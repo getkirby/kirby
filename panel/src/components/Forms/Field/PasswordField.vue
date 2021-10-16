@@ -29,12 +29,7 @@ import counter from "@/mixins/forms/counter.js";
  * Have a look at `<k-field>`, `<k-input>` and `<k-password-input>` for additional information.
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    PasswordInput,
-    counter
-  ],
+  mixins: [Field, Input, PasswordInput, counter],
   inheritAttrs: false,
   props: {
     minlength: {
@@ -51,5 +46,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

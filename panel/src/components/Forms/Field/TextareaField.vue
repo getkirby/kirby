@@ -23,22 +23,17 @@ import { props as TextareaInput } from "../Input/TextareaInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-textarea-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-textarea-input>`
  * for additional information.
  * @example <k-textarea-field v-model="text" name="text" label="Text" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    TextareaInput,
-    counter
-  ],
+  mixins: [Field, Input, TextareaInput, counter],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

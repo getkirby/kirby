@@ -17,21 +17,17 @@ import { props as Input } from "../Input.vue";
 import { props as ToggleInput } from "../Input/ToggleInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-input>`
  * for additional information.
  * @example <k-toggle-field v-model="toggle" label="Toggle" name="toggle" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    ToggleInput
-  ],
+  mixins: [Field, Input, ToggleInput],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

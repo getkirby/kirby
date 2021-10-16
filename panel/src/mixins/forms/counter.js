@@ -1,4 +1,3 @@
-
 export default {
   props: {
     counter: {
@@ -24,8 +23,8 @@ export default {
       return {
         count: count,
         min: this.min,
-        max: this.max,
+        max: this.max
       };
     }
-  },
-}
+  }
+};

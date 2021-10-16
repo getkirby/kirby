@@ -1,10 +1,5 @@
 <template>
-  <div
-    :data-align="align"
-    :data-size="size"
-    :data-theme="theme"
-    class="k-text"
-  >
+  <div :data-align="align" :data-size="size" :data-theme="theme" class="k-text">
     <!-- @slot Text content -->
     <slot />
   </div>
@@ -38,7 +33,7 @@ export default {
      */
     theme: String
   }
-}
+};
 </script>
 
 <style>

@@ -18,16 +18,11 @@
     @keydown.ctrl.s="clean"
     @keydown.meta.s="clean"
     v-on="listeners"
-  >
+  />
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -36,12 +31,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    required
-  ],
+  mixins: [autofocus, disabled, id, required],
   props: {
     max: Number,
     min: Number,
@@ -56,8 +46,8 @@ export const props = {
       type: [Number, String],
       default: null
     }
-  },
-}
+  }
+};
 
 /**
  * @example <k-input v-model="number" name="number" type="number" />
@@ -73,9 +63,9 @@ export default {
       listeners: {
         ...this.$listeners,
         input: (event) => this.onInput(event.target.value),
-        blur: this.onBlur,
+        blur: this.onBlur
       }
-    }
+    };
   },
   watch: {
     value(value) {
@@ -105,8 +95,10 @@ export default {
         return 0;
       }
 
-      if (step.toString().indexOf('e') !== -1) {
-        return parseInt(step.toFixed(16).split(".")[1].split("").reverse().join("")).toString().length;
+      if (step.toString().indexOf("e") !== -1) {
+        return parseInt(
+          step.toFixed(16).split(".")[1].split("").reverse().join("")
+        ).toString().length;
       }
 
       return step.toString().split(".")[1].length || 0;
@@ -169,8 +161,7 @@ export default {
       }
     };
   }
-}
-
+};
 </script>
 
 <style>

@@ -2,16 +2,18 @@
   <k-inside>
     <k-view class="k-users-view">
       <k-header>
-        {{ $t('view.users') }}
+        {{ $t("view.users") }}
 
         <template #left>
           <k-button-group
-            :buttons="[{
-              disabled: $permissions.users.create === false,
-              text: $t('user.create'),
-              icon: 'add',
-              click: () => $dialog('users/create')
-            }]"
+            :buttons="[
+              {
+                disabled: $permissions.users.create === false,
+                text: $t('user.create'),
+                icon: 'add',
+                click: () => $dialog('users/create')
+              }
+            ]"
           />
         </template>
 
@@ -28,7 +30,7 @@
                 <k-dropdown-item icon="bolt" link="/users">
                   {{ $t("role.all") }}
                 </k-dropdown-item>
-                <hr>
+                <hr />
                 <k-dropdown-item
                   v-for="roleFilter in roles"
                   :key="roleFilter.id"
@@ -70,10 +72,10 @@ export default {
   },
   computed: {
     items() {
-      return this.users.data.map(user => {
+      return this.users.data.map((user) => {
         user.options = this.$dropdown(user.link);
         return user;
-      })
+      });
     }
   },
   methods: {

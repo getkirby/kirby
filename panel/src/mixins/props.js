@@ -1,4 +1,3 @@
-
 import after from "./props/after.js";
 import autofocus from "./props/autofocus.js";
 import before from "./props/before.js";

@@ -39,15 +39,14 @@ export default {
    * @param {object} options
    */
   init(state, options = {}) {
-
     // defaults
     this.options = {
-      base:     document.querySelector("base").href,
-      headers:  () => {},
+      base: document.querySelector("base").href,
+      headers: () => {},
       onFinish: () => {},
-      onStart:  () => {},
-      onSwap:   () => {},
-      query:    () => {},
+      onStart: () => {},
+      onSwap: () => {},
+      query: () => {},
       ...options
     };
 
@@ -166,7 +165,7 @@ export default {
     };
 
     const globals = this.arrayToString(options.globals);
-    const only    = this.arrayToString(options.only);
+    const only = this.arrayToString(options.only);
 
     this.options.onStart(options);
 
@@ -183,7 +182,7 @@ export default {
           "X-Fiber-Globals": globals,
           "X-Fiber-Only": only,
           "X-Fiber-Referrer": this.state.$view.path,
-          ...options.headers,
+          ...options.headers
         }
       });
 
@@ -198,7 +197,6 @@ export default {
     } finally {
       this.options.onFinish(options);
     }
-
   },
 
   /**
@@ -213,7 +211,10 @@ export default {
 
     // either replacing the whole state
     // or pushing onto it
-    if (options.replace === true || this.url(this.state.$url).href === window.location.href) {
+    if (
+      options.replace === true ||
+      this.url(this.state.$url).href === window.location.href
+    ) {
       window.history.replaceState(this.state, "", this.state.$url);
     } else {
       window.history.pushState(this.state, "", this.state.$url);
@@ -239,6 +240,5 @@ export default {
 
     url.search = this.query(query, url.search);
     return url;
-  },
-
- };
+  }
+};

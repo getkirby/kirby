@@ -101,7 +101,7 @@ export default {
         max: this.max,
         multiple: this.multiple,
         search: this.search,
-        selected: this.selected.map(model => model.id)
+        selected: this.selected.map((model) => model.id)
       });
     },
     remove(index) {
@@ -109,7 +109,7 @@ export default {
       this.onInput();
     },
     removeById(id) {
-      this.selected = this.selected.filter(item => item.id !== id);
+      this.selected = this.selected.filter((item) => item.id !== id);
       this.onInput();
     },
     select(items) {
@@ -119,14 +119,15 @@ export default {
       }
 
       // remove all items that are no longer selected
-      this.selected = this.selected.filter(selected => {
-        return items.filter(item => item.id === selected.id).length > 0;
+      this.selected = this.selected.filter((selected) => {
+        return items.filter((item) => item.id === selected.id).length > 0;
       });
 
       // add items that are not yet in the selected list
-      items.forEach(item => {
+      items.forEach((item) => {
         if (
-          this.selected.filter(selected => item.id === selected.id).length === 0
+          this.selected.filter((selected) => item.id === selected.id).length ===
+          0
         ) {
           this.selected.push(item);
         }

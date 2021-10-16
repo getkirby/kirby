@@ -93,7 +93,7 @@ export default {
     isInstalled: Boolean,
     isOk: Boolean,
     requirements: Object,
-    translations: Array,
+    translations: Array
   },
   data() {
     return {
@@ -162,7 +162,7 @@ export default {
   margin-top: 1.5rem;
 }
 .k-installation-view .k-headline {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 .k-installation-issues {
   line-height: 1.5em;

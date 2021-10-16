@@ -26,18 +26,12 @@ import counter from "@/mixins/forms/counter.js";
  * Have a look at `<k-field>`, `<k-input>` and `<k-tags-input>` for additional information.
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    TagsInput,
-    counter
-  ],
+  mixins: [Field, Input, TagsInput, counter],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>
-

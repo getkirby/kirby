@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Link extends Mark {
-
   get button() {
     return {
       icon: "url",
@@ -11,18 +10,18 @@ export default class Link extends Mark {
 
   commands() {
     return {
-      "link": () => {
+      link: () => {
         this.editor.emit("link", this.editor);
       },
-      "insertLink": (attrs = {}) => {
+      insertLink: (attrs = {}) => {
         if (attrs.href) {
           return this.update(attrs);
         }
       },
-      "removeLink": () => {
+      removeLink: () => {
         return this.remove();
       },
-      "toggleLink": (attrs = {}) => {
+      toggleLink: (attrs = {}) => {
         if (attrs.href && attrs.href.length > 0) {
           this.editor.command("insertLink", attrs);
         } else {
@@ -35,7 +34,7 @@ export default class Link extends Mark {
   get defaults() {
     return {
       target: null
-    }
+    };
   }
 
   get name() {
@@ -47,9 +46,9 @@ export default class Link extends Mark {
       utils.pasteRule(
         /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b([-a-zA-Z0-9@:%_+.~#?&//=,]*)/gi,
         type,
-        url => ({ href: url }),
-      ),
-    ]
+        (url) => ({ href: url })
+      )
+    ];
   }
 
   plugins() {
@@ -59,24 +58,28 @@ export default class Link extends Mark {
           handleClick: (view, pos, event) => {
             const attrs = this.editor.getMarkAttrs("link");
 
-            if (attrs.href && event.altKey === true && event.target instanceof HTMLAnchorElement) {
-              event.stopPropagation()
-              window.open(attrs.href, attrs.target)
+            if (
+              attrs.href &&
+              event.altKey === true &&
+              event.target instanceof HTMLAnchorElement
+            ) {
+              event.stopPropagation();
+              window.open(attrs.href, attrs.target);
             }
-          },
-        },
-      },
-    ]
+          }
+        }
+      }
+    ];
   }
 
   get schema() {
     return {
       attrs: {
         href: {
-          default: null,
+          default: null
         },
         target: {
-          default: null,
+          default: null
         },
         title: {
           default: null
@@ -86,18 +89,21 @@ export default class Link extends Mark {
       parseDOM: [
         {
           tag: "a[href]:not([href^='mailto:'])",
-          getAttrs: dom => ({
+          getAttrs: (dom) => ({
             href: dom.getAttribute("href"),
             target: dom.getAttribute("target"),
             title: dom.getAttribute("title")
-          }),
-        },
+          })
+        }
       ],
-      toDOM: node => ["a", {
-        ...node.attrs,
-        rel: "noopener noreferrer",
-      }, 0],
-    }
+      toDOM: (node) => [
+        "a",
+        {
+          ...node.attrs,
+          rel: "noopener noreferrer"
+        },
+        0
+      ]
+    };
   }
-
 }

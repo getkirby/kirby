@@ -1,5 +1,9 @@
 <template>
-  <span :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
+  <span
+    :data-disabled="disabled"
+    :data-empty="selected === ''"
+    class="k-select-input"
+  >
     <select
       :id="id"
       ref="input"
@@ -12,11 +16,7 @@
       class="k-select-input-native"
       v-on="listeners"
     >
-      <option
-        v-if="hasEmptyOption"
-        :disabled="required"
-        value=""
-      >
+      <option v-if="hasEmptyOption" :disabled="required" value="">
         {{ emptyOption }}
       </option>
       <option
@@ -33,24 +33,12 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  name,
-  required
-} from "@/mixins/props.js"
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    name,
-    required
-  ],
+  mixins: [autofocus, disabled, id, name, required],
   props: {
     ariaLabel: String,
     default: String,
@@ -76,7 +64,7 @@ export const props = {
       default: ""
     }
   }
-}
+};
 
 export default {
   mixins: [props],
@@ -146,7 +134,7 @@ export default {
     },
     text(value) {
       let text = null;
-      this.options.forEach(option => {
+      this.options.forEach((option) => {
         if (option.value == value) {
           text = option.text;
         }
@@ -157,11 +145,11 @@ export default {
   validations() {
     return {
       selected: {
-        required: this.required ? validateRequired : true,
+        required: this.required ? validateRequired : true
       }
     };
   }
-}
+};
 </script>
 
 <style>

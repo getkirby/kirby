@@ -36,7 +36,7 @@ export const props = {
     },
     value: String
   }
-}
+};
 
 export default {
   mixins: [props],
@@ -50,11 +50,11 @@ export default {
     dateOptions() {
       return {
         autofocus: this.autofocus,
-        disabled:  this.disabled,
-        display:   this.display,
-        id:        this.id,
-        required:  this.required,
-        value:     this.value
+        disabled: this.disabled,
+        display: this.display,
+        id: this.id,
+        required: this.required,
+        value: this.value
       };
     },
     timeOptions() {
@@ -62,8 +62,10 @@ export default {
         ...this.time,
         disabled: this.disabled,
         required: this.required,
-        value:    this.value ? this.toDatetime(this.value).format("HH:mm:ss") : null
-      }
+        value: this.value
+          ? this.toDatetime(this.value).format("HH:mm:ss")
+          : null
+      };
     }
   },
   watch: {
@@ -87,7 +89,7 @@ export default {
       this.$refs.dateInput.focus();
     },
     onUpdate(value, input) {
-      const base  = this.toDatetime(this.value);
+      const base = this.toDatetime(this.value);
       input = this.toDatetime(value, input, base);
       this.emit("update", input);
     },
@@ -130,41 +132,52 @@ export default {
       }
 
       if (input === "date") {
-        return base.clone().utc().set("year", dt.get("year"))
-                                 .set("month", dt.get("month"))
-                                 .set("date", dt.get("date"));
+        return base
+          .clone()
+          .utc()
+          .set("year", dt.get("year"))
+          .set("month", dt.get("month"))
+          .set("date", dt.get("date"));
       }
 
       if (input === "time") {
-        return base.clone().utc().set("hour", dt.get("hour"))
-                                 .set("minute", dt.get("minute"))
-                                 .set("second", dt.get("second"));
+        return base
+          .clone()
+          .utc()
+          .set("hour", dt.get("hour"))
+          .set("minute", dt.get("minute"))
+          .set("second", dt.get("second"));
       }
     }
   },
   validations() {
     return {
       value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-        required: this.required ? validateRequired : true,
+        min: this.min
+          ? (value) =>
+              this.$helper.validate.datetime(
+                this,
+                value,
+                this.min,
+                "isAfter",
+                this.step.unit
+              )
+          : true,
+        max: this.max
+          ? (value) =>
+              this.$helper.validate.datetime(
+                this,
+                value,
+                this.max,
+                "isBefore",
+                this.step.unit
+              )
+          : true,
+        required: this.required ? validateRequired : true
       }
     };
   }
-}
-
+};
 </script>
 
 <style>

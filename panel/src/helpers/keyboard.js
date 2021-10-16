@@ -4,4 +4,4 @@ export function metaKey() {
 
 export default {
   metaKey
-}
+};

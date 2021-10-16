@@ -31,12 +31,7 @@
         </template>
       </k-items>
     </template>
-    <k-empty
-      v-else
-      :data-invalid="isInvalid"
-      icon="users"
-      @click="open"
-    >
+    <k-empty v-else :data-invalid="isInvalid" icon="users" @click="open">
       {{ empty || $t("field.users.empty") }}
     </k-empty>
     <k-users-dialog ref="selector" @submit="select" />

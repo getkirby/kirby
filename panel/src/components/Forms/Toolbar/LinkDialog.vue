@@ -5,12 +5,7 @@
     @close="cancel"
     @submit="$refs.form.submit()"
   >
-    <k-form
-      ref="form"
-      v-model="value"
-      :fields="fields"
-      @submit="submit"
-    />
+    <k-form ref="form" v-model="value" :fields="fields" @submit="submit" />
   </k-dialog>
 </template>
 
@@ -25,13 +20,13 @@ export default {
       fields: {
         url: {
           label: this.$t("link"),
-          type: 'text',
+          type: "text",
           placeholder: this.$t("url.placeholder"),
-          icon: 'url'
+          icon: "url"
         },
         text: {
           label: this.$t("link.text"),
-          type: 'text'
+          type: "text"
         }
       }
     };
@@ -64,9 +59,11 @@ export default {
       }
     },
     submit() {
-
       // insert the link
-      this.$emit("submit", this.kirbytext ? this.createKirbytext() : this.createMarkdown());
+      this.$emit(
+        "submit",
+        this.kirbytext ? this.createKirbytext() : this.createMarkdown()
+      );
 
       // reset the form
       this.value = {
@@ -78,5 +75,5 @@ export default {
       this.$refs.dialog.close();
     }
   }
-}
+};
 </script>

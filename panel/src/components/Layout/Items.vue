@@ -15,7 +15,7 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
-        :class="{'k-draggable-item': sortable && item.sortable}"
+        :class="{ 'k-draggable-item': sortable && item.sortable }"
         :image="imageOptions(item)"
         :layout="layout"
         :sortable="sortable && item.sortable"
@@ -27,11 +27,7 @@
         @option="$emit('option', $event, item, itemIndex)"
       >
         <template #options>
-          <slot
-            name="options"
-            :item="item"
-            :index="itemIndex"
-          />
+          <slot name="options" :item="item" :index="itemIndex" />
         </template>
       </k-item>
     </slot>
@@ -91,7 +87,7 @@ export default {
     },
     imageOptions(item) {
       let globalOptions = this.image;
-      let localOptions  = item.image;
+      let localOptions = item.image;
 
       if (globalOptions === false || localOptions === false) {
         return false;
@@ -111,7 +107,7 @@ export default {
       };
     }
   }
-}
+};
 </script>
 
 <style>
@@ -164,7 +160,7 @@ export default {
 .k-cardlets-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-  grid-gap: .5rem;
+  grid-gap: 0.5rem;
 }
 
 /**
@@ -173,5 +169,4 @@ export default {
 .k-list-items .k-list-item:not(:last-child) {
   margin-bottom: 2px;
 }
-
 </style>

@@ -1,4 +1,3 @@
-
 export async function toJson(response) {
   const text = await response.text();
   let data;
@@ -23,18 +22,18 @@ export default (config) => {
         headers: {
           "x-requested-with": "xmlhttprequest",
           "content-type": "application/json",
-          ...options.headers,
+          ...options.headers
         }
       });
 
       // adapt headers for all non-GET and non-POST methods
       if (
         config.methodOverwrite &&
-        options.method !== 'GET' &&
-        options.method !== 'POST'
+        options.method !== "GET" &&
+        options.method !== "POST"
       ) {
         options.headers["x-http-method-override"] = options.method;
-        options.method = 'POST';
+        options.method = "POST";
       }
 
       // CMS specific options via callback
@@ -49,14 +48,14 @@ export default (config) => {
       // fetch the resquest's response
       const response = await fetch(
         [config.endpoint, path].join(
-          (config.endpoint.endsWith("/") || path.startsWith("/")) ? "" : "/"
+          config.endpoint.endsWith("/") || path.startsWith("/") ? "" : "/"
         ),
         options
       );
 
       try {
         // try to parse JSON
-        const json = await toJson(response)
+        const json = await toJson(response);
 
         // check for the server response code
         if (response.status < 200 || response.status > 299) {
@@ -78,7 +77,6 @@ export default (config) => {
         config.onComplete(id);
         config.onSuccess(json);
         return data;
-
       } catch (e) {
         this.running--;
         config.onComplete(id);
@@ -91,32 +89,26 @@ export default (config) => {
         path +=
           "?" +
           Object.keys(query)
-            .filter(key => query[key] !== undefined && query[key] !== null)
-            .map(key => key + "=" + query[key])
+            .filter((key) => query[key] !== undefined && query[key] !== null)
+            .map((key) => key + "=" + query[key])
             .join("&");
       }
 
       return this.request(
         path,
-        Object.assign(
-          options || {},
-          {
-            method: "GET"
-          }
-        ),
+        Object.assign(options || {}, {
+          method: "GET"
+        }),
         silent
       );
     },
     async post(path, data, options, method = "POST", silent = false) {
       return this.request(
         path,
-        Object.assign(
-          options || {},
-          {
-            method: method,
-            body: JSON.stringify(data)
-          }
-        ),
+        Object.assign(options || {}, {
+          method: method,
+          body: JSON.stringify(data)
+        }),
         silent
       );
     },
@@ -126,5 +118,5 @@ export default (config) => {
     async delete(path, data, options, silent = false) {
       return this.post(path, data, options, "DELETE", silent);
     }
-  }
+  };
 };

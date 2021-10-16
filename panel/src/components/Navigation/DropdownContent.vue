@@ -9,7 +9,7 @@
     <!-- @slot Content of the dropdown -->
     <slot>
       <template v-for="(option, index) in items">
-        <hr v-if="option === '-'" :key="_uid + '-item-' + index">
+        <hr v-if="option === '-'" :key="_uid + '-item-' + index" />
         <k-dropdown-item
           v-else
           :ref="_uid + '-item-' + index"
@@ -66,7 +66,6 @@ export default {
           this.$dropdown(this.options)(ready);
         } else if (typeof this.options === "function") {
           this.options(ready);
-
         } else if (Array.isArray(this.options)) {
           ready(this.options);
         }
@@ -78,7 +77,7 @@ export default {
       if (typeof option.click === "function") {
         option.click.call(this);
       } else if (option.click) {
-        this.$emit('action', option.click);
+        this.$emit("action", option.click);
       }
     },
     /**
@@ -86,7 +85,6 @@ export default {
      * @public
      */
     open() {
-
       this.reset();
 
       if (OpenDropdown && OpenDropdown !== this) {
@@ -94,7 +92,7 @@ export default {
         OpenDropdown.close();
       }
 
-      this.fetchOptions(items => {
+      this.fetchOptions((items) => {
         this.$events.$on("keydown", this.navigate);
         this.$events.$on("click", this.close);
         this.items = items;
@@ -146,7 +144,10 @@ export default {
       this.$nextTick(() => {
         if (this.$el) {
           // get window height depending on the browser
-          let windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
+          let windowHeight =
+            window.innerHeight ||
+            document.body.clientHeight ||
+            document.documentElement.clientHeight;
 
           // the minimum height required from above and below for the behavior of the dropup
           // k-topbar or form-buttons (2.5rem = 40px)
@@ -162,8 +163,8 @@ export default {
           // activates the dropup if the dropdown content overflows
           // to the bottom of the screen but only if there is enough space top of screen
           if (
-              (scrollTop + dropdownHeight) > (windowHeight - safeSpaceHeight) &&
-              (dropdownHeight + (safeSpaceHeight * 2)) < scrollTop
+            scrollTop + dropdownHeight > windowHeight - safeSpaceHeight &&
+            dropdownHeight + safeSpaceHeight * 2 < scrollTop
           ) {
             this.dropup = true;
           }
@@ -207,8 +208,12 @@ export default {
             this.current++;
 
             if (this.current > this.$children.length - 1) {
-              const enabled = this.$children.filter(x => x.disabled === false);
-              this.current = this.$children.indexOf(enabled[enabled.length - 1]);
+              const enabled = this.$children.filter(
+                (x) => x.disabled === false
+              );
+              this.current = this.$children.indexOf(
+                enabled[enabled.length - 1]
+              );
               break;
             }
 
@@ -266,22 +271,22 @@ export default {
   inset-inline-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 .k-dropdown-content > .k-dropdown-item:last-child {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .k-dropdown-content[data-dropup] {
   top: auto;
   bottom: 100%;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .k-dropdown-content hr {
   border-color: currentColor;
   opacity: 0.2;
-  margin: .5rem 1rem;
+  margin: 0.5rem 1rem;
 }
 .k-dropdown-content[data-theme="light"] {
   background: var(--color-white);

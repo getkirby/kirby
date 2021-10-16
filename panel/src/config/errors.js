@@ -2,7 +2,7 @@ import store from "@/store/store.js";
 
 export default {
   install(app) {
-    app.config.errorHandler = error => {
+    app.config.errorHandler = (error) => {
       if (window.panel.$config.debug) {
         window.console.error(error);
       }
@@ -26,6 +26,6 @@ export default {
 
     window.panel.deprecated = (msg) => {
       console.warn("Deprecated: " + msg);
-    }
+    };
   }
-}
+};

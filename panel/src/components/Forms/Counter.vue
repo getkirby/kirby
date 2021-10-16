@@ -61,6 +61,6 @@ export default {
 .k-counter-rules {
   color: var(--color-gray-600);
   font-weight: var(--font-normal);
-  padding-inline-start: .5rem;
+  padding-inline-start: 0.5rem;
 }
 </style>

@@ -1,10 +1,5 @@
 <template>
-  <component
-    :is="component"
-    ref="button"
-    v-bind="$props"
-    v-on="$listeners"
-  >
+  <component :is="component" ref="button" v-bind="$props" v-on="$listeners">
     <template v-if="text">
       {{ text }}
     </template>
@@ -82,7 +77,7 @@ export default {
       }
 
       return this.link ? "k-button-link" : "k-button-native";
-    },
+    }
   },
   methods: {
     focus() {
@@ -123,9 +118,8 @@ button::-moz-focus-inner {
   display: inline-block;
   position: relative;
   font-size: var(--text-sm);
-  transition: color .3s;
+  transition: color 0.3s;
   outline: none;
-
 }
 .k-button:focus,
 .k-button:hover {
@@ -157,11 +151,11 @@ button::-moz-focus-inner {
 }
 
 .k-button-icon ~ .k-button-text {
-  padding-inline-start: .5rem;
+  padding-inline-start: 0.5rem;
 }
 
 .k-button-text {
-  opacity: .75;
+  opacity: 0.75;
 }
 .k-button:focus .k-button-text,
 .k-button:hover .k-button-text {

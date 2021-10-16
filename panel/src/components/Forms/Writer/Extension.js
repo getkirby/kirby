@@ -1,9 +1,8 @@
 export default class Extension {
-
   constructor(options = {}) {
     this.options = {
       ...this.defaults,
-      ...options,
+      ...options
     };
   }
 
@@ -42,5 +41,4 @@ export default class Extension {
   keys() {
     return {};
   }
-
 }

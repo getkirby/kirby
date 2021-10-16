@@ -2,7 +2,7 @@
   <k-inside>
     <k-view class="k-settings-view">
       <k-header>
-        {{ $t('view.settings') }}
+        {{ $t("view.settings") }}
       </k-header>
 
       <section class="k-system-info">
@@ -13,20 +13,24 @@
         <ul class="k-system-info-box">
           <li>
             <dl>
-              <dt>{{ $t('license') }}</dt>
+              <dt>{{ $t("license") }}</dt>
               <dd>
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <button v-else class="k-system-unregistered" @click="$dialog('registration')">
-                  {{ $t('license.unregistered') }}
+                <button
+                  v-else
+                  class="k-system-unregistered"
+                  @click="$dialog('registration')"
+                >
+                  {{ $t("license.unregistered") }}
                 </button>
               </dd>
             </dl>
           </li>
           <li>
             <dl>
-              <dt>{{ $t('version') }}</dt>
+              <dt>{{ $t("version") }}</dt>
               <dd dir="ltr">
                 {{ version }}
               </dd>
@@ -39,14 +43,14 @@
         <template v-if="languages.length > 0">
           <section class="k-languages-section">
             <header class="k-settings-view-section-header">
-              <k-headline>{{ $t('languages.default') }}</k-headline>
+              <k-headline>{{ $t("languages.default") }}</k-headline>
             </header>
             <k-collection :items="primaryLanguage" />
           </section>
 
           <section class="k-languages-section">
             <header class="k-settings-view-section-header">
-              <k-headline>{{ $t('languages.secondary') }}</k-headline>
+              <k-headline>{{ $t("languages.secondary") }}</k-headline>
               <k-button
                 :text="$t('language.create')"
                 icon="add"
@@ -58,14 +62,14 @@
               :items="secondaryLanguages"
             />
             <k-empty v-else icon="globe" @click="$dialog('languages/create')">
-              {{ $t('languages.secondary.empty') }}
+              {{ $t("languages.secondary.empty") }}
             </k-empty>
           </section>
         </template>
 
         <template v-else-if="languages.length === 0">
           <header class="k-settings-view-section-header">
-            <k-headline>{{ $t('languages') }}</k-headline>
+            <k-headline>{{ $t("languages") }}</k-headline>
             <k-button
               :text="$t('language.create')"
               icon="add"
@@ -73,7 +77,7 @@
             />
           </header>
           <k-empty icon="globe" @click="$dialog('languages/create')">
-            {{ $t('languages.empty') }}
+            {{ $t("languages.empty") }}
           </k-empty>
         </template>
       </section>
@@ -87,7 +91,7 @@ export default {
     languages: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     },
     license: String,
@@ -95,12 +99,12 @@ export default {
   },
   computed: {
     languagesCollection() {
-      return this.languages.map(language => ({
+      return this.languages.map((language) => ({
         ...language,
         image: {
           back: "black",
           color: "gray",
-          icon: "globe",
+          icon: "globe"
         },
         link: () => {
           this.$dialog(`languages/${language.id}/update`);
@@ -125,10 +129,12 @@ export default {
       }));
     },
     primaryLanguage() {
-      return this.languagesCollection.filter(language => language.default);
+      return this.languagesCollection.filter((language) => language.default);
     },
     secondaryLanguages() {
-      return this.languagesCollection.filter(language => language.default === false);
+      return this.languagesCollection.filter(
+        (language) => language.default === false
+      );
     }
   }
 };
@@ -142,14 +148,14 @@ export default {
   margin-bottom: 1.5rem;
 }
 .k-settings-view-section-header {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: space-between;
 }
 
 .k-system-info-box {
   background: var(--color-white);
-  padding: .75rem;
+  padding: 0.75rem;
   display: flex;
 }
 .k-system-info-box li {
@@ -171,7 +177,7 @@ export default {
 .k-system-info-box dt {
   font-size: var(--text-sm);
   color: var(--color-gray-600);
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 .k-system-unregistered {
   color: var(--color-negative);

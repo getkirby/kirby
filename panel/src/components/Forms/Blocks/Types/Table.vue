@@ -12,7 +12,9 @@
     </tr>
     <tr v-if="rows.length === 0">
       <td :colspan="columnsCount">
-        <small class="k-block-type-table-preview-empty">{{ $t('field.structure.empty') }}</small>
+        <small class="k-block-type-table-preview-empty">{{
+          $t("field.structure.empty")
+        }}</small>
       </td>
     </tr>
     <tr v-for="(row, rowIndex) in rows" v-else :key="rowIndex">
@@ -31,7 +33,9 @@
         />
         <template v-else>
           <p class="k-structure-table-text">
-            {{ column.before }} {{ displayText(fields[columnName], row[columnName]) || "–" }} {{ column.after }}
+            {{ column.before }}
+            {{ displayText(fields[columnName], row[columnName]) || "–" }}
+            {{ column.after }}
           </p>
         </template>
       </td>
@@ -64,7 +68,7 @@ export default {
     },
     table() {
       let table = null;
-      Object.values(this.fieldset.tabs).forEach(tab => {
+      Object.values(this.fieldset.tabs).forEach((tab) => {
         if (tab.fields.rows) {
           table = tab.fields.rows;
         }
@@ -90,12 +94,12 @@ export default {
 .k-block-type-table-preview th {
   text-align: start;
   line-height: 1.5em;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   font-size: var(--text-sm);
 }
 .k-block-type-table-preview tr:not(:last-child) td,
 .k-block-type-table-preview th {
-    border-bottom: 1px solid var(--color-gray-300);
+  border-bottom: 1px solid var(--color-gray-300);
 }
 .k-block-type-table-preview th {
   background: var(--color-gray-100);

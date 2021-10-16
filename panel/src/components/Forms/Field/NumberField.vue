@@ -21,16 +21,12 @@ import { props as NumberInput } from "../Input/NumberInput.vue";
  * @example <k-number-field v-model="number" name="number" label="Number" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    NumberInput
-  ],
+  mixins: [Field, Input, NumberInput],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

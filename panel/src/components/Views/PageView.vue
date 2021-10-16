@@ -40,10 +40,7 @@
                 icon="cog"
                 @click="$refs.settings.toggle()"
               />
-              <k-dropdown-content
-                ref="settings"
-                :options="$dropdown(id)"
-              />
+              <k-dropdown-content ref="settings" :options="$dropdown(id)" />
             </k-dropdown>
 
             <k-languages-dropdown />
@@ -51,11 +48,7 @@
         </template>
 
         <template #right>
-          <k-prev-next
-            v-if="model.id"
-            :prev="prev"
-            :next="next"
-          />
+          <k-prev-next v-if="model.id" :prev="prev" :next="next" />
         </template>
       </k-header>
 

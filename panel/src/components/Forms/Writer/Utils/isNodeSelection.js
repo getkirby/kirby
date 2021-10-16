@@ -3,6 +3,6 @@
  */
 import { NodeSelection } from "prosemirror-state";
 
-export default selection => {
+export default (selection) => {
   return selection instanceof NodeSelection;
 };

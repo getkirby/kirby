@@ -9,7 +9,7 @@
       tabindex="-1"
       @change="select"
       @click.stop
-    >
+    />
 
     <k-dialog
       ref="dialog"
@@ -46,11 +46,13 @@
       <template #footer>
         <template v-if="errors.length > 0">
           <k-button-group
-            :buttons="[{
-              icon: 'check',
-              text: $t('confirm'),
-              click: () => $refs.dialog.close()
-            }]"
+            :buttons="[
+              {
+                icon: 'check',
+                text: $t('confirm'),
+                click: () => $refs.dialog.close()
+              }
+            ]"
           />
         </template>
       </template>
@@ -155,7 +157,7 @@ export default {
       }
 
       this.total = this.files.length;
-      this.files.forEach(file => {
+      this.files.forEach((file) => {
         this.$helper.upload(file, {
           url: this.options.url,
           attributes: this.options.attributes,
@@ -209,7 +211,7 @@ export default {
 }
 
 .k-upload-dialog .k-headline {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 
 .k-upload-list,
@@ -222,7 +224,7 @@ export default {
 }
 
 .k-upload-error-list li {
-  padding: .75rem;
+  padding: 0.75rem;
   background: var(--color-white);
   border-radius: var(--rounded-xs);
 }

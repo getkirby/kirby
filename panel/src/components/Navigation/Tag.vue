@@ -58,21 +58,21 @@ export default {
   color: #fff;
 }
 .k-tag-text {
-  padding: .3rem .75rem .375rem;
+  padding: 0.3rem 0.75rem 0.375rem;
   line-height: var(--leading-tight);
 }
 .k-tag-toggle {
-  color: rgba(255, 255, 255, .7);
+  color: rgba(255, 255, 255, 0.7);
   width: 1.75rem;
   height: 100%;
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-inline-start: 1px solid rgba(255, 255, 255, .15);
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
 }
 .k-tag-toggle:hover {
-  background: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
 [data-disabled] .k-tag {

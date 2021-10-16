@@ -14,7 +14,7 @@ export const props = {
       default: "url"
     }
   }
-}
+};
 
 /**
  * @example <k-input v-model="url" name="url" type="url" />
@@ -22,5 +22,5 @@ export const props = {
 export default {
   extends: TextInput,
   mixins: [props]
-}
+};
 </script>

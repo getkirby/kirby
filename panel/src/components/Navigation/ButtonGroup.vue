@@ -27,12 +27,12 @@ export default {
      */
     buttons: Array
   }
-}
+};
 </script>
 
 <style>
 .k-button-group {
-  --padding-x: .75rem;
+  --padding-x: 0.75rem;
   --padding-y: 1rem;
   --line-height: 1rem;
 

@@ -65,9 +65,9 @@ export default {
      * @values tiny, small, medium, large, huge
      */
     size: String,
-     /**
-      * Whether the collection can be sorted
-      */
+    /**
+     * Whether the collection can be sorted
+     */
     sortable: Boolean,
     pagination: {
       type: [Boolean, Object],
@@ -128,12 +128,12 @@ export default {
 
 <style>
 .k-collection-help {
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
 }
 .k-collection-footer {
   display: flex;
   justify-content: space-between;
-  margin-inline: -.75rem;
+  margin-inline: -0.75rem;
 }
 .k-collection-pagination {
   line-height: 1.25rem;
@@ -141,7 +141,7 @@ export default {
   min-height: 2.75rem;
 }
 .k-collection-pagination .k-pagination .k-button {
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   line-height: 1.125rem;
 }
 </style>

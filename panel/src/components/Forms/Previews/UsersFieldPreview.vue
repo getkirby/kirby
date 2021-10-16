@@ -27,19 +27,19 @@
 <script>
 export default {
   props: {
-    value: Array,
+    value: Array
   }
-}
+};
 </script>
 
 <style>
 .k-users-field-preview {
-  padding: 0 .25rem 0 .75rem;
+  padding: 0 0.25rem 0 0.75rem;
   display: flex;
 }
 .k-users-field-preview li {
   line-height: 0;
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-users-field-preview .k-link {
   display: flex;
@@ -58,7 +58,7 @@ export default {
 .k-users-field-preview figcaption {
   flex-grow: 1;
   line-height: 1.5em;
-  padding-inline: .5rem;
+  padding-inline: 0.5rem;
   border: 1px solid var(--color-border);
   border-inline-start: 0;
   border-radius: var(--rounded-xs);
@@ -66,5 +66,4 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 </style>

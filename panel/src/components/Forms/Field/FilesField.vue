@@ -2,11 +2,7 @@
   <k-field v-bind="$props" class="k-files-field">
     <template v-if="more && !disabled" #options>
       <k-button-group class="k-field-options">
-        <k-options-dropdown
-          ref="options"
-          v-bind="options"
-          @action="onAction"
-        />
+        <k-options-dropdown ref="options" v-bind="options" @action="onAction" />
       </k-button-group>
     </template>
 
@@ -57,7 +53,7 @@ export default {
   props: {
     uploads: [Boolean, Object, Array]
   },
- computed: {
+  computed: {
     moreUpload() {
       return this.more && this.uploads;
     },
@@ -74,7 +70,9 @@ export default {
       }
 
       return {
-        options: [{ icon: "check", text: this.$t("select"), click: () => this.open() }]
+        options: [
+          { icon: "check", text: this.$t("select"), click: () => this.open() }
+        ]
       };
     },
     uploadParams() {
@@ -82,7 +80,7 @@ export default {
         accept: this.uploads.accept,
         max: this.max,
         multiple: this.multiple,
-        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+        url: this.$urls.api + "/" + this.endpoints.field + "/upload"
       };
     }
   },
@@ -129,14 +127,14 @@ export default {
       }
     },
     isSelected(file) {
-      return this.selected.find(f => f.id === file.id);
+      return this.selected.find((f) => f.id === file.id);
     },
     upload(upload, files) {
       if (this.multiple === false) {
         this.selected = [];
       }
 
-      files.forEach(file => {
+      files.forEach((file) => {
         if (!this.isSelected(file)) {
           this.selected.push(file);
         }

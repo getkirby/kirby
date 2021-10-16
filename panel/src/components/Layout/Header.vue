@@ -1,7 +1,11 @@
 <template>
   <header :data-editable="editable" class="k-header">
     <k-headline tag="h1" size="huge">
-      <span v-if="editable && $listeners.edit" class="k-headline-editable" @click="$emit('edit')">
+      <span
+        v-if="editable && $listeners.edit"
+        class="k-headline-editable"
+        @click="$emit('edit')"
+      >
         <!-- @slot headline -->
         <slot />
         <k-icon type="edit" />
@@ -38,36 +42,37 @@ export default {
     tabs: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     }
   },
-  computed:  {
+  computed: {
     tabsWithBadges() {
-      const changed = Object.keys(this.$store.getters['content/changes']());
+      const changed = Object.keys(this.$store.getters["content/changes"]());
 
-      return this.tabs.map(tab => {
-
+      return this.tabs.map((tab) => {
         // collect all fields per tab
         let fields = [];
-        Object.values(tab.columns).forEach(column => {
-          Object.values(column.sections).forEach(section => {
+        Object.values(tab.columns).forEach((column) => {
+          Object.values(column.sections).forEach((section) => {
             if (section.type === "fields") {
-              Object.keys(section.fields).forEach(field => {
+              Object.keys(section.fields).forEach((field) => {
                 fields.push(field);
-              })
+              });
             }
-          })
+          });
         });
 
         // get count of changed fields in this tab
-        tab.badge = fields.filter(field => changed.includes(field.toLowerCase())).length;
+        tab.badge = fields.filter((field) =>
+          changed.includes(field.toLowerCase())
+        ).length;
 
         return tab;
       });
     }
   }
-}
+};
 </script>
 
 <style>
@@ -78,11 +83,11 @@ export default {
 }
 .k-header .k-headline {
   min-height: 1.25em;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   word-wrap: break-word;
 }
 .k-header .k-header-buttons {
-  margin-top: -.5rem;
+  margin-top: -0.5rem;
   height: 3.25rem;
 }
 .k-header .k-headline-editable {
@@ -91,9 +96,9 @@ export default {
 .k-header .k-headline-editable .k-icon {
   color: var(--color-gray-500);
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   display: inline-block;
-  margin-inline-start: .5rem
+  margin-inline-start: 0.5rem;
 }
 .k-header .k-headline-editable:hover .k-icon {
   opacity: 1;

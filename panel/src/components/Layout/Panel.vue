@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       offline: false
-    }
+    };
   },
   computed: {
     defaultLanguage() {
@@ -78,7 +78,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style>
@@ -87,7 +87,7 @@ export default {
   content: " ";
   inset: 0;
   z-index: var(--z-loader);
-  background: rgba(17, 17, 17, .7);
+  background: rgba(17, 17, 17, 0.7);
   content: "offline";
   display: flex;
   align-items: center;
@@ -104,21 +104,25 @@ export default {
   width: 1px;
 }
 .k-panel[data-loading] {
-  animation: LoadingCursor .5s;
+  animation: LoadingCursor 0.5s;
 }
 .k-panel[data-loading]::after,
 .k-panel[data-dragging] {
   user-select: none;
 }
 @keyframes LoadingCursor {
-  100% { cursor: progress; }
+  100% {
+    cursor: progress;
+  }
 }
 @keyframes Spin {
-  100% { transform: rotate(360deg); }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity .5s;
+  transition: opacity 0.5s;
 }
 .fade-enter,
 .fade-leave-to {

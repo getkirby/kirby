@@ -9,7 +9,7 @@
     </template>
     <template v-else>
       <li v-for="image in content.images" :key="image.id">
-        <img :src="image.url" :alt="image.alt">
+        <img :src="image.url" :alt="image.alt" />
       </li>
     </template>
   </ul>
@@ -20,13 +20,13 @@
  * @displayName BlockTypeGallery
  * @internal
  */
-export default {}
+export default {};
 </script>
 
 <style>
 .k-block-type-gallery ul {
   display: grid;
-  grid-gap: .75rem;
+  grid-gap: 0.75rem;
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   line-height: 0;
   align-items: center;

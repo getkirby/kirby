@@ -45,10 +45,7 @@
           </template>
 
           <template #right>
-            <k-prev-next
-              :prev="prev"
-              :next="next"
-            />
+            <k-prev-next :prev="prev" :next="next" />
           </template>
         </k-header>
 
@@ -60,10 +57,7 @@
           :tab="tab"
         />
 
-        <k-upload
-          ref="upload"
-          @success="onUpload"
-        />
+        <k-upload ref="upload" @success="onUpload" />
       </k-view>
       <k-form-buttons :lock="lock" />
     </div>

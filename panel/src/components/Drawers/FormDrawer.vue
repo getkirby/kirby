@@ -36,7 +36,7 @@ export default {
     empty: {
       type: String,
       default() {
-        return "Missing field setup"
+        return "Missing field setup";
       }
     },
     icon: String,
@@ -52,9 +52,9 @@ export default {
   },
   computed: {
     fields() {
-      const tabId  = this.tab || null;
-      const tabs   = this.tabs;
-      const tab    = tabs[tabId] || this.firstTab;
+      const tabId = this.tab || null;
+      const tabs = this.tabs;
+      const tab = tabs[tabId] || this.firstTab;
       const fields = tab.fields || {};
 
       return fields;
@@ -78,11 +78,14 @@ export default {
 
       if (focus !== false) {
         setTimeout(() => {
-          let autofocus = Object.values(this.fields).filter(field => field.autofocus === true)[0] || null;
+          let autofocus =
+            Object.values(this.fields).filter(
+              (field) => field.autofocus === true
+            )[0] || null;
           this.focus(autofocus);
         }, 1);
       }
     }
   }
-}
+};
 </script>

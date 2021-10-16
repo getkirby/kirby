@@ -11,7 +11,7 @@
  * @displayName BlockTypeDefault
  * @internal
  */
-export default {}
+export default {};
 </script>
 
 <style>

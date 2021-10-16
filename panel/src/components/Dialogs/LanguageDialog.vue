@@ -23,7 +23,7 @@ export default {
   methods: {
     onCodeChanges(code) {
       if (!code) {
-        return this.model.locale = null;
+        return (this.model.locale = null);
       }
 
       if (code.length >= 2) {
@@ -47,8 +47,10 @@ export default {
       }
     },
     onNameChanges(name) {
-      this.model.code = this.$helper.slug(name, [this.model.rules, this.$system.ascii]).substr(0, 2);
-    },
+      this.model.code = this.$helper
+        .slug(name, [this.model.rules, this.$system.ascii])
+        .substr(0, 2);
+    }
   }
 };
 </script>

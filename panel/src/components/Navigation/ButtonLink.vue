@@ -14,18 +14,12 @@
     class="k-button"
     v-on="$listeners"
   >
-    <k-icon
-      v-if="icon"
-      :type="icon"
-      :alt="tooltip"
-      class="k-button-icon"
-    />
+    <k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
     <span v-if="$slots.default" class="k-button-text"><slot /></span>
   </k-link>
 </template>
 
 <script>
-
 export default {
   inheritAttrs: false,
   props: {
@@ -40,7 +34,7 @@ export default {
     target: String,
     tabindex: String,
     theme: String,
-    tooltip: String,
+    tooltip: String
   }
 };
 </script>

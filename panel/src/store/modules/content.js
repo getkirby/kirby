@@ -2,10 +2,7 @@ import Vue from "vue";
 import clone from "@/helpers/clone.js";
 
 const keep = (id, data) => {
-  localStorage.setItem(
-    "kirby$content$" + id,
-    JSON.stringify(data)
-  );
+  localStorage.setItem("kirby$content$" + id, JSON.stringify(data));
 };
 
 export default {
@@ -33,27 +30,26 @@ export default {
     }
   },
 
-
   getters: {
     // status getters
 
     /**
      * Checks for an ID if a model exists in the store
      */
-    exists: state => id => {
+    exists: (state) => (id) => {
       return Object.prototype.hasOwnProperty.call(state.models, id);
     },
     /**
      * Checks for an ID if a model has unsaved changes
      */
-    hasChanges: (state, getters) => id => {
+    hasChanges: (state, getters) => (id) => {
       const changes = getters.model(id).changes;
       return Object.keys(changes).length > 0;
     },
     /**
      * Checks for an ID if it is the current model
      */
-    isCurrent: (state) => id => {
+    isCurrent: (state) => (id) => {
       return state.current === id;
     },
 
@@ -62,7 +58,7 @@ export default {
     /**
      * Returns ID (current or provided) with correct language suffix
      */
-    id: (state) => id => {
+    id: (state) => (id) => {
       id = id || state.current;
 
       if (window.panel.$language) {
@@ -74,7 +70,7 @@ export default {
     /**
      * Return the full model object for passed ID
      */
-    model: (state, getters) => id => {
+    model: (state, getters) => (id) => {
       id = id || state.current;
 
       if (getters.exists(id) === true) {
@@ -85,19 +81,19 @@ export default {
         api: null,
         originals: {},
         values: {},
-        changes: {},
+        changes: {}
       };
     },
     /**
      * Returns original (in content file) values for passed model ID
      */
-    originals: (state, getters) => id => {
+    originals: (state, getters) => (id) => {
       return clone(getters.model(id).originals);
     },
     /**
      * Returns values (incl. unsaved changes) for passed model ID
      */
-    values: (state, getters) => id => {
+    values: (state, getters) => (id) => {
       return {
         ...getters.originals(id),
         ...getters.changes(id)
@@ -106,20 +102,19 @@ export default {
     /**
      * Returns unsaved changes for passed model ID
      */
-    changes: (state, getters) => id => {
+    changes: (state, getters) => (id) => {
       return clone(getters.model(id).changes);
     }
   },
 
-
   mutations: {
     CLEAR(state) {
-      Object.keys(state.models).forEach(key => {
+      Object.keys(state.models).forEach((key) => {
         state.models[key].changes = {};
       });
 
       // remove all form changes from localStorage
-      Object.keys(localStorage).forEach(key => {
+      Object.keys(localStorage).forEach((key) => {
         if (key.startsWith("kirby$content$")) {
           localStorage.removeItem(key);
         }
@@ -132,7 +127,7 @@ export default {
 
       // if model already in store, use stored changes,
       // otherwise fallback to provided changes
-      let changes = state.models[id] ? state.models[id].changes : model.changes ;
+      let changes = state.models[id] ? state.models[id].changes : model.changes;
 
       Vue.set(state.models, id, {
         api: model.api,
@@ -176,7 +171,7 @@ export default {
       value = clone(value);
 
       // // compare current field value with its original value
-      const current  = JSON.stringify(value);
+      const current = JSON.stringify(value);
       const original = JSON.stringify(state.models[id].originals[field]);
 
       if (original == current) {
@@ -195,25 +190,24 @@ export default {
     }
   },
 
-
   actions: {
     init(context) {
       // load models in store from localStorage
       Object.keys(localStorage)
-            .filter(key => key.startsWith("kirby$content$"))
-            .map(key => key.split("kirby$content$")[1])
-            .forEach(id => {
-              const data = localStorage.getItem("kirby$content$" + id);
-              context.commit("CREATE", [id, JSON.parse(data)]);
-            });
+        .filter((key) => key.startsWith("kirby$content$"))
+        .map((key) => key.split("kirby$content$")[1])
+        .forEach((id) => {
+          const data = localStorage.getItem("kirby$content$" + id);
+          context.commit("CREATE", [id, JSON.parse(data)]);
+        });
 
       // load old format
       Object.keys(localStorage)
-        .filter(key => key.startsWith("kirby$form$"))
-        .map(key => key.split("kirby$form$")[1])
-        .forEach(id => {
+        .filter((key) => key.startsWith("kirby$form$"))
+        .map((key) => key.split("kirby$form$")[1])
+        .forEach((id) => {
           const json = localStorage.getItem("kirby$form$" + id);
-          let   data = null;
+          let data = null;
 
           try {
             data = JSON.parse(json);
@@ -275,7 +269,7 @@ export default {
     },
     move(context, [from, to]) {
       from = context.getters.id(from);
-      to   = context.getters.id(to);
+      to = context.getters.id(to);
       context.commit("MOVE", [from, to]);
     },
     remove(context, id) {
@@ -305,25 +299,26 @@ export default {
       context.dispatch("disable");
 
       const model = context.getters.model(id);
-      const data  = {...model.originals, ...model.changes};
+      const data = { ...model.originals, ...model.changes };
 
       // Send updated values to API
       try {
-        await Vue.$api.patch(model.api, data)
+        await Vue.$api.patch(model.api, data);
 
         // re-create model with updated values as originals
-        context.commit("CREATE", [id, {
-          ...model,
-          originals: data
-        }]);
+        context.commit("CREATE", [
+          id,
+          {
+            ...model,
+            originals: data
+          }
+        ]);
 
         // revert unsaved changes (which also removes localStorage entry)
         context.dispatch("revert", id);
-
       } finally {
         context.dispatch("enable");
       }
-
     },
     update(context, [field, value, id]) {
       id = id || context.state.current;

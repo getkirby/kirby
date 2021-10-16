@@ -9,9 +9,18 @@
     @close="$emit('close')"
     @submit="$refs.dialog.close()"
   >
+<<<<<<< HEAD
     <k-text>{{ message }}</k-text>
     <dl v-if="detailsList.length" class="k-error-details">
       <template v-for="(detail, index) in detailsList">
+=======
+    <k-text>{{ notification.message }}</k-text>
+    <dl
+      v-if="notification.details && Object.keys(notification.details).length"
+      class="k-error-details"
+    >
+      <template v-for="(detail, index) in notification.details">
+>>>>>>> 5f441749 (Format JS and Vue files)
         <dt :key="'detail-label-' + index">
           {{ detail.label }}
         </dt>
@@ -61,11 +70,11 @@ export default {
   padding: 1rem;
   font-size: var(--text-sm);
   line-height: 1.25em;
-  margin-top: .75rem;
+  margin-top: 0.75rem;
 }
 .k-error-details dt {
   color: var(--color-negative-light);
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 .k-error-details dd {
   overflow: hidden;
@@ -77,7 +86,7 @@ export default {
 }
 .k-error-details li:not(:last-child) {
   border-bottom: 1px solid var(--color-background);
-  padding-bottom: .25rem;
-  margin-bottom: .25rem;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 </style>

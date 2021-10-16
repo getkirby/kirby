@@ -19,22 +19,12 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, required } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    required
-  ],
+  mixins: [autofocus, disabled, id, required],
   props: {
     display: {
       type: String,
@@ -78,7 +68,7 @@ export default {
   data() {
     return {
       input: this.toFormat(this.value),
-      selected: null,
+      selected: null
     };
   },
   computed: {
@@ -87,9 +77,9 @@ export default {
      */
     map() {
       return {
-        day:    ["D", "DD"],
-        month:  ["M", "MM", "MMM", "MMMM"],
-        year:   ["YY", "YYYY"]
+        day: ["D", "DD"],
+        month: ["M", "MM", "MMM", "MMMM"],
+        year: ["YY", "YYYY"]
       };
     },
     /**
@@ -135,23 +125,25 @@ export default {
 
           // … by either just adding all variants, if the first chunk …
           if (patterns.length === 0) {
-            current = tokens.map(token => [token]);
+            current = tokens.map((token) => [token]);
 
-          // … or adding each variant to all patterns from the previous token
+            // … or adding each variant to all patterns from the previous token
           } else {
-            tokens.forEach(token => {
-              current = current.concat(previous.map(prev => prev.concat([token])));
-            })
+            tokens.forEach((token) => {
+              current = current.concat(
+                previous.map((prev) => prev.concat([token]))
+              );
+            });
           }
-          patterns  = patterns.concat(current);
-          previous  = current;
-          current   = [];
+          patterns = patterns.concat(current);
+          previous = current;
+          current = [];
         }
       }
 
       // join components with some separator
       // and make sure the more detailed patterns go first
-      return patterns.map(format => format.join(this.separator)).reverse();
+      return patterns.map((format) => format.join(this.separator)).reverse();
     },
     /**
      * Separator from `display` format
@@ -212,21 +204,21 @@ export default {
               operator = "add";
             }
 
-          // handle manipulation of all other units
+            // handle manipulation of all other units
           } else {
             unit = this.toUnit(token);
 
             if (unit !== this.step.unit) {
               size = 1;
             }
-          }          
+          }
         }
 
         // manipulate datetime by size and unit
         dt = this.parsed.clone()[operator](size, unit);
 
-      // if no parsed result exist, fill with current datetime
-      // and mark the part that represent the step unit to be selected
+        // if no parsed result exist, fill with current datetime
+        // and mark the part that represent the step unit to be selected
       } else {
         dt = this.toNearest(this.$library.dayjs());
         this.selected = this.toIndex();
@@ -270,12 +262,12 @@ export default {
       if (this.selected === null) {
         this.selected = cursor || 0;
 
-      // cursor position is not at currently selected,
-      // select at cursor position
+        // cursor position is not at currently selected,
+        // select at cursor position
       } else if (cursor !== this.selected) {
         this.selected = cursor;
 
-      // otherwise select next part
+        // otherwise select next part
       } else {
         this.selected++;
       }
@@ -284,7 +276,7 @@ export default {
       if (this.selected >= this.parts.length) {
         this.selected = null;
 
-      // otherwise, capture event and select
+        // otherwise, capture event and select
       } else {
         event.preventDefault();
         event.stopPropagation();
@@ -340,7 +332,7 @@ export default {
       // parse value as datetime object if string,
       // otherwise expect dayjs object was provided as value
       if (typeof value == "string") {
-        value = this.toDatetime(value)
+        value = this.toDatetime(value);
       }
 
       if (value.isValid() === false) {
@@ -374,26 +366,25 @@ export default {
           return index;
         }
       }
-
     },
     toRange(partIndex) {
       // get an index/position range for the part at provided index
       return {
         start: this.parts.slice(0, partIndex).join(this.separator).length,
-        end:   this.parts.slice(0, partIndex + 1).join(this.separator).length
+        end: this.parts.slice(0, partIndex + 1).join(this.separator).length
       };
     },
     toTokens(token) {
       // get all token variants for provided token
-      const values  = Object.values(this.map);
-      const matches = values.filter(tokens => tokens.includes(token));
+      const values = Object.values(this.map);
+      const matches = values.filter((tokens) => tokens.includes(token));
       return matches[0];
     },
     toUnit(token, nearest = true) {
       // get unit for provided token
-      const keys   = Object.keys(this.map);
+      const keys = Object.keys(this.map);
       const values = Object.values(this.map);
-      let index    = values.findIndex(tokens => tokens.includes(token));
+      let index = values.findIndex((tokens) => tokens.includes(token));
 
       // if nearest unit is required,
       // make sure no unit below the step unit is returned
@@ -408,23 +399,29 @@ export default {
   validations() {
     return {
       value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-        required: this.required ? validateRequired : true,
+        min: this.min
+          ? (value) =>
+              this.$helper.validate.datetime(
+                this,
+                value,
+                this.min,
+                "isAfter",
+                this.step.unit
+              )
+          : true,
+        max: this.max
+          ? (value) =>
+              this.$helper.validate.datetime(
+                this,
+                value,
+                this.max,
+                "isBefore",
+                this.step.unit
+              )
+          : true,
+        required: this.required ? validateRequired : true
       }
-    }
+    };
   }
 };
 </script>

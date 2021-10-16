@@ -40,7 +40,7 @@ export default {
   props: {
     details: Array,
     image: Object,
-    url: String,
+    url: String
   }
 };
 </script>
@@ -96,7 +96,7 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: rgba(255, 255, 255, .75);
+  color: rgba(255, 255, 255, 0.75);
   font-size: var(--text-sm);
 }
 

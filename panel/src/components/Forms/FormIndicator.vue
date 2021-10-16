@@ -4,15 +4,9 @@
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
 
-    <k-dropdown-content
-      ref="list"
-      align="right"
-      theme="light"
-    >
-      <p class="k-form-indicator-info">
-        {{ $t("lock.unsaved") }}:
-      </p>
-      <hr>
+    <k-dropdown-content ref="list" align="right" theme="light">
+      <p class="k-form-indicator-info">{{ $t("lock.unsaved") }}:</p>
+      <hr />
       <k-dropdown-item
         v-for="entry in entries"
         :key="entry.id"
@@ -31,24 +25,24 @@ export default {
     return {
       isOpen: false,
       entries: []
-    }
+    };
   },
   computed: {
     store() {
       return this.$store.state.content.models;
     },
     models() {
-      const ids = Object.keys(this.store).filter(id => {
+      const ids = Object.keys(this.store).filter((id) => {
         return this.store[id] ? true : false;
       });
 
-      let models = ids.map(id => {
+      let models = ids.map((id) => {
         return {
           id: id,
           ...this.store[id]
         };
       });
-      return models.filter(model => Object.keys(model.changes).length > 0);
+      return models.filter((model) => Object.keys(model.changes).length > 0);
     },
     hasChanges() {
       return this.models.length > 0;
@@ -70,9 +64,14 @@ export default {
     },
     load() {
       // create an API request promise for each model with changes
-      const promises = this.models.map(async model => {
+      const promises = this.models.map(async (model) => {
         try {
-          const response = await this.$api.get(model.api, { view: "compact" }, null, true);
+          const response = await this.$api.get(
+            model.api,
+            { view: "compact" },
+            null,
+            true
+          );
 
           // populate entry depending on model type
           let entry;
@@ -85,7 +84,6 @@ export default {
                 link: this.$api.pages.link(response.id)
               }
             };
-
           } else if (model.id.startsWith("/files/") === true) {
             entry = {
               icon: "image",
@@ -94,13 +92,12 @@ export default {
                 link: response.link
               }
             };
-
           } else if (model.id.startsWith("/users/") === true) {
             entry = {
               icon: "user",
               label: response.email,
               target: {
-                link: this.$api.users.link(response.id),
+                link: this.$api.users.link(response.id)
               }
             };
           } else {
@@ -121,20 +118,22 @@ export default {
           }
 
           return entry;
-
         } catch (error) {
           this.$store.dispatch("content/remove", model.id);
           return null;
         }
       });
 
-      return Promise.all(promises).then(entries => {
-        this.entries = entries.filter(entry => {
+      return Promise.all(promises).then((entries) => {
+        this.entries = entries.filter((entry) => {
           return entry !== null;
         });
 
         if (this.entries.length === 0) {
-          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+          this.$store.dispatch(
+            "notification/success",
+            this.$t("lock.unsaved.empty")
+          );
         }
       });
     },
@@ -158,7 +157,7 @@ export default {
 .k-form-indicator-info {
   font-size: var(--text-sm);
   font-weight: var(--font-bold);
-  padding: .75rem 1rem .25rem;
+  padding: 0.75rem 1rem 0.25rem;
   line-height: 1.25em;
   width: 15rem;
 }

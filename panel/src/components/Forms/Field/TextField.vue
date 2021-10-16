@@ -25,17 +25,12 @@ import { props as TextInput } from "../Input/TextInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>`
  * for additional information.
  * @example <k-text-field v-model="text" name="text" label="Boring text" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    TextInput,
-    counter
-  ],
+  mixins: [Field, Input, TextInput, counter],
   inheritAttrs: false,
   methods: {
     focus() {
@@ -45,7 +40,7 @@ export default {
       this.$refs.input.select();
     }
   }
-}
+};
 </script>
 
 <style>

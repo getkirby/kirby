@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Code extends Mark {
-
   get button() {
     return {
       icon: "code",
@@ -14,14 +13,12 @@ export default class Code extends Mark {
   }
 
   inputRules({ type, utils }) {
-    return [
-      utils.markInputRule(/(?:`)([^`]+)(?:`)$/, type),
-    ];
+    return [utils.markInputRule(/(?:`)([^`]+)(?:`)$/, type)];
   }
 
   keys() {
     return {
-      "Mod-`": () => this.toggle(),
+      "Mod-`": () => this.toggle()
     };
   }
 
@@ -30,19 +27,14 @@ export default class Code extends Mark {
   }
 
   pasteRules({ type, utils }) {
-    return [
-      utils.markPasteRule(/(?:`)([^`]+)(?:`)/g, type),
-    ]
+    return [utils.markPasteRule(/(?:`)([^`]+)(?:`)/g, type)];
   }
 
   get schema() {
     return {
       excludes: "_",
-      parseDOM: [
-        { tag: "code" },
-      ],
-      toDOM: () => ["code", 0],
+      parseDOM: [{ tag: "code" }],
+      toDOM: () => ["code", 0]
     };
   }
-
 }
