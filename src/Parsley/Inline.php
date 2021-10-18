@@ -66,9 +66,7 @@ class Inline
     {
         $html = '';
         foreach ($children as $child) {
-            if ($childHtml = $this->parseNode($child)) {
-                $html .= $childHtml;
-            }
+            $html .= $this->parseNode($child);
         }
         return $html;
     }
