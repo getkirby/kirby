@@ -170,6 +170,7 @@ export default {
   overflow: hidden;
   max-width: 10rem;
   text-overflow: ellipsis;
+  opacity: 1;
 }
 
 @media screen and (min-width: 30em) {
@@ -215,9 +216,16 @@ export default {
   inset-inline-end: 0;
 }
 .k-tabs-badge {
-  padding-inline-start: .25rem;
+  position: absolute;
+  top: -.5rem;
+  font-variant-numeric: tabular-nums;
+  inset-inline-end: -.5rem;
+  line-height: var(--leading-normal);
+  padding: 0rem .375rem;
+  border-radius: var(--rounded);
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
-  color: var(--color-orange-600);
+  background: var(--theme-light);
+  color: var(--color-black);
 }
 </style>

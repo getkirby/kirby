@@ -44,6 +44,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
+  min-height: 6rem;
 }
 .k-layout-column:focus {
   outline: 0;
