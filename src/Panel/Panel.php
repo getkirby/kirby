@@ -299,8 +299,6 @@ class Panel
                 }
 
                 $result = $route->action()->call($route, ...$route->arguments());
-            } catch (Redirect $e) {
-                $result = Response::redirect($e->location(), $e->getCode());
             } catch (Throwable $e) {
                 $result = $e;
             }

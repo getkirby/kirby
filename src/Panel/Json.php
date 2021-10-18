@@ -42,8 +42,15 @@ abstract class Json
      */
     public static function response($data, array $options = [])
     {
+        // handle redirects
+        if (is_a($data, 'Kirby\Panel\Redirect') === true) {
+            $data = [
+                'redirect' => $data->location(),
+                'code'     => $data->code()
+            ];
+
         // handle Kirby exceptions
-        if (is_a($data, 'Kirby\Exception\Exception') === true) {
+        } elseif (is_a($data, 'Kirby\Exception\Exception') === true) {
             $data = static::error($data->getMessage(), $data->getHttpCode());
 
         // handle exceptions

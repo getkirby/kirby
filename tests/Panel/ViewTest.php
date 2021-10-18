@@ -700,6 +700,29 @@ class ViewTest extends TestCase
     /**
      * @covers ::response
      */
+    public function testResponseFromRedirect()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        $redirect = new \Kirby\Panel\Redirect('https://getkirby.com');
+        $response = View::response($redirect);
+
+        $this->assertInstanceOf('Kirby\Http\Response', $response);
+
+        $this->assertSame(302, $response->code());
+        $this->assertSame('https://getkirby.com', $response->header('Location'));
+    }
+
+    /**
+     * @covers ::response
+     */
     public function testResponseFromKirbyException()
     {
         // fake json request for easier assertions

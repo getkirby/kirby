@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
@@ -391,8 +392,12 @@ class View
         $area  = $options['area']  ?? [];
         $areas = $options['areas'] ?? [];
 
+        // handle redirects
+        if (is_a($data, 'Kirby\Panel\Redirect') === true) {
+            return Response::redirect($data->location(), $data->code());
+
         // handle Kirby exceptions
-        if (is_a($data, 'Kirby\Exception\Exception') === true) {
+        } elseif (is_a($data, 'Kirby\Exception\Exception') === true) {
             $data = static::error($data->getMessage(), $data->getHttpCode());
 
         // handle regular exceptions
