@@ -5,7 +5,6 @@ namespace Kirby\Parsley;
 use DOMNode;
 use Kirby\Parsley\Schema\Plain;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Str;
 
 /**
  * HTML parser to extract the best possible blocks
