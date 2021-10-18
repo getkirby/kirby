@@ -322,7 +322,7 @@ class FileTest extends TestCase
             'ratio' => '3/2',
             'url' => '/media/site/' . $hash . '/test.jpg',
             'src' => Model::imagePlaceholder(),
-            'srcset' => '/media/site/' . $hash . '/test-38x38.jpg 1x, /media/site/' . $hash . '/test-76x76.jpg 2x'
+            'srcset' => '/media/site/' . $hash . '/test-38x38-crop.jpg 1x, /media/site/' . $hash . '/test-76x76-crop.jpg 2x'
         ], $panel->image(['cover' => true]));
     }
 

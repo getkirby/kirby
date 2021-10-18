@@ -311,8 +311,8 @@ class ModelTest extends TestCase
         $this->assertArrayHasKey('srcset', $image);
         $this->assertSame($icon, $image['icon']);
         $this->assertSame($ratio, $image['ratio']);
-        $this->assertStringContainsString('test-38x38.jpg 1x', $image['srcset']);
-        $this->assertStringContainsString('test-76x76.jpg 2x', $image['srcset']);
+        $this->assertStringContainsString('test-38x38-crop.jpg 1x', $image['srcset']);
+        $this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
     }
 
     /**
