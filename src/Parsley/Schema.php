@@ -19,10 +19,10 @@ class Schema
      * Returns the fallback block when no
      * other block type can be detected
      *
-     * @param string $html
+     * @param \Kirby\Parsley\Element|string $element
      * @return array|null
      */
-    public function fallback(string $html): ?array
+    public function fallback($element): ?array
     {
         return null;
     }

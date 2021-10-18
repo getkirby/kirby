@@ -60,6 +60,13 @@ class PlainTest extends TestCase
      */
     public function testSkip()
     {
-        return $this->assertSame(['head', 'meta', 'script', 'style'], $this->schema->skip());
+        return $this->assertSame([
+            'base',
+            'link',
+            'meta',
+            'script',
+            'style',
+            'title'
+        ], $this->schema->skip());
     }
 }

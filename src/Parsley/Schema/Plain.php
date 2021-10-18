@@ -23,14 +23,20 @@ class Plain extends Schema
      * Creates the fallback block type
      * if no other block can be found
      *
-     * @param string $html
+     * @param \Kirby\Parsley\Element|string $element
      * @return array|null
      */
-    public function fallback(string $html): ?array
+    public function fallback($element): ?array
     {
-        $text = trim($html);
+        if (is_a($element, Element::class) === true) {
+            $text = $element->innerText();
+        } elseif (is_string($element) === true) {
+            $text = trim($element);
 
-        if (Str::length($text) === 0) {
+            if (Str::length($text) === 0) {
+                return null;
+            }
+        } else {
             return null;
         }
 
@@ -50,6 +56,13 @@ class Plain extends Schema
      */
     public function skip(): array
     {
-        return ['head', 'meta', 'script', 'style'];
+        return [
+            'base',
+            'link',
+            'meta',
+            'script',
+            'style',
+            'title'
+        ];
     }
 }

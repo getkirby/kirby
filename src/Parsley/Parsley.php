@@ -5,6 +5,7 @@ namespace Kirby\Parsley;
 use DOMNode;
 use Kirby\Parsley\Schema\Plain;
 use Kirby\Toolkit\Dom;
+use Kirby\Toolkit\Str;
 
 /**
  * HTML parser to extract the best possible blocks
@@ -81,6 +82,10 @@ class Parsley
                 ]
             ];
             return;
+        }
+
+        if (!preg_match('/<body|head*.?>/', $html)) {
+            $html = '<div>' . $html . '</div>';
         }
 
         $this->dom    = new Dom($html);
@@ -189,15 +194,7 @@ class Parsley
      */
     public function fallback($element): ?array
     {
-        if (is_a($element, Element::class) === true) {
-            $html = $element->innerHtml();
-        } elseif (is_string($element) === true) {
-            $html = $element;
-        } else {
-            $html = '';
-        }
-
-        if ($fallback = $this->schema->fallback($html)) {
+        if ($fallback = $this->schema->fallback($element)) {
             return $fallback;
         }
 
@@ -306,7 +303,16 @@ class Parsley
                 return false;
             }
 
-            if ($element->tagName !== 'body' && $element->tagName !== 'html') {
+            $wrappers = [
+                'body',
+                'head',
+                'html',
+            ];
+
+            // wrapper elements should never be converted
+            // to a simple fallback block. Their children
+            // have to be parsed individually.
+            if (in_array($element->tagName, $wrappers) === false) {
                 $node = new Element($element, $this->marks);
 
                 if ($block = $this->fallback($node)) {

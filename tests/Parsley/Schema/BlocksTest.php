@@ -57,7 +57,7 @@ class BlocksTest extends TestCase
         $expected = [
             'content' => [
                 'citation' => null,
-                'text'     => '<b>Bold</b> <i>Italic</i>'
+                'text'     => '<p><b>Bold</b> <i>Italic</i></p>'
             ],
             'type' => 'quote',
         ];
@@ -78,7 +78,7 @@ class BlocksTest extends TestCase
         $expected = [
             'content' => [
                 'citation' => null,
-                'text'     => 'A<br /><br />B'
+                'text'     => '<p>A</p><p>B</p>'
             ],
             'type' => 'quote',
         ];
@@ -532,7 +532,14 @@ class BlocksTest extends TestCase
      */
     public function testSkip()
     {
-        return $this->assertSame(['head', 'meta', 'script', 'style'], $this->schema->skip());
+        return $this->assertSame([
+            'base',
+            'link',
+            'meta',
+            'script',
+            'style',
+            'title'
+        ], $this->schema->skip());
     }
 
     public function testTable()

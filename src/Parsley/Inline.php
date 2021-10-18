@@ -66,7 +66,9 @@ class Inline
     {
         $html = '';
         foreach ($children as $child) {
-            $html .= $this->parseNode($child);
+            if ($childHtml = $this->parseNode($child)) {
+                $html .= $childHtml;
+            }
         }
         return $html;
     }
@@ -85,7 +87,7 @@ class Inline
 
         // ignore comments
         if (is_a($node, 'DOMComment') === true) {
-            return '';
+            return null;
         }
 
         // known marks
@@ -106,7 +108,23 @@ class Inline
                 return '<' . $node->tagName . attr($attrs, ' ') . ' />';
             }
 
-            return '<' . $node->tagName . attr($attrs, ' ') . '>' . $this->parseChildren($node->childNodes) . '</' . $node->tagName . '>';
+            $innerHtml = $this->parseChildren($node->childNodes);
+
+            if ($node->tagName === 'p') {
+                // trim the inner HTML for paragraphs
+                $innerHtml = trim($innerHtml);
+
+                // skip empty paragraphs
+                if ($innerHtml === '') {
+                    return null;
+                }
+            }
+
+            if ($innerHtml === '') {
+                return null;
+            }
+
+            return '<' . $node->tagName . attr($attrs, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
         }
 
         // unknown marks

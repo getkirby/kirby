@@ -22,7 +22,7 @@ class InlineTest extends TestCase
         $element = new Inline($comment);
 
         $this->assertInstanceOf('DOMComment', $comment);
-        $this->assertSame('', $element->parseNode($comment));
+        $this->assertSame(null, $element->parseNode($comment));
     }
 
     /**
