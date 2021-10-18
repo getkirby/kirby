@@ -6,6 +6,7 @@
     @open="onOpen"
   >
     <div
+      :data-id="id"
       :data-nested="nested"
       class="k-drawer"
       @mousedown="click = true"
@@ -59,6 +60,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    id: String,
     icon: String,
     tab: String,
     tabs: Object,
