@@ -2,6 +2,7 @@
 
 namespace Kirby\Parsley\Schema;
 
+use Kirby\Parsley\Element;
 use Kirby\Parsley\Schema;
 use Kirby\Toolkit\Str;
 
