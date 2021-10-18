@@ -1,12 +1,17 @@
 <template>
-  <hr class="k-line-field">
+  <hr class="k-line-field" :data-size="size">
 </template>
 
 <script>
 /**
  * @example <k-line-field />
  */
-export default {}
+export default {
+  inheritAttrs: false,
+  props: {
+    size: String,
+  }
+}
 </script>
 
 <style>
@@ -15,6 +20,18 @@ export default {}
   border: 0;
   height: 3rem;
   width: auto;
+}
+.k-line-field[data-size="small"] {
+  height: .5rem;
+}
+.k-line-field[data-size="medium"] {
+  height: 1rem;
+}
+.k-line-field[data-size="large"] {
+  height: 2rem;
+}
+.k-line-field[data-size="huge"] {
+  height: 5rem;
 }
 .k-line-field::after {
   position: absolute;
