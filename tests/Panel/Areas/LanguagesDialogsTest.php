@@ -2,12 +2,13 @@
 
 namespace Kirby\Panel\Areas;
 
-class SettingsDialogsTest extends AreaTestCase
+class LanguagesDialogsTest extends AreaTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
         $this->install();
+        $this->enableMultilang();
         $this->login();
     }
 
@@ -36,13 +37,6 @@ class SettingsDialogsTest extends AreaTestCase
 
     public function testLanguageCreateOnSubmit(): void
     {
-        $this->app([
-            'options' => [
-                'languages' => true
-            ]
-        ]);
-
-        $this->login();
         $this->submit([
             'name' => 'English',
             'code' => 'en',
@@ -169,28 +163,4 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertNull($props['value']['email']);
     }
 
-    public function testRegistrationOnSubmitWithInvalidLicense(): void
-    {
-        $this->submit([
-            'license' => 'K2-1234'
-        ]);
-
-        $dialog = $this->dialog('registration');
-
-        $this->assertSame(400, $dialog['code']);
-        $this->assertSame('Please enter a valid license key', $dialog['error']);
-    }
-
-    public function testRegistrationOnSubmitWithInvalidEmail(): void
-    {
-        $this->submit([
-            'license' => 'K3-PRO-',
-            'email'   => 'mail@'
-        ]);
-
-        $dialog = $this->dialog('registration');
-
-        $this->assertSame(400, $dialog['code']);
-        $this->assertSame('Please enter a valid email address', $dialog['error']);
-    }
 }

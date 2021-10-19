@@ -575,7 +575,6 @@ class ViewTest extends TestCase
 
         $expected = [
             'current'  => true,
-            'disabled' => false,
             'icon'     => 'home',
             'id'       => 'site',
             'link'     => 'site',
@@ -626,8 +625,7 @@ class ViewTest extends TestCase
             ],
         );
 
-        $this->assertCount(5, $menu);
-        $this->assertTrue($menu[0]['disabled']);
+        $this->assertCount(4, $menu);
     }
 
     /**

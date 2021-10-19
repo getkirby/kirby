@@ -105,7 +105,7 @@ class PanelTest extends TestCase
         $areas = Panel::areas($this->app);
 
         $this->assertArrayHasKey('site', $areas);
-        $this->assertArrayHasKey('settings', $areas);
+        $this->assertArrayHasKey('system', $areas);
         $this->assertArrayHasKey('users', $areas);
         $this->assertArrayHasKey('account', $areas);
         $this->assertCount(4, $areas);
