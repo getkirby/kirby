@@ -50,6 +50,33 @@ class Plugin extends Model
     }
 
     /**
+     * Returns the array with author information
+     * from the composer file
+     *
+     * @return array
+     */
+    public function authors(): array
+    {
+        return $this->info()['authors'] ?? [];
+    }
+
+    /**
+     * Returns a comma-separated list with all author names
+     *
+     * @return string
+     */
+    public function authorsNames(): string
+    {
+        $names = [];
+
+        foreach ($this->authors() as $author) {
+            $names[] = $author['name'] ?? null;
+        }
+
+        return implode(', ', array_filter($names));
+    }
+
+    /**
      * @return array
      */
     public function extends(): array

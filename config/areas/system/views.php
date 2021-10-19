@@ -26,9 +26,7 @@ return [
             foreach ($pluginsCollection->sortBy('name', 'asc') as $plugin) {
                 $plugins[] = [
                     'license' => $plugin->license(),
-                    'author'  => implode(', ', A::map((array)$plugin->authors(), function ($author) {
-                        return $author['name'];
-                    })),
+                    'author'  => $plugin->authorsNames(),
                     'name'    => $plugin->name(),
                     'version' => $plugin->version(),
                 ];
@@ -41,7 +39,7 @@ return [
                     'license' => $license,
                     'plugins' => $plugins,
                     'php'     => phpversion(),
-                    'server'  => Server::get('SERVER_SOFTWARE'),
+                    'server'  => $kirby->system()->serverSoftware(),
                     'ssl'     => Server::https(),
                     'version' => $kirby->version(),
                 ]

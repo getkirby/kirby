@@ -342,12 +342,14 @@ class View
                 continue;
             }
 
-            $access   = $permissions['access'][$areaId] ?? true;
-            $disabled = $menuSetting === 'disabled' || $access === false;
+            $access = $permissions['access'][$areaId] ?? true;
+
+            if ($menuSetting === 'disabled' || $access === false) {
+                continue;
+            }
 
             $menu[] = [
                 'current'  => $areaId === $current,
-                'disabled' => $disabled,
                 'icon'     => $area['icon'],
                 'id'       => $areaId,
                 'link'     => $area['link'],

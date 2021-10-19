@@ -27,11 +27,12 @@ class Permissions
      */
     protected $actions = [
         'access' => [
-            'account'  => true,
-            'panel'    => true,
-            'settings' => true,
-            'site'     => true,
-            'users'    => true,
+            'account'   => true,
+            'languages' => true,
+            'panel'     => true,
+            'site'      => true,
+            'system'    => true,
+            'users'     => true,
         ],
         'files' => [
             'changeName' => true,

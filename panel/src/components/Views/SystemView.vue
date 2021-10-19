@@ -27,7 +27,7 @@
             <dl>
               <dt>{{ $t('version') }}</dt>
               <dd dir="ltr">
-                {{ version }}
+                <a :href="'https://github.com/getkirby/kirby/releases/tag/' + version">{{ version }}</a>
               </dd>
             </dl>
           </li>
@@ -36,15 +36,15 @@
 
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>Environment</k-headline>
+          <k-headline>{{ $t('environment') }}</k-headline>
         </header>
 
         <ul class="k-system-info-box" style="--columns: 4">
           <li>
             <dl>
-              <dt>Debug mode</dt>
+              <dt>Debugging</dt>
               <dd :class="{ 'k-system-warning': debug }">
-                {{ debug ? 'on' : 'off' }}
+                {{ debug ? $t('on') : $t('off') }}
               </dd>
             </dl>
           </li>
@@ -52,13 +52,13 @@
             <dl>
               <dt>SSL</dt>
               <dd :class="{ 'k-system-warning': !ssl }">
-                {{ ssl ? 'on' : 'off' }}
+                {{ ssl ? $t('on') : $t('off') }}
               </dd>
             </dl>
           </li>
           <li>
             <dl>
-              <dt>PHP version</dt>
+              <dt>PHP</dt>
               <dd>
                 {{ php }}
               </dd>
@@ -68,7 +68,7 @@
             <dl>
               <dt>Server</dt>
               <dd>
-                {{ server }}
+                {{ server || '?' }}
               </dd>
             </dl>
           </li>
@@ -81,16 +81,16 @@
         </header>
         <table class="k-system-plugins">
           <tr>
-            <th>Name</th>
-            <th>Author</th>
-            <th>License</th>
-            <th>Version</th>
+            <th>{{ $t('name') }}</th>
+            <th class="desk">{{ $t('author') }}</th>
+            <th class="desk">{{ $t('license') }}</th>
+            <th style="width: 8rem">{{ $t('version') }}</th>
           </tr>
           <tr v-for="plugin in plugins" :key="plugin.name">
-            <td>{{ plugin.name }}</td>
-            <td>{{ plugin.author || "-" }}</td>
-            <td>{{ plugin.license || "-" }}</td>
-            <td>{{ plugin.version || "-" }}</td>
+            <td><a :href="'https://getkirby.com/plugins/' + plugin.name">{{ plugin.name }}</a></td>
+            <td class="desk">{{ plugin.author || "-" }}</td>
+            <td class="desk">{{ plugin.license || "-" }}</td>
+            <td style="width: 8rem">{{ plugin.version || "-" }}</td>
           </tr>
         </table>
       </section>
@@ -124,26 +124,21 @@ export default {
 }
 
 .k-system-info-box {
-  --columns: 2;
   display: grid;
   grid-gap: 1px;
-  grid-template-columns: repeat(var(--columns), 1fr);
+  font-size: var(--text-sm);
 }
+
+@media screen and (min-width: 45rem) {
+  .k-system-info-box {
+    grid-template-columns: repeat(var(--columns), 1fr);
+  }
+}
+
 .k-system-info-box li {
   padding: .75rem;
   background: var(--color-white);
 }
-
-@media screen and (max-width: 40em){
-  .k-system-info-box {
-    flex-direction: column;
-  }
-
-  .k-system-info-box li:not(:last-child) {
-    margin-bottom: .5rem;
-  }
-}
-
 .k-system-info-box dt {
   font-size: var(--text-sm);
   color: var(--color-gray-600);
@@ -153,10 +148,15 @@ export default {
   color: var(--color-negative);
   font-weight: var(--font-bold);
 }
+.k-system-info-box dd button {
+  text-align: left;
+  font-size: var(--text-sm);
+}
 
 .k-system-plugins {
-  table-layout: fixed;
   width: 100%;
+  font-variant-numeric: tabular-nums;
+  table-layout: fixed;
   border-spacing: 1px;
 }
 .k-system-plugins th,
@@ -164,10 +164,23 @@ export default {
   text-align: left;
   padding: .75rem;
   font-weight: var(--font-normal);
-  background: var(--color-white);
-}
-.k-system-plugins th {
   font-size: var(--text-sm);
+  background: var(--color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.k-system-plugins .desk {
+  display: none;
+}
+
+@media screen and (min-width: 45rem) {
+  .k-system-plugins .desk {
+    display: table-cell;
+  }
+}
+
+.k-system-plugins th {
   color: var(--color-gray-600);
 }
 </style>

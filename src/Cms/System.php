@@ -494,6 +494,16 @@ class System
      */
     public function server(): bool
     {
+        return $this->serverSoftware() !== null;
+    }
+
+    /**
+     * Returns the detected server software
+     *
+     * @return string|null
+     */
+    public function serverSoftware(): ?string
+    {
         if ($servers = $this->app->option('servers')) {
             $servers = A::wrap($servers);
         } else {
@@ -508,7 +518,9 @@ class System
 
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
-        return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
+        preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
+
+        return $matches[0] ?? null;
     }
 
     /**
@@ -534,7 +546,7 @@ class System
         if ($site->title()->isNotEmpty()) {
             return $site->title()->value();
         }
-        
+
         return $site->blueprint()->title();
     }
 

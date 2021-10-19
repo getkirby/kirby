@@ -81,8 +81,8 @@ class Panel
         $menu = $kirby->option('panel.menu', [
             'site',
             'languages',
+            'users',
             'system',
-            'users'
         ]);
 
         $result = [];
