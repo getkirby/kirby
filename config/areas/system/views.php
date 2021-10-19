@@ -41,6 +41,7 @@ return [
                     'license' => $license,
                     'plugins' => $plugins,
                     'php'     => phpversion(),
+                    'server'  => Server::get('SERVER_SOFTWARE'),
                     'ssl'     => Server::https(),
                     'version' => $kirby->version(),
                 ]

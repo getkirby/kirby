@@ -9,7 +9,7 @@
           <k-headline>Kirby</k-headline>
         </header>
 
-        <ul class="k-system-info-box">
+        <ul class="k-system-info-box" style="--columns: 2">
           <li>
             <dl>
               <dt>{{ $t('license') }}</dt>
@@ -17,7 +17,7 @@
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <button v-else class="k-system-unregistered" @click="$dialog('registration')">
+                <button v-else class="k-system-warning" @click="$dialog('registration')">
                   {{ $t('license.unregistered') }}
                 </button>
               </dd>
@@ -36,14 +36,14 @@
 
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>Check</k-headline>
+          <k-headline>Environment</k-headline>
         </header>
 
-        <ul class="k-system-info-box">
+        <ul class="k-system-info-box" style="--columns: 4">
           <li>
             <dl>
               <dt>Debug mode</dt>
-              <dd>
+              <dd :class="{ 'k-system-warning': debug }">
                 {{ debug ? 'on' : 'off' }}
               </dd>
             </dl>
@@ -51,7 +51,7 @@
           <li>
             <dl>
               <dt>SSL</dt>
-              <dd>
+              <dd :class="{ 'k-system-warning': !ssl }">
                 {{ ssl ? 'on' : 'off' }}
               </dd>
             </dl>
@@ -61,6 +61,14 @@
               <dt>PHP version</dt>
               <dd>
                 {{ php }}
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>Server</dt>
+              <dd>
+                {{ server }}
               </dd>
             </dl>
           </li>
@@ -97,6 +105,7 @@ export default {
     license: String,
     php: String,
     plugins: Array,
+    server: String,
     ssl: Boolean,
     version: String
   }
@@ -115,9 +124,10 @@ export default {
 }
 
 .k-system-info-box {
+  --columns: 2;
   display: grid;
   grid-gap: 1px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(var(--columns), 1fr);
 }
 .k-system-info-box li {
   padding: .75rem;
@@ -139,12 +149,13 @@ export default {
   color: var(--color-gray-600);
   margin-bottom: .25rem;
 }
-.k-system-unregistered {
+.k-system-warning {
   color: var(--color-negative);
   font-weight: var(--font-bold);
 }
 
 .k-system-plugins {
+  table-layout: fixed;
   width: 100%;
   border-spacing: 1px;
 }
