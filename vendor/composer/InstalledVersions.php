@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-beta.3',
-    'version' => '3.6.0.0-beta3',
+    'pretty_version' => '3.6.0-rc.1',
+    'version' => '3.6.0.0-RC1',
     'aliases' => 
     array (
     ),
@@ -48,17 +48,17 @@ private static $installed = array (
     ),
     'filp/whoops' => 
     array (
-      'pretty_version' => '2.12.1',
-      'version' => '2.12.1.0',
+      'pretty_version' => '2.14.1',
+      'version' => '2.14.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c13c0be93cff50f88bbd70827d993026821914dd',
+      'reference' => '15ead64e9828f0fc90932114429c4f7923570cb1',
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-beta.3',
-      'version' => '3.6.0.0-beta3',
+      'pretty_version' => '3.6.0-rc.1',
+      'version' => '3.6.0.0-RC1',
       'aliases' => 
       array (
       ),
@@ -75,21 +75,12 @@ private static $installed = array (
     ),
     'laminas/laminas-escaper' => 
     array (
-      'pretty_version' => '2.7.0',
-      'version' => '2.7.0.0',
+      'pretty_version' => '2.9.0',
+      'version' => '2.9.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '5e04bc5ae5990b17159d79d331055e2c645e5cc5',
-    ),
-    'laminas/laminas-zendframework-bridge' => 
-    array (
-      'pretty_version' => '1.4.0',
-      'version' => '1.4.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'bf180a382393e7db5c1e8d0f2ec0c4af9c724baf',
+      'reference' => '891ad70986729e20ed2e86355fcf93c9dc238a5f',
     ),
     'league/color-extractor' => 
     array (
@@ -127,12 +118,12 @@ private static $installed = array (
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.5.0',
-      'version' => '6.5.0.0',
+      'pretty_version' => 'v6.5.1',
+      'version' => '6.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a5b5c43e50b7fba655f793ad27303cd74c57363c',
+      'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
     ),
     'psr/log' => 
     array (
@@ -160,13 +151,6 @@ private static $installed = array (
       array (
       ),
       'reference' => 'a4d0c11a36dd7f4e7cd7096076cab6d3378a071e',
-    ),
-    'zendframework/zend-escaper' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '^2.6.1',
-      ),
     ),
   ),
 );
