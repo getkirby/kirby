@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Escape;
 
 return [
     'system' => [

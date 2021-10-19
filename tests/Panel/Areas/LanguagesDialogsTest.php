@@ -162,5 +162,4 @@ class LanguagesDialogsTest extends AreaTestCase
         $this->assertNull($props['value']['license']);
         $this->assertNull($props['value']['email']);
     }
-
 }
