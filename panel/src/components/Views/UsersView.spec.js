@@ -12,7 +12,7 @@ describe("UsersView", () => {
 
   it("should display correctly", () => {
     cy.get(".k-topbar-menu-button").click();
-    cy.get(".k-topbar-menu a:nth-child(3)").should(
+    cy.get(".k-topbar-menu a:nth-child(2)").should(
       "have.attr",
       "aria-current",
       "true"
