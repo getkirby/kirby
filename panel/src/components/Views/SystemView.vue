@@ -81,16 +81,34 @@
         </header>
         <table class="k-system-plugins">
           <tr>
-            <th>{{ $t('name') }}</th>
-            <th class="desk">{{ $t('author') }}</th>
-            <th class="desk">{{ $t('license') }}</th>
-            <th style="width: 8rem">{{ $t('version') }}</th>
+            <th>
+              {{ $t('name') }}
+            </th>
+            <th class="desk">
+              {{ $t('author') }}
+            </th>
+            <th class="desk">
+              {{ $t('license') }}
+            </th>
+            <th style="width: 8rem">
+              {{ $t('version') }}
+            </th>
           </tr>
           <tr v-for="plugin in plugins" :key="plugin.name">
-            <td><a :href="'https://getkirby.com/plugins/' + plugin.name">{{ plugin.name }}</a></td>
-            <td class="desk">{{ plugin.author || "-" }}</td>
-            <td class="desk">{{ plugin.license || "-" }}</td>
-            <td style="width: 8rem">{{ plugin.version || "-" }}</td>
+            <td>
+              <a :href="'https://getkirby.com/plugins/' + plugin.name">
+                {{ plugin.name }}
+              </a>
+            </td>
+            <td class="desk">
+              {{ plugin.author || "-" }}
+            </td>
+            <td class="desk">
+              {{ plugin.license || "-" }}
+            </td>
+            <td style="width: 8rem">
+              {{ plugin.version || "-" }}
+            </td>
           </tr>
         </table>
       </section>
