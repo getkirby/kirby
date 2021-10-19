@@ -2,6 +2,8 @@
 
 namespace Kirby\Parsley\Schema;
 
+use Kirby\Parsley\Element;
+use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,10 +24,10 @@ class PlainTest extends TestCase
     public function testFallback()
     {
         $expected = [
-            'type' => 'text',
             'content' => [
                 'text' => 'Test'
-            ]
+            ],
+            'type' => 'text',
         ];
 
         return $this->assertSame($expected, $this->schema->fallback('Test'));
@@ -37,6 +39,35 @@ class PlainTest extends TestCase
     public function testFallbackForEmptyContent()
     {
         return $this->assertNull($this->schema->fallback(''));
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForDomElement()
+    {
+
+        $dom      = new Dom('<p>Test</p>');
+        $p        = $dom->query('//p')[0];
+        $el       = new Element($p);
+        $fallback = $this->schema->fallback($el);
+
+        $expected = [
+            'content' => [
+                'text' => 'Test',
+            ],
+            'type' => 'text'
+        ];
+
+        $this->assertSame($expected, $fallback);
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForInvalidContent()
+    {
+        $this->assertNull($this->schema->fallback([]));
     }
 
     /**

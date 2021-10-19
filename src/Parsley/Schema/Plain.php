@@ -42,10 +42,10 @@ class Plain extends Schema
         }
 
         return [
-            'type' => 'text',
             'content' => [
                 'text' => $text
-            ]
+            ],
+            'type' => 'text',
         ];
     }
 
