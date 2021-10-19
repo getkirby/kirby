@@ -46,7 +46,6 @@ class PlainTest extends TestCase
      */
     public function testFallbackForDomElement()
     {
-
         $dom      = new Dom('<p>Test</p>');
         $p        = $dom->query('//p')[0];
         $el       = new Element($p);

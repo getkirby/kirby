@@ -67,6 +67,8 @@ class Blocks extends Plain
         if (is_a($element, Element::class) === true) {
             $html = $element->innerHtml();
 
+            // wrap the inner HTML in a p tag if it doesn't
+            // contain one yet.
             if (Str::contains($html, '<p>') === false) {
                 $html = '<p>' . $html . '</p>';
             }
