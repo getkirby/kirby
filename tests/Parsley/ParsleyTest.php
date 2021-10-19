@@ -7,6 +7,15 @@ use Kirby\Parsley\Schema\Blocks;
 use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\TestCase;
 
+class TestableParsley extends Parsley
+{
+    public function setBlocks(array $blocks)
+    {
+        $this->blocks = $blocks;
+    }
+}
+
+
 /**
  * @coversDefaultClass Kirby\Parsley\Parsley
  */
@@ -14,7 +23,7 @@ class ParsleyTest extends TestCase
 {
     protected function parser(string $html = 'Test')
     {
-        return new Parsley($html, new Blocks());
+        return new TestableParsley($html, new Blocks());
     }
 
     /**
@@ -103,6 +112,7 @@ class ParsleyTest extends TestCase
     {
         return [
             ['<p>Test</p>', '/html/body/p/text()', true],
+            ['<p>Test</p>', '/html/body/p', false],
             ['<span>Test</span>', '/html/body/span', false],
             ['<i><h1>Test</h1></i>', '/html/body/i', false],
         ];
@@ -129,6 +139,100 @@ class ParsleyTest extends TestCase
         $comment = $dom->query('/html/body/p')[0]->childNodes[0];
 
         $this->assertFalse($this->parser()->isInline($comment));
+    }
+
+    /**
+     * @covers ::mergeOrAppend
+     */
+    public function testMergeOrAppendExpectMerge()
+    {
+        $parser = $this->parser();
+
+        $parser->setBlocks([
+            [
+                'content' => ['text' => '<p>A</p>'],
+                'type'    => 'text',
+            ]
+        ]);
+
+        $parser->mergeOrAppend([
+            'content' => ['text' => '<p>B</p>'],
+            'type'    => 'text'
+        ]);
+
+        $expected = [
+            [
+                'content' => [
+                    'text' => '<p>A</p> <p>B</p>'
+                ],
+                'type' => 'text'
+            ]
+        ];
+
+        $this->assertSame($expected, $parser->blocks());
+    }
+
+    /**
+     * @covers ::mergeOrAppend
+     */
+    public function testMergeOrAppendExpectAppend()
+    {
+        $parser = $this->parser();
+
+        $parser->setBlocks([
+            [
+                'content' => ['text' => 'A'],
+                'type'    => 'heading',
+            ]
+        ]);
+
+        $parser->mergeOrAppend([
+            'content' => ['text' => '<p>B</p>'],
+            'type'    => 'text'
+        ]);
+
+        $expected = [
+            [
+                'content' => [
+                    'text' => 'A'
+                ],
+                'type' => 'heading'
+            ],
+            [
+                'content' => [
+                    'text' => '<p>B</p>'
+                ],
+                'type' => 'text'
+            ]
+        ];
+
+        $this->assertSame($expected, $parser->blocks());
+    }
+
+    /**
+     * @covers ::mergeOrAppend
+     */
+    public function testMergeOrAppendWithoutBlocks()
+    {
+        $parser = $this->parser();
+
+        $parser->setBlocks([]);
+
+        $parser->mergeOrAppend([
+            'content' => ['text' => '<p>B</p>'],
+            'type'    => 'text'
+        ]);
+
+        $expected = [
+            [
+                'content' => [
+                    'text' => '<p>B</p>'
+                ],
+                'type' => 'text'
+            ]
+        ];
+
+        $this->assertSame($expected, $parser->blocks());
     }
 
     /**

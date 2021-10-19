@@ -254,7 +254,7 @@ class Parsley
 
         // merge with previous block
         if ($block['type'] === 'text' && $lastItem && $lastItem['type'] === 'text') {
-            $this->blocks[$lastIndex]['content']['text'] .= "\n\n" . $block['content']['text'];
+            $this->blocks[$lastIndex]['content']['text'] .= ' ' . $block['content']['text'];
 
         // append
         } else {
