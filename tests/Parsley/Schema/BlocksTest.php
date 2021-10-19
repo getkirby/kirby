@@ -57,7 +57,7 @@ class BlocksTest extends TestCase
         $expected = [
             'content' => [
                 'citation' => null,
-                'text'     => '<b>Bold</b> <i>Italic</i>'
+                'text'     => '<p><b>Bold</b> <i>Italic</i></p>'
             ],
             'type' => 'quote',
         ];
@@ -78,7 +78,7 @@ class BlocksTest extends TestCase
         $expected = [
             'content' => [
                 'citation' => null,
-                'text'     => 'A<br /><br />B'
+                'text'     => '<p>A</p><p>B</p>'
             ],
             'type' => 'quote',
         ];
@@ -120,6 +120,70 @@ class BlocksTest extends TestCase
         ];
 
         return $this->assertSame($expected, $this->schema->fallback('Test'));
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForDomElement()
+    {
+        $dom = new Dom('<p><b>Bold</b> <i>Italic</i></p>');
+        $p        = $dom->query('//p')[0];
+        $el       = new Element($p, [
+            ['tag' => 'b'],
+            ['tag' => 'i'],
+            ['tag' => 'p'],
+        ]);
+        $fallback = $this->schema->fallback($el);
+
+        $expected = [
+            'content' => [
+                'text' => '<p><b>Bold</b> <i>Italic</i></p>',
+            ],
+            'type' => 'text'
+        ];
+
+        $this->assertSame($expected, $fallback);
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForDomElementWithParagraphs()
+    {
+        $dom = new Dom('<div><p>A</p><p>B</p></div>');
+        $p        = $dom->query('//div')[0];
+        $el       = new Element($p, [
+            ['tag' => 'b'],
+            ['tag' => 'i'],
+            ['tag' => 'p'],
+        ]);
+        $fallback = $this->schema->fallback($el);
+
+        $expected = [
+            'content' => [
+                'text' => '<p>A</p><p>B</p>',
+            ],
+            'type' => 'text'
+        ];
+
+        $this->assertSame($expected, $fallback);
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForEmptyContent()
+    {
+        return $this->assertNull($this->schema->fallback(''));
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForInvalidContent()
+    {
+        return $this->assertNull($this->schema->fallback([]));
     }
 
     public function testHeading()
@@ -532,7 +596,14 @@ class BlocksTest extends TestCase
      */
     public function testSkip()
     {
-        return $this->assertSame(['head', 'meta', 'script', 'style'], $this->schema->skip());
+        return $this->assertSame([
+            'base',
+            'link',
+            'meta',
+            'script',
+            'style',
+            'title'
+        ], $this->schema->skip());
     }
 
     public function testTable()

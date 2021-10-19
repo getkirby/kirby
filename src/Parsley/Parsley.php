@@ -83,6 +83,10 @@ class Parsley
             return;
         }
 
+        if (!preg_match('/<body|head*.?>/', $html)) {
+            $html = '<div>' . $html . '</div>';
+        }
+
         $this->dom    = new Dom($html);
         $this->doc    = $this->dom->document();
         $this->schema = $schema ?? new Plain();
@@ -189,15 +193,7 @@ class Parsley
      */
     public function fallback($element): ?array
     {
-        if (is_a($element, Element::class) === true) {
-            $html = $element->innerHtml();
-        } elseif (is_string($element) === true) {
-            $html = $element;
-        } else {
-            $html = '';
-        }
-
-        if ($fallback = $this->schema->fallback($html)) {
+        if ($fallback = $this->schema->fallback($element)) {
             return $fallback;
         }
 
@@ -258,7 +254,7 @@ class Parsley
 
         // merge with previous block
         if ($block['type'] === 'text' && $lastItem && $lastItem['type'] === 'text') {
-            $this->blocks[$lastIndex]['content']['text'] .= "\n\n" . $block['content']['text'];
+            $this->blocks[$lastIndex]['content']['text'] .= ' ' . $block['content']['text'];
 
         // append
         } else {
@@ -306,7 +302,16 @@ class Parsley
                 return false;
             }
 
-            if ($element->tagName !== 'body' && $element->tagName !== 'html') {
+            $wrappers = [
+                'body',
+                'head',
+                'html',
+            ];
+
+            // wrapper elements should never be converted
+            // to a simple fallback block. Their children
+            // have to be parsed individually.
+            if (in_array($element->tagName, $wrappers) === false) {
                 $node = new Element($element, $this->marks);
 
                 if ($block = $this->fallback($node)) {

@@ -39,7 +39,7 @@ class Blocks extends Plain
         }
 
         // filter empty blocks and separate text blocks with breaks
-        $text = implode('<br /><br />', array_filter($text));
+        $text = implode('', array_filter($text));
 
         // get the citation from the footer
         if ($footer = $node->find('footer')) {
@@ -59,20 +59,34 @@ class Blocks extends Plain
      * Creates the fallback block type
      * if no other block can be found
      *
-     * @param string $html
+     * @param \Kirby\Parsley\Element|string $element
      * @return array|null
      */
-    public function fallback(string $html): ?array
+    public function fallback($element): ?array
     {
-        $html = trim($html);
+        if (is_a($element, Element::class) === true) {
+            $html = $element->innerHtml();
 
-        if (Str::length($html) === 0) {
+            // wrap the inner HTML in a p tag if it doesn't
+            // contain one yet.
+            if (Str::contains($html, '<p>') === false) {
+                $html = '<p>' . $html . '</p>';
+            }
+        } elseif (is_string($element) === true) {
+            $html = trim($element);
+
+            if (Str::length($html) === 0) {
+                return null;
+            }
+
+            $html = '<p>' . $html . '</p>';
+        } else {
             return null;
         }
 
         return [
             'content' => [
-                'text' => '<p>' . $html . '</p>',
+                'text' => $html,
             ],
             'type' => 'text',
         ];
@@ -250,6 +264,9 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'i',
+            ],
+            [
+                'tag' => 'p',
             ],
             [
                 'tag' => 'strike',
