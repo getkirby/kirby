@@ -11,6 +11,80 @@ use PHPUnit\Framework\TestCase;
 class InlineTest extends TestCase
 {
     /**
+     * @covers ::parseAttrs
+     */
+    public function testParseAttrs()
+    {
+        $dom    = new Dom('<b class="foo">Test</b>');
+        $b      = $dom->query('//b')[0];
+        $attrs  = Inline::parseAttrs($b, [
+            'b' => [
+                'attrs' => ['class']
+            ]
+        ]);
+
+        $this->assertSame(['class' => 'foo'], $attrs);
+    }
+
+    /**
+     * @covers ::parseAttrs
+     */
+    public function testParseAttrsWithDefaults()
+    {
+        $dom    = new Dom('<b>Test</b>');
+        $b      = $dom->query('//b')[0];
+        $attrs  = Inline::parseAttrs($b, [
+            'b' => [
+                'attrs'    => ['class'],
+                'defaults' => ['class' => 'foo']
+            ]
+        ]);
+
+        $this->assertSame(['class' => 'foo'], $attrs);
+    }
+
+    /**
+     * @covers ::parseAttrs
+     */
+    public function testParseAttrsWithIgnoredAttrs()
+    {
+        $dom    = new Dom('<b class="foo">Test</b>');
+        $b      = $dom->query('//b')[0];
+        $attrs  = Inline::parseAttrs($b, [
+            'b' => true
+        ]);
+
+        $this->assertSame([], $attrs);
+    }
+
+    /**
+     * @covers ::parseInnerHtml
+     */
+    public function testParseInnerHtml()
+    {
+        $dom    = new Dom('<p><b>Bold</b> <i>Italic</i></p>');
+        $p      = $dom->query('//p')[0];
+        $html   = Inline::parseInnerHtml($p, [
+            'b' => true,
+            'i' => true
+        ]);
+
+        $this->assertSame('<b>Bold</b> <i>Italic</i>', $html);
+    }
+
+    /**
+     * @covers ::parseInnerHtml
+     */
+    public function testParseInnerHtmlWithEmptyParagraph()
+    {
+        $dom  = new Dom('<p> </p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseInnerHtml($p);
+
+        $this->assertNull($html);
+    }
+
+    /**
      * @covers ::parseNode
      */
     public function testParseNodeWithComment()
@@ -19,10 +93,23 @@ class InlineTest extends TestCase
         $dom->loadHTML('<!-- comment -->');
 
         $comment = $dom->childNodes[1];
-        $element = new Inline($comment);
+        $html    = Inline::parseNode($comment);
 
-        $this->assertInstanceOf('DOMComment', $comment);
-        $this->assertSame(null, $element->parseNode($comment));
+        $this->assertSame(null, $html);
+    }
+
+    /**
+     * @covers ::parseNode
+     */
+    public function testParseNodeWithEmptyParagraph()
+    {
+        $dom  = new Dom('<p> </p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseNode($p, [
+            'p' => true
+        ]);
+
+        $this->assertNull($html);
     }
 
     /**
@@ -30,21 +117,14 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithKnownMarks()
     {
-        $dom = new Dom('<p><b>Test</b> <i>Test</i></p>');
-
-        // html > body > p
-        $p       = $dom->query('/html/body/p')[0];
-        $element = new Inline($p, [
-            [
-                'tag' => 'b'
-            ],
-            [
-                'tag' => 'i'
-            ]
+        $dom  = new Dom('<p><b>Test</b> <i>Test</i></p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseNode($p, [
+            'b' => true,
+            'i' => true
         ]);
 
-        $this->assertInstanceOf('DOMElement', $p);
-        $this->assertSame('<b>Test</b> <i>Test</i>', $element->parseNode($p));
+        $this->assertSame('<b>Test</b> <i>Test</i>', $html);
     }
 
     /**
@@ -52,19 +132,15 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithKnownMarksWithAttrs()
     {
-        $dom = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
-
-        // html > body > p
-        $p       = $dom->query('/html/body/p')[0];
-        $element = new Inline($p, [
-            [
-                'tag'   => 'a',
+        $dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseNode($p, [
+            'a' => [
                 'attrs' => ['href'],
             ],
         ]);
 
-        $this->assertInstanceOf('DOMElement', $p);
-        $this->assertSame('<a href="https://getkirby.com">Test</a>', $element->parseNode($p));
+        $this->assertSame('<a href="https://getkirby.com">Test</a>', $html);
     }
 
     /**
@@ -72,13 +148,10 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithKnownMarksWithAttrDefaults()
     {
-        $dom = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
-
-        // html > body > p
-        $p       = $dom->query('/html/body/p')[0];
-        $element = new Inline($p, [
-            [
-                'tag'   => 'a',
+        $dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseNode($p, [
+            'a' => [
                 'attrs' => ['href', 'rel'],
                 'defaults' => [
                     'rel' => 'test'
@@ -86,8 +159,7 @@ class InlineTest extends TestCase
             ],
         ]);
 
-        $this->assertInstanceOf('DOMElement', $p);
-        $this->assertSame('<a href="https://getkirby.com" rel="test">Test</a>', $element->parseNode($p));
+        $this->assertSame('<a href="https://getkirby.com" rel="test">Test</a>', $html);
     }
 
     /**
@@ -95,14 +167,11 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithUnkownMarks()
     {
-        $dom = new Dom('<p><b>Test</b> <i>Test</i></p>');
+        $dom     = new Dom('<p><b>Test</b> <i>Test</i></p>');
+        $p       = $dom->query('//p')[0];
+        $html    = Inline::parseNode($p);
 
-        // html > body > p
-        $p       = $dom->query('/html/body/p')[0];
-        $element = new Inline($p);
-
-        $this->assertInstanceOf('DOMElement', $p);
-        $this->assertSame('Test Test', $element->parseNode($p));
+        $this->assertSame('Test Test', $html);
     }
 
     /**
@@ -110,18 +179,13 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithSelfClosingElement()
     {
-        $dom = new Dom('<p><br></p>');
-
-        // html > body > p
-        $p       = $dom->query('/html/body/p')[0];
-        $element = new Inline($p, [
-            [
-                'tag' => 'br'
-            ]
+        $dom  = new Dom('<p><br></p>');
+        $p    = $dom->query('//p')[0];
+        $html = Inline::parseNode($p, [
+            'br' => true
         ]);
 
-        $this->assertInstanceOf('DOMElement', $p);
-        $this->assertSame('<br />', $element->parseNode($p));
+        $this->assertSame('<br />', $html);
     }
 
     /**
@@ -129,14 +193,11 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithText()
     {
-        $dom = new Dom('Test');
+        $dom  = new Dom('Test');
+        $text = $dom->query('//p/text()')[0];
+        $html = Inline::parseNode($text);
 
-        // html > body > p > text
-        $text    = $dom->query('/html/body/p')[0]->childNodes[0];
-        $element = new Inline($text);
-
-        $this->assertInstanceOf('DOMText', $text);
-        $this->assertSame('Test', $element->parseNode($text));
+        $this->assertSame('Test', $html);
     }
 
     /**
@@ -144,13 +205,10 @@ class InlineTest extends TestCase
      */
     public function testParseNodeWithTextEncoded()
     {
-        $dom = new Dom('Test & Test');
+        $dom  = new Dom('Test & Test');
+        $text = $dom->query('//p/text()')[0];
+        $html = Inline::parseNode($text);
 
-        // html > body > p > text
-        $text    = $dom->query('/html/body/p')[0]->childNodes[0];
-        $element = new Inline($text);
-
-        $this->assertInstanceOf('DOMText', $text);
-        $this->assertSame('Test &amp; Test', $element->parseNode($text));
+        $this->assertSame('Test &amp; Test', $html);
     }
 }
