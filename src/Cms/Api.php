@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 
 /**
@@ -78,7 +79,7 @@ class Api extends BaseApi
      * @return \Kirby\Cms\File|null
      * @throws \Kirby\Exception\NotFoundException if the file cannot be found
      */
-    public function file(string $path = null, string $filename)
+    public function file(string $path = null, string $filename): ?File
     {
         $filename = urldecode($filename);
         $file     = $this->parent($path)->file($filename);
@@ -103,7 +104,7 @@ class Api extends BaseApi
      * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
      * @throws \Kirby\Exception\NotFoundException if the model cannot be found
      */
-    public function parent(string $path)
+    public function parent(string $path): File|Model|null
     {
         $modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
         $modelTypes = [
@@ -155,7 +156,7 @@ class Api extends BaseApi
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return $this->kirby;
     }
@@ -177,7 +178,7 @@ class Api extends BaseApi
      * @return \Kirby\Cms\Page|null
      * @throws \Kirby\Exception\NotFoundException if the page cannot be found
      */
-    public function page(string $id)
+    public function page(string $id): ?Page
     {
         $id   = str_replace('+', '/', $id);
         $page = $this->kirby->page($id);
@@ -203,7 +204,7 @@ class Api extends BaseApi
      * @param string|null $status
      * @return \Kirby\Cms\Pages
      */
-    public function pages(string $parentId = null, string $status = null)
+    public function pages(string $parentId = null, string $status = null): Pages
     {
         $parent = $parentId === null ? $this->site() : $this->page($parentId);
 
@@ -230,7 +231,7 @@ class Api extends BaseApi
      * @param string|null $parent
      * @return \Kirby\Cms\Pages
      */
-    public function searchPages(string $parent = null)
+    public function searchPages(string $parent = null): Pages
     {
         $pages = $this->pages($parent, $this->requestQuery('status'));
 
@@ -247,7 +248,7 @@ class Api extends BaseApi
      * @param array $options Additional options, see the session component
      * @return \Kirby\Session\Session
      */
-    public function session(array $options = [])
+    public function session(array $options = []): Session
     {
         return $this->kirby->session(array_merge([
             'detect' => true
@@ -285,7 +286,7 @@ class Api extends BaseApi
      * @return \Kirby\Cms\User|null
      * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
      */
-    public function user(string $id = null)
+    public function user(string $id = null): ?User
     {
         // get the authenticated user
         if ($id === null) {
@@ -310,7 +311,7 @@ class Api extends BaseApi
      *
      * @return \Kirby\Cms\Users
      */
-    public function users()
+    public function users(): Users
     {
         return $this->kirby->users();
     }
