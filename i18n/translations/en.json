@@ -528,9 +528,10 @@
 
   "view.account": "Your account",
   "view.installation": "Installation",
+  "view.languages": "Languages",
   "view.resetPassword": "Reset password",
-  "view.settings": "Settings",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Users",
 
   "welcome": "Welcome",
