@@ -242,14 +242,14 @@ class Panel
         }
 
         // handle different response types (view, dialog, ...)
-        switch ($options['type'] ?? 'view') {
+        switch ($options['type'] ?? null) {
             case 'dialog':
                 return Dialog::response($result, $options);
             case 'dropdown':
                 return Dropdown::response($result, $options);
             case 'search':
                 return Search::response($result, $options);
-            case 'view':
+            default:
                 return View::response($result, $options);
         }
     }
@@ -408,7 +408,7 @@ class Panel
                 'type'    => 'dialog',
                 'area'    => $areaId,
                 'action'  => $dialog['load'] ?? function () {
-                    return false;
+                    return 'The load handler for your dialog is missing';
                 },
             ];
 
@@ -419,7 +419,7 @@ class Panel
                 'area'    => $areaId,
                 'method'  => 'POST',
                 'action'  => $dialog['submit'] ?? function () {
-                    return false;
+                    return 'Your dialog does not define a submit handler';
                 }
             ];
         }

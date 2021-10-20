@@ -231,6 +231,7 @@ class Document
         $kirby = kirby();
 
         // Full HTML response
+        // @codeCoverageIgnoreStart
         try {
             if (static::link() === true) {
                 usleep(1);
@@ -239,6 +240,7 @@ class Document
         } catch (Throwable $e) {
             die('The Panel assets cannot be installed properly. ' . $e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));

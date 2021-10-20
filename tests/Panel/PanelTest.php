@@ -415,6 +415,19 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::routes
+     */
+    public function testRoutes()
+    {
+        $routes = Panel::routes([]);
+
+        $this->assertSame('browser', $routes[0]['pattern']);
+        $this->assertSame(['/', 'installation', 'login'], $routes[1]['pattern']);
+        $this->assertSame('(:all)', $routes[2]['pattern']);
+        $this->assertSame('The view could not be found', $routes[2]['action']());
+    }
+
+    /**
      * @covers ::routesForDialogs
      */
     public function testRoutesForDialogs(): void
@@ -449,6 +462,23 @@ class PanelTest extends TestCase
         ];
 
         $this->assertSame($expected, $routes);
+    }
+
+    /**
+     * @covers ::routesForDialogs
+     */
+    public function testRoutesForDialogsWithoutHandlers(): void
+    {
+        $area = [
+            'dialogs' => [
+                'test' => []
+            ]
+        ];
+
+        $routes = Panel::routesForDialogs('test', $area);
+
+        $this->assertSame('The load handler for your dialog is missing', $routes[0]['action']());
+        $this->assertSame('Your dialog does not define a submit handler', $routes[1]['action']());
     }
 
     /**
