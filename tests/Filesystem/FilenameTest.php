@@ -81,6 +81,15 @@ class FilenameTest extends TestCase
         $this->assertSame($expected, $name->attributesToString('-'));
     }
 
+    /**
+     * @covers ::attributesToString
+     */
+    public function testAttributesToStringWithoutAttrs()
+    {
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', []);
+        $this->assertSame('', $name->attributesToString());
+    }
+
     public function blurOptionProvider()
     {
         return [

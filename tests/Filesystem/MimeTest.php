@@ -51,6 +51,15 @@ class MimeTest extends TestCase
     /**
      * @covers ::fromSvg
      */
+    public function testFromSvg()
+    {
+        $mime = Mime::fromSvg(__DIR__ . '/fixtures/mime/optimized.svg');
+        $this->assertSame('image/svg+xml', $mime);
+    }
+
+    /**
+     * @covers ::fromSvg
+     */
     public function testFromSvgNonExistingFile()
     {
         $mime = Mime::fromSvg(__DIR__ . '/imaginary.svg');
