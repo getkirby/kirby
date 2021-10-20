@@ -180,6 +180,13 @@ class Plugin extends Model
      */
     public function toArray(): array
     {
-        return $this->propertiesToArray();
+        return [
+            'authors'     => $this->authors(),
+            'description' => $this->description(),
+            'name'        => $this->name(),
+            'license'     => $this->license(),
+            'root'        => $this->root(),
+            'version'     => $this->version()
+        ];
     }
 }

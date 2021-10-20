@@ -6,8 +6,12 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Bastian Allgeier",
-            "email": "bastian@getkirby.com"
+            "name": "A",
+            "email": "a@getkirby.com"
+        },
+        {
+            "name": "B",
+            "email": "b@getkirby.com"
         }
     ],
     "require": {}
