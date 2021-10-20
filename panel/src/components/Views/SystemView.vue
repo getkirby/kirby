@@ -42,7 +42,7 @@
         <ul class="k-system-info-box" style="--columns: 4">
           <li>
             <dl>
-              <dt>Debugging</dt>
+              <dt>{{ $t('debugging') }}</dt>
               <dd :class="{ 'k-system-warning': debug }">
                 {{ debug ? $t('on') : $t('off') }}
               </dd>
@@ -66,7 +66,7 @@
           </li>
           <li>
             <dl>
-              <dt>Server</dt>
+              <dt>{{ $t('server') }}</dt>
               <dd>
                 {{ server || '?' }}
               </dd>
@@ -77,7 +77,7 @@
 
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>Plugins</k-headline>
+          <k-headline>{{ $t('plugins') }}</k-headline>
         </header>
         <table class="k-system-plugins">
           <tr>

@@ -25,6 +25,8 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
+  "debugging": "Debugging",
+
   "delete": "Delete",
   "delete.all": "Delete all",
 
@@ -432,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Previous",
   "preview": "Preview",
   "remove": "Remove",
@@ -467,6 +470,8 @@
   "title": "Title",
   "template": "Template",
   "today": "Today",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
