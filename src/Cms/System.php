@@ -57,25 +57,6 @@ class System
     }
 
     /**
-     * Get an status array of all checks
-     *
-     * @return array
-     */
-    public function status(): array
-    {
-        return [
-            'accounts'  => $this->accounts(),
-            'content'   => $this->content(),
-            'curl'      => $this->curl(),
-            'sessions'  => $this->sessions(),
-            'mbstring'  => $this->mbstring(),
-            'media'     => $this->media(),
-            'php'       => $this->php(),
-            'server'    => $this->server(),
-        ];
-    }
-
-    /**
      * Check for a writable accounts folder
      *
      * @return bool
@@ -235,44 +216,6 @@ class System
     }
 
     /**
-     * Normalizes the app's index URL for
-     * licensing purposes
-     *
-     * @param string|null $url Input URL, by default the app's index URL
-     * @return string Normalized URL
-     */
-    protected function licenseUrl(string $url = null): string
-    {
-        if ($url === null) {
-            $url = $this->indexUrl();
-        }
-
-        // remove common "testing" subdomains as well as www.
-        // to ensure that installations of the same site have
-        // the same license URL; only for installations at /,
-        // subdirectory installations are difficult to normalize
-        if (Str::contains($url, '/') === false) {
-            if (Str::startsWith($url, 'www.')) {
-                return substr($url, 4);
-            }
-
-            if (Str::startsWith($url, 'dev.')) {
-                return substr($url, 4);
-            }
-
-            if (Str::startsWith($url, 'test.')) {
-                return substr($url, 5);
-            }
-
-            if (Str::startsWith($url, 'staging.')) {
-                return substr($url, 8);
-            }
-        }
-
-        return $url;
-    }
-
-    /**
      * Loads the license file and returns
      * the license information if available
      *
@@ -331,6 +274,44 @@ class System
         } else {
             return true;
         }
+    }
+
+    /**
+     * Normalizes the app's index URL for
+     * licensing purposes
+     *
+     * @param string|null $url Input URL, by default the app's index URL
+     * @return string Normalized URL
+     */
+    protected function licenseUrl(string $url = null): string
+    {
+        if ($url === null) {
+            $url = $this->indexUrl();
+        }
+
+        // remove common "testing" subdomains as well as www.
+        // to ensure that installations of the same site have
+        // the same license URL; only for installations at /,
+        // subdirectory installations are difficult to normalize
+        if (Str::contains($url, '/') === false) {
+            if (Str::startsWith($url, 'www.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'dev.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'test.')) {
+                return substr($url, 5);
+            }
+
+            if (Str::startsWith($url, 'staging.')) {
+                return substr($url, 8);
+            }
+        }
+
+        return $url;
     }
 
     /**
@@ -531,6 +512,25 @@ class System
     public function sessions(): bool
     {
         return is_writable($this->app->root('sessions'));
+    }
+
+    /**
+     * Get an status array of all checks
+     *
+     * @return array
+     */
+    public function status(): array
+    {
+        return [
+            'accounts'  => $this->accounts(),
+            'content'   => $this->content(),
+            'curl'      => $this->curl(),
+            'sessions'  => $this->sessions(),
+            'mbstring'  => $this->mbstring(),
+            'media'     => $this->media(),
+            'php'       => $this->php(),
+            'server'    => $this->server(),
+        ];
     }
 
     /**
