@@ -187,7 +187,7 @@ class BlocksField extends FieldClass
         ];
     }
 
-    public function store($value)
+    public function store($value = null)
     {
         $blocks = $this->blocksToValues((array)$value, 'content');
 

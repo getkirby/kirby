@@ -10,32 +10,116 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
 
+/**
+ * Abstract field class to be used instead
+ * of functional field components for more
+ * control.
+ *
+ * @package   Kirby Form
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 abstract class FieldClass
 {
     use HasSiblings;
 
+    /**
+     * @var string|array|null
+     */
     protected $after;
+
+    /**
+     * @var bool
+     */
     protected $autofocus;
+
+    /**
+     * @var string|array|null
+     */
     protected $before;
+
+    /**
+     * @var mixed
+     */
     protected $default;
+
+    /**
+     * @var bool
+     */
     protected $disabled;
+
+    /**
+     * @var string|array|null
+     */
     protected $help;
+
+    /**
+     * @var string|null
+     */
     protected $icon;
+
+    /**
+     * @var string|array|null
+     */
     protected $label;
+
     /**
      * @var \Kirby\Cms\ModelWithContent
      */
     protected $model;
+
+    /**
+     * @var string
+     */
     protected $name;
+
+    /**
+     * @var array
+     */
     protected $params;
+
+    /**
+     * @var string|array|null
+     */
     protected $placeholder;
+
+    /**
+     * @var bool
+     */
     protected $required;
+
+    /**
+     * @var \Kirby\Form\Fields
+     */
     protected $siblings;
+
+    /**
+     * @var bool
+     */
     protected $translate;
+
+    /**
+     * @var mixed
+     */
     protected $value;
+
+    /**
+     * @var array
+     */
     protected $when;
+
+    /**
+     * @var string|null
+     */
     protected $width;
 
+    /**
+     * @param string $param
+     * @param array $args
+     * @return mixed
+     */
     public function __call(string $param, array $args)
     {
         if (isset($this->$param) === true) {
@@ -45,6 +129,9 @@ abstract class FieldClass
         return $this->params[$param] ?? null;
     }
 
+    /**
+     * @param array $params
+     */
     public function __construct(array $params = [])
     {
         $this->params = $params;
@@ -71,21 +158,33 @@ abstract class FieldClass
         }
     }
 
+    /**
+     * @return string|null
+     */
     public function after(): ?string
     {
         return $this->stringTemplate($this->after);
     }
 
+    /**
+     * @return array
+     */
     public function api(): array
     {
         return $this->routes();
     }
 
+    /**
+     * @return bool
+     */
     public function autofocus(): bool
     {
         return $this->autofocus;
     }
 
+    /**
+     * @return string|null
+     */
     public function before(): ?string
     {
         return $this->stringTemplate($this->before);
@@ -110,6 +209,8 @@ abstract class FieldClass
     /**
      * Returns the default value for the field,
      * which will be used when a page/file/user is created
+     *
+     * @return mixed
      */
     public function default()
     {
@@ -126,87 +227,12 @@ abstract class FieldClass
 
     /**
      * If `true`, the field is no longer editable and will not be saved
+     *
+     * @return bool
      */
     public function disabled(): bool
     {
         return $this->disabled;
-    }
-
-    /**
-     * Optional help text below the field
-     */
-    public function help(): ?string
-    {
-        if (empty($this->help) === false) {
-            $help = $this->stringTemplate($this->help);
-            $help = $this->kirby()->kirbytext($help);
-            return $help;
-        }
-
-        return null;
-    }
-
-    protected function i18n($param)
-    {
-        return empty($param) === false ? I18n::translate($param, $param) : null;
-    }
-
-    /**
-     * Optional icon that will be shown at the end of the field
-     */
-    public function icon(): ?string
-    {
-        return $this->icon;
-    }
-
-    public function id(): string
-    {
-        return $this->name();
-    }
-
-    public function isDisabled(): bool
-    {
-        return $this->disabled;
-    }
-
-    public function isEmpty(): bool
-    {
-        return $this->isEmptyValue($this->value());
-    }
-
-    public function isEmptyValue($value): bool
-    {
-        return in_array($value, [null, '', []], true);
-    }
-
-    /**
-     * Checks if the field is invalid
-     *
-     * @return bool
-     */
-    public function isInvalid(): bool
-    {
-        return $this->isValid() === false;
-    }
-
-    public function isRequired(): bool
-    {
-        return $this->required;
-    }
-
-    public function isSaveable(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Checks if the field is valid
-     *
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return empty($this->errors()) === true;
     }
 
     /**
@@ -232,6 +258,110 @@ abstract class FieldClass
     }
 
     /**
+     * Optional help text below the field
+     *
+     * @return string|null
+     */
+    public function help(): ?string
+    {
+        if (empty($this->help) === false) {
+            $help = $this->stringTemplate($this->help);
+            $help = $this->kirby()->kirbytext($help);
+            return $help;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string|array $param
+     * @return string|null
+     */
+    protected function i18n($param): ?string
+    {
+        return empty($param) === false ? I18n::translate($param, $param) : null;
+    }
+
+    /**
+     * Optional icon that will be shown at the end of the field
+     *
+     * @return string|null
+     */
+    public function icon(): ?string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->name();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this->isEmptyValue($this->value());
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    public function isEmptyValue($value = null): bool
+    {
+        return in_array($value, [null, '', []], true);
+    }
+
+    /**
+     * Checks if the field is invalid
+     *
+     * @return bool
+     */
+    public function isInvalid(): bool
+    {
+        return $this->isValid() === false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSaveable(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Checks if the field is valid
+     *
+     * @return bool
+     */
+    public function isValid(): bool
+    {
+        return empty($this->errors()) === true;
+    }
+
+    /**
      * Returns the Kirby instance
      *
      * @return \Kirby\Cms\App
@@ -243,6 +373,8 @@ abstract class FieldClass
 
     /**
      * The field label can be set as string or associative array with translations
+     *
+     * @return string
      */
     public function label(): string
     {
@@ -325,6 +457,8 @@ abstract class FieldClass
 
     /**
      * Optional placeholder value that will be shown when the field is empty
+     *
+     * @return string|null
      */
     public function placeholder(): ?string
     {
@@ -389,91 +523,170 @@ abstract class FieldClass
         return $this->isSaveable();
     }
 
+    /**
+     * @param array|string $after
+     * @return void
+     */
     protected function setAfter($after = null)
     {
         $this->after = $this->i18n($after);
     }
 
+    /**
+     * @param bool $autofocus
+     * @return void
+     */
     protected function setAutofocus(bool $autofocus = false)
     {
         $this->autofocus = $autofocus;
     }
 
+    /**
+     * @param array|string $before
+     * @return void
+     */
     protected function setBefore($before = null)
     {
         $this->before = $this->i18n($before);
     }
 
+    /**
+     * @param mixed $default
+     * @return void
+     */
     protected function setDefault($default = null)
     {
         $this->default = $default;
     }
 
+    /**
+     * @param bool $disabled
+     * @return void
+     */
     protected function setDisabled(bool $disabled = false)
     {
         $this->disabled = $disabled;
     }
 
+    /**
+     * @param array|string $help
+     * @return void
+     */
     protected function setHelp($help = null)
     {
         $this->help = $this->i18n($help);
     }
 
+    /**
+     * @param string|null $icon
+     * @return void
+     */
     protected function setIcon(string $icon = null)
     {
         $this->icon = $icon;
     }
 
+    /**
+     * @param array|string $label
+     * @return void
+     */
     protected function setLabel($label = null)
     {
         $this->label = $this->i18n($label);
     }
 
+    /**
+     * @param \Kirby\Cms\ModelWithContent $model
+     * @return void
+     */
     protected function setModel(ModelWithContent $model)
     {
         $this->model = $model;
     }
 
+    /**
+     * @param string|null $name
+     * @return void
+     */
     protected function setName(string $name = null)
     {
         $this->name = $name;
     }
 
+    /**
+     * @param array|string $placeholder
+     * @return void
+     */
     protected function setPlaceholder($placeholder = null)
     {
         $this->placeholder = $this->i18n($placeholder);
     }
 
+    /**
+     * @param bool $required
+     * @return void
+     */
     protected function setRequired(bool $required = false)
     {
         $this->required = $required;
     }
 
+    /**
+     * @param \Kirby\Form\Fields|null $siblings
+     * @return void
+     */
     protected function setSiblings(Fields $siblings = null)
     {
-        $this->siblings = $siblings ?? new Fields([]);
+        $this->siblings = $siblings ?? new Fields([$this]);
     }
 
+    /**
+     * @param bool $translate
+     * @return void
+     */
     protected function setTranslate(bool $translate = true)
     {
         $this->translate = $translate;
     }
 
+    /**
+     * Setter for the when condition
+     *
+     * @param mixed $when
+     * @return void
+     */
     protected function setWhen($when = null)
     {
         $this->when = $when;
     }
 
+    /**
+     * Setter for the field width
+     *
+     * @param string|null $width
+     * @return void
+     */
     protected function setWidth(string $width = null)
     {
         $this->width = $width;
     }
 
+    /**
+     * Returns all sibling fields
+     *
+     * @return \Kirby\Form\Fields
+     */
     protected function siblingsCollection()
     {
         return $this->siblings;
     }
 
+    /**
+     * Parses a string template in the given value
+     *
+     * @param string|null $string
+     * @return string|null
+     */
     protected function stringTemplate(?string $string = null): ?string
     {
         if ($string !== null) {
@@ -483,7 +696,14 @@ abstract class FieldClass
         return null;
     }
 
-    public function store($value)
+    /**
+     * Converts the given value to a value
+     * that can be stored in the text file
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public function store($value = null)
     {
         return $value;
     }
@@ -515,6 +735,11 @@ abstract class FieldClass
         });
     }
 
+    /**
+     * Returns the field type
+     *
+     * @return string
+     */
     public function type(): string
     {
         return lcfirst(basename(str_replace(['\\', 'Field'], ['/', ''], static::class)));
@@ -588,6 +813,10 @@ abstract class FieldClass
         return $this->value;
     }
 
+    /**
+     * @param mixed $value
+     * @return array
+     */
     protected function valueFromJson($value): array
     {
         try {
@@ -597,11 +826,20 @@ abstract class FieldClass
         }
     }
 
+    /**
+     * @param mixed $value
+     * @return void
+     */
     protected function valueFromYaml($value)
     {
         return Data::decode($value, 'yaml');
     }
 
+    /**
+     * @param array|null $value
+     * @param bool $pretty
+     * @return string
+     */
     protected function valueToJson(array $value = null, bool $pretty = false): string
     {
         if ($pretty === true) {
@@ -611,6 +849,10 @@ abstract class FieldClass
         return json_encode($value);
     }
 
+    /**
+     * @param array|null $value
+     * @return string
+     */
     protected function valueToYaml(array $value = null): string
     {
         return Data::encode($value, 'yaml');
