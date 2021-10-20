@@ -332,24 +332,30 @@ class View
 
         // areas
         foreach ($areas as $areaId => $area) {
+            $access = $permissions['access'][$areaId] ?? true;
+
+            // areas without access permissions get skipped entirely
+            if ($access === false) {
+                continue;
+            }
+
+            // fetch custom menu settings from the area definition
             $menuSetting = $area['menu'] ?? false;
 
+            // menu settings can be a callback that can return true, false or disabled
             if (is_a($menuSetting, 'Closure') === true) {
                 $menuSetting = $menuSetting($areas, $permissions, $current);
             }
 
+            // false will remove the area entirely just like with
+            // disabled permissions
             if ($menuSetting === false) {
-                continue;
-            }
-
-            $access = $permissions['access'][$areaId] ?? true;
-
-            if ($menuSetting === 'disabled' || $access === false) {
                 continue;
             }
 
             $menu[] = [
                 'current'  => $areaId === $current,
+                'disabled' => $menuSetting === 'disabled',
                 'icon'     => $area['icon'],
                 'id'       => $areaId,
                 'link'     => $area['link'],
