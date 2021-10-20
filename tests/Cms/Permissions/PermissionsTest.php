@@ -145,5 +145,4 @@ class PermissionsTest extends TestCase
 
         $this->assertFalse($permissions->for('access.system'));
     }
-
 }
