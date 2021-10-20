@@ -9,11 +9,46 @@ class TestField extends FieldClass
 {
 }
 
+class UnsaveableField extends FieldClass
+{
+    public function isSaveable(): bool
+    {
+        return false;
+    }
+}
+
+class ValidatedField extends FieldClass
+{
+    public function validations(): array
+    {
+        return [
+            'minlength',
+            'custom' => function ($value) {
+                if ($value !== 'a') {
+                    throw new \Exception('Please enter an a');
+                }
+            }
+        ];
+    }
+}
+
 /**
  * @coversDefaultClass Kirby\Form\FieldClass
  */
 class FieldClassTest extends TestCase
 {
+    /**
+     * @covers ::__call
+     */
+    public function test__call()
+    {
+        $field = new TestField([
+            'foo' => 'bar'
+        ]);
+
+        $this->assertSame('bar', $field->foo());
+    }
+
     /**
      * @covers ::after
      */
@@ -138,6 +173,15 @@ class FieldClassTest extends TestCase
 
         $field = new TestField(['required' => true]);
         $this->assertSame(['required' => 'Please enter something'], $field->errors());
+
+        $field = new ValidatedField(['value' => 'a']);
+        $this->assertSame([], $field->errors());
+
+        $field = new ValidatedField(['value' => 'a', 'minlength' => 4]);
+        $this->assertSame(['minlength' => 'Please enter a longer value. (min. 4 characters)'], $field->errors());
+
+        $field = new ValidatedField(['value' => 'b']);
+        $this->assertSame(['custom' => 'Please enter an a'], $field->errors());
     }
 
     /**
@@ -219,6 +263,9 @@ class FieldClassTest extends TestCase
     {
         $field = new TestField();
         $this->assertTrue($field->isSaveable());
+
+        $field = new UnsaveableField();
+        $this->assertFalse($field->isSaveable());
     }
 
     /**
@@ -491,6 +538,9 @@ class FieldClassTest extends TestCase
 
         $field = new TestField(['default' => 'Default value']);
         $this->assertSame('Default value', $field->value(true));
+
+        $field = new UnsaveableField(['value' => 'Test']);
+        $this->assertNull($field->value());
     }
 
     /**
