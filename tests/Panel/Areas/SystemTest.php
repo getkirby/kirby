@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel\Areas;
 
+use Kirby\Cms\App;
+
 class SystemTest extends AreaTestCase
 {
     public function setUp(): void
@@ -25,7 +27,34 @@ class SystemTest extends AreaTestCase
         $this->assertSame('system', $view['id']);
         $this->assertSame('System', $view['title']);
         $this->assertSame('k-system-view', $view['component']);
+        $this->assertFalse($props['debug']);
         $this->assertNull($props['license']);
+        $this->assertSame([], $props['plugins']);
+        $this->assertSame(phpversion(), $props['php']);
+        $this->assertSame('php', $props['server']);
         $this->assertSame($this->app->version(), $props['version']);
+    }
+
+    public function testViewWithPlugins(): void
+    {
+        App::plugin('getkirby/test', [
+            'root' => __DIR__ . '/fixtures/plugin'
+        ]);
+
+        $this->login();
+
+        $view     = $this->view('system');
+        $expected = [
+            [
+                'author'  => 'A, B',
+                'license' => 'MIT',
+                'name'    => 'getkirby/test',
+                'version' => '1.0.0'
+            ]
+        ];
+
+        $this->assertSame($expected, $view['props']['plugins']);
+
+        App::destroy();
     }
 }

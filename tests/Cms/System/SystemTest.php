@@ -183,7 +183,7 @@ class SystemTest extends TestCase
                 'url' => $indexUrl
             ]
         ]));
-        $this->assertEquals($expected, $system->indexUrl($indexUrl));
+        $this->assertSame($expected, $system->indexUrl($indexUrl));
 
         // reset SERVER_ADDR
         $_SERVER['SERVER_ADDR'] = null;
@@ -227,7 +227,7 @@ class SystemTest extends TestCase
         $_SERVER['SERVER_NAME'] = $name;
 
         $system = new System($this->app);
-        $this->assertEquals($expected, $system->isLocal());
+        $this->assertSame($expected, $system->isLocal());
     }
 
     /**
@@ -364,7 +364,7 @@ class SystemTest extends TestCase
                 'url' => 'https://getkirby.com'
             ]
         ]));
-        $this->assertEquals($expected, $licenseUrl->invoke($system, $url));
+        $this->assertSame($expected, $licenseUrl->invoke($system, $url));
     }
 
     /**
@@ -444,6 +444,15 @@ class SystemTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
         $app->system()->loginMethods();
+    }
+
+    /**
+     * @covers ::plugins
+     */
+    public function testPlugins()
+    {
+        $system = new System($this->app);
+        $this->assertInstanceOf('Kirby\Cms\Collection', $system->plugins());
     }
 
     /**

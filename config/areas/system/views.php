@@ -1,13 +1,13 @@
 <?php
 
-use Kirby\Toolkit\Collection;
 
 return [
     'system' => [
         'pattern' => 'system',
         'action'  => function () {
             $kirby   = kirby();
-            $license = $kirby->system()->license();
+            $system  = $kirby->system();
+            $license = $system->license();
 
             // @codeCoverageIgnoreStart
             if ($license === true) {
@@ -19,26 +19,23 @@ return [
             }
             // @codeCoverageIgnoreEnd
 
-            $plugins = [];
-            $pluginsCollection = new Collection($kirby->plugins());
-
-            foreach ($pluginsCollection->sortBy('name', 'asc') as $plugin) {
-                $plugins[] = [
-                    'license' => $plugin->license(),
+            $plugins = $system->plugins()->values(function ($plugin) {
+                return [
                     'author'  => $plugin->authorsNames(),
+                    'license' => $plugin->license(),
                     'name'    => $plugin->name(),
                     'version' => $plugin->version(),
                 ];
-            }
+            });
 
             return [
                 'component' => 'k-system-view',
                 'props'     => [
-                    'debug'   => $kirby->option('debug'),
+                    'debug'   => $kirby->option('debug', false),
                     'license' => $license,
                     'plugins' => $plugins,
                     'php'     => phpversion(),
-                    'server'  => $kirby->system()->serverSoftware(),
+                    'server'  => $system->serverSoftware(),
                     'ssl'     => Server::https(),
                     'version' => $kirby->version(),
                 ]

@@ -409,6 +409,17 @@ class System
     }
 
     /**
+     * Returns a sorted collection of all
+     * installed plugins
+     *
+     * @return \Kirby\Cms\Collection
+     */
+    public function plugins()
+    {
+        return (new Collection(App::instance()->plugins()))->sortBy('name', 'asc');
+    }
+
+    /**
      * Validates the license key
      * and adds it to the .license file in the config
      * folder if possible.

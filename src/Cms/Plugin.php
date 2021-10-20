@@ -85,6 +85,16 @@ class Plugin extends Model
     }
 
     /**
+     * Returns the unique id for the plugin
+     *
+     * @return string
+     */
+    public function id(): string
+    {
+        return $this->name();
+    }
+
+    /**
      * @return array
      */
     public function info(): array

@@ -26,8 +26,8 @@ class PluginTest extends TestCase
             'root' => __DIR__ . '/fixtures/plugin'
         ]);
 
-        $this->assertEquals('1.0.0', $plugin->version());
-        $this->assertEquals('MIT', $plugin->license());
+        $this->assertSame('1.0.0', $plugin->version());
+        $this->assertSame('MIT', $plugin->license());
     }
 
     /**
@@ -76,7 +76,17 @@ class PluginTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($extends, $plugin->extends());
+        $this->assertSame($extends, $plugin->extends());
+    }
+
+    /**
+     * @covers ::id
+     */
+    public function testId()
+    {
+        $plugin = new Plugin($id = 'abc-1234/DEF-56789', []);
+
+        $this->assertSame($id, $plugin->id());
     }
 
     /**
@@ -99,12 +109,12 @@ class PluginTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('getkirby/test-plugin', $plugin->info()['name']);
-        $this->assertEquals('MIT', $plugin->info()['license']);
-        $this->assertEquals('1.0.0', $plugin->info()['version']);
-        $this->assertEquals('plugin', $plugin->info()['type']);
-        $this->assertEquals('Some really nice description', $plugin->info()['description']);
-        $this->assertEquals($authors, $plugin->info()['authors']);
+        $this->assertSame('getkirby/test-plugin', $plugin->info()['name']);
+        $this->assertSame('MIT', $plugin->info()['license']);
+        $this->assertSame('1.0.0', $plugin->info()['version']);
+        $this->assertSame('plugin', $plugin->info()['type']);
+        $this->assertSame('Some really nice description', $plugin->info()['description']);
+        $this->assertSame($authors, $plugin->info()['authors']);
     }
 
     /**
@@ -116,7 +126,7 @@ class PluginTest extends TestCase
             'root' => __DIR__
         ]);
 
-        $this->assertEquals([], $plugin->info());
+        $this->assertSame([], $plugin->info());
     }
 
     /**
@@ -133,7 +143,7 @@ class PluginTest extends TestCase
 
         $plugin = new Plugin('getkirby/test-plugin');
 
-        $this->assertEquals($media . '/plugins/getkirby/test-plugin', $plugin->mediaRoot());
+        $this->assertSame($media . '/plugins/getkirby/test-plugin', $plugin->mediaRoot());
     }
 
     /**
@@ -152,7 +162,7 @@ class PluginTest extends TestCase
 
         $plugin = new Plugin('getkirby/test-plugin');
 
-        $this->assertEquals('/media/plugins/getkirby/test-plugin', $plugin->mediaUrl());
+        $this->assertSame('/media/plugins/getkirby/test-plugin', $plugin->mediaUrl());
     }
 
     /**
@@ -164,7 +174,7 @@ class PluginTest extends TestCase
             'root' => __DIR__
         ]);
 
-        $this->assertEquals(__DIR__ . '/composer.json', $plugin->manifest());
+        $this->assertSame(__DIR__ . '/composer.json', $plugin->manifest());
     }
 
     /**
@@ -175,7 +185,7 @@ class PluginTest extends TestCase
     {
         $plugin = new Plugin($name = 'abc-1234/DEF-56789', []);
 
-        $this->assertEquals($name, $plugin->name());
+        $this->assertSame($name, $plugin->name());
     }
 
     /**
@@ -202,8 +212,8 @@ class PluginTest extends TestCase
 
         $app = new App();
 
-        $this->assertEquals('bar', $app->plugin('developer/plugin')->option('foo'));
-        $this->assertEquals('bar', $app->option('developer.plugin.foo'));
+        $this->assertSame('bar', $app->plugin('developer/plugin')->option('foo'));
+        $this->assertSame('bar', $app->option('developer.plugin.foo'));
     }
 
     /**
@@ -213,7 +223,7 @@ class PluginTest extends TestCase
     {
         $plugin = new Plugin('getkirby/test-plugin', []);
 
-        $this->assertEquals('getkirby.test-plugin', $plugin->prefix());
+        $this->assertSame('getkirby.test-plugin', $plugin->prefix());
     }
 
     /**
@@ -223,7 +233,7 @@ class PluginTest extends TestCase
     {
         $plugin = new Plugin('getkirby/test-plugin');
 
-        $this->assertEquals(__DIR__, $plugin->root());
+        $this->assertSame(__DIR__, $plugin->root());
     }
 
     /**
@@ -235,7 +245,7 @@ class PluginTest extends TestCase
             'root' => $custom = __DIR__ . '/test',
         ]);
 
-        $this->assertEquals($custom, $plugin->root());
+        $this->assertSame($custom, $plugin->root());
     }
 
     /**
