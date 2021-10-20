@@ -96,9 +96,12 @@
           </tr>
           <tr v-for="plugin in plugins" :key="plugin.name">
             <td>
-              <a :href="'https://getkirby.com/plugins/' + plugin.name">
+              <a v-if="plugin.link" :href="plugin.link">
                 {{ plugin.name }}
               </a>
+              <template v-else>
+                {{ plugin.name }}
+              </template>
             </td>
             <td class="desk">
               {{ plugin.author || "-" }}

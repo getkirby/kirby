@@ -38,7 +38,19 @@ class SystemTest extends AreaTestCase
     public function testViewWithPlugins(): void
     {
         App::plugin('getkirby/test', [
-            'root' => __DIR__ . '/fixtures/plugin'
+            'info' => [
+                'authors' => [
+                    [
+                        'name' => 'A'
+                    ],
+                    [
+                        'name' => 'B'
+                    ]
+                ],
+                'homepage' => 'https://getkirby.com',
+                'version'  => '1.0.0',
+                'license'  => 'MIT'
+            ]
         ]);
 
         $this->login();
@@ -48,6 +60,7 @@ class SystemTest extends AreaTestCase
             [
                 'author'  => 'A, B',
                 'license' => 'MIT',
+                'link'    => 'https://getkirby.com',
                 'name'    => 'getkirby/test',
                 'version' => '1.0.0'
             ]

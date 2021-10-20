@@ -23,6 +23,7 @@ return [
                 return [
                     'author'  => $plugin->authorsNames(),
                     'license' => $plugin->license(),
+                    'link'    => $plugin->link(),
                     'name'    => $plugin->name(),
                     'version' => $plugin->version(),
                 ];

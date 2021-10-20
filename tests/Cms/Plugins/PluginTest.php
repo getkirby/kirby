@@ -120,6 +120,20 @@ class PluginTest extends TestCase
     /**
      * @covers ::info
      */
+    public function testInfoFromProps()
+    {
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'info' => [
+                'license' => 'MIT'
+            ]
+        ]);
+
+        $this->assertSame('MIT', $plugin->info()['license']);
+    }
+
+    /**
+     * @covers ::info
+     */
     public function testInfoWhenEmpty()
     {
         $plugin = new Plugin('getkirby/test-plugin', [
@@ -127,6 +141,75 @@ class PluginTest extends TestCase
         ]);
 
         $this->assertSame([], $plugin->info());
+    }
+
+    /**
+     * @covers ::link
+     */
+    public function testLinkFromHomepage()
+    {
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'info' => [
+                'homepage' => 'https://getkirby.com'
+            ]
+        ]);
+
+        $this->assertSame('https://getkirby.com', $plugin->link());
+    }
+
+    /**
+     * @covers ::link
+     */
+    public function testLinkFromInvalidHomepage()
+    {
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'info' => [
+                'homepage' => 'test'
+            ]
+        ]);
+
+        $this->assertNull($plugin->link());
+    }
+
+    /**
+     * @covers ::link
+     */
+    public function testLinkFromSupportDocs()
+    {
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'info' => [
+                'support' => [
+                    'docs' => 'https://getkirby.com'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('https://getkirby.com', $plugin->link());
+    }
+
+    /**
+     * @covers ::link
+     */
+    public function testLinkFromSupportSource()
+    {
+        $plugin = new Plugin('getkirby/test-plugin', [
+            'info' => [
+                'support' => [
+                    'source' => 'https://getkirby.com'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('https://getkirby.com', $plugin->link());
+    }
+
+    /**
+     * @covers ::link
+     */
+    public function testLinkWhenEmpty()
+    {
+        $plugin = new Plugin('getkirby/test-plugin');
+        $this->assertNull($plugin->link());
     }
 
     /**
@@ -265,6 +348,7 @@ class PluginTest extends TestCase
             'description' => 'Some really nice description',
             'name'        => 'getkirby/test-plugin',
             'license'     => 'MIT',
+            'link'        => 'https://getkirby.com',
             'root'        => $root,
             'version'     => '1.0.0'
         ];
