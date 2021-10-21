@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
@@ -26,6 +27,8 @@ class UserTest extends TestCase
 
     public function setUp(): void
     {
+        Blueprint::$loaded = [];
+
         $this->app = new App([
             'roots' => [
                 'index' => $this->tmp,
@@ -52,6 +55,76 @@ class UserTest extends TestCase
         $breadcrumb = (new User($model))->breadcrumb();
         $this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
         $this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
+    }
+
+    /**
+     * @covers ::home
+     */
+    public function testHome()
+    {
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $panel = new User($user);
+        $this->assertSame('site', $panel->home());
+    }
+
+    /**
+     * @covers ::home
+     */
+    public function testHomeWithCustomPath()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'home' => '/blog'
+                ]
+            ]
+        ]);
+
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $panel = new User($user);
+        $this->assertSame('/blog', $panel->home());
+    }
+
+    /**
+     * @covers ::home
+     */
+    public function testHomeWithCustomPathQuery()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'home' => '{{ site.find("test").panel.url }}'
+                ]
+            ]
+        ]);
+
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $panel = new User($user);
+        $this->assertSame('/panel/pages/test', $panel->home());
     }
 
     /**

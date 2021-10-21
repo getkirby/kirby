@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
@@ -25,6 +26,16 @@ class PanelTest extends TestCase
         ]);
 
         Dir::make($this->tmp);
+        // fix installation issues by creating directories
+        Dir::make($this->tmp . '/content');
+        Dir::make($this->tmp . '/media');
+        Dir::make($this->tmp . '/site/accounts');
+        Dir::make($this->tmp . '/site/sessions');
+
+        // let's pretend we are on a supported server
+        $_SERVER['SERVER_SOFTWARE'] = 'php';
+
+        Blueprint::$loaded = [];
     }
 
     public function tearDown(): void
@@ -73,12 +84,6 @@ class PanelTest extends TestCase
         $this->assertArrayHasKey('installation', $areas);
         $this->assertCount(1, $areas);
 
-        // fix installation issues by creating directories
-        Dir::make($this->tmp . '/content');
-        Dir::make($this->tmp . '/media');
-        Dir::make($this->tmp . '/site/accounts');
-        Dir::make($this->tmp . '/site/sessions');
-
         // create the first admin
         $this->app = $this->app->clone([
             'users' => [
@@ -88,9 +93,6 @@ class PanelTest extends TestCase
                 ]
             ]
         ]);
-
-        // let's pretend we are on a supported server
-        $_SERVER['SERVER_SOFTWARE'] = 'php';
 
         // unauthenticated / installed
         $areas = Panel::areas($this->app);
@@ -275,6 +277,163 @@ class PanelTest extends TestCase
             $this->assertSame('/foo/test', $r->getMessage());
             $this->assertSame(302, $r->getCode());
         }
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHome()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $app->impersonate('test@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/site');
+
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithoutUser()
+    {
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/login');
+
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithSession()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $this->app->session()->set('panel.path', 'users');
+        $this->app->impersonate('test@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/users');
+
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithSessionAndInvalidPath()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $this->app->session()->set('panel.path', 'login');
+        $this->app->impersonate('test@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/site');
+
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithMissingSiteAccess()
+    {
+        $app = $this->app->clone([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'permissions' => [
+                        'access' => [
+                            'site' => false,
+                        ]
+                    ]
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/users');
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithCustomHomeView()
+    {
+        $app = $this->app->clone([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'home' => 'account'
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/account');
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithCustomQueryForHomeView()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'home' => '{{ site.find("test").panel.url }}'
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/pages/test');
+        Panel::goHome();
     }
 
     /**

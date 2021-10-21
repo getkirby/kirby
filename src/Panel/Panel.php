@@ -7,6 +7,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -153,11 +155,70 @@ class Panel
      * @return void
      * @codeCoverageIgnore
      */
-    public static function go(?string $path = null, int $code = 302): void
+    public static function go(?string $url = null, int $code = 302): void
     {
-        $slug = kirby()->option('panel.slug', 'panel');
-        $url  = url($slug . '/' . trim($path, '/'));
+        if (Url::isAbsolute($url) === false) {
+            $slug = kirby()->option('panel.slug', 'panel');
+            $url  = url($slug . '/' . trim($url, '/'));
+        }
+
         throw new Redirect($url, $code);
+    }
+
+    /**
+     * Handles redirection to the correct area
+     * after login or when visiting the login or installation
+     * views after being already authenticated
+     *
+     * @return void
+     */
+    public static function goHome(): void
+    {
+        $kirby = kirby();
+        $user  = $kirby->user();
+
+        // go to the login if there's no authenticated
+        // user. This should in theory never happen in the
+        // fallback route, but let's just be safe. The rest
+        // of the code relies on an authenticated user
+        if (!$user) {
+            static::go('login');
+        }
+
+        // if the last path has been stored in the
+        // session, redirect the user to it
+        // (set after successful login)
+        $path = trim($kirby->session()->get('panel.path'), '/');
+
+        // ignore various paths when redirecting
+        // those would cause infinite redirect loops
+        if (in_array($path, ['', 'login', 'logout', 'installation'])) {
+            // get the home view for the current user
+            $path = $user->panel()->home();
+        }
+
+        // get the area id to check for firewall issues
+        $areaId = Str::split($path, '/')[0];
+
+        // check for access to the given area
+        if (static::hasAccess($user, $areaId) === false) {
+            // needed to create a proper menu
+            $areas       = static::areas();
+            $permissions = $user->role()->permissions()->toArray();
+
+            // go through the menu and search for the first
+            // available view we can go to
+            foreach (View::menu($areas, $permissions) as $menuItem) {
+                // skip separators and disabled items
+                if ($menuItem === '-' || ($menuItem['disabled'] ?? false) === true) {
+                    continue;
+                }
+
+                static::go($menuItem['link']);
+            }
+        }
+
+        static::go($path);
     }
 
     /**
@@ -364,18 +425,8 @@ class Panel
                 'installation',
                 'login',
             ],
-            'action' => function () use ($kirby) {
-                // if the last path has been stored in the
-                // session, redirect the user to it
-                // (used after successful login)
-                $path = trim($kirby->session()->get('panel.path'), '/');
-
-                // ignore various paths when redirecting
-                if (in_array($path, ['', 'login', 'logout', 'installation'])) {
-                    $path = 'site';
-                }
-
-                Panel::go($path);
+            'action' => function () {
+                Panel::goHome();
             }
         ];
 
