@@ -7,7 +7,7 @@ use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Parsley\Schema\Plain
+ * @coversDefaultClass \Kirby\Parsley\Schema\Plain
  */
 class PlainTest extends TestCase
 {

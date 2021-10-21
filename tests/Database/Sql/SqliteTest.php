@@ -8,7 +8,7 @@ use Kirby\Toolkit\A;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Database\Sql\Sqlite
+ * @coversDefaultClass \Kirby\Database\Sql\Sqlite
  */
 class SqliteTest extends TestCase
 {

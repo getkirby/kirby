@@ -6,7 +6,7 @@ use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Parsley\Element
+ * @coversDefaultClass \Kirby\Parsley\Element
  */
 class ElementTest extends TestCase
 {

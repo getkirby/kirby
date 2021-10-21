@@ -5,7 +5,7 @@ namespace Kirby\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\Txt
+ * @coversDefaultClass \Kirby\Data\Txt
  */
 class TxtTest extends TestCase
 {

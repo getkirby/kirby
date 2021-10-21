@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth\Status
+ * @coversDefaultClass \Kirby\Cms\Auth\Status
  * @covers ::__construct
  * @covers ::setChallenge
  * @covers ::setChallengeFallback

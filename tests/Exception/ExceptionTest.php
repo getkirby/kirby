@@ -17,7 +17,7 @@ class WillFail
 }
 
 /**
- * @coversDefaultClass Kirby\Exception\Exception
+ * @coversDefaultClass \Kirby\Exception\Exception
  */
 class ExceptionTest extends TestCase
 {

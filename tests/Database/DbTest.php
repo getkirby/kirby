@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
 /**
- * @coversDefaultClass Kirby\Database\Db
+ * @coversDefaultClass \Kirby\Database\Db
  */
 class DbTest extends TestCase
 {

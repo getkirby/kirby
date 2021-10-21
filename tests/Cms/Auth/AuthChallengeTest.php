@@ -8,7 +8,7 @@ use Kirby\Filesystem\Dir;
 require_once __DIR__ . '/../mocks.php';
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth
+ * @coversDefaultClass \Kirby\Cms\Auth
  */
 class AuthChallengeTest extends TestCase
 {

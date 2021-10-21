@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Toolkit\I18n
+ * @coversDefaultClass \Kirby\Toolkit\I18n
  */
 class I18nTest extends TestCase
 {

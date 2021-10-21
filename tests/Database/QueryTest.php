@@ -5,7 +5,7 @@ namespace Kirby\Database;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Database\Database
+ * @coversDefaultClass \Kirby\Database\Database
  */
 class QueryTest extends TestCase
 {
