@@ -26,7 +26,7 @@ abstract class FieldClass
     use HasSiblings;
 
     /**
-     * @var string|array|null
+     * @var string|null
      */
     protected $after;
 
@@ -36,7 +36,7 @@ abstract class FieldClass
     protected $autofocus;
 
     /**
-     * @var string|array|null
+     * @var string|null
      */
     protected $before;
 
@@ -51,7 +51,7 @@ abstract class FieldClass
     protected $disabled;
 
     /**
-     * @var string|array|null
+     * @var string|null
      */
     protected $help;
 
@@ -61,7 +61,7 @@ abstract class FieldClass
     protected $icon;
 
     /**
-     * @var string|array|null
+     * @var string|null
      */
     protected $label;
 
@@ -81,7 +81,7 @@ abstract class FieldClass
     protected $params;
 
     /**
-     * @var string|array|null
+     * @var string|null
      */
     protected $placeholder;
 
@@ -106,7 +106,7 @@ abstract class FieldClass
     protected $value;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $when;
 
@@ -214,10 +214,6 @@ abstract class FieldClass
      */
     public function default()
     {
-        if ($this->default === null) {
-            return;
-        }
-
         if (is_string($this->default) === false) {
             return $this->default;
         }
@@ -274,10 +270,10 @@ abstract class FieldClass
     }
 
     /**
-     * @param string|array $param
+     * @param string|array|null $param
      * @return string|null
      */
-    protected function i18n($param): ?string
+    protected function i18n($param = null): ?string
     {
         return empty($param) === false ? I18n::translate($param, $param) : null;
     }
@@ -384,7 +380,7 @@ abstract class FieldClass
     /**
      * Returns the parent model
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function model()
     {
@@ -524,7 +520,7 @@ abstract class FieldClass
     }
 
     /**
-     * @param array|string $after
+     * @param array|string|null $after
      * @return void
      */
     protected function setAfter($after = null)
@@ -542,7 +538,7 @@ abstract class FieldClass
     }
 
     /**
-     * @param array|string $before
+     * @param array|string|null $before
      * @return void
      */
     protected function setBefore($before = null)
@@ -569,7 +565,7 @@ abstract class FieldClass
     }
 
     /**
-     * @param array|string $help
+     * @param array|string|null $help
      * @return void
      */
     protected function setHelp($help = null)
@@ -581,13 +577,13 @@ abstract class FieldClass
      * @param string|null $icon
      * @return void
      */
-    protected function setIcon(string $icon = null)
+    protected function setIcon(?string $icon = null)
     {
         $this->icon = $icon;
     }
 
     /**
-     * @param array|string $label
+     * @param array|string|null $label
      * @return void
      */
     protected function setLabel($label = null)
@@ -614,7 +610,7 @@ abstract class FieldClass
     }
 
     /**
-     * @param array|string $placeholder
+     * @param array|string|null $placeholder
      * @return void
      */
     protected function setPlaceholder($placeholder = null)
@@ -635,7 +631,7 @@ abstract class FieldClass
      * @param \Kirby\Form\Fields|null $siblings
      * @return void
      */
-    protected function setSiblings(Fields $siblings = null)
+    protected function setSiblings(?Fields $siblings = null)
     {
         $this->siblings = $siblings ?? new Fields([$this]);
     }
@@ -828,9 +824,9 @@ abstract class FieldClass
 
     /**
      * @param mixed $value
-     * @return void
+     * @return array
      */
-    protected function valueFromYaml($value)
+    protected function valueFromYaml($value): array
     {
         return Data::decode($value, 'yaml');
     }
