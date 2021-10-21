@@ -13,14 +13,14 @@ return [
             return $inline;
         },
         /**
-         * Sets the allowed HTML formats. Available formats: `bold`, `italic`, `underline`, `strike`, `code`, `link`. Activate them all by passing `true`. Deactivate them all by passing `false`
+         * Sets the allowed HTML formats. Available formats: `bold`, `italic`, `underline`, `strike`, `code`, `link`, `email`. Activate them all by passing `true`. Deactivate them all by passing `false`
          * @param array|bool $marks
          */
         'marks' => function ($marks = true) {
             return $marks;
         },
         /**
-         * Sets the allowed nodes. Available nodes: `bulletList`, `orderedList`, `heading`, `horizontalRule`, `listItem`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `heading`, `bulletList`, `orderedList`.
+         * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
          * @param array|bool|null $nodes
          */
         'nodes' => function ($nodes = null) {
