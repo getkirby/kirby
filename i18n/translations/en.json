@@ -1,5 +1,6 @@
 {
   "add": "Add",
+  "author": "Author",
   "avatar": "Profile picture",
   "back": "Back",
   "cancel": "Cancel",
@@ -24,23 +25,27 @@
   "days.tue": "Tue",
   "days.wed": "Wed",
 
+  "debugging": "Debugging",
+
   "delete": "Delete",
   "delete.all": "Delete all",
-  "dimensions": "Dimensions",
-  "disabled": "Disabled",
-  "discard": "Discard",
-  "download": "Download",
-  "duplicate": "Duplicate",
-  "edit": "Edit",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Dimensions",
+  "disabled": "Disabled",
+  "discard": "Discard",
+  "download": "Download",
+  "duplicate": "Duplicate",
+
+  "edit": "Edit",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Invalid login",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Please enter a valid URL",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Previous",
   "preview": "Preview",
   "remove": "Remove",
@@ -461,6 +470,8 @@
   "title": "Title",
   "template": "Template",
   "today": "Today",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Your account",
   "view.installation": "Installation",
+  "view.languages": "Languages",
   "view.resetPassword": "Reset password",
-  "view.settings": "Settings",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Users",
 
   "welcome": "Welcome",

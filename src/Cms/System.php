@@ -57,25 +57,6 @@ class System
     }
 
     /**
-     * Get an status array of all checks
-     *
-     * @return array
-     */
-    public function status(): array
-    {
-        return [
-            'accounts'  => $this->accounts(),
-            'content'   => $this->content(),
-            'curl'      => $this->curl(),
-            'sessions'  => $this->sessions(),
-            'mbstring'  => $this->mbstring(),
-            'media'     => $this->media(),
-            'php'       => $this->php(),
-            'server'    => $this->server(),
-        ];
-    }
-
-    /**
      * Check for a writable accounts folder
      *
      * @return bool
@@ -235,44 +216,6 @@ class System
     }
 
     /**
-     * Normalizes the app's index URL for
-     * licensing purposes
-     *
-     * @param string|null $url Input URL, by default the app's index URL
-     * @return string Normalized URL
-     */
-    protected function licenseUrl(string $url = null): string
-    {
-        if ($url === null) {
-            $url = $this->indexUrl();
-        }
-
-        // remove common "testing" subdomains as well as www.
-        // to ensure that installations of the same site have
-        // the same license URL; only for installations at /,
-        // subdirectory installations are difficult to normalize
-        if (Str::contains($url, '/') === false) {
-            if (Str::startsWith($url, 'www.')) {
-                return substr($url, 4);
-            }
-
-            if (Str::startsWith($url, 'dev.')) {
-                return substr($url, 4);
-            }
-
-            if (Str::startsWith($url, 'test.')) {
-                return substr($url, 5);
-            }
-
-            if (Str::startsWith($url, 'staging.')) {
-                return substr($url, 8);
-            }
-        }
-
-        return $url;
-    }
-
-    /**
      * Loads the license file and returns
      * the license information if available
      *
@@ -331,6 +274,44 @@ class System
         } else {
             return true;
         }
+    }
+
+    /**
+     * Normalizes the app's index URL for
+     * licensing purposes
+     *
+     * @param string|null $url Input URL, by default the app's index URL
+     * @return string Normalized URL
+     */
+    protected function licenseUrl(string $url = null): string
+    {
+        if ($url === null) {
+            $url = $this->indexUrl();
+        }
+
+        // remove common "testing" subdomains as well as www.
+        // to ensure that installations of the same site have
+        // the same license URL; only for installations at /,
+        // subdirectory installations are difficult to normalize
+        if (Str::contains($url, '/') === false) {
+            if (Str::startsWith($url, 'www.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'dev.')) {
+                return substr($url, 4);
+            }
+
+            if (Str::startsWith($url, 'test.')) {
+                return substr($url, 5);
+            }
+
+            if (Str::startsWith($url, 'staging.')) {
+                return substr($url, 8);
+            }
+        }
+
+        return $url;
     }
 
     /**
@@ -428,6 +409,17 @@ class System
     }
 
     /**
+     * Returns a sorted collection of all
+     * installed plugins
+     *
+     * @return \Kirby\Cms\Collection
+     */
+    public function plugins()
+    {
+        return (new Collection(App::instance()->plugins()))->sortBy('name', 'asc');
+    }
+
+    /**
      * Validates the license key
      * and adds it to the .license file in the config
      * folder if possible.
@@ -494,6 +486,16 @@ class System
      */
     public function server(): bool
     {
+        return $this->serverSoftware() !== null;
+    }
+
+    /**
+     * Returns the detected server software
+     *
+     * @return string|null
+     */
+    public function serverSoftware(): ?string
+    {
         if ($servers = $this->app->option('servers')) {
             $servers = A::wrap($servers);
         } else {
@@ -508,7 +510,9 @@ class System
 
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 
-        return preg_match('!(' . implode('|', $servers) . ')!i', $software) > 0;
+        preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
+
+        return $matches[0] ?? null;
     }
 
     /**
@@ -519,6 +523,25 @@ class System
     public function sessions(): bool
     {
         return is_writable($this->app->root('sessions'));
+    }
+
+    /**
+     * Get an status array of all checks
+     *
+     * @return array
+     */
+    public function status(): array
+    {
+        return [
+            'accounts'  => $this->accounts(),
+            'content'   => $this->content(),
+            'curl'      => $this->curl(),
+            'sessions'  => $this->sessions(),
+            'mbstring'  => $this->mbstring(),
+            'media'     => $this->media(),
+            'php'       => $this->php(),
+            'server'    => $this->server(),
+        ];
     }
 
     /**
@@ -534,7 +557,7 @@ class System
         if ($site->title()->isNotEmpty()) {
             return $site->title()->value();
         }
-        
+
         return $site->blueprint()->title();
     }
 

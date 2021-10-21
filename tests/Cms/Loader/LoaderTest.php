@@ -97,7 +97,7 @@ class LoaderTest extends TestCase
         $this->assertSame('Your account', $areas['account']['label']);
         $this->assertSame('Installation', $areas['installation']['label']);
         $this->assertSame('Login', $areas['login']['label']);
-        $this->assertSame('Settings', $areas['settings']['label']);
+        $this->assertSame('System', $areas['system']['label']);
         $this->assertSame('Site', $areas['site']['label']);
         $this->assertSame('Users', $areas['users']['label']);
     }

@@ -105,7 +105,7 @@ class PanelTest extends TestCase
         $areas = Panel::areas($this->app);
 
         $this->assertArrayHasKey('site', $areas);
-        $this->assertArrayHasKey('settings', $areas);
+        $this->assertArrayHasKey('system', $areas);
         $this->assertArrayHasKey('users', $areas);
         $this->assertArrayHasKey('account', $areas);
         $this->assertCount(4, $areas);
@@ -199,7 +199,7 @@ class PanelTest extends TestCase
                     'title' => 'Editor',
                     'permissions' => [
                         'access' => [
-                            'settings' => false
+                            'system' => false
                         ]
                     ]
                 ]
@@ -224,8 +224,8 @@ class PanelTest extends TestCase
         $this->expectExceptionMessage('You are not allowed to access this part of the panel');
 
         // no area access
-        $this->assertFalse(Panel::hasAccess($app->user(), 'settings'));
-        Panel::firewall($app->user(), 'settings');
+        $this->assertFalse(Panel::hasAccess($app->user(), 'system'));
+        Panel::firewall($app->user(), 'system');
     }
 
     /**

@@ -589,6 +589,32 @@ class ViewTest extends TestCase
     /**
      * @covers ::menu
      */
+    public function testMenuAccess()
+    {
+        $menu = View::menu(
+            [
+                'site' => [
+                    'icon'  => 'home',
+                    'label' => 'Site',
+                    'link'  => 'site',
+                    'menu'  => true,
+                ]
+            ],
+            [
+                'access' => [
+                    'site' => false
+                ]
+            ],
+            'site'
+        );
+
+        $this->assertCount(4, $menu);
+        $this->assertSame('-', $menu[0]);
+    }
+
+    /**
+     * @covers ::menu
+     */
     public function testMenuCallback()
     {
         $menu = View::menu(

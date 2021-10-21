@@ -71,9 +71,10 @@ class Core
         return [
             'account'      => $this->root . '/areas/account.php',
             'installation' => $this->root . '/areas/installation.php',
+            'languages'    => $this->root . '/areas/languages.php',
             'login'        => $this->root . '/areas/login.php',
-            'settings'     => $this->root . '/areas/settings.php',
             'site'         => $this->root . '/areas/site.php',
+            'system'       => $this->root . '/areas/system.php',
             'users'        => $this->root . '/areas/users.php',
         ];
     }

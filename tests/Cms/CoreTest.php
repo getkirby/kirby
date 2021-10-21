@@ -34,7 +34,7 @@ class CoreTest extends TestCase
         $this->assertArrayHasKey('account', $areas);
         $this->assertArrayHasKey('installation', $areas);
         $this->assertArrayHasKey('login', $areas);
-        $this->assertArrayHasKey('settings', $areas);
+        $this->assertArrayHasKey('system', $areas);
         $this->assertArrayHasKey('site', $areas);
         $this->assertArrayHasKey('users', $areas);
     }

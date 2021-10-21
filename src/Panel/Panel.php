@@ -73,11 +73,16 @@ class Panel
 
         unset($areas['installation'], $areas['login']);
 
+        // disable the language area for single-language installations
+        if (!$kirby->option('languages')) {
+            unset($areas['languages']);
+        }
 
         $menu = $kirby->option('panel.menu', [
             'site',
-            'settings',
-            'users'
+            'languages',
+            'users',
+            'system',
         ]);
 
         $result = [];

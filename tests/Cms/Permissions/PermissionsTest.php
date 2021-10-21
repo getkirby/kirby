@@ -131,4 +131,18 @@ class PermissionsTest extends TestCase
 
         new Permissions();
     }
+
+    /**
+     * @todo Remove in 3.7
+     */
+    public function testSettingsFallback()
+    {
+        $permissions = new Permissions([
+            'access' => [
+                'settings' => false
+            ]
+        ]);
+
+        $this->assertFalse($permissions->for('access.system'));
+    }
 }
