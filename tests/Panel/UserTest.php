@@ -67,7 +67,7 @@ class UserTest extends TestCase
         ]);
 
         $panel = new User($user);
-        $this->assertSame('site', $panel->home());
+        $this->assertSame('/panel/site', $panel->home());
     }
 
     /**

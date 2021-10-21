@@ -363,7 +363,6 @@ class View
             ];
         }
 
-        // account
         $menu[] = '-';
         $menu[] = [
             'current'  => $current === 'account',

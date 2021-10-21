@@ -93,10 +93,11 @@ class User extends Model
     public function home(): ?string
     {
         if ($home = ($this->model->blueprint()->home() ?? null)) {
-            return $this->model->toString($home);
+            $url = $this->model->toString($home);
+            return url($url);
         }
 
-        return 'site';
+        return Panel::url('site');
     }
 
     /**

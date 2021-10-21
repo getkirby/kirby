@@ -157,12 +157,7 @@ class Panel
      */
     public static function go(?string $url = null, int $code = 302): void
     {
-        if (Url::isAbsolute($url) === false) {
-            $slug = kirby()->option('panel.slug', 'panel');
-            $url  = url($slug . '/' . trim($url, '/'));
-        }
-
-        throw new Redirect($url, $code);
+        throw new Redirect(static::url($url), $code);
     }
 
     /**
@@ -174,51 +169,7 @@ class Panel
      */
     public static function goHome(): void
     {
-        $kirby = kirby();
-        $user  = $kirby->user();
-
-        // go to the login if there's no authenticated
-        // user. This should in theory never happen in the
-        // fallback route, but let's just be safe. The rest
-        // of the code relies on an authenticated user
-        if (!$user) {
-            static::go('login');
-        }
-
-        // if the last path has been stored in the
-        // session, redirect the user to it
-        // (set after successful login)
-        $path = trim($kirby->session()->get('panel.path'), '/');
-
-        // ignore various paths when redirecting
-        // those would cause infinite redirect loops
-        if (in_array($path, ['', 'login', 'logout', 'installation'])) {
-            // get the home view for the current user
-            $path = $user->panel()->home();
-        }
-
-        // get the area id to check for firewall issues
-        $areaId = Str::split($path, '/')[0];
-
-        // check for access to the given area
-        if (static::hasAccess($user, $areaId) === false) {
-            // needed to create a proper menu
-            $areas       = static::areas();
-            $permissions = $user->role()->permissions()->toArray();
-
-            // go through the menu and search for the first
-            // available view we can go to
-            foreach (View::menu($areas, $permissions) as $menuItem) {
-                // skip separators and disabled items
-                if ($menuItem === '-' || ($menuItem['disabled'] ?? false) === true) {
-                    continue;
-                }
-
-                static::go($menuItem['link']);
-            }
-        }
-
-        static::go($path);
+        static::go(Home::url());
     }
 
     /**
@@ -621,5 +572,33 @@ class Panel
         $kirby->setCurrentTranslation($translation);
 
         return $translation;
+    }
+
+    /**
+     * Creates an absolute Panel URL
+     * independent of the Panel slug config
+     *
+     * @param string|null $url
+     * @return string
+     */
+    public static function url(?string $url = null): string
+    {
+        $slug = kirby()->option('panel.slug', 'panel');
+
+        // only touch relative paths
+        if (Url::isAbsolute($url) === false) {
+            $path = trim($url, '/');
+
+            // add the panel slug prefix if it it's not
+            // included in the path yet
+            if (Str::startsWith($path, $slug . '/') === false) {
+                $path = $slug . '/' . $path;
+            }
+
+            // create an absolute URL
+            $url = url($path);
+        }
+
+        return $url;
     }
 }

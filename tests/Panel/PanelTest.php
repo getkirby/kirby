@@ -19,6 +19,8 @@ class PanelTest extends TestCase
 
     public function setUp(): void
     {
+        Blueprint::$loaded = [];
+
         $this->app = new App([
             'roots' => [
                 'index' => $this->tmp,
@@ -34,8 +36,6 @@ class PanelTest extends TestCase
 
         // let's pretend we are on a supported server
         $_SERVER['SERVER_SOFTWARE'] = 'php';
-
-        Blueprint::$loaded = [];
     }
 
     public function tearDown(): void
@@ -349,10 +349,12 @@ class PanelTest extends TestCase
         $this->app->session()->set('panel.path', 'login');
         $this->app->impersonate('test@getkirby.com');
 
-        $this->expectException('Kirby\Panel\Redirect');
-        $this->expectExceptionMessage('/panel/site');
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid redirect URL');
 
-        Panel::goHome();
+
+
+        dump(Panel::goHome());
     }
 
     /**
@@ -380,6 +382,36 @@ class PanelTest extends TestCase
 
         $this->expectException('Kirby\Panel\Redirect');
         $this->expectExceptionMessage('/panel/users');
+        Panel::goHome();
+    }
+
+    /**
+     * @covers ::goHome
+     */
+    public function testGoHomeWithAccountAccessOnly()
+    {
+        $app = $this->app->clone([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'permissions' => [
+                        'access' => [
+                            'site'  => false,
+                            'users' => false,
+                            'system' => false
+                        ]
+                    ]
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $this->expectException('Kirby\Panel\Redirect');
+        $this->expectExceptionMessage('/panel/account');
         Panel::goHome();
     }
 
