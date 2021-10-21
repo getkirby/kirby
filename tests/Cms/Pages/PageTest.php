@@ -1028,13 +1028,13 @@ class PageTest extends TestCase
             'blueprints' => [
                 'pages/accessible-bar' => [
                     'options' => [
-                        'read' => true,
+                        'access' => true,
                         'show' => false
                     ]
                 ],
                 'pages/accessible-baz' => [
                     'options' => [
-                        'read' => false,
+                        'access' => false,
                         'show' => true
                     ]
                 ]
@@ -1062,7 +1062,7 @@ class PageTest extends TestCase
         $this->assertTrue($page->isAccessible());
 
         $page = $app->page('bar');
-        $this->assertFalse($page->isAccessible());
+        $this->assertTrue($page->isAccessible());
 
         $page = $app->page('baz');
         $this->assertFalse($page->isAccessible());

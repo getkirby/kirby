@@ -37,6 +37,7 @@ class PageBlueprint extends Blueprint
                 'delete'         => null,
                 'duplicate'      => null,
                 'preview'        => null,
+                'read'           => null,
                 'show'           => null,
                 'sort'           => null,
                 'update'         => null,

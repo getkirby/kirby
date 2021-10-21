@@ -50,7 +50,7 @@ class PageBlueprintApiModelTest extends ApiModelTestCase
         $this->assertArrayHasKey('changeTitle', $options);
         $this->assertArrayHasKey('create', $options);
         $this->assertArrayHasKey('delete', $options);
-        $this->assertArrayHasKey('read', $options);
+        $this->assertArrayHasKey('access', $options);
         $this->assertArrayHasKey('preview', $options);
         $this->assertArrayHasKey('sort', $options);
         $this->assertArrayHasKey('update', $options);

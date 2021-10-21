@@ -795,12 +795,11 @@ class Page extends ModelWithContent
      *
      * @deprecated 3.6.0 `read` option is split into as `access` and `show`.
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isReadable(): bool
     {
-        // @codeCoverageIgnoreStart
         deprecated('`read` option is split into as `access` and `show`. This option will be removed in 3.7.0');
-        // @codeCoverageIgnoreEnd
 
         static $readable = [];
 

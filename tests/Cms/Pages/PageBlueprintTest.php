@@ -13,6 +13,7 @@ class PageBlueprintTest extends TestCase
         ]);
 
         $expected = [
+            'access'         => null,
             'changeSlug'     => null,
             'changeStatus'   => null,
             'changeTemplate' => null,
@@ -47,6 +48,7 @@ class PageBlueprintTest extends TestCase
         ]);
 
         $expected = [
+            'access'         => null,
             'changeSlug'     => true,
             'changeStatus'   => null,
             'changeTemplate' => false,
@@ -56,8 +58,8 @@ class PageBlueprintTest extends TestCase
             'duplicate'      => null,
             'preview'        => null,
             'read'           => null,
-            'sort'           => null,
             'show'           => null,
+            'sort'           => null,
             'update'         => null,
         ];
 
@@ -84,6 +86,7 @@ class PageBlueprintTest extends TestCase
         ]);
 
         $expected = [
+            'access'         => null,
             'changeSlug'     => true,
             'changeStatus'   => null,
             'changeTemplate' => false,
