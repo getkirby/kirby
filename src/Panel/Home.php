@@ -28,6 +28,13 @@ use Throwable;
 class Home
 {
     /**
+     * Returns an alternative URL if access
+     * to the first choice is blocked.
+     *
+     * It will go through the entire menu and
+     * take the first area which is not disabled
+     * or locked in other ways
+     *
      * @return string
      */
     public static function alternative(): string
@@ -75,6 +82,13 @@ class Home
     }
 
     /**
+     * Returns the custom Panel URL for the user
+     * if the user role blueprint defines one via the
+     * `home` option. If not, the custom URL is simply
+     * `/panel/site` as always. If there's no
+     * authenticated user, the link to the login
+     * view is returned instead
+     *
      * @return string
      */
     public static function custom(): string
@@ -89,6 +103,11 @@ class Home
     }
 
     /**
+     * Checks if the user has access to the given
+     * panel path. This is quite tricky, because we
+     * need to call a trimmed down router to check
+     * for available routes and their firewall status.
+     *
      * @param string $path
      * @return bool
      */
@@ -132,6 +151,11 @@ class Home
     }
 
     /**
+     * Checks if the given Uri has the same domain
+     * as the index URL of the Kirby installation.
+     * This is used to block external URLs to third-party
+     * domains as redirect options.
+     *
      * @param \Kirby\Http\Uri $uri
      * @return bool
      */
@@ -141,6 +165,8 @@ class Home
     }
 
     /**
+     * Checks if the given URL is a Panel Url.
+     *
      * @param string $url
      * @return bool
      */
@@ -150,6 +176,9 @@ class Home
     }
 
     /**
+     * Returns the path after /panel/ which can then
+     * be used in the router or to find a matching view
+     *
      * @param string $url
      * @return string|null
      */
@@ -160,6 +189,11 @@ class Home
     }
 
     /**
+     * Returns the Url that has been stored in the session
+     * before the last logout. We take this Url if possible
+     * to redirect the user back to the last point where they
+     * left before they got logged out.
+     *
      * @return string|null
      */
     public static function remembered(): ?string
@@ -172,6 +206,27 @@ class Home
     }
 
     /**
+     * Tries to find the best possible Url to redirect
+     * the user to after the login.
+     *
+     * When the user got logged out, we try to send them back
+     * to the point where they left.
+     *
+     * If they have a custom redirect Url defined in their blueprint
+     * via the `home` option, we send them there if no Url is stored
+     * in the session.
+     *
+     * If none of the options above find any result, we try to send
+     * them to the site view.
+     *
+     * Before the redirect happens, the final Url is sanitized, the query
+     * and params are removed to avoid any attacks and the domain is compared
+     * to avoid redirects to external Urls.
+     *
+     * Afterwards, we also check for permissions before the redirect happens
+     * to avoid redirects to inaccessible Panel views. In such a case
+     * the next best accessible view is picked from the menu.
+     *
      * @return string
      */
     public static function url(): string
