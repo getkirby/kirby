@@ -566,7 +566,15 @@ class Page extends ModelWithContent
      */
     public function isAccessible(): bool
     {
-        return $this->isReadable() === true && $this->isVisible() === true;
+        static $accessible = [];
+
+        $template = $this->intendedTemplate()->name();
+
+        if (isset($accessible[$template]) === true) {
+            return $accessible[$template];
+        }
+
+        return $accessible[$template] = $this->permissions()->can('access');
     }
 
     /**
@@ -785,10 +793,15 @@ class Page extends ModelWithContent
     /**
      * Check if the page can be read by the current user
      *
+     * @deprecated 3.6.0 `read` option is split into as `access` and `show`.
      * @return bool
      */
     public function isReadable(): bool
     {
+        // @codeCoverageIgnoreStart
+        deprecated('`read` option is split into as `access` and `show`. This option will be removed in 3.7.0');
+        // @codeCoverageIgnoreEnd
+
         static $readable = [];
 
         $template = $this->intendedTemplate()->name();
@@ -859,7 +872,9 @@ class Page extends ModelWithContent
             return $visible[$template];
         }
 
-        return $visible[$template] = $this->permissions()->can('show');
+        $visible[$template] = $this->permissions()->can('show');
+
+        return $this->isAccessible() === true && $visible[$template] === true;
     }
 
     /**

@@ -119,7 +119,7 @@ return [
             foreach ($pages->data as $id => $page) {
 
                 // remove all protected pages
-                if ($page->isAccessible() === false) {
+                if ($page->isVisible() === false) {
                     unset($pages->data[$id]);
                     continue;
                 }

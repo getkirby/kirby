@@ -47,6 +47,7 @@ class Permissions
             'delete' => true
         ],
         'pages' => [
+            'access'         => true,
             'changeSlug'     => true,
             'changeStatus'   => true,
             'changeTemplate' => true,
@@ -55,7 +56,6 @@ class Permissions
             'delete'         => true,
             'duplicate'      => true,
             'preview'        => true,
-            'read'           => true,
             'show'           => true,
             'sort'           => true,
             'update'         => true
