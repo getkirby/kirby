@@ -90,7 +90,7 @@ export default {
   methods: {
     sluggify(value) {
       return this.$helper.slug(
-        value.trim(),
+        value,
         [this.slugs, this.$system.ascii],
         this.allow
       );
