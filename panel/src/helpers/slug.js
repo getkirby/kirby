@@ -1,6 +1,10 @@
 import "./regex.js";
 
 export default (string, rules = [], allowed = "") => {
+  if (!string) {
+    return "";
+  }
+
   const separator = "-";
   allowed = "a-z0-9" + allowed;
   string  = string.trim().toLowerCase();
