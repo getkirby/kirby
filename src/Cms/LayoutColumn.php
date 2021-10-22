@@ -50,7 +50,7 @@ class LayoutColumn extends Item
      *
      * @return \Kirby\Cms\Blocks
      */
-    public function blocks()
+    public function blocks(): Blocks
     {
         return $this->blocks;
     }

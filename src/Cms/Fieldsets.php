@@ -20,7 +20,7 @@ class Fieldsets extends Items
 {
     const ITEM_CLASS = '\Kirby\Cms\Fieldset';
 
-    protected static function createFieldsets($params)
+    protected static function createFieldsets($params): array
     {
         $fieldsets = [];
         $groups = [];

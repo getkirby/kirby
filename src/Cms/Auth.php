@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Throwable;
@@ -93,7 +94,7 @@ class Auth
      * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
      * @throws \Kirby\Exception\PermissionException If the rate limit is exceeded
      */
-    public function createChallenge(string $email, bool $long = false, string $mode = 'login')
+    public function createChallenge(string $email, bool $long = false, string $mode = 'login'): Status
     {
         // ensure that email addresses with IDN domains are in Unicode format
         $email = Idn::decodeEmail($email);
@@ -184,7 +185,7 @@ class Auth
      *
      * @return string|false
      */
-    public function csrf()
+    public function csrf(): bool|string
     {
         // get the csrf from the header
         $fromHeader = $this->kirby->request()->csrf();
@@ -210,7 +211,7 @@ class Auth
      * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
      * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
      */
-    public function currentUserFromBasicAuth(BasicAuth $auth = null)
+    public function currentUserFromBasicAuth(BasicAuth $auth = null): ?User
     {
         if ($this->kirby->option('api.basicAuth', false) !== true) {
             throw new PermissionException('Basic authentication is not activated');
@@ -249,7 +250,7 @@ class Auth
      *
      * @return \Kirby\Cms\User|null
      */
-    public function currentUserFromImpersonation()
+    public function currentUserFromImpersonation(): ?User
     {
         return $this->impersonate;
     }
@@ -304,7 +305,7 @@ class Auth
      * @return \Kirby\Cms\User|null
      * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
      */
-    public function impersonate(?string $who = null)
+    public function impersonate(?string $who = null): ?User
     {
         // clear the status cache
         $this->status = null;
@@ -388,7 +389,7 @@ class Auth
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
      * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
-    public function login(string $email, string $password, bool $long = false)
+    public function login(string $email, string $password, bool $long = false): User
     {
         // session options
         $options = [
@@ -452,7 +453,7 @@ class Auth
      *                                 logged in user will be returned
      * @return \Kirby\Cms\Auth\Status
      */
-    public function status($session = null, bool $allowImpersonation = true)
+    public function status($session = null, bool $allowImpersonation = true): Status
     {
         // try to return from cache
         if ($this->status && $session === null && $allowImpersonation === true) {
@@ -504,7 +505,7 @@ class Auth
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
      * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
-    public function validatePassword(string $email, string $password)
+    public function validatePassword(string $email, string $password): User
     {
         // ensure that email addresses with IDN domains are in Unicode format
         $email = Idn::decodeEmail($email);
@@ -726,7 +727,7 @@ class Auth
      *
      * @throws \Throwable If an authentication error occured
      */
-    public function user($session = null, bool $allowImpersonation = true)
+    public function user($session = null, bool $allowImpersonation = true): User|bool|null
     {
         if ($allowImpersonation === true && $this->impersonate !== null) {
             return $this->impersonate;
@@ -775,7 +776,7 @@ class Auth
      * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
      * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid
      */
-    public function verifyChallenge(string $code)
+    public function verifyChallenge(string $code): User
     {
         try {
             $session = $this->kirby->session();
@@ -855,7 +856,7 @@ class Auth
      * @param \Kirby\Session\Session|array|null $session
      * @return \Kirby\Session\Session
      */
-    protected function session($session = null)
+    protected function session($session = null): Session
     {
         // use passed session options or session object if set
         if (is_array($session) === true) {

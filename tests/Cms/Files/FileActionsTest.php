@@ -11,7 +11,7 @@ class FileActionsTest extends TestCase
     protected $app;
     protected $fixtures;
 
-    public function app()
+    public function app(): App
     {
         return new App([
             'roots' => [
@@ -44,7 +44,7 @@ class FileActionsTest extends TestCase
         ]);
     }
 
-    public function appWithLanguages()
+    public function appWithLanguages(): App
     {
         return $this->app()->clone([
             'languages' => [
@@ -72,7 +72,7 @@ class FileActionsTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function parentProvider()
+    public function parentProvider(): array
     {
         $app = $this->app();
 

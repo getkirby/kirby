@@ -51,7 +51,7 @@ class Role extends Model
      * @param array $inject
      * @return static
      */
-    public static function admin(array $inject = [])
+    public static function admin(array $inject = []): static
     {
         try {
             return static::load('admin');
@@ -94,7 +94,7 @@ class Role extends Model
      * @param array $inject
      * @return static
      */
-    public static function factory(array $props, array $inject = [])
+    public static function factory(array $props, array $inject = []): static
     {
         return new static($props + $inject);
     }
@@ -128,7 +128,7 @@ class Role extends Model
      * @param array $inject
      * @return static
      */
-    public static function load(string $file, array $inject = [])
+    public static function load(string $file, array $inject = []): static
     {
         $data = Data::read($file);
         $data['name'] = F::name($file);
@@ -148,7 +148,7 @@ class Role extends Model
      * @param array $inject
      * @return static
      */
-    public static function nobody(array $inject = [])
+    public static function nobody(array $inject = []): static
     {
         try {
             return static::load('nobody');
@@ -169,7 +169,7 @@ class Role extends Model
      * @param mixed $description
      * @return $this
      */
-    protected function setDescription($description = null)
+    protected function setDescription($description = null): static
     {
         $this->description = I18n::translate($description, $description);
         return $this;
@@ -179,7 +179,7 @@ class Role extends Model
      * @param string $name
      * @return $this
      */
-    protected function setName(string $name)
+    protected function setName(string $name): static
     {
         $this->name = $name;
         return $this;
@@ -189,7 +189,7 @@ class Role extends Model
      * @param mixed $permissions
      * @return $this
      */
-    protected function setPermissions($permissions = null)
+    protected function setPermissions($permissions = null): static
     {
         $this->permissions = new Permissions($permissions);
         return $this;
@@ -199,7 +199,7 @@ class Role extends Model
      * @param mixed $title
      * @return $this
      */
-    protected function setTitle($title = null)
+    protected function setTitle($title = null): static
     {
         $this->title = I18n::translate($title, $title);
         return $this;

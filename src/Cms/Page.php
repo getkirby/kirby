@@ -225,7 +225,7 @@ class Page extends ModelWithContent
      *
      * @return \Kirby\Cms\PageBlueprint
      */
-    public function blueprint()
+    public function blueprint(): PageBlueprint
     {
         if (is_a($this->blueprint, 'Kirby\Cms\PageBlueprint') === true) {
             return $this->blueprint;
@@ -964,7 +964,7 @@ class Page extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImageSource(string $query = null): File|Asset|null
     {
         if ($query === null) {
             $query = 'page.image';
@@ -1095,7 +1095,7 @@ class Page extends ModelWithContent
      *
      * @return \Kirby\Cms\PagePermissions
      */
-    public function permissions()
+    public function permissions(): PagePermissions
     {
         return new PagePermissions($this);
     }
@@ -1201,7 +1201,7 @@ class Page extends ModelWithContent
      * @return \Kirby\Cms\Template
      * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
      */
-    public function representation($type)
+    public function representation($type): Template
     {
         $kirby          = $this->kirby();
         $template       = $this->template();
@@ -1232,7 +1232,7 @@ class Page extends ModelWithContent
      *
      * @return \Kirby\Cms\PageRules
      */
-    protected function rules()
+    protected function rules(): PageRules
     {
         return new PageRules();
     }
@@ -1244,7 +1244,7 @@ class Page extends ModelWithContent
      * @param array $params
      * @return \Kirby\Cms\Pages
      */
-    public function search(string $query = null, $params = [])
+    public function search(string $query = null, $params = []): Pages
     {
         return $this->index()->search($query, $params);
     }

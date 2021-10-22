@@ -18,7 +18,7 @@ class MyModel extends Model
         return $this;
     }
 
-    public function id()
+    public function id(): int|string|null
     {
         return $this->id;
     }

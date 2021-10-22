@@ -84,7 +84,7 @@ trait PageSiblings
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function nextUnlisted($collection = null)
+    public function nextUnlisted($collection = null): ?Page
     {
         return $this->nextAll($collection)->unlisted()->first();
     }
@@ -96,7 +96,7 @@ trait PageSiblings
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function prevListed($collection = null)
+    public function prevListed($collection = null): ?Page
     {
         return $this->prevAll($collection)->listed()->last();
     }
@@ -108,7 +108,7 @@ trait PageSiblings
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function prevUnlisted($collection = null)
+    public function prevUnlisted($collection = null): ?Page
     {
         return $this->prevAll($collection)->unlisted()->first();
     }
@@ -118,7 +118,7 @@ trait PageSiblings
      *
      * @return \Kirby\Cms\Collection
      */
-    protected function siblingsCollection()
+    protected function siblingsCollection(): Collection
     {
         if ($this->isDraft() === true) {
             return $this->parentModel()->drafts();
@@ -133,7 +133,7 @@ trait PageSiblings
      * @param bool $self
      * @return \Kirby\Cms\Pages
      */
-    public function templateSiblings(bool $self = true)
+    public function templateSiblings(bool $self = true): Pages
     {
         return $this->siblings($self)->filter('intendedTemplate', $this->intendedTemplate()->name());
     }

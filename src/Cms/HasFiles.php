@@ -25,7 +25,7 @@ trait HasFiles
      *
      * @return \Kirby\Cms\Files
      */
-    public function audio()
+    public function audio(): Files
     {
         return $this->files()->filter('type', '==', 'audio');
     }
@@ -35,7 +35,7 @@ trait HasFiles
      *
      * @return \Kirby\Cms\Files
      */
-    public function code()
+    public function code(): Files
     {
         return $this->files()->filter('type', '==', 'code');
     }
@@ -57,7 +57,7 @@ trait HasFiles
      * @param array $props
      * @return \Kirby\Cms\File
      */
-    public function createFile(array $props)
+    public function createFile(array $props): File
     {
         $props = array_merge($props, [
             'parent' => $this,
@@ -72,7 +72,7 @@ trait HasFiles
      *
      * @return \Kirby\Cms\Files
      */
-    public function documents()
+    public function documents(): Files
     {
         return $this->files()->filter('type', '==', 'document');
     }
@@ -84,7 +84,7 @@ trait HasFiles
      * @param string $in
      * @return \Kirby\Cms\File|null
      */
-    public function file(string $filename = null, string $in = 'files')
+    public function file(string $filename = null, string $in = 'files'): ?File
     {
         if ($filename === null) {
             return $this->$in()->first();
@@ -109,7 +109,7 @@ trait HasFiles
      *
      * @return \Kirby\Cms\Files
      */
-    public function files()
+    public function files(): Files
     {
         if (is_a($this->files, 'Kirby\Cms\Files') === true) {
             return $this->files;
@@ -184,7 +184,7 @@ trait HasFiles
      * @param string|null $filename
      * @return \Kirby\Cms\File|null
      */
-    public function image(string $filename = null)
+    public function image(string $filename = null): ?File
     {
         return $this->file($filename, 'images');
     }
@@ -219,7 +219,7 @@ trait HasFiles
      *
      * @return \Kirby\Cms\Files
      */
-    public function videos()
+    public function videos(): Files
     {
         return $this->files()->filter('type', '==', 'video');
     }

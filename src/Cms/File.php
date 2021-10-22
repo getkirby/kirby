@@ -178,7 +178,7 @@ class File extends ModelWithContent
      *
      * @return \Kirby\Cms\FileBlueprint
      */
-    public function blueprint()
+    public function blueprint(): FileBlueprint
     {
         if (is_a($this->blueprint, 'Kirby\Cms\FileBlueprint') === true) {
             return $this->blueprint;
@@ -499,7 +499,7 @@ class File extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImageSource(string $query = null): File|Asset|null
     {
         if ($query === null && $this->isViewable()) {
             return $this;
@@ -759,7 +759,7 @@ class File extends ModelWithContent
      *
      * @return \Kirby\Cms\Site
      */
-    public function site()
+    public function site(): Site
     {
         return is_a($this->parent(), 'Kirby\Cms\Site') === true ? $this->parent() : $this->kirby()->site();
     }

@@ -40,7 +40,7 @@ class Url extends BaseUrl
      * @param string $extension
      * @return string|null
      */
-    public static function toTemplateAsset(string $assetPath, string $extension)
+    public static function toTemplateAsset(string $assetPath, string $extension): ?string
     {
         $kirby = App::instance();
         $page  = $kirby->site()->page();

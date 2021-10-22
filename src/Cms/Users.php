@@ -27,7 +27,7 @@ class Users extends Collection
      */
     public static $methods = [];
 
-    public function create(array $data)
+    public function create(array $data): User
     {
         return User::create($data);
     }
@@ -65,7 +65,7 @@ class Users extends Collection
      * @param array $inject
      * @return static
      */
-    public static function factory(array $users, array $inject = [])
+    public static function factory(array $users, array $inject = []): static
     {
         $collection = new static();
 
@@ -84,7 +84,7 @@ class Users extends Collection
      * @param string $key
      * @return \Kirby\Cms\User|null
      */
-    public function findByKey(string $key)
+    public function findByKey(string $key): ?User
     {
         if (Str::contains($key, '@') === true) {
             return parent::findBy('email', Str::lower($key));
@@ -100,7 +100,7 @@ class Users extends Collection
      * @param array $inject
      * @return static
      */
-    public static function load(string $root, array $inject = [])
+    public static function load(string $root, array $inject = []): static
     {
         $users = new static();
 
@@ -133,7 +133,7 @@ class Users extends Collection
      * @param string $role
      * @return static
      */
-    public function role(string $role)
+    public function role(string $role): static
     {
         return $this->filter('role', $role);
     }

@@ -141,7 +141,7 @@ class Translation
      * @param array $inject
      * @return static
      */
-    public static function load(string $code, string $root, array $inject = [])
+    public static function load(string $code, string $root, array $inject = []): static
     {
         try {
             $data = array_merge(Data::read($root), $inject);

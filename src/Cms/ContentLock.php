@@ -89,7 +89,7 @@ class ContentLock
      *
      * @return array|bool
      */
-    public function get()
+    public function get(): bool|array
     {
         $data = $this->data['lock'] ?? [];
 

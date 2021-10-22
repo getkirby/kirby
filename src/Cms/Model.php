@@ -45,9 +45,9 @@ abstract class Model
     /**
      * Each model must return a unique id
      *
-     * @return string|int
+     * @return int|string|null
      */
-    public function id()
+    public function id(): int|string|null
     {
         return null;
     }
@@ -57,7 +57,7 @@ abstract class Model
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return static::$kirby = static::$kirby ?? App::instance();
     }
@@ -67,7 +67,7 @@ abstract class Model
      *
      * @return \Kirby\Cms\Site
      */
-    public function site()
+    public function site(): Site
     {
         return $this->site = $this->site ?? $this->kirby()->site();
     }

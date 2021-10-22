@@ -34,7 +34,7 @@ trait HasChildren
      *
      * @return \Kirby\Cms\Pages
      */
-    public function children()
+    public function children(): Pages
     {
         if (is_a($this->children, 'Kirby\Cms\Pages') === true) {
             return $this->children;
@@ -48,7 +48,7 @@ trait HasChildren
      *
      * @return \Kirby\Cms\Pages
      */
-    public function childrenAndDrafts()
+    public function childrenAndDrafts(): Pages
     {
         return $this->children()->merge($this->drafts());
     }
@@ -70,7 +70,7 @@ trait HasChildren
      * @param string $path
      * @return \Kirby\Cms\Page|null
      */
-    public function draft(string $path)
+    public function draft(string $path): ?Page
     {
         $path = str_replace('_drafts/', '', $path);
 
@@ -103,7 +103,7 @@ trait HasChildren
      *
      * @return \Kirby\Cms\Pages
      */
-    public function drafts()
+    public function drafts(): Pages
     {
         if (is_a($this->drafts, 'Kirby\Cms\Pages') === true) {
             return $this->drafts;
@@ -139,7 +139,7 @@ trait HasChildren
      * @param string $path
      * @return \Kirby\Cms\Page|null
      */
-    public function findPageOrDraft(string $path)
+    public function findPageOrDraft(string $path): ?Page
     {
         return $this->children()->find($path) ?? $this->drafts()->find($path);
     }
@@ -149,7 +149,7 @@ trait HasChildren
      *
      * @return \Kirby\Cms\Pages
      */
-    public function grandChildren()
+    public function grandChildren(): Pages
     {
         return $this->children()->children();
     }

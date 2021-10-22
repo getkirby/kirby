@@ -33,10 +33,10 @@ class UserPicker extends Picker
     /**
      * Search all users for the picker
      *
-     * @return \Kirby\Cms\Users|null
+     * @return \Kirby\Cms\Collection|null
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public function items()
+    public function items(): ?Collection
     {
         $model = $this->options['model'];
 

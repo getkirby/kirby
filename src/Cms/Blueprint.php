@@ -221,7 +221,7 @@ class Blueprint
      * @param \Kirby\Cms\Model $model
      * @return static|null
      */
-    public static function factory(string $name, string $fallback = null, Model $model)
+    public static function factory(string $name, string $fallback = null, Model $model): ?static
     {
         try {
             $props = static::load($name);

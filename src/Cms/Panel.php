@@ -30,7 +30,7 @@ class Panel
      * @param \Kirby\Cms\App $kirby
      * @return string|false
      */
-    public static function customCss(App $kirby)
+    public static function customCss(App $kirby): bool|string
     {
         if ($css = $kirby->option('panel.css')) {
             $asset = asset($css);
@@ -93,8 +93,9 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @return \Kirby\Http\Response
+     * @throws Throwable
      */
-    public static function render(App $kirby)
+    public static function render(App $kirby): Response
     {
         try {
             if (static::link($kirby) === true) {

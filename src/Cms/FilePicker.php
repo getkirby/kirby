@@ -33,10 +33,10 @@ class FilePicker extends Picker
     /**
      * Search all files for the picker
      *
-     * @return \Kirby\Cms\Files|null
+     * @return \Kirby\Cms\Collection
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public function items()
+    public function items(): Collection
     {
         $model = $this->options['model'];
 

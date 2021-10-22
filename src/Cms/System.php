@@ -273,7 +273,7 @@ class System
      *                     permissions for access.settings, otherwise just a
      *                     boolean that tells whether a valid license is active
      */
-    public function license()
+    public function license(): bool|string
     {
         try {
             $license = Json::read($this->app->root('config') . '/.license');

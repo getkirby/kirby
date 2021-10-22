@@ -58,7 +58,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Page|\Kirby\Cms\Site|null
      */
-    public function model()
+    public function model(): Page|Site|null
     {
         // no subpages navigation = no model
         if ($this->options['subpages'] === false) {
@@ -80,7 +80,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Page|\Kirby\Cms\Site|null
      */
-    public function modelForQuery()
+    public function modelForQuery(): Page|Site|null
     {
         if ($this->options['subpages'] === true && empty($this->options['parent']) === false) {
             return $this->parent();
@@ -139,7 +139,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Pages|null
      */
-    public function items()
+    public function items(): Collection|null
     {
         // cache
         if ($this->items !== null) {
@@ -176,7 +176,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Pages
      */
-    public function itemsForParent()
+    public function itemsForParent(): Pages
     {
         return $this->parent()->children();
     }
@@ -187,7 +187,7 @@ class PagePicker extends Picker
      * @return \Kirby\Cms\Pages
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public function itemsForQuery()
+    public function itemsForQuery(): Pages
     {
         // cache
         if ($this->itemsForQuery !== null) {
@@ -219,7 +219,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Page|\Kirby\Cms\Site
      */
-    public function parent()
+    public function parent(): Page|Site
     {
         if ($this->parent !== null) {
             return $this->parent;
@@ -235,7 +235,7 @@ class PagePicker extends Picker
      *
      * @return \Kirby\Cms\Page|\Kirby\Cms\Site
      */
-    public function start()
+    public function start(): Page|Site
     {
         if (empty($this->options['query']) === false) {
             if ($items = $this->itemsForQuery()) {

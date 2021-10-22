@@ -56,7 +56,7 @@ class PluginAssets
      * @param string $filename
      * @return \Kirby\Cms\Response|null
      */
-    public static function resolve(string $pluginName, string $filename)
+    public static function resolve(string $pluginName, string $filename): ?Response
     {
         if ($plugin = App::instance()->plugin($pluginName)) {
             $source = $plugin->root() . '/assets/' . $filename;

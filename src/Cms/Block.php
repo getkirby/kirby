@@ -118,7 +118,7 @@ class Block extends Item
      *
      * @return \Kirby\Cms\Content
      */
-    public function content()
+    public function content(): Content
     {
         return $this->content;
     }
@@ -149,7 +149,7 @@ class Block extends Item
      * @param mixed ...$args
      * @return string
      */
-    public function excerpt(...$args)
+    public function excerpt(...$args): String
     {
         return Str::excerpt($this->toHtml(), ...$args);
     }
@@ -219,7 +219,7 @@ class Block extends Item
      *
      * @return \Kirby\Cms\Field
      */
-    public function toField()
+    public function toField(): Field
     {
         return new Field($this->parent(), $this->id(), $this->toHtml());
     }

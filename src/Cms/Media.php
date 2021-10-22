@@ -29,7 +29,7 @@ class Media
      * @param string $filename
      * @return \Kirby\Cms\Response|false
      */
-    public static function link(Model $model = null, string $hash, string $filename)
+    public static function link(Model $model = null, string $hash, string $filename): bool|Response
     {
         if ($model === null) {
             return false;
@@ -94,7 +94,7 @@ class Media
      * @param string $filename
      * @return \Kirby\Cms\Response|false
      */
-    public static function thumb($model, string $hash, string $filename)
+    public static function thumb($model, string $hash, string $filename): bool|Response
     {
         $kirby = App::instance();
 

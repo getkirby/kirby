@@ -21,7 +21,7 @@ trait FileModifications
      * @param bool $pixels
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function blur($pixels = true)
+    public function blur($pixels = true): FileVersion|File
     {
         return $this->thumb(['blur' => $pixels]);
     }
@@ -31,7 +31,7 @@ trait FileModifications
      *
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function bw()
+    public function bw(): FileVersion|File
     {
         return $this->thumb(['grayscale' => true]);
     }
@@ -44,7 +44,7 @@ trait FileModifications
      * @param string|array $options
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function crop(int $width, int $height = null, $options = null)
+    public function crop(int $width, int $height = null, $options = null): FileVersion|File
     {
         $quality = null;
         $crop    = 'center';
@@ -73,7 +73,7 @@ trait FileModifications
      *
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function grayscale()
+    public function grayscale(): FileVersion|File
     {
         return $this->thumb(['grayscale' => true]);
     }
@@ -83,7 +83,7 @@ trait FileModifications
      *
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function greyscale()
+    public function greyscale(): FileVersion|File
     {
         return $this->thumb(['grayscale' => true]);
     }
@@ -94,7 +94,7 @@ trait FileModifications
      * @param int $quality
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      */
-    public function quality(int $quality)
+    public function quality(int $quality): FileVersion|File
     {
         return $this->thumb(['quality' => $quality]);
     }
@@ -109,7 +109,7 @@ trait FileModifications
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public function resize(int $width = null, int $height = null, int $quality = null)
+    public function resize(int $width = null, int $height = null, int $quality = null): FileVersion|File
     {
         return $this->thumb([
             'width'   => $width,
@@ -178,7 +178,7 @@ trait FileModifications
      * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public function thumb($options = null)
+    public function thumb($options = null): FileVersion|File
     {
         // thumb presets
         if (empty($options) === true) {

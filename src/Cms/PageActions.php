@@ -636,7 +636,7 @@ trait PageActions
      * @param array $options
      * @return \Kirby\Cms\Page
      */
-    public function duplicate(string $slug = null, array $options = [])
+    public function duplicate(string $slug = null, array $options = []): Page
     {
 
         // create the slug for the duplicate

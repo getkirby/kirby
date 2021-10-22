@@ -44,7 +44,7 @@ abstract class ModelWithContent extends Model
      *
      * @return \Kirby\Cms\Blueprint
      */
-    abstract public function blueprint();
+    abstract public function blueprint(): Blueprint;
 
     /**
      * Returns an array with all blueprints that are available
@@ -88,7 +88,7 @@ abstract class ModelWithContent extends Model
      * @return \Kirby\Cms\Content
      * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
-    public function content(string $languageCode = null)
+    public function content(string $languageCode = null): Content
     {
 
         // single language support
@@ -458,7 +458,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImageSource(string $query = null): File|Asset|null
     {
         $image = $this->query($query ?? null);
 

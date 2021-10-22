@@ -156,7 +156,7 @@ class ContentTranslation
      *
      * @return \Kirby\Cms\Model
      */
-    public function parent()
+    public function parent(): Model
     {
         return $this->parent;
     }
@@ -165,7 +165,7 @@ class ContentTranslation
      * @param string $code
      * @return $this
      */
-    protected function setCode(string $code)
+    protected function setCode(string $code): static
     {
         $this->code = $code;
         return $this;
@@ -218,7 +218,7 @@ class ContentTranslation
      * @param bool $overwrite
      * @return $this
      */
-    public function update(array $data = null, bool $overwrite = false)
+    public function update(array $data = null, bool $overwrite = false): static
     {
         $this->content = $overwrite === true ? (array)$data : array_merge($this->content(), (array)$data);
         return $this;

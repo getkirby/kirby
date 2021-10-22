@@ -172,7 +172,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\SiteBlueprint
      */
-    public function blueprint()
+    public function blueprint(): SiteBlueprint
     {
         if (is_a($this->blueprint, 'Kirby\Cms\SiteBlueprint') === true) {
             return $this->blueprint;
@@ -186,7 +186,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\Pages
      */
-    public function breadcrumb()
+    public function breadcrumb(): Pages
     {
         // get all parents and flip the order
         $crumb = $this->page()->parents()->flip();
@@ -231,7 +231,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function errorPage()
+    public function errorPage(): ?Page
     {
         if (is_a($this->errorPage, 'Kirby\Cms\Page') === true) {
             return $this->errorPage;
@@ -270,7 +270,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function homePage()
+    public function homePage(): ?Page
     {
         if (is_a($this->homePage, 'Kirby\Cms\Page') === true) {
             return $this->homePage;
@@ -362,7 +362,7 @@ class Site extends ModelWithContent
      * @param string|null $handler
      * @return int|string
      */
-    public function modified(?string $format = null, ?string $handler = null)
+    public function modified(?string $format = null, ?string $handler = null): int|string
     {
         return Dir::modified(
             $this->root(),
@@ -406,7 +406,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\Pages
      */
-    public function pages()
+    public function pages(): Pages
     {
         return $this->children();
     }
@@ -444,7 +444,7 @@ class Site extends ModelWithContent
      *
      * @return \Kirby\Cms\SitePermissions
      */
-    public function permissions()
+    public function permissions(): SitePermissions
     {
         return new SitePermissions($this);
     }
@@ -501,7 +501,7 @@ class Site extends ModelWithContent
      * @param array $params
      * @return \Kirby\Cms\Pages
      */
-    public function search(?string $query = null, $params = [])
+    public function search(?string $query = null, $params = []): Pages
     {
         return $this->index()->search($query, $params);
     }
@@ -512,7 +512,7 @@ class Site extends ModelWithContent
      * @param array|null $blueprint
      * @return $this
      */
-    protected function setBlueprint(?array $blueprint = null)
+    protected function setBlueprint(?array $blueprint = null): static
     {
         if ($blueprint !== null) {
             $blueprint['model'] = $this;
@@ -531,7 +531,7 @@ class Site extends ModelWithContent
      * @param string $id
      * @return $this
      */
-    protected function setErrorPageId(string $id = 'error')
+    protected function setErrorPageId(string $id = 'error'): static
     {
         $this->errorPageId = $id;
         return $this;
@@ -546,7 +546,7 @@ class Site extends ModelWithContent
      * @param string $id
      * @return $this
      */
-    protected function setHomePageId(string $id = 'home')
+    protected function setHomePageId(string $id = 'home'): static
     {
         $this->homePageId = $id;
         return $this;
@@ -559,7 +559,7 @@ class Site extends ModelWithContent
      * @param \Kirby\Cms\Page|null $page
      * @return $this
      */
-    public function setPage(?Page $page = null)
+    public function setPage(?Page $page = null): static
     {
         $this->page = $page;
         return $this;
@@ -571,7 +571,7 @@ class Site extends ModelWithContent
      * @param string|null $url
      * @return $this
      */
-    protected function setUrl($url = null)
+    protected function setUrl($url = null): static
     {
         $this->url = $url;
         return $this;
@@ -582,6 +582,7 @@ class Site extends ModelWithContent
      * properties to an array
      *
      * @return array
+     * @throws InvalidArgumentException
      */
     public function toArray(): array
     {
@@ -634,10 +635,11 @@ class Site extends ModelWithContent
      * id or page object and
      * returns the current page
      *
-     * @internal
      * @param string|\Kirby\Cms\Page $page
      * @param string|null $languageCode
      * @return \Kirby\Cms\Page
+     * @throws InvalidArgumentException
+     * @internal
      */
     public function visit($page, ?string $languageCode = null)
     {

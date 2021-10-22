@@ -76,7 +76,7 @@ abstract class Picker
      *
      * @return \Kirby\Cms\Collection|null
      */
-    abstract public function items();
+    abstract public function items(): ?Collection;
 
     /**
      * Converts all given items to an associative

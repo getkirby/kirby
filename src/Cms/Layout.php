@@ -61,7 +61,7 @@ class Layout extends Item
      *
      * @return \Kirby\Cms\Content
      */
-    public function attrs()
+    public function attrs(): Content
     {
         return $this->attrs;
     }
@@ -71,7 +71,7 @@ class Layout extends Item
      *
      * @return \Kirby\Cms\LayoutColumns
      */
-    public function columns()
+    public function columns(): LayoutColumns
     {
         return $this->columns;
     }

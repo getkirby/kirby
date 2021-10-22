@@ -19,6 +19,9 @@ class Layouts extends Items
 {
     const ITEM_CLASS = '\Kirby\Cms\Layout';
 
+    /**
+     * @throws \Exception
+     */
     public static function factory(array $items = null, array $params = [])
     {
         $first = $items[0] ?? [];

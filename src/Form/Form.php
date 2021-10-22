@@ -177,7 +177,7 @@ class Form
      * @param array $props
      * @return \Kirby\Form\Field
      */
-    public static function exceptionField(Throwable $exception, array $props = [])
+    public static function exceptionField(Throwable $exception, array $props = []): Field
     {
         $message = $exception->getMessage();
 
@@ -199,7 +199,7 @@ class Form
      *
      * @return \Kirby\Form\Fields|null
      */
-    public function fields()
+    public function fields(): ?Fields
     {
         return $this->fields;
     }

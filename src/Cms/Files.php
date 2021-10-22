@@ -59,7 +59,7 @@ class Files extends Collection
      * @param int $offset Sorting offset
      * @return $this
      */
-    public function changeSort(array $files, int $offset = 0)
+    public function changeSort(array $files, int $offset = 0): static
     {
         foreach ($files as $filename) {
             if ($file = $this->get($filename)) {
@@ -78,7 +78,7 @@ class Files extends Collection
      * @param \Kirby\Cms\Model $parent
      * @return static
      */
-    public static function factory(array $files, Model $parent)
+    public static function factory(array $files, Model $parent): static
     {
         $collection = new static([], $parent);
         $kirby      = $parent->kirby();
@@ -102,7 +102,7 @@ class Files extends Collection
      * @param string $id
      * @return \Kirby\Cms\File|null
      */
-    public function findById(string $id)
+    public function findById(string $id): ?File
     {
         return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
     }
@@ -115,7 +115,7 @@ class Files extends Collection
      * @param string $key
      * @return \Kirby\Cms\File|null
      */
-    public function findByKey(string $key)
+    public function findByKey(string $key): ?File
     {
         return $this->findById($key);
     }
@@ -126,7 +126,7 @@ class Files extends Collection
      * @param null|string|array $template
      * @return $this|static
      */
-    public function template($template)
+    public function template($template): static
     {
         if (empty($template) === true) {
             return $this;

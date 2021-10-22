@@ -120,7 +120,7 @@ class PageRules
      * @return bool
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the page cannot be converted to a draft
      */
-    public static function changeStatusToDraft(Page $page)
+    public static function changeStatusToDraft(Page $page): bool
     {
         if ($page->permissions()->changeStatus() !== true) {
             throw new PermissionException([
@@ -152,7 +152,7 @@ class PageRules
      * @throws \Kirby\Exception\InvalidArgumentException If the given position is invalid
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status or the status for the page cannot be changed by any user
      */
-    public static function changeStatusToListed(Page $page, int $position)
+    public static function changeStatusToListed(Page $page, int $position): bool
     {
         // no need to check for status changing permissions,
         // instead we need to check for sorting permissions
@@ -199,7 +199,7 @@ class PageRules
      * @return bool
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status
      */
-    public static function changeStatusToUnlisted(Page $page)
+    public static function changeStatusToUnlisted(Page $page): bool
     {
         if ($page->permissions()->changeStatus() !== true) {
             throw new PermissionException([

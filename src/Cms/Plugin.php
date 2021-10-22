@@ -138,7 +138,7 @@ class Plugin extends Model
      * @return $this
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    protected function setName(string $name)
+    protected function setName(string $name): static
     {
         if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
             throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');

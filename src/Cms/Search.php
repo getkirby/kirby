@@ -21,7 +21,7 @@ class Search
      * @param array $params
      * @return \Kirby\Cms\Files
      */
-    public static function files(string $query = null, $params = [])
+    public static function files(string $query = null, $params = []): Files
     {
         return App::instance()->site()->index()->files()->search($query, $params);
     }
@@ -34,7 +34,7 @@ class Search
      * @param mixed $params
      * @return \Kirby\Cms\Collection|bool
      */
-    public static function collection(Collection $collection, string $query = null, $params = [])
+    public static function collection(Collection $collection, string $query = null, $params = []): Collection|bool
     {
         $kirby = App::instance();
         return ($kirby->component('search'))($kirby, $collection, $query, $params);
@@ -45,7 +45,7 @@ class Search
      * @param array $params
      * @return \Kirby\Cms\Pages
      */
-    public static function pages(string $query = null, $params = [])
+    public static function pages(string $query = null, $params = []): Pages
     {
         return App::instance()->site()->index()->search($query, $params);
     }
@@ -55,7 +55,7 @@ class Search
      * @param array $params
      * @return \Kirby\Cms\Users
      */
-    public static function users(string $query = null, $params = [])
+    public static function users(string $query = null, $params = []): Users
     {
         return App::instance()->users()->search($query, $params);
     }

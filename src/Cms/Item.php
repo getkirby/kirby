@@ -96,7 +96,7 @@ class Item
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return $this->parent()->kirby();
     }

@@ -137,7 +137,7 @@ trait FileActions
      * @param \Kirby\Cms\Page $page
      * @return \Kirby\Cms\File
      */
-    public function copy(Page $page)
+    public function copy(Page $page): File
     {
         F::copy($this->root(), $page->root() . '/' . $this->filename());
 

@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
-    public function blueprint()
+    public function blueprint(): Blueprint
     {
         return 'test';
     }
@@ -47,7 +47,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
         $this->testModel = $model;
     }
 
-    public function blueprint()
+    public function blueprint(): Blueprint
     {
         return new Blueprint([
             'model'  => $this->testModel,

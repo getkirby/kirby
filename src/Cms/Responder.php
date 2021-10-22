@@ -115,7 +115,7 @@ class Responder
      * @param bool $override If `true`, the already defined timestamp will be overridden
      * @return int|null|$this
      */
-    public function expires($expires = null, bool $override = false)
+    public function expires($expires = null, bool $override = false): int|static|null
     {
         // getter
         if ($expires === null && $override === false) {
@@ -161,7 +161,7 @@ class Responder
      * @param int|null $code
      * @return int|$this
      */
-    public function code(int $code = null)
+    public function code(int $code = null): int|static|null
     {
         if ($code === null) {
             return $this->code;
@@ -193,7 +193,7 @@ class Responder
      * @param bool $lazy If `true`, an existing header value is not overridden
      * @return string|$this
      */
-    public function header(string $key, $value = null, bool $lazy = false)
+    public function header(string $key, $value = null, bool $lazy = false): string|static|null
     {
         if ($value === null) {
             return $this->headers[$key] ?? null;
@@ -218,7 +218,7 @@ class Responder
      * @param array|null $headers
      * @return array|$this
      */
-    public function headers(array $headers = null)
+    public function headers(array $headers = null): array|static
     {
         if ($headers === null) {
             return $this->headers;
@@ -234,7 +234,7 @@ class Responder
      * @param array|null $json
      * @return string|$this
      */
-    public function json(array $json = null)
+    public function json(array $json = null): string|static|null
     {
         if ($json !== null) {
             $this->body(json_encode($json));
@@ -266,7 +266,7 @@ class Responder
      * @param string|null $body
      * @return \Kirby\Cms\Response
      */
-    public function send(string $body = null)
+    public function send(string $body = null): Response
     {
         if ($body !== null) {
             $this->body($body);
@@ -297,7 +297,7 @@ class Responder
      * @param string|null $type
      * @return string|$this
      */
-    public function type(string $type = null)
+    public function type(string $type = null): string|static|null
     {
         if ($type === null) {
             return $this->type;

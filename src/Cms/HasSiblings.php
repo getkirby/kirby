@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Fields;
+
 /**
  * This trait is used by pages, files and users
  * to handle navigation through parent collections
@@ -53,7 +55,7 @@ trait HasSiblings
      *
      * @return \Kirby\Cms\Collection
      */
-    public function nextAll($collection = null)
+    public function nextAll($collection = null): Collection
     {
         if ($collection === null) {
             $collection = $this->siblingsCollection();
@@ -85,7 +87,7 @@ trait HasSiblings
      *
      * @return \Kirby\Cms\Collection
      */
-    public function prevAll($collection = null)
+    public function prevAll($collection = null): Collection
     {
         if ($collection === null) {
             $collection = $this->siblingsCollection();
@@ -98,9 +100,9 @@ trait HasSiblings
      * Returns all sibling elements
      *
      * @param bool $self
-     * @return \Kirby\Cms\Collection
+     * @return \Kirby\Cms\Collection|Fields
      */
-    public function siblings(bool $self = true)
+    public function siblings(bool $self = true): Collection|Fields
     {
         $siblings = $this->siblingsCollection();
 

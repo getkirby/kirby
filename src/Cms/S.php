@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Session\Session;
 use Kirby\Toolkit\Facade;
 
 /**
@@ -18,7 +19,7 @@ class S extends Facade
     /**
      * @return \Kirby\Session\Session
      */
-    public static function instance()
+    public static function instance(): Session
     {
         return App::instance()->session();
     }

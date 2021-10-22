@@ -254,7 +254,7 @@ class Response
      * @param int $code
      * @return static
      */
-    public static function redirect(string $location = '/', int $code = 302)
+    public static function redirect(string $location = '/', int $code = 302): static
     {
         return new static([
             'code' => $code,

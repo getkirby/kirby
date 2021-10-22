@@ -67,7 +67,7 @@ trait SiteActions
      * @param array $props
      * @return \Kirby\Cms\Page
      */
-    public function createChild(array $props)
+    public function createChild(array $props): Page
     {
         $props = array_merge($props, [
             'url'    => null,
@@ -84,7 +84,7 @@ trait SiteActions
      *
      * @return $this
      */
-    public function purge()
+    public function purge(): static
     {
         $this->blueprint    = null;
         $this->children     = null;

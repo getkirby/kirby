@@ -174,7 +174,7 @@ class User extends ModelWithContent
      *
      * @return \Kirby\Cms\Blueprint
      */
-    public function blueprint()
+    public function blueprint(): Blueprint
     {
         if (is_a($this->blueprint, 'Kirby\Cms\Blueprint') === true) {
             return $this->blueprint;
@@ -598,7 +598,7 @@ class User extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImageSource(string $query = null): File|Asset|null
     {
         if ($query === null) {
             return $this->avatar();

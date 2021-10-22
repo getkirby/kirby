@@ -16,7 +16,7 @@ class MockObject extends Model
         $this->group = $props['group'] ?? null;
     }
 
-    public function id()
+    public function id(): int|string|null
     {
         return $this->id;
     }

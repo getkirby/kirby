@@ -28,7 +28,7 @@ trait UserActions
      * @param string $email
      * @return static
      */
-    public function changeEmail(string $email)
+    public function changeEmail(string $email): static
     {
         return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
             $user = $user->clone([
@@ -49,7 +49,7 @@ trait UserActions
      * @param string $language
      * @return static
      */
-    public function changeLanguage(string $language)
+    public function changeLanguage(string $language): static
     {
         return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
             $user = $user->clone([
@@ -70,7 +70,7 @@ trait UserActions
      * @param string $name
      * @return static
      */
-    public function changeName(string $name)
+    public function changeName(string $name): static
     {
         return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
             $user = $user->clone([
@@ -91,7 +91,7 @@ trait UserActions
      * @param string $password
      * @return static
      */
-    public function changePassword(string $password)
+    public function changePassword(string $password): static
     {
         return $this->commit('changePassword', ['user' => $this, 'password' => $password], function ($user, $password) {
             $user = $user->clone([
@@ -174,7 +174,7 @@ trait UserActions
      * @param array|null $props
      * @return static
      */
-    public static function create(array $props = null)
+    public static function create(array $props = null): static
     {
         $data = $props;
 

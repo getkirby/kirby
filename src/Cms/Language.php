@@ -333,7 +333,7 @@ class Language extends Model
      *
      * @param string $code
      */
-    public static function loadRules(string $code)
+    public static function loadRules(string $code): array
     {
         $kirby = kirby();
         $code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
@@ -354,9 +354,9 @@ class Language extends Model
      * Returns the PHP locale setting array
      *
      * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
-     * @return array|string
+     * @return array|string|null
      */
-    public function locale(int $category = null)
+    public function locale(int $category = null): array|string|null
     {
         if ($category !== null) {
             return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
@@ -423,7 +423,7 @@ class Language extends Model
      *
      * @return \Kirby\Cms\LanguageRouter
      */
-    public function router()
+    public function router(): LanguageRouter
     {
         return new LanguageRouter($this);
     }

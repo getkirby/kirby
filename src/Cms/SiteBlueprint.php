@@ -47,7 +47,7 @@ class SiteBlueprint extends Blueprint
      *
      * @return string|bool
      */
-    public function preview()
+    public function preview(): bool|string
     {
         $preview = $this->props['options']['preview'] ?? true;
 

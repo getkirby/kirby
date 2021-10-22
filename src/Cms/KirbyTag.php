@@ -23,7 +23,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
      * @param string $path
      * @return \Kirby\Cms\File|null
      */
-    public function file(string $path)
+    public function file(string $path): ?File
     {
         $parent = $this->parent();
 
@@ -47,7 +47,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return $this->data['kirby'] ?? App::instance();
     }
@@ -57,7 +57,7 @@ class KirbyTag extends \Kirby\Text\KirbyTag
      *
      * @return \Kirby\Cms\Model|null
      */
-    public function parent()
+    public function parent(): ?Model
     {
         return $this->data['parent'];
     }

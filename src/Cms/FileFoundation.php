@@ -75,7 +75,7 @@ trait FileFoundation
      *
      * @return \Kirby\Image\Image
      */
-    public function asset()
+    public function asset(): Image
     {
         return $this->asset = $this->asset ?? new Image($this->root());
     }
@@ -158,7 +158,7 @@ trait FileFoundation
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return App::instance();
     }

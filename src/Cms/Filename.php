@@ -158,7 +158,7 @@ class Filename
      *
      * @return false|int
      */
-    public function blur()
+    public function blur(): bool|int
     {
         $value = $this->attributes['blur'] ?? false;
 
@@ -174,7 +174,7 @@ class Filename
      *
      * @return false|string
      */
-    public function crop()
+    public function crop(): bool|string
     {
         // get the crop value
         $crop = $this->attributes['crop'] ?? false;
@@ -193,7 +193,7 @@ class Filename
      *
      * @return array
      */
-    public function dimensions()
+    public function dimensions(): array
     {
         if (empty($this->attributes['width']) === true && empty($this->attributes['height']) === true) {
             return [];

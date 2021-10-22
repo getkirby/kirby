@@ -178,7 +178,7 @@ trait AppErrors
      *
      * @return \Whoops\Run
      */
-    protected function whoops()
+    protected function whoops(): Whoops
     {
         if ($this->whoops !== null) {
             return $this->whoops;

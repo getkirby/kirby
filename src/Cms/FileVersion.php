@@ -68,7 +68,7 @@ class FileVersion
      *
      * @return \Kirby\Cms\App
      */
-    public function kirby()
+    public function kirby(): App
     {
         return $this->original()->kirby();
     }

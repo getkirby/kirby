@@ -79,7 +79,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Files
      */
-    public function audio()
+    public function audio(): Files
     {
         return $this->files()->filter('type', 'audio');
     }
@@ -89,7 +89,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Pages
      */
-    public function children()
+    public function children(): Pages
     {
         $children = new Pages([], $this->parent);
 
@@ -107,7 +107,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Files
      */
-    public function code()
+    public function code(): Files
     {
         return $this->files()->filter('type', 'code');
     }
@@ -127,7 +127,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Pages
      */
-    public function drafts()
+    public function drafts(): Pages
     {
         $drafts = new Pages([], $this->parent);
 
@@ -181,7 +181,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Files
      */
-    public function files()
+    public function files(): Files
     {
         $files = new Files([], $this->parent);
 
@@ -293,7 +293,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Page|null
      */
-    public function findOpen()
+    public function findOpen(): ?Page
     {
         return $this->findBy('isOpen', true);
     }
@@ -306,7 +306,7 @@ class Pages extends Collection
      * @param mixed $default
      * @return \Kirby\Cms\Page|null
      */
-    public function get($key, $default = null)
+    public function get($key, $default = null): ?Page
     {
         if ($key === null) {
             return null;
@@ -324,7 +324,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Files
      */
-    public function images()
+    public function images(): Files
     {
         return $this->files()->filter('type', 'image');
     }
@@ -336,7 +336,7 @@ class Pages extends Collection
      * @param bool $drafts
      * @return \Kirby\Cms\Pages
      */
-    public function index(bool $drafts = false)
+    public function index(bool $drafts = false): ?Pages
     {
         // get object property by cache mode
         $index = $drafts === true ? $this->indexWithDrafts : $this->index;
@@ -370,7 +370,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Pages
      */
-    public function listed()
+    public function listed(): Pages
     {
         return $this->filter('isListed', '==', true);
     }
@@ -477,7 +477,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Pages
      */
-    public function published()
+    public function published(): Pages
     {
         return $this->filter('isDraft', '==', false);
     }
@@ -488,7 +488,7 @@ class Pages extends Collection
      * @param string|array $templates
      * @return \Kirby\Cms\Pages
      */
-    public function template($templates)
+    public function template($templates): Pages
     {
         if (empty($templates) === true) {
             return $this;
@@ -508,7 +508,7 @@ class Pages extends Collection
      *
      * @return \Kirby\Cms\Files
      */
-    public function videos()
+    public function videos(): Files
     {
         return $this->files()->filter('type', 'video');
     }

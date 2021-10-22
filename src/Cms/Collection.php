@@ -105,7 +105,7 @@ class Collection extends BaseCollection
      * @param mixed $item
      * @return \Kirby\Cms\Collection
      */
-    public function append(...$args)
+    public function append(...$args): Collection
     {
         if (count($args) === 1) {
             // try to determine the key from the provided item
@@ -125,10 +125,10 @@ class Collection extends BaseCollection
      *
      * @param string|Closure $field
      * @param bool $i Ignore upper/lowercase for group names
-     * @return \Kirby\Cms\Collection
+     * @return BaseCollection
      * @throws \Kirby\Exception\Exception
      */
-    public function group($field, bool $i = true)
+    public function group($field, bool $i = true): BaseCollection
     {
         if (is_string($field) === true) {
             $groups = new Collection([], $this->parent());
@@ -200,7 +200,7 @@ class Collection extends BaseCollection
      * @param mixed ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Cms\Collection
      */
-    public function not(...$keys)
+    public function not(...$keys): Collection
     {
         $collection = $this->clone();
 
@@ -225,7 +225,7 @@ class Collection extends BaseCollection
      * @param mixed ...$arguments
      * @return \Kirby\Cms\Collection
      */
-    public function paginate(...$arguments)
+    public function paginate(...$arguments): Collection
     {
         $this->pagination = Pagination::for($this, ...$arguments);
 
@@ -251,7 +251,7 @@ class Collection extends BaseCollection
      * @param mixed $item
      * @return \Kirby\Cms\Collection
      */
-    public function prepend(...$args)
+    public function prepend(...$args): Collection
     {
         if (count($args) === 1) {
             // try to determine the key from the provided item

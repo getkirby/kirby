@@ -79,7 +79,7 @@ class StructureObject extends Model
      *
      * @return \Kirby\Cms\Content
      */
-    public function content()
+    public function content(): Content
     {
         if (is_a($this->content, 'Kirby\Cms\Content') === true) {
             return $this->content;
@@ -133,7 +133,7 @@ class StructureObject extends Model
      * @param array|null $content
      * @return $this
      */
-    protected function setContent(array $content = null)
+    protected function setContent(array $content = null): static
     {
         $this->content = $content;
         return $this;
@@ -160,7 +160,7 @@ class StructureObject extends Model
      * @return $this
      * @param \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null $parent
      */
-    protected function setParent(Model $parent = null)
+    protected function setParent(Model $parent = null): static
     {
         $this->parent = $parent;
         return $this;
@@ -172,7 +172,7 @@ class StructureObject extends Model
      * @param \Kirby\Cms\Structure|null $structure
      * @return $this
      */
-    protected function setStructure(Structure $structure = null)
+    protected function setStructure(Structure $structure = null): static
     {
         $this->structure = $structure;
         return $this;
@@ -183,7 +183,7 @@ class StructureObject extends Model
      *
      * @return \Kirby\Cms\Structure
      */
-    protected function siblingsCollection()
+    protected function siblingsCollection(): Structure
     {
         return $this->structure;
     }

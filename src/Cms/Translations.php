@@ -41,7 +41,7 @@ class Translations extends Collection
      * @param array $translations
      * @return static
      */
-    public static function factory(array $translations)
+    public static function factory(array $translations): static
     {
         $collection = new static();
 
@@ -58,7 +58,7 @@ class Translations extends Collection
      * @param array $inject
      * @return static
      */
-    public static function load(string $root, array $inject = [])
+    public static function load(string $root, array $inject = []): static
     {
         $collection = new static();
 

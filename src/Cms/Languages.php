@@ -53,7 +53,7 @@ class Languages extends Collection
      * @param array $props
      * @return \Kirby\Cms\Language
      */
-    public function create(array $props)
+    public function create(array $props): Language
     {
         return Language::create($props);
     }
@@ -63,7 +63,7 @@ class Languages extends Collection
      *
      * @return \Kirby\Cms\Language|null
      */
-    public function default()
+    public function default(): ?Language
     {
         if ($language = $this->findBy('isDefault', true)) {
             return $language;
@@ -78,7 +78,7 @@ class Languages extends Collection
      * @internal
      * @return static
      */
-    public static function load()
+    public static function load(): static
     {
         $languages = [];
         $files     = glob(App::instance()->root('languages') . '/*.php');
