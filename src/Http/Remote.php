@@ -104,6 +104,13 @@ class Remote
     {
         $defaults = static::$defaults;
 
+        // use the system CA store by default if
+        // one has been configured in php.ini
+        $cainfo = ini_get('curl.cainfo');
+        if (empty($cainfo) === false && is_file($cainfo) === true) {
+            $defaults['ca'] = self::CA_SYSTEM;
+        }
+
         // update the defaults with App config if set;
         // request the App instance lazily
         $app = App::instance(null, true);
