@@ -314,6 +314,8 @@ export default {
 .k-writer {
   position: relative;
   width: 100%;
+  grid-template-areas: "content";
+  display: grid;
 }
 .k-writer .ProseMirror {
   overflow-wrap: break-word;
@@ -323,6 +325,7 @@ export default {
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
   line-height: inherit;
+  grid-area: content;
 }
 .k-writer .ProseMirror:focus {
   outline: 0;
@@ -413,19 +416,12 @@ export default {
 }
 
 .k-writer[data-placeholder][data-empty]::before {
+  grid-area: content;
   content: attr(data-placeholder);
   line-height: inherit;
   color: var(--color-gray-500);
   pointer-events: none;
   white-space: pre-wrap;
   word-wrap: break-word;
-}
-.k-writer[data-placeholder][data-empty] .ProseMirror {
-   position: absolute;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   top: 0;
-   padding: .375rem .5rem;
 }
 </style>
