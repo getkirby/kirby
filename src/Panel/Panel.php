@@ -161,18 +161,6 @@ class Panel
     }
 
     /**
-     * Handles redirection to the correct area
-     * after login or when visiting the login or installation
-     * views after being already authenticated
-     *
-     * @return void
-     */
-    public static function goHome(): void
-    {
-        static::go(Home::url());
-    }
-
-    /**
      * Check if the given user has access to the panel
      * or to a given area
      *
@@ -377,7 +365,7 @@ class Panel
                 'login',
             ],
             'action' => function () {
-                Panel::goHome();
+                Panel::go(Home::url());
             }
         ];
 
