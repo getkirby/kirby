@@ -44,6 +44,9 @@ class HomeTest extends TestCase
         Dir::remove($this->tmp);
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternative()
     {
         $this->app = $this->app->clone([
@@ -57,11 +60,17 @@ class HomeTest extends TestCase
         $this->assertSame('/panel/site', Home::alternative());
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternativeWithoutUser()
     {
         $this->assertSame('/panel/login', Home::alternative());
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternativeWithLimitedAccess()
     {
         $this->app = $this->app->clone([
@@ -90,6 +99,9 @@ class HomeTest extends TestCase
         $this->assertSame('/panel/users', Home::alternative());
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternativeWithOnlyAccessToAccounts()
     {
         $this->app = $this->app->clone([
@@ -120,6 +132,9 @@ class HomeTest extends TestCase
         $this->assertSame('/panel/account', Home::alternative());
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternativeWithoutPanelAccess()
     {
         $this->app = $this->app->clone([
@@ -143,6 +158,9 @@ class HomeTest extends TestCase
         $this->assertSame('/', Home::alternative());
     }
 
+    /**
+     * @covers ::alternative
+     */
     public function testAlternativeWithoutViewAccess()
     {
         $this->app = $this->app->clone([
@@ -173,6 +191,9 @@ class HomeTest extends TestCase
         Home::alternative();
     }
 
+    /**
+     * @covers ::hasAccess
+     */
     public function testHasAccessWithoutUserAndInstallation()
     {
         $this->assertFalse(Home::hasAccess('site'));
@@ -180,6 +201,9 @@ class HomeTest extends TestCase
         $this->assertTrue(Home::hasAccess('installation'));
     }
 
+    /**
+     * @covers ::hasAccess
+     */
     public function testHasAccessWithoutUser()
     {
         $this->app = $this->app->clone([
@@ -192,6 +216,9 @@ class HomeTest extends TestCase
         $this->assertTrue(Home::hasAccess('login'));
     }
 
+    /**
+     * @covers ::hasAccess
+     */
     public function testHasAccessWithUser()
     {
         $this->app = $this->app->clone([
@@ -213,6 +240,9 @@ class HomeTest extends TestCase
         $this->assertTrue(Home::hasAccess('account'));
     }
 
+    /**
+     * @covers ::hasAccess
+     */
     public function testHasAccessWithLimitedAccess()
     {
         $this->app = $this->app->clone([
@@ -244,6 +274,9 @@ class HomeTest extends TestCase
         $this->assertTrue(Home::hasAccess('account'));
     }
 
+    /**
+     * @covers ::hasValidDomain
+     */
     public function testHasValidDomain()
     {
         $uri = Uri::current();
@@ -256,6 +289,9 @@ class HomeTest extends TestCase
         $this->assertFalse(Home::hasValidDomain($uri));
     }
 
+    /**
+     * @covers ::isPanelUrl
+     */
     public function testIsPanelUrl()
     {
         $this->assertTrue(Home::isPanelUrl('/panel'));
@@ -263,6 +299,9 @@ class HomeTest extends TestCase
         $this->assertFalse(Home::isPanelUrl('test'));
     }
 
+    /**
+     * @covers ::panelPath
+     */
     public function testPanelPath()
     {
         $this->assertSame('site', Home::panelPath('/panel/site'));
@@ -270,17 +309,26 @@ class HomeTest extends TestCase
         $this->assertSame('', Home::panelPath('/test/page'));
     }
 
+    /**
+     * @covers ::remembered
+     */
     public function testRemembered()
     {
         $this->assertNull(Home::remembered());
     }
 
+    /**
+     * @covers ::remembered
+     */
     public function testRememberedFromSession()
     {
         $this->app->session()->set('panel.path', 'users');
         $this->assertSame('/panel/users', Home::remembered());
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrl()
     {
         $this->app = $this->app->clone([
@@ -343,6 +391,9 @@ class HomeTest extends TestCase
         $this->assertSame($expected, Home::url());
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrlWithInvalidCustomHome()
     {
         $this->app = $this->app->clone([
@@ -373,6 +424,9 @@ class HomeTest extends TestCase
         Home::url();
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrlWithRememberedPath()
     {
         $this->app = $this->app->clone([
@@ -387,6 +441,82 @@ class HomeTest extends TestCase
         $this->assertSame('/panel/users', Home::url());
     }
 
+    /**
+     * @covers ::url
+     */
+    public function testUrlWithInvalidRememberedPath()
+    {
+        $this->app = $this->app->clone([
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $this->app->impersonate('test@getkirby.com');
+        $this->app->session()->set('panel.path', 'login');
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid redirect URL');
+
+        Home::url();
+    }
+
+    /**
+     * @covers ::url
+     */
+    public function testUrlWithMissingSiteAccess()
+    {
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'permissions' => [
+                        'access' => [
+                            'site' => false,
+                        ]
+                    ]
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $this->app->impersonate('editor@getkirby.com');
+        $this->assertSame('/panel/users', Home::url());
+    }
+
+    /**
+     * @covers ::url
+     */
+    public function testUrlWithAccountAccessOnly()
+    {
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'permissions' => [
+                        'access' => [
+                            'site'  => false,
+                            'users' => false,
+                            'system' => false
+                        ]
+                    ]
+                ]
+            ],
+            'users' => [
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $this->app->impersonate('editor@getkirby.com');
+
+        $this->assertSame('/panel/account', Home::url());
+    }
+
+    /**
+     * @covers ::url
+     */
     public function testUrlWithoutUser()
     {
         $this->assertSame('/panel/login', Home::url());
