@@ -100,17 +100,17 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'language' => Field::translation(['required' => true])
+                        'translation' => Field::translation(['required' => true])
                     ],
                     'submitButton' => t('change'),
                     'value' => [
-                        'language' => $user->language()
+                        'translation' => $user->language()
                     ]
                 ]
             ];
         },
         'submit' => function (string $id) {
-            Find::user($id)->changeLanguage(get('language'));
+            Find::user($id)->changeLanguage(get('translation'));
 
             return [
                 'event'  => 'user.changeLanguage',
