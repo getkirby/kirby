@@ -87,15 +87,15 @@ class UsersDialogsTest extends AreaTestCase
 
         $this->assertFormDialog($dialog);
 
-        $this->assertSame('Language', $props['fields']['language']['label']);
+        $this->assertSame('Language', $props['fields']['translation']['label']);
         $this->assertSame('Change', $props['submitButton']);
-        $this->assertSame('en', $props['value']['language']);
+        $this->assertSame('en', $props['value']['translation']);
     }
 
     public function testChangeLanguageOnSubmit(): void
     {
         $this->submit([
-            'language' => 'de'
+            'translation' => 'de'
         ]);
 
         $dialog = $this->dialog('users/test/changeLanguage');
