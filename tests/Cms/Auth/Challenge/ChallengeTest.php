@@ -19,7 +19,7 @@ class MockChallenge extends Challenge
 }
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth\Challenge
+ * @coversDefaultClass \Kirby\Cms\Auth\Challenge
  */
 class ChallengeTest extends TestCase
 {

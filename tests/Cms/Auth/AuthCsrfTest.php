@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth
+ * @coversDefaultClass \Kirby\Cms\Auth
  */
 class AuthCsrfTest extends TestCase
 {

@@ -371,6 +371,7 @@ class DirTest extends TestCase
 
     /**
      * @covers ::inventory
+     * @covers ::inventoryModels
      */
     public function testInventoryModels()
     {
@@ -394,6 +395,7 @@ class DirTest extends TestCase
 
     /**
      * @covers ::inventory
+     * @covers ::inventoryModels
      */
     public function testInventoryMultilangModels()
     {
@@ -648,6 +650,7 @@ class DirTest extends TestCase
 
     /**
      * @covers ::size
+     * @covers ::niceSize
      */
     public function testSize()
     {
@@ -702,6 +705,10 @@ class DirTest extends TestCase
         Dir::make($this->tmp);
         Dir::make($this->tmp . '/sub');
         F::write($this->tmp . '/sub/test.txt', 'foo');
+
+        // the modification time of the folder is already later
+        // than the given time
+        $this->assertTrue(Dir::wasModifiedAfter($this->tmp, $time - 10));
 
         // ensure that the modified times are consistent
         // to make the test more reliable

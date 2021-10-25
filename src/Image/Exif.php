@@ -207,9 +207,11 @@ class Exif
      */
     protected function read(): array
     {
+        // @codeCoverageIgnoreStart
         if (function_exists('exif_read_data') === false) {
             return [];
         }
+        // @codeCoverageIgnoreEnd
 
         $data = @exif_read_data($this->image->root());
         return is_array($data) ? $data : [];

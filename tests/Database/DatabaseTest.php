@@ -6,7 +6,7 @@ use PDOException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Database\Database
+ * @coversDefaultClass \Kirby\Database\Database
  */
 class DatabaseTest extends TestCase
 {

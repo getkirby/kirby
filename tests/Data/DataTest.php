@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/mocks.php';
 
 /**
- * @coversDefaultClass Kirby\Data\Data
+ * @coversDefaultClass \Kirby\Data\Data
  */
 class DataTest extends TestCase
 {

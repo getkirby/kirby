@@ -3,7 +3,7 @@
 namespace Kirby\Toolkit;
 
 /**
- * @coversDefaultClass Kirby\Toolkit\Dom
+ * @coversDefaultClass \Kirby\Toolkit\Dom
  */
 class DomTest extends TestCase
 {

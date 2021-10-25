@@ -1,6 +1,5 @@
 <?php
 
-// @codeCoverageIgnoreStart
 return [
     // cms classes
     'collection' => 'Kirby\Cms\Collection',
@@ -79,4 +78,3 @@ return [
     'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
     'kirby\toolkit\mime'       => 'Kirby\Filesystem\Mime',
 ];
-// @codeCoverageIgnoreEnd

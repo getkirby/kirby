@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Toolkit\Html
+ * @coversDefaultClass \Kirby\Toolkit\Html
  */
 class HtmlTest extends TestCase
 {

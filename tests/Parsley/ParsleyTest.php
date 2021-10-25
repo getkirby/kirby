@@ -17,7 +17,7 @@ class TestableParsley extends Parsley
 
 
 /**
- * @coversDefaultClass Kirby\Parsley\Parsley
+ * @coversDefaultClass \Kirby\Parsley\Parsley
  */
 class ParsleyTest extends TestCase
 {

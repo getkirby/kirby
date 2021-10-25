@@ -5,7 +5,7 @@ namespace Kirby\Parsley;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Parsley\Schema
+ * @coversDefaultClass \Kirby\Parsley\Schema
  */
 class SchemaTest extends TestCase
 {

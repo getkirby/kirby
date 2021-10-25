@@ -8,7 +8,7 @@ use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth\EmailChallenge
+ * @coversDefaultClass \Kirby\Cms\Auth\EmailChallenge
  */
 class EmailChallengeTest extends TestCase
 {

@@ -6,7 +6,7 @@ use Kirby\Toolkit\Dom;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Parsley\Inline
+ * @coversDefaultClass \Kirby\Parsley\Inline
  */
 class InlineTest extends TestCase
 {

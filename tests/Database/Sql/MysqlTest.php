@@ -7,7 +7,7 @@ use Kirby\Toolkit\A;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Database\Sql\Mysql
+ * @coversDefaultClass \Kirby\Database\Sql\Mysql
  */
 class MysqlTest extends TestCase
 {

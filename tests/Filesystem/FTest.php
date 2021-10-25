@@ -39,6 +39,17 @@ class FTest extends TestCase
     }
 
     /**
+     * @covers ::base64
+     */
+    public function testBase64()
+    {
+        F::write($this->tmp, 'test');
+        $expected = base64_encode('test');
+
+        $this->assertSame($expected, F::base64($this->tmp));
+    }
+
+    /**
      * @covers ::copy
      */
     public function testCopy()
@@ -622,6 +633,7 @@ class FTest extends TestCase
         $this->assertSame('code', F::type('content.php'));
         $this->assertSame('code', F::type('py'));
         $this->assertSame('code', F::type('java'));
+        $this->assertNull(F::type('foo'));
     }
 
     /**

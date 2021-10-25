@@ -6,12 +6,18 @@ use Exception;
 
 class UserRulesTest extends TestCase
 {
-    public function appWithAdmin()
+    public function app()
     {
         return new App([
             'roots' => [
-                'site' => __DIR__ . '/fixtures',
-            ],
+                'site' => __DIR__ . '/fixtures'
+            ]
+        ]);
+    }
+
+    public function appWithAdmin()
+    {
+        return $this->app()->clone([
             'user' => 'admin@domain.com',
             'users' => [
                 ['email' => 'user@domain.com', 'role' => 'editor'],
@@ -70,6 +76,7 @@ class UserRulesTest extends TestCase
         return [
             ['Email', 'domain.com', 'You are not allowed to change the email for the user "test"'],
             ['Language', 'english', 'You are not allowed to change the language for the user "test"'],
+            ['Name', 'Test', 'You are not allowed to change the name for the user "test"'],
             ['Password', '1234', 'You are not allowed to change the password for the user "test"'],
         ];
     }
@@ -100,6 +107,35 @@ class UserRulesTest extends TestCase
         $kirby = $this->appWithAdmin();
 
         UserRules::changeEmail($kirby->user('user@domain.com'), 'admin@domain.com');
+    }
+
+    public function testChangeRoleWithoutPermissions()
+    {
+        $kirby = new App([
+            'roots' => [
+                'site' => __DIR__ . '/fixtures',
+            ],
+            'user' => 'admin@domain.com',
+            'users' => [
+                ['email' => 'editor@domain.com', 'role' => 'admin'],
+                ['email' => 'admin@domain.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $kirby->impersonate('admin@domain.com');
+
+        $permissions = $this->createMock(UserPermissions::class);
+        $permissions->method('__call')->with('changeRole')->willReturn(false);
+
+        $user = $this->createMock(User::class);
+        $user->method('kirby')->willReturn($kirby);
+        $user->method('permissions')->willReturn($permissions);
+        $user->method('username')->willReturn('test');
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to change the role for the user "test"');
+
+        UserRules::changeRole($user, 'admin');
     }
 
     public function testChangeRoleFromAdminByAdmin()
@@ -199,6 +235,76 @@ class UserRulesTest extends TestCase
         $this->assertTrue(UserRules::create($user, $props));
     }
 
+    public function testCreateFirstUserWithoutPassword()
+    {
+        $user = new User($props = [
+            'email'    => 'new-user@domain.com',
+            'password' => '',
+            'language' => 'en',
+            'kirby'    => $this->app()
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+        UserRules::create($user, $props);
+    }
+
+    public function testCreateAdminAsEditor()
+    {
+        $app = $this->app()->clone([
+            'users' => [
+                ['email' => 'admin@getkirby.com', 'role' => 'admin'],
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $user = new User($props = [
+            'email'    => 'new-user@domain.com',
+            'password' => '12345678',
+            'language' => 'en',
+            'role'     => 'admin',
+            'kirby'    => $app
+        ]);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to create this user');
+
+        UserRules::create($user, $props);
+    }
+
+    public function testCreatePermissions()
+    {
+        $app = $this->app()->clone([
+            'users' => [
+                ['email' => 'admin@getkirby.com', 'role' => 'admin'],
+                ['email' => 'editor@getkirby.com', 'role' => 'editor']
+            ]
+        ]);
+
+        $app->impersonate('editor@getkirby.com');
+
+        $permissions = $this->createMock(UserPermissions::class);
+        $permissions->method('__call')->with('create')->willReturn(false);
+
+        $user = $this->createMock(User::class);
+        $user->method('kirby')->willReturn($app);
+        $user->method('permissions')->willReturn($permissions);
+        $user->method('id')->willReturn('test');
+        $user->method('email')->willReturn('test@getkirby.com');
+        $user->method('language')->willReturn('en');
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to create this user');
+
+        UserRules::create($user, [
+            'password' => 12345678,
+            'role'     => 'editor'
+        ]);
+    }
+
     public function testUpdate()
     {
         $app  = $this->appWithAdmin();
@@ -226,11 +332,30 @@ class UserRulesTest extends TestCase
 
     public function testDeleteLastUser()
     {
-        $this->expectException('Kirby\Exception\LogicException');
-        $this->expectExceptionCode('error.user.delete.lastAdmin');
+        $user = $this->createMock(User::class);
+        $user->method('isLastAdmin')->willReturn(false);
+        $user->method('isLastUser')->willReturn(true);
 
-        $kirby = $this->appWithAdmin();
-        UserRules::delete($kirby->user('user@domain.com'));
-        UserRules::delete($kirby->user('admin@domain.com'));
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionMessage('The last user cannot be deleted');
+
+        UserRules::delete($user);
+    }
+
+    public function testDeletePermissions()
+    {
+        $permissions = $this->createMock(UserPermissions::class);
+        $permissions->method('__call')->with('delete')->willReturn(false);
+
+        $user = $this->createMock(User::class);
+        $user->method('permissions')->willReturn($permissions);
+        $user->method('isLastAdmin')->willReturn(false);
+        $user->method('isLastUser')->willReturn(false);
+        $user->method('username')->willReturn('test');
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to delete the user "test"');
+
+        UserRules::delete($user);
     }
 }

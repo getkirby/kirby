@@ -5,7 +5,7 @@ namespace Kirby\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\Yaml
+ * @coversDefaultClass \Kirby\Data\Yaml
  */
 class YamlTest extends TestCase
 {
