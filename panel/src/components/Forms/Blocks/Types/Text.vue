@@ -37,5 +37,11 @@ export default {
 .k-block-type-text-input {
   font-size: var(--text-base);
   line-height: 1.5em;
+  height: 100%;
+}
+.k-block-type-text,
+.k-block-container-type-text,
+.k-block-type-text .k-writer .ProseMirror {
+  height: 100%;
 }
 </style>
