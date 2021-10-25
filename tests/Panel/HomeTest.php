@@ -192,6 +192,50 @@ class HomeTest extends TestCase
     }
 
     /**
+     * @covers ::custom
+     */
+    public function testCustom()
+    {
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'users/admin' => [
+                    'name' => 'admin',
+                    'home' => '/panel/account'
+                ],
+            ],
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $this->app->impersonate('test@getkirby.com');
+        $this->assertSame('/panel/account', Home::custom());
+    }
+
+    /**
+     * @covers ::custom
+     */
+    public function testCustomWithoutBlueprintSetting()
+    {
+        $this->app = $this->app->clone([
+            'users' => [
+                ['email' => 'test@getkirby.com', 'role' => 'admin']
+            ]
+        ]);
+
+        $this->app->impersonate('test@getkirby.com');
+        $this->assertSame('/panel/site', Home::custom());
+    }
+
+    /**
+     * @covers ::custom
+     */
+    public function testCustomWithoutUser()
+    {
+        $this->assertSame('/panel/login', Home::custom());
+    }
+
+    /**
      * @covers ::hasAccess
      */
     public function testHasAccessWithoutUserAndInstallation()
@@ -238,6 +282,10 @@ class HomeTest extends TestCase
         $this->assertTrue(Home::hasAccess('pages/test'));
         $this->assertTrue(Home::hasAccess('users/test@getkirby.com'));
         $this->assertTrue(Home::hasAccess('account'));
+
+        // dialogs and dropdowns never get access
+        $this->assertFalse(Home::hasAccess('dialogs/users/create'));
+        $this->assertFalse(Home::hasAccess('dropdowns/users/test@getkirby.com'));
     }
 
     /**
