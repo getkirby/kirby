@@ -63,7 +63,7 @@ export default {
       this.restoreScrollPosition();
 
       // enable scrolling of background
-      document.documentElement.style.overflow = "visible";
+      this.$store.dispatch("preventScrolling", false);
 
       // unbind events
       this.$events.$off("keydown.esc", this.close);
@@ -119,7 +119,7 @@ export default {
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
 
         // prevent scrolling of background
-        document.documentElement.style.overflow = "hidden";
+        this.$store.dispatch("preventScrolling", true);
 
         this.$emit("ready");
       }, 1)
