@@ -288,16 +288,16 @@ class UserMethodsTest extends TestCase
             'roles' => [
                 ['name' => 'admin'],
                 ['name' => 'editor'],
+            ],
+            'users' => [
+                ['email' => 'admin@getkirby.com', 'role' => 'admin']
             ]
         ]);
 
-        $user = new User([
-            'email' => 'user@domain.com',
-            'role'  => 'admin'
-        ]);
+        $admin = $this->app->impersonate('admin@getkirby.com');
 
-        $this->assertCount(1, $user->roles());
-        $this->assertSame('admin', $user->roles()->first()->id());
+        $this->assertCount(1, $admin->roles());
+        $this->assertSame('admin', $admin->roles()->first()->id());
     }
 
     /**
