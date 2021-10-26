@@ -16,7 +16,6 @@ export default new Vuex.Store({
     drag: null,
     fatal: false,
     isLoading: false,
-    preventScrolling: false,
   },
   mutations: {
     SET_DIALOG(state, dialog) {
@@ -30,9 +29,6 @@ export default new Vuex.Store({
     },
     SET_LOADING(state, loading) {
       state.isLoading = loading;
-    },
-    SET_PREVENT_SCROLLING(state, preventScrolling) {
-      state.preventScrolling = preventScrolling;
     }
   },
   actions: {
@@ -71,9 +67,6 @@ export default new Vuex.Store({
       context.dispatch("dialog", null);
       context.dispatch("drawers/close");
     },
-    preventScrolling(context, preventScrolling) {
-      context.commit("SET_PREVENT_SCROLLING", preventScrolling);
-    }
   },
   modules: {
     content: content,

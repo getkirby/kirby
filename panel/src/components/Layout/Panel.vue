@@ -4,7 +4,6 @@
     :data-loading="$store.state.isLoading"
     :data-language="language"
     :data-language-default="defaultLanguage"
-    :data-prevent-scrolling="$store.state.preventScrolling"
     :data-role="role"
     :data-translation="$translation.code"
     :data-user="user"
@@ -110,10 +109,6 @@ export default {
 .k-panel[data-loading]::after,
 .k-panel[data-dragging] {
   user-select: none;
-}
-.k-panel[data-prevent-scrolling] {
-  position: fixed;
-  width: 100%;
 }
 @keyframes LoadingCursor {
   100% { cursor: progress; }

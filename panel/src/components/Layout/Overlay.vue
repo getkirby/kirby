@@ -60,10 +60,11 @@ export default {
 
       this.isOpen = false;
       this.$emit("close");
-      this.restoreScrollPosition();
 
-      // enable scrolling of background
-      this.$store.dispatch("preventScrolling", false);
+      // restore scrolling
+      document.body.style.position = "static";
+      document.body.style.top = 0;
+      this.restoreScrollPosition();
 
       // unbind events
       this.$events.$off("keydown.esc", this.close);
@@ -118,27 +119,19 @@ export default {
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
 
-        // prevent scrolling of background
-        this.$store.dispatch("preventScrolling", true);
+        // prevent scrolling for the body element
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+        document.body.style.top = -(this.scrollTop) + "px";
 
         this.$emit("ready");
       }, 1)
     },
     restoreScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        view.scrollTop = this.scrollTop;
-      }
+      document.documentElement.scrollTop = this.scrollTop;
     },
     storeScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        this.scrollTop = view.scrollTop;
-      } else {
-        this.scrollTop = 0;
-      }
+      this.scrollTop = document.documentElement.scrollTop;
     },
   }
 };
