@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class UserPermissionsTest extends TestCase
 {
-
     protected $app;
 
     public function setUp(): void
@@ -293,5 +292,4 @@ class UserPermissionsTest extends TestCase
 
         $this->assertTrue($client->permissions()->changeRole());
     }
-
 }

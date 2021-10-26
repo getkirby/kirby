@@ -225,7 +225,8 @@ class FieldTest extends TestCase
      */
     public function testRole(): void
     {
-        $field = Field::role();
+        // without options
+        $field = Field::role(new \Kirby\Cms\Roles());
         $expected = [
             'label'   => 'Role',
             'type'    => 'hidden',
@@ -234,7 +235,7 @@ class FieldTest extends TestCase
 
         $this->assertSame($expected, $field);
 
-        // without authenticated user
+        // with roles from the app instance
         $this->app = $this->app->clone([
             'blueprints' => [
                 'users/admin'  => [
@@ -254,30 +255,7 @@ class FieldTest extends TestCase
             ]
         ]);
 
-        $field = Field::role();
-        $expected = [
-            'label'   => 'Role',
-            'type'    => 'radio',
-            'options' => [
-                [
-                    'text' => 'Client',
-                    'info' => 'No description',
-                    'value' => 'client'
-                ],
-                [
-                    'text' => 'Editor',
-                    'info' => 'Editor description',
-                    'value' => 'editor'
-                ],
-            ]
-        ];
-
-        $this->assertSame($expected, $field);
-
-        // with authenticated admin
-        $this->app->impersonate('kirby');
-
-        $field = Field::role();
+        $field = Field::role($this->app->roles());
         $expected = [
             'label'   => 'Role',
             'type'    => 'radio',

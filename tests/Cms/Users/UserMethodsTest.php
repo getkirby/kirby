@@ -314,5 +314,4 @@ class UserMethodsTest extends TestCase
 
         $this->assertCount(0, $user->roles());
     }
-
 }
