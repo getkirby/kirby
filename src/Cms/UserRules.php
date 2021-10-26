@@ -111,9 +111,12 @@ class UserRules
      */
     public static function changeRole(User $user, string $role): bool
     {
+        $kirby       = $user->kirby();
+        $currentUser = $kirby->user();
+
         // protect admin from role changes by non-admin
         if (
-            $user->kirby()->user()->isAdmin() === false &&
+            $currentUser->isAdmin() === false &&
             $user->isAdmin() === true
         ) {
             throw new PermissionException([
@@ -124,7 +127,7 @@ class UserRules
 
         // prevent non-admins making a user to admin
         if (
-            $user->kirby()->user()->isAdmin() === false &&
+            $currentUser->isAdmin() === false &&
             $role === 'admin'
         ) {
             throw new PermissionException([

@@ -29,7 +29,7 @@ return [
                         'language' => Field::translation([
                             'required' => true
                         ]),
-                        'role' => Field::role([
+                        'role' => Field::role($kirby->roles()->canBeCreated(), [
                             'required' => true
                         ])
                     ],
@@ -206,14 +206,14 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'role' => Field::role([
+                        'role' => Field::role($user->roles(), [
                             'label'    => t('user.changeRole.select'),
                             'required' => true,
                         ])
                     ],
                     'submitButton' => t('user.changeRole'),
                     'value' => [
-                        'role' => $user->role()->name()
+                        'role' => $user->role()->id()
                     ]
                 ]
             ];

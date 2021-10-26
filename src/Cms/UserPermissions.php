@@ -19,11 +19,16 @@ class UserPermissions extends ModelPermissions
     protected $category = 'users';
 
     /**
+     * @var \Kirby\Cms\User
+     */
+    protected $model;
+
+    /**
      * UserPermissions constructor
      *
-     * @param \Kirby\Cms\Model $model
+     * @param \Kirby\Cms\User $model
      */
-    public function __construct(Model $model)
+    public function __construct(User $model)
     {
         parent::__construct($model);
 
@@ -36,7 +41,30 @@ class UserPermissions extends ModelPermissions
      */
     protected function canChangeRole(): bool
     {
-        return $this->model->roles()->count() > 1;
+        $roles = $this->model->kirby()->roles();
+
+        // authenticated admins can always change the role of
+        // a user unless the user is the last admin
+        if ($this->user->isAdmin() === true) {
+            if ($this->model->isLastAdmin() === true) {
+                return false;
+            }
+
+            return $roles->count() > 1;
+        }
+
+        // if the user is an admin and the authenticated
+        // user isn't, the authenticated user cannot
+        // change the role. No matter how the permissions
+        // are set.
+        if ($this->model->isAdmin() === true) {
+            return false;
+        }
+
+        // non-admins cannot promote users to admins
+        $roles = $roles->filter('id', '!=', 'admin');
+
+        return $roles->count() > 1;
     }
 
     /**

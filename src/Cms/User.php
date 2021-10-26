@@ -646,24 +646,38 @@ class User extends ModelWithContent
         // a collection with just the one role of the user
         $myRole = $roles->filter('id', $this->role()->id());
 
-        // if there's an authenticated user …
-        if ($user = $kirby->user()) {
-
-            // admin users can select pretty much any role
-            if ($user->isAdmin() === true) {
-                // except if the user is the last admin
-                if ($this->isLastAdmin() === true) {
-                    // in which case they have to stay admin
-                    return $myRole;
-                }
-
-                // return all roles for mighty admins
-                return $roles;
-            }
+        // if there's no authenticated user
+        // only the already assigned role is available
+        if (!$authUser = $kirby->user()) {
+            return $myRole;
         }
 
-        // any other user can only keep their role
-        return $myRole;
+        // admin users can select pretty much any role
+        if ($authUser->isAdmin() === true) {
+            // except if the user is the last admin
+            if ($this->isLastAdmin() === true) {
+                // in which case they have to stay admin
+                return $myRole;
+            }
+
+            // return all roles for mighty admins
+            return $roles;
+        }
+
+        // any other role cannot change the roles for admins
+        if ($this->isAdmin() === true) {
+            return $myRole;
+        }
+
+        // any other role cannot promote a user to admin, even
+        // if they have full changeRole permissions
+        $roles = $roles->filter('id', '!=', 'admin');
+
+        if ($this->permissions()->changeRole() === false) {
+            return $myRole;
+        }
+
+        return $roles;
     }
 
     /**

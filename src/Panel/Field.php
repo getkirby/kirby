@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Cms\Roles;
 
 /**
  * Provides common field prop definitions
@@ -150,24 +151,16 @@ class Field
     /**
      * User role radio buttons
      *
+     * @param \Kirby\Cms\Roles $roles
      * @param array $props
      * @return array
      */
-    public static function role(array $props = []): array
+    public static function role(Roles $roles, array $props = []): array
     {
-        $kirby   = kirby();
-        $user    = $kirby->user();
-        $isAdmin = $user && $user->isAdmin();
-        $roles   = [];
+        $options = [];
 
-        foreach ($kirby->roles() as $role) {
-            // exclude the admin role, if the user
-            // is not allowed to change role to admin
-            if ($role->name() === 'admin' && $isAdmin === false) {
-                continue;
-            }
-
-            $roles[] = [
+        foreach ($roles as $role) {
+            $options[] = [
                 'text'  => $role->title(),
                 'info'  => $role->description() ?? t('role.description.placeholder'),
                 'value' => $role->name()
@@ -176,8 +169,8 @@ class Field
 
         return array_merge([
             'label'    => t('role'),
-            'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
-            'options'  => $roles
+            'type'     => count($options) <= 1 ? 'hidden' : 'radio',
+            'options'  => $options
         ], $props);
     }
 
