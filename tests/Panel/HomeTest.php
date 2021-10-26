@@ -55,17 +55,9 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertSame('/panel/site', Home::alternative());
-    }
-
-    /**
-     * @covers ::alternative
-     */
-    public function testAlternativeWithoutUser()
-    {
-        $this->assertSame('/panel/login', Home::alternative());
+        $this->assertSame('/panel/site', Home::alternative($user));
     }
 
     /**
@@ -94,9 +86,9 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertSame('/panel/users', Home::alternative());
+        $this->assertSame('/panel/users', Home::alternative($user));
     }
 
     /**
@@ -127,9 +119,9 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertSame('/panel/account', Home::alternative());
+        $this->assertSame('/panel/account', Home::alternative($user));
     }
 
     /**
@@ -153,9 +145,9 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertSame('/', Home::alternative());
+        $this->assertSame('/', Home::alternative($user));
     }
 
     /**
@@ -183,87 +175,18 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->expectExceptionMessage('There’s no available Panel page to redirect to');
 
-        Home::alternative();
-    }
-
-    /**
-     * @covers ::custom
-     */
-    public function testCustom()
-    {
-        $this->app = $this->app->clone([
-            'blueprints' => [
-                'users/admin' => [
-                    'name' => 'admin',
-                    'home' => '/panel/account'
-                ],
-            ],
-            'users' => [
-                ['email' => 'test@getkirby.com', 'role' => 'admin']
-            ]
-        ]);
-
-        $this->app->impersonate('test@getkirby.com');
-        $this->assertSame('/panel/account', Home::custom());
-    }
-
-    /**
-     * @covers ::custom
-     */
-    public function testCustomWithoutBlueprintSetting()
-    {
-        $this->app = $this->app->clone([
-            'users' => [
-                ['email' => 'test@getkirby.com', 'role' => 'admin']
-            ]
-        ]);
-
-        $this->app->impersonate('test@getkirby.com');
-        $this->assertSame('/panel/site', Home::custom());
-    }
-
-    /**
-     * @covers ::custom
-     */
-    public function testCustomWithoutUser()
-    {
-        $this->assertSame('/panel/login', Home::custom());
+        Home::alternative($user);
     }
 
     /**
      * @covers ::hasAccess
      */
-    public function testHasAccessWithoutUserAndInstallation()
-    {
-        $this->assertFalse(Home::hasAccess('site'));
-        $this->assertFalse(Home::hasAccess('login'));
-        $this->assertTrue(Home::hasAccess('installation'));
-    }
-
-    /**
-     * @covers ::hasAccess
-     */
-    public function testHasAccessWithoutUser()
-    {
-        $this->app = $this->app->clone([
-            'users' => [
-                ['email' => 'test@getkirby.com', 'role' => 'admin']
-            ]
-        ]);
-
-        $this->assertFalse(Home::hasAccess('site'));
-        $this->assertTrue(Home::hasAccess('login'));
-    }
-
-    /**
-     * @covers ::hasAccess
-     */
-    public function testHasAccessWithUser()
+    public function testHasAccess()
     {
         $this->app = $this->app->clone([
             'site' => [
@@ -276,16 +199,16 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertTrue(Home::hasAccess('site'));
-        $this->assertTrue(Home::hasAccess('pages/test'));
-        $this->assertTrue(Home::hasAccess('users/test@getkirby.com'));
-        $this->assertTrue(Home::hasAccess('account'));
+        $this->assertTrue(Home::hasAccess($user, 'site'));
+        $this->assertTrue(Home::hasAccess($user, 'pages/test'));
+        $this->assertTrue(Home::hasAccess($user, 'users/test@getkirby.com'));
+        $this->assertTrue(Home::hasAccess($user, 'account'));
 
         // dialogs and dropdowns never get access
-        $this->assertFalse(Home::hasAccess('dialogs/users/create'));
-        $this->assertFalse(Home::hasAccess('dropdowns/users/test@getkirby.com'));
+        $this->assertFalse(Home::hasAccess($user, 'dialogs/users/create'));
+        $this->assertFalse(Home::hasAccess($user, 'dropdowns/users/test@getkirby.com'));
     }
 
     /**
@@ -314,12 +237,12 @@ class HomeTest extends TestCase
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
+        $user = $this->app->impersonate('test@getkirby.com');
 
-        $this->assertFalse(Home::hasAccess('site'));
-        $this->assertFalse(Home::hasAccess('pages/test'));
-        $this->assertTrue(Home::hasAccess('users/test@getkirby.com'));
-        $this->assertTrue(Home::hasAccess('account'));
+        $this->assertFalse(Home::hasAccess($user, 'site'));
+        $this->assertFalse(Home::hasAccess($user, 'pages/test'));
+        $this->assertTrue(Home::hasAccess($user, 'users/test@getkirby.com'));
+        $this->assertTrue(Home::hasAccess($user, 'account'));
     }
 
     /**

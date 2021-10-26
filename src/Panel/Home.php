@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
@@ -35,16 +36,11 @@ class Home
      * take the first area which is not disabled
      * or locked in other ways
      *
+     * @param \Kirby\Cms\User $user
      * @return string
      */
-    public static function alternative(): string
+    public static function alternative(User $user): string
     {
-        $user = kirby()->user();
-
-        if (!$user) {
-            return Panel::url('login');
-        }
-
         $permissions = $user->role()->permissions();
 
         // no access to the panel? The only good alternative is the main url
@@ -82,36 +78,16 @@ class Home
     }
 
     /**
-     * Returns the custom Panel URL for the user
-     * if the user role blueprint defines one via the
-     * `home` option. If not, the custom URL is simply
-     * `/panel/site` as always. If there's no
-     * authenticated user, the link to the login
-     * view is returned instead
-     *
-     * @return string
-     */
-    public static function custom(): string
-    {
-        $user = kirby()->user();
-
-        if (!$user) {
-            return Panel::url('login');
-        }
-
-        return $user->panel()->home();
-    }
-
-    /**
      * Checks if the user has access to the given
      * panel path. This is quite tricky, because we
      * need to call a trimmed down router to check
      * for available routes and their firewall status.
      *
+     * @param \Kirby\Cms\User
      * @param string $path
      * @return bool
      */
-    public static function hasAccess(string $path): bool
+    public static function hasAccess(User $user, string $path): bool
     {
         $areas  = Panel::areas();
         $routes = Panel::routes($areas);
@@ -127,7 +103,7 @@ class Home
 
         // create a dummy router to check if we can access this route at all
         try {
-            return router($path, 'GET', $routes, function ($route) {
+            return router($path, 'GET', $routes, function ($route) use ($user) {
                 $auth   = $route->attributes()['auth'] ?? true;
                 $areaId = $route->attributes()['area'] ?? null;
                 $type   = $route->attributes()['type'] ?? 'view';
@@ -143,7 +119,7 @@ class Home
                 }
 
                 // check the firewall
-                return Panel::hasAccess(kirby()->user(), $areaId);
+                return Panel::hasAccess($user, $areaId);
             });
         } catch (Throwable $e) {
             return false;
@@ -231,7 +207,17 @@ class Home
      */
     public static function url(): string
     {
-        $url = static::remembered() ?? static::custom();
+        $user = kirby()->user();
+
+        // if there's no authenticated user, all internal
+        // redirects will be blocked and the user is redirected
+        // to the login instead
+        if (!$user) {
+            return Panel::url('login');
+        }
+
+        // get the last visited url from the session or the custom home
+        $url = static::remembered() ?? $user->panel()->home();
 
         // inspect the given URL
         $uri = new Uri($url);
@@ -257,20 +243,18 @@ class Home
         // get the plain panel path
         $path = static::panelPath($url);
 
-        // when the user is already signed in, a redirect to login, logout or
-        // installation views would lead to an infinite redirect loop
+        // a redirect to login, logout or installation
+        // views would lead to an infinite redirect loop
         if (in_array($path, ['', 'login', 'logout', 'installation'], true) === true) {
-            if (kirby()->user()) {
-                throw new InvalidArgumentException('Invalid redirect URL');
-            }
+            throw new InvalidArgumentException('Invalid redirect URL');
         }
 
         // Check if the user can access the URL
-        if (static::hasAccess($path) === true) {
+        if (static::hasAccess($user, $path) === true) {
             return $url;
         }
 
         // Try to find an alternative
-        return static::alternative();
+        return static::alternative($user);
     }
 }
