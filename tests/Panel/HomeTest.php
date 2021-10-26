@@ -209,6 +209,12 @@ class HomeTest extends TestCase
         // dialogs and dropdowns never get access
         $this->assertFalse(Home::hasAccess($user, 'dialogs/users/create'));
         $this->assertFalse(Home::hasAccess($user, 'dropdowns/users/test@getkirby.com'));
+
+        // invalid routes return false
+        $this->assertFalse(Home::hasAccess($user, 'does/not/exist/at/all'));
+
+        // unauthenticated views return true
+        $this->assertTrue(Home::hasAccess($user, 'browser'));
     }
 
     /**
