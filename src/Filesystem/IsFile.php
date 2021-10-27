@@ -104,11 +104,23 @@ trait IsFile
             'url'  => $this->url()
         ];
 
-        if ($this->type() === 'image') {
-            return $this->asset = new Image($props);
-        }
+        return $this->asset = $this->typeModel($props);
+    }
 
-        return $this->asset = new File($props);
+    /**
+     * Returns correct file instance by type
+     *
+     * @param array|string|null $props
+     * @return \Kirby\Filesystem\File
+     */
+    public function typeModel($props = null)
+    {
+        switch ($this->type()) {
+            case 'image':
+                return new Image($props);
+            default:
+                return new File($props);
+        }
     }
 
     /**
