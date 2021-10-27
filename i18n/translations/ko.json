@@ -1,5 +1,6 @@
 {
   "add": "\ucd94\uac00",
+  "author": "Author",
   "avatar": "프로필 이미지",
   "back": "복귀",
   "cancel": "\ucde8\uc18c",
@@ -24,23 +25,27 @@
   "days.tue": "\ud654",
   "days.wed": "\uc218",
 
+  "debugging": "Debugging",
+
   "delete": "\uc0ad\uc81c",
   "delete.all": "모두 삭제",
-  "dimensions": "크기",
-  "disabled": "비활성화",
-  "discard": "무시",
-  "download": "다운로드",
-  "duplicate": "복제",
-  "edit": "\ud3b8\uc9d1",
-  "expand": "열기",
-  "expand.all": "모두 열기",
 
   "dialog.files.empty": "선택한 파일이 없습니다.",
   "dialog.pages.empty": "선택한 페이지가 없습니다.",
   "dialog.users.empty": "선택한 사용자가 없습니다.",
 
+  "dimensions": "크기",
+  "disabled": "비활성화",
+  "discard": "무시",
+  "download": "다운로드",
+  "duplicate": "복제",
+
+  "edit": "\ud3b8\uc9d1",
+
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "코드가 올바르지 않습니다.",
   "error.access.login": "로그인할 수 없습니다.",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "{time} 이전 시각을 입력하세요.",
   "error.validation.time.between": "{min}, {max} 사이의 시각을 입력하세요.",
   "error.validation.url": "올바른 URL을 입력하세요.",
+
+  "expand": "열기",
+  "expand.all": "모두 열기",
 
   "field.required": "필드를 채우세요.",
   "field.blocks.changeType": "유형 변경",
@@ -426,6 +434,7 @@
   "paste": "붙여넣기",
   "paste.after": "뒤로 붙여넣기",
   "pixel": "픽셀",
+  "plugins": "Plugins",
   "prev": "이전",
   "preview": "미리 보기",
   "remove": "삭제",
@@ -461,6 +470,8 @@
   "title": "제목",
   "template": "\ud15c\ud50c\ub9bf",
   "today": "오늘",
+
+  "server": "Server",
 
   "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
 
@@ -528,9 +539,10 @@
 
   "view.account": "계정",
   "view.installation": "\uc124\uce58",
+  "view.languages": "언어",
   "view.resetPassword": "암호 초기화",
-  "view.settings": "설정",
   "view.site": "사이트",
+  "view.system": "System",
   "view.users": "\uc0ac\uc6a9\uc790",
 
   "welcome": "반갑습니다.",

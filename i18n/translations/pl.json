@@ -1,5 +1,6 @@
 {
   "add": "Dodaj",
+  "author": "Author",
   "avatar": "Zdj\u0119cie profilowe",
   "back": "Wróć",
   "cancel": "Anuluj",
@@ -24,23 +25,27 @@
   "days.tue": "Wt",
   "days.wed": "\u015ar",
 
+  "debugging": "Debugging",
+
   "delete": "Usu\u0144",
   "delete.all": "Usuń wszystkie",
-  "dimensions": "Wymiary",
-  "disabled": "Wyłączone",
-  "discard": "Odrzu\u0107",
-  "download": "Pobierz",
-  "duplicate": "Zduplikuj",
-  "edit": "Edytuj",
-  "expand": "Rozwiń",
-  "expand.all": "Rozwiń wszystkie",
 
   "dialog.files.empty": "Brak plików do wyboru",
   "dialog.pages.empty": "Brak stron do wyboru",
   "dialog.users.empty": "Brak użytkowników do wyboru",
 
+  "dimensions": "Wymiary",
+  "disabled": "Wyłączone",
+  "discard": "Odrzu\u0107",
+  "download": "Pobierz",
+  "duplicate": "Zduplikuj",
+
+  "edit": "Edytuj",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Nieprawidłowy kod",
   "error.access.login": "Nieprawidłowy login",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Wprowadź czas wcześniejszy niż {time}",
   "error.validation.time.between": "Wprowadź czas między {min} a {max}",
   "error.validation.url": "Wprowadź poprawny adres URL",
+
+  "expand": "Rozwiń",
+  "expand.all": "Rozwiń wszystkie",
 
   "field.required": "Pole jest wymagane",
   "field.blocks.changeType": "Zmień typ",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Piksel",
+  "plugins": "Plugins",
   "prev": "Poprzednie",
   "preview": "Podgląd",
   "remove": "Usuń",
@@ -461,6 +470,8 @@
   "title": "Tytuł",
   "template": "Szablon",
   "today": "Dzisiaj",
+
+  "server": "Server",
 
   "site.blueprint": "Ta strona nie ma jeszcze wzorca. Możesz go zdefiniować w <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Twoje konto",
   "view.installation": "Instalacja",
+  "view.languages": "Języki",
   "view.resetPassword": "Zresetuj hasło",
-  "view.settings": "Ustawienia",
   "view.site": "Strona",
+  "view.system": "System",
   "view.users": "U\u017cytkownicy",
 
   "welcome": "Witaj",

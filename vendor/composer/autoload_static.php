@@ -288,6 +288,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Panel\\Dropdown' => __DIR__ . '/../..' . '/src/Panel/Dropdown.php',
         'Kirby\\Panel\\Field' => __DIR__ . '/../..' . '/src/Panel/Field.php',
         'Kirby\\Panel\\File' => __DIR__ . '/../..' . '/src/Panel/File.php',
+        'Kirby\\Panel\\Home' => __DIR__ . '/../..' . '/src/Panel/Home.php',
         'Kirby\\Panel\\Json' => __DIR__ . '/../..' . '/src/Panel/Json.php',
         'Kirby\\Panel\\Model' => __DIR__ . '/../..' . '/src/Panel/Model.php',
         'Kirby\\Panel\\Page' => __DIR__ . '/../..' . '/src/Panel/Page.php',

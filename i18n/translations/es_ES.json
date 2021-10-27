@@ -1,5 +1,6 @@
 {
   "add": "Añadir",
+  "author": "Author",
   "avatar": "Foto de perfil",
   "back": "Atrás",
   "cancel": "Cancelar",
@@ -24,23 +25,27 @@
   "days.tue": "Ma",
   "days.wed": "Mi",
 
+  "debugging": "Debugging",
+
   "delete": "Borrar",
   "delete.all": "Delete all",
-  "dimensions": "Dimensiones",
-  "disabled": "Desabilitado",
-  "discard": "Descartar",
-  "download": "Descargar",
-  "duplicate": "Duplicar",
-  "edit": "Editar",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No se ha seleccionado ningún archivo",
   "dialog.pages.empty": "No se ha seleccionado ninguna página",
   "dialog.users.empty": "No se ha seleccionado ningún usuario",
 
+  "dimensions": "Dimensiones",
+  "disabled": "Desabilitado",
+  "discard": "Descartar",
+  "download": "Descargar",
+  "duplicate": "Duplicar",
+
+  "edit": "Editar",
+
   "email": "Correo electrónico",
   "email.placeholder": "correo@ejemplo.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Ingreso inválido",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Por favor introduzca un URL válido",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Anterior",
   "preview": "Preview",
   "remove": "Eliminar",
@@ -461,6 +470,8 @@
   "title": "Titulo",
   "template": "Plantilla",
   "today": "Hoy",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Su cuenta",
   "view.installation": "Instalación",
+  "view.languages": "Idiomas",
   "view.resetPassword": "Reset password",
-  "view.settings": "Ajustes",
   "view.site": "Sitio",
+  "view.system": "System",
   "view.users": "Usuarios",
 
   "welcome": "Bienvenido(a)",

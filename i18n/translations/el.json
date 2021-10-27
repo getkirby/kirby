@@ -1,5 +1,6 @@
 {
   "add": "\u03a0\u03c1\u03bf\u03c3\u03b8\u03ae\u03ba\u03b7",
+  "author": "Author",
   "avatar": "\u0395\u03b9\u03ba\u03cc\u03bd\u03b1 \u03c0\u03c1\u03bf\u03c6\u03af\u03bb",
   "back": "Πίσω",
   "cancel": "\u0391\u03ba\u03cd\u03c1\u03c9\u03c3\u03b7",
@@ -24,23 +25,27 @@
   "days.tue": "\u03a4\u03c1\u03af",
   "days.wed": "\u03a4\u03b5\u03c4",
 
+  "debugging": "Debugging",
+
   "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
   "delete.all": "Delete all",
-  "dimensions": "Διαστάσεις",
-  "disabled": "Disabled",
-  "discard": "Απόρριψη",
-  "download": "Λήψη",
-  "duplicate": "Αντίγραφο",
-  "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Διαστάσεις",
+  "disabled": "Disabled",
+  "discard": "Απόρριψη",
+  "download": "Λήψη",
+  "duplicate": "Αντίγραφο",
+
+  "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
+
   "email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Mη έγκυρος κωδικός",
   "error.access.login": "Mη έγκυρη σύνδεση",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Εικονοστοιχέιο",
+  "plugins": "Plugins",
   "prev": "Προηγούμενο",
   "preview": "Preview",
   "remove": "Αφαίρεση",
@@ -461,6 +470,8 @@
   "title": "Τίτλος",
   "template": "\u03a0\u03c1\u03cc\u03c4\u03c5\u03c0\u03bf",
   "today": "Σήμερα",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "\u039f \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03c3\u03b1\u03c2",
   "view.installation": "\u0395\u03b3\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
+  "view.languages": "Γλώσσες",
   "view.resetPassword": "Reset password",
-  "view.settings": "Ρυθμίσεις",
   "view.site": "Iστοσελίδα",
+  "view.system": "System",
   "view.users": "\u03a7\u03c1\u03ae\u03c3\u03c4\u03b5\u03c2",
 
   "welcome": "Καλώς ήρθατε",

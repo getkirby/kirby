@@ -1,5 +1,6 @@
 {
   "add": "Lis\u00e4\u00e4",
+  "author": "Author",
   "avatar": "Profiilikuva",
   "back": "Takaisin",
   "cancel": "Peruuta",
@@ -24,23 +25,27 @@
   "days.tue": "Ti",
   "days.wed": "Ke",
 
+  "debugging": "Debugging",
+
   "delete": "Poista",
   "delete.all": "Poista kaikki",
-  "dimensions": "Mitat",
-  "disabled": "Pois käytöstä",
-  "discard": "Hylkää",
-  "download": "Lataa",
-  "duplicate": "Kahdenna",
-  "edit": "Muokkaa",
-  "expand": "Laajenna",
-  "expand.all": "Laajenna kaikki",
 
   "dialog.files.empty": "Ei valittavissa olevia tiedostoja",
   "dialog.pages.empty": "Ei valittavissa olevia sivuja",
   "dialog.users.empty": "Ei valittavissa olevia käyttäjiä",
 
+  "dimensions": "Mitat",
+  "disabled": "Pois käytöstä",
+  "discard": "Hylkää",
+  "download": "Lataa",
+  "duplicate": "Kahdenna",
+
+  "edit": "Muokkaa",
+
   "email": "S\u00e4hk\u00f6posti",
   "email.placeholder": "nimi@osoite.fi",
+
+  "environment": "Environment",
 
   "error.access.code": "Väärä koodi",
   "error.access.login": "Kirjautumistiedot eivät kelpaa",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Anna aiempi aika kuin {time}",
   "error.validation.time.between": "Anna aika väliltä {min} ja {max}",
   "error.validation.url": "Anna kelpaava URL",
+
+  "expand": "Laajenna",
+  "expand.all": "Laajenna kaikki",
 
   "field.required": "Kenttä on pakollinen",
   "field.blocks.changeType": "Vaihda tyyppiä",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pikseli",
+  "plugins": "Plugins",
   "prev": "Edellinen",
   "preview": "Esikatselu",
   "remove": "Poista",
@@ -461,6 +470,8 @@
   "title": "Nimi",
   "template": "Sivupohja",
   "today": "Tänään",
+
+  "server": "Server",
 
   "site.blueprint": "Tällä sivustolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Oma käyttäjätili",
   "view.installation": "Asennus",
+  "view.languages": "Kielet",
   "view.resetPassword": "Aseta salasana",
-  "view.settings": "Asetukset",
   "view.site": "Sivusto",
+  "view.system": "System",
   "view.users": "K\u00e4ytt\u00e4j\u00e4t",
 
   "welcome": "Tervetuloa",

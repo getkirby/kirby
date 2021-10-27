@@ -1,5 +1,6 @@
 {
   "add": "Tambah",
+  "author": "Author",
   "avatar": "Gambar profil",
   "back": "Kembali",
   "cancel": "Batal",
@@ -24,23 +25,27 @@
   "days.tue": "Sel",
   "days.wed": "Rab",
 
+  "debugging": "Debugging",
+
   "delete": "Hapus",
   "delete.all": "Hapus semua",
-  "dimensions": "Dimensi",
-  "disabled": "Dimatikan",
-  "discard": "Buang",
-  "download": "Unduh",
-  "duplicate": "Duplikasi",
-  "edit": "Sunting",
-  "expand": "Luaskan",
-  "expand.all": "Luaskan Semua",
 
   "dialog.files.empty": "Tidak ada berkas untuk dipilih",
   "dialog.pages.empty": "Tidak ada halaman untuk dipilih",
   "dialog.users.empty": "Tidak ada pengguna untuk dipilih",
 
+  "dimensions": "Dimensi",
+  "disabled": "Dimatikan",
+  "discard": "Buang",
+  "download": "Unduh",
+  "duplicate": "Duplikasi",
+
+  "edit": "Sunting",
+
   "email": "Surel",
   "email.placeholder": "surel@contoh.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Kode tidak valid",
   "error.access.login": "Upaya masuk tidak valid",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Masukkan waktu sebelum {time}",
   "error.validation.time.between": "Masukkan waktu antara {min} dan {max}",
   "error.validation.url": "Masukkan URL yang valid",
+
+  "expand": "Luaskan",
+  "expand.all": "Luaskan Semua",
 
   "field.required": "Bidang ini wajib",
   "field.blocks.changeType": "Ubah tipe",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Piksel",
+  "plugins": "Plugins",
   "prev": "Sebelumnya",
   "preview": "Pratinjau",
   "remove": "Hapus",
@@ -461,6 +470,8 @@
   "title": "Judul",
   "template": "Templat",
   "today": "Hari ini",
+
+  "server": "Server",
 
   "site.blueprint": "Situs ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Akun Anda",
   "view.installation": "Pemasangan",
+  "view.languages": "Bahasa",
   "view.resetPassword": "Atur ulang sandi",
-  "view.settings": "Pengaturan",
   "view.site": "Situs",
+  "view.system": "System",
   "view.users": "Pengguna",
 
   "welcome": "Selamat datang",

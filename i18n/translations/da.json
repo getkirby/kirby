@@ -1,5 +1,6 @@
 {
   "add": "Ny",
+  "author": "Author",
   "avatar": "Profilbillede",
   "back": "Tilbage",
   "cancel": "Annuller",
@@ -24,23 +25,27 @@
   "days.tue": "Tir",
   "days.wed": "Ons",
 
+  "debugging": "Debugging",
+
   "delete": "Slet",
   "delete.all": "Slet alle",
-  "dimensions": "Dimensioner",
-  "disabled": "Deaktiveret",
-  "discard": "Kass\u00e9r",
-  "download": "Download",
-  "duplicate": "Dupliker",
-  "edit": "Rediger",
-  "expand": "Fold ud",
-  "expand.all": "Fold alle ud",
 
   "dialog.files.empty": "Ingen filer kan vælges",
   "dialog.pages.empty": "Ingen sider kan vælges",
   "dialog.users.empty": "Ingen brugere kan vælges",
 
+  "dimensions": "Dimensioner",
+  "disabled": "Deaktiveret",
+  "discard": "Kass\u00e9r",
+  "download": "Download",
+  "duplicate": "Dupliker",
+
+  "edit": "Rediger",
+
   "email": "Email",
   "email.placeholder": "mail@eksempel.dk",
+
+  "environment": "Environment",
 
   "error.access.code": "Ugyldig kode",
   "error.access.login": "Ugyldigt log ind",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Indtast venligst et tidspunkt inden {time}",
   "error.validation.time.between": "Indtast venligst et tidspunkt imellem {min} og {max}",
   "error.validation.url": "Indtast venligst en gyldig URL",
+
+  "expand": "Fold ud",
+  "expand.all": "Fold alle ud",
 
   "field.required": "Feltet er påkrævet",
   "field.blocks.changeType": "Skift type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Forrige",
   "preview": "Forhåndsvisning",
   "remove": "Fjern",
@@ -461,6 +470,8 @@
   "title": "Titel",
   "template": "Skabelon",
   "today": "Idag",
+
+  "server": "Server",
 
   "site.blueprint": "Sitet har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Din konto",
   "view.installation": "Installation",
+  "view.languages": "Sprog",
   "view.resetPassword": "Nulstil adgangskode",
-  "view.settings": "Indstillinger",
   "view.site": "Website",
+  "view.system": "System",
   "view.users": "Brugere",
 
   "welcome": "Velkommen",

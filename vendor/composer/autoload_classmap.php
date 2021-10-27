@@ -199,6 +199,7 @@ return array(
     'Kirby\\Panel\\Dropdown' => $baseDir . '/src/Panel/Dropdown.php',
     'Kirby\\Panel\\Field' => $baseDir . '/src/Panel/Field.php',
     'Kirby\\Panel\\File' => $baseDir . '/src/Panel/File.php',
+    'Kirby\\Panel\\Home' => $baseDir . '/src/Panel/Home.php',
     'Kirby\\Panel\\Json' => $baseDir . '/src/Panel/Json.php',
     'Kirby\\Panel\\Model' => $baseDir . '/src/Panel/Model.php',
     'Kirby\\Panel\\Page' => $baseDir . '/src/Panel/Page.php',

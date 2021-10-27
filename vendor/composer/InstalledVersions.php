@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-rc.1',
-    'version' => '3.6.0.0-RC1',
+    'pretty_version' => '3.6.0-rc.2',
+    'version' => '3.6.0.0-RC2',
     'aliases' => 
     array (
     ),
@@ -48,17 +48,17 @@ private static $installed = array (
     ),
     'filp/whoops' => 
     array (
-      'pretty_version' => '2.14.1',
-      'version' => '2.14.1.0',
+      'pretty_version' => '2.14.4',
+      'version' => '2.14.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '15ead64e9828f0fc90932114429c4f7923570cb1',
+      'reference' => 'f056f1fe935d9ed86e698905a957334029899895',
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-rc.1',
-      'version' => '3.6.0.0-RC1',
+      'pretty_version' => '3.6.0-rc.2',
+      'version' => '3.6.0.0-RC2',
       'aliases' => 
       array (
       ),
