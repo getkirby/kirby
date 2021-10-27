@@ -1,5 +1,6 @@
 {
   "add": "Voeg toe",
+  "author": "Author",
   "avatar": "Avatar",
   "back": "Terug",
   "cancel": "Annuleren",
@@ -24,23 +25,27 @@
   "days.tue": "Di",
   "days.wed": "Wo",
 
+  "debugging": "Debugging",
+
   "delete": "Verwijderen",
   "delete.all": "Verwijder alles",
-  "dimensions": "Dimensies",
-  "disabled": "Uitgeschakeld",
-  "discard": "Annuleren",
-  "download": "Download",
-  "duplicate": "Dupliceren",
-  "edit": "Wijzig",
-  "expand": "Open",
-  "expand.all": "Open alles",
 
   "dialog.files.empty": "Geen bestanden om te selecteren",
   "dialog.pages.empty": "Geen pagina's om te selecteren",
   "dialog.users.empty": "Geen gebruikers om te selecteren",
 
+  "dimensions": "Dimensies",
+  "disabled": "Uitgeschakeld",
+  "discard": "Annuleren",
+  "download": "Download",
+  "duplicate": "Dupliceren",
+
+  "edit": "Wijzig",
+
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
+
+  "environment": "Environment",
 
   "error.access.code": "Ongeldige code",
   "error.access.login": "Ongeldige login",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Voer een tijd in voor  {time}",
   "error.validation.time.between": "Voer een tijd in tussen {min} en {max}",
   "error.validation.url": "Vul een geldige URL in",
+
+  "expand": "Open",
+  "expand.all": "Open alles",
 
   "field.required": "Dit veld is verplicht",
   "field.blocks.changeType": "Wijzig type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Vorige",
   "preview": "Voorbeeld",
   "remove": "Verwijder",
@@ -461,6 +470,8 @@
   "title": "Titel",
   "template": "Template",
   "today": "Vandaag",
+
+  "server": "Server",
 
   "site.blueprint": "Deze website heeft nog geen ontwerp. Je kan het ontwerp hier plaatsen<strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Jouw account",
   "view.installation": "Installatie",
+  "view.languages": "Talen",
   "view.resetPassword": "Wachtwoord herstellen",
-  "view.settings": "Opties",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Gebruikers",
 
   "welcome": "Welkom",

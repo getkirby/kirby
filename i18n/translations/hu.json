@@ -1,5 +1,6 @@
 {
   "add": "Hozz\u00e1ad",
+  "author": "Author",
   "avatar": "Profilkép",
   "back": "Vissza",
   "cancel": "M\u00e9gsem",
@@ -24,23 +25,27 @@
   "days.tue": "ke",
   "days.wed": "sze",
 
+  "debugging": "Debugging",
+
   "delete": "T\u00f6rl\u00e9s",
   "delete.all": "Delete all",
-  "dimensions": "Méretek",
-  "disabled": "Disabled",
-  "discard": "Visszavon\u00e1s",
-  "download": "Letöltés",
-  "duplicate": "Másolat",
-  "edit": "Aloldal szerkeszt\u00e9se",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "Nincsenek fájlok kiválasztva",
   "dialog.pages.empty": "Nincsenek oldalak kiválasztva",
   "dialog.users.empty": "Nincsenek felhasználók kiválasztva",
 
+  "dimensions": "Méretek",
+  "disabled": "Disabled",
+  "discard": "Visszavon\u00e1s",
+  "download": "Letöltés",
+  "duplicate": "Másolat",
+
+  "edit": "Aloldal szerkeszt\u00e9se",
+
   "email": "Email",
   "email.placeholder": "mail@pelda.hu",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Érvénytelen bejelentkezés",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Kérlek megfelelő URL-t adj meg",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Előző",
   "preview": "Preview",
   "remove": "Eltávolítás",
@@ -461,6 +470,8 @@
   "title": "Cím",
   "template": "Sablon",
   "today": "Ma",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Fi\u00f3kod",
   "view.installation": "Telep\u00edt\u00e9s",
+  "view.languages": "Nyelvek",
   "view.resetPassword": "Reset password",
-  "view.settings": "Beállítások",
   "view.site": "Weboldal",
+  "view.system": "System",
   "view.users": "Felhaszn\u00e1l\u00f3k",
 
   "welcome": "Üdvözlünk",

@@ -1,5 +1,6 @@
 {
   "add": "Pridėti",
+  "author": "Author",
   "avatar": "Profilio nuotrauka",
   "back": "Atgal",
   "cancel": "Atšaukti",
@@ -24,23 +25,27 @@
   "days.tue": "Ant",
   "days.wed": "Tre",
 
+  "debugging": "Debugging",
+
   "delete": "Pašalinti",
   "delete.all": "Pašalinti viską",
-  "dimensions": "Išmatavimai",
-  "disabled": "Išjungta",
-  "discard": "Atšaukti",
-  "download": "Parsisiųsti",
-  "duplicate": "Dublikuoti",
-  "edit": "Redaguoti",
-  "expand": "Išskleisti",
-  "expand.all": "Išskleisti viską",
 
   "dialog.files.empty": "Nėra failų pasirinkimui",
   "dialog.pages.empty": "Nėra puslapių pasirinkimui",
   "dialog.users.empty": "Nėra vartotojų pasirinkimui",
 
+  "dimensions": "Išmatavimai",
+  "disabled": "Išjungta",
+  "discard": "Atšaukti",
+  "download": "Parsisiųsti",
+  "duplicate": "Dublikuoti",
+
+  "edit": "Redaguoti",
+
   "email": "El. paštas",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Neteisinas kodas",
   "error.access.login": "Neteisingas prisijungimo vardas",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Įrašykite laiką prieš {time}",
   "error.validation.time.between": "Įrašykite laiką tarp {min} ir {max}",
   "error.validation.url": "Prašome įrašyti teisingą URL",
+
+  "expand": "Išskleisti",
+  "expand.all": "Išskleisti viską",
 
   "field.required": "Laukas privalomas",
   "field.blocks.changeType": "Pakeisti tipą",
@@ -426,6 +434,7 @@
   "paste": "Įterpti",
   "paste.after": "Įterpti po",
   "pixel": "Pikselis",
+  "plugins": "Plugins",
   "prev": "Ankstesnis",
   "preview": "Peržiūra",
   "remove": "Pašalinti",
@@ -461,6 +470,8 @@
   "title": "Pavadinimas",
   "template": "Puslapio šablonas",
   "today": "Šiandien",
+
+  "server": "Server",
 
   "site.blueprint": "Svetainė neturi blueprint. Jūs galite nustatyti jį <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Jūsų paskyra",
   "view.installation": "Installation",
+  "view.languages": "Kalbos",
   "view.resetPassword": "Sukurti naują slaptažodį",
-  "view.settings": "Nustatymai",
   "view.site": "Svetainė",
+  "view.system": "System",
   "view.users": "Vartotojai",
 
   "welcome": "Sveiki",

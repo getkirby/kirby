@@ -1,5 +1,6 @@
 {
   "add": "Pridať",
+  "author": "Author",
   "avatar": "Profilový obrázok",
   "back": "Späť",
   "cancel": "Zrušiť",
@@ -24,23 +25,27 @@
   "days.tue": "Uto",
   "days.wed": "Str",
 
+  "debugging": "Debugging",
+
   "delete": "Zmazať",
   "delete.all": "Zmazať všetky",
-  "dimensions": "Rozmery",
-  "disabled": "Disabled",
-  "discard": "Zahodiť",
-  "download": "Stiahnuť",
-  "duplicate": "Duplikovať",
-  "edit": "Upraviť",
-  "expand": "Rozbaliť",
-  "expand.all": "Rozbaliť všetky",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Rozmery",
+  "disabled": "Disabled",
+  "discard": "Zahodiť",
+  "download": "Stiahnuť",
+  "duplicate": "Duplikovať",
+
+  "edit": "Upraviť",
+
   "email": "E-mail",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Neplatný  kód",
   "error.access.login": "Neplatné prihlásenie",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Prosím, zadajte platnú URL",
+
+  "expand": "Rozbaliť",
+  "expand.all": "Rozbaliť všetky",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Predchádzajúci",
   "preview": "Preview",
   "remove": "Odstrániť",
@@ -461,6 +470,8 @@
   "title": "Titulok",
   "template": "Šablóna",
   "today": "Dnes",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Váš účet",
   "view.installation": "Inštalácia",
+  "view.languages": "Jazyky",
   "view.resetPassword": "Reset password",
-  "view.settings": "Nastavenia",
   "view.site": "Portál",
+  "view.system": "System",
   "view.users": "Užívatelia",
 
   "welcome": "Vitajte",

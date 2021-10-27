@@ -1,5 +1,6 @@
 {
   "add": "Ajouter",
+  "author": "Author",
   "avatar": "Image du profil",
   "back": "Retour",
   "cancel": "Annuler",
@@ -24,23 +25,27 @@
   "days.tue": "Mar",
   "days.wed": "Mer",
 
+  "debugging": "Debugging",
+
   "delete": "Supprimer",
   "delete.all": "Tout supprimer",
-  "dimensions": "Dimensions",
-  "disabled": "Désactivé",
-  "discard": "Supprimer",
-  "download": "Télécharger",
-  "duplicate": "Dupliquer",
-  "edit": "Éditer",
-  "expand": "Déplier",
-  "expand.all": "Tout déplier",
 
   "dialog.files.empty": "Aucun fichier à sélectionner",
   "dialog.pages.empty": "Aucune page à sélectionner",
   "dialog.users.empty": "Aucun utilisateur à sélectionner",
 
+  "dimensions": "Dimensions",
+  "disabled": "Désactivé",
+  "discard": "Supprimer",
+  "download": "Télécharger",
+  "duplicate": "Dupliquer",
+
+  "edit": "Éditer",
+
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Code incorrect",
   "error.access.login": "Identifiant incorrect",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Veuillez entrer une heure avant {time}",
   "error.validation.time.between": "Veuillez entrer une heure entre {min} et {max}",
   "error.validation.url": "Veuillez saisir une URL valide",
+
+  "expand": "Déplier",
+  "expand.all": "Tout déplier",
 
   "field.required": "Le champ est obligatoire",
   "field.blocks.changeType": "Changer le type",
@@ -426,6 +434,7 @@
   "paste": "Coller",
   "paste.after": "Coller après",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Précédent",
   "preview": "Prévisualiser",
   "remove": "Supprimer",
@@ -461,6 +470,8 @@
   "title": "Titre",
   "template": "Modèle",
   "today": "Aujourd’hui",
+
+  "server": "Server",
 
   "site.blueprint": "Ce site n’a pas encore de blueprint. Vous pouvez en définir les paramètres dans <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Votre compte",
   "view.installation": "Installation",
+  "view.languages": "Langages",
   "view.resetPassword": "Réinitialiser le mot de passe",
-  "view.settings": "Paramètres",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Utilisateurs",
 
   "welcome": "Bienvenue",

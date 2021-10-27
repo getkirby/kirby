@@ -1,5 +1,6 @@
 {
   "add": "Ekle",
+  "author": "Author",
   "avatar": "Profil resmi",
   "back": "Geri",
   "cancel": "\u0130ptal",
@@ -24,23 +25,27 @@
   "days.tue": "Sal",
   "days.wed": "\u00c7ar",
 
+  "debugging": "Debugging",
+
   "delete": "Sil",
   "delete.all": "Tümünü sil",
-  "dimensions": "Boyutlar",
-  "disabled": "Devredışı",
-  "discard": "Vazge\u00e7",
-  "download": "İndir",
-  "duplicate": "Kopyala",
-  "edit": "D\u00fczenle",
-  "expand": "Genişlet",
-  "expand.all": "Tümünü genişlet",
 
   "dialog.files.empty": "Seçilecek dosya yok",
   "dialog.pages.empty": "Seçilecek sayfa yok",
   "dialog.users.empty": "Seçilecek kullanıcı yok",
 
+  "dimensions": "Boyutlar",
+  "disabled": "Devredışı",
+  "discard": "Vazge\u00e7",
+  "download": "İndir",
+  "duplicate": "Kopyala",
+
+  "edit": "D\u00fczenle",
+
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Geçersiz kod",
   "error.access.login": "Geçersiz giriş",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Lütfen {time} öncesi bir tarih girin",
   "error.validation.time.between": "Lütfen {min} ile {max} arasında bir tarih girin",
   "error.validation.url": "Lütfen geçerli bir adres girin",
+
+  "expand": "Genişlet",
+  "expand.all": "Tümünü genişlet",
 
   "field.required": "Alan gereklidir",
   "field.blocks.changeType": "Türü değiştir",
@@ -426,6 +434,7 @@
   "paste": "Yapıştır",
   "paste.after": "Sonrasına yapıştır",
   "pixel": "Piksel",
+  "plugins": "Plugins",
   "prev": "Önceki",
   "preview": "Önizle",
   "remove": "Kaldır",
@@ -461,6 +470,8 @@
   "title": "Başlık",
   "template": "\u015eablon",
   "today": "Bugün",
+
+  "server": "Server",
 
   "site.blueprint": "Sitenin henüz bir planı yok. Kurulumu <strong>/site/blueprints/site.yml</strong>'de tanımlayabilirsiniz.",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Hesap Bilgilerin",
   "view.installation": "Kurulum",
+  "view.languages": "Diller",
   "view.resetPassword": "Şifreyi sıfırla",
-  "view.settings": "Ayarlar",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Kullan\u0131c\u0131lar",
 
   "welcome": "Hoşgeldiniz",

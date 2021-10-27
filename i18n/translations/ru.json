@@ -1,5 +1,6 @@
 {
   "add": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c",
+  "author": "Author",
   "avatar": "\u0410\u0432\u0430\u0442\u0430\u0440 (\u0444\u043e\u0442\u043e)",
   "back": "Назад",
   "cancel": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c",
@@ -24,23 +25,27 @@
   "days.tue": "\u0412\u0442",
   "days.wed": "\u0421\u0440",
 
+  "debugging": "Debugging",
+
   "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
   "delete.all": "Удалить все",
-  "dimensions": "Размеры",
-  "disabled": "Отключено",
-  "discard": "\u0421\u0431\u0440\u043e\u0441",
-  "download": "Скачать",
-  "duplicate": "Дублировать",
-  "edit": "\u041d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c",
-  "expand": "Развернуть",
-  "expand.all": "Развернуть все",
 
   "dialog.files.empty": "Нет файлов для выбора",
   "dialog.pages.empty": "Нет страниц для выбора",
   "dialog.users.empty": "Нет пользователей для выбора",
 
+  "dimensions": "Размеры",
+  "disabled": "Отключено",
+  "discard": "\u0421\u0431\u0440\u043e\u0441",
+  "download": "Скачать",
+  "duplicate": "Дублировать",
+
+  "edit": "\u041d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Неверный код",
   "error.access.login": "Неправильный логин",
@@ -73,9 +78,9 @@
   "error.file.maxheight": "Высота изображения не должна превышать {height} px",
   "error.file.maxsize": "Файл слишком большой",
   "error.file.maxwidth": "Ширина изображения не должна превышать {width} px",
-  "error.file.mime.differs": "Загруженный файл должен быть того же mime типа: \"{mime}\"",
-  "error.file.mime.forbidden": "Тип медиа \"{mime}\" не допустим",
-  "error.file.mime.invalid": "Неверный тип mime: {mime}",
+  "error.file.mime.differs": "Загружаемый файл должен иметь такое же расширение (тип): \"{mime}\"",
+  "error.file.mime.forbidden": "Расширение (тип) \"{mime}\" не допускается",
+  "error.file.mime.invalid": "Неверное расширение (тип): {mime}",
   "error.file.mime.missing": "Не удалось определить тип медиа для файла \"{filename}\"",
   "error.file.minheight": "Высота файла должна быть хотя бы {height} px",
   "error.file.minsize": "Файл слишком маленький",
@@ -211,6 +216,9 @@
   "error.validation.time.between": "Пожалуйста, укажите время между {min} и {max}",
   "error.validation.url": "Пожалуйста, введите правильный URL",
 
+  "expand": "Развернуть",
+  "expand.all": "Развернуть все",
+
   "field.required": "Поле обязательно",
   "field.blocks.changeType": "Изменить тип",
   "field.blocks.code.name": "Код",
@@ -268,7 +276,7 @@
   "field.structure.empty": "Еще нет записей",
   "field.users.empty": "Еще нет пользователей",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+  "file.blueprint": "У файла пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Вы точно хотите удалить файл <br><strong>{filename}</strong>?",
   "file.sort": "Изменить позицию",
 
@@ -343,9 +351,9 @@
   "login.code.label.password-reset": "Код для сброса пароля",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Если ваш Email уже зарегистрирован, запрашиваемый код был отправлен на него.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Привет, {user.nameOrEmail}!\n\nНедавно вы запросили код для входа в Панель управления {site}.\nСледующий код входа будет действителен в течение {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали код для входа, проигнорируйте это письмо или обратитесь к администратору, если у вас есть вопросы.\nВ целях безопасности НЕ ПЕРЕСЫЛАЙТЕ это письмо.",
   "login.email.login.subject": "Ваш код для входа",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Привет, {user.nameOrEmail}!\n\nНедавно вы запросили сброс пароля для входа в Панель управления {site}.\nСледующий код входа будет действителен в течение {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали сброс пароля, проигнорируйте это письмо или обратитесь к администратору, если у вас есть вопросы.\nВ целях безопасности НЕ ПЕРЕСЫЛАЙТЕ это письмо.",
   "login.email.password-reset.subject": "Ваш код для сброса пароля",
   "login.remember": "Сохранять вход активным",
   "login.reset": "Сбросить пароль",
@@ -391,7 +399,7 @@
   "orientation.portrait": "Портретная",
   "orientation.square": "Квадрат",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
+  "page.blueprint": "У страницы пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0441\u0441\u044b\u043b\u043a\u0443 (\u0427\u041f\u0423)",
   "page.changeSlug.fromTitle": "Создать из названия",
   "page.changeStatus": "Изменить статус",
@@ -426,6 +434,7 @@
   "paste": "Вставить",
   "paste.after": "Вставить после",
   "pixel": "Пиксель",
+  "plugins": "Plugins",
   "prev": "Предыдущий",
   "preview": "Предпросмотр",
   "remove": "Удалить",
@@ -456,13 +465,15 @@
   "settings": "Настройка",
   "show": "Показать",
   "size": "Размер",
-  "slug": "Понятная ссылка (ЧПУ)",
+  "slug": "Понятная ссылка",
   "sort": "Сортировать",
   "title": "Название",
   "template": "\u0428\u0430\u0431\u043b\u043e\u043d",
   "today": "Сегодня",
 
-  "site.blueprint": "Вы можете определить новые секции и поля формы для этого сайта в <strong>/site/blueprints/site.yml</strong>",
+  "server": "Server",
+
+  "site.blueprint": "У сайта пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Код",
   "toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
@@ -497,7 +508,7 @@
   "upload.error.extension": "Загрузка файла не удалась из за расширения",
   "upload.error.formSize": "Загруженный файл больше чем MAX_FILE_SIZE настройка в форме",
   "upload.error.iniPostSize": "Загружаемый файл больше чем post_max_size настройка в php.ini",
-  "upload.error.iniSize": "Загруженный файл больше чем upload_max_filesize настройка в php.ini",
+  "upload.error.iniSize": "Загруженный файл больше чем настройка upload_max_filesize в php.ini",
   "upload.error.noFile": "Файл не был загружен",
   "upload.error.noFiles": "Файлы не были загружены",
   "upload.error.partial": "Файл загружен только частично",
@@ -509,7 +520,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Пользователь",
-  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+  "user.blueprint": "Вы можете определить новые секции и поля разметки для пользователя в <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Поменять эл. почту",
   "user.changeLanguage": "Поменять язык",
   "user.changeName": "Переназвать этого пользователя",
@@ -528,9 +539,10 @@
 
   "view.account": "\u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
   "view.installation": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430",
+  "view.languages": "Языки",
   "view.resetPassword": "Сбросить пароль",
-  "view.settings": "Настройка",
   "view.site": "Сайт",
+  "view.system": "System",
   "view.users": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438",
 
   "welcome": "Добро пожаловать",

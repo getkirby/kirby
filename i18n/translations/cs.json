@@ -1,5 +1,6 @@
 {
   "add": "P\u0159idat",
+  "author": "Author",
   "avatar": "Profilov\u00fd obr\u00e1zek",
   "back": "Zpět",
   "cancel": "Zru\u0161it",
@@ -24,23 +25,27 @@
   "days.tue": "\u00fat",
   "days.wed": "st",
 
+  "debugging": "Debugging",
+
   "delete": "Smazat",
   "delete.all": "Smazat vše",
-  "dimensions": "Rozměry",
-  "disabled": "Zakázáno",
-  "discard": "Zahodit",
-  "download": "Stáhnout",
-  "duplicate": "Duplikovat",
-  "edit": "Upravit",
-  "expand": "Rozbalit",
-  "expand.all": "Rozbalit vše",
 
   "dialog.files.empty": "Žádné soubory k výběru",
   "dialog.pages.empty": "Žádné stránky k výběru",
   "dialog.users.empty": "Žádní uživatelé k výběru",
 
+  "dimensions": "Rozměry",
+  "disabled": "Zakázáno",
+  "discard": "Zahodit",
+  "download": "Stáhnout",
+  "duplicate": "Duplikovat",
+
+  "edit": "Upravit",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Neplatný kód",
   "error.access.login": "Neplatné přihlášení",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Zadejte prosím čas před {time}",
   "error.validation.time.between": "Zadejte prosím čas v rozmezí od {min} do {max}",
   "error.validation.url": "Zadejte prosím platnou adresu URL",
+
+  "expand": "Rozbalit",
+  "expand.all": "Rozbalit vše",
 
   "field.required": "Pole musí být vyplněno.",
   "field.blocks.changeType": "Změnit typ",
@@ -426,6 +434,7 @@
   "paste": "Vložit",
   "paste.after": "Vložit za",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Předchozí",
   "preview": "Náhled",
   "remove": "Odstranit",
@@ -461,6 +470,8 @@
   "title": "Název",
   "template": "\u0160ablona",
   "today": "Dnes",
+
+  "server": "Server",
 
   "site.blueprint": "Hlavní panel nemá blueprint. Blueprint můžete definovat v <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "V\u00e1\u0161 \u00fa\u010det",
   "view.installation": "Instalace",
+  "view.languages": "Jazyky",
   "view.resetPassword": "Resetovat heslo",
-  "view.settings": "Nastavení",
   "view.site": "Stránka",
+  "view.system": "System",
   "view.users": "U\u017eivatel\u00e9",
 
   "welcome": "Vítejte",

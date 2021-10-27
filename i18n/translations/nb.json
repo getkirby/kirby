@@ -1,5 +1,6 @@
 {
   "add": "Legg til",
+  "author": "Author",
   "avatar": "Profilbilde",
   "back": "Tilbake",
   "cancel": "Avbryt",
@@ -24,23 +25,27 @@
   "days.tue": "Tir",
   "days.wed": "Ons",
 
+  "debugging": "Debugging",
+
   "delete": "Slett",
   "delete.all": "Delete all",
-  "dimensions": "Dimensjoner",
-  "disabled": "Disabled",
-  "discard": "Forkast",
-  "download": "Download",
-  "duplicate": "Duplicate",
-  "edit": "Rediger",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Dimensjoner",
+  "disabled": "Disabled",
+  "discard": "Forkast",
+  "download": "Download",
+  "duplicate": "Duplicate",
+
+  "edit": "Rediger",
+
   "email": "Epost",
   "email.placeholder": "epost@eksempel.no",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Ugyldig innlogging",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Vennligst skriv inn en gyldig URL",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Piksel",
+  "plugins": "Plugins",
   "prev": "Forrige",
   "preview": "Preview",
   "remove": "Fjern",
@@ -461,6 +470,8 @@
   "title": "Tittel",
   "template": "Mal",
   "today": "I dag",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Din konto",
   "view.installation": "Installasjon",
+  "view.languages": "Språk",
   "view.resetPassword": "Reset password",
-  "view.settings": "Innstillinger",
   "view.site": "Side",
+  "view.system": "System",
   "view.users": "Brukere",
 
   "welcome": "Velkommen",

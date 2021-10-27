@@ -1,5 +1,6 @@
 {
   "add": "L\u00e4gg till",
+  "author": "Author",
   "avatar": "Profilbild",
   "back": "Tillbaka",
   "cancel": "Avbryt",
@@ -9,7 +10,7 @@
   "collapse": "Kollapsa",
   "collapse.all": "Kollapsa alla",
   "copy": "Kopiera",
-  "copy.all": "Copy all",
+  "copy.all": "Kopiera alla",
   "create": "Skapa",
 
   "date": "Datum",
@@ -24,23 +25,27 @@
   "days.tue": "Tis",
   "days.wed": "Ons",
 
+  "debugging": "Debugging",
+
   "delete": "Radera",
   "delete.all": "Radera allt",
-  "dimensions": "Dimensioner",
-  "disabled": "Inaktiverad",
-  "discard": "Kassera",
-  "download": "Ladda ner",
-  "duplicate": "Duplicera",
-  "edit": "Redigera",
-  "expand": "Expandera",
-  "expand.all": "Expandera alla",
 
   "dialog.files.empty": "Inga filer att välja",
   "dialog.pages.empty": "Inga sidor att välja",
   "dialog.users.empty": "Inga användare att välja",
 
+  "dimensions": "Dimensioner",
+  "disabled": "Inaktiverad",
+  "discard": "Kassera",
+  "download": "Ladda ner",
+  "duplicate": "Duplicera",
+
+  "edit": "Redigera",
+
   "email": "E-postadress",
   "email.placeholder": "namn@exempel.se",
+
+  "environment": "Environment",
 
   "error.access.code": "Ogiltig kod",
   "error.access.login": "Ogiltig inloggning",
@@ -93,7 +98,7 @@
   "error.language.code": "Ange en giltig kod för språket",
   "error.language.duplicate": "Språket finns redan",
   "error.language.name": "Ange ett giltigt namn för språket",
-  "error.language.notFound": "The language could not be found",
+  "error.language.notFound": "Språket hittades inte",
 
   "error.layout.validation.block": "Det finns ett fel i block {blockIndex} i layout {layoutIndex}",
   "error.layout.validation.settings": "Det finns ett fel i inställningarna för layout {index}",
@@ -211,6 +216,9 @@
   "error.validation.time.between": "Ange en tid mellan {min} och {max}",
   "error.validation.url": "Ange en giltig URL",
 
+  "expand": "Expandera",
+  "expand.all": "Expandera alla",
+
   "field.required": "Fältet krävs",
   "field.blocks.changeType": "Ändra typ",
   "field.blocks.code.name": "Kod",
@@ -221,7 +229,7 @@
   "field.blocks.delete.confirm.selected": "Vill du verkligen radera de valda blocken?",
   "field.blocks.empty": "Inga block än",
   "field.blocks.fieldsets.label": "Välj en typ av block …",
-  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
+  "field.blocks.fieldsets.paste": "Tryck på <kbd>{{ shortcut }}</kbd> för att klistra in/importera block från ditt urklipp",
   "field.blocks.gallery.name": "Galleri",
   "field.blocks.gallery.images.empty": "Inga bilder än",
   "field.blocks.gallery.images.label": "Bilder",
@@ -238,7 +246,7 @@
   "field.blocks.image.placeholder": "Välj en bild",
   "field.blocks.image.ratio": "Bildförhållande",
   "field.blocks.image.url": "Bild-URL",
-  "field.blocks.line.name": "Line",
+  "field.blocks.line.name": "Linje",
   "field.blocks.list.name": "Punktlista",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -268,7 +276,7 @@
   "field.structure.empty": "Inga poster än",
   "field.users.empty": "Inga användare valda än",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+  "file.blueprint": "Denna fil har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Vill du verkligen radera <br><strong>{filename}</strong>?",
   "file.sort": "Ändra position",
 
@@ -277,7 +285,7 @@
 
   "hide": "Göm",
   "hour": "Timme",
-  "import": "Import",
+  "import": "Importera",
   "insert": "Infoga",
   "insert.after": "Infoga efter",
   "insert.before": "Infoga före",
@@ -343,9 +351,9 @@
   "login.code.label.password-reset": "Kod för återställning av lösenord",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Om din e-postadress är registrerad skickades den begärda koden via e-post.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hej {user.nameOrEmail}.\n\nDu begärde nyligen en inloggningskod till panelen för {site}.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt någon inloggningskod, ignorera detta e-postmeddelande eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl, vidarebefordra INTE detta e-postmeddelande.",
   "login.email.login.subject": "Din inloggningskod",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hej {user.nameOrEmail}.\n\nDu begärde nyligen en kod för återställning av ditt lösenord till panelen för {site}.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt en återställning av ditt lösenord, ignorera detta e-postmeddelande eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl, vidarebefordra INTE detta e-postmeddelande.",
   "login.email.password-reset.subject": "Din kod för återställning av lösenord",
   "login.remember": "Håll mig inloggad",
   "login.reset": "Återställ lösenord",
@@ -391,7 +399,7 @@
   "orientation.portrait": "Stående",
   "orientation.square": "Kvadrat",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
+  "page.blueprint": "Denna sida har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Ändra URL",
   "page.changeSlug.fromTitle": "Skapa utifr\u00e5n titel",
   "page.changeStatus": "Ändra status",
@@ -423,9 +431,10 @@
   "pagination.page": "Sida",
 
   "password": "L\u00f6senord",
-  "paste": "Paste",
-  "paste.after": "Paste after",
+  "paste": "Klistra in",
+  "paste.after": "Klistra in efter",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Föregående",
   "preview": "Förhandsgranska",
   "remove": "Ta bort",
@@ -462,6 +471,8 @@
   "template": "Mall",
   "today": "Idag",
 
+  "server": "Server",
+
   "site.blueprint": "Webbplatsen har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kod",
@@ -471,15 +482,15 @@
   "toolbar.button.heading.1": "Rubrik 1",
   "toolbar.button.heading.2": "Rubrik 2",
   "toolbar.button.heading.3": "Rubrik 3",
-  "toolbar.button.heading.4": "Heading 4",
-  "toolbar.button.heading.5": "Heading 5",
-  "toolbar.button.heading.6": "Heading 6",
+  "toolbar.button.heading.4": "Rubrik 4",
+  "toolbar.button.heading.5": "Rubrik 5",
+  "toolbar.button.heading.6": "Rubrik 6",
   "toolbar.button.italic": "Kursiv",
   "toolbar.button.file": "Fil",
   "toolbar.button.file.select": "Välj en fil",
   "toolbar.button.file.upload": "Ladda upp en fil",
   "toolbar.button.link": "L\u00e4nk",
-  "toolbar.button.paragraph": "Paragraph",
+  "toolbar.button.paragraph": "Stycke",
   "toolbar.button.strike": "Genomstruken",
   "toolbar.button.ol": "Sorterad lista",
   "toolbar.button.underline": "Understruken",
@@ -509,7 +520,7 @@
   "url.placeholder": "https://exempel.se",
 
   "user": "Användare",
-  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+  "user.blueprint": "Du kan skapa ytterligare sektioner och fält för den här användarrollen i <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Ändra e-postadress",
   "user.changeLanguage": "Ändra språk",
   "user.changeName": "Byt namn på denna användare",
@@ -528,9 +539,10 @@
 
   "view.account": "Ditt konto",
   "view.installation": "Installation",
+  "view.languages": "Språk",
   "view.resetPassword": "Återställ lösenord",
-  "view.settings": "Inställningar",
   "view.site": "Webbplats",
+  "view.system": "System",
   "view.users": "Anv\u00e4ndare",
 
   "welcome": "Välkommen",

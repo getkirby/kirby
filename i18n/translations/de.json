@@ -1,5 +1,6 @@
 {
   "add": "Hinzuf\u00fcgen",
+  "author": "Autor",
   "avatar": "Profilbild",
   "back": "Zurück",
   "cancel": "Abbrechen",
@@ -24,23 +25,27 @@
   "days.tue": "Di",
   "days.wed": "Mi",
 
+  "debugging": "Debugging",
+
   "delete": "L\u00f6schen",
   "delete.all": "Alle löschen",
-  "dimensions": "Maße",
-  "disabled": "Gesperrt",
-  "discard": "Verwerfen",
-  "download": "Download",
-  "duplicate": "Duplizieren",
-  "edit": "Bearbeiten",
-  "expand": "Aufklappen",
-  "expand.all": "Alle aufklappen",
 
   "dialog.files.empty": "Keine verfügbaren Dateien",
   "dialog.pages.empty": "Keine verfügbaren Seiten",
   "dialog.users.empty": "Keine verfügbaren Accounts",
 
+  "dimensions": "Maße",
+  "disabled": "Gesperrt",
+  "discard": "Verwerfen",
+  "download": "Download",
+  "duplicate": "Duplizieren",
+
+  "edit": "Bearbeiten",
+
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
+
+  "environment": "Umgebung",
 
   "error.access.code": "Ungültiger Code",
   "error.access.login": "Ungültige Zugangsdaten",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Bitte gib eine Zeit vor {time} ein",
   "error.validation.time.between": "Bitte gib eine Zeit zwischen {min} und {max} ein",
   "error.validation.url": "Bitte gib eine gültige URL ein",
+
+  "expand": "Aufklappen",
+  "expand.all": "Alle aufklappen",
 
   "field.required": "Das Feld ist Pflicht",
   "field.blocks.changeType": "Blocktyp ändern",
@@ -426,6 +434,7 @@
   "paste": "Einfügen",
   "paste.after": "Danach einfügen",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Vorheriger Eintrag",
   "preview": "Vorschau",
   "remove": "Entfernen",
@@ -461,6 +470,8 @@
   "title": "Titel",
   "template": "Vorlage",
   "today": "Heute",
+
+  "server": "Server",
 
   "site.blueprint": "Du kannst zusätzliche Felder und Bereiche für die Seite in <strong>/site/blueprints/site.yml</strong> anlegen",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Dein Account",
   "view.installation": "Installation",
+  "view.languages": "Sprachen",
   "view.resetPassword": "Passwort zurücksetzen",
-  "view.settings": "Einstellungen",
   "view.site": "Seite",
+  "view.system": "System",
   "view.users": "Accounts",
 
   "welcome": "Willkommen",

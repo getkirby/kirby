@@ -1,5 +1,6 @@
 {
   "add": "Afegir",
+  "author": "Author",
   "avatar": "Imatge del perfil",
   "back": "Tornar",
   "cancel": "Cancel\u00b7lar",
@@ -24,23 +25,27 @@
   "days.tue": "dt.",
   "days.wed": "dc.",
 
+  "debugging": "Debugging",
+
   "delete": "Eliminar",
   "delete.all": "Eliminar tot",
-  "dimensions": "Dimensions",
-  "disabled": "Desactivat",
-  "discard": "Descartar",
-  "download": "Descarregar",
-  "duplicate": "Duplicar",
-  "edit": "Editar",
-  "expand": "Expandir",
-  "expand.all": "Expandir tot",
 
   "dialog.files.empty": "No hi ha cap fitxer per seleccionar",
   "dialog.pages.empty": "No hi ha cap pàgina per seleccionar",
   "dialog.users.empty": "No hi ha cap usuari per seleccionar",
 
+  "dimensions": "Dimensions",
+  "disabled": "Desactivat",
+  "discard": "Descartar",
+  "download": "Descarregar",
+  "duplicate": "Duplicar",
+
+  "edit": "Editar",
+
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Codi invàlid",
   "error.access.login": "Inici de sessió no vàlid",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Si us plau, introduïu una URL vàlida",
+
+  "expand": "Expandir",
+  "expand.all": "Expandir tot",
 
   "field.required": "El camp és obligatori",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Anterior",
   "preview": "Preview",
   "remove": "Eliminar",
@@ -461,6 +470,8 @@
   "title": "Títol",
   "template": "Plantilla",
   "today": "Avui",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "La teva compta",
   "view.installation": "Instal·lació",
+  "view.languages": "Idiomes",
   "view.resetPassword": "Reset password",
-  "view.settings": "Configuració",
   "view.site": "Lloc web",
+  "view.system": "System",
   "view.users": "Usuaris",
 
   "welcome": "Benvinguda",

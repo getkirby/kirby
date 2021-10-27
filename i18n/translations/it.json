@@ -1,5 +1,6 @@
 {
   "add": "Aggiungi",
+  "author": "Author",
   "avatar": "Immagine del profilo",
   "back": "Indietro",
   "cancel": "Annulla",
@@ -24,23 +25,27 @@
   "days.tue": "Ma",
   "days.wed": "Me",
 
+  "debugging": "Debugging",
+
   "delete": "Elimina",
   "delete.all": "Elimina tutti",
-  "dimensions": "Dimensioni",
-  "disabled": "Disabilitato",
-  "discard": "Abbandona",
-  "download": "Scarica",
-  "duplicate": "Duplica",
-  "edit": "Modifica",
-  "expand": "Espandi",
-  "expand.all": "Espandi tutto",
 
   "dialog.files.empty": "Nessun file selezionabile",
   "dialog.pages.empty": "Nessuna pagina selezionabile",
   "dialog.users.empty": "Nessuno user selezionabile",
 
+  "dimensions": "Dimensioni",
+  "disabled": "Disabilitato",
+  "discard": "Abbandona",
+  "download": "Scarica",
+  "duplicate": "Duplica",
+
+  "edit": "Modifica",
+
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Codice non valido",
   "error.access.login": "Login Invalido",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Inserisci un orario prima delle {time}",
   "error.validation.time.between": "Inserisci un orario tra le {min} e le {max}",
   "error.validation.url": "Inserisci un URL valido",
+
+  "expand": "Espandi",
+  "expand.all": "Espandi tutto",
 
   "field.required": "Il campo è obbligatorio",
   "field.blocks.changeType": "Cambia tipo",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Precedente",
   "preview": "Anteprima",
   "remove": "Rimuovi",
@@ -461,6 +470,8 @@
   "title": "Titolo",
   "template": "Template",
   "today": "Oggi",
+
+  "server": "Server",
 
   "site.blueprint": "Il sito non ha ancora un \"blueprint\". Puoi impostarne uno in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Il tuo account",
   "view.installation": "Installazione",
+  "view.languages": "Lingue",
   "view.resetPassword": "Reimposta la password",
-  "view.settings": "Impostazioni",
   "view.site": "Sito",
+  "view.system": "System",
   "view.users": "Utenti",
 
   "welcome": "Benvenuto",

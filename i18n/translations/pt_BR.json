@@ -1,5 +1,6 @@
 {
   "add": "Adicionar",
+  "author": "Author",
   "avatar": "Foto do perfil",
   "back": "Voltar",
   "cancel": "Cancelar",
@@ -24,23 +25,27 @@
   "days.tue": "Ter",
   "days.wed": "Qua",
 
+  "debugging": "Debugging",
+
   "delete": "Excluir",
   "delete.all": "Delete all",
-  "dimensions": "Dimensões",
-  "disabled": "Disabled",
-  "discard": "Descartar",
-  "download": "Download",
-  "duplicate": "Duplicate",
-  "edit": "Editar",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Dimensões",
+  "disabled": "Disabled",
+  "discard": "Descartar",
+  "download": "Download",
+  "duplicate": "Duplicate",
+
+  "edit": "Editar",
+
   "email": "Email",
   "email.placeholder": "mail@exemplo.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Login inválido",
@@ -210,6 +215,9 @@
   "error.validation.time.before": "Please enter a time before {time}",
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Digite uma URL válida",
+
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -426,6 +434,7 @@
   "paste": "Paste",
   "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Anterior",
   "preview": "Preview",
   "remove": "Remover",
@@ -461,6 +470,8 @@
   "title": "Título",
   "template": "Tema",
   "today": "Hoje",
+
+  "server": "Server",
 
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
@@ -528,9 +539,10 @@
 
   "view.account": "Sua conta",
   "view.installation": "Instala\u00e7\u00e3o",
+  "view.languages": "Idiomas",
   "view.resetPassword": "Reset password",
-  "view.settings": "Configurações",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Usu\u00e1rios",
 
   "welcome": "Bem-vindo",
