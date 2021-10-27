@@ -117,7 +117,7 @@ export default {
         return "negative";
       }
       if (this.mode === "unlock") {
-        return "focus";
+        return "info";
       }
 
       return "notice";

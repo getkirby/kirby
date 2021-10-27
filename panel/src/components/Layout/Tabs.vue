@@ -217,12 +217,14 @@ export default {
 }
 .k-tabs-badge {
   position: absolute;
-  top: -.5rem;
+  top: 3px;
   font-variant-numeric: tabular-nums;
-  inset-inline-end: -.5rem;
-  line-height: var(--leading-normal);
-  padding: 0rem .375rem;
-  border-radius: var(--rounded);
+  inset-inline-end: 2px;
+  line-height: 1.5;
+  padding: 0 .25rem;
+  border-radius: 2px;
+  font-size: 10px;
+  box-shadow: var(--shadow-md);
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
   background: var(--theme-light);
