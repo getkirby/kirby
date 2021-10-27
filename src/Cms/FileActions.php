@@ -8,6 +8,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Form\Form;
+use Kirby\Image\Image;
 
 /**
  * FileActions
@@ -181,7 +182,15 @@ trait FileActions
 
         // create the basic file and a test upload object
         $file = static::factory($props);
-        $upload = new BaseFile($props['source']);
+
+        // dynamic file instance
+        switch ($file->type()) {
+            case 'image':
+                $upload = new Image($props['source']);
+                break;
+            default:
+                $upload = new BaseFile($props['source']);
+        }
 
         // create a form for the file
         $form = Form::for($file, [
@@ -280,7 +289,21 @@ trait FileActions
      */
     public function replace(string $source)
     {
-        return $this->commit('replace', ['file' => $this, 'upload' => new BaseFile($source)], function ($file, $upload) {
+        // dynamic file instance
+        switch ($this->type()) {
+            case 'image':
+                $upload = new Image($source);
+                break;
+            default:
+                $upload = new BaseFile($source);
+        }
+
+        $arguments = [
+            'file' => $this,
+            'upload' => $upload
+        ];
+
+        return $this->commit('replace', $arguments, function ($file, $upload) {
 
             // delete all public versions
             $file->unpublish();
