@@ -2,7 +2,7 @@
 
 [![Release](https://badgen.net/github/release/getkirby/kirby/stable?color=yellow)](https://github.com/getkirby/kirby/releases/latest)
 [![CI Status](https://github.com/getkirby/kirby/workflows/CI/badge.svg)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
-[![Coverage Status](https://badgen.net/codecov/c/gh/getkirby/kirby/master?label=coverage)](https://codecov.io/gh/getkirby/kirby)
+[![Coverage Status](https://badgen.net/codecov/c/gh/getkirby/kirby/main?label=coverage)](https://codecov.io/gh/getkirby/kirby)
 [![Downloads](https://badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
 [![Twitter](https://badgen.net/twitter/follow/getkirby?color=cyan)](https://twitter.com/getkirby)
 
