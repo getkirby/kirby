@@ -88,6 +88,19 @@ class User extends Model
     }
 
     /**
+     * @return string|null
+     */
+    public function home(): ?string
+    {
+        if ($home = ($this->model->blueprint()->home() ?? null)) {
+            $url = $this->model->toString($home);
+            return url($url);
+        }
+
+        return Panel::url('site');
+    }
+
+    /**
      * Default settings for the user's Panel image
      *
      * @return array

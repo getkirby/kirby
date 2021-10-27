@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
@@ -18,6 +19,8 @@ class PanelTest extends TestCase
 
     public function setUp(): void
     {
+        Blueprint::$loaded = [];
+
         $this->app = new App([
             'roots' => [
                 'index' => $this->tmp,
@@ -25,6 +28,14 @@ class PanelTest extends TestCase
         ]);
 
         Dir::make($this->tmp);
+        // fix installation issues by creating directories
+        Dir::make($this->tmp . '/content');
+        Dir::make($this->tmp . '/media');
+        Dir::make($this->tmp . '/site/accounts');
+        Dir::make($this->tmp . '/site/sessions');
+
+        // let's pretend we are on a supported server
+        $_SERVER['SERVER_SOFTWARE'] = 'php';
     }
 
     public function tearDown(): void
@@ -73,12 +84,6 @@ class PanelTest extends TestCase
         $this->assertArrayHasKey('installation', $areas);
         $this->assertCount(1, $areas);
 
-        // fix installation issues by creating directories
-        Dir::make($this->tmp . '/content');
-        Dir::make($this->tmp . '/media');
-        Dir::make($this->tmp . '/site/accounts');
-        Dir::make($this->tmp . '/site/sessions');
-
         // create the first admin
         $this->app = $this->app->clone([
             'users' => [
@@ -88,9 +93,6 @@ class PanelTest extends TestCase
                 ]
             ]
         ]);
-
-        // let's pretend we are on a supported server
-        $_SERVER['SERVER_SOFTWARE'] = 'php';
 
         // unauthenticated / installed
         $areas = Panel::areas($this->app);

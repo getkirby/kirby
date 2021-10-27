@@ -7,6 +7,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 
@@ -153,11 +155,9 @@ class Panel
      * @return void
      * @codeCoverageIgnore
      */
-    public static function go(?string $path = null, int $code = 302): void
+    public static function go(?string $url = null, int $code = 302): void
     {
-        $slug = kirby()->option('panel.slug', 'panel');
-        $url  = url($slug . '/' . trim($path, '/'));
-        throw new Redirect($url, $code);
+        throw new Redirect(static::url($url), $code);
     }
 
     /**
@@ -364,18 +364,8 @@ class Panel
                 'installation',
                 'login',
             ],
-            'action' => function () use ($kirby) {
-                // if the last path has been stored in the
-                // session, redirect the user to it
-                // (used after successful login)
-                $path = trim($kirby->session()->get('panel.path'), '/');
-
-                // ignore various paths when redirecting
-                if (in_array($path, ['', 'login', 'logout', 'installation'])) {
-                    $path = 'site';
-                }
-
-                Panel::go($path);
+            'action' => function () {
+                Panel::go(Home::url());
             }
         ];
 
@@ -570,5 +560,33 @@ class Panel
         $kirby->setCurrentTranslation($translation);
 
         return $translation;
+    }
+
+    /**
+     * Creates an absolute Panel URL
+     * independent of the Panel slug config
+     *
+     * @param string|null $url
+     * @return string
+     */
+    public static function url(?string $url = null): string
+    {
+        $slug = kirby()->option('panel.slug', 'panel');
+
+        // only touch relative paths
+        if (Url::isAbsolute($url) === false) {
+            $path = trim($url, '/');
+
+            // add the panel slug prefix if it it's not
+            // included in the path yet
+            if (Str::startsWith($path, $slug . '/') === false) {
+                $path = $slug . '/' . $path;
+            }
+
+            // create an absolute URL
+            $url = url($path);
+        }
+
+        return $url;
     }
 }
