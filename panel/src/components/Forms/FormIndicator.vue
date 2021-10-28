@@ -40,10 +40,10 @@ export default {
     ids() {
       return Object
         .entries(this.store)
-        .filter(([id, model]) => {
+        .filter(([, model]) => {
           return Object.keys(model.changes).length > 0;
         })
-        .map(([id, model]) => {
+        .map(([id]) => {
           return id;
         });
     },
