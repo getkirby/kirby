@@ -23,8 +23,8 @@ export default {
       }
       return {
         count: count,
-        min: this.min,
-        max: this.max,
+        min: this.min ?? this.minlength,
+        max: this.max ?? this.maxlength,
       };
     }
   },
