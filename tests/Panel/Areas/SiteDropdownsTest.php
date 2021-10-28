@@ -2,13 +2,53 @@
 
 namespace Kirby\Panel\Areas;
 
-class PageDropdownsTest extends AreaTestCase
+class SiteDropdownsTest extends AreaTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
         $this->install();
         $this->login();
+    }
+
+    public function testChangesDropdown(): void
+    {
+        $this->app([
+            'request' => [
+                'body' => [
+                    'ids' => [
+                        'site',
+                        'pages/test'
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ],
+                'content' => [
+                    'title' => 'Test site'
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $options = $this->dropdown('changes')['options'];
+        $expected = [
+            [
+                'icon' => 'home',
+                'text' => 'Test site',
+                'link' => '/panel/site'
+            ],
+            [
+                'icon' => 'page',
+                'text' => 'test',
+                'link' => '/panel/pages/test'
+            ]
+        ];
+
+        $this->assertEquals($expected, $options);
     }
 
     public function testPageDropdown(): void

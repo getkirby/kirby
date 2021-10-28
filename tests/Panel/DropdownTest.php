@@ -111,6 +111,41 @@ class DropdownTest extends TestCase
     /**
      * @covers ::changes
      */
+    public function testChangesWithInvalidId()
+    {
+        $this->app = $this->app->clone([
+            'request' => [
+                'body' => [
+                    'ids' => [
+                        'site',
+                        'pages/does-not-exist'
+                    ]
+                ]
+            ],
+            'site' => [
+                'content' => [
+                    'title' => 'Test site'
+                ]
+            ]
+        ]);
+
+        $this->app->impersonate('kirby');
+
+        $options = Dropdown::changes();
+        $expected = [
+            [
+                'icon' => 'home',
+                'text' => 'Test site',
+                'link' => '/panel/site'
+            ]
+        ];
+
+        $this->assertEquals($expected, $options);
+    }
+
+    /**
+     * @covers ::changes
+     */
     public function testChangesWithLanguages()
     {
         $this->app = $this->app->clone([
