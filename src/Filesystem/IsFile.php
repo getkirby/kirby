@@ -91,24 +91,26 @@ trait IsFile
     /**
      * Returns the file asset object
      *
+     * @param array|string|null $props
      * @return \Kirby\Filesystem\File
      */
-    public function asset()
+    public function asset($props = null)
     {
         if ($this->asset !== null) {
             return $this->asset;
         }
 
-        $props = [
+        $props = $props ?? [
             'root' => $this->root(),
             'url'  => $this->url()
         ];
 
-        if ($this->type() === 'image') {
-            return $this->asset = new Image($props);
+        switch ($this->type()) {
+            case 'image':
+                return $this->asset = new Image($props);
+            default:
+                return $this->asset = new File($props);
         }
-
-        return $this->asset = new File($props);
     }
 
     /**

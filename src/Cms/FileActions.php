@@ -6,7 +6,6 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
 use Kirby\Form\Form;
 
 /**
@@ -181,7 +180,7 @@ trait FileActions
 
         // create the basic file and a test upload object
         $file = static::factory($props);
-        $upload = new BaseFile($props['source']);
+        $upload = $file->asset($props['source']);
 
         // create a form for the file
         $form = Form::for($file, [
@@ -280,7 +279,14 @@ trait FileActions
      */
     public function replace(string $source)
     {
-        return $this->commit('replace', ['file' => $this, 'upload' => new BaseFile($source)], function ($file, $upload) {
+        $file = $this->clone();
+
+        $arguments = [
+            'file' => $file,
+            'upload' => $file->asset($source)
+        ];
+
+        return $this->commit('replace', $arguments, function ($file, $upload) {
 
             // delete all public versions
             $file->unpublish();

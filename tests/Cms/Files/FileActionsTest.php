@@ -170,6 +170,7 @@ class FileActionsTest extends TestCase
 
         $this->assertFileExists($result->root());
         $this->assertFileExists($parent->root() . '/test.md');
+        $this->assertInstanceOf('Kirby\Filesystem\File', $result->asset());
     }
 
     /**
@@ -239,6 +240,24 @@ class FileActionsTest extends TestCase
 
         $this->assertEquals('Custom A', $result->a()->value());
         $this->assertEquals('B', $result->b()->value());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testCreateImage($parent)
+    {
+        $source =  __DIR__ . '/fixtures/files/test.jpg';
+
+        $result = File::create([
+            'filename' => 'test.jpg',
+            'source'   => $source,
+            'parent'   => $parent
+        ]);
+
+        $this->assertFileExists($result->root());
+        $this->assertFileExists($parent->root() . '/test.jpg');
+        $this->assertInstanceOf('Kirby\Image\Image', $result->asset());
     }
 
     /**
@@ -333,10 +352,35 @@ class FileActionsTest extends TestCase
         ]);
 
         $this->assertEquals(F::read($original), F::read($originalFile->root()));
+        $this->assertInstanceOf('Kirby\Filesystem\File', $originalFile->asset());
 
         $replacedFile = $originalFile->replace($replacement);
 
         $this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
+        $this->assertInstanceOf('Kirby\Filesystem\File', $replacedFile->asset());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testReplaceImage($parent)
+    {
+        $original =  __DIR__ . '/fixtures/files/test.jpg';
+        $replacement =  __DIR__ . '/fixtures/files/cat.jpg';
+
+        $originalFile = File::create([
+            'filename' => 'test.jpg',
+            'source'   => $original,
+            'parent'   => $parent
+        ]);
+
+        $this->assertSame(F::read($original), F::read($originalFile->root()));
+        $this->assertInstanceOf('Kirby\Image\Image', $originalFile->asset());
+
+        $replacedFile = $originalFile->replace($replacement);
+
+        $this->assertSame(F::read($replacement), F::read($replacedFile->root()));
+        $this->assertInstanceOf('Kirby\Image\Image', $replacedFile->asset());
     }
 
     /**
