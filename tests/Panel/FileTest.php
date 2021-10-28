@@ -259,6 +259,26 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::dropdownOption
+     */
+    public function testDropdownOption()
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $panel  = new File($page->file());
+        $option = $panel->dropdownOption();
+
+        $this->assertSame('image', $option['icon']);
+        $this->assertSame('test.jpg', $option['text']);
+        $this->assertSame('/panel/pages/test/files/test.jpg', $option['link']);
+    }
+
+    /**
      * @covers ::imageDefaults
      * @covers ::imageColor
      * @covers ::imageIcon

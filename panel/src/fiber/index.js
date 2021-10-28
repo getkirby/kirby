@@ -187,6 +187,10 @@ export default {
         }
       });
 
+      if (response.ok === false) {
+        throw response;
+      }
+
       let json = await toJson(response);
 
       // add exisiting data to partial requests

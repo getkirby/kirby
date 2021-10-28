@@ -88,6 +88,21 @@ class User extends Model
     }
 
     /**
+     * Returns the setup for a dropdown option
+     * which is used in the changes dropdown
+     * for example.
+     *
+     * @return array
+     */
+    public function dropdownOption(): array
+    {
+        return [
+            'icon' => 'user',
+            'text' => $this->model->username(),
+        ] + parent::dropdownOption();
+    }
+
+    /**
      * @return string|null
      */
     public function home(): ?string

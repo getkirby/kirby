@@ -41,6 +41,160 @@ class DropdownTest extends TestCase
     }
 
     /**
+     * @covers ::changes
+     */
+    public function testChanges()
+    {
+        $this->app = $this->app->clone([
+            'request' => [
+                'body' => [
+                    'ids' => [
+                        'site',
+                        'pages/test',
+                        'pages/test/files/test.jpg',
+                        'users/test'
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test page'
+                        ],
+                        'files' => [
+                            [
+                                'filename' => 'test.jpg',
+                            ]
+                        ]
+                    ]
+                ],
+                'content' => [
+                    'title' => 'Test site'
+                ]
+            ],
+            'users' => [
+                ['email' => 'test@getkirby.com', 'id' => 'test']
+            ]
+        ]);
+
+        $this->app->impersonate('kirby');
+
+        $options = Dropdown::changes();
+        $expected = [
+            [
+                'icon' => 'home',
+                'text' => 'Test site',
+                'link' => '/panel/site'
+            ],
+            [
+                'icon' => 'page',
+                'text' => 'Test page',
+                'link' => '/panel/pages/test'
+            ],
+            [
+                'icon' => 'image',
+                'text' => 'test.jpg',
+                'link' => '/panel/pages/test/files/test.jpg'
+            ],
+            [
+                'icon' => 'user',
+                'text' => 'test@getkirby.com',
+                'link' => '/panel/users/test'
+            ]
+        ];
+
+        $this->assertEquals($expected, $options);
+    }
+
+    /**
+     * @covers ::changes
+     */
+    public function testChangesWithInvalidId()
+    {
+        $this->app = $this->app->clone([
+            'request' => [
+                'body' => [
+                    'ids' => [
+                        'site',
+                        'pages/does-not-exist'
+                    ]
+                ]
+            ],
+            'site' => [
+                'content' => [
+                    'title' => 'Test site'
+                ]
+            ]
+        ]);
+
+        $this->app->impersonate('kirby');
+
+        $options = Dropdown::changes();
+        $expected = [
+            [
+                'icon' => 'home',
+                'text' => 'Test site',
+                'link' => '/panel/site'
+            ]
+        ];
+
+        $this->assertEquals($expected, $options);
+    }
+
+    /**
+     * @covers ::changes
+     */
+    public function testChangesWithLanguages()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true,
+            ],
+            'request' => [
+                'body' => [
+                    'ids' => [
+                        'site?language=en',
+                    ]
+                ]
+            ],
+            'site' => [
+                'content' => [
+                    'title' => 'Test site'
+                ]
+            ],
+            'languages' => [
+                ['code' => 'en', 'name' => 'English']
+            ]
+        ]);
+
+        $this->app->impersonate('kirby');
+
+        $options = Dropdown::changes();
+        $expected = [
+            [
+                'icon' => 'home',
+                'text' => 'Test site (en)',
+                'link' => '/panel/site?language=en'
+            ],
+        ];
+
+        $this->assertEquals($expected, $options);
+    }
+
+    /**
+     * @covers ::changes
+     */
+    public function testChangesWithoutOptions()
+    {
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionMessage('No changes for given models');
+
+        Dropdown::changes();
+    }
+
+    /**
      * @covers ::error
      */
     public function testError(): void

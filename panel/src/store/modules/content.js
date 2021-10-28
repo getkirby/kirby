@@ -19,7 +19,7 @@ export default {
 
     /**
      * Object of models:
-     *  Key   => type/slug/language, e.g. pages/blog+a-blog-post/de
+     *  Key   => type/slug/?language=languageCode, e.g. pages/blog+a-blog-post/?language=de
      *  Value => Object of
      *            - api: API endpoint
      *            - originals: values as they are in the content file
@@ -66,7 +66,7 @@ export default {
       id = id || state.current;
 
       if (window.panel.$language) {
-        return id + "/" + window.panel.$language.code;
+        return id + "?language=" + window.panel.$language.code;
       }
 
       return id;
@@ -251,7 +251,7 @@ export default {
       model.id = context.getters.id(model.id);
 
       // remove title from model content
-      if (model.id.startsWith("pages/") || model.id.startsWith("site")) {
+      if (model.id.startsWith("/pages/") || model.id.startsWith("/site")) {
         delete model.content.title;
       }
 
