@@ -62,9 +62,11 @@ export default {
       this.$emit("close");
 
       // restore scrolling
-      document.body.style.position = "static";
-      document.body.style.top = 0;
-      this.restoreScrollPosition();
+      if (document.querySelectorAll('.k-overlay').length === 1) {
+        document.body.style.position = "static";
+        document.body.style.top = 0;
+        this.restoreScrollPosition();
+      }
 
       // unbind events
       this.$events.$off("keydown.esc", this.close);
@@ -103,12 +105,19 @@ export default {
         return;
       }
 
-      this.storeScrollPosition();
       this.isOpen = true;
       this.$emit("open");
 
       // bind events
       this.$events.$on("keydown.esc", this.close);
+
+      // prevent scrolling for the body element
+      if (document.body.style.position !== "fixed") {
+        this.storeScrollPosition();
+        document.body.style.position = "fixed";
+        document.body.style.width = "100%";
+        document.body.style.top = -(this.scrollTop) + "px";
+      }
 
       setTimeout(() => {
         // autofocus
@@ -118,11 +127,6 @@ export default {
 
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
-
-        // prevent scrolling for the body element
-        document.body.style.position = "fixed";
-        document.body.style.width = "100%";
-        document.body.style.top = -(this.scrollTop) + "px";
 
         this.$emit("ready");
       }, 1)
