@@ -137,4 +137,24 @@ class LayoutsTest extends TestCase
         $this->assertCount(2, $blocks);
         $this->assertInstanceOf('Kirby\Cms\Blocks', $blocks);
     }
+
+    public function testHiddenBlocks()
+    {
+        $data = [
+            [
+                'type'     => 'heading',
+                'content'  => ['text' => 'Heading'],
+            ],
+            [
+                'type'     => 'text',
+                'content'  => ['text' => 'Text'],
+                'isHidden' => true,
+            ]
+        ];
+
+        $layouts = Layouts::factory($data);
+
+        $this->assertCount(1, $layouts->toBlocks());
+        $this->assertCount(2, $layouts->toBlocks(true));
+    }
 }

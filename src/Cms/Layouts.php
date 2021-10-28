@@ -78,16 +78,17 @@ class Layouts extends Items
     /**
      * Converts layouts to blocks
      *
+     * @param bool $includeHidden Sets whether to include hidden blocks
      * @return \Kirby\Cms\Blocks
      */
-    public function toBlocks()
+    public function toBlocks(bool $includeHidden = false)
     {
         $blocks = [];
 
         if ($this->isNotEmpty() === true) {
             foreach ($this->data() as $layout) {
                 foreach ($layout->columns() as $column) {
-                    foreach ($column->blocks() as $block) {
+                    foreach ($column->blocks($includeHidden) as $block) {
                         $blocks[] = $block->toArray();
                     }
                 }
