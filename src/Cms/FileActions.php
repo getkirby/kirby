@@ -180,7 +180,7 @@ trait FileActions
 
         // create the basic file and a test upload object
         $file = static::factory($props);
-        $upload = $file->typeModel($props['source']);
+        $upload = $file->asset($props['source']);
 
         // create a form for the file
         $form = Form::for($file, [
@@ -279,9 +279,11 @@ trait FileActions
      */
     public function replace(string $source)
     {
+        $file = $this->clone();
+
         $arguments = [
-            'file' => $this,
-            'upload' => $this->typeModel($source)
+            'file' => $file,
+            'upload' => $file->asset($source)
         ];
 
         return $this->commit('replace', $arguments, function ($file, $upload) {
