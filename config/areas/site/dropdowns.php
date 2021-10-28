@@ -1,10 +1,16 @@
 <?php
 
-use Kirby\Cms\Find;
+use Kirby\Panel\Dropdown;
 
 $files = require __DIR__ . '/../files/dropdowns.php';
 
 return [
+    'changes' => [
+        'pattern' => 'changes',
+        'options' => function () {
+            return Dropdown::changes();
+        }
+    ],
     'page' => [
         'pattern' => 'pages/(:any)',
         'options' => function (string $path) {

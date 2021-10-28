@@ -443,6 +443,7 @@ class Panel
                 'pattern' => $pattern,
                 'type'    => 'dropdown',
                 'area'    => $areaId,
+                'method'  => 'GET|POST',
                 'action'  => $dropdown['options'] ?? $dropdown['action']
             ];
         }

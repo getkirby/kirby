@@ -15,6 +15,21 @@ namespace Kirby\Panel;
 class Site extends Model
 {
     /**
+     * Returns the setup for a dropdown option
+     * which is used in the changes dropdown
+     * for example.
+     *
+     * @return array
+     */
+    public function dropdownOption(): array
+    {
+        return [
+            'icon' => 'home',
+            'text' => $this->model->title()->value(),
+        ] + parent::dropdownOption();
+    }
+
+    /**
      * Returns the image file object based on provided query
      *
      * @internal

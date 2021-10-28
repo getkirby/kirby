@@ -154,6 +154,19 @@ class Page extends Model
         return $result;
     }
 
+    /**
+     * Returns the setup for a dropdown option
+     * which is used in the changes dropdown
+     * for example.
+     *
+     * @return array
+     */
+    public function dropdownOption(): array
+    {
+        return [
+            'text' => $this->model->title()->value(),
+        ] + parent::dropdownOption();
+    }
 
     /**
      * Returns the escaped Id, which is

@@ -231,6 +231,19 @@ class ModelTest extends TestCase
         new App();
     }
 
+    public function testDropdown()
+    {
+        $model  = new CustomPanelModel(new ModelSite());
+        $option = $model->dropdownOption();
+        $expected = [
+            'icon' => 'page',
+            'link' => '/panel/custom',
+            'text' => null
+        ];
+
+        $this->assertSame($expected, $option);
+    }
+
     /**
      * @covers ::image
      * @covers ::imageDefaults

@@ -39,11 +39,21 @@ class SiteTest extends TestCase
     }
 
     /**
-     * @covers ::path
+     * @covers ::dropdownOption
      */
-    public function testPath()
+    public function testDropdownOption(): void
     {
-        $this->assertSame('site', $this->panel()->path());
+        $model = $this->panel([
+            'content' => [
+                'title' => 'Test site'
+            ]
+        ]);
+
+        $option = $model->dropdownOption();
+
+        $this->assertSame('home', $option['icon']);
+        $this->assertSame('Test site', $option['text']);
+        $this->assertSame('/panel/site', $option['link']);
     }
 
     /**
@@ -106,6 +116,14 @@ class SiteTest extends TestCase
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
         ], $panel->image(['cover' => true]));
+    }
+
+    /**
+     * @covers ::path
+     */
+    public function testPath()
+    {
+        $this->assertSame('site', $this->panel()->path());
     }
 
     /**

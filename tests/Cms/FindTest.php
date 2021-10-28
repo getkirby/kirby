@@ -271,7 +271,9 @@ class FindTest extends TestCase
         $this->assertInstanceOf(User::class, Find::parent('account'));
         $this->assertInstanceOf(User::class, Find::parent('users/test@getkirby.com'));
         $this->assertInstanceOf(Site::class, Find::parent('site'));
+        $this->assertInstanceOf(Site::class, Find::parent('/site'));
         $this->assertInstanceOf(Page::class, Find::parent('pages/a+aa'));
+        $this->assertInstanceOf(Page::class, Find::parent('pages/a aa'));
         $this->assertInstanceOf(File::class, Find::parent('site/files/sitefile.jpg'));
         $this->assertInstanceOf(File::class, Find::parent('pages/a/files/a-regular-file.jpg'));
         $this->assertInstanceOf(File::class, Find::parent('users/test@getkirby.com/files/userfile.jpg'));

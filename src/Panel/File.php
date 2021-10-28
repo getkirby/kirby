@@ -160,6 +160,21 @@ class File extends Model
     }
 
     /**
+     * Returns the setup for a dropdown option
+     * which is used in the changes dropdown
+     * for example.
+     *
+     * @return array
+     */
+    public function dropdownOption(): array
+    {
+        return [
+            'icon' => 'image',
+            'text' => $this->model->filename(),
+        ] + parent::dropdownOption();
+    }
+
+    /**
      * Returns the Panel icon color
      *
      * @return string

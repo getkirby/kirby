@@ -1,9 +1,10 @@
 <template>
   <k-dropdown v-if="hasChanges" class="k-form-indicator">
-    <k-button class="k-topbar-button" @click="toggle">
-      <k-icon type="edit" class="k-form-indicator-icon" />
-    </k-button>
-
+    <k-button
+      class="k-form-indicator-toggle k-topbar-button"
+      icon="edit"
+      @click="toggle"
+    />
     <k-dropdown-content
       ref="list"
       align="right"
@@ -14,12 +15,11 @@
       </p>
       <hr>
       <k-dropdown-item
-        v-for="entry in entries"
-        :key="entry.id"
-        :icon="entry.icon"
-        @click.native.stop="go(entry.target)"
+        v-for="option in options"
+        :key="option.id"
+        v-bind="option"
       >
-        {{ entry.label }}
+        {{ option.text }}
       </k-dropdown-item>
     </k-dropdown-content>
   </k-dropdown>
@@ -30,117 +30,45 @@ export default {
   data() {
     return {
       isOpen: false,
-      entries: []
+      options: []
     }
   },
   computed: {
+    hasChanges() {
+      return this.ids.length > 0;
+    },
+    ids() {
+      return Object
+        .entries(this.store)
+        .filter(([id, model]) => {
+          return Object.keys(model.changes).length > 0;
+        })
+        .map(([id, model]) => {
+          return id;
+        });
+    },
     store() {
       return this.$store.state.content.models;
     },
-    models() {
-      const ids = Object.keys(this.store).filter(id => {
-        return this.store[id] ? true : false;
-      });
-
-      let models = ids.map(id => {
-        return {
-          id: id,
-          ...this.store[id]
-        };
-      });
-      return models.filter(model => Object.keys(model.changes).length > 0);
-    },
-    hasChanges() {
-      return this.models.length > 0;
-    }
   },
   methods: {
-    go(target) {
-      let data = {};
-
-      // if a target language is set and it is not the current language,
-      // switch to it before routing to target view
-      if (target.language) {
-        data.language = target.language;
-      }
-
-      this.$go(target.link, {
-        data: data
-      });
-    },
-    load() {
-      // create an API request promise for each model with changes
-      const promises = this.models.map(async model => {
-        try {
-          const response = await this.$api.get(model.api, { view: "compact" }, null, true);
-
-          // populate entry depending on model type
-          let entry;
-
-          if (model.id.startsWith("/pages/") === true) {
-            entry = {
-              icon: "page",
-              label: response.title,
-              target: {
-                link: this.$api.pages.link(response.id)
-              }
-            };
-
-          } else if (model.id.startsWith("/files/") === true) {
-            entry = {
-              icon: "image",
-              label: response.filename,
-              target: {
-                link: response.link
-              }
-            };
-
-          } else if (model.id.startsWith("/users/") === true) {
-            entry = {
-              icon: "user",
-              label: response.email,
-              target: {
-                link: this.$api.users.link(response.id),
-              }
-            };
-          } else {
-            entry = {
-              icon: "home",
-              label: response.title,
-              target: {
-                link: "/site"
-              }
-            };
-          }
-
-          // add language indicator if in multilang
-          if (this.$language) {
-            const language = model.id.split("/").pop();
-            entry.label = entry.label + " (" + language + ")";
-            entry.target.language = language;
-          }
-
-          return entry;
-
-        } catch (error) {
-          this.$store.dispatch("content/remove", model.id);
-          return null;
-        }
-      });
-
-      return Promise.all(promises).then(entries => {
-        this.entries = entries.filter(entry => {
-          return entry !== null;
-        });
-
-        if (this.entries.length === 0) {
-          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
-        }
-      });
-    },
     async toggle() {
       if (this.$refs.list.isOpen === false) {
-        await this.load();
+        try {
+          await this.$dropdown("changes", {
+            body: {
+              ids: this.ids
+            }
+          })(options => {
+            this.options = options;
+          });
+        } catch (e) {
+          if (e.status && e.status === 400) {
+            this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+            this.$store.dispatch("content/clear");
+            return false;
+          }
+        }
       }
 
       if (this.$refs.list) {
@@ -152,7 +80,7 @@ export default {
 </script>
 
 <style>
-.k-form-indicator-icon {
+.k-form-indicator-toggle {
   color: var(--color-notice-light);
 }
 .k-form-indicator-info {

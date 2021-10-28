@@ -88,6 +88,26 @@ class PageTest extends TestCase
     }
 
     /**
+     * @covers ::dropdownOption
+     */
+    public function testDropdownOption()
+    {
+        $page = new ModelPage([
+            'slug'    => 'test',
+            'content' => [
+                'title' => 'Test page'
+            ]
+        ]);
+
+        $panel  = new Page($page);
+        $option = $panel->dropdownOption();
+
+        $this->assertSame('page', $option['icon']);
+        $this->assertSame('Test page', $option['text']);
+        $this->assertSame('/panel/pages/test', $option['link']);
+    }
+
+    /**
      * @covers ::dragText
      */
     public function testDragText()
