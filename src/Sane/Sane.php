@@ -77,6 +77,7 @@ class Sane
 
     /**
      * Sanitizes the given string with the specified handler
+     * @since 3.6.0
      *
      * @param string $string
      * @param string $type
@@ -92,6 +93,7 @@ class Sane
      * the file with the sanitized version;
      * the sane handlers are automatically chosen by
      * the extension and MIME type if not specified
+     * @since 3.6.0
      *
      * @param string $file
      * @param string|bool $typeLazy Explicit handler type string,
