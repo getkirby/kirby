@@ -65,10 +65,15 @@ class LayoutColumn extends Item
     /**
      * Returns the blocks collection
      *
+     * @param bool $includeHidden Sets whether to include hidden blocks
      * @return \Kirby\Cms\Blocks
      */
-    public function blocks()
+    public function blocks(bool $includeHidden = false)
     {
+        if ($includeHidden === false) {
+            return $this->blocks->filter('isHidden', false);
+        }
+
         return $this->blocks;
     }
 
@@ -121,7 +126,7 @@ class LayoutColumn extends Item
     public function toArray(): array
     {
         return [
-            'blocks' => $this->blocks()->toArray(),
+            'blocks' => $this->blocks(true)->toArray(),
             'id'     => $this->id(),
             'width'  => $this->width(),
         ];

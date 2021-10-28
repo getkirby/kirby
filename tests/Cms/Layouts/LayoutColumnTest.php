@@ -27,6 +27,21 @@ class LayoutColumnTest extends TestCase
         $this->assertSame('text', $column->blocks()->last()->type());
     }
 
+    public function testHiddenBlocks()
+    {
+        $column = new LayoutColumn([
+            'blocks' => [
+                ['type' => 'heading'],
+                ['type' => 'text', 'isHidden' => true],
+            ]
+        ]);
+
+        $this->assertFalse($column->isEmpty());
+        $this->assertTrue($column->isNotEmpty());
+        $this->assertCount(1, $column->blocks());
+        $this->assertCount(2, $column->blocks(true));
+    }
+
     public function testSpan()
     {
         $column = new LayoutColumn([
