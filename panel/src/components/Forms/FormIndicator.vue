@@ -39,12 +39,9 @@ export default {
     },
     ids() {
       return Object
-        .entries(this.store)
-        .filter(([, model]) => {
-          return Object.keys(model.changes).length > 0;
-        })
-        .map(([id]) => {
-          return id;
+        .keys(this.store)
+        .filter(id => {
+          return Object.keys(this.store[id].changes).length > 0;
         });
     },
     store() {
