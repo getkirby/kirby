@@ -509,6 +509,7 @@ class File
     /**
      * Sanitizes the file contents depending on the file type
      * by overwriting the file with the sanitized version
+     * @since 3.6.0
      *
      * @param string|bool $typeLazy Explicit sane handler type string,
      *                              `true` for lazy autodetection or

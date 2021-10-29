@@ -101,6 +101,7 @@ class Blocks extends Items
 
     /**
      * Checks if a given block type exists in the collection
+     * @since 3.6.0
      *
      * @param string $type
      * @return bool

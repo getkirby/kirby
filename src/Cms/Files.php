@@ -133,6 +133,7 @@ class Files extends Collection
      * Returns the file size for all
      * files in the collection in a
      * human-readable format
+     * @since 3.6.0
      *
      * @return string
      */
@@ -144,6 +145,7 @@ class Files extends Collection
     /**
      * Returns the raw size for all
      * files in the collection
+     * @since 3.6.0
      *
      * @return int
      */

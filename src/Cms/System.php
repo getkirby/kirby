@@ -547,6 +547,7 @@ class System
     /**
      * Returns the site's title as defined in the
      * content file or `site.yml` blueprint
+     * @since 3.6.0
      *
      * @return string
      */

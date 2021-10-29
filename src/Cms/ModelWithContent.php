@@ -517,6 +517,7 @@ abstract class ModelWithContent extends Model
 
     /**
      * String template builder with automatic HTML escaping
+     * @since 3.6.0
      *
      * @param string|null $template Template string or `null` to use the model ID
      * @param array $data

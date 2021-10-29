@@ -377,6 +377,7 @@ class A
     /**
      * A simple wrapper around array_map
      * with a sane argument order
+     * @since 3.6.0
      *
      * @param array $array
      * @param callable $map
