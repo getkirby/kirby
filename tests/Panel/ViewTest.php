@@ -589,6 +589,58 @@ class ViewTest extends TestCase
     /**
      * @covers ::menu
      */
+    public function testMenuAreasDivider()
+    {
+        $menu = View::menu(
+            [
+                'products' => [
+                    'icon'    => 'tag',
+                    'label'   => 'Products',
+                    'link'    => 'products',
+                    'menu'    => true,
+                    'divider' => true
+                ],
+                'orders' => [
+                    'icon'    => 'cart',
+                    'label'   => 'Orders',
+                    'link'    => 'orders',
+                    'menu'    => true,
+                    'divider' => 'both'
+                ],
+                'report' => [
+                    'icon'    => 'chart',
+                    'label'   => 'Report',
+                    'link'    => 'report',
+                    'menu'    => true,
+                    'divider' => 'after'
+                ],
+                'settings' => [
+                    'icon'    => 'settings',
+                    'label'   => 'Settings',
+                    'link'    => 'settings',
+                    'menu'    => true
+                ],
+            ],
+        );
+
+        $this->assertCount(12, $menu);
+        $this->assertSame('-', $menu[0]);
+        $this->assertSame('products', $menu[1]['id']);
+        $this->assertSame('-', $menu[2]);
+        $this->assertSame('orders', $menu[3]['id']);
+        $this->assertSame('-', $menu[4]);
+        $this->assertSame('report', $menu[5]['id']);
+        $this->assertSame('-', $menu[6]);
+        $this->assertSame('settings', $menu[7]['id']);
+        $this->assertSame('-', $menu[8]);
+        $this->assertSame('account', $menu[9]['id']);
+        $this->assertSame('-', $menu[10]);
+        $this->assertSame('logout', $menu[11]['id']);
+    }
+
+    /**
+     * @covers ::menu
+     */
     public function testMenuAccess()
     {
         $menu = View::menu(

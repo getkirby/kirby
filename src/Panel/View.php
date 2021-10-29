@@ -354,6 +354,11 @@ class View
                 continue;
             }
 
+            // available options for before divider: `before`, `both`, `true`
+            if (in_array($area['divider'] ?? false, ['before', 'both', true], true) === true) {
+                $menu[] = '-';
+            }
+
             $menu[] = [
                 'current'  => $areaId === $current,
                 'disabled' => $menuSetting === 'disabled',
@@ -362,6 +367,11 @@ class View
                 'link'     => $area['link'],
                 'text'     => $area['label'],
             ];
+
+            // available options for after divider: `after`, `both`
+            if (in_array($area['divider'] ?? false, ['after', 'both'], true) === true) {
+                $menu[] = '-';
+            }
         }
 
         $menu[] = '-';
