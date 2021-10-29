@@ -30,12 +30,18 @@ class File extends Model
                 $breadcrumb = [];
                 break;
             case 'user':
-                $breadcrumb = [
-                    [
-                        'label' => $parent->username(),
-                        'link'  => $parent->panel()->url(true)
-                    ]
-                ];
+                if ($parent->isLoggedIn() === true) {
+                    // The breadcrumb is not necessary
+                    // on the account view
+                    $breadcrumb = [];
+                } else {
+                    $breadcrumb = [
+                        [
+                            'label' => $parent->username(),
+                            'link'  => $parent->panel()->url(true)
+                        ]
+                    ];
+                }
                 break;
             case 'page':
                 $breadcrumb = $this->model->parents()->flip()->values(function ($parent) {

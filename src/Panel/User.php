@@ -37,7 +37,6 @@ class User extends Model
      */
     public function dropdown(array $options = []): array
     {
-        $page        = $this->model;
         $permissions = $this->options(['preview']);
         $url         = $this->url(true);
         $result      = [];
@@ -48,6 +47,8 @@ class User extends Model
             'text'     => t('user.changeName'),
             'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
         ];
+
+        $result[] = '-';
 
         $result[] = [
             'dialog'   => $url . '/changeEmail',
@@ -76,6 +77,8 @@ class User extends Model
             'text'     => t('user.changeLanguage'),
             'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
         ];
+
+        $result[] = '-';
 
         $result[] = [
             'dialog'   => $url . '/delete',
@@ -209,15 +212,17 @@ class User extends Model
      */
     public function props(): array
     {
-        $user   = $this->model;
-        $avatar = $user->avatar();
+        $user    = $this->model;
+        $account = $user->isLoggedIn();
+        $avatar  = $user->avatar();
 
         return array_merge(
             parent::props(),
-            $this->prevNext(),
+            $account ? [] : $this->prevNext(),
             [
                 'blueprint' => $this->model->role()->name(),
                 'model' => [
+                    'account'  => $account,
                     'avatar'   => $avatar ? $avatar->url() : null,
                     'content'  => $this->content(),
                     'email'    => $user->email(),
