@@ -142,7 +142,7 @@ class LayoutField extends BlocksField
         return $this->settings;
     }
 
-    public function store($value = null)
+    public function store($value)
     {
         $value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 

@@ -699,7 +699,7 @@ abstract class FieldClass
      * @param mixed $value
      * @return mixed
      */
-    public function store($value = null)
+    public function store($value)
     {
         return $value;
     }
