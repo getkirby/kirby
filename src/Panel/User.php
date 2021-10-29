@@ -37,6 +37,8 @@ class User extends Model
      */
     public function dropdown(array $options = []): array
     {
+        $account     = $this->model->isLoggedIn();
+        $i18nPrefix  = $account ? 'account' : 'user';
         $permissions = $this->options(['preview']);
         $url         = $this->url(true);
         $result      = [];
@@ -44,7 +46,7 @@ class User extends Model
         $result[] = [
             'dialog'   => $url . '/changeName',
             'icon'     => 'title',
-            'text'     => t('user.changeName'),
+            'text'     => t($i18nPrefix . '.changeName'),
             'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
         ];
 
@@ -83,7 +85,7 @@ class User extends Model
         $result[] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
-            'text'     => t('user.delete'),
+            'text'     => t($i18nPrefix . '.delete'),
             'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 
