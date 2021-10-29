@@ -511,9 +511,6 @@ class FieldClassTest extends TestCase
     public function testStore()
     {
         $field = new TestField();
-        $this->assertNull($field->store());
-
-        $field = new TestField();
         $this->assertSame('test', $field->store('test'));
     }
 
