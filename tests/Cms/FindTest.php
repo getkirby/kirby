@@ -373,6 +373,29 @@ class FindTest extends TestCase
     /**
      * @covers ::user
      */
+    public function testUserForAccountArea()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'api' => [
+                    'allowImpersonation' => true
+                ]
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin'
+                ]
+            ]
+        ]);
+
+        $app->impersonate('test@getkirby.com');
+        $this->assertEquals('test@getkirby.com', Find::user('account')->email());
+    }
+
+    /**
+     * @covers ::user
+     */
     public function testUserNotFound()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
