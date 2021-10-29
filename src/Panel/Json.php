@@ -4,9 +4,10 @@ namespace Kirby\Panel;
 
 /**
  * The Json abstract response class provides
- * acommon framework for Fiber requests
+ * common framework for Fiber requests
  * to render the JSON object for, e.g.
  * Panel dialogs, dropdowns etc.
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>

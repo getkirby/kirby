@@ -12,6 +12,7 @@ use Throwable;
  * The Dropdown response class handles Fiber
  * requests to render the JSON object for
  * dropdown menus
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>

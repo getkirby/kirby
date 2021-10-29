@@ -14,6 +14,7 @@ use Throwable;
  * The Document is used by the View class to render
  * the full Panel HTML document in Fiber calls that
  * should not return just JSON objects
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>

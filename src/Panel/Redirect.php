@@ -8,6 +8,7 @@ use Exception;
  * The Redirect exception can be thrown in all Fiber
  * routes to send a redirect response. It is
  * primarily used in `Panel::go($location)`
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>

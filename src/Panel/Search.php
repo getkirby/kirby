@@ -6,6 +6,7 @@ namespace Kirby\Panel;
  * The Search response class handles Fiber
  * requests to render the JSON object for
  * search queries
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
