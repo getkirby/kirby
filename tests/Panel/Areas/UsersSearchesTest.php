@@ -46,7 +46,7 @@ class UsersSearchesTest extends AreaTestCase
 
         $this->assertSame($image, $results[0]['image']);
         $this->assertSame('test@getkirby.com', $results[0]['text']);
-        $this->assertSame('/users/test', $results[0]['link']);
+        $this->assertSame('/account', $results[0]['link']);
         $this->assertSame('&lt;strong&gt;Admin', $results[0]['info']);
     }
 }

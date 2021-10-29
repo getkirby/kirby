@@ -61,6 +61,11 @@ class FileDropdownsTest extends AreaTestCase
                     'files' => [
                         ['filename' => 'test.jpg']
                     ]
+                ],
+                [
+                    'id'    => 'admin',
+                    'email' => 'admin@getkirby.com',
+                    'role'  => 'admin',
                 ]
             ]
         ]);
@@ -68,7 +73,7 @@ class FileDropdownsTest extends AreaTestCase
         // pretend the file exists
         F::write($this->app->user('test')->file('test.jpg')->root(), '');
 
-        $this->login();
+        $this->login('admin@getkirby.com');
     }
 
     public function testFileDropdownInListView(): void
