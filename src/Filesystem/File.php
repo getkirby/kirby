@@ -190,13 +190,13 @@ class File
     }
 
     /**
-     * Returns a md5 hash of the root
+     * Returns a sha256 hash of the root
      *
      * @return string
      */
     public function hash(): string
     {
-        return md5($this->root);
+        return hash('sha256', $this->root);
     }
 
     /**

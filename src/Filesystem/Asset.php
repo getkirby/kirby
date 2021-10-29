@@ -59,7 +59,7 @@ class Asset
      */
     public function mediaHash(): string
     {
-        return crc32($this->filename()) . '-' . $this->modified();
+        return hash('sha256', $this->filename()) . '-' . $this->modified();
     }
 
     /**

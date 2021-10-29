@@ -85,7 +85,7 @@ class MediaTest extends TestCase
             'filename' => $filename = 'test.jpg'
         ]);
 
-        $oldToken  = crc32($filename);
+        $oldToken  = hash('sha256', $filename);
         $newToken  = $file->mediaToken();
         $directory = $this->fixtures . '/media/site';
 
@@ -119,7 +119,7 @@ class MediaTest extends TestCase
             'filename' => $filename = 'test.jpg'
         ]);
 
-        $oldToken  = crc32($filename);
+        $oldToken  = hash('sha256', $filename);
         $newToken  = $file->mediaToken();
         $directory = $this->fixtures . '/media/site';
 
@@ -154,7 +154,7 @@ class MediaTest extends TestCase
             'filename' => $filename = 'test.jpg'
         ]);
 
-        $oldToken  = crc32($filename);
+        $oldToken  = hash('sha256', $filename);
         $newToken  = $file->mediaToken();
         $directory = $this->fixtures . '/media/site';
 

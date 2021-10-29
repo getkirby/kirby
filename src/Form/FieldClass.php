@@ -722,7 +722,7 @@ abstract class FieldClass
     public function toArray(): array
     {
         $props = $this->props();
-        $props['signature'] = md5(json_encode($props));
+        $props['signature'] = hash('sha256', json_encode($props));
 
         ksort($props);
 

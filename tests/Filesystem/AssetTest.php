@@ -56,7 +56,7 @@ class AssetTest extends TestCase
     {
         $asset = $this->_asset();
 
-        $mediaHash = crc32('logo.svg') . '-';
+        $mediaHash = hash('sha256', 'logo.svg') . '-';
         $mediaPath = 'assets/images/' . $mediaHash . '/logo.svg';
 
         $this->assertSame($mediaHash, $asset->mediaHash());

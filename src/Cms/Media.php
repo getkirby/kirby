@@ -154,7 +154,7 @@ class Media
 
         // get both old and new versions (pre and post Kirby 3.4.0)
         $versions = array_merge(
-            glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR),
+            glob($directory . '/' . hash('sha256', $file->filename()) . '-*', GLOB_ONLYDIR),
             glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR)
         );
 

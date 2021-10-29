@@ -436,7 +436,7 @@ class Field extends Component
         unset($array['model']);
 
         $array['saveable']  = $this->save();
-        $array['signature'] = md5(json_encode($array));
+        $array['signature'] = hash('sha256', json_encode($array));
 
         ksort($array);
 

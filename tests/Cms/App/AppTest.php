@@ -815,7 +815,8 @@ class AppTest extends TestCase
 
     public function testVersionHash()
     {
-        $this->assertEquals(md5(App::version()), App::versionHash());
+        $hash = hash('sha256', App::version());
+        $this->assertEquals($hash, App::versionHash());
     }
 
     public function testSlugsOption()

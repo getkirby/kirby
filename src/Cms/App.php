@@ -1576,7 +1576,7 @@ class App
      */
     public static function versionHash(): string
     {
-        return md5(static::version());
+        return hash('sha256', static::version());
     }
 
     /**
