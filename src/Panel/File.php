@@ -23,23 +23,17 @@ class File extends Model
      */
     public function breadcrumb(): array
     {
-        $parent = $this->model->parent();
+        $breadcrumb = [];
+        $parent     = $this->model->parent();
 
         switch ($parent::CLASS_ALIAS) {
-            case 'site':
-                $breadcrumb = [];
-                break;
             case 'user':
-                if ($parent->isLoggedIn() === true) {
-                    // The breadcrumb is not necessary
-                    // on the account view
-                    $breadcrumb = [];
-                } else {
-                    $breadcrumb = [
-                        [
-                            'label' => $parent->username(),
-                            'link'  => $parent->panel()->url(true)
-                        ]
+                // The breadcrumb is not necessary
+                // on the account view
+                if ($parent->isLoggedIn() === false) {
+                    $breadcrumb[] = [
+                        'label' => $parent->username(),
+                        'link'  => $parent->panel()->url(true)
                     ];
                 }
                 break;
