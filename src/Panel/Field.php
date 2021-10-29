@@ -8,7 +8,6 @@ use Kirby\Cms\Page;
 /**
  * Provides common field prop definitions
  * for dialogs and other places
- *
  * @since 3.6.0
  *
  * @package   Kirby Panel

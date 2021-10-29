@@ -11,6 +11,7 @@ use Kirby\Toolkit\Str;
  * The View response class handles Fiber
  * requests to render either a JSON object
  * or a full HTML document for Panel views
+ * @since 3.6.0
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
