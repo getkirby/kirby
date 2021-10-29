@@ -53,7 +53,7 @@
             icon="box"
             @click="choose(blocks.length)"
           >
-            {{ $t('field.blocks.empty') }}
+            {{ empty || $t("field.blocks.empty") }}
           </k-empty>
         </template>
       </k-draggable>
