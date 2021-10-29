@@ -151,6 +151,11 @@ class User extends Model
      */
     public function path(): string
     {
+        // path to your own account
+        if ($this->model->is($this->model->kirby()->user()) === true) {
+            return 'account';
+        }
+
         return 'users/' . $this->model->id();
     }
 
