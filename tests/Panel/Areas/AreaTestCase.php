@@ -183,6 +183,11 @@ abstract class AreaTestCase extends TestCase
                 'query' => [
                     '_json' => true,
                 ]
+            ],
+            'options' => [
+                'api' => [
+                    'allowImpersonation' => true
+                ]
             ]
         ]);
 
