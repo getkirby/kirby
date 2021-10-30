@@ -157,7 +157,7 @@ class User extends Model
     public function path(): string
     {
         // path to your own account
-        if ($this->model->is($this->model->kirby()->user()) === true) {
+        if ($this->model->isLoggedIn() === true) {
             return 'account';
         }
 
