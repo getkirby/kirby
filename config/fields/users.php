@@ -4,7 +4,12 @@ use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
-    'mixins' => ['min', 'picker', 'userpicker'],
+    'mixins' => [
+        'layout',
+        'min',
+        'picker',
+        'userpicker'
+    ],
     'props' => [
         /**
          * Unset inherited props

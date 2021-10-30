@@ -5,9 +5,10 @@ use Kirby\Toolkit\A;
 
 return [
     'mixins' => [
-        'picker',
         'filepicker',
+        'layout',
         'min',
+        'picker',
         'upload'
     ],
     'props' => [
@@ -25,20 +26,6 @@ return [
          */
         'default' => function ($default = null) {
             return $default;
-        },
-
-        /**
-         * Changes the layout of the selected files. Available layouts: `list`, `cards`
-         */
-        'layout' => function (string $layout = 'list') {
-            return $layout;
-        },
-
-        /**
-         * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
-         */
-        'size' => function (string $size = 'auto') {
-            return $size;
         },
 
         'value' => function ($value = null) {

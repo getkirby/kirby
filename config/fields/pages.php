@@ -4,7 +4,12 @@ use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
-    'mixins' => ['min', 'pagepicker', 'picker'],
+    'mixins' => [
+        'layout',
+        'min',
+        'pagepicker',
+        'picker',
+    ],
     'props' => [
         /**
          * Unset inherited props
@@ -23,24 +28,10 @@ return [
         },
 
         /**
-         * Changes the layout of the selected files. Available layouts: `list`, `cards`
-         */
-        'layout' => function (string $layout = 'list') {
-            return $layout;
-        },
-
-        /**
          * Optional query to select a specific set of pages
          */
         'query' => function (string $query = null) {
             return $query;
-        },
-
-        /**
-         * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
-         */
-        'size' => function (string $size = 'auto') {
-            return $size;
         },
 
         /**

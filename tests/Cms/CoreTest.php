@@ -203,6 +203,7 @@ class CoreTest extends TestCase
         $this->assertArrayHasKey('datetime', $mixins);
         $this->assertArrayHasKey('filepicker', $mixins);
         $this->assertArrayHasKey('min', $mixins);
+        $this->assertArrayHasKey('layout', $mixins);
         $this->assertArrayHasKey('options', $mixins);
         $this->assertArrayHasKey('pagepicker', $mixins);
         $this->assertArrayHasKey('picker', $mixins);
