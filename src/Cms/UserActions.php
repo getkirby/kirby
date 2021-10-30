@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * UserActions
@@ -252,12 +253,19 @@ trait UserActions
     public function createId(): string
     {
         $length = 8;
-        $id     = Str::random($length);
+        $id     = null;
+        $retry  = true;
 
-        while ($this->kirby()->users()->has($id)) {
-            $length++;
-            $id = Str::random($length);
-        }
+        do {
+            try {
+                $id = Str::random($length);
+                if (UserRules::validId($this, $id) === true) {
+                    return $id;
+                }
+            } catch (Throwable $e) {
+                $length++;
+            }
+        } while ($retry === true);
 
         return $id;
     }
