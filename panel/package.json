@@ -28,6 +28,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.0",
     "cypress": "^8.5.0",
     "eslint": "^7.32.0",
     "eslint-plugin-cypress": "^2.12.1",
@@ -41,5 +42,20 @@
     "vue-docgen-api": "^4.41.2",
     "vue-template-compiler": "^2.6.14",
     "wait-on": "^6.0.0"
-  }
+  },
+  "browserslist": [
+    "last 2 Android versions",
+    "last 2 Chrome versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 Edge versions",
+    "last 2 Firefox versions",
+    "last 2 FirefoxAndroid versions",
+    "last 2 iOS versions",
+    "last 2 KaiOS versions",
+    "last 2 Safari versions",
+    "last 2 Samsung versions",
+    "last 2 Opera versions",
+    "last 2 OperaMobile versions",
+    "last 2 UCAndroid versions"
+  ]
 }
