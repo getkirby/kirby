@@ -21,14 +21,6 @@ use Throwable;
 abstract class ModelWithContent extends Model
 {
     /**
-     * Each model must define a CLASS_ALIAS
-     * which will be used in template queries.
-     * The CLASS_ALIAS is a short human-readable
-     * version of the class name. I.e. page.
-     */
-    const CLASS_ALIAS = null;
-
-    /**
      * The content
      *
      * @var \Kirby\Cms\Content
