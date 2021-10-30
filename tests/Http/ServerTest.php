@@ -32,6 +32,10 @@ class ServerTest extends TestCase
         // SERVER_PORT
         $_SERVER['SERVER_PORT'] = 777;
         $this->assertEquals(777, Server::port());
+
+        // HTTP_HOST
+        $_SERVER['HTTP_HOST'] = 'localhost:776';
+        $this->assertEquals(776, Server::port());
     }
 
     public function testForwardedPort()
