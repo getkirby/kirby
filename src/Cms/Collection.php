@@ -165,16 +165,16 @@ class Collection extends BaseCollection
      * Checks if the given object or id
      * is in the collection
      *
-     * @param string|object $id
+     * @param string|object $key
      * @return bool
      */
-    public function has($id): bool
+    public function has($key): bool
     {
-        if (is_object($id) === true) {
-            $id = $id->id();
+        if (is_object($key) === true) {
+            $key = $key->id();
         }
 
-        return parent::has($id);
+        return parent::has($key);
     }
 
     /**
@@ -182,16 +182,16 @@ class Collection extends BaseCollection
      * The method will automatically detect objects
      * or ids and then search accordingly.
      *
-     * @param string|object $object
+     * @param string|object $needle
      * @return int
      */
-    public function indexOf($object): int
+    public function indexOf($needle): int
     {
-        if (is_string($object) === true) {
-            return array_search($object, $this->keys());
+        if (is_string($needle) === true) {
+            return array_search($needle, $this->keys());
         }
 
-        return array_search($object->id(), $this->keys());
+        return array_search($needle->id(), $this->keys());
     }
 
     /**
@@ -270,17 +270,17 @@ class Collection extends BaseCollection
      * offset, limit, search and paginate on the collection.
      * Any part of the query is optional.
      *
-     * @param array $query
+     * @param array $arguments
      * @return static
      */
-    public function query(array $query = [])
+    public function query(array $arguments = [])
     {
-        $paginate = $query['paginate'] ?? null;
-        $search   = $query['search'] ?? null;
+        $paginate = $arguments['paginate'] ?? null;
+        $search   = $arguments['search'] ?? null;
 
-        unset($query['paginate']);
+        unset($arguments['paginate']);
 
-        $result = parent::query($query);
+        $result = parent::query($arguments);
 
         if (empty($search) === false) {
             if (is_array($search) === true) {
