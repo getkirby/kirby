@@ -2,10 +2,11 @@ import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
 import { createVuePlugin } from "vite-plugin-vue2";
-import pluginRewriteAll from "vite-plugin-rewrite-all";
+import postcssAutoprefixer from "autoprefixer";
 import postcssCsso from "postcss-csso";
-import postcssLogical from "postcss-logical";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
+import postcssLogical from "postcss-logical";
+import pluginRewriteAll from "vite-plugin-rewrite-all";
 
 let custom;
 try {
@@ -69,7 +70,8 @@ export default defineConfig(({ command }) => {
         plugins: [
           postcssLogical(),
           postcssDirPseudoClass(),
-          postcssCsso()
+          postcssCsso(),
+          postcssAutoprefixer()
         ]
       }
     },
