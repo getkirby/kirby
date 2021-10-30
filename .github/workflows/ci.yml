@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        php: [ "7.3", "7.4", "8.0" ]
+        php: [ "7.4", "8.0" ]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
