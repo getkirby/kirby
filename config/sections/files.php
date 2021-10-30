@@ -28,7 +28,7 @@ return [
             return $image ?? [];
         },
         /**
-         * Optional info text setup. Info text is shown on the right (lists) or below (cards) the filename.
+         * Optional info text setup. Info text is shown on the right (lists, cardlets) or below (cards) the filename.
          */
         'info' => function ($info = null) {
             return I18n::translate($info, $info);
