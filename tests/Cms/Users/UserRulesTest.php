@@ -358,4 +358,14 @@ class UserRulesTest extends TestCase
 
         UserRules::delete($user);
     }
+
+    public function testValidId()
+    {
+        $user = new User(['email' => 'test@getkirby.com']);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('"account" is a reserved word and cannot be used as user id');
+
+        UserRules::validId($user, 'account');
+    }
 }
