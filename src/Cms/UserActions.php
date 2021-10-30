@@ -253,8 +253,6 @@ trait UserActions
     public function createId(): string
     {
         $length = 8;
-        $id     = null;
-        $retry  = true;
 
         do {
             try {
@@ -265,9 +263,7 @@ trait UserActions
             } catch (Throwable $e) {
                 $length++;
             }
-        } while ($retry === true);
-
-        return $id;
+        } while (true);
     }
 
     /**
