@@ -7,7 +7,53 @@ namespace Kirby\Toolkit;
  */
 class DomTest extends TestCase
 {
-    public function urlProvider()
+    public function parseSaveHtmlProvider(): array
+    {
+        return [
+            // full document with doctype
+            [
+                '<!DOCTYPE html><html><body><p>Lorem ipsum</p></body></html>',
+                "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+            ],
+
+            // full document with doctype (with whitespace)
+            [
+                "<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>",
+                "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+            ],
+
+            // Unicode string
+            ['<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>'],
+
+            // Unicode string with entities
+            [
+                '<html><body><p>TEST &mdash;&nbsp;jūsų šildymo sistemai</p></body></html>',
+                '<html><body><p>TEST — jūsų šildymo sistemai</p></body></html>',
+            ],
+
+            // weird whitespace
+            ["<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>"],
+
+            // partial document with syntax issue
+            [
+                '<p>This is <strong>important</strong!</p>',
+                '<html><body><p>This is <strong>important</strong>!</p></body></html>'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider parseSaveHtmlProvider
+     * @covers ::__construct
+     * @covers ::toString
+     */
+    public function testParseSaveHtml(string $html, string $expected = null)
+    {
+        $dom = new Dom($html, 'HTML');
+        $this->assertSame(($expected ?? $html) . "\n", $dom->toString());
+    }
+
+    public function urlProvider(): array
     {
         return [
             // allowed empty url

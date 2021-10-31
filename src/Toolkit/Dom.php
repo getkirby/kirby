@@ -71,8 +71,17 @@ class Dom
         $this->type = strtoupper($type);
         if ($this->type === 'HTML') {
             // the loadHTML() method expects ISO-8859-1 by default;
-            // convert every native UTF-8 character to an entity
-            $load = $this->doc->loadHTML(mb_convert_encoding($code, 'HTML-ENTITIES', 'UTF-8'));
+            // force parsing as UTF-8 by injecting an XML declaration
+            $xmlDeclaration = 'encoding="UTF-8" id="' . Str::random(10) . '"';
+            $load = $this->doc->loadHTML('<?xml ' . $xmlDeclaration . '>' . $code);
+
+            // remove the injected XML declaration again
+            $pis = $this->query('//processing-instruction()');
+            foreach (iterator_to_array($pis) as $pi) {
+                if ($pi->data === $xmlDeclaration) {
+                    static::remove($pi);
+                }
+            }
 
             // remove the default doctype
             if (Str::contains($code, '<!DOCTYPE ') === false) {
@@ -545,8 +554,25 @@ class Dom
             return $result;
         }
 
-        $method = 'save' . $this->type;
-        return $this->doc->$method();
+        if ($this->type === 'HTML') {
+            // enforce export as UTF-8 by injecting a <meta> tag
+            // at the beginning of the document
+            $metaTag = $this->doc->createElement('meta');
+            $metaTag->setAttribute('http-equiv', 'Content-Type');
+            $metaTag->setAttribute('content', 'text/html; charset=utf-8');
+            $metaTag->setAttribute('id', $metaId = Str::random(10));
+            $this->doc->insertBefore($metaTag, $this->doc->documentElement);
+
+            $html = $this->doc->saveHTML();
+
+            // remove the <meta> tag from the document and from the output
+            static::remove($metaTag);
+            $html = str_replace($this->doc->saveHTML($metaTag), '', $html);
+
+            return $html;
+        }
+
+        return $this->doc->saveXML();
     }
 
     /**
