@@ -98,10 +98,7 @@ function csrf(?string $check = null)
 function css($url, $options = null): ?string
 {
     if (is_array($url) === true) {
-        $links = array_map(function ($url) use ($options) {
-            return css($url, $options);
-        }, $url);
-
+        $links = A::map($url, fn ($url) => css($url, $options));
         return implode(PHP_EOL, $links);
     }
 
@@ -373,10 +370,7 @@ function invalid(array $data = [], array $rules = [], array $messages = []): arr
 function js($url, $options = null): ?string
 {
     if (is_array($url) === true) {
-        $scripts = array_map(function ($url) use ($options) {
-            return js($url, $options);
-        }, $url);
-
+        $scripts = A::map($url, fn ($url) => js($url, $options));
         return implode(PHP_EOL, $scripts);
     }
 

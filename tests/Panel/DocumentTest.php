@@ -106,9 +106,7 @@ class DocumentTest extends TestCase
             'plugins' => '/media/plugins/index.js?0',
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
-        ], array_map(function ($js) {
-            return $js['src'];
-        }, $assets['js']));
+        ], array_map(fn ($js) => $js['src'], $assets['js']));
 
 
         // dev mode with custom url
@@ -140,9 +138,7 @@ class DocumentTest extends TestCase
             'plugins' => '/media/plugins/index.js?0',
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
-        ], array_map(function ($js) {
-            return $js['src'];
-        }, $assets['js']));
+        ], array_map(fn ($js) => $js['src'], $assets['js']));
 
 
         // custom panel css and js

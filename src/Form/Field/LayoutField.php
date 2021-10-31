@@ -116,9 +116,10 @@ class LayoutField extends BlocksField
 
     protected function setLayouts(array $layouts = [])
     {
-        $this->layouts = array_map(function ($layout) {
-            return Str::split($layout);
-        }, $layouts);
+        $this->layouts = array_map(
+            fn ($layout) => Str::split($layout),
+            $layouts
+        );
     }
 
     protected function setSettings($settings = null)

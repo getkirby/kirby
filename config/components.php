@@ -28,9 +28,7 @@ return [
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
-    'css' => function (App $kirby, string $url, $options = null): string {
-        return $url;
-    },
+    'css' => fn (App $kirby, string $url, $options = null): string => $url,
 
 
     /**
@@ -123,9 +121,7 @@ return [
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
-    'js' => function (App $kirby, string $url, $options = null): string {
-        return $url;
-    },
+    'js' => fn (App $kirby, string $url, $options = null): string => $url,
 
     /**
      * Add your own Markdown parser

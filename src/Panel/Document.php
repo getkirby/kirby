@@ -130,9 +130,10 @@ class Document
 
         // remove missing files
         $assets['css'] = array_filter($assets['css']);
-        $assets['js']  = array_filter($assets['js'], function ($js) {
-            return empty($js['src']) === false;
-        });
+        $assets['js']  = array_filter(
+            $assets['js'],
+            fn ($js) => empty($js['src']) === false
+        );
 
         return $assets;
     }
