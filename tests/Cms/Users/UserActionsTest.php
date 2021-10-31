@@ -91,7 +91,7 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeLanguage('de');
 
-        $this->assertEquals('de', $user->language());
+        $this->assertSame('de', $user->language());
     }
 
     public function testChangeName()
@@ -99,7 +99,7 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeName('Edith Thor');
 
-        $this->assertEquals('Edith Thor', $user->name());
+        $this->assertSame('Edith Thor', $user->name()->value());
     }
 
     public function testChangePassword()
@@ -127,7 +127,7 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertSame('new@domain.com', $user->email());
         $this->assertEquals('admin', $user->role());
     }
 
@@ -163,7 +163,7 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertSame('new@domain.com', $user->email());
         $this->assertEquals('editor', $user->role());
     }
 
@@ -177,7 +177,7 @@ class UserActionsTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals('Custom A', $user->a()->value());
+        $this->assertSame('Custom A', $user->a()->value());
     }
 
     public function testCreateWithDefaults()
@@ -200,8 +200,8 @@ class UserActionsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('A', $user->a()->value());
-        $this->assertEquals('B', $user->b()->value());
+        $this->assertSame('A', $user->a()->value());
+        $this->assertSame('B', $user->b()->value());
     }
 
     public function testCreateWithDefaultsAndContent()
@@ -227,8 +227,8 @@ class UserActionsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('Custom A', $user->a()->value());
-        $this->assertEquals('B', $user->b()->value());
+        $this->assertSame('Custom A', $user->a()->value());
+        $this->assertSame('B', $user->b()->value());
     }
 
     public function testCreateWithContentMultilang()
@@ -259,8 +259,8 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('a', $user->a()->value());
-        $this->assertEquals('b', $user->b()->value());
+        $this->assertSame('a', $user->a()->value());
+        $this->assertSame('b', $user->b()->value());
     }
 
     public function testDelete()
@@ -280,7 +280,7 @@ class UserActionsTest extends TestCase
             'website' => $url = 'https://editor.com'
         ]);
 
-        $this->assertEquals($url, $user->website()->value());
+        $this->assertSame($url, $user->website()->value());
     }
 
     public function testUpdateWithAuthUser()
@@ -290,7 +290,7 @@ class UserActionsTest extends TestCase
         $user->update([
             'website' => $url = 'https://getkirby.com'
         ]);
-        $this->assertEquals($url, $this->app->user()->website()->value());
+        $this->assertSame($url, $this->app->user()->website()->value());
         $user->logout();
     }
 

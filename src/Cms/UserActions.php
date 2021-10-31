@@ -260,10 +260,14 @@ trait UserActions
                 if (UserRules::validId($this, $id) === true) {
                     return $id;
                 }
+
+                // we can't really test for a random match
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
                 $length++;
             }
         } while (true);
+        // @codeCoverageIgnoreEnd
     }
 
     /**
