@@ -316,7 +316,7 @@ class File extends Model
             $absolute = $parent !== $params['model'];
         }
 
-        $params['text'] = $params['text'] ?? '{{ file.filename }}';
+        $params['text'] ??= '{{ file.filename }}';
 
         return array_merge(parent::pickerData($params), [
             'filename' => $name,

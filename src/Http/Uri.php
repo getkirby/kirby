@@ -144,10 +144,10 @@ class Uri
 
         // parse the path and extract params
         if (empty($props['path']) === false) {
-            $extract         = Params::extract($props['path']);
-            $props['params'] = $props['params'] ?? $extract['params'];
-            $props['path']   = $extract['path'];
-            $props['slash']  = $props['slash'] ?? $extract['slash'];
+            $extract           = Params::extract($props['path']);
+            $props['params'] ??= $extract['params'];
+            $props['path']     = $extract['path'];
+            $props['slash']  ??= $extract['slash'];
         }
 
         $this->setProperties($this->props = $props);

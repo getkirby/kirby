@@ -527,7 +527,7 @@ abstract class Sql
             ];
         }
 
-        $limit = $limit ?? '18446744073709551615';
+        $limit ??= '18446744073709551615';
 
         $offsetBinding = $this->bindingName('offset');
         $limitBinding  = $this->bindingName('limit');

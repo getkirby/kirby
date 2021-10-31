@@ -899,8 +899,8 @@ class Str
      */
     public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
     {
-        $separator = $separator ?? static::$defaults['slug']['separator'];
-        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+        $separator ??= static::$defaults['slug']['separator'];
+        $allowed   ??= static::$defaults['slug']['allowed'];
 
         $string = trim($string);
         $string = static::lower($string);

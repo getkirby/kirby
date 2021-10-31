@@ -382,7 +382,7 @@ class Page extends ModelWithContent
      */
     public function depth(): int
     {
-        return $this->depth = $this->depth ?? (substr_count($this->id(), '/') + 1);
+        return $this->depth ??= (substr_count($this->id(), '/') + 1);
     }
 
     /**
@@ -1102,7 +1102,7 @@ class Page extends ModelWithContent
      */
     public function root(): string
     {
-        return $this->root = $this->root ?? $this->kirby()->root('content') . '/' . $this->diruri();
+        return $this->root ??= $this->kirby()->root('content') . '/' . $this->diruri();
     }
 
     /**

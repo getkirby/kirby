@@ -77,7 +77,7 @@ abstract class Model
      */
     public function dragTextType(string $type = null): string
     {
-        $type = $type ?? 'auto';
+        $type ??= 'auto';
 
         if ($type === 'auto') {
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';

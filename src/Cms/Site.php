@@ -463,7 +463,7 @@ class Site extends ModelWithContent
      */
     public function root(): string
     {
-        return $this->root = $this->root ?? $this->kirby()->root('content');
+        return $this->root ??= $this->kirby()->root('content');
     }
 
     /**

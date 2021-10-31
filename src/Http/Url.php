@@ -145,8 +145,8 @@ class Url
         }
 
         // build the full url
-        $path = ltrim($path, '/');
-        $home = $home ?? static::home();
+        $path   = ltrim($path, '/');
+        $home ??= static::home();
 
         if (empty($path) === true) {
             return $home;

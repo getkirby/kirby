@@ -504,8 +504,8 @@ class Dir
         }
 
         // create the ignore pattern
-        $ignore = $ignore ?? static::$ignore;
-        $ignore = array_merge($ignore, ['.', '..']);
+        $ignore ??= static::$ignore;
+        $ignore   = array_merge($ignore, ['.', '..']);
 
         // scan for all files and dirs
         $result = array_values((array)array_diff(scandir($dir), $ignore));

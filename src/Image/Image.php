@@ -116,7 +116,7 @@ class Image extends File
      */
     public function exif()
     {
-        return $this->exif = $this->exif ?? new Exif($this);
+        return $this->exif ??= new Exif($this);
     }
 
     /**

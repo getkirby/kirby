@@ -45,10 +45,10 @@ class Options
      */
     public static function api($api, $model = null): array
     {
-        $model = $model ?? App::instance()->site();
-        $fetch = null;
-        $text  = null;
-        $value = null;
+        $model ??= App::instance()->site();
+        $fetch   = null;
+        $text    = null;
+        $value   = null;
 
         if (is_array($api) === true) {
             $fetch = $api['fetch'] ?? null;
@@ -165,7 +165,7 @@ class Options
      */
     public static function query($query, $model = null): array
     {
-        $model = $model ?? App::instance()->site();
+        $model ??= App::instance()->site();
 
         // default text setup
         $text = [

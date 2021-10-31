@@ -67,7 +67,7 @@ abstract class Model
      */
     public function kirby()
     {
-        return static::$kirby = static::$kirby ?? App::instance();
+        return static::$kirby ??= App::instance();
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class Model
      */
     public function site()
     {
-        return $this->site = $this->site ?? $this->kirby()->site();
+        return $this->site ??= $this->kirby()->site();
     }
 
     /**

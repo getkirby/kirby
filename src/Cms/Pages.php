@@ -151,7 +151,7 @@ class Pages extends Collection
      */
     public static function factory(array $pages, Model $model = null, bool $draft = false)
     {
-        $model    = $model ?? App::instance()->site();
+        $model  ??= App::instance()->site();
         $children = new static([], $model);
         $kirby    = $model->kirby();
 

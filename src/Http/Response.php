@@ -160,10 +160,10 @@ class Response
             throw new Exception('The file could not be found');
         }
 
-        $filename = $filename ?? basename($file);
-        $modified = filemtime($file);
-        $body     = file_get_contents($file);
-        $size     = strlen($body);
+        $filename ??= basename($file);
+        $modified   = filemtime($file);
+        $body       = file_get_contents($file);
+        $size       = strlen($body);
 
         $props = array_replace_recursive([
             'body'    => $body,
