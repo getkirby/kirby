@@ -56,7 +56,7 @@ class XmlTest extends TestCase
     public function testDisallowedJavascriptUrl()
     {
         $fixture   = "<xml>\n<a href='javascript:alert(1)'></a>\n</xml>";
-        $sanitized = "<xml>\n<a/>\n</xml>\n";
+        $sanitized = "<xml>\n<a/>\n</xml>";
 
         $this->assertSame($sanitized, Xml::sanitize($fixture));
 
@@ -74,7 +74,7 @@ class XmlTest extends TestCase
          * @license https://www.apache.org/licenses/LICENSE-2.0
          */
         $fixture   = '<xml>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></xml>';
-        $sanitized = "<xml>123<a>I am a dolphin!</a></xml>\n";
+        $sanitized = '<xml>123<a>I am a dolphin!</a></xml>';
 
         $this->assertSame($sanitized, Xml::sanitize($fixture));
 
@@ -127,7 +127,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 3): The hostname "malicious.com" is not allowed');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 2): The hostname "malicious.com" is not allowed');
         Xml::validateFile($fixture);
     }
 
@@ -139,7 +139,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 3): The hostname "malicious.com" is not allowed');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): The hostname "malicious.com" is not allowed');
         Xml::validateFile($fixture);
     }
 

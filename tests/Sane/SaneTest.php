@@ -84,7 +84,7 @@ class SaneTest extends TestCase
      */
     public function testSanitize()
     {
-        $this->assertSame("<svg><path d=\"123\"/></svg>\n", Sane::sanitize('<svg><path d="123" onclick="alert(1)"></path></svg>', 'svg'));
+        $this->assertSame('<svg><path d="123"/></svg>', Sane::sanitize('<svg><path d="123" onclick="alert(1)"></path></svg>', 'svg'));
     }
 
     /**
@@ -215,7 +215,7 @@ class SaneTest extends TestCase
     public function testValidateFileMime1()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The "script" element (line 3) is not allowed');
+        $this->expectExceptionMessage('The "script" element (line 2) is not allowed');
 
         Sane::validateFile($this->fixture('script-1.xml'));
     }
@@ -227,7 +227,7 @@ class SaneTest extends TestCase
     public function testValidateFileMime2()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
 
         Sane::validateFile($this->fixture('script-2.xml'));
     }
