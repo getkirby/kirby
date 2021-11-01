@@ -34,6 +34,14 @@ class Dom
     protected $body;
 
     /**
+     * The original input code as
+     * passed to the constructor
+     *
+     * @var string
+     */
+    protected $code;
+
+    /**
      * Document object
      *
      * @var \DOMDocument
@@ -55,7 +63,8 @@ class Dom
      */
     public function __construct(string $code, string $type = 'HTML')
     {
-        $this->doc = new DOMDocument();
+        $this->code = $code;
+        $this->doc  = new DOMDocument();
 
         $loaderSetting = null;
         if (\PHP_VERSION_ID < 80000) {
@@ -70,6 +79,11 @@ class Dom
 
         $this->type = strtoupper($type);
         if ($this->type === 'HTML') {
+            // ensure proper parsing for HTML snippets
+            if (preg_match('/<(html|body)[> ]/i', $code) !== 1) {
+                $code = '<body>' . $code . '</body>';
+            }
+
             // the loadHTML() method expects ISO-8859-1 by default;
             // force parsing as UTF-8 by injecting an XML declaration
             $xmlDeclaration = 'encoding="UTF-8" id="' . Str::random(10) . '"';
@@ -538,22 +552,14 @@ class Dom
     /**
      * Returns the document markup as string
      *
-     * @param bool $xmlDecl If set to `false`, the XML declaration
-     *                      is omitted from the output
+     * @param bool $normalize If set to `true`, the document
+     *                        is exported with an XML declaration/
+     *                        full HTML markup even if the input
+     *                        didn't have them
      * @return string
      */
-    public function toString(bool $xmlDecl = true): string
+    public function toString(bool $normalize = false): string
     {
-        if ($this->type === 'XML' && $xmlDecl === false) {
-            // only return child nodes, which omits the XML declaration
-            $result = '';
-            foreach ($this->doc->childNodes as $node) {
-                $result .= $this->doc->saveXML($node) . "\n";
-            }
-
-            return $result;
-        }
-
         if ($this->type === 'HTML') {
             // enforce export as UTF-8 by injecting a <meta> tag
             // at the beginning of the document
@@ -563,13 +569,40 @@ class Dom
             $metaTag->setAttribute('id', $metaId = Str::random(10));
             $this->doc->insertBefore($metaTag, $this->doc->documentElement);
 
-            $html = $this->doc->saveHTML();
+            if (preg_match('/<html[> ]/i', $this->code) === 1 || $normalize === true) {
+                // full document
+                $html = $this->doc->saveHTML();
+            } elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
+                // there was a <body>, but no <html>; export just the <body>
+                $html = $this->doc->saveHTML($this->body()) . "\n";
+            } else {
+                // just an HTML snippet
+                $html = $this->innerMarkup($this->body()) . "\n";
+            }
 
             // remove the <meta> tag from the document and from the output
             static::remove($metaTag);
             $html = str_replace($this->doc->saveHTML($metaTag), '', $html);
 
             return $html;
+        }
+
+        if (Str::contains($this->code, '<?xml ', true) === false && $normalize === false) {
+            // the input didn't contain an XML declaration;
+            // only return child nodes, which omits it
+            $result = '';
+            foreach ($this->doc->childNodes as $node) {
+                $result .= $this->doc->saveXML($node) . "\n";
+            }
+
+            return $result;
+        }
+
+        // ensure that the document is encoded as UTF-8
+        // unless a different encoding was specified in
+        // the input or before exporting
+        if ($this->doc->encoding === null) {
+            $this->doc->encoding = 'UTF-8';
         }
 
         return $this->doc->saveXML();

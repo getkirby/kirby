@@ -6,7 +6,6 @@ use DOMAttr;
 use DOMDocumentType;
 use DOMElement;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Str;
 
 /**
  * Base class for Sane handlers with DOM file types
@@ -73,9 +72,7 @@ class DomHandler extends Handler
     {
         $dom = static::parse($string);
         $dom->sanitize(static::options());
-
-        // export without XML declaration if the input didn't have one
-        return $dom->toString(Str::contains($string, '<?xml '));
+        return $dom->toString();
     }
 
     /**
