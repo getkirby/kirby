@@ -614,7 +614,11 @@ class Dom
         $metaTag->setAttribute('id', $metaId = Str::random(10));
         $this->doc->insertBefore($metaTag, $this->doc->documentElement);
 
-        if (preg_match('/<html[> ]/i', $this->code) === 1 || $normalize === true) {
+        if (
+            preg_match('/<html[> ]/i', $this->code) === 1 ||
+            $this->doc->doctype !== null ||
+            $normalize === true
+        ) {
             // full document
             $html = $this->doc->saveHTML();
         } elseif (preg_match('/<body[> ]/i', $this->code) === 1) {

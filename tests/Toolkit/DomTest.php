@@ -57,6 +57,13 @@ class DomTest extends TestCase
                 '<p>This is <strong>important</strong>!</p>'
             ],
 
+            // HTML snippet with doctype
+            [
+                'html',
+                '<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
+                "<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
+            ],
+
             // HTML snippet without wrapper tag
             [
                 'html',
@@ -182,6 +189,13 @@ class DomTest extends TestCase
                 'html',
                 '<p>This is <strong>important</strong!</p>',
                 '<html><body><p>This is <strong>important</strong>!</p></body></html>'
+            ],
+
+            // HTML snippet with doctype
+            [
+                'html',
+                '<!DOCTYPE html><p>This is <strong>important</strong>!</p>',
+                "<!DOCTYPE html>\n<html><body><p>This is <strong>important</strong>!</p></body></html>"
             ],
 
             // just a <body>
