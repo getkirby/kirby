@@ -561,51 +561,17 @@ class Dom
     public function toString(bool $normalize = false): string
     {
         if ($this->type === 'HTML') {
-            // enforce export as UTF-8 by injecting a <meta> tag
-            // at the beginning of the document
-            $metaTag = $this->doc->createElement('meta');
-            $metaTag->setAttribute('http-equiv', 'Content-Type');
-            $metaTag->setAttribute('content', 'text/html; charset=utf-8');
-            $metaTag->setAttribute('id', $metaId = Str::random(10));
-            $this->doc->insertBefore($metaTag, $this->doc->documentElement);
-
-            if (preg_match('/<html[> ]/i', $this->code) === 1 || $normalize === true) {
-                // full document
-                $html = $this->doc->saveHTML();
-            } elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
-                // there was a <body>, but no <html>; export just the <body>
-                $html = $this->doc->saveHTML($this->body()) . "\n";
-            } else {
-                // just an HTML snippet
-                $html = $this->innerMarkup($this->body()) . "\n";
-            }
-
-            // remove the <meta> tag from the document and from the output
-            static::remove($metaTag);
-            $html = str_replace($this->doc->saveHTML($metaTag), '', $html);
-
-            return $html;
+            $string = $this->exportHtml($normalize);
+        } else {
+            $string = $this->exportXml($normalize);
         }
 
-        if (Str::contains($this->code, '<?xml ', true) === false && $normalize === false) {
-            // the input didn't contain an XML declaration;
-            // only return child nodes, which omits it
-            $result = '';
-            foreach ($this->doc->childNodes as $node) {
-                $result .= $this->doc->saveXML($node) . "\n";
-            }
-
-            return $result;
+        // add trailing newline if the input contained one
+        if (rtrim($this->code, "\r\n") !== $this->code) {
+            $string .= "\n";
         }
 
-        // ensure that the document is encoded as UTF-8
-        // unless a different encoding was specified in
-        // the input or before exporting
-        if ($this->doc->encoding === null) {
-            $this->doc->encoding = 'UTF-8';
-        }
-
-        return $this->doc->saveXML();
+        return $string;
     }
 
     /**
@@ -628,6 +594,73 @@ class Dom
         }
 
         static::remove($node);
+    }
+
+    /**
+     * Returns the document markup as HTML string
+     *
+     * @param bool $normalize If set to `true`, the document
+     *                        is exported with full HTML markup
+     *                        even if the input didn't have it
+     * @return string
+     */
+    protected function exportHtml(bool $normalize = false): string
+    {
+        // enforce export as UTF-8 by injecting a <meta> tag
+        // at the beginning of the document
+        $metaTag = $this->doc->createElement('meta');
+        $metaTag->setAttribute('http-equiv', 'Content-Type');
+        $metaTag->setAttribute('content', 'text/html; charset=utf-8');
+        $metaTag->setAttribute('id', $metaId = Str::random(10));
+        $this->doc->insertBefore($metaTag, $this->doc->documentElement);
+
+        if (preg_match('/<html[> ]/i', $this->code) === 1 || $normalize === true) {
+            // full document
+            $html = $this->doc->saveHTML();
+        } elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
+            // there was a <body>, but no <html>; export just the <body>
+            $html = $this->doc->saveHTML($this->body());
+        } else {
+            // just an HTML snippet
+            $html = $this->innerMarkup($this->body());
+        }
+
+        // remove the <meta> tag from the document and from the output
+        static::remove($metaTag);
+        $html = str_replace($this->doc->saveHTML($metaTag), '', $html);
+
+        return trim($html);
+    }
+
+    /**
+     * Returns the document markup as XML string
+     *
+     * @param bool $normalize If set to `true`, the document
+     *                        is exported with an XML declaration
+     *                        even if the input didn't have it
+     * @return string
+     */
+    protected function exportXml(bool $normalize = false): string
+    {
+        if (Str::contains($this->code, '<?xml ', true) === false && $normalize === false) {
+            // the input didn't contain an XML declaration;
+            // only return child nodes, which omits it
+            $result = [];
+            foreach ($this->doc->childNodes as $node) {
+                $result[] = $this->doc->saveXML($node);
+            }
+
+            return implode("\n", $result);
+        }
+
+        // ensure that the document is encoded as UTF-8
+        // unless a different encoding was specified in
+        // the input or before exporting
+        if ($this->doc->encoding === null) {
+            $this->doc->encoding = 'UTF-8';
+        }
+
+        return trim($this->doc->saveXML());
     }
 
     /**

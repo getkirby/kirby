@@ -27,8 +27,8 @@ class DomTest extends TestCase
             // full document with doctype (with whitespace)
             [
                 'html',
-                "<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>",
-                "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+                "<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>\n\n",
+                "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>\n"
             ],
 
             // Unicode string
@@ -47,7 +47,7 @@ class DomTest extends TestCase
             // weird whitespace
             [
                 'html',
-                "<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>"
+                "<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
             ],
 
             // HTML snippet with syntax issue
@@ -145,11 +145,13 @@ class DomTest extends TestCase
      * @dataProvider parseSaveProvider
      * @covers ::__construct
      * @covers ::toString
+     * @covers ::exportHtml
+     * @covers ::exportXml
      */
     public function testParseSave(string $type, string $code, string $expected = null)
     {
         $dom = new Dom($code, $type);
-        $this->assertSame(($expected ?? $code) . "\n", $dom->toString());
+        $this->assertSame($expected ?? $code, $dom->toString());
     }
 
     public function parseSaveNormalizeProvider(): array
@@ -172,7 +174,7 @@ class DomTest extends TestCase
             // weird whitespace
             [
                 'html',
-                "<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>"
+                "<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
             ],
 
             // HTML snippet with syntax issue
@@ -255,14 +257,14 @@ class DomTest extends TestCase
             // weird whitespace
             [
                 'xml',
-                "<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>",
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>"
+                "<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
             ],
 
             // weird whitespace with XML declaration
             [
                 'xml',
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>"
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg>\n  <text>\n    Lorem ipsum\n</text>\n  </svg>\n"
             ],
         ];
     }
@@ -271,11 +273,13 @@ class DomTest extends TestCase
      * @dataProvider parseSaveNormalizeProvider
      * @covers ::__construct
      * @covers ::toString
+     * @covers ::exportHtml
+     * @covers ::exportXml
      */
     public function testParseSaveNormalize(string $type, string $code, string $expected = null)
     {
         $dom = new Dom($code, $type);
-        $this->assertSame(($expected ?? $code) . "\n", $dom->toString(true));
+        $this->assertSame($expected ?? $code, $dom->toString(true));
     }
 
     public function urlProvider(): array
