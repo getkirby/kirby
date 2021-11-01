@@ -16,6 +16,12 @@ class DomTest extends TestCase
                 "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
             ],
 
+            // full document with lowercase doctype
+            [
+                '<!doctype html><html><body><p>Lorem ipsum</p></body></html>',
+                "<!DOCTYPE html>\n<html><body><p>Lorem ipsum</p></body></html>"
+            ],
+
             // full document with doctype (with whitespace)
             [
                 "<!DOCTYPE html>\n\n<html><body><p>Lorem ipsum</p></body></html>",

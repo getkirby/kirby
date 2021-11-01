@@ -84,7 +84,7 @@ class Dom
             }
 
             // remove the default doctype
-            if (Str::contains($code, '<!DOCTYPE ') === false) {
+            if (Str::contains($code, '<!DOCTYPE ', true) === false) {
                 static::remove($this->doc->doctype);
             }
         } else {
