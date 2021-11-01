@@ -19,6 +19,24 @@ class DomTest extends TestCase
             // allowed path
             ['/some/path', true],
 
+            // allowed path
+            ['some', true],
+
+            // allowed path
+            ['some/path', true],
+
+            // allowed path
+            ['some/path:test', true],
+
+            // allowed path
+            ['some/path:some/test', true],
+
+            // allowed path
+            ['./some/path', true],
+
+            // allowed path
+            ['../some/path', true],
+
             // allowed fragment
             ['#', true],
 
@@ -91,13 +109,22 @@ class DomTest extends TestCase
             ['tel:491234+5678', 'Invalid telephone number'],
 
             // forbidden URL type
+            ['javascript:alert()', 'Unknown URL type'],
+
+            // forbidden URL type
             ['ftp:test', 'Unknown URL type'],
 
             // forbidden URL type
             ['ftp://test', 'Unknown URL type'],
 
             // forbidden URL type
-            ['//test', 'Unknown URL type'],
+            ['my-amazing-protocol:test', 'Unknown URL type'],
+
+            // forbidden URL type
+            ['my-amazing-protocol://test', 'Unknown URL type'],
+
+            // forbidden URL type
+            ['//test', 'Protocol-relative URLs are not allowed'],
         ];
     }
 

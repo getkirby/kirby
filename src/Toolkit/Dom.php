@@ -262,8 +262,25 @@ class Dom
             return true;
         }
 
-        // allow site-internal URLs (but not protocol-relative URLs)
-        if (mb_substr($url, 0, 1) === '/' && mb_substr($url, 1, 1) !== '/') {
+        // disallow protocol-relative URLs
+        if (mb_substr($url, 0, 2) === '//') {
+            return 'Protocol-relative URLs are not allowed';
+        }
+
+        // allow site-internal URLs that didn't match the
+        // protocol-relative check above
+        if (mb_substr($url, 0, 1) === '/') {
+            return true;
+        }
+
+        // allow relative URLs (= URLs without a scheme);
+        // this is either a URL without colon or one where the
+        // part before the colon is definitely no valid scheme;
+        // see https://url.spec.whatwg.org/#url-writing
+        if (
+            Str::contains($url, ':') === false ||
+            Str::contains(Str::before($url, ':'), '/') === true
+        ) {
             return true;
         }
 
