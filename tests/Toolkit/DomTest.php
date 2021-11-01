@@ -95,6 +95,9 @@ class DomTest extends TestCase
 
             // forbidden URL type
             ['ftp://test', 'Unknown URL type'],
+
+            // forbidden URL type
+            ['//test', 'Unknown URL type'],
         ];
     }
 

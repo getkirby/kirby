@@ -258,8 +258,12 @@ class Dom
         }
 
         // allow URLs that point to fragments inside the file
-        // as well as site-internal URLs
-        if (in_array(mb_substr($url, 0, 1), ['#', '/']) === true) {
+        if (mb_substr($url, 0, 1) === '#') {
+            return true;
+        }
+
+        // allow site-internal URLs (but not protocol-relative URLs)
+        if (mb_substr($url, 0, 1) === '/' && mb_substr($url, 1, 1) !== '/') {
             return true;
         }
 
