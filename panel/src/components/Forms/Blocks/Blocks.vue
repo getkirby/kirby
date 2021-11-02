@@ -465,7 +465,17 @@ export default {
     onOutsideFocus(event) {
       const overlay = document.querySelector(".k-overlay:last-of-type");
       if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
-        this.select(null);
+        return this.select(null);
+      }
+
+      // since we are still working in the same block when overlay is open
+      // we cannot detect the transition between the layout columns
+      // following codes detect if the target is in the same column
+      if (overlay) {
+        const layoutColumn = this.$el.closest(".k-layout-column");
+        if (layoutColumn && layoutColumn.contains(event.target) === false) {
+          return this.select(null);
+        }
       }
     },
     onPaste(e) {
