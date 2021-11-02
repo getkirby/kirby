@@ -41,7 +41,7 @@ export default {
       return Object
         .keys(this.store)
         .filter(id => {
-          return Object.keys(this.store[id].changes).length > 0;
+          return Object.keys(this.store[id]?.changes || {}).length > 0;
         });
     },
     store() {
