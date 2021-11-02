@@ -92,6 +92,7 @@ class UsersRoutesTest extends TestCase
         $app = $this->app->clone([
             'blueprints' => [
                 'users/admin' => [
+                    'name'  => 'admin',
                     'title' => 'Test'
                 ]
             ]
@@ -103,7 +104,7 @@ class UsersRoutesTest extends TestCase
 
         $this->assertSame(200, $response['code']);
         $this->assertSame('Test', $response['data']['title']);
-        $this->assertSame('users/admin', $response['data']['name']);
+        $this->assertSame('admin', $response['data']['name']);
     }
 
     public function testBlueprints()
@@ -111,6 +112,7 @@ class UsersRoutesTest extends TestCase
         $app = $this->app->clone([
             'blueprints' => [
                 'users/admin' => [
+                    'name'     => 'admin',
                     'title'    => 'Admin',
                     'sections' => [
                         'test' => [
@@ -124,6 +126,7 @@ class UsersRoutesTest extends TestCase
                     ]
                 ],
                 'users/editor' => [
+                    'name'  => 'editor',
                     'title' => 'Editor'
                 ]
             ]
@@ -155,20 +158,9 @@ class UsersRoutesTest extends TestCase
         $this->assertSame('test@getkirby.com', $response['data']['username']);
     }
 
-    public function testGet()
-    {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/admin@getkirby.com');
-
-        $this->assertEquals('admin@getkirby.com', $response['data']['email']);
-    }
-
     public function testChangeEmail()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/admin@getkirby.com/email', 'PATCH', [
+        $response = $this->app->api()->call('users/admin@getkirby.com/email', 'PATCH', [
             'body' => [
                 'email' => 'admin@getkirby.de'
             ]
@@ -180,9 +172,7 @@ class UsersRoutesTest extends TestCase
 
     public function testChangeLanguage()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/admin@getkirby.com/language', 'PATCH', [
+        $response = $this->app->api()->call('users/admin@getkirby.com/language', 'PATCH', [
             'body' => [
                 'language' => 'de'
             ]
@@ -194,9 +184,7 @@ class UsersRoutesTest extends TestCase
 
     public function testChangeName()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/admin@getkirby.com/name', 'PATCH', [
+        $response = $this->app->api()->call('users/admin@getkirby.com/name', 'PATCH', [
             'body' => [
                 'name' => 'Test user'
             ]
@@ -221,9 +209,7 @@ class UsersRoutesTest extends TestCase
 
     public function testChangeRole()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/editor@getkirby.com/role', 'PATCH', [
+        $response = $this->app->api()->call('users/editor@getkirby.com/role', 'PATCH', [
             'body' => [
                 'role' => 'editor'
             ]
@@ -369,6 +355,15 @@ class UsersRoutesTest extends TestCase
         $this->assertEquals('a.jpg', $response['data'][1]['filename']);
     }
 
+    public function testGet()
+    {
+        $app = $this->app;
+
+        $response = $app->api()->call('users/admin@getkirby.com');
+
+        $this->assertEquals('admin@getkirby.com', $response['data']['email']);
+    }
+
     public function testRoles()
     {
         $this->app->impersonate('kirby');
@@ -463,9 +458,7 @@ class UsersRoutesTest extends TestCase
 
     public function testUpdate()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users/admin@getkirby.com', 'PATCH', [
+        $response = $this->app->api()->call('users/admin@getkirby.com', 'PATCH', [
             'body' => [
                 'name' => 'Test User'
             ]
@@ -477,9 +470,7 @@ class UsersRoutesTest extends TestCase
 
     public function testUsers()
     {
-        $app = $this->app;
-
-        $response = $app->api()->call('users');
+        $response = $this->app->api()->call('users');
 
         $this->assertEquals('admin@getkirby.com', $response['data'][0]['email']);
         $this->assertEquals('editor@getkirby.com', $response['data'][1]['email']);
