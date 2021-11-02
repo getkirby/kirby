@@ -167,6 +167,10 @@ class Parsley
      */
     public function endInlineBlock()
     {
+        if (empty($this->inline) === true) {
+            return;
+        }
+
         $html = [];
 
         foreach ($this->inline as $inline) {
@@ -228,6 +232,11 @@ class Parsley
         }
 
         if (is_a($element, 'DOMElement') === true) {
+            // all spans will be treated as inline elements
+            if ($element->tagName === 'span') {
+                return true;
+            }
+
             if ($this->containsBlock($element) === true) {
                 return false;
             }
