@@ -432,10 +432,7 @@ class HomeTest extends TestCase
         $this->app->impersonate('test@getkirby.com');
         $this->app->session()->set('panel.path', 'login');
 
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid redirect URL');
-
-        Home::url();
+        $this->assertSame('/panel/site', Home::url());
     }
 
     /**

@@ -247,12 +247,12 @@ class Home
         // a redirect to login, logout or installation
         // views would lead to an infinite redirect loop
         if (in_array($path, ['', 'login', 'logout', 'installation'], true) === true) {
-            throw new InvalidArgumentException('Invalid redirect URL');
+            $path = 'site';
         }
 
         // Check if the user can access the URL
         if (static::hasAccess($user, $path) === true) {
-            return $url;
+            return Panel::url($path);
         }
 
         // Try to find an alternative
