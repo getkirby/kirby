@@ -60,10 +60,12 @@ class Api extends BaseApi
     {
         $field = Form::for($model)->field($name);
 
-        $fieldApi = $this->clone([
-            'routes' => $field->api(),
-            'data'   => array_merge($this->data(), ['field' => $field])
-        ]);
+        $fieldApi = new static(
+            array_merge($this->propertyData, [
+                'data'   => array_merge($this->data(), ['field' => $field]),
+                'routes' => $field->api(),
+            ]),
+        );
 
         return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
     }
