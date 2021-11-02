@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Section;
+use Kirby\Form\Field;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -48,6 +50,9 @@ class UsersRoutesTest extends TestCase
 
     public function tearDown(): void
     {
+        App::destroy();
+        Field::$types = [];
+        Section::$types = [];
         Dir::remove($this->fixtures);
     }
 
