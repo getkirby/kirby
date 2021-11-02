@@ -368,4 +368,20 @@ class UserRulesTest extends TestCase
 
         UserRules::validId($user, 'account');
     }
+
+    public function testValidIdWhenDuplicateIsFound()
+    {
+        $app = $this->app()->clone([
+            'users' => [
+                ['id' => 'admin', 'email' => 'admin@getkirby.com', 'role' => 'admin'],
+            ]
+        ]);
+
+        $user = new User(['email' => 'test@getkirby.com', 'kirby' => $app]);
+
+        $this->expectException('Kirby\Exception\DuplicateException');
+        $this->expectExceptionMessage('A user with this id exists');
+
+        UserRules::validId($user, 'admin');
+    }
 }
