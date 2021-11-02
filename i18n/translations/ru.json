@@ -1,6 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c",
-  "author": "Author",
+  "author": "Автор",
   "avatar": "\u0410\u0432\u0430\u0442\u0430\u0440 (\u0444\u043e\u0442\u043e)",
   "back": "Назад",
   "cancel": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c",
@@ -25,7 +29,7 @@
   "days.tue": "\u0412\u0442",
   "days.wed": "\u0421\u0440",
 
-  "debugging": "Debugging",
+  "debugging": "Отладка",
 
   "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
   "delete.all": "Удалить все",
@@ -45,7 +49,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "environment": "Environment",
+  "environment": "Среда",
 
   "error.access.code": "Неверный код",
   "error.access.login": "Неправильный логин",
@@ -57,7 +61,7 @@
   "error.avatar.dimensions.invalid": "Пожалуйста, сделайте чтобы ширина или высота фотографии была меньше 3000 пикселей",
   "error.avatar.mime.forbidden": "Фотография профиля должна быть JPEG или PNG",
 
-  "error.blueprint.notFound": "Не удалось загрузить blueprint \"{name}\"",
+  "error.blueprint.notFound": "Не удалось загрузить разметку \"{name}\"",
 
   "error.blocks.max.plural": "Вы не можете добавить больше {max} блоков",
   "error.blocks.max.singular": "Вы не можете добавить больше одного блока",
@@ -104,7 +108,7 @@
   "error.layout.validation.settings": "Ошибка в настройках макета {index}",
 
   "error.license.format": "Пожалуйста, введите правильный лицензионный код",
-  "error.license.email": "Пожалуйста, введите правильный адрес эл. почты",
+  "error.license.email": "Пожалуйста, введите правильный Email",
   "error.license.verification": "Лицензия не подтверждена",
 
   "error.page.changeSlug.permission": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
@@ -126,7 +130,7 @@
   "error.page.notFound": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
   "error.page.num.invalid": "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
   "error.page.slug.invalid": "Пожалуйста, введите правильный URL",
-  "error.page.slug.maxlength": "Длина ссылки (ЧПУ) должна быть короче \"{length}\" символов",
+  "error.page.slug.maxlength": "Длина ссылки должна быть короче \"{length}\" символов",
   "error.page.sort.permission": "Невозможно сортировать страницу \"{slug}\"",
   "error.page.status.invalid": "Пожалуйста, установите верный статус страницы",
   "error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
@@ -163,7 +167,7 @@
   "error.user.delete.lastAdmin": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430",
   "error.user.delete.lastUser": "Нельзя удалить единственного пользователя",
   "error.user.delete.permission": "У вас нет права удалить пользователя \"{name}\"",
-  "error.user.duplicate": "Пользователь с эл. почтой \"{email}\" уже есть",
+  "error.user.duplicate": "Пользователь с Email \"{email}\" уже есть",
   "error.user.email.invalid": "Пожалуйста, введите правильный адрес эл. почты",
   "error.user.language.invalid": "Введите правильный язык",
   "error.user.notFound": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
@@ -187,7 +191,7 @@
   "error.validation.date.between": "Пожалуйста, укажите дату между {min} и {max}",
   "error.validation.denied": "Пожалуйста отмените",
   "error.validation.different": "Значение не может быть \"{other}\"",
-  "error.validation.email": "Пожалуйста, введите правильный адрес эл. почты",
+  "error.validation.email": "Пожалуйста, введите правильный Email",
   "error.validation.endswith": "Значение должно заканчиваться с \"{end}\"",
   "error.validation.filename": "Пожалуйста, введите правильное название файла",
   "error.validation.in": "Пожалуйста, введите одно из следующих: ({in})",
@@ -325,7 +329,7 @@
   "languages.secondary": "Дополнительные языки",
   "languages.secondary.empty": "Еще нет дополнительных языков",
 
-  "license": "\u041b\u0438\u0446\u0435\u043d\u0437\u0438\u044f Kirby",
+  "license": "Лицензия",
   "license.buy": "Купить лицензию",
   "license.register": "Зарегистрировать",
   "license.register.help": "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
@@ -400,7 +404,7 @@
   "orientation.square": "Квадрат",
 
   "page.blueprint": "У страницы пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
-  "page.changeSlug": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0441\u0441\u044b\u043b\u043a\u0443 (\u0427\u041f\u0423)",
+  "page.changeSlug": "Изменить ссылку",
   "page.changeSlug.fromTitle": "Создать из названия",
   "page.changeStatus": "Изменить статус",
   "page.changeStatus.position": "Пожалуйста, выберите позицию",
@@ -434,7 +438,7 @@
   "paste": "Вставить",
   "paste.after": "Вставить после",
   "pixel": "Пиксель",
-  "plugins": "Plugins",
+  "plugins": "Плагины",
   "prev": "Предыдущий",
   "preview": "Предпросмотр",
   "remove": "Удалить",
@@ -471,13 +475,13 @@
   "template": "\u0428\u0430\u0431\u043b\u043e\u043d",
   "today": "Сегодня",
 
-  "server": "Server",
+  "server": "Сервер",
 
   "site.blueprint": "У сайта пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Код",
   "toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
-  "toolbar.button.email": "Эл. почта",
+  "toolbar.button.email": "Email",
   "toolbar.button.headings": "Заголовки",
   "toolbar.button.heading.1": "Заголовок 1",
   "toolbar.button.heading.2": "Заголовок 2",
@@ -521,7 +525,7 @@
 
   "user": "Пользователь",
   "user.blueprint": "Вы можете определить новые секции и поля разметки для пользователя в <strong>/site/blueprints/users/{blueprint}.yml</strong>",
-  "user.changeEmail": "Поменять эл. почту",
+  "user.changeEmail": "Поменять Email",
   "user.changeLanguage": "Поменять язык",
   "user.changeName": "Переназвать этого пользователя",
   "user.changePassword": "Поменять пароль",
@@ -535,14 +539,14 @@
 
   "users": "Пользователи",
 
-  "version": "\u0412\u0435\u0440\u0441\u0438\u044f Kirby",
+  "version": "Версия",
 
   "view.account": "\u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
   "view.installation": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430",
   "view.languages": "Языки",
   "view.resetPassword": "Сбросить пароль",
   "view.site": "Сайт",
-  "view.system": "System",
+  "view.system": "Система",
   "view.users": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438",
 
   "welcome": "Добро пожаловать",

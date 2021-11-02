@@ -1,6 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Ekle",
-  "author": "Author",
+  "author": "Yazar",
   "avatar": "Profil resmi",
   "back": "Geri",
   "cancel": "\u0130ptal",
@@ -25,7 +29,7 @@
   "days.tue": "Sal",
   "days.wed": "\u00c7ar",
 
-  "debugging": "Debugging",
+  "debugging": "Hata ayıklama",
 
   "delete": "Sil",
   "delete.all": "Tümünü sil",
@@ -45,7 +49,7 @@
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
 
-  "environment": "Environment",
+  "environment": "Ortam",
 
   "error.access.code": "Geçersiz kod",
   "error.access.login": "Geçersiz giriş",
@@ -434,7 +438,7 @@
   "paste": "Yapıştır",
   "paste.after": "Sonrasına yapıştır",
   "pixel": "Piksel",
-  "plugins": "Plugins",
+  "plugins": "Eklentiler",
   "prev": "Önceki",
   "preview": "Önizle",
   "remove": "Kaldır",
@@ -471,7 +475,7 @@
   "template": "\u015eablon",
   "today": "Bugün",
 
-  "server": "Server",
+  "server": "Sunucu",
 
   "site.blueprint": "Sitenin henüz bir planı yok. Kurulumu <strong>/site/blueprints/site.yml</strong>'de tanımlayabilirsiniz.",
 
@@ -542,7 +546,7 @@
   "view.languages": "Diller",
   "view.resetPassword": "Şifreyi sıfırla",
   "view.site": "Site",
-  "view.system": "System",
+  "view.system": "Sistem",
   "view.users": "Kullan\u0131c\u0131lar",
 
   "welcome": "Hoşgeldiniz",

@@ -1,4 +1,8 @@
 {
+  "account.changeName": "Deinen Namen ändern",
+  "account.delete": "Deinen Account löschen",
+  "account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden. ",
+
   "add": "Hinzuf\u00fcgen",
   "author": "Autor",
   "avatar": "Profilbild",
