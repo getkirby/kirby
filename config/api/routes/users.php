@@ -71,6 +71,7 @@ return [
             return $this->user($id)->avatar();
         }
     ],
+    // @codeCoverageIgnoreStart
     [
         'pattern' => [
             '(account)/avatar',
@@ -91,6 +92,7 @@ return [
             }, $single = true);
         }
     ],
+    // @codeCoverageIgnoreEnd
     [
         'pattern' => [
             '(account)/avatar',
@@ -138,9 +140,7 @@ return [
         ],
         'method'  => 'ALL',
         'action'  => function (string $id, string $fieldName, string $path = null) {
-            if ($user = $this->user($id)) {
-                return $this->fieldApi($user, $fieldName, $path);
-            }
+            return $this->fieldApi($this->user($id), $fieldName, $path);
         }
     ],
     [
