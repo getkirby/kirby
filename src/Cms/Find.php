@@ -157,6 +157,12 @@ class Find
      */
     public static function user(string $id = null)
     {
+        // account is a reserved word to find the current
+        // user. It's used in various API and area routes.
+        if ($id === 'account') {
+            $id = null;
+        }
+
         $kirby = App::instance();
 
         // get the authenticated user

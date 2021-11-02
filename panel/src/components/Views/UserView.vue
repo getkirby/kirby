@@ -71,7 +71,7 @@
 
           <template #right>
             <k-prev-next
-              v-if="$options.prevnext"
+              v-if="!model.account"
               :prev="prev"
               :next="next"
             />
@@ -104,7 +104,6 @@ import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,
-  prevnext: true,
   computed: {
     avatarOptions() {
       return [

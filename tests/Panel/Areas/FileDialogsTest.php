@@ -61,6 +61,11 @@ class FileDialogsTest extends AreaTestCase
                     'files' => [
                         ['filename' => 'test.jpg']
                     ]
+                ],
+                [
+                    'id'    => 'admin',
+                    'email' => 'admin@getkirby.com',
+                    'role'  => 'admin'
                 ]
             ]
         ]);
@@ -190,7 +195,7 @@ class FileDialogsTest extends AreaTestCase
         $this->submit([
             'name' => 'new-test'
         ]);
-        $this->login();
+        $this->login('admin@getkirby.com');
 
         $dialog = $this->dialog('users/test/files/test.jpg/changeName');
 
@@ -212,7 +217,7 @@ class FileDialogsTest extends AreaTestCase
             'name'      => 'new-test',
             '_referrer' => 'users/test/files/test.jpg'
         ]);
-        $this->login();
+        $this->login('admin@getkirby.com');
 
         $dialog = $this->dialog('users/test/files/test.jpg/changeName');
         $this->assertSame('/users/test/files/new-test.jpg', $dialog['redirect']);
@@ -468,7 +473,7 @@ class FileDialogsTest extends AreaTestCase
     {
         $this->createUserFile();
         $this->submit([]);
-        $this->login();
+        $this->login('admin@getkirby.com');
 
         $dialog = $this->dialog('users/test/files/test.jpg/delete');
 
@@ -485,7 +490,7 @@ class FileDialogsTest extends AreaTestCase
         $this->submit([
             '_referrer' => '/users/test/files/test.jpg'
         ]);
-        $this->login();
+        $this->login('admin@getkirby.com');
 
         $dialog = $this->dialog('users/test/files/test.jpg/delete');
 

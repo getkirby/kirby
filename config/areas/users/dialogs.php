@@ -232,12 +232,13 @@ return [
     'user.delete' => [
         'pattern' => 'users/(:any)/delete',
         'load' => function (string $id) {
-            $user = Find::user($id);
+            $user       = Find::user($id);
+            $i18nPrefix = $user->isLoggedIn() ? 'account' : 'user';
 
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    'text' => tt('user.delete.confirm', [
+                    'text' => tt($i18nPrefix . '.delete.confirm', [
                         'email' => Escape::html($user->email())
                     ])
                 ]
@@ -258,7 +259,7 @@ return [
             }
 
             // logout the user if they deleted themselves
-            if ($user->is(kirby()->user())) {
+            if ($user->isLoggedIn()) {
                 $redirect = '/logout';
             }
 
