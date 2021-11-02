@@ -2,9 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\Section;
-use Kirby\Form\Field;
 use Kirby\Filesystem\Dir;
+use Kirby\Form\Field;
 use PHPUnit\Framework\TestCase;
 
 class UsersRoutesTest extends TestCase
