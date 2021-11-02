@@ -250,6 +250,9 @@ class FileTest extends TestCase
                 'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
                 'content' => $index
             ],
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',

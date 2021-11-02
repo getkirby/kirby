@@ -336,6 +336,9 @@ class PageSortTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
@@ -385,6 +388,9 @@ class PageSortTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'site' => [
                 'children' => [
                     [
@@ -425,6 +431,9 @@ class PageSortTest extends TestCase
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
             ],
             'languages' => [
                 [

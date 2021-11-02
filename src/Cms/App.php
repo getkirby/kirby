@@ -900,7 +900,10 @@ class App
             return $this->multilang;
         }
 
-        return $this->multilang = $this->languages()->count() !== 0;
+        return $this->multilang = (
+            $this->option('languages') === true &&
+            $this->languages()->count() !== 0
+        );
     }
 
     /**

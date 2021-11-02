@@ -123,6 +123,9 @@ class FindTest extends TestCase
     public function testLanguage()
     {
         $app = $this->app->clone([
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',

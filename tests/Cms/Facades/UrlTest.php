@@ -34,6 +34,9 @@ class UrlTest extends TestCase
     public function testToWithLanguage()
     {
         $this->app->clone([
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 'en' => [
                     'code' => 'en'

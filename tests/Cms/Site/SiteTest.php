@@ -132,6 +132,9 @@ class SiteTest extends TestCase
                 'index'   => $index = __DIR__ . '/fixtures/SitePropsTest/modified',
                 'content' => $index
             ],
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',

@@ -155,6 +155,9 @@ class UserTest extends TestCase
                 'index'    => $index = __DIR__ . '/fixtures/UserPropsTest/modified',
                 'accounts' => $index
             ],
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',

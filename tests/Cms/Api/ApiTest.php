@@ -104,6 +104,9 @@ class ApiTest extends TestCase
         $this->assertSame('C', setlocale(LC_ALL, 0));
 
         $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
@@ -132,6 +135,9 @@ class ApiTest extends TestCase
         $this->assertSame('C', setlocale(LC_ALL, 0));
 
         $this->app = $this->app->clone([
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
@@ -189,6 +195,7 @@ class ApiTest extends TestCase
                 ]
             ],
             'options' => [
+                'languages'      => true,
                 'panel.language' => 'de'
             ]
         ]);
@@ -204,6 +211,9 @@ class ApiTest extends TestCase
                 [
                     'email' => 'homer@simpsons.com'
                 ]
+            ],
+            'options' => [
+                'languages'   => true,
             ],
             'languages' => [
                 [
@@ -241,6 +251,7 @@ class ApiTest extends TestCase
                 ]
             ],
             'options' => [
+                'languages'      => true,
                 'panel.language' => 'de'
             ]
         ]);
@@ -251,6 +262,9 @@ class ApiTest extends TestCase
 
         // without logged in user without Panel language
         $app = $this->app->clone([
+            'options' => [
+                'languages'   => true
+            ],
             'languages' => [
                 [
                     'code'    => 'it-it',

@@ -108,6 +108,9 @@ class AppTranslationsTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages'        => true
+            ],
             'languages' => [
                 [
                     'code'         => 'de',
@@ -162,6 +165,9 @@ class AppTranslationsTest extends TestCase
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
             ],
             'languages' => [
                 [
@@ -462,6 +468,9 @@ class AppTranslationsTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'fr',
@@ -475,6 +484,9 @@ class AppTranslationsTest extends TestCase
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
             ],
             'languages' => [
                 [
@@ -497,6 +509,7 @@ class AppTranslationsTest extends TestCase
                 ]
             ],
             'options' => [
+                'languages'      => true,
                 'panel.language' => 'it'
             ]
         ]);

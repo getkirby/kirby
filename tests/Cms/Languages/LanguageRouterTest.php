@@ -16,6 +16,9 @@ class LanguageRouterTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code' => 'en'
@@ -180,6 +183,9 @@ class LanguageRouterTest extends TestCase
     public function testRouteWithPageScopeAndInvalidPage()
     {
         $app = $this->app->clone([
+            'options' => [
+                'languages' => true
+            ],
             'site' => [
                 'children' => [
                     ['slug' => 'notes']

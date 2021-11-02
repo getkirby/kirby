@@ -671,6 +671,9 @@ class RouterTest extends TestCase
                     ]
                 ],
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'fr',
@@ -728,6 +731,9 @@ class RouterTest extends TestCase
                         'template' => 'test'
                     ]
                 ],
+            ],
+            'options' => [
+                'languages' => true
             ],
             'languages' => [
                 [

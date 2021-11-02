@@ -379,6 +379,9 @@ class KirbyTagsTest extends TestCase
             'urls' => [
                 'index' => 'https://getkirby.com'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 'en' => [
                     'code' => 'en'
@@ -406,6 +409,9 @@ class KirbyTagsTest extends TestCase
             ],
             'urls' => [
                 'index' => 'https://getkirby.com'
+            ],
+            'options' => [
+                'languages' => true
             ],
             'languages' => [
                 'en' => [

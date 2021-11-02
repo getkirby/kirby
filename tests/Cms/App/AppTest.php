@@ -967,4 +967,125 @@ class AppTest extends TestCase
 
         $this->assertSame(['title' => 'Site'], $app->controller('none', [], 'json'));
     }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilang()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages'   => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $this->assertTrue($app->multilang());
+        $this->assertCount(2, $app->languages());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangDefault()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertFalse($app->multilang());
+        $this->assertCount(0, $app->languages());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangWithOption()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages'   => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $this->assertTrue($app->multilang());
+        $this->assertCount(2, $app->languages());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangEnabledOptionWithoutLanguages()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => []
+        ]);
+
+        $this->assertFalse($app->multilang());
+        $this->assertCount(0, $app->languages());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangDisabledOptionWithLanguages()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages'   => false
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $this->assertFalse($app->multilang());
+        $this->assertCount(2, $app->languages());
+    }
 }

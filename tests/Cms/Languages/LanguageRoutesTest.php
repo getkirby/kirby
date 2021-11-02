@@ -16,6 +16,9 @@ class LanguageRoutesTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',

@@ -656,6 +656,9 @@ class PageTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code' => 'en'
@@ -737,6 +740,9 @@ class PageTest extends TestCase
                 'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
                 'content' => $index
             ],
+            'options' => [
+                'languages' => true
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
@@ -773,6 +779,9 @@ class PageTest extends TestCase
             'roots' => [
                 'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
                 'content' => $index
+            ],
+            'options' => [
+                'languages'   => true
             ],
             'languages' => [
                 [
