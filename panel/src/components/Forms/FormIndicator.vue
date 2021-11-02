@@ -60,11 +60,9 @@ export default {
             this.options = options;
           });
         } catch (e) {
-          if (e.status && e.status === 400) {
-            this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
-            this.$store.dispatch("content/clear");
-            return false;
-          }
+          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+          this.$store.dispatch("content/clear");
+          return false;
         }
       }
 
