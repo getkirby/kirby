@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     detailsList() {
-      return Array.isArray(this.details) ? this.details : Object.values(this.details);
+      return Array.isArray(this.details) ? this.details : Object.values(this.details || {});
     }
   }
 };
