@@ -135,16 +135,6 @@ return [
     ],
     [
         'pattern' => [
-            '(account)/fields/(:any)/(:all?)',
-            'users/(:any)/fields/(:any)/(:all?)',
-        ],
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $fieldName, string $path = null) {
-            return $this->fieldApi($this->user($id), $fieldName, $path);
-        }
-    ],
-    [
-        'pattern' => [
             '(account)/language',
             'users/(:any)/language',
         ],
@@ -211,9 +201,7 @@ return [
         ],
         'method'  => 'ALL',
         'action'  => function (string $id, string $fieldName, string $path = null) {
-            if ($user = $this->user($id)) {
-                return $this->fieldApi($user, $fieldName, $path);
-            }
+            return $this->fieldApi($this->user($id), $fieldName, $path);
         }
     ],
 ];
