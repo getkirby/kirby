@@ -1,6 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Ajouter",
-  "author": "Author",
+  "author": "Auteur",
   "avatar": "Image du profil",
   "back": "Retour",
   "cancel": "Annuler",
@@ -25,7 +29,7 @@
   "days.tue": "Mar",
   "days.wed": "Mer",
 
-  "debugging": "Debugging",
+  "debugging": "Débogage",
 
   "delete": "Supprimer",
   "delete.all": "Tout supprimer",
@@ -45,7 +49,7 @@
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
 
-  "environment": "Environment",
+  "environment": "Environnement",
 
   "error.access.code": "Code incorrect",
   "error.access.login": "Identifiant incorrect",
@@ -471,7 +475,7 @@
   "template": "Modèle",
   "today": "Aujourd’hui",
 
-  "server": "Server",
+  "server": "Serveur",
 
   "site.blueprint": "Ce site n’a pas encore de blueprint. Vous pouvez en définir les paramètres dans <strong>/site/blueprints/site.yml</strong>",
 
@@ -542,7 +546,7 @@
   "view.languages": "Langages",
   "view.resetPassword": "Réinitialiser le mot de passe",
   "view.site": "Site",
-  "view.system": "System",
+  "view.system": "Système",
   "view.users": "Utilisateurs",
 
   "welcome": "Bienvenue",

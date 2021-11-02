@@ -1,4 +1,8 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "\u0414\u043e\u0431\u0430\u0432\u0438",
   "author": "Author",
   "avatar": "Профилна снимка",

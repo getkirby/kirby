@@ -1,4 +1,8 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "L\u00e4gg till",
   "author": "Author",
   "avatar": "Profilbild",
