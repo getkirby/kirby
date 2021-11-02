@@ -194,7 +194,7 @@ class InlineTest extends TestCase
     public function testParseNodeWithText()
     {
         $dom  = new Dom('Test');
-        $text = $dom->query('//p/text()')[0];
+        $text = $dom->query('//text()')[0];
         $html = Inline::parseNode($text);
 
         $this->assertSame('Test', $html);
@@ -206,7 +206,7 @@ class InlineTest extends TestCase
     public function testParseNodeWithTextEncoded()
     {
         $dom  = new Dom('Test & Test');
-        $text = $dom->query('//p/text()')[0];
+        $text = $dom->query('//text()')[0];
         $html = Inline::parseNode($text);
 
         $this->assertSame('Test &amp; Test', $html);

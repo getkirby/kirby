@@ -33,7 +33,7 @@ class SvgTest extends TestCase
     public function testAllowedAriaAttr()
     {
         $fixture = '<svg><path aria-label="Test" /></svg>';
-        $cleaned = "<svg><path aria-label=\"Test\"/></svg>\n";
+        $cleaned = '<svg><path aria-label="Test"/></svg>';
 
         $this->assertNull(Svg::validate($fixture));
         $this->assertSame($cleaned, Svg::sanitize($fixture));
@@ -42,7 +42,7 @@ class SvgTest extends TestCase
     public function testAllowedAriaData()
     {
         $fixture = '<svg><path data-color="test" /></svg>';
-        $cleaned = "<svg><path data-color=\"test\"/></svg>\n";
+        $cleaned = '<svg><path data-color="test"/></svg>';
 
         $this->assertNull(Svg::validate($fixture));
         $this->assertSame($cleaned, Svg::sanitize($fixture));
@@ -67,7 +67,7 @@ class SvgTest extends TestCase
     public function testDisallowedJavascriptUrl()
     {
         $fixture   = "<svg>\n<a href='javascript:alert(1)'><path /></a>\n</svg>";
-        $sanitized = "<svg>\n<a><path/></a>\n</svg>\n";
+        $sanitized = "<svg>\n<a><path/></a>\n</svg>";
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -85,7 +85,7 @@ class SvgTest extends TestCase
          * @license https://www.apache.org/licenses/LICENSE-2.0
          */
         $fixture = '<svg>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></svg>';
-        $sanitized = "<svg>123<a>I am a dolphin!</a></svg>\n";
+        $sanitized = '<svg>123<a>I am a dolphin!</a></svg>';
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -114,7 +114,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 2)');
+        $this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
         Svg::validateFile($fixture);
     }
 
@@ -126,7 +126,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 2)');
+        $this->expectExceptionMessage('The namespace "https://malicious.com/script.php" is not allowed (around line 1)');
         Svg::validateFile($fixture);
     }
 
@@ -162,7 +162,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 3)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 2)');
         Svg::validateFile($fixture);
     }
 
@@ -174,14 +174,14 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 3)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2)');
         Svg::validateFile($fixture);
     }
 
     public function testDisallowedOnclickAttr()
     {
         $fixture   = "<svg>\n<path onclick='alert(1)' />\n</svg>";
-        $sanitized = "<svg>\n<path/>\n</svg>\n";
+        $sanitized = "<svg>\n<path/>\n</svg>";
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -193,7 +193,7 @@ class SvgTest extends TestCase
     public function testDisallowedOnloadAttr()
     {
         $fixture   = '<svg onload="alert(1)"></svg>';
-        $sanitized = "<svg/>\n";
+        $sanitized = '<svg/>';
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -210,7 +210,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 15)');
+        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 14)');
         Svg::validateFile($fixture);
     }
 
@@ -222,7 +222,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 19)');
+        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
         Svg::validateFile($fixture);
     }
 
@@ -234,7 +234,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 19)');
+        $this->expectExceptionMessage('Nested "use" elements are not allowed (used in line 18)');
         Svg::validateFile($fixture);
     }
 
@@ -289,7 +289,7 @@ class SvgTest extends TestCase
     public function testDisallowedCaseSensitive()
     {
         $fixture   = "<svg>\n<Text x='0' y='20'>Hello</Text>\n</svg>";
-        $sanitized = "<svg>\n\n</svg>\n";
+        $sanitized = "<svg>\n\n</svg>";
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -301,7 +301,7 @@ class SvgTest extends TestCase
     public function testDisallowedForeignobject()
     {
         $fixture   = '<svg><foreignobject><iframe onload="alert(1)" /></foreignobject></svg>';
-        $sanitized = "<svg/>\n";
+        $sanitized = '<svg/>';
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -325,7 +325,7 @@ class SvgTest extends TestCase
     public function testDisallowedScript()
     {
         $fixture   = '<svg><script>alert(1)</script></svg>';
-        $sanitized = "<svg/>\n";
+        $sanitized = '<svg/>';
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
@@ -337,7 +337,7 @@ class SvgTest extends TestCase
     public function testDisallowedBlockquote()
     {
         $fixture   = '<svg><blockquote>SVGs are SVGs are SVGs</blockquote></svg>';
-        $sanitized = "<svg/>\n";
+        $sanitized = '<svg/>';
 
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 

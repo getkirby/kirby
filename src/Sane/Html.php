@@ -123,28 +123,6 @@ class Html extends DomHandler
     protected static $type = 'HTML';
 
     /**
-     * Sanitizes the given string
-     *
-     * @param string $string
-     * @return string
-     *
-     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
-     */
-    public static function sanitize(string $string): string
-    {
-        $dom = static::parse($string);
-        $dom->sanitize(static::options());
-
-        if (preg_match('/<body[> ]/i', $string) === 1) {
-            // the input was a full document
-            return $dom->toString();
-        }
-
-        // the input was just an HTML snippet
-        return $dom->innerMarkup($dom->body());
-    }
-
-    /**
      * Returns the sanitization options for the handler
      *
      * @return array
@@ -160,23 +138,5 @@ class Html extends DomHandler
             'disallowedTags'      => static::$disallowedTags,
             'urlAttrs'            => static::$urlAttrs,
         ]);
-    }
-
-    /**
-     * Parses the given string into a `Toolkit\Dom` object
-     *
-     * @param string $string
-     * @return \Kirby\Toolkit\Dom
-     *
-     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
-     */
-    protected static function parse(string $string)
-    {
-        if (preg_match('/<body[> ]/i', $string) !== 1) {
-            // just an HTML snippet, add a body for proper parsing
-            $string = '<body>' . $string . '</body>';
-        }
-
-        return parent::parse($string);
     }
 }

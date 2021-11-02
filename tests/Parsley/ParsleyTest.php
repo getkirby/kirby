@@ -75,7 +75,7 @@ class ParsleyTest extends TestCase
     public function testContainsBlockWithText()
     {
         $dom     = new Dom('Test');
-        $element = $dom->query('//p')[0]->childNodes[0];
+        $element = $dom->query('//body')[0]->childNodes[0];
 
         $this->assertFalse($this->parser()->containsBlock($element));
     }
@@ -278,7 +278,7 @@ class ParsleyTest extends TestCase
     public function testParseNodeWithSkippableElement()
     {
         $dom    = new Dom('<script src="/test.js"></script>');
-        $script = $dom->query('/html/head/script')[0];
+        $script = $dom->query('/html/body/script')[0];
 
         $this->assertInstanceOf('DOMElement', $script);
         $this->assertFalse($this->parser()->parseNode($script));
@@ -291,8 +291,8 @@ class ParsleyTest extends TestCase
     {
         $dom = new Dom('Test');
 
-        // html > body > p > text
-        $text = $dom->query('/html/body/p')[0]->childNodes[0];
+        // html > body > text
+        $text = $dom->query('/html/body')[0]->childNodes[0];
 
         $this->assertInstanceOf('DOMText', $text);
         $this->assertTrue($this->parser()->parseNode($text));

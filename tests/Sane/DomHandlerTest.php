@@ -13,16 +13,15 @@ class DomHandlerTest extends TestCase
 
     public function testSanitize()
     {
-        $fixture   = '<xml><test attr="value">Hello world</test></xml>';
-        $sanitized = "<xml><test attr=\"value\">Hello world</test></xml>\n";
-        $this->assertSame($sanitized, DomHandler::sanitize($fixture));
+        $fixture = '<xml><test attr="value">Hello world</test></xml>';
+        $this->assertSame($fixture, DomHandler::sanitize($fixture));
 
         $fixture   = '<?xml version="1.0"?><xml><test>Hello world</test></xml>';
-        $sanitized = "<?xml version=\"1.0\"?>\n<xml><test>Hello world</test></xml>\n";
+        $sanitized = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<xml><test>Hello world</test></xml>";
         $this->assertSame($sanitized, DomHandler::sanitize($fixture));
 
         $fixture   = '<?xml version="1.0" standalone="no"?><xml><test>Hello world</test></xml>';
-        $sanitized = "<?xml version=\"1.0\" standalone=\"no\"?>\n<xml><test>Hello world</test></xml>\n";
+        $sanitized = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<xml><test>Hello world</test></xml>";
         $this->assertSame($sanitized, DomHandler::sanitize($fixture));
     }
 

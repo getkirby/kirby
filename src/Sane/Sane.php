@@ -28,6 +28,7 @@ class Sane
      */
     public static $aliases = [
         'application/xml' => 'xml',
+        'image/svg'       => 'svg',
         'image/svg+xml'   => 'svg',
         'text/html'       => 'html',
         'text/xml'        => 'xml',
