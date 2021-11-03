@@ -861,7 +861,7 @@ class Page extends ModelWithContent
      *
      * @return bool
      */
-    public function isVisible(): bool
+    public function isShowable(): bool
     {
         static $visible = [];
 

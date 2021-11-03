@@ -976,7 +976,7 @@ class PageTest extends TestCase
         $this->assertFalse($page->isReadable());
     }
 
-    public function testIsVisible()
+    public function testIsShowable()
     {
         $app = new App([
             'roots' => [
@@ -1010,13 +1010,13 @@ class PageTest extends TestCase
         $app->impersonate('kirby');
 
         $page = $app->page('foo');
-        $this->assertTrue($page->isVisible());
+        $this->assertTrue($page->isShowable());
 
         $page = $app->page('bar');
-        $this->assertTrue($page->isVisible());
+        $this->assertTrue($page->isShowable());
 
         $page = $app->page('baz');
-        $this->assertFalse($page->isVisible());
+        $this->assertFalse($page->isShowable());
     }
 
     public function testIsAccessible()

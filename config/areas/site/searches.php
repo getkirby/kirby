@@ -10,7 +10,7 @@ return [
             $pages = site()
                 ->index(true)
                 ->search($query)
-                ->filter('isVisible', true)
+                ->filter('isShowable', true)
                 ->limit(10);
 
             $results = [];

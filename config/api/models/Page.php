@@ -55,7 +55,7 @@ return [
                 ->nextAll()
                 ->filter('intendedTemplate', $page->intendedTemplate())
                 ->filter('status', $page->status())
-                ->filter('isVisible', true)
+                ->filter('isShowable', true)
                 ->first();
         },
         'num' => function (Page $page) {
@@ -92,7 +92,7 @@ return [
                 ->prevAll()
                 ->filter('intendedTemplate', $page->intendedTemplate())
                 ->filter('status', $page->status())
-                ->filter('isVisible', true)
+                ->filter('isShowable', true)
                 ->last();
         },
         'previewUrl' => function (Page $page) {

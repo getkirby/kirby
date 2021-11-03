@@ -307,7 +307,7 @@ class Page extends Model
                     ->filter('status', $page->status());
             }
 
-            return $siblings->filter('isVisible', true);
+            return $siblings->filter('isShowable', true);
         };
 
         return [

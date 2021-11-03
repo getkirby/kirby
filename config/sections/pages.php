@@ -118,8 +118,8 @@ return [
             // loop for the best performance
             foreach ($pages->data as $id => $page) {
 
-                // remove all protected pages
-                if ($page->isVisible() === false) {
+                // remove all protected and hidden pages
+                if ($page->isShowable() === false) {
                     unset($pages->data[$id]);
                     continue;
                 }
