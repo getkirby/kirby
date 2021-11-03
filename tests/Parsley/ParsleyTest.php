@@ -113,7 +113,7 @@ class ParsleyTest extends TestCase
         return [
             ['<p>Test</p>', '/html/body/p/text()', true],
             ['<p>Test</p>', '/html/body/p', false],
-            ['<span>Test</span>', '/html/body/span', false],
+            ['<span>Test</span>', '/html/body/span', true],
             ['<i><h1>Test</h1></i>', '/html/body/i', false],
         ];
     }
