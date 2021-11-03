@@ -66,7 +66,7 @@ abstract class AreaTestCase extends TestCase
         $this->app([
             'options' => [
                 'languages' => true
-            ]
+            ],
         ]);
     }
 

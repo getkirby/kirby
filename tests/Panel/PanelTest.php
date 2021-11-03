@@ -336,6 +336,48 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::multilang
+     */
+    public function testMultilang()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true
+            ]
+        ]);
+
+        $this->assertTrue(Panel::multilang());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangWithImplicitLanguageInstallation()
+    {
+        $this->app = $this->app->clone([
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $this->assertTrue(Panel::multilang());
+    }
+
+    /**
+     * @covers ::multilang
+     */
+    public function testMultilangDisabled()
+    {
+        $this->assertFalse(Panel::multilang());
+    }
+
+    /**
      * @covers ::response
      */
     public function testResponse()
