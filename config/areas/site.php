@@ -7,7 +7,7 @@ return function ($kirby) {
             return $kirby->site()->title()->or(t('view.site'))->toString();
         },
         'icon'      => 'home',
-        'label'     => t('view.site'),
+        'label'     => $kirby->site()->blueprint()->title() ?? t('view.site'),
         'menu'      => true,
         'dialogs'   => require __DIR__ . '/site/dialogs.php',
         'dropdowns' => require __DIR__ . '/site/dropdowns.php',
