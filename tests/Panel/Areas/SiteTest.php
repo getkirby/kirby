@@ -177,4 +177,54 @@ class SiteTest extends AreaTestCase
         $this->assertNull($props['next']);
         $this->assertNull($props['prev']);
     }
+
+    public function testSiteTitle(): void
+    {
+        $this->app([
+            'blueprints' => [
+                'site' => [
+                    'title' => 'My Blog',
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $view  = $this->view('site');
+
+        $this->assertSame('site', $view['id']);
+        $this->assertSame('My Blog', $view['title']);
+    }
+
+    public function testSiteTitleMultilang(): void
+    {
+        $this->app([
+            'blueprints' => [
+                'site' => [
+                    'title' => [
+                        'de' => 'Mein Blog',
+                        'en' => 'My Blog',
+                    ],
+                ]
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                ],
+                [
+                    'default' => true,
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ],
+        ]);
+
+        $this->login();
+
+        $view  = $this->view('site');
+
+        $this->assertSame('site', $view['id']);
+        $this->assertSame('Mein Blog', $view['title']);
+    }
 }
