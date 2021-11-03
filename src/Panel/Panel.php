@@ -76,7 +76,9 @@ class Panel
 
         unset($areas['installation'], $areas['login']);
 
-        // disable the language area for single-language installations
+        // Disable the language area for single-language installations
+        // This does not check for installed languages. Otherwise you'd
+        // not be able to add the first language through the view
         if (!$kirby->option('languages')) {
             unset($areas['languages']);
         }
@@ -210,6 +212,18 @@ class Panel
             'X-Fiber' => 'true',
             'Cache-Control' => 'no-store'
         ]);
+    }
+
+    /**
+     * Checks for a multilanguage installation
+     *
+     * @return bool
+     */
+    public static function multilang(): bool
+    {
+        // multilang setup check
+        $kirby = kirby();
+        return $kirby->option('languages') || $kirby->multilang();
     }
 
     /**
@@ -516,7 +530,7 @@ class Panel
         $kirby = kirby();
 
         // language switcher
-        if ($kirby->option('languages')) {
+        if (static::multilang()) {
             $fallback = 'en';
 
             if ($defaultLanguage = $kirby->defaultLanguage()) {
