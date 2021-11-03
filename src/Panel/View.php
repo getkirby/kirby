@@ -142,7 +142,7 @@ class View
         $kirby = kirby();
 
         // multilang setup check
-        $multilang = $kirby->multilang();
+        $multilang = $kirby->option('languages') || $kirby->multilang();
 
         // get the authenticated user
         $user = $kirby->user();
