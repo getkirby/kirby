@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Language;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
@@ -316,14 +317,18 @@ class ViewTest extends TestCase
 
         $expected = [
             [
-                'code'    => 'en',
-                'default' => true,
-                'name'    => 'English'
+                'code'      => 'en',
+                'default'   => true,
+                'direction' => 'ltr',
+                'name'      => 'English',
+                'rules'     => Language::loadRules('en')
             ],
             [
-                'code'    => 'de',
-                'default' => false,
-                'name'    => 'Deutsch'
+                'code'      => 'de',
+                'default'   => false,
+                'direction' => 'ltr',
+                'name'      => 'Deutsch',
+                'rules'     => Language::loadRules('de')
             ]
         ];
 
