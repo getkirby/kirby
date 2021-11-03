@@ -338,7 +338,7 @@ export default {
   box-shadow: none;
   outline: 0;
 }
-.k-textarea-input[data-font="monospace"] {
+.k-textarea-input-native[data-font="monospace"] {
   font-family: var(--font-mono);
 }
 
