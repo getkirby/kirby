@@ -134,7 +134,7 @@ export default {
       this.isOpen ? this.close() : this.open();
     },
     focus(n = 0) {
-      if (this.$children[n] && this.$children[n].focus) {
+      if (this.$children[n]?.focus) {
         this.current = n;
         this.$children[n].focus();
       }

@@ -40,7 +40,7 @@ export default {
         return this.content.src;
       }
 
-      if (this.content.image[0] && this.content.image[0].url) {
+      if (this.content.image[0]?.url) {
         return this.content.image[0].url;
       }
 

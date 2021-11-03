@@ -28,7 +28,7 @@ export default {
       }
 
       // resolve extending via component name
-      if (options.extends && typeof options.extends === "string") {
+      if (typeof options?.extends === "string") {
         // only extend if referenced component exists
         if (components[options.extends]) {
           options.extends = components[options.extends].extend({

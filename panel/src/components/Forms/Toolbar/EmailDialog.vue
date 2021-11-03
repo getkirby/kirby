@@ -49,7 +49,7 @@ export default {
     },
     createKirbytext() {
       const email = this.value.email || "";
-      if (this.value.text && this.value.text.length > 0) {
+      if (this.value.text?.length > 0) {
         return `(email: ${email} text: ${this.value.text})`;
       } else {
         return `(email: ${email})`;
@@ -57,7 +57,7 @@ export default {
     },
     createMarkdown() {
       const email = this.value.email || '';
-      if (this.value.text && this.value.text.length > 0) {
+      if (this.value.text?.length > 0) {
         return `[${this.value.text}](mailto:${email})`;
       } else {
         return `<${email}>`;

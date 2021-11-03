@@ -77,7 +77,7 @@ export default {
      * @param  {string} name field name to focus
      */
     focus(name) {
-      if (this.$refs.fields && this.$refs.fields.focus) {
+      if (this.$refs.fields?.focus) {
         this.$refs.fields.focus(name);
       }
     },
@@ -90,7 +90,7 @@ export default {
       this.$emit("submit", this.value);
     },
     /**
-     * Submit the form 
+     * Submit the form
      * @public
      */
     submit() {

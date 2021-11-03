@@ -132,7 +132,7 @@ export default {
       Object.keys(this.$refs).forEach(ref => {
         const component = this.$refs[ref][0];
 
-        if (component.close && typeof component.close === "function") {
+        if (typeof component?.close === "function") {
           component.close();
         }
       });

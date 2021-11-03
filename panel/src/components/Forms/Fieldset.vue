@@ -106,7 +106,7 @@ export default {
      * @param {string} name field name
      */
     hasField(name) {
-      return this.$refs[name] && this.$refs[name][0];
+      return this.$refs[name]?.[0];
     },
     meetsCondition(field) {
 

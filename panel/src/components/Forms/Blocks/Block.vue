@@ -109,7 +109,7 @@ export default {
     className() {
       let className = ["k-block-type-" + this.type];
 
-      if (this.fieldset.preview && this.fieldset.preview !== this.type) {
+      if (this.fieldset.preview !== this.type) {
         className.push("k-block-type-" + this.fieldset.preview);
       }
 
