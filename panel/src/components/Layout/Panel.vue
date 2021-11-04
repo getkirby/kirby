@@ -18,7 +18,7 @@
     </template>
 
     <!-- Fatal iframe -->
-    <k-fatal v-if="$store.state.fatal" />
+    <k-fatal v-if="$store.state.fatal !== false" :html="$store.state.fatal" />
 
     <!-- Offline warning -->
     <div v-if="offline" class="k-offline-warning">

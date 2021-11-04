@@ -142,7 +142,7 @@ export default {
 
 <style>
 .k-block-selector.k-dialog {
-  background: #313740;
+  background: var(--color-dark);
   color: var(--color-white);
 }
 .k-block-selector .k-headline {
