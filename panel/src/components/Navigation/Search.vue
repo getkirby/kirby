@@ -176,6 +176,10 @@ export default {
 
         const response = await this.$search(this.currentType.id, query);
 
+        if (response === false) {
+          throw `JSON parsing failed`;
+        }
+
         this.items = response.results;
 
       } catch (error) {

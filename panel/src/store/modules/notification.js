@@ -26,6 +26,30 @@ export default {
       clearTimeout(this.timer);
       context.commit("UNSET");
     },
+    deprecated(context, message) {
+      console.warn("Deprecated: " + message);
+    },
+    error(context, error) {
+      if (error instanceof PromiseRejectionEvent) {
+        error.preventDefault();
+        error = error.reason;
+      }
+
+      if (typeof error === "string") {
+        error = { message: error };
+      }
+
+      if (window.panel.$config.debug) {
+        window.console.error(error);
+      }
+
+      context.dispatch("dialog", {
+        component: "k-error-dialog",
+        props: error,
+      }, {root: true});
+
+      context.dispatch("close");
+    },
     open(context, payload) {
       context.dispatch("close");
       context.commit("SET", payload);
@@ -46,19 +70,6 @@ export default {
         timeout: 4000,
         ...payload
       });
-    },
-    error(context, payload) {
-      if (typeof payload === "string") {
-        payload = { message: payload };
-      }
-
-      context.dispatch("dialog", {
-        component: "k-error-dialog",
-        props: payload,
-      }, {root: true});
-
-      context.dispatch("close");
-
     }
   }
 };

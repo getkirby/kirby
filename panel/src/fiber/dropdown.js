@@ -3,28 +3,23 @@ import Fiber from "./index";
 
 export default function (path, options) {
   return async ready => {
-    options = {
+    const dropdown = await Fiber.request("dropdowns/" + path, {
+      ...options,
       method: "POST",
-      ...options
-    };
+      type: "$dropdown"
+    });
 
-    const data = await Fiber.request("dropdowns/" + path, options);
-
-    // the request for the dialog is failing
-    if (!data.$dropdown) {
-      throw "The dropdown could not be loaded";
+    // the request could not be parsed
+    // the fatal view is taking over
+    if (dropdown === false) {
+      return false;
     }
 
-    // the dropdown sends a backend error
-    if (data.$dropdown.error) {
-      throw data.$dropdown.error;
+    if (Array.isArray(dropdown.options) === false || dropdown.options.length === 0) {
+      throw `The dropdown is empty`;
     }
 
-    if (Array.isArray(data.$dropdown.options) === false || data.$dropdown.options.length === 0) {
-      throw "The dropdown is empty";
-    }
-
-    data.$dropdown.options.map(option => {
+    dropdown.options.map(option => {
       if (option.dialog) {
         option.click = function () {
           const url     = typeof option.dialog === "string" ? option.dialog : option.dialog.url;
@@ -35,6 +30,7 @@ export default function (path, options) {
       return option;
     });
 
-    ready(data.$dropdown.options);
+    ready(dropdown.options);
+
   }
 }

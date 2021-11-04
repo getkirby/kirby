@@ -21,24 +21,19 @@ export default {
     async onSubmit(value) {
 
       try {
-        const response = await this.$request(this.path, {
+        const dialog = await this.$request(this.path, {
           body: value,
           method: "POST",
+          type: "$dialog",
           headers: {
             "X-Fiber-Referrer": this.referrer
           }
         });
 
-        const dialog = response.$dialog;
-
-        // something's wrong with the response
-        if (!dialog) {
-          throw `The dialog could not be submitted`;
-        }
-
-        // there's an error message from the server
-        if (dialog.error) {
-          throw dialog.error;
+        // json parsing failed and
+        // the fatal dialog is taking over
+        if (dialog === false) {
+          return false;
         }
 
         // everything went fine. We can close the dialog
@@ -72,7 +67,6 @@ export default {
         }
 
       } catch (e) {
-        console.error(e);
         this.$refs.dialog.error(e);
       }
 
