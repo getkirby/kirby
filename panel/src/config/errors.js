@@ -6,7 +6,8 @@ export default {
 
     // global rejected promise handler
     window.onunhandledrejection = (event) => {
-      store.dispatch("notification/error", event);
+      event.preventDefault();
+      store.dispatch("notification/error", event.reason);
     };
 
     // global deprecation handler

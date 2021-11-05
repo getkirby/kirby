@@ -171,13 +171,13 @@ export default {
       try {
         // Skip API call if query empty
         if (query === null || query === "") {
-          throw new Error;
+          throw Error("Empty query");
         }
 
         const response = await this.$search(this.currentType.id, query);
 
         if (response === false) {
-          throw `JSON parsing failed`;
+          throw Error("JSON parsing failed");
         }
 
         this.items = response.results;

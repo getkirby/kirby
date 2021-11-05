@@ -15,7 +15,7 @@ export default async function (path, options = {}) {
 
   // check for an existing dialog component
   if (!dialog.component || this.$helper.isComponent(dialog.component) === false) {
-    throw `The dialog component does not exist`;
+    throw Error(`The dialog component does not exist`);
   }
 
   // make sure the dialog always receives a props object

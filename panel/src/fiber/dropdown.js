@@ -16,7 +16,7 @@ export default function (path, options) {
     }
 
     if (Array.isArray(dropdown.options) === false || dropdown.options.length === 0) {
-      throw `The dropdown is empty`;
+      throw Error(`The dropdown is empty`);
     }
 
     dropdown.options.map(option => {

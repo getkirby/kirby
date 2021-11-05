@@ -216,15 +216,15 @@ export default {
 
       // the return type does not match the expected type
       if (!json[options.type]) {
-        throw `The ${options.type} could not be loaded`;
+        throw Error(`The ${options.type} could not be loaded`);
       }
 
       // request-specific data
       const data = json[options.type];
 
-      // the response contains a custom error
+      // the response contains a custom error message
       if (data.error) {
-        throw data.error;
+        throw Error(data.error);
       }
 
       // views add the entire response object to the state
