@@ -74,5 +74,6 @@
     "issues": "https://github.com/getkirby/kirby/issues",
     "forum": "https://forum.getkirby.com",
     "source": "https://github.com/getkirby/kirby"
-  }
+  },
+  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7"
 }
