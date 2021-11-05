@@ -10,6 +10,7 @@ use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -270,6 +271,28 @@ class Dom
         // allow site-internal URLs that didn't match the
         // protocol-relative check above
         if (mb_substr($url, 0, 1) === '/') {
+            // if a CMS instance is active, only allow the URL
+            // if it doesn't point outside of the index URL
+            if ($kirby = App::instance(null, true)) {
+                $indexUrl = $kirby->url('index', true)->path()->toString(true);
+
+                if (Str::startsWith($url, $indexUrl) !== true) {
+                    return 'The URL points outside of the site index URL';
+                }
+
+                // disallow directory traversal outside of the index URL
+                // TODO: the ../ sequences could be cleaned from the URL
+                //       before the check by normalizing the URL; then the
+                //       check above can also validate URLs with ../ sequences
+                if (
+                    Str::contains($url, '../') !== false ||
+                    Str::contains($url, '..\\') !== false
+                ) {
+                    return 'The ../ sequence is not allowed in relative URLs';
+                }
+            }
+
+            // no active CMS instance, always allow site-internal URLs
             return true;
         }
 
@@ -281,6 +304,15 @@ class Dom
             Str::contains($url, ':') === false ||
             Str::contains(Str::before($url, ':'), '/') === true
         ) {
+            // disallow directory traversal as we cannot know
+            // in which URL context the URL will be printed
+            if (
+                Str::contains($url, '../') !== false ||
+                Str::contains($url, '..\\') !== false
+            ) {
+                return 'The ../ sequence is not allowed in relative URLs';
+            }
+
             return true;
         }
 
