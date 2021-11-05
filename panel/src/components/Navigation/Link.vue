@@ -90,7 +90,7 @@ export default {
       }
 
       // don't route if it's an absolute link
-      if (this.href.indexOf("://") > 0) {
+      if (typeof this.href === "string" && this.href.indexOf("://") > 0) {
         return false;
       }
 
