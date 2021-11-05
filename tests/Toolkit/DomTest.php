@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\App;
+
 /**
  * @coversDefaultClass \Kirby\Toolkit\Dom
  */
@@ -308,11 +310,31 @@ class DomTest extends TestCase
             // allowed path
             ['/some/path', true],
 
+            // allowed path
+            ['some', true],
+
+            // allowed path
+            ['some/path', true],
+
+            // allowed path
+            ['some/path:test', true],
+
+            // allowed path
+            ['some/path:some/test', true],
+
+            // allowed path
+            ['./some/path', true],
+
             // allowed fragment
             ['#', true],
 
             // allowed fragment
             ['#test-fragment', true],
+
+            // allowed data uri when all are accepted
+            ['data:image/jpeg;base64,test', true, [
+                'allowedDataUris' => true
+            ]],
 
             // allowed data uri
             ['data:image/jpeg;base64,test', true, [
@@ -344,6 +366,21 @@ class DomTest extends TestCase
 
             // allowed phone number
             ['tel:+491122334455', true],
+
+            // forbidden protocol-relative URL
+            ['//test', 'Protocol-relative URLs are not allowed'],
+
+            // forbidden relative URL
+            ['../some/path', 'The ../ sequence is not allowed in relative URLs'],
+
+            // forbidden relative URL
+            ['..\some\path', 'The ../ sequence is not allowed in relative URLs'],
+
+            // forbidden relative URL
+            ['some/../../path', 'The ../ sequence is not allowed in relative URLs'],
+
+            // forbidden relative URL
+            ['some\..\..\path', 'The ../ sequence is not allowed in relative URLs'],
 
             // forbidden data uri
             ['data:image/jpeg;base64,test', 'Invalid data URI', [
@@ -380,10 +417,19 @@ class DomTest extends TestCase
             ['tel:491234+5678', 'Invalid telephone number'],
 
             // forbidden URL type
+            ['javascript:alert()', 'Unknown URL type'],
+
+            // forbidden URL type
             ['ftp:test', 'Unknown URL type'],
 
             // forbidden URL type
             ['ftp://test', 'Unknown URL type'],
+
+            // forbidden URL type
+            ['my-amazing-protocol:test', 'Unknown URL type'],
+
+            // forbidden URL type
+            ['my-amazing-protocol://test', 'Unknown URL type'],
         ];
     }
 
@@ -394,5 +440,49 @@ class DomTest extends TestCase
     public function testIsAllowedUrl(string $url, $expected, array $options = [])
     {
         $this->assertSame($expected, Dom::isAllowedUrl($url, $options));
+    }
+
+    public function urlProviderCms()
+    {
+        return [
+            // allowed URL with site at the domain root
+            ['https://getkirby.com', '/some/path', true],
+
+            // allowed URL with site at the domain root
+            ['/', '/some/path', true],
+
+            // allowed URL with site in a subfolder
+            ['https://getkirby.com/some', '/some/path', true],
+
+            // allowed URL with site in a subfolder
+            ['/some', '/some/path', true],
+
+            // disallowed URL with site in a subfolder
+            ['https://getkirby.com/site', '/some/path', 'The URL points outside of the site index URL'],
+
+            // disallowed URL with site in a subfolder
+            ['/site', '/some/path', 'The URL points outside of the site index URL'],
+
+            // disallowed URL with directory traversal
+            ['https://getkirby.com/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+
+            // disallowed URL with directory traversal
+            ['/site', '/site/../some/path', 'The ../ sequence is not allowed in relative URLs'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlProviderCms
+     * @covers ::isAllowedUrl
+     */
+    public function testIsAllowedUrlCms(string $indexUrl, string $url, $expected)
+    {
+        new App([
+            'urls' => [
+                'index' => $indexUrl
+            ]
+        ]);
+
+        $this->assertSame($expected, Dom::isAllowedUrl($url, []));
     }
 }

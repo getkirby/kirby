@@ -10,6 +10,7 @@ use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -281,8 +282,60 @@ class Dom
         }
 
         // allow URLs that point to fragments inside the file
-        // as well as site-internal URLs
-        if (in_array(mb_substr($url, 0, 1), ['#', '/']) === true) {
+        if (mb_substr($url, 0, 1) === '#') {
+            return true;
+        }
+
+        // disallow protocol-relative URLs
+        if (mb_substr($url, 0, 2) === '//') {
+            return 'Protocol-relative URLs are not allowed';
+        }
+
+        // allow site-internal URLs that didn't match the
+        // protocol-relative check above
+        if (mb_substr($url, 0, 1) === '/') {
+            // if a CMS instance is active, only allow the URL
+            // if it doesn't point outside of the index URL
+            if ($kirby = App::instance(null, true)) {
+                $indexUrl = $kirby->url('index', true)->path()->toString(true);
+
+                if (Str::startsWith($url, $indexUrl) !== true) {
+                    return 'The URL points outside of the site index URL';
+                }
+
+                // disallow directory traversal outside of the index URL
+                // TODO: the ../ sequences could be cleaned from the URL
+                //       before the check by normalizing the URL; then the
+                //       check above can also validate URLs with ../ sequences
+                if (
+                    Str::contains($url, '../') !== false ||
+                    Str::contains($url, '..\\') !== false
+                ) {
+                    return 'The ../ sequence is not allowed in relative URLs';
+                }
+            }
+
+            // no active CMS instance, always allow site-internal URLs
+            return true;
+        }
+
+        // allow relative URLs (= URLs without a scheme);
+        // this is either a URL without colon or one where the
+        // part before the colon is definitely no valid scheme;
+        // see https://url.spec.whatwg.org/#url-writing
+        if (
+            Str::contains($url, ':') === false ||
+            Str::contains(Str::before($url, ':'), '/') === true
+        ) {
+            // disallow directory traversal as we cannot know
+            // in which URL context the URL will be printed
+            if (
+                Str::contains($url, '../') !== false ||
+                Str::contains($url, '..\\') !== false
+            ) {
+                return 'The ../ sequence is not allowed in relative URLs';
+            }
+
             return true;
         }
 
@@ -323,7 +376,7 @@ class Dom
         if (Str::startsWith($url, 'mailto:') === true) {
             $address = Str::after($url, 'mailto:');
 
-            if (empty($address) || V::email($address) === true) {
+            if (empty($address) === true || V::email($address) === true) {
                 return true;
             }
 
@@ -334,7 +387,10 @@ class Dom
         if (Str::startsWith($url, 'tel:') === true) {
             $address = Str::after($url, 'tel:');
 
-            if (empty($address) || preg_match('!^[+]?[0-9]+$!', $address)) {
+            if (
+                empty($address) === true ||
+                preg_match('!^[+]?[0-9]+$!', $address) === 1
+            ) {
                 return true;
             }
 
