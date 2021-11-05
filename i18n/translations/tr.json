@@ -1,7 +1,7 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "İsminizi değiştirin",
+  "account.delete": "Hesabınızı silin",
+  "account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
 
   "add": "Ekle",
   "author": "Yazar",
