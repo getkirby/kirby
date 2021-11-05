@@ -1,10 +1,10 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
+  "account.changeName": "Ændre dit navn",
+  "account.delete": "Slet din konto",
   "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
 
   "add": "Ny",
-  "author": "Author",
+  "author": "Forfatter",
   "avatar": "Profilbillede",
   "back": "Tilbage",
   "cancel": "Annuller",
@@ -14,7 +14,7 @@
   "collapse": "Fold sammen",
   "collapse.all": "Fold alle sammen",
   "copy": "Kopier",
-  "copy.all": "Copy all",
+  "copy.all": "Kopier alle",
   "create": "Opret",
 
   "date": "Dato",
@@ -29,7 +29,7 @@
   "days.tue": "Tir",
   "days.wed": "Ons",
 
-  "debugging": "Debugging",
+  "debugging": "Fejlfinding",
 
   "delete": "Slet",
   "delete.all": "Slet alle",
@@ -49,7 +49,7 @@
   "email": "Email",
   "email.placeholder": "mail@eksempel.dk",
 
-  "environment": "Environment",
+  "environment": "Miljø",
 
   "error.access.code": "Ugyldig kode",
   "error.access.login": "Ugyldigt log ind",
@@ -102,7 +102,7 @@
   "error.language.code": "Indtast venligst en gyldig kode for sproget",
   "error.language.duplicate": "Sproget eksisterer allerede",
   "error.language.name": "Indtast venligst et gyldigt navn for sproget",
-  "error.language.notFound": "The language could not be found",
+  "error.language.notFound": "Sproget fandtes ikke",
 
   "error.layout.validation.block": "Der er fejl i blok {blockIndex} i layout {layoutIndex}",
   "error.layout.validation.settings": "Der er fejl i layout {index} indstillinger",
@@ -174,7 +174,7 @@
   "error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Forkert adgangskode",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
   "error.user.undefined": "Brugeren kunne ikke findes",
   "error.user.update.permission": "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
@@ -250,7 +250,7 @@
   "field.blocks.image.placeholder": "Vælg et billede",
   "field.blocks.image.ratio": "Størrelsesforhold",
   "field.blocks.image.url": "Billede URL",
-  "field.blocks.line.name": "Line",
+  "field.blocks.line.name": "Linje",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Tekst",
@@ -289,7 +289,7 @@
 
   "hide": "Skjul",
   "hour": "Time",
-  "import": "Import",
+  "import": "Importer",
   "insert": "Inds\u00e6t",
   "insert.after": "Indsæt efter",
   "insert.before": "Indsæt før",
@@ -390,11 +390,11 @@
   "more": "Mere",
   "name": "Navn",
   "next": "Næste",
-  "no": "no",
+  "no": "nej",
   "off": "Sluk",
   "on": "Tænd",
   "open": "Åben",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Åben i et nyt vindue",
   "options": "Indstillinger",
   "options.none": "Ingen muligheder",
 
@@ -435,8 +435,8 @@
   "pagination.page": "Side",
 
   "password": "Adgangskode",
-  "paste": "Paste",
-  "paste.after": "Paste after",
+  "paste": "Indsæt",
+  "paste.after": "Indsæt efter",
   "pixel": "Pixel",
   "plugins": "Plugins",
   "prev": "Forrige",
@@ -486,18 +486,18 @@
   "toolbar.button.heading.1": "Overskrift 1",
   "toolbar.button.heading.2": "Overskrift 2",
   "toolbar.button.heading.3": "Overskrift 3",
-  "toolbar.button.heading.4": "Heading 4",
-  "toolbar.button.heading.5": "Heading 5",
-  "toolbar.button.heading.6": "Heading 6",
+  "toolbar.button.heading.4": "Overskrift 4",
+  "toolbar.button.heading.5": "Overskrift 5",
+  "toolbar.button.heading.6": "Overskrift 6",
   "toolbar.button.italic": "Kursiv tekst",
   "toolbar.button.file": "Fil",
   "toolbar.button.file.select": "Vælg en fil",
   "toolbar.button.file.upload": "Upload en fil",
   "toolbar.button.link": "Link",
-  "toolbar.button.paragraph": "Paragraph",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.paragraph": "Afsnit",
+  "toolbar.button.strike": "Gennemstreg",
   "toolbar.button.ol": "Ordnet liste",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Understreg",
   "toolbar.button.ul": "Punktliste",
 
   "translation.author": "Kirby Team",
@@ -551,5 +551,5 @@
 
   "welcome": "Velkommen",
   "year": "År",
-  "yes": "yes"
+  "yes": "ja"
 }

@@ -1,7 +1,7 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "Modifier votre nom",
+  "account.delete": "Supprimer votre compte",
+  "account.delete.confirm": "Voulez-vous vraiment supprimer votre compte ? Vous serez déconnecté immédiatement. Votre compte ne pourra pas être récupéré.",
 
   "add": "Ajouter",
   "author": "Auteur",
