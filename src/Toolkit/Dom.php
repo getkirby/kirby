@@ -353,7 +353,7 @@ class Dom
         if (Str::startsWith($url, 'mailto:') === true) {
             $address = Str::after($url, 'mailto:');
 
-            if (empty($address) || V::email($address) === true) {
+            if (empty($address) === true || V::email($address) === true) {
                 return true;
             }
 
@@ -364,7 +364,10 @@ class Dom
         if (Str::startsWith($url, 'tel:') === true) {
             $address = Str::after($url, 'tel:');
 
-            if (empty($address) || preg_match('!^[+]?[0-9]+$!', $address)) {
+            if (
+                empty($address) === true ||
+                preg_match('!^[+]?[0-9]+$!', $address) === 1
+            ) {
                 return true;
             }
 

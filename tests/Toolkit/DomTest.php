@@ -42,6 +42,11 @@ class DomTest extends TestCase
             // allowed fragment
             ['#test-fragment', true],
 
+            // allowed data uri when all are accepted
+            ['data:image/jpeg;base64,test', true, [
+                'allowedDataUris' => true
+            ]],
+
             // allowed data uri
             ['data:image/jpeg;base64,test', true, [
                 'allowedDataUris' => [
@@ -72,6 +77,9 @@ class DomTest extends TestCase
 
             // allowed phone number
             ['tel:+491122334455', true],
+
+            // forbidden protocol-relative URL
+            ['//test', 'Protocol-relative URLs are not allowed'],
 
             // forbidden relative URL
             ['../some/path', 'The ../ sequence is not allowed in relative URLs'],
@@ -133,9 +141,6 @@ class DomTest extends TestCase
 
             // forbidden URL type
             ['my-amazing-protocol://test', 'Unknown URL type'],
-
-            // forbidden URL type
-            ['//test', 'Protocol-relative URLs are not allowed'],
         ];
     }
 
