@@ -77,8 +77,8 @@
 
       <section v-if="plugins.length" class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>
-            <a href="https://getkirby.com/plugins">{{ $t('plugins') }}</a>
+          <k-headline link="https://getkirby.com/plugins">
+            {{ $t('plugins') }}
           </k-headline>
         </header>
         <table class="k-system-plugins">

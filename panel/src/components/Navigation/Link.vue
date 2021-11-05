@@ -69,23 +69,28 @@ export default {
   },
   methods: {
     isRoutable(e) {
-      // don't redirect with control keys
+      // don't route with control keys
       if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
         return false;
       }
 
-      // don't redirect when preventDefault called
+      // don't route when preventDefault called
       if (e.defaultPrevented) {
         return false;
       }
 
-      // don't redirect on right click
+      // don't route on right click
       if (e.button !== undefined && e.button !== 0) {
         return false;
       }
 
-      // don't redirect if a target is set
+      // don't route if a target is set
       if (this.target) {
+        return false;
+      }
+
+      // don't route if it's an absolute link
+      if (this.href.indexOf("://") > 0) {
         return false;
       }
 
