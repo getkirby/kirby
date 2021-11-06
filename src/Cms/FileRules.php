@@ -189,7 +189,11 @@ class FileRules
             ]);
         }
 
-        if (Str::contains($extension, 'php') || Str::contains($extension, 'phar')) {
+        if (
+            Str::contains($extension, 'php') ||
+            Str::contains($extension, 'phar') ||
+            Str::contains($extension, 'phtml')
+        ) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
