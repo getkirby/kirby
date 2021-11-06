@@ -182,7 +182,7 @@ class FileRules
         // make it easier to compare the extension
         $extension = strtolower($extension);
 
-        if (empty($extension)) {
+        if (empty($extension) === true) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.missing',
                 'data' => ['filename' => $file->filename()]
@@ -190,9 +190,9 @@ class FileRules
         }
 
         if (
-            Str::contains($extension, 'php') ||
-            Str::contains($extension, 'phar') ||
-            Str::contains($extension, 'phtml')
+            Str::contains($extension, 'php') !== false ||
+            Str::contains($extension, 'phar') !== false ||
+            Str::contains($extension, 'phtml') !== false
         ) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
@@ -200,14 +200,14 @@ class FileRules
             ]);
         }
 
-        if (Str::contains($extension, 'htm')) {
+        if (Str::contains($extension, 'htm') !== false) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'HTML']
             ]);
         }
 
-        if (V::in($extension, ['exe', App::instance()->contentExtension()])) {
+        if (V::in($extension, ['exe', App::instance()->contentExtension()]) !== false) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.forbidden',
                 'data' => ['extension' => $extension]
