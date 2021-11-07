@@ -43,7 +43,7 @@
             :layout="options.layout"
             :data-invalid="isInvalid"
             icon="image"
-          v-on="{ click: add ? upload : undefined }"
+            v-on="{ click: add ? upload : undefined }"
           >
             {{ options.empty || $t('files.empty') }}
           </k-empty>
