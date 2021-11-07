@@ -34,7 +34,7 @@ return [
             }
 
             if ($parent === null) {
-                return $this->model;
+                $parent = $this->model;
             }
 
             return $parent;
