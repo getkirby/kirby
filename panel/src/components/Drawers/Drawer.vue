@@ -9,10 +9,10 @@
       :data-id="id"
       :data-nested="nested"
       class="k-drawer"
-      @mousedown="click = true"
+      @mousedown.stop="mousedown(true)"
       @mouseup="mouseup"
     >
-      <div class="k-drawer-box" @mousedown.stop="click = false">
+      <div class="k-drawer-box" @mousedown.stop="mousedown(false)">
         <header class="k-drawer-header">
           <h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
             <k-icon :type="icon" /> {{ title }}
@@ -111,6 +111,13 @@ export default {
       }
 
       this.click = false;
+    },
+    mousedown(click = false) {
+      this.click = click;
+
+      if (this.click === true) {
+        this.$store.dispatch("drawers/close");
+      }
     },
     onClose() {
       this.$store.dispatch("drawers/close", this._uid);
