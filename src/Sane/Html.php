@@ -77,6 +77,7 @@ class Html extends DomHandler
         'i'          => true,
         'ins'        => true,
         'li'         => true,
+        'small'      => true,
         'span'       => true,
         'strong'     => true,
         'sub'        => true,
@@ -84,6 +85,7 @@ class Html extends DomHandler
         'ol'         => true,
         'p'          => true,
         'pre'        => true,
+        's'          => true,
         'u'          => true,
         'ul'         => true,
     ];
