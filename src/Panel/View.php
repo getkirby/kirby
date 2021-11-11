@@ -250,6 +250,7 @@ class View
         return [
             'code'      => $code,
             'component' => 'k-error-view',
+            'error'     => $message,
             'props'     => [
                 'error'  => $message,
                 'layout' => Panel::hasAccess(kirby()->user()) ? 'inside' : 'outside'

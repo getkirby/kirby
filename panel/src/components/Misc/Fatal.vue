@@ -4,7 +4,7 @@
       <k-bar>
         <template #left>
           <k-headline>
-            The JSON response could not be parsed:
+            The JSON response could not be parsed
           </k-headline>
         </template>
         <template #right>
@@ -25,25 +25,17 @@
  * @internal
  */
 export default {
-  computed: {
-    fatal() {
-      return this.$store.state.fatal;
-    }
+  props: {
+    html: String
   },
-  watch: {
-    fatal(html) {
-      if (html !== null) {
-        this.$nextTick(() => {
-          try {
-            let doc = this.$refs.iframe.contentWindow.document;
-            doc.open();
-            doc.write(html);
-            doc.close();
-          } catch (e) {
-            console.error(e);
-          }
-        })
-      }
+  mounted() {
+    try {
+      let doc = this.$refs.iframe.contentWindow.document;
+      doc.open();
+      doc.write(this.html);
+      doc.close();
+    } catch (e) {
+      console.error(e);
     }
   }
 }
@@ -55,7 +47,7 @@ export default {
   inset: 0;
   background: var(--color-backdrop);
   display: flex;
-  z-index: var(--z-dialog);
+  z-index: var(--z-fatal);
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
@@ -65,18 +57,23 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--color-white);
-  padding: .75rem 1.5rem 1.5rem;
+  color: var(--color-black);
+  background: var(--color-red-400);
   box-shadow: var(--shadow-xl);
   border-radius: var(--rounded);
 }
-.k-fatal-box .k-bar {
-  margin-bottom: var(--spacing-3);
+.k-fatal-box .k-headline {
+  line-height: 1;
+  font-size: var(--text-sm);
+  padding: .75rem;
+}
+.k-fatal-box .k-button {
+  padding: .75rem;
 }
 .k-fatal-iframe {
   border: 0;
   width: 100%;
   flex-grow: 1;
-  border: 2px solid var(--color-border);
+  background: var(--color-white);
 }
 </style>

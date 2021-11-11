@@ -26,7 +26,7 @@
 
 import clone from "../helpers/clone";
 import { merge } from "../helpers/object";
-import { toJson } from "../api/request";
+import store from "../store/store";
 
 export default {
   options: {},
@@ -96,8 +96,21 @@ export default {
    * @returns {object}
    */
   async go(url, options) {
-    const json = await this.request(url, options);
-    return this.setState(json, options);
+    try {
+      const response = await this.request(url, options);
+
+      // the request could not be parsed
+      // the fatal view is taking over
+      if (response === false) {
+        return false;
+      }
+
+      return this.setState(response, options);
+    } catch (e) {
+      if (options?.silent !== true) {
+        throw e;
+      }
+    }
   },
 
   /**
@@ -162,6 +175,7 @@ export default {
       only: [],
       query: {},
       silent: false,
+      type: "$view",
       ...options
     };
 
@@ -187,18 +201,48 @@ export default {
         }
       });
 
-      let json = await toJson(response);
+      const text = await response.text();
+      let json;
 
-      // add exisiting data to partial requests
-      if (only.length) {
-        json = merge(this.state, json);
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        store.dispatch("fatal", {
+          html: text,
+          silent: options.silent
+        });
+        return false;
       }
 
-      return json;
+      // the return type does not match the expected type
+      if (!json[options.type]) {
+        throw Error(`The ${options.type} could not be loaded`);
+      }
+
+      // request-specific data
+      const data = json[options.type];
+
+      // the response contains a custom error message
+      if (data.error) {
+        throw Error(data.error);
+      }
+
+      // views add the entire response object to the state
+      if (options.type === "$view") {
+        // add exisiting data to partial view requests
+        if (only.length) {
+          return merge(this.state, json);
+        }
+
+        return json;
+      }
+
+      // dialogs, searches and dropdowns only need what is
+      // contained in their request data (i.e. $dialog, $dropdown)
+      return data;
     } finally {
       this.options.onFinish(options);
     }
-
   },
 
   /**
@@ -208,6 +252,10 @@ export default {
    * @param {object} options
    */
   async setState(state, options = {}) {
+    if (typeof state !== "object") {
+      return false;
+    }
+
     // clone existing data
     this.state = clone(state);
 
