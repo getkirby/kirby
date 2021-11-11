@@ -15,7 +15,7 @@ export default new Vuex.Store({
     dialog: null,
     drag: null,
     fatal: false,
-    isLoading: false,
+    isLoading: false
   },
   mutations: {
     SET_DIALOG(state, dialog) {
@@ -64,6 +64,10 @@ export default new Vuex.Store({
       context.commit("SET_LOADING", loading === true);
     },
     navigate(context) {
+      // always make sure that scrolling is activated again
+      document.body.style.position = "static";
+      document.body.style.top = 0;
+
       context.dispatch("dialog", null);
       context.dispatch("drawers/close");
     },

@@ -51,25 +51,29 @@ export default {
       scrollTop: 0
     };
   },
+  destroyed() {
+    // make sure that the close events are properly triggered
+    // if a dialog has not been closed by the close method
+    this.close(true);
+  },
   methods: {
-    close() {
+    close(force = false) {
       // it makes it run once
       if (this.isOpen === false) {
         return;
       }
 
       this.isOpen = false;
-      this.$emit("close");
 
       // restore scrolling
-      if (document.querySelectorAll('.k-overlay').length === 1) {
-        document.body.style.position = "static";
-        document.body.style.top = 0;
+      if (force === true || document.querySelectorAll('.k-overlay').length === 1) {
+        this.restoreOverflow();
         this.restoreScrollPosition();
       }
 
       // unbind events
       this.$events.$off("keydown.esc", this.close);
+      this.$emit("close");
     },
     focus() {
       let target = this.$refs.overlay.querySelector(`
@@ -130,6 +134,10 @@ export default {
 
         this.$emit("ready");
       }, 1)
+    },
+    restoreOverflow() {
+      document.body.style.position = "static";
+      document.body.style.top = 0;
     },
     restoreScrollPosition() {
       document.documentElement.scrollTop = this.scrollTop;

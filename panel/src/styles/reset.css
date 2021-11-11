@@ -18,13 +18,13 @@ noscript {
 html {
   font-family: var(--font-sans);
   background: var(--color-background);
+  overflow-y: scroll;
 }
 
 html,
 body {
   color: var(--color-gray-900);
   min-height: 100vh;
-  overflow-y: scroll;
 }
 
 a {
