@@ -1,6 +1,6 @@
 <template>
   <form class="k-login-form k-login-code-form" @submit.prevent="login">
-    <h1 class="k-offscreen">
+    <h1 class="sr-only">
       {{ $t('login') }}
     </h1>
 

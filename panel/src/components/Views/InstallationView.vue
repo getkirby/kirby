@@ -11,7 +11,7 @@
 
       <!-- ready to be installed -->
       <form v-else-if="isReady" @submit.prevent="install">
-        <h1 class="k-offscreen">
+        <h1 class="sr-only">
           {{ $t("installation") }}
         </h1>
         <k-fieldset v-model="user" :fields="fields" :novalidate="true" />
