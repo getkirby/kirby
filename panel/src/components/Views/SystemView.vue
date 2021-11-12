@@ -17,9 +17,9 @@
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <button v-else class="k-system-warning" @click="$dialog('registration')">
+                <k-button v-else class="k-system-warning" @click="$dialog('registration')">
                   {{ $t('license.unregistered') }}
-                </button>
+                </k-button>
               </dd>
             </dl>
           </li>
@@ -27,7 +27,7 @@
             <dl>
               <dt>{{ $t('version') }}</dt>
               <dd dir="ltr">
-                <a :href="'https://github.com/getkirby/kirby/releases/tag/' + version">{{ version }}</a>
+                <k-link :to="'https://github.com/getkirby/kirby/releases/tag/' + version">{{ version }}</k-link>
               </dd>
             </dl>
           </li>
@@ -98,9 +98,9 @@
           </tr>
           <tr v-for="plugin in plugins" :key="plugin.name">
             <td>
-              <a v-if="plugin.link" :href="plugin.link">
+              <k-link v-if="plugin.link" :to="plugin.link">
                 {{ plugin.name }}
-              </a>
+              </k-link>
               <template v-else>
                 {{ plugin.name }}
               </template>
@@ -170,10 +170,10 @@ export default {
 .k-system-warning {
   color: var(--color-negative);
   font-weight: var(--font-bold);
+  display: inline-flex;
 }
-.k-system-info-box dd button {
-  text-align: left;
-  font-size: var(--text-sm);
+.k-system-warning .k-button-text {
+  opacity: 1;
 }
 
 .k-system-plugins {
