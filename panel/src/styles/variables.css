@@ -135,6 +135,7 @@
   --color-text: var(--color-gray-900);
   --color-text-light: var(--color-gray-600);
 
+  --z-offline: 1200;
   --z-fatal: 1100;
   --z-loader: 1000;
   --z-notification: 900;
