@@ -34,9 +34,10 @@ Vue.use(Portal);
 Vue.use(Vuelidate);
 
 // Global styles
-import "./styles/variables.css"
-import "./styles/reset.css"
-import "./styles/utilities.css"
+import "./styles/variables.css";
+import "./styles/reset.css";
+import "./styles/animations.css";
+import "./styles/utilities.css";
 
 new Vue({
   store,

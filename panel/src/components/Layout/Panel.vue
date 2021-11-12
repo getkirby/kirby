@@ -94,34 +94,11 @@ export default {
   justify-content: center;
   color: var(--color-white);
 }
-.k-offscreen {
-  clip-path: inset(100%);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
 .k-panel[data-loading] {
   animation: LoadingCursor .5s;
 }
 .k-panel[data-loading]::after,
 .k-panel[data-dragging] {
   user-select: none;
-}
-@keyframes LoadingCursor {
-  100% { cursor: progress; }
-}
-@keyframes Spin {
-  100% { transform: rotate(360deg); }
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>
