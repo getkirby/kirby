@@ -23,8 +23,8 @@ html {
 html,
 body {
   color: var(--color-gray-900);
-  min-height: 100vh;
-  overflow-y: scroll;
+  height: 100%;
+  overflow: hidden;
 }
 
 a {
@@ -41,9 +41,3 @@ b {
   font-weight: var(--font-bold);
 }
 
-.k-panel {
-  min-height: 100vh;
-}
-.k-panel:focus {
-  outline: 0;
-}
