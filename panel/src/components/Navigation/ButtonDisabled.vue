@@ -33,6 +33,7 @@ export default {
 <style>
 .k-button[data-disabled] {
   opacity: .5;
+  pointer-events: none;
   cursor: default;
 }
 .k-card-options > .k-button[data-disabled] {
