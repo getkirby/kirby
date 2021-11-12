@@ -111,6 +111,8 @@
   "error.license.email": "Masukkan surel yang valid",
   "error.license.verification": "Lisensi tidak dapat diverifikasi",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
   "error.page.changeStatus.incomplete": "Halaman memiliki kesalahan dan tidak dapat diterbitkan",
   "error.page.changeStatus.permission": "Status halaman ini tidak dapat diubah",

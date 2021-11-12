@@ -111,6 +111,8 @@
   "error.license.email": "Prosím, zadajte platnú e-mailovú adresu",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
   "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemôže byť zverejnená",
   "error.page.changeStatus.permission": "Status tejto stránky nemôže byť zmenený",

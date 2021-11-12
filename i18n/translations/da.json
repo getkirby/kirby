@@ -111,6 +111,8 @@
   "error.license.email": "Indtast venligst en gyldig email adresse",
   "error.license.verification": "Licensen kunne ikke verificeres",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Du kan ikke ændre URL-endelse for \"{slug}\"",
   "error.page.changeStatus.incomplete": "Siden indeholder fejl og kan derfor ikke udgives",
   "error.page.changeStatus.permission": "Status for denne side kan ikke ændres",

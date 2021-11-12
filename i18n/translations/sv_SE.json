@@ -111,6 +111,8 @@
   "error.license.email": "Ange en giltig e-postadress",
   "error.license.verification": "Licensen kunde inte verifieras",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
   "error.page.changeStatus.incomplete": "Sidan innehåller fel och kan inte publiceras",
   "error.page.changeStatus.permission": "Statusen för denna sida kan inte ändras",

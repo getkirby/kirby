@@ -111,6 +111,8 @@
   "error.license.email": "Prašome įrašyti teisingą el. pašto adresą",
   "error.license.verification": "Nepavyko patikrinti licenzijos",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Neturite teisės pakeisti \"{slug}\" URL",
   "error.page.changeStatus.incomplete": "Puslapis turi klaidų ir negali būti paskelbtas",
   "error.page.changeStatus.permission": "Šiam puslapiui negalima pakeisti statuso",

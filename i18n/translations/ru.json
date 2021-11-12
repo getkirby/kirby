@@ -111,6 +111,8 @@
   "error.license.email": "Пожалуйста, введите правильный Email",
   "error.license.verification": "Лицензия не подтверждена",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
   "error.page.changeStatus.incomplete": "На странице есть ошибки и поэтому ее нельзя опубликовать",
   "error.page.changeStatus.permission": "Невозможно поменять статус для этой страницы",
