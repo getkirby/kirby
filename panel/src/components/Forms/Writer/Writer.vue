@@ -424,6 +424,7 @@ export default {
   line-height: 2em;
   overflow-x: auto;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   white-space: pre;
 }
 .k-writer-code code {

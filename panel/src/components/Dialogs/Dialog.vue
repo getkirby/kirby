@@ -18,7 +18,7 @@
         <k-button icon="cancel" @click="notification = null" />
       </div>
 
-      <div class="k-dialog-body">
+      <div class="k-dialog-body scroll-y-auto">
         <slot />
       </div>
 
@@ -322,8 +322,6 @@ export default {
 
 .k-dialog-body {
   padding: 1.5rem;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .k-dialog-body .k-fieldset {

@@ -48,7 +48,7 @@
             />
           </nav>
         </header>
-        <div class="k-drawer-body">
+        <div class="k-drawer-body scroll-y-auto">
           <slot />
         </div>
       </div>
@@ -251,7 +251,6 @@ export default {
 .k-drawer-body {
   padding: 1.5rem;
   flex-grow: 1;
-  overflow-y: auto;
   background: var(--color-background);
 }
 

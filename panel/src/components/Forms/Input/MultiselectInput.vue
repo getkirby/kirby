@@ -43,7 +43,7 @@
           >
         </k-dropdown-item>
 
-        <div class="k-multiselect-options">
+        <div class="k-multiselect-options scroll-y-auto">
           <k-dropdown-item
             v-for="option in visible"
             :key="option.value"
@@ -373,7 +373,6 @@ export default {
 .k-multiselect-options {
   position: relative;
   max-height: 275px;
-  overflow-y: auto;
   padding: .5rem 0;
 }
 
