@@ -111,6 +111,8 @@
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
   "error.license.verification": "라이선스 키가 올바르지 않습니다.",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "고유 주소({slug})를 변경할 권한이 없습니다.",
   "error.page.changeStatus.incomplete": "페이지를 공개할 수 없습니다.",
   "error.page.changeStatus.permission": "페이지의 상태를 변경할 수 없습니다.",

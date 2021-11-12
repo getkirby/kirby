@@ -111,6 +111,8 @@
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
   "error.license.verification": "De licentie kon niet worden geverifieerd. ",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Je kunt de URL van deze pagina niet wijzigen",
   "error.page.changeStatus.incomplete": "Deze pagina bevat fouten en kan niet worden gepubliceerd",
   "error.page.changeStatus.permission": "De status van deze pagina kan niet worden gewijzigd",

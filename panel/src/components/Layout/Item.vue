@@ -267,7 +267,7 @@ export default {
   margin-inline-start: -2px;
 }
 .k-item:not(.k-list-item) .k-item-content {
-  padding: .5rem .75rem;
+  padding: .625rem .75rem;
 }
 
 /** Cardlet Item **/
@@ -307,11 +307,14 @@ export default {
 }
 .k-cards-item .k-item-content {
   overflow: hidden;
+  align-self: center;
+}
+.k-cards-item[data-has-info] .k-item-content {
+  align-self: flex-start;
 }
 .k-cards-item .k-item-title,
 .k-cards-item .k-item-info {
   white-space: normal;
-  word-wrap: break-word;
 }
 .k-cards-item .k-item-info {
   padding-top: .125rem;
@@ -321,7 +324,7 @@ export default {
   padding-inline-start: .7rem;
 }
 .k-cards-item:not([data-has-label]) {
-  grid-template-columns: auto auto;
+  grid-template-columns: 1fr auto;
   grid-template-rows: auto 1fr;
   grid-template-areas:
     "figure figure"

@@ -1,5 +1,7 @@
 <template>
-  <k-icon class="k-loader" type="loader" />
+  <span class="k-loader">
+    <k-icon class="k-loader-icon" type="loader" />
+  </span>
 </template>
 
 <script>
@@ -16,7 +18,7 @@ export default {}
 .k-loader {
   z-index: 1;
 }
-.k-loader svg {
+.k-loader-icon {
   animation: Spin .9s linear infinite;
 }
 </style>

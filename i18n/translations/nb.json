@@ -111,6 +111,8 @@
   "error.license.email": "Vennligst skriv inn en gyldig e-postadresse",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Du kan ikke endre URLen for denne siden",
   "error.page.changeStatus.incomplete": "Siden har feil og kan ikke publiseres",
   "error.page.changeStatus.permission": "Sidens status kan ikke endres",

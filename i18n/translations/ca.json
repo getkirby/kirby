@@ -111,6 +111,8 @@
   "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
   "error.license.verification": "No s’ha pogut verificar la llicència",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
   "error.page.changeStatus.incomplete": "La pàgina té errors i no es pot publicar",
   "error.page.changeStatus.permission": "No es pot canviar l'estat d'aquesta pàgina",

@@ -111,6 +111,8 @@
   "error.license.email": "Wprowadź poprawny adres email",
   "error.license.verification": "Nie udało się zweryfikować licencji",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Nie możesz zmienić końcówki adresu URL w \"{slug}\"",
   "error.page.changeStatus.incomplete": "Strona zawiera błędy i nie można jej opublikować",
   "error.page.changeStatus.permission": "Status tej strony nie może zostać zmieniony",

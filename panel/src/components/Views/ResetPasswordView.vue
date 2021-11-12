@@ -8,7 +8,7 @@
         @submit="submit"
       >
         <template #header>
-          <h1 class="k-offscreen">
+          <h1 class="sr-only">
             {{ $t('view.resetPassword') }}
           </h1>
 

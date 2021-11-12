@@ -111,6 +111,8 @@
   "error.license.email": "لطفا ایمیل صحیحی وارد کنید",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "شما امکان تغییر پسوند Url صفحه «{slug}» را ندارید",
   "error.page.changeStatus.incomplete": "صفحه حاوی خطا است و قابل انتشار نیست",
   "error.page.changeStatus.permission": "وضعیت صفحه جاری قابل تغییر نیست",

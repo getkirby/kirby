@@ -111,6 +111,8 @@
   "error.license.email": "Kérlek adj meg egy valós email-címet",
   "error.license.verification": "A licensz nem ellenőrizhető",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
   "error.page.changeStatus.incomplete": "Az oldal hibákat tartalmaz és nem publikálható",
   "error.page.changeStatus.permission": "Az oldal státusza nem változtatható meg",
