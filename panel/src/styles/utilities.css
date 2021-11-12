@@ -48,3 +48,27 @@
   --theme-light: var(--color-focus-light);
   --theme-bg: var(--color-blue-200);
 }
+
+.scroll-x,
+.scroll-x-auto,
+.scroll-y,
+.scroll-y-auto {
+  -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, 0, 0);
+}
+.scroll-x {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.scroll-x-auto {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.scroll-y {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.scroll-y-auto {
+  overflow-x: hidden;
+  overflow-y: auto;
+}

@@ -37,7 +37,9 @@
         @submit="$emit('submit', $event)"
       />
     </k-view>
-    <k-form-buttons :lock="lock" />
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 

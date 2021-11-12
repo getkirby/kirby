@@ -8,9 +8,10 @@
         :view="$view"
       />
     </header>
-    <main class="k-panel-view">
+    <main class="k-panel-view scroll-y">
       <slot />
     </main>
+    <slot name="footer" />
   </k-panel>
 </template>
 
@@ -21,14 +22,21 @@ export default {
 </script>
 
 <style>
+.k-panel-inside {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+.k-panel-inside:focus {
+  outline: 0;
+}
 .k-panel-header {
-  position: fixed;
-  top: 0;
-  inset-inline: 0;
   z-index: var(--z-navigation);
+  flex-shrink: 0;
 }
 .k-panel-view {
-  padding-top: 2.5rem;
+  flex-grow: 1;
   padding-bottom: 6rem;
 }
 </style>

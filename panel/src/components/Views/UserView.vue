@@ -34,11 +34,9 @@
               :options="avatarOptions"
             />
           </k-dropdown>
-
           <k-button-group :buttons="buttons" />
         </k-view>
       </div>
-
       <k-view>
         <k-header
           :editable="permissions.changeName && !isLocked"
@@ -50,7 +48,6 @@
           <template v-else>
             {{ model.name }}
           </template>
-
           <template #left>
             <k-button-group>
               <k-dropdown class="k-user-view-options">
@@ -68,7 +65,6 @@
               <k-languages-dropdown />
             </k-button-group>
           </template>
-
           <template #right>
             <k-prev-next
               v-if="!model.account"
@@ -77,7 +73,6 @@
             />
           </template>
         </k-header>
-
         <k-sections
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
@@ -85,7 +80,6 @@
           :parent="id"
           :tab="tab"
         />
-
         <k-upload
           ref="upload"
           :url="uploadApi"
@@ -94,8 +88,10 @@
           @success="uploadedAvatar"
         />
       </k-view>
-      <k-form-buttons :lock="lock" />
     </div>
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 

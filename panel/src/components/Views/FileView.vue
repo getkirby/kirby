@@ -15,7 +15,6 @@
           @edit="$dialog(id + '/changeName')"
         >
           {{ model.filename }}
-
           <template #left>
             <k-button-group>
               <k-button
@@ -43,7 +42,6 @@
               <k-languages-dropdown />
             </k-button-group>
           </template>
-
           <template #right>
             <k-prev-next
               :prev="prev"
@@ -51,7 +49,6 @@
             />
           </template>
         </k-header>
-
         <k-sections
           :blueprint="blueprint"
           :empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
@@ -59,14 +56,15 @@
           :parent="id"
           :tab="tab"
         />
-
         <k-upload
           ref="upload"
           @success="onUpload"
         />
       </k-view>
-      <k-form-buttons :lock="lock" />
     </div>
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 

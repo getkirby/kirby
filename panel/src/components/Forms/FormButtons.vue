@@ -283,14 +283,8 @@ export default {
 </script>
 
 <style>
-.k-form-buttons {
-  position: fixed;
-  bottom: 0;
-  inset-inline: 0;
-  z-index: var(--z-navigation);
-}
 .k-form-buttons[data-theme] {
-    background: var(--theme-light);
+  background: var(--theme-light);
 }
 .k-form-buttons .k-view {
   display: flex;

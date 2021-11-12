@@ -49,7 +49,6 @@
             <k-languages-dropdown />
           </k-button-group>
         </template>
-
         <template #right>
           <k-prev-next
             v-if="model.id"
@@ -58,7 +57,6 @@
           />
         </template>
       </k-header>
-
       <k-sections
         :blueprint="blueprint"
         :empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
@@ -67,7 +65,9 @@
         :tab="tab"
       />
     </k-view>
-    <k-form-buttons :lock="lock" />
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 
