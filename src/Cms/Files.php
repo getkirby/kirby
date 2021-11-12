@@ -35,7 +35,7 @@ class Files extends Collection
      *
      * @param \Kirby\Cms\Files|\Kirby\Cms\File|string $object
      * @return $this
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
      */
     public function add($object)
     {

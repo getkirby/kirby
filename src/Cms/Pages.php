@@ -50,7 +50,7 @@ class Pages extends Collection
      *
      * @param \Kirby\Cms\Pages|\Kirby\Cms\Page|string $object
      * @return $this
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
      */
     public function add($object)
     {
