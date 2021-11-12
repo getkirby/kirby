@@ -27,7 +27,9 @@
             <dl>
               <dt>{{ $t('version') }}</dt>
               <dd dir="ltr">
-                <k-link :to="'https://github.com/getkirby/kirby/releases/tag/' + version">{{ version }}</k-link>
+                <k-link :to="'https://github.com/getkirby/kirby/releases/tag/' + version">
+                  {{ version }}
+                </k-link>
               </dd>
             </dl>
           </li>
