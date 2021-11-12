@@ -82,7 +82,6 @@ export default {
      * blocked overflow style
      */
     navigate() {
-      document.documentElement.style.overflow = "visible";
       this.$store.dispatch("navigate");
     },
 

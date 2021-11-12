@@ -62,9 +62,6 @@ export default {
       this.$emit("close");
       this.restoreScrollPosition();
 
-      // enable scrolling of background
-      document.documentElement.style.overflow = "visible";
-
       // unbind events
       this.$events.$off("keydown.esc", this.close);
     },
@@ -117,9 +114,6 @@ export default {
 
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
-
-        // prevent scrolling of background
-        document.documentElement.style.overflow = "hidden";
 
         this.$emit("ready");
       }, 1)
