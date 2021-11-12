@@ -17,16 +17,6 @@
 
   <title>Kirby Panel</title>
 
-  <?php foreach ($assets['css'] as $css): ?>
-  <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $css ?>">
-  <?php endforeach ?>
-
-  <?php foreach ($assets['icons'] as $rel => $icon): ?>
-  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= url($icon['url']) ?>" type="<?= $icon['type'] ?>">
-  <?php endforeach ?>
-
-  <base href="<?= $panelUrl ?>">
-
   <script>
     if (
         !window.CSS ||
@@ -36,6 +26,16 @@
       window.location.href = "<?= $panelUrl ?>browser";
     }
   </script>
+
+  <?php foreach ($assets['css'] as $css): ?>
+  <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $css ?>">
+  <?php endforeach ?>
+
+  <?php foreach ($assets['icons'] as $rel => $icon): ?>
+  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= url($icon['url']) ?>" type="<?= $icon['type'] ?>">
+  <?php endforeach ?>
+
+  <base href="<?= $panelUrl ?>">
 </head>
 <body>
   <div id="app"></div>
