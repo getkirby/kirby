@@ -92,7 +92,7 @@ class Dom
 
             // remove the injected XML declaration again
             $pis = $this->query('//processing-instruction()');
-            foreach (iterator_to_array($pis) as $pi) {
+            foreach (iterator_to_array($pis, false) as $pi) {
                 if ($pi->data === $xmlDeclaration) {
                     static::remove($pi);
                 }
@@ -585,7 +585,7 @@ class Dom
         // validate the doctype;
         // convert the `DOMNodeList` to an array first, otherwise removing
         // nodes would shift the list and make subsequent operations fail
-        foreach (iterator_to_array($this->doc->childNodes) as $child) {
+        foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
             if (is_a($child, 'DOMDocumentType') === true) {
                 $this->sanitizeDoctype($child, $options, $errors);
             }
@@ -593,13 +593,13 @@ class Dom
 
         // validate all processing instructions like <?xml-stylesheet
         $pis = $this->query('//processing-instruction()');
-        foreach (iterator_to_array($pis) as $pi) {
+        foreach (iterator_to_array($pis, false) as $pi) {
             $this->sanitizePI($pi, $options, $errors);
         }
 
         // validate all elements in the document tree
         $elements = $this->doc->getElementsByTagName('*');
-        foreach (iterator_to_array($elements) as $element) {
+        foreach (iterator_to_array($elements, false) as $element) {
             $this->sanitizeElement($element, $options, $errors);
         }
 
@@ -859,7 +859,7 @@ class Dom
         if ($element->hasAttributes()) {
             // convert the `DOMNodeList` to an array first, otherwise removing
             // attributes would shift the list and make subsequent operations fail
-            foreach (iterator_to_array($element->attributes) as $attr) {
+            foreach (iterator_to_array($element->attributes, false) as $attr) {
                 $this->sanitizeAttr($attr, $options, $errors);
 
                 // custom check (if the attribute is still in the document)
