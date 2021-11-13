@@ -841,9 +841,8 @@ class Dom
         // check if the tag is not allowlisted; keep children
         if ($options['allowedTags'] !== true) {
             $listedName = static::listContainsName(array_keys($options['allowedTags']), $element, $options);
-            $isAllowed  = ($listedName === false) ? false : $options['allowedTags'][$listedName];
 
-            if ($isAllowed === false) {
+            if ($listedName === false) {
                 $errors[] = new InvalidArgumentException(
                     'The "' . $name . '" element (line ' .
                     $element->getLineNo() . ') is not allowed, ' .
