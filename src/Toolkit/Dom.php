@@ -407,6 +407,8 @@ class Dom
      * work at all.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public static function isSupported(): bool
     {
