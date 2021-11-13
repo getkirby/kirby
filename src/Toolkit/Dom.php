@@ -199,7 +199,8 @@ class Dom
 
         // configuration per tag name
         $tagName            = $attr->ownerElement->nodeName;
-        $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
+        $listedTagName      = static::listContainsName(array_keys($options['allowedTags']), $attr->ownerElement, $options);
+        $allowedAttrsForTag = $listedTagName ? ($allowedTags[$listedTagName] ?? true) : true;
 
         // the element allows all global attributes
         if ($allowedAttrsForTag === true) {
