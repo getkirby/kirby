@@ -16,7 +16,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
- * @since 3.6.0
+ * @since 3.5.8
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>,
