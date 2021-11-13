@@ -198,7 +198,7 @@ class Dom
         }
 
         // configuration per tag name
-        $tagName            = $attr->ownerElement->tagName;
+        $tagName            = $attr->ownerElement->nodeName;
         $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
 
         // the element allows all global attributes
@@ -735,7 +735,7 @@ class Dom
     protected function sanitizeAttr(DOMAttr $attr, array $options, array &$errors): void
     {
         $element = $attr->ownerElement;
-        $name    = $attr->name;
+        $name    = $attr->nodeName;
         $value   = $attr->value;
 
         $allowed = static::isAllowedAttr($attr, $options);
@@ -750,8 +750,8 @@ class Dom
             $allowed = static::isAllowedUrl($value, $options);
             if ($allowed !== true) {
                 $errors[] = new InvalidArgumentException(
-                    'The URL is not allowed in attribute: ' .
-                    $name . ' (line ' . $attr->getLineNo() . '): ' .
+                    'The URL is not allowed in attribute "' .
+                    $name . '" (line ' . $attr->getLineNo() . '): ' .
                     $allowed
                 );
                 $element->removeAttributeNode($attr);
@@ -762,8 +762,8 @@ class Dom
                 $allowed = static::isAllowedUrl($url, $options);
                 if ($allowed !== true) {
                     $errors[] = new InvalidArgumentException(
-                        'The URL is not allowed in attribute: ' .
-                        $name . ' (line ' . $attr->getLineNo() . '): ' .
+                        'The URL is not allowed in attribute "' .
+                        $name . '" (line ' . $attr->getLineNo() . '): ' .
                         $allowed
                     );
                     $element->removeAttributeNode($attr);
@@ -800,7 +800,7 @@ class Dom
      */
     protected function sanitizeElement(DOMElement $element, array $options, array &$errors): void
     {
-        $name = $element->tagName;
+        $name = $element->nodeName;
 
         // check defined namespaces (`xmlns` attributes);
         // we need to check this first as the namespace can affect

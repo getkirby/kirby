@@ -203,7 +203,7 @@ class SaneTest extends TestCase
     public function testValidateFileError()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "style"');
 
         Sane::validateFile($this->fixture('external-source-1.svg'), 'svg');
     }

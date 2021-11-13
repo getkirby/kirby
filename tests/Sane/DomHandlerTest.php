@@ -33,7 +33,7 @@ class DomHandlerTest extends TestCase
     public function testValidateException1()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
 
         DomHandler::validate("<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
     }
