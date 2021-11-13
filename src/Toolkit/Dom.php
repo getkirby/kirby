@@ -462,15 +462,16 @@ class Dom
             // exact matches of the local name (which will
             // contain a namespace if that namespace name
             // is not defined in the document)
-            if (in_array($localName, $list) === true) {
-                return $localName;
+            foreach ($list as $item) {
+                if ($compare($item, $localName) === true) {
+                    return $item;
+                }
             }
 
             return false;
         }
 
-        // we need to consider the namespaces,
-        // so look at each item individually
+        // we need to consider the namespaces
         foreach ($list as $item) {
             // try to find the expected origin namespace URI
             $namespaceUri = null;
