@@ -423,15 +423,10 @@ class Dom
      */
     public function innerMarkup(DOMNode $node): string
     {
-        if ($node === null) {
-            return '';
-        }
+        $markup = '';
+        $method = 'save' . $this->type;
 
-        $markup   = '';
-        $children = $node->childNodes;
-        $method   = 'save' . $this->type;
-
-        foreach ($children as $child) {
+        foreach ($node->childNodes as $child) {
             $markup .= $node->ownerDocument->$method($child);
         }
 
@@ -534,14 +529,15 @@ class Dom
      *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
      *                       any attribute
      *                       - `allowedDataUris`: List of all MIME types that may be used in
-     *                       data attributes (only checked in `urlAttrs`) or `true` for any
-     *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
      *                       or `true` for any
+     *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       and inside `url()` wrappers or `true` for any
      *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
      *                       the array keys are reference names that can be referred to from the
-     *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags` and `urlAttrs` lists;
-     *                       the namespace names as used in the document are *not* validated;
-     *                       setting the whole option to `true` will allow any namespace
+     *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
+     *                       and `urlAttrs` lists; the namespace names as used in the document are *not*
+     *                       validated; setting the whole option to `true` will allow any namespace
      *                       - `allowedPIs`: Names of allowed XML processing instructions or
      *                       `true` for any
      *                       - `allowedTags`: Associative array of all allowed tag names with the
@@ -554,8 +550,7 @@ class Dom
      *                       modify it; the callback must return an array with exception
      *                       objects for each modification
      *                       - `disallowedTags`: Array of explicitly disallowed tags, which will
-     *                       be removed completely including their children; the names must be
-     *                       lower-case as the matching is done case-insensitively
+     *                       be removed completely including their children (matched case-insensitively)
      *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
      *                       and may throw exceptions on validation errors
      *                       - `elementCallback`: Closure that will receive each `DOMElement` and
