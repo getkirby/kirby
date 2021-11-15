@@ -262,8 +262,8 @@ export default {
   inset-inline-end: .75rem;
   margin-top: calc(-1.75rem + 2px);
 }
-.k-block-container[data-last-in-batch] .k-block-options,
-.k-block-container[data-selected] .k-block-options {
+.k-block-container[data-last-in-batch] > .k-block-options,
+.k-block-container[data-selected] > .k-block-options {
   display: flex;
 }
 .k-block-container[data-hidden] .k-block {
