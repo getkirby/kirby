@@ -16,7 +16,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
- * @since 3.6.0
+ * @since 3.5.8
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -92,7 +92,7 @@ class Dom
 
             // remove the injected XML declaration again
             $pis = $this->query('//processing-instruction()');
-            foreach (iterator_to_array($pis) as $pi) {
+            foreach (iterator_to_array($pis, false) as $pi) {
                 if ($pi->data === $xmlDeclaration) {
                     static::remove($pi);
                 }
@@ -198,8 +198,9 @@ class Dom
         }
 
         // configuration per tag name
-        $tagName            = $attr->ownerElement->tagName;
-        $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
+        $tagName            = $attr->ownerElement->nodeName;
+        $listedTagName      = static::listContainsName(array_keys($options['allowedTags']), $attr->ownerElement, $options);
+        $allowedAttrsForTag = $listedTagName ? ($allowedTags[$listedTagName] ?? true) : true;
 
         // the element allows all global attributes
         if ($allowedAttrsForTag === true) {
@@ -406,6 +407,8 @@ class Dom
      * work at all.
      *
      * @return bool
+     *
+     * @codeCoverageIgnore
      */
     public static function isSupported(): bool
     {
@@ -420,15 +423,10 @@ class Dom
      */
     public function innerMarkup(DOMNode $node): string
     {
-        if ($node === null) {
-            return '';
-        }
+        $markup = '';
+        $method = 'save' . $this->type;
 
-        $markup   = '';
-        $children = $node->childNodes;
-        $method   = 'save' . $this->type;
-
-        foreach ($children as $child) {
+        foreach ($node->childNodes as $child) {
             $markup .= $node->ownerDocument->$method($child);
         }
 
@@ -462,15 +460,16 @@ class Dom
             // exact matches of the local name (which will
             // contain a namespace if that namespace name
             // is not defined in the document)
-            if (in_array($localName, $list) === true) {
-                return $localName;
+            foreach ($list as $item) {
+                if ($compare($item, $localName) === true) {
+                    return $item;
+                }
             }
 
             return false;
         }
 
-        // we need to consider the namespaces,
-        // so look at each item individually
+        // we need to consider the namespaces
         foreach ($list as $item) {
             // try to find the expected origin namespace URI
             $namespaceUri = null;
@@ -530,14 +529,15 @@ class Dom
      *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
      *                       any attribute
      *                       - `allowedDataUris`: List of all MIME types that may be used in
-     *                       data attributes (only checked in `urlAttrs`) or `true` for any
-     *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
      *                       or `true` for any
+     *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       and inside `url()` wrappers or `true` for any
      *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
      *                       the array keys are reference names that can be referred to from the
-     *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags` and `urlAttrs` lists;
-     *                       the namespace names as used in the document are *not* validated;
-     *                       setting the whole option to `true` will allow any namespace
+     *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
+     *                       and `urlAttrs` lists; the namespace names as used in the document are *not*
+     *                       validated; setting the whole option to `true` will allow any namespace
      *                       - `allowedPIs`: Names of allowed XML processing instructions or
      *                       `true` for any
      *                       - `allowedTags`: Associative array of all allowed tag names with the
@@ -550,8 +550,7 @@ class Dom
      *                       modify it; the callback must return an array with exception
      *                       objects for each modification
      *                       - `disallowedTags`: Array of explicitly disallowed tags, which will
-     *                       be removed completely including their children; the names must be
-     *                       lower-case as the matching is done case-insensitively
+     *                       be removed completely including their children (matched case-insensitively)
      *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
      *                       and may throw exceptions on validation errors
      *                       - `elementCallback`: Closure that will receive each `DOMElement` and
@@ -584,7 +583,7 @@ class Dom
         // validate the doctype;
         // convert the `DOMNodeList` to an array first, otherwise removing
         // nodes would shift the list and make subsequent operations fail
-        foreach (iterator_to_array($this->doc->childNodes) as $child) {
+        foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
             if (is_a($child, 'DOMDocumentType') === true) {
                 $this->sanitizeDoctype($child, $options, $errors);
             }
@@ -592,13 +591,13 @@ class Dom
 
         // validate all processing instructions like <?xml-stylesheet
         $pis = $this->query('//processing-instruction()');
-        foreach (iterator_to_array($pis) as $pi) {
+        foreach (iterator_to_array($pis, false) as $pi) {
             $this->sanitizePI($pi, $options, $errors);
         }
 
         // validate all elements in the document tree
         $elements = $this->doc->getElementsByTagName('*');
-        foreach (iterator_to_array($elements) as $element) {
+        foreach (iterator_to_array($elements, false) as $element) {
             $this->sanitizeElement($element, $options, $errors);
         }
 
@@ -734,7 +733,7 @@ class Dom
     protected function sanitizeAttr(DOMAttr $attr, array $options, array &$errors): void
     {
         $element = $attr->ownerElement;
-        $name    = $attr->name;
+        $name    = $attr->nodeName;
         $value   = $attr->value;
 
         $allowed = static::isAllowedAttr($attr, $options);
@@ -749,8 +748,8 @@ class Dom
             $allowed = static::isAllowedUrl($value, $options);
             if ($allowed !== true) {
                 $errors[] = new InvalidArgumentException(
-                    'The URL is not allowed in attribute: ' .
-                    $name . ' (line ' . $attr->getLineNo() . '): ' .
+                    'The URL is not allowed in attribute "' .
+                    $name . '" (line ' . $attr->getLineNo() . '): ' .
                     $allowed
                 );
                 $element->removeAttributeNode($attr);
@@ -761,8 +760,8 @@ class Dom
                 $allowed = static::isAllowedUrl($url, $options);
                 if ($allowed !== true) {
                     $errors[] = new InvalidArgumentException(
-                        'The URL is not allowed in attribute: ' .
-                        $name . ' (line ' . $attr->getLineNo() . '): ' .
+                        'The URL is not allowed in attribute "' .
+                        $name . '" (line ' . $attr->getLineNo() . '): ' .
                         $allowed
                     );
                     $element->removeAttributeNode($attr);
@@ -799,7 +798,7 @@ class Dom
      */
     protected function sanitizeElement(DOMElement $element, array $options, array &$errors): void
     {
-        $name = $element->tagName;
+        $name = $element->nodeName;
 
         // check defined namespaces (`xmlns` attributes);
         // we need to check this first as the namespace can affect
@@ -840,9 +839,8 @@ class Dom
         // check if the tag is not allowlisted; keep children
         if ($options['allowedTags'] !== true) {
             $listedName = static::listContainsName(array_keys($options['allowedTags']), $element, $options);
-            $isAllowed  = ($listedName === false) ? false : $options['allowedTags'][$listedName];
 
-            if ($isAllowed === false) {
+            if ($listedName === false) {
                 $errors[] = new InvalidArgumentException(
                     'The "' . $name . '" element (line ' .
                     $element->getLineNo() . ') is not allowed, ' .
@@ -858,7 +856,7 @@ class Dom
         if ($element->hasAttributes()) {
             // convert the `DOMNodeList` to an array first, otherwise removing
             // attributes would shift the list and make subsequent operations fail
-            foreach (iterator_to_array($element->attributes) as $attr) {
+            foreach (iterator_to_array($element->attributes, false) as $attr) {
                 $this->sanitizeAttr($attr, $options, $errors);
 
                 // custom check (if the attribute is still in the document)

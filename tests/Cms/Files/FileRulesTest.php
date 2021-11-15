@@ -131,7 +131,7 @@ class FileRulesTest extends TestCase
         $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::create($file, $upload);
     }
@@ -228,7 +228,7 @@ class FileRulesTest extends TestCase
         $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::replace($file, $upload);
     }

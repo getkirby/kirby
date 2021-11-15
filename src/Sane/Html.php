@@ -4,7 +4,7 @@ namespace Kirby\Sane;
 
 /**
  * Sane handler for HTML files
- * @since 3.6.0
+ * @since 3.5.8
  *
  * @package   Kirby Sane
  * @author    Bastian Allgeier <bastian@getkirby.com>,

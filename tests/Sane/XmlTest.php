@@ -61,7 +61,7 @@ class XmlTest extends TestCase
         $this->assertSame($sanitized, Xml::sanitize($fixture));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
         Xml::validate($fixture);
     }
 
@@ -79,7 +79,7 @@ class XmlTest extends TestCase
         $this->assertSame($sanitized, Xml::sanitize($fixture));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 1): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
         Xml::validate($fixture);
     }
 
@@ -91,7 +91,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
         Xml::validateFile($fixture);
     }
 
@@ -103,7 +103,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 7): Invalid data URI');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 7): Invalid data URI');
         Xml::validateFile($fixture);
     }
 
@@ -115,7 +115,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: filter (line 7): Invalid data URI');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7): Invalid data URI');
         Xml::validateFile($fixture);
     }
 
@@ -127,7 +127,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 2): The hostname "malicious.com" is not allowed');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
         Xml::validateFile($fixture);
     }
 
@@ -139,7 +139,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): The hostname "malicious.com" is not allowed');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): The hostname "malicious.com" is not allowed');
         Xml::validateFile($fixture);
     }
 

@@ -4,6 +4,7 @@ namespace Kirby\Sane;
 
 /**
  * @covers \Kirby\Sane\Html
+ * @todo Add more tests from DOMPurify and the other test classes
  */
 class HtmlTest extends TestCase
 {
