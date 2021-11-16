@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-rc.5',
-    'version' => '3.6.0.0-RC5',
+    'pretty_version' => '3.6.0',
+    'version' => '3.6.0.0',
     'aliases' => 
     array (
     ),
@@ -57,8 +57,8 @@ private static $installed = array (
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-rc.5',
-      'version' => '3.6.0.0-RC5',
+      'pretty_version' => '3.6.0',
+      'version' => '3.6.0.0',
       'aliases' => 
       array (
       ),
