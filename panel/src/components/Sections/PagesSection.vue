@@ -45,7 +45,7 @@
           :layout="options.layout"
           :data-invalid="isInvalid"
           icon="page"
-          v-on="{ click: add ? create : undefined }"
+          v-on="add ? { click: create } : {}"
         >
           {{ options.empty || $t('pages.empty') }}
         </k-empty>
