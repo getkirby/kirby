@@ -1,3 +1,4 @@
+/* eslint-env node */
 import fs from "fs";
 import path from "path";
 import { defineConfig } from "vite";
@@ -24,7 +25,7 @@ export default defineConfig(({ command }) => {
 
     // Delete the flag file on any kind of exit
     for (const eventType of ["exit", "SIGINT", "uncaughtException"]) {
-      process.on(eventType, function(err) {
+      process.on(eventType, function (err) {
         if (fs.existsSync(runningPath) === true) {
           fs.unlinkSync(runningPath);
         }
