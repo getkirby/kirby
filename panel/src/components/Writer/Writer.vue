@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       editor: null,
+      json: {},
       html: this.value,
       isEmpty: true,
       toolbar: false
@@ -140,7 +141,16 @@ export default {
           }
         },
         update: (payload) => {
-          this.html    = payload.editor.getHTML();
+          // compare documents to avoid minor HTML differences
+          // to cause unwanted updates
+          const jsonNew = JSON.stringify(this.editor.getJSON());
+          const jsonOld = JSON.stringify(this.json);
+
+          if (jsonNew === jsonOld) {
+            return;
+          }
+
+          this.json    = jsonNew;
           this.isEmpty = payload.editor.isEmpty();
 
           // when a new list item or heading is created, textContent length returns 0
@@ -155,6 +165,9 @@ export default {
           ) {
             this.html = "";
           }
+
+          // create the final HTML to send to the server
+          this.html = payload.editor.getHTML();
 
           this.$emit("input", this.html);
         }
@@ -172,6 +185,7 @@ export default {
     });
 
     this.isEmpty = this.editor.isEmpty();
+    this.json    = this.editor.getJSON();
   },
   beforeDestroy() {
     this.editor.destroy();
