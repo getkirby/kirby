@@ -111,7 +111,7 @@
   "error.license.email": "Zadejte prosím platnou emailovou adresu",
   "error.license.verification": "Licenci nelze ověřit",
 
-  "error.offline": "The Panel is currently offline",
+  "error.offline": "Panel je v současnosti off-line",
 
   "error.page.changeSlug.permission": "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
   "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemohla být zveřejněna",

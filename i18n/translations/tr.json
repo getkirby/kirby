@@ -111,7 +111,7 @@
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
   "error.license.verification": "Lisans doğrulanamadı",
 
-  "error.offline": "The Panel is currently offline",
+  "error.offline": "Panel şu anda çevrimdışı",
 
   "error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
   "error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",

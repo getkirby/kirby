@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Breyta nafninu þínu",
+  "account.delete": "Eyða reikningnum þínum",
+  "account.delete.confirm": "Ertu alveg viss um að þú viljir endanlega eyða reikningnum þínum? Þú munt verða útskráð/ur án tafar. Ómögulegt verður að endurheimta reikninginn þinn.",
+
   "add": "Bæta við",
+  "author": "Höfundur",
   "avatar": "Prófíl mynd",
   "back": "Til baka",
   "cancel": "Hætta við",
@@ -9,6 +14,7 @@
   "collapse": "Collapse",
   "collapse.all": "Collapse All",
   "copy": "Afrita",
+  "copy.all": "Afrita allt",
   "create": "Stofna",
 
   "date": "Dagsetning",
@@ -23,23 +29,27 @@
   "days.tue": "Þri",
   "days.wed": "Mið",
 
+  "debugging": "Aflúsun",
+
   "delete": "Eyða",
   "delete.all": "Eyða hreint öllu",
-  "dimensions": "Rýmd",
-  "disabled": "Óvirkt",
-  "discard": "Hunsa",
-  "download": "Hlaða niður",
-  "duplicate": "Klóna",
-  "edit": "Breyta",
-  "expand": "Þenja út",
-  "expand.all": "Þenja allt út",
 
   "dialog.files.empty": "Engar skrár til að velja úr",
   "dialog.pages.empty": "Engar síður til að velja úr",
   "dialog.users.empty": "Engir notendur til að velja úr",
 
+  "dimensions": "Rýmd",
+  "disabled": "Óvirkt",
+  "discard": "Hunsa",
+  "download": "Hlaða niður",
+  "duplicate": "Klóna",
+
+  "edit": "Breyta",
+
   "email": "Netfang",
   "email.placeholder": "nafn@netfang.is",
+
+  "environment": "Umhverfi",
 
   "error.access.code": "Ógildur kóði",
   "error.access.login": "Ógild innskráning",
@@ -92,6 +102,7 @@
   "error.language.code": "Gófúslega settu inn gildan kóða fyrir tungumál",
   "error.language.duplicate": "Þetta tungumál er nú þegar skráð",
   "error.language.name": "Gott og gyllt nafn fyrir tungumálið",
+  "error.language.notFound": "Tungumálið fannst ekkert",
 
   "error.layout.validation.block": "Það er villa í bálki {blockIndex} í rammanum {layoutIndex}",
   "error.layout.validation.settings": "Hér er villa í sitllingum fyrir ramman {index}",
@@ -99,6 +110,8 @@
   "error.license.format": "Gildur leyfiskóði hér",
   "error.license.email": "Almennilegt netfang hér",
   "error.license.verification": "Ekki heppnaðist að staðfest leyfið",
+
+  "error.offline": "Stjórnborðið er óvirkt eins og stendur.",
 
   "error.page.changeSlug.permission": "Þú hefur ekkert leyfi til þess að breyta slóðarforskeytinu fyrir  \"{slug}\"",
   "error.page.changeStatus.incomplete": "Það eru villur á síðunni og við getum ekki gefið hana út",
@@ -160,10 +173,12 @@
   "error.user.email.invalid": "Vinsamlegast ákjósanlegt netfang",
   "error.user.language.invalid": "Vinsamlegast ákjósanlegt tungumál",
   "error.user.notFound": "Þessi notandi; \"{name}\" fannst ekki",
-  "error.user.password.invalid": "Veldu ákjósanlegt lykilorð. Minnst átta stafa langt.",
+  "error.user.password.invalid": "Veldu ákjósanlegt lykilorð. Minnst 8 stafa langt.",
   "error.user.password.notSame": "Lykilorðin stemma ekki",
   "error.user.password.undefined": "Þessi notandi hefur ekki lykilorð",
+  "error.user.password.wrong": "Rangt lykilorð",
   "error.user.role.invalid": "Veldu ákjósanlegt hlutverk",
+  "error.user.undefined": "Notandinn fannst ekkert",
   "error.user.update.permission": "Þú mátt ekkert breyta notandanum \"{name}\"",
 
   "error.validation.accepted": "Staðfestu",
@@ -190,7 +205,7 @@
   "error.validation.maxlength": "Veldu eitthvað styttra. (hámark {max} stafir)",
   "error.validation.maxwords": "Ekki skrá fleiri en {max}. orð",
   "error.validation.min": "Skráðu gildi ekki lægra en {min}",
-  "error.validation.minlength": "Hafðu þetta lengra en {min}. stafi)",
+  "error.validation.minlength": "Hafðu þetta lengra en {min}. stafi",
   "error.validation.minwords": "Lágmark {min}. orð",
   "error.validation.more": "Eitthvað hærra en {min}",
   "error.validation.notcontains": "Skráðu eitthvað sem inniheldur ekki \"{needle}\"",
@@ -207,6 +222,9 @@
   "error.validation.time.between": "Veldu tíma milli {min} og {max}",
   "error.validation.url": "Ákjósanleg vefslóð",
 
+  "expand": "Þenja út",
+  "expand.all": "Þenja allt út",
+
   "field.required": "Þetta svið er nauðsynlegt",
   "field.blocks.changeType": "Breyta um bálkagerð",
   "field.blocks.code.name": "Kóði",
@@ -217,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Viltu virkilega eyða völdum bálkum?",
   "field.blocks.empty": "Öngvir bálkar enn",
   "field.blocks.fieldsets.label": "Veldu bálkagerð …",
+  "field.blocks.fieldsets.paste": "Notaðu 1{{ shortcut }}1 flýtilyklaaðgerðina til að setja blokkina hér.",
   "field.blocks.gallery.name": "Myndasafn",
   "field.blocks.gallery.images.empty": "Engar myndir enn",
   "field.blocks.gallery.images.label": "Myndir",
@@ -228,11 +247,12 @@
   "field.blocks.image.caption": "Myndartexti",
   "field.blocks.image.crop": "Kroppa",
   "field.blocks.image.link": "Tengill",
-  "field.blocks.image.link.newwindow": "Nýr gluggi",
   "field.blocks.image.location": "Staðsetning",
   "field.blocks.image.name": "Mynd",
   "field.blocks.image.placeholder": "Veldu mynd",
   "field.blocks.image.ratio": "Hlutfall",
+  "field.blocks.image.url": "Slóð myndar",
+  "field.blocks.line.name": "Lína",
   "field.blocks.list.name": "Listi",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Texti",
@@ -271,6 +291,7 @@
 
   "hide": "Fela",
   "hour": "Klukkustund",
+  "import": "Hlaða inn",
   "insert": "Setja inn",
   "insert.after": "Setja eftir",
   "insert.before": "Setja fyrir",
@@ -278,10 +299,10 @@
 
   "installation": "Uppsettning",
   "installation.completed": "Panellinn er uppsettur",
-  "installation.disabled": "Paneluppsetning er sjálfgefið óvirk á vefþjónum á Veraldarvefnum.  Reyndu frekar að setja Panelinn í lokuðu umhverfi eða virkjaðu  <code>panel.install</code> möguleikan.",
+  "installation.disabled": "Paneluppsetning er sjálfgefið óvirk á vefþjónum á Veraldarvefnum.  Reyndu frekar að setja Panelinn upp í lokuðu umhverfi eða virkjaðu  <code>panel.install</code> möguleikan.",
   "installation.issues.accounts": "<code>/site/accounts</code> mappan er annaðhvort ekki til eða er ekki skrifanleg.",
   "installation.issues.content": "<code>/content</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
-  "installation.issues.curl": "<code>CURL</code> viðbótin er hér bráðnauðsynleg" ,
+  "installation.issues.curl": "<code>CURL</code> viðbótin er hér bráðnauðsynleg",
   "installation.issues.headline": "Uppsetning Panelsins mistókst hrapalega",
   "installation.issues.mbstring": "<code>MB String</code> er hér bráðnauðsynleg",
   "installation.issues.media": "<code>/media</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
@@ -316,7 +337,7 @@
   "license.register.help": "Þú fékkst sendan tölvupóst með leyfiskóðanum þegar þú keyptir leyfi. Vinsamlegast afritaðu hann og settu hann hingað til að skrá þig.",
   "license.register.label": "Vinsamlegast settu inn leyfiskóðan",
   "license.register.success": "Þakka þér fyrir að velja Kirby",
-  "license.unregistered": "Kirby (Dýrari týpan)",
+  "license.unregistered": "Þetta er óskráð prufueintak af Kirby",
 
   "link": "Tengill",
   "link.text": "Tengilstexti",
@@ -336,9 +357,9 @@
   "login.code.label.password-reset": "Kóði fyrir endurstillingu lykilorðs",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Ef netfangið (e. email) þitt er skráð þá bíður þín nýr tölvupóstur.",
-  "login.email.login.body": "Já halló {user.nameOrEmail},\n\nNýlega baðstu um innskráningarkóða fyrir bakendan á sorli.is.\nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við Jón Águst ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
+  "login.email.login.body": "Já halló {user.nameOrEmail},\n\nNýlega baðstu um innskráningarkóða fyrir bakendan á sorli.is.\nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
   "login.email.login.subject": "Innskráningarkóðinn þinn",
-  "login.email.password-reset.body": "Nei halló {user.nameOrEmail},\n\nNýverið baðstu um að lykilorði þínu væri endurstillt fyrir bakendan á sorli.is. \nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við Jón Águst ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
+  "login.email.password-reset.body": "Nei halló {user.nameOrEmail},\n\nNýverið baðstu um að lykilorði þínu væri endurstillt fyrir bakendan á sorli.is. \nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
   "login.email.password-reset.subject": "Kóðinn þinn fyrir endurstillingu lykilorðs",
   "login.remember": "Vista innskráningu",
   "login.reset": "Endurheimta lykilorð takk",
@@ -371,9 +392,11 @@
   "more": "Meira",
   "name": "Nafn",
   "next": "Næst",
+  "no": "nei",
   "off": "Af",
   "on": "Á",
   "open": "Opna",
+  "open.newWindow": "Opna í nýjum glugga",
   "options": "Valmöguleikar",
   "options.none": "Engir valmöguleikar",
 
@@ -414,7 +437,10 @@
   "pagination.page": "Síða",
 
   "password": "Lykilorð",
+  "paste": "Líma",
+  "paste.after": "Líma eftir",
   "pixel": "Punkta",
+  "plugins": "Viðbætur",
   "prev": "Fyrri",
   "preview": "Forskoða",
   "remove": "Fjarlægja",
@@ -451,6 +477,8 @@
   "template": "Sniðmát",
   "today": "Núna",
 
+  "server": "Vefþjónn",
+
   "site.blueprint": "Þessi vefur hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kóðasnið",
@@ -460,15 +488,21 @@
   "toolbar.button.heading.1": "Fyrirsögn 1",
   "toolbar.button.heading.2": "Fyrirsögn 2",
   "toolbar.button.heading.3": "Fyrirsögn 3",
+  "toolbar.button.heading.4": "Fyrirsögn 4",
+  "toolbar.button.heading.5": "Fyrirsögn 5",
+  "toolbar.button.heading.6": "Fyrirsögn 6",
   "toolbar.button.italic": "Skáletrun",
   "toolbar.button.file": "Skrár",
   "toolbar.button.file.select": "Veldu skrá",
   "toolbar.button.file.upload": "Hlaða inn skrá",
   "toolbar.button.link": "Tengill",
+  "toolbar.button.paragraph": "Efnisgrein",
+  "toolbar.button.strike": "Gegnumstrika",
   "toolbar.button.ol": "Raðaður listi",
+  "toolbar.button.underline": "Undirstrika",
   "toolbar.button.ul": "Áherslumerktur listi",
 
-  "translation.author": "white.is",
+  "translation.author": "Kirby Teymið",
   "translation.direction": "ltr",
   "translation.name": "Íslenska A137",
   "translation.locale": "is_IS",
@@ -511,11 +545,13 @@
 
   "view.account": "Notandareikningurinn þinn",
   "view.installation": "Uppsetning",
+  "view.languages": "Tungumál",
   "view.resetPassword": "Endurstilla lykilorð",
-  "view.settings": "Stillingar",
   "view.site": "Vefsvæðið",
+  "view.system": "Kerfi",
   "view.users": "Notendur",
 
   "welcome": "Komið þér fagnandi",
-  "year": "Ár"
+  "year": "Ár",
+  "yes": "já"
 }

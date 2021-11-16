@@ -111,7 +111,7 @@
   "error.license.email": "Veuillez saisir un courriel valide",
   "error.license.verification": "La licence n’a pu être vérifiée",
 
-  "error.offline": "The Panel is currently offline",
+  "error.offline": "Le Panel est actuellement hors ligne",
 
   "error.page.changeSlug.permission": "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour «&nbsp;{slug}&nbsp;»",
   "error.page.changeStatus.incomplete": "La page comporte des erreurs et ne peut pas être publiée",
