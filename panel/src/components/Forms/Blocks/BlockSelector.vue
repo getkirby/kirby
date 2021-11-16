@@ -31,11 +31,12 @@
         />
       </div>
     </details>
-    <!-- eslint-disable-next-line vue/no-v-html -->
+    <!-- eslint-disable vue/no-v-html -->
     <p
       class="k-clipboard-hint"
       v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
     />
+    <!-- eslint-enable -->
   </k-dialog>
 </template>
 

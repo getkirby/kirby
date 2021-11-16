@@ -12,7 +12,9 @@ export default {
     /**
      * Components
      */
-    for (const [name, options] of Object.entries(window.panel.plugins.components)) {
+    for (const [name, options] of Object.entries(
+      window.panel.plugins.components
+    )) {
       // make sure component has something to show
       if (!options.template && !options.render && !options.extends) {
         store.dispatch(
@@ -30,12 +32,12 @@ export default {
             options,
             components: {
               ...components,
-              ...options.components || {}
+              ...(options.components || {})
             }
           });
         } else {
           // if component doesn't exist, don't extend
-          options.extends = null
+          options.extends = null;
         }
 
         if (options.mixins) {

@@ -556,7 +556,6 @@ export default {
       const index = this.findIndex(block.id);
 
       if (index !== -1) {
-
         if (this.selected?.id === block.id) {
           this.select(null);
         }

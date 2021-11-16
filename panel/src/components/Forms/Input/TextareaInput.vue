@@ -173,7 +173,7 @@ export default {
     },
     insertFile(files) {
       if (files?.length > 0) {
-        this.insert(files.map(file => file.dragText).join("\n\n"));
+        this.insert(files.map((file) => file.dragText).join("\n\n"));
       }
     },
     insertUpload(files, response) {

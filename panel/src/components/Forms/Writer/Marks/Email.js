@@ -21,7 +21,7 @@ export default class Email extends Mark {
       removeEmail: () => {
         return this.remove();
       },
-      "toggleEmail": (attrs = {}) => {
+      toggleEmail: (attrs = {}) => {
         if (attrs.href?.length > 0) {
           this.editor.command("insertEmail", attrs);
         } else {

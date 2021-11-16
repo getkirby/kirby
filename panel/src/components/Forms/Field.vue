@@ -9,10 +9,10 @@
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label"
-            >{{ labelText }}
-            <abbr v-if="required" :title="$t('field.required')">*</abbr></label
-          >
+          <label :for="input" class="k-field-label">
+            {{ labelText }}
+            <abbr v-if="required" :title="$t('field.required')">*</abbr>
+          </label>
         </slot>
         <slot name="options" />
         <slot name="counter">

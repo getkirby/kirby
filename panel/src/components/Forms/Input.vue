@@ -90,7 +90,10 @@ export default {
     trigger(e, method) {
       // prevent focussing on first input element,
       // if click is already targetting another input element
-      if (e?.target?.tagName === 'INPUT' && typeof e?.target?.[method] === "function") {
+      if (
+        e?.target?.tagName === "INPUT" &&
+        typeof e?.target?.[method] === "function"
+      ) {
         e.target[method]();
         return;
       }

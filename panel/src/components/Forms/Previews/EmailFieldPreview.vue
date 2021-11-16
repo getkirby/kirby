@@ -5,7 +5,7 @@ export default {
   extends: UrlFieldPreview,
   computed: {
     link() {
-      return this.value?.length > 0 ? 'mailto:' + this.value : null;
+      return this.value?.length > 0 ? "mailto:" + this.value : null;
     }
   }
 };

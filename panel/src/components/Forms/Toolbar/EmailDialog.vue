@@ -51,7 +51,7 @@ export default {
       }
     },
     createMarkdown() {
-      const email = this.value.email || '';
+      const email = this.value.email || "";
       if (this.value.text?.length > 0) {
         return `[${this.value.text}](mailto:${email})`;
       } else {

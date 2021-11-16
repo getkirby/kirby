@@ -125,7 +125,7 @@ export default {
       tags: this.prepareTags(this.value),
       selected: null,
       newTag: null,
-      tagOptions: this.options.map(tag => {
+      tagOptions: this.options.map((tag) => {
         if (this.icon?.length > 0) {
           tag.icon = this.icon;
         }
