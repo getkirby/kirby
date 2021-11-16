@@ -3,9 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\Str;
+use Kirby\Form\Form;
 
 /**
  * Api
@@ -61,10 +60,12 @@ class Api extends BaseApi
     {
         $field = Form::for($model)->field($name);
 
-        $fieldApi = $this->clone([
-            'routes' => $field->api(),
-            'data'   => array_merge($this->data(), ['field' => $field])
-        ]);
+        $fieldApi = new static(
+            array_merge($this->propertyData, [
+                'data'   => array_merge($this->data(), ['field' => $field]),
+                'routes' => $field->api(),
+            ]),
+        );
 
         return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
     }
@@ -80,19 +81,7 @@ class Api extends BaseApi
      */
     public function file(string $path = null, string $filename)
     {
-        $filename = urldecode($filename);
-        $file     = $this->parent($path)->file($filename);
-
-        if ($file && $file->isReadable() === true) {
-            return $file;
-        }
-
-        throw new NotFoundException([
-            'key'  => 'file.notFound',
-            'data' => [
-                'filename' => $filename
-            ]
-        ]);
+        return Find::file($path, $filename);
     }
 
     /**
@@ -105,49 +94,7 @@ class Api extends BaseApi
      */
     public function parent(string $path)
     {
-        $modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
-        $modelTypes = [
-            'site'    => 'site',
-            'users'   => 'user',
-            'pages'   => 'page',
-            'account' => 'account'
-        ];
-        $modelName = $modelTypes[$modelType] ?? null;
-
-        if (Str::endsWith($modelType, '/files') === true) {
-            $modelName = 'file';
-        }
-
-        $kirby = $this->kirby();
-
-        switch ($modelName) {
-            case 'site':
-                $model = $kirby->site();
-                break;
-            case 'account':
-                $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
-                break;
-            case 'page':
-                $id    = str_replace(['+', ' '], '/', basename($path));
-                $model = $kirby->page($id);
-                break;
-            case 'file':
-                $model = $this->file(...explode('/files/', $path));
-                break;
-            case 'user':
-                $model = $kirby->user(basename($path));
-                break;
-            default:
-                throw new InvalidArgumentException('Invalid model type: ' . $modelType);
-        }
-
-        if ($model) {
-            return $model;
-        }
-
-        throw new NotFoundException([
-            'key' => $modelName . '.undefined'
-        ]);
+        return Find::parent($path);
     }
 
     /**
@@ -179,19 +126,7 @@ class Api extends BaseApi
      */
     public function page(string $id)
     {
-        $id   = str_replace('+', '/', $id);
-        $page = $this->kirby->page($id);
-
-        if ($page && $page->isReadable() === true) {
-            return $page;
-        }
-
-        throw new NotFoundException([
-            'key'  => 'page.notFound',
-            'data' => [
-                'slug' => $id
-            ]
-        ]);
+        return Find::page($id);
     }
 
     /**
@@ -287,22 +222,15 @@ class Api extends BaseApi
      */
     public function user(string $id = null)
     {
-        // get the authenticated user
-        if ($id === null) {
-            return $this->kirby->auth()->user(null, $this->kirby()->option('api.allowImpersonation', false));
-        }
+        try {
+            return Find::user($id);
+        } catch (NotFoundException $e) {
+            if ($id === null) {
+                return null;
+            }
 
-        // get a specific user by id
-        if ($user = $this->kirby->users()->find($id)) {
-            return $user;
+            throw $e;
         }
-
-        throw new NotFoundException([
-            'key'  => 'user.notFound',
-            'data' => [
-                'name' => $id
-            ]
-        ]);
     }
 
     /**

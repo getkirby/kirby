@@ -5,7 +5,7 @@ namespace Kirby\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\Txt
+ * @coversDefaultClass \Kirby\Data\Txt
  */
 class TxtTest extends TestCase
 {
@@ -32,6 +32,9 @@ class TxtTest extends TestCase
 
         $result = Txt::decode($data);
         $this->assertSame($array, $result);
+
+        $this->assertSame('', Txt::encode([]));
+        $this->assertSame([], Txt::decode(''));
 
         $this->assertSame([], Txt::decode(null));
         $this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));

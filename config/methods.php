@@ -366,7 +366,7 @@ return function (App $app) {
          * @return \Kirby\Cms\Field
          */
         'html' => function (Field $field) {
-            $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
+            $field->value = Html::encode($field->value);
             return $field;
         },
 
@@ -498,13 +498,14 @@ return function (App $app) {
          */
         'replace' => function (Field $field, array $data = [], string $fallback = '') use ($app) {
             if ($parent = $field->parent()) {
-                $field->value = $field->parent()->toString($field->value, $data, $fallback);
+                // never pass `null` as the $template to avoid the fallback to the model ID
+                $field->value = $parent->toString($field->value ?? '', $data, $fallback);
             } else {
                 $field->value = Str::template($field->value, array_replace([
                     'kirby' => $app,
                     'site'  => $app->site(),
                     'page'  => $app->page()
-                ], $data), $fallback);
+                ], $data), ['fallback' => $fallback]);
             }
 
             return $field;

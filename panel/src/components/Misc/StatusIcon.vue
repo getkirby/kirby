@@ -3,17 +3,18 @@
     :disabled="disabled"
     :icon="icon"
     :responsive="responsive"
+    :text="text"
+    :theme="theme"
     :tooltip="title"
     :class="'k-status-icon k-status-icon-' + status"
     @click="onClick"
-  >
-    <template v-if="text">
-      {{ text }}
-    </template>
-  </k-button>
+  />
 </template>
 
 <script>
+/**
+ * Page status icon
+ */
 export default {
   props: {
     click: {
@@ -38,6 +39,17 @@ export default {
 
       return "circle"
     },
+    theme() {
+      if (this.status === "draft") {
+        return "negative";
+      }
+
+      if (this.status === "unlisted") {
+        return "info";
+      }
+
+      return "positive"
+    },
     title() {
       let title = this.tooltip || this.text;
 
@@ -57,26 +69,22 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-status-icon svg {
   width: 14px;
   height: 14px;
 }
-.k-status-icon-listed .k-icon {
-  color: $color-positive-on-dark;
+.k-status-icon .k-icon {
+  color: var(--theme-light);
 }
-.k-status-icon-unlisted .k-icon {
-  color: $color-focus-on-dark;
-}
-.k-status-icon-draft  .k-icon {
-  color: $color-negative-on-dark;
+.k-status-icon .k-button-text {
+  color: var(--color-black);
 }
 .k-status-icon[data-disabled] {
   opacity: 1 !important;
-
-  .k-icon {
-    color: $color-gray-400;
-    opacity: .5;
-  }
+}
+.k-status-icon[data-disabled] .k-icon {
+  color: var(--color-gray-400);
+  opacity: .5;
 }
 </style>

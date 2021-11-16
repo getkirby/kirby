@@ -1,16 +1,17 @@
 <template>
   <k-dialog
-    v-if="notification"
     ref="dialog"
     :cancel-button="false"
+    :size="size"
     :visible="true"
     class="k-error-dialog"
-    @close="exit"
+    @cancel="$emit('cancel')"
+    @close="$emit('close')"
     @submit="$refs.dialog.close()"
   >
-    <k-text>{{ notification.message }}</k-text>
-    <dl v-if="notification.details && Object.keys(notification.details).length" class="k-error-details">
-      <template v-for="(detail, index) in notification.details">
+    <k-text>{{ message }}</k-text>
+    <dl v-if="detailsList.length" class="k-error-details">
+      <template v-for="(detail, index) in detailsList">
         <dt :key="'detail-label-' + index">
           {{ detail.label }}
         </dt>
@@ -36,45 +37,35 @@ import DialogMixin from "@/mixins/dialog.js";
 
 export default {
   mixins: [DialogMixin],
-  computed: {
-    notification() {
-      let notification = this.$store.state.notification;
-
-      if (notification.type === "error") {
-        return notification;
-      }
-
-      return null;
+  props: {
+    details: [Object, Array],
+    message: String,
+    size: {
+      type: String,
+      default: "medium"
     }
   },
-  methods: {
-    enter() {
-      this.$nextTick(() => {
-        if (this.$el && this.$el.querySelector) {
-          this.$el.querySelector(".k-dialog-footer .k-button").focus();
-        }
-      });
-    },
-    exit() {
-      this.$store.dispatch("notification/close");
+  computed: {
+    detailsList() {
+      return Array.isArray(this.details) ? this.details : Object.values(this.details || {});
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-error-details {
-  background: $color-white;
+  background: var(--color-white);
   display: block;
   overflow: auto;
   padding: 1rem;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1.25em;
-  margin-top: 0.75rem;
+  margin-top: .75rem;
 }
 .k-error-details dt {
-  color: $color-negative-on-dark;
-  margin-bottom: 0.25rem;
+  color: var(--color-negative-light);
+  margin-bottom: .25rem;
 }
 .k-error-details dd {
   overflow: hidden;
@@ -85,8 +76,8 @@ export default {
   margin-bottom: 1.5em;
 }
 .k-error-details li:not(:last-child) {
-  border-bottom: 1px solid $color-background;
-  padding-bottom: 0.25rem;
-  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-background);
+  padding-bottom: .25rem;
+  margin-bottom: .25rem;
 }
 </style>

@@ -30,7 +30,11 @@ class FilePermissionsTest extends TestCase
 
         $kirby->impersonate('kirby');
 
-        $file  = new File(['filename' => 'test.jpg']);
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
         $perms = $file->permissions();
 
         $this->assertTrue($perms->can($action));
@@ -47,7 +51,11 @@ class FilePermissionsTest extends TestCase
             ]
         ]);
 
-        $file  = new File(['filename' => 'test.jpg']);
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
         $perms = $file->permissions();
 
         $this->assertFalse($perms->can($action));

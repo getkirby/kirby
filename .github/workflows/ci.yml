@@ -12,9 +12,10 @@ jobs:
       github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     strategy:
       matrix:
-        php: [ "7.3", "7.4", "8.0" ]
+        php: [ "7.4", "8.0" ]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
@@ -36,7 +37,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -50,13 +51,13 @@ jobs:
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:9.5.4, psalm:4.7.1
+          tools: phpunit:9.5.10, psalm:4.11.2
 
       - name: Setup problem matchers
         run: |
@@ -79,11 +80,11 @@ jobs:
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@29386c70ef20e286228c72b668a06fd0e8399192 # pin@v1
+        uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
-          file: ${{ github.workspace }}/clover.xml
+          files: ${{ github.workspace }}/clover.xml
           flags: backend
           env_vars: PHP
         env:
@@ -91,7 +92,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@ece2addcff6617641ef7caf0016fb0fd4c2a9962 # pin@v1
+        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
         with:
           sarif_file: sarif
 
@@ -105,6 +106,7 @@ jobs:
       github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       php: "8.0"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
@@ -133,7 +135,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -147,38 +149,34 @@ jobs:
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@d2b5039cb4888cf1f0bb9e808f904f7093e0cb2a # pin@v2
+        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
         with:
           working-directory: kirby/panel
           runTests: false
 
-      - name: Start servers
-        env:
-          VUE_APP_DEV_SERVER: http://127.0.0.1:8000
-        run: |
-          # start the built-in PHP server
-          php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
+      - name: Build Panel dist files
+        run: npm run build
+        working-directory: kirby/panel
 
-          # start the Vue CLI server
-          npm run dev -- --skip-plugins @vue/cli-plugin-eslint &> ${{ github.workspace }}/_logs/vue-cli.log &
+      - name: Start the PHP server
+        run: php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@d2b5039cb4888cf1f0bb9e808f904f7093e0cb2a # pin@v2
-        env:
-          CYPRESS_host: "http://127.0.0.1:8000"
+        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:8080"
-          command: npm run test
+          wait-on: "http://127.0.0.1:8000/panel/login"
+          wait-on-timeout: 5
+          config: baseUrl=http://127.0.0.1:8000
 
       - name: Print log files
         if: always()
@@ -191,14 +189,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@ee69f02b3dfdecd58bb31b4d133da38ba6fe3700 # pin@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@ee69f02b3dfdecd58bb31b4d133da38ba6fe3700 # pin@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos
@@ -213,6 +211,7 @@ jobs:
       github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       php: "8.0"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
@@ -226,7 +225,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -241,14 +240,14 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.0.13, composer-normalize:2.13.3, composer-require-checker:3.2.0,
-            composer-unused:0.7.5, phpcpd:6.0.3, phpmd:2.10.0
+            composer:2.1.10, composer-normalize:2.15.0, composer-require-checker:3.3.0,
+            composer-unused:0.7.7, phpcpd:6.0.3, phpmd:2.10.2
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -272,7 +271,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@ece2addcff6617641ef7caf0016fb0fd4c2a9962 # pin@v1
+        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
         with:
           sarif_file: sarif
 
@@ -280,6 +279,7 @@ jobs:
     name: Coding Style & Frontend Analysis
 
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       php: "8.0"
 
@@ -288,7 +288,7 @@ jobs:
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
 
       - name: Set up Node.js problem matchers
-        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # pin@v2
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # pin@v2
 
       - name: Cache npm dependencies
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
@@ -302,11 +302,11 @@ jobs:
         working-directory: panel
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:3.0.0
+          tools: php-cs-fixer:3.2.1
 
       - name: Cache analysis data
         id: finishPrepare
@@ -327,7 +327,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@48950dbe544db810d96221f012e7ac641d010820 # pin@v1
+        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: 'true'
@@ -343,7 +343,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@48950dbe544db810d96221f012e7ac641d010820 # pin@v1
+        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: 'true'

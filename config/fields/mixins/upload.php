@@ -27,6 +27,7 @@ return [
             if ($template) {
                 $file = new File([
                     'filename' => 'tmp',
+                    'parent'   => $this->model(),
                     'template' => $template
                 ]);
 

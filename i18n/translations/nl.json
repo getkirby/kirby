@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Wijzig je naam",
+  "account.delete": "Verwijder je account",
+  "account.delete.confirm": "Wil je echt je account verwijderen? Je wordt direct uitgelogd. Uw account kan niet worden hersteld.",
+
   "add": "Voeg toe",
+  "author": "Auteur",
   "avatar": "Avatar",
   "back": "Terug",
   "cancel": "Annuleren",
@@ -9,6 +14,7 @@
   "collapse": "Sluit",
   "collapse.all": "Sluit alles",
   "copy": "Kopiëren",
+  "copy.all": "Kopieer alles",
   "create": "Aanmaken",
 
   "date": "Datum",
@@ -23,23 +29,27 @@
   "days.tue": "Di",
   "days.wed": "Wo",
 
+  "debugging": "Foutopsporing",
+
   "delete": "Verwijderen",
   "delete.all": "Verwijder alles",
-  "dimensions": "Dimensies",
-  "disabled": "Uitgeschakeld",
-  "discard": "Annuleren",
-  "download": "Download",
-  "duplicate": "Dupliceren",
-  "edit": "Wijzig",
-  "expand": "Open",
-  "expand.all": "Open alles",
 
   "dialog.files.empty": "Geen bestanden om te selecteren",
   "dialog.pages.empty": "Geen pagina's om te selecteren",
   "dialog.users.empty": "Geen gebruikers om te selecteren",
 
+  "dimensions": "Dimensies",
+  "disabled": "Uitgeschakeld",
+  "discard": "Annuleren",
+  "download": "Download",
+  "duplicate": "Dupliceren",
+
+  "edit": "Wijzig",
+
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
+
+  "environment": "Omgeving",
 
   "error.access.code": "Ongeldige code",
   "error.access.login": "Ongeldige login",
@@ -92,6 +102,7 @@
   "error.language.code": "Vul een geldige code voor deze taal in",
   "error.language.duplicate": "De taal bestaat al",
   "error.language.name": "Vul een geldige naam voor deze taal in",
+  "error.language.notFound": "De taal kan niet worden gevonden",
 
   "error.layout.validation.block": "Er is een fout gevonden in blok {blockIndex} in ontwerp {layoutIndex}",
   "error.layout.validation.settings": "Er is een fout gevonden in de instellingen van ontwerp {index} ",
@@ -99,6 +110,8 @@
   "error.license.format": "Vul een gelidge licentie-key in",
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
   "error.license.verification": "De licentie kon niet worden geverifieerd. ",
+
+  "error.offline": "Het Panel is momenteel offline",
 
   "error.page.changeSlug.permission": "Je kunt de URL van deze pagina niet wijzigen",
   "error.page.changeStatus.incomplete": "Deze pagina bevat fouten en kan niet worden gepubliceerd",
@@ -118,7 +131,7 @@
   "error.page.duplicate.permission": "Je bent niet gemachtigd om \"{slug}\" te dupliceren",
   "error.page.notFound": "De pagina \"{slug}\" kan niet worden gevonden",
   "error.page.num.invalid": "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Vul een geldig URL-achtervoegsel in",
   "error.page.slug.maxlength": "Slug lengte moet minder dan \"{length}\" tekens bevatten",
   "error.page.sort.permission": "De pagina \"{slug}\" kan niet worden gesorteerd",
   "error.page.status.invalid": "Zorg voor een geldige paginastatus",
@@ -163,8 +176,9 @@
   "error.user.password.invalid": "Gelieve een geldig wachtwoord in te voeren. Wachtwoorden moeten minstens 8 karakters lang zijn.",
   "error.user.password.notSame": "De wachtwoorden komen niet overeen",
   "error.user.password.undefined": "De gebruiker heeft geen wachtwoord",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Fout wachtwoord",
   "error.user.role.invalid": "Gelieve een geldige rol in te voeren",
+  "error.user.undefined": "De gebruiker kan niet worden gevonden",
   "error.user.update.permission": "Je hebt geen rechten om gebruiker \"{name}\" te updaten",
 
   "error.validation.accepted": "Gelieve te bevestigen",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Voer een tijd in tussen {min} en {max}",
   "error.validation.url": "Vul een geldige URL in",
 
+  "expand": "Open",
+  "expand.all": "Open alles",
+
   "field.required": "Dit veld is verplicht",
   "field.blocks.changeType": "Wijzig type",
   "field.blocks.code.name": "Code",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Wil je de geselecteerde blokken echt verwijderen?",
   "field.blocks.empty": "Nog geen blokken",
   "field.blocks.fieldsets.label": "Selecteer een bloktype ...",
+  "field.blocks.fieldsets.paste": "Druk op <kbd>{{ shortcut }}</kbd> om blokken van je klembord te plakken/importeren",
   "field.blocks.gallery.name": "Galerij",
   "field.blocks.gallery.images.empty": "Nog geen afbeeldingen",
   "field.blocks.gallery.images.label": "Afbeeldingen",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Selecteer een afbeelding",
   "field.blocks.image.ratio": "Verhouding",
   "field.blocks.image.url": "Afbeeldings-URL",
+  "field.blocks.line.name": "Lijn",
   "field.blocks.list.name": "Lijst",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Tekst",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Nog geen items.",
   "field.users.empty": "Nog geen gebruikers geselecteerd",
 
-  "file.blueprint": "Dit bestand heeft nog geen ontwerp. Je kan het ontwerp hier plaatsen <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "Dit bestand heeft nog geen blauwdruk. U kunt de instellingen definiëren in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Wil je dit bestand <br><strong>{filename}</strong> verwijderen?",
   "file.sort": "Verander positie",
 
@@ -272,6 +291,7 @@
 
   "hide": "Verberg",
   "hour": "Uur",
+  "import": "Importeer",
   "insert": "Toevoegen",
   "insert.after": "Voeg toe na",
   "insert.before": "Voeg toe voor",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Wachtwoord herstel code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Als uw e-mailadres geregistreerd is, werd de gevraagde code per e-mail verzonden.",
-  "login.email.login.body": "Hallo {user.nameOrEmail},\n\nU heeft onlangs een inlogcode aangevraagd voor het Kirby Panel.\nDe volgende inlogcode is geldig voor {timeout} minuten:\n\n{code}\n\nIndien u geen inlogcode heeft aangevraagd, negeer dan alstublieft deze email of neem contact op met uw beheerder indien u vragen heeft.\nVoor de veiligheid, gelieve deze email NIET door te sturen.",
+  "login.email.login.body": "Hallo {user.nameOrEmail},\n\nJe hebt onlangs een inlogcode aangevraagd voor het Panel van {site}.\nDe volgende inlogcode is {timeout} minuten geldig:\n\n{code}\n\nAls je geen inlogcode hebt aangevraagd, mag je deze mail negeren of neem je contact op met uw beheerder.\nOm veiligheidsredenen verzoeken wij deze e-mail NIET door te sturen.",
   "login.email.login.subject": "Jouw log in code",
-  "login.email.password-reset.body": "Hallo {user.nameOrEmail},\n\nU heeft onlangs een wachtwoord reset code aangevraagd voor het Kirby Panel.\nDe volgende wachtwoord reset code is geldig voor {timeout} minuten:\n\n{code}\n\nAls u geen wachtwoord reset code heeft aangevraagd, negeer deze e-mail dan alstublieft of neem contact op met uw beheerder als u vragen heeft.\nVoor de veiligheid, gelieve deze email NIET door te sturen.",
+  "login.email.password-reset.body": "Hallo {user.nameOrEmail},\n\nJe hebt onlangs een paswoord herstel code aangevraagd voor het Panel van {site}.\nDe volgende paswoord herstel code is {timeout} minuten geldig:\n\n{code}\n\nAls je geen paswoord herstel code hebt aangevraagd, mag je deze mail negeren of neem je contact op met uw beheerder.\nOm veiligheidsredenen verzoeken wij deze e-mail NIET door te sturen.",
   "login.email.password-reset.subject": "Jouw wachtwoord herstel code",
   "login.remember": "Houd mij ingelogd",
   "login.reset": "Wachtwoord herstellen",
@@ -372,11 +392,11 @@
   "more": "Meer",
   "name": "Naam",
   "next": "Volgende",
-  "no": "no",
+  "no": "nee",
   "off": "uit",
   "on": "aan",
   "open": "Open",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Openen in een nieuw scherm",
   "options": "Opties",
   "options.none": "Geen opties beschikbaar",
 
@@ -385,7 +405,7 @@
   "orientation.portrait": "Staand",
   "orientation.square": "Vierkant",
 
-  "page.blueprint": "Deze pagina heeft nog geen ontwerp. Je kan het ontwerp hier plaatsten <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "Deze pagina heeft nog geen blauwdruk. Je kan de instellingen definiëren in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Verander URL",
   "page.changeSlug.fromTitle": "Aanmaken op basis van titel",
   "page.changeStatus": "Wijzig status",
@@ -417,7 +437,10 @@
   "pagination.page": "Pagina",
 
   "password": "Wachtwoord",
+  "paste": "Plak",
+  "paste.after": "Plak achter",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Vorige",
   "preview": "Voorbeeld",
   "remove": "Verwijder",
@@ -454,6 +477,8 @@
   "template": "Template",
   "today": "Vandaag",
 
+  "server": "Server",
+
   "site.blueprint": "Deze website heeft nog geen ontwerp. Je kan het ontwerp hier plaatsen<strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
@@ -463,14 +488,18 @@
   "toolbar.button.heading.1": "Koptekst 1",
   "toolbar.button.heading.2": "Koptekst 2",
   "toolbar.button.heading.3": "Koptekst 3",
+  "toolbar.button.heading.4": "Hoofding 4",
+  "toolbar.button.heading.5": "Hoofding 5",
+  "toolbar.button.heading.6": "Hoofding 6",
   "toolbar.button.italic": "Cursieve tekst",
   "toolbar.button.file": "Bestand",
   "toolbar.button.file.select": "Selecteer een bestand",
   "toolbar.button.file.upload": "Upload bestand",
   "toolbar.button.link": "Link",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.paragraph": "Paragraaf",
+  "toolbar.button.strike": "Doorstreept",
   "toolbar.button.ol": "Genummerde lijst",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Onderlijn",
   "toolbar.button.ul": "Opsomming",
 
   "translation.author": "Het team van Kirby",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://voorbeeld.nl",
 
   "user": "Gebruiker",
-  "user.blueprint": "Je kunt extra zones en formuliervelden voor deze rol toevoegen in <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Je kan aanvullende secties en formuliervelden voor deze gebruikersrol definiëren in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Email veranderen",
   "user.changeLanguage": "Taal veranderen",
   "user.changeName": "Gebruiker hernoemen",
@@ -516,12 +545,13 @@
 
   "view.account": "Jouw account",
   "view.installation": "Installatie",
+  "view.languages": "Talen",
   "view.resetPassword": "Wachtwoord herstellen",
-  "view.settings": "Opties",
   "view.site": "Site",
+  "view.system": "Systeem",
   "view.users": "Gebruikers",
 
   "welcome": "Welkom",
   "year": "Jaar",
-  "yes": "yes"
+  "yes": "ja"
 }

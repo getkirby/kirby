@@ -1,48 +1,40 @@
 <template>
   <k-field v-bind="$props" class="k-users-field">
-    <k-button-group slot="options" class="k-field-options">
-      <k-button
-        v-if="more && !disabled"
-        :icon="btnIcon"
-        class="k-field-options-button"
-        @click="open"
-      >
-        {{ btnLabel }}
-      </k-button>
-    </k-button-group>
+    <template #options>
+      <k-button-group class="k-field-options">
+        <k-button
+          v-if="more && !disabled"
+          :icon="btnIcon"
+          :text="btnLabel"
+          class="k-field-options-button"
+          @click="open"
+        />
+      </k-button-group>
+    </template>
 
     <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :list="selected"
-        :handle="true"
-        :data-invalid="isInvalid"
-        @end="onInput"
+      <k-items
+        :items="selected"
+        :layout="layout"
+        :size="size"
+        :sortable="!disabled && selected.length > 1"
+        @sort="onInput"
+        @sortChange="$emit('change', $event)"
       >
-        <component
-          :is="elements.item"
-          v-for="(user, index) in selected"
-          :key="user.email"
-          :sortable="!disabled && selected.length > 1"
-          :text="user.text"
-          :info="user.info"
-          :link="link ? $api.users.link(user.id) : null"
-          :image="user.image"
-          :icon="user.icon"
-        >
+        <template #options="{ index }">
           <k-button
             v-if="!disabled"
-            slot="options"
+            :tooltip="$t('remove')"
             icon="remove"
             @click="remove(index)"
           />
-        </component>
-      </k-draggable>
+        </template>
+      </k-items>
     </template>
-    <k-empty 
-      v-else 
-      :data-invalid="isInvalid" 
-      icon="users" 
+    <k-empty
+      v-else
+      :data-invalid="isInvalid"
+      icon="users"
       @click="open"
     >
       {{ empty || $t("field.users.empty") }}
@@ -52,29 +44,14 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    open() {
-      if (this.disabled) {
-        return false;
-      }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(user => user.id)
-      });
-    }
-  }
+  mixins: [picker]
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-users-field[data-disabled] * {
   pointer-events: all !important;
 }

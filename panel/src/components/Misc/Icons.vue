@@ -8,7 +8,18 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
   icons: window.panel.plugins.icons
 };
 </script>
+
+<style>
+.k-icons {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+</style>

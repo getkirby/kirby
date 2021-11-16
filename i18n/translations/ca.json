@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Afegir",
+  "author": "Author",
   "avatar": "Imatge del perfil",
   "back": "Tornar",
   "cancel": "Cancel\u00b7lar",
@@ -9,6 +14,7 @@
   "collapse": "Col·lapsar",
   "collapse.all": "Col·lapsar tot",
   "copy": "Copiar",
+  "copy.all": "Copy all",
   "create": "Crear",
 
   "date": "Data",
@@ -23,23 +29,27 @@
   "days.tue": "dt.",
   "days.wed": "dc.",
 
+  "debugging": "Debugging",
+
   "delete": "Eliminar",
   "delete.all": "Eliminar tot",
-  "dimensions": "Dimensions",
-  "disabled": "Desactivat",
-  "discard": "Descartar",
-  "download": "Descarregar",
-  "duplicate": "Duplicar",
-  "edit": "Editar",
-  "expand": "Expandir",
-  "expand.all": "Expandir tot",
 
   "dialog.files.empty": "No hi ha cap fitxer per seleccionar",
   "dialog.pages.empty": "No hi ha cap pàgina per seleccionar",
   "dialog.users.empty": "No hi ha cap usuari per seleccionar",
 
+  "dimensions": "Dimensions",
+  "disabled": "Desactivat",
+  "discard": "Descartar",
+  "download": "Descarregar",
+  "duplicate": "Duplicar",
+
+  "edit": "Editar",
+
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Codi invàlid",
   "error.access.login": "Inici de sessió no vàlid",
@@ -92,6 +102,7 @@
   "error.language.code": "Introdueix un codi vàlid per a l’idioma",
   "error.language.duplicate": "L'idioma ja existeix",
   "error.language.name": "Introdueix un nom vàlid per a l'idioma",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Introduïu una clau de llicència vàlida",
   "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
   "error.license.verification": "No s’ha pogut verificar la llicència",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
   "error.page.changeStatus.incomplete": "La pàgina té errors i no es pot publicar",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "L'usuari no té una contrasenya",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
+  "error.user.undefined": "L'usuari no s'ha trobat",
   "error.user.update.permission": "No tens permís per actualitzar l'usuari \"{name}\"",
 
   "error.validation.accepted": "Si us plau confirma",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Si us plau, introduïu una URL vàlida",
 
+  "expand": "Expandir",
+  "expand.all": "Expandir tot",
+
   "field.required": "El camp és obligatori",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "Codi",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Encara no hi ha entrades.",
   "field.users.empty": "Encara no s'ha seleccionat cap usuari",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Esteu segurs d'eliminar <br><strong>{filename}</strong>?",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "Hora",
+  "import": "Import",
   "insert": "Insertar",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Manten-me connectat",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Vertical",
   "orientation.square": "Quadrat",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Canviar URL",
   "page.changeSlug.fromTitle": "Crear a partir del t\u00edtol",
   "page.changeStatus": "Canviar l'estat",
@@ -417,7 +437,10 @@
   "pagination.page": "Pàgina",
 
   "password": "Contrasenya",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Anterior",
   "preview": "Preview",
   "remove": "Eliminar",
@@ -454,6 +477,8 @@
   "template": "Plantilla",
   "today": "Avui",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Codi",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Encapçalament 1",
   "toolbar.button.heading.2": "Encapçalament 2",
   "toolbar.button.heading.3": "Encapçalament 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "Cursiva",
   "toolbar.button.file": "Arxiu",
   "toolbar.button.file.select": "Selecciona un fitxer",
   "toolbar.button.file.upload": "Carrega un fitxer",
   "toolbar.button.link": "Enlla\u00e7",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Llista ordenada",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Usuari",
-  "user.blueprint": "Podeu definir seccions addicionals i camps de formulari per a aquest rol d'usuari a <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Canviar e-mail",
   "user.changeLanguage": "Canviar idioma",
   "user.changeName": "Canviar el nom d'aquest usuari",
@@ -516,9 +545,10 @@
 
   "view.account": "La teva compta",
   "view.installation": "Instal·lació",
+  "view.languages": "Idiomes",
   "view.resetPassword": "Reset password",
-  "view.settings": "Configuració",
   "view.site": "Lloc web",
+  "view.system": "System",
   "view.users": "Usuaris",
 
   "welcome": "Benvinguda",

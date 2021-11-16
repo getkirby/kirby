@@ -4,55 +4,57 @@ namespace Kirby\Cms;
 
 class RootsTest extends TestCase
 {
-    public function defaultRootProvider(): array
+    protected function rootProvider(string $index): array
     {
-        $index = realpath(__DIR__ . '/../../../../');
+        $kirby = realpath(__DIR__ . '/../../..');
 
         return [
+            [$kirby, 'kirby'],
+            [$kirby . '/i18n', 'i18n'],
+            [$kirby . '/i18n/translations', 'i18n:translations'],
+            [$kirby . '/i18n/rules', 'i18n:rules'],
             [$index, 'index'],
-            [$index . '/kirby', 'kirby'],
-            [$index . '/media', 'media'],
+            [$index . '/assets', 'assets'],
             [$index . '/content', 'content'],
+            [$index . '/media', 'media'],
+            [$kirby . '/panel', 'panel'],
             [$site = $index . '/site', 'site'],
             [$site . '/accounts', 'accounts'],
             [$site . '/blueprints', 'blueprints'],
+            [$site . '/cache', 'cache'],
             [$site . '/collections', 'collections'],
+            [$site . '/config', 'config'],
+            [$site . '/config/.license', 'license'],
             [$site . '/controllers', 'controllers'],
+            [$site . '/languages', 'languages'],
             [$site . '/logs', 'logs'],
+            [$site . '/models', 'models'],
             [$site . '/plugins', 'plugins'],
+            [$site . '/sessions', 'sessions'],
             [$site . '/snippets', 'snippets'],
             [$site . '/templates', 'templates'],
+            [$site . '/blueprints/users', 'roles'],
         ];
+    }
+
+    public function defaultRootProvider(): array
+    {
+        return $this->rootProvider(realpath(__DIR__ . '/../../../../'));
     }
 
     /**
      * @dataProvider defaultRootProvider
      */
-    public function testDefaulRoot($root, $method)
+    public function testDefaultRoot($root, $method)
     {
         $roots = (new App())->roots();
 
-        $this->assertEquals($root, $roots->$method());
+        $this->assertSame($root, $roots->$method());
     }
 
     public function customIndexRootProvider(): array
     {
-        $index = '/var/www/getkirby.com';
-
-        return [
-            [$index, 'index'],
-            [$index . '/media', 'media'],
-            [$index . '/content', 'content'],
-            [$site = $index . '/site', 'site'],
-            [$site . '/accounts', 'accounts'],
-            [$site . '/blueprints', 'blueprints'],
-            [$site . '/collections', 'collections'],
-            [$site . '/controllers', 'controllers'],
-            [$site . '/logs', 'logs'],
-            [$site . '/plugins', 'plugins'],
-            [$site . '/snippets', 'snippets'],
-            [$site . '/templates', 'templates'],
-        ];
+        return $this->rootProvider('/var/www/getkirby.com');
     }
 
     /**
@@ -68,7 +70,7 @@ class RootsTest extends TestCase
 
         $roots = $app->roots();
 
-        $this->assertEquals($root, $roots->$method());
+        $this->assertSame($root, $roots->$method());
     }
 
     public function customRootProvider(): array
@@ -81,6 +83,7 @@ class RootsTest extends TestCase
             [$public . '/media', 'media'],
             [$base . '/content', 'content'],
             [$base . '/site', 'site'],
+            [$base . '/site/config', 'config'],
         ];
     }
 
@@ -89,7 +92,6 @@ class RootsTest extends TestCase
      */
     public function testCustomRoot($root, $method)
     {
-
         // public directory setup
         $base   = '/var/www/getkirby.com';
         $public = $base . '/public';
@@ -105,6 +107,6 @@ class RootsTest extends TestCase
 
         $roots = $app->roots();
 
-        $this->assertEquals($root, $roots->$method());
+        $this->assertSame($root, $roots->$method());
     }
 }

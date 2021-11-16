@@ -50,23 +50,22 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dropdown-item {
   white-space: nowrap;
   line-height: 1;
   display: flex;
   width: 100%;
   align-items: center;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   padding: 6px 16px;
-
-  &:focus {
-    @include focus-ring;
-  }
 }
-
+.k-dropdown-item:focus{
+  outline: none;
+  box-shadow: var(--shadow-outline);
+}
 .k-dropdown-item .k-button-figure {
   text-align: center;
-  padding-right: 0.5rem;
+  padding-inline-end: .5rem;
 }
 </style>

@@ -205,7 +205,7 @@ class Database
         }
 
         // fetch the dsn and store it
-        $this->dsn = static::$types[$this->type]['dsn']($options);
+        $this->dsn = (static::$types[$this->type]['dsn'])($options);
 
         // try to connect
         $this->connection = new PDO($this->dsn, $options['user'], $options['password']);
@@ -504,7 +504,7 @@ class Database
     {
         if ($this->tables === null) {
             // Get the list of tables from the database
-            $sql     = $this->sql()->tables($this->database);
+            $sql     = $this->sql()->tables();
             $results = $this->query($sql['query'], $sql['bindings']);
 
             if ($results) {

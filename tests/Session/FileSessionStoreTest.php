@@ -2,8 +2,8 @@
 
 namespace Kirby\Session;
 
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
@@ -45,8 +45,14 @@ class FileSessionStoreTest extends TestCase
         // let the store __destruct() itself
         unset($this->store);
 
-        // make sure the directory is writable before trying to delete
+        // make sure the directory and in files are writable before trying to delete
         chmod($this->root, 0777);
+
+        $files = array_diff(scandir($this->root) ?? [], ['.', '..']);
+        foreach ($files as $file) {
+            chmod($this->root . '/' . $file, 0777);
+        }
+
         Dir::remove($this->root);
         $this->assertDirectoryNotExists($this->root);
     }

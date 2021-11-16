@@ -1,12 +1,11 @@
 <?php
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * User Routes
  */
 return [
-
     [
         'pattern' => 'users',
         'method'  => 'GET',
@@ -33,35 +32,51 @@ return [
         }
     ],
     [
-        'pattern' => 'users/(:any)',
+        'pattern' => [
+            '(account)',
+            'users/(:any)',
+        ],
         'method'  => 'GET',
         'action'  => function (string $id) {
             return $this->user($id);
         }
     ],
     [
-        'pattern' => 'users/(:any)',
+        'pattern' => [
+            '(account)',
+            'users/(:any)',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [
-        'pattern' => 'users/(:any)',
+        'pattern' => [
+            '(account)',
+            'users/(:any)',
+        ],
         'method'  => 'DELETE',
         'action'  => function (string $id) {
             return $this->user($id)->delete();
         }
     ],
     [
-        'pattern' => 'users/(:any)/avatar',
+        'pattern' => [
+            '(account)/avatar',
+            'users/(:any)/avatar',
+        ],
         'method'  => 'GET',
         'action'  => function (string $id) {
             return $this->user($id)->avatar();
         }
     ],
+    // @codeCoverageIgnoreStart
     [
-        'pattern' => 'users/(:any)/avatar',
+        'pattern' => [
+            '(account)/avatar',
+            'users/(:any)/avatar',
+        ],
         'method'  => 'POST',
         'action'  => function (string $id) {
             if ($avatar = $this->user($id)->avatar()) {
@@ -77,84 +92,116 @@ return [
             }, $single = true);
         }
     ],
+    // @codeCoverageIgnoreEnd
     [
-        'pattern' => 'users/(:any)/avatar',
+        'pattern' => [
+            '(account)/avatar',
+            'users/(:any)/avatar',
+        ],
         'method'  => 'DELETE',
         'action'  => function (string $id) {
             return $this->user($id)->avatar()->delete();
         }
     ],
     [
-        'pattern' => 'users/(:any)/blueprint',
+        'pattern' => [
+            '(account)/blueprint',
+            'users/(:any)/blueprint',
+        ],
         'method'  => 'GET',
         'action'  => function (string $id) {
             return $this->user($id)->blueprint();
         }
     ],
     [
-        'pattern' => 'users/(:any)/blueprints',
+        'pattern' => [
+            '(account)/blueprints',
+            'users/(:any)/blueprints',
+        ],
         'method'  => 'GET',
         'action'  => function (string $id) {
             return $this->user($id)->blueprints($this->requestQuery('section'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/email',
+        'pattern' => [
+            '(account)/email',
+            'users/(:any)/email',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changeEmail($this->requestBody('email'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/fields/(:any)/(:all?)',
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $fieldName, string $path = null) {
-            if ($user = $this->user($id)) {
-                return $this->fieldApi($user, $fieldName, $path);
-            }
-        }
-    ],
-    [
-        'pattern' => 'users/(:any)/language',
+        'pattern' => [
+            '(account)/language',
+            'users/(:any)/language',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changeLanguage($this->requestBody('language'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/name',
+        'pattern' => [
+            '(account)/name',
+            'users/(:any)/name',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changeName($this->requestBody('name'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/password',
+        'pattern' => [
+            '(account)/password',
+            'users/(:any)/password',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changePassword($this->requestBody('password'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/role',
+        'pattern' => [
+            '(account)/role',
+            'users/(:any)/role',
+        ],
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changeRole($this->requestBody('role'));
         }
     ],
     [
-        'pattern' => 'users/(:any)/roles',
+        'pattern' => [
+            '(account)/roles',
+            'users/(:any)/roles',
+        ],
         'action'  => function (string $id) {
             return $this->user($id)->roles();
         }
     ],
     [
-        'pattern' => 'users/(:any)/sections/(:any)',
+        'pattern' => [
+            '(account)/sections/(:any)',
+            'users/(:any)/sections/(:any)',
+        ],
         'method'  => 'GET',
         'action'  => function (string $id, string $sectionName) {
             if ($section = $this->user($id)->blueprint()->section($sectionName)) {
                 return $section->toResponse();
             }
+        }
+    ],
+    [
+        'pattern' => [
+            '(account)/fields/(:any)/(:all?)',
+            'users/(:any)/fields/(:any)/(:all?)',
+        ],
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $fieldName, string $path = null) {
+            return $this->fieldApi($this->user($id), $fieldName, $path);
         }
     ],
 ];

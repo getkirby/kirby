@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default (api) => {
   return {
     async list(params) {
@@ -7,16 +5,6 @@ export default (api) => {
     },
     async get(name) {
       return api.get("roles/" + name);
-    },
-    async options(params) {
-      const roles = await this.list(params);
-      return roles.data.map(role => {
-        return {
-          info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
-          text: role.title,
-          value: role.name
-        };
-      });
     }
   }
 };

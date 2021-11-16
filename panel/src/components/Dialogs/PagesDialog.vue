@@ -7,7 +7,7 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box :text="issue" :html="false" theme="negative" />
+      <k-box :text="issue" theme="negative" />
     </template>
     <template v-else>
       <header v-if="model" class="k-pages-dialog-navbar">
@@ -30,43 +30,28 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="page in models"
-            :key="page.id"
-            :text="page.text"
-            :info="page.info"
-            :image="page.image"
-            :icon="page.icon"
-            @click="toggle(page)"
-          >
-            <template slot="options">
-              <k-button
-                v-if="isSelected(page)"
-                slot="options"
-                :autofocus="true"
-                :icon="checkedIcon"
-                :tooltip="$t('remove')"
-                theme="positive"
-              />
-              <k-button
-                v-else
-                slot="options"
-                :autofocus="true"
-                :tooltip="$t('select')"
-                icon="circle-outline"
-              />
-              <k-button
-                v-if="model"
-                :disabled="!page.hasChildren"
-                :tooltip="$t('open')"
-                icon="angle-right"
-                @click.stop="go(page)"
-              />
-            </template>
-          </k-list-item>
-        </k-list>
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: page }">
+            <k-button
+              v-bind="toggleBtn(page)"
+              @click="toggle(page)"
+            />
+            <k-button
+              v-if="page"
+              :disabled="!page.hasChildren"
+              :tooltip="$t('open')"
+              icon="angle-right"
+              @click.stop="go(page)"
+            />
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
@@ -122,18 +107,18 @@ export default {
     },
     onFetched(response) {
       this.model = response.model;
-    },
+    }
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-dialog-navbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.5rem;
-  padding-right: 38px;
+  margin-bottom: .5rem;
+  padding-inline-end: 38px;
 }
 .k-pages-dialog-navbar .k-button {
   width: 38px;
@@ -150,7 +135,7 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
 .k-pages-dialog .k-list-item .k-button[disabled] {
-  opacity: 0.25;
+  opacity: .25;
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;

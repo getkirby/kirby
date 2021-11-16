@@ -1,40 +1,46 @@
 <template>
-  <k-view class="k-password-reset-view" align="center">
-    <k-form
-      v-model="values"
-      :fields="fields"
-      :submit-button="$t('change')"
-      @submit="submit"
-    >
-      <template slot="header">
-        <h1 class="k-offscreen">
-          {{ $t('view.resetPassword') }}
-        </h1>
+  <k-inside>
+    <k-view class="k-password-reset-view" align="center">
+      <k-form
+        v-model="values"
+        :fields="fields"
+        :submit-button="$t('change')"
+        @submit="submit"
+      >
+        <template #header>
+          <h1 class="sr-only">
+            {{ $t('view.resetPassword') }}
+          </h1>
 
-        <div v-if="issue" class="k-login-alert" @click="issue = null">
-          <span>{{ issue }}</span>
-          <k-icon type="alert" />
-        </div>
+          <k-login-alert v-if="issue" @click="issue = null">
+            {{ issue }}
+          </k-login-alert>
 
-        <k-user-info :user="$user" />
-      </template>
+          <k-user-info :user="$user" />
+        </template>
 
-      <div slot="footer" class="k-login-buttons">
-        <k-button
-          class="k-login-button"
-          icon="check"
-          type="submit"
-        >
-          {{ $t("change") }} <template v-if="isLoading">
-            …
-          </template>
-        </k-button>
-      </div>
-    </k-form>
-  </k-view>
+        <template #footer>
+          <div class="k-login-buttons">
+            <k-button
+              class="k-login-button"
+              icon="check"
+              type="submit"
+            >
+              {{ $t("change") }} <template v-if="isLoading">
+                …
+              </template>
+            </k-button>
+          </div>
+        </template>
+      </k-form>
+    </k-view>
+  </k-inside>
 </template>
 
 <script>
+// import the Login View to load the styles
+import "./LoginView.vue";
+
 export default {
   data() {
     return {
@@ -98,13 +104,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-password-reset-view .k-user-info {
   height: 38px;
   margin-bottom: 2.25rem;
   padding: .5rem;
-  background: $color-white;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow);
 }
 </style>

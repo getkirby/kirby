@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Přejmenovat",
+  "account.delete": "Smazat účet",
+  "account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
+
   "add": "P\u0159idat",
+  "author": "Autor",
   "avatar": "Profilov\u00fd obr\u00e1zek",
   "back": "Zpět",
   "cancel": "Zru\u0161it",
@@ -9,6 +14,7 @@
   "collapse": "Sbalit",
   "collapse.all": "Sbalit vše",
   "copy": "Kopírovat",
+  "copy.all": "Kopírovat vše",
   "create": "Vytvořit",
 
   "date": "Datum",
@@ -23,23 +29,27 @@
   "days.tue": "\u00fat",
   "days.wed": "st",
 
+  "debugging": "Ladění",
+
   "delete": "Smazat",
   "delete.all": "Smazat vše",
-  "dimensions": "Rozměry",
-  "disabled": "Zakázáno",
-  "discard": "Zahodit",
-  "download": "Stáhnout",
-  "duplicate": "Duplikovat",
-  "edit": "Upravit",
-  "expand": "Rozbalit",
-  "expand.all": "Rozbalit vše",
 
   "dialog.files.empty": "Žádné soubory k výběru",
   "dialog.pages.empty": "Žádné stránky k výběru",
   "dialog.users.empty": "Žádní uživatelé k výběru",
 
+  "dimensions": "Rozměry",
+  "disabled": "Zakázáno",
+  "discard": "Zahodit",
+  "download": "Stáhnout",
+  "duplicate": "Duplikovat",
+
+  "edit": "Upravit",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Prostředí",
 
   "error.access.code": "Neplatný kód",
   "error.access.login": "Neplatné přihlášení",
@@ -92,6 +102,7 @@
   "error.language.code": "Zadejte prosím platný kód jazyka",
   "error.language.duplicate": "Jazyk již existuje",
   "error.language.name": "Zadejte prosím platné jméno jazyka",
+  "error.language.notFound": "Jazyk nebyl nalezen",
 
   "error.layout.validation.block": "Chyba v bloku {blockIndex} v rozvržení {layoutIndex}",
   "error.layout.validation.settings": "Chyba v nastavení rozvržení {index}",
@@ -99,6 +110,8 @@
   "error.license.format": "Zadejte prosím platné licenční číslo",
   "error.license.email": "Zadejte prosím platnou emailovou adresu",
   "error.license.verification": "Licenci nelze ověřit",
+
+  "error.offline": "Panel je v současnosti off-line",
 
   "error.page.changeSlug.permission": "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
   "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemohla být zveřejněna",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Uživatel nemá nastavené heslo.",
   "error.user.password.wrong": "Špatné heslo",
   "error.user.role.invalid": "Zadejte prosím platnou roli",
+  "error.user.undefined": "Uživatele se nepodařilo nalézt",
   "error.user.update.permission": "Nemáte dovoleno upravit uživatele \"{name}\"",
 
   "error.validation.accepted": "Potvrďte prosím",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Zadejte prosím čas v rozmezí od {min} do {max}",
   "error.validation.url": "Zadejte prosím platnou adresu URL",
 
+  "expand": "Rozbalit",
+  "expand.all": "Rozbalit vše",
+
   "field.required": "Pole musí být vyplněno.",
   "field.blocks.changeType": "Změnit typ",
   "field.blocks.code.name": "Kód",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Opravdu chcete smazat vybrané bloky?",
   "field.blocks.empty": "Zatím žádné bloky",
   "field.blocks.fieldsets.label": "Vyberte prosím typ bloku …",
+  "field.blocks.fieldsets.paste": "Stiskněte<kbd>{{ shortcut }}</kbd> pro vložení/import bloků z Vaší schránky",
   "field.blocks.gallery.name": "Galerie",
   "field.blocks.gallery.images.empty": "Zatím žádné obrázky",
   "field.blocks.gallery.images.label": "Obrázky",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Vyberte obrázek",
   "field.blocks.image.ratio": "Poměr stran",
   "field.blocks.image.url": "URL obrázku",
+  "field.blocks.line.name": "Čára",
   "field.blocks.list.name": "Seznam",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
   "field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
 
-  "file.blueprint": "Tento typ souboru nemá blueprint. Blueprint můžete definovat v <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "Tento typ souboru nemá blueprint. Blueprint můžete definovat v  <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Opravdu chcete smazat tento soubor?",
   "file.sort": "Změnit pozici",
 
@@ -272,6 +291,7 @@
 
   "hide": "Skrýt",
   "hour": "Hodina",
+  "import": "Import",
   "insert": "Vlo\u017eit",
   "insert.after": "Vložit za",
   "insert.before": "Vložit před",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Kód pro resetování hesla",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Vaše e-mailová adresa byla zaregistrována, kód byl odeslán do Vaší e-mailové schránky.",
-  "login.email.login.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro přihlášení do Kirby Panelu.\nNásledující kód pro přihlášení je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro přihlášení nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej.",
+  "login.email.login.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro přihlášení do Kirby Panelu na stránce {site}.\nNásledující kód pro přihlášení je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro přihlášení nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej nikomu dalšímu.",
   "login.email.login.subject": "Váš kód pro přihlášení",
-  "login.email.password-reset.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro přihlášení do Kirby Panelu.\nNásledující kód pro přihlášení je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro přihlášení nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej.",
+  "login.email.password-reset.body": "Ahoj {user.nameOrEmail},\n\nV nedávné době jsi zažádal(a) o kód pro resetování hesla do Kirby Panelu na stránce {site}.\nNásledující kód pro resetování hesla je platný {timeout} minut:\n\n{code}\n\nPokud jsi o kód pro resetování hesla nežádal(a), tuto zprávu prosím ignoruj a v případě dotazů prosím kontaktuj svého administrátora.\nZ bezpečnostních důvodů prosím tuto zprávu nepřeposílej nikomu dalšímu.",
   "login.email.password-reset.subject": "Váš kód pro resetování hesla",
   "login.remember": "Zůstat přihlášen",
   "login.reset": "Resetovat heslo",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Na výšku",
   "orientation.square": "Čtverec",
 
-  "page.blueprint": "Tento typ stránky nemá blueprint. Blueprint můžete definovat v <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "Tento typ stránky nemá blueprint. Blueprint můžete definovat v <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Zm\u011bnit URL",
   "page.changeSlug.fromTitle": "Vytvo\u0159it z n\u00e1zvu",
   "page.changeStatus": "Změnit status",
@@ -417,7 +437,10 @@
   "pagination.page": "Stránka",
 
   "password": "Heslo",
+  "paste": "Vložit",
+  "paste.after": "Vložit za",
   "pixel": "Pixel",
+  "plugins": "Doplňky",
   "prev": "Předchozí",
   "preview": "Náhled",
   "remove": "Odstranit",
@@ -454,6 +477,8 @@
   "template": "\u0160ablona",
   "today": "Dnes",
 
+  "server": "Server",
+
   "site.blueprint": "Hlavní panel nemá blueprint. Blueprint můžete definovat v <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kód",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Nadpis 1",
   "toolbar.button.heading.2": "Nadpis 2",
   "toolbar.button.heading.3": "Nadpis 3",
+  "toolbar.button.heading.4": "Nadpis 4",
+  "toolbar.button.heading.5": "Nadpis 5",
+  "toolbar.button.heading.6": "Nadpis 6",
   "toolbar.button.italic": "Kurz\u00edva",
   "toolbar.button.file": "Soubor",
   "toolbar.button.file.select": "Vyberte soubor",
   "toolbar.button.file.upload": "Nahrajte soubor",
   "toolbar.button.link": "Odkaz",
+  "toolbar.button.paragraph": "Odstavec",
   "toolbar.button.strike": "Přeškrtnutí",
   "toolbar.button.ol": "Číslovaný seznam",
   "toolbar.button.underline": "Podtržení",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Uživatel",
-  "user.blueprint": "Pro tuto uživatelskou roli můžete definovat další sekce a pole v <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Pro tuto uživatelskou roli můžete definovat další sekce a pole v <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Změnit email",
   "user.changeLanguage": "Změnit jazyk",
   "user.changeName": "Přejmenovat tohoto uživatele",
@@ -516,9 +545,10 @@
 
   "view.account": "V\u00e1\u0161 \u00fa\u010det",
   "view.installation": "Instalace",
+  "view.languages": "Jazyky",
   "view.resetPassword": "Resetovat heslo",
-  "view.settings": "Nastavení",
   "view.site": "Stránka",
+  "view.system": "Systém",
   "view.users": "U\u017eivatel\u00e9",
 
   "welcome": "Vítejte",

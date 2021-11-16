@@ -9,10 +9,14 @@
       <slot v-else />
     </k-headline>
     <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
-      <!-- @slot buttons on the left -->
-      <slot slot="left" name="left" class="k-header-left" />
-      <!-- @slot buttons on the right -->
-      <slot slot="right" name="right" class="k-header-right" />
+      <template #left>
+        <!-- @slot buttons on the left -->
+        <slot name="left" />
+      </template>
+      <template #right>
+        <!-- @slot buttons on the right -->
+        <slot name="right" />
+      </template>
     </k-bar>
 
     <k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
@@ -66,11 +70,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-header {
-  border-bottom: 1px solid $color-border;
-  margin-bottom: 2rem;
   padding-top: 4vh;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border);
 }
 .k-header .k-headline {
   min-height: 1.25em;
@@ -85,18 +89,11 @@ export default {
   cursor: pointer;
 }
 .k-header .k-headline-editable .k-icon {
-  color: $color-light-grey;
+  color: var(--color-gray-500);
   opacity: 0;
   transition: opacity .3s;
   display: inline-block;
-
-  [dir="ltr"] & {
-    margin-left: .5rem;
-  }
-
-  [dir="rtl"] & {
-    margin-right: .5rem;
-  }
+  margin-inline-start: .5rem
 }
 .k-header .k-headline-editable:hover .k-icon {
   opacity: 1;

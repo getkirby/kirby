@@ -2,13 +2,26 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
+
 class UserActionsTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
+        Dir::remove($this->tmp);
+        Data::write($this->tmp . '/accounts/admin/index.php', [
+            'email' => 'admin@domain.com',
+            'role' => 'admin'
+        ]);
+        Data::write($this->tmp . '/accounts/editor/index.php', [
+            'email' => 'editor@domain.com',
+            'role' => 'editor'
+        ]);
+
         $this->app = new App([
             'roles' => [
                 [
@@ -20,27 +33,16 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $this->fixtures = __DIR__ . '/fixtures/UserActionsTest',
+                'accounts' => $this->tmp . '/accounts',
+                'sessions' => $this->tmp . '/sessions'
             ],
-            'user'  => 'admin@domain.com',
-            'users' => [
-                [
-                    'email' => 'admin@domain.com',
-                    'role'  => 'admin'
-                ],
-                [
-                    'email' => 'editor@domain.com',
-                    'role'  => 'editor'
-                ]
-            ],
+            'user'  => 'admin@domain.com'
         ]);
-
-        Dir::remove($this->fixtures);
     }
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
     public function testChangeEmail()
@@ -48,7 +50,10 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeEmail('another@domain.com');
 
-        $this->assertEquals('another@domain.com', $user->email());
+        $this->assertSame('another@domain.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('another@domain.com', $this->app->clone()->user($user->id())->email());
     }
 
     public function testChangeEmailWithUnicode()
@@ -59,9 +64,26 @@ class UserActionsTest extends TestCase
         $user = $user->changeEmail('test@exämple.com');
         $this->assertSame('test@exämple.com', $user->email());
 
+        // verify the value stored on disk
+        $this->assertSame('test@exämple.com', $this->app->clone()->user($user->id())->email());
+
         // with Punycode email
         $user = $user->changeEmail('test@xn--tst-qla.com');
         $this->assertSame('test@täst.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('test@täst.com', $this->app->clone()->user($user->id())->email());
+    }
+
+    public function testChangeEmailWithUppercase()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeEmail('ANOTHER@domain.com');
+
+        $this->assertSame('another@domain.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('another@domain.com', $this->app->clone()->user($user->id())->email());
     }
 
     public function testChangeLanguage()
@@ -69,7 +91,7 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeLanguage('de');
 
-        $this->assertEquals('de', $user->language());
+        $this->assertSame('de', $user->language());
     }
 
     public function testChangeName()
@@ -77,7 +99,7 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeName('Edith Thor');
 
-        $this->assertEquals('Edith Thor', $user->name());
+        $this->assertSame('Edith Thor', $user->name()->value());
     }
 
     public function testChangePassword()
@@ -105,7 +127,7 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertSame('new@domain.com', $user->email());
         $this->assertEquals('admin', $user->role());
     }
 
@@ -141,7 +163,7 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('new@domain.com', $user->email());
+        $this->assertSame('new@domain.com', $user->email());
         $this->assertEquals('editor', $user->role());
     }
 
@@ -155,7 +177,7 @@ class UserActionsTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals('Custom A', $user->a()->value());
+        $this->assertSame('Custom A', $user->a()->value());
     }
 
     public function testCreateWithDefaults()
@@ -178,8 +200,8 @@ class UserActionsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('A', $user->a()->value());
-        $this->assertEquals('B', $user->b()->value());
+        $this->assertSame('A', $user->a()->value());
+        $this->assertSame('B', $user->b()->value());
     }
 
     public function testCreateWithDefaultsAndContent()
@@ -205,8 +227,8 @@ class UserActionsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('Custom A', $user->a()->value());
-        $this->assertEquals('B', $user->b()->value());
+        $this->assertSame('Custom A', $user->a()->value());
+        $this->assertSame('B', $user->b()->value());
     }
 
     public function testCreateWithContentMultilang()
@@ -237,8 +259,8 @@ class UserActionsTest extends TestCase
 
         $this->assertTrue($user->exists());
 
-        $this->assertEquals('a', $user->a()->value());
-        $this->assertEquals('b', $user->b()->value());
+        $this->assertSame('a', $user->a()->value());
+        $this->assertSame('b', $user->b()->value());
     }
 
     public function testDelete()
@@ -258,26 +280,17 @@ class UserActionsTest extends TestCase
             'website' => $url = 'https://editor.com'
         ]);
 
-        $this->assertEquals($url, $user->website()->value());
+        $this->assertSame($url, $user->website()->value());
     }
 
     public function testUpdateWithAuthUser()
     {
-        $app = new App([
-            'users' => [
-                [
-                    'email' => 'admin@getkirby.com',
-                    'role'  => 'admin'
-                ]
-            ]
-        ]);
-
-        $user = $app->user('admin@getkirby.com');
+        $user = $this->app->user('admin@domain.com');
         $user->loginPasswordless();
         $user->update([
             'website' => $url = 'https://getkirby.com'
         ]);
-        $this->assertEquals($url, $app->user()->website()->value());
+        $this->assertSame($url, $this->app->user()->website()->value());
         $user->logout();
     }
 

@@ -14,7 +14,7 @@ return [
     'computed' => [
         'empty' => function () {
             if ($this->empty) {
-                return $this->model()->toString($this->empty);
+                return $this->model()->toSafeString($this->empty);
             }
         }
     ]

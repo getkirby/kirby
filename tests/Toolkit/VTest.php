@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Cms\Page;
+use Kirby\Cms\Field;
 use PHPUnit\Framework\TestCase;
 
 class CanBeCounted implements \Countable
@@ -390,19 +390,19 @@ class VTest extends TestCase
         $this->assertFalse(V::size(5, 7, '>'));
         $this->assertFalse(V::size(7, 5, '<'));
 
-        $page = new Page(['slug' => 'a', 'content' => ['foo' => 2]]);
-        $this->assertTrue(V::size($page->foo(), 2));
-        $this->assertTrue(V::size($page->foo(), 3, '<'));
-        $this->assertTrue(V::size($page->foo(), 1, '>'));
-        $this->assertFalse(V::size($page->foo(), 1, '<'));
-        $this->assertFalse(V::size($page->foo(), 3, '>'));
+        $field = new Field(null, 'foo', 2);
+        $this->assertTrue(V::size($field->foo(), 2));
+        $this->assertTrue(V::size($field->foo(), 3, '<'));
+        $this->assertTrue(V::size($field->foo(), 1, '>'));
+        $this->assertFalse(V::size($field->foo(), 1, '<'));
+        $this->assertFalse(V::size($field->foo(), 3, '>'));
 
-        $page = new Page(['slug' => 'a', 'content' => ['foo' => 'hello']]);
-        $this->assertTrue(V::size($page->foo(), 5));
-        $this->assertTrue(V::size($page->foo(), 6, '<'));
-        $this->assertTrue(V::size($page->foo(), 4, '>'));
-        $this->assertFalse(V::size($page->foo(), 4, '<'));
-        $this->assertFalse(V::size($page->foo(), 6, '>'));
+        $field = new Field(null, 'foo', 'hello');
+        $this->assertTrue(V::size($field->foo(), 5));
+        $this->assertTrue(V::size($field->foo(), 6, '<'));
+        $this->assertTrue(V::size($field->foo(), 4, '>'));
+        $this->assertFalse(V::size($field->foo(), 4, '<'));
+        $this->assertFalse(V::size($field->foo(), 6, '>'));
     }
 
     public function testSizeInvalid()

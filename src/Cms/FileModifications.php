@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
- * Resizing, blurring etc.
+ * Trait for image resizing, blurring etc.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -191,9 +191,20 @@ trait FileModifications
             return $this;
         }
 
-        $result = ($this->kirby()->component('file::version'))($this->kirby(), $this, $options);
+        // fallback to global config options
+        if (isset($options['format']) === false) {
+            if ($format = $this->kirby()->option('thumbs.format')) {
+                $options['format'] = $format;
+            }
+        }
 
-        if (is_a($result, 'Kirby\Cms\FileVersion') === false && is_a($result, 'Kirby\Cms\File') === false) {
+        $component = $this->kirby()->component('file::version');
+        $result    = $component($this->kirby(), $this, $options);
+
+        if (
+            is_a($result, 'Kirby\Cms\FileVersion') === false &&
+            is_a($result, 'Kirby\Cms\File') === false
+        ) {
             throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
         }
 

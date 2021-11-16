@@ -2,11 +2,10 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\IsFile;
+use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Escape;
-use Kirby\Toolkit\F;
-use Throwable;
 
 /**
  * The `$file` object provides a set
@@ -16,11 +15,11 @@ use Throwable;
  * URL or resizing an image. It also
  * handles file meta data.
  *
- * The File class is a wrapper around
- * the Kirby\Image\Image class, which
- * is used to handle all file methods.
+ * The File class proxies the `Kirby\Filesystem\File`
+ * or `Kirby\Image\Image` class, which
+ * is used to handle all asset file methods.
  * In addition the File class handles
- * File meta data via Kirby\Cms\Content.
+ * meta data via `Kirby\Cms\Content`.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -33,19 +32,10 @@ class File extends ModelWithContent
     const CLASS_ALIAS = 'file';
 
     use FileActions;
-    use FileFoundation;
     use FileModifications;
     use HasMethods;
     use HasSiblings;
-
-    /**
-     * The parent asset object
-     * This is used to do actual file
-     * method calls, like size, mime, etc.
-     *
-     * @var \Kirby\Image\Image
-     */
-    protected $asset;
+    use IsFile;
 
     /**
      * Cache for the initialized blueprint object
@@ -57,12 +47,12 @@ class File extends ModelWithContent
     /**
      * @var string
      */
-    protected $id;
+    protected $filename;
 
     /**
      * @var string
      */
-    protected $filename;
+    protected $id;
 
     /**
      * All registered file methods
@@ -123,7 +113,7 @@ class File extends ModelWithContent
         }
 
         // content fields
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**
@@ -133,7 +123,11 @@ class File extends ModelWithContent
      */
     public function __construct(array $props)
     {
-        // properties
+        // set filename as the most important prop first
+        // TODO: refactor later to avoid redundant prop setting
+        $this->setProperty('filename', $props['filename'] ?? null, true);
+
+        // set other properties
         $this->setProperties($props);
     }
 
@@ -160,17 +154,6 @@ class File extends ModelWithContent
     public function apiUrl(bool $relative = false): string
     {
         return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
-    }
-
-    /**
-     * Returns the Image object
-     *
-     * @internal
-     * @return \Kirby\Image\Image
-     */
-    public function asset()
-    {
-        return $this->asset = $this->asset ?? new Image($this->root());
     }
 
     /**
@@ -227,43 +210,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Provides a kirbytag or markdown
-     * tag for the file, which will be
-     * used in the panel, when the file
-     * gets dragged onto a textarea
-     *
-     * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
-     * @param bool $absolute
-     * @return string
-     */
-    public function dragText(string $type = null, bool $absolute = false): string
-    {
-        $type = $this->dragTextType($type);
-        $url  = $absolute ? $this->id() : $this->filename();
-
-        if ($dragTextFromCallback = $this->dragTextFromCallback($type, $url)) {
-            return $dragTextFromCallback;
-        }
-
-        if ($type === 'markdown') {
-            if ($this->type() === 'image') {
-                return '![' . $this->alt() . '](' . $url . ')';
-            } else {
-                return '[' . $this->filename() . '](' . $url . ')';
-            }
-        } else {
-            if ($this->type() === 'image') {
-                return '(image: ' . $url . ')';
-            } elseif ($this->type() === 'video') {
-                return '(video: ' . $url . ')';
-            } else {
-                return '(file: ' . $url . ')';
-            }
-        }
-    }
-
-    /**
      * Constructs a File object
      *
      * @internal
@@ -293,6 +239,20 @@ class File extends ModelWithContent
     public function files()
     {
         return $this->siblingsCollection();
+    }
+
+    /**
+     * Converts the file to html
+     *
+     * @param array $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return $this->asset()->html(array_merge(
+            ['alt' => $this->alt()],
+            $attr
+        ));
     }
 
     /**
@@ -446,156 +406,13 @@ class File extends ModelWithContent
     }
 
     /**
-     * Panel icon definition
+     * Returns the panel info object
      *
-     * @internal
-     * @param array|null $params
-     * @return array
+     * @return \Kirby\Panel\File
      */
-    public function panelIcon(array $params = null): array
+    public function panel()
     {
-        $colorBlue   = '#81a2be';
-        $colorPurple = '#b294bb';
-        $colorOrange = '#de935f';
-        $colorGreen  = '#a7bd68';
-        $colorAqua   = '#8abeb7';
-        $colorYellow = '#f0c674';
-        $colorRed    = '#d16464';
-        $colorWhite  = '#c5c9c6';
-
-        $types = [
-            'image'    => ['color' => $colorOrange, 'type' => 'file-image'],
-            'video'    => ['color' => $colorYellow, 'type' => 'file-video'],
-            'document' => ['color' => $colorRed, 'type' => 'file-document'],
-            'audio'    => ['color' => $colorAqua, 'type' => 'file-audio'],
-            'code'     => ['color' => $colorBlue, 'type' => 'file-code'],
-            'archive'  => ['color' => $colorWhite, 'type' => 'file-zip'],
-        ];
-
-        $extensions = [
-            'indd'  => ['color' => $colorPurple],
-            'xls'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'xlsx'  => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'csv'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'docx'  => ['color' => $colorBlue, 'type' => 'file-word'],
-            'doc'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'rtf'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'mdown' => ['type' => 'file-text'],
-            'md'    => ['type' => 'file-text']
-        ];
-
-        $definition = array_merge($types[$this->type()] ?? [], $extensions[$this->extension()] ?? []);
-
-        $params['type']  = $definition['type']  ?? 'file';
-        $params['color'] = $definition['color'] ?? $colorWhite;
-
-        return parent::panelIcon($params);
-    }
-
-    /**
-     * Returns the image file object based on provided query
-     *
-     * @internal
-     * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
-     */
-    protected function panelImageSource(string $query = null)
-    {
-        if ($query === null && $this->isViewable()) {
-            return $this;
-        }
-
-        return parent::panelImageSource($query);
-    }
-
-    /**
-     * Returns an array of all actions
-     * that can be performed in the Panel
-     *
-     * @since 3.3.0 This also checks for the lock status
-     * @since 3.5.1 This also checks for matching accept settings
-     *
-     * @param array $unlock An array of options that will be force-unlocked
-     * @return array
-     */
-    public function panelOptions(array $unlock = []): array
-    {
-        $options = parent::panelOptions($unlock);
-
-        try {
-            // check if the file type is allowed at all,
-            // otherwise it cannot be replaced
-            $this->match($this->blueprint()->accept());
-        } catch (Throwable $e) {
-            $options['replace'] = false;
-        }
-
-        return $options;
-    }
-
-    /**
-     * Returns the full path without leading slash
-     *
-     * @internal
-     * @return string
-     */
-    public function panelPath(): string
-    {
-        return 'files/' . $this->filename();
-    }
-
-    /**
-     * Prepares the response data for file pickers
-     * and file fields
-     *
-     * @param array|null $params
-     * @return array
-     */
-    public function panelPickerData(array $params = []): array
-    {
-        $image = $this->panelImage($params['image'] ?? []);
-        $icon  = $this->panelIcon($image);
-        $uuid  = $this->id();
-
-        if (empty($params['model']) === false) {
-            $uuid = $this->parent() === $params['model'] ? $this->filename() : $this->id();
-            $absolute = $this->parent() !== $params['model'];
-        }
-
-        // escape the default text
-        // TODO: no longer needed in 3.6
-        $textQuery = $params['text'] ?? '{{ file.filename }}';
-        $text = $this->toString($textQuery);
-        if ($textQuery === '{{ file.filename }}') {
-            $text = Escape::html($text);
-        }
-
-        return [
-            'filename' => $this->filename(),
-            'dragText' => $this->dragText('auto', $absolute ?? false),
-            'icon'     => $icon,
-            'id'       => $this->id(),
-            'image'    => $image,
-            'info'     => $this->toString($params['info'] ?? false),
-            'link'     => $this->panelUrl(true),
-            'text'     => $text,
-            'type'     => $this->type(),
-            'url'      => $this->url(),
-            'uuid'     => $uuid,
-        ];
-    }
-
-    /**
-     * Returns the url to the editing view
-     * in the panel
-     *
-     * @internal
-     * @param bool $relative
-     * @return string
-     */
-    public function panelUrl(bool $relative = false): string
-    {
-        return $this->parent()->panelUrl($relative) . '/' . $this->panelPath();
+        return new Panel($this);
     }
 
     /**
@@ -612,6 +429,7 @@ class File extends ModelWithContent
      * Returns the parent id if a parent exists
      *
      * @internal
+     * @todo 3.7.0 When setParent() is changed, the if check is not needed anymore
      * @return string|null
      */
     public function parentId(): ?string
@@ -697,13 +515,22 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the parent model object
+     * Sets the parent model object;
+     * this property is required for `File::create()` and
+     * will be generally required starting with Kirby 3.7.0
      *
      * @param \Kirby\Cms\Model|null $parent
      * @return $this
+     * @todo make property required in 3.7.0
      */
     protected function setParent(Model $parent = null)
     {
+        // @codeCoverageIgnoreStart
+        if ($parent === null) {
+            deprecated('You are creating a `Kirby\Cms\File` object without passing the `parent` property. While unsupported, this hasn\'t caused any direct errors so far. To fix inconsistencies, the `parent` property will be required when creating a `Kirby\Cms\File` object in Kirby 3.7.0 and higher. Not passing this property will start throwing a breaking error.');
+        }
+        // @codeCoverageIgnoreEnd
+
         $this->parent = $parent;
         return $this;
     }
@@ -805,5 +632,135 @@ class File extends ModelWithContent
     public function url(): string
     {
         return $this->url ?? $this->url = ($this->kirby()->component('file::url'))($this->kirby(), $this);
+    }
+
+
+    /**
+     * Deprecated!
+     */
+
+    /**
+     * Provides a kirbytag or markdown
+     * tag for the file, which will be
+     * used in the panel, when the file
+     * gets dragged onto a textarea
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param bool $absolute
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function dragText(string $type = null, bool $absolute = false): string
+    {
+        return $this->panel()->dragText($type, $absolute);
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @since 3.3.0 This also checks for the lock status
+     * @since 3.5.1 This also checks for matching accept settings
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        return $this->panel()->options($unlock);
+    }
+
+    /**
+     * Returns the full path without leading slash
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelPath(): string
+    {
+        return $this->panel()->path();
+    }
+
+    /**
+     * Prepares the response data for file pickers
+     * and file fields
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @param array|null $params
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelPickerData(array $params = []): array
+    {
+        return $this->panel()->pickerData($params);
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param bool $relative
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelUrl(bool $relative = false): string
+    {
+        return $this->panel()->url($relative);
+    }
+
+    /**
+     * Simplified File URL that uses the parent
+     * Page URL and the filename as a more stable
+     * alternative for the media URLs.
+     *
+     * @return string
+     */
+    public function previewUrl(): string
+    {
+        $parent = $this->parent();
+        $url    = url($this->id());
+
+        switch ($parent::CLASS_ALIAS) {
+            case 'page':
+                $preview = $parent->blueprint()->preview();
+
+                // the page has a custom preview setting,
+                // thus the file is only accessible through
+                // the direct media URL
+                if ($preview !== true) {
+                    return $this->url();
+                }
+
+                // it's more stable to access files for drafts
+                // through their direct URL to avoid conflicts
+                // with draft token verification
+                if ($parent->isDraft() === true) {
+                    return $this->url();
+                }
+
+                return $url;
+            case 'user':
+                return $this->url();
+            default:
+                return $url;
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Kirby\Cms\Form;
 use Kirby\Data\Data;
+use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 
 return [

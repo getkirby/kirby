@@ -37,13 +37,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-layout-column {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: $color-white;
+  background: var(--color-white);
   min-height: 6rem;
 }
 .k-layout-column:focus {
@@ -54,8 +54,13 @@ export default {
   box-shadow: none;
   padding: 0;
   height: 100%;
-  background: $color-white;
+  background: var(--color-white);
+  min-height: 4rem;
 }
+.k-layout-column .k-blocks[data-empty="true"] {
+  min-height: 6rem;
+}
+
 .k-layout-column .k-blocks-list {
   display: flex;
   flex-direction: column;
@@ -64,23 +69,19 @@ export default {
 .k-layout-column .k-blocks .k-block-container:last-of-type {
   flex-grow: 1;
 }
-.k-layout-column .k-blocks .k-empty {
+.k-layout-column .k-blocks-empty {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
+  inset: 0;
   justify-content: center;
-  border: 0;
   opacity: 0;
   transition: opacity .3s;
+  border: 0;
 }
-.k-layout-column .k-blocks .k-empty:hover {
+.k-layout-column .k-blocks-empty:hover {
   opacity: 1;
 }
-.k-layout-column .k-blocks .k-empty .k-icon {
-  border-right: 0;
+.k-layout-column .k-blocks-empty.k-empty .k-icon {
+  width: 1rem;
+  border-inline-end: 0;
 }
 </style>

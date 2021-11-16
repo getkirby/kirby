@@ -5,7 +5,7 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Cms\User;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 
 class MockChallenge extends Challenge
 {
@@ -19,7 +19,7 @@ class MockChallenge extends Challenge
 }
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth\Challenge
+ * @coversDefaultClass \Kirby\Cms\Auth\Challenge
  */
 class ChallengeTest extends TestCase
 {

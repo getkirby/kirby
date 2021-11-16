@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\Form;
+use Kirby\Form\Form;
 
 return [
     'props' => [

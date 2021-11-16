@@ -42,19 +42,16 @@
             <k-button
               v-if="day"
               :disabled="isDisabled(day)"
+              :text="day"
               @click="select(day)"
-            >
-              {{ day }}
-            </k-button>
+            />
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="select('today')">
-              {{ $t("today") }}
-            </k-button>
+            <k-button :text="$t('today')" @click="select('today')" />
           </td>
         </tr>
       </tfoot>
@@ -278,12 +275,12 @@ export default {
         }
       }
 
-      const iso = this.multiple ? 
-                  this.datetimes.map(date => this.toISO(date)) : 
+      const iso = this.multiple ?
+                  this.datetimes.map(date => this.toISO(date)) :
                   this.toISO(this.datetimes[0]);
 
       /**
-       * The input event is fired when a date is selected. 
+       * The input event is fired when a date is selected.
        * @property {string} iso data as ISO date string
        */
       this.$emit("input", iso);
@@ -330,14 +327,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$cell-padding: 0.25rem 0.5rem;
+<style>
 
 .k-calendar-input {
-  padding: 0.5rem;
-  background: $color-gray-900;
-  color: $color-light;
-  border-radius: $rounded-xs;
+  --cell-padding: .25rem .5rem;
+
+  padding: .5rem;
+  background: var(--color-gray-900);
+  color: var(--color-light);
+  border-radius: var(--rounded-xs);
 }
 .k-calendar-table {
   table-layout: fixed;
@@ -349,46 +347,42 @@ $cell-padding: 0.25rem 0.5rem;
 .k-calendar-input > nav {
   display: flex;
   direction: ltr;
-
-  .k-button {
-    padding: 0.5rem;
-  }
+}
+.k-calendar-input > nav .k-button {
+  padding: .5rem;
 }
 .k-calendar-selects {
   flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  [dir="ltr"] & {
-    direction: ltr;
-  }
-
-  [dir="rtl"] & {
-    direction: rtl;
-  }
-
+}
+[dir="ltr"] .k-calendar-selects {
+  direction: ltr;
+}
+[dir="rtl"] .k-calendar-selects {
+  direction: rtl;
 }
 .k-calendar-selects .k-select-input {
-  padding: 0 0.5rem;
-  font-weight: $font-normal;
-  font-size: $text-sm;
+  padding: 0 .5rem;
+  font-weight: var(--font-normal);
+  font-size: var(--text-sm);
 }
 .k-calendar-selects .k-select-input:focus-within {
-  color: $color-focus-on-dark !important;
+  color: var(--color-focus-light) !important;
 }
 .k-calendar-input th {
-  padding: 0.5rem 0;
-  color: $color-light-grey;
-  font-size: $text-xs;
+  padding: .5rem 0;
+  color: var(--color-gray-500);
+  font-size: var(--text-xs);
   font-weight: 400;
   text-align: center;
 }
 .k-calendar-day .k-button {
   width: 2rem;
   height: 2rem;
-  margin: 0 auto;
-  color: $color-white;
+  margin-inline: auto;
+  color: var(--color-white);
   line-height: 1.75rem;
   display: flex;
   justify-content: center;
@@ -399,37 +393,37 @@ $cell-padding: 0.25rem 0.5rem;
   opacity: 1;
 }
 .k-calendar-table .k-button:hover {
-  color: $color-white;
+  color: var(--color-white);
 }
 .k-calendar-day:hover .k-button:not([data-disabled]) {
-  border-color: rgba($color-white, 0.25);
+  border-color: rgba(255, 255, 255, .25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
-  color: $color-yellow-600;
+  color: var(--color-yellow-500);
   font-weight: 500;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-  border-color: $color-focus-on-dark;
-  color: $color-focus-on-dark;
+  border-color: var(--color-focus-light);
+  color: var(--color-focus-light);
 }
 .k-calendar-day[data-between] {
   background: #333;
 }
 .k-calendar-day[data-first] {
-  border-top-left-radius: 100%;
-  border-bottom-left-radius: 100%;
+  border-start-start-radius: 100%;
+  border-end-start-radius: 100%;
 }
 .k-calendar-day[data-last] {
-  border-top-right-radius: 100%;
-  border-bottom-right-radius: 100%;
+  border-start-end-radius: 100%;
+  border-end-end-radius: 100%;
 }
 .k-calendar-today {
   text-align: center;
   padding-top: .5rem;
 }
 .k-calendar-today .k-button {
-  color: $color-focus-on-dark;
-  font-size: $text-xs;
+  color: var(--color-focus-light);
+  font-size: var(--text-xs);
   padding: 1rem;
 }
 .k-calendar-today .k-button-text {

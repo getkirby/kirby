@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Cambia il tuo nome",
+  "account.delete": "Elimina l'account",
+  "account.delete.confirm": "Vuoi davvero eliminare il tuo account? Verrai disconnesso immediatamente. Il tuo account non potrà essere recuperato.",
+
   "add": "Aggiungi",
+  "author": "Autore",
   "avatar": "Immagine del profilo",
   "back": "Indietro",
   "cancel": "Annulla",
@@ -9,6 +14,7 @@
   "collapse": "Comprimi",
   "collapse.all": "Comprimi tutto",
   "copy": "Copia",
+  "copy.all": "Copia tutto",
   "create": "Crea",
 
   "date": "Data",
@@ -23,23 +29,27 @@
   "days.tue": "Ma",
   "days.wed": "Me",
 
+  "debugging": "Debugging",
+
   "delete": "Elimina",
   "delete.all": "Elimina tutti",
-  "dimensions": "Dimensioni",
-  "disabled": "Disabilitato",
-  "discard": "Abbandona",
-  "download": "Scarica",
-  "duplicate": "Duplica",
-  "edit": "Modifica",
-  "expand": "Espandi",
-  "expand.all": "Espandi tutto",
 
   "dialog.files.empty": "Nessun file selezionabile",
   "dialog.pages.empty": "Nessuna pagina selezionabile",
   "dialog.users.empty": "Nessuno user selezionabile",
 
+  "dimensions": "Dimensioni",
+  "disabled": "Disabilitato",
+  "discard": "Abbandona",
+  "download": "Scarica",
+  "duplicate": "Duplica",
+
+  "edit": "Modifica",
+
   "email": "Email",
   "email.placeholder": "mail@esempio.com",
+
+  "environment": "Ambiente",
 
   "error.access.code": "Codice non valido",
   "error.access.login": "Login Invalido",
@@ -67,7 +77,7 @@
   "error.file.changeName.permission": "Non ti è permesso modificare il nome di \"{filename}\"",
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
   "error.file.extension.forbidden": "L'estensione \"{extension}\" non è consentita",
-  "error.file.extension.invalid": "Invalid extension: {extension}",
+  "error.file.extension.invalid": "Estensione non valida: {extension}",
   "error.file.extension.missing": "Il file \"{filename}\" non ha estensione",
   "error.file.maxheight": "L'immagine non dev'essere più alta di {height} pixel",
   "error.file.maxsize": "Il file è troppo pesante",
@@ -83,7 +93,7 @@
   "error.file.notFound": "Il file non \u00e8 stato trovato",
   "error.file.orientation": "L'imaggine dev'essere orientata in \"{orientation}\"",
   "error.file.type.forbidden": "Non ti è permesso caricare file {type}",
-  "error.file.type.invalid": "Invalid file type: {type}",
+  "error.file.type.invalid": "Tipo di file non valido: {type}",
   "error.file.undefined": "Il file non \u00e8 stato trovato",
 
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
@@ -92,13 +102,16 @@
   "error.language.code": "Inserisci un codice valido per la lingua",
   "error.language.duplicate": "La lingua esiste già",
   "error.language.name": "Inserisci un nome valido per la lingua",
+  "error.language.notFound": "La lingua non è stata trovata",
 
-  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
-  "error.layout.validation.settings": "There's an error in layout {index} settings",
+  "error.layout.validation.block": "C'è un errore nel blocco {blockIndex} nel layout {layoutIndex}",
+  "error.layout.validation.settings": "C'è un errore nelle impostazioni del layout {index}",
 
   "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",
   "error.license.verification": "Non è stato possibile verificare la licenza",
+
+  "error.offline": "Il pannello di controllo è attualmente offline",
 
   "error.page.changeSlug.permission": "Non ti è permesso cambiare l'URL di \"{slug}\"",
   "error.page.changeStatus.incomplete": "La pagina contiene errori e non può essere pubblicata",
@@ -118,7 +131,7 @@
   "error.page.duplicate.permission": "Non ti è permesso duplicare \"{slug}\"",
   "error.page.notFound": "La pagina \"{slug}\" non è stata trovata",
   "error.page.num.invalid": "Inserisci un numero di ordinamento valido. I numeri non devono essere negativi",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Per favore inserisci un suffisso valido per l'URL",
   "error.page.slug.maxlength": "Lo \"slug\" dev'essere più corto di \"{length}\" caratteri",
   "error.page.sort.permission": "La pagina \"{slug}\" non può essere ordinata",
   "error.page.status.invalid": "Imposta uno stato valido per la pagina",
@@ -163,8 +176,9 @@
   "error.user.password.invalid": "Per favore inserisci una password valida. Le password devono essere lunghe almeno 8 caratteri",
   "error.user.password.notSame": "Le password non corrispondono",
   "error.user.password.undefined": "L'utente non ha una password",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Password sbagliata",
   "error.user.role.invalid": "Inserisci un ruolo valido",
+  "error.user.undefined": "L'utente non è stato trovato",
   "error.user.update.permission": "Non ti è permesso aggiornare l'utente \"{name}\"",
 
   "error.validation.accepted": "Per favore conferma",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Inserisci un orario tra le {min} e le {max}",
   "error.validation.url": "Inserisci un URL valido",
 
+  "expand": "Espandi",
+  "expand.all": "Espandi tutto",
+
   "field.required": "Il campo è obbligatorio",
   "field.blocks.changeType": "Cambia tipo",
   "field.blocks.code.name": "Codice",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Vuoi veramente eliminare i blocchi selezionati?",
   "field.blocks.empty": "Nessun blocco inserito",
   "field.blocks.fieldsets.label": "Seleziona il tipo di blocco …",
+  "field.blocks.fieldsets.paste": "Premi <kbd>{{ shortcut }}</kbd> per incollare/importare i blocchi dagli appunti",
   "field.blocks.gallery.name": "Galleria",
   "field.blocks.gallery.images.empty": "Nessuna immagine inserita",
   "field.blocks.gallery.images.label": "Immagini",
@@ -233,7 +251,8 @@
   "field.blocks.image.name": "Immagine",
   "field.blocks.image.placeholder": "Seleziona un'immagine",
   "field.blocks.image.ratio": "Rapporto",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "URL immagine",
+  "field.blocks.line.name": "Linea",
   "field.blocks.list.name": "Lista",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Testo",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Non ci sono ancora elementi.",
   "field.users.empty": "Nessun utente selezionato",
 
-  "file.blueprint": "Questo file non ha ancora un \"blueprint\". Puoi impostarne uno in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "Questo file non ha ancora un blueprint. Puoi definire la sua configurazione in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Sei sicuro di voler eliminare questo file?",
   "file.sort": "Cambia posizione",
 
@@ -272,6 +291,7 @@
 
   "hide": "Nascondi",
   "hour": "Ora",
+  "import": "Importa",
   "insert": "Inserisci",
   "insert.after": "Inserisci dopo",
   "insert.before": "Inserisci prima",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Codice per reimpostare la password",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Qualora il tuo indirizzo email fosse registrato, il codice richiesto è stato inviato tramite email.",
-  "login.email.login.body": "Ciao {user.nameOrEmail},\n\nHai recentemente richiesto un codice di accesso per il pannello Kirby.\nIl seguente codice sarà valido per {timeout} minuti:\n\n{code}\n\nSe non hai richiesto un codice di accesso, per favore ignora questa email o contatta il tuo amministratore se hai domande. \nPer motivi di sicurezza, per favore NON inoltrare questa email.",
+  "login.email.login.body": "Ciao {user.nameOrEmail},\n\nHai recentemente richiesto un codice di login per il pannello di controllo di {site}.\nIl seguente codice di login sarà valido per {timeout} minuti:\n\n{code}\n\nSe non hai richiesto un codice di login, per favore ignora questa mail o contatta il tuo amministratore in caso di domande.\nPer sicurezza, per favore NON inoltrare questa email.",
   "login.email.login.subject": "Il tuo codice di accesso",
-  "login.email.password-reset.body": "Ciao {user.nameOrEmail},\n\nHai recentemente richiesto un codice per reimpostare la tua password per il pannello Kirby.\nIl seguente codice sarà valido per {timeout} minuti:\n\n{code}\n\nSe non hai richiesto questo codice, per favore ignora questa email o contatta il tuo amministratore se hai domande. \nPer motivi di sicurezza, per favore NON inoltrare questa email.",
+  "login.email.password-reset.body": "Ciao {user.nameOrEmail},\n\nHai recentemente richiesto di resettare la password per il pannello di controllo di {site}.\nIl seguente codice di reset della password sarà valido per {timeout} minuti:\n\n{code}\n\nSe non hai richiesto di resettare la password per favore ignora questa email o contatta il tuo amministratore in caso di domande.\nPer sicurezza, per favore NON inoltrare questa email.",
   "login.email.password-reset.subject": "Il tuo codice di reimpostazione della password",
   "login.remember": "Resta collegato",
   "login.reset": "Reimposta la password",
@@ -376,7 +396,7 @@
   "off": "off",
   "on": "on",
   "open": "Apri",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Apri in una finestra nuova",
   "options": "Opzioni",
   "options.none": "Nessuna opzione",
 
@@ -385,7 +405,7 @@
   "orientation.portrait": "Verticale",
   "orientation.square": "Quadrato",
 
-  "page.blueprint": "Questa pagina non ha ancora un \"blueprint\". Puoi impostarne uno in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "Questa pagina non ha ancora un blueprint. Puoi definire la sua configurazione in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Modifica URL",
   "page.changeSlug.fromTitle": "Crea in base al titolo",
   "page.changeStatus": "Cambia stato",
@@ -417,7 +437,10 @@
   "pagination.page": "Pagina",
 
   "password": "Password",
+  "paste": "Incolla",
+  "paste.after": "Incolla dopo",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Precedente",
   "preview": "Anteprima",
   "remove": "Rimuovi",
@@ -454,6 +477,8 @@
   "template": "Template",
   "today": "Oggi",
 
+  "server": "Server",
+
   "site.blueprint": "Il sito non ha ancora un \"blueprint\". Puoi impostarne uno in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Codice",
@@ -463,14 +488,18 @@
   "toolbar.button.heading.1": "Titolo 1",
   "toolbar.button.heading.2": "Titolo 2",
   "toolbar.button.heading.3": "Titolo 3",
+  "toolbar.button.heading.4": "Titolo 4",
+  "toolbar.button.heading.5": "Titolo 5",
+  "toolbar.button.heading.6": "Titolo 6",
   "toolbar.button.italic": "Corsivo",
   "toolbar.button.file": "File",
   "toolbar.button.file.select": "Seleziona un file",
   "toolbar.button.file.upload": "Carica un file",
   "toolbar.button.link": "Link",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.paragraph": "Paragrafo",
+  "toolbar.button.strike": "Barrato",
   "toolbar.button.ol": "Elenco numerato",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Sottolinea",
   "toolbar.button.ul": "Elenco puntato",
 
   "translation.author": "Kirby Team, Roman Steiner, Manu Moreale",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://esempio.com",
 
   "user": "Utente",
-  "user.blueprint": "Puoi definire sezioni e campi del form aggiuntivi per questo ruolo in <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Puoi definire ulteriori sezioni e campi del form aggiuntivi per questo ruolo in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Modifica email",
   "user.changeLanguage": "Cambia lingua",
   "user.changeName": "Rinomina questo utente",
@@ -516,12 +545,13 @@
 
   "view.account": "Il tuo account",
   "view.installation": "Installazione",
+  "view.languages": "Lingue",
   "view.resetPassword": "Reimposta la password",
-  "view.settings": "Impostazioni",
   "view.site": "Sito",
+  "view.system": "Sistema",
   "view.users": "Utenti",
 
   "welcome": "Benvenuto",
   "year": "Anno",
-  "yes": "yes"
+  "yes": "sì"
 }

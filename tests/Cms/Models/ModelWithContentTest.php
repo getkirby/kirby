@@ -19,6 +19,11 @@ class ExtendedModelWithContent extends ModelWithContent
         return 'test.txt';
     }
 
+    public function panel()
+    {
+        return new PageForPanel($this);
+    }
+
     public function permissions()
     {
         return null;
@@ -163,5 +168,14 @@ class ModelWithContentTest extends TestCase
                 'title' => 'Page'
             ]
         ], $model->blueprints('menu'));
+    }
+
+    public function testToStringWithoutValue()
+    {
+        $model = new Site();
+        $this->assertSame('', $model->toString());
+
+        $model = new Page(['slug' => 'foo']);
+        $this->assertSame('foo', $model->toString());
     }
 }

@@ -17,37 +17,22 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TagsInput from "../Input/TagsInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as TagsInput } from "../Input/TagsInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-tags-input>` for additional information.
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    TagsInput,
+    counter
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...TagsInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-
-      return {
-        count: this.value && Array.isArray(this.value) ? this.value.length : 0,
-        min: this.min,
-        max: this.max,
-      };
-    }
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

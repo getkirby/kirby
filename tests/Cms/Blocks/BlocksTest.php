@@ -74,6 +74,20 @@ class BlocksTest extends TestCase
         $this->assertSame('text', $blocks->last()->type());
     }
 
+    public function testHasType()
+    {
+        $input = [
+            [
+                'type' => 'heading'
+            ]
+        ];
+
+        $blocks = Blocks::factory($input);
+
+        $this->assertTrue($blocks->hasType('heading'));
+        $this->assertFalse($blocks->hasType('code'));
+    }
+
     public function testParseJson()
     {
         $input = [

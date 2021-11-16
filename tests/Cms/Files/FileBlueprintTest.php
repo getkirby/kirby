@@ -6,8 +6,12 @@ class FileBlueprintTest extends TestCase
 {
     public function testOptions()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $blueprint = new FileBlueprint([
-            'model' => new File(['filename' => 'test.jpg'])
+            'model' => new File(['filename' => 'test.jpg', 'parent' => $page])
         ]);
 
         $expected = [
@@ -24,8 +28,13 @@ class FileBlueprintTest extends TestCase
 
     public function testTemplateFromContent()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent' => $page,
             'content' => [
                 'template' => 'gallery'
             ]
@@ -36,8 +45,13 @@ class FileBlueprintTest extends TestCase
 
     public function testCustomTemplate()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent'   => $page,
             'template' => 'gallery'
         ]);
 
@@ -46,8 +60,13 @@ class FileBlueprintTest extends TestCase
 
     public function testDefaultBlueprint()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent'   => $page,
             'template' => 'does-not-exist',
         ]);
 
@@ -67,8 +86,13 @@ class FileBlueprintTest extends TestCase
             ]
         ]);
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent'   => $page,
             'template' => 'gallery',
         ]);
 
@@ -80,8 +104,13 @@ class FileBlueprintTest extends TestCase
 
     public function testAccept()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
-            'filename' => 'test.jpg'
+            'filename' => 'test.jpg',
+            'parent'   => $page
         ]);
 
         // string = MIME types
@@ -234,8 +263,13 @@ class FileBlueprintTest extends TestCase
 
     public function testAcceptMime()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
-            'filename' => 'test.jpg'
+            'filename' => 'test.jpg',
+            'parent'   => $page
         ]);
 
         // default restrictions
@@ -324,8 +358,13 @@ class FileBlueprintTest extends TestCase
             ]
         ]);
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent'   => $page,
             'template' => 'image',
         ]);
 

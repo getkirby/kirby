@@ -1,12 +1,24 @@
 <template>
-  <k-icon class="k-loader" type="loader" />
+  <span class="k-loader">
+    <k-icon class="k-loader-icon" type="loader" />
+  </span>
 </template>
 
-<style lang="scss">
+<script>
+/**
+ * Animated loading spinner
+ * @public
+ *
+ * @example <k-loader />
+ */
+export default {}
+</script>
+
+<style>
 .k-loader {
   z-index: 1;
 }
-.k-loader svg {
+.k-loader-icon {
   animation: Spin .9s linear infinite;
 }
 </style>

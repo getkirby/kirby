@@ -5,7 +5,7 @@ namespace Kirby\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\Json
+ * @coversDefaultClass \Kirby\Data\Json
  */
 class JsonTest extends TestCase
 {
@@ -27,6 +27,9 @@ class JsonTest extends TestCase
         $this->assertSame($array, $result);
 
         $this->assertSame([], Json::decode(null));
+        $this->assertSame([], Json::decode(''));
+        $this->assertSame([], Json::decode('{}'));
+        $this->assertSame([], Json::decode('[]'));
         $this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
     }
 

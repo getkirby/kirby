@@ -16,33 +16,33 @@ export default {
   props: {
     /**
      * To center the content
-     * @values centre 
+     * @values centre
      */
     align: String
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-view {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-inline: 1.5rem;
   margin: 0 auto;
   max-width: 100rem;
-
-  @media screen and (min-width: $breakpoint-sm) {
-    padding-left: 3rem;
-    padding-right: 3rem;
+}
+@media screen and (min-width: 30em) {
+  .k-view {
+    padding-inline: 3rem;
   }
+}
 
-  @media screen and (min-width: $breakpoint-lg) {
-    padding-left: 6rem;
-    padding-right: 6rem;
+@media screen and (min-width: 90em) {
+  .k-view {
+    padding-inline: 6rem;
   }
 }
 
 .k-view[data-align="center"] {
-  height: calc(100vh - 6rem);
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;

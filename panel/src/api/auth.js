@@ -7,7 +7,7 @@ export default (api) => {
         password: user.password
       };
 
-      return await api.post("auth/login", data);
+      return api.post("auth/login", data);
     },
     async logout() {
       return api.post("auth/logout");
@@ -16,7 +16,7 @@ export default (api) => {
       return api.get("auth", params);
     },
     async verifyCode(code) {
-      return await api.post("auth/code", {code});
+      return api.post("auth/code", {code});
     }
   }
 };

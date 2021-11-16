@@ -1,10 +1,9 @@
-<?xml version="1.0" standalone="no"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <g id="a0">
-    <circle fill="#000" r="10" />
+    <circle fill="#000" r="10"/>
   </g>
   <g id="a1">
-    <use xlink:href="#a0" />
-    <use href="#a0" />
+    <use xlink:href="#a0"/>
+    <use href="#a0"/>
   </g>
 </svg>

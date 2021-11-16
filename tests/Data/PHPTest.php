@@ -2,11 +2,11 @@
 
 namespace Kirby\Data;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\PHP
+ * @coversDefaultClass \Kirby\Data\PHP
  */
 class PHPTest extends TestCase
 {

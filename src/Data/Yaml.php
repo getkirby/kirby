@@ -50,7 +50,7 @@ class Yaml extends Handler
      */
     public static function decode($string): array
     {
-        if ($string === null) {
+        if ($string === null || $string === '') {
             return [];
         }
 

@@ -12,6 +12,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
   props: {
     user: [Object, String]
@@ -19,22 +22,22 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-user-info {
   display: flex;
   align-items: center;
   line-height: 1;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-user-info .k-image {
   width: 1.5rem;
-  margin-right: 0.75rem;
+  margin-inline-end: .75rem;
 }
 .k-user-info .k-icon {
   width: 1.5rem;
   height: 1.5rem;
-  margin-right: 0.75rem;
-  background: $color-black;
-  color: $color-white;
+  margin-inline-end: .75rem;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 </style>

@@ -4,10 +4,15 @@
     "type": "plugin",
     "version": "1.0.0",
     "license": "MIT",
+    "homepage": "https://getkirby.com",
     "authors": [
         {
-            "name": "Bastian Allgeier",
-            "email": "bastian@getkirby.com"
+            "name": "A",
+            "email": "a@getkirby.com"
+        },
+        {
+            "name": "B",
+            "email": "b@getkirby.com"
         }
     ],
     "require": {}

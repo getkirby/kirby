@@ -1,43 +1,35 @@
 <template>
   <k-field v-bind="$props" class="k-pages-field">
-    <k-button-group slot="options" class="k-field-options">
-      <k-button
-        v-if="more && !disabled"
-        :icon="btnIcon"
-        class="k-field-options-button"
-        @click="open"
-      >
-        {{ btnLabel }}
-      </k-button>
-    </k-button-group>
+    <template #options>
+      <k-button-group class="k-field-options">
+        <k-button
+          v-if="more && !disabled"
+          :icon="btnIcon"
+          :text="btnLabel"
+          class="k-field-options-button"
+          @click="open"
+        />
+      </k-button-group>
+    </template>
+
     <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :handle="true"
-        :list="selected"
-        :data-size="size"
-        :data-invalid="isInvalid"
-        @end="onInput"
+      <k-items
+        :items="selected"
+        :layout="layout"
+        :size="size"
+        :sortable="!disabled && selected.length > 1"
+        @sort="onInput"
+        @sortChange="$emit('change', $event)"
       >
-        <component
-          :is="elements.item"
-          v-for="(page, index) in selected"
-          :key="page.id"
-          :sortable="!disabled && selected.length > 1"
-          :text="page.text"
-          :info="page.info"
-          :link="link ? page.link : null"
-          :icon="page.icon"
-          :image="page.image"
-        >
+        <template #options="{ index }">
           <k-button
             v-if="!disabled"
-            slot="options"
+            :tooltip="$t('remove')"
             icon="remove"
             @click="remove(index)"
           />
-        </component>
-      </k-draggable>
+        </template>
+      </k-items>
     </template>
     <k-empty
       v-else
@@ -53,29 +45,14 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    open() {
-      if (this.disabled) {
-        return false;
-      }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(page => page.id)
-      });
-    }
-  }
+  mixins: [picker]
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-field[data-disabled] * {
   pointer-events: all !important;
 }

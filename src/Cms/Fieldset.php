@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -21,6 +22,7 @@ class Fieldset extends Item
     const ITEMS_CLASS = '\Kirby\Cms\Fieldsets';
 
     protected $disabled;
+    protected $editable;
     protected $fields = [];
     protected $icon;
     protected $label;
@@ -49,6 +51,7 @@ class Fieldset extends Item
         parent::__construct($params);
 
         $this->disabled  = $params['disabled'] ?? false;
+        $this->editable  = $params['editable'] ?? true;
         $this->icon      = $params['icon'] ?? null;
         $this->model     = $this->parent;
         $this->name      = $this->createName($params['name'] ?? Str::ucfirst($this->type));
@@ -70,6 +73,10 @@ class Fieldset extends Item
         }
     }
 
+    /**
+     * @param array $fields
+     * @return array
+     */
     protected function createFields(array $fields = []): array
     {
         $fields = Blueprint::fieldsProps($fields);
@@ -81,16 +88,28 @@ class Fieldset extends Item
         return $fields;
     }
 
-    protected function createName($name): string
+    /**
+     * @param array|string $name
+     * @return string|null
+     */
+    protected function createName($name): ?string
     {
         return I18n::translate($name, $name);
     }
 
+    /**
+     * @param array|string $label
+     * @return string|null
+     */
     protected function createLabel($label = null): ?string
     {
         return I18n::translate($label, $label);
     }
 
+    /**
+     * @param array $params
+     * @return array
+     */
     protected function createTabs(array $params = []): array
     {
         $tabs = $params['tabs'] ?? [];
@@ -124,11 +143,33 @@ class Fieldset extends Item
         return $tabs;
     }
 
+    /**
+     * @return bool
+     */
     public function disabled(): bool
     {
         return $this->disabled;
     }
 
+    /**
+     * @return bool
+     */
+    public function editable(): bool
+    {
+        if ($this->editable === false) {
+            return false;
+        }
+
+        if (count($this->fields) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return array
+     */
     public function fields(): array
     {
         return $this->fields;
@@ -139,7 +180,7 @@ class Fieldset extends Item
      *
      * @param array $fields
      * @param array $input
-     * @return \Kirby\Cms\Form
+     * @return \Kirby\Form\Form
      */
     public function form(array $fields, array $input = [])
     {
@@ -151,36 +192,65 @@ class Fieldset extends Item
         ]);
     }
 
+    /**
+     * @return string|null
+     */
     public function icon(): ?string
     {
         return $this->icon;
     }
 
+    /**
+     * @return string|null
+     */
     public function label(): ?string
     {
         return $this->label;
     }
 
+    /**
+     * @return \Kirby\Cms\ModelWithContent
+     */
     public function model()
     {
         return $this->model;
     }
 
+    /**
+     * @return string
+     */
     public function name(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return string|bool
+     */
+    public function preview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * @return array
+     */
     public function tabs(): array
     {
         return $this->tabs;
     }
 
+    /**
+     * @return bool
+     */
     public function translate(): bool
     {
         return $this->translate;
     }
 
+    /**
+     * @return string
+     */
     public function type(): string
     {
         return $this->type;
@@ -192,21 +262,33 @@ class Fieldset extends Item
     public function toArray(): array
     {
         return [
-            'disabled'  => $this->disabled,
-            'icon'      => $this->icon,
-            'label'     => $this->label,
-            'name'      => $this->name,
-            'preview'   => $this->preview,
-            'tabs'      => $this->tabs,
-            'translate' => $this->translate,
-            'type'      => $this->type,
-            'unset'     => $this->unset,
-            'wysiwyg'   => $this->wysiwyg,
+            'disabled'  => $this->disabled(),
+            'editable'  => $this->editable(),
+            'icon'      => $this->icon(),
+            'label'     => $this->label(),
+            'name'      => $this->name(),
+            'preview'   => $this->preview(),
+            'tabs'      => $this->tabs(),
+            'translate' => $this->translate(),
+            'type'      => $this->type(),
+            'unset'     => $this->unset(),
+            'wysiwyg'   => $this->wysiwyg(),
         ];
     }
 
+    /**
+     * @return bool
+     */
     public function unset(): bool
     {
         return $this->unset;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wysiwyg(): bool
+    {
+        return $this->wysiwyg;
     }
 }

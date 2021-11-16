@@ -225,7 +225,7 @@ abstract class Sql
             'null'    => $null,
             'default' => $columnDefault['query'],
             'unique'  => $uniqueColumn
-        ], ''));
+        ], ['fallback' => '']));
 
         return [
             'query'    => $query,

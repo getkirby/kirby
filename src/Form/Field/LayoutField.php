@@ -4,10 +4,10 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
-use Kirby\Cms\Form;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Throwable;
 

@@ -1,10 +1,10 @@
 <template>
   <k-draggable
     ref="box"
+    v-direction
     :list="tags"
     :data-layout="layout"
     :options="dragOptions"
-    :dir="direction"
     class="k-tags-input"
     @end="onInput"
   >
@@ -26,55 +26,71 @@
       <span v-html="tag.text" />
     </k-tag>
 
-    <span slot="footer" class="k-tags-input-element">
-      <k-autocomplete
-        ref="autocomplete"
-        :html="true"
-        :options="options"
-        :skip="skip"
-        @select="addTag"
-        @leave="$refs.input.focus()"
-      >
-        <input
-          :id="id"
-          ref="input"
-          v-model.trim="newTag"
-          :autofocus="autofocus"
-          :disabled="disabled || (max && tags.length >= max)"
-          :name="name"
-          autocomplete="off"
-          type="text"
-          @input="type($event.target.value)"
-          @blur="blurInput"
-          @keydown.meta.s="blurInput"
-          @keydown.left.exact="leaveInput"
-          @keydown.enter.exact="enter"
-          @keydown.tab.exact="tab"
-          @keydown.backspace.exact="leaveInput"
+    <template #footer>
+      <span class="k-tags-input-element">
+        <k-autocomplete
+          ref="autocomplete"
+          :html="true"
+          :options="options"
+          :skip="skip"
+          @select="addTag"
+          @leave="$refs.input.focus()"
         >
-      </k-autocomplete>
-    </span>
+          <input
+            :id="id"
+            ref="input"
+            v-model.trim="newTag"
+            :autofocus="autofocus"
+            :disabled="disabled || (max && tags.length >= max)"
+            :name="name"
+            autocomplete="off"
+            type="text"
+            @input="type($event.target.value)"
+            @blur="blurInput"
+            @keydown.meta.s="blurInput"
+            @keydown.left.exact="leaveInput"
+            @keydown.enter.exact="enter"
+            @keydown.tab.exact="tab"
+            @keydown.backspace.exact="leaveInput"
+          >
+        </k-autocomplete>
+      </span>
+    </template>
   </k-draggable>
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-import direction from "@/helpers/direction.js";
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     accept: {
       type: String,
       default: "all"
     },
-    disabled: Boolean,
     icon: {
       type: [String, Boolean],
       default: "tag"
     },
-    id: [Number, String],
     /**
      * You can set the layout to `list` to extend the width of each tag
      * to 100% and show them in a list. This is handy in narrow columns
@@ -90,7 +106,6 @@ export default {
      * The minimum number of required tags
      */
     min: Number,
-    name: [Number, String],
     /**
      * Options will be shown in the autocomplete dropdown
      * as soon as you start typing.
@@ -101,7 +116,6 @@ export default {
         return [];
       }
     },
-    required: Boolean,
     separator: {
       type: String,
       default: ","
@@ -112,7 +126,12 @@ export default {
         return [];
       }
     }
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       tags: this.prepareTags(this.value),
@@ -127,9 +146,6 @@ export default {
     };
   },
   computed: {
-    direction() {
-      return direction(this);
-    },
     dragOptions() {
       return {
         delay: 1,
@@ -385,22 +401,22 @@ export default {
   validations() {
     return {
       tags: {
-        required: this.required ? required : true,
-        minLength: this.min ? minLength(this.min) : true,
-        maxLength: this.max ? maxLength(this.max) : true
+        required: this.required ? validateRequired : true,
+        minLength: this.min ? validateMinLength(this.min) : true,
+        maxLength: this.max ? validateMaxLength(this.max) : true
       }
     };
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-tags-input {
   display: flex;
   flex-wrap: wrap;
 }
 .k-tags-input .k-sortable-ghost {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 .k-tags-input-element {
   flex-grow: 1;
@@ -419,9 +435,8 @@ export default {
 .k-tags-input-element input:focus {
   outline: 0;
 }
-
 .k-tags-input[data-layout="list"] .k-tag {
   width: 100%;
-  margin-right: 0 !important;
+  margin-inline-end: 0 !important;
 }
 </style>

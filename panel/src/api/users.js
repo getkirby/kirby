@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default (api) => {
   return {
     async blueprint(id) {
@@ -9,14 +7,6 @@ export default (api) => {
       return api.get("users/" + id + "/blueprints", {
         section: section
       });
-    },
-    breadcrumb(user) {
-      return [
-        {
-          link: "/users/" + user.id,
-          label: user.username
-        }
-      ];
     },
     async changeEmail(id, email) {
       return api.patch("users/" + id + "/email", { email: email });
@@ -51,59 +41,10 @@ export default (api) => {
     async get(id, query) {
       return api.get("users/" + id, query);
     },
-    async options(id) {
-      const user    = await api.get(this.url(id), {select: "options"});
-      const options = user.options;
-      let result    = [];
-
-      result.push({
-        click: "rename",
-        icon: "title",
-        text: Vue.i18n.translate("user.changeName"),
-        disabled: !options.changeName
-      });
-
-      result.push({
-        click: "email",
-        icon: "email",
-        text: Vue.i18n.translate("user.changeEmail"),
-        disabled: !options.changeEmail
-      });
-
-      result.push({
-        click: "role",
-        icon: "bolt",
-        text: Vue.i18n.translate("user.changeRole"),
-        disabled: !options.changeRole
-      });
-
-      result.push({
-        click: "password",
-        icon: "key",
-        text: Vue.i18n.translate("user.changePassword"),
-        disabled: !options.changePassword
-      });
-
-      result.push({
-        click: "language",
-        icon: "globe",
-        text: Vue.i18n.translate("user.changeLanguage"),
-        disabled: !options.changeLanguage
-      });
-
-      result.push({
-        click: "remove",
-        icon: "trash",
-        text: Vue.i18n.translate("user.delete"),
-        disabled: !options.delete
-      });
-
-      return result;
-    },
     async roles(id) {
       const roles = await api.get(this.url(id, "roles"));
       return roles.data.map(role => ({
-        info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
+        info: role.description || `(${window.panel.$t("role.description.placeholder")})`,
         text: role.title,
         value: role.name
       }));

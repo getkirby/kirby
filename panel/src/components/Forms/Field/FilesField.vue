@@ -1,83 +1,53 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-    <template v-if="more && !disabled" slot="options">
+    <template v-if="more && !disabled" #options>
       <k-button-group class="k-field-options">
-        <template v-if="uploads">
-          <k-dropdown>
-            <k-button
-              ref="pickerToggle"
-              :icon="btnIcon"
-              class="k-field-options-button"
-              @click="prompt"
-            >
-              {{ btnLabel }}
-            </k-button>
-            <k-dropdown-content ref="picker" align="right">
-              <k-dropdown-item icon="check" @click="open">
-                {{ $t('select') }}
-              </k-dropdown-item>
-              <k-dropdown-item icon="upload" @click="upload">
-                {{ $t('upload') }}
-              </k-dropdown-item>
-            </k-dropdown-content>
-          </k-dropdown>
-        </template>
-        <template v-else>
-          <k-button icon="check" class="k-field-options-button" @click="open">
-            {{ $t('select') }}
-          </k-button>
-        </template>
+        <k-options-dropdown
+          ref="options"
+          v-bind="options"
+          @action="onAction"
+        />
       </k-button-group>
     </template>
 
-    <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :list="selected"
-        :data-size="size"
-        :handle="true"
-        :data-invalid="isInvalid"
-        @end="onInput"
-      >
-        <component
-          :is="elements.item"
-          v-for="(file, index) in selected"
-          :key="file.id"
+    <k-dropzone :disabled="more === false" @drop="drop">
+      <template v-if="selected.length">
+        <k-items
+          :items="selected"
+          :layout="layout"
+          :size="size"
           :sortable="!disabled && selected.length > 1"
-          :text="file.text"
-          :link="link ? file.link : null"
-          :info="file.info"
-          :image="file.image"
-          :icon="file.icon"
+          @sort="onInput"
+          @sortChange="$emit('change', $event)"
         >
-          <k-button
-            v-if="!disabled"
-            slot="options"
-            :tooltip="$t('remove')"
-            icon="remove"
-            @click="remove(index)"
-          />
-        </component>
-      </k-draggable>
-    </template>
-    <k-empty
-      v-else
-      :layout="layout"
-      :data-invalid="isInvalid"
-      icon="image"
-      @click="prompt"
-    >
-      {{ empty || $t("field.files.empty") }}
-    </k-empty>
+          <template #options="{ index }">
+            <k-button
+              v-if="!disabled"
+              :tooltip="$t('remove')"
+              icon="remove"
+              @click="remove(index)"
+            />
+          </template>
+        </k-items>
+      </template>
+      <k-empty
+        v-else
+        :layout="layout"
+        :data-invalid="isInvalid"
+        icon="image"
+        @click="prompt"
+      >
+        {{ empty || $t("field.files.empty") }}
+      </k-empty>
+    </k-dropzone>
 
     <k-files-dialog ref="selector" @submit="select" />
-    <k-upload ref="fileUpload" @success="selectUpload" />
+    <k-upload ref="fileUpload" @success="upload" />
   </k-field>
 </template>
 
 <script>
-import config from "@/config/config.js";
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 /**
  * @example <k-files-field v-model="files" name="files" label="Files" />
@@ -87,6 +57,35 @@ export default {
   props: {
     uploads: [Boolean, Object, Array]
   },
+ computed: {
+    moreUpload() {
+      return this.more && this.uploads;
+    },
+    options() {
+      if (this.uploads) {
+        return {
+          icon: this.btnIcon,
+          text: this.btnLabel,
+          options: [
+            { icon: "check", text: this.$t("select"), click: "open" },
+            { icon: "upload", text: this.$t("upload"), click: "upload" }
+          ]
+        };
+      }
+
+      return {
+        options: [{ icon: "check", text: this.$t("select"), click: () => this.open() }]
+      };
+    },
+    uploadParams() {
+      return {
+        accept: this.uploads.accept,
+        max: this.max,
+        multiple: this.multiple,
+        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+      };
+    }
+  },
   created() {
     this.$events.$on("file.delete", this.removeById);
   },
@@ -94,6 +93,13 @@ export default {
     this.$events.$off("file.delete", this.removeById);
   },
   methods: {
+    drop(files) {
+      if (this.uploads === false) {
+        return false;
+      }
+
+      return this.$refs.fileUpload.drop(files, this.uploadParams);
+    },
     prompt(e) {
       e.stopPropagation();
 
@@ -101,49 +107,49 @@ export default {
         return false;
       }
 
-      if (this.more && this.uploads) {
-        this.$refs.picker.toggle();
+      if (this.moreUpload) {
+        this.$refs.options.toggle();
       } else {
         this.open();
       }
     },
-    open() {
-      if (this.disabled) {
-        return false;
+    onAction(action) {
+      // no need for `action` modifier
+      // as native button `click` prop requires
+      // inline function when only one option available
+      if (!this.moreUpload) {
+        return;
       }
 
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(file => file.id)
-      });
+      switch (action) {
+        case "open":
+          return this.open();
+        case "upload":
+          return this.$refs.fileUpload.open(this.uploadParams);
+      }
     },
-    selectUpload(upload, files) {
+    isSelected(file) {
+      return this.selected.find(f => f.id === file.id);
+    },
+    upload(upload, files) {
       if (this.multiple === false) {
         this.selected = [];
       }
 
       files.forEach(file => {
-        this.selected.push(file);
+        if (!this.isSelected(file)) {
+          this.selected.push(file);
+        }
       });
 
       this.onInput();
       this.$events.$emit("model.update");
-    },
-    upload() {
-      this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
-        multiple: this.multiple,
-        accept: this.uploads.accept
-      });
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-files-field[data-disabled] * {
   pointer-events: all !important;
 }

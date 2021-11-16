@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -81,7 +81,7 @@ class FileBlueprint extends Blueprint
 
             if (is_array($accept['extension']) === true) {
                 // determine the main MIME type for each extension
-                $restrictions[] = array_map(['Kirby\Toolkit\Mime', 'fromExtension'], $accept['extension']);
+                $restrictions[] = array_map(['Kirby\Filesystem\Mime', 'fromExtension'], $accept['extension']);
             }
 
             if (is_array($accept['type']) === true) {
@@ -89,7 +89,7 @@ class FileBlueprint extends Blueprint
                 $mimes = [];
                 foreach ($accept['type'] as $type) {
                     if ($extensions = F::typeToExtensions($type)) {
-                        $mimes[] = array_map(['Kirby\Toolkit\Mime', 'fromExtension'], $extensions);
+                        $mimes[] = array_map(['Kirby\Filesystem\Mime', 'fromExtension'], $extensions);
                     }
                 }
 

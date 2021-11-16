@@ -1,5 +1,10 @@
 {
+  "account.changeName": "İsminizi değiştirin",
+  "account.delete": "Hesabınızı silin",
+  "account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
+
   "add": "Ekle",
+  "author": "Yazar",
   "avatar": "Profil resmi",
   "back": "Geri",
   "cancel": "\u0130ptal",
@@ -9,6 +14,7 @@
   "collapse": "Daralt",
   "collapse.all": "Tümünü daralt",
   "copy": "Kopyala",
+  "copy.all": "Tümünü kopyala",
   "create": "Oluştur",
 
   "date": "Tarih",
@@ -23,23 +29,27 @@
   "days.tue": "Sal",
   "days.wed": "\u00c7ar",
 
+  "debugging": "Hata ayıklama",
+
   "delete": "Sil",
   "delete.all": "Tümünü sil",
-  "dimensions": "Boyutlar",
-  "disabled": "Devredışı",
-  "discard": "Vazge\u00e7",
-  "download": "İndir",
-  "duplicate": "Kopyala",
-  "edit": "D\u00fczenle",
-  "expand": "Genişlet",
-  "expand.all": "Tümünü genişlet",
 
   "dialog.files.empty": "Seçilecek dosya yok",
   "dialog.pages.empty": "Seçilecek sayfa yok",
   "dialog.users.empty": "Seçilecek kullanıcı yok",
 
+  "dimensions": "Boyutlar",
+  "disabled": "Devredışı",
+  "discard": "Vazge\u00e7",
+  "download": "İndir",
+  "duplicate": "Kopyala",
+
+  "edit": "D\u00fczenle",
+
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
+
+  "environment": "Ortam",
 
   "error.access.code": "Geçersiz kod",
   "error.access.login": "Geçersiz giriş",
@@ -92,6 +102,7 @@
   "error.language.code": "Lütfen dil için geçerli bir kod girin",
   "error.language.duplicate": "Bu dil zaten var",
   "error.language.name": "Lütfen dil için geçerli bir isim girin",
+  "error.language.notFound": "Dil bulunamadı",
 
   "error.layout.validation.block": "{layoutIndex}. düzenin {blockIndex}. bloğunda bir hata var",
   "error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
@@ -99,6 +110,8 @@
   "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
   "error.license.verification": "Lisans doğrulanamadı",
+
+  "error.offline": "Panel şu anda çevrimdışı",
 
   "error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
   "error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
   "error.user.password.wrong": "Yanlış şifre",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
+  "error.user.undefined": "Kullanıcı bulunamadı",
   "error.user.update.permission": "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
 
   "error.validation.accepted": "Lütfen onaylayın",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Lütfen {min} ile {max} arasında bir tarih girin",
   "error.validation.url": "Lütfen geçerli bir adres girin",
 
+  "expand": "Genişlet",
+  "expand.all": "Tümünü genişlet",
+
   "field.required": "Alan gereklidir",
   "field.blocks.changeType": "Türü değiştir",
   "field.blocks.code.name": "Kod",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Seçilen blokları gerçekten silmek istiyor musunuz?",
   "field.blocks.empty": "Henüz blok yok",
   "field.blocks.fieldsets.label": "Lütfen bir blok türü seçiniz …",
+  "field.blocks.fieldsets.paste": "Panonuzdan blokları yapıştırmak veya içe aktarmak için <kbd>{{ shortcut }}</kbd>'e basın",
   "field.blocks.gallery.name": "Galeri",
   "field.blocks.gallery.images.empty": "Henüz görsel yok",
   "field.blocks.gallery.images.label": "Görseller",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Bir görsel seçin",
   "field.blocks.image.ratio": "Oran",
   "field.blocks.image.url": "Görsel URL",
+  "field.blocks.line.name": "Çizgi",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Metin",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Hen\u00fcz bir girdi yok",
   "field.users.empty": "Henüz kullanıcı seçilmedi",
 
-  "file.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/file/{template}.yml</strong>'de tanımlayabilirsiniz.",
+  "file.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/files/{blueprint}.yml</strong> dosyasında tanımlayabilirsiniz.",
   "file.delete.confirm": "<strong>{filename}</strong> dosyasını silmek istediğinizden emin misiniz?",
   "file.sort": "Pozisyon değiştir",
 
@@ -272,6 +291,7 @@
 
   "hide": "Gizle",
   "hour": "Saat",
+  "import": "İçe aktar",
   "insert": "Ekle",
   "insert.after": "Sonrasına ekle",
   "insert.before": "Öncesine ekle",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Şifre sıfırlama kodu",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "E-posta adresiniz kayıtlıysa, istenen kod e-posta yoluyla gönderilmiştir.",
-  "login.email.login.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce Kirby Panel'i için bir giriş kodu istediniz.\nAşağıdaki giriş kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nBir giriş kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinize başvurun.\nGüvenlik için lütfen bu e-postayı İLETMEYİN.",
+  "login.email.login.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce {site} Panel'i için bir giriş kodu istediniz.\nAşağıdaki giriş kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nBir giriş kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinize başvurun.\nGüvenliğiniz için lütfen bu e-postayı İLETMEYİN.",
   "login.email.login.subject": "Giriş kodunuz",
-  "login.email.password-reset.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce Kirby Panel'i için bir şifre sıfırlama kodu istediniz.\nAşağıdaki şifre sıfırlama kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nŞifre sıfırlama kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinizle iletişime geçin.\nGüvenlik için lütfen bu e-postayı İLETMEYİN.",
+  "login.email.password-reset.body": "Merhaba {user.nameOrEmail},\n\nKısa süre önce {site} Panel'i için bir şifre sıfırlama kodu istediniz.\nAşağıdaki şifre sıfırlama kodu {timeout} dakika boyunca geçerli olacaktır:\n\n{code}\n\nŞifre sıfırlama kodu istemediyseniz, lütfen bu e-postayı dikkate almayın veya sorularınız varsa yöneticinizle iletişime geçin.\nGüvenliğiniz için lütfen bu e-postayı İLETMEYİN.",
   "login.email.password-reset.subject": "Şifre sıfırlama kodunuz",
   "login.remember": "Oturumumu açık tut",
   "login.reset": "Şifreyi sıfırla",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Dikey",
   "orientation.square": "Kare",
 
-  "page.blueprint": "Bu sayfanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/{template}.yml</strong>'de tanımlayabilirsiniz.",
+  "page.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/pages/{blueprint}.yml</strong> dosyasında tanımlayabilirsiniz.",
   "page.changeSlug": "Web Adresini Değiştir",
   "page.changeSlug.fromTitle": "Ba\u015fl\u0131ktan olu\u015ftur",
   "page.changeStatus": "Durumu değiştir",
@@ -417,7 +437,10 @@
   "pagination.page": "Sayfa",
 
   "password": "\u015eifre",
+  "paste": "Yapıştır",
+  "paste.after": "Sonrasına yapıştır",
   "pixel": "Piksel",
+  "plugins": "Eklentiler",
   "prev": "Önceki",
   "preview": "Önizle",
   "remove": "Kaldır",
@@ -454,6 +477,8 @@
   "template": "\u015eablon",
   "today": "Bugün",
 
+  "server": "Sunucu",
+
   "site.blueprint": "Sitenin henüz bir planı yok. Kurulumu <strong>/site/blueprints/site.yml</strong>'de tanımlayabilirsiniz.",
 
   "toolbar.button.code": "Kod",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Başlık 1",
   "toolbar.button.heading.2": "Başlık 2",
   "toolbar.button.heading.3": "Başlık 3",
+  "toolbar.button.heading.4": "Başlık 4",
+  "toolbar.button.heading.5": "Başlık 5",
+  "toolbar.button.heading.6": "Başlık 6",
   "toolbar.button.italic": "Eğik Yazı",
   "toolbar.button.file": "Dosya",
   "toolbar.button.file.select": "Bir dosya seçin",
   "toolbar.button.file.upload": "Bir dosya yükleyin",
   "toolbar.button.link": "Ba\u011flant\u0131",
+  "toolbar.button.paragraph": "Paragraf",
   "toolbar.button.strike": "Üstü çizili",
   "toolbar.button.ol": "Sıralı liste",
   "toolbar.button.underline": "Altı çizili",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://ornek.com",
 
   "user": "Kullanıcı",
-  "user.blueprint": "Bu kullanıcı rolü için <strong>/site/blueprints/users/{role}.yml</strong> içinde ek bölümler ve form alanları tanımlayabilirsiniz",
+  "user.blueprint": "Bu kullanıcı rolü için <strong>/site/blueprints/users/{blueprint}.yml</strong> içinde ek bölümler ve form alanları tanımlayabilirsiniz",
   "user.changeEmail": "E-postayı değiştir",
   "user.changeLanguage": "Dili değiştir",
   "user.changeName": "Kullanıcıyı yeniden adlandır",
@@ -516,9 +545,10 @@
 
   "view.account": "Hesap Bilgilerin",
   "view.installation": "Kurulum",
+  "view.languages": "Diller",
   "view.resetPassword": "Şifreyi sıfırla",
-  "view.settings": "Ayarlar",
   "view.site": "Site",
+  "view.system": "Sistem",
   "view.users": "Kullan\u0131c\u0131lar",
 
   "welcome": "Hoşgeldiniz",

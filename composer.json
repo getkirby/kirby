@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.5.7.1",
+  "version": "3.6.0",
   "license": "proprietary",
   "authors": [
     {
@@ -18,16 +18,17 @@
     }
   ],
   "require": {
-    "php": ">=7.3.0 <8.1.0",
+    "php": ">=7.4.0 <8.1.0",
     "ext-ctype": "*",
     "ext-mbstring": "*",
     "claviska/simpleimage": "3.6.3",
-    "filp/whoops": "2.12.1",
-    "getkirby/composer-installer": "^1.2.0",
-    "laminas/laminas-escaper": "2.7.0",
+    "filp/whoops": "2.14.4",
+    "getkirby/composer-installer": "^1.2.1",
+    "laminas/laminas-escaper": "2.9.0",
     "michelf/php-smartypants": "1.8.1",
     "mustangostang/spyc": "0.6.3",
-    "phpmailer/phpmailer": "6.5.0",
+    "phpmailer/phpmailer": "6.5.1",
+    "psr/log": "1.1.4",
     "true/punycode": "2.1.1"
   },
   "config": {
@@ -73,5 +74,6 @@
     "issues": "https://github.com/getkirby/kirby/issues",
     "forum": "https://forum.getkirby.com",
     "source": "https://github.com/getkirby/kirby"
-  }
+  },
+  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7"
 }

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 

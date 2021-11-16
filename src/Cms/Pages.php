@@ -48,13 +48,13 @@ class Pages extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $object
+     * @param \Kirby\Cms\Pages|\Kirby\Cms\Page|string $object
      * @return $this
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException When no `Page` or `Pages` object or an ID of an existing page is passed
      */
     public function add($object)
     {
-        // add a page collection
+        // add a pages collection
         if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
@@ -66,9 +66,10 @@ class Pages extends Collection
         } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
 
-        // give a useful error message on invalid input
+        // give a useful error message on invalid input;
+        // silently ignore "empty" values for compatibility with existing setups
         } elseif (in_array($object, [null, false, true], true) !== true) {
-            throw new InvalidArgumentException('You must pass a Page object to the Pages collection');
+            throw new InvalidArgumentException('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
         }
 
         return $this;
@@ -223,14 +224,8 @@ class Pages extends Collection
             return $page;
         }
 
-        $multiLang = App::instance()->multilang();
-
-        if ($multiLang === true && $page = $this->findBy('slug', $id)) {
-            return $page;
-        }
-
         $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-        $page  = $this->findByIdRecursive($id, $start, $multiLang);
+        $page  = $this->findByIdRecursive($id, $start, App::instance()->multilang());
 
         return $page;
     }
@@ -254,8 +249,14 @@ class Pages extends Collection
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
 
-            if ($item === null && $multiLang === true) {
-                $item = $collection->findBy('slug', $key);
+            if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
+                if (count($path) > 1 || $collection->parent()) {
+                    // either the desired path is definitely not a slug, or collection is the children of another collection
+                    $item = $collection->findBy('slug', $key);
+                } else {
+                    // desired path _could_ be a slug or a "top level" uri
+                    $item = $collection->findBy('uri', $key);
+                }
             }
 
             if ($item === null) {

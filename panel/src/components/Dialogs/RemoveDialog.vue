@@ -17,7 +17,7 @@ export default {
     submitButton: {
       type: [String, Boolean],
       default() {
-        return this.$t("delete");
+        return window.panel.$t("delete")
       }
     },
     text: String,

@@ -1,12 +1,13 @@
 <template>
   <k-box
-    v-if="tabs.length === 0"
+    v-if="tab.columns.length === 0"
+    :html="true"
     :text="empty"
     theme="info"
   />
   <k-grid v-else class="k-sections" gutter="large">
     <k-column
-      v-for="(column, columnIndex) in currentTab.columns"
+      v-for="(column, columnIndex) in tab.columns"
       :key="parent + '-column-' + columnIndex"
       :width="column.width"
       :sticky="column.sticky"
@@ -17,10 +18,11 @@
             :is="'k-' + section.type + '-section'"
             v-if="exists(section.type)"
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
+            :column="column.width"
+            :lock="lock"
             :name="section.name"
             :parent="parent"
-            :blueprint="blueprint"
-            :column="column.width"
+            :timestamp="$view.timestamp"
             :class="'k-section k-section-name-' + section.name"
             v-bind="section"
             @submit="$emit('submit', $event)"
@@ -39,14 +41,11 @@ export default {
   props: {
     empty: String,
     blueprint: String,
+    lock: [Boolean, Object],
     parent: String,
-    tab: String,
-    tabs: Array,
+    tab: Object
   },
   computed: {
-    currentTab() {
-      return this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
-    },
     content() {
       return this.$store.getters["content/values"]();
     }
@@ -79,7 +78,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-sections {
   padding-bottom: 3rem;
 }
@@ -94,19 +93,12 @@ export default {
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
-  padding-bottom: 0.75rem;
+  padding-bottom: .75rem;
   min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
   top: -.875rem;
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+  inset-inline-end: 0;
 }
 </style>

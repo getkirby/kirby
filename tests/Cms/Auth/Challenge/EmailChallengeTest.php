@@ -5,10 +5,10 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Email\Email;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth\EmailChallenge
+ * @coversDefaultClass \Kirby\Cms\Auth\EmailChallenge
  */
 class EmailChallengeTest extends TestCase
 {
@@ -240,7 +240,7 @@ class EmailChallengeTest extends TestCase
         $this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
         $this->assertSame('Custom subject', $email->subject());
         $this->assertSame(
-            "homer@simpsons.com\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
+            "homer@simpsons.com\nTest Site\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
             $email->body()->text()
         );
     }
@@ -270,11 +270,11 @@ class EmailChallengeTest extends TestCase
         $this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
         $this->assertSame('Your login code', $email->subject());
         $this->assertSame(
-            "homer@simpsons.com\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
+            "homer@simpsons.com\nTest Site\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
             $email->body()->text()
         );
         $this->assertSame(
-            "HTML: homer@simpsons.com\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
+            "HTML: homer@simpsons.com\nTest Site\n7\n" . substr($code, 0, 3) . ' ' . substr($code, 3, 3),
             $email->body()->html()
         );
     }

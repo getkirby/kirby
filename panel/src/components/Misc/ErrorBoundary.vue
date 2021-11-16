@@ -1,6 +1,7 @@
 <script>
-import config from "@/config/config.js";
-
+/**
+ * @internal
+ */
 export default {
   data() {
     return {
@@ -8,7 +9,7 @@ export default {
     };
   },
   errorCaptured(error) {
-    if (config.debug) {
+    if (this.$config.debug) {
       window.console.warn(error);
     }
 

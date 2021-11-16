@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "\u03a0\u03c1\u03bf\u03c3\u03b8\u03ae\u03ba\u03b7",
+  "author": "Author",
   "avatar": "\u0395\u03b9\u03ba\u03cc\u03bd\u03b1 \u03c0\u03c1\u03bf\u03c6\u03af\u03bb",
   "back": "Πίσω",
   "cancel": "\u0391\u03ba\u03cd\u03c1\u03c9\u03c3\u03b7",
@@ -9,6 +14,7 @@
   "collapse": "Collapse",
   "collapse.all": "Collapse All",
   "copy": "Αντιγραφή",
+  "copy.all": "Copy all",
   "create": "Δημιουργία",
 
   "date": "Ημερομηνία",
@@ -23,23 +29,27 @@
   "days.tue": "\u03a4\u03c1\u03af",
   "days.wed": "\u03a4\u03b5\u03c4",
 
+  "debugging": "Debugging",
+
   "delete": "\u0394\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03ae",
   "delete.all": "Delete all",
-  "dimensions": "Διαστάσεις",
-  "disabled": "Disabled",
-  "discard": "Απόρριψη",
-  "download": "Λήψη",
-  "duplicate": "Αντίγραφο",
-  "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Διαστάσεις",
+  "disabled": "Disabled",
+  "discard": "Απόρριψη",
+  "download": "Λήψη",
+  "duplicate": "Αντίγραφο",
+
+  "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
+
   "email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Mη έγκυρος κωδικός",
   "error.access.login": "Mη έγκυρη σύνδεση",
@@ -92,6 +102,7 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "error.license.verification": "The license could not be verified",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
   "error.page.changeStatus.incomplete": "Δεν ήταν δυνατή η δημοσίευση της σελίδας καθώς περιέχει σφάλματα",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Παρακαλώ εισαγάγετε έναν έγκυρο ρόλο",
+  "error.user.undefined": "Δεν είναι δυνατή η εύρεση του χρήστη",
   "error.user.update.permission": "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
 
   "error.validation.accepted": "Παρακαλώ επιβεβαιώστε",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL",
 
+  "expand": "Expand",
+  "expand.all": "Expand All",
+
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "Κώδικας",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "\u0394\u03b5\u03bd \u03c5\u03c0\u03ac\u03c1\u03c7\u03bf\u03c5\u03bd \u03b1\u03ba\u03cc\u03bc\u03b7 \u03ba\u03b1\u03c4\u03b1\u03c7\u03c9\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.",
   "field.users.empty": "Δεν έχουν επιλεγεί ακόμη χρήστες",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf;",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "Ώρα",
+  "import": "Import",
   "insert": "\u0395\u03b9\u03c3\u03b1\u03b3\u03c9\u03b3\u03ae",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Κρατήστε με συνδεδεμένο",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Κάθετος",
   "orientation.square": "Τετράγωνος",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "\u0391\u03bb\u03bb\u03b1\u03b3\u03ae URL",
   "page.changeSlug.fromTitle": "\u0394\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03b1\u03c0\u03cc \u03c4\u03bf\u03bd \u03c4\u03af\u03c4\u03bb\u03bf",
   "page.changeStatus": "Αλλαγή κατάστασης",
@@ -417,7 +437,10 @@
   "pagination.page": "Σελίδα",
 
   "password": "\u039a\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Εικονοστοιχέιο",
+  "plugins": "Plugins",
   "prev": "Προηγούμενο",
   "preview": "Preview",
   "remove": "Αφαίρεση",
@@ -454,6 +477,8 @@
   "template": "\u03a0\u03c1\u03cc\u03c4\u03c5\u03c0\u03bf",
   "today": "Σήμερα",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Κώδικας",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Επικεφαλίδα 1",
   "toolbar.button.heading.2": "Επικεφαλίδα 2",
   "toolbar.button.heading.3": "Επικεφαλίδα 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "\u03a0\u03bb\u03ac\u03b3\u03b9\u03b1 \u03b3\u03c1\u03b1\u03c6\u03ae",
   "toolbar.button.file": "Αρχείο",
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03bc\u03bf\u03c2",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Ταξινομημένη λίστα",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Χρήστης",
-  "user.blueprint": "Μπορείτε να ορίσετε επιπλέον τμήματα και πεδία φόρμας για αυτόν τον ρόλο χρήστη στο <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Αλλαγή διεύθινσης ηλεκτρονικού ταχυδρομείου",
   "user.changeLanguage": "Αλλαγή γλώσσας",
   "user.changeName": "Μετονομασία χρήστη",
@@ -516,9 +545,10 @@
 
   "view.account": "\u039f \u03bb\u03bf\u03b3\u03b1\u03c1\u03b9\u03b1\u03c3\u03bc\u03cc\u03c2 \u03c3\u03b1\u03c2",
   "view.installation": "\u0395\u03b3\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
+  "view.languages": "Γλώσσες",
   "view.resetPassword": "Reset password",
-  "view.settings": "Ρυθμίσεις",
   "view.site": "Iστοσελίδα",
+  "view.system": "System",
   "view.users": "\u03a7\u03c1\u03ae\u03c3\u03c4\u03b5\u03c2",
 
   "welcome": "Καλώς ήρθατε",

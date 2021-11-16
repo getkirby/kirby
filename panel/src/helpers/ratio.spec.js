@@ -3,7 +3,7 @@ import ratio from "./ratio.js";
 describe("$helper.ratio()", () => {
   it("should return default ratio", () => {
     const result = ratio();
-    expect(result).to.equal("66.66666666666667%");
+    expect(result).to.equal("66.67%");
   });
 
   it("should return padding for 16/9", () => {

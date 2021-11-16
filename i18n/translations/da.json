@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Ændre dit navn",
+  "account.delete": "Slet din konto",
+  "account.delete.confirm": "Ønsker du virkelig at slette din konto? Du vil blive logget ud med det samme. Din konto kan ikke gendannes.",
+
   "add": "Ny",
+  "author": "Forfatter",
   "avatar": "Profilbillede",
   "back": "Tilbage",
   "cancel": "Annuller",
@@ -9,6 +14,7 @@
   "collapse": "Fold sammen",
   "collapse.all": "Fold alle sammen",
   "copy": "Kopier",
+  "copy.all": "Kopier alle",
   "create": "Opret",
 
   "date": "Dato",
@@ -23,23 +29,27 @@
   "days.tue": "Tir",
   "days.wed": "Ons",
 
+  "debugging": "Fejlfinding",
+
   "delete": "Slet",
   "delete.all": "Slet alle",
-  "dimensions": "Dimensioner",
-  "disabled": "Deaktiveret",
-  "discard": "Kass\u00e9r",
-  "download": "Download",
-  "duplicate": "Dupliker",
-  "edit": "Rediger",
-  "expand": "Fold ud",
-  "expand.all": "Fold alle ud",
 
   "dialog.files.empty": "Ingen filer kan vælges",
   "dialog.pages.empty": "Ingen sider kan vælges",
   "dialog.users.empty": "Ingen brugere kan vælges",
 
+  "dimensions": "Dimensioner",
+  "disabled": "Deaktiveret",
+  "discard": "Kass\u00e9r",
+  "download": "Download",
+  "duplicate": "Dupliker",
+
+  "edit": "Rediger",
+
   "email": "Email",
   "email.placeholder": "mail@eksempel.dk",
+
+  "environment": "Miljø",
 
   "error.access.code": "Ugyldig kode",
   "error.access.login": "Ugyldigt log ind",
@@ -92,6 +102,7 @@
   "error.language.code": "Indtast venligst en gyldig kode for sproget",
   "error.language.duplicate": "Sproget eksisterer allerede",
   "error.language.name": "Indtast venligst et gyldigt navn for sproget",
+  "error.language.notFound": "Sproget fandtes ikke",
 
   "error.layout.validation.block": "Der er fejl i blok {blockIndex} i layout {layoutIndex}",
   "error.layout.validation.settings": "Der er fejl i layout {index} indstillinger",
@@ -99,6 +110,8 @@
   "error.license.format": "Indtast venligst en gyldig licensnøgle",
   "error.license.email": "Indtast venligst en gyldig email adresse",
   "error.license.verification": "Licensen kunne ikke verificeres",
+
+  "error.offline": "Panelet er i øjeblikket offline",
 
   "error.page.changeSlug.permission": "Du kan ikke ændre URL-endelse for \"{slug}\"",
   "error.page.changeStatus.incomplete": "Siden indeholder fejl og kan derfor ikke udgives",
@@ -118,7 +131,7 @@
   "error.page.duplicate.permission": "Du har ikke mulighed for at duplikere \"{slug}\"",
   "error.page.notFound": "Siden kunne ikke findes",
   "error.page.num.invalid": "Indtast venligst et gyldigt sorteringsnummer. Nummeret kan ikke være negativt.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Indtast venligst et gyldigt URL appendix",
   "error.page.slug.maxlength": "Navnet skal være kortere end \"{length}\" tegn",
   "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
   "error.page.status.invalid": "Sæt venligst en gyldig status for siden",
@@ -163,8 +176,9 @@
   "error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Forkert adgangskode",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
+  "error.user.undefined": "Brugeren kunne ikke findes",
   "error.user.update.permission": "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
 
   "error.validation.accepted": "Bekræft venligst",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Indtast venligst et tidspunkt imellem {min} og {max}",
   "error.validation.url": "Indtast venligst en gyldig URL",
 
+  "expand": "Fold ud",
+  "expand.all": "Fold alle ud",
+
   "field.required": "Feltet er påkrævet",
   "field.blocks.changeType": "Skift type",
   "field.blocks.code.name": "Kode",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Ønsker du virkelig at slette de valgte blokke?",
   "field.blocks.empty": "Ingen blokke endnu",
   "field.blocks.fieldsets.label": "Vælg venligst en blok type",
+  "field.blocks.fieldsets.paste": "Tryk <kbd>{{ shortcut }}</kbd> for at indsætte/importere blokke fra dit udklipsholder",
   "field.blocks.gallery.name": "Galleri",
   "field.blocks.gallery.images.empty": "Ingen billeder endnu",
   "field.blocks.gallery.images.label": "Billeder",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Vælg et billede",
   "field.blocks.image.ratio": "Størrelsesforhold",
   "field.blocks.image.url": "Billede URL",
+  "field.blocks.line.name": "Linje",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Tekst",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Ingen indtastninger endnu.",
   "field.users.empty": "Ingen brugere er valgt",
 
-  "file.blueprint": "Denne fil har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "Denne fil har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "\u00d8nsker du virkelig at slette denne fil?",
   "file.sort": "Skift position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Skjul",
   "hour": "Time",
+  "import": "Importer",
   "insert": "Inds\u00e6t",
   "insert.after": "Indsæt efter",
   "insert.before": "Indsæt før",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Sikkerhedskode",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Hvis din email adresse er registreret er en sikkerhedskode blevet sendt via email.",
-  "login.email.login.body": "Hej {user.nameOrEmail},\n\nDu har for nyligt anmodet om en log ind kode til Kirby Panel.\nFølgende log ind kode vil være gyldig i {timeout} minutter:\n\n{code}\n\nHvis du ikke har anmodet om en log ind kode, kan du blot ignorere denne email eller kontakte din administrator hvis du har spørgsmål.\nAf sikkerhedsmæssige årsager, bør du IKKE videresende denne email.",
+  "login.email.login.body": "Hej {user.nameOrEmail},\n\nDu har for nyligt anmodet om en log ind kode til panelet af {site}.\nFølgende log ind kode vil være gyldig i {timeout} minutter:\n\n{code}\n\nHvis du ikke har anmodet om en log ind kode, kan du blot ignorere denne email eller kontakte din administrator hvis du har spørgsmål.\nAf sikkerhedsmæssige årsager, bør du IKKE videresende denne email.",
   "login.email.login.subject": "Din log ind kode",
-  "login.email.password-reset.body": "Hej {user.nameOrEmail},\n\nDu har for nyligt anmodet om kode til nulstilling af adgangskode til Kirby Panel.\nFølgende kode til nulstilling af adgangskode vil være gyldig i {timeout} minutter:\n\n{code}\n\nHvis du ikke har anmodet om kode til nulstilling af adgangskode, kan du blot ignorere denne email eller kontakte din administrator hvis du har spørgsmål.\nAf sikkerhedsmæssige årsager, bør du IKKE videresende denne email.",
+  "login.email.password-reset.body": "Hej {user.nameOrEmail},\n\nDu har for nyligt anmodet om kode til nulstilling af adgangskode til panelet af {site}.\nFølgende kode til nulstilling af adgangskode vil være gyldig i {timeout} minutter:\n\n{code}\n\nHvis du ikke har anmodet om kode til nulstilling af adgangskode, kan du blot ignorere denne email eller kontakte din administrator hvis du har spørgsmål.\nAf sikkerhedsmæssige årsager, bør du IKKE videresende denne email.",
   "login.email.password-reset.subject": "Din kode til nulstilling af adgangskode",
   "login.remember": "Forbliv logget ind",
   "login.reset": "Nulstil adgangskode",
@@ -372,11 +392,11 @@
   "more": "Mere",
   "name": "Navn",
   "next": "Næste",
-  "no": "no",
+  "no": "nej",
   "off": "Sluk",
   "on": "Tænd",
   "open": "Åben",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Åben i et nyt vindue",
   "options": "Indstillinger",
   "options.none": "Ingen muligheder",
 
@@ -385,7 +405,7 @@
   "orientation.portrait": "Portræt",
   "orientation.square": "Kvadrat",
 
-  "page.blueprint": "Denne side har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "Denne side har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "\u00c6ndre URL",
   "page.changeSlug.fromTitle": "Generer udfra titel",
   "page.changeStatus": "Skift status",
@@ -417,7 +437,10 @@
   "pagination.page": "Side",
 
   "password": "Adgangskode",
+  "paste": "Indsæt",
+  "paste.after": "Indsæt efter",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Forrige",
   "preview": "Forhåndsvisning",
   "remove": "Fjern",
@@ -454,6 +477,8 @@
   "template": "Skabelon",
   "today": "Idag",
 
+  "server": "Server",
+
   "site.blueprint": "Sitet har intet blueprint endnu. Du kan definere opsætningen i <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kode",
@@ -463,14 +488,18 @@
   "toolbar.button.heading.1": "Overskrift 1",
   "toolbar.button.heading.2": "Overskrift 2",
   "toolbar.button.heading.3": "Overskrift 3",
+  "toolbar.button.heading.4": "Overskrift 4",
+  "toolbar.button.heading.5": "Overskrift 5",
+  "toolbar.button.heading.6": "Overskrift 6",
   "toolbar.button.italic": "Kursiv tekst",
   "toolbar.button.file": "Fil",
   "toolbar.button.file.select": "Vælg en fil",
   "toolbar.button.file.upload": "Upload en fil",
   "toolbar.button.link": "Link",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.paragraph": "Afsnit",
+  "toolbar.button.strike": "Gennemstreg",
   "toolbar.button.ol": "Ordnet liste",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Understreg",
   "toolbar.button.ul": "Punktliste",
 
   "translation.author": "Kirby Team",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Bruger",
-  "user.blueprint": "Du kan definere yderligere sektioner og formular felter for denne brugerrolle i <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Du kan definere yderligere sektioner og formular felter for denne brugerrolle i <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Skift email",
   "user.changeLanguage": "Skift sprog",
   "user.changeName": "Omdøb denne bruger",
@@ -516,12 +545,13 @@
 
   "view.account": "Din konto",
   "view.installation": "Installation",
+  "view.languages": "Sprog",
   "view.resetPassword": "Nulstil adgangskode",
-  "view.settings": "Indstillinger",
   "view.site": "Website",
+  "view.system": "System",
   "view.users": "Brugere",
 
   "welcome": "Velkommen",
   "year": "År",
-  "yes": "yes"
+  "yes": "ja"
 }

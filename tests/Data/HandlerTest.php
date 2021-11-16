@@ -2,13 +2,13 @@
 
 namespace Kirby\Data;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/mocks.php';
 
 /**
- * @coversDefaultClass Kirby\Data\Handler
+ * @coversDefaultClass \Kirby\Data\Handler
  */
 class HandlerTest extends TestCase
 {

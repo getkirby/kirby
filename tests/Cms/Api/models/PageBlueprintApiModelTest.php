@@ -2,30 +2,15 @@
 
 namespace Kirby\Cms;
 
-class PageBlueprintApiModelTest extends TestCase
+use Kirby\Cms\Api\ApiModelTestCase;
+
+class PageBlueprintApiModelTest extends ApiModelTestCase
 {
-    protected $api;
-    protected $app;
-
-    public function attr($object, $attr)
-    {
-        return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-    }
-
-    public function assertAttr($object, $attr, $value)
-    {
-        $this->assertEquals($this->attr($object, $attr), $value);
-    }
+    public $page;
 
     public function setUp(): void
     {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
-
-        $this->api  = $this->app->api();
+        parent::setUp();
         $this->page = new Page(['slug' => 'test']);
     }
 

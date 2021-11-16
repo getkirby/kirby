@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 class MediaTest extends TestCase
@@ -66,8 +66,7 @@ class MediaTest extends TestCase
         $file   = $this->app->file('projects/test.svg');
         $result = Media::link($this->app->page('projects'), 'abcde-12345', $file->filename());
 
-        $this->assertInstanceOf(Response::class, $result);
-        $this->assertEquals(404, $result->code());
+        $this->assertFalse($result);
     }
 
     public function testLinkWithoutModel()
@@ -77,9 +76,12 @@ class MediaTest extends TestCase
 
     public function testPublish()
     {
+        $site = new Site();
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $site,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -106,9 +108,14 @@ class MediaTest extends TestCase
 
     public function testUnpublish()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -136,9 +143,14 @@ class MediaTest extends TestCase
 
     public function testUnpublishAndIgnore()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -168,8 +180,13 @@ class MediaTest extends TestCase
     {
         $directory = $this->fixtures . '/does-not-exist';
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => 'does-not-exist.jpg'
         ]);
 

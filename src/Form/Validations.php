@@ -19,12 +19,12 @@ class Validations
     /**
      * Validates if the field value is boolean
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function boolean(Field $field, $value): bool
+    public static function boolean($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             if (is_bool($value) === false) {
@@ -40,12 +40,12 @@ class Validations
     /**
      * Validates if the field value is valid date
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function date(Field $field, $value): bool
+    public static function date($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             if (V::date($value) !== true) {
@@ -61,12 +61,12 @@ class Validations
     /**
      * Validates if the field value is valid email
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function email(Field $field, $value): bool
+    public static function email($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             if (V::email($value) === false) {
@@ -82,12 +82,12 @@ class Validations
     /**
      * Validates if the field value is maximum
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function max(Field $field, $value): bool
+    public static function max($field, $value): bool
     {
         if ($field->isEmpty($value) === false && $field->max() !== null) {
             if (V::max($value, $field->max()) === false) {
@@ -103,12 +103,12 @@ class Validations
     /**
      * Validates if the field value is max length
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function maxlength(Field $field, $value): bool
+    public static function maxlength($field, $value): bool
     {
         if ($field->isEmpty($value) === false && $field->maxlength() !== null) {
             if (V::maxLength($value, $field->maxlength()) === false) {
@@ -124,12 +124,12 @@ class Validations
     /**
      * Validates if the field value is minimum
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function min(Field $field, $value): bool
+    public static function min($field, $value): bool
     {
         if ($field->isEmpty($value) === false && $field->min() !== null) {
             if (V::min($value, $field->min()) === false) {
@@ -145,12 +145,12 @@ class Validations
     /**
      * Validates if the field value is min length
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function minlength(Field $field, $value): bool
+    public static function minlength($field, $value): bool
     {
         if ($field->isEmpty($value) === false && $field->minlength() !== null) {
             if (V::minLength($value, $field->minlength()) === false) {
@@ -166,12 +166,12 @@ class Validations
     /**
      * Validates if the field value matches defined pattern
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function pattern(Field $field, $value): bool
+    public static function pattern($field, $value): bool
     {
         if ($field->isEmpty($value) === false && $field->pattern() !== null) {
             if (V::match($value, '/' . $field->pattern() . '/i') === false) {
@@ -187,12 +187,12 @@ class Validations
     /**
      * Validates if the field value is required
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function required(Field $field, $value): bool
+    public static function required($field, $value): bool
     {
         if ($field->isRequired() === true && $field->save() === true && $field->isEmpty($value) === true) {
             throw new InvalidArgumentException([
@@ -206,12 +206,12 @@ class Validations
     /**
      * Validates if the field value is in defined options
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function option(Field $field, $value): bool
+    public static function option($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             $values = array_column($field->options(), 'value');
@@ -229,12 +229,12 @@ class Validations
     /**
      * Validates if the field values is in defined options
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function options(Field $field, $value): bool
+    public static function options($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             $values = array_column($field->options(), 'value');
@@ -253,12 +253,12 @@ class Validations
     /**
      * Validates if the field value is valid time
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function time(Field $field, $value): bool
+    public static function time($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             if (V::time($value) !== true) {
@@ -274,12 +274,12 @@ class Validations
     /**
      * Validates if the field value is valid url
      *
-     * @param \Kirby\Form\Field $field
+     * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
      * @param $value
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function url(Field $field, $value): bool
+    public static function url($field, $value): bool
     {
         if ($field->isEmpty($value) === false) {
             if (V::url($value) === false) {

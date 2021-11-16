@@ -7,8 +7,10 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Form\Form;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -284,6 +286,10 @@ trait PageActions
                 ]);
 
                 foreach ($this->kirby()->languages()->codes() as $code) {
+                    if ($oldPage->translation($code)->exists() !== true) {
+                        continue;
+                    }
+
                     $content = $oldPage->content($code)->convertTo($template);
 
                     if (F::remove($oldPage->contentFile($code)) !== true) {
@@ -295,7 +301,7 @@ trait PageActions
                 }
 
                 // return a fresh copy of the object
-                return $newPage->clone();
+                $page = $newPage->clone();
             } else {
                 $newPage = $this->clone([
                     'content'  => $this->content()->convertTo($template),
@@ -306,8 +312,17 @@ trait PageActions
                     throw new LogicException('The old text file could not be removed');
                 }
 
-                return $newPage->save();
+                $page = $newPage->save();
             }
+
+            // update the parent collection
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->set($page->id(), $page);
+            } else {
+                $page->parentModel()->children()->set($page->id(), $page);
+            }
+
+            return $page;
         });
     }
 
@@ -322,7 +337,16 @@ trait PageActions
     {
         $arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
         return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
-            return $page->save(['title' => $title], $languageCode);
+            $page = $page->save(['title' => $title], $languageCode);
+
+            // flush the parent cache to get children and drafts right
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->set($page->id(), $page);
+            } else {
+                $page->parentModel()->children()->set($page->id(), $page);
+            }
+
+            return $page;
         });
     }
 
@@ -529,14 +553,13 @@ trait PageActions
                 return 0;
             case 'date':
             case 'datetime':
+                // the $format needs to produce only digits,
+                // so it can be converted to integer below
                 $format = $mode === 'date' ? 'Ymd' : 'YmdHi';
                 $lang   = $this->kirby()->defaultLanguage() ?? null;
                 $field  = $this->content($lang)->get('date');
                 $date   = $field->isEmpty() ? 'now' : $field;
-                // TODO: in 3.6.0 throw an error if date() doesn't
-                // return a number, see https://github.com/getkirby/kirby/pull/3061#discussion_r552783943
                 return (int)date($format, strtotime($date));
-                break;
             case 'default':
 
                 $max = $this
@@ -571,7 +594,7 @@ trait PageActions
                     'kirby' => $app,
                     'page'  => $app->page($this->id()),
                     'site'  => $app->site(),
-                ], '');
+                ], ['fallback' => '']);
 
                 return (int)$template;
         }
@@ -640,17 +663,28 @@ trait PageActions
     {
 
         // create the slug for the duplicate
-        $slug = Str::slug($slug ?? $this->slug() . '-copy');
+        $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(t('page.duplicate.appendix')));
 
-        $arguments = ['originalPage' => $this, 'input' => $slug, 'options' => $options];
+        $arguments = [
+            'originalPage' => $this,
+            'input'        => $slug,
+            'options'      => $options
+        ];
+
         return $this->commit('duplicate', $arguments, function ($page, $slug, $options) {
-            return $this->copy([
+            $page = $this->copy([
                 'parent'   => $this->parent(),
                 'slug'     => $slug,
                 'isDraft'  => true,
                 'files'    => $options['files']    ?? false,
                 'children' => $options['children'] ?? false,
             ]);
+
+            if (isset($options['title']) === true) {
+                $page = $page->changeTitle($options['title']);
+            }
+
+            return $page;
         });
     }
 
@@ -784,20 +818,6 @@ trait PageActions
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated 3.5.0 Use `Page::changeSort()` instead
-     * @todo Remove in 3.6.0
-     *
-     * @param null $position
-     * @return $this|static
-     */
-    public function sort($position = null)
-    {
-        deprecated('$page->sort() is deprecated, use $page->changeSort() instead. $page->sort() will be removed in Kirby 3.6.0.');
-
-        return $this->changeStatus('listed', $position);
     }
 
     /**

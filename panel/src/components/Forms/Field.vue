@@ -41,20 +41,34 @@
 </template>
 
 <script>
-export default {
-  inheritAttrs: false,
+import {
+  disabled,
+  help,
+  label,
+  name,
+  required
+} from "@/mixins/props.js";
+
+export const props = {
+  mixins: [
+    disabled,
+    help,
+    label,
+    name,
+    required,
+  ],
   props: {
     counter: [Boolean, Object],
-    disabled: Boolean,
     endpoints: Object,
-    help: String,
     input: [String, Number],
-    label: String,
-    name: [String, Number],
-    required: Boolean,
     translate: Boolean,
     type: String
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   computed: {
     labelText() {
       return this.label || " ";
@@ -63,18 +77,18 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-field-label {
-  font-weight: $font-bold;
+  font-weight: var(--font-bold);
   display: block;
-  padding: 0 0 0.75rem;
+  padding: 0 0 .75rem;
   flex-grow: 1;
   line-height: 1.25rem;
 }
 .k-field-label abbr {
   text-decoration: none;
-  color: $color-light-grey;
-  padding-left: 0.25rem;
+  color: var(--color-gray-500);
+  padding-inline-start: .25rem;
 }
 .k-field-header {
   position: relative;
@@ -84,14 +98,7 @@ export default {
 .k-field-options {
   position: absolute;
   top: calc(-.5rem - 1px);
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+  inset-inline-end: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
   height: auto;
@@ -116,6 +123,6 @@ export default {
   display: block;
 }
 .k-field-help {
-  padding-top: 0.5rem;
+  padding-top: .5rem;
 }
 </style>

@@ -3,6 +3,7 @@
     v-if="isOpen"
     :data-align="align"
     :data-dropup="dropup"
+    :data-theme="theme"
     class="k-dropdown-content"
   >
     <!-- @slot Content of the dropdown -->
@@ -14,7 +15,7 @@
           :ref="_uid + '-item-' + index"
           :key="_uid + '-item-' + index"
           v-bind="option"
-          @click="$emit('action', option.click)"
+          @click="onOptionClick(option)"
         >
           {{ option.text }}
         </k-dropdown-item>
@@ -32,7 +33,6 @@ let OpenDropdown = null;
  */
 export default {
   props: {
-    options: [Array, Function],
     /**
      * Alignment of the dropdown items
      * @values left, right
@@ -40,6 +40,15 @@ export default {
     align: {
       type: String,
       default: "left"
+    },
+    options: [Array, Function, String],
+    /**
+     * Visual theme of the dropdown
+     * @values dark, light
+     */
+    theme: {
+      type: String,
+      default: "dark"
     }
   },
   data() {
@@ -54,10 +63,7 @@ export default {
     async fetchOptions(ready) {
       if (this.options) {
         if (typeof this.options === "string") {
-          const response = await fetch(this.options);
-          const json = await response.json();
-          return ready(json);
-
+          this.$dropdown(this.options)(ready);
         } else if (typeof this.options === "function") {
           this.options(ready);
 
@@ -66,6 +72,13 @@ export default {
         }
       } else {
         return ready(this.items);
+      }
+    },
+    onOptionClick(option) {
+      if (typeof option.click === "function") {
+        option.click.call(this);
+      } else if (option.click) {
+        this.$emit('action', option.click);
       }
     },
     /**
@@ -131,12 +144,14 @@ export default {
       this.dropup = false;
 
       this.$nextTick(() => {
-        const view = document.querySelector(".k-panel-view");
+        if (this.$el) {
+          // get window height depending on the browser
+          let windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
-        if (view && this.$el) {
-          // window height without padding (6rem)
-          // doesn't included form-buttons bar (2.5rem = 40px)
-          let windowHeight = view.clientHeight - 40;
+          // the minimum height required from above and below for the behavior of the dropup
+          // k-topbar or form-buttons (2.5rem = 40px)
+          // safe area height is slightly higher than that
+          let safeSpaceHeight = 50;
 
           // dropdown content position relative to the viewport
           let scrollTop = this.$el.getBoundingClientRect().top || 0;
@@ -144,8 +159,14 @@ export default {
           // dropdown content height
           let dropdownHeight = this.$el.clientHeight;
 
-          // activate the dropup if the last item overflows to the bottom of the screen
-          this.dropup = (scrollTop + dropdownHeight) > windowHeight;
+          // activates the dropup if the dropdown content overflows
+          // to the bottom of the screen but only if there is enough space top of screen
+          if (
+              (scrollTop + dropdownHeight) > (windowHeight - safeSpaceHeight) &&
+              (dropdownHeight + (safeSpaceHeight * 2)) < scrollTop
+          ) {
+            this.dropup = true;
+          }
         }
       });
     },
@@ -226,40 +247,23 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dropdown-content {
   position: absolute;
   top: 100%;
-  background: $color-gray-900;
-  color: $color-white;
-  z-index: z-index(dropdown);
-  box-shadow: $shadow-lg;
-  border-radius: $rounded-xs;
-  text-align: left;
+  background: var(--color-black);
+  color: var(--color-white);
+  z-index: var(--z-dropdown);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--rounded-xs);
+  text-align: start;
   margin-bottom: 6rem;
-
-  [dir="ltr"] & {
-    left: 0;
-  }
-
-  [dir="rtl"] & {
-    right: 0;
-  }
-
 }
-
+.k-dropdown-content[data-align="left"] {
+  inset-inline-start: 0;
+}
 .k-dropdown-content[data-align="right"] {
-
-  [dir="ltr"] & {
-    left: auto;
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-    right: auto;
-  }
-
+  inset-inline-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
@@ -275,19 +279,12 @@ export default {
 }
 
 .k-dropdown-content hr {
-  position: relative;
-  padding: 0.5rem 0;
-  border: 0;
-
-  &::after {
-    position: absolute;
-    top: 0.5rem;
-    left: 1rem;
-    right: 1rem;
-    content: "";
-    height: 1px;
-    background: currentColor;
-    opacity: 0.2;
-  }
+  border-color: currentColor;
+  opacity: 0.2;
+  margin: .5rem 1rem;
+}
+.k-dropdown-content[data-theme="light"] {
+  background: var(--color-white);
+  color: var(--color-black);
 }
 </style>

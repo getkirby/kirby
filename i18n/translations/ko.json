@@ -1,6 +1,11 @@
 {
+  "account.changeName": "이름 변경",
+  "account.delete": "계정 삭제",
+  "account.delete.confirm": "계정을 삭제할까요? 계정을 삭제한 뒤에는 복구할 수 없습니다.",
+
   "add": "\ucd94\uac00",
-  "avatar": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0",
+  "author": "저자",
+  "avatar": "프로필 이미지",
   "back": "복귀",
   "cancel": "\ucde8\uc18c",
   "change": "\ubcc0\uacbd",
@@ -9,6 +14,7 @@
   "collapse": "접기",
   "collapse.all": "모두 접기",
   "copy": "복사",
+  "copy.all": "모두 복사",
   "create": "등록",
 
   "date": "날짜",
@@ -23,23 +29,27 @@
   "days.tue": "\ud654",
   "days.wed": "\uc218",
 
+  "debugging": "디버깅",
+
   "delete": "\uc0ad\uc81c",
   "delete.all": "모두 삭제",
-  "dimensions": "크기",
-  "disabled": "비활성화",
-  "discard": "무시",
-  "download": "다운로드",
-  "duplicate": "복제",
-  "edit": "\ud3b8\uc9d1",
-  "expand": "열기",
-  "expand.all": "모두 열기",
 
   "dialog.files.empty": "선택한 파일이 없습니다.",
   "dialog.pages.empty": "선택한 페이지가 없습니다.",
   "dialog.users.empty": "선택한 사용자가 없습니다.",
 
+  "dimensions": "크기",
+  "disabled": "비활성화",
+  "discard": "무시",
+  "download": "다운로드",
+  "duplicate": "복제",
+
+  "edit": "\ud3b8\uc9d1",
+
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
+
+  "environment": "환경",
 
   "error.access.code": "코드가 올바르지 않습니다.",
   "error.access.login": "로그인할 수 없습니다.",
@@ -76,7 +86,7 @@
   "error.file.mime.forbidden": "이 MIME 형식({mime})은 업로드할 수 없습니다.",
   "error.file.mime.invalid": "MIME 형식({mime})이 올바르지 않습니다.",
   "error.file.mime.missing": "파일({filename})의 MIME 형식을 확인할 수 없습니다.",
-  "error.file.minheight": "{height}픽셀 이상으로 이미지의 높이를 설정하세요.",
+  "error.file.minheight": "이미지의 높이를 {height}픽셀 이상으로 설정하세요.",
   "error.file.minsize": "파일이 너무 작습니다.",
   "error.file.minwidth": "이미지의 너비를 {width}픽셀 이상으로 설정하세요.",
   "error.file.name.missing": "파일명을 입력하세요.",
@@ -92,6 +102,7 @@
   "error.language.code": "올바른 언어 코드를 입력하세요.",
   "error.language.duplicate": "이미 등록한 언어입니다.",
   "error.language.name": "올바른 언어명을 입력하세요.",
+  "error.language.notFound": "언어를 찾을 수 없습니다.",
 
   "error.layout.validation.block": "레이아웃({layoutIndex})의 블록({blockIndex})을 확인하세요.",
   "error.layout.validation.settings": "레이아웃({index})의 옵션을 확인하세요.",
@@ -99,6 +110,8 @@
   "error.license.format": "올바른 라이선스 키를 입력하세요.",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
   "error.license.verification": "라이선스 키가 올바르지 않습니다.",
+
+  "error.offline": "패널이 오프라인 상태입니다.",
 
   "error.page.changeSlug.permission": "고유 주소({slug})를 변경할 권한이 없습니다.",
   "error.page.changeStatus.incomplete": "페이지를 공개할 수 없습니다.",
@@ -119,7 +132,7 @@
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid": "올바른 정수를 입력하세요.",
   "error.page.slug.invalid": "올바른 URL을 입력하세요.",
-  "error.page.slug.maxlength": "{length}자 이하로 고유 주소를 입력하세요.",
+  "error.page.slug.maxlength": "고유 주소를 {length}자 이하로 입력하세요.",
   "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
   "error.page.status.invalid": "올바른 상태를 설정하세요.",
   "error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "암호가 설정되지 않았습니다.",
   "error.user.password.wrong": "암호가 올바르지 않습니다.",
   "error.user.role.invalid": "올바른 역할을 지정하세요.",
+  "error.user.undefined": "사용자가 없습니다.",
   "error.user.update.permission": "사용자({name})의 정보를 변경할 권한이 없습니다.",
 
   "error.validation.accepted": "확인하세요.",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "{min}, {max} 사이의 시각을 입력하세요.",
   "error.validation.url": "올바른 URL을 입력하세요.",
 
+  "expand": "열기",
+  "expand.all": "모두 열기",
+
   "field.required": "필드를 채우세요.",
   "field.blocks.changeType": "유형 변경",
   "field.blocks.code.name": "코드",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "선택한 블록을 삭제할까요?",
   "field.blocks.empty": "블록이 없습니다.",
   "field.blocks.fieldsets.label": "블록의 유형을 선택하세요.",
+  "field.blocks.fieldsets.paste": "단축키(<kbd>{{ shortcut }}</kbd>)로 클립보드에서 블록을 가져올 수 있습니다.",
   "field.blocks.gallery.name": "갤러리",
   "field.blocks.gallery.images.empty": "이미지가 없습니다.",
   "field.blocks.gallery.images.label": "이미지",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "이미지 선택",
   "field.blocks.image.ratio": "비율",
   "field.blocks.image.url": "이미지 URL",
+  "field.blocks.line.name": "가로줄",
   "field.blocks.list.name": "목록",
   "field.blocks.markdown.name": "마크다운",
   "field.blocks.markdown.label": "마크다운",
@@ -263,7 +282,7 @@
   "field.structure.empty": "항목이 없습니다.",
   "field.users.empty": "선택한 사용자가 없습니다.",
 
-  "file.blueprint": "블루프린트(<strong>/site/blueprints/{template}.yml</strong>)를 설정하세요.",
+  "file.blueprint": "블루프린트(<strong>/site/blueprints/files/{blueprint}.yml</strong>)를 설정하세요.",
   "file.delete.confirm": "파일(<strong>{filename}</strong>)을 삭제할까요?",
   "file.sort": "순서 변경",
 
@@ -272,6 +291,7 @@
 
   "hide": "숨기기",
   "hour": "시",
+  "import": "가져오기",
   "insert": "\uc0bd\uc785",
   "insert.after": "뒤에 삽입",
   "insert.before": "앞에 삽입",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "암호 초기화 코드",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "입력한 이메일 주소로 코드를 전송했습니다.",
-  "login.email.login.body": "{user.nameOrEmail} 님,\n\nKirby 패널에서 요청한 로그인 코드는 다음과 같습니다. 로그인 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n로그인 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
+  "login.email.login.body": "{user.nameOrEmail} 님,\n\n{site} 패널에서 요청한 로그인 코드는 다음과 같습니다. 로그인 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n로그인 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
   "login.email.login.subject": "로그인 코드",
-  "login.email.password-reset.body": "{user.nameOrEmail} 님,\n\nKirby 패널에서 요청한 로그인 코드는 다음과 같습니다. 로그인 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n로그인 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
+  "login.email.password-reset.body": "{user.nameOrEmail} 님,\n\n{site} 패널에서 요청한 암호 초기화 코드는 다음과 같습니다. 암호 초기화 코드는 {timeout}분 동안 유효합니다.\n\n{code}\n\n암호 초기화 코드를 요청한 적이 없다면, 이 이메일을 무시하거나 관리자에게 문의하세요. 보안을 위해 이 이메일은 다른 사람과 공유하지 마세요.",
   "login.email.password-reset.subject": "암호 초기화 코드",
   "login.remember": "로그인 유지",
   "login.reset": "암호 초기화",
@@ -372,11 +392,11 @@
   "more": "더 보기",
   "name": "이름",
   "next": "다음",
-  "no": "no",
+  "no": "네",
   "off": "끔",
   "on": "켬",
   "open": "열기",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "새 창에서 열기",
   "options": "옵션",
   "options.none": "옵션이 없습니다.",
 
@@ -385,7 +405,7 @@
   "orientation.portrait": "세로로 긴 사각형",
   "orientation.square": "정사각형",
 
-  "page.blueprint": "블루프린트(<strong>/site/blueprints/{template}.yml</strong>)를 설정하세요.",
+  "page.blueprint": "블루프린트(<strong>/site/blueprints/pages/{blueprint}.yml</strong>)를 설정하세요.",
   "page.changeSlug": "고유 주소 변경",
   "page.changeSlug.fromTitle": "제목에서 가져오기",
   "page.changeStatus": "상태 변경",
@@ -417,7 +437,10 @@
   "pagination.page": "페이지",
 
   "password": "\uc554\ud638",
+  "paste": "붙여넣기",
+  "paste.after": "뒤로 붙여넣기",
   "pixel": "픽셀",
+  "plugins": "플러그인",
   "prev": "이전",
   "preview": "미리 보기",
   "remove": "삭제",
@@ -454,6 +477,8 @@
   "template": "\ud15c\ud50c\ub9bf",
   "today": "오늘",
 
+  "server": "서버",
+
   "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
 
   "toolbar.button.code": "코드",
@@ -463,18 +488,22 @@
   "toolbar.button.heading.1": "제목 1",
   "toolbar.button.heading.2": "제목 2",
   "toolbar.button.heading.3": "제목 3",
+  "toolbar.button.heading.4": "제목 4",
+  "toolbar.button.heading.5": "제목 5",
+  "toolbar.button.heading.6": "제목 6",
   "toolbar.button.italic": "강조 2",
   "toolbar.button.file": "파일",
   "toolbar.button.file.select": "파일 선택",
   "toolbar.button.file.upload": "파일 업로드",
   "toolbar.button.link": "링크",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.paragraph": "문단",
+  "toolbar.button.strike": "취소선",
   "toolbar.button.ol": "숫자 목록",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "밑줄",
   "toolbar.button.ul": "기호 목록",
 
   "translation.author": "Kirby 팀",
-  "translation.direction": "LTR",
+  "translation.direction": "왼쪽에서 오른쪽",
   "translation.name": "한국어",
   "translation.locale": "ko_KR",
 
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "사용자",
-  "user.blueprint": "블루프린트(<strong>/site/blueprints/users/{role}.yml</strong>)에 섹션과 필드를 추가할 수 있습니다.",
+  "user.blueprint": "블루프린트(<strong>/site/blueprints/users/{blueprint}.yml</strong>)에 섹션과 필드를 추가할 수 있습니다.",
   "user.changeEmail": "이메일 주소 변경",
   "user.changeLanguage": "언어 변경",
   "user.changeName": "사용자명 변경",
@@ -516,12 +545,13 @@
 
   "view.account": "계정",
   "view.installation": "\uc124\uce58",
+  "view.languages": "언어",
   "view.resetPassword": "암호 초기화",
-  "view.settings": "설정",
   "view.site": "사이트",
+  "view.system": "시스템",
   "view.users": "\uc0ac\uc6a9\uc790",
 
   "welcome": "반갑습니다.",
   "year": "년",
-  "yes": "yes"
+  "yes": "아니요"
 }

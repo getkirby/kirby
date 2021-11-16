@@ -11,16 +11,16 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import { props as Field } from "../Field.vue";
 import Layouts from "@/components/Layouter/Layouts.vue";
 
 export default {
   components: {
     "k-block-layouts": Layouts,
   },
+  mixins: [Field],
   inheritAttrs: false,
   props: {
-    ...Field.props,
     empty: String,
     fieldsetGroups: Object,
     fieldsets: Object,

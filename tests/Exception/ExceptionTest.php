@@ -2,7 +2,7 @@
 
 namespace Kirby\Exception;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class WillFail
 }
 
 /**
- * @coversDefaultClass Kirby\Exception\Exception
+ * @coversDefaultClass \Kirby\Exception\Exception
  */
 class ExceptionTest extends TestCase
 {

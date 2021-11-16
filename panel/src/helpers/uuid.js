@@ -1,4 +1,4 @@
-export default function () {
+export default () => {
   var uuid = "", i, random;
   for (i = 0; i < 32; i++) {
     random = Math.random() * 16 | 0;

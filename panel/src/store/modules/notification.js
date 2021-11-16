@@ -26,6 +26,44 @@ export default {
       clearTimeout(this.timer);
       context.commit("UNSET");
     },
+    deprecated(context, message) {
+      console.warn("Deprecated: " + message);
+    },
+    error(context, error) {
+      // props for the dialog
+      let props = error;
+
+      // handle when a simple string is thrown as error
+      // we should avoid that whenever possible
+      if (typeof error === "string") {
+        props = {
+          message: error
+        };
+      }
+
+      // handle proper Error instances
+      if (error instanceof Error) {
+        // convert error objects to props for the dialog
+        props = {
+          message: error.message
+        };
+
+        // only log errors to the console in debug mode
+        if (window.panel.$config.debug) {
+          window.console.error(error);
+        }
+      }
+
+      // show the error dialog
+      context.dispatch("dialog", {
+        component: "k-error-dialog",
+        props: props,
+      }, {root: true});
+
+      // remove the notification from store
+      // to avoid showing it in the topbar
+      context.dispatch("close");
+    },
     open(context, payload) {
       context.dispatch("close");
       context.commit("SET", payload);
@@ -44,16 +82,6 @@ export default {
       context.dispatch("open", {
         type: "success",
         timeout: 4000,
-        ...payload
-      });
-    },
-    error(context, payload) {
-      if (typeof payload === "string") {
-        payload = { message: payload };
-      }
-
-      context.dispatch("open", {
-        type: "error",
         ...payload
       });
     }

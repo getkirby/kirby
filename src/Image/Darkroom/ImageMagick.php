@@ -3,8 +3,8 @@
 namespace Kirby\Image\Darkroom;
 
 use Exception;
+use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
-use Kirby\Toolkit\F;
 
 /**
  * ImageMagick
@@ -211,6 +211,10 @@ class ImageMagick extends Darkroom
      */
     protected function save(string $file, array $options): string
     {
+        if ($options['format'] !== null) {
+            $file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
+        }
+
         return sprintf('-limit thread 1 "%s"', $file);
     }
 

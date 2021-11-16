@@ -33,15 +33,27 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js"
 
-export default {
-  inheritAttrs: false,
+import { required as validateRequired } from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     ariaLabel: String,
     default: String,
-    disabled: Boolean,
     /**
      * The text, that is shown as the first empty option, when the field is not required.
      */
@@ -49,8 +61,6 @@ export default {
       type: [Boolean, String],
       default: true
     },
-    id: [Number, String],
-    name: [Number, String],
     /**
      * The text, that is shown when no option is selected yet.
      */
@@ -61,12 +71,16 @@ export default {
         return [];
       }
     },
-    required: Boolean,
     value: {
       type: [String, Number, Boolean],
       default: ""
     }
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       selected: this.value,
@@ -143,14 +157,14 @@ export default {
   validations() {
     return {
       selected: {
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     };
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-select-input {
   position: relative;
   display: block;
@@ -159,10 +173,7 @@ export default {
 }
 .k-select-input-native {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   opacity: 0;
   width: 100%;
   font: inherit;
@@ -174,6 +185,6 @@ export default {
   cursor: default;
 }
 .k-select-input-native {
-  font-weight: $font-normal;
+  font-weight: var(--font-normal);
 }
 </style>

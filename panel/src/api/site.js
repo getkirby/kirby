@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default (api) => {
   return {
     async blueprint() {
@@ -16,20 +14,6 @@ export default (api) => {
     },
     async get(query = { view: "panel" }) {
       return api.get("site", query);
-    },
-    async options() {
-      const site    = await api.get("site", {select: "options"});
-      const options = site.options;
-      let result    = [];
-
-      result.push({
-        click: "rename",
-        icon: "title",
-        text: Vue.i18n.translate("rename"),
-        disabled: !options.changeTitle
-      });
-
-      return result;
     },
     async update(data) {
       return api.post("site", data);

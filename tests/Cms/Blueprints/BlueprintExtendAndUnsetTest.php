@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
-class BlueprintExtendAndUnset extends TestCase
+class BlueprintExtendAndUnsetTest extends TestCase
 {
     protected $app;
 
@@ -73,7 +73,7 @@ class BlueprintExtendAndUnset extends TestCase
     {
         $blueprint = new Blueprint([
             'title'  => 'extended',
-            'model'  => 'page',
+            'model'  => new Page(['slug' => 'test']),
             'extends' => 'pages/base',
             'tabs'  => [
                 'seo'  => false
@@ -90,7 +90,7 @@ class BlueprintExtendAndUnset extends TestCase
     {
         $blueprint = new Blueprint([
             'title'  => 'extended',
-            'model'  => 'page',
+            'model'  => new Page(['slug' => 'test']),
             'extends' => 'pages/base',
             'tabs'  => [
                 'content'  => [
@@ -118,7 +118,7 @@ class BlueprintExtendAndUnset extends TestCase
     {
         $blueprint = new Blueprint([
             'title'  => 'extended',
-            'model'  => 'page',
+            'model'  => new Page(['slug' => 'test']),
             'extends' => 'pages/base',
             'tabs'  => [
                 'seo' => [
@@ -146,7 +146,7 @@ class BlueprintExtendAndUnset extends TestCase
     {
         $blueprint = new Blueprint([
             'title'   => 'extended',
-            'model'   => 'page',
+            'model'   => new Page(['slug' => 'test']),
             'extends' => 'pages/base',
             'tabs'    => [
                 'additional' => [

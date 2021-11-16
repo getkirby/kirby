@@ -7,7 +7,7 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box :text="issue" :html="false" theme="negative" />
+      <k-box :text="issue" theme="negative" />
     </template>
 
     <template v-else>
@@ -21,34 +21,21 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="user in models"
-            :key="user.email"
-            :text="user.text"
-            :info="user.info !== user.text ? user.info : null"
-            :image="user.image"
-            :icon="user.icon"
-            @click="toggle(user)"
-          >
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: user }">
             <k-button
-              v-if="isSelected(user)"
-              slot="options"
-              :autofocus="true"
-              :icon="checkedIcon"
-              :tooltip="$t('remove')"
-              theme="positive"
+              v-bind="toggleBtn(user)"
+              @click="toggle(user)"
             />
-            <k-button
-              v-else
-              slot="options"
-              :autofocus="true"
-              :tooltip="$t('select')"
-              icon="circle-outline"
-            />
-          </k-list-item>
-        </k-list>
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
@@ -69,11 +56,21 @@
 import picker from "@/mixins/picker/dialog.js";
 
 export default {
-  mixins: [picker]
+  mixins: [picker],
+  methods: {
+    item(item) {
+      return {
+        ...item,
+        key: item.email,
+        info: item.info !== item.text ? item.info : null,
+        link: false
+      }
+    }
+  }
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-users-dialog .k-list-item {
   cursor: pointer;
 }

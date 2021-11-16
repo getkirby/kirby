@@ -5,7 +5,9 @@
     v-bind="$props"
     class="k-password-field"
   >
-    <slot slot="options" name="options" />
+    <template #options>
+      <slot name="options" />
+    </template>
     <k-input
       :id="_uid"
       ref="input"
@@ -18,23 +20,23 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import PasswordInput from "../Input/PasswordInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as PasswordInput } from "../Input/PasswordInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-password-input>` for additional information.
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    PasswordInput,
+    counter
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...PasswordInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    },
     minlength: {
       type: Number,
       default: 8
@@ -42,18 +44,6 @@ export default {
     icon: {
       type: String,
       default: "key"
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-      return {
-        count: this.value ? String(this.value).length : 0,
-        min: this.minlength,
-        max: this.maxlength
-      };
     }
   },
   methods: {

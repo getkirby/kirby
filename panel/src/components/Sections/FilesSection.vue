@@ -8,11 +8,10 @@
       <k-headline>
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
-      <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">
-          {{ $t("add") }}
-        </k-button>
-      </k-button-group>
+      <k-button-group
+        v-if="add"
+        :buttons="[{ text: $t('add'), icon: 'upload', click: upload }]"
+      />
     </header>
 
     <template v-if="error">
@@ -44,7 +43,7 @@
             :layout="options.layout"
             :data-invalid="isInvalid"
             icon="image"
-            @click="if (add) upload()"
+            v-on="add ? { click: upload } : {}"
           >
             {{ options.empty || $t('files.empty') }}
           </k-empty>
@@ -61,16 +60,12 @@
         </template>
       </k-dropzone>
 
-      <k-file-rename-dialog ref="rename" @success="update" />
-      <k-file-remove-dialog ref="remove" @success="update" />
-      <k-file-sort-dialog ref="sort" @success="reload" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
     </template>
   </section>
 </template>
 
 <script>
-import config from "@/config/config.js";
 import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
@@ -94,44 +89,10 @@ export default {
     this.$events.$off("file.sort", this.reload);
   },
   methods: {
-    action(file, action) {
-
-      switch (action) {
-        case "edit":
-          this.$go(file.link);
-          break;
-        case "download":
-          window.open(file.url);
-          break;
-        case "rename":
-          this.$refs.rename.open(file.parent, file.filename);
-          break;
-        case "replace":
-          this.$refs.upload.open({
-            url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
-            accept: "." + file.extension + "," + file.mime,
-            multiple: false
-          });
-          break;
-        case "remove":
-          if (this.data.length <= this.options.min) {
-            const number = this.options.min > 1 ? "plural" : "singular";
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.section.files.min." + number, {
-                section: this.options.headline || this.name,
-                min: this.options.min
-              })
-            });
-            break;
-          }
-
-          this.$refs.remove.open(file.parent, file.filename);
-          break;
-        case "sort":
-          this.$refs.sort.open(file.parent, file, this.options.apiUrl);
-          break;
+    action(action, file) {
+      if (action === "replace") {
+        this.replace(file);
       }
-
     },
     drop(files) {
       if (this.add === false) {
@@ -140,26 +101,25 @@ export default {
 
       this.$refs.upload.drop(files, {
         ...this.add,
-        url: config.api + "/" + this.add.api
+        url: this.$urls.api + "/" + this.add.api
       });
     },
     items(data) {
       return data.map(file => {
         file.sortable = this.options.sortable;
         file.column   = this.column;
-        file.options  = async ready => {
-          try {
-            const options = await this.$api.files.options(
-              file.parent,
-              file.filename,
-              "list",
-              this.options.sortable
-            );
-            ready(options);
-
-          } catch (error) {
-            this.$store.dispatch("notification/error", error);
+        file.options  = this.$dropdown(file.link, {
+          query: {
+            view: "list",
+            update: this.options.sortable,
+            delete: data.length > this.options.min
           }
+        });
+
+        // add data-attributes info for item
+        file.data = {
+          "data-id": file.id,
+          "data-template": file.template
         };
 
         return file;
@@ -167,8 +127,8 @@ export default {
     },
     replace(file) {
       this.$refs.upload.open({
-        url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
-        accept: file.mime,
+        url: this.$urls.api + "/" + file.link,
+        accept: "." + file.extension + "," + file.mime,
         multiple: false
       });
     },
@@ -209,7 +169,7 @@ export default {
 
       this.$refs.upload.open({
         ...this.add,
-        url: config.api + "/" + this.add.api
+        url: this.$urls.api + "/" + this.add.api
       });
     },
     uploaded() {
@@ -221,7 +181,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-files-section[data-processing] {
   pointer-events: none;
 }

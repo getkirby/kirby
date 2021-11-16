@@ -56,11 +56,6 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins["created"].push(parts["created"]);
   }
 
-  // Views
-  resolve(parts, "views", function (name, options) {
-    window.panel.plugins["views"][name] = options;
-  });
-
   // Login
   if (parts.login) {
     window.panel.plugins.login = parts.login;

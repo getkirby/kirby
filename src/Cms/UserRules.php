@@ -299,6 +299,10 @@ class UserRules
      */
     public static function validId(User $user, string $id): bool
     {
+        if ($id === 'account') {
+            throw new InvalidArgumentException('"account" is a reserved word and cannot be used as user id');
+        }
+
         if ($user->kirby()->users()->find($id)) {
             throw new DuplicateException('A user with this id exists');
         }

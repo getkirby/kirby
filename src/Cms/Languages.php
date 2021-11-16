@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * A collection of all defined site languages

@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use Kirby\Filesystem\F;
 use ReflectionFunction;
 
 /**

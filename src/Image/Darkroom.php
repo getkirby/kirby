@@ -21,6 +21,9 @@ class Darkroom
         'im' => 'Kirby\Image\Darkroom\ImageMagick'
     ];
 
+    /**
+     * @var array
+     */
     protected $settings = [];
 
     /**
@@ -61,8 +64,9 @@ class Darkroom
     {
         return [
             'autoOrient' => true,
-            'crop'       => false,
             'blur'       => false,
+            'crop'       => false,
+            'format'     => null,
             'grayscale'  => false,
             'height'     => null,
             'quality'    => 90,

@@ -5,7 +5,10 @@
     v-bind="$props"
     v-on="$listeners"
   >
-    <slot />
+    <template v-if="text">
+      {{ text }}
+    </template>
+    <slot v-else />
   </component>
 </template>
 
@@ -17,6 +20,10 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    /**
+     * Pass instead of a link URL to be triggered on clicking the button
+     */
+    click: Function,
     /**
      * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
      */
@@ -45,6 +52,10 @@ export default {
      */
     target: String,
     tabindex: String,
+    /**
+     * Use either the default slot or this prop for the button text
+     */
+    text: String,
     /**
      * With the theme you can control the general design of the button.
      * @values positive, negative
@@ -93,11 +104,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 button {
   line-height: inherit;
   border: 0;
-  font-family: $font-sans;
+  font-family: var(--font-sans);
   font-size: 1rem;
   color: currentColor;
   background: none;
@@ -111,36 +122,32 @@ button::-moz-focus-inner {
 .k-button {
   display: inline-block;
   position: relative;
-  font-size: $text-sm;
-  transition: color 0.3s;
+  font-size: var(--text-sm);
+  transition: color .3s;
+  outline: none;
 
-  &:focus,
-  &:hover {
-    outline: none;
-  }
+}
+.k-button:focus,
+.k-button:hover {
+  outline: none;
+}
 
-  @include highlight-tabbed;
-
-  * {
-    vertical-align: middle;
-  }
+.k-button * {
+  vertical-align: middle;
 }
 
 /* hide button text on small screens */
 .k-button[data-responsive] .k-button-text {
   display: none;
-
-  @media screen and (min-width: $breakpoint-sm) {
+}
+@media screen and (min-width: 30em) {
+  .k-button[data-responsive] .k-button-text {
     display: inline;
   }
 }
 
-.k-button[data-theme="positive"] {
-  color: $color-positive;
-}
-
-.k-button[data-theme="negative"] {
-  color: $color-negative;
+.k-button[data-theme] {
+  color: var(--theme);
 }
 
 .k-button-icon {
@@ -150,17 +157,11 @@ button::-moz-focus-inner {
 }
 
 .k-button-icon ~ .k-button-text {
-  [dir="ltr"] & {
-    padding-left: 0.5rem;
-  }
-
-  [dir="rtl"] & {
-    padding-right: 0.5rem;
-  }
+  padding-inline-start: .5rem;
 }
 
 .k-button-text {
-  opacity: 0.75;
+  opacity: .75;
 }
 .k-button:focus .k-button-text,
 .k-button:hover .k-button-text {

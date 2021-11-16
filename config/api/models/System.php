@@ -52,12 +52,8 @@ return [
         'requirements' => function (System $system) {
             return $system->toArray();
         },
-        'site' => function () {
-            try {
-                return $this->site()->blueprint()->title();
-            } catch (Throwable $e) {
-                return $this->site()->title()->value();
-            }
+        'site' => function (System $system) {
+            return $system->title();
         },
         'slugs' => function () {
             return Str::$language;
@@ -87,7 +83,7 @@ return [
         'version' => function () {
             $user = $this->user();
 
-            if ($user && $user->role()->permissions()->for('access', 'settings') === true) {
+            if ($user && $user->role()->permissions()->for('access', 'system') === true) {
                 return $this->kirby()->version();
             } else {
                 return null;

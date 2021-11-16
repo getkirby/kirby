@@ -4,7 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\Exception;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * Reader and write of PHP files with data in a returned array
@@ -49,10 +49,10 @@ class PHP extends Handler
     /**
      * PHP strings shouldn't be decoded manually
      *
-     * @param mixed $array
+     * @param mixed $string
      * @return array
      */
-    public static function decode($array): array
+    public static function decode($string): array
     {
         throw new BadMethodCallException('The PHP::decode() method is not implemented');
     }

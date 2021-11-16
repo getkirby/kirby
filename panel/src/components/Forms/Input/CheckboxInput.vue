@@ -30,38 +30,30 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  label,
+  required
+} from "@/mixins/props.js";
+
+import { required as validateRequired } from "vuelidate/lib/validators";
 
 /**
- * 
+ *
  * @example <k-input v-model="checkbox" type="checkbox" />
  */
 export default {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    label,
+    required
+  ],
   inheritAttrs: false,
   props: {
-    /**
-     * If true, the input will be instantly focused when the form is created
-     */
-    autofocus: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * If true, the input is disabled and cannot be filled in or edited
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    id: [Number, String],
-    label: String,
-    /**
-     * If true, the input must not be empty
-     */
-    required: {
-      type: Boolean,
-      default: false
-    },
     value: Boolean,
   },
   watch: {
@@ -102,14 +94,14 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 
 .k-checkbox-input {
   position: relative;
@@ -124,14 +116,14 @@ export default {
 }
 .k-checkbox-input-label {
   display: block;
-  padding-left: 1.75rem;
+  padding-inline-start: 1.75rem;
 }
 .k-checkbox-input-icon {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 1rem;
   height: 1rem;
-  border: 2px solid $color-light-grey;
+  border: 2px solid var(--color-gray-500);
 }
 .k-checkbox-input-icon svg {
   position: absolute;
@@ -140,24 +132,24 @@ export default {
   display: none;
 }
 .k-checkbox-input-icon path {
-  stroke: $color-white;
+  stroke: var(--color-white);
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-gray-900;
-  background: $color-gray-900;
+  border-color: var(--color-gray-900);
+  background: var(--color-gray-900);
 }
 [data-disabled] .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-gray-600;
-  background: $color-gray-600;
+  border-color: var(--color-gray-600);
+  background: var(--color-gray-600);
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;
 }
 .k-checkbox-input-native:focus + .k-checkbox-input-icon {
-  border-color: $color-blue-600;
+  border-color: var(--color-blue-600);
 }
 .k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 
 </style>

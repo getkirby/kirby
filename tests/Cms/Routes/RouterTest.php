@@ -2,8 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Route;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
@@ -223,7 +224,9 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        $response = $app->call('media/pages/projects/1234-5678/cover.jpg');
+        $mediaHash = $app->file('projects/cover.jpg')->mediaHash();
+
+        $response = $app->call('media/pages/projects/' . $mediaHash . '/cover.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -239,7 +242,9 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        $response = $app->call('media/site/1234-5678/background.jpg');
+        $mediaHash = $app->file('background.jpg')->mediaHash();
+
+        $response = $app->call('media/site/' . $mediaHash . '/background.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 
@@ -259,7 +264,9 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        $response = $app->call('media/users/test/1234-5678/test.jpg');
+        $mediaHash = $app->user('test')->file('test.jpg')->mediaHash();
+
+        $response = $app->call('media/users/test/' . $mediaHash . '/test.jpg');
         $this->assertInstanceOf(Response::class, $response);
     }
 

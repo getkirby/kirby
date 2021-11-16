@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
+use Kirby\Filesystem\File as BaseFile;
 
 class FileRulesTest extends TestCase
 {
@@ -32,6 +32,16 @@ class FileRulesTest extends TestCase
         $file = $page->file('a.jpg');
 
         $this->assertTrue(FileRules::changeName($file, 'c'));
+    }
+
+    public function testChangeNameWithEmptyInput()
+    {
+        $file = new File(['filename' => 'test.jpg']);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The name must not be empty');
+
+        FileRules::changeName($file, '');
     }
 
     public function testChangeNameWithoutPermissions()
@@ -94,9 +104,9 @@ class FileRulesTest extends TestCase
         $file->method('exists')->willReturn(true);
 
         $this->expectException('Kirby\Exception\DuplicateException');
-        $this->expectExceptionMessage('The file exists and cannot be overwritten');
+        $this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
-        $upload = $this->createMock(Image::class);
+        $upload = $this->createMock(BaseFile::class);
 
         FileRules::create($file, $upload);
     }
@@ -108,16 +118,20 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('create')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['permissions', 'blueprint', 'filename'])
+            ->addMethods(['extension'])
+            ->getMock();
         $file->method('blueprint')->willReturn($blueprint);
         $file->method('extension')->willReturn('svg');
         $file->method('filename')->willReturn('test.svg');
         $file->method('permissions')->willReturn($permissions);
 
-        $upload = new Image(__DIR__ . '/fixtures/files/test.svg');
+        $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::create($file, $upload);
     }
@@ -134,7 +148,7 @@ class FileRulesTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('The file cannot be created');
 
-        $upload = $this->createMock(Image::class);
+        $upload = $this->createMock(BaseFile::class);
 
         FileRules::create($file, $upload);
     }
@@ -164,7 +178,7 @@ class FileRulesTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('The file cannot be replaced');
 
-        $upload = $this->createMock(Image::class);
+        $upload = $this->createMock(BaseFile::class);
 
         FileRules::replace($file, $upload);
     }
@@ -174,13 +188,16 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('replace')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['permissions'])
+            ->addMethods(['mime', 'extension'])
+            ->getMock();
         $file->method('permissions')->willReturn($permissions);
-        $file->method('__call')->with('mime')->willReturn('image/jpeg');
+        $file->method('mime')->willReturn('image/jpeg');
         $file->method('extension')->willReturn('jpg');
 
-
-        $upload = $this->createMock(Image::class);
+        $upload = $this->createMock(BaseFile::class);
         $upload->method('mime')->willReturn('image/png');
         $upload->method('extension')->willReturn('png');
 
@@ -197,17 +214,21 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('replace')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call', 'permissions', 'blueprint', 'filename'])
+            ->addMethods(['extension'])
+            ->getMock();
         $file->method('__call')->with('mime')->willReturn('image/svg+xml');
         $file->method('blueprint')->willReturn($blueprint);
         $file->method('extension')->willReturn('svg');
         $file->method('filename')->willReturn('test.svg');
         $file->method('permissions')->willReturn($permissions);
 
-        $upload = new Image(__DIR__ . '/fixtures/files/test.svg');
+        $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::replace($file, $upload);
     }
@@ -232,13 +253,17 @@ class FileRulesTest extends TestCase
             ['jpg', true],
             ['png', true],
             ['', false, 'The extensions for "test" is missing'],
-            ['htm', false, 'The extension "htm" is not allowed'],
-            ['html', false, 'The extension "html" is not allowed'],
-            ['php', false, 'The extension "php" is not allowed'],
-            ['phar', false, 'The extension "phar" is not allowed'],
-            ['exe', false, 'The extension "exe" is not allowed'],
+            ['php', false, 'You are not allowed to upload PHP files'],
+            ['phar', false, 'You are not allowed to upload PHP files'],
+            ['phtml', false, 'You are not allowed to upload PHP files'],
             ['php4', false, 'You are not allowed to upload PHP files'],
             ['1phar2', false, 'You are not allowed to upload PHP files'],
+            ['phtml5', false, 'You are not allowed to upload PHP files'],
+            ['htm', false, 'You are not allowed to upload HTML files'],
+            ['html', false, 'You are not allowed to upload HTML files'],
+            ['dhtml', false, 'You are not allowed to upload HTML files'],
+            ['exe', false, 'The extension "exe" is not allowed'],
+            ['txt', false, 'The extension "txt" is not allowed'],
         ];
     }
 
@@ -269,12 +294,15 @@ class FileRulesTest extends TestCase
 
             // extension
             ['test', '', 'text/plain', false, 'The extensions for "test" is missing'],
-            ['test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
-            ['test.html', 'html', 'text/plain', false, 'The extension "html" is not allowed'],
-            ['test.php', 'php', 'text/plain', false, 'The extension "php" is not allowed'],
-            ['test.phar', 'phar', 'text/plain', false, 'The extension "phar" is not allowed'],
+            ['test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
+            ['test.html', 'html', 'text/plain', false, 'You are not allowed to upload HTML files'],
+            ['test.php', 'php', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phtml', 'phtml', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phar', 'phar', 'text/plain', false, 'You are not allowed to upload PHP files'],
             ['test.exe', 'exe', 'text/plain', false, 'The extension "exe" is not allowed'],
+            ['test.txt', 'txt', 'text/plain', false, 'The extension "txt" is not allowed'],
             ['test.php4', 'php4', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phtml5', 'phtml5', 'text/plain', false, 'You are not allowed to upload PHP files'],
             ['test.1phar2', '1phar2', 'text/plain', false, 'You are not allowed to upload PHP files'],
 
             // mime
@@ -291,7 +319,7 @@ class FileRulesTest extends TestCase
 
             // rule order
             ['.test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
-            ['.test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
+            ['.test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
             ['.test.jpg', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
         ];
     }
@@ -303,8 +331,8 @@ class FileRulesTest extends TestCase
     {
         $file = $this->getMockBuilder(File::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['filename', 'extension'])
-            ->addMethods(['mime'])
+            ->onlyMethods(['filename'])
+            ->addMethods(['mime', 'extension'])
             ->getMock();
         $file->method('filename')->willReturn($filename);
         $file->method('extension')->willReturn($extension);
@@ -324,8 +352,8 @@ class FileRulesTest extends TestCase
     {
         $file = $this->getMockBuilder(File::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['filename', 'extension'])
-            ->addMethods(['mime'])
+            ->onlyMethods(['filename'])
+            ->addMethods(['mime', 'extension'])
             ->getMock();
         $file->method('filename')->willReturn('test.jpg');
         $file->method('extension')->willReturn('jpg');

@@ -1,24 +1,23 @@
 <template>
   <form class="k-login-form k-login-code-form" @submit.prevent="login">
-    <h1 class="k-offscreen">
+    <h1 class="sr-only">
       {{ $t('login') }}
     </h1>
 
-    <div v-if="issue" class="k-login-alert" @click="issue = null">
-      <span>{{ issue }}</span>
-      <k-icon type="alert" />
-    </div>
+    <k-login-alert v-if="issue" @click="issue = null">
+      {{ issue }}
+    </k-login-alert>
 
-    <k-user-info :user="$store.state.user.pendingEmail" />
+    <k-user-info :user="pending.email" />
 
     <k-text-field
       v-model="code"
       :autofocus="true"
       :counter="false"
-      :help="$t('login.code.text.' + $store.state.user.pendingChallenge)"
+      :help="$t('login.code.text.' + pending.challenge)"
       :label="$t('login.code.label.' + mode)"
       :novalidate="true"
-      :placeholder="$t('login.code.placeholder.' + $store.state.user.pendingChallenge)"
+      :placeholder="$t('login.code.placeholder.' + pending.challenge)"
       :required="true"
       autocomplete="one-time-code"
       icon="unlock"
@@ -52,6 +51,10 @@
 
 <script>
 export default {
+  props: {
+    methods: Array,
+    pending: Object
+  },
   data() {
     return {
       code: "",
@@ -62,34 +65,32 @@ export default {
   },
   computed: {
     mode() {
-      if (this.$store.state.system.info.loginMethods.includes("password-reset") === true) {
+      if (this.methods.includes("password-reset") === true) {
         return "password-reset";
-      } else {
-        return "login";
       }
+
+      return "login";
     }
   },
   methods: {
     async back() {
       this.isLoadingBack = true;
-      await this.$store.dispatch("user/logout");
-      this.isLoadingBack = false;
+      this.$go("/logout");
     },
     async login() {
       this.issue          = null;
       this.isLoadingLogin = true;
 
       try {
-        const result = await this.$api.auth.verifyCode(this.code);
+        await this.$api.auth.verifyCode(this.code);
+        this.$store.dispatch("notification/success", this.$t("welcome"));
 
         if (this.mode === "password-reset") {
-          this.$store.dispatch("user/visit", "/reset-password");
+          this.$go("reset-password")
+        } else {
+          this.$reload();
         }
 
-        this.$store.dispatch("user/login", result.user);
-        await this.$store.dispatch("system/load", true);
-
-        this.$store.dispatch("notification/success", this.$t("welcome"));
       } catch (error) {
         this.issue = error.message;
       } finally {
@@ -100,13 +101,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-login-code-form .k-user-info {
   height: 38px;
   margin-bottom: 2.25rem;
   padding: .5rem;
-  background: $color-white;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow);
 }
 </style>

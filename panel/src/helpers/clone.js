@@ -1,5 +1,5 @@
 
-export default function (array) {
+export default (array) => {
   if (array === undefined) {
     return undefined;
   }

@@ -17,28 +17,26 @@
 </template>
 
 <script>
+import {
+  help,
+  label
+} from "@/mixins/props.js";
+
 /**
  * @example <k-headline-field label="This is a headline" />
  */
 export default {
+  mixins: [
+    help,
+    label
+  ],
   props: {
-    /**
-     * Help text for below the field
-     */
-    help: String,
-    /**
-     * Label of the field
-     */
-    label: String,
-    /**
-     * Enables or hides the index numbers left next to the headline
-     */
     numbered: Boolean
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 body {
   counter-reset: headline-counter;
 }
@@ -46,19 +44,18 @@ body {
   position: relative;
   padding-top: 1.5rem;
 
-  // don't add the top padding,
-  // if the headline is the very first form element
-  .k-fieldset > .k-grid .k-column:first-child & {
-    padding-top: 0;
-  }
+}
+/* don't add the top padding,
+if the headline is the very first form element */
+.k-fieldset > .k-grid .k-column:first-child .k-headline-field {
+  padding-top: 0;
 }
 
 .k-headline-field .k-headline[data-numbered]::before {
   counter-increment: headline-counter;
   content: counter(headline-counter, decimal-leading-zero);
-  color: $color-focus;
+  color: var(--color-focus);
   font-weight: 400;
-  padding-right: .25rem;
+  padding-inline-end: .25rem;
 }
-
 </style>

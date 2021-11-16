@@ -1,11 +1,7 @@
 <script>
 import DateInput from "./DateInput.vue";
 
-/**
- * @example <k-input v-model="time" name="time" type="time" />
- */
-export default {
-  extends: DateInput,
+export const props = {
   props: {
     display: {
       type: String,
@@ -26,7 +22,15 @@ export default {
       type: String,
       default: "time"
     }
-  },
+  }
+}
+
+/**
+ * @example <k-input v-model="time" name="time" type="time" />
+ */
+export default {
+  extends: DateInput,
+  mixins: [props],
   computed: {
     is12HourFormat() {
       return this.display.toLowerCase().includes("a")

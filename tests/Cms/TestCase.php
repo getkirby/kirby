@@ -9,13 +9,14 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    public $page = null;
+    protected $page = null;
+    protected $app;
 
     public function setUp(): void
     {
         App::destroy();
 
-        new App([
+        $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ]

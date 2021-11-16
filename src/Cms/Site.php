@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\Dir;
+use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
 
 /**
@@ -113,7 +115,7 @@ class Site extends ModelWithContent
         }
 
         // return site content otherwise
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**
@@ -412,31 +414,13 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Returns the full path without leading slash
+     * Returns the panel info object
      *
-     * @internal
-     * @return string
+     * @return \Kirby\Panel\Site
      */
-    public function panelPath(): string
+    public function panel()
     {
-        return 'site';
-    }
-
-    /**
-     * Returns the url to the editing view
-     * in the panel
-     *
-     * @internal
-     * @param bool $relative
-     * @return string
-     */
-    public function panelUrl(bool $relative = false): string
-    {
-        if ($relative === true) {
-            return '/' . $this->panelPath();
-        } else {
-            return $this->kirby()->url('panel') . '/' . $this->panelPath();
-        }
+        return new Panel($this);
     }
 
     /**
@@ -571,7 +555,7 @@ class Site extends ModelWithContent
      * @param string|null $url
      * @return $this
      */
-    protected function setUrl($url = null)
+    protected function setUrl(?string $url = null)
     {
         $this->url = $url;
         return $this;
@@ -603,7 +587,7 @@ class Site extends ModelWithContent
      * @param string|null $language
      * @return string
      */
-    public function url($language = null): string
+    public function url(?string $language = null): string
     {
         if ($language !== null || $this->kirby()->multilang() === true) {
             return $this->urlForLanguage($language);
@@ -674,5 +658,42 @@ class Site extends ModelWithContent
     public function wasModifiedAfter($time): bool
     {
         return Dir::wasModifiedAfter($this->root(), $time);
+    }
+
+
+    /**
+     * Deprecated!
+     */
+
+    /**
+     * Returns the full path without leading slash
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelPath(): string
+    {
+        return $this->panel()->path();
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param bool $relative
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelUrl(bool $relative = false): string
+    {
+        return $this->panel()->url($relative);
     }
 }

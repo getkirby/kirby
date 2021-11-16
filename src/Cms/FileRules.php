@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Image\Image;
+use Kirby\Filesystem\File as BaseFile;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -38,6 +38,12 @@ class FileRules
             ]);
         }
 
+        if (Str::length($name) === 0) {
+            throw new InvalidArgumentException([
+                'key' => 'file.changeName.empty'
+            ]);
+        }
+
         $parent    = $file->parent();
         $duplicate = $parent->files()->not($file)->findBy('filename', $name . '.' . $file->extension());
 
@@ -67,15 +73,22 @@ class FileRules
      * Validates if the file can be created
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\Filesystem\File $upload
      * @return bool
      * @throws \Kirby\Exception\DuplicateException If a file with the same name exists
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to create the file
      */
-    public static function create(File $file, Image $upload): bool
+    public static function create(File $file, BaseFile $upload): bool
     {
         if ($file->exists() === true) {
-            throw new DuplicateException('The file exists and cannot be overwritten');
+            if ($file->sha1() !== $upload->sha1()) {
+                throw new DuplicateException([
+                    'key'  => 'file.duplicate',
+                    'data' => [
+                        'filename' => $file->filename()
+                    ]
+                ]);
+            }
         }
 
         if ($file->permissions()->create() !== true) {
@@ -110,12 +123,12 @@ class FileRules
      * Validates if the file can be replaced
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\Filesystem\File $upload
      * @return bool
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to replace the file
      * @throws \Kirby\Exception\InvalidArgumentException If the file type of the new file is different
      */
-    public static function replace(File $file, Image $upload): bool
+    public static function replace(File $file, BaseFile $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
             throw new PermissionException('The file cannot be replaced');
@@ -169,31 +182,35 @@ class FileRules
         // make it easier to compare the extension
         $extension = strtolower($extension);
 
-        if (empty($extension)) {
+        if (empty($extension) === true) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.missing',
                 'data' => ['filename' => $file->filename()]
             ]);
         }
 
-        if (V::in($extension, ['php', 'phar', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
-            throw new InvalidArgumentException([
-                'key'  => 'file.extension.forbidden',
-                'data' => ['extension' => $extension]
-            ]);
-        }
-
-        if (Str::contains($extension, 'php') || Str::contains($extension, 'phar')) {
+        if (
+            Str::contains($extension, 'php') !== false ||
+            Str::contains($extension, 'phar') !== false ||
+            Str::contains($extension, 'phtml') !== false
+        ) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
             ]);
         }
 
-        if (Str::contains($extension, 'htm')) {
+        if (Str::contains($extension, 'htm') !== false) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'HTML']
+            ]);
+        }
+
+        if (V::in($extension, ['exe', App::instance()->contentExtension()]) !== false) {
+            throw new InvalidArgumentException([
+                'key'  => 'file.extension.forbidden',
+                'data' => ['extension' => $extension]
             ]);
         }
 

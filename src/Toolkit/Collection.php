@@ -287,12 +287,7 @@ class Collection extends Iterator implements Countable
         }
 
         // get the filter from the filters array
-        $filter = static::$filters[$operator] ?? null;
-
-        // return an unfiltered list if the filter does not exist
-        if ($filter === null) {
-            return $this;
-        }
+        $filter = static::$filters[$operator];
 
         if (is_array($filter) === true) {
             $collection = clone $this;

@@ -1,8 +1,11 @@
 <template>
-  <k-dropdown v-if="languages.length">
-    <k-button :responsive="true" icon="globe" @click="$refs.languages.toggle()">
-      {{ language.name }}
-    </k-button>
+  <k-dropdown v-if="languages.length" class="k-languages-dropdown">
+    <k-button
+      :text="language.name"
+      :responsive="true"
+      icon="globe"
+      @click="$refs.languages.toggle()"
+    />
     <k-dropdown-content v-if="languages" ref="languages">
       <k-dropdown-item @click="change(defaultLanguage)">
         {{ defaultLanguage.name }}
@@ -23,19 +26,23 @@
 export default {
   computed: {
     defaultLanguage() {
-      return this.$store.state.languages.default;
+      return this.$languages.find(language => language.default === true);
     },
     language() {
-      return this.$store.state.languages.current;
+      return this.$language;
     },
     languages() {
-      return this.$store.state.languages.all.filter(language => language.default === false);
+      return this.$languages.filter(language => language.default === false);
     }
   },
   methods: {
     change(language) {
-      this.$store.dispatch("languages/current", language);
       this.$emit("change", language);
+      this.$go(this.$view.path, {
+        query: {
+          language: language.code
+        }
+      });
     }
   }
 }

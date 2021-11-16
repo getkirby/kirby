@@ -5,6 +5,8 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/mocks.php';
+
 class RemoteTest extends TestCase
 {
     protected $defaults;
@@ -54,6 +56,21 @@ class RemoteTest extends TestCase
         $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
         $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
 
+        // default with php.ini setting (invalid): internal CA
+        ini_set('curl.cainfo', __DIR__ . '/does-not-exist.pem');
+        $request = Remote::get('https://getkirby.com');
+        $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
+        $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+
+        // default with php.ini setting (valid): system CA
+        ini_set('curl.cainfo', __FILE__);
+        $request = Remote::get('https://getkirby.com');
+        $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertArrayNotHasKey(CURLOPT_CAINFO, $request->curlopt);
+        $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+        ini_restore('curl.cainfo');
+
         // explicit internal CA
         $request = Remote::get('https://getkirby.com', [
             'ca' => Remote::CA_INTERNAL
@@ -61,6 +78,16 @@ class RemoteTest extends TestCase
         $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
         $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
         $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+
+        // explicit internal CA with php.ini setting
+        ini_set('curl.cainfo', __FILE__);
+        $request = Remote::get('https://getkirby.com', [
+            'ca' => Remote::CA_INTERNAL
+        ]);
+        $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
+        $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+        ini_restore('curl.cainfo');
 
         // explicit internal CA with an existing file named like the constant
         $originalCwd = getcwd();

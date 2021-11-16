@@ -5,10 +5,17 @@ namespace Kirby\Cms;
 class UserAuthTest extends TestCase
 {
     protected $app;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
+        Dir::remove($this->tmp);
         $this->app = new App([
+            'roots' => [
+                'index'    => '/dev/null',
+                'accounts' => $this->tmp . '/accounts',
+                'sessions' => $this->tmp . '/sessions'
+            ],
             'users' => [
                 [
                     'email' => 'test@getkirby.com',
@@ -16,6 +23,11 @@ class UserAuthTest extends TestCase
                 ]
             ]
         ]);
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->tmp);
     }
 
     public function testGlobalUserState()

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
@@ -12,7 +13,8 @@ class FieldMethodsTest extends TestCase
 
         new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index'   => '/dev/null',
+                'content' => __DIR__ . '/fixtures'
             ]
         ]);
     }
@@ -580,6 +582,10 @@ class FieldMethodsTest extends TestCase
             ]
         ])->value());
 
+        // missing or empty field
+        $this->assertSame('', $this->field(null)->replace(['message' => 'world'])->value());
+        $this->assertSame('', $this->field('')->replace(['message' => 'world'])->value());
+
         // with page
         $page = new Page([
             'slug'    => 'test',
@@ -590,6 +596,7 @@ class FieldMethodsTest extends TestCase
         ]);
 
         $this->assertSame('Title: Hello world', $page->text()->replace()->value());
+        $this->assertSame('', $page->doesNotExist()->replace()->value());
     }
 
     public function testShort()
@@ -676,30 +683,94 @@ class FieldMethodsTest extends TestCase
     {
         $data = [
             [
+                'type' => 'code',
                 'content' => [
-                    'text' => 'Hello world'
-                ],
-                'type' => 'heading'
+                    'code' => '<?php echo "Hello World!"; ?>',
+                    'language' => 'php',
+                ]
             ],
             [
+                'type' => 'gallery',
                 'content' => [
-                    'text' => 'Nice blocks'
-                ],
-                'type' => 'text'
+                    'images' => [
+                        'a.png',
+                        'b.png'
+                    ],
+                ]
+            ],
+            [
+                'type'    => 'image',
+                'content' => [
+                    'alt'      => 'The Kirby logo as favicon',
+                    'caption'  => 'This favicon is really amazing!',
+                    'location' => 'web',
+                    'src'      => 'https://getkirby.com/favicon.png',
+                    'link'     => 'https://getkirby.com',
+                ]
+            ],
+            [
+                'type'    => 'image',
+                'content' => [
+                    'alt'   => 'White ink on a white canvas',
+                    'image' => 'a.png',
+                ]
+            ],
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'text' => 'A nice heading',
+                ]
+            ],
+            [
+                'type'    => 'list',
+                'content' => [
+                    'text' => '<ul><li>list item 1<\/li><li>list item 2<\/li><\/ul>',
+                ]
+            ],
+            [
+                'type'    => 'markdown',
+                'content' => [
+                    'text' => '# Heading 1',
+                ]
+            ],
+            [
+                'type'    => 'quote',
+                'content' => [
+                    'text'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.',
+                    'citation' => 'John Doe',
+                ]
+            ],
+            [
+                'type'    => 'text',
+                'content' => [
+                    'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.'
+                ]
+            ],
+            [
+                'type'    => 'video',
+                'content' => [
+                    'caption' => 'How to install Kirby in 5 minutes',
+                    'url'     => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+                ]
             ]
         ];
 
-        $field = $this->field(json_encode($data));
+        $json   = Json::encode($data);
+        $field  = new Field(kirby()->page('files'), 'test', $json);
         $blocks = $field->toBlocks();
 
         $this->assertInstanceOf('\Kirby\Cms\Blocks', $blocks);
-        $this->assertInstanceOf('\Kirby\Cms\Site', $blocks->parent());
-        $this->assertCount(2, $blocks->data());
+        $this->assertInstanceOf('\Kirby\Cms\Page', $blocks->parent());
+        $this->assertCount(count($data), $blocks);
+        $this->assertCount(count($data), $blocks->data());
 
-        $this->assertSame('heading', $blocks->first()->type());
-        $this->assertSame('Hello world', $blocks->first()->content()->data()['text']);
-        $this->assertSame('text', $blocks->last()->type());
-        $this->assertSame('Nice blocks', $blocks->last()->content()->data()['text']);
+        foreach ($data as $index => $row) {
+            $block = $blocks->nth($index);
+
+            $this->assertSame($row['type'], $block->type());
+            $this->assertSame($row['content'], $block->content()->data());
+            $this->assertNotEmpty($block->toHtml());
+        }
     }
 
     public function testToLayouts()

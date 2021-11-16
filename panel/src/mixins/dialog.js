@@ -1,5 +1,9 @@
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true
+    },
     cancelButton: {
       type: [String, Boolean],
       default: true,
@@ -16,7 +20,8 @@ export default {
     /**
      * @values success, error
      */
-    theme: String
+    theme: String,
+    visible: Boolean
   },
   methods: {
     close() {
@@ -47,7 +52,7 @@ export default {
         }
 
         payload.event.forEach(event => {
-          this.$events.$emit(event);
+          this.$events.$emit(event, payload);
         })
       }
 

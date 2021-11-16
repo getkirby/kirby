@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TimeInput from "../Input/TimeInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as TimeInput } from "../Input/TimeInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-time-input>` 
@@ -22,11 +22,13 @@ import TimeInput from "../Input/TimeInput.vue";
  * @example <k-time-field v-model="time" name="time" label="Time" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    TimeInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...TimeInput.props,
     icon: {
       type: String,
       default: "clock"

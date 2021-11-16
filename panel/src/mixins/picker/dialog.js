@@ -20,14 +20,17 @@ export default {
         page: 1,
         total: 0
       }
-    }
+    };
   },
   computed: {
-    multiple() {
-      return this.options.multiple === true && this.options.max !== 1;
-    },
     checkedIcon() {
       return this.multiple === true ? "check" : "circle-filled";
+    },
+    items() {
+      return this.models.map(this.item);
+    },
+    multiple() {
+      return this.options.multiple === true && this.options.max !== 1;
     }
   },
   watch: {
@@ -39,30 +42,27 @@ export default {
     this.updateSearch = debounce(this.updateSearch, 200);
   },
   methods: {
-    fetch() {
+    async fetch() {
       const params = {
         page: this.pagination.page,
         search: this.search,
-        ...this.fetchData || {}
+        ...(this.fetchData || {})
       };
 
-      return this.$api
-        .get(this.options.endpoint, params)
-        .then(response => {
-          this.models     = response.data;
-          this.pagination = response.pagination;
+      try {
+        const response = await this.$api.get(this.options.endpoint, params);
+        this.models = response.data;
+        this.pagination = response.pagination;
 
-          if (this.onFetched) {
-            this.onFetched(response);
-          }
-        })
-        .catch(e => {
-          this.models = [];
-          this.issue  = e.message;
-        });
+        if (this.onFetched) {
+          this.onFetched(response);
+        }
+      } catch (e) {
+        this.models = [];
+        this.issue = e.message;
+      }
     },
-    open(models, options) {
-
+    async open(models, options) {
       // reset pagination
       this.pagination.page = 0;
 
@@ -73,10 +73,10 @@ export default {
 
       if (Array.isArray(models)) {
         this.models = models;
-        fetch       = false;
+        fetch = false;
       } else {
         this.models = [];
-        options     = models;
+        options = models;
       }
 
       this.options = {
@@ -93,15 +93,13 @@ export default {
       });
 
       if (fetch) {
-        this.fetch().then(() => {
-          this.$refs.dialog.open();
-        });
-      } else {
-        this.$refs.dialog.open();
+        await this.fetch();
       }
+
+      this.$refs.dialog.open();
     },
     paginate(pagination) {
-      this.pagination.page  = pagination.page;
+      this.pagination.page = pagination.page;
       this.pagination.limit = pagination.limit;
       this.fetch();
     },
@@ -111,6 +109,10 @@ export default {
     },
     isSelected(item) {
       return this.selected[item.id] !== undefined;
+    },
+    item(item) {
+      item.link = false;
+      return item;
     },
     toggle(item) {
       if (this.options.multiple === false || this.options.max === 1) {
@@ -122,15 +124,28 @@ export default {
         return;
       }
 
-      if (this.options.max && this.options.max <= Object.keys(this.selected).length) {
+      if (
+        this.options.max &&
+        this.options.max <= Object.keys(this.selected).length
+      ) {
         return;
       }
 
       this.$set(this.selected, item.id, item);
     },
+    toggleBtn(item) {
+      const isSelected = this.isSelected(item);
+
+      return {
+        autofocus: true,
+        icon: isSelected ? this.checkedIcon : "circle-outline",
+        tooltip: isSelected ? this.$t("remove") : this.$t("select"),
+        theme: isSelected ? "positive" : null
+      };
+    },
     updateSearch() {
       this.pagination.page = 0;
       this.fetch();
-    },
+    }
   }
 };

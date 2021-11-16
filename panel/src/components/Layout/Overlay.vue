@@ -5,6 +5,7 @@
       :data-centered="loading || centered"
       :data-dimmed="dimmed"
       :data-loading="loading"
+      :dir="$translation.direction"
       :class="$vnode.data.staticClass"
       class="k-overlay"
       v-on="$listeners"
@@ -52,13 +53,17 @@ export default {
   },
   methods: {
     close() {
+      // it makes it run once
+      if (this.isOpen === false) {
+        return;
+      }
+
       this.isOpen = false;
       this.$emit("close");
       this.restoreScrollPosition();
 
       // unbind events
       this.$events.$off("keydown.esc", this.close);
-      document.removeEventListener("focus", this.focustrap);
     },
     focus() {
       let target = this.$refs.overlay.querySelector(`
@@ -88,22 +93,18 @@ export default {
         return;
       }
     },
-    focustrap(e) {
-      if (
-        this.$refs.overlay &&
-        this.$refs.overlay.contains(e.target) === false
-      ) {
-        this.focus();
-      }
-    },
     open() {
+      // it makes it run once
+      if (this.isOpen === true) {
+        return;
+      }
+
       this.storeScrollPosition();
       this.isOpen = true;
       this.$emit("open");
 
       // bind events
       this.$events.$on("keydown.esc", this.close);
-      // document.addEventListener("focus", this.focustrap, true);
 
       setTimeout(() => {
         // autofocus
@@ -137,16 +138,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  z-index: z-index(dialog);
+  z-index: var(--z-dialog);
   transform: translate3d(0, 0, 0);
 }
 .k-overlay[data-centered] {
@@ -155,9 +153,9 @@ export default {
   justify-content: center;
 }
 .k-overlay[data-dimmed] {
-  background: $color-backdrop;
+  background: var(--color-backdrop);
 }
 .k-overlay-loader {
-  color: $color-white;
+  color: var(--color-white);
 }
 </style>

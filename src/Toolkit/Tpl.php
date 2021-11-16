@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Filesystem\F;
 use Throwable;
 
 /**

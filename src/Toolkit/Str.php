@@ -157,7 +157,7 @@ class Str
         foreach ($items as $quality => $values) {
             foreach ($values as $value) {
                 $result[] = [
-                    'quality' => $quality,
+                    'quality' => (float)$quality,
                     'value'   => $value
                 ];
             }
@@ -407,8 +407,12 @@ class Str
      *
      * @param string|null $string
      * @return bool
+     * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
+     * @todo Throw deprecation warning in 3.7.0
+     * @todo Remove in 3.8.0
+     * @codeCoverageIgnore
      */
-    public static function isURL(string $string = null): bool
+    public static function isURL(?string $string = null): bool
     {
         return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
@@ -474,14 +478,12 @@ class Str
             foreach ($type as $t) {
                 $pool = array_merge($pool, static::pool($t));
             }
-
-            return $pool;
         } else {
-            switch ($type) {
-                case 'alphaLower':
+            switch (strtolower($type)) {
+                case 'alphalower':
                     $pool = range('a', 'z');
                     break;
-                case 'alphaUpper':
+                case 'alphaupper':
                     $pool = range('A', 'Z');
                     break;
                 case 'alpha':
@@ -490,7 +492,7 @@ class Str
                 case 'num':
                     $pool = range(0, 9);
                     break;
-                case 'alphaNum':
+                case 'alphanum':
                     $pool = static::pool(['alpha', 'num']);
                     break;
             }
@@ -729,6 +731,53 @@ class Str
     }
 
     /**
+     * Replaces placeholders in string with values from the data array
+     * and escapes HTML in the results in `{{ }}` placeholders
+     * while leaving HTML special characters untouched in `{< >}` placeholders
+     *
+     * @since 3.6.0
+     *
+     * @param string|null $string The string with placeholders
+     * @param array $data Associative array with placeholders as
+     *                    keys and replacements as values.
+     *                    Supports query syntax.
+     * @param array $options An options array that contains:
+     *                       - fallback: if a token does not have any matches
+     *                       - callback: to be able to handle each matching result (escaping is applied after the callback)
+     *
+     * @return string The filled-in and partially escaped string
+     */
+    public static function safeTemplate(string $string = null, array $data = [], array $options = []): string
+    {
+        $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+        $fallback = $options['fallback'] ?? '';
+
+        // replace and escape
+        $string = static::template($string, $data, [
+            'start'    => '{{',
+            'end'      => '}}',
+            'callback' => function ($result, $query, $data) use ($callback) {
+                if ($callback !== null) {
+                    $result = $callback($result, $query, $data);
+                }
+
+                return Escape::html($result);
+            },
+            'fallback' => $fallback
+        ]);
+
+        // replace unescaped (specifically marked placeholders)
+        $string = static::template($string, $data, [
+            'start'    => '{<',
+            'end'      => '>}',
+            'callback' => $callback,
+            'fallback' => $fallback
+        ]);
+
+        return $string;
+    }
+
+    /**
      * Shortens a string and adds an ellipsis if the string is too long
      *
      * <code>
@@ -763,44 +812,6 @@ class Str
         }
 
         return static::substr($string, 0, $length) . $appendix;
-    }
-
-    /**
-     * Convert a string to a safe version to be used in a URL
-     *
-     * @param string $string The unsafe string
-     * @param string $separator To be used instead of space and
-     *                          other non-word characters.
-     * @param string $allowed List of all allowed characters (regex)
-     * @param int $maxlength The maximum length of the slug
-     * @return string The safe string
-     */
-    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
-    {
-        $separator = $separator ?? static::$defaults['slug']['separator'];
-        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
-
-        $string = trim($string);
-        $string = static::lower($string);
-        $string = static::ascii($string);
-
-        // replace spaces with simple dashes
-        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
-
-        if (strlen($separator) > 0) {
-            // remove double separators
-            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
-        }
-
-        // replace slashes with dashes
-        $string = str_replace('/', $separator, $string);
-
-        // trim leading and trailing non-word-chars
-        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
-        $string = preg_replace('![^a-z0-9]+$!', '', $string);
-
-        // cut the string after the given maxlength
-        return static::short($string, $maxlength, false);
     }
 
     /**
@@ -874,6 +885,44 @@ class Str
         }
 
         return compact('matches', 'percent');
+    }
+
+    /**
+     * Convert a string to a safe version to be used in a URL
+     *
+     * @param string $string The unsafe string
+     * @param string $separator To be used instead of space and
+     *                          other non-word characters.
+     * @param string $allowed List of all allowed characters (regex)
+     * @param int $maxlength The maximum length of the slug
+     * @return string The safe string
+     */
+    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
+    {
+        $separator = $separator ?? static::$defaults['slug']['separator'];
+        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+
+        $string = trim($string);
+        $string = static::lower($string);
+        $string = static::ascii($string);
+
+        // replace spaces with simple dashes
+        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
+
+        if (strlen($separator) > 0) {
+            // remove double separators
+            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
+        }
+
+        // replace slashes with dashes
+        $string = str_replace('/', $separator, $string);
+
+        // trim leading and trailing non-word-chars
+        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
+        $string = preg_replace('![^a-z0-9]+$!', '', $string);
+
+        // cut the string after the given maxlength
+        return static::short($string, $maxlength, false);
     }
 
     /**
@@ -953,7 +1002,7 @@ class Str
     }
 
     /**
-     * Replaces placeholders in string with value from array
+     * Replaces placeholders in string with values from the data array
      *
      * <code>
      *
@@ -964,23 +1013,33 @@ class Str
      *
      * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
-     *                    keys and replacements as values
+     *                    keys and replacements as values.
+     *                    Supports query syntax.
      * @param string|array|null $fallback An options array that contains:
      *                                    - fallback: if a token does not have any matches
      *                                    - callback: to be able to handle each matching result
      *                                    - start: start placeholder
      *                                    - end: end placeholder
      *                                    A simple fallback string is supported for compatibility (but deprecated).
-     * @param string $start Placeholder start characters
-     * @param string $end Placeholder end characters
+     * @param string $start Placeholder start characters (deprecated)
+     * @param string $end Placeholder end characters (deprecated)
      *
-     * @todo Deprecate `string $fallback` and `$start`/`$end` arguments with warning in 3.6.0
      * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
      *
      * @return string The filled-in string
      */
     public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
     {
+        // @codeCoverageIgnoreStart
+        if (
+            is_string($fallback) === true ||
+            $start !== '{{' ||
+            $end !== '}}'
+        ) {
+            deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
+        }
+        // @codeCoverageIgnoreEnd
+
         $options  = $fallback;
         $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
@@ -1165,12 +1224,17 @@ class Str
      */
     public static function widont(string $string = null): string
     {
-        return preg_replace_callback('|([^\s])\s+([^\s]+)\s*$|u', function ($matches) {
+        // Replace space between last word and punctuation
+        $string = preg_replace_callback('|(\S)\s(\S?)$|u', function ($matches) {
+            return $matches[1] . '&nbsp;' . $matches[2];
+        }, $string);
+
+        // Replace space between last two words
+        return preg_replace_callback('|(\s)(?=\S*$)(\S+)|u', function ($matches) {
             if (static::contains($matches[2], '-')) {
-                return $matches[1] . '&nbsp;' . str_replace('-', '&#8209;', $matches[2]);
-            } else {
-                return $matches[1] . '&nbsp;' . $matches[2];
+                $matches[2] = str_replace('-', '&#8209;', $matches[2]);
             }
+            return '&nbsp;' . $matches[2];
         }, $string);
     }
 }

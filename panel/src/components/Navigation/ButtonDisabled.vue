@@ -30,16 +30,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-button[data-disabled] {
-  opacity: 0.5;
+  opacity: .5;
+  pointer-events: none;
   cursor: default;
 }
 .k-card-options > .k-button[data-disabled] {
   display: inline-flex;
-}
-.k-button[data-disabled]:focus .k-button-text,
-.k-button[data-disabled]:hover .k-button-text {
-  opacity: 0.75;
 }
 </style>

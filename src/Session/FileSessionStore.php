@@ -6,7 +6,7 @@ use FilesystemIterator;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
 
 /**

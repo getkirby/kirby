@@ -12,7 +12,6 @@
 
 <script>
 import SectionMixin from "@/mixins/section/section.js";
-
 export default {
   mixins: [SectionMixin],
   data() {
@@ -22,16 +21,15 @@ export default {
       theme: null
     };
   },
-  created() {
-    this.load()
-      .then(response => {
-        this.headline = response.options.headline;
-        this.text     = response.options.text;
-        this.theme    = response.options.theme || "info";
-      });
+  async created() {
+    const response = await this.load()
+    this.headline  = response.headline;
+    this.text      = response.text;
+    this.theme     = response.theme || "info";
   }
 };
 </script>
+
 <style>
 
 .k-info-section-headline {

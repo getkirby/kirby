@@ -115,7 +115,7 @@ export default {
     pageLabel: {
       type: String,
       default() {
-        return this.$t("pagination.page");
+        return window.panel.$t("pagination.page")
       }
     },
     /**
@@ -131,7 +131,7 @@ export default {
     prevLabel: {
       type: String,
       default() {
-        return this.$t("prev");
+        return window.panel.$t("prev")
       }
     },
     /**
@@ -140,7 +140,7 @@ export default {
     nextLabel: {
       type: String,
       default() {
-        return this.$t("next");
+        return window.panel.$t("next")
       }
     },
     validate: {
@@ -212,34 +212,35 @@ export default {
      * Jump to the given page
      * @public
      */
-    goTo(page) {
-      this.validate(page)
-        .then(() => {
-          if (page < 1) {
-            page = 1;
-          }
+    async goTo(page) {
+      try {
+        await this.validate(page);
 
-          if (page > this.pages) {
-            page = this.pages;
-          }
+        if (page < 1) {
+          page = 1;
+        }
 
-          this.currentPage = page;
+        if (page > this.pages) {
+          page = this.pages;
+        }
 
-          if (this.$refs.dropdown) {
-            this.$refs.dropdown.close();
-          }
+        this.currentPage = page;
 
-          this.$emit("paginate", {
-            page: this.currentPage,
-            start: this.start,
-            end: this.end,
-            limit: this.limit,
-            offset: this.offset
-          });
-        })
-        .catch(() => {
-          // pagination stopped
+        if (this.$refs.dropdown) {
+          this.$refs.dropdown.close();
+        }
+
+        this.$emit("paginate", {
+          page: this.currentPage,
+          start: this.start,
+          end: this.end,
+          limit: this.limit,
+          offset: this.offset
         });
+
+      } catch (e) {
+        // pagination stopped
+      }
     },
     /**
      * Jump to the previous page
@@ -269,7 +270,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pagination {
   user-select: none;
   direction: ltr;
@@ -281,29 +282,24 @@ export default {
   white-space: nowrap;
 }
 .k-pagination > span {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
-.k-pagination[data-align="center"] {
-  text-align: center;
-}
-.k-pagination[data-align="right"] {
-  text-align: right;
+.k-pagination[data-align] {
+  text-align: var(--align);
 }
 
 .k-dropdown-content.k-pagination-selector {
   position: absolute;
   top: 100%;
-  left: 50%;
+  inset-inline-start: 50%;
   transform: translateX(-50%);
-  background: $color-black;
-
-  [dir="ltr"] & {
-    direction: ltr;
-  }
-
-  [dir="rtl"] & {
-    direction: rtl;
-  }
+  background: var(--color-black);
+}
+[dir="ltr"] .k-dropdown-content.k-pagination-selector {
+  direction: ltr;
+}
+[dir="rtl"] .k-dropdown-content.k-pagination-selector {
+  direction: rtl;
 }
 
 .k-pagination-settings {
@@ -316,12 +312,12 @@ export default {
 }
 .k-pagination-settings label {
   display: flex;
-  border-right: 1px solid rgba(#fff, .35);
+  border-inline-end: 1px solid rgba(255, 255, 255, .35);
   align-items: center;
   padding: .625rem 1rem;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 .k-pagination-settings label span {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 </style>

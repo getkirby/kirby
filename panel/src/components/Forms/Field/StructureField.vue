@@ -1,16 +1,15 @@
 <template>
   <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
     <!-- Add button -->
-    <template slot="options">
+    <template #options>
       <k-button
         v-if="more && currentIndex === null"
         :id="_uid"
         ref="add"
+        :text="$t('add')"
         icon="add"
         @click="add"
-      >
-        {{ $t("add") }}
-      </k-button>
+      />
     </template>
 
     <!-- Form -->
@@ -26,9 +25,12 @@
           @submit="submit"
         />
         <footer class="k-structure-form-buttons">
-          <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">
-            {{ $t('cancel') }}
-          </k-button>
+          <k-button
+            :text="$t('cancel')"
+            icon="cancel"
+            class="k-structure-form-cancel-button"
+            @click="close"
+          />
           <k-pagination
             v-if="currentIndex !== 'new'"
             :dropdown="false"
@@ -39,9 +41,12 @@
             :validate="beforePaginate"
             @paginate="paginate"
           />
-          <k-button class="k-structure-form-submit-button" icon="check" @click="submit">
-            {{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}
-          </k-button>
+          <k-button
+            :text="$t(currentIndex !== 'new' ? 'confirm' : 'add')"
+            icon="check"
+            class="k-structure-form-submit-button"
+            @click="submit"
+          />
         </footer>
       </section>
     </template>
@@ -81,11 +86,11 @@
           </tr>
         </thead>
         <k-draggable
+          v-direction
           :list="items"
           :data-disabled="disabled"
           :options="dragOptions"
           :handle="true"
-          :dir="direction"
           element="tbody"
           @end="onInput"
         >
@@ -168,7 +173,6 @@
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
 import structure from "@/mixins/forms/structure.js";
 
 export default {
@@ -215,9 +219,6 @@ export default {
     };
   },
   computed: {
-    direction() {
-      return direction(this);
-    },
     dragOptions() {
       return {
         disabled: !this.isSortable,
@@ -506,50 +507,48 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
-    save() {
+    async save() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
-        return this.validate(this.currentModel)
-          .then(() => {
-            if (this.currentIndex === "new") {
-              this.addItem(this.currentModel);
-            } else {
-              this.items[this.currentIndex] = this.currentModel;
-            }
+        try {
+          await this.validate(this.currentModel);
 
-            this.items = this.sort(this.items);
-            this.onInput();
+          if (this.currentIndex === "new") {
+            this.addItem(this.currentModel);
+          } else {
+            this.items[this.currentIndex] = this.currentModel;
+          }
 
-            return true;
-          })
-          .catch(errors => {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.incomplete"),
-              details: errors
-            });
+          this.items = this.sort(this.items);
+          this.onInput();
 
-            throw errors;
+          return true;
+
+        } catch (errors) {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.incomplete"),
+            details: errors
           });
-      } else {
-        return Promise.resolve();
+
+          throw errors;
+        }
       }
     },
-    submit() {
-      this.save()
-        .then(this.close)
-        .catch(() => {
-          // don't close
-        });
+    async submit() {
+      try {
+        await this.save()
+        this.close()
+      } catch (e) {
+        // don't close
+      }
     },
-    validate(model) {
-      return this.$api
-        .post(this.endpoints.field + "/validate", model)
-        .then(errors => {
-          if (errors.length > 0) {
-            throw errors;
-          } else {
-            return true;
-          }
-        });
+    async validate(model) {
+      const errors = await this.$api.post(this.endpoints.field + "/validate", model);
+
+      if (errors.length > 0) {
+        throw errors;
+      } else {
+        return true;
+      }
     },
     update(index, column, value) {
       this.items[index][column] = value;
@@ -559,240 +558,165 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$structure-item-height: 38px;
+<style>
+.k-structure-field {
+  --item-height: 38px;
+}
 
 .k-structure-table {
   position: relative;
   table-layout: fixed;
   width: 100%;
   background: #fff;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   border-spacing: 0;
-  box-shadow: $shadow;
+  box-shadow: var(--shadow);
+}
+.k-structure-table th,
+.k-structure-table td {
+  border-inline-end: 1px solid var(--color-background);
+  line-height: 1.25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  th,
-  td {
-    border-bottom: 1px solid $color-background;
-    line-height: 1.25em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.k-structure-table th,
+.k-structure-table tr:not(:last-child) td {
+  border-bottom: 1px solid var(--color-background);
+}
 
-    [dir="ltr"] & {
-      border-right: 1px solid $color-background;
-    }
+.k-structure-table td:last-child {
+  overflow: visible;
+}
 
-    [dir="rtl"] & {
-      border-left: 1px solid $color-background;
-    }
-  }
+.k-structure-table th {
+  position: sticky;
+  top: 0;
+  inset-inline: 0;
+  width: 100%;
+  height: var(--item-height);
+  padding: 0 .75rem;
+  background: #fff;
+  color: var(--color-gray-600);
+  font-weight: 400;
+  text-align: start;
+  z-index: 1;
+}
 
-  td:last-child {
-    overflow: visible;
-  }
+.k-structure-table th:last-child,
+.k-structure-table td:last-child {
+  width: var(--item-height);
+  border-inline-end: 0;
+}
 
-  th {
-    position: sticky;
-    top: 0;
-    right: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    font-weight: 400;
-    z-index: 1;
-    color: $color-gray-600;
-    padding: 0 0.75rem;
-    height: $structure-item-height;
+.k-structure-table tbody tr:hover td {
+  background: rgba(239, 239, 239, .25);
+}
 
-    [dir="ltr"] & {
-      text-align: left;
-    }
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  th:last-child,
-  td:last-child {
-    width: $structure-item-height;
-
-    [dir="ltr"] & {
-      border-right: 0;
-    }
-
-    [dir="rtl"] & {
-      border-left: 0;
-    }
-  }
-
-  tr:last-child td {
-    border-bottom: 0;
-  }
-
-  tbody tr:hover td {
-    background: rgba($color-background, 0.25);
-  }
-
-  /* mobile */
-  @media screen and (max-width: $breakpoint-md) {
-    td,
-    th {
-      display: none;
-    }
-
-    th:first-child,
-    th:nth-child(2),
-    th:last-child,
-    td:first-child,
-    td:nth-child(2),
-    td:last-child {
-      display: table-cell;
-    }
-  }
-
-  /* alignment */
-  .k-structure-table-column[data-align="center"] {
-    text-align: center;
-  }
-  .k-structure-table-column[data-align="right"] {
-    [dir="ltr"] & {
-      text-align: right;
-    }
-
-    [dir="rtl"] & {
-      text-align: left;
-    }
-  }
-  .k-structure-table-column[data-align="right"] > .k-input {
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  /* column widths */
-  .k-structure-table-column[data-width="1/2"] {
-    width: 50%;
-  }
-  .k-structure-table-column[data-width="1/3"] {
-    width: 33.33%;
-  }
-  .k-structure-table-column[data-width="1/4"] {
-    width: 25%;
-  }
-  .k-structure-table-column[data-width="1/5"] {
-    width: 20%;
-  }
-  .k-structure-table-column[data-width="1/6"] {
-    width: 16.66%;
-  }
-  .k-structure-table-column[data-width="1/8"] {
-    width: 12.5%;
-  }
-  .k-structure-table-column[data-width="1/9"] {
-    width: 11.11%;
-  }
-  .k-structure-table-column[data-width="2/3"] {
-    width: 66.66%;
-  }
-  .k-structure-table-column[data-width="3/4"] {
-    width: 75%;
-  }
-
-  .k-structure-table-index {
-    width: $structure-item-height;
-    height: $structure-item-height;
-    text-align: center;
-  }
-  .k-structure-table-index-number {
-    font-size: $text-xs;
-    color: $color-light-grey;
-    padding-top: 0.15rem;
-  }
-
-  .k-sort-handle {
-    width: $structure-item-height;
-    height: $structure-item-height;
+/* mobile */
+@media screen and (max-width: 65em) {
+  .k-structure-table td,
+  .k-structure-table th {
     display: none;
   }
 
-  &[data-sortable] tr:hover .k-structure-table-index-number {
-    display: none;
-  }
-  &[data-sortable] tr:hover .k-sort-handle {
-    display: flex !important;
-  }
-
-  .k-structure-table-options {
-    position: relative;
-    width: $structure-item-height;
-    text-align: center;
-    height: $structure-item-height;
-  }
-  .k-structure-table-options-button {
-    width: $structure-item-height;
-    height: $structure-item-height;
-  }
-
-  .k-structure-table-text {
-    padding: 0 0.75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .k-sortable-ghost {
-    background: $color-white;
-    box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
-    outline: 2px solid $color-focus;
-    margin-bottom: 2px;
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
+  .k-structure-table th:first-child,
+  .k-structure-table th:nth-child(2),
+  .k-structure-table th:last-child,
+  .k-structure-table td:first-child,
+  .k-structure-table td:nth-child(2),
+  .k-structure-table td:last-child {
+    display: table-cell;
   }
 }
+
+/* alignment */
+.k-structure-table .k-structure-table-column[data-align] {
+  text-align: var(--align);
+}
+.k-structure-table .k-structure-table-column[data-align="right"] > .k-input {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.k-structure-table .k-structure-table-index,
+.k-structure-table .k-sort-handle,
+.k-structure-table .k-structure-table-options,
+.k-structure-table .k-structure-table-options-button {
+  width: var(--item-height);
+  height: var(--item-height);
+}
+
+.k-structure-table .k-structure-table-index {
+  text-align: center;
+}
+.k-structure-table .k-structure-table-index-number {
+  font-size: var(--text-xs);
+  color: var(--color-gray-500);
+  padding-top: .15rem;
+}
+
+.k-structure-table .k-sort-handle,
+.k-structure-table[data-sortable] tr:hover .k-structure-table-index-number {
+  display: none;
+}
+.k-structure-table[data-sortable] tr:hover .k-sort-handle {
+  display: flex !important;
+}
+
+.k-structure-table .k-structure-table-options {
+  position: relative;
+  text-align: center;
+}
+
+.k-structure-table .k-structure-table-text {
+  padding: 0 .75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.k-structure-table .k-sortable-ghost {
+  background: var(--color-white);
+  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  outline: 2px solid var(--color-focus);
+  margin-bottom: 2px;
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
 [data-disabled] .k-structure-table {
-  background: $color-background;
-
-  th,
-  td {
-    background: $color-background;
-    border-bottom: 1px solid $color-border;
-
-    [dir="ltr"] & {
-      border-right: 1px solid $color-border;
-    }
-
-    [dir="rtl"] & {
-      border-left: 1px solid $color-border;
-    }
-  }
-
-  td:last-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  background: var(--color-background);
 }
-.k-sortable-row-fallback {
+[data-disabled] .k-structure-table th,
+[data-disabled] .k-structure-table td {
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  border-inline-end: 1px solid var(--color-border);
+}
+[data-disabled] .k-structure-table td:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.k-structure-table .k-sortable-row-fallback {
   opacity: 0 !important;
 }
 
 .k-structure-backdrop {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: 2;
   height: 100vh;
 }
 .k-structure-form {
   position: relative;
   z-index: 3;
-  border-radius: $rounded-xs;
+  border-radius: var(--rounded-xs);
   margin-bottom: 1px;
-  box-shadow: rgba($color-gray-900, 0.05) 0 0 0 3px;
-  border: 1px solid $color-border;
-  background: $color-background;
+  box-shadow: rgba(17, 17, 17, .05) 0 0 0 3px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
 }
 
 .k-structure-form-fields {
@@ -800,26 +724,28 @@ $structure-item-height: 38px;
 }
 
 .k-structure-form-buttons {
-  border-top: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
 }
 
 .k-structure-form-buttons .k-pagination {
   display: none;
-  @media screen and (min-width: $breakpoint-md) {
+}
+@media screen and (min-width: 65em) {
+  .k-structure-form-buttons .k-pagination {
     display: flex;
   }
 }
 
 .k-structure-form-buttons .k-pagination > .k-button,
 .k-structure-form-buttons .k-pagination > span {
-  padding: 0.875rem 1rem !important;
+  padding: .875rem 1rem !important;
 }
 
 .k-structure-form-cancel-button,
 .k-structure-form-submit-button {
-  padding: 0.875rem 1.5rem;
+  padding: .875rem 1.5rem;
   line-height: 1rem;
   display: flex;
 }

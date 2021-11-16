@@ -1,7 +1,11 @@
+import clipboard from "./clipboard.js";
 import clone from "./clone.js";
+import color from "./color.js";
 import debounce from "./debounce.js";
+import embed from "./embed.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
+import keyboard from "./keyboard.js";
 import pad from "./pad.js";
 import ratio from "./ratio.js";
 import slug from "./slug.js";
@@ -15,7 +19,6 @@ import "./regex.js";
 
 export default {
   install(Vue) {
-
     /**
      * Array.sortBy()
      */
@@ -38,22 +41,24 @@ export default {
     };
 
     Vue.prototype.$helper = {
-      clone: clone,
-      isComponent: isComponent,
-      isUploadEvent: isUploadEvent,
-      debounce: debounce,
-      pad: pad,
-      ratio: ratio,
-      slug: slug,
-      sort: sort,
-      string: string,
-      upload: upload,
-      uuid: uuid,
-      validate: validate,
+      clipboard,
+      clone,
+      color,
+      embed,
+      isComponent,
+      isUploadEvent,
+      debounce,
+      keyboard,
+      pad,
+      ratio,
+      slug,
+      sort,
+      string,
+      upload,
+      uuid,
+      validate
     };
 
     Vue.prototype.$esc = string.escapeHTML;
-
   }
-
 };

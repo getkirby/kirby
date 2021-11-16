@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\PermissionException;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -221,6 +221,9 @@ class Language extends Model
             static::converter('', $language->code());
         }
 
+        // update the main languages collection in the app instance
+        App::instance()->languages(false)->append($language->code(), $language);
+
         return $language;
     }
 
@@ -234,23 +237,25 @@ class Language extends Model
      */
     public function delete(): bool
     {
-        if ($this->exists() === false) {
-            return true;
-        }
-
         $kirby     = App::instance();
         $languages = $kirby->languages();
         $code      = $this->code();
+        $isLast    = $languages->count() === 1;
 
         if (F::remove($this->root()) !== true) {
             throw new Exception('The language could not be deleted');
         }
 
-        if ($languages->count() === 1) {
-            return $this->converter($code, '');
+        if ($isLast === true) {
+            $this->converter($code, '');
         } else {
-            return $this->deleteContentFiles($code);
+            $this->deleteContentFiles($code);
         }
+
+        // get the original language collection and remove the current language
+        $kirby->languages(false)->remove($code);
+
+        return true;
     }
 
     /**
@@ -679,6 +684,11 @@ class Language extends Model
             throw new PermissionException('Please select another language to be the primary language');
         }
 
-        return $updated->save();
+        $language = $updated->save();
+
+        // make sure the language is also updated in the Kirby language collection
+        App::instance()->languages(false)->set($language->code(), $language);
+
+        return $language;
     }
 }

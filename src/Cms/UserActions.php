@@ -6,10 +6,12 @@ use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Form\Form;
 use Kirby\Http\Idn;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * UserActions
@@ -30,6 +32,8 @@ trait UserActions
      */
     public function changeEmail(string $email)
     {
+        $email = trim($email);
+
         return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
             $user = $user->clone([
                 'email' => $email
@@ -38,6 +42,9 @@ trait UserActions
             $user->updateCredentials([
                 'email' => $email
             ]);
+
+            // update the users collection
+            $user->kirby()->users()->set($user->id(), $user);
 
             return $user;
         });
@@ -60,6 +67,9 @@ trait UserActions
                 'language' => $language
             ]);
 
+            // update the users collection
+            $user->kirby()->users()->set($user->id(), $user);
+
             return $user;
         });
     }
@@ -72,6 +82,8 @@ trait UserActions
      */
     public function changeName(string $name)
     {
+        $name = trim($name);
+
         return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
             $user = $user->clone([
                 'name' => $name
@@ -80,6 +92,9 @@ trait UserActions
             $user->updateCredentials([
                 'name' => $name
             ]);
+
+            // update the users collection
+            $user->kirby()->users()->set($user->id(), $user);
 
             return $user;
         });
@@ -99,6 +114,9 @@ trait UserActions
             ]);
 
             $user->writePassword($password);
+
+            // update the users collection
+            $user->kirby()->users()->set($user->id(), $user);
 
             return $user;
         });
@@ -120,6 +138,9 @@ trait UserActions
             $user->updateCredentials([
                 'role' => $role
             ]);
+
+            // update the users collection
+            $user->kirby()->users()->set($user->id(), $user);
 
             return $user;
         });
@@ -232,14 +253,21 @@ trait UserActions
     public function createId(): string
     {
         $length = 8;
-        $id     = Str::random($length);
 
-        while ($this->kirby()->users()->has($id)) {
-            $length++;
-            $id = Str::random($length);
-        }
+        do {
+            try {
+                $id = Str::random($length);
+                if (UserRules::validId($this, $id) === true) {
+                    return $id;
+                }
 
-        return $id;
+                // we can't really test for a random match
+                // @codeCoverageIgnoreStart
+            } catch (Throwable $e) {
+                $length++;
+            }
+        } while (true);
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -315,6 +343,9 @@ trait UserActions
             $this->kirby()->auth()->setUser($user);
         }
 
+        // update the users collection
+        $user->kirby()->users()->set($user->id(), $user);
+
         return $user;
     }
 
@@ -327,6 +358,11 @@ trait UserActions
      */
     protected function updateCredentials(array $credentials): bool
     {
+        // normalize the email address
+        if (isset($credentials['email']) === true) {
+            $credentials['email'] = Str::lower(trim($credentials['email']));
+        }
+
         return $this->writeCredentials(array_merge($this->credentials(), $credentials));
     }
 

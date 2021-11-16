@@ -1,7 +1,8 @@
 <template>
   <div
-    :data-theme="theme"
     :data-over="over"
+    :data-size="size"
+    :data-theme="theme"
     class="k-textarea-input"
   >
     <div class="k-textarea-input-wrapper">
@@ -27,9 +28,8 @@
           spellcheck,
           value
         }"
+        v-direction
         :data-font="font"
-        :data-size="size"
-        :dir="direction"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
@@ -52,36 +52,41 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-import direction from "@/helpers/direction.js";
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js"
 
-/**
- * @example <k-input v-model="text" name="text" type="textarea" />
- */
-export default {
-  inheritAttrs: false,
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
-    /**
-     * Enables or disables all or specific buttons in the toolbar.
-     */
     buttons: {
       type: [Boolean, Array],
       default: true
     },
-    disabled: Boolean,
     endpoints: Object,
     font: String,
-    id: [Number, String],
-    name: [Number, String],
     maxlength: Number,
     minlength: Number,
     placeholder: String,
     preselect: Boolean,
-    required: Boolean,
     /**
-     * Pre-selects the size before auto-sizing kicks in. 
+     * Pre-selects the size before auto-sizing kicks in.
      * This can be useful to fill gaps in field layouts.
      * @values small, medium, large, huge
      */
@@ -94,15 +99,18 @@ export default {
     uploads: [Boolean, Object, Array],
     value: String
   },
+}
+
+/**
+ * @example <k-input v-model="text" name="text" type="textarea" />
+ */
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       over: false
     };
-  },
-  computed: {
-    direction() {
-      return direction(this);
-    }
   },
   watch: {
     value() {
@@ -193,7 +201,7 @@ export default {
       // dropping files
       if (this.uploads && this.$helper.isUploadEvent($event)) {
         return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-          url: config.api + "/" + this.endpoints.field + "/upload",
+          url: this.$urls.api + "/" + this.endpoints.field + "/upload",
           multiple: false
         });
       }
@@ -274,7 +282,7 @@ export default {
     },
     uploadFile() {
       this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
+        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
         multiple: false,
       });
     },
@@ -285,16 +293,28 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true
+        required: this.required ? validateRequired : true,
+        minLength: this.minlength ? validateMinLength(this.minlength) : true,
+        maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
       }
     };
   }
 };
 </script>
 
-<style lang="scss">
+<style>
+.k-textarea-input[data-size="small"] {
+  --size: 7.5rem;
+}
+.k-textarea-input[data-size="medium"] {
+  --size: 15rem;
+}
+.k-textarea-input[data-size="large"] {
+  --size: 30rem;
+}
+.k-textarea-input[data-size="huge"] {
+  --size: 45rem;
+}
 .k-textarea-input-wrapper {
   position: relative;
 }
@@ -306,9 +326,10 @@ export default {
   font: inherit;
   line-height: 1.5em;
   color: inherit;
+  min-height: var(--size);
 }
 .k-textarea-input-native::placeholder {
-  color: $color-light-grey;
+  color: var(--color-gray-500);
 }
 .k-textarea-input-native:focus {
   outline: 0;
@@ -317,34 +338,21 @@ export default {
   box-shadow: none;
   outline: 0;
 }
-.k-textarea-input-native[data-size="small"] {
-  min-height: 7.5rem;
-}
-.k-textarea-input-native[data-size="medium"] {
-  min-height: 15rem;
-}
-.k-textarea-input-native[data-size="large"] {
-  min-height: 30rem;
-}
-.k-textarea-input-native[data-size="huge"] {
-  min-height: 45rem;
-}
 .k-textarea-input-native[data-font="monospace"] {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
 }
 
 .k-toolbar {
-  margin-bottom: 0.25rem;
+  margin-bottom: .25rem;
   color: #aaa;
 }
 .k-textarea-input:focus-within .k-toolbar {
   position: sticky;
   top: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   z-index: 1;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
-  border-bottom: 1px solid rgba(#000, 0.1);
+  box-shadow: rgba(0, 0, 0, .05) 0 2px 5px;
+  border-bottom: 1px solid rgba(0 ,0 ,0 , .1);
   color: #000;
 }
 </style>

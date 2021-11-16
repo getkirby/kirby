@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Deinen Namen ändern",
+  "account.delete": "Deinen Account löschen",
+  "account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden. ",
+
   "add": "Hinzuf\u00fcgen",
+  "author": "Autor",
   "avatar": "Profilbild",
   "back": "Zurück",
   "cancel": "Abbrechen",
@@ -9,6 +14,7 @@
   "collapse": "Zusammenklappen",
   "collapse.all": "Alle zusammenklappen",
   "copy": "Kopieren",
+  "copy.all": "Alle kopieren",
   "create": "Erstellen",
 
   "date": "Datum",
@@ -23,23 +29,27 @@
   "days.tue": "Di",
   "days.wed": "Mi",
 
+  "debugging": "Debugging",
+
   "delete": "L\u00f6schen",
   "delete.all": "Alle löschen",
-  "dimensions": "Maße",
-  "disabled": "Gesperrt",
-  "discard": "Verwerfen",
-  "download": "Download",
-  "duplicate": "Duplizieren",
-  "edit": "Bearbeiten",
-  "expand": "Aufklappen",
-  "expand.all": "Alle aufklappen",
 
   "dialog.files.empty": "Keine verfügbaren Dateien",
   "dialog.pages.empty": "Keine verfügbaren Seiten",
   "dialog.users.empty": "Keine verfügbaren Accounts",
 
+  "dimensions": "Maße",
+  "disabled": "Gesperrt",
+  "discard": "Verwerfen",
+  "download": "Download",
+  "duplicate": "Duplizieren",
+
+  "edit": "Bearbeiten",
+
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
+
+  "environment": "Umgebung",
 
   "error.access.code": "Ungültiger Code",
   "error.access.login": "Ungültige Zugangsdaten",
@@ -92,6 +102,7 @@
   "error.language.code": "Bitte gib einen gültigen Code für die Sprache an",
   "error.language.duplicate": "Die Sprache besteht bereits",
   "error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
+  "error.language.notFound": "Die Sprache konnte nicht gefunden werden",
 
   "error.layout.validation.block": "Fehler in Block {blockIndex} in Layout {layoutIndex}",
   "error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
@@ -99,6 +110,8 @@
   "error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
   "error.license.email": "Bitte gib eine gültige E-Mailadresse an",
   "error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
+
+  "error.offline": "Das Panel ist zur Zeit offline",
 
   "error.page.changeSlug.permission": "Du darfst die URL der Seite \"{slug}\" nicht ändern",
   "error.page.changeStatus.incomplete": "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Der Account hat kein Passwort",
   "error.user.password.wrong": "Falsches Passwort",
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
+  "error.user.undefined": "Der Benutzer wurde nicht gefunden",
   "error.user.update.permission": "Du darfst den den Account \"{name}\" nicht bearbeiten",
 
   "error.validation.accepted": "Bitte bestätige",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Bitte gib eine Zeit zwischen {min} und {max} ein",
   "error.validation.url": "Bitte gib eine gültige URL ein",
 
+  "expand": "Aufklappen",
+  "expand.all": "Alle aufklappen",
+
   "field.required": "Das Feld ist Pflicht",
   "field.blocks.changeType": "Blocktyp ändern",
   "field.blocks.code.name": "Code",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Willst du wirklich die ausgewählten Blöcke löschen?",
   "field.blocks.empty": "Keine Blöcke",
   "field.blocks.fieldsets.label": "Bitte wähle einen Blocktyp aus …",
+  "field.blocks.fieldsets.paste": "Drücke <kbd>{{ shortcut }}</kbd> um Blöcke aus der Zwischenablage zu importieren",
   "field.blocks.gallery.name": "Galerie",
   "field.blocks.gallery.images.empty": "Keine Bilder",
   "field.blocks.gallery.images.label": "Bilder",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Bild auswählen",
   "field.blocks.image.ratio": "Seitenverhältnis",
   "field.blocks.image.url": "Bild URL",
+  "field.blocks.line.name": "Linie",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
   "field.users.empty": "Keine Accounts ausgewählt",
 
-  "file.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Datei in <strong>/site/blueprints/{template}.yml</strong> anlegen",
+  "file.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Datei in <strong>/site/blueprints/files/{blueprint}.yml</strong> anlegen",
   "file.delete.confirm": "Willst du die Datei <strong>{filename}</strong> <br>wirklich löschen?",
   "file.sort": "Position ändern",
 
@@ -272,6 +291,7 @@
 
   "hide": "Verbergen",
   "hour": "Stunde",
+  "import": "Importieren",
   "insert": "Einf\u00fcgen",
   "insert.after": "Danach einfügen",
   "insert.before": "Davor einfügen",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Anmeldecode",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Wenn deine E-Mail-Adresse registriert ist, wurde der angeforderte Code per E-Mail versendet.",
-  "login.email.login.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel angefordert.\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
+  "login.email.login.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel von {site} angefordert.\n\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
   "login.email.login.subject": "Dein Anmeldecode",
-  "login.email.password-reset.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel angefordert.\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
+  "login.email.password-reset.body": "Hallo {user.nameOrEmail},\n\ndu hast gerade einen Anmeldecode für das Kirby Panel von {site} angefordert.\n\nDer folgende Anmeldecode ist für die nächsten {timeout} Minuten gültig:\n\n{code}\n\nWenn du keinen Anmeldecode angefordert hast, ignoriere bitte diese E-Mail oder kontaktiere bei Fragen deinen Administrator.\nBitte leite diese E-Mail aus Sicherheitsgründen NICHT weiter.",
   "login.email.password-reset.subject": "Dein Anmeldecode",
   "login.remember": "Angemeldet bleiben",
   "login.reset": "Passwort zurücksetzen",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Hochformat",
   "orientation.square": "Quadratisch",
 
-  "page.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Seite in <strong>/site/blueprints/{template}.yml</strong> anlegen",
+  "page.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Seite in <strong>/site/blueprints/pages/{blueprint}.yml</strong> anlegen",
   "page.changeSlug": "URL \u00e4ndern",
   "page.changeSlug.fromTitle": "Aus Titel erzeugen",
   "page.changeStatus": "Status ändern",
@@ -417,7 +437,10 @@
   "pagination.page": "Seite",
 
   "password": "Passwort",
+  "paste": "Einfügen",
+  "paste.after": "Danach einfügen",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Vorheriger Eintrag",
   "preview": "Vorschau",
   "remove": "Entfernen",
@@ -454,6 +477,8 @@
   "template": "Vorlage",
   "today": "Heute",
 
+  "server": "Server",
+
   "site.blueprint": "Du kannst zusätzliche Felder und Bereiche für die Seite in <strong>/site/blueprints/site.yml</strong> anlegen",
 
   "toolbar.button.code": "Code",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Überschrift 1",
   "toolbar.button.heading.2": "Überschrift 2",
   "toolbar.button.heading.3": "Überschrift 3",
+  "toolbar.button.heading.4": "Überschrift 4",
+  "toolbar.button.heading.5": "Überschrift 5",
+  "toolbar.button.heading.6": "Überschrift 6",
   "toolbar.button.italic": "Kursiver Text",
   "toolbar.button.file": "Datei",
   "toolbar.button.file.select": "Datei auswählen",
   "toolbar.button.file.upload": "Datei hochladen",
   "toolbar.button.link": "Link",
+  "toolbar.button.paragraph": "Absatz",
   "toolbar.button.strike": "Durchgestrichen",
   "toolbar.button.ol": "Geordnete Liste",
   "toolbar.button.underline": "Unterstrichen",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://beispiel.de",
 
   "user": "Account",
-  "user.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Rolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
+  "user.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Rolle in <strong>/site/blueprints/users/{blueprint}.yml</strong> anlegen",
   "user.changeEmail": "E-Mail ändern",
   "user.changeLanguage": "Sprache ändern",
   "user.changeName": "Account umbenennen",
@@ -516,9 +545,10 @@
 
   "view.account": "Dein Account",
   "view.installation": "Installation",
+  "view.languages": "Sprachen",
   "view.resetPassword": "Passwort zurücksetzen",
-  "view.settings": "Einstellungen",
   "view.site": "Seite",
+  "view.system": "System",
   "view.users": "Accounts",
 
   "welcome": "Willkommen",

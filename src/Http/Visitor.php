@@ -2,8 +2,8 @@
 
 namespace Kirby\Http;
 
+use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 

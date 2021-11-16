@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import Column from "./Column";
+import Column from "./Column.vue";
 
 /**
  * @internal
@@ -114,18 +114,19 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$layout-border-color: $color-gray-300;
-$layout-toolbar-width: 2rem;
+<style>
 
 .k-layout {
+  --layout-border-color: var(--color-gray-300);
+  --layout-toolbar-width: 2rem;
+
   position: relative;
-  padding-right: $layout-toolbar-width;
+  padding-inline-end: var(--layout-toolbar-width);
   background: #fff;
-  box-shadow: $shadow;
+  box-shadow: var(--shadow);
 }
 [data-disabled] .k-layout {
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {
   margin-bottom: 1px;
@@ -137,23 +138,22 @@ $layout-toolbar-width: 2rem;
 /** Toolbar **/
 .k-layout-toolbar {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: $layout-toolbar-width;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: var(--layout-toolbar-width);
   display: flex;
   flex-direction: column;
-  font-size: $text-sm;
-  background: $color-gray-100;
-  border-left: 1px solid $color-gray-200;
-  color: $color-gray-500;
+  font-size: var(--text-sm);
+  background: var(--color-gray-100);
+  border-inline-start: 1px solid var(--color-light);
+  color: var(--color-gray-500);
 }
 .k-layout-toolbar:hover {
-  color: $color-black;
+  color: var(--color-black);
 }
 .k-layout-toolbar-button {
-  width: $layout-toolbar-width;
-  height: $layout-toolbar-width;
+  width: var(--layout-toolbar-width);
+  height: var(--layout-toolbar-width);
 }
 .k-layout-toolbar .k-sort-handle {
   margin-top: auto;
@@ -163,8 +163,8 @@ $layout-toolbar-width: 2rem;
 /** Columns **/
 .k-layout-columns.k-grid {
   grid-gap: 1px;
-  background: $layout-border-color;
-  background: $color-gray-300;
+  background: var(--layout-border-color);
+  background: var(--color-gray-300);
 }
 .k-layout:not(:first-child) .k-layout-columns.k-grid {
   border-top: 0;

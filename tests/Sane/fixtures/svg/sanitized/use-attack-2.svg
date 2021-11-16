@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="a0">
+    <circle fill="#000" r="10"/>
+  </g>
+  <g id="a1">
+    <g>
+      <use xlink:href="#a0"/>
+      <use xlink:href="#a0"/>
+      <use xlink:href="#a0"/>
+    </g>
+    <g>
+      <use xlink:href="#a0"/>
+      <use xlink:href="#a0"/>
+      <use xlink:href="#a0"/>
+    </g>
+  </g>
+  <g id="a2">
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+    <use/>
+  </g>
+</svg>

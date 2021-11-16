@@ -2,31 +2,15 @@
 
 namespace Kirby\Cms;
 
-class UserBlueprintApiModelTest extends TestCase
+use Kirby\Cms\Api\ApiModelTestCase;
+
+class UserBlueprintApiModelTest extends ApiModelTestCase
 {
-    protected $api;
-    protected $app;
     protected $user;
-
-    public function attr($object, $attr)
-    {
-        return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-    }
-
-    public function assertAttr($object, $attr, $value)
-    {
-        $this->assertEquals($this->attr($object, $attr), $value);
-    }
 
     public function setUp(): void
     {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
-
-        $this->api  = $this->app->api();
+        parent::setUp();
         $this->user = new User(['email' => 'test@getkirby.com']);
     }
 

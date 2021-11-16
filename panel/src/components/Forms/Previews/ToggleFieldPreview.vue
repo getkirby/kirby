@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-mutating-props -->
   <k-input
     v-model="value"
     :text="text"
@@ -23,7 +24,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-toggle-field-preview label {
   padding: 0 .25rem 0 .75rem;
   display: flex;
@@ -33,42 +34,20 @@ export default {
   white-space: nowrap;
 }
 .k-toggle-field-preview .k-toggle-input-label {
-  [dir="ltr"] & {
-    padding-left: .5rem;
-  }
+  padding-inline-start: .5rem;
+}
 
-  [dir="rtl"] & {
-    padding-right: .5rem;
-  }
-
-  [dir="ltr"] [data-align="right"] & {
-    padding-right: .5rem;
-  }
-
-  [dir="rtl"] [data-align="right"] & {
-    padding-left: .5rem;
-  }
+[data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-inline-end: .5rem;
 }
 
 .k-toggle-field-preview .k-toggle-input {
-  [dir="ltr"] & {
-    padding: 0 .25rem 0 .75rem;
-  }
+  padding-block: 0;
+  padding-inline: .75rem .25rem;
+}
 
-  [dir="rtl"] & {
-    padding: 0 .75rem 0 .25rem;
-  }
-
-  [data-align="right"] & {
-    flex-direction: row-reverse;
-  }
-
-  [dir="ltr"] [data-align="right"] & {
-    padding: 0 .75rem 0 .25rem;
-  }
-
-  [dir="rtl"] [data-align="right"] & {
-    padding: 0 .25rem 0 .75rem;
-  }
+[data-align="right"] .k-toggle-field-preview .k-toggle-input {
+  flex-direction: row-reverse;
+  padding-inline: .25rem .75rem ;
 }
 </style>

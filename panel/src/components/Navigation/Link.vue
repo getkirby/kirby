@@ -60,8 +60,8 @@ export default {
         return '';
       }
 
-      if (this.$route !== undefined && this.to[0] === '/' && !this.target) {
-        return (this.$router.options.url || '') + this.to;
+      if (this.to[0] === '/' && !this.target) {
+        return this.$url(this.to);
       }
 
       return this.to;
@@ -69,28 +69,28 @@ export default {
   },
   methods: {
     isRoutable(e) {
-      // the router is not installed
-      if (this.$route === undefined) {
-        return false;
-      }
-
-      // don't redirect with control keys
+      // don't route with control keys
       if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
         return false;
       }
 
-      // don't redirect when preventDefault called
+      // don't route when preventDefault called
       if (e.defaultPrevented) {
         return false;
       }
 
-      // don't redirect on right click
+      // don't route on right click
       if (e.button !== undefined && e.button !== 0) {
         return false;
       }
 
-      // don't redirect if a target is set
+      // don't route if a target is set
       if (this.target) {
+        return false;
+      }
+
+      // don't route if it's an absolute link
+      if (typeof this.href === "string" && this.href.indexOf("://") > 0) {
         return false;
       }
 
@@ -118,8 +118,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-link {
-  @include highlight-tabbed;
+  outline: none;
 }
 </style>

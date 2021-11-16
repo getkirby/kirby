@@ -7,6 +7,7 @@
     v-on="$listeners"
   >
     <k-link v-if="link" :to="link">
+      <!-- @slot Content/text of the headline -->
       <slot />
     </k-link>
     <slot v-else />
@@ -15,29 +16,34 @@
 
 <script>
 /**
+ * Use to display consistently sized headlines
+ * @public
+
  * @example <k-headline>This is a nice headline</k-headline>
  */
 export default {
   props: {
     /**
-     * Set a link for the headline. The link can be absolute or relative.
+     * Sets a link for the headline.
+     * The link can be absolute or relative.
      */
     link: String,
     /**
-     * Sets the text size
-     * @values tiny, small, medium, large, huge
+     * Alternate text sizes
+     * @values small, large, huge
      */
     size: {
       type: String
     },
     /**
-     * Sets the html tag for the headline element
+     * HTML tag for the headline element
      */
     tag: {
       type: String,
       default: "h2"
     },
     /**
+     * Visual look of the headline
      * @values positive, negative
      */
     theme: {
@@ -47,41 +53,40 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-headline {
-  font-size: $text-base;
-  font-weight: $font-bold;
+  --size: var(--text-base);
+  font-size: var(--size);
+  font-weight: var(--font-bold);
   line-height: 1.5em;
 }
 .k-headline[data-size="small"] {
-  font-size: $text-sm;
+  --size: var(--text-sm);
 }
 .k-headline[data-size="large"] {
-  font-size: $text-xl;
-  font-weight: $font-normal;
-
-  @media screen and (min-width: $breakpoint-md) {
-    font-size: $text-2xl;
+  --size: var(--text-xl);
+  font-weight: var(--font-normal);
+}
+@media screen and (min-width: 65em) {
+  .k-headline[data-size="large"] {
+    --size: var(--text-2xl);
   }
 }
 .k-headline[data-size="huge"] {
-  font-size: $text-2xl;
+  --size: var(--text-2xl);
   line-height: 1.15em;
-
-  @media screen and (min-width: $breakpoint-md) {
-    font-size: $text-3xl;
+}
+@media screen and (min-width: 65em) {
+  .k-headline[data-size="huge"] {
+    --size: var(--text-3xl);
   }
 }
-.k-headline[data-theme="negative"] {
-  color: $color-negative;
+.k-headline[data-theme] {
+  color: var(--theme);
 }
-.k-headline[data-theme="positive"] {
-  color: $color-positive;
-}
-
 .k-headline abbr {
-  color: $color-light-grey;
-  padding-left: .25rem;
+  color: var(--color-gray-500);
+  padding-inline-start: .25rem;
   text-decoration: none;
 }
 </style>

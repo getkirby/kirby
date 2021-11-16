@@ -3,7 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class OptionsQueryTest extends TestCase

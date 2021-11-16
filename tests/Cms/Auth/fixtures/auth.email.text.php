@@ -1,1 +1,1 @@
-<?= $user->email() . "\n" . $timeout . "\n" . $code;
+<?= $user->email() . "\n" . $site . "\n" . $timeout . "\n" . $code;

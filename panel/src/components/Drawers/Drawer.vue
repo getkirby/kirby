@@ -6,21 +6,24 @@
     @open="onOpen"
   >
     <div
+      :data-id="id"
       :data-nested="nested"
       class="k-drawer"
-      @mousedown="click = true"
+      @mousedown.stop="mousedown(true)"
       @mouseup="mouseup"
     >
-      <div class="k-drawer-box" @mousedown.stop="click = false">
+      <div class="k-drawer-box" @mousedown.stop="mousedown(false)">
         <header class="k-drawer-header">
           <h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
             <k-icon :type="icon" /> {{ title }}
           </h2>
           <ul v-else class="k-drawer-breadcrumb">
             <li v-for="crumb in breadcrumb" :key="crumb.id">
-              <k-button :icon="crumb.icon" @click="goTo(crumb.id)">
-                {{ crumb.title }}
-              </k-button>
+              <k-button
+                :icon="crumb.icon"
+                :text="crumb.title"
+                @click="goTo(crumb.id)"
+              />
             </li>
           </ul>
           <nav
@@ -31,11 +34,10 @@
               v-for="tabButton in tabs"
               :key="tabButton.name"
               :current="tab == tabButton.name"
+              :text="tabButton.label"
               class="k-drawer-tab"
               @click.stop="$emit('tab', tabButton.name)"
-            >
-              {{ tabButton.label }}
-            </k-button>
+            />
           </nav>
           <nav class="k-drawer-options">
             <slot name="options" />
@@ -46,7 +48,7 @@
             />
           </nav>
         </header>
-        <div class="k-drawer-body">
+        <div class="k-drawer-body scroll-y-auto">
           <slot />
         </div>
       </div>
@@ -58,6 +60,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    id: String,
     icon: String,
     tab: String,
     tabs: Object,
@@ -109,6 +112,13 @@ export default {
 
       this.click = false;
     },
+    mousedown(click = false) {
+      this.click = click;
+
+      if (this.click === true) {
+        this.$store.dispatch("drawers/close");
+      }
+    },
     onClose() {
       this.$store.dispatch("drawers/close", this._uid);
       this.$emit("close");
@@ -128,40 +138,37 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$drawer-header-height: 2.5rem;
-$drawer-header-padding: 1.5rem;
-
+<style>
 .k-drawer {
+  --drawer-header-height: 2.5rem;
+  --drawer-header-padding: 1.5rem;
+
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: z-index(toolbar);
+  inset: 0;
+  z-index: var(--z-toolbar);
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
-  background: rgba(#000, .2);
+  background: rgba(0, 0, 0, .2);
 }
 .k-drawer-box {
   position: relative;
   flex-basis: 50rem;
   display: flex;
   flex-direction: column;
-  background: $color-background;
-  box-shadow: $shadow-xl;
+  background: var(--color-background);
+  box-shadow: var(--shadow-xl);
 }
 .k-drawer-header {
   flex-shrink: 0;
-  height: $drawer-header-height;
-  padding-left: $drawer-header-padding;
+  height: var(--drawer-header-height);
+  padding-inline-start: var(--drawer-header-padding);
   display: flex;
   align-items: center;
   line-height: 1;
   justify-content: space-between;
-  background: $color-white;
-  font-size: $text-sm;
+  background: var(--color-white);
+  font-size: var(--text-sm);
 }
 .k-drawer-title {
   padding: 0 .75rem;
@@ -172,83 +179,80 @@ $drawer-header-padding: 1.5rem;
   flex-grow: 1;
   align-items: center;
   min-width: 0;
-  margin-left: -.75rem;
-  font-size: $text-sm;
-  font-weight: $font-normal;
+  margin-inline-start: -.75rem;
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
 }
 .k-drawer-breadcrumb li:not(:last-child) .k-button::after {
   position: absolute;
-  display: inline-flex;
-  right: -.75rem;
+  inset-inline-end: -.75rem;
   width: 1.5rem;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   content: "›";
-  color: $color-gray-500;
-  height: $drawer-header-height;
+  color: var(--color-gray-500);
+  height: var(--drawer-header-height);
 }
 .k-drawer-title .k-icon,
 .k-drawer-breadcrumb .k-icon {
   width: 1rem;
-  color: $color-gray-500;
-  margin-right: .5rem;
+  color: var(--color-gray-500);
+  margin-inline-end: .5rem;
 }
 .k-drawer-breadcrumb .k-button {
   display: inline-flex;
   align-items: center;
-  height: $drawer-header-height;
-  padding: 0 .75rem;
+  height: var(--drawer-header-height);
+  padding-inline: .75rem;
 }
 .k-drawer-breadcrumb .k-button-text {
   opacity: 1;
 }
 .k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 .k-drawer-tabs {
   display: flex;
   align-items: center;
   line-height: 1;
-  margin-right: .75rem;
+  margin-inline-end: .75rem;
 }
 .k-drawer-tab.k-button {
-  height: $drawer-header-height;
-  padding: 0 .75rem;
+  height: var(--drawer-header-height);
+  padding-inline: .75rem;
   display: flex;
   align-items: center;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 .k-drawer-tab.k-button[aria-current]::after {
   position: absolute;
   bottom: -1px;
-  left: .75rem;
-  right: .75rem;
+  inset-inline: .75rem;
   content: "";
-  background: $color-black;
+  background: var(--color-black);
   height: 2px;
 }
 
 .k-drawer-options {
-  padding-right: .75rem;
+  padding-inline-end: .75rem;
 }
 .k-drawer-option.k-button {
-  width: $drawer-header-height;
-  height: $drawer-header-height;
-  color: $color-gray-500;
+  width: var(--drawer-header-height);
+  height: var(--drawer-header-height);
+  color: var(--color-gray-500);
   line-height: 1;
 }
 .k-drawer-option.k-button:focus,
 .k-drawer-option.k-button:hover {
-  color: $color-black;
+  color: var(--color-black);
 }
 
 .k-drawer-body {
   padding: 1.5rem;
   flex-grow: 1;
-  overflow-y: auto;
-  background: $color-background;
+  background: var(--color-background);
 }
-
 
 /* Nested drawers */
 .k-drawer[data-nested] {

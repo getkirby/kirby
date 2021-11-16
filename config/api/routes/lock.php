@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Exception\Exception;
 
 /**
  * Content Lock Routes
@@ -9,7 +8,13 @@ return [
     [
         'pattern' => '(:all)/lock',
         'method'  => 'GET',
+        /**
+         * @deprecated 3.6.0
+         * @todo Remove in 3.7.0
+         */
         'action'  => function (string $path) {
+            deprecated('The `GET (:all)/lock` API endpoint has been deprecated and will be removed in 3.7.0');
+
             if ($lock = $this->parent($path)->lock()) {
                 return [
                     'supported' => true,
@@ -30,11 +35,6 @@ return [
             if ($lock = $this->parent($path)->lock()) {
                 return $lock->create();
             }
-
-            throw new Exception([
-                'key'      => 'lock.notImplemented',
-                'httpCode' => 501
-            ]);
         }
     ],
     [
@@ -44,17 +44,19 @@ return [
             if ($lock = $this->parent($path)->lock()) {
                 return $lock->remove();
             }
-
-            throw new Exception([
-                'key'      => 'lock.notImplemented',
-                'httpCode' => 501
-            ]);
         }
     ],
     [
         'pattern' => '(:all)/unlock',
         'method'  => 'GET',
+        /**
+         * @deprecated 3.6.0
+         * @todo Remove in 3.7.0
+         */
         'action'  => function (string $path) {
+            deprecated('The `GET (:all)/unlock` API endpoint has been deprecated and will be removed in 3.7.0');
+
+
             if ($lock = $this->parent($path)->lock()) {
                 return [
                     'supported' => true,
@@ -75,11 +77,6 @@ return [
             if ($lock = $this->parent($path)->lock()) {
                 return $lock->unlock();
             }
-
-            throw new Exception([
-                'key'      => 'lock.notImplemented',
-                'httpCode' => 501
-            ]);
         }
     ],
     [
@@ -89,11 +86,6 @@ return [
             if ($lock = $this->parent($path)->lock()) {
                 return $lock->resolve();
             }
-
-            throw new Exception([
-                'key'      => 'lock.notImplemented',
-                'httpCode' => 501
-            ]);
         }
     ],
 ];

@@ -2,7 +2,8 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
+use Kirby\Filesystem\F;
+use Kirby\Http\Uri;
 use Kirby\Http\Url;
 
 /**
@@ -194,7 +195,7 @@ class Html extends Xml
             return str_replace($search, $values, $string);
         }
 
-        return htmlentities($string, ENT_COMPAT, 'utf-8');
+        return htmlentities($string, ENT_QUOTES, 'utf-8');
     }
 
     /**
@@ -305,7 +306,7 @@ class Html extends Xml
             $text = $attr['href'];
         }
 
-        if (is_string($text) === true && Str::isUrl($text) === true) {
+        if (is_string($text) === true && V::url($text) === true) {
             $text = Url::short($text);
         }
 
@@ -355,7 +356,7 @@ class Html extends Xml
         if ($content === null) {
             $content = '';
         }
-        
+
         // force void elements to be self-closing
         if (static::isVoid($name) === true) {
             $content = null;
@@ -419,21 +420,62 @@ class Html extends Xml
      * @param array $options Additional `vimeo` and `youtube` options
      *                       (will be used as query params in the embed URL)
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function video(string $url, array $options = [], array $attr = []): string
+    public static function video(string $url, array $options = [], array $attr = []): ?string
     {
         // YouTube video
-        if (preg_match('!youtu!i', $url) === 1) {
+        if (Str::contains($url, 'youtu', true) === true) {
             return static::youtube($url, $options['youtube'] ?? [], $attr);
         }
 
         // Vimeo video
-        if (preg_match('!vimeo!i', $url) === 1) {
+        if (Str::contains($url, 'vimeo', true) === true) {
             return static::vimeo($url, $options['vimeo'] ?? [], $attr);
         }
 
-        throw new Exception('Unexpected video type');
+        // self-hosted video file
+        $extension = F::extension($url);
+        $type      = F::extensionToType($extension);
+        $mime      = F::extensionToMime($extension);
+
+        // ignore unknown file types
+        if ($type !== 'video') {
+            return null;
+        }
+
+        return static::tag('video', [
+            static::tag('source', null, [
+                'src'  => $url,
+                'type' => $mime
+            ])
+        ], $attr);
+    }
+
+    /**
+     * Generates a list of attributes
+     * for video iframes
+     *
+     * @param array $attr
+     * @return array
+     */
+    public static function videoAttr(array $attr = []): array
+    {
+        // allow fullscreen mode by default
+        // and use new `allow` attribute
+        if (
+            isset($attr['allow']) === false &&
+            ($attr['allowfullscreen'] ?? true) === true
+        ) {
+            $attr['allow'] = 'fullscreen';
+        }
+
+        // remove deprecated attribute
+        if (isset($attr['allowfullscreen']) === true) {
+            unset($attr['allowfullscreen']);
+        }
+
+        return $attr;
     }
 
     /**
@@ -442,28 +484,38 @@ class Html extends Xml
      * @param string $url Vimeo video URL
      * @param array $options Query params for the embed URL
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function vimeo(string $url, array $options = [], array $attr = []): string
+    public static function vimeo(string $url, array $options = [], array $attr = []): ?string
     {
-        if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
-            $id = $array[1];
-        } elseif (preg_match('!player.vimeo.com\/video\/([0-9]+)!i', $url, $array) === 1) {
-            $id = $array[1];
-        } else {
-            throw new Exception('Invalid Vimeo source');
+        $uri   = new Uri($url);
+        $path  = $uri->path();
+        $query = $uri->query();
+        $id    = null;
+
+        switch ($uri->host()) {
+            case 'vimeo.com':
+            case 'www.vimeo.com':
+                $id = $path->first();
+                break;
+            case 'player.vimeo.com':
+                $id = $path->nth(1);
+                break;
         }
 
-        // build the options query
-        if (empty($options) === false) {
-            $query = '?' . http_build_query($options);
-        } else {
-            $query = '';
+        if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
+            return null;
         }
 
-        $url = 'https://player.vimeo.com/video/' . $id . $query;
+        // append query params
+        foreach ($options as $key => $value) {
+            $query->$key = $value;
+        }
 
-        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
+        // build the full video src URL
+        $src = 'https://player.vimeo.com/video/' . $id . $query->toString(true);
+
+        return static::iframe($src, static::videoAttr($attr));
     }
 
     /**
@@ -472,102 +524,78 @@ class Html extends Xml
      * @param string $url YouTube video URL
      * @param array $options Query params for the embed URL
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function youtube(string $url, array $options = [], array $attr = []): string
+    public static function youtube(string $url, array $options = [], array $attr = []): ?string
     {
-        // default YouTube embed domain
-        $domain     = 'youtube.com';
-        $uri        = 'embed/';
-        $id         = null;
-        $urlOptions = [];
+        if (preg_match('!youtu!i', $url) !== 1) {
+            return null;
+        }
 
-        $schemes = [
-            // https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
-                'uri'     => 'embed/videoseries?list='
-            ],
+        $uri    = new Uri($url);
+        $path   = $uri->path();
+        $query  = $uri->query();
+        $first  = $path->first();
+        $second = $path->nth(1);
+        $host   = 'https://' . $uri->host() . '/embed';
+        $src    = null;
 
-            // https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube-nocookie.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
-                'domain'  => 'www.youtube-nocookie.com',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://www.youtube.com/embed/d9NF2edxy-M
-            // https://www.youtube.com/embed/d9NF2edxy-M?start=10
-            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?'],
-
-            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
-            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10
-            [
-                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?',
-                'domain'  => 'www.youtube-nocookie.com'
-            ],
-
-            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M
-            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10
-            [
-                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?',
-                'domain'  => 'www.youtube-nocookie.com'
-            ],
-
-            // https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube-nocookie.com\/playlist\?list=([a-zA-Z0-9_-]+)',
-                'domain'  => 'www.youtube-nocookie.com',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://www.youtube.com/watch?v=d9NF2edxy-M
-            // https://www.youtube.com/watch?v=d9NF2edxy-M&t=10
-            ['pattern' => 'youtube.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?'],
-
-            // https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube.com\/playlist\?list=([a-zA-Z0-9_-]+)',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://youtu.be/d9NF2edxy-M
-            // https://youtu.be/d9NF2edxy-M?t=10
-            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)(?:\?(.+))?']
-        ];
-
-        foreach ($schemes as $schema) {
-            if (preg_match('!' . $schema['pattern'] . '!i', $url, $array) === 1) {
-                $domain = $schema['domain'] ?? $domain;
-                $uri    = $schema['uri'] ?? $uri;
-                $id     = $array[1];
-                if (isset($array[2]) === true) {
-                    parse_str($array[2], $urlOptions);
-
-                    // convert video URL options to embed URL options
-                    if (isset($urlOptions['t']) === true) {
-                        $urlOptions['start'] = $urlOptions['t'];
-                        unset($urlOptions['t']);
-                    }
-                }
-                break;
+        $isYoutubeId = function (?string $id = null): bool {
+            if (empty($id) === true) {
+                return false;
             }
+
+            return preg_match('!^[a-zA-Z0-9_-]+$!', $id);
+        };
+
+        switch ($path->toString()) {
+            // playlists
+            case 'embed/videoseries':
+            case 'playlist':
+                if ($isYoutubeId($query->list) === true) {
+                    $src = $host . '/videoseries';
+                }
+
+                break;
+
+            // regular video URLs
+            case 'watch':
+                if ($isYoutubeId($query->v) === true) {
+                    $src = $host . '/' . $query->v;
+
+                    $query->start = $query->t;
+                    unset($query->v, $query->t);
+                }
+
+                break;
+
+            default:
+                // short URLs
+                if (Str::contains($uri->host(), 'youtu.be') === true && $isYoutubeId($first) === true) {
+                    $src = 'https://www.youtube.com/embed/' . $first;
+
+                    $query->start = $query->t;
+                    unset($query->t);
+
+                // embedded video URLs
+                } elseif ($first === 'embed' && $isYoutubeId($second) === true) {
+                    $src = $host . '/' . $second;
+                }
         }
 
-        // no match
-        if ($id === null) {
-            throw new Exception('Invalid YouTube source');
+        if (empty($src) === true) {
+            return null;
         }
 
-        // build the options query
-        if (empty($options) === false || empty($urlOptions) === false) {
-            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query(array_merge($urlOptions, $options));
-        } else {
-            $query = '';
+        // append all query parameters
+        foreach ($options as $key => $value) {
+            $query->$key = $value;
         }
 
-        $url = 'https://' . $domain . '/' . $uri . $id . $query;
+        // build the full video src URL
+        $src = $src . $query->toString(true);
 
-        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
+        // render the iframe
+        return static::iframe($src, static::videoAttr($attr));
     }
 }

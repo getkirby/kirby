@@ -38,15 +38,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-tag {
   position: relative;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1;
   cursor: pointer;
-  background-color: $color-gray-900;
-  color: $color-light;
-  border-radius: $rounded-xs;
+  background-color: var(--color-gray-900);
+  color: var(--color-light);
+  border-radius: var(--rounded-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -54,28 +54,29 @@ export default {
 }
 .k-tag:focus {
   outline: 0;
-  background-color: $color-focus;
-  border-color: $color-focus;
+  background-color: var(--color-focus);
   color: #fff;
 }
 .k-tag-text {
-  padding: 0 .75rem;
+  padding: .3rem .75rem .375rem;
+  line-height: var(--leading-tight);
 }
 .k-tag-toggle {
-  color: rgba(255, 255, 255, 0.7);
-  width: 2rem;
+  color: rgba(255, 255, 255, .7);
+  width: 1.75rem;
   height: 100%;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-inline-start: 1px solid rgba(255, 255, 255, .15);
 }
 .k-tag-toggle:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, .2);
   color: #fff;
 }
 [data-disabled] .k-tag {
-  background-color: $color-gray-600;
+  background-color: var(--color-gray-600);
 }
 [data-disabled] .k-tag .k-tag-toggle {
   display: none;

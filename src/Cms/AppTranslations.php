@@ -159,20 +159,23 @@ trait AppTranslations
      * Set locale settings
      *
      * @deprecated 3.5.0 Use `\Kirby\Toolkit\Locale::set()` instead
-     * @todo Remove in 3.6.0
+     * @todo Remove in 3.7.0
      *
      * @param string|array $locale
      */
     public function setLocale($locale): void
     {
+        // @codeCoverageIgnoreStart
+        deprecated('`Kirby\Cms\App::setLocale()` has been deprecated and will be removed in 3.7.0. Use `Kirby\Toolkit\Locale::set()` instead');
         Locale::set($locale);
+        // @codeCoverageIgnoreEnd
     }
 
     /**
      * Load a specific translation by locale
      *
      * @param string|null $locale Locale name or `null` for the current locale
-     * @return \Kirby\Cms\Translation|null
+     * @return \Kirby\Cms\Translation
      */
     public function translation(?string $locale = null)
     {

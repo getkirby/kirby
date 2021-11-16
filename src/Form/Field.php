@@ -238,7 +238,7 @@ class Field extends Component
                 'help' => function () {
                     /** @var \Kirby\Form\Field $this */
                     if ($this->help) {
-                        $help = $this->model()->toString($this->help);
+                        $help = $this->model()->toSafeString($this->help);
                         $help = $this->kirby()->kirbytext($help);
                         return $help;
                     }
@@ -441,7 +441,7 @@ class Field extends Component
         ksort($array);
 
         return array_filter($array, function ($item) {
-            return $item !== null;
+            return $item !== null && is_object($item) === false;
         });
     }
 

@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Hozz\u00e1ad",
+  "author": "Author",
   "avatar": "Profilkép",
   "back": "Vissza",
   "cancel": "M\u00e9gsem",
@@ -9,6 +14,7 @@
   "collapse": "Collapse",
   "collapse.all": "Collapse All",
   "copy": "Másol",
+  "copy.all": "Copy all",
   "create": "Létrehoz",
 
   "date": "Dátum",
@@ -23,23 +29,27 @@
   "days.tue": "ke",
   "days.wed": "sze",
 
+  "debugging": "Debugging",
+
   "delete": "T\u00f6rl\u00e9s",
   "delete.all": "Delete all",
-  "dimensions": "Méretek",
-  "disabled": "Disabled",
-  "discard": "Visszavon\u00e1s",
-  "download": "Letöltés",
-  "duplicate": "Másolat",
-  "edit": "Aloldal szerkeszt\u00e9se",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "Nincsenek fájlok kiválasztva",
   "dialog.pages.empty": "Nincsenek oldalak kiválasztva",
   "dialog.users.empty": "Nincsenek felhasználók kiválasztva",
 
+  "dimensions": "Méretek",
+  "disabled": "Disabled",
+  "discard": "Visszavon\u00e1s",
+  "download": "Letöltés",
+  "duplicate": "Másolat",
+
+  "edit": "Aloldal szerkeszt\u00e9se",
+
   "email": "Email",
   "email.placeholder": "mail@pelda.hu",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Érvénytelen bejelentkezés",
@@ -92,6 +102,7 @@
   "error.language.code": "Kérlek, add meg a nyelv érvényes kódját",
   "error.language.duplicate": "A nyelv már létezik",
   "error.language.name": "Kérlek, add meg a nyelv érvényes nevét",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
   "error.license.email": "Kérlek adj meg egy valós email-címet",
   "error.license.verification": "A licensz nem ellenőrizhető",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
   "error.page.changeStatus.incomplete": "Az oldal hibákat tartalmaz és nem publikálható",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Kérlek adj meg egy megfelelő szerepkört",
+  "error.user.undefined": "A felhasználó nem található",
   "error.user.update.permission": "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
 
   "error.validation.accepted": "Kérlek erősítsd meg",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Kérlek megfelelő URL-t adj meg",
 
+  "expand": "Expand",
+  "expand.all": "Expand All",
+
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "Kód",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Nincs m\u00e9g bejegyz\u00e9s",
   "field.users.empty": "Nincs felhasználó kiválasztva",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Biztos törölni akarod ezt a fájlt: <br><strong>{filename}</strong>?",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "Óra",
+  "import": "Import",
   "insert": "Beilleszt",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Maradjak bejelentkezve",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Álló",
   "orientation.square": "Négyzetes",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "URL v\u00e1ltoztat\u00e1sa",
   "page.changeSlug.fromTitle": "L\u00e9trehoz\u00e1s c\u00edmb\u0151l",
   "page.changeStatus": "Állapot módosítása",
@@ -417,7 +437,10 @@
   "pagination.page": "Oldal",
 
   "password": "Jelsz\u00f3",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Előző",
   "preview": "Preview",
   "remove": "Eltávolítás",
@@ -454,6 +477,8 @@
   "template": "Sablon",
   "today": "Ma",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kód",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Cím 1",
   "toolbar.button.heading.2": "Cím 2",
   "toolbar.button.heading.3": "Cím 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "Dőlt szöveg",
   "toolbar.button.file": "Fájl",
   "toolbar.button.file.select": "Válassz egy fájlt",
   "toolbar.button.file.upload": "Fájl feltöltése",
   "toolbar.button.link": "Link",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Rendezett lista",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://pelda.hu",
 
   "user": "Felhasználó",
-  "user.blueprint": "Ehhez a szerepkörhöz további szekciókat és mezőket vehetsz fel a <strong>/site/blueprints/users/{role}.yml</strong> fájlban",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Email módosítása",
   "user.changeLanguage": "Nyelv módosítása",
   "user.changeName": "Felhasználó átnevezése",
@@ -516,9 +545,10 @@
 
   "view.account": "Fi\u00f3kod",
   "view.installation": "Telep\u00edt\u00e9s",
+  "view.languages": "Nyelvek",
   "view.resetPassword": "Reset password",
-  "view.settings": "Beállítások",
   "view.site": "Weboldal",
+  "view.system": "System",
   "view.users": "Felhaszn\u00e1l\u00f3k",
 
   "welcome": "Üdvözlünk",

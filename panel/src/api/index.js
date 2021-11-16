@@ -20,6 +20,7 @@ export default (extensions = {}) => {
     onStart() { },
     onComplete() { },
     onSuccess() { },
+    onParserError() { },
     onError(error) {
       window.console.log(error.message);
       throw error;
@@ -48,7 +49,7 @@ export default (extensions = {}) => {
   api.users = users(api);
 
   /**
-   * @deprecated
+   * @deprecated 3.5.0
    * @todo remove in 3.7.0
    */
   api.files.rename = api.files.changeName;

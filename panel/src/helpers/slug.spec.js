@@ -67,4 +67,19 @@ describe("$helper.slug()", () => {
     expect(resultB).to.equal("a-b");
   });
 
+  it("should return empty string when no param sent", () => {
+    const result = slug();
+    expect(result).to.equal("");
+  });
+
+  it("should return empty string when null param sent", () => {
+    const result = slug(null);
+    expect(result).to.equal("");
+  });
+
+  it("should return empty string when undefined param sent", () => {
+    const result = slug(undefined);
+    expect(result).to.equal("");
+  });
+
 });

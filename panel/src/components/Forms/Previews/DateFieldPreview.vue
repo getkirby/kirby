@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-date-field-preview {
   padding: 0 .75rem;
 }

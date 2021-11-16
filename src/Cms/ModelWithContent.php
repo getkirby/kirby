@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -19,14 +20,6 @@ use Throwable;
  */
 abstract class ModelWithContent extends Model
 {
-    /**
-     * Each model must define a CLASS_ALIAS
-     * which will be used in template queries.
-     * The CLASS_ALIAS is a short human-readable
-     * version of the class name. I.e. page.
-     */
-    const CLASS_ALIAS = null;
-
     /**
      * The content
      *
@@ -245,46 +238,6 @@ abstract class ModelWithContent extends Model
     }
 
     /**
-     * Returns the drag text from a custom callback
-     * if the callback is defined in the config
-     *
-     * @internal
-     * @param string $type markdown or kirbytext
-     * @param mixed ...$args
-     * @return string|null
-     */
-    public function dragTextFromCallback(string $type, ...$args): ?string
-    {
-        $dragTextCallback = option('panel.' . $type . '.' . static::CLASS_ALIAS . 'DragText');
-
-        if (empty($dragTextCallback) === false && is_a($dragTextCallback, 'Closure') === true && ($dragText = $dragTextCallback($this, ...$args)) !== null) {
-            return $dragText;
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the correct drag text type
-     * depending on the given type or the
-     * configuration
-     *
-     * @internal
-     * @param string $type (null|auto|kirbytext|markdown)
-     * @return string
-     */
-    public function dragTextType(string $type = null): string
-    {
-        $type = $type ?? 'auto';
-
-        if ($type === 'auto') {
-            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
-        }
-
-        return $type === 'markdown' ? 'markdown' : 'kirbytext';
-    }
-
-    /**
      * Returns all content validation errors
      *
      * @return array
@@ -362,144 +315,12 @@ abstract class ModelWithContent extends Model
     }
 
     /**
-     * Returns the panel icon definition
+     * Returns the panel info of the model
+     * @since 3.6.0
      *
-     * @internal
-     * @param array|null $params
-     * @return array
+     * @return \Kirby\Panel\Model
      */
-    public function panelIcon(array $params = null): array
-    {
-        $defaults = [
-            'type'  => 'page',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#c5c9c6',
-        ];
-
-        return array_merge($defaults, $params ?? []);
-    }
-
-    /**
-     * @internal
-     * @param string|array|false|null $settings
-     * @return array|null
-     */
-    public function panelImage($settings = null): ?array
-    {
-        $defaults = [
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'cover' => false
-        ];
-
-        // switch the image off
-        if ($settings === false) {
-            return null;
-        }
-
-        if (is_string($settings) === true) {
-            // use defined icon in blueprint
-            if ($settings === 'icon') {
-                return [];
-            }
-
-            $settings = [
-                'query' => $settings
-            ];
-        }
-
-        if ($image = $this->panelImageSource($settings['query'] ?? null)) {
-
-            // main url
-            $settings['url'] = $image->url();
-
-            // only create srcsets for actual File objects
-            if (is_a($image, 'Kirby\Cms\File') === true) {
-
-                // for cards
-                $settings['cards'] = [
-                    'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                    'srcset' => $image->srcset([
-                        352,
-                        864,
-                        1408,
-                    ])
-                ];
-
-                // for lists
-                $settings['list'] = [
-                    'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                    'srcset' => $image->srcset([
-                        '1x' => [
-                            'width' => 38,
-                            'height' => 38,
-                            'crop' => 'center'
-                        ],
-                        '2x' => [
-                            'width' => 76,
-                            'height' => 76,
-                            'crop' => 'center'
-                        ],
-                    ])
-                ];
-            }
-
-            unset($settings['query']);
-        }
-
-        return array_merge($defaults, (array)$settings);
-    }
-
-    /**
-     * Returns the image file object based on provided query
-     *
-     * @internal
-     * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
-     */
-    protected function panelImageSource(string $query = null)
-    {
-        $image = $this->query($query ?? null);
-
-        // validate the query result
-        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\Cms\Asset') === false) {
-            $image = null;
-        }
-
-        // fallback for files
-        if ($image === null && is_a($this, 'Kirby\Cms\File') === true && $this->isViewable() === true) {
-            $image = $this;
-        }
-
-        return $image;
-    }
-
-    /**
-     * Returns an array of all actions
-     * that can be performed in the Panel
-     * This also checks for the lock status
-     * @since 3.3.0
-     *
-     * @param array $unlock An array of options that will be force-unlocked
-     * @return array
-     */
-    public function panelOptions(array $unlock = []): array
-    {
-        $options = $this->permissions()->toArray();
-
-        if ($this->isLocked()) {
-            foreach ($options as $key => $value) {
-                if (in_array($key, $unlock)) {
-                    continue;
-                }
-
-                $options[$key] = false;
-            }
-        }
-
-        return $options;
-    }
+    abstract public function panel();
 
     /**
      * Must return the permissions object for the model
@@ -687,24 +508,43 @@ abstract class ModelWithContent extends Model
     }
 
     /**
-     * String template builder
+     * String template builder with automatic HTML escaping
+     * @since 3.6.0
      *
-     * @param string|null $template
+     * @param string|null $template Template string or `null` to use the model ID
      * @param array $data
      * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null, array $data = [], string $fallback = ''): string
+    public function toSafeString(string $template = null, array $data = [], string $fallback = ''): string
+    {
+        return $this->toString($template, $data, $fallback, 'safeTemplate');
+    }
+
+    /**
+     * String template builder
+     *
+     * @param string|null $template Template string or `null` to use the model ID
+     * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
+     * @param string $handler For internal use
+     * @return string
+     */
+    public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
     {
         if ($template === null) {
-            return $this->id();
+            return $this->id() ?? '';
         }
 
-        $result = Str::template($template, array_replace([
+        if ($handler !== 'template' && $handler !== 'safeTemplate') {
+            throw new InvalidArgumentException('Invalid toString handler'); // @codeCoverageIgnore
+        }
+
+        $result = Str::$handler($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ], $data), $fallback);
+        ], $data), ['fallback' => $fallback]);
 
         return $result;
     }
@@ -800,5 +640,60 @@ abstract class ModelWithContent extends Model
             $this->contentFile($languageCode),
             $this->contentFileData($data, $languageCode)
         );
+    }
+
+
+    /**
+     * Deprecated!
+     */
+
+    /**
+     * Returns the panel icon definition
+     *
+     * @deprecated 3.6.0 Use `->panel()->image()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param array|null $params
+     * @return array|null
+     * @codeCoverageIgnore
+     */
+    public function panelIcon(array $params = null): ?array
+    {
+        return $this->panel()->image($params);
+    }
+
+    /**
+     * @deprecated 3.6.0 Use `->panel()->image()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param string|array|false|null $settings
+     * @return array|null
+     * @codeCoverageIgnore
+     */
+    public function panelImage($settings = null): ?array
+    {
+        return $this->panel()->image($settings);
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     * This also checks for the lock status
+     *
+     * @deprecated 3.6.0 Use `->panel()->options()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        return $this->panel()->options($unlock);
     }
 }

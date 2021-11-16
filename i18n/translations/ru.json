@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c",
+  "author": "Автор",
   "avatar": "\u0410\u0432\u0430\u0442\u0430\u0440 (\u0444\u043e\u0442\u043e)",
   "back": "Назад",
   "cancel": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c",
@@ -9,6 +14,7 @@
   "collapse": "Свернуть",
   "collapse.all": "Свернуть все",
   "copy": "Скопировать",
+  "copy.all": "Копировать все",
   "create": "Создать",
 
   "date": "Дата",
@@ -23,23 +29,27 @@
   "days.tue": "\u0412\u0442",
   "days.wed": "\u0421\u0440",
 
+  "debugging": "Отладка",
+
   "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
   "delete.all": "Удалить все",
-  "dimensions": "Размеры",
-  "disabled": "Отключено",
-  "discard": "\u0421\u0431\u0440\u043e\u0441",
-  "download": "Скачать",
-  "duplicate": "Дублировать",
-  "edit": "\u041d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c",
-  "expand": "Развернуть",
-  "expand.all": "Развернуть все",
 
   "dialog.files.empty": "Нет файлов для выбора",
   "dialog.pages.empty": "Нет страниц для выбора",
   "dialog.users.empty": "Нет пользователей для выбора",
 
+  "dimensions": "Размеры",
+  "disabled": "Отключено",
+  "discard": "\u0421\u0431\u0440\u043e\u0441",
+  "download": "Скачать",
+  "duplicate": "Дублировать",
+
+  "edit": "\u041d\u0430\u0441\u0442\u0440\u043e\u0438\u0442\u044c",
+
   "email": "Email",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Среда",
 
   "error.access.code": "Неверный код",
   "error.access.login": "Неправильный логин",
@@ -51,7 +61,7 @@
   "error.avatar.dimensions.invalid": "Пожалуйста, сделайте чтобы ширина или высота фотографии была меньше 3000 пикселей",
   "error.avatar.mime.forbidden": "Фотография профиля должна быть JPEG или PNG",
 
-  "error.blueprint.notFound": "Не удалось загрузить blueprint \"{name}\"",
+  "error.blueprint.notFound": "Не удалось загрузить разметку \"{name}\"",
 
   "error.blocks.max.plural": "Вы не можете добавить больше {max} блоков",
   "error.blocks.max.singular": "Вы не можете добавить больше одного блока",
@@ -72,9 +82,9 @@
   "error.file.maxheight": "Высота изображения не должна превышать {height} px",
   "error.file.maxsize": "Файл слишком большой",
   "error.file.maxwidth": "Ширина изображения не должна превышать {width} px",
-  "error.file.mime.differs": "Загруженный файл должен быть того же mime типа: \"{mime}\"",
-  "error.file.mime.forbidden": "Тип медиа \"{mime}\" не допустим",
-  "error.file.mime.invalid": "Неверный тип mime: {mime}",
+  "error.file.mime.differs": "Загружаемый файл должен иметь такое же расширение (тип): \"{mime}\"",
+  "error.file.mime.forbidden": "Расширение (тип) \"{mime}\" не допускается",
+  "error.file.mime.invalid": "Неверное расширение (тип): {mime}",
   "error.file.mime.missing": "Не удалось определить тип медиа для файла \"{filename}\"",
   "error.file.minheight": "Высота файла должна быть хотя бы {height} px",
   "error.file.minsize": "Файл слишком маленький",
@@ -92,13 +102,16 @@
   "error.language.code": "Пожалуйста, впишите правильный код языка",
   "error.language.duplicate": "Язык уже есть",
   "error.language.name": "Пожалуйста, впишите правильное название языка",
+  "error.language.notFound": "Не получилось найти этот язык",
 
   "error.layout.validation.block": "Ошибка в блоке {blockIndex} в макете {layoutIndex}",
   "error.layout.validation.settings": "Ошибка в настройках макета {index}",
 
   "error.license.format": "Пожалуйста, введите правильный лицензионный код",
-  "error.license.email": "Пожалуйста, введите правильный адрес эл. почты",
+  "error.license.email": "Пожалуйста, введите правильный Email",
   "error.license.verification": "Лицензия не подтверждена",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
   "error.page.changeStatus.incomplete": "На странице есть ошибки и поэтому ее нельзя опубликовать",
@@ -119,7 +132,7 @@
   "error.page.notFound": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
   "error.page.num.invalid": "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
   "error.page.slug.invalid": "Пожалуйста, введите правильный URL",
-  "error.page.slug.maxlength": "Длина ссылки (ЧПУ) должна быть короче \"{length}\" символов",
+  "error.page.slug.maxlength": "Длина ссылки должна быть короче \"{length}\" символов",
   "error.page.sort.permission": "Невозможно сортировать страницу \"{slug}\"",
   "error.page.status.invalid": "Пожалуйста, установите верный статус страницы",
   "error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
@@ -156,7 +169,7 @@
   "error.user.delete.lastAdmin": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430",
   "error.user.delete.lastUser": "Нельзя удалить единственного пользователя",
   "error.user.delete.permission": "У вас нет права удалить пользователя \"{name}\"",
-  "error.user.duplicate": "Пользователь с эл. почтой \"{email}\" уже есть",
+  "error.user.duplicate": "Пользователь с Email \"{email}\" уже есть",
   "error.user.email.invalid": "Пожалуйста, введите правильный адрес эл. почты",
   "error.user.language.invalid": "Введите правильный язык",
   "error.user.notFound": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "У пользователя нет пароля",
   "error.user.password.wrong": "Неверный пароль",
   "error.user.role.invalid": "Введите правильную роль",
+  "error.user.undefined": "Аккаунт не найден",
   "error.user.update.permission": "У вас нет права обновить пользователя \"{name}\"",
 
   "error.validation.accepted": "Пожалуйста, подтвердите",
@@ -179,7 +193,7 @@
   "error.validation.date.between": "Пожалуйста, укажите дату между {min} и {max}",
   "error.validation.denied": "Пожалуйста отмените",
   "error.validation.different": "Значение не может быть \"{other}\"",
-  "error.validation.email": "Пожалуйста, введите правильный адрес эл. почты",
+  "error.validation.email": "Пожалуйста, введите правильный Email",
   "error.validation.endswith": "Значение должно заканчиваться с \"{end}\"",
   "error.validation.filename": "Пожалуйста, введите правильное название файла",
   "error.validation.in": "Пожалуйста, введите одно из следующих: ({in})",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Пожалуйста, укажите время между {min} и {max}",
   "error.validation.url": "Пожалуйста, введите правильный URL",
 
+  "expand": "Развернуть",
+  "expand.all": "Развернуть все",
+
   "field.required": "Поле обязательно",
   "field.blocks.changeType": "Изменить тип",
   "field.blocks.code.name": "Код",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Вы действительно хотите удалить эти блоки?",
   "field.blocks.empty": "Еще нет блоков",
   "field.blocks.fieldsets.label": "Пожалуйста, выберите тип блока…",
+  "field.blocks.fieldsets.paste": "Нажмите <kbd>{{ shortcut }}</kbd> чтобы вставить/импортировать блоки из буфера памяти",
   "field.blocks.gallery.name": "Галерея",
   "field.blocks.gallery.images.empty": "Еще нет изображений",
   "field.blocks.gallery.images.label": "Изображения",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Выберите изображение",
   "field.blocks.image.ratio": "Соотношение",
   "field.blocks.image.url": "URL изображения",
+  "field.blocks.line.name": "Линия",
   "field.blocks.list.name": "Список",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Текст",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Еще нет записей",
   "field.users.empty": "Еще нет пользователей",
 
-  "file.blueprint": "Вы можете определить новые секции и поля формы для этого файла в <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "У файла пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Вы точно хотите удалить файл <br><strong>{filename}</strong>?",
   "file.sort": "Изменить позицию",
 
@@ -272,6 +291,7 @@
 
   "hide": "Скрыть",
   "hour": "Час",
+  "import": "Импортировать",
   "insert": "\u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044c",
   "insert.after": "Вставить ниже",
   "insert.before": "Вставить выше",
@@ -311,7 +331,7 @@
   "languages.secondary": "Дополнительные языки",
   "languages.secondary.empty": "Еще нет дополнительных языков",
 
-  "license": "\u041b\u0438\u0446\u0435\u043d\u0437\u0438\u044f Kirby",
+  "license": "Лицензия",
   "license.buy": "Купить лицензию",
   "license.register": "Зарегистрировать",
   "license.register.help": "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Код для сброса пароля",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Если ваш Email уже зарегистрирован, запрашиваемый код был отправлен на него.",
-  "login.email.login.body": "Добрый день, {user.nameOrEmail}.\n\nНедавно вы запросили код для авторизации в Kirby Panel.\nЭтот код будет доступен {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали код для авторизации, пожалуйста, проигнорируйте это письмо или свяжитесь  с вашим администратором, если у вас возникли вопросы.\nТакже исходя из соображений безопасности просим вас НЕ ПЕРЕСЫЛАТЬ это письмо.",
+  "login.email.login.body": "Привет, {user.nameOrEmail}!\n\nНедавно вы запросили код для входа в Панель управления {site}.\nСледующий код входа будет действителен в течение {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали код для входа, проигнорируйте это письмо или обратитесь к администратору, если у вас есть вопросы.\nВ целях безопасности НЕ ПЕРЕСЫЛАЙТЕ это письмо.",
   "login.email.login.subject": "Ваш код для входа",
-  "login.email.password-reset.body": "Добрый день, {user.nameOrEmail}.\n\nНедавно вы запросили код для сброса пароля в Kirby Panel.\nЭтот код будет доступен {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали код для сброса пароля, пожалуйста, проигнорируйте это письмо или свяжитесь с вашим администратором, если у вас возникли вопросы.\nТакже исходя из соображений безопасности просим вас НЕ ПЕРЕСЫЛАТЬ это письмо.",
+  "login.email.password-reset.body": "Привет, {user.nameOrEmail}!\n\nНедавно вы запросили сброс пароля для входа в Панель управления {site}.\nСледующий код входа будет действителен в течение {timeout} минут:\n\n{code}\n\nЕсли вы не запрашивали сброс пароля, проигнорируйте это письмо или обратитесь к администратору, если у вас есть вопросы.\nВ целях безопасности НЕ ПЕРЕСЫЛАЙТЕ это письмо.",
   "login.email.password-reset.subject": "Ваш код для сброса пароля",
   "login.remember": "Сохранять вход активным",
   "login.reset": "Сбросить пароль",
@@ -385,8 +405,8 @@
   "orientation.portrait": "Портретная",
   "orientation.square": "Квадрат",
 
-  "page.blueprint": "Вы можете определить новые секции и поля формы для этой страницы в <strong>/site/blueprints/{template}.yml</strong>",
-  "page.changeSlug": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0441\u0441\u044b\u043b\u043a\u0443 (\u0427\u041f\u0423)",
+  "page.blueprint": "У страницы пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
+  "page.changeSlug": "Изменить ссылку",
   "page.changeSlug.fromTitle": "Создать из названия",
   "page.changeStatus": "Изменить статус",
   "page.changeStatus.position": "Пожалуйста, выберите позицию",
@@ -417,7 +437,10 @@
   "pagination.page": "Страница",
 
   "password": "\u041f\u0430\u0440\u043e\u043b\u044c",
+  "paste": "Вставить",
+  "paste.after": "Вставить после",
   "pixel": "Пиксель",
+  "plugins": "Плагины",
   "prev": "Предыдущий",
   "preview": "Предпросмотр",
   "remove": "Удалить",
@@ -448,26 +471,32 @@
   "settings": "Настройка",
   "show": "Показать",
   "size": "Размер",
-  "slug": "Понятная ссылка (ЧПУ)",
+  "slug": "Понятная ссылка",
   "sort": "Сортировать",
   "title": "Название",
   "template": "\u0428\u0430\u0431\u043b\u043e\u043d",
   "today": "Сегодня",
 
-  "site.blueprint": "Вы можете определить новые секции и поля формы для этого сайта в <strong>/site/blueprints/site.yml</strong>",
+  "server": "Сервер",
+
+  "site.blueprint": "У сайта пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Код",
   "toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
-  "toolbar.button.email": "Эл. почта",
+  "toolbar.button.email": "Email",
   "toolbar.button.headings": "Заголовки",
   "toolbar.button.heading.1": "Заголовок 1",
   "toolbar.button.heading.2": "Заголовок 2",
   "toolbar.button.heading.3": "Заголовок 3",
+  "toolbar.button.heading.4": "Заголовок 4",
+  "toolbar.button.heading.5": "Заголовок 5",
+  "toolbar.button.heading.6": "Заголовок 6",
   "toolbar.button.italic": "Курсив",
   "toolbar.button.file": "Файл",
   "toolbar.button.file.select": "Выбрать файл",
   "toolbar.button.file.upload": "Закачать файл",
   "toolbar.button.link": "\u0421\u0441\u044b\u043b\u043a\u0430",
+  "toolbar.button.paragraph": "Параграф",
   "toolbar.button.strike": "Зачёркнутый",
   "toolbar.button.ol": "Нумерованный список",
   "toolbar.button.underline": "Подчёркнутый",
@@ -485,7 +514,7 @@
   "upload.error.extension": "Загрузка файла не удалась из за расширения",
   "upload.error.formSize": "Загруженный файл больше чем MAX_FILE_SIZE настройка в форме",
   "upload.error.iniPostSize": "Загружаемый файл больше чем post_max_size настройка в php.ini",
-  "upload.error.iniSize": "Загруженный файл больше чем upload_max_filesize настройка в php.ini",
+  "upload.error.iniSize": "Загруженный файл больше чем настройка upload_max_filesize в php.ini",
   "upload.error.noFile": "Файл не был загружен",
   "upload.error.noFiles": "Файлы не были загружены",
   "upload.error.partial": "Файл загружен только частично",
@@ -497,8 +526,8 @@
   "url.placeholder": "https://example.com",
 
   "user": "Пользователь",
-  "user.blueprint": "Вы можете определить новые секции и поля формы для этой роли пользователя в <strong>/site/blueprints/users/{role}.yml</strong>",
-  "user.changeEmail": "Поменять эл. почту",
+  "user.blueprint": "Вы можете определить новые секции и поля разметки для пользователя в <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+  "user.changeEmail": "Поменять Email",
   "user.changeLanguage": "Поменять язык",
   "user.changeName": "Переназвать этого пользователя",
   "user.changePassword": "Поменять пароль",
@@ -512,13 +541,14 @@
 
   "users": "Пользователи",
 
-  "version": "\u0412\u0435\u0440\u0441\u0438\u044f Kirby",
+  "version": "Версия",
 
   "view.account": "\u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
   "view.installation": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430",
+  "view.languages": "Языки",
   "view.resetPassword": "Сбросить пароль",
-  "view.settings": "Настройка",
   "view.site": "Сайт",
+  "view.system": "Система",
   "view.users": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438",
 
   "welcome": "Добро пожаловать",

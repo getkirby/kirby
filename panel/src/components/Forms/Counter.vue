@@ -47,28 +47,20 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-counter {
-  font-size: $text-xs;
-  color: $color-gray-900;
-  font-weight: $font-bold;
+  font-size: var(--text-xs);
+  color: var(--color-gray-900);
+  font-weight: var(--font-bold);
 }
 .k-counter[data-invalid] {
   box-shadow: none;
   border: 0;
-  color: $color-negative;
+  color: var(--color-negative);
 }
 .k-counter-rules {
-  color: $color-gray-600;
-  font-weight: $font-normal;
-
-  [dir="ltr"] & {
-    padding-left: .5rem;
-  }
-
-  [dir="rtl"] & {
-    padding-right: .5rem;
-  }
-
+  color: var(--color-gray-600);
+  font-weight: var(--font-normal);
+  padding-inline-start: .5rem;
 }
 </style>

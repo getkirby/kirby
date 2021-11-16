@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 
 class FileActionsTest extends TestCase
 {
@@ -170,6 +170,7 @@ class FileActionsTest extends TestCase
 
         $this->assertFileExists($result->root());
         $this->assertFileExists($parent->root() . '/test.md');
+        $this->assertInstanceOf('Kirby\Filesystem\File', $result->asset());
     }
 
     /**
@@ -244,6 +245,24 @@ class FileActionsTest extends TestCase
     /**
      * @dataProvider parentProvider
      */
+    public function testCreateImage($parent)
+    {
+        $source =  __DIR__ . '/fixtures/files/test.jpg';
+
+        $result = File::create([
+            'filename' => 'test.jpg',
+            'source'   => $source,
+            'parent'   => $parent
+        ]);
+
+        $this->assertFileExists($result->root());
+        $this->assertFileExists($parent->root() . '/test.jpg');
+        $this->assertInstanceOf('Kirby\Image\Image', $result->asset());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
     public function testCreateHooks($parent)
     {
         $phpunit = $this;
@@ -252,7 +271,7 @@ class FileActionsTest extends TestCase
 
         $app = $this->app->clone([
             'hooks' => [
-                'file.create:before' => function (File $file, Image $upload) use (&$before) {
+                'file.create:before' => function (File $file, BaseFile $upload) use (&$before) {
                     $before = true;
                 },
                 'file.create:after' => function (File $file) use (&$after, $phpunit) {
@@ -333,10 +352,35 @@ class FileActionsTest extends TestCase
         ]);
 
         $this->assertEquals(F::read($original), F::read($originalFile->root()));
+        $this->assertInstanceOf('Kirby\Filesystem\File', $originalFile->asset());
 
         $replacedFile = $originalFile->replace($replacement);
 
         $this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
+        $this->assertInstanceOf('Kirby\Filesystem\File', $replacedFile->asset());
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testReplaceImage($parent)
+    {
+        $original =  __DIR__ . '/fixtures/files/test.jpg';
+        $replacement =  __DIR__ . '/fixtures/files/cat.jpg';
+
+        $originalFile = File::create([
+            'filename' => 'test.jpg',
+            'source'   => $original,
+            'parent'   => $parent
+        ]);
+
+        $this->assertSame(F::read($original), F::read($originalFile->root()));
+        $this->assertInstanceOf('Kirby\Image\Image', $originalFile->asset());
+
+        $replacedFile = $originalFile->replace($replacement);
+
+        $this->assertSame(F::read($replacement), F::read($replacedFile->root()));
+        $this->assertInstanceOf('Kirby\Image\Image', $replacedFile->asset());
     }
 
     /**
@@ -499,9 +543,9 @@ class FileActionsTest extends TestCase
 
         $app = $this->app->clone([
             'hooks' => [
-                'file.replace:before' => function (File $file, $upload) use ($phpunit, &$calls) {
+                'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
-                    $phpunit->assertInstanceOf('Kirby\Image\Image', $upload);
+                    $phpunit->assertInstanceOf('Kirby\Filesystem\File', $upload);
                     $phpunit->assertSame('site.csv', $file->filename());
                     $phpunit->assertSame('replace.csv', $upload->filename());
                     $phpunit->assertFileDoesNotExist($file->root());

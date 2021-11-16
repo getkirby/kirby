@@ -2,18 +2,11 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 
 class UserTestModel extends User
 {
-}
-
-class UserTestForceLocked extends User
-{
-    public function isLocked(): bool
-    {
-        return true;
-    }
 }
 
 class UserTest extends TestCase
@@ -223,6 +216,32 @@ class UserTest extends TestCase
         }
     }
 
+    public function testValidatePasswordHttpCode()
+    {
+        $user = new User([
+            'email'    => 'test@getkirby.com',
+            'password' => User::hashPassword('correct-horse-battery-staple')
+        ]);
+
+        $caught = 0;
+
+        try {
+            $user->validatePassword('short');
+        } catch (\Kirby\Exception\InvalidArgumentException $e) {
+            $this->assertSame(400, $e->getHttpCode());
+            $caught++;
+        }
+
+        try {
+            $user->validatePassword('longbutinvalid');
+        } catch (\Kirby\Exception\InvalidArgumentException $e) {
+            $this->assertSame(401, $e->getHttpCode());
+            $caught++;
+        }
+
+        $this->assertSame(2, $caught);
+    }
+
     public function testValidateUndefinedPassword()
     {
         $user = new User([
@@ -322,64 +341,5 @@ class UserTest extends TestCase
         $this->assertInstanceOf(UserTestModel::class, $user);
 
         User::$models = [];
-    }
-
-    public function testPanelOptions()
-    {
-        $user = new User([
-            'email' => 'test@getkirby.com',
-        ]);
-
-        $user->kirby()->impersonate('kirby');
-
-        $expected = [
-            'create'         => true,
-            'changeEmail'    => true,
-            'changeLanguage' => true,
-            'changeName'     => true,
-            'changePassword' => true,
-            'changeRole'     => false, // just one role
-            'delete'         => true,
-            'update'         => true,
-        ];
-
-        $this->assertEquals($expected, $user->panelOptions());
-    }
-
-    public function testPanelOptionsWithLockedUser()
-    {
-        $user = new UserTestForceLocked([
-            'email' => 'test@getkirby.com',
-        ]);
-
-        $user->kirby()->impersonate('kirby');
-
-        // without override
-        $expected = [
-            'create'         => false,
-            'changeEmail'    => false,
-            'changeLanguage' => false,
-            'changeName'     => false,
-            'changePassword' => false,
-            'changeRole'     => false,
-            'delete'         => false,
-            'update'         => false,
-        ];
-
-        $this->assertEquals($expected, $user->panelOptions());
-
-        // with override
-        $expected = [
-            'create'         => false,
-            'changeEmail'    => true,
-            'changeLanguage' => false,
-            'changeName'     => false,
-            'changePassword' => false,
-            'changeRole'     => false,
-            'delete'         => false,
-            'update'         => false,
-        ];
-
-        $this->assertEquals($expected, $user->panelOptions(['changeEmail']));
     }
 }

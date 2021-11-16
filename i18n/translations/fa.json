@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "\u0627\u0641\u0632\u0648\u062f\u0646",
+  "author": "Author",
   "avatar": "\u062a\u0635\u0648\u06cc\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644",
   "back": "بازگشت",
   "cancel": "\u0627\u0646\u0635\u0631\u0627\u0641",
@@ -9,6 +14,7 @@
   "collapse": "Collapse",
   "collapse.all": "Collapse All",
   "copy": "کپی",
+  "copy.all": "Copy all",
   "create": "ایجاد",
 
   "date": "تاریخ",
@@ -23,23 +29,27 @@
   "days.tue": "\u0633\u0647 \u0634\u0646\u0628\u0647",
   "days.wed": "\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647",
 
+  "debugging": "Debugging",
+
   "delete": "\u062d\u0630\u0641",
   "delete.all": "Delete all",
-  "dimensions": "ابعاد",
-  "disabled": "Disabled",
-  "discard": "\u0627\u0646\u0635\u0631\u0627\u0641",
-  "download": "Download",
-  "duplicate": "Duplicate",
-  "edit": "\u0648\u06cc\u0631\u0627\u06cc\u0634",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "ابعاد",
+  "disabled": "Disabled",
+  "discard": "\u0627\u0646\u0635\u0631\u0627\u0641",
+  "download": "Download",
+  "duplicate": "Duplicate",
+
+  "edit": "\u0648\u06cc\u0631\u0627\u06cc\u0634",
+
   "email": "\u067e\u0633\u062a \u0627\u0644\u06a9\u062a\u0631\u0648\u0646\u06cc\u06a9",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "اطلاعات ورودی نامعتبر است",
@@ -92,6 +102,7 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "لطفا ایمیل صحیحی وارد کنید",
   "error.license.verification": "The license could not be verified",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "شما امکان تغییر پسوند Url صفحه «{slug}» را ندارید",
   "error.page.changeStatus.incomplete": "صفحه حاوی خطا است و قابل انتشار نیست",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "کاربر فاقد گذرواژه است",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "لطفا نقش صحیحی وارد نمایید",
+  "error.user.undefined": "کاربر مورد نظر پیدا نشد",
   "error.user.update.permission": "شما اجازه بروزرسانی کاربر «{name}» را ندارید",
 
   "error.validation.accepted": "لطفا تایید کنید",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "لطفا آدرس URL صحیح وارد کنید",
 
+  "expand": "Expand",
+  "expand.all": "Expand All",
+
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "کد",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "\u0645\u0648\u0631\u062f\u06cc \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f.",
   "field.users.empty": "کاربری انتخاب نشده است",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "آیا واقعا می خواهید این فایل را حذف کنید؟<br><strong>{filename}</strong>",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "ساعت",
+  "import": "Import",
   "insert": "\u062f\u0631\u062c",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "مرا به خاطر بسپار",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "عمودی",
   "orientation.square": "مربع",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "تغییر Url صفحه",
   "page.changeSlug.fromTitle": "\u0627\u06cc\u062c\u0627\u062f \u0627\u0632 \u0631\u0648\u06cc \u0639\u0646\u0648\u0627\u0646",
   "page.changeStatus": "تغییر وضعیت",
@@ -417,7 +437,10 @@
   "pagination.page": "صفحه",
 
   "password": "\u06af\u0630\u0631\u0648\u0627\u0698\u0647",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "پیکسل",
+  "plugins": "Plugins",
   "prev": "قبلی",
   "preview": "Preview",
   "remove": "حذف",
@@ -454,6 +477,8 @@
   "template": "\u0642\u0627\u0644\u0628 \u0635\u0641\u062d\u0647",
   "today": "امروز",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "کد",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "عنوان 1",
   "toolbar.button.heading.2": "عنوان 2",
   "toolbar.button.heading.3": "عنوان 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "\u0645\u062a\u0646 \u0627\u0631\u06cc\u0628",
   "toolbar.button.file": "فایل",
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u067e\u06cc\u0648\u0646\u062f",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "لیست مرتب",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "کاربر",
-  "user.blueprint": "شما می توانید قسمت‌های اضافی و فیلدهای فرم را برای این نقش کاربر در <strong>/site/blueprints/users/{role}.yml</strong> تعریف کنید",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "تغییر ایمیل",
   "user.changeLanguage": "تغییر زبان",
   "user.changeName": "تغییر نام این کاربر",
@@ -516,9 +545,10 @@
 
   "view.account": "حساب کاربری شما",
   "view.installation": "\u0646\u0635\u0628 \u0648 \u0631\u0627\u0647 \u0627\u0646\u062f\u0627\u0632\u06cc",
+  "view.languages": "زبان‌ها",
   "view.resetPassword": "Reset password",
-  "view.settings": "تنظیمات",
   "view.site": "سایت",
+  "view.system": "System",
   "view.users": "\u06a9\u0627\u0631\u0628\u0631\u0627\u0646",
 
   "welcome": "خوش آمدید",

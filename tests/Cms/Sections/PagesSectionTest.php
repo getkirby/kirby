@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Panel\Model;
 use PHPUnit\Framework\TestCase;
 
 class PagesSectionTest extends TestCase
@@ -71,6 +72,27 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertEquals('test/a', $section->parent()->id());
+    }
+
+    public function testParentWithInvalidOption()
+    {
+        $this->app->impersonate('kirby');
+
+        $parent = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'a']
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The parent is invalid. You must choose the site or a page as parent.');
+
+        new Section('pages', [
+            'name'  => 'test',
+            'model' => $parent,
+            'parent' => 'kirby.user'
+        ]);
     }
 
     public function statusProvider()
@@ -359,10 +381,10 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertStringContainsString('data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw', $data[0]['image']['cards']['url']);
+        $this->assertStringContainsString(Model::imagePlaceholder(), $data[0]['image']['src']);
 
         // non-existing covers
-        $this->assertNull($data[2]['image']['cards']['url'] ?? null);
+        $this->assertArrayNotHasKey('src', $data[2]['image']);
     }
 
     public function testTemplates()

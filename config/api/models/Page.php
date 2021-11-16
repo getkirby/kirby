@@ -1,7 +1,7 @@
 <?php
 
-use Kirby\Cms\Form;
 use Kirby\Cms\Page;
+use Kirby\Form\Form;
 
 /**
  * Page
@@ -27,7 +27,7 @@ return [
             return $page->errors();
         },
         'files' => function (Page $page) {
-            return $page->files()->sort('sort', 'asc', 'filename', 'asc');
+            return $page->files()->sorted();
         },
         'hasChildren' => function (Page $page) {
             return $page->hasChildren();
@@ -44,6 +44,12 @@ return [
         'isSortable' => function (Page $page) {
             return $page->isSortable();
         },
+        /**
+         * @deprecated 3.6.0
+         * @todo Throw deprecated warning in 3.7.0
+         * @todo Remove in 3.8.0
+         * @codeCoverageIgnore
+         */
         'next' => function (Page $page) {
             return $page
                 ->nextAll()
@@ -56,13 +62,18 @@ return [
             return $page->num();
         },
         'options' => function (Page $page) {
-            return $page->panelOptions(['preview']);
+            return $page->panel()->options(['preview']);
         },
+        /**
+         * @todo Remove in 3.7.0
+         * @codeCoverageIgnore
+         */
         'panelIcon' => function (Page $page) {
-            return $page->panelIcon();
+            deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
+            return $page->panel()->image();
         },
         'panelImage' => function (Page $page) {
-            return $page->panelImage();
+            return $page->panel()->image();
         },
         'parent' => function (Page $page) {
             return $page->parent();
@@ -70,6 +81,12 @@ return [
         'parents' => function (Page $page) {
             return $page->parents()->flip();
         },
+        /**
+         * @deprecated 3.6.0
+         * @todo Throw deprecated warning in 3.7.0
+         * @todo Remove in 3.8.0
+         * @codeCoverageIgnore
+         */
         'prev' => function (Page $page) {
             return $page
                 ->prevAll()

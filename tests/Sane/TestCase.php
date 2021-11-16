@@ -3,23 +3,39 @@
 namespace Kirby\Sane;
 
 use FilesystemIterator;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 class TestCase extends BaseTestCase
 {
-    protected $type = 'svg';
+    protected $type;
+
+    public function tearDown(): void
+    {
+        Dir::remove(__DIR__ . '/tmp');
+    }
 
     /**
      * Returns the path to a test fixture file
      *
      * @param string $name Fixture name including file extension
+     * @param bool $tmp If true, the fixture will be copied to a temporary location
      * @return string
      */
-    protected function fixture(string $name): string
+    protected function fixture(string $name, bool $tmp = false): string
     {
-        return __DIR__ . '/fixtures/' . $this->type . '/' . $name;
+        $fixtureRoot = __DIR__ . '/fixtures/' . $this->type . '/' . $name;
+
+        if ($tmp === false) {
+            return $fixtureRoot;
+        }
+
+        $tmpRoot = __DIR__ . '/tmp/' . $this->type . '/' . $name;
+        F::copy($fixtureRoot, $tmpRoot);
+        return $tmpRoot;
     }
 
     /**

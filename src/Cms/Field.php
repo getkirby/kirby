@@ -75,14 +75,14 @@ class Field
         $method = strtolower($method);
 
         if (isset(static::$methods[$method]) === true) {
-            return static::$methods[$method](clone $this, ...$arguments);
+            return (static::$methods[$method])(clone $this, ...$arguments);
         }
 
         if (isset(static::$aliases[$method]) === true) {
             $method = strtolower(static::$aliases[$method]);
 
             if (isset(static::$methods[$method]) === true) {
-                return static::$methods[$method](clone $this, ...$arguments);
+                return (static::$methods[$method])(clone $this, ...$arguments);
             }
         }
 

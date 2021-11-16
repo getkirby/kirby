@@ -14,8 +14,7 @@
       <!-- eslint-disable vue/no-v-html -->
       <label v-if="option.info" :for="id + '-' + index">
         <span class="k-radio-input-text" v-html="option.text" />
-        <!-- @todo support (escaped) HTML in the info prop in 3.6.0 -->
-        <span class="k-radio-input-info">{{ option.info }}</span>
+        <span class="k-radio-input-info" v-html="option.info" />
       </label>
       <label v-else :for="id + '-' + index" v-html="option.text" />
       <!-- eslint-enable vue/no-v-html -->
@@ -26,24 +25,32 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import { required as validateRequired } from "vuelidate/lib/validators";
+
+export const props = {
+    mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     columns: Number,
-    disabled: Boolean,
-    id: {
-      type: [Number, String],
-      default() {
-        return this._uid;
-      }
-    },
     options: Array,
-    required: Boolean,
     value: [String, Number, Boolean]
   },
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   watch: {
     value() {
       this.onInvalid();
@@ -73,18 +80,18 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true
+        required: this.required ? validateRequired : true
       }
     };
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-radio-input li {
   position: relative;
   line-height: 1.5rem;
-  padding-left: 1.75rem;
+  padding-inline-start: 1.75rem;
 }
 .k-radio-input input {
   position: absolute;
@@ -100,27 +107,27 @@ export default {
 .k-radio-input label::before {
   position: absolute;
   top: .175em;
-  left: 0;
+  inset-inline-start: 0;
   content: "";
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 2px solid $color-light-grey;
-  box-shadow: $color-white 0 0 0 2px inset;
+  border: 2px solid var(--color-gray-500);
+  box-shadow: var(--color-white) 0 0 0 2px inset;
 }
 .k-radio-input input:checked + label::before {
-  border-color: $color-gray-900;
-  background: $color-gray-900;
+  border-color: var(--color-gray-900);
+  background: var(--color-gray-900);
 }
 [data-disabled] .k-radio-input input:checked + label::before {
-  border-color: $color-gray-600;
-  background: $color-gray-600;
+  border-color: var(--color-gray-600);
+  background: var(--color-gray-600);
 }
 .k-radio-input input:focus + label::before {
-  border-color: $color-blue-600;
+  border-color: var(--color-blue-600);
 }
 .k-radio-input input:focus:checked + label::before {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 
 .k-radio-input-text {

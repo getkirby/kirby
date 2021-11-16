@@ -21,15 +21,14 @@
     "extra": {
     },
     "require": {
-        "php": "^7.3 || ~8.0.0",
-        "laminas/laminas-zendframework-bridge": "^1.0"
+        "php": "^7.3 || ~8.0.0 || ~8.1.0"
     },
     "suggest": {
         "ext-iconv": "*",
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "laminas/laminas-coding-standard": "~1.0.0",
+        "laminas/laminas-coding-standard": "~2.3.0",
         "phpunit/phpunit": "^9.3",
         "psalm/plugin-phpunit": "^0.12.2",
         "vimeo/psalm": "^3.16"
@@ -55,7 +54,7 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-escaper": "^2.6.1"
+    "conflict": {
+        "zendframework/zend-escaper": "*"
     }
 }

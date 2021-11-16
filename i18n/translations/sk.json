@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Pridať",
+  "author": "Author",
   "avatar": "Profilový obrázok",
   "back": "Späť",
   "cancel": "Zrušiť",
@@ -9,6 +14,7 @@
   "collapse": "Zabaliť",
   "collapse.all": "Zabaliť všetky",
   "copy": "Kopírovať",
+  "copy.all": "Copy all",
   "create": "Vytvoriť",
 
   "date": "Dátum",
@@ -23,23 +29,27 @@
   "days.tue": "Uto",
   "days.wed": "Str",
 
+  "debugging": "Debugging",
+
   "delete": "Zmazať",
   "delete.all": "Zmazať všetky",
-  "dimensions": "Rozmery",
-  "disabled": "Disabled",
-  "discard": "Zahodiť",
-  "download": "Stiahnuť",
-  "duplicate": "Duplikovať",
-  "edit": "Upraviť",
-  "expand": "Rozbaliť",
-  "expand.all": "Rozbaliť všetky",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
   "dialog.users.empty": "No users to select",
 
+  "dimensions": "Rozmery",
+  "disabled": "Disabled",
+  "discard": "Zahodiť",
+  "download": "Stiahnuť",
+  "duplicate": "Duplikovať",
+
+  "edit": "Upraviť",
+
   "email": "E-mail",
   "email.placeholder": "mail@example.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Neplatný  kód",
   "error.access.login": "Neplatné prihlásenie",
@@ -92,6 +102,7 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Prosím, zadajte platnú e-mailovú adresu",
   "error.license.verification": "The license could not be verified",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
   "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemôže byť zverejnená",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Užívateľ nemá heslo",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Prosím, zadajte platnú rolu",
+  "error.user.undefined": "Užívateľa sa nepodarilo nájsť",
   "error.user.update.permission": "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
 
   "error.validation.accepted": "Prosím, potvrďte",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Prosím, zadajte platnú URL",
 
+  "expand": "Rozbaliť",
+  "expand.all": "Rozbaliť všetky",
+
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "Kód",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Naozaj chcete zmazať vybrané bloky?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Galéria",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Obrázky",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Zatiaľ žiadne údaje",
   "field.users.empty": "Žiadni užívatelia zatiaľ neboli zvolení",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Ste si istý, že chcete zmazať <br><strong>{filename}</strong>?",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "Hodina",
+  "import": "Import",
   "insert": "Vložiť",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Ponechať ma prihláseného",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Portrét",
   "orientation.square": "Štvorec",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Zmeniť URL",
   "page.changeSlug.fromTitle": "Vytvoriť z titulku",
   "page.changeStatus": "Zmeniť status",
@@ -417,7 +437,10 @@
   "pagination.page": "Stránka",
 
   "password": "Heslo",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Predchádzajúci",
   "preview": "Preview",
   "remove": "Odstrániť",
@@ -454,6 +477,8 @@
   "template": "Šablóna",
   "today": "Dnes",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kód",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Nadpis 1",
   "toolbar.button.heading.2": "Nadpis 2",
   "toolbar.button.heading.3": "Nadpis 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "Kurzíva",
   "toolbar.button.file": "Súbor",
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Odkaz",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Číslovaný zoznam",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Užívateľ",
-  "user.blueprint": "Ďalšie sekcie a formulárové polia pre túto užívateľskú rolu môžete definovať v rámci <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Zmeniť e-mail",
   "user.changeLanguage": "Zmeniť jazyk",
   "user.changeName": "Premenovať tohto užívateľa",
@@ -516,9 +545,10 @@
 
   "view.account": "Váš účet",
   "view.installation": "Inštalácia",
+  "view.languages": "Jazyky",
   "view.resetPassword": "Reset password",
-  "view.settings": "Nastavenia",
   "view.site": "Portál",
+  "view.system": "System",
   "view.users": "Užívatelia",
 
   "welcome": "Vitajte",

@@ -257,17 +257,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-toolbar {
-  background: $color-white;
-  border-bottom: 1px solid $color-background;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-background);
   height: 38px;
 }
 .k-toolbar-wrapper {
   position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   max-width: 100%;
 }
 .k-toolbar-buttons {
@@ -275,13 +274,13 @@ export default {
 }
 .k-toolbar-divider {
   width: 1px;
-  background: $color-background;
+  background: var(--color-background);
 }
 .k-toolbar-button {
   width: 36px;
   height: 36px;
 }
 .k-toolbar-button:hover {
-  background: rgba($color-background, 0.5);
+  background: rgba(239, 239, 239, .5);
 }
 </style>

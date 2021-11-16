@@ -23,7 +23,7 @@ class FieldsSectionTest extends TestCase
     {
         return [
             [
-                new Page(['slug' => 'test']),
+                $page = new Page(['slug' => 'test']),
                 true
             ],
             [
@@ -31,7 +31,7 @@ class FieldsSectionTest extends TestCase
                 true
             ],
             [
-                new File(['filename' => 'test.jpg']),
+                new File(['filename' => 'test.jpg', 'parent' => $page]),
                 false
             ],
             [

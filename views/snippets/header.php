@@ -33,6 +33,9 @@
       color: #999;
       padding-top: 3rem;
     }
+    .admin-advice p {
+      margin-bottom: 1.5rem;
+    }
   </style>
 
 </head>

@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Tambah",
+  "author": "Author",
   "avatar": "Gambar profil",
   "back": "Kembali",
   "cancel": "Batal",
@@ -9,6 +14,7 @@
   "collapse": "Lipat",
   "collapse.all": "Lipat Semua",
   "copy": "Salin",
+  "copy.all": "Copy all",
   "create": "Buat",
 
   "date": "Tanggal",
@@ -23,23 +29,27 @@
   "days.tue": "Sel",
   "days.wed": "Rab",
 
+  "debugging": "Debugging",
+
   "delete": "Hapus",
   "delete.all": "Hapus semua",
-  "dimensions": "Dimensi",
-  "disabled": "Dimatikan",
-  "discard": "Buang",
-  "download": "Unduh",
-  "duplicate": "Duplikasi",
-  "edit": "Sunting",
-  "expand": "Luaskan",
-  "expand.all": "Luaskan Semua",
 
   "dialog.files.empty": "Tidak ada berkas untuk dipilih",
   "dialog.pages.empty": "Tidak ada halaman untuk dipilih",
   "dialog.users.empty": "Tidak ada pengguna untuk dipilih",
 
+  "dimensions": "Dimensi",
+  "disabled": "Dimatikan",
+  "discard": "Buang",
+  "download": "Unduh",
+  "duplicate": "Duplikasi",
+
+  "edit": "Sunting",
+
   "email": "Surel",
   "email.placeholder": "surel@contoh.com",
+
+  "environment": "Environment",
 
   "error.access.code": "Kode tidak valid",
   "error.access.login": "Upaya masuk tidak valid",
@@ -92,6 +102,7 @@
   "error.language.code": "Masukkan kode bahasa yang valid",
   "error.language.duplicate": "Bahasa sudah ada",
   "error.language.name": "Masukkan nama bahasa yang valid",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "Ada kesalahan di blok {blockIndex} di tata letak {layoutIndex}",
   "error.layout.validation.settings": "Ada kesalahan di pengaturan tata letak {index}",
@@ -99,6 +110,8 @@
   "error.license.format": "Masukkan kode lisensi yang valid",
   "error.license.email": "Masukkan surel yang valid",
   "error.license.verification": "Lisensi tidak dapat diverifikasi",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
   "error.page.changeStatus.incomplete": "Halaman memiliki kesalahan dan tidak dapat diterbitkan",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "Pengguna tidak memiliki sandi",
   "error.user.password.wrong": "Kata sandi salah",
   "error.user.role.invalid": "Masukkan peran yang valid",
+  "error.user.undefined": "Pengguna tidak dapat ditemukan",
   "error.user.update.permission": "Anda tidak diizinkan memperbaharui pengguna \"{name}\"",
 
   "error.validation.accepted": "Mohon konfirmasi",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Masukkan waktu antara {min} dan {max}",
   "error.validation.url": "Masukkan URL yang valid",
 
+  "expand": "Luaskan",
+  "expand.all": "Luaskan Semua",
+
   "field.required": "Bidang ini wajib",
   "field.blocks.changeType": "Ubah tipe",
   "field.blocks.code.name": "Kode",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Anda yakin menghapus blok yang dipilih?",
   "field.blocks.empty": "Belum ada blok",
   "field.blocks.fieldsets.label": "Pilih tipe blok …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Galeri",
   "field.blocks.gallery.images.empty": "Belum ada gambar",
   "field.blocks.gallery.images.label": "Gambar",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Pilih gambar",
   "field.blocks.image.ratio": "Rasio",
   "field.blocks.image.url": "URL Gambar",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "Daftar",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Teks",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Belum ada entri",
   "field.users.empty": "Belum ada pengguna yang dipilih",
 
-  "file.blueprint": "Berkas ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Anda yakin menghapus <br> <strong>{filename}</strong>?",
   "file.sort": "Ubah posisi",
 
@@ -272,6 +291,7 @@
 
   "hide": "Sembunyikan",
   "hour": "Jam",
+  "import": "Import",
   "insert": "Sisipkan",
   "insert.after": "Sisipkan setelah",
   "insert.before": "Sisipkan sebelum",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Kode atur ulang sandi",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "Jika alamat surel terdaftar, kode yang diminta dikirim via surel",
-  "login.email.login.body": "Hai {user.nameOrEmail},\n\nAnda baru saja meminta kode masuk untuk Kirby Panel.\nKode masuk berikut valid selama {timeout} menit:\n\n{code}\n\nJika Anda tidak meminta kode masuk, abaikan surel ini atau hubungi admin apabila ada yang ingin ditanyakan.\nUntuk alasan keamanan, JANGAN teruskan surel ini.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Kode masuk Anda",
-  "login.email.password-reset.body": "Hai {user.nameOrEmail},\n\nAnda baru saja meminta kode atur ulang sandi untuk Kirby Panel.\nKode atur ulang sandi berikut valid selama {timeout} menit:\n\n{code}\n\nJika Anda tidak meminta kode atur ulang sandi, abaikan surel ini atau hubungi admin apabila ada yang ingin ditanyakan.\nUntuk alasan keamanan, JANGAN teruskan surel ini.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Kode atur ulang sandi Anda",
   "login.remember": "Biarkan tetap masuk",
   "login.reset": "Atur ulang sandi",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Tegak",
   "orientation.square": "Persegi",
 
-  "page.blueprint": "Halaman ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Ubah URL",
   "page.changeSlug.fromTitle": "Buat dari judul",
   "page.changeStatus": "Ubah status",
@@ -417,7 +437,10 @@
   "pagination.page": "Halaman",
 
   "password": "Sandi",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Piksel",
+  "plugins": "Plugins",
   "prev": "Sebelumnya",
   "preview": "Pratinjau",
   "remove": "Hapus",
@@ -454,6 +477,8 @@
   "template": "Templat",
   "today": "Hari ini",
 
+  "server": "Server",
+
   "site.blueprint": "Situs ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kode",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Penajukan 1",
   "toolbar.button.heading.2": "Penajukan 2",
   "toolbar.button.heading.3": "Penajukan 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "Miring",
   "toolbar.button.file": "Berkas",
   "toolbar.button.file.select": "Pilih berkas",
   "toolbar.button.file.upload": "Unggah berkas",
   "toolbar.button.link": "Tautan",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Coret",
   "toolbar.button.ol": "Daftar berurut",
   "toolbar.button.underline": "Garis bawah",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://contoh.com",
 
   "user": "Pengguna",
-  "user.blueprint": "Anda dapat mendefinisikan bagian tambahan dan bidang formulir untuk peran pengguna ini di <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Ubah surel",
   "user.changeLanguage": "Ubah bahasa",
   "user.changeName": "Ubah nama pengguna ini",
@@ -516,9 +545,10 @@
 
   "view.account": "Akun Anda",
   "view.installation": "Pemasangan",
+  "view.languages": "Bahasa",
   "view.resetPassword": "Atur ulang sandi",
-  "view.settings": "Pengaturan",
   "view.site": "Situs",
+  "view.system": "System",
   "view.users": "Pengguna",
 
   "welcome": "Selamat datang",

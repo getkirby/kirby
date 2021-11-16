@@ -89,11 +89,9 @@ class InfoSectionTest extends TestCase
         ]);
 
         $expected = [
-            'options' => [
-                'headline' => 'Test Headline',
-                'text'     => '<p>Test Text</p>',
-                'theme'    => 'notice'
-            ]
+            'headline' => 'Test Headline',
+            'text'     => '<p>Test Text</p>',
+            'theme'    => 'notice'
         ];
 
         $this->assertEquals($expected, $section->toArray());

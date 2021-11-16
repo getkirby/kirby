@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class AuthRoutesTest extends TestCase

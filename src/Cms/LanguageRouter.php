@@ -91,7 +91,7 @@ class LanguageRouter
                         return $page->uri($language) . '/' . $pattern;
                     }, $patterns);
 
-                    // reinject the pattern and the full page object
+                    // re-inject the pattern and the full page object
                     $routes[$index]['pattern'] = $patterns;
                     $routes[$index]['page']    = $page;
                 } else {

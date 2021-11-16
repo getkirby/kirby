@@ -5,7 +5,7 @@ namespace Kirby\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Data\Xml
+ * @coversDefaultClass \Kirby\Data\Xml
  */
 class XmlTest extends TestCase
 {
@@ -40,6 +40,7 @@ class XmlTest extends TestCase
         $this->assertSame($array, $result);
 
         $this->assertSame([], Xml::decode(null));
+        $this->assertSame([], Xml::decode(''));
         $this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
     }
 

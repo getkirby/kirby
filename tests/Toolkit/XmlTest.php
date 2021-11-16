@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass Kirby\Toolkit\Xml
+ * @coversDefaultClass \Kirby\Toolkit\Xml
  */
 class XmlTest extends TestCase
 {

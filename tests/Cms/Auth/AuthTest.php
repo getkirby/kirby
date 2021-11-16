@@ -2,11 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Session\AutoSession;
 use Throwable;
 
 /**
- * @coversDefaultClass Kirby\Cms\Auth
+ * @coversDefaultClass \Kirby\Cms\Auth
  */
 class AuthTest extends TestCase
 {

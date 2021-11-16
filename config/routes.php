@@ -2,9 +2,9 @@
 
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
-use Kirby\Cms\Panel;
-use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
+use Kirby\Panel\Panel;
+use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
 
 return function ($kirby) {
@@ -50,7 +50,7 @@ return function ($kirby) {
             'pattern' => $media . '/plugins/index.(css|js)',
             'env'     => 'media',
             'action'  => function (string $type) use ($kirby) {
-                $plugins = new PanelPlugins();
+                $plugins = new Plugins();
 
                 return $kirby
                     ->response()
@@ -63,17 +63,6 @@ return function ($kirby) {
             'env'     => 'media',
             'action'  => function (string $provider, string $pluginName, string $filename, string $extension) {
                 return PluginAssets::resolve($provider . '/' . $pluginName, $filename . '.' . $extension);
-            }
-        ],
-        [
-            'pattern' => $panel . '/(:all?)',
-            'env'     => 'panel',
-            'action'  => function () use ($kirby) {
-                if ($kirby->option('panel') === false) {
-                    return null;
-                }
-
-                return Panel::render($kirby);
             }
         ],
         [
@@ -103,7 +92,15 @@ return function ($kirby) {
             'action'  => function ($path, $hash, $filename) {
                 return Media::thumb($path, $hash, $filename);
             }
-        ]
+        ],
+        [
+            'pattern' => $panel . '/(:all?)',
+            'method'  => 'ALL',
+            'env'     => 'panel',
+            'action'  => function ($path = null) {
+                return Panel::router($path);
+            }
+        ],
     ];
 
     // Multi-language setup

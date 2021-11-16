@@ -7,7 +7,7 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box :text="issue" :html="false" theme="negative" />
+      <k-box :text="issue" theme="negative" />
     </template>
 
     <template v-else>
@@ -21,34 +21,21 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="file in models"
-            :key="file.id"
-            :text="file.text"
-            :info="file.info"
-            :image="file.image"
-            :icon="file.icon"
-            @click="toggle(file)"
-          >
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: file }">
             <k-button
-              v-if="isSelected(file)"
-              slot="options"
-              :autofocus="true"
-              :icon="checkedIcon"
-              :tooltip="$t('remove')"
-              theme="positive"
+              v-bind="toggleBtn(file)"
+              @click="toggle(file)"
             />
-            <k-button
-              v-else
-              slot="options"
-              :autofocus="true"
-              :tooltip="$t('select')"
-              icon="circle-outline"
-            />
-          </k-list-item>
-        </k-list>
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
@@ -73,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-files-dialog .k-list-item {
   cursor: pointer;
 }

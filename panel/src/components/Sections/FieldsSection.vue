@@ -10,7 +10,7 @@
       :fields="fields"
       :validate="true"
       :value="values"
-      :disabled="$store.state.content.status.lock !== null"
+      :disabled="lock && lock.state === 'lock'"
       @input="input"
       @submit="onSubmit"
     />
@@ -32,15 +32,14 @@ export default {
     };
   },
   computed: {
-    language() {
-      return this.$store.state.languages.current;
-    },
     values() {
       return this.$store.getters["content/values"]();
     }
   },
   watch: {
-    language() {
+    // Reload values and field definitions
+    // when the view has changed in the backend
+    timestamp() {
       this.fetch();
     }
   },
@@ -85,7 +84,7 @@ export default {
 
 <style>
 .k-fields-issue-headline {
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
 }
 .k-fields-section input[type="submit"] {
   display: none;

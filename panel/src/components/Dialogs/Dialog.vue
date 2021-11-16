@@ -3,6 +3,7 @@
     ref="overlay"
     :autofocus="autofocus"
     :centered="true"
+    @close="onOverlayClose"
     @ready="$emit('ready')"
   >
     <div
@@ -17,35 +18,13 @@
         <k-button icon="cancel" @click="notification = null" />
       </div>
 
-      <div class="k-dialog-body">
+      <div class="k-dialog-body scroll-y-auto">
         <slot />
       </div>
 
-      <footer v-if="$slots['footer'] || cancelButton || submitButton" class="k-dialog-footer">
+      <footer v-if="$slots['footer'] || buttons.length" class="k-dialog-footer">
         <slot name="footer">
-          <k-button-group>
-            <span>
-              <k-button
-                v-if="cancelButton"
-                icon="cancel"
-                class="k-dialog-button-cancel"
-                @click="cancel"
-              >
-                {{ cancelButtonLabel }}
-              </k-button>
-            </span>
-            <span>
-              <k-button
-                v-if="submitButtonConfig"
-                :icon="icon"
-                :theme="theme"
-                class="k-dialog-button-submit"
-                @click="submit"
-              >
-                {{ submitButtonLabel }}
-              </k-button>
-            </span>
-          </k-button-group>
+          <k-button-group :buttons="buttons" />
         </slot>
       </footer>
     </div>
@@ -104,6 +83,30 @@ export default {
     };
   },
   computed: {
+    buttons() {
+      let buttons = [];
+
+      if (this.cancelButton) {
+        buttons.push({
+          icon: "cancel",
+          text: this.cancelButtonLabel,
+          class: "k-dialog-button-cancel",
+          click: this.cancel
+        });
+      }
+
+      if (this.submitButtonConfig) {
+        buttons.push({
+          icon: this.icon,
+          text: this.submitButtonLabel,
+          theme: this.theme,
+          class: "k-dialog-button-submit",
+          click: this.submit
+        });
+      }
+
+      return buttons;
+    },
     cancelButtonLabel() {
       if (this.cancelButton === false) {
         return false;
@@ -148,11 +151,37 @@ export default {
   },
   methods: {
     /**
+     * Reacts to the overlay being closed
+     * and cleans up the dialog events
+     * @private
+     */
+    onOverlayClose() {
+      this.notification = null;
+      /**
+       * This event is triggered when the dialog is being closed.
+       * This happens independently from the cancel event.
+       * @event close
+       */
+      this.$emit("close");
+      this.$events.$off("keydown.esc", this.close);
+      this.$store.dispatch("dialog", false);
+    },
+    /**
      * Opens the dialog and triggers the `@open` event
      * @public
      */
     open() {
-      this.$store.dispatch("dialog", true);
+      // when dialogs are used in the old-fashioned way
+      // by adding their component to a template and calling
+      // open on the component manually, the dialog state
+      // is set to true. In comparison, this.$dialog fills
+      // the dialog state after a successfull request and
+      // the fiber dialog component is injected on store change
+      // automatically.
+      if (!this.$store.state.dialog) {
+        this.$store.dispatch("dialog", true);
+      }
+
       this.notification = null;
       this.$refs.overlay.open();
       /**
@@ -167,18 +196,9 @@ export default {
      * @public
      */
     close() {
-      this.notification = null;
       if (this.$refs.overlay) {
         this.$refs.overlay.close();
       }
-      /**
-       * This event is triggered when the dialog is being closed. 
-       * This happens independently from the cancel event.
-       * @event close
-       */
-      this.$emit("close");
-      this.$events.$off("keydown.esc", this.close);
-      this.$store.dispatch("dialog", false);
     },
     /**
      * Triggers the `@cancel` event and closes the dialog.
@@ -186,7 +206,7 @@ export default {
      */
     cancel() {
       /**
-       * This event is triggered whenever the cancel button or 
+       * This event is triggered whenever the cancel button or
        * the backdrop is clicked.
        * @event cancel
        */
@@ -235,13 +255,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dialog {
   position: relative;
-  background: $color-light;
+  background: var(--color-background);
   width: 100%;
-  box-shadow: $shadow-lg;
-  border-radius: $rounded-xs;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--rounded-xs);
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -274,24 +294,19 @@ export default {
 }
 
 .k-dialog-notification {
-  padding: 0.75rem 1.5rem;
-  background: $color-gray-900;
+  padding: .75rem 1.5rem;
+  background: var(--color-gray-900);
   width: 100%;
   line-height: 1.25rem;
-  color: $color-white;
+  color: var(--color-white);
   display: flex;
   flex-shrink: 0;
   align-items: center;
 }
 
-.k-dialog-notification[data-theme="error"] {
-  background: $color-negative-on-dark;
-  color: $color-black;
-}
-
-.k-dialog-notification[data-theme="success"] {
-  background: $color-positive-on-dark;
-  color: $color-black;
+.k-dialog-notification[data-theme] {
+  background: var(--theme-light);
+  color: var(--color-black);
 }
 
 .k-dialog-notification p {
@@ -302,24 +317,22 @@ export default {
 
 .k-dialog-notification .k-button {
   display: flex;
-  margin-left: 1rem;
+  margin-inline-start: 1rem;
 }
 
 .k-dialog-body {
   padding: 1.5rem;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .k-dialog-body .k-fieldset {
-  padding-bottom: 0.5rem;
+  padding-bottom: .5rem;
 }
 
 .k-dialog-footer {
-  border-top: 1px solid $color-gray-300;
   padding: 0;
-  border-bottom-left-radius: $rounded-xs;
-  border-bottom-right-radius: $rounded-xs;
+  border-top: 1px solid var(--color-gray-300);
+  border-end-start-radius: var(--rounded-xs);
+  border-end-end-radius: var(--rounded-xs);
   line-height: 1;
   flex-shrink: 0;
 }
@@ -329,20 +342,19 @@ export default {
   margin: 0;
   justify-content: space-between;
 
-  .k-button {
-    padding: 0.75rem 1rem;
-    line-height: 1.25rem;
-  }
+}
+.k-dialog-footer .k-button-group .k-button {
+  padding: .75rem 1rem;
+  line-height: 1.25rem;
+}
 
-  .k-button:first-child {
-    text-align: left;
-    padding-left: 1.5rem;
-  }
-
-  .k-button:last-child {
-    text-align: right;
-    padding-right: 1.5rem;
-  }
+.k-dialog-footer .k-button-group .k-button:first-child {
+  text-align: start;
+  padding-inline-start: 1.5rem;
+}
+.k-dialog-footer .k-button-group .k-button:last-child {
+  text-align: end;
+  padding-inline-end: 1.5rem;
 }
 
 /** Pagination **/
@@ -359,9 +371,9 @@ export default {
 }
 
 .k-dialog-search.k-input {
-  background: rgba(#000, .075);
+  background: rgba(0, 0, 0, .075);
   padding: 0 1rem;
   height: 36px;
-  border-radius: $rounded-xs;
+  border-radius: var(--rounded-xs);
 }
 </style>

@@ -1,67 +1,26 @@
 import Vue from "vue";
 
-/* Style-only components */
-import "@/components/Misc/Invalid.vue";
-
 /* Dialogs */
 import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
-import FileRemoveDialog from "@/components/Dialogs/FileRemoveDialog.vue";
-import FileRenameDialog from "@/components/Dialogs/FileRenameDialog.vue";
-import FileSortDialog from "@/components/Dialogs/FileSortDialog.vue";
+import FiberDialog from "@/components/Dialogs/FiberDialog.vue";
 import FilesDialog from "@/components/Dialogs/FilesDialog.vue";
 import FormDialog from "@/components/Dialogs/FormDialog.vue";
-import LanguageCreateDialog from "@/components/Dialogs/LanguageCreateDialog.vue";
-import LanguageRemoveDialog from "@/components/Dialogs/LanguageRemoveDialog.vue";
-import LanguageUpdateDialog from "@/components/Dialogs/LanguageUpdateDialog.vue";
-import PageCreateDialog from "@/components/Dialogs/PageCreateDialog.vue";
-import PageDuplicateDialog from "@/components/Dialogs/PageDuplicateDialog.vue";
-import PageRemoveDialog from "@/components/Dialogs/PageRemoveDialog.vue";
-import PageRenameDialog from "@/components/Dialogs/PageRenameDialog.vue";
-import PageSortDialog from "@/components/Dialogs/PageSortDialog.vue";
-import PageStatusDialog from "@/components/Dialogs/PageStatusDialog.vue";
-import PageTemplateDialog from "@/components/Dialogs/PageTemplateDialog.vue";
+import LanguageDialog from "@/components/Dialogs/LanguageDialog.vue";
 import PagesDialog from "@/components/Dialogs/PagesDialog.vue";
 import RemoveDialog from "@/components/Dialogs/RemoveDialog.vue";
-import SiteRenameDialog from "@/components/Dialogs/SiteRenameDialog.vue";
 import TextDialog from "@/components/Dialogs/TextDialog.vue";
-import UserCreateDialog from "@/components/Dialogs/UserCreateDialog.vue";
-import UserEmailDialog from "@/components/Dialogs/UserEmailDialog.vue";
-import UserLanguageDialog from "@/components/Dialogs/UserLanguageDialog.vue";
-import UserPasswordDialog from "@/components/Dialogs/UserPasswordDialog.vue";
-import UserRemoveDialog from "@/components/Dialogs/UserRemoveDialog.vue";
-import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
-import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
 import UsersDialog from "@/components/Dialogs/UsersDialog.vue";
 
 Vue.component("k-dialog", Dialog);
 Vue.component("k-error-dialog", ErrorDialog);
-Vue.component("k-file-rename-dialog", FileRenameDialog);
-Vue.component("k-file-remove-dialog", FileRemoveDialog);
-Vue.component("k-file-sort-dialog", FileSortDialog);
+Vue.component("k-fiber-dialog", FiberDialog);
 Vue.component("k-files-dialog", FilesDialog);
 Vue.component("k-form-dialog", FormDialog);
-Vue.component("k-language-create-dialog", LanguageCreateDialog);
-Vue.component("k-language-remove-dialog", LanguageRemoveDialog);
-Vue.component("k-language-update-dialog", LanguageUpdateDialog);
-Vue.component("k-page-create-dialog", PageCreateDialog);
-Vue.component("k-page-duplicate-dialog", PageDuplicateDialog);
-Vue.component("k-page-remove-dialog", PageRemoveDialog);
-Vue.component("k-page-sort-dialog", PageSortDialog);
-Vue.component("k-page-rename-dialog", PageRenameDialog);
-Vue.component("k-page-status-dialog", PageStatusDialog);
-Vue.component("k-page-template-dialog", PageTemplateDialog);
+Vue.component("k-language-dialog", LanguageDialog);
 Vue.component("k-pages-dialog", PagesDialog);
 Vue.component("k-remove-dialog", RemoveDialog);
-Vue.component("k-site-rename-dialog", SiteRenameDialog);
 Vue.component("k-text-dialog", TextDialog);
-Vue.component("k-user-create-dialog", UserCreateDialog);
-Vue.component("k-user-email-dialog", UserEmailDialog);
-Vue.component("k-user-language-dialog", UserLanguageDialog);
-Vue.component("k-user-password-dialog", UserPasswordDialog);
-Vue.component("k-user-remove-dialog", UserRemoveDialog);
-Vue.component("k-user-rename-dialog", UserRenameDialog);
-Vue.component("k-user-role-dialog", UserRoleDialog);
 Vue.component("k-users-dialog", UsersDialog);
 
 /* Drawers */
@@ -70,7 +29,6 @@ import FormDrawer from "@/components/Drawers/FormDrawer.vue";
 
 Vue.component("k-drawer", Drawer);
 Vue.component("k-form-drawer", FormDrawer);
-
 
 /* Form */
 import Autocomplete from "@/components/Forms/Autocomplete.vue";
@@ -85,7 +43,10 @@ import Input from "@/components/Forms/Input.vue";
 import Login from "@/components/Forms/Login.vue";
 import LoginCode from "@/components/Forms/LoginCode.vue";
 import Upload from "@/components/Forms/Upload.vue";
-import Writer from "@/components/Writer/Writer.vue";
+import Writer from "@/components/Forms/Writer/Writer.vue";
+
+/** Form Helpers */
+import LoginAlert from "@/components/Forms/LoginAlert.vue";
 
 /** Form Inputs */
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
@@ -100,6 +61,7 @@ import PasswordInput from "@/components/Forms/Input/PasswordInput.vue";
 import RadioInput from "@/components/Forms/Input/RadioInput.vue";
 import RangeInput from "@/components/Forms/Input/RangeInput.vue";
 import SelectInput from "@/components/Forms/Input/SelectInput.vue";
+import SlugInput from "@/components/Forms/Input/SlugInput.vue";
 import TagsInput from "@/components/Forms/Input/TagsInput.vue";
 import TelInput from "@/components/Forms/Input/TelInput.vue";
 import TextInput from "@/components/Forms/Input/TextInput.vue";
@@ -127,6 +89,7 @@ import PasswordField from "@/components/Forms/Field/PasswordField.vue";
 import RadioField from "@/components/Forms/Field/RadioField.vue";
 import RangeField from "@/components/Forms/Field/RangeField.vue";
 import SelectField from "@/components/Forms/Field/SelectField.vue";
+import SlugField from "@/components/Forms/Field/SlugField.vue";
 import StructureField from "@/components/Forms/Field/StructureField.vue";
 import TagsField from "@/components/Forms/Field/TagsField.vue";
 import TelField from "@/components/Forms/Field/TelField.vue";
@@ -169,6 +132,8 @@ Vue.component("k-login-code", LoginCode);
 Vue.component("k-upload", Upload);
 Vue.component("k-writer", Writer);
 
+Vue.component("k-login-alert", LoginAlert);
+
 Vue.component("k-checkbox-input", CheckboxInput);
 Vue.component("k-checkboxes-input", CheckboxesInput);
 Vue.component("k-date-input", DateInput);
@@ -181,6 +146,7 @@ Vue.component("k-password-input", PasswordInput);
 Vue.component("k-radio-input", RadioInput);
 Vue.component("k-range-input", RangeInput);
 Vue.component("k-select-input", SelectInput);
+Vue.component("k-slug-input", SlugInput);
 Vue.component("k-tags-input", TagsInput);
 Vue.component("k-tel-input", TelInput);
 Vue.component("k-text-input", TextInput);
@@ -207,6 +173,7 @@ Vue.component("k-password-field", PasswordField);
 Vue.component("k-radio-field", RadioField);
 Vue.component("k-range-field", RangeField);
 Vue.component("k-select-field", SelectField);
+Vue.component("k-slug-field", SlugField);
 Vue.component("k-structure-field", StructureField);
 Vue.component("k-tags-field", TagsField);
 Vue.component("k-text-field", TextField);
@@ -237,8 +204,6 @@ Vue.component("k-writer-field-preview", WriterFieldPreview);
 import AspectRatio from "@/components/Layout/AspectRatio.vue";
 import Bar from "@/components/Layout/Bar.vue";
 import Box from "@/components/Layout/Box.vue";
-import Card from "@/components/Layout/Card.vue";
-import Cards from "@/components/Layout/Cards.vue";
 import Collection from "@/components/Layout/Collection.vue";
 import Column from "@/components/Layout/Column.vue";
 import Dropzone from "@/components/Layout/Dropzone.vue";
@@ -246,17 +211,18 @@ import Empty from "@/components/Layout/Empty.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
-import List from "@/components/Layout/List.vue";
-import ListItem from "@/components/Layout/ListItem.vue";
+import Inside from "@/components/Layout/Inside.vue";
+import Item from "@/components/Layout/Item.vue";
+import ItemImage from "@/components/Layout/ItemImage.vue";
+import Items from "@/components/Layout/Items.vue";
 import Overlay from "@/components/Layout/Overlay.vue";
+import Panel from "@/components/Layout/Panel.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
 Vue.component("k-aspect-ratio", AspectRatio);
 Vue.component("k-bar", Bar);
 Vue.component("k-box", Box);
-Vue.component("k-card", Card);
-Vue.component("k-cards", Cards);
 Vue.component("k-collection", Collection);
 Vue.component("k-column", Column);
 Vue.component("k-dropzone", Dropzone);
@@ -264,20 +230,27 @@ Vue.component("k-empty", Empty);
 Vue.component("k-file-preview", FilePreview);
 Vue.component("k-grid", Grid);
 Vue.component("k-header", Header);
-Vue.component("k-list", List);
-Vue.component("k-list-item", ListItem);
+Vue.component("k-inside", Inside);
+Vue.component("k-item", Item);
+Vue.component("k-item-image", ItemImage);
+Vue.component("k-items", Items);
 Vue.component("k-overlay", Overlay);
+Vue.component("k-panel", Panel);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
 /* Misc */
 import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
+import Fatal from "@/components/Misc/Fatal.vue";
 import Headline from "@/components/Misc/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
+import Icons from "@/components/Misc/Icons.vue";
 import Image from "@/components/Misc/Image.vue";
 import Loader from "@/components/Misc/Loader.vue";
+import OfflineWarning from "@/components/Misc/OfflineWarning.vue";
 import Progress from "@/components/Misc/Progress.vue";
+import Registration from "@/components/Misc/Registration.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
 import StatusIcon from "@/components/Misc/StatusIcon.vue";
 import Text from "@/components/Misc/Text.vue";
@@ -285,17 +258,22 @@ import UserInfo from "@/components/Misc/UserInfo.vue";
 
 Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
+Vue.component("k-fatal", Fatal);
 Vue.component("k-headline", Headline);
 Vue.component("k-icon", Icon);
+Vue.component("k-icons", Icons);
 Vue.component("k-image", Image);
 Vue.component("k-loader", Loader);
+Vue.component("k-offline-warning", OfflineWarning);
 Vue.component("k-progress", Progress);
+Vue.component("k-registration", Registration);
 Vue.component("k-status-icon", StatusIcon);
 Vue.component("k-sort-handle", SortHandle);
 Vue.component("k-text", Text);
 Vue.component("k-user-info", UserInfo);
 
 /* Navigation */
+import Breadcrumb from "@/components/Navigation/Breadcrumb.vue";
 import Button from "@/components/Navigation/Button.vue";
 import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
 import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
@@ -306,12 +284,14 @@ import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
 import Link from "@/components/Navigation/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
+import OptionsDropdown from "@/components/Navigation/OptionsDropdown.vue";
 import Pagination from "@/components/Navigation/Pagination.vue";
 import PrevNext from "@/components/Navigation/PrevNext.vue";
 import Search from "@/components/Navigation/Search.vue";
 import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
+Vue.component("k-breadcrumb", Breadcrumb);
 Vue.component("k-button", Button);
 Vue.component("k-button-disabled", ButtonDisabled);
 Vue.component("k-button-group", ButtonGroup);
@@ -322,6 +302,7 @@ Vue.component("k-dropdown-content", DropdownContent);
 Vue.component("k-dropdown-item", DropdownItem);
 Vue.component("k-languages-dropdown", Languages);
 Vue.component("k-link", Link);
+Vue.component("k-options-dropdown", OptionsDropdown);
 Vue.component("k-pagination", Pagination);
 Vue.component("k-prev-next", PrevNext);
 Vue.component("k-search", Search);
@@ -342,31 +323,33 @@ Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
-import BrowserView from "@/components/Views/BrowserView.vue";
-import CustomView from "@/components/Views/CustomView.vue";
+import AccountView from "@/components/Views/AccountView.vue";
 import ErrorView from "@/components/Views/ErrorView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
+import LanguagesView from "@/components/Views/LanguagesView.vue";
 import LoginView from "@/components/Views/LoginView.vue";
 import PageView from "@/components/Views/PageView.vue";
+import PluginView from "@/components/Views/PluginView.vue";
 import ResetPasswordView from "@/components/Views/ResetPasswordView.vue";
-import SettingsView from "@/components/Views/SettingsView.vue";
 import SiteView from "@/components/Views/SiteView.vue";
+import SystemView from "@/components/Views/SystemView.vue";
 import UsersView from "@/components/Views/UsersView.vue";
 import UserView from "@/components/Views/UserView.vue";
 
-Vue.component("k-browser-view", BrowserView);
-Vue.component("k-custom-view", CustomView);
+Vue.component("k-account-view", AccountView);
 Vue.component("k-error-view", ErrorView);
 Vue.component("k-file-view", FileView);
 Vue.component("k-installation-view", InstallationView);
+Vue.component("k-languages-view", LanguagesView);
 Vue.component("k-login-view", LoginView);
 Vue.component("k-page-view", PageView);
+Vue.component("k-plugin-view", PluginView);
 Vue.component("k-reset-password-view", ResetPasswordView);
-Vue.component("k-settings-view", SettingsView);
 Vue.component("k-site-view", SiteView);
+Vue.component("k-system-view", SystemView);
 Vue.component("k-users-view", UsersView);
 Vue.component("k-user-view", UserView);
 
 /* Blocks */
-import "@/components/Blocks/index.js";
+import "@/components/Forms/Blocks/index.js";

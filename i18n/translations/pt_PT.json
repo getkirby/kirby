@@ -1,5 +1,10 @@
 {
+  "account.changeName": "Change your name",
+  "account.delete": "Delete your account",
+  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+
   "add": "Adicionar",
+  "author": "Author",
   "avatar": "Foto do perfil",
   "back": "Voltar",
   "cancel": "Cancelar",
@@ -9,6 +14,7 @@
   "collapse": "Collapse",
   "collapse.all": "Collapse All",
   "copy": "Copiar",
+  "copy.all": "Copy all",
   "create": "Criar",
 
   "date": "Data",
@@ -23,23 +29,27 @@
   "days.tue": "Ter",
   "days.wed": "Qua",
 
+  "debugging": "Debugging",
+
   "delete": "Excluir",
   "delete.all": "Delete all",
-  "dimensions": "Dimensões",
-  "disabled": "Inativo",
-  "discard": "Descartar",
-  "download": "Descarregar",
-  "duplicate": "Duplicar",
-  "edit": "Editar",
-  "expand": "Expand",
-  "expand.all": "Expand All",
 
   "dialog.files.empty": "Sem arquivos para selecionar",
   "dialog.pages.empty": "Sem páginas para selecionar",
   "dialog.users.empty": "Sem utilizadores para selecionar",
 
+  "dimensions": "Dimensões",
+  "disabled": "Inativo",
+  "discard": "Descartar",
+  "download": "Descarregar",
+  "duplicate": "Duplicar",
+
+  "edit": "Editar",
+
   "email": "Email",
   "email.placeholder": "mail@exemplo.pt",
+
+  "environment": "Environment",
 
   "error.access.code": "Invalid code",
   "error.access.login": "Login inválido",
@@ -92,6 +102,7 @@
   "error.language.code": "Insira um código de idioma válido",
   "error.language.duplicate": "O idioma já existe",
   "error.language.name": "Insira um nome válido para o idioma",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
@@ -99,6 +110,8 @@
   "error.license.format": "Insira uma chave de licença válida",
   "error.license.email": "Digite um endereço de email válido",
   "error.license.verification": "Não foi possível verificar a licença",
+
+  "error.offline": "The Panel is currently offline",
 
   "error.page.changeSlug.permission": "Não tem permissões para alterar a URL de \"{slug}\"",
   "error.page.changeStatus.incomplete": "A página possui erros e não pode ser guardada",
@@ -165,6 +178,7 @@
   "error.user.password.undefined": "O utilizador não possui uma palavra-passe",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Digite uma função válida",
+  "error.user.undefined": "Usuário não encontrado",
   "error.user.update.permission": "Não tem permissões para atualizar o utilizador \"{name}\"",
 
   "error.validation.accepted": "Por favor, confirme",
@@ -208,6 +222,9 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Digite uma URL válida",
 
+  "expand": "Expand",
+  "expand.all": "Expand All",
+
   "field.required": "Este campo é necessário",
   "field.blocks.changeType": "Change type",
   "field.blocks.code.name": "Código",
@@ -218,6 +235,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -234,6 +252,7 @@
   "field.blocks.image.placeholder": "Select an image",
   "field.blocks.image.ratio": "Ratio",
   "field.blocks.image.url": "Image URL",
+  "field.blocks.line.name": "Line",
   "field.blocks.list.name": "List",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",
@@ -263,7 +282,7 @@
   "field.structure.empty": "Nenhum registro",
   "field.users.empty": "Nenhum utilizador selecionado",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Deseja realmente excluir <br> <strong>{filename}</strong>?",
   "file.sort": "Change position",
 
@@ -272,6 +291,7 @@
 
   "hide": "Hide",
   "hour": "Hora",
+  "import": "Import",
   "insert": "Inserir",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -337,9 +357,9 @@
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
   "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Panel of {site}.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Panel of {site}.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Manter-me conectado",
   "login.reset": "Reset password",
@@ -385,7 +405,7 @@
   "orientation.portrait": "Retrato",
   "orientation.square": "Quadrado",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Alterar URL",
   "page.changeSlug.fromTitle": "Criar a partir do t\u00edtulo",
   "page.changeStatus": "Alterar estado",
@@ -417,7 +437,10 @@
   "pagination.page": "Página",
 
   "password": "Palavra-passe",
+  "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Pixel",
+  "plugins": "Plugins",
   "prev": "Anterior",
   "preview": "Preview",
   "remove": "Remover",
@@ -454,6 +477,8 @@
   "template": "Tema",
   "today": "Hoje",
 
+  "server": "Server",
+
   "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Código",
@@ -463,11 +488,15 @@
   "toolbar.button.heading.1": "Título 1",
   "toolbar.button.heading.2": "Título 2",
   "toolbar.button.heading.3": "Título 3",
+  "toolbar.button.heading.4": "Heading 4",
+  "toolbar.button.heading.5": "Heading 5",
+  "toolbar.button.heading.6": "Heading 6",
   "toolbar.button.italic": "Itálico",
   "toolbar.button.file": "Ficheiro",
   "toolbar.button.file.select": "Selecione o arquivo",
   "toolbar.button.file.upload": "Carregue o arquivo",
   "toolbar.button.link": "Link",
+  "toolbar.button.paragraph": "Paragraph",
   "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Lista ordenada",
   "toolbar.button.underline": "Underline",
@@ -497,7 +526,7 @@
   "url.placeholder": "https://exemplo.pt",
 
   "user": "Utilizador",
-  "user.blueprint": "Pode definir seções e campos de formulário adicionais para esta função de utilizador em <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Alterar email",
   "user.changeLanguage": "Alterar idioma",
   "user.changeName": "Renomear este utilizador",
@@ -516,9 +545,10 @@
 
   "view.account": "A sua conta",
   "view.installation": "Instala\u00e7\u00e3o",
+  "view.languages": "Idiomas",
   "view.resetPassword": "Reset password",
-  "view.settings": "Configurações",
   "view.site": "Site",
+  "view.system": "System",
   "view.users": "Utilizadores",
 
   "welcome": "Bem-vindo",
