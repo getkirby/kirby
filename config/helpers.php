@@ -584,7 +584,7 @@ function page(...$id)
  */
 function pages(...$id)
 {
-    if (count($id) === 1) {
+    if (count($id) === 1 && is_array($id[0]) === false) {
         // @codeCoverageIgnoreStart
         deprecated('Passing a single id to the `pages()` helper will return a Kirby\Cms\Pages collection with a single element instead of the single Kirby\Cms\Page object itself - starting in 3.7.0.');
         // @codeCoverageIgnoreEnd
