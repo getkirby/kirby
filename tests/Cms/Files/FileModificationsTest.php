@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\TestCase;
 
 class FileModificationsTest extends TestCase
@@ -40,6 +41,14 @@ class FileModificationsTest extends TestCase
 
         $file = $app->file('test.jpg');
         $file->thumb($input);
+    }
+
+    public function testThumbWithAssetObject()
+    {
+        $app = $this->app->clone();
+        $asset = new Asset('');
+        $result = $asset->thumb([]);
+        $this->assertInstanceOf(Asset::class, $result);
     }
 
     public function testThumbWithDefaultPreset()
@@ -106,7 +115,7 @@ class FileModificationsTest extends TestCase
         ]);
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The file::version component must return a File or FileVersion object');
+        $this->expectExceptionMessage('The file::version component must return a File, FileVersion or Asset object');
 
         $file = $app->file('test.jpg');
         $file->thumb(['width' => 100]);
