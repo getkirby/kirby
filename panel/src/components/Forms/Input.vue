@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     blur(e) {
-      if (e && e.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
+      if (e?.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
         this.trigger(null, "blur");
       }
     },
@@ -100,20 +100,20 @@ export default {
     trigger(e, method) {
       // prevent focussing on first input element,
       // if click is already targetting another input element
-      if (e && e.target && e.target.tagName === 'INPUT' && typeof e.target[method] === "function") {
+      if (e?.target?.tagName === 'INPUT' && typeof e?.target?.[method] === "function") {
         e.target[method]();
         return;
       }
 
       // use dedicated focus method if provided
-      if (this.$refs.input && typeof this.$refs.input[method] === "function") {
+      if (typeof this.$refs.input?.[method] === "function") {
         this.$refs.input[method]();
         return;
       }
 
       const input = this.$el.querySelector("input, select, textarea");
 
-      if (input && typeof input[method] === "function") {
+      if (typeof input?.[method] === "function") {
         input[method]();
       }
     },

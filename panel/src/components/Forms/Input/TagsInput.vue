@@ -138,7 +138,7 @@ export default {
       selected: null,
       newTag: null,
       tagOptions: this.options.map(tag => {
-        if (this.icon && this.icon.length > 0) {
+        if (this.icon?.length > 0) {
           tag.icon = this.icon;
         }
         return tag;
@@ -305,7 +305,7 @@ export default {
       if (nextTag) {
         let nextRef = this.$refs[nextTag.value];
 
-        if (nextRef && nextRef[0]) {
+        if (nextRef?.[0]) {
           return {
             ref: nextRef[0],
             tag: nextTag,
@@ -388,7 +388,7 @@ export default {
       this.selected = tag;
     },
     tab(event) {
-      if (this.newTag && this.newTag.length > 0) {
+      if (this.newTag?.length > 0) {
         event.preventDefault();
         this.addString(this.newTag);
       }

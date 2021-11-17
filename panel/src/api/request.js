@@ -65,13 +65,13 @@ export default (config) => {
         }
 
         // look for an error status
-        if (json.status && json.status === "error") {
+        if (json.status === "error") {
           throw json;
         }
 
         let data = json;
 
-        if (json.data && json.type && json.type === "model") {
+        if (json.data && json.type === "model") {
           data = json.data;
         }
 

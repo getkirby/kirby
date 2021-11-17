@@ -172,7 +172,7 @@ export default {
       this.resize();
     },
     insertFile(files) {
-      if (files && files.length > 0) {
+      if (files?.length > 0) {
         this.insert(files.map(file => file.dragText).join("\n\n"));
       }
     },
@@ -209,7 +209,7 @@ export default {
       // dropping text
       const drag = this.$store.state.drag;
 
-      if (drag && drag.type === "text") {
+      if (drag?.type === "text") {
         this.focus();
         this.insert(drag.data);
       }
@@ -239,7 +239,7 @@ export default {
       // drag & drop for text
       const drag = this.$store.state.drag;
 
-      if (drag && drag.type === "text") {
+      if (drag?.type === "text") {
         $event.dataTransfer.dropEffect = "copy";
         this.focus();
         this.over = true;

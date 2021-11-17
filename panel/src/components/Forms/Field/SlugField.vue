@@ -77,7 +77,7 @@ export default {
       this.$refs.input.focus();
     },
     onWizard() {
-      if (this.wizard && this.wizard.field && this.formData[this.wizard.field]) {
+      if (this.wizard?.field && this.formData[this.wizard.field]) {
         this.slug = this.formData[this.wizard.field];
       }
     }

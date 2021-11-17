@@ -358,7 +358,7 @@ export default {
       Object.entries(newFields).forEach(([name, field]) => {
         const oldField = oldFields[name];
 
-        if (oldField && oldField.type === field.type && oldBlock.content[name]) {
+        if (oldField?.type === field.type && oldBlock?.content?.[name]) {
           content[name] = oldBlock.content[name];
         }
       });
@@ -402,7 +402,7 @@ export default {
       return this.blocks.findIndex(element => element.id === id);
     },
     focus(block) {
-      if (block && block.id && this.$refs["block-" + block.id]) {
+      if (block?.id && this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].focus();
         return;
       }
@@ -473,7 +473,7 @@ export default {
       // following codes detect if the target is in the same column
       if (overlay) {
         const layoutColumn = this.$el.closest(".k-layout-column");
-        if (layoutColumn && layoutColumn.contains(event.target) === false) {
+        if (layoutColumn?.contains(event.target) === false) {
           return this.select(null);
         }
       }
@@ -489,7 +489,7 @@ export default {
       if (this.isEditing === true) {
 
         // enable pasting when the block selector is open
-        if (this.$refs.selector && this.$refs.selector.isOpen() === true) {
+        if (this.$refs.selector?.isOpen() === true) {
           return this.paste(e);
         }
 
@@ -548,7 +548,7 @@ export default {
 
       if (index !== -1) {
 
-        if (this.selected && this.selected.id === block.id) {
+        if (this.selected?.id === block.id) {
           this.select(null);
         }
 

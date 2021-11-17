@@ -109,7 +109,7 @@ export default {
     navigate(index) {
       const ref = this.$refs["fieldset-" + index];
 
-      if (ref && ref[0]) {
+      if (ref?.[0]) {
         ref[0].focus();
       }
     },

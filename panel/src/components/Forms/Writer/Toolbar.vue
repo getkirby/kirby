@@ -148,7 +148,7 @@ export default {
       return false;
     },
     isButtonDisabled(node) {
-      if (this.activeButton && this.activeButton.when) {
+      if (this.activeButton?.when) {
         const when = this.activeButton.when;
         return when.includes(node.name) === false;
       }

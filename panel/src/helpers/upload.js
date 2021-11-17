@@ -45,7 +45,7 @@ export default (file, params) => {
       json = {status: "error", message: "The file could not be uploaded"};
     }
 
-    if (json.status && json.status === "error") {
+    if (json.status === "error") {
       options.error(xhr, file, json);
     } else {
       options.success(xhr, file, json);

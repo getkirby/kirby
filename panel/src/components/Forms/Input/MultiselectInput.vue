@@ -158,7 +158,7 @@ export default {
       return this.$t("options.none");
     },
     filtered() {
-      if (this.q && this.q.length >= (this.search.min || 0)) {
+      if (this.q?.length >= (this.search.min || 0)) {
         return this.options
           .filter(option => this.isFiltered(option))
           .map(option => ({
@@ -291,7 +291,7 @@ export default {
     },
     onOpen() {
       this.$nextTick(() => {
-        if (this.$refs.search && this.$refs.search.focus) {
+        if (this.$refs.search?.focus) {
           this.$refs.search.focus();
         }
 

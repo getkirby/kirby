@@ -70,7 +70,7 @@ export default {
       this.$refs.drawer.close();
     },
     focus(name) {
-      if (this.$refs.form && typeof this.$refs.form.focus === "function") {
+      if (typeof this.$refs.form?.focus === "function") {
         this.$refs.form.focus(name);
       }
     },
