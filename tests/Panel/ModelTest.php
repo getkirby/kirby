@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -74,6 +75,11 @@ class ModelSiteWithImageMethod extends ModelSite
     public function panelBack()
     {
         return 'blue';
+    }
+
+    public function cover()
+    {
+        return new Asset('tmp/test.svg');
     }
 }
 
@@ -326,6 +332,18 @@ class ModelTest extends TestCase
         $this->assertSame($ratio, $image['ratio']);
         $this->assertStringContainsString('test-38x38-crop.jpg 1x', $image['srcset']);
         $this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
+    }
+
+    /**
+     * @covers ::image
+     */
+    public function testImageWithNonResizableAsset()
+    {
+        $site  = new ModelSiteWithImageMethod([]);
+        $panel = new CustomPanelModel($site);
+        $image = $panel->image('site.cover');
+        $this->assertSame('//tmp/test.svg', $image['url']);
+        $this->assertSame('//tmp/test.svg', $image['src']);
     }
 
     /**
