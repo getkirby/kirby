@@ -25,6 +25,34 @@ class Html extends Xml
     public static $entities;
 
     /**
+     * List of HTML tags that can be used inline
+     *
+     * @var array
+     */
+    public static $inlineList = [
+        'b',
+        'i',
+        'small',
+        'abbr',
+        'cite',
+        'code',
+        'dfn',
+        'em',
+        'kbd',
+        'strong',
+        'samp',
+        'var',
+        'a',
+        'bdo',
+        'br',
+        'img',
+        'q',
+        'span',
+        'sub',
+        'sup'
+    ];
+
+    /**
      * Closing string for void tags;
      * can be used to switch to trailing slashes if required
      *
