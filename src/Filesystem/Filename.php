@@ -109,9 +109,10 @@ class Filename
             'q'          => $this->quality(),
         ];
 
-        $array = array_filter($array, function ($item) {
-            return $item !== null && $item !== false && $item !== '';
-        });
+        $array = array_filter(
+            $array,
+            fn ($item) => $item !== null && $item !== false && $item !== ''
+        );
 
         return $array;
     }

@@ -25,9 +25,10 @@ class Languages extends Collection
      */
     public function __construct($objects = [], $parent = null)
     {
-        $defaults = array_filter($objects, function ($language) {
-            return $language->isDefault() === true;
-        });
+        $defaults = array_filter(
+            $objects,
+            fn ($language) => $language->isDefault() === true
+        );
 
         if (count($defaults) > 1) {
             throw new DuplicateException('You cannot have multiple default languages. Please check your language config files.');
