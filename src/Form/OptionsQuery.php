@@ -119,12 +119,34 @@ class OptionsQuery
             return $this->options;
         }
 
-        if ($cachedOptions = A::get($this->query(), static::$cache)) {
-            return $cachedOptions;
+        $data    = $this->data();
+        $cacheKey = $this->query();
+
+        // If the query string contains any model with an id
+        // then append that id to $cacheKey to make it unique.
+        //
+        // examples: 
+        // "{{ file.parent.images }}"
+        // "{{ page.parent.files }}"
+        // "{{ user.customMethod }}"
+        // 
+        // this is not needed for queries like:
+        // "{{ kirby.collection('customCollection') }}"
+        // "{{ site.customMethod }}"
+
+        preg_match('/(?:\bblock|file|page|user)\.+/i', $cacheKey, $matches);
+        foreach($matches as $match) {
+            if ($model = A::get($match[1], $data)) {
+                $cacheKey .= '[' . $model->id() . ']';
+            }
         }
 
-        $data    = $this->data();
-        $query   = new Query($this->query(), $data);
+        // if a cached collection exist return that
+        if ($cachedOptions = A::get($cacheKey, static::$cache)) {
+            return $cachedOptions;
+        }
+        
+        $query   = new Query($cacheKey, $data);
         $result  = $query->result();
         $result  = $this->resultToCollection($result);
         $options = [];
@@ -139,7 +161,8 @@ class OptionsQuery
             ];
         }
 
-        static::$cache[$this->query()] = $options;
+        // store collection in cache
+        static::$cache[$cacheKey] = $options;
 
         return $this->options = $options;
     }
