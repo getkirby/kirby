@@ -134,9 +134,9 @@ class OptionsQuery
         // "{{ kirby.collection('customCollection') }}"
         // "{{ site.customMethod }}"
 
-        preg_match('/(?:\bblock|file|page|user)\.+/i', $cacheKey, $matches);
+        preg_match('/(\bblock|file|page|user)\.+/i', $cacheKey, $matches);
         foreach($matches as $match) {
-            if ($model = A::get($match[1], $data)) {
+            if ($model = A::get(strtolower($match[1]), $data)) {
                 $cacheKey .= '[' . $model->id() . ']';
             }
         }
