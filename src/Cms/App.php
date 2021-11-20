@@ -328,17 +328,9 @@ class App
      */
     public function call(string $path = null, string $method = null)
     {
-        $router = $this->router();
-
-        $router::$beforeEach = function ($route, $path, $method) {
-            $this->trigger('route:before', compact('route', 'path', 'method'));
-        };
-
-        $router::$afterEach = function ($route, $path, $method, $result, $final) {
-            return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
-        };
-
-        return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
+        $path   ??= $this->path();
+        $method ??= $this->request()->method();
+        return $this->router()->call($path, $method);
     }
 
     /**
@@ -1234,7 +1226,15 @@ class App
             }
         }
 
-        return $this->router = $this->router ?? new Router($routes);
+        return $this->router ??= new Router(
+            $routes,
+            function ($route, $path, $method) {
+                $this->trigger('route:before', compact('route', 'path', 'method'));
+            },
+            function ($route, $path, $method, $result, $final) {
+                return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
+            }
+        );
     }
 
     /**

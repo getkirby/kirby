@@ -16,8 +16,8 @@ use Kirby\Toolkit\A;
  */
 class Router
 {
-    public static $beforeEach;
-    public static $afterEach;
+    public $beforeEach;
+    public $afterEach;
 
     /**
      * Store for the current route,
@@ -53,8 +53,14 @@ class Router
      *
      * @param array $routes
      */
-    public function __construct(array $routes = [])
-    {
+    public function __construct(
+        array $routes = [],
+        ?Closure $before = null,
+        ?Closure $after = null
+    ) {
+        $this->beforeEach = $before;
+        $this->afterEach  = $after;
+
         foreach ($routes as $props) {
             if (isset($props['pattern'], $props['action']) === false) {
                 throw new InvalidArgumentException('Invalid route parameters');
@@ -72,7 +78,12 @@ class Router
 
             foreach ($methods as $method) {
                 foreach ($patterns as $pattern) {
-                    $this->routes[$method][] = new Route($pattern, $method, $props['action'], $props);
+                    $this->routes[$method][] = new Route(
+                        $pattern,
+                        $method,
+                        $props['action'],
+                        $props
+                    );
                 }
             }
         }
@@ -100,8 +111,8 @@ class Router
         while ($loop === true) {
             $route = $this->find($path, $method, $ignore);
 
-            if (is_a(static::$beforeEach, 'Closure') === true) {
-                (static::$beforeEach)($route, $path, $method);
+            if (is_a($this->beforeEach, 'Closure') === true) {
+                ($this->beforeEach)($route, $path, $method);
             }
 
             try {
@@ -116,9 +127,9 @@ class Router
                 $ignore[] = $route;
             }
 
-            if (is_a(static::$afterEach, 'Closure') === true) {
+            if (is_a($this->afterEach, 'Closure') === true) {
                 $final  = $loop === false;
-                $result = (static::$afterEach)($route, $path, $method, $result, $final);
+                $result = ($this->afterEach)($route, $path, $method, $result, $final);
             }
         }
 
