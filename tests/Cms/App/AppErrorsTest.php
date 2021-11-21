@@ -26,6 +26,7 @@ class AppErrorsTest extends TestCase
 
     /**
      * @covers ::handleCliErrors
+     * @covers ::getExceptionHookWhoopsHandler
      */
     public function testHandleCliErrors()
     {
@@ -47,6 +48,7 @@ class AppErrorsTest extends TestCase
 
     /**
      * @covers ::handleErrors
+     * @covers ::getExceptionHookWhoopsHandler
      */
     public function testHandleErrors()
     {
@@ -107,6 +109,7 @@ class AppErrorsTest extends TestCase
 
     /**
      * @covers ::handleHtmlErrors
+     * @covers ::getExceptionHookWhoopsHandler
      */
     public function testHandleHtmlErrors()
     {
@@ -186,6 +189,7 @@ class AppErrorsTest extends TestCase
 
     /**
      * @covers ::handleJsonErrors
+     * @covers ::getExceptionHookWhoopsHandler
      */
     public function testHandleJsonErrors()
     {
@@ -268,6 +272,7 @@ class AppErrorsTest extends TestCase
     /**
      * @covers ::setWhoopsHandler
      * @covers ::unsetWhoopsHandler
+     * @covers ::getExceptionHookWhoopsHandler
      */
     public function testSetUnsetWhoopsHandler()
     {
