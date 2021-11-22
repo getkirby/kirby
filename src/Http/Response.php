@@ -167,7 +167,7 @@ class Response
 
         $props = array_replace_recursive([
             'body'    => $body,
-            'type'    => 'application/force-download',
+            'type'    => F::mime($file),
             'headers' => [
                 'Pragma'                    => 'public',
                 'Cache-Control'             => 'no-cache, no-store, must-revalidate',
