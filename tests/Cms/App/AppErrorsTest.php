@@ -25,6 +25,37 @@ class AppErrorsTest extends TestCase
     }
 
     /**
+     * @covers ::getExceptionHookWhoopsHandler
+     */
+    public function testExceptionHook()
+    {
+        $result = null;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'system.exception' => function ($exception) use (&$result) {
+                    $result = $exception->getMessage();
+                }
+            ]
+        ]);
+
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+
+        $whoops  = $whoopsMethod->invoke($app);
+        $handler = $whoops->getHandlers()[1];
+
+        // test CallbackHandler with \Exception class
+        $exception = new \Exception('Some error message');
+        $handler->setException($exception);
+
+        // handle the exception
+        $this->_getBufferedContent($handler);
+
+        $this->assertSame('Some error message', $result);
+    }
+
+    /**
      * @covers ::handleCliErrors
      * @covers ::getExceptionHookWhoopsHandler
      */
