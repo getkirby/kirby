@@ -137,7 +137,10 @@ class Options
         $result = [];
 
         foreach ($options as $key => $option) {
-            if (is_array($option) === false || isset($option['value']) === false) {
+            if (
+                is_array($option) === false ||
+                isset($option['value']) === false
+            ) {
                 $option = [
                     'value' => is_int($key) ? $option : $key,
                     'text'  => $option
@@ -145,9 +148,7 @@ class Options
             }
 
             // translate the option text
-            if (is_array($option['text']) === true) {
-                $option['text'] = I18n::translate($option['text'], $option['text']);
-            }
+            $option['text'] = I18n::translate($option['text'], $option['text']);
 
             // add the option to the list
             $result[] = $option;

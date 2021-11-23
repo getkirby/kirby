@@ -86,20 +86,20 @@ class OptionsTest extends TestCase
 
         $expected = [
             [
-                'value' => 'apple',
-                'text'  => 'Apple'
+                'text'  => 'Apple',
+                'value' => 'apple'
             ],
             [
-                'value' => 'intel',
-                'text'  => 'Intel'
+                'text'  => 'Intel',
+                'value' => 'intel'
             ],
             [
-                'value' => 'microsoft',
-                'text'  => 'Microsoft'
+                'text'  => 'Microsoft',
+                'value' => 'microsoft'
             ],
         ];
 
-        $this->assertEquals($expected, $options);
+        $this->assertSame($expected, $options);
     }
 
     public function testBlocks()
@@ -257,7 +257,7 @@ class OptionsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testTranslated()
@@ -269,8 +269,8 @@ class OptionsTest extends TestCase
             'b' => ['en' => 'B (en)', 'de' => 'B (de)']
         ]);
 
-        $this->assertEquals('A (en)', $options[0]['text']);
-        $this->assertEquals('B (en)', $options[1]['text']);
+        $this->assertSame('A (en)', $options[0]['text']);
+        $this->assertSame('B (en)', $options[1]['text']);
 
         I18n::$locale = 'de';
 
@@ -279,25 +279,61 @@ class OptionsTest extends TestCase
             'b' => ['en' => 'B (en)', 'de' => 'B (de)']
         ]);
 
-        $this->assertEquals('A (de)', $options[0]['text']);
-        $this->assertEquals('B (de)', $options[1]['text']);
+        $this->assertSame('A (de)', $options[0]['text']);
+        $this->assertSame('B (de)', $options[1]['text']);
+    }
+
+    public function testTranslatedWithI18nKey()
+    {
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'de',
+                    'default' => true
+                ],
+                [
+                    'code'=> 'en'
+                ]
+            ],
+            'translations' => [
+                'de' => [
+                    'test.a' => 'A (de)',
+                    'test.b' => 'B (de)'
+                ],
+                'en' => [
+                    'test.a' => 'A (en)',
+                    'test.b' => 'B (en)'
+                ]
+            ]
+        ]);
+
+        I18n::$locale = 'en';
+
+        $options = Options::factory([
+            'test.a',
+            'test.b'
+        ]);
+
+        $this->assertSame('A (en)', $options[0]['text']);
+        $this->assertSame('B (en)', $options[1]['text']);
+
+        I18n::$locale = 'de';
+
+        $options = Options::factory([
+            'test.a',
+            'test.b'
+        ]);
+
+        $this->assertSame('A (de)', $options[0]['text']);
+        $this->assertSame('B (de)', $options[1]['text']);
     }
 
     public function testUntranslated()
     {
-        I18n::$translations = [
-            'en' => [
-                'language' => 'Language'
-            ],
-            'de' => [
-                'language' => 'Sprache'
-            ]
-        ];
-
         $options = Options::factory([
-            'language' => 'language',
+            'test.c'
         ]);
 
-        $this->assertEquals('language', $options[0]['text']);
+        $this->assertSame('test.c', $options[0]['text']);
     }
 }
