@@ -122,6 +122,11 @@ class OptionsQuery
         $data    = $this->data();
         $cacheKey = $this->query();
 
+        // making sure the cache uses the current language
+        if ($language = kirby()->language()) {
+            $cacheKey .= '(' . $language->code() . ')';
+        }
+
         // If the query string contains any model with an id
         // then append that id to $cacheKey to make it unique.
         //
