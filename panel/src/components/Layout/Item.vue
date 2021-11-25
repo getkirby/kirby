@@ -4,7 +4,6 @@
     v-bind="data"
     :data-has-figure="hasFigure"
     :data-has-info="Boolean(info)"
-    :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
     class="k-item"
     tabindex="-1"
@@ -73,7 +72,6 @@ export default {
     flag: Object,
     image: [Object, Boolean],
     info: String,
-    label: String,
     layout: {
       type: String,
       default: "list"
@@ -282,11 +280,11 @@ export default {
 
 /** Card Item **/
 .k-cards-item {
-  grid-template-rows: auto auto auto;
+  grid-template-columns: auto;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     "figure"
-    "content"
-    "footer";
+    "content";
 }
 .k-cards-item .k-item-figure {
   border-start-start-radius: var(--rounded-sm);
@@ -294,31 +292,23 @@ export default {
 }
 .k-cards-item .k-item-content {
   overflow: hidden;
-  align-self: center;
-}
-.k-cards-item[data-has-info] .k-item-content {
   align-self: flex-start;
 }
 .k-cards-item .k-item-title,
 .k-cards-item .k-item-info {
   white-space: normal;
 }
+.k-cards-item .k-item-title-link > span,
+.k-cards-item .k-item-info {
+  padding-inline-end: 4rem;
+}
 .k-cards-item .k-item-info {
   padding-top: 0.125rem;
 }
 .k-cards-item .k-item-footer {
+  position: absolute;
+  bottom: 0;
+  inset-inline-end: .5rem;
   width: auto;
-  padding-inline-start: 0.7rem;
-}
-.k-cards-item:not([data-has-label]) {
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "figure figure"
-    "content footer";
-}
-.k-cards-item:not([data-has-label]) .k-item-footer {
-  align-items: flex-end;
-  padding-inline-start: 0;
 }
 </style>
