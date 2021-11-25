@@ -9,7 +9,7 @@
       >
         <template #header>
           <h1 class="sr-only">
-            {{ $t('view.resetPassword') }}
+            {{ $t("view.resetPassword") }}
           </h1>
 
           <k-login-alert v-if="issue" @click="issue = null">
@@ -21,14 +21,8 @@
 
         <template #footer>
           <div class="k-login-buttons">
-            <k-button
-              class="k-login-button"
-              icon="check"
-              type="submit"
-            >
-              {{ $t("change") }} <template v-if="isLoading">
-                …
-              </template>
+            <k-button class="k-login-button" icon="check" type="submit">
+              {{ $t("change") }} <template v-if="isLoading"> … </template>
             </k-button>
           </div>
         </template>
@@ -108,7 +102,7 @@ export default {
 .k-password-reset-view .k-user-info {
   height: 38px;
   margin-bottom: 2.25rem;
-  padding: .5rem;
+  padding: 0.5rem;
   background: var(--color-white);
   border-radius: var(--rounded-xs);
   box-shadow: var(--shadow);

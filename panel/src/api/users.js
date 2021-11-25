@@ -43,8 +43,10 @@ export default (api) => {
     },
     async roles(id) {
       const roles = await api.get(this.url(id, "roles"));
-      return roles.data.map(role => ({
-        info: role.description || `(${window.panel.$t("role.description.placeholder")})`,
+      return roles.data.map((role) => ({
+        info:
+          role.description ||
+          `(${window.panel.$t("role.description.placeholder")})`,
         text: role.title,
         value: role.name
       }));
@@ -63,6 +65,6 @@ export default (api) => {
       }
 
       return url;
-    },
-  }
+    }
+  };
 };

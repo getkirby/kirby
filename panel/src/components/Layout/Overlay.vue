@@ -11,15 +11,8 @@
       v-on="$listeners"
       @mousedown="close"
     >
-      <k-loader
-        v-if="loading"
-        class="k-overlay-loader"
-      />
-      <slot
-        v-else
-        :close="close"
-        :isOpen="isOpen"
-      />
+      <k-loader v-if="loading" class="k-overlay-loader" />
+      <slot v-else :close="close" :isOpen="isOpen" />
     </div>
   </portal>
 </template>
@@ -30,7 +23,7 @@ export default {
   props: {
     autofocus: {
       type: Boolean,
-      default: true,
+      default: true
     },
     centered: {
       type: Boolean,
@@ -88,7 +81,8 @@ export default {
       if (
         this.$slots.default[0] &&
         this.$slots.default[0].context &&
-        typeof this.$slots.default[0].context.focus === "function") {
+        typeof this.$slots.default[0].context.focus === "function"
+      ) {
         this.$slots.default[0].context.focus();
         return;
       }
@@ -113,10 +107,12 @@ export default {
         }
 
         // prevent that clicks on the overlay slot trigger close
-        document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
+        document
+          .querySelector(".k-overlay > *")
+          .addEventListener("mousedown", (e) => e.stopPropagation());
 
         this.$emit("ready");
-      }, 1)
+      }, 1);
     },
     restoreScrollPosition() {
       const view = document.querySelector(".k-panel-view");
@@ -133,7 +129,7 @@ export default {
       } else {
         this.scrollTop = 0;
       }
-    },
+    }
   }
 };
 </script>

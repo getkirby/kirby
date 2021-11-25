@@ -1,14 +1,13 @@
 import Node from "../Node";
 
 export default class BulletList extends Node {
-
   get button() {
     return {
       id: this.name,
       icon: "list-bullet",
       label: window.panel.$t("toolbar.button.ul"),
       name: this.name,
-      when: ['listItem', 'bulletList', 'orderedList']
+      when: ["listItem", "bulletList", "orderedList"]
     };
   }
 
@@ -17,14 +16,12 @@ export default class BulletList extends Node {
   }
 
   inputRules({ type, utils }) {
-    return [
-      utils.wrappingInputRule(/^\s*([-+*])\s$/, type),
-    ];
+    return [utils.wrappingInputRule(/^\s*([-+*])\s$/, type)];
   }
 
   keys({ type, schema, utils }) {
     return {
-      "Shift-Ctrl-8": utils.toggleList(type, schema.nodes.listItem),
+      "Shift-Ctrl-8": utils.toggleList(type, schema.nodes.listItem)
     };
   }
 
@@ -36,11 +33,8 @@ export default class BulletList extends Node {
     return {
       content: "listItem+",
       group: "block",
-      parseDOM: [
-        { tag: "ul" },
-      ],
-      toDOM: () => ["ul", 0],
+      parseDOM: [{ tag: "ul" }],
+      toDOM: () => ["ul", 0]
     };
   }
-
 }

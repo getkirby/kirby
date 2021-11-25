@@ -5,31 +5,20 @@
     </k-headline>
     <footer v-if="help" class="k-field-footer">
       <!-- eslint-disable vue/no-v-html -->
-      <k-text
-        v-if="help"
-        theme="help"
-        class="k-field-help"
-        v-html="help"
-      />
+      <k-text v-if="help" theme="help" class="k-field-help" v-html="help" />
       <!-- eslint-enable vue/no-v-html -->
     </footer>
   </div>
 </template>
 
 <script>
-import {
-  help,
-  label
-} from "@/mixins/props.js";
+import { help, label } from "@/mixins/props.js";
 
 /**
  * @example <k-headline-field label="This is a headline" />
  */
 export default {
-  mixins: [
-    help,
-    label
-  ],
+  mixins: [help, label],
   props: {
     numbered: Boolean
   }
@@ -43,7 +32,6 @@ body {
 .k-headline-field {
   position: relative;
   padding-top: 1.5rem;
-
 }
 /* don't add the top padding,
 if the headline is the very first form element */
@@ -56,6 +44,6 @@ if the headline is the very first form element */
   content: counter(headline-counter, decimal-leading-zero);
   color: var(--color-focus);
   font-weight: 400;
-  padding-inline-end: .25rem;
+  padding-inline-end: 0.25rem;
 }
 </style>

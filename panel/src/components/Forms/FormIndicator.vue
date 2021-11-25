@@ -5,15 +5,9 @@
       icon="edit"
       @click="toggle"
     />
-    <k-dropdown-content
-      ref="list"
-      align="right"
-      theme="light"
-    >
-      <p class="k-form-indicator-info">
-        {{ $t("lock.unsaved") }}:
-      </p>
-      <hr>
+    <k-dropdown-content ref="list" align="right" theme="light">
+      <p class="k-form-indicator-info">{{ $t("lock.unsaved") }}:</p>
+      <hr />
       <k-dropdown-item
         v-for="option in options"
         :key="option.id"
@@ -31,22 +25,20 @@ export default {
     return {
       isOpen: false,
       options: []
-    }
+    };
   },
   computed: {
     hasChanges() {
       return this.ids.length > 0;
     },
     ids() {
-      return Object
-        .keys(this.store)
-        .filter(id => {
-          return Object.keys(this.store[id]?.changes || {}).length > 0;
-        });
+      return Object.keys(this.store).filter((id) => {
+        return Object.keys(this.store[id]?.changes || {}).length > 0;
+      });
     },
     store() {
       return this.$store.state.content.models;
-    },
+    }
   },
   methods: {
     async toggle() {
@@ -56,11 +48,14 @@ export default {
             body: {
               ids: this.ids
             }
-          })(options => {
+          })((options) => {
             this.options = options;
           });
         } catch (e) {
-          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+          this.$store.dispatch(
+            "notification/success",
+            this.$t("lock.unsaved.empty")
+          );
           this.$store.dispatch("content/clear");
           return false;
         }
@@ -81,7 +76,7 @@ export default {
 .k-form-indicator-info {
   font-size: var(--text-sm);
   font-weight: var(--font-bold);
-  padding: .75rem 1rem .25rem;
+  padding: 0.75rem 1rem 0.25rem;
   line-height: 1.25em;
   width: 15rem;
 }

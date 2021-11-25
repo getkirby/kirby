@@ -1,9 +1,5 @@
 <template>
-  <k-field
-    :counter="counterOptions"
-    v-bind="$props"
-    class="k-checkboxes-field"
-  >
+  <k-field :counter="counterOptions" v-bind="$props" class="k-checkboxes-field">
     <k-input
       :id="_uid"
       ref="input"
@@ -25,17 +21,12 @@ import counter from "@/mixins/forms/counter.js";
  * Have a look at `<k-field>`, `<k-input>` and `<k-checkboxes-input>` for additional information.
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    CheckboxesInput,
-    counter
-  ],
+  mixins: [Field, Input, CheckboxesInput, counter],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

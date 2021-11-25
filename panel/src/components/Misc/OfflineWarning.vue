@@ -1,8 +1,6 @@
 <template>
   <div v-if="offline" class="k-offline-warning">
-    <p>
-      <k-icon type="bolt" /> {{ $t('error.offline') }}
-    </p>
+    <p><k-icon type="bolt" /> {{ $t("error.offline") }}</p>
   </div>
 </template>
 
@@ -14,7 +12,7 @@ export default {
   data() {
     return {
       offline: false
-    }
+    };
   },
   created() {
     this.$events.$on("offline", this.isOffline);
@@ -32,7 +30,7 @@ export default {
       this.offline = true;
     }
   }
-}
+};
 </script>
 
 <style>
@@ -49,10 +47,10 @@ export default {
 .k-offline-warning p {
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
   background: var(--color-white);
   box-shadow: var(--shadow);
-  padding: .75rem;
+  padding: 0.75rem;
   border-radius: var(--rounded);
 }
 .k-offline-warning p .k-icon {

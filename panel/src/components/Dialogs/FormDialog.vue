@@ -20,9 +20,7 @@
       @input="$emit('input', $event)"
       @submit="$emit('submit', $event)"
     />
-    <k-box v-else theme="negative">
-      This form dialog has no fields
-    </k-box>
+    <k-box v-else theme="negative"> This form dialog has no fields </k-box>
   </k-dialog>
 </template>
 
@@ -44,20 +42,20 @@ export default {
     },
     size: {
       type: String,
-      default: "medium",
+      default: "medium"
     },
     submitButton: {
       type: [String, Boolean],
       default() {
-        return window.panel.$t("save")
+        return window.panel.$t("save");
       }
     },
     text: {
-      type: String,
+      type: String
     },
     theme: {
       type: String,
-      default: "positive",
+      default: "positive"
     },
     value: {
       type: Object,
@@ -69,7 +67,7 @@ export default {
   data() {
     return {
       model: this.value
-    }
+    };
   },
   computed: {
     hasFields() {
@@ -83,5 +81,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

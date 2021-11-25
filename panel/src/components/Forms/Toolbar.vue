@@ -50,7 +50,7 @@
 </template>
 
 <script>
-const list = function(type) {
+const list = function (type) {
   this.command("insert", (input, selection) => {
     let html = [];
 
@@ -129,7 +129,7 @@ export default {
       }
     },
     close() {
-      Object.keys(this.$refs).forEach(ref => {
+      Object.keys(this.$refs).forEach((ref) => {
         const component = this.$refs[ref][0];
 
         if (typeof component?.close === "function") {
@@ -138,10 +138,9 @@ export default {
       });
     },
     fileCommandSetup() {
-
       let command = {
         label: this.$t("toolbar.button.file"),
-        icon: "attachment",
+        icon: "attachment"
       };
 
       if (this.uploads === false) {
@@ -281,6 +280,6 @@ export default {
   height: 36px;
 }
 .k-toolbar-button:hover {
-  background: rgba(239, 239, 239, .5);
+  background: rgba(239, 239, 239, 0.5);
 }
 </style>

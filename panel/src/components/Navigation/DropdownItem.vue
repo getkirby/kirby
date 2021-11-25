@@ -37,7 +37,7 @@ export default {
           this.$emit("click", event);
         }
       }
-    }
+    };
   },
   methods: {
     focus() {
@@ -60,12 +60,12 @@ export default {
   font-size: var(--text-sm);
   padding: 6px 16px;
 }
-.k-dropdown-item:focus{
+.k-dropdown-item:focus {
   outline: none;
   box-shadow: var(--shadow-outline);
 }
 .k-dropdown-item .k-button-figure {
   text-align: center;
-  padding-inline-end: .5rem;
+  padding-inline-end: 0.5rem;
 }
 </style>

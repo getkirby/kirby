@@ -10,17 +10,16 @@ import translations from "./translations.js";
 import users from "./users.js";
 
 export default (extensions = {}) => {
-
   const defaults = {
     endpoint: "/api",
     methodOverwrite: true,
     onPrepare(options) {
       return options;
     },
-    onStart() { },
-    onComplete() { },
-    onSuccess() { },
-    onParserError() { },
+    onStart() {},
+    onComplete() {},
+    onSuccess() {},
+    onParserError() {},
     onError(error) {
       window.console.log(error.message);
       throw error;
@@ -35,7 +34,7 @@ export default (extensions = {}) => {
   let api = {
     ...config,
     ...request(config),
-    ...extensions,
+    ...extensions
   };
 
   api.auth = auth(api);

@@ -15,10 +15,7 @@
       class="k-item-image"
     />
     <!-- icon -->
-    <k-aspect-ratio
-      v-else
-      :ratio="ratio"
-    >
+    <k-aspect-ratio v-else :ratio="ratio">
       <k-icon
         :color="$helper.color(image.color)"
         :size="size"
@@ -54,11 +51,11 @@ export default {
     size() {
       switch (this.layout) {
         case "cards":
-          return "large"
+          return "large";
         case "cardlets":
-            return "medium"
+          return "medium";
         default:
-          return "regular"
+          return "regular";
       }
     },
     sizes() {

@@ -1,9 +1,5 @@
 <template>
-  <k-icon
-    :type="icon"
-    class="k-sort-handle"
-    aria-hidden="true"
-  />
+  <k-icon :type="icon" class="k-sort-handle" aria-hidden="true" />
 </template>
 
 <script>
@@ -26,7 +22,7 @@ export default {
       default: "sort"
     }
   }
-}
+};
 </script>
 
 <style>
@@ -44,7 +40,7 @@ export default {
   height: 2rem;
   display: flex;
   will-change: opacity, color;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   z-index: 1;
 }
 .k-sort-handle svg {

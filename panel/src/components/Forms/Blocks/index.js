@@ -21,7 +21,7 @@ Vue.component("k-block-title", BlockTitle);
 Vue.component("k-block-type", BlockType);
 
 // block types
-const components = import.meta.globEager('./Types/*.vue');
+const components = import.meta.globEager("./Types/*.vue");
 
 Object.keys(components).map((key) => {
   // get name and type by filename

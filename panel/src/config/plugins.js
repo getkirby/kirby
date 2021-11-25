@@ -12,7 +12,9 @@ export default {
     /**
      * Components
      */
-    for (const [name, options] of Object.entries(window.panel.plugins.components)) {
+    for (const [name, options] of Object.entries(
+      window.panel.plugins.components
+    )) {
       // make sure component has something to show
       if (!options.template && !options.render && !options.extends) {
         store.dispatch(
@@ -30,27 +32,26 @@ export default {
             options,
             components: {
               ...components,
-              ...options.components || {}
+              ...(options.components || {})
             }
           });
         } else {
           // if component doesn't exist, don't extend
-          options.extends = null
+          options.extends = null;
         }
 
-        if (options.template) {
-          options.render = null;
+        if (options.mixins) {
+          options.mixins = options.mixins.map((mixin) => {
+            return typeof mixin === "string" ? mixins[mixin] : mixin;
+          });
         }
-      }
 
-      if (options.mixins) {
-        options.mixins = options.mixins.map(mixin => {
-          return typeof mixin === "string" ? mixins[mixin] : mixin;
-        });
-      }
+        if (components[name]) {
+          window.console.warn(`Plugin is replacing "${name}"`);
+        }
 
-      if (components[name]) {
-        window.console.warn(`Plugin is replacing "${name}"`);
+        app.component(name, options);
+        components[name] = app.options.components[name];
       }
 
       app.component(name, options);
@@ -64,4 +65,4 @@ export default {
       app.use(plugin);
     }
   }
-}
+};

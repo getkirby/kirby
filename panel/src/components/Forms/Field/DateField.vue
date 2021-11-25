@@ -42,11 +42,7 @@ import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
  * @example <k-date-field v-model="date" name="date" label="Date" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    DateTimeInput
-  ],
+  mixins: [Field, Input, DateTimeInput],
   inheritAttrs: false,
   props: {
     /**
@@ -108,5 +104,5 @@ export default {
       }
     }
   }
-}
+};
 </script>

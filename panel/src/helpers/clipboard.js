@@ -1,5 +1,4 @@
 export function read(e) {
-
   if (!e) {
     return null;
   }
@@ -10,7 +9,10 @@ export function read(e) {
 
   if (e instanceof ClipboardEvent) {
     e.preventDefault();
-    const html = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain") || null;
+    const html =
+      e.clipboardData.getData("text/html") ||
+      e.clipboardData.getData("text/plain") ||
+      null;
 
     if (html) {
       return html.replace(/\u00a0/g, " ");
@@ -21,7 +23,6 @@ export function read(e) {
 }
 
 export function write(value, e) {
-
   // create pretty json of objects and arrays
   if (typeof value !== "string") {
     value = JSON.stringify(value, null, 2);
@@ -45,15 +46,15 @@ export function write(value, e) {
     input.contentEditable = true;
     input.readOnly = true;
 
-    const range = document.createRange()
-    range.selectNodeContents(input)
+    const range = document.createRange();
+    range.selectNodeContents(input);
 
-    const selection = window.getSelection()
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
     input.setSelectionRange(0, 999999);
 
-  // everything else
+    // everything else
   } else {
     input.select();
   }
@@ -67,4 +68,4 @@ export function write(value, e) {
 export default {
   read,
   write
-}
+};

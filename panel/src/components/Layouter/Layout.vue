@@ -13,11 +13,13 @@
         :fieldset-groups="fieldsetGroups"
         :fieldsets="fieldsets"
         v-bind="column"
-        @input="$emit('updateColumn', {
-          column,
-          columnIndex,
-          blocks: $event
-        })"
+        @input="
+          $emit('updateColumn', {
+            column,
+            columnIndex,
+            blocks: $event
+          })
+        "
       />
     </k-grid>
     <nav v-if="!disabled" class="k-layout-toolbar">
@@ -30,7 +32,11 @@
       />
 
       <k-dropdown>
-        <k-button class="k-layout-toolbar-button" icon="angle-down" @click="$refs.options.toggle()" />
+        <k-button
+          class="k-layout-toolbar-button"
+          icon="angle-down"
+          @click="$refs.options.toggle()"
+        />
         <k-dropdown-content ref="options" align="right">
           <k-dropdown-item icon="angle-up" @click="$emit('prepend')">
             {{ $t("insert.before") }}
@@ -38,15 +44,22 @@
           <k-dropdown-item icon="angle-down" @click="$emit('append')">
             {{ $t("insert.after") }}
           </k-dropdown-item>
-          <hr>
-          <k-dropdown-item v-if="settings" icon="settings" @click="$refs.drawer.open()">
+          <hr />
+          <k-dropdown-item
+            v-if="settings"
+            icon="settings"
+            @click="$refs.drawer.open()"
+          >
             {{ $t("settings") }}
           </k-dropdown-item>
           <k-dropdown-item icon="copy" @click="$emit('duplicate')">
             {{ $t("duplicate") }}
           </k-dropdown-item>
-          <hr>
-          <k-dropdown-item icon="trash" @click="$refs.confirmRemoveDialog.open()">
+          <hr />
+          <k-dropdown-item
+            icon="trash"
+            @click="$refs.confirmRemoveDialog.open()"
+          >
             {{ $t("field.layout.delete") }}
           </k-dropdown-item>
         </k-dropdown-content>
@@ -101,9 +114,9 @@ export default {
       Object.entries(tabs).forEach(([tabName, tab]) => {
         Object.entries(tab.fields).forEach(([fieldName]) => {
           tabs[tabName].fields[fieldName].endpoints = {
-            field:   this.endpoints.field + "/fields/" + fieldName,
+            field: this.endpoints.field + "/fields/" + fieldName,
             section: this.endpoints.section,
-            model:   this.endpoints.model
+            model: this.endpoints.model
           };
         });
       });
@@ -115,7 +128,6 @@ export default {
 </script>
 
 <style>
-
 .k-layout {
   --layout-border-color: var(--color-gray-300);
   --layout-toolbar-width: 2rem;

@@ -20,11 +20,7 @@ import { props as SelectInput } from "../Input/SelectInput.vue";
  * Have a look at `<k-field>`, `<k-input>` and `<k-select-input>` for additional information.
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    SelectInput
-  ],
+  mixins: [Field, Input, SelectInput],
   inheritAttrs: false,
   props: {
     icon: {
@@ -37,5 +33,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

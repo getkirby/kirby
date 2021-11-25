@@ -1,7 +1,6 @@
 import Node from "../Node";
 
 export default class HardBreak extends Node {
-
   commands({ utils, type }) {
     return () => this.createHardBreak(utils, type);
   }
@@ -25,7 +24,7 @@ export default class HardBreak extends Node {
 
     let keymap = {
       "Mod-Enter": command,
-      "Shift-Enter": command,
+      "Shift-Enter": command
     };
 
     if (this.options.enter) {
@@ -44,11 +43,8 @@ export default class HardBreak extends Node {
       inline: true,
       group: "inline",
       selectable: false,
-      parseDOM: [
-        { tag: "br" },
-      ],
-      toDOM: () => ["br"],
+      parseDOM: [{ tag: "br" }],
+      toDOM: () => ["br"]
     };
   }
-
 }

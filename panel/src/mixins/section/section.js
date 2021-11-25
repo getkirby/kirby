@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     load() {
-      return this.$api.get(this.parent + '/sections/' + this.name);
+      return this.$api.get(this.parent + "/sections/" + this.name);
     }
   }
 };

@@ -3,7 +3,11 @@
     <k-view v-if="form === 'login'" align="center" class="k-login-view">
       <k-login-plugin :methods="methods" />
     </k-view>
-    <k-view v-else-if="form === 'code'" align="center" class="k-login-code-view">
+    <k-view
+      v-else-if="form === 'code'"
+      align="center"
+      class="k-login-code-view"
+    >
       <k-login-code v-bind="$props" />
     </k-view>
   </k-panel>
@@ -51,7 +55,7 @@ export default {
   z-index: 1;
 
   text-decoration: underline;
-  font-size: .875rem;
+  font-size: 0.875rem;
 }
 
 .k-login-form label abbr {
@@ -66,10 +70,10 @@ export default {
 }
 
 .k-login-button {
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   font-weight: 500;
-  transition: opacity .3s;
-  margin-inline-end: -1rem
+  transition: opacity 0.3s;
+  margin-inline-end: -1rem;
 }
 
 .k-login-button span {
@@ -77,7 +81,7 @@ export default {
 }
 
 .k-login-button[disabled] {
-  opacity: .25;
+  opacity: 0.25;
 }
 
 .k-login-back-button,
@@ -92,14 +96,14 @@ export default {
 }
 
 .k-login-checkbox {
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .k-login-checkbox .k-checkbox-text {
-  opacity: .75;
-  transition: opacity .3s;
+  opacity: 0.75;
+  transition: opacity 0.3s;
 }
 
 .k-login-checkbox:hover span,

@@ -7,7 +7,7 @@ export default {
     permissions: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     },
     lock: {
@@ -16,7 +16,7 @@ export default {
     model: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     },
     tab: {

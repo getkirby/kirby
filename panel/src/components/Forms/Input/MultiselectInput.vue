@@ -38,9 +38,13 @@
           <input
             ref="search"
             v-model="q"
-            :placeholder="search.min ? $t('search.min', { min: search.min }) : $t('search') + ' …'"
+            :placeholder="
+              search.min
+                ? $t('search.min', { min: search.min })
+                : $t('search') + ' …'
+            "
             @keydown.esc.stop="escape"
-          >
+          />
         </k-dropdown-item>
 
         <div class="k-multiselect-options scroll-y-auto">
@@ -50,8 +54,8 @@
             :icon="isSelected(option) ? 'check' : 'circle-outline'"
             :class="{
               'k-multiselect-option': true,
-              'selected': isSelected(option),
-              'disabled': !more
+              selected: isSelected(option),
+              disabled: !more
             }"
             @click.prevent="select(option)"
             @keydown.native.enter.prevent.stop="select(option)"
@@ -84,11 +88,7 @@
 </template>
 
 <script>
-import {
-  disabled,
-  id,
-  required
-} from "@/mixins/props.js";
+import { disabled, id, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -97,11 +97,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    disabled,
-    id,
-    required
-  ],
+  mixins: [disabled, id, required],
   props: {
     max: Number,
     min: Number,
@@ -160,15 +156,15 @@ export default {
     filtered() {
       if (this.q?.length >= (this.search.min || 0)) {
         return this.options
-          .filter(option => this.isFiltered(option))
-          .map(option => ({
+          .filter((option) => this.isFiltered(option))
+          .map((option) => ({
             ...option,
             display: this.toHighlightedString(option.text),
             info: this.toHighlightedString(option.value)
           }));
       }
 
-      return this.options.map(option => ({
+      return this.options.map((option) => ({
         ...option,
         display: option.text,
         info: option.value
@@ -187,16 +183,19 @@ export default {
 
       let items = this.state;
 
-      const index = x => this.options.findIndex(y => y.value === x.value);
+      const index = (x) => this.options.findIndex((y) => y.value === x.value);
       return items.sort((a, b) => index(a) - index(b));
     },
     visible() {
       if (this.limit) {
-        return this.filtered.slice(0, this.search.display || this.filtered.length);
+        return this.filtered.slice(
+          0,
+          this.search.display || this.filtered.length
+        );
       }
 
       return this.filtered;
-    },
+    }
   },
   watch: {
     value(value) {
@@ -241,11 +240,13 @@ export default {
       this.$refs.dropdown.open();
     },
     index(option) {
-      return this.state.findIndex(item => item.value === option.value);
+      return this.state.findIndex((item) => item.value === option.value);
     },
     isFiltered(option) {
-      return String(option.text).match(this.regex) ||
-             String(option.value).match(this.regex);
+      return (
+        String(option.text).match(this.regex) ||
+        String(option.value).match(this.regex)
+      );
     },
     isSelected(option) {
       return this.index(option) !== -1;
@@ -264,11 +265,7 @@ export default {
           }
           break;
         case "next":
-          if (
-            current &&
-            current.nextSibling &&
-            current.nextSibling.focus
-          ) {
+          if (current && current.nextSibling && current.nextSibling.focus) {
             current.nextSibling.focus();
           }
           break;
@@ -295,7 +292,9 @@ export default {
           this.$refs.search.focus();
         }
 
-        this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop;
+        this.$refs.dropdown.$el.querySelector(
+          ".k-multiselect-options"
+        ).scrollTop = this.scrollTop;
       });
     },
     remove(option) {
@@ -303,7 +302,9 @@ export default {
       this.onInput();
     },
     select(option) {
-      this.scrollTop = this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop;
+      this.scrollTop = this.$refs.dropdown.$el.querySelector(
+        ".k-multiselect-options"
+      ).scrollTop;
 
       option = { text: option.text, value: option.value };
 
@@ -317,8 +318,8 @@ export default {
       // make sure that no HTML exists before in the string
       // to avoid XSS when displaying via `v-html`
       string = this.$helper.string.stripHTML(string);
-      return string.replace(this.regex, "<b>$1</b>")
-    },
+      return string.replace(this.regex, "<b>$1</b>");
+    }
   },
   validations() {
     return {
@@ -353,7 +354,7 @@ export default {
   margin-top: 0 !important;
   color: var(--color-white);
   background: var(--color-gray-900);
-  border-bottom: 1px dashed rgba(255, 255, 255, .2);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
 }
 .k-multiselect-search > .k-button-text {
   flex: 1;
@@ -366,14 +367,14 @@ export default {
   background: none;
   border: none;
   outline: none;
-  padding: .25rem 0;
+  padding: 0.25rem 0;
   font: inherit;
 }
 
 .k-multiselect-options {
   position: relative;
   max-height: 275px;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
 
 .k-multiselect-option {
@@ -393,7 +394,7 @@ export default {
 
 .k-multiselect-value {
   color: var(--color-gray-500);
-  margin-inline-start: .25rem;
+  margin-inline-start: 0.25rem;
 }
 .k-multiselect-value::before {
   content: " (";
@@ -409,10 +410,10 @@ export default {
 
 .k-multiselect-more {
   width: 100%;
-  padding: .75rem;
-  color: rgba(255, 255, 255, .8);
+  padding: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
-  border-top: 1px dashed rgba(255, 255, 255, .2);
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
 }
 .k-multiselect-more:hover {
   color: var(--color-white);

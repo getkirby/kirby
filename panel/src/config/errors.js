@@ -20,4 +20,4 @@ export default {
       store.dispatch("notification/error", error);
     };
   }
-}
+};

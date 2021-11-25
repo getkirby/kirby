@@ -16,7 +16,7 @@ export default {
     return {
       email: {
         email: null,
-        title: null,
+        title: null
       }
     };
   },
@@ -32,7 +32,7 @@ export default {
           label: this.$t("title"),
           type: "text",
           icon: "title"
-        },
+        }
       };
     }
   },

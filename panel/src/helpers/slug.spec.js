@@ -1,7 +1,6 @@
 import slug from "./slug.js";
 
 describe("$helper.slug()", () => {
-
   it("should replace spaces", () => {
     const result = slug("a b c");
     expect(result).to.equal("a-b-c");
@@ -39,11 +38,11 @@ describe("$helper.slug()", () => {
 
   it("should apply rules", () => {
     const rules = [
-      { "å": "a" },
-      { "á": "a" },
-      { "ö": "oe" },
-      { "ß": "ss" },
-      { "İ": "i" }
+      { å: "a" },
+      { á: "a" },
+      { ö: "oe" },
+      { ß: "ss" },
+      { İ: "i" }
     ];
 
     const result = slug("åöß", rules);
@@ -51,9 +50,7 @@ describe("$helper.slug()", () => {
   });
 
   it("should handle plus signs", () => {
-    const rules = [
-      { "+": "-plus-" }
-    ];
+    const rules = [{ "+": "-plus-" }];
 
     const result = slug("1+1", rules);
     expect(result).to.equal("1-plus-1");
@@ -81,5 +78,4 @@ describe("$helper.slug()", () => {
     const result = slug(undefined);
     expect(result).to.equal("");
   });
-
 });

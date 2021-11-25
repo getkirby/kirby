@@ -17,7 +17,15 @@
           <component
             :is="'k-' + section.type + '-section'"
             v-if="exists(section.type)"
-            :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
+            :key="
+              parent +
+              '-column-' +
+              columnIndex +
+              '-section-' +
+              sectionIndex +
+              '-' +
+              blueprint
+            "
             :column="column.width"
             :lock="lock"
             :name="section.name"
@@ -28,7 +36,13 @@
             @submit="$emit('submit', $event)"
           />
           <template v-else>
-            <k-box :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex" :text="$t('error.section.type.invalid', { type: section.type })" theme="negative" />
+            <k-box
+              :key="
+                parent + '-column-' + columnIndex + '-section-' + sectionIndex
+              "
+              :text="$t('error.section.type.invalid', { type: section.type })"
+              theme="negative"
+            />
           </template>
         </template>
       </template>
@@ -55,15 +69,14 @@ export default {
       return this.$helper.isComponent(`k-${type}-section`);
     },
     meetsCondition(section) {
-
       if (!section.when) {
         return true;
       }
 
       let result = true;
 
-      Object.keys(section.when).forEach(key => {
-        const value     = this.content[key.toLowerCase()];
+      Object.keys(section.when).forEach((key) => {
+        const value = this.content[key.toLowerCase()];
         const condition = section.when[key];
 
         if (value !== condition) {
@@ -72,8 +85,7 @@ export default {
       });
 
       return result;
-
-    },
+    }
   }
 };
 </script>
@@ -93,12 +105,12 @@ export default {
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
-  padding-bottom: .75rem;
+  padding-bottom: 0.75rem;
   min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
-  top: -.875rem;
+  top: -0.875rem;
   inset-inline-end: 0;
 }
 </style>

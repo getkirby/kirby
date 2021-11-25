@@ -10,22 +10,23 @@ export default {
         }
         case "date": {
           const date = this.$library.dayjs(value);
-          const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
+          const format =
+            field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
           return date.isValid() ? date.format(format) : "";
         }
         case "tags":
         case "multiselect":
           return value
-            .map(item => {
+            .map((item) => {
               return item.text;
             })
             .join(", ");
         case "checkboxes": {
           return value
-            .map(item => {
+            .map((item) => {
               let text = item;
 
-              field.options.forEach(option => {
+              field.options.forEach((option) => {
                 if (option.value === item) {
                   text = option.text;
                 }
@@ -37,7 +38,9 @@ export default {
         }
         case "radio":
         case "select": {
-          const option = field.options.filter(item => item.value === value)[0];
+          const option = field.options.filter(
+            (item) => item.value === value
+          )[0];
           return option ? option.text : null;
         }
       }
@@ -55,4 +58,4 @@ export default {
       return fraction ? this.$helper.ratio(fraction, "auto", false) : "auto";
     }
   }
-}
+};

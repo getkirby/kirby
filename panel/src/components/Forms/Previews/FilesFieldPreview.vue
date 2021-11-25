@@ -13,21 +13,21 @@ export default {
   props: {
     value: Array
   }
-}
+};
 </script>
 
 <style>
 .k-files-field-preview {
   display: grid;
-  grid-gap: .5rem;
+  grid-gap: 0.5rem;
   grid-template-columns: repeat(auto-fill, 1.525rem);
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
 }
 .k-files-field-preview li {
   line-height: 0;
 }
 .k-files-field-preview li .k-icon {
-  --size: .85rem;
+  --size: 0.85rem;
   height: 100%;
 }
 </style>

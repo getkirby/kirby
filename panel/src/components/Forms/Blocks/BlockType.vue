@@ -12,7 +12,7 @@ export default {
     field(name, fallback = null) {
       let field = null;
 
-      Object.values(this.fieldset.tabs).forEach(tab => {
+      Object.values(this.fieldset.tabs).forEach((tab) => {
         if (tab.fields[name]) {
           field = tab.fields[name];
         }
@@ -28,7 +28,7 @@ export default {
         ...this.content,
         ...content
       });
-    },
+    }
   }
 };
 </script>

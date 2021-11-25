@@ -1,10 +1,5 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    :help="preview"
-    class="k-slug-field"
-  >
+  <k-field :input="_uid" v-bind="$props" :help="preview" class="k-slug-field">
     <template v-if="wizard && wizard.text" #options>
       <k-button :text="wizard.text" icon="wand" @click="onWizard" />
     </template>
@@ -30,11 +25,7 @@ import { props as SlugInput } from "../Input/SlugInput.vue";
  * @example <k-slug-field v-model="slug" name="slug" label="Slug" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    SlugInput
-  ],
+  mixins: [Field, Input, SlugInput],
   inheritAttrs: false,
   props: {
     icon: {
@@ -46,12 +37,12 @@ export default {
     },
     wizard: {
       type: [Boolean, Object],
-      default: false,
+      default: false
     }
   },
   data() {
     return {
-      slug: this.value,
+      slug: this.value
     };
   },
   computed: {
@@ -82,5 +73,5 @@ export default {
       }
     }
   }
-}
+};
 </script>
