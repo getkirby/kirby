@@ -197,6 +197,9 @@ export default {
   z-index: 1;
 }
 .k-item-buttons > .k-dropdown {
+  z-index: var(--z-navigation);
+}
+.k-item-buttons > .k-dropdown-content {
   z-index: var(--z-dropdown);
 }
 
