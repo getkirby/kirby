@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Email extends Mark {
-
   get button() {
     return {
       icon: "email",
@@ -11,15 +10,15 @@ export default class Email extends Mark {
 
   commands() {
     return {
-      "email": () => {
+      email: () => {
         this.editor.emit("email");
       },
-      "insertEmail": (attrs = {}) => {
+      insertEmail: (attrs = {}) => {
         if (attrs.href) {
           return this.update(attrs);
         }
       },
-      "removeEmail": () => {
+      removeEmail: () => {
         return this.remove();
       },
       "toggleEmail": (attrs = {}) => {
@@ -35,7 +34,7 @@ export default class Email extends Mark {
   get defaults() {
     return {
       target: null
-    }
+    };
   }
 
   get name() {
@@ -44,12 +43,10 @@ export default class Email extends Mark {
 
   pasteRules({ type, utils }) {
     return [
-      utils.pasteRule(
-        /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/gi,
-        type,
-        url => ({ href: url }),
-      ),
-    ]
+      utils.pasteRule(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/gi, type, (url) => ({
+        href: url
+      }))
+    ];
   }
 
   plugins() {
@@ -59,21 +56,25 @@ export default class Email extends Mark {
           handleClick: (view, pos, event) => {
             const attrs = this.editor.getMarkAttrs("email");
 
-            if (attrs.href && event.altKey === true && event.target instanceof HTMLAnchorElement) {
-              event.stopPropagation()
-              window.open(attrs.href)
+            if (
+              attrs.href &&
+              event.altKey === true &&
+              event.target instanceof HTMLAnchorElement
+            ) {
+              event.stopPropagation();
+              window.open(attrs.href);
             }
-          },
-        },
-      },
-    ]
+          }
+        }
+      }
+    ];
   }
 
   get schema() {
     return {
       attrs: {
         href: {
-          default: null,
+          default: null
         },
         title: {
           default: null
@@ -83,17 +84,20 @@ export default class Email extends Mark {
       parseDOM: [
         {
           tag: "a[href^='mailto:']",
-          getAttrs: dom => ({
+          getAttrs: (dom) => ({
             href: dom.getAttribute("href").replace("mailto:", ""),
             title: dom.getAttribute("title")
-          }),
-        },
+          })
+        }
       ],
-      toDOM: node => ["a", {
-        ...node.attrs,
-        href: "mailto:"+ node.attrs.href,
-      }, 0],
-    }
+      toDOM: (node) => [
+        "a",
+        {
+          ...node.attrs,
+          href: "mailto:" + node.attrs.href
+        },
+        0
+      ]
+    };
   }
-
 }

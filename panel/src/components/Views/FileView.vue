@@ -43,10 +43,7 @@
             </k-button-group>
           </template>
           <template #right>
-            <k-prev-next
-              :prev="prev"
-              :next="next"
-            />
+            <k-prev-next :prev="prev" :next="next" />
           </template>
         </k-header>
         <k-sections
@@ -56,10 +53,7 @@
           :parent="id"
           :tab="tab"
         />
-        <k-upload
-          ref="upload"
-          @success="onUpload"
-        />
+        <k-upload ref="upload" @success="onUpload" />
       </k-view>
     </div>
     <template #footer>

@@ -40,9 +40,9 @@ export default (api) => {
     },
     async duplicate(id, slug, options) {
       return api.post("pages/" + this.id(id) + "/duplicate", {
-        slug:     slug,
+        slug: slug,
         children: options.children || false,
-        files:    options.files    || false,
+        files: options.files || false
       });
     },
     async get(id, query) {
@@ -69,22 +69,31 @@ export default (api) => {
     },
     async search(parent, query) {
       if (parent) {
-        return api.post('pages/' + this.id(parent) + '/children/search?select=id,title,hasChildren', query);
+        return api.post(
+          "pages/" +
+            this.id(parent) +
+            "/children/search?select=id,title,hasChildren",
+          query
+        );
       }
 
-      return api.post('site/children/search?select=id,title,hasChildren', query);
+      return api.post(
+        "site/children/search?select=id,title,hasChildren",
+        query
+      );
     },
     async update(id, data) {
       return api.patch("pages/" + this.id(id), data);
     },
     url(id, path) {
-      let url = id === null ? "pages" : "pages/" + String(id).replace(/\//g, "+");
+      let url =
+        id === null ? "pages" : "pages/" + String(id).replace(/\//g, "+");
 
       if (path) {
         url += "/" + path;
       }
 
       return url;
-    },
+    }
   };
 };

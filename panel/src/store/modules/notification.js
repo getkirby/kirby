@@ -55,10 +55,14 @@ export default {
       }
 
       // show the error dialog
-      context.dispatch("dialog", {
-        component: "k-error-dialog",
-        props: props,
-      }, {root: true});
+      context.dispatch(
+        "dialog",
+        {
+          component: "k-error-dialog",
+          props: props
+        },
+        { root: true }
+      );
 
       // remove the notification from store
       // to avoid showing it in the topbar

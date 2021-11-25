@@ -1,7 +1,7 @@
 <template>
   <form class="k-login-form" @submit.prevent="login">
     <h1 class="sr-only">
-      {{ $t('login') }}
+      {{ $t("login") }}
     </h1>
 
     <k-login-alert v-if="issue" @click="issue = null">
@@ -27,25 +27,16 @@
     </div>
 
     <div class="k-login-buttons">
-      <span
-        v-if="isResetForm === false"
-        class="k-login-checkbox"
-      >
+      <span v-if="isResetForm === false" class="k-login-checkbox">
         <k-checkbox-input
           :value="user.remember"
           :label="$t('login.remember')"
           @input="user.remember = $event"
         />
       </span>
-      <k-button
-        class="k-login-button"
-        icon="check"
-        type="submit"
-      >
+      <k-button class="k-login-button" icon="check" type="submit">
         {{ $t("login" + (isResetForm ? ".reset" : "")) }}
-        <template v-if="isLoading">
-          …
-        </template>
+        <template v-if="isLoading"> … </template>
       </k-button>
     </div>
   </form>
@@ -73,10 +64,8 @@ export default {
       return (
         this.codeMode !== null &&
         this.methods.includes("password") === true &&
-        (
-          this.methods.includes("password-reset") === true ||
-          this.methods.includes("code") === true
-        )
+        (this.methods.includes("password-reset") === true ||
+          this.methods.includes("code") === true)
       );
     },
     codeMode() {
@@ -95,7 +84,7 @@ export default {
           label: this.$t("email"),
           type: "email",
           required: true,
-          link: false,
+          link: false
         }
       };
 
@@ -122,16 +111,11 @@ export default {
       return "email";
     },
     isResetForm() {
-      return (
-        this.codeMode === "password-reset" &&
-        this.form === "email"
-      );
+      return this.codeMode === "password-reset" && this.form === "email";
     },
     toggleText() {
       return this.$t(
-        "login.toggleText." +
-        this.codeMode + "." +
-        this.formOpposite(this.form)
+        "login.toggleText." + this.codeMode + "." + this.formOpposite(this.form)
       );
     }
   },
@@ -144,7 +128,7 @@ export default {
       }
     },
     async login() {
-      this.issue     = null;
+      this.issue = null;
       this.isLoading = true;
 
       // clear field data that is not needed for login
@@ -164,7 +148,6 @@ export default {
         this.$reload({
           globals: ["$system", "$translation"]
         });
-
       } catch (error) {
         this.issue = error.message;
       } finally {

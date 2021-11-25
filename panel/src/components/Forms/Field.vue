@@ -9,7 +9,10 @@
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" :title="$t('field.required')">*</abbr></label>
+          <label :for="input" class="k-field-label"
+            >{{ labelText }}
+            <abbr v-if="required" :title="$t('field.required')">*</abbr></label
+          >
         </slot>
         <slot name="options" />
         <slot name="counter">
@@ -27,12 +30,7 @@
       <footer v-if="help || $slots.help" class="k-field-footer">
         <slot name="help">
           <!-- eslint-disable vue/no-v-html -->
-          <k-text
-            v-if="help"
-            theme="help"
-            class="k-field-help"
-            v-html="help"
-          />
+          <k-text v-if="help" theme="help" class="k-field-help" v-html="help" />
           <!-- eslint-enable vue/no-v-html -->
         </slot>
       </footer>
@@ -41,22 +39,10 @@
 </template>
 
 <script>
-import {
-  disabled,
-  help,
-  label,
-  name,
-  required
-} from "@/mixins/props.js";
+import { disabled, help, label, name, required } from "@/mixins/props.js";
 
 export const props = {
-  mixins: [
-    disabled,
-    help,
-    label,
-    name,
-    required,
-  ],
+  mixins: [disabled, help, label, name, required],
   props: {
     counter: [Boolean, Object],
     endpoints: Object,
@@ -64,7 +50,7 @@ export const props = {
     translate: Boolean,
     type: String
   }
-}
+};
 
 export default {
   mixins: [props],
@@ -81,14 +67,14 @@ export default {
 .k-field-label {
   font-weight: var(--font-bold);
   display: block;
-  padding: 0 0 .75rem;
+  padding: 0 0 0.75rem;
   flex-grow: 1;
   line-height: 1.25rem;
 }
 .k-field-label abbr {
   text-decoration: none;
   color: var(--color-gray-500);
-  padding-inline-start: .25rem;
+  padding-inline-start: 0.25rem;
 }
 .k-field-header {
   position: relative;
@@ -97,14 +83,14 @@ export default {
 }
 .k-field-options {
   position: absolute;
-  top: calc(-.5rem - 1px);
+  top: calc(-0.5rem - 1px);
   inset-inline-end: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
   height: auto;
 }
 .k-field-options.k-button-group .k-field-options-button.k-button {
-  padding: .75rem;
+  padding: 0.75rem;
   display: flex;
 }
 .k-field[data-disabled] {
@@ -113,7 +99,7 @@ export default {
 .k-field[data-disabled] * {
   pointer-events: none;
 }
-.k-field[data-disabled] .k-text[data-theme=help] * {
+.k-field[data-disabled] .k-text[data-theme="help"] * {
   pointer-events: initial;
 }
 .k-field-counter {
@@ -123,6 +109,6 @@ export default {
   display: block;
 }
 .k-field-help {
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 </style>

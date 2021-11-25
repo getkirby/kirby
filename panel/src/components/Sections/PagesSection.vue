@@ -6,7 +6,8 @@
   >
     <header class="k-section-header">
       <k-headline :link="options.link">
-        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
+        {{ headline }}
+        <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
       <k-button-group
@@ -47,7 +48,7 @@
           icon="page"
           v-on="add ? { click: create } : {}"
         >
-          {{ options.empty || $t('pages.empty') }}
+          {{ options.empty || $t("pages.empty") }}
         </k-empty>
         <footer class="k-collection-footer">
           <!-- eslint-disable vue/no-v-html -->
@@ -86,7 +87,7 @@ export default {
   methods: {
     create() {
       if (this.add) {
-        this.$dialog('pages/create', {
+        this.$dialog("pages/create", {
           query: {
             parent: this.options.link || this.parent,
             view: this.parent,
@@ -96,7 +97,7 @@ export default {
       }
     },
     items(data) {
-      return data.map(page => {
+      return data.map((page) => {
         const isEnabled = page.permissions.changeStatus !== false;
 
         page.flag = {
@@ -108,10 +109,10 @@ export default {
           }
         };
 
-        page.sortable  = page.permissions.sort && this.options.sortable;
+        page.sortable = page.permissions.sort && this.options.sortable;
         page.deletable = data.length > this.options.min;
-        page.column    = this.column;
-        page.options   = this.$dropdown(page.link, {
+        page.column = this.column;
+        page.options = this.$dropdown(page.link, {
           query: {
             view: "list",
             delete: page.deletable,
@@ -150,7 +151,6 @@ export default {
           await this.$api.pages.status(element.id, "listed", position);
           this.$store.dispatch("notification/success", ":)");
           this.$events.$emit("page.sort", element);
-
         } catch (error) {
           this.$store.dispatch("notification/error", {
             message: error.message,
@@ -158,7 +158,6 @@ export default {
           });
 
           await this.reload();
-
         } finally {
           this.isProcessing = false;
         }

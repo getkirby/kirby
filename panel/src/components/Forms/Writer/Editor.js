@@ -5,7 +5,6 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { inputRules, undoInputRule } from "prosemirror-inputrules";
 
-
 // Prosemirror utils
 import utils from "./Utils";
 
@@ -16,7 +15,6 @@ import Extensions from "./Extensions";
 import { Doc, Paragraph, Text } from "./Nodes";
 
 export default class Editor extends Emitter {
-
   constructor(options = {}) {
     super();
 
@@ -30,7 +28,7 @@ export default class Editor extends Emitter {
       extensions: [],
       emptyDocument: {
         type: "doc",
-        content: [],
+        content: []
       },
       events: {},
       inline: false,
@@ -48,7 +46,7 @@ export default class Editor extends Emitter {
 
   get builtInExtensions() {
     if (!this.options.useBuiltInExtensions) {
-      return []
+      return [];
     }
 
     return [
@@ -56,7 +54,7 @@ export default class Editor extends Emitter {
         inline: this.options.inline
       }),
       new Text(),
-      new Paragraph(),
+      new Paragraph()
     ];
   }
 
@@ -77,7 +75,7 @@ export default class Editor extends Emitter {
   createCommands() {
     return this.extensions.commands({
       schema: this.schema,
-      view: this.view,
+      view: this.view
     });
   }
 
@@ -90,15 +88,22 @@ export default class Editor extends Emitter {
       try {
         return this.schema.nodeFromJSON(content);
       } catch (error) {
-        window.console.warn("Invalid content.", "Passed value:", content, "Error:", error);
+        window.console.warn(
+          "Invalid content.",
+          "Passed value:",
+          content,
+          "Error:",
+          error
+        );
         return this.schema.nodeFromJSON(this.options.emptyDocument);
       }
     }
 
     if (typeof content === "string") {
       const htmlString = `<div>${content}</div>`;
-      const parser     = new window.DOMParser()
-      const element    = parser.parseFromString(htmlString, "text/html").body.firstElementChild;
+      const parser = new window.DOMParser();
+      const element = parser.parseFromString(htmlString, "text/html").body
+        .firstElementChild;
 
       return DOMParser.fromSchema(this.schema).parse(element, parseOptions);
     }
@@ -117,20 +122,19 @@ export default class Editor extends Emitter {
   }
 
   createExtensions() {
-    return new Extensions([
-      ...this.builtInExtensions,
-      ...this.options.extensions,
-    ], this);
+    return new Extensions(
+      [...this.builtInExtensions, ...this.options.extensions],
+      this
+    );
   }
 
   createFocusEvents() {
-
     const toggleFocus = (view, event, focus = true) => {
       this.focused = focus;
-      this.emit((focus ? "focus" : "blur"), {
+      this.emit(focus ? "focus" : "blur", {
         event,
         state: view.state,
-        view,
+        view
       });
 
       const transaction = this.state.tr.setMeta("focused", focus);
@@ -140,7 +144,7 @@ export default class Editor extends Emitter {
     return new Plugin({
       props: {
         attributes: {
-          tabindex: 0,
+          tabindex: 0
         },
         handleDOMEvents: {
           focus: (view, event) => {
@@ -157,13 +161,13 @@ export default class Editor extends Emitter {
   createInputRules() {
     return this.extensions.inputRules({
       schema: this.schema,
-      excludedExtensions: this.options.disableInputRules,
+      excludedExtensions: this.options.disableInputRules
     });
   }
 
   createKeymaps() {
     return this.extensions.keymaps({
-      schema: this.schema,
+      schema: this.schema
     });
   }
 
@@ -178,7 +182,7 @@ export default class Editor extends Emitter {
   createPasteRules() {
     return this.extensions.pasteRules({
       schema: this.schema,
-      excludedExtensions: this.options.disablePasteRules,
+      excludedExtensions: this.options.disablePasteRules
     });
   }
 
@@ -192,7 +196,7 @@ export default class Editor extends Emitter {
     return new Schema({
       topNode: this.options.topNode,
       nodes: this.nodes,
-      marks: this.marks,
+      marks: this.marks
     });
   }
 
@@ -203,15 +207,15 @@ export default class Editor extends Emitter {
       plugins: [
         ...this.plugins,
         inputRules({
-          rules: this.inputRules,
+          rules: this.inputRules
         }),
         ...this.pasteRules,
         ...this.keymaps,
         keymap({
-          Backspace: undoInputRule,
+          Backspace: undoInputRule
         }),
         keymap(baseKeymap),
-        this.createFocusEvents(),
+        this.createFocusEvents()
       ]
     });
   }
@@ -221,7 +225,6 @@ export default class Editor extends Emitter {
       dispatchTransaction: this.dispatchTransaction.bind(this),
       editable: () => this.options.editable,
       handlePaste: (view, event) => {
-
         if (typeof this.events["paste"] === "function") {
           const html = event.clipboardData.getData("text/html");
           const text = event.clipboardData.getData("text/plain");
@@ -232,25 +235,23 @@ export default class Editor extends Emitter {
             return true;
           }
         }
-
       },
       handleDrop: (...args) => {
-        this.emit("drop", ...args)
+        this.emit("drop", ...args);
       },
-      state: this.createState(),
+      state: this.createState()
     });
   }
 
   destroy() {
     if (!this.view) {
-      return
+      return;
     }
 
     this.view.destroy();
   }
 
   dispatchTransaction(transaction) {
-
     // keep the old state for comparison
     const lastState = this.state;
 
@@ -263,8 +264,8 @@ export default class Editor extends Emitter {
     // store the updated selection
     this.selection = {
       from: this.state.selection.from,
-      to:   this.state.selection.to,
-    }
+      to: this.state.selection.to
+    };
 
     // store active nodes and marks for the toolbar
     this.setActiveNodesAndMarks();
@@ -275,7 +276,7 @@ export default class Editor extends Emitter {
       getHTML: this.getHTML.bind(this),
       getJSON: this.getJSON.bind(this),
       state: this.state,
-      transaction,
+      transaction
     };
 
     // emit details about the transaction
@@ -289,13 +290,14 @@ export default class Editor extends Emitter {
 
     // Only emit a select event if the selection changed
     const { from, to } = this.state.selection;
-    const hasChanged   = !lastState || !lastState.selection.eq(newState.selection);
+    const hasChanged =
+      !lastState || !lastState.selection.eq(newState.selection);
 
     this.emit(newState.selection.empty ? "deselect" : "select", {
       ...payload,
       from,
       hasChanged,
-      to,
+      to
     });
   }
 
@@ -312,10 +314,10 @@ export default class Editor extends Emitter {
   }
 
   getHTML() {
-    const div = document.createElement('div');
-    const fragment = DOMSerializer
-      .fromSchema(this.schema)
-      .serializeFragment(this.state.doc.content);
+    const div = document.createElement("div");
+    const fragment = DOMSerializer.fromSchema(this.schema).serializeFragment(
+      this.state.doc.content
+    );
 
     div.appendChild(fragment);
 
@@ -335,33 +337,35 @@ export default class Editor extends Emitter {
   }
 
   getSchemaJSON() {
-    return JSON.parse(JSON.stringify({
-      nodes: this.nodes,
-      marks: this.marks,
-    }));
+    return JSON.parse(
+      JSON.stringify({
+        nodes: this.nodes,
+        marks: this.marks
+      })
+    );
   }
 
   init(options = {}) {
     this.options = {
       ...this.defaults,
-      ...options,
+      ...options
     };
 
     this.element = this.options.element;
     this.focused = false;
-    this.selection = { from: 0, to: 0};
+    this.selection = { from: 0, to: 0 };
 
-    this.events     = this.createEvents();
+    this.events = this.createEvents();
     this.extensions = this.createExtensions();
-    this.nodes      = this.createNodes();
-    this.marks      = this.createMarks();
-    this.schema     = this.createSchema();
-    this.keymaps    = this.createKeymaps();
+    this.nodes = this.createNodes();
+    this.marks = this.createMarks();
+    this.schema = this.createSchema();
+    this.keymaps = this.createKeymaps();
     this.inputRules = this.createInputRules();
     this.pasteRules = this.createPasteRules();
-    this.plugins    = this.createPlugins();
-    this.view       = this.createView();
-    this.commands   = this.createCommands();
+    this.plugins = this.createPlugins();
+    this.view = this.createView();
+    this.commands = this.createCommands();
 
     this.setActiveNodesAndMarks();
 
@@ -371,7 +375,7 @@ export default class Editor extends Emitter {
 
     this.emit("init", {
       view: this.view,
-      state: this.state,
+      state: this.state
     });
 
     // give extensions access to our view
@@ -389,20 +393,24 @@ export default class Editor extends Emitter {
   }
 
   get isActive() {
-    return Object
-      .entries({
-        ...this.activeMarks,
-        ...this.activeNodes,
-      })
-      .reduce((types, [name, value]) => ({
+    return Object.entries({
+      ...this.activeMarks,
+      ...this.activeNodes
+    }).reduce(
+      (types, [name, value]) => ({
         ...types,
-        [name]: (attrs = {}) => value(attrs),
-      }), {})
+        [name]: (attrs = {}) => value(attrs)
+      }),
+      {}
+    );
   }
 
   removeMark(mark) {
     if (this.schema.marks[mark]) {
-      return utils.removeMark(this.schema.marks[mark])(this.state, this.view.dispatch);
+      return utils.removeMark(this.schema.marks[mark])(
+        this.state,
+        this.view.dispatch
+      );
     }
   }
 
@@ -414,48 +422,48 @@ export default class Editor extends Emitter {
     if (position === "start" || position === true) {
       return {
         from: 0,
-        to: 0,
-      }
+        to: 0
+      };
     }
 
     if (position === "end") {
       const { doc } = this.state;
       return {
         from: doc.content.size,
-        to: doc.content.size,
+        to: doc.content.size
       };
     }
 
     return {
       from: position,
-      to: position,
+      to: position
     };
   }
 
   setActiveNodesAndMarks() {
-    this.activeMarks = Object
-      .values(this.schema.marks)
-      .filter(mark => utils.markIsActive(this.state, mark))
-      .map(mark => mark.name);
+    this.activeMarks = Object.values(this.schema.marks)
+      .filter((mark) => utils.markIsActive(this.state, mark))
+      .map((mark) => mark.name);
 
-    this.activeMarkAttrs = Object
-      .entries(this.schema.marks)
-      .reduce((marks, [name, mark]) => ({
+    this.activeMarkAttrs = Object.entries(this.schema.marks).reduce(
+      (marks, [name, mark]) => ({
         ...marks,
-        [name]: utils.getMarkAttrs(this.state, mark),
-      }), {});
+        [name]: utils.getMarkAttrs(this.state, mark)
+      }),
+      {}
+    );
 
-    this.activeNodes = Object
-      .values(this.schema.nodes)
-      .filter(node => utils.nodeIsActive(this.state, node))
-      .map(node => node.name);
+    this.activeNodes = Object.values(this.schema.nodes)
+      .filter((node) => utils.nodeIsActive(this.state, node))
+      .map((node) => node.name);
 
-    this.activeNodeAttrs = Object
-      .entries(this.schema.nodes)
-      .reduce((nodes, [name, node]) => ({
+    this.activeNodeAttrs = Object.entries(this.schema.nodes).reduce(
+      (nodes, [name, node]) => ({
         ...nodes,
-        [name]: utils.getNodeAttrs(this.state, node),
-      }), {});
+        [name]: utils.getNodeAttrs(this.state, node)
+      }),
+      {}
+    );
   }
 
   setContent(content = {}, emitUpdate = false, parseOptions) {
@@ -471,29 +479,34 @@ export default class Editor extends Emitter {
   }
 
   setSelection(from = 0, to = 0) {
-    const { doc, tr }  = this.state;
+    const { doc, tr } = this.state;
     const resolvedFrom = utils.minMax(from, 0, doc.content.size);
-    const resolvedEnd  = utils.minMax(to, 0, doc.content.size);
-    const selection    = TextSelection.create(doc, resolvedFrom, resolvedEnd);
-    const transaction  = tr.setSelection(selection);
+    const resolvedEnd = utils.minMax(to, 0, doc.content.size);
+    const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
+    const transaction = tr.setSelection(selection);
 
     this.view.dispatch(transaction);
   }
 
   get state() {
-    return this.view ? this.view.state : null
+    return this.view ? this.view.state : null;
   }
 
   toggleMark(mark) {
     if (this.schema.marks[mark]) {
-      return utils.toggleMark(this.schema.marks[mark])(this.state, this.view.dispatch);
+      return utils.toggleMark(this.schema.marks[mark])(
+        this.state,
+        this.view.dispatch
+      );
     }
   }
 
   updateMark(mark, attrs) {
     if (this.schema.marks[mark]) {
-      return utils.updateMark(this.schema.marks[mark], attrs)(this.state, this.view.dispatch);
+      return utils.updateMark(this.schema.marks[mark], attrs)(
+        this.state,
+        this.view.dispatch
+      );
     }
   }
-
 }

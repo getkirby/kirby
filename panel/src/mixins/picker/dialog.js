@@ -86,7 +86,7 @@ export default {
 
       this.selected = {};
 
-      this.options.selected.forEach(id => {
+      this.options.selected.forEach((id) => {
         this.$set(this.selected, id, {
           id: id
         });

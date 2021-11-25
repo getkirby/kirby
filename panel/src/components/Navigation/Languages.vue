@@ -10,7 +10,7 @@
       <k-dropdown-item @click="change(defaultLanguage)">
         {{ defaultLanguage.name }}
       </k-dropdown-item>
-      <hr>
+      <hr />
       <k-dropdown-item
         v-for="languageItem in languages"
         :key="languageItem.code"
@@ -26,13 +26,13 @@
 export default {
   computed: {
     defaultLanguage() {
-      return this.$languages.find(language => language.default === true);
+      return this.$languages.find((language) => language.default === true);
     },
     language() {
       return this.$language;
     },
     languages() {
-      return this.$languages.filter(language => language.default === false);
+      return this.$languages.filter((language) => language.default === false);
     }
   },
   methods: {
@@ -45,5 +45,5 @@ export default {
       });
     }
   }
-}
+};
 </script>

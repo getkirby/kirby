@@ -22,18 +22,16 @@ export default {
     };
   },
   async created() {
-    const response = await this.load()
-    this.headline  = response.headline;
-    this.text      = response.text;
-    this.theme     = response.theme || "info";
+    const response = await this.load();
+    this.headline = response.headline;
+    this.text = response.text;
+    this.theme = response.theme || "info";
   }
 };
 </script>
 
 <style>
-
 .k-info-section-headline {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
-
 </style>

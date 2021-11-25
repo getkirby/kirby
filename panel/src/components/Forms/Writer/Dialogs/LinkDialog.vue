@@ -37,10 +37,7 @@ export default {
         target: {
           label: this.$t("open.newWindow"),
           type: "toggle",
-          text: [
-            this.$t("no"),
-            this.$t("yes")
-          ]
+          text: [this.$t("no"), this.$t("yes")]
         }
       };
     }

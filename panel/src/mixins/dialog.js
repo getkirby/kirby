@@ -6,7 +6,7 @@ export default {
     },
     cancelButton: {
       type: [String, Boolean],
-      default: true,
+      default: true
     },
     icon: String,
     submitButton: {
@@ -51,9 +51,9 @@ export default {
           payload.event = [payload.event];
         }
 
-        payload.event.forEach(event => {
+        payload.event.forEach((event) => {
           this.$events.$emit(event, payload);
-        })
+        });
       }
 
       if (

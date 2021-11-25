@@ -8,11 +8,7 @@
     @focusout="focussed = false"
   >
     <template v-if="hasFieldsets">
-      <k-draggable
-        v-bind="draggableOptions"
-        class="k-blocks-list"
-        @sort="save"
-      >
+      <k-draggable v-bind="draggableOptions" class="k-blocks-list" @sort="save">
         <k-block
           v-for="(block, index) in blocks"
           :ref="'block-' + block.id"
@@ -79,15 +75,10 @@
         @submit="removeSelected"
       />
 
-      <k-block-pasteboard
-        ref="pasteboard"
-        @paste="paste($event)"
-      />
+      <k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
     </template>
     <template v-else>
-      <k-box theme="info">
-        No fieldsets yet
-      </k-box>
+      <k-box theme="info"> No fieldsets yet </k-box>
     </template>
   </div>
 </template>
@@ -109,7 +100,7 @@ export default {
     group: String,
     max: {
       type: Number,
-      default: null,
+      default: null
     },
     value: {
       type: Array,
@@ -124,7 +115,7 @@ export default {
       batch: [],
       blocks: this.value,
       current: null,
-      isFocussed: false,
+      isFocussed: false
     };
   },
   computed: {
@@ -148,7 +139,9 @@ export default {
       return Object.keys(this.fieldsets).length;
     },
     isEditing() {
-      return this.$store.state.dialog || this.$store.state.drawers.open.length > 0;
+      return (
+        this.$store.state.dialog || this.$store.state.drawers.open.length > 0
+      );
     },
     isEmpty() {
       return this.blocks.length === 0;
@@ -208,14 +201,16 @@ export default {
       }
 
       if (Array.isArray(what)) {
-        let blocks = this.$helper.clone(what).map(block => {
+        let blocks = this.$helper.clone(what).map((block) => {
           block.id = this.$helper.uuid();
           return block;
         });
 
         // filters only supported blocks
         const availableFieldsets = Object.keys(this.fieldsets);
-        blocks = blocks.filter(block => availableFieldsets.includes(block.type));
+        blocks = blocks.filter((block) =>
+          availableFieldsets.includes(block.type)
+        );
 
         // don't add blocks that exceed the maximum limit
         if (this.max) {
@@ -228,7 +223,9 @@ export default {
       }
     },
     async add(type = "text", index) {
-      const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
+      const block = await this.$api.get(
+        this.endpoints.field + "/fieldsets/" + type
+      );
       this.blocks.splice(index, 0, block);
       this.save();
 
@@ -237,9 +234,11 @@ export default {
       });
     },
     addToBatch(block) {
-
       // move the selected block to the batch first
-      if (this.selected !== null && this.batch.includes(this.selected) === false) {
+      if (
+        this.selected !== null &&
+        this.batch.includes(this.selected) === false
+      ) {
         this.batch.push(this.selected);
         this.current = null;
       }
@@ -295,7 +294,7 @@ export default {
 
       let blocks = [];
 
-      this.blocks.forEach(block => {
+      this.blocks.forEach((block) => {
         if (this.selectedOrBatched.includes(block.id)) {
           blocks.push(block);
         }
@@ -330,7 +329,7 @@ export default {
 
       const fields = (fieldset) => {
         let fields = {};
-        Object.values(fieldset.tabs).forEach(tab => {
+        Object.values(fieldset.tabs).forEach((tab) => {
           fields = {
             ...fields,
             ...tab.fields
@@ -341,7 +340,9 @@ export default {
       };
 
       const oldBlock = this.blocks[index];
-      const newBlock = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
+      const newBlock = await this.$api.get(
+        this.endpoints.field + "/fieldsets/" + type
+      );
 
       const oldFieldset = this.fieldsets[oldBlock.type];
       const newFieldset = this.fieldsets[type];
@@ -384,22 +385,24 @@ export default {
       this.save();
     },
     fieldset(block) {
-      return this.fieldsets[block.type] || {
-        icon: "box",
-        name: block.type,
-        tabs: {
-          content: {
-            fields: {}
-          }
-        },
-        type: block.type,
-      };
+      return (
+        this.fieldsets[block.type] || {
+          icon: "box",
+          name: block.type,
+          tabs: {
+            content: {
+              fields: {}
+            }
+          },
+          type: block.type
+        }
+      );
     },
     find(id) {
-      return this.blocks.find(element => element.id === id);
+      return this.blocks.find((element) => element.id === id);
     },
     findIndex(id) {
-      return this.blocks.findIndex(element => element.id === id);
+      return this.blocks.findIndex((element) => element.id === id);
     },
     focus(block) {
       if (block?.id && this.$refs["block-" + block.id]) {
@@ -428,7 +431,10 @@ export default {
     },
     isInputEvent() {
       const focused = document.querySelector(":focus");
-      return focused && focused.matches("input, textarea, [contenteditable], .k-writer");
+      return (
+        focused &&
+        focused.matches("input, textarea, [contenteditable], .k-writer")
+      );
     },
     isLastInBatch(block) {
       const [lastItem] = this.batch.slice(-1);
@@ -444,7 +450,9 @@ export default {
       // moving block between fields
       if (event.from !== event.to) {
         const block = event.draggedContext.element;
-        const to    = event.relatedContext.component.componentData || event.relatedContext.component.$parent.componentData;
+        const to =
+          event.relatedContext.component.componentData ||
+          event.relatedContext.component.$parent.componentData;
 
         // fieldset is not supported in target field
         if (Object.keys(to.fieldsets).includes(block.type) === false) {
@@ -464,7 +472,10 @@ export default {
     },
     onOutsideFocus(event) {
       const overlay = document.querySelector(".k-overlay:last-of-type");
-      if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
+      if (
+        this.$el.contains(event.target) === false &&
+        (!overlay || overlay.contains(event.target) === false)
+      ) {
         return this.select(null);
       }
 
@@ -479,7 +490,6 @@ export default {
       }
     },
     onPaste(e) {
-
       // never paste blocks when the focus is in an input element
       if (this.isInputEvent(e) === true) {
         return false;
@@ -487,7 +497,6 @@ export default {
 
       // never paste when dialogs or drawers are open
       if (this.isEditing === true) {
-
         // enable pasting when the block selector is open
         if (this.$refs.selector?.isOpen() === true) {
           return this.paste(e);
@@ -498,14 +507,12 @@ export default {
 
       // if nothing is selected …
       if (this.selectedOrBatched.length === 0) {
-
         // if there are multiple instances,
         // pasting is disabled to avoid multiple
         // pasted blocks
         if (this.isOnlyInstance() !== true) {
           return false;
         }
-
       }
 
       return this.paste(e);
@@ -519,10 +526,12 @@ export default {
       const html = this.$helper.clipboard.read(e);
 
       // pass html or plain text to the paste endpoint to convert it to blocks
-      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
+      const blocks = await this.$api.post(this.endpoints.field + "/paste", {
+        html: html
+      });
 
       // get the index
-      let lastItem  = this.selectedOrBatched[this.selectedOrBatched.length - 1];
+      let lastItem = this.selectedOrBatched[this.selectedOrBatched.length - 1];
       let lastIndex = this.findIndex(lastItem);
 
       if (lastIndex === -1) {
@@ -563,7 +572,7 @@ export default {
       this.$refs.removeAll.close();
     },
     removeSelected() {
-      this.batch.forEach(id => {
+      this.batch.forEach((id) => {
         const index = this.findIndex(id);
         if (index !== -1) {
           this.$delete(this.blocks, index);
@@ -596,7 +605,7 @@ export default {
       this.current = block ? block.id : null;
     },
     selectAll() {
-      this.batch = Object.values(this.blocks).map(block => block.id);
+      this.batch = Object.values(this.blocks).map((block) => block.id);
     },
     show(block) {
       this.$set(block, "isHidden", false);
@@ -618,11 +627,9 @@ export default {
     update(block, content) {
       const index = this.findIndex(block.id);
       if (index !== -1) {
-
         Object.entries(content).forEach(([key, value]) => {
           this.$set(this.blocks[index].content, key, value);
         });
-
       }
       this.save();
     }
@@ -648,7 +655,7 @@ export default {
 }
 .k-blocks .k-sortable-ghost {
   outline: 2px solid var(--color-focus);
-  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;

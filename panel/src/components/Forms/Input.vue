@@ -32,20 +32,10 @@
 </template>
 
 <script>
-import {
-  after,
-  before,
-  disabled,
-  invalid
-} from "@/mixins/props.js";
+import { after, before, disabled, invalid } from "@/mixins/props.js";
 
 export const props = {
-  mixins: [
-    after,
-    before,
-    disabled,
-    invalid
-  ],
+  mixins: [after, before, disabled, invalid],
   props: {
     autofocus: Boolean,
     type: String,
@@ -53,7 +43,7 @@ export const props = {
     theme: String,
     novalidate: {
       type: Boolean,
-      default: false,
+      default: false
     },
     value: {
       type: [String, Boolean, Number, Object, Array],
@@ -116,9 +106,9 @@ export default {
       if (typeof input?.[method] === "function") {
         input[method]();
       }
-    },
+    }
   }
-}
+};
 </script>
 
 <style>
@@ -228,10 +218,10 @@ export default {
 }
 
 /* Checkboxes & Radio Buttons */
-.k-input[data-theme="field"][data-type=checkboxes] .k-checkboxes-input li,
-.k-input[data-theme="field"][data-type=checkboxes] .k-radio-input li,
-.k-input[data-theme="field"][data-type=radio] .k-checkboxes-input li,
-.k-input[data-theme="field"][data-type=radio] .k-radio-input li {
+.k-input[data-theme="field"][data-type="checkboxes"] .k-checkboxes-input li,
+.k-input[data-theme="field"][data-type="checkboxes"] .k-radio-input li,
+.k-input[data-theme="field"][data-type="radio"] .k-checkboxes-input li,
+.k-input[data-theme="field"][data-type="radio"] .k-radio-input li {
   min-width: 0;
   overflow-wrap: break-word;
 }
@@ -240,9 +230,13 @@ export default {
 .k-input[data-theme="field"][data-type="checkboxes"] .k-input-before {
   border-inline-end: 1px solid var(--color-background);
 }
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-element + .k-input-after,
-.k-input[data-theme="field"][data-type="checkboxes"] .k-input-element + .k-input-icon {
-  border-inline-start : 1px solid var(--color-background);
+.k-input[data-theme="field"][data-type="checkboxes"]
+  .k-input-element
+  + .k-input-after,
+.k-input[data-theme="field"][data-type="checkboxes"]
+  .k-input-element
+  + .k-input-icon {
+  border-inline-start: 1px solid var(--color-background);
 }
 .k-input[data-theme="field"][data-type="checkboxes"] .k-input-element {
   overflow: hidden;
@@ -277,8 +271,12 @@ export default {
 .k-input[data-theme="field"][data-type="radio"] .k-input-before {
   border-inline-end: 1px solid var(--color-background);
 }
-.k-input[data-theme="field"][data-type="radio"] .k-input-element + .k-input-after,
-.k-input[data-theme="field"][data-type="radio"] .k-input-element + .k-input-icon {
+.k-input[data-theme="field"][data-type="radio"]
+  .k-input-element
+  + .k-input-after,
+.k-input[data-theme="field"][data-type="radio"]
+  .k-input-element
+  + .k-input-icon {
   border-inline-start: 1px solid var(--color-background);
 }
 .k-input[data-theme="field"][data-type="radio"] .k-input-element {
@@ -304,14 +302,19 @@ export default {
   flex-grow: 1;
   min-height: var(--field-input-height);
   line-height: var(--field-input-line-height);
-  padding: calc((var(--field-input-height) - var(--field-input-line-height)) / 2) var(--field-input-padding);
+  padding: calc(
+      (var(--field-input-height) - var(--field-input-line-height)) / 2
+    )
+    var(--field-input-padding);
 }
 .k-input[data-theme="field"][data-type="radio"] .k-radio-input label::before {
   top: calc((var(--field-input-height) - 1rem) / 2);
   inset-inline-start: var(--field-input-padding);
   margin-top: -1px;
 }
-.k-input[data-theme="field"][data-type="radio"] .k-radio-input .k-radio-input-info {
+.k-input[data-theme="field"][data-type="radio"]
+  .k-radio-input
+  .k-radio-input-info {
   display: block;
   font-size: var(--text-sm);
   color: var(--color-gray-600);
@@ -327,7 +330,7 @@ export default {
 }
 
 /* Range */
-.k-input[data-theme="field"][data-type="range"]  .k-range-input {
+.k-input[data-theme="field"][data-type="range"] .k-range-input {
   padding: var(--field-input-padding);
 }
 
@@ -343,28 +346,32 @@ export default {
 
 /* Tags */
 .k-input[data-theme="field"][data-type="tags"] .k-tags-input {
-  padding: .25rem .25rem 0 .25rem;
+  padding: 0.25rem 0.25rem 0 0.25rem;
 }
 .k-input[data-theme="field"][data-type="tags"] .k-tag {
-  margin-inline-end: .25rem;
-  margin-bottom: .25rem;
+  margin-inline-end: 0.25rem;
+  margin-bottom: 0.25rem;
   height: auto;
   min-height: 1.75rem;
   font-size: var(--text-sm);
 }
 .k-input[data-theme="field"][data-type="tags"] .k-tags-input input {
   font-size: var(--text-sm);
-  padding: 0 .25rem;
+  padding: 0 0.25rem;
   height: 1.75rem;
   line-height: 1;
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input .k-dropdown-content {
-  top: calc(100% + .5rem + 2px);
+.k-input[data-theme="field"][data-type="tags"]
+  .k-tags-input
+  .k-dropdown-content {
+  top: calc(100% + 0.5rem + 2px);
 }
 /* don't apply dropup feature to tags */
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input .k-dropdown-content[data-dropup] {
-  top: calc(100% + .5rem + 2px);
+.k-input[data-theme="field"][data-type="tags"]
+  .k-tags-input
+  .k-dropdown-content[data-dropup] {
+  top: calc(100% + 0.5rem + 2px);
   bottom: initial;
   margin-bottom: initial;
 }
@@ -374,12 +381,12 @@ export default {
   position: relative;
 }
 .k-input[data-theme="field"][data-type="multiselect"] .k-multiselect-input {
-  padding: .25rem 2rem 0 .25rem;
+  padding: 0.25rem 2rem 0 0.25rem;
   min-height: 2.25rem;
 }
 .k-input[data-theme="field"][data-type="multiselect"] .k-tag {
-  margin-inline-end: .25rem;
-  margin-bottom: .25rem;
+  margin-inline-end: 0.25rem;
+  margin-bottom: 0.25rem;
   height: 1.75rem;
   font-size: var(--text-sm);
 }
@@ -391,8 +398,8 @@ export default {
 }
 
 /* Textarea */
-.k-input[data-theme="field"][data-type="textarea"]  .k-textarea-input-native {
-  padding: .25rem var(--field-input-padding);
+.k-input[data-theme="field"][data-type="textarea"] .k-textarea-input-native {
+  padding: 0.25rem var(--field-input-padding);
   line-height: 1.5rem;
 }
 
@@ -404,8 +411,7 @@ export default {
   padding-inline-start: var(--field-input-padding);
 }
 .k-input[data-theme="field"][data-type="toggle"] .k-toggle-input-label {
-  padding: 0 var(--field-input-padding) 0 .75rem;
+  padding: 0 var(--field-input-padding) 0 0.75rem;
   line-height: var(--field-input-height);
 }
-
 </style>

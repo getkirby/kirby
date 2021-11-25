@@ -12,12 +12,7 @@
   >
     <slot />
   </a>
-  <span
-    v-else
-    :title="title"
-    class="k-link"
-    data-disabled
-  >
+  <span v-else :title="title" class="k-link" data-disabled>
     <slot />
   </span>
 </template>
@@ -43,7 +38,7 @@ export default {
     /**
      * The path or absolute URL for the link.
      */
-    to: [String, Function],
+    to: [String, Function]
   },
   data() {
     return {
@@ -57,10 +52,10 @@ export default {
   computed: {
     href() {
       if (typeof this.to === "function") {
-        return '';
+        return "";
       }
 
-      if (this.to[0] === '/' && !this.target) {
+      if (this.to[0] === "/" && !this.target) {
         return this.$url(this.to);
       }
 

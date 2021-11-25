@@ -29,16 +29,12 @@ import { props as Input } from "../Input.vue";
 import { props as UrlInput } from "../Input/UrlInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>`
  * for additional information.
  * @example <k-url-field v-model="url" name="url" label="Url" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    UrlInput
-  ],
+  mixins: [Field, Input, UrlInput],
   inheritAttrs: false,
   props: {
     link: {
@@ -55,5 +51,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

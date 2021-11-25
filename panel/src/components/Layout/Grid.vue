@@ -13,7 +13,7 @@ export default {
     /**
      * @values small, medium, large, huge
      */
-    gutter: String,
+    gutter: String
   }
 };
 </script>
@@ -60,7 +60,6 @@ export default {
   .k-grid[data-gutter="huge"] {
     grid-column-gap: 6rem;
   }
-
 }
 
 @media screen and (min-width: 120em) {

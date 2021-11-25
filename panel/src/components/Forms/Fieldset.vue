@@ -24,7 +24,9 @@
               v-bind="field"
               @input="$emit('input', value, field, fieldName)"
               @focus="$emit('focus', $event, field, fieldName)"
-              @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
+              @invalid="
+                ($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
+              "
               @submit="$emit('submit', $event, field, fieldName)"
             />
             <k-box v-else theme="negative">
@@ -109,15 +111,14 @@ export default {
       return this.$refs[name]?.[0];
     },
     meetsCondition(field) {
-
       if (!field.when) {
         return true;
       }
 
       let result = true;
 
-      Object.keys(field.when).forEach(key => {
-        const value     = this.value[key.toLowerCase()];
+      Object.keys(field.when).forEach((key) => {
+        const value = this.value[key.toLowerCase()];
         const condition = field.when[key];
 
         if (value !== condition) {
@@ -126,7 +127,6 @@ export default {
       });
 
       return result;
-
     },
     onInvalid($invalid, $v, field, fieldName) {
       this.errors[fieldName] = $v;

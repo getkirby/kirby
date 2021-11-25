@@ -37,7 +37,7 @@ export default {
   line-height: 1.5em;
   background: var(--color-background);
   border-radius: var(--rounded);
-  padding: .5rem .5rem 0;
+  padding: 0.5rem 0.5rem 0;
   font-family: var(--font-mono);
 }
 </style>

@@ -32,7 +32,7 @@ export default {
     fieldsets: Object,
     id: String,
     isSelected: Boolean,
-    width: String,
+    width: String
   }
 };
 </script>
@@ -74,7 +74,7 @@ export default {
   inset: 0;
   justify-content: center;
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   border: 0;
 }
 .k-layout-column .k-blocks-empty:hover {

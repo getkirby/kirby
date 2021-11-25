@@ -10,14 +10,14 @@
   >
     <template v-if="src">
       <k-aspect-ratio v-if="ratio" :ratio="ratio" :cover="crop">
-        <img :alt="content.alt" :src="src">
+        <img :alt="content.alt" :src="src" />
       </k-aspect-ratio>
       <img
         v-else
         :alt="content.alt"
         :src="src"
         class="k-block-type-image-auto"
-      >
+      />
     </template>
   </k-block-figure>
 </template>
@@ -48,7 +48,7 @@ export default {
     },
     ratio() {
       return this.content.ratio || false;
-    },
+    }
   }
 };
 </script>

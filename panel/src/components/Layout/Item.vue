@@ -8,7 +8,7 @@
     :data-has-options="Boolean(options)"
     class="k-item"
     tabindex="-1"
-    @click="$emit('click', $event);"
+    @click="$emit('click', $event)"
     @dragstart="$emit('drag', $event)"
   >
     <!-- Image -->
@@ -22,10 +22,7 @@
     </slot>
 
     <!-- Sort handle -->
-    <k-sort-handle
-      v-if="sortable"
-      class="k-item-sort-handle"
-    />
+    <k-sort-handle v-if="sortable" class="k-item-sort-handle" />
 
     <!-- Content -->
     <header class="k-item-content">
@@ -49,19 +46,10 @@
     </header>
 
     <!-- Footer -->
-    <footer
-      v-if="flag || options || $slots.options"
-      class="k-item-footer"
-    >
-      <nav
-        class="k-item-buttons"
-        @click.stop
-      >
+    <footer v-if="flag || options || $slots.options" class="k-item-footer">
+      <nav class="k-item-buttons" @click.stop>
         <!-- Status icon -->
-        <k-status-icon
-          v-if="flag"
-          v-bind="flag"
-        />
+        <k-status-icon v-if="flag" v-bind="flag" />
 
         <!-- Options -->
         <slot name="options">
@@ -186,7 +174,7 @@ export default {
   min-width: 0;
 }
 .k-item-label {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-item-buttons {
   position: relative;
@@ -233,7 +221,7 @@ export default {
   flex-shrink: 2;
   justify-content: space-between;
   align-items: center;
-  margin-inline-start: .75rem;
+  margin-inline-start: 0.75rem;
 }
 .k-list-item .k-item-title,
 .k-list-item .k-item-info {
@@ -241,14 +229,14 @@ export default {
   line-height: 1.5rem;
 }
 .k-list-item .k-item-title {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
   flex-shrink: 1;
 }
 .k-list-item .k-item-info {
   flex-shrink: 2;
   text-align: end;
   justify-self: end;
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-list-item .k-item-footer {
   flex-shrink: 0;
@@ -259,7 +247,7 @@ export default {
 
 /** Cardlet and card items shared */
 .k-item:not(.k-list-item) .k-item-sort-handle {
-  margin: .25rem;
+  margin: 0.25rem;
   background: var(--color-background);
   box-shadow: var(--shadow-md);
 }
@@ -267,7 +255,7 @@ export default {
   margin-inline-start: -2px;
 }
 .k-item:not(.k-list-item) .k-item-content {
-  padding: .625rem .75rem;
+  padding: 0.625rem 0.75rem;
 }
 
 /** Cardlet Item **/
@@ -289,9 +277,8 @@ export default {
   border-end-start-radius: var(--rounded-sm);
 }
 .k-cardlets-item .k-item-footer {
-  padding-block: .5rem;
+  padding-block: 0.5rem;
 }
-
 
 /** Card Item **/
 .k-cards-item {
@@ -317,11 +304,11 @@ export default {
   white-space: normal;
 }
 .k-cards-item .k-item-info {
-  padding-top: .125rem;
+  padding-top: 0.125rem;
 }
 .k-cards-item .k-item-footer {
   width: auto;
-  padding-inline-start: .7rem;
+  padding-inline-start: 0.7rem;
 }
 .k-cards-item:not([data-has-label]) {
   grid-template-columns: 1fr auto;

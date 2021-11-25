@@ -33,11 +33,7 @@ import { props as EmailInput } from "../Input/EmailInput.vue";
  * @example <k-email-field v-model="email" name="email" label="Email" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    EmailInput
-  ],
+  mixins: [Field, Input, EmailInput],
   inheritAttrs: false,
   props: {
     link: {
@@ -57,7 +53,7 @@ export default {
   methods: {
     focus() {
       this.$refs.input.focus();
-    },
+    }
   }
-}
+};
 </script>

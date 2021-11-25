@@ -17,14 +17,14 @@ export default {
     submitButton: {
       type: [String, Boolean],
       default() {
-        return window.panel.$t("delete")
+        return window.panel.$t("delete");
       }
     },
     text: String,
     theme: {
       type: String,
       default: "negative"
-    },
+    }
   }
-}
+};
 </script>

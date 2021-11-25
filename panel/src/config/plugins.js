@@ -38,19 +38,18 @@ export default {
           options.extends = null
         }
 
-        if (options.template) {
-          options.render = null;
+        if (options.mixins) {
+          options.mixins = options.mixins.map((mixin) => {
+            return typeof mixin === "string" ? mixins[mixin] : mixin;
+          });
         }
-      }
 
-      if (options.mixins) {
-        options.mixins = options.mixins.map(mixin => {
-          return typeof mixin === "string" ? mixins[mixin] : mixin;
-        });
-      }
+        if (components[name]) {
+          window.console.warn(`Plugin is replacing "${name}"`);
+        }
 
-      if (components[name]) {
-        window.console.warn(`Plugin is replacing "${name}"`);
+        app.component(name, options);
+        components[name] = app.options.components[name];
       }
 
       app.component(name, options);
@@ -64,4 +63,4 @@ export default {
       app.use(plugin);
     }
   }
-}
+};

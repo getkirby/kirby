@@ -9,7 +9,7 @@
         type="radio"
         class="k-radio-input-native"
         @change="onInput(option.value)"
-      >
+      />
 
       <!-- eslint-disable vue/no-v-html -->
       <label v-if="option.info" :for="id + '-' + index">
@@ -25,27 +25,17 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, required } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
-    mixins: [
-    autofocus,
-    disabled,
-    id,
-    required
-  ],
+  mixins: [autofocus, disabled, id, required],
   props: {
     columns: Number,
     options: Array,
     value: [String, Number, Boolean]
-  },
+  }
 };
 
 export default {
@@ -84,7 +74,7 @@ export default {
       }
     };
   }
-}
+};
 </script>
 
 <style>
@@ -106,7 +96,7 @@ export default {
 }
 .k-radio-input label::before {
   position: absolute;
-  top: .175em;
+  top: 0.175em;
   inset-inline-start: 0;
   content: "";
   width: 1rem;

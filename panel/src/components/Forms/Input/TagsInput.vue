@@ -52,7 +52,7 @@
             @keydown.enter.exact="enter"
             @keydown.tab.exact="tab"
             @keydown.backspace.exact="leaveInput"
-          >
+          />
         </k-autocomplete>
       </span>
     </template>
@@ -60,13 +60,7 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  name,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -75,13 +69,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    name,
-    required
-  ],
+  mixins: [autofocus, disabled, id, name, required],
   props: {
     accept: {
       type: String,
@@ -127,7 +115,7 @@ export const props = {
       }
     }
   }
-}
+};
 
 export default {
   mixins: [props],
@@ -157,7 +145,7 @@ export default {
       return this.tags.length > 1;
     },
     skip() {
-      return this.tags.map(tag => tag.value);
+      return this.tags.map((tag) => tag.value);
     }
   },
   watch: {
@@ -182,7 +170,7 @@ export default {
       string = string.trim();
 
       if (string.includes(this.separator)) {
-        string.split(this.separator).forEach(tag => {
+        string.split(this.separator).forEach((tag) => {
           this.addString(tag);
         });
 
@@ -195,7 +183,7 @@ export default {
 
       if (this.accept === "options") {
         const option = this.options.filter(
-          option => option.text === string
+          (option) => option.text === string
         )[0];
 
         if (!option) {
@@ -215,7 +203,7 @@ export default {
     addTagToIndex(tag) {
       if (this.accept === "options") {
         const option = this.options.filter(
-          option => option.value === tag.value
+          (option) => option.value === tag.value
         )[0];
 
         if (!option) {
@@ -317,7 +305,7 @@ export default {
       return false;
     },
     index(tag) {
-      return this.tags.findIndex(item => item.value === tag.value);
+      return this.tags.findIndex((item) => item.value === tag.value);
     },
     onInput() {
       this.$emit("input", this.tags);
@@ -351,7 +339,7 @@ export default {
         return [];
       }
 
-      return value.map(tag => {
+      return value.map((tag) => {
         if (typeof tag === "string") {
           return {
             text: tag,

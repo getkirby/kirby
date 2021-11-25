@@ -1,7 +1,6 @@
 import string from "./string.js";
 
 describe("$helper.string.lcfirst", () => {
-
   it("should convert first character to lowercase", () => {
     const result = string.lcfirst("Hello");
     expect(result).to.equal("hello");
@@ -16,5 +15,4 @@ describe("$helper.string.lcfirst", () => {
     const result = string.lcfirst(0);
     expect(result).to.equal("0");
   });
-
 });

@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Underline extends Mark {
-
   get button() {
     return {
       icon: "underline",
@@ -15,8 +14,8 @@ export default class Underline extends Mark {
 
   keys() {
     return {
-      "Mod-u": () => this.toggle(),
-    }
+      "Mod-u": () => this.toggle()
+    };
   }
 
   get name() {
@@ -27,15 +26,14 @@ export default class Underline extends Mark {
     return {
       parseDOM: [
         {
-          tag: "u",
+          tag: "u"
         },
         {
           style: "text-decoration",
-          getAttrs: value => value === "underline",
-        },
+          getAttrs: (value) => value === "underline"
+        }
       ],
-      toDOM: () => ["u", 0],
-    }
+      toDOM: () => ["u", 0]
+    };
   }
-
 }

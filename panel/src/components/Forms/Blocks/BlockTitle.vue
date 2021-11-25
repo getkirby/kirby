@@ -33,7 +33,10 @@ export default {
         return false;
       }
 
-      const label = this.$helper.string.template(this.fieldset.label, this.content);
+      const label = this.$helper.string.template(
+        this.fieldset.label,
+        this.content
+      );
       return label === "…" ? false : label;
     },
     name() {
@@ -48,17 +51,17 @@ export default {
   display: flex;
   align-items: center;
   min-width: 0;
-  padding-inline-end: .75rem;
+  padding-inline-end: 0.75rem;
   font-size: var(--text-sm);
   line-height: 1;
 }
 .k-block-icon {
   width: 1rem;
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
   color: var(--color-gray-500);
 }
 .k-block-name {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-block-label {
   color: var(--color-gray-600);

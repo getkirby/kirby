@@ -1,7 +1,6 @@
 import Node from "../Node";
 
 export default class Paragraph extends Node {
-
   get button() {
     return {
       id: this.name,
@@ -13,7 +12,7 @@ export default class Paragraph extends Node {
 
   commands({ utils, type }) {
     return {
-      "paragraph": () => utils.setBlockType(type)
+      paragraph: () => utils.setBlockType(type)
     };
   }
 
@@ -22,15 +21,16 @@ export default class Paragraph extends Node {
       content: "inline*",
       group: "block",
       draggable: false,
-      parseDOM: [{
-        tag: "p",
-      }],
-      toDOM: () => ["p", 0],
-    }
+      parseDOM: [
+        {
+          tag: "p"
+        }
+      ],
+      toDOM: () => ["p", 0]
+    };
   }
 
   get name() {
-    return "paragraph"
+    return "paragraph";
   }
-
 }

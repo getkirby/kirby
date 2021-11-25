@@ -1,23 +1,21 @@
 import string from "./string.js";
 
 describe("$helper.string.template", () => {
-
   const values = {
     title: "Kirby",
     images: [
-      {filename: "foo.jpg"},
-      {filename: "bar.jpg"},
-      {filename: "baz.jpg"}
+      { filename: "foo.jpg" },
+      { filename: "bar.jpg" },
+      { filename: "baz.jpg" }
     ],
     user: {
       email: "bastian@getkirby.com",
       username: "bastian"
     },
-    info: "",
+    info: ""
   };
 
   it("should insert values", () => {
-
     let result = string.template("Hello World!", values);
     expect(result).to.equal("Hello World!");
 
@@ -48,7 +46,10 @@ describe("$helper.string.template", () => {
     result = string.template("{{user.email}}", values);
     expect(result).to.equal("bastian@getkirby.com");
 
-    result = string.template("{{title}} {{ images.1.filename }}, { user.username }:{user.email}", values);
+    result = string.template(
+      "{{title}} {{ images.1.filename }}, { user.username }:{user.email}",
+      values
+    );
     expect(result).to.equal("Kirby bar.jpg, bastian:bastian@getkirby.com");
 
     result = string.template("Counting: {{images.length}}", values);
@@ -59,7 +60,7 @@ describe("$helper.string.template", () => {
   });
 
   it("should insert default", () => {
-    const values = {a: null, b: null, cc: null};
+    const values = { a: null, b: null, cc: null };
     let result = string.template("{{notexists}}", values);
     expect(result).to.equal("…");
 
@@ -69,8 +70,10 @@ describe("$helper.string.template", () => {
     result = string.template("Filename: {{ images.99.filename }}", values);
     expect(result).to.equal("Filename: …");
 
-    result = string.template("New user { user.notexists } registered now", values);
+    result = string.template(
+      "New user { user.notexists } registered now",
+      values
+    );
     expect(result).to.equal("New user … registered now");
   });
-
 });

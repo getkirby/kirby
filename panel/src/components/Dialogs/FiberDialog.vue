@@ -19,7 +19,6 @@ export default {
   },
   methods: {
     async onSubmit(value) {
-
       try {
         const dialog = await this.$request(this.path, {
           body: value,
@@ -65,11 +64,9 @@ export default {
         } else {
           this.$reload(dialog.reload || {});
         }
-
       } catch (e) {
         this.$refs.dialog.error(e);
       }
-
     }
   }
 };

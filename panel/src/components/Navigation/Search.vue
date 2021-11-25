@@ -35,7 +35,7 @@
           @keydown.tab.prevent="onTab"
           @keydown.enter="onEnter"
           @keydown.esc="close"
-        >
+        />
         <k-button
           :icon="isLoading ? 'loader' : 'cancel'"
           :tooltip="$t('close')"
@@ -44,10 +44,7 @@
         />
       </div>
 
-      <div
-        v-if="q && (!hasResults || items.length)"
-        class="k-search-results"
-      >
+      <div v-if="q && (!hasResults || items.length)" class="k-search-results">
         <!-- Results -->
         <k-items
           v-if="items.length"
@@ -86,8 +83,8 @@ export default {
       items: [],
       currentType: this.getType(this.type),
       q: null,
-      selected: -1,
-    }
+      selected: -1
+    };
   },
   watch: {
     q(newQuery, oldQuery) {
@@ -181,13 +178,11 @@ export default {
         }
 
         this.items = response.results;
-
       } catch (error) {
         this.items = [];
-
       } finally {
         this.select(-1);
-        this.isLoading  = false;
+        this.isLoading = false;
         this.hasResults = this.items.length > 0;
       }
     },
@@ -195,7 +190,7 @@ export default {
       this.selected = index;
       if (this.$refs.items) {
         const items = this.$refs.items.$el.querySelectorAll(".k-item");
-        [...items].forEach(item => delete item.dataset.selected);
+        [...items].forEach((item) => delete item.dataset.selected);
         if (index >= 0) {
           items[index].dataset.selected = true;
         }
@@ -236,7 +231,7 @@ export default {
   background: none;
   flex-grow: 1;
   font: inherit;
-  padding: .75rem;
+  padding: 0.75rem;
   border: 0;
   height: 2.5rem;
 }
@@ -252,11 +247,11 @@ export default {
 }
 
 .k-search-results {
-  padding: .5rem 1rem 1rem;
+  padding: 0.5rem 1rem 1rem;
   background: var(--color-light);
 }
 .k-search .k-item:not(:last-child) {
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 .k-search .k-item[data-selected] {
   outline: 2px solid var(--color-focus);

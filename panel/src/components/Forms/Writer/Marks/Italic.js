@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Italic extends Mark {
-
   get button() {
     return {
       icon: "italic",
@@ -16,13 +15,13 @@ export default class Italic extends Mark {
   inputRules({ type, utils }) {
     return [
       utils.markInputRule(/(?:^|[^_])(_([^_]+)_)$/, type),
-      utils.markInputRule(/(?:^|[^*])(\*([^*]+)\*)$/, type),
+      utils.markInputRule(/(?:^|[^*])(\*([^*]+)\*)$/, type)
     ];
   }
 
   keys() {
     return {
-      "Mod-i": () => this.toggle(),
+      "Mod-i": () => this.toggle()
     };
   }
 
@@ -33,19 +32,14 @@ export default class Italic extends Mark {
   pasteRules({ type, utils }) {
     return [
       utils.markPasteRule(/_([^_]+)_/g, type),
-      utils.markPasteRule(/\*([^*]+)\*/g, type),
+      utils.markPasteRule(/\*([^*]+)\*/g, type)
     ];
   }
 
   get schema() {
     return {
-      parseDOM: [
-        { tag: "i" },
-        { tag: "em" },
-        { style: "font-style=italic" },
-      ],
-      toDOM: () => ['em', 0],
+      parseDOM: [{ tag: "i" }, { tag: "em" }, { style: "font-style=italic" }],
+      toDOM: () => ["em", 0]
     };
   }
-
 }

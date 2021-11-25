@@ -17,7 +17,7 @@
         :active-node-attrs="toolbar.nodeAttrs"
         :is-paragraph-node-hidden="isParagraphNodeHidden"
         :style="{
-          'bottom': toolbar.position.bottom + 'px',
+          bottom: toolbar.position.bottom + 'px',
           'inset-inline-start': toolbar.position.left + 'px'
         }"
         @command="editor.command($event)"
@@ -86,7 +86,7 @@ export const props = {
     headings: [Array, Boolean],
     inline: {
       type: Boolean,
-      default: false,
+      default: false
     },
     marks: {
       type: [Array, Boolean],
@@ -95,11 +95,7 @@ export const props = {
     nodes: {
       type: [Array, Boolean],
       default() {
-        return [
-          "heading",
-          "bulletList",
-          "orderedList"
-        ];
+        return ["heading", "bulletList", "orderedList"];
       }
     },
     paste: {
@@ -116,15 +112,15 @@ export const props = {
     value: {
       type: String,
       default: ""
-    },
+    }
   }
-}
+};
 
 export default {
   components: {
     "k-writer-email-dialog": EmailDialog,
     "k-writer-link-dialog": LinkDialog,
-    "k-writer-toolbar": ToolbarComponent,
+    "k-writer-toolbar": ToolbarComponent
   },
   mixins: [props],
   data() {
@@ -138,7 +134,11 @@ export default {
   },
   computed: {
     isParagraphNodeHidden() {
-      return Array.isArray(this.nodes) === true && this.nodes.length !== 3 && this.nodes.includes("paragraph") === false;
+      return (
+        Array.isArray(this.nodes) === true &&
+        this.nodes.length !== 3 &&
+        this.nodes.includes("paragraph") === false
+      );
     }
   },
   watch: {
@@ -183,7 +183,7 @@ export default {
             return;
           }
 
-          this.json    = jsonNew;
+          this.json = jsonNew;
           this.isEmpty = payload.editor.isEmpty();
 
           // when a new list item or heading is created, textContent length returns 0
@@ -191,10 +191,8 @@ export default {
           // empty input means no nodes or just the paragraph node and its length 0
           if (
             this.isEmpty &&
-            (
-              payload.editor.activeNodes.length === 0 ||
-              payload.editor.activeNodes.includes("paragraph")
-            )
+            (payload.editor.activeNodes.length === 0 ||
+              payload.editor.activeNodes.includes("paragraph"))
           ) {
             this.html = "";
           }
@@ -210,17 +208,16 @@ export default {
         ...this.createNodes(),
 
         // Extensions
-        new History,
-        new Insert,
-        new Toolbar,
-        ...this.extensions || [],
+        new History(),
+        new Insert(),
+        new Toolbar(),
+        ...(this.extensions || [])
       ],
       inline: this.inline
     });
 
     this.isEmpty = this.editor.isEmpty();
-    this.json    = this.editor.getJSON();
-
+    this.json = this.editor.getJSON();
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -235,7 +232,7 @@ export default {
 
       let installed = [];
 
-      allowed.forEach(allowed => {
+      allowed.forEach((allowed) => {
         if (available[allowed]) {
           installed.push(available[allowed]);
         }
@@ -251,18 +248,20 @@ export default {
       this.editor.command(command, ...args);
     },
     createMarks() {
-      return this.filterExtensions({
-        bold: new Bold,
-        italic: new Italic,
-        strike: new Strike,
-        underline: new Underline,
-        code: new Code,
-        link: new Link,
-        email: new Email,
-      }, this.marks);
+      return this.filterExtensions(
+        {
+          bold: new Bold(),
+          italic: new Italic(),
+          strike: new Strike(),
+          underline: new Underline(),
+          code: new Code(),
+          link: new Link(),
+          email: new Email()
+        },
+        this.marks
+      );
     },
     createNodes() {
-
       const hardBreak = new HardBreak({
         text: true,
         enter: this.inline
@@ -273,25 +272,30 @@ export default {
         return [hardBreak];
       }
 
-      return this.filterExtensions({
-        bulletList: new BulletList,
-        orderedList: new OrderedList,
-        heading: new Heading,
-        horizontalRule: new HorizontalRule,
-        listItem: new ListItem
-      }, this.nodes, (allowed, installed) => {
+      return this.filterExtensions(
+        {
+          bulletList: new BulletList(),
+          orderedList: new OrderedList(),
+          heading: new Heading(),
+          horizontalRule: new HorizontalRule(),
+          listItem: new ListItem()
+        },
+        this.nodes,
+        (allowed, installed) => {
+          // install the list item when there's a list available
+          if (
+            allowed.includes("bulletList") ||
+            allowed.includes("orderedList")
+          ) {
+            installed.push(new ListItem());
+          }
 
-        // install the list item when there's a list available
-        if (allowed.includes("bulletList") || allowed.includes("orderedList")) {
-          installed.push(new ListItem);
+          // always install the hard break
+          installed.push(hardBreak);
+
+          return installed;
         }
-
-        // always install the hard break
-        installed.push(hardBreak);
-
-        return installed;
-      });
-
+      );
     },
     getHTML() {
       return this.editor.getHTML();
@@ -307,17 +311,17 @@ export default {
         let left = this.toolbar.position.left;
 
         // adjust left overflow
-        if (left - (toolbarWidth / 2) < 0) {
-          left = left + ((toolbarWidth / 2) - left) - 20;
+        if (left - toolbarWidth / 2 < 0) {
+          left = left + (toolbarWidth / 2 - left) - 20;
         }
 
         // adjust right overflow
-        if (left + (toolbarWidth / 2) > editorWidth) {
-          left = left - (left + (toolbarWidth / 2) - editorWidth) + 20;
+        if (left + toolbarWidth / 2 > editorWidth) {
+          left = left - (left + toolbarWidth / 2 - editorWidth) + 20;
         }
 
         if (left !== this.toolbar.position.left) {
-          this.$refs.toolbar.$el.style.left = left + 'px';
+          this.$refs.toolbar.$el.style.left = left + "px";
         }
       }
     }
@@ -361,7 +365,7 @@ export default {
 .k-writer .ProseMirror h1,
 .k-writer .ProseMirror h2,
 .k-writer .ProseMirror h3 {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 
 .k-writer .ProseMirror h1 {
@@ -382,16 +386,15 @@ export default {
   font-weight: 700;
 }
 
-
 .k-writer .ProseMirror strong {
   font-weight: 600;
 }
 .k-writer .ProseMirror code {
   position: relative;
-  font-size: .925em;
+  font-size: 0.925em;
   display: inline-block;
   line-height: 1.325;
-  padding: .05em .325em;
+  padding: 0.05em 0.325em;
   background: var(--color-gray-300);
   border-radius: var(--rounded);
   font-family: var(--font-mono);

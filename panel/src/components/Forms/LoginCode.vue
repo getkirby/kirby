@@ -1,7 +1,7 @@
 <template>
   <form class="k-login-form k-login-code-form" @submit.prevent="login">
     <h1 class="sr-only">
-      {{ $t('login') }}
+      {{ $t("login") }}
     </h1>
 
     <k-login-alert v-if="issue" @click="issue = null">
@@ -30,20 +30,12 @@
         icon="angle-left"
         @click="back"
       >
-        {{ $t("back") }} <template v-if="isLoadingBack">
-          …
-        </template>
+        {{ $t("back") }} <template v-if="isLoadingBack"> … </template>
       </k-button>
 
-      <k-button
-        class="k-login-button"
-        icon="check"
-        type="submit"
-      >
+      <k-button class="k-login-button" icon="check" type="submit">
         {{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
-        <template v-if="isLoadingLogin">
-          …
-        </template>
+        <template v-if="isLoadingLogin"> … </template>
       </k-button>
     </div>
   </form>
@@ -78,7 +70,7 @@ export default {
       this.$go("/logout");
     },
     async login() {
-      this.issue          = null;
+      this.issue = null;
       this.isLoadingLogin = true;
 
       try {
@@ -86,11 +78,10 @@ export default {
         this.$store.dispatch("notification/success", this.$t("welcome"));
 
         if (this.mode === "password-reset") {
-          this.$go("reset-password")
+          this.$go("reset-password");
         } else {
           this.$reload();
         }
-
       } catch (error) {
         this.issue = error.message;
       } finally {
@@ -105,7 +96,7 @@ export default {
 .k-login-code-form .k-user-info {
   height: 38px;
   margin-bottom: 2.25rem;
-  padding: .5rem;
+  padding: 0.5rem;
   background: var(--color-white);
   border-radius: var(--rounded-xs);
   box-shadow: var(--shadow);

@@ -1,10 +1,5 @@
 <template>
-  <k-overlay
-    ref="overlay"
-    :dimmed="false"
-    @close="onClose"
-    @open="onOpen"
-  >
+  <k-overlay ref="overlay" :dimmed="false" @close="onClose" @open="onOpen">
     <div
       :data-id="id"
       :data-nested="nested"
@@ -26,10 +21,7 @@
               />
             </li>
           </ul>
-          <nav
-            v-if="hasTabs"
-            class="k-drawer-tabs"
-          >
+          <nav v-if="hasTabs" class="k-drawer-tabs">
             <k-button
               v-for="tabButton in tabs"
               :key="tabButton.name"
@@ -41,11 +33,7 @@
           </nav>
           <nav class="k-drawer-options">
             <slot name="options" />
-            <k-button
-              class="k-drawer-option"
-              icon="check"
-              @click="close"
-            />
+            <k-button class="k-drawer-option" icon="check" @click="close" />
           </nav>
         </header>
         <div class="k-drawer-body scroll-y-auto">
@@ -79,7 +67,7 @@ export default {
       return this.tabs && Object.keys(this.tabs).length > 1;
     },
     index() {
-      return this.breadcrumb.findIndex(item => item.id === this._uid);
+      return this.breadcrumb.findIndex((item) => item.id === this._uid);
     },
     nested() {
       return this.index > 0;
@@ -135,7 +123,7 @@ export default {
       this.$refs.overlay.open();
     }
   }
-}
+};
 </script>
 
 <style>
@@ -149,7 +137,7 @@ export default {
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, 0.2);
 }
 .k-drawer-box {
   position: relative;
@@ -171,7 +159,7 @@ export default {
   font-size: var(--text-sm);
 }
 .k-drawer-title {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
 }
 .k-drawer-title,
 .k-drawer-breadcrumb {
@@ -179,13 +167,13 @@ export default {
   flex-grow: 1;
   align-items: center;
   min-width: 0;
-  margin-inline-start: -.75rem;
+  margin-inline-start: -0.75rem;
   font-size: var(--text-sm);
   font-weight: var(--font-normal);
 }
 .k-drawer-breadcrumb li:not(:last-child) .k-button::after {
   position: absolute;
-  inset-inline-end: -.75rem;
+  inset-inline-end: -0.75rem;
   width: 1.5rem;
   display: inline-flex;
   justify-content: center;
@@ -198,13 +186,13 @@ export default {
 .k-drawer-breadcrumb .k-icon {
   width: 1rem;
   color: var(--color-gray-500);
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-drawer-breadcrumb .k-button {
   display: inline-flex;
   align-items: center;
   height: var(--drawer-header-height);
-  padding-inline: .75rem;
+  padding-inline: 0.75rem;
 }
 .k-drawer-breadcrumb .k-button-text {
   opacity: 1;
@@ -216,11 +204,11 @@ export default {
   display: flex;
   align-items: center;
   line-height: 1;
-  margin-inline-end: .75rem;
+  margin-inline-end: 0.75rem;
 }
 .k-drawer-tab.k-button {
   height: var(--drawer-header-height);
-  padding-inline: .75rem;
+  padding-inline: 0.75rem;
   display: flex;
   align-items: center;
   font-size: var(--text-xs);
@@ -228,14 +216,14 @@ export default {
 .k-drawer-tab.k-button[aria-current]::after {
   position: absolute;
   bottom: -1px;
-  inset-inline: .75rem;
+  inset-inline: 0.75rem;
   content: "";
   background: var(--color-black);
   height: 2px;
 }
 
 .k-drawer-options {
-  padding-inline-end: .75rem;
+  padding-inline-end: 0.75rem;
 }
 .k-drawer-option.k-button {
   width: var(--drawer-header-height);

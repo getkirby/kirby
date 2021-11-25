@@ -7,7 +7,7 @@
 <script>
 export default {
   props: {
-    id: String,
+    id: String
   },
   computed: {
     view() {

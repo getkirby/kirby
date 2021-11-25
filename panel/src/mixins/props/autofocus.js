@@ -1,6 +1,5 @@
-
 export default {
   props: {
-    autofocus: Boolean,
+    autofocus: Boolean
   }
-}
+};
