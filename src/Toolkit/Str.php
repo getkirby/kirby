@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The String class provides a set
@@ -180,9 +181,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, $position + static::length($needle));
         }
+
+        return static::substr($string, $position + static::length($needle));
     }
 
     /**
@@ -222,9 +223,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, 0, $position);
         }
+
+        return static::substr($string, 0, $position);
     }
 
     /**
@@ -250,7 +251,12 @@ class Str
      */
     public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
-        return call_user_func($caseInsensitive === true ? 'stripos' : 'strpos', $string, $needle) !== false;
+        if ($needle === '') {
+            return true;
+        }
+
+        $method = $caseInsensitive === true ? 'stripos' : 'strpos';
+        return call_user_func($method, $string, $needle) !== false;
     }
 
     /**
@@ -397,9 +403,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, $position);
         }
+
+        return static::substr($string, $position);
     }
 
     /**
@@ -512,6 +518,10 @@ class Str
      */
     public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
     {
+        if ($needle === '') {
+            throw new InvalidArgumentException('The needle must not be empty');
+        }
+
         if ($caseInsensitive === true) {
             $string = static::lower($string);
             $needle = static::lower($needle);
@@ -1198,9 +1208,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, 0, $position + static::length($needle));
         }
+
+        return static::substr($string, 0, $position + static::length($needle));
     }
 
     /**
