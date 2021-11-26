@@ -20,7 +20,7 @@
  * Use to display any icon from the Panel's icon set.
  * @public
  *
- * @example <k-icon type="pencil" />
+ * @example <k-icon type="edit" />
  */
 export default {
   props: {
