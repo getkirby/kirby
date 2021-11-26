@@ -302,9 +302,6 @@ class Panel
         // create a micro-router for the Panel
         return router($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
 
-            // trigger hook
-            $route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
-
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
             $areaId = $route->attributes()['area'] ?? null;
@@ -313,6 +310,9 @@ class Panel
 
             // call the route action to check the result
             try {
+                // trigger hook
+                $route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
+
                 // check for access before executing area routes
                 if ($auth !== false) {
                     static::firewall($kirby->user(), $areaId);
