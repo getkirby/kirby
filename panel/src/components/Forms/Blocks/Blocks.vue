@@ -329,12 +329,13 @@ export default {
 
       const fields = (fieldset) => {
         let fields = {};
-        Object.values(fieldset.tabs).forEach((tab) => {
+
+        for (const tab of Object.values(fieldset?.tabs ?? {})) {
           fields = {
             ...fields,
             ...tab.fields
           };
-        });
+        }
 
         return fields;
       };
@@ -353,16 +354,16 @@ export default {
 
       let content = newBlock.content;
 
-      const oldFields = fields(oldFieldset);
       const newFields = fields(newFieldset);
+      const oldFields = fields(oldFieldset);
 
-      Object.entries(newFields).forEach(([name, field]) => {
+      for (const [name, field] of Object.entries(newFields)) {
         const oldField = oldFields[name];
 
         if (oldField?.type === field.type && oldBlock?.content?.[name]) {
           content[name] = oldBlock.content[name];
         }
-      });
+      }
 
       this.blocks[index] = {
         ...newBlock,
