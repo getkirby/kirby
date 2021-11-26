@@ -98,7 +98,7 @@ export default {
     name: String,
     next: Object,
     prev: Object,
-    type: String,
+    type: String
   },
   data() {
     return {
@@ -109,7 +109,7 @@ export default {
     className() {
       let className = ["k-block-type-" + this.type];
 
-      if (this.fieldset.preview && this.fieldset.preview !== this.type) {
+      if (this.fieldset.preview !== this.type) {
         className.push("k-block-type-" + this.fieldset.preview);
       }
 
@@ -133,22 +133,25 @@ export default {
       return {
         ...this.$listeners,
         confirmToRemove: this.confirmToRemove,
-        open: this.open,
-      }
+        open: this.open
+      };
     },
     tabs() {
       let tabs = this.fieldset.tabs;
 
       Object.entries(tabs).forEach(([tabName, tab]) => {
         Object.entries(tab.fields).forEach(([fieldName]) => {
-
           tabs[tabName].fields[fieldName].section = this.name;
           tabs[tabName].fields[fieldName].endpoints = {
-            field:   this.endpoints.field + "/fieldsets/" + this.type + "/fields/" + fieldName,
+            field:
+              this.endpoints.field +
+              "/fieldsets/" +
+              this.type +
+              "/fields/" +
+              fieldName,
             section: this.endpoints.section,
-            model:   this.endpoints.model
+            model: this.endpoints.model
           };
-
         });
       });
 
@@ -181,7 +184,7 @@ export default {
       }
 
       return false;
-    },
+    }
   },
   methods: {
     close() {
@@ -227,11 +230,11 @@ export default {
 <style>
 .k-block-container {
   position: relative;
-  padding: .75rem;
+  padding: 0.75rem;
   background: var(--color-white);
 }
 .k-block-container:not(:last-of-type) {
-  border-bottom: 1px dashed rgba(0, 0, 0, .1);
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
 }
 .k-block-container:focus {
   outline: 0;
@@ -245,7 +248,7 @@ export default {
   position: absolute;
   inset: 0;
   content: "";
-  background: rgba(238, 242, 246, .375);
+  background: rgba(238, 242, 246, 0.375);
   mix-blend-mode: multiply;
   border: 1px solid var(--color-focus);
 }
@@ -259,15 +262,15 @@ export default {
   display: none;
   position: absolute;
   top: 0;
-  inset-inline-end: .75rem;
+  inset-inline-end: 0.75rem;
   margin-top: calc(-1.75rem + 2px);
 }
-.k-block-container[data-last-in-batch] .k-block-options,
-.k-block-container[data-selected] .k-block-options {
+.k-block-container[data-last-in-batch] > .k-block-options,
+.k-block-container[data-selected] > .k-block-options {
   display: flex;
 }
 .k-block-container[data-hidden] .k-block {
-  opacity: .25;
+  opacity: 0.25;
 }
 .k-drawer-options .k-button[data-disabled] {
   vertical-align: middle;

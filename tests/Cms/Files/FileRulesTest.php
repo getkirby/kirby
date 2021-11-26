@@ -131,7 +131,7 @@ class FileRulesTest extends TestCase
         $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::create($file, $upload);
     }
@@ -228,7 +228,7 @@ class FileRulesTest extends TestCase
         $upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
         FileRules::replace($file, $upload);
     }
@@ -253,14 +253,17 @@ class FileRulesTest extends TestCase
             ['jpg', true],
             ['png', true],
             ['', false, 'The extensions for "test" is missing'],
-            ['htm', false, 'The extension "htm" is not allowed'],
-            ['html', false, 'The extension "html" is not allowed'],
-            ['php', false, 'The extension "php" is not allowed'],
-            ['phar', false, 'The extension "phar" is not allowed'],
-            ['exe', false, 'The extension "exe" is not allowed'],
+            ['php', false, 'You are not allowed to upload PHP files'],
+            ['phar', false, 'You are not allowed to upload PHP files'],
+            ['phtml', false, 'You are not allowed to upload PHP files'],
             ['php4', false, 'You are not allowed to upload PHP files'],
-            ['dhtml', false, 'You are not allowed to upload HTML files'],
             ['1phar2', false, 'You are not allowed to upload PHP files'],
+            ['phtml5', false, 'You are not allowed to upload PHP files'],
+            ['htm', false, 'You are not allowed to upload HTML files'],
+            ['html', false, 'You are not allowed to upload HTML files'],
+            ['dhtml', false, 'You are not allowed to upload HTML files'],
+            ['exe', false, 'The extension "exe" is not allowed'],
+            ['txt', false, 'The extension "txt" is not allowed'],
         ];
     }
 
@@ -291,12 +294,15 @@ class FileRulesTest extends TestCase
 
             // extension
             ['test', '', 'text/plain', false, 'The extensions for "test" is missing'],
-            ['test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
-            ['test.html', 'html', 'text/plain', false, 'The extension "html" is not allowed'],
-            ['test.php', 'php', 'text/plain', false, 'The extension "php" is not allowed'],
-            ['test.phar', 'phar', 'text/plain', false, 'The extension "phar" is not allowed'],
+            ['test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
+            ['test.html', 'html', 'text/plain', false, 'You are not allowed to upload HTML files'],
+            ['test.php', 'php', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phtml', 'phtml', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phar', 'phar', 'text/plain', false, 'You are not allowed to upload PHP files'],
             ['test.exe', 'exe', 'text/plain', false, 'The extension "exe" is not allowed'],
+            ['test.txt', 'txt', 'text/plain', false, 'The extension "txt" is not allowed'],
             ['test.php4', 'php4', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.phtml5', 'phtml5', 'text/plain', false, 'You are not allowed to upload PHP files'],
             ['test.1phar2', '1phar2', 'text/plain', false, 'You are not allowed to upload PHP files'],
 
             // mime
@@ -313,7 +319,7 @@ class FileRulesTest extends TestCase
 
             // rule order
             ['.test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
-            ['.test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
+            ['.test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
             ['.test.jpg', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
         ];
     }

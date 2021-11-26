@@ -4,7 +4,7 @@ namespace Kirby\Sane;
 
 /**
  * Sane handler for HTML files
- * @since 3.6.0
+ * @since 3.5.8
  *
  * @package   Kirby Sane
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -77,6 +77,7 @@ class Html extends DomHandler
         'i'          => true,
         'ins'        => true,
         'li'         => true,
+        'small'      => true,
         'span'       => true,
         'strong'     => true,
         'sub'        => true,
@@ -84,6 +85,7 @@ class Html extends DomHandler
         'ol'         => true,
         'p'          => true,
         'pre'        => true,
+        's'          => true,
         'u'          => true,
         'ul'         => true,
     ];

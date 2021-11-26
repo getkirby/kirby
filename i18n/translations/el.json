@@ -111,6 +111,8 @@
   "error.license.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
   "error.page.changeStatus.incomplete": "Δεν ήταν δυνατή η δημοσίευση της σελίδας καθώς περιέχει σφάλματα",
   "error.page.changeStatus.permission": "Δεν είναι δυνατή η αλλαγή κατάστασης για αυτή τη σελίδα",

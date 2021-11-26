@@ -111,6 +111,8 @@
   "error.license.email": "Anna sähköpostiosoite",
   "error.license.verification": "Lisenssiä ei voitu vahvistaa",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
   "error.page.changeStatus.incomplete": "Sivulla on virheitä eikä sitä voitu julkaista",
   "error.page.changeStatus.permission": "Tämän sivun tilaa ei voi muuttaa",

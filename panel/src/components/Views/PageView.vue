@@ -40,25 +40,16 @@
                 icon="cog"
                 @click="$refs.settings.toggle()"
               />
-              <k-dropdown-content
-                ref="settings"
-                :options="$dropdown(id)"
-              />
+              <k-dropdown-content ref="settings" :options="$dropdown(id)" />
             </k-dropdown>
 
             <k-languages-dropdown />
           </k-button-group>
         </template>
-
         <template #right>
-          <k-prev-next
-            v-if="model.id"
-            :prev="prev"
-            :next="next"
-          />
+          <k-prev-next v-if="model.id" :prev="prev" :next="next" />
         </template>
       </k-header>
-
       <k-sections
         :blueprint="blueprint"
         :empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
@@ -67,7 +58,9 @@
         :tab="tab"
       />
     </k-view>
-    <k-form-buttons :lock="lock" />
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 

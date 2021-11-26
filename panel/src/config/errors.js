@@ -2,30 +2,22 @@ import store from "@/store/store.js";
 
 export default {
   install(app) {
-    app.config.errorHandler = error => {
-      if (window.panel.$config.debug) {
-        window.console.error(error);
-      }
-
-      store.dispatch("notification/error", {
-        message: error.message || "An error occurred. Please reload the Panel."
-      });
-    };
-
     window.panel = window.panel || {};
-    window.panel.error = (notification, msg) => {
-      if (window.panel.$config.debug) {
-        window.console.error(notification + ": " + msg);
-      }
 
-      store.dispatch(
-        "notification/error",
-        notification + ". See the console for more information."
-      );
+    // global rejected promise handler
+    window.onunhandledrejection = (event) => {
+      event.preventDefault();
+      store.dispatch("notification/error", event.reason);
     };
 
-    window.panel.deprecated = (msg) => {
-      console.warn("Deprecated: " + msg);
-    }
+    // global deprecation handler
+    window.panel.deprecated = (message) => {
+      store.dispatch("notification/deprecated", message);
+    };
+
+    // global error handler
+    window.panel.error = app.config.errorHandler = (error) => {
+      store.dispatch("notification/error", error);
+    };
   }
-}
+};

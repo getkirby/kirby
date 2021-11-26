@@ -9,7 +9,7 @@
       name,
       pattern,
       placeholder,
-      required,
+      required
     }"
     v-direction
     :value="slug"
@@ -18,7 +18,7 @@
     type="text"
     class="k-text-input"
     v-on="listeners"
-  >
+  />
 </template>
 
 <script>
@@ -35,14 +35,14 @@ export const props = {
     formData: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     },
     sync: {
-      type: String,
-    },
+      type: String
+    }
   }
-}
+};
 
 /**
  * @example <k-input v-model="slug" name="slug" type="slug" />
@@ -100,5 +100,5 @@ export default {
       this.$emit("input", this.slug);
     }
   }
-}
+};
 </script>

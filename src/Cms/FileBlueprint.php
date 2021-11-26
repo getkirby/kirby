@@ -163,17 +163,24 @@ class FileBlueprint extends Blueprint
 
         // normalize the MIME, extension and type from strings into arrays
         if (is_string($accept['mime']) === true) {
-            $accept['mime'] = array_map(function ($mime) {
-                return $mime['value'];
-            }, Str::accepted($accept['mime']));
+            $accept['mime'] = array_map(
+                fn ($mime) => $mime['value'],
+                Str::accepted($accept['mime'])
+            );
         }
 
         if (is_string($accept['extension']) === true) {
-            $accept['extension'] = array_map('trim', explode(',', $accept['extension']));
+            $accept['extension'] = array_map(
+                'trim',
+                explode(',', $accept['extension'])
+            );
         }
 
         if (is_string($accept['type']) === true) {
-            $accept['type'] = array_map('trim', explode(',', $accept['type']));
+            $accept['type'] = array_map(
+                'trim',
+                explode(',', $accept['type'])
+            );
         }
 
         return $accept;

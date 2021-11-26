@@ -92,12 +92,12 @@ export default {
 
 .k-column[data-disabled] {
   cursor: not-allowed;
-  opacity: .4;
+  opacity: 0.4;
 }
 .k-column[data-disabled] * {
   pointer-events: none;
 }
-.k-column[data-disabled] .k-text[data-theme=help] * {
+.k-column[data-disabled] .k-text[data-theme="help"] * {
   pointer-events: initial;
 }
 </style>

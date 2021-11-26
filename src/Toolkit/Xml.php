@@ -106,9 +106,10 @@ class Xml
             if (isset($value['value'], $value['escape'])) {
                 $value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
             } else {
-                $value = implode(' ', array_filter($value, function ($value) {
-                    return !empty($value) || is_numeric($value);
-                }));
+                $value = implode(' ', array_filter(
+                    $value,
+                    fn ($value) => !empty($value) || is_numeric($value)
+                ));
             }
         } else {
             $value = static::encode($value);

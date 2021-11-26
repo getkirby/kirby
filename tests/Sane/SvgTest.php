@@ -4,8 +4,6 @@ namespace Kirby\Sane;
 
 /**
  * @covers \Kirby\Sane\Svg
- * @covers \Kirby\Toolkit\Dom
- * @todo Separate test class for Toolkit\Dom
  */
 class SvgTest extends TestCase
 {
@@ -72,7 +70,7 @@ class SvgTest extends TestCase
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
         Svg::validate($fixture);
     }
 
@@ -90,7 +88,7 @@ class SvgTest extends TestCase
         $this->assertSame($sanitized, Svg::sanitize($fixture));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 1): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
         Svg::validate($fixture);
     }
 
@@ -102,7 +100,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2): Unknown URL type');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
         Svg::validateFile($fixture);
     }
 
@@ -138,7 +136,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 7)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 7)');
         Svg::validateFile($fixture);
     }
 
@@ -150,7 +148,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: filter (line 7)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7)');
         Svg::validateFile($fixture);
     }
 
@@ -162,7 +160,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2)');
         Svg::validateFile($fixture);
     }
 
@@ -174,7 +172,7 @@ class SvgTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Svg::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2)');
         Svg::validateFile($fixture);
     }
 

@@ -111,6 +111,8 @@
   "error.license.email": "Digite um endereço de email válido",
   "error.license.verification": "Não foi possível verificar a licença",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Não tem permissões para alterar a URL de \"{slug}\"",
   "error.page.changeStatus.incomplete": "A página possui erros e não pode ser guardada",
   "error.page.changeStatus.permission": "O estado desta página não pode ser alterado",

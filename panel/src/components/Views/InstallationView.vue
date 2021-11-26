@@ -11,7 +11,7 @@
 
       <!-- ready to be installed -->
       <form v-else-if="isReady" @submit.prevent="install">
-        <h1 class="k-offscreen">
+        <h1 class="sr-only">
           {{ $t("installation") }}
         </h1>
         <k-fieldset v-model="user" :fields="fields" :novalidate="true" />
@@ -93,7 +93,7 @@ export default {
     isInstalled: Boolean,
     isOk: Boolean,
     requirements: Object,
-    translations: Array,
+    translations: Array
   },
   data() {
     return {
@@ -162,7 +162,7 @@ export default {
   margin-top: 1.5rem;
 }
 .k-installation-view .k-headline {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 .k-installation-issues {
   line-height: 1.5em;

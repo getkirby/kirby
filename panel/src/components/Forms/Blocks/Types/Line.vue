@@ -1,6 +1,6 @@
 <template>
   <div>
-    <hr>
+    <hr />
   </div>
 </template>
 
@@ -9,13 +9,12 @@
  * @displayName BlockTypeLine
  * @internal
  */
-export default {
-};
+export default {};
 </script>
 
 <style>
 .k-block-type-line hr {
-  margin-block: .75rem;
+  margin-block: 0.75rem;
   border: 0;
   border-top: 2px solid var(--color-gray-400);
 }

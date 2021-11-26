@@ -1,4 +1,3 @@
-
 window.panel = window.panel || {};
 window.panel.plugins = {
   components: {},
@@ -17,7 +16,7 @@ window.panel.plugin = function (plugin, parts) {
       options = { template: options };
     }
 
-    window.panel.plugins["components"][`k-block-type-${name}`] = {
+    window.panel.plugins.components[`k-block-type-${name}`] = {
       extends: "k-block-type",
       ...options
     };
@@ -25,35 +24,35 @@ window.panel.plugin = function (plugin, parts) {
 
   // Components
   resolve(parts, "components", function (name, options) {
-    window.panel.plugins["components"][name] = options;
+    window.panel.plugins.components[name] = options;
   });
 
   // Fields
   resolve(parts, "fields", function (name, options) {
-    window.panel.plugins["components"][`k-${name}-field`] = options;
+    window.panel.plugins.components[`k-${name}-field`] = options;
   });
 
   // Icons
   resolve(parts, "icons", function (name, options) {
-    window.panel.plugins["icons"][name] = options;
+    window.panel.plugins.icons[name] = options;
   });
 
   // Sections
   resolve(parts, "sections", function (name, options) {
-    window.panel.plugins["components"][`k-${name}-section`] = {
+    window.panel.plugins.components[`k-${name}-section`] = {
       ...options,
-      mixins: ["section"].concat(options.mixins || [])
+      mixins: ["section", ...(options.mixins || [])]
     };
   });
 
-  // Vue.use
+  // `Vue.use`
   resolve(parts, "use", function (name, options) {
-    window.panel.plugins["use"].push(options);
+    window.panel.plugins.use.push(options);
   });
 
-  // created callback
+  // Vue `created` callback
   if (parts["created"]) {
-    window.panel.plugins["created"].push(parts["created"]);
+    window.panel.plugins.created.push(parts["created"]);
   }
 
   // Login
@@ -62,20 +61,15 @@ window.panel.plugin = function (plugin, parts) {
   }
 
   // Third-party plugins
-  resolve(parts, "thirdParty", function(name, options) {
-    window.panel.plugins["thirdParty"][name] = options;
+  resolve(parts, "thirdParty", function (name, options) {
+    window.panel.plugins.thirdParty[name] = options;
   });
-
 };
 
 function resolve(object, type, callback) {
   if (object[type]) {
-
-    if (Object.entries) {
-      Object.entries(object[type]).forEach(function ([name, options]) {
-        callback(name, options);
-      });
+    for (const [name, options] of Object.entries(object[type])) {
+      callback(name, options);
     }
-
   }
 }

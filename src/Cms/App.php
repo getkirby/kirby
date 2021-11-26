@@ -330,6 +330,10 @@ class App
     {
         $router = $this->router();
 
+        /**
+         * @todo Closures should not defined statically but
+         * for each instance to avoid this constant setting and unsetting
+         */
         $router::$beforeEach = function ($route, $path, $method) {
             $this->trigger('route:before', compact('route', 'path', 'method'));
         };
@@ -338,7 +342,12 @@ class App
             return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
         };
 
-        return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
+        $result = $router->call($path ?? $this->path(), $method ?? $this->request()->method());
+
+        $router::$beforeEach = null;
+        $router::$afterEach  = null;
+
+        return $result;
     }
 
     /**

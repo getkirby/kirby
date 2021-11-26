@@ -2,7 +2,7 @@
   <k-inside>
     <k-view class="k-languages-view">
       <k-header>
-        {{ $t('view.languages') }}
+        {{ $t("view.languages") }}
 
         <k-button-group slot="left">
           <k-button
@@ -17,28 +17,28 @@
         <template v-if="languages.length > 0">
           <section class="k-languages-view-section">
             <header class="k-languages-view-section-header">
-              <k-headline>{{ $t('languages.default') }}</k-headline>
+              <k-headline>{{ $t("languages.default") }}</k-headline>
             </header>
             <k-collection :items="primaryLanguage" />
           </section>
 
           <section class="k-languages-view-section">
             <header class="k-languages-view-section-header">
-              <k-headline>{{ $t('languages.secondary') }}</k-headline>
+              <k-headline>{{ $t("languages.secondary") }}</k-headline>
             </header>
             <k-collection
               v-if="secondaryLanguages.length"
               :items="secondaryLanguages"
             />
             <k-empty v-else icon="globe" @click="$dialog('languages/create')">
-              {{ $t('languages.secondary.empty') }}
+              {{ $t("languages.secondary.empty") }}
             </k-empty>
           </section>
         </template>
 
         <template v-else-if="languages.length === 0">
           <k-empty icon="globe" @click="$dialog('languages/create')">
-            {{ $t('languages.empty') }}
+            {{ $t("languages.empty") }}
           </k-empty>
         </template>
       </section>
@@ -52,18 +52,18 @@ export default {
     languages: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     }
   },
   computed: {
     languagesCollection() {
-      return this.languages.map(language => ({
+      return this.languages.map((language) => ({
         ...language,
         image: {
           back: "black",
           color: "gray",
-          icon: "globe",
+          icon: "globe"
         },
         link: () => {
           this.$dialog(`languages/${language.id}/update`);
@@ -88,10 +88,12 @@ export default {
       }));
     },
     primaryLanguage() {
-      return this.languagesCollection.filter(language => language.default);
+      return this.languagesCollection.filter((language) => language.default);
     },
     secondaryLanguages() {
-      return this.languagesCollection.filter(language => language.default === false);
+      return this.languagesCollection.filter(
+        (language) => language.default === false
+      );
     }
   }
 };
@@ -102,7 +104,7 @@ export default {
   margin-bottom: 1.5rem;
 }
 .k-languages-view-section-header {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 .k-languages-view-section {
   margin-bottom: 3rem;

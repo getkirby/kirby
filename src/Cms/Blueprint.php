@@ -567,9 +567,7 @@ class Blueprint
 
         // set all options to false
         if ($options === false) {
-            return array_map(function () {
-                return false;
-            }, $defaults);
+            return array_map(fn () => false, $defaults);
         }
 
         // extend options if possible
@@ -765,9 +763,10 @@ class Blueprint
      */
     public function sections(): array
     {
-        return array_map(function ($section) {
-            return $this->section($section['name']);
-        }, $this->sections);
+        return A::map(
+            $this->sections,
+            fn ($section) => $this->section($section['name'])
+        );
     }
 
     /**

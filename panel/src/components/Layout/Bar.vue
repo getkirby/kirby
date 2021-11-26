@@ -30,7 +30,7 @@
  *   <template #right>...</template>
  * </k-bar>
  */
-export default {}
+export default {};
 </script>
 
 <style>

@@ -1,7 +1,7 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "Modifier votre nom",
+  "account.delete": "Supprimer votre compte",
+  "account.delete.confirm": "Voulez-vous vraiment supprimer votre compte ? Vous serez déconnecté immédiatement. Votre compte ne pourra pas être récupéré.",
 
   "add": "Ajouter",
   "author": "Auteur",
@@ -110,6 +110,8 @@
   "error.license.format": "Veuillez saisir un numéro de licence valide",
   "error.license.email": "Veuillez saisir un courriel valide",
   "error.license.verification": "La licence n’a pu être vérifiée",
+
+  "error.offline": "Le Panel est actuellement hors ligne",
 
   "error.page.changeSlug.permission": "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour «&nbsp;{slug}&nbsp;»",
   "error.page.changeStatus.incomplete": "La page comporte des erreurs et ne peut pas être publiée",

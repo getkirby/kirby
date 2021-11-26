@@ -111,6 +111,8 @@
   "error.license.email": "Bitte gib eine gültige E-Mailadresse an",
   "error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
 
+  "error.offline": "Das Panel ist zur Zeit offline",
+
   "error.page.changeSlug.permission": "Du darfst die URL der Seite \"{slug}\" nicht ändern",
   "error.page.changeStatus.incomplete": "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
   "error.page.changeStatus.permission": "Der Status der Seite kann nicht geändert werden",

@@ -44,21 +44,27 @@
       />
     </div>
 
-    <k-toolbar-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
-    <k-toolbar-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
-    <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
+    <k-toolbar-email-dialog
+      ref="emailDialog"
+      @cancel="cancel"
+      @submit="insert($event)"
+    />
+    <k-toolbar-link-dialog
+      ref="linkDialog"
+      @cancel="cancel"
+      @submit="insert($event)"
+    />
+    <k-files-dialog
+      ref="fileDialog"
+      @cancel="cancel"
+      @submit="insertFile($event)"
+    />
     <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
   </div>
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  name,
-  required
-} from "@/mixins/props.js"
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -67,13 +73,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    name,
-    required
-  ],
+  mixins: [autofocus, disabled, id, name, required],
   props: {
     buttons: {
       type: [Boolean, Array],
@@ -98,8 +98,8 @@ export const props = {
     theme: String,
     uploads: [Boolean, Object, Array],
     value: String
-  },
-}
+  }
+};
 
 /**
  * @example <k-input v-model="text" name="text" type="textarea" />
@@ -172,12 +172,12 @@ export default {
       this.resize();
     },
     insertFile(files) {
-      if (files && files.length > 0) {
-        this.insert(files.map(file => file.dragText).join("\n\n"));
+      if (files?.length > 0) {
+        this.insert(files.map((file) => file.dragText).join("\n\n"));
       }
     },
     insertUpload(files, response) {
-      this.insert(response.map(file => file.dragText).join("\n\n"));
+      this.insert(response.map((file) => file.dragText).join("\n\n"));
       this.$events.$emit("model.update");
     },
     onClick() {
@@ -209,7 +209,7 @@ export default {
       // dropping text
       const drag = this.$store.state.drag;
 
-      if (drag && drag.type === "text") {
+      if (drag?.type === "text") {
         this.focus();
         this.insert(drag.data);
       }
@@ -239,7 +239,7 @@ export default {
       // drag & drop for text
       const drag = this.$store.state.drag;
 
-      if (drag && drag.type === "text") {
+      if (drag?.type === "text") {
         $event.dataTransfer.dropEffect = "copy";
         this.focus();
         this.over = true;
@@ -283,7 +283,7 @@ export default {
     uploadFile() {
       this.$refs.fileUpload.open({
         url: this.$urls.api + "/" + this.endpoints.field + "/upload",
-        multiple: false,
+        multiple: false
       });
     },
     wrap(text) {
@@ -343,7 +343,7 @@ export default {
 }
 
 .k-toolbar {
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
   color: #aaa;
 }
 .k-textarea-input:focus-within .k-toolbar {
@@ -351,8 +351,8 @@ export default {
   top: 0;
   inset-inline: 0;
   z-index: 1;
-  box-shadow: rgba(0, 0, 0, .05) 0 2px 5px;
-  border-bottom: 1px solid rgba(0 ,0 ,0 , .1);
+  box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   color: #000;
 }
 </style>

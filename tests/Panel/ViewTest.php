@@ -407,6 +407,7 @@ class ViewTest extends TestCase
         $expected = [
             'code' => 404,
             'component' => 'k-error-view',
+            'error' => 'Test',
             'props' => [
                 'error' => 'Test',
                 'layout' => 'outside'

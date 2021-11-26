@@ -21,12 +21,7 @@
                 :src="model.avatar"
                 ratio="1/1"
               />
-              <k-icon
-                v-else
-                back="gray-900"
-                color="gray-200"
-                type="user"
-              />
+              <k-icon v-else back="gray-900" color="gray-200" type="user" />
             </k-button>
             <k-dropdown-content
               v-if="model.avatar"
@@ -34,11 +29,9 @@
               :options="avatarOptions"
             />
           </k-dropdown>
-
           <k-button-group :buttons="buttons" />
         </k-view>
       </div>
-
       <k-view>
         <k-header
           :editable="permissions.changeName && !isLocked"
@@ -46,7 +39,12 @@
           :tabs="tabs"
           @edit="$dialog(id + '/changeName')"
         >
-          <span v-if="!model.name || model.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
+          <span
+            v-if="!model.name || model.name.length === 0"
+            class="k-user-name-placeholder"
+          >
+            {{ $t("name") }} …
+          </span>
           <template v-else>
             {{ model.name }}
           </template>
@@ -60,24 +58,15 @@
                   icon="cog"
                   @click="$refs.settings.toggle()"
                 />
-                <k-dropdown-content
-                  ref="settings"
-                  :options="$dropdown(id)"
-                />
+                <k-dropdown-content ref="settings" :options="$dropdown(id)" />
               </k-dropdown>
               <k-languages-dropdown />
             </k-button-group>
           </template>
-
           <template #right>
-            <k-prev-next
-              v-if="!model.account"
-              :prev="prev"
-              :next="next"
-            />
+            <k-prev-next v-if="!model.account" :prev="prev" :next="next" />
           </template>
         </k-header>
-
         <k-sections
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
@@ -85,7 +74,6 @@
           :parent="id"
           :tab="tab"
         />
-
         <k-upload
           ref="upload"
           :url="uploadApi"
@@ -94,8 +82,10 @@
           @success="uploadedAvatar"
         />
       </k-view>
-      <k-form-buttons :lock="lock" />
     </div>
+    <template #footer>
+      <k-form-buttons :lock="lock" />
+    </template>
   </k-inside>
 </template>
 
@@ -123,21 +113,21 @@ export default {
       return [
         {
           icon: "email",
-          text: `${this.$t('email')}: ${this.model.email}`,
+          text: `${this.$t("email")}: ${this.model.email}`,
           disabled: !this.permissions.changeEmail || this.isLocked,
-          click: () => this.$dialog(this.id + '/changeEmail')
+          click: () => this.$dialog(this.id + "/changeEmail")
         },
         {
           icon: "bolt",
-          text: `${this.$t('role')}: ${this.model.role}`,
+          text: `${this.$t("role")}: ${this.model.role}`,
           disabled: !this.permissions.changeRole || this.isLocked,
-          click: () => this.$dialog(this.id + '/changeRole')
+          click: () => this.$dialog(this.id + "/changeRole")
         },
         {
           icon: "globe",
-          text: `${this.$t('language')}: ${this.model.language}`,
+          text: `${this.$t("language")}: ${this.model.language}`,
           disabled: !this.permissions.changeLanguage || this.isLocked,
-          click: () => this.$dialog(this.id + '/changeLanguage')
+          click: () => this.$dialog(this.id + "/changeLanguage")
         }
       ];
     },
@@ -147,7 +137,7 @@ export default {
   },
   methods: {
     async deleteAvatar() {
-      await this.$api.users.deleteAvatar(this.model.id)
+      await this.$api.users.deleteAvatar(this.model.id);
       this.avatar = null;
       this.$store.dispatch("notification/success", ":)");
       this.$reload();
@@ -156,7 +146,7 @@ export default {
       if (this.model.avatar) {
         this.$refs.picture.toggle();
       } else {
-        this. $refs.upload.open();
+        this.$refs.upload.open();
       }
     },
     uploadedAvatar() {
@@ -179,11 +169,11 @@ export default {
 }
 .k-user-profile .k-button-group {
   overflow: hidden;
-  margin-inline-start: .75rem
+  margin-inline-start: 0.75rem;
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
-  padding-block: .25rem;
+  padding-block: 0.25rem;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -206,7 +196,7 @@ export default {
 
 .k-user-name-placeholder {
   color: var(--color-gray-500);
-  transition: color .3s;
+  transition: color 0.3s;
 }
 .k-header[data-editable] .k-user-name-placeholder:hover {
   color: var(--color-gray-900);

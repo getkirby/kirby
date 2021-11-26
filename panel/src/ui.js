@@ -30,4 +30,3 @@ Vue.use(Api, store);
 
 Vue.use(Portal);
 Vue.use(Vuelidate);
-

@@ -5,7 +5,7 @@
   </p>
   <p class="admin-advice">
     Advice for developers and administrators:<br>
-    Change the PHP version to 7.4 or 8.0 (PHP 8.0 is recommended)
+    Change the PHP version to one supported by your version of Kirby
   </p>
 
 <?php include __DIR__ . '/snippets/footer.php' ?>

@@ -7,7 +7,7 @@ export default {
     permissions: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     },
     lock: {
@@ -16,7 +16,7 @@ export default {
     model: {
       type: Object,
       default() {
-        return {}
+        return {};
       }
     },
     tab: {
@@ -39,7 +39,7 @@ export default {
       return this.model.link;
     },
     isLocked() {
-      return this.lock && this.lock.state === "lock";
+      return this.lock?.state === "lock";
     }
   },
   watch: {

@@ -7,7 +7,7 @@
 
 <style>
 .k-login-alert {
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
   display: flex;
   justify-content: space-between;
   align-items: center;

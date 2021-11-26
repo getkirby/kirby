@@ -17,10 +17,7 @@
   </k-button>
 
   <!-- Multiple options = dropdown -->
-  <k-dropdown
-    v-else-if="options.length"
-    class="k-options-dropdown"
-  >
+  <k-dropdown v-else-if="options.length" class="k-options-dropdown">
     <k-button
       :icon="icon"
       :tooltip="$t('options')"
@@ -57,12 +54,12 @@ export default {
      */
     icon: {
       type: String,
-      default: "dots",
+      default: "dots"
     },
     options: {
       type: [Array, Function, String],
       default() {
-        return []
+        return [];
       }
     },
     /**
@@ -96,7 +93,7 @@ export default {
       this.$refs.options.toggle();
     }
   }
-}
+};
 </script>
 
 <style>
@@ -112,6 +109,6 @@ export default {
   align-items: center;
   min-width: 38px;
   height: 38px;
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
 }
 </style>

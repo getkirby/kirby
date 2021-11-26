@@ -14,7 +14,6 @@ import store from "./store/store.js";
 import Portal from "@linusborg/vue-simple-portal";
 import Vuelidate from "vuelidate";
 
-
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
@@ -22,7 +21,17 @@ Vue.use(Errors);
 Vue.use(Helpers);
 Vue.use(Libraries);
 
+// Global styles
+import "./styles/variables.css";
+import "./styles/reset.css";
+import "./styles/animations.css";
+
+// Load components
 import "./config/components.js";
+
+// Load utilities after components
+// to increase specificity
+import "./styles/utilities.css";
 
 Vue.use(Plugins);
 Vue.use(Events);
@@ -32,11 +41,6 @@ Vue.use(Api, store);
 
 Vue.use(Portal);
 Vue.use(Vuelidate);
-
-// Global styles
-import "./styles/variables.css"
-import "./styles/reset.css"
-import "./styles/utilities.css"
 
 new Vue({
   store,

@@ -111,6 +111,8 @@
   "error.license.email": "Please enter a valid email address",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "You are not allowed to change the URL appendix for \"{slug}\"",
   "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
   "error.page.changeStatus.permission": "The status for this page cannot be changed",

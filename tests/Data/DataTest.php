@@ -119,15 +119,14 @@ class DataTest extends TestCase
 
     public function handlerProvider()
     {
-        $handlers = array_filter(array_keys(Data::$handlers), function ($handler) {
-            // the PHP handler doesn't support decoding and therefore cannot be
-            // tested with the test methods in this test class
-            return $handler !== 'php';
-        });
+        // the PHP handler doesn't support decoding and therefore cannot be
+        // tested with the test methods in this test class
+        $handlers = array_filter(
+            array_keys(Data::$handlers),
+            fn ($handler) => $handler !== 'php'
+        );
 
-        return array_map(function ($handler) {
-            return [$handler];
-        }, $handlers);
+        return array_map(fn ($handler) => [$handler], $handlers);
     }
 
     /**

@@ -2,7 +2,7 @@
   <k-inside>
     <k-view class="k-system-view">
       <k-header>
-        {{ $t('view.system') }}
+        {{ $t("view.system") }}
       </k-header>
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
@@ -12,22 +12,32 @@
         <ul class="k-system-info-box" style="--columns: 2">
           <li>
             <dl>
-              <dt>{{ $t('license') }}</dt>
+              <dt>{{ $t("license") }}</dt>
               <dd>
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <button v-else class="k-system-warning" @click="$dialog('registration')">
-                  {{ $t('license.unregistered') }}
-                </button>
+                <k-button
+                  v-else
+                  class="k-system-warning"
+                  @click="$dialog('registration')"
+                >
+                  {{ $t("license.unregistered") }}
+                </k-button>
               </dd>
             </dl>
           </li>
           <li>
             <dl>
-              <dt>{{ $t('version') }}</dt>
+              <dt>{{ $t("version") }}</dt>
               <dd dir="ltr">
-                <a :href="'https://github.com/getkirby/kirby/releases/tag/' + version">{{ version }}</a>
+                <k-link
+                  :to="
+                    'https://github.com/getkirby/kirby/releases/tag/' + version
+                  "
+                >
+                  {{ version }}
+                </k-link>
               </dd>
             </dl>
           </li>
@@ -36,15 +46,15 @@
 
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>{{ $t('environment') }}</k-headline>
+          <k-headline>{{ $t("environment") }}</k-headline>
         </header>
 
         <ul class="k-system-info-box" style="--columns: 4">
           <li>
             <dl>
-              <dt>{{ $t('debugging') }}</dt>
+              <dt>{{ $t("debugging") }}</dt>
               <dd :class="{ 'k-system-warning': debug }">
-                {{ debug ? $t('on') : $t('off') }}
+                {{ debug ? $t("on") : $t("off") }}
               </dd>
             </dl>
           </li>
@@ -52,7 +62,7 @@
             <dl>
               <dt>SSL</dt>
               <dd :class="{ 'k-system-warning': !ssl }">
-                {{ ssl ? $t('on') : $t('off') }}
+                {{ ssl ? $t("on") : $t("off") }}
               </dd>
             </dl>
           </li>
@@ -66,39 +76,41 @@
           </li>
           <li>
             <dl>
-              <dt>{{ $t('server') }}</dt>
+              <dt>{{ $t("server") }}</dt>
               <dd>
-                {{ server || '?' }}
+                {{ server || "?" }}
               </dd>
             </dl>
           </li>
         </ul>
       </section>
 
-      <section class="k-system-view-section">
+      <section v-if="plugins.length" class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>{{ $t('plugins') }}</k-headline>
+          <k-headline link="https://getkirby.com/plugins">
+            {{ $t("plugins") }}
+          </k-headline>
         </header>
         <table class="k-system-plugins">
           <tr>
             <th>
-              {{ $t('name') }}
+              {{ $t("name") }}
             </th>
             <th class="desk">
-              {{ $t('author') }}
+              {{ $t("author") }}
             </th>
             <th class="desk">
-              {{ $t('license') }}
+              {{ $t("license") }}
             </th>
             <th style="width: 8rem">
-              {{ $t('version') }}
+              {{ $t("version") }}
             </th>
           </tr>
           <tr v-for="plugin in plugins" :key="plugin.name">
             <td>
-              <a v-if="plugin.link" :href="plugin.link">
+              <k-link v-if="plugin.link" :to="plugin.link">
                 {{ plugin.name }}
-              </a>
+              </k-link>
               <template v-else>
                 {{ plugin.name }}
               </template>
@@ -127,7 +139,7 @@ export default {
     php: String,
     plugins: Array,
     server: String,
-    ssl: Boolean,
+    https: Boolean,
     version: String
   }
 };
@@ -138,7 +150,7 @@ export default {
   margin-bottom: 1.5rem;
 }
 .k-system-view-section-header {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 .k-system-view-section {
   margin-bottom: 3rem;
@@ -157,21 +169,21 @@ export default {
 }
 
 .k-system-info-box li {
-  padding: .75rem;
+  padding: 0.75rem;
   background: var(--color-white);
 }
 .k-system-info-box dt {
   font-size: var(--text-sm);
   color: var(--color-gray-600);
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 .k-system-warning {
   color: var(--color-negative);
   font-weight: var(--font-bold);
+  display: inline-flex;
 }
-.k-system-info-box dd button {
-  text-align: left;
-  font-size: var(--text-sm);
+.k-system-warning .k-button-text {
+  opacity: 1;
 }
 
 .k-system-plugins {
@@ -183,7 +195,7 @@ export default {
 .k-system-plugins th,
 .k-system-plugins td {
   text-align: left;
-  padding: .75rem;
+  padding: 0.75rem;
   font-weight: var(--font-normal);
   font-size: var(--text-sm);
   background: var(--color-white);

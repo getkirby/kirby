@@ -16,7 +16,7 @@ export default (api) => {
       return api.get("auth", params);
     },
     async verifyCode(code) {
-      return api.post("auth/code", {code});
+      return api.post("auth/code", { code });
     }
-  }
+  };
 };

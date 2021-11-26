@@ -40,7 +40,7 @@ class Users extends Collection
      *
      * @param \Kirby\Cms\Users|\Kirby\Cms\User|string $object
      * @return $this
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException When no `User` or `Users` object or an ID of an existing user is passed
      */
     public function add($object)
     {

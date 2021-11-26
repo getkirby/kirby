@@ -20,11 +20,11 @@ export default {
       return dt.format(this.field.display);
     }
   }
-}
+};
 </script>
 
 <style>
 .k-time-field-preview {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
 }
 </style>

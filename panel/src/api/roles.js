@@ -6,5 +6,5 @@ export default (api) => {
     async get(name) {
       return api.get("roles/" + name);
     }
-  }
+  };
 };

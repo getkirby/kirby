@@ -1,7 +1,7 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "İsminizi değiştirin",
+  "account.delete": "Hesabınızı silin",
+  "account.delete.confirm": "Hesabınızı gerçekten silmek istiyor musunuz? Oturumunuz hemen sonlandırılacaktır. Hesabınız daha sonra geri alınamaz.",
 
   "add": "Ekle",
   "author": "Yazar",
@@ -110,6 +110,8 @@
   "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
   "error.license.verification": "Lisans doğrulanamadı",
+
+  "error.offline": "Panel şu anda çevrimdışı",
 
   "error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
   "error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",

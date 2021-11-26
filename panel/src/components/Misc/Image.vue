@@ -15,17 +15,9 @@
         :srcset="srcset"
         :sizes="sizes"
         @dragstart.prevent
-      >
-      <k-loader
-        v-if="!loaded && !error"
-        position="center"
-        theme="light"
       />
-      <k-icon
-        v-if="!loaded && error"
-        class="k-image-error"
-        type="cancel"
-      />
+      <k-loader v-if="!loaded && !error" position="center" theme="light" />
+      <k-icon v-if="!loaded && error" class="k-image-error" type="cancel" />
     </span>
   </span>
 </template>
@@ -87,7 +79,7 @@ export default {
     /**
      * For responsive images, pass the `srcset` attribute
      */
-    srcset: String,
+    srcset: String
   },
   data() {
     return {
@@ -150,10 +142,10 @@ export default {
   inset-inline-start: 50%;
   transform: translate(-50%, -50%);
   color: var(--color-white);
-  font-size: .9em;
+  font-size: 0.9em;
 }
 .k-image-error svg * {
-  fill: rgba(255, 255, 255, .3);
+  fill: rgba(255, 255, 255, 0.3);
 }
 .k-image[data-cover] img {
   object-fit: cover;

@@ -73,7 +73,7 @@ export default {
     /**
      * ISO date string/s, i.e. `2012-12-12`
      */
-    value: [Array, String],
+    value: [Array, String]
   },
   data() {
     return this.toData(this.value);
@@ -91,29 +91,29 @@ export default {
     },
     weekdays() {
       return [
-        this.$t('days.mon'),
-        this.$t('days.tue'),
-        this.$t('days.wed'),
-        this.$t('days.thu'),
-        this.$t('days.fri'),
-        this.$t('days.sat'),
-        this.$t('days.sun'),
+        this.$t("days.mon"),
+        this.$t("days.tue"),
+        this.$t("days.wed"),
+        this.$t("days.thu"),
+        this.$t("days.fri"),
+        this.$t("days.sat"),
+        this.$t("days.sun")
       ];
     },
     monthnames() {
       return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december'),
+        this.$t("months.january"),
+        this.$t("months.february"),
+        this.$t("months.march"),
+        this.$t("months.april"),
+        this.$t("months.may"),
+        this.$t("months.june"),
+        this.$t("months.july"),
+        this.$t("months.august"),
+        this.$t("months.september"),
+        this.$t("months.october"),
+        this.$t("months.november"),
+        this.$t("months.december")
       ];
     },
     months() {
@@ -126,8 +126,9 @@ export default {
         options.push({
           value: index,
           text: item,
-          disabled: date.isBefore(this.view.min, "month") ||
-                    date.isAfter(this.view.max, "month")
+          disabled:
+            date.isBefore(this.view.min, "month") ||
+            date.isAfter(this.view.max, "month")
         });
       });
 
@@ -137,11 +138,11 @@ export default {
       var options = [];
 
       const min = this.view.min
-                ? this.view.min.get("year")
-                : this.view.year - 20;
+        ? this.view.min.get("year")
+        : this.view.year - 20;
       const max = this.view.max
-                ? this.view.max.get("year")
-                : this.view.year + 20;
+        ? this.view.max.get("year")
+        : this.view.year + 20;
 
       for (var x = min; x <= max; x++) {
         options.push({
@@ -159,14 +160,14 @@ export default {
   },
   watch: {
     value(value) {
-      const data     = this.toData(value);
+      const data = this.toData(value);
       this.datetimes = data.datetimes;
-      this.view      = data.view;
+      this.view = data.view;
     }
   },
   methods: {
     days(week) {
-      let days    = [];
+      let days = [];
       const start = (week - 1) * 7 + 1;
 
       for (let x = start; x < start + 7; x++) {
@@ -181,34 +182,27 @@ export default {
       return days;
     },
     isBetween(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
+      if (day === "" || this.multiple == false || this.datetimes.length < 2) {
         return false;
       }
 
       const date = this.toDate(day);
-      return this.isFirst(day) ||
-            this.isLast(day) ||
-            (
-              date.isAfter(this.datetimes[0], "day") &&
-              date.isBefore(this.datetimes[1], "day")
-            );
-
+      return (
+        this.isFirst(day) ||
+        this.isLast(day) ||
+        (date.isAfter(this.datetimes[0], "day") &&
+          date.isBefore(this.datetimes[1], "day"))
+      );
     },
     isDisabled(day) {
       const date = this.toDate(day);
-      return date.isBefore(this.view.min, "day") ||
-             date.isAfter(this.view.max, "day");
+      return (
+        date.isBefore(this.view.min, "day") ||
+        date.isAfter(this.view.max, "day")
+      );
     },
     isFirst(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
+      if (day === "" || this.multiple == false || this.datetimes.length < 2) {
         return false;
       }
 
@@ -216,11 +210,7 @@ export default {
       return date.isSame(this.datetimes[0], "day");
     },
     isLast(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
+      if (day === "" || this.multiple == false || this.datetimes.length < 2) {
         return false;
       }
 
@@ -233,7 +223,7 @@ export default {
       }
 
       const date = this.toDate(day);
-      return this.datetimes.some(current => date.isSame(current, "day"));
+      return this.datetimes.some((current) => date.isSame(current, "day"));
     },
     isToday(day) {
       return this.toDate(day).isSame(this.toToday(), "day");
@@ -247,9 +237,11 @@ export default {
       this.show(prev);
     },
     mergeTime(dt1, dt2) {
-      return dt1.clone().set("second", dt2.get("second"))
-                        .set("minute", dt2.get("minute"))
-                        .set("hour", dt2.get("hour"));
+      return dt1
+        .clone()
+        .set("second", dt2.get("second"))
+        .set("minute", dt2.get("minute"))
+        .set("hour", dt2.get("hour"));
     },
     select(day) {
       const reference = this.datetimes[0] || this.toToday();
@@ -258,7 +250,6 @@ export default {
         const today = this.mergeTime(this.$library.dayjs(), reference);
         this.datetimes = [today];
         this.show(today);
-
       } else {
         let date = this.toDate(day);
         date = this.mergeTime(date, reference);
@@ -275,9 +266,9 @@ export default {
         }
       }
 
-      const iso = this.multiple ?
-                  this.datetimes.map(date => this.toISO(date)) :
-                  this.toISO(this.datetimes[0]);
+      const iso = this.multiple
+        ? this.datetimes.map((date) => this.toISO(date))
+        : this.toISO(this.datetimes[0]);
 
       /**
        * The input event is fired when a date is selected.
@@ -286,11 +277,11 @@ export default {
       this.$emit("input", iso);
     },
     show(date) {
-      this.view.year  = date.year();
+      this.view.year = date.year();
       this.view.month = date.month();
     },
     toData(value) {
-      const today     = this.toToday();
+      const today = this.toToday();
       const datetimes = this.toDatetimes(value);
 
       return {
@@ -299,9 +290,9 @@ export default {
           month: (datetimes[0] || today).month(),
           year: (datetimes[0] || today).year(),
           min: this.min ? this.$library.dayjs.utc(this.min) : null,
-          max: this.max ? this.$library.dayjs.utc(this.max) : null,
+          max: this.max ? this.$library.dayjs.utc(this.max) : null
         }
-      }
+      };
     },
     toDate(day, month = this.view.month, year = this.view.year) {
       return this.$library.dayjs.utc(`${year}-${month + 1}-${day} 00:00:00`);
@@ -315,24 +306,23 @@ export default {
         return [this.$library.dayjs.utc(value)];
       }
 
-      return value.map(date => this.$library.dayjs.utc(date));
+      return value.map((date) => this.$library.dayjs.utc(date));
     },
     toISO(dt) {
       return dt.format("YYYY-MM-DD HH:mm:ss");
     },
     toToday() {
       return this.$library.dayjs.utc();
-    },
+    }
   }
 };
 </script>
 
 <style>
-
 .k-calendar-input {
-  --cell-padding: .25rem .5rem;
+  --cell-padding: 0.25rem 0.5rem;
 
-  padding: .5rem;
+  padding: 0.5rem;
   background: var(--color-gray-900);
   color: var(--color-light);
   border-radius: var(--rounded-xs);
@@ -341,7 +331,7 @@ export default {
   table-layout: fixed;
   width: 100%;
   min-width: 15rem;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 
 .k-calendar-input > nav {
@@ -349,7 +339,7 @@ export default {
   direction: ltr;
 }
 .k-calendar-input > nav .k-button {
-  padding: .5rem;
+  padding: 0.5rem;
 }
 .k-calendar-selects {
   flex-grow: 1;
@@ -364,7 +354,7 @@ export default {
   direction: rtl;
 }
 .k-calendar-selects .k-select-input {
-  padding: 0 .5rem;
+  padding: 0 0.5rem;
   font-weight: var(--font-normal);
   font-size: var(--text-sm);
 }
@@ -372,7 +362,7 @@ export default {
   color: var(--color-focus-light) !important;
 }
 .k-calendar-input th {
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   color: var(--color-gray-500);
   font-size: var(--text-xs);
   font-weight: 400;
@@ -396,7 +386,7 @@ export default {
   color: var(--color-white);
 }
 .k-calendar-day:hover .k-button:not([data-disabled]) {
-  border-color: rgba(255, 255, 255, .25);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
   color: var(--color-yellow-500);
@@ -419,7 +409,7 @@ export default {
 }
 .k-calendar-today {
   text-align: center;
-  padding-top: .5rem;
+  padding-top: 0.5rem;
 }
 .k-calendar-today .k-button {
   color: var(--color-focus-light);

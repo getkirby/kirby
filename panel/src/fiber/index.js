@@ -26,7 +26,7 @@
 
 import clone from "../helpers/clone";
 import { merge } from "../helpers/object";
-import { toJson } from "../api/request";
+import store from "../store/store";
 
 export default {
   options: {},
@@ -39,15 +39,14 @@ export default {
    * @param {object} options
    */
   init(state, options = {}) {
-
     // defaults
     this.options = {
-      base:     document.querySelector("base").href,
-      headers:  () => {},
+      base: document.querySelector("base").href,
+      headers: () => {},
       onFinish: () => {},
-      onStart:  () => {},
-      onSwap:   () => {},
-      query:    () => {},
+      onStart: () => {},
+      onSwap: () => {},
+      query: () => {},
       ...options
     };
 
@@ -96,8 +95,21 @@ export default {
    * @returns {object}
    */
   async go(url, options) {
-    const json = await this.request(url, options);
-    return this.setState(json, options);
+    try {
+      const response = await this.request(url, options);
+
+      // the request could not be parsed
+      // the fatal view is taking over
+      if (response === false) {
+        return false;
+      }
+
+      return this.setState(response, options);
+    } catch (e) {
+      if (options?.silent !== true) {
+        throw e;
+      }
+    }
   },
 
   /**
@@ -162,11 +174,12 @@ export default {
       only: [],
       query: {},
       silent: false,
+      type: "$view",
       ...options
     };
 
     const globals = this.arrayToString(options.globals);
-    const only    = this.arrayToString(options.only);
+    const only = this.arrayToString(options.only);
 
     this.options.onStart(options);
 
@@ -183,22 +196,52 @@ export default {
           "X-Fiber-Globals": globals,
           "X-Fiber-Only": only,
           "X-Fiber-Referrer": this.state.$view.path,
-          ...options.headers,
+          ...options.headers
         }
       });
 
-      let json = await toJson(response);
+      const text = await response.text();
+      let json;
 
-      // add exisiting data to partial requests
-      if (only.length) {
-        json = merge(this.state, json);
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        store.dispatch("fatal", {
+          html: text,
+          silent: options.silent
+        });
+        return false;
       }
 
-      return json;
+      // the return type does not match the expected type
+      if (!json[options.type]) {
+        throw Error(`The ${options.type} could not be loaded`);
+      }
+
+      // request-specific data
+      const data = json[options.type];
+
+      // the response contains a custom error message
+      if (data.error) {
+        throw Error(data.error);
+      }
+
+      // views add the entire response object to the state
+      if (options.type === "$view") {
+        // add exisiting data to partial view requests
+        if (only.length) {
+          return merge(this.state, json);
+        }
+
+        return json;
+      }
+
+      // dialogs, searches and dropdowns only need what is
+      // contained in their request data (i.e. $dialog, $dropdown)
+      return data;
     } finally {
       this.options.onFinish(options);
     }
-
   },
 
   /**
@@ -208,12 +251,19 @@ export default {
    * @param {object} options
    */
   async setState(state, options = {}) {
+    if (typeof state !== "object") {
+      return false;
+    }
+
     // clone existing data
     this.state = clone(state);
 
     // either replacing the whole state
     // or pushing onto it
-    if (options.replace === true || this.url(this.state.$url).href === window.location.href) {
+    if (
+      options.replace === true ||
+      this.url(this.state.$url).href === window.location.href
+    ) {
       window.history.replaceState(this.state, "", this.state.$url);
     } else {
       window.history.pushState(this.state, "", this.state.$url);
@@ -239,6 +289,5 @@ export default {
 
     url.search = this.query(query, url.search);
     return url;
-  },
-
- };
+  }
+};

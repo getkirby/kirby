@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -94,8 +95,9 @@ class Fieldsets extends Items
 
     public function toArray(?Closure $map = null): array
     {
-        return array_map($map ?? function ($fieldset) {
-            return $fieldset->toArray();
-        }, $this->data);
+        return A::map(
+            $this->data,
+            $map ?? fn ($fieldset) => $fieldset->toArray()
+        );
     }
 }

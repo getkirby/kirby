@@ -1,35 +1,19 @@
 <template>
-  <nav
-    :aria-label="label"
-    class="k-breadcrumb"
-  >
+  <nav :aria-label="label" class="k-breadcrumb">
     <k-dropdown class="k-breadcrumb-dropdown">
-      <k-button
-        icon="road-sign"
-        @click="$refs.dropdown.toggle()"
-      />
-      <k-dropdown-content
-        ref="dropdown"
-        :options="dropdown"
-        theme="light"
-      />
+      <k-button icon="road-sign" @click="$refs.dropdown.toggle()" />
+      <k-dropdown-content ref="dropdown" :options="dropdown" theme="light" />
     </k-dropdown>
 
     <ol>
-      <li
-        v-for="(crumb, index) in segments"
-        :key="index"
-      >
+      <li v-for="(crumb, index) in segments" :key="index">
         <k-link
           :title="crumb.text || crumb.label"
           :to="crumb.link"
           :aria-current="isLast(index) ? 'page' : false"
           class="k-breadcrumb-link"
         >
-          <k-loader
-            v-if="crumb.loading"
-            class="k-breadcrumb-icon"
-          />
+          <k-loader v-if="crumb.loading" class="k-breadcrumb-icon" />
           <k-icon
             v-else-if="crumb.icon"
             :type="crumb.icon"
@@ -55,13 +39,13 @@ export default {
     },
     label: {
       type: String,
-      default: "Breadcrumb",
+      default: "Breadcrumb"
     },
     view: Object
   },
   computed: {
     dropdown() {
-      return this.segments.map(link => ({
+      return this.segments.map((link) => ({
         ...link,
         text: link.label,
         icon: "angle-right"
@@ -70,9 +54,9 @@ export default {
     segments() {
       return [
         {
-          link:    this.view.link,
-          label:   this.view.breadcrumbLabel,
-          icon:    this.view.icon,
+          link: this.view.link,
+          label: this.view.breadcrumbLabel,
+          icon: this.view.icon,
           loading: this.$store.state.isLoading
         },
         ...this.crumbs
@@ -81,15 +65,15 @@ export default {
   },
   methods: {
     isLast(index) {
-      return (this.crumbs.length - 1) === index;
+      return this.crumbs.length - 1 === index;
     }
   }
-}
+};
 </script>
 
 <style>
 .k-breadcrumb {
-  padding-inline: .5rem;
+  padding-inline: 0.5rem;
 }
 .k-breadcrumb-dropdown {
   height: 2.5rem;
@@ -118,7 +102,7 @@ export default {
   font-size: var(--text-sm);
   min-width: 0;
   align-self: stretch;
-  padding-block: .625rem;
+  padding-block: 0.625rem;
   line-height: 1.25rem;
 }
 .k-breadcrumb li {
@@ -132,15 +116,15 @@ export default {
 }
 .k-breadcrumb li:not(:last-child)::after {
   content: "/";
-  padding-inline: .5rem;
-  opacity: .5;
+  padding-inline: 0.5rem;
+  opacity: 0.5;
   flex-shrink: 0;
 }
 .k-breadcrumb li:not(:first-child):not(:last-child) {
   max-width: 15vw;
 }
 .k-breadcrumb-icon {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-breadcrumb-link-text {
   white-space: nowrap;

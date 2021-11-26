@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Strike extends Mark {
-
   get button() {
     return {
       icon: "strikethrough",
@@ -14,14 +13,12 @@ export default class Strike extends Mark {
   }
 
   inputRules({ type, utils }) {
-    return [
-      utils.markInputRule(/~([^~]+)~$/, type),
-    ];
+    return [utils.markInputRule(/~([^~]+)~$/, type)];
   }
 
   keys() {
     return {
-      "Mod-d": () => this.toggle(),
+      "Mod-d": () => this.toggle()
     };
   }
 
@@ -30,30 +27,27 @@ export default class Strike extends Mark {
   }
 
   pasteRules({ type, utils }) {
-    return [
-      utils.markPasteRule(/~([^~]+)~/g, type),
-    ];
+    return [utils.markPasteRule(/~([^~]+)~/g, type)];
   }
 
   get schema() {
     return {
       parseDOM: [
         {
-          tag: "s",
+          tag: "s"
         },
         {
-          tag: "del",
+          tag: "del"
         },
         {
-          tag: "strike",
+          tag: "strike"
         },
         {
           style: "text-decoration",
-          getAttrs: value => value === "line-through",
-        },
+          getAttrs: (value) => value === "line-through"
+        }
       ],
-      toDOM: () => ["s", 0],
+      toDOM: () => ["s", 0]
     };
   }
-
 }

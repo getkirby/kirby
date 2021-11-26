@@ -52,7 +52,7 @@ export default {
   line-height: 1.5em;
   background: #000;
   border-radius: var(--rounded);
-  padding: .5rem .75rem 3rem;
+  padding: 0.5rem 0.75rem 3rem;
   color: #fff;
   font-family: var(--font-mono);
 }
@@ -77,7 +77,7 @@ export default {
 }
 .k-block-type-code-editor-language .k-select-input {
   position: relative;
-  padding: .325rem .75rem .5rem 2rem;
+  padding: 0.325rem 0.75rem 0.5rem 2rem;
   z-index: 1;
   font-size: var(--text-xs);
 }

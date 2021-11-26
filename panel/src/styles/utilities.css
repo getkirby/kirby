@@ -48,3 +48,41 @@
   --theme-light: var(--color-focus-light);
   --theme-bg: var(--color-blue-200);
 }
+
+.scroll-x,
+.scroll-x-auto,
+.scroll-y,
+.scroll-y-auto {
+  -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, 0, 0);
+}
+.scroll-x {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.scroll-x-auto {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.scroll-y {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.scroll-y-auto {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/** Todo: deprecate k-offscreen **/
+.sr-only,
+.k-offscreen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

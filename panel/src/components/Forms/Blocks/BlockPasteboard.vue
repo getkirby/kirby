@@ -6,8 +6,12 @@
     size="large"
     class="k-block-importer"
   >
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <label for="pasteboard" v-html="$t('field.blocks.fieldsets.paste', { shortcut })" />
+    <!-- eslint-disable vue/no-v-html -->
+    <label
+      for="pasteboard"
+      v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
+    />
+    <!-- eslint-enable -->
     <textarea id="pasteboard" @paste.prevent="onPaste" />
   </k-dialog>
 </template>
@@ -20,7 +24,7 @@ export default {
   inheritAttrs: false,
   computed: {
     shortcut() {
-      return this.$helper.keyboard.metaKey() + '+v';
+      return this.$helper.keyboard.metaKey() + "+v";
     }
   },
   methods: {
@@ -52,12 +56,12 @@ export default {
   color: var(--color-gray-400);
 }
 .k-block-importer label kbd {
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   font-family: var(--font-mono);
-  letter-spacing: .1em;
-  padding: .25rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem;
   border-radius: var(--rounded);
-  margin: 0 .25rem;
+  margin: 0 0.25rem;
 }
 .k-block-importer textarea {
   width: 100%;

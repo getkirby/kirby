@@ -111,6 +111,8 @@
   "error.license.email": "Моля въведете валиден email адрес",
   "error.license.verification": "The license could not be verified",
 
+  "error.offline": "The Panel is currently offline",
+
   "error.page.changeSlug.permission": "Не можете да смените URL на \"{slug}\"",
   "error.page.changeStatus.incomplete": "Страницата съдържа грешки и не може да бъде публикувана",
   "error.page.changeStatus.permission": "Статусът на страницата не може да бъде променен",

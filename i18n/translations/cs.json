@@ -1,10 +1,10 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "Přejmenovat",
+  "account.delete": "Smazat účet",
+  "account.delete.confirm": "Opravdu chcete smazat svůj účet? Budete okamžitě odhlášeni. Účet nemůže být zpětně obnoven.",
 
   "add": "P\u0159idat",
-  "author": "Author",
+  "author": "Autor",
   "avatar": "Profilov\u00fd obr\u00e1zek",
   "back": "Zpět",
   "cancel": "Zru\u0161it",
@@ -29,7 +29,7 @@
   "days.tue": "\u00fat",
   "days.wed": "st",
 
-  "debugging": "Debugging",
+  "debugging": "Ladění",
 
   "delete": "Smazat",
   "delete.all": "Smazat vše",
@@ -49,7 +49,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "environment": "Environment",
+  "environment": "Prostředí",
 
   "error.access.code": "Neplatný kód",
   "error.access.login": "Neplatné přihlášení",
@@ -110,6 +110,8 @@
   "error.license.format": "Zadejte prosím platné licenční číslo",
   "error.license.email": "Zadejte prosím platnou emailovou adresu",
   "error.license.verification": "Licenci nelze ověřit",
+
+  "error.offline": "Panel je v současnosti off-line",
 
   "error.page.changeSlug.permission": "Nem\u016f\u017eete zm\u011bnit URL t\u00e9to str\u00e1nky",
   "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemohla být zveřejněna",
@@ -438,7 +440,7 @@
   "paste": "Vložit",
   "paste.after": "Vložit za",
   "pixel": "Pixel",
-  "plugins": "Plugins",
+  "plugins": "Doplňky",
   "prev": "Předchozí",
   "preview": "Náhled",
   "remove": "Odstranit",
@@ -546,7 +548,7 @@
   "view.languages": "Jazyky",
   "view.resetPassword": "Resetovat heslo",
   "view.site": "Stránka",
-  "view.system": "System",
+  "view.system": "Systém",
   "view.users": "U\u017eivatel\u00e9",
 
   "welcome": "Vítejte",

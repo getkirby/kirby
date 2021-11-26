@@ -14,6 +14,6 @@ export default (api) => {
     },
     async update(code, values) {
       return api.patch("languages/" + code, values);
-    },
+    }
   };
 };

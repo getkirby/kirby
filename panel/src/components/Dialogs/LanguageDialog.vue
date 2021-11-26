@@ -23,7 +23,7 @@ export default {
   methods: {
     onCodeChanges(code) {
       if (!code) {
-        return this.model.locale = null;
+        return (this.model.locale = null);
       }
 
       if (code.length >= 2) {
@@ -38,7 +38,7 @@ export default {
           // if the entered language code exists
           // matches the locale values in the languages defined in the system
           let locales = this.$system.locales || [];
-          if (locales && locales[code]) {
+          if (locales?.[code]) {
             this.model.locale = locales[code];
           } else {
             this.model.locale = null;
@@ -47,8 +47,10 @@ export default {
       }
     },
     onNameChanges(name) {
-      this.model.code = this.$helper.slug(name, [this.model.rules, this.$system.ascii]).substr(0, 2);
-    },
+      this.model.code = this.$helper
+        .slug(name, [this.model.rules, this.$system.ascii])
+        .substr(0, 2);
+    }
   }
 };
 </script>

@@ -87,9 +87,10 @@ class LanguageRouter
                     $patterns = A::wrap($route['pattern']);
 
                     // prefix all patterns with the page slug
-                    $patterns = array_map(function ($pattern) use ($page, $language) {
-                        return $page->uri($language) . '/' . $pattern;
-                    }, $patterns);
+                    $patterns = A::map(
+                        $patterns,
+                        fn ($pattern) => $page->uri($language) . '/' . $pattern
+                    );
 
                     // re-inject the pattern and the full page object
                     $routes[$index]['pattern'] = $patterns;

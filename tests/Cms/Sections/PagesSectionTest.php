@@ -74,6 +74,27 @@ class PagesSectionTest extends TestCase
         $this->assertEquals('test/a', $section->parent()->id());
     }
 
+    public function testParentWithInvalidOption()
+    {
+        $this->app->impersonate('kirby');
+
+        $parent = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'a']
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The parent is invalid. You must choose the site or a page as parent.');
+
+        new Section('pages', [
+            'name'  => 'test',
+            'model' => $parent,
+            'parent' => 'kirby.user'
+        ]);
+    }
+
     public function statusProvider()
     {
         return [

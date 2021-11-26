@@ -1,7 +1,6 @@
-
 export function datetime(app, value, limit, condition, base = "day") {
   let dt = app.$library.dayjs.utc(value);
-  
+
   if (!dt.isValid()) {
     dt = app.$library.dayjs.utc(value, "HH:mm:ss");
   }
@@ -20,4 +19,4 @@ export function datetime(app, value, limit, condition, base = "day") {
 
 export default {
   datetime
-}
+};

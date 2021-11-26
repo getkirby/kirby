@@ -47,7 +47,9 @@ export default {
   },
   computed: {
     detailsList() {
-      return Array.isArray(this.details) ? this.details : Object.values(this.details || {});
+      return Array.isArray(this.details)
+        ? this.details
+        : Object.values(this.details || {});
     }
   }
 };
@@ -61,11 +63,11 @@ export default {
   padding: 1rem;
   font-size: var(--text-sm);
   line-height: 1.25em;
-  margin-top: .75rem;
+  margin-top: 0.75rem;
 }
 .k-error-details dt {
   color: var(--color-negative-light);
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
 }
 .k-error-details dd {
   overflow: hidden;
@@ -77,7 +79,7 @@ export default {
 }
 .k-error-details li:not(:last-child) {
   border-bottom: 1px solid var(--color-background);
-  padding-bottom: .25rem;
-  margin-bottom: .25rem;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 </style>

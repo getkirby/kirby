@@ -37,7 +37,7 @@ export default {
         return "circle-half";
       }
 
-      return "circle"
+      return "circle";
     },
     theme() {
       if (this.status === "draft") {
@@ -48,7 +48,7 @@ export default {
         return "info";
       }
 
-      return "positive"
+      return "positive";
     },
     title() {
       let title = this.tooltip || this.text;
@@ -66,7 +66,7 @@ export default {
       this.$emit("click");
     }
   }
-}
+};
 </script>
 
 <style>
@@ -85,6 +85,6 @@ export default {
 }
 .k-status-icon[data-disabled] .k-icon {
   color: var(--color-gray-400);
-  opacity: .5;
+  opacity: 0.5;
 }
 </style>

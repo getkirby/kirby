@@ -1,10 +1,10 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "이름 변경",
+  "account.delete": "계정 삭제",
+  "account.delete.confirm": "계정을 삭제할까요? 계정을 삭제한 뒤에는 복구할 수 없습니다.",
 
   "add": "\ucd94\uac00",
-  "author": "Author",
+  "author": "저자",
   "avatar": "프로필 이미지",
   "back": "복귀",
   "cancel": "\ucde8\uc18c",
@@ -29,7 +29,7 @@
   "days.tue": "\ud654",
   "days.wed": "\uc218",
 
-  "debugging": "Debugging",
+  "debugging": "디버깅",
 
   "delete": "\uc0ad\uc81c",
   "delete.all": "모두 삭제",
@@ -49,7 +49,7 @@
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
-  "environment": "Environment",
+  "environment": "환경",
 
   "error.access.code": "코드가 올바르지 않습니다.",
   "error.access.login": "로그인할 수 없습니다.",
@@ -110,6 +110,8 @@
   "error.license.format": "올바른 라이선스 키를 입력하세요.",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
   "error.license.verification": "라이선스 키가 올바르지 않습니다.",
+
+  "error.offline": "패널이 오프라인 상태입니다.",
 
   "error.page.changeSlug.permission": "고유 주소({slug})를 변경할 권한이 없습니다.",
   "error.page.changeStatus.incomplete": "페이지를 공개할 수 없습니다.",
@@ -438,7 +440,7 @@
   "paste": "붙여넣기",
   "paste.after": "뒤로 붙여넣기",
   "pixel": "픽셀",
-  "plugins": "Plugins",
+  "plugins": "플러그인",
   "prev": "이전",
   "preview": "미리 보기",
   "remove": "삭제",
@@ -475,7 +477,7 @@
   "template": "\ud15c\ud50c\ub9bf",
   "today": "오늘",
 
-  "server": "Server",
+  "server": "서버",
 
   "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
 
@@ -546,7 +548,7 @@
   "view.languages": "언어",
   "view.resetPassword": "암호 초기화",
   "view.site": "사이트",
-  "view.system": "System",
+  "view.system": "시스템",
   "view.users": "\uc0ac\uc6a9\uc790",
 
   "welcome": "반갑습니다.",

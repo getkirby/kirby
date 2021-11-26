@@ -1,7 +1,6 @@
 import pad from "./pad.js";
 
 describe("$helper.pad()", () => {
-
   it("should add default padding", () => {
     expect(pad(1)).to.equal("01");
   });

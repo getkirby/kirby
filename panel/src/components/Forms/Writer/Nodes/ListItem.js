@@ -1,12 +1,11 @@
 import Node from "../Node";
 
 export default class ListItem extends Node {
-
   keys({ type, utils }) {
     return {
-      "Enter": utils.splitListItem(type),
+      Enter: utils.splitListItem(type),
       "Shift-Tab": utils.liftListItem(type),
-      "Tab": utils.sinkListItem(type)
+      Tab: utils.sinkListItem(type)
     };
   }
 
@@ -19,11 +18,8 @@ export default class ListItem extends Node {
       content: "paragraph block*",
       defining: true,
       draggable: false,
-      parseDOM: [
-        { tag: "li" },
-      ],
-      toDOM: () => ["li", 0],
+      parseDOM: [{ tag: "li" }],
+      toDOM: () => ["li", 0]
     };
   }
-
 }

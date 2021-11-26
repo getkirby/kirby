@@ -13,12 +13,16 @@
       class="k-dialog"
       @mousedown.stop
     >
-      <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
+      <div
+        v-if="notification"
+        :data-theme="notification.type"
+        class="k-dialog-notification"
+      >
         <p>{{ notification.message }}</p>
         <k-button icon="cancel" @click="notification = null" />
       </div>
 
-      <div class="k-dialog-body">
+      <div class="k-dialog-body scroll-y-auto">
         <slot />
       </div>
 
@@ -43,7 +47,7 @@ export default {
     },
     cancelButton: {
       type: [String, Boolean],
-      default: true,
+      default: true
     },
     /**
      * The icon type for the submit button
@@ -119,7 +123,6 @@ export default {
       return this.cancelButton;
     },
     submitButtonConfig() {
-
       if (this.$attrs["button"] !== undefined) {
         return this.$attrs["button"];
       }
@@ -214,10 +217,10 @@ export default {
       this.close();
     },
     focus() {
-      if (this.$refs.dialog && this.$refs.dialog.querySelector) {
+      if (this.$refs.dialog?.querySelector) {
         const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
 
-        if (btn && typeof btn.focus === "function") {
+        if (typeof btn?.focus === "function") {
           btn.focus();
         }
       }
@@ -294,7 +297,7 @@ export default {
 }
 
 .k-dialog-notification {
-  padding: .75rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   background: var(--color-gray-900);
   width: 100%;
   line-height: 1.25rem;
@@ -322,12 +325,10 @@ export default {
 
 .k-dialog-body {
   padding: 1.5rem;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .k-dialog-body .k-fieldset {
-  padding-bottom: .5rem;
+  padding-bottom: 0.5rem;
 }
 
 .k-dialog-footer {
@@ -343,10 +344,9 @@ export default {
   display: flex;
   margin: 0;
   justify-content: space-between;
-
 }
 .k-dialog-footer .k-button-group .k-button {
-  padding: .75rem 1rem;
+  padding: 0.75rem 1rem;
   line-height: 1.25rem;
 }
 
@@ -369,11 +369,11 @@ export default {
 
 /** Dialog search field **/
 .k-dialog-search {
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
 }
 
 .k-dialog-search.k-input {
-  background: rgba(0, 0, 0, .075);
+  background: rgba(0, 0, 0, 0.075);
   padding: 0 1rem;
   height: 36px;
   border-radius: var(--rounded-xs);
