@@ -74,7 +74,7 @@ class Blueprint
         $props = $this->preset($props);
 
         // normalize the name
-        $props['name'] = $props['name'] ?? 'default';
+        $props['name'] ??= 'default';
 
         // normalize and translate the title
         $props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
@@ -337,7 +337,7 @@ class Blueprint
 
         $normalize = function ($props) use ($name) {
             // inject the filename as name if no name is set
-            $props['name'] = $props['name'] ?? $name;
+            $props['name'] ??= $name;
 
             // normalize the title
             $title = $props['title'] ?? ucfirst($props['name']);
@@ -577,7 +577,7 @@ class Blueprint
             $alias = $aliases[$key] ?? null;
 
             if ($alias !== null) {
-                $options[$alias] = $options[$alias] ?? $value;
+                $options[$alias] ??= $value;
                 unset($options[$key]);
             }
         }

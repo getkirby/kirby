@@ -92,7 +92,7 @@ class Router
      */
     public function call(string $path = null, string $method = 'GET', Closure $callback = null)
     {
-        $path   = $path ?? '';
+        $path ??= '';
         $ignore = [];
         $result = null;
         $loop   = true;

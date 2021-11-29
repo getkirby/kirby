@@ -36,14 +36,14 @@ class Panel
      */
     public static function area(string $id, $area): array
     {
-        $area['id']              = $id;
-        $area['label']           = $area['label'] ?? $id;
-        $area['breadcrumb']      = $area['breadcrumb'] ?? [];
-        $area['breadcrumbLabel'] = $area['breadcrumbLabel'] ?? $area['label'];
-        $area['title']           = $area['label'];
-        $area['menu']            = $area['menu'] ?? false;
-        $area['link']            = $area['link'] ?? $id;
-        $area['search']          = $area['search'] ?? null;
+        $area['id']                = $id;
+        $area['label']           ??= $id;
+        $area['breadcrumb']      ??= [];
+        $area['breadcrumbLabel'] ??= $area['label'];
+        $area['title']             = $area['label'];
+        $area['menu']            ??= false;
+        $area['link']            ??= $id;
+        $area['search']          ??= null;
 
         return $area;
     }

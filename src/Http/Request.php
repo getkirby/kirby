@@ -174,7 +174,7 @@ class Request
      */
     public function body()
     {
-        return $this->body = $this->body ?? new Body();
+        return $this->body ??= new Body();
     }
 
     /**
@@ -269,7 +269,7 @@ class Request
      */
     public function files()
     {
-        return $this->files = $this->files ?? new Files();
+        return $this->files ??= new Files();
     }
 
     /**
@@ -379,7 +379,7 @@ class Request
      */
     public function query()
     {
-        return $this->query = $this->query ?? new Query();
+        return $this->query ??= new Query();
     }
 
     /**
@@ -407,6 +407,6 @@ class Request
             return $this->url()->clone($props);
         }
 
-        return $this->url = $this->url ?? Uri::current();
+        return $this->url ??= Uri::current();
     }
 }

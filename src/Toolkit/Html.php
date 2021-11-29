@@ -233,7 +233,7 @@ class Html extends Xml
      */
     public static function entities(): array
     {
-        return self::$entities = self::$entities ?? get_html_translation_table(HTML_ENTITIES);
+        return self::$entities ??= get_html_translation_table(HTML_ENTITIES);
     }
 
     /**

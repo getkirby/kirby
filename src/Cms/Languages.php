@@ -88,8 +88,9 @@ class Languages extends Collection
             $props = F::load($file);
 
             if (is_array($props) === true) {
-                // inject the language code from the filename if it does not exist
-                $props['code'] = $props['code'] ?? F::name($file);
+                // inject the language code from the filename
+                // if it does not exist
+                $props['code'] ??= F::name($file);
 
                 $languages[] = new Language($props);
             }

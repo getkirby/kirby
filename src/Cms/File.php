@@ -367,7 +367,7 @@ class File extends ModelWithContent
             return $modified;
         }
 
-        $handler = $handler ?? $this->kirby()->option('date.handler', 'date');
+        $handler ??= $this->kirby()->option('date.handler', 'date');
 
         return $handler($format, $modified);
     }
@@ -422,7 +422,7 @@ class File extends ModelWithContent
      */
     public function parent()
     {
-        return $this->parent = $this->parent ?? $this->kirby()->site();
+        return $this->parent ??= $this->kirby()->site();
     }
 
     /**
@@ -472,7 +472,7 @@ class File extends ModelWithContent
      */
     public function root(): ?string
     {
-        return $this->root = $this->root ?? $this->parent()->root() . '/' . $this->filename();
+        return $this->root ??= $this->parent()->root() . '/' . $this->filename();
     }
 
     /**
@@ -598,7 +598,7 @@ class File extends ModelWithContent
      */
     public function template(): ?string
     {
-        return $this->template = $this->template ?? $this->content()->get('template')->value();
+        return $this->template ??= $this->content()->get('template')->value();
     }
 
     /**
@@ -631,7 +631,7 @@ class File extends ModelWithContent
      */
     public function url(): string
     {
-        return $this->url ?? $this->url = ($this->kirby()->component('file::url'))($this->kirby(), $this);
+        return $this->url ??= ($this->kirby()->component('file::url'))($this->kirby(), $this);
     }
 
 

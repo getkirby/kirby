@@ -45,7 +45,7 @@ class Db
 
         // try to connect with the default
         // connection settings if no params are set
-        $defaults = [
+        $params ??= [
             'type'     => Config::get('db.type', 'mysql'),
             'host'     => Config::get('db.host', 'localhost'),
             'user'     => Config::get('db.user', 'root'),
@@ -54,7 +54,6 @@ class Db
             'prefix'   => Config::get('db.prefix', ''),
             'port'     => Config::get('db.port', '')
         ];
-        $params = $params ?? $defaults;
 
         return static::$connection = new Database($params);
     }

@@ -231,7 +231,7 @@ class Page extends Model
      */
     public function pickerData(array $params = []): array
     {
-        $params['text'] = $params['text'] ?? '{{ page.title }}';
+        $params['text'] ??= '{{ page.title }}';
 
         return array_merge(parent::pickerData($params), [
             'dragText'    => $this->dragText(),

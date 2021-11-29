@@ -49,7 +49,7 @@ class BlocksField extends FieldClass
                 $type = $block['type'];
 
                 // get and cache fields at the same time
-                $fields[$type] = $fields[$type] ?? $this->fields($block['type']);
+                $fields[$type] ??= $this->fields($block['type']);
 
                 // overwrite the block content with form values
                 $block['content'] = $this->form($fields[$type], $block['content'])->$to();

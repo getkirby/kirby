@@ -43,7 +43,7 @@ class Fieldsets extends Items
             $fieldset = Blueprint::extend($fieldset);
 
             // make sure the type is always set
-            $fieldset['type'] = $fieldset['type'] ?? $type;
+            $fieldset['type'] ??= $type;
 
             // extract groups
             if ($fieldset['type'] === 'group') {
@@ -70,7 +70,7 @@ class Fieldsets extends Items
 
     public static function factory(array $items = null, array $params = [])
     {
-        $items = $items ?? option('blocks.fieldsets', [
+        $items ??= option('blocks.fieldsets', [
             'code'     => 'blocks/code',
             'gallery'  => 'blocks/gallery',
             'heading'  => 'blocks/heading',

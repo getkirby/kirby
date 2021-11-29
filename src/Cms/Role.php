@@ -210,7 +210,7 @@ class Role extends Model
      */
     public function title(): string
     {
-        return $this->title = $this->title ?? ucfirst($this->name());
+        return $this->title ??= ucfirst($this->name());
     }
 
     /**
