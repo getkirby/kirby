@@ -43,7 +43,7 @@ class Query extends Obj
 
     public function toString($questionMark = false): string
     {
-        $query = http_build_query($this, null, '&', PHP_QUERY_RFC3986);
+        $query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
 
         if (empty($query) === true) {
             return '';
