@@ -315,7 +315,7 @@ export default {
 .k-cards-item .k-item-title::after,
 .k-cards-item .k-item-info::after {
   display: inline-block;
-  content: " ";
+  content: "\00a0";
   width: var(--item-content-wrapper);
 }
 .k-cards-item {
