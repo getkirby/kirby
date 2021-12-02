@@ -186,6 +186,9 @@ export default {
           this.json = jsonNew;
           this.isEmpty = payload.editor.isEmpty();
 
+          // create the final HTML to send to the server
+          this.html = payload.editor.getHTML();
+
           // when a new list item or heading is created, textContent length returns 0
           // checking active nodes to prevent this issue
           // empty input means no nodes or just the paragraph node and its length 0
@@ -196,9 +199,6 @@ export default {
           ) {
             this.html = "";
           }
-
-          // create the final HTML to send to the server
-          this.html = payload.editor.getHTML();
 
           this.$emit("input", this.html);
         }
