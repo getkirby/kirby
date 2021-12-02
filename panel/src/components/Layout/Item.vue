@@ -3,6 +3,7 @@
     :class="layout ? 'k-' + layout + '-item' : false"
     v-bind="data"
     :data-has-figure="hasFigure"
+    :data-has-flag="Boolean(flag)"
     :data-has-info="Boolean(info)"
     :data-has-options="Boolean(options)"
     class="k-item"
@@ -291,24 +292,61 @@ export default {
   border-start-end-radius: var(--rounded-sm);
 }
 .k-cards-item .k-item-content {
+  padding: 0.5rem 0.75rem !important;
   overflow: hidden;
-  align-self: flex-start;
 }
 .k-cards-item .k-item-title,
 .k-cards-item .k-item-info {
+  line-height: 1.375rem;
   white-space: normal;
 }
-.k-cards-item .k-item-title-link > span,
-.k-cards-item .k-item-info {
-  padding-inline-end: 4rem;
+
+/**
+ * Both title and info get a little inline block attached
+ * to their text. This neat little trick will make sure
+ * that the last line wraps correctly to avoid overlapping
+ * with the options or flag.
+ *
+ * It's important to get the width of the wrapper correct though.
+ * It should always match the width of the footer. In order to
+ * control that we use the custom property and set the width
+ * depending on the data attributes for the flag and options.
+ */
+.k-cards-item .k-item-title::after,
+.k-cards-item .k-item-info::after {
+  display: inline-block;
+  content: " ";
+  width: var(--item-content-wrapper);
 }
-.k-cards-item .k-item-info {
-  padding-top: 0.125rem;
+.k-cards-item {
+  --item-content-wrapper: 0;
 }
+.k-cards-item[data-has-flag],
+.k-cards-item[data-has-options] {
+  --item-content-wrapper: 38px;
+}
+.k-cards-item[data-has-flag][data-has-options] {
+  --item-content-wrapper: 76px;
+}
+
+/**
+ * The title wrapper needs to be removed as soon
+ * as the info is visible. Otherwise it could create
+ * a gap between title and info
+ */
+.k-cards-item[data-has-info] .k-item-title::after {
+  display: none;
+}
+
+/**
+ * The footer is simply positioned absolute in
+ * the bottom right corner and does not cause
+ * the wrapping of the content
+ */
 .k-cards-item .k-item-footer {
   position: absolute;
   bottom: 0;
-  inset-inline-end: .5rem;
+  inset-inline-end: 0;
   width: auto;
 }
 </style>
