@@ -20,7 +20,16 @@
   "require": {
     "php": ">=7.4.0 <8.1.0",
     "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-filter": "*",
+    "ext-hash": "*",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
     "ext-mbstring": "*",
+    "ext-openssl": "*",
+    "ext-SimpleXML": "*",
     "claviska/simpleimage": "3.6.3",
     "filp/whoops": "2.14.4",
     "getkirby/composer-installer": "^1.2.1",
@@ -30,6 +39,16 @@
     "phpmailer/phpmailer": "6.5.1",
     "psr/log": "1.1.4",
     "true/punycode": "2.1.1"
+  },
+  "suggest": {
+    "ext-PDO": "Support for using databases",
+    "ext-apcu": "Support for the Apcu cache driver",
+    "ext-exif": "Support for exif information from images",
+    "ext-fileinfo": "Improved mime type detection for files",
+    "ext-intl": "Improved i18n number formatting",
+    "ext-memcached": "Support for the Memcached cache driver",
+    "ext-zip": "Support for ZIP archive file functions",
+    "ext-zlib": "Sanitization and validation for svgz files"
   },
   "config": {
     "optimize-autoloader": true,
