@@ -11,14 +11,12 @@ return [
             return [
                 'component' => 'k-languages-view',
                 'props'     => [
-                    'languages' => $kirby->languages()->values(function ($language) {
-                        return [
-                            'default' => $language->isDefault(),
-                            'id'      => $language->code(),
-                            'info'    => Escape::html($language->code()),
-                            'text'    => Escape::html($language->name()),
-                        ];
-                    })
+                    'languages' => $kirby->languages()->values(fn ($language) => [
+                        'default' => $language->isDefault(),
+                        'id'      => $language->code(),
+                        'info'    => Escape::html($language->code()),
+                        'text'    => Escape::html($language->name()),
+                    ])
                 ]
             ];
         }

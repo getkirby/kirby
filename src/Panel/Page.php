@@ -22,12 +22,10 @@ class Page extends Model
     public function breadcrumb(): array
     {
         $parents = $this->model->parents()->flip()->merge($this->model);
-        return $parents->values(function ($parent) {
-            return [
-                'label' => $parent->title()->toString(),
-                'link'  => $parent->panel()->url(true),
-            ];
-        });
+        return $parents->values(fn ($parent) => [
+            'label' => $parent->title()->toString(),
+            'link'  => $parent->panel()->url(true),
+        ]);
     }
 
     /**

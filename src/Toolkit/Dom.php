@@ -247,9 +247,7 @@ class Dom
                 $options['allowedAttrPrefixes'],
                 $attr,
                 $options,
-                function ($expected, $real): bool {
-                    return Str::startsWith($real, $expected);
-                }
+                fn ($expected, $real): bool => Str::startsWith($real, $expected)
             ) !== false
         ) {
             return true;
@@ -450,9 +448,7 @@ class Dom
         $localName         = $node->localName;
 
         if ($compare === null) {
-            $compare = function ($expected, $real): bool {
-                return $expected === $real;
-            };
+            $compare = fn ($expected, $real): bool => $expected === $real;
         }
 
         // if the configuration does not define namespace URIs or if the
@@ -831,9 +827,7 @@ class Dom
                 $options['disallowedTags'],
                 $element,
                 $options,
-                function ($expected, $real): bool {
-                    return Str::lower($expected) === Str::lower($real);
-                }
+                fn ($expected, $real): bool => Str::lower($expected) === Str::lower($real)
             ) !== false
         ) {
             $errors[] = new InvalidArgumentException(

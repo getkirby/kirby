@@ -61,12 +61,10 @@ return [
      * Users
      */
     'users' => [
-        'default' => function () {
-            return $this->users();
-        },
-        'model' => 'user',
-        'type'  => 'Kirby\Cms\Users',
-        'view'  => 'compact'
+        'default' => fn () => $this->users(),
+        'model'   => 'user',
+        'type'    => 'Kirby\Cms\Users',
+        'view'    => 'compact'
     ]
 
 ];

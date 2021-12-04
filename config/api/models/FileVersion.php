@@ -7,42 +7,18 @@ use Kirby\Cms\FileVersion;
  */
 return [
     'fields' => [
-        'dimensions' => function (FileVersion $file) {
-            return $file->dimensions()->toArray();
-        },
-        'exists' => function (FileVersion $file) {
-            return $file->exists();
-        },
-        'extension' => function (FileVersion $file) {
-            return $file->extension();
-        },
-        'filename' => function (FileVersion $file) {
-            return $file->filename();
-        },
-        'id' => function (FileVersion $file) {
-            return $file->id();
-        },
-        'mime' => function (FileVersion $file) {
-            return $file->mime();
-        },
-        'modified' => function (FileVersion $file) {
-            return $file->modified('c');
-        },
-        'name' => function (FileVersion $file) {
-            return $file->name();
-        },
-        'niceSize' => function (FileVersion $file) {
-            return $file->niceSize();
-        },
-        'size' => function (FileVersion $file) {
-            return $file->size();
-        },
-        'type' => function (FileVersion $file) {
-            return $file->type();
-        },
-        'url' => function (FileVersion $file) {
-            return $file->url();
-        },
+        'dimensions' => fn (FileVersion $file) => $file->dimensions()->toArray(),
+        'exists'     => fn (FileVersion $file) => $file->exists(),
+        'extension'  => fn (FileVersion $file) => $file->extension(),
+        'filename'   => fn (FileVersion $file) => $file->filename(),
+        'id'         => fn (FileVersion $file) => $file->id(),
+        'mime'       => fn (FileVersion $file) => $file->mime(),
+        'modified'   => fn (FileVersion $file) => $file->modified('c'),
+        'name'       => fn (FileVersion $file) => $file->name(),
+        'niceSize'   => fn (FileVersion $file) => $file->niceSize(),
+        'size'       => fn (FileVersion $file) => $file->size(),
+        'type'       => fn (FileVersion $file) => $file->type(),
+        'url'        => fn (FileVersion $file) => $file->url(),
     ],
     'type'  => 'Kirby\Cms\FileVersion',
     'views' => [

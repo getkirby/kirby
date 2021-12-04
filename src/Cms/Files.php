@@ -151,9 +151,7 @@ class Files extends Collection
      */
     public function size(): int
     {
-        return F::size($this->values(function ($file) {
-            return $file->root();
-        }));
+        return F::size($this->values(fn ($file) => $file->root()));
     }
 
     /**

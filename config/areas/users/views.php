@@ -9,12 +9,10 @@ return [
         'action'  => function () {
             $kirby = kirby();
             $role  = get('role');
-            $roles = $kirby->roles()->toArray(function ($role) {
-                return [
-                    'id'    => $role->id(),
-                    'title' => $role->title(),
-                ];
-            });
+            $roles = $kirby->roles()->toArray(fn ($role) => [
+                'id'    => $role->id(),
+                'title' => $role->title(),
+            ]);
 
             return [
                 'component' => 'k-users-view',
@@ -38,15 +36,13 @@ return [
                         ]);
 
                         return [
-                            'data' => $users->values(function ($user) {
-                                return [
-                                    'id'    => $user->id(),
-                                    'image' => $user->panel()->image(),
-                                    'info'  => Escape::html($user->role()->title()),
-                                    'link'  => $user->panel()->url(true),
-                                    'text'  => Escape::html($user->username())
-                                ];
-                            }),
+                            'data' => $users->values(fn ($user) => [
+                                'id'    => $user->id(),
+                                'image' => $user->panel()->image(),
+                                'info'  => Escape::html($user->role()->title()),
+                                'link'  => $user->panel()->url(true),
+                                'text'  => Escape::html($user->username())
+                            ]),
                             'pagination' => $users->pagination()->toArray()
                         ];
                     },

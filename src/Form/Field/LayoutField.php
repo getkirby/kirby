@@ -84,13 +84,11 @@ class LayoutField extends BlocksField
 
                 return Layout::factory([
                     'attrs'   => $attrs,
-                    'columns' => array_map(function ($width) {
-                        return [
-                            'blocks' => [],
-                            'id'     => uuid(),
-                            'width'  => $width,
-                        ];
-                    }, $columns)
+                    'columns' => array_map(fn ($width) => [
+                        'blocks' => [],
+                        'id'     => uuid(),
+                        'width'  => $width,
+                    ], $columns)
                 ])->toArray();
             },
         ];
