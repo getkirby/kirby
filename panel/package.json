@@ -32,10 +32,10 @@
   "devDependencies": {
     "autoprefixer": "^10.4.0",
     "cypress": "^8.5.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.4.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-vue": "^7.18.0",
+    "eslint-plugin-vue": "^8.1.1",
     "postcss-csso": "^5.0.1",
     "postcss-dir-pseudo-class": "^6.0.0",
     "postcss-logical": "^5.0.0",
