@@ -98,7 +98,7 @@ export default {
 .k-icon[data-back="pattern"] {
   color: var(--color-white);
 }
-[data-disabled] .k-icon[data-back="pattern"] svg {
+[data-disabled="true"] .k-icon[data-back="pattern"] svg {
   opacity: 1;
 }
 

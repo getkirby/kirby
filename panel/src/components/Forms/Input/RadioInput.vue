@@ -109,7 +109,7 @@ export default {
   border-color: var(--color-gray-900);
   background: var(--color-gray-900);
 }
-[data-disabled] .k-radio-input input:checked + label::before {
+[data-disabled="true"] .k-radio-input input:checked + label::before {
   border-color: var(--color-gray-600);
   background: var(--color-gray-600);
 }

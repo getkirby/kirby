@@ -10,17 +10,17 @@
 }
 
 /* Invalid */
-[data-invalid] {
+[data-invalid="true"] {
   border: 1px solid var(--color-negative-outline);
   box-shadow: var(--color-negative-outline) 0 0 3px 2px;
 }
-[data-invalid]:focus-within {
+[data-invalid="true"]:focus-within {
   border: var(--field-input-invalid-focus-border) !important;
   box-shadow: var(--color-negative-outline) 0 0 0 2px !important;
 }
 
 /* Tabbed */
-[data-tabbed] {
+[data-tabbed="true"] {
   box-shadow: var(--shadow-outline);
 }
 

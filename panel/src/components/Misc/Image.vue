@@ -147,7 +147,7 @@ export default {
 .k-image-error svg * {
   fill: rgba(255, 255, 255, 0.3);
 }
-.k-image[data-cover] img {
+.k-image[data-cover="true"] img {
   object-fit: cover;
 }
 .k-image[data-back="black"] span {

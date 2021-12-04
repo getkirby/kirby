@@ -125,7 +125,9 @@ export default {
   border-color: var(--color-gray-900);
   background: var(--color-gray-900);
 }
-[data-disabled] .k-checkbox-input-native:checked + .k-checkbox-input-icon {
+[data-disabled="true"]
+  .k-checkbox-input-native:checked
+  + .k-checkbox-input-icon {
   border-color: var(--color-gray-600);
   background: var(--color-gray-600);
 }

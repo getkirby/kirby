@@ -184,7 +184,7 @@ export default {
   height: 5rem;
   line-height: 0;
 }
-.k-user-view-image[data-disabled] {
+.k-user-view-image[data-disabled="true"] {
   opacity: 1;
 }
 .k-user-view-image .k-image {
@@ -198,7 +198,7 @@ export default {
   color: var(--color-gray-500);
   transition: color 0.3s;
 }
-.k-header[data-editable] .k-user-name-placeholder:hover {
+.k-header[data-editable="true"] .k-user-name-placeholder:hover {
   color: var(--color-gray-900);
 }
 </style>

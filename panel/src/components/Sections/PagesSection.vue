@@ -172,7 +172,7 @@ export default {
 </script>
 
 <style>
-.k-pages-section[data-processing] {
+.k-pages-section[data-processing="true"] {
   pointer-events: none;
 }
 </style>

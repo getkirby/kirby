@@ -156,7 +156,7 @@ export default {
   grid-area: info;
   color: var(--color-gray-500);
 }
-.k-item-title-link.k-link[data-tabbed] {
+.k-item-title-link.k-link[data-="true"] {
   box-shadow: none;
 }
 .k-item-title-link::after {
@@ -268,7 +268,7 @@ export default {
     "content"
     "footer";
 }
-.k-cardlets-item[data-has-figure] {
+.k-cardlets-item[data-has-figure="true"] {
   grid-template-columns: 6rem auto;
   grid-template-areas:
     "figure content"
@@ -324,11 +324,11 @@ export default {
 .k-cards-item {
   --item-content-wrapper: 0;
 }
-.k-cards-item[data-has-flag],
-.k-cards-item[data-has-options] {
+.k-cards-item[data-has-flag="true"],
+.k-cards-item[data-has-options="true"] {
   --item-content-wrapper: 38px;
 }
-.k-cards-item[data-has-flag][data-has-options] {
+.k-cards-item[data-has-flag="true"][data-has-options="true"] {
   --item-content-wrapper: 76px;
 }
 
@@ -337,7 +337,7 @@ export default {
  * as the info is visible. Otherwise it could create
  * a gap between title and info
  */
-.k-cards-item[data-has-info] .k-item-title::after {
+.k-cards-item[data-has-info="true"] .k-item-title::after {
   display: none;
 }
 

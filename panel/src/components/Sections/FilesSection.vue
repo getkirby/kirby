@@ -181,7 +181,7 @@ export default {
 </script>
 
 <style>
-.k-files-section[data-processing] {
+.k-files-section[data-processing="true"] {
   pointer-events: none;
 }
 </style>

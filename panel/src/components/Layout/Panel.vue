@@ -63,11 +63,11 @@ export default {
 </script>
 
 <style>
-.k-panel[data-loading] {
+.k-panel[data-loading="true"] {
   animation: LoadingCursor 0.5s;
 }
-.k-panel[data-loading]::after,
-.k-panel[data-dragging] {
+.k-panel[data-loading="true"]::after,
+.k-panel[data-dragging="true"] {
   user-select: none;
 }
 </style>

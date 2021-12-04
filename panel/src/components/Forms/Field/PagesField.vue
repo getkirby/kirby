@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style>
-.k-pages-field[data-disabled] * {
+.k-pages-field[data-disabled="true"] * {
   pointer-events: all !important;
 }
 </style>
