@@ -228,9 +228,9 @@ class ImageMagick extends Darkroom
     protected function strip(string $file, array $options): string
     {
         if (F::extension($file) === 'png') {
-            // ImageMagick does not support keeping ICC profiles, while
-            // stripping other privacy-related information, such as GPS
-            // data. So discard all color profiles for PNG files.
+            // ImageMagick does not support keeping ICC profiles while
+            // stripping other privacy- and security-related information,
+            // such as GPS data; so discard all color profiles for PNG files
             // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
             return '-strip';
         }

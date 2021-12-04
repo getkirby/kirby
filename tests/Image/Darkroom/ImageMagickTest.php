@@ -60,44 +60,48 @@ class ImageMagickTest extends TestCase
         $this->assertTrue(F::exists($webp));
     }
 
-    public function testKeepColorProfileStripMeta()
+    /**
+     * @dataProvider keepColorProfileStripMetaProvider
+     */
+    public function testKeepColorProfileStripMeta($basename)
     {
-        $files = [
-            'cat.jpg',
-            'onigiri-adobe-rgb-gps.jpg',
-            'onigiri-adobe-rgb-gps.webp',
-            'png-adobe-rgb-gps.png',
-            'png-srgb-gps.png',
-        ];
+        $im = new ImageMagick([
+            'bin' => 'convert',
+            'width' => 250, // do some arbitrary transformation
+        ]);
 
-        foreach ($files as $basename) {
-            $im = new ImageMagick([
-                'bin' => 'convert',
-                'width' => 250, // do some arbitrary transformation
-            ]);
+        copy($this->fixtures . '/' . $basename, $file = $this->tmp . '/' . $basename);
 
-            copy("{$this->fixtures}/{$basename}", $file = "{$this->tmp}/{$basename}");
+        // test if profile has been kept
+        // errors have to be redirected to /dev/null, otherwise they would be printed to stdout by ImageMagick
+        $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
+        $im->process($file);
+        $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
 
-            // Test if profile has been kept. Errors have to be redirected to /dev/null,
-            // otherwise they would be printed to stdout by ImageMagick.
-            $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
-            $im->process($file);
-            $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
-
-            if (F::extension($basename) === 'png') {
-                // Ensure, that profile has been stripped from PNG files, because
-                // ImageMagick cannot keep it while stripping all other metadata.
-                // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
-                $this->assertTrue($profile === null);
-            } else {
-                // Ensure, that profile has been kep for all other file types.
-                $this->assertTrue($profile === $originalProfile);
-            }
-
-            // Ensure that other metadata has been stripped
-            $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
-            $this->assertFalse(strpos($meta, 'photoshop:CaptionWriter'));
-            $this->assertFalse(strpos($meta, 'GPS'));
+        if (F::extension($basename) === 'png') {
+            // ensure that the profile has been stripped from PNG files, because
+            // ImageMagick cannot keep it while stripping all other metadata
+            // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
+            $this->assertNull($profile);
+        } else {
+            // ensure that the profile has been kept for all other file types
+            $this->assertSame($originalProfile, $profile);
         }
+
+        // ensure that other metadata has been stripped
+        $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
+        $this->assertStringNotContainsString('photoshop:CaptionWriter', $meta);
+        $this->assertStringNotContainsString('GPS', $meta);
+    }
+
+    public function keepColorProfileStripMetaProvider(): array
+    {
+        return [
+            ['cat.jpg'],
+            ['onigiri-adobe-rgb-gps.jpg'],
+            ['onigiri-adobe-rgb-gps.webp'],
+            ['png-adobe-rgb-gps.png'],
+            ['png-srgb-gps.png'],
+        ];
     }
 }
