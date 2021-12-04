@@ -200,16 +200,20 @@ return [
         },
         'submit' => function (string $id) {
             $page  = Find::page($id);
-            $title = trim(get('title'));
-            $slug  = trim(get('slug'));
+            $title = trim(get('title', ''));
+            $slug  = trim(get('slug', ''));
 
             // basic input validation before we move on
             if (Str::length($title) === 0) {
-                throw new InvalidArgumentException(['key' => 'page.changeTitle.empty']);
+                throw new InvalidArgumentException([
+                    'key' => 'page.changeTitle.empty'
+                ]);
             }
 
             if (Str::length($slug) === 0) {
-                throw new InvalidArgumentException(['key' => 'page.slug.invalid']);
+                throw new InvalidArgumentException([
+                    'key' => 'page.slug.invalid'
+                ]);
             }
 
             // nothing changed
@@ -318,7 +322,7 @@ return [
             ];
         },
         'submit' => function () {
-            $title = trim(get('title'));
+            $title = trim(get('title', ''));
 
             if (Str::length($title) === 0) {
                 throw new InvalidArgumentException([
