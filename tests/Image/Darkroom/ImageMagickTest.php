@@ -63,10 +63,11 @@ class ImageMagickTest extends TestCase
     /**
      * @dataProvider keepColorProfileStripMetaProvider
      */
-    public function testKeepColorProfileStripMeta($basename)
+    public function testKeepColorProfileStripMeta(string $basename, bool $crop)
     {
         $im = new ImageMagick([
             'bin' => 'convert',
+            'crop' => $crop,
             'width' => 250, // do some arbitrary transformation
         ]);
 
@@ -97,11 +98,16 @@ class ImageMagickTest extends TestCase
     public function keepColorProfileStripMetaProvider(): array
     {
         return [
-            ['cat.jpg'],
-            ['onigiri-adobe-rgb-gps.jpg'],
-            ['onigiri-adobe-rgb-gps.webp'],
-            ['png-adobe-rgb-gps.png'],
-            ['png-srgb-gps.png'],
+            ['cat.jpg', false],
+            ['cat.jpg', true],
+            ['onigiri-adobe-rgb-gps.jpg', false],
+            ['onigiri-adobe-rgb-gps.jpg', true],
+            ['onigiri-adobe-rgb-gps.webp', false],
+            ['onigiri-adobe-rgb-gps.webp', true],
+            ['png-adobe-rgb-gps.png', false],
+            ['png-adobe-rgb-gps.png', true],
+            ['png-srgb-gps.png', false],
+            ['png-srgb-gps.png', true],
         ];
     }
 }
