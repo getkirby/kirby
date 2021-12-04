@@ -142,9 +142,7 @@ class BlocksField extends FieldClass
         return [
             [
                 'pattern' => 'uuid',
-                'action'  => function () {
-                    return ['uuid' => uuid()];
-                }
+                'action'  => fn () => ['uuid' => uuid()]
             ],
             [
                 'pattern' => 'paste',

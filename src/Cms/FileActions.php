@@ -90,9 +90,11 @@ trait FileActions
      */
     public function changeSort(int $sort)
     {
-        return $this->commit('changeSort', ['file' => $this, 'position' => $sort], function ($file, $sort) {
-            return $file->save(['sort' => $sort]);
-        });
+        return $this->commit(
+            'changeSort',
+            ['file' => $this, 'position' => $sort],
+            fn ($file, $sort) => $file->save(['sort' => $sort])
+        );
     }
 
     /**

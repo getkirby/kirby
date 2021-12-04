@@ -7,18 +7,10 @@ use Kirby\Cms\FileBlueprint;
  */
 return [
     'fields' => [
-        'name' => function (FileBlueprint $blueprint) {
-            return $blueprint->name();
-        },
-        'options' => function (FileBlueprint $blueprint) {
-            return $blueprint->options();
-        },
-        'tabs' => function (FileBlueprint $blueprint) {
-            return $blueprint->tabs();
-        },
-        'title' => function (FileBlueprint $blueprint) {
-            return $blueprint->title();
-        },
+        'name'    => fn (FileBlueprint $blueprint) => $blueprint->name(),
+        'options' => fn (FileBlueprint $blueprint) => $blueprint->options(),
+        'tabs'    => fn (FileBlueprint $blueprint) => $blueprint->tabs(),
+        'title'   => fn (FileBlueprint $blueprint) => $blueprint->title(),
     ],
     'type' => 'Kirby\Cms\FileBlueprint',
     'views' => [

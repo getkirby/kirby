@@ -38,12 +38,10 @@ class File extends Model
                 }
                 break;
             case 'page':
-                $breadcrumb = $this->model->parents()->flip()->values(function ($parent) {
-                    return [
-                        'label' => $parent->title()->toString(),
-                        'link'  => $parent->panel()->url(true),
-                    ];
-                });
+                $breadcrumb = $this->model->parents()->flip()->values(fn ($parent) => [
+                    'label' => $parent->title()->toString(),
+                    'link'  => $parent->panel()->url(true),
+                ]);
         }
 
         // add the file
@@ -459,13 +457,11 @@ class File extends Model
         $file = $this->model;
 
         return [
-            'breadcrumb' => function () use ($file): array {
-                return $file->panel()->breadcrumb();
-            },
-            'component' => 'k-file-view',
-            'props'     => $this->props(),
-            'search'    => 'files',
-            'title'     => $file->filename(),
+            'breadcrumb' => fn (): array => $file->panel()->breadcrumb(),
+            'component'  => 'k-file-view',
+            'props'      => $this->props(),
+            'search'     => 'files',
+            'title'      => $file->filename(),
         ];
     }
 }

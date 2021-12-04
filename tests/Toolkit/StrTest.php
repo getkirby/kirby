@@ -1001,9 +1001,7 @@ EOT;
                 'username' => 'homer'
             ]
         ], [
-            'callback' => function ($result) {
-                return Str::ucfirst($result);
-            }
+            'callback' => fn ($result) => Str::ucfirst($result)
         ]);
         $this->assertSame('Hello Homer', $template);
 

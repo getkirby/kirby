@@ -375,10 +375,8 @@ class Form
     public function toArray(): array
     {
         $array = [
-            'errors' => $this->errors(),
-            'fields' => $this->fields->toArray(function ($item) {
-                return $item->toArray();
-            }),
+            'errors'  => $this->errors(),
+            'fields'  => $this->fields->toArray(fn ($item) => $item->toArray()),
             'invalid' => $this->isInvalid()
         ];
 

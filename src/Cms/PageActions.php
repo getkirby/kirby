@@ -201,9 +201,11 @@ trait PageActions
     protected function changeStatusToDraft()
     {
         $arguments = ['page' => $this, 'status' => 'draft', 'position' => null];
-        $page = $this->commit('changeStatus', $arguments, function ($page) {
-            return $page->unpublish();
-        });
+        $page = $this->commit(
+            'changeStatus',
+            $arguments,
+            fn ($page) => $page->unpublish()
+        );
 
         return $page;
     }
@@ -755,9 +757,7 @@ trait PageActions
             ->children()
             ->listed()
             ->append($this)
-            ->filter(function ($page) {
-                return $page->blueprint()->num() === 'default';
-            });
+            ->filter(fn ($page) => $page->blueprint()->num() === 'default');
 
         // get a non-associative array of ids
         $keys  = $siblings->keys();
@@ -804,9 +804,7 @@ trait PageActions
             ->children()
             ->listed()
             ->not($this)
-            ->filter(function ($page) {
-                return $page->blueprint()->num() === 'default';
-            });
+            ->filter(fn ($page) => $page->blueprint()->num() === 'default');
 
         if ($siblings->count() > 0) {
             foreach ($siblings as $sibling) {
