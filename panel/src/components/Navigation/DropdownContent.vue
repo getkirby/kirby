@@ -277,7 +277,7 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.k-dropdown-content[data-dropup] {
+.k-dropdown-content[data-dropup="true"] {
   top: auto;
   bottom: 100%;
   margin-bottom: 0.5rem;

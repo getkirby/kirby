@@ -385,7 +385,7 @@ export default {
 .k-calendar-table .k-button:hover {
   color: var(--color-white);
 }
-.k-calendar-day:hover .k-button:not([data-disabled]) {
+.k-calendar-day:hover .k-button:not([data-disabled="true"]) {
   border-color: rgba(255, 255, 255, 0.25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
@@ -396,14 +396,14 @@ export default {
   border-color: var(--color-focus-light);
   color: var(--color-focus-light);
 }
-.k-calendar-day[data-between] {
+.k-calendar-day[data-between="true"] {
   background: #333;
 }
-.k-calendar-day[data-first] {
+.k-calendar-day[data-first="true"] {
   border-start-start-radius: 100%;
   border-end-start-radius: 100%;
 }
-.k-calendar-day[data-last] {
+.k-calendar-day[data-last="true"] {
   border-start-end-radius: 100%;
   border-end-end-radius: 100%;
 }

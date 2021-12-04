@@ -143,12 +143,12 @@ export default {
   z-index: var(--z-dialog);
   transform: translate3d(0, 0, 0);
 }
-.k-overlay[data-centered] {
+.k-overlay[data-centered="true"] {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.k-overlay[data-dimmed] {
+.k-overlay[data-dimmed="true"] {
   background: var(--color-backdrop);
 }
 .k-overlay-loader {
