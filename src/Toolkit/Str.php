@@ -276,6 +276,7 @@ class Str
 
         // separately handle strftime to be able
         // to suppress deprecation warning
+        // TODO: remove strftime support for PHP 9.0
         if ($handler === 'strftime') {
             // make sure timezone is set correctly
             date_default_timezone_get();
