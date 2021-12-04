@@ -405,7 +405,7 @@ class FileTest extends TestCase
         $file = $this->_file();
         $this->assertSame(F::modified($file->root()), $file->modified());
 
-        $this->assertSame(strftime('%d.%m.%Y', F::modified($file->root())), $file->modified('%d.%m.%Y', 'strftime'));
+        $this->assertSame(@strftime('%d.%m.%Y', F::modified($file->root())), $file->modified('%d.%m.%Y', 'strftime'));
 
         // non-existing file
         $file = $this->_file('does/not/exist.js');

@@ -265,13 +265,22 @@ class Str
      *
      * @param int|null $time
      * @param string|null $format
-     * @param string $handler
+     * @param string $handler date or strftime
      * @return string|int
      */
     public static function date(?int $time = null, ?string $format = null, string $handler = 'date')
     {
         if (is_null($format) === true) {
             return $time;
+        }
+
+        // separately handle strftime to be able
+        // to suppress deprecation warning
+        if ($handler === 'strftime') {
+            // make sure timezone is set correctly
+            date_default_timezone_get();
+
+            return @strftime($format, $time);
         }
 
         return $handler($format, $time);

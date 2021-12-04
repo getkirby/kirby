@@ -143,7 +143,7 @@ class UserTest extends TestCase
 
         // custom date handler
         $format = '%d.%m.%Y';
-        $this->assertEquals(strftime($format, $modified), $user->modified($format, 'strftime'));
+        $this->assertEquals(@strftime($format, $modified), $user->modified($format, 'strftime'));
 
         Dir::remove($index);
     }
