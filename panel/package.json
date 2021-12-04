@@ -40,9 +40,9 @@
     "postcss-dir-pseudo-class": "^6.0.0",
     "postcss-logical": "^5.0.0",
     "prettier": "^2.5.0",
-    "vite": "^2.6.2",
+    "vite": "^2.6.14",
     "vite-plugin-rewrite-all": "^0.1.2",
-    "vite-plugin-vue2": "^1.8.2",
+    "vite-plugin-vue2": "^1.9.0",
     "vue-docgen-api": "^4.41.2",
     "vue-template-compiler": "^2.6.14",
     "wait-on": "^6.0.0"
