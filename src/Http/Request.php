@@ -220,7 +220,7 @@ class Request
         $methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'];
 
         // the request method can be overwritten with a header
-        $methodOverride = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? null);
+        $methodOverride = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '');
 
         if ($method === null && in_array($methodOverride, $methods) === true) {
             $method = $methodOverride;

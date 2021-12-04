@@ -246,8 +246,12 @@ class Uri
             return static::$current;
         }
 
-        $uri = Server::get('REQUEST_URI');
-        $uri = preg_replace('!^(http|https)\:\/\/' . Server::get('HTTP_HOST') . '!', '', $uri);
+        $uri = Server::get('REQUEST_URI') ?? '';
+        $uri = preg_replace(
+            '!^(http|https)\:\/\/' . Server::get('HTTP_HOST') . '!',
+            '',
+            $uri
+        );
         $uri = parse_url('http://getkirby.com' . $uri);
 
         $url = new static(array_merge([

@@ -145,6 +145,10 @@ class Html extends Xml
         // all other cases can share the XML variant
         $attr = parent::attr($name, $value);
 
+        if ($attr === null) {
+            return null;
+        }
+
         // HTML supports named entities
         $entities = parent::entities();
         $html = array_keys($entities);
@@ -353,7 +357,7 @@ class Html extends Xml
      */
     public static function rel(?string $rel = null, ?string $target = null): ?string
     {
-        $rel = trim($rel);
+        $rel = trim($rel ?? '');
 
         if ($target === '_blank') {
             if (empty($rel) === false) {

@@ -128,7 +128,7 @@ trait AppErrors
                     'code'      => $code,
                     'message'   => $exception->getMessage(),
                     'details'   => $details,
-                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? ''),
                     'line'      => $exception->getLine(),
                 ], $httpCode);
             } else {
