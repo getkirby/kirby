@@ -177,7 +177,7 @@ class ImageMagick extends Darkroom
     {
         // simple resize
         if ($options['crop'] === false) {
-            return sprintf('-resize %sx%s!', $options['width'], $options['height']);
+            return sprintf('-thumbnail %sx%s!', $options['width'], $options['height']);
         }
 
         $gravities = [
@@ -195,7 +195,7 @@ class ImageMagick extends Darkroom
         // translate the gravity option into something imagemagick understands
         $gravity = $gravities[$options['crop']] ?? 'Center';
 
-        $command  = sprintf('-resize %sx%s^', $options['width'], $options['height']);
+        $command  = sprintf('-thumbnail %sx%s^', $options['width'], $options['height']);
         $command .= sprintf(' -gravity %s -crop %sx%s+0+0', $gravity, $options['width'], $options['height']);
 
         return $command;
@@ -235,6 +235,6 @@ class ImageMagick extends Darkroom
             return '-strip';
         }
 
-        return '+profile "!icc,*"';
+        return '';
     }
 }
