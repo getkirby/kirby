@@ -212,6 +212,10 @@ class Database
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
+        // TODO: behavior without this attribute would be preferrable
+        // (actual types instead of all strings) but would be a breaking change
+        $this->connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+
         // store the connection
         static::$connections[$this->id] = $this;
 
