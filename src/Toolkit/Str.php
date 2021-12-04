@@ -260,6 +260,24 @@ class Str
     }
 
     /**
+     * Convert timestamp to date string
+     * according to locale settings
+     *
+     * @param int|null $time
+     * @param string|null $format
+     * @param string $handler
+     * @return string|int
+     */
+    public static function date(?int $time = null, ?string $format = null, string $handler = 'date')
+    {
+        if (is_null($format) === true) {
+            return $time;
+        }
+
+        return $handler($format, $time);
+    }
+
+    /**
      * Converts a string to a different encoding
      *
      * @param string $string

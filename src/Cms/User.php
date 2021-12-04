@@ -532,7 +532,7 @@ class User extends ModelWithContent
         $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
         $handler       ??= $this->kirby()->option('date.handler', 'date');
 
-        return $handler($format, $modifiedTotal);
+        return Str::date($modifiedTotal, $format, $handler);
     }
 
     /**
