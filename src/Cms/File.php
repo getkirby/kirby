@@ -6,6 +6,7 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 /**
  * The `$file` object provides a set
@@ -362,14 +363,9 @@ class File extends ModelWithContent
         $file     = $this->modifiedFile();
         $content  = $this->modifiedContent($languageCode);
         $modified = max($file, $content);
-
-        if (is_null($format) === true) {
-            return $modified;
-        }
-
         $handler ??= $this->kirby()->option('date.handler', 'date');
 
-        return $handler($format, $modified);
+        return Str::date($modified, $format, $handler);
     }
 
     /**

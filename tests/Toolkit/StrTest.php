@@ -129,6 +129,22 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::date
+     */
+    public function testDate()
+    {
+        $time = mktime(1, 1, 1, 1, 29, 2020);
+
+        // default `date` handler
+        $this->assertSame($time, Str::date($time));
+        $this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
+
+        // `strftime` handler
+        $this->assertSame($time, Str::date($time, null, 'strftime'));
+        $this->assertSame('29.01.2020', Str::date($time, '%d.%m.%Y', 'strftime'));
+    }
+
+    /**
      * @covers ::convert
      */
     public function testConvert()

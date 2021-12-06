@@ -121,13 +121,14 @@ return function (App $app) {
                 return null;
             }
 
-            $time = empty($field->value) === true ? strtotime($fallback) : $field->toTimestamp();
-
-            if ($format === null) {
-                return $time;
+            if (empty($field->value) === false) {
+                $time = $field->toTimestamp();
+            } else {
+                $time = strtotime($fallback);
             }
 
-            return ($app->option('date.handler', 'date'))($format, $time);
+            $handler = $app->option('date.handler', 'date');
+            return Str::date($time, $format, $handler);
         },
 
         /**
