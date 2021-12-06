@@ -682,6 +682,27 @@ class DomTest extends TestCase
 
                 'Not included in the global allowlist'
             ],
+            [
+                'xml:space',
+                ['xml:space'],
+                [],
+
+                true
+            ],
+            [
+                'xml:space',
+                [],
+                [],
+
+                'Not included in the global allowlist'
+            ],
+            [
+                'xml:id',
+                ['xml:space'],
+                [],
+
+                'Not included in the global allowlist'
+            ],
 
             // either list may allow the attribute
             [
@@ -1069,6 +1090,80 @@ class DomTest extends TestCase
                 null,
 
                 false // local name check fails because node has namespace
+            ],
+
+            // special `xml:` namespace
+            [
+                ['xml:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                true,
+                null,
+
+                'xml:space' // exact match
+            ],
+            [
+                ['xml:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                [],
+                null,
+
+                'xml:space' // exact match even though namespace is not configured
+            ],
+            [
+                ['xml:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                ['xml' => 'http://www.w3.org/XML/1998/namespace'],
+                null,
+
+                'xml:space' // exact match with defined namespace
+            ],
+            [
+                ['xml:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                ['xml' => 'http://example.com/this-is-not-legal'],
+                null,
+
+                'xml:space' // exact match with different namespace
+            ],
+            [
+                ['xml:space'],
+                ['space', 'https://example.com/this-is-not-legal'],
+                true,
+                null,
+
+                false // wrong namespace
+            ],
+            [
+                ['xml:space'],
+                ['space', ''],
+                true,
+                null,
+
+                false // no namespace
+            ],
+            [
+                ['xlink:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                true,
+                null,
+
+                false // configuration with different namespace
+            ],
+            [
+                ['xlink:space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                ['xlink' => 'http://www.w3.org/1999/xlink'],
+                null,
+
+                false // configuration with different namespace
+            ],
+            [
+                ['space'],
+                ['space', 'http://www.w3.org/XML/1998/namespace'],
+                true,
+                null,
+
+                false // configuration without namespace
             ],
 
             // custom compare function
