@@ -260,6 +260,9 @@ class Url
      */
     public static function to(string $path = null, $options = null): string
     {
+        // make sure $path is string
+        $path ??= '';
+
         // keep relative urls
         if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
             return $path;

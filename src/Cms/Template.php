@@ -78,7 +78,11 @@ class Template
      */
     public function exists(): bool
     {
-        return file_exists($this->file());
+        if ($file = $this->file()) {
+            return file_exists($file);
+        }
+
+        return false;
     }
 
     /**

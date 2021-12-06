@@ -92,6 +92,9 @@ class Server
      */
     public static function sanitize(string $key, $value)
     {
+        // make sure $value is not null
+        $value ??= '';
+
         switch ($key) {
             case 'SERVER_ADDR':
             case 'SERVER_NAME':

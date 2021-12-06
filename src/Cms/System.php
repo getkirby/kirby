@@ -508,7 +508,7 @@ class System
             ];
         }
 
-        $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
+        $software = $_SERVER['SERVER_SOFTWARE'] ?? '';
 
         preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
 

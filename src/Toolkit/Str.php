@@ -397,6 +397,9 @@ class Str
      */
     public static function float($value): string
     {
+        // make sure $value is not null
+        $value ??= '';
+
         // Convert exponential to decimal, 1e-8 as 0.00000001
         if (strpos(strtolower($value), 'e') !== false) {
             $value = rtrim(sprintf('%.16f', (float)$value), '0');
@@ -460,7 +463,7 @@ class Str
      */
     public static function length(string $string = null): int
     {
-        return mb_strlen($string, 'UTF-8');
+        return mb_strlen($string ?? '', 'UTF-8');
     }
 
     /**
@@ -930,7 +933,7 @@ class Str
         $separator ??= static::$defaults['slug']['separator'];
         $allowed   ??= static::$defaults['slug']['allowed'];
 
-        $string = trim($string);
+        $string = trim($string ?? '');
         $string = static::lower($string);
         $string = static::ascii($string);
 
@@ -986,8 +989,11 @@ class Str
             return $string;
         }
 
-        $parts  = explode($separator, $string);
-        $out    = [];
+        // make sure $string is string
+        $string ??= '';
+
+        $parts = explode($separator, $string);
+        $out   = [];
 
         foreach ($parts as $p) {
             $p = trim($p);
@@ -1074,6 +1080,9 @@ class Str
         $start    = (string)($options['start'] ?? $start);
         $end      = (string)($options['end'] ?? $end);
 
+        // make sure $string is string
+        $string ??= '';
+
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
             $query = trim($match[1]);
 
@@ -1112,8 +1121,12 @@ class Str
      */
     public static function toBytes($size): int
     {
+        // TODO: remove in 3.7.0
+        // in favor of strict parameter type hint
+        $size ??= '';
+
         $size = trim($size);
-        $last = strtolower($size[strlen($size)-1] ?? null);
+        $last = strtolower($size[strlen($size)-1] ?? '');
         $size = (int)$size;
 
         switch ($last) {
@@ -1252,6 +1265,9 @@ class Str
      */
     public static function widont(string $string = null): string
     {
+        // make sure $string is string
+        $string ??= '';
+
         // Replace space between last word and punctuation
         $string = preg_replace_callback('|(\S)\s(\S?)$|u', function ($matches) {
             return $matches[1] . '&nbsp;' . $matches[2];

@@ -229,11 +229,14 @@ class Panel
     /**
      * Returns the referrer path if present
      *
-     * @return string|null
+     * @return string
      */
-    public static function referrer(): ?string
+    public static function referrer(): string
     {
-        $referrer = kirby()->request()->header('X-Fiber-Referrer') ?? get('_referrer');
+        $referrer = kirby()->request()->header('X-Fiber-Referrer')
+                 ?? get('_referrer')
+                 ?? '';
+
         return '/' . trim($referrer, '/');
     }
 
