@@ -46,6 +46,10 @@ git diff-index --cached --name-only HEAD | while read -r file; do
             echo "### ESLint on $file"
             npm --prefix panel run lint -- --no-fix "../$file"
             echo
+
+            echo "### Prettier on $file"
+            npm --prefix panel run format "../$file"
+            echo
         ;;
 
         composer.json | composer.lock)
