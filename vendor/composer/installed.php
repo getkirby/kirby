@@ -106,23 +106,29 @@
             'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
             'dev_requirement' => false,
         ),
-        'symfony/polyfill-mbstring' => array(
-            'pretty_version' => 'v1.23.1',
-            'version' => '1.23.1.0',
+        'symfony/polyfill-intl-idn' => array(
+            'pretty_version' => 'v1.23.0',
+            'version' => '1.23.0.0',
             'type' => 'library',
-            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'install_path' => __DIR__ . '/../symfony/polyfill-intl-idn',
             'aliases' => array(),
-            'reference' => '9174a3d80210dca8daa7f31fec659150bbeabfc6',
+            'reference' => '65bd267525e82759e7d8c4e8ceea44f398838e65',
             'dev_requirement' => false,
         ),
-        'true/punycode' => array(
-            'pretty_version' => 'v2.1.1',
-            'version' => '2.1.1.0',
+        'symfony/polyfill-intl-normalizer' => array(
+            'pretty_version' => 'v1.23.0',
+            'version' => '1.23.0.0',
             'type' => 'library',
-            'install_path' => __DIR__ . '/../true/punycode',
+            'install_path' => __DIR__ . '/../symfony/polyfill-intl-normalizer',
             'aliases' => array(),
-            'reference' => 'a4d0c11a36dd7f4e7cd7096076cab6d3378a071e',
+            'reference' => '8590a5f561694770bdcd3f9b5c69dde6945028e8',
             'dev_requirement' => false,
+        ),
+        'symfony/polyfill-php72' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
+            ),
         ),
     ),
 );

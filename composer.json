@@ -29,11 +29,19 @@
     "mustangostang/spyc": "0.6.3",
     "phpmailer/phpmailer": "6.5.1",
     "psr/log": "1.1.4",
-    "true/punycode": "2.1.1"
+    "symfony/polyfill-intl-idn": "^1.23"
+  },
+  "replace": {
+    "symfony/polyfill-php72": "*"
   },
   "config": {
     "optimize-autoloader": true,
     "platform-check": false
+  },
+  "extra": {
+    "unused": [
+      "symfony/polyfill-intl-idn"
+    ]
   },
   "autoload": {
     "psr-4": {

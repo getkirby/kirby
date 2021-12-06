@@ -1,8 +1,8 @@
 {
-    "name": "symfony/polyfill-mbstring",
+    "name": "symfony/polyfill-intl-normalizer",
     "type": "library",
-    "description": "Symfony polyfill for the Mbstring extension",
-    "keywords": ["polyfill", "shim", "compatibility", "portable", "mbstring"],
+    "description": "Symfony polyfill for intl's Normalizer class and related functions",
+    "keywords": ["polyfill", "shim", "compatibility", "portable", "intl", "normalizer"],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
@@ -19,11 +19,12 @@
         "php": ">=7.1"
     },
     "autoload": {
-        "psr-4": { "Symfony\\Polyfill\\Mbstring\\": "" },
-        "files": [ "bootstrap.php" ]
+        "psr-4": { "Symfony\\Polyfill\\Intl\\Normalizer\\": "" },
+        "files": [ "bootstrap.php" ],
+        "classmap": [ "Resources/stubs" ]
     },
     "suggest": {
-        "ext-mbstring": "For best performance"
+        "ext-intl": "For best performance"
     },
     "minimum-stability": "dev",
     "extra": {
