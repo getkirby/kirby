@@ -48,7 +48,7 @@ class SimpleImage {
    * @param string $image An image file or a data URI to load.
    * @throws \Exception Thrown if the GD library is not found; file|URI or image data is invalid.
    */
-  public function __construct($image = null) {
+  public function __construct($image = '') {
     // Check for the required GD extension
     if(extension_loaded('gd')) {
       // Ignore JPEG warnings that cause imagecreatefromjpeg() to fail
@@ -147,7 +147,7 @@ class SimpleImage {
         // workaround to prevent imagepalettetruecolor() from borking transparency.
         $width = imagesx($gif);
         $height = imagesy($gif);
-        $this->image = imagecreatetruecolor($width, $height);
+        $this->image = imagecreatetruecolor((int) $width, (int) $height);
         $transparentColor = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
         imagecolortransparent($this->image, $transparentColor);
         imagefill($this->image, 0, 0, $transparentColor);
@@ -194,7 +194,7 @@ class SimpleImage {
    * @return \claviska\SimpleImage
    */
   public function fromNew($width, $height, $color = 'transparent') {
-    $this->image = imagecreatetruecolor($width, $height);
+    $this->image = imagecreatetruecolor((int) $width, (int) $height);
 
     // Use PNG for dynamically created images because it's lossless and supports transparency
     $this->mimeType = 'image/png';
@@ -490,7 +490,7 @@ class SimpleImage {
       imagefilter($srcIm, IMG_FILTER_COLORIZE, 0, 0, 0, 127 * ((100 - $pct) / 100));
     }
 
-    imagecopy($dstIm, $srcIm, $dstX, $dstY, $srcX, $srcY, $srcW, $srcH);
+    imagecopy($dstIm, $srcIm, (int) $dstX, (int) $dstY, (int) $srcX, (int) $srcY, (int) $srcW, (int) $srcH);
 
     return true;
   }
@@ -593,7 +593,7 @@ class SimpleImage {
     // Avoid using native imagecrop() because of a bug with PNG transparency
     $dstW = abs($x2 - $x1);
     $dstH = abs($y2 - $y1);
-    $newImage = imagecreatetruecolor($dstW, $dstH);
+    $newImage = imagecreatetruecolor((int) $dstW, (int) $dstH);
     $transparentColor = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
     imagecolortransparent($newImage, $transparentColor);
     imagefill($newImage, 0, 0, $transparentColor);
@@ -603,10 +603,10 @@ class SimpleImage {
       $newImage,
       $this->image,
       0, 0, min($x1, $x2), min($y1, $y2),
-      $dstW,
-      $dstH,
-      $dstW,
-      $dstH
+      (int) $dstW,
+      (int) $dstH,
+      (int) $dstW,
+      (int) $dstH
     );
 
     // Swap out the new image
@@ -802,7 +802,7 @@ class SimpleImage {
     // We can't use imagescale because it doesn't seem to preserve transparency properly. The
     // workaround is to create a new truecolor image, allocate a transparent color, and copy the
     // image over to it using imagecopyresampled.
-    $newImage = imagecreatetruecolor($width, $height);
+    $newImage = imagecreatetruecolor((int) $width, (int) $height);
     $transparentColor = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
     imagecolortransparent($newImage, $transparentColor);
     imagefill($newImage, 0, 0, $transparentColor);
@@ -810,8 +810,8 @@ class SimpleImage {
       $newImage,
       $this->image,
       0, 0, 0, 0,
-      $width,
-      $height,
+      (int) $width,
+      (int) $height,
       $this->getWidth(),
       $this->getHeight()
     );
@@ -1885,7 +1885,7 @@ class SimpleImage {
       $color['red'],
       $color['green'],
       $color['blue'],
-      127 - ($color['alpha'] * 127)
+      (int) (127 - ($color['alpha'] * 127))
     );
     if($index > -1) {
       // Yes, return this color index
