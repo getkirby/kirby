@@ -9,7 +9,7 @@
     </template>
     <template v-else>
       <li v-for="image in content.images" :key="image.id">
-        <img :src="image.url" :srcset="image.image.srcset" :alt="image.alt">
+        <img :src="image.url" :srcset="image.image.srcset" :alt="image.alt" />
       </li>
     </template>
   </ul>
