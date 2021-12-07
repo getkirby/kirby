@@ -453,6 +453,15 @@ class Panel
         $routes    = [];
 
         foreach ($dropdowns as $name => $dropdown) {
+            // Handle shortcuts for dropdowns. The name is the pattern
+            // and options are defined in a Closure
+            if (is_a($dropdown, 'Closure') === true) {
+                $dropdown = [
+                    'pattern' => $name,
+                    'action'  => $dropdown
+                ];
+            }
+
             // create the full pattern with dropdowns prefix
             $pattern = 'dropdowns/' . trim(($dropdown['pattern'] ?? $name), '/');
 
