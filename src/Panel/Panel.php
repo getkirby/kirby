@@ -36,14 +36,14 @@ class Panel
      */
     public static function area(string $id, $area): array
     {
-        $area['id']              = $id;
-        $area['label']           = $area['label'] ?? $id;
-        $area['breadcrumb']      = $area['breadcrumb'] ?? [];
-        $area['breadcrumbLabel'] = $area['breadcrumbLabel'] ?? $area['label'];
-        $area['title']           = $area['label'];
-        $area['menu']            = $area['menu'] ?? false;
-        $area['link']            = $area['link'] ?? $id;
-        $area['search']          = $area['search'] ?? null;
+        $area['id']                = $id;
+        $area['label']           ??= $id;
+        $area['breadcrumb']      ??= [];
+        $area['breadcrumbLabel'] ??= $area['label'];
+        $area['title']             = $area['label'];
+        $area['menu']            ??= false;
+        $area['link']            ??= $id;
+        $area['search']          ??= null;
 
         return $area;
     }
@@ -229,11 +229,14 @@ class Panel
     /**
      * Returns the referrer path if present
      *
-     * @return string|null
+     * @return string
      */
-    public static function referrer(): ?string
+    public static function referrer(): string
     {
-        $referrer = kirby()->request()->header('X-Fiber-Referrer') ?? get('_referrer');
+        $referrer = kirby()->request()->header('X-Fiber-Referrer')
+                 ?? get('_referrer')
+                 ?? '';
+
         return '/' . trim($referrer, '/');
     }
 
@@ -302,9 +305,6 @@ class Panel
         // create a micro-router for the Panel
         return router($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
 
-            // trigger hook
-            $route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
-
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
             $areaId = $route->attributes()['area'] ?? null;
@@ -313,6 +313,9 @@ class Panel
 
             // call the route action to check the result
             try {
+                // trigger hook
+                $route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
+
                 // check for access before executing area routes
                 if ($auth !== false) {
                     static::firewall($kirby->user(), $areaId);
@@ -450,6 +453,15 @@ class Panel
         $routes    = [];
 
         foreach ($dropdowns as $name => $dropdown) {
+            // Handle shortcuts for dropdowns. The name is the pattern
+            // and options are defined in a Closure
+            if (is_a($dropdown, 'Closure') === true) {
+                $dropdown = [
+                    'pattern' => $name,
+                    'action'  => $dropdown
+                ];
+            }
+
             // create the full pattern with dropdowns prefix
             $pattern = 'dropdowns/' . trim(($dropdown['pattern'] ?? $name), '/');
 

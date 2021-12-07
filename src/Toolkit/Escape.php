@@ -81,7 +81,7 @@ class Escape
      */
     protected static function escaper()
     {
-        return static::$escaper = static::$escaper ?? new Escaper('utf-8');
+        return static::$escaper ??= new Escaper('utf-8');
     }
 
     /**

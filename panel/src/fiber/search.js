@@ -1,4 +1,3 @@
-
 import Fiber from "./index";
 
 export default async function (type, query, options = {}) {

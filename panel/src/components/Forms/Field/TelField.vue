@@ -17,16 +17,12 @@ import { props as Input } from "../Input.vue";
 import { props as TelInput } from "../Input/TelInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-tel-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-tel-input>`
  * for additional information.
  * @example <k-tel-field v-model="tel" name="tel" label="Phone number" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    TelInput
-  ],
+  mixins: [Field, Input, TelInput],
   inheritAttrs: false,
   props: {
     icon: {
@@ -39,5 +35,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

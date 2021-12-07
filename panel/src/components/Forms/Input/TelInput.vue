@@ -14,7 +14,7 @@ export const props = {
       default: "tel"
     }
   }
-}
+};
 
 /**
  * @example <k-input v-model="tel" name="tel" type="tel" />
@@ -22,5 +22,5 @@ export const props = {
 export default {
   extends: TextInput,
   mixins: [props]
-}
+};
 </script>

@@ -1,4 +1,3 @@
-
 export default {
   props: {
     id: {
@@ -8,4 +7,4 @@ export default {
       }
     }
   }
-}
+};

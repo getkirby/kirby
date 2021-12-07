@@ -115,7 +115,7 @@ class I18n
      */
     public static function formatNumber($number, string $locale = null): string
     {
-        $locale = $locale ?? static::locale();
+        $locale ??= static::locale();
 
         $formatter = static::decimalNumberFormatter($locale);
         if ($formatter !== null) {
@@ -154,7 +154,7 @@ class I18n
      */
     public static function translate($key, $fallback = null, string $locale = null)
     {
-        $locale = $locale ?? static::locale();
+        $locale ??= static::locale();
 
         if (is_array($key) === true) {
             if (isset($key[$locale])) {
@@ -224,7 +224,7 @@ class I18n
      */
     public static function translation(string $locale = null): array
     {
-        $locale = $locale ?? static::locale();
+        $locale ??= static::locale();
 
         if (isset(static::$translations[$locale]) === true) {
             return static::$translations[$locale];
@@ -283,8 +283,7 @@ class I18n
      */
     public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
     {
-        $locale = $locale ?? static::locale();
-
+        $locale    ??= static::locale();
         $translation = static::translate($key, null, $locale);
 
         if ($translation === null) {

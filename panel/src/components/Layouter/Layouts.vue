@@ -1,11 +1,7 @@
 <template>
   <div>
     <template v-if="rows.length">
-      <k-draggable
-        v-bind="draggableOptions"
-        class="k-layouts"
-        @sort="save"
-      >
+      <k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
         <k-layout
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
@@ -22,11 +18,13 @@
           @remove="removeLayout(layout)"
           @select="selected = layout.id"
           @updateAttrs="updateAttrs(layoutIndex, $event)"
-          @updateColumn="updateColumn({
-            layout,
-            layoutIndex,
-            ...$event
-          })"
+          @updateColumn="
+            updateColumn({
+              layout,
+              layoutIndex,
+              ...$event
+            })
+          "
         />
       </k-draggable>
 
@@ -38,11 +36,7 @@
       />
     </template>
     <template v-else>
-      <k-empty
-        icon="dashboard"
-        class="k-layout-empty"
-        @click="selectLayout(0)"
-      >
+      <k-empty icon="dashboard" class="k-layout-empty" @click="selectLayout(0)">
         {{ empty || $t("field.layout.empty") }}
       </k-empty>
     </template>
@@ -100,7 +94,7 @@ export default {
       currentLayout: null,
       nextIndex: null,
       rows: this.value,
-      selected: null,
+      selected: null
     };
   },
   computed: {
@@ -108,7 +102,7 @@ export default {
       return {
         id: this._uid,
         handle: true,
-        list: this.rows,
+        list: this.rows
       };
     }
   },
@@ -138,9 +132,9 @@ export default {
       };
 
       // replace all unique IDs for columns and blocks
-      copy.columns = copy.columns.map(column => {
+      copy.columns = copy.columns.map((column) => {
         column.id = this.$helper.uuid();
-        column.blocks = column.blocks.map(block => {
+        column.blocks = column.blocks.map((block) => {
           block.id = this.$helper.uuid();
           return block;
         });
@@ -152,7 +146,7 @@ export default {
       this.save();
     },
     removeLayout(layout) {
-      const index = this.rows.findIndex(element => element.id === layout.id);
+      const index = this.rows.findIndex((element) => element.id === layout.id);
 
       if (index !== -1) {
         this.$delete(this.rows, index);
@@ -174,7 +168,8 @@ export default {
       this.$refs.selector.open();
     },
     updateColumn(args) {
-      this.rows[args.layoutIndex].columns[args.columnIndex].blocks = args.blocks;
+      this.rows[args.layoutIndex].columns[args.columnIndex].blocks =
+        args.blocks;
       this.save();
     },
     updateAttrs(layoutIndex, attrs) {
@@ -188,7 +183,7 @@ export default {
 <style>
 .k-layouts .k-sortable-ghost {
   position: relative;
-  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
   outline: 2px solid var(--color-focus);
   cursor: grabbing;
   cursor: -moz-grabbing;
@@ -203,7 +198,7 @@ export default {
 }
 .k-layout-selector .k-headline {
   line-height: 1;
-  margin-top: -.25rem;
+  margin-top: -0.25rem;
   margin-bottom: 1.5rem;
 }
 .k-layout-selector ul {
@@ -226,7 +221,7 @@ export default {
 }
 .k-layout-selector-option .k-column {
   display: flex;
-  background: rgba(255, 255, 255, .2);
+  background: rgba(255, 255, 255, 0.2);
   justify-content: center;
   font-size: var(--text-xs);
   align-items: center;
@@ -239,7 +234,7 @@ export default {
   width: 100%;
   color: var(--color-gray-500);
   justify-content: center;
-  padding: .75rem 0;
+  padding: 0.75rem 0;
 }
 .k-layout-add-button:hover {
   color: var(--color-black);

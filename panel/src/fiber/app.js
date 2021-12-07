@@ -1,4 +1,3 @@
-
 import Fiber from "./index";
 import Vue from "vue";
 
@@ -15,7 +14,7 @@ export default {
     Fiber.init(this.state, {
       headers: () => {
         return {
-          "X-CSRF": this.state.$system.csrf,
+          "X-CSRF": this.state.$system.csrf
         };
       },
       /**
@@ -62,8 +61,8 @@ export default {
         this.setTranslation(state);
 
         this.component = state.$view.component;
-        this.state     = state;
-        this.key       = options.replace === true ? this.key : state.$view.timestamp;
+        this.state = state;
+        this.key = options.replace === true ? this.key : state.$view.timestamp;
 
         if (options.navigate === true) {
           this.navigate();
@@ -73,7 +72,7 @@ export default {
         return {
           language: this.state.$language?.code
         };
-      },
+      }
     });
   },
   methods: {
@@ -150,4 +149,4 @@ export default {
       });
     }
   }
-}
+};

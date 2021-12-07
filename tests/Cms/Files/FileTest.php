@@ -214,7 +214,7 @@ class FileTest extends TestCase
 
         // custom date handler
         $format = '%d.%m.%Y';
-        $this->assertEquals(strftime($format, $modified), $file->modified($format, 'strftime'));
+        $this->assertEquals(@strftime($format, $modified), $file->modified($format, 'strftime'));
 
         Dir::remove(dirname($index));
     }

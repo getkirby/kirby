@@ -1,10 +1,10 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "Cambia tu nombre",
+  "account.delete": "Borrar tu cuenta",
+  "account.delete.confirm": "¿Realmente quieres eliminar tu cuenta? Tu sesión se cerrará inmediatamente. La cuenta no podrá ser recuperada.",
 
   "add": "Añadir",
-  "author": "Author",
+  "author": "Autor",
   "avatar": "Foto de perfil",
   "back": "Atrás",
   "cancel": "Cancelar",

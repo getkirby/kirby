@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The String class provides a set
@@ -180,9 +181,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, $position + static::length($needle));
         }
+
+        return static::substr($string, $position + static::length($needle));
     }
 
     /**
@@ -222,9 +223,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, 0, $position);
         }
+
+        return static::substr($string, 0, $position);
     }
 
     /**
@@ -250,7 +251,40 @@ class Str
      */
     public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
-        return call_user_func($caseInsensitive === true ? 'stripos' : 'strpos', $string, $needle) !== false;
+        if ($needle === '') {
+            return true;
+        }
+
+        $method = $caseInsensitive === true ? 'stripos' : 'strpos';
+        return call_user_func($method, $string, $needle) !== false;
+    }
+
+    /**
+     * Convert timestamp to date string
+     * according to locale settings
+     *
+     * @param int|null $time
+     * @param string|null $format
+     * @param string $handler date or strftime
+     * @return string|int
+     */
+    public static function date(?int $time = null, ?string $format = null, string $handler = 'date')
+    {
+        if (is_null($format) === true) {
+            return $time;
+        }
+
+        // separately handle strftime to be able
+        // to suppress deprecation warning
+        // TODO: remove strftime support for PHP 9.0
+        if ($handler === 'strftime') {
+            // make sure timezone is set correctly
+            date_default_timezone_get();
+
+            return @strftime($format, $time);
+        }
+
+        return $handler($format, $time);
     }
 
     /**
@@ -373,6 +407,9 @@ class Str
      */
     public static function float($value): string
     {
+        // make sure $value is not null
+        $value ??= '';
+
         // Convert exponential to decimal, 1e-8 as 0.00000001
         if (strpos(strtolower($value), 'e') !== false) {
             $value = rtrim(sprintf('%.16f', (float)$value), '0');
@@ -397,9 +434,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, $position);
         }
+
+        return static::substr($string, $position);
     }
 
     /**
@@ -436,7 +473,7 @@ class Str
      */
     public static function length(string $string = null): int
     {
-        return mb_strlen($string, 'UTF-8');
+        return mb_strlen($string ?? '', 'UTF-8');
     }
 
     /**
@@ -512,6 +549,10 @@ class Str
      */
     public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
     {
+        if ($needle === '') {
+            throw new InvalidArgumentException('The needle must not be empty');
+        }
+
         if ($caseInsensitive === true) {
             $string = static::lower($string);
             $needle = static::lower($needle);
@@ -899,10 +940,10 @@ class Str
      */
     public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
     {
-        $separator = $separator ?? static::$defaults['slug']['separator'];
-        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+        $separator ??= static::$defaults['slug']['separator'];
+        $allowed   ??= static::$defaults['slug']['allowed'];
 
-        $string = trim($string);
+        $string = trim($string ?? '');
         $string = static::lower($string);
         $string = static::ascii($string);
 
@@ -958,8 +999,11 @@ class Str
             return $string;
         }
 
-        $parts  = explode($separator, $string);
-        $out    = [];
+        // make sure $string is string
+        $string ??= '';
+
+        $parts = explode($separator, $string);
+        $out   = [];
 
         foreach ($parts as $p) {
             $p = trim($p);
@@ -1046,6 +1090,9 @@ class Str
         $start    = (string)($options['start'] ?? $start);
         $end      = (string)($options['end'] ?? $end);
 
+        // make sure $string is string
+        $string ??= '';
+
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
             $query = trim($match[1]);
 
@@ -1084,8 +1131,12 @@ class Str
      */
     public static function toBytes($size): int
     {
+        // TODO: remove in 3.7.0
+        // in favor of strict parameter type hint
+        $size ??= '';
+
         $size = trim($size);
-        $last = strtolower($size[strlen($size)-1] ?? null);
+        $last = strtolower($size[strlen($size)-1] ?? '');
         $size = (int)$size;
 
         switch ($last) {
@@ -1198,9 +1249,9 @@ class Str
 
         if ($position === false) {
             return '';
-        } else {
-            return static::substr($string, 0, $position + static::length($needle));
         }
+
+        return static::substr($string, 0, $position + static::length($needle));
     }
 
     /**
@@ -1224,6 +1275,9 @@ class Str
      */
     public static function widont(string $string = null): string
     {
+        // make sure $string is string
+        $string ??= '';
+
         // Replace space between last word and punctuation
         $string = preg_replace_callback('|(\S)\s(\S?)$|u', function ($matches) {
             return $matches[1] . '&nbsp;' . $matches[2];

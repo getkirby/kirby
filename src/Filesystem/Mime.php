@@ -320,7 +320,7 @@ class Mime
         }
 
         // get the extension or extract it from the filename
-        $extension = $extension ?? F::extension($file);
+        $extension ??= F::extension($file);
 
         // try to guess the mime type at least
         if ($mime === false) {

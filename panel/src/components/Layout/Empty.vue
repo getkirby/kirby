@@ -6,10 +6,7 @@
     class="k-empty"
     v-on="$listeners"
   >
-    <k-icon
-      v-if="icon"
-      :type="icon"
-    />
+    <k-icon v-if="icon" :type="icon" />
     <p><slot /></p>
   </component>
 </template>
@@ -94,10 +91,10 @@ button.k-empty:focus {
 .k-empty[data-layout="list"] > .k-icon {
   width: 36px;
   min-height: 36px;
-  border-inline-end: 1px solid rgba(0, 0, 0, .05);
+  border-inline-end: 1px solid rgba(0, 0, 0, 0.05);
 }
 .k-empty[data-layout="list"] > p {
   line-height: 1.25rem;
-  padding: .5rem .75rem;
+  padding: 0.5rem 0.75rem;
 }
 </style>

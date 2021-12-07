@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Closure;
 use Exception;
 use InvalidArgumentException;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Http
@@ -59,8 +60,11 @@ class Router
                 throw new InvalidArgumentException('Invalid route parameters');
             }
 
-            $methods  = array_map('trim', explode('|', strtoupper($props['method'] ?? 'GET')));
-            $patterns = is_array($props['pattern']) === false ? [$props['pattern']] : $props['pattern'];
+            $patterns = A::wrap($props['pattern']);
+            $methods  = A::map(
+                explode('|', strtoupper($props['method'] ?? 'GET')),
+                'trim'
+            );
 
             if ($methods === ['ALL']) {
                 $methods = array_keys($this->routes);
@@ -88,7 +92,7 @@ class Router
      */
     public function call(string $path = null, string $method = 'GET', Closure $callback = null)
     {
-        $path   = $path ?? '';
+        $path ??= '';
         $ignore = [];
         $result = null;
         $loop   = true;

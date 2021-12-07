@@ -59,12 +59,12 @@ export default {
       this.$store.dispatch("drag", null);
     }
   }
-}
+};
 </script>
 
 <style>
 .k-panel[data-loading] {
-  animation: LoadingCursor .5s;
+  animation: LoadingCursor 0.5s;
 }
 .k-panel[data-loading]::after,
 .k-panel[data-dragging] {

@@ -208,7 +208,7 @@ class ContentLock
         }
 
         // add lock user to unlocked data
-        $this->data['unlock']   = $this->data['unlock'] ?? [];
+        $this->data['unlock'] ??= [];
         $this->data['unlock'][] = $this->data['lock']['user'];
 
         return $this->clearLock();

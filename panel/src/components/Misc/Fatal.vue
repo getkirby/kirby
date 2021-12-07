@@ -3,9 +3,7 @@
     <div class="k-fatal-box">
       <k-bar>
         <template #left>
-          <k-headline>
-            The JSON response could not be parsed
-          </k-headline>
+          <k-headline> The JSON response could not be parsed </k-headline>
         </template>
         <template #right>
           <k-button
@@ -38,7 +36,7 @@ export default {
       console.error(e);
     }
   }
-}
+};
 </script>
 
 <style>
@@ -65,10 +63,10 @@ export default {
 .k-fatal-box .k-headline {
   line-height: 1;
   font-size: var(--text-sm);
-  padding: .75rem;
+  padding: 0.75rem;
 }
 .k-fatal-box .k-button {
-  padding: .75rem;
+  padding: 0.75rem;
 }
 .k-fatal-iframe {
   border: 0;

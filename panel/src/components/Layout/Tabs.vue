@@ -1,9 +1,5 @@
 <template>
-  <div
-    v-if="tabs && tabs.length > 1"
-    :data-theme="theme"
-    class="k-tabs"
-  >
+  <div v-if="tabs && tabs.length > 1" :data-theme="theme" class="k-tabs">
     <nav>
       <k-button
         v-for="tabButton in visibleTabs"
@@ -16,10 +12,7 @@
       >
         {{ tabButton.label || tabButton.text || tabButton.name }}
 
-        <span
-          v-if="tabButton.badge"
-          class="k-tabs-badge"
-        >
+        <span v-if="tabButton.badge" class="k-tabs-badge">
           {{ tabButton.badge }}
         </span>
       </k-button>
@@ -65,18 +58,18 @@ export default {
       size: null,
       visibleTabs: this.tabs,
       invisibleTabs: []
-    }
+    };
   },
   computed: {
     current() {
-      const tab = this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
+      const tab =
+        this.tabs.find((tab) => tab.name === this.tab) || this.tabs[0] || {};
       return tab.name;
     }
   },
   watch: {
     tabs(tabs) {
-      this.visibleTabs = tabs,
-      this.invisibleTabs = [];
+      (this.visibleTabs = tabs), (this.invisibleTabs = []);
       this.resize(true);
     }
   },
@@ -88,7 +81,6 @@ export default {
   },
   methods: {
     resize(force) {
-
       if (!this.tabs || this.tabs.length <= 1) {
         return;
       }
@@ -116,7 +108,6 @@ export default {
         this.invisibleTabs = this.tabs.slice(2);
         this.size = "small";
       }
-
     }
   }
 };
@@ -140,7 +131,7 @@ export default {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: .625rem .75rem;
+  padding: 0.625rem 0.75rem;
   font-size: var(--text-xs);
   text-transform: uppercase;
   text-align: center;
@@ -151,20 +142,18 @@ export default {
   flex-shrink: 1;
   flex-direction: column;
   max-width: 15rem;
-
 }
-
 
 @media screen and (min-width: 30em) {
   .k-tab-button.k-button {
     flex-direction: row;
   }
   .k-tab-button.k-button .k-icon {
-    margin-inline-end: .5rem;
+    margin-inline-end: 0.5rem;
   }
 }
 .k-tab-button.k-button > .k-button-text {
-  padding-top: .375rem;
+  padding-top: 0.375rem;
   padding-inline-start: 0;
   font-size: 10px;
   overflow: hidden;
@@ -221,7 +210,7 @@ export default {
   font-variant-numeric: tabular-nums;
   inset-inline-end: 2px;
   line-height: 1.5;
-  padding: 0 .25rem;
+  padding: 0 0.25rem;
   border-radius: 2px;
   font-size: 10px;
   box-shadow: var(--shadow-md);

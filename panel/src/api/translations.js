@@ -6,5 +6,5 @@ export default (api) => {
     async get(locale) {
       return api.get("translations/" + locale);
     }
-  }
+  };
 };

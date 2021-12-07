@@ -1,22 +1,25 @@
 export default {
   namespaced: true,
   state: {
-    open: [],
+    open: []
   },
   mutations: {
     CLOSE(state, id) {
       if (id) {
-        state.open = state.open.filter(item => item.id !== id);
+        state.open = state.open.filter((item) => item.id !== id);
       } else {
         state.open = [];
       }
     },
     GOTO(state, id) {
-      state.open = state.open.slice(0, state.open.findIndex(item => item.id === id) + 1);
+      state.open = state.open.slice(
+        0,
+        state.open.findIndex((item) => item.id === id) + 1
+      );
     },
     OPEN(state, drawer) {
       state.open.push(drawer);
-    },
+    }
   },
   actions: {
     close(context, id) {

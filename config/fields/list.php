@@ -11,7 +11,7 @@ return [
     ],
     'computed' => [
         'value' => function () {
-            return trim($this->value);
+            return trim($this->value ?? '');
         }
     ]
 ];

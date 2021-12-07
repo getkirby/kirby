@@ -25,6 +25,34 @@ class Html extends Xml
     public static $entities;
 
     /**
+     * List of HTML tags that can be used inline
+     *
+     * @var array
+     */
+    public static $inlineList = [
+        'b',
+        'i',
+        'small',
+        'abbr',
+        'cite',
+        'code',
+        'dfn',
+        'em',
+        'kbd',
+        'strong',
+        'samp',
+        'var',
+        'a',
+        'bdo',
+        'br',
+        'img',
+        'q',
+        'span',
+        'sub',
+        'sup'
+    ];
+
+    /**
      * Closing string for void tags;
      * can be used to switch to trailing slashes if required
      *
@@ -117,6 +145,10 @@ class Html extends Xml
         // all other cases can share the XML variant
         $attr = parent::attr($name, $value);
 
+        if ($attr === null) {
+            return null;
+        }
+
         // HTML supports named entities
         $entities = parent::entities();
         $html = array_keys($entities);
@@ -205,7 +237,7 @@ class Html extends Xml
      */
     public static function entities(): array
     {
-        return self::$entities = self::$entities ?? get_html_translation_table(HTML_ENTITIES);
+        return self::$entities ??= get_html_translation_table(HTML_ENTITIES);
     }
 
     /**
@@ -325,7 +357,7 @@ class Html extends Xml
      */
     public static function rel(?string $rel = null, ?string $target = null): ?string
     {
-        $rel = trim($rel);
+        $rel = trim($rel ?? '');
 
         if ($target === '_blank') {
             if (empty($rel) === false) {

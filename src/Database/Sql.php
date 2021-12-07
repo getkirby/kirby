@@ -290,9 +290,10 @@ abstract class Sql
         // add keys
         foreach ($inner['keys'] as $key => $columns) {
             // quote each column name and make a list string out of the column names
-            $columns = implode(', ', array_map(function ($name) {
-                return $this->quoteIdentifier($name);
-            }, $columns));
+            $columns = implode(', ', array_map(
+                fn ($name) => $this->quoteIdentifier($name),
+                $columns
+            ));
 
             if ($key === 'primary') {
                 $key = 'PRIMARY KEY';
@@ -526,7 +527,7 @@ abstract class Sql
             ];
         }
 
-        $limit = $limit ?? '18446744073709551615';
+        $limit ??= '18446744073709551615';
 
         $offsetBinding = $this->bindingName('offset');
         $limitBinding  = $this->bindingName('limit');

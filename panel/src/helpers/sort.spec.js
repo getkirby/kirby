@@ -1,9 +1,7 @@
 import sort from "./sort.js";
 
 describe("$helper.sort()", () => {
-
   it("should sort", () => {
-
     let users = [
       { username: "Homer" },
       { username: "Marge" },
@@ -17,7 +15,7 @@ describe("$helper.sort()", () => {
       { username: "Homer" },
       { username: "Lisa" },
       { username: "Maggie" },
-      { username: "Marge" },
+      { username: "Marge" }
     ];
 
     const sorter = sort();
@@ -27,7 +25,5 @@ describe("$helper.sort()", () => {
     });
 
     expect(users).to.deep.equal(expected);
-
   });
-
 });

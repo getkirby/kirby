@@ -405,7 +405,7 @@ class System
     {
         return
             version_compare(PHP_VERSION, '7.4.0', '>=') === true &&
-            version_compare(PHP_VERSION, '8.1.0', '<')  === true;
+            version_compare(PHP_VERSION, '8.2.0', '<')  === true;
     }
 
     /**
@@ -508,7 +508,7 @@ class System
             ];
         }
 
-        $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
+        $software = $_SERVER['SERVER_SOFTWARE'] ?? '';
 
         preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
 

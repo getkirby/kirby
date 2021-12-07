@@ -8,7 +8,7 @@
       class="k-checkbox-input-native"
       type="checkbox"
       @change="onChange($event.target.checked)"
-    >
+    />
     <span class="k-checkbox-input-icon" aria-hidden="true">
       <svg
         width="12"
@@ -30,13 +30,7 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  label,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, label, required } from "@/mixins/props.js";
 
 import { required as validateRequired } from "vuelidate/lib/validators";
 
@@ -45,16 +39,10 @@ import { required as validateRequired } from "vuelidate/lib/validators";
  * @example <k-input v-model="checkbox" type="checkbox" />
  */
 export default {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    label,
-    required
-  ],
+  mixins: [autofocus, disabled, id, label, required],
   inheritAttrs: false,
   props: {
-    value: Boolean,
+    value: Boolean
   },
   watch: {
     value() {
@@ -94,15 +82,14 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? validateRequired : true,
+        required: this.required ? validateRequired : true
       }
-    }
+    };
   }
-}
+};
 </script>
 
 <style>
-
 .k-checkbox-input {
   position: relative;
   cursor: pointer;
@@ -151,5 +138,4 @@ export default {
 .k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
   background: var(--color-focus);
 }
-
 </style>

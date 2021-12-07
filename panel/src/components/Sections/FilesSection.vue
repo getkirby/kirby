@@ -6,7 +6,8 @@
   >
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
+        {{ headline }}
+        <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group
         v-if="add"
@@ -17,7 +18,7 @@
     <template v-if="error">
       <k-box theme="negative">
         <k-text size="small">
-          <strong>{{ $t("error.section.notLoaded", {name: name}) }}:</strong>
+          <strong>{{ $t("error.section.notLoaded", { name: name }) }}:</strong>
           {{ error }}
         </k-text>
       </k-box>
@@ -45,7 +46,7 @@
             icon="image"
             v-on="add ? { click: upload } : {}"
           >
-            {{ options.empty || $t('files.empty') }}
+            {{ options.empty || $t("files.empty") }}
           </k-empty>
           <footer class="k-collection-footer">
             <!-- eslint-disable vue/no-v-html -->
@@ -77,7 +78,7 @@ export default {
       } else {
         return false;
       }
-    },
+    }
   },
   created() {
     this.load();
@@ -105,10 +106,10 @@ export default {
       });
     },
     items(data) {
-      return data.map(file => {
+      return data.map((file) => {
         file.sortable = this.options.sortable;
-        file.column   = this.column;
-        file.options  = this.$dropdown(file.link, {
+        file.column = this.column;
+        file.options = this.$dropdown(file.link, {
           query: {
             view: "list",
             update: this.options.sortable,
@@ -139,7 +140,7 @@ export default {
 
       this.isProcessing = true;
 
-      items = items.map(item => {
+      items = items.map((item) => {
         return item.id;
       });
 
@@ -150,13 +151,11 @@ export default {
         });
         this.$store.dispatch("notification/success", ":)");
         this.$events.$emit("file.sort");
-
       } catch (error) {
         this.reload();
         this.$store.dispatch("notification/error", error.message);
-
       } finally {
-        this.isProcessing = false
+        this.isProcessing = false;
       }
     },
     update() {

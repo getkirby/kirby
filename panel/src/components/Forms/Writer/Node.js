@@ -1,9 +1,8 @@
 import Extension from "./Extension";
 
 export default class Node extends Extension {
-
   constructor(options = {}) {
-    super(options)
+    super(options);
   }
 
   get type() {
@@ -17,5 +16,4 @@ export default class Node extends Extension {
   commands() {
     return {};
   }
-
 }

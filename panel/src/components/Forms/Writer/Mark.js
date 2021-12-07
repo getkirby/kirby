@@ -1,7 +1,6 @@
 import Extension from "./Extension.js";
 
 export default class Mark extends Extension {
-
   constructor(options = {}) {
     super(options);
   }
@@ -29,5 +28,4 @@ export default class Mark extends Extension {
   update(attrs) {
     this.editor.updateMark(this.name, attrs);
   }
-
 }

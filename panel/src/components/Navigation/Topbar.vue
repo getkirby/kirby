@@ -55,11 +55,7 @@
     </k-view>
 
     <!-- search overlay -->
-    <k-search
-      ref="search"
-      :type="$view.search || 'pages'"
-      :types="$searches"
-    />
+    <k-search ref="search" :type="$view.search || 'pages'" :types="$searches" />
   </div>
 </template>
 
@@ -70,7 +66,7 @@ export default {
     license: Boolean,
     menu: Array,
     title: String,
-    view: Object,
+    view: Object
   },
   computed: {
     notification() {
@@ -117,7 +113,7 @@ export default {
   flex-shrink: 0;
 }
 .k-topbar-menu ul {
-  padding: .5rem 0;
+  padding: 0.5rem 0;
 }
 .k-topbar .k-button[data-theme] {
   color: var(--theme-light);
@@ -135,7 +131,7 @@ export default {
   font-weight: 500;
 }
 .k-topbar-button {
-  padding: .75rem;
+  padding: 0.75rem;
   line-height: 1;
   font-size: var(--text-sm);
 }
@@ -149,7 +145,7 @@ export default {
   padding-inline-end: 0;
 }
 .k-topbar-view-button .k-icon {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 
 .k-topbar-signals {
@@ -166,7 +162,7 @@ export default {
   content: "";
   top: -0.5rem;
   bottom: 0;
-  width: .5rem;
+  width: 0.5rem;
   background: -webkit-linear-gradient(
     inline-start,
     rgba(17, 17, 17, 0),
@@ -183,7 +179,7 @@ export default {
   display: flex;
 }
 
-@media screen and (max-width: 30em){
+@media screen and (max-width: 30em) {
   .k-topbar .k-button[data-theme="negative"] .k-button-text {
     display: none;
   }

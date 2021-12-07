@@ -31,12 +31,12 @@ export default {
 }
 .k-user-info .k-image {
   width: 1.5rem;
-  margin-inline-end: .75rem;
+  margin-inline-end: 0.75rem;
 }
 .k-user-info .k-icon {
   width: 1.5rem;
   height: 1.5rem;
-  margin-inline-end: .75rem;
+  margin-inline-end: 0.75rem;
   background: var(--color-black);
   color: var(--color-white);
 }

@@ -12,12 +12,7 @@
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -26,12 +21,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    required
-  ],
+  mixins: [autofocus, disabled, id, required],
   props: {
     columns: Number,
     max: Number,
@@ -55,7 +45,7 @@ export default {
   data() {
     return {
       selected: this.valueToArray(this.value)
-    }
+    };
   },
   watch: {
     value(value) {
@@ -105,17 +95,16 @@ export default {
       if (typeof value === "object") {
         return Object.values(value);
       }
-    },
+    }
   },
   validations() {
     return {
       selected: {
         required: this.required ? validateRequired : true,
         min: this.min ? validateMinLength(this.min) : true,
-        max: this.max ? validateMaxLength(this.max) : true,
+        max: this.max ? validateMaxLength(this.max) : true
       }
     };
   }
-}
-
+};
 </script>

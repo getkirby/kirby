@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "license": "proprietary",
   "authors": [
     {
@@ -21,7 +21,7 @@
     "php": ">=7.4.0 <8.1.0",
     "ext-ctype": "*",
     "ext-mbstring": "*",
-    "claviska/simpleimage": "3.6.3",
+    "claviska/simpleimage": "3.6.4",
     "filp/whoops": "2.14.4",
     "getkirby/composer-installer": "^1.2.1",
     "laminas/laminas-escaper": "2.9.0",
@@ -29,11 +29,20 @@
     "mustangostang/spyc": "0.6.3",
     "phpmailer/phpmailer": "6.5.1",
     "psr/log": "1.1.4",
-    "true/punycode": "2.1.1"
+    "symfony/polyfill-intl-idn": "1.23.0",
+    "symfony/polyfill-mbstring": "1.23.1"
+  },
+  "replace": {
+    "symfony/polyfill-php72": "*"
   },
   "config": {
     "optimize-autoloader": true,
     "platform-check": false
+  },
+  "extra": {
+    "unused": [
+      "symfony/polyfill-intl-idn"
+    ]
   },
   "autoload": {
     "psr-4": {

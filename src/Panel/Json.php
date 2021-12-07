@@ -68,7 +68,7 @@ abstract class Json
         }
 
         // always inject the response code
-        $data['code']     = $data['code']    ?? 200;
+        $data['code']   ??= 200;
         $data['path']     = $options['path'] ?? null;
         $data['referrer'] = Panel::referrer();
 

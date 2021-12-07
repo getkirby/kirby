@@ -28,9 +28,7 @@ return [
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
-    'css' => function (App $kirby, string $url, $options = null): string {
-        return $url;
-    },
+    'css' => fn (App $kirby, string $url, $options = null): string => $url,
 
 
     /**
@@ -84,9 +82,10 @@ return [
      * @param \Kirby\Cms\App $kirby Kirby instance
      * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
      * @param array $options All thumb options (width, height, crop, blur, grayscale)
-     * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion
+     * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
      */
     'file::version' => function (App $kirby, $file, array $options = []) {
+        // if file is not resizable, return
         if ($file->isResizable() === false) {
             return $file;
         }
@@ -96,14 +95,20 @@ return [
         $template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
         $thumbRoot = (new Filename($file->root(), $template, $options))->toString();
         $thumbName = basename($thumbRoot);
-        $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
+        // check if the thumb already exists
         if (file_exists($thumbRoot) === false) {
+
+            // if not, create job file
+            $job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
+
             try {
                 Data::write($job, array_merge($options, [
                     'filename' => $file->filename()
                 ]));
             } catch (Throwable $e) {
+                // if thumb doesn't exist yet and job file cannot
+                // be created, return
                 return $file;
             }
         }
@@ -123,9 +128,7 @@ return [
      * @param string $url Relative or absolute URL
      * @param string|array $options An array of attributes for the link tag or a media attribute string
      */
-    'js' => function (App $kirby, string $url, $options = null): string {
-        return $url;
-    },
+    'js' => fn (App $kirby, string $url, $options = null): string => $url,
 
     /**
      * Add your own Markdown parser

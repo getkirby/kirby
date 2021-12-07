@@ -3,12 +3,12 @@
     :class="layout ? 'k-' + layout + '-item' : false"
     v-bind="data"
     :data-has-figure="hasFigure"
+    :data-has-flag="Boolean(flag)"
     :data-has-info="Boolean(info)"
-    :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
     class="k-item"
     tabindex="-1"
-    @click="$emit('click', $event);"
+    @click="$emit('click', $event)"
     @dragstart="$emit('drag', $event)"
   >
     <!-- Image -->
@@ -22,10 +22,7 @@
     </slot>
 
     <!-- Sort handle -->
-    <k-sort-handle
-      v-if="sortable"
-      class="k-item-sort-handle"
-    />
+    <k-sort-handle v-if="sortable" class="k-item-sort-handle" />
 
     <!-- Content -->
     <header class="k-item-content">
@@ -49,19 +46,10 @@
     </header>
 
     <!-- Footer -->
-    <footer
-      v-if="flag || options || $slots.options"
-      class="k-item-footer"
-    >
-      <nav
-        class="k-item-buttons"
-        @click.stop
-      >
+    <footer v-if="flag || options || $slots.options" class="k-item-footer">
+      <nav class="k-item-buttons" @click.stop>
         <!-- Status icon -->
-        <k-status-icon
-          v-if="flag"
-          v-bind="flag"
-        />
+        <k-status-icon v-if="flag" v-bind="flag" />
 
         <!-- Options -->
         <slot name="options">
@@ -85,7 +73,6 @@ export default {
     flag: Object,
     image: [Object, Boolean],
     info: String,
-    label: String,
     layout: {
       type: String,
       default: "list"
@@ -186,7 +173,7 @@ export default {
   min-width: 0;
 }
 .k-item-label {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-item-buttons {
   position: relative;
@@ -209,6 +196,9 @@ export default {
   z-index: 1;
 }
 .k-item-buttons > .k-dropdown {
+  z-index: var(--z-navigation);
+}
+.k-item-buttons > .k-dropdown-content {
   z-index: var(--z-dropdown);
 }
 
@@ -233,7 +223,7 @@ export default {
   flex-shrink: 2;
   justify-content: space-between;
   align-items: center;
-  margin-inline-start: .75rem;
+  margin-inline-start: 0.75rem;
 }
 .k-list-item .k-item-title,
 .k-list-item .k-item-info {
@@ -241,14 +231,14 @@ export default {
   line-height: 1.5rem;
 }
 .k-list-item .k-item-title {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
   flex-shrink: 1;
 }
 .k-list-item .k-item-info {
   flex-shrink: 2;
   text-align: end;
   justify-self: end;
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-list-item .k-item-footer {
   flex-shrink: 0;
@@ -259,7 +249,7 @@ export default {
 
 /** Cardlet and card items shared */
 .k-item:not(.k-list-item) .k-item-sort-handle {
-  margin: .25rem;
+  margin: 0.25rem;
   background: var(--color-background);
   box-shadow: var(--shadow-md);
 }
@@ -267,7 +257,7 @@ export default {
   margin-inline-start: -2px;
 }
 .k-item:not(.k-list-item) .k-item-content {
-  padding: .625rem .75rem;
+  padding: 0.625rem 0.75rem;
 }
 
 /** Cardlet Item **/
@@ -289,49 +279,77 @@ export default {
   border-end-start-radius: var(--rounded-sm);
 }
 .k-cardlets-item .k-item-footer {
-  padding-block: .5rem;
+  padding-block: 0.5rem;
 }
-
 
 /** Card Item **/
 .k-cards-item {
-  grid-template-rows: auto auto auto;
+  grid-template-columns: auto;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     "figure"
-    "content"
-    "footer";
+    "content";
 }
 .k-cards-item .k-item-figure {
   border-start-start-radius: var(--rounded-sm);
   border-start-end-radius: var(--rounded-sm);
 }
 .k-cards-item .k-item-content {
+  padding: 0.5rem 0.75rem !important;
   overflow: hidden;
-  align-self: center;
-}
-.k-cards-item[data-has-info] .k-item-content {
-  align-self: flex-start;
 }
 .k-cards-item .k-item-title,
 .k-cards-item .k-item-info {
+  line-height: 1.375rem;
   white-space: normal;
 }
-.k-cards-item .k-item-info {
-  padding-top: .125rem;
+
+/**
+ * Both title and info get a little inline block attached
+ * to their text. This neat little trick will make sure
+ * that the last line wraps correctly to avoid overlapping
+ * with the options or flag.
+ *
+ * It's important to get the width of the wrapper correct though.
+ * It should always match the width of the footer. In order to
+ * control that we use the custom property and set the width
+ * depending on the data attributes for the flag and options.
+ */
+.k-cards-item .k-item-title::after,
+.k-cards-item .k-item-info::after {
+  display: inline-block;
+  content: "\00a0";
+  width: var(--item-content-wrapper);
 }
+.k-cards-item {
+  --item-content-wrapper: 0;
+}
+.k-cards-item[data-has-flag],
+.k-cards-item[data-has-options] {
+  --item-content-wrapper: 38px;
+}
+.k-cards-item[data-has-flag][data-has-options] {
+  --item-content-wrapper: 76px;
+}
+
+/**
+ * The title wrapper needs to be removed as soon
+ * as the info is visible. Otherwise it could create
+ * a gap between title and info
+ */
+.k-cards-item[data-has-info] .k-item-title::after {
+  display: none;
+}
+
+/**
+ * The footer is simply positioned absolute in
+ * the bottom right corner and does not cause
+ * the wrapping of the content
+ */
 .k-cards-item .k-item-footer {
+  position: absolute;
+  bottom: 0;
+  inset-inline-end: 0;
   width: auto;
-  padding-inline-start: .7rem;
-}
-.k-cards-item:not([data-has-label]) {
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "figure figure"
-    "content footer";
-}
-.k-cards-item:not([data-has-label]) .k-item-footer {
-  align-items: flex-end;
-  padding-inline-start: 0;
 }
 </style>

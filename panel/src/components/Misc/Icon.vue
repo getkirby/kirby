@@ -20,7 +20,7 @@
  * Use to display any icon from the Panel's icon set.
  * @public
  *
- * @example <k-icon type="pencil" />
+ * @example <k-icon type="edit" />
  */
 export default {
   props: {
@@ -110,7 +110,12 @@ export default {
 }
 
 /* fix emoji alignment on high-res screens */
-@media only screen and (-webkit-min-device-pixel-ratio: 2), not all, not all, not all, only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  not all,
+  not all,
+  not all,
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
   .k-icon-emoji {
     font-size: 1.25em;
   }

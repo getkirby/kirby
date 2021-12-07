@@ -7,12 +7,7 @@
     :title="tooltip"
     class="k-button"
   >
-    <k-icon
-      v-if="icon"
-      :type="icon"
-      :alt="tooltip"
-      class="k-button-icon"
-    />
+    <k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
     <span v-if="$slots.default" class="k-button-text"><slot /></span>
   </span>
 </template>
@@ -25,14 +20,14 @@ export default {
     id: [String, Number],
     responsive: Boolean,
     theme: String,
-    tooltip: String,
+    tooltip: String
   }
 };
 </script>
 
 <style>
 .k-button[data-disabled] {
-  opacity: .5;
+  opacity: 0.5;
   pointer-events: none;
   cursor: default;
 }

@@ -167,7 +167,7 @@ class Core
      */
     public function components(): array
     {
-        return $this->cache['components'] ?? $this->cache['components'] = include $this->root . '/components.php';
+        return $this->cache['components'] ??= include $this->root . '/components.php';
     }
 
     /**
@@ -203,7 +203,7 @@ class Core
      */
     public function fieldMethods(): array
     {
-        return $this->cache['fieldMethods'] ?? $this->cache['fieldMethods'] = (include $this->root . '/methods.php')($this->kirby);
+        return $this->cache['fieldMethods'] ??= (include $this->root . '/methods.php')($this->kirby);
     }
 
     /**
@@ -295,7 +295,7 @@ class Core
      */
     public function kirbyTags(): array
     {
-        return $this->cache['kirbytags'] ?? $this->cache['kirbytags'] = include $this->root . '/tags.php';
+        return $this->cache['kirbytags'] ??= include $this->root . '/tags.php';
     }
 
     /**
@@ -321,7 +321,7 @@ class Core
      */
     public function roots(): array
     {
-        return $this->cache['roots'] ?? $this->cache['roots'] = [
+        return $this->cache['roots'] ??= [
             // kirby
             'kirby' => function (array $roots) {
                 return dirname(__DIR__, 2);
@@ -428,7 +428,7 @@ class Core
      */
     public function routes(): array
     {
-        return $this->cache['routes'] ?? $this->cache['routes'] = (include $this->root . '/routes.php')($this->kirby);
+        return $this->cache['routes'] ??= (include $this->root . '/routes.php')($this->kirby);
     }
 
     /**
@@ -517,7 +517,7 @@ class Core
      */
     public function urls(): array
     {
-        return $this->cache['urls'] ?? $this->cache['urls'] = [
+        return $this->cache['urls'] ??= [
             'index' => function () {
                 return Url::index();
             },

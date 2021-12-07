@@ -128,7 +128,7 @@ class Exception extends \Exception
             ]);
 
             // handover to Exception parent class constructor
-            parent::__construct($message, null, $args['previous'] ?? null);
+            parent::__construct($message, 0, $args['previous'] ?? null);
         }
 
         // set the Exception code to the key

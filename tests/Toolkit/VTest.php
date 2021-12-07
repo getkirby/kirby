@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class CanBeCounted implements \Countable
 {
-    public function count()
+    public function count(): int
     {
         return 7;
     }

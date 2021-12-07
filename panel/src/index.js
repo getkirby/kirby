@@ -14,7 +14,6 @@ import store from "./store/store.js";
 import Portal from "@linusborg/vue-simple-portal";
 import Vuelidate from "vuelidate";
 
-
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
@@ -42,7 +41,6 @@ Vue.use(Api, store);
 
 Vue.use(Portal);
 Vue.use(Vuelidate);
-
 
 new Vue({
   store,

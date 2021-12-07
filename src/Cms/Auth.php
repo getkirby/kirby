@@ -605,9 +605,10 @@ class Auth
         $originalLog = $log;
         $time = time() - $this->kirby->option('auth.timeout', 3600);
         foreach ($log as $category => $entries) {
-            $log[$category] = array_filter($entries, function ($entry) use ($time) {
-                return $entry['time'] > $time;
-            });
+            $log[$category] = array_filter(
+                $entries,
+                fn ($entry) => $entry['time'] > $time
+            );
         }
 
         // write new log to the file system if it changed

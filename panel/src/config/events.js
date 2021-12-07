@@ -1,8 +1,7 @@
-import mitt from 'mitt';
+import mitt from "mitt";
 
 export default {
   install(app) {
-
     const emitter = mitt();
 
     const bus = {
@@ -15,19 +14,19 @@ export default {
       copy(e) {
         bus.$emit("copy", e);
       },
-      dragenter (e) {
+      dragenter(e) {
         bus.entered = e.target;
         bus.prevent(e);
         bus.$emit("dragenter", e);
       },
-      dragleave (e) {
+      dragleave(e) {
         bus.prevent(e);
 
         if (bus.entered === e.target) {
           bus.$emit("dragleave", e);
         }
       },
-      drop (e) {
+      drop(e) {
         bus.prevent(e);
         bus.$emit("drop", e);
       },
@@ -36,12 +35,11 @@ export default {
         bus.$emit("focus", e);
       },
       keydown(e) {
-
-        let parts = ['keydown'];
+        let parts = ["keydown"];
 
         // with meta or control key
         if (e.metaKey || e.ctrlKey) {
-          parts.push('cmd');
+          parts.push("cmd");
         }
 
         if (e.altKey === true) {
@@ -49,18 +47,18 @@ export default {
         }
 
         if (e.shiftKey === true) {
-          parts.push('shift');
+          parts.push("shift");
         }
 
         let key = app.prototype.$helper.string.lcfirst(e.key);
 
         // key replacements
         const keys = {
-          "escape": "esc",
-          "arrowUp": "up",
-          "arrowDown": "down",
-          "arrowLeft": "left",
-          "arrowRight": "right"
+          escape: "esc",
+          arrowUp: "up",
+          arrowDown: "down",
+          arrowLeft: "left",
+          arrowRight: "right"
         };
 
         if (keys[key]) {
@@ -89,7 +87,7 @@ export default {
       prevent(e) {
         e.stopPropagation();
         e.preventDefault();
-      },
+      }
     };
 
     window.addEventListener("online", bus.online);

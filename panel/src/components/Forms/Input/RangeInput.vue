@@ -17,23 +17,21 @@
       type="range"
       class="k-range-input-native"
       v-on="listeners"
-    >
+    />
     <span v-if="tooltip" class="k-range-input-tooltip">
-      <span v-if="tooltip.before" class="k-range-input-tooltip-before">{{ tooltip.before }}</span>
+      <span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
+        tooltip.before
+      }}</span>
       <span class="k-range-input-tooltip-text">{{ label }}</span>
-      <span v-if="tooltip.after" class="k-range-input-tooltip-after">{{ tooltip.after }}</span>
+      <span v-if="tooltip.after" class="k-range-input-tooltip-after">{{
+        tooltip.after
+      }}</span>
     </span>
   </label>
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  name,
-  required
-} from "@/mixins/props.js";
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -42,13 +40,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    name,
-    required
-  ],
+  mixins: [autofocus, disabled, id, name, required],
   props: {
     default: [Number, String],
     /**
@@ -86,7 +78,7 @@ export const props = {
     },
     value: [Number, String]
   }
-}
+};
 
 /**
  * @example <k-input v-model="range" name="range" type="range" />
@@ -109,10 +101,14 @@ export default {
       return this.min < 0 ? 0 : this.min;
     },
     label() {
-      return this.required || (this.value || this.value === 0) ? this.format(this.position) : "–";
+      return this.required || this.value || this.value === 0
+        ? this.format(this.position)
+        : "–";
     },
     position() {
-      return (this.value || this.value === 0) ? this.value : this.default || this.baseline;
+      return this.value || this.value === 0
+        ? this.value
+        : this.default || this.baseline;
     }
   },
   watch: {
@@ -132,8 +128,8 @@ export default {
       this.$refs.input.focus();
     },
     format(value) {
-      const locale = document.lang ? document.lang.replace("_", "-") : 'en';
-      const parts  = this.step.toString().split(".");
+      const locale = document.lang ? document.lang.replace("_", "-") : "en";
+      const parts = this.step.toString().split(".");
       const digits = parts.length > 1 ? parts[1].length : 0;
       return new Intl.NumberFormat(locale, {
         minimumFractionDigits: digits
@@ -144,7 +140,7 @@ export default {
     },
     onInput(value) {
       this.$emit("input", value);
-    },
+    }
   },
   validations() {
     return {
@@ -155,7 +151,7 @@ export default {
       }
     };
   }
-}
+};
 </script>
 
 <style>
@@ -182,7 +178,10 @@ export default {
   --value: 0;
   --range: calc(var(--max) - var(--min));
   --ratio: calc((var(--value) - var(--min)) / var(--range));
-  --position: calc(0.5 * var(--range-thumb-size) + var(--ratio) * calc(100% - var(--range-thumb-size)));
+  --position: calc(
+    0.5 * var(--range-thumb-size) + var(--ratio) *
+      calc(100% - var(--range-thumb-size))
+  );
 
   appearance: none;
   width: 100%;
@@ -224,10 +223,7 @@ export default {
       var(--range-track-color),
       var(--range-track-color)
     )
-    0 / var(--position)
-    100%
-    no-repeat
-    var(--range-track-background);
+    0 / var(--position) 100% no-repeat var(--range-track-background);
 }
 
 .k-range-input-native::-moz-range-progress {
@@ -285,7 +281,11 @@ export default {
   width: 100%;
   height: var(--range-track-height);
   background: var(--range-track-background);
-  background: linear-gradient(var(--range-track-focus-color), var(--range-track-focus-color)) 0 / var(--position) 100% no-repeat var(--range-track-background);
+  background: linear-gradient(
+      var(--range-track-focus-color),
+      var(--range-track-focus-color)
+    )
+    0 / var(--position) 100% no-repeat var(--range-track-background);
 }
 .k-range-input-native:focus::-moz-range-progress {
   height: var(--range-track-height);
@@ -320,7 +320,7 @@ export default {
   border-radius: var(--rounded-xs);
   background: var(--color-gray-900);
   margin-inline-start: 1rem;
-  padding: 0 .25rem;
+  padding: 0 0.25rem;
   white-space: nowrap;
 }
 .k-range-input-tooltip::after {
@@ -339,7 +339,11 @@ export default {
 }
 
 [data-disabled] .k-range-input-native::-webkit-slider-runnable-track {
-  background: linear-gradient(var(--range-track-color-disabled), var(--range-track-color-disabled)) 0 / var(--position) 100% no-repeat var(--range-track-background);
+  background: linear-gradient(
+      var(--range-track-color-disabled),
+      var(--range-track-color-disabled)
+    )
+    0 / var(--position) 100% no-repeat var(--range-track-background);
 }
 [data-disabled] .k-range-input-native::-moz-range-progress {
   height: var(--range-track-height);

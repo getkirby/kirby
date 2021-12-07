@@ -12,7 +12,7 @@ export const props = {
     placeholder: {
       type: String,
       default() {
-        return window.panel.$t("email.placeholder")
+        return window.panel.$t("email.placeholder");
       }
     },
     type: {
@@ -20,7 +20,7 @@ export const props = {
       default: "email"
     }
   }
-}
+};
 
 /**
  * @example <k-input v-model="email" type="email" name="email" />
@@ -28,5 +28,5 @@ export const props = {
 export default {
   extends: TextInput,
   mixins: [props]
-}
+};
 </script>

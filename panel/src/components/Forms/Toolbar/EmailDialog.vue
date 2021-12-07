@@ -5,12 +5,7 @@
     @close="cancel"
     @submit="$refs.form.submit()"
   >
-    <k-form
-      ref="form"
-      v-model="value"
-      :fields="fields"
-      @submit="submit"
-    />
+    <k-form ref="form" v-model="value" :fields="fields" @submit="submit" />
   </k-dialog>
 </template>
 
@@ -25,11 +20,11 @@ export default {
       fields: {
         email: {
           label: this.$t("email"),
-          type: 'email'
+          type: "email"
         },
         text: {
           label: this.$t("link.text"),
-          type: 'text'
+          type: "text"
         }
       }
     };
@@ -49,15 +44,15 @@ export default {
     },
     createKirbytext() {
       const email = this.value.email || "";
-      if (this.value.text && this.value.text.length > 0) {
+      if (this.value.text?.length > 0) {
         return `(email: ${email} text: ${this.value.text})`;
       } else {
         return `(email: ${email})`;
       }
     },
     createMarkdown() {
-      const email = this.value.email || '';
-      if (this.value.text && this.value.text.length > 0) {
+      const email = this.value.email || "";
+      if (this.value.text?.length > 0) {
         return `[${this.value.text}](mailto:${email})`;
       } else {
         return `<${email}>`;
@@ -65,7 +60,10 @@ export default {
     },
     submit() {
       // insert the link
-      this.$emit("submit", this.kirbytext ? this.createKirbytext() : this.createMarkdown());
+      this.$emit(
+        "submit",
+        this.kirbytext ? this.createKirbytext() : this.createMarkdown()
+      );
 
       // reset the form
       this.value = {
@@ -77,5 +75,5 @@ export default {
       this.$refs.dialog.close();
     }
   }
-}
+};
 </script>

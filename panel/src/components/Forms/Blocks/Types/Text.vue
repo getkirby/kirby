@@ -18,7 +18,7 @@
  */
 export default {
   props: {
-    endpoints: Object,
+    endpoints: Object
   },
   computed: {
     textField() {

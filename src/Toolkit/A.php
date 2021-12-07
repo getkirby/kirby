@@ -467,10 +467,7 @@ class A
     {
         // convert a simple ignore list to a nested $key => true array
         if (isset($ignore[0]) === true) {
-            $ignore = array_map(function () {
-                return true;
-            }, array_flip($ignore));
-
+            $ignore = array_map(fn () => true, array_flip($ignore));
             $ignore = A::nest($ignore);
         }
 

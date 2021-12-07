@@ -208,7 +208,7 @@ class ContentTranslation
      */
     public function slug(): ?string
     {
-        return $this->slug = $this->slug ?? ($this->content()['slug'] ?? null);
+        return $this->slug ??= ($this->content()['slug'] ?? null);
     }
 
     /**

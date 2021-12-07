@@ -77,7 +77,7 @@ abstract class Model
      */
     public function dragTextType(string $type = null): string
     {
-        $type = $type ?? 'auto';
+        $type ??= 'auto';
 
         if ($type === 'auto') {
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
@@ -141,8 +141,8 @@ abstract class Model
             // main url
             $settings['url'] = $image->url();
 
-            // only create srcsets for actual File objects
-            if (is_a($image, 'Kirby\Cms\File') === true) {
+            // only create srcsets for resizable files
+            if ($image->isResizable() === true) {
                 $settings['src'] = static::imagePlaceholder();
 
                 switch ($layout) {
@@ -174,6 +174,8 @@ abstract class Model
                         ]
                     ]);
                 }
+            } elseif ($image->isViewable() === true) {
+                $settings['src'] = $image->url();
             }
         }
 

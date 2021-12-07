@@ -2,12 +2,11 @@ import Api from "@/api/index.js";
 
 export default {
   install(Vue, store) {
-
     Vue.prototype.$api = Vue.$api = Api({
       config: {
         endpoint: window.panel.$urls.api,
         onComplete: (requestId) => {
-          Vue.$api.requests = Vue.$api.requests.filter(value => {
+          Vue.$api.requests = Vue.$api.requests.filter((value) => {
             return value !== requestId;
           });
 
@@ -15,7 +14,7 @@ export default {
             store.dispatch("isLoading", false);
           }
         },
-        onError: error => {
+        onError: (error) => {
           if (window.panel.$config.debug) {
             window.console.error(error);
           }
@@ -23,7 +22,8 @@ export default {
           // handle requests that return no auth
           if (
             error.code === 403 &&
-            (error.message === "Unauthenticated" || error.key === "access.panel")
+            (error.message === "Unauthenticated" ||
+              error.key === "access.panel")
           ) {
             Vue.prototype.$go("/logout");
           }

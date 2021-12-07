@@ -57,7 +57,7 @@ export default {
   border-radius: var(--rounded-xs);
   line-height: 1.25rem;
   border-inline-start: 2px solid var(--color-gray-500);
-  padding: .5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="code"] {
   background: var(--color-gray-900);
@@ -71,7 +71,7 @@ export default {
   padding: 0;
 }
 .k-box[data-theme="button"] .k-button {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   height: 2.25rem;
   width: 100%;
   display: flex;
@@ -102,7 +102,7 @@ export default {
   border: 1px dashed var(--color-border);
 }
 .k-box[data-theme="empty"] .k-icon {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   color: var(--color-gray-500);
 }
 .k-box[data-theme="empty"] p {

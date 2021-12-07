@@ -228,7 +228,7 @@ class User extends ModelWithContent
 
     protected function credentials(): array
     {
-        return $this->credentials = $this->credentials ?? $this->readCredentials();
+        return $this->credentials ??= $this->readCredentials();
     }
 
     /**
@@ -238,7 +238,7 @@ class User extends ModelWithContent
      */
     public function email(): ?string
     {
-        return $this->email = $this->email ?? $this->credentials()['email'] ?? null;
+        return $this->email ??= $this->credentials()['email'] ?? null;
     }
 
     /**
@@ -403,7 +403,7 @@ class User extends ModelWithContent
      */
     public function language(): string
     {
-        return $this->language ?? $this->language = $this->credentials()['language'] ?? $this->kirby()->panelLanguage();
+        return $this->language ??= $this->credentials()['language'] ?? $this->kirby()->panelLanguage();
     }
 
     /**
@@ -530,9 +530,9 @@ class User extends ModelWithContent
         $modifiedContent = F::modified($this->contentFile($languageCode));
         $modifiedIndex   = F::modified($this->root() . '/index.php');
         $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
-        $handler         = $handler ?? $this->kirby()->option('date.handler', 'date');
+        $handler       ??= $this->kirby()->option('date.handler', 'date');
 
-        return $handler($format, $modifiedTotal);
+        return Str::date($modifiedTotal, $format, $handler);
     }
 
     /**

@@ -128,7 +128,7 @@ trait AppErrors
                     'code'      => $code,
                     'message'   => $exception->getMessage(),
                     'details'   => $details,
-                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? ''),
                     'line'      => $exception->getLine(),
                 ], $httpCode);
             } else {
@@ -158,7 +158,21 @@ trait AppErrors
         $whoops = $this->whoops();
         $whoops->clearHandlers();
         $whoops->pushHandler($handler);
+        $whoops->pushHandler($this->getExceptionHookWhoopsHandler());
         $whoops->register(); // will only do something if not already registered
+    }
+
+    /**
+     * Initializes a callback handler for triggering the `system.exception` hook
+     *
+     * @return \Whoops\Handler\CallbackHandler
+     */
+    protected function getExceptionHookWhoopsHandler(): CallbackHandler
+    {
+        return new CallbackHandler(function ($exception, $inspector, $run) {
+            $this->trigger('system.exception', compact('exception'));
+            return Handler::DONE;
+        });
     }
 
     /**

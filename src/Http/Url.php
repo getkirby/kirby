@@ -145,8 +145,8 @@ class Url
         }
 
         // build the full url
-        $path = ltrim($path, '/');
-        $home = $home ?? static::home();
+        $path   = ltrim($path, '/');
+        $home ??= static::home();
 
         if (empty($path) === true) {
             return $home;
@@ -260,6 +260,9 @@ class Url
      */
     public static function to(string $path = null, $options = null): string
     {
+        // make sure $path is string
+        $path ??= '';
+
         // keep relative urls
         if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
             return $path;

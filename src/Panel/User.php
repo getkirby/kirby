@@ -172,7 +172,7 @@ class User extends Model
      */
     public function pickerData(array $params = null): array
     {
-        $params['text'] = $params['text'] ?? '{{ user.username }}';
+        $params['text'] ??= '{{ user.username }}';
 
         return array_merge(parent::pickerData($params), [
             'email'    => $this->model->email(),

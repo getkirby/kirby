@@ -138,7 +138,7 @@ class Dom
      */
     public function body()
     {
-        return $this->body = $this->body ?? $this->query('/html/body')[0] ?? null;
+        return $this->body ??= $this->query('/html/body')[0] ?? null;
     }
 
     /**
@@ -455,11 +455,20 @@ class Dom
             };
         }
 
-        if ($allowedNamespaces === true) {
-            // take the list as it is and only consider
+        // if the configuration does not define namespace URIs or if the
+        // currently checked node is from the special `xml:` namespace
+        // that has a fixed namespace according to the XML spec...
+        if ($allowedNamespaces === true || $node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
+            // ...take the list as it is and only consider
             // exact matches of the local name (which will
             // contain a namespace if that namespace name
             // is not defined in the document)
+
+            // the list contains the `xml:` prefix, so add it to the name as well
+            if ($node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
+                $localName = 'xml:' . $localName;
+            }
+
             foreach ($list as $item) {
                 if ($compare($item, $localName) === true) {
                     return $item;

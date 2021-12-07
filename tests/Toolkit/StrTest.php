@@ -58,6 +58,16 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::after
+     */
+    public function testAfterWithEmptyNeedle()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The needle must not be empty');
+        Str::after('test', '');
+    }
+
+    /**
      * @covers ::before
      */
     public function testBefore()
@@ -73,6 +83,16 @@ class StrTest extends TestCase
         $this->assertSame('Hell', Str::before($string, 'ö', true));
         $this->assertSame('Hell', Str::before($string, 'Ö', true));
         $this->assertSame('', Str::before($string, 'x'));
+    }
+
+    /**
+     * @covers ::before
+     */
+    public function testBeforeWithEmptyNeedle()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The needle must not be empty');
+        Str::before('test', '');
     }
 
     /**
@@ -103,6 +123,25 @@ class StrTest extends TestCase
         $this->assertTrue(Str::contains($string, 'Wörld', true));
         $this->assertTrue(Str::contains($string, 'hellö', true));
         $this->assertTrue(Str::contains($string, 'wörld', true));
+
+        // empty needle
+        $this->assertTrue(Str::contains($string, ''));
+    }
+
+    /**
+     * @covers ::date
+     */
+    public function testDate()
+    {
+        $time = mktime(1, 1, 1, 1, 29, 2020);
+
+        // default `date` handler
+        $this->assertSame($time, Str::date($time));
+        $this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
+
+        // `strftime` handler
+        $this->assertSame($time, Str::date($time, null, 'strftime'));
+        $this->assertSame('29.01.2020', Str::date($time, '%d.%m.%Y', 'strftime'));
     }
 
     /**
@@ -305,6 +344,16 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::from
+     */
+    public function testFromWithEmptyNeedle()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The needle must not be empty');
+        Str::from('test', '');
+    }
+
+    /**
      * @covers ::kebab
      */
     public function testKebab()
@@ -404,6 +453,16 @@ class StrTest extends TestCase
         $this->assertTrue(Str::position($string, 'h', true) === 0);
         $this->assertTrue(Str::position($string, 'ö', true) === 4);
         $this->assertTrue(Str::position($string, 'Ö', true) === 4);
+    }
+
+    /**
+     * @covers ::position
+     */
+    public function testPositionWithEmptyNeedle()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The needle must not be empty');
+        Str::position('test', '');
     }
 
     /**
@@ -1103,6 +1162,16 @@ EOT;
         $this->assertSame('Hellö', Str::until($string, 'ö', true));
         $this->assertSame('Hellö', Str::until($string, 'Ö', true));
         $this->assertSame('', Str::until($string, 'x'));
+    }
+
+    /**
+     * @covers ::until
+     */
+    public function testUntilWithEmptyNeedle()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The needle must not be empty');
+        Str::until('test', '');
     }
 
     /**

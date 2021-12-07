@@ -475,11 +475,7 @@ class F
 
         $modified = filemtime($file);
 
-        if (is_null($format) === true) {
-            return $modified;
-        }
-
-        return $handler($format, $modified);
+        return Str::date($modified, $format, $handler);
     }
 
     /**

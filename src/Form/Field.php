@@ -71,8 +71,8 @@ class Field extends Component
         $this->formFields = $formFields;
 
         // use the type as fallback for the name
-        $attrs['name'] = $attrs['name'] ?? $type;
-        $attrs['type'] = $type;
+        $attrs['name'] ??= $type;
+        $attrs['type']   = $type;
 
         parent::__construct($type, $attrs);
     }
@@ -440,9 +440,10 @@ class Field extends Component
 
         ksort($array);
 
-        return array_filter($array, function ($item) {
-            return $item !== null && is_object($item) === false;
-        });
+        return array_filter(
+            $array,
+            fn ($item) => $item !== null && is_object($item) === false
+        );
     }
 
     /**
