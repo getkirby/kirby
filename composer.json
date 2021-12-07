@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "license": "proprietary",
   "authors": [
     {
@@ -29,7 +29,8 @@
     "mustangostang/spyc": "0.6.3",
     "phpmailer/phpmailer": "6.5.1",
     "psr/log": "1.1.4",
-    "symfony/polyfill-intl-idn": "1.23.0"
+    "symfony/polyfill-intl-idn": "1.23.0",
+    "symfony/polyfill-mbstring": "1.23.1"
   },
   "replace": {
     "symfony/polyfill-php72": "*"

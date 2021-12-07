@@ -6,7 +6,7 @@
   "add": "\ucd94\uac00",
   "author": "저자",
   "avatar": "프로필 이미지",
-  "back": "복귀",
+  "back": "뒤로",
   "cancel": "\ucde8\uc18c",
   "change": "\ubcc0\uacbd",
   "close": "\ub2eb\uae30",
@@ -34,9 +34,9 @@
   "delete": "\uc0ad\uc81c",
   "delete.all": "모두 삭제",
 
-  "dialog.files.empty": "선택한 파일이 없습니다.",
-  "dialog.pages.empty": "선택한 페이지가 없습니다.",
-  "dialog.users.empty": "선택한 사용자가 없습니다.",
+  "dialog.files.empty": "선택할 파일이 없습니다.",
+  "dialog.pages.empty": "선택할 페이지가 없습니다.",
+  "dialog.users.empty": "선택할 사용자가 없습니다.",
 
   "dimensions": "크기",
   "disabled": "비활성화",
@@ -49,7 +49,7 @@
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
-  "environment": "환경",
+  "environment": "구동 환경",
 
   "error.access.code": "코드가 올바르지 않습니다.",
   "error.access.login": "로그인할 수 없습니다.",
@@ -194,7 +194,7 @@
   "error.validation.denied": "취소하세요.",
   "error.validation.different": "{other}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.email": "올바른 이메일 주소를 입력하세요.",
-  "error.validation.endswith": "값은 다음으로 끝나야 합니다: {end}",
+  "error.validation.endswith": "값은 다음({end})으로 끝나야 합니다.",
   "error.validation.filename": "올바른 파일명을 입력하세요.",
   "error.validation.in": "{in} 중 하나를 입력하세요.",
   "error.validation.integer": "올바른 정수를 입력하세요.",
@@ -215,7 +215,7 @@
   "error.validation.required": "해당 항목을 확인하세요.",
   "error.validation.same": "이 값({other})을 입력하세요.",
   "error.validation.size": "값의 크기({size})를 확인하세요. ",
-  "error.validation.startswith": "값은 다음으로 시작해야 합니다: {start}",
+  "error.validation.startswith": "값은 다음({start})으로 시작해야 합니다.",
   "error.validation.time": "올바른 시각을 입력하세요.",
   "error.validation.time.after": "{time} 이후 시각을 입력하세요.",
   "error.validation.time.before": "{time} 이전 시각을 입력하세요.",
@@ -274,7 +274,7 @@
 
   "field.layout.delete": "레이아웃 삭제",
   "field.layout.delete.confirm": "레이아웃을 삭제할까요?",
-  "field.layout.empty": "레이아웃이 없습니다.",
+  "field.layout.empty": "행이 없습니다.",
   "field.layout.select": "레이아웃 선택",
 
   "field.pages.empty": "선택한 페이지가 없습니다.",
@@ -392,7 +392,7 @@
   "more": "더 보기",
   "name": "이름",
   "next": "다음",
-  "no": "네",
+  "no": "아니요",
   "off": "끔",
   "on": "켬",
   "open": "열기",
@@ -482,7 +482,7 @@
   "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
 
   "toolbar.button.code": "코드",
-  "toolbar.button.bold": "강조 1",
+  "toolbar.button.bold": "강조",
   "toolbar.button.email": "이메일 주소",
   "toolbar.button.headings": "제목",
   "toolbar.button.heading.1": "제목 1",
@@ -553,5 +553,5 @@
 
   "welcome": "반갑습니다.",
   "year": "년",
-  "yes": "아니요"
+  "yes": "네"
 }

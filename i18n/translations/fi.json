@@ -1,10 +1,10 @@
 {
-  "account.changeName": "Change your name",
-  "account.delete": "Delete your account",
-  "account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+  "account.changeName": "Muuta nimesi",
+  "account.delete": "Poista tilisi",
+  "account.delete.confirm": "Haluatko varmasti poistaa tilisi? Sinut kirjataan ulos välittömästi, eikä tiliäsi voi palauttaa.",
 
   "add": "Lis\u00e4\u00e4",
-  "author": "Author",
+  "author": "Tekijä",
   "avatar": "Profiilikuva",
   "back": "Takaisin",
   "cancel": "Peruuta",
@@ -14,7 +14,7 @@
   "collapse": "Pienennä",
   "collapse.all": "Pienennä kaikki",
   "copy": "Kopioi",
-  "copy.all": "Copy all",
+  "copy.all": "Kopioi kaikki",
   "create": "Luo",
 
   "date": "Päivämäärä",
@@ -49,7 +49,7 @@
   "email": "S\u00e4hk\u00f6posti",
   "email.placeholder": "nimi@osoite.fi",
 
-  "environment": "Environment",
+  "environment": "Ympäristö",
 
   "error.access.code": "Väärä koodi",
   "error.access.login": "Kirjautumistiedot eivät kelpaa",
@@ -102,7 +102,7 @@
   "error.language.code": "Anna kielen lyhenne",
   "error.language.duplicate": "Kieli on jo olemassa",
   "error.language.name": "Anna kielen nimi",
-  "error.language.notFound": "The language could not be found",
+  "error.language.notFound": "Kieltä ei löytynyt",
 
   "error.layout.validation.block": "Lohkon {blockIndex} asetelmassa {layoutIndex} tapahtui virhe",
   "error.layout.validation.settings": "Virhe asetelman {index} asetuksissa",
@@ -111,7 +111,7 @@
   "error.license.email": "Anna sähköpostiosoite",
   "error.license.verification": "Lisenssiä ei voitu vahvistaa",
 
-  "error.offline": "The Panel is currently offline",
+  "error.offline": "Paneeli on offline-tilassa",
 
   "error.page.changeSlug.permission": "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
   "error.page.changeStatus.incomplete": "Sivulla on virheitä eikä sitä voitu julkaista",
@@ -235,7 +235,7 @@
   "field.blocks.delete.confirm.selected": "Haluatko varmasti poistaa valitut lohkot?",
   "field.blocks.empty": "Ei lohkoja",
   "field.blocks.fieldsets.label": "Valitse lohkon tyyppi …",
-  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
+  "field.blocks.fieldsets.paste": "Paina <kbd>{{ shortcut }}</kbd> liittääksesi tai tuodaksesi lohkoja leikepöydältä",
   "field.blocks.gallery.name": "Galleria",
   "field.blocks.gallery.images.empty": "Ei kuvia",
   "field.blocks.gallery.images.label": "Kuvat",
@@ -282,7 +282,7 @@
   "field.structure.empty": "Rivejä ei ole vielä lisätty",
   "field.users.empty": "Käyttäjiä ei ole vielä valittu",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+  "file.blueprint": "Tällä tiedostolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Haluatko varmasti poistaa tiedoston <br><strong>{filename}</strong>?",
   "file.sort": "Muuta järjestyspaikkaa",
 
@@ -291,7 +291,7 @@
 
   "hide": "Piilota",
   "hour": "Tunti",
-  "import": "Import",
+  "import": "Tuo",
   "insert": "Lis\u00e4\u00e4",
   "insert.after": "Lisää eteen",
   "insert.before": "Lisää jälkeen",
@@ -405,7 +405,7 @@
   "orientation.portrait": "Pystysuuntainen",
   "orientation.square": "Neliskulmainen",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
+  "page.blueprint": "Tällä sivulla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Vaihda URL-osoite",
   "page.changeSlug.fromTitle": "Luo nimen perusteella",
   "page.changeStatus": "Muuta tilaa",
@@ -437,10 +437,10 @@
   "pagination.page": "Sivu",
 
   "password": "Salasana",
-  "paste": "Paste",
-  "paste.after": "Paste after",
+  "paste": "Liitä",
+  "paste.after": "Liitä jälkeen",
   "pixel": "Pikseli",
-  "plugins": "Plugins",
+  "plugins": "Liitännäiset",
   "prev": "Edellinen",
   "preview": "Esikatselu",
   "remove": "Poista",
@@ -477,7 +477,7 @@
   "template": "Sivupohja",
   "today": "Tänään",
 
-  "server": "Server",
+  "server": "Palvelin",
 
   "site.blueprint": "Tällä sivustolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/site.yml</strong>",
 
@@ -488,15 +488,15 @@
   "toolbar.button.heading.1": "Otsikko 1",
   "toolbar.button.heading.2": "Otsikko 2",
   "toolbar.button.heading.3": "Otsikko 3",
-  "toolbar.button.heading.4": "Heading 4",
-  "toolbar.button.heading.5": "Heading 5",
-  "toolbar.button.heading.6": "Heading 6",
+  "toolbar.button.heading.4": "Otsikko 4",
+  "toolbar.button.heading.5": "Otsikko 5",
+  "toolbar.button.heading.6": "Otsikko 6",
   "toolbar.button.italic": "Kursivointi",
   "toolbar.button.file": "Tiedosto",
   "toolbar.button.file.select": "Valitse tiedosto",
   "toolbar.button.file.upload": "Lähetä tiedosto",
   "toolbar.button.link": "Linkki",
-  "toolbar.button.paragraph": "Paragraph",
+  "toolbar.button.paragraph": "Kappale",
   "toolbar.button.strike": "Yliviivaus",
   "toolbar.button.ol": "Järjestetty lista",
   "toolbar.button.underline": "Alaviiva",
@@ -526,7 +526,7 @@
   "url.placeholder": "https://esimerkki.fi",
 
   "user": "Käyttäjä",
-  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
+  "user.blueprint": "Voit määrittää lisää osioita ja lomakekenttiä tälle käyttäjälle suunnitelmassa <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Muuta sähköpostiosoite",
   "user.changeLanguage": "Vaihda kieli",
   "user.changeName": "Nimeä uudelleen",
@@ -548,7 +548,7 @@
   "view.languages": "Kielet",
   "view.resetPassword": "Aseta salasana",
   "view.site": "Sivusto",
-  "view.system": "System",
+  "view.system": "Järjestelmä",
   "view.users": "K\u00e4ytt\u00e4j\u00e4t",
 
   "welcome": "Tervetuloa",
