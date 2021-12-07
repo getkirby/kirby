@@ -235,7 +235,7 @@
   "field.blocks.delete.confirm.selected": "Viltu virkilega eyða völdum bálkum?",
   "field.blocks.empty": "Öngvir bálkar enn",
   "field.blocks.fieldsets.label": "Veldu bálkagerð …",
-  "field.blocks.fieldsets.paste": "Notaðu 1{{ shortcut }}1 flýtilyklaaðgerðina til að setja blokkina hér.",
+  "field.blocks.fieldsets.paste": "Notaðu<kbd> {{ shortcut }}</kbd> flýtilyklaaðgerðina til að setja blokkina hér.",
   "field.blocks.gallery.name": "Myndasafn",
   "field.blocks.gallery.images.empty": "Engar myndir enn",
   "field.blocks.gallery.images.label": "Myndir",
