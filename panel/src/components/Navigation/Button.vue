@@ -50,7 +50,7 @@ export default {
     /**
      * Use either the default slot or this prop for the button text
      */
-    text: String,
+    text: [String, Number],
     /**
      * With the theme you can control the general design of the button.
      * @values positive, negative
