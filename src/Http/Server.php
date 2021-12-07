@@ -103,7 +103,7 @@ class Server
                 $value = strip_tags($value);
                 $value = preg_replace('![^\w.:-]+!iu', '', $value);
                 $value = trim($value, '-');
-                $value = htmlspecialchars($value);
+                $value = htmlspecialchars($value, ENT_COMPAT);
                 break;
             case 'SERVER_PORT':
             case 'HTTP_X_FORWARDED_PORT':

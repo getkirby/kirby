@@ -727,7 +727,7 @@ class PageTest extends TestCase
 
         // custom date handler with format
         $format = '%d.%m.%Y';
-        $this->assertEquals(strftime($format, $modified), $page->modified($format, 'strftime'));
+        $this->assertEquals(@strftime($format, $modified), $page->modified($format, 'strftime'));
     }
 
     public function testModifiedInMultilangInstallation()
