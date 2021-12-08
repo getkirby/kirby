@@ -89,12 +89,12 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.5.1',
-            'version' => '6.5.1.0',
+            'pretty_version' => 'v6.5.3',
+            'version' => '6.5.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),
-            'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
+            'reference' => 'baeb7cde6b60b1286912690ab0693c7789a31e71',
             'dev_requirement' => false,
         ),
         'psr/log' => array(
