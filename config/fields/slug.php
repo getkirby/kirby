@@ -38,14 +38,6 @@ return [
          */
         'sync'  => function (string $sync = null) {
             return $sync;
-        },
-
-        /**
-         * Set to object with keys `field` and `text` to add
-         * button to generate from another field
-         */
-        'wizard' => function ($wizard = false) {
-            return $wizard;
         }
     ],
     'validations' => [

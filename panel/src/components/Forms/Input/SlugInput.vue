@@ -72,6 +72,11 @@ export default {
           return false;
         }
 
+        if (this.syncValue == null) {
+          this.syncValue = newValue[this.sync];
+          return false;
+        }
+
         this.syncValue = newValue[this.sync];
         this.onInput(this.sluggify(this.syncValue));
       },

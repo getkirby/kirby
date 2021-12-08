@@ -1,9 +1,5 @@
 <template>
   <k-field :input="_uid" v-bind="$props" :help="preview" class="k-slug-field">
-    <template v-if="wizard && wizard.text" #options>
-      <k-button :text="wizard.text" icon="wand" @click="onWizard" />
-    </template>
-
     <k-input
       :id="_uid"
       ref="input"
@@ -35,10 +31,6 @@ export default {
     path: {
       type: String
     },
-    wizard: {
-      type: [Boolean, Object],
-      default: false
-    }
   },
   data() {
     return {
@@ -67,11 +59,6 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
-    onWizard() {
-      if (this.wizard?.field && this.formData[this.wizard.field]) {
-        this.slug = this.formData[this.wizard.field];
-      }
-    }
   }
 };
 </script>
