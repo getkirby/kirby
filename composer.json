@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "php": ">=7.4.0 <8.1.0",
+    "php": ">=7.4.0 <8.2.0",
     "ext-ctype": "*",
     "ext-mbstring": "*",
     "claviska/simpleimage": "3.6.5",
