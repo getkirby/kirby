@@ -60,9 +60,9 @@
           </li>
           <li>
             <dl>
-              <dt>SSL</dt>
-              <dd :class="{ 'k-system-warning': !ssl }">
-                {{ ssl ? $t("on") : $t("off") }}
+              <dt>HTTPS</dt>
+              <dd :class="{ 'k-system-warning': !https }">
+                {{ https ? $t("on") : $t("off") }}
               </dd>
             </dl>
           </li>

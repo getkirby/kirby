@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Http\Server;
 
 return [
     'system' => [
