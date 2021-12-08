@@ -11,12 +11,12 @@
     ),
     'versions' => array(
         'claviska/simpleimage' => array(
-            'pretty_version' => '3.6.4',
-            'version' => '3.6.4.0',
+            'pretty_version' => '3.6.5',
+            'version' => '3.6.5.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../claviska/simpleimage',
             'aliases' => array(),
-            'reference' => '21b6f4bf4ef1927158b3e29bd0c2d99c6681c750',
+            'reference' => '00f90662686696b9b7157dbb176183aabe89700f',
             'dev_requirement' => false,
         ),
         'filp/whoops' => array(
