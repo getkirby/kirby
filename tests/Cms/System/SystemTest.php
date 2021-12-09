@@ -540,9 +540,7 @@ class SystemTest extends TestCase
     /**
      * @covers ::accounts
      * @covers ::content
-     * @covers ::curl
      * @covers ::sessions
-     * @covers ::mbstring
      * @covers ::media
      * @covers ::php
      * @covers ::server
@@ -556,11 +554,34 @@ class SystemTest extends TestCase
         $expected = [
             'accounts' => true,
             'content' => true,
-            'curl' => true,
             'sessions' => true,
-            'mbstring' => true,
             'media' => true,
-            'php' => true,
+            'php' => [
+                'version' => true,
+                'required' => [
+                    'ctype'     => true,
+                    'curl'      => true,
+                    'dom'       => true,
+                    'filter'    => true,
+                    'hash'      => true,
+                    'iconv'     => true,
+                    'json'      => true,
+                    'libxml'    => true,
+                    'mbstring'  => true,
+                    'openssl'   => true,
+                    'SimpleXML' => true
+                ],
+                'suggested' => [
+                    'PDO'       => true,
+                    'apcu'      => true,
+                    'exif'      => true,
+                    'fileinfo'  => true,
+                    'intl'      => true,
+                    'memcached' => true,
+                    'zip'       => true,
+                    'zlib'      => true
+                ]
+            ],
             'server' => false,
         ];
         $this->assertSame($expected, $system->status());

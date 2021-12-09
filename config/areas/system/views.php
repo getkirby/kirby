@@ -33,13 +33,14 @@ return [
             return [
                 'component' => 'k-system-view',
                 'props'     => [
-                    'debug'   => $kirby->option('debug', false),
-                    'license' => $license,
-                    'plugins' => $plugins,
-                    'php'     => phpversion(),
-                    'server'  => $system->serverSoftware(),
-                    'https'   => Server::https(),
-                    'version' => $kirby->version(),
+                    'debug'      => $kirby->option('debug', false),
+                    'extensions' => $system->extensions(),
+                    'https'      => Server::https(),
+                    'license'    => $license,
+                    'plugins'    => $plugins,
+                    'php'        => phpversion(),
+                    'server'     => $system->serverSoftware(),
+                    'version'    => $kirby->version(),
                 ]
             ];
         }

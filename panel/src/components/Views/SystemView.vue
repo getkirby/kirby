@@ -127,6 +127,39 @@
           </tr>
         </table>
       </section>
+      <section class="k-system-view-section">
+        <header class="k-system-view-section-header">
+          <k-headline> PHP extensions </k-headline>
+        </header>
+        <table class="k-system-plugins">
+          <tr>
+            <th>Required</th>
+            <th>Suggested</th>
+          </tr>
+          <tr>
+            <td>
+              <ul
+                v-for="(status, extension) in extensions.required"
+                :key="extension"
+              >
+                <li :class="{ 'k-system-warning': !status }">
+                  {{ extension }}
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul
+                v-for="(status, extension) in extensions.suggested"
+                :key="extension"
+              >
+                <li :class="{ 'k-system-warning': !status }">
+                  {{ extension }}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </section>
     </k-view>
   </k-inside>
 </template>
@@ -135,11 +168,12 @@
 export default {
   props: {
     debug: Boolean,
+    extensions: Object,
+    https: Boolean,
     license: String,
     php: String,
     plugins: Array,
     server: String,
-    https: Boolean,
     version: String
   }
 };

@@ -31,28 +31,29 @@
             <span v-html="$t('installation.disabled')" />
           </li>
 
-          <li v-if="requirements.php === false">
+          <li v-if="requirements.php.version === false">
             <k-icon type="alert" />
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="$t('installation.issues.php')" />
           </li>
 
+          <template
+            v-for="(installed, extension) in requirements.extensions.required"
+          >
+            <li v-if="installed === false" :key="extension">
+              <k-icon type="alert" />
+              <!-- eslint-disable vue/no-v-html -->
+              <span
+                v-html="$t('installation.issues.extension', { extension })"
+              />
+              <!-- eslint-enable vue/no-v-html -->
+            </li>
+          </template>
+
           <li v-if="requirements.server === false">
             <k-icon type="alert" />
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="$t('installation.issues.server')" />
-          </li>
-
-          <li v-if="requirements.mbstring === false">
-            <k-icon type="alert" />
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="$t('installation.issues.mbstring')" />
-          </li>
-
-          <li v-if="requirements.curl === false">
-            <k-icon type="alert" />
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="$t('installation.issues.curl')" />
           </li>
 
           <li v-if="requirements.accounts === false">

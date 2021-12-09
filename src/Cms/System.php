@@ -77,13 +77,37 @@ class System
     }
 
     /**
-     * Check for an existing curl extension
+     * Check for a required and suggested PHP extensions
      *
-     * @return bool
+     * @return array
      */
-    public function curl(): bool
+    public function extensions(): array
     {
-        return extension_loaded('curl');
+        return [
+            'required' => [
+                'ctype'     => extension_loaded('ctype'),
+                'curl'      => extension_loaded('curl'),
+                'dom'       => extension_loaded('dom'),
+                'filter'    => extension_loaded('filter'),
+                'hash'      => extension_loaded('hash'),
+                'iconv'     => extension_loaded('iconv'),
+                'json'      => extension_loaded('json'),
+                'libxml'    => extension_loaded('libxml'),
+                'mbstring'  => extension_loaded('mbstring'),
+                'openssl'   => extension_loaded('openssl'),
+                'SimpleXML' => extension_loaded('SimpleXML'),
+            ],
+            'suggested' => [
+                'PDO'       => extension_loaded('PDO'),
+                'apcu'      => extension_loaded('apcu'),
+                'exif'      => extension_loaded('exif'),
+                'fileinfo'  => extension_loaded('fileinfo'),
+                'intl'      => extension_loaded('intl'),
+                'memcached' => extension_loaded('memcached'),
+                'zip'       => extension_loaded('zip'),
+                'zlib'      => extension_loaded('zlib'),
+            ]
+        ];
     }
 
     /**
@@ -145,7 +169,8 @@ class System
      */
     public function isInstallable(): bool
     {
-        return $this->isLocal() === true || $this->app->option('panel.install', false) === true;
+        return $this->isLocal() === true ||
+               $this->app->option('panel.install', false) === true;
     }
 
     /**
@@ -212,7 +237,9 @@ class System
      */
     public function isOk(): bool
     {
-        return in_array(false, array_values($this->status()), true) === false;
+        $status = $this->status();
+        $check = fn ($checks) => in_array(false, array_values($checks), true) === false;
+        return $check($status) && $check($status['extensions']['required']);
     }
 
     /**
@@ -377,16 +404,6 @@ class System
     }
 
     /**
-     * Check for an existing mbstring extension
-     *
-     * @return bool
-     */
-    public function mbString(): bool
-    {
-        return extension_loaded('mbstring');
-    }
-
-    /**
      * Check for a writable media folder
      *
      * @return bool
@@ -533,14 +550,13 @@ class System
     public function status(): array
     {
         return [
-            'accounts'  => $this->accounts(),
-            'content'   => $this->content(),
-            'curl'      => $this->curl(),
-            'sessions'  => $this->sessions(),
-            'mbstring'  => $this->mbstring(),
-            'media'     => $this->media(),
-            'php'       => $this->php(),
-            'server'    => $this->server(),
+            'accounts'   => $this->accounts(),
+            'content'    => $this->content(),
+            'sessions'   => $this->sessions(),
+            'media'      => $this->media(),
+            'php'        => $this->php(),
+            'extensions' => $this->extensions(),
+            'server'     => $this->server()
         ];
     }
 
