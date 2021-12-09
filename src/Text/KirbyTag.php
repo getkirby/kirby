@@ -159,7 +159,7 @@ class KirbyTag
 
         // extract all attributes
         $regex = sprintf('/(%s):/i', implode('|', $attr));
-        $search = preg_split($regex, $tag, false, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $search = preg_split($regex, $tag, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // $search is now an array with alternating keys and values
         // convert it to arrays of keys and values

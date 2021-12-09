@@ -417,7 +417,7 @@ class Str
 
         $value   = str_replace(',', '.', $value);
         $decimal = strlen(substr(strrchr($value, '.'), 1));
-        return number_format((float)$value, $decimal, '.', false);
+        return number_format((float)$value, $decimal, '.', '');
     }
 
     /**
