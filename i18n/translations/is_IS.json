@@ -109,7 +109,7 @@
 
   "error.license.format": "Gildur leyfiskóði hér",
   "error.license.email": "Almennilegt netfang hér",
-  "error.license.verification": "Ekki heppnaðist að staðfest leyfið",
+  "error.license.verification": "Ekki heppnaðist að staðfesta leyfið",
 
   "error.offline": "Stjórnborðið er óvirkt eins og stendur.",
 
@@ -356,7 +356,7 @@
   "login.code.label.login": "Innskráningarkóði",
   "login.code.label.password-reset": "Kóði fyrir endurstillingu lykilorðs",
   "login.code.placeholder.email": "000 000",
-  "login.code.text.email": "Ef netfangið (e. email) þitt er skráð þá bíður þín nýr tölvupóstur.",
+  "login.code.text.email": "Ef netfangið þitt er skráð þá bíður þín nýr tölvupóstur.",
   "login.email.login.body": "Já halló {user.nameOrEmail},\n\nNýlega baðstu um innskráningarkóða fyrir bakendan á sorli.is.\nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
   "login.email.login.subject": "Innskráningarkóðinn þinn",
   "login.email.password-reset.body": "Nei halló {user.nameOrEmail},\n\nNýverið baðstu um að lykilorði þínu væri endurstillt fyrir bakendan á sorli.is. \nEftirfarandi kóði er virkur í  {timeout} mínútur:\n\n{code}\n\nEf þú óskaðir ekki eftir þessu þá hunsaðu þennan tölvupóst eða talaðu við vefstjóran ef þú vilt fræðast nánar.\nAf öryggisástæðum vinsamlegast áframsendu þennan tölvupóst ALLS EKKI.",
@@ -504,7 +504,7 @@
 
   "translation.author": "Kirby Teymið",
   "translation.direction": "ltr",
-  "translation.name": "Íslenska A137",
+  "translation.name": "Íslenska",
   "translation.locale": "is_IS",
 
   "upload": "Hlaða inn",
@@ -523,7 +523,7 @@
   "upload.progress": "Hleð inn…",
 
   "url": "Slóð",
-  "url.placeholder": "https://hvitur.is",
+  "url.placeholder": "https://tildaem.is/",
 
   "user": "Notandi",
   "user.blueprint": "Þér er óhætt að skilgreina fleiri svæði fyrir þetta notenda hlutverk í <strong>/site/blueprints/users/{role}.yml</strong>",
