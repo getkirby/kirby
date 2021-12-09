@@ -294,7 +294,7 @@ class Dimensions
             }
         }
 
-        return new static($width, $height);
+        return new static((int)$width, (int)$height);
     }
 
     /**
