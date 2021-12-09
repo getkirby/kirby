@@ -298,7 +298,7 @@ return [
             if ($isLocalVideo === true) {
                 // handles local video file
                 if ($tag->file = $tag->file($tag->value)) {
-                    $source = Html::tag('source', null, [
+                    $source = Html::tag('source', '', [
                         'src'  => $tag->file->url(),
                         'type' => $tag->file->mime()
                     ]);
