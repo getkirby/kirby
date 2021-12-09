@@ -69,7 +69,8 @@ export default {
   },
   watch: {
     tabs(tabs) {
-      (this.visibleTabs = tabs), (this.invisibleTabs = []);
+      this.visibleTabs = tabs;
+      this.invisibleTabs = [];
       this.resize(true);
     }
   },
