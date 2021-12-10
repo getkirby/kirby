@@ -240,11 +240,11 @@ export default {
   outline: 0;
 }
 
-.k-block-container[data-batched] {
+.k-block-container[data-batched="true"] {
   z-index: 2;
   border-bottom-color: transparent;
 }
-.k-block-container[data-batched]::after {
+.k-block-container[data-batched="true"]::after {
   position: absolute;
   inset: 0;
   content: "";
@@ -253,7 +253,7 @@ export default {
   border: 1px solid var(--color-focus);
 }
 
-.k-block-container[data-selected] {
+.k-block-container[data-selected="true"] {
   z-index: 2;
   box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
   border-bottom-color: transparent;
@@ -265,18 +265,18 @@ export default {
   inset-inline-end: 0.75rem;
   margin-top: calc(-1.75rem + 2px);
 }
-.k-block-container[data-last-in-batch] > .k-block-options,
-.k-block-container[data-selected] > .k-block-options {
+.k-block-container[data-last-in-batch="true"] > .k-block-options,
+.k-block-container[data-selected="true"] > .k-block-options {
   display: flex;
 }
-.k-block-container[data-hidden] .k-block {
+.k-block-container[data-hidden="true"] .k-block {
   opacity: 0.25;
 }
-.k-drawer-options .k-button[data-disabled] {
+.k-drawer-options .k-button[data-disabled="true"] {
   vertical-align: middle;
   display: inline-grid;
 }
-[data-disabled] .k-block-container {
+[data-disabled="true"] .k-block-container {
   background: var(--color-background);
 }
 </style>

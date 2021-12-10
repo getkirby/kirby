@@ -137,7 +137,7 @@ export default {
   background: #fff;
   box-shadow: var(--shadow);
 }
-[data-disabled] .k-layout {
+[data-disabled="true"] .k-layout {
   padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {

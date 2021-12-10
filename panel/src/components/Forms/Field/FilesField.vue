@@ -148,7 +148,7 @@ export default {
 </script>
 
 <style>
-.k-files-field[data-disabled] * {
+.k-files-field[data-disabled="true"] * {
   pointer-events: all !important;
 }
 </style>

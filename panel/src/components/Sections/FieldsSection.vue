@@ -83,7 +83,7 @@ export default {
   display: none;
 }
 
-[data-locked] .k-fields-section {
+[data-locked="true"] .k-fields-section {
   opacity: 0.2;
   pointer-events: none;
 }

@@ -434,7 +434,7 @@ export default {
   font-family: var(--font-mono);
 }
 
-.k-writer[data-placeholder][data-empty]::before {
+.k-writer[data-placeholder][data-empty="true"]::before {
   grid-area: content;
   content: attr(data-placeholder);
   line-height: inherit;
