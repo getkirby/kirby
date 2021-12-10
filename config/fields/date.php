@@ -2,8 +2,10 @@
 
 use Kirby\Exception\Exception;
 use Kirby\Form\Field;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+
 
 return [
     'mixins' => ['datetime'],
@@ -20,12 +22,11 @@ return [
             return $calendar;
         },
 
-
         /**
          * Default date when a new page/file/user gets created
          */
-        'default' => function (string $default = null) {
-            return $default;
+        'default' => function (string $default = null): ?string {
+            return Date::optional($default);
         },
 
         /**
@@ -46,42 +47,21 @@ return [
         /**
          * Latest date, which can be selected/saved (Y-m-d)
          */
-        'max' => function (string $max = null) {
-            return $this->toDatetime($max);
+        'max' => function (string $max = null): ?string {
+            return Date::optional($max);
         },
         /**
          * Earliest date, which can be selected/saved (Y-m-d)
          */
-        'min' => function (string $min = null) {
-            return $this->toDatetime($min);
+        'min' => function (string $min = null): ?string {
+            return Date::optional($min);
         },
 
         /**
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
-            $default = [
-                'size' => 1,
-                'unit' => 'day'
-            ];
-
-            if ($step === null) {
-                return $default;
-            }
-
-            if (is_array($step) === true) {
-                $step = array_merge($default, $step);
-                $step['unit'] = strtolower($step['unit']);
-                return $step;
-            }
-
-            if (is_int($step) === true) {
-                return array_merge($default, ['size' => $step]);
-            }
-
-            if (is_string($step) === true) {
-                return array_merge($default, ['unit' => strtolower($step)]);
-            }
+            return Date::step($step);
         },
 
         /**
@@ -93,14 +73,11 @@ return [
         /**
          * Must be a parseable date string
          */
-        'value' => function ($value = null) {
-            return $value;
+        'value' => function ($value = null): ?string {
+            return Date::optional($value);
         },
     ],
     'computed' => [
-        'default' => function () {
-            return $this->toDatetime($this->default);
-        },
         'display' => function () {
             if ($this->display) {
                 return Str::upper($this->display);
@@ -125,55 +102,49 @@ return [
             }
 
             return $this->time['step'];
-        },
-        'value' => function () {
-            return $this->toDatetime($this->value);
-        },
+        }
     ],
     'validations' => [
         'date',
         'minMax' => function ($value) {
-            $min    = $this->min ? strtotime($this->min) : null;
-            $max    = $this->max ? strtotime($this->max) : null;
-            $value  = strtotime($this->value());
+
+            if (!$value = Date::optional($value)) {
+                return true;
+            }
+
+            $min = Date::optional($this->min);
+            $max = Date::optional($this->max);
+
             $format = $this->time === false ? 'd.m.Y' : 'd.m.Y H:i';
-            $errors = [];
 
-            if ($value && $min && $value < $min) {
-                $errors['min'] = $min;
-            }
+            if ($min && $max && $value->isBetween($min, $max) === false) {
+                throw new Exception([
+                    'key' => 'validation.date.between',
+                    'data' => [
+                        'min' => $min->format($format),
+                        'max' => $min->format($format)
+                    ]
+                ]);
+            } elseif ($min && $value->isAfter($min) === false) {
 
-            if ($value && $max && $value > $max) {
-                $errors['max'] = $max;
-            }
+                throw new Exception([
+                    'key' => 'validation.date.after',
+                    'data' => [
+                        'time' => $min->format($format),
+                    ]
+                ]);
 
-            if (empty($errors) === false) {
-                if ($min && $max) {
-                    throw new Exception([
-                        'key' => 'validation.date.between',
-                        'data' => [
-                            'min' => date($format, $min),
-                            'max' => date($format, $max)
-                        ]
-                    ]);
-                } elseif ($min) {
-                    throw new Exception([
-                        'key' => 'validation.date.after',
-                        'data' => [
-                            'date' => date($format, $min),
-                        ]
-                    ]);
-                } else {
-                    throw new Exception([
-                        'key' => 'validation.date.before',
-                        'data' => [
-                            'date' => date($format, $max),
-                        ]
-                    ]);
-                }
+            } elseif ($max && $value->isBefore($max) === false) {
+                throw new Exception([
+                    'key' => 'validation.date.before',
+                    'data' => [
+                        'time' => $max->format($format),
+                    ]
+                ]);
             }
 
             return true;
+
         },
     ]
 ];
