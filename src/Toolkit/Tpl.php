@@ -19,13 +19,14 @@ class Tpl
     /**
      * Renders the template
      *
-     * @param string $file
+     * @param string|null $file
      * @param array $data
      * @return string
+     * @throws Throwable
      */
-    public static function load(string $file = null, array $data = []): string
+    public static function load(?string $file = null, array $data = []): string
     {
-        if (is_file($file) === false) {
+        if ($file === null || is_file($file) === false) {
             return '';
         }
 
