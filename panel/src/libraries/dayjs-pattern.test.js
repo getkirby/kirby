@@ -8,7 +8,9 @@ describe("dayjs.pattern.at()", () => {
       { start: 5, unit: "month" },
       { start: 6, unit: "month" },
       { start: 9, unit: "day" },
-      { start: 8, end: 9, unit: "day" }
+      { start: 8, end: 10, unit: "day" },
+      { start: 6, end: 10, unit: "month" },
+      { start: 0, end: 4, unit: "year" }
     ],
     "MM/DD/YY HH:mm": [
       { start: 0, unit: "month" },
@@ -17,7 +19,7 @@ describe("dayjs.pattern.at()", () => {
       { start: 4, unit: "day" },
       { start: 6, unit: "year" },
       { start: 10, unit: "hour" },
-      { start: 9, end: 10, unit: "hour" }
+      { start: 9, end: 11, unit: "hour" }
     ]
   };
 
@@ -31,12 +33,6 @@ describe("dayjs.pattern.at()", () => {
       }
     });
   }
-
-  it("null for broader selection", () => {
-    const pattern = dayjs.pattern("YYYY-MM-DD");
-    const part = pattern.at(0, 9);
-    expect(part).toBe(null);
-  });
 });
 
 describe("dayjs.pattern.format()", () => {

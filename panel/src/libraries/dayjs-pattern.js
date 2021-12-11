@@ -63,10 +63,14 @@ export default (option, Dayjs, dayjs) => {
 
       at(start, end = start) {
         const matches = this.parts.filter(
-          (part) => part.start <= start && part.end >= end
+          (part) => part.start <= start && part.end >= end - 1
         );
 
-        return matches[0] ?? null;
+        if (matches[0]) {
+          return matches[0];
+        }
+
+        return this.parts.filter((part) => part.start <= start).pop();
       }
 
       /**
