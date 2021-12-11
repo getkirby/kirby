@@ -2,31 +2,27 @@ import dayjs from "./dayjs.js";
 
 describe("dayjs.round()", () => {
   it("Unsupported unit", () => {
-    try {
+    expect(() => {
       dayjs("2020-01-01").round("foo", 1);
-    } catch (e) {
-      expect(e.message).toBe("Invalid rounding unit");
-    }
+    }).toThrow("Invalid rounding unit");
   });
 
-  it("Unsupported size", () => {
-    const sizes = [
-      { unit: "second", size: 7 },
-      { unit: "minute", size: 7 },
-      { unit: "hour", size: 5 },
-      { unit: "day", size: 2 },
-      { unit: "month", size: 2 },
-      { unit: "year", size: 2 }
-    ];
+  const sizes = [
+    { unit: "second", size: 7 },
+    { unit: "minute", size: 7 },
+    { unit: "hour", size: 5 },
+    { unit: "day", size: 2 },
+    { unit: "month", size: 2 },
+    { unit: "year", size: 2 }
+  ];
 
-    for (const test in sizes) {
-      try {
-        dayjs("2020-01-01").round(test.unit, test.size);
-      } catch (e) {
-        expect(e.message).toBe("Invalid rounding size");
-      }
-    }
-  });
+  for (const test in sizes) {
+    it("Unsupported size: " + sizes[test].unit, () => {
+      expect(() => {
+        dayjs("2020-01-01").round(sizes[test].unit, sizes[test].size);
+      }).toThrow("Invalid rounding size");
+    });
+  }
 
   it("Transform 'day' to 'date'", () => {
     const dt = dayjs("2020-01-01");
