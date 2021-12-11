@@ -50,6 +50,23 @@ class Date extends DateTime
     }
 
     /**
+     * Rounds the datetime value up to next value of the specified unit
+     *
+     * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+     * @return $this
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
+     */
+    public function ceil(string $unit)
+    {
+        static::validateUnit($unit);
+
+        $this->floor($unit);
+        $this->modify('+1 ' . $unit);
+        return $this;
+    }
+
+    /**
      * Returns the interval between the provided and the object's datetime
      *
      * @param string|int|\DateTimeInterface $datetime
@@ -75,6 +92,32 @@ class Date extends DateTime
 
         $this->setDate($this->year(), $this->month(), $day);
         return $this->day();
+    }
+
+    /**
+     * Rounds the datetime value down to the specified unit
+     *
+     * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
+     * @return $this
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
+     */
+    public function floor(string $unit)
+    {
+        static::validateUnit($unit);
+
+        $formats = [
+            'year'   => 'Y-01-01P',
+            'month'  => 'Y-m-01P',
+            'day'    => 'Y-m-dP',
+            'hour'   => 'Y-m-d H:00:00P',
+            'minute' => 'Y-m-d H:i:00P',
+            'second' => 'Y-m-d H:i:sP'
+        ];
+
+        $flooredDate = date($formats[$unit], $this->timestamp());
+        $this->set($flooredDate);
+        return $this;
     }
 
     /**
@@ -183,6 +226,32 @@ class Date extends DateTime
     }
 
     /**
+     * Returns the datetime which is nearest to the object's datetime
+     *
+     * @param string|int|\DateTimeInterface ...$datetime Datetime strings, UNIX timestamps or objects
+     * @return string|int|\DateTimeInterface
+     */
+    public function nearest(...$datetime)
+    {
+        $timestamp = $this->timestamp();
+        $minDiff   = PHP_INT_MAX;
+        $nearest   = null;
+
+        foreach ($datetime as $item) {
+            $itemObject    = new static($item, $this->timezone());
+            $itemTimestamp = $itemObject->timestamp();
+            $diff          = abs($timestamp - $itemTimestamp);
+
+            if ($diff < $minDiff) {
+                $minDiff = $diff;
+                $nearest = $item;
+            }
+        }
+
+        return $nearest;
+    }
+
+    /**
      * Returns an instance of the current datetime
      *
      * @param \DateTimeZone|null $timezone
@@ -220,13 +289,34 @@ class Date extends DateTime
      * @param string $unit `year`, `month`, `day`, `hour`, `minute` or `second`
      * @param int $size Rounding step starting at `0` of the specified unit
      * @return $this
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the unit name or size is invalid
      */
     public function round(string $unit, int $size = 1)
     {
-        if (method_exists($this, $unit) === false) {
-            throw new InvalidArgumentException('Invalid rounding unit');
+        static::validateUnit($unit);
+
+        // round to a step of 1 first
+        $floor   = (clone $this)->floor($unit);
+        $ceil    = (clone $this)->ceil($unit);
+        $nearest = $this->nearest($floor, $ceil);
+        $this->set($nearest);
+
+        if ($size === 1) {
+            // we are already done
+            return $this;
         }
 
+        // validate step size
+        if (
+            in_array($unit, ['day', 'month', 'year']) && $size !== 1 ||
+            $unit === 'hour' && 24 % $size !== 0 ||
+            in_array($unit, ['second', 'minute']) && 60 % $size !== 0
+        ) {
+            throw new InvalidArgumentException('Invalid rounding size for ' . $unit);
+        }
+
+        // round to other rounding steps
         $value = $this->{$unit}();
         $value = round($value / $size) * $size;
         $this->{$unit}($value);
@@ -248,6 +338,18 @@ class Date extends DateTime
 
         $this->setTime($this->hour(), $this->minute(), $second);
         return $this->second();
+    }
+
+    /**
+     * Overwrites the datetime value with a different one
+     *
+     * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
+     * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+     */
+    public function set($datetime, ?DateTimeZone $timezone = null)
+    {
+        $datetime = new static($datetime, $timezone);
+        $this->setTimestamp($datetime->timestamp());
     }
 
     /**
@@ -332,6 +434,8 @@ class Date extends DateTime
      * @param string $mode `date`, `time` or `datetime`
      * @param bool $timezone Whether the timezone is printed as well
      * @return string
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the mode is invalid
      */
     public function toString(string $mode = 'datetime', bool $timezone = true): string
     {
@@ -370,5 +474,21 @@ class Date extends DateTime
 
         $this->setDate($year, $this->month(), $this->day());
         return $this->year();
+    }
+
+    /**
+     * Ensures that the provided string is a valid unit name
+     *
+     * @param string $unit
+     * @return void
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
+    protected static function validateUnit(string $unit): void
+    {
+        $units = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+        if (in_array($unit, $units) === false) {
+            throw new InvalidArgumentException('Invalid rounding unit');
+        }
     }
 }
