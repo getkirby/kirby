@@ -40,13 +40,13 @@ class Date extends DateTime
     }
 
     /**
-     * Returns the datetime in ISO 8601 format
+     * Returns the datetime in `YYYY-MM-DD hh:mm:ss` format with timezone
      *
      * @return string
      */
     public function __toString(): string
     {
-        return $this->format(static::ISO8601);
+        return $this->toString('datetime');
     }
 
     /**
