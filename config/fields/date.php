@@ -6,7 +6,6 @@ use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
-
 return [
     'mixins' => ['datetime'],
     'props' => [
@@ -61,7 +60,7 @@ return [
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
-            return Date::step($step);
+            return Date::stepConfig($step);
         },
 
         /**
@@ -107,7 +106,6 @@ return [
     'validations' => [
         'date',
         'minMax' => function ($value) {
-
             if (!$value = Date::optional($value)) {
                 return true;
             }
@@ -126,14 +124,12 @@ return [
                     ]
                 ]);
             } elseif ($min && $value->isAfter($min) === false) {
-
                 throw new Exception([
                     'key' => 'validation.date.after',
                     'data' => [
                         'time' => $min->format($format),
                     ]
                 ]);
-
             } elseif ($max && $value->isBefore($max) === false) {
                 throw new Exception([
                     'key' => 'validation.date.before',
@@ -144,7 +140,6 @@ return [
             }
 
             return true;
-
         },
     ]
 ];

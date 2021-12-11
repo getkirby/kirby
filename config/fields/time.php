@@ -58,7 +58,7 @@ return [
          * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
          */
         'step' => function ($step = null) {
-            return Date::step($step, [
+            return Date::stepConfig($step, [
                 'size' => 5,
                 'unit' => 'minute'
             ]);
@@ -82,7 +82,6 @@ return [
     'validations' => [
         'time',
         'minMax' => function ($value) {
-
             if (!$value = Date::optional($value)) {
                 return true;
             }
@@ -93,7 +92,6 @@ return [
             $format = 'H:i:s';
 
             if ($min && $max && $value->isBetween($min, $max) === false) {
-
                 throw new Exception([
                     'key' => 'validation.time.between',
                     'data' => [
@@ -101,16 +99,13 @@ return [
                         'max' => $min->format($format)
                     ]
                 ]);
-
             } elseif ($min && $value->isAfter($min) === false) {
-
                 throw new Exception([
                     'key' => 'validation.time.after',
                     'data' => [
                         'time' => $min->format($format),
                     ]
                 ]);
-
             } elseif ($max && $value->isBefore($max) === false) {
                 throw new Exception([
                     'key' => 'validation.time.before',
