@@ -2,6 +2,7 @@ export default (option, Dayjs) => {
   /**
    * Merges the current datetime with a part (date or time)
    * of another dayjs object
+   *
    * @param {Object} dt  dayjs object to merge into current object
    * @param {string|array} units array of units or alias (`date` or `time`)
    * @returns

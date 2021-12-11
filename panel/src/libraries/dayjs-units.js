@@ -2,6 +2,7 @@ export default (option, Dayjs, dayjs) => {
   /**
    * Returns a map of units to dayjs tokens
    * based on 12h/24h clock
+   *
    * @param {bool} is12h
    * @returns {Object}
    */

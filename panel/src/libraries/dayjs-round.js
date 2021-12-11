@@ -2,6 +2,7 @@ export default (option, Dayjs) => {
   /**
    * Rounds the current objec
    * to the nearest provided unit step
+   *
    * @param {string} unit dayjs unit
    * @param {int} size step size
    * @returns
