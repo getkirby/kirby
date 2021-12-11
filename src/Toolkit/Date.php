@@ -326,6 +326,37 @@ class Date extends DateTime
     }
 
     /**
+     * Returns the date, time or datetime in `YYYY-MM-DD hh:mm:ss` format
+     * with optional timezone
+     *
+     * @param string $mode `date`, `time` or `datetime`
+     * @param bool $timezone Whether the timezone is printed as well
+     * @return string
+     */
+    public function toString(string $mode = 'datetime', bool $timezone = true): string
+    {
+        switch ($mode) {
+            case 'date':
+                $format = 'Y-m-d';
+                break;
+            case 'time':
+                $format = 'H:i:s';
+                break;
+            case 'datetime':
+                $format = 'Y-m-d H:i:s';
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid mode');
+        }
+
+        if ($timezone === true) {
+            $format .= 'P';
+        }
+
+        return $this->format($format);
+    }
+
+    /**
      * Gets or sets the year value
      *
      * @param int|null $year
