@@ -1,15 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("dayjs.validate()", () => {
-  it("no parameters", () => {
-    expect(dayjs().validate()).toBe(true);
-    expect(dayjs("Invalid").validate()).toBe(false);
-  });
-
-  it("invalid dayjs object", () => {
-    expect(dayjs("Invalid").validate("2020-01-01")).toBe(false);
-  });
-
+describe("Validating", () => {
   const data = {
     "min by day": [
       {
@@ -85,4 +76,15 @@ describe("dayjs.validate()", () => {
       }
     });
   }
+});
+
+describe("Failures", () => {
+  it("no parameters", () => {
+    expect(dayjs().validate()).toBe(true);
+    expect(dayjs("Invalid").validate()).toBe(false);
+  });
+
+  it("invalid dayjs object", () => {
+    expect(dayjs("Invalid").validate("2020-01-01")).toBe(false);
+  });
 });

@@ -1,17 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("dayjs.merge()", () => {
-  it("Unsupported unit alias", () => {
-    const a = dayjs("2020-01-01");
-    const b = dayjs("2020-02-01");
-
-    try {
-      a.merge(b, "foo");
-    } catch (e) {
-      expect(e.message).toBe("Invalid merge unit alias");
-    }
-  });
-
+describe("Merging", () => {
   const data = [
     [
       "2020-02-29 16:05:15",
@@ -42,4 +31,14 @@ describe("dayjs.merge()", () => {
       expect(a.merge(b, data[test][2])).toStrictEqual(dayjs(data[test][3]));
     });
   }
+});
+
+describe("Failures", () => {
+  it("Unsupported unit alias", () => {
+    const a = dayjs("2020-01-01");
+    const b = dayjs("2020-02-01");
+    expect(() => {
+      a.merge(b, "foo");
+    }).toThrow("Invalid merge unit alias");
+  });
 });

@@ -1,34 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("dayjs.round()", () => {
-  it("Unsupported unit", () => {
-    expect(() => {
-      dayjs("2020-01-01").round("foo", 1);
-    }).toThrow("Invalid rounding unit");
-  });
-
-  const sizes = [
-    { unit: "second", size: 7 },
-    { unit: "minute", size: 7 },
-    { unit: "hour", size: 5 },
-    { unit: "day", size: 2 },
-    { unit: "month", size: 2 },
-    { unit: "year", size: 2 }
-  ];
-
-  for (const test in sizes) {
-    it("Unsupported size: " + sizes[test].unit, () => {
-      expect(() => {
-        dayjs("2020-01-01").round(sizes[test].unit, sizes[test].size);
-      }).toThrow("Invalid rounding size");
-    });
-  }
-
-  it("Transform 'day' to 'date'", () => {
-    const dt = dayjs("2020-01-01");
-    expect(dt.round("day", 1)).toStrictEqual(dt.round("date", 1));
-  });
-
+describe("Rounding", () => {
   const data = {
     "1s: no change": [
       "second",
@@ -88,4 +60,36 @@ describe("dayjs.round()", () => {
       expect(result.format("YYYY-MM-DD HH:mm:ss")).toBe(data[test][3]);
     });
   }
+});
+
+describe("Failures", () => {
+  it("Unsupported unit", () => {
+    expect(() => {
+      dayjs("2020-01-01").round("foo", 1);
+    }).toThrow("Invalid rounding unit");
+  });
+
+  const sizes = [
+    { unit: "second", size: 7 },
+    { unit: "minute", size: 7 },
+    { unit: "hour", size: 5 },
+    { unit: "day", size: 2 },
+    { unit: "month", size: 2 },
+    { unit: "year", size: 2 }
+  ];
+
+  for (const test in sizes) {
+    it("Unsupported size: " + sizes[test].unit, () => {
+      expect(() => {
+        dayjs("2020-01-01").round(sizes[test].unit, sizes[test].size);
+      }).toThrow("Invalid rounding size");
+    });
+  }
+});
+
+describe("Convenience", () => {
+  it("Transform 'day' to 'date'", () => {
+    const dt = dayjs("2020-01-01");
+    expect(dt.round("day", 1)).toStrictEqual(dt.round("date", 1));
+  });
 });
