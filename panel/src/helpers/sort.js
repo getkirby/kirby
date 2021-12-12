@@ -1,5 +1,9 @@
 /* eslint-disable */
-// https://github.com/bubkoo/natsort
+/**
+ * @param {Object} options
+ * JS implementation of
+ * https://github.com/bubkoo/natsort
+ */
 export default (options) => {
   options = options || {};
 

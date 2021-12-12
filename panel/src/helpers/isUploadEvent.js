@@ -1,3 +1,7 @@
+/**
+ * Checks if provided event is an upload-related event
+ * @returns {bool}
+ */
 export default (event) => {
   if (!event.dataTransfer) {
     return false;

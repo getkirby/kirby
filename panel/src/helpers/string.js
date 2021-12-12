@@ -1,8 +1,19 @@
+import "./regex.js";
+
+/**
+ * Converts camel-case to kebab-case
+ * @param {string} string
+ * @returns {string}
+ */
 export function camelToKebab(string) {
   return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 /**
+ * Escapes HTML in string
+ * @param {string} string
+ * @returns {string}
+ *
  * Source: https://github.com/janl/mustache.js/blob/v4.2.0/mustache.js#L60-L75
  *
  * The MIT License
@@ -40,11 +51,14 @@ export function escapeHTML(string) {
     "=": "&#x3D;"
   };
 
-  return String(string).replace(/[&<>"'`=/]/g, (char) => {
-    return entityMap[char];
-  });
+  return String(string).replace(/[&<>"'`=/]/g, (char) => entityMap[char]);
 }
 
+/**
+ * Checks if string contains an emoji
+ * @param {string} string
+ * @returns {bool}
+ */
 export function hasEmoji(string) {
   if (typeof string !== "string") {
     return false;
@@ -59,39 +73,128 @@ export function hasEmoji(string) {
   return result !== null && result.length !== null;
 }
 
+/**
+ * Turns first letter lowercase
+ * @param {string} string
+ * @returns {string}
+ */
 export function lcfirst(string) {
   const str = String(string);
-  return str.charAt(0).toLowerCase() + str.substr(1);
+  return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
+/**
+ * Prefixes string with 0 until length is reached
+ * @param {string} value
+ * @param {number} length
+ * @returns
+ */
+export function pad(value, length = 2) {
+  value = String(value);
+  let pad = "";
+
+  while (pad.length < length - value.length) {
+    pad += "0";
+  }
+
+  return pad + value;
+}
+
+/**
+ * Generate random alpha-num string of specified length
+ * @param {number} length
+ * @returns {string}
+ */
 export function random(length) {
   let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
+  const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const count = pool.length;
   for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    result += pool.charAt(Math.floor(Math.random() * count));
   }
   return result;
 }
 
-export function stripHTML(string) {
-  const str = String(string);
-  return str.replace(/(<([^>]+)>)/gi, "");
+/**
+ * Convert string to ASCII slug
+ * @param {string} string string to be converted
+ * @param {array} rules ruleset to convert non-ASCII characters
+ * @param {array} allowed list of allowed non-ASCII characters
+ * @param {string} separator character used to replace e.g. spaces
+ * @returns {string}
+ */
+export function slug(string, rules = [], allowed = "", separator = "-") {
+  if (!string) {
+    return "";
+  }
+
+  allowed = "a-z0-9" + allowed;
+  string = string.trim().toLowerCase();
+
+  // replace according to language and ascii rules
+  for (const ruleset of rules) {
+    for (const rule in ruleset) {
+      const isTrimmed = rule.slice(0, 1) !== "/";
+      const trimmed = rule.slice(1, rule.length - 1);
+      const regex = isTrimmed ? rule : trimmed;
+      string = string.replace(
+        new RegExp(RegExp.escape(regex), "g"),
+        ruleset[rule]
+      );
+    }
+  }
+
+  // remove all other non-ASCII characters
+  string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
+
+  // replace spaces with simple dashes
+  string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
+
+  // remove double separators
+  string = string.replace(
+    new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
+    separator
+  );
+
+  // replace slashes with dashes
+  string = string.replace("/", separator);
+
+  // trim leading and trailing non-word-chars
+  string = string.replace(new RegExp("^[^" + allowed + "]+", "g"), "");
+  string = string.replace(new RegExp("[^" + allowed + "]+$", "g"), "");
+
+  return string;
 }
 
+/**
+ * Strips HTML tags from string
+ * @param {string} string
+ * @returns {string}
+ */
+export function stripHTML(string) {
+  return String(string).replace(/(<([^>]+)>)/gi, "");
+}
+
+/**
+ * Replaces template placeholders in string
+ * with provided values
+ * @param {string} string
+ * @param {Object} values
+ * @returns {string}
+ */
 export function template(string, values = {}) {
-  const resolve = function (parts, data = {}) {
+  const resolve = (parts, data = {}) => {
     const part = escapeHTML(parts.shift());
     const value = data[part] ?? null;
 
     if (value === null) {
       return Object.prototype.hasOwnProperty.call(data, part) || "…";
-    } else if (parts.length === 0) {
-      return value;
-    } else {
-      return resolve(parts, value);
     }
+    if (parts.length === 0) {
+      return value;
+    }
+
+    return resolve(parts, value);
   };
 
   const opening = "[{]{1,2}[\\s]?";
@@ -99,25 +202,51 @@ export function template(string, values = {}) {
 
   string = string.replace(
     new RegExp(`${opening}(.*?)${closing}`, "gi"),
-    ($0, $1) => {
-      return resolve($1.split("."), values);
-    }
+    ($0, $1) => resolve($1.split("."), values)
   );
 
   return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
 }
 
+/**
+ * Turns first letter uppercase
+ * @param {string} string
+ * @returns {string}
+ */
 export function ucfirst(string) {
   const str = String(string);
-  return str.charAt(0).toUpperCase() + str.substr(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/**
+ * Turns first letter of each word uppercase
+ * @param {string} string
+ * @returns {string}
+ */
 export function ucwords(string) {
-  const str = String(string);
-  return str
+  return String(string)
     .split(/ /g)
     .map((word) => ucfirst(word))
     .join(" ");
+}
+
+/**
+ * Returns a unique ID
+ * @returns {string}
+ */
+export function uuid() {
+  let uuid = "",
+    i,
+    random;
+  for (i = 0; i < 32; i++) {
+    random = (Math.random() * 16) | 0;
+
+    if (i == 8 || i == 12 || i == 16 || i == 20) {
+      uuid += "-";
+    }
+    uuid += (i == 12 ? 4 : i == 16 ? (random & 3) | 8 : random).toString(16);
+  }
+  return uuid;
 }
 
 export default {
@@ -125,9 +254,12 @@ export default {
   escapeHTML,
   hasEmoji,
   lcfirst,
+  pad,
   random,
+  slug,
   stripHTML,
   template,
   ucfirst,
-  ucwords
+  ucwords,
+  uuid
 };
