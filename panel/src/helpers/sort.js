@@ -114,7 +114,7 @@ export default (options) => {
       }
 
       // if unicode use locale comparison
-      if (ure.test(xF + yF) && xF.localeCompare) {
+      if (ure.it(xF + yF) && xF.localeCompare) {
         var comp = xF.localeCompare(yF);
 
         if (comp > 0) {
