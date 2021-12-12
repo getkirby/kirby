@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   backend-tests:
-    name: "Backend: Unit tests · PHP ${{ matrix.php }}"
+    name: "Backend: Unit tests - PHP ${{ matrix.php }}"
 
     # if on pull request, only run if from a fork
     # (our own repo is covered by the push event)
