@@ -95,6 +95,9 @@ export default defineConfig(({ command }) => {
         "/media": proxy
       },
       ...custom
+    },
+    test: {
+      match: ["**/*.test.js"]
     }
   };
 });
