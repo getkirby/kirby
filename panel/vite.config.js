@@ -97,7 +97,8 @@ export default defineConfig(({ command }) => {
       ...custom
     },
     test: {
-      match: ["**/*.test.js"]
+      match: ["**/*.test.js"],
+      collectCoverageMatch: ["src/**/*.(js|vue)", "!**/*.(e2e|test).js"]
     }
   };
 });
