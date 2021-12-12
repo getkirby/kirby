@@ -8,9 +8,9 @@
     "lint": "eslint \"src/**/*.{js,vue}\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.{js,vue}\"",
-    "test": "test:unit && test:e2e",
+    "test": "npm run test:unit && npm run test:e2e",
     "test:e2e": "cypress run",
-    "cy:e2e:open": "cypress open",
+    "test:e2e:open": "cypress open",
     "test:unit:open": "peeky open",
     "test:unit": "peeky run"
   },
