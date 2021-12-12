@@ -93,7 +93,7 @@ export default {
   pointer-events: none;
   z-index: 1;
 }
-.k-dropzone[data-over]::after {
+.k-dropzone[data-over="true"]::after {
   display: block;
   outline: 1px solid var(--color-focus);
   box-shadow: var(--color-focus-outline) 0 0 0 3px;

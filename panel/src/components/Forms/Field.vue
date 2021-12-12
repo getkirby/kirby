@@ -93,13 +93,13 @@ export default {
   padding: 0.75rem;
   display: flex;
 }
-.k-field[data-disabled] {
+.k-field[data-disabled="true"] {
   cursor: not-allowed;
 }
-.k-field[data-disabled] * {
+.k-field[data-disabled="true"] * {
   pointer-events: none;
 }
-.k-field[data-disabled] .k-text[data-theme="help"] * {
+.k-field[data-disabled="true"] .k-text[data-theme="help"] * {
   pointer-events: initial;
 }
 .k-field-counter {

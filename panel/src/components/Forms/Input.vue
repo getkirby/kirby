@@ -135,11 +135,11 @@ export default {
 }
 
 /* Disabled state */
-.k-input[data-disabled] {
+.k-input[data-disabled="true"] {
   pointer-events: none;
 }
 
-[data-disabled] .k-input-icon {
+[data-disabled="true"] .k-input-icon {
   color: var(--color-gray-600);
 }
 
@@ -153,7 +153,7 @@ export default {
   box-shadow: var(--color-focus-outline) 0 0 0 2px;
 }
 
-.k-input[data-theme="field"][data-disabled] {
+.k-input[data-theme="field"][data-disabled="true"] {
   background: var(--color-background);
 }
 
