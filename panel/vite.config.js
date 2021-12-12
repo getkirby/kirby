@@ -95,6 +95,10 @@ export default defineConfig(({ command }) => {
         "/media": proxy
       },
       ...custom
+    },
+    test: {
+      match: ["**/*.test.js"],
+      collectCoverageMatch: ["src/**/*.(js|vue)", "!**/*.(e2e|test).js"]
     }
   };
 });
