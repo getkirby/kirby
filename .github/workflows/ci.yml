@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   backend-tests:
-    name: "Backend: Unit tests - PHP ${{ matrix.php }}"
+    name: "Backend: Unit tests · PHP ${{ matrix.php }}"
 
     # if on pull request, only run if from a fork
     # (our own repo is covered by the push event)
@@ -107,80 +107,25 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      php: "8.0"
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
       - name: Checkout
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+
+      - name: Set up Node.js problem matchers and cache npm dependencies
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # pin@v2
         with:
-          path: kirby
-
-      - name: Checkout Sandbox
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
-        with:
-          repository: getkirby/sandbox
-          path: sandbox
-          submodules: true
-
-      - name: Preparations
-        run: |
-          # set up log directory
-          mkdir -p ${{ github.workspace }}/_logs
-
-          # link Kirby to Sandbox
-          rm -rf ${{ github.workspace }}/sandbox/kirby
-          ln -s ${{ github.workspace }}/kirby ${{ github.workspace }}/sandbox/kirby
-
-      - name: Set up Node.js problem matchers
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # pin@v2
-
-      - name: Cache npm dependencies
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          cache: 'npm'
+          cache-dependency-path: panel/package-lock.json
 
       - name: Install npm dependencies
+        id: finishPrepare
         run: npm ci
         working-directory: panel
 
-      - name: Setup PHP cache environment
-        id: ext-cache
-        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
-        with:
-          php-version: ${{ env.php }}
-          extensions: ${{ env.extensions }}
-          key: peeky-v1
-
-      - name: Cache PHP extensions
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
-        with:
-          path: ${{ steps.ext-cache.outputs.dir }}
-          key: ${{ steps.ext-cache.outputs.key }}
-          restore-keys: ${{ steps.ext-cache.outputs.key }}
-
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
-        with:
-          php-version: ${{ env.php }}
-          extensions: ${{ env.extensions }}
-          coverage: none
-
-      - name: Build Panel dist files
-        run: npm run build
-        working-directory: kirby/panel
-
-      - name: Start the PHP server
-        run: php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
-        working-directory: kirby/panel
-
       - name: Run JavaScript unit tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: >
-          npm run test:unit
+        run: npm run test:unit
         working-directory: panel
 
   frontend-e2e:
@@ -374,15 +319,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
 
-      - name: Set up Node.js problem matchers
-        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # pin@v2
-
-      - name: Cache npm dependencies
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+      - name: Set up Node.js problem matchers and cache npm dependencies
+        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # pin@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          cache: 'npm'
+          cache-dependency-path: panel/package-lock.json
 
       - name: Install npm dependencies
         run: npm ci
