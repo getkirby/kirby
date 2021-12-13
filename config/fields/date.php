@@ -25,7 +25,7 @@ return [
          * Default date when a new page/file/user gets created
          */
         'default' => function (string $default = null): ?string {
-            return Date::optional($default);
+            return $this->toDatetime($default);
         },
 
         /**
@@ -60,7 +60,10 @@ return [
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
-            return Date::stepConfig($step);
+            return Date::stepConfig($step, [
+                'size' => 5,
+                'unit' => 'minute',
+            ]);
         },
 
         /**
@@ -72,9 +75,9 @@ return [
         /**
          * Must be a parseable date string
          */
-        'value' => function ($value = null): ?string {
-            return Date::optional($value);
-        },
+        'value' => function ($value = null) {
+            return $value;
+        }
     ],
     'computed' => [
         'display' => function () {
@@ -101,7 +104,10 @@ return [
             }
 
             return $this->time['step'];
-        }
+        },
+        'value' => function (): ?string {
+            return $this->toDatetime($this->value);
+        },
     ],
     'validations' => [
         'date',
@@ -123,14 +129,14 @@ return [
                         'max' => $min->format($format)
                     ]
                 ]);
-            } elseif ($min && $value->isAfter($min) === false) {
+            } elseif ($min && $value->isMin($min) === false) {
                 throw new Exception([
                     'key' => 'validation.date.after',
                     'data' => [
                         'time' => $min->format($format),
                     ]
                 ]);
-            } elseif ($max && $value->isBefore($max) === false) {
+            } elseif ($max && $value->isMax($max) === false) {
                 throw new Exception([
                     'key' => 'validation.date.before',
                     'data' => [

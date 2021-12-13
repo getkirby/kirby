@@ -54,6 +54,16 @@ class DateTest extends TestCase
     }
 
     /**
+     * @covers ::is
+     */
+    public function testIs()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertTrue($date->is('2021-12-12'));
+        $this->assertFalse($date->is('2021-12-13'));
+    }
+
+    /**
      * @covers ::isAfter
      */
     public function testIsAfter()
@@ -79,8 +89,29 @@ class DateTest extends TestCase
     public function testIsBetween()
     {
         $date = new Date('2021-12-12');
+        $this->assertTrue($date->isBetween('2021-12-12', '2021-12-12'));
         $this->assertTrue($date->isBetween('2021-12-11', '2021-12-13'));
         $this->assertFalse($date->isBetween('2021-12-13', '2021-12-14'));
+    }
+
+    /**
+     * @covers ::isMax
+     */
+    public function testIsMax()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertTrue($date->isMax('2021-12-12'));
+        $this->assertFalse($date->isMax('2021-12-11'));
+    }
+
+    /**
+     * @covers ::isMin
+     */
+    public function testIsMin()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertTrue($date->isMin('2021-12-12'));
+        $this->assertFalse($date->isMin('2021-12-13'));
     }
 
     /**

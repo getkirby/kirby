@@ -12,12 +12,11 @@ return [
          */
         'placeholder' => null,
 
-
         /**
          * Sets the default time when a new page/file/user is created
          */
         'default' => function ($default = null): ?string {
-            return Date::optional($default);
+            return $default;
         },
 
         /**
@@ -60,11 +59,11 @@ return [
         'step' => function ($step = null) {
             return Date::stepConfig($step, [
                 'size' => 5,
-                'unit' => 'minute'
+                'unit' => 'minute',
             ]);
         },
         'value' => function ($value = null): ?string {
-            return Date::optional($value);
+            return $value;
         }
     ],
     'computed' => [
@@ -75,8 +74,14 @@ return [
 
             return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
         },
+        'default' => function (): ?string {
+            return $this->toDatetime($this->default, 'H:i:s');
+        },
         'format' => function () {
             return $this->props['format'] ?? 'H:i:s';
+        },
+        'value' => function (): ?string {
+            return $this->toDatetime($this->value, 'H:i:s');
         }
     ],
     'validations' => [
@@ -99,14 +104,14 @@ return [
                         'max' => $min->format($format)
                     ]
                 ]);
-            } elseif ($min && $value->isAfter($min) === false) {
+            } elseif ($min && $value->isMin($min) === false) {
                 throw new Exception([
                     'key' => 'validation.time.after',
                     'data' => [
                         'time' => $min->format($format),
                     ]
                 ]);
-            } elseif ($max && $value->isBefore($max) === false) {
+            } elseif ($max && $value->isMax($max) === false) {
                 throw new Exception([
                     'key' => 'validation.time.before',
                     'data' => [

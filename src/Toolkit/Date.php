@@ -137,6 +137,18 @@ class Date extends DateTime
     }
 
     /**
+     * Checks if the object's datetime is the same as the given datetime
+     *
+     * @param string|int|\DateTimeInterface $datetime
+     * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+     * @return bool
+     */
+    public function is($datetime = 'now', ?DateTimeZone $timezone = null): bool
+    {
+        return $this == new static($datetime, $timezone);
+    }
+
+    /**
      * Checks if the object's datetime is after the given datetime
      *
      * @param string|int|\DateTimeInterface $datetime
@@ -145,7 +157,7 @@ class Date extends DateTime
      */
     public function isAfter($datetime = 'now', ?DateTimeZone $timezone = null): bool
     {
-        return $this->compare($datetime, $timezone)->invert === 1;
+        return $this > new static($datetime, $timezone);
     }
 
     /**
@@ -157,20 +169,43 @@ class Date extends DateTime
      */
     public function isBefore($datetime = 'now', ?DateTimeZone $timezone = null): bool
     {
-        return $this->compare($datetime, $timezone)->invert === 0;
+        return $this < new static($datetime, $timezone);
     }
 
     /**
      * Checks if the object's datetime is between the given datetimes
      *
-     * @param string|int|\DateTimeInterface $after
-     * @param string|int|\DateTimeInterface $before
-     * @param \DateTimeZone|null $timezone Optional default timezone if `$after`/`$before` are strings
+     * @param string|int|\DateTimeInterface $min
+     * @param string|int|\DateTimeInterface $max
      * @return bool
      */
-    public function isBetween($after, $before): bool
+    public function isBetween($min, $max): bool
     {
-        return $this->isAfter($after) === true && $this->isBefore($before) === true;
+        return $this->isMin($min) === true && $this->isMax($max) === true;
+    }
+
+    /**
+     * Checks if the object's datetime is at or before the given datetime
+     *
+     * @param string|int|\DateTimeInterface $datetime
+     * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+     * @return bool
+     */
+    public function isMax($datetime = 'now', ?DateTimeZone $timezone = null): bool
+    {
+        return $this <= new static($datetime, $timezone);
+    }
+
+    /**
+     * Checks if the object's datetime is at or after the given datetime
+     *
+     * @param string|int|\DateTimeInterface $datetime
+     * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
+     * @return bool
+     */
+    public function isMin($datetime = 'now', ?DateTimeZone $timezone = null): bool
+    {
+        return $this >= new static($datetime, $timezone);
     }
 
     /**
