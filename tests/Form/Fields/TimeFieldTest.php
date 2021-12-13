@@ -12,14 +12,42 @@ class TimeFieldTest extends TestCase
         $this->assertEquals('time', $field->name());
         $this->assertEquals(null, $field->value());
         $this->assertEquals(null, $field->default());
+        $this->assertEquals('HH:mm', $field->display());
         $this->assertEquals('clock', $field->icon());
         $this->assertEquals(24, $field->notation());
         $this->assertEquals(['size' => 5, 'unit' => 'minute'], $field->step());
         $this->assertTrue($field->save());
     }
 
+    public function testDisplayFor12HourNotation()
+    {
+        $field = $this->field('time', [
+            'notation' => 12
+        ]);
+
+        $this->assertSame('h:mm a', $field->display());
+    }
+
+    public function testDisplayWithCustomSetup()
+    {
+        $field = $this->field('time', [
+            'display' => 'HH:mm:ss'
+        ]);
+
+        $this->assertSame('HH:mm:ss', $field->display());
+    }
+
     public function testMinMax()
     {
+        // no value
+        $field = $this->field('time', [
+            'value' => null
+        ]);
+
+        $field->validate();
+        $this->assertTrue($field->isValid());
+        $this->assertFalse($field->isInvalid());
+
         // no limits
         $field = $this->field('time', [
             'value' => '10:00:00'
@@ -50,6 +78,17 @@ class TimeFieldTest extends TestCase
         $field->validate();
         $this->assertTrue($field->isValid());
         $this->assertFalse($field->isInvalid());
+
+        // min & max failed
+        $field = $this->field('time', [
+            'value' => '10:00:00',
+            'min'   => '08:00',
+            'max'   => '09:00'
+        ]);
+
+        $field->validate();
+        $this->assertFalse($field->isValid());
+        $this->assertTrue($field->isInvalid());
 
         // min failed
         $field = $this->field('time', [

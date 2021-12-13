@@ -419,6 +419,8 @@ class Date extends DateTime
         if (is_string($input) === true) {
             return array_merge($default, ['unit' => strtolower($input)]);
         }
+
+        throw new InvalidArgumentException('Invalid input');
     }
 
     /**

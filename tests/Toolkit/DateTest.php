@@ -10,6 +10,33 @@ use PHPUnit\Framework\TestCase;
 class DateTest extends TestCase
 {
     /**
+     * @covers ::__construct
+     */
+    public function test__constructWithString()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertSame('2021-12-12', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function test__constructWithInt()
+    {
+        $date = new Date(strtotime('2021-12-12'));
+        $this->assertSame('2021-12-12', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function test__constructWithDate()
+    {
+        $date = new Date(new Date('2021-12-12'));
+        $this->assertSame('2021-12-12', $date->format('Y-m-d'));
+    }
+
+    /**
      * @covers ::__toString
      */
     public function test__toString()
@@ -115,6 +142,28 @@ class DateTest extends TestCase
     }
 
     /**
+     * @covers ::microsecond
+     */
+    public function testMicrosecond()
+    {
+        $date = new Date('2021-12-12');
+        $date->modify('+500 ms');
+
+        $this->assertSame(500000, $date->microsecond());
+    }
+
+    /**
+     * @covers ::millisecond
+     */
+    public function testMillisecond()
+    {
+        $date = new Date('2021-12-12');
+        $date->modify('+500 ms');
+
+        $this->assertSame(500, $date->millisecond());
+    }
+
+    /**
      * @covers ::minute
      */
     public function testMinute()
@@ -134,6 +183,17 @@ class DateTest extends TestCase
         $this->assertSame(12, $date->month());
         $this->assertSame(11, $date->month(11));
         $this->assertSame('2021-11-12', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::now
+     */
+    public function testNow()
+    {
+        $date = Date::now();
+
+        $this->assertSame(date('Y-m-d H:i:s'), $date->format('Y-m-d H:i:s'));
+        $this->assertInstanceOf(Date::class, $date);
     }
 
     /**
@@ -215,6 +275,7 @@ class DateTest extends TestCase
 
     /**
      * @covers ::round
+     * @covers ::validateUnit
      */
     public function testRoundUnsupportedUnit()
     {
@@ -297,6 +358,17 @@ class DateTest extends TestCase
             'size' => 5,
             'unit' => 'day'
         ], $config);
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfigWithInvalidInput()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid input');
+
+        Date::stepConfig(new Date());
     }
 
     /**
