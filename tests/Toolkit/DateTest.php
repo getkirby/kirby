@@ -10,6 +10,112 @@ use PHPUnit\Framework\TestCase;
 class DateTest extends TestCase
 {
     /**
+     * @covers ::__toString
+     */
+    public function test__toString()
+    {
+        $date = new Date('2021-12-12 12:12:12');
+        $this->assertSame('2021-12-12 12:12:12+00:00', (string)$date);
+    }
+
+    /**
+     * @covers ::compare
+     */
+    public function testCompare()
+    {
+        $date = new Date('2021-12-12');
+        $diff = $date->compare('2021-12-10');
+
+        $this->assertInstanceOf('DateInterval', $diff);
+        $this->assertSame(1, $diff->invert);
+        $this->assertSame(2, $diff->days);
+    }
+
+    /**
+     * @covers ::day
+     */
+    public function testDay()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertSame(12, $date->day());
+        $this->assertSame(13, $date->day(13));
+        $this->assertSame('2021-12-13', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::hour
+     */
+    public function testHour()
+    {
+        $date = new Date('12:12');
+        $this->assertSame(12, $date->hour());
+        $this->assertSame(13, $date->hour(13));
+        $this->assertSame('13:12', $date->format('H:i'));
+    }
+
+    /**
+     * @covers ::isAfter
+     */
+    public function testIsAfter()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertTrue($date->isAfter('2021-12-11'));
+        $this->assertFalse($date->isAfter('2021-12-13'));
+    }
+
+    /**
+     * @covers ::isBefore
+     */
+    public function testIsBefore()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertFalse($date->isBefore('2021-12-11'));
+        $this->assertTrue($date->isBefore('2021-12-13'));
+    }
+
+    /**
+     * @covers ::isBetween
+     */
+    public function testIsBetween()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertTrue($date->isBetween('2021-12-11', '2021-12-13'));
+        $this->assertFalse($date->isBetween('2021-12-13', '2021-12-14'));
+    }
+
+    /**
+     * @covers ::minute
+     */
+    public function testMinute()
+    {
+        $date = new Date('12:12');
+        $this->assertSame(12, $date->minute());
+        $this->assertSame(13, $date->minute(13));
+        $this->assertSame('12:13', $date->format('H:i'));
+    }
+
+    /**
+     * @covers ::month
+     */
+    public function testMonth()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertSame(12, $date->month());
+        $this->assertSame(11, $date->month(11));
+        $this->assertSame('2021-11-12', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::optional
+     */
+    public function testOptional()
+    {
+        $this->assertNull(Date::optional(null));
+        $this->assertNull(Date::optional('invalid date'));
+        $this->assertInstanceOf(Date::class, Date::optional('2021-12-12'));
+    }
+
+    /**
      * @covers ::round
      * @dataProvider roundProvider
      */
@@ -86,5 +192,207 @@ class DateTest extends TestCase
 
         $date = new Date('2020-01-01');
         $date->round('foo', 1);
+    }
+
+    /**
+     * @covers ::second
+     */
+    public function testSecond()
+    {
+        $date = new Date('12:12:12');
+        $this->assertSame(12, $date->second());
+        $this->assertSame(13, $date->second(13));
+        $this->assertSame('12:12:13', $date->format('H:i:s'));
+    }
+
+    /**
+     * @covers ::set
+     */
+    public function testSet()
+    {
+        $date = new Date('2021-12-12');
+
+        // overwrite with timestamp
+        $timestamp = strtotime('2021-12-13');
+        $date->set($timestamp);
+        $this->assertSame('2021-12-13', $date->format('Y-m-d'));
+
+        // overwrite with string
+        $date->set('2021-12-13');
+        $this->assertSame('2021-12-13', $date->format('Y-m-d'));
+
+        // overwrite with date object
+        $date->set(new Date('2021-12-13'));
+        $this->assertSame('2021-12-13', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfig()
+    {
+        $config = Date::stepConfig();
+
+        $this->assertSame([
+            'size' => 1,
+            'unit' => 'day'
+        ], $config);
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfigWithArray()
+    {
+        $config = Date::stepConfig([
+            'size' => 5,
+            'unit' => 'Hour'
+        ]);
+
+        $this->assertSame([
+            'size' => 5,
+            'unit' => 'hour'
+        ], $config);
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfigWithInt()
+    {
+        $config = Date::stepConfig(5);
+
+        $this->assertSame([
+            'size' => 5,
+            'unit' => 'day'
+        ], $config);
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfigWithString()
+    {
+        $config = Date::stepConfig('Minute');
+
+        $this->assertSame([
+            'size' => 1,
+            'unit' => 'minute'
+        ], $config);
+    }
+
+    /**
+     * @covers ::stepConfig
+     */
+    public function testStepConfigWithCustomDefault()
+    {
+        $config = Date::stepConfig(null, $default = [
+            'size' => 5,
+            'unit' => 'month'
+        ]);
+
+        $this->assertSame($default, $config);
+    }
+
+    /**
+     * @covers ::time
+     */
+    public function testTime()
+    {
+        $date = new Date('2021-12-12 12:12:12');
+        $this->assertSame('12:12:12', $date->time());
+    }
+
+    /**
+     * @covers ::timestamp
+     */
+    public function testTimestamp()
+    {
+        $date = new Date('2021-12-12');
+        $timestamp = strtotime('2021-12-12');
+
+        $this->assertSame($timestamp, $date->timestamp());
+    }
+
+    /**
+     * @covers ::timezone
+     */
+    public function testTimezone()
+    {
+        $date = new Date();
+        $this->assertInstanceOf('DateTimeZone', $date->timezone());
+    }
+
+    /**
+     * @covers ::today
+     */
+    public function testToday()
+    {
+        $date = Date::today();
+        $timestamp = strtotime('today');
+        $this->assertSame($timestamp, $date->timestamp());
+    }
+
+    /**
+     * @covers ::toString
+     */
+    public function testToStringModeDate()
+    {
+        // with timezone
+        $date = new Date('2021-12-12');
+        $this->assertSame('2021-12-12+00:00', $date->toString('date'));
+
+        // without timezone
+        $this->assertSame('2021-12-12', $date->toString('date', false));
+    }
+
+    /**
+     * @covers ::toString
+     */
+    public function testToStringModeDatetime()
+    {
+        // with timezone
+        $date = new Date('2021-12-12 12:12:12');
+        $this->assertSame('2021-12-12 12:12:12+00:00', $date->toString());
+        $this->assertSame('2021-12-12 12:12:12+00:00', $date->toString('datetime'));
+
+        // without timezone
+        $this->assertSame('2021-12-12 12:12:12', $date->toString('datetime', false));
+    }
+
+    /**
+     * @covers ::toString
+     */
+    public function testToStringModeTime()
+    {
+        // with timezone
+        $date = new Date('12:12:12');
+        $this->assertSame('12:12:12+00:00', $date->toString('time'));
+
+        // without timezone
+        $this->assertSame('12:12:12', $date->toString('time', false));
+    }
+
+    /**
+     * @covers ::toString
+     */
+    public function testToStringWithInvalidMode()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid mode');
+
+        $date = new Date('12:12:12');
+        $date->toString('foo');
+    }
+
+    /**
+     * @covers ::year
+     */
+    public function testYear()
+    {
+        $date = new Date('2021-12-12');
+        $this->assertSame(2021, $date->year());
+        $this->assertSame(2022, $date->year(2022));
+        $this->assertSame('2022-12-12', $date->format('Y-m-d'));
     }
 }
