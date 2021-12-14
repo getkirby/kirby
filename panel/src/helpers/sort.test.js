@@ -24,6 +24,6 @@ describe("$helper.sort()", () => {
       return sorter(a.username, b.username);
     });
 
-    expect(users).to.deep.equal(expected);
+    expect(users).toStrictEqual(expected);
   });
 });

@@ -642,13 +642,13 @@ export default {
   background: var(--color-white);
   box-shadow: var(--shadow);
 }
-[data-disabled] .k-blocks {
+[data-disabled="true"] .k-blocks {
   background: var(--color-background);
 }
-.k-blocks[data-multi-select-key] .k-block-container > * {
+.k-blocks[data-multi-select-key="true"] .k-block-container > * {
   pointer-events: none;
 }
-.k-blocks[data-empty] {
+.k-blocks[data-empty="true"] {
   padding: 0;
   background: none;
   box-shadow: none;

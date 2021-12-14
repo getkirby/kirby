@@ -26,12 +26,12 @@ export default {
 </script>
 
 <style>
-.k-button[data-disabled] {
+.k-button[data-disabled="true"] {
   opacity: 0.5;
   pointer-events: none;
   cursor: default;
 }
-.k-card-options > .k-button[data-disabled] {
+.k-card-options > .k-button[data-disabled="true"] {
   display: inline-flex;
 }
 </style>

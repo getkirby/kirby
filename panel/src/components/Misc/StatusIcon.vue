@@ -80,10 +80,10 @@ export default {
 .k-status-icon .k-button-text {
   color: var(--color-black);
 }
-.k-status-icon[data-disabled] {
+.k-status-icon[data-disabled="true"] {
   opacity: 1 !important;
 }
-.k-status-icon[data-disabled] .k-icon {
+.k-status-icon[data-disabled="true"] .k-icon {
   color: var(--color-gray-400);
   opacity: 0.5;
 }

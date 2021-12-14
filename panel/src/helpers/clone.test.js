@@ -7,6 +7,6 @@ describe("$helper.clone()", () => {
       b: "B"
     };
 
-    expect(clone(object)).to.deep.equal(object);
+    expect(clone(object)).toStrictEqual(object);
   });
 });

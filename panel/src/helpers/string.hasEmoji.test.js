@@ -4176,7 +4176,7 @@ describe("$helper.string.hasEmoji", () => {
 
     emojis.forEach((emoji) => {
       const result = string.hasEmoji(emoji);
-      expect(result).to.be.true;
+      expect(result).toBe(true);
     });
   });
 
@@ -4185,7 +4185,7 @@ describe("$helper.string.hasEmoji", () => {
 
     others.forEach((other) => {
       const result = string.hasEmoji(other);
-      expect(result).to.be.false;
+      expect(result).toBe(false);
     });
   });
 });

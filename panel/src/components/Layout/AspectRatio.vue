@@ -57,7 +57,7 @@ export default {
   width: 100%;
   object-fit: contain;
 }
-.k-aspect-ratio[data-cover] > * {
+.k-aspect-ratio[data-cover="true"] > * {
   object-fit: cover;
 }
 </style>
