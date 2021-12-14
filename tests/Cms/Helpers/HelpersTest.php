@@ -707,12 +707,24 @@ class HelpersTest extends TestCase
 
     public function testTimestamp()
     {
+        $result = timestamp('2021-12-12 12:12:12');
+        $this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
+    }
+
+    public function testTimestampWithStep()
+    {
         $result = timestamp('2021-12-12 12:12:12', [
             'unit' => 'minute',
             'size' => 5
         ]);
 
         $this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
+    }
+
+    public function testTimestampWithInvalidDate()
+    {
+        $result = timestamp('invalid date');
+        $this->assertNull($result);
     }
 
     public function testTwitter()

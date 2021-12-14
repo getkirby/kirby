@@ -786,11 +786,16 @@ function tc(string $key, int $count)
  */
 function timestamp(?string $date = null, $step = null): ?int
 {
-    $date = Date::optional($date);
-    $step = Date::stepConfig($step);
-    $date->round($step['unit'], $step['size']);
+    if ($date = Date::optional($date)) {
+        if ($step !== null) {
+            $step = Date::stepConfig($step);
+            $date->round($step['unit'], $step['size']);
+        }
 
-    return $date->timestamp();
+        return $date->timestamp();
+    }
+
+    return null;
 }
 
 /**
