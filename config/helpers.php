@@ -788,7 +788,10 @@ function timestamp(?string $date = null, $step = null): ?int
 {
     if ($date = Date::optional($date)) {
         if ($step !== null) {
-            $step = Date::stepConfig($step);
+            $step = Date::stepConfig($step, [
+                'unit' => 'minute',
+                'size' => 1
+            ]);
             $date->round($step['unit'], $step['size']);
         }
 
