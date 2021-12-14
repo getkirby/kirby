@@ -60,10 +60,7 @@ return [
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
-            return Date::stepConfig($step, [
-                'size' => 5,
-                'unit' => 'minute',
-            ]);
+            return $step;
         },
 
         /**
@@ -99,11 +96,17 @@ return [
             return $field->toArray();
         },
         'step' => function () {
-            if ($this->time === false) {
-                return $this->step;
+            if ($this->time === false || empty($this->time['step']) === true) {
+                return Date::stepConfig($this->step, [
+                    'size' => 1,
+                    'unit' => 'day'
+                ]);
             }
 
-            return $this->time['step'];
+            return Date::stepConfig($this->time['step'], [
+                'size' => 5,
+                'unit' => 'minute'
+            ]);
         },
         'value' => function (): ?string {
             return $this->toDatetime($this->value);
