@@ -130,6 +130,20 @@ class DateFieldTest extends TestCase
     }
 
     /**
+     * @link https://github.com/getkirby/kirby/issues/3642
+     */
+    public function testTimeWithDefaultNow()
+    {
+        $field = $this->field('date', [
+            'time'    => true,
+            'default' => 'now',
+        ]);
+
+        $now = date('Y-m-d H:i:s', strtotime('now'));
+        $this->assertSame($now, $field->default());
+    }
+
+    /**
      * @dataProvider valueProvider
      */
     public function testValue($input, $expected, $step = null)
