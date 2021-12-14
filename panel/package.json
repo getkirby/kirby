@@ -4,13 +4,15 @@
   "scripts": {
     "build": "vite build",
     "build:docs": "node scripts/docs.js",
-    "cy:run": "cypress run",
-    "cy:open": "cypress open",
     "dev": "vite",
     "lint": "eslint \"src/**/*.{js,vue}\"",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"src/**/*.{js,vue}\"",
-    "test": "cypress run"
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "test:unit:open": "peeky open",
+    "test:unit": "peeky run"
   },
   "dependencies": {
     "@linusborg/vue-simple-portal": "^0.1.5",
@@ -30,6 +32,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@peeky/test": "^0.8.3",
     "autoprefixer": "^10.4.0",
     "cypress": "^9.1.1",
     "eslint": "^8.4.0",

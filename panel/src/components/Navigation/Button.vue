@@ -131,11 +131,11 @@ button::-moz-focus-inner {
 }
 
 /* hide button text on small screens */
-.k-button[data-responsive] .k-button-text {
+.k-button[data-responsive="true"] .k-button-text {
   display: none;
 }
 @media screen and (min-width: 30em) {
-  .k-button[data-responsive] .k-button-text {
+  .k-button[data-responsive="true"] .k-button-text {
     display: inline;
   }
 }

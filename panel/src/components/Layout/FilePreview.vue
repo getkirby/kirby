@@ -69,7 +69,7 @@ export default {
   padding: min(4vw, 3rem);
   outline: 0;
 }
-.k-file-preview-image-link[data-tabbed] {
+.k-file-preview-image-link[data-tabbed="true"] {
   box-shadow: none;
   outline: 2px solid var(--color-focus);
   outline-offset: -2px;

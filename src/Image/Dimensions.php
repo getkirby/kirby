@@ -285,12 +285,12 @@ class Dimensions
 
         if ($xml !== false) {
             $attr   = $xml->attributes();
-            $width  = (float)($attr->width);
-            $height = (float)($attr->height);
-            if (($width === 0.0 || $height === 0.0) && empty($attr->viewBox) === false) {
+            $width  = (int)($attr->width);
+            $height = (int)($attr->height);
+            if (($width === 0 || $height === 0) && empty($attr->viewBox) === false) {
                 $box    = explode(' ', $attr->viewBox);
-                $width  = (float)($box[2] ?? 0);
-                $height = (float)($box[3] ?? 0);
+                $width  = (int)($box[2] ?? 0);
+                $height = (int)($box[3] ?? 0);
             }
         }
 

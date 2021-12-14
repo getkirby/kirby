@@ -253,7 +253,7 @@ export default {
 .k-search .k-item:not(:last-child) {
   margin-bottom: 0.25rem;
 }
-.k-search .k-item[data-selected] {
+.k-search .k-item[data-selected="true"] {
   outline: 2px solid var(--color-focus);
 }
 .k-search .k-item-info {

@@ -1,6 +1,6 @@
 {
     "baseUrl": "http://sandbox.test",
     "integrationFolder": "src/",
-    "testFiles": "**/*.spec.js",
+    "testFiles": "**/*.e2e.js",
     "video": false
 }

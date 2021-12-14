@@ -243,7 +243,7 @@ export default {
 }
 
 /* Nested drawers */
-.k-drawer[data-nested] {
+.k-drawer[data-nested="true"] {
   background: none;
 }
 </style>
