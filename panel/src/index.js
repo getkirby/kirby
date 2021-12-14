@@ -7,7 +7,7 @@ import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
-import Libraries from "./config/libraries.js";
+import Libraries from "./libraries/index.js";
 import Plugins from "./config/plugins.js";
 import store from "./store/store.js";
 
