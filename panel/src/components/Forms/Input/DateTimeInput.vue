@@ -88,23 +88,24 @@ export default {
     focus() {
       this.$refs.dateInput.focus();
     },
-    onUpdate(value, input) {
-      const base = this.toDatetime(this.value);
-      input = this.toDatetime(value, input, base);
-      this.emit("update", input);
-    },
-    onEnter(value, input) {
-      this.onUpdate(input, value);
+
+    onEnter(value, units) {
+      this.onUpdate(units, value);
       this.emit("enter");
     },
-    onInput(value, input) {
-      this.input = this.toDatetime(value, input, this.input);
+    onInput(value, units) {
+      this.input = this.toDatetime(value, units, this.input);
       this.emit("input");
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    toDatetime(value, input, base) {
+    onUpdate(value, units) {
+      const base = this.toDatetime(this.value);
+      value = this.toDatetime(value, units, base);
+      this.emit("update", value);
+    },
+    toDatetime(value, units, dt) {
       // if only value is passed,
       // parse value as dayjs date and
       // return object (or null if invalid)
@@ -113,13 +114,13 @@ export default {
         return null;
       }
 
-      let dt = this.$library.dayjs.utc(value);
+      let result = this.$library.dayjs.utc(value);
 
-      if (input === "time") {
-        dt = this.$library.dayjs.utc(value, "HH:mm:ss");
+      if (units === "time") {
+        result = this.$library.dayjs.utc(value, "HH:mm:ss");
       }
 
-      if (dt.isValid() === false) {
+      if (result.isValid() === false) {
         return null;
       }
 
@@ -127,27 +128,11 @@ export default {
       // take the input (date or time) values from value
       // and merge these onto the base dayjs object
 
-      if (!input || !base) {
-        return dt;
+      if (!units || !dt) {
+        return result;
       }
 
-      if (input === "date") {
-        return base
-          .clone()
-          .utc()
-          .set("year", dt.get("year"))
-          .set("month", dt.get("month"))
-          .set("date", dt.get("date"));
-      }
-
-      if (input === "time") {
-        return base
-          .clone()
-          .utc()
-          .set("hour", dt.get("hour"))
-          .set("minute", dt.get("minute"))
-          .set("second", dt.get("second"));
-      }
+      return dt.update(units, result);
     }
   },
   validations() {
@@ -155,23 +140,15 @@ export default {
       value: {
         min: this.min
           ? (value) =>
-              this.$helper.validate.datetime(
-                this,
-                value,
-                this.min,
-                "isAfter",
-                this.step.unit
-              )
+              this.$library.dayjs
+                .utc(value)
+                .validate(this.min, "isAfter", this.step.unit)
           : true,
         max: this.max
           ? (value) =>
-              this.$helper.validate.datetime(
-                this,
-                value,
-                this.max,
-                "isBefore",
-                this.step.unit
-              )
+              this.$library.dayjs
+                .utc(value)
+                .validate(this.max, "isBefore", this.step.unit)
           : true,
         required: this.required ? validateRequired : true
       }
