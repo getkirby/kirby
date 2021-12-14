@@ -29,6 +29,16 @@ class DateFieldTest extends TestCase
 
     public function testMinMax()
     {
+        // empty
+        $field = $this->field('date', [
+            'min'   => '2020-10-01',
+            'max'   => '2020-10-31'
+        ]);
+
+        $field->validate();
+        $this->assertTrue($field->isValid());
+        $this->assertFalse($field->isInvalid());
+
         // no limits
         $field = $this->field('date', [
             'value' => '2020-10-10'
@@ -59,6 +69,17 @@ class DateFieldTest extends TestCase
         $field->validate();
         $this->assertTrue($field->isValid());
         $this->assertFalse($field->isInvalid());
+
+        // min & max failed
+        $field = $this->field('date', [
+            'min'   => '2020-10-01',
+            'max'   => '2020-10-02',
+            'value' => '2020-10-03'
+        ]);
+
+        $field->validate();
+        $this->assertFalse($field->isValid());
+        $this->assertTrue($field->isInvalid());
 
         // min failed
         $field = $this->field('date', [
@@ -106,6 +127,20 @@ class DateFieldTest extends TestCase
         ]);
 
         $this->assertEquals('', $field->data());
+    }
+
+    /**
+     * @link https://github.com/getkirby/kirby/issues/3642
+     */
+    public function testTimeWithDefaultNow()
+    {
+        $field = $this->field('date', [
+            'time'    => true,
+            'default' => 'now',
+        ]);
+
+        $now = date('Y-m-d H:i:s', strtotime('now'));
+        $this->assertSame($now, $field->default());
     }
 
     /**
