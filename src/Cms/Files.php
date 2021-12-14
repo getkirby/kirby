@@ -135,11 +135,14 @@ class Files extends Collection
      * human-readable format
      * @since 3.6.0
      *
+     * @param string|null|false $locale Locale for number formatting,
+     *                                  `null` for the current locale,
+     *                                  `false` to disable number formatting
      * @return string
      */
-    public function niceSize(): string
+    public function niceSize($locale = null): string
     {
-        return F::niceSize($this->size());
+        return F::niceSize($this->size(), $locale);
     }
 
     /**

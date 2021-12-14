@@ -416,11 +416,14 @@ class File
      * Returns the file size in a
      * human-readable format
      *
+     * @param string|null|false $locale Locale for number formatting,
+     *                                  `null` for the current locale,
+     *                                  `false` to disable number formatting
      * @return string
      */
-    public function niceSize(): string
+    public function niceSize($locale = null): string
     {
-        return F::niceSize($this->root);
+        return F::niceSize($this->root, $locale);
     }
 
     /**

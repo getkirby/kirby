@@ -482,11 +482,14 @@ class Dir
      * Returns a nicely formatted size of all the contents of the folder
      *
      * @param string $dir The path of the directory
+     * @param string|null|false $locale Locale for number formatting,
+     *                                  `null` for the current locale,
+     *                                  `false` to disable number formatting
      * @return mixed
      */
-    public static function niceSize(string $dir)
+    public static function niceSize(string $dir, $locale = null)
     {
-        return F::niceSize(static::size($dir));
+        return F::niceSize(static::size($dir), $locale);
     }
 
     /**
