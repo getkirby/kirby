@@ -149,7 +149,7 @@ export default {
      * Separator from `display` format
      */
     separator() {
-      return this.display.match(/[\W]/)[0];
+      return this.display.match(/[\W]/)?.[0] ?? "";
     },
     /**
      * Array of used dayjs format tokens
