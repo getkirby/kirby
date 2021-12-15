@@ -101,8 +101,10 @@ class UrlTest extends TestCase
 
     public function testFix()
     {
-        $this->assertEquals('http://getkirby.com', Url::fix('getkirby.com'));
-        $this->assertEquals('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
+        $this->assertSame('http://', Url::fix());
+        $this->assertSame('http://', Url::fix(''));
+        $this->assertSame('http://getkirby.com', Url::fix('getkirby.com'));
+        $this->assertSame('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
     }
 
     public function testBase()
