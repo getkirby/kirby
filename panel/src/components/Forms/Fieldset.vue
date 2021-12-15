@@ -82,11 +82,8 @@ export default {
      */
     focus(name) {
       if (name) {
-        if (
-          this.hasField(name) &&
-          typeof this.$refs[name][0].focus === "function"
-        ) {
-          this.$refs[name][0].focus();
+        if (this.hasField(name)) {
+          this.$refs[name][0]?.focus?.();
         }
         return;
       }

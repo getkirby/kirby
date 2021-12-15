@@ -78,14 +78,7 @@ export default {
         return;
       }
 
-      if (
-        this.$slots.default[0] &&
-        this.$slots.default[0].context &&
-        typeof this.$slots.default[0].context.focus === "function"
-      ) {
-        this.$slots.default[0].context.focus();
-        return;
-      }
+      this.$slots.default?.[0]?.context?.focus?.();
     },
     open() {
       // it makes it run once
