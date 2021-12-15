@@ -306,9 +306,11 @@ class File
 
             // determine if any pattern matches the MIME type;
             // once any pattern matches, `$carry` is `true` and the rest is skipped
-            $matches = array_reduce($rules['mime'], function ($carry, $pattern) use ($mime) {
-                return $carry || Mime::matches($mime, $pattern);
-            }, false);
+            $matches = array_reduce(
+                $rules['mime'],
+                fn ($carry, $pattern) => $carry || Mime::matches($mime, $pattern),
+                false
+            );
 
             if ($matches !== true) {
                 throw new Exception([

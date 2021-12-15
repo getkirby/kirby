@@ -6,12 +6,10 @@ use Kirby\Panel\Panel;
 return [
     'account' => [
         'pattern' => 'account',
-        'action'  => function () {
-            return [
-                'component' => 'k-account-view',
-                'props'     => kirby()->user()->panel()->props(),
-            ];
-        },
+        'action'  => fn () => [
+            'component' => 'k-account-view',
+            'props'     => kirby()->user()->panel()->props(),
+        ],
     ],
     'account.file' => [
         'pattern' => 'account/files/(:any)',
@@ -31,10 +29,6 @@ return [
     ],
     'account.password' => [
         'pattern' => 'reset-password',
-        'action'  => function () {
-            return [
-                'component' => 'k-reset-password-view',
-            ];
-        }
+        'action'  => fn () => ['component' => 'k-reset-password-view']
     ]
 ];

@@ -7,27 +7,13 @@ use Kirby\Cms\PageBlueprint;
  */
 return [
     'fields' => [
-        'name' => function (PageBlueprint $blueprint) {
-            return $blueprint->name();
-        },
-        'num' => function (PageBlueprint $blueprint) {
-            return $blueprint->num();
-        },
-        'options' => function (PageBlueprint $blueprint) {
-            return $blueprint->options();
-        },
-        'preview' => function (PageBlueprint $blueprint) {
-            return $blueprint->preview();
-        },
-        'status' => function (PageBlueprint $blueprint) {
-            return $blueprint->status();
-        },
-        'tabs' => function (PageBlueprint $blueprint) {
-            return $blueprint->tabs();
-        },
-        'title' => function (PageBlueprint $blueprint) {
-            return $blueprint->title();
-        },
+        'name'    => fn (PageBlueprint $blueprint) => $blueprint->name(),
+        'num'     => fn (PageBlueprint $blueprint) => $blueprint->num(),
+        'options' => fn (PageBlueprint $blueprint) => $blueprint->options(),
+        'preview' => fn (PageBlueprint $blueprint) => $blueprint->preview(),
+        'status'  => fn (PageBlueprint $blueprint) => $blueprint->status(),
+        'tabs'    => fn (PageBlueprint $blueprint) => $blueprint->tabs(),
+        'title'   => fn (PageBlueprint $blueprint) => $blueprint->title(),
     ],
     'type' => 'Kirby\Cms\PageBlueprint',
     'views' => [

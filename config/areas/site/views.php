@@ -5,9 +5,7 @@ use Kirby\Cms\Find;
 return [
     'page' => [
         'pattern' => 'pages/(:any)',
-        'action'  => function (string $path) {
-            return Find::page($path)->panel()->view();
-        }
+        'action'  => fn (string $path) => Find::page($path)->panel()->view()
     ],
     'page.file' => [
         'pattern' => 'pages/(:any)/files/(:any)',
@@ -17,9 +15,7 @@ return [
     ],
     'site' => [
         'pattern' => 'site',
-        'action'  => function () {
-            return site()->panel()->view();
-        }
+        'action'  => fn () => site()->panel()->view()
     ],
     'site.file' => [
         'pattern' => 'site/files/(:any)',

@@ -516,9 +516,7 @@ class Dir
 
         // add absolute paths
         if ($absolute === true) {
-            $result = array_map(function ($item) use ($dir) {
-                return $dir . '/' . $item;
-            }, $result);
+            $result = array_map(fn ($item) => $dir . '/' . $item, $result);
         }
 
         return $result;

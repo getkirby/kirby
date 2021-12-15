@@ -7,9 +7,7 @@ $files = require __DIR__ . '/../files/dropdowns.php';
 return [
     'changes' => [
         'pattern' => 'changes',
-        'options' => function () {
-            return Dropdown::changes();
-        }
+        'options' => fn () => Dropdown::changes()
     ],
     'page' => [
         'pattern' => 'pages/(:any)',

@@ -7,18 +7,10 @@ use Kirby\Cms\UserBlueprint;
  */
 return [
     'fields' => [
-        'name' => function (UserBlueprint $blueprint) {
-            return $blueprint->name();
-        },
-        'options' => function (UserBlueprint $blueprint) {
-            return $blueprint->options();
-        },
-        'tabs' => function (UserBlueprint $blueprint) {
-            return $blueprint->tabs();
-        },
-        'title' => function (UserBlueprint $blueprint) {
-            return $blueprint->title();
-        },
+        'name'    => fn (UserBlueprint $blueprint) => $blueprint->name(),
+        'options' => fn (UserBlueprint $blueprint) => $blueprint->options(),
+        'tabs'    => fn (UserBlueprint $blueprint) => $blueprint->tabs(),
+        'title'   => fn (UserBlueprint $blueprint) => $blueprint->title(),
     ],
     'type' => 'Kirby\Cms\UserBlueprint',
     'views' => [

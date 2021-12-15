@@ -756,9 +756,11 @@ class F
     public static function size($file): int
     {
         if (is_array($file) === true) {
-            return array_reduce($file, function ($total, $file) {
-                return $total + F::size($file);
-            }, 0);
+            return array_reduce(
+                $file,
+                fn ($total, $file) => $total + F::size($file),
+                0
+            );
         }
 
         try {
