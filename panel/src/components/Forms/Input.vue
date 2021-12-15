@@ -105,10 +105,7 @@ export default {
       }
 
       const input = this.$el.querySelector("input, select, textarea");
-
-      if (typeof input?.[method] === "function") {
-        input[method]();
-      }
+      input?.[method]?.();
     }
   }
 };

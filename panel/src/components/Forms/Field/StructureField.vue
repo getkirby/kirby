@@ -443,9 +443,7 @@ export default {
       this.submit();
     },
     focus() {
-      if (this.$refs.add?.focus) {
-        this.$refs.add.focus();
-      }
+      this.$refs.add?.focus?.();
     },
     indexOf(index) {
       if (!this.limit) {

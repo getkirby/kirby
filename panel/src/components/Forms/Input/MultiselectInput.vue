@@ -288,9 +288,7 @@ export default {
     },
     onOpen() {
       this.$nextTick(() => {
-        if (this.$refs.search?.focus) {
-          this.$refs.search.focus();
-        }
+        this.$refs.search?.focus?.();
 
         this.$refs.dropdown.$el.querySelector(
           ".k-multiselect-options"

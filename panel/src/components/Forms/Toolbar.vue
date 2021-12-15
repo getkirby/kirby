@@ -131,10 +131,7 @@ export default {
     close() {
       Object.keys(this.$refs).forEach((ref) => {
         const component = this.$refs[ref][0];
-
-        if (typeof component?.close === "function") {
-          component.close();
-        }
+        component?.close?.();
       });
     },
     fileCommandSetup() {

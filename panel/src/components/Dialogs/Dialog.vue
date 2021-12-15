@@ -219,10 +219,7 @@ export default {
     focus() {
       if (this.$refs.dialog?.querySelector) {
         const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
-
-        if (typeof btn?.focus === "function") {
-          btn.focus();
-        }
+        btn?.focus?.();
       }
     },
     /**
