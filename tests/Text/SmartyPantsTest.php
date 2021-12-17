@@ -15,6 +15,14 @@ class SmartyPantsTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
+    public function testParseEmpty()
+    {
+        $parser = new SmartyPants();
+
+        $this->assertSame('', $parser->parse());
+        $this->assertSame('', $parser->parse(''));
+    }
+
     public function testDefaults()
     {
         $expected = [

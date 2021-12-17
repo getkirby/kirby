@@ -343,7 +343,7 @@ return [
      * Modify all URLs
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $path URL path
+     * @param string|null $path URL path
      * @param array|string|null $options Array of options for the Uri class
      * @return string
      */
@@ -376,7 +376,10 @@ return [
         }
 
         // keep relative urls
-        if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
+        if (
+            $path !== null &&
+            (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
+        ) {
             return $path;
         }
 

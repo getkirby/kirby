@@ -28,7 +28,10 @@ class UrlTest extends TestCase
 
     public function testTo()
     {
-        $this->assertEquals('https://getkirby.com/projects', Url::to('projects'));
+        $this->assertSame('https://getkirby.com', Url::to());
+        $this->assertSame('https://getkirby.com', Url::to(''));
+        $this->assertSame('https://getkirby.com', Url::to('/'));
+        $this->assertSame('https://getkirby.com/projects', Url::to('projects'));
     }
 
     public function testToWithLanguage()
