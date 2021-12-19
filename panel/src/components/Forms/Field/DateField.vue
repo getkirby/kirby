@@ -3,10 +3,10 @@
     <k-input
       :id="_uid"
       ref="input"
-      :value="date"
+      :type="inputType"
+      :value="value"
       v-bind="$props"
       theme="field"
-      type="date"
       v-on="listeners"
     >
       <template v-if="calendar" #icon>
@@ -35,14 +35,14 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as DateInput } from "../Input/DateInput.vue";
+import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-datetime-input>` for additional information.
  * @example <k-date-field v-model="date" name="date" label="Date" />
  */
 export default {
-  mixins: [Field, Input, DateInput],
+  mixins: [Field, Input, DateTimeInput],
   inheritAttrs: false,
   props: {
     /**
@@ -63,6 +63,9 @@ export default {
     };
   },
   computed: {
+    inputType() {
+      return this.time === false ? "date" : "datetime";
+    },
     listeners() {
       return {
         ...this.$listeners,
