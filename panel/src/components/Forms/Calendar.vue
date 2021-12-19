@@ -348,9 +348,7 @@ export default {
       this.show(prev);
     },
     onTime() {
-      this.dt = this.dt
-        .set("hour", this.current.hour)
-        .set("minute", this.current.minute);
+      this.dt = this.dt.merge(this.view, "time");
       this.onInput();
     },
     /**
