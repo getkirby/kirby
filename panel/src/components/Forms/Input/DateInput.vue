@@ -110,6 +110,11 @@ export default {
   },
   mounted() {
     this.onInvalid();
+    // make sure to commit temporary value when Cmd+S is hit
+    this.$events.$on("keydown.cmd.s", this.onBlur);
+  },
+  destroyed() {
+    this.$events.$off("keydown.cmd.s", this.onBlur);
   },
   methods: {
     /**
