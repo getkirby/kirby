@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -9,6 +10,20 @@ use PHPUnit\Framework\TestCase;
  */
 class YamlTest extends TestCase
 {
+    protected $app;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'options' => [
+                'yaml' => 'symfony'
+            ],
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+    }
+
     /**
      * @covers ::encode
      * @covers ::decode
@@ -29,7 +44,7 @@ class YamlTest extends TestCase
         $result = Yaml::decode($data);
         $this->assertSame($array, $result);
 
-        $this->assertSame('', Yaml::encode([]));
+        $this->assertSame('[]', Yaml::encode([]));
         $this->assertSame([], Yaml::decode(''));
 
         $this->assertSame([], Yaml::decode(null));
@@ -86,5 +101,30 @@ class YamlTest extends TestCase
         $this->assertSame('number: 3.2' . PHP_EOL, $data);
 
         setlocale(LC_ALL, $locale);
+    }
+
+    /**
+     * @covers ::encode
+     * @covers ::decode
+     */
+    public function testEncodeDecodeSpaces()
+    {
+        $array = [
+            'builder' => [
+                'blocks' => [
+                    ['content' => 'This is a
+     test to see,
+         if indentation can be preservered
+                     '],
+                    ['content' => '
+                     or not
+                     ']
+                ]
+            ]
+        ];
+
+        $data   = Yaml::encode($array);
+        $result = Yaml::decode($data);
+        $this->assertSame($array, $result);
     }
 }

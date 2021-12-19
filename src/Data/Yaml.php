@@ -3,10 +3,12 @@
 namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Spyc;
+use Symfony\Component\Yaml\Yaml as Symfony;
 
 /**
- * Simple Wrapper around the Spyc YAML class
+ * Simple Wrapper around the Spyc or Symfony YAML class
  *
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -24,22 +26,33 @@ class Yaml extends Handler
      */
     public static function encode($data): string
     {
-        // TODO: The locale magic should no longer be
-        //       necessary when support for PHP 7.x is dropped
+        // get YAML handler from config option
+        $handler = kirby()->option('yaml', 'spyc');
 
-        // fetch the current locale setting for numbers
-        $locale = setlocale(LC_NUMERIC, 0);
+        if ($handler === 'symfony') {
+            return Symfony::dump($data, 2, 2, Symfony::DUMP_MULTI_LINE_LITERAL_BLOCK | Symfony::DUMP_EMPTY_ARRAY_AS_SEQUENCE);
+        }
 
-        // change to english numerics to avoid issues with floats
-        setlocale(LC_NUMERIC, 'C');
+        if ($handler === 'spyc') {
+            // TODO: The locale magic should no longer be
+            //       necessary when support for PHP 7.x is dropped
 
-        // $data, $indent, $wordwrap, $no_opening_dashes
-        $yaml = Spyc::YAMLDump($data, false, false, true);
+            // fetch the current locale setting for numbers
+            $locale = setlocale(LC_NUMERIC, 0);
 
-        // restore the previous locale settings
-        setlocale(LC_NUMERIC, $locale);
+            // change to english numerics to avoid issues with floats
+            setlocale(LC_NUMERIC, 'C');
 
-        return $yaml;
+            // $data, $indent, $wordwrap, $no_opening_dashes
+            $yaml = Spyc::YAMLDump($data, false, false, true);
+
+            // restore the previous locale settings
+            setlocale(LC_NUMERIC, $locale);
+
+            return $yaml;
+        }
+
+        throw new InvalidArgumentException('Invalid YAML handler: ' . $handler);
     }
 
     /**
@@ -62,16 +75,30 @@ class Yaml extends Handler
             throw new InvalidArgumentException('Invalid YAML data; please pass a string');
         }
 
+        // get YAML handler from config option
+        $handler = kirby()->option('yaml', 'spyc');
+
         // remove BOM
         $string = str_replace("\xEF\xBB\xBF", '', $string);
-        $result = Spyc::YAMLLoadString($string);
 
-        if (is_array($result)) {
+        if ($handler === 'symfony') {
+            $result = Symfony::parse($string);
+            $result = A::wrap($result);
             return $result;
-        } else {
-            // apparently Spyc always returns an array, even for invalid YAML syntax
-            // so this Exception should currently never be thrown
-            throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
         }
+
+        if ($handler === 'spyc') {
+            $result = Spyc::YAMLLoadString($string);
+
+            if (is_array($result)) {
+                return $result;
+            } else {
+                // apparently Spyc always returns an array, even for invalid YAML syntax
+                // so this Exception should currently never be thrown
+                throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
+            }
+        }
+
+        throw new InvalidArgumentException('Invalid YAML handler: ' . $handler);
     }
 }

@@ -30,7 +30,8 @@
     "phpmailer/phpmailer": "6.5.3",
     "psr/log": "1.1.4",
     "symfony/polyfill-intl-idn": "1.23.0",
-    "symfony/polyfill-mbstring": "1.23.1"
+    "symfony/polyfill-mbstring": "1.23.1",
+    "symfony/yaml": "^5.4"
   },
   "replace": {
     "symfony/polyfill-php72": "*"

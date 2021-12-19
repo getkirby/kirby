@@ -106,6 +106,24 @@
             'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
             'dev_requirement' => false,
         ),
+        'symfony/deprecation-contracts' => array(
+            'pretty_version' => 'v3.0.0',
+            'version' => '3.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/deprecation-contracts',
+            'aliases' => array(),
+            'reference' => 'c726b64c1ccfe2896cb7df2e1331c357ad1c8ced',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-ctype' => array(
+            'pretty_version' => 'v1.23.0',
+            'version' => '1.23.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
+            'aliases' => array(),
+            'reference' => '46cd95797e9df938fdd2b03693b5fca5e64b01ce',
+            'dev_requirement' => false,
+        ),
         'symfony/polyfill-intl-idn' => array(
             'pretty_version' => 'v1.23.0',
             'version' => '1.23.0.0',
@@ -138,6 +156,15 @@
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'symfony/yaml' => array(
+            'pretty_version' => 'v5.4.0',
+            'version' => '5.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/yaml',
+            'aliases' => array(),
+            'reference' => '034ccc0994f1ae3f7499fa5b1f2e75d5e7a94efc',
+            'dev_requirement' => false,
         ),
     ),
 );
