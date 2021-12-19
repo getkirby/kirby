@@ -1,5 +1,6 @@
 <template>
   <div class="k-calendar-input">
+    <!-- Month + year selects -->
     <nav>
       <k-button icon="angle-left" @click="onPrev" />
       <span class="k-calendar-selects">
@@ -20,6 +21,7 @@
     </nav>
 
     <table class="k-calendar-table">
+      <!-- Weekdays -->
       <thead>
         <tr>
           <th v-for="day in weekdays" :key="'weekday_' + day">
@@ -27,6 +29,7 @@
           </th>
         </tr>
       </thead>
+      <!-- Dates grid -->
       <tbody>
         <tr v-for="week in weeks" :key="'week_' + week">
           <td
@@ -46,6 +49,7 @@
         </tr>
       </tbody>
       <tfoot>
+        <!-- Time selects -->
         <tr v-if="time" class="k-calendar-time">
           <td colspan="3">
             <k-select-input
@@ -67,6 +71,7 @@
             />
           </td>
         </tr>
+        <!-- Today button -->
         <tr>
           <td class="k-calendar-today" colspan="7">
             <k-button :text="$t('today')" @click="select('today')" />
@@ -122,6 +127,8 @@ export default {
       let min = 0;
       let max = 59;
 
+      // Use min/max only if we have already selected
+      // the same day and hour as min/max
       if (this.current.min && this.dt.isSame(this.current.min, "hour")) {
         min = this.current.min.get("minute");
       }
@@ -139,21 +146,30 @@ export default {
       let min = 0;
       let max = 23;
 
-      if (this.current.min && this.dt.isSame(this.current.min, "date")) {
+      // Use min/max only if we have already selected
+      // the same day as min/max
+      if (this.current.min && this.dt.isSame(this.current.min, "day")) {
         min = this.current.min.get("hour");
       }
-      if (this.current.max && this.dt.isSame(this.current.max, "date")) {
+      if (this.current.max && this.dt.isSame(this.current.max, "day")) {
         max = this.current.max.get("hour");
       }
 
       return this.toOptions(min, max);
     },
     /**
+     * Number of days in the current month
+     * @returns {number}
+     */
+    numberOfDays() {
+      return this.toDate().daysInMonth();
+    },
+    /**
      * Adjusted weekday number (Sunday is 7 not 0)
      * @returns {number}
      */
     firstWeekday() {
-      const weekday = this.view.day();
+      const weekday = this.toDate().day();
       return weekday > 0 ? weekday : 7;
     },
     /**
@@ -170,7 +186,11 @@ export default {
      * @returns {number}
      */
     weeks() {
-      return Math.ceil((this.view.daysInMonth() + this.firstWeekday - 1) / 7);
+      // in which column do we need to start
+      const offset = this.firstWeekday - 1;
+      // how many weeks/rows do we need
+      // to cover offset and all days
+      return Math.ceil((this.numberOfDays + offset) / 7);
     },
     /**
      * Translated month names
@@ -222,19 +242,7 @@ export default {
     years() {
       const min = this.current.min?.get("year") ?? this.current.year - 20;
       const max = this.current.max?.get("year") ?? this.current.year + 20;
-
       return this.toOptions(min, max);
-    },
-    /**dis
-     * dayjs object for the current calendar view
-     * @returns {Object}
-     */
-    view() {
-      return this.$library.dayjs(
-        `${this.current.year}-${this.current.month + 1}-01 ${
-          this.current.hour
-        }:${this.current.minute}:00`
-      );
     }
   },
   watch: {
@@ -276,12 +284,14 @@ export default {
      */
     days(week) {
       let days = [];
-      const start = (week - 1) * 7 + 1;
-      const max = this.view.daysInMonth();
 
-      for (let x = start; x < start + 7; x++) {
+      const start = (week - 1) * 7 + 1;
+      const end = start + 7;
+
+      for (let x = start; x < end; x++) {
         const day = x - (this.firstWeekday - 1);
-        days.push(day > 0 && day <= max ? day : "");
+        const isPlaceholder = day <= 0 || day > this.numberOfDays;
+        days.push(!isPlaceholder ? day : "");
       }
 
       return days;
@@ -307,10 +317,6 @@ export default {
      * @returns {boolean}
      */
     isSelected(day) {
-      if (day === "") {
-        return false;
-      }
-
       return this.toDate(day).isSame(this.dt, "day");
     },
     /**
@@ -337,18 +343,18 @@ export default {
      * Shows the following month
      */
     onNext() {
-      const next = this.view.clone().add(1, "month");
+      const next = this.toDate().add(1, "month");
       this.show(next);
     },
     /**
      * Shows the previous month
      */
     onPrev() {
-      let prev = this.view.clone().subtract(1, "month");
+      const prev = this.toDate().subtract(1, "month");
       this.show(prev);
     },
     onTime() {
-      this.dt = this.dt.merge(this.view, "time");
+      this.dt = this.dt.merge(this.toDate(), "time");
       this.onInput();
     },
     /**
@@ -356,9 +362,10 @@ export default {
      * based on current view (month + year)
      */
     select(day) {
+      // when selecting today, make sure to merge in current time selects
       const date =
         day === "today"
-          ? this.$library.dayjs().merge(this.view, "time")
+          ? this.$library.dayjs().merge(this.toDate(), "time")
           : this.toDate(day);
       this.dt = date;
       this.show(date);
@@ -379,7 +386,7 @@ export default {
      * @param {number} day
      * @param {number} month
      */
-    toDate(day, month = this.current.month) {
+    toDate(day = 1, month = this.current.month) {
       return this.$library.dayjs(
         `${this.current.year}-${month + 1}-${day} ${this.current.hour}:${
           this.current.minute
