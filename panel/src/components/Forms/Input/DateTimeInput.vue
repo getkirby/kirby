@@ -1,20 +1,20 @@
 <template>
   <div class="k-datetime-input">
     <k-date-input
-      ref="dateInput"
-      v-bind="dateOptions"
-      @input="onInput($event, 'date')"
-      @update="onUpdate($event, 'date')"
-      @enter="onEnter($event, 'date')"
+      ref="dateOptions"
+      v-bind="$props"
+      @input="onChange"
+      @enter="onChange($event, 'enter')"
+      @update="onChange($event, 'update')"
       @focus="$emit('focus')"
     />
     <template v-if="time">
       <k-time-input
         ref="timeInput"
         v-bind="timeOptions"
-        @input="onInput($event, 'time')"
-        @update="onUpdate($event, 'time')"
-        @enter="onEnter($event, 'time')"
+        @input="onChange($event, 'input', 'time')"
+        @enter="onChange($event, 'enter', 'time')"
+        @update="onChange($event, 'update', 'time')"
         @focus="$emit('focus')"
       />
     </template>
@@ -43,11 +43,15 @@ export default {
   inheritAttrs: false,
   data() {
     return {
-      input: this.toDatetime(this.value)
+      dt: this.$library.dayjs.iso(this.value)
     };
   },
   computed: {
     dateOptions() {
+      // we don't bind the full $props to the
+      // date input so that we can exclude e.g.
+      // `min` and `max` since validation should
+      // only happen in this component
       return {
         autofocus: this.autofocus,
         disabled: this.disabled,
@@ -62,15 +66,13 @@ export default {
         ...this.time,
         disabled: this.disabled,
         required: this.required,
-        value: this.value
-          ? this.toDatetime(this.value).format("HH:mm:ss")
-          : null
+        value: this.dt.toISO("time")
       };
     }
   },
   watch: {
-    value() {
-      this.input = this.toDatetime(this.value);
+    value(value) {
+      this.input = this.$library.dayjs.iso(value);
       this.onInvalid();
     }
   },
@@ -78,61 +80,36 @@ export default {
     this.onInvalid();
   },
   methods: {
-    emit(event, dt = this.input) {
-      if (dt) {
-        this.$emit(event, dt.format("YYYY-MM-DD HH:mm:ss"));
-      } else {
-        this.$emit(event, "");
-      }
-    },
+    /**
+     * Focuses the input element
+     * @public
+     */
     focus() {
       this.$refs.dateInput.focus();
     },
-
-    onEnter(value, units) {
-      this.onUpdate(units, value);
-      this.emit("enter");
-    },
-    onInput(value, units) {
-      this.input = this.toDatetime(value, units, this.input);
-      this.emit("input");
+    /**
+     * We process the temporary input and
+     * emit it as specified event
+     * @param {string} input emitted datetime part as ISO string
+     * @param {string} part `date` or `time`
+     */
+    onChange(input, event = "input", part = "date") {
+      this.update(input, part);
+      this.$emit(event, this.dt.toISO());
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    onUpdate(value, units) {
-      const base = this.toDatetime(this.value);
-      value = this.toDatetime(value, units, base);
-      this.emit("update", value);
-    },
-    toDatetime(value, units, dt) {
-      // if only value is passed,
-      // parse value as dayjs date and
-      // return object (or null if invalid)
-
-      if (!value) {
-        return null;
-      }
-
-      let result = this.$library.dayjs.utc(value);
-
-      if (units === "time") {
-        result = this.$library.dayjs.utc(value, "HH:mm:ss");
-      }
-
-      if (result.isValid() === false) {
-        return null;
-      }
-
-      // if also input and base are passed,
-      // take the input (date or time) values from value
-      // and merge these onto the base dayjs object
-
-      if (!units || !dt) {
-        return result;
-      }
-
-      return dt.update(units, result);
+    /**
+     * Update the local datetime object from ISO string
+     * by specifying what datetime part the string refers to
+     * @public
+     * @param {string} string datetime part as ISO string
+     * @param {string} part `date` or `time`
+     */
+    update(string, part = "date") {
+      const dt = this.$library.dayjs.iso(string, part);
+      this.dt = this.dt.merge(dt, part);
     }
   },
   validations() {
@@ -140,15 +117,15 @@ export default {
       value: {
         min: this.min
           ? (value) =>
-              this.$library.dayjs
-                .utc(value)
-                .validate(this.min, "isAfter", this.step.unit)
+              this.$library
+                .dayjs(value)
+                .validate(this.min, "min", this.step.unit)
           : true,
         max: this.max
           ? (value) =>
-              this.$library.dayjs
-                .utc(value)
-                .validate(this.max, "isBefore", this.step.unit)
+              this.$library
+                .dayjs(value)
+                .validate(this.max, "max", this.step.unit)
           : true,
         required: this.required ? validateRequired : true
       }

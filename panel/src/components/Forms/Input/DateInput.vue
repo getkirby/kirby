@@ -96,12 +96,6 @@ export default {
       return this.pattern.format(this.dt);
     },
     /**
-     * dayjs pattern to use for ISO format
-     */
-    iso() {
-      return "YYYY-MM-DD HH:mm:ss";
-    },
-    /**
      * dayjs pattern class for `display` pattern
      */
     pattern() {
@@ -294,25 +288,14 @@ export default {
      * @public
      */
     toDatetime(string) {
-      const dt = this.$library.dayjs(string, this.iso);
-
-      if (!dt || !dt.isValid()) {
-        return null;
-      }
-
-      return dt;
+      return this.$library.dayjs.iso(string);
     },
     /**
      * Converts dayjs object to ISO string
-     * @param {string} string
-     * @public
+     * @param {Object} dt
      */
     toISO(dt) {
-      if (!dt || !dt.isValid()) {
-        return null;
-      }
-
-      return dt.format(this.iso);
+      return dt?.toISO();
     }
   },
   validations() {

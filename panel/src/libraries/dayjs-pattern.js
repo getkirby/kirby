@@ -66,10 +66,12 @@ export default (option, Dayjs, dayjs) => {
           (part) => part.start <= start && part.end >= end - 1
         );
 
+        // exact selection found
         if (matches[0]) {
           return matches[0];
         }
 
+        // fallback to part where selection starts
         return this.parts.filter((part) => part.start <= start).pop();
       }
 
@@ -100,7 +102,7 @@ export default (option, Dayjs, dayjs) => {
           const variations = this.variations();
 
           for (let i = 0; i < variations.length; i++) {
-            const dt = this.parse(input, variations[i]);
+            const dt = this.dayjs(input, variations[i]);
 
             if (dt.isValid() === true) {
               return dt;
@@ -109,32 +111,6 @@ export default (option, Dayjs, dayjs) => {
         }
 
         return null;
-      }
-
-      /**
-       * Generates dayjs object from input
-       * @param {string} input
-       * @param {string} format uses the pattern as default
-       * @returns {Object|null}
-       */
-      parse(input, format) {
-        if (!input) {
-          return null;
-        }
-
-        if (typeof input === "object" && input.isValid()) {
-          return input;
-        }
-
-        if (!format && this.isTime === true) {
-          format = "HH:mm:ss";
-        }
-
-        if (!format) {
-          return this.dayjs.utc(input);
-        }
-
-        return this.dayjs.utc(input, format);
       }
 
       /**

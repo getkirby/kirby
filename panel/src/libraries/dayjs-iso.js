@@ -9,13 +9,12 @@ export default (option, Dayjs, dayjs) => {
     if (format === "date") {
       return "YYYY-MM-DD";
     }
+
     if (format === "time") {
       return "HH:mm:ss";
     }
-    if (format === "datetime") {
-      return "YYYY-MM-DD HH:mm:ss";
-    }
-    return format;
+
+    return "YYYY-MM-DD HH:mm:ss";
   };
 
   /**

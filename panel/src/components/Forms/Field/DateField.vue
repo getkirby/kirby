@@ -7,7 +7,10 @@
       :value="value"
       v-bind="$props"
       theme="field"
-      v-on="listeners"
+      @enter="onSelect"
+      @focus="onFocus"
+      @input="onInput"
+      @update="onUpdate"
     >
       <template v-if="calendar" #icon>
         <k-dropdown>
@@ -59,21 +62,16 @@ export default {
   },
   data() {
     return {
+      // ISO string - we need to hold on to an temporary
+      // value, so that we can pass the temporary input event values
+      // on to the calendar component without updating the content value
+      // (we will update only on the update event)
       datetime: this.value
     };
   },
   computed: {
     inputType() {
       return this.time === false ? "date" : "datetime";
-    },
-    listeners() {
-      return {
-        ...this.$listeners,
-        enter: this.onSelect,
-        focus: this.onFocus,
-        input: this.onInput,
-        update: this.onUpdate
-      };
     }
   },
   watch: {
@@ -82,26 +80,39 @@ export default {
     }
   },
   methods: {
+    /**
+     * Focuses the input element
+     * @public
+     */
     focus() {
       this.$refs.input.focus();
     },
+    /**
+     * Open calendar when input is focussed
+     */
+    onFocus() {
+      this.$refs.calendar?.open();
+    },
+    /**
+     * Update the content value by
+     * emitting the input event
+     */
     onUpdate(value) {
       this.$emit("input", value);
     },
-    onFocus() {
-      if (this.$refs.calendar) {
-        this.$refs.calendar.open();
-      }
-    },
+    /**
+     * Store temporary value to be
+     * shared between input and calendar
+     */
     onInput(value) {
       this.datetime = value;
     },
+    /**
+     * Update value and close calendar
+     */
     onSelect(value) {
       this.onUpdate(value);
-
-      if (this.$refs.calendar) {
-        this.$refs.calendar.close();
-      }
+      this.$refs.calendar?.close();
     }
   }
 };

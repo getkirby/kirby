@@ -10,6 +10,12 @@ export default (option, Dayjs) => {
   Dayjs.prototype.merge = function (dt, units = "date") {
     let result = this.clone();
 
+    // if provided object is not valid,
+    // return unaltered
+    if (!dt || !dt.isValid()) {
+      return result;
+    }
+
     // if string alias has been provided,
     // transform to array of units
     if (typeof units === "string") {

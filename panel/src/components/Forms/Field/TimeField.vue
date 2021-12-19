@@ -6,7 +6,7 @@
       v-bind="$props"
       theme="field"
       type="time"
-      v-on="listeners"
+      @update="$emit('input', $event)"
     />
   </k-field>
 </template>
@@ -30,16 +30,11 @@ export default {
       default: "clock"
     }
   },
-  computed: {
-    listeners() {
-      return {
-        ...this.$listeners,
-        update: (input) => this.$emit("input", input),
-        input: () => {}
-      };
-    }
-  },
   methods: {
+    /**
+     * Focuses the input element
+     * @public
+     */
     focus() {
       this.$refs.input.focus();
     }

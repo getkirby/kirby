@@ -1,4 +1,4 @@
-export default (option, Dayjs) => {
+export default (option, Dayjs, dayjs) => {
   /**
    * Validates datetime against an
    * upper or lower (min/max) boundary
@@ -19,13 +19,13 @@ export default (option, Dayjs) => {
       return true;
     }
 
+    // generate dayjs object for value
+    boundary = dayjs.iso(boundary);
+
     const condition = {
       min: "isAfter",
       max: "isBefore"
     }[type];
-
-    // generate dayjs object for value
-    boundary = this.parse(boundary);
 
     // whether input is the reference or within the condition (upper/lower)
     // compared against the unit
