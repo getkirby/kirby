@@ -1,6 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("Merging", () => {
+describe("dayjs.merge()", () => {
   const data = [
     [
       "2020-02-29 16:05:15",
@@ -31,9 +31,7 @@ describe("Merging", () => {
       expect(a.merge(b, data[test][2])).toStrictEqual(dayjs(data[test][3]));
     });
   }
-});
 
-describe("Failures", () => {
   it("Unsupported unit alias", () => {
     const a = dayjs("2020-01-01");
     const b = dayjs("2020-02-01");

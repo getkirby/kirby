@@ -1,6 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("Validating", () => {
+describe("dayjs.validate()", () => {
   const data = {
     "min by day": [
       {
@@ -76,9 +76,7 @@ describe("Validating", () => {
       }
     });
   }
-});
 
-describe("Failures", () => {
   it("no parameters", () => {
     expect(dayjs().validate()).toBe(true);
     expect(dayjs("Invalid").validate()).toBe(false);
