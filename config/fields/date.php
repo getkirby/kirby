@@ -4,6 +4,7 @@ use Kirby\Exception\Exception;
 use Kirby\Form\Field;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
     'mixins' => ['datetime'],
@@ -76,9 +77,13 @@ return [
         }
     ],
     'computed' => [
+        'display' => function () {
+            if ($this->display) {
+                return Str::upper($this->display);
+            }
+        },
         'format' => function () {
-            $default = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
-            return $this->props['format'] ?? $default;
+            return $this->props['format'] ?? ($this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s');
         },
         'time' => function () {
             if ($this->time === false) {
