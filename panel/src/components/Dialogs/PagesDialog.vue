@@ -31,7 +31,13 @@
       />
 
       <template v-if="items.length">
-        <k-items :items="items" layout="list" :sortable="false" @item="toggle">
+        <k-items
+          :items="items"
+          :link="false"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
           <template #options="{ item: page }">
             <k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
             <k-button
