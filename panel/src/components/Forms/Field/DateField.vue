@@ -7,6 +7,7 @@
       :value="value"
       v-bind="$props"
       theme="field"
+      @blur="onBlur"
       @enter="onSelect"
       @focus="onFocus"
       @input="onInput"
@@ -88,6 +89,14 @@ export default {
       this.$refs.input.focus();
     },
     /**
+     * Closes calendar when input is blured
+     */
+    onBlur(e) {
+      if (!e || this.$el.contains(e.relatedTarget) === false) {
+        this.$refs.calendar?.close();
+      }
+    },
+    /**
      * Open calendar when input is focussed
      */
     onFocus() {
@@ -112,7 +121,7 @@ export default {
      */
     onSelect(value) {
       this.onUpdate(value);
-      this.$refs.calendar?.close();
+      this.onBlur();
     }
   }
 };
