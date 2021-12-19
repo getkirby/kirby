@@ -66,7 +66,7 @@ export default {
         ...this.time,
         disabled: this.disabled,
         required: this.required,
-        value: this.dt.toISO("time")
+        value: this.dt?.toISO("time")
       };
     }
   },
@@ -97,7 +97,7 @@ export default {
       const dt = this.$library.dayjs.iso(input, part);
       // merge specified part (date/time) into `this.dt`
       this.dt = this.dt.merge(dt, part);
-      this.$emit(event, this.dt.toISO());
+      this.$emit(event, this.dt?.toISO());
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
