@@ -114,38 +114,39 @@ export default {
     return this.data(this.value);
   },
   computed: {
+    /**
+     * Select options for minutes dropdown
+     * @returns {array}
+     */
     minutes() {
-      var options = [];
+      let min = 0;
+      let max = 59;
 
-      const min = this.current.min?.get("minute") ?? 0;
-      const max = this.current.max?.get("minute") ?? 59;
-
-      for (var x = min; x <= max; x++) {
-        options.push({
-          value: x,
-          text: this.$helper.pad(x)
-        });
+      if (this.current.min && this.dt.isSame(this.current.min, "hour")) {
+        min = this.current.min.get("minute");
+      }
+      if (this.current.max && this.dt.isSame(this.current.max, "hour")) {
+        max = this.current.max.get("minute");
       }
 
-      return options;
+      return this.toOptions(min, max);
     },
     /**
-     *
+     * Select options for hours dropdown
+     * @returns {array}
      */
     hours() {
-      var options = [];
+      let min = 0;
+      let max = 23;
 
-      const min = this.current.min?.get("hour") ?? 0;
-      const max = this.current.max?.get("hour") ?? 23;
-
-      for (var x = min; x <= max; x++) {
-        options.push({
-          value: x,
-          text: this.$helper.pad(x)
-        });
+      if (this.current.min && this.dt.isSame(this.current.min, "date")) {
+        min = this.current.min.get("hour");
+      }
+      if (this.current.max && this.dt.isSame(this.current.max, "date")) {
+        max = this.current.max.get("hour");
       }
 
-      return options;
+      return this.toOptions(min, max);
     },
     /**
      * Adjusted weekday number (Sunday is 7 not 0)
@@ -219,19 +220,10 @@ export default {
      * @returns {array}
      */
     years() {
-      var options = [];
-
       const min = this.current.min?.get("year") ?? this.current.year - 20;
       const max = this.current.max?.get("year") ?? this.current.year + 20;
 
-      for (var x = min; x <= max; x++) {
-        options.push({
-          value: x,
-          text: this.$helper.pad(x)
-        });
-      }
-
-      return options;
+      return this.toOptions(min, max);
     },
     /**dis
      * dayjs object for the current calendar view
@@ -395,6 +387,24 @@ export default {
           this.current.minute
         }:00`
       );
+    },
+    /**
+     * Generates select options between min and max
+     * @param {number} min
+     * @param {number} max
+     * @returns {array}
+     */
+    toOptions(min, max) {
+      var options = [];
+
+      for (var x = min; x <= max; x++) {
+        options.push({
+          value: x,
+          text: this.$helper.pad(x)
+        });
+      }
+
+      return options;
     }
   }
 };
