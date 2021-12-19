@@ -198,10 +198,9 @@ export default {
      * When blurring the input, commit its
      * parsed value as datetime object
      */
-    onBlur(e) {
+    onBlur() {
       this.dt = this.input;
       this.$emit("update", this.toISO(this.dt));
-      this.$emit("blur", e);
     },
     /**
      * When hitting enter, blur the input

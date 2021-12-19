@@ -6,7 +6,6 @@
       @input="onChange"
       @enter="onChange($event, 'enter')"
       @update="onChange($event, 'update')"
-      @blur="$emit('blur', $event)"
       @focus="$emit('focus')"
     />
     <template v-if="time">
@@ -16,7 +15,6 @@
         @input="onChange($event, 'input', 'time')"
         @enter="onChange($event, 'enter', 'time')"
         @update="onChange($event, 'update', 'time')"
-        @blur="$emit('blur', $event)"
         @focus="$emit('focus')"
       />
     </template>
