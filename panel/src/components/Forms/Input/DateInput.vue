@@ -124,15 +124,18 @@ export default {
       // first commit current input value to `dt` object
       this.dt = this.input;
 
+      // defaults for step
+      const step = this.toStep();
+
       // if no parsed result exist, use current datetime
       if (this.dt === null) {
-        this.dt = this.$library.dayjs().round(this.step.unit, this.step.size);
+        this.dt = this.$library.dayjs().round(step.unit, step.size);
       }
 
       // what unit to alter and by how much:
       // as default use the step unit and size
-      let unit = this.step.unit;
-      let size = this.step.size;
+      let unit = step.unit;
+      let size = step.size;
 
       // if a part in the input is selected,
       // manipulate that part
@@ -151,7 +154,7 @@ export default {
 
           // only use step size for step unit,
           // otherwise use size of 1
-          if (unit !== this.step.unit) {
+          if (unit !== step.unit) {
             size = 1;
           }
         }
@@ -159,10 +162,7 @@ export default {
 
       // change `dt` by determined size and unit
       // and emit as `update` event
-      this.dt = this.dt[operator](size, unit).round(
-        this.step.unit,
-        this.stepsize
-      );
+      this.dt = this.dt[operator](size, unit).round(step.unit, step.size);
       this.$emit("update", this.toISO(this.dt));
       this.$nextTick(() => this.select(selected));
     },
@@ -209,7 +209,8 @@ export default {
       let dt = this.pattern.interpret(input);
 
       if (dt) {
-        dt = dt.round(this.step.unit, this.step.size);
+        const step = this.toStep();
+        dt = dt.round(step.unit, step.size);
       }
 
       this.input = dt;
@@ -296,6 +297,17 @@ export default {
      */
     toISO(dt) {
       return dt?.toISO();
+    },
+    /**
+     * Merges step donfiguration with defaults
+     * @param {Object} step
+     * @returns {Object}
+     */
+    toStep(step = this.step) {
+      return {
+        ...this.$options.props.step.default(),
+        ...step
+      };
     }
   },
   validations() {
@@ -305,13 +317,13 @@ export default {
           ? (value) =>
               this.$library
                 .dayjs(value)
-                .validate(this.min, "min", this.step.unit)
+                .validate(this.min, "min", this.toStep().unit)
           : true,
         max: this.max
           ? (value) =>
               this.$library
                 .dayjs(value)
-                .validate(this.max, "max", this.step.unit)
+                .validate(this.max, "max", this.toStep().unit)
           : true,
         required: this.required ? validateRequired : true
       }

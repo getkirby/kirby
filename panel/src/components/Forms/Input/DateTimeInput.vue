@@ -88,28 +88,19 @@ export default {
       this.$refs.dateInput.focus();
     },
     /**
-     * We process the temporary input and
-     * emit it as specified event
+     * Process the temporary input and emit it as specified event
      * @param {string} input emitted datetime part as ISO string
      * @param {string} part `date` or `time`
      */
     onChange(input, event = "input", part = "date") {
-      this.update(input, part);
+      // parse input as ISO string (date or time)
+      const dt = this.$library.dayjs.iso(input, part);
+      // merge specified part (date/time) into `this.dt`
+      this.dt = this.dt.merge(dt, part);
       this.$emit(event, this.dt.toISO());
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
-    /**
-     * Update the local datetime object from ISO string
-     * by specifying what datetime part the string refers to
-     * @public
-     * @param {string} string datetime part as ISO string
-     * @param {string} part `date` or `time`
-     */
-    update(string, part = "date") {
-      const dt = this.$library.dayjs.iso(string, part);
-      this.dt = this.dt.merge(dt, part);
     }
   },
   validations() {
