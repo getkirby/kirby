@@ -5,7 +5,7 @@ export default (option, Dayjs) => {
    *
    * @param {Object} dt  dayjs object to merge into current object
    * @param {string|array} units array of units or alias (`date` or `time`)
-   * @returns
+   * @returns {Object}
    */
   Dayjs.prototype.merge = function (dt, units = "date") {
     let result = this.clone();

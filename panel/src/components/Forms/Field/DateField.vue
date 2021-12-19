@@ -47,8 +47,20 @@ import { props as Input } from "../Input.vue";
 import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-datetime-input>` for additional information.
+ * Form field to handle a date/datetime value.
+ *
+ * Bundles `k-date-input`/`k-datetime-input` with `k-calendar`.
+ * This is why we need to store a temporary datetimo ISO string
+ * which represents a current but unstored state of the input
+ * that we pass on to the calendar. That way the calendar shows
+ * the same state of the input, even when the value isn't yet passed
+ * up to the content store.
+ *
+ * Have a look at `<k-field>`, `<k-input>`
+ * and `<k-datetime-input>` for additional information.
+ *
  * @example <k-date-field v-model="date" name="date" label="Date" />
+ * @public
  */
 export default {
   mixins: [Field, Input, DateTimeInput],
@@ -68,10 +80,9 @@ export default {
   },
   data() {
     return {
-      // ISO string - we need to hold on to an temporary
-      // value, so that we can pass the temporary input event values
-      // on to the calendar component without updating the content value
-      // (we will update only on the update event)
+      // ISO string - we need to hold on to a temporary
+      // value, so that we can pass it to the calendar component
+      // without updating the content store yet
       datetime: this.value
     };
   },

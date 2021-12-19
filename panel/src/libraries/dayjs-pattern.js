@@ -61,6 +61,13 @@ export default (option, Dayjs, dayjs) => {
             this.units.includes("day")) === false;
       }
 
+      /**
+       * Returns information about part at
+       * provided selection/indexes
+       * @param {number} start
+       * @param {number} end
+       * @returns {Object}
+       */
       at(start, end = start) {
         const matches = this.parts.filter(
           (part) => part.start <= start && part.end >= end - 1

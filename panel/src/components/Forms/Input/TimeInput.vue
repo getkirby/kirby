@@ -4,7 +4,8 @@ import DateInput from "./DateInput.vue";
 export const props = {
   props: {
     /**
-     * dayjs format to parse and display the time
+     * Format to parse and display the time
+     * @values HH, H, hh, h, mm, m, ss, s, a
      * @example `hh:mm a`
      */
     display: {
@@ -13,14 +14,22 @@ export const props = {
     },
     /**
      * The last allowed time
+     * as ISO time string
      * @example `22:30:00`
      */
     max: String,
     /**
      * The first allowed time
+     * as ISO time string
      * @example `01:30:00`
      */
     min: String,
+    /**
+     * Rounding to the nearest step.
+     * Requires an object with a `unit`
+     * and a `size` key
+     * @example { unit: 'second', size: 15 }
+     */
     step: {
       type: Object,
       default() {
@@ -33,28 +42,38 @@ export const props = {
     type: {
       type: String,
       default: "time"
-    }
+    },
+    /**
+     * Value must be provided as ISO time string
+     * @example `22:33:00`
+     */
+    value: String
   }
 };
 
 /**
+ * Form input to handle a time value.
+ *
+ * Extends `k-date-input` and makes sure that values
+ * get parsed and emitted as time-only ISO string `HH:mm:ss`
+ *
  * @example <k-input v-model="time" name="time" type="time" />
+ * @public
  */
 export default {
   extends: DateInput,
   mixins: [props],
   methods: {
     /**
-     * Converts ISO string to dayjs object
+     * Converts ISO time string to dayjs object
      * @param {string} string
-     * @public
      */
     toDatetime(string) {
       return this.$library.dayjs.iso(string, "time");
     },
     /**
-     * Converts dayjs object to ISO string
-     * @param {Object} dt
+     * Converts dayjs object to ISO time string
+     * @param {Object|null} dt
      */
     toISO(dt) {
       return dt.toISO("time");

@@ -30,7 +30,7 @@ export default (option, Dayjs, dayjs) => {
    * Converts ISO string to dayjs object
    * @param {string} string
    * @param {string} format
-   * @returns {Object}
+   * @returns {Object|null}
    */
   dayjs.iso = function (string, format = "datetime") {
     const dt = dayjs(string, dayjsISOformat(format));

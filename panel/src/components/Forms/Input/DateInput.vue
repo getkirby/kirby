@@ -33,7 +33,8 @@ export const props = {
   mixins: [autofocus, disabled, id, required],
   props: {
     /**
-     * format to parse and display the datetime
+     * Format to parse and display the datetime
+     * @values YYYY, YY, MM, M, DD, D
      * @example `MM/DD/YY`
      */
     display: {
@@ -41,17 +42,20 @@ export const props = {
       default: "DD.MM.YYYY"
     },
     /**
-     * The last allowed date
+     * The last allowed date as ISO datetime string
      * @example `2025-12-31 22:30:00`
      */
     max: String,
     /**
-     * The first allowed date
+     * The first allowed date as ISO datetime string
      * @example `2020-01-01 01:30:00`
      */
     min: String,
     /**
-     * Rounding to the nearest step unit size
+     * Rounding to the nearest step.
+     * Requires an object with a `unit`
+     * and a `size` key
+     * @example { unit: 'minute', size: 30 }
      */
     step: {
       type: Object,
@@ -67,7 +71,7 @@ export const props = {
       default: "date"
     },
     /**
-     * The date must be provided as iso date string
+     * Value must be provided as ISO datetime string
      * @example `2012-12-12 22:33:00`
      */
     value: String
@@ -75,28 +79,36 @@ export const props = {
 };
 
 /**
+ * Form input to handle a date value.
+ *
+ * Component allows free input and tries to parse the
+ * input value based on a provided `display` format pattern.
+ * Support rounding to a nearest `step` as well as keyboard
+ * interactions (altering value by arrow up/down, selecting of
+ * input parts via tab key).
+ *
  * @example <k-input v-model="date" type="date" name="date" />
+ * @public
  */
 export default {
   mixins: [props],
   inheritAttrs: false,
   data() {
-    const dt = this.toDatetime(this.value);
-
     return {
-      dt,
-      input: dt
+      dt: this.toDatetime(this.value)
     };
   },
   computed: {
     /**
      * Formatted string for datetime object
+     * @returns {string}
      */
     formatted() {
       return this.pattern.format(this.dt);
     },
     /**
      * dayjs pattern class for `display` pattern
+     * @returns {Object}
      */
     pattern() {
       return this.$library.dayjs.pattern(this.display);
@@ -104,13 +116,13 @@ export default {
   },
   watch: {
     value(value) {
-      this.dt = this.input = this.toDatetime(value);
+      this.dt = this.toDatetime(value);
       this.onInvalid();
     }
   },
   mounted() {
     this.onInvalid();
-    // make sure to commit temporary value when Cmd+S is hit
+    // make sure to commit input value when Cmd+S is hit
     this.$events.$on("keydown.cmd.s", this.onBlur);
   },
   destroyed() {
@@ -121,13 +133,12 @@ export default {
      * Increment/decrement the current dayjs object based on the
      * cursor position in the input element and ensuring steps
      * @param {string} operator `add` or `substract`
-     * @public
      */
     alter(operator) {
-      // since manipulation command can occur
-      // while typing new value, make sure to
-      // first commit current input value to `dt` object
-      this.dt = this.input;
+      // since manipulation command can occur while
+      // typing new value, make sure to first update
+      // datetime object from current input value
+      this.dt = this.parse();
 
       // defaults for step
       const step = this.toStep();
@@ -181,7 +192,6 @@ export default {
     /**
      * Decrement the currently
      * selected input part
-     * @public
      */
     onArrowDown() {
       this.alter("subtract");
@@ -189,17 +199,16 @@ export default {
     /**
      * Increment the currently
      * selected input part
-     * @public
      */
     onArrowUp() {
       this.alter("add");
     },
     /**
-     * When blurring the input, commit its
-     * parsed value as datetime object
+     * When blurring the input, update
+     * datetime object from parsed value
      */
     onBlur() {
-      this.dt = this.input;
+      this.dt = this.parse();
       this.$emit("update", this.toISO(this.dt));
     },
     /**
@@ -210,17 +219,17 @@ export default {
       await this.$refs.input.blur();
       this.$emit("enter", this.toISO(this.dt));
     },
-    onInput(input) {
-      let dt = this.pattern.interpret(input);
+    /**
+     * Parse the current input value and
+     * emit it as well as check the validation
+     */
+    onInput() {
+      const dt = this.parse();
+      this.$emit("input", this.toISO(dt));
 
-      if (dt) {
-        const step = this.toStep();
-        dt = dt.round(step.unit, step.size);
-      }
-
-      this.input = dt;
-      this.onInvalid(input && !dt);
-      this.$emit("input", this.toISO(this.input));
+      // highlight as invalid if input isn't empty
+      // but cannot be parsed as datetime object
+      this.onInvalid(this.$refs.input.value && !dt);
     },
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
@@ -236,14 +245,17 @@ export default {
      *    => select the last affected part
      * d. cursor selection cover last part
      *    => tab should blur the input, focus on next tabbale element
+     *
+     * @param {Event} event
      */
     onTab(event) {
       // make sure to confirm any current input
-      this.dt = this.input;
+      this.onBlur();
 
       this.$nextTick(() => {
         const selection = this.selection();
-        // when an exact part is selected
+
+        // if an exact part is selected
         if (
           selection.start === this.$refs.input.selectionStart &&
           selection.end === this.$refs.input.selectionEnd - 1
@@ -267,6 +279,23 @@ export default {
       });
     },
     /**
+     * Takes current input value and
+     * tries to interpret it as datetime object
+     * based on the `display` pattern
+     * @return {Object|null}
+     */
+    parse() {
+      // get value and try to interpret
+      const input = this.$refs.input.value;
+      let dt = this.pattern.interpret(input);
+
+      // round to nearest step
+      const step = this.toStep();
+      dt = dt?.round(step.unit, step.size);
+
+      return dt;
+    },
+    /**
      * Sets the cursor selection in the input element
      * that includes the provided part
      * @param {Object} part
@@ -281,6 +310,7 @@ export default {
     },
     /**
      * Get pattern part for current cursor selection
+     * @returns {Object}
      */
     selection() {
       return this.pattern.at(
@@ -291,7 +321,7 @@ export default {
     /**
      * Converts ISO string to dayjs object
      * @param {string} string
-     * @public
+     * @return {Object|null}
      */
     toDatetime(string) {
       return this.$library.dayjs.iso(string);
@@ -299,13 +329,14 @@ export default {
     /**
      * Converts dayjs object to ISO string
      * @param {Object} dt
+     * @return {Object|null}
      */
     toISO(dt) {
       return dt?.toISO();
     },
     /**
      * Merges step donfiguration with defaults
-     * @param {Object} step
+     * @param {Object} step (default using `this.step`)
      * @returns {Object}
      */
     toStep(step = this.step) {

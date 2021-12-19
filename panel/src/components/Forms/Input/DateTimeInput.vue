@@ -28,16 +28,29 @@ import { required as validateRequired } from "vuelidate/lib/validators";
 export const props = {
   mixins: [DateInput],
   props: {
+    /**
+     * Time options (e.g. `display`, `step`).
+     * Please check docs for `k-time-input` props.
+     * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
+     */
     time: {
       type: [Boolean, Object],
       default() {
         return {};
       }
-    },
-    value: String
+    }
   }
 };
 
+/**
+ * Form input to handle a datetime value.
+ *
+ * Splits and merges value and responses among
+ * a separate date input and time input.
+ *
+ * @example <k-input v-model="value" name="datetime" type="datetime" />
+ * @public
+ */
 export default {
   mixins: [props],
   inheritAttrs: false,
