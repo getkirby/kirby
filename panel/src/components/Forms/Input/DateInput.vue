@@ -11,7 +11,7 @@
     :class="`k-text-input k-${type}-input`"
     :placeholder="display"
     :value="formatted"
-    autocomplete="false"
+    autocomplete="off"
     spellcheck="false"
     type="text"
     @blur="onBlur"
