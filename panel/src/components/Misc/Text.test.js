@@ -30,4 +30,19 @@ describe("Text.vue", () => {
     const wrapper = mount(Text);
     expect(wrapper.classes()).toContain("k-text");
   });
+
+  it("matches snapshot", async () => {
+    const wrapper = mount(Text, {
+      propsData: {
+        align: "right",
+        size: "large",
+        theme: "help"
+      },
+      slots: {
+        default: "This is some text"
+      }
+    });
+
+    expect(wrapper.element).toMatchSnapshot();
+  });
 });

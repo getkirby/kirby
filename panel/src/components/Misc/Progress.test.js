@@ -29,4 +29,14 @@ describe("Progress.vue", () => {
     const wrapper = mount(Progress);
     expect(wrapper.classes()).toContain("k-progress");
   });
+
+  it("matches snapshot", async () => {
+    const wrapper = mount(Progress, {
+      propsData: {
+        value: 30
+      }
+    });
+
+    expect(wrapper.element).toMatchSnapshot();
+  });
 });

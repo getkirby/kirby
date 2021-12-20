@@ -1,0 +1,12 @@
+// Vitest Snapshot v1
+
+exports[`Text.vue > matches snapshot 1`] = `
+<div
+  class="k-text"
+  data-align="right"
+  data-size="large"
+  data-theme="help"
+>
+  This is some text
+</div>
+`;
