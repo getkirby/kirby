@@ -4,6 +4,24 @@
 
 <script>
 /**
+ * Validates the value to be between 0 and 100
+ * @param {Number} value
+ * @param {Boolean} throws whether to throw an error when validation fails
+ * @returns {Boolean}
+ */
+const validator = (value, throws = false) => {
+  if (value >= 0 && value <= 100) {
+    return true;
+  }
+
+  if (throws) {
+    throw new Error("value has to be between 0 and 100");
+  }
+
+  return false;
+};
+
+/**
  * A simple progress bar that we
  * mostly use it in the upload dialog.
  * @public
@@ -18,7 +36,8 @@ export default {
      */
     value: {
       type: Number,
-      default: 0
+      default: 0,
+      validator: validator
     }
   },
   data() {
@@ -33,11 +52,12 @@ export default {
   },
   methods: {
     /**
-     * Update the value (if not possible via prop)
-     * @param {Number} value new value of the progress bar
+     * Update the value
+     * @param {Number} value new value of the progress bar (0-100)
      * @public
      */
     set(value) {
+      validator(value, true);
       this.state = value;
     }
   }
