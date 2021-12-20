@@ -97,10 +97,9 @@ export default defineConfig(({ command }) => {
       ...custom
     },
     test: {
-      environment: "happy-dom",
+      environment: "jsdom",
       include: ["**/*.test.js"],
-      global: true,
-      setupFiles: ["./tests/bootstrap.js"]
+      global: true
     }
   };
 });
