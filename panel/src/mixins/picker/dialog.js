@@ -111,7 +111,6 @@ export default {
       return this.selected[item.id] !== undefined;
     },
     item(item) {
-      item.link = false;
       return item;
     },
     toggle(item) {
