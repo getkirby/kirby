@@ -12,7 +12,7 @@
     "test:e2e": "cypress run",
     "test:e2e:open": "cypress open",
     "test:unit": "vitest",
-    "test:unit:coverage": "vitest --coverage"
+    "test:unit:coverage": "c8 vitest"
   },
   "dependencies": {
     "@linusborg/vue-simple-portal": "^0.1.5",
@@ -67,5 +67,11 @@
     "last 2 Opera versions",
     "last 2 OperaMobile versions",
     "last 2 UCAndroid versions"
-  ]
+  ],
+  "c8": {
+    "skip-full": true,
+    "exclude": [
+      "vite.config.js"
+    ]
+  }
 }
