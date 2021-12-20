@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import color from "./color.js";
 
 const data = {

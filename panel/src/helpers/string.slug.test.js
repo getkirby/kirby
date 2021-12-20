@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import { slug } from "./string.js";
 
 describe("$helper.string.slug()", () => {

@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import embed from "./embed.js";
 
 describe("$helper.embed()", () => {

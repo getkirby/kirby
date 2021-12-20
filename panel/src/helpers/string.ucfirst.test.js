@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import string from "./string.js";
 
 describe("$helper.string.ucfirst", () => {

@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
 const data = {
@@ -9,8 +13,8 @@ describe("dayjs.units", () => {
   for (const test in data) {
     it(test, () => {
       const map = dayjs.units(data[test].state);
-      expect(map.hour).toStrictEqual(data[test].hour);
-      expect(map.meridiem).toStrictEqual(data[test].meridiem);
+      expect(map.hour).toEqual(data[test].hour);
+      expect(map.meridiem).toEqual(data[test].meridiem);
     });
   }
 });

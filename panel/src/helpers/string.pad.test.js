@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import { pad } from "./string.js";
 
 describe("$helper.string.pad()", () => {

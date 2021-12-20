@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import { merge } from "./object.js";
 
 describe("$helper.object.merge", () => {

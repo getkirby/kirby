@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import ratio from "./ratio.js";
 
 describe("$helper.ratio()", () => {

@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
 describe("dayjs.validate()", () => {

@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import { clone } from "./object.js";
 
 describe("$helper.object.clone()", () => {

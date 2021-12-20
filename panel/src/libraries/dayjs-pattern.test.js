@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
 describe("dayjs.pattern.at()", () => {
@@ -88,7 +92,7 @@ describe("dayjs.pattern.interpret()", () => {
 
       for (const input of data[test].inputs) {
         const result = pattern.interpret(input).format(test);
-        expect(result).toStrictEqual(data[test].result);
+        expect(result).toEqual(data[test].result);
       }
     });
   }
@@ -146,7 +150,7 @@ describe("dayjs.pattern.parts", () => {
   for (const test in data) {
     it(test, () => {
       const pattern = dayjs.pattern(test);
-      expect(pattern.parts).toStrictEqual(data[test]);
+      expect(pattern.parts).toEqual(data[test]);
     });
   }
 });
@@ -161,7 +165,7 @@ describe("dayjs.pattern.separators", () => {
   for (const test in data) {
     it(test, () => {
       const pattern = dayjs.pattern(test);
-      expect(pattern.separators).toStrictEqual(data[test]);
+      expect(pattern.separators).toEqual(data[test]);
     });
   }
 });
@@ -180,7 +184,7 @@ describe("dayjs.pattern.tokens()", () => {
   for (const test in h12) {
     it(`${test} - 12h`, () => {
       const pattern = dayjs.pattern("YYYY-MM-DD hh:mm a");
-      expect(pattern.tokens(test)).toStrictEqual(h12[test]);
+      expect(pattern.tokens(test)).toEqual(h12[test]);
     });
   }
 
@@ -193,7 +197,7 @@ describe("dayjs.pattern.tokens()", () => {
   for (const test in h24) {
     it(`${test} - 24h`, () => {
       const pattern = dayjs.pattern("YYYY-MM-DD HH:mm");
-      expect(pattern.tokens(test)).toStrictEqual(h24[test]);
+      expect(pattern.tokens(test)).toEqual(h24[test]);
     });
   }
 });
@@ -246,7 +250,7 @@ describe("dayjs.pattern.units", () => {
   for (const test in data) {
     it(test, () => {
       const pattern = dayjs.pattern(test);
-      expect(pattern.units).toStrictEqual(data[test]);
+      expect(pattern.units).toEqual(data[test]);
     });
   }
 });
@@ -350,7 +354,7 @@ describe("dayjs.pattern.variations()", () => {
   for (const test in data) {
     it(test, () => {
       const variations = dayjs.pattern(test).variations();
-      expect(variations).toStrictEqual(data[test]);
+      expect(variations).toEqual(data[test]);
     });
   }
 });

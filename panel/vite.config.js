@@ -97,8 +97,10 @@ export default defineConfig(({ command }) => {
       ...custom
     },
     test: {
-      match: ["**/*.test.js"],
-      collectCoverageMatch: ["src/**/*.(js|vue)", "!**/*.(e2e|test).js"]
+      environment: "happy-dom",
+      include: ["**/*.test.js"],
+      global: true,
+      setupFiles: ["./tests/bootstrap.js"]
     }
   };
 });

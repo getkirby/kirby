@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment node
+ */
+
 import sort from "./sort.js";
 
 describe("$helper.sort()", () => {
@@ -24,6 +28,6 @@ describe("$helper.sort()", () => {
       return sorter(a.username, b.username);
     });
 
-    expect(users).toStrictEqual(expected);
+    expect(users).toEqual(expected);
   });
 });
