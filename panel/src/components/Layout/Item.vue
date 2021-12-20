@@ -29,7 +29,7 @@
       <slot>
         <h3 class="k-item-title">
           <k-link
-            v-if="link"
+            v-if="link !== false"
             :target="target"
             :to="link"
             class="k-item-title-link"
