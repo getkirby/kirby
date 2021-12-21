@@ -76,7 +76,7 @@ export default {
      * @param {Object|null} dt
      */
     toISO(dt) {
-      return dt.toISO("time");
+      return dt?.toISO("time");
     }
   }
 };
