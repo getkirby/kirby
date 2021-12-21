@@ -23,7 +23,6 @@
               :value="datetime"
               :min="min"
               :max="max"
-              :time="inputType === 'datetime'"
               @input="onUpdate"
             />
           </k-dropdown-content>
