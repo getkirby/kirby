@@ -27,6 +27,6 @@ describe("$helper.object.merge", () => {
 
     const result = merge(target, source);
 
-    expect(result).toStrictEqual(expected);
+    expect(result).toEqual(expected);
   });
 });

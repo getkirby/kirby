@@ -11,7 +11,7 @@ describe.concurrent("$helper.object.clone()", () => {
       b: "B"
     };
 
-    expect(clone(object)).toStrictEqual(object);
+    expect(clone(object)).toEqual(object);
   });
 
   it("should return nothing when provided nothing", () => {
