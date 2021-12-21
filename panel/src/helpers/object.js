@@ -1,3 +1,24 @@
+/**
+ * Clone provided object or array
+ *
+ * @param {Object|array} array
+ * @returns  {Object|array}
+ */
+export function clone(array) {
+  if (array === undefined) {
+    return undefined;
+  }
+
+  return JSON.parse(JSON.stringify(array));
+}
+
+/**
+ * Merges two objects
+ *
+ * @param {Object} target
+ * @param {Object} source
+ * @returns {Object}
+ */
 export function merge(target, source) {
   // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
   for (const key of Object.keys(source)) {
@@ -12,5 +33,6 @@ export function merge(target, source) {
 }
 
 export default {
+  clone,
   merge
 };

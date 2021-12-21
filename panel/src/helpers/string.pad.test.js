@@ -1,6 +1,6 @@
-import pad from "./pad.js";
+import { pad } from "./string.js";
 
-describe("$helper.pad()", () => {
+describe("$helper.string.pad()", () => {
   it("should add default padding", () => {
     expect(pad(1)).toBe("01");
   });

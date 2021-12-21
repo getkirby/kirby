@@ -1,18 +1,15 @@
 import clipboard from "./clipboard.js";
-import clone from "./clone.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
-import pad from "./pad.js";
+import object from "./object.js";
 import ratio from "./ratio.js";
-import slug from "./slug.js";
 import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
-import uuid from "./uuid.js";
 import validate from "./validate.js";
 
 import "./regex.js";
@@ -42,20 +39,21 @@ export default {
 
     Vue.prototype.$helper = {
       clipboard,
-      clone,
+      clone: object.clone,
       color,
       embed,
       isComponent,
       isUploadEvent,
       debounce,
       keyboard,
-      pad,
+      object,
+      pad: string.pad,
       ratio,
-      slug,
+      slug: string.slug,
       sort,
       string,
       upload,
-      uuid,
+      uuid: string.uuid,
       validate
     };
 

@@ -1,6 +1,6 @@
-import slug from "./slug.js";
+import { slug } from "./string.js";
 
-describe("$helper.slug()", () => {
+describe("$helper.string.slug()", () => {
   it("should replace spaces", () => {
     const result = slug("a b c");
     expect(result).toBe("a-b-c");
@@ -9,6 +9,11 @@ describe("$helper.slug()", () => {
   it("should replace slashes with dashes", () => {
     const result = slug("a/b/c");
     expect(result).toBe("a-b-c");
+  });
+
+  it("should replace slashes with custom separator", () => {
+    const result = slug("a/b/c", [], [], "%");
+    expect(result).toBe("a%b%c");
   });
 
   it("should replace non-allowed characters", () => {
