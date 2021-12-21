@@ -94,25 +94,6 @@ export default {
   },
   computed: {
     /**
-     * Select options for minutes dropdown
-     * @returns {array}
-     */
-    minutes() {
-      let min = 0;
-      let max = 59;
-
-      // Use min/max only if we have already selected
-      // the same day and hour as min/max
-      if (this.current.min && this.dt.isSame(this.current.min, "hour")) {
-        min = this.current.min.get("minute");
-      }
-      if (this.current.max && this.dt.isSame(this.current.max, "hour")) {
-        max = this.current.max.get("minute");
-      }
-
-      return this.toOptions(min, max);
-    },
-    /**
      * Number of days in the current month
      * @returns {number}
      */
