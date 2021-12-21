@@ -18,6 +18,7 @@
         :class="{ 'k-draggable-item': sortable && item.sortable }"
         :image="imageOptions(item)"
         :layout="layout"
+        :link="link ? item.link : false"
         :sortable="sortable && item.sortable"
         :width="item.column"
         @click="$emit('item', item, itemIndex)"
@@ -47,6 +48,10 @@ export default {
     layout: {
       type: String,
       default: "list"
+    },
+    link: {
+      type: Boolean,
+      default: true
     },
     image: {
       type: [Object, Boolean],

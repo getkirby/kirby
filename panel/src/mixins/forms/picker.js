@@ -85,7 +85,6 @@ export default {
   methods: {
     focus() {},
     item(item) {
-      item.link = this.link ? item.link : null;
       return item;
     },
     onInput() {
