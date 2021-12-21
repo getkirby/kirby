@@ -1,6 +1,6 @@
 import dayjs from "./dayjs.js";
 
-describe("Rounding", () => {
+describe("dayjs.round()", () => {
   const data = {
     "1s: no change": [
       "second",
@@ -60,9 +60,7 @@ describe("Rounding", () => {
       expect(result.format("YYYY-MM-DD HH:mm:ss")).toBe(data[test][3]);
     });
   }
-});
 
-describe("Failures", () => {
   it("Unsupported unit", () => {
     expect(() => {
       dayjs("2020-01-01").round("foo", 1);
@@ -85,9 +83,7 @@ describe("Failures", () => {
       }).toThrow("Invalid rounding size");
     });
   }
-});
 
-describe("Convenience", () => {
   it("Transform 'day' to 'date'", () => {
     const dt = dayjs("2020-01-01");
     expect(dt.round("day", 1)).toStrictEqual(dt.round("date", 1));
