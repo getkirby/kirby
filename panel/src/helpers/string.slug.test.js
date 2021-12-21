@@ -4,7 +4,7 @@
 
 import { slug } from "./string.js";
 
-describe("$helper.string.slug()", () => {
+describe.concurrent("$helper.string.slug()", () => {
   it("should replace spaces", () => {
     const result = slug("a b c");
     expect(result).toBe("a-b-c");

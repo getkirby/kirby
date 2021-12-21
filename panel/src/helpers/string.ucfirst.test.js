@@ -4,7 +4,7 @@
 
 import string from "./string.js";
 
-describe("$helper.string.ucfirst", () => {
+describe.concurrent("$helper.string.ucfirst", () => {
   it("should convert first character to uppercase", () => {
     const result = string.ucfirst("hello");
     expect(result).toBe("Hello");

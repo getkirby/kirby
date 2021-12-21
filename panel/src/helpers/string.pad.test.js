@@ -4,7 +4,7 @@
 
 import { pad } from "./string.js";
 
-describe("$helper.string.pad()", () => {
+describe.concurrent("$helper.string.pad()", () => {
   it("should add default padding", () => {
     expect(pad(1)).toBe("01");
   });

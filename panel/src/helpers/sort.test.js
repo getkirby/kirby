@@ -4,7 +4,7 @@
 
 import sort from "./sort.js";
 
-describe("$helper.sort()", () => {
+describe.concurrent("$helper.sort()", () => {
   it("should sort", () => {
     let users = [
       { username: "Homer" },

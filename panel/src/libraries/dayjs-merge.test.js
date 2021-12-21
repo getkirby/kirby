@@ -4,7 +4,7 @@
 
 import dayjs from "./dayjs.js";
 
-describe("dayjs.merge()", () => {
+describe.concurrent("dayjs.merge()", () => {
   const data = [
     [
       "2020-02-29 16:05:15",

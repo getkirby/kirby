@@ -4,7 +4,7 @@
 
 import string from "./string.js";
 
-describe("$helper.string.lcfirst", () => {
+describe.concurrent("$helper.string.lcfirst", () => {
   it("should convert first character to lowercase", () => {
     const result = string.lcfirst("Hello");
     expect(result).toBe("hello");

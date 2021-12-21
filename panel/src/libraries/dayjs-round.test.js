@@ -4,7 +4,7 @@
 
 import dayjs from "./dayjs.js";
 
-describe("dayjs.round()", () => {
+describe.concurrent("dayjs.round()", () => {
   const data = {
     "1s: no change": [
       "second",

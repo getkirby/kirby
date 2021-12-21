@@ -4,7 +4,7 @@
 
 import dayjs from "./dayjs.js";
 
-describe("dayjs.pattern.at()", () => {
+describe.concurrent("dayjs.pattern.at()", () => {
   const data = {
     "YYYY-MM-DD": [
       { start: 0, unit: "year" },

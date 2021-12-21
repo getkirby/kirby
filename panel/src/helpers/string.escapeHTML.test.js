@@ -4,7 +4,7 @@
 
 import string from "./string.js";
 
-describe("$helper.string.escapeHTML", () => {
+describe.concurrent("$helper.string.escapeHTML", () => {
   it("should escape HTML", () => {
     const result = string.escapeHTML(
       '<div class="button">This text includes `&<>"\'/=` characters</div>'
