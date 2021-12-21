@@ -49,28 +49,6 @@
         </tr>
       </tbody>
       <tfoot>
-        <!-- Time selects -->
-        <tr v-if="time" class="k-calendar-time">
-          <td colspan="3">
-            <k-select-input
-              v-model.number="current.hour"
-              :options="hours"
-              :disabled="disabled"
-              :required="true"
-              @input="onTime"
-            />
-          </td>
-          <td>:</td>
-          <td colspan="3">
-            <k-select-input
-              v-model.number="current.minute"
-              :options="minutes"
-              :disabled="disabled"
-              :required="true"
-              @input="onTime"
-            />
-          </td>
-        </tr>
         <!-- Today button -->
         <tr>
           <td class="k-calendar-today" colspan="7">
@@ -106,10 +84,6 @@ export default {
      */
     min: String,
     /**
-     * Whether to display time selects
-     */
-    time: Boolean,
-    /**
      * ISO date/datetime string
      * @example `2020-03-05 07:30:00`
      */
@@ -134,25 +108,6 @@ export default {
       }
       if (this.current.max && this.dt.isSame(this.current.max, "hour")) {
         max = this.current.max.get("minute");
-      }
-
-      return this.toOptions(min, max);
-    },
-    /**
-     * Select options for hours dropdown
-     * @returns {array}
-     */
-    hours() {
-      let min = 0;
-      let max = 23;
-
-      // Use min/max only if we have already selected
-      // the same day as min/max
-      if (this.current.min && this.dt.isSame(this.current.min, "day")) {
-        min = this.current.min.get("hour");
-      }
-      if (this.current.max && this.dt.isSame(this.current.max, "day")) {
-        max = this.current.max.get("hour");
       }
 
       return this.toOptions(min, max);
@@ -353,10 +308,6 @@ export default {
       const prev = this.toDate().subtract(1, "month");
       this.show(prev);
     },
-    onTime() {
-      this.dt = this.dt.merge(this.toDate(), "time");
-      this.onInput();
-    },
     /**
      * Selects a day and updates datetime object
      * based on current view (month + year)
@@ -492,13 +443,6 @@ export default {
 .k-calendar-day[aria-selected="date"] .k-button {
   border-color: var(--color-focus-light);
   color: var(--color-focus-light);
-}
-.k-calendar-time td {
-  padding-top: 0.5rem;
-  text-align: center;
-}
-.k-calendar-time .k-select-input {
-  border-bottom: 1px solid var(--color-gray-700);
 }
 .k-calendar-today {
   text-align: center;
