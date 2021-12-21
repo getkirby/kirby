@@ -1,6 +1,8 @@
 import debounce from "./debounce.js";
 
 describe("$helper.debounce()", () => {
+  let clock = null;
+
   beforeEach(() => {
     clock = sinon.useFakeTimers();
   });
