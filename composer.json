@@ -37,7 +37,10 @@
   },
   "config": {
     "optimize-autoloader": true,
-    "platform-check": false
+    "platform-check": false,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
   },
   "extra": {
     "unused": [

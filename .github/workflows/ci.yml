@@ -278,8 +278,8 @@ jobs:
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.1.10, composer-normalize:2.15.0, composer-require-checker:3.3.0,
-            composer-unused:0.7.7, phpcpd:6.0.3, phpmd:2.10.2
+            composer:2.2.0, composer-normalize:2.18.0, composer-require-checker:4.0.0,
+            composer-unused:0.7.10, phpcpd:6.0.3, phpmd:2.11.1
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
