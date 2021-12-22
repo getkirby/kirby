@@ -1,26 +1,25 @@
+import { vi } from "vitest";
 import debounce from "./debounce.js";
 
 describe("$helper.debounce()", () => {
-  let clock = null;
-
   beforeEach(() => {
-    clock = sinon.useFakeTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
-    clock.restore();
+    vi.useRealTimers();
   });
 
   it("calls callback after 100ms", () => {
-    const callback = sinon.fake();
+    const callback = vi.fn(() => {});
     const throttled = debounce(callback, 100);
 
     throttled();
 
-    clock.tick(99);
-    expect(callback.notCalled).toBe(true);
+    vi.advanceTimersByTime(99);
+    expect(callback).not.toHaveBeenCalled();
 
-    clock.tick(1);
-    expect(callback.calledOnce).toBe(true);
+    vi.advanceTimersByTime(1);
+    expect(callback).toHaveBeenCalledTimes(1);
   });
 });

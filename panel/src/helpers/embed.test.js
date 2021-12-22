@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import embed from "./embed.js";
 
-describe("$helper.embed()", () => {
+describe.concurrent("$helper.embed()", () => {
   it("should create the right embed URLs", () => {
     const tests = [
       // YouTube

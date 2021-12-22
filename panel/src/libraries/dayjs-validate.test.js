@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
-describe("dayjs.validate()", () => {
+describe.concurrent("dayjs.validate()", () => {
   const data = {
     "min by day": [
       {

@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import string from "./string.js";
 
-describe("$helper.string.template", () => {
+describe.concurrent("$helper.string.template", () => {
   const values = {
     title: "Kirby",
     images: [

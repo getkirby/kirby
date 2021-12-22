@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import string from "./string.js";
 
-describe("$helper.string.hasEmoji", () => {
+describe.concurrent("$helper.string.hasEmoji", () => {
   it("should identify emojis", () => {
     const emojis = [
       "😀",
@@ -4173,19 +4177,16 @@ describe("$helper.string.hasEmoji", () => {
       "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
       "text with emoji 😜"
     ];
-
-    emojis.forEach((emoji) => {
-      const result = string.hasEmoji(emoji);
-      expect(result).toBe(true);
-    });
+    for (const emoji of emojis) {
+      expect(string.hasEmoji(emoji)).toBe(true);
+    }
   });
 
   it("should not identify non-emojis", () => {
     const others = ["Couple", "0", 0, null, false];
 
-    others.forEach((other) => {
-      const result = string.hasEmoji(other);
-      expect(result).toBe(false);
-    });
+    for (const other of others) {
+      expect(string.hasEmoji(other)).toBe(false);
+    }
   });
 });

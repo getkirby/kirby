@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
-describe("dayjs.merge()", () => {
+describe.concurrent("dayjs.merge()", () => {
   const data = [
     [
       "2020-02-29 16:05:15",
@@ -28,7 +32,7 @@ describe("dayjs.merge()", () => {
     }`, () => {
       const a = dayjs(data[test][0]);
       const b = dayjs(data[test][1]);
-      expect(a.merge(b, data[test][2])).toStrictEqual(dayjs(data[test][3]));
+      expect(a.merge(b, data[test][2])).toEqual(dayjs(data[test][3]));
     });
   }
 

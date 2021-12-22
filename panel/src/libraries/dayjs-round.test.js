@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import dayjs from "./dayjs.js";
 
-describe("dayjs.round()", () => {
+describe.concurrent("dayjs.round()", () => {
   const data = {
     "1s: no change": [
       "second",
@@ -86,6 +90,6 @@ describe("dayjs.round()", () => {
 
   it("Transform 'day' to 'date'", () => {
     const dt = dayjs("2020-01-01");
-    expect(dt.round("day", 1)).toStrictEqual(dt.round("date", 1));
+    expect(dt.round("day", 1)).toEqual(dt.round("date", 1));
   });
 });

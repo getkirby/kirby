@@ -1,7 +1,6 @@
 module.exports = {
   extends: [
     "eslint:recommended",
-    "plugin:@peeky/recommended",
     "plugin:cypress/recommended",
     "plugin:vue/recommended",
     "prettier"

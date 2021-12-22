@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import ratio from "./ratio.js";
 
-describe("$helper.ratio()", () => {
+describe.concurrent("$helper.ratio()", () => {
   const data = {
     "should return default ratio": [[undefined, "66.67%"]],
     "should return padding for 16/9": [["16/9", "56.25%"]],

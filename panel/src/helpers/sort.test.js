@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import sort from "./sort.js";
 
-describe("$helper.sort()", () => {
+describe.concurrent("$helper.sort()", () => {
   it("should sort", () => {
     let users = [
       { username: "Homer" },
@@ -24,6 +28,6 @@ describe("$helper.sort()", () => {
       return sorter(a.username, b.username);
     });
 
-    expect(users).toStrictEqual(expected);
+    expect(users).toEqual(expected);
   });
 });
