@@ -38,11 +38,18 @@ export default {
   methods: {
     change(language) {
       this.$emit("change", language);
-      this.$go(this.$view.path, {
-        query: {
-          language: language.code
-        }
-      });
+
+      let query = {
+        language: language.code
+      };
+
+      // append if any tab is active
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("tab")) {
+        query.tab = params.get("tab");
+      }
+
+      this.$go(this.$view.path, { query });
     }
   }
 };
