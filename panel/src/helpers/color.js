@@ -21,7 +21,7 @@ export default function (string) {
   // for ex: `#000` or `var(--color-white)`
   if (string.startsWith("#") === false && string.startsWith("var(") === false) {
     const colorVariable = "--color-" + string;
-    const colorComputed = getComputedStyle(document.documentElement)
+    const colorComputed = window.getComputedStyle(document.documentElement)
       .getPropertyValue(colorVariable);
 
     if (colorComputed) {
