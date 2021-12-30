@@ -24,6 +24,13 @@ describe.concurrent("$helper.css.color()", () => {
     "should return HEX": [
       ["#fff", "#fff"],
       ["#bababa", "#bababa"]
+    ],
+    "should return self with lowercase": [
+      ["LightSeaGreen", "lightseagreen"],
+      ["DarkSalmon", "darksalmon"],
+      ["MediumSlateBlue", "mediumslateblue"],
+      ["Background", "var(--color-background)"],
+      ["#E2E2E2", "#e2e2e2"]
     ]
   };
 
