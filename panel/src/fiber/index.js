@@ -190,6 +190,7 @@ export default {
         body: this.body(options.body),
         credentials: "same-origin",
         cache: "no-store",
+        redirect: "manual",
         headers: {
           ...this.options.headers(),
           "X-Fiber": true,
@@ -201,44 +202,49 @@ export default {
       });
 
       const text = await response.text();
-      let json;
 
-      try {
-        json = JSON.parse(text);
-      } catch (e) {
-        store.dispatch("fatal", {
-          html: text,
-          silent: options.silent
-        });
-        return false;
-      }
+      if (response.type === "opaqueredirect") {
+        window.location.replace(response.url);
+      } else {
+        let json;
 
-      // the return type does not match the expected type
-      if (!json[options.type]) {
-        throw Error(`The ${options.type} could not be loaded`);
-      }
-
-      // request-specific data
-      const data = json[options.type];
-
-      // the response contains a custom error message
-      if (data.error) {
-        throw Error(data.error);
-      }
-
-      // views add the entire response object to the state
-      if (options.type === "$view") {
-        // add exisiting data to partial view requests
-        if (only.length) {
-          return merge(this.state, json);
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          store.dispatch("fatal", {
+            html: text,
+            silent: options.silent
+          });
+          return false;
         }
 
-        return json;
-      }
+        // the return type does not match the expected type
+        if (!json[options.type]) {
+          throw Error(`The ${options.type} could not be loaded`);
+        }
 
-      // dialogs, searches and dropdowns only need what is
-      // contained in their request data (i.e. $dialog, $dropdown)
-      return data;
+        // request-specific data
+        const data = json[options.type];
+
+        // the response contains a custom error message
+        if (data.error) {
+          throw Error(data.error);
+        }
+
+        // views add the entire response object to the state
+        if (options.type === "$view") {
+          // add exisiting data to partial view requests
+          if (only.length) {
+            return merge(this.state, json);
+          }
+
+          return json;
+        }
+
+        // dialogs, searches and dropdowns only need what is
+        // contained in their request data (i.e. $dialog, $dropdown)
+        return data;
+      }
     } finally {
       this.options.onFinish(options);
     }
