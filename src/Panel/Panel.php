@@ -384,7 +384,8 @@ class Panel
             ],
             'action' => function () {
                 Panel::go(Home::url());
-            }
+            },
+            'auth' => false
         ];
 
         // catch all route
