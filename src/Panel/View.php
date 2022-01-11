@@ -397,10 +397,6 @@ class View
      */
     public static function response($data, array $options = [])
     {
-        $kirby = kirby();
-        $area  = $options['area']  ?? [];
-        $areas = $options['areas'] ?? [];
-
         // handle redirects
         if (is_a($data, 'Kirby\Panel\Redirect') === true) {
             return Response::redirect($data->location(), $data->code());
