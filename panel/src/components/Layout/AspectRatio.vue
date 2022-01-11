@@ -15,9 +15,9 @@
  * in the specified ratio
  * @public
  *
- * @example <k-ratio ratio="3/2">
+ * @example <k-aspect-ratio ratio="3/2">
   <div>Ratio!</div>
-</k-reatio>
+</k-aspect-ratio>
  */
 export default {
   props: {
