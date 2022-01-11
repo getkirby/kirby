@@ -178,15 +178,13 @@ class View
             },
             '$languages' => function () use ($kirby, $multilang): array {
                 if ($multilang === true) {
-                    return $kirby->languages()->values(function ($language) {
-                        return [
-                            'code'      => $language->code(),
-                            'default'   => $language->isDefault(),
-                            'direction' => $language->direction(),
-                            'name'      => $language->name(),
-                            'rules'     => $language->rules(),
-                        ];
-                    });
+                    return $kirby->languages()->values(fn ($language) => [
+                        'code'      => $language->code(),
+                        'default'   => $language->isDefault(),
+                        'direction' => $language->direction(),
+                        'name'      => $language->name(),
+                        'rules'     => $language->rules(),
+                    ]);
                 }
 
                 return [];
@@ -315,12 +313,10 @@ class View
                     'name'      => $translation->name(),
                 ];
             },
-            '$urls' => function () use ($kirby) {
-                return [
-                    'api'  => $kirby->url('api'),
-                    'site' => $kirby->url('index')
-                ];
-            }
+            '$urls' => fn () => [
+                'api'  => $kirby->url('api'),
+                'site' => $kirby->url('index')
+            ]
         ];
     }
 

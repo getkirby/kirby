@@ -16,14 +16,14 @@
             :tooltip="$t('date.select')"
             class="k-input-icon-button"
             tabindex="-1"
-            @click="onFocus"
+            @click="$refs.calendar.toggle()"
           />
           <k-dropdown-content ref="calendar" align="right">
             <k-calendar
               :value="datetime"
               :min="min"
               :max="max"
-              @input="onSelect"
+              @input="onUpdate"
             />
           </k-dropdown-content>
         </k-dropdown>

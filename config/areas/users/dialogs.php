@@ -25,8 +25,8 @@ return [
                             'link'     => false,
                             'required' => true
                         ]),
-                        'password' => Field::password(),
-                        'language' => Field::translation([
+                        'password'     => Field::password(),
+                        'translation'  => Field::translation([
                             'required' => true
                         ]),
                         'role' => Field::role([
@@ -35,11 +35,11 @@ return [
                     ],
                     'submitButton' => t('create'),
                     'value' => [
-                        'name'     => '',
-                        'email'    => '',
-                        'password' => '',
-                        'language' => $kirby->panelLanguage(),
-                        'role'     => $kirby->user()->role()->name()
+                        'name'        => '',
+                        'email'       => '',
+                        'password'    => '',
+                        'translation' => $kirby->panelLanguage(),
+                        'role'        => $kirby->user()->role()->name()
                     ]
                 ]
             ];
@@ -49,7 +49,7 @@ return [
                 'name'     => get('name'),
                 'email'    => get('email'),
                 'password' => get('password'),
-                'language' => get('language'),
+                'language' => get('translation'),
                 'role'     => get('role')
             ]);
             return [

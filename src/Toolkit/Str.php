@@ -256,7 +256,7 @@ class Str
         }
 
         $method = $caseInsensitive === true ? 'stripos' : 'strpos';
-        return call_user_func($method, $string, $needle) !== false;
+        return call_user_func($method, $string ?? '', $needle) !== false;
     }
 
     /**
@@ -484,7 +484,7 @@ class Str
      */
     public static function lower(string $string = null): string
     {
-        return mb_strtolower($string, 'UTF-8');
+        return mb_strtolower($string ?? '', 'UTF-8');
     }
 
     /**
@@ -558,7 +558,7 @@ class Str
             $needle = static::lower($needle);
         }
 
-        return mb_strpos($string, $needle, 0, 'UTF-8');
+        return mb_strpos($string ?? '', $needle, 0, 'UTF-8');
     }
 
     /**
@@ -640,7 +640,7 @@ class Str
 
         // without a limit we might as well use the built-in function
         if ($limit === -1) {
-            return str_replace($search, $replace, $string);
+            return str_replace($search, $replace, $string ?? '');
         }
 
         // if the limit is zero, the result will be no replacements at all
@@ -1042,7 +1042,7 @@ class Str
      */
     public static function substr(string $string = null, int $start = 0, int $length = null): string
     {
-        return mb_substr($string, $start, $length, 'UTF-8');
+        return mb_substr($string ?? '', $start, $length, 'UTF-8');
     }
 
     /**
@@ -1214,7 +1214,7 @@ class Str
      */
     public static function ucwords(string $string = null): string
     {
-        return mb_convert_case($string, MB_CASE_TITLE, 'UTF-8');
+        return mb_convert_case($string ?? '', MB_CASE_TITLE, 'UTF-8');
     }
 
     /**
@@ -1262,7 +1262,7 @@ class Str
      */
     public static function upper(string $string = null): string
     {
-        return mb_strtoupper($string, 'UTF-8');
+        return mb_strtoupper($string ?? '', 'UTF-8');
     }
 
     /**

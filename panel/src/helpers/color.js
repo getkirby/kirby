@@ -1,3 +1,9 @@
+/**
+ * Resolves CSS property alias to proper CSS color values
+ *
+ * @param {string} string
+ * @returns {string}
+ */
 export default function (string) {
   if (typeof string !== "string") {
     return;

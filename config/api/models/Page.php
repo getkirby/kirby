@@ -8,42 +8,18 @@ use Kirby\Form\Form;
  */
 return [
     'fields' => [
-        'blueprint' => function (Page $page) {
-            return $page->blueprint();
-        },
-        'blueprints' => function (Page $page) {
-            return $page->blueprints();
-        },
-        'children' => function (Page $page) {
-            return $page->children();
-        },
-        'content' => function (Page $page) {
-            return Form::for($page)->values();
-        },
-        'drafts' => function (Page $page) {
-            return $page->drafts();
-        },
-        'errors' => function (Page $page) {
-            return $page->errors();
-        },
-        'files' => function (Page $page) {
-            return $page->files()->sorted();
-        },
-        'hasChildren' => function (Page $page) {
-            return $page->hasChildren();
-        },
-        'hasDrafts' => function (Page $page) {
-            return $page->hasDrafts();
-        },
-        'hasFiles' => function (Page $page) {
-            return $page->hasFiles();
-        },
-        'id' => function (Page $page) {
-            return $page->id();
-        },
-        'isSortable' => function (Page $page) {
-            return $page->isSortable();
-        },
+        'blueprint'   => fn (Page $page) => $page->blueprint(),
+        'blueprints'  => fn (Page $page) => $page->blueprints(),
+        'children'    => fn (Page $page) => $page->children(),
+        'content'     => fn (Page $page) => Form::for($page)->values(),
+        'drafts'      => fn (Page $page) => $page->drafts(),
+        'errors'      => fn (Page $page) => $page->errors(),
+        'files'       => fn (Page $page) => $page->files()->sorted(),
+        'hasChildren' => fn (Page $page) => $page->hasChildren(),
+        'hasDrafts'   => fn (Page $page) => $page->hasDrafts(),
+        'hasFiles'    => fn (Page $page) => $page->hasFiles(),
+        'id'          => fn (Page $page) => $page->id(),
+        'isSortable'  => fn (Page $page) => $page->isSortable(),
         /**
          * @deprecated 3.6.0
          * @todo Throw deprecated warning in 3.7.0
@@ -58,12 +34,8 @@ return [
                 ->filter('isReadable', true)
                 ->first();
         },
-        'num' => function (Page $page) {
-            return $page->num();
-        },
-        'options' => function (Page $page) {
-            return $page->panel()->options(['preview']);
-        },
+        'num'     => fn (Page $page) => $page->num(),
+        'options' => fn (Page $page) => $page->panel()->options(['preview']),
         /**
          * @todo Remove in 3.7.0
          * @codeCoverageIgnore
@@ -72,15 +44,9 @@ return [
             deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
             return $page->panel()->image();
         },
-        'panelImage' => function (Page $page) {
-            return $page->panel()->image();
-        },
-        'parent' => function (Page $page) {
-            return $page->parent();
-        },
-        'parents' => function (Page $page) {
-            return $page->parents()->flip();
-        },
+        'panelImage' => fn (Page $page) => $page->panel()->image(),
+        'parent'     => fn (Page $page) => $page->parent(),
+        'parents'    => fn (Page $page) => $page->parents()->flip(),
         /**
          * @deprecated 3.6.0
          * @todo Throw deprecated warning in 3.7.0
@@ -95,31 +61,19 @@ return [
                 ->filter('isReadable', true)
                 ->last();
         },
-        'previewUrl' => function (Page $page) {
-            return $page->previewUrl();
-        },
-        'siblings' => function (Page $page) {
+        'previewUrl' => fn (Page $page) => $page->previewUrl(),
+        'siblings'   => function (Page $page) {
             if ($page->isDraft() === true) {
                 return $page->parentModel()->children()->not($page);
             } else {
                 return $page->siblings();
             }
         },
-        'slug' => function (Page $page) {
-            return $page->slug();
-        },
-        'status' => function (Page $page) {
-            return $page->status();
-        },
-        'template' => function (Page $page) {
-            return $page->intendedTemplate()->name();
-        },
-        'title' => function (Page $page) {
-            return $page->title()->value();
-        },
-        'url' => function (Page $page) {
-            return $page->url();
-        },
+        'slug'     => fn (Page $page) => $page->slug(),
+        'status'   => fn (Page $page) => $page->status(),
+        'template' => fn (Page $page) => $page->intendedTemplate()->name(),
+        'title'    => fn (Page $page) => $page->title()->value(),
+        'url'      => fn (Page $page) => $page->url(),
     ],
     'type' => 'Kirby\Cms\Page',
     'views' => [

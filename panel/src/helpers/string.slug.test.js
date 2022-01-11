@@ -1,39 +1,48 @@
-import slug from "./slug.js";
+/**
+ * @vitest-environment node
+ */
 
-describe("$helper.slug()", () => {
+import { slug } from "./string.js";
+
+describe.concurrent("$helper.string.slug()", () => {
   it("should replace spaces", () => {
     const result = slug("a b c");
-    expect(result).to.equal("a-b-c");
+    expect(result).toBe("a-b-c");
   });
 
   it("should replace slashes with dashes", () => {
     const result = slug("a/b/c");
-    expect(result).to.equal("a-b-c");
+    expect(result).toBe("a-b-c");
+  });
+
+  it("should replace slashes with custom separator", () => {
+    const result = slug("a/b/c", [], [], "%");
+    expect(result).toBe("a%b%c");
   });
 
   it("should replace non-allowed characters", () => {
     const result = slug("æöß");
-    expect(result).to.equal("");
+    expect(result).toBe("");
   });
 
   it("should replace non-word characters", () => {
     const result = slug("@a.b*c!");
-    expect(result).to.equal("a-b-c");
+    expect(result).toBe("a-b-c");
   });
 
   it("should trim correctly", () => {
     const result = slug(" abc ");
-    expect(result).to.equal("abc");
+    expect(result).toBe("abc");
   });
 
   it("should remove non-asci characters", () => {
     const result = slug("❤️");
-    expect(result).to.equal("");
+    expect(result).toBe("");
   });
 
   it("should remove double seperators", () => {
     const result = slug("a--b  c");
-    expect(result).to.equal("a-b-c");
+    expect(result).toBe("a-b-c");
   });
 
   it("should apply rules", () => {
@@ -46,36 +55,36 @@ describe("$helper.slug()", () => {
     ];
 
     const result = slug("åöß", rules);
-    expect(result).to.equal("aoess");
+    expect(result).toBe("aoess");
   });
 
   it("should handle plus signs", () => {
     const rules = [{ "+": "-plus-" }];
 
     const result = slug("1+1", rules);
-    expect(result).to.equal("1-plus-1");
+    expect(result).toBe("1-plus-1");
   });
 
   it("handles asterisks", () => {
     const resultA = slug("***");
-    expect(resultA).to.equal("");
+    expect(resultA).toBe("");
 
     const resultB = slug("***a***b***");
-    expect(resultB).to.equal("a-b");
+    expect(resultB).toBe("a-b");
   });
 
   it("should return empty string when no param sent", () => {
     const result = slug();
-    expect(result).to.equal("");
+    expect(result).toBe("");
   });
 
   it("should return empty string when null param sent", () => {
     const result = slug(null);
-    expect(result).to.equal("");
+    expect(result).toBe("");
   });
 
   it("should return empty string when undefined param sent", () => {
     const result = slug(undefined);
-    expect(result).to.equal("");
+    expect(result).toBe("");
   });
 });

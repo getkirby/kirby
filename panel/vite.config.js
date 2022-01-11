@@ -55,7 +55,7 @@ export default defineConfig(({ command }) => {
       minify: "terser",
       cssCodeSplit: false,
       rollupOptions: {
-        input: "/src/index.js",
+        input: "./src/index.js",
         output: {
           entryFileNames: "js/[name].js",
           chunkFileNames: "js/[name].js",
@@ -95,6 +95,11 @@ export default defineConfig(({ command }) => {
         "/media": proxy
       },
       ...custom
+    },
+    test: {
+      environment: "jsdom",
+      include: ["**/*.test.js"],
+      global: true
     }
   };
 });

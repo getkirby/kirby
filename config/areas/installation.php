@@ -32,9 +32,7 @@ return function ($kirby) {
             'installation.fallback' => [
                 'pattern' => '(:all)',
                 'auth'    => false,
-                'action'  => function () {
-                    Panel::go('installation');
-                }
+                'action'  => fn () => Panel::go('installation')
             ]
         ]
     ];

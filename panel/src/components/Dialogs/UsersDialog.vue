@@ -22,7 +22,13 @@
       />
 
       <template v-if="items.length">
-        <k-items :items="items" layout="list" :sortable="false" @item="toggle">
+        <k-items
+          :items="items"
+          :link="false"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
           <template #options="{ item: user }">
             <k-button v-bind="toggleBtn(user)" @click="toggle(user)" />
           </template>
@@ -54,8 +60,7 @@ export default {
       return {
         ...item,
         key: item.email,
-        info: item.info !== item.text ? item.info : null,
-        link: false
+        info: item.info !== item.text ? item.info : null
       };
     }
   }

@@ -353,11 +353,9 @@ class Panel
             [
                 'pattern' => 'browser',
                 'auth'    => false,
-                'action'  => function () use ($kirby) {
-                    return new Response(
-                        Tpl::load($kirby->root('kirby') . '/views/browser.php')
-                    );
-                },
+                'action'  => fn () => new Response(
+                    Tpl::load($kirby->root('kirby') . '/views/browser.php')
+                ),
             ]
         ];
 
@@ -382,18 +380,14 @@ class Panel
                 'installation',
                 'login',
             ],
-            'action' => function () {
-                Panel::go(Home::url());
-            },
+            'action' => fn () => Panel::go(Home::url()),
             'auth' => false
         ];
 
         // catch all route
         $routes[] = [
             'pattern' => '(:all)',
-            'action'  => function () {
-                return 'The view could not be found';
-            }
+            'action'  => fn () => 'The view could not be found'
         ];
 
         return $routes;
@@ -421,9 +415,7 @@ class Panel
                 'pattern' => $pattern,
                 'type'    => 'dialog',
                 'area'    => $areaId,
-                'action'  => $dialog['load'] ?? function () {
-                    return 'The load handler for your dialog is missing';
-                },
+                'action'  => $dialog['load'] ?? fn () => 'The load handler for your dialog is missing'
             ];
 
             // submit event
@@ -432,9 +424,7 @@ class Panel
                 'type'    => 'dialog',
                 'area'    => $areaId,
                 'method'  => 'POST',
-                'action'  => $dialog['submit'] ?? function () {
-                    return 'Your dialog does not define a submit handler';
-                }
+                'action'  => $dialog['submit'] ?? fn () => 'Your dialog does not define a submit handler'
             ];
         }
 

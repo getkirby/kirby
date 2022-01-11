@@ -24,9 +24,8 @@
  * SOFTWARE.
  */
 
-import clone from "../helpers/clone";
-import { merge } from "../helpers/object";
-import store from "../store/store";
+import { clone, merge } from "../helpers/object.js";
+import store from "../store/store.js";
 
 export default {
   options: {},

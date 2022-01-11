@@ -1,15 +1,14 @@
 {
   "name": "getkirby/cms",
-  "type": "kirby-cms",
   "description": "The Kirby 3 core",
+  "license": "proprietary",
+  "type": "kirby-cms",
+  "version": "3.6.1.1",
   "keywords": [
     "kirby",
     "cms",
     "core"
   ],
-  "homepage": "https://getkirby.com",
-  "version": "3.6.1.1",
-  "license": "proprietary",
   "authors": [
     {
       "name": "Kirby Team",
@@ -17,6 +16,14 @@
       "homepage": "https://getkirby.com"
     }
   ],
+  "homepage": "https://getkirby.com",
+  "support": {
+    "email": "support@getkirby.com",
+    "issues": "https://github.com/getkirby/kirby/issues",
+    "forum": "https://forum.getkirby.com",
+    "source": "https://github.com/getkirby/kirby"
+  },
+  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7",
   "require": {
     "php": ">=7.4.0 <8.2.0",
     "ext-ctype": "*",
@@ -35,15 +42,6 @@
   "replace": {
     "symfony/polyfill-php72": "*"
   },
-  "config": {
-    "optimize-autoloader": true,
-    "platform-check": false
-  },
-  "extra": {
-    "unused": [
-      "symfony/polyfill-intl-idn"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "Kirby\\": "src/"
@@ -54,6 +52,18 @@
     "files": [
       "config/setup.php",
       "config/helpers.php"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    },
+    "optimize-autoloader": true,
+    "platform-check": false
+  },
+  "extra": {
+    "unused": [
+      "symfony/polyfill-intl-idn"
     ]
   },
   "scripts": {
@@ -77,12 +87,5 @@
     "fix": "php-cs-fixer fix",
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist"
-  },
-  "support": {
-    "email": "support@getkirby.com",
-    "issues": "https://github.com/getkirby/kirby/issues",
-    "forum": "https://forum.getkirby.com",
-    "source": "https://github.com/getkirby/kirby"
-  },
-  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7"
+  }
 }

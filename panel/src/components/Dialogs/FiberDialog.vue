@@ -54,7 +54,11 @@ export default {
         // dispatch store actions that might have been defined in the response
         if (dialog.dispatch) {
           Object.keys(dialog.dispatch).forEach((event) => {
-            this.$store.dispatch(event, ...dialog.dispatch[event]);
+            const payload = dialog.dispatch[event];
+            this.$store.dispatch(
+              event,
+              Array.isArray(payload) === true ? [...payload] : payload
+            );
           });
         }
 

@@ -22,7 +22,7 @@ class UsersDialogsTest extends AreaTestCase
         $this->assertSame('Name', $props['fields']['name']['label']);
         $this->assertSame('Email', $props['fields']['email']['label']);
         $this->assertSame('Password', $props['fields']['password']['label']);
-        $this->assertSame('Language', $props['fields']['language']['label']);
+        $this->assertSame('Language', $props['fields']['translation']['label']);
         $this->assertSame('Role', $props['fields']['role']['label']);
 
         $this->assertSame('Create', $props['submitButton']);
@@ -31,7 +31,7 @@ class UsersDialogsTest extends AreaTestCase
         $this->assertSame('', $props['value']['name']);
         $this->assertSame('', $props['value']['email']);
         $this->assertSame('', $props['value']['password']);
-        $this->assertSame('en', $props['value']['language']);
+        $this->assertSame('en', $props['value']['translation']);
         $this->assertSame('admin', $props['value']['role']);
     }
 

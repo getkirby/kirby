@@ -333,8 +333,6 @@ class Collection extends BaseCollection
      */
     public function toArray(Closure $map = null): array
     {
-        return parent::toArray($map ?? function ($object) {
-            return $object->toArray();
-        });
+        return parent::toArray($map ?? fn ($object) => $object->toArray());
     }
 }

@@ -11,6 +11,7 @@
         <k-items
           :items="selected"
           :layout="layout"
+          :link="link"
           :size="size"
           :sortable="!disabled && selected.length > 1"
           @sort="onInput"
@@ -148,7 +149,7 @@ export default {
 </script>
 
 <style>
-.k-files-field[data-disabled] * {
+.k-files-field[data-disabled="true"] * {
   pointer-events: all !important;
 }
 </style>

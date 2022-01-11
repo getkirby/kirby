@@ -1,5 +1,5 @@
 import Vue from "vue";
-import clone from "@/helpers/clone.js";
+import { clone } from "@/helpers/object.js";
 
 const keep = (id, data) => {
   localStorage.setItem("kirby$content$" + id, JSON.stringify(data));

@@ -1,6 +1,10 @@
+/**
+ * @vitest-environment node
+ */
+
 import embed from "./embed.js";
 
-describe("$helper.embed()", () => {
+describe.concurrent("$helper.embed()", () => {
   it("should create the right embed URLs", () => {
     const tests = [
       // YouTube
@@ -130,7 +134,7 @@ describe("$helper.embed()", () => {
       const expected = test[1];
       const result = embed.video(input);
 
-      expect(result).to.equal(expected);
+      expect(result).toBe(expected);
     });
   });
 
@@ -141,13 +145,13 @@ describe("$helper.embed()", () => {
     );
     const expected = "https://www.youtube-nocookie.com/embed/d9NF2edxy-M";
 
-    expect(result).to.equal(expected);
+    expect(result).toBe(expected);
   });
 
   it("should work with doNotTrack flag for vimeo videos", () => {
     const result = embed.video("https://vimeo.com/239882943", true);
     const expected = "https://player.vimeo.com/video/239882943?dnt=1";
 
-    expect(result).to.equal(expected);
+    expect(result).toBe(expected);
   });
 });

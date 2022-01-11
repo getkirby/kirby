@@ -29,7 +29,7 @@ export default {
   grid-column-start: span 12;
 }
 
-.k-column[data-sticky] > div {
+.k-column[data-sticky="true"] > div {
   position: sticky;
   top: 4vh;
   z-index: 2;
@@ -90,14 +90,14 @@ export default {
   }
 }
 
-.k-column[data-disabled] {
+.k-column[data-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.4;
 }
-.k-column[data-disabled] * {
+.k-column[data-disabled="true"] * {
   pointer-events: none;
 }
-.k-column[data-disabled] .k-text[data-theme="help"] * {
+.k-column[data-disabled="true"] .k-text[data-theme="help"] * {
   pointer-events: initial;
 }
 </style>

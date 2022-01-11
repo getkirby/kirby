@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
+use Kirby\Toolkit\Date;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -785,60 +786,19 @@ function tc(string $key, int $count)
  */
 function timestamp(?string $date = null, $step = null): ?int
 {
-    if (V::date($date) === false) {
-        return null;
-    }
-
-    $date = strtotime($date);
-
-    if ($step === null) {
-        return $date;
-    }
-
-    // fallback for pre-3.5.0 usage
-    if (is_int($step) === true) {
-        $step = [
-            'unit' => 'minute',
-            'size' => $step
-        ];
-    }
-
-    if (is_array($step) === false) {
-        return $date;
-    }
-
-    $parts = [
-        'second' => date('s', $date),
-        'minute' => date('i', $date),
-        'hour'   => date('H', $date),
-        'day'    => date('d', $date),
-        'month'  => date('m', $date),
-        'year'   => date('Y', $date),
-    ];
-
-    $current = $parts[$step['unit']];
-    $nearest = round($current / $step['size']) * $step['size'];
-    $parts[$step['unit']] = $nearest;
-
-    foreach ($parts as $part => $value) {
-        if ($part === $step['unit']) {
-            break;
+    if ($date = Date::optional($date)) {
+        if ($step !== null) {
+            $step = Date::stepConfig($step, [
+                'unit' => 'minute',
+                'size' => 1
+            ]);
+            $date->round($step['unit'], $step['size']);
         }
 
-        $parts[$part] = 0;
+        return $date->timestamp();
     }
 
-    $timestamp = strtotime(
-        $parts['year'] . '-' .
-        str_pad($parts['month'], 2, 0, STR_PAD_LEFT) . '-' .
-        str_pad($parts['day'], 2, 0, STR_PAD_LEFT) . ' ' .
-        str_pad($parts['hour'], 2, 0, STR_PAD_LEFT) . ':' .
-        str_pad($parts['minute'], 2, 0, STR_PAD_LEFT) . ':' .
-        str_pad($parts['second'], 2, 0, STR_PAD_LEFT)
-    );
-
-    // on error, convert `false` into `null`
-    return $timestamp ?? null;
+    return null;
 }
 
 /**

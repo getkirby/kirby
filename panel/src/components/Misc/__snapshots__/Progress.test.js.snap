@@ -1,0 +1,11 @@
+// Vitest Snapshot v1
+
+exports[`Progress.vue > matches snapshot 1`] = `
+<progress
+  class="k-progress"
+  max="100"
+  value="30"
+>
+  30%
+</progress>
+`;

@@ -38,7 +38,7 @@ export default {
   methods: {
     change(language) {
       this.$emit("change", language);
-      this.$go(this.$view.path, {
+      this.$go(window.location, {
         query: {
           language: language.code
         }
