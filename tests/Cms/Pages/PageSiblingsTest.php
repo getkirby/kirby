@@ -63,8 +63,10 @@ class PageSiblingsTest extends TestCase
     public function testHasNextListed()
     {
         $site = $this->site([
-            ['slug' => 'unlisted'],
-            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-b'],
+            ['slug' => 'listed-b', 'num' => 2],
         ]);
 
         $collection = $site->children();
@@ -76,8 +78,10 @@ class PageSiblingsTest extends TestCase
     public function testHasNextUnlisted()
     {
         $site = $this->site([
-            ['slug' => 'listed', 'num' => 1],
-            ['slug' => 'unlisted'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-b', 'num' => 2],
+            ['slug' => 'unlisted-b'],
         ]);
 
         $collection = $site->children();
@@ -106,8 +110,10 @@ class PageSiblingsTest extends TestCase
     public function testHasPrevListed()
     {
         $site = $this->site([
-            ['slug' => 'listed', 'num' => 1],
-            ['slug' => 'unlisted'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-b', 'num' => 2],
+            ['slug' => 'unlisted-b'],
         ]);
 
         $collection = $site->children();
@@ -119,8 +125,10 @@ class PageSiblingsTest extends TestCase
     public function testHasPrevUnlisted()
     {
         $site = $this->site([
-            ['slug' => 'unlisted'],
-            ['slug' => 'listed', 'num' => 1]
+            ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-b'],
+            ['slug' => 'listed-b', 'num' => 2],
         ]);
 
         $collection = $site->children();
@@ -194,22 +202,24 @@ class PageSiblingsTest extends TestCase
     {
         $collection = $this->site([
             ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-a', 'num' => 1],
             ['slug' => 'unlisted-b'],
-            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'listed-b', 'num' => 2],
         ])->children();
 
-        $this->assertEquals('listed', $collection->first()->nextListed()->slug());
+        $this->assertSame('listed-a', $collection->first()->nextListed()->slug());
     }
 
     public function testNextUnlisted()
     {
         $collection = $this->site([
             ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-a'],
             ['slug' => 'listed-b', 'num' => 2],
-            ['slug' => 'unlisted'],
+            ['slug' => 'unlisted-b'],
         ])->children();
 
-        $this->assertEquals('unlisted', $collection->first()->nextUnlisted()->slug());
+        $this->assertSame('unlisted-a', $collection->first()->nextUnlisted()->slug());
     }
 
     public function testPrev()
@@ -233,23 +243,25 @@ class PageSiblingsTest extends TestCase
     public function testPrevListed()
     {
         $collection = $this->site([
-            ['slug' => 'listed', 'num' => 1],
+            ['slug' => 'listed-a', 'num' => 1],
             ['slug' => 'unlisted-a'],
+            ['slug' => 'listed-b', 'num' => 1],
             ['slug' => 'unlisted-b'],
         ])->children();
 
-        $this->assertEquals('listed', $collection->last()->prevListed()->slug());
+        $this->assertSame('listed-b', $collection->last()->prevListed()->slug());
     }
 
     public function testPrevUnlisted()
     {
         $collection = $this->site([
-            ['slug' => 'unlisted'],
+            ['slug' => 'unlisted-a'],
             ['slug' => 'listed-a', 'num' => 1],
+            ['slug' => 'unlisted-b'],
             ['slug' => 'listed-b', 'num' => 2],
         ])->children();
 
-        $this->assertEquals('unlisted', $collection->last()->prevUnlisted()->slug());
+        $this->assertSame('unlisted-b', $collection->last()->prevUnlisted()->slug());
     }
 
     public function testSiblings()

@@ -110,7 +110,7 @@ trait PageSiblings
      */
     public function prevUnlisted($collection = null)
     {
-        return $this->prevAll($collection)->unlisted()->first();
+        return $this->prevAll($collection)->unlisted()->last();
     }
 
     /**
