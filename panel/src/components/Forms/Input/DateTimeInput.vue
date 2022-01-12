@@ -108,8 +108,10 @@ export default {
     onChange(input, event = "input", part = "date") {
       // parse input as ISO string (date or time)
       const dt = this.$library.dayjs.iso(input, part);
+
       // merge specified part (date/time) into `this.dt`
-      this.dt = this.dt.merge(dt, part);
+      this.dt = this.dt ? this.dt.merge(dt, part) : dt;
+
       this.$emit(event, this.dt?.toISO());
     },
     onInvalid() {
