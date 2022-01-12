@@ -333,7 +333,7 @@ export default {
      * @return {Object|null}
      */
     toISO(dt) {
-      return dt?.toISO();
+      return dt?.toISO() || null;
     },
     /**
      * Merges step donfiguration with defaults
