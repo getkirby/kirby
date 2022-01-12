@@ -287,11 +287,12 @@ export default {
     parse() {
       // get value and try to interpret
       const input = this.$refs.input.value;
+
       let dt = this.pattern.interpret(input);
 
       // round to nearest step
       const step = this.toStep();
-      dt = dt?.round(step.unit, step.size);
+      dt = dt?.round(step.unit, step.size) || null;
 
       return dt;
     },
