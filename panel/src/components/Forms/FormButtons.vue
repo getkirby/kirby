@@ -233,10 +233,6 @@ export default {
         e.preventDefault();
       }
 
-      if (this.hasChanges === false) {
-        return true;
-      }
-
       try {
         await this.$store.dispatch("content/save");
         this.$events.$emit("model.update");
