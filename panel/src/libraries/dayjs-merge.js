@@ -13,7 +13,7 @@ export default (option, Dayjs) => {
     // if provided object is not valid,
     // return unaltered
     if (!dt || !dt.isValid()) {
-      return result;
+      return this;
     }
 
     // if string alias has been provided,
