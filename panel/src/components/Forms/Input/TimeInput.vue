@@ -61,8 +61,7 @@ export const props = {
  * @public
  */
 export default {
-  extends: DateInput,
-  mixins: [props],
+  mixins: [DateInput, props],
   methods: {
     /**
      * Converts ISO time string to dayjs object
