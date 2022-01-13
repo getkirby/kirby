@@ -199,6 +199,12 @@ export default {
         }
       });
 
+      // redirect to non-fiber resources
+      if (response.headers.has("X-Fiber") === false) {
+        window.location.href = response.url;
+        return false;
+      }
+
       const text = await response.text();
       let json;
 
