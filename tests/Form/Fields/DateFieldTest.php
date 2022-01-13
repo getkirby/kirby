@@ -23,7 +23,7 @@ class DateFieldTest extends TestCase
             'value' => null
         ]);
 
-        $this->assertNull($field->value());
+        $this->assertSame('', $field->value());
         $this->assertEquals('', $field->toString());
     }
 
