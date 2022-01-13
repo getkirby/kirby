@@ -307,7 +307,7 @@ class Date extends DateTime
      */
     public static function optional(?string $datetime = null, ?DateTimeZone $timezone = null)
     {
-        if ($datetime === null) {
+        if (empty($datetime) === true) {
             return null;
         }
 
