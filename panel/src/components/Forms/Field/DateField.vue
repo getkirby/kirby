@@ -123,7 +123,7 @@ export default {
      * emitting the input event
      */
     onUpdate(value) {
-      this.$emit("input", value);
+      this.$emit("input", value || "");
     },
     /**
      * Store temporary value to be
