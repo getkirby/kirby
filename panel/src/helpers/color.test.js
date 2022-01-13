@@ -1,10 +1,13 @@
-/**
- * @vitest-environment node
- */
-
 import color from "./color.js";
 
 describe.concurrent("$helper.css.color()", () => {
+  document.documentElement.style.setProperty("--color-white", "white");
+  document.documentElement.style.setProperty("--color-blue-200", "blue-200");
+  document.documentElement.style.setProperty(
+    "--color-background",
+    "background"
+  );
+
   const data = {
     "should return nothing for non-strings": [
       [1, undefined],
@@ -24,6 +27,13 @@ describe.concurrent("$helper.css.color()", () => {
     "should return HEX": [
       ["#fff", "#fff"],
       ["#bababa", "#bababa"]
+    ],
+    "should return self with lowercase": [
+      ["LightSeaGreen", "lightseagreen"],
+      ["DarkSalmon", "darksalmon"],
+      ["MediumSlateBlue", "mediumslateblue"],
+      ["Background", "var(--color-background)"],
+      ["#E2E2E2", "#e2e2e2"]
     ]
   };
 
