@@ -120,6 +120,9 @@ export default {
       this.onInvalid();
     }
   },
+  created() {
+    this.onInput = this.$helper.debounce(this.onInput, 500);
+  },
   mounted() {
     this.onInvalid();
     // make sure to commit input value when Cmd+S is hit
@@ -249,6 +252,11 @@ export default {
      * @param {Event} event
      */
     onTab(event) {
+      // step out of the field if it is empty
+      if (this.$refs.input.value == "") {
+        return;
+      }
+
       // make sure to confirm any current input
       this.onBlur();
 
@@ -260,16 +268,29 @@ export default {
           selection.start === this.$refs.input.selectionStart &&
           selection.end === this.$refs.input.selectionEnd - 1
         ) {
-          // if last part is selected, jump out
-          if (selection.index === this.pattern.parts.length - 1) {
-            return;
-          }
+          // move backward on shift + tab
+          if (event.shiftKey) {
+            // if the first part is selected, jump out
+            if (selection.index === 0) {
+              return;
+            }
 
-          // select next part
-          this.select(this.pattern.parts[selection.index + 1]);
+            // select previous part
+            this.selectPrev(selection.index);
+
+            // move forward on tab
+          } else {
+            // if the last part is selected, jump out
+            if (selection.index === this.pattern.parts.length - 1) {
+              return;
+            }
+
+            // select next part
+            this.selectNext(selection.index);
+          }
         } else {
           // select default part (step unit)
-          this.select();
+          event.shiftKey ? this.selectLast() : this.selectFirst();
         }
 
         // prevent event and propagation
@@ -308,6 +329,36 @@ export default {
       }
 
       this.$refs.input.setSelectionRange(part.start, part.end + 1);
+    },
+    /**
+     * Selects the first pattern if available
+     * @public
+     */
+    selectFirst() {
+      this.select(this.pattern.parts[0]);
+    },
+    /**
+     * Selects the last pattern if available
+     * @public
+     */
+    selectLast() {
+      this.select(this.pattern.parts[this.pattern.parts.length - 1]);
+    },
+    /**
+     * Selects the next pattern if available
+     * @param {Number} index
+     * @public
+     */
+    selectNext(index) {
+      this.select(this.pattern.parts[index + 1]);
+    },
+    /**
+     * Selects the previous pattern if available
+     * @param {Number} index
+     * @public
+     */
+    selectPrev(index) {
+      this.select(this.pattern.parts[index - 1]);
     },
     /**
      * Get pattern part for current cursor selection
