@@ -91,7 +91,7 @@ export default async function (path, options = {}) {
   // be loaded from the API. All options that normally
   // will be returned from the API request must be set in
   // the object (component, props, etc.)
-  if (path === "object") {
+  if (typeof path === "object") {
     dialog = await syncDialog(path);
   } else {
     dialog = await asyncDialog(path, options);
