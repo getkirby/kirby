@@ -1,29 +1,105 @@
 import Fiber from "./index";
 
-export default async function (path, options = {}) {
-  let dialog = null;
+/**
+ * Defines dialogs via JS object
+ *
+ * @example
+ * this.$dialog({
+ *   component: 'k-remove-dialog',
+ *   props: {
+ *      text: 'Do you really want to delete this?'
+ *   },
+ *   submit: () => {},
+ *   cancel: () => {}
+ * });
+ *
+ * @param {Object} dialog
+ * @return {Object}
+ */
+const syncDialog = async function (dialog) {
+  return dialog;
+};
+
+/**
+ * Loads the dialog setup from the server
+ *
+ * @example
+ * this.$dialog('some/dialog');
+ *
+ * @example
+ * this.$dialog('some/dialog', () => {
+ *  // on submit
+ * });
+ *
+ * @example
+ * this.$dialog('some/dialog', {
+ *   query: {
+ *     template: 'some-template'
+ *   },
+ *   submit: () => {},
+ *   cancel: () => {}
+ * });
+ *
+ * @param {String} path
+ * @param {Function|Object} options
+ */
+const asyncDialog = async function (path, options = {}) {
   let submit = null;
+  let cancel = null;
 
   if (typeof options === "function") {
     submit = options;
     options = {};
-  }
-
-  if (typeof path === "object") {
-    dialog = path;
   } else {
-    dialog = await Fiber.request("dialogs/" + path, {
-      ...options,
-      type: "$dialog"
-    });
+    submit = options.submit;
+    cancel = options.cancel;
   }
 
-  // inject the on submit handler
-  dialog.submit = dialog.submit || submit;
+  // load the dialog definition from the server
+  let result = await Fiber.request("dialogs/" + path, {
+    ...options,
+    type: "$dialog"
+  });
+
+  // JSON parsing failed. The dialog is invalid
+  if (typeof result !== "object") {
+    return false;
+  }
+
+  // add the event handlers to the result
+  // they will be stored in Vuex to be available
+  // in the Fiber dialog component
+  result.submit = submit;
+  result.cancel = cancel;
+
+  return result;
+};
+
+/**
+ * Opens a dialog by either loading its
+ * definition from the server in a Fiber request
+ * or by the given object definition (first arg).
+ *
+ * @param {String|Object} path
+ * @param {Function|Object} options
+ * @returns
+ */
+export default async function (path, options = {}) {
+  let dialog = null;
+
+  // dialog is defined as object and will not
+  // be loaded from the API. All options that normally
+  // will be returned from the API request must be set in
+  // the object (component, props, etc.)
+  if (path === "object") {
+    dialog = await syncDialog(path);
+  } else {
+    dialog = await asyncDialog(path, options);
+  }
 
   // the request could not be parsed
   // the fatal view is taking over
-  if (dialog === false) {
+  if (!dialog) {
     return false;
   }
 
