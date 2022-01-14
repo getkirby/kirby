@@ -1,5 +1,3 @@
-import Fiber from "./index";
-
 /**
  * Defines dialogs via JS object
  *
@@ -17,7 +15,12 @@ import Fiber from "./index";
  * @return {Object}
  */
 const syncDialog = async function (dialog) {
-  return dialog;
+  return {
+    cancel: null,
+    submit: null,
+    props: {},
+    ...dialog
+  };
 };
 
 /**
@@ -56,7 +59,7 @@ const asyncDialog = async function (path, options = {}) {
   }
 
   // load the dialog definition from the server
-  let result = await Fiber.request("dialogs/" + path, {
+  let result = await this.$fiber.request("dialogs/" + path, {
     ...options,
     type: "$dialog"
   });
@@ -69,8 +72,8 @@ const asyncDialog = async function (path, options = {}) {
   // add the event handlers to the result
   // they will be stored in Vuex to be available
   // in the Fiber dialog component
-  result.submit = submit;
-  result.cancel = cancel;
+  result.submit = submit || null;
+  result.cancel = cancel || null;
 
   return result;
 };
@@ -92,9 +95,9 @@ export default async function (path, options = {}) {
   // will be returned from the API request must be set in
   // the object (component, props, etc.)
   if (typeof path === "object") {
-    dialog = await syncDialog(path);
+    dialog = await syncDialog.call(this, path);
   } else {
-    dialog = await asyncDialog(path, options);
+    dialog = await asyncDialog.call(this, path, options);
   }
 
   // the request could not be parsed

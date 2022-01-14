@@ -5,6 +5,7 @@ import search from "./search";
 
 export default {
   install(app) {
+    app.prototype.$fiber = window.panel.$fiber = Fiber;
     app.prototype.$dialog = window.panel.$dialog = dialog;
     app.prototype.$dropdown = window.panel.$dropdown = dropdown;
     app.prototype.$go = window.panel.$go = (path, options) =>

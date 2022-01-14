@@ -6,6 +6,13 @@ import dialog from "./dialog.js";
 
 const Vue = () => {
   return {
+    $fiber: {
+      request() {
+        return {
+          component: "k-remove-dialog"
+        };
+      }
+    },
     $helper: {
       isComponent() {
         return true;
@@ -22,16 +29,21 @@ const Vue = () => {
 
 describe.concurrent("$dialog()", () => {
   it("should create synchronous dialog", async () => {
-    const input = {
+    const result = await dialog.call(Vue(), {
       component: "k-remove-dialog",
       props: {
         text: "Test text"
       }
-    };
+    });
 
-    const result = await dialog.call(Vue(), input);
-
-    expect(result).toStrictEqual(input);
+    expect(result).toEqual({
+      cancel: null,
+      submit: null,
+      component: "k-remove-dialog",
+      props: {
+        text: "Test text"
+      }
+    });
   });
 
   it("should always inject props", async () => {
@@ -40,8 +52,10 @@ describe.concurrent("$dialog()", () => {
     });
 
     expect(result).toEqual({
-      component: "k-remove-dialog",
-      props: {}
+      cancel: null,
+      submit: null,
+      props: {},
+      component: "k-remove-dialog"
     });
   });
 
@@ -53,8 +67,10 @@ describe.concurrent("$dialog()", () => {
     });
 
     expect(vue.$store.state.dialog).toEqual({
-      component: "k-remove-dialog",
-      props: {}
+      cancel: null,
+      submit: null,
+      props: {},
+      component: "k-remove-dialog"
     });
   });
 
@@ -80,5 +96,81 @@ describe.concurrent("$dialog()", () => {
     } catch (e) {
       expect(e.message).toEqual("The dialog component does not exist");
     }
+  });
+
+  it("should create asynchronous dialog", async () => {
+    const vue = Vue();
+
+    const result = await dialog.call(vue, "test");
+
+    expect(result).toEqual({
+      component: "k-remove-dialog",
+      props: {},
+      submit: null,
+      cancel: null
+    });
+  });
+
+  it("should support custom handlers", async () => {
+    const onSubmit = () => {};
+    const onCancel = () => {};
+
+    const result = await dialog.call(Vue(), "test", {
+      submit: onSubmit,
+      cancel: onCancel
+    });
+
+    expect(result.submit).toStrictEqual(onSubmit);
+    expect(result.cancel).toStrictEqual(onCancel);
+  });
+
+  it("should support submit handler as second argument", async () => {
+    const vue = Vue();
+
+    vue.$fiber.request = async function () {
+      return {
+        component: "k-remove-dialog"
+      };
+    };
+
+    const onSubmit = () => {
+      return "submitted";
+    };
+
+    const result = await dialog.call(vue, "test", onSubmit);
+
+    expect(result.submit).toStrictEqual(onSubmit);
+  });
+
+  it("should return false on invalid response", async () => {
+    const vue = Vue();
+
+    vue.$fiber.request = async function () {
+      return false;
+    };
+
+    const result = await dialog.call(vue, "test");
+
+    expect(result).toBe(false);
+  });
+
+  it("should prefix the request path", async () => {
+    const vue = Vue();
+
+    vue.$fiber.request = async function (path) {
+      expect(path).toBe("dialogs/test");
+    };
+
+    await dialog.call(vue, "test");
+  });
+
+  it("should define the $dialog type", async () => {
+    const vue = Vue();
+
+    vue.$fiber.request = async function (path, options) {
+      expect(options.type).toBe("$dialog");
+    };
+
+    await dialog.call(vue, "test");
   });
 });
