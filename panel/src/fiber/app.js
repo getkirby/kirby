@@ -1,4 +1,3 @@
-import Fiber from "./index";
 import Vue from "vue";
 
 export default {
@@ -11,7 +10,7 @@ export default {
     };
   },
   created() {
-    Fiber.init(this.state, {
+    this.$fiber.init(this.state, {
       headers: () => {
         return {
           "X-CSRF": this.state.$system.csrf

@@ -1,7 +1,5 @@
-import Fiber from "./index";
-
 export default async function (type, query, options = {}) {
-  return await Fiber.request("search/" + type, {
+  return await this.$fiber.request("search/" + type, {
     query: {
       query: query
     },

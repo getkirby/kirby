@@ -8,13 +8,10 @@ export default {
     app.prototype.$fiber = window.panel.$fiber = Fiber;
     app.prototype.$dialog = window.panel.$dialog = dialog;
     app.prototype.$dropdown = window.panel.$dropdown = dropdown;
-    app.prototype.$go = window.panel.$go = (path, options) =>
-      Fiber.go(Fiber.url(path), options);
-    app.prototype.$reload = window.panel.$reload = (options) =>
-      Fiber.reload(options);
-    app.prototype.$request = window.panel.$request = (...args) =>
-      Fiber.request(...args);
+    app.prototype.$go = window.panel.$go = Fiber.go.bind(Fiber);
+    app.prototype.$reload = window.panel.$reload = Fiber.reload.bind(Fiber);
+    app.prototype.$request = window.panel.$request = Fiber.request.bind(Fiber);
     app.prototype.$search = window.panel.$search = search;
-    app.prototype.$url = window.panel.$url = (...args) => Fiber.url(...args);
+    app.prototype.$url = window.panel.$url = Fiber.url.bind(Fiber);
   }
 };

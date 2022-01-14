@@ -94,6 +94,8 @@ export default {
    * @returns {object}
    */
   async go(url, options) {
+    url = this.url(url);
+
     try {
       const response = await this.request(url, options);
 

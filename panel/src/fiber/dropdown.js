@@ -1,8 +1,6 @@
-import Fiber from "./index";
-
 export default function (path, options) {
   return async (ready) => {
-    const dropdown = await Fiber.request("dropdowns/" + path, {
+    const dropdown = await this.$fiber.request("dropdowns/" + path, {
       ...options,
       method: "POST",
       type: "$dropdown"
