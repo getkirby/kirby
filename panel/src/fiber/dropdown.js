@@ -2,7 +2,6 @@ export default function (path, options = {}) {
   return async (ready) => {
     const dropdown = await this.$fiber.request("dropdowns/" + path, {
       ...options,
-      method: "POST",
       type: "$dropdown"
     });
 

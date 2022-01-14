@@ -12,7 +12,6 @@ describe.concurrent("$dropdown()", () => {
       $fiber: {
         async request(path, options) {
           expect(path).toBe("dropdowns/test");
-          expect(options.method).toBe("POST");
           expect(options.type).toBe("$dropdown");
 
           return {
