@@ -65,7 +65,7 @@ describe.concurrent("$fiber", () => {
     };
 
     // fetch mock
-    fiber.fetch = (url, options) => {
+    fiber.fetch = () => {
       return {
         headers: new Headers({ "X-Fiber": true }),
         text: () =>
