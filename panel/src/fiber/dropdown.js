@@ -1,4 +1,4 @@
-export default function (path, options) {
+export default function (path, options = {}) {
   return async (ready) => {
     const dropdown = await this.$fiber.request("dropdowns/" + path, {
       ...options,
@@ -8,7 +8,7 @@ export default function (path, options) {
 
     // the request could not be parsed
     // the fatal view is taking over
-    if (dropdown === false) {
+    if (!dropdown) {
       return false;
     }
 
@@ -21,14 +21,14 @@ export default function (path, options) {
 
     dropdown.options.map((option) => {
       if (option.dialog) {
-        option.click = function () {
+        option.click = () => {
           const url =
             typeof option.dialog === "string"
               ? option.dialog
               : option.dialog.url;
           const options =
             typeof option.dialog === "object" ? option.dialog : {};
-          this.$dialog(url, options);
+          return this.$dialog(url, options);
         };
       }
       return option;
