@@ -4,6 +4,7 @@
     ref="dialog"
     :visible="true"
     v-bind="props"
+    @cancel="onCancel"
     @submit="onSubmit"
   />
 </template>
@@ -18,16 +19,35 @@ export default {
     referrer: String
   },
   methods: {
+    close() {
+      this.$refs.dialog.close();
+    },
+    onCancel() {
+      if (typeof this.$store.state.dialog.cancel === "function") {
+        this.$store.state.dialog.cancel({ dialog: this });
+      }
+    },
     async onSubmit(value) {
+      let dialog = null;
+
       try {
-        const dialog = await this.$request(this.path, {
-          body: value,
-          method: "POST",
-          type: "$dialog",
-          headers: {
-            "X-Fiber-Referrer": this.referrer
-          }
-        });
+        if (typeof this.$store.state.dialog.submit === "function") {
+          dialog = await this.$store.state.dialog.submit({
+            dialog: this,
+            value
+          });
+        } else if (this.path) {
+          dialog = await this.$request(this.path, {
+            body: value,
+            method: "POST",
+            type: "$dialog",
+            headers: {
+              "X-Fiber-Referrer": this.referrer
+            }
+          });
+        } else {
+          throw "The dialog needs a submit action or a dialog route path to be submitted";
+        }
 
         // json parsing failed and
         // the fatal dialog is taking over
@@ -36,7 +56,7 @@ export default {
         }
 
         // everything went fine. We can close the dialog
-        this.$refs.dialog.close();
+        this.close();
 
         // show the smiley in the topbar
         this.$store.dispatch("notification/success", ":)");

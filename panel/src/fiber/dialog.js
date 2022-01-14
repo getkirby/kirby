@@ -1,10 +1,25 @@
 import Fiber from "./index";
 
 export default async function (path, options = {}) {
-  const dialog = await Fiber.request("dialogs/" + path, {
-    ...options,
-    type: "$dialog"
-  });
+  let dialog = null;
+  let submit = null;
+
+  if (typeof options === "function") {
+    submit = options;
+    options = {};
+  }
+
+  if (typeof path === "object") {
+    dialog = path;
+  } else {
+    dialog = await Fiber.request("dialogs/" + path, {
+      ...options,
+      type: "$dialog"
+    });
+  }
+
+  // inject the on submit handler
+  dialog.submit = dialog.submit || submit;
 
   // the request could not be parsed
   // the fatal view is taking over
