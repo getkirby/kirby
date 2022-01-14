@@ -116,7 +116,7 @@ export default {
   /**
    * Builds a query string for request URLs
    *
-   * @param {object} data
+   * @param {object} query
    * @param {object} base
    * @returns {URLSearchParams}
    */
