@@ -11,10 +11,29 @@ export default {
   },
   created() {
     this.$fiber.init(this.state, {
+      base: document.querySelector("base").href,
+      /**
+       * Returns all custom headers for
+       * each Fiber request
+       * @returns {Object}
+       */
       headers: () => {
         return {
           "X-CSRF": this.state.$system.csrf
         };
+      },
+      /**
+       * Handles fatal JSON parsing issues
+       * that cannot be converted to a valid
+       * Fiber request.
+       *
+       * @param {object}
+       */
+      onFatal({ text, options }) {
+        this.$store.dispatch("fatal", {
+          html: text,
+          silent: options.silent
+        });
       },
       /**
        * Is being called when a Fiber request
@@ -25,6 +44,22 @@ export default {
         if (this.$api.requests.length === 0) {
           this.$store.dispatch("isLoading", false);
         }
+      },
+      /**
+       * Is being called when a new state is pushed
+       *
+       * @param {Object} state
+       */
+      onPushState: (state) => {
+        window.history.pushState(state, "", state.$url);
+      },
+      /**
+       * Is being called when a the current state is replaced
+       *
+       * @param {Object} state
+       */
+      onReplaceState: (state) => {
+        window.history.replaceState(state, "", state.$url);
       },
       /**
        * Is being called when a Fiber request
@@ -67,12 +102,21 @@ export default {
           this.navigate();
         }
       },
+      /**
+       * Returns global query parameters
+       * that should be added to all requests
+       *
+       * @returns {Object}
+       */
       query: () => {
         return {
           language: this.state.$language?.code
         };
       }
     });
+
+    // back button event
+    window.addEventListener("popstate", this.$reload);
   },
   methods: {
     /**
