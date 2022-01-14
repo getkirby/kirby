@@ -1,3 +1,13 @@
+/**
+ * Loads dropdown options from the server
+ *
+ * @example
+ * <k-dropdown-content :options="$dropdown('some/dropdown')" />
+ *
+ * @param {String} path
+ * @param {Object} options
+ * @return {Function}
+ */
 export default function (path, options = {}) {
   return async (ready) => {
     const dropdown = await this.$fiber.request("dropdowns/" + path, {
