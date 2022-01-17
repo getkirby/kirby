@@ -248,24 +248,6 @@ class DocumentTest extends TestCase
     /**
      * @covers ::favicon
      */
-    public function testFaviconString(): void
-    {
-        // single string
-        $app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'favicon' => 'assets/favicon.ico'
-                ]
-            ]
-        ]);
-
-        $icons = Document::favicon();
-        $this->assertSame('assets/favicon.ico', $icons['shortcut icon']['url']);
-    }
-
-    /**
-     * @covers ::favicon
-     */
     public function testFaviconArray(): void
     {
         // array
@@ -289,6 +271,44 @@ class DocumentTest extends TestCase
         $icons = Document::favicon();
         $this->assertSame('assets/my-favicon.svg', $icons['shortcut icon']['url']);
         $this->assertSame('assets/my-favicon.png', $icons['alternate icon']['url']);
+    }
+
+    /**
+     * @covers ::favicon
+     */
+    public function testFaviconString(): void
+    {
+        // single string
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'favicon' => 'assets/favicon.ico'
+                ]
+            ]
+        ]);
+
+        $icons = Document::favicon();
+        $this->assertSame('image/x-icon', $icons['shortcut icon']['type']);
+        $this->assertSame('assets/favicon.ico', $icons['shortcut icon']['url']);
+    }
+
+    /**
+     * @covers ::favicon
+     */
+    public function testFaviconInvalid(): void
+    {
+        // single string
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'favicon' => 5
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid panel.favicon option');
+        $icons = Document::favicon();
     }
 
     /**

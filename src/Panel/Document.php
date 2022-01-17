@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -174,7 +175,8 @@ class Document
      */
     public static function favicon(string $url = ''): array
     {
-        $icons = kirby()->option('panel.favicon', [
+        $kirby = kirby();
+        $icons = $kirby->option('panel.favicon', [
             'apple-touch-icon' => [
                 'type' => 'image/png',
                 'url'  => $url . '/apple-touch-icon.png',
@@ -189,17 +191,21 @@ class Document
             ]
         ]);
 
+        if (is_array($icons) === true) {
+            return $icons;
+        }
+
         // make sure to convert favicon string to array
         if (is_string($icons) === true) {
-            $icons = [
+            return [
                 'shortcut icon' => [
-                    'type' => 'image/svg+xml',
+                    'type' => F::mime($icons),
                     'url'  => $icons,
                 ]
             ];
         }
 
-        return $icons;
+        throw new InvalidArgumentException('Invalid panel.favicon option');
     }
 
     /**
