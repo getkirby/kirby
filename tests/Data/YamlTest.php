@@ -87,4 +87,28 @@ class YamlTest extends TestCase
 
         setlocale(LC_ALL, $locale);
     }
+
+    public function testEncodeNodeTypes()
+    {
+        $data = Yaml::encode(['test' => '']);
+        $this->assertSame('test: ""' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => null]);
+        $this->assertSame('test: null' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => 0]);
+        $this->assertSame('test: 0' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => true]);
+        $this->assertSame('test: true' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => false]);
+        $this->assertSame('test: false' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => 'string']);
+        $this->assertSame('test: string' . PHP_EOL, $data);
+
+        $data = Yaml::encode(['test' => '"string"']);
+        $this->assertSame('test: "string"' . PHP_EOL, $data);
+    }
 }
