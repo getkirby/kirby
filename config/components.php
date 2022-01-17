@@ -138,6 +138,8 @@ return [
      * @param array $options Markdown options
      * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
      * @return string
+     * @todo add deprecation warning for $inline parameter in 3.7.0
+     * @todo remove $inline parameter in in 3.8.0
      */
     'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;

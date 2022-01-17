@@ -788,19 +788,21 @@ class App
      * Parses KirbyTags first and Markdown afterwards
      *
      * @internal
-     * @todo deprecate $inline $option in 3.7.0 and remove in 3.8.0
      * @param string|null $text
-     * @param array $options
-     * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
+     * @param array $data
+     * @param bool $inline (deprecated: use $data['markdown']['inline'] instead)
      * @return string
+     * @todo add deprecation warning for $inline parameter in 3.7.0
+     * @todo rename $data parameter to $options in 3.7.0
+     * @todo remove $inline parameter in in 3.8.0
      */
-    public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
+    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
         $options = A::merge([
             'markdown' => [
                 'inline' => $inline
             ]
-        ], $options);
+        ], $data);
 
         $text = $this->apply('kirbytext:before', compact('text'), 'text');
         $text = $this->kirbytags($text, $options);
@@ -897,13 +899,18 @@ class App
      * Parses Markdown
      *
      * @internal
-     * @todo deprecate boolean $options in 3.7.0 and remove in 3.8.0
      * @param string|null $text
      * @param bool|array $options
      * @return string
+     * @todo rename $inline parameter to $options in 3.7.0
+     * @todo add deprecation warning for boolean $options in 3.7.0
+     * @todo remove boolean $options in in 3.8.0
      */
-    public function markdown(string $text = null, $options = null): string
+    public function markdown(string $text = null, $inline = null): string
     {
+        // TODO: remove after renaming parameter
+        $options = $inline;
+
         // support for the old syntax to enable inline mode as second argument
         if (is_bool($options) === true) {
             $options = [
@@ -912,7 +919,10 @@ class App
         }
 
         // merge global options with local options
-        $options = array_merge($this->options['markdown'] ?? [], (array)$options);
+        $options = array_merge(
+            $this->options['markdown'] ?? [],
+            (array)$options
+        );
 
         return ($this->component('markdown'))($this, $text, $options);
     }
