@@ -69,18 +69,22 @@ describe("dayjs.pattern.format()", () => {
 describe("dayjs.pattern.interpret()", () => {
   const data = {
     "YYYY-MM-DD": {
+      pattern: "YYYY-MM-DD",
       inputs: ["2020-08-01", "20-8-1", "20-8", "20/8"],
       result: "2020-08-01"
     },
     "MM/DD/YY HH:mm": {
+      pattern: "MM/DD/YY HH:mm",
       inputs: ["08/02/15 08:03", "8/2/15 8:3", "8.2.15 8.3"],
       result: "08/02/15 08:03"
     },
     "YY.M.D": {
+      pattern: "YY.M.D",
       inputs: ["20.1.1", "20.1", "20"],
       result: "20.1.1"
     },
     "HH:mm:ss": {
+      pattern: "HH:mm:ss",
       inputs: ["19:03:22", "19.3.22"],
       result: "19:03:22"
     }
@@ -88,7 +92,7 @@ describe("dayjs.pattern.interpret()", () => {
 
   for (const test in data) {
     it(test, () => {
-      const pattern = dayjs.pattern(test);
+      const pattern = dayjs.pattern(data[test].pattern);
 
       for (const input of data[test].inputs) {
         const result = pattern.interpret(input).format(test);
