@@ -25,11 +25,31 @@
  */
 
 import { clone, merge } from "../helpers/object.js";
-import store from "../store/store.js";
 
-export default {
-  options: {},
-  state: {},
+export default class Fiber {
+  /**
+   * @param {object} options
+   */
+  constructor(options = {}) {
+    this.options = {
+      base: "/",
+      headers: () => {
+        return {};
+      },
+      onFatal: () => {},
+      onFinish: () => {},
+      onPushState: () => {},
+      onReplaceState: () => {},
+      onStart: () => {},
+      onSwap: () => {},
+      query: () => {
+        return {};
+      },
+      ...options
+    };
+
+    this.state = {};
+  }
 
   /**
    * Setup call to make Fiber ready
@@ -37,24 +57,16 @@ export default {
    * @param {object} state
    * @param {object} options
    */
-  init(state, options = {}) {
+  init(state = {}, options = {}) {
     // defaults
     this.options = {
-      base: document.querySelector("base").href,
-      headers: () => {},
-      onFinish: () => {},
-      onStart: () => {},
-      onSwap: () => {},
-      query: () => {},
+      ...this.options,
       ...options
     };
 
     // set initial state
     this.setState(state);
-
-    // back button event
-    window.addEventListener("popstate", this.reload.bind(this));
-  },
+  }
 
   /**
    * Prepares a set of values to
@@ -69,7 +81,7 @@ export default {
       return String(array);
     }
     return array.join(",");
-  },
+  }
 
   /**
    * Creates a proper request body
@@ -83,7 +95,18 @@ export default {
     }
 
     return body;
-  },
+  }
+
+  /**
+   * Handles the pure fetch request
+   *
+   * @param {string} url
+   * @param {object} options
+   * @returns {object}
+   */
+  async fetch(url, options) {
+    return fetch(url, options);
+  }
 
   /**
    * Sends a view request to load and
@@ -109,12 +132,12 @@ export default {
         throw e;
       }
     }
-  },
+  }
 
   /**
    * Builds a query string for request URLs
    *
-   * @param {object} data
+   * @param {object} query
    * @param {object} base
    * @returns {URLSearchParams}
    */
@@ -143,7 +166,15 @@ export default {
     });
 
     return params;
-  },
+  }
+
+  /**
+   * Handle hard redirects
+   * @param {String|URL} url
+   */
+  redirect(url) {
+    window.location.href = url;
+  }
 
   /**
    * A wrapper around go() which
@@ -157,7 +188,7 @@ export default {
       ...options,
       replace: true
     });
-  },
+  }
 
   /**
    * Sends a generic Fiber request
@@ -166,7 +197,7 @@ export default {
    * @param {Object} options
    * @returns {Object}
    */
-  async request(path, options = {}) {
+  async request(path = "", options = {}) {
     options = {
       globals: false,
       method: "GET",
@@ -177,14 +208,19 @@ export default {
       ...options
     };
 
-    const globals = this.arrayToString(options.globals);
+    // convert globals to comma separated string
+    const globals = options.globals
+      ? this.arrayToString(options.globals)
+      : false;
+
+    // convert only fields to comma separated string
     const only = this.arrayToString(options.only);
 
     this.options.onStart(options);
 
     try {
       const url = this.url(path, options.query);
-      const response = await fetch(url, {
+      const response = await this.fetch(url, {
         method: options.method,
         body: this.body(options.body),
         credentials: "same-origin",
@@ -194,14 +230,14 @@ export default {
           "X-Fiber": true,
           "X-Fiber-Globals": globals,
           "X-Fiber-Only": only,
-          "X-Fiber-Referrer": this.state.$view.path,
+          "X-Fiber-Referrer": this.state.$view?.path || null,
           ...options.headers
         }
       });
 
       // redirect to non-fiber resources
       if (response.headers.has("X-Fiber") === false) {
-        window.location.href = response.url;
+        this.redirect(response.url);
         return false;
       }
 
@@ -211,9 +247,12 @@ export default {
       try {
         json = JSON.parse(text);
       } catch (e) {
-        store.dispatch("fatal", {
-          html: text,
-          silent: options.silent
+        this.options.onFatal({
+          url,
+          path,
+          options,
+          response,
+          text
         });
         return false;
       }
@@ -247,7 +286,7 @@ export default {
     } finally {
       this.options.onFinish(options);
     }
-  },
+  }
 
   /**
    * Stores the state for the current page/view
@@ -269,13 +308,15 @@ export default {
       options.replace === true ||
       this.url(this.state.$url).href === window.location.href
     ) {
-      window.history.replaceState(this.state, "", this.state.$url);
+      this.options.onReplaceState(this.state, options);
     } else {
-      window.history.pushState(this.state, "", this.state.$url);
+      this.options.onPushState(this.state, options);
     }
 
-    this.options.onSwap(state, options);
-  },
+    this.options.onSwap(this.state, options);
+
+    return this.state;
+  }
 
   /**
    * Builds a full URL object based on the
@@ -295,4 +336,4 @@ export default {
     url.search = this.query(query, url.search);
     return url;
   }
-};
+}

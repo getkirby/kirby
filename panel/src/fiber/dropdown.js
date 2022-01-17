@@ -1,16 +1,23 @@
-import Fiber from "./index";
-
-export default function (path, options) {
+/**
+ * Loads dropdown options from the server
+ *
+ * @example
+ * <k-dropdown-content :options="$dropdown('some/dropdown')" />
+ *
+ * @param {String} path
+ * @param {Object} options
+ * @return {Function}
+ */
+export default function (path, options = {}) {
   return async (ready) => {
-    const dropdown = await Fiber.request("dropdowns/" + path, {
+    const dropdown = await this.$fiber.request("dropdowns/" + path, {
       ...options,
-      method: "POST",
       type: "$dropdown"
     });
 
     // the request could not be parsed
     // the fatal view is taking over
-    if (dropdown === false) {
+    if (!dropdown) {
       return false;
     }
 
@@ -23,14 +30,14 @@ export default function (path, options) {
 
     dropdown.options.map((option) => {
       if (option.dialog) {
-        option.click = function () {
+        option.click = () => {
           const url =
             typeof option.dialog === "string"
               ? option.dialog
               : option.dialog.url;
           const options =
             typeof option.dialog === "object" ? option.dialog : {};
-          this.$dialog(url, options);
+          return this.$dialog(url, options);
         };
       }
       return option;
