@@ -771,10 +771,11 @@ class App
      */
     public function kirbytags(string $text = null, array $data = []): string
     {
-        $data['kirby']  = $data['kirby']  ?? $this;
-        $data['site']   = $data['site']   ?? $data['kirby']->site();
-        $data['parent'] = $data['parent'] ?? $data['site']->page();
-        $options        = $this->options;
+        $data['kirby']  ??= $this;
+        $data['site']   ??= $data['kirby']->site();
+        $data['parent'] ??= $data['site']->page();
+
+        $options = $this->options;
 
         $text = $this->apply('kirbytags:before', compact('text', 'data', 'options'), 'text');
         $text = KirbyTags::parse($text, $data, $options);
@@ -788,15 +789,21 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param array $data
-     * @param bool $inline
+     * @param array $options
+     * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
      * @return string
      */
-    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
+    public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
     {
+        $options = A::merge([
+            'markdown' => [
+                'inline' => $inline
+            ]
+        ], $options);
+
         $text = $this->apply('kirbytext:before', compact('text'), 'text');
-        $text = $this->kirbytags($text, $data);
-        $text = $this->markdown($text, $inline);
+        $text = $this->kirbytags($text, $options);
+        $text = $this->markdown($text, $options['markdown']);
 
         if ($this->option('smartypants', false) !== false) {
             $text = $this->smartypants($text);

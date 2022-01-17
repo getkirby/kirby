@@ -449,12 +449,12 @@ function kirbytags(?string $text = null, array $data = []): string
  * given string. Shortcut for `$kirby->kirbytext()`
  *
  * @param string|null $text
- * @param array $data
+ * @param array $options
  * @return string
  */
-function kirbytext(?string $text = null, array $data = []): string
+function kirbytext(?string $text = null, array $options = []): string
 {
-    return App::instance()->kirbytext($text, $data);
+    return App::instance()->kirbytext($text, $options);
 }
 
 /**
@@ -463,24 +463,24 @@ function kirbytext(?string $text = null, array $data = []): string
  * @since 3.1.0
  *
  * @param string|null $text
- * @param array $data
+ * @param array $options
  * @return string
  */
-function kirbytextinline(?string $text = null, array $data = []): string
+function kirbytextinline(?string $text = null, array $options = []): string
 {
-    return App::instance()->kirbytext($text, $data, true);
+    return App::instance()->kirbytext($text, $options, true);
 }
 
 /**
  * Shortcut for `kirbytext()` helper
  *
  * @param string|null $text
- * @param array $data
+ * @param array $options
  * @return string
  */
-function kt(?string $text = null, array $data = []): string
+function kt(?string $text = null, array $options = []): string
 {
-    return kirbytext($text, $data);
+    return kirbytext($text, $options);
 }
 
 /**
@@ -488,12 +488,12 @@ function kt(?string $text = null, array $data = []): string
  * @since 3.1.0
  *
  * @param string|null $text
- * @param array $data
+ * @param array $options
  * @return string
  */
-function kti(?string $text = null, array $data = []): string
+function kti(?string $text = null, array $options = []): string
 {
-    return kirbytextinline($text, $data);
+    return kirbytextinline($text, $options);
 }
 
 /**

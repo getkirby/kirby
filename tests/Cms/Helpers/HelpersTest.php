@@ -461,6 +461,14 @@ class HelpersTest extends TestCase
         $this->assertSame($inline, kti($text));
     }
 
+    public function testKirbyTextHelperWithSafeMode()
+    {
+        $text     = '<h1>Kirby</h1>';
+        $expected = '<p>&lt;h1&gt;Kirby&lt;/h1&gt;</p>';
+
+        $this->assertSame($expected, kirbytext($text, ['markdown' => ['safe' => true]]));
+    }
+
     public function testLoad()
     {
         load([
@@ -476,6 +484,14 @@ class HelpersTest extends TestCase
     {
         $tag = markdown('# Kirby');
         $expected = '<h1>Kirby</h1>';
+
+        $this->assertSame($expected, $tag);
+    }
+
+    public function testMarkdownHelperWithSafeMode()
+    {
+        $tag = markdown('<h1>Kirby</h1>', ['safe' => true]);
+        $expected = '<p>&lt;h1&gt;Kirby&lt;/h1&gt;</p>';
 
         $this->assertSame($expected, $tag);
     }
