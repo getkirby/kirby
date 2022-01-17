@@ -451,14 +451,11 @@ class HelpersTest extends TestCase
 
     public function testKirbyTextHelper()
     {
-        $text   = 'This is **just** a text.';
-        $normal = '<p>This is <strong>just</strong> a text.</p>';
-        $inline = 'This is <strong>just</strong> a text.';
+        $text     = 'This is **just** a text.';
+        $expected = '<p>This is <strong>just</strong> a text.</p>';
 
-        $this->assertSame($normal, kirbytext($text));
-        $this->assertSame($normal, kt($text));
-        $this->assertSame($inline, kirbytextinline($text));
-        $this->assertSame($inline, kti($text));
+        $this->assertSame($expected, kirbytext($text));
+        $this->assertSame($expected, kt($text));
     }
 
     public function testKirbyTextHelperWithSafeMode()
@@ -467,6 +464,25 @@ class HelpersTest extends TestCase
         $expected = '<p>&lt;h1&gt;Kirby&lt;/h1&gt;</p>';
 
         $this->assertSame($expected, kirbytext($text, ['markdown' => ['safe' => true]]));
+        $this->assertSame($expected, kt($text, ['markdown' => ['safe' => true]]));
+    }
+
+    public function testKirbyTextInlineHelper()
+    {
+        $text     = 'This is **just** a text.';
+        $expected = 'This is <strong>just</strong> a text.';
+
+        $this->assertSame($expected, kirbytextinline($text));
+        $this->assertSame($expected, kti($text));
+    }
+
+    public function testKirbyTextInlineHelperWithSafeMode()
+    {
+        $text     = 'This is <b>just</b> a text.';
+        $expected = 'This is &lt;b&gt;just&lt;/b&gt; a text.';
+
+        $this->assertSame($expected, kirbytextinline($text, ['markdown' => ['safe' => true]]));
+        $this->assertSame($expected, kti($text, ['markdown' => ['safe' => true]]));
     }
 
     public function testLoad()

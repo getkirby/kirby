@@ -76,6 +76,46 @@ class AppComponentsTest extends TestCase
         $this->assertEquals($expected, js('something.js'));
     }
 
+    public function testKirbytext()
+    {
+        $text     = 'Test';
+        $expected = '<p>Test</p>';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text));
+    }
+
+    public function testKirbytextWithSafeMode()
+    {
+        $text     = '<h1>Test</h1>';
+        $expected = '&lt;h1&gt;Test&lt;/h1&gt;';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [
+            'markdown' => [
+                'safe' => true
+            ]
+        ], true));
+    }
+
+    public function testKirbytextInline()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [
+            'markdown' => [
+                'inline' => true
+            ]
+        ], true));
+    }
+
+    public function testKirbytextInlineDeprecated()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [], true));
+    }
+
     public function testMarkdown()
     {
         $text     = 'Test';
@@ -90,6 +130,12 @@ class AppComponentsTest extends TestCase
         $expected = 'Test';
 
         $this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+
+        // deprecated boolean second option
+        $this->assertEquals($expected, $this->kirby->markdown($text, true));
+
+        // deprecated fourth argument
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], true));
     }
 
     public function testMarkdownWithSafeMode()
