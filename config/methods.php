@@ -451,10 +451,11 @@ return function (App $app) {
          * Converts markdown to valid HTML
          *
          * @param \Kirby\Cms\Field $field
+         * @param array $options
          * @return \Kirby\Cms\Field
          */
-        'markdown' => function (Field $field) use ($app) {
-            $field->value = $app->markdown($field->value);
+        'markdown' => function (Field $field, array $options = []) use ($app) {
+            $field->value = $app->markdown($field->value, $options);
             return $field;
         },
 

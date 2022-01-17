@@ -890,12 +890,22 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param bool $inline
+     * @param bool|array $options
      * @return string
      */
-    public function markdown(string $text = null, bool $inline = false): string
+    public function markdown(string $text = null, $options = null): string
     {
-        return ($this->component('markdown'))($this, $text, $this->options['markdown'] ?? [], $inline);
+        // support for the old syntax to enable inline mode as second argument
+        if (is_bool($options) === true) {
+            $options = [
+                'inline' => $options
+            ];
+        }
+
+        // merge global options with local options
+        $options = array_merge($this->options['markdown'] ?? [], (array)$options);
+
+        return ($this->component('markdown'))($this, $text, $options);
     }
 
     /**

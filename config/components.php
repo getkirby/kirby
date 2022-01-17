@@ -136,12 +136,15 @@ return [
      * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $text Text to parse
      * @param array $options Markdown options
-     * @param bool $inline Whether to wrap the text in `<p>` tags
+     * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
      * @return string
      */
     'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
         static $config;
+
+        // support for the deprecated fourth argument
+        $options['inline'] ??= $inline;
 
         // if the config options have changed or the component is called for the first time,
         // (re-)initialize the parser object
@@ -150,7 +153,7 @@ return [
             $config   = $options;
         }
 
-        return $markdown->parse($text, $inline);
+        return $markdown->parse($text, $options['inline'] ?? false);
     },
 
     /**

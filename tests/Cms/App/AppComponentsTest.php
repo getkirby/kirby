@@ -84,6 +84,22 @@ class AppComponentsTest extends TestCase
         $this->assertEquals($expected, $this->kirby->markdown($text));
     }
 
+    public function testMarkdownInline()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+    }
+
+    public function testMarkdownWithSafeMode()
+    {
+        $text     = '<div>Test</div>';
+        $expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
+
+        $this->assertEquals($expected, $this->kirby->markdown($text, ['safe' => true]));
+    }
+
     public function testMarkdownCachedInstance()
     {
         $text     = '1st line
