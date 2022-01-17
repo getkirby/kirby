@@ -9,13 +9,12 @@ export default (option, Dayjs, dayjs) => {
     if (format === "date") {
       return "YYYY-MM-DD";
     }
+
     if (format === "time") {
       return "HH:mm:ss";
     }
-    if (format === "datetime") {
-      return "YYYY-MM-DD HH:mm:ss";
-    }
-    return format;
+
+    return "YYYY-MM-DD HH:mm:ss";
   };
 
   /**
@@ -31,7 +30,7 @@ export default (option, Dayjs, dayjs) => {
    * Converts ISO string to dayjs object
    * @param {string} string
    * @param {string} format
-   * @returns {Object}
+   * @returns {Object|null}
    */
   dayjs.iso = function (string, format = "datetime") {
     const dt = dayjs(string, dayjsISOformat(format));

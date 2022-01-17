@@ -10,7 +10,6 @@ import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
-import validate from "./validate.js";
 
 import "./regex.js";
 
@@ -53,8 +52,7 @@ export default {
       sort,
       string,
       upload,
-      uuid: string.uuid,
-      validate
+      uuid: string.uuid
     };
 
     Vue.prototype.$esc = string.escapeHTML;

@@ -376,7 +376,7 @@ class FormTest extends TestCase
         $this->assertEquals('Updated Title', $values['title']);
 
         // empty fields should be actually empty
-        $this->assertNull($values['date']);
+        $this->assertSame('', $values['date']);
     }
 
     public function testPageFormWithClosures()

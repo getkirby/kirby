@@ -5,10 +5,16 @@ export default (option, Dayjs) => {
    *
    * @param {Object} dt  dayjs object to merge into current object
    * @param {string|array} units array of units or alias (`date` or `time`)
-   * @returns
+   * @returns {Object}
    */
   Dayjs.prototype.merge = function (dt, units = "date") {
     let result = this.clone();
+
+    // if provided object is not valid,
+    // return unaltered
+    if (!dt || !dt.isValid()) {
+      return this;
+    }
 
     // if string alias has been provided,
     // transform to array of units

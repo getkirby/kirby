@@ -168,6 +168,11 @@ export default {
         return false;
       }
 
+      // avoid issues with undefined values
+      if (value === undefined) {
+        value = null;
+      }
+
       value = clone(value);
 
       // // compare current field value with its original value

@@ -5,7 +5,7 @@ export default (option, Dayjs) => {
    *
    * @param {string} unit dayjs unit
    * @param {int} size step size
-   * @returns
+   * @returns {Object}
    */
   Dayjs.prototype.round = function (unit = "date", size = 1) {
     // Validate step unit

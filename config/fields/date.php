@@ -108,8 +108,8 @@ return [
                 'unit' => 'minute'
             ]);
         },
-        'value' => function (): ?string {
-            return $this->toDatetime($this->value);
+        'value' => function (): string {
+            return $this->toDatetime($this->value) ?? '';
         },
     ],
     'validations' => [

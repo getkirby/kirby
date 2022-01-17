@@ -202,6 +202,7 @@ class DateTest extends TestCase
     public function testOptional()
     {
         $this->assertNull(Date::optional(null));
+        $this->assertNull(Date::optional(''));
         $this->assertNull(Date::optional('invalid date'));
         $this->assertInstanceOf(Date::class, Date::optional('2021-12-12'));
     }

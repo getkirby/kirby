@@ -36,6 +36,13 @@ describe.concurrent("dayjs.merge()", () => {
     });
   }
 
+  it("Invalid input", () => {
+    const a = dayjs("2020-01-01");
+    expect(a.merge(undefined)).toStrictEqual(a);
+    expect(a.merge(null)).toStrictEqual(a);
+    expect(a.merge(dayjs("Invalid"))).toStrictEqual(a);
+  });
+
   it("Unsupported unit alias", () => {
     const a = dayjs("2020-01-01");
     const b = dayjs("2020-02-01");

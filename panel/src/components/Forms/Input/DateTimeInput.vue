@@ -1,20 +1,20 @@
 <template>
   <div class="k-datetime-input">
     <k-date-input
-      ref="dateInput"
-      v-bind="dateOptions"
-      @input="onInput($event, 'date')"
-      @update="onUpdate($event, 'date')"
-      @enter="onEnter($event, 'date')"
+      ref="dateOptions"
+      v-bind="$props"
+      @input="onChange"
+      @enter="onChange($event, 'enter')"
+      @update="onChange($event, 'update')"
       @focus="$emit('focus')"
     />
     <template v-if="time">
       <k-time-input
         ref="timeInput"
         v-bind="timeOptions"
-        @input="onInput($event, 'time')"
-        @update="onUpdate($event, 'time')"
-        @enter="onEnter($event, 'time')"
+        @input="onChange($event, 'input', 'time')"
+        @enter="onChange($event, 'enter', 'time')"
+        @update="onChange($event, 'update', 'time')"
         @focus="$emit('focus')"
       />
     </template>
@@ -28,26 +28,43 @@ import { required as validateRequired } from "vuelidate/lib/validators";
 export const props = {
   mixins: [DateInput],
   props: {
+    /**
+     * Time options (e.g. `display`, `step`).
+     * Please check docs for `k-time-input` props.
+     * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
+     */
     time: {
       type: [Boolean, Object],
       default() {
         return {};
       }
-    },
-    value: String
+    }
   }
 };
 
+/**
+ * Form input to handle a datetime value.
+ *
+ * Splits and merges value and responses among
+ * a separate date input and time input.
+ *
+ * @example <k-input v-model="value" name="datetime" type="datetime" />
+ * @public
+ */
 export default {
   mixins: [props],
   inheritAttrs: false,
   data() {
     return {
-      input: this.toDatetime(this.value)
+      dt: this.$library.dayjs.iso(this.value)
     };
   },
   computed: {
     dateOptions() {
+      // we don't bind the full $props to the
+      // date input so that we can exclude e.g.
+      // `min` and `max` since validation should
+      // only happen in this component
       return {
         autofocus: this.autofocus,
         disabled: this.disabled,
@@ -62,15 +79,13 @@ export default {
         ...this.time,
         disabled: this.disabled,
         required: this.required,
-        value: this.value
-          ? this.toDatetime(this.value).format("HH:mm:ss")
-          : null
+        value: this.dt?.toISO("time") || null
       };
     }
   },
   watch: {
-    value() {
-      this.input = this.toDatetime(this.value);
+    value(value) {
+      this.input = this.$library.dayjs.iso(value);
       this.onInvalid();
     }
   },
@@ -78,76 +93,36 @@ export default {
     this.onInvalid();
   },
   methods: {
-    emit(event, dt = this.input) {
-      if (dt) {
-        this.$emit(event, dt.format("YYYY-MM-DD HH:mm:ss"));
-      } else {
-        this.$emit(event, "");
-      }
-    },
+    /**
+     * Focuses the input element
+     * @public
+     */
     focus() {
       this.$refs.dateInput.focus();
     },
-    onUpdate(value, input) {
-      const base = this.toDatetime(this.value);
-      input = this.toDatetime(value, input, base);
-      this.emit("update", input);
-    },
-    onEnter(value, input) {
-      this.onUpdate(input, value);
-      this.emit("enter");
-    },
-    onInput(value, input) {
-      this.input = this.toDatetime(value, input, this.input);
-      this.emit("input");
+    /**
+     * Process the temporary input and emit it as specified event
+     * @param {string} input emitted datetime part as ISO string
+     * @param {string} part `date` or `time`
+     */
+    onChange(input, event = "input", part = "date") {
+      // allow to empty the field
+      if (input === null) {
+        this.dt = null;
+        this.$emit(event, null);
+        return;
+      }
+
+      // parse input as ISO string (date or time)
+      const dt = this.$library.dayjs.iso(input, part);
+
+      // merge specified part (date/time) into `this.dt`
+      this.dt = this.dt ? this.dt.merge(dt, part) : dt;
+
+      this.$emit(event, this.dt?.toISO() || null);
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
-    toDatetime(value, input, base) {
-      // if only value is passed,
-      // parse value as dayjs date and
-      // return object (or null if invalid)
-
-      if (!value) {
-        return null;
-      }
-
-      let dt = this.$library.dayjs.utc(value);
-
-      if (input === "time") {
-        dt = this.$library.dayjs.utc(value, "HH:mm:ss");
-      }
-
-      if (dt.isValid() === false) {
-        return null;
-      }
-
-      // if also input and base are passed,
-      // take the input (date or time) values from value
-      // and merge these onto the base dayjs object
-
-      if (!input || !base) {
-        return dt;
-      }
-
-      if (input === "date") {
-        return base
-          .clone()
-          .utc()
-          .set("year", dt.get("year"))
-          .set("month", dt.get("month"))
-          .set("date", dt.get("date"));
-      }
-
-      if (input === "time") {
-        return base
-          .clone()
-          .utc()
-          .set("hour", dt.get("hour"))
-          .set("minute", dt.get("minute"))
-          .set("second", dt.get("second"));
-      }
     }
   },
   validations() {
@@ -155,23 +130,15 @@ export default {
       value: {
         min: this.min
           ? (value) =>
-              this.$helper.validate.datetime(
-                this,
-                value,
-                this.min,
-                "isAfter",
-                this.step.unit
-              )
+              this.$library
+                .dayjs(value)
+                .validate(this.min, "min", this.step.unit)
           : true,
         max: this.max
           ? (value) =>
-              this.$helper.validate.datetime(
-                this,
-                value,
-                this.max,
-                "isBefore",
-                this.step.unit
-              )
+              this.$library
+                .dayjs(value)
+                .validate(this.max, "max", this.step.unit)
           : true,
         required: this.required ? validateRequired : true
       }
