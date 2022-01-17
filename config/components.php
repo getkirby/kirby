@@ -153,7 +153,7 @@ return [
             $config   = $options;
         }
 
-        return $markdown->parse($text, $options['inline'] ?? false);
+        return $markdown->parse($text, $options['inline']);
     },
 
     /**
