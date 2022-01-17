@@ -65,22 +65,9 @@ class Document
             'css' => [
                 'index'   => $url . '/css/style.css',
                 'plugins' => $plugins->url('css'),
-                'custom'  => static::customCss(),
+                'custom'  => static::customAsset('panel.css'),
             ],
-            'icons' => $kirby->option('panel.favicon', [
-                'apple-touch-icon' => [
-                    'type' => 'image/png',
-                    'url'  => $url . '/apple-touch-icon.png',
-                ],
-                'shortcut icon' => [
-                    'type' => 'image/svg+xml',
-                    'url'  => $url . '/favicon.svg',
-                ],
-                'alternate icon' => [
-                    'type' => 'image/png',
-                    'url'  => $url . '/favicon.png',
-                ]
-            ]),
+            'icons' => static::favicon($url),
             'js' => [
                 'vendor'       => [
                     'nonce' => $nonce,
@@ -99,7 +86,7 @@ class Document
                 ],
                 'custom'       => [
                     'nonce' => $nonce,
-                    'src'   => static::customJs(),
+                    'src'   => static::customAsset('panel.js'),
                     'type'  => 'module'
                 ],
                 'index'        => [
@@ -139,14 +126,16 @@ class Document
     }
 
     /**
-     * Check for a custom css file from the
-     * config (panel.css)
+     * Check for a custom asset file from the
+     * config (e.g. panel.css or panel.js)
+     * @since 3.6.2
      *
+     * @param string $option asset option name
      * @return string|null
      */
-    public static function customCss(): ?string
+    public static function customAsset(string $option): ?string
     {
-        if ($css = kirby()->option('panel.css')) {
+        if ($css = kirby()->option($option)) {
             $asset = asset($css);
 
             if ($asset->exists() === true) {
@@ -158,22 +147,59 @@ class Document
     }
 
     /**
-     * Check for a custom js file from the
-     * config (panel.js)
-     *
-     * @return string|null
+     * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
+     * @todo add deprecation warning in 3.7.0, remove in 3.8.0
+     */
+    public static function customCss(): ?string
+    {
+        return static::customAsset('panel.css');
+    }
+
+    /**
+     * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
+     * @todo add deprecation warning in 3.7.0, remove in 3.8.0
      */
     public static function customJs(): ?string
     {
-        if ($js = kirby()->option('panel.js')) {
-            $asset = asset($js);
+        return static::customAsset('panel.js');
+    }
 
-            if ($asset->exists() === true) {
-                return $asset->url() . '?' . $asset->modified();
-            }
+    /**
+     * Returns array of favion icons
+     * based on config option
+     * @since 3.6.2
+     *
+     * @param string $url URL prefix for default icons
+     * @return array
+     */
+    public static function favicon(string $url = ''): array
+    {
+        $icons = kirby()->option('panel.favicon', [
+            'apple-touch-icon' => [
+                'type' => 'image/png',
+                'url'  => $url . '/apple-touch-icon.png',
+            ],
+            'shortcut icon' => [
+                'type' => 'image/svg+xml',
+                'url'  => $url . '/favicon.svg',
+            ],
+            'alternate icon' => [
+                'type' => 'image/png',
+                'url'  => $url . '/favicon.png',
+            ]
+        ]);
+
+        // make sure to convert favicon string to array
+        if (is_string($icons) === true) {
+            $icons = [
+                'shortcut icon' => [
+                    'type' => 'image/svg+xml',
+                    'url'  => $icons,
+                ]
+            ];
         }
 
-        return null;
+        return $icons;
     }
 
     /**
