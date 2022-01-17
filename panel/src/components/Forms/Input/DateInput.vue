@@ -120,9 +120,6 @@ export default {
       this.onInvalid();
     }
   },
-  created() {
-    this.onInput = this.$helper.debounce(this.onInput, 500);
-  },
   mounted() {
     this.onInvalid();
     // make sure to commit input value when Cmd+S is hit
