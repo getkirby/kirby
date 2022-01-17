@@ -88,7 +88,7 @@
   "error.file.mime.missing": "Il MIME type per \"{filename}\" non può essere rilevato",
   "error.file.minheight": "L'immagine dev'essere alta almeno {height} pixel",
   "error.file.minsize": "Il file è troppo leggero",
-  "error.file.minwidth": "L'immagine dev'essere larga almeno {height} pixel",
+  "error.file.minwidth": "L'immagine dev'essere larga almeno {width} pixel",
   "error.file.name.missing": "Il nome del file non può essere vuoto",
   "error.file.notFound": "Il file non \u00e8 stato trovato",
   "error.file.orientation": "L'imaggine dev'essere orientata in \"{orientation}\"",
@@ -156,6 +156,8 @@
   "error.site.update.permission": "Non ti è permesso modificare i contenuti globali del sito",
 
   "error.template.default.notFound": "Il template \"default\" non esiste",
+
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Non ti è permesso modificare l'indirizzo email di \"{name}\"",
   "error.user.changeLanguage.permission": "Non ti è permesso modificare la lingua per l'utente \"{name}\"",

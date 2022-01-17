@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Ekkert sjálfgefið sniðmát fannst",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Þú mátt ekkert breyta netfangi notandans \"{name}\"",
   "error.user.changeLanguage.permission": "Þú hefur ekki leyfi til að breyta tungumáli notandans \"{name}\"",
   "error.user.changeName.permission": "Þú mátt alls ekki breyta nafni notandans \"{name}\"",

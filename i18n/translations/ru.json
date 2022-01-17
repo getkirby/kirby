@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Нет шаблона по умолчанию",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "У вас нет права поменять эл. почту пользователя \"{name}\"",
   "error.user.changeLanguage.permission": "У вас нет права поменять язык для пользователя \"{name}\"",
   "error.user.changeName.permission": "У вас нет права поменять имя пользователя \"{name}\"",

@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "La defaŭlta ŝablono ne ekzistas",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Vi ne rajtas ŝanĝi la retpoŝtadreson de la uzanto \"{name}\"",
   "error.user.changeLanguage.permission": "Vi ne rajtas ŝanĝi la lingvon de la uzanto \"{name}\"",
   "error.user.changeName.permission": "Vi ne rajtas ŝanĝi la nomon de la uzanto \"{name}\"",
