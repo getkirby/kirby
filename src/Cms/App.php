@@ -788,6 +788,7 @@ class App
      * Parses KirbyTags first and Markdown afterwards
      *
      * @internal
+     * @todo deprecate $inline $option in 3.7.0 and remove in 3.8.0
      * @param string|null $text
      * @param array $options
      * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
@@ -896,6 +897,7 @@ class App
      * Parses Markdown
      *
      * @internal
+     * @todo deprecate boolean $options in 3.7.0 and remove in 3.8.0
      * @param string|null $text
      * @param bool|array $options
      * @return string
