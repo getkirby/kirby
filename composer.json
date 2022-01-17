@@ -33,7 +33,6 @@
     "getkirby/composer-installer": "^1.2.1",
     "laminas/laminas-escaper": "2.9.0",
     "michelf/php-smartypants": "1.8.1",
-    "mustangostang/spyc": "0.6.3",
     "phpmailer/phpmailer": "6.5.3",
     "psr/log": "1.1.4",
     "symfony/polyfill-intl-idn": "1.23.0",

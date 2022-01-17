@@ -79,15 +79,6 @@
             'reference' => '47d17c90a4dfd0ccf1f87e25c65e6c8012415aad',
             'dev_requirement' => false,
         ),
-        'mustangostang/spyc' => array(
-            'pretty_version' => '0.6.3',
-            'version' => '0.6.3.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../mustangostang/spyc',
-            'aliases' => array(),
-            'reference' => '4627c838b16550b666d15aeae1e5289dd5b77da0',
-            'dev_requirement' => false,
-        ),
         'phpmailer/phpmailer' => array(
             'pretty_version' => 'v6.5.3',
             'version' => '6.5.3.0',
@@ -116,8 +107,8 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-intl-normalizer' => array(
-            'pretty_version' => 'v1.23.0',
-            'version' => '1.23.0.0',
+            'pretty_version' => 'v1.24.0',
+            'version' => '1.24.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-intl-normalizer',
             'aliases' => array(),
