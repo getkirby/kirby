@@ -86,8 +86,8 @@ class AppComponentsTest extends TestCase
 
     public function testKirbytextWithSafeMode()
     {
-        $text     = '<h1>Test</h1>';
-        $expected = '&lt;h1&gt;Test&lt;/h1&gt;';
+        $text     = '<h1>**Test**</h1>';
+        $expected = '&lt;h1&gt;<strong>Test</strong>&lt;/h1&gt;';
 
         $this->assertEquals($expected, $this->kirby->kirbytext($text, [
             'markdown' => [
