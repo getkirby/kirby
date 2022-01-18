@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Predvolená šablóna neexistuje",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Nemáte povolenie na zmenu e-mailu pre užívateľa \"{name}\"",
   "error.user.changeLanguage.permission": "Nemáte povolenie na zmenu jazyka pre užívateľa \"{name}\"",
   "error.user.changeName.permission": "Nemáte povolenie na zmenu mena pre užívateľa \"{name}\"",

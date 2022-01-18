@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Nėra šablono pagal nutylėjimą",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Neturite leidimo keisti vartotojo \"{name}\" el. paštą",
   "error.user.changeLanguage.permission": "Neturite leidimo keisti vartotojo \"{name}\" kalbą",
   "error.user.changeName.permission": "Neturite leidimo keisti vartotojo \"{name}\" vardą",

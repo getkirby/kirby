@@ -88,7 +88,7 @@
   "error.file.mime.missing": "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
   "error.file.minheight": "Die Bildhöhe muss mindestens {height} Pixel betragen",
   "error.file.minsize": "Die Datei ist zu klein",
-  "error.file.minwidth": "Die Bildbreite muss mindestens {height} Pixel betragen",
+  "error.file.minwidth": "Die Bildbreite muss mindestens {width} Pixel betragen",
   "error.file.name.missing": "Bitte gib einen Dateinamen an",
   "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
   "error.file.orientation": "Das Bildformat ist ungültig. Erwartetes Format: \"{orientation}\"",
@@ -156,6 +156,8 @@
   "error.site.update.permission": "Du darfst die Seite nicht bearbeiten",
 
   "error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
+
+  "error.unexpected": "Ein unerwarteter Fehler ist aufgetreten. Aktiviere den Debug Modus für weitere Informationen: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Du kannst die E-Mailadresse für den Account \"{name}\" nicht ändern",
   "error.user.changeLanguage.permission": "Du kannst die Sprache für den Account \"{name}\" nicht ändern",

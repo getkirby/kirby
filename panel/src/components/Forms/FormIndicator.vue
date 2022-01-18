@@ -45,6 +45,7 @@ export default {
       if (this.$refs.list.isOpen === false) {
         try {
           await this.$dropdown("changes", {
+            method: "POST",
             body: {
               ids: this.ids
             }

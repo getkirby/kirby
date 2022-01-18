@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Templat bawaan tidak ada",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Anda tidak diizinkan mengubah surel dari pengguna \"{name}\"",
   "error.user.changeLanguage.permission": "Anda tidak diizinkan mengubah bahasa dari pengguna \"{name}\"",
   "error.user.changeName.permission": "Anda tidak diizinkan mengubah nama dari pengguna \"{name}\"",

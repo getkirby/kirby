@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "La plantilla predeterminada no existeix",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "No tens permís per canviar el correu electrònic per a l'usuari \"{name}\"",
   "error.user.changeLanguage.permission": "No tens permís per canviar l'idioma de l'usuari \"{name}\"",
   "error.user.changeName.permission": "No tens permís per canviar el nom de l'usuari \"{name}\"",

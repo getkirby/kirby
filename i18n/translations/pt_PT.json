@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "O tema padrão não existe",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Não tem permissões para alterar o email do utilizador \"{name}\"",
   "error.user.changeLanguage.permission": "Não tem permissões para alterar o idioma do utilizador \"{name}\"",
   "error.user.changeName.permission": "Não tem permissões para alterar o nome do utilizador \"{name}\"",

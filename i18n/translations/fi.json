@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Oletussivupohjaa ei ole määritetty",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" sähköpostiosoitetta",
   "error.user.changeLanguage.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" kieltä",
   "error.user.changeName.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" nimeä",

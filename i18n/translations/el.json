@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Το προεπιλεγμένο πρότυπο δεν υπάρχει",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Δεν επιτρέπεται να αλλάξετε τη διεύθινση ηλεκτρονικού ταχυδρομείου για τον χρήστη \"{name}\"",
   "error.user.changeLanguage.permission": "Δεν επιτρέπεται να αλλάξετε τη γλώσσα για τον χρήστη \"{name}\"",
   "error.user.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του χρήστη \"{name}",

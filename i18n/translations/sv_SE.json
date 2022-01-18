@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Standardmallen existerar inte",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Du har inte behörighet att ändra e-postadressen för användaren \"{name}\"",
   "error.user.changeLanguage.permission": "Du har inte behörighet att ändra språket för användaren \"{name}\"",
   "error.user.changeName.permission": "Du har inte behörighet att ändra namnet för användaren \"{name}\"",

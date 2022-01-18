@@ -157,6 +157,8 @@
 
   "error.template.default.notFound": "Výchozí šablona neexistuje",
 
+  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+
   "error.user.changeEmail.permission": "Nemáte dovoleno měnit email uživatele \"{name}\"",
   "error.user.changeLanguage.permission": "Nemáte dovoleno změnit jazyk uživatele \"{name}\"",
   "error.user.changeName.permission": "Nemáte dovoleno změnit jméno uživatele \"{name}\"",
