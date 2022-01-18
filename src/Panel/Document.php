@@ -136,8 +136,8 @@ class Document
      */
     public static function customAsset(string $option): ?string
     {
-        if ($css = kirby()->option($option)) {
-            $asset = asset($css);
+        if ($path = kirby()->option($option)) {
+            $asset = asset($path);
 
             if ($asset->exists() === true) {
                 return $asset->url() . '?' . $asset->modified();
