@@ -393,13 +393,14 @@ return function (App $app) {
          * Converts the field content from Markdown/Kirbytext to valid HTML
          *
          * @param \Kirby\Cms\Field $field
+         * @param array $options
          * @return \Kirby\Cms\Field
          */
-        'kirbytext' => function (Field $field) use ($app) {
-            $field->value = $app->kirbytext($field->value, [
+        'kirbytext' => function (Field $field, array $options = []) use ($app) {
+            $field->value = $app->kirbytext($field->value, A::merge($options, [
                 'parent' => $field->parent(),
                 'field'  => $field
-            ]);
+            ]));
 
             return $field;
         },
@@ -410,13 +411,17 @@ return function (App $app) {
          * @since 3.1.0
          *
          * @param \Kirby\Cms\Field $field
+         * @param array $options
          * @return \Kirby\Cms\Field
          */
-        'kirbytextinline' => function (Field $field) use ($app) {
-            $field->value = $app->kirbytext($field->value, [
-                'parent' => $field->parent(),
-                'field'  => $field
-            ], true);
+        'kirbytextinline' => function (Field $field, array $options = []) use ($app) {
+            $field->value = $app->kirbytext($field->value, A::merge($options, [
+                'parent'   => $field->parent(),
+                'field'    => $field,
+                'markdown' => [
+                    'inline' => true
+                ]
+            ]));
 
             return $field;
         },
@@ -451,10 +456,11 @@ return function (App $app) {
          * Converts markdown to valid HTML
          *
          * @param \Kirby\Cms\Field $field
+         * @param array $options
          * @return \Kirby\Cms\Field
          */
-        'markdown' => function (Field $field) use ($app) {
-            $field->value = $app->markdown($field->value);
+        'markdown' => function (Field $field, array $options = []) use ($app) {
+            $field->value = $app->markdown($field->value, $options);
             return $field;
         },
 

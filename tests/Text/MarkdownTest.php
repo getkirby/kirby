@@ -13,8 +13,9 @@ class MarkdownTest extends TestCase
         $markdown = new Markdown();
 
         $this->assertSame([
+            'breaks' => true,
             'extra'  => false,
-            'breaks' => true
+            'safe'   => false,
         ], $markdown->defaults());
     }
 
@@ -26,6 +27,24 @@ class MarkdownTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Markdown::class, $markdown);
+    }
+
+    public function testSafeModeDisabled()
+    {
+        $markdown = new Markdown([
+            'safe' => false
+        ]);
+
+        $this->assertSame('<div>Custom HTML</div>', $markdown->parse('<div>Custom HTML</div>'));
+    }
+
+    public function testSafeModeEnabled()
+    {
+        $markdown = new Markdown([
+            'safe' => true
+        ]);
+
+        $this->assertSame('<p>&lt;div&gt;Custom HTML&lt;/div&gt;</p>', $markdown->parse('<div>Custom HTML</div>'));
     }
 
     public function testParse()

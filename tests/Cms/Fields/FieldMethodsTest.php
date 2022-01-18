@@ -520,6 +520,14 @@ class FieldMethodsTest extends TestCase
         $this->assertSame($expected, $this->field($kirbytext)->kt()->value());
     }
 
+    public function testKirbytextWithSafeMode()
+    {
+        $kirbytext = '<h1>Test</h1>';
+        $expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
+
+        $this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
+    }
+
     public function testKirbytextInline()
     {
         $kirbytext = '(link: # text: Test)';
@@ -527,6 +535,14 @@ class FieldMethodsTest extends TestCase
 
         $this->assertSame($expected, $this->field($kirbytext)->kirbytextinline()->value());
         $this->assertSame($expected, $this->field($kirbytext)->kti()->value());
+    }
+
+    public function testKirbytextInlineWithSafeMode()
+    {
+        $kirbytext = '<b>Test</b>';
+        $expected  = '&lt;b&gt;Test&lt;/b&gt;';
+
+        $this->assertSame($expected, $this->field($kirbytext)->kirbytextInline(['markdown' => ['safe' => true]])->value());
     }
 
     public function testKirbytags()
@@ -548,6 +564,14 @@ class FieldMethodsTest extends TestCase
         $expected = '<p><strong>Test</strong></p>';
 
         $this->assertSame($expected, $this->field($markdown)->markdown()->value());
+    }
+
+    public function testMarkdownWithSafeMode()
+    {
+        $markdown = '<h1>Test</h1>';
+        $expected = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
+
+        $this->assertSame($expected, $this->field($markdown)->markdown(['safe' => true])->value());
     }
 
     public function testOr()

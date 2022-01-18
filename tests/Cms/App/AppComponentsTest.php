@@ -46,7 +46,7 @@ class AppComponentsTest extends TestCase
         ]);
 
         $expected = '<link href="/test.css" rel="stylesheet">';
-        $this->assertEquals($expected, css('something.css'));
+        $this->assertSame($expected, css('something.css'));
     }
 
     public function testDump()
@@ -59,7 +59,7 @@ class AppComponentsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('test', dump('test'));
+        $this->assertSame('test', dump('test'));
     }
 
     public function testJsPlugin()
@@ -73,7 +73,47 @@ class AppComponentsTest extends TestCase
         ]);
 
         $expected = '<script src="/test.js"></script>';
-        $this->assertEquals($expected, js('something.js'));
+        $this->assertSame($expected, js('something.js'));
+    }
+
+    public function testKirbytext()
+    {
+        $text     = 'Test';
+        $expected = '<p>Test</p>';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text));
+    }
+
+    public function testKirbytextWithSafeMode()
+    {
+        $text     = '<h1>**Test**</h1>';
+        $expected = '&lt;h1&gt;<strong>Test</strong>&lt;/h1&gt;';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [
+            'markdown' => [
+                'safe' => true
+            ]
+        ], true));
+    }
+
+    public function testKirbytextInline()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [
+            'markdown' => [
+                'inline' => true
+            ]
+        ], true));
+    }
+
+    public function testKirbytextInlineDeprecated()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->kirbytext($text, [], true));
     }
 
     public function testMarkdown()
@@ -81,7 +121,29 @@ class AppComponentsTest extends TestCase
         $text     = 'Test';
         $expected = '<p>Test</p>';
 
-        $this->assertEquals($expected, $this->kirby->markdown($text));
+        $this->assertSame($expected, $this->kirby->markdown($text));
+    }
+
+    public function testMarkdownInline()
+    {
+        $text     = 'Test';
+        $expected = 'Test';
+
+        $this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+
+        // deprecated boolean second option
+        $this->assertEquals($expected, $this->kirby->markdown($text, true));
+
+        // deprecated fourth argument
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], true));
+    }
+
+    public function testMarkdownWithSafeMode()
+    {
+        $text     = '<div>Test</div>';
+        $expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
+
+        $this->assertEquals($expected, $this->kirby->markdown($text, ['safe' => true]));
     }
 
     public function testMarkdownCachedInstance()
@@ -91,11 +153,11 @@ class AppComponentsTest extends TestCase
         $expected = '<p>1st line<br />
 2nd line</p>';
 
-        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, []));
+        $this->assertSame($expected, $this->kirby->component('markdown')($this->kirby, $text, []));
 
         $expected = '<p>1st line
 2nd line</p>';
-        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, ['breaks' => false]));
+        $this->assertSame($expected, $this->kirby->component('markdown')($this->kirby, $text, ['breaks' => false]));
     }
 
     public function testSmartypants()
@@ -103,7 +165,7 @@ class AppComponentsTest extends TestCase
         $text     = '"Test"';
         $expected = '&#8220;Test&#8221;';
 
-        $this->assertEquals($expected, $this->kirby->smartypants($text));
+        $this->assertSame($expected, $this->kirby->smartypants($text));
     }
 
     public function testSmartypantsDisabled()
@@ -211,10 +273,10 @@ class AppComponentsTest extends TestCase
         $text     = '"Test"';
         $expected = '&#8220;Test&#8221;';
 
-        $this->assertEquals($expected, $this->kirby->component('smartypants')($this->kirby, $text, []));
+        $this->assertSame($expected, $this->kirby->component('smartypants')($this->kirby, $text, []));
 
         $expected = 'TestTest&#8221;';
-        $this->assertEquals($expected, $this->kirby->component('smartypants')($this->kirby, $text, ['doublequote.open' => 'Test']));
+        $this->assertSame($expected, $this->kirby->component('smartypants')($this->kirby, $text, ['doublequote.open' => 'Test']));
     }
 
     public function testSnippet()
@@ -234,31 +296,31 @@ class AppComponentsTest extends TestCase
         F::write($fixtures . '/plugin.php', 'plugin');
 
         // simple string
-        $this->assertEquals('test', $app->snippet('test'));
+        $this->assertSame('test', $app->snippet('test'));
 
         // field
-        $this->assertEquals('test', $app->snippet(new Field(null, 'test', 'test')));
+        $this->assertSame('test', $app->snippet(new Field(null, 'test', 'test')));
 
         // fallback
-        $this->assertEquals('fallback', $app->snippet(['does-not-exist', 'fallback']));
+        $this->assertSame('fallback', $app->snippet(['does-not-exist', 'fallback']));
 
         // fallback from field
-        $this->assertEquals('fallback', $app->snippet(['does-not-exist', new Field(null, 'test', 'fallback')]));
+        $this->assertSame('fallback', $app->snippet(['does-not-exist', new Field(null, 'test', 'fallback')]));
 
         // from plugin
-        $this->assertEquals('plugin', $app->snippet('plugin'));
+        $this->assertSame('plugin', $app->snippet('plugin'));
 
         // from plugin with field
-        $this->assertEquals('plugin', $app->snippet(new Field(null, 'test', 'plugin')));
+        $this->assertSame('plugin', $app->snippet(new Field(null, 'test', 'plugin')));
 
         // fallback from plugin
-        $this->assertEquals('plugin', $app->snippet(['does-not-exist', 'plugin']));
+        $this->assertSame('plugin', $app->snippet(['does-not-exist', 'plugin']));
 
         // fallback from plugin with field
-        $this->assertEquals('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin') ]));
+        $this->assertSame('plugin', $app->snippet(['does-not-exist', new Field(null, 'test', 'plugin') ]));
 
         // inject data
-        $this->assertEquals('test', $app->snippet('variable', ['message' => 'test']));
+        $this->assertSame('test', $app->snippet('variable', ['message' => 'test']));
 
         Dir::remove($fixtures);
     }
@@ -278,7 +340,7 @@ class AppComponentsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('test', url('anything'));
+        $this->assertSame('test', url('anything'));
     }
 
     public function testUrlPluginWithNativeComponent()
@@ -295,8 +357,8 @@ class AppComponentsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('test-path', url('test'));
-        $this->assertEquals('/any/page', url('any/page'));
+        $this->assertSame('test-path', url('test'));
+        $this->assertSame('/any/page', url('any/page'));
     }
 
     public function testEmail()

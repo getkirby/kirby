@@ -528,11 +528,12 @@ function load(array $classmap, ?string $base = null)
  * `$kirby->markdown($text)`
  *
  * @param string|null $text
+ * @param array $options
  * @return string
  */
-function markdown(?string $text = null): string
+function markdown(?string $text = null, array $options = []): string
 {
-    return App::instance()->markdown($text);
+    return App::instance()->markdown($text, $options);
 }
 
 /**

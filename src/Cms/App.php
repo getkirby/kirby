@@ -771,10 +771,11 @@ class App
      */
     public function kirbytags(string $text = null, array $data = []): string
     {
-        $data['kirby']  = $data['kirby']  ?? $this;
-        $data['site']   = $data['site']   ?? $data['kirby']->site();
-        $data['parent'] = $data['parent'] ?? $data['site']->page();
-        $options        = $this->options;
+        $data['kirby']  ??= $this;
+        $data['site']   ??= $data['kirby']->site();
+        $data['parent'] ??= $data['site']->page();
+
+        $options = $this->options;
 
         $text = $this->apply('kirbytags:before', compact('text', 'data', 'options'), 'text');
         $text = KirbyTags::parse($text, $data, $options);
@@ -789,14 +790,23 @@ class App
      * @internal
      * @param string|null $text
      * @param array $data
-     * @param bool $inline
+     * @param bool $inline (deprecated: use $data['markdown']['inline'] instead)
      * @return string
+     * @todo add deprecation warning for $inline parameter in 3.7.0
+     * @todo rename $data parameter to $options in 3.7.0
+     * @todo remove $inline parameter in in 3.8.0
      */
     public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
+        $options = A::merge([
+            'markdown' => [
+                'inline' => $inline
+            ]
+        ], $data);
+
         $text = $this->apply('kirbytext:before', compact('text'), 'text');
-        $text = $this->kirbytags($text, $data);
-        $text = $this->markdown($text, $inline);
+        $text = $this->kirbytags($text, $options);
+        $text = $this->markdown($text, $options['markdown']);
 
         if ($this->option('smartypants', false) !== false) {
             $text = $this->smartypants($text);
@@ -890,12 +900,31 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param bool $inline
+     * @param bool|array $options
      * @return string
+     * @todo rename $inline parameter to $options in 3.7.0
+     * @todo add deprecation warning for boolean $options in 3.7.0
+     * @todo remove boolean $options in in 3.8.0
      */
-    public function markdown(string $text = null, bool $inline = false): string
+    public function markdown(string $text = null, $inline = null): string
     {
-        return ($this->component('markdown'))($this, $text, $this->options['markdown'] ?? [], $inline);
+        // TODO: remove after renaming parameter
+        $options = $inline;
+
+        // support for the old syntax to enable inline mode as second argument
+        if (is_bool($options) === true) {
+            $options = [
+                'inline' => $options
+            ];
+        }
+
+        // merge global options with local options
+        $options = array_merge(
+            $this->options['markdown'] ?? [],
+            (array)$options
+        );
+
+        return ($this->component('markdown'))($this, $text, $options);
     }
 
     /**
