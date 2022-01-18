@@ -44,7 +44,7 @@ class DocumentTest extends TestCase
     /**
      * @covers ::assets
      */
-    public function testAssets(): void
+    public function testAssetsDefaults(): void
     {
         // default asset setup
         $assets  = Document::assets();
@@ -72,10 +72,15 @@ class DocumentTest extends TestCase
 
         $this->assertSame($base . '/js/index.js', $assets['js']['index']['src']);
         $this->assertSame('module', $assets['js']['index']['type']);
+    }
 
-
+    /**
+     * @covers ::assets
+     */
+    public function testAssetsDev(): void
+    {
         // dev mode
-        $this->app = $this->app->clone([
+        $app = $this->app->clone([
             'request' => [
                 'url' => 'http://sandbox.test'
             ],
@@ -87,9 +92,9 @@ class DocumentTest extends TestCase
         ]);
 
         // add vite file
-        F::write($viteFile = $this->app->roots()->panel() . '/.vite-running', '');
+        F::write($app->roots()->panel() . '/.vite-running', '');
 
-        $assets = Document::assets($this->app);
+        $assets = Document::assets($app);
         $base   = 'http://sandbox.test:3000';
 
         // css
@@ -107,10 +112,15 @@ class DocumentTest extends TestCase
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
         ], array_map(fn ($js) => $js['src'], $assets['js']));
+    }
 
-
+    /**
+     * @covers ::assets
+     */
+    public function testAssetsCustomUrl(): void
+    {
         // dev mode with custom url
-        $this->app = $this->app->clone([
+        $app = $this->app->clone([
             'request' => [
                 'url' => 'http://sandbox.test'
             ],
@@ -121,7 +131,7 @@ class DocumentTest extends TestCase
             ]
         ]);
 
-        $assets = Document::assets($this->app);
+        $assets = Document::assets($app);
         $base   = 'http://localhost:3000';
 
         // css
@@ -139,10 +149,15 @@ class DocumentTest extends TestCase
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
         ], array_map(fn ($js) => $js['src'], $assets['js']));
+    }
 
-
+    /**
+     * @covers ::assets
+     */
+    public function testAssetsCustomCssJs(): void
+    {
         // custom panel css and js
-        $this->app = $this->app->clone([
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'css' => '/assets/panel.css',
@@ -155,17 +170,17 @@ class DocumentTest extends TestCase
         F::write($this->tmp . '/assets/panel.css', 'test');
         F::write($this->tmp . '/assets/panel.js', 'test');
 
-        $assets = Document::assets($this->app);
+        $assets = Document::assets($app);
 
         $this->assertTrue(Str::contains($assets['css']['custom'], 'assets/panel.css'));
         $this->assertTrue(Str::contains($assets['js']['custom']['src'], 'assets/panel.js'));
 
         // clean up vite file
-        F::remove($viteFile);
+        F::remove($app->roots()->panel() . '/.vite-running');
     }
 
     /**
-     * @covers ::customCss
+     * @covers ::customAsset
      */
     public function testCustomCss(): void
     {
@@ -178,7 +193,7 @@ class DocumentTest extends TestCase
             ]
         ]);
 
-        $this->assertNull(Document::customCss());
+        $this->assertNull(Document::customAsset('panel.css'));
 
         // valid
         F::write($this->tmp . '/panel.css', '');
@@ -191,11 +206,14 @@ class DocumentTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue(Str::contains(Document::customCss(), '/panel.css'));
+        $this->assertStringContainsString(
+            '/panel.css',
+            Document::customAsset('panel.css')
+        );
     }
 
     /**
-     * @covers ::customJs
+     * @covers ::customAsset
      */
     public function testCustomJs(): void
     {
@@ -208,7 +226,7 @@ class DocumentTest extends TestCase
             ]
         ]);
 
-        $this->assertNull(Document::customJs());
+        $this->assertNull(Document::customAsset('panel.js'));
 
         // valid
         F::write($this->tmp . '/panel.js', '');
@@ -221,7 +239,76 @@ class DocumentTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue(Str::contains(Document::customJs(), '/panel.js'));
+        $this->assertStringContainsString(
+            '/panel.js',
+            Document::customAsset('panel.js')
+        );
+    }
+
+    /**
+     * @covers ::favicon
+     */
+    public function testFaviconArray(): void
+    {
+        // array
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'favicon' => [
+                        'shortcut icon' => [
+                            'type' => 'image/svg+xml',
+                            'url'  => 'assets/my-favicon.svg',
+                        ],
+                        'alternate icon' => [
+                            'type' => 'image/png',
+                            'url'  => 'assets/my-favicon.png',
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $icons = Document::favicon();
+        $this->assertSame('assets/my-favicon.svg', $icons['shortcut icon']['url']);
+        $this->assertSame('assets/my-favicon.png', $icons['alternate icon']['url']);
+    }
+
+    /**
+     * @covers ::favicon
+     */
+    public function testFaviconString(): void
+    {
+        // single string
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'favicon' => 'assets/favicon.ico'
+                ]
+            ]
+        ]);
+
+        $icons = Document::favicon();
+        $this->assertSame('image/x-icon', $icons['shortcut icon']['type']);
+        $this->assertSame('assets/favicon.ico', $icons['shortcut icon']['url']);
+    }
+
+    /**
+     * @covers ::favicon
+     */
+    public function testFaviconInvalid(): void
+    {
+        // single string
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'favicon' => 5
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid panel.favicon option');
+        $icons = Document::favicon();
     }
 
     /**
