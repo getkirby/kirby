@@ -72,7 +72,7 @@ return [
                 return $this->display;
             }
 
-            return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
+            return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
         },
         'default' => function (): ?string {
             return $this->toDatetime($this->default, 'H:i:s');

@@ -115,8 +115,9 @@ export default {
     }
   },
   watch: {
-    value(value) {
-      this.dt = this.toDatetime(value);
+    value(newValue, oldValue) {
+      if (newValue === oldValue) return;
+      this.dt = this.toDatetime(newValue);
       this.onInvalid();
     }
   },
@@ -179,7 +180,7 @@ export default {
       // change `dt` by determined size and unit
       // and emit as `update` event
       this.dt = this.dt[operator](size, unit).round(step.unit, step.size);
-      this.$emit("update", this.toISO(this.dt));
+      this.$emit("input", this.toISO(this.dt));
       this.$nextTick(() => this.select(selected));
     },
     /**
@@ -209,27 +210,30 @@ export default {
      */
     onBlur() {
       this.dt = this.parse();
-      this.$emit("update", this.toISO(this.dt));
+      this.$emit("input", this.toISO(this.dt));
     },
     /**
      * When hitting enter, blur the input
      * but also emit additional event
      */
-    async onEnter() {
-      await this.$refs.input.blur();
-      this.$emit("enter", this.toISO(this.dt));
+    onEnter() {
+      this.onBlur();
     },
     /**
      * Parse the current input value and
      * emit it as well as check the validation
      */
-    onInput() {
+    onInput(value) {
+      if (!value) {
+        return this.onEnter();
+      }
+
+      // update the timestamp
       const dt = this.parse();
-      this.$emit("input", this.toISO(dt));
 
       // highlight as invalid if input isn't empty
       // but cannot be parsed as datetime object
-      this.onInvalid(this.$refs.input.value && !dt);
+      this.onInvalid(value && !dt);
     },
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
@@ -262,6 +266,7 @@ export default {
 
         // if an exact part is selected
         if (
+          this.$refs.input &&
           selection.start === this.$refs.input.selectionStart &&
           selection.end === this.$refs.input.selectionEnd - 1
         ) {
@@ -309,10 +314,11 @@ export default {
       let dt = this.pattern.interpret(input);
 
       // round to nearest step
+      return this.round(dt);
+    },
+    round(dt) {
       const step = this.toStep();
-      dt = dt?.round(step.unit, step.size) || null;
-
-      return dt;
+      return dt?.round(step.unit, step.size) || null;
     },
     /**
      * Sets the cursor selection in the input element
@@ -325,7 +331,7 @@ export default {
         part = this.selection();
       }
 
-      this.$refs.input.setSelectionRange(part.start, part.end + 1);
+      this.$refs.input?.setSelectionRange(part.start, part.end + 1);
     },
     /**
      * Selects the first pattern if available
@@ -373,7 +379,7 @@ export default {
      * @return {Object|null}
      */
     toDatetime(string) {
-      return this.$library.dayjs.iso(string);
+      return this.round(this.$library.dayjs.iso(string));
     },
     /**
      * Converts dayjs object to ISO string
@@ -381,7 +387,7 @@ export default {
      * @return {Object|null}
      */
     toISO(dt) {
-      return dt?.toISO() || null;
+      return dt?.toISO("date") || null;
     },
     /**
      * Merges step donfiguration with defaults

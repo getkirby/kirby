@@ -68,7 +68,7 @@ export default {
      * @param {string} string
      */
     toDatetime(string) {
-      return this.$library.dayjs.iso(string, "time");
+      return this.round(this.$library.dayjs.iso(string, "time"));
     },
     /**
      * Converts dayjs object to ISO time string

@@ -42,6 +42,7 @@ import Fieldset from "@/components/Forms/Fieldset.vue";
 import Input from "@/components/Forms/Input.vue";
 import Login from "@/components/Forms/Login.vue";
 import LoginCode from "@/components/Forms/LoginCode.vue";
+import Times from "@/components/Forms/Times.vue";
 import Upload from "@/components/Forms/Upload.vue";
 import Writer from "@/components/Forms/Writer/Writer.vue";
 
@@ -129,6 +130,7 @@ Vue.component("k-fieldset", Fieldset);
 Vue.component("k-input", Input);
 Vue.component("k-login", Login);
 Vue.component("k-login-code", LoginCode);
+Vue.component("k-times", Times);
 Vue.component("k-upload", Upload);
 Vue.component("k-writer", Writer);
 

@@ -1,43 +1,77 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-date-field"
-    @focusout.native="onBlur"
-  >
-    <k-input
-      :id="_uid"
-      ref="input"
-      :type="inputType"
-      :value="value"
-      v-bind="$props"
-      theme="field"
-      @blur="onBlur"
-      @enter="onSelect"
-      @focus="onFocus"
-      @input="onInput"
-      @update="onUpdate"
+  <k-field :input="_uid" v-bind="$props" class="k-date-field">
+    <div
+      :data-time-length="timeLength"
+      class="k-date-field-body"
+      data-theme="field"
     >
-      <template v-if="calendar" #icon>
-        <k-dropdown>
-          <k-button
-            :icon="icon"
-            :tooltip="$t('date.select')"
-            class="k-input-icon-button"
-            tabindex="-1"
-            @click="$refs.calendar.toggle()"
-          />
-          <k-dropdown-content ref="calendar" align="right">
-            <k-calendar
-              :value="datetime"
-              :min="min"
-              :max="max"
-              @input="onUpdate"
+      <k-input
+        ref="dateInput"
+        :autofocus="autofocus"
+        :id="_uid"
+        :disabled="disabled"
+        :display="display"
+        :max="max"
+        :min="min"
+        :required="required"
+        :value="value"
+        theme="field"
+        type="date"
+        v-bind="$props"
+        @input="onDateInput"
+      >
+        <template v-if="calendar" #icon>
+          <k-dropdown>
+            <k-button
+              :icon="icon"
+              :tooltip="$t('date.select')"
+              class="k-input-icon-button"
+              @click="$refs.calendar.toggle()"
             />
-          </k-dropdown-content>
-        </k-dropdown>
-      </template>
-    </k-input>
+            <k-dropdown-content ref="calendar" align="right">
+              <k-calendar
+                :value="value"
+                :min="min"
+                :max="max"
+                @input="onCalendarInput"
+              />
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
+      </k-input>
+
+      <k-input
+        v-if="time"
+        ref="timeInput"
+        :disabled="disabled"
+        :display="time.display"
+        :required="required"
+        :step="time.step"
+        :value="iso.time"
+        :icon="time.icon"
+        theme="field"
+        type="time"
+        @input="onTimeInput"
+      >
+        <template v-if="times" #icon>
+          <k-dropdown>
+            <k-button
+              :icon="time.icon || 'clock'"
+              :tooltip="$t('time.select')"
+              class="k-input-icon-button"
+              @click="$refs.times.toggle()"
+            />
+            <k-dropdown-content ref="times" align="right">
+              <k-times
+                :display="time.display"
+                :value="value"
+                @input="onTimesInput"
+              />
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
+      </k-input>
+    </div>
   </k-field>
 </template>
 
@@ -76,24 +110,38 @@ export default {
     icon: {
       type: String,
       default: "calendar"
+    },
+    /**
+     * Deactivate th dropdown timer or not
+     */
+    times: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      // ISO string - we need to hold on to a temporary
-      // value, so that we can pass it to the calendar component
-      // without updating the content store yet
-      datetime: this.value
+      iso: this.toIso(this.value)
     };
   },
   computed: {
-    inputType() {
-      return this.time === false ? "date" : "datetime";
+    timeLength() {
+      const length = String(this.time.display).length;
+
+      if (length <= 5) {
+        return "sm";
+      }
+
+      if (length <= 8) {
+        return "md";
+      }
+
+      return "lg";
     }
   },
   watch: {
-    value(value) {
-      this.datetime = value;
+    value() {
+      this.iso = this.toIso(this.value);
     }
   },
   methods: {
@@ -102,43 +150,101 @@ export default {
      * @public
      */
     focus() {
-      this.$refs.input.focus();
+      this.$refs.dateInput.focus();
     },
-    /**
-     * Closes calendar when input is blured
-     */
-    onBlur(e) {
-      if (!e || this.$el.contains(e.relatedTarget) === false) {
-        this.$refs.calendar?.close();
+    onInput() {
+      if (this.iso.date === null && this.iso.time === null) {
+        this.$emit("input", "");
       }
+
+      const dt = this.$library.dayjs.iso(this.iso.date + " " + this.iso.time);
+
+      this.$emit("input", dt?.toISO() || "");
     },
-    /**
-     * Open calendar when input is focussed
-     */
-    onFocus() {
-      this.$refs.calendar?.open();
+    onCalendarInput(value) {
+      this.$refs.calendar?.close();
+      this.onDateInput(value);
     },
-    /**
-     * Update the content value by
-     * emitting the input event
-     */
-    onUpdate(value) {
-      this.$emit("input", value || "");
+    onDateInput(value) {
+      if (value && !this.iso.time) {
+        this.iso.time = this.$library.dayjs().toISO("time");
+      }
+
+      this.iso.date = value;
+      this.onInput();
     },
-    /**
-     * Store temporary value to be
-     * shared between input and calendar
-     */
-    onInput(value) {
-      this.datetime = value;
+    onTimeInput(value) {
+      if (value && !this.iso.date) {
+        this.iso.date = this.$library.dayjs().toISO("date");
+      }
+
+      this.iso.time = value;
+      this.onInput();
     },
-    /**
-     * Update value and close calendar
-     */
-    onSelect(value) {
-      this.onUpdate(value);
-      this.onBlur();
+    onTimesInput(value) {
+      this.$refs.times?.close();
+      this.onTimeInput(value + ":00");
+    },
+    toIso(value) {
+      const dt = this.$library.dayjs.iso(value);
+
+      return {
+        date: dt?.toISO("date") || null,
+        time: dt?.toISO("time") || null
+      };
     }
   }
 };
 </script>
+
+<style>
+.k-date-field-body {
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 1;
+  border: var(--field-input-border);
+  padding: var(--spacing-1);
+  background: var(--field-input-background);
+  gap: var(--spacing-1);
+}
+.k-date-field-body:focus-within {
+  border: var(--field-input-focus-border);
+  box-shadow: var(--color-focus-outline) 0 0 0 2px;
+}
+.k-date-field-body > .k-input[data-theme="field"] {
+  border: 0;
+  box-shadow: none;
+  background: var(--color-light);
+  border-radius: var(--rounded-sm);
+}
+.k-date-field-body > .k-input[data-invalid="true"],
+.k-date-field-body > .k-input[data-invalid="true"]:focus-within {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.k-date-field-body > .k-input[data-theme="field"] .k-text-input {
+  padding: var(--spacing-1) var(--spacing-2);
+  font-variant-numeric: tabular-nums;
+}
+.k-date-field-body .k-input .k-input-icon-button,
+.k-date-field-body .k-input .k-input-icon {
+  width: 1.75rem;
+}
+.k-date-field-body[data-time-length="sm"] {
+  --time-width: 6rem;
+}
+.k-date-field-body[data-time-length="md"] {
+  --time-width: 7.5rem;
+}
+.k-date-field-body[data-time-length="lg"] {
+  --time-width: 9rem;
+}
+.k-date-field-body .k-input[data-type="date"] {
+  flex-grow: 1;
+  flex-basis: calc(100% - var(--time-width) - 1rem);
+}
+.k-date-field-body .k-input[data-type="time"] {
+  flex-grow: 1;
+  flex-basis: var(--time-width);
+}
+</style>
