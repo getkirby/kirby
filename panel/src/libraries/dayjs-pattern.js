@@ -153,8 +153,8 @@ export default (option, Dayjs, dayjs) => {
         // generate all possible combination of tokens
         const variations = segments.reduce((a, b, i) => {
           const segment = segments.slice(0, i + 1);
-
           let results = segment
+            .filter((item) => item)
             .reverse()
             .reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
 

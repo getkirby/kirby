@@ -1,16 +1,14 @@
 <template>
   <input
     ref="input"
-    v-bind="{
-      autofocus,
-      disabled,
-      id,
-      required
-    }"
     v-direction
+    :autofocus="autofocus"
     :class="`k-text-input k-${type}-input`"
+    :disabled="disabled"
+    :id="id"
     :placeholder="display"
-    :value="formatted"
+    :required="required"
+    v-model="formatted"
     autocomplete="off"
     spellcheck="false"
     type="text"
@@ -26,8 +24,6 @@
 
 <script>
 import { autofocus, disabled, id, required } from "@/mixins/props.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
   mixins: [autofocus, disabled, id, required],
@@ -95,34 +91,43 @@ export default {
   inheritAttrs: false,
   data() {
     return {
-      dt: this.toDatetime(this.value)
+      dt: null,
+      formatted: null
     };
   },
   computed: {
-    /**
-     * Formatted string for datetime object
-     * @returns {string}
-     */
-    formatted() {
-      return this.pattern.format(this.dt);
-    },
     /**
      * dayjs pattern class for `display` pattern
      * @returns {Object}
      */
     pattern() {
       return this.$library.dayjs.pattern(this.display);
+    },
+    /**
+     * Merges step donfiguration with defaults
+     * @returns {Object}
+     */
+    rounding() {
+      return {
+        ...this.$options.props.step.default(),
+        ...this.step
+      };
     }
   },
   watch: {
-    value(newValue, oldValue) {
-      if (newValue === oldValue) return;
-      this.dt = this.toDatetime(newValue);
-      this.onInvalid();
+    value: {
+      handler(newValue, oldValue) {
+        if (newValue === oldValue) {
+          return;
+        }
+
+        const dt = this.toDatetime(newValue);
+        this.commit(dt);
+      },
+      immediate: true
     }
   },
-  mounted() {
-    this.onInvalid();
+  created() {
     // make sure to commit input value when Cmd+S is hit
     this.$events.$on("keydown.cmd.s", this.onBlur);
   },
@@ -139,20 +144,12 @@ export default {
       // since manipulation command can occur while
       // typing new value, make sure to first update
       // datetime object from current input value
-      this.dt = this.parse();
-
-      // defaults for step
-      const step = this.toStep();
-
-      // if no parsed result exist, use current datetime
-      if (this.dt === null) {
-        this.dt = this.$library.dayjs().round(step.unit, step.size);
-      }
+      let dt = this.parse() || this.round(this.$library.dayjs());
 
       // what unit to alter and by how much:
       // as default use the step unit and size
-      let unit = step.unit;
-      let size = step.size;
+      let unit = this.rounding.unit;
+      let size = this.rounding.size;
 
       // if a part in the input is selected,
       // manipulate that part
@@ -162,7 +159,7 @@ export default {
         // handle  meridiem to toggle between am/pm
         // instead of e.g. skipping to next day
         if (selected.unit === "meridiem") {
-          operator = this.dt.format("a") === "pm" ? "subtract" : "add";
+          operator = dt.format("a") === "pm" ? "subtract" : "add";
           unit = "hour";
           size = 12;
         } else {
@@ -171,7 +168,7 @@ export default {
 
           // only use step size for step unit,
           // otherwise use size of 1
-          if (unit !== step.unit) {
+          if (unit !== this.rounding.unit) {
             size = 1;
           }
         }
@@ -179,9 +176,30 @@ export default {
 
       // change `dt` by determined size and unit
       // and emit as `update` event
-      this.dt = this.dt[operator](size, unit).round(step.unit, step.size);
-      this.$emit("input", this.toISO(this.dt));
+      dt = dt[operator](size, unit).round(
+        this.rounding.unit,
+        this.rounding.size
+      );
+
+      this.commit(dt);
+      this.emit(dt);
+
       this.$nextTick(() => this.select(selected));
+    },
+
+    commit(dt) {
+      this.dt = dt;
+      this.formatted = this.pattern.format(dt);
+      this.$emit("invalid", this.$v.$invalid, this.$v);
+    },
+
+    /**
+     * Convert the dt to an ISO string and
+     * emit the input event
+     * @param {Object} dt
+     */
+    emit(dt) {
+      this.$emit("input", this.toISO(dt));
     },
     /**
      * Focuses the input element
@@ -209,8 +227,9 @@ export default {
      * datetime object from parsed value
      */
     onBlur() {
-      this.dt = this.parse();
-      this.$emit("input", this.toISO(this.dt));
+      const dt = this.parse();
+      this.commit(dt);
+      this.emit(dt);
     },
     /**
      * When hitting enter, blur the input
@@ -218,25 +237,25 @@ export default {
      */
     onEnter() {
       this.onBlur();
+      this.$emit("submit");
     },
     /**
      * Parse the current input value and
      * emit it as well as check the validation
      */
     onInput(value) {
+      const dt = this.parse();
+      const formatted = this.pattern.format(dt);
+
       if (!value) {
-        return this.onEnter();
+        this.commit(dt);
+        return this.emit(dt);
       }
 
-      // update the timestamp
-      const dt = this.parse();
-
-      // highlight as invalid if input isn't empty
-      // but cannot be parsed as datetime object
-      this.onInvalid(value && !dt);
-    },
-    onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
+      if (formatted == value) {
+        this.commit(dt);
+        return this.emit(dt);
+      }
     },
     /**
      * Handle tab key in input
@@ -260,7 +279,6 @@ export default {
 
       // make sure to confirm any current input
       this.onBlur();
-
       this.$nextTick(() => {
         const selection = this.selection();
 
@@ -295,10 +313,7 @@ export default {
           event.shiftKey ? this.selectLast() : this.selectFirst();
         }
 
-        // prevent event and propagation
-        // so that the focus does not move out of input
         event.preventDefault();
-        event.stopPropagation();
       });
     },
     /**
@@ -308,17 +323,12 @@ export default {
      * @return {Object|null}
      */
     parse() {
-      // get value and try to interpret
-      const input = this.$refs.input.value;
-
-      let dt = this.pattern.interpret(input);
-
-      // round to nearest step
-      return this.round(dt);
+      const value = this.$refs.input.value;
+      // interpret and round to nearest step
+      return this.round(this.pattern.interpret(value));
     },
     round(dt) {
-      const step = this.toStep();
-      return dt?.round(step.unit, step.size) || null;
+      return dt?.round(this.rounding.unit, this.rounding.size) || null;
     },
     /**
      * Sets the cursor selection in the input element
@@ -388,35 +398,20 @@ export default {
      */
     toISO(dt) {
       return dt?.toISO("date") || null;
-    },
-    /**
-     * Merges step donfiguration with defaults
-     * @param {Object} step (default using `this.step`)
-     * @returns {Object}
-     */
-    toStep(step = this.step) {
-      return {
-        ...this.$options.props.step.default(),
-        ...step
-      };
     }
   },
   validations() {
     return {
       value: {
-        min: this.min
-          ? (value) =>
-              this.$library
-                .dayjs(value)
-                .validate(this.min, "min", this.toStep().unit)
-          : true,
-        max: this.max
-          ? (value) =>
-              this.$library
-                .dayjs(value)
-                .validate(this.max, "max", this.toStep().unit)
-          : true,
-        required: this.required ? validateRequired : true
+        min:
+          this.dt && this.min
+            ? () => this.dt.validate(this.min, "min", this.rounding.unit)
+            : true,
+        max:
+          this.dt && this.max
+            ? () => this.dt.validate(this.max, "max", this.rounding.unit)
+            : true,
+        required: this.required ? () => !!this.dt : true
       }
     };
   }

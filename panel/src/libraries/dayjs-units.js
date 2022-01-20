@@ -8,7 +8,7 @@ export default (option, Dayjs, dayjs) => {
    */
   dayjs.units = (is12h) => ({
     year: ["YY", "YYYY"],
-    month: ["M", "MM"],
+    month: ["M", "MM", "MMMM"],
     day: ["D", "DD"],
     hour: is12h ? ["h", "hh"] : ["H", "HH"],
     minute: ["m", "mm"],

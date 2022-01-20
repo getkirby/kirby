@@ -1,6 +1,8 @@
 <template>
   <k-field :input="_uid" v-bind="$props" class="k-date-field">
     <div
+      ref="body"
+      :data-invalid="!novalidate && isInvalid"
       :data-time-length="timeLength"
       class="k-date-field-body"
       data-theme="field"
@@ -18,7 +20,9 @@
         theme="field"
         type="date"
         v-bind="$props"
+        @invalid="onDateInvalid"
         @input="onDateInput"
+        @submit="$emit('submit')"
       >
         <template v-if="calendar" #icon>
           <k-dropdown>
@@ -39,7 +43,6 @@
           </k-dropdown>
         </template>
       </k-input>
-
       <k-input
         v-if="time"
         ref="timeInput"
@@ -52,6 +55,7 @@
         theme="field"
         type="time"
         @input="onTimeInput"
+        @submit="$emit('submit')"
       >
         <template v-if="times" #icon>
           <k-dropdown>
@@ -112,7 +116,7 @@ export default {
       default: "calendar"
     },
     /**
-     * Deactivate th dropdown timer or not
+     * Deactivate the dropdown timer or not
      */
     times: {
       type: Boolean,
@@ -121,6 +125,7 @@ export default {
   },
   data() {
     return {
+      isInvalid: false,
       iso: this.toIso(this.value)
     };
   },
@@ -140,8 +145,9 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.iso = this.toIso(this.value);
+    value(newValue, oldValue) {
+      if (newValue === oldValue) return;
+      this.iso = this.toIso(newValue);
     }
   },
   methods: {
@@ -152,12 +158,32 @@ export default {
     focus() {
       this.$refs.dateInput.focus();
     },
+    isEmpty() {
+      if (this.time) {
+        return this.iso.date === null && this.iso.time;
+      } else {
+        return this.iso.date === null;
+      }
+    },
+    now() {
+      const now = this.$library.dayjs();
+      return {
+        date: now.toISO("date"),
+        time: this.time ? now.toISO("time") : "00:00:00"
+      };
+    },
     onInput() {
-      if (this.iso.date === null && this.iso.time === null) {
-        this.$emit("input", "");
+      if (this.isEmpty()) {
+        return this.$emit("input", "");
       }
 
       const dt = this.$library.dayjs.iso(this.iso.date + " " + this.iso.time);
+
+      if (!dt) {
+        if (this.iso.date === null || this.iso.time === null) {
+          return;
+        }
+      }
 
       this.$emit("input", dt?.toISO() || "");
     },
@@ -167,15 +193,19 @@ export default {
     },
     onDateInput(value) {
       if (value && !this.iso.time) {
-        this.iso.time = this.$library.dayjs().toISO("time");
+        this.iso.time = this.now().time;
       }
 
       this.iso.date = value;
       this.onInput();
     },
+    onDateInvalid(state) {
+      this.isInvalid = state;
+    },
     onTimeInput(value) {
+      // fill in the current date if the date field is empty
       if (value && !this.iso.date) {
-        this.iso.date = this.$library.dayjs().toISO("date");
+        this.iso.date = this.now().date;
       }
 
       this.iso.time = value;
@@ -187,7 +217,6 @@ export default {
     },
     toIso(value) {
       const dt = this.$library.dayjs.iso(value);
-
       return {
         date: dt?.toISO("date") || null,
         time: dt?.toISO("time") || null
@@ -216,6 +245,9 @@ export default {
   box-shadow: none;
   background: var(--color-light);
   border-radius: var(--rounded-sm);
+}
+.k-date-field-body > .k-input[data-theme="field"][data-disabled] {
+  background: var(--color-gray-100);
 }
 .k-date-field-body > .k-input[data-invalid="true"],
 .k-date-field-body > .k-input[data-invalid="true"]:focus-within {
