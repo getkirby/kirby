@@ -96,6 +96,9 @@ export default {
     };
   },
   computed: {
+    inputType() {
+      return "date";
+    },
     /**
      * dayjs pattern class for `display` pattern
      * @returns {Object}
@@ -325,7 +328,7 @@ export default {
     parse() {
       const value = this.$refs.input.value;
       // interpret and round to nearest step
-      return this.round(this.pattern.interpret(value));
+      return this.round(this.pattern.interpret(value, this.inputType));
     },
     round(dt) {
       return dt?.round(this.rounding.unit, this.rounding.size) || null;
@@ -389,7 +392,7 @@ export default {
      * @return {Object|null}
      */
     toDatetime(string) {
-      return this.round(this.$library.dayjs.iso(string));
+      return this.round(this.$library.dayjs.iso(string, this.inputType));
     },
     /**
      * Converts dayjs object to ISO string
@@ -397,7 +400,7 @@ export default {
      * @return {Object|null}
      */
     toISO(dt) {
-      return dt?.toISO("date") || null;
+      return dt?.toISO(this.inputType) || null;
     }
   },
   validations() {
