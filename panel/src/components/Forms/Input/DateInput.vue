@@ -1,14 +1,14 @@
 <template>
   <input
+    :id="id"
     ref="input"
+    v-model="formatted"
     v-direction
     :autofocus="autofocus"
     :class="`k-text-input k-${type}-input`"
     :disabled="disabled"
-    :id="id"
     :placeholder="display"
     :required="required"
-    v-model="formatted"
     autocomplete="off"
     spellcheck="false"
     type="text"
@@ -17,7 +17,7 @@
     @input="onInput($event.target.value)"
     @keydown.down.stop.prevent="onArrowDown"
     @keydown.up.stop.prevent="onArrowUp"
-    @keydown.enter="onEnter"
+    @keydown.enter.stop.prevent="onEnter"
     @keydown.tab="onTab"
   />
 </template>
@@ -240,22 +240,26 @@ export default {
      */
     onEnter() {
       this.onBlur();
-      this.$emit("submit");
+      this.$nextTick(() => this.$emit("submit"));
     },
     /**
-     * Parse the current input value and
-     * emit it as well as check the validation
+     * Takes the current input value and
+     * tries to interpret/parse it as dayjs object.
+     * For empty inputs and input values that
+     * already are complete (equal to formatted string),
+     * field emits the current value as input to parent.
      */
     onInput(value) {
+      // get the parsed dayjs object
       const dt = this.parse();
+
+      // get the formatted string for dayjs value
       const formatted = this.pattern.format(dt);
 
-      if (!value) {
-        this.commit(dt);
-        return this.emit(dt);
-      }
-
-      if (formatted == value) {
+      // if input is empty or if the input value
+      // matches the formatted dayjs interpretation
+      // directly commit and emit value
+      if (!value || formatted == value) {
         this.commit(dt);
         return this.emit(dt);
       }
