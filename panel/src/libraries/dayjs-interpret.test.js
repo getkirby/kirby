@@ -83,7 +83,7 @@ describe("dayjs.interpret(input, 'date')", () => {
   }
 });
 
-describe("dayjs.pattern.interpret(input, 'time')", () => {
+describe("dayjs.interpret(input, 'time')", () => {
   const expected = {
     "12:22:37": "12:22:37",
     "12:22": "12:22:00",
