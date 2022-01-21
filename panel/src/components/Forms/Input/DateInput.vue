@@ -326,9 +326,10 @@ export default {
      * @return {Object|null}
      */
     parse() {
-      const value = this.$refs.input.value;
+      let value = this.$refs.input.value;
       // interpret and round to nearest step
-      return this.round(this.pattern.interpret(value, this.inputType));
+      value = this.$library.dayjs.interpret(value, this.inputType);
+      return this.round(value);
     },
     round(dt) {
       return dt?.round(this.rounding.unit, this.rounding.size) || null;
