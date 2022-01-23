@@ -105,7 +105,8 @@ export default defineConfig(({ command }) => {
         extension: ["js", "vue"],
         src: "src",
         reporter: ["text", "lcov"]
-      }
+      },
+      setupFiles: ["vitest.setup.js"]
     }
   };
 });
