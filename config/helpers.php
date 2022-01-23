@@ -115,11 +115,18 @@ function css($url, $options = null): ?string
         }
     }
 
+    // only valid value for 'rel' is 'alternate stylesheet', if 'title' is given as well
+    if (
+        ($options['rel'] ?? '') !== 'alternate stylesheet' ||
+        ($options['title'] ?? '') === ''
+    ) {
+        $options['rel'] = 'stylesheet';
+    }
+
     $url  = ($kirby->component('css'))($kirby, $url, $options);
     $url  = Url::to($url);
     $attr = array_merge((array)$options, [
-        'href' => $url,
-        'rel'  => 'stylesheet'
+        'href' => $url
     ]);
 
     return '<link ' . attr($attr) . '>';

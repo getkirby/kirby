@@ -143,6 +143,30 @@ class HelpersTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
+    public function testCssHelperWithValidRelAttr()
+    {
+        $result   = css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testCssHelperWithInvalidRelAttr()
+    {
+        $result   = css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet" title="High contrast">';
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testCssHelperWithRelAttrButNoTitle()
+    {
+        $result   = css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
+        $expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
+
+        $this->assertSame($expected, $result);
+    }
+
     public function testCssHelperWithArray()
     {
         $result = css([
