@@ -69,7 +69,13 @@ class ImageMagick extends Darkroom
      */
     protected function convert(string $file, array $options): string
     {
-        return sprintf($options['bin'] . ' "%s"', $file);
+        $command = $options['bin'];
+
+        // limit to single-threading to keep CPU usage sane
+        $command .= ' -limit thread 1';
+
+        // append input file
+        return $command . ' "' . $file . '"';
     }
 
     /**
@@ -202,8 +208,7 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Makes sure to not process too many images at once
-     * which could crash the server
+     * Creates the option for the output file
      *
      * @param string $file
      * @param array $options
@@ -215,7 +220,7 @@ class ImageMagick extends Darkroom
             $file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
         }
 
-        return sprintf('-limit thread 1 "%s"', $file);
+        return '"' . $file . '"';
     }
 
     /**
