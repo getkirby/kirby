@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import { clone } from "./object.js";
 
 describe.concurrent("$helper.object.clone()", () => {

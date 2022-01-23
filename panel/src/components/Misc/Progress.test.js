@@ -1,7 +1,8 @@
+import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import Progress from "./Progress.vue";
 
-describe("Progress.vue", () => {
+describe.concurrent("Progress.vue", () => {
   it("mounts component", async () => {
     const wrapper = mount(Progress);
     expect(wrapper.element.value).toBe(0);

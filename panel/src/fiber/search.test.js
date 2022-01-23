@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import search from "./search.js";
 
 describe.concurrent("$search()", () => {

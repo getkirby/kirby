@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import dialog from "./dialog.js";
 
 const Vue = () => {
