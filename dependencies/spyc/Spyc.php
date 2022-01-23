@@ -7,7 +7,7 @@
  * into a PHP array.  It currently supports a very limited subsection of
  * the YAML spec.
  *
- * @version 0.6.3
+ * @version 0.6.3 (Kirby fork for PHP 8.1+)
  * @author Vlad Andersen <vlad.andersen@gmail.com>
  * @author Chris Wanstrath <chris@ozmm.org>
  * @link https://github.com/mustangostang/spyc/
@@ -290,23 +290,22 @@ class Spyc
     private function _dumpNode($key, $value, $indent, $previous_key = -1, $first_key = 0, $source_array = null)
     {
         // do some folding here, for blocks
-        if (is_string($value) &&
+        if (
+            is_string($value) &&
             (
-                (
-                    strpos($value, "\n") !== false ||
-                    strpos($value, ": ") !== false ||
-                    strpos($value, "- ") !== false ||
-                    strpos($value, "*") !== false ||
-                    strpos($value, "#") !== false ||
-                    strpos($value, "<") !== false ||
-                    strpos($value, ">") !== false ||
-                    strpos($value, '%') !== false ||
-                    strpos($value, '  ') !== false ||
-                    strpos($value, "[") !== false ||
-                    strpos($value, "]") !== false ||
-                    strpos($value, "{") !== false ||
-                    strpos($value, "}") !== false
-                ) ||
+                strpos($value, "\n") !== false ||
+                strpos($value, ": ") !== false ||
+                strpos($value, "- ") !== false ||
+                strpos($value, "*") !== false ||
+                strpos($value, "#") !== false ||
+                strpos($value, "<") !== false ||
+                strpos($value, ">") !== false ||
+                strpos($value, '%') !== false ||
+                strpos($value, '  ') !== false ||
+                strpos($value, "[") !== false ||
+                strpos($value, "]") !== false ||
+                strpos($value, "{") !== false ||
+                strpos($value, "}") !== false ||
                 strpos($value, "&") !== false ||
                 strpos($value, "'") !== false ||
                 strpos($value, "!") === 0 ||
@@ -359,14 +358,16 @@ class Spyc
      */
     private function _doLiteralBlock($value, $indent)
     {
+        $value ??= '';
+
         if ($value === "\n") return '\n';
-        if (strpos($value ?? '', "\n") === false && strpos($value ?? '', "'") === false) {
+        if (strpos($value, "\n") === false && strpos($value, "'") === false) {
             return sprintf("'%s'", $value);
         }
-        if (strpos($value ?? '', "\n") === false && strpos($value ?? '', '"') === false) {
+        if (strpos($value, "\n") === false && strpos($value, '"') === false) {
             return sprintf('"%s"', $value);
         }
-        $exploded = explode("\n", $value ?? '');
+        $exploded = explode("\n", $value);
         $newValue = '|';
         if (isset($exploded[0]) && ($exploded[0] == "|" || $exploded[0] == "|-" || $exploded[0] == ">")) {
             $newValue = $exploded[0];
@@ -393,11 +394,10 @@ class Spyc
     private function _doFolding($value, $indent)
     {
         // Don't do anything if wordwrap is set to 0
-
-        if ($this->_dumpWordWrap !== 0 && is_string($value ?? '') && strlen($value ?? '') > $this->_dumpWordWrap) {
+        if ($this->_dumpWordWrap !== 0 && is_string($value) && strlen($value) > $this->_dumpWordWrap) {
             $indent += $this->_dumpIndent;
             $indent = str_repeat(' ', $indent);
-            $wrapped = wordwrap($value ?? '', $this->_dumpWordWrap, "\n$indent");
+            $wrapped = wordwrap($value, $this->_dumpWordWrap, "\n$indent");
             $value = ">\n" . $indent . $wrapped;
         } else {
             if ($this->setting_dump_force_quotes && is_string($value) && $value !== self::REMPTY)
@@ -1005,8 +1005,10 @@ class Spyc
 
     private static function stripIndent($line, $indent = -1)
     {
-        if ($indent == -1) $indent = strlen($line ?? '') - strlen(ltrim($line ?? ''));
-        return substr($line ?? '', $indent);
+        $line ??= '';
+
+        if ($indent == -1) $indent = strlen($line) - strlen(ltrim($line));
+        return substr($line, $indent);
     }
 
     private function getParentPathByIndent($indent)
