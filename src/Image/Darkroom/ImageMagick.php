@@ -42,7 +42,7 @@ class ImageMagick extends Darkroom
     protected function blur(string $file, array $options)
     {
         if ($options['blur'] !== false) {
-            return '-blur 0x' . $options['blur'];
+            return '-blur ' . escapeshellarg('0x' . $options['blur']);
         }
     }
 
@@ -69,7 +69,13 @@ class ImageMagick extends Darkroom
      */
     protected function convert(string $file, array $options): string
     {
-        return sprintf($options['bin'] . ' "%s"', $file);
+        $command = escapeshellarg($options['bin']);
+
+        // limit to single-threading to keep CPU usage sane
+        $command .= ' -limit thread 1';
+
+        // append input file
+        return $command . ' ' . escapeshellarg($file);
     }
 
     /**
@@ -162,7 +168,7 @@ class ImageMagick extends Darkroom
      */
     protected function quality(string $file, array $options): string
     {
-        return '-quality ' . $options['quality'];
+        return '-quality ' . escapeshellarg($options['quality']);
     }
 
     /**
@@ -177,7 +183,7 @@ class ImageMagick extends Darkroom
     {
         // simple resize
         if ($options['crop'] === false) {
-            return sprintf('-thumbnail %sx%s!', $options['width'], $options['height']);
+            return '-thumbnail ' . escapeshellarg(sprintf('%sx%s!', $options['width'], $options['height']));
         }
 
         $gravities = [
@@ -195,15 +201,15 @@ class ImageMagick extends Darkroom
         // translate the gravity option into something imagemagick understands
         $gravity = $gravities[$options['crop']] ?? 'Center';
 
-        $command  = sprintf('-thumbnail %sx%s^', $options['width'], $options['height']);
-        $command .= sprintf(' -gravity %s -crop %sx%s+0+0', $gravity, $options['width'], $options['height']);
+        $command  = '-thumbnail ' . escapeshellarg(sprintf('%sx%s^', $options['width'], $options['height']));
+        $command .= ' -gravity ' . escapeshellarg($gravity);
+        $command .= ' -crop ' . escapeshellarg(sprintf('%sx%s+0+0', $options['width'], $options['height']));
 
         return $command;
     }
 
     /**
-     * Makes sure to not process too many images at once
-     * which could crash the server
+     * Creates the option for the output file
      *
      * @param string $file
      * @param array $options
@@ -215,7 +221,7 @@ class ImageMagick extends Darkroom
             $file = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '.' . $options['format'];
         }
 
-        return sprintf('-limit thread 1 "%s"', $file);
+        return escapeshellarg($file);
     }
 
     /**
