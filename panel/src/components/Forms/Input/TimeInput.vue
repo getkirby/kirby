@@ -63,6 +63,10 @@ export const props = {
 export default {
   mixins: [DateInput, props],
   computed: {
+    /**
+     * Use the time part for handling input values
+     * @returns {string}
+     */
     inputType() {
       return "time";
     }

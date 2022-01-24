@@ -43,12 +43,15 @@ export default {
   mixins: [Field, Input, TimeInput],
   inheritAttrs: false,
   props: {
+    /**
+     * Icon used for the input (and times dropdown)
+     */
     icon: {
       type: String,
       default: "clock"
     },
     /**
-     * Deactivate the dropdown timer or not
+     * Deactivate the times dropdown or not
      */
     times: {
       type: Boolean,
@@ -63,6 +66,10 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
+    /**
+     * Handles the input event from the times dropdown
+     * @param {string} value
+     */
     select(value) {
       this.$emit("input", value);
       this.$refs.times?.close();

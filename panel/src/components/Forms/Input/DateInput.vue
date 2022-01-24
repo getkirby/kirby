@@ -29,7 +29,7 @@ export const props = {
   mixins: [autofocus, disabled, id, required],
   props: {
     /**
-     * Format to parse and display the datetime
+     * Format to parse and display the date
      * @values YYYY, YY, MM, M, DD, D
      * @example `MM/DD/YY`
      */
@@ -38,13 +38,13 @@ export const props = {
       default: "DD.MM.YYYY"
     },
     /**
-     * The last allowed date as ISO datetime string
-     * @example `2025-12-31 22:30:00`
+     * The last allowed date as ISO date string
+     * @example `2025-12-31`
      */
     max: String,
     /**
-     * The first allowed date as ISO datetime string
-     * @example `2020-01-01 01:30:00`
+     * The first allowed date as ISO date string
+     * @example `2020-01-01`
      */
     min: String,
     /**
@@ -67,8 +67,8 @@ export const props = {
       default: "date"
     },
     /**
-     * Value must be provided as ISO datetime string
-     * @example `2012-12-12 22:33:00`
+     * Value must be provided as ISO date string
+     * @example `2012-12-12`
      */
     value: String
   }
@@ -77,10 +77,10 @@ export const props = {
 /**
  * Form input to handle a date value.
  *
- * Component allows free input and tries to parse the
- * input value based on a provided `display` format pattern.
- * Support rounding to a nearest `step` as well as keyboard
- * interactions (altering value by arrow up/down, selecting of
+ * Component allows some degree of free input and parses the
+ * input value to a dayjs object. Supports rounding to a
+ * nearest `step` as well as keyboard interactions
+ * (altering value by arrow up/down, selecting of
  * input parts via tab key).
  *
  * @example <k-input v-model="date" type="date" name="date" />
@@ -96,6 +96,10 @@ export default {
     };
   },
   computed: {
+    /**
+     * Use the date part for handling input values
+     * @returns {string}
+     */
     inputType() {
       return "date";
     },
@@ -120,12 +124,10 @@ export default {
   watch: {
     value: {
       handler(newValue, oldValue) {
-        if (newValue === oldValue) {
-          return;
+        if (newValue !== oldValue) {
+          const dt = this.toDatetime(newValue);
+          this.commit(dt);
         }
-
-        const dt = this.toDatetime(newValue);
-        this.commit(dt);
       },
       immediate: true
     }
@@ -141,7 +143,7 @@ export default {
     /**
      * Increment/decrement the current dayjs object based on the
      * cursor position in the input element and ensuring steps
-     * @param {string} operator `add` or `substract`
+     * @param {string} operator `add`|`substract`
      */
     alter(operator) {
       // since manipulation command can occur while
@@ -189,17 +191,20 @@ export default {
 
       this.$nextTick(() => this.select(selected));
     },
-
+    /**
+     * Updates the in data stored dayjs object
+     * as well as formatted string representation
+     * @param {Object} dt dayjs object
+     */
     commit(dt) {
       this.dt = dt;
       this.formatted = this.pattern.format(dt);
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-
     /**
-     * Convert the dt to an ISO string and
-     * emit the input event
-     * @param {Object} dt
+     * Convert the dayjs object to an ISO string
+     * and emit the input event
+     * @param {Object} dt dayjs object
      */
     emit(dt) {
       this.$emit("input", this.toISO(dt));
@@ -227,7 +232,7 @@ export default {
     },
     /**
      * When blurring the input, update
-     * datetime object from parsed value
+     * data from parsed value and emit
      */
     onBlur() {
       const dt = this.parse();
@@ -236,7 +241,7 @@ export default {
     },
     /**
      * When hitting enter, blur the input
-     * but also emit additional event
+     * but also emit additional submit event
      */
     onEnter() {
       this.onBlur();
@@ -248,6 +253,7 @@ export default {
      * For empty inputs and input values that
      * already are complete (equal to formatted string),
      * field emits the current value as input to parent.
+     * @param {string} value
      */
     onInput(value) {
       // get the parsed dayjs object
@@ -335,6 +341,12 @@ export default {
       value = this.$library.dayjs.interpret(value, this.inputType);
       return this.round(value);
     },
+    /**
+     * Rounds the provided dayjs object to
+     * the nearest step
+     * @param {Object} dt dayjs object
+     * @returns {Object|null}
+     */
     round(dt) {
       return dt?.round(this.rounding.unit, this.rounding.size) || null;
     },
@@ -393,7 +405,7 @@ export default {
     },
     /**
      * Converts ISO string to dayjs object
-     * @param {string} string
+     * @param {string} string ISO string
      * @return {Object|null}
      */
     toDatetime(string) {
@@ -401,7 +413,7 @@ export default {
     },
     /**
      * Converts dayjs object to ISO string
-     * @param {Object} dt
+     * @param {Object} dt dayjs object
      * @return {Object|null}
      */
     toISO(dt) {

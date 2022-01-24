@@ -7,6 +7,7 @@
       class="k-date-field-body"
       data-theme="field"
     >
+      <!-- Date input -->
       <k-input
         ref="dateInput"
         :autofocus="autofocus"
@@ -43,6 +44,8 @@
           </k-dropdown>
         </template>
       </k-input>
+
+      <!-- Time input (optional) -->
       <k-input
         v-if="time"
         ref="timeInput"
@@ -87,12 +90,8 @@ import { props as DateInput } from "../Input/DateInput.vue";
 /**
  * Form field to handle a date/datetime value.
  *
- * Bundles `k-date-input`/`k-datetime-input` with `k-calendar`.
- * This is why we need to store a temporary datetimo ISO string
- * which represents a current but unstored state of the input
- * that we pass on to the calendar. That way the calendar shows
- * the same state of the input, even when the value isn't yet passed
- * up to the content store.
+ * Bundles `k-date-input` with `k-calendar` and, optionally,
+ * `k-time-input` with `k-times`.
  *
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-datetime-input>` for additional information.
@@ -105,24 +104,32 @@ export default {
   inheritAttrs: false,
   props: {
     /**
-     * Deactivate the dropdown calendar or not
+     * Deactivate the calendar dropdown or not
      */
     calendar: {
       type: Boolean,
       default: true
     },
+    /**
+     * Icon used for the date input (and calendar dropdown)
+     */
     icon: {
       type: String,
       default: "calendar"
     },
     /**
-     * Deactivate the dropdown timer or not
+     * Time options (e.g. `display`, `icon`, `step`).
+     * Please check docs for `k-time-input` props.
+     * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
+     */
     time: {
       type: [Boolean, Object],
       default() {
         return {};
       }
     },
+    /**
+     * Deactivate the times dropdown or not
      */
     times: {
       type: Boolean,
@@ -132,10 +139,27 @@ export default {
   data() {
     return {
       isInvalid: false,
+      // keep an object of separate ISO values
+      // for date and time parts
       iso: this.toIso(this.value)
     };
   },
   computed: {
+    /**
+     * Whether the field is empty
+     * @returns {bool}
+     */
+    isEmpty() {
+      if (this.time) {
+        return this.iso.date === null && this.iso.time;
+      }
+
+      return this.iso.date === null;
+    },
+    /**
+     * Size class for time input
+     * @returns {string}
+     */
     timeLength() {
       const length = String(this.time.display).length;
 
@@ -152,8 +176,9 @@ export default {
   },
   watch: {
     value(newValue, oldValue) {
-      if (newValue === oldValue) return;
-      this.iso = this.toIso(newValue);
+      if (newValue !== oldValue) {
+        this.iso = this.toIso(newValue);
+      }
     }
   },
   methods: {
@@ -164,13 +189,11 @@ export default {
     focus() {
       this.$refs.dateInput.focus();
     },
-    isEmpty() {
-      if (this.time) {
-        return this.iso.date === null && this.iso.time;
-      } else {
-        return this.iso.date === null;
-      }
-    },
+    /**
+     * Returns an object of ISO date and time parts
+     * for the current date/time
+     * @returns {Object}
+     */
     now() {
       const now = this.$library.dayjs();
       return {
@@ -178,8 +201,11 @@ export default {
         time: this.time ? now.toISO("time") : "00:00:00"
       };
     },
+    /**
+     * Handle any input action
+     */
     onInput() {
-      if (this.isEmpty()) {
+      if (this.isEmpty) {
         return this.$emit("input", "");
       }
 
@@ -193,11 +219,20 @@ export default {
 
       this.$emit("input", dt?.toISO() || "");
     },
+    /**
+     * Handle input event from calendar dropdown
+     * @param {string} value
+     */
     onCalendarInput(value) {
       this.$refs.calendar?.close();
       this.onDateInput(value);
     },
+    /**
+     * Handle input event from date input
+     * @param {string} value
+     */
     onDateInput(value) {
+      // fill in the current time if the time input is empty
       if (value && !this.iso.time) {
         this.iso.time = this.now().time;
       }
@@ -205,11 +240,19 @@ export default {
       this.iso.date = value;
       this.onInput();
     },
+    /**
+     * Handle invalid event from date input
+     * @param {bool} state
+     */
     onDateInvalid(state) {
       this.isInvalid = state;
     },
+    /**
+     * Handle input event from time input
+     * @param {string} value
+     */
     onTimeInput(value) {
-      // fill in the current date if the date field is empty
+      // fill in the current date if the date input is empty
       if (value && !this.iso.date) {
         this.iso.date = this.now().date;
       }
@@ -217,10 +260,19 @@ export default {
       this.iso.time = value;
       this.onInput();
     },
+    /**
+     * Handle input event from times dropdown
+     * @param {string} value
+     */
     onTimesInput(value) {
       this.$refs.times?.close();
       this.onTimeInput(value + ":00");
     },
+    /**
+     * Convert an ISO string into an object
+     * of date/time part ISO strings
+     * @param {string} value
+     */
     toIso(value) {
       const dt = this.$library.dayjs.iso(value);
       return {
