@@ -232,38 +232,28 @@ export default {
   flex-wrap: wrap;
   line-height: 1;
   border: var(--field-input-border);
-  padding: var(--spacing-1);
-  background: var(--field-input-background);
-  gap: var(--spacing-1);
+  background: var(--color-gray-300);
+  gap: 1px;
 }
 .k-date-field-body:focus-within {
   border: var(--field-input-focus-border);
   box-shadow: var(--color-focus-outline) 0 0 0 2px;
 }
+.k-date-field[data-disabled] .k-date-field-body {
+  background: none;
+}
 .k-date-field-body > .k-input[data-theme="field"] {
   border: 0;
   box-shadow: none;
-  background: var(--color-light);
   border-radius: var(--rounded-sm);
-}
-.k-date-field-body > .k-input[data-theme="field"][data-disabled] {
-  background: var(--color-gray-100);
 }
 .k-date-field-body > .k-input[data-invalid="true"],
 .k-date-field-body > .k-input[data-invalid="true"]:focus-within {
   border: 0 !important;
   box-shadow: none !important;
 }
-.k-date-field-body > .k-input[data-theme="field"] .k-text-input {
-  padding: var(--spacing-1) var(--spacing-2);
-  font-variant-numeric: tabular-nums;
-}
-.k-date-field-body .k-input .k-input-icon-button,
-.k-date-field-body .k-input .k-input-icon {
-  width: 1.75rem;
-}
 .k-date-field-body[data-time-length="sm"] {
-  --time-width: 6rem;
+  --time-width: 6.5rem;
 }
 .k-date-field-body[data-time-length="md"] {
   --time-width: 7.5rem;

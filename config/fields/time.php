@@ -81,7 +81,7 @@ return [
             return $this->props['format'] ?? 'H:i:s';
         },
         'value' => function (): ?string {
-            return $this->toDatetime($this->value, 'H:i:s');
+            return $this->toDatetime($this->value, 'H:i:s') ?? '';
         }
     ],
     'validations' => [
