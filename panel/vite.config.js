@@ -99,7 +99,14 @@ export default defineConfig(({ command }) => {
     test: {
       environment: "jsdom",
       include: ["**/*.test.js"],
-      global: true
+      coverage: {
+        all: true,
+        exclude: ["**/*.e2e.js", "**/*.test.js"],
+        extension: ["js", "vue"],
+        src: "src",
+        reporter: ["text", "lcov"]
+      },
+      setupFiles: ["vitest.setup.js"]
     }
   };
 });

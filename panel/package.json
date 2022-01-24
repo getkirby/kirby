@@ -68,11 +68,5 @@
     "last 2 Opera versions",
     "last 2 OperaMobile versions",
     "last 2 UCAndroid versions"
-  ],
-  "c8": {
-    "skip-full": true,
-    "exclude": [
-      "vite.config.js"
-    ]
-  }
+  ]
 }

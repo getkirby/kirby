@@ -125,8 +125,18 @@ jobs:
 
       - name: Run JavaScript unit tests
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run test:unit
+        run: npm run test:unit:coverage
         working-directory: panel
+      
+      # TODO: Disabled until Vitest coverage reporting is accurate and
+      #       Kirby's frontend tests are useful enough that we need this metric 
+      # - name: Upload coverage results to Codecov
+      #   uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
+      #     fail_ci_if_error: true
+      #     files: ${{ github.workspace }}/panel/coverage/lcov.info
+      #     flags: frontend
 
   frontend-e2e:
     name: "Frontend: E2E tests"

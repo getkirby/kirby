@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import string from "./string.js";
 
 describe.concurrent("$helper.string.ucfirst", () => {

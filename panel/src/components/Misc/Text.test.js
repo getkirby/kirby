@@ -1,7 +1,8 @@
+import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import Text from "./Text.vue";
 
-describe("Text.vue", () => {
+describe.concurrent("Text.vue", () => {
   it("has default slot", async () => {
     const wrapper = mount(Text, {
       slots: {

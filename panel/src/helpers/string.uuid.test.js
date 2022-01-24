@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import string from "./string.js";
 
 describe("$helper.string.uuid", () => {

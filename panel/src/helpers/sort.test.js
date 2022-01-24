@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import sort from "./sort.js";
 
 describe.concurrent("$helper.sort()", () => {

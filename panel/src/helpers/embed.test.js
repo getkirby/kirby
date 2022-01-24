@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import embed from "./embed.js";
 
 describe.concurrent("$helper.embed()", () => {

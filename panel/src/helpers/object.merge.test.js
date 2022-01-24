@@ -2,6 +2,7 @@
  * @vitest-environment node
  */
 
+import { describe, expect, it } from "vitest";
 import { merge } from "./object.js";
 
 describe("$helper.object.merge", () => {

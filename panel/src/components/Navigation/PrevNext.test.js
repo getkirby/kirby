@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import PrevNext from "./PrevNext.vue";
 
@@ -5,7 +6,7 @@ const setup = {
   stubs: ["k-button-group"]
 };
 
-describe("PrevNext.vue", () => {
+describe.concurrent("PrevNext.vue", () => {
   it("has buttons", async () => {
     const wrapper = mount(PrevNext, {
       propsData: {
