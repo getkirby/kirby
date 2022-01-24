@@ -82,7 +82,7 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
+import { props as DateInput } from "../Input/DateInput.vue";
 
 /**
  * Form field to handle a date/datetime value.
@@ -101,7 +101,7 @@ import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
  * @public
  */
 export default {
-  mixins: [Field, Input, DateTimeInput],
+  mixins: [Field, Input, DateInput],
   inheritAttrs: false,
   props: {
     /**
@@ -117,6 +117,12 @@ export default {
     },
     /**
      * Deactivate the dropdown timer or not
+    time: {
+      type: [Boolean, Object],
+      default() {
+        return {};
+      }
+    },
      */
     times: {
       type: Boolean,
