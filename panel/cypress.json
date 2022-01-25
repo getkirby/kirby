@@ -1,6 +1,5 @@
 {
   "baseUrl": "http://sandbox.test",
-  "experimentalSessionSupport": true,
   "integrationFolder": "src/",
   "testFiles": "**/*.e2e.js",
   "video": false

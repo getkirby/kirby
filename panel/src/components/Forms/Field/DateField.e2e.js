@@ -1,14 +1,11 @@
-const login = () => {
-  cy.session("test", () => {
+describe("DateField", () => {
+  before(() => {
     cy.visit("/env/install/fields");
     cy.visit("/env/user/test");
-    cy.visit("/env/auth/test");
   });
-};
 
-describe("DateField", () => {
   beforeEach(() => {
-    login();
+    cy.visit("/env/auth/test");
     cy.visit("/panel/pages/date");
   });
 
