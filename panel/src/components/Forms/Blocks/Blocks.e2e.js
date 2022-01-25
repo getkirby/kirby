@@ -12,9 +12,12 @@ const createBlock = (type) => {
 };
 
 describe("Blocks", () => {
-  beforeEach(() => {
+  before(() => {
     cy.visit("/env/install/blocks");
     cy.visit("/env/user/test");
+  });
+
+  beforeEach(() => {
     cy.visit("/env/auth/test");
   });
 

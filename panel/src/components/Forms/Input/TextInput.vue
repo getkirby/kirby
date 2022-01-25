@@ -128,6 +128,7 @@ export default {
   background: none;
   font: inherit;
   color: inherit;
+  font-variant-numeric: tabular-nums;
 }
 .k-text-input::placeholder {
   color: var(--color-gray-500);

@@ -62,20 +62,13 @@ export const props = {
  */
 export default {
   mixins: [DateInput, props],
-  methods: {
+  computed: {
     /**
-     * Converts ISO time string to dayjs object
-     * @param {string} string
+     * Use the time part for handling input values
+     * @returns {string}
      */
-    toDatetime(string) {
-      return this.$library.dayjs.iso(string, "time");
-    },
-    /**
-     * Converts dayjs object to ISO time string
-     * @param {Object|null} dt
-     */
-    toISO(dt) {
-      return dt?.toISO("time") || null;
+    inputType() {
+      return "time";
     }
   }
 };

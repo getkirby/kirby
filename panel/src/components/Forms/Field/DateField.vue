@@ -1,60 +1,97 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-date-field"
-    @focusout.native="onBlur"
-  >
-    <k-input
-      :id="_uid"
-      ref="input"
-      :type="inputType"
-      :value="value"
-      v-bind="$props"
-      theme="field"
-      @blur="onBlur"
-      @enter="onSelect"
-      @focus="onFocus"
-      @input="onInput"
-      @update="onUpdate"
+  <k-field :input="_uid" v-bind="$props" class="k-date-field">
+    <div
+      ref="body"
+      :data-invalid="!novalidate && isInvalid"
+      :data-time-length="timeLength"
+      class="k-date-field-body"
+      data-theme="field"
     >
-      <template v-if="calendar" #icon>
-        <k-dropdown>
-          <k-button
-            :icon="icon"
-            :tooltip="$t('date.select')"
-            class="k-input-icon-button"
-            tabindex="-1"
-            @click="$refs.calendar.toggle()"
-          />
-          <k-dropdown-content ref="calendar" align="right">
-            <k-calendar
-              :value="datetime"
-              :min="min"
-              :max="max"
-              @input="onUpdate"
+      <!-- Date input -->
+      <k-input
+        :id="_uid"
+        ref="dateInput"
+        :autofocus="autofocus"
+        :disabled="disabled"
+        :display="display"
+        :max="max"
+        :min="min"
+        :required="required"
+        :value="value"
+        theme="field"
+        type="date"
+        v-bind="$props"
+        @invalid="onDateInvalid"
+        @input="onDateInput"
+        @submit="$emit('submit')"
+      >
+        <template v-if="calendar" #icon>
+          <k-dropdown>
+            <k-button
+              :icon="icon"
+              :tooltip="$t('date.select')"
+              class="k-input-icon-button"
+              @click="$refs.calendar.toggle()"
             />
-          </k-dropdown-content>
-        </k-dropdown>
-      </template>
-    </k-input>
+            <k-dropdown-content ref="calendar" align="right">
+              <k-calendar
+                :value="value"
+                :min="min"
+                :max="max"
+                @input="onCalendarInput"
+              />
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
+      </k-input>
+
+      <!-- Time input (optional) -->
+      <k-input
+        v-if="time"
+        ref="timeInput"
+        :disabled="disabled"
+        :display="time.display"
+        :required="required"
+        :step="time.step"
+        :value="iso.time"
+        :icon="time.icon"
+        theme="field"
+        type="time"
+        @input="onTimeInput"
+        @submit="$emit('submit')"
+      >
+        <template v-if="times" #icon>
+          <k-dropdown>
+            <k-button
+              :icon="time.icon || 'clock'"
+              :tooltip="$t('time.select')"
+              class="k-input-icon-button"
+              @click="$refs.times.toggle()"
+            />
+            <k-dropdown-content ref="times" align="right">
+              <k-times
+                :display="time.display"
+                :value="value"
+                @input="onTimesInput"
+              />
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
+      </k-input>
+    </div>
   </k-field>
 </template>
 
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
+import { props as DateInput } from "../Input/DateInput.vue";
 
 /**
  * Form field to handle a date/datetime value.
  *
- * Bundles `k-date-input`/`k-datetime-input` with `k-calendar`.
- * This is why we need to store a temporary datetimo ISO string
- * which represents a current but unstored state of the input
- * that we pass on to the calendar. That way the calendar shows
- * the same state of the input, even when the value isn't yet passed
- * up to the content store.
+ * Bundles `k-date-input` with `k-calendar` and, optionally,
+ * `k-time-input` with `k-times`.
  *
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-datetime-input>` for additional information.
@@ -63,37 +100,85 @@ import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
  * @public
  */
 export default {
-  mixins: [Field, Input, DateTimeInput],
+  mixins: [Field, Input, DateInput],
   inheritAttrs: false,
   props: {
     /**
-     * Deactivate the dropdown calendar or not
+     * Deactivate the calendar dropdown or not
      */
     calendar: {
       type: Boolean,
       default: true
     },
+    /**
+     * Icon used for the date input (and calendar dropdown)
+     */
     icon: {
       type: String,
       default: "calendar"
+    },
+    /**
+     * Time options (e.g. `display`, `icon`, `step`).
+     * Please check docs for `k-time-input` props.
+     * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
+     */
+    time: {
+      type: [Boolean, Object],
+      default() {
+        return {};
+      }
+    },
+    /**
+     * Deactivate the times dropdown or not
+     */
+    times: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      // ISO string - we need to hold on to a temporary
-      // value, so that we can pass it to the calendar component
-      // without updating the content store yet
-      datetime: this.value
+      isInvalid: false,
+      // keep an object of separate ISO values
+      // for date and time parts
+      iso: this.toIso(this.value)
     };
   },
   computed: {
-    inputType() {
-      return this.time === false ? "date" : "datetime";
+    /**
+     * Whether the field is empty
+     * @returns {bool}
+     */
+    isEmpty() {
+      if (this.time) {
+        return this.iso.date === null && this.iso.time;
+      }
+
+      return this.iso.date === null;
+    },
+    /**
+     * Size class for time input
+     * @returns {string}
+     */
+    timeLength() {
+      const length = String(this.time.display).length;
+
+      if (length <= 5) {
+        return "sm";
+      }
+
+      if (length <= 8) {
+        return "md";
+      }
+
+      return "lg";
     }
   },
   watch: {
-    value(value) {
-      this.datetime = value;
+    value(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.iso = this.toIso(newValue);
+      }
     }
   },
   methods: {
@@ -102,43 +187,144 @@ export default {
      * @public
      */
     focus() {
-      this.$refs.input.focus();
+      this.$refs.dateInput.focus();
     },
     /**
-     * Closes calendar when input is blured
+     * Returns an object of ISO date and time parts
+     * for the current date/time
+     * @returns {Object}
      */
-    onBlur(e) {
-      if (!e || this.$el.contains(e.relatedTarget) === false) {
-        this.$refs.calendar?.close();
+    now() {
+      const now = this.$library.dayjs();
+      return {
+        date: now.toISO("date"),
+        time: this.time ? now.toISO("time") : "00:00:00"
+      };
+    },
+    /**
+     * Handle any input action
+     */
+    onInput() {
+      if (this.isEmpty) {
+        return this.$emit("input", "");
       }
+
+      const dt = this.$library.dayjs.iso(this.iso.date + " " + this.iso.time);
+
+      if (!dt) {
+        if (this.iso.date === null || this.iso.time === null) {
+          return;
+        }
+      }
+
+      this.$emit("input", dt?.toISO() || "");
     },
     /**
-     * Open calendar when input is focussed
+     * Handle input event from calendar dropdown
+     * @param {string} value
      */
-    onFocus() {
-      this.$refs.calendar?.open();
+    onCalendarInput(value) {
+      this.$refs.calendar?.close();
+      this.onDateInput(value);
     },
     /**
-     * Update the content value by
-     * emitting the input event
+     * Handle input event from date input
+     * @param {string} value
      */
-    onUpdate(value) {
-      this.$emit("input", value || "");
+    onDateInput(value) {
+      // fill in the current time if the time input is empty
+      if (value && !this.iso.time) {
+        this.iso.time = this.now().time;
+      }
+
+      this.iso.date = value;
+      this.onInput();
     },
     /**
-     * Store temporary value to be
-     * shared between input and calendar
+     * Handle invalid event from date input
+     * @param {bool} state
      */
-    onInput(value) {
-      this.datetime = value;
+    onDateInvalid(state) {
+      this.isInvalid = state;
     },
     /**
-     * Update value and close calendar
+     * Handle input event from time input
+     * @param {string} value
      */
-    onSelect(value) {
-      this.onUpdate(value);
-      this.onBlur();
+    onTimeInput(value) {
+      // fill in the current date if the date input is empty
+      if (value && !this.iso.date) {
+        this.iso.date = this.now().date;
+      }
+
+      this.iso.time = value;
+      this.onInput();
+    },
+    /**
+     * Handle input event from times dropdown
+     * @param {string} value
+     */
+    onTimesInput(value) {
+      this.$refs.times?.close();
+      this.onTimeInput(value + ":00");
+    },
+    /**
+     * Convert an ISO string into an object
+     * of date/time part ISO strings
+     * @param {string} value
+     */
+    toIso(value) {
+      const dt = this.$library.dayjs.iso(value);
+      return {
+        date: dt?.toISO("date") || null,
+        time: dt?.toISO("time") || null
+      };
     }
   }
 };
 </script>
+
+<style>
+.k-date-field-body {
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 1;
+  border: var(--field-input-border);
+  background: var(--color-gray-300);
+  gap: 1px;
+}
+.k-date-field-body:focus-within {
+  border: var(--field-input-focus-border);
+  box-shadow: var(--color-focus-outline) 0 0 0 2px;
+}
+.k-date-field[data-disabled] .k-date-field-body {
+  background: none;
+}
+.k-date-field-body > .k-input[data-theme="field"] {
+  border: 0;
+  box-shadow: none;
+  border-radius: var(--rounded-sm);
+}
+.k-date-field-body > .k-input[data-invalid="true"],
+.k-date-field-body > .k-input[data-invalid="true"]:focus-within {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.k-date-field-body[data-time-length="sm"] {
+  --time-width: 6.5rem;
+}
+.k-date-field-body[data-time-length="md"] {
+  --time-width: 7.5rem;
+}
+.k-date-field-body[data-time-length="lg"] {
+  --time-width: 9rem;
+}
+.k-date-field-body .k-input[data-type="date"] {
+  flex-grow: 1;
+  flex-basis: calc(100% - var(--time-width) - 1rem);
+}
+.k-date-field-body .k-input[data-type="time"] {
+  flex-grow: 1;
+  flex-basis: var(--time-width);
+}
+</style>

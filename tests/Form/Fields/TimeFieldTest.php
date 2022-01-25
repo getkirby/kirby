@@ -25,7 +25,7 @@ class TimeFieldTest extends TestCase
             'notation' => 12
         ]);
 
-        $this->assertSame('h:mm a', $field->display());
+        $this->assertSame('hh:mm a', $field->display());
     }
 
     public function testDisplayWithCustomSetup()
@@ -147,8 +147,8 @@ class TimeFieldTest extends TestCase
     public function valueProvider()
     {
         return [
-            [null, null],
-            ['invalid time', null],
+            [null, ''],
+            ['invalid time', ''],
             ['22:33:00', '22:33:00'],
             ['22:32:00', '22:30:00', 5],
             ['22:33:00', '22:35:00', 5],
@@ -171,7 +171,7 @@ class TimeFieldTest extends TestCase
             'value'   => $input,
         ]);
 
-        $this->assertEquals($expected, $field->value());
-        $this->assertEquals($expected, $field->default());
+        $this->assertSame($expected, $field->value());
+        $this->assertSame($expected, $field->default());
     }
 }

@@ -6,8 +6,22 @@
       v-bind="$props"
       theme="field"
       type="time"
-      @update="$emit('input', $event)"
-    />
+      @input="$emit('input', $event || '')"
+    >
+      <template v-if="times" #icon>
+        <k-dropdown>
+          <k-button
+            :icon="icon || 'clock'"
+            :tooltip="$t('time.select')"
+            class="k-input-icon-button"
+            @click="$refs.times.toggle()"
+          />
+          <k-dropdown-content ref="times" align="right">
+            <k-times :display="display" :value="value" @input="select" />
+          </k-dropdown-content>
+        </k-dropdown>
+      </template>
+    </k-input>
   </k-field>
 </template>
 
@@ -29,9 +43,19 @@ export default {
   mixins: [Field, Input, TimeInput],
   inheritAttrs: false,
   props: {
+    /**
+     * Icon used for the input (and times dropdown)
+     */
     icon: {
       type: String,
       default: "clock"
+    },
+    /**
+     * Deactivate the times dropdown or not
+     */
+    times: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -41,6 +65,14 @@ export default {
      */
     focus() {
       this.$refs.input.focus();
+    },
+    /**
+     * Handles the input event from the times dropdown
+     * @param {string} value
+     */
+    select(value) {
+      this.$emit("input", value);
+      this.$refs.times?.close();
     }
   }
 };

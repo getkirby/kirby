@@ -24,8 +24,8 @@ return [
         /**
          * Default date when a new page/file/user gets created
          */
-        'default' => function (string $default = null): ?string {
-            return $this->toDatetime($default);
+        'default' => function (string $default = null): string {
+            return $this->toDatetime($default) ?? '';
         },
 
         /**
@@ -136,14 +136,14 @@ return [
                 throw new Exception([
                     'key' => 'validation.date.after',
                     'data' => [
-                        'time' => $min->format($format),
+                        'date' => $min->format($format),
                     ]
                 ]);
             } elseif ($max && $value->isMax($max) === false) {
                 throw new Exception([
                     'key' => 'validation.date.before',
                     'data' => [
-                        'time' => $max->format($format),
+                        'date' => $max->format($format),
                     ]
                 ]);
             }

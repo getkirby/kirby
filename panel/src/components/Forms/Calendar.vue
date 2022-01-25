@@ -75,17 +75,17 @@ export default {
     disabled: Boolean,
     /**
      * The last allowed date
-     * @example `2020-12-31 15:30:00`
+     * @example `2020-12-31`
      */
     max: String,
     /**
      * The first allowed date
-     * @example `2020-01-01 01:30:00`
+     * @example `2020-01-01`
      */
     min: String,
     /**
      * ISO date/datetime string
-     * @example `2020-03-05 07:30:00`
+     * @example `2020-03-05`
      */
     value: String
   },
@@ -204,8 +204,6 @@ export default {
         dt: dt,
         // current calendar view
         current: {
-          minute: (dt ?? now).minute(),
-          hour: (dt ?? now).hour(),
           month: (dt ?? now).month(),
           year: (dt ?? now).year(),
           min: this.$library.dayjs.iso(this.min),
@@ -273,7 +271,7 @@ export default {
        * The input event is fired when a date is selected.
        * @property {string} iso data as ISO date string
        */
-      this.$emit("input", this.dt?.toISO());
+      this.$emit("input", this.dt?.toISO("date") || null);
     },
     /**
      * Shows the following month
@@ -319,11 +317,7 @@ export default {
      * @param {number} month
      */
     toDate(day = 1, month = this.current.month) {
-      return this.$library.dayjs(
-        `${this.current.year}-${month + 1}-${day} ${this.current.hour}:${
-          this.current.minute
-        }:00`
-      );
+      return this.$library.dayjs(`${this.current.year}-${month + 1}-${day}`);
     },
     /**
      * Generates select options between min and max

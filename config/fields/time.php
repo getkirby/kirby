@@ -72,16 +72,16 @@ return [
                 return $this->display;
             }
 
-            return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
+            return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
         },
-        'default' => function (): ?string {
-            return $this->toDatetime($this->default, 'H:i:s');
+        'default' => function (): string {
+            return $this->toDatetime($this->default, 'H:i:s') ?? '';
         },
         'format' => function () {
             return $this->props['format'] ?? 'H:i:s';
         },
         'value' => function (): ?string {
-            return $this->toDatetime($this->value, 'H:i:s');
+            return $this->toDatetime($this->value, 'H:i:s') ?? '';
         }
     ],
     'validations' => [
