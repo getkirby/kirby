@@ -74,8 +74,8 @@ return [
 
             return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
         },
-        'default' => function (): ?string {
-            return $this->toDatetime($this->default, 'H:i:s');
+        'default' => function (): string {
+            return $this->toDatetime($this->default, 'H:i:s') ?? '';
         },
         'format' => function () {
             return $this->props['format'] ?? 'H:i:s';

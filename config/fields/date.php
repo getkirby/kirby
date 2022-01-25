@@ -24,8 +24,8 @@ return [
         /**
          * Default date when a new page/file/user gets created
          */
-        'default' => function (string $default = null): ?string {
-            return $this->toDatetime($default);
+        'default' => function (string $default = null): string {
+            return $this->toDatetime($default) ?? '';
         },
 
         /**
