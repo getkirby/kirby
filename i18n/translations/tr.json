@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Varsayılan şablon yok",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Beklenmeyen bir hata oluştu! Daha fazla bilgi için hata ayıklama modunu etkinleştirin: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "\"{name}\" kullanıcısı için e-postayı değiştiremezsiniz",
   "error.user.changeLanguage.permission": "\"{name}\" kullanıcısının dilini değiştiremezsin",

@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Standardskabelonen eksisterer ikke",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "En uventet fejl opstod! Aktiver debug mode for mere info: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Du har ikke tilladelse til at ændre emailen for brugeren \"{name}\"",
   "error.user.changeLanguage.permission": "Du har ikke tilladelse til at ændre sproget for brugeren \"{name}\"",
