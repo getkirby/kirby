@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import TimeInput from "../Input/TimeInput.vue";
-
 export default {
   props: {
     field: Object,
@@ -16,8 +14,8 @@ export default {
   },
   computed: {
     text() {
-      const dt = TimeInput.methods.toDatetime.call(this, this.value);
-      return dt.format(this.field.display);
+      const dt = this.$library.dayjs.iso(this.value, "time");
+      return dt?.format(this.field.display) || "";
     }
   }
 };
