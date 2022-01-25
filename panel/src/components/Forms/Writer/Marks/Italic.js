@@ -14,8 +14,8 @@ export default class Italic extends Mark {
 
   inputRules({ type, utils }) {
     return [
-      utils.markInputRule(/(?:^|[^_])(_([^_]+)_)$/, type),
-      utils.markInputRule(/(?:^|[^*])(\*([^*]+)\*)$/, type)
+      utils.markInputRule(/(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/, type),
+      utils.markInputRule(/(?:^|\s)((?:_)((?:[^_]+))(?:_))$/, type)
     ];
   }
 
