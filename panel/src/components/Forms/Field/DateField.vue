@@ -9,9 +9,9 @@
     >
       <!-- Date input -->
       <k-input
+        :id="_uid"
         ref="dateInput"
         :autofocus="autofocus"
-        :id="_uid"
         :disabled="disabled"
         :display="display"
         :max="max"
