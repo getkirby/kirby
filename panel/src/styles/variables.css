@@ -123,15 +123,15 @@
   --color-border: var(--color-gray-400);
   --color-focus: var(--color-blue-600);
   --color-focus-light: var(--color-blue-400);
-  --color-focus-outline: rgba(113, 143, 183, .25);
+  --color-focus-outline: rgba(113, 143, 183, 0.25);
   --color-negative: var(--color-red-600);
   --color-negative-light: var(--color-red-400);
-  --color-negative-outline: rgba(212, 110, 110, .25);
+  --color-negative-outline: rgba(212, 110, 110, 0.25);
   --color-notice: var(--color-orange-600);
   --color-notice-light: var(--color-orange-400);
   --color-positive: var(--color-green-600);
   --color-positive-light: var(--color-green-400);
-  --color-positive-outline: rgba(128, 149, 65, .25);
+  --color-positive-outline: rgba(128, 149, 65, 0.25);
   --color-text: var(--color-gray-900);
   --color-text-light: var(--color-gray-600);
 
@@ -148,13 +148,17 @@
   --z-content: 200;
   --z-background: 100;
 
-  --bg-pattern: repeating-conic-gradient(rgba(0,0,0, 0) 0% 25%, rgba(0,0,0, .2) 0% 50%) 50% / 20px 20px;
+  --bg-pattern: repeating-conic-gradient(
+      rgba(0, 0, 0, 0) 0% 25%,
+      rgba(0, 0, 0, 0.2) 0% 50%
+    )
+    50% / 20px 20px;
 
-  --shadow-sticky: rgba(0, 0, 0, .05) 0 2px 5px;
+  --shadow-sticky: rgba(0, 0, 0, 0.05) 0 2px 5px;
   --shadow-dropdown: var(--shadow-lg);
   --shadow-item: var(--shadow);
 
-  --field-input-padding: .5rem;
+  --field-input-padding: 0.5rem;
   --field-input-height: 2.25rem;
   --field-input-line-height: 1.25rem;
   --field-input-font-size: var(--text-base);
