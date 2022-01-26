@@ -195,11 +195,8 @@ export default {
 .k-item-buttons > .k-button {
   z-index: 1;
 }
-.k-item-buttons > .k-dropdown {
-  z-index: var(--z-navigation);
-}
-.k-item-buttons > .k-dropdown-content {
-  z-index: var(--z-dropdown);
+.k-item-buttons > .k-options-dropdown > .k-options-dropdown-toggle {
+  z-index: var(--z-toolbar);
 }
 
 /** List Item **/
