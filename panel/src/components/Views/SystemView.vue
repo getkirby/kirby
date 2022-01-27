@@ -82,6 +82,38 @@
               </dd>
             </dl>
           </li>
+          <li>
+            <dl>
+              <dt>Kirby folder</dt>
+              <dd :class="{ 'k-system-warning': kirby }">
+                {{ kirby ? "exposed" : "hidden" }}
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>Git Repo</dt>
+              <dd :class="{ 'k-system-warning': git }">
+                {{ git ? "exposed" : "hidden" }}
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>Content folder</dt>
+              <dd :class="{ 'k-system-warning': content }">
+                {{ content ? "exposed" : "hidden" }}
+              </dd>
+            </dl>
+          </li>
+          <li>
+            <dl>
+              <dt>Site folder</dt>
+              <dd :class="{ 'k-system-warning': site }">
+                {{ site ? "exposed" : "hidden" }}
+              </dd>
+            </dl>
+          </li>
         </ul>
       </section>
 
@@ -126,6 +158,51 @@ export default {
     server: String,
     https: Boolean,
     version: String
+  },
+  data() {
+    return {
+      content: null,
+      git: null,
+      kirby: null,
+      site: null
+    };
+  },
+  created() {
+    this.checkContent();
+    this.checkGit();
+    this.checkKirby();
+    this.checkSite();
+  },
+  methods: {
+    async checkContent() {
+      this.content = await this.isAccessible(
+        window.location.origin + "/content/site.txt"
+      );
+    },
+    async checkGit() {
+      this.git = await this.isAccessible(
+        window.location.origin + "/.git/config"
+      );
+    },
+    async checkKirby() {
+      this.kirby = await this.isAccessible(
+        window.location.origin + "/kirby/composer.json"
+      );
+    },
+    async checkSite() {
+      this.site = await this.isAccessible(
+        window.location.origin + "/site/blueprints/site.yml"
+      );
+    },
+    async isAccessible(url) {
+      const response = await fetch(url, {
+        cache: "no-store"
+      });
+
+      console.log(response);
+
+      return response.status < 400;
+    }
   }
 };
 </script>
