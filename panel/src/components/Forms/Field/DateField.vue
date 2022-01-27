@@ -3,7 +3,6 @@
     <div
       ref="body"
       :data-invalid="!novalidate && isInvalid"
-      :data-time-length="timeLength"
       class="k-date-field-body"
       data-theme="field"
     >
@@ -155,23 +154,6 @@ export default {
       }
 
       return this.iso.date === null;
-    },
-    /**
-     * Size class for time input
-     * @returns {string}
-     */
-    timeLength() {
-      const length = String(this.time.display).length;
-
-      if (length <= 5) {
-        return "sm";
-      }
-
-      if (length <= 8) {
-        return "md";
-      }
-
-      return "lg";
     }
   },
   watch: {
@@ -310,21 +292,20 @@ export default {
   border: 0 !important;
   box-shadow: none !important;
 }
-.k-date-field-body[data-time-length="sm"] {
-  --time-width: 6.5rem;
+
+/* https://heydonworks.com/article/the-flexbox-holy-albatross/ */
+.k-date-field-body {
+  --multiplier: calc(25rem - 100%);
 }
-.k-date-field-body[data-time-length="md"] {
-  --time-width: 7.5rem;
-}
-.k-date-field-body[data-time-length="lg"] {
-  --time-width: 9rem;
+.k-date-field-body > * {
+  flex-grow: 1;
+  flex-basis: calc(var(--multiplier) * 999);
+  max-width: 100%;
 }
 .k-date-field-body .k-input[data-type="date"] {
-  flex-grow: 1;
-  flex-basis: calc(100% - var(--time-width) - 1rem);
+  min-width: 60%;
 }
 .k-date-field-body .k-input[data-type="time"] {
-  flex-grow: 1;
-  flex-basis: var(--time-width);
+  min-width: 30%;
 }
 </style>
