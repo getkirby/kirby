@@ -319,6 +319,7 @@ class PagesTest extends TestCase
         $this->assertNull($pages->findById('mother'));
         $this->assertIsPage($pages->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertNull($pages->findById('child'));
+        $this->assertNull($pages->findById(null));
     }
 
     public function testFindByIdAndUriTranslated()
