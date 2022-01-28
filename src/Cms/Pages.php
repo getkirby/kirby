@@ -205,6 +205,10 @@ class Pages extends Collection
      */
     public function findById(string $id = null)
     {
+        if ($id === null) {
+            return null;
+        }
+
         // remove trailing or leading slashes
         $id = trim($id, '/');
 
