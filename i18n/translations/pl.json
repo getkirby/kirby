@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Domyślny szablon nie istnieje",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Wystąpił nieoczekiwany błąd! Włącz tryb debugowania, aby uzyskać więcej informacji: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Nie masz uprawnień, by zmienić adres e-mail użytkownika \"{name}\"",
   "error.user.changeLanguage.permission": "Nie masz uprawnień, by zmienić język użytkownika \"{name}\"",
