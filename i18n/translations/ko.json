@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "기본 템플릿이 없습니다.",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "오류가 발생했습니다. 디버그 모드를 활성화해 오류를 확인하세요. https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "사용자({name})의 이메일 주소를 변경할 권한이 없습니다.",
   "error.user.changeLanguage.permission": "사용자({name})의 언어를 변경할 권한이 없습니다.",

@@ -116,7 +116,7 @@
   "error.page.changeSlug.permission": "Þú hefur ekkert leyfi til þess að breyta slóðarforskeytinu fyrir  \"{slug}\"",
   "error.page.changeStatus.incomplete": "Það eru villur á síðunni og við getum ekki gefið hana út",
   "error.page.changeStatus.permission": "Stöðu síðunnar var ekki hægt að breyta",
-  "error.page.changeStatus.toDraft.invalid": "Síðunn \"{slug}\" er ekki hægt að breyta í uppkast",
+  "error.page.changeStatus.toDraft.invalid": "Síðunni \"{slug}\" er ekki hægt að breyta í uppkast",
   "error.page.changeTemplate.invalid": "Sniðmáti fyrir síðuna \"{slug}\" er ekki hægt að breyta",
   "error.page.changeTemplate.permission": "Þú hefur engan veginn leyfi til að breyta sniðmáti fyrir síðuna \"{slug}\"",
   "error.page.changeTitle.empty": "Titillinn getur ekki verið óskilgreindur",
@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Ekkert sjálfgefið sniðmát fannst",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Það átti sér stað óvænt villa. Notaðu lúsarleitarhaminn (e. debug mode) til að skilja þetta betur. \nFyrir nánari upplýsingar: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Þú mátt ekkert breyta netfangi notandans \"{name}\"",
   "error.user.changeLanguage.permission": "Þú hefur ekki leyfi til að breyta tungumáli notandans \"{name}\"",
@@ -203,7 +203,7 @@
   "error.validation.ip": "Skráðu ákjósanlega IP tölu",
   "error.validation.less": "Skráðu gildi lægra en {max}",
   "error.validation.match": "Gildið er ekki eftir væntingum",
-  "error.validation.max": "Skráð gildi sem er ekki hærra en {max}",
+  "error.validation.max": "Skráðu gildi sem er ekki hærra en {max}",
   "error.validation.maxlength": "Veldu eitthvað styttra. (hámark {max} stafir)",
   "error.validation.maxwords": "Ekki skrá fleiri en {max}. orð",
   "error.validation.min": "Skráðu gildi ekki lægra en {min}",
@@ -213,7 +213,7 @@
   "error.validation.notcontains": "Skráðu eitthvað sem inniheldur ekki \"{needle}\"",
   "error.validation.notin": "Ekki skrá neitt af þessu: ({notIn})",
   "error.validation.option": "Veldu ákjósanlegan kost",
-  "error.validation.num": "Skráðu ákjósanlega tölu",
+  "error.validation.num": "Notaðu tölugildi",
   "error.validation.required": "Skráðu eitthvað",
   "error.validation.same": "Skráðu \"{other}\"",
   "error.validation.size": "Gildið þarf að vera \"{size}\"",
