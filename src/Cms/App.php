@@ -924,7 +924,8 @@ class App
             (array)$options
         );
 
-        return ($this->component('markdown'))($this, $text, $options);
+        $inline = $options['inline'] ?? false;
+        return ($this->component('markdown'))($this, $text, $options, $inline);
     }
 
     /**
