@@ -14,7 +14,7 @@
     @keydown.ctrl.shift.down.prevent="$emit('sortDown')"
     @keydown.ctrl.shift.up.prevent="$emit('sortUp')"
     @focus="$emit('focus')"
-    @focusin="$emit('focus')"
+    @focusin="onFocusIn"
   >
     <div :class="className" class="k-block">
       <component
@@ -201,6 +201,14 @@ export default {
           this.$refs.container.focus();
         }
       }
+    },
+    onFocusIn(event) {
+      // skip focus if the event is coming from the options buttons
+      if (this.$refs.options?.$el?.contains(event.target)) {
+        return;
+      }
+
+      this.$emit("focus", event);
     },
     goTo(block) {
       if (block) {

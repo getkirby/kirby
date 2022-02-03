@@ -472,6 +472,11 @@ export default {
       this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
     },
     onOutsideFocus(event) {
+      //ignore focus in dialogs
+      if (event.target.closest(".k-dialog")) {
+        return;
+      }
+
       const overlay = document.querySelector(".k-overlay:last-of-type");
       if (
         this.$el.contains(event.target) === false &&
@@ -479,6 +484,7 @@ export default {
       ) {
         return this.select(null);
       }
+
 
       // since we are still working in the same block when overlay is open
       // we cannot detect the transition between the layout columns

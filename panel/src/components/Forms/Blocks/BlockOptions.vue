@@ -5,13 +5,13 @@
         :tooltip="$t('copy')"
         class="k-block-options-button"
         icon="template"
-        @mousedown.native.prevent="$emit('copy')"
+        @click.prevent="$emit('copy')"
       />
       <k-button
         :tooltip="$t('remove')"
         class="k-block-options-button"
         icon="trash"
-        @mousedown.native.prevent="$emit('confirmToRemoveSelected')"
+        @click.prevent="$emit('confirmToRemoveSelected')"
       />
     </template>
     <template v-else>
