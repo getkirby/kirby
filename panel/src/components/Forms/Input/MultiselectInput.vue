@@ -252,24 +252,11 @@ export default {
       return this.index(option) !== -1;
     },
     navigate(direction) {
-      let current = document.activeElement;
-
-      switch (direction) {
-        case "prev":
-          if (
-            current &&
-            current.previousSibling &&
-            current.previousSibling.focus
-          ) {
-            current.previousSibling.focus();
-          }
-          break;
-        case "next":
-          if (current && current.nextSibling && current.nextSibling.focus) {
-            current.nextSibling.focus();
-          }
-          break;
+      if (direction === "prev") {
+        direction = "previous";
       }
+
+      document.activeElement?.[direction + "Sibling"]?.focus?.();
     },
     onClose() {
       if (this.$refs.dropdown.isOpen === false) {
@@ -288,9 +275,7 @@ export default {
     },
     onOpen() {
       this.$nextTick(() => {
-        if (this.$refs.search?.focus) {
-          this.$refs.search.focus();
-        }
+        this.$refs.search?.focus?.();
 
         this.$refs.dropdown.$el.querySelector(
           ".k-multiselect-options"
