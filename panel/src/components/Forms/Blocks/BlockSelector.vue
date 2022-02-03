@@ -113,11 +113,7 @@ export default {
       return this.dialogIsOpen;
     },
     navigate(index) {
-      const ref = this.$refs["fieldset-" + index];
-
-      if (ref?.[0]) {
-        ref[0].focus();
-      }
+      this.$refs["fieldset-" + index]?.[0]?.focus();
     },
     onClose() {
       this.dialogIsOpen = false;
