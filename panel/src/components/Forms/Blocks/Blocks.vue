@@ -485,7 +485,6 @@ export default {
         return this.select(null);
       }
 
-
       // since we are still working in the same block when overlay is open
       // we cannot detect the transition between the layout columns
       // following codes detect if the target is in the same column
