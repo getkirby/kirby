@@ -412,7 +412,7 @@ export default {
   border-color: rgba(255, 255, 255, 0.25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
-  color: var(--color-yellow-500);
+  color: var(--color-yellow-600);
   font-weight: 500;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
