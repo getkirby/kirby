@@ -5,7 +5,7 @@
         :tooltip="$t('copy')"
         class="k-block-options-button"
         icon="template"
-        @mousedown.native.prevent="$emit('copy')"
+        @mousedown.native.prevent="copy()"
       />
       <k-button
         :tooltip="$t('remove')"
@@ -114,6 +114,16 @@ export default {
   methods: {
     open() {
       this.$refs.options.open();
+    },
+    blurActiveElement() {
+      const activeElement = document.activeElement;
+      if (activeElement && typeof activeElement.blur === "function") {
+        activeElement.blur();
+      }
+    },
+    copy() {
+      this.blurActiveElement();
+      this.$emit("copy");
     }
   }
 };
