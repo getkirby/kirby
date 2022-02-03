@@ -924,7 +924,10 @@ class App
             (array)$options
         );
 
-        return ($this->component('markdown'))($this, $text, $options);
+        // TODO: deprecate passing the $inline parameter in 3.7.0
+        // TODO: remove passing the $inline parameter in 3.8.0
+        $inline = $options['inline'] ?? false;
+        return ($this->component('markdown'))($this, $text, $options, $inline);
     }
 
     /**
