@@ -2,9 +2,20 @@
  * @vitest-environment node
  */
 
+import { beforeAll, afterAll, describe, expect, it, vi } from "vitest";
 import dayjs from "./dayjs.js";
 
 describe("dayjs.interpret(input, 'date')", () => {
+  beforeAll(() => {
+    vi.useFakeTimers();
+    const date = new Date(2022, 0, 15);
+    vi.setSystemTime(date);
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   const expected = {
     "2021-03-05": "2021-03-05",
     "2021-03-5": "2021-03-05",
