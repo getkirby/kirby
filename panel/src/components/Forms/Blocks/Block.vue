@@ -204,6 +204,8 @@ export default {
     },
     onFocusIn(event) {
       // skip focus if the event is coming from the options buttons
+      // to preserve the current focus (since options buttons directly
+      // trigger events and don't need any focus themselves)
       if (this.$refs.options?.$el?.contains(event.target)) {
         return;
       }
