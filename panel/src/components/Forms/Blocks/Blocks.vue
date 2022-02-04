@@ -472,7 +472,7 @@ export default {
       this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
     },
     onOutsideFocus(event) {
-      //ignore focus in dialogs
+      // ignore focus in dialogs to not alter current selection
       if (event.target.closest(".k-dialog")) {
         return;
       }
