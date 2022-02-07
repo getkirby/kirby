@@ -69,10 +69,13 @@ class Params extends Query
                 }
 
                 $paramParts = Str::split($p, $separator);
-                $paramKey   = $paramParts[0];
+                $paramKey   = $paramParts[0] ?? null;
                 $paramValue = $paramParts[1] ?? null;
 
-                $params[$paramKey] = $paramValue;
+                if ($paramKey !== null) {
+                    $params[$paramKey] = $paramValue;
+                }
+
                 unset($path[$index]);
             }
 

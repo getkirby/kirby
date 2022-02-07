@@ -33,12 +33,36 @@ class ParamsTest extends TestCase
         $this->assertEquals(null, $params->b);
     }
 
+    public function testExtractFromNull()
+    {
+        $params   = Params::extract();
+        $expected = [
+            'path'   => null,
+            'params' => null,
+            'slash'  => false
+        ];
+
+        $this->assertEquals($expected, $params);
+    }
+
     public function testExtractFromEmptyString()
     {
         $params   = Params::extract('');
         $expected = [
             'path'   => null,
             'params' => null,
+            'slash'  => false
+        ];
+
+        $this->assertEquals($expected, $params);
+    }
+
+    public function testExtractFromSeparator()
+    {
+        $params   = Params::extract(Params::separator());
+        $expected = [
+            'path'   => [],
+            'params' => [],
             'slash'  => false
         ];
 
