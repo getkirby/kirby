@@ -166,9 +166,7 @@ export default {
             "X-CSRF": window.panel.$system.csrf
           },
           progress: (xhr, file, progress) => {
-            if (this.$refs[file.name]?.[0]) {
-              this.$refs[file.name][0].set(progress);
-            }
+            this.$refs[file.name]?.[0]?.set(progress);
           },
           success: (xhr, file, response) => {
             this.complete(file, response.data);

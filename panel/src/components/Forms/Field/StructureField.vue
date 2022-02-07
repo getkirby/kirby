@@ -414,9 +414,7 @@ export default {
       this.$store.dispatch("content/disable");
 
       this.$nextTick(() => {
-        if (this.$refs.form) {
-          this.$refs.form.focus(field || this.autofocus);
-        }
+        this.$refs.form?.focus(field || this.autofocus);
       });
     },
     duplicateItem(index) {
@@ -443,9 +441,7 @@ export default {
       this.submit();
     },
     focus() {
-      if (this.$refs.add?.focus) {
-        this.$refs.add.focus();
-      }
+      this.$refs.add?.focus?.();
     },
     indexOf(index) {
       if (!this.limit) {
