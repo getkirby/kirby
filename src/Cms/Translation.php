@@ -8,7 +8,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Wrapper around Kirby's localization files,
- * which are store in `kirby/translations`.
+ * which are stored in `kirby/translations`.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
