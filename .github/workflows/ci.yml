@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
         with:
           fetch-depth: 2
 
@@ -37,21 +37,21 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
+        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -66,7 +66,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
+        uses: github/codeql-action/upload-sarif@2b46439dd5477d8a1659811cdc500d35e601a1cb # pin@v1
         with:
           sarif_file: sarif
 
@@ -110,10 +110,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # pin@v2
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
         with:
           cache: 'npm'
           cache-dependency-path: panel/package-lock.json
@@ -127,9 +127,9 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: npm run test:unit:coverage
         working-directory: panel
-      
+
       # TODO: Disabled until Vitest coverage reporting is accurate and
-      #       Kirby's frontend tests are useful enough that we need this metric 
+      #       Kirby's frontend tests are useful enough that we need this metric
       # - name: Upload coverage results to Codecov
       #   uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
       #   with:
@@ -155,12 +155,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
         with:
           path: kirby
 
       - name: Checkout Sandbox
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
         with:
           repository: getkirby/sandbox
           path: sandbox
@@ -177,28 +177,28 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
+        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: e2e-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
+        uses: cypress-io/github-action@f5bea478b80a774068179089247f13d60abc5010 # pin@v2
         with:
           working-directory: kirby/panel
           runTests: false
@@ -212,7 +212,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
+        uses: cypress-io/github-action@f5bea478b80a774068179089247f13d60abc5010 # pin@v2
         with:
           working-directory: kirby/panel
           install: false
@@ -231,14 +231,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
+        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # pin@v2
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
+        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # pin@v2
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos
@@ -260,21 +260,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
 
       - name: Preparations
         run: mkdir sarif
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
+        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -282,14 +282,14 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
             composer:2.2.0, composer-normalize:2.18.0, composer-require-checker:4.0.0,
-            composer-unused:0.7.10, phpcpd:6.0.3, phpmd:2.11.1
+            composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.11.1
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -301,7 +301,7 @@ jobs:
 
       - name: Check for unused Composer dependencies
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: composer unused --no-progress
+        run: composer-unused --no-progress
 
       - name: Check for duplicated code
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -313,7 +313,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
+        uses: github/codeql-action/upload-sarif@2b46439dd5477d8a1659811cdc500d35e601a1cb # pin@v1
         with:
           sarif_file: sarif
 
@@ -327,10 +327,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@04c56d2f954f1e4c69436aa54cfef261a018f458 # pin@v2
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
         with:
           cache: 'npm'
           cache-dependency-path: panel/package-lock.json
@@ -340,7 +340,7 @@ jobs:
         working-directory: panel
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
@@ -348,7 +348,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
         with:
           path: ~/.php-cs-fixer
           key: coding-style
@@ -365,7 +365,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
+        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: "true"
@@ -382,7 +382,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
+        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
         with:
           tool_name: Prettier
           fail_on_error: "true"
@@ -398,7 +398,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
+        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: "true"
