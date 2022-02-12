@@ -1,9 +1,25 @@
-name: CI
-on: [push, pull_request]
+name: CI - Backend
+on:
+  push:
+    paths:
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!i18n/**"
+      - "!panel/**"
+      - "!scripts/**"
+  pull_request:
+    paths:
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!i18n/**"
+      - "!panel/**"
+      - "!scripts/**"
 
 jobs:
-  backend-tests:
-    name: "Backend: Unit tests - PHP ${{ matrix.php }}"
+  tests:
+    name: "Unit tests - PHP ${{ matrix.php }}"
 
     # if on pull request, only run if from a fork
     # (our own repo is covered by the push event)
@@ -96,155 +112,8 @@ jobs:
         with:
           sarif_file: sarif
 
-  frontend-tests:
-    name: "Frontend: Unit tests"
-
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
-    if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
-
-      - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
-        with:
-          cache: 'npm'
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        id: finishPrepare
-        run: npm ci
-        working-directory: panel
-
-      - name: Run JavaScript unit tests
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run test:unit:coverage
-        working-directory: panel
-
-      # TODO: Disabled until Vitest coverage reporting is accurate and
-      #       Kirby's frontend tests are useful enough that we need this metric
-      # - name: Upload coverage results to Codecov
-      #   uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
-      #     fail_ci_if_error: true
-      #     files: ${{ github.workspace }}/panel/coverage/lcov.info
-      #     flags: frontend
-
-  frontend-e2e:
-    name: "Frontend: E2E tests"
-
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
-    if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
-
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      php: "8.0"
-      extensions: mbstring, ctype, curl, gd, apcu, memcached
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
-        with:
-          path: kirby
-
-      - name: Checkout Sandbox
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
-        with:
-          repository: getkirby/sandbox
-          path: sandbox
-          submodules: true
-
-      - name: Preparations
-        run: |
-          # set up log directory
-          mkdir -p ${{ github.workspace }}/_logs
-
-          # link Kirby to Sandbox
-          rm -rf ${{ github.workspace }}/sandbox/kirby
-          ln -s ${{ github.workspace }}/kirby ${{ github.workspace }}/sandbox/kirby
-
-      - name: Setup PHP cache environment
-        id: ext-cache
-        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
-        with:
-          php-version: ${{ env.php }}
-          extensions: ${{ env.extensions }}
-          key: e2e-v1
-
-      - name: Cache PHP extensions
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
-        with:
-          path: ${{ steps.ext-cache.outputs.dir }}
-          key: ${{ steps.ext-cache.outputs.key }}
-          restore-keys: ${{ steps.ext-cache.outputs.key }}
-
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
-        with:
-          php-version: ${{ env.php }}
-          extensions: ${{ env.extensions }}
-          coverage: none
-
-      - name: Install dependencies
-        uses: cypress-io/github-action@984d819333e83d780899a6dcd093c16e6b4b2db0 # pin@v3
-        with:
-          working-directory: kirby/panel
-          runTests: false
-
-      - name: Build Panel dist files
-        run: npm run build
-        working-directory: kirby/panel
-
-      - name: Start the PHP server
-        run: php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
-        working-directory: kirby/panel
-
-      - name: Run tests
-        uses: cypress-io/github-action@984d819333e83d780899a6dcd093c16e6b4b2db0 # pin@v3
-        with:
-          working-directory: kirby/panel
-          install: false
-          wait-on: "http://127.0.0.1:8000/panel/login"
-          wait-on-timeout: 5
-          config: baseUrl=http://127.0.0.1:8000
-
-      - name: Print log files
-        if: always()
-        run: |
-          for log in ${{ github.workspace }}/_logs/*; do
-            echo "::group::$(basename $log)"
-            cat $log
-            echo "::endgroup::"
-          done
-
-      - name: Archive Cypress screenshots
-        if: failure()
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # pin@v2
-        with:
-          name: cypress-screenshots
-          path: kirby/panel/cypress/screenshots
-
-      - name: Archive Cypress videos
-        if: always()
-        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # pin@v2
-        with:
-          name: cypress-videos
-          path: kirby/panel/cypress/videos
-
-  backend-analysis:
-    name: "Backend: Code Quality"
+  analysis:
+    name: "Code Quality"
 
     # if on pull request, only run if from a fork
     # (our own repo is covered by the push event)
@@ -318,7 +187,7 @@ jobs:
           sarif_file: sarif
 
   coding-style:
-    name: "Backend + Frontend: Coding Style"
+    name: "Coding Style"
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -328,16 +197,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
-
-      - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
-        with:
-          cache: 'npm'
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        run: npm ci
-        working-directory: panel
 
       - name: Setup PHP environment
         uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
@@ -352,40 +211,6 @@ jobs:
         with:
           path: ~/.php-cs-fixer
           key: coding-style
-
-      - name: Check for JavaScript coding style violations (ESLint)
-        if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --no-fix flag in push builds to get a failed CI status
-        run: >
-          npm run lint -- --max-warnings 0 --format stylish
-          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
-        working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
-        with:
-          tool_name: ESLint
-          fail_on_error: "true"
-
-      - name: Check for JavaScript coding style violations (Prettier)
-        if: always() && steps.finishPrepare.outcome == 'success'
-        # Use the --check flag in push builds to get a failed CI status
-        run: >
-          npm run format --
-          ${{ github.event_name != 'pull_request' && '--check' || '--write' }}
-        working-directory: panel
-
-      - name: Create code suggestions from the coding style changes (on PR only)
-        if: >
-          always() && steps.finishPrepare.outcome == 'success' &&
-          github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
-        with:
-          tool_name: Prettier
-          fail_on_error: "true"
 
       - name: Check for PHP coding style violations
         if: always() && steps.finishPrepare.outcome == 'success'
