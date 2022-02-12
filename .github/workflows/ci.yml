@@ -57,7 +57,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:9.5.10, psalm:4.11.2
+          tools: phpunit:9.5.13, psalm:4.20.0
 
       - name: Setup problem matchers
         run: |
@@ -92,7 +92,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@2b46439dd5477d8a1659811cdc500d35e601a1cb # pin@v1
+        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
         with:
           sarif_file: sarif
 
@@ -198,7 +198,7 @@ jobs:
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@f5bea478b80a774068179089247f13d60abc5010 # pin@v2
+        uses: cypress-io/github-action@984d819333e83d780899a6dcd093c16e6b4b2db0 # pin@v3
         with:
           working-directory: kirby/panel
           runTests: false
@@ -212,7 +212,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@f5bea478b80a774068179089247f13d60abc5010 # pin@v2
+        uses: cypress-io/github-action@984d819333e83d780899a6dcd093c16e6b4b2db0 # pin@v3
         with:
           working-directory: kirby/panel
           install: false
@@ -288,7 +288,7 @@ jobs:
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.2.0, composer-normalize:2.18.0, composer-require-checker:4.0.0,
+            composer:2.2.6, composer-normalize:2.23.1, composer-require-checker:4.0.0,
             composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.11.1
 
       - name: Validate composer.json/composer.lock
@@ -313,7 +313,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@2b46439dd5477d8a1659811cdc500d35e601a1cb # pin@v1
+        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
         with:
           sarif_file: sarif
 
@@ -344,7 +344,7 @@ jobs:
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:3.2.1
+          tools: php-cs-fixer:3.6.0
 
       - name: Cache analysis data
         id: finishPrepare
@@ -365,7 +365,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: "true"
@@ -382,7 +382,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
         with:
           tool_name: Prettier
           fail_on_error: "true"
@@ -398,7 +398,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@c2fb8e077303cf70e9bb5bc89e8ef908c1c84d2a # pin@v1
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: "true"
