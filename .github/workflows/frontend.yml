@@ -2,9 +2,11 @@ name: CI - Frontend
 on:
   push:
     paths:
+      - ".github/workflows/frontend.yml"
       - "panel/**"
   pull_request:
     paths:
+      - ".github/workflows/frontend.yml"
       - "panel/**"
 
 jobs:

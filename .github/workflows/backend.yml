@@ -2,18 +2,20 @@ name: CI - Backend
 on:
   push:
     paths:
+      - ".github/workflows/backend.yml"
+      - "**"
       - "!.tx/**"
       - "!.vscode/**"
       - "!assets/**"
-      - "!i18n/**"
       - "!panel/**"
       - "!scripts/**"
   pull_request:
     paths:
+      - ".github/workflows/backend.yml"
+      - "**"
       - "!.tx/**"
       - "!.vscode/**"
       - "!assets/**"
-      - "!i18n/**"
       - "!panel/**"
       - "!scripts/**"
 
