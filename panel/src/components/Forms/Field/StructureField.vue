@@ -70,7 +70,7 @@
       >
         <thead>
           <tr>
-            <th class="k-structure-table-index">#</th>
+            <th v-if="enumeration" class="k-structure-table-index">#</th>
             <th
               v-for="(column, columnName) in columns"
               :key="columnName + '-header'"
@@ -93,7 +93,7 @@
           @end="onInput"
         >
           <tr v-for="(item, index) in paginatedItems" :key="index" @click.stop>
-            <td class="k-structure-table-index">
+            <td v-if="enumeration" class="k-structure-table-index">
               <k-sort-handle v-if="isSortable" />
               <span class="k-structure-table-index-number">{{
                 indexOf(index)
@@ -201,6 +201,10 @@ export default {
       default: false
     },
     sortable: {
+      type: Boolean,
+      default: true
+    },
+    enumeration: {
       type: Boolean,
       default: true
     },
