@@ -81,7 +81,7 @@ class ImageMagick extends Darkroom
 
             // add hint only when downscaling
             if ($options['width'] < $image->width() && $options['height'] < $image->height()) {
-                $command .= sprintf(' -define jpeg:size=%dx%d', $options['width'], $options['height']);
+                $command .= ' -define ' . escapeshellarg(sprintf('jpeg:size=%dx%d', $options['width'], $options['height']));
             }
         }
 
