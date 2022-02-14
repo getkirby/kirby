@@ -25,9 +25,9 @@ class Body
     protected $html;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $text;
+    protected $text = '';
 
     /**
      * Email body constructor
