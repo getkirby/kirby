@@ -254,10 +254,17 @@ class Uri
         );
         $uri = parse_url('http://getkirby.com' . $uri);
 
+        // returns default ports if reverse proxy exists
+        if ($forwarded === false && isset($_SERVER['HTTP_X_FORWARDED_FOR']) === true) {
+            $port = Server::https() === true ? 443 : 80;
+        } else {
+            $port = Server::port($forwarded);
+        }
+
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
             'host'   => Server::host($forwarded),
-            'port'   => Server::port($forwarded),
+            'port'   => $port,
             'path'   => $uri['path'] ?? null,
             'query'  => $uri['query'] ?? null,
         ], $props));

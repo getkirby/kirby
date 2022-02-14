@@ -96,6 +96,34 @@ class UriTest extends TestCase
         $this->assertEquals('a/b/ktest.loc', $uri->path());
     }
 
+    public function testCurrentWithReverseProxyDefault()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc:8080';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.1.123.234';
+
+        $uri = Uri::current();
+        $this->assertSame(80, $uri->port());
+    }
+
+    public function testCurrentWithReverseProxyCustomPort()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc:8080';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.1.123.234';
+
+        $uri = Uri::current(['port' => 8888]);
+        $this->assertSame(8888, $uri->port());
+    }
+
+    public function testCurrentWithReverseProxyForwarded()
+    {
+        $_SERVER['HTTP_HOST'] = 'ktest.loc:8080';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.1.123.234';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = '8888';
+
+        $uri = Uri::current([], true);
+        $this->assertSame(8888, $uri->port());
+    }
+
     public function testValidScheme()
     {
         $url = new Uri();
