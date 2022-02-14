@@ -35,6 +35,11 @@ export default {
     tabindex: String,
     theme: String,
     tooltip: String
+  },
+  methods: {
+    focus() {
+      this.$el.focus();
+    }
   }
 };
 </script>
