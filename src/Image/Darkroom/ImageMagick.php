@@ -5,7 +5,6 @@ namespace Kirby\Image\Darkroom;
 use Exception;
 use Kirby\Filesystem\F;
 use Kirby\Image\Darkroom;
-use Kirby\Image\Image;
 
 /**
  * ImageMagick
@@ -77,10 +76,8 @@ class ImageMagick extends Darkroom
 
         // add JPEG size hint to optimize CPU and memory usage
         if (F::mime($file) === 'image/jpeg') {
-            $image = new Image($file);
-
             // add hint only when downscaling
-            if ($options['width'] < $image->width() && $options['height'] < $image->height()) {
+            if ($options['scaleWidth'] < 1 && $options['scaleHeight'] < 1) {
                 $command .= ' -define ' . escapeshellarg(sprintf('jpeg:size=%dx%d', $options['width'], $options['height']));
             }
         }

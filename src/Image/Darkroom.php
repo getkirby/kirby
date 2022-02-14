@@ -63,14 +63,16 @@ class Darkroom
     protected function defaults(): array
     {
         return [
-            'autoOrient' => true,
-            'blur'       => false,
-            'crop'       => false,
-            'format'     => null,
-            'grayscale'  => false,
-            'height'     => null,
-            'quality'    => 90,
-            'width'      => null,
+            'autoOrient'  => true,
+            'blur'        => false,
+            'crop'        => false,
+            'format'      => null,
+            'grayscale'   => false,
+            'height'      => null,
+            'quality'     => 90,
+            'scaleHeight' => null,
+            'scaleWidth'  => null,
+            'width'       => null,
         ];
     }
 
@@ -124,12 +126,19 @@ class Darkroom
      */
     public function preprocess(string $file, array $options = [])
     {
-        $options    = $this->options($options);
-        $image      = new Image($file);
+        $options = $this->options($options);
+        $image   = new Image($file);
+
+        $sourceWidth  = $image->width();
+        $sourceHeight = $image->height();
+
         $dimensions = $image->dimensions()->thumb($options);
 
         $options['width']  = $dimensions->width();
         $options['height'] = $dimensions->height();
+
+        $options['scaleWidth']  = $options['width'] / $sourceWidth;
+        $options['scaleHeight'] = $options['height'] / $sourceHeight;
 
         return $options;
     }
