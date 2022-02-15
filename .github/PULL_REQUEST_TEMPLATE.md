@@ -1,12 +1,12 @@
 ## This PR …
 <!--
-A clear and concise description of the PR introduces.
-Use this section for review hints and explanations or discussion points/todos.
+A clear and concise description of the PR.
+Use this section for review hints, explanations or discussion points/todos.
 
-Add the sections you need: Features, Enhancements, Fixes, Deprecated.
+Add releant release notes: Features, Enhancements, Fixes, Deprecated.
 Reference issues from the `kirby` repo or ideas from `feedback.getkirby.com`.
 
-Always mention if PR introduces breaking changes.
+Always mention whether PR introduces breaking changes.
 -->
 
 ### Fixes
