@@ -237,10 +237,9 @@ class Uri
 
     /**
      * @param array $props
-     * @param bool $forwarded
      * @return static
      */
-    public static function current(array $props = [], bool $forwarded = false)
+    public static function current(array $props = [])
     {
         if (static::$current !== null) {
             return static::$current;
@@ -256,8 +255,8 @@ class Uri
 
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
-            'host'   => Server::host($forwarded),
-            'port'   => Server::port($forwarded),
+            'host'   => Server::host(),
+            'port'   => Server::port(),
             'path'   => $uri['path'] ?? null,
             'query'  => $uri['query'] ?? null,
         ], $props));
@@ -335,10 +334,9 @@ class Uri
      * or any other executed script.
      *
      * @param array $props
-     * @param bool $forwarded
      * @return string
      */
-    public static function index(array $props = [], bool $forwarded = false)
+    public static function index(array $props = [])
     {
         if (Server::cli() === true) {
             $path = null;
@@ -362,7 +360,7 @@ class Uri
             'path'     => $path,
             'query'    => null,
             'fragment' => null,
-        ]), $forwarded);
+        ]));
     }
 
 

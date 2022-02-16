@@ -117,16 +117,13 @@ class Server
     /**
      * Returns the correct port number
      *
-     * @param bool $forwarded
      * @return int
      */
-    public static function port(bool $forwarded = false): int
+    public static function port(): int
     {
         // based on forwarded port
-        if ($forwarded === true) {
-            if ($port = static::get('HTTP_X_FORWARDED_PORT')) {
-                return $port;
-            }
+        if ($port = static::get('HTTP_X_FORWARDED_PORT')) {
+            return (int)$port;
         }
 
         // based on HTTP host
@@ -160,12 +157,11 @@ class Server
     /**
      * Returns the correct host
      *
-     * @param bool $forwarded
      * @return string
      */
-    public static function host(bool $forwarded = false): string
+    public static function host(): string
     {
-        $host = $forwarded === true ? static::get('HTTP_X_FORWARDED_HOST') : null;
+        $host = static::get('HTTP_X_FORWARDED_HOST');
 
         if (empty($host) === true) {
             $host = static::get('SERVER_NAME');
