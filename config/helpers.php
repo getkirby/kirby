@@ -765,11 +765,12 @@ function svg($file)
  *
  * @param string|array $key
  * @param string|null $fallback
+ * @param string|null $locale
  * @return array|string|null
  */
-function t($key, string $fallback = null)
+function t($key, string $fallback = null, string $locale = null)
 {
-    return I18n::translate($key, $fallback);
+    return I18n::translate($key, $fallback, $locale);
 }
 
 /**
@@ -777,11 +778,13 @@ function t($key, string $fallback = null)
  *
  * @param string $key
  * @param int $count
+ * @param string|null $locale
+ * @param bool $formatNumber If set to `false`, the count is not formatted
  * @return mixed
  */
-function tc(string $key, int $count)
+function tc(string $key, int $count, string $locale = null, bool $formatNumber = true)
 {
-    return I18n::translateCount($key, $count);
+    return I18n::translateCount($key, $count, $locale, $formatNumber);
 }
 
 /**
