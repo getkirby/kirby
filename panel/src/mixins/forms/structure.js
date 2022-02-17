@@ -49,7 +49,7 @@ export default {
         return "…";
       }
 
-      return value.toString();
+      return value?.toString();
     },
     previewExists(type) {
       return this.$helper.isComponent(`k-${type}-field-preview`);
