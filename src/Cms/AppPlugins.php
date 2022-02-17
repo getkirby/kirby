@@ -21,7 +21,7 @@ use Kirby\Toolkit\V;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 trait AppPlugins
@@ -181,7 +181,7 @@ trait AppPlugins
     {
         return $this->extensions['blockModels'] = Block::$models = array_merge(Block::$models, $models);
     }
-  
+
     /**
      * Registers additional blocks methods
      *

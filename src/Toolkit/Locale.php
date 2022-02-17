@@ -12,7 +12,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @package   Kirby Toolkit
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Locale

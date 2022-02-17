@@ -10,7 +10,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Json extends Handler
