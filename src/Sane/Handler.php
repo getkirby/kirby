@@ -14,7 +14,7 @@ use Kirby\Filesystem\F;
  * @package   Kirby Sane
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 abstract class Handler

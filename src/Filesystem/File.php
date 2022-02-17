@@ -20,7 +20,7 @@ use Kirby\Toolkit\V;
  * @package   Kirby Filesystem
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class File

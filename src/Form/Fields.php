@@ -11,7 +11,7 @@ use Kirby\Toolkit\Collection;
  * @package   Kirby Form
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Fields extends Collection

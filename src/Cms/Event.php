@@ -16,7 +16,7 @@ use Kirby\Toolkit\Controller;
  * @author    Lukas Bestle <lukas@getkirby.com>,
  *            Ahmet Bora
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Event
