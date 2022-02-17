@@ -45,5 +45,5 @@ Read about how to contribute to the development in our [contributing guide](/.gi
 
 ---
 
-© 2009-2022 Bastian Allgeier (Bastian Allgeier GmbH)  
+© 2009-2022 Bastian Allgeier  
 [getkirby.com](https://getkirby.com) · [License agreement](https://getkirby.com/license)
