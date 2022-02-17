@@ -783,6 +783,47 @@ class HelpersTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testTcHelper()
+    {
+        $this->kirby->clone([
+            'translations' => [
+                'en' => [
+                    'car' => ['No cars', 'One car', 'Two cars', 'Many cars']
+                ]
+            ]
+        ]);
+
+        $this->assertSame('No cars', tc('car', 0));
+        $this->assertSame('One car', tc('car', 1));
+        $this->assertSame('Two cars', tc('car', 2));
+        $this->assertSame('Many cars', tc('car', 3));
+        $this->assertSame('Many cars', tc('car', 4));
+    }
+
+    public function testTcHelperWithPlaceholders()
+    {
+        $this->kirby->clone([
+            'translations' => [
+                'en' => [
+                    'car' => ['No cars', 'One car', '{{ count }} cars']
+                ],
+                'de' => [
+                    'car' => ['Keine Autos', 'Ein Auto', '{{ count }} Autos']
+                ]
+            ]
+        ]);
+
+        $this->assertSame('2 cars', tc('car', 2));
+        $this->assertSame('3 cars', tc('car', 3));
+        $this->assertSame('1,234,567 cars', tc('car', 1234567));
+        $this->assertSame('1,234,567 cars', tc('car', 1234567, null));
+        $this->assertSame('1,234,567 cars', tc('car', 1234567, null, true));
+        $this->assertSame('1234567 cars', tc('car', 1234567, null, false));
+        $this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de'));
+        $this->assertSame('1.234.567 Autos', tc('car', 1234567, 'de', true));
+        $this->assertSame('1234567 Autos', tc('car', 1234567, 'de', false));
+    }
+
     public function testTwitter()
     {
         // simple
