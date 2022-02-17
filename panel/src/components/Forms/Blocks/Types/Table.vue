@@ -24,19 +24,21 @@
         :style="'width:' + width(column.width)"
         :data-align="column.align"
       >
-        <component
-          :is="'k-' + column.type + '-field-preview'"
-          v-if="previewExists(column.type)"
-          :value="row[columnName]"
-          :column="column"
-          :field="fields[columnName]"
-        />
-        <template v-else>
-          <p class="k-structure-table-text">
-            {{ column.before }}
-            {{ displayText(fields[columnName], row[columnName]) || "–" }}
-            {{ column.after }}
-          </p>
+        <template v-if="columnIsEmpty(row[columnName]) === false">
+          <component
+            :is="'k-' + column.type + '-field-preview'"
+            v-if="previewExists(column.type)"
+            :value="row[columnName]"
+            :column="column"
+            :field="fields[columnName]"
+          />
+          <template v-else>
+            <p class="k-structure-table-text">
+              {{ column.before }}
+              {{ displayText(fields[columnName], row[columnName]) || "–" }}
+              {{ column.after }}
+            </p>
+          </template>
         </template>
       </td>
     </tr>
@@ -89,13 +91,24 @@ export default {
   border-radius: var(--rounded-sm);
   overflow: hidden;
   table-layout: fixed;
+  --item-height: 38px;
 }
 .k-block-type-table-preview td,
 .k-block-type-table-preview th {
   text-align: start;
   line-height: 1.5em;
-  padding: 0.5rem 0.75rem;
   font-size: var(--text-sm);
+}
+.k-block-type-table-preview th {
+  padding: 0.5rem 0.75rem;
+}
+.k-block-type-table-preview td {
+  height: var(--item-height);
+  padding: 0 0.75rem;
+}
+.k-block-type-table-preview td > *,
+.k-block-type-table-preview td [class$="-field-preview"] {
+  padding: 0;
 }
 .k-block-type-table-preview tr:not(:last-child) td,
 .k-block-type-table-preview th {
