@@ -3,9 +3,9 @@
 A clear and concise description of the PR.
 Use this section for review hints, explanations or discussion points/todos.
 
-Add releant release notes: Features, Enhancements, Fixes, Deprecated.
+Add relevant release notes: Features, Enhancements, Fixes, Deprecated.
 Reference issues from the `kirby` repo or ideas from `feedback.getkirby.com`.
-Always mention whether PR introduces breaking changes.
+Always mention whether your PR introduces breaking changes.
 
 How to contribute: https://contribute.getkirby.com
 -->
@@ -19,7 +19,7 @@ How to contribute: https://contribute.getkirby.com
 
 ## Ready?
 <!--
-If you can help to check off the following tasks, that'd be great. 
+If you can help to check off the following tasks, that'd be great.
 If not, don't worry - we will take care of it.
 
 More details: https://contribute.getkirby.com
