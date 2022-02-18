@@ -31,7 +31,6 @@ For bug fixes, please create a new branch following the name scheme: `fix/issue_
 - Every bug fix should include a [unit test](#tests) to avoid future regressions. Let us know if you need help with that.
 - Make sure your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
 - Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
--
 
 ### Features
 
