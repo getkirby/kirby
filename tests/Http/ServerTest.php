@@ -4,6 +4,9 @@ namespace Kirby\Http;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Http\Server
+ */
 class ServerTest extends TestCase
 {
     protected $_SERVER = null;
@@ -11,55 +14,195 @@ class ServerTest extends TestCase
     public function setUp(): void
     {
         $this->_SERVER = $_SERVER;
+        Server::$hosts = [];
     }
 
     public function tearDown(): void
     {
         $_SERVER = $this->_SERVER;
+        Server::$hosts = [];
     }
 
+    /**
+     * @covers ::address
+     */
+    public function testAddress()
+    {
+        $_SERVER['SERVER_ADDR'] = $ip = '127.0.0.1';
+        $this->assertSame($ip, Server::address());
+    }
+
+    /**
+     * @covers ::address
+     */
+    public function testAddressOnCli()
+    {
+        $this->assertSame('', Server::address());
+    }
+
+    /**
+     * @covers ::cli
+     */
+    public function testCli()
+    {
+        $this->assertTrue(Server::cli());
+    }
+
+    /**
+     * @covers ::get
+     */
     public function testGet()
     {
-        $this->assertIsArray(Server::get());
-        $this->assertIsString(Server::get('SERVER_ADDR'));
+        $_SERVER['TEST'] = 'foo';
+        $this->assertSame('foo', Server::get('test'));
+        $this->assertSame('foo', Server::get('TEST'));
     }
 
+    /**
+     * @covers ::get
+     */
+    public function testGetAll()
+    {
+        $this->assertSame($_SERVER, Server::get());
+    }
+
+    /**
+     * @covers ::get
+     */
+    public function testGetFallback()
+    {
+        $this->assertSame('foo', Server::get('test', 'foo'));
+    }
+
+    /**
+     * @covers ::host
+     */
     public function testHost()
     {
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        Server::$hosts = ['*'];
+        $this->assertSame('example.com', Server::host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostFromServerAddress()
+    {
+        $_SERVER['SERVER_ADDR'] = 'example.com';
+        $this->assertSame('example.com', Server::host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostFromServerName()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.com';
+        $this->assertSame('example.com', Server::host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostFromProxy()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
+        Server::$hosts = ['*'];
+        $this->assertSame('example.com', Server::host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostAllowlistExcluded()
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        Server::$hosts = ['getkirby.com'];
         $this->assertSame('', Server::host());
-
-        // SERVER_NAME
-        $_SERVER['SERVER_NAME'] = 'foo';
-        $this->assertSame('foo', Server::host());
-
-        // SERVER_ADDR
-
-        // remove the server name to fall back on the address
-        unset($_SERVER['SERVER_NAME']);
-
-        // set the address
-        $_SERVER['SERVER_ADDR'] = 'bar';
-
-        $this->assertSame('bar', Server::host());
     }
 
-    public function testHostForwarded()
+    /**
+     * @covers ::host
+     */
+    public function testHostAllowlistIncluded()
     {
-        // HTTP_X_FORWARDED_HOST
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
-        $this->assertSame('kirby', Server::host(true));
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        Server::$hosts = ['example.com'];
+        $this->assertSame('example.com', Server::host());
     }
 
-    public function testHttps()
+    /**
+     * @covers ::host
+     */
+    public function testHostAllowlistWildcard()
     {
-        $this->assertFalse(Server::https());
+        $_SERVER['HTTP_HOST'] = 'example.com';
+        Server::$hosts = ['*'];
+        $this->assertSame('example.com', Server::host());
+    }
 
-        // $_SERVER['HTTPS']
-        $_SERVER['HTTPS'] = 'https';
-        $this->assertTrue(Server::https());
+    /**
+     * @covers ::host
+     */
+    public function testHostOnCli()
+    {
+        $this->assertSame('', Server::host());
+    }
 
-        // Port 443
+    /**
+     * @covers ::host
+     */
+    public function testHostWithPort()
+    {
+        $_SERVER['HTTP_HOST'] = 'example.com:8888';
+        Server::$hosts = ['*'];
+        $this->assertSame('example.com', Server::host());
+    }
+
+    public function provideHttps()
+    {
+        return [
+            [null, false],
+            ['', false],
+            ['0', false],
+            [0, false],
+            ['false', false],
+            [false, false],
+            ['off', false],
+            [true, true],
+            ['1', true],
+            ['on', true],
+            ['https', true],
+        ];
+    }
+
+    /**
+     * @dataProvider provideHttps
+     * @covers ::https
+     */
+    public function testHttpsFromHeader($input, $expected)
+    {
+        $_SERVER['HTTPS'] = $input;
+        $this->assertSame($expected, Server::https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsFromPort()
+    {
         $_SERVER['SERVER_PORT'] = 443;
+        $this->assertTrue(Server::https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsFromForwardedPort()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = 443;
         $this->assertTrue(Server::https());
 
         // HTTP_X_FORWARDED_PROTO = https
@@ -67,27 +210,125 @@ class ServerTest extends TestCase
         $this->assertTrue(Server::https());
     }
 
-    public function testPort()
+    /**
+     * @covers ::https
+     */
+    public function testHttpsFromForwardedProto()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST']  = 'example.com';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $this->assertTrue(Server::https());
+    }
+
+    public function provideIsAllowedHost()
+    {
+        return [
+            [
+                'getkirby.com',
+                [],
+                true
+            ],
+            [
+                'getkirby.com',
+                ['*'],
+                true
+            ],
+            [
+                'getkirby.com',
+                ['*getkirby.com'],
+                true
+            ],
+            [
+                'chat.getkirby.de',
+                ['*.getkirby.*'],
+                true
+            ],
+            [
+                'getkirby.com',
+                ['getkirby.de'],
+                false
+            ],
+            [
+                'getkirby.com',
+                ['getkirby.de', 'trykirby.com'],
+                false
+            ]
+        ];
+    }
+
+    /**
+     * @covers ::isAllowedHost
+     * @dataProvider provideIsAllowedHost
+     */
+    public function testIsAllowedHost($input, $hosts, $expected)
+    {
+        Server::$hosts = $hosts;
+        $this->assertSame($expected, Server::isAllowedHost($input));
+    }
+
+    /**
+     * @covers ::isBehindProxy
+     */
+    public function testIsBehindProxy()
+    {
+        $this->assertFalse(Server::isBehindProxy());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortFromHost()
+    {
+        // HTTP_HOST
+        $_SERVER['HTTP_HOST'] = 'localhost:8888';
+        $this->assertSame(8888, Server::port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortFromProxyHost()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com:8888';
+        $this->assertSame(8888, Server::port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortFromProxyPort()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = 8888;
+        $this->assertSame(8888, Server::port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortFromProxyProto()
+    {
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $this->assertSame(443, Server::port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortFromServer()
     {
         // SERVER_PORT
         $_SERVER['SERVER_PORT'] = 777;
         $this->assertSame(777, Server::port());
-
-        // HTTP_HOST
-        $_SERVER['HTTP_HOST'] = 'localhost:776';
-        $this->assertSame(776, Server::port());
     }
 
+    /**
+     * @covers ::port
+     */
     public function testPortOnCli()
     {
         $this->assertSame(0, Server::port());
-    }
-
-    public function testPortForwarded()
-    {
-        // HTTP_X_FORWARDED_PORT
-        $_SERVER['HTTP_X_FORWARDED_PORT'] = 999;
-        $this->assertSame(999, Server::port(true));
     }
 
     public function provideRequestUri(): array
@@ -140,6 +381,7 @@ class ServerTest extends TestCase
 
     /**
      * @dataProvider provideRequestUri
+     * @covers ::requestUri
      */
     public function testRequestUri($input, $expected)
     {
@@ -147,4 +389,37 @@ class ServerTest extends TestCase
         $this->assertSame($expected, Server::requestUri());
     }
 
+    public function provideSanitize()
+    {
+        return [
+            [
+                'HTTP_HOST',
+                '<script>foo()</script>',
+                'foo'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '<script>foo()</script>',
+                'foo'
+            ],
+            [
+                'SERVER_PORT',
+                'abc9999',
+                9999
+            ],
+            [
+                'HTTP_X_FORWARDED_PORT',
+                'abc9999',
+                9999
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideSanitize
+     */
+    public function testSanitize($key, $value, $expected)
+    {
+        $this->assertSame($expected, Server::sanitize($key, $value));
+    }
 }

@@ -22,13 +22,20 @@ class Server
     public static $cli;
 
     /**
+     * List of trusted hosts
+     *
+     * @var array
+     */
+    public static $hosts = [];
+
+    /**
      * Returns the server's IP address
      *
      * @return string
      */
     public static function address(): string
     {
-        return static::get('SERVER_ADDR');
+        return static::get('SERVER_ADDR', '');
     }
 
     /**
@@ -86,19 +93,36 @@ class Server
     /**
      * Returns the correct host
      *
-     * @param bool $forwarded
+     * @param bool $forwarded Deprecated. Todo: remove in 3.7.0
      * @return string
      */
     public static function host(bool $forwarded = false): string
     {
-        $host = $forwarded === true ? static::get('HTTP_X_FORWARDED_HOST') : null;
+        $host = null;
+
+        // insecure host parameters are only allowed when hosts
+        // are validated against set of host patterns
+        $allowInsecure = empty(static::$hosts) === false;
+
+        if ($allowInsecure === true && static::isBehindProxy() === true) {
+            $host = static::get('HTTP_X_FORWARDED_HOST');
+        }
 
         if (empty($host) === true) {
             $host = static::get('SERVER_NAME');
         }
 
+        if ($allowInsecure === true && empty($host) === true) {
+            $host = static::get('HTTP_HOST');
+        }
+
         if (empty($host) === true) {
             $host = static::get('SERVER_ADDR');
+        }
+
+        // ignore invalid host names
+        if (static::isAllowedHost($host) === false) {
+            $host = null;
         }
 
         return explode(':', $host)[0];
@@ -111,71 +135,93 @@ class Server
      */
     public static function https(): bool
     {
-        if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+        $https = $_SERVER['HTTPS'] ?? null;
+        $off   = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
+
+        // check for various options to send a negative HTTPS header
+        if (in_array($https, $off, true) === false) {
             return true;
-        } elseif (static::port() === 443) {
-            return true;
-        } elseif (in_array(static::get('HTTP_X_FORWARDED_PROTO'), ['https', 'https, http'])) {
-            return true;
-        } else {
-            return false;
         }
+
+        // check for the port
+        if (static::port() === 443) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks for allowed host names
+     *
+     * @param string $host
+     * @return bool
+     */
+    public static function isAllowedHost(string $host): bool
+    {
+        if (empty(static::$hosts) === true) {
+            return true;
+        }
+
+        foreach (static::$hosts as $pattern) {
+            if (fnmatch($pattern, $host) === true) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the server is behind a
+     * proxy server.
+     *
+     * @return bool
+     */
+    public static function isBehindProxy(): bool
+    {
+        return empty($_SERVER['HTTP_X_FORWARDED_HOST']) === false;
     }
 
     /**
      * Returns the correct port number
      *
-     * @param bool $forwarded
+     * @param bool $forwarded Deprecated. Todo: remove in 3.7.0
      * @return int
      */
     public static function port(bool $forwarded = false): int
     {
-        // based on forwarded port
-        if ($forwarded === true) {
-            if ($port = static::get('HTTP_X_FORWARDED_PORT')) {
-                return $port;
+        $port = null;
+
+        // handle reverse proxy setups
+        if (static::isBehindProxy() === true) {
+            // based on forwarded port
+            $port = static::get('HTTP_X_FORWARDED_PORT');
+
+            // based on the forwarded host
+            if (empty($port) === true) {
+                $port = (int)parse_url(static::get('HTTP_X_FORWARDED_HOST'), PHP_URL_PORT);
+            }
+
+            // based on the forwarded proto
+            if (empty($port) === true) {
+                if (in_array($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null, ['https', 'https, http']) === true) {
+                    $port = 443;
+                }
             }
         }
 
-        // based on HTTP host
-        $host = static::get('HTTP_HOST');
-        if ($pos = strpos($host, ':')) {
-            return (int)substr($host, $pos + 1);
+        // based on the host
+        if (empty($port) === true) {
+            $port = (int)parse_url(static::get('HTTP_HOST'), PHP_URL_PORT);
         }
 
         // based on server port
-        return static::get('SERVER_PORT');
-    }
-
-    /**
-     * Help to sanitize some _SERVER keys
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return mixed
-     */
-    public static function sanitize(string $key, $value)
-    {
-        // make sure $value is not null
-        $value ??= '';
-
-        switch ($key) {
-            case 'SERVER_ADDR':
-            case 'SERVER_NAME':
-            case 'HTTP_HOST':
-            case 'HTTP_X_FORWARDED_HOST':
-                $value = strip_tags($value);
-                $value = preg_replace('![^\w.:-]+!iu', '', $value);
-                $value = trim($value, '-');
-                $value = htmlspecialchars($value, ENT_COMPAT);
-                break;
-            case 'SERVER_PORT':
-            case 'HTTP_X_FORWARDED_PORT':
-                $value = (int)(preg_replace('![^0-9]+!', '', $value));
-                break;
+        if (empty($port) === true) {
+            $port = static::get('SERVER_PORT');
         }
 
-        return $value;
+        return $port ?? 0;
     }
 
     /**
@@ -193,5 +239,36 @@ class Server
             'path'  => $uri['path']  ?? null,
             'query' => $uri['query'] ?? null,
         ];
+    }
+
+    /**
+     * Help to sanitize some _SERVER keys
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
+     */
+    public static function sanitize(string $key, $value)
+    {
+        switch ($key) {
+            case 'SERVER_ADDR':
+            case 'SERVER_NAME':
+            case 'HTTP_HOST':
+            case 'HTTP_X_FORWARDED_HOST':
+                $value ??= '';
+                $value = strtolower($value);
+                $value = strip_tags($value);
+                $value = preg_replace('![^\w.:-]+!iu', '', $value);
+                $value = trim($value, '-');
+                $value = htmlspecialchars($value, ENT_COMPAT);
+                break;
+            case 'SERVER_PORT':
+            case 'HTTP_X_FORWARDED_PORT':
+                $value ??= '';
+                $value = (int)(preg_replace('![^0-9]+!', '', $value));
+                break;
+            }
+
+        return $value;
     }
 }

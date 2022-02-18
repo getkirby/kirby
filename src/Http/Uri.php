@@ -237,7 +237,7 @@ class Uri
 
     /**
      * @param array $props
-     * @param bool $forwarded
+     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return static
      */
     public static function current(array $props = [], bool $forwarded = false)
@@ -247,11 +247,10 @@ class Uri
         }
 
         $uri = Server::requestUri();
-
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
-            'host'   => Server::host($forwarded),
-            'port'   => Server::port($forwarded),
+            'host'   => Server::host(),
+            'port'   => Server::port(),
             'path'   => $uri['path'],
             'query'  => $uri['query'],
         ], $props));
