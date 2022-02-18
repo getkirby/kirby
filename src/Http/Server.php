@@ -84,34 +84,42 @@ class Server
     }
 
     /**
-     * Help to sanitize some _SERVER keys
+     * Returns the correct host
      *
-     * @param string $key
-     * @param mixed $value
-     * @return mixed
+     * @param bool $forwarded
+     * @return string
      */
-    public static function sanitize(string $key, $value)
+    public static function host(bool $forwarded = false): string
     {
-        // make sure $value is not null
-        $value ??= '';
+        $host = $forwarded === true ? static::get('HTTP_X_FORWARDED_HOST') : null;
 
-        switch ($key) {
-            case 'SERVER_ADDR':
-            case 'SERVER_NAME':
-            case 'HTTP_HOST':
-            case 'HTTP_X_FORWARDED_HOST':
-                $value = strip_tags($value);
-                $value = preg_replace('![^\w.:-]+!iu', '', $value);
-                $value = trim($value, '-');
-                $value = htmlspecialchars($value, ENT_COMPAT);
-                break;
-            case 'SERVER_PORT':
-            case 'HTTP_X_FORWARDED_PORT':
-                $value = (int)(preg_replace('![^0-9]+!', '', $value));
-                break;
+        if (empty($host) === true) {
+            $host = static::get('SERVER_NAME');
         }
 
-        return $value;
+        if (empty($host) === true) {
+            $host = static::get('SERVER_ADDR');
+        }
+
+        return explode(':', $host)[0];
+    }
+
+    /**
+     * Checks for a https request
+     *
+     * @return bool
+     */
+    public static function https(): bool
+    {
+        if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+            return true;
+        } elseif (static::port() === 443) {
+            return true;
+        } elseif (in_array(static::get('HTTP_X_FORWARDED_PROTO'), ['https', 'https, http'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -140,42 +148,34 @@ class Server
     }
 
     /**
-     * Checks for a https request
+     * Help to sanitize some _SERVER keys
      *
-     * @return bool
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
      */
-    public static function https(): bool
+    public static function sanitize(string $key, $value)
     {
-        if (isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
-            return true;
-        } elseif (static::port() === 443) {
-            return true;
-        } elseif (in_array(static::get('HTTP_X_FORWARDED_PROTO'), ['https', 'https, http'])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+        // make sure $value is not null
+        $value ??= '';
 
-    /**
-     * Returns the correct host
-     *
-     * @param bool $forwarded
-     * @return string
-     */
-    public static function host(bool $forwarded = false): string
-    {
-        $host = $forwarded === true ? static::get('HTTP_X_FORWARDED_HOST') : null;
-
-        if (empty($host) === true) {
-            $host = static::get('SERVER_NAME');
+        switch ($key) {
+            case 'SERVER_ADDR':
+            case 'SERVER_NAME':
+            case 'HTTP_HOST':
+            case 'HTTP_X_FORWARDED_HOST':
+                $value = strip_tags($value);
+                $value = preg_replace('![^\w.:-]+!iu', '', $value);
+                $value = trim($value, '-');
+                $value = htmlspecialchars($value, ENT_COMPAT);
+                break;
+            case 'SERVER_PORT':
+            case 'HTTP_X_FORWARDED_PORT':
+                $value = (int)(preg_replace('![^0-9]+!', '', $value));
+                break;
         }
 
-        if (empty($host) === true) {
-            $host = static::get('SERVER_ADDR');
-        }
-
-        return explode(':', $host)[0];
+        return $value;
     }
 
     /**

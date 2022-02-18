@@ -24,25 +24,30 @@ class ServerTest extends TestCase
         $this->assertIsString(Server::get('SERVER_ADDR'));
     }
 
-    public function testPort()
+    public function testHost()
     {
-        $this->assertIsInt(Server::port());
-        $this->assertEquals(0, Server::port());
+        $this->assertSame('', Server::host());
 
-        // SERVER_PORT
-        $_SERVER['SERVER_PORT'] = 777;
-        $this->assertEquals(777, Server::port());
+        // SERVER_NAME
+        $_SERVER['SERVER_NAME'] = 'foo';
+        $this->assertSame('foo', Server::host());
 
-        // HTTP_HOST
-        $_SERVER['HTTP_HOST'] = 'localhost:776';
-        $this->assertEquals(776, Server::port());
+        // SERVER_ADDR
+
+        // remove the server name to fall back on the address
+        unset($_SERVER['SERVER_NAME']);
+
+        // set the address
+        $_SERVER['SERVER_ADDR'] = 'bar';
+
+        $this->assertSame('bar', Server::host());
     }
 
-    public function testForwardedPort()
+    public function testHostForwarded()
     {
-        // HTTP_X_FORWARDED_PORT
-        $_SERVER['HTTP_X_FORWARDED_PORT'] = 999;
-        $this->assertEquals(999, Server::port(true));
+        // HTTP_X_FORWARDED_HOST
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
+        $this->assertSame('kirby', Server::host(true));
     }
 
     public function testHttps()
@@ -62,33 +67,30 @@ class ServerTest extends TestCase
         $this->assertTrue(Server::https());
     }
 
-    public function testHost()
+    public function testPort()
     {
-        $this->assertEquals('', Server::host());
+        // SERVER_PORT
+        $_SERVER['SERVER_PORT'] = 777;
+        $this->assertSame(777, Server::port());
 
-        // SERVER_NAME
-        $_SERVER['SERVER_NAME'] = 'foo';
-        $this->assertEquals('foo', Server::host());
-
-        // SERVER_ADDR
-
-        // remove the server name to fall back on the address
-        unset($_SERVER['SERVER_NAME']);
-
-        // set the address
-        $_SERVER['SERVER_ADDR'] = 'bar';
-
-        $this->assertEquals('bar', Server::host());
+        // HTTP_HOST
+        $_SERVER['HTTP_HOST'] = 'localhost:776';
+        $this->assertSame(776, Server::port());
     }
 
-    public function testForwardedHost()
+    public function testPortOnCli()
     {
-        // HTTP_X_FORWARDED_HOST
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
-        $this->assertEquals('kirby', Server::host(true));
+        $this->assertSame(0, Server::port());
     }
 
-    public function requestUriProvider()
+    public function testPortForwarded()
+    {
+        // HTTP_X_FORWARDED_PORT
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = 999;
+        $this->assertSame(999, Server::port(true));
+    }
+
+    public function provideRequestUri(): array
     {
         return [
             [
@@ -137,7 +139,7 @@ class ServerTest extends TestCase
     }
 
     /**
-     * @dataProvider requestUriProvider
+     * @dataProvider provideRequestUri
      */
     public function testRequestUri($input, $expected)
     {
