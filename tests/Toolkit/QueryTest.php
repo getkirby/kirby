@@ -62,7 +62,7 @@ class QueryTest extends TestCase
         ]);
 
         $this->assertSame('homer', $query->result());
-        
+
         $query = new Query('user.1', [
             'user' => [
                 'homer',

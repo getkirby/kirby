@@ -190,7 +190,7 @@ class Sessions
 
         // token was found, try to get the session
         try {
-            $mode = (is_string($tokenFromHeader))? 'header' : 'cookie';
+            $mode = (is_string($tokenFromHeader)) ? 'header' : 'cookie';
             return $this->get($token, $mode);
         } catch (Throwable $e) {
             return null;

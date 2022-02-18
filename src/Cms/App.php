@@ -38,14 +38,14 @@ use Throwable;
  */
 class App
 {
-    const CLASS_ALIAS = 'kirby';
-
     use AppCaches;
     use AppErrors;
     use AppPlugins;
     use AppTranslations;
     use AppUsers;
     use Properties;
+
+    public const CLASS_ALIAS = 'kirby';
 
     protected static $instance;
     protected static $version;

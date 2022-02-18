@@ -23,7 +23,7 @@ abstract class Model
      * The CLASS_ALIAS is a short human-readable
      * version of the class name. I.e. page.
      */
-    const CLASS_ALIAS = null;
+    public const CLASS_ALIAS = null;
 
     /**
      * The parent Kirby instance

@@ -20,9 +20,9 @@ namespace Kirby\Cms;
  */
 class Item
 {
-    const ITEMS_CLASS = '\Kirby\Cms\Items';
-
     use HasSiblings;
+
+    public const ITEMS_CLASS = '\Kirby\Cms\Items';
 
     /**
      * @var string

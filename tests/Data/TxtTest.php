@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TxtTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures';
+    public const FIXTURES = __DIR__ . '/fixtures';
 
     /**
      * @covers ::encode

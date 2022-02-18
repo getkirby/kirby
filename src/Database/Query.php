@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  */
 class Query
 {
-    const ERROR_INVALID_QUERY_METHOD = 0;
+    public const ERROR_INVALID_QUERY_METHOD = 0;
 
     /**
      * Parent Database object

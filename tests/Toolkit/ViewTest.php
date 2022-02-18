@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class ViewTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures/view';
+    public const FIXTURES = __DIR__ . '/fixtures/view';
 
     protected function _view(array $data = [])
     {

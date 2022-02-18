@@ -186,7 +186,7 @@ class AppComponentsTest extends TestCase
 
         // deprecated fourth argument
         $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], false));
-        
+
         $expected = '<pre><code>Test _case_</pre></code>';
         $this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
 

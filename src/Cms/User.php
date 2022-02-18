@@ -22,12 +22,12 @@ use Kirby\Toolkit\Str;
  */
 class User extends ModelWithContent
 {
-    const CLASS_ALIAS = 'user';
-
     use HasFiles;
     use HasMethods;
     use HasSiblings;
     use UserActions;
+
+    public const CLASS_ALIAS = 'user';
 
     /**
      * @var UserBlueprint

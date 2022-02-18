@@ -181,7 +181,7 @@ class Api
 
                 // get the locale from the translation
                 $translation = $user->kirby()->translation($language);
-                $locale = ($translation !== null)? $translation->locale() : $language;
+                $locale = ($translation !== null) ? $translation->locale() : $language;
 
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible

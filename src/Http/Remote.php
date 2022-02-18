@@ -20,8 +20,8 @@ use Kirby\Toolkit\Str;
  */
 class Remote
 {
-    const CA_INTERNAL = 1;
-    const CA_SYSTEM   = 2;
+    public const CA_INTERNAL = 1;
+    public const CA_SYSTEM   = 2;
 
     /**
      * @var array

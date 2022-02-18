@@ -155,7 +155,7 @@ class Dir
 
         foreach ($items as $item) {
             $root     = $dir . '/' . $item;
-            $entry    = $path !== null ? $path . '/' . $item: $item;
+            $entry    = $path !== null ? $path . '/' . $item : $item;
             $result[] = $entry;
 
             if ($recursive === true && is_dir($root) === true) {
