@@ -932,4 +932,30 @@ class PageTest extends TestCase
         $page = $app->page('bar');
         $page->controller();
     }
+
+    public function testToArray()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $expected = [
+            'children' => [],
+            'content' => [],
+            'files' => [],
+            'id' => 'test',
+            'mediaUrl' => '/media/pages/test',
+            'mediaRoot' => '/dev/null/media/pages/test',
+            'num' => null,
+            'parent' => null,
+            'slug' => 'test',
+            'template' => $page->template(),
+            'translations' => [],
+            'uid' => 'test',
+            'uri' => 'test',
+            'url' => '/test',
+        ];
+
+        $this->assertSame($expected, $page->toArray());
+    }
 }
