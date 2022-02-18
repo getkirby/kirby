@@ -125,7 +125,7 @@ class Server
             $host = null;
         }
 
-        return explode(':', $host)[0];
+        return explode(':', $host ?? '')[0];
     }
 
     /**
@@ -232,7 +232,7 @@ class Server
      */
     public static function requestUri(): array
     {
-        $uri = static::get('REQUEST_URI');
+        $uri = static::get('REQUEST_URI', '');
         $uri = parse_url($uri);
 
         return [
