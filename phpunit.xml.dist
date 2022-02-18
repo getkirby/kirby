@@ -29,6 +29,6 @@
     </testsuites>
 
     <php>
-        <ini name="memory_limit" value="3072M" />
+        <ini name="memory_limit" value="4096M" />
     </php>
 </phpunit>
