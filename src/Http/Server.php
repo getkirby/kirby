@@ -177,4 +177,21 @@ class Server
 
         return explode(':', $host)[0];
     }
+
+    /**
+     * Returns an array with path and query
+     * from the REQUEST_URI
+     *
+     * @return array
+     */
+    public static function requestUri(): array
+    {
+        $uri = static::get('REQUEST_URI');
+        $uri = parse_url($uri);
+
+        return [
+            'path'  => $uri['path']  ?? null,
+            'query' => $uri['query'] ?? null,
+        ];
+    }
 }

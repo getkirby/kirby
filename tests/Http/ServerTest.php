@@ -87,4 +87,62 @@ class ServerTest extends TestCase
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'kirby';
         $this->assertEquals('kirby', Server::host(true));
     }
+
+    public function requestUriProvider()
+    {
+        return [
+            [
+                null,
+                [
+                    'path'  => '',
+                    'query' => null
+                ]
+            ],
+            [
+                '/',
+                [
+                    'path'  => '/',
+                    'query' => null
+                ]
+            ],
+            [
+                '/foo/bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => null
+                ]
+            ],
+            [
+                '/foo/bar?foo=bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                'index.php?foo=bar',
+                [
+                    'path'  => 'index.php',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                'https://getkirby.com/foo/bar?foo=bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => 'foo=bar'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider requestUriProvider
+     */
+    public function testRequestUri($input, $expected)
+    {
+        $_SERVER['REQUEST_URI'] = $input;
+        $this->assertSame($expected, Server::requestUri());
+    }
+
 }

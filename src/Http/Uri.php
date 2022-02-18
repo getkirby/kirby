@@ -246,20 +246,14 @@ class Uri
             return static::$current;
         }
 
-        $uri = Server::get('REQUEST_URI') ?? '';
-        $uri = preg_replace(
-            '!^(http|https)\:\/\/' . Server::get('HTTP_HOST') . '!',
-            '',
-            $uri
-        );
-        $uri = parse_url('http://getkirby.com' . $uri);
+        $uri = Server::requestUri();
 
         $url = new static(array_merge([
             'scheme' => Server::https() === true ? 'https' : 'http',
             'host'   => Server::host($forwarded),
             'port'   => Server::port($forwarded),
-            'path'   => $uri['path'] ?? null,
-            'query'  => $uri['query'] ?? null,
+            'path'   => $uri['path'],
+            'query'  => $uri['query'],
         ], $props));
 
         return $url;
