@@ -271,4 +271,41 @@ class Server
 
         return $value;
     }
+
+    /**
+     * Returns the path to the php script
+     * within the document root without the
+     * filename of the script.
+     *
+     * i.e. /subfolder/index.php -> subfolder
+     *
+     * This can be used to build the base url
+     * for subfolder installations
+     *
+     * @return string
+     */
+    public static function scriptPath(): string
+    {
+        if (static::cli() === true) {
+            return '';
+        }
+
+        $path = $_SERVER['SCRIPT_NAME'] ?? '';
+        // replace Windows backslashes
+        $path = str_replace('\\', '/', $path);
+        // remove the script
+        $path = dirname($path);
+        // replace those fucking backslashes again
+        $path = str_replace('\\', '/', $path);
+        // remove the leading and trailing slashes
+        $path = trim($path, '/');
+
+        // top-level scripts don't have a path
+        // and dirname() will return '.'
+        if ($path === '.') {
+            $path = '';
+        }
+
+        return $path;
+    }
 }

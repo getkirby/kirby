@@ -15,12 +15,14 @@ class ServerTest extends TestCase
     {
         $this->_SERVER = $_SERVER;
         Server::$hosts = [];
+        Server::$cli = null;
     }
 
     public function tearDown(): void
     {
         $_SERVER = $this->_SERVER;
         Server::$hosts = [];
+        Server::$cli = null;
     }
 
     /**
@@ -421,5 +423,56 @@ class ServerTest extends TestCase
     public function testSanitize($key, $value, $expected)
     {
         $this->assertSame($expected, Server::sanitize($key, $value));
+    }
+
+    public function provideScriptPath()
+    {
+        return [
+            [
+                null,
+                ''
+            ],
+            [
+                '',
+                ''
+            ],
+            [
+                '/index.php',
+                ''
+            ],
+            [
+                '/subfolder/index.php',
+                'subfolder'
+            ],
+            [
+                '/subfolder/test.php',
+                'subfolder'
+            ],
+            [
+                '\subfolder\subsubfolder\index.php',
+                'subfolder/subsubfolder'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideScriptPath
+     * @covers ::scriptPath
+     */
+    public function testScriptPath($scriptName, $expected)
+    {
+        $_SERVER['SCRIPT_NAME'] = $scriptName;
+        // switch off cli detection to simulate
+        // script path detection on the server
+        Server::$cli = false;
+        $this->assertSame($expected, Server::scriptPath());
+    }
+
+    /**
+     * @covers ::scriptPath
+     */
+    public function testScriptPathOnCli()
+    {
+        $this->assertSame('', Server::scriptPath());
     }
 }
