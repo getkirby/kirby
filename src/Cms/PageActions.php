@@ -780,10 +780,8 @@ trait PageActions
         foreach ($sorted as $key => $id) {
             if ($id === $this->id()) {
                 continue;
-            } else {
-                if ($sibling = $siblings->get($id)) {
-                    $sibling->changeNum($key + 1);
-                }
+            } elseif ($sibling = $siblings->get($id)) {
+                $sibling->changeNum($key + 1);
             }
         }
 

@@ -296,12 +296,10 @@ class I18n
 
         if (is_string($translation) === true) {
             $message = $translation;
+        } elseif (isset($translation[$count]) === true) {
+            $message = $translation[$count];
         } else {
-            if (isset($translation[$count]) === true) {
-                $message = $translation[$count];
-            } else {
-                $message = end($translation);
-            }
+            $message = end($translation);
         }
 
         if ($formatNumber === true) {
