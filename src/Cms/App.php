@@ -92,6 +92,7 @@ class App
         $this->bakeRoots($props['roots'] ?? []);
 
         // stuff from config and additional options
+        Config::$data = [];
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
@@ -985,18 +986,22 @@ class App
      */
     protected function optionsFromConfig(): array
     {
-        $server = $this->server();
-        $root   = $this->root('config');
+        $root = $this->root('config');
 
-        Config::$data = [];
+        // main config file
+        $main = F::load($root . '/config.php', []);
 
-        $main   = F::load($root . '/config.php', []);
+        // server-specific config files
+        $server = $this->server($main['url'] ?? null);
         $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);
         $addr   = F::load($root . '/config.' . basename($server->address()) . '.php', []);
 
-        $config = Config::$data;
-
-        return $this->options = array_replace_recursive($config, $main, $host, $addr);
+        return $this->options = array_replace_recursive(
+            Config::$data,
+            $main,
+            $host,
+            $addr
+        );
     }
 
     /**
@@ -1007,7 +1012,10 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, $options);
+        return $this->options = array_replace_recursive(
+            $this->options,
+            $options
+        );
     }
 
     /**
@@ -1410,11 +1418,18 @@ class App
     /**
      * Returns the Server object
      *
+     * @param string|array|true|null $hosts Allowed hosts
      * @return \Kirby\Http\Server
      */
-    public function server()
+    public function server($hosts = null)
     {
-        return $this->server = $this->server ?? new Server();
+        if ($this->server !== null) {
+            return $this->server;
+        }
+
+        $this->server = new Server();
+        $this->server->setHosts($hosts);
+        return $this->server;
     }
 
     /**

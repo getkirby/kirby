@@ -2,6 +2,8 @@
 
 namespace Kirby\Http;
 
+use Kirby\Toolkit\A;
+
 /**
  * A set of methods that make it more convenient to get variables
  * from the global server array
@@ -307,5 +309,25 @@ class Server
         }
 
         return $path;
+    }
+
+    /**
+     * Sets the static $hosts property
+     *
+     * null: ignores forwarded host -> $hosts = empty array
+     * true: support any forwarded host-> $hosts = ['*']
+     * array: trusted hosts -> $hosts = array of trusted hosts
+     * string: single trusted host -> $hosts = [host]
+     *
+     * @param string|array|true|null $hosts
+     * @return void
+     */
+    public static function setHosts($hosts = [])
+    {
+        if ($hosts === true) {
+            $hosts = ['*'];
+        }
+
+        static::$hosts = A::wrap($hosts);
     }
 }
