@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class MarkdownTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures';
+    public const FIXTURES = __DIR__ . '/fixtures';
 
     public function testDefaults()
     {

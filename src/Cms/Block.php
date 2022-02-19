@@ -20,9 +20,9 @@ use Throwable;
  */
 class Block extends Item
 {
-    const ITEMS_CLASS = '\Kirby\Cms\Blocks';
-
     use HasMethods;
+
+    public const ITEMS_CLASS = '\Kirby\Cms\Blocks';
 
     /**
      * @var \Kirby\Cms\Content

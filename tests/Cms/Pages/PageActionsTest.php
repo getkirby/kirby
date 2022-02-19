@@ -284,7 +284,7 @@ class PageActionsTest extends TestCase
 
         $this->assertEquals('article', $modified->intendedTemplate());
         $this->assertSame(2, $calls);
-        
+
         $this->assertFileExists($modified->contentFile('en'));
         $this->assertFileExists($modified->contentFile('de'));
         $this->assertFileDoesNotExist($modified->contentFile('fr'));

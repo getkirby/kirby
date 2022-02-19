@@ -19,7 +19,7 @@ class Spyc
 {
     // SETTINGS
 
-    const REMPTY = "\0\0\0\0\0";
+    public const REMPTY = "\0\0\0\0\0";
 
     /**
      * Setting this to true will force YAMLDump to enclose any string value in
@@ -106,7 +106,7 @@ class Spyc
      */
     public static function YAMLLoad($input, $options = [])
     {
-        $Spyc = new Spyc;
+        $Spyc = new Spyc();
         foreach ($options as $key => $value) {
             if (property_exists($Spyc, $key)) {
                 $Spyc->$key = $value;
@@ -137,7 +137,7 @@ class Spyc
      */
     public static function YAMLLoadString($input, $options = [])
     {
-        $Spyc = new Spyc;
+        $Spyc = new Spyc();
         foreach ($options as $key => $value) {
             if (property_exists($Spyc, $key)) {
                 $Spyc->$key = $value;
@@ -169,7 +169,7 @@ class Spyc
      */
     public static function YAMLDump($array, $indent = false, $wordwrap = false, $no_opening_dashes = false)
     {
-        $spyc = new Spyc;
+        $spyc = new Spyc();
         return $spyc->dump($array, $indent, $wordwrap, $no_opening_dashes);
     }
 
@@ -448,9 +448,9 @@ class Spyc
     {
         if (self::isTrueWord($value)) {
             $value = true;
-        } else if (self::isFalseWord($value)) {
+        } elseif (self::isFalseWord($value)) {
             $value = false;
-        } else if (self::isNullWord($value)) {
+        } elseif (self::isNullWord($value)) {
             $value = null;
         }
     }
@@ -912,20 +912,18 @@ class Spyc
             }
 
             $_arr = array_merge($_arr, $value);
-        } else if ($key || $key === '' || $key === '0') {
+        } elseif ($key || $key === '' || $key === '0') {
             if (!is_array($_arr))
                 $_arr = array($key => $value);
             else
                 $_arr[$key] = $value;
+        } elseif (!is_array($_arr)) {
+            $_arr = array($value);
+            $key = 0;
         } else {
-            if (!is_array($_arr)) {
-                $_arr = array($value);
-                $key = 0;
-            } else {
-                $_arr[] = $value;
-                end($_arr);
-                $key = key($_arr);
-            }
+            $_arr[] = $value;
+            end($_arr);
+            $key = key($_arr);
         }
 
         $reverse_path = array_reverse($this->path);
@@ -992,12 +990,12 @@ class Spyc
         return $literalBlock . $line;
     }
 
-    function revertLiteralPlaceHolder($lineArray, $literalBlock)
+    public function revertLiteralPlaceHolder($lineArray, $literalBlock)
     {
         foreach ($lineArray as $k => $_) {
             if (is_array($_))
                 $lineArray[$k] = $this->revertLiteralPlaceHolder($_, $literalBlock);
-            else if (substr($_, -1 * strlen($this->LiteralPlaceHolder)) == $this->LiteralPlaceHolder)
+            elseif (substr($_, -1 * strlen($this->LiteralPlaceHolder)) == $this->LiteralPlaceHolder)
                 $lineArray[$k] = rtrim($literalBlock, " \r\n");
         }
         return $lineArray;

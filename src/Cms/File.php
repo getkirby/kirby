@@ -30,13 +30,13 @@ use Kirby\Toolkit\Str;
  */
 class File extends ModelWithContent
 {
-    const CLASS_ALIAS = 'file';
-
     use FileActions;
     use FileModifications;
     use HasMethods;
     use HasSiblings;
     use IsFile;
+
+    public const CLASS_ALIAS = 'file';
 
     /**
      * Cache for the initialized blueprint object

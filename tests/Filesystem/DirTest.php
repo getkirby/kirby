@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase as TestCase;
  */
 class DirTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures/dir';
+    public const FIXTURES = __DIR__ . '/fixtures/dir';
 
     protected $fixtures = __DIR__ . '/fixtures/dir';
     protected $tmp = __DIR__ . '/tmp';

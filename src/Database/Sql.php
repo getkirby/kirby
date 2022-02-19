@@ -155,7 +155,7 @@ abstract class Sql
      *
      * @param $table string
      * @param $column string
-     * @param $values boolean Whether the identifier is going to be used for a VALUES clause;
+     * @param $values bool Whether the identifier is going to be used for a VALUES clause;
      *                        only relevant for SQLite
      * @return string
      */

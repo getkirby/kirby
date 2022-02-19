@@ -23,7 +23,7 @@ use Throwable;
  */
 class Blocks extends Items
 {
-    const ITEM_CLASS = '\Kirby\Cms\Block';
+    public const ITEM_CLASS = '\Kirby\Cms\Block';
 
     /**
      * Return HTML when the collection is

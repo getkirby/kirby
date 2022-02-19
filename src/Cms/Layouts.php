@@ -17,7 +17,7 @@ use Throwable;
  */
 class Layouts extends Items
 {
-    const ITEM_CLASS = '\Kirby\Cms\Layout';
+    public const ITEM_CLASS = '\Kirby\Cms\Layout';
 
     public static function factory(array $items = null, array $params = [])
     {

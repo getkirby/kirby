@@ -17,7 +17,7 @@ use Exception;
  */
 class Items extends Collection
 {
-    const ITEM_CLASS = '\Kirby\Cms\Item';
+    public const ITEM_CLASS = '\Kirby\Cms\Item';
 
     /**
      * @var array

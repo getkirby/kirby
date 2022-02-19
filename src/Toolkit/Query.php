@@ -18,14 +18,14 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Query
 {
-    const PARTS      = '!\.|(\(([^()]+|(?1))*+\))(*SKIP)(*FAIL)!'; // split by dot, but not inside (nested) parens
-    const PARAMETERS = '!,|' . self::SKIP . '!'; // split by comma, but not inside skip groups
+    public const PARTS      = '!\.|(\(([^()]+|(?1))*+\))(*SKIP)(*FAIL)!'; // split by dot, but not inside (nested) parens
+    public const PARAMETERS = '!,|' . self::SKIP . '!'; // split by comma, but not inside skip groups
 
-    const NO_PNTH = '\([^(]+\)(*SKIP)(*FAIL)';
-    const NO_SQBR = '\[[^]]+\](*SKIP)(*FAIL)';
-    const NO_DLQU = '\"(?:[^"\\\\]|\\\\.)*\"(*SKIP)(*FAIL)';  // allow \" escaping inside string
-    const NO_SLQU = '\'(?:[^\'\\\\]|\\\\.)*\'(*SKIP)(*FAIL)'; // allow \' escaping inside string
-    const SKIP    = self::NO_PNTH . '|' . self::NO_SQBR . '|' .
+    public const NO_PNTH = '\([^(]+\)(*SKIP)(*FAIL)';
+    public const NO_SQBR = '\[[^]]+\](*SKIP)(*FAIL)';
+    public const NO_DLQU = '\"(?:[^"\\\\]|\\\\.)*\"(*SKIP)(*FAIL)';  // allow \" escaping inside string
+    public const NO_SLQU = '\'(?:[^\'\\\\]|\\\\.)*\'(*SKIP)(*FAIL)'; // allow \' escaping inside string
+    public const SKIP    = self::NO_PNTH . '|' . self::NO_SQBR . '|' .
                     self::NO_DLQU . '|' . self::NO_SLQU;
 
     /**

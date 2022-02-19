@@ -1,1 +1,3 @@
-<?php throw new Exception('View exception');
+<?php
+
+throw new Exception('View exception');
