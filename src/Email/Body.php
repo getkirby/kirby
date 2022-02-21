@@ -20,12 +20,12 @@ class Body
     use Properties;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $html;
 
     /**
-     * @var string|null
+     * @var string
      */
     protected $text;
 
@@ -42,7 +42,7 @@ class Body
     /**
      * Returns the HTML content of the email body
      *
-     * @return string|null
+     * @return string
      */
     public function html()
     {
@@ -52,7 +52,7 @@ class Body
     /**
      * Returns the plain text content of the email body
      *
-     * @return string|null
+     * @return string
      */
     public function text()
     {
@@ -67,7 +67,7 @@ class Body
      */
     protected function setHtml(string $html = null)
     {
-        $this->html = $html;
+        $this->html = $html ?? '';
         return $this;
     }
 
@@ -79,7 +79,7 @@ class Body
      */
     protected function setText(string $text = null)
     {
-        $this->text = $text;
+        $this->text = $text ?? '';
         return $this;
     }
 }
