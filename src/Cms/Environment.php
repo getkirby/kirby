@@ -27,39 +27,32 @@ class Environment
     protected $root;
 
     /**
-     * @var \Kirby\Http\Server
-     */
-    protected $server;
-
-    /**
      * @var \Kirby\Http\Uri
      */
     protected $uri;
 
     /**
-     * @param \Kirby\Http\Server $server
      * @param string $root
      * @param bool|string|array|null $allowed
      */
-    public function __construct(Server $server, string $root, $allowed = null)
+    public function __construct(string $root, $allowed = null)
     {
-        $this->root   = $root;
-        $this->server = $server;
+        $this->root = $root;
 
         // the current URL is detected via possibly insecure HOST headers
         if ($allowed === true || $allowed === null) {
-            $this->server->hosts(['*']);
+            Server::hosts(['*']);
             $this->uri = Uri::index();
 
         // the current URL is detected via the server name
         } elseif ($allowed === false) {
-            $this->server->hosts([]);
+            Server::hosts([]);
             $this->uri = Uri::index();
 
         // the current URL is predefined and not detected automatically
         } elseif (is_string($allowed) === true) {
             $this->uri = new Uri($allowed);
-            $this->server->hosts([$this->uri->host()]);
+            Server::hosts([$this->uri->host()]);
 
         // the current URL is auto detected with a host allowlist
         } elseif (is_array($allowed) === true) {
@@ -68,7 +61,7 @@ class Environment
                 $hosts[]    = $host;
             }
 
-            $this->server->hosts($hosts);
+            Server::hosts($hosts);
             $this->uri = Uri::index();
         } else {
             throw new InvalidArgumentException('Invalid allow list setup for base URLs');
@@ -96,7 +89,7 @@ class Environment
         $configAddr = [];
 
         $host = $this->host();
-        $addr = $this->server->address();
+        $addr = Server::address();
 
         // load the config for the host
         if (empty($host) === false) {
