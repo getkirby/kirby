@@ -195,6 +195,10 @@ class Server
         }
 
         foreach (static::$hosts as $pattern) {
+            if (empty($pattern) === true) {
+                continue;
+            }
+
             if (fnmatch($pattern, $host) === true) {
                 return true;
             }
