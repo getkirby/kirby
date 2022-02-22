@@ -56,6 +56,7 @@ class App
     protected $collections;
     protected $core;
     protected $defaultLanguage;
+    protected $environment;
     protected $language;
     protected $languages;
     protected $locks;
@@ -92,9 +93,9 @@ class App
         $this->bakeRoots($props['roots'] ?? []);
 
         // stuff from config and additional options
-        Config::$data = [];
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
+        $this->optionsFromEnvironment();
 
         // register the Whoops error handler
         $this->handleErrors();
@@ -283,11 +284,6 @@ class App
      */
     protected function bakeUrls(array $urls = null)
     {
-        // inject the index URL from the config
-        if (isset($this->options['url']) === true) {
-            $urls['index'] = $this->options['url'];
-        }
-
         $urls = array_merge($this->core->urls(), (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
@@ -588,6 +584,17 @@ class App
         $props = (new Email($preset, $props))->toArray();
 
         return ($this->component('email'))($this, $props, $debug);
+    }
+
+    /**
+     * Returns the environment object with access
+     * to the detected host, base url and dedicated options
+     *
+     * @return \Kirby\Cms\Environment
+     */
+    public function environment()
+    {
+        return $this->environment;
     }
 
     /**
@@ -986,22 +993,30 @@ class App
      */
     protected function optionsFromConfig(): array
     {
-        $root = $this->root('config');
+        // create an empty config container
+        Config::$data = [];
 
-        // main config file
-        $main = F::load($root . '/config.php', []);
+        // load the main config options
+        $root    = $this->root('config');
+        $options = F::load($root . '/config.php', []);
 
-        // server-specific config files
-        $server = $this->server($main['url'] ?? null);
-        $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);
-        $addr   = F::load($root . '/config.' . basename($server->address()) . '.php', []);
+        // merge into one clean options array
+        return $this->options = array_replace_recursive(Config::$data, $options);
+    }
 
-        return $this->options = array_replace_recursive(
-            Config::$data,
-            $main,
-            $host,
-            $addr
-        );
+    /**
+     * Load all options for the current
+     * server environment
+     *
+     * @return array
+     */
+    protected function optionsFromEnvironment(): array
+    {
+        // create the environment based on the URL setup
+        $this->environment = new Environment($this->server(), $this->root('config'), $this->options['url'] ?? null);
+
+        // merge into one clean options array
+        return $this->options = array_replace_recursive($this->options, $this->environment->options());
     }
 
     /**
@@ -1418,18 +1433,15 @@ class App
     /**
      * Returns the Server object
      *
-     * @param string|array|true|null $hosts Allowed hosts
      * @return \Kirby\Http\Server
      */
-    public function server($hosts = null)
+    public function server()
     {
         if ($this->server !== null) {
             return $this->server;
         }
 
-        $this->server = new Server();
-        $this->server->setHosts($hosts);
-        return $this->server;
+        return $this->server = new Server();
     }
 
     /**

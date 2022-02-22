@@ -82,7 +82,7 @@ class ServerTest extends TestCase
     public function testHost()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::$hosts = ['*'];
+        Server::hosts(true);
         $this->assertSame('example.com', Server::host());
     }
 
@@ -110,7 +110,7 @@ class ServerTest extends TestCase
     public function testHostFromProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
-        Server::$hosts = ['*'];
+        Server::hosts(true);
         $this->assertSame('example.com', Server::host());
     }
 
@@ -120,7 +120,7 @@ class ServerTest extends TestCase
     public function testHostAllowlistExcluded()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::$hosts = ['getkirby.com'];
+        Server::hosts('getkirby.com');
         $this->assertSame('', Server::host());
     }
 
@@ -130,7 +130,7 @@ class ServerTest extends TestCase
     public function testHostAllowlistIncluded()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::$hosts = ['example.com'];
+        Server::hosts('example.com');
         $this->assertSame('example.com', Server::host());
     }
 
@@ -140,7 +140,7 @@ class ServerTest extends TestCase
     public function testHostAllowlistWildcard()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::$hosts = ['*'];
+        Server::hosts('*');
         $this->assertSame('example.com', Server::host());
     }
 
@@ -158,8 +158,29 @@ class ServerTest extends TestCase
     public function testHostWithPort()
     {
         $_SERVER['HTTP_HOST'] = 'example.com:8888';
-        Server::$hosts = ['*'];
+        Server::hosts(true);
         $this->assertSame('example.com', Server::host());
+    }
+
+    /**
+     * @covers ::hosts
+     */
+    public function testHosts()
+    {
+        // default
+        $this->assertSame([], Server::hosts());
+
+        // single string
+        $this->assertSame(['getkirby.com'], Server::hosts('getkirby.com'));
+        $this->assertSame(['getkirby.com'], Server::hosts());
+
+        // whitecard
+        $this->assertSame(['*'], Server::hosts(true));
+        $this->assertSame(['*'], Server::hosts());
+
+        // block
+        $this->assertSame([], Server::hosts(false));
+        $this->assertSame([], Server::hosts());
     }
 
     public function provideHttps()
@@ -264,7 +285,7 @@ class ServerTest extends TestCase
      */
     public function testIsAllowedHost($input, $hosts, $expected)
     {
-        Server::$hosts = $hosts;
+        Server::hosts($hosts);
         $this->assertSame($expected, Server::isAllowedHost($input));
     }
 
@@ -394,6 +415,39 @@ class ServerTest extends TestCase
     public function provideSanitize()
     {
         return [
+            // needs no sanitizing
+            [
+                'HTTP_HOST',
+                'getkirby.com',
+                'getkirby.com'
+            ],
+            [
+                'HTTP_HOST',
+                'öxample.com',
+                'öxample.com'
+            ],
+            [
+                'HTTP_HOST',
+                'example-with-dashes.com',
+                'example-with-dashes.com'
+            ],
+            [
+                'SERVER_PORT',
+                9999,
+                9999
+            ],
+
+            // needs sanitizing
+            [
+                'HTTP_HOST',
+                '.somehost.com',
+                'somehost.com'
+            ],
+            [
+                'HTTP_HOST',
+                '-somehost.com',
+                'somehost.com'
+            ],
             [
                 'HTTP_HOST',
                 '<script>foo()</script>',
@@ -403,6 +457,16 @@ class ServerTest extends TestCase
                 'HTTP_X_FORWARDED_HOST',
                 '<script>foo()</script>',
                 'foo'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '../some-fake-host',
+                'some-fake-host'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '../',
+                ''
             ],
             [
                 'SERVER_PORT',

@@ -131,6 +131,35 @@ class Server
     }
 
     /**
+     * Setter and getter for the the static $hosts property
+     *
+     * null: returns all defined hosts
+     * false: ignores forwarded host -> $hosts = empty array
+     * true: support any forwarded host-> $hosts = ['*']
+     * array: trusted hosts -> $hosts = array of trusted hosts
+     * string: single trusted host -> $hosts = [host]
+     *
+     * @param string|array|true|null $hosts
+     * @return array
+     */
+    public static function hosts($hosts = null): array
+    {
+        if ($hosts === null) {
+            return static::$hosts;
+        }
+
+        if ($hosts === false) {
+            $hosts = [];
+        }
+
+        if ($hosts === true) {
+            $hosts = ['*'];
+        }
+
+        return static::$hosts = A::wrap($hosts);
+    }
+
+    /**
      * Checks for a https request
      *
      * @return bool
@@ -260,9 +289,11 @@ class Server
                 $value ??= '';
                 $value = strtolower($value);
                 $value = strip_tags($value);
+                $value = basename($value);
                 $value = preg_replace('![^\w.:-]+!iu', '', $value);
-                $value = trim($value, '-');
                 $value = htmlspecialchars($value, ENT_COMPAT);
+                $value = trim($value, '-');
+                $value = trim($value, '.');
                 break;
             case 'SERVER_PORT':
             case 'HTTP_X_FORWARDED_PORT':
@@ -309,25 +340,5 @@ class Server
         }
 
         return $path;
-    }
-
-    /**
-     * Sets the static $hosts property
-     *
-     * null: ignores forwarded host -> $hosts = empty array
-     * true: support any forwarded host-> $hosts = ['*']
-     * array: trusted hosts -> $hosts = array of trusted hosts
-     * string: single trusted host -> $hosts = [host]
-     *
-     * @param string|array|true|null $hosts
-     * @return void
-     */
-    public static function setHosts($hosts = [])
-    {
-        if ($hosts === true) {
-            $hosts = ['*'];
-        }
-
-        static::$hosts = A::wrap($hosts);
     }
 }

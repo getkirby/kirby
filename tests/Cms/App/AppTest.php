@@ -16,15 +16,18 @@ use ReflectionMethod;
 class AppTest extends TestCase
 {
     protected $fixtures;
+    protected $_SERVER;
 
     public function setUp(): void
     {
+        $this->_SERVER = $_SERVER;
         $this->fixtures = __DIR__ . '/fixtures/AppTest';
     }
 
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+        $_SERVER = $this->_SERVER;
     }
 
     /**
@@ -784,9 +787,8 @@ class AppTest extends TestCase
             ['http://getkirby.com', 'http://getkirby.com'],
             ['https://getkirby.com', 'https://getkirby.com'],
             ['https://getkirby.com/test', 'https://getkirby.com/test'],
-            ['/', 'http://example.com/'],
-            ['/test', 'http://example.com/test'],
-            ['getkirby.com/test', 'http://example.com/getkirby.com/test'],
+            ['/', '/'],
+            ['/test', '/test'],
         ];
     }
 
@@ -795,8 +797,6 @@ class AppTest extends TestCase
      */
     public function testUrl($url, $expected)
     {
-        $_SERVER['SERVER_ADDR'] = 'example.com';
-
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
