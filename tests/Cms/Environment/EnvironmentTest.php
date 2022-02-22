@@ -34,6 +34,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -51,6 +52,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -68,6 +70,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -85,6 +88,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -102,6 +106,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -122,6 +127,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -139,6 +145,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -156,6 +163,7 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::__construct
      * @covers ::host
      * @covers ::url
      */
@@ -172,6 +180,9 @@ class EnvironmentTest extends TestCase
         $this->assertSame(['example.de'], $server->hosts());
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testInvalidAllowList()
     {
         $server = $this->server([
