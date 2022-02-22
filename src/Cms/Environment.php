@@ -39,12 +39,12 @@ class Environment
     {
         $this->root = $root;
 
-        // the current URL is detected via possibly insecure HOST headers
+        // the current URL should be detected via possibly insecure HOST headers
         if ($allowed === true || $allowed === null) {
             Server::hosts(['*']);
             $this->uri = Uri::index();
 
-        // the current URL is detected via the server name
+        // the current URL should be detected via the server name
         } elseif ($allowed === false) {
             Server::hosts([]);
             $this->uri = Uri::index();
@@ -54,7 +54,7 @@ class Environment
             $this->uri = new Uri($allowed);
             Server::hosts([$this->uri->host()]);
 
-        // the current URL is auto detected with a host allowlist
+        // the current URL should be auto detected from a host allowlist
         } elseif (is_array($allowed) === true) {
             foreach ($allowed as $url) {
                 $host = (new Uri($url))->host();
