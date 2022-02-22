@@ -1437,11 +1437,7 @@ class App
      */
     public function server()
     {
-        if ($this->server !== null) {
-            return $this->server;
-        }
-
-        return $this->server = new Server();
+        return $this->server ??= new Server();
     }
 
     /**
