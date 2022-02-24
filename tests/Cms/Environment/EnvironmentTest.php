@@ -64,6 +64,34 @@ class EnvironmentTest extends TestCase
      * @covers ::host
      * @covers ::url
      */
+    public function testAllowFromRelativeUrl()
+    {
+        $env = new Environment($this->config, '/');
+
+        $this->assertSame('/', $env->url());
+        $this->assertNull($env->host());
+        $this->assertSame([], Server::hosts());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::host
+     * @covers ::url
+     */
+    public function testAllowFromRelativeUrlWithSubfolder()
+    {
+        $env = new Environment($this->config, '/subfolder');
+
+        $this->assertSame('/subfolder', $env->url());
+        $this->assertNull($env->host());
+        $this->assertSame([], Server::hosts());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::host
+     * @covers ::url
+     */
     public function testAllowFromServerName()
     {
         $_SERVER['SERVER_NAME'] = 'example.com';
@@ -119,11 +147,10 @@ class EnvironmentTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
 
-        $env = new Environment($this->config, false);
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
-        $this->assertSame('/', $env->url());
-        $this->assertSame('', $env->host());
-        $this->assertSame([], Server::hosts());
+        new Environment($this->config, false);
     }
 
     /**
@@ -135,11 +162,10 @@ class EnvironmentTest extends TestCase
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
 
-        $env = new Environment($this->config, false);
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
-        $this->assertSame('/', $env->url());
-        $this->assertSame('', $env->host());
-        $this->assertSame([], Server::hosts());
+        new Environment($this->config, false);
     }
 
     /**
@@ -151,11 +177,10 @@ class EnvironmentTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
 
-        $env = new Environment($this->config, ['http://example.de']);
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
-        $this->assertSame('/', $env->url());
-        $this->assertSame('', $env->host());
-        $this->assertSame(['example.de'], Server::hosts());
+        new Environment($this->config, ['http://example.de']);
     }
 
     /**

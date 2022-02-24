@@ -39,6 +39,10 @@ class Environment
     {
         $this->root = $root;
 
+        // empty hosts for relative URLs may be allowed in
+        // some scenarios. Otherwise an exception is thrown further down.
+        $allowEmptyHost = false;
+
         // the current URL should be detected via possibly insecure HOST headers
         if ($allowed === true || $allowed === null) {
             Server::hosts(['*']);
@@ -51,10 +55,22 @@ class Environment
 
         // the current URL is predefined and not detected automatically
         } elseif (is_string($allowed) === true) {
-            $this->uri = new Uri($allowed);
-            Server::hosts([$this->uri->host()]);
+            // if the url option is relative (i.e. '/' or '/some/subfolder')
+            // the host will be empty and that's totally fine.
+            $allowEmptyHost = true;
 
-        // the current URL should be auto detected from a host allowlist
+            // create the URI object directly from the given option
+            // without any form of detection from the server
+            $this->uri = new Uri($allowed);
+
+            // only create an allow list from absolute URLs
+            // otherwise the default secure host detection
+            // behavior will be used
+            if (empty($host = $this->uri->host()) === false) {
+                Server::hosts([$host]);
+            }
+
+            // the current URL should be auto detected from a host allowlist
         } elseif (is_array($allowed) === true) {
             foreach ($allowed as $url) {
                 $host = (new Uri($url))->host();
@@ -65,6 +81,11 @@ class Environment
             $this->uri = Uri::index();
         } else {
             throw new InvalidArgumentException('Invalid allow list setup for base URLs');
+        }
+
+        // check for empty hosts
+        if ($allowEmptyHost === false && empty($this->uri->host()) === true) {
+            throw new InvalidArgumentException('Invalid host setup. The detected host is not allowed.');
         }
     }
 
