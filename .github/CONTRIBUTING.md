@@ -2,54 +2,93 @@
 
 :+1::tada: First off, yes, you can contribute and thanks already for taking the time if you do! :tada::+1:
 
-## Our branches setup
+## How we organize code
 
-| Branch | Used for | PRs allowed? |
-|--|--|--|
-| `main` | Latest released version | - |
-| `release/*` | Pre-releases in testing before they are merged into `main` when released | - |
-| `develop` | Working branch for next patch version, e.g. `3.0.x` | target for bugfix PRs |
-| `features` | Working branch for next feature version, e.g. `3.x` | target for feature PRs |
-| `fix/*` | Temporary branches for single patch | - |
-| `feature/*` | Temporary branches for single feature | - |
+To keep track of different states of our code (current release, bugfixes, features) we use branches:
 
-We will review all pull requests (PRs) to `develop` or `features` and merge them, if decided once appropriate version is upcoming. Please understand that this might not be the immediate next release.
+| Branch      | Used for                                                                 | PRs allowed?   |
+| ----------- | ------------------------------------------------------------------------ | -------------- |
+| `main`      | Latest released version                                                  | -              |
+| `develop`   | Working branch for next release, e.g. `3.7.x`                            | target for PRs |
+| `fix/*`     | Temporary branches for single patch                                      | -              |
+| `feature/*` | Temporary branches for single feature                                    | -              |
+| `release/*` | Pre-releases in testing before they are merged into `main` when released | -              |
 
-## Bug reports
+We will review all pull requests (PRs) to `develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
 
-Helping us understand bugs you encountered is the first step to support us in fixing them. When you create a bug report, please include as many details as possible. Fill out [the required template](ISSUE_TEMPLATE/bug_report.md), the requested information helps us resolve issues faster.
+## How you can contribute
 
-## Bug fixes
+### Report a bug
 
-For bug fixes create a new  branch following the name scheme: `fix/issue_number-bug-x`. Limit bug fix pull-requests (PRs) to a single bug. **Do not mix multiple bug fixes in a single PR.** This will make it easier for us to review the fix and merge it.
+When you find a bug, the first step to fixing it is to help us understand and reproduce the bug as best as possible. When you create a bug report, please include as many details as possible. Fill out [the template](ISSUE_TEMPLATE/bug_report.md) because the requested information helps us resolve issues so much faster.
 
-Always send bug fix PRs against the `develop` branch––not `main`! Add a helpful description of what the PR does if it is not 100% self-explanatory. Every bug fix should also be combined with a unit test to avoid future regressions. Let us know if you need help with that.
+### Bug fixes
 
-Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
+For bug fixes, please create a new branch following the name scheme: `fix/issue_number-bug-x`, e.g. `fix/234-this-nasty-bug`. Limit bug fix PRs to a single bug. **Do not mix multiple bug fixes in a single PR.** This will make it easier for us to review the fix and merge it.
 
-Fix code style issues with [PHP CS](https://github.com/FriendsOfPHP/PHP-CS-Fixer) before you submit the PR. [Install PHP CS globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via composer and then run `composer fix` in the kirby repository. Our tests will fail if there are CS issues in your code.
+- Always send bug fix PRs against the `develop` branch––not `main`.
+- Add a helpful description of what the PR does if it is not 100% self-explanatory.
+- Every bug fix should include a [unit test](#tests) to avoid future regressions. Let us know if you need help with that.
+- Make sure your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
+- Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 
-## Translations
+### Features
 
-We are really happy about any help with our translations. Please, do not translate directly in the JSON files though. We use a service called Transifex to handle [all translations for the Panel](https://translation.getkirby.com/). Create an account there and send us a request to join our translator group. Please, also send us an email at <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests and often miss them.
+For features create a new branch following the name scheme: `feature/issue_number-feature-x`, e.g. `feature/123-awesome-function`. Our [feedback platform](https://feedback.getkirby.com) can be a good source of highly requested features. Maybe your feature idea already exists and you can get valuable feedback from other Kirby users. Focus on a single feature per PR. Don't mix features!
 
-## Features
+- Always send feature PRs against the `develop` branch––not `main`.
+- Add a helpful description of what the PR does.
+- New features should include [unit tests](#tests). Let us know if you need help with that.
+- Make your code [style](#style) matches ours and includes [comments/in-code documentation](#documentation).
+- Make sure your branch is up to date with the latest state on the `develop` branch. [Rebase](https://help.github.com/articles/about-pull-request-merges/) changes before you send the PR.
 
-For features create a new branch following the name scheme: `feature/issue_number-feature-x`. Always send feature PRs against the `features` branch––not `main`!
+We try to bundle features in our major releases, e.g. `3.x`. That is why we might only review and, if accepted, merge your PR once an appropriate release is upcoming. Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
 
-We try to bundle features in our major releases, e.g. `3.x`. That is why we might only review and, if decided, merge your PR once an appropriate  release for your PR is upcoming.
+### Translations
 
-Have a look at our [feedback platform](https://feedback.getkirby.com). Maybe your feature idea already exists and you can get valuable feedback from other Kirby users.
+We are really happy about any help with translations. Please do not directly translate JSON files, though. We use a service called Transifex to handle [all translations](https://translation.getkirby.com/). Create an account there and send us a request to join our translator group. Additionally, also send an email to <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests.
 
-### Additional rules:
+## How we write code
 
-1. New features must have unit tests
-2. Fix code style issues with CS fixer and `composer fix` before you submit the PR
-3. Add a helpful description
-4. Focus on a single feature per PR. Don't mix features!
-5. Write human-readable commit messages. We might use them for the changelog.
+### Style
 
-Please understand that we cannot merge all feature ideas or that it might take a while. Check out the [roadmap](https://roadmap.getkirby.com) to see upcoming releases.
+#### Backend (PHP)
+
+We use [PHP CS](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-2](https://www.php-fig.org/psr/psr-2/). [Install PHP CS globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via composer and then run `composer fix` in the `kirby` folder to check for inconsistencies and fix them. Our automated PR checks will fail if there are code style issues with your code.
+
+#### Frontend/Panel (JavaScript, Vue)
+
+We use [Prettier](https://prettier.io) to ensure a consistent style for our JavaScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
+
+### Documentation
+
+In-code documentation and comments help us understand each other's code - or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this.
+
+#### Backend (PHP)
+
+We use PHP [DocBlocks](https://docs.phpdoc.org/guide/references/phpdoc/basic-syntax.html#what-is-a-docblock) for classes and methods.
+
+#### Frontend/Panel (JavaScript, Vue)
+
+We use [JSDoc](https://jsdoc.app) for documenting JavaScript code, especially for [Vue components](https://vue-styleguidist.github.io/docs/Documenting.html).
+
+### Tests
+
+Unit and integration tests help us prevent regressions when we make changes to the code. Every bug fix should also add a unit test for the fixed bug to make sure we won't re-introduce the same problem later down the road. Every new feature should be accompanied by unit tests to protect it from breaking through future changes.
+
+#### Backend (PHP)
+
+We use [PHPUnit](https://phpunit.de) for unit test for our PHP code. You can find all existing tests in the [`kirby/tests` subfolders](https://github.com/getkirby/kirby/tree/main/tests). Take a look to see how we usually structure our tests.
+
+#### Frontend/Panel (JavaScript, Vue)
+
+The Panel doesn't have extensive test coverage yet. That's an area we are still trying to improve.
+
+We use [vitest](https://vitest.dev) for unit tests for JavaScript and Vue components - `.test.js` files next to the actual JavaScript/Vue file.
+
+For integration tests, we use [cypress](https://www.cypress.io) - `.e2e.js` files.
+
+## And last…
 
 Let us know [in the forum](https://forum.getkirby.com) if you have questions.
 
