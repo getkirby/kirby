@@ -43,17 +43,26 @@ class Environment
         // some scenarios. Otherwise an exception is thrown further down.
         $allowEmptyHost = false;
 
-        // the current URL should be detected via possibly insecure HOST headers
-        if ($allowed === true || $allowed === null) {
+        // This is the default. The current URL should be detected via the server name.
+        // Empty hosts are allowed. Should lead to no breaking changes with previous setups.
+        if ($allowed === null) {
+            $allowEmptyHost = true;
+
+            Server::hosts([]);
+            $this->uri = Uri::index();
+
+        // The current URL should be detected via possibly insecure HOST headers
+        } elseif ($allowed === true) {
             Server::hosts(['*']);
             $this->uri = Uri::index();
 
-        // the current URL should be detected via the server name
+        // the current URL should be detected via the server name. no empty hosts allowed
         } elseif ($allowed === false) {
             Server::hosts([]);
             $this->uri = Uri::index();
 
-        // the current URL is predefined and not detected automatically
+        // the current URL is predefined with a single string
+        // and not detected automatically
         } elseif (is_string($allowed) === true) {
             // if the url option is relative (i.e. '/' or '/some/subfolder')
             // the host will be empty and that's totally fine.
@@ -70,7 +79,7 @@ class Environment
                 Server::hosts([$host]);
             }
 
-            // the current URL should be auto detected from a host allowlist
+        // the current URL should be auto detected from a host allowlist
         } elseif (is_array($allowed) === true) {
             foreach ($allowed as $url) {
                 $host = (new Uri($url))->host();
