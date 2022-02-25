@@ -9,7 +9,7 @@
   "back": "Zpět",
   "cancel": "Zru\u0161it",
   "change": "Zm\u011bnit",
-  "close": "Zav\u0159it",
+  "close": "Zavřít",
   "confirm": "Ok",
   "collapse": "Sbalit",
   "collapse.all": "Sbalit vše",
@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Výchozí šablona neexistuje",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Vyskytla se neočekávaná chyba! Pro více informací povolte debug mód, viz: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Nemáte dovoleno měnit email uživatele \"{name}\"",
   "error.user.changeLanguage.permission": "Nemáte dovoleno změnit jazyk uživatele \"{name}\"",

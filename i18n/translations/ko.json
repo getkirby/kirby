@@ -505,7 +505,7 @@
   "toolbar.button.ul": "기호 목록",
 
   "translation.author": "Kirby 팀",
-  "translation.direction": "왼쪽에서 오른쪽",
+  "translation.direction": "ltr",
   "translation.name": "한국어",
   "translation.locale": "ko_KR",
 
