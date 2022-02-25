@@ -48,7 +48,7 @@ class Mime
         'html'  => 'text/html',
         'ico'   => 'image/x-icon',
         'ics'   => 'text/calendar',
-        'js'    => 'application/javascript',
+        'js'    => ['application/javascript', 'application/x-javascript'],
         'json'  => ['application/json', 'text/json'],
         'j2k'   => ['image/jp2'],
         'jp2'   => ['image/jp2'],
