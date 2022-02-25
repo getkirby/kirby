@@ -40,6 +40,7 @@ return array(
     'Kirby\\Cms\\ContentTranslation' => $baseDir . '/src/Cms/ContentTranslation.php',
     'Kirby\\Cms\\Core' => $baseDir . '/src/Cms/Core.php',
     'Kirby\\Cms\\Email' => $baseDir . '/src/Cms/Email.php',
+    'Kirby\\Cms\\Environment' => $baseDir . '/src/Cms/Environment.php',
     'Kirby\\Cms\\Event' => $baseDir . '/src/Cms/Event.php',
     'Kirby\\Cms\\Field' => $baseDir . '/src/Cms/Field.php',
     'Kirby\\Cms\\Fieldset' => $baseDir . '/src/Cms/Fieldset.php',
