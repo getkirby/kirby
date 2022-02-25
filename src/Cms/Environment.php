@@ -79,7 +79,7 @@ class Environment
                 Server::hosts([$host]);
             }
 
-        // the current URL should be auto detected from a host allowlist
+            // the current URL should be auto detected from a host allowlist
         } elseif (is_array($allowed) === true) {
             foreach ($allowed as $url) {
                 $host = (new Uri($url))->host();
