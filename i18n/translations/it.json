@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Il template \"default\" non esiste",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Si è verificato un errore inaspettato! Abilita la modalità \"debug\" per ulteriori informazioni: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Non ti è permesso modificare l'indirizzo email di \"{name}\"",
   "error.user.changeLanguage.permission": "Non ti è permesso modificare la lingua per l'utente \"{name}\"",
