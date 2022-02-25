@@ -452,7 +452,7 @@ class Core
     public function urls(): array
     {
         return $this->cache['urls'] ??= [
-            'index'   => fn () => Url::index(),
+            'index'   => fn () => $this->kirby->environment()->url(),
             'base'    => fn (array $urls) => rtrim($urls['index'], '/'),
             'current' => function (array $urls) {
                 $path = trim($this->kirby->path(), '/');

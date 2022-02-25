@@ -57,9 +57,8 @@ class SystemTest extends TestCase
             ['http://getkirby.com', 'getkirby.com'],
             ['https://getkirby.com', 'getkirby.com'],
             ['https://getkirby.com/test', 'getkirby.com/test'],
-            ['/', 'example.com'],
-            ['/test', 'example.com/test'],
-            ['getkirby.com/test', 'example.com/getkirby.com/test'],
+            ['/', '/'],
+            ['/test', '/test']
         ];
     }
 
@@ -176,17 +175,12 @@ class SystemTest extends TestCase
      */
     public function testIndexUrl($indexUrl, $expected)
     {
-        $_SERVER['SERVER_ADDR'] = 'example.com';
-
         $system = new System($this->app->clone([
             'options' => [
                 'url' => $indexUrl
             ]
         ]));
         $this->assertSame($expected, $system->indexUrl($indexUrl));
-
-        // reset SERVER_ADDR
-        $_SERVER['SERVER_ADDR'] = null;
     }
 
     /**

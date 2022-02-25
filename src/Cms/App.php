@@ -56,6 +56,7 @@ class App
     protected $collections;
     protected $core;
     protected $defaultLanguage;
+    protected $environment;
     protected $language;
     protected $languages;
     protected $locks;
@@ -94,6 +95,7 @@ class App
         // stuff from config and additional options
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
+        $this->optionsFromEnvironment();
 
         // register the Whoops error handler
         $this->handleErrors();
@@ -282,11 +284,6 @@ class App
      */
     protected function bakeUrls(array $urls = null)
     {
-        // inject the index URL from the config
-        if (isset($this->options['url']) === true) {
-            $urls['index'] = $this->options['url'];
-        }
-
         $urls = array_merge($this->core->urls(), (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
@@ -587,6 +584,17 @@ class App
         $props = (new Email($preset, $props))->toArray();
 
         return ($this->component('email'))($this, $props, $debug);
+    }
+
+    /**
+     * Returns the environment object with access
+     * to the detected host, base url and dedicated options
+     *
+     * @return \Kirby\Cms\Environment
+     */
+    public function environment()
+    {
+        return $this->environment;
     }
 
     /**
@@ -985,18 +993,30 @@ class App
      */
     protected function optionsFromConfig(): array
     {
-        $server = $this->server();
-        $root   = $this->root('config');
-
+        // create an empty config container
         Config::$data = [];
 
-        $main   = F::load($root . '/config.php', []);
-        $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);
-        $addr   = F::load($root . '/config.' . basename($server->address()) . '.php', []);
+        // load the main config options
+        $root    = $this->root('config');
+        $options = F::load($root . '/config.php', []);
 
-        $config = Config::$data;
+        // merge into one clean options array
+        return $this->options = array_replace_recursive(Config::$data, $options);
+    }
 
-        return $this->options = array_replace_recursive($config, $main, $host, $addr);
+    /**
+     * Load all options for the current
+     * server environment
+     *
+     * @return array
+     */
+    protected function optionsFromEnvironment(): array
+    {
+        // create the environment based on the URL setup
+        $this->environment = new Environment($this->root('config'), $this->options['url'] ?? null);
+
+        // merge into one clean options array
+        return $this->options = array_replace_recursive($this->options, $this->environment->options());
     }
 
     /**
@@ -1007,7 +1027,10 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, $options);
+        return $this->options = array_replace_recursive(
+            $this->options,
+            $options
+        );
     }
 
     /**
@@ -1414,7 +1437,7 @@ class App
      */
     public function server()
     {
-        return $this->server = $this->server ?? new Server();
+        return $this->server ??= new Server();
     }
 
     /**
