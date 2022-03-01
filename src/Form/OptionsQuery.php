@@ -141,13 +141,13 @@ class OptionsQuery
 
         preg_match('/(\bblock|file|page|user)\.+/i', $cacheKey, $matches);
         foreach($matches as $match) {
-            if ($model = A::get(strtolower($match[1]), $data)) {
+            if ($model = A::get($data, strtolower($match[1]))) {
                 $cacheKey .= '[' . $model->id() . ']';
             }
         }
 
         // if a cached collection exist return that
-        if ($cachedOptions = A::get($cacheKey, static::$cache)) {
+        if ($cachedOptions = A::get(static::$cache, $cacheKey)) {
             return $cachedOptions;
         }
         
