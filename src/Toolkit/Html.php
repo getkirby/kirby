@@ -528,7 +528,7 @@ class Html extends Xml
         switch ($uri->host()) {
             case 'vimeo.com':
             case 'www.vimeo.com':
-                $id = $path->first();
+                $id = $path->last();
                 break;
             case 'player.vimeo.com':
                 $id = $path->nth(1);
