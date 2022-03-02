@@ -645,12 +645,36 @@ class HtmlTest extends TestCase
                 'https://player.vimeo.com/video/239882943'
             ],
             [
-                'https://vimeo.com/239882943?test=value',
-                'https://player.vimeo.com/video/239882943?test=value'
+                'https://vimeo.com/channels/channelname/239882943',
+                'https://player.vimeo.com/video/239882943'
+            ],
+            [
+                'https://vimeo.com/groups/groupname/videos/239882943',
+                'https://player.vimeo.com/video/239882943'
+            ],
+            [
+                'https://vimeo.com/showcase/239882943',
+                'https://player.vimeo.com/video/239882943'
             ],
             [
                 'https://player.vimeo.com/video/239882943',
                 'https://player.vimeo.com/video/239882943'
+            ],
+            [
+                'https://vimeo.com/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
+            ],
+            [
+                'https://vimeo.com/channels/channelname/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
+            ],
+            [
+                'https://vimeo.com/groups/groupname/videos/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
+            ],
+            [
+                'https://vimeo.com/showcase/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
             ],
             [
                 'https://player.vimeo.com/video/239882943?test=value',
