@@ -5,6 +5,7 @@ fields:
   images:
     label: field.blocks.gallery.images.label
     type: files
+    query: page.images
     multiple: true
     layout: cards
     size: tiny
