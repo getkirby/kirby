@@ -98,9 +98,9 @@ class App
             $this->optionsFromProps($props['options'] ?? []);
             $this->optionsFromEnvironment();
         } finally {
-            // register the Whoops error handler
-            // put into try/catch/finally block to to ensure Whoops registered
-            // if there is a problem loading the configurations
+            // register the Whoops error handler inside of a
+            // try-finally block to ensure it's still registered
+            // even if there is a problem loading the configurations
             $this->handleErrors();
         }
 
