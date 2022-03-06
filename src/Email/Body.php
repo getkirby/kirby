@@ -46,7 +46,7 @@ class Body
      */
     public function html()
     {
-        return $this->html;
+        return $this->html ?? '';
     }
 
     /**
@@ -56,7 +56,7 @@ class Body
      */
     public function text()
     {
-        return $this->text;
+        return $this->text ?? '';
     }
 
     /**
@@ -67,7 +67,7 @@ class Body
      */
     protected function setHtml(string $html = null)
     {
-        $this->html = $html ?? '';
+        $this->html = $html;
         return $this;
     }
 
@@ -79,7 +79,7 @@ class Body
      */
     protected function setText(string $text = null)
     {
-        $this->text = $text ?? '';
+        $this->text = $text;
         return $this;
     }
 }
