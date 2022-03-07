@@ -129,16 +129,18 @@ class Darkroom
         $options = $this->options($options);
         $image   = new Image($file);
 
+        $dimensions      = $image->dimensions();
+        $thumbDimensions = $dimensions->thumb($options);
+
         $sourceWidth  = $image->width();
         $sourceHeight = $image->height();
 
-        $dimensions = $image->dimensions()->thumb($options);
+        $options['width']  = $thumbDimensions->width();
+        $options['height'] = $thumbDimensions->height();
 
-        $options['width']  = $dimensions->width();
-        $options['height'] = $dimensions->height();
-
-        $options['scaleWidth']  = $options['width'] / $sourceWidth;
-        $options['scaleHeight'] = $options['height'] / $sourceHeight;
+        // scale ratio compared to the source dimensions
+        $options['scaleWidth']  = $sourceWidth ? $options['width'] / $sourceWidth : null;
+        $options['scaleHeight'] = $sourceHeight ? $options['height'] / $sourceHeight : null;
 
         return $options;
     }

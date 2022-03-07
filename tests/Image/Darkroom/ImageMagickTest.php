@@ -41,6 +41,8 @@ class ImageMagickTest extends TestCase
             'grayscale' => false,
             'height' => 500,
             'quality' => 90,
+            'scaleHeight' => 1,
+            'scaleWidth' => 1,
             'width' => 500,
             'bin' => 'convert',
             'interlace' => false
