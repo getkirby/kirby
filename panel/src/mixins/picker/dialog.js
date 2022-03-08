@@ -136,7 +136,6 @@ export default {
       const isSelected = this.isSelected(item);
 
       return {
-        autofocus: true,
         icon: isSelected ? this.checkedIcon : "circle-outline",
         tooltip: isSelected ? this.$t("remove") : this.$t("select"),
         theme: isSelected ? "positive" : null
