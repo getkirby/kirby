@@ -347,6 +347,7 @@ abstract class ModelWithContent extends Model
             $result = Str::query($query, [
                 'kirby'             => $this->kirby(),
                 'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+                'model'             => $this,
                 static::CLASS_ALIAS => $this
             ]);
         } catch (Throwable $e) {

@@ -375,6 +375,14 @@ class FileTest extends TestCase
         $this->assertSame($file->url(), $file->previewUrl());
     }
 
+    public function testQuery()
+    {
+        $file = $this->file();
+
+        $this->assertSame('cover.jpg', $file->query('file.filename'));
+        $this->assertSame('cover.jpg', $file->query('model.filename'));
+    }
+
     public function testApiUrl()
     {
         $app = new App([
