@@ -92,13 +92,17 @@ class App
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
-        // stuff from config and additional options
-        $this->optionsFromConfig();
-        $this->optionsFromProps($props['options'] ?? []);
-        $this->optionsFromEnvironment();
-
-        // register the Whoops error handler
-        $this->handleErrors();
+        try {
+            // stuff from config and additional options
+            $this->optionsFromConfig();
+            $this->optionsFromProps($props['options'] ?? []);
+            $this->optionsFromEnvironment();
+        } finally {
+            // register the Whoops error handler inside of a
+            // try-finally block to ensure it's still registered
+            // even if there is a problem loading the configurations
+            $this->handleErrors();
+        }
 
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
