@@ -326,6 +326,27 @@ class BlueprintTest extends TestCase
     }
 
     /**
+     * @covers ::load
+     */
+    public function testLoadWithI18nName()
+    {
+        Blueprint::$loaded = [];
+
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'pages/test' => function () {
+                    return ['name' => ['en' => 'foo', 'de' => 'fuh']];
+                }
+            ]
+        ]);
+
+        $blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+        $this->assertSame('Foo', $blueprint->title());
+        $this->assertSame('foo', $blueprint->name());
+    }
+
+    /**
      * @covers ::fields
      * @covers ::field
      */

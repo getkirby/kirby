@@ -76,7 +76,8 @@ class Blueprint
         // normalize the name
         $props['name'] ??= 'default';
 
-        // normalize and translate the title
+        // normalize and translate the name and title
+        $props['name']  = $this->i18n($props['name']);
         $props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
 
         // convert all shortcuts
@@ -290,9 +291,13 @@ class Blueprint
         // now ensure that we always return the data array
         if (is_string($file) === true && F::exists($file) === true) {
             return static::$loaded[$name] = Data::read($file);
-        } elseif (is_array($file) === true) {
+        }
+
+        if (is_array($file) === true) {
             return static::$loaded[$name] = $file;
-        } elseif (is_callable($file) === true) {
+        }
+
+        if (is_callable($file) === true) {
             return static::$loaded[$name] = $file($kirby);
         }
 
@@ -335,20 +340,10 @@ class Blueprint
     {
         $props = static::find($name);
 
-        $normalize = function ($props) use ($name) {
-            // inject the filename as name if no name is set
-            $props['name'] ??= $name;
+        // inject the filename as name if no name is set
+        $props['name'] ??= $name;
 
-            // normalize the title
-            $title = $props['title'] ?? ucfirst($props['name']);
-
-            // translate the title
-            $props['title'] = I18n::translate($title, $title);
-
-            return $props;
-        };
-
-        return $normalize($props);
+        return $props;
     }
 
     /**
