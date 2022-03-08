@@ -13,7 +13,7 @@ fields:
   image:
     label: field.blocks.image.name
     type: files
-    query: page.images
+    query: model.images
     multiple: false
     image:
       back: black
