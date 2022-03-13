@@ -10,10 +10,12 @@ on:
       - "release/**"
 
 jobs:
-  ci:
-    name: "Continous integration"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./.github/workflows/backend
-      - uses: ./.github/workflows/frontend
-      - uses: ./.github/workflows/integration
+  release_backend:
+    name: "Release: CI - Backend"
+    uses: ./.github/workflows/backend.yml
+  release_frontend:
+    name: "Release: CI - Frontend"
+    uses: ./.github/workflows/frontend.yml
+  release_integration:
+    name: "Release: CI - Integration"
+    uses: ./.github/workflows/integration.yml
