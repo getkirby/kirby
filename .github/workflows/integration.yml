@@ -1,6 +1,9 @@
 name: CI - Integration
 on:
   push:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - "**"
       - "!.github/**"
@@ -11,6 +14,9 @@ on:
       - "!panel/scripts/**"
       - "!scripts/**"
   pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - "**"
       - "!.github/**"
@@ -20,6 +26,7 @@ on:
       - "!assets/**"
       - "!panel/scripts/**"
       - "!scripts/**"
+  workflow_call:
 
 jobs:
   e2e:

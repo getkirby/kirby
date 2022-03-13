@@ -1,6 +1,9 @@
 name: CI - Backend
 on:
   push:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - "**"
       - "!.github/**"
@@ -11,6 +14,9 @@ on:
       - "!panel/**"
       - "!scripts/**"
   pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - "**"
       - "!.github/**"
@@ -20,6 +26,7 @@ on:
       - "!assets/**"
       - "!panel/**"
       - "!scripts/**"
+  workflow_call:
 
 jobs:
   tests:

@@ -1,15 +1,22 @@
 name: CI - Frontend
 on:
   push:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - ".github/workflows/frontend.yml"
       - "panel/**"
       - "!panel/scripts/**"
   pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
     paths:
       - ".github/workflows/frontend.yml"
       - "panel/**"
       - "!panel/scripts/**"
+  workflow_call:
 
 jobs:
   tests:
