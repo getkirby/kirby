@@ -1,0 +1,19 @@
+name: Release
+on:
+  push:
+    branches:
+      - "main"
+      - "release/**"
+  pull_request:
+    branches:
+      - "main"
+      - "release/**"
+
+jobs:
+  ci:
+    name: "Continous integration"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/backend
+      - uses: ./.github/workflows/frontend
+      - uses: ./.github/workflows/integration
