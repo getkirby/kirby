@@ -4,10 +4,12 @@ on:
     paths:
       - ".github/workflows/frontend.yml"
       - "panel/**"
+      - "!panel/scripts/**"
   pull_request:
     paths:
       - ".github/workflows/frontend.yml"
       - "panel/**"
+      - "!panel/scripts/**"
 
 jobs:
   tests:

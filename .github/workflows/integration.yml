@@ -2,19 +2,23 @@ name: CI - Integration
 on:
   push:
     paths:
-      - ".github/workflows/integration.yml"
       - "**"
+      - "!.github/**"
+      - ".github/workflows/integration.yml"
       - "!.tx/**"
       - "!.vscode/**"
       - "!assets/**"
+      - "!panel/scripts/**"
       - "!scripts/**"
   pull_request:
     paths:
-      - ".github/workflows/integration.yml"
       - "**"
+      - "!.github/**"
+      - ".github/workflows/integration.yml"
       - "!.tx/**"
       - "!.vscode/**"
       - "!assets/**"
+      - "!panel/scripts/**"
       - "!scripts/**"
 
 jobs:
