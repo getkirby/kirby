@@ -6,13 +6,13 @@
 
 To keep track of different states of our code (current release, bugfixes, features) we use branches:
 
-| Branch      | Used for                                                                 | PRs allowed?   |
-| ----------- | ------------------------------------------------------------------------ | -------------- |
-| `main`      | Latest released version                                                  | -              |
-| `develop`   | Working branch for next release, e.g. `3.7.x`                            | target for PRs |
-| `fix/*`     | Temporary branches for single patch                                      | -              |
-| `feature/*` | Temporary branches for single feature                                    | -              |
-| `release/*` | Pre-releases in testing before they are merged into `main` when released | -              |
+| Branch      | Used for                                                                 | PRs allowed?                |
+| ----------- | ------------------------------------------------------------------------ | --------------------------- |
+| `main`      | Latest released version                                                  | -                           |
+| `develop`   | Working branch for next release, e.g. `3.7.x`                            | ✅                          |
+| `fix/*`     | Temporary branches for single patch                                      | -                           |
+| `feature/*` | Temporary branches for single feature                                    | -                           |
+| `release/*` | Pre-releases in testing before they are merged into `main` when released | only during release testing |
 
 We will review all pull requests (PRs) to `develop` and merge them if accepted, once an appropriate version is upcoming. Please understand that this might not be the immediate next release and might take some time.
 
@@ -54,7 +54,7 @@ We are really happy about any help with translations. Please do not directly tra
 
 #### Backend (PHP)
 
-We use [PHP CS](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-2](https://www.php-fig.org/psr/psr-2/). [Install PHP CS globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via composer and then run `composer fix` in the `kirby` folder to check for inconsistencies and fix them. Our automated PR checks will fail if there are code style issues with your code.
+We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). [Install PHP CS Fixer globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via Composer and then run `composer fix` in the `kirby` folder to check for inconsistencies and fix them. Our automated PR checks will fail if there are code style issues with your code.
 
 #### Frontend/Panel (JavaScript, Vue)
 
@@ -62,7 +62,7 @@ We use [Prettier](https://prettier.io) to ensure a consistent style for our Java
 
 ### Documentation
 
-In-code documentation and comments help us understand each other's code - or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this.
+In-code documentation and comments help us understand each other's code - or our own code after some months. Especially when matters get more complicated, we try to add a lot of comments to explain what the code does or why we implemented it like this. Even better than good comments is good code that is easy to understand.
 
 #### Backend (PHP)
 
@@ -71,6 +71,10 @@ We use PHP [DocBlocks](https://docs.phpdoc.org/guide/references/phpdoc/basic-syn
 #### Frontend/Panel (JavaScript, Vue)
 
 We use [JSDoc](https://jsdoc.app) for documenting JavaScript code, especially for [Vue components](https://vue-styleguidist.github.io/docs/Documenting.html).
+
+#### Public documentation
+
+We also document Kirby on the Kirby website at <https://getkirby.com>. However we recommend to wait with writing public documentation until the feature PR is merged. If you don't know where the documentation for a feature best belongs, don't worry. We can take care of writing the docs.
 
 ### Tests
 
