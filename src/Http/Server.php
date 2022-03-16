@@ -100,34 +100,26 @@ class Server
      */
     public static function host(bool $forwarded = false): string
     {
-        $host = null;
+        $hosts[] = static::get('SERVER_NAME');
+        $hosts[] = static::get('SERVER_ADDR');
 
         // insecure host parameters are only allowed when hosts
         // are validated against set of host patterns
-        $allowInsecure = empty(static::$hosts) === false;
-
-        if ($allowInsecure === true && static::isBehindProxy() === true) {
-            $host = static::get('HTTP_X_FORWARDED_HOST');
+        if (empty(static::$hosts) === false) {
+            $hosts[] = static::get('HTTP_HOST');
+            $hosts[] = static::get('HTTP_X_FORWARDED_HOST');
         }
 
-        if (empty($host) === true) {
-            $host = static::get('SERVER_NAME');
+        // remove empty hosts
+        $hosts = array_filter($hosts);
+
+        foreach ($hosts as $host) {
+            if (static::isAllowedHost($host) === true) {
+                return explode(':', $host)[0];
+            }
         }
 
-        if ($allowInsecure === true && empty($host) === true) {
-            $host = static::get('HTTP_HOST');
-        }
-
-        if (empty($host) === true) {
-            $host = static::get('SERVER_ADDR');
-        }
-
-        // ignore invalid host names
-        if (static::isAllowedHost($host) === false) {
-            $host = null;
-        }
-
-        return explode(':', $host ?? '')[0];
+        return '';
     }
 
     /**
