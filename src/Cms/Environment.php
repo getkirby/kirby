@@ -39,62 +39,23 @@ class Environment
     {
         $this->root = $root;
 
-        // This is the default. The current URL should be detected via the server name.
-        // Empty hosts are allowed. Should lead to no breaking changes with previous setups.
-        if ($allowed === null) {
-            Server::hosts([]);
-            $this->uri = Uri::index();
-
-        // The current URL should be detected via possibly insecure HOST headers
-        } elseif ($allowed === true) {
-            Server::hosts(['*']);
-            $this->uri = Uri::index();
-            $this->blockEmptyHost();
-
-        // the current URL should be detected via the server name. no empty hosts allowed
-        } elseif ($allowed === false) {
-            Server::hosts([]);
-            $this->uri = Uri::index();
-            $this->blockEmptyHost();
-
-        // the current URL is predefined with a single string
-        // and not detected automatically.
-        // If the url option is relative (i.e. '/' or '/some/subfolder')
-        // the host will be empty and that's totally fine.
-        // No need to block an empty host here
-        } elseif (is_string($allowed) === true) {
-            // create the URI object directly from the given option
-            // without any form of detection from the server
-            $this->uri = new Uri($allowed);
-
-            // only create an allow list from absolute URLs
-            // otherwise the default secure host detection
-            // behavior will be used
-            if (empty($host = $this->uri->host()) === false) {
-                Server::hosts([$host]);
-            }
-
-            // the current URL should be auto detected from a host allowlist
-        } elseif (is_array($allowed) === true) {
-            foreach ($allowed as $url) {
-                $host    = (new Uri($url))->host();
-                $hosts[] = $host;
-            }
-
-            // register all allowed hosts
-            Server::hosts($hosts);
-
-            // get the index URL, including the subfolder if it exists
-            $this->uri = Uri::index();
-            $this->blockEmptyHost();
-
-            // validate against the list of allowed base URLs
-            if (in_array((string)$this->uri, $allowed) === false) {
-                throw new InvalidArgumentException('The subfolder is not in the allowed base URL list');
-            }
-        } else {
-            throw new InvalidArgumentException('Invalid allow list setup for base URLs');
+        if (is_string($allowed) === true) {
+            return $this->setupFromString($allowed);
         }
+
+        if (is_array($allowed) === true) {
+            return $this->setupFromArray($allowed);
+        }
+
+        if (is_int($allowed) === true) {
+            return $this->setupFromFlag($allowed);
+        }
+
+        if (is_null($allowed) === true) {
+            return $this->setupFromFlag(Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY);
+        }
+
+        throw new InvalidArgumentException('Invalid allow list setup for base URLs');
     }
 
     /**
@@ -145,6 +106,97 @@ class Environment
         }
 
         return array_replace_recursive($configHost, $configAddr);
+    }
+
+    /**
+     * The current URL should be auto detected from a host allowlist
+     *
+     * @param array $allowed
+     * @return \Kirby\Http\Uri
+     */
+    public function setupFromArray(array $allowed)
+    {
+        foreach ($allowed as $url) {
+            $host    = (new Uri($url))->host();
+            $hosts[] = $host;
+        }
+
+        // register all allowed hosts
+        Server::hosts($hosts);
+
+        // get the index URL, including the subfolder if it exists
+        $this->uri = Uri::index();
+        $this->blockEmptyHost();
+
+        // validate against the list of allowed base URLs
+        if (in_array((string)$this->uri, $allowed) === false) {
+            throw new InvalidArgumentException('The subfolder is not in the allowed base URL list');
+        }
+
+        return $this->uri;
+    }
+
+    /**
+     * The URL option receives a set of Server constant flags
+     *
+     * Server::HOST_FROM_SERVER
+     * Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY
+     * Server::HOST_FROM_HOST
+     * Server::HOST_FROM_HOST | Server::HOST_ALLOW_EMPTY
+     *
+     * @param integer $allowed
+     * @return \Kirby\Http\Uri
+     */
+    public function setupFromFlag(int $allowed)
+    {
+        // allow host detection from host headers
+        if ($allowed & Server::HOST_FROM_HEADER) {
+            Server::hosts(Server::HOST_FROM_HEADER);
+
+        // detect host only from server name
+        } else {
+            Server::hosts(Server::HOST_FROM_SERVER);
+        }
+
+        // get the base URL
+        $this->uri = Uri::index();
+
+        // accept empty hosts
+        if ($allowed & Server::HOST_ALLOW_EMPTY) {
+            return $this->uri;
+        }
+
+        // block empty hosts
+        $this->blockEmptyHost();
+
+        return $this->uri;
+    }
+
+    /**
+     * The current URL is predefined with a single string
+     * and not detected automatically.
+     *
+     * If the url option is relative (i.e. '/' or '/some/subfolder')
+     * The host will be empty and that's totally fine.
+     * No need to block an empty host here
+     *
+     * @param string $allowed
+     * @return \Kirby\Http\Uri
+     */
+    public function setupFromString(string $allowed)
+    {
+        // create the URI object directly from the given option
+        // without any form of detection from the server
+        $this->uri = new Uri($allowed);
+
+        // only create an allow list from absolute URLs
+        // otherwise the default secure host detection
+        // behavior will be used
+        if (empty($host = $this->uri->host()) === false) {
+            Server::hosts([$host]);
+        }
+
+        return $this->uri;
     }
 
     /**

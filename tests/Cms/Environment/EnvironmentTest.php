@@ -31,13 +31,14 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromFlag
      * @covers ::url
      */
     public function testAllowFromInsecureHost()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
 
-        $env = new Environment($this->config, true);
+        $env = new Environment($this->config, Server::HOST_FROM_HEADER);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
@@ -48,13 +49,14 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromFlag
      * @covers ::url
      */
     public function testAllowFromInsecureForwardedHost()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
 
-        $env = new Environment($this->config, true);
+        $env = new Environment($this->config, Server::HOST_FROM_HEADER);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
@@ -65,6 +67,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromString
      * @covers ::url
      */
     public function testAllowFromRelativeUrl()
@@ -80,6 +83,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromString
      * @covers ::url
      */
     public function testAllowFromRelativeUrlWithSubfolder()
@@ -95,13 +99,14 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromFlag
      * @covers ::url
      */
     public function testAllowFromServerName()
     {
         $_SERVER['SERVER_NAME'] = 'example.com';
 
-        $env = new Environment($this->config, false);
+        $env = new Environment($this->config, Server::HOST_FROM_SERVER);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
@@ -112,6 +117,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromString
      * @covers ::url
      */
     public function testAllowFromUrl()
@@ -129,6 +135,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromArray
      * @covers ::url
      */
     public function testAllowFromUrls()
@@ -149,6 +156,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromArray
      * @covers ::url
      */
     public function testAllowFromUrlsWithSubfolders()
@@ -172,6 +180,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromFlag
      * @covers ::url
      */
     public function testDisallowFromInsecureHost()
@@ -181,13 +190,14 @@ class EnvironmentTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
-        new Environment($this->config, false);
+        new Environment($this->config, Server::HOST_FROM_SERVER);
     }
 
     /**
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromFlag
      * @covers ::url
      */
     public function testDisallowFromInsecureForwardedHost()
@@ -197,13 +207,14 @@ class EnvironmentTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
-        new Environment($this->config, false);
+        new Environment($this->config, Server::HOST_FROM_SERVER);
     }
 
     /**
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromArray
      * @covers ::url
      */
     public function testDisallowFromInvalidSubfolders()
@@ -226,6 +237,7 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromArray
      * @covers ::url
      */
     public function testDisallowFromUnkownInsecureHost()

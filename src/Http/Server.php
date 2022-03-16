@@ -16,6 +16,11 @@ use Kirby\Toolkit\A;
  */
 class Server
 {
+
+    const HOST_FROM_SERVER = 1;
+    const HOST_FROM_HEADER = 2;
+    const HOST_ALLOW_EMPTY = 4;
+
     /**
      * Cache for the cli status
      *
@@ -125,13 +130,13 @@ class Server
     /**
      * Setter and getter for the the static $hosts property
      *
-     * null: returns all defined hosts
-     * false: ignores forwarded host -> $hosts = empty array
-     * true: support any forwarded host-> $hosts = ['*']
-     * array: trusted hosts -> $hosts = array of trusted hosts
-     * string: single trusted host -> $hosts = [host]
+     * $hosts = null                     -> return all defined hosts
+     * $hosts = Server::HOST_FROM_SERVER -> []
+     * $hosts = Server::HOST_FROM_HEADER -> ['*']
+     * $hosts = array                    -> [array of trusted hosts]
+     * $hosts = string                   -> [single trusted host]
      *
-     * @param string|array|true|null $hosts
+     * @param string|array|int|null $hosts
      * @return array
      */
     public static function hosts($hosts = null): array
@@ -140,21 +145,19 @@ class Server
             return static::$hosts;
         }
 
-        if ($hosts === false) {
-            $hosts = [];
+        if (is_int($hosts) && $hosts & static::HOST_FROM_SERVER) {
+            return static::$hosts = [];
         }
 
-        if ($hosts === true) {
-            $hosts = ['*'];
+        if (is_int($hosts) && $hosts & static::HOST_FROM_HEADER) {
+            return static::$hosts = ['*'];
         }
 
         // make sure hosts are always an array
         $hosts = A::wrap($hosts);
 
-        // remove duplicate hosts
-        $hosts = array_unique($hosts);
-
-        return static::$hosts = $hosts;
+        // return unique hosts
+        return static::$hosts = array_unique($hosts);
     }
 
     /**
