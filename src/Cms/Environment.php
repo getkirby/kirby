@@ -144,7 +144,7 @@ class Environment
      * Server::HOST_FROM_HOST
      * Server::HOST_FROM_HOST | Server::HOST_ALLOW_EMPTY
      *
-     * @param integer $allowed
+     * @param int $allowed
      * @return \Kirby\Http\Uri
      */
     public function setupFromFlag(int $allowed)

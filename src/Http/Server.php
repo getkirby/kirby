@@ -16,10 +16,9 @@ use Kirby\Toolkit\A;
  */
 class Server
 {
-
-    const HOST_FROM_SERVER = 1;
-    const HOST_FROM_HEADER = 2;
-    const HOST_ALLOW_EMPTY = 4;
+    public const HOST_FROM_SERVER = 1;
+    public const HOST_FROM_HEADER = 2;
+    public const HOST_ALLOW_EMPTY = 4;
 
     /**
      * Cache for the cli status
