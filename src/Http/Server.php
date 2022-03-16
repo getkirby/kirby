@@ -156,7 +156,13 @@ class Server
             $hosts = ['*'];
         }
 
-        return static::$hosts = A::wrap($hosts);
+        // make sure hosts are always an array
+        $hosts = A::wrap($hosts);
+
+        // remove duplicate hosts
+        $hosts = array_unique($hosts);
+
+        return static::$hosts = $hosts;
     }
 
     /**

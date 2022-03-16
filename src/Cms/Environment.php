@@ -39,15 +39,9 @@ class Environment
     {
         $this->root = $root;
 
-        // empty hosts for relative URLs may be allowed in
-        // some scenarios. Otherwise an exception is thrown further down.
-        $allowEmptyHost = false;
-
         // This is the default. The current URL should be detected via the server name.
         // Empty hosts are allowed. Should lead to no breaking changes with previous setups.
         if ($allowed === null) {
-            $allowEmptyHost = true;
-
             Server::hosts([]);
             $this->uri = Uri::index();
 
@@ -55,19 +49,20 @@ class Environment
         } elseif ($allowed === true) {
             Server::hosts(['*']);
             $this->uri = Uri::index();
+            $this->blockEmptyHost();
 
         // the current URL should be detected via the server name. no empty hosts allowed
         } elseif ($allowed === false) {
             Server::hosts([]);
             $this->uri = Uri::index();
+            $this->blockEmptyHost();
 
         // the current URL is predefined with a single string
-        // and not detected automatically
+        // and not detected automatically.
+        // If the url option is relative (i.e. '/' or '/some/subfolder')
+        // the host will be empty and that's totally fine.
+        // No need to block an empty host here
         } elseif (is_string($allowed) === true) {
-            // if the url option is relative (i.e. '/' or '/some/subfolder')
-            // the host will be empty and that's totally fine.
-            $allowEmptyHost = true;
-
             // create the URI object directly from the given option
             // without any form of detection from the server
             $this->uri = new Uri($allowed);
@@ -82,18 +77,36 @@ class Environment
             // the current URL should be auto detected from a host allowlist
         } elseif (is_array($allowed) === true) {
             foreach ($allowed as $url) {
-                $host = (new Uri($url))->host();
-                $hosts[]    = $host;
+                $host    = (new Uri($url))->host();
+                $hosts[] = $host;
             }
 
+            // register all allowed hosts
             Server::hosts($hosts);
+
+            // get the index URL, including the subfolder if it exists
             $this->uri = Uri::index();
+            $this->blockEmptyHost();
+
+            // validate against the list of allowed base URLs
+            if (in_array((string)$this->uri, $allowed) === false) {
+                throw new InvalidArgumentException('The subfolder is not in the allowed base URL list');
+            }
         } else {
             throw new InvalidArgumentException('Invalid allow list setup for base URLs');
         }
+    }
 
-        // check for empty hosts
-        if ($allowEmptyHost === false && empty($this->uri->host()) === true) {
+    /**
+     * Throw an exception if the host in the URI
+     * object is empty
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @return void
+     */
+    protected function blockEmptyHost(): void
+    {
+        if (empty($this->uri->host()) === true) {
             throw new InvalidArgumentException('Invalid host setup. The detected host is not allowed.');
         }
     }

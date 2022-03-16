@@ -143,6 +143,28 @@ class EnvironmentTest extends TestCase
      * @covers ::host
      * @covers ::url
      */
+    public function testAllowFromUrlsWithSubfolders()
+    {
+        Server::$cli = false;
+
+        $_SERVER['HTTP_HOST']   = 'localhost';
+        $_SERVER['SCRIPT_NAME'] = '/path-a/index.php';
+
+        $env = new Environment($this->config, [
+            'http://localhost/path-a',
+            'http://localhost/path-b'
+        ]);
+
+        $this->assertSame('http://localhost/path-a', $env->url());
+        $this->assertSame('localhost', $env->host());
+        $this->assertSame(['localhost'], Server::hosts());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::host
+     * @covers ::url
+     */
     public function testDisallowFromInsecureHost()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
@@ -166,6 +188,27 @@ class EnvironmentTest extends TestCase
         $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
 
         new Environment($this->config, false);
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::host
+     * @covers ::url
+     */
+    public function testDisallowFromInvalidSubfolders()
+    {
+        Server::$cli = false;
+
+        $_SERVER['HTTP_HOST']   = 'localhost';
+        $_SERVER['SCRIPT_NAME'] = '/path-a/index.php';
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The subfolder is not in the allowed base URL list');
+
+        new Environment($this->config, [
+            'http://localhost/path-b',
+            'http://localhost/path-c'
+        ]);
     }
 
     /**
