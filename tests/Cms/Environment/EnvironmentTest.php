@@ -29,6 +29,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -45,6 +46,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -61,6 +63,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -75,6 +78,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -89,6 +93,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -105,6 +110,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -121,6 +127,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -140,6 +147,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -162,6 +170,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -177,6 +186,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -192,6 +202,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
@@ -213,6 +224,7 @@ class EnvironmentTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::blockEmptyHost
      * @covers ::host
      * @covers ::url
      */
