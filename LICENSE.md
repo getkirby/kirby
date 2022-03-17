@@ -1,6 +1,6 @@
 # Kirby License Agreement
 
-Published: March 15, 2022
+Published: March 15, 2022  
 Source: https://getkirby.com/license/2022-03-15
 
 ## About this Agreement
