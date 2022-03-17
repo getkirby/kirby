@@ -1,5 +1,8 @@
 # Kirby License Agreement
 
+Published: March 15, 2022
+Source: https://getkirby.com/license/2022-03-15
+
 ## About this Agreement
 
 While Kirby's source code is publicly available, Kirby is **not free**. To use Kirby in production, you need to [purchase a license](https://getkirby.com/buy).
