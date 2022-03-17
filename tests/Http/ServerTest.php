@@ -82,7 +82,7 @@ class ServerTest extends TestCase
     public function testHost()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts(true);
+        Server::hosts(Server::HOST_FROM_HEADER);
         $this->assertSame('example.com', Server::host());
     }
 
@@ -110,7 +110,7 @@ class ServerTest extends TestCase
     public function testHostFromProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
-        Server::hosts(true);
+        Server::hosts(Server::HOST_FROM_HEADER);
         $this->assertSame('example.com', Server::host());
     }
 
@@ -158,7 +158,7 @@ class ServerTest extends TestCase
     public function testHostWithPort()
     {
         $_SERVER['HTTP_HOST'] = 'example.com:8888';
-        Server::hosts(true);
+        Server::hosts(Server::HOST_FROM_HEADER);
         $this->assertSame('example.com', Server::host());
     }
 
@@ -175,11 +175,11 @@ class ServerTest extends TestCase
         $this->assertSame(['getkirby.com'], Server::hosts());
 
         // whitecard
-        $this->assertSame(['*'], Server::hosts(true));
+        $this->assertSame(['*'], Server::hosts(Server::HOST_FROM_HEADER));
         $this->assertSame(['*'], Server::hosts());
 
         // block
-        $this->assertSame([], Server::hosts(false));
+        $this->assertSame([], Server::hosts(Server::HOST_FROM_SERVER));
         $this->assertSame([], Server::hosts());
     }
 

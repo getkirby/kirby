@@ -16,6 +16,10 @@ use Kirby\Toolkit\A;
  */
 class Server
 {
+    public const HOST_FROM_SERVER = 1;
+    public const HOST_FROM_HEADER = 2;
+    public const HOST_ALLOW_EMPTY = 4;
+
     /**
      * Cache for the cli status
      *
@@ -100,46 +104,38 @@ class Server
      */
     public static function host(bool $forwarded = false): string
     {
-        $host = null;
+        $hosts[] = static::get('SERVER_NAME');
+        $hosts[] = static::get('SERVER_ADDR');
 
         // insecure host parameters are only allowed when hosts
         // are validated against set of host patterns
-        $allowInsecure = empty(static::$hosts) === false;
-
-        if ($allowInsecure === true && static::isBehindProxy() === true) {
-            $host = static::get('HTTP_X_FORWARDED_HOST');
+        if (empty(static::$hosts) === false) {
+            $hosts[] = static::get('HTTP_HOST');
+            $hosts[] = static::get('HTTP_X_FORWARDED_HOST');
         }
 
-        if (empty($host) === true) {
-            $host = static::get('SERVER_NAME');
+        // remove empty hosts
+        $hosts = array_filter($hosts);
+
+        foreach ($hosts as $host) {
+            if (static::isAllowedHost($host) === true) {
+                return explode(':', $host)[0];
+            }
         }
 
-        if ($allowInsecure === true && empty($host) === true) {
-            $host = static::get('HTTP_HOST');
-        }
-
-        if (empty($host) === true) {
-            $host = static::get('SERVER_ADDR');
-        }
-
-        // ignore invalid host names
-        if (static::isAllowedHost($host) === false) {
-            $host = null;
-        }
-
-        return explode(':', $host ?? '')[0];
+        return '';
     }
 
     /**
      * Setter and getter for the the static $hosts property
      *
-     * null: returns all defined hosts
-     * false: ignores forwarded host -> $hosts = empty array
-     * true: support any forwarded host-> $hosts = ['*']
-     * array: trusted hosts -> $hosts = array of trusted hosts
-     * string: single trusted host -> $hosts = [host]
+     * $hosts = null                     -> return all defined hosts
+     * $hosts = Server::HOST_FROM_SERVER -> []
+     * $hosts = Server::HOST_FROM_HEADER -> ['*']
+     * $hosts = array                    -> [array of trusted hosts]
+     * $hosts = string                   -> [single trusted host]
      *
-     * @param string|array|true|null $hosts
+     * @param string|array|int|null $hosts
      * @return array
      */
     public static function hosts($hosts = null): array
@@ -148,15 +144,19 @@ class Server
             return static::$hosts;
         }
 
-        if ($hosts === false) {
-            $hosts = [];
+        if (is_int($hosts) && $hosts & static::HOST_FROM_SERVER) {
+            return static::$hosts = [];
         }
 
-        if ($hosts === true) {
-            $hosts = ['*'];
+        if (is_int($hosts) && $hosts & static::HOST_FROM_HEADER) {
+            return static::$hosts = ['*'];
         }
 
-        return static::$hosts = A::wrap($hosts);
+        // make sure hosts are always an array
+        $hosts = A::wrap($hosts);
+
+        // return unique hosts
+        return static::$hosts = array_unique($hosts);
     }
 
     /**
