@@ -180,6 +180,29 @@ class EnvironmentTest extends TestCase
      * @covers ::__construct
      * @covers ::blockEmptyHost
      * @covers ::host
+     * @covers ::setupFromArray
+     * @covers ::url
+     */
+    public function testAllowFromUrlsWithSlash()
+    {
+        Server::$cli = false;
+
+        $_SERVER['SERVER_NAME'] = 'getkirby.com';
+        $_SERVER['SCRIPT_NAME'] = '/index.php';
+
+        $env = new Environment($this->config, [
+            'http://getkirby.com/',
+        ]);
+
+        $this->assertSame('http://getkirby.com', $env->url());
+        $this->assertSame('getkirby.com', $env->host());
+        $this->assertSame(['getkirby.com'], Server::hosts());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::blockEmptyHost
+     * @covers ::host
      * @covers ::setupFromFlag
      * @covers ::url
      */

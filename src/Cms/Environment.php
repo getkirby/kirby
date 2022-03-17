@@ -116,9 +116,14 @@ class Environment
      */
     public function setupFromArray(array $allowed)
     {
+        $allowedStrings = [];
+        $allowedUris    = [];
+        $hosts          = [];
+
         foreach ($allowed as $url) {
-            $host    = (new Uri($url))->host();
-            $hosts[] = $host;
+            $allowedUris[]    = $uri = new Uri($url, ['slash' => false]);
+            $allowedStrings[] = $uri->toString();
+            $hosts[]          = $uri->host();
         }
 
         // register all allowed hosts
@@ -129,7 +134,7 @@ class Environment
         $this->blockEmptyHost();
 
         // validate against the list of allowed base URLs
-        if (in_array((string)$this->uri, $allowed) === false) {
+        if (in_array($this->uri->toString(), $allowedStrings) === false) {
             throw new InvalidArgumentException('The subfolder is not in the allowed base URL list');
         }
 
