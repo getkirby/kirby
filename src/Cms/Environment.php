@@ -40,19 +40,23 @@ class Environment
         $this->root = $root;
 
         if (is_string($allowed) === true) {
-            return $this->setupFromString($allowed);
+            $this->setupFromString($allowed);
+            return;
         }
 
         if (is_array($allowed) === true) {
-            return $this->setupFromArray($allowed);
+            $this->setupFromArray($allowed);
+            return;
         }
 
         if (is_int($allowed) === true) {
-            return $this->setupFromFlag($allowed);
+            $this->setupFromFlag($allowed);
+            return;
         }
 
         if (is_null($allowed) === true) {
-            return $this->setupFromFlag(Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY);
+            $this->setupFromFlag(Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY);
+            return;
         }
 
         throw new InvalidArgumentException('Invalid allow list setup for base URLs');
@@ -131,6 +135,8 @@ class Environment
 
         // get the index URL, including the subfolder if it exists
         $this->uri = Uri::index();
+
+        // empty URLs don't make sense in an allow list
         $this->blockEmptyHost();
 
         // validate against the list of allowed base URLs
