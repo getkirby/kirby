@@ -430,5 +430,6 @@ export default {
 }
 .k-calendar-today .k-button-text {
   opacity: 1;
+  vertical-align: baseline;
 }
 </style>
