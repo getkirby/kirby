@@ -76,8 +76,7 @@ class Blueprint
         // normalize the name
         $props['name'] ??= 'default';
 
-        // normalize and translate the name and title
-        $props['name']  = $this->i18n($props['name']);
+        // normalize and translate the title
         $props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
 
         // convert all shortcuts

@@ -54,7 +54,7 @@ class Fieldset extends Item
         $this->editable  = $params['editable'] ?? true;
         $this->icon      = $params['icon'] ?? null;
         $this->model     = $this->parent;
-        $this->name      = $this->createName($params['name'] ?? Str::ucfirst($this->type));
+        $this->name      = $this->createName($params['title'] ?? $params['name'] ?? Str::ucfirst($this->type));
         $this->label     = $this->createLabel($params['label'] ?? null);
         $this->preview   = $params['preview'] ?? null;
         $this->tabs      = $this->createTabs($params);
