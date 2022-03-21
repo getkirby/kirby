@@ -47,6 +47,11 @@
 import ModelView from "./ModelView.vue";
 
 export default {
-  extends: ModelView
+  extends: ModelView,
+  computed: {
+    protectedFields() {
+      return ["title"];
+    }
+  }
 };
 </script>
