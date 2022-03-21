@@ -305,8 +305,12 @@ class UserTest extends TestCase
             'name'  => 'Test User'
         ]);
 
-        $this->assertEquals('Test User', $user->query('user.name'));
-        $this->assertEquals('test@getkirby.com', $user->query('user.email'));
+        $this->assertSame('Test User', $user->query('user.name')->value());
+        $this->assertSame('test@getkirby.com', $user->query('user.email'));
+
+        // also test with `model` key
+        $this->assertSame('Test User', $user->query('model.name')->value());
+        $this->assertSame('test@getkirby.com', $user->query('model.email'));
     }
 
     public function testUserMethods()
