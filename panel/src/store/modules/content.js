@@ -249,11 +249,6 @@ export default {
       // attach the language to the id
       model.id = context.getters.id(model.id);
 
-      // remove title from model content
-      if (model.id.startsWith("/pages/") || model.id.startsWith("/site")) {
-        delete model.content.title;
-      }
-
       const data = {
         api: model.api,
         originals: clone(model.content),

@@ -37,7 +37,19 @@ abstract class Model
      */
     public function content(): array
     {
-        return Form::for($this->model)->values();
+        $content = Form::for($this->model)->values();
+
+        // For Page and Site models, the title is a reserved field
+        // that's handled separately and should not be available in
+        // the regular content array for the Panel
+        if (
+            is_a($this->model, 'Kirby\Cms\Page') === true ||
+            is_a($this->model, 'Kirby\Cms\Site') === true
+        ) {
+            unset($content['title']);
+        }
+
+        return $content;
     }
 
     /**

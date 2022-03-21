@@ -3,7 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File as ModelFile;
+use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Cms\User as ModelUser;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
@@ -125,6 +128,67 @@ class ModelTest extends TestCase
             ]
         ]);
         $this->assertSame($content, $panel->content());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::content
+     */
+    public function testContentWithTitle()
+    {
+        // panel model for file
+        $model = new CustomPanelModel(
+            new ModelFile([
+                'filename' => 'test.jpg',
+                'content' => [
+                    'title' => 'Test'
+                ]
+            ])
+        );
+
+        $this->assertArrayHasKey('title', $model->content());
+
+        // panel model for user
+        $model = new CustomPanelModel(
+            new ModelUser([
+                'id' => 'test@getkirby.com',
+                'content' => [
+                    'title' => 'Test'
+                ]
+            ])
+        );
+
+        $this->assertArrayHasKey('title', $model->content());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::content
+     */
+    public function testContentWithoutTitle()
+    {
+        // panel model for site
+        $model = new CustomPanelModel(
+            new ModelSite([
+                'content' => [
+                    'title' => 'Test'
+                ]
+            ])
+        );
+
+        $this->assertArrayNotHasKey('title', $model->content());
+
+        // panel model for page
+        $model = new CustomPanelModel(
+            new ModelPage([
+                'slug' => 'test',
+                'content' => [
+                    'title' => 'Test'
+                ]
+            ])
+        );
+
+        $this->assertArrayNotHasKey('title', $model->content());
     }
 
     /**
