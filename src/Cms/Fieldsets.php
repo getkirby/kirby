@@ -79,7 +79,6 @@ class Fieldsets extends Items
             'list'     => 'blocks/list',
             'markdown' => 'blocks/markdown',
             'quote'    => 'blocks/quote',
-            'table'    => 'blocks/table',
             'text'     => 'blocks/text',
             'video'    => 'blocks/video',
         ]);
