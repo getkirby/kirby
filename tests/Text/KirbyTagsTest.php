@@ -604,7 +604,7 @@ class KirbyTagsTest extends TestCase
 
         $page  = $kirby->page('test');
 
-        $expected = '<figure class="video"><iframe allow="fullscreen" src="https://www.youtube.com/embed/VhP7ZzZysQg?controls=0"></iframe></figure>';
+        $expected = '<figure class="video"><iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg?controls=0"></iframe></figure>';
         $this->assertSame($expected, $page->text()->kt()->value());
     }
 
@@ -653,7 +653,7 @@ class KirbyTagsTest extends TestCase
             ],
             [
                 '(video: https://www.youtube.com/watch?v=VhP7ZzZysQg)',
-                '<figure class="video-class"><iframe allow="fullscreen" src="https://www.youtube.com/embed/VhP7ZzZysQg"></iframe></figure>'
+                '<figure class="video-class"><iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg"></iframe></figure>'
             ]
         ];
     }
