@@ -157,7 +157,7 @@
 
   "error.template.default.notFound": "Az alapértelmezett sablon nem létezik",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Váratlan hiba történt! További információért engedélyezd a hibakeresés módot: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó email-címét",
   "error.user.changeLanguage.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nyelvi beállításait",

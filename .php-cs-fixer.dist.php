@@ -8,8 +8,7 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 return $config
     ->setRules([
-        '@PSR1' => true,
-        '@PSR2' => true,
+        '@PSR12' => true,
         'align_multiline_comment' => ['comment_type' => 'phpdocs_like'],
         'array_indentation' => true,
         'array_syntax' => ['syntax' => 'short'],

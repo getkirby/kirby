@@ -33,19 +33,19 @@ use Throwable;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class App
 {
-    const CLASS_ALIAS = 'kirby';
-
     use AppCaches;
     use AppErrors;
     use AppPlugins;
     use AppTranslations;
     use AppUsers;
     use Properties;
+
+    public const CLASS_ALIAS = 'kirby';
 
     protected static $instance;
     protected static $version;
@@ -56,6 +56,7 @@ class App
     protected $collections;
     protected $core;
     protected $defaultLanguage;
+    protected $environment;
     protected $language;
     protected $languages;
     protected $locks;
@@ -91,12 +92,17 @@ class App
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
-        // stuff from config and additional options
-        $this->optionsFromConfig();
-        $this->optionsFromProps($props['options'] ?? []);
-
-        // register the Whoops error handler
-        $this->handleErrors();
+        try {
+            // stuff from config and additional options
+            $this->optionsFromConfig();
+            $this->optionsFromProps($props['options'] ?? []);
+            $this->optionsFromEnvironment();
+        } finally {
+            // register the Whoops error handler inside of a
+            // try-finally block to ensure it's still registered
+            // even if there is a problem loading the configurations
+            $this->handleErrors();
+        }
 
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
@@ -282,11 +288,6 @@ class App
      */
     protected function bakeUrls(array $urls = null)
     {
-        // inject the index URL from the config
-        if (isset($this->options['url']) === true) {
-            $urls['index'] = $this->options['url'];
-        }
-
         $urls = array_merge($this->core->urls(), (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
@@ -587,6 +588,17 @@ class App
         $props = (new Email($preset, $props))->toArray();
 
         return ($this->component('email'))($this, $props, $debug);
+    }
+
+    /**
+     * Returns the environment object with access
+     * to the detected host, base url and dedicated options
+     *
+     * @return \Kirby\Cms\Environment
+     */
+    public function environment()
+    {
+        return $this->environment;
     }
 
     /**
@@ -924,7 +936,10 @@ class App
             (array)$options
         );
 
-        return ($this->component('markdown'))($this, $text, $options);
+        // TODO: deprecate passing the $inline parameter in 3.7.0
+        // TODO: remove passing the $inline parameter in 3.8.0
+        $inline = $options['inline'] ?? false;
+        return ($this->component('markdown'))($this, $text, $options, $inline);
     }
 
     /**
@@ -982,18 +997,30 @@ class App
      */
     protected function optionsFromConfig(): array
     {
-        $server = $this->server();
-        $root   = $this->root('config');
-
+        // create an empty config container
         Config::$data = [];
 
-        $main   = F::load($root . '/config.php', []);
-        $host   = F::load($root . '/config.' . basename($server->host()) . '.php', []);
-        $addr   = F::load($root . '/config.' . basename($server->address()) . '.php', []);
+        // load the main config options
+        $root    = $this->root('config');
+        $options = F::load($root . '/config.php', []);
 
-        $config = Config::$data;
+        // merge into one clean options array
+        return $this->options = array_replace_recursive(Config::$data, $options);
+    }
 
-        return $this->options = array_replace_recursive($config, $main, $host, $addr);
+    /**
+     * Load all options for the current
+     * server environment
+     *
+     * @return array
+     */
+    protected function optionsFromEnvironment(): array
+    {
+        // create the environment based on the URL setup
+        $this->environment = new Environment($this->root('config'), $this->options['url'] ?? null);
+
+        // merge into one clean options array
+        return $this->options = array_replace_recursive($this->options, $this->environment->options());
     }
 
     /**
@@ -1004,7 +1031,10 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, $options);
+        return $this->options = array_replace_recursive(
+            $this->options,
+            $options
+        );
     }
 
     /**
@@ -1411,7 +1441,7 @@ class App
      */
     public function server()
     {
-        return $this->server = $this->server ?? new Server();
+        return $this->server ??= new Server();
     }
 
     /**

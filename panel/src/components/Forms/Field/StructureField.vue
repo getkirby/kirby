@@ -384,25 +384,6 @@ export default {
 
       this.$store.dispatch("content/enable");
     },
-    columnIsEmpty(value) {
-      if (value === undefined || value === null || value === "") {
-        return true;
-      }
-
-      if (
-        typeof value === "object" &&
-        Object.keys(value).length === 0 &&
-        value.constructor === Object
-      ) {
-        return true;
-      }
-
-      if (value.length !== undefined && value.length === 0) {
-        return true;
-      }
-
-      return false;
-    },
     confirmRemove(index) {
       this.close();
       this.trash = index + this.pagination.offset;
@@ -414,9 +395,7 @@ export default {
       this.$store.dispatch("content/disable");
 
       this.$nextTick(() => {
-        if (this.$refs.form) {
-          this.$refs.form.focus(field || this.autofocus);
-        }
+        this.$refs.form?.focus(field || this.autofocus);
       });
     },
     duplicateItem(index) {
@@ -443,9 +422,7 @@ export default {
       this.submit();
     },
     focus() {
-      if (this.$refs.add?.focus) {
-        this.$refs.add.focus();
-      }
+      this.$refs.add?.focus?.();
     },
     indexOf(index) {
       if (!this.limit) {

@@ -16,7 +16,7 @@ namespace Kirby\Cms;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Core
@@ -452,7 +452,7 @@ class Core
     public function urls(): array
     {
         return $this->cache['urls'] ??= [
-            'index'   => fn () => Url::index(),
+            'index'   => fn () => $this->kirby->environment()->url(),
             'base'    => fn (array $urls) => rtrim($urls['index'], '/'),
             'current' => function (array $urls) {
                 $path = trim($this->kirby->path(), '/');

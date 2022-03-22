@@ -10,7 +10,7 @@ use SimpleXMLElement;
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Xml
@@ -145,7 +145,7 @@ class Xml
                 $value      = $props['@value'] ?? null;
                 if (isset($props['@namespaces'])) {
                     foreach ($props['@namespaces'] as $key => $namespace) {
-                        $key = 'xmlns' . (($key)? ':' . $key : '');
+                        $key = 'xmlns' . (($key) ? ':' . $key : '');
                         $attributes[$key] = $namespace;
                     }
                 }
@@ -294,7 +294,7 @@ class Xml
         // also check for attributes without any namespace
         $attributeArray = [];
         foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
-            $prefix = ($namespace)? $namespace . ':' : '';
+            $prefix = ($namespace) ? $namespace . ':' : '';
             $attributes = $element->attributes($namespace, true);
 
             foreach ($attributes as $key => $value) {
@@ -314,7 +314,7 @@ class Xml
         // also check for children without any namespace
         $hasChildren = false;
         foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
-            $prefix = ($namespace)? $namespace . ':' : '';
+            $prefix = ($namespace) ? $namespace . ':' : '';
             $children = $element->children($namespace, true);
 
             if (count($children) > 0) {

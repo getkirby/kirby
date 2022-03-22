@@ -12,7 +12,7 @@ use Kirby\Toolkit\Str;
  * @package   Kirby Database
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 abstract class Sql
@@ -155,7 +155,7 @@ abstract class Sql
      *
      * @param $table string
      * @param $column string
-     * @param $values boolean Whether the identifier is going to be used for a VALUES clause;
+     * @param $values bool Whether the identifier is going to be used for a VALUES clause;
      *                        only relevant for SQLite
      * @return string
      */

@@ -20,19 +20,19 @@ use Kirby\Toolkit\A;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Page extends ModelWithContent
 {
-    const CLASS_ALIAS = 'page';
-
     use PageActions;
     use PageSiblings;
     use HasChildren;
     use HasFiles;
     use HasMethods;
     use HasSiblings;
+
+    public const CLASS_ALIAS = 'page';
 
     /**
      * All registered page methods
@@ -1338,7 +1338,7 @@ class Page extends ModelWithContent
             'mediaUrl'     => $this->mediaUrl(),
             'mediaRoot'    => $this->mediaRoot(),
             'num'          => $this->num(),
-            'parent'       => $this->parent() ? $this->parent()->id(): null,
+            'parent'       => $this->parent() ? $this->parent()->id() : null,
             'slug'         => $this->slug(),
             'template'     => $this->template(),
             'translations' => $this->translations()->toArray(),

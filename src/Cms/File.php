@@ -25,18 +25,18 @@ use Kirby\Toolkit\Str;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class File extends ModelWithContent
 {
-    const CLASS_ALIAS = 'file';
-
     use FileActions;
     use FileModifications;
     use HasMethods;
     use HasSiblings;
     use IsFile;
+
+    public const CLASS_ALIAS = 'file';
 
     /**
      * Cache for the initialized blueprint object

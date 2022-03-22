@@ -17,17 +17,17 @@ use Kirby\Toolkit\Str;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class User extends ModelWithContent
 {
-    const CLASS_ALIAS = 'user';
-
     use HasFiles;
     use HasMethods;
     use HasSiblings;
     use UserActions;
+
+    public const CLASS_ALIAS = 'user';
 
     /**
      * @var UserBlueprint

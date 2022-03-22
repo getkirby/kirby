@@ -472,6 +472,11 @@ export default {
       this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
     },
     onOutsideFocus(event) {
+      // ignore focus in dialogs to not alter current selection
+      if (event.target.closest(".k-dialog")) {
+        return;
+      }
+
       const overlay = document.querySelector(".k-overlay:last-of-type");
       if (
         this.$el.contains(event.target) === false &&

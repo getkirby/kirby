@@ -74,17 +74,11 @@ export default {
       }
 
       if (typeof target?.focus === "function") {
-        target.focus();
-        return;
+        return target.focus();
       }
 
-      if (
-        this.$slots.default[0] &&
-        this.$slots.default[0].context &&
-        typeof this.$slots.default[0].context.focus === "function"
-      ) {
-        this.$slots.default[0].context.focus();
-        return;
+      if (typeof this.$slots.default[0]?.context?.focus === "function") {
+        return this.$slots.default[0].context.focus();
       }
     },
     open() {

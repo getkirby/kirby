@@ -160,6 +160,43 @@ class AppComponentsTest extends TestCase
         $this->assertSame($expected, $this->kirby->component('markdown')($this->kirby, $text, ['breaks' => false]));
     }
 
+    public function testMarkdownPlugin()
+    {
+        $this->kirby = $this->kirby->clone([
+            'components' => [
+                'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false) {
+                    $result = Html::encode($text);
+
+                    if (!$inline) {
+                        $result = '<p>' . $result . '</p>';
+                    }
+
+                    return '<pre><code>' . $result . '</pre></code>';
+                }
+            ]
+        ]);
+
+        $text     = 'Test _case_';
+
+        $expected = '<pre><code><p>Test _case_</p></pre></code>';
+        $this->assertEquals($expected, $this->kirby->markdown($text));
+
+        // deprecated boolean second option
+        $this->assertEquals($expected, $this->kirby->markdown($text, false));
+
+        // deprecated fourth argument
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], false));
+
+        $expected = '<pre><code>Test _case_</pre></code>';
+        $this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+
+        // deprecated boolean second option
+        $this->assertEquals($expected, $this->kirby->markdown($text, true));
+
+        // deprecated fourth argument
+        $this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], true));
+    }
+
     public function testSmartypants()
     {
         $text     = '"Test"';

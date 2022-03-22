@@ -412,11 +412,11 @@ export default {
   border-color: rgba(255, 255, 255, 0.25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
-  color: var(--color-yellow-500);
-  font-weight: 500;
+  text-decoration: underline;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-  border-color: var(--color-focus-light);
+  border-color: currentColor;
+  font-weight: 600;
   color: var(--color-focus-light);
 }
 .k-calendar-today {
@@ -424,11 +424,12 @@ export default {
   padding-top: 0.5rem;
 }
 .k-calendar-today .k-button {
-  color: var(--color-focus-light);
   font-size: var(--text-xs);
   padding: 1rem;
+  text-decoration: underline;
 }
 .k-calendar-today .k-button-text {
   opacity: 1;
+  vertical-align: baseline;
 }
 </style>

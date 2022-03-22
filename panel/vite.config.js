@@ -64,7 +64,10 @@ export default defineConfig(({ command }) => {
       }
     },
     optimizeDeps: {
-      entries: "src/**/*.{js,vue}"
+      entries: "src/**/*.{js,vue}",
+      exclude: [
+        "vitest"
+      ]
     },
     css: {
       postcss: {

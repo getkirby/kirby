@@ -16,7 +16,7 @@ use Throwable;
  * @package   Kirby Session
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Session
@@ -560,7 +560,7 @@ class Session
         $parts = explode('.', $token);
 
         // only continue if the token has exactly the right amount of parts
-        $expectedParts = ($withoutKey === true)? 2 : 3;
+        $expectedParts = ($withoutKey === true) ? 2 : 3;
         if (count($parts) !== $expectedParts) {
             throw new InvalidArgumentException([
                 'data'      => ['method' => 'Session::parseToken', 'argument' => '$token'],
@@ -570,7 +570,7 @@ class Session
 
         $tokenExpiry = (int)$parts[0];
         $tokenId     = $parts[1];
-        $tokenKey    = ($withoutKey === true)? null : $parts[2];
+        $tokenKey    = ($withoutKey === true) ? null : $parts[2];
 
         // verify that all parts were parsed correctly using reassembly
         $expectedToken = $tokenExpiry . '.' . $tokenId;

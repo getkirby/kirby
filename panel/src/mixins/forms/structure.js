@@ -3,6 +3,25 @@ import { props as Field } from "@/components/Forms/Field.vue";
 export default {
   mixins: [Field],
   methods: {
+    columnIsEmpty(value) {
+      if (value === undefined || value === null || value === "") {
+        return true;
+      }
+
+      if (
+        typeof value === "object" &&
+        Object.keys(value).length === 0 &&
+        value.constructor === Object
+      ) {
+        return true;
+      }
+
+      if (value.length !== undefined && value.length === 0) {
+        return true;
+      }
+
+      return false;
+    },
     displayText(field, value) {
       switch (field.type) {
         case "user": {
@@ -49,7 +68,7 @@ export default {
         return "…";
       }
 
-      return value.toString();
+      return value?.toString();
     },
     previewExists(type) {
       return this.$helper.isComponent(`k-${type}-field-preview`);

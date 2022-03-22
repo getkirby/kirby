@@ -67,7 +67,7 @@
   "error.blocks.max.singular": "Ekki meira en einn bálkur",
   "error.blocks.min.plural": "Minnst {min}. bálka",
   "error.blocks.min.singular": "Allavegana einn bálkur takk",
-  "error.blocks.validation": "Það er villa í bálk {index}",
+  "error.blocks.validation": "Það er villa í bálki númer {index}. Klikkaðu á bálkinn og finndu villuna. Það er væntanlega rauðlitur rammi utan um villuna.",
 
   "error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
@@ -411,7 +411,7 @@
   "page.changeSlug": "Breyta vefslóð",
   "page.changeSlug.fromTitle": "Slóð af titli",
   "page.changeStatus": "Breyta stöðu",
-  "page.changeStatus.position": "Veldu ákjósanlega stöðu",
+  "page.changeStatus.position": "Veldu ákjósanlega röðun",
   "page.changeStatus.select": "Veldu nýja stöðu",
   "page.changeTemplate": "Breyta sniðmáti",
   "page.delete.confirm": "Viltu virkilega farga <strong>{title}</strong>?",

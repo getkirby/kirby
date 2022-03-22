@@ -1,0 +1,240 @@
+name: CI - Backend
+on:
+  push:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - "**"
+      - "!.github/**"
+      - ".github/workflows/backend.yml"
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!panel/**"
+      - "!scripts/**"
+  pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - "**"
+      - "!.github/**"
+      - ".github/workflows/backend.yml"
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!panel/**"
+      - "!scripts/**"
+  workflow_call:
+
+jobs:
+  tests:
+    name: "Unit tests - PHP ${{ matrix.php }}"
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        php: ["7.4", "8.0", "8.1"]
+    env:
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
+      ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        with:
+          fetch-depth: 2
+
+      - name: Preparations
+        run: mkdir sarif
+
+      - name: Install memcached
+        uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # pin@v7
+
+      - name: Install system locales
+        run: sudo apt-get update && sudo apt-get install -y locales-all
+
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          key: php-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: ${{ env.ini }}
+          coverage: pcov
+          tools: phpunit:9.5.13, psalm:4.20.0
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Cache analysis data
+        id: finishPrepare
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        with:
+          path: ~/.cache/psalm
+          key: backend-analysis-${{ matrix.php }}
+
+      - name: Run tests
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
+
+      - name: Statically analyze using Psalm
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
+
+      - name: Upload coverage results to Codecov
+        uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
+          fail_ci_if_error: true
+          files: ${{ github.workspace }}/clover.xml
+          flags: backend
+          env_vars: PHP
+        env:
+          PHP: ${{ matrix.php }}
+
+      - name: Upload code scanning results to GitHub
+        if: always() && steps.finishPrepare.outcome == 'success'
+        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
+        with:
+          sarif_file: sarif
+
+  analysis:
+    name: "Code Quality"
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      php: "8.0"
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+
+      - name: Preparations
+        run: mkdir sarif
+
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          key: php-analysis-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
+      - name: Setup PHP environment
+        id: finishPrepare
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          coverage: none
+          tools: |
+            composer:2.2.6, composer-normalize:2.23.1, composer-require-checker:4.0.0,
+            composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.11.1
+
+      - name: Validate composer.json/composer.lock
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: composer validate --strict --no-check-version --no-check-all
+
+      - name: Ensure that composer.json is normalized
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: composer-normalize --dry-run
+
+      - name: Check for unused Composer dependencies
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: composer-unused --no-progress
+
+      - name: Check for duplicated code
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: phpcpd --fuzzy --exclude tests --exclude vendor .
+
+      - name: Statically analyze using PHPMD
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: phpmd . github phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*' --reportfile-sarif sarif/phpmd.sarif
+
+      - name: Upload code scanning results to GitHub
+        if: always() && steps.finishPrepare.outcome == 'success'
+        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
+        with:
+          sarif_file: sarif
+
+  coding-style:
+    name: "Coding Style"
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      php: "8.0"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        with:
+          php-version: ${{ env.php }}
+          coverage: none
+          tools: php-cs-fixer:3.6.0
+
+      - name: Cache analysis data
+        id: finishPrepare
+        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        with:
+          path: ~/.php-cs-fixer
+          key: coding-style
+
+      - name: Check for PHP coding style violations
+        if: always() && steps.finishPrepare.outcome == 'success'
+        # Use the --dry-run flag in push builds to get a failed CI status
+        run: >
+          php-cs-fixer fix --diff
+          ${{ github.event_name != 'pull_request' && '--dry-run' || '' }}
+
+      - name: Create code suggestions from the coding style changes (on PR only)
+        if: >
+          always() && steps.finishPrepare.outcome == 'success' &&
+          github.event_name == 'pull_request'
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        with:
+          tool_name: PHP-CS-Fixer
+          fail_on_error: "true"

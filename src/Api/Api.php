@@ -22,7 +22,7 @@ use Throwable;
  * @package   Kirby Api
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Api
@@ -181,7 +181,7 @@ class Api
 
                 // get the locale from the translation
                 $translation = $user->kirby()->translation($language);
-                $locale = ($translation !== null)? $translation->locale() : $language;
+                $locale = ($translation !== null) ? $translation->locale() : $language;
 
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible

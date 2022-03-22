@@ -23,7 +23,7 @@ use Throwable;
  * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Dir
@@ -155,7 +155,7 @@ class Dir
 
         foreach ($items as $item) {
             $root     = $dir . '/' . $item;
-            $entry    = $path !== null ? $path . '/' . $item: $item;
+            $entry    = $path !== null ? $path . '/' . $item : $item;
             $result[] = $entry;
 
             if ($recursive === true && is_dir($root) === true) {

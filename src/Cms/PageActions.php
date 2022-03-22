@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 trait PageActions
@@ -780,10 +780,8 @@ trait PageActions
         foreach ($sorted as $key => $id) {
             if ($id === $this->id()) {
                 continue;
-            } else {
-                if ($sibling = $siblings->get($id)) {
-                    $sibling->changeNum($key + 1);
-                }
+            } elseif ($sibling = $siblings->get($id)) {
+                $sibling->changeNum($key + 1);
             }
         }
 

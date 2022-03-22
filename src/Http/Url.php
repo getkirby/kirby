@@ -10,7 +10,7 @@ use Kirby\Toolkit\Str;
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Url
@@ -100,12 +100,12 @@ class Url
      * Returns the url to the executed script
      *
      * @param array $props
-     * @param bool $forwarded
+     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return string
      */
     public static function index(array $props = [], bool $forwarded = false): string
     {
-        return Uri::index($props, $forwarded)->toString();
+        return Uri::index($props)->toString();
     }
 
     /**

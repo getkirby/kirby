@@ -17,7 +17,7 @@ class Parsedown
 {
     # ~
 
-    const version = '1.8.0-beta-7';
+    public const version = '1.8.0-beta-7';
 
     # ~
 
@@ -207,11 +207,9 @@ class Parsedown
                     $CurrentBlock = $Block;
 
                     continue;
-                } else {
-                    if ($this->isBlockCompletable($CurrentBlock['type'])) {
-                        $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
-                        $CurrentBlock = $this->$methodName($CurrentBlock);
-                    }
+                } elseif ($this->isBlockCompletable($CurrentBlock['type'])) {
+                    $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
+                    $CurrentBlock = $this->$methodName($CurrentBlock);
                 }
             }
 
@@ -1597,12 +1595,10 @@ class Parsedown
                 $markup .= $this->elements($Element['elements']);
             } elseif (isset($Element['element'])) {
                 $markup .= $this->element($Element['element']);
+            } elseif (!$permitRawHtml) {
+                $markup .= self::escape($text, true);
             } else {
-                if (!$permitRawHtml) {
-                    $markup .= self::escape($text, true);
-                } else {
-                    $markup .= $text;
-                }
+                $markup .= $text;
             }
 
             $markup .= $hasName ? '</' . $Element['name'] . '>' : '';

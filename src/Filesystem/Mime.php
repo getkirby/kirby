@@ -14,7 +14,7 @@ use SimpleXMLElement;
  * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Mime
@@ -48,7 +48,7 @@ class Mime
         'html'  => 'text/html',
         'ico'   => 'image/x-icon',
         'ics'   => 'text/calendar',
-        'js'    => 'application/x-javascript',
+        'js'    => ['application/javascript', 'application/x-javascript'],
         'json'  => ['application/json', 'text/json'],
         'j2k'   => ['image/jp2'],
         'jp2'   => ['image/jp2'],

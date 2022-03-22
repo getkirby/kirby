@@ -14,7 +14,7 @@ use Exception;
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class A
@@ -153,9 +153,9 @@ class A
         return implode($separator, $value);
     }
 
-    const MERGE_OVERWRITE = 0;
-    const MERGE_APPEND    = 1;
-    const MERGE_REPLACE   = 2;
+    public const MERGE_OVERWRITE = 0;
+    public const MERGE_APPEND    = 1;
+    public const MERGE_REPLACE   = 2;
 
     /**
      * Merges arrays recursively

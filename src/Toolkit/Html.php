@@ -12,7 +12,7 @@ use Kirby\Http\Url;
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Html extends Xml
@@ -528,7 +528,7 @@ class Html extends Xml
         switch ($uri->host()) {
             case 'vimeo.com':
             case 'www.vimeo.com':
-                $id = $path->first();
+                $id = $path->last();
                 break;
             case 'player.vimeo.com':
                 $id = $path->nth(1);

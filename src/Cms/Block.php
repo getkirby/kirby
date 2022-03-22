@@ -15,14 +15,14 @@ use Throwable;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Block extends Item
 {
-    const ITEMS_CLASS = '\Kirby\Cms\Blocks';
-
     use HasMethods;
+
+    public const ITEMS_CLASS = '\Kirby\Cms\Blocks';
 
     /**
      * @var \Kirby\Cms\Content

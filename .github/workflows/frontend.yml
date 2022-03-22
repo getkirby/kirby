@@ -1,0 +1,118 @@
+name: CI - Frontend
+on:
+  push:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - ".github/workflows/frontend.yml"
+      - "panel/**"
+      - "!panel/scripts/**"
+  pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - ".github/workflows/frontend.yml"
+      - "panel/**"
+      - "!panel/scripts/**"
+  workflow_call:
+
+jobs:
+  tests:
+    name: "Unit tests"
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+
+      - name: Set up Node.js problem matchers and cache npm dependencies
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
+        with:
+          cache: "npm"
+          cache-dependency-path: panel/package-lock.json
+
+      - name: Install npm dependencies
+        id: finishPrepare
+        run: npm ci
+        working-directory: panel
+
+      - name: Run JavaScript unit tests
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: npm run test:unit:coverage
+        working-directory: panel
+
+      # TODO: Disabled until Vitest coverage reporting is accurate and
+      #       Kirby's frontend tests are useful enough that we need this metric
+      # - name: Upload coverage results to Codecov
+      #   uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
+      #     fail_ci_if_error: true
+      #     files: ${{ github.workspace }}/panel/coverage/lcov.info
+      #     flags: frontend
+
+  coding-style:
+    name: "Coding Style"
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      php: "8.0"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+
+      - name: Set up Node.js problem matchers and cache npm dependencies
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
+        with:
+          cache: "npm"
+          cache-dependency-path: panel/package-lock.json
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: panel
+
+      - name: Check for JavaScript coding style violations (ESLint)
+        if: always() && steps.finishPrepare.outcome == 'success'
+        # Use the --no-fix flag in push builds to get a failed CI status
+        run: >
+          npm run lint -- --max-warnings 0 --format stylish
+          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
+        working-directory: panel
+
+      - name: Create code suggestions from the coding style changes (on PR only)
+        if: >
+          always() && steps.finishPrepare.outcome == 'success' &&
+          github.event_name == 'pull_request'
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        with:
+          tool_name: ESLint
+          fail_on_error: "true"
+
+      - name: Check for JavaScript coding style violations (Prettier)
+        if: always() && steps.finishPrepare.outcome == 'success'
+        # Use the --check flag in push builds to get a failed CI status
+        run: >
+          npm run format --
+          ${{ github.event_name != 'pull_request' && '--check' || '--write' }}
+        working-directory: panel
+
+      - name: Create code suggestions from the coding style changes (on PR only)
+        if: >
+          always() && steps.finishPrepare.outcome == 'success' &&
+          github.event_name == 'pull_request'
+        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        with:
+          tool_name: Prettier
+          fail_on_error: "true"

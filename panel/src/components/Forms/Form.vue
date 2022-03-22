@@ -77,9 +77,7 @@ export default {
      * @param  {string} name field name to focus
      */
     focus(name) {
-      if (this.$refs.fields?.focus) {
-        this.$refs.fields.focus(name);
-      }
+      this.$refs.fields?.focus?.(name);
     },
     onSubmit() {
       /**

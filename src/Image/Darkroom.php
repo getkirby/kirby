@@ -11,7 +11,7 @@ use Exception;
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Darkroom
@@ -63,14 +63,16 @@ class Darkroom
     protected function defaults(): array
     {
         return [
-            'autoOrient' => true,
-            'blur'       => false,
-            'crop'       => false,
-            'format'     => null,
-            'grayscale'  => false,
-            'height'     => null,
-            'quality'    => 90,
-            'width'      => null,
+            'autoOrient'  => true,
+            'blur'        => false,
+            'crop'        => false,
+            'format'      => null,
+            'grayscale'   => false,
+            'height'      => null,
+            'quality'     => 90,
+            'scaleHeight' => null,
+            'scaleWidth'  => null,
+            'width'       => null,
         ];
     }
 
@@ -124,12 +126,21 @@ class Darkroom
      */
     public function preprocess(string $file, array $options = [])
     {
-        $options    = $this->options($options);
-        $image      = new Image($file);
-        $dimensions = $image->dimensions()->thumb($options);
+        $options = $this->options($options);
+        $image   = new Image($file);
 
-        $options['width']  = $dimensions->width();
-        $options['height'] = $dimensions->height();
+        $dimensions      = $image->dimensions();
+        $thumbDimensions = $dimensions->thumb($options);
+
+        $sourceWidth  = $image->width();
+        $sourceHeight = $image->height();
+
+        $options['width']  = $thumbDimensions->width();
+        $options['height'] = $thumbDimensions->height();
+
+        // scale ratio compared to the source dimensions
+        $options['scaleWidth']  = $sourceWidth ? $options['width'] / $sourceWidth : null;
+        $options['scaleHeight'] = $sourceHeight ? $options['height'] / $sourceHeight : null;
 
         return $options;
     }

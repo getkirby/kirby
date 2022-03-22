@@ -10,7 +10,7 @@ use Kirby\Toolkit\Properties;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 abstract class Model
@@ -23,7 +23,7 @@ abstract class Model
      * The CLASS_ALIAS is a short human-readable
      * version of the class name. I.e. page.
      */
-    const CLASS_ALIAS = null;
+    public const CLASS_ALIAS = null;
 
     /**
      * The parent Kirby instance

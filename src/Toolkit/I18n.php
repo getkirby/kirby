@@ -11,7 +11,7 @@ use NumberFormatter;
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class I18n
@@ -296,12 +296,10 @@ class I18n
 
         if (is_string($translation) === true) {
             $message = $translation;
+        } elseif (isset($translation[$count]) === true) {
+            $message = $translation[$count];
         } else {
-            if (isset($translation[$count]) === true) {
-                $message = $translation[$count];
-            } else {
-                $message = end($translation);
-            }
+            $message = end($translation);
         }
 
         if ($formatNumber === true) {

@@ -33,20 +33,21 @@ class EmailTest extends TestCase
             'sales@supercompany.com'     => 'Super Company Sales'
         ];
 
-        $this->assertEquals($from, $email->from());
-        $this->assertEquals($fromName, $email->fromName());
-        $this->assertEquals([$to => null], $email->to());
-        $this->assertEquals($replyTo, $email->replyTo());
-        $this->assertEquals($replyToName, $email->replyToName());
-        $this->assertEquals($subject, $email->subject());
-        $this->assertEquals($expectedCc, $email->cc());
-        $this->assertEquals($expectedCc, $email->bcc());
+        $this->assertSame($from, $email->from());
+        $this->assertSame($fromName, $email->fromName());
+        $this->assertSame([$to => null], $email->to());
+        $this->assertSame($replyTo, $email->replyTo());
+        $this->assertSame($replyToName, $email->replyToName());
+        $this->assertSame($subject, $email->subject());
+        $this->assertSame($expectedCc, $email->cc());
+        $this->assertSame($expectedCc, $email->bcc());
 
         $this->assertInstanceOf(Body::class, $email->body());
-        $this->assertEquals($body, $email->body()->text());
-        $this->assertEquals(null, $email->body()->html());
+        $this->assertSame($body, $email->body()->text());
+        $this->assertSame('', $email->body()->html());
+        $this->assertFalse($email->isHtml());
 
-        $this->assertEquals(['type' => 'mail'], $email->transport());
+        $this->assertSame(['type' => 'mail'], $email->transport());
     }
 
     public function testRequiredProperty()
@@ -67,9 +68,9 @@ class EmailTest extends TestCase
             'bcc' => null,
         ]);
 
-        $this->assertEquals('', $email->replyTo());
-        $this->assertEquals([], $email->cc());
-        $this->assertEquals([], $email->bcc());
+        $this->assertSame('', $email->replyTo());
+        $this->assertSame([], $email->cc());
+        $this->assertSame([], $email->bcc());
     }
 
     public function testInvalidAddress()
@@ -103,8 +104,8 @@ class EmailTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Body::class, $email->body());
-        $this->assertEquals($body['text'], $email->body()->text());
-        $this->assertEquals($body['html'], $email->body()->html());
+        $this->assertSame($body['text'], $email->body()->text());
+        $this->assertSame($body['html'], $email->body()->html());
 
         $this->assertTrue($email->isHtml());
     }
@@ -118,8 +119,8 @@ class EmailTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Body::class, $email->body());
-        $this->assertEquals(null, $email->body()->text());
-        $this->assertEquals($body['html'], $email->body()->html());
+        $this->assertSame('', $email->body()->text());
+        $this->assertSame($body['html'], $email->body()->html());
 
         $this->assertTrue($email->isHtml());
     }
@@ -133,7 +134,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($attachments, $email->attachments());
+        $this->assertSame($attachments, $email->attachments());
     }
 
     public function testBeforeSend()

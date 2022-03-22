@@ -17,17 +17,17 @@ use Kirby\Toolkit\A;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Site extends ModelWithContent
 {
-    const CLASS_ALIAS = 'site';
-
     use SiteActions;
     use HasChildren;
     use HasFiles;
     use HasMethods;
+
+    public const CLASS_ALIAS = 'site';
 
     /**
      * The SiteBlueprint object
@@ -572,10 +572,10 @@ class Site extends ModelWithContent
         return [
             'children'  => $this->children()->keys(),
             'content'   => $this->content()->toArray(),
-            'errorPage' => $this->errorPage() ? $this->errorPage()->id(): false,
+            'errorPage' => $this->errorPage() ? $this->errorPage()->id() : false,
             'files'     => $this->files()->keys(),
-            'homePage'  => $this->homePage() ? $this->homePage()->id(): false,
-            'page'      => $this->page() ? $this->page()->id(): false,
+            'homePage'  => $this->homePage() ? $this->homePage()->id() : false,
+            'page'      => $this->page() ? $this->page()->id() : false,
             'title'     => $this->title()->value(),
             'url'       => $this->url(),
         ];

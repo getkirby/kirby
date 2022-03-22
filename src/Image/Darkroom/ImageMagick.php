@@ -12,7 +12,7 @@ use Kirby\Image\Darkroom;
  * @package   Kirby Image
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class ImageMagick extends Darkroom
@@ -73,6 +73,14 @@ class ImageMagick extends Darkroom
 
         // limit to single-threading to keep CPU usage sane
         $command .= ' -limit thread 1';
+
+        // add JPEG size hint to optimize CPU and memory usage
+        if (F::mime($file) === 'image/jpeg') {
+            // add hint only when downscaling
+            if ($options['scaleWidth'] < 1 && $options['scaleHeight'] < 1) {
+                $command .= ' -define ' . escapeshellarg(sprintf('jpeg:size=%dx%d', $options['width'], $options['height']));
+            }
+        }
 
         // append input file
         return $command . ' ' . escapeshellarg($file);
