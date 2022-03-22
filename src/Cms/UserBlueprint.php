@@ -30,7 +30,7 @@ class UserBlueprint extends Blueprint
 
         // normalize all available page options
         $this->props['options'] = $this->normalizeOptions(
-            $props['options'] ?? true,
+            $this->props['options'] ?? true,
             // defaults
             [
                 'create'         => null,
