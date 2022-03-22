@@ -246,17 +246,20 @@ export default {
       context.commit("CLEAR");
     },
     create(context, model) {
+      const content = clone(model.content);
+
+      // remove fields from the content object that
+      // should be ignored in changes or when saving content
+      if (Array.isArray(model.ignore)) {
+        model.ignore.forEach((field) => delete content[field]);
+      }
+
       // attach the language to the id
       model.id = context.getters.id(model.id);
 
-      // remove title from model content
-      if (model.id.startsWith("/pages/") || model.id.startsWith("/site")) {
-        delete model.content.title;
-      }
-
       const data = {
         api: model.api,
-        originals: clone(model.content),
+        originals: content,
         changes: {}
       };
 

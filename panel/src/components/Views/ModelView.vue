@@ -40,6 +40,9 @@ export default {
     },
     isLocked() {
       return this.lock?.state === "lock";
+    },
+    protectedFields() {
+      return [];
     }
   },
   watch: {
@@ -65,7 +68,8 @@ export default {
       this.$store.dispatch("content/create", {
         id: this.id,
         api: this.id,
-        content: this.model.content
+        content: this.model.content,
+        ignore: this.protectedFields
       });
     },
     async reload() {
