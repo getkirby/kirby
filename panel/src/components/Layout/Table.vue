@@ -417,5 +417,10 @@ td.k-table-options-column {
   .k-table td:last-child {
     display: table-cell;
   }
+
+  .k-table th.k-table-column:nth-child(2),
+  .k-table td.k-table-column:nth-child(2) {
+    width: auto !important;
+  }
 }
 </style>
