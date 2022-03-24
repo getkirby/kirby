@@ -268,7 +268,14 @@ class Server
     public static function requestUri(): array
     {
         $uri = static::get('REQUEST_URI', '');
-        $uri = parse_url($uri);
+
+        if (Url::isAbsolute($uri) === true) {
+            $uri = parse_url($uri);
+        } else {
+            // the fake domain is needed to make sure the URL parsing is
+            // always correct. Even if there's a colon in the path for params
+            $uri = parse_url('http://getkirby.com' . $uri);
+        }
 
         return [
             'path'  => $uri['path']  ?? null,

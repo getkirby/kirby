@@ -360,7 +360,7 @@ class ServerTest extends TestCase
             [
                 null,
                 [
-                    'path'  => '',
+                    'path'  => null,
                     'query' => null
                 ]
             ],
@@ -386,9 +386,23 @@ class ServerTest extends TestCase
                 ]
             ],
             [
+                '/foo/bar/page:2?foo=bar',
+                [
+                    'path'  => '/foo/bar/page:2',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                '/foo/bar/page;2?foo=bar',
+                [
+                    'path'  => '/foo/bar/page;2',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
                 'index.php?foo=bar',
                 [
-                    'path'  => 'index.php',
+                    'path'  => null,
                     'query' => 'foo=bar'
                 ]
             ],
