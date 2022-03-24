@@ -69,14 +69,13 @@ return [
                 return $value;
             }
 
-            $value     = trim($value);
             $converter = $this->converters()[$this->converter()];
 
             if (is_array($value) === true) {
                 return array_map($converter, $value);
             }
 
-            return call_user_func($converter, $value);
+            return call_user_func($converter, trim($value ?? ''));
         },
         'converters' => function (): array {
             return [

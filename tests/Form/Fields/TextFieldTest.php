@@ -27,7 +27,9 @@ class TextFieldTest extends TestCase
             ['slug', 'Super nice', 'super-nice'],
             ['upper', 'Super nice', 'SUPER NICE'],
             ['lower', 'Super nice', 'super nice'],
-            ['ucfirst', 'super nice', 'Super nice']
+            ['ucfirst', 'super nice', 'Super nice'],
+            ['upper', null, ''],
+            ['lower', '', ''],
         ];
     }
 
