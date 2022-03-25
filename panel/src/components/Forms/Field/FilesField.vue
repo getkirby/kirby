@@ -6,7 +6,7 @@
       </k-button-group>
     </template>
 
-    <k-dropzone :disabled="more === false" @drop="drop">
+    <k-dropzone :disabled="!moreUpload" @drop="drop">
       <template v-if="selected.length">
         <k-items
           :items="selected"
@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     moreUpload() {
-      return this.more && this.uploads;
+      return !this.disabled && this.more && this.uploads;
     },
     options() {
       if (this.uploads) {
