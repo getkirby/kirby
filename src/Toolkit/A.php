@@ -726,4 +726,53 @@ class A
             return $array;
         }
     }
+
+    /**
+     * Filter the array using the given callback
+     * using both value and key
+     *
+     * @param array $array
+     * @param callable $callback
+     * @return array
+     */
+    public static function where(array $array, callable $callback): array
+    {
+        return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+    }
+
+    /**
+     * Filter the array, using only the given key or array of keys
+     *
+     * @param array $array
+     * @param int|string|array $keys
+     * @return array
+     */
+    public static function only(array $array, $keys): array
+    {
+        if (is_int($keys) || is_string($keys)) {
+            $keys = static::wrap($keys);
+        }
+
+        return static::where($array, function ($value, $key) use ($keys) {
+            return in_array($key, $keys, true);
+        });
+    }
+
+    /**
+     * Filter the array for ever key except the given key or array of keys
+     *
+     * @param array $array
+     * @param int|string|array $keys
+     * @return array
+     */
+    public static function except(array $array, $keys): array
+    {
+        if (is_int($keys) || is_string($keys)) {
+            $keys = static::wrap($keys);
+        }
+
+        return static::where($array, function ($value, $key) use ($keys) {
+            return in_array($key, $keys, true) === false;
+        });
+    }
 }
