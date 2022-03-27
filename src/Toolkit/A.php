@@ -753,7 +753,7 @@ class A
             $keys = static::wrap($keys);
         }
 
-        return A::where($array, function ($value, $key) use ($keys) {
+        return static::where($array, function ($value, $key) use ($keys) {
             return in_array($key, $keys, true);
         });
     }
@@ -771,7 +771,7 @@ class A
             $keys = static::wrap($keys);
         }
 
-        return A::where($array, function ($value, $key) use ($keys) {
+        return static::where($array, function ($value, $key) use ($keys) {
             return in_array($key, $keys, true) === false;
         });
     }
