@@ -729,7 +729,7 @@ class A
 
     /**
      * Filter the array using the given callback
-     * using both keys and values
+     * using both value and key
      *
      * @param array $array
      * @param callable $callback
@@ -741,7 +741,7 @@ class A
     }
 
     /**
-     * Filter the array using the given key or array of keys
+     * Filter the array, using only the given key or array of keys
      *
      * @param array $array
      * @param int|string|array $keys
@@ -759,7 +759,7 @@ class A
     }
 
     /**
-     * Filter the array using the given key or array of keys
+     * Filter the array for ever key except the given key or array of keys
      *
      * @param array $array
      * @param int|string|array $keys
