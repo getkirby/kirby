@@ -707,8 +707,6 @@ class ATest extends TestCase
         $associativeArray = $this->_array();
         $array = array_keys($associativeArray);
 
-        ray($associativeArray);
-
         $result = A::where($associativeArray, function($value, $key){
             return in_array($key, ['cat', 'dog']);
         });
