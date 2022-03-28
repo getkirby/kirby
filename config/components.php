@@ -168,7 +168,7 @@ return [
      * @return \Kirby\Cms\Collection|bool
      */
     'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
-        if (empty(trim($query)) === true) {
+        if (empty(trim($query ?? '')) === true) {
             return $collection->limit(0);
         }
 
