@@ -6,7 +6,7 @@ return [
     'props' => [
         /**
          * The headline for the section. This can be a simple string or a template with additional info from the parent page.
-         * @todo deprecate in 3.8
+         * @todo deprecate in 3.7
          */
         'headline' => function ($headline = null) {
             return I18n::translate($headline, $headline);
