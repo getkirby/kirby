@@ -203,6 +203,51 @@ class FieldsetTest extends TestCase
     }
 
     /**
+     * @covers ::name
+     */
+    public function testNameTranslated()
+    {
+        $fieldset = new Fieldset([
+            'type'  => 'test',
+            'name'  => [
+                'en' => 'English name',
+                'de' => 'Deutscher Name',
+            ]
+        ]);
+
+        $this->assertSame('English name', $fieldset->name());
+    }
+
+    /**
+     * @covers ::name
+     */
+    public function testNameFromTitle()
+    {
+        $fieldset = new Fieldset([
+            'type'  => 'test',
+            'title' => 'Test Title'
+        ]);
+
+        $this->assertSame('Test Title', $fieldset->name());
+    }
+
+    /**
+     * @covers ::name
+     */
+    public function testNameFromTitleTranslated()
+    {
+        $fieldset = new Fieldset([
+            'type'  => 'test',
+            'title' => [
+                'en' => 'English name',
+                'de' => 'Deutscher Name',
+            ]
+        ]);
+
+        $this->assertSame('English name', $fieldset->name());
+    }
+
+    /**
      * @covers ::preview
      */
     public function testPreview()
