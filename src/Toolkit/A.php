@@ -741,31 +741,13 @@ class A
     }
 
     /**
-     * Filter the array, using only the given key or array of keys
+     * Remove key(s) from an array
      *
      * @param array $array
      * @param int|string|array $keys
      * @return array
      */
-    public static function only(array $array, $keys): array
-    {
-        if (is_int($keys) || is_string($keys)) {
-            $keys = static::wrap($keys);
-        }
-
-        return static::filter($array, function ($value, $key) use ($keys) {
-            return in_array($key, $keys, true);
-        });
-    }
-
-    /**
-     * Filter the array for ever key except the given key or array of keys
-     *
-     * @param array $array
-     * @param int|string|array $keys
-     * @return array
-     */
-    public static function except(array $array, $keys): array
+    public static function without(array $array, $keys): array
     {
         if (is_int($keys) || is_string($keys)) {
             $keys = static::wrap($keys);
