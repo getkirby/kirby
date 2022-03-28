@@ -735,7 +735,7 @@ class A
      * @param callable $callback
      * @return array
      */
-    public static function where(array $array, callable $callback): array
+    public static function filter(array $array, callable $callback): array
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
     }
@@ -753,7 +753,7 @@ class A
             $keys = static::wrap($keys);
         }
 
-        return static::where($array, function ($value, $key) use ($keys) {
+        return static::filter($array, function ($value, $key) use ($keys) {
             return in_array($key, $keys, true);
         });
     }
@@ -771,7 +771,7 @@ class A
             $keys = static::wrap($keys);
         }
 
-        return static::where($array, function ($value, $key) use ($keys) {
+        return static::filter($array, function ($value, $key) use ($keys) {
             return in_array($key, $keys, true) === false;
         });
     }

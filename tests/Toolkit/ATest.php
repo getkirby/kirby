@@ -708,22 +708,22 @@ class ATest extends TestCase
         $associativeArray = $this->_array();
         $array = array_keys($associativeArray);
 
-        $result = A::where($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function($value, $key){
             return in_array($key, ['cat', 'dog']);
         });
         $this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff'], $result);
 
-        $result = A::where($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function($value, $key){
             return in_array($value, ['miao', 'tweet']);
         });
         $this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-        $result = A::where($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function($value, $key){
             return $key === 'cat' || $value === 'tweet';
         });
         $this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-        $result = A::where($array, function($value, $key){
+        $result = A::filter($array, function($value, $key){
             return $key > 0;
         });
         $this->assertSame([1 => 'dog', 2 => 'bird'], $result);
