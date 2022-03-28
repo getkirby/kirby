@@ -14,7 +14,7 @@ export default {
   },
   computed: {
     text() {
-      const dt = this.$library.dayjs.iso(this.value);
+      const dt = this.$library.dayjs(this.value);
 
       if (dt) {
         let format = this.field.display;

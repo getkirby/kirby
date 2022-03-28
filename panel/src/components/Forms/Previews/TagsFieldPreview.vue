@@ -15,7 +15,7 @@ export default {
   computed: {
     tags() {
       if (Array.isArray(this.value)) {
-        return this.value;
+        return this.value.map((tag) => tag.text || tag);
       }
 
       return this.value.split(",");

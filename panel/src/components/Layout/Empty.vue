@@ -7,7 +7,9 @@
     v-on="$listeners"
   >
     <k-icon v-if="icon" :type="icon" />
-    <p><slot /></p>
+    <p>
+      <slot>{{ text }}</slot>
+    </p>
   </component>
 </template>
 

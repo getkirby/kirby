@@ -112,7 +112,10 @@ return [
 
                     // Skip hidden and unsaveable fields
                     // They should never be included as column
-                    if ($field['type'] === 'hidden' || $field['saveable'] === false) {
+                    if (
+                        $field['type'] === 'hidden' ||
+                        $field['saveable'] === false
+                    ) {
                         continue;
                     }
 
@@ -129,7 +132,10 @@ return [
 
                     $field = $this->fields[$columnName] ?? null;
 
-                    if (empty($field) === true || $field['saveable'] === false) {
+                    if (
+                        empty($field) === true ||
+                        $field['saveable'] === false
+                    ) {
                         continue;
                     }
 
