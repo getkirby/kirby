@@ -45,6 +45,30 @@ class PagesSectionTest extends TestCase
         $this->assertEquals('Pages', $section->headline());
     }
 
+    public function testHeadlineFromLabel()
+    {
+        // single label
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'label' => 'Test'
+        ]);
+
+        $this->assertEquals('Test', $section->headline());
+
+        // translated label
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => new Page(['slug' => 'test']),
+            'label' => [
+                'en' => 'Pages',
+                'de' => 'Seiten'
+            ]
+        ]);
+
+        $this->assertEquals('Pages', $section->headline());
+    }
+
     public function testParent()
     {
         $this->app->impersonate('kirby');
