@@ -24,8 +24,17 @@
 <script>
 export default {
   props: {
+    /**
+     * Column options
+     */
     column: Object,
+    /**
+     * Optional corresponding field options
+     */
     field: Object,
+    /**
+     * Current row
+     */
     row: Object,
     value: {
       type: [String, Number, Object, Array],

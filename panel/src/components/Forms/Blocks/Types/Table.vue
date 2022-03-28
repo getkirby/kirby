@@ -10,21 +10,40 @@
 
 <script>
 /**
+ * Preview for the `table` block
+ *
  * @displayName BlockTypeTable
  * @internal
  */
 export default {
   inheritAttrs: false,
   computed: {
+    /**
+     * Returns either explicitly defined columns
+     * or fieldset fields as columns config
+     * @returns {Object}
+     */
     columns() {
       return this.table.columns || this.fields;
     },
+    /**
+     * @returns  {Object}
+     */
     fields() {
       return this.table.fields || {};
     },
+    /**
+     * @returns {Array}
+     */
     rows() {
       return this.content.rows || [];
     },
+    /**
+     * Returns table config from `rows`
+     * field by looping through each tab
+     * to find the field
+     * @returns {Object}
+     */
     table() {
       let table = null;
 

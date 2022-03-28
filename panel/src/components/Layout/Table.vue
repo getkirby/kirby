@@ -121,9 +121,7 @@
 <script>
 /**
  * A simple table component with columns and rows
- *
- * Events:
- * cell, input, header, option, sort
+ * @public
  */
 export default {
   props: {
@@ -138,7 +136,8 @@ export default {
      */
     disabled: Boolean,
     /**
-     * Optional fields configuration that match columns
+     * Optional fields configuration that can be used as columns
+     * (used for our structure field)
      */
     fields: {
       type: Object,
@@ -149,7 +148,7 @@ export default {
      */
     empty: String,
     /**
-     * Index number for first column
+     * Index number for first row
      */
     index: {
       type: [Number, Boolean],
@@ -174,9 +173,17 @@ export default {
     };
   },
   computed: {
+    /**
+     * Number of columns
+     * @returns {number}
+     */
     columnsCount() {
       return Object.keys(this.columns).length;
     },
+    /**
+     * Config options for `k-draggable`
+     * @returns {Object}
+     */
     dragOptions() {
       return {
         disabled: !this.sortable,
@@ -184,13 +191,21 @@ export default {
         ghostClass: "k-table-row-ghost"
       };
     },
+    /**
+     * Whether to show index column
+     * @returns {bool}
+     */
     hasIndexColumn() {
       return this.sortable || this.index !== false;
     },
+    /**
+     * Whether to show options column
+     * @returns {bool}
+     */
     hasOptions() {
       return (
         this.options ||
-        Object.values(this.rows).filter((row) => row.options).length > 0
+        Object.values(this.values).filter((row) => row.options).length > 0
       );
     }
   },
@@ -200,6 +215,11 @@ export default {
     }
   },
   methods: {
+    /**
+     * Checks if specific column is fully empty
+     * @param {number} columnIndex
+     * @returns {bool}
+     */
     isColumnEmpty(columnIndex) {
       return (
         this.rows.filter(
@@ -207,27 +227,57 @@ export default {
         ).length === 0
       );
     },
+    /**
+     * Returns label for a column
+     * @param {Object} column
+     * @param {number} columnIndex
+     * @returns {string}
+     */
     label(column, columnIndex) {
       return column.label || this.$helper.string.ucfirst(columnIndex);
     },
+    /**
+     * When a table cell is clicked
+     * @param {mixed} params
+     */
     onCell(params) {
       this.$emit("cell", params);
     },
+    /**
+     * When a cell updates (via inline editing)
+     * @param {Object} object with column index, row index and new value
+     */
     onCellUpdate({ columnIndex, rowIndex, value }) {
       this.values[rowIndex][columnIndex] = value;
       this.$emit("input", this.values);
     },
+    /**
+     * When a header cell is clicked
+     * @param {mixed} params
+     */
     onHeader(params) {
       this.$emit("header", params);
     },
+    /**
+     * When an option from the dropdown is engaged
+     * @param {string} option
+     * @param {Object} row
+     * @param {number} rowIndex
+     */
     onOption(option, row, rowIndex) {
       this.$emit("option", option, row, rowIndex);
     },
-    onSort(e) {
-      console.log(e);
+    /**
+     * When the table has been sorted
+     */
+    onSort() {
       this.$emit("input", this.values);
       this.$emit("sort", this.values);
     },
+    /**
+     * Returns width styling based on column fraction
+     * @param {string} fraction
+     */
     width(fraction) {
       return fraction ? this.$helper.ratio(fraction, "auto", false) : "auto";
     }
@@ -365,20 +415,16 @@ export default {
 
 /** Index column **/
 th.k-table-index-column,
-td.k-table-index-column {
+td.k-table-index-column,
+th.k-table-options-column,
+td.k-table-options-column {
   width: var(--table-row-height);
-  text-align: center;
+  text-align: center !important;
 }
 .k-table-index {
   font-size: var(--text-xs);
   color: var(--color-gray-500);
   line-height: 1.1em;
-}
-
-/** Options column **/
-th.k-table-options-column,
-td.k-table-options-column {
-  width: var(--table-row-height);
 }
 
 /** Empty */

@@ -45,8 +45,17 @@
 <script>
 export default {
   props: {
+    /**
+     * Form fields
+     */
     fields: Object,
+    /**
+     * Index of current model/row
+     */
     index: [Number, String],
+    /**
+     * Total number of rows in field
+     */
     total: Number,
     value: Object
   },

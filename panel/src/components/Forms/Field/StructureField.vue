@@ -73,7 +73,13 @@ export default {
   mixins: [Field],
   inheritAttrs: false,
   props: {
+    /**
+     * What columns to show in the table
+     */
     columns: Object,
+    /**
+     * Whether to allow row duplication
+     */
     duplicate: {
       type: Boolean,
       default: true
@@ -82,18 +88,40 @@ export default {
      * The text, that is shown when the field has no entries.
      */
     empty: String,
+    /**
+     * Fields for the form
+     */
     fields: Object,
+    /**
+     * How many rows to show per page
+     */
     limit: Number,
+    /**
+     * Upper limit of rows allowed
+     */
     max: Number,
+    /**
+     * Lower limit of rows required
+     */
     min: Number,
+    /**
+     * Whether to insert new entries at the top
+     * of the list instead at the end
+     */
     prepend: {
       type: Boolean,
       default: false
     },
+    /**
+     * Whether to allow sorting of rows
+     */
     sortable: {
       type: Boolean,
       default: true
     },
+    /**
+     * Expression by which to sort rows automatically
+     */
     sortBy: String,
     value: {
       type: Array,
@@ -113,12 +141,20 @@ export default {
     };
   },
   computed: {
+    /**
+     * Config options for `k-draggable`
+     * @returns {Object}
+     */
     dragOptions() {
       return {
         disabled: !this.isSortable,
         fallbackClass: "k-sortable-row-fallback"
       };
     },
+    /**
+     * Config for the structure form
+     * @returns {Object}
+     */
     form() {
       let fields = {};
 
@@ -141,6 +177,10 @@ export default {
 
       return fields;
     },
+    /**
+     * Index of first row that is displayed
+     * @returns {number}
+     */
     index() {
       if (!this.limit) {
         return 1;
@@ -148,6 +188,10 @@ export default {
 
       return (this.page - 1) * this.limit;
     },
+    /**
+     * Returns if new entries can be added
+     * @returns {bool}
+     */
     more() {
       if (this.disabled === true) {
         return false;
@@ -159,6 +203,10 @@ export default {
 
       return true;
     },
+    /**
+     * Returns if field is invalid
+     * @returns {bool}
+     */
     isInvalid() {
       if (this.disabled === true) {
         return false;
@@ -174,6 +222,10 @@ export default {
 
       return false;
     },
+    /**
+     * Returns whether the rows can be sorted
+     * @returns {bool}
+     */
     isSortable() {
       if (this.sortBy) {
         return false;
@@ -197,6 +249,10 @@ export default {
 
       return true;
     },
+    /**
+     * Returns config for `k-pagination`
+     * @returns {Obect}
+     */
     pagination() {
       let offset = 0;
 
@@ -213,6 +269,10 @@ export default {
         details: true
       };
     },
+    /**
+     * Returns array of options for dropdown in rows
+     * @returns {Array}
+     */
     options() {
       let options = [];
 
@@ -232,6 +292,10 @@ export default {
 
       return options;
     },
+    /**
+     * Returns paginated slice of items/rows
+     * @returns {Array}
+     */
     paginatedItems() {
       if (!this.limit) {
         return this.items;
@@ -254,7 +318,7 @@ export default {
     /**
      * Adds new entry
      * @public
-     * @param {Object} value new entry
+     * @param {Object} value object with values for each field
      */
     add(value) {
       if (this.prepend === true) {
@@ -270,11 +334,17 @@ export default {
     focus() {
       this.$refs.add?.focus?.();
     },
+    /**
+     * Opens form for a specific row at index
+     * with field focussed
+     * @param {number} index
+     * @param {string} field
+     */
     jump(index, field) {
       this.open(index + this.pagination.offset, field);
     },
     /**
-     * When adding new structure entry
+     * Called when adding new structure entry
      */
     onAdd() {
       // ignore if field is disabled
@@ -334,6 +404,10 @@ export default {
         this.$refs.form?.focus(field);
       });
     },
+    /**
+     * Called when pagination changes in open form
+     * @param {number} index index of new row to be shown
+     */
     onFormPaginate(index) {
       this.save();
       this.open(index);
@@ -349,9 +423,19 @@ export default {
         // don't close
       }
     },
+    /**
+     * When the field's value changes
+     * @param {array} values
+     */
     onInput(values = this.items) {
       this.$emit("input", values);
     },
+    /**
+     * Called when option from row's dropdown was engaged
+     * @param {string} option option name that was triggered
+     * @param {Object} row
+     * @param {number} rowIndex
+     */
     onOption(option, row, rowIndex) {
       switch (option) {
         case "remove":
@@ -401,9 +485,18 @@ export default {
       this.currentModel = this.$helper.clone(this.items[index]);
       this.onFormOpen(field);
     },
-    paginate(pagination) {
-      this.page = pagination.page;
+    /**
+     * Update pagination state
+     * @param {Object} pagination
+     */
+    paginate({ page }) {
+      this.page = page;
     },
+    /**
+     * Sort items according to `sortBy` prop
+     * @param {Array} items
+     * @returns {Array}
+     */
     sort(items) {
       if (!this.sortBy) {
         return items;
@@ -411,6 +504,10 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
+    /**
+     * Saves the current entry with the values
+     * from the structure form and updates field value
+     */
     async save() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
         try {
@@ -436,6 +533,12 @@ export default {
         }
       }
     },
+    /**
+     * Converts field value to internal
+     * items state
+     * @param {Array} value
+     * @returns {Array}
+     */
     toItems(value) {
       if (Array.isArray(value) === false) {
         return [];
@@ -443,6 +546,11 @@ export default {
 
       return this.sort(value);
     },
+    /**
+     * Validayes the structure form
+     * @param {Object} model
+     * @returns {bool}
+     */
     async validate(model) {
       const errors = await this.$api.post(
         this.endpoints.field + "/validate",

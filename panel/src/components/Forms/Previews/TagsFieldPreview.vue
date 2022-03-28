@@ -9,7 +9,13 @@
 <script>
 export default {
   props: {
+    /**
+     * Column config
+     */
     column: Object,
+    /**
+     * Field value
+     */
     value: [Array, String]
   },
   computed: {
