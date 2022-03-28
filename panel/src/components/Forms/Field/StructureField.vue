@@ -611,6 +611,11 @@ export default {
   .k-structure-table td:last-child {
     display: table-cell;
   }
+
+  .k-structure-table th.k-structure-table-column:nth-child(2),
+  .k-structure-table td.k-structure-table-column:nth-child(2) {
+    width: auto !important;
+  }
 }
 
 /* alignment */
