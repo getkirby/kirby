@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SectionMixin from "@/mixins/section/section.js";
+import SectionMixin from "@/mixins/section.js";
 import debounce from "@/helpers/debounce.js";
 
 export default {
