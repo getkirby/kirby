@@ -1,6 +1,7 @@
 <template>
   <div class="k-collection">
     <k-items
+      v-if="items.length"
       :items="items"
       :layout="layout"
       :size="size"
@@ -8,7 +9,13 @@
       @option="onOption"
       @sort="$emit('sort', $event)"
       @change="$emit('change', $event)"
-    />
+    >
+      <template #options="{ item, itemIndex: index }">
+        <slot name="options" :v-bind="{ item, index }" />
+      </template>
+    </k-items>
+
+    <k-empty v-else :layout="layout" v-bind="empty" @click="$emit('empty')" />
 
     <footer v-if="hasFooter" class="k-collection-footer">
       <!-- eslint-disable vue/no-v-html -->
@@ -42,6 +49,7 @@
  */
 export default {
   props: {
+    empty: Object,
     /**
      * Help text to show below the collection
      */
