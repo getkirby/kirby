@@ -392,4 +392,33 @@ class QueryTest extends TestCase
 
         $this->assertSame(3, $count);
     }
+
+    public function testPage()
+    {
+        $query = $this->database->table('users');
+
+        // example one
+        $results = $query->page(1, 10);
+        $pagination = $results->pagination();
+
+        $this->assertCount(4, $results);
+        $this->assertSame('John', $results->first()->fname());
+        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+
+        // example two
+        $results = $query->page(3, 1);
+        $pagination = $results->pagination();
+
+        $this->assertCount(1, $results);
+        $this->assertSame('George', $results->first()->fname());
+        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+
+        // example  three
+        $results = $query->page(2, 3);
+        $pagination = $results->pagination();
+
+        $this->assertCount(1, $results);
+        $this->assertSame('Mark', $results->first()->fname());
+        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+    }
 }
