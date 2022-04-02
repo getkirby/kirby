@@ -403,7 +403,12 @@ class QueryTest extends TestCase
 
         $this->assertCount(4, $results);
         $this->assertSame('John', $results->first()->fname());
-        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+        $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(4, $pagination->total());
+        $this->assertSame(1, $pagination->page());
+        $this->assertSame(1, $pagination->start());
+        $this->assertSame(4, $pagination->end());
+        $this->assertSame(10, $pagination->limit());
 
         // example two
         $results = $query->page(3, 1);
@@ -411,14 +416,24 @@ class QueryTest extends TestCase
 
         $this->assertCount(1, $results);
         $this->assertSame('George', $results->first()->fname());
-        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+        $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(4, $pagination->total());
+        $this->assertSame(3, $pagination->page());
+        $this->assertSame(3, $pagination->start());
+        $this->assertSame(3, $pagination->end());
+        $this->assertSame(1, $pagination->limit());
 
-        // example  three
+        // example three
         $results = $query->page(2, 3);
         $pagination = $results->pagination();
 
         $this->assertCount(1, $results);
         $this->assertSame('Mark', $results->first()->fname());
-        $this->assertInstanceOf('\Kirby\Toolkit\Pagination', $pagination);
+        $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(4, $pagination->total());
+        $this->assertSame(2, $pagination->page());
+        $this->assertSame(4, $pagination->start());
+        $this->assertSame(4, $pagination->end());
+        $this->assertSame(3, $pagination->limit());
     }
 }
