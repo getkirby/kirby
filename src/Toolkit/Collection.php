@@ -742,7 +742,14 @@ class Collection extends Iterator implements Countable
      */
     public function paginate(...$arguments)
     {
-        $this->pagination = Pagination::for($this, ...$arguments);
+        // set pagination property if passed first argument
+        // already a pagination object, otherwise create new
+        // pagination instance with passed arguments
+        if (is_a($arguments[0], 'Kirby\Toolkit\Pagination') === true) {
+            $this->pagination = $arguments[0]->clone();
+        } else {
+            $this->pagination = Pagination::for($this, ...$arguments);
+        }
 
         // slice and clone the collection according to the pagination
         return $this->slice($this->pagination->offset(), $this->pagination->limit());
