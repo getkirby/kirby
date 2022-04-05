@@ -404,6 +404,7 @@ class QueryTest extends TestCase
         $this->assertCount(4, $results);
         $this->assertSame('John', $results->first()->fname());
         $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(1, $pagination->pages());
         $this->assertSame(4, $pagination->total());
         $this->assertSame(1, $pagination->page());
         $this->assertSame(1, $pagination->start());
@@ -417,6 +418,7 @@ class QueryTest extends TestCase
         $this->assertCount(1, $results);
         $this->assertSame('George', $results->first()->fname());
         $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(4, $pagination->pages());
         $this->assertSame(4, $pagination->total());
         $this->assertSame(3, $pagination->page());
         $this->assertSame(3, $pagination->start());
@@ -430,6 +432,7 @@ class QueryTest extends TestCase
         $this->assertCount(1, $results);
         $this->assertSame('Mark', $results->first()->fname());
         $this->assertTrue(get_class($pagination) === 'Kirby\Toolkit\Pagination');
+        $this->assertSame(2, $pagination->pages());
         $this->assertSame(4, $pagination->total());
         $this->assertSame(2, $pagination->page());
         $this->assertSame(4, $pagination->start());
