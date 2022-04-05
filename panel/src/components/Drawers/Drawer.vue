@@ -246,4 +246,9 @@ export default {
 .k-drawer[data-nested="true"] {
   background: none;
 }
+
+/* Table inside drawer */
+.k-drawer-body .k-table th {
+  top: -1.5rem;
+}
 </style>
