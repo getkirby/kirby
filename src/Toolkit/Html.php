@@ -500,11 +500,7 @@ class Html extends Xml
             ($attr['allowfullscreen'] ?? true) === true
         ) {
             $attr['allow'] = 'fullscreen';
-        }
-
-        // remove deprecated attribute
-        if (isset($attr['allowfullscreen']) === true) {
-            unset($attr['allowfullscreen']);
+            $attr['allowfullscreen'] = true;
         }
 
         return $attr;

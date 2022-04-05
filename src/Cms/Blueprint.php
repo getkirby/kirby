@@ -203,12 +203,14 @@ class Blueprint
             return $props;
         }
 
-        try {
-            $mixin = static::find($extends);
-            $mixin = static::extend($mixin);
-            $props = A::merge($mixin, $props, A::MERGE_REPLACE);
-        } catch (Exception $e) {
-            // keep the props unextended if the snippet wasn't found
+        foreach (A::wrap($extends) as $extend) {
+            try {
+                $mixin = static::find($extend);
+                $mixin = static::extend($mixin);
+                $props = A::merge($mixin, $props, A::MERGE_REPLACE);
+            } catch (Exception $e) {
+                // keep the props unextended if the snippet wasn't found
+            }
         }
 
         // remove the extends flag

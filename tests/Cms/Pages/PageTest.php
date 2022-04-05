@@ -933,6 +933,16 @@ class PageTest extends TestCase
         $page->controller();
     }
 
+    public function testQuery()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $this->assertSame('test', $page->query('page.slug'));
+        $this->assertSame('test', $page->query('model.slug'));
+    }
+
     public function testToArray()
     {
         $page = new Page([

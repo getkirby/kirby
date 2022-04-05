@@ -333,4 +333,28 @@ class PageBlueprintTest extends TestCase
 
         $this->assertEquals($expected, $blueprint->status());
     }
+
+    /**
+     * @covers ::extend
+     */
+    public function testExtendNum()
+    {
+        new App([
+            'blueprints' => [
+                'pages/test' => [
+                    'title' => 'Extension Test',
+                    'num' => 'date'
+                ]
+            ]
+        ]);
+
+        $blueprint = new PageBlueprint([
+            'extends' => 'pages/test',
+            'title' => 'Extended',
+            'model'   => new Page(['slug' => 'test'])
+        ]);
+
+        $this->assertSame('Extended', $blueprint->title());
+        $this->assertSame('date', $blueprint->num());
+    }
 }

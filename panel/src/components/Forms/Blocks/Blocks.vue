@@ -473,7 +473,10 @@ export default {
     },
     onOutsideFocus(event) {
       // ignore focus in dialogs to not alter current selection
-      if (event.target.closest(".k-dialog")) {
+      if (
+        typeof event.target.closest === "function" &&
+        event.target.closest(".k-dialog")
+      ) {
         return;
       }
 

@@ -263,6 +263,18 @@ class SiteTest extends TestCase
         $this->assertInstanceOf('Kirby\Panel\Site', $site->panel());
     }
 
+    public function testQuery()
+    {
+        $site = new Site([
+            'content' => [
+                'title' => 'Mægazine',
+            ]
+        ]);
+
+        $this->assertSame('Mægazine', $site->query('site.title')->value());
+        $this->assertSame('Mægazine', $site->query('model.title')->value());
+    }
+
     public function testApiUrl()
     {
         $site = new Site();

@@ -445,7 +445,7 @@ class System
         }
 
         // @codeCoverageIgnoreStart
-        $response = Remote::get('https://licenses.getkirby.com/register', [
+        $response = Remote::get('https://hub.getkirby.com/register', [
             'data' => [
                 'license' => $license,
                 'email'   => Str::lower(trim($email)),

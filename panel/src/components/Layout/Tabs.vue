@@ -68,10 +68,13 @@ export default {
     }
   },
   watch: {
-    tabs(tabs) {
-      this.visibleTabs = tabs;
-      this.invisibleTabs = [];
-      this.resize(true);
+    tabs: {
+      handler(tabs) {
+        this.visibleTabs = tabs;
+        this.invisibleTabs = [];
+        this.resize(true);
+      },
+      immediate: true
     }
   },
   created() {

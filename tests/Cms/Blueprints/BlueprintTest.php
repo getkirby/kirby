@@ -275,6 +275,49 @@ class BlueprintTest extends TestCase
     }
 
     /**
+     * @covers ::extend
+     */
+    public function testExtendMultiple()
+    {
+        new App([
+            'blueprints' => [
+                'props/after' => ['after' => 'foo'],
+                'props/before' => ['before' => 'bar'],
+                'props/required' => ['required' => true],
+                'props/text' => ['type' => 'text'],
+                'props/translatable' => ['translatable' => false],
+                'props/width' => ['width' => '1/3']
+            ]
+        ]);
+
+        $blueprint = new Blueprint([
+            'model' => new Page(['slug' => 'test']),
+            'fields' => [
+                'test' => [
+                    'label' => 'Test',
+                    'extends'  => [
+                        'props/after',
+                        'props/before',
+                        'props/required',
+                        'props/text',
+                        'props/translatable',
+                        'props/width',
+                    ]
+                ]
+            ]
+        ]);
+
+        $field = $blueprint->field('test');
+
+        $this->assertSame('foo', $field['after']);
+        $this->assertSame('bar', $field['before']);
+        $this->assertSame(true, $field['required']);
+        $this->assertSame('text', $field['type']);
+        $this->assertSame(false, $field['translatable']);
+        $this->assertSame('1/3', $field['width']);
+    }
+
+    /**
      * @covers ::factory
      * @covers ::find
      */
