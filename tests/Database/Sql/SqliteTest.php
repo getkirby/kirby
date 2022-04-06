@@ -22,6 +22,7 @@ class SqliteTest extends TestCase
             'database' => ':memory:'
         ]);
         $this->database->execute('CREATE TABLE test (id INTEGER)');
+        $this->database->execute('CREATE VIEW view_test AS SELECT * FROM test');
 
         $this->sql = new Sqlite($this->database);
     }
@@ -159,7 +160,17 @@ class SqliteTest extends TestCase
     public function testTables()
     {
         $result = $this->sql->tables();
-        $this->assertSame('SELECT name FROM sqlite_master WHERE type = "table"', $result['query']);
+        $this->assertSame('SELECT name FROM sqlite_master WHERE type = "table" OR type = "view"', $result['query']);
         $this->assertSame([], $result['bindings']);
+    }
+
+    /**
+     * @covers ::tables
+     */
+    public function testValidateTable()
+    {
+        $this->assertTrue($this->database->validateTable('test'));
+        $this->assertTrue($this->database->validateTable('view_test'));
+        $this->assertFalse($this->database->validateTable('not_exist'));
     }
 }
