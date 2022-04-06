@@ -701,9 +701,9 @@ class ATest extends TestCase
 
 
      /**
-     * @covers ::where
+     * @covers ::filter
      */
-    public function testWhere()
+    public function testFilter()
     {
         $associativeArray = $this->_array();
         $array = array_keys($associativeArray);
