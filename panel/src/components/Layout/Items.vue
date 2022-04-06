@@ -10,28 +10,25 @@
     @change="$emit('change', $event)"
     @end="$emit('sort', items, $event)"
   >
-    <slot>
-      <k-item
-        v-for="(item, itemIndex) in items"
-        :key="item.id || itemIndex"
-        v-bind="item"
-        :class="{ 'k-draggable-item': sortable && item.sortable }"
-        :image="imageOptions(item)"
-        :layout="layout"
-        :link="link ? item.link : false"
-        :sortable="sortable && item.sortable"
-        :width="item.column"
-        @click="$emit('item', item, itemIndex)"
-        @drag="onDragStart($event, item.dragText)"
-        @flag="$emit('flag', item, itemIndex)"
-        @mouseover.native="$emit('hover', $event, item, itemIndex)"
-        @option="$emit('option', $event, item, itemIndex)"
-      >
-        <template #options>
-          <slot name="options" :item="item" :index="itemIndex" />
-        </template>
-      </k-item>
-    </slot>
+    <k-item
+      v-for="(item, itemIndex) in items"
+      :key="item.id || itemIndex"
+      v-bind="item"
+      :class="{ 'k-draggable-item': sortable && item.sortable }"
+      :image="imageOptions(item)"
+      :layout="layout"
+      :link="link ? item.link : false"
+      :sortable="sortable && item.sortable"
+      :width="item.column"
+      @click="$emit('item', item, itemIndex)"
+      @drag="onDragStart($event, item.dragText)"
+      @mouseover.native="$emit('hover', $event, item, itemIndex)"
+      @option="$emit('option', $event, item, itemIndex)"
+    >
+      <template #options>
+        <slot name="options" :v-bind="{ item, itemIndex }" />
+      </template>
+    </k-item>
   </k-draggable>
 </template>
 

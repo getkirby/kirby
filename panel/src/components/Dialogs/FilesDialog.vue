@@ -21,31 +21,11 @@
         icon="search"
       />
 
-      <template v-if="items.length">
-        <k-items
-          :link="false"
-          :items="items"
-          layout="list"
-          :sortable="false"
-          @item="toggle"
-        >
-          <template #options="{ item: file }">
-            <k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
-          </template>
-        </k-items>
-
-        <k-pagination
-          :details="true"
-          :dropdown="false"
-          v-bind="pagination"
-          class="k-dialog-pagination"
-          align="center"
-          @paginate="paginate"
-        />
-      </template>
-      <k-empty v-else icon="image">
-        {{ $t("dialog.files.empty") }}
-      </k-empty>
+      <k-collection v-bind="collection" @item="toggle" @paginate="paginate">
+        <template #options="{ item: file }">
+          <k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
+        </template>
+      </k-collection>
     </template>
   </k-dialog>
 </template>
@@ -54,7 +34,15 @@
 import picker from "@/mixins/picker/dialog.js";
 
 export default {
-  mixins: [picker]
+  mixins: [picker],
+  computed: {
+    emptyProps() {
+      return {
+        icon: "image",
+        text: this.$t("dialog.files.empty")
+      };
+    }
+  }
 };
 </script>
 

@@ -26,6 +26,21 @@ export default {
     checkedIcon() {
       return this.multiple === true ? "check" : "circle-filled";
     },
+    collection() {
+      return {
+        empty: this.emptyProps,
+        items: this.items,
+        link: false,
+        layout: "list",
+        pagination: {
+          details: true,
+          dropdown: false,
+          align: "center",
+          ...this.pagination
+        },
+        sortable: false
+      };
+    },
     items() {
       return this.models.map(this.item);
     },
