@@ -159,10 +159,10 @@ export default {
       }
     },
 
-    onAction(action, model) {},
+    onAction() {},
     onAdd() {},
     onChange() {},
-    onDrop(files) {},
+    onDrop() {},
     onSort() {},
     onPaginate(pagination) {
       localStorage.setItem(this.paginationId, pagination.page);
