@@ -706,7 +706,7 @@ class ATest extends TestCase
     public function testFilter()
     {
         $associativeArray = $this->_array();
-        $array = array_keys($associativeArray);
+        $indexedArray = array_keys($associativeArray);
 
         $result = A::filter($associativeArray, function($value, $key){
             return in_array($key, ['cat', 'dog']);
@@ -723,7 +723,7 @@ class ATest extends TestCase
         });
         $this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-        $result = A::filter($array, function($value, $key){
+        $result = A::filter($indexedArray, function($value, $key){
             return $key > 0;
         });
         $this->assertSame([1 => 'dog', 2 => 'bird'], $result);
@@ -735,17 +735,15 @@ class ATest extends TestCase
     public function testWithout()
     {
         $associativeArray = $this->_array();
-        $array = array_keys($associativeArray);
-
-        $array = [...array_keys($associativeArray), ...array_keys($associativeArray)];
+        $indexedArray = [...array_keys($associativeArray), ...array_keys($associativeArray)];
 
         $this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, 'cat'));
         $this->assertSame(['dog' => 'wuff'], A::without($associativeArray, ['cat', 'bird']));
         $this->assertSame([], A::without($associativeArray, ['cat', 'dog', 'bird']));
-        $this->assertSame($associativeArray, A::without($associativeArray, ['this', 'doesnt', 'exist']));
+        $this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, ['this', 'doesnt', 'exist']));
 
-        $this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($array, range(1, 3)));
-        $this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4=> 'dog', 5 => 'bird'], A::without($array, 0));
-        $this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($array, -1));
+        $this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, range(1, 3)));
+        $this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4=> 'dog', 5 => 'bird'], A::without($indexedArray, 0));
+        $this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($indexedArray, -1));
     }
 }
