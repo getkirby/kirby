@@ -401,7 +401,7 @@ export default {
 }
 .k-writer .ProseMirror ul,
 .k-writer .ProseMirror ol {
-  padding-inline-start: 1rem;
+  padding-inline-start: 1.75rem;
 }
 .k-writer .ProseMirror ul > li {
   list-style: disc;
