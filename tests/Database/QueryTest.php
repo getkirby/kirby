@@ -393,6 +393,17 @@ class QueryTest extends TestCase
         $this->assertSame(3, $count);
     }
 
+    public function testWhereCallback()
+    {
+        $count = $this->database
+            ->table('users')
+            ->where('balance', '>', 75)
+            ->where(fn ($q) => $q->where('role_id', '=', 3))
+            ->count();
+
+        $this->assertSame(1, $count);
+    }
+
     public function testPage()
     {
         $query = $this->database->table('users');

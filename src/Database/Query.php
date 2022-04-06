@@ -972,6 +972,11 @@ class Query
                     $this->bindings($sql['bindings']);
                 } elseif (is_callable($args[0]) === true) {
                     $query = clone $this;
+
+                    // since the callback uses its own where condition
+                    // it is necessary to clear/reset the cloned where condition
+                    $query->where = null;
+
                     call_user_func($args[0], $query);
 
                     // copy over the bindings from the nested query
