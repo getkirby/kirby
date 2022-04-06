@@ -388,6 +388,32 @@ abstract class Model
     }
 
     /**
+     * Returns link url and tooltip
+     * for optional sibling model and
+     * preserves tab selection
+     *
+     * @internal
+     *
+     * @param \Kirby\Cms\ModelWithContent|null $model
+     * @param string $tooltip
+     * @return array
+     */
+    protected function toPrevNextLink($model = null, string $tooltip = 'title'): ?array
+    {
+        if ($model === null) {
+            return null;
+        }
+
+        $data = $model->panel()->toLink($tooltip);
+
+        if ($tab = get('tab')) {
+            $data['link'] .= '?tab=' . $tab;
+        }
+
+        return $data;
+    }
+
+    /**
      * Returns the url to the editing view
      * in the Panel
      *
