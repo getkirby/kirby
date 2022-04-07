@@ -2,7 +2,9 @@
 
 namespace Kirby\Toolkit;
 
+use DateTime;
 use Exception;
+use IntlDateFormatter;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -264,17 +266,33 @@ class Str
      * according to locale settings
      *
      * @param int|null $time
-     * @param string|null $format
-     * @param string $handler date or strftime
+     * @param string|\IntlDateFormatter|null $format
+     * @param string $handler date, intl or strftime
      * @return string|int
      */
-    public static function date(?int $time = null, ?string $format = null, string $handler = 'date')
+    public static function date(?int $time = null, $format = null, string $handler = 'date')
     {
         if (is_null($format) === true) {
             return $time;
         }
 
-        // separately handle strftime to be able
+        // $format is an IntlDateFormatter instance
+        if (is_a($format, 'IntlDateFormatter') === true) {
+            return $format->format($time ?? time());
+        }
+
+        // `intl` handler
+        if ($handler === 'intl') {
+            $datetime = new DateTime();
+
+            if ($time !== null) {
+                $datetime->setTimestamp($time);
+            }
+
+            return IntlDateFormatter::formatObject($datetime, $format);
+        }
+
+        // handle `strftime` to be able
         // to suppress deprecation warning
         // TODO: remove strftime support for PHP 9.0
         if ($handler === 'strftime') {
