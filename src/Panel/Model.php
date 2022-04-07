@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Form\Form;
+use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 
 /**
@@ -407,7 +408,11 @@ abstract class Model
         $data = $model->panel()->toLink($tooltip);
 
         if ($tab = get('tab')) {
-            $data['link'] .= '?tab=' . $tab;
+            $uri = new Uri($data['link'], [
+                'query' => ['tab' => $tab]
+            ]);
+
+            $data['link'] = $uri->toString();
         }
 
         return $data;
