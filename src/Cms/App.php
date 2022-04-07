@@ -668,6 +668,50 @@ class App
     }
 
     /**
+     * Return an image from any page
+     * specified by the path
+     *
+     * Example:
+     * <?= App::image('some/page/myimage.jpg') ?>
+     *
+     * @param string|null $path
+     * @return \Kirby\Cms\File|null
+     *
+     * @todo merge with App::file()
+     */
+    public function image(?string $path = null)
+    {
+        if ($path === null) {
+            return $this->site()->page()->image();
+        }
+
+        $uri      = dirname($path);
+        $filename = basename($path);
+
+        if ($uri === '.') {
+            $uri = null;
+        }
+
+        switch ($uri) {
+            case '/':
+                $parent = $this->site();
+                break;
+            case null:
+                $parent = $this->site()->page();
+                break;
+            default:
+                $parent = $this->site()->page($uri);
+                break;
+        }
+
+        if ($parent) {
+            return $parent->image($filename);
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the current App instance
      *
      * @param \Kirby\Cms\App|null $instance

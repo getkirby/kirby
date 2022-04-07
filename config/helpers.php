@@ -279,14 +279,7 @@ if (
      */
     function image(?string $path = null)
     {
-        $kirby = App::instance();
-        $file = $kirby->file($path, $kirby->site());
-
-        if ($file->type() !== 'image') {
-            return null;
-        }
-
-        return $file;
+        return App::instance()->image($path);
     }
 }
 
@@ -618,7 +611,7 @@ if (
      */
     function router(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
     {
-        return Router::factory($path, $method, $routes, $callback);
+        return Router::execute($path, $method, $routes, $callback);
     }
 }
 
