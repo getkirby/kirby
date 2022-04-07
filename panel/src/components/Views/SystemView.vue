@@ -13,15 +13,11 @@
           <li>
             <dl>
               <dt>{{ $t("license") }}</dt>
-              <dd>
+              <dd :class="{ 'k-system-warning': !$license }">
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <k-button
-                  v-else
-                  class="k-system-warning"
-                  @click="$dialog('registration')"
-                >
+                <k-button v-else @click="$dialog('registration')">
                   {{ $t("license.unregistered") }}
                 </k-button>
               </dd>
@@ -54,7 +50,9 @@
             <dl>
               <dt>{{ $t("debugging") }}</dt>
               <dd :class="{ 'k-system-warning': debug }">
-                {{ debug ? $t("on") : $t("off") }}
+                <button @click="$dialog('system/issue/debug')">
+                  {{ debug ? $t("on") : $t("off") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -62,7 +60,9 @@
             <dl>
               <dt>HTTPS</dt>
               <dd :class="{ 'k-system-warning': !https }">
-                {{ https ? $t("on") : $t("off") }}
+                <button @click="$dialog('system/issue/https')">
+                  {{ https ? $t("on") : $t("off") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -86,7 +86,9 @@
             <dl>
               <dt>Kirby folder</dt>
               <dd :class="{ 'k-system-warning': kirby }">
-                {{ kirby ? "exposed" : "hidden" }}
+                <button @click="$dialog('system/issue/kirby')">
+                  {{ status("kirby") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -94,7 +96,9 @@
             <dl>
               <dt>Git Repo</dt>
               <dd :class="{ 'k-system-warning': git }">
-                {{ git ? "exposed" : "hidden" }}
+                <button @click="$dialog('system/issue/git')">
+                  {{ status("git") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -102,7 +106,9 @@
             <dl>
               <dt>Content folder</dt>
               <dd :class="{ 'k-system-warning': content }">
-                {{ content ? "exposed" : "hidden" }}
+                <button @click="$dialog('system/issue/content')">
+                  {{ status("content") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -110,7 +116,9 @@
             <dl>
               <dt>Site folder</dt>
               <dd :class="{ 'k-system-warning': site }">
-                {{ site ? "exposed" : "hidden" }}
+                <button @click="$dialog('system/issue/site')">
+                  {{ status("site") }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -199,9 +207,14 @@ export default {
         cache: "no-store"
       });
 
-      console.log(response);
-
       return response.status < 400;
+    },
+    status(key) {
+      if (this[key] === null) {
+        return "…";
+      }
+
+      return this[key] === true ? this.$t("exposed") : this.$t("hidden");
     }
   }
 };
@@ -241,12 +254,16 @@ export default {
   color: var(--color-gray-600);
   margin-bottom: 0.25rem;
 }
+.k-system-info-box dd button {
+  font: inherit;
+}
 .k-system-warning {
   color: var(--color-negative);
   font-weight: var(--font-bold);
   display: inline-flex;
 }
 .k-system-warning .k-button-text {
+  font: inherit;
   opacity: 1;
 }
 </style>

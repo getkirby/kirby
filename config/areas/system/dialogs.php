@@ -3,6 +3,24 @@
 use Kirby\Panel\Field;
 
 return [
+    // system issue information
+    'system.issue' => [
+        'pattern' => 'system/issue/(:any)',
+        'load' => function (string $issue) {
+            return [
+                'component' => 'k-text-dialog',
+                'props' => [
+                    'text'         => $issue,
+                    'submitButton' => t('retry')
+                ]
+            ];
+        },
+        'submit' => function () {
+            return [
+                'redirect' => '/system'
+            ];
+        }
+    ],
     // license registration
     'registration' => [
         'load' => function () {
