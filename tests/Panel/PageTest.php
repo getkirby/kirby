@@ -18,7 +18,7 @@ class ModelPageTestForceLocked extends ModelPage
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\Page
+ * @coversDefaultClass \Kirby\Panel\Page|\Kirby\Panel\Model
  */
 class PageTest extends TestCase
 {
@@ -601,6 +601,32 @@ class PageTest extends TestCase
 
         $props = (new Page($app->page('baz')))->props();
         $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::prevNext
+     * @covers ::toPrevNextLink
+     */
+    public function testPropsPrevNextWithTab()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo'],
+                    ['slug' => 'bar'],
+                    ['slug' => 'baz']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $_GET['tab'] = 'test';
+
+        $prevNext = (new Page($app->page('bar')))->prevNext();
+        $this->assertSame('/pages/foo?tab=test', $prevNext['prev']()['link']);
+        $this->assertSame('/pages/baz?tab=test', $prevNext['next']()['link']);
+
+        $_GET = [];
     }
 
     /**
