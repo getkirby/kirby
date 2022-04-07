@@ -700,7 +700,7 @@ class ATest extends TestCase
     }
 
 
-     /**
+    /**
      * @covers ::filter
      */
     public function testFilter()
@@ -708,28 +708,28 @@ class ATest extends TestCase
         $associativeArray = $this->_array();
         $indexedArray = array_keys($associativeArray);
 
-        $result = A::filter($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function ($value, $key) {
             return in_array($key, ['cat', 'dog']);
         });
         $this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff'], $result);
 
-        $result = A::filter($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function ($value, $key) {
             return in_array($value, ['miao', 'tweet']);
         });
         $this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-        $result = A::filter($associativeArray, function($value, $key){
+        $result = A::filter($associativeArray, function ($value, $key) {
             return $key === 'cat' || $value === 'tweet';
         });
         $this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
 
-        $result = A::filter($indexedArray, function($value, $key){
+        $result = A::filter($indexedArray, function ($value, $key) {
             return $key > 0;
         });
         $this->assertSame([1 => 'dog', 2 => 'bird'], $result);
     }
 
-     /**
+    /**
      * @covers ::without
      */
     public function testWithout()
