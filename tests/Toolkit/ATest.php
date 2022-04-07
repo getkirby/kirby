@@ -740,7 +740,7 @@ class ATest extends TestCase
         $this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, 'cat'));
         $this->assertSame(['dog' => 'wuff'], A::without($associativeArray, ['cat', 'bird']));
         $this->assertSame([], A::without($associativeArray, ['cat', 'dog', 'bird']));
-        $this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, ['this', 'doesnt', 'exist']));
+        $this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, ['this', 'cat', 'doesnt', 'exist']));
 
         $this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, range(1, 3)));
         $this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4=> 'dog', 5 => 'bird'], A::without($indexedArray, 0));
