@@ -117,7 +117,7 @@ class HtmlTest extends TestCase
     public function attrProvider()
     {
         return [
-            [[],                         null,  ''],
+            [[],                         null,  null],
             [['B' => 'b', 'A' => 'a'],   null,  'a="a" b="b"'],
             [['B' => 'b', 'A' => 'a'],   true,  'a="a" b="b"'],
             [['B' => 'b', 'A' => 'a'],   false, 'b="b" a="a"'],
