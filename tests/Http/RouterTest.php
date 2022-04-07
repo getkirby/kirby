@@ -6,12 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
 {
-    public function setUp(): void
-    {
-        Router::$beforeEach = null;
-        Router::$afterEach  = null;
-    }
-
     public function testRegisterSingleRoute()
     {
         $router = new Router([
@@ -98,43 +92,46 @@ class RouterTest extends TestCase
 
     public function testBeforeEach()
     {
-        $router = new Router([
+        $router = new Router(
             [
-                'pattern' => '/',
-                'action'  => function () {
-                }
-            ]
-        ]);
-
-        $router::$beforeEach = function ($route, $path, $method) {
-            $this->assertInstanceOf(Route::class, $route);
-            $this->assertEquals('/', $path);
-            $this->assertEquals('GET', $method);
-        };
+                [
+                    'pattern' => '/',
+                    'action'  => function () {
+                    }
+                ]
+            ],
+            function ($route, $path, $method) {
+                $this->assertInstanceOf(Route::class, $route);
+                $this->assertEquals('/', $path);
+                $this->assertEquals('GET', $method);
+            }
+        );
 
         $router->call('/', 'GET');
     }
 
     public function testAfterEach()
     {
-        $router = new Router([
+        $router = new Router(
             [
-                'pattern' => '/',
-                'action'  => function () {
-                    return 'test';
-                }
-            ]
-        ]);
+                [
+                    'pattern' => '/',
+                    'action'  => function () {
+                        return 'test';
+                    }
+                ]
+            ],
+            null,
+            function ($route, $path, $method, $result, $final) {
+                $this->assertInstanceOf(Route::class, $route);
+                $this->assertEquals('/', $path);
+                $this->assertEquals('GET', $method);
+                $this->assertEquals('test', $result);
+                $this->assertTrue($final);
 
-        $router::$afterEach = function ($route, $path, $method, $result, $final) {
-            $this->assertInstanceOf(Route::class, $route);
-            $this->assertEquals('/', $path);
-            $this->assertEquals('GET', $method);
-            $this->assertEquals('test', $result);
-            $this->assertTrue($final);
-
-            return $result . ':after';
-        };
+                return $result . ':after';
+            }
+        );
 
         $this->assertEquals('test:after', $router->call('/', 'GET'));
     }
@@ -194,32 +191,34 @@ class RouterTest extends TestCase
 
     public function testNextAfterEach()
     {
-        $router = new Router([
-            [
-                'pattern' => 'a',
-                'action'  => function () {
-                    /** @var \Kirby\Http\Route $this */
-                    $this->next();
-                }
-            ],
-            [
-                'pattern' => 'a',
-                'action'  => function () {
-                    return 'a';
-                }
-            ]
-        ]);
-
         $numTotal = 0;
         $numFinal = 0;
 
-        $router::$afterEach = function ($route, $path, $method, $result, $final) use (&$numTotal, &$numFinal) {
-            $numTotal++;
+        $router = new Router(
+            [
+                [
+                    'pattern' => 'a',
+                    'action'  => function () {
+                        /** @var \Kirby\Http\Route $this */
+                        $this->next();
+                    }
+                ],
+                [
+                    'pattern' => 'a',
+                    'action'  => function () {
+                        return 'a';
+                    }
+                ]
+            ],
+            null,
+            function ($route, $path, $method, $result, $final) use (&$numTotal, &$numFinal) {
+                $numTotal++;
 
-            if ($final === true) {
-                $numFinal++;
+                if ($final === true) {
+                    $numFinal++;
+                }
             }
-        };
+        );
 
         $router->call('a');
         $this->assertEquals(2, $numTotal);
