@@ -372,11 +372,11 @@ class File
     /**
      * Returns the file's last modification time
      *
-     * @param string $format
-     * @param string|null $handler date or strftime
+     * @param string|\IntlDateFormatter|null $format
+     * @param string|null $handler date, intl or strftime
      * @return mixed
      */
-    public function modified(?string $format = null, ?string $handler = null)
+    public function modified($format = null, ?string $handler = null)
     {
         $kirby = $this->kirby();
 
