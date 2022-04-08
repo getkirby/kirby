@@ -80,8 +80,21 @@ class FileRules
      */
     public static function create(File $file, BaseFile $upload): bool
     {
+        // first we want to ensure that we are not trying to
+        // create a duplicate file. So if a file
+        // with the same name already exists
         if ($file->exists() === true) {
-            if ($file->sha1() !== $upload->sha1()) {
+            // $file will be based on the props of the new file,
+            // so we need to get the props of the existing file
+            $existing = kirby()->file($file->id());
+
+            // if the new upload is the exact same file
+            // and uses the same template, we can continue,
+            // otherwise throw an eroror for duplicate file
+            if (
+                $file->sha1() !== $upload->sha1() ||
+                $file->template() !== $existing->template()
+            ) {
                 throw new DuplicateException([
                     'key'  => 'file.duplicate',
                     'data' => [
