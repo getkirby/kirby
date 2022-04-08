@@ -730,6 +730,7 @@ class A
     /**
      * Filter the array using the given callback
      * using both value and key
+     * @since 3.6.5
      *
      * @param array $array
      * @param callable $callback
@@ -742,6 +743,7 @@ class A
 
     /**
      * Remove key(s) from an array
+     * @since 3.6.5
      *
      * @param array $array
      * @param int|string|array $keys
