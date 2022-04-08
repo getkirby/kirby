@@ -18,7 +18,7 @@ class ModelUserTestForceLocked extends ModelUser
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\User
+ * @coversDefaultClass \Kirby\Panel\User|\Kirby\Panel\Model
  */
 class UserTest extends TestCase
 {
@@ -434,6 +434,29 @@ class UserTest extends TestCase
         $prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
         $this->assertSame('b@getkirby.com', $prevNext['prev']()['tooltip']);
         $this->assertNull($prevNext['next']());
+    }
+
+    /**
+     * @covers ::prevNext
+     * @covers ::toPrevNextLink
+     */
+    public function testPrevNextWithTab()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                ['id' => 'a', 'email' => 'a@getkirby.com'],
+                ['id' => 'b', 'email' => 'b@getkirby.com'],
+                ['id' => 'c', 'email' => 'c@getkirby.com']
+            ]
+        ]);
+
+        $_GET['tab'] = 'test';
+
+        $prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
+        $this->assertSame('/users/a?tab=test', $prevNext['prev']()['link']);
+        $this->assertSame('/users/c?tab=test', $prevNext['next']()['link']);
+
+        $_GET = [];
     }
 
     /**

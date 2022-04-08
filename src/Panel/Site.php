@@ -15,6 +15,11 @@ namespace Kirby\Panel;
 class Site extends Model
 {
     /**
+     * @var \Kirby\Cms\Site
+     */
+    protected $model;
+
+    /**
      * Returns the setup for a dropdown option
      * which is used in the changes dropdown
      * for example.

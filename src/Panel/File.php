@@ -17,6 +17,11 @@ use Throwable;
 class File extends Model
 {
     /**
+     * @var \Kirby\Cms\File
+     */
+    protected $model;
+
+    /**
      * Breadcrumb array
      *
      * @return array
@@ -423,11 +428,11 @@ class File extends Model
         return [
             'next' => function () use ($file, $siblings): ?array {
                 $next = $siblings->nth($siblings->indexOf($file) + 1);
-                return $next ? $next->panel()->toLink('filename') : null;
+                return $this->toPrevNextLink($next, 'filename');
             },
             'prev' => function () use ($file, $siblings): ?array {
                 $prev = $siblings->nth($siblings->indexOf($file) - 1);
-                return $prev ? $prev->panel()->toLink('filename') : null;
+                return $this->toPrevNextLink($prev, 'filename');
             }
         ];
     }

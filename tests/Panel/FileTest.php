@@ -19,7 +19,7 @@ class ModelFileTestForceLocked extends ModelFile
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\File
+ * @coversDefaultClass \Kirby\Panel\File|\Kirby\Panel\Model
  */
 class FileTest extends TestCase
 {
@@ -698,6 +698,7 @@ class FileTest extends TestCase
 
     /**
      * @covers ::props
+     * @covers ::prevNext
      */
     public function testPropsPrevNext()
     {
@@ -725,6 +726,7 @@ class FileTest extends TestCase
 
     /**
      * @covers ::props
+     * @covers ::prevNext
      */
     public function testPropsPrevNextWithSort()
     {
@@ -748,6 +750,30 @@ class FileTest extends TestCase
         $props = (new File($page->file('c.jpg')))->props();
         $this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
         $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::prevNext
+     * @covers ::toPrevNextLink
+     */
+    public function testPropsPrevNextWithTab()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg'],
+                ['filename' => 'c.jpg']
+            ]
+        ]);
+
+        $_GET['tab'] = 'test';
+
+        $prevNext = (new File($page->file('b.jpg')))->prevNext();
+        $this->assertSame('/pages/test/files/a.jpg?tab=test', $prevNext['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg?tab=test', $prevNext['next']()['link']);
+
+        $_GET = [];
     }
 
     /**
