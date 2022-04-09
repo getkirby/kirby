@@ -26,6 +26,7 @@
   "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7",
   "require": {
     "php": ">=7.4.0 <8.2.0",
+    "ext-SimpleXML": "*",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-dom": "*",
@@ -36,7 +37,6 @@
     "ext-libxml": "*",
     "ext-mbstring": "*",
     "ext-openssl": "*",
-    "ext-SimpleXML": "*",
     "claviska/simpleimage": "3.6.5",
     "filp/whoops": "2.14.5",
     "getkirby/composer-installer": "^1.2.1",
@@ -62,18 +62,6 @@
     "ext-zip": "Support for ZIP archive file functions",
     "ext-zlib": "Sanitization and validation for svgz files"
   },
-  "config": {
-    "allow-plugins": {
-      "getkirby/composer-installer": true
-    },
-    "optimize-autoloader": true,
-    "platform-check": false
-  },
-  "extra": {
-    "unused": [
-      "symfony/polyfill-intl-idn"
-    ]
-  },
   "autoload": {
     "psr-4": {
       "Kirby\\": "src/"
@@ -84,6 +72,18 @@
     "files": [
       "config/setup.php",
       "config/helpers.php"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    },
+    "optimize-autoloader": true,
+    "platform-check": false
+  },
+  "extra": {
+    "unused": [
+      "symfony/polyfill-intl-idn"
     ]
   },
   "scripts": {
