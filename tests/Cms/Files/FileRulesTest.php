@@ -102,6 +102,8 @@ class FileRulesTest extends TestCase
         $file = $this->createMock(File::class);
         $file->method('filename')->willReturn('test.jpg');
         $file->method('exists')->willReturn(true);
+        $page = $this->createMock(Page::class);
+        $file->method('parent')->willReturn($page);
 
         $this->expectException('Kirby\Exception\DuplicateException');
         $this->expectExceptionMessage('A file with the name "test.jpg" already exists');
