@@ -44,8 +44,6 @@
     "michelf/php-smartypants": "1.8.1",
     "phpmailer/phpmailer": "6.5.4",
     "psr/log": "1.1.4",
-    "symfony/polyfill-ctype": "1.25.0",
-    "symfony/polyfill-iconv": "1.25.0",
     "symfony/polyfill-intl-idn": "1.25.0",
     "symfony/polyfill-mbstring": "1.25.0"
   },
