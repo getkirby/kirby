@@ -7,7 +7,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * The `Helpers` class hosts a few handy helper methods
- * @since 3.6.4
+ * @since 3.7.0
  *
  * @package   Kirby Toolkit
  * @author    Nico Hoffmann <nico@getkirby.com>

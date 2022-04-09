@@ -514,7 +514,7 @@ class App
 
     /**
      * Checks/returns a CSRF token
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param string|null $check Pass a token here to compare it to the one in the session
      * @return string|bool Either the token or a boolean check result

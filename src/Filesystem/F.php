@@ -395,7 +395,7 @@ class F
 
     /**
      * A super simple class autoloader
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param array $classmap
      * @param string|null $base

@@ -385,7 +385,7 @@ class Str
 
     /**
      * Escape string for context specific output
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param string $string Untrusted data
      * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
@@ -1304,7 +1304,7 @@ class Str
     /**
      * Creates a compliant v4 UUID
      * Taken from: https://github.com/symfony/polyfill
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @return string
      */

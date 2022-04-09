@@ -204,7 +204,7 @@ class Response
     /**
      * Redirects to the given Urls
      * Urls can be relative or absolute.
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param string $url
      * @param int $code

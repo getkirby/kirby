@@ -44,8 +44,9 @@ class V
     }
 
     /**
-     * Runs a number of validators on a set of data and checks if the data is invalid
-     * @since 3.6.4
+     * Runs a number of validators on a set of data and
+     * checks if the data is invalid
+     * @since 3.7.0
      *
      * @param array $data
      * @param array $rules

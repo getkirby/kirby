@@ -362,7 +362,7 @@ class Date extends DateTime
     /**
      * Rounds the minutes of the given date
      * by the defined step
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param string|null $date
      * @param int|array|null $step array of `unit` and `size` to round to nearest

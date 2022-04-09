@@ -148,7 +148,7 @@ class Router
     /**
      * Creates a micro-router and executes
      * the routing action immediately
-     * @since 3.6.4
+     * @since 3.7.0
      *
      * @param string|null $path
      * @param string $method
