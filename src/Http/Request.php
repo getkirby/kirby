@@ -24,6 +24,7 @@ class Request
     public static $authTypes = [
         'basic'   => 'Kirby\Http\Request\Auth\BasicAuth',
         'bearer'  => 'Kirby\Http\Request\Auth\BearerAuth',
+        'session' => 'Kirby\Http\Request\Auth\SessionAuth',
     ];
 
     /**
