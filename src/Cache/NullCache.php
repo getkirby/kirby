@@ -14,20 +14,15 @@ namespace Kirby\Cache;
 class NullCache extends Cache
 {
     /**
-     * Writes an item to the cache for a given number of minutes and
+     * Internal method to store the raw cache value;
      * returns whether the operation was successful
      *
-     * <code>
-     *   // put an item in the cache for 15 minutes
-     *   $cache->set('value', 'my value', 15);
-     * </code>
-     *
+     * @internal
      * @param string $key
-     * @param mixed $value
-     * @param int $minutes
+     * @param \Kirby\Cache\Value $value
      * @return bool
      */
-    public function set(string $key, $value, int $minutes = 0): bool
+    public function store(string $key, Value $value): bool
     {
         return true;
     }
@@ -36,6 +31,7 @@ class NullCache extends Cache
      * Internal method to retrieve the raw cache value;
      * needs to return a Value object or null if not found
      *
+     * @internal
      * @param string $key
      * @return \Kirby\Cache\Value|null
      */

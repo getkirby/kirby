@@ -33,7 +33,7 @@ class MemCachedTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::retrieve
      * @covers ::remove
      */
@@ -57,7 +57,7 @@ class MemCachedTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::retrieve
      * @covers ::remove
      */

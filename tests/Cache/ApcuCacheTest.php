@@ -23,7 +23,7 @@ class ApcuCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove
@@ -48,7 +48,7 @@ class ApcuCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::exists
      * @covers ::retrieve
      * @covers ::remove

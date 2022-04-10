@@ -41,8 +41,9 @@ class CacheTest extends TestCase
 
     /**
      * @covers ::get
+     * @covers ::set
      */
-    public function testGet()
+    public function testGetSet()
     {
         $cache = new TestCache();
 
@@ -60,10 +61,11 @@ class CacheTest extends TestCase
 
         $this->assertSame('default', $cache->get('doesnotexist', 'default'));
 
-        $cache->set('notyetexpired', 'foo', 10, time());
+        $cache->set('notyetexpired', 'foo', 10);
         $this->assertSame('foo', $cache->get('notyetexpired'));
+        $this->assertSame(time() + 600, $cache->expires('notyetexpired'));
 
-        $cache->set('expired', 'foo', 10, 0);
+        $cache->setWithCreated('expired', 'foo', 10, 0);
         $this->assertTrue(isset($cache->store['expired']));
         $this->assertSame('default', $cache->get('expired', 'default'));
         $this->assertFalse(isset($cache->store['expired']));
@@ -109,7 +111,7 @@ class CacheTest extends TestCase
         $cache->set('foo', 'foo');
         $this->assertFalse($cache->expired('foo'));
 
-        $cache->set('foo', 'foo', 10, 0);
+        $cache->setWithCreated('foo', 'foo', 10, 0);
         $this->assertTrue($cache->expired('foo'));
 
         $cache->set('foo', 'foo', 10);
@@ -126,7 +128,7 @@ class CacheTest extends TestCase
     {
         $cache = new TestCache();
 
-        $cache->set('foo', 'foo', 10, 1234);
+        $cache->setWithCreated('foo', 'foo', 10, 1234);
         $this->assertSame(1234, $cache->created('foo'));
         $this->assertSame(1234, $cache->modified('foo'));
 
@@ -144,7 +146,7 @@ class CacheTest extends TestCase
         $cache->set('foo', 'foo');
         $this->assertTrue($cache->exists('foo'));
 
-        $cache->set('foo', 'foo', 10, 0);
+        $cache->setWithCreated('foo', 'foo', 10, 0);
         $this->assertFalse($cache->exists('foo'));
 
         $this->assertFalse($cache->exists('doesnotexist'));

@@ -12,7 +12,7 @@ require_once __DIR__ . '/mocks.php';
 class MemoryCacheTest extends TestCase
 {
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::retrieve
      * @covers ::remove
      */
@@ -36,7 +36,7 @@ class MemoryCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::retrieve
      * @covers ::remove
      */

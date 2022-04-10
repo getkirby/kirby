@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class NullCacheTest extends TestCase
 {
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::retrieve
      * @covers ::remove
      */

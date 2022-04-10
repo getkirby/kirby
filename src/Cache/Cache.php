@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Exception\Exception;
+
 /**
  * Cache foundation
  * This abstract class is used as
@@ -34,8 +36,7 @@ abstract class Cache
 
     /**
      * Writes an item to the cache for a given number of minutes and
-     * returns whether the operation was successful;
-     * this needs to be defined by the driver
+     * returns whether the operation was successful
      *
      * <code>
      *   // put an item in the cache for 15 minutes
@@ -47,7 +48,30 @@ abstract class Cache
      * @param int $minutes
      * @return bool
      */
-    abstract public function set(string $key, $value, int $minutes = 0): bool;
+    public function set(string $key, $value, int $minutes = 0): bool
+    {
+        $value = Value::fromArray(compact('value', 'minutes'));
+
+        return $this->store($key, $value);
+    }
+
+    /**
+     * Internal method to store the raw cache value;
+     * needs to return whether the operation was successful;
+     * this needs to be defined by the driver
+     *
+     * @todo 3.8 Make this method `abstract` to require drivers to implement it
+     * @codeCoverageIgnore
+     *
+     * @internal
+     * @param string $key
+     * @param \Kirby\Cache\Value $value
+     * @return bool
+     */
+    public function store(string $key, Value $value): bool
+    {
+        throw new Exception('The ' . static::class . ' cache driver implements neither the set() nor the store() methods.');
+    }
 
     /**
      * Adds the prefix to the key if given
@@ -69,6 +93,7 @@ abstract class Cache
      * needs to return a Value object or null if not found;
      * this needs to be defined by the driver
      *
+     * @internal
      * @param string $key
      * @return \Kirby\Cache\Value|null
      */

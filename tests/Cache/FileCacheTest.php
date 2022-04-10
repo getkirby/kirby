@@ -183,7 +183,7 @@ class FileCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::created
      * @covers ::retrieve
      * @covers ::remove
@@ -218,7 +218,7 @@ class FileCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::created
      * @covers ::retrieve
      * @covers ::remove
@@ -252,7 +252,7 @@ class FileCacheTest extends TestCase
     }
 
     /**
-     * @covers ::set
+     * @covers ::store
      * @covers ::created
      * @covers ::retrieve
      * @covers ::remove

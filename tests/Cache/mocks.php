@@ -15,16 +15,32 @@ function time(): int
         throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
     }
 
-    return 1337;
+    return MockTime::$time;
+}
+
+class MockTime
+{
+    public static $time = 1337;
 }
 
 class TestCache extends Cache
 {
     public $store = [];
 
-    public function set(string $key, $value, int $minutes = 0, int $created = null): bool
+    public function setWithCreated(string $key, $value, int $minutes = 0, int $created = 0): bool
     {
-        $value = new Value($value, $minutes, $created);
+        $originalMockTime = MockTime::$time;
+        MockTime::$time = $created;
+
+        $result = parent::set($key, $value, $minutes);
+
+        MockTime::$time = $originalMockTime;
+
+        return $result;
+    }
+
+    public function store(string $key, $value): bool
+    {
         $this->store[$key] = $value;
         return true;
     }
