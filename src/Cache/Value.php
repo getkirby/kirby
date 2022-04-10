@@ -19,20 +19,22 @@ class Value
 {
     /**
      * Cached value
+     *
      * @var mixed
      */
     protected $value;
 
     /**
-     * the number of minutes until the value expires
-     * @todo Rename this property to $expiry to reflect
-     *       both minutes and absolute timestamps
+     * The number of minutes until the value expires
+     * or the absolute UNIX expiry timestamp
+     *
      * @var int
      */
     protected $minutes;
 
     /**
      * Creation timestamp
+     *
      * @var int
      */
     protected $created;
@@ -41,9 +43,9 @@ class Value
      * Constructor
      *
      * @param mixed $value
-     * @param int $minutes the number of minutes until the value expires
-     *                     or an absolute UNIX timestamp
-     * @param int $created the UNIX timestamp when the value has been created
+     * @param int $minutes The number of minutes until the value expires
+     *                     or an absolute UNIX expiry timestamp
+     * @param int $created The UNIX timestamp when the value has been created
      */
     public function __construct($value, int $minutes = 0, int $created = null)
     {
@@ -91,7 +93,11 @@ class Value
      */
     public static function fromArray(array $array)
     {
-        return new static($array['value'] ?? null, $array['minutes'] ?? 0, $array['created'] ?? null);
+        return new static(
+            $array['value'] ?? null,
+            $array['minutes'] ?? 0,
+            $array['created'] ?? null,
+        );
     }
 
     /**
