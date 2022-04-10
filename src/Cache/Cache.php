@@ -100,7 +100,7 @@ abstract class Cache
     abstract public function retrieve(string $key);
 
     /**
-     * Gets an item from the cache
+     * Gets an item from the cache unless it is expired
      *
      * <code>
      *   // get an item from the cache driver
@@ -116,22 +116,45 @@ abstract class Cache
      */
     public function get(string $key, $default = null)
     {
+        $value = $this->getObject($key);
+
+        // return the pure value
+        return $value ? $value->value() : $default;
+    }
+
+    /**
+     * Gets an item object from the cache unless it is expired
+     *
+     * <code>
+     *   // get an item from the cache driver
+     *   $value = $cache->getObject('value');
+     *
+     *   // access the cached (meta)data
+     *   $value->value();
+     *   $value->created();
+     *   $value->expires();
+     * </code>
+     *
+     * @param string $key
+     * @return \Kirby\Cache\Value|null
+     */
+    public function getObject(string $key)
+    {
         // get the Value
         $value = $this->retrieve($key);
 
         // check for a valid cache value
         if (!is_a($value, 'Kirby\Cache\Value')) {
-            return $default;
+            return null;
         }
 
         // remove the item if it is expired
         if ($value->expires() > 0 && time() >= $value->expires()) {
             $this->remove($key);
-            return $default;
+            return null;
         }
 
-        // return the pure value
-        return $value->value();
+        return $value;
     }
 
     /**

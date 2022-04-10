@@ -41,6 +41,7 @@ class CacheTest extends TestCase
 
     /**
      * @covers ::get
+     * @covers ::getObject
      * @covers ::set
      */
     public function testGetSet()
@@ -49,6 +50,10 @@ class CacheTest extends TestCase
 
         $cache->set('foo', 'foo');
         $this->assertSame('foo', $cache->get('foo'));
+        $object = $cache->getObject('foo');
+        $this->assertSame('foo', $object->value());
+        $this->assertSame(time(), $object->created());
+        $this->assertNull($object->expires());
 
         $cache->set('foo', ['this is' => 'an array']);
         $this->assertSame(['this is' => 'an array'], $cache->get('foo'));
@@ -57,17 +62,26 @@ class CacheTest extends TestCase
         $this->assertSame(1234, $cache->get('foo'));
 
         $cache->set('foo', null);
-        $this->assertSame(null, $cache->get('foo', 'default'));
+        $this->assertNull($cache->get('foo', 'default'));
+        $object = $cache->getObject('foo');
+        $this->assertNull($object->value());
+        $this->assertSame(time(), $object->created());
+        $this->assertNull($object->expires());
 
         $this->assertSame('default', $cache->get('doesnotexist', 'default'));
+        $this->assertNull($cache->getObject('doesnotexist'));
 
         $cache->set('notyetexpired', 'foo', 10);
         $this->assertSame('foo', $cache->get('notyetexpired'));
-        $this->assertSame(time() + 600, $cache->expires('notyetexpired'));
+        $object = $cache->getObject('notyetexpired');
+        $this->assertSame('foo', $object->value());
+        $this->assertSame(time(), $object->created());
+        $this->assertSame(time() + 600, $object->expires());
 
         $cache->setWithCreated('expired', 'foo', 10, 0);
         $this->assertTrue(isset($cache->store['expired']));
         $this->assertSame('default', $cache->get('expired', 'default'));
+        $this->assertNull($cache->getObject('expired'));
         $this->assertFalse(isset($cache->store['expired']));
     }
 
@@ -96,7 +110,7 @@ class CacheTest extends TestCase
         $this->assertSame(time() + 720, $cache->expires('foo'));
 
         $cache->set('foo', 'foo');
-        $this->assertSame(null, $cache->expires('foo'));
+        $this->assertNull($cache->expires('foo'));
 
         $this->assertFalse($cache->expires('doesnotexist'));
     }
