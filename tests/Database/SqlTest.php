@@ -459,4 +459,38 @@ class SqlTest extends TestCase
             'bindings' => []
         ], $this->sql->having('test < :value'));
     }
+
+    public function testValueSet()
+    {
+        $this->database->createTable('users', [
+            'name' => ['type' => 'varchar']
+        ]);
+
+        $values = $this->sql->values('users', [
+            'name' => 'John Doe',
+            'nonexisting' => 'test',
+        ], ', ', true);
+
+        $this->assertArrayHasKey('query', $values);
+        $this->assertArrayHasKey('bindings', $values);
+        $this->assertCount(1, $values['bindings']);
+        $this->assertSame('John Doe', current($values['bindings']));
+    }
+
+    public function testValueList()
+    {
+        $this->database->createTable('users', [
+            'name' => ['type' => 'varchar']
+        ]);
+
+        $values = $this->sql->values('users', [
+            'name' => 'John Doe',
+            'nonexisting' => 'test',
+        ], ', ', false);
+
+        $this->assertArrayHasKey('query', $values);
+        $this->assertArrayHasKey('bindings', $values);
+        $this->assertCount(1, $values['bindings']);
+        $this->assertSame('John Doe', current($values['bindings']));
+    }
 }
