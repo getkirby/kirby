@@ -853,8 +853,14 @@ abstract class Sql
         $query    = [];
         $bindings = [];
 
-        foreach ($values as $key => $value) {
-            $fields[] = $this->columnName($table, $key, $enforceQualified);
+        foreach ($values as $column => $value) {
+            $key = $this->columnName($table, $column, $enforceQualified);
+
+            if ($key === null) {
+                continue;
+            }
+
+            $fields[] = $key;
 
             if (in_array($value, static::$literals, true) === true) {
                 $query[] = $value ?: 'null';
@@ -895,6 +901,10 @@ abstract class Sql
 
         foreach ($values as $column => $value) {
             $key = $this->columnName($table, $column, $enforceQualified);
+
+            if ($key === null) {
+                continue;
+            }
 
             if (in_array($value, static::$literals, true) === true) {
                 $query[] = $key . ' = ' . ($value ?: 'null');
