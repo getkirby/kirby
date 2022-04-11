@@ -2,21 +2,30 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 
 class FileRulesTest extends TestCase
 {
     protected $app;
+    protected $fixtures;
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest'
             ]
         ]);
 
         $this->app->impersonate('kirby');
+        Dir::make($this->fixtures);
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
     }
 
     public function testChangeName()
@@ -102,6 +111,8 @@ class FileRulesTest extends TestCase
         $file = $this->createMock(File::class);
         $file->method('filename')->willReturn('test.jpg');
         $file->method('exists')->willReturn(true);
+        $page = $this->createMock(Page::class);
+        $file->method('parent')->willReturn($page);
 
         $this->expectException('Kirby\Exception\DuplicateException');
         $this->expectExceptionMessage('A file with the name "test.jpg" already exists');
@@ -109,6 +120,129 @@ class FileRulesTest extends TestCase
         $upload = $this->createMock(BaseFile::class);
 
         FileRules::create($file, $upload);
+    }
+
+    public function testCreateSameFile()
+    {
+        $testImage =  __DIR__ . '/fixtures/files/test.jpg';
+
+        $app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFile',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'test.jpg', 'content' => ['template' => 'test']],
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+
+        // create real file with content and move into page root
+        F::copy($testImage, $page->root() . '/test.jpg');
+        F::write($page->root() . '/test.jpg.txt', 'Template: test');
+
+        // create new file
+        $newFile = new File([
+            'filename' => 'test.jpg',
+            'parent' => $page,
+            'content' => [
+                'template' => 'test'
+            ]
+        ]);
+
+        $upload = new BaseFile($testImage);
+        $create = FileRules::create($newFile, $upload);
+
+        $this->assertTrue($create);
+    }
+
+    public function testCreateSameFileWithDifferentTemplate()
+    {
+        $testImage =  __DIR__ . '/fixtures/files/test.jpg';
+
+        $app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFileWithDifferentTemplate',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'test.jpg', 'content' => ['template' => 'test']],
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+
+        // create real file with content and move into page root
+        F::copy($testImage, $page->root() . '/test.jpg');
+        F::write($page->root() . '/test.jpg.txt', 'Template: test');
+
+        $newFile = new File([
+            'filename' => 'test.jpg',
+            'parent' => $page,
+            'content' => [
+                'template' => 'cover'
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\DuplicateException');
+        $this->expectExceptionMessage('A file with the name "test.jpg" already exists');
+
+        $upload = new BaseFile($testImage);
+        FileRules::create($newFile, $upload);
+    }
+
+    public function testCreateDifferentFileWithSameFilename()
+    {
+        $testImage =  __DIR__ . '/fixtures/files/test.jpg';
+
+        $app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createDifferentFileWithSameFilename',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'test.jpg', 'content' => ['template' => 'test']],
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+
+        // create real file with content and move into page root
+        F::copy($testImage, $page->root() . '/test.jpg');
+        F::write($page->root() . '/test.jpg.txt', 'Template: test');
+
+        $newFile = new File([
+            'filename' => 'test.jpg',
+            'parent' => $page,
+            'content' => [
+                'template' => 'test'
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\DuplicateException');
+        $this->expectExceptionMessage('A file with the name "test.jpg" already exists');
+
+        $upload = new BaseFile(__DIR__ . '/fixtures/files/cat.jpg');
+        FileRules::create($newFile, $upload);
     }
 
     public function testCreateHarmfulContents()
