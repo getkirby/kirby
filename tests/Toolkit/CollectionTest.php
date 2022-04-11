@@ -773,6 +773,36 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @covers ::random
+     */
+    public function testRandom()
+    {
+        $collection = new Collection([
+            'one' => 'eins',
+            'two' => 'zwei',
+            'three' => 'drei',
+            'four' => 'vier'
+        ]);
+        $collectionKeys = array_flip($collection->keys());
+        $collectionValues = array_flip($collection->values());
+
+        // Assert existence and correctness of keys
+        $random1 = $collection->random();
+        $this->assertSame($collection->findByKey($random1->keys()[0]), $random1->first());
+
+        // Assert order of keys in non-shuffled random
+        $random2 = $collection->random(2);
+        $this->assertTrue($collectionKeys[$random2->keys()[0]] < $collectionKeys[$random2->keys()[1]]);
+
+        $random3 = $collection->random(3, true);
+        foreach ($random3 as $key => $value) {
+            $this->assertContains($key, $collection->keys());
+            $this->assertContains($value, $collection->values());
+            $this->assertSame($collectionKeys[$key], $collectionValues[$value]);
+        }
+    }
+
+    /**
      * @covers ::__unset
      */
     public function testRemoveMultiple()

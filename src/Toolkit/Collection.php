@@ -870,6 +870,17 @@ class Collection extends Iterator implements Countable
         return $result;
     }
 
+    public function random(int $count = 1, bool $shuffle = false)
+    {
+        if ($shuffle) {
+            return $this->shuffle()->slice(0, $count);
+        }
+
+        $collection = clone $this;
+        $collection->data = A::random($collection->data, $count);
+        return $collection;
+    }
+
     /**
      * Removes an element from the array by key
      *
