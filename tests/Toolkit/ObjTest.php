@@ -19,6 +19,20 @@ class ObjTest extends TestCase
         $this->assertNull($obj->foo);
     }
 
+    public function test__getMultiple()
+    {
+        $obj = new Obj([
+            'one' => 'first',
+            'two' => 'second',
+            'three' => 'third'
+        ]);
+
+        $this->assertEquals('first', $obj->get('one'));
+        $this->assertEquals(['one' => 'first', 'three' => 'third'], $obj->get(['one', 'three']));
+        $this->assertEquals(['one' => 'first', 'three' => 'third', 'eight' => null], $obj->get(['one', 'three', 'eight']));
+        $this->assertEquals($obj->toArray(), $obj->get(['one', 'two', 'three']));
+    }
+
     public function testToArray()
     {
         $obj = new Obj($expected = [

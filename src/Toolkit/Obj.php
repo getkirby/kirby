@@ -64,12 +64,17 @@ class Obj extends stdClass
     /**
      * Property Getter
      *
-     * @param string $property
+     * @param string|array $property
      * @param mixed $fallback
      * @return mixed
      */
-    public function get(string $property, $fallback = null)
+    public function get(string|array $property, $fallback = null)
     {
+        if (is_array($property)) {
+            $filtered = A::get($this->toArray(), $property);
+            return ! empty($filtered) ? $filtered : $fallback;
+        }
+
         return $this->$property ?? $fallback;
     }
 
