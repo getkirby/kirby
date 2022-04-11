@@ -870,6 +870,14 @@ class Collection extends Iterator implements Countable
         return $result;
     }
 
+    /**
+     * Returns a new collection consisting of random elements,
+     * from the original collection, shuffled or ordered
+     *
+     * @param int $count
+     * @param bool $shuffle
+     * @return $this|static
+     */
     public function random(int $count = 1, bool $shuffle = false)
     {
         if ($shuffle) {
