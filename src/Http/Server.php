@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Kirby\Http;
 
 use Kirby\Toolkit\A;
@@ -66,6 +67,26 @@ class Server
         }
 
         return static::$cli = false;
+    }
+
+    /**
+     * Sanitize and return the forwarded protocol
+     *
+     * @return string|null
+     */
+    public static function forwardedProtocol(): ?string
+    {
+        $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
+
+        if (empty($proto) === true) {
+            return null;
+        }
+
+        if (in_array(strtolower($proto), ['https', 'https, http']) === true) {
+            return 'https';
+        }
+
+        return 'http';
     }
 
     /**
@@ -166,11 +187,27 @@ class Server
      */
     public static function https(): bool
     {
-        $https = $_SERVER['HTTPS'] ?? null;
-        $off   = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
+        // forwarded protocol
+        if (static::forwardedProtocol() === 'https') {
+            return true;
+        }
 
-        // check for various options to send a negative HTTPS header
-        if (in_array($https, $off, true) === false) {
+        // little helper to check for enabled SSL
+        // because the possible return values are quite weird
+        $isOn = static function ($value): bool {
+            // off can mean many things :)
+            $off = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
+
+            return in_array($value, $off, true) === false;
+        };
+
+        // forwarded ssl state
+        if ($isOn($_SERVER['HTTP_X_FORWARDED_SSL'] ?? null) === true) {
+            return true;
+        }
+
+        // ssl state
+        if ($isOn($_SERVER['HTTPS'] ?? null) === true) {
             return true;
         }
 
@@ -240,6 +277,7 @@ class Server
 
             // based on the forwarded proto
             if (empty($port) === true) {
+
                 if (in_array($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null, ['https', 'https, http']) === true) {
                     $port = 443;
                 }

@@ -211,6 +211,16 @@ class ServerTest extends TestCase
     }
 
     /**
+     * @dataProvider provideHttps
+     * @covers ::https
+     */
+    public function testHttpsFromForwardedHeader($input, $expected)
+    {
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = $input;
+        $this->assertSame($expected, Server::https());
+    }
+
+    /**
      * @covers ::https
      */
     public function testHttpsFromPort()
