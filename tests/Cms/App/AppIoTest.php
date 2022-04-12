@@ -79,12 +79,30 @@ class AppIoTest extends TestCase
     {
         $input = new Response([
             'code' => 200,
-            'body' => 'Test'
+            'body' => 'Test',
+            'type' => 'text/plain',
+            'headers' => [
+                'X-Foo'  => 'Foobar',
+                'X-Test' => 'Test'
+            ]
         ]);
 
-        $response = $this->app()->io($input);
+        $app = $this->app();
+        $app->response()->header('Cache-Control', 'no-cache');
+        $app->response()->header('X-Foo', 'Bar');
+        $response = $app->io($input);
 
-        $this->assertEquals($input, $response);
+        $this->assertSame([
+            'type' => 'text/plain',
+            'charset' => 'UTF-8',
+            'code' => 200,
+            'headers' => [
+                'Cache-Control' => 'no-cache',
+                'X-Foo'         => 'Foobar',
+                'X-Test'        => 'Test'
+            ],
+            'body' => 'Test',
+        ], $response->toArray());
     }
 
     public function testPage()
