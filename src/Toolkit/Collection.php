@@ -876,7 +876,7 @@ class Collection extends Iterator implements Countable
      *
      * @param int $count
      * @param bool $shuffle
-     * @return $this|static
+     * @return static
      */
     public function random(int $count = 1, bool $shuffle = false)
     {
