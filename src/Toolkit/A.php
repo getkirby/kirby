@@ -340,8 +340,8 @@ class A
      * either in original or shuffled order
      *
      * @param array $array
-     * @param integer $count
-     * @param boolean $shuffle
+     * @param int $count
+     * @param bool $shuffle
      * @return array
      */
     public static function random(array $array, int $count = 1, bool $shuffle = false): array
