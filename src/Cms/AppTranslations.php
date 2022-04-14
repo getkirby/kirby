@@ -166,7 +166,7 @@ trait AppTranslations
     public function setLocale($locale): void
     {
         // @codeCoverageIgnoreStart
-        deprecated('`Kirby\Cms\App::setLocale()` has been deprecated and will be removed in 3.7.0. Use `Kirby\Toolkit\Locale::set()` instead');
+        App::deprecated('`Kirby\Cms\App::setLocale()` has been deprecated and will be removed in 3.7.0. Use `Kirby\Toolkit\Locale::set()` instead');
         Locale::set($locale);
         // @codeCoverageIgnoreEnd
     }

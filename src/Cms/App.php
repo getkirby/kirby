@@ -513,6 +513,43 @@ class App
     }
 
     /**
+     * Checks/returns a CSRF token
+     * @since 3.6.2
+     *
+     * @param string|null $check Pass a token here to compare it to the one in the session
+     * @return string|bool Either the token or a boolean check result
+     */
+    public static function csrf(?string $check = null)
+    {
+        $session = static::instance()->session();
+
+        // no arguments, generate/return a token
+        // (check explicitly if there have been no arguments at all;
+        // checking for null introduces a security issue because null could come
+        // from user input or bugs in the calling code!)
+        if (func_num_args() === 0) {
+            $token = $session->get('kirby.csrf');
+
+            if (is_string($token) !== true) {
+                $token = bin2hex(random_bytes(32));
+                $session->set('kirby.csrf', $token);
+            }
+
+            return $token;
+        }
+
+        // argument has been passed, check the token
+        if (
+            is_string($check) === true &&
+            is_string($session->get('kirby.csrf')) === true
+        ) {
+            return hash_equals($session->get('kirby.csrf'), $check) === true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the default language object
      *
      * @return \Kirby\Cms\Language|null
@@ -520,6 +557,22 @@ class App
     public function defaultLanguage()
     {
         return $this->defaultLanguage = $this->defaultLanguage ?? $this->languages()->default();
+    }
+
+    /**
+     * Triggers a deprecation warning if debug mode is active
+     * @since 3.6.2
+     *
+     * @param string $message
+     * @return bool Whether the warning was triggered
+     */
+    public static function deprecated(string $message): bool
+    {
+        if (static::instance()->option('debug') === true) {
+            return trigger_error($message, E_USER_DEPRECATED) === true;
+        }
+
+        return false;
     }
 
     /**
@@ -557,6 +610,21 @@ class App
         }
 
         return $this->defaultLanguage();
+    }
+
+    /**
+     * Simple object and variable dumper
+     * to help with debugging.
+     * @since 3.6.2
+     *
+     * @param mixed $variable
+     * @param bool $echo
+     * @return string
+     */
+    public static function dump($variable, bool $echo = true): string
+    {
+        $kirby = static::instance();
+        return ($kirby->component('dump'))($kirby, $variable, $echo);
     }
 
     /**
@@ -626,6 +694,62 @@ class App
         }
 
         return null;
+    }
+
+    /**
+     * Redirects to the given Urls
+     * Urls can be relative or absolute.
+     * @since 3.6.2
+     *
+     * @param string $url
+     * @param int $code
+     * @return void
+     */
+    public static function go(string $url = '/', int $code = 302)
+    {
+        die(Response::redirect($url, $code));
+    }
+
+    /**
+     * Return an image from any page
+     * specified by the path
+     *
+     * Example:
+     * <?= App::image('some/page/myimage.jpg') ?>
+     *
+     * @param string|null $path
+     * @return \Kirby\Cms\File|null
+     */
+    public function image(?string $path = null)
+    {
+        if ($path === null) {
+            return $this->site()->page()->image();
+        }
+
+        $uri      = dirname($path);
+        $filename = basename($path);
+
+        if ($uri === '.') {
+            $uri = null;
+        }
+
+        switch ($uri) {
+            case '/':
+                $parent = $this->site();
+                break;
+            case null:
+                $parent = $this->site()->page();
+                break;
+            default:
+                $parent = $this->site()->page($uri);
+                break;
+        }
+
+        if ($parent) {
+            return $parent->image($filename);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -753,14 +877,27 @@ class App
      * Renders a single KirbyTag with the given attributes
      *
      * @internal
-     * @param string $type
+     * @param string|array $type
      * @param string|null $value
      * @param array $attr
      * @param array $data
      * @return string
      */
-    public function kirbytag(string $type, string $value = null, array $attr = [], array $data = []): string
+    public function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
     {
+        if (is_array($type) === true) {
+            $kirbytag = $type;
+            $type     = key($kirbytag);
+            $value    = current($kirbytag);
+            $attr     = $kirbytag;
+
+            // check data attribute and separate from attr data if exists
+            if (isset($attr['data']) === true) {
+                $data = $attr['data'];
+                unset($attr['data']);
+            }
+        }
+
         $data['kirby']  = $data['kirby']  ?? $this;
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
@@ -1104,6 +1241,30 @@ class App
         }
 
         return null;
+    }
+
+    /**
+     * Returns a single param from the current URL
+     * @since 3.6.2
+     *
+     * @param string $key
+     * @param string|null $fallback
+     * @return string|null
+     */
+    public function param(string $key, ?string $fallback = null): ?string
+    {
+        return $this->request()->url()->params()->$key ?? $fallback;
+    }
+
+    /**
+     * Returns all params from the current Url
+     * @since 3.6.2
+     *
+     * @return array
+     */
+    public function params(): array
+    {
+        return $this->request()->url()->params()->toArray();
     }
 
     /**
@@ -1498,11 +1659,22 @@ class App
      * @internal
      * @param mixed $name
      * @param array $data
+     * @param bool $return
      * @return string|null
      */
-    public function snippet($name, array $data = []): ?string
+    public function snippet($name, array $data = [], bool $return = true): ?string
     {
-        return ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+        if (is_object($data) === true) {
+            $data = ['item' => $data];
+        }
+
+        $snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+
+        if ($return === true) {
+            return $snippet;
+        }
+
+        echo $snippet;
     }
 
     /**

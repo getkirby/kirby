@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 
 /**
  * Content Lock Routes
@@ -13,7 +14,7 @@ return [
          * @todo Remove in 3.7.0
          */
         'action'  => function (string $path) {
-            deprecated('The `GET (:all)/lock` API endpoint has been deprecated and will be removed in 3.7.0');
+            App::deprecated('The `GET (:all)/lock` API endpoint has been deprecated and will be removed in 3.7.0');
 
             if ($lock = $this->parent($path)->lock()) {
                 return [
@@ -54,7 +55,7 @@ return [
          * @todo Remove in 3.7.0
          */
         'action'  => function (string $path) {
-            deprecated('The `GET (:all)/unlock` API endpoint has been deprecated and will be removed in 3.7.0');
+            App::deprecated('The `GET (:all)/unlock` API endpoint has been deprecated and will be removed in 3.7.0');
 
 
             if ($lock = $this->parent($path)->lock()) {

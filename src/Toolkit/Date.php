@@ -388,6 +388,31 @@ class Date extends DateTime
     }
 
     /**
+     * Rounds the minutes of the given date
+     * by the defined step
+     *
+     * @param string|null $date
+     * @param int|array|null $step array of `unit` and `size` to round to nearest
+     * @return int|null
+     */
+    public static function stamp(?string $date = null, $step = null): ?int
+    {
+        if ($date = static::optional($date)) {
+            if ($step !== null) {
+                $step = static::stepConfig($step, [
+                    'unit' => 'minute',
+                    'size' => 1
+                ]);
+                $date->round($step['unit'], $step['size']);
+            }
+
+            return $date->timestamp();
+        }
+
+        return null;
+    }
+
+    /**
      * Normalizes the step configuration array for rounding
      *
      * @param array|string|int|null $input Full array with `size` and/or `unit` keys, `unit`

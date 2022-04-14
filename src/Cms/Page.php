@@ -465,7 +465,7 @@ class Page extends ModelWithContent
      */
     public function go(array $options = [], int $code = 302)
     {
-        go($this->url($options), $code);
+        App::go($this->url($options), $code);
     }
 
     /**

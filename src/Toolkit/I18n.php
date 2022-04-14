@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use Kirby\Cms\App;
 use NumberFormatter;
 
 /**
@@ -63,7 +64,7 @@ class I18n
     public static function fallback(): string
     {
         // @codeCoverageIgnoreStart
-        deprecated('I18n::fallback() has been deprecated. Use I18n::fallbacks() instead.');
+        App::deprecated('I18n::fallback() has been deprecated. Use I18n::fallbacks() instead.');
         return static::fallbacks()[0];
         // @codeCoverageIgnoreEnd
     }

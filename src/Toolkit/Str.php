@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -380,6 +381,23 @@ class Str
         }
 
         return $needle === $probe;
+    }
+
+    /**
+     * Escape string for context specific output
+     * @since 3.6.2
+     *
+     * @param string $string Untrusted data
+     * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
+     * @return string Escaped data
+     */
+    public static function esc(string $string, string $context = 'html'): string
+    {
+        if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
+            return Escape::$context($string);
+        }
+
+        return $string;
     }
 
     /**
@@ -1098,7 +1116,7 @@ class Str
             $start !== '{{' ||
             $end !== '}}'
         ) {
-            deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
+            App::deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
         }
         // @codeCoverageIgnoreEnd
 
@@ -1281,6 +1299,36 @@ class Str
     public static function upper(string $string = null): string
     {
         return mb_strtoupper($string ?? '', 'UTF-8');
+    }
+
+    /**
+     * Creates a compliant v4 UUID
+     * Taken from: https://github.com/symfony/polyfill
+     * @since 3.6.2
+     *
+     * @return string
+     */
+    public static function uuid(): string
+    {
+        $uuid = bin2hex(random_bytes(16));
+
+        return sprintf(
+            '%08s-%04s-4%03s-%04x-%012s',
+            // 32 bits for "time_low"
+            substr($uuid, 0, 8),
+            // 16 bits for "time_mid"
+            substr($uuid, 8, 4),
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            substr($uuid, 13, 3),
+            // 16 bits:
+            // * 8 bits for "clk_seq_hi_res",
+            // * 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            hexdec(substr($uuid, 16, 4)) & 0x3fff | 0x8000,
+            // 48 bits for "node"
+            substr($uuid, 20, 12)
+        );
     }
 
     /**

@@ -44,6 +44,74 @@ class V
     }
 
     /**
+     * Runs a number of validators on a set of data and checks if the data is invalid
+     * @since 3.6.2
+     *
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
+     * @return array
+     */
+    public static function invalid(array $data = [], array $rules = [], array $messages = []): array
+    {
+        $errors = [];
+
+        foreach ($rules as $field => $validations) {
+            $validationIndex = -1;
+
+            // See: http://php.net/manual/en/types.comparisons.php
+            // only false for: null, undefined variable, '', []
+            $value   = $data[$field] ?? null;
+            $filled  = $value !== null && $value !== '' && $value !== [];
+            $message = $messages[$field] ?? $field;
+
+            // True if there is an error message for each validation method.
+            $messageArray = is_array($message);
+
+            foreach ($validations as $method => $options) {
+                // If the index is numeric, there is no option
+                // and `$value` is sent directly as a `$options` parameter
+                if (is_numeric($method) === true) {
+                    $method  = $options;
+                    $options = [$value];
+                } else {
+                    if (is_array($options) === false) {
+                        $options = [$options];
+                    }
+
+                    array_unshift($options, $value);
+                }
+
+                $validationIndex++;
+
+                if ($method === 'required') {
+                    if ($filled) {
+                        // Field is required and filled.
+                        continue;
+                    }
+                } elseif ($filled) {
+                    if (V::$method(...$options) === true) {
+                        // Field is filled and passes validation method.
+                        continue;
+                    }
+                } else {
+                    // If a field is not required and not filled, no validation should be done.
+                    continue;
+                }
+
+                // If no continue was called we have a failed validation.
+                if ($messageArray) {
+                    $errors[$field][] = $message[$validationIndex] ?? $field;
+                } else {
+                    $errors[$field] = $message;
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
      * Creates a useful error message for the given validator
      * and the arguments. This is used mainly internally
      * to create error messages
