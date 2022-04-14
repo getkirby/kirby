@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
@@ -89,41 +88,6 @@ class Obj extends stdClass
         }
 
         return $this->$property ?? $fallback;
-    }
-
-    /**
-     * Determines the size/length of numbers, strings, arrays and countable objects
-     * @since 3.6.2
-     *
-     * @param mixed $value
-     * @return int
-     * @throws \Kirby\Exception\InvalidArgumentException
-     */
-    public static function size($value): int
-    {
-        if (is_numeric($value)) {
-            return (int)$value;
-        }
-
-        if (is_string($value)) {
-            return Str::length(trim($value));
-        }
-
-        if (is_array($value)) {
-            return count($value);
-        }
-
-        if (is_object($value)) {
-            if (is_a($value, 'Countable') === true) {
-                return count($value);
-            }
-
-            if (is_a($value, 'Kirby\Toolkit\Collection') === true) {
-                return $value->count();
-            }
-        }
-
-        throw new InvalidArgumentException('Could not determine the size of the given value');
     }
 
     /**

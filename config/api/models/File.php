@@ -1,7 +1,7 @@
 <?php
 
-use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Helpers;
 use Kirby\Form\Form;
 
 /**
@@ -33,7 +33,7 @@ return [
         'panelIcon'  => function (File $file) {
             // TODO: remove in 3.7.0
             // @codeCoverageIgnoreStart
-            App::deprecated('The API field file.panelIcon has been deprecated and will be removed in 3.7.0. Use file.panelImage instead');
+            Helpers::deprecated('The API field file.panelIcon has been deprecated and will be removed in 3.7.0. Use file.panelImage instead');
             return $file->panel()->image();
         // @codeCoverageIgnoreEnd
         },

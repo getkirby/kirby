@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\Form\Form;
 
@@ -42,7 +42,7 @@ return [
          * @codeCoverageIgnore
          */
         'panelIcon' => function (Page $page) {
-            App::deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
+            Helpers::deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
             return $page->panel()->image();
         },
         'panelImage' => fn (Page $page) => $page->panel()->image(),

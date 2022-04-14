@@ -20,7 +20,7 @@ class Html extends \Kirby\Toolkit\Html
 {
     /**
      * Creates one or multiple CSS link tags
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
      * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
@@ -77,7 +77,7 @@ class Html extends \Kirby\Toolkit\Html
 
     /**
      * Creates a script tag to load a javascript file
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string|array $url
      * @param string|array $options
@@ -112,7 +112,7 @@ class Html extends \Kirby\Toolkit\Html
     /**
      * Includes an SVG file by absolute or
      * relative file path.
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string|\Kirby\Cms\File $file
      * @return string|false

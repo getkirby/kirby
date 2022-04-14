@@ -1,15 +1,15 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
+use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Http\Router;
-use Kirby\Toolkit\Classes;
 use Kirby\Toolkit\Date;
-use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -117,7 +117,7 @@ if (
      */
     function deprecated(string $message): bool
     {
-        return App::deprecated($message);
+        return Helpers::deprecated($message);
     }
 }
 
@@ -135,7 +135,7 @@ if (
      */
     function dump($variable, bool $echo = true): string
     {
-        return App::dump($variable, $echo);
+        return Helpers::dump($variable, $echo);
     }
 }
 
@@ -225,7 +225,7 @@ if (
      */
     function go(string $url = '/', int $code = 302)
     {
-        App::go($url, $code);
+        Response::go($url, $code);
     }
 }
 
@@ -279,7 +279,14 @@ if (
      */
     function image(?string $path = null)
     {
-        return App::instance()->image($path);
+        $kirby = App::instance();
+        $file = $kirby->file($path, $kirby->site());
+
+        if ($file->type() !== 'image') {
+            return null;
+        }
+
+        return $file;
     }
 }
 
@@ -455,7 +462,7 @@ if (
      */
     function load(array $classmap, ?string $base = null)
     {
-        return Classes::load($classmap, $base);
+        return F::loadClasses($classmap, $base);
     }
 }
 
@@ -557,7 +564,7 @@ if (
      */
     function param(string $key, ?string $fallback = null): ?string
     {
-        return App::instance()->param($key, $fallback);
+        return App::instance()->request()->url()->params()->$key ?? $fallback;
     }
 }
 
@@ -572,7 +579,7 @@ if (
      */
     function params(): array
     {
-        return App::instance()->params();
+        return App::instance()->request()->url()->params()->toArray();
     }
 }
 
@@ -643,7 +650,7 @@ if (
      */
     function size($value): int
     {
-        return Obj::size($value);
+        return Helpers::size($value);
     }
 }
 
@@ -735,7 +742,7 @@ if (
         int $count,
         string $locale = null,
         bool $formatNumber = true
-    ){
+    ) {
         return I18n::translateCount($key, $count, $locale, $formatNumber);
     }
 }
@@ -754,7 +761,7 @@ if (
      */
     function timestamp(?string $date = null, $step = null): ?int
     {
-        return Date::stamp($date, $step);
+        return Date::roundedTimestamp($date, $step);
     }
 }
 

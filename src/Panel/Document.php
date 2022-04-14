@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
@@ -131,7 +130,7 @@ class Document
     /**
      * Check for a custom asset file from the
      * config (e.g. panel.css or panel.js)
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string $option asset option name
      * @return string|null
@@ -170,7 +169,7 @@ class Document
     /**
      * Returns array of favion icons
      * based on config option
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string $url URL prefix for default icons
      * @return array
@@ -271,7 +270,7 @@ class Document
         try {
             if (static::link() === true) {
                 usleep(1);
-                App::go($kirby->url('index') . '/' . $kirby->path());
+                Response::go($kirby->url('index') . '/' . $kirby->path());
             }
         } catch (Throwable $e) {
             die('The Panel assets cannot be installed properly. ' . $e->getMessage());

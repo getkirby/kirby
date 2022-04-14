@@ -39,6 +39,9 @@ return [
      * @param mixed $variable
      * @param bool $echo
      * @return string
+     *
+     * @deprecated 3.7.0 Disable `dump()` via `KIRBY_HELPER_DUMP` instead and create your own function
+     * @todo move to `Helpers::dump()`, remove component in 3.8.0
      */
     'dump' => function (App $kirby, $variable, bool $echo = true) {
         if (Server::cli() === true) {

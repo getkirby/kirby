@@ -200,6 +200,21 @@ class Response
         return new static($props);
     }
 
+
+    /**
+     * Redirects to the given Urls
+     * Urls can be relative or absolute.
+     * @since 3.6.4
+     *
+     * @param string $url
+     * @param int $code
+     * @return void
+     */
+    public static function go(string $url = '/', int $code = 302)
+    {
+        die(static::redirect($url, $code));
+    }
+
     /**
      * Getter for single headers
      *

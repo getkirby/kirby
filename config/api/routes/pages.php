@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 
 /**
  * Page Routes
@@ -48,7 +48,7 @@ return [
         'action'  => function (string $id) {
             // @codeCoverageIgnoreStart
             if ($this->route->pattern() === 'pages/([a-zA-Z0-9\.\-_%= \+\@\(\)]+)/children/blueprints') {
-                App::deprecated('`GET pages/(:any)/children/blueprints` API endpoint has been deprecated and will be removed in 3.7.0. Use `GET pages/(:any)/blueprints` instead');
+                Helpers::deprecated('`GET pages/(:any)/children/blueprints` API endpoint has been deprecated and will be removed in 3.7.0. Use `GET pages/(:any)/blueprints` instead');
             }
             // @codeCoverageIgnoreEnd
             return $this->page($id)->blueprints($this->requestQuery('section'));

@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Toolkit\A;
@@ -465,7 +466,7 @@ class Page extends ModelWithContent
      */
     public function go(array $options = [], int $code = 302)
     {
-        App::go($this->url($options), $code);
+        Response::go($this->url($options), $code);
     }
 
     /**

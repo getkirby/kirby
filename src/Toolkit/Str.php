@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
-use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -385,7 +385,7 @@ class Str
 
     /**
      * Escape string for context specific output
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string $string Untrusted data
      * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
@@ -1116,7 +1116,7 @@ class Str
             $start !== '{{' ||
             $end !== '}}'
         ) {
-            App::deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
+            Helpers::deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
         }
         // @codeCoverageIgnoreEnd
 
@@ -1304,7 +1304,7 @@ class Str
     /**
      * Creates a compliant v4 UUID
      * Taken from: https://github.com/symfony/polyfill
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @return string
      */

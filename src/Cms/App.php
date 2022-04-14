@@ -514,7 +514,7 @@ class App
 
     /**
      * Checks/returns a CSRF token
-     * @since 3.6.2
+     * @since 3.6.4
      *
      * @param string|null $check Pass a token here to compare it to the one in the session
      * @return string|bool Either the token or a boolean check result
@@ -560,22 +560,6 @@ class App
     }
 
     /**
-     * Triggers a deprecation warning if debug mode is active
-     * @since 3.6.2
-     *
-     * @param string $message
-     * @return bool Whether the warning was triggered
-     */
-    public static function deprecated(string $message): bool
-    {
-        if (static::instance()->option('debug') === true) {
-            return trigger_error($message, E_USER_DEPRECATED) === true;
-        }
-
-        return false;
-    }
-
-    /**
      * Destroy the instance singleton and
      * purge other static props
      *
@@ -610,21 +594,6 @@ class App
         }
 
         return $this->defaultLanguage();
-    }
-
-    /**
-     * Simple object and variable dumper
-     * to help with debugging.
-     * @since 3.6.2
-     *
-     * @param mixed $variable
-     * @param bool $echo
-     * @return string
-     */
-    public static function dump($variable, bool $echo = true): string
-    {
-        $kirby = static::instance();
-        return ($kirby->component('dump'))($kirby, $variable, $echo);
     }
 
     /**
@@ -678,11 +647,13 @@ class App
         if ($id === '.') {
             if ($file = $parent->file($filename)) {
                 return $file;
-            } elseif ($file = $this->site()->file($filename)) {
-                return $file;
-            } else {
-                return null;
             }
+
+            if ($file = $this->site()->file($filename)) {
+                return $file;
+            }
+
+            return null;
         }
 
         if ($page = $this->page($id, $parent, $drafts)) {
@@ -694,62 +665,6 @@ class App
         }
 
         return null;
-    }
-
-    /**
-     * Redirects to the given Urls
-     * Urls can be relative or absolute.
-     * @since 3.6.2
-     *
-     * @param string $url
-     * @param int $code
-     * @return void
-     */
-    public static function go(string $url = '/', int $code = 302)
-    {
-        die(Response::redirect($url, $code));
-    }
-
-    /**
-     * Return an image from any page
-     * specified by the path
-     *
-     * Example:
-     * <?= App::image('some/page/myimage.jpg') ?>
-     *
-     * @param string|null $path
-     * @return \Kirby\Cms\File|null
-     */
-    public function image(?string $path = null)
-    {
-        if ($path === null) {
-            return $this->site()->page()->image();
-        }
-
-        $uri      = dirname($path);
-        $filename = basename($path);
-
-        if ($uri === '.') {
-            $uri = null;
-        }
-
-        switch ($uri) {
-            case '/':
-                $parent = $this->site();
-                break;
-            case null:
-                $parent = $this->site()->page();
-                break;
-            default:
-                $parent = $this->site()->page($uri);
-                break;
-        }
-
-        if ($parent) {
-            return $parent->image($filename);
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -1241,30 +1156,6 @@ class App
         }
 
         return null;
-    }
-
-    /**
-     * Returns a single param from the current URL
-     * @since 3.6.2
-     *
-     * @param string $key
-     * @param string|null $fallback
-     * @return string|null
-     */
-    public function param(string $key, ?string $fallback = null): ?string
-    {
-        return $this->request()->url()->params()->$key ?? $fallback;
-    }
-
-    /**
-     * Returns all params from the current Url
-     * @since 3.6.2
-     *
-     * @return array
-     */
-    public function params(): array
-    {
-        return $this->request()->url()->params()->toArray();
     }
 
     /**

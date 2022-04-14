@@ -109,7 +109,7 @@ class Block extends Item
      */
     public function _key(): string
     {
-        App::deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
+        Helpers::deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
         return $this->type();
     }
 
@@ -123,7 +123,7 @@ class Block extends Item
      */
     public function _uid(): string
     {
-        App::deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
+        Helpers::deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
         return $this->id();
     }
 
