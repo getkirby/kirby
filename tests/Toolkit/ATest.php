@@ -285,7 +285,7 @@ class ATest extends TestCase
 
         // Assert count in completely shuffled array
         $random3 = A::random($array, 3, true);
-        $this->assertSame(count($array), count($random3));
+        $this->assertCount(3, $random3);
         foreach ($random3 as $key => $value) {
             $this->assertContains($key, array_keys($array));
             $this->assertContains($value, array_values($array));
