@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
@@ -71,8 +72,15 @@ class Obj extends stdClass
     public function get(string|array $property, $fallback = null)
     {
         if (is_array($property)) {
-            $filtered = A::get($this->toArray(), $property);
-            return ! empty($filtered) ? $filtered : $fallback;
+            if (!is_array($fallback)) {
+                throw new InvalidArgumentException('The fallback value must be an array when getting multiple properties');
+            }
+
+            $result = [];
+            foreach($property as $key) {
+                $result[$key] = $this->$key ?? $fallback[$key] ?? null;
+            }
+            return $result;
         }
 
         return $this->$property ?? $fallback;
