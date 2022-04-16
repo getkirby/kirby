@@ -82,8 +82,14 @@ class ImageMagick extends Darkroom
             }
         }
 
+        // frame option to allow selecting layers for multi-layer or frames for animated images
+        $fileOptions = '';
+        if ($options['frame'] !== null) {
+            $fileOptions = '[' . escapeshellarg($options['frame']) . ']';
+        }
+
         // append input file
-        return $command . ' ' . escapeshellarg($file);
+        return $command . ' ' . escapeshellarg($file) . $fileOptions;
     }
 
     /**
@@ -96,6 +102,7 @@ class ImageMagick extends Darkroom
         return parent::defaults() + [
             'bin'       => 'convert',
             'interlace' => false,
+            'frame'     => null,
         ];
     }
 
