@@ -63,13 +63,14 @@ class Obj extends stdClass
     }
 
     /**
-     * Property Getter
+     * Gets one or multiple properties of the object
      *
      * @param string|array $property
-     * @param mixed $fallback
+     * @param mixed $fallback If multiple properties are requested:
+     *                        Associative array of fallback values per key
      * @return mixed
      */
-    public function get(string|array $property, $fallback = null)
+    public function get($property, $fallback = null)
     {
         if (is_array($property)) {
             if (!is_array($fallback)) {
@@ -77,7 +78,7 @@ class Obj extends stdClass
             }
 
             $result = [];
-            foreach($property as $key) {
+            foreach ($property as $key) {
                 $result[$key] = $this->$key ?? $fallback[$key] ?? null;
             }
             return $result;

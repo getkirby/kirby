@@ -19,7 +19,7 @@ class ObjTest extends TestCase
         $this->assertNull($obj->foo);
     }
 
-    public function test__getMultiple()
+    public function testGetMultiple()
     {
         $obj = new Obj([
             'one' => 'first',
@@ -38,7 +38,7 @@ class ObjTest extends TestCase
         $this->assertEquals($obj->toArray(), $obj->get(['one', 'two', 'three']));
     }
 
-    public function test__getMultipleInvalidFallback()
+    public function testGetMultipleInvalidFallback()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('fallback value must be an array');
