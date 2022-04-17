@@ -73,6 +73,10 @@ class Obj extends stdClass
     public function get($property, $fallback = null)
     {
         if (is_array($property)) {
+            if ($fallback === null) {
+                $fallback = [];
+            }
+
             if (!is_array($fallback)) {
                 throw new InvalidArgumentException('The fallback value must be an array when getting multiple properties');
             }
