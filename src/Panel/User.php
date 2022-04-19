@@ -15,6 +15,11 @@ namespace Kirby\Panel;
 class User extends Model
 {
     /**
+     * @var \Kirby\Cms\User
+     */
+    protected $model;
+
+    /**
      * Breadcrumb array
      *
      * @return array
@@ -193,14 +198,8 @@ class User extends Model
         $user = $this->model;
 
         return [
-            'next' => function () use ($user) {
-                $next = $user->next();
-                return $next ? $next->panel()->toLink('username') : null;
-            },
-            'prev' => function () use ($user) {
-                $prev = $user->prev();
-                return $prev ? $prev->panel()->toLink('username') : null;
-            }
+            'next' => fn () => $this->toPrevNextLink($user->next(), 'username'),
+            'prev' => fn () => $this->toPrevNextLink($user->prev(), 'username')
         ];
     }
 

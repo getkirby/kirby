@@ -112,11 +112,11 @@ return function (App $app) {
          * Converts the field value to a timestamp or a formatted date
          *
          * @param \Kirby\Cms\Field $field
-         * @param string|null $format PHP date formatting string
+         * @param string|\IntlDateFormatter|null $format PHP date formatting string
          * @param string|null $fallback Fallback string for `strtotime` (since 3.2)
          * @return string|int
          */
-        'toDate' => function (Field $field, string $format = null, string $fallback = null) use ($app) {
+        'toDate' => function (Field $field, $format = null, string $fallback = null) use ($app) {
             if (empty($field->value) === true && $fallback === null) {
                 return null;
             }

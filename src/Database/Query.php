@@ -775,7 +775,11 @@ class Query
 
         // apply it to the dataset and retrieve all rows. make sure to use Collection as the iterator to be able to attach the pagination object
         $iterator   = $this->iterator;
-        $collection = $this->offset($pagination->offset())->limit($pagination->limit())->iterator('Collection')->all();
+        $collection = $this
+            ->offset($pagination->offset())
+            ->limit($pagination->limit())
+            ->iterator('Kirby\Toolkit\Collection')
+            ->all();
 
         $this->iterator($iterator);
 
@@ -968,6 +972,11 @@ class Query
                     $this->bindings($sql['bindings']);
                 } elseif (is_callable($args[0]) === true) {
                     $query = clone $this;
+
+                    // since the callback uses its own where condition
+                    // it is necessary to clear/reset the cloned where condition
+                    $query->where = null;
+
                     call_user_func($args[0], $query);
 
                     // copy over the bindings from the nested query

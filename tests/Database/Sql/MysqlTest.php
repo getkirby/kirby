@@ -20,6 +20,8 @@ class MysqlTest extends TestCase
             'type'     => 'sqlite',
             'database' => ':memory:'
         ]);
+        $this->database->execute('CREATE TABLE test (id INTEGER)');
+        $this->database->execute('CREATE VIEW view_test AS SELECT * FROM test');
 
         $this->sql = new Mysql($this->database);
     }
@@ -42,5 +44,15 @@ class MysqlTest extends TestCase
         $result = $this->sql->tables();
         $this->assertStringStartsWith('SELECT TABLE_NAME AS name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ', $result['query']);
         $this->assertSame(':memory:', A::first($result['bindings']));
+    }
+
+    /**
+     * @covers ::tables
+     */
+    public function testValidateTable()
+    {
+        $this->assertTrue($this->database->validateTable('test'));
+        $this->assertTrue($this->database->validateTable('view_test'));
+        $this->assertFalse($this->database->validateTable('not_exist'));
     }
 }

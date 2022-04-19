@@ -75,7 +75,12 @@ class Pagination
 
         $params = [];
 
-        if (is_array($a) === true) {
+        if (is_a($a, static::class) === true) {
+            /**
+             * First argument is a pagination/self object
+             */
+            return $a;
+        } elseif (is_array($a) === true) {
 
             /**
              * First argument is an option array

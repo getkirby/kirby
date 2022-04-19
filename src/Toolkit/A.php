@@ -726,4 +726,37 @@ class A
             return $array;
         }
     }
+
+    /**
+     * Filter the array using the given callback
+     * using both value and key
+     * @since 3.6.5
+     *
+     * @param array $array
+     * @param callable $callback
+     * @return array
+     */
+    public static function filter(array $array, callable $callback): array
+    {
+        return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+    }
+
+    /**
+     * Remove key(s) from an array
+     * @since 3.6.5
+     *
+     * @param array $array
+     * @param int|string|array $keys
+     * @return array
+     */
+    public static function without(array $array, $keys): array
+    {
+        if (is_int($keys) || is_string($keys)) {
+            $keys = static::wrap($keys);
+        }
+
+        return static::filter($array, function ($value, $key) use ($keys) {
+            return in_array($key, $keys, true) === false;
+        });
+    }
 }

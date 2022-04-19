@@ -80,15 +80,30 @@ class FileRules
      */
     public static function create(File $file, BaseFile $upload): bool
     {
+        // We want to ensure that we are not creating duplicate files.
+        // If a file with the same name already exists
         if ($file->exists() === true) {
-            if ($file->sha1() !== $upload->sha1()) {
-                throw new DuplicateException([
-                    'key'  => 'file.duplicate',
-                    'data' => [
-                        'filename' => $file->filename()
-                    ]
-                ]);
+            // $file will be based on the props of the new file,
+            // to compare templates, we need to get the props of
+            // the already existing file from meta content file
+            $existing = $file->parent()->file($file->filename());
+
+            // if the new upload is the exact same file
+            // and uses the same template, we can continue
+            if (
+                $file->sha1() === $upload->sha1() &&
+                $file->template() === $existing->template()
+            ) {
+                return true;
             }
+
+            // otherwise throw an error for duplicate file
+            throw new DuplicateException([
+                'key'  => 'file.duplicate',
+                'data' => [
+                    'filename' => $file->filename()
+                ]
+            ]);
         }
 
         if ($file->permissions()->create() !== true) {

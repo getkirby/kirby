@@ -10,6 +10,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Request;
+use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
@@ -709,14 +710,25 @@ class App
             return $this->io(new NotFoundException());
         }
 
-        // Response Configuration
+        // (Modified) global response configuration, e.g. in routes
         if (is_a($input, 'Kirby\Cms\Responder') === true) {
+            // return the passed object unmodified (without injecting headers
+            // from the global object) to allow a complete response override
+            // https://github.com/getkirby/kirby/pull/4144#issuecomment-1034766726
             return $input->send();
         }
 
         // Responses
         if (is_a($input, 'Kirby\Http\Response') === true) {
-            return $input;
+            $data = $input->toArray();
+
+            // inject headers from the global response configuration
+            // lazily (only if they are not already set);
+            // the case-insensitive nature of headers will be
+            // handled by PHP's `header()` function
+            $data['headers'] = array_merge($response->headers(), $data['headers']);
+
+            return new Response($data);
         }
 
         // Pages

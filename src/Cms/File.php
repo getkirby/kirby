@@ -353,12 +353,12 @@ class File extends ModelWithContent
     /**
      * Get the file's last modification time.
      *
-     * @param string|null $format
-     * @param string|null $handler date or strftime
+     * @param string|\IntlDateFormatter|null $format
+     * @param string|null $handler date, intl or strftime
      * @param string|null $languageCode
      * @return mixed
      */
-    public function modified(string $format = null, string $handler = null, string $languageCode = null)
+    public function modified($format = null, string $handler = null, string $languageCode = null)
     {
         $file     = $this->modifiedFile();
         $content  = $this->modifiedContent($languageCode);
