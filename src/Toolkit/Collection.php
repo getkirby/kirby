@@ -871,6 +871,25 @@ class Collection extends Iterator implements Countable
     }
 
     /**
+     * Returns a new collection consisting of random elements,
+     * from the original collection, shuffled or ordered
+     *
+     * @param int $count
+     * @param bool $shuffle
+     * @return static
+     */
+    public function random(int $count = 1, bool $shuffle = false)
+    {
+        if ($shuffle) {
+            return $this->shuffle()->slice(0, $count);
+        }
+
+        $collection = clone $this;
+        $collection->data = A::random($collection->data, $count);
+        return $collection;
+    }
+
+    /**
      * Removes an element from the array by key
      *
      * @param mixed $key the name of the key

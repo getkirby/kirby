@@ -266,6 +266,34 @@ class ATest extends TestCase
     }
 
     /**
+     * @covers ::random
+     */
+    public function testRandom()
+    {
+        $array = $this->_array();
+        $arrayKeys = array_flip(array_keys($array));
+        $arrayValues = array_flip(array_values($array));
+
+        // Assert existence and correctness of keys
+        $random1 = A::random($array, 1);
+        $this->assertTrue(in_array(array_values($random1)[0], $array));
+        $this->assertTrue(in_array(array_key_first($random1), array_keys($array)));
+
+        // Assert order of keys in non-shuffled random
+        $random2 = A::random($array, 2);
+        $this->assertTrue($arrayKeys[array_key_first($random2)] < $arrayKeys[array_key_last($random2)]);
+
+        // Assert count in completely shuffled array
+        $random3 = A::random($array, 3, true);
+        $this->assertCount(3, $random3);
+        foreach ($random3 as $key => $value) {
+            $this->assertContains($key, array_keys($array));
+            $this->assertContains($value, array_values($array));
+            $this->assertSame($arrayKeys[$key], $arrayValues[$value]);
+        }
+    }
+
+    /**
      * @covers ::fill
      */
     public function testFill()
