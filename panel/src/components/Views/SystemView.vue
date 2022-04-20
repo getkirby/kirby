@@ -91,41 +91,25 @@
             {{ $t("plugins") }}
           </k-headline>
         </header>
-        <table class="k-system-plugins">
-          <tr>
-            <th>
-              {{ $t("name") }}
-            </th>
-            <th class="desk">
-              {{ $t("author") }}
-            </th>
-            <th class="desk">
-              {{ $t("license") }}
-            </th>
-            <th style="width: 8rem">
-              {{ $t("version") }}
-            </th>
-          </tr>
-          <tr v-for="plugin in plugins" :key="plugin.name">
-            <td>
-              <k-link v-if="plugin.link" :to="plugin.link">
-                {{ plugin.name }}
-              </k-link>
-              <template v-else>
-                {{ plugin.name }}
-              </template>
-            </td>
-            <td class="desk">
-              {{ plugin.author || "-" }}
-            </td>
-            <td class="desk">
-              {{ plugin.license || "-" }}
-            </td>
-            <td style="width: 8rem">
-              {{ plugin.version || "-" }}
-            </td>
-          </tr>
-        </table>
+        <k-table
+          :index="false"
+          :columns="{
+            name: {
+              label: $t('name')
+            },
+            author: {
+              label: $t('author')
+            },
+            license: {
+              label: $t('license')
+            },
+            version: {
+              label: $t('version'),
+              width: '8rem'
+            }
+          }"
+          :rows="plugins"
+        />
       </section>
     </k-view>
   </k-inside>
@@ -160,6 +144,7 @@ export default {
   display: grid;
   grid-gap: 1px;
   font-size: var(--text-sm);
+  box-shadow: var(--shadow);
 }
 
 @media screen and (min-width: 45rem) {
@@ -173,7 +158,8 @@ export default {
   background: var(--color-white);
 }
 .k-system-info-box dt {
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
   color: var(--color-gray-600);
   margin-bottom: 0.25rem;
 }
@@ -184,36 +170,5 @@ export default {
 }
 .k-system-warning .k-button-text {
   opacity: 1;
-}
-
-.k-system-plugins {
-  width: 100%;
-  font-variant-numeric: tabular-nums;
-  table-layout: fixed;
-  border-spacing: 1px;
-}
-.k-system-plugins th,
-.k-system-plugins td {
-  text-align: left;
-  padding: 0.75rem;
-  font-weight: var(--font-normal);
-  font-size: var(--text-sm);
-  background: var(--color-white);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.k-system-plugins .desk {
-  display: none;
-}
-
-@media screen and (min-width: 45rem) {
-  .k-system-plugins .desk {
-    display: table-cell;
-  }
-}
-
-.k-system-plugins th {
-  color: var(--color-gray-600);
 }
 </style>
