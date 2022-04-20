@@ -55,6 +55,32 @@ class RolesTest extends TestCase
         $this->assertEquals('editor', $roles->last()->name());
     }
 
+    public function testLoadFromPluginsCallable()
+    {
+        new App([
+            'blueprints' => [
+                'users/admin' => function () {
+                    return [
+                        'name' => 'admin',
+                        'title' => 'Admin'
+                    ];
+                },
+                'users/editor' => function () {
+                    return [
+                        'name' => 'editor',
+                        'title' => 'Editor'
+                    ];
+                }
+            ]
+        ]);
+
+        $roles = Roles::load();
+
+        $this->assertCount(2, $roles);
+        $this->assertSame('admin', $roles->first()->name());
+        $this->assertSame('editor', $roles->last()->name());
+    }
+
     public function testCanBeChanged()
     {
         new App([
