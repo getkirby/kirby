@@ -307,6 +307,14 @@ class Uri
     }
 
     /**
+     * @return boolean
+     */
+    public function https(): bool
+    {
+        return $this->scheme() === 'https';
+    }
+
+    /**
      * Tries to convert the internationalized host
      * name to the human-readable UTF8 representation
      *
