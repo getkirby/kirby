@@ -16,8 +16,7 @@ return [
     'page.changeSort' => [
         'pattern' => 'pages/(:any)/changeSort',
         'load' => function (string $id) {
-            $page     = Find::page($id);
-            $position = null;
+            $page = Find::page($id);
 
             if ($page->blueprint()->num() !== 'default') {
                 throw new PermissionException([

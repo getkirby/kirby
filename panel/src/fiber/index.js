@@ -220,6 +220,14 @@ export default class Fiber {
 
     try {
       const url = this.url(path, options.query);
+
+      // don't even try to request a cross-origin url
+      // redirect instead.
+      if (new URL(url).origin !== location.origin) {
+        this.redirect(url);
+        return false;
+      }
+
       const response = await this.fetch(url, {
         method: options.method,
         body: this.body(options.body),
