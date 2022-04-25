@@ -307,7 +307,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function https(): bool
     {

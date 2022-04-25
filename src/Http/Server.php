@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Kirby\Http;
 
 use Kirby\Toolkit\A;
@@ -277,7 +276,6 @@ class Server
 
             // based on the forwarded proto
             if (empty($port) === true) {
-
                 if (in_array($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null, ['https', 'https, http']) === true) {
                     $port = 443;
                 }

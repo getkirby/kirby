@@ -1,0 +1,891 @@
+<?php
+
+namespace Kirby\Http;
+
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @coversDefaultClass \Kirby\Http\Environment
+ */
+class EnvironmentTest extends TestCase
+{
+    /**
+     * @covers ::cli
+     */
+    public function testCli()
+    {
+        // enabled
+        $env = new Environment();
+        $this->assertTrue($env->cli());
+
+        // force enabled
+        $env = new Environment([
+            'cli' => true
+        ]);
+        $this->assertTrue($env->cli());
+
+        // disabled
+        $env = new Environment([
+            'cli' => false
+        ]);
+        $this->assertFalse($env->cli());
+    }
+
+    /**
+     * @covers ::detect
+     */
+    public function testDetect()
+    {
+        // empty server info
+        $env = new Environment();
+        $this->assertSame([], $env->detect(null, []));
+    }
+
+    /**
+     * @covers ::get
+     */
+    public function testGet()
+    {
+        $env = new Environment(null, $info = [
+            'HTTP_K_SOMETHING' => 'custom value',
+            'argv'             => 'lower case stuff'
+        ]);
+
+        $this->assertSame($info, $env->get());
+        $this->assertSame($info, $env->get(false));
+        $this->assertSame($info, $env->get(null));
+        $this->assertSame('custom value', $env->get('HTTP_K_SOMETHING'));
+        $this->assertSame('custom value', $env->get('http_k_something'));
+        $this->assertSame('fallback', $env->get('http_does_not_exist', 'fallback'));
+        $this->assertSame('lower case stuff', $env->get('argv'));
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHost()
+    {
+        // via server name
+        $env = new Environment(null, [
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('getkirby.com', $env->host());
+
+        // via server addr
+        $env = new Environment(null, [
+            'SERVER_ADDR' => '127.0.0.1'
+        ]);
+
+        $this->assertSame('127.0.0.1', $env->host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostAllowedSingle()
+    {
+        $env = new Environment(['allowed' => 'https://getkirby.com']);
+
+        $this->assertSame('getkirby.com', $env->host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostAllowedMultiple()
+    {
+        $options = [
+            'allowed' => [
+                'https://getkirby.com',
+                'http://test.getkirby.com'
+            ]
+        ];
+
+        // via server name
+        $env = new Environment($options, [
+            'SERVER_NAME' => 'test.getkirby.com'
+        ]);
+
+        $this->assertSame('test.getkirby.com', $env->host());
+
+        // via insecure host is fine in this case
+        $env = new Environment($options, [
+            'HTTP_HOST' => 'test.getkirby.com'
+        ]);
+
+        $this->assertSame('test.getkirby.com', $env->host());
+
+        // via insecure forwarded host is also fine
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'test.getkirby.com'
+        ]);
+
+        $this->assertSame('test.getkirby.com', $env->host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostForbidden()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new Environment(
+            [
+                'allowed' => [
+                    'https://getkirby.com',
+                    'https://test.getkirby.com'
+                ]
+            ],
+            [
+                'SERVER_NAME' => 'google.com'
+            ]
+        );
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostIgnoreInsecure()
+    {
+        // not possible via insecure header
+        $env = new Environment(null, [
+            'HTTP_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertNull($env->host());
+
+        // not possible via insecure forwarded header
+        $env = new Environment(null, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertNull($env->host());
+    }
+
+    /**
+     * @covers ::host
+     */
+    public function testHostInsecure()
+    {
+        // insecure host header
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('getkirby.com', $env->host());
+
+        // insecure forwarded host header
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('getkirby.com', $env->host());
+    }
+
+    public function providerForHttpsValues()
+    {
+        return [
+            ['off', false],
+            [null, false],
+            ['', false],
+            [0, false],
+            ['0', false],
+            [false, false],
+            ['false', false],
+            [-1, false],
+            ['-1', false],
+            ['on', true],
+            [true, true],
+            ['true', true],
+            ['1', true],
+            [1, true],
+            ['https', true],
+        ];
+    }
+
+    /**
+     * @covers ::https
+     * @dataProvider providerForHttpsValues
+     */
+    public function testHttps($value, $expected)
+    {
+        // via server config
+        $env = new Environment(null, [
+            'HTTPS' => $value
+        ]);
+
+        $this->assertSame($expected, $env->https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsAllowedSingle()
+    {
+        $env = new Environment(['allowed' => 'http://getkirby.com']);
+        $this->assertFalse($env->https());
+
+        $env = new Environment(['allowed' => 'https://getkirby.com']);
+        $this->assertTrue($env->https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsAllowedMultiple()
+    {
+        $options = [
+            'allowed' => [
+                'http://a.getkirby.com',
+                'https://b.getkirby.com',
+            ]
+        ];
+
+        // via server name: https off
+        $env = new Environment($options, [
+            'SERVER_NAME' => 'a.getkirby.com'
+        ]);
+
+        $this->assertFalse($env->https());
+
+        // via server name: https on
+        $env = new Environment($options, [
+            'HTTPS'       => 'on',
+            'SERVER_NAME' => 'b.getkirby.com'
+        ]);
+
+        $this->assertTrue($env->https());
+
+        // via forwarded ssl: https off
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'a.getkirby.com',
+            'HTTP_X_FORWARDED_SSL'  => false
+        ]);
+
+        $this->assertFalse($env->https());
+
+        // via forwarded ssl: https on
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'b.getkirby.com',
+            'HTTP_X_FORWARDED_SSL'  => true
+        ]);
+
+        $this->assertTrue($env->https());
+
+        // via forwarded proto: https off
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST'  => 'a.getkirby.com',
+            'HTTP_X_FORWARDED_PROTO' => 'http'
+        ]);
+
+        $this->assertFalse($env->https());
+
+        // via forwarded proto: https on
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST'  => 'b.getkirby.com',
+            'HTTP_X_FORWARDED_PROTO' => 'https'
+        ]);
+
+        $this->assertTrue($env->https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsForbidden()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new Environment(
+            [
+                'allowed' => [
+                    'https://getkirby.com',
+                    'https://test.getkirby.com'
+                ]
+            ],
+            [
+                'HTTPS'       => 'off',
+                'SERVER_NAME' => 'getkirby.com'
+            ]
+        );
+    }
+
+    public function providerForHttpsProtocols()
+    {
+        return [
+            ['http', false],
+            [null, false],
+            ['https', true],
+            ['HTTPS', true],
+            ['https, http', true],
+            ['HTTPS, http', true],
+        ];
+    }
+
+    /**
+     * @covers ::https
+     * @dataProvider providerForHttpsProtocols
+     */
+    public function testHttpsFromProtocol($value, $expected)
+    {
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_HOST'  => 'getkirby.com',
+            'HTTP_X_FORWARDED_PROTO' => $value
+        ]);
+
+        $this->assertSame($expected, $env->https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsIgnoreInsecure()
+    {
+        $env = new Environment(null, [
+            'HTTP_X_FORWARDED_SSL' => 'on'
+        ]);
+
+        $this->assertFalse($env->https());
+    }
+
+    /**
+     * @covers ::https
+     */
+    public function testHttpsInsecure()
+    {
+        // insecure forwarded https header
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_SSL'  => 'on',
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertTrue($env->https());
+    }
+
+    /**
+     * @covers ::info
+     */
+    public function testInfo()
+    {
+        // no info
+        $env = new Environment();
+
+        $this->assertSame($_SERVER, $env->info());
+
+
+        // empty info
+        $env = new Environment(null, []);
+
+        $this->assertSame([], $env->info());
+
+
+        // custom info
+        $env = new Environment(null, $info = [
+            'HTTP_X_FORWARDED_SSL'  => 'on',
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertSame($info, $env->info());
+    }
+
+
+    /**
+     * @covers ::address
+     * @covers ::ip
+     */
+    public function testIp()
+    {
+        // no ip
+        $env = new Environment();
+
+        $this->assertNull($env->address());
+        $this->assertNull($env->ip());
+
+        // via server address
+        $env = new Environment(null, [
+            'SERVER_ADDR' => '127.0.0.1'
+        ]);
+
+        $this->assertSame('127.0.0.1', $env->address());
+        $this->assertSame('127.0.0.1', $env->ip());
+    }
+
+    /**
+     * @covers ::isBehindProxy
+     */
+    public function testIsBehindProxy()
+    {
+        // no value given
+        $env = new Environment();
+        $this->assertFalse($env->isBehindProxy());
+
+        // given host
+        $env = new Environment(null, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertTrue($env->isBehindProxy());
+
+        // empty host
+        $env = new Environment(null, [
+            'HTTP_X_FORWARDED_HOST' => ''
+        ]);
+
+        $this->assertFalse($env->isBehindProxy());
+    }
+
+    /**
+     * @covers ::path
+     */
+    public function testPath()
+    {
+        // the path in cli requests is always empty
+        $env = new Environment();
+        $this->assertSame('', $env->path());
+
+        // the path in HTTPS requests is taken from the script name
+        $env = new Environment(['cli' => false], [
+            'SCRIPT_NAME' => '/subfolder/index.php'
+        ]);
+
+        $this->assertSame('subfolder', $env->path());
+
+        // When there's a single allowed URL, the path is extracted from the URL
+        $env = new Environment([
+            'allowed' => [
+                'https://getkirby.com/subfolder'
+            ]
+        ]);
+
+        $this->assertSame('subfolder', $env->path());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPort()
+    {
+        // no port given
+        $env = new Environment();
+        $this->assertNull($env->port());
+
+        // via server addr
+        $env = new Environment(null, [
+            'SERVER_PORT' => 8888
+        ]);
+
+        $this->assertSame(8888, $env->port());
+
+        // via detected host
+        $env = new Environment(null, [
+            'SERVER_NAME' => 'getkirby.com:8888'
+        ]);
+
+        $this->assertSame(8888, $env->port());
+
+        // via https
+        $env = new Environment(null, [
+            'HTTPS' => true
+        ]);
+
+        $this->assertSame(443, $env->port());
+
+        // via forwarded port
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
+            'HTTP_X_FORWARDED_PORT' => 8888
+        ]);
+
+        $this->assertSame(8888, $env->port());
+
+        // via forwarded host
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com:8888'
+        ]);
+
+        $this->assertSame(8888, $env->port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortAllowedSingle()
+    {
+        $env = new Environment(['allowed' => 'http://getkirby.com']);
+        $this->assertNull($env->port());
+
+        $env = new Environment(['allowed' => 'http://getkirby.com:9999']);
+        $this->assertSame(9999, $env->port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortAllowedMultiple()
+    {
+        $options = [
+            'allowed' => [
+                'http://getkirby.com',
+                'http://getkirby.com:9999',
+            ]
+        ];
+
+        // via server name: no port
+        $env = new Environment($options, [
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertNull($env->port());
+
+        // via server name: port
+        $env = new Environment($options, [
+            'SERVER_PORT' => 9999,
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertSame(9999, $env->port());
+
+        // via proxy: no port
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
+        ]);
+
+        $this->assertNull($env->port());
+
+        // via proxy: port
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
+            'HTTP_X_FORWARDED_PORT' => 9999
+        ]);
+
+        $this->assertSame(9999, $env->port());
+
+        // via proxy: port in host
+        $env = new Environment($options, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com:9999',
+        ]);
+
+        $this->assertSame(9999, $env->port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortForbidden()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new Environment(
+            [
+                'allowed' => [
+                    'http://getkirby.com:8888',
+                    'http://getkirby.com:1234'
+                ]
+            ],
+            [
+                'SERVER_NAME' => 'getkirby.com'
+            ]
+        );
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortIgnoreInsecure()
+    {
+        $env = new Environment(null, [
+            'HTTP_X_FORWARDED_PORT' => 8888
+        ]);
+
+        $this->assertNull($env->port());
+    }
+
+    /**
+     * @covers ::port
+     */
+    public function testPortInsecure()
+    {
+        // insecure forwarded port
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_PORT'  => 9999,
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertSame(9999, $env->port());
+    }
+
+
+    public function providerForRequestUris()
+    {
+        return [
+            [
+                null,
+                [
+                    'path'  => null,
+                    'query' => null
+                ]
+            ],
+            [
+                '/',
+                [
+                    'path'  => '/',
+                    'query' => null
+                ]
+            ],
+            [
+                '/foo/bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => null
+                ]
+            ],
+            [
+                '/foo/bar?foo=bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                '/foo/bar/page:2?foo=bar',
+                [
+                    'path'  => '/foo/bar/page:2',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                '/foo/bar/page;2?foo=bar',
+                [
+                    'path'  => '/foo/bar/page;2',
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                'index.php?foo=bar',
+                [
+                    'path'  => null,
+                    'query' => 'foo=bar'
+                ]
+            ],
+            [
+                'https://getkirby.com/foo/bar?foo=bar',
+                [
+                    'path'  => '/foo/bar',
+                    'query' => 'foo=bar'
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @covers ::requestUri
+     * @dataProvider providerForRequestUris
+     */
+    public function testRequestUri($value, $expected)
+    {
+        $env = new Environment(null, [
+            'REQUEST_URI' => $value,
+        ]);
+
+        $this->assertSame($expected, $env->requestUri($value));
+    }
+
+    public function providerForSanitize()
+    {
+        return [
+            // needs no sanitizing
+            [
+                'HTTP_HOST',
+                'getkirby.com',
+                'getkirby.com'
+            ],
+            [
+                'HTTP_HOST',
+                'öxample.com',
+                'öxample.com'
+            ],
+            [
+                'HTTP_HOST',
+                'example-with-dashes.com',
+                'example-with-dashes.com'
+            ],
+            [
+                'SERVER_PORT',
+                9999,
+                9999
+            ],
+
+            // needs sanitizing
+            [
+                'HTTP_HOST',
+                '.somehost.com',
+                'somehost.com'
+            ],
+            [
+                'HTTP_HOST',
+                '-somehost.com',
+                'somehost.com'
+            ],
+            [
+                'HTTP_HOST',
+                '<script>foo()</script>',
+                'foo'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '<script>foo()</script>',
+                'foo'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '../some-fake-host',
+                'some-fake-host'
+            ],
+            [
+                'HTTP_X_FORWARDED_HOST',
+                '../',
+                null
+            ],
+            [
+                'SERVER_PORT',
+                'abc9999',
+                9999
+            ],
+            [
+                'HTTP_X_FORWARDED_PORT',
+                'abc9999',
+                9999
+            ]
+        ];
+    }
+
+    /**
+     * @covers ::sanitize
+     * @dataProvider providerForSanitize
+     */
+    public function testSanitize($key, $value, $expected)
+    {
+        $env = new Environment();
+        $this->assertSame($expected, $env->sanitize($key, $value));
+    }
+
+    /**
+     * @covers ::sanitize
+     */
+    public function testSanitizeAll()
+    {
+        $input    = [];
+        $expected = [];
+
+        foreach ($this->providerForSanitize() as $row) {
+            $input   [$row[0]] = $row[1];
+            $expected[$row[0]] = $row[2];
+        }
+
+        $env = new Environment();
+        $this->assertSame($expected, $env->sanitize($input));
+    }
+
+    public function providerForScriptPaths()
+    {
+        return [
+            [
+                null,
+                ''
+            ],
+            [
+                '',
+                ''
+            ],
+            [
+                ' ',
+                ''
+            ],
+            [
+                '/index.php',
+                ''
+            ],
+            [
+                '/subfolder/index.php',
+                'subfolder'
+            ],
+            [
+                '/subfolder/test.php',
+                'subfolder'
+            ],
+            [
+                '\subfolder\subsubfolder\index.php',
+                'subfolder/subsubfolder'
+            ],
+        ];
+    }
+
+    /**
+     * @covers ::scriptPath
+     * @dataProvider providerForScriptPaths
+     */
+    public function testScriptPath($value, $expected)
+    {
+        $env = new Environment(null, [
+            'SCRIPT_NAME' => $value
+        ]);
+
+        $this->assertSame($expected, $env->scriptPath());
+    }
+
+    /**
+     * @covers ::url
+     */
+    public function testUrl()
+    {
+        // nothing given
+        $env = new Environment();
+        $this->assertSame('/', $env->url());
+
+        // host only
+        $env = new Environment(['cli' => false], [
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('http://getkirby.com', $env->url());
+
+        // empty host in subfolder
+        $env = new Environment(['cli' => false], [
+            'SCRIPT_NAME' => '/subfolder/index.php'
+        ]);
+
+        $this->assertSame('/subfolder', $env->url());
+
+        // server address
+        $env = new Environment(['cli' => false], [
+            'SERVER_ADDR' => '127.0.0.1',
+            'SERVER_PORT' => 8888
+        ]);
+
+        $this->assertSame('http://127.0.0.1:8888', $env->url());
+
+        // all parts
+        $env = new Environment(['cli' => false], [
+            'HTTPS'       => true,
+            'SERVER_NAME' => 'getkirby.com',
+            'SERVER_PORT' => 8888,
+            'SCRIPT_NAME' => '/subfolder/index.php'
+        ]);
+
+        $this->assertSame('https://getkirby.com:8888/subfolder', $env->url());
+
+        // proxy
+        $env = new Environment(['cli' => false, 'allowed' => '*'], [
+            'HTTP_X_FORWARDED_SSL'  => true,
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
+            'HTTP_X_FORWARDED_PORT' => 8888,
+        ]);
+
+        $this->assertSame('https://getkirby.com:8888', $env->url());
+    }
+}
