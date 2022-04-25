@@ -9,23 +9,7 @@ use Kirby\Http\Server;
  */
 class EnvironmentTest extends TestCase
 {
-    protected $_SERVER = null;
-    protected $config = null;
-
-    public function setUp(): void
-    {
-        $this->config = __DIR__ . '/fixtures';
-        $this->_SERVER = $_SERVER;
-        Server::$hosts = [];
-        Server::$cli = null;
-    }
-
-    public function tearDown(): void
-    {
-        $_SERVER = $this->_SERVER;
-        Server::$hosts = [];
-        Server::$cli = null;
-    }
+    protected $config = __DIR__ . '/fixtures';
 
     /**
      * @covers ::__construct
@@ -36,13 +20,15 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromInsecureHost()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
-        $env = new Environment($this->config, Server::HOST_FROM_HEADER);
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => Server::HOST_FROM_HEADER
+        ], [
+            'HTTP_HOST' => 'example.com'
+        ]);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
-        $this->assertSame(['*'], Server::hosts());
     }
 
     /**
@@ -54,13 +40,15 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromInsecureForwardedHost()
     {
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
-
-        $env = new Environment($this->config, Server::HOST_FROM_HEADER);
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => Server::HOST_FROM_HEADER
+        ], [
+            'HTTP_X_FORWARDED_HOST' => 'example.com'
+        ]);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
-        $this->assertSame(['*'], Server::hosts());
     }
 
     /**
@@ -72,11 +60,13 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromRelativeUrl()
     {
-        $env = new Environment($this->config, '/');
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => '/'
+        ]);
 
         $this->assertSame('/', $env->url());
         $this->assertNull($env->host());
-        $this->assertSame([], Server::hosts());
     }
 
     /**
@@ -88,11 +78,13 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromRelativeUrlWithSubfolder()
     {
-        $env = new Environment($this->config, '/subfolder');
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => '/subfolder'
+        ]);
 
         $this->assertSame('/subfolder', $env->url());
         $this->assertNull($env->host());
-        $this->assertSame([], Server::hosts());
     }
 
     /**
@@ -104,13 +96,15 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromServerName()
     {
-        $_SERVER['SERVER_NAME'] = 'example.com';
-
-        $env = new Environment($this->config, Server::HOST_FROM_SERVER);
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => Server::HOST_FROM_SERVER
+        ], [
+            'SERVER_NAME' => 'example.com'
+        ]);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
-        $this->assertSame([], Server::hosts());
     }
 
     /**
@@ -122,13 +116,15 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromUrl()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
-        $env = new Environment($this->config, 'http://example.com');
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => 'http://example.com'
+        ], [
+            'HTTP_HOST' => 'example.com'
+        ]);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
-        $this->assertSame(['example.com'], Server::hosts());
     }
 
     /**
@@ -140,16 +136,18 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromUrls()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
-        $env = new Environment($this->config, [
-            'http://example.com',
-            'http://staging.example.com'
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => [
+                'http://example.com',
+                'http://staging.example.com'
+            ]
+        ], [
+            'HTTP_HOST' => 'example.com'
         ]);
 
         $this->assertSame('http://example.com', $env->url());
         $this->assertSame('example.com', $env->host());
-        $this->assertSame(['example.com', 'staging.example.com'], Server::hosts());
     }
 
     /**
@@ -161,19 +159,20 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromUrlsWithSubfolders()
     {
-        Server::$cli = false;
-
-        $_SERVER['HTTP_HOST']   = 'localhost';
-        $_SERVER['SCRIPT_NAME'] = '/path-a/index.php';
-
-        $env = new Environment($this->config, [
-            'http://localhost/path-a',
-            'http://localhost/path-b'
+        $env = new Environment([
+            'cli'     => false,
+            'root'    => $this->config,
+            'allowed' => [
+                'http://localhost/path-a',
+                'http://localhost/path-b'
+            ]
+        ], [
+            'HTTP_HOST'   => 'localhost',
+            'SCRIPT_NAME' => '/path-a/index.php'
         ]);
 
         $this->assertSame('http://localhost/path-a', $env->url());
         $this->assertSame('localhost', $env->host());
-        $this->assertSame(['localhost'], Server::hosts());
     }
 
     /**
@@ -185,18 +184,18 @@ class EnvironmentTest extends TestCase
      */
     public function testAllowFromUrlsWithSlash()
     {
-        Server::$cli = false;
-
-        $_SERVER['SERVER_NAME'] = 'getkirby.com';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-
-        $env = new Environment($this->config, [
-            'http://getkirby.com/',
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => [
+                'http://getkirby.com/',
+            ]
+        ], [
+            'SERVER_NAME' => 'getkirby.com',
+            'SCRIPT_NAME' => '/index.php'
         ]);
 
         $this->assertSame('http://getkirby.com', $env->url());
         $this->assertSame('getkirby.com', $env->host());
-        $this->assertSame(['getkirby.com'], Server::hosts());
     }
 
     /**
@@ -208,29 +207,26 @@ class EnvironmentTest extends TestCase
      */
     public function testDisallowFromInsecureHost()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => Server::HOST_FROM_SERVER
+        ], [
+            'HTTP_HOST' => 'example.com'
+        ]);
 
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
-
-        new Environment($this->config, Server::HOST_FROM_SERVER);
+        $this->assertNull($env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromFlag
-     * @covers ::url
-     */
-    public function testDisallowFromInsecureForwardedHost()
+    public function testIgnoreFromInsecureForwardedHost()
     {
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
+        $env = new Environment([
+            'root'    => $this->config,
+            'allowed' => Server::HOST_FROM_SERVER
+        ], [
+            'HTTP_X_FORWARDED_HOST' => 'example.com'
+        ]);
 
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
-
-        new Environment($this->config, Server::HOST_FROM_SERVER);
+        $this->assertNull($env->host());
     }
 
     /**
@@ -242,35 +238,19 @@ class EnvironmentTest extends TestCase
      */
     public function testDisallowFromInvalidSubfolders()
     {
-        Server::$cli = false;
-
-        $_SERVER['HTTP_HOST']   = 'localhost';
-        $_SERVER['SCRIPT_NAME'] = '/path-a/index.php';
-
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The subfolder is not in the allowed base URL list');
+        $this->expectExceptionMessage('The environment is not allowed');
 
-        new Environment($this->config, [
-            'http://localhost/path-b',
-            'http://localhost/path-c'
+        new Environment([
+            'root'    => $this->config,
+            'allowed' => [
+                'http://localhost/path-b',
+                'http://localhost/path-c'
+            ]
+        ], [
+            'HTTP_HOST'   => 'localhost',
+            'SCRIPT_NAME' => '/path-a/index.php'
         ]);
-    }
-
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromArray
-     * @covers ::url
-     */
-    public function testDisallowFromUnkownInsecureHost()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid host setup. The detected host is not allowed.');
-
-        new Environment($this->config, ['http://example.de']);
     }
 
     /**
@@ -278,12 +258,15 @@ class EnvironmentTest extends TestCase
      */
     public function testInvalidAllowList()
     {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid allow list setup for base URLs');
 
-        new Environment($this->config, new \stdClass());
+        new Environment([
+            'root'    => $this->config,
+            'allowed' => new \stdClass()
+        ], [
+            'HTTP_HOST' => 'example.com'
+        ]);
     }
 
     /**
@@ -291,9 +274,11 @@ class EnvironmentTest extends TestCase
      */
     public function testOptions()
     {
-        $_SERVER['SERVER_NAME'] = 'example.com';
-
-        $env = new Environment($this->config);
+        $env = new Environment([
+            'root' => $this->config,
+        ], [
+            'SERVER_NAME' => 'example.com'
+        ]);
 
         $this->assertSame('test option', $env->options()['test']);
     }
@@ -303,9 +288,11 @@ class EnvironmentTest extends TestCase
      */
     public function testOptionsFromServerAddress()
     {
-        $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-
-        $env = new Environment($this->config);
+        $env = new Environment([
+            'root' => $this->config,
+        ], [
+            'SERVER_ADDR' => '127.0.0.1'
+        ]);
 
         $this->assertSame('test address option', $env->options()['test']);
     }
@@ -315,9 +302,14 @@ class EnvironmentTest extends TestCase
      */
     public function testOptionsFromInvalidHost()
     {
-        $_SERVER['SERVER_NAME'] = 'example.com';
-
-        $env = new Environment($this->config, 'http://example.de');
+        $env = new Environment([
+            'root' => $this->config,
+            'allowed' => [
+                'http://example.de'
+            ]
+        ], [
+            'SERVER_NAME' => 'example.com'
+        ]);
 
         $this->assertSame([], $env->options());
     }

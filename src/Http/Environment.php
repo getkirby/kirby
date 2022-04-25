@@ -166,6 +166,11 @@ class Environment
         // environment will be based on that
         if (count($allowed) === 1) {
             $url = A::first($allowed);
+
+            if (is_string($url) === false) {
+                throw new InvalidArgumentException('Invalid allow list setup for base URLs');
+            }
+
             $uri = new Uri($url, ['slash' => false]);
 
             $this->host  = $uri->host();
@@ -184,6 +189,11 @@ class Environment
         $this->url = $this->detectUrl();
 
         foreach ($allowed as $url) {
+            // skip invalid URLs
+            if (is_string($url) === false) {
+                continue;
+            }
+
             $uri = new Uri($url, ['slash' => false]);
 
             if ($uri->toString() === $this->url) {
