@@ -409,5 +409,4 @@ class UriTest extends TestCase
         $url = new Uri(['scheme' => 'https']);
         $this->assertTrue($url->https());
     }
-
 }

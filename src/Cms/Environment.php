@@ -89,7 +89,6 @@ class Environment extends BaseEnvironment
         // allow host detection from host headers
         if ($flags & Server::HOST_FROM_HEADER) {
             return '*';
-
         }
 
         // detect host only from server name
