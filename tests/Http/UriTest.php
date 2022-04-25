@@ -400,4 +400,14 @@ class UriTest extends TestCase
         $this->assertSame('', $url->params()->toString());
         $this->assertSame('', $url->path()->toString());
     }
+
+    public function testHttps()
+    {
+        $url = new Uri(['scheme' => 'http']);
+        $this->assertFalse($url->https());
+
+        $url = new Uri(['scheme' => 'https']);
+        $this->assertTrue($url->https());
+    }
+
 }

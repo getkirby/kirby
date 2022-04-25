@@ -1109,7 +1109,10 @@ class App
     protected function optionsFromEnvironment(): array
     {
         // create the environment based on the URL setup
-        $this->environment = new Environment($this->root('config'), $this->options['url'] ?? null);
+        $this->environment = new Environment([
+            'root'    => $this->root('config'),
+            'allowed' => $this->options['url'] ?? null
+        ]);
 
         // merge into one clean options array
         return $this->options = array_replace_recursive($this->options, $this->environment->options());
