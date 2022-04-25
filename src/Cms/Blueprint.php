@@ -289,13 +289,16 @@ class Blueprint
             $file = $kirby->extension('blueprints', $name);
         }
 
+        // callback option can be return array or blueprint file path
+        if (is_callable($file) === true) {
+            $file = $file($kirby);
+        }
+
         // now ensure that we always return the data array
         if (is_string($file) === true && F::exists($file) === true) {
             return static::$loaded[$name] = Data::read($file);
         } elseif (is_array($file) === true) {
             return static::$loaded[$name] = $file;
-        } elseif (is_callable($file) === true) {
-            return static::$loaded[$name] = $file($kirby);
         }
 
         // neither a valid file nor array data

@@ -106,12 +106,12 @@ class Roles extends Collection
                 continue;
             }
 
-            if (is_array($blueprint) === true) {
-                $role = Role::factory($blueprint, $inject);
-            } elseif (is_callable($blueprint) === true) {
+            // callback option can be return array or blueprint file path
+            if (is_callable($blueprint) === true) {
                 $blueprint = $blueprint($kirby);
-                $blueprint['name'] ??= $blueprintName;
+            }
 
+            if (is_array($blueprint) === true) {
                 $role = Role::factory($blueprint, $inject);
             } else {
                 $role = Role::load($blueprint, $inject);
