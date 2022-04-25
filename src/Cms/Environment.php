@@ -41,7 +41,7 @@ class Environment extends BaseEnvironment
 
         // keep Server flags compatible for now
         if (is_int($options['allowed']) === true) {
-            $options['allowed'] = $this->allowedFromFlag();
+            $options['allowed'] = $this->allowedFromFlag($options['allowed']);
         }
 
         parent::__construct($options, $info);
