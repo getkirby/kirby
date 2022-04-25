@@ -69,26 +69,6 @@ class Server
     }
 
     /**
-     * Sanitize and return the forwarded protocol
-     *
-     * @return string|null
-     */
-    public static function forwardedProtocol(): ?string
-    {
-        $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
-
-        if (empty($proto) === true) {
-            return null;
-        }
-
-        if (in_array(strtolower($proto), ['https', 'https, http']) === true) {
-            return 'https';
-        }
-
-        return 'http';
-    }
-
-    /**
      * Gets a value from the _SERVER array
      *
      * <code>
@@ -186,27 +166,11 @@ class Server
      */
     public static function https(): bool
     {
-        // forwarded protocol
-        if (static::forwardedProtocol() === 'https') {
-            return true;
-        }
+        $https = $_SERVER['HTTPS'] ?? null;
+        $off   = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
 
-        // little helper to check for enabled SSL
-        // because the possible return values are quite weird
-        $isOn = static function ($value): bool {
-            // off can mean many things :)
-            $off = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
-
-            return in_array($value, $off, true) === false;
-        };
-
-        // forwarded ssl state
-        if ($isOn($_SERVER['HTTP_X_FORWARDED_SSL'] ?? null) === true) {
-            return true;
-        }
-
-        // ssl state
-        if ($isOn($_SERVER['HTTPS'] ?? null) === true) {
+        // check for various options to send a negative HTTPS header
+        if (in_array($https, $off, true) === false) {
             return true;
         }
 
