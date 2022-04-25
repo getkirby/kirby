@@ -242,7 +242,7 @@ class Environment
     }
 
     /**
-         * @return string|null
+     * @return string|null
      */
     protected function detectForwardedHost(): ?string
     {
