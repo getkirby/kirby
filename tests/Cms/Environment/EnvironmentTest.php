@@ -9,15 +9,25 @@ use Kirby\Http\Server;
  */
 class EnvironmentTest extends TestCase
 {
-    protected $config = __DIR__ . '/fixtures';
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromFlag
-     * @covers ::url
-     */
+    protected $_SERVER = null;
+    protected $config = null;
+
+    public function setUp(): void
+    {
+        $this->config = __DIR__ . '/fixtures';
+        $this->_SERVER = $_SERVER;
+        Server::$hosts = [];
+        Server::$cli = null;
+    }
+
+    public function tearDown(): void
+    {
+        $_SERVER = $this->_SERVER;
+        Server::$hosts = [];
+        Server::$cli = null;
+    }
+
     public function testAllowFromInsecureHost()
     {
         $env = new Environment([
@@ -31,13 +41,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('example.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromFlag
-     * @covers ::url
-     */
     public function testAllowFromInsecureForwardedHost()
     {
         $env = new Environment([
@@ -51,49 +54,32 @@ class EnvironmentTest extends TestCase
         $this->assertSame('example.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromString
-     * @covers ::url
-     */
     public function testAllowFromRelativeUrl()
     {
         $env = new Environment([
             'root'    => $this->config,
             'allowed' => '/'
+        ], [
+
         ]);
 
         $this->assertSame('/', $env->url());
         $this->assertNull($env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromString
-     * @covers ::url
-     */
     public function testAllowFromRelativeUrlWithSubfolder()
     {
         $env = new Environment([
             'root'    => $this->config,
             'allowed' => '/subfolder'
+        ], [
+
         ]);
 
         $this->assertSame('/subfolder', $env->url());
         $this->assertNull($env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromFlag
-     * @covers ::url
-     */
     public function testAllowFromServerName()
     {
         $env = new Environment([
@@ -107,13 +93,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('example.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromString
-     * @covers ::url
-     */
     public function testAllowFromUrl()
     {
         $env = new Environment([
@@ -127,13 +106,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('example.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromArray
-     * @covers ::url
-     */
     public function testAllowFromUrls()
     {
         $env = new Environment([
@@ -150,13 +122,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('example.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromArray
-     * @covers ::url
-     */
     public function testAllowFromUrlsWithSubfolders()
     {
         $env = new Environment([
@@ -175,13 +140,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('localhost', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromArray
-     * @covers ::url
-     */
     public function testAllowFromUrlsWithSlash()
     {
         $env = new Environment([
@@ -198,13 +156,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('getkirby.com', $env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromFlag
-     * @covers ::url
-     */
     public function testDisallowFromInsecureHost()
     {
         $env = new Environment([
@@ -229,13 +180,6 @@ class EnvironmentTest extends TestCase
         $this->assertNull($env->host());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::blockEmptyHost
-     * @covers ::host
-     * @covers ::setupFromArray
-     * @covers ::url
-     */
     public function testDisallowFromInvalidSubfolders()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -253,9 +197,6 @@ class EnvironmentTest extends TestCase
         ]);
     }
 
-    /**
-     * @covers ::__construct
-     */
     public function testInvalidAllowList()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -269,9 +210,6 @@ class EnvironmentTest extends TestCase
         ]);
     }
 
-    /**
-     * @covers ::options
-     */
     public function testOptions()
     {
         $env = new Environment([
@@ -283,9 +221,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('test option', $env->options()['test']);
     }
 
-    /**
-     * @covers ::options
-     */
     public function testOptionsFromServerAddress()
     {
         $env = new Environment([
@@ -297,9 +232,6 @@ class EnvironmentTest extends TestCase
         $this->assertSame('test address option', $env->options()['test']);
     }
 
-    /**
-     * @covers ::options
-     */
     public function testOptionsFromInvalidHost()
     {
         $env = new Environment([
