@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
+
 class RolesTest extends TestCase
 {
     public function testFactory()
@@ -53,6 +56,68 @@ class RolesTest extends TestCase
         $this->assertCount(2, $roles);
         $this->assertEquals('admin', $roles->first()->name());
         $this->assertEquals('editor', $roles->last()->name());
+    }
+
+    public function testLoadFromPluginsCallbackString()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'blueprints' => $fixtures = __DIR__ . '/fixtures/RolesTest/loadFromPluginsCallbackString',
+            ],
+            'blueprints' => [
+                'users/admin' => function () use ($fixtures) {
+                    return $fixtures . '/custom/admin.yml';
+                },
+                'users/editor' => function () use ($fixtures) {
+                    return $fixtures . '/custom/editor.yml';
+                }
+            ]
+        ]);
+
+        Data::write($fixtures . '/custom/admin.yml', [
+            'name' => 'admin',
+            'title' => 'Admin'
+        ]);
+
+        Data::write($fixtures . '/custom/editor.yml', [
+            'name' => 'editor',
+            'title' => 'Editor'
+        ]);
+
+        $roles = Roles::load();
+
+        $this->assertCount(2, $roles);
+        $this->assertSame('admin', $roles->first()->name());
+        $this->assertSame('editor', $roles->last()->name());
+
+        Dir::remove($fixtures);
+    }
+
+    public function testLoadFromPluginsCallbackArray()
+    {
+        new App([
+            'blueprints' => [
+                'users/admin' => function () {
+                    return [
+                        'name' => 'admin',
+                        'title' => 'Admin'
+                    ];
+                },
+                'users/editor' => function () {
+                    return [
+                        'name' => 'editor',
+                        'title' => 'Editor'
+                    ];
+                }
+            ]
+        ]);
+
+        $roles = Roles::load();
+
+        $this->assertCount(2, $roles);
+        $this->assertSame('admin', $roles->first()->name());
+        $this->assertSame('editor', $roles->last()->name());
     }
 
     public function testCanBeChanged()
