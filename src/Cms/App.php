@@ -1297,15 +1297,16 @@ class App
             }
         }
 
-        return $this->router ??= new Router(
-            $routes,
-            function ($route, $path, $method) {
+        $hooks = [
+            'beforeEach' => function ($route, $path, $method) {
                 $this->trigger('route:before', compact('route', 'path', 'method'));
             },
-            function ($route, $path, $method, $result, $final) {
+            'afterEach' => function ($route, $path, $method, $result, $final) {
                 return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
             }
-        );
+        ];
+
+        return $this->router ??= new Router($routes, $hooks);
     }
 
     /**

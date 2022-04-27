@@ -92,6 +92,14 @@ class RouterTest extends TestCase
 
     public function testBeforeEach()
     {
+        $hooks = [
+            'beforeEach' => function ($route, $path, $method) {
+                $this->assertInstanceOf(Route::class, $route);
+                $this->assertEquals('/', $path);
+                $this->assertEquals('GET', $method);
+            }
+        ];
+
         $router = new Router(
             [
                 [
@@ -100,11 +108,7 @@ class RouterTest extends TestCase
                     }
                 ]
             ],
-            function ($route, $path, $method) {
-                $this->assertInstanceOf(Route::class, $route);
-                $this->assertEquals('/', $path);
-                $this->assertEquals('GET', $method);
-            }
+            $hooks
         );
 
         $router->call('/', 'GET');
@@ -112,6 +116,18 @@ class RouterTest extends TestCase
 
     public function testAfterEach()
     {
+        $hooks = [
+            'afterEach' => function ($route, $path, $method, $result, $final) {
+                $this->assertInstanceOf(Route::class, $route);
+                $this->assertEquals('/', $path);
+                $this->assertEquals('GET', $method);
+                $this->assertEquals('test', $result);
+                $this->assertTrue($final);
+
+                return $result . ':after';
+            }
+        ];
+
         $router = new Router(
             [
                 [
@@ -121,16 +137,7 @@ class RouterTest extends TestCase
                     }
                 ]
             ],
-            null,
-            function ($route, $path, $method, $result, $final) {
-                $this->assertInstanceOf(Route::class, $route);
-                $this->assertEquals('/', $path);
-                $this->assertEquals('GET', $method);
-                $this->assertEquals('test', $result);
-                $this->assertTrue($final);
-
-                return $result . ':after';
-            }
+            $hooks
         );
 
         $this->assertEquals('test:after', $router->call('/', 'GET'));
@@ -194,6 +201,16 @@ class RouterTest extends TestCase
         $numTotal = 0;
         $numFinal = 0;
 
+        $hooks = [
+            'afterEach' => function ($route, $path, $method, $result, $final) use (&$numTotal, &$numFinal) {
+                $numTotal++;
+
+                if ($final === true) {
+                    $numFinal++;
+                }
+            }
+        ];
+
         $router = new Router(
             [
                 [
@@ -210,14 +227,7 @@ class RouterTest extends TestCase
                     }
                 ]
             ],
-            null,
-            function ($route, $path, $method, $result, $final) use (&$numTotal, &$numFinal) {
-                $numTotal++;
-
-                if ($final === true) {
-                    $numFinal++;
-                }
-            }
+            $hooks
         );
 
         $router->call('a');
