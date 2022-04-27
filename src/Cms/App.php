@@ -330,26 +330,9 @@ class App
      */
     public function call(string $path = null, string $method = null)
     {
-        $router = $this->router();
-
-        /**
-         * @todo Closures should not defined statically but
-         * for each instance to avoid this constant setting and unsetting
-         */
-        $router::$beforeEach = function ($route, $path, $method) {
-            $this->trigger('route:before', compact('route', 'path', 'method'));
-        };
-
-        $router::$afterEach = function ($route, $path, $method, $result, $final) {
-            return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
-        };
-
-        $result = $router->call($path ?? $this->path(), $method ?? $this->request()->method());
-
-        $router::$beforeEach = null;
-        $router::$afterEach  = null;
-
-        return $result;
+        $path   ??= $this->path();
+        $method ??= $this->request()->method();
+        return $this->router()->call($path, $method);
     }
 
     /**
@@ -1314,7 +1297,15 @@ class App
             }
         }
 
-        return $this->router = $this->router ?? new Router($routes);
+        return $this->router ??= new Router(
+            $routes,
+            function ($route, $path, $method) {
+                $this->trigger('route:before', compact('route', 'path', 'method'));
+            },
+            function ($route, $path, $method, $result, $final) {
+                return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
+            }
+        );
     }
 
     /**
