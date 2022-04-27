@@ -2,8 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
@@ -23,10 +21,16 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
+    public static $authTypes = [
+        'basic'   => 'Kirby\Http\Request\Auth\BasicAuth',
+        'bearer'  => 'Kirby\Http\Request\Auth\BearerAuth',
+        'session' => 'Kirby\Http\Request\Auth\SessionAuth',
+    ];
+
     /**
      * The auth object if available
      *
-     * @var BearerAuth|BasicAuth|false|null
+     * @var \Kirby\Http\Request\Auth|false|null
      */
     protected $auth;
 
@@ -144,7 +148,7 @@ class Request
     /**
      * Returns the Auth object if authentication is set
      *
-     * @return \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|null
+     * @return \Kirby\Http\Request\Auth|null
      */
     public function auth()
     {
@@ -153,15 +157,17 @@ class Request
         }
 
         if ($auth = $this->options['auth'] ?? $this->header('authorization')) {
-            $type  = Str::before($auth, ' ');
-            $token = Str::after($auth, ' ');
-            $class = 'Kirby\\Http\\Request\\Auth\\' . ucfirst($type) . 'Auth';
+            $type = Str::lower(Str::before($auth, ' '));
+            $data = Str::after($auth, ' ');
 
-            if (class_exists($class) === false) {
+            $class = static::$authTypes[$type] ?? null;
+            if (!$class || class_exists($class) === false) {
                 return $this->auth = false;
             }
 
-            return $this->auth = new $class($token);
+            $object = new $class($data);
+
+            return $this->auth = $object;
         }
 
         return $this->auth = false;
