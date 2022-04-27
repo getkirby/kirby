@@ -16,14 +16,25 @@ use Kirby\Toolkit\A;
  */
 class Router
 {
-    public $beforeEach;
-    public $afterEach;
+    /**
+     * Hook that is called after each route
+     *
+     * @var \Closure
+     */
+    protected $afterEach;
+
+    /**
+     * Hook that is called before each route
+     *
+     * @var \Closure
+     */
+    protected $beforeEach;
 
     /**
      * Store for the current route,
      * if one can be found
      *
-     * @var Route|null
+     * @var \Kirby\Http\Route|null
      */
     protected $route;
 
@@ -52,14 +63,12 @@ class Router
      * registers all the given routes
      *
      * @param array $routes
+     * @param array<string, \Closure> $hooks Optional `beforeEach` and `afterEach` hooks
      */
-    public function __construct(
-        array $routes = [],
-        ?Closure $before = null,
-        ?Closure $after = null
-    ) {
-        $this->beforeEach = $before;
-        $this->afterEach  = $after;
+    public function __construct(array $routes = [], array $hooks = [])
+    {
+        $this->beforeEach = $hooks['beforeEach'] ?? null;
+        $this->afterEach  = $hooks['afterEach']  ?? null;
 
         foreach ($routes as $props) {
             if (isset($props['pattern'], $props['action']) === false) {
