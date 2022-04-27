@@ -19,7 +19,7 @@ class ModelFileTestForceLocked extends ModelFile
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\File|\Kirby\Panel\Model
+ * @coversDefaultClass \Kirby\Panel\File
  */
 class FileTest extends TestCase
 {
