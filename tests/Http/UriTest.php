@@ -6,16 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class UriTest extends TestCase
 {
-    protected $_SERVER = null;
-    protected $example1;
-    protected $example2;
+    protected $_SERVER  = null;
+    protected $example1 = 'https://getkirby.com';
+    protected $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
     protected function setUp(): void
     {
         Uri::$current = null;
-
-        $this->example1 = 'https://getkirby.com';
-        $this->example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/?q=awesome#top';
 
         $this->_SERVER = $_SERVER;
     }
@@ -268,74 +265,139 @@ class UriTest extends TestCase
             'password' => 'weakpassword',
             'query'    => ['q' => 'awesome'],
             'fragment' => 'top',
-            'params'   => [],
+            'params'   => [
+                'with' => 'kirby',
+            ],
             'slash'    => true,
         ], $url->toArray());
     }
 
-    public function testToString()
+    public function buildProvider()
     {
-        $url = new Uri($this->example1);
-        $this->assertEquals($this->example1, $url->toString());
-        $this->assertEquals($this->example1, (string)$url);
+        return [
+            // basic 1:1 tests
+            [$this->example1, [], $this->example1],
+            [$this->example2, [], $this->example2],
 
-        $url = new Uri($this->example2);
-        $this->assertEquals($this->example2, $url->toString());
-        $this->assertEquals($this->example2, (string)$url);
+            // relative path + adding params
+            [
+                '/search',
+                [
+                    'params' => ['page' => 2],
+                    'query'  => ['q' => 'something']
+                ],
+                '/search/page:2?q=something'
+            ],
+
+            // path + adding params + query
+            [
+                'https://getkirby.com/search',
+                [
+                    'params' => ['page' => 2],
+                    'query'  => ['q' => 'something']
+                ],
+                'https://getkirby.com/search/page:2?q=something'
+            ],
+
+            // path + params + query
+            [
+                'https://getkirby.com/search?q=something',
+                [
+                    'params' => ['page' => 2]
+                ],
+                'https://getkirby.com/search/page:2?q=something'
+            ],
+
+            // path + slash + params + query
+            [
+                'https://getkirby.com/search/?q=something',
+                [
+                    'params' => ['page' => 2]
+                ],
+                'https://getkirby.com/search/page:2/?q=something'
+            ],
+
+            // params replacement
+            [
+                'https://getkirby.com/search/page:2?q=something',
+                [
+                    'params' => ['page' => 3]
+                ],
+                'https://getkirby.com/search/page:3?q=something'
+            ],
+
+            // params removal without slash
+            [
+                'https://getkirby.com/search/page:2?q=something',
+                [
+                    'params' => []
+                ],
+                'https://getkirby.com/search?q=something'
+            ],
+
+            // params removal with slash
+            [
+                'https://getkirby.com/search/page:2/?q=something',
+                [
+                    'params' => []
+                ],
+                'https://getkirby.com/search/?q=something'
+            ],
+
+            // URL with disabled params (treated as normal path)
+            [
+                'https://getkirby.com/search/page:2/?q=something',
+                [
+                    'params' => false
+                ],
+                'https://getkirby.com/search/page:2/?q=something'
+            ],
+
+            // URL with disabled params without slash
+            [
+                'https://getkirby.com/search/page:2?q=something',
+                [
+                    'params' => false
+                ],
+                'https://getkirby.com/search/page:2?q=something'
+            ],
+        ];
     }
 
-    public function testBuild()
+    /**
+     * @dataProvider buildProvider
+     */
+    public function testToString(string $url, array $props, string $expected)
     {
+        $url = new Uri($url, $props);
+        $this->assertSame($expected, $url->toString());
+        $this->assertSame($expected, (string)$url);
+    }
 
-        // relative path + adding params
-        $uri = new Uri('/search', [
-            'params' => ['page' => 2],
-            'query'  => ['q' => 'something']
-        ]);
+    public function testConstructParamsDisabled()
+    {
+        // with slash
+        $url = new Uri('https://getkirby.com/search/page:2/?q=something', ['params' => false]);
+        $this->assertTrue($url->slash());
+        $this->assertSame('', $url->params()->toString());
+        $this->assertSame('search/page:2', $url->path()->toString());
 
-        $this->assertEquals('/search/page:2?q=something', $uri->toString());
+        // without slash
+        $url = new Uri('https://getkirby.com/search/page:2?q=something', ['params' => false]);
+        $this->assertFalse($url->slash());
+        $this->assertSame('', $url->params()->toString());
+        $this->assertSame('search/page:2', $url->path()->toString());
 
-        // path + adding params + query
-        $uri = new Uri('https://getkirby.com/search', [
-            'params' => ['page' => 2],
-            'query'  => ['q' => 'something']
-        ]);
+        // from array path
+        $url = new Uri(['path' => ['search', 'page:2'], 'params' => false]);
+        $this->assertFalse($url->slash());
+        $this->assertSame('', $url->params()->toString());
+        $this->assertSame('search/page:2', $url->path()->toString());
 
-        $this->assertEquals('https://getkirby.com/search/page:2?q=something', $uri->toString());
-
-        // path + params + query
-        $uri = new Uri('https://getkirby.com/search?q=something', [
-            'params' => ['page' => 2]
-        ]);
-
-        $this->assertEquals('https://getkirby.com/search/page:2?q=something', $uri->toString());
-
-        // path + slash + params + query
-        $uri = new Uri('https://getkirby.com/search/?q=something', [
-            'params' => ['page' => 2]
-        ]);
-
-        $this->assertEquals('https://getkirby.com/search/page:2/?q=something', $uri->toString());
-
-        // params replacement
-        $uri = new Uri('https://getkirby.com/search/page:2?q=something', [
-            'params' => ['page' => 3]
-        ]);
-
-        $this->assertEquals('https://getkirby.com/search/page:3?q=something', $uri->toString());
-
-        // params removal without slash
-        $uri = new Uri('https://getkirby.com/search/page:2?q=something', [
-            'params' => []
-        ]);
-
-        $this->assertEquals('https://getkirby.com/search?q=something', $uri->toString());
-
-        // params removal with slash
-        $uri = new Uri('https://getkirby.com/search/page:2/?q=something', [
-            'params' => []
-        ]);
-
-        $this->assertEquals('https://getkirby.com/search/?q=something', $uri->toString());
+        // without path
+        $url = new Uri(['params' => false]);
+        $this->assertFalse($url->slash());
+        $this->assertSame('', $url->params()->toString());
+        $this->assertSame('', $url->path()->toString());
     }
 }

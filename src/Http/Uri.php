@@ -130,7 +130,7 @@ class Uri
      * Creates a new URI object
      *
      * @param array|string $props
-     * @param array $inject
+     * @param array $inject Additional props to inject if a URL string is passed
      */
     public function __construct($props = [], array $inject = [])
     {
@@ -144,10 +144,7 @@ class Uri
 
         // parse the path and extract params
         if (empty($props['path']) === false) {
-            $extract           = Params::extract($props['path']);
-            $props['params'] ??= $extract['params'];
-            $props['path']     = $extract['path'];
-            $props['slash']  ??= $extract['slash'];
+            $props = static::parsePath($props);
         }
 
         $this->setProperties($this->props = $props);
@@ -372,11 +369,17 @@ class Uri
     }
 
     /**
-     * @param \Kirby\Http\Params|string|array|null $params
+     * @param \Kirby\Http\Params|string|array|false|null $params
      * @return $this
      */
     public function setParams($params = null)
     {
+        // ensure that the special constructor value of `false`
+        // is never passed through as it's not supported by `Params`
+        if ($params === false) {
+            $params = [];
+        }
+
         $this->params = is_a($params, 'Kirby\Http\Params') === true ? $params : new Params($params);
         return $this;
     }
@@ -538,5 +541,34 @@ class Uri
             $this->setHost(Idn::encode($this->host));
         }
         return $this;
+    }
+
+    /**
+     * Parses the path inside the props and extracts
+     * the params unless disabled
+     *
+     * @param array $props
+     * @return array Modified props array
+     */
+    protected static function parsePath(array $props): array
+    {
+        // extract params, the rest is the path;
+        // only do this if not explicitly disabled (set to `false`)
+        if (isset($props['params']) === false || $props['params'] !== false) {
+            $extract           = Params::extract($props['path']);
+            $props['params'] ??= $extract['params'];
+            $props['path']     = $extract['path'];
+            $props['slash']  ??= $extract['slash'];
+
+            return $props;
+        }
+
+        // use the full path;
+        // automatically detect the trailing slash from it if possible
+        if (is_string($props['path']) === true) {
+            $props['slash'] = substr($props['path'], -1, 1) === '/';
+        }
+
+        return $props;
     }
 }
