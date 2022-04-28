@@ -18,7 +18,7 @@ class ModelPageTestForceLocked extends ModelPage
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\Page|\Kirby\Panel\Model
+ * @coversDefaultClass \Kirby\Panel\Page
  */
 class PageTest extends TestCase
 {

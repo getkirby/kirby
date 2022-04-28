@@ -18,7 +18,7 @@ class ModelUserTestForceLocked extends ModelUser
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\User|\Kirby\Panel\Model
+ * @coversDefaultClass \Kirby\Panel\User
  */
 class UserTest extends TestCase
 {

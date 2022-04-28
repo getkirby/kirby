@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\PageBlueprint
+ */
 class PageBlueprintTest extends TestCase
 {
     public function testOptions()
