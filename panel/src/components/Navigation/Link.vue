@@ -59,6 +59,10 @@ export default {
         return this.$url(this.to);
       }
 
+      if (this.to.includes("@") === true && this.to.includes("://") === false) {
+        return `mailto:` + this.to;
+      }
+
       return this.to;
     }
   },
