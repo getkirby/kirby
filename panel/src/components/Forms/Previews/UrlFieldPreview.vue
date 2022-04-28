@@ -1,5 +1,5 @@
 <template>
-  <p class="k-url-field-preview">
+  <p class="k-url-field-preview" :class="$options.class">
     {{ column.before }}
     <k-link :to="link" @click.native.stop>
       {{ text }}

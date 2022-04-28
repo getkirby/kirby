@@ -20,10 +20,11 @@ export default {
         return "";
       }
 
-      let format = this.field.display;
+      let format = this.column.display || this.field.display;
+      let time = this.column.time?.display || this.field.time?.display;
 
-      if (this.field.time?.display) {
-        format += " " + this.field.time.display;
+      if (time) {
+        format += " " + time;
       }
 
       return dt.format(format);

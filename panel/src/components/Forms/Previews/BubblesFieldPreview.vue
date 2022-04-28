@@ -11,11 +11,39 @@ export default {
   inheritAttrs: false,
   mixins: [FieldPreview],
   props: {
-    value: Array
+    value: [Array, String]
   },
   computed: {
     bubbles() {
-      return this.value;
+      let bubbles = this.value;
+
+      // predefined options
+      const options = this.column.options || this.field.options || [];
+
+      if (typeof bubbles === "string") {
+        bubbles = bubbles.split(",");
+      }
+
+      return bubbles.map((bubble) => {
+        if (typeof bubble === "string") {
+          bubble = {
+            value: bubble,
+            text: bubble
+          };
+        }
+
+        for (const option of options) {
+          if (option.value === bubble.value) {
+            bubble.text = bubble.text;
+          }
+        }
+
+        return {
+          back: "light",
+          color: "black",
+          ...bubble
+        };
+      });
     }
   }
 };
