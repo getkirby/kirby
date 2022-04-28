@@ -7,6 +7,7 @@
       background: $helper.color(back)
     }"
     class="k-bubble"
+    @click.native.stop
   >
     <k-item-image v-if="image" :image="image" layout="list" />
     {{ text }}

@@ -124,6 +124,7 @@
  * @public
  */
 export default {
+  inheritAttrs: false,
   props: {
     /**
      * Configuration which columns to include.

@@ -95,7 +95,8 @@
           :index="false"
           :columns="{
             name: {
-              label: $t('name')
+              label: $t('name'),
+              type: 'url'
             },
             author: {
               label: $t('author')

@@ -109,19 +109,6 @@ import Toolbar from "@/components/Forms/Toolbar.vue";
 import ToolbarEmailDialog from "@/components/Forms/Toolbar/EmailDialog.vue";
 import ToolbarLinkDialog from "@/components/Forms/Toolbar/LinkDialog.vue";
 
-/* Form Field Previews */
-import DateFieldPreview from "@/components/Forms/Previews/DateFieldPreview.vue";
-import EmailFieldPreview from "@/components/Forms/Previews/EmailFieldPreview.vue";
-import FilesFieldPreview from "@/components/Forms/Previews/FilesFieldPreview.vue";
-import ListFieldPreview from "@/components/Forms/Previews/ListFieldPreview.vue";
-import PagesFieldPreview from "@/components/Forms/Previews/PagesFieldPreview.vue";
-import TagsFieldPreview from "@/components/Forms/Previews/TagsFieldPreview.vue";
-import TimeFieldPreview from "@/components/Forms/Previews/TimeFieldPreview.vue";
-import ToggleFieldPreview from "@/components/Forms/Previews/ToggleFieldPreview.vue";
-import UrlFieldPreview from "@/components/Forms/Previews/UrlFieldPreview.vue";
-import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
-import WriterFieldPreview from "@/components/Forms/Previews/WriterFieldPreview.vue";
-
 Vue.component("k-calendar", Calendar);
 Vue.component("k-counter", Counter);
 Vue.component("k-autocomplete", Autocomplete);
@@ -195,22 +182,12 @@ Vue.component("k-toolbar", Toolbar);
 Vue.component("k-toolbar-email-dialog", ToolbarEmailDialog);
 Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
-Vue.component("k-date-field-preview", DateFieldPreview);
-Vue.component("k-email-field-preview", EmailFieldPreview);
-Vue.component("k-files-field-preview", FilesFieldPreview);
-Vue.component("k-list-field-preview", ListFieldPreview);
-Vue.component("k-pages-field-preview", PagesFieldPreview);
-Vue.component("k-toggle-field-preview", ToggleFieldPreview);
-Vue.component("k-tags-field-preview", TagsFieldPreview);
-Vue.component("k-time-field-preview", TimeFieldPreview);
-Vue.component("k-url-field-preview", UrlFieldPreview);
-Vue.component("k-users-field-preview", UsersFieldPreview);
-Vue.component("k-writer-field-preview", WriterFieldPreview);
-
 /* Layout */
 import AspectRatio from "@/components/Layout/AspectRatio.vue";
 import Bar from "@/components/Layout/Bar.vue";
 import Box from "@/components/Layout/Box.vue";
+import Bubble from "@/components/Layout/Bubble.vue";
+import Bubbles from "@/components/Layout/Bubbles.vue";
 import Collection from "@/components/Layout/Collection.vue";
 import Column from "@/components/Layout/Column.vue";
 import Dropzone from "@/components/Layout/Dropzone.vue";
@@ -233,6 +210,8 @@ import View from "@/components/Layout/View.vue";
 Vue.component("k-aspect-ratio", AspectRatio);
 Vue.component("k-bar", Bar);
 Vue.component("k-box", Box);
+Vue.component("k-bubble", Bubble);
+Vue.component("k-bubbles", Bubbles);
 Vue.component("k-collection", Collection);
 Vue.component("k-column", Column);
 Vue.component("k-dropzone", Dropzone);
@@ -356,3 +335,6 @@ Vue.component("k-user-view", UserView);
 
 /* Blocks */
 import "@/components/Forms/Blocks/index.js";
+
+/* Field Previews */
+import "@/components/Forms/Previews/index.js";

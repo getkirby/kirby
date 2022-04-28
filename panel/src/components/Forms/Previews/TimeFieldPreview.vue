@@ -1,17 +1,13 @@
-<template>
-  <div>
-    <p class="k-time-field-preview">
-      {{ text }}
-    </p>
-  </div>
-</template>
-
 <script>
+import TextFieldPreview from "./TextFieldPreview.vue";
+
 export default {
+  inheritAttrs: false,
+  extends: TextFieldPreview,
   props: {
-    field: Object,
     value: String
   },
+  class: "k-time-field-preview",
   computed: {
     text() {
       const dt = this.$library.dayjs.iso(this.value, "time");
@@ -20,9 +16,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.k-time-field-preview {
-  padding: 0 0.75rem;
-}
-</style>
