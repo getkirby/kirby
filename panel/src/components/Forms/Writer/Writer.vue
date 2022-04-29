@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import Editor from "./Editor";
-
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
 import EmailDialog from "./Dialogs/EmailDialog.vue";
@@ -149,7 +147,9 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
+    const Editor = (await import("./Editor.js")).default;
+
     this.editor = new Editor({
       autofocus: this.autofocus,
       content: this.value,
