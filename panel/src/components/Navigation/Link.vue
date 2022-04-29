@@ -59,7 +59,7 @@ export default {
         return this.$url(this.to);
       }
 
-      if (this.to.includes("@") === true && this.to.includes("://") === false) {
+      if (this.to.includes("@") === true && this.to.includes("/") === false) {
         return `mailto:` + this.to;
       }
 
@@ -88,9 +88,16 @@ export default {
         return false;
       }
 
-      // don't route if it's an absolute link
-      if (typeof this.href === "string" && this.href.indexOf("://") > 0) {
-        return false;
+      if (typeof this.href === "string") {
+        // don't route if it's an absolute link
+        if (this.href.includes("://")) {
+          return false;
+        }
+
+        // don't route if it's an email
+        if (this.href.includes("mailto:")) {
+          return false;
+        }
       }
 
       return true;
