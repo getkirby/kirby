@@ -50,9 +50,7 @@
             <dl>
               <dt>{{ $t("debugging") }}</dt>
               <dd :class="{ 'k-system-warning': debug }">
-                <button @click="$dialog('system/issue/debug')">
-                  {{ debug ? $t("on") : $t("off") }}
-                </button>
+                {{ debug ? $t("on") : $t("off") }}
               </dd>
             </dl>
           </li>
@@ -60,9 +58,7 @@
             <dl>
               <dt>HTTPS</dt>
               <dd :class="{ 'k-system-warning': !https }">
-                <button @click="$dialog('system/issue/https')">
-                  {{ https ? $t("on") : $t("off") }}
-                </button>
+                {{ https ? $t("on") : $t("off") }}
               </dd>
             </dl>
           </li>
@@ -86,9 +82,7 @@
             <dl>
               <dt>Kirby folder</dt>
               <dd :class="{ 'k-system-warning': kirby }">
-                <button @click="$dialog('system/issue/kirby')">
-                  {{ status("kirby") }}
-                </button>
+                {{ status("kirby") }}
               </dd>
             </dl>
           </li>
@@ -96,9 +90,7 @@
             <dl>
               <dt>Git Repo</dt>
               <dd :class="{ 'k-system-warning': git }">
-                <button @click="$dialog('system/issue/git')">
-                  {{ status("git") }}
-                </button>
+                {{ status("git") }}
               </dd>
             </dl>
           </li>
@@ -106,9 +98,7 @@
             <dl>
               <dt>Content folder</dt>
               <dd :class="{ 'k-system-warning': content }">
-                <button @click="$dialog('system/issue/content')">
-                  {{ status("content") }}
-                </button>
+                {{ status("content") }}
               </dd>
             </dl>
           </li>
@@ -116,9 +106,7 @@
             <dl>
               <dt>Site folder</dt>
               <dd :class="{ 'k-system-warning': site }">
-                <button @click="$dialog('system/issue/site')">
-                  {{ status("site") }}
-                </button>
+                {{ status("site") }}
               </dd>
             </dl>
           </li>
