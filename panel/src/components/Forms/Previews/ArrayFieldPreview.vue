@@ -10,7 +10,9 @@ export default {
       return [
         {
           text:
-            this.value.length === 1 ? `1 entry` : `${this.value.length} entries`
+            this.value.length === 1
+              ? `1 ${this.$t("entry")}`
+              : `${this.value.length} ${this.$t("entries")}`
         }
       ];
     }

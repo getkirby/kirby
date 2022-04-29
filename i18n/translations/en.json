@@ -49,6 +49,9 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Environment",
 
   "error.access.code": "Invalid code",
