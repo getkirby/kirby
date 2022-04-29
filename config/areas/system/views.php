@@ -22,12 +22,12 @@ return [
 
             $plugins = $system->plugins()->values(function ($plugin) {
                 return [
-                    'name' => [
+                    'author'  => $plugin->authorsNames(),
+                    'license' => $plugin->license(),
+                    'name'    => [
                         'text' => $plugin->name(),
                         'href' => $plugin->link(),
                     ],
-                    'author'  => $plugin->authorsNames(),
-                    'license' => $plugin->license(),
                     'version' => $plugin->version(),
                 ];
             });
