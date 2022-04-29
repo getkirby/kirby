@@ -9,13 +9,19 @@
 <script>
 export default {
   props: {
+    /**
+     * Column config
+     */
     column: Object,
+    /**
+     * Field value
+     */
     value: [Array, String]
   },
   computed: {
     tags() {
       if (Array.isArray(this.value)) {
-        return this.value;
+        return this.value.map((tag) => tag.text || tag);
       }
 
       return this.value.split(",");

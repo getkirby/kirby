@@ -246,4 +246,10 @@ export default {
 .k-drawer[data-nested="true"] {
   background: none;
 }
+
+/* Sticky elements inside drawer */
+.k-drawer-body .k-textarea-input:focus-within .k-toolbar,
+.k-drawer-body .k-table th {
+  top: -1.5rem;
+}
 </style>
