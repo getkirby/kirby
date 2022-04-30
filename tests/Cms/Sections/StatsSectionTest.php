@@ -95,6 +95,18 @@ class StatsSectionTest extends TestCase
         $this->assertSame($this->model->reports(), $section->reports());
     }
 
+    public function testReportsFromInvalidValue()
+    {
+        $section = new Section('stats', [
+            'name'     => 'test',
+            'model'    => $this->model,
+            'reports'  => new \stdClass()
+        ]);
+
+        $this->assertSame([], $section->reports());
+    }
+
+
     public function testReportsWithQueries()
     {
         $section = new Section('stats', [
@@ -106,5 +118,18 @@ class StatsSectionTest extends TestCase
         ]);
 
         $this->assertSame([$this->model->report()], $section->reports());
+    }
+
+    public function testReportsWithInvalidQueries()
+    {
+        $section = new Section('stats', [
+            'name'     => 'test',
+            'model'    => $this->model,
+            'reports'  => [
+                'page.somethingSomething'
+            ]
+        ]);
+
+        $this->assertSame([], $section->reports());
     }
 }
