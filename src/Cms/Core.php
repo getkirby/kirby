@@ -424,6 +424,7 @@ class Core
             'files'  => $this->root . '/sections/files.php',
             'info'   => $this->root . '/sections/info.php',
             'pages'  => $this->root . '/sections/pages.php',
+            'stats'  => $this->root . '/sections/stats.php',
         ];
     }
 

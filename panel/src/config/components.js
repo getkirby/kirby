@@ -224,6 +224,7 @@ import ItemImage from "@/components/Layout/ItemImage.vue";
 import Items from "@/components/Layout/Items.vue";
 import Overlay from "@/components/Layout/Overlay.vue";
 import Panel from "@/components/Layout/Panel.vue";
+import Stats from "@/components/Layout/Stats.vue";
 import Table from "@/components/Layout/Table.vue";
 import TableCell from "@/components/Layout/TableCell.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
@@ -245,6 +246,7 @@ Vue.component("k-item-image", ItemImage);
 Vue.component("k-items", Items);
 Vue.component("k-overlay", Overlay);
 Vue.component("k-panel", Panel);
+Vue.component("k-stats", Stats);
 Vue.component("k-table", Table);
 Vue.component("k-table-cell", TableCell);
 Vue.component("k-tabs", Tabs);
@@ -321,17 +323,7 @@ Vue.component("k-tag", Tag);
 Vue.component("k-topbar", Topbar);
 
 /* Sections */
-import Sections from "@/components/Sections/Sections.vue";
-import InfoSection from "@/components/Sections/InfoSection.vue";
-import PagesSection from "@/components/Sections/PagesSection.vue";
-import FilesSection from "@/components/Sections/FilesSection.vue";
-import FieldsSection from "@/components/Sections/FieldsSection.vue";
-
-Vue.component("k-sections", Sections);
-Vue.component("k-info-section", InfoSection);
-Vue.component("k-pages-section", PagesSection);
-Vue.component("k-files-section", FilesSection);
-Vue.component("k-fields-section", FieldsSection);
+import "@/components/Sections/index.js";
 
 /* Views */
 import AccountView from "@/components/Views/AccountView.vue";
