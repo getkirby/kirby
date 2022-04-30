@@ -42,6 +42,12 @@ return [
                     'server'  => $system->serverSoftware(),
                     'https'   => Server::https(),
                     'version' => $kirby->version(),
+                    'urls'    => [
+                        'content' => $system->folderUrl('content'),
+                        'git'     => $system->folderUrl('git'),
+                        'kirby'   => $system->folderUrl('kirby'),
+                        'site'    => $system->folderUrl('site')
+                    ]
                 ]
             ];
         }

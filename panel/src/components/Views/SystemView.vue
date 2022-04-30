@@ -153,6 +153,7 @@ export default {
     plugins: Array,
     server: String,
     https: Boolean,
+    urls: Object,
     version: String
   },
   data() {
@@ -164,31 +165,15 @@ export default {
     };
   },
   created() {
-    this.checkContent();
-    this.checkGit();
-    this.checkKirby();
-    this.checkSite();
+    this.check("content");
+    this.check("git");
+    this.check("kirby");
+    this.check("site");
   },
   methods: {
-    async checkContent() {
-      this.content = await this.isAccessible(
-        window.location.origin + "/content/site.txt"
-      );
-    },
-    async checkGit() {
-      this.git = await this.isAccessible(
-        window.location.origin + "/.git/config"
-      );
-    },
-    async checkKirby() {
-      this.kirby = await this.isAccessible(
-        window.location.origin + "/kirby/composer.json"
-      );
-    },
-    async checkSite() {
-      this.site = await this.isAccessible(
-        window.location.origin + "/site/blueprints/site.yml"
-      );
+    async check(key) {
+      const url = this.urls[key];
+      this[key] = !url ? false : await this.isAccessible(url);
     },
     async isAccessible(url) {
       const response = await fetch(url, {

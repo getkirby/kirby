@@ -1252,9 +1252,9 @@ class App
      * Returns a system root
      *
      * @param string $type
-     * @return string
+     * @return string|null
      */
-    public function root(string $type = 'index'): string
+    public function root(string $type = 'index'): ?string
     {
         return $this->roots->__get($type);
     }
@@ -1594,7 +1594,7 @@ class App
      *
      * @param string $type
      * @param bool $object If set to `true`, the URL is converted to an object
-     * @return string|\Kirby\Http\Uri
+     * @return string|\Kirby\Http\Uri|null
      */
     public function url(string $type = 'index', bool $object = false)
     {

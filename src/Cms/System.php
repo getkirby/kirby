@@ -87,6 +87,56 @@ class System
     }
 
     /**
+     * Returns the URL to any system folder
+     * if the folder is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @return string|null
+     */
+    public function folderUrl(string $folder): ?string
+    {
+        if ($folder === 'git') {
+            return url('.git/config');
+        }
+
+        $root  = $this->app->root($folder);
+        $index = $this->app->root('index');
+
+        if ($root === null || is_dir($root) === false || is_dir($index) === false) {
+            return null;
+        }
+
+        $root  = realpath($root);
+        $index = realpath($index);
+
+        // windows
+        $root  = str_replace('\\', '/', $root);
+        $index = str_replace('\\', '/', $index);
+
+        // the folder is not within the document root?
+        if (Str::contains($root, $index) === false) {
+            return null;
+        }
+
+        // get the path after the document root
+        $path = trim(Str::after($root, $index), '/');
+
+        // build the absolute URL to the folder
+        $url = url($path);
+
+        switch ($folder) {
+            case 'content':
+                return $url . '/' . basename($this->app->site()->contentFile());
+            case 'kirby':
+                return $url . '/composer.json';
+            case 'site':
+                return $url . '/templates/default.php';
+            default:
+                return null;
+        }
+    }
+
+    /**
      * Returns the app's human-readable
      * index URL without scheme
      *
