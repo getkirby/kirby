@@ -519,9 +519,9 @@ class App
      * @param string|null $check Pass a token here to compare it to the one in the session
      * @return string|bool Either the token or a boolean check result
      */
-    public static function csrf(?string $check = null)
+    public function csrf(?string $check = null)
     {
-        $session = static::instance()->session();
+        $session = $this->session();
 
         // no arguments, generate/return a token
         // (check explicitly if there have been no arguments at all;

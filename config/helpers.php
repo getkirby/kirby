@@ -80,10 +80,10 @@ if (
         // checking for null introduces a security issue because null could come
         // from user input or bugs in the calling code!
         if (func_num_args() === 0) {
-            return App::csrf();
+            return kirby()->csrf();
         }
 
-        return App::csrf($check);
+        return kirby()->csrf($check);
     }
 }
 
