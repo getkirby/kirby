@@ -60,7 +60,7 @@ if (
      */
     function collection(string $name)
     {
-        return App::instance()->collection($name);
+        return kirby()->collection($name);
     }
 }
 
@@ -187,7 +187,7 @@ if (
      */
     function get($key = null, $default = null)
     {
-        return App::instance()->request()->get($key, $default);
+        return kirby()->request()->get($key, $default);
     }
 }
 
@@ -279,7 +279,7 @@ if (
      */
     function image(?string $path = null)
     {
-        return App::instance()->image($path);
+        return kirby()->image($path);
     }
 }
 
@@ -348,7 +348,7 @@ if (
      */
     function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
     {
-        return App::instance()->kirbytag($type, $value, $attr, $data);
+        return kirby()->kirbytag($type, $value, $attr, $data);
     }
 }
 
@@ -366,7 +366,7 @@ if (
      */
     function kirbytags(?string $text = null, array $data = []): string
     {
-        return App::instance()->kirbytags($text, $data);
+        return kirby()->kirbytags($text, $data);
     }
 }
 
@@ -384,7 +384,7 @@ if (
      */
     function kirbytext(?string $text = null, array $data = []): string
     {
-        return App::instance()->kirbytext($text, $data);
+        return kirby()->kirbytext($text, $data);
     }
 }
 
@@ -403,7 +403,7 @@ if (
      */
     function kirbytextinline(?string $text = null, array $data = []): string
     {
-        return App::instance()->kirbytext($text, $data, true);
+        return kirby()->kirbytext($text, $data, true);
     }
 }
 
@@ -472,7 +472,7 @@ if (
      */
     function markdown(?string $text = null, array $data = []): string
     {
-        return App::instance()->markdown($text, $data);
+        return kirby()->markdown($text, $data);
     }
 }
 
@@ -489,7 +489,7 @@ if (
      */
     function option(string $key, $default = null)
     {
-        return App::instance()->option($key, $default);
+        return kirby()->option($key, $default);
     }
 }
 
@@ -508,7 +508,7 @@ if (
     function page(...$id)
     {
         if (empty($id) === true) {
-            return App::instance()->site()->page();
+            return kirby()->site()->page();
         }
 
         if (count($id) > 1) {
@@ -517,7 +517,7 @@ if (
             // @codeCoverageIgnoreEnd
         }
 
-        return App::instance()->site()->find(...$id);
+        return kirby()->site()->find(...$id);
     }
 }
 
@@ -540,7 +540,7 @@ if (
             // @codeCoverageIgnoreEnd
         }
 
-        return App::instance()->site()->find(...$id);
+        return kirby()->site()->find(...$id);
     }
 }
 
@@ -557,7 +557,7 @@ if (
      */
     function param(string $key, ?string $fallback = null): ?string
     {
-        return App::instance()->request()->url()->params()->$key ?? $fallback;
+        return kirby()->request()->url()->params()->$key ?? $fallback;
     }
 }
 
@@ -572,7 +572,7 @@ if (
      */
     function params(): array
     {
-        return App::instance()->request()->url()->params()->toArray();
+        return kirby()->request()->url()->params()->toArray();
     }
 }
 
@@ -626,7 +626,7 @@ if (
      */
     function site()
     {
-        return App::instance()->site();
+        return kirby()->site();
     }
 }
 
@@ -660,7 +660,7 @@ if (
      */
     function smartypants(?string $text = null): string
     {
-        return App::instance()->smartypants($text);
+        return kirby()->smartypants($text);
     }
 }
 
@@ -678,7 +678,7 @@ if (
      */
     function snippet($name, $data = [], bool $return = false)
     {
-        return App::instance()->snippet($name, $data, $return);
+        return kirby()->snippet($name, $data, $return);
     }
 }
 
