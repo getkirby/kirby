@@ -837,7 +837,7 @@ class App
      *
      * @internal
      * @param string|array $type Tag type or array with all tag arguments
-                                 (the key of the first element becomes the type)
+     *                           (the key of the first element becomes the type)
      * @param string|null $value
      * @param array $attr
      * @param array $data
