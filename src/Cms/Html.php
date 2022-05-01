@@ -29,7 +29,7 @@ class Html extends \Kirby\Toolkit\Html
     public static function css($url, $options = null): ?string
     {
         if (is_array($url) === true) {
-            $links = A::map($url, fn ($url) => css($url, $options));
+            $links = A::map($url, fn ($url) => static::css($url, $options));
             return implode(PHP_EOL, $links);
         }
 

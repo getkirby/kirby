@@ -836,7 +836,8 @@ class App
      * Renders a single KirbyTag with the given attributes
      *
      * @internal
-     * @param string|array $type
+     * @param string|array $type Tag type or array with all tag arguments
+                                 (the key of the first element becomes the type)
      * @param string|null $value
      * @param array $attr
      * @param array $data
@@ -1593,11 +1594,11 @@ class App
      *
      * @internal
      * @param mixed $name
-     * @param array $data
-     * @param bool $return
+     * @param array|object $data Variables or an object that becomes `$item`
+     * @param bool $return On `false`, directly echo the snippet
      * @return string|null
      */
-    public function snippet($name, array $data = [], bool $return = true): ?string
+    public function snippet($name, $data = [], bool $return = true): ?string
     {
         if (is_object($data) === true) {
             $data = ['item' => $data];
