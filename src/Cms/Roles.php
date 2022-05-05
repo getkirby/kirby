@@ -97,12 +97,18 @@ class Roles extends Collection
      */
     public static function load(string $root = null, array $inject = [])
     {
+        $kirby = App::instance();
         $roles = new static();
 
         // load roles from plugins
-        foreach (App::instance()->extensions('blueprints') as $blueprintName => $blueprint) {
+        foreach ($kirby->extensions('blueprints') as $blueprintName => $blueprint) {
             if (substr($blueprintName, 0, 6) !== 'users/') {
                 continue;
+            }
+
+            // callback option can be return array or blueprint file path
+            if (is_callable($blueprint) === true) {
+                $blueprint = $blueprint($kirby);
             }
 
             if (is_array($blueprint) === true) {

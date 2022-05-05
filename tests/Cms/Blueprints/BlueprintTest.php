@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -341,7 +342,7 @@ class BlueprintTest extends TestCase
      * @covers ::factory
      * @covers ::find
      */
-    public function testFactoryWithCallback()
+    public function testFactoryWithCallbackArray()
     {
         Blueprint::$loaded = [];
 
@@ -352,6 +353,34 @@ class BlueprintTest extends TestCase
                 }
             ]
         ]);
+
+        $blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+        $this->assertSame('Test', $blueprint->title());
+        $this->assertSame('pages/test', $blueprint->name());
+    }
+
+    /**
+     * @covers ::factory
+     * @covers ::find
+     */
+    public function testFactoryWithCallbackString()
+    {
+        Blueprint::$loaded = [];
+
+        $this->app = $this->app->clone([
+            'roots' => [
+                'index' => '/dev/null',
+                'blueprints' => $fixtures = __DIR__ . '/fixtures/BlueprintTest/factoryWithCallbackString',
+            ],
+            'blueprints' => [
+                'pages/test' => function () use ($fixtures) {
+                    return $fixtures . '/custom/test.yml';
+                }
+            ]
+        ]);
+
+        Data::write($fixtures . '/custom/test.yml', ['title' => 'Test']);
 
         $blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
 

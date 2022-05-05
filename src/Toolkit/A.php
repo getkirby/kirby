@@ -336,6 +336,29 @@ class A
     }
 
     /**
+     * Returns a number of random elements from an array,
+     * either in original or shuffled order
+     *
+     * @param array $array
+     * @param int $count
+     * @param bool $shuffle
+     * @return array
+     */
+    public static function random(array $array, int $count = 1, bool $shuffle = false): array
+    {
+        if ($shuffle) {
+            return array_slice(self::shuffle($array), 0, $count);
+        }
+
+        if ($count === 1) {
+            $key = array_rand($array);
+            return [$key => $array[$key]];
+        }
+
+        return self::get($array, array_rand($array, $count));
+    }
+
+    /**
      * Fills an array up with additional elements to certain amount.
      *
      * <code>
