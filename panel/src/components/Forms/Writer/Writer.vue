@@ -148,7 +148,7 @@ export default {
     }
   },
   async mounted() {
-    const Editor = (await import("./Editor.js")).default;
+    const { default: Editor } = await import("./Editor.js");
 
     this.editor = new Editor({
       autofocus: this.autofocus,
