@@ -3,6 +3,7 @@
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
 use Kirby\Cms\PluginAssets;
+use Kirby\Http\Response;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
@@ -91,6 +92,15 @@ return function ($kirby) {
             'env'     => 'media',
             'action'  => function ($path, $hash, $filename) {
                 return Media::thumb($path, $hash, $filename);
+            }
+        ],
+        [
+            'pattern' => $panel . '/(js|css)/(:all)',
+            'method'  => 'ALL',
+            'env'     => 'panel',
+            'action'  => function (string $type, string $path) use ($kirby) {
+                $root = $kirby->root('media') . '/panel/' . $kirby->versionHash() . '/' . $type . '/' . $path;
+                return Response::file($root);
             }
         ],
         [
