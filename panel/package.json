@@ -47,7 +47,7 @@
     "postcss-dir-pseudo-class": "^6.0.4",
     "postcss-logical": "^5.0.0",
     "prettier": "^2.5.1",
-    "vite": "^2.9.6",
+    "vite": "^2.9.8",
     "vite-plugin-rewrite-all": "^0.1.2",
     "vite-plugin-vue2": "^2.0.0",
     "vitest": "^0.3.2",
