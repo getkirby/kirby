@@ -133,7 +133,7 @@ class Html extends Xml
      *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
      * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
      *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
-     *                     * @param string|null $before An optional string that will be prepended if the result is not empty
+     * @param string|null $before An optional string that will be prepended if the result is not empty
      * @param string|null $after An optional string that will be appended if the result is not empty
      * @return string|null The generated HTML attributes string
      */
