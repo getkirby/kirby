@@ -1029,11 +1029,19 @@ class Page extends ModelWithContent
 
         // try to get the page from cache
         if (empty($data) === true && $this->isCacheable() === true) {
-            $cache    = $kirby->cache('pages');
-            $cacheId  = $this->cacheId($contentType);
-            $result   = $cache->get($cacheId);
-            $html     = $result['html'] ?? null;
-            $response = $result['response'] ?? [];
+            $cache       = $kirby->cache('pages');
+            $cacheId     = $this->cacheId($contentType);
+            $result      = $cache->get($cacheId);
+            $html        = $result['html'] ?? null;
+            $response    = $result['response'] ?? [];
+            $usesAuth    = $result['usesAuth'] ?? false;
+            $usesCookies = $result['usesCookies'] ?? [];
+
+            // if the request contains dynamic data that the cached response
+            // relied on, don't use the cache to allow dynamic code to run
+            if (Responder::isPrivate($usesAuth, $usesCookies) === true) {
+                $html = null;
+            }
 
             // reconstruct the response configuration
             if (empty($html) === false && empty($response) === false) {
@@ -1060,15 +1068,15 @@ class Page extends ModelWithContent
             // render the page
             $html = $template->render($kirby->data);
 
-            // convert the response configuration to an array
-            $response = $kirby->response()->toArray();
-
             // cache the result
-            if ($cache !== null && $kirby->response()->cache() === true) {
+            $response = $kirby->response();
+            if ($cache !== null && $response->cache() === true) {
                 $cache->set($cacheId, [
-                    'html'     => $html,
-                    'response' => $response
-                ], $kirby->response()->expires() ?? 0);
+                    'html'        => $html,
+                    'response'    => $response->toArray(),
+                    'usesAuth'    => $response->usesAuth(),
+                    'usesCookies' => $response->usesCookies(),
+                ], $response->expires() ?? 0);
             }
         }
 

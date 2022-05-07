@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
@@ -98,6 +99,22 @@ class RequestTest extends TestCase
         $this->assertFalse($request->auth());
 
         unset($_SERVER['HTTP_AUTHORIZATION']);
+    }
+
+    public function testAuthTrack()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertFalse($app->response()->usesAuth());
+
+        $request = new Request();
+        $request->auth();
+
+        $this->assertTrue($app->response()->usesAuth());
     }
 
     public function testMethod()

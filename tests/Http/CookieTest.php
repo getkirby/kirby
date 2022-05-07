@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 class CookieTest extends TestCase
@@ -51,6 +52,22 @@ class CookieTest extends TestCase
         $this->assertSame('bar', Cookie::get('foo'));
         $this->assertSame('some amazing default', Cookie::get('does_not_exist', 'some amazing default'));
         $this->assertSame($_COOKIE, Cookie::get());
+    }
+
+    public function testGetSetTrack()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertSame([], $app->response()->usesCookies());
+
+        Cookie::set('foo', 'fooo');
+        Cookie::get('bar');
+
+        $this->assertSame(['foo', 'bar'], $app->response()->usesCookies());
     }
 
     public function testParse()
