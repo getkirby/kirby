@@ -13,10 +13,11 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_ASSET') === false ||
     constant('KIRBY_HELPER_ASSET') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Helper to create an asset object
      *
@@ -29,11 +30,11 @@ if (
     }
 }
 
-
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_ATTR') === false ||
     constant('KIRBY_HELPER_ATTR') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Generates a list of HTML attributes
      *
@@ -48,10 +49,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_COLLECTION') === false ||
     constant('KIRBY_HELPER_COLLECTION') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns the result of a collection by name
      *
@@ -64,10 +66,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_CSRF') === false ||
     constant('KIRBY_HELPER_CSRF') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Checks / returns a CSRF token
      *
@@ -87,10 +90,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_CSS') === false ||
     constant('KIRBY_HELPER_CSS') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates one or multiple CSS link tags
      *
@@ -104,10 +108,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_DEPRECATED') === false ||
     constant('KIRBY_HELPER_DEPRECATED') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Triggers a deprecation warning if debug mode is active
      * @since 3.3.0
@@ -121,10 +126,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_DUMP') === false ||
     constant('KIRBY_HELPER_DUMP') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Simple object and variable dumper
      * to help with debugging.
@@ -139,10 +145,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_E') === false ||
     constant('KIRBY_HELPER_E') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Smart version of echo with an if condition as first argument
      *
@@ -156,10 +163,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_ESC') === false ||
     constant('KIRBY_HELPER_ESC') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Escape context specific output
      *
@@ -173,11 +181,11 @@ if (
     }
 }
 
-
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_GET') === false ||
     constant('KIRBY_HELPER_GET') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for $kirby->request()->get()
      *
@@ -191,10 +199,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_GIST') === false ||
     constant('KIRBY_HELPER_GIST') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Embeds a Github Gist
      *
@@ -211,10 +220,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_GO') === false ||
     constant('KIRBY_HELPER_GO') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Redirects to the given Urls
      * Urls can be relative or absolute.
@@ -229,10 +239,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_H') === false ||
     constant('KIRBY_HELPER_H') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for html()
      *
@@ -246,10 +257,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_HTML') === false ||
     constant('KIRBY_HELPER_HTML') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates safe html by encoding special characters
      *
@@ -263,10 +275,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_IMAGE') === false ||
     constant('KIRBY_HELPER_IMAGE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Return an image from any page
      * specified by the path
@@ -283,10 +296,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_INVALID') === false ||
     constant('KIRBY_HELPER_INVALID') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Runs a number of validators on a set of data and checks if the data is invalid
      *
@@ -301,10 +315,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_JS') === false ||
     constant('KIRBY_HELPER_JS') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates a script tag to load a javascript file
      *
@@ -318,10 +333,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KIRBY') === false ||
     constant('KIRBY_HELPER_KIRBY') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns the Kirby object in any situation
      *
@@ -333,10 +349,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KIRBYTAG') === false ||
     constant('KIRBY_HELPER_KIRBYTAG') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Makes it possible to use any defined Kirbytag as standalone function
      *
@@ -352,10 +369,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KIRBYTAGS') === false ||
     constant('KIRBY_HELPER_KIRBYTAGS') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Parses KirbyTags in the given string. Shortcut
      * for `$kirby->kirbytags($text, $data)`
@@ -370,10 +388,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KIRBYTEXT') === false ||
     constant('KIRBY_HELPER_KIRBYTEXT') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Parses KirbyTags and Markdown in the
      * given string. Shortcut for `$kirby->kirbytext()`
@@ -388,10 +407,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KIRBYTEXTINLINE') === false ||
     constant('KIRBY_HELPER_KIRBYTEXTINLINE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Parses KirbyTags and inline Markdown in the
      * given string.
@@ -407,10 +427,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KT') === false ||
     constant('KIRBY_HELPER_KT') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for `kirbytext()` helper
      *
@@ -424,10 +445,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_KTI') === false ||
     constant('KIRBY_HELPER_KTI') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for `kirbytextinline()` helper
      * @since 3.1.0
@@ -442,10 +464,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_LOAD') === false ||
     constant('KIRBY_HELPER_LOAD') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * A super simple class autoloader
      *
@@ -459,10 +482,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_MARKDOWN') === false ||
     constant('KIRBY_HELPER_MARKDOWN') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Parses markdown in the given string. Shortcut for
      * `$kirby->markdown($text)`
@@ -476,10 +500,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_OPTION') === false ||
     constant('KIRBY_HELPER_OPTION') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for `$kirby->option($key, $default)`
      *
@@ -493,10 +518,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_PAGE') === false ||
     constant('KIRBY_HELPER_PAGE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Fetches a single page or multiple pages by
      * id or the current page when no id is specified
@@ -521,10 +547,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_PAGES') === false ||
     constant('KIRBY_HELPER_PAGES') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Helper to build page collections
      *
@@ -544,10 +571,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_PARAM') === false ||
     constant('KIRBY_HELPER_PARAM') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns a single param from the URL
      *
@@ -561,10 +589,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_PARAMS') === false ||
     constant('KIRBY_HELPER_PARAMS') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns all params from the current Url
      *
@@ -576,10 +605,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_R') === false ||
     constant('KIRBY_HELPER_R') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Smart version of return with an if condition as first argument
      *
@@ -594,10 +624,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_ROUTER') === false ||
     constant('KIRBY_HELPER_ROUTER') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates a micro-router and executes
      * the routing action immediately
@@ -615,10 +646,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_SITE') === false ||
     constant('KIRBY_HELPER_SITE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns the current site object
      *
@@ -630,10 +662,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_SIZE') === false ||
     constant('KIRBY_HELPER_SIZE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Determines the size/length of numbers, strings, arrays and countable objects
      *
@@ -647,10 +680,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_SMARTYPANTS') === false ||
     constant('KIRBY_HELPER_SMARTYPANTS') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Enhances the given string with
      * smartypants. Shortcut for `$kirby->smartypants($text)`
@@ -664,10 +698,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_SNIPPET') === false ||
     constant('KIRBY_HELPER_SNIPPET') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Embeds a snippet from the snippet folder
      *
@@ -682,10 +717,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_SVG') === false ||
     constant('KIRBY_HELPER_SVG') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Includes an SVG file by absolute or
      * relative file path.
@@ -699,10 +735,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_T') === false ||
     constant('KIRBY_HELPER_T') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Returns translate string for key from translation file
      *
@@ -717,10 +754,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_TC') === false ||
     constant('KIRBY_HELPER_TC') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Translates a count
      *
@@ -740,10 +778,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_TIMESTAMP') === false ||
     constant('KIRBY_HELPER_TIMESTAMP') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Rounds the minutes of the given date
      * by the defined step
@@ -758,10 +797,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_TT') === false ||
     constant('KIRBY_HELPER_TT') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Translate by key and then replace
      * placeholders in the text
@@ -778,10 +818,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_TWITTER') === false ||
     constant('KIRBY_HELPER_TWITTER') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Builds a Twitter link
      *
@@ -802,10 +843,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_U') === false ||
     constant('KIRBY_HELPER_U') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Shortcut for url()
      *
@@ -819,10 +861,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_URL') === false ||
     constant('KIRBY_HELPER_URL') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Builds an absolute URL for a given path
      *
@@ -836,10 +879,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_UUID') === false ||
     constant('KIRBY_HELPER_UUID') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates a compliant v4 UUID
      *
@@ -851,10 +895,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_VIDEO') === false ||
     constant('KIRBY_HELPER_VIDEO') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Creates a video embed via iframe for Youtube or Vimeo
      * videos. The embed Urls are automatically detected from
@@ -871,10 +916,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_VIMEO') === false ||
     constant('KIRBY_HELPER_VIMEO') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Embeds a Vimeo video by URL in an iframe
      *
@@ -889,10 +935,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_WIDONT') === false ||
     constant('KIRBY_HELPER_WIDONT') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * The widont function makes sure that there are no
      * typographical widows at the end of a paragraph –
@@ -907,10 +954,11 @@ if (
     }
 }
 
+// @codeCoverageIgnoreStart
 if (
     defined('KIRBY_HELPER_YOUTUBE') === false ||
     constant('KIRBY_HELPER_YOUTUBE') !== false
-) {
+) { // @codeCoverageIgnoreEnd
     /**
      * Embeds a Youtube video by URL in an iframe
      *

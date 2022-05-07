@@ -152,6 +152,33 @@ class HtmlTest extends TestCase
     }
 
     /**
+     * @covers ::attr
+     */
+    public function testAttrWithBeforeValue()
+    {
+        $attr = Html::attr(['test' => 'test'], null, ' ');
+        $this->assertSame(' test="test"', $attr);
+    }
+
+    /**
+     * @covers ::attr
+     */
+    public function testAttrWithAfterValue()
+    {
+        $attr = Html::attr(['test' => 'test'], null, null, ' ');
+        $this->assertSame('test="test" ', $attr);
+    }
+
+    /**
+     * @covers ::attr
+     */
+    public function testAttrWithoutValues()
+    {
+        $attr = Html::attr([]);
+        $this->assertNull($attr);
+    }
+
+    /**
      * @covers ::breaks
      */
     public function testBreaks()

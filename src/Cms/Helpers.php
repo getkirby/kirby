@@ -64,18 +64,8 @@ class Helpers
             return Str::length(trim($value));
         }
 
-        if (is_array($value)) {
+        if (is_countable($value)) {
             return count($value);
-        }
-
-        if (is_object($value)) {
-            if (is_a($value, 'Countable') === true) {
-                return count($value);
-            }
-
-            if (is_a($value, 'Kirby\Toolkit\Collection') === true) {
-                return $value->count();
-            }
         }
 
         throw new InvalidArgumentException('Could not determine the size of the given value');
