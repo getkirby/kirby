@@ -73,6 +73,10 @@ export default {
     flag: Object,
     image: [Object, Boolean],
     info: String,
+    /**
+     * Display layout
+     * @values list, cards, cardlets
+     */
     layout: {
       type: String,
       default: "list"

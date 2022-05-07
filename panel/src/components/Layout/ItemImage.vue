@@ -31,6 +31,10 @@ export default {
   inheritAttrs: false,
   props: {
     image: [Object, Boolean],
+    /**
+     * Display layout
+     * @values list, cards, cardlets
+     */
     layout: {
       type: String,
       default: "list"
