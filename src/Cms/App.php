@@ -1611,6 +1611,7 @@ class App
         }
 
         echo $snippet;
+        return null;
     }
 
     /**
