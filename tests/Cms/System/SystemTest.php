@@ -220,6 +220,25 @@ class SystemTest extends TestCase
      * @covers ::exposedFileUrl
      * @covers ::folderUrl
      */
+    public function testFolderUrlForInsignificantFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures,
+                'media' => $this->fixtures . '/media'
+            ]
+        ]));
+
+        Dir::make($this->fixtures . '/media');
+
+        $this->assertSame('/media', $system->folderUrl('media'));
+        $this->assertNull($system->exposedFileUrl('media'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
     public function testFolderUrlForKirbyFolder()
     {
         $system = new System($this->app->clone([

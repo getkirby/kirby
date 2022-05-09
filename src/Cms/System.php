@@ -109,6 +109,8 @@ class System
                 return $url . '/composer.json';
             case 'site':
                 return $url . '/templates/default.php';
+            default:
+                return null;
         }
     }
 
