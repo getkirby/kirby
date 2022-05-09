@@ -87,10 +87,11 @@ class System
     }
 
     /**
-     * Returns the URL to any system folder
-     * if the folder is located in the document
+     * Returns the URL to the file within a system folder
+     * if the file is located in the document
      * root. Otherwise it will return null.
      *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
      * @return string|null
      */
     public function folderUrl(string $folder): ?string
@@ -114,7 +115,7 @@ class System
         $index = str_replace('\\', '/', $index);
 
         // the folder is not within the document root?
-        if (Str::contains($root, $index) === false) {
+        if (Str::startsWith($root, $index) === false) {
             return null;
         }
 
