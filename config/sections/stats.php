@@ -27,10 +27,7 @@ return [
         'reports' => function () {
             $reports = [];
             $model   = $this->model();
-
-            $value = function ($value) use ($model) {
-                return $value === null ? null : $model->toString($value);
-            };
+            $value   = fn ($value) => $value === null ? null : $model->toString($value);
 
             foreach ($this->reports as $report) {
                 if (is_string($report) === true) {
