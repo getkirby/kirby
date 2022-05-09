@@ -94,14 +94,43 @@ class System
      * @param string $folder 'git', 'content', 'site', 'kirby'
      * @return string|null
      */
-    public function folderUrl(string $folder): ?string
+    public function exposedFileUrl(string $folder): ?string
     {
-        if ($folder === 'git') {
-            return url('.git/config');
+        if (!$url = $this->folderUrl($folder)) {
+            return null;
         }
 
-        $root  = $this->app->root($folder);
+        switch ($folder) {
+            case 'content':
+                return $url . '/' . basename($this->app->site()->contentFile());
+            case 'git':
+                return $url . '/config';
+            case 'kirby':
+                return $url . '/composer.json';
+            case 'site':
+                return $url . '/templates/default.php';
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Returns the URL to a system folder
+     * if the folder is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
+     * @return string|null
+     */
+    public function folderUrl(string $folder): ?string
+    {
         $index = $this->app->root('index');
+
+        if ($folder === 'git') {
+            $root = $index . '/.git';
+        } else {
+            $root = $this->app->root($folder);
+        }
 
         if ($root === null || is_dir($root) === false || is_dir($index) === false) {
             return null;
@@ -123,18 +152,7 @@ class System
         $path = trim(Str::after($root, $index), '/');
 
         // build the absolute URL to the folder
-        $url = url($path);
-
-        switch ($folder) {
-            case 'content':
-                return $url . '/' . basename($this->app->site()->contentFile());
-            case 'kirby':
-                return $url . '/composer.json';
-            case 'site':
-                return $url . '/templates/default.php';
-            default:
-                return null;
-        }
+        return url($path);
     }
 
     /**

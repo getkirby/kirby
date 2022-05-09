@@ -43,10 +43,10 @@ return [
                     'https'   => Server::https(),
                     'version' => $kirby->version(),
                     'urls'    => [
-                        'content' => $system->folderUrl('content'),
-                        'git'     => $system->folderUrl('git'),
-                        'kirby'   => $system->folderUrl('kirby'),
-                        'site'    => $system->folderUrl('site')
+                        'content' => $system->exposedFileUrl('content'),
+                        'git'     => $system->exposedFileUrl('git'),
+                        'kirby'   => $system->exposedFileUrl('kirby'),
+                        'site'    => $system->exposedFileUrl('site')
                     ]
                 ]
             ];
