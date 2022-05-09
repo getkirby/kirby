@@ -264,6 +264,22 @@ class SystemTest extends TestCase
     }
 
     /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForUnknownFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        $this->assertNull($system->folderUrl('unknown'));
+        $this->assertNull($system->exposedFileUrl('unknown'));
+    }
+
+    /**
      * @covers ::indexUrl
      * @dataProvider providerForIndexUrls
      */
