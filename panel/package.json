@@ -43,6 +43,7 @@
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^8.4.1",
     "jsdom": "^19.0.0",
+    "md5": "^2.3.0",
     "postcss-csso": "^6.0.0",
     "postcss-dir-pseudo-class": "^6.0.4",
     "postcss-logical": "^5.0.0",

@@ -1,5 +1,6 @@
 /* eslint-env node */
 import fs from "fs";
+import md5 from "md5";
 import path from "path";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { createVuePlugin } from "vite-plugin-vue2";
@@ -8,6 +9,10 @@ import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 import postcssLogical from "postcss-logical";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
+
+let composer = fs.readFileSync("../composer.json");
+composer = JSON.parse(composer);
+let hash = md5(composer.version);
 
 let custom;
 try {
@@ -51,7 +56,7 @@ export default defineConfig(({ command }) => {
       // Fix vuelidate error
       "process.env.BUILD": JSON.stringify("production")
     },
-    base: "./",
+    base: "/media/panel/" + hash + "/",
     build: {
       minify: "terser",
       cssCodeSplit: false,
