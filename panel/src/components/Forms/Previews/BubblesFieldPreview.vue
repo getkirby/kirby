@@ -34,7 +34,7 @@ export default {
 
         for (const option of options) {
           if (option.value === bubble.value) {
-            bubble.text = bubble.text;
+            bubble.text = option.text;
           }
         }
 
