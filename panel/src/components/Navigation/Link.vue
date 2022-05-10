@@ -90,7 +90,7 @@ export default {
 
       if (typeof this.href === "string") {
         // don't route if it's an absolute link
-        if (this.href.includes("://")) {
+        if (this.href.includes("://") || this.href.startsWith("//")) {
           return false;
         }
 
