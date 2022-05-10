@@ -470,18 +470,18 @@
   "section.required": "The section is required",
 
   "select": "Select",
+  "server": "Server",
   "settings": "Settings",
   "show": "Show",
+  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
+  "stats.empty": "No reports",
+
   "title": "Title",
   "template": "Template",
   "today": "Today",
-
-  "server": "Server",
-
-  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Bold",
