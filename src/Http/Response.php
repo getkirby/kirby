@@ -209,6 +209,8 @@ class Response
      * @param string $url
      * @param int $code
      * @return void
+     *
+     * @codeCoverageIgnore
      */
     public static function go(string $url = '/', int $code = 302)
     {
