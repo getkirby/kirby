@@ -2,10 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\App;
-use Kirby\Toolkit\Dir;
-
-
 /**
  * @coversDefaultClass Kirby\Cms\Html
  */
