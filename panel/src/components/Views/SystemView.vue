@@ -51,7 +51,7 @@
       <section v-if="hasSecurityIssues" class="k-system-view-section">
         <header class="k-system-view-section-header">
           <k-headline>{{ $t("security") }}</k-headline>
-          <k-button :tooltip="$t('retry')" icon="refresh" @click="$reload" />
+          <k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
         </header>
 
         <ul class="k-system-security">
@@ -174,6 +174,9 @@ export default {
       });
 
       return response.status < 400;
+    },
+    retry() {
+      this.$go(window.location.href);
     }
   }
 };
