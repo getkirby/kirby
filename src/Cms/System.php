@@ -108,7 +108,16 @@ class System
             case 'kirby':
                 return $url . '/composer.json';
             case 'site':
-                return $url . '/templates/default.php';
+                $files = glob($this->app->root('site') . '/**/*.*');
+                $file  = $files[0] ?? null;
+
+                if (empty($file) === true) {
+                    return $url;
+                }
+
+                $file = basename(dirname($file)) . '/' . basename($file);
+
+                return $url . '/' . $file;
             default:
                 return null;
         }

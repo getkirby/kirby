@@ -277,6 +277,7 @@ class SystemTest extends TestCase
         $this->assertNull($system->folderUrl('site'));
 
         Dir::make($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/templates/default.php', 'test');
 
         $this->assertSame('/site', $system->folderUrl('site'));
         $this->assertSame('/site/templates/default.php', $system->exposedFileUrl('site'));
