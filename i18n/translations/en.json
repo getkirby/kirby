@@ -229,7 +229,6 @@
 
   "expand": "Expand",
   "expand.all": "Expand All",
-  "exposed": "exposed",
 
   "field.required": "The field is required",
   "field.blocks.changeType": "Change type",
@@ -295,7 +294,6 @@
   "files": "Files",
   "files.empty": "No files yet",
 
-  "hidden": "hidden",
   "hide": "Hide",
   "hour": "Hour",
   "import": "Import",
