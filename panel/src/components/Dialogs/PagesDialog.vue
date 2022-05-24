@@ -30,38 +30,18 @@
         icon="search"
       />
 
-      <template v-if="items.length">
-        <k-items
-          :items="items"
-          :link="false"
-          layout="list"
-          :sortable="false"
-          @item="toggle"
-        >
-          <template #options="{ item: page }">
-            <k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
-            <k-button
-              v-if="page"
-              :disabled="!page.hasChildren"
-              :tooltip="$t('open')"
-              icon="angle-right"
-              @click.stop="go(page)"
-            />
-          </template>
-        </k-items>
-
-        <k-pagination
-          :details="true"
-          :dropdown="false"
-          v-bind="pagination"
-          align="center"
-          class="k-dialog-pagination"
-          @paginate="paginate"
-        />
-      </template>
-      <k-empty v-else icon="page">
-        {{ $t("dialog.pages.empty") }}
-      </k-empty>
+      <k-collection v-bind="collection" @item="toggle" @paginate="paginate">
+        <template #options="{ item: page }">
+          <k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
+          <k-button
+            v-if="page"
+            :disabled="!page.hasChildren"
+            :tooltip="$t('open')"
+            icon="angle-right"
+            @click.stop="go(page)"
+          />
+        </template>
+      </k-collection>
     </template>
   </k-dialog>
 </template>
@@ -86,6 +66,12 @@ export default {
     };
   },
   computed: {
+    emptyProps() {
+      return {
+        icon: "page",
+        text: this.$t("dialog.pages.empty")
+      };
+    },
     fetchData() {
       return {
         parent: this.options.parent

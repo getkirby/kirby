@@ -360,7 +360,7 @@ export default {
 }
 
 /** Pagination **/
-.k-dialog-pagination {
+.k-dialog .k-pagination {
   margin-bottom: -1.5rem;
   display: flex;
   justify-content: center;

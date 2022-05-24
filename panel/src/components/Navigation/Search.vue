@@ -46,7 +46,7 @@
 
       <div v-if="q && (!hasResults || items.length)" class="k-search-results">
         <!-- Results -->
-        <k-items
+        <k-collection
           v-if="items.length"
           ref="items"
           :items="items"
