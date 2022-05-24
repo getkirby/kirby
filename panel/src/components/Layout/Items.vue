@@ -1,5 +1,16 @@
 <template>
+  <div v-if="layout === 'table'">
+    <k-table
+      :columns="{
+        image: { label: 'Image' },
+        text: { label: 'Title' },
+        info: { label: 'Info' }
+      }"
+      :rows="items"
+    />
+  </div>
   <k-draggable
+    v-else
     class="k-items"
     :class="'k-' + layout + '-items'"
     :handle="true"
