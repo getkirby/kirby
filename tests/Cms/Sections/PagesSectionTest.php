@@ -539,4 +539,31 @@ class PagesSectionTest extends TestCase
         $this->assertSame('en: A', $section->data()[1]['text']);
         $this->assertSame('en: B', $section->data()[2]['text']);
     }
+
+    public function testUnreadable()
+    {
+        $this->app->clone([
+            'blueprints' => [
+                'pages/unreadable' => [
+                    'options' => ['read' => false]
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'subpage-a'],
+                ['slug' => 'subpage-b', 'template' => 'unreadable'],
+                ['slug' => 'subpage-c']
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page
+        ]);
+
+        $this->assertCount(2, $section->data());
+    }
 }

@@ -115,21 +115,24 @@ return [
                     $pages = $this->parent->childrenAndDrafts();
             }
 
-            // loop for the best performance
-            foreach ($pages->data as $id => $page) {
-
+            // filters pages that are protected and not in the templates list
+            // internal `filter()` method used instead of foreach loop that previously included `unset()`
+            // because `unset()` is updating the original data, `filter()` is just filtering
+            // also it has been tested that there is no performance difference
+            // even in 0.1 seconds on 100k virtual pages
+            $pages = $pages->filter(function ($page) {
                 // remove all protected pages
                 if ($page->isReadable() === false) {
-                    unset($pages->data[$id]);
-                    continue;
+                    return false;
                 }
 
                 // filter by all set templates
                 if ($this->templates && in_array($page->intendedTemplate()->name(), $this->templates) === false) {
-                    unset($pages->data[$id]);
-                    continue;
+                    return false;
                 }
-            }
+
+                return true;
+            });
 
             // sort
             if ($this->sortBy) {
