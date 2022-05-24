@@ -8,6 +8,6 @@ export default {
       }
     },
     field: Object,
-    value: true
+    value: {}
   }
 };

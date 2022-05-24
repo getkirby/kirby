@@ -31,7 +31,6 @@ export default {
      */
     row: Object,
     value: {
-      type: [Boolean, String, Number, Object, Array],
       default: ""
     }
   },
