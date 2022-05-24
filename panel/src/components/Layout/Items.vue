@@ -88,24 +88,6 @@ export default {
       let columns = this.columns;
       let items = this.items;
 
-      if (!columns) {
-        columns = {
-          text: { label: "Title", type: "url" },
-          info: { label: "Info" }
-        };
-
-        items = items.map((item) => {
-          console.log(item);
-
-          item.text = {
-            text: item.text,
-            to: item.url
-          };
-
-          return item;
-        });
-      }
-
       return {
         columns: columns,
         rows: items

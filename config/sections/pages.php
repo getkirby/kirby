@@ -18,6 +18,9 @@ return [
         'search'
     ],
     'props' => [
+        'columns' => function (array $columns = null) {
+            return $columns ?? [];
+        },
         /**
          * Optional array of templates that should only be allowed to add
          * or `false` to completely disable page creation
@@ -89,6 +92,43 @@ return [
         }
     ],
     'computed' => [
+        'columns' => function () {
+            $columns = [];
+
+            if ($this->image !== false) {
+                $columns['image'] = [
+                    'label' => ' ',
+                    'type'  => 'image',
+                    'width' => 'var(--table-row-height)'
+                ];
+            }
+
+            $columns['title'] = [
+                'label' => 'Title',
+                'type'  => 'url'
+            ];
+
+            if ($this->info) {
+                $columns['info'] = [
+                    'label' => 'Info',
+                    'type'  => 'text',
+                ];
+            }
+
+            foreach ($this->columns as $columnName => $column) {
+                $column['id']     = $columnName;
+                $column['costum'] = true;
+                $columns[$columnName . 'Cell'] = $column;
+            }
+
+            $columns['flag'] = [
+                'label' => ' ',
+                'type'  => 'flag',
+                'width' => 'var(--table-row-height)'
+            ];
+
+            return $columns;
+        },
         'parent' => function () {
             $parent = $this->parentModel();
 
@@ -163,13 +203,17 @@ return [
             return $this->pages->pagination()->total();
         },
         'data' => function () {
+            if ($this->layout === 'table') {
+                return $this->rows();
+            }
+
             $data = [];
 
             foreach ($this->pages as $item) {
                 $panel       = $item->panel();
                 $permissions = $item->permissions();
 
-                $data[] = [
+                $row = [
                     'dragText'    => $panel->dragText(),
                     'id'          => $item->id(),
                     'image'       => $panel->image($this->image, $this->layout),
@@ -186,6 +230,8 @@ return [
                     'template'    => $item->intendedTemplate()->name(),
                     'text'        => $item->toSafeString($this->text),
                 ];
+
+                $data[] = $row;
             }
 
             return $data;
@@ -296,14 +342,59 @@ return [
             }
 
             return $blueprints;
+        },
+        'rows' => function () {
+
+            $rows = [];
+
+            foreach ($this->pages as $item) {
+
+                $panel = $item->panel();
+                $row   = [];
+
+                $row['title'] = [
+                    'text' => $item->toSafeString($this->text),
+                    'href' => $panel->url(true)
+                ];
+
+                $row['id']          = $item->id();
+                $row['image']       = $panel->image($this->image, 'list');
+                $row['info']        = $item->toSafeString($this->info ?? false);
+                $row['status']      = $item->status();
+                $row['permissions'] = $item->permissions();
+                $row['link']        = $panel->url(true);
+
+                // custom columns
+                foreach ($this->columns as $columnName => $column) {
+                    // don't overwrite essential columns
+                    if (isset($row[$columnName]) === true) {
+                        continue;
+                    }
+
+                    if (empty($column['value']) === false) {
+                        $value = $item->toSafeString($column['value']);
+                    } else {
+                        $value = $item->content()->get($column['id'] ?? $columnName)->value();
+                    }
+
+                    $row[$columnName] = $value;
+                }
+
+                $rows[] = $row;
+            }
+
+            return $rows;
+
         }
     ],
     'toArray' => function () {
+
         return [
             'data'    => $this->data,
             'errors'  => $this->errors,
             'options' => [
                 'add'      => $this->add,
+                'columns'  => $this->columns,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'help'     => $this->help,

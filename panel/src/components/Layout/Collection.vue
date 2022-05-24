@@ -57,6 +57,7 @@
  */
 export default {
   props: {
+    columns: Object,
     empty: Object,
     /**
      * Help text to show below the collection
