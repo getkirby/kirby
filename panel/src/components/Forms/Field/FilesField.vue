@@ -91,9 +91,7 @@ export default {
 
       return this.$refs.fileUpload.drop(files, this.uploadParams);
     },
-    prompt(e) {
-      e.stopPropagation();
-
+    prompt() {
       if (this.disabled) {
         return false;
       }

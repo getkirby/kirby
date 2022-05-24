@@ -20,7 +20,6 @@
         class="k-dialog-search"
         icon="search"
       />
-
       <k-collection v-bind="collection" @item="toggle" @paginate="paginate">
         <template #options="{ item: file }">
           <k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
