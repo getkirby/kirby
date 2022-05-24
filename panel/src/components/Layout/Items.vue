@@ -1,13 +1,6 @@
 <template>
   <div v-if="layout === 'table'">
-    <k-table
-      :columns="{
-        image: { label: 'Image' },
-        text: { label: 'Title' },
-        info: { label: 'Info' }
-      }"
-      :rows="items"
-    />
+    <k-table v-bind="table" />
   </div>
   <k-draggable
     v-else
@@ -47,6 +40,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    columns: Object,
     items: {
       type: Array,
       default() {
@@ -88,6 +82,33 @@ export default {
         sort: this.sortable,
         disabled: this.sortable === false,
         draggable: ".k-draggable-item"
+      };
+    },
+    table() {
+      let columns = this.columns;
+      let items = this.items;
+
+      if (!columns) {
+        columns = {
+          text: { label: "Title", type: "url" },
+          info: { label: "Info" }
+        };
+
+        items = items.map((item) => {
+          console.log(item);
+
+          item.text = {
+            text: item.text,
+            to: item.url
+          };
+
+          return item;
+        });
+      }
+
+      return {
+        columns: columns,
+        rows: items
       };
     }
   },

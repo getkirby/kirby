@@ -2,6 +2,7 @@
   <div class="k-collection">
     <k-items
       v-if="items.length"
+      :columns="columns"
       :items="items"
       :layout="layout"
       :link="link"
