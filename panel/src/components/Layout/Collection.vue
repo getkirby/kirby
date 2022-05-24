@@ -11,7 +11,7 @@
       @change="$emit('change', $event)"
     >
       <template #options="{ item, itemIndex: index }">
-        <slot name="options" :v-bind="{ item, index }" />
+        <slot name="options" v-bind="{ item, index }" />
       </template>
     </k-items>
 

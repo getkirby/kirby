@@ -26,7 +26,7 @@
       @option="$emit('option', $event, item, itemIndex)"
     >
       <template #options>
-        <slot name="options" :v-bind="{ item, itemIndex }" />
+        <slot name="options" v-bind="{ item, itemIndex }" />
       </template>
     </k-item>
   </k-draggable>
