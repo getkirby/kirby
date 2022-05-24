@@ -108,13 +108,22 @@ class System
             case 'kirby':
                 return $url . '/composer.json';
             case 'site':
-                $files = glob($this->app->root('site') . '/**/*.*');
-                $file  = $files[0] ?? null;
+                $root  = $this->app->root('site');
+                $files = glob($root . '/blueprints/*.yml');
 
-                if (empty($file) === true) {
+                if (empty($files) === true) {
+                    $files = glob($root . '/templates/*.*');
+                }
+
+                if (empty($files) === true) {
+                    $files = glob($root . '/snippets/*.*');
+                }
+
+                if (empty($files) === true || empty($files[0]) === true) {
                     return $url;
                 }
 
+                $file = $files[0];
                 $file = basename(dirname($file)) . '/' . basename($file);
 
                 return $url . '/' . $file;

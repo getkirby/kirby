@@ -276,11 +276,26 @@ class SystemTest extends TestCase
 
         $this->assertNull($system->folderUrl('site'));
 
-        Dir::make($this->fixtures . '/site');
+        // with blueprints
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/blueprints/site.yml', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/blueprints/site.yml', $system->exposedFileUrl('site'));
+
+        // with templates
+        Dir::remove($this->fixtures . '/site');
         F::write($this->fixtures . '/site/templates/default.php', 'test');
 
         $this->assertSame('/site', $system->folderUrl('site'));
         $this->assertSame('/site/templates/default.php', $system->exposedFileUrl('site'));
+
+        // with snippets
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/snippets/header.php', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/snippets/header.php', $system->exposedFileUrl('site'));
     }
 
     /**
