@@ -567,7 +567,7 @@ class PagesSectionTest extends TestCase
         $this->assertCount(2, $section->data());
     }
 
-    public function testSearch()
+    public function testSearchDefault()
     {
         $model = new Page([
             'slug'     => 'test',
@@ -578,15 +578,25 @@ class PagesSectionTest extends TestCase
             ]
         ]);
 
-        // no search option as default
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model
         ]);
 
         $this->assertCount(3, $section->data());
+    }
 
-        // enabled search with no query
+    public function testSearchWithNoQuery()
+    {
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model,
@@ -594,43 +604,83 @@ class PagesSectionTest extends TestCase
         ]);
 
         $this->assertCount(3, $section->data());
+    }
 
-        // search with query
+    public function testSearchWithQuery1()
+    {
+        $_GET['query'] = 'bike';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'bike'
-
+            'search' => true
         ]);
 
         $this->assertCount(2, $section->data());
         $this->assertSame('Bike', $section->data()[0]['text']);
         $this->assertSame('Mount Bike', $section->data()[1]['text']);
 
-        // search with query alternative
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery2()
+    {
+        $_GET['query'] = 'mount';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'mount'
-
+            'search' => true
         ]);
 
         $this->assertCount(2, $section->data());
         $this->assertSame('Mount Bike', $section->data()[0]['text']);
         $this->assertSame('Mountain', $section->data()[1]['text']);
 
-        // search with query alternative
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery3()
+    {
+        $_GET['query'] = 'mountain';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $_GET['query'] = 'mountain';
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'mountain'
-
+            'search' => true
         ]);
 
         $this->assertCount(1, $section->data());
         $this->assertSame('Mountain', $section->data()[0]['text']);
+
+        $_GET = [];
     }
 }

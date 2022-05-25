@@ -433,7 +433,7 @@ class FilesSectionTest extends TestCase
         $this->assertSame('en: b.jpg', $section->data()[1]['text']);
     }
 
-    public function testSearch()
+    public function testSearchDefault()
     {
         $model = new Page([
             'slug'  => 'test',
@@ -444,15 +444,25 @@ class FilesSectionTest extends TestCase
             ]
         ]);
 
-        // no search option as default
         $section = new Section('files', [
             'name'  => 'test',
             'model' => $model
         ]);
 
         $this->assertCount(3, $section->data());
+    }
 
-        // enabled search with no query
+    public function testSearchWithNoQuery()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+                ['filename' => 'mountain.jpg'],
+                ['filename' => 'bike.jpg']
+            ]
+        ]);
+
         $section = new Section('files', [
             'name'   => 'test',
             'model'  => $model,
@@ -460,43 +470,83 @@ class FilesSectionTest extends TestCase
         ]);
 
         $this->assertCount(3, $section->data());
+    }
 
-        // search with query
+    public function testSearchWithQuery1()
+    {
+        $_GET['query'] = 'bike';
+
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+                ['filename' => 'mountain.jpg'],
+                ['filename' => 'bike.jpg']
+            ]
+        ]);
+
         $section = new Section('files', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'bike'
-
+            'search' => true
         ]);
 
         $this->assertCount(2, $section->data());
         $this->assertSame('bike.jpg', $section->data()[0]['filename']);
         $this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
 
-        // search with query alternative
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery2()
+    {
+        $_GET['query'] = 'mount';
+
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+                ['filename' => 'mountain.jpg'],
+                ['filename' => 'bike.jpg']
+            ]
+        ]);
+
         $section = new Section('files', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'mount'
-
+            'search' => true
         ]);
 
         $this->assertCount(2, $section->data());
         $this->assertSame('mount-bike.jpg', $section->data()[0]['filename']);
         $this->assertSame('mountain.jpg', $section->data()[1]['filename']);
 
-        // search with query alternative
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery3()
+    {
+        $_GET['query'] = 'mountain';
+
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+                ['filename' => 'mountain.jpg'],
+                ['filename' => 'bike.jpg']
+            ]
+        ]);
+
         $section = new Section('files', [
             'name'   => 'test',
             'model'  => $model,
-            'search' => true,
-            'query'  => 'mountain'
+            'search' => true
 
         ]);
 
         $this->assertCount(1, $section->data());
         $this->assertSame('mountain.jpg', $section->data()[0]['filename']);
+
+        $_GET = [];
     }
 }
