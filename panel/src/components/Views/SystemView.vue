@@ -9,43 +9,7 @@
           <k-headline>{{ $t("environment") }}</k-headline>
         </header>
 
-        <dl class="k-system-info-box" style="--columns: 2">
-          <div>
-            <dt>{{ $t("license") }}</dt>
-            <dd :class="{ 'k-system-warning': !$license }">
-              <template v-if="$license">
-                {{ license }}
-              </template>
-              <k-button v-else @click="$dialog('registration')">
-                {{ $t("license.unregistered") }}
-              </k-button>
-            </dd>
-          </div>
-          <div>
-            <dt>Kirby</dt>
-            <dd dir="ltr">
-              <k-link
-                :to="
-                  'https://github.com/getkirby/kirby/releases/tag/' + version
-                "
-              >
-                {{ version }}
-              </k-link>
-            </dd>
-          </div>
-          <div>
-            <dt>PHP</dt>
-            <dd>
-              {{ php }}
-            </dd>
-          </div>
-          <div>
-            <dt>{{ $t("server") }}</dt>
-            <dd>
-              {{ server || "?" }}
-            </dd>
-          </div>
-        </dl>
+        <k-stats :reports="environment" class="k-system-info" />
       </section>
 
       <section v-if="hasSecurityIssues" class="k-system-view-section">
@@ -146,6 +110,31 @@ export default {
     };
   },
   computed: {
+    environment() {
+      return [
+        {
+          label: this.$t("license"),
+          value: this.$license
+            ? this.license
+            : this.$t("license.unregistered.label"),
+          theme: this.$lincense ? null : "negative",
+          link: this.$lincense ? null : () => this.$dialog("registration")
+        },
+        {
+          label: this.$t("version"),
+          value: this.version,
+          link: "https://github.com/getkirby/kirby/releases/tag/" + this.version
+        },
+        {
+          label: "PHP",
+          value: this.php
+        },
+        {
+          label: this.$t("server"),
+          value: this.server || "?"
+        }
+      ];
+    },
     hasSecurityIssues() {
       return (
         this.content ||
@@ -195,33 +184,10 @@ export default {
   margin-bottom: 3rem;
 }
 
-.k-system-info-box {
-  display: grid;
-  grid-gap: 1px;
-  font-size: var(--text-sm);
-  box-shadow: var(--shadow);
+.k-system-info [data-theme] .k-stat-value {
+  color: var(--theme);
 }
 
-@media screen and (min-width: 45rem) {
-  .k-system-info-box {
-    grid-template-columns: repeat(var(--columns), 1fr);
-  }
-}
-
-.k-system-info-box div {
-  padding: 0.75rem;
-  background: var(--color-white);
-}
-.k-system-info-box dt {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-gray-600);
-  margin-bottom: 0.25rem;
-}
-.k-system-info-box dd button {
-  font: inherit;
-  display: inline-flex;
-}
 .k-system-warning {
   color: var(--color-negative);
   font-weight: var(--font-bold);

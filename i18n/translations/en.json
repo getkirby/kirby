@@ -343,6 +343,7 @@
   "license.register.label": "Please enter your license code",
   "license.register.success": "Thank you for supporting Kirby",
   "license.unregistered": "This is an unregistered demo of Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Link",
   "link.text": "Link text",
