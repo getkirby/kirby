@@ -6,109 +6,90 @@
       </k-header>
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>Kirby</k-headline>
-        </header>
-
-        <ul class="k-system-info-box" style="--columns: 2">
-          <li>
-            <dl>
-              <dt>{{ $t("license") }}</dt>
-              <dd :class="{ 'k-system-warning': !$license }">
-                <template v-if="$license">
-                  {{ license }}
-                </template>
-                <k-button v-else @click="$dialog('registration')">
-                  {{ $t("license.unregistered") }}
-                </k-button>
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>{{ $t("version") }}</dt>
-              <dd dir="ltr">
-                <k-link
-                  :to="
-                    'https://github.com/getkirby/kirby/releases/tag/' + version
-                  "
-                >
-                  {{ version }}
-                </k-link>
-              </dd>
-            </dl>
-          </li>
-        </ul>
-      </section>
-
-      <section class="k-system-view-section">
-        <header class="k-system-view-section-header">
           <k-headline>{{ $t("environment") }}</k-headline>
         </header>
 
-        <ul class="k-system-info-box" style="--columns: 4">
-          <li>
-            <dl>
-              <dt>{{ $t("debugging") }}</dt>
-              <dd :class="{ 'k-system-warning': debug }">
-                {{ debug ? $t("on") : $t("off") }}
-              </dd>
-            </dl>
+        <dl class="k-system-info-box" style="--columns: 2">
+          <div>
+            <dt>{{ $t("license") }}</dt>
+            <dd :class="{ 'k-system-warning': !$license }">
+              <template v-if="$license">
+                {{ license }}
+              </template>
+              <k-button v-else @click="$dialog('registration')">
+                {{ $t("license.unregistered") }}
+              </k-button>
+            </dd>
+          </div>
+          <div>
+            <dt>Kirby</dt>
+            <dd dir="ltr">
+              <k-link
+                :to="
+                  'https://github.com/getkirby/kirby/releases/tag/' + version
+                "
+              >
+                {{ version }}
+              </k-link>
+            </dd>
+          </div>
+          <div>
+            <dt>PHP</dt>
+            <dd>
+              {{ php }}
+            </dd>
+          </div>
+          <div>
+            <dt>{{ $t("server") }}</dt>
+            <dd>
+              {{ server || "?" }}
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <section v-if="hasSecurityIssues" class="k-system-view-section">
+        <header class="k-system-view-section-header">
+          <k-headline>{{ $t("security") }}</k-headline>
+          <k-button :tooltip="$t('retry')" icon="refresh" @click="$reload" />
+        </header>
+
+        <ul class="k-system-security">
+          <li v-if="debug">
+            <k-link to="https://getkirby.com/security/debug">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.debugging") }}</span>
+            </k-link>
           </li>
-          <li>
-            <dl>
-              <dt>HTTPS</dt>
-              <dd :class="{ 'k-system-warning': !https }">
-                {{ https ? $t("on") : $t("off") }}
-              </dd>
-            </dl>
+          <li v-if="!https">
+            <k-link to="https://getkirby.com/security/https">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.https") }}</span>
+            </k-link>
           </li>
-          <li>
-            <dl>
-              <dt>PHP</dt>
-              <dd>
-                {{ php }}
-              </dd>
-            </dl>
+          <li v-if="git">
+            <k-link to="https://getkirby.com/security/git">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.git") }}</span>
+            </k-link>
           </li>
-          <li>
-            <dl>
-              <dt>{{ $t("server") }}</dt>
-              <dd>
-                {{ server || "?" }}
-              </dd>
-            </dl>
+          <li v-if="content">
+            <k-link to="https://getkirby.com/security/content">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.content") }}</span>
+            </k-link>
           </li>
-          <li>
-            <dl>
-              <dt>Kirby folder</dt>
-              <dd :class="{ 'k-system-warning': kirby }">
-                {{ status("kirby") }}
-              </dd>
-            </dl>
+          <li v-if="kirby">
+            <k-link to="https://getkirby.com/security/kirby">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.kirby") }}</span>
+            </k-link>
           </li>
-          <li>
-            <dl>
-              <dt>Git Repo</dt>
-              <dd :class="{ 'k-system-warning': git }">
-                {{ status("git") }}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>Content folder</dt>
-              <dd :class="{ 'k-system-warning': content }">
-                {{ status("content") }}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>Site folder</dt>
-              <dd :class="{ 'k-system-warning': site }">
-                {{ status("site") }}
-              </dd>
-            </dl>
+          <li v-if="site">
+            <k-link to="https://getkirby.com/security/site">
+              <k-icon type="alert" />
+              <span>{{ $t("system.issues.site") }}</span>
+            </k-link>
           </li>
         </ul>
       </section>
@@ -164,6 +145,18 @@ export default {
       site: null
     };
   },
+  computed: {
+    hasSecurityIssues() {
+      return (
+        this.content ||
+        this.git ||
+        this.kirby ||
+        this.site ||
+        !this.https ||
+        this.debug
+      );
+    }
+  },
   created() {
     this.check("content");
     this.check("git");
@@ -181,13 +174,6 @@ export default {
       });
 
       return response.status < 400;
-    },
-    status(key) {
-      if (this[key] === null) {
-        return "…";
-      }
-
-      return this[key] === true ? this.$t("exposed") : this.$t("hidden");
     }
   }
 };
@@ -199,6 +185,8 @@ export default {
 }
 .k-system-view-section-header {
   margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
 }
 .k-system-view-section {
   margin-bottom: 3rem;
@@ -217,7 +205,7 @@ export default {
   }
 }
 
-.k-system-info-box li {
+.k-system-info-box div {
   padding: 0.75rem;
   background: var(--color-white);
 }
@@ -229,6 +217,7 @@ export default {
 }
 .k-system-info-box dd button {
   font: inherit;
+  display: inline-flex;
 }
 .k-system-warning {
   color: var(--color-negative);
@@ -238,5 +227,35 @@ export default {
 .k-system-warning .k-button-text {
   font: inherit;
   opacity: 1;
+}
+
+.k-system-security a {
+  font-size: var(--text-sm);
+  display: grid;
+  align-items: center;
+  grid-template-columns: 2.5rem auto;
+  background: var(--color-white);
+  color: var(--color-black);
+  margin-bottom: 1px;
+  line-height: var(--leading-tight);
+}
+.k-system-security a:focus {
+  position: relative;
+  z-index: 1;
+}
+.k-system-security .k-icon {
+  background: var(--color-red-200);
+  color: var(--color-negative);
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 100%;
+}
+.k-system-security span:last-of-type {
+  padding: var(--spacing-3);
+}
+.k-system-security span:last-of-type::after {
+  content: "→";
+  margin-inline-start: var(--spacing-2);
 }
 </style>
