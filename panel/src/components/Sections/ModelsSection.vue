@@ -89,18 +89,18 @@ export default {
     buttons() {
       let buttons = [];
 
-      if (this.canSearch) {
-        buttons.push({
-          icon: "search",
-          click: this.onSearch
-        });
-      }
-
       if (this.canAdd) {
         buttons.push({
           icon: "add",
           text: this.$t('add'),
           click: this.onAdd
+        });
+      }
+
+      if (this.canSearch) {
+        buttons.push({
+          icon: "filter",
+          click: this.onSearch
         });
       }
 
