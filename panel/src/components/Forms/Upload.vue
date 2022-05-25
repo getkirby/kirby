@@ -176,6 +176,11 @@ export default {
             this.complete(file, response.data);
           }
         });
+
+        // if there is sort data, increment in the loop for next file
+        if (this.options?.attributes?.sort !== undefined) {
+          this.options.attributes.sort++;
+        }
       });
     },
     complete(file, data) {
