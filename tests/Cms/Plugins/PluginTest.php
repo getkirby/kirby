@@ -209,7 +209,7 @@ class PluginTest extends TestCase
     public function testLinkWhenEmpty()
     {
         $plugin = new Plugin('getkirby/test-plugin');
-        $this->assertNull($plugin->link());
+        $this->assertSame('https://getkirby.com/plugins/getkirby/test-plugin', $plugin->link());
     }
 
     /**

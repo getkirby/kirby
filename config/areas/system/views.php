@@ -24,8 +24,10 @@ return [
                 return [
                     'author'  => $plugin->authorsNames(),
                     'license' => $plugin->license(),
-                    'link'    => $plugin->link(),
-                    'name'    => $plugin->name(),
+                    'name'    => [
+                        'text' => $plugin->name(),
+                        'href' => $plugin->link(),
+                    ],
                     'version' => $plugin->version(),
                 ];
             });

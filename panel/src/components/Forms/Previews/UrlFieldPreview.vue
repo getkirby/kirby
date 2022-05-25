@@ -1,27 +1,31 @@
 <template>
-  <p class="k-url-field-preview">
+  <p class="k-url-field-preview" :class="$options.class">
     {{ column.before }}
-    <k-link :to="link" target="_blank" @click.native.stop>
-      {{ value }}
+    <k-link :to="link" @click.native.stop>
+      {{ text }}
     </k-link>
     {{ column.after }}
   </p>
 </template>
 
 <script>
+import FieldPreview from "@/mixins/forms/fieldPreview.js";
+
 export default {
+  mixins: [FieldPreview],
   props: {
-    column: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
-    value: String
+    value: [String, Object]
   },
   computed: {
     link() {
-      return this.value;
+      return typeof this.value === "object" ? this.value.href : this.value;
+    },
+    text() {
+      if (typeof this.value === "object") {
+        return this.value.text;
+      }
+
+      return this.link;
     }
   }
 };
@@ -29,9 +33,7 @@ export default {
 
 <style>
 .k-url-field-preview {
-  padding: 0 0.75rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 0.325rem 0.75rem;
 }
 .k-url-field-preview a {
   color: var(--color-focus);

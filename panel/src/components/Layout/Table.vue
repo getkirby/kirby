@@ -124,6 +124,7 @@
  * @public
  */
 export default {
+  inheritAttrs: false,
   props: {
     /**
      * Configuration which columns to include.
@@ -279,7 +280,15 @@ export default {
      * @param {string} fraction
      */
     width(fraction) {
-      return fraction ? this.$helper.ratio(fraction, "auto", false) : "auto";
+      if (typeof fraction !== "string") {
+        return "auto";
+      }
+
+      if (fraction.includes("/") === false) {
+        return fraction;
+      }
+
+      return this.$helper.ratio(fraction, "auto", false);
     }
   }
 };
