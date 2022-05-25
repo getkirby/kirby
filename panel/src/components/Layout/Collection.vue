@@ -166,4 +166,13 @@ export default {
   padding: 0.5rem 0.75rem;
   line-height: 1.125rem;
 }
+.k-collection-search {
+  margin-bottom: .75rem;
+}
+.k-collection-search.k-input {
+  background: rgba(0, 0, 0, 0.075);
+  padding: 0 1rem;
+  height: 36px;
+  border-radius: var(--rounded-xs);
+}
 </style>

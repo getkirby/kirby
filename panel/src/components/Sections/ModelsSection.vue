@@ -10,10 +10,7 @@
         <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
-      <k-button-group
-        v-if="canAdd"
-        :buttons="[{ text: $t('add'), icon: 'add', click: onAdd }]"
-      />
+      <k-button-group :buttons="buttons" />
     </header>
 
     <k-box v-if="error" theme="negative">
@@ -25,6 +22,17 @@
 
     <template v-else>
       <k-dropzone :disabled="!canDrop" @drop="onDrop">
+        <transition name="fade">
+          <k-input
+            v-if="searchable && options.search"
+            :autofocus="true"
+            :placeholder="$t('search') + ' …'"
+            v-model="query"
+            type="text"
+            class="k-collection-search"
+          />
+        </transition>
+
         <k-collection
           v-bind="collection"
           :data-invalid="isInvalid"
@@ -42,6 +50,8 @@
 </template>
 
 <script>
+import debounce from "@/helpers/debounce";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -70,15 +80,40 @@ export default {
       },
       pagination: {
         page: null
-      }
+      },
+      query: null,
+      searchable: false,
     };
   },
   computed: {
+    buttons() {
+      let buttons = [];
+
+      if (this.canSearch) {
+        buttons.push({
+          icon: "search",
+          click: this.onSearch
+        });
+      }
+
+      if (this.canAdd) {
+        buttons.push({
+          icon: "add",
+          text: this.$t('add'),
+          click: this.onAdd
+        });
+      }
+
+      return buttons;
+    },
     canAdd() {
       return true;
     },
     canDrop() {
       return false;
+    },
+    canSearch() {
+      return this.options.search;
     },
     collection() {
       return {
@@ -123,7 +158,11 @@ export default {
     // the view has changed in the backend
     timestamp() {
       this.reload();
-    }
+    },
+    query: debounce(function () {
+      this.pagination.page = 0;
+      this.reload();
+    }, 200),
   },
   created() {
     this.load();
@@ -145,7 +184,7 @@ export default {
       try {
         const response = await this.$api.get(
           this.parent + "/sections/" + this.name,
-          { page: this.pagination.page }
+          { page: this.pagination.page, query: this.query }
         );
 
         this.options = response.options;
@@ -163,6 +202,9 @@ export default {
     onAdd() {},
     onChange() {},
     onDrop() {},
+    onSearch() {
+      this.searchable = !this.searchable;
+    },
     onSort() {},
     onPaginate(pagination) {
       localStorage.setItem(this.paginationId, pagination.page);

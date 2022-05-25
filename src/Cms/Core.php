@@ -407,6 +407,7 @@ class Core
             'min'        => $this->root . '/sections/mixins/min.php',
             'pagination' => $this->root . '/sections/mixins/pagination.php',
             'parent'     => $this->root . '/sections/mixins/parent.php',
+            'search'     => $this->root . '/sections/mixins/search.php',
         ];
     }
 

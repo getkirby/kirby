@@ -432,4 +432,71 @@ class FilesSectionTest extends TestCase
         $this->assertSame('en: a.jpg', $section->data()[0]['text']);
         $this->assertSame('en: b.jpg', $section->data()[1]['text']);
     }
+
+    public function testSearch()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+                ['filename' => 'mountain.jpg'],
+                ['filename' => 'bike.jpg']
+            ]
+        ]);
+
+        // no search option as default
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => $model
+        ]);
+
+        $this->assertCount(3, $section->data());
+
+        // enabled search with no query
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(3, $section->data());
+
+        // search with query
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'bike'
+
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('bike.jpg', $section->data()[0]['filename']);
+        $this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
+
+        // search with query alternative
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'mount'
+
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('mount-bike.jpg', $section->data()[0]['filename']);
+        $this->assertSame('mountain.jpg', $section->data()[1]['filename']);
+
+        // search with query alternative
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'mountain'
+
+        ]);
+
+        $this->assertCount(1, $section->data());
+        $this->assertSame('mountain.jpg', $section->data()[0]['filename']);
+    }
 }
