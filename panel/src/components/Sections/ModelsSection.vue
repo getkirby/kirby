@@ -95,7 +95,8 @@ export default {
         buttons.push({
           icon: "filter",
           text: this.$t("search"),
-          click: this.onSearchToggle
+          click: this.onSearchToggle,
+          responsive: true
         });
       }
 
