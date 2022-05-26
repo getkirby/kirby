@@ -105,12 +105,15 @@ export default {
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
-  padding-bottom: 0.75rem;
   min-height: 2rem;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-inline-end: var(--spacing-3);
 }
 .k-section-header .k-button-group {
-  position: absolute;
-  top: -0.875rem;
-  inset-inline-end: 0;
+  margin-top: -0.875rem;
+  white-space: nowrap;
 }
 </style>
