@@ -133,7 +133,9 @@ export default {
     emptyProps() {
       return {
         icon: "page",
-        text: this.options.empty || this.$t("pages.empty")
+        text: this.searching
+          ? this.$t("pages.empty.filtered")
+          : this.options.empty || this.$t("pages.empty")
       };
     },
     items() {
