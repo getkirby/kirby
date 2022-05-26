@@ -312,7 +312,7 @@ return [
                 'max'      => $this->max,
                 'min'      => $this->min,
                 'query'    => $this->query,
-                'search'   => $this->as,
+                'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable
             ],

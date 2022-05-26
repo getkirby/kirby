@@ -13,6 +13,7 @@
       <k-button-group :buttons="buttons" />
     </header>
 
+    <!-- Error -->
     <k-box v-if="error" theme="negative">
       <k-text size="small">
         <strong> {{ $t("error.section.notLoaded", { name: name }) }}: </strong>
@@ -22,17 +23,18 @@
 
     <template v-else>
       <k-dropzone :disabled="!canDrop" @drop="onDrop">
-        <transition name="fade">
-          <k-input
-            v-if="searchable && options.search"
-            :autofocus="true"
-            :placeholder="$t('search') + ' …'"
-            v-model="query"
-            type="text"
-            class="k-collection-search"
-          />
-        </transition>
+        <!-- Search filter  -->
+        <k-input
+          v-if="searching && options.search"
+          v-model="query"
+          :autofocus="true"
+          :placeholder="$t('search') + ' …'"
+          type="text"
+          class="k-models-section-search"
+          @keydown.esc="onSearchEscape"
+        />
 
+        <!-- Models collection -->
         <k-collection
           v-bind="collection"
           :data-invalid="isInvalid"
@@ -82,25 +84,26 @@ export default {
         page: null
       },
       query: null,
-      searchable: false,
+      searching: false
     };
   },
   computed: {
     buttons() {
       let buttons = [];
 
-      if (this.canAdd) {
-        buttons.push({
-          icon: "add",
-          text: this.$t('add'),
-          click: this.onAdd
-        });
-      }
-
       if (this.canSearch) {
         buttons.push({
           icon: "filter",
-          click: this.onSearch
+          text: this.$t("search"),
+          click: this.onSearchToggle
+        });
+      }
+
+      if (this.canAdd) {
+        buttons.push({
+          icon: "add",
+          text: this.$t("add"),
+          click: this.onAdd
         });
       }
 
@@ -162,7 +165,7 @@ export default {
     query: debounce(function () {
       this.pagination.page = 0;
       this.reload();
-    }, 200),
+    }, 200)
   },
   created() {
     this.load();
@@ -202,14 +205,18 @@ export default {
     onAdd() {},
     onChange() {},
     onDrop() {},
-    onSearch() {
-      this.searchable = !this.searchable;
-    },
     onSort() {},
     onPaginate(pagination) {
       localStorage.setItem(this.paginationId, pagination.page);
       this.pagination = pagination;
       this.reload();
+    },
+    onSearchToggle() {
+      this.searching = !this.searching;
+    },
+    onSearchEscape() {
+      this.query = null;
+      this.searching = false;
     },
     onUpload() {},
 
@@ -227,5 +234,13 @@ export default {
 <style>
 .k-models-section[data-processing="true"] {
   pointer-events: none;
+}
+
+.k-models-section-search.k-input {
+  margin-bottom: var(--spacing-3);
+  background: var(--color-gray-300);
+  padding: var(--spacing-3);
+  border-radius: var(--rounded-xs);
+  font-size: var(--text-sm);
 }
 </style>
