@@ -1,10 +1,10 @@
 <template>
-  <dl class="k-stats">
+  <dl class="k-stats" :data-size="size">
     <component
-      v-for="(report, id) in reports"
       :is="report.link ? 'k-link' : 'div'"
-      :data-theme="report.theme"
+      v-for="(report, id) in reports"
       :key="id"
+      :data-theme="report.theme"
       :to="report.link"
       class="k-stat"
     >
@@ -18,7 +18,11 @@
 <script>
 export default {
   props: {
-    reports: Array
+    reports: Array,
+    size: {
+      type: String,
+      default: "large"
+    }
   }
 };
 </script>
@@ -26,7 +30,7 @@ export default {
 <style>
 .k-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   grid-gap: 1px;
 }
 .k-stat {
@@ -45,7 +49,7 @@ export default {
   display: block;
 }
 .k-stat-value {
-  font-size: var(--text-2xl);
+  font-size: var(--value);
   margin-bottom: var(--spacing-1);
   order: 1;
 }
@@ -59,5 +63,17 @@ export default {
 .k-stat-info {
   order: 3;
   color: var(--theme, var(--color-gray-500));
+}
+.k-stats[data-size="small"] {
+  --value: var(--text-md);
+}
+.k-stats[data-size="medium"] {
+  --value: var(--text-xl);
+}
+.k-stats[data-size="large"] {
+  --value: var(--text-2xl);
+}
+.k-stats[data-size="huge"] {
+  --value: var(--text-3xl);
 }
 </style>

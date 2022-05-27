@@ -9,7 +9,7 @@
           <k-headline>{{ $t("environment") }}</k-headline>
         </header>
 
-        <k-stats :reports="environment" class="k-system-info" />
+        <k-stats :reports="environment" size="medium" class="k-system-info" />
       </section>
 
       <section v-if="hasSecurityIssues" class="k-system-view-section">

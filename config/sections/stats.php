@@ -21,6 +21,9 @@ return [
             }
 
             return $reports;
+        },
+        'size' => function (string $size = 'large') {
+            return $size;
         }
     ],
     'computed' => [
