@@ -170,6 +170,151 @@ class SystemTest extends TestCase
     }
 
     /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForContentFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'content' => $this->fixtures . '/content',
+                'index'   => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/content');
+
+        $this->assertNull($system->folderUrl('content'));
+        $this->assertNull($system->exposedFileUrl('content'));
+
+        Dir::make($this->fixtures . '/content');
+
+        $this->assertSame('/content', $system->folderUrl('content'));
+        $this->assertSame('/content/site.txt', $system->exposedFileUrl('content'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForGitFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/.git');
+
+        $this->assertNull($system->folderUrl('git'));
+        $this->assertNull($system->exposedFileUrl('git'));
+
+        Dir::make($this->fixtures . '/.git');
+
+        $this->assertSame('/.git', $system->folderUrl('git'));
+        $this->assertSame('/.git/config', $system->exposedFileUrl('git'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForInsignificantFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures,
+                'media' => $this->fixtures . '/media'
+            ]
+        ]));
+
+        Dir::make($this->fixtures . '/media');
+
+        $this->assertSame('/media', $system->folderUrl('media'));
+        $this->assertNull($system->exposedFileUrl('media'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForKirbyFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'kirby' => $this->fixtures . '/kirby',
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/kirby');
+
+        $this->assertNull($system->folderUrl('kirby'));
+        $this->assertNull($system->exposedFileUrl('kirby'));
+
+        Dir::make($this->fixtures . '/kirby');
+
+        $this->assertSame('/kirby', $system->folderUrl('kirby'));
+        $this->assertSame('/kirby/composer.json', $system->exposedFileUrl('kirby'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForSiteFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'site'  => $this->fixtures . '/site',
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/site');
+
+        $this->assertNull($system->folderUrl('site'));
+
+        // with blueprints
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/blueprints/site.yml', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/blueprints/site.yml', $system->exposedFileUrl('site'));
+
+        // with templates
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/templates/default.php', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/templates/default.php', $system->exposedFileUrl('site'));
+
+        // with snippets
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/snippets/header.php', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/snippets/header.php', $system->exposedFileUrl('site'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForUnknownFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        $this->assertNull($system->folderUrl('unknown'));
+        $this->assertNull($system->exposedFileUrl('unknown'));
+    }
+
+    /**
      * @covers ::indexUrl
      * @dataProvider providerForIndexUrls
      */

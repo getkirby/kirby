@@ -87,6 +87,93 @@ class System
     }
 
     /**
+     * Returns the URL to the file within a system folder
+     * if the file is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
+     * @return string|null
+     */
+    public function exposedFileUrl(string $folder): ?string
+    {
+        if (!$url = $this->folderUrl($folder)) {
+            return null;
+        }
+
+        switch ($folder) {
+            case 'content':
+                return $url . '/' . basename($this->app->site()->contentFile());
+            case 'git':
+                return $url . '/config';
+            case 'kirby':
+                return $url . '/composer.json';
+            case 'site':
+                $root  = $this->app->root('site');
+                $files = glob($root . '/blueprints/*.yml');
+
+                if (empty($files) === true) {
+                    $files = glob($root . '/templates/*.*');
+                }
+
+                if (empty($files) === true) {
+                    $files = glob($root . '/snippets/*.*');
+                }
+
+                if (empty($files) === true || empty($files[0]) === true) {
+                    return $url;
+                }
+
+                $file = $files[0];
+                $file = basename(dirname($file)) . '/' . basename($file);
+
+                return $url . '/' . $file;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Returns the URL to a system folder
+     * if the folder is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
+     * @return string|null
+     */
+    public function folderUrl(string $folder): ?string
+    {
+        $index = $this->app->root('index');
+
+        if ($folder === 'git') {
+            $root = $index . '/.git';
+        } else {
+            $root = $this->app->root($folder);
+        }
+
+        if ($root === null || is_dir($root) === false || is_dir($index) === false) {
+            return null;
+        }
+
+        $root  = realpath($root);
+        $index = realpath($index);
+
+        // windows
+        $root  = str_replace('\\', '/', $root);
+        $index = str_replace('\\', '/', $index);
+
+        // the folder is not within the document root?
+        if (Str::startsWith($root, $index) === false) {
+            return null;
+        }
+
+        // get the path after the document root
+        $path = trim(Str::after($root, $index), '/');
+
+        // build the absolute URL to the folder
+        return url($path);
+    }
+
+    /**
      * Returns the app's human-readable
      * index URL without scheme
      *
