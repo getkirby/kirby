@@ -69,7 +69,7 @@ export default {
   color: var(--theme, var(--color-gray-500));
 }
 .k-stats[data-size="small"] {
-  --value: var(--text-md);
+  --value: var(--text-base);
 }
 .k-stats[data-size="medium"] {
   --value: var(--text-xl);
