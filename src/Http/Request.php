@@ -302,7 +302,7 @@ class Request
     /**
      * Returns whether the request contains
      * the `Authorization` header
-     * @since 3.6.6
+     * @since 3.7.0
      *
      * @return bool
      */

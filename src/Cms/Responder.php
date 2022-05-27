@@ -132,7 +132,7 @@ class Responder
      * Setter and getter for the flag that defines
      * whether the current response uses the HTTP
      * `Authorization` request header
-     * @since 3.6.6
+     * @since 3.7.0
      *
      * @param bool|null $usesAuth
      * @return bool|$this
@@ -150,7 +150,7 @@ class Responder
     /**
      * Setter for a cookie name that is
      * used by the response
-     * @since 3.6.6
+     * @since 3.7.0
      *
      * @param string $name
      * @return void
@@ -166,7 +166,7 @@ class Responder
     /**
      * Setter and getter for the list of cookie
      * names the response relies on
-     * @since 3.6.6
+     * @since 3.7.0
      *
      * @param array|null $usesCookies
      * @return array|$this
@@ -421,6 +421,7 @@ class Responder
      * all caches due to using dynamic data based on auth
      * and/or cookies; the request data only matters if it
      * is actually used/relied on by the response
+     * @since 3.7.0
      * @internal
      *
      * @param bool $usesAuth
