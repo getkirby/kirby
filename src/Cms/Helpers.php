@@ -9,11 +9,11 @@ use Kirby\Toolkit\Str;
  * The `Helpers` class hosts a few handy helper methods
  * @since 3.7.0
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Cms
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 class Helpers
 {
