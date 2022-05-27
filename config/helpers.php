@@ -62,7 +62,7 @@ if (
      */
     function collection(string $name)
     {
-        return kirby()->collection($name);
+        return App::instance()->collection($name);
     }
 }
 
@@ -83,10 +83,10 @@ if (
         // checking for null introduces a security issue because null could come
         // from user input or bugs in the calling code!
         if (func_num_args() === 0) {
-            return kirby()->csrf();
+            return App::instance()->csrf();
         }
 
-        return kirby()->csrf($check);
+        return App::instance()->csrf($check);
     }
 }
 
@@ -159,7 +159,7 @@ if (
      */
     function e($condition, $value, $alternative = null)
     {
-        echo r($condition, $value, $alternative);
+        echo $condition ? $value : $alternative;
     }
 }
 
@@ -195,7 +195,7 @@ if (
      */
     function get($key = null, $default = null)
     {
-        return kirby()->request()->get($key, $default);
+        return App::instance()->request()->get($key, $default);
     }
 }
 
@@ -213,7 +213,7 @@ if (
      */
     function gist(string $url, ?string $file = null): string
     {
-        return kirbytag([
+        return App::instance()->kirbytag([
             'gist' => $url,
             'file' => $file,
         ]);
@@ -292,7 +292,7 @@ if (
      */
     function image(?string $path = null)
     {
-        return kirby()->image($path);
+        return App::instance()->image($path);
     }
 }
 
@@ -365,7 +365,7 @@ if (
      */
     function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
     {
-        return kirby()->kirbytag($type, $value, $attr, $data);
+        return App::instance()->kirbytag($type, $value, $attr, $data);
     }
 }
 
@@ -384,7 +384,7 @@ if (
      */
     function kirbytags(?string $text = null, array $data = []): string
     {
-        return kirby()->kirbytags($text, $data);
+        return App::instance()->kirbytags($text, $data);
     }
 }
 
@@ -403,7 +403,7 @@ if (
      */
     function kirbytext(?string $text = null, array $data = []): string
     {
-        return kirby()->kirbytext($text, $data);
+        return App::instance()->kirbytext($text, $data);
     }
 }
 
@@ -423,7 +423,7 @@ if (
      */
     function kirbytextinline(?string $text = null, array $data = []): string
     {
-        return kirby()->kirbytext($text, $data, true);
+        return App::instance()->kirbytext($text, $data, true);
     }
 }
 
@@ -441,7 +441,7 @@ if (
      */
     function kt(?string $text = null, array $data = []): string
     {
-        return kirbytext($text, $data);
+        return App::instance()->kirbytext($text, $data);
     }
 }
 
@@ -460,7 +460,7 @@ if (
      */
     function kti(?string $text = null, array $data = []): string
     {
-        return kirbytextinline($text, $data);
+        return App::instance()->kirbytext($text, $data, true);
     }
 }
 
@@ -496,7 +496,7 @@ if (
      */
     function markdown(?string $text = null, array $data = []): string
     {
-        return kirby()->markdown($text, $data);
+        return App::instance()->markdown($text, $data);
     }
 }
 
@@ -514,7 +514,7 @@ if (
      */
     function option(string $key, $default = null)
     {
-        return kirby()->option($key, $default);
+        return App::instance()->option($key, $default);
     }
 }
 
@@ -534,16 +534,16 @@ if (
     function page(...$id)
     {
         if (empty($id) === true) {
-            return kirby()->site()->page();
+            return App::instance()->site()->page();
         }
 
         if (count($id) > 1) {
             // @codeCoverageIgnoreStart
-            deprecated('Passing multiple parameters to the `page()` helper has been deprecated. Please use the `pages()` helper instead.');
+            Helpers::deprecated('Passing multiple parameters to the `page()` helper has been deprecated. Please use the `pages()` helper instead.');
             // @codeCoverageIgnoreEnd
         }
 
-        return kirby()->site()->find(...$id);
+        return App::instance()->site()->find(...$id);
     }
 }
 
@@ -563,11 +563,11 @@ if (
     {
         if (count($id) === 1 && is_array($id[0]) === false) {
             // @codeCoverageIgnoreStart
-            deprecated('Passing a single id to the `pages()` helper will return a Kirby\Cms\Pages collection with a single element instead of the single Kirby\Cms\Page object itself - starting in 3.7.0.');
+            Helpers::deprecated('Passing a single id to the `pages()` helper will return a Kirby\Cms\Pages collection with a single element instead of the single Kirby\Cms\Page object itself - starting in 3.7.0.');
             // @codeCoverageIgnoreEnd
         }
 
-        return kirby()->site()->find(...$id);
+        return App::instance()->site()->find(...$id);
     }
 }
 
@@ -585,7 +585,7 @@ if (
      */
     function param(string $key, ?string $fallback = null): ?string
     {
-        return kirby()->request()->url()->params()->$key ?? $fallback;
+        return App::instance()->request()->url()->params()->$key ?? $fallback;
     }
 }
 
@@ -601,7 +601,7 @@ if (
      */
     function params(): array
     {
-        return kirby()->request()->url()->params()->toArray();
+        return App::instance()->request()->url()->params()->toArray();
     }
 }
 
@@ -658,7 +658,7 @@ if (
      */
     function site()
     {
-        return kirby()->site();
+        return App::instance()->site();
     }
 }
 
@@ -694,7 +694,7 @@ if (
      */
     function smartypants(?string $text = null): string
     {
-        return kirby()->smartypants($text);
+        return App::instance()->smartypants($text);
     }
 }
 
@@ -713,7 +713,7 @@ if (
      */
     function snippet($name, $data = [], bool $return = false)
     {
-        return kirby()->snippet($name, $data, $return);
+        return App::instance()->snippet($name, $data, $return);
     }
 }
 
@@ -834,7 +834,7 @@ if (
      */
     function twitter(string $username, ?string $text = null, ?string $title = null, ?string $class = null): string
     {
-        return kirbytag([
+        return App::instance()->kirbytag([
             'twitter' => $username,
             'text'    => $text,
             'title'   => $title,

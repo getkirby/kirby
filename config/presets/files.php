@@ -1,9 +1,11 @@
 <?php
 
+use Kirby\Toolkit\I18n;
+
 return function (array $props) {
     $props['sections'] = [
         'files' => [
-            'headline' => $props['headline'] ?? t('files'),
+            'headline' => $props['headline'] ?? I18n::translate('files'),
             'type'     => 'files',
             'layout'   => $props['layout'] ?? 'cards',
             'template' => $props['template'] ?? null,

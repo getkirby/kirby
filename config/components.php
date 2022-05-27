@@ -335,8 +335,8 @@ return [
      */
     'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
         $darkroom = Darkroom::factory(
-            option('thumbs.driver', 'gd'),
-            option('thumbs', [])
+            $kirby->option('thumbs.driver', 'gd'),
+            $kirby->option('thumbs', [])
         );
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
@@ -374,7 +374,13 @@ return [
         if ($kirby->multilang() === true) {
             $parts = Str::split($path, '#');
 
-            if ($page = page($parts[0] ?? null)) {
+            if ($parts[0] ?? null) {
+                $page = $kirby->site()->find($parts[0]);
+            } else {
+                $page = $kirby->site()->page();
+            }
+
+            if ($page) {
                 $path = $page->url($language);
 
                 if (isset($parts[1]) === true) {

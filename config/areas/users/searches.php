@@ -1,13 +1,15 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 return [
     'users' => [
-        'label' => t('users'),
+        'label' => I18n::translate('users'),
         'icon'  => 'users',
         'query' => function (string $query = null) {
-            $users   = kirby()->users()->search($query)->limit(10);
+            $users   = App::instance()->users()->search($query)->limit(10);
             $results = [];
 
             foreach ($users as $user) {

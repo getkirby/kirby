@@ -170,7 +170,7 @@ class System
         $path = trim(Str::after($root, $index), '/');
 
         // build the absolute URL to the folder
-        return url($path);
+        return Url::to($path);
     }
 
     /**

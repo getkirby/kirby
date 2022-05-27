@@ -732,7 +732,7 @@ class File extends ModelWithContent
     public function previewUrl(): string
     {
         $parent = $this->parent();
-        $url    = url($this->id());
+        $url    = Url::to($this->id());
 
         switch ($parent::CLASS_ALIAS) {
             case 'page':

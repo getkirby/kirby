@@ -11,6 +11,7 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -665,7 +666,7 @@ trait PageActions
     {
 
         // create the slug for the duplicate
-        $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(t('page.duplicate.appendix')));
+        $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(I18n::translate('page.duplicate.appendix')));
 
         $arguments = [
             'originalPage' => $this,

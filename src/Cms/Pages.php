@@ -54,12 +54,14 @@ class Pages extends Collection
      */
     public function add($object)
     {
+        $site = App::instance()->site();
+
         // add a pages collection
         if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
         // add a page by id
-        } elseif (is_string($object) === true && $page = page($object)) {
+        } elseif (is_string($object) === true && $page = $site->find($object)) {
             $this->__set($page->id(), $page);
 
         // add a page object

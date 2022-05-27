@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Toolkit\Escape;
 
@@ -7,8 +8,8 @@ return [
     'users' => [
         'pattern' => 'users',
         'action'  => function () {
-            $kirby = kirby();
-            $role  = get('role');
+            $kirby = App::instance();
+            $role  = $kirby->request()->get('role');
             $roles = $kirby->roles()->toArray(fn ($role) => [
                 'id'    => $role->id(),
                 'title' => $role->title(),
@@ -32,7 +33,7 @@ return [
 
                         $users = $users->paginate([
                             'limit' => 20,
-                            'page'  => get('page')
+                            'page'  => $kirby->request()->get('page')
                         ]);
 
                         return [

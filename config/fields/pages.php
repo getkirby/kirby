@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
@@ -62,7 +63,7 @@ return [
         },
         'toPages' => function ($value = null) {
             $pages = [];
-            $kirby = kirby();
+            $kirby = App::instance();
 
             foreach (Data::decode($value, 'yaml') as $id) {
                 if (is_array($id) === true) {

@@ -59,7 +59,7 @@ class Html extends \Kirby\Toolkit\Html
             'href' => $url
         ]);
 
-        return '<link ' . attr($attr) . '>';
+        return '<link ' . static::attr($attr) . '>';
     }
 
     /**

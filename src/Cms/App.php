@@ -1281,7 +1281,7 @@ class App
 
         // search for a draft if the page cannot be found
         if (!$page && $draft = $site->draft($path)) {
-            if ($this->user() || $draft->isVerified(get('token'))) {
+            if ($this->user() || $draft->isVerified($this->request()->get('token'))) {
                 $page = $draft;
             }
         }

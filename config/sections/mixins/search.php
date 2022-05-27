@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\App;
+
 return [
     'props' => [
         /**
@@ -11,7 +13,7 @@ return [
     ],
     'computed' => [
         'query' => function (): ?string {
-            return get('query');
+            return App::instance()->request()->get('query');
         }
     ]
 ];

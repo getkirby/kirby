@@ -38,7 +38,7 @@ class Items extends Collection
     public function __construct($objects = [], array $options = [])
     {
         $this->options = $options;
-        $this->parent  = $options['parent'] ?? site();
+        $this->parent  = $options['parent'] ?? App::instance()->site();
 
         parent::__construct($objects, $this->parent);
     }
@@ -55,7 +55,7 @@ class Items extends Collection
     {
         $options = array_merge([
             'options' => [],
-            'parent'  => site(),
+            'parent'  => App::instance()->site(),
         ], $params);
 
         if (empty($items) === true || is_array($items) === false) {

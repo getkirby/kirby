@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
@@ -34,7 +35,7 @@ class Document
      */
     public static function assets(): array
     {
-        $kirby = kirby();
+        $kirby = App::instance();
         $nonce = $kirby->nonce();
 
         // get the assets from the Vite dev server in dev mode;
@@ -137,7 +138,7 @@ class Document
      */
     public static function customAsset(string $option): ?string
     {
-        if ($path = kirby()->option($option)) {
+        if ($path = App::instance()->option($option)) {
             $asset = new Asset($path);
 
             if ($asset->exists() === true) {
@@ -176,7 +177,7 @@ class Document
      */
     public static function favicon(string $url = ''): array
     {
-        $kirby = kirby();
+        $kirby = App::instance();
         $icons = $kirby->option('panel.favicon', [
             'apple-touch-icon' => [
                 'type' => 'image/png',
@@ -218,7 +219,7 @@ class Document
      */
     public static function icons(): string
     {
-        return F::read(kirby()->root('kirby') . '/panel/dist/img/icons.svg');
+        return F::read(App::instance()->root('kirby') . '/panel/dist/img/icons.svg');
     }
 
     /**
@@ -230,7 +231,7 @@ class Document
      */
     public static function link(): bool
     {
-        $kirby       = kirby();
+        $kirby       = App::instance();
         $mediaRoot   = $kirby->root('media') . '/panel';
         $panelRoot   = $kirby->root('panel') . '/dist';
         $versionHash = $kirby->versionHash();
@@ -263,7 +264,7 @@ class Document
      */
     public static function response(array $fiber)
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         // Full HTML response
         // @codeCoverageIgnoreStart

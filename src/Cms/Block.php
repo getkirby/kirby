@@ -278,7 +278,8 @@ class Block extends Item
     public function toHtml(): string
     {
         try {
-            return (string)snippet('blocks/' . $this->type(), $this->controller(), true);
+            $kirby = $this->parent()->kirby();
+            return (string)$kirby->snippet('blocks/' . $this->type(), $this->controller(), true);
         } catch (Throwable $e) {
             return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
         }
