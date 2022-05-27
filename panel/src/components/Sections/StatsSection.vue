@@ -5,7 +5,7 @@
         {{ headline }}
       </k-headline>
     </header>
-    <k-stats v-if="reports.length > 0" :reports="reports" />
+    <k-stats v-if="reports.length > 0" :reports="reports" :size="size" />
     <k-empty v-else icon="chart"> {{ empty || $t("stats.empty") }}</k-empty>
   </section>
 </template>
@@ -19,7 +19,8 @@ export default {
     return {
       isLoading: true,
       headline: null,
-      reports: null
+      reports: null,
+      size: null
     };
   },
   async created() {
@@ -27,6 +28,7 @@ export default {
     this.isLoading = false;
     this.headline = section.headline;
     this.reports = section.reports;
+    this.size = section.size;
   },
   methods: {}
 };
