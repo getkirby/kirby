@@ -31,7 +31,7 @@
           :placeholder="$t('search') + ' …'"
           type="text"
           class="k-models-section-search"
-          @keydown.esc="onSearchEscape"
+          @keydown.esc="onSearchToggle"
         />
 
         <!-- Models collection -->
@@ -142,10 +142,17 @@ export default {
       return this.data;
     },
     isInvalid() {
+      // disable validation while filtering via search
+      if (this.query?.length > 0) {
+        return false;
+      }
+
+      // validate min
       if (this.options.min && this.data.length < this.options.min) {
         return true;
       }
 
+      // validate max
       if (this.options.max && this.data.length > this.options.max) {
         return true;
       }
@@ -216,10 +223,7 @@ export default {
     },
     onSearchToggle() {
       this.searching = !this.searching;
-    },
-    onSearchEscape() {
       this.query = null;
-      this.searching = false;
     },
     onUpload() {},
 
