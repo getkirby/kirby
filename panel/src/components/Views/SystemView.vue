@@ -118,7 +118,7 @@ export default {
             ? this.license
             : this.$t("license.unregistered.label"),
           theme: this.$lincense ? null : "negative",
-          link: this.$lincense ? null : () => this.$dialog("registration")
+          click: this.$lincense ? null : () => this.$dialog("registration")
         },
         {
           label: this.$t("version"),

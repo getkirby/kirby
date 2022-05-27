@@ -5,8 +5,10 @@
       v-for="(report, id) in reports"
       :key="id"
       :data-theme="report.theme"
+      :data-click="!!report.click"
       :to="report.link"
       class="k-stat"
+      @click="report.click ? report.click() : null"
     >
       <dt class="k-stat-label">{{ report.label }}</dt>
       <dd class="k-stat-value">{{ report.value }}</dd>
@@ -41,7 +43,9 @@ export default {
   padding: var(--spacing-3) var(--spacing-6);
   line-height: var(--leading-normal);
 }
-.k-stat.k-link:hover {
+.k-stat.k-link:hover,
+.k-stat[data-click="true"]:hover {
+  cursor: pointer;
   background: var(--color-gray-100);
 }
 .k-stat dt,
