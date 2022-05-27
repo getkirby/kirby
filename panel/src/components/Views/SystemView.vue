@@ -158,6 +158,9 @@ export default {
     }
   },
   created() {
+    console.info(
+      "Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
+    );
     this.check("content");
     this.check("git");
     this.check("kirby");
