@@ -10,12 +10,10 @@
         <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
-      <k-button-group
-        v-if="canAdd"
-        :buttons="[{ text: $t('add'), icon: 'add', click: onAdd }]"
-      />
+      <k-button-group :buttons="buttons" />
     </header>
 
+    <!-- Error -->
     <k-box v-if="error" theme="negative">
       <k-text size="small">
         <strong> {{ $t("error.section.notLoaded", { name: name }) }}: </strong>
@@ -25,6 +23,18 @@
 
     <template v-else>
       <k-dropzone :disabled="!canDrop" @drop="onDrop">
+        <!-- Search filter  -->
+        <k-input
+          v-if="searching && options.search"
+          v-model="query"
+          :autofocus="true"
+          :placeholder="$t('search') + ' …'"
+          type="text"
+          class="k-models-section-search"
+          @keydown.esc="onSearchToggle"
+        />
+
+        <!-- Models collection -->
         <k-collection
           v-bind="collection"
           :data-invalid="isInvalid"
@@ -42,6 +52,8 @@
 </template>
 
 <script>
+import debounce from "@/helpers/debounce";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -70,15 +82,42 @@ export default {
       },
       pagination: {
         page: null
-      }
+      },
+      query: null,
+      searching: false
     };
   },
   computed: {
+    buttons() {
+      let buttons = [];
+
+      if (this.canSearch) {
+        buttons.push({
+          icon: "filter",
+          text: this.$t("search"),
+          click: this.onSearchToggle,
+          responsive: true
+        });
+      }
+
+      if (this.canAdd) {
+        buttons.push({
+          icon: "add",
+          text: this.$t("add"),
+          click: this.onAdd
+        });
+      }
+
+      return buttons;
+    },
     canAdd() {
       return true;
     },
     canDrop() {
       return false;
+    },
+    canSearch() {
+      return this.options.search;
     },
     collection() {
       return {
@@ -94,17 +133,26 @@ export default {
     emptyProps() {
       return {
         icon: "page",
-        text: this.options.empty || this.$t("pages.empty")
+        text: this.searching
+          ? this.$t("pages.empty.filtered")
+          : this.options.empty || this.$t("pages.empty")
       };
     },
     items() {
       return this.data;
     },
     isInvalid() {
+      // disable validation while filtering via search
+      if (this.query?.length > 0) {
+        return false;
+      }
+
+      // validate min
       if (this.options.min && this.data.length < this.options.min) {
         return true;
       }
 
+      // validate max
       if (this.options.max && this.data.length > this.options.max) {
         return true;
       }
@@ -123,7 +171,11 @@ export default {
     // the view has changed in the backend
     timestamp() {
       this.reload();
-    }
+    },
+    query: debounce(function () {
+      this.pagination.page = 0;
+      this.reload();
+    }, 200)
   },
   created() {
     this.load();
@@ -145,7 +197,7 @@ export default {
       try {
         const response = await this.$api.get(
           this.parent + "/sections/" + this.name,
-          { page: this.pagination.page }
+          { page: this.pagination.page, query: this.query }
         );
 
         this.options = response.options;
@@ -169,6 +221,10 @@ export default {
       this.pagination = pagination;
       this.reload();
     },
+    onSearchToggle() {
+      this.searching = !this.searching;
+      this.query = null;
+    },
     onUpload() {},
 
     async reload() {
@@ -185,5 +241,13 @@ export default {
 <style>
 .k-models-section[data-processing="true"] {
   pointer-events: none;
+}
+
+.k-models-section-search.k-input {
+  margin-bottom: var(--spacing-3);
+  background: var(--color-gray-300);
+  padding: var(--spacing-3);
+  border-radius: var(--rounded-xs);
+  font-size: var(--text-sm);
 }
 </style>

@@ -293,6 +293,7 @@
 
   "files": "Files",
   "files.empty": "No files yet",
+  "files.empty.filtered": "No matching files",
 
   "hide": "Hide",
   "hour": "Hour",
@@ -436,6 +437,7 @@
 
   "pages": "Pages",
   "pages.empty": "No pages yet",
+  "pages.empty.filtered": "No matching pages",
   "pages.status.draft": "Drafts",
   "pages.status.listed": "Published",
   "pages.status.unlisted": "Unlisted",
