@@ -1,12 +1,14 @@
 <template>
-  <dl class="k-stats">
+  <dl class="k-stats" :data-size="size">
     <component
-      v-for="(report, id) in reports"
       :is="report.link ? 'k-link' : 'div'"
-      :data-theme="report.theme"
+      v-for="(report, id) in reports"
       :key="id"
+      :data-theme="report.theme"
+      :data-click="!!report.click"
       :to="report.link"
       class="k-stat"
+      @click="report.click ? report.click() : null"
     >
       <dt class="k-stat-label">{{ report.label }}</dt>
       <dd class="k-stat-value">{{ report.value }}</dd>
@@ -18,7 +20,11 @@
 <script>
 export default {
   props: {
-    reports: Array
+    reports: Array,
+    size: {
+      type: String,
+      default: "large"
+    }
   }
 };
 </script>
@@ -26,7 +32,7 @@ export default {
 <style>
 .k-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   grid-gap: 1px;
 }
 .k-stat {
@@ -37,7 +43,9 @@ export default {
   padding: var(--spacing-3) var(--spacing-6);
   line-height: var(--leading-normal);
 }
-.k-stat.k-link:hover {
+.k-stat.k-link:hover,
+.k-stat[data-click="true"]:hover {
+  cursor: pointer;
   background: var(--color-gray-100);
 }
 .k-stat dt,
@@ -45,7 +53,7 @@ export default {
   display: block;
 }
 .k-stat-value {
-  font-size: var(--text-2xl);
+  font-size: var(--value);
   margin-bottom: var(--spacing-1);
   order: 1;
 }
@@ -59,5 +67,17 @@ export default {
 .k-stat-info {
   order: 3;
   color: var(--theme, var(--color-gray-500));
+}
+.k-stats[data-size="small"] {
+  --value: var(--text-base);
+}
+.k-stats[data-size="medium"] {
+  --value: var(--text-xl);
+}
+.k-stats[data-size="large"] {
+  --value: var(--text-2xl);
+}
+.k-stats[data-size="huge"] {
+  --value: var(--text-3xl);
 }
 </style>
