@@ -13,7 +13,7 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
-if (Helpers::hasOverride('asset') === false) {
+if (Helpers::hasOverride('asset') === false) { // @codeCoverageIgnore
     /**
      * Helper to create an asset object
      *
@@ -26,7 +26,7 @@ if (Helpers::hasOverride('asset') === false) {
     }
 }
 
-if (Helpers::hasOverride('attr') === false) {
+if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
     /**
      * Generates a list of HTML attributes
      *
@@ -41,7 +41,7 @@ if (Helpers::hasOverride('attr') === false) {
     }
 }
 
-if (Helpers::hasOverride('collection') === false) {
+if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
     /**
      * Returns the result of a collection by name
      *
@@ -54,7 +54,7 @@ if (Helpers::hasOverride('collection') === false) {
     }
 }
 
-if (Helpers::hasOverride('csrf') === false) {
+if (Helpers::hasOverride('csrf') === false) { // @codeCoverageIgnore
     /**
      * Checks / returns a CSRF token
      *
@@ -74,7 +74,7 @@ if (Helpers::hasOverride('csrf') === false) {
     }
 }
 
-if (Helpers::hasOverride('css') === false) {
+if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
     /**
      * Creates one or multiple CSS link tags
      *
@@ -88,7 +88,7 @@ if (Helpers::hasOverride('css') === false) {
     }
 }
 
-if (Helpers::hasOverride('deprecated') === false) {
+if (Helpers::hasOverride('deprecated') === false) { // @codeCoverageIgnore
     /**
      * Triggers a deprecation warning if debug mode is active
      * @since 3.3.0
@@ -102,7 +102,7 @@ if (Helpers::hasOverride('deprecated') === false) {
     }
 }
 
-if (Helpers::hasOverride('dump') === false) {
+if (Helpers::hasOverride('dump') === false) { // @codeCoverageIgnore
     /**
      * Simple object and variable dumper
      * to help with debugging.
@@ -117,7 +117,7 @@ if (Helpers::hasOverride('dump') === false) {
     }
 }
 
-if (Helpers::hasOverride('e') === false) {
+if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
     /**
      * Smart version of echo with an if condition as first argument
      *
@@ -131,7 +131,7 @@ if (Helpers::hasOverride('e') === false) {
     }
 }
 
-if (Helpers::hasOverride('esc') === false) {
+if (Helpers::hasOverride('esc') === false) { // @codeCoverageIgnore
     /**
      * Escape context specific output
      *
@@ -145,7 +145,7 @@ if (Helpers::hasOverride('esc') === false) {
     }
 }
 
-if (Helpers::hasOverride('get') === false) {
+if (Helpers::hasOverride('get') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for $kirby->request()->get()
      *
@@ -159,7 +159,7 @@ if (Helpers::hasOverride('get') === false) {
     }
 }
 
-if (Helpers::hasOverride('gist') === false) {
+if (Helpers::hasOverride('gist') === false) { // @codeCoverageIgnore
     /**
      * Embeds a Github Gist
      *
@@ -176,7 +176,7 @@ if (Helpers::hasOverride('gist') === false) {
     }
 }
 
-if (Helpers::hasOverride('go') === false) {
+if (Helpers::hasOverride('go') === false) { // @codeCoverageIgnore
     /**
      * Redirects to the given Urls
      * Urls can be relative or absolute.
@@ -191,7 +191,7 @@ if (Helpers::hasOverride('go') === false) {
     }
 }
 
-if (Helpers::hasOverride('h') === false) {
+if (Helpers::hasOverride('h') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for html()
      *
@@ -205,7 +205,7 @@ if (Helpers::hasOverride('h') === false) {
     }
 }
 
-if (Helpers::hasOverride('html') === false) {
+if (Helpers::hasOverride('html') === false) { // @codeCoverageIgnore
     /**
      * Creates safe html by encoding special characters
      *
@@ -219,7 +219,7 @@ if (Helpers::hasOverride('html') === false) {
     }
 }
 
-if (Helpers::hasOverride('image') === false) {
+if (Helpers::hasOverride('image') === false) { // @codeCoverageIgnore
     /**
      * Return an image from any page
      * specified by the path
@@ -236,7 +236,7 @@ if (Helpers::hasOverride('image') === false) {
     }
 }
 
-if (Helpers::hasOverride('invalid') === false) {
+if (Helpers::hasOverride('invalid') === false) { // @codeCoverageIgnore
     /**
      * Runs a number of validators on a set of data and checks if the data is invalid
      *
@@ -251,7 +251,7 @@ if (Helpers::hasOverride('invalid') === false) {
     }
 }
 
-if (Helpers::hasOverride('js') === false) {
+if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
     /**
      * Creates a script tag to load a javascript file
      *
@@ -265,7 +265,7 @@ if (Helpers::hasOverride('js') === false) {
     }
 }
 
-if (Helpers::hasOverride('kirby') === false) {
+if (Helpers::hasOverride('kirby') === false) { // @codeCoverageIgnore
     /**
      * Returns the Kirby object in any situation
      *
@@ -277,7 +277,7 @@ if (Helpers::hasOverride('kirby') === false) {
     }
 }
 
-if (Helpers::hasOverride('kirbytag') === false) {
+if (Helpers::hasOverride('kirbytag') === false) { // @codeCoverageIgnore
     /**
      * Makes it possible to use any defined Kirbytag as standalone function
      *
@@ -293,7 +293,7 @@ if (Helpers::hasOverride('kirbytag') === false) {
     }
 }
 
-if (Helpers::hasOverride('kirbytags') === false) {
+if (Helpers::hasOverride('kirbytags') === false) { // @codeCoverageIgnore
     /**
      * Parses KirbyTags in the given string. Shortcut
      * for `$kirby->kirbytags($text, $data)`
@@ -308,7 +308,7 @@ if (Helpers::hasOverride('kirbytags') === false) {
     }
 }
 
-if (Helpers::hasOverride('kirbytext') === false) {
+if (Helpers::hasOverride('kirbytext') === false) { // @codeCoverageIgnore
     /**
      * Parses KirbyTags and Markdown in the
      * given string. Shortcut for `$kirby->kirbytext()`
@@ -323,7 +323,7 @@ if (Helpers::hasOverride('kirbytext') === false) {
     }
 }
 
-if (Helpers::hasOverride('kirbytextinline') === false) {
+if (Helpers::hasOverride('kirbytextinline') === false) { // @codeCoverageIgnore
     /**
      * Parses KirbyTags and inline Markdown in the
      * given string.
@@ -339,7 +339,7 @@ if (Helpers::hasOverride('kirbytextinline') === false) {
     }
 }
 
-if (Helpers::hasOverride('kt') === false) {
+if (Helpers::hasOverride('kt') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for `kirbytext()` helper
      *
@@ -353,7 +353,7 @@ if (Helpers::hasOverride('kt') === false) {
     }
 }
 
-if (Helpers::hasOverride('kti') === false) {
+if (Helpers::hasOverride('kti') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for `kirbytextinline()` helper
      * @since 3.1.0
@@ -368,7 +368,7 @@ if (Helpers::hasOverride('kti') === false) {
     }
 }
 
-if (Helpers::hasOverride('load') === false) {
+if (Helpers::hasOverride('load') === false) { // @codeCoverageIgnore
     /**
      * A super simple class autoloader
      *
@@ -382,7 +382,7 @@ if (Helpers::hasOverride('load') === false) {
     }
 }
 
-if (Helpers::hasOverride('markdown') === false) {
+if (Helpers::hasOverride('markdown') === false) { // @codeCoverageIgnore
     /**
      * Parses markdown in the given string. Shortcut for
      * `$kirby->markdown($text)`
@@ -396,7 +396,7 @@ if (Helpers::hasOverride('markdown') === false) {
     }
 }
 
-if (Helpers::hasOverride('option') === false) {
+if (Helpers::hasOverride('option') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for `$kirby->option($key, $default)`
      *
@@ -410,7 +410,7 @@ if (Helpers::hasOverride('option') === false) {
     }
 }
 
-if (Helpers::hasOverride('page') === false) {
+if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
     /**
      * Fetches a single page or multiple pages by
      * id or the current page when no id is specified
@@ -435,7 +435,7 @@ if (Helpers::hasOverride('page') === false) {
     }
 }
 
-if (Helpers::hasOverride('pages') === false) {
+if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
     /**
      * Helper to build page collections
      *
@@ -455,7 +455,7 @@ if (Helpers::hasOverride('pages') === false) {
     }
 }
 
-if (Helpers::hasOverride('param') === false) {
+if (Helpers::hasOverride('param') === false) { // @codeCoverageIgnore
     /**
      * Returns a single param from the URL
      *
@@ -469,7 +469,7 @@ if (Helpers::hasOverride('param') === false) {
     }
 }
 
-if (Helpers::hasOverride('params') === false) {
+if (Helpers::hasOverride('params') === false) { // @codeCoverageIgnore
     /**
      * Returns all params from the current Url
      *
@@ -481,7 +481,7 @@ if (Helpers::hasOverride('params') === false) {
     }
 }
 
-if (Helpers::hasOverride('r') === false) {
+if (Helpers::hasOverride('r') === false) { // @codeCoverageIgnore
     /**
      * Smart version of return with an if condition as first argument
      *
@@ -496,7 +496,7 @@ if (Helpers::hasOverride('r') === false) {
     }
 }
 
-if (Helpers::hasOverride('router') === false) {
+if (Helpers::hasOverride('router') === false) { // @codeCoverageIgnore
     /**
      * Creates a micro-router and executes
      * the routing action immediately
@@ -514,7 +514,7 @@ if (Helpers::hasOverride('router') === false) {
     }
 }
 
-if (Helpers::hasOverride('site') === false) {
+if (Helpers::hasOverride('site') === false) { // @codeCoverageIgnore
     /**
      * Returns the current site object
      *
@@ -526,7 +526,7 @@ if (Helpers::hasOverride('site') === false) {
     }
 }
 
-if (Helpers::hasOverride('size') === false) {
+if (Helpers::hasOverride('size') === false) { // @codeCoverageIgnore
     /**
      * Determines the size/length of numbers, strings, arrays and countable objects
      *
@@ -540,7 +540,7 @@ if (Helpers::hasOverride('size') === false) {
     }
 }
 
-if (Helpers::hasOverride('smartypants') === false) {
+if (Helpers::hasOverride('smartypants') === false) { // @codeCoverageIgnore
     /**
      * Enhances the given string with
      * smartypants. Shortcut for `$kirby->smartypants($text)`
@@ -554,7 +554,7 @@ if (Helpers::hasOverride('smartypants') === false) {
     }
 }
 
-if (Helpers::hasOverride('snippet') === false) {
+if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
     /**
      * Embeds a snippet from the snippet folder
      *
@@ -569,7 +569,7 @@ if (Helpers::hasOverride('snippet') === false) {
     }
 }
 
-if (Helpers::hasOverride('svg') === false) {
+if (Helpers::hasOverride('svg') === false) { // @codeCoverageIgnore
     /**
      * Includes an SVG file by absolute or
      * relative file path.
@@ -583,7 +583,7 @@ if (Helpers::hasOverride('svg') === false) {
     }
 }
 
-if (Helpers::hasOverride('t') === false) {
+if (Helpers::hasOverride('t') === false) { // @codeCoverageIgnore
     /**
      * Returns translate string for key from translation file
      *
@@ -598,7 +598,7 @@ if (Helpers::hasOverride('t') === false) {
     }
 }
 
-if (Helpers::hasOverride('tc') === false) {
+if (Helpers::hasOverride('tc') === false) { // @codeCoverageIgnore
     /**
      * Translates a count
      *
@@ -618,7 +618,7 @@ if (Helpers::hasOverride('tc') === false) {
     }
 }
 
-if (Helpers::hasOverride('timestamp') === false) {
+if (Helpers::hasOverride('timestamp') === false) { // @codeCoverageIgnore
     /**
      * Rounds the minutes of the given date
      * by the defined step
@@ -633,7 +633,7 @@ if (Helpers::hasOverride('timestamp') === false) {
     }
 }
 
-if (Helpers::hasOverride('tt') === false) {
+if (Helpers::hasOverride('tt') === false) { // @codeCoverageIgnore
     /**
      * Translate by key and then replace
      * placeholders in the text
@@ -650,7 +650,7 @@ if (Helpers::hasOverride('tt') === false) {
     }
 }
 
-if (Helpers::hasOverride('twitter') === false) {
+if (Helpers::hasOverride('twitter') === false) { // @codeCoverageIgnore
     /**
      * Builds a Twitter link
      *
@@ -671,7 +671,7 @@ if (Helpers::hasOverride('twitter') === false) {
     }
 }
 
-if (Helpers::hasOverride('u') === false) {
+if (Helpers::hasOverride('u') === false) { // @codeCoverageIgnore
     /**
      * Shortcut for url()
      *
@@ -685,7 +685,7 @@ if (Helpers::hasOverride('u') === false) {
     }
 }
 
-if (Helpers::hasOverride('url') === false) {
+if (Helpers::hasOverride('url') === false) { // @codeCoverageIgnore
     /**
      * Builds an absolute URL for a given path
      *
@@ -699,7 +699,7 @@ if (Helpers::hasOverride('url') === false) {
     }
 }
 
-if (Helpers::hasOverride('uuid') === false) {
+if (Helpers::hasOverride('uuid') === false) { // @codeCoverageIgnore
     /**
      * Creates a compliant v4 UUID
      *
@@ -711,7 +711,7 @@ if (Helpers::hasOverride('uuid') === false) {
     }
 }
 
-if (Helpers::hasOverride('video') === false) {
+if (Helpers::hasOverride('video') === false) { // @codeCoverageIgnore
     /**
      * Creates a video embed via iframe for Youtube or Vimeo
      * videos. The embed Urls are automatically detected from
@@ -728,7 +728,7 @@ if (Helpers::hasOverride('video') === false) {
     }
 }
 
-if (Helpers::hasOverride('vimeo') === false) {
+if (Helpers::hasOverride('vimeo') === false) { // @codeCoverageIgnore
     /**
      * Embeds a Vimeo video by URL in an iframe
      *
@@ -743,7 +743,7 @@ if (Helpers::hasOverride('vimeo') === false) {
     }
 }
 
-if (Helpers::hasOverride('widont') === false) {
+if (Helpers::hasOverride('widont') === false) { // @codeCoverageIgnore
     /**
      * The widont function makes sure that there are no
      * typographical widows at the end of a paragraph –
@@ -758,7 +758,7 @@ if (Helpers::hasOverride('widont') === false) {
     }
 }
 
-if (Helpers::hasOverride('youtube') === false) {
+if (Helpers::hasOverride('youtube') === false) { // @codeCoverageIgnore
     /**
      * Embeds a Youtube video by URL in an iframe
      *
