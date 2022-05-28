@@ -25,4 +25,8 @@
             </errorLevel>
         </InvalidScope>
     </issueHandlers>
+
+    <plugins>
+        <plugin filename="etc/psalm-plugins/HelperFunctionUsePlugin.php" />
+    </plugins>
 </psalm>
