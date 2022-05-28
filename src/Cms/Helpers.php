@@ -47,6 +47,20 @@ class Helpers
     }
 
     /**
+     * Checks if a helper was overridden by the user
+     * by setting the `KIRBY_HELPER_*` constant
+     * @internal
+     *
+     * @param string $name Name of the helper
+     * @return bool
+     */
+    public static function hasOverride(string $name): bool
+    {
+        $name = 'KIRBY_HELPER_' . strtoupper($name);
+        return defined($name) === true && constant($name) === false;
+    }
+
+    /**
      * Determines the size/length of numbers,
      * strings, arrays and countable objects
      *
