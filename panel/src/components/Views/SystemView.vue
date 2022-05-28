@@ -146,14 +146,15 @@ export default {
       );
     }
   },
-  created() {
+  async created() {
     console.info(
       "Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
     );
-    this.check("content");
-    this.check("git");
-    this.check("kirby");
-    this.check("site");
+    await this.check("content");
+    await this.check("git");
+    await this.check("kirby");
+    await this.check("site");
+    console.info("System health checks ended.");
   },
   methods: {
     async check(key) {
