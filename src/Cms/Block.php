@@ -109,7 +109,7 @@ class Block extends Item
      */
     public function _key(): string
     {
-        deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
+        Helpers::deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
         return $this->type();
     }
 
@@ -123,7 +123,7 @@ class Block extends Item
      */
     public function _uid(): string
     {
-        deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
+        Helpers::deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
         return $this->id();
     }
 
@@ -278,7 +278,8 @@ class Block extends Item
     public function toHtml(): string
     {
         try {
-            return (string)snippet('blocks/' . $this->type(), $this->controller(), true);
+            $kirby = $this->parent()->kirby();
+            return (string)$kirby->snippet('blocks/' . $this->type(), $this->controller(), true);
         } catch (Throwable $e) {
             return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
         }

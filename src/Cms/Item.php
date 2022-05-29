@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Str;
+
 /**
  * The Item class is the foundation
  * for every object in context with
@@ -53,9 +55,9 @@ class Item
     {
         $siblingsClass = static::ITEMS_CLASS;
 
-        $this->id       = $params['id']       ?? uuid();
+        $this->id       = $params['id']       ?? Str::uuid();
         $this->params   = $params;
-        $this->parent   = $params['parent']   ?? site();
+        $this->parent   = $params['parent']   ?? App::instance()->site();
         $this->siblings = $params['siblings'] ?? new $siblingsClass();
     }
 

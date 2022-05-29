@@ -70,7 +70,7 @@ class Fieldsets extends Items
 
     public static function factory(array $items = null, array $params = [])
     {
-        $items ??= option('blocks.fieldsets', [
+        $items ??= App::instance()->option('blocks.fieldsets', [
             'code'     => 'blocks/code',
             'gallery'  => 'blocks/gallery',
             'heading'  => 'blocks/heading',

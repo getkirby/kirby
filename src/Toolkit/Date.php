@@ -360,6 +360,32 @@ class Date extends DateTime
     }
 
     /**
+     * Rounds the minutes of the given date
+     * by the defined step
+     * @since 3.7.0
+     *
+     * @param string|null $date
+     * @param int|array|null $step array of `unit` and `size` to round to nearest
+     * @return int|null
+     */
+    public static function roundedTimestamp(?string $date = null, $step = null): ?int
+    {
+        if ($date = static::optional($date)) {
+            if ($step !== null) {
+                $step = static::stepConfig($step, [
+                    'unit' => 'minute',
+                    'size' => 1
+                ]);
+                $date->round($step['unit'], $step['size']);
+            }
+
+            return $date->timestamp();
+        }
+
+        return null;
+    }
+
+    /**
      * Gets or sets the second value
      *
      * @param int|null $second

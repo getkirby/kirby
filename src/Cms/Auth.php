@@ -194,8 +194,9 @@ class Auth
      */
     public function csrfFromSession(): string
     {
-        $isDev = $this->kirby->option('panel.dev', false) !== false;
-        return $this->kirby->option('api.csrf', $isDev ? 'dev' : csrf());
+        $isDev    = $this->kirby->option('panel.dev', false) !== false;
+        $fallback = $isDev ? 'dev' : $this->kirby->csrf();
+        return $this->kirby->option('api.csrf', $fallback);
     }
 
     /**

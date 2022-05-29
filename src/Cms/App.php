@@ -513,6 +513,43 @@ class App
     }
 
     /**
+     * Checks/returns a CSRF token
+     * @since 3.7.0
+     *
+     * @param string|null $check Pass a token here to compare it to the one in the session
+     * @return string|bool Either the token or a boolean check result
+     */
+    public function csrf(?string $check = null)
+    {
+        $session = $this->session();
+
+        // no arguments, generate/return a token
+        // (check explicitly if there have been no arguments at all;
+        // checking for null introduces a security issue because null could come
+        // from user input or bugs in the calling code!)
+        if (func_num_args() === 0) {
+            $token = $session->get('kirby.csrf');
+
+            if (is_string($token) !== true) {
+                $token = bin2hex(random_bytes(32));
+                $session->set('kirby.csrf', $token);
+            }
+
+            return $token;
+        }
+
+        // argument has been passed, check the token
+        if (
+            is_string($check) === true &&
+            is_string($session->get('kirby.csrf')) === true
+        ) {
+            return hash_equals($session->get('kirby.csrf'), $check) === true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the default language object
      *
      * @return \Kirby\Cms\Language|null
@@ -610,11 +647,13 @@ class App
         if ($id === '.') {
             if ($file = $parent->file($filename)) {
                 return $file;
-            } elseif ($file = $this->site()->file($filename)) {
-                return $file;
-            } else {
-                return null;
             }
+
+            if ($file = $this->site()->file($filename)) {
+                return $file;
+            }
+
+            return null;
         }
 
         if ($page = $this->page($id, $parent, $drafts)) {
@@ -623,6 +662,50 @@ class App
 
         if ($page = $this->page($id, null, $drafts)) {
             return $page->file($filename);
+        }
+
+        return null;
+    }
+
+    /**
+     * Return an image from any page
+     * specified by the path
+     *
+     * Example:
+     * <?= App::image('some/page/myimage.jpg') ?>
+     *
+     * @param string|null $path
+     * @return \Kirby\Cms\File|null
+     *
+     * @todo merge with App::file()
+     */
+    public function image(?string $path = null)
+    {
+        if ($path === null) {
+            return $this->site()->page()->image();
+        }
+
+        $uri      = dirname($path);
+        $filename = basename($path);
+
+        if ($uri === '.') {
+            $uri = null;
+        }
+
+        switch ($uri) {
+            case '/':
+                $parent = $this->site();
+                break;
+            case null:
+                $parent = $this->site()->page();
+                break;
+            default:
+                $parent = $this->site()->page($uri);
+                break;
+        }
+
+        if ($parent) {
+            return $parent->image($filename);
         }
 
         return null;
@@ -753,14 +836,28 @@ class App
      * Renders a single KirbyTag with the given attributes
      *
      * @internal
-     * @param string $type
+     * @param string|array $type Tag type or array with all tag arguments
+     *                           (the key of the first element becomes the type)
      * @param string|null $value
      * @param array $attr
      * @param array $data
      * @return string
      */
-    public function kirbytag(string $type, string $value = null, array $attr = [], array $data = []): string
+    public function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
     {
+        if (is_array($type) === true) {
+            $kirbytag = $type;
+            $type     = key($kirbytag);
+            $value    = current($kirbytag);
+            $attr     = $kirbytag;
+
+            // check data attribute and separate from attr data if exists
+            if (isset($attr['data']) === true) {
+                $data = $attr['data'];
+                unset($attr['data']);
+            }
+        }
+
         $data['kirby']  = $data['kirby']  ?? $this;
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
@@ -1184,7 +1281,7 @@ class App
 
         // search for a draft if the page cannot be found
         if (!$page && $draft = $site->draft($path)) {
-            if ($this->user() || $draft->isVerified(get('token'))) {
+            if ($this->user() || $draft->isVerified($this->request()->get('token'))) {
                 $page = $draft;
             }
         }
@@ -1497,12 +1594,24 @@ class App
      *
      * @internal
      * @param mixed $name
-     * @param array $data
+     * @param array|object $data Variables or an object that becomes `$item`
+     * @param bool $return On `false`, directly echo the snippet
      * @return string|null
      */
-    public function snippet($name, array $data = []): ?string
+    public function snippet($name, $data = [], bool $return = true): ?string
     {
-        return ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+        if (is_object($data) === true) {
+            $data = ['item' => $data];
+        }
+
+        $snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+
+        if ($return === true) {
+            return $snippet;
+        }
+
+        echo $snippet;
+        return null;
     }
 
     /**

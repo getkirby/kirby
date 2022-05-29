@@ -61,7 +61,7 @@ abstract class Picker
             // optional mapping function for the result array
             'map' => null,
             // the reference model
-            'model' => site(),
+            'model' => App::instance()->site(),
             // current page when paginating
             'page' => 1,
             // a query string to fetch specific items

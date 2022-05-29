@@ -1,13 +1,15 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 return [
     'pages' => [
-        'label' => t('pages'),
+        'label' => I18n::translate('pages'),
         'icon'  => 'page',
         'query' => function (string $query = null) {
-            $pages = site()
+            $pages = App::instance()->site()
                 ->index(true)
                 ->search($query)
                 ->filter('isReadable', true)
@@ -28,10 +30,10 @@ return [
         }
     ],
     'files' => [
-        'label' => t('files'),
+        'label' => I18n::translate('files'),
         'icon'  => 'image',
         'query' => function (string $query = null) {
-            $files = site()
+            $files = App::instance()->site()
                 ->index(true)
                 ->filter('isReadable', true)
                 ->files()

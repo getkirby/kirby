@@ -2,9 +2,11 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -46,7 +48,7 @@ class Home
 
         // no access to the panel? The only good alternative is the main url
         if ($permissions->for('access', 'panel') === false) {
-            return site()->url();
+            return App::instance()->site()->url();
         }
 
         // needed to create a proper menu
@@ -104,7 +106,7 @@ class Home
 
         // create a dummy router to check if we can access this route at all
         try {
-            return router($path, 'GET', $routes, function ($route) use ($user) {
+            return Router::execute($path, 'GET', $routes, function ($route) use ($user) {
                 $auth   = $route->attributes()['auth'] ?? true;
                 $areaId = $route->attributes()['area'] ?? null;
                 $type   = $route->attributes()['type'] ?? 'view';
@@ -138,7 +140,8 @@ class Home
      */
     public static function hasValidDomain(Uri $uri): bool
     {
-        return $uri->domain() === (new Uri(site()->url()))->domain();
+        $rootUrl = App::instance()->site()->url();
+        return $uri->domain() === (new Uri($rootUrl))->domain();
     }
 
     /**
@@ -149,7 +152,7 @@ class Home
      */
     public static function isPanelUrl(string $url): bool
     {
-        return Str::startsWith($url, kirby()->url('panel'));
+        return Str::startsWith($url, App::instance()->url('panel'));
     }
 
     /**
@@ -161,7 +164,7 @@ class Home
      */
     public static function panelPath(string $url): ?string
     {
-        $after = Str::after($url, kirby()->url('panel'));
+        $after = Str::after($url, App::instance()->url('panel'));
         return trim($after, '/');
     }
 
@@ -176,7 +179,7 @@ class Home
     public static function remembered(): ?string
     {
         // check for a stored path after login
-        $remembered = kirby()->session()->pull('panel.path');
+        $remembered = App::instance()->session()->pull('panel.path');
 
         // convert the result to an absolute URL if available
         return $remembered ? Panel::url($remembered) : null;
@@ -208,7 +211,7 @@ class Home
      */
     public static function url(): string
     {
-        $user = kirby()->user();
+        $user = App::instance()->user();
 
         // if there's no authenticated user, all internal
         // redirects will be blocked and the user is redirected

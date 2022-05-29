@@ -341,7 +341,7 @@ return function (App $app) {
          * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
          */
         'escape' => function (Field $field, string $context = 'html') {
-            $field->value = esc($field->value, $context);
+            $field->value = Str::esc($field->value, $context);
             return $field;
         },
 

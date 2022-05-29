@@ -41,7 +41,7 @@ class VTest extends TestCase
         $this->assertFalse(V::me('you'));
     }
 
-    public function testInvalidMethod()
+    public function testCallInvalidMethod()
     {
         $this->expectException('Exception');
         $this->expectExceptionMessage('The validator does not exist: fool');
@@ -254,6 +254,153 @@ class VTest extends TestCase
 
         $this->assertFalse(V::in('bastian', ['lukas', 'nico', 'sonja']));
         $this->assertFalse(V::in('bastian', []));
+    }
+
+    public function testInvalid()
+    {
+        $data = [
+            'username' => 123,
+            'email'    => 'homersimpson.com',
+            'zip'      => 'abc',
+            'website'  => '',
+            'created'  => '9999-99-99',
+        ];
+
+        $rules = [
+            'username' => ['alpha'],
+            'email'    => ['required', 'email'],
+            'zip'      => ['integer'],
+            'website'  => ['url'],
+            'created'  => ['date']
+        ];
+
+        $messages = [
+            'username' => 'The username must not contain numbers',
+            'email'    => 'Invalid email',
+            'zip'      => 'The ZIP must contain only numbers',
+            'created'  => 'Invalid date',
+        ];
+
+        $result = V::invalid($data, $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $data = [
+            'username' => 'homer',
+            'email'    => 'homer@simpson.com',
+            'zip'      => 123,
+            'website'  => 'http://example.com',
+            'created'  => '2021-01-01',
+        ];
+
+        $result = V::invalid($data, $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidSimple()
+    {
+        $data   = ['homer', null];
+        $rules  = [['alpha'], ['required']];
+        $result = V::invalid($data, $rules);
+        $this->assertSame(1, $result[1]);
+    }
+
+    public function testInvalidRequired()
+    {
+        $rules    = ['email' => ['required']];
+        $messages = ['email' => ''];
+
+        $result = V::invalid(['email' => null], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['name' => 'homer'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => ''], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => []], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => '0'], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => 0], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => false], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => 'homer@simpson.com'], $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidOptions()
+    {
+        $rules = [
+            'username' => ['min' => 6]
+        ];
+
+        $messages = [
+            'username' => ''
+        ];
+
+        $result = V::invalid(['username' => 'homer'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $rules = [
+            'username' => ['between' => [3, 6]]
+        ];
+
+        $result = V::invalid(['username' => 'ho'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homer'], $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidWithMultipleMessages()
+    {
+        $data     = ['username' => ''];
+        $rules    = ['username' => ['required', 'alpha', 'min' => 4]];
+        $messages = ['username' => [
+            'The username is required',
+            'The username must contain only letters',
+            'The username must be at least 4 characters long',
+        ]];
+
+        $result   = V::invalid(['username' => ''], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username is required',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result   = V::invalid(['username' => 'a1'], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username must contain only letters',
+                'The username must be at least 4 characters long',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result   = V::invalid(['username' => 'ab'], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username must be at least 4 characters long',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result = V::invalid(['username' => 'abcd'], $rules, $messages);
+        $this->assertSame([], $result);
     }
 
     public function testNotIn()

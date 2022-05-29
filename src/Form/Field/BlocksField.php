@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldsets;
@@ -12,6 +13,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 class BlocksField extends FieldClass
@@ -28,7 +30,7 @@ class BlocksField extends FieldClass
 
     public function __construct(array $params = [])
     {
-        $this->setFieldsets($params['fieldsets'] ?? null, $params['model'] ?? site());
+        $this->setFieldsets($params['fieldsets'] ?? null, $params['model'] ?? App::instance()->site());
 
         parent::__construct($params);
 
@@ -142,13 +144,15 @@ class BlocksField extends FieldClass
         return [
             [
                 'pattern' => 'uuid',
-                'action'  => fn () => ['uuid' => uuid()]
+                'action'  => fn () => ['uuid' => Str::uuid()]
             ],
             [
                 'pattern' => 'paste',
                 'method'  => 'POST',
                 'action'  => function () use ($field) {
-                    $value  = BlocksCollection::parse(get('html'));
+                    $request = App::instance()->request();
+
+                    $value  = BlocksCollection::parse($request->get('html'));
                     $blocks = BlocksCollection::factory($value);
                     return $field->blocksToValues($blocks->toArray());
                 }

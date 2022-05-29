@@ -146,6 +146,22 @@ class Router
     }
 
     /**
+     * Creates a micro-router and executes
+     * the routing action immediately
+     * @since 3.7.0
+     *
+     * @param string|null $path
+     * @param string $method
+     * @param array $routes
+     * @param \Closure|null $callback
+     * @return mixed
+     */
+    public static function execute(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+    {
+        return (new static($routes))->call($path, $method, $callback);
+    }
+
+    /**
      * Finds a Route object by path and method
      * The Route's arguments method is used to
      * find matches and return all the found

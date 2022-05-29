@@ -150,9 +150,9 @@ class ApiTest extends TestCase
         ]);
         $this->api = $this->app->api();
 
-        $_GET['language'] = 'de';
-
-        $this->assertSame('something', $this->api->call('foo'));
+        $this->assertSame('something', $this->api->call('foo', 'GET', [
+            'query' => ['language' => 'de']
+        ]));
         $this->assertSame('de_AT.UTF-8', setlocale(LC_ALL, 0));
 
         $_GET = [];

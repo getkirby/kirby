@@ -1,4 +1,7 @@
 <?php
+
+use Kirby\Cms\Url;
+
 /**
  * @var \Kirby\Cms\App $kirby
  * @var string $icons
@@ -32,7 +35,7 @@
   <?php endforeach ?>
 
   <?php foreach ($assets['icons'] as $rel => $icon): ?>
-  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= url($icon['url']) ?>" type="<?= $icon['type'] ?>">
+  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= Url::to($icon['url']) ?>" type="<?= $icon['type'] ?>">
   <?php endforeach ?>
 
   <base href="<?= $panelUrl ?>">

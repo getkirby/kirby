@@ -340,7 +340,7 @@ class Language extends Model
      */
     public static function loadRules(string $code)
     {
-        $kirby = kirby();
+        $kirby = App::instance();
         $code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
         $file  = $kirby->root('i18n:rules') . '/' . $code . '.json';
 

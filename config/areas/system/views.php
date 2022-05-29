@@ -1,12 +1,13 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Http\Server;
 
 return [
     'system' => [
         'pattern' => 'system',
         'action'  => function () {
-            $kirby   = kirby();
+            $kirby   = App::instance();
             $system  = $kirby->system();
             $license = $system->license();
 

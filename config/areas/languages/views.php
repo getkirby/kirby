@@ -1,12 +1,13 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Escape;
 
 return [
     'languages' => [
         'pattern' => 'languages',
         'action'  => function () {
-            $kirby = kirby();
+            $kirby = App::instance();
 
             return [
                 'component' => 'k-languages-view',

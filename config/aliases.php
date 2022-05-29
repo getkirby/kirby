@@ -7,6 +7,7 @@ return [
     'file'       => 'Kirby\Cms\File',
     'files'      => 'Kirby\Cms\Files',
     'find'       => 'Kirby\Cms\Find',
+    'helpers'    => 'Kirby\Cms\Helpers',
     'html'       => 'Kirby\Cms\Html',
     'kirby'      => 'Kirby\Cms\App',
     'page'       => 'Kirby\Cms\Page',

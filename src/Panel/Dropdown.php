@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Exception\LogicException;
 use Kirby\Http\Uri;
@@ -31,9 +32,9 @@ class Dropdown extends Json
      */
     public static function changes(): array
     {
-        $kirby     = kirby();
+        $kirby     = App::instance();
         $multilang = $kirby->multilang();
-        $ids       = Str::split(get('ids'));
+        $ids       = Str::split($kirby->request()->get('ids'));
         $options   = [];
 
         foreach ($ids as $id) {

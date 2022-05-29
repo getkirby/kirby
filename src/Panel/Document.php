@@ -2,8 +2,10 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -33,7 +35,7 @@ class Document
      */
     public static function assets(): array
     {
-        $kirby = kirby();
+        $kirby = App::instance();
         $nonce = $kirby->nonce();
 
         // get the assets from the Vite dev server in dev mode;
@@ -129,15 +131,15 @@ class Document
     /**
      * Check for a custom asset file from the
      * config (e.g. panel.css or panel.js)
-     * @since 3.6.2
+     * @since 3.7.0
      *
      * @param string $option asset option name
      * @return string|null
      */
     public static function customAsset(string $option): ?string
     {
-        if ($path = kirby()->option($option)) {
-            $asset = asset($path);
+        if ($path = App::instance()->option($option)) {
+            $asset = new Asset($path);
 
             if ($asset->exists() === true) {
                 return $asset->url() . '?' . $asset->modified();
@@ -168,14 +170,14 @@ class Document
     /**
      * Returns array of favion icons
      * based on config option
-     * @since 3.6.2
+     * @since 3.7.0
      *
      * @param string $url URL prefix for default icons
      * @return array
      */
     public static function favicon(string $url = ''): array
     {
-        $kirby = kirby();
+        $kirby = App::instance();
         $icons = $kirby->option('panel.favicon', [
             'apple-touch-icon' => [
                 'type' => 'image/png',
@@ -217,7 +219,7 @@ class Document
      */
     public static function icons(): string
     {
-        return F::read(kirby()->root('kirby') . '/panel/dist/img/icons.svg');
+        return F::read(App::instance()->root('kirby') . '/panel/dist/img/icons.svg');
     }
 
     /**
@@ -229,7 +231,7 @@ class Document
      */
     public static function link(): bool
     {
-        $kirby       = kirby();
+        $kirby       = App::instance();
         $mediaRoot   = $kirby->root('media') . '/panel';
         $panelRoot   = $kirby->root('panel') . '/dist';
         $versionHash = $kirby->versionHash();
@@ -262,14 +264,14 @@ class Document
      */
     public static function response(array $fiber)
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         // Full HTML response
         // @codeCoverageIgnoreStart
         try {
             if (static::link() === true) {
                 usleep(1);
-                go($kirby->url('index') . '/' . $kirby->path());
+                Response::go($kirby->url('index') . '/' . $kirby->path());
             }
         } catch (Throwable $e) {
             die('The Panel assets cannot be installed properly. ' . $e->getMessage());

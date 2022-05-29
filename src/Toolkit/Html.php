@@ -133,9 +133,11 @@ class Html extends Xml
      *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
      * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
      *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+     * @param string|null $before An optional string that will be prepended if the result is not empty
+     * @param string|null $after An optional string that will be appended if the result is not empty
      * @return string|null The generated HTML attributes string
      */
-    public static function attr($name, $value = null): ?string
+    public static function attr($name, $value = null, ?string $before = null, ?string $after = null): ?string
     {
         // HTML supports boolean attributes without values
         if (is_array($name) === false && is_bool($value) === true) {
@@ -153,7 +155,13 @@ class Html extends Xml
         $entities = parent::entities();
         $html = array_keys($entities);
         $xml  = array_values($entities);
-        return str_replace($xml, $html, $attr);
+        $attr = str_replace($xml, $html, $attr);
+
+        if ($attr) {
+            return $before . $attr . $after;
+        }
+
+        return null;
     }
 
     /**

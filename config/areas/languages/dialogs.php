@@ -1,19 +1,21 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 $languageDialogFields = [
     'name' => [
-        'label'    => t('language.name'),
+        'label'    => I18n::translate('language.name'),
         'type'     => 'text',
         'required' => true,
         'icon'     => 'title'
     ],
     'code' => [
-        'label'    => t('language.code'),
+        'label'    => I18n::translate('language.code'),
         'type'     => 'text',
         'required' => true,
         'counter'  => false,
@@ -21,18 +23,18 @@ $languageDialogFields = [
         'width'    => '1/2'
     ],
     'direction' => [
-        'label'    => t('language.direction'),
+        'label'    => I18n::translate('language.direction'),
         'type'     => 'select',
         'required' => true,
         'empty'    => false,
         'options'  => [
-            ['value' => 'ltr', 'text' => t('language.direction.ltr')],
-            ['value' => 'rtl', 'text' => t('language.direction.rtl')]
+            ['value' => 'ltr', 'text' => I18n::translate('language.direction.ltr')],
+            ['value' => 'rtl', 'text' => I18n::translate('language.direction.rtl')]
         ],
         'width'    => '1/2'
     ],
     'locale' => [
-        'label' => t('language.locale'),
+        'label' => I18n::translate('language.locale'),
         'type'  => 'text',
     ],
 ];
@@ -47,7 +49,7 @@ return [
                 'component' => 'k-language-dialog',
                 'props' => [
                     'fields' => $languageDialogFields,
-                    'submitButton' => t('language.create'),
+                    'submitButton' => I18n::translate('language.create'),
                     'value' => [
                         'code'      => '',
                         'direction' => 'ltr',
@@ -58,12 +60,16 @@ return [
             ];
         },
         'submit' => function () {
-            kirby()->languages()->create([
-                'code'      => get('code'),
-                'direction' => get('direction'),
-                'locale'    => get('locale'),
-                'name'      => get('name'),
+            $kirby = App::instance();
+
+            $data = $kirby->request()->get([
+                'code',
+                'direction',
+                'locale',
+                'name'
             ]);
+            $kirby->languages()->create($data);
+
             return [
                 'event' => 'language.create'
             ];
@@ -78,7 +84,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    'text' => tt('language.delete.confirm', [
+                    'text' => I18n::template('language.delete.confirm', [
                         'name' => Escape::html($language->name())
                     ])
                 ]
@@ -116,7 +122,7 @@ return [
                 $fields['locale'] = [
                     'label' => $fields['locale']['label'],
                     'type'  => 'info',
-                    'text'  => t('language.locale.warning')
+                    'text'  => I18n::translate('language.locale.warning')
                 ];
             }
 
@@ -124,7 +130,7 @@ return [
                 'component' => 'k-language-dialog',
                 'props' => [
                     'fields'       => $fields,
-                    'submitButton' => t('save'),
+                    'submitButton' => I18n::translate('save'),
                     'value'        => [
                         'code'      => $language->code(),
                         'direction' => $language->direction(),
@@ -136,11 +142,11 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            $language = Find::language($id)->update([
-                'direction' => get('direction'),
-                'locale'    => get('locale'),
-                'name'      => get('name'),
-            ]);
+            $kirby = App::instance();
+
+            $data = $kirby->request()->get(['direction', 'locale', 'name']);
+            $language = Find::language($id)->update($data);
+
             return [
                 'event' => 'language.update'
             ];

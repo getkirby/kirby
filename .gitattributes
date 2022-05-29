@@ -3,10 +3,6 @@
 .github/ export-ignore
 .gitignore export-ignore
 
-# scripts
-.tx export-ignore
-scripts/ export-ignore
-
 # tests
 .codecov.yml export-ignore
 .php-cs-fixer.dist.php export-ignore
@@ -29,4 +25,7 @@ panel/vite.config.js export-ignore
 panel/vitest.setup.js export-ignore
 
 # other
+.tx export-ignore
 .vscode/ export-ignore
+etc/ export-ignore
+scripts/ export-ignore
