@@ -401,7 +401,7 @@ class F
      * @param string|null $base
      * @return void
      */
-    public static function loadClasses(array $classmap, ?string $base = null)
+    public static function loadClasses(array $classmap, ?string $base = null): void
     {
         // convert all classnames to lowercase
         $classmap = array_change_key_case($classmap);

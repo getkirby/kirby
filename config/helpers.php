@@ -199,7 +199,7 @@ if (Helpers::hasOverride('h') === false) { // @codeCoverageIgnore
      * @param bool $keepTags
      * @return string
      */
-    function h(?string $string, bool $keepTags = false)
+    function h(?string $string, bool $keepTags = false): string
     {
         return Html::encode($string, $keepTags);
     }
@@ -213,7 +213,7 @@ if (Helpers::hasOverride('html') === false) { // @codeCoverageIgnore
      * @param bool $keepTags
      * @return string
      */
-    function html(?string $string, bool $keepTags = false)
+    function html(?string $string, bool $keepTags = false): string
     {
         return Html::encode($string, $keepTags);
     }
@@ -376,9 +376,9 @@ if (Helpers::hasOverride('load') === false) { // @codeCoverageIgnore
      * @param string|null $base
      * @return void
      */
-    function load(array $classmap, ?string $base = null)
+    function load(array $classmap, ?string $base = null): void
     {
-        return F::loadClasses($classmap, $base);
+        F::loadClasses($classmap, $base);
     }
 }
 
@@ -387,12 +387,13 @@ if (Helpers::hasOverride('markdown') === false) { // @codeCoverageIgnore
      * Parses markdown in the given string. Shortcut for
      * `$kirby->markdown($text)`
      *
-     * @param array $data
+     * @param string|null $text
+     * @param array $options
      * @return string
      */
-    function markdown(?string $text = null, array $data = []): string
+    function markdown(?string $text = null, array $options = []): string
     {
-        return App::instance()->markdown($text, $data);
+        return App::instance()->markdown($text, $options);
     }
 }
 
@@ -561,9 +562,9 @@ if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
      * @param string|array $name
      * @param array|object $data
      * @param bool $return
-     * @return string
+     * @return string|null
      */
-    function snippet($name, $data = [], bool $return = false)
+    function snippet($name, $data = [], bool $return = false): ?string
     {
         return App::instance()->snippet($name, $data, $return);
     }
@@ -644,7 +645,7 @@ if (Helpers::hasOverride('tt') === false) { // @codeCoverageIgnore
      * @param string|null $locale
      * @return string
      */
-    function tt(string $key, $fallback = null, ?array $replace = null, ?string $locale = null)
+    function tt(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
     {
         return I18n::template($key, $fallback, $replace, $locale);
     }

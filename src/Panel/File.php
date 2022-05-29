@@ -105,16 +105,11 @@ class File extends Model
      */
     public function dropdown(array $options = []): array
     {
-        $file    = $this->model;
-        $request = $file->kirby()->request();
+        $file = $this->model;
 
-        $defaults = [
-            'view'   => $request->get('view'),
-            'update' => $request->get('update'),
-            'delete' => $request->get('delete')
-        ];
+        $defaults = $file->kirby()->request()->get(['view', 'update', 'delete']);
+        $options  = array_merge($defaults, $options);
 
-        $options     = array_merge($defaults, $options);
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
