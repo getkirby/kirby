@@ -149,7 +149,7 @@ class Environment
         }
 
         // insecure auto-detection
-        if ($options['allowed'] === '*') {
+        if ($options['allowed'] === '*' || $options['allowed'] === ['*']) {
             $this->detectAuto(true);
 
         // fixed environments
@@ -503,6 +503,10 @@ class Environment
      */
     protected function detectScriptPath(?string $scriptPath = null): string
     {
+        if ($this->cli === true) {
+            return '';
+        }
+
         return $this->sanitizeScriptPath($scriptPath);
     }
 
