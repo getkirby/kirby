@@ -9,7 +9,6 @@ use Kirby\Http\Server;
  */
 class EnvironmentTest extends TestCase
 {
-
     protected $_SERVER = null;
     protected $config = null;
 
