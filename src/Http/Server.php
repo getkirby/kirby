@@ -93,5 +93,4 @@ class Server extends Facade
 
         return false;
     }
-
 }

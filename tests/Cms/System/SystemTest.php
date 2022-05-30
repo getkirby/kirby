@@ -363,9 +363,13 @@ class SystemTest extends TestCase
      */
     public function testIsLocalWithServerName($name, $expected)
     {
-        $_SERVER['SERVER_NAME'] = $name;
+        $app = $this->app->clone([
+            'server' => [
+                'SERVER_NAME' => $name
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
         $this->assertSame($expected, $system->isLocal());
     }
 

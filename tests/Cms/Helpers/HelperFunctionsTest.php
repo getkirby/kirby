@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Cms\App as Kirby;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
-use Kirby\Http\Uri;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 
@@ -59,7 +58,7 @@ class HelperFunctionsTest extends TestCase
 
     public function testCollection()
     {
-        $app = $this->kirby->clone([
+        $this->kirby->clone([
             'site' => [
                 'children' => [
                     ['slug' => 'test']
@@ -624,24 +623,24 @@ class HelperFunctionsTest extends TestCase
 
     public function testParam()
     {
-        Uri::$current = new Uri('https://getkirby.com/projects/filter:current');
-
-        $app = $this->kirby->clone();
+        $this->kirby->clone([
+            'server' => [
+                'REQUEST_URI' => '/projects/filter:current'
+            ]
+        ]);
 
         $this->assertSame('current', param('filter'));
-
-        Uri::$current = null;
     }
 
     public function testParams()
     {
-        Uri::$current = new Uri('https://getkirby.com/projects/a:value-a/b:value-b');
-
-        $app = $this->kirby->clone();
+        $this->kirby->clone([
+            'server' => [
+                'REQUEST_URI' => '/projects/a:value-a/b:value-b?foo=path'
+            ],
+        ]);
 
         $this->assertSame(['a' => 'value-a', 'b' => 'value-b'], params());
-
-        Uri::$current = null;
     }
 
     public function testR()
@@ -711,7 +710,7 @@ class HelperFunctionsTest extends TestCase
 
     public function testSmartypantsWithKirbytext()
     {
-        new App([
+        $this->kirby->clone([
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -728,7 +727,7 @@ class HelperFunctionsTest extends TestCase
 
     public function testSnippet()
     {
-        $app = $this->kirby->clone([
+        $this->kirby->clone([
             'roots' => [
                 'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
                 'snippets'  => $index,
@@ -741,7 +740,7 @@ class HelperFunctionsTest extends TestCase
 
     public function testSnippetAlternatives()
     {
-        $app = $this->kirby->clone([
+        $this->kirby->clone([
             'roots' => [
                 'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
                 'snippets'  => $index,
@@ -754,7 +753,7 @@ class HelperFunctionsTest extends TestCase
 
     public function testSnippetObject()
     {
-        $app = $this->kirby->clone([
+        $this->kirby->clone([
             'roots' => [
                 'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
                 'snippets'  => $index,
@@ -769,7 +768,7 @@ class HelperFunctionsTest extends TestCase
     {
         $this->expectOutputString('Hello world');
 
-        $app = $this->kirby->clone([
+        $this->kirby->clone([
             'roots' => [
                 'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
                 'snippets'  => $index,
@@ -894,9 +893,9 @@ class HelperFunctionsTest extends TestCase
 
     public function testUrl()
     {
-        $app = $this->kirby->clone([
-            'urls' => [
-                'index' => $url = 'https://getkirby.com'
+        $this->kirby->clone([
+            'options' => [
+                'url' => $url = 'https://getkirby.com'
             ]
         ]);
 
@@ -906,9 +905,9 @@ class HelperFunctionsTest extends TestCase
 
     public function testUrlWithOptions()
     {
-        $app = $this->kirby->clone([
-            'urls' => [
-                'index' => $url = 'https://getkirby.com'
+        $this->kirby->clone([
+            'options' => [
+                'url' => $url = 'https://getkirby.com'
             ]
         ]);
 
