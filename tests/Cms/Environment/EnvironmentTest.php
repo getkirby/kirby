@@ -9,22 +9,11 @@ use Kirby\Http\Server;
  */
 class EnvironmentTest extends TestCase
 {
-    protected $_SERVER = null;
     protected $config = null;
 
     public function setUp(): void
     {
         $this->config = __DIR__ . '/fixtures';
-        $this->_SERVER = $_SERVER;
-        Server::$hosts = [];
-        Server::$cli = null;
-    }
-
-    public function tearDown(): void
-    {
-        $_SERVER = $this->_SERVER;
-        Server::$hosts = [];
-        Server::$cli = null;
     }
 
     public function testAllowFromInsecureHost()
