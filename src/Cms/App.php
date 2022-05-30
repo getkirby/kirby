@@ -614,7 +614,7 @@ class App
      * Returns the environment object with access
      * to the detected host, base url and dedicated options
      *
-     * @return \Kirby\Cms\Environment
+     * @return \Kirby\Http\Environment
      */
     public function environment()
     {
@@ -1542,7 +1542,7 @@ class App
     /**
      * Returns the Environment object
      *
-     * @return \Kirby\Cms\Environment
+     * @return \Kirby\Http\Environment
      */
     public function server()
     {
