@@ -89,14 +89,11 @@ class AppErrorsTest extends TestCase
         $testMethod = new ReflectionMethod(App::class, 'handleErrors');
         $testMethod->setAccessible(true);
 
-        $app    = App::instance();
+        $app = $this->app->clone([
+            'cli' => true
+        ]);
+
         $whoops = $whoopsMethod->invoke($app);
-
-        $oldCli    = Server::$cli;
-        $oldAccept = $_SERVER['HTTP_ACCEPT'] ?? null;
-
-        // CLI
-        Server::$cli = true;
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
@@ -104,20 +101,24 @@ class AppErrorsTest extends TestCase
         $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        // JSON
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'application/json';
+        $app = $this->app->clone([
+            'cli' => true,
+            'server' => [
+                'HTTP_ACCEPT' => 'application/json'
+            ]
+        ]);
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
         $this->assertCount(2, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        // HTML
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
         $app = new App([
+            'cli' => false,
+            'server' => [
+                'HTTP_ACCEPT' => 'text/html'
+            ],
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -132,10 +133,6 @@ class AppErrorsTest extends TestCase
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
-
-        // reset global state
-        Server::$cli            = $oldCli;
-        $_SERVER['HTTP_ACCEPT'] = $oldAccept;
     }
 
     /**
