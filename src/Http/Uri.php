@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
 use Throwable;
@@ -234,25 +235,15 @@ class Uri
 
     /**
      * @param array $props
-     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return static
      */
-    public static function current(array $props = [], bool $forwarded = false)
+    public static function current(array $props = [])
     {
         if (static::$current !== null) {
             return static::$current;
         }
 
-        $uri = Server::requestUri();
-        $url = new static(array_merge([
-            'scheme' => Server::https() === true ? 'https' : 'http',
-            'host'   => Server::host(),
-            'port'   => Server::port(),
-            'path'   => $uri['path'],
-            'query'  => $uri['query'],
-        ], $props));
-
-        return $url;
+        return new static(App::instance()->url('current'), $props);
     }
 
     /**
@@ -333,18 +324,12 @@ class Uri
      * or any other executed script.
      *
      * @param array $props
-     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return string
      */
-    public static function index(array $props = [], bool $forwarded = false)
+    public static function index(array $props = [])
     {
-        return static::current(array_merge($props, [
-            'path'     => Server::scriptPath(),
-            'query'    => null,
-            'fragment' => null,
-        ]));
+        return new static(App::instance()->url('index'), $props);
     }
-
 
     /**
      * Checks if the host exists
