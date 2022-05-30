@@ -209,6 +209,9 @@ export default {
   opacity: 1;
 }
 
+.k-system-security {
+  box-shadow: var(--shadow);
+}
 .k-system-security a {
   font-size: var(--text-sm);
   display: grid;
