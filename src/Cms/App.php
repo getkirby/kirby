@@ -9,6 +9,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Environment;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;

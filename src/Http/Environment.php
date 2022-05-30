@@ -3,13 +3,15 @@
 namespace Kirby\Http;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
- * The environment class takes care of
- * secure host and base URL detection,
- * as well as other server settings.
+ * The environment object takes care of
+ * secure host and base URL detection, as
+ * well as loading the dedicated
+ * environment options.
  *
  * @package   Kirby Http
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -67,6 +69,11 @@ class Environment
     /**
      * @var string
      */
+    protected $root;
+
+    /**
+     * @var string
+     */
     protected $scriptPath;
 
     /**
@@ -120,6 +127,7 @@ class Environment
         $info ??= $_SERVER;
         $options = array_merge([
             'cli'     => null,
+            'root'    => null,
             'allowed' => null
         ], $options ?? []);
 
@@ -130,9 +138,15 @@ class Environment
         $this->https         = false;
         $this->isBehindProxy = $this->detectIfIsBehindProxy();
         $this->requestUri    = $this->detectRequestUri($this->get('REQUEST_URI'));
+        $this->root          = $options['root'];
         $this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
         $this->path          = $this->detectPath($this->scriptPath);
         $this->port          = null;
+
+        // keep Server flags compatible for now
+        if (is_int($options['allowed']) === true) {
+            $options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
+        }
 
         // insecure auto-detection
         if ($options['allowed'] === '*') {
@@ -202,6 +216,28 @@ class Environment
         }
 
         throw new InvalidArgumentException('The environment is not allowed');
+    }
+
+    /**
+     * The URL option receives a set of Server constant flags
+     *
+     * Server::HOST_FROM_SERVER
+     * Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY
+     * Server::HOST_FROM_HOST
+     * Server::HOST_FROM_HOST | Server::HOST_ALLOW_EMPTY
+     *
+     * @param int $flags
+     * @return string|null
+     */
+    protected function detectAllowedFromFlag(int $flags): ?string
+    {
+        // allow host detection from host headers
+        if ($flags & Server::HOST_FROM_HEADER) {
+            return '*';
+        }
+
+        // detect host only from server name
+        return null;
     }
 
     /**
@@ -567,6 +603,32 @@ class Environment
     public function isBehindProxy(): bool
     {
         return $this->isBehindProxy;
+    }
+
+    /**
+     * Loads and returns the environment options
+     *
+     * @return array
+     */
+    public function options(): array
+    {
+        $configHost = [];
+        $configAddr = [];
+
+        $host = $this->host();
+        $addr = $this->ip();
+
+        // load the config for the host
+        if (empty($host) === false) {
+            $configHost = F::load($this->root . '/config.' . $host . '.php', []);
+        }
+
+        // load the config for the server IP
+        if (empty($addr) === false) {
+            $configAddr = F::load($this->root . '/config.' . $addr . '.php', []);
+        }
+
+        return array_replace_recursive($configHost, $configAddr);
     }
 
     /**
