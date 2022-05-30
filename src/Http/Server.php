@@ -2,7 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Facade;
 
 /**
@@ -27,39 +26,6 @@ class Server extends Facade
     public static $hosts;
 
     /**
-     * Setter and getter for the the static $hosts property
-     *
-     * $hosts = null                     -> return all defined hosts
-     * $hosts = Server::HOST_FROM_SERVER -> []
-     * $hosts = Server::HOST_FROM_HEADER -> ['*']
-     * $hosts = array                    -> [array of trusted hosts]
-     * $hosts = string                   -> [single trusted host]
-     *
-     * @param string|array|int|null $hosts
-     * @return array
-     */
-    public static function hosts($hosts = null): array
-    {
-        if ($hosts === null) {
-            return static::$hosts;
-        }
-
-        if (is_int($hosts) && $hosts & static::HOST_FROM_SERVER) {
-            return static::$hosts = [];
-        }
-
-        if (is_int($hosts) && $hosts & static::HOST_FROM_HEADER) {
-            return static::$hosts = ['*'];
-        }
-
-        // make sure hosts are always an array
-        $hosts = A::wrap($hosts);
-
-        // return unique hosts
-        return static::$hosts = array_unique($hosts);
-    }
-
-    /**
      * @return \Kirby\Http\Environment
      */
     public static function instance()
@@ -68,30 +34,5 @@ class Server extends Facade
             'cli'     => static::$cli,
             'allowed' => static::$hosts
         ]);
-    }
-
-    /**
-     * Checks for allowed host names
-     *
-     * @param string $host
-     * @return bool
-     */
-    public static function isAllowedHost(string $host): bool
-    {
-        if (empty(static::$hosts) === true) {
-            return true;
-        }
-
-        foreach (static::$hosts as $pattern) {
-            if (empty($pattern) === true) {
-                continue;
-            }
-
-            if (fnmatch($pattern, $host) === true) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
