@@ -40,7 +40,7 @@ return [
                     'plugins' => $plugins,
                     'php'     => phpversion(),
                     'server'  => $system->serverSoftware(),
-                    'https'   => $kirby->server()->https(),
+                    'https'   => $kirby->environment()->https(),
                     'version' => $kirby->version(),
                     'urls'    => [
                         'content' => $system->exposedFileUrl('content'),
