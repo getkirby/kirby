@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
-use Kirby\Http\Server;
 use ReflectionMethod;
 use Whoops\Handler\PlainTextHandler;
 

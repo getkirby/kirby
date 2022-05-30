@@ -9,7 +9,6 @@ use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
