@@ -14,7 +14,8 @@ use Kirby\Toolkit\Facade;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- * @todo      Deprecated! Remove in 3.8.0
+ * @deprecated 3.7.0 Use `Cms\Environment` instead
+ * @todo Remove in 3.8.0
  */
 class Server extends Facade
 {
