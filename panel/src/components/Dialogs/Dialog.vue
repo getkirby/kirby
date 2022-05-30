@@ -264,7 +264,7 @@ export default {
   background: var(--color-background);
   width: 100%;
   box-shadow: var(--shadow-lg);
-  border-radius: var(--rounded-xs);
+  border-radius: var(--rounded);
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -299,7 +299,10 @@ export default {
 .k-dialog-notification {
   padding: 0.75rem 1.5rem;
   background: var(--color-gray-900);
+  border-start-start-radius: var(--rounded);
+  border-start-end-radius: var(--rounded);
   width: 100%;
+  margin-top: -1px; /* to avoid a bleeding background with the border radius */
   line-height: 1.25rem;
   color: var(--color-white);
   display: flex;
