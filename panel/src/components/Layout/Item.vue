@@ -114,7 +114,7 @@ export default {
 .k-item {
   position: relative;
   background: var(--color-white);
-  border-radius: var(--rounded-sm);
+  border-radius: var(--rounded);
   box-shadow: var(--shadow);
   display: grid;
   grid-template-columns: auto;
@@ -215,8 +215,8 @@ export default {
 }
 .k-list-item .k-item-figure {
   width: 38px;
-  border-start-start-radius: var(--rounded-sm);
-  border-end-start-radius: var(--rounded-sm);
+  border-start-start-radius: var(--rounded);
+  border-end-start-radius: var(--rounded);
 }
 .k-list-item .k-item-content {
   display: flex;
@@ -276,8 +276,8 @@ export default {
     "figure footer";
 }
 .k-cardlets-item .k-item-figure {
-  border-start-start-radius: var(--rounded-sm);
-  border-end-start-radius: var(--rounded-sm);
+  border-start-start-radius: var(--rounded);
+  border-end-start-radius: var(--rounded);
 }
 .k-cardlets-item .k-item-footer {
   padding-block: 0.5rem;
@@ -292,8 +292,8 @@ export default {
     "content";
 }
 .k-cards-item .k-item-figure {
-  border-start-start-radius: var(--rounded-sm);
-  border-start-end-radius: var(--rounded-sm);
+  border-start-start-radius: var(--rounded);
+  border-start-end-radius: var(--rounded);
 }
 .k-cards-item .k-item-content {
   padding: 0.5rem 0.75rem !important;
