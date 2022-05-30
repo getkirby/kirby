@@ -12,7 +12,6 @@ use Kirby\Filesystem\F;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
@@ -71,7 +70,6 @@ class App
     protected $roots;
     protected $routes;
     protected $router;
-    protected $server;
     protected $sessionHandler;
     protected $site;
     protected $system;
@@ -1110,9 +1108,10 @@ class App
     {
         // create the environment based on the URL setup
         $this->environment = new Environment([
+            'allowed' => $this->options['url'] ?? null,
+            'cli'     => $this->options['cli'] ?? null,
             'root'    => $this->root('config'),
-            'allowed' => $this->options['url'] ?? null
-        ]);
+        ], $this->options['server'] ?? null);
 
         // merge into one clean options array
         return $this->options = array_replace_recursive($this->options, $this->environment->options());
@@ -1539,13 +1538,13 @@ class App
     }
 
     /**
-     * Returns the Server object
+     * Returns the Environment object
      *
-     * @return \Kirby\Http\Server
+     * @return \Kirby\Cms\Environment
      */
     public function server()
     {
-        return $this->server ??= new Server();
+        return $this->environment;
     }
 
     /**

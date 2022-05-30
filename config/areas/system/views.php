@@ -41,7 +41,7 @@ return [
                     'plugins' => $plugins,
                     'php'     => phpversion(),
                     'server'  => $system->serverSoftware(),
-                    'https'   => Server::https(),
+                    'https'   => $kirby->server()->https(),
                     'version' => $kirby->version(),
                     'urls'    => [
                         'content' => $system->exposedFileUrl('content'),
