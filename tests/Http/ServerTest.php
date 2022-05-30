@@ -39,7 +39,7 @@ class ServerTest extends TestCase
      */
     public function testAddressOnCli()
     {
-        $this->assertSame('', Server::address());
+        $this->assertSame(null, Server::address());
     }
 
     /**
@@ -121,7 +121,7 @@ class ServerTest extends TestCase
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
         Server::hosts('getkirby.com');
-        $this->assertSame('', Server::host());
+        $this->assertSame(null, Server::host());
     }
 
     /**
@@ -130,7 +130,7 @@ class ServerTest extends TestCase
     public function testHostAllowlistIncluded()
     {
         $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts('example.com');
+        Server::hosts('http://example.com');
         $this->assertSame('example.com', Server::host());
     }
 
@@ -149,7 +149,7 @@ class ServerTest extends TestCase
      */
     public function testHostOnCli()
     {
-        $this->assertSame('', Server::host());
+        $this->assertSame(null, Server::host());
     }
 
     /**
@@ -213,19 +213,12 @@ class ServerTest extends TestCase
     /**
      * @covers ::https
      */
-    public function testHttpsFromPort()
-    {
-        $_SERVER['SERVER_PORT'] = 443;
-        $this->assertTrue(Server::https());
-    }
-
-    /**
-     * @covers ::https
-     */
     public function testHttpsFromForwardedPort()
     {
+        Server::$hosts = Server::HOST_FROM_HEADER;
+
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
-        $_SERVER['HTTP_X_FORWARDED_PORT'] = 443;
+        $_SERVER['HTTP_X_FORWARDED_SSL'] = 'on';
         $this->assertTrue(Server::https());
 
         // HTTP_X_FORWARDED_PROTO = https
@@ -240,6 +233,9 @@ class ServerTest extends TestCase
     {
         $_SERVER['HTTP_X_FORWARDED_HOST']  = 'example.com';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+        Server::$hosts = Server::HOST_FROM_HEADER;
+
         $this->assertTrue(Server::https());
     }
 
@@ -304,6 +300,8 @@ class ServerTest extends TestCase
     {
         // HTTP_HOST
         $_SERVER['HTTP_HOST'] = 'localhost:8888';
+
+        Server::$hosts = Server::HOST_FROM_HEADER;
         $this->assertSame(8888, Server::port());
     }
 
@@ -313,6 +311,8 @@ class ServerTest extends TestCase
     public function testPortFromProxyHost()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com:8888';
+
+        Server::$hosts = Server::HOST_FROM_HEADER;
         $this->assertSame(8888, Server::port());
     }
 
@@ -323,6 +323,8 @@ class ServerTest extends TestCase
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
         $_SERVER['HTTP_X_FORWARDED_PORT'] = 8888;
+
+        Server::$hosts = Server::HOST_FROM_HEADER;
         $this->assertSame(8888, Server::port());
     }
 
@@ -333,6 +335,8 @@ class ServerTest extends TestCase
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+        Server::$hosts = Server::HOST_FROM_HEADER;
         $this->assertSame(443, Server::port());
     }
 
@@ -351,7 +355,7 @@ class ServerTest extends TestCase
      */
     public function testPortOnCli()
     {
-        $this->assertSame(0, Server::port());
+        $this->assertSame(null, Server::port());
     }
 
     public function provideRequestUri(): array
@@ -480,7 +484,7 @@ class ServerTest extends TestCase
             [
                 'HTTP_X_FORWARDED_HOST',
                 '../',
-                ''
+                null
             ],
             [
                 'SERVER_PORT',
