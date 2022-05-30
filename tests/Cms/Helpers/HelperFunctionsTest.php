@@ -209,15 +209,15 @@ class HelperFunctionsTest extends TestCase
 
     public function testDumpOnServer()
     {
-        Server::$cli = false;
+        $this->kirby = $this->kirby->clone([
+            'cli' => false
+        ]);
 
         $this->assertSame('<pre>test</pre>', dump('test', false));
 
         $this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
         dump('test1');
         dump('test2', true);
-
-        Server::$cli = null;
     }
 
     public function testE()

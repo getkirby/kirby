@@ -19,12 +19,9 @@ class PaginationTest extends TestCase
 
     public function testCustomAppUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'urls' => [
-                'index' => 'https://getkirby.com'
+        $this->app->clone([
+            'options' => [
+                'url' => 'https://getkirby.com'
             ]
         ]);
 
@@ -39,22 +36,9 @@ class PaginationTest extends TestCase
 
     public function testSubfolderUrl()
     {
-        $server = $_SERVER;
-
-        // remove any cached uri object
-        Uri::$current = null;
-
-        // if cli detection is activated the index url detection
-        // will fail and fall back to /
-        Server::$cli = false;
-
-        // no additional path
-        $_SERVER['SERVER_NAME'] = 'localhost';
-        $_SERVER['SCRIPT_NAME'] = '/starterkit/index.php';
-
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
+        $this->app->clone([
+            'options' => [
+                'url' => 'http://localhost/starterkit'
             ]
         ]);
 
@@ -65,10 +49,6 @@ class PaginationTest extends TestCase
         ]);
 
         $this->assertSame('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
-
-        $_SERVER = $server;
-        Server::$cli = true;
-        Uri::$current = null;
     }
 
     public function testCurrentPageUrl()

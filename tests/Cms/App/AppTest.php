@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Route;
-use Kirby\Http\Server;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
@@ -473,10 +472,8 @@ class AppTest extends TestCase
     {
         App::destroy();
 
-        // fake a non-CLI environment for testing debug mode
-        Server::$cli = false;
-
         $app = new App([
+            'cli' => false,
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -519,9 +516,6 @@ class AppTest extends TestCase
         $this->assertSame('another-test', $app->site()->errorPageId());
 
         $this->assertSame('ss', Str::$language['ß']);
-
-        // reset global environment
-        Server::$cli = true;
     }
 
     public function testRolesFromFixtures()
