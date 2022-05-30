@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
@@ -16,13 +17,6 @@ class UrlTest extends TestCase
         Uri::$current = null;
         Url::$current = null;
         Url::$home    = '/';
-
-        $this->_SERVER = $_SERVER;
-    }
-
-    public function tearDown(): void
-    {
-        $_SERVER = $this->_SERVER;
     }
 
     public function testCurrent()
@@ -214,14 +208,17 @@ class UrlTest extends TestCase
      */
     public function testIndex($host, $scriptName, $expected)
     {
-        $_SERVER['SERVER_NAME'] = $host;
-        $_SERVER['SCRIPT_NAME'] = $scriptName;
-
-        // overwrite cli detection
-        Server::$cli = false;
+        new App([
+            'cli' => false,
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'server' => [
+                'SERVER_NAME' => $host,
+                'SCRIPT_NAME' => $scriptName
+            ]
+        ]);
 
         $this->assertEquals($expected, Url::index());
-
-        Server::$cli = null;
     }
 }
