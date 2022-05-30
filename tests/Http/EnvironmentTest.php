@@ -1055,11 +1055,21 @@ class EnvironmentTest extends TestCase
      */
     public function testScriptPath($value, $expected)
     {
-        $env = new Environment(null, [
+        $env = new Environment(['cli' => false], [
             'SCRIPT_NAME' => $value
         ]);
 
         $this->assertSame($expected, $env->scriptPath());
+    }
+
+    /**
+     * @covers ::scriptPath
+     */
+    public function testScriptPathOnCli()
+    {
+        $env = new Environment(['cli' => true]);
+
+        $this->assertSame('', $env->scriptPath());
     }
 
     /**
