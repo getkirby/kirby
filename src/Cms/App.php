@@ -95,7 +95,7 @@ class App
             // stuff from config and additional options
             $this->optionsFromConfig();
             $this->optionsFromProps($props['options'] ?? []);
-            $this->optionsFromEnvironment();
+            $this->optionsFromEnvironment($props);
         } finally {
             // register the Whoops error handler inside of a
             // try-finally block to ensure it's still registered
@@ -1102,16 +1102,17 @@ class App
      * Load all options for the current
      * server environment
      *
+     * @param array $props
      * @return array
      */
-    protected function optionsFromEnvironment(): array
+    protected function optionsFromEnvironment(array $props = []): array
     {
         // create the environment based on the URL setup
         $this->environment = new Environment([
             'allowed' => $this->options['url'] ?? null,
-            'cli'     => $this->options['cli'] ?? null,
+            'cli'     => $props['cli'] ?? null,
             'root'    => $this->root('config'),
-        ], $this->options['server'] ?? null);
+        ], $props['server'] ?? null);
 
         // merge into one clean options array
         return $this->options = array_replace_recursive($this->options, $this->environment->options());
