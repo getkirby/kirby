@@ -1218,14 +1218,7 @@ class App
             return $this->path;
         }
 
-        $requestUri  = '/' . $this->request()->url()->path();
-        $scriptName  = $_SERVER['SCRIPT_NAME'];
-        $scriptFile  = basename($scriptName);
-        $scriptDir   = dirname($scriptName);
-        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir : $scriptName;
-        $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
-
-        return $this->setPath($requestPath)->path;
+        return $this->setPath($this->environment->requestRoute())->path;
     }
 
     /**
@@ -1248,7 +1241,14 @@ class App
      */
     public function request()
     {
-        return $this->request = $this->request ?? new Request();
+        if ($this->request !== null) {
+            return $this->request;
+        }
+
+        return $this->request = new Request([
+            'cli' => $this->environment->cli(),
+            'url' => $this->url('current')
+        ]);
     }
 
     /**

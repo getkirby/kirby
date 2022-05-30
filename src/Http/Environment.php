@@ -656,6 +656,20 @@ class Environment
     }
 
     /**
+     * Returns the path after the script path
+     * This is the one used for routing
+     *
+     * @return string
+     */
+    public function requestRoute(): string
+    {
+        $requestUri = trim($this->requestUri()['path'] ?? '', '/');
+        $scriptPath = $this->scriptPath();
+
+        return trim(preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri), '/');
+    }
+
+    /**
      * Returns an array with path and query
      * from the REQUEST_URI
      *
