@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 
 class PaginationTest extends TestCase
