@@ -73,10 +73,6 @@ class Block extends Item
     {
         parent::__construct($params);
 
-        // import old builder format
-        $params = BlockConverter::builderBlock($params);
-        $params = BlockConverter::editorBlock($params);
-
         if (isset($params['type']) === false) {
             throw new InvalidArgumentException('The block type is missing');
         }
