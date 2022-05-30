@@ -79,16 +79,6 @@ class ServerTest extends TestCase
     /**
      * @covers ::host
      */
-    public function testHost()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts(Server::HOST_FROM_HEADER);
-        $this->assertSame('example.com', Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
     public function testHostFromServerAddress()
     {
         $_SERVER['SERVER_ADDR'] = 'example.com';
@@ -107,80 +97,9 @@ class ServerTest extends TestCase
     /**
      * @covers ::host
      */
-    public function testHostFromProxy()
-    {
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
-        Server::hosts(Server::HOST_FROM_HEADER);
-        $this->assertSame('example.com', Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
-    public function testHostAllowlistExcluded()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts('getkirby.com');
-        $this->assertSame(null, Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
-    public function testHostAllowlistIncluded()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts('http://example.com');
-        $this->assertSame('example.com', Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
-    public function testHostAllowlistWildcard()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        Server::hosts('*');
-        $this->assertSame('example.com', Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
     public function testHostOnCli()
     {
         $this->assertSame(null, Server::host());
-    }
-
-    /**
-     * @covers ::host
-     */
-    public function testHostWithPort()
-    {
-        $_SERVER['HTTP_HOST'] = 'example.com:8888';
-        Server::hosts(Server::HOST_FROM_HEADER);
-        $this->assertSame('example.com', Server::host());
-    }
-
-    /**
-     * @covers ::hosts
-     */
-    public function testHosts()
-    {
-        // default
-        $this->assertSame([], Server::hosts());
-
-        // single string
-        $this->assertSame(['getkirby.com'], Server::hosts('getkirby.com'));
-        $this->assertSame(['getkirby.com'], Server::hosts());
-
-        // whitecard
-        $this->assertSame(['*'], Server::hosts(Server::HOST_FROM_HEADER));
-        $this->assertSame(['*'], Server::hosts());
-
-        // block
-        $this->assertSame([], Server::hosts(Server::HOST_FROM_SERVER));
-        $this->assertSame([], Server::hosts());
     }
 
     public function provideHttps()
@@ -237,52 +156,6 @@ class ServerTest extends TestCase
         Server::$hosts = Server::HOST_FROM_HEADER;
 
         $this->assertTrue(Server::https());
-    }
-
-    public function provideIsAllowedHost()
-    {
-        return [
-            [
-                'getkirby.com',
-                [],
-                true
-            ],
-            [
-                'getkirby.com',
-                ['*'],
-                true
-            ],
-            [
-                'getkirby.com',
-                ['*getkirby.com'],
-                true
-            ],
-            [
-                'chat.getkirby.de',
-                ['*.getkirby.*'],
-                true
-            ],
-            [
-                'getkirby.com',
-                ['getkirby.de'],
-                false
-            ],
-            [
-                'getkirby.com',
-                ['getkirby.de', 'trykirby.com'],
-                false
-            ]
-        ];
-    }
-
-    /**
-     * @covers ::isAllowedHost
-     * @dataProvider provideIsAllowedHost
-     */
-    public function testIsAllowedHost($input, $hosts, $expected)
-    {
-        Server::hosts($hosts);
-        $this->assertSame($expected, Server::isAllowedHost($input));
     }
 
     /**
