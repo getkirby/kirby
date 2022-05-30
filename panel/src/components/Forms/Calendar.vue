@@ -346,7 +346,6 @@ export default {
   --cell-padding: 0.25rem 0.5rem;
 
   padding: 0.5rem;
-  background: var(--color-gray-900);
   color: var(--color-light);
   border-radius: var(--rounded-xs);
 }
