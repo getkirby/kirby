@@ -252,9 +252,9 @@ class System
      */
     public function isLocal(): bool
     {
-        $server  = $this->app->server();
-        $visitor = $this->app->visitor();
-        $host    = $server->host();
+        $environment  = $this->app->environment();
+        $visitor      = $this->app->visitor();
+        $host         = $environment->host();
 
         if ($host === 'localhost') {
             return true;

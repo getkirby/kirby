@@ -1541,8 +1541,11 @@ class App
 
     /**
      * Returns the Environment object
+     * @deprecated 3.7.0 Use `$kirby->environment()` instead
      *
      * @return \Kirby\Http\Environment
+     * @todo Start throwing deprecation warnings in 3.8.0
+     * @todo Remove in 3.9.0
      */
     public function server()
     {
