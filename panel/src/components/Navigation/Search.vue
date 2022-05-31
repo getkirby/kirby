@@ -205,9 +205,10 @@ export default {
   max-width: 30rem;
   margin: 2.5rem auto;
   box-shadow: var(--shadow-lg);
+  background: var(--color-light);
+  border-radius: var(--rounded);
 }
 .k-search-input {
-  background: var(--color-light);
   display: flex;
 }
 .k-search-types {
@@ -248,7 +249,6 @@ export default {
 
 .k-search-results {
   padding: 0.5rem 1rem 1rem;
-  background: var(--color-light);
 }
 .k-search .k-item:not(:last-child) {
   margin-bottom: 0.25rem;

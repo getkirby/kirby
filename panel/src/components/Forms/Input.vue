@@ -147,6 +147,7 @@ export default {
   line-height: 1;
   border: var(--field-input-border);
   background: var(--field-input-background);
+  border-radius: var(--rounded);
 }
 .k-input[data-theme="field"]:focus-within {
   border: var(--field-input-focus-border);

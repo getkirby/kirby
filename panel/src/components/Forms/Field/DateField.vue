@@ -274,6 +274,7 @@ export default {
   border: var(--field-input-border);
   background: var(--color-gray-300);
   gap: 1px;
+  border-radius: var(--rounded);
 }
 .k-date-field-body:focus-within {
   border: var(--field-input-focus-border);

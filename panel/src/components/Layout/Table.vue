@@ -305,6 +305,7 @@ export default {
   font-size: var(--text-sm);
   border-spacing: 0;
   box-shadow: var(--shadow);
+  border-radius: var(--rounded);
   font-variant-numeric: tabular-nums;
 }
 
@@ -319,6 +320,12 @@ export default {
   line-height: 1.25em;
 }
 
+.k-table th:first-child {
+  border-start-start-radius: var(--rounded);
+}
+.k-table th:last-child {
+  border-start-end-radius: var(--rounded);
+}
 .k-table th:last-child,
 .k-table td:last-child {
   height: var(--table-row-height);

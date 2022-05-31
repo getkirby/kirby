@@ -240,6 +240,7 @@ export default {
   position: relative;
   padding: 0.75rem;
   background: var(--color-white);
+  border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
   border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
