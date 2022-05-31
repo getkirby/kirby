@@ -1,5 +1,9 @@
 <template>
-  <header :data-editable="editable" class="k-header">
+  <header
+    :data-editable="editable"
+    :data-tabs="tabsWithBadges.length > 1"
+    class="k-header"
+  >
     <k-headline tag="h1" size="huge">
       <span
         v-if="editable && $listeners.edit"
@@ -80,6 +84,9 @@ export default {
   padding-top: 4vh;
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--color-border);
+}
+.k-header[data-tabs] {
+  border-bottom: 0;
 }
 .k-header .k-headline {
   min-height: 1.25em;
