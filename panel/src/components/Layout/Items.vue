@@ -4,6 +4,7 @@
       v-bind="table"
       @change="$emit('change', $event)"
       @sort="$emit('sort', $event)"
+      @option="onOption"
     />
   </div>
   <k-draggable
@@ -31,7 +32,7 @@
       @click="$emit('item', item, itemIndex)"
       @drag="onDragStart($event, item.dragText)"
       @mouseover.native="$emit('hover', $event, item, itemIndex)"
-      @option="$emit('option', $event, item, itemIndex)"
+      @option="onOption($event, item, itemIndex)"
     >
       <template #options>
         <slot name="options" v-bind="{ item, itemIndex }" />
@@ -105,6 +106,9 @@ export default {
         type: "text",
         data: dragText
       });
+    },
+    onOption(option, item, itemIndex) {
+      this.$emit("option", option, item, itemIndex);
     },
     imageOptions(item) {
       let globalOptions = this.image;
