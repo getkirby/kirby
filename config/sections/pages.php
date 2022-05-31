@@ -7,6 +7,7 @@ use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
+        'columns',
         'empty',
         'headline',
         'help',
@@ -18,9 +19,6 @@ return [
         'search'
     ],
     'props' => [
-        'columns' => function (array $columns = null) {
-            return $columns ?? [];
-        },
         /**
          * Optional array of templates that should only be allowed to add
          * or `false` to completely disable page creation
@@ -92,52 +90,19 @@ return [
         }
     ],
     'computed' => [
-        'columns' => function () {
-            $columns = [];
-
-            if ($this->image !== false) {
-                $columns['image'] = [
-                    'label' => ' ',
-                    'type'  => 'image',
-                    'width' => 'var(--table-row-height)'
-                ];
-            }
-
-            $columns['title'] = [
-                'label' => 'Title',
-                'type'  => 'url'
-            ];
-
-            if ($this->info) {
-                $columns['info'] = [
-                    'label' => 'Info',
-                    'type'  => 'text',
-                ];
-            }
-
-            foreach ($this->columns as $columnName => $column) {
-                $column['id'] = $columnName;
-                $columns[$columnName . 'Cell'] = $column;
-            }
-
-            $columns['flag'] = [
-                'label' => ' ',
-                'type'  => 'flag',
-                'width' => 'var(--table-row-height)'
-            ];
-
-            return $columns;
-        },
         'parent' => function () {
             $parent = $this->parentModel();
 
-            if (is_a($parent, 'Kirby\Cms\Site') === false && is_a($parent, 'Kirby\Cms\Page') === false) {
+            if (
+                is_a($parent, 'Kirby\Cms\Site') === false &&
+                is_a($parent, 'Kirby\Cms\Page') === false
+            ) {
                 throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
             }
 
             return $parent;
         },
-        'pages' => function () {
+        'models' => function () {
             switch ($this->status) {
                 case 'draft':
                     $pages = $this->parent->drafts();
@@ -199,7 +164,7 @@ return [
             return $pages;
         },
         'total' => function () {
-            return $this->pages->pagination()->total();
+            return $this->models->pagination()->total();
         },
         'data' => function () {
             if ($this->layout === 'table') {
@@ -208,7 +173,7 @@ return [
 
             $data = [];
 
-            foreach ($this->pages as $item) {
+            foreach ($this->models as $item) {
                 $panel       = $item->panel();
                 $permissions = $item->permissions();
 
@@ -341,46 +306,6 @@ return [
             }
 
             return $blueprints;
-        },
-        'rows' => function () {
-            $rows = [];
-
-            foreach ($this->pages as $item) {
-                $panel = $item->panel();
-                $row   = [];
-
-                $row['title'] = [
-                    'text' => $item->toSafeString($this->text),
-                    'href' => $panel->url(true)
-                ];
-
-                $row['id']          = $item->id();
-                $row['image']       = $panel->image($this->image, 'list');
-                $row['info']        = $item->toSafeString($this->info ?? false);
-                $row['status']      = $item->status();
-                $row['permissions'] = $item->permissions();
-                $row['link']        = $panel->url(true);
-
-                // custom columns
-                foreach ($this->columns as $columnName => $column) {
-                    // don't overwrite essential columns
-                    if (isset($row[$columnName]) === true) {
-                        continue;
-                    }
-
-                    if (empty($column['value']) === false) {
-                        $value = $item->toSafeString($column['value']);
-                    } else {
-                        $value = $item->content()->get($column['id'] ?? $columnName)->value();
-                    }
-
-                    $row[$columnName] = $value;
-                }
-
-                $rows[] = $row;
-            }
-
-            return $rows;
         }
     ],
     'toArray' => function () {

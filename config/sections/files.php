@@ -5,6 +5,7 @@ use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
+        'columns',
         'empty',
         'headline',
         'help',
@@ -16,9 +17,6 @@ return [
         'search'
     ],
     'props' => [
-        'columns' => function (array $columns = null) {
-            return $columns ?? [];
-        },
         /**
          * Enables/disables reverse sorting
          */
@@ -82,40 +80,10 @@ return [
 
             return null;
         },
-        'columns' => function () {
-            $columns = [];
-
-            if ($this->image !== false) {
-                $columns['image'] = [
-                    'label' => ' ',
-                    'type'  => 'image',
-                    'width' => 'var(--table-row-height)'
-                ];
-            }
-
-            $columns['filename'] = [
-                'label' => 'Filename',
-                'type'  => 'url'
-            ];
-
-            if ($this->info) {
-                $columns['info'] = [
-                    'label' => 'Info',
-                    'type'  => 'text',
-                ];
-            }
-
-            foreach ($this->columns as $columnName => $column) {
-                $column['id'] = $columnName;
-                $columns[$columnName . 'Cell'] = $column;
-            }
-
-            return $columns;
-        },
         'parent' => function () {
             return $this->parentModel();
         },
-        'files' => function () {
+        'models' => function () {
             $files = $this->parent->files()->template($this->template);
 
             // filter out all protected files
@@ -158,7 +126,7 @@ return [
             // a different parent model
             $dragTextAbsolute = $this->model->is($this->parent) === false;
 
-            foreach ($this->files as $file) {
+            foreach ($this->models as $file) {
                 $panel = $file->panel();
 
                 $data[] = [
@@ -180,7 +148,7 @@ return [
             return $data;
         },
         'total' => function () {
-            return $this->files->pagination()->total();
+            return $this->models->pagination()->total();
         },
         'errors' => function () {
             $errors = [];
@@ -267,47 +235,6 @@ return [
                     'template' => $template
                 ])
             ];
-        }
-    ],
-    'methods' => [
-        'rows' => function () {
-            $rows = [];
-
-            foreach ($this->files as $item) {
-                $panel = $item->panel();
-                $row   = [];
-
-                $row['filename'] = [
-                    'text' => $item->toSafeString($this->text),
-                    'href' => $panel->url(true)
-                ];
-
-                $row['id']          = $item->id();
-                $row['image']       = $panel->image($this->image, 'list');
-                $row['info']        = $item->toSafeString($this->info ?? false);
-                $row['permissions'] = $item->permissions();
-                $row['link']        = $panel->url(true);
-
-                // custom columns
-                foreach ($this->columns as $columnName => $column) {
-                    // don't overwrite essential columns
-                    if (isset($row[$columnName]) === true) {
-                        continue;
-                    }
-
-                    if (empty($column['value']) === false) {
-                        $value = $item->toSafeString($column['value']);
-                    } else {
-                        $value = $item->content()->get($column['id'] ?? $columnName)->value();
-                    }
-
-                    $row[$columnName] = $value;
-                }
-
-                $rows[] = $row;
-            }
-
-            return $rows;
         }
     ],
     'toArray' => function () {
