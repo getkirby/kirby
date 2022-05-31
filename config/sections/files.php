@@ -271,11 +271,9 @@ return [
     ],
     'methods' => [
         'rows' => function () {
-
             $rows = [];
 
             foreach ($this->files as $item) {
-
                 $panel = $item->panel();
                 $row   = [];
 
@@ -310,7 +308,6 @@ return [
             }
 
             return $rows;
-
         }
     ],
     'toArray' => function () {

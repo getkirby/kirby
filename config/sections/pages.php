@@ -343,11 +343,9 @@ return [
             return $blueprints;
         },
         'rows' => function () {
-
             $rows = [];
 
             foreach ($this->pages as $item) {
-
                 $panel = $item->panel();
                 $row   = [];
 
@@ -383,11 +381,9 @@ return [
             }
 
             return $rows;
-
         }
     ],
     'toArray' => function () {
-
         return [
             'data'    => $this->data,
             'errors'  => $this->errors,
