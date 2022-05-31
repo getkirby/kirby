@@ -48,6 +48,21 @@ return [
         }
     ],
     'computed' => [
+        'add' => function () {
+            if ($this->create === false) {
+                return false;
+            }
+
+            if (in_array($this->status, ['draft', 'all']) === false) {
+                return false;
+            }
+
+            if ($this->isFull() === true) {
+                return false;
+            }
+
+            return true;
+        },
         'parent' => function () {
             $parent = $this->parentModel();
 
@@ -122,53 +137,35 @@ return [
             return $pages;
         },
         'data' => function () {
-            if ($this->layout === 'table') {
-                return $this->rows();
-            }
-
             $data = [];
 
-            foreach ($this->models as $item) {
-                $panel       = $item->panel();
-                $permissions = $item->permissions();
+            foreach ($this->models as $model) {
+                $panel = $model->panel();
 
-                $row = [
+                $item = [
                     'dragText'    => $panel->dragText(),
-                    'id'          => $item->id(),
-                    'image'       => $panel->image($this->image, $this->layout),
-                    'info'        => $item->toSafeString($this->info ?? false),
+                    'id'          => $model->id(),
+                    'image'       => $panel->image(
+                        $this->image,
+                        $this->layout === 'table' ? 'list' : $this->layout
+                    ),
+                    'info'        => $model->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
-                    'parent'      => $item->parentId(),
-                    'permissions' => [
-                        'sort'         => $permissions->can('sort'),
-                        'changeSlug'   => $permissions->can('changeSlug'),
-                        'changeStatus' => $permissions->can('changeStatus'),
-                        'changeTitle'  => $permissions->can('changeTitle'),
-                    ],
-                    'status'      => $item->status(),
-                    'template'    => $item->intendedTemplate()->name(),
-                    'text'        => $item->toSafeString($this->text),
+                    'parent'      => $model->parentId(),
+                    'permissions' => $model->permissions(),
+                    'status'      => $model->status(),
+                    'template'    => $model->intendedTemplate()->name(),
+                    'text'        => $model->toSafeString($this->text),
                 ];
 
-                $data[] = $row;
+                if ($this->layout === 'table') {
+                    $item = $this->columnsValues($item, $model);
+                }
+
+                $data[] = $item;
             }
 
             return $data;
-        },
-        'add' => function () {
-            if ($this->create === false) {
-                return false;
-            }
-
-            if (in_array($this->status, ['draft', 'all']) === false) {
-                return false;
-            }
-
-            if ($this->isFull() === true) {
-                return false;
-            }
-
-            return true;
         }
     ],
     'methods' => [

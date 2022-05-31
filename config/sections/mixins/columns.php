@@ -52,48 +52,28 @@ return [
         },
     ],
     'methods' => [
-        'rows' => function () {
-            $rows = [];
+        'columnsValues' => function ($item, $model) {
+            $item['title'] = [
+                'text' => $model->toSafeString($this->text),
+                'href' => $model->panel()->url(true)
+            ];
 
-            foreach ($this->models as $item) {
-                $panel = $item->panel();
-                $row   = [];
-
-                $row['title'] = [
-                    'text' => $item->toSafeString($this->text),
-                    'href' => $panel->url(true)
-                ];
-
-                $row['id']          = $item->id();
-                $row['image']       = $panel->image($this->image, 'list');
-                $row['info']        = $item->toSafeString($this->info ?? false);
-                $row['permissions'] = $item->permissions();
-                $row['link']        = $panel->url(true);
-
-                if ($this->type === 'pages') {
-                    $row['status'] = $item->status();
+            foreach ($this->columns as $columnName => $column) {
+                // don't overwrite essential columns
+                if (isset($item[$columnName]) === true) {
+                    continue;
                 }
 
-                // custom columns
-                foreach ($this->columns as $columnName => $column) {
-                    // don't overwrite essential columns
-                    if (isset($row[$columnName]) === true) {
-                        continue;
-                    }
-
-                    if (empty($column['value']) === false) {
-                        $value = $item->toSafeString($column['value']);
-                    } else {
-                        $value = $item->content()->get($column['id'] ?? $columnName)->value();
-                    }
-
-                    $row[$columnName] = $value;
+                if (empty($column['value']) === false) {
+                    $value = $model->toSafeString($column['value']);
+                } else {
+                    $value = $model->content()->get($column['id'] ?? $columnName)->value();
                 }
 
-                $rows[] = $row;
+                $item[$columnName] = $value;
             }
 
-            return $rows;
+            return $item;
         }
     ],
 ];

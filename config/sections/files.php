@@ -81,33 +81,38 @@ return [
             return $files;
         },
         'data' => function () {
-            if ($this->layout === 'table') {
-                return $this->rows();
-            }
-
             $data = [];
 
             // the drag text needs to be absolute when the files come from
             // a different parent model
             $dragTextAbsolute = $this->model->is($this->parent) === false;
 
-            foreach ($this->models as $file) {
-                $panel = $file->panel();
+            foreach ($this->models as $model) {
+                $panel = $model->panel();
 
-                $data[] = [
+                $item = [
                     'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
-                    'extension' => $file->extension(),
-                    'filename'  => $file->filename(),
-                    'id'        => $file->id(),
-                    'image'     => $panel->image($this->image, $this->layout),
-                    'info'      => $file->toSafeString($this->info ?? false),
+                    'extension' => $model->extension(),
+                    'filename'  => $model->filename(),
+                    'id'        => $model->id(),
+                    'image'     => $panel->image(
+                        $this->image,
+                        $this->layout === 'table' ? 'list' : $this->layout
+                    ),
+                    'info'      => $model->toSafeString($this->info ?? false),
                     'link'      => $panel->url(true),
-                    'mime'      => $file->mime(),
-                    'parent'    => $file->parent()->panel()->path(),
-                    'template'  => $file->template(),
-                    'text'      => $file->toSafeString($this->text),
-                    'url'       => $file->url(),
+                    'mime'      => $model->mime(),
+                    'parent'    => $model->parent()->panel()->path(),
+                    'template'  => $model->template(),
+                    'text'      => $model->toSafeString($this->text),
+                    'url'       => $model->url(),
                 ];
+
+                if ($this->layout === 'table') {
+                    $item = $this->columnsValues($item, $model);
+                }
+
+                $data[] = $item;
             }
 
             return $data;
