@@ -54,6 +54,13 @@ class UriTest extends TestCase
         $this->assertEquals('/', $uri->toString());
     }
 
+    public function testCurrentWithCustomObject()
+    {
+        Uri::$current = $uri = new Uri('/');
+
+        $this->assertSame($uri, Uri::current());
+    }
+
     public function testCurrentWithRequestUri()
     {
         new App([
@@ -440,5 +447,32 @@ class UriTest extends TestCase
 
         $url = new Uri(['scheme' => 'https']);
         $this->assertTrue($url->https());
+    }
+
+    public function testHasFragment()
+    {
+        $uri = new Uri('https://getkirby.com/#footer');
+        $this->assertTrue($uri->hasFragment());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasFragment());
+    }
+
+    public function testHasPath()
+    {
+        $uri = new Uri('https://getkirby.com/docs');
+        $this->assertTrue($uri->hasPath());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasPath());
+    }
+
+    public function testHasQuery()
+    {
+        $uri = new Uri('https://getkirby.com?search=foo');
+        $this->assertTrue($uri->hasQuery());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasQuery());
     }
 }
