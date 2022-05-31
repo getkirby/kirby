@@ -99,6 +99,7 @@ class EnvironmentTest extends TestCase
         $env = new Environment([
             'root'    => $this->config,
             'allowed' => [
+                null,
                 'http://example.com',
                 'http://staging.example.com'
             ]
@@ -116,6 +117,7 @@ class EnvironmentTest extends TestCase
             'cli'     => false,
             'root'    => $this->config,
             'allowed' => [
+                true,
                 'http://localhost/path-a',
                 'http://localhost/path-b'
             ]
@@ -1124,6 +1126,36 @@ class EnvironmentTest extends TestCase
         $env = new Environment(['cli' => true]);
 
         $this->assertSame('', $env->scriptPath());
+    }
+
+    /**
+     * @covers ::toArray
+     */
+    public function testToArray()
+    {
+        $env = new Environment([
+            'root' => $this->config,
+        ], [
+            'SERVER_NAME' => 'example.com'
+        ]);
+
+        $this->assertSame([
+            'host'          => 'example.com',
+            'https'         => false,
+            'info'          => [
+                'SERVER_NAME' => 'example.com'
+            ],
+            'ip'            => null,
+            'isBehindProxy' => false,
+            'path'          => '',
+            'port'          => null,
+            'requestUri'    => [
+                'path'  => null,
+                'query' => null
+            ],
+            'scriptPath'    => '',
+            'url'           => 'http://example.com'
+        ], $env->toArray());
     }
 
     /**

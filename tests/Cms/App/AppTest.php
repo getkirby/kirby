@@ -349,6 +349,7 @@ class AppTest extends TestCase
 
         $this->assertSame($info, $app->environment()->info());
         $this->assertSame($app->environment(), $app->server());
+        $this->assertSame($info, $app->server()->info());
     }
 
     /**

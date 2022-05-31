@@ -1546,6 +1546,7 @@ class App
      * @return \Kirby\Http\Environment
      * @todo Start throwing deprecation warnings in 3.8.0
      * @todo Remove in 3.9.0
+     * @codeCoverageIgnore
      */
     public function server()
     {
