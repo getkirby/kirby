@@ -875,7 +875,12 @@ class EnvironmentTest extends TestCase
                 '/starterkit/index.php',
                 '/starterkit',
                 ''
-            ]
+            ],
+            [
+                '/index.php',
+                '/panel/dropdowns//pages/blog',
+                'panel/dropdowns/pages/blog'
+            ],
         ];
     }
 

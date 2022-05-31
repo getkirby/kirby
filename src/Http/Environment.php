@@ -670,6 +670,7 @@ class Environment
     public function requestRoute(): string
     {
         $requestUri = trim($this->requestUri()['path'] ?? '', '/');
+        $requestUri = str_replace('//', '/', $requestUri);
         $scriptPath = $this->scriptPath();
 
         return trim(preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri), '/');
