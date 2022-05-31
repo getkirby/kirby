@@ -101,7 +101,7 @@ class AppErrorsTest extends TestCase
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         $app = $this->app->clone([
-            'cli' => true,
+            'cli' => false,
             'server' => [
                 'HTTP_ACCEPT' => 'application/json'
             ]
