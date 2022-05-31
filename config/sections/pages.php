@@ -116,8 +116,7 @@ return [
             }
 
             foreach ($this->columns as $columnName => $column) {
-                $column['id']     = $columnName;
-                $column['costum'] = true;
+                $column['id'] = $columnName;
                 $columns[$columnName . 'Cell'] = $column;
             }
 
