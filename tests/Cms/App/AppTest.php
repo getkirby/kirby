@@ -333,6 +333,25 @@ class AppTest extends TestCase
     }
 
     /**
+     * @covers ::environment
+     * @covers ::server
+     */
+    public function testEnvironment()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'server' => $info = [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $this->assertSame($info, $app->environment()->info());
+        $this->assertSame($app->environment(), $app->server());
+    }
+
+    /**
      * @covers ::image
      */
     public function testImage()
