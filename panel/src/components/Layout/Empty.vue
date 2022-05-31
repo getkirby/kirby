@@ -50,7 +50,7 @@ export default {
 .k-empty {
   display: flex;
   align-items: stretch;
-  border-radius: var(--rounded-xs);
+  border-radius: var(--rounded);
   color: var(--color-gray-600);
   border: 1px dashed var(--color-border);
 }
