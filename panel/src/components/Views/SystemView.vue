@@ -12,50 +12,12 @@
         <k-stats :reports="environment" size="medium" class="k-system-info" />
       </section>
 
-      <section v-if="hasSecurityIssues" class="k-system-view-section">
+      <section v-if="security.length" class="k-system-view-section">
         <header class="k-system-view-section-header">
           <k-headline>{{ $t("security") }}</k-headline>
           <k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
         </header>
-
-        <ul class="k-system-security">
-          <li v-if="debug">
-            <k-link to="https://getkirby.com/security/debug">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.debugging") }}</span>
-            </k-link>
-          </li>
-          <li v-if="!https">
-            <k-link to="https://getkirby.com/security/https">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.https") }}</span>
-            </k-link>
-          </li>
-          <li v-if="git">
-            <k-link to="https://getkirby.com/security/git">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.git") }}</span>
-            </k-link>
-          </li>
-          <li v-if="content">
-            <k-link to="https://getkirby.com/security/content">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.content") }}</span>
-            </k-link>
-          </li>
-          <li v-if="kirby">
-            <k-link to="https://getkirby.com/security/kirby">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.kirby") }}</span>
-            </k-link>
-          </li>
-          <li v-if="site">
-            <k-link to="https://getkirby.com/security/site">
-              <k-icon type="alert" />
-              <span>{{ $t("system.issues.site") }}</span>
-            </k-link>
-          </li>
-        </ul>
+        <k-items :items="security" />
       </section>
 
       <section v-if="plugins.length" class="k-system-view-section">
@@ -103,10 +65,7 @@ export default {
   },
   data() {
     return {
-      content: null,
-      git: null,
-      kirby: null,
-      site: null
+      security: []
     };
   },
   computed: {
@@ -135,15 +94,13 @@ export default {
         }
       ];
     },
-    hasSecurityIssues() {
-      return (
-        this.content ||
-        this.git ||
-        this.kirby ||
-        this.site ||
-        !this.https ||
-        this.debug
-      );
+    security() {
+      return [
+        {
+          text: this.$t("system.issues.git"),
+          link: "https://getkirby.com/security/git"
+        }
+      ];
     }
   },
   async created() {
@@ -156,7 +113,9 @@ export default {
 
     await promiseAll([
       this.check("content"),
+      this.check("debug"),
       this.check("git"),
+      this.check("https"),
       this.check("kirby"),
       this.check("site")
     ]);
@@ -165,8 +124,40 @@ export default {
   },
   methods: {
     async check(key) {
-      const url = this.urls[key];
-      this[key] = !url ? false : await this.isAccessible(url);
+      switch (key) {
+        case "debug":
+          if (this.debug === true) {
+            this.securityIssue(key);
+          }
+          break;
+        case "https":
+          if (this.https !== true) {
+            this.securityIssue(key);
+          }
+          break;
+        default:
+          const url = this.urls[key];
+
+          if (!url) {
+            return false;
+          }
+
+          if ((await this.isAccessible(url)) === true) {
+            this.securityIssue(key);
+          }
+      }
+    },
+    securityIssue(key) {
+      this.security.push({
+        image: {
+          back: "var(--color-red-200)",
+          icon: "alert",
+          color: "var(--color-red)"
+        },
+        id: key,
+        text: this.$t("system.issues." + key),
+        link: "https://getkirby.com/security/" + key
+      });
     },
     async isAccessible(url) {
       const response = await fetch(url, {
@@ -194,51 +185,7 @@ export default {
 .k-system-view-section {
   margin-bottom: 3rem;
 }
-
 .k-system-info [data-theme] .k-stat-value {
   color: var(--theme);
-}
-
-.k-system-warning {
-  color: var(--color-negative);
-  font-weight: var(--font-bold);
-  display: inline-flex;
-}
-.k-system-warning .k-button-text {
-  font: inherit;
-  opacity: 1;
-}
-
-.k-system-security {
-  box-shadow: var(--shadow);
-}
-.k-system-security a {
-  font-size: var(--text-sm);
-  display: grid;
-  align-items: center;
-  grid-template-columns: 2.5rem auto;
-  background: var(--color-white);
-  color: var(--color-black);
-  margin-bottom: 1px;
-  line-height: var(--leading-tight);
-}
-.k-system-security a:focus {
-  position: relative;
-  z-index: 1;
-}
-.k-system-security .k-icon {
-  background: var(--color-red-200);
-  color: var(--color-negative);
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 100%;
-}
-.k-system-security span:last-of-type {
-  padding: var(--spacing-3);
-}
-.k-system-security span:last-of-type::after {
-  content: "→";
-  margin-inline-start: var(--spacing-2);
 }
 </style>

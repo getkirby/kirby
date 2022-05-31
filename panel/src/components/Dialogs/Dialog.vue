@@ -337,8 +337,6 @@ export default {
 .k-dialog-footer {
   padding: 0;
   border-top: 1px solid var(--color-gray-300);
-  border-end-start-radius: var(--rounded-xs);
-  border-end-end-radius: var(--rounded-xs);
   line-height: 1;
   flex-shrink: 0;
 }
