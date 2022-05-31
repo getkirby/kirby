@@ -377,6 +377,6 @@ export default {
   background: rgba(0, 0, 0, 0.075);
   padding: 0 1rem;
   height: 36px;
-  border-radius: var(--rounded-xs);
+  border-radius: var(--rounded);
 }
 </style>
