@@ -11,8 +11,7 @@ return [
         'headline',
         'help',
         'layout',
-        'min',
-        'max',
+        'limits',
         'pagination',
         'parent',
         'search',
@@ -112,40 +111,6 @@ return [
             }
 
             return $data;
-        },
-        'total' => function () {
-            return $this->models->pagination()->total();
-        },
-        'errors' => function () {
-            $errors = [];
-
-            if ($this->validateMax() === false) {
-                $errors['max'] = I18n::template('error.section.files.max.' . I18n::form($this->max), [
-                    'max'     => $this->max,
-                    'section' => $this->headline
-                ]);
-            }
-
-            if ($this->validateMin() === false) {
-                $errors['min'] = I18n::template('error.section.files.min.' . I18n::form($this->min), [
-                    'min'     => $this->min,
-                    'section' => $this->headline
-                ]);
-            }
-
-            if (empty($errors) === true) {
-                return [];
-            }
-
-            return [
-                $this->name => [
-                    'label'   => $this->headline,
-                    'message' => $errors,
-                ]
-            ];
-        },
-        'pagination' => function () {
-            return $this->pagination();
         },
         'upload' => function () {
             if ($this->isFull() === true) {

@@ -3,7 +3,6 @@
 use Kirby\Cms\Blueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
@@ -13,8 +12,7 @@ return [
         'headline',
         'help',
         'layout',
-        'min',
-        'max',
+        'limits',
         'pagination',
         'parent',
         'search',
@@ -123,9 +121,6 @@ return [
 
             return $pages;
         },
-        'total' => function () {
-            return $this->models->pagination()->total();
-        },
         'data' => function () {
             if ($this->layout === 'table') {
                 return $this->rows();
@@ -160,34 +155,6 @@ return [
 
             return $data;
         },
-        'errors' => function () {
-            $errors = [];
-
-            if ($this->validateMax() === false) {
-                $errors['max'] = I18n::template('error.section.pages.max.' . I18n::form($this->max), [
-                    'max'     => $this->max,
-                    'section' => $this->headline
-                ]);
-            }
-
-            if ($this->validateMin() === false) {
-                $errors['min'] = I18n::template('error.section.pages.min.' . I18n::form($this->min), [
-                    'min'     => $this->min,
-                    'section' => $this->headline
-                ]);
-            }
-
-            if (empty($errors) === true) {
-                return [];
-            }
-
-            return [
-                $this->name => [
-                    'label'   => $this->headline,
-                    'message' => $errors,
-                ]
-            ];
-        },
         'add' => function () {
             if ($this->create === false) {
                 return false;
@@ -202,9 +169,6 @@ return [
             }
 
             return true;
-        },
-        'pagination' => function () {
-            return $this->pagination();
         }
     ],
     'methods' => [
