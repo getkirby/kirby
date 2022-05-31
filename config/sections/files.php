@@ -15,33 +15,10 @@ return [
         'max',
         'pagination',
         'parent',
-        'search'
+        'search',
+        'sort'
     ],
     'props' => [
-        /**
-         * Enables/disables reverse sorting
-         */
-        'flip' => function (bool $flip = false) {
-            return $flip;
-        },
-        /**
-         * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
-         */
-        'size' => function (string $size = 'auto') {
-            return $size;
-        },
-        /**
-         * Enables/disables manual sorting
-         */
-        'sortable' => function (bool $sortable = true) {
-            return $sortable;
-        },
-        /**
-         * Overwrites manual sorting and sorts by the given field and sorting direction (i.e. `filename desc`)
-         */
-        'sortBy' => function (string $sortBy = null) {
-            return $sortBy;
-        },
         /**
          * Filters all files by template and also sets the template, which will be used for all uploads
          */
@@ -169,25 +146,6 @@ return [
         },
         'pagination' => function () {
             return $this->pagination();
-        },
-        'sortable' => function () {
-            if ($this->sortable === false) {
-                return false;
-            }
-
-            if (empty($this->query) === false) {
-                return false;
-            }
-
-            if ($this->sortBy !== null) {
-                return false;
-            }
-
-            if ($this->flip === true) {
-                return false;
-            }
-
-            return true;
         },
         'upload' => function () {
             if ($this->isFull() === true) {

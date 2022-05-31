@@ -411,6 +411,7 @@ class Core
             'pagination' => $this->root . '/sections/mixins/pagination.php',
             'parent'     => $this->root . '/sections/mixins/parent.php',
             'search'     => $this->root . '/sections/mixins/search.php',
+            'sort'        => $this->root . '/sections/mixins/sort.php',
         ];
     }
 
