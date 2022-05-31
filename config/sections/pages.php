@@ -8,6 +8,7 @@ use Kirby\Toolkit\I18n;
 return [
     'mixins' => [
         'columns',
+        'details',
         'empty',
         'headline',
         'help',
@@ -31,18 +32,6 @@ return [
          */
         'flip' => function (bool $flip = false) {
             return $flip;
-        },
-        /**
-         * Image options to control the source and look of page previews
-         */
-        'image' => function ($image = null) {
-            return $image ?? [];
-        },
-        /**
-         * Optional info text setup. Info text is shown on the right (lists) or below (cards) the page title.
-         */
-        'info' => function ($info = null) {
-            return I18n::translate($info, $info);
         },
         /**
          * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
@@ -81,12 +70,6 @@ return [
          */
         'templates' => function ($templates = null) {
             return A::wrap($templates ?? $this->template);
-        },
-        /**
-         * Setup for the main text in the list or cards. By default this will display the page title.
-         */
-        'text' => function ($text = '{{ page.title }}') {
-            return I18n::translate($text, $text);
         }
     ],
     'computed' => [
@@ -242,14 +225,6 @@ return [
             }
 
             return true;
-        },
-        'link' => function () {
-            $modelLink  = $this->model->panel()->url(true);
-            $parentLink = $this->parent->panel()->url(true);
-
-            if ($modelLink !== $parentLink) {
-                return $parentLink;
-            }
         },
         'pagination' => function () {
             return $this->pagination();
