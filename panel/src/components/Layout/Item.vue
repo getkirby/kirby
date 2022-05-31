@@ -250,9 +250,10 @@ export default {
 
 /** Cardlet and card items shared */
 .k-item:not(.k-list-item) .k-item-sort-handle {
-  margin: 0.25rem;
+  margin: var(--spacing-2);
   background: var(--color-background);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--rounded-sm);
 }
 .k-item:not(.k-list-item) .k-item-label {
   margin-inline-start: -2px;
