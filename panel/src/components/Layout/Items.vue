@@ -1,6 +1,10 @@
 <template>
   <div v-if="layout === 'table'">
-    <k-table v-bind="table" />
+    <k-table
+      v-bind="table"
+      @change="$emit('change', $event)"
+      @sort="$emit('sort', $event)"
+    />
   </div>
   <k-draggable
     v-else
@@ -90,7 +94,8 @@ export default {
 
       return {
         columns: columns,
-        rows: items
+        rows: items,
+        sortable: this.sortable
       };
     }
   },

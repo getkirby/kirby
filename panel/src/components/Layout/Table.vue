@@ -43,6 +43,7 @@
       :options="dragOptions"
       :handle="true"
       element="tbody"
+      @change="onChange"
       @end="onSort"
     >
       <!-- Empty -->
@@ -238,6 +239,13 @@ export default {
       return column.label || this.$helper.string.ucfirst(columnIndex);
     },
     /**
+     * When the table has been sorted,
+     * emit changed item with event details
+     */
+    onChange(event) {
+      this.$emit("change", event);
+    },
+    /**
      * When a table cell is clicked
      * @param {mixed} params
      */
@@ -269,7 +277,8 @@ export default {
       this.$emit("option", option, row, rowIndex);
     },
     /**
-     * When the table has been sorted
+     * When the table has been sorted,
+     * emit all items in new order
      */
     onSort() {
       this.$emit("input", this.values);
