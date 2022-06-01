@@ -93,14 +93,6 @@ export default {
           value: this.server || "?"
         }
       ];
-    },
-    security() {
-      return [
-        {
-          text: this.$t("system.issues.git"),
-          link: "https://getkirby.com/security/git"
-        }
-      ];
     }
   },
   async created() {
