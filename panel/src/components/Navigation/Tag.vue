@@ -6,7 +6,12 @@
     @keydown.delete.prevent="remove"
   >
     <span class="k-tag-text"><slot /></span>
-    <span v-if="removable" class="k-tag-toggle" @click="remove">&times;</span>
+    <k-icon
+      v-if="removable"
+      class="k-tag-toggle"
+      type="cancel-small"
+      @click.native="remove"
+    />
   </span>
 </template>
 
@@ -64,11 +69,8 @@ export default {
 .k-tag-toggle {
   color: rgba(255, 255, 255, 0.7);
   width: 1.75rem;
+  padding-inline-end: 1px;
   height: 100%;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
   border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
 }
 .k-tag-toggle:hover {
