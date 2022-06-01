@@ -286,7 +286,7 @@ export default {
 .k-date-field-body > .k-input[data-theme="field"] {
   border: 0;
   box-shadow: none;
-  border-radius: var(--rounded-sm);
+  border-radius: var(--rounded);
 }
 .k-date-field-body > .k-input[data-invalid="true"],
 .k-date-field-body > .k-input[data-invalid="true"]:focus-within {
