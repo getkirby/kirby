@@ -4,10 +4,10 @@ return [
     'props' => [
         /**
          * Changes the layout of the selected entries.
-         * Available layouts: `list`, `cardlets`, `cards`, `table`
+         * Available layouts: `list`, `cardlets`, `cards`
          */
         'layout' => function (string $layout = 'list') {
-            $layouts = ['list', 'cardlets', 'cards', 'table'];
+            $layouts = ['list', 'cardlets', 'cards'];
             return in_array($layout, $layouts) ? $layout : 'list';
         },
 

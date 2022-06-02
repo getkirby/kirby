@@ -7,7 +7,6 @@ use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
-        'columns',
         'details',
         'empty',
         'headline',
