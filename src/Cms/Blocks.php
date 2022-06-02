@@ -2,12 +2,9 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Json;
-use Kirby\Data\Yaml;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Blocks as BlockSchema;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -118,21 +115,8 @@ class Blocks extends Items
             try {
                 $input = Json::decode((string)$input);
             } catch (Throwable $e) {
-                try {
-                    // try to import the old YAML format
-                    $yaml  = Yaml::decode((string)$input);
-                    $first = A::first($yaml);
-
-                    // check for valid yaml
-                    if (empty($yaml) === true || (isset($first['_key']) === false && isset($first['type']) === false)) {
-                        throw new Exception('Invalid YAML');
-                    } else {
-                        $input = $yaml;
-                    }
-                } catch (Throwable $e) {
-                    $parser = new Parsley((string)$input, new BlockSchema());
-                    $input  = $parser->blocks();
-                }
+                $parser = new Parsley((string)$input, new BlockSchema());
+                $input  = $parser->blocks();
             }
         }
 

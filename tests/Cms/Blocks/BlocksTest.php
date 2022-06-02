@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class BlocksTest extends TestCase
@@ -77,18 +76,6 @@ class BlocksTest extends TestCase
         ];
 
         $result = Blocks::parse(json_encode($input));
-        $this->assertSame($input, $result);
-    }
-
-    public function testParseYaml()
-    {
-        $input = [
-            [
-                'type' => 'heading'
-            ]
-        ];
-
-        $result = Blocks::parse(Yaml::encode($input));
         $this->assertSame($input, $result);
     }
 
