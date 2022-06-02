@@ -4,9 +4,6 @@ namespace Kirby\Http;
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Kirby\Http\Server
- */
 class ServerTest extends TestCase
 {
     protected $_SERVER = null;
@@ -25,34 +22,22 @@ class ServerTest extends TestCase
         Server::$cli = null;
     }
 
-    /**
-     * @covers ::address
-     */
     public function testAddress()
     {
         $_SERVER['SERVER_ADDR'] = $ip = '127.0.0.1';
         $this->assertSame($ip, Server::address());
     }
 
-    /**
-     * @covers ::address
-     */
     public function testAddressOnCli()
     {
         $this->assertSame(null, Server::address());
     }
 
-    /**
-     * @covers ::cli
-     */
     public function testCli()
     {
         $this->assertTrue(Server::cli());
     }
 
-    /**
-     * @covers ::get
-     */
     public function testGet()
     {
         $_SERVER['TEST'] = 'foo';
@@ -60,43 +45,28 @@ class ServerTest extends TestCase
         $this->assertSame('foo', Server::get('TEST'));
     }
 
-    /**
-     * @covers ::get
-     */
     public function testGetAll()
     {
         $this->assertSame($_SERVER, Server::get());
     }
 
-    /**
-     * @covers ::get
-     */
     public function testGetFallback()
     {
         $this->assertSame('foo', Server::get('test', 'foo'));
     }
 
-    /**
-     * @covers ::host
-     */
     public function testHostFromServerAddress()
     {
         $_SERVER['SERVER_ADDR'] = 'example.com';
         $this->assertSame('example.com', Server::host());
     }
 
-    /**
-     * @covers ::host
-     */
     public function testHostFromServerName()
     {
         $_SERVER['SERVER_NAME'] = 'example.com';
         $this->assertSame('example.com', Server::host());
     }
 
-    /**
-     * @covers ::host
-     */
     public function testHostOnCli()
     {
         $this->assertSame(null, Server::host());
@@ -121,7 +91,6 @@ class ServerTest extends TestCase
 
     /**
      * @dataProvider provideHttps
-     * @covers ::https
      */
     public function testHttpsFromHeader($input, $expected)
     {
@@ -129,9 +98,6 @@ class ServerTest extends TestCase
         $this->assertSame($expected, Server::https());
     }
 
-    /**
-     * @covers ::https
-     */
     public function testHttpsFromForwardedPort()
     {
         Server::$hosts = Server::HOST_FROM_HEADER;
@@ -145,9 +111,6 @@ class ServerTest extends TestCase
         $this->assertTrue(Server::https());
     }
 
-    /**
-     * @covers ::https
-     */
     public function testHttpsFromForwardedProto()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST']  = 'example.com';
@@ -158,17 +121,11 @@ class ServerTest extends TestCase
         $this->assertTrue(Server::https());
     }
 
-    /**
-     * @covers ::isBehindProxy
-     */
     public function testIsBehindProxy()
     {
         $this->assertFalse(Server::isBehindProxy());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortFromHost()
     {
         // HTTP_HOST
@@ -178,9 +135,6 @@ class ServerTest extends TestCase
         $this->assertSame(8888, Server::port());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortFromProxyHost()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com:8888';
@@ -189,9 +143,6 @@ class ServerTest extends TestCase
         $this->assertSame(8888, Server::port());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortFromProxyPort()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
@@ -201,9 +152,6 @@ class ServerTest extends TestCase
         $this->assertSame(8888, Server::port());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortFromProxyProto()
     {
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'example.com';
@@ -213,9 +161,6 @@ class ServerTest extends TestCase
         $this->assertSame(443, Server::port());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortFromServer()
     {
         // SERVER_PORT
@@ -223,9 +168,6 @@ class ServerTest extends TestCase
         $this->assertSame(777, Server::port());
     }
 
-    /**
-     * @covers ::port
-     */
     public function testPortOnCli()
     {
         $this->assertSame(null, Server::port());
@@ -295,7 +237,6 @@ class ServerTest extends TestCase
 
     /**
      * @dataProvider provideRequestUri
-     * @covers ::requestUri
      */
     public function testRequestUri($input, $expected)
     {
@@ -412,7 +353,6 @@ class ServerTest extends TestCase
 
     /**
      * @dataProvider provideScriptPath
-     * @covers ::scriptPath
      */
     public function testScriptPath($scriptName, $expected)
     {
@@ -423,9 +363,6 @@ class ServerTest extends TestCase
         $this->assertSame($expected, Server::scriptPath());
     }
 
-    /**
-     * @covers ::scriptPath
-     */
     public function testScriptPathOnCli()
     {
         $this->assertSame('', Server::scriptPath());
