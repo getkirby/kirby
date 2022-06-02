@@ -22,35 +22,30 @@ class SystemRoutesTest extends TestCase
 
     public function testGetWithInvalidServerSoftware()
     {
-        // keep the original software to reset it later
-        $originalSoftware = $_SERVER['SERVER_SOFTWARE'] ?? null;
-
         // set invalid server software
-        $_SERVER['SERVER_SOFTWARE'] = 'invalid';
+        $app = $this->app->clone([
+            'server' => [
+                'SERVER_SOFTWARE' => 'invalid'
+            ]
+        ]);
 
-        $response = $this->app->api()->call('system', 'GET');
+        $response = $app->api()->call('system', 'GET');
 
         $this->assertFalse($response['data']['isOk']);
         $this->assertFalse($response['data']['requirements']['server']);
-
-        // reset the server software
-        $_SERVER['SERVER_SOFTWARE'] = $originalSoftware;
     }
 
     public function testGetWithValidServerSoftware()
     {
-        // keep the original software to reset it later
-        $originalSoftware = $_SERVER['SERVER_SOFTWARE'] ?? null;
+        $app = $this->app->clone([
+            'server' => [
+                'SERVER_SOFTWARE' => 'apache'
+            ]
+        ]);
 
-        // set invalid server software
-        $_SERVER['SERVER_SOFTWARE'] = 'apache';
-
-        $response = $this->app->api()->call('system', 'GET');
+        $response = $app->api()->call('system', 'GET');
 
         $this->assertTrue($response['data']['isOk']);
-
-        // reset the server software
-        $_SERVER['SERVER_SOFTWARE'] = $originalSoftware;
     }
 
     public function testGetWithoutUser()
