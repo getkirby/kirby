@@ -85,7 +85,7 @@ export default {
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--color-border);
 }
-.k-header[data-tabs] {
+.k-header[data-tabs="true"] {
   border-bottom: 0;
 }
 .k-header .k-headline {
