@@ -209,6 +209,21 @@ class VTest extends TestCase
         $this->assertFalse(V::email('@getkirby.com'));
     }
 
+    public function testEmpty()
+    {
+        $this->assertTrue(V::empty(''));
+        $this->assertTrue(V::empty(null));
+        $this->assertTrue(V::empty([]));
+        $this->assertTrue(V::empty(new Collection()));
+
+        $this->assertFalse(V::empty(0));
+        $this->assertFalse(V::empty('0'));
+        $this->assertFalse(V::empty(false));
+        $this->assertFalse(V::empty(true));
+        $this->assertFalse(V::empty(['']));
+        $this->assertFalse(V::empty(new Collection(['a'])));
+    }
+
     public function testDateComparison()
     {
         $this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
@@ -403,6 +418,12 @@ class VTest extends TestCase
         $this->assertSame([], $result);
     }
 
+    public function testNotEmpty()
+    {
+        $this->assertFalse(V::notEmpty(''));
+        $this->assertTrue(V::notEmpty(0));
+    }
+
     public function testNotIn()
     {
         $this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
@@ -503,6 +524,16 @@ class VTest extends TestCase
     }
 
     public function testRequired()
+    {
+        // required
+        $this->assertTrue(V::required(2));
+        $this->assertTrue(V::required(2));
+
+        $this->assertFalse(V::required(''));
+        $this->assertFalse(V::required(''));
+    }
+
+    public function testRequiredWithReferenceArray()
     {
         $this->assertTrue(V::required('a', ['a' => 2]));
         $this->assertTrue(V::required('a', ['a' => 'foo']));
