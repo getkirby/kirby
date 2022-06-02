@@ -153,7 +153,7 @@ return [
                     ),
                     'info'        => $model->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
-                      'parent'      => $model->parentId(),
+                    'parent'      => $model->parentId(),
                     'permissions' => $model->permissions(),
                     'status'      => $model->status(),
                     'template'    => $model->intendedTemplate()->name(),

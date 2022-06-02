@@ -2,7 +2,6 @@
 
 use Kirby\Toolkit\I18n;
 
-
 return [
     'props' => [
         /**
