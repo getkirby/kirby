@@ -11,7 +11,8 @@ return [
         'headline',
         'help',
         'layout',
-        'limits',
+        'min',
+        'max',
         'pagination',
         'parent',
         'search',
@@ -116,6 +117,34 @@ return [
             }
 
             return $data;
+        },
+        'errors' => function () {
+            $errors = [];
+
+            if ($this->validateMax() === false) {
+                $errors['max'] = I18n::template('error.section.files.max.' . I18n::form($this->max), [
+                    'max'     => $this->max,
+                    'section' => $this->headline
+                ]);
+            }
+
+            if ($this->validateMin() === false) {
+                $errors['min'] = I18n::template('error.section.files.min.' . I18n::form($this->min), [
+                    'min'     => $this->min,
+                    'section' => $this->headline
+                ]);
+            }
+
+            if (empty($errors) === true) {
+                return [];
+            }
+
+            return [
+                $this->name => [
+                    'label'   => $this->headline,
+                    'message' => $errors,
+                ]
+            ];
         },
         'upload' => function () {
             if ($this->isFull() === true) {

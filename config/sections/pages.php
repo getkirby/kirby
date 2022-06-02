@@ -3,6 +3,7 @@
 use Kirby\Cms\Blueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
@@ -12,7 +13,8 @@ return [
         'headline',
         'help',
         'layout',
-        'limits',
+        'min',
+        'max',
         'pagination',
         'parent',
         'search',
@@ -140,7 +142,8 @@ return [
             $data = [];
 
             foreach ($this->models as $model) {
-                $panel = $model->panel();
+                $panel       = $model->panel();
+                $permissions = $model->permissions();
 
                 $item = [
                     'dragText'    => $panel->dragText(),
@@ -151,7 +154,7 @@ return [
                     ),
                     'info'        => $model->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
-                    'parent'      => $model->parentId(),
+                      'parent'      => $model->parentId(),
                     'permissions' => $model->permissions(),
                     'status'      => $model->status(),
                     'template'    => $model->intendedTemplate()->name(),
@@ -166,6 +169,34 @@ return [
             }
 
             return $data;
+        },
+        'errors' => function () {
+            $errors = [];
+
+            if ($this->validateMax() === false) {
+                $errors['max'] = I18n::template('error.section.pages.max.' . I18n::form($this->max), [
+                    'max'     => $this->max,
+                    'section' => $this->headline
+                ]);
+            }
+
+            if ($this->validateMin() === false) {
+                $errors['min'] = I18n::template('error.section.pages.min.' . I18n::form($this->min), [
+                    'min'     => $this->min,
+                    'section' => $this->headline
+                ]);
+            }
+
+            if (empty($errors) === true) {
+                return [];
+            }
+
+            return [
+                $this->name => [
+                    'label'   => $this->headline,
+                    'message' => $errors,
+                ]
+            ];
         }
     ],
     'methods' => [
