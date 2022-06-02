@@ -177,7 +177,12 @@ class ContentTranslation
      */
     protected function setContent(array $content = null)
     {
-        $this->content = $content;
+        if ($content !== null) {
+            $this->content = array_change_key_case($content);
+        } else {
+            $this->content = null;
+        }
+
         return $this;
     }
 
@@ -220,7 +225,8 @@ class ContentTranslation
      */
     public function update(array $data = null, bool $overwrite = false)
     {
-        $this->content = $overwrite === true ? (array)$data : array_merge($this->content(), (array)$data);
+        $data = array_change_key_case((array)$data);
+        $this->content = $overwrite === true ? $data : array_merge($this->content(), $data);
         return $this;
     }
 
