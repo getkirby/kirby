@@ -113,7 +113,12 @@ export default {
   padding-inline-end: var(--spacing-3);
 }
 .k-section-header .k-button-group {
-  margin-top: -0.875rem;
-  white-space: nowrap;
+  position: absolute;
+  top: calc(-0.5rem - 1px);
+  inset-inline-end: 0;
+}
+.k-section-header .k-button-group > .k-button {
+  padding: 0.75rem;
+  display: inline-flex;
 }
 </style>

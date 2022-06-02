@@ -22,6 +22,7 @@
 /* Tabbed */
 [data-tabbed="true"] {
   box-shadow: var(--shadow-outline);
+  border-radius: var(--rounded);
 }
 
 /* Theme */

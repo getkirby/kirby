@@ -259,6 +259,8 @@ export default {
 <style>
 .k-toolbar {
   background: var(--color-white);
+  border-start-start-radius: var(--rounded);
+  border-start-end-radius: var(--rounded);
   border-bottom: 1px solid var(--color-background);
   height: 38px;
 }

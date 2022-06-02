@@ -110,6 +110,7 @@ export default {
   inset-inline-start: 0;
   width: 1rem;
   height: 1rem;
+  border-radius: var(--rounded);
   border: 2px solid var(--color-gray-500);
 }
 .k-checkbox-input-icon svg {

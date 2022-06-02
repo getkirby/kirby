@@ -33,15 +33,16 @@ export default {
 .k-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  grid-gap: 1px;
+  grid-gap: var(--spacing-2px);
 }
 .k-stat {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow);
   padding: var(--spacing-3) var(--spacing-6);
   line-height: var(--leading-normal);
+  border-radius: var(--rounded);
 }
 .k-stat.k-link:hover,
 .k-stat[data-click="true"]:hover {

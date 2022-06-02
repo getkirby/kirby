@@ -487,7 +487,7 @@
 
   "stats.empty": "No reports",
   "system.issues.content": "The content folder seems to be exposed",
-  "system.issues.debugging": "Debugging must be turned off in production",
+  "system.issues.debug": "Debugging must be turned off in production",
   "system.issues.git": "The .git folder seems to be accessible via the browser",
   "system.issues.https": "We recommend HTTPS for all your sites",
   "system.issues.kirby": "The kirby folder seems to be accessible via the browser",

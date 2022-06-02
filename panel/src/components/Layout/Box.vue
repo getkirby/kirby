@@ -53,11 +53,10 @@ export default {
   font-size: var(--text-sm);
 }
 .k-box:not([data-theme="none"]) {
-  background: var(--color-gray-300);
-  border-radius: var(--rounded-xs);
+  background: var(--color-white);
+  border-radius: var(--rounded);
   line-height: 1.25rem;
-  border-inline-start: 2px solid var(--color-gray-500);
-  padding: 0.5rem 1.5rem;
+  padding: 0.75rem 1rem;
 }
 .k-box[data-theme="code"] {
   background: var(--color-gray-900);

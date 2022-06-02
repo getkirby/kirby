@@ -246,8 +246,9 @@ export default {
 .k-models-section-search.k-input {
   margin-bottom: var(--spacing-3);
   background: var(--color-gray-300);
-  padding: var(--spacing-3);
-  border-radius: var(--rounded-xs);
+  padding: var(--spacing-2) var(--spacing-3);
+  height: var(--field-input-height);
+  border-radius: var(--rounded);
   font-size: var(--text-sm);
 }
 </style>
