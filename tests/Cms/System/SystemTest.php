@@ -11,7 +11,6 @@ use ReflectionClass;
  */
 class SystemTest extends TestCase
 {
-    protected $_SERVER = null;
     protected $app;
     protected $fixtures;
     protected $subFixtures;
@@ -23,32 +22,16 @@ class SystemTest extends TestCase
                 'index' => $this->fixtures = __DIR__ . '/fixtures/SystemTest'
             ]
         ]);
-
-        $this->_SERVER = $_SERVER;
     }
 
     public function tearDown(): void
     {
-        $_SERVER = $this->_SERVER;
-
         if ($this->subFixtures !== null) {
             chmod($this->subFixtures, 0755);
             Dir::remove($this->subFixtures);
         }
 
         Dir::remove($this->fixtures);
-    }
-
-    public function providerForClientAddresses()
-    {
-        return [
-            ['127.0.0.1', '127.0.0.1', true],
-            ['::1', '::1', true],
-            ['127.0.0.1', '::1', true],
-            ['::1', '127.0.0.1', true],
-            ['1.2.3.4', '127.0.0.1', false],
-            ['127.0.0.1', '1.2.3.4', false],
-        ];
     }
 
     public function providerForIndexUrls()
@@ -358,46 +341,17 @@ class SystemTest extends TestCase
     }
 
     /**
-     * @covers ::isLocal
-     * @dataProvider providerForServerNames
-     */
-    public function testIsLocalWithServerName($name, $expected)
-    {
-        $app = $this->app->clone([
-            'server' => [
-                'SERVER_NAME' => $name
-            ]
-        ]);
-
-        $system = new System($app);
-        $this->assertSame($expected, $system->isLocal());
-    }
-
-    /**
-     * @covers ::isLocal
-     * @dataProvider providerForClientAddresses
-     */
-    public function testIsLocalWithClientAddresses(string $address, string $forwardedAddress, bool $expected)
-    {
-        $system = new System($this->app);
-
-        $_SERVER['REMOTE_ADDR'] = $address;
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = $forwardedAddress;
-        $this->assertSame($expected, $system->isLocal());
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['HTTP_CLIENT_IP'] = $forwardedAddress;
-        $this->assertSame($expected, $system->isLocal());
-    }
-
-    /**
      * @covers ::isInstallable
      */
     public function testIsInstallableOnLocalhost()
     {
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertTrue($system->isInstallable());
     }
@@ -407,9 +361,13 @@ class SystemTest extends TestCase
      */
     public function testIsInstallableOnPublicServer()
     {
-        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertFalse($system->isInstallable());
     }
@@ -419,13 +377,14 @@ class SystemTest extends TestCase
      */
     public function testIsInstallableOnPublicServerWithOverride()
     {
-        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
-
         $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'install' => true
                 ]
+            ],
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
             ]
         ]);
 
@@ -451,14 +410,51 @@ class SystemTest extends TestCase
     }
 
     /**
+     * @covers ::isLocal
+     */
+    public function testIsLocal()
+    {
+        // yep
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+            ]
+        ]);
+
+        $system = new System($app);
+
+        $this->assertTrue($system->isLocal());
+
+        // nope
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
+            ]
+        ]);
+
+        $system = new System($app);
+
+        $this->assertFalse($system->isLocal());
+    }
+
+    /**
      * @covers ::isOk
      */
     public function testIsOk()
     {
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $_SERVER['SERVER_SOFTWARE'] = 'Apache';
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'install' => true
+                ]
+            ],
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+                'SERVER_SOFTWARE' => 'Apache'
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertTrue($system->isOk());
     }
@@ -631,9 +627,13 @@ class SystemTest extends TestCase
      */
     public function testServer($software, $expected)
     {
-        $_SERVER['SERVER_SOFTWARE'] = $software;
+        $app = $this->app->clone([
+            'server' => [
+                'SERVER_SOFTWARE' => $software
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
         $server = $system->server();
 
         $this->assertSame($expected, $server);
@@ -651,12 +651,13 @@ class SystemTest extends TestCase
      */
     public function testServerOverwrite()
     {
-        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
-
         // single server
         $app = $this->app->clone([
             'options' => [
                 'servers' => 'symfony'
+            ],
+            'server' => [
+                'SERVER_SOFTWARE' => 'symfony'
             ]
         ]);
 
@@ -670,6 +671,9 @@ class SystemTest extends TestCase
         $app = $this->app->clone([
             'options' => [
                 'servers' => ['symfony', 'apache']
+            ],
+            'server' => [
+                'SERVER_SOFTWARE' => 'symfony'
             ]
         ]);
 

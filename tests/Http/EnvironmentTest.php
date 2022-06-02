@@ -628,6 +628,60 @@ class EnvironmentTest extends TestCase
         $this->assertFalse($env->isBehindProxy());
     }
 
+    public function providerForIps()
+    {
+        return [
+            ['127.0.0.1', '127.0.0.1', '127.0.0.1', true],
+            ['::1', '::1', '::1', true],
+            ['127.0.0.1', '::1', null, true],
+            ['::1', '127.0.0.1', false, true],
+            ['1.2.3.4', '127.0.0.1', '::1', false],
+            ['127.0.0.1', null, '1.2.3.4', false],
+            ['127.0.0.1', null, '', true],
+            [null, null, null, false],
+            ['', null, false, false],
+        ];
+    }
+
+    /**
+     * @covers ::isLocal
+     * @dataProvider providerForIps
+     */
+    public function testIsLocalWithIp($address, $forwardedFor, $clientIp, bool $expected)
+    {
+        $env = new Environment(null, [
+            'REMOTE_ADDR' => $address,
+            'HTTP_X_FORWARDED_FOR' => $forwardedFor,
+            'HTTP_CLIENT_IP' => $clientIp,
+        ]);
+
+        $this->assertSame($expected, $env->isLocal());
+    }
+
+    public function providerForServerNames()
+    {
+        return [
+            ['localhost', true],
+            ['mydomain.local', true],
+            ['mydomain.test', true],
+            ['mydomain.com', false],
+            ['mydomain.dev', false],
+        ];
+    }
+
+    /**
+     * @covers ::isLocal
+     * @dataProvider providerForServerNames
+     */
+    public function testIsLocalWithServerName($name, $expected)
+    {
+        $env = new Environment(null, [
+            'SERVER_NAME' => $name
+        ]);
+
+        $this->assertSame($expected, $env->isLocal());
+    }
+
     public function testOptions()
     {
         $env = new Environment([
