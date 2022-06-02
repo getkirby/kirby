@@ -617,6 +617,53 @@ class Environment
     }
 
     /**
+     * Check if this is a local installation
+     *
+     * @return bool
+     */
+    public function isLocal(): bool
+    {
+        // check host
+        $host = $this->host();
+
+        if ($host === 'localhost') {
+            return true;
+        }
+
+        if (Str::endsWith($host, '.local') === true) {
+            return true;
+        }
+
+        if (Str::endsWith($host, '.test') === true) {
+            return true;
+        }
+
+        // collect all possible visitor ips
+        $ips = [
+            $this->get('REMOTE_ADDR'),
+            $this->get('HTTP_X_FORWARDED_FOR'),
+            $this->get('HTTP_CLIENT_IP')
+        ];
+
+        // remove duplicates and empty ips
+        $ips = array_unique(array_filter($ips));
+
+        // no known ip? Better not assume it's local
+        if (empty($ips) === true) {
+            return false;
+        }
+
+        // stop as soon as a non-local ip is found
+        foreach ($ips as $ip) {
+            if (in_array($ip, ['::1', '127.0.0.1']) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Loads and returns the environment options
      *
      * @return array
