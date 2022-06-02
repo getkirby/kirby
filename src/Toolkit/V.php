@@ -391,6 +391,23 @@ V::$validators = [
     },
 
     /**
+     * Checks for empty values
+     */
+    'empty' => function ($value = null): bool {
+        $empty = ['', null, []];
+
+        if (in_array($value, $empty, true) === true) {
+            return true;
+        }
+
+        if (is_countable($value) === true) {
+            return count($value) === 0;
+        }
+
+        return false;
+    },
+
+    /**
      * Checks if the given string ends with the given value
      */
     'endsWith' => function (string $value, string $end): bool {
@@ -500,6 +517,13 @@ V::$validators = [
     },
 
     /**
+     * Checks that the given value is not empty
+     */
+    'notEmpty' => function ($value): bool {
+        return V::empty($value) === false;
+    },
+
+    /**
      * Checks that the given value is not in the given list of values
      */
     'notIn' => function ($value, $notIn): bool {
@@ -514,11 +538,16 @@ V::$validators = [
     },
 
     /**
-     * Checks if the value is present in the given array
+     * Checks if the value is present
      */
-    'required' => function ($key, array $array): bool {
-        return isset($array[$key]) === true &&
-               V::notIn($array[$key], [null, '', []]) === true;
+    'required' => function ($value, $array = null): bool {
+        // with reference array
+        if (is_array($array) === true) {
+            return isset($array[$value]) === true && V::notEmpty($array[$value]) === true;
+        }
+
+        // without reference array
+        return V::notEmpty($value);
     },
 
     /**
