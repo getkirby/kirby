@@ -49,21 +49,6 @@ return [
         }
     ],
     'computed' => [
-        'add' => function () {
-            if ($this->create === false) {
-                return false;
-            }
-
-            if (in_array($this->status, ['draft', 'all']) === false) {
-                return false;
-            }
-
-            if ($this->isFull() === true) {
-                return false;
-            }
-
-            return true;
-        },
         'parent' => function () {
             $parent = $this->parentModel();
 
@@ -76,7 +61,7 @@ return [
 
             return $parent;
         },
-        'models' => function () {
+        'pages' => function () {
             switch ($this->status) {
                 case 'draft':
                     $pages = $this->parent->drafts();
@@ -137,31 +122,33 @@ return [
 
             return $pages;
         },
+        'total' => function () {
+            return $this->pages->pagination()->total();
+        },
         'data' => function () {
             $data = [];
 
-            foreach ($this->models as $model) {
-                $panel       = $model->panel();
-                $permissions = $model->permissions();
+            foreach ($this->pages as $page) {
+                $panel       = $page->panel();
 
                 $item = [
                     'dragText'    => $panel->dragText(),
-                    'id'          => $model->id(),
+                    'id'          => $page->id(),
                     'image'       => $panel->image(
                         $this->image,
                         $this->layout === 'table' ? 'list' : $this->layout
                     ),
-                    'info'        => $model->toSafeString($this->info ?? false),
+                    'info'        => $page->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
-                    'parent'      => $model->parentId(),
-                    'permissions' => $model->permissions(),
-                    'status'      => $model->status(),
-                    'template'    => $model->intendedTemplate()->name(),
-                    'text'        => $model->toSafeString($this->text),
+                    'parent'      => $page->parentId(),
+                    'permissions' => $page->permissions(),
+                    'status'      => $page->status(),
+                    'template'    => $page->intendedTemplate()->name(),
+                    'text'        => $page->toSafeString($this->text),
                 ];
 
                 if ($this->layout === 'table') {
-                    $item = $this->columnsValues($item, $model);
+                    $item = $this->columnsValues($item, $page);
                 }
 
                 $data[] = $item;
@@ -196,6 +183,24 @@ return [
                     'message' => $errors,
                 ]
             ];
+        },
+        'add' => function () {
+            if ($this->create === false) {
+                return false;
+            }
+
+            if (in_array($this->status, ['draft', 'all']) === false) {
+                return false;
+            }
+
+            if ($this->isFull() === true) {
+                return false;
+            }
+
+            return true;
+        },
+        'pagination' => function () {
+            return $this->pagination();
         }
     ],
     'methods' => [

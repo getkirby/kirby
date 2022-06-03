@@ -18,11 +18,6 @@ return [
             return App::instance()->request()->get('page', $page);
         },
     ],
-    'computed' => [
-        'pagination' => function () {
-            return $this->pagination();
-        },
-    ],
     'methods' => [
         'pagination' => function () {
             $pagination = new Pagination([
@@ -37,9 +32,6 @@ return [
                 'page'   => $pagination->page(),
                 'total'  => $pagination->total(),
             ];
-        },
-        'total' => function () {
-            return $this->models->pagination()->total();
-        },
+        }
     ]
 ];
