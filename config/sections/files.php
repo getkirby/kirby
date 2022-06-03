@@ -118,7 +118,7 @@ return [
             return $data;
         },
         'total' => function () {
-             return $this->files->pagination()->total();
+            return $this->files->pagination()->total();
         },
         'errors' => function () {
             $errors = [];
