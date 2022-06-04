@@ -1,8 +1,13 @@
+/**
+ * @param {File} file
+ * @param {object} params
+ */
 export default (file, params) => {
   const defaults = {
     url: "/",
     field: "file",
     method: "POST",
+    size: 2048,
     attributes: {},
     complete: function () {},
     error: function () {},
@@ -11,67 +16,98 @@ export default (file, params) => {
   };
 
   const options = Object.assign(defaults, params);
+
+  // number of chunks
+  const total = Math.ceil(file.size / options.size);
+
+  // accumulated uploaded size tracker
+  let progress = 0;
+
+  // set up shared form data for all chunks
   const formData = new FormData();
 
-  formData.append(options.field, file, file.name);
-
   if (options.attributes) {
-    Object.keys(options.attributes).forEach((key) => {
+    for (const key in options.attributes) {
       formData.append(key, options.attributes[key]);
-    });
+    }
   }
 
-  const xhr = new XMLHttpRequest();
-
-  const progress = (event) => {
+  /**
+   * Calculate total progess for all chunks
+   * @param {ProgressEvent} event
+   */
+  const setProgress = (event) => {
     if (!event.lengthComputable || !options.progress) {
       return;
     }
 
-    let percent = Math.max(
-      0,
-      Math.min(100, (event.loaded / event.total) * 100)
-    );
+    progress += event.loaded;
+    let percent = Math.max(0, Math.min(100, (progress / file.size) * 100));
 
-    options.progress(xhr, file, Math.ceil(percent));
+    options.progress(file, Math.ceil(percent));
   };
 
-  xhr.upload.addEventListener("loadstart", progress);
-  xhr.upload.addEventListener("progress", progress);
+  /**
+   * Sends each chunk
+   * @param {Blob} chunk
+   * @param {number} index
+   * @param {FormData} data
+   * @param {object} options
+   */
+  const send = (chunk, index, data, options) => {
+    data.append(options.field, chunk, `${file.name}.part`);
+    data.append("last", index >= total);
 
-  xhr.addEventListener("load", (event) => {
-    let json = null;
+    const xhr = new XMLHttpRequest();
 
-    try {
-      json = JSON.parse(event.target.response);
-    } catch (e) {
-      json = { status: "error", message: "The file could not be uploaded" };
-    }
+    xhr.upload.addEventListener("loadstart", setProgress);
+    xhr.upload.addEventListener("progress", setProgress);
 
-    if (json.status === "error") {
-      options.error(xhr, file, json);
-    } else {
-      options.success(xhr, file, json);
-      options.progress(xhr, file, 100);
-    }
-  });
+    xhr.addEventListener("load", (event) => {
+      let json = null;
 
-  xhr.addEventListener("error", (event) => {
-    const json = JSON.parse(event.target.response);
+      try {
+        json = JSON.parse(event.target.response);
+      } catch (e) {
+        json = { status: "error", message: "The file could not be uploaded" };
+      }
 
-    options.error(xhr, file, json);
-    options.progress(xhr, file, 100);
-  });
-
-  xhr.open(options.method, options.url, true);
-
-  // add all request headers
-  if (options.headers) {
-    Object.keys(options.headers).forEach((header) => {
-      const value = options.headers[header];
-      xhr.setRequestHeader(header, value);
+      if (json.status === "error") {
+        options.error(file, json);
+      } else {
+        options.success(file, json);
+        options.progress(file, 100);
+      }
     });
-  }
 
-  xhr.send(formData);
+    xhr.addEventListener("error", (event) => {
+      const json = JSON.parse(event.target.response);
+
+      options.error(file, json);
+      options.progress(file, 100);
+    });
+
+    xhr.open(options.method, options.url, true);
+
+    // add all request headers
+    if (options.headers) {
+      Object.keys(options.headers).forEach((header) => {
+        const value = options.headers[header];
+        xhr.setRequestHeader(header, value);
+      });
+    }
+
+    xhr.send(data);
+  };
+
+  // split into chunks and send
+  for (let i = 0; i < total; i++) {
+    const chunk = file.slice(
+      i * options.size,
+      Math.min(i * options.size + options.size, file.size),
+      file.type
+    );
+
+    send(chunk, i, formData, options);
+  }
 };

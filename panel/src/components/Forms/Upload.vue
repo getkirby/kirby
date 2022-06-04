@@ -157,7 +157,8 @@ export default {
       }
 
       this.total = this.files.length;
-      this.files.forEach((file) => {
+
+      for (const file of this.files) {
         this.$helper.upload(file, {
           url: this.options.url,
           attributes: this.options.attributes,
@@ -165,13 +166,13 @@ export default {
           headers: {
             "X-CSRF": window.panel.$system.csrf
           },
-          progress: (xhr, file, progress) => {
+          progress: (file, progress) => {
             this.$refs[file.name]?.[0]?.set(progress);
           },
-          success: (xhr, file, response) => {
+          success: (file, response) => {
             this.complete(file, response.data);
           },
-          error: (xhr, file, response) => {
+          error: (file, response) => {
             this.errors.push({ file: file, message: response.message });
             this.complete(file, response.data);
           }
@@ -181,7 +182,7 @@ export default {
         if (this.options?.attributes?.sort !== undefined) {
           this.options.attributes.sort++;
         }
-      });
+      }
     },
     complete(file, data) {
       this.completed[file.name] = data;
