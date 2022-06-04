@@ -63,7 +63,7 @@ class Environment
      *
      * @var bool
      */
-    protected $isBehindProxy = false;
+    protected $isBehindProxy;
 
     /**
      * URI path to the base
@@ -322,12 +322,8 @@ class Environment
      */
     protected function detectCli(?bool $override = null): bool
     {
-        if ($override === false) {
-            return false;
-        }
-
-        if ($override === true) {
-            return true;
+        if (is_bool($override) === true) {
+            return $override;
         }
 
         if (defined('STDIN') === true) {
@@ -802,8 +798,11 @@ class Environment
 
         // remove the script path only from the beginning of the URI
         $scriptPath = $this->scriptPath();
+        if ($scriptPath && Str::position($requestUri, $scriptPath) === 0) {
+            $requestUri = Str::substr($requestUri, Str::length($scriptPath));
+        }
 
-        return trim(preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri), '/');
+        return trim($requestUri, '/');
     }
 
     /**
