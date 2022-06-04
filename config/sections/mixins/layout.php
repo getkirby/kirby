@@ -81,7 +81,11 @@ return [
                 }
 
                 if (empty($column['value']) === false) {
-                    $value = $model->toSafeString($column['value']);
+                    if ($column['html'] ?? false === true) {
+                        $value = $model->toString($column['value']);
+                    } else {
+                        $value = $model->toSafeString($column['value']);
+                    }
                 } else {
                     $value = $model->content()->get($column['id'] ?? $columnName)->value();
                 }
