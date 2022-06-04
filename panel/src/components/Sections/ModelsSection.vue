@@ -121,7 +121,7 @@ export default {
     },
     collection() {
       return {
-        empty: this.emptyProps,
+        empty: this.emptyPropsWithSearch,
         layout: this.options.layout,
         help: this.options.help,
         items: this.items,
@@ -133,9 +133,15 @@ export default {
     emptyProps() {
       return {
         icon: "page",
+        text: this.$t("pages.empty")
+      };
+    },
+    emptyPropsWithSearch() {
+      return {
+        ...this.emptyProps,
         text: this.searching
-          ? this.$t("pages.empty.filtered")
-          : this.options.empty || this.$t("pages.empty")
+          ? this.$t("search.results.none")
+          : this.options.empty || this.emptyProps.text
       };
     },
     items() {

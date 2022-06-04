@@ -13,9 +13,7 @@ export default {
     emptyProps() {
       return {
         icon: "image",
-        text: this.searching
-          ? this.$t("files.empty.filtered")
-          : this.options.empty || this.$t("files.empty")
+        text: this.$t("files.empty")
       };
     },
     items() {
