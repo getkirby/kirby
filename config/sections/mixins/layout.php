@@ -37,10 +37,12 @@ return [
                 ];
             }
 
-            $columns['title'] = [
-                'label' => I18n::translate('title'),
-                'type'  => 'url'
-            ];
+            if ($this->text) {
+                $columns['title'] = [
+                    'label' => I18n::translate('title'),
+                    'type'  => 'url'
+                ];
+            }
 
             if ($this->info) {
                 $columns['info'] = [
