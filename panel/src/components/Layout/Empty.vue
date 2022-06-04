@@ -86,16 +86,19 @@ button.k-empty:focus {
   height: 2rem;
 }
 
-/* layout:list */
-.k-empty[data-layout="list"] {
+/* layout:list or layout:table */
+.k-empty[data-layout="list"],
+.k-empty[data-layout="table"] {
   min-height: 38px;
 }
-.k-empty[data-layout="list"] > .k-icon {
+.k-empty[data-layout="list"] > .k-icon,
+.k-empty[data-layout="table"] > .k-icon {
   width: 36px;
   min-height: 36px;
   border-inline-end: 1px solid rgba(0, 0, 0, 0.05);
 }
-.k-empty[data-layout="list"] > p {
+.k-empty[data-layout="list"] > p,
+.k-empty[data-layout="table"] > p {
   line-height: 1.25rem;
   padding: 0.5rem 0.75rem;
 }
