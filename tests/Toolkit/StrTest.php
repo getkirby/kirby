@@ -52,7 +52,7 @@ class StrTest extends TestCase
         // case insensitive
         $this->assertSame(' Wörld', Str::after($string, 'ö', true));
         $this->assertSame(' Wörld', Str::after($string, 'Ö', true));
-        $this->assertSame('', Str::after($string, 'x'));
+        $this->assertSame('', Str::after($string, 'x', true));
 
         // non existing chars
         $this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
@@ -66,6 +66,28 @@ class StrTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The needle must not be empty');
         Str::after('test', '');
+    }
+
+    /**
+     * @covers ::afterStart
+     */
+    public function testAfterStart()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertSame(' Wörld', Str::afterStart($string, 'Hellö'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'HELLÖ'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'x'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, ''));
+
+        // case insensitive
+        $this->assertSame(' Wörld', Str::afterStart($string, 'Hellö', true));
+        $this->assertSame(' Wörld', Str::afterStart($string, 'HELLÖ', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'x', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, '', true));
     }
 
     /**
@@ -83,7 +105,7 @@ class StrTest extends TestCase
         // case insensitive
         $this->assertSame('Hell', Str::before($string, 'ö', true));
         $this->assertSame('Hell', Str::before($string, 'Ö', true));
-        $this->assertSame('', Str::before($string, 'x'));
+        $this->assertSame('', Str::before($string, 'x', true));
     }
 
     /**
@@ -94,6 +116,28 @@ class StrTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The needle must not be empty');
         Str::before('test', '');
+    }
+
+    /**
+     * @covers ::beforeEnd
+     */
+    public function testBeforeEnd()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'Wörld'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'WÖRLD'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'Hellö'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'x'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, ''));
+
+        // case insensitive
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'Wörld', true));
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'WÖRLD', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'Hellö', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'x', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, '', true));
     }
 
     /**
