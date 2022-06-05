@@ -96,13 +96,6 @@ class Environment
     protected $requestUri;
 
     /**
-     * Root directory for environment configs
-     *
-     * @var string
-     */
-    protected $root;
-
-    /**
      * Path to the php script within the
      * document root without the
      * filename of the script
@@ -166,7 +159,6 @@ class Environment
         $info ??= $_SERVER;
         $options = array_merge([
             'cli'     => null,
-            'root'    => null,
             'allowed' => null
         ], $options ?? []);
 
@@ -177,7 +169,6 @@ class Environment
         $this->https         = false;
         $this->isBehindProxy = $this->detectIfIsBehindProxy();
         $this->requestUri    = $this->detectRequestUri($this->get('REQUEST_URI'));
-        $this->root          = $options['root'];
         $this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
         $this->path          = $this->detectPath($this->scriptPath);
         $this->port          = null;
@@ -740,11 +731,13 @@ class Environment
     }
 
     /**
-     * Loads and returns the environment options
+     * Loads and returns options from environment-specific
+     * PHP files (by host name and server IP address)
      *
+     * @param string $root Root directory to load configs from
      * @return array
      */
-    public function options(): array
+    public function options(string $root): array
     {
         $configHost = [];
         $configAddr = [];
@@ -754,12 +747,12 @@ class Environment
 
         // load the config for the host
         if (empty($host) === false) {
-            $configHost = F::load($this->root . '/config.' . $host . '.php', []);
+            $configHost = F::load($root . '/config.' . $host . '.php', []);
         }
 
         // load the config for the server IP
         if (empty($addr) === false) {
-            $configAddr = F::load($this->root . '/config.' . $addr . '.php', []);
+            $configAddr = F::load($root . '/config.' . $addr . '.php', []);
         }
 
         return array_replace_recursive($configHost, $configAddr);

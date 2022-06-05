@@ -684,30 +684,25 @@ class EnvironmentTest extends TestCase
 
     public function testOptions()
     {
-        $env = new Environment([
-            'root' => $this->config,
-        ], [
+        $env = new Environment(null, [
             'SERVER_NAME' => 'example.com'
         ]);
 
-        $this->assertSame('test option', $env->options()['test']);
+        $this->assertSame('test option', $env->options($this->config)['test']);
     }
 
     public function testOptionsFromServerAddress()
     {
-        $env = new Environment([
-            'root' => $this->config,
-        ], [
+        $env = new Environment(null, [
             'SERVER_ADDR' => '127.0.0.1'
         ]);
 
-        $this->assertSame('test address option', $env->options()['test']);
+        $this->assertSame('test address option', $env->options($this->config)['test']);
     }
 
     public function testOptionsFromInvalidHost()
     {
         $env = new Environment([
-            'root' => $this->config,
             'allowed' => [
                 'http://example.de'
             ]
@@ -715,7 +710,7 @@ class EnvironmentTest extends TestCase
             'SERVER_NAME' => 'example.com'
         ]);
 
-        $this->assertSame([], $env->options());
+        $this->assertSame([], $env->options($this->config));
     }
 
     /**

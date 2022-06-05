@@ -1112,11 +1112,11 @@ class App
         $this->environment = new Environment([
             'allowed' => $this->options['url'] ?? null,
             'cli'     => $props['cli'] ?? null,
-            'root'    => $this->root('config'),
         ], $props['server'] ?? null);
 
         // merge into one clean options array
-        return $this->options = array_replace_recursive($this->options, $this->environment->options());
+        $options = $this->environment->options($this->root('config'));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
