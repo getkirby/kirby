@@ -59,9 +59,10 @@ class Environment
     protected $ip;
 
     /**
-     * Whether the site is behind a reverse proxy
+     * Whether the site is behind a reverse proxy;
+     * `null` if not known (fixed allowed URL setup)
      *
-     * @var bool
+     * @var bool|null
      */
     protected $isBehindProxy;
 
@@ -167,7 +168,7 @@ class Environment
         $this->ip            = $this->detectIp();
         $this->host          = null;
         $this->https         = false;
-        $this->isBehindProxy = $this->detectIfIsBehindProxy();
+        $this->isBehindProxy = null;
         $this->requestUri    = $this->detectRequestUri($this->get('REQUEST_URI'));
         $this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
         $this->path          = $this->detectPath($this->scriptPath);
@@ -292,17 +293,25 @@ class Environment
     protected function detectAuto(bool $insecure = false): void
     {
         // proxy server setup
-        if ($this->isBehindProxy === true && $insecure === true) {
+        if (
+            $insecure === true &&
+            empty($this->info['HTTP_X_FORWARDED_HOST']) === false
+        ) {
+            $this->isBehindProxy = true;
+
             $this->host  = $this->detectForwardedHost();
             $this->https = $this->detectForwardedHttps();
             $this->port  = $this->detectForwardedPort();
 
-        // local server setup
-        } else {
-            $this->host  = $this->detectHost($insecure);
-            $this->https = $this->detectHttps();
-            $this->port  = $this->detectPort();
+            return;
         }
+
+        // local server setup
+        $this->isBehindProxy = false;
+
+        $this->host  = $this->detectHost($insecure);
+        $this->https = $this->detectHttps();
+        $this->port  = $this->detectPort();
     }
 
     /**
@@ -459,16 +468,6 @@ class Environment
         }
 
         return in_array(strtolower($protocol), ['https', 'https, http']) === true;
-    }
-
-    /**
-     * Checks if a reverse proxy is active
-     *
-     * @return bool
-     */
-    protected function detectIfIsBehindProxy(): bool
-    {
-        return empty($this->info['HTTP_X_FORWARDED_HOST']) === false;
     }
 
     /**
@@ -675,9 +674,9 @@ class Environment
      * Returns if the server is behind a
      * reverse proxy server
      *
-     * @return bool
+     * @return bool|null
      */
-    public function isBehindProxy(): bool
+    public function isBehindProxy(): ?bool
     {
         return $this->isBehindProxy;
     }
