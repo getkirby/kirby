@@ -171,7 +171,7 @@ class Str
     }
 
     /**
-     * Returns the rest of the string after the given character
+     * Returns the rest of the string after the given substring or character
      *
      * @param string $string
      * @param string $needle
@@ -187,6 +187,27 @@ class Str
         }
 
         return static::substr($string, $position + static::length($needle));
+    }
+
+    /**
+     * Removes the given substring or character only from the start of the string
+     *
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
+     * @return string
+     */
+    public static function afterStart(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        if ($needle === '') {
+            return $string;
+        }
+
+        if (static::startsWith($string, $needle, $caseInsensitive) === true) {
+            return static::substr($string, static::length($needle));
+        }
+
+        return $string;
     }
 
     /**
@@ -213,7 +234,7 @@ class Str
     }
 
     /**
-     * Returns the beginning of a string before the given character
+     * Returns the beginning of a string before the given substring or character
      *
      * @param string $string
      * @param string $needle
@@ -229,6 +250,27 @@ class Str
         }
 
         return static::substr($string, 0, $position);
+    }
+
+    /**
+     * Removes the given substring or character only from the end of the string
+     *
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
+     * @return string
+     */
+    public static function beforeEnd(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        if ($needle === '') {
+            return $string;
+        }
+
+        if (static::endsWith($string, $needle, $caseInsensitive) === true) {
+            return static::substr($string, 0, -static::length($needle));
+        }
+
+        return $string;
     }
 
     /**
