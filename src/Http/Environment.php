@@ -789,10 +789,7 @@ class Environment
         $requestUri = str_replace('//', '/', $requestUri);
 
         // remove the script path only from the beginning of the URI
-        $scriptPath = $this->scriptPath();
-        if ($scriptPath && Str::position($requestUri, $scriptPath) === 0) {
-            $requestUri = Str::substr($requestUri, Str::length($scriptPath));
-        }
+        $requestUri = Str::afterStart($requestUri, $this->scriptPath());
 
         return trim($requestUri, '/');
     }
