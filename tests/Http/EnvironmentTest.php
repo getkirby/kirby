@@ -613,15 +613,44 @@ class EnvironmentTest extends TestCase
         $env = new Environment();
         $this->assertFalse($env->isBehindProxy());
 
-        // given host
+        // given host but with secure checking
         $env = new Environment(null, [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertFalse($env->isBehindProxy());
+
+        // given host with allowlist
+        $env = new Environment([
+            'allowed' => ['http://getkirby.com', 'http://trykirby.com']
+        ], [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertTrue($env->isBehindProxy());
+
+        // given host with fixed host
+        $env = new Environment([
+            'allowed' => 'http://getkirby.com'
+        ], [
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
+        ]);
+
+        $this->assertNull($env->isBehindProxy());
+
+        // given host with wildcard
+        $env = new Environment([
+            'allowed' => '*'
+        ], [
             'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
         ]);
 
         $this->assertTrue($env->isBehindProxy());
 
         // empty host
-        $env = new Environment(null, [
+        $env = new Environment([
+            'allowed' => '*'
+        ], [
             'HTTP_X_FORWARDED_HOST' => ''
         ]);
 
