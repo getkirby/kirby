@@ -529,6 +529,21 @@ class Str
     }
 
     /**
+     * Add's _1 to a string or increment the ending number to allow _2, _3, etc
+     *
+     * @param  string  $string    The string to increment
+     * @param  int     $first     Start with
+     * @param  string  $separator Separator
+     * @return string
+     */
+    public static function increment(string $string, int $first = 1, string $separator = '_'): string
+    {
+        preg_match('/(.+)' . $separator . '([0-9]+)$/', $string, $match);
+
+        return isset($match[2]) ? $match[1] . $separator . ((int) $match[2] + 1) : $string . $separator . $first;
+    }
+
+    /**
      * Checks if the given string is a URL
      *
      * @param string|null $string

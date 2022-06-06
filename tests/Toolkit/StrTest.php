@@ -426,6 +426,39 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::increment
+     */
+    public function testIncrement()
+    {
+        $string = 'Pöst';
+        $this->assertSame('Pöst_1', Str::increment($string));
+
+        $string = 'Pöst_1';
+        $this->assertSame('Pöst_2', Str::increment($string));
+
+        $string = 'Pöst_2';
+        $this->assertSame('Pöst_3', Str::increment($string));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst-1', Str::increment($string, 1, '-'));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst-10', Str::increment($string, 10, '-'));
+
+        $string = 'Pöst-10';
+        $this->assertSame('Pöst-11', Str::increment($string, 1, '-'));
+
+        $string = 'Pöst-10';
+        $this->assertSame('Pöst-11', Str::increment($string, 10, '-'));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst 1', Str::increment($string, 1, ' '));
+
+        $string = 'Pöst post 1';
+        $this->assertSame('Pöst post 2', Str::increment($string, 1, ' '));
+    }
+
+    /**
      * @covers ::kebab
      */
     public function testKebab()
