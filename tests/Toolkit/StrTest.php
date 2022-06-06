@@ -903,6 +903,18 @@ class StrTest extends TestCase
         $string = 'fòô_bàř';
         $this->assertSame('FòôBàř', Str::studly($string));
     }
+
+    /**
+     * @covers ::camel
+     */
+    public function testCamel()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('fooBar', Str::camel($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+    }
     
     /**
      * @covers ::split
