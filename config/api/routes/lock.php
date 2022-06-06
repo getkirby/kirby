@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Helpers;
 
 /**
  * Content Lock Routes

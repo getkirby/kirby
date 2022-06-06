@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use Kirby\Cms\Helpers;
 use NumberFormatter;
 
 /**

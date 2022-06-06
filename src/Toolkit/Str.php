@@ -1181,10 +1181,10 @@ class Str
      *                    keys and replacements as values.
      *                    Supports query syntax.
      * @param string|array|null $options An options array that contains:
-     *                                    - fallback: if a token does not have any matches
-     *                                    - callback: to be able to handle each matching result
-     *                                    - start: start placeholder
-     *                                    - end: end placeholder
+     *                                   - fallback: if a token does not have any matches
+     *                                   - callback: to be able to handle each matching result
+     *                                   - start: start placeholder
+     *                                   - end: end placeholder
      * @return string The filled-in string
      */
     public static function template(string $string = null, array $data = [], array $options = null): string
