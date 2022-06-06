@@ -1,3 +1,5 @@
+// see: https://github.com/getkirby/kirby/pull/4334
+
 /**
  * @vitest-environment jsdom
  */

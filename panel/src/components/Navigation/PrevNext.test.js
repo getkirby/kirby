@@ -22,6 +22,8 @@ describe.concurrent("PrevNext.vue", () => {
       { disabled: true, link: "#", icon: "angle-right" }
     ]);
     expect(wrapper.findComponent("k-button-group-stub").exists()).toBe(true);
+
+    // see: https://github.com/getkirby/kirby/pull/4334
     //expect(wrapper.element).toMatchSnapshot();
   });
 
