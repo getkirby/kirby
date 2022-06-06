@@ -45,7 +45,8 @@ class FileRulesTest extends TestCase
 
     public function testChangeNameWithEmptyInput()
     {
-        $file = new File(['filename' => 'test.jpg']);
+        $parent = new Page(['slug' => 'test']);
+        $file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The name must not be empty');

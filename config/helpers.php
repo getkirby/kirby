@@ -414,13 +414,13 @@ if (Helpers::hasOverride('option') === false) { // @codeCoverageIgnore
 
 if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
     /**
-     * Fetches a single page or multiple pages by
-     * id or the current page when no id is specified
+     * Fetches a single page by id or
+     * the current page when no id is specified
      *
-     * @param string $id
+     * @param string|null $id
      * @return \Kirby\Cms\Page|null
      */
-    function page($id)
+    function page($id = null)
     {
         if (empty($id) === true) {
             return App::instance()->site()->page();
@@ -432,7 +432,7 @@ if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
 
 if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
     /**
-     * Helper to build page collections
+     * Helper to build pages collection
      *
      * @param string|array ...$id
      * @return \Kirby\Cms\Pages|null
