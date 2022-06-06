@@ -10,9 +10,10 @@ return [
          * @todo remove in 3.9.0
          */
         'headline' => function ($headline = null) {
-            if ($headline !== null) {
-                Helpers::deprecated('`headline` prop for sections has been deprecated and will be removed in Kirby 3.9.0. Use `label` instead.');
-            }
+            // TODO: add deprecation notive in 3.8.0
+            // if ($headline !== null) {
+            //     Helpers::deprecated('`headline` prop for sections has been deprecated and will be removed in Kirby 3.9.0. Use `label` instead.');
+            // }
 
             return I18n::translate($headline, $headline);
         },
