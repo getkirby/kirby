@@ -1024,7 +1024,7 @@ class Str
      * @param string $value The string to convert
      * @return string
      */
-    public static function studly(string $value): string
+    public static function studly(string $value = null): string
     {
         return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
     }
