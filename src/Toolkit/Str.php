@@ -531,9 +531,9 @@ class Str
     /**
      * Add's _1 to a string or increment the ending number to allow _2, _3, etc
      *
-     * @param  string  $string    The string to increment
-     * @param  int     $first     Start with
-     * @param  string  $separator Separator
+     * @param string $string The string to increment
+     * @param int $first Start with
+     * @param string $separator Separator
      * @return string
      */
     public static function increment(string $string, int $first = 1, string $separator = '_'): string
