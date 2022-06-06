@@ -1,6 +1,5 @@
 # os
 .DS_Store
-vendor
 
 # build files
 /dist.zip
