@@ -849,6 +849,18 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::studly
+     */
+    public function testStudly()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('FooBar', Str::studly($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
+    }
+    
+    /**
      * @covers ::split
      */
     public function testSplit()
