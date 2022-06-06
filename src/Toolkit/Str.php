@@ -1019,10 +1019,9 @@ class Str
     }
 
     /**
-     * Convert a string to studly caps case.
+     * Converts a string to studly caps case
      *
-     * @param string $value The string to convert.
-     * 
+     * @param string $value The string to convert
      * @return string
      */
     public static function studly(string $value): string
