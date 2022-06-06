@@ -540,7 +540,7 @@ class Str
     {
         preg_match('/(.+)' . $separator . '([0-9]+)$/', $string, $match);
 
-        return isset($match[2]) ? $match[1] . $separator . ((int) $match[2] + 1) : $string . $separator . $first;
+        return isset($match[2]) ? $match[1] . $separator . ((int)$match[2] + 1) : $string . $separator . $first;
     }
 
     /**
