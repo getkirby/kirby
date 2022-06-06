@@ -287,6 +287,17 @@ class Str
     }
 
     /**
+     * Converts a string to camel case
+     *
+     * @param string $value The string to convert
+     * @return string
+     */
+    public static function camel(string $value = null): string
+    {
+        return lcfirst(static::studly($value));
+    }
+
+    /**
      * Checks if a str contains another string
      *
      * @param string $string
@@ -1069,17 +1080,6 @@ class Str
     public static function studly(string $value = null): string
     {
         return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
-    }
-
-    /**
-     * Converts a string to camel case
-     *
-     * @param string $value The string to convert
-     * @return string
-     */
-    public static function camel(string $value = null): string
-    {
-        return lcfirst(static::studly($value));
     }
 
     /**

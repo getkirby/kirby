@@ -151,6 +151,27 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::camel
+     */
+    public function testCamel()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('fooBar', Str::camel($string));
+
+        $string = 'FòôBàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+        
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+    }
+
+    /**
      * @covers ::contains
      */
     public function testContains()
@@ -900,20 +921,17 @@ class StrTest extends TestCase
         $string = 'foo_bar';
         $this->assertSame('FooBar', Str::studly($string));
 
+        $string = 'FòôBàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
+
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
+        
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
+
         $string = 'fòô_bàř';
         $this->assertSame('FòôBàř', Str::studly($string));
-    }
-
-    /**
-     * @covers ::camel
-     */
-    public function testCamel()
-    {
-        $string = 'foo_bar';
-        $this->assertSame('fooBar', Str::camel($string));
-
-        $string = 'fòô_bàř';
-        $this->assertSame('fòôBàř', Str::camel($string));
     }
     
     /**
