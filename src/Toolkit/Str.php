@@ -1072,17 +1072,6 @@ class Str
     }
 
     /**
-     * Converts a string to studly caps case
-     *
-     * @param string $value The string to convert
-     * @return string
-     */
-    public static function studly(string $value = null): string
-    {
-        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
-    }
-
-    /**
      * Better alternative for explode()
      * It takes care of removing empty values
      * and it has a built-in way to skip values
@@ -1130,6 +1119,17 @@ class Str
         }
 
         return static::position($string, $needle, $caseInsensitive) === 0;
+    }
+
+    /**
+     * Converts a string to studly caps case
+     *
+     * @param string $value The string to convert
+     * @return string
+     */
+    public static function studly(string $value = null): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
     }
 
     /**

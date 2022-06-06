@@ -163,7 +163,7 @@ class StrTest extends TestCase
 
         $string = 'Fòô-bàřBaz';
         $this->assertSame('fòôBàřBaz', Str::camel($string));
-        
+
         $string = 'Fòô-bàř_Baz';
         $this->assertSame('fòôBàřBaz', Str::camel($string));
 
@@ -851,143 +851,6 @@ class StrTest extends TestCase
     }
 
     /**
-     * @covers ::slug
-     */
-    public function testSlug()
-    {
-        // Double dashes
-        $this->assertSame('a-b', Str::slug('a--b'));
-
-        // Dashes at the end of the line
-        $this->assertSame('a', Str::slug('a-'));
-
-        // Dashes at the beginning of the line
-        $this->assertSame('a', Str::slug('-a'));
-
-        // Underscores converted to dashes
-        $this->assertSame('a-b', Str::slug('a_b'));
-
-        // Unallowed characters
-        $this->assertSame('a-b', Str::slug('a@b'));
-
-        // Spaces characters
-        $this->assertSame('a-b', Str::slug('a b'));
-
-        // Double Spaces characters
-        $this->assertSame('a-b', Str::slug('a  b'));
-
-        // Custom separator
-        $this->assertSame('a+b', Str::slug('a-b', '+'));
-
-        // Allow underscores
-        $this->assertSame('a_b', Str::slug('a_b', '-', 'a-z0-9_'));
-
-        // store default defaults
-        $defaults = Str::$defaults['slug'];
-
-        // Custom str defaults
-        Str::$defaults['slug']['separator'] = '+';
-        Str::$defaults['slug']['allowed']   = 'a-z0-9_';
-
-        $this->assertSame('a+b', Str::slug('a-b'));
-        $this->assertSame('a_b', Str::slug('a_b'));
-
-        // Reset str defaults
-        Str::$defaults['slug'] = $defaults;
-
-        // Language rules
-        Str::$language = ['ä' => 'ae'];
-        $this->assertSame('ae-b', Str::slug('ä b'));
-        Str::$language = [];
-    }
-
-    /**
-     * @covers ::snake
-     */
-    public function testSnake()
-    {
-        $string = 'KingCobra';
-        $this->assertSame('king_cobra', Str::snake($string));
-
-        $string = 'kingCobra';
-        $this->assertSame('king_cobra', Str::snake($string));
-    }
-
-    /**
-     * @covers ::studly
-     */
-    public function testStudly()
-    {
-        $string = 'foo_bar';
-        $this->assertSame('FooBar', Str::studly($string));
-
-        $string = 'FòôBàř';
-        $this->assertSame('FòôBàř', Str::studly($string));
-
-        $string = 'Fòô-bàřBaz';
-        $this->assertSame('FòôBàřBaz', Str::studly($string));
-        
-        $string = 'Fòô-bàř_Baz';
-        $this->assertSame('FòôBàřBaz', Str::studly($string));
-
-        $string = 'fòô_bàř';
-        $this->assertSame('FòôBàř', Str::studly($string));
-    }
-    
-    /**
-     * @covers ::split
-     */
-    public function testSplit()
-    {
-        // default separator
-        $string = 'ä,ö,ü,ß';
-        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string));
-
-        // custom separator
-        $string = 'ä/ö/ü/ß';
-        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string, '/'));
-
-        // custom separator and limited length
-        $string = 'ää/ö/üü/ß';
-        $this->assertSame(['ää', 'üü'], Str::split($string, '/', 2));
-
-        // custom separator with line-breaks
-        $string = <<<EOT
-            ---
-            -abc-
-            ---
-            -def-
-EOT;
-        $this->assertSame(['-abc-', '-def-'], Str::split($string, '---'));
-
-        // input is already an array
-        $string = ['ää', 'üü', 'ß'];
-        $this->assertSame($string, Str::split($string));
-    }
-
-    /**
-     * @covers ::startsWith
-     */
-    public function testStartsWith()
-    {
-        $string = 'Hellö Wörld';
-
-        // case sensitive
-        $this->assertTrue(Str::startsWith($string, ''));
-        $this->assertTrue(Str::startsWith($string, 'H'));
-        $this->assertFalse(Str::startsWith($string, 'h'));
-        $this->assertTrue(Str::startsWith($string, 'Hellö'));
-        $this->assertFalse(Str::startsWith($string, 'hellö'));
-
-        // case insensitive
-        $this->assertTrue(Str::startsWith($string, '', true));
-        $this->assertTrue(Str::startsWith($string, 'H', true));
-        $this->assertTrue(Str::startsWith($string, 'h', true));
-        $this->assertTrue(Str::startsWith($string, 'Hellö', true));
-        $this->assertTrue(Str::startsWith($string, 'hellö', true));
-    }
-
-    /**
      * @covers ::similarity
      */
     public function testSimilarity()
@@ -1057,6 +920,143 @@ EOT;
             'matches' => 5,
             'percent' => 100.0
         ], Str::similarity('Kirby', 'KIRBY', true));
+    }
+
+    /**
+     * @covers ::slug
+     */
+    public function testSlug()
+    {
+        // Double dashes
+        $this->assertSame('a-b', Str::slug('a--b'));
+
+        // Dashes at the end of the line
+        $this->assertSame('a', Str::slug('a-'));
+
+        // Dashes at the beginning of the line
+        $this->assertSame('a', Str::slug('-a'));
+
+        // Underscores converted to dashes
+        $this->assertSame('a-b', Str::slug('a_b'));
+
+        // Unallowed characters
+        $this->assertSame('a-b', Str::slug('a@b'));
+
+        // Spaces characters
+        $this->assertSame('a-b', Str::slug('a b'));
+
+        // Double Spaces characters
+        $this->assertSame('a-b', Str::slug('a  b'));
+
+        // Custom separator
+        $this->assertSame('a+b', Str::slug('a-b', '+'));
+
+        // Allow underscores
+        $this->assertSame('a_b', Str::slug('a_b', '-', 'a-z0-9_'));
+
+        // store default defaults
+        $defaults = Str::$defaults['slug'];
+
+        // Custom str defaults
+        Str::$defaults['slug']['separator'] = '+';
+        Str::$defaults['slug']['allowed']   = 'a-z0-9_';
+
+        $this->assertSame('a+b', Str::slug('a-b'));
+        $this->assertSame('a_b', Str::slug('a_b'));
+
+        // Reset str defaults
+        Str::$defaults['slug'] = $defaults;
+
+        // Language rules
+        Str::$language = ['ä' => 'ae'];
+        $this->assertSame('ae-b', Str::slug('ä b'));
+        Str::$language = [];
+    }
+
+    /**
+     * @covers ::snake
+     */
+    public function testSnake()
+    {
+        $string = 'KingCobra';
+        $this->assertSame('king_cobra', Str::snake($string));
+
+        $string = 'kingCobra';
+        $this->assertSame('king_cobra', Str::snake($string));
+    }
+
+    /**
+     * @covers ::split
+     */
+    public function testSplit()
+    {
+        // default separator
+        $string = 'ä,ö,ü,ß';
+        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string));
+
+        // custom separator
+        $string = 'ä/ö/ü/ß';
+        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string, '/'));
+
+        // custom separator and limited length
+        $string = 'ää/ö/üü/ß';
+        $this->assertSame(['ää', 'üü'], Str::split($string, '/', 2));
+
+        // custom separator with line-breaks
+        $string = <<<EOT
+            ---
+            -abc-
+            ---
+            -def-
+EOT;
+        $this->assertSame(['-abc-', '-def-'], Str::split($string, '---'));
+
+        // input is already an array
+        $string = ['ää', 'üü', 'ß'];
+        $this->assertSame($string, Str::split($string));
+    }
+
+    /**
+     * @covers ::startsWith
+     */
+    public function testStartsWith()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertTrue(Str::startsWith($string, ''));
+        $this->assertTrue(Str::startsWith($string, 'H'));
+        $this->assertFalse(Str::startsWith($string, 'h'));
+        $this->assertTrue(Str::startsWith($string, 'Hellö'));
+        $this->assertFalse(Str::startsWith($string, 'hellö'));
+
+        // case insensitive
+        $this->assertTrue(Str::startsWith($string, '', true));
+        $this->assertTrue(Str::startsWith($string, 'H', true));
+        $this->assertTrue(Str::startsWith($string, 'h', true));
+        $this->assertTrue(Str::startsWith($string, 'Hellö', true));
+        $this->assertTrue(Str::startsWith($string, 'hellö', true));
+    }
+
+    /**
+     * @covers ::studly
+     */
+    public function testStudly()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('FooBar', Str::studly($string));
+
+        $string = 'FòôBàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
+
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
+
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
     }
 
     /**
