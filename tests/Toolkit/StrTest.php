@@ -151,6 +151,27 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::camel
+     */
+    public function testCamel()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('fooBar', Str::camel($string));
+
+        $string = 'FòôBàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+    }
+
+    /**
      * @covers ::contains
      */
     public function testContains()
@@ -830,6 +851,78 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::similarity
+     */
+    public function testSimilarity()
+    {
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'bar'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', ''));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', 'foo'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', ''));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'fooBar'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 100.0
+        ], Str::similarity('foo', 'foo'));
+
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 75.0
+        ], Str::similarity('Tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'FOO'));
+
+        $this->assertSame([
+            'matches' => 1,
+            'percent' => 20.0
+        ], Str::similarity('Kirby', 'KIRBY'));
+
+        // case-insensitive
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('Tête', 'tête', true));
+
+        $this->assertSame([
+            'matches' => 2,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'FOU', true));
+
+        $this->assertSame([
+            'matches' => 5,
+            'percent' => 100.0
+        ], Str::similarity('Kirby', 'KIRBY', true));
+    }
+
+    /**
      * @covers ::slug
      */
     public function testSlug()
@@ -946,75 +1039,24 @@ EOT;
     }
 
     /**
-     * @covers ::similarity
+     * @covers ::studly
      */
-    public function testSimilarity()
+    public function testStudly()
     {
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', 'bar'));
+        $string = 'foo_bar';
+        $this->assertSame('FooBar', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', ''));
+        $string = 'FòôBàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('', 'foo'));
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('', ''));
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 66.66666666666667
-        ], Str::similarity('foo', 'fooBar'));
-
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 100.0
-        ], Str::similarity('foo', 'foo'));
-
-        $this->assertSame([
-            'matches' => 4,
-            'percent' => 100.0
-        ], Str::similarity('tête', 'tête'));
-
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 75.0
-        ], Str::similarity('Tête', 'tête'));
-
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', 'FOO'));
-
-        $this->assertSame([
-            'matches' => 1,
-            'percent' => 20.0
-        ], Str::similarity('Kirby', 'KIRBY'));
-
-        // case-insensitive
-        $this->assertSame([
-            'matches' => 4,
-            'percent' => 100.0
-        ], Str::similarity('Tête', 'tête', true));
-
-        $this->assertSame([
-            'matches' => 2,
-            'percent' => 66.66666666666667
-        ], Str::similarity('foo', 'FOU', true));
-
-        $this->assertSame([
-            'matches' => 5,
-            'percent' => 100.0
-        ], Str::similarity('Kirby', 'KIRBY', true));
+        $string = 'fòô_bàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
     }
 
     /**
