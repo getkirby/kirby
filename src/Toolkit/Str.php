@@ -1444,15 +1444,15 @@ class Str
     }
 
     /**
-     * Wrap the string with the given strings
+     * Wraps the string with the given string(s)
      *
      * @param string $string String to wrap
-     * @param string $before String to wrap before
-     * @param string|null $after String to wrap after
+     * @param string $before String to prepend
+     * @param string|null $after String to append (if different from `$before`)
      * @return string
      */
     public static function wrap(string $string, string $before, string $after = null): string
     {
-        return $before . $string . ($after ??= $before);
+        return $before . $string . ($after ?? $before);
     }
 }
