@@ -532,11 +532,11 @@ class Str
      * Add's _1 to a string or increment the ending number to allow _2, _3, etc
      *
      * @param string $string The string to increment
-     * @param int $first Start with
-     * @param string $separator Separator
+     * @param string $separator
+     * @param int $first Starting number
      * @return string
      */
-    public static function increment(string $string, int $first = 1, string $separator = '_'): string
+    public static function increment(string $string, string $separator = '-', int $first = 1): string
     {
         preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $match);
 
