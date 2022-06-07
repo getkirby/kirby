@@ -538,7 +538,7 @@ class Str
      */
     public static function increment(string $string, int $first = 1, string $separator = '_'): string
     {
-        preg_match('/(.+)' . $separator . '([0-9]+)$/', $string, $match);
+        preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $match);
 
         return isset($match[2]) ? $match[1] . $separator . ((int)$match[2] + 1) : $string . $separator . $first;
     }
