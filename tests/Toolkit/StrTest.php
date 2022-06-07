@@ -431,31 +431,40 @@ class StrTest extends TestCase
     public function testIncrement()
     {
         $string = 'Pöst';
-        $this->assertSame('Pöst_1', Str::increment($string));
+        $this->assertSame('Pöst-1', Str::increment($string));
 
-        $string = 'Pöst_1';
-        $this->assertSame('Pöst_2', Str::increment($string));
+        $string = 'Pöst-1';
+        $this->assertSame('Pöst-2', Str::increment($string));
 
-        $string = 'Pöst_2';
-        $this->assertSame('Pöst_3', Str::increment($string));
-
-        $string = 'Pöst';
-        $this->assertSame('Pöst-1', Str::increment($string, 1, '-'));
+        $string = 'Pöst-2';
+        $this->assertSame('Pöst-3', Str::increment($string));
 
         $string = 'Pöst';
-        $this->assertSame('Pöst-10', Str::increment($string, 10, '-'));
+        $this->assertSame('Pöst-1', Str::increment($string, '-'));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst-10', Str::increment($string, '-', 10));
 
         $string = 'Pöst-10';
-        $this->assertSame('Pöst-11', Str::increment($string, 1, '-'));
+        $this->assertSame('Pöst-11', Str::increment($string, '-', 1));
 
         $string = 'Pöst-10';
-        $this->assertSame('Pöst-11', Str::increment($string, 10, '-'));
+        $this->assertSame('Pöst-11', Str::increment($string, '-',  10));
 
         $string = 'Pöst';
-        $this->assertSame('Pöst 1', Str::increment($string, 1, ' '));
+        $this->assertSame('Pöst 1', Str::increment($string, ' ', 1));
 
         $string = 'Pöst post 1';
-        $this->assertSame('Pöst post 2', Str::increment($string, 1, ' '));
+        $this->assertSame('Pöst post 2', Str::increment($string, ' ', 1));
+
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_10-1', Str::increment($string, '-'));
+
+        $string = 'Pöst-5';
+        $this->assertSame('Pöst-6', Str::increment($string, '-', 10));
+
+        $string = 'Pöst-15';
+        $this->assertSame('Pöst-16', Str::increment($string, '-', 10));
     }
 
     /**
