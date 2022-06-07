@@ -540,7 +540,12 @@ class Str
     {
         preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $match);
 
-        return isset($match[2]) ? $match[1] . $separator . ((int)$match[2] + 1) : $string . $separator . $first;
+        if (isset($match[2]) === true) {
+            // increment the existing ending number
+            return $match[1] . $separator . ((int)$match[2] + 1);
+        }
+
+        return $string . $separator . $first;
     }
 
     /**
