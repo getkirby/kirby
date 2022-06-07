@@ -449,7 +449,7 @@ class StrTest extends TestCase
         $this->assertSame('Pöst-11', Str::increment($string, '-', 1));
 
         $string = 'Pöst-10';
-        $this->assertSame('Pöst-11', Str::increment($string, '-',  10));
+        $this->assertSame('Pöst-11', Str::increment($string, '-', 10));
 
         $string = 'Pöst';
         $this->assertSame('Pöst 1', Str::increment($string, ' ', 1));
