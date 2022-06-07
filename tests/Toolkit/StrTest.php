@@ -440,16 +440,16 @@ class StrTest extends TestCase
         $this->assertSame('Pöst-3', Str::increment($string));
 
         $string = 'Pöst';
-        $this->assertSame('Pöst-1', Str::increment($string, '-'));
+        $this->assertSame('Pöst_1', Str::increment($string, '_'));
 
         $string = 'Pöst';
-        $this->assertSame('Pöst-10', Str::increment($string, '-', 10));
+        $this->assertSame('Pöst_10', Str::increment($string, '_', 10));
 
-        $string = 'Pöst-10';
-        $this->assertSame('Pöst-11', Str::increment($string, '-', 1));
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_11', Str::increment($string, '_', 1));
 
-        $string = 'Pöst-10';
-        $this->assertSame('Pöst-11', Str::increment($string, '-', 10));
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_11', Str::increment($string, '_', 10));
 
         $string = 'Pöst';
         $this->assertSame('Pöst 1', Str::increment($string, ' ', 1));
@@ -459,6 +459,9 @@ class StrTest extends TestCase
 
         $string = 'Pöst_10';
         $this->assertSame('Pöst_10-1', Str::increment($string, '-'));
+
+        $string = 'Pöst-10';
+        $this->assertSame('Pöst-10_1', Str::increment($string, '_'));
 
         $string = 'Pöst-5';
         $this->assertSame('Pöst-6', Str::increment($string, '-', 10));

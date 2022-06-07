@@ -529,7 +529,7 @@ class Str
     }
 
     /**
-     * Add's _1 to a string or increment the ending number to allow _2, _3, etc
+     * Adds `-1` to a string or increments the ending number to allow `-2`, `-3`, etc.
      *
      * @param string $string The string to increment
      * @param string $separator
@@ -538,13 +538,14 @@ class Str
      */
     public static function increment(string $string, string $separator = '-', int $first = 1): string
     {
-        preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $match);
+        preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $matches);
 
-        if (isset($match[2]) === true) {
+        if (isset($matches[2]) === true) {
             // increment the existing ending number
-            return $match[1] . $separator . ((int)$match[2] + 1);
+            return $matches[1] . $separator . ((int)$matches[2] + 1);
         }
 
+        // append a new ending number
         return $string . $separator . $first;
     }
 
