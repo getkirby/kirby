@@ -529,6 +529,27 @@ class Str
     }
 
     /**
+     * Adds `-1` to a string or increments the ending number to allow `-2`, `-3`, etc.
+     *
+     * @param string $string The string to increment
+     * @param string $separator
+     * @param int $first Starting number
+     * @return string
+     */
+    public static function increment(string $string, string $separator = '-', int $first = 1): string
+    {
+        preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $matches);
+
+        if (isset($matches[2]) === true) {
+            // increment the existing ending number
+            return $matches[1] . $separator . ((int)$matches[2] + 1);
+        }
+
+        // append a new ending number
+        return $string . $separator . $first;
+    }
+
+    /**
      * Checks if the given string is a URL
      *
      * @param string|null $string
