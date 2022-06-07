@@ -1442,4 +1442,17 @@ class Str
             return '&nbsp;' . $matches[2];
         }, $string);
     }
+
+    /**
+     * Wrap the string with the given strings
+     *
+     * @param string $string String to wrap
+     * @param string $before String to wrap before
+     * @param string|null $after String to wrap after
+     * @return string
+     */
+    public static function wrap(string $string, string $before, string $after = null): string
+    {
+        return $before . $string . ($after ??= $before);
+    }
 }
