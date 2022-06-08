@@ -369,8 +369,7 @@ class Environment
             return true;
         }
 
-        // fall back to local setup
-        return $this->detectHttps();
+        return false;
     }
 
     /**
