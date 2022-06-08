@@ -100,7 +100,7 @@ class UriTest extends TestCase
         $this->assertSame('/', $uri->toString());
     }
 
-    public function testCurrentWithHostInPath()
+    public function testCurrentWithHostInRequestUri()
     {
         new App([
             'cli' => false,

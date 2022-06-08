@@ -923,7 +923,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame(9999, $env->port());
     }
 
-    public function providerForRequestRoutes()
+    public function providerForRequestPaths()
     {
         return [
             [
@@ -965,17 +965,49 @@ class EnvironmentTest extends TestCase
     }
 
     /**
-     * @dataProvider providerForRequestRoutes
-     * @covers ::requestRoute
+     * @dataProvider providerForRequestPaths
+     * @covers ::requestPath
      */
-    public function testRequestRoute($scriptName, $requestUri, $route)
+    public function testRequestPath($scriptName, $requestUri, $route)
     {
         $env = new Environment(['cli' => false], [
             'SCRIPT_NAME' => $scriptName,
             'REQUEST_URI' => $requestUri,
         ]);
 
-        $this->assertSame($route, $env->requestRoute());
+        $this->assertSame($route, $env->requestPath());
+    }
+
+    public function testRequestUrl()
+    {
+        // basic
+        $env = new Environment(['cli' => false], []);
+
+        $this->assertSame('/', $env->requestUrl());
+
+        // with server name
+        $env = new Environment(['cli' => false], [
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('http://getkirby.com', $env->requestUrl());
+
+        // with request path
+        $env = new Environment(['cli' => false], [
+            'SERVER_NAME' => 'getkirby.com',
+            'REQUEST_URI' => '/blog/article-a',
+        ]);
+
+        $this->assertSame('http://getkirby.com/blog/article-a', $env->requestUrl());
+
+        // with subfolder path
+        $env = new Environment(['cli' => false], [
+            'SERVER_NAME' => 'getkirby.com',
+            'REQUEST_URI' => '/subfolder/blog/article-a',
+            'SCRIPT_NAME' => '/subfolder/index.php',
+        ]);
+
+        $this->assertSame('http://getkirby.com/subfolder/blog/article-a', $env->requestUrl());
     }
 
     public function providerForRequestUris()

@@ -243,7 +243,13 @@ class Uri
             return static::$current;
         }
 
-        return new static(App::instance()->url('current'), $props);
+        if ($app = App::instance(null, true)) {
+            $url = $app->url('current');
+        } else {
+            $url = (new Environment)->requestUrl();
+        }
+
+        return new static($url, $props);
     }
 
     /**
@@ -328,7 +334,13 @@ class Uri
      */
     public static function index(array $props = [])
     {
-        return new static(App::instance()->url('index'), $props);
+        if ($app = App::instance(null, true)) {
+            $url = $app->url('index');
+        } else {
+            $url = (new Environment())->url();
+        }
+
+        return new static($url, $props);
     }
 
     /**

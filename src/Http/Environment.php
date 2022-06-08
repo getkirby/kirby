@@ -776,7 +776,7 @@ class Environment
      *
      * @return string
      */
-    public function requestRoute(): string
+    public function requestPath(): string
     {
         $requestUri = trim($this->requestUri()['path'] ?? '', '/');
         $requestUri = str_replace('//', '/', $requestUri);
@@ -796,6 +796,23 @@ class Environment
     public function requestUri(): array
     {
         return $this->requestUri;
+    }
+
+    /**
+     * Returns the current URL, including the request path
+     *
+     * @return string
+     */
+    public function requestUrl(): string
+    {
+        $path = $this->requestPath();
+        $base = $this->url();
+
+        if (empty($path) === true) {
+            return $base;
+        }
+
+        return rtrim($base, '/') . '/' . $path;
     }
 
     /**

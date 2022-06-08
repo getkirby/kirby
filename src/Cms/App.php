@@ -1218,7 +1218,7 @@ class App
             return $this->path;
         }
 
-        return $this->setPath($this->environment()->requestRoute())->path;
+        return $this->path ??= $this->environment()->requestPath();
     }
 
     /**
