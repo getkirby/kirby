@@ -812,6 +812,14 @@ class EnvironmentTest extends TestCase
         ]);
 
         $this->assertSame(8888, $env->port());
+
+        // via forwarded proto
+        $env = new Environment(['allowed' => '*'], [
+            'HTTP_X_FORWARDED_HOST'  => 'getkirby.com',
+            'HTTP_X_FORWARDED_PROTO' => 'https'
+        ]);
+
+        $this->assertSame(443, $env->port());
     }
 
     /**

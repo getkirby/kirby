@@ -391,6 +391,11 @@ class Environment
             return $this->portInHost;
         }
 
+        // based on the detected https state
+        if ($this->https === true) {
+            return 443;
+        }
+
         return null;
     }
 
