@@ -458,6 +458,18 @@ class VTest extends TestCase
         $this->assertFalse(V::ip('192.168.255.24.23'));
     }
 
+    public function testJson()
+    {
+        $this->assertTrue(V::json('{"foo": "bar"}'));
+        $this->assertTrue(V::json("{}"));
+        $this->assertTrue(V::json("[]"));
+        $this->assertFalse(V::json("{foo: bar}"));
+        $this->assertFalse(V::json("foo"));
+        $this->assertFalse(V::json([]));
+        $this->assertFalse(V::json(false));
+        $this->assertFalse(V::json(42));
+    }
+
     public function testLess()
     {
         $this->assertTrue(V::less(1, 2));
