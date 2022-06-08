@@ -430,7 +430,7 @@ V::$validators = [
             return false;
         }
 
-        return (bool)mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
+        return mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
     },
 
     /**
