@@ -429,8 +429,8 @@ V::$validators = [
         if (!is_string($value) || $value === '') {
             return false;
         }
-        
-        return (bool) mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
+
+        return (bool)mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
     },
 
     /**
