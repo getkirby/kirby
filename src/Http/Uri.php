@@ -246,7 +246,7 @@ class Uri
         if ($app = App::instance(null, true)) {
             $url = $app->url('current');
         } else {
-            $url = (new Environment)->requestUrl();
+            $url = (new Environment())->requestUrl();
         }
 
         return new static($url, $props);
