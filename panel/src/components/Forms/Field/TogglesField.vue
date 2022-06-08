@@ -5,8 +5,8 @@
       ref="input"
       v-bind="$props"
       v-on="$listeners"
+      theme="field"
       type="toggles"
-      @reset="onInput('')"
     />
   </k-field>
 </template>
@@ -29,16 +29,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.k-toggles-field[data-disabled] .k-toggles-input {
-  opacity: 0.5;
-}
-.k-toggles-field .k-input[data-invalid] {
-  box-shadow: none;
-}
-.k-toggles-field .k-input,
-.k-toggles-field .k-input-element {
-  display: inline-flex;
-}
-</style>

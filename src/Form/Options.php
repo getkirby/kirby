@@ -144,6 +144,9 @@ class Options
                 ];
             }
 
+            // fallback for the text
+            $option['text'] ??= $option['value'];
+
             // translate the option text
             if (is_array($option['text']) === true) {
                 $option['text'] = I18n::translate($option['text'], $option['text']);

@@ -5,7 +5,7 @@
       ref="input"
       :checked="value"
       :disabled="disabled"
-      class="k-checkbox-input-native"
+      class="k-checkbox-input-native input-hidden"
       type="checkbox"
       @change="onChange($event.target.checked)"
     />
@@ -93,13 +93,6 @@ export default {
 .k-checkbox-input {
   position: relative;
   cursor: pointer;
-}
-.k-checkbox-input-native {
-  position: absolute;
-  appearance: none;
-  width: 0;
-  height: 0;
-  opacity: 0;
 }
 .k-checkbox-input-label {
   display: block;

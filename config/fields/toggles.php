@@ -10,16 +10,12 @@ return [
         'before'      => null,
         'icon'        => null,
         'placeholder' => null,
-        'columns'     => null,
 
         'labels' => function (bool $labels = true) {
             return $labels;
         },
         'reset' => function (bool $reset = true) {
             return $reset;
-        },
-        'equalize' => function (bool $equalize = true) {
-            return $equalize;
         }
     ],
     'computed' => [
