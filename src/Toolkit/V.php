@@ -423,6 +423,17 @@ V::$validators = [
     },
 
     /**
+     * Checks for a valid hex color
+     */
+    'hexColor' => function ($value): bool {
+        if (!is_string($value) || $value === '') {
+            return false;
+        }
+        
+        return (bool) mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
+    },
+
+    /**
      * Checks if the value exists in a list of given values
      */
     'in' => function ($value, array $in, bool $strict = false): bool {
