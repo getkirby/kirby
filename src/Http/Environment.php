@@ -391,8 +391,7 @@ class Environment
             return $this->portInHost;
         }
 
-        // fall back to local setup
-        return $this->detectPort();
+        return null;
     }
 
     /**
