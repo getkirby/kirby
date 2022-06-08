@@ -280,6 +280,10 @@ class VTest extends TestCase
         $this->assertFalse(V::hexColor(false));
         $this->assertFalse(V::hexColor(new \stdclass()));
         $this->assertFalse(V::hexColor(''));
+        $this->assertFalse(V::hexColor('#'));
+        $this->assertFalse(V::hexColor('#ff'));
+        $this->assertFalse(V::hexColor('##fff'));
+        $this->assertFalse(V::hexColor('#???'));
     }
 
     public function testIn()
