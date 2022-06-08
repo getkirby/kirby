@@ -461,10 +461,10 @@ class VTest extends TestCase
     public function testJson()
     {
         $this->assertTrue(V::json('{"foo": "bar"}'));
-        $this->assertTrue(V::json("{}"));
-        $this->assertTrue(V::json("[]"));
-        $this->assertFalse(V::json("{foo: bar}"));
-        $this->assertFalse(V::json("foo"));
+        $this->assertTrue(V::json('{}'));
+        $this->assertTrue(V::json('[]'));
+        $this->assertFalse(V::json('{foo: bar}'));
+        $this->assertFalse(V::json('foo'));
         $this->assertFalse(V::json([]));
         $this->assertFalse(V::json(false));
         $this->assertFalse(V::json(42));
