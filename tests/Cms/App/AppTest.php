@@ -353,6 +353,22 @@ class AppTest extends TestCase
     }
 
     /**
+     * @covers ::environment
+     */
+    public function testEnvironmentBeforeInitialization()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new App([
+            'options' => [
+                'debug' => true,
+                'url'   => ['https://getkirby.com', 'https://trykirby.com']
+            ]
+        ]);
+    }
+
+    /**
      * @covers ::image
      */
     public function testImage()

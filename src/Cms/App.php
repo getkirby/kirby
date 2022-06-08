@@ -618,7 +618,7 @@ class App
      */
     public function environment()
     {
-        return $this->environment;
+        return $this->environment ?? new Environment();
     }
 
     /**
@@ -1115,7 +1115,7 @@ class App
         ], $props['server'] ?? null);
 
         // merge into one clean options array
-        $options = $this->environment->options($this->root('config'));
+        $options = $this->environment()->options($this->root('config'));
         return $this->options = array_replace_recursive($this->options, $options);
     }
 
@@ -1218,7 +1218,7 @@ class App
             return $this->path;
         }
 
-        return $this->setPath($this->environment->requestRoute())->path;
+        return $this->setPath($this->environment()->requestRoute())->path;
     }
 
     /**
@@ -1246,7 +1246,7 @@ class App
         }
 
         return $this->request = new Request([
-            'cli' => $this->environment->cli(),
+            'cli' => $this->environment()->cli(),
             'url' => $this->url('current')
         ]);
     }
@@ -1550,7 +1550,7 @@ class App
      */
     public function server()
     {
-        return $this->environment;
+        return $this->environment();
     }
 
     /**
