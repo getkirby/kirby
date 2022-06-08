@@ -11,6 +11,9 @@ return [
         'icon'        => null,
         'placeholder' => null,
 
+        'grow' => function (bool $grow = true) {
+            return $grow;
+        },
         'labels' => function (bool $labels = true) {
             return $labels;
         },

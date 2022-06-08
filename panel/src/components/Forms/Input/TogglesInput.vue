@@ -34,7 +34,7 @@ export const props = {
   mixins: [autofocus, disabled, id, required],
   props: {
     columns: Number,
-    equalize: Boolean,
+    grow: Boolean,
     labels: Boolean,
     options: Array,
     reset: Boolean,
@@ -90,6 +90,13 @@ export default {
 </script>
 
 <style>
+.k-input[data-type="toggles"] {
+  display: inline-flex;
+}
+.k-input[data-type="toggles"].grow {
+  display: flex;
+}
+
 .k-toggles-input {
   display: grid;
   grid-template-columns: repeat(var(--options), minmax(0, 1fr));
@@ -109,7 +116,7 @@ export default {
   background: var(--color-white);
   cursor: pointer;
   display: flex;
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
   justify-content: center;
   line-height: 1.25;
   padding: 0 var(--spacing-3);

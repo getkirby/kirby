@@ -2,6 +2,7 @@
   <k-field v-bind="$props" class="k-toggles-field">
     <k-input
       :id="_uid"
+      :class="{ grow }"
       ref="input"
       v-bind="$props"
       v-on="$listeners"
