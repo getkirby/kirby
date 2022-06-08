@@ -346,17 +346,12 @@ class Environment
      */
     protected function detectForwardedHost(): ?string
     {
-        $host = $this->get('HTTP_X_FORWARDED_HOST');
+        $host  = $this->get('HTTP_X_FORWARDED_HOST');
+        $parts = $this->detectPortInHost($host);
 
-        if (empty($host) === false) {
-            $parts = $this->detectPortInHost($host);
+        $this->portInHost = $parts['port'];
 
-            $this->portInHost = $parts['port'];
-
-            return $parts['host'];
-        }
-
-        return $this->detectHost(true);
+        return $parts['host'];
     }
 
     /**
