@@ -1336,4 +1336,16 @@ EOT;
         $this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
         $this->assertSame('', Str::widont());
     }
+
+    /**
+     * @covers ::wrap
+     */
+    public function testWrap()
+    {
+        $string = 'Pöst title';
+        $this->assertSame('# Pöst title {.title}', Str::wrap($string, '# ', ' {.title}'));
+
+        $string = 'Pöst title';
+        $this->assertSame('"Pöst title"', Str::wrap($string, '"'));
+    }
 }

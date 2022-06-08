@@ -447,6 +447,19 @@ V::$validators = [
     },
 
     /**
+     * Checks for valid json
+     */
+    'json' => function ($value): bool {
+        if (!is_string($value) || $value === '') {
+            return false;
+        }
+
+        json_decode($value);
+
+        return json_last_error() === JSON_ERROR_NONE;
+    },
+
+    /**
      * Checks if the value is lower than the second value
      */
     'less' => function ($value, float $max): bool {
