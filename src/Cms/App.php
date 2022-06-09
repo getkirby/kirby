@@ -900,11 +900,13 @@ class App
     public function kirbytext(string $text = null, array $options = [], bool $inline = null): string
     {
         // warning for deprecated fourth parameter
+        // @codeCoverageIgnoreStart
         if ($inline === null) {
             $inline = false;
         } else {
             Helpers::deprecated('Cms\App::kribytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
         }
+        // @codeCoverageIgnoreEnd
 
         $options['markdown']['inline'] ??= $inline;
 
@@ -1011,6 +1013,7 @@ class App
     public function markdown(string $text = null, $options = null): string
     {
         // support for the old syntax to enable inline mode as second argument
+        // @codeCoverageIgnoreStart
         if (is_bool($options) === true) {
             Helpers::deprecated('Cms\App::markdown(): Passing a boolean as second parameter has been deprecated and won\'t be supported anymore in Kirby 3.8.0. Instead pass array with the key "inline" set to true or false.');
 
@@ -1018,6 +1021,7 @@ class App
                 'inline' => $options
             ];
         }
+        // @codeCoverageIgnoreEnd
 
         // merge global options with local options
         $options = array_merge(

@@ -176,6 +176,7 @@ class Environment
 
         // keep Server flags compatible for now
         // TODO: remove in 3.8.0
+        // @codeCoverageIgnoreStart
         if (is_int($options['allowed']) === true) {
             Helpers::deprecated('
                 Using `Server::` constants for the `url` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
@@ -183,6 +184,7 @@ class Environment
 
             $options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
         }
+        // @codeCoverageIgnoreEnd
 
         // insecure auto-detection
         if ($options['allowed'] === '*' || $options['allowed'] === ['*']) {

@@ -153,6 +153,7 @@ class Document
     /**
      * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
      * @todo remove in 3.8.0
+     * @codeCoverageIgnore
      */
     public static function customCss(): ?string
     {
@@ -163,6 +164,7 @@ class Document
     /**
      * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
      * @todo remove in 3.8.0
+     * @codeCoverageIgnore
      */
     public static function customJs(): ?string
     {
