@@ -30,13 +30,6 @@ return [
         },
         'niceSize'   => fn (File $file) => $file->niceSize(),
         'options'    => fn (File $file) => $file->panel()->options(),
-        'panelIcon'  => function (File $file) {
-            // TODO: remove in 3.7.0
-            // @codeCoverageIgnoreStart
-            Helpers::deprecated('The API field file.panelIcon has been deprecated and will be removed in 3.7.0. Use file.panelImage instead');
-            return $file->panel()->image();
-        // @codeCoverageIgnoreEnd
-        },
         'panelImage' => fn (File $file) => $file->panel()->image(),
         'panelUrl'   => fn (File $file) => $file->panel()->url(true),
         'prev'       => fn (File $file) => $file->prev(),

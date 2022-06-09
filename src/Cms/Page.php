@@ -1472,7 +1472,6 @@ class Page extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @deprecated 3.6.0 Use `->panel()->dragText()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1482,6 +1481,7 @@ class Page extends ModelWithContent
      */
     public function dragText(string $type = null): string
     {
+        Helpers::deprecated('Cms\Page::dragText() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->dragText() instead.');
         return $this->panel()->dragText($type);
     }
 
@@ -1490,7 +1490,6 @@ class Page extends ModelWithContent
      * used in the panel to make routing work properly
      *
      * @deprecated 3.6.0 Use `->panel()->id()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1499,6 +1498,7 @@ class Page extends ModelWithContent
      */
     public function panelId(): string
     {
+        Helpers::deprecated('Cms\Page::panelId() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->id() instead.');
         return $this->panel()->id();
     }
 
@@ -1506,7 +1506,6 @@ class Page extends ModelWithContent
      * Returns the full path without leading slash
      *
      * @deprecated 3.6.0 Use `->panel()->path()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1515,6 +1514,7 @@ class Page extends ModelWithContent
      */
     public function panelPath(): string
     {
+        Helpers::deprecated('Cms\Page::panelPath() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->path() instead.');
         return $this->panel()->path();
     }
 
@@ -1523,7 +1523,6 @@ class Page extends ModelWithContent
      * and page fields
      *
      * @deprecated 3.6.0 Use `->panel()->pickerData()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @param array|null $params
@@ -1532,6 +1531,7 @@ class Page extends ModelWithContent
      */
     public function panelPickerData(array $params = []): array
     {
+        Helpers::deprecated('Cms\Page::panelPickerData() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->pickerData() instead.');
         return $this->panel()->pickerData($params);
     }
 
@@ -1540,7 +1540,6 @@ class Page extends ModelWithContent
      * in the panel
      *
      * @deprecated 3.6.0 Use `->panel()->url()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1550,6 +1549,7 @@ class Page extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
+        Helpers::deprecated('Cms\Page::panelUrl() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->url() instead.');
         return $this->panel()->url($relative);
     }
 }

@@ -4,6 +4,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
@@ -140,12 +141,18 @@ return [
      * @param array $options Markdown options
      * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
      * @return string
-     * @todo add deprecation warning for $inline parameter in 3.7.0
      * @todo remove $inline parameter in in 3.8.0
      */
-    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
+    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = null): string {
         static $markdown;
         static $config;
+
+        // warning for deprecated fourth parameter
+        if ($inline === null) {
+            $inline = false;
+        } else {
+            Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
+        }
 
         // support for the deprecated fourth argument
         $options['inline'] ??= $inline;

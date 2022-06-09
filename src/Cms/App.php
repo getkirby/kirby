@@ -892,20 +892,21 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param array $data
-     * @param bool $inline (deprecated: use $data['markdown']['inline'] instead)
+     * @param array $options
+     * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
      * @return string
-     * @todo add deprecation warning for $inline parameter in 3.7.0
-     * @todo rename $data parameter to $options in 3.7.0
      * @todo remove $inline parameter in in 3.8.0
      */
-    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
+    public function kirbytext(string $text = null, array $options = [], bool $inline = null): string
     {
-        $options = A::merge([
-            'markdown' => [
-                'inline' => $inline
-            ]
-        ], $data);
+        // warning for deprecated fourth parameter
+        if ($inline === null) {
+            $inline = false;
+        } else {
+            Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
+        }
+
+        $options['markdown']['inline'] ??= $inline;
 
         $text = $this->apply('kirbytext:before', compact('text'), 'text');
         $text = $this->kirbytags($text, $options);
@@ -1005,17 +1006,14 @@ class App
      * @param string|null $text
      * @param bool|array $options
      * @return string
-     * @todo rename $inline parameter to $options in 3.7.0
-     * @todo add deprecation warning for boolean $options in 3.7.0
      * @todo remove boolean $options in in 3.8.0
      */
-    public function markdown(string $text = null, $inline = null): string
+    public function markdown(string $text = null, $options = null): string
     {
-        // TODO: remove after renaming parameter
-        $options = $inline;
-
         // support for the old syntax to enable inline mode as second argument
         if (is_bool($options) === true) {
+            Helpers::deprecated('Cms\App::markdown(): Passing a boolean as second parameter has been deprecated and won\'t be supported anymore in Kirby 3.8.0. Instead pass array with the key "inline" set to true or false.');
+
             $options = [
                 'inline' => $options
             ];
@@ -1027,7 +1025,6 @@ class App
             (array)$options
         );
 
-        // TODO: deprecate passing the $inline parameter in 3.7.0
         // TODO: remove passing the $inline parameter in 3.8.0
         $inline = $options['inline'] ?? false;
         return ($this->component('markdown'))($this, $text, $options, $inline);

@@ -330,7 +330,7 @@ class Uri
      * or any other executed script.
      *
      * @param array $props
-     * @return string
+     * @return string|static
      */
     public static function index(array $props = [])
     {

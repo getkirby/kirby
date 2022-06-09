@@ -96,34 +96,6 @@ class Block extends Item
     }
 
     /**
-     * Deprecated method to return the block type
-     *
-     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::type()` instead
-     * @todo Remove in 3.7.0
-     *
-     * @return string
-     */
-    public function _key(): string
-    {
-        Helpers::deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
-        return $this->type();
-    }
-
-    /**
-     * Deprecated method to return the block id
-     *
-     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::id()` instead
-     * @todo Remove in 3.7.0
-     *
-     * @return string
-     */
-    public function _uid(): string
-    {
-        Helpers::deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
-        return $this->id();
-    }
-
-    /**
      * Returns the content object
      *
      * @return \Kirby\Cms\Content
