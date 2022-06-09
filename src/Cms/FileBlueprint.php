@@ -117,6 +117,7 @@ class FileBlueprint extends Blueprint
     /**
      * Returns the list of all accepted file extensions and mime types in a comma separated string.
      * Compatible with the `accept` attribute of HTML input elements.
+     * When no restrictions are defined, the string `*` is returned.
      *
      * @return string
      */
@@ -130,7 +131,7 @@ class FileBlueprint extends Blueprint
         return A::join(array_merge(
             A::map($extensionArray, fn ($ext) => ".$ext"),
             $mimeArray
-        ));
+        )) ?: '*';
     }
 
     /**
