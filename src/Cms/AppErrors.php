@@ -46,7 +46,7 @@ trait AppErrors
      */
     protected function handleErrors(): void
     {
-        if ($this->request()->cli() === true) {
+        if ($this->environment()->cli() === true) {
             $this->handleCliErrors();
             return;
         }

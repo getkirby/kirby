@@ -190,7 +190,7 @@ class Request
      */
     public function cli(): bool
     {
-        return Server::cli();
+        return $this->options['cli'] ?? (new Environment())->cli();
     }
 
     /**

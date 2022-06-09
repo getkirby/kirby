@@ -2,24 +2,18 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 class UriTest extends TestCase
 {
-    protected $_SERVER  = null;
     protected $example1 = 'https://getkirby.com';
     protected $example2 = 'https://testuser:weakpassword@getkirby.com:3000/docs/getting-started/with:kirby/?q=awesome#top';
 
     protected function setUp(): void
     {
+        App::destroy();
         Uri::$current = null;
-
-        $this->_SERVER = $_SERVER;
-    }
-
-    public function tearDown(): void
-    {
-        $_SERVER = $this->_SERVER;
     }
 
     public function testClone()
@@ -38,59 +32,85 @@ class UriTest extends TestCase
         $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
     }
 
+    public function testCurrent()
+    {
+        new App([
+            'cli' => false,
+            'options' => [
+                'url' => 'https://getkirby.com'
+            ],
+            'server' => [
+                'REQUEST_URI' => '/docs/reference'
+            ]
+        ]);
+
+        $uri = Uri::current();
+        $this->assertSame('https://getkirby.com/docs/reference', $uri->toString());
+    }
+
     public function testCurrentInCli()
     {
         $uri = Uri::current();
         $this->assertEquals('/', $uri->toString());
     }
 
-    public function testCurrentWithRequestUri()
+    public function testCurrentWithCustomObject()
     {
-        $_SERVER['REQUEST_URI'] = '/a/b';
+        Uri::$current = $uri = new Uri('/');
 
-        $uri = Uri::current();
-        $this->assertEquals('/a/b', $uri->toString());
-        $this->assertEquals('a/b', $uri->path());
+        $this->assertSame($uri, Uri::current());
     }
 
-    public function testCurrentWithHostInRequestUri()
+    public function testCurrentWithRequestUri()
     {
-        $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/';
+        new App([
+            'cli' => false,
+            'server' => [
+                'REQUEST_URI' => '/a/b'
+            ]
+        ]);
 
         $uri = Uri::current();
-        $this->assertEquals('/', $uri->toString());
-        $this->assertEquals('', $uri->path());
+        $this->assertSame('/a/b', $uri->toString());
     }
 
     public function testCurrentWithHostAndPathInRequestUri()
     {
-        $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/a/b';
+        new App([
+            'cli' => false,
+            'server' => [
+                'REQUEST_URI' => 'http://ktest.loc/a/b'
+            ]
+        ]);
 
         $uri = Uri::current();
-        $this->assertEquals('/a/b', $uri->toString());
-        $this->assertEquals('a/b', $uri->path());
+        $this->assertSame('/a/b', $uri->toString());
     }
 
     public function testCurrentWithHostAndSchemeInRequestUri()
     {
-        $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/';
+        new App([
+            'cli' => false,
+            'server' => [
+                'REQUEST_URI' => 'http://ktest.loc/'
+            ]
+        ]);
 
         $uri = Uri::current();
-        $this->assertEquals('/', $uri->toString());
-        $this->assertEquals('', $uri->path());
+        $this->assertSame('/', $uri->toString());
     }
 
-    public function testCurrentWithHostInPath()
+    public function testCurrentWithHostInRequestUri()
     {
-        $_SERVER['HTTP_HOST'] = 'ktest.loc';
-        $_SERVER['REQUEST_URI'] = 'http://ktest.loc/a/b/ktest.loc';
+        new App([
+            'cli' => false,
+            'server' => [
+                'REQUEST_URI' => 'http://ktest.loc/a/b/ktest.loc'
+            ]
+        ]);
 
         $uri = Uri::current();
-        $this->assertEquals('/a/b/ktest.loc', $uri->toString());
-        $this->assertEquals('a/b/ktest.loc', $uri->path());
+        $this->assertSame('/a/b/ktest.loc', $uri->toString());
     }
 
     public function testValidScheme()
@@ -98,10 +118,29 @@ class UriTest extends TestCase
         $url = new Uri();
 
         $url->setScheme('http');
-        $this->assertEquals('http', $url->scheme());
+        $this->assertSame('http', $url->scheme());
 
         $url->setScheme('https');
-        $this->assertEquals('https', $url->scheme());
+        $this->assertSame('https', $url->scheme());
+    }
+
+    public function testIndex()
+    {
+        new App([
+            'cli' => false,
+            'options' => [
+                'url' => 'https://getkirby.com'
+            ]
+        ]);
+
+        $uri = Uri::index();
+        $this->assertSame('https://getkirby.com', $uri->toString());
+    }
+
+    public function testIndexInCli()
+    {
+        $uri = Uri::index();
+        $this->assertSame('/', $uri->toString());
     }
 
     public function testInvalidScheme()
@@ -399,5 +438,41 @@ class UriTest extends TestCase
         $this->assertFalse($url->slash());
         $this->assertSame('', $url->params()->toString());
         $this->assertSame('', $url->path()->toString());
+    }
+
+    public function testHttps()
+    {
+        $url = new Uri(['scheme' => 'http']);
+        $this->assertFalse($url->https());
+
+        $url = new Uri(['scheme' => 'https']);
+        $this->assertTrue($url->https());
+    }
+
+    public function testHasFragment()
+    {
+        $uri = new Uri('https://getkirby.com/#footer');
+        $this->assertTrue($uri->hasFragment());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasFragment());
+    }
+
+    public function testHasPath()
+    {
+        $uri = new Uri('https://getkirby.com/docs');
+        $this->assertTrue($uri->hasPath());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasPath());
+    }
+
+    public function testHasQuery()
+    {
+        $uri = new Uri('https://getkirby.com?search=foo');
+        $this->assertTrue($uri->hasQuery());
+
+        $uri = new Uri('https://getkirby.com');
+        $this->assertFalse($uri->hasQuery());
     }
 }

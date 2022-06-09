@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Http\Server;
 
 return [
     'system' => [
@@ -41,7 +40,7 @@ return [
                     'plugins' => $plugins,
                     'php'     => phpversion(),
                     'server'  => $system->serverSoftware(),
-                    'https'   => Server::https(),
+                    'https'   => $kirby->environment()->https(),
                     'version' => $kirby->version(),
                     'urls'    => [
                         'content' => $system->exposedFileUrl('content'),

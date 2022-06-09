@@ -9,10 +9,10 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Environment;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
@@ -71,7 +71,6 @@ class App
     protected $roots;
     protected $routes;
     protected $router;
-    protected $server;
     protected $sessionHandler;
     protected $site;
     protected $system;
@@ -97,7 +96,7 @@ class App
             // stuff from config and additional options
             $this->optionsFromConfig();
             $this->optionsFromProps($props['options'] ?? []);
-            $this->optionsFromEnvironment();
+            $this->optionsFromEnvironment($props);
         } finally {
             // register the Whoops error handler inside of a
             // try-finally block to ensure it's still registered
@@ -615,11 +614,11 @@ class App
      * Returns the environment object with access
      * to the detected host, base url and dedicated options
      *
-     * @return \Kirby\Cms\Environment
+     * @return \Kirby\Http\Environment
      */
     public function environment()
     {
-        return $this->environment;
+        return $this->environment ?? new Environment();
     }
 
     /**
@@ -1104,15 +1103,20 @@ class App
      * Load all options for the current
      * server environment
      *
+     * @param array $props
      * @return array
      */
-    protected function optionsFromEnvironment(): array
+    protected function optionsFromEnvironment(array $props = []): array
     {
         // create the environment based on the URL setup
-        $this->environment = new Environment($this->root('config'), $this->options['url'] ?? null);
+        $this->environment = new Environment([
+            'allowed' => $this->options['url'] ?? null,
+            'cli'     => $props['cli'] ?? null,
+        ], $props['server'] ?? null);
 
         // merge into one clean options array
-        return $this->options = array_replace_recursive($this->options, $this->environment->options());
+        $options = $this->environment()->options($this->root('config'));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -1214,14 +1218,7 @@ class App
             return $this->path;
         }
 
-        $requestUri  = '/' . $this->request()->url()->path();
-        $scriptName  = $_SERVER['SCRIPT_NAME'];
-        $scriptFile  = basename($scriptName);
-        $scriptDir   = dirname($scriptName);
-        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir : $scriptName;
-        $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
-
-        return $this->setPath($requestPath)->path;
+        return $this->path ??= $this->environment()->requestPath();
     }
 
     /**
@@ -1244,7 +1241,14 @@ class App
      */
     public function request()
     {
-        return $this->request = $this->request ?? new Request();
+        if ($this->request !== null) {
+            return $this->request;
+        }
+
+        return $this->request = new Request([
+            'cli' => $this->environment()->cli(),
+            'url' => $this->url('current')
+        ]);
     }
 
     /**
@@ -1536,13 +1540,17 @@ class App
     }
 
     /**
-     * Returns the Server object
+     * Returns the Environment object
+     * @deprecated 3.7.0 Use `$kirby->environment()` instead
      *
-     * @return \Kirby\Http\Server
+     * @return \Kirby\Http\Environment
+     * @todo Start throwing deprecation warnings in 3.8.0
+     * @todo Remove in 3.9.0
+     * @codeCoverageIgnore
      */
     public function server()
     {
-        return $this->server ??= new Server();
+        return $this->environment();
     }
 
     /**

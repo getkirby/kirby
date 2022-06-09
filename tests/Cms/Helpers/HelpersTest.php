@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Server;
 use Kirby\Toolkit\Obj;
 
 /**
@@ -18,10 +17,7 @@ class HelpersTest extends TestCase
         // with disabled debug mode
         $this->assertFalse(Helpers::deprecated('The xyz method is deprecated.'));
 
-        $this->kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $this->app = $this->app->clone([
             'options' => [
                 'debug' => true
             ]
@@ -38,6 +34,10 @@ class HelpersTest extends TestCase
      */
     public function testDumpOnCli()
     {
+        $this->app = $this->app->clone([
+            'cli' => true
+        ]);
+
         $this->assertSame("test\n", Helpers::dump('test', false));
 
         $this->expectOutputString("test\ntest\n");
@@ -50,15 +50,15 @@ class HelpersTest extends TestCase
      */
     public function testDumpOnServer()
     {
-        Server::$cli = false;
+        $this->app = $this->app->clone([
+            'cli' => false
+        ]);
 
         $this->assertSame('<pre>test</pre>', Helpers::dump('test', false));
 
         $this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
         Helpers::dump('test1');
         Helpers::dump('test2', true);
-
-        Server::$cli = null;
     }
 
     /**

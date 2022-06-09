@@ -89,6 +89,19 @@ class RequestTest extends TestCase
         unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
+    public function testCli()
+    {
+        $request = new Request();
+        $this->assertTrue($request->cli());
+
+        $request = new Request(['cli' => true]);
+        $this->assertTrue($request->cli());
+
+        $request = new Request(['cli' => false]);
+        $this->assertFalse($request->cli());
+    }
+
+
     public function testUnknownAuth()
     {
         $_SERVER['HTTP_AUTHORIZATION'] = 'Unknown abcd';
@@ -160,14 +173,15 @@ class RequestTest extends TestCase
         $clone = $request->url([
             'host'  => 'getkirby.com',
             'path'  => 'yay',
-            'query' => ['foo' => 'bar']
+            'query' => ['foo' => 'bar'],
+            'slash' => false,
         ]);
 
         $uriAfter = $request->url();
 
-        $this->assertNotEquals($uriBefore, $clone);
-        $this->assertEquals($uriBefore, $uriAfter);
-        $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
+        $this->assertNotSame($uriBefore, $clone);
+        $this->assertSame($uriBefore, $uriAfter);
+        $this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
     }
 
     public function testPath()
