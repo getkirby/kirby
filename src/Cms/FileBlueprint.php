@@ -127,12 +127,10 @@ class FileBlueprint extends Blueprint
         $extensionArray = A::wrap($accept['extension'] ?? []);
         $mimeArray = A::wrap($accept['mime'] ?? []);
 
-        return A::join([
-            ...A::map($extensionArray, function ($extension) {
-                return '.' . $extension;
-            }),
-            ...$mimeArray
-        ]);
+        return A::join(array_merge(
+            A::map($extensionArray, fn ($ext) => ".$ext"),
+            $mimeArray
+        ));
     }
 
     /**
