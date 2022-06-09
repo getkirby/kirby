@@ -112,6 +112,27 @@ class FileBlueprint extends Blueprint
         // no restrictions, accept everything
         return '*';
     }
+    
+    /**
+     * Returns the list of all accepted file extensions and mime types in a comma separated string.
+     * Compatible with the `accept` attribute of HTML input elements.
+     *
+     * @return string
+     */
+    public function acceptAttribute(): string
+    {
+        $accept = $this->accept();
+
+        $extensionArray = A::wrap($accept['extension'] ?? []);
+        $mimeArray = A::wrap($accept['mime'] ?? []);
+
+        return A::join([
+            ...A::map($extensionArray, function ($extension) {
+                return '.' . $extension;
+            }),
+            ...$mimeArray
+        ]);
+    }
 
     /**
      * @param mixed $accept
