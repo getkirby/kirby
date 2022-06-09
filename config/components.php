@@ -150,7 +150,7 @@ return [
         // warning for deprecated fourth parameter
         if ($inline === null) {
             $inline = false;
-        } else {
+        } elseif (isset($options['inline']) === false) {
             Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
         }
 
