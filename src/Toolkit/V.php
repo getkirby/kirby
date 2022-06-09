@@ -425,12 +425,20 @@ V::$validators = [
     /**
      * Checks for a valid hex color
      */
-    'hexColor' => function ($value): bool {
+    'hexColor' => function ($value, ?bool $hash = true): bool {
         if (!is_string($value) || $value === '') {
             return false;
         }
 
-        return mb_ereg_match('^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$', $value);
+        if ($hash === true && Str::startsWith($value, '#') === false) {
+            return false;
+        } elseif ($hash === true && Str::startsWith($value, '#') === true) {
+            $value = substr($value, 1);
+        } elseif ($hash === false && Str::startsWith($value, '#') === true) {
+            return false;
+        }
+
+        return ctype_xdigit($value) === true && in_array(strlen($value), [3, 4, 6, 8]) === true;
     },
 
     /**
