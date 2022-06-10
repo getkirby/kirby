@@ -9,7 +9,6 @@ use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
@@ -44,7 +43,7 @@ return [
      * @todo move to `Helpers::dump()`, remove component in 3.8.0
      */
     'dump' => function (App $kirby, $variable, bool $echo = true) {
-        if (Server::cli() === true) {
+        if ($kirby->environment()->cli() === true) {
             $output = print_r($variable, true) . PHP_EOL;
         } else {
             $output = '<pre>' . print_r($variable, true) . '</pre>';

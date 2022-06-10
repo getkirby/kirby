@@ -267,6 +267,7 @@ class Core
             'textarea'    => $this->root . '/fields/textarea.php',
             'time'        => $this->root . '/fields/time.php',
             'toggle'      => $this->root . '/fields/toggle.php',
+            'toggles'     => $this->root . '/fields/toggles.php',
             'url'         => $this->root . '/fields/url.php',
             'users'       => $this->root . '/fields/users.php',
             'writer'      => $this->root . '/fields/writer.php'

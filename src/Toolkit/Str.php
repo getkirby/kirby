@@ -420,7 +420,7 @@ class Str
      * @param bool $caseInsensitive
      * @return bool
      */
-    public static function endsWith(string $string, string $needle, bool $caseInsensitive = false): bool
+    public static function endsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
         if ($needle === '') {
             return true;

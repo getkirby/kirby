@@ -49,58 +49,6 @@ import Writer from "@/components/Forms/Writer/Writer.vue";
 /** Form Helpers */
 import LoginAlert from "@/components/Forms/LoginAlert.vue";
 
-/** Form Inputs */
-import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
-import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
-import DateInput from "@/components/Forms/Input/DateInput.vue";
-import EmailInput from "@/components/Forms/Input/EmailInput.vue";
-import ListInput from "@/components/Forms/Input/ListInput.vue";
-import MultiselectInput from "@/components/Forms/Input/MultiselectInput.vue";
-import NumberInput from "@/components/Forms/Input/NumberInput.vue";
-import PasswordInput from "@/components/Forms/Input/PasswordInput.vue";
-import RadioInput from "@/components/Forms/Input/RadioInput.vue";
-import RangeInput from "@/components/Forms/Input/RangeInput.vue";
-import SelectInput from "@/components/Forms/Input/SelectInput.vue";
-import SlugInput from "@/components/Forms/Input/SlugInput.vue";
-import TagsInput from "@/components/Forms/Input/TagsInput.vue";
-import TelInput from "@/components/Forms/Input/TelInput.vue";
-import TextInput from "@/components/Forms/Input/TextInput.vue";
-import TextareaInput from "@/components/Forms/Input/TextareaInput.vue";
-import TimeInput from "@/components/Forms/Input/TimeInput.vue";
-import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
-import UrlInput from "@/components/Forms/Input/UrlInput.vue";
-
-/** Form Fields */
-import BlocksField from "@/components/Forms/Field/BlocksField.vue";
-import CheckboxesField from "@/components/Forms/Field/CheckboxesField.vue";
-import DateField from "@/components/Forms/Field/DateField.vue";
-import EmailField from "@/components/Forms/Field/EmailField.vue";
-import FilesField from "@/components/Forms/Field/FilesField.vue";
-import GapField from "@/components/Forms/Field/GapField.vue";
-import HeadlineField from "@/components/Forms/Field/HeadlineField.vue";
-import InfoField from "@/components/Forms/Field/InfoField.vue";
-import LayoutField from "@/components/Forms/Field/LayoutField.vue";
-import LineField from "@/components/Forms/Field/LineField.vue";
-import ListField from "@/components/Forms/Field/ListField.vue";
-import MultiselectField from "@/components/Forms/Field/MultiselectField.vue";
-import NumberField from "@/components/Forms/Field/NumberField.vue";
-import PagesField from "@/components/Forms/Field/PagesField.vue";
-import PasswordField from "@/components/Forms/Field/PasswordField.vue";
-import RadioField from "@/components/Forms/Field/RadioField.vue";
-import RangeField from "@/components/Forms/Field/RangeField.vue";
-import SelectField from "@/components/Forms/Field/SelectField.vue";
-import SlugField from "@/components/Forms/Field/SlugField.vue";
-import StructureField from "@/components/Forms/Field/StructureField.vue";
-import TagsField from "@/components/Forms/Field/TagsField.vue";
-import TelField from "@/components/Forms/Field/TelField.vue";
-import TextField from "@/components/Forms/Field/TextField.vue";
-import TextareaField from "@/components/Forms/Field/TextareaField.vue";
-import TimeField from "@/components/Forms/Field/TimeField.vue";
-import ToggleField from "@/components/Forms/Field/ToggleField.vue";
-import UrlField from "@/components/Forms/Field/UrlField.vue";
-import UsersField from "@/components/Forms/Field/UsersField.vue";
-import WriterField from "@/components/Forms/Field/WriterField.vue";
-
 /* Form Structure */
 import StructureForm from "@/components/Forms/Structure/StructureForm.vue";
 
@@ -126,55 +74,11 @@ Vue.component("k-writer", Writer);
 
 Vue.component("k-login-alert", LoginAlert);
 
-Vue.component("k-checkbox-input", CheckboxInput);
-Vue.component("k-checkboxes-input", CheckboxesInput);
-Vue.component("k-date-input", DateInput);
-Vue.component("k-email-input", EmailInput);
-Vue.component("k-list-input", ListInput);
-Vue.component("k-multiselect-input", MultiselectInput);
-Vue.component("k-number-input", NumberInput);
-Vue.component("k-password-input", PasswordInput);
-Vue.component("k-radio-input", RadioInput);
-Vue.component("k-range-input", RangeInput);
-Vue.component("k-select-input", SelectInput);
-Vue.component("k-slug-input", SlugInput);
-Vue.component("k-tags-input", TagsInput);
-Vue.component("k-tel-input", TelInput);
-Vue.component("k-text-input", TextInput);
-Vue.component("k-textarea-input", TextareaInput);
-Vue.component("k-time-input", TimeInput);
-Vue.component("k-toggle-input", ToggleInput);
-Vue.component("k-url-input", UrlInput);
+/* Form Inputs */
+import "@/components/Forms/Input/index.js";
 
-Vue.component("k-blocks-field", BlocksField);
-Vue.component("k-checkboxes-field", CheckboxesField);
-Vue.component("k-date-field", DateField);
-Vue.component("k-email-field", EmailField);
-Vue.component("k-files-field", FilesField);
-Vue.component("k-gap-field", GapField);
-Vue.component("k-headline-field", HeadlineField);
-Vue.component("k-info-field", InfoField);
-Vue.component("k-layout-field", LayoutField);
-Vue.component("k-line-field", LineField);
-Vue.component("k-list-field", ListField);
-Vue.component("k-multiselect-field", MultiselectField);
-Vue.component("k-number-field", NumberField);
-Vue.component("k-pages-field", PagesField);
-Vue.component("k-password-field", PasswordField);
-Vue.component("k-radio-field", RadioField);
-Vue.component("k-range-field", RangeField);
-Vue.component("k-select-field", SelectField);
-Vue.component("k-slug-field", SlugField);
-Vue.component("k-structure-field", StructureField);
-Vue.component("k-tags-field", TagsField);
-Vue.component("k-text-field", TextField);
-Vue.component("k-textarea-field", TextareaField);
-Vue.component("k-tel-field", TelField);
-Vue.component("k-time-field", TimeField);
-Vue.component("k-toggle-field", ToggleField);
-Vue.component("k-url-field", UrlField);
-Vue.component("k-users-field", UsersField);
-Vue.component("k-writer-field", WriterField);
+/* Form Fields */
+import "@/components/Forms/Field/index.js";
 
 Vue.component("k-structure-form", StructureForm);
 

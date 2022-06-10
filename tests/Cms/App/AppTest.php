@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Route;
-use Kirby\Http\Server;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
@@ -334,6 +333,42 @@ class AppTest extends TestCase
     }
 
     /**
+     * @covers ::environment
+     * @covers ::server
+     */
+    public function testEnvironment()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'server' => $info = [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $this->assertSame($info, $app->environment()->info());
+        $this->assertSame($app->environment(), $app->server());
+        $this->assertSame($info, $app->server()->info());
+    }
+
+    /**
+     * @covers ::environment
+     */
+    public function testEnvironmentBeforeInitialization()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new App([
+            'options' => [
+                'debug' => true,
+                'url'   => ['https://getkirby.com', 'https://trykirby.com']
+            ]
+        ]);
+    }
+
+    /**
      * @covers ::image
      */
     public function testImage()
@@ -473,10 +508,8 @@ class AppTest extends TestCase
     {
         App::destroy();
 
-        // fake a non-CLI environment for testing debug mode
-        Server::$cli = false;
-
         $app = new App([
+            'cli' => false,
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -519,9 +552,6 @@ class AppTest extends TestCase
         $this->assertSame('another-test', $app->site()->errorPageId());
 
         $this->assertSame('ss', Str::$language['ß']);
-
-        // reset global environment
-        Server::$cli = true;
     }
 
     public function testRolesFromFixtures()
