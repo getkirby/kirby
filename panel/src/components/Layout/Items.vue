@@ -1,12 +1,11 @@
 <template>
-  <div v-if="layout === 'table'">
-    <k-table
-      v-bind="table"
-      @change="$emit('change', $event)"
-      @sort="$emit('sort', $event)"
-      @option="onOption"
-    />
-  </div>
+  <k-table
+    v-if="layout === 'table'"
+    v-bind="table"
+    @change="$emit('change', $event)"
+    @sort="$emit('sort', $event)"
+    @option="onOption"
+  />
   <k-draggable
     v-else
     class="k-items"

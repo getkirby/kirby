@@ -130,6 +130,7 @@ return [
 
             foreach ($this->pages as $page) {
                 $panel       = $page->panel();
+                $permissions = $page->permissions();
 
                 $item = [
                     'dragText'    => $panel->dragText(),
@@ -141,7 +142,12 @@ return [
                     'info'        => $page->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
                     'parent'      => $page->parentId(),
-                    'permissions' => $page->permissions(),
+                    'permissions' => [
+                         'sort'         => $permissions->can('sort'),
+                         'changeSlug'   => $permissions->can('changeSlug'),
+                         'changeStatus' => $permissions->can('changeStatus'),
+                         'changeTitle'  => $permissions->can('changeTitle'),
+                     ],
                     'status'      => $page->status(),
                     'template'    => $page->intendedTemplate()->name(),
                     'text'        => $page->toSafeString($this->text),
