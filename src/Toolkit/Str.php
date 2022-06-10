@@ -308,6 +308,7 @@ class Str
     {
         return static::substr($string, $index, 1);
     }
+
     /**
      * Checks if a str contains another string
      *
