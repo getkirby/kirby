@@ -81,7 +81,7 @@ return [
                 }
 
                 if (empty($column['value']) === false) {
-                    if ($column['html'] ?? false === true) {
+                    if ($column['type'] ?? false === 'html') {
                         $value = $model->toString($column['value']);
                     } else {
                         $value = $model->toSafeString($column['value']);

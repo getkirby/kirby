@@ -78,32 +78,31 @@
         </td>
 
         <!-- Cell -->
-        <template v-for="(column, columnIndex) in columns">
-          <k-table-cell
-            :key="rowIndex + '-' + columnIndex"
-            :column="column"
-            :field="fields[columnIndex]"
-            :row="row"
-            :value="row[columnIndex]"
-            :style="'width:' + width(column.width)"
-            class="k-table-column"
-            @click.native="
-              onCell({
-                row,
-                rowIndex,
-                column,
-                columnIndex
-              })
-            "
-            @input="
-              onCellUpdate({
-                columnIndex,
-                rowIndex,
-                value: $event
-              })
-            "
-          />
-        </template>
+        <k-table-cell
+          v-for="(column, columnIndex) in columns"
+          :key="rowIndex + '-' + columnIndex"
+          :column="column"
+          :field="fields[columnIndex]"
+          :row="row"
+          :value="row[columnIndex]"
+          :style="'width:' + width(column.width)"
+          class="k-table-column"
+          @click.native="
+            onCell({
+              row,
+              rowIndex,
+              column,
+              columnIndex
+            })
+          "
+          @input="
+            onCellUpdate({
+              columnIndex,
+              rowIndex,
+              value: $event
+            })
+          "
+        />
 
         <!-- Options -->
         <td v-if="hasOptions" class="k-table-options-column">

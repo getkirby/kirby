@@ -10,8 +10,8 @@
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
-  inheritAttrs: false,
   mixins: [FieldPreview],
+  inheritAttrs: false,
   computed: {
     text() {
       return this.value;
