@@ -298,6 +298,18 @@ class Str
     }
 
     /**
+     * Returns the character at index.
+     *
+     * @param string $string String to extract the character from
+     * @param int $index Position of the character
+     * @return string
+     */
+    public static function charAt(string $string = null, int $index): string
+    {
+        return static::substr($string, $index, 1);
+    }
+    
+    /**
      * Checks if a str contains another string
      *
      * @param string $string

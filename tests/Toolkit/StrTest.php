@@ -217,6 +217,19 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::charAt
+     */
+    public function testcharAt()
+    {
+        $string = 'Hellö Wörld';
+        $this->assertSame('H', Str::charAt($string, 0));
+        $this->assertSame('ö', Str::charAt($string, 4));
+        $this->assertSame('d', Str::charAt($string, 10));
+        $this->assertSame('', Str::charAt($string, 11));
+        $this->assertSame('', Str::charAt($string, 12));
+    }
+
+    /**
      * @covers ::convert
      */
     public function testConvert()
