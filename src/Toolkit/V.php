@@ -423,6 +423,25 @@ V::$validators = [
     },
 
     /**
+     * Checks for a valid hex color
+     */
+    'hexColor' => function ($value, ?bool $hash = true): bool {
+        if (!is_string($value) || $value === '') {
+            return false;
+        }
+
+        if ($hash === true && Str::startsWith($value, '#') === false) {
+            return false;
+        } elseif ($hash === true && Str::startsWith($value, '#') === true) {
+            $value = substr($value, 1);
+        } elseif ($hash === false && Str::startsWith($value, '#') === true) {
+            return false;
+        }
+
+        return ctype_xdigit($value) === true && in_array(strlen($value), [3, 4, 6, 8]) === true;
+    },
+
+    /**
      * Checks if the value exists in a list of given values
      */
     'in' => function ($value, array $in, bool $strict = false): bool {

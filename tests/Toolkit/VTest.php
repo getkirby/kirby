@@ -263,6 +263,31 @@ class VTest extends TestCase
         $this->assertFalse(V::filename('../'));
     }
 
+    public function testHexColor()
+    {
+        $this->assertTrue(V::hexColor('#000'));
+        $this->assertTrue(V::hexColor('000', false));
+        $this->assertTrue(V::hexColor('#000000'));
+        $this->assertTrue(V::hexColor('000000', false));
+        $this->assertTrue(V::hexColor('#FFFFFF'));
+        $this->assertTrue(V::hexColor('#ffffff'));
+        $this->assertTrue(V::hexColor('#fff'));
+        $this->assertTrue(V::hexColor('fff', false));
+        $this->assertFalse(V::hexColor('42'));
+        $this->assertFalse(V::hexColor(42));
+        $this->assertFalse(V::hexColor([]));
+        $this->assertFalse(V::hexColor(null));
+        $this->assertFalse(V::hexColor(false));
+        $this->assertFalse(V::hexColor(new \stdclass()));
+        $this->assertFalse(V::hexColor(''));
+        $this->assertFalse(V::hexColor('#fff', false));
+        $this->assertFalse(V::hexColor('fff', true));
+        $this->assertFalse(V::hexColor('#'));
+        $this->assertFalse(V::hexColor('#ff'));
+        $this->assertFalse(V::hexColor('##fff'));
+        $this->assertFalse(V::hexColor('#???'));
+    }
+
     public function testIn()
     {
         $this->assertTrue(V::in('bastian', ['bastian', 'nico', 'sonja']));
