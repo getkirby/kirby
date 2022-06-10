@@ -752,6 +752,11 @@ class File extends ModelWithContent
                     return $this->url();
                 }
 
+                // checks `file::url` component is extended
+                if ($this->kirby()->isNativeComponent('file::url') === false) {
+                    return $this->url();
+                }
+
                 return $url;
             case 'user':
                 return $this->url();

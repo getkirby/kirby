@@ -791,6 +791,18 @@ trait AppPlugins
     }
 
     /**
+     * Checks if a native component was extended
+     * @since 3.7.0
+     *
+     * @param string $component
+     * @return bool
+     */
+    public function isNativeComponent(string $component): bool
+    {
+        return $this->component($component) === $this->nativeComponent($component);
+    }
+
+    /**
      * Returns the native implementation
      * of a core component
      *
