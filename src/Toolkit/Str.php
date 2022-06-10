@@ -298,7 +298,7 @@ class Str
     }
 
     /**
-     * Returns the character at index.
+     * Returns the character at index
      *
      * @param string $string String to extract the character from
      * @param int $index Position of the character
