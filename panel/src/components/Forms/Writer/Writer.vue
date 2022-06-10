@@ -174,6 +174,10 @@ export default {
           }
         },
         update: (payload) => {
+          if (!this.editor) {
+            return;
+          }
+
           // compare documents to avoid minor HTML differences
           // to cause unwanted updates
           const jsonNew = JSON.stringify(this.editor.getJSON());
