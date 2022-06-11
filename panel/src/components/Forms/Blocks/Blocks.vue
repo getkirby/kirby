@@ -174,6 +174,15 @@ export default {
 		}
 	},
 	created() {
+		// resets multi selecting on tab change
+		// keep only if there are already multiple selections
+		// triggers `blur` event when tab changed
+		window.addEventListener("blur", () => {
+			if (this.batch.length === 0) {
+				this.isMultiSelectKey = false;
+			}
+		});
+
 		this.$events.$on("copy", this.copy);
 		this.$events.$on("focus", this.onOutsideFocus);
 		this.$events.$on("keydown", this.onKey);
