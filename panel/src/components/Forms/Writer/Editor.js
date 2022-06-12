@@ -322,7 +322,14 @@ export default class Editor extends Emitter {
     div.appendChild(fragment);
 
     if (this.options.inline && div.querySelector("p")) {
-      return div.querySelector("p").innerHTML;
+      let paragraphs = [];
+
+      const elems = div.querySelectorAll("p");
+      [...elems].forEach((elem) => {
+        paragraphs.push(elem.innerHTML)
+      });
+
+      return paragraphs.join("<br>");
     }
 
     return div.innerHTML;
