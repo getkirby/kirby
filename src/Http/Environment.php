@@ -163,7 +163,7 @@ class Environment
             'allowed' => null
         ], $options ?? []);
 
-        $this->info          = $this->sanitize($info);
+        $this->info          = static::sanitize($info);
         $this->cli           = $this->detectCli($options['cli']);
         $this->ip            = $this->detectIp();
         $this->host          = null;
@@ -541,7 +541,7 @@ class Environment
 
         return [
             'host' => $parts[0] ?? null,
-            'port' => $this->sanitizePort($parts[1] ?? null),
+            'port' => static::sanitizePort($parts[1] ?? null),
         ];
     }
 
@@ -627,7 +627,7 @@ class Environment
             $key = strtoupper($key);
         }
 
-        return $this->info[$key] ?? $this->sanitize($key, $default);
+        return $this->info[$key] ?? static::sanitize($key, $default);
     }
 
     /**
@@ -829,11 +829,11 @@ class Environment
      * @param mixed $value
      * @return mixed
      */
-    public function sanitize($key, $value = null)
+    public static function sanitize($key, $value = null)
     {
         if (is_array($key) === true) {
             foreach ($key as $k => $v) {
-                $key[$k] = $this->sanitize($k, $v);
+                $key[$k] = static::sanitize($k, $v);
             }
 
             return $key;
@@ -844,10 +844,10 @@ class Environment
             case 'SERVER_NAME':
             case 'HTTP_HOST':
             case 'HTTP_X_FORWARDED_HOST':
-                return $this->sanitizeHost($value);
+                return static::sanitizeHost($value);
             case 'SERVER_PORT':
             case 'HTTP_X_FORWARDED_PORT':
-                return $this->sanitizePort($value);
+                return static::sanitizePort($value);
             default:
                 return $value;
         }
@@ -859,7 +859,7 @@ class Environment
      * @param string|null $host
      * @return string|null
      */
-    protected function sanitizeHost(?string $host = null): ?string
+    protected static function sanitizeHost(?string $host = null): ?string
     {
         if (empty($host) === true) {
             return null;
@@ -887,7 +887,7 @@ class Environment
      * @param string|int|null $port
      * @return int|null
      */
-    protected function sanitizePort($port = null): ?int
+    protected static function sanitizePort($port = null): ?int
     {
         // already fine
         if (is_int($port) === true) {

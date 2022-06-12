@@ -1168,8 +1168,7 @@ class EnvironmentTest extends TestCase
      */
     public function testSanitize($key, $value, $expected)
     {
-        $env = new Environment();
-        $this->assertSame($expected, $env->sanitize($key, $value));
+        $this->assertSame($expected, Environment::sanitize($key, $value));
     }
 
     /**
@@ -1185,8 +1184,7 @@ class EnvironmentTest extends TestCase
             $expected[$row[0]] = $row[2];
         }
 
-        $env = new Environment();
-        $this->assertSame($expected, $env->sanitize($input));
+        $this->assertSame($expected, Environment::sanitize($input));
     }
 
     public function providerForScriptPaths()
