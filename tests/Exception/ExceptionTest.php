@@ -2,6 +2,7 @@
 
 namespace Kirby\Exception;
 
+use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +24,7 @@ class ExceptionTest extends TestCase
 {
     public function tearDown(): void
     {
-        unset($_SERVER['DOCUMENT_ROOT']);
+        App::destroy();
     }
 
     /**
@@ -185,10 +186,20 @@ class ExceptionTest extends TestCase
         $exception = new Exception();
         $this->assertSame(__FILE__, $exception->getFileRelative());
 
-        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+        new App([
+            'server' => [
+                'DOCUMENT_ROOT' => __DIR__
+            ]
+        ]);
+
         $this->assertSame(F::filename(__FILE__), $exception->getFileRelative());
 
-        $_SERVER['DOCUMENT_ROOT'] = __DIR__ . '/';
+        new App([
+            'server' => [
+                'DOCUMENT_ROOT' => __DIR__ . '/'
+            ]
+        ]);
+
         $this->assertSame(F::filename(__FILE__), $exception->getFileRelative());
     }
 
@@ -209,7 +220,12 @@ class ExceptionTest extends TestCase
         ];
         $this->assertSame($expected, $exception->toArray());
 
-        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
+        new App([
+            'server' => [
+                'DOCUMENT_ROOT' => __DIR__ . '/'
+            ]
+        ]);
+
         $exception = new Exception();
         $expected['file'] = F::filename(__FILE__);
         $expected['line'] = $exception->getLine();

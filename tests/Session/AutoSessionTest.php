@@ -2,6 +2,7 @@
 
 namespace Kirby\Session;
 
+use Kirby\Cms\App;
 use Kirby\Http\Cookie;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -25,6 +26,7 @@ class AutoSessionTest extends TestCase
     public function tearDown(): void
     {
         unset($this->store);
+        App::destroy();
     }
 
     /**
@@ -72,7 +74,7 @@ class AutoSessionTest extends TestCase
     public function testGet()
     {
         Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
         $autoSession = new AutoSession($this->store);
 
         // default: no detection
@@ -85,7 +87,7 @@ class AutoSessionTest extends TestCase
 
         // newly created session
         Cookie::remove('kirby_session');
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $this->setAuthorization('');
         $session = $autoSession->get();
         $this->assertNull($session->token());
         $this->assertSame('cookie', $session->mode());
@@ -263,5 +265,14 @@ class AutoSessionTest extends TestCase
 
         $autoSession->collectGarbage();
         $this->assertTrue($this->store->collectedGarbage);
+    }
+
+    protected function setAuthorization(string $value): void
+    {
+        new App([
+            'server' => [
+                'HTTP_AUTHORIZATION' => $value
+            ]
+        ]);
     }
 }
