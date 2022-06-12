@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
@@ -151,19 +152,23 @@ class Document
 
     /**
      * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
-     * @todo add deprecation warning in 3.7.0, remove in 3.8.0
+     * @todo remove in 3.8.0
+     * @codeCoverageIgnore
      */
     public static function customCss(): ?string
     {
+        Helpers::deprecated('Panel\Document::customCss() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.css\') instead.');
         return static::customAsset('panel.css');
     }
 
     /**
      * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
-     * @todo add deprecation warning in 3.7.0, remove in 3.8.0
+     * @todo remove in 3.8.0
+     * @codeCoverageIgnore
      */
     public static function customJs(): ?string
     {
+        Helpers::deprecated('Panel\Document::customJs() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.js\') instead.');
         return static::customAsset('panel.js');
     }
 

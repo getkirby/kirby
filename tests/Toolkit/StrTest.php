@@ -1187,10 +1187,7 @@ EOT;
      */
     public function testToBytes()
     {
-        $this->assertSame(0, Str::toBytes(0));
         $this->assertSame(0, Str::toBytes(''));
-        $this->assertSame(0, Str::toBytes(null));
-        $this->assertSame(0, Str::toBytes(false));
         $this->assertSame(0, Str::toBytes('x'));
         $this->assertSame(0, Str::toBytes('K'));
         $this->assertSame(0, Str::toBytes('M'));

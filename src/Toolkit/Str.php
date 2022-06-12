@@ -555,12 +555,12 @@ class Str
      * @param string|null $string
      * @return bool
      * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
-     * @todo Throw deprecation warning in 3.7.0
      * @todo Remove in 3.8.0
      * @codeCoverageIgnore
      */
     public static function isURL(?string $string = null): bool
     {
+        Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
         return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
 
@@ -1180,36 +1180,19 @@ class Str
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values.
      *                    Supports query syntax.
-     * @param string|array|null $fallback An options array that contains:
-     *                                    - fallback: if a token does not have any matches
-     *                                    - callback: to be able to handle each matching result
-     *                                    - start: start placeholder
-     *                                    - end: end placeholder
-     *                                    A simple fallback string is supported for compatibility (but deprecated).
-     * @param string $start Placeholder start characters (deprecated)
-     * @param string $end Placeholder end characters (deprecated)
-     *
-     * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
-     *
+     * @param array $options An options array that contains:
+     *                       - fallback: if a token does not have any matches
+     *                       - callback: to be able to handle each matching result
+     *                       - start: start placeholder
+     *                       - end: end placeholder
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
+    public static function template(string $string = null, array $data = [], array $options = []): string
     {
-        // @codeCoverageIgnoreStart
-        if (
-            is_string($fallback) === true ||
-            $start !== '{{' ||
-            $end !== '}}'
-        ) {
-            Helpers::deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
-        }
-        // @codeCoverageIgnoreEnd
-
-        $options  = $fallback;
-        $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
+        $fallback = $options['fallback'] ?? null;
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
-        $start    = (string)($options['start'] ?? $start);
-        $end      = (string)($options['end'] ?? $end);
+        $start    = (string)($options['start'] ?? '{{');
+        $end      = (string)($options['end'] ?? '}}');
 
         // make sure $string is string
         $string ??= '';
@@ -1247,15 +1230,11 @@ class Str
      * Converts a filesize string with shortcuts
      * like M, G or K to an integer value
      *
-     * @param mixed $size
+     * @param string $size
      * @return int
      */
-    public static function toBytes($size): int
+    public static function toBytes(string $size): int
     {
-        // TODO: remove in 3.7.0
-        // in favor of strict parameter type hint
-        $size ??= '';
-
         $size = trim($size);
         $last = strtolower($size[strlen($size)-1] ?? '');
         $size = (int)$size;

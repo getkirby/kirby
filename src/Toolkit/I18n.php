@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use Kirby\Cms\Helpers;
 use NumberFormatter;
 
 /**
@@ -52,22 +51,6 @@ class I18n
      * @var array
      */
     protected static $decimalsFormatters = [];
-
-    /**
-     * Returns the first fallback locale
-     *
-     * @deprecated 3.5.1 Use `\Kirby\Toolkit\I18n::fallbacks()` instead
-     * @todo Remove in 3.7.0
-     *
-     * @return string
-     */
-    public static function fallback(): string
-    {
-        // @codeCoverageIgnoreStart
-        Helpers::deprecated('I18n::fallback() has been deprecated. Use I18n::fallbacks() instead.');
-        return static::fallbacks()[0];
-        // @codeCoverageIgnoreEnd
-    }
 
     /**
      * Returns the list of fallback locales

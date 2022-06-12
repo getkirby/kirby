@@ -654,7 +654,6 @@ abstract class ModelWithContent extends Model
      * Returns the panel icon definition
      *
      * @deprecated 3.6.0 Use `->panel()->image()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -664,12 +663,12 @@ abstract class ModelWithContent extends Model
      */
     public function panelIcon(array $params = null): ?array
     {
+        Helpers::deprecated('Cms\ModelWithContent::panelIcon() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
         return $this->panel()->image($params);
     }
 
     /**
      * @deprecated 3.6.0 Use `->panel()->image()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -679,6 +678,7 @@ abstract class ModelWithContent extends Model
      */
     public function panelImage($settings = null): ?array
     {
+        Helpers::deprecated('Cms\ModelWithContent::panelImage() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
         return $this->panel()->image($settings);
     }
 
@@ -688,7 +688,6 @@ abstract class ModelWithContent extends Model
      * This also checks for the lock status
      *
      * @deprecated 3.6.0 Use `->panel()->options()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @param array $unlock An array of options that will be force-unlocked
@@ -697,6 +696,7 @@ abstract class ModelWithContent extends Model
      */
     public function panelOptions(array $unlock = []): array
     {
+        Helpers::deprecated('Cms\ModelWithContent::panelOptions() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->options() instead.');
         return $this->panel()->options($unlock);
     }
 }

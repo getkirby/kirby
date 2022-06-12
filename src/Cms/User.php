@@ -888,7 +888,6 @@ class User extends ModelWithContent
     /**
      * Returns the full path without leading slash
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -897,13 +896,13 @@ class User extends ModelWithContent
      */
     public function panelPath(): string
     {
+        Helpers::deprecated('Cms\User::panelPath() has been deprecated and will be removed in Kirby 3.8.0. Use $user->panel()->path() instead.');
         return $this->panel()->path();
     }
 
     /**
      * Returns prepared data for the panel user picker
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @param array|null $params
@@ -912,6 +911,7 @@ class User extends ModelWithContent
      */
     public function panelPickerData(array $params = null): array
     {
+        Helpers::deprecated('Cms\User::panelPickerData() has been deprecated and will be removed in Kirby 3.8.0. Use $user->panel()->pickerData() instead.');
         return $this->panel()->pickerData($params);
     }
 
@@ -919,7 +919,6 @@ class User extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -929,6 +928,7 @@ class User extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
+        Helpers::deprecated('Cms\User::panelUrl() has been deprecated and will be removed in Kirby 3.8.0. Use $user->panel()->url() instead.');
         return $this->panel()->url($relative);
     }
 }

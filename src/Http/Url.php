@@ -100,10 +100,9 @@ class Url
      * Returns the url to the executed script
      *
      * @param array $props
-     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return string
      */
-    public static function index(array $props = [], bool $forwarded = false): string
+    public static function index(array $props = []): string
     {
         return Uri::index($props)->toString();
     }

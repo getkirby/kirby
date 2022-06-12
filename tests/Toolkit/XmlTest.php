@@ -183,8 +183,8 @@ class XmlTest extends TestCase
         $tag = Xml::tag('name', null, ['foo' => 'bar']);
         $this->assertSame('<name foo="bar" />', $tag);
 
-        $tag = Xml::tag('name', 'Süper Önencœded ßtring', ['foo' => 'bar']);
-        $this->assertSame('<name foo="bar"><![CDATA[Süper Önencœded ßtring]]></name>', $tag);
+        $tag = Xml::tag('name', 'String with <not> a tag & some text', ['foo' => 'bar']);
+        $this->assertSame('<name foo="bar"><![CDATA[String with <not> a tag & some text]]></name>', $tag);
 
         $tag = Xml::tag('name', 'content', ['foo' => 'bar'], '  ', 1);
         $this->assertSame('  <name foo="bar">content</name>', $tag);
@@ -214,9 +214,9 @@ class XmlTest extends TestCase
             [null, null],
             ['', null],
             ['<![CDATA[test]]>', '<![CDATA[test]]>'],
-            ['<![CDATA[töst]]>', '<![CDATA[töst]]>'],
+            ['<![CDATA[String with <not> a tag & some text]]>', '<![CDATA[String with <not> a tag & some text]]>'],
             ['test', 'test'],
-            ['töst', '<![CDATA[töst]]>'],
+            ['String with <not> a tag & some text', '<![CDATA[String with <not> a tag & some text]]>'],
             ['This is a <![CDATA[test]]> with CDATA', '<![CDATA[This is a <![CDATA[test]]]]><![CDATA[> with CDATA]]>'],
             ['te]]>st', '<![CDATA[te]]]]><![CDATA[>st]]>'],
             ['tö]]>st', '<![CDATA[tö]]]]><![CDATA[>st]]>']

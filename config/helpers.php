@@ -413,46 +413,40 @@ if (Helpers::hasOverride('option') === false) { // @codeCoverageIgnore
 
 if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
     /**
-     * Fetches a single page or multiple pages by
-     * id or the current page when no id is specified
+     * Fetches a single page by id or
+     * the current page when no id is specified
      *
-     * @param string|array ...$id
-     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
-     * @todo reduce to one parameter in 3.7.0 (also change return and return type)
+     * @param string|null $id
+     * @return \Kirby\Cms\Page|null
      */
-    function page(...$id)
+    function page(?string $id = null)
     {
         if (empty($id) === true) {
             return App::instance()->site()->page();
         }
 
-        if (count($id) > 1) {
-            // @codeCoverageIgnoreStart
-            Helpers::deprecated('Passing multiple parameters to the `page()` helper has been deprecated. Please use the `pages()` helper instead.');
-            // @codeCoverageIgnoreEnd
-        }
-
-        return App::instance()->site()->find(...$id);
+        return App::instance()->site()->find($id);
     }
 }
 
 if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
     /**
-     * Helper to build page collections
+     * Helper to build pages collection
      *
      * @param string|array ...$id
-     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
-     * @todo return only Pages|null in 3.7.0, wrap in Pages for single passed id
+     * @return \Kirby\Cms\Pages|null
      */
     function pages(...$id)
     {
-        if (count($id) === 1 && is_array($id[0]) === false) {
-            // @codeCoverageIgnoreStart
-            Helpers::deprecated('Passing a single id to the `pages()` helper will return a Kirby\Cms\Pages collection with a single element instead of the single Kirby\Cms\Page object itself - starting in 3.7.0.');
-            // @codeCoverageIgnoreEnd
+        // ensure that a list of string arguments and an array
+        // as the first argument are treated the same
+        if (count($id) === 1 && is_array($id[0]) === true) {
+            $id = $id[0];
         }
 
-        return App::instance()->site()->find(...$id);
+        // always passes $id an array; ensures we get a
+        // collection even if only one ID is passed
+        return App::instance()->site()->find($id);
     }
 }
 
