@@ -439,13 +439,15 @@ if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
      */
     function pages(...$id)
     {
-        $pages = App::instance()->site()->find(...$id);
-
-        if (is_a($pages, 'Kirby\Cms\Page') === false) {
-            $pages = new Pages([$pages]);
+        // ensure that a list of string arguments and an array
+        // as the first argument are treated the same
+        if (count($id) === 1 && is_array($id[0]) === true) {
+            $id = $id[0];
         }
 
-        return $pages;
+        // always passes $id an array; ensures we get a
+        // collection even if only one ID is passed
+        return App::instance()->site()->find($id);
     }
 }
 
