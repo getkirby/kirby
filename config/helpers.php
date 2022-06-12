@@ -3,7 +3,6 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
-use Kirby\Cms\Pages;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
