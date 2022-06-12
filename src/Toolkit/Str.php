@@ -1187,9 +1187,9 @@ class Str
      *                                   - end: end placeholder
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], array $options = null): string
+    public static function template(string $string = null, array $data = [], array $options = []): string
     {
-        $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
+        $fallback = $options['fallback'] ?? null;
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
         $start    = (string)($options['start'] ?? '{{');
         $end      = (string)($options['end'] ?? '}}');

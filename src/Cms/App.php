@@ -904,7 +904,7 @@ class App
         if ($inline === null) {
             $inline = false;
         } else {
-            Helpers::deprecated('Cms\App::kribytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
+            Helpers::deprecated('Cms\App::kirbytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'markdown\'][\'inline\'] instead.');
         }
         // @codeCoverageIgnoreEnd
 

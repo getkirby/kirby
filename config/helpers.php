@@ -420,7 +420,7 @@ if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
      * @param string|null $id
      * @return \Kirby\Cms\Page|null
      */
-    function page($id = null)
+    function page(?string $id = null)
     {
         if (empty($id) === true) {
             return App::instance()->site()->page();
