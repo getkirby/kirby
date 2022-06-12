@@ -13,7 +13,7 @@ export default class Doc extends Node {
 
 	get schema() {
 		return {
-			content: this.options.inline ? "paragraph+" : "block+"
+			content: this.options.inline ? "inline*" : "block+"
 		};
 	}
 }
