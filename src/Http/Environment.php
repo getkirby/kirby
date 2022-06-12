@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
@@ -628,6 +629,36 @@ class Environment
         }
 
         return $this->info[$key] ?? static::sanitize($key, $default);
+    }
+
+    /**
+     * Gets a value from the global server environment array
+     * of the current app instance; falls back to `$_SERVER` if
+     * no app instance is running
+     *
+     * @param string|false|null $key The key to look for. Pass `false` or `null`
+     *                               to return the entire server array.
+     * @param mixed $default Optional default value, which should be
+     *                       returned if no element has been found
+     * @return mixed
+     */
+    public static function getGlobally($key = null, $default = null)
+    {
+        // first try the global `Environment` object if the CMS is running
+        $app = App::instance(null, true);
+        if ($app) {
+            return $app->environment()->get($key, $default);
+        }
+
+        if (is_string($key) === false) {
+            return static::sanitize($_SERVER);
+        }
+
+        if (isset($_SERVER[$key]) === false) {
+            $key = strtoupper($key);
+        }
+
+        return static::sanitize($key, $_SERVER[$key] ?? $default);
     }
 
     /**

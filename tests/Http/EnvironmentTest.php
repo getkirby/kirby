@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,6 +15,11 @@ class EnvironmentTest extends TestCase
     public function setUp(): void
     {
         $this->config = __DIR__ . '/fixtures/EnvironmentTest';
+    }
+
+    public function tearDown(): void
+    {
+        App::destroy();
     }
 
     public function testAllowFromInsecureHost()
@@ -213,17 +219,65 @@ class EnvironmentTest extends TestCase
     public function testGet()
     {
         $env = new Environment(null, $info = [
+            'HTTP_HOST'        => 'something/GETKIRBY.COM',
             'HTTP_K_SOMETHING' => 'custom value',
             'argv'             => 'lower case stuff'
         ]);
+        $info['HTTP_HOST'] = 'getkirby.com';
 
         $this->assertSame($info, $env->get());
         $this->assertSame($info, $env->get(false));
         $this->assertSame($info, $env->get(null));
+        $this->assertSame('getkirby.com', $env->get('HTTP_HOST'));
+        $this->assertSame('getkirby.com', $env->get('http_host'));
         $this->assertSame('custom value', $env->get('HTTP_K_SOMETHING'));
         $this->assertSame('custom value', $env->get('http_k_something'));
         $this->assertSame('fallback', $env->get('http_does_not_exist', 'fallback'));
         $this->assertSame('lower case stuff', $env->get('argv'));
+    }
+
+    /**
+     * @covers ::getGlobally
+     * @backupGlobals enabled
+     */
+    public function testGetGlobally()
+    {
+        $_SERVER = [
+            'HTTP_HOST'        => 'something/GETKIRBY.COM',
+            'HTTP_K_SOMETHING' => 'custom value ($_SERVER)',
+            'argv'             => 'lower case stuff ($_SERVER)'
+        ];
+        $sanitized = $_SERVER;
+        $sanitized['HTTP_HOST'] = 'getkirby.com';
+
+        $this->assertSame($sanitized, Environment::getGlobally());
+        $this->assertSame($sanitized, Environment::getGlobally(false));
+        $this->assertSame($sanitized, Environment::getGlobally(null));
+        $this->assertSame('getkirby.com', Environment::getGlobally('HTTP_HOST'));
+        $this->assertSame('getkirby.com', Environment::getGlobally('http_host'));
+        $this->assertSame('custom value ($_SERVER)', Environment::getGlobally('HTTP_K_SOMETHING'));
+        $this->assertSame('custom value ($_SERVER)', Environment::getGlobally('http_k_something'));
+        $this->assertSame('fallback', Environment::getGlobally('http_does_not_exist', 'fallback'));
+        $this->assertSame('lower case stuff ($_SERVER)', Environment::getGlobally('argv'));
+
+        new App([
+            'server' => $info = [
+                'HTTP_HOST'        => 'something/TRYKIRBY.COM',
+                'HTTP_K_SOMETHING' => 'custom value (app)',
+                'argv'             => 'lower case stuff (app)'
+            ]
+        ]);
+        $info['HTTP_HOST'] = 'trykirby.com';
+
+        $this->assertSame($info, Environment::getGlobally());
+        $this->assertSame($info, Environment::getGlobally(false));
+        $this->assertSame($info, Environment::getGlobally(null));
+        $this->assertSame('trykirby.com', Environment::getGlobally('HTTP_HOST'));
+        $this->assertSame('trykirby.com', Environment::getGlobally('http_host'));
+        $this->assertSame('custom value (app)', Environment::getGlobally('HTTP_K_SOMETHING'));
+        $this->assertSame('custom value (app)', Environment::getGlobally('http_k_something'));
+        $this->assertSame('fallback', Environment::getGlobally('http_does_not_exist', 'fallback'));
+        $this->assertSame('lower case stuff (app)', Environment::getGlobally('argv'));
     }
 
     /**
