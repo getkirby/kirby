@@ -129,7 +129,7 @@ trait AppErrors
                     'code'      => $code,
                     'message'   => $exception->getMessage(),
                     'details'   => $details,
-                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? ''),
+                    'file'      => ltrim($exception->getFile(), $this->environment()->get('DOCUMENT_ROOT', '')),
                     'line'      => $exception->getLine(),
                 ], $httpCode);
             } else {

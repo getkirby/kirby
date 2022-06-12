@@ -573,4 +573,45 @@ class ApiTest extends TestCase
         $page = $app->page('test');
         $app->api()->fieldApi($page, '');
     }
+
+    public function testRenderExceptionWithDebugging()
+    {
+        // simulate the document root to test relative file paths
+        $app = $this->app->clone([
+            'server' => [
+                'DOCUMENT_ROOT' => __DIR__
+            ]
+        ]);
+
+        $api = new Api([
+            'debug' => true,
+            'kirby' => $app,
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'method'  => 'POST',
+                    'action'  => function () {
+                        throw new \Exception('nope');
+                    }
+                ]
+            ]
+        ]);
+
+        $result = $api->render('test', 'POST');
+
+        $expected = [
+            'status'    => 'error',
+            'message'   => 'nope',
+            'code'      => 500,
+            'exception' => 'Exception',
+            'key'       => null,
+            'file'      => '/' . basename(__FILE__),
+            'line'      => __LINE__ - 15,
+            'details'   => [],
+            'route'     => 'test'
+        ];
+
+        $this->assertInstanceOf('Kirby\Http\Response', $result);
+        $this->assertEquals(json_encode($expected), $result->body());
+    }
 }

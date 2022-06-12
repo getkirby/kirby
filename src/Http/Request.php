@@ -226,14 +226,14 @@ class Request
         $methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'];
 
         // the request method can be overwritten with a header
-        $methodOverride = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '');
+        $methodOverride = strtoupper(Environment::getGlobally('HTTP_X_HTTP_METHOD_OVERRIDE', ''));
 
         if ($method === null && in_array($methodOverride, $methods) === true) {
             $method = $methodOverride;
         }
 
         // final chain of options to detect the method
-        $method = $method ?? $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $method = $method ?? Environment::getGlobally('REQUEST_METHOD', 'GET');
 
         // uppercase the shit out of it
         $method = strtoupper($method);
@@ -314,7 +314,7 @@ class Request
     {
         $headers = [];
 
-        foreach ($_SERVER as $key => $value) {
+        foreach (Environment::getGlobally() as $key => $value) {
             if (substr($key, 0, 5) !== 'HTTP_' && substr($key, 0, 14) !== 'REDIRECT_HTTP_') {
                 continue;
             }
