@@ -191,6 +191,7 @@ class Str
 
     /**
      * Removes the given substring or character only from the start of the string
+     * @since 3.7.0
      *
      * @param string $string
      * @param string $needle
@@ -254,6 +255,7 @@ class Str
 
     /**
      * Removes the given substring or character only from the end of the string
+     * @since 3.7.0
      *
      * @param string $string
      * @param string $needle
@@ -530,6 +532,7 @@ class Str
 
     /**
      * Adds `-1` to a string or increments the ending number to allow `-2`, `-3`, etc.
+     * @since 3.7.0
      *
      * @param string $string The string to increment
      * @param string $separator
@@ -1144,6 +1147,7 @@ class Str
 
     /**
      * Converts a string to studly caps case
+     * @since 3.7.0
      *
      * @param string $value The string to convert
      * @return string
@@ -1424,6 +1428,7 @@ class Str
 
     /**
      * Wraps the string with the given string(s)
+     * @since 3.7.0
      *
      * @param string $string String to wrap
      * @param string $before String to prepend
