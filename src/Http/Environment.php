@@ -865,7 +865,7 @@ class Environment
             return null;
         }
 
-        $host = strtolower($host);
+        $host = Str::lower($host);
         $host = strip_tags($host);
         $host = basename($host);
         $host = preg_replace('![^\w.:-]+!iu', '', $host);
