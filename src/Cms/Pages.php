@@ -94,7 +94,7 @@ class Pages extends Collection
      */
     public function children()
     {
-        $children = new Pages([], $this->parent);
+        $children = new Pages([]);
 
         foreach ($this->data as $page) {
             foreach ($page->children() as $childKey => $child) {
@@ -132,7 +132,7 @@ class Pages extends Collection
      */
     public function drafts()
     {
-        $drafts = new Pages([], $this->parent);
+        $drafts = new Pages([]);
 
         foreach ($this->data as $page) {
             foreach ($page->drafts() as $draftKey => $draft) {
@@ -227,6 +227,15 @@ class Pages extends Collection
 
         // try the obvious way
         if ($page = $this->get($id)) {
+            return $page;
+        }
+
+        // for secondary languages, try the full translated URI
+        if (
+            App::instance()->multilang() === true &&
+            App::instance()->language()->isDefault() === false &&
+            $page = $this->findBy('uri', $id)
+        ) {
             return $page;
         }
 
@@ -352,7 +361,7 @@ class Pages extends Collection
             return $index;
         }
 
-        $index = new Pages([], $this->parent);
+        $index = new Pages([]);
 
         foreach ($this->data as $pageKey => $page) {
             $index->data[$pageKey] = $page;

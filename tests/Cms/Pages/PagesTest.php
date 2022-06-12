@@ -313,6 +313,20 @@ class PagesTest extends TestCase
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findByUri('child'));
 
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('child'));
+
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
         $this->assertIsPage($pages->findById('grandma/mother'), 'grandma/mother');
@@ -415,6 +429,20 @@ class PagesTest extends TestCase
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findByUri('child'));
 
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('child'));
+
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
         $this->assertIsPage($pages->findById('grandma/mother'), 'grandma/mother');
@@ -473,6 +501,35 @@ class PagesTest extends TestCase
         $this->assertNull($site->children()->findById('oma/mutter/child'));
         $this->assertNull($site->children()->findById('grandmother/mutter/child'));
         $this->assertNull($site->children()->findById('grandmother/mutter/kind'));
+
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('oma/mutter/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('oma/mutter/kind/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('oma/mutter/kind.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('oma/mutter/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('oma/mutter/kind/'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('oma/mutter/kind.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findById('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->find('grandma')->grandChildren()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('grandma/mutter/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('grandma/mutter/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('oma/mutter'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('oma/mutter'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('grandma/mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mutter'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mutter'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mutter/kind'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mutter/kind'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('mother/child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('kind'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findById('child'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('kind'));
+        $this->assertNull($site->find('grandma')->grandChildren()->findByUri('child'));
 
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
