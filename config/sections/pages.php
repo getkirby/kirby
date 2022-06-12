@@ -250,7 +250,7 @@ return [
                 'headline' => $this->headline,
                 'help'     => $this->help,
                 'layout'   => $this->layout,
-                'link'     => $this->link,
+                'link'     => $this->link(),
                 'max'      => $this->max,
                 'min'      => $this->min,
                 'query'    => $this->query,
