@@ -756,8 +756,7 @@ class PagesSectionTest extends TestCase
 
         $section = new Section('pages', [
             'name'   => 'test',
-            'model'  => $model,
-            'layout' => 'table',
+            'model'  => $model
         ]);
 
         $options = $section->toArray()['options'];

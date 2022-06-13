@@ -57,7 +57,11 @@ class ResponderTest extends TestCase
      */
     public function testCacheUsesAuth()
     {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer brown-bearer';
+        $this->kirby([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Bearer brown-bearer'
+            ]
+        ]);
 
         $responder = new Responder();
         $this->assertTrue($responder->cache());
@@ -267,7 +271,11 @@ class ResponderTest extends TestCase
 
         // with dynamic data in environment
         $_COOKIE['foo'] = 'bar';
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer brown-bearer';
+        $this->kirby([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Bearer brown-bearer'
+            ]
+        ]);
 
         $this->assertTrue($responder->isPrivate(true, []));
         $this->assertTrue($responder->isPrivate(true, ['foo']));
