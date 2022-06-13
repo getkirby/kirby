@@ -230,6 +230,11 @@ class Pages extends Collection
             return $page;
         }
 
+        $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
+        if ($page = $this->findByIdRecursive($id, $start, App::instance()->multilang())) {
+            return $page;
+        }
+
         // for secondary languages, try the full translated URI
         if (
             App::instance()->multilang() === true &&
@@ -239,10 +244,7 @@ class Pages extends Collection
             return $page;
         }
 
-        $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-        $page  = $this->findByIdRecursive($id, $start, App::instance()->multilang());
-
-        return $page;
+        return null;
     }
 
     /**

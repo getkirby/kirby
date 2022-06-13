@@ -636,6 +636,12 @@ class PagesTest extends TestCase
         $this->assertIsPage($pages->findById('zzz'), 'zzz');
         $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
 
+        $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz'));
+        $this->assertIsPage($pages->findById('aaa'), 'aaa');
+        $this->assertIsPage($pages->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($pages->findById('zzz'), 'zzz');
+        $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
+
         $app->setCurrentLanguage('de');
 
         $this->assertIsPage($site->children()->findById('aaa'), 'aaa');
@@ -646,6 +652,12 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('zzz')->children()->findById('yyy'), 'zzz/yyy');
 
         $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz', 'zzz/yyy'));
+        $this->assertIsPage($pages->findById('aaa'), 'aaa');
+        $this->assertIsPage($pages->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($pages->findById('zzz'), 'zzz');
+        $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
+
+        $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz'));
         $this->assertIsPage($pages->findById('aaa'), 'aaa');
         $this->assertIsPage($pages->findById('aaa/bbb'), 'aaa/bbb');
         $this->assertIsPage($pages->findById('zzz'), 'zzz');
