@@ -38,6 +38,16 @@ class LayoutMixinTest extends TestCase
             'model' => $this->page,
         ]);
 
+        $this->assertSame([], $section->columns());
+    }
+
+    public function testColumnsWithTableLayout()
+    {
+        $section = new Section('test', [
+            'model'  => $this->page,
+            'layout' => 'table'
+        ]);
+
         $expected = [
             'image' => [
                 'label' => ' ',
@@ -52,8 +62,9 @@ class LayoutMixinTest extends TestCase
     public function testColumnsWithText()
     {
         $section = new Section('test', [
-            'model' => $this->page,
-            'text'  => '{{ page.title }}'
+            'model'  => $this->page,
+            'text'   => '{{ page.title }}',
+            'layout' => 'table'
         ]);
 
         $expected = [
@@ -74,9 +85,10 @@ class LayoutMixinTest extends TestCase
     public function testColumnsWithTextAndInfo()
     {
         $section = new Section('test', [
-            'model' => $this->page,
-            'text'  => '{{ page.title }}',
-            'info'  => '{{ page.date }}'
+            'model'  => $this->page,
+            'text'   => '{{ page.title }}',
+            'info'   => '{{ page.date }}',
+            'layout' => 'table'
         ]);
 
         $expected = [
@@ -101,7 +113,8 @@ class LayoutMixinTest extends TestCase
     public function testColumnsWithFlag()
     {
         $section = new Section('pages', [
-            'model' => $this->page
+            'model'  => $this->page,
+            'layout' => 'table'
         ]);
 
         $expected = [
@@ -123,7 +136,8 @@ class LayoutMixinTest extends TestCase
     public function testColumnsWithCustomColumns()
     {
         $section = new Section('test', [
-            'model' => $this->page,
+            'model'   => $this->page,
+            'layout'  => 'table',
             'columns' => [
                 'date' => [
                     'label' => 'Date',
@@ -163,6 +177,7 @@ class LayoutMixinTest extends TestCase
             'model' => $model,
             'text'  => '{{ page.title }}',
             'info'  => '{{ page.slug }}',
+            'layout' => 'table',
             'columns' => [
                 'date' => [
                     'label' => 'Date',

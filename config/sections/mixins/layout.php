@@ -29,6 +29,10 @@ return [
         'columns' => function () {
             $columns = [];
 
+            if ($this->layout !== 'table') {
+                return [];
+            }
+
             if ($this->image !== false) {
                 $columns['image'] = [
                     'label' => ' ',
