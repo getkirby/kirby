@@ -680,6 +680,12 @@ class Api
      */
     public function responseForException(Throwable $e): array
     {
+        if (isset($this->kirby) === true) {
+            $docRoot = $this->kirby->environment()->get('DOCUMENT_ROOT');
+        } else {
+            $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? null;
+        }
+
         // prepare the result array for all exception types
         $result = [
             'status'    => 'error',
@@ -687,7 +693,7 @@ class Api
             'code'      => empty($e->getCode()) === true ? 500 : $e->getCode(),
             'exception' => get_class($e),
             'key'       => null,
-            'file'      => F::relativepath($e->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? null),
+            'file'      => F::relativepath($e->getFile(), $docRoot),
             'line'      => $e->getLine(),
             'details'   => [],
             'route'     => $this->route ? $this->route->pattern() : null

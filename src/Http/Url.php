@@ -185,7 +185,7 @@ class Url
      */
     public static function last(): string
     {
-        return $_SERVER['HTTP_REFERER'] ?? '';
+        return Environment::getGlobally('HTTP_REFERER', '');
     }
 
     /**

@@ -80,7 +80,7 @@ class AppErrorsTest extends TestCase
      * @covers ::handleErrors
      * @covers ::getExceptionHookWhoopsHandler
      */
-    public function testHandleErrors()
+    public function testHandleErrors1()
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
@@ -99,6 +99,19 @@ class AppErrorsTest extends TestCase
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+    }
+
+    /**
+     * @covers ::handleErrors
+     * @covers ::getExceptionHookWhoopsHandler
+     */
+    public function testHandleErrors2()
+    {
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+
+        $testMethod = new ReflectionMethod(App::class, 'handleErrors');
+        $testMethod->setAccessible(true);
 
         $app = $this->app->clone([
             'cli' => false,
@@ -107,13 +120,28 @@ class AppErrorsTest extends TestCase
             ]
         ]);
 
+        $whoops = $whoopsMethod->invoke($app);
+
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
         $this->assertCount(2, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+    }
 
-        $app = new App([
+    /**
+     * @covers ::handleErrors
+     * @covers ::getExceptionHookWhoopsHandler
+     */
+    public function testHandleErrors3()
+    {
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+
+        $testMethod = new ReflectionMethod(App::class, 'handleErrors');
+        $testMethod->setAccessible(true);
+
+        $app = $this->app->clone([
             'cli' => false,
             'server' => [
                 'HTTP_ACCEPT' => 'text/html'
@@ -290,7 +318,7 @@ class AppErrorsTest extends TestCase
             'details' => [
                 'Some error message'
             ],
-            'file' => __FILE__,
+            'file' => basename(__FILE__),
             'line' => $exception->getLine()
         ]), $this->_getBufferedContent($handlers[0]));
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);

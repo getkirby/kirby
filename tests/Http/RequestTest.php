@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
@@ -11,6 +12,11 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        App::destroy();
+    }
+
     public function testCustomProps()
     {
         $file = [
@@ -66,27 +72,31 @@ class RequestTest extends TestCase
 
     public function testBasicAuth()
     {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode($credentials = 'testuser:testpass');
+        new App([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($credentials = 'testuser:testpass')
+            ]
+        ]);
 
         $request = new Request();
 
         $this->assertInstanceOf(BasicAuth::class, $request->auth());
         $this->assertEquals('testuser', $request->auth()->username());
         $this->assertEquals('testpass', $request->auth()->password());
-
-        unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testBearerAuth()
     {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer abcd';
+        new App([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Bearer abcd'
+            ]
+        ]);
 
         $request = new Request();
 
         $this->assertInstanceOf(BearerAuth::class, $request->auth());
         $this->assertEquals('abcd', $request->auth()->token());
-
-        unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testCli()
@@ -104,13 +114,15 @@ class RequestTest extends TestCase
 
     public function testUnknownAuth()
     {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Unknown abcd';
+        new App([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Unknown abcd'
+            ]
+        ]);
 
         $request = new Request();
 
         $this->assertFalse($request->auth());
-
-        unset($_SERVER['HTTP_AUTHORIZATION']);
     }
 
     public function testMethod()

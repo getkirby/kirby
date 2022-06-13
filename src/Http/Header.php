@@ -130,7 +130,7 @@ class Header
     public static function status($code = null, bool $send = true)
     {
         $codes    = static::$codes;
-        $protocol = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
+        $protocol = Environment::getGlobally('SERVER_PROTOCOL', 'HTTP/1.1');
 
         // allow full control over code and message
         if (is_string($code) === true && preg_match('/^\d{3} \w.+$/', $code) === 1) {

@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
@@ -163,7 +164,7 @@ class Environment
             'allowed' => null
         ], $options ?? []);
 
-        $this->info          = $this->sanitize($info);
+        $this->info          = static::sanitize($info);
         $this->cli           = $this->detectCli($options['cli']);
         $this->ip            = $this->detectIp();
         $this->host          = null;
@@ -541,7 +542,7 @@ class Environment
 
         return [
             'host' => $parts[0] ?? null,
-            'port' => $this->sanitizePort($parts[1] ?? null),
+            'port' => static::sanitizePort($parts[1] ?? null),
         ];
     }
 
@@ -627,7 +628,37 @@ class Environment
             $key = strtoupper($key);
         }
 
-        return $this->info[$key] ?? $this->sanitize($key, $default);
+        return $this->info[$key] ?? static::sanitize($key, $default);
+    }
+
+    /**
+     * Gets a value from the global server environment array
+     * of the current app instance; falls back to `$_SERVER` if
+     * no app instance is running
+     *
+     * @param string|false|null $key The key to look for. Pass `false` or `null`
+     *                               to return the entire server array.
+     * @param mixed $default Optional default value, which should be
+     *                       returned if no element has been found
+     * @return mixed
+     */
+    public static function getGlobally($key = null, $default = null)
+    {
+        // first try the global `Environment` object if the CMS is running
+        $app = App::instance(null, true);
+        if ($app) {
+            return $app->environment()->get($key, $default);
+        }
+
+        if (is_string($key) === false) {
+            return static::sanitize($_SERVER);
+        }
+
+        if (isset($_SERVER[$key]) === false) {
+            $key = strtoupper($key);
+        }
+
+        return static::sanitize($key, $_SERVER[$key] ?? $default);
     }
 
     /**
@@ -829,11 +860,11 @@ class Environment
      * @param mixed $value
      * @return mixed
      */
-    public function sanitize($key, $value = null)
+    public static function sanitize($key, $value = null)
     {
         if (is_array($key) === true) {
             foreach ($key as $k => $v) {
-                $key[$k] = $this->sanitize($k, $v);
+                $key[$k] = static::sanitize($k, $v);
             }
 
             return $key;
@@ -844,10 +875,10 @@ class Environment
             case 'SERVER_NAME':
             case 'HTTP_HOST':
             case 'HTTP_X_FORWARDED_HOST':
-                return $this->sanitizeHost($value);
+                return static::sanitizeHost($value);
             case 'SERVER_PORT':
             case 'HTTP_X_FORWARDED_PORT':
-                return $this->sanitizePort($value);
+                return static::sanitizePort($value);
             default:
                 return $value;
         }
@@ -859,7 +890,7 @@ class Environment
      * @param string|null $host
      * @return string|null
      */
-    protected function sanitizeHost(?string $host = null): ?string
+    protected static function sanitizeHost(?string $host = null): ?string
     {
         if (empty($host) === true) {
             return null;
@@ -887,7 +918,7 @@ class Environment
      * @param string|int|null $port
      * @return int|null
      */
-    protected function sanitizePort($port = null): ?int
+    protected static function sanitizePort($port = null): ?int
     {
         // already fine
         if (is_int($port) === true) {
