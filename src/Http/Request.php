@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
@@ -156,6 +157,13 @@ class Request
             return $this->auth;
         }
 
+        // modify CMS caching behavior:
+        // lazily request the instance for non-CMS use cases
+        $kirby = App::instance(null, true);
+        if ($kirby) {
+            $kirby->response()->usesAuth(true);
+        }
+
         if ($auth = $this->options['auth'] ?? $this->header('authorization')) {
             $type = Str::lower(Str::before($auth, ' '));
             $data = Str::after($auth, ' ');
@@ -289,6 +297,20 @@ class Request
     public function get($key = null, $fallback = null)
     {
         return A::get($this->data(), $key, $fallback);
+    }
+
+    /**
+     * Returns whether the request contains
+     * the `Authorization` header
+     * @since 3.7.0
+     *
+     * @return bool
+     */
+    public function hasAuth(): bool
+    {
+        $header = $this->options['auth'] ?? $this->header('authorization');
+
+        return $header !== null;
     }
 
     /**

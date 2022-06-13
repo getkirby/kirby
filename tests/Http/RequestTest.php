@@ -125,6 +125,22 @@ class RequestTest extends TestCase
         $this->assertFalse($request->auth());
     }
 
+    public function testAuthTrack()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertFalse($app->response()->usesAuth());
+
+        $request = new Request();
+        $request->auth();
+
+        $this->assertTrue($app->response()->usesAuth());
+    }
+
     public function testMethod()
     {
         $request = new Request();

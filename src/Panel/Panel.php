@@ -215,7 +215,7 @@ class Panel
 
         return Response::json($data, $code, $request->get('_pretty'), [
             'X-Fiber' => 'true',
-            'Cache-Control' => 'no-store'
+            'Cache-Control' => 'no-store, private'
         ]);
     }
 

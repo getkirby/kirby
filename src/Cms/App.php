@@ -1438,11 +1438,16 @@ class App
      */
     public function session(array $options = [])
     {
-        // never cache responses that depend on the session
-        $this->response()->cache(false);
-        $this->response()->header('Cache-Control', 'no-store', true);
+        $session = $this->sessionHandler()->get($options);
 
-        return $this->sessionHandler()->get($options);
+        // disable caching for sessions that use the `Authorization` header;
+        // cookie sessions are already covered by the `Cookie` class
+        if ($session->mode() === 'manual') {
+            $this->response()->cache(false);
+            $this->response()->header('Cache-Control', 'no-store, private', true);
+        }
+
+        return $session;
     }
 
     /**

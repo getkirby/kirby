@@ -618,14 +618,20 @@ class AppTest extends TestCase
 
         $this->assertInstanceOf(Session::class, $app->session());
 
+        $this->assertTrue($app->response()->cache());
+        $this->assertSame(['Vary' => 'Cookie'], $app->response()->headers());
+
+        // manual session that blocks caching
+        $app->response()->headers([]);
+        $this->assertInstanceOf(Session::class, $app->session(['createMode' => 'manual']));
         $this->assertFalse($app->response()->cache());
-        $this->assertSame(['Cache-Control' => 'no-store'], $app->response()->headers());
+        $this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'no-store, private'], $app->response()->headers());
 
         // test lazy header setter
-        $app->response()->header('Cache-Control', 'custom');
-        $this->assertInstanceOf(Session::class, $app->session());
+        $app->response()->headers(['Cache-Control' => 'custom']);
+        $this->assertInstanceOf(Session::class, $app->session(['createMode' => 'manual']));
         $this->assertFalse($app->response()->cache());
-        $this->assertSame(['Cache-Control' => 'custom'], $app->response()->headers());
+        $this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'custom'], $app->response()->headers());
     }
 
     public function testInstance()
