@@ -2,6 +2,7 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Cms\Helpers;
 use Throwable;
 
 /**
@@ -30,7 +31,7 @@ class Value
      *
      * @var int
      */
-    protected $minutes;
+    protected $expiry;
 
     /**
      * Creation timestamp
@@ -43,14 +44,14 @@ class Value
      * Constructor
      *
      * @param mixed $value
-     * @param int $minutes The number of minutes until the value expires
-     *                     or an absolute UNIX expiry timestamp
-     * @param int $created The UNIX timestamp when the value has been created
+     * @param int $expiry The number of minutes until the value expires
+     *                    or an absolute UNIX expiry timestamp
+     * @param int|null $created The UNIX timestamp when the value has been created
      */
-    public function __construct($value, int $minutes = 0, int $created = null)
+    public function __construct($value, int $expiry = 0, int $created = null)
     {
         $this->value   = $value;
-        $this->minutes = $minutes ?? 0;
+        $this->expiry  = $expiry ?? 0;
         $this->created = $created ?? time();
     }
 
@@ -73,16 +74,16 @@ class Value
     public function expires(): ?int
     {
         // 0 = keep forever
-        if ($this->minutes === 0) {
+        if ($this->expiry === 0) {
             return null;
         }
 
-        if ($this->minutes > 1000000000) {
-            // absolute timestamp
-            return $this->minutes;
+        // absolute timestamp
+        if ($this->expiry > 1000000000) {
+            return $this->expiry;
         }
 
-        return $this->created + ($this->minutes * 60);
+        return $this->created + ($this->expiry * 60);
     }
 
     /**
@@ -93,9 +94,17 @@ class Value
      */
     public static function fromArray(array $array)
     {
+        // TODO: remove in 3.8.0
+        // @codeCoverageIgnoreStart
+        if (isset($array['minutes']) === true) {
+            Helpers::deprecated('$array[\'minutes\']`is deprecated and will be removed in Kirby 3.8.0. Use $array[\'expiry\'] instead.');
+            $array['expiry'] ??= $array['minutes'];
+        }
+        // @codeCoverageIgnoreEnd
+
         return new static(
             $array['value'] ?? null,
-            $array['minutes'] ?? 0,
+            $array['expiry'] ?? 0,
             $array['created'] ?? null,
         );
     }
@@ -141,7 +150,7 @@ class Value
     {
         return [
             'created' => $this->created,
-            'minutes' => $this->minutes,
+            'expiry'  => $this->expiry,
             'value'   => $this->value,
         ];
     }

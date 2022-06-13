@@ -45,12 +45,12 @@ abstract class Cache
      *
      * @param string $key
      * @param mixed $value
-     * @param int $minutes
+     * @param int $expiry
      * @return bool
      */
-    public function set(string $key, $value, int $minutes = 0): bool
+    public function set(string $key, $value, int $expiry = 0): bool
     {
-        $value = Value::fromArray(compact('value', 'minutes'));
+        $value = Value::fromArray(compact('value', 'expiry'));
 
         return $this->store($key, $value);
     }

@@ -56,7 +56,7 @@ class ValueTest extends TestCase
     {
         $data = [
             'created' => 10000,
-            'minutes' => 0,
+            'expiry'  => 0,
             'value'   => 'foo'
         ];
         $value = Value::fromArray($data);
@@ -67,7 +67,7 @@ class ValueTest extends TestCase
 
         $data = [
             'created' => 10000,
-            'minutes' => 1234567890,
+            'expiry'  => 1234567890,
             'value'   => 'foo'
         ];
         $value = Value::fromArray($data);
@@ -79,7 +79,7 @@ class ValueTest extends TestCase
         $time = time();
         $data = [
             'created' => null,
-            'minutes' => 1000,
+            'expiry'  => 1000,
             'value'   => ['this is' => 'an array']
         ];
         $value = Value::fromArray($data);
@@ -88,13 +88,13 @@ class ValueTest extends TestCase
         $this->assertSame(['this is' => 'an array'], $value->value());
         $this->assertSame([
             'created' => $time,
-            'minutes' => 1000,
+            'expiry'  => 1000,
             'value'   => ['this is' => 'an array']
         ], $value->toArray());
 
         $data = [
             'created' => 10000,
-            'minutes' => null,
+            'expiry'  => null,
             'value'   => 'foo'
         ];
         $value = Value::fromArray($data);
@@ -103,7 +103,7 @@ class ValueTest extends TestCase
         $this->assertSame('foo', $value->value());
         $this->assertSame([
             'created' => 10000,
-            'minutes' => 0,
+            'expiry'  => 0,
             'value'   => 'foo'
         ], $value->toArray());
     }
@@ -117,7 +117,7 @@ class ValueTest extends TestCase
 
         $data = [
             'created' => 'invalid',
-            'minutes' => 'invalid',
+            'expiry'  => 'invalid',
             'value'   => 'foo'
         ];
         $value = Value::fromArray($data);
@@ -131,7 +131,7 @@ class ValueTest extends TestCase
     {
         $data = json_encode([
             'created' => 10000,
-            'minutes' => 0,
+            'expiry'  => 0,
             'value'   => 'foo'
         ]);
         $value = Value::fromJson($data);
@@ -143,7 +143,7 @@ class ValueTest extends TestCase
         $time = time();
         $data = json_encode([
             'created' => null,
-            'minutes' => 1000,
+            'expiry'  => 1000,
             'value'   => ['this is' => 'an array']
         ]);
         $value = Value::fromJson($data);
@@ -152,13 +152,13 @@ class ValueTest extends TestCase
         $this->assertSame(['this is' => 'an array'], $value->value());
         $this->assertSame(json_encode([
             'created' => $time,
-            'minutes' => 1000,
+            'expiry'  => 1000,
             'value'   => ['this is' => 'an array']
         ]), $value->toJson());
 
         $data = json_encode([
             'created' => 10000,
-            'minutes' => null,
+            'expiry'  => null,
             'value'   => 'foo'
         ]);
         $value = Value::fromJson($data);
@@ -167,7 +167,7 @@ class ValueTest extends TestCase
         $this->assertSame('foo', $value->value());
         $this->assertSame(json_encode([
             'created' => 10000,
-            'minutes' => 0,
+            'expiry'  => 0,
             'value'   => 'foo'
         ]), $value->toJson());
 
@@ -175,7 +175,7 @@ class ValueTest extends TestCase
 
         $data = json_encode([
             'created' => 'invalid',
-            'minutes' => 'invalid',
+            'expiry'  => 'invalid',
             'value'   => 'foo'
         ]);
         $this->assertNull(Value::fromJson($data));
