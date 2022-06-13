@@ -400,6 +400,7 @@ class Core
     public function sectionMixins(): array
     {
         return [
+            'details'    => $this->root . '/sections/mixins/details.php',
             'empty'      => $this->root . '/sections/mixins/empty.php',
             'headline'   => $this->root . '/sections/mixins/headline.php',
             'help'       => $this->root . '/sections/mixins/help.php',
@@ -409,6 +410,7 @@ class Core
             'pagination' => $this->root . '/sections/mixins/pagination.php',
             'parent'     => $this->root . '/sections/mixins/parent.php',
             'search'     => $this->root . '/sections/mixins/search.php',
+            'sort'        => $this->root . '/sections/mixins/sort.php',
         ];
     }
 

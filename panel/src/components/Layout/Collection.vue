@@ -2,6 +2,7 @@
   <div class="k-collection">
     <k-items
       v-if="items.length"
+      :columns="columns"
       :items="items"
       :layout="layout"
       :link="link"
@@ -56,6 +57,7 @@
  */
 export default {
   props: {
+    columns: Object,
     empty: Object,
     /**
      * Help text to show below the collection

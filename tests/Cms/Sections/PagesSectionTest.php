@@ -683,4 +683,86 @@ class PagesSectionTest extends TestCase
 
         $_GET = [];
     }
+
+    public function testTableLayout()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'test'],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table'
+        ]);
+
+        $this->assertSame('table', $section->layout());
+
+        $data = $section->data();
+        $item = $data[0];
+
+        $this->assertSame('', $item['info']);
+        $this->assertSame([
+            'text' => 'test',
+            'href' => '/pages/test+test'
+        ], $item['title']);
+    }
+
+    public function testTableLayoutWithCustomColumns()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'test',
+                    'content' => [
+                        'date' => '2012-12-12'
+                    ]
+                ],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table',
+            'columns' => [
+                'date' => [
+                    'label' => 'Date',
+                    'type'  => 'date'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('2012-12-12', $section->data()[0]['dateCell']);
+    }
+
+    public function testOptions()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'test',
+                    'content' => [
+                        'date' => '2012-12-12'
+                    ]
+                ],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table',
+        ]);
+
+        $options = $section->toArray()['options'];
+
+        $this->assertSame([], $options['columns']);
+        $this->assertNull($options['link']);
+    }
 }

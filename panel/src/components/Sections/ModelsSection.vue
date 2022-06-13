@@ -121,6 +121,7 @@ export default {
     },
     collection() {
       return {
+        columns: this.options.columns,
         empty: this.emptyPropsWithSearch,
         layout: this.options.layout,
         help: this.options.help,

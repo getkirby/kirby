@@ -43,6 +43,7 @@
       :options="dragOptions"
       :handle="true"
       element="tbody"
+      @change="onChange"
       @end="onSort"
     >
       <!-- Empty -->
@@ -77,32 +78,31 @@
         </td>
 
         <!-- Cell -->
-        <template v-for="(column, columnIndex) in columns">
-          <k-table-cell
-            :key="rowIndex + '-' + columnIndex"
-            :column="column"
-            :field="fields[columnIndex]"
-            :row="row"
-            :value="row[columnIndex]"
-            :style="'width:' + width(column.width)"
-            class="k-table-column"
-            @click.native="
-              onCell({
-                row,
-                rowIndex,
-                column,
-                columnIndex
-              })
-            "
-            @input="
-              onCellUpdate({
-                columnIndex,
-                rowIndex,
-                value: $event
-              })
-            "
-          />
-        </template>
+        <k-table-cell
+          v-for="(column, columnIndex) in columns"
+          :key="rowIndex + '-' + columnIndex"
+          :column="column"
+          :field="fields[columnIndex]"
+          :row="row"
+          :value="row[columnIndex]"
+          :style="'width:' + width(column.width)"
+          class="k-table-column"
+          @click.native="
+            onCell({
+              row,
+              rowIndex,
+              column,
+              columnIndex
+            })
+          "
+          @input="
+            onCellUpdate({
+              columnIndex,
+              rowIndex,
+              value: $event
+            })
+          "
+        />
 
         <!-- Options -->
         <td v-if="hasOptions" class="k-table-options-column">
@@ -238,6 +238,13 @@ export default {
       return column.label || this.$helper.string.ucfirst(columnIndex);
     },
     /**
+     * When the table has been sorted,
+     * emit changed item with event details
+     */
+    onChange(event) {
+      this.$emit("change", event);
+    },
+    /**
      * When a table cell is clicked
      * @param {mixed} params
      */
@@ -269,7 +276,8 @@ export default {
       this.$emit("option", option, row, rowIndex);
     },
     /**
-     * When the table has been sorted
+     * When the table has been sorted,
+     * emit all items in new order
      */
     onSort() {
       this.$emit("input", this.values);

@@ -546,7 +546,8 @@ abstract class ModelWithContent extends Model
         $result = Str::$handler($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
-            static::CLASS_ALIAS => $this
+            'model'             => $this,
+            static::CLASS_ALIAS => $this,
         ], $data), ['fallback' => $fallback]);
 
         return $result;

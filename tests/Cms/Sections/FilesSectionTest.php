@@ -10,13 +10,23 @@ class FilesSectionTest extends TestCase
 
     public function setUp(): void
     {
-        App::destroy();
+        $this->app();
+    }
 
-        $this->app = new App([
+    public function app(array $props = [])
+    {
+        App::destroy();
+        $this->app = new App(array_replace_recursive([
             'roots' => [
                 'index' => '/dev/null'
             ]
-        ]);
+        ], $props));
+
+        // The file section will always be empty for
+        // unauthorized users
+        $this->app->impersonate('kirby');
+
+        return $this->app;
     }
 
     public function testAccept()
@@ -32,7 +42,6 @@ class FilesSectionTest extends TestCase
 
     public function testHeadline()
     {
-
         // single headline
         $section = new Section('files', [
             'name'     => 'test',
@@ -474,7 +483,11 @@ class FilesSectionTest extends TestCase
 
     public function testSearchWithQuery1()
     {
-        $_GET['query'] = 'bike';
+        $this->app->clone([
+            'request' => [
+                'query' => ['query' => 'bike']
+            ]
+        ]);
 
         $model = new Page([
             'slug'  => 'test',
@@ -494,13 +507,15 @@ class FilesSectionTest extends TestCase
         $this->assertCount(2, $section->data());
         $this->assertSame('bike.jpg', $section->data()[0]['filename']);
         $this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
-
-        $_GET = [];
     }
 
     public function testSearchWithQuery2()
     {
-        $_GET['query'] = 'mount';
+        $this->app->clone([
+            'request' => [
+                'query' => ['query' => 'mount']
+            ]
+        ]);
 
         $model = new Page([
             'slug'  => 'test',
@@ -520,13 +535,15 @@ class FilesSectionTest extends TestCase
         $this->assertCount(2, $section->data());
         $this->assertSame('mount-bike.jpg', $section->data()[0]['filename']);
         $this->assertSame('mountain.jpg', $section->data()[1]['filename']);
-
-        $_GET = [];
     }
 
     public function testSearchWithQuery3()
     {
-        $_GET['query'] = 'mountain';
+        $this->app->clone([
+            'request' => [
+                'query' => ['query' => 'mountain']
+            ]
+        ]);
 
         $model = new Page([
             'slug'  => 'test',
@@ -546,7 +563,82 @@ class FilesSectionTest extends TestCase
 
         $this->assertCount(1, $section->data());
         $this->assertSame('mountain.jpg', $section->data()[0]['filename']);
+    }
 
-        $_GET = [];
+    public function testTableLayout()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'mount-bike.jpg'],
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table'
+        ]);
+
+        $this->assertSame('table', $section->layout());
+
+        $data = $section->data();
+        $item = $data[0];
+
+        $this->assertSame('', $item['info']);
+        $this->assertSame([
+            'text' => 'mount-bike.jpg',
+            'href' => '/pages/test/files/mount-bike.jpg'
+        ], $item['title']);
+    }
+
+    public function testTableLayoutWithCustomColumns()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'mount-bike.jpg',
+                    'content'  => ['alt' => 'Alt test']
+                ],
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table',
+            'columns' => [
+                'alt' => [
+                    'label' => 'Alt',
+                    'type'  => 'text'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('Alt test', $section->data()[0]['altCell']);
+    }
+
+    public function testOptions()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'mount-bike.jpg',
+                ],
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'list',
+        ]);
+
+        $options = $section->toArray()['options'];
+
+        $this->assertSame([], $options['columns']);
+        $this->assertNull($options['link']);
     }
 }

@@ -32,6 +32,6 @@ return [
                 'page'   => $pagination->page(),
                 'total'  => $pagination->total(),
             ];
-        },
+        }
     ]
 ];
