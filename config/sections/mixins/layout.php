@@ -68,9 +68,9 @@ return [
         },
     ],
     'methods' => [
-        'columnsValues' => function ($item, $model) {
+        'columnsValues' => function (array $item, $model) {
             $item['title'] = [
-                'text' => $model->toSafeString($this->text),
+                'text' => $item['text'],
                 'href' => $model->panel()->url(true)
             ];
 

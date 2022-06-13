@@ -130,5 +130,4 @@ class SortMixinTest extends TestCase
 
         $this->assertSame('title desc', $section->sortBy());
     }
-
 }
