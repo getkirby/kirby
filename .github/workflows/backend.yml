@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
         with:
           fetch-depth: 2
 
@@ -64,21 +64,21 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
+        uses: shivammathur/cache-extensions@fc01a9cdc93341e96c2078d848f2e96240d83c17 # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -93,7 +93,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
         with:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
@@ -107,7 +107,7 @@ jobs:
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
+        uses: codecov/codecov-action@66b3de25f6f91f65eb92c514d31d6b6f13d5ab18 # pin@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
+        uses: github/codeql-action/upload-sarif@7e72857c42532e0c5757d954def4bf7cb35249fa # pin@v2
         with:
           sarif_file: sarif
 
@@ -140,21 +140,21 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
       - name: Preparations
         run: mkdir sarif
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@fe198edd1ac99a6990225b63be8f4e9c21e9a8ca # pin@v1
+        uses: shivammathur/cache-extensions@fc01a9cdc93341e96c2078d848f2e96240d83c17 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
@@ -162,14 +162,14 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.2.6, composer-normalize:2.23.1, composer-require-checker:4.0.0,
-            composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.11.1
+            composer:2.3.7, composer-normalize:2.28.0, composer-require-checker:4.0.0,
+            composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.12.0
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -193,7 +193,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 # pin@v1
+        uses: github/codeql-action/upload-sarif@7e72857c42532e0c5757d954def4bf7cb35249fa # pin@v2
         with:
           sarif_file: sarif
 
@@ -207,18 +207,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@7854a0cae7fa7a5f3feac66d27bae2dc42d1067a # pin@v2
+        uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:3.6.0
+          tools: php-cs-fixer:3.8.0
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # pin@v2
+        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
         with:
           path: ~/.php-cs-fixer
           key: coding-style
@@ -234,7 +234,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        uses: reviewdog/action-suggester@ab82daa6ea9b84fe43db7747bb10fa087f34e1ab # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: "true"

@@ -33,10 +33,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
+        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -54,7 +54,7 @@ jobs:
       # TODO: Disabled until Vitest coverage reporting is accurate and
       #       Kirby's frontend tests are useful enough that we need this metric
       # - name: Upload coverage results to Codecov
-      #   uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
+      #   uses: codecov/codecov-action@66b3de25f6f91f65eb92c514d31d6b6f13d5ab18 # pin@v3
       #   with:
       #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
       #     fail_ci_if_error: true
@@ -71,10 +71,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # pin@v2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # pin@v2
+        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -95,7 +95,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        uses: reviewdog/action-suggester@ab82daa6ea9b84fe43db7747bb10fa087f34e1ab # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: "true"
@@ -112,7 +112,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@650721aae74ec5d8b0cae75cf980720f1b60cef3 # pin@v1
+        uses: reviewdog/action-suggester@ab82daa6ea9b84fe43db7747bb10fa087f34e1ab # pin@v1
         with:
           tool_name: Prettier
           fail_on_error: "true"
