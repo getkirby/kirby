@@ -188,7 +188,7 @@ class File extends Model
             'document' => 'red-400',
             'audio'    => 'aqua-400',
             'code'     => 'blue-400',
-            'archive'  => 'white'
+            'archive'  => 'gray-500'
         ];
 
         $extensions = [
@@ -203,7 +203,7 @@ class File extends Model
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageDefaults()['icon'];
+               parent::imageDefaults()['color'];
     }
 
     /**
@@ -227,28 +227,28 @@ class File extends Model
     protected function imageIcon(): string
     {
         $types = [
-            'image'    => 'file-image',
-            'video'    => 'file-video',
-            'document' => 'file-document',
-            'audio'    => 'file-audio',
-            'code'     => 'file-code',
-            'archive'  => 'file-zip'
+            'image'    => 'image',
+            'video'    => 'video',
+            'document' => 'document',
+            'audio'    => 'audio',
+            'code'     => 'code',
+            'archive'  => 'archive'
         ];
 
         $extensions = [
-            'xls'   => 'file-spreadsheet',
-            'xlsx'  => 'file-spreadsheet',
-            'csv'   => 'file-spreadsheet',
-            'docx'  => 'file-word',
-            'doc'   => 'file-word',
-            'rtf'   => 'file-word',
-            'mdown' => 'file-text',
-            'md'    => 'file-text'
+            'xls'   => 'table',
+            'xlsx'  => 'table',
+            'csv'   => 'table',
+            'docx'  => 'pen',
+            'doc'   => 'pen',
+            'rtf'   => 'pen',
+            'mdown' => 'markdown',
+            'md'    => 'markdown'
         ];
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageDefaults()['color'];
+               'file';
     }
 
     /**
