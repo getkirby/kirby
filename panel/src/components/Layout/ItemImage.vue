@@ -18,7 +18,6 @@
     <k-aspect-ratio v-else :ratio="ratio">
       <k-icon
         :color="$helper.color(image.color)"
-        :size="size"
         :type="image.icon"
         class="k-item-icon"
       />
