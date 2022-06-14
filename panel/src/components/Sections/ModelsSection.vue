@@ -41,7 +41,7 @@
           @action="onAction"
           @change="onChange"
           @sort="onSort"
-          @empty="add ? onAdd : null"
+          @empty="canAdd ? onAdd() : null"
           @paginate="onPaginate"
         />
       </k-dropzone>
@@ -188,8 +188,6 @@ export default {
     this.load();
   },
   methods: {
-    add() {},
-
     async load(reload) {
       if (!reload) {
         this.isLoading = true;
