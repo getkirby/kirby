@@ -328,6 +328,7 @@ export default {
 
 .k-dialog-body {
   padding: 1.5rem;
+  overscroll-behavior: contain;
 }
 
 .k-dialog-body .k-fieldset {
