@@ -49,6 +49,9 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Среда",
 
   "error.access.code": "Неверный код",
@@ -340,6 +343,7 @@
   "license.register.label": "Пожалуйста вставьте код лицензии",
   "license.register.success": "Спасибо за поддержку Kirby",
   "license.unregistered": "Это незарегистрированная версия Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "\u0421\u0441\u044b\u043b\u043a\u0430",
   "link.text": "\u0422\u0435\u043a\u0441\u0442 \u0441\u0441\u044b\u043b\u043a\u0438",
@@ -469,19 +473,27 @@
 
   "section.required": "Секция обязательна",
 
+  "security": "Security",
   "select": "Выбрать",
+  "server": "Сервер",
   "settings": "Настройка",
   "show": "Показать",
+  "site.blueprint": "У сайта пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/site.yml</strong>",
   "size": "Размер",
   "slug": "Понятная ссылка",
   "sort": "Сортировать",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Название",
   "template": "\u0428\u0430\u0431\u043b\u043e\u043d",
   "today": "Сегодня",
-
-  "server": "Сервер",
-
-  "site.blueprint": "У сайта пока нет разметки. Вы можете определить новые секции и поля разметки в <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Код",
   "toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
