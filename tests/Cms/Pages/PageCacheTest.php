@@ -270,7 +270,11 @@ class PageCacheTest extends TestCase
     public function testRenderCacheDynamicActiveOnFirstRender(string $slug, array $dynamicElements)
     {
         $_COOKIE['foo'] = $_COOKIE['kirby_session'] = 'bar';
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer brown-bearer';
+        $this->app->clone([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Bearer brown-bearer'
+            ]
+        ]);
 
         $cache = $this->app->cache('pages');
         $page  = $this->app->page($slug);
