@@ -282,6 +282,11 @@ export default {
 </script>
 
 <style>
+.k-form-buttons {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-navigation);
+}
 .k-form-buttons[data-theme] {
   background: var(--theme-light);
 }

@@ -23,8 +23,6 @@ html {
 html,
 body {
   color: var(--color-gray-900);
-  height: 100%;
-  overflow: hidden;
 }
 
 a {
