@@ -79,7 +79,7 @@ export default {
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
         try {
-          await this.$api.pages.status(element.id, "listed", position);
+          await this.$api.pages.changeStatus(element.id, "listed", position);
           this.$store.dispatch("notification/success", ":)");
           this.$events.$emit("page.sort", element);
         } catch (error) {
