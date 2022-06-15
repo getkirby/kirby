@@ -88,6 +88,9 @@ export default {
     };
   },
   computed: {
+    addIcon() {
+      return "add";
+    },
     buttons() {
       let buttons = [];
 
@@ -102,7 +105,7 @@ export default {
 
       if (this.canAdd) {
         buttons.push({
-          icon: "add",
+          icon: this.addIcon,
           text: this.$t("add"),
           click: this.onAdd
         });

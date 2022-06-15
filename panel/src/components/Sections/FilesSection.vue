@@ -4,6 +4,9 @@ import ModelsSection from "@/components/Sections/ModelsSection.vue";
 export default {
   extends: ModelsSection,
   computed: {
+    addIcon() {
+      return "upload";
+    },
     canAdd() {
       return this.$permissions.files.create && this.options.upload !== false;
     },
