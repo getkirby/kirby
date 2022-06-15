@@ -608,7 +608,7 @@ class PagesSectionTest extends TestCase
 
     public function testSearchWithQuery1()
     {
-        $_GET['query'] = 'bike';
+        $_GET['searchterm'] = 'bike';
 
         $model = new Page([
             'slug'     => 'test',
@@ -634,7 +634,7 @@ class PagesSectionTest extends TestCase
 
     public function testSearchWithQuery2()
     {
-        $_GET['query'] = 'mount';
+        $_GET['searchterm'] = 'mount';
 
         $model = new Page([
             'slug'     => 'test',
@@ -660,7 +660,7 @@ class PagesSectionTest extends TestCase
 
     public function testSearchWithQuery3()
     {
-        $_GET['query'] = 'mountain';
+        $_GET['searchterm'] = 'mountain';
 
         $model = new Page([
             'slug'     => 'test',
@@ -671,7 +671,7 @@ class PagesSectionTest extends TestCase
             ]
         ]);
 
-        $_GET['query'] = 'mountain';
+        $_GET['searchterm'] = 'mountain';
         $section = new Section('pages', [
             'name'   => 'test',
             'model'  => $model,
