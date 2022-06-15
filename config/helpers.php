@@ -330,12 +330,13 @@ if (Helpers::hasOverride('kirbytextinline') === false) { // @codeCoverageIgnore
      * @since 3.1.0
      *
      * @param string|null $text
-     * @param array $data
+     * @param array $options
      * @return string
      */
-    function kirbytextinline(?string $text = null, array $data = []): string
+    function kirbytextinline(?string $text = null, array $options = []): string
     {
-        return App::instance()->kirbytext($text, $data, true);
+        $options['markdown']['inline'] = true;
+        return App::instance()->kirbytext($text, $options);
     }
 }
 
@@ -359,12 +360,13 @@ if (Helpers::hasOverride('kti') === false) { // @codeCoverageIgnore
      * @since 3.1.0
      *
      * @param string|null $text
-     * @param array $data
+     * @param array $options
      * @return string
      */
-    function kti(?string $text = null, array $data = []): string
+    function kti(?string $text = null, array $options = []): string
     {
-        return App::instance()->kirbytext($text, $data, true);
+        $options['markdown']['inline'] = true;
+        return App::instance()->kirbytext($text, $options);
     }
 }
 
