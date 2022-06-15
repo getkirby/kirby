@@ -26,7 +26,7 @@
         <!-- Search filter  -->
         <k-input
           v-if="searching && options.search"
-          v-model="query"
+          v-model="searchterm"
           :autofocus="true"
           :placeholder="$t('search') + ' …'"
           type="text"
@@ -83,7 +83,7 @@ export default {
       pagination: {
         page: null
       },
-      query: null,
+      searchterm: null,
       searching: false
     };
   },
@@ -150,7 +150,7 @@ export default {
     },
     isInvalid() {
       // disable validation while filtering via search
-      if (this.query?.length > 0) {
+      if (this.searchterm?.length > 0) {
         return false;
       }
 
@@ -174,15 +174,15 @@ export default {
     }
   },
   watch: {
+    searchterm: debounce(function () {
+      this.pagination.page = 0;
+      this.reload();
+    }, 200),
     // Reload the section when
     // the view has changed in the backend
     timestamp() {
       this.reload();
-    },
-    query: debounce(function () {
-      this.pagination.page = 0;
-      this.reload();
-    }, 200)
+    }
   },
   created() {
     this.load();
@@ -204,7 +204,7 @@ export default {
       try {
         const response = await this.$api.get(
           this.parent + "/sections/" + this.name,
-          { page: this.pagination.page, query: this.query }
+          { page: this.pagination.page, searchterm: this.searchterm }
         );
 
         this.options = response.options;
@@ -230,7 +230,7 @@ export default {
     },
     onSearchToggle() {
       this.searching = !this.searching;
-      this.query = null;
+      this.searchterm = null;
     },
     onUpload() {},
 

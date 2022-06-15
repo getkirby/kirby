@@ -99,8 +99,8 @@ return [
             });
 
             // search
-            if ($this->search === true && empty($this->query) === false) {
-                $pages = $pages->search($this->query);
+            if ($this->search === true && empty($this->searchterm) === false) {
+                $pages = $pages->search($this->searchterm);
             }
 
             // sort
@@ -253,7 +253,6 @@ return [
                 'link'     => $this->link(),
                 'max'      => $this->max,
                 'min'      => $this->min,
-                'query'    => $this->query,
                 'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable

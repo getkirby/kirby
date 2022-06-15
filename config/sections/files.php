@@ -55,8 +55,8 @@ return [
             $files = $files->filter('isReadable', true);
 
             // search
-            if ($this->search === true && empty($this->query) === false) {
-                $files = $files->search($this->query);
+            if ($this->search === true && empty($this->searchterm) === false) {
+                $files = $files->search($this->searchterm);
             }
 
             // sort
@@ -195,7 +195,6 @@ return [
                 'link'     => $this->link(),
                 'max'      => $this->max,
                 'min'      => $this->min,
-                'query'    => $this->query,
                 'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable,
