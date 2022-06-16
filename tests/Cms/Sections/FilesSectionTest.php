@@ -485,7 +485,7 @@ class FilesSectionTest extends TestCase
     {
         $this->app->clone([
             'request' => [
-                'query' => ['query' => 'bike']
+                'query' => ['searchterm' => 'bike']
             ]
         ]);
 
@@ -513,7 +513,7 @@ class FilesSectionTest extends TestCase
     {
         $this->app->clone([
             'request' => [
-                'query' => ['query' => 'mount']
+                'query' => ['searchterm' => 'mount']
             ]
         ]);
 
@@ -541,7 +541,7 @@ class FilesSectionTest extends TestCase
     {
         $this->app->clone([
             'request' => [
-                'query' => ['query' => 'mountain']
+                'query' => ['searchterm' => 'mountain']
             ]
         ]);
 

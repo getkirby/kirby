@@ -12,8 +12,8 @@ return [
         }
     ],
     'computed' => [
-        'query' => function (): ?string {
-            return App::instance()->request()->get('query');
+        'searchterm' => function (): ?string {
+            return App::instance()->request()->get('searchterm');
         }
     ]
 ];
