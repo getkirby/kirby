@@ -70,6 +70,7 @@ export default {
       isLoading: false,
       isProcessing: false,
       options: {
+        columns: {},
         empty: null,
         headline: null,
         help: null,
