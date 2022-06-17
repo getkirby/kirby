@@ -109,6 +109,7 @@
           <slot name="options" v-bind="{ row, rowIndex, options }">
             <k-options-dropdown
               :options="row.options || options"
+              :text="(row.options || options).length > 1"
               @option="onOption($event, row, rowIndex)"
             />
           </slot>

@@ -275,8 +275,9 @@ export default {
      */
     options() {
       let options = [];
+      let more = this.duplicate && this.more && this.currentIndex === null;
 
-      if (this.duplicate && this.more && this.currentIndex === null) {
+      if (more) {
         options.push({
           icon: "copy",
           text: this.$t("duplicate"),
@@ -286,7 +287,7 @@ export default {
 
       options.push({
         icon: "remove",
-        text: this.$t("remove"),
+        text: more ? this.$t("remove") : null,
         click: "remove"
       });
 
