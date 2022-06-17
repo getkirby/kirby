@@ -23,7 +23,6 @@
     "forum": "https://forum.getkirby.com",
     "source": "https://github.com/getkirby/kirby"
   },
-  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7",
   "require": {
     "php": ">=7.4.0 <8.2.0",
     "ext-SimpleXML": "*",
@@ -43,7 +42,6 @@
     "laminas/laminas-escaper": "2.10.0",
     "michelf/php-smartypants": "1.8.1",
     "phpmailer/phpmailer": "6.6.0",
-    "psr/log": "1.1.4",
     "symfony/polyfill-intl-idn": "1.26.0",
     "symfony/polyfill-mbstring": "1.26.0"
   },
@@ -77,6 +75,9 @@
       "getkirby/composer-installer": true
     },
     "optimize-autoloader": true,
+    "platform": {
+      "php": "7.4.0"
+    },
     "platform-check": false
   },
   "extra": {
