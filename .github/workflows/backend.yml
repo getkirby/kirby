@@ -98,6 +98,10 @@ jobs:
           path: ~/.cache/psalm
           key: backend-analysis-${{ matrix.php }}
 
+      - name: Check Composer platform requirements
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: composer check-platform-reqs
+
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml

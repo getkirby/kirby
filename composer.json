@@ -89,13 +89,11 @@
     "post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
     "analyze": [
       "@analyze:composer",
-      "@analyze:composer-platform-reqs",
       "@analyze:psalm",
       "@analyze:phpcpd",
       "@analyze:phpmd"
     ],
     "analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-    "analyze:composer-platform-reqs": "composer check-platform-reqs",
     "analyze:phpcpd": "phpcpd --fuzzy --exclude tests --exclude vendor .",
     "analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
     "analyze:psalm": "psalm",
