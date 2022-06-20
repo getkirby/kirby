@@ -51,7 +51,7 @@ export default {
   cursor: pointer;
   background-color: var(--color-gray-900);
   color: var(--color-light);
-  border-radius: var(--rounded);
+  border-radius: var(--rounded-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
