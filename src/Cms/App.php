@@ -22,6 +22,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -104,6 +105,9 @@ class App
             $this->handleErrors();
         }
 
+        // a custom request setup must come before defining the path
+        $this->setRequest($props['request'] ?? null);
+
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
 
@@ -114,7 +118,6 @@ class App
         // configurable properties
         $this->setOptionalProperties($props, [
             'languages',
-            'request',
             'roles',
             'site',
             'user',
@@ -1219,7 +1222,11 @@ class App
             return $this->path;
         }
 
-        return $this->path ??= $this->environment()->requestPath();
+        $requestUri  = $this->request()->url()->path()->toString();
+        $scriptPath  = $this->environment()->scriptPath();
+        $requestPath = Str::afterStart($requestUri, $scriptPath);
+
+        return $this->setPath($requestPath)->path;
     }
 
     /**
@@ -1246,9 +1253,11 @@ class App
             return $this->request;
         }
 
+        $env = $this->environment();
+
         return $this->request = new Request([
-            'cli' => $this->environment()->cli(),
-            'url' => $this->url('current')
+            'cli' => $env->cli(),
+            'url' => $env->requestUrl()
         ]);
     }
 
