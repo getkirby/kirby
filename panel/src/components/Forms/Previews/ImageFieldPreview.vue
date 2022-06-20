@@ -13,9 +13,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.k-image-field-preview {
-  width: var(--table-row-height);
-}
-</style>
