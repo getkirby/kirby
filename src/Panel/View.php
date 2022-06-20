@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Http\Response;
-use Kirby\Http\Url;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -198,7 +197,7 @@ class View
             '$license' => (bool)$kirby->system()->license(),
             '$multilang' => $multilang,
             '$searches' => static::searches($options['areas'] ?? [], $permissions),
-            '$url' => Url::current(),
+            '$url' => $kirby->request()->url()->toString(),
             '$user' => function () use ($user) {
                 if ($user) {
                     return [

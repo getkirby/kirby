@@ -1026,20 +1026,6 @@ class EnvironmentTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providerForRequestPaths
-     * @covers ::requestPath
-     */
-    public function testRequestPath($scriptName, $requestUri, $route)
-    {
-        $env = new Environment(['cli' => false], [
-            'SCRIPT_NAME' => $scriptName,
-            'REQUEST_URI' => $requestUri,
-        ]);
-
-        $this->assertSame($route, $env->requestPath());
-    }
-
     public function testRequestUrl()
     {
         // basic
@@ -1078,56 +1064,49 @@ class EnvironmentTest extends TestCase
             [
                 null,
                 [
-                    'path'  => null,
-                    'query' => null
+                    'path'  => '',
+                    'query' => ''
                 ]
             ],
             [
                 '/',
                 [
-                    'path'  => '/',
-                    'query' => null
+                    'path'  => '',
+                    'query' => ''
                 ]
             ],
             [
                 '/foo/bar',
                 [
-                    'path'  => '/foo/bar',
-                    'query' => null
+                    'path'  => 'foo/bar',
+                    'query' => ''
                 ]
             ],
             [
                 '/foo/bar?foo=bar',
                 [
-                    'path'  => '/foo/bar',
+                    'path'  => 'foo/bar',
                     'query' => 'foo=bar'
                 ]
             ],
             [
                 '/foo/bar/page:2?foo=bar',
                 [
-                    'path'  => '/foo/bar/page:2',
-                    'query' => 'foo=bar'
-                ]
-            ],
-            [
-                '/foo/bar/page;2?foo=bar',
-                [
-                    'path'  => '/foo/bar/page;2',
+                    'path'  => 'foo/bar',
                     'query' => 'foo=bar'
                 ]
             ],
             [
                 'index.php?foo=bar',
                 [
-                    'path'  => null,
+                    'path'  => '',
                     'query' => 'foo=bar'
                 ]
             ],
             [
                 'https://getkirby.com/foo/bar?foo=bar',
                 [
-                    'path'  => '/foo/bar',
+                    'path'  => 'foo/bar',
                     'query' => 'foo=bar'
                 ]
             ]
@@ -1144,7 +1123,8 @@ class EnvironmentTest extends TestCase
             'REQUEST_URI' => $value,
         ]);
 
-        $this->assertSame($expected, $env->requestUri($value));
+        $this->assertSame($expected['path'], $env->requestUri($value)->path()->toString());
+        $this->assertSame($expected['query'], $env->requestUri($value)->query()->toString());
     }
 
     public function providerForSanitize()
@@ -1319,10 +1299,7 @@ class EnvironmentTest extends TestCase
             'isBehindProxy' => false,
             'path'          => '',
             'port'          => null,
-            'requestUri'    => [
-                'path'  => null,
-                'query' => null
-            ],
+            'requestUri'    => 'http://example.com',
             'scriptPath'    => '',
             'url'           => 'http://example.com'
         ], $env->toArray());

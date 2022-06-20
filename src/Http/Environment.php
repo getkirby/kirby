@@ -177,7 +177,6 @@ class Environment
         $this->host          = null;
         $this->https         = false;
         $this->isBehindProxy = null;
-        $this->requestUri    = $this->detectRequestUri($this->get('REQUEST_URI'));
         $this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
         $this->path          = $this->detectPath($this->scriptPath);
         $this->port          = null;
@@ -209,6 +208,9 @@ class Environment
 
         // build the URL based on the detected params
         $this->detectUrl();
+
+        // build the request URI based on the detected URL
+        $this->detectRequestUri($this->get('REQUEST_URI'));
 
         // return the sanitized $_SERVER array
         return $this->info;
@@ -557,22 +559,24 @@ class Environment
      * Splits any URI into path and query
      *
      * @param string|null $requestUri
-     * @return array
+     * @return \Kirby\Http\Uri
      */
-    protected function detectRequestUri(?string $requestUri = null): array
+    protected function detectRequestUri(?string $requestUri = null)
     {
-        if (Url::isAbsolute($requestUri) === true) {
-            $requestUri = parse_url($requestUri);
-        } else {
-            // the fake domain is needed to make sure the URL parsing is
-            // always correct. Even if there's a colon in the path for params
-            $requestUri = parse_url('http://getkirby.com' . $requestUri);
+        // make sure the URL parser works properly when there's a
+        // colon in the request URI but the URI is relative
+        if (Url::isAbsolute($requestUri) === false) {
+            $requestUri = 'https://getkirby.com' . $requestUri;
         }
 
-        return [
-            'path'  => $requestUri['path']  ?? null,
-            'query' => $requestUri['query'] ?? null,
-        ];
+        $uri = new Uri($requestUri);
+
+        return $this->requestUri = $this->uri()->clone([
+            'fragment' => $uri->fragment(),
+            'params'   => $uri->params(),
+            'path'     => $uri->path(),
+            'query'    => $uri->query()
+        ]);
     }
 
     /**
@@ -816,48 +820,24 @@ class Environment
     }
 
     /**
-     * Returns the path after the script path
-     * This is the one used for routing
+     * Returns an URI object for the requested URL
      *
-     * @return string
+     * @return \Kirby\Http\Uri
      */
-    public function requestPath(): string
-    {
-        $requestUri = trim($this->requestUri()['path'] ?? '', '/');
-        $requestUri = str_replace('//', '/', $requestUri);
-
-        // remove the script path only from the beginning of the URI
-        $requestUri = Str::afterStart($requestUri, $this->scriptPath());
-
-        return trim($requestUri, '/');
-    }
-
-    /**
-     * Returns an array with path and query
-     * from the `REQUEST_URI`
-     *
-     * @return array
-     */
-    public function requestUri(): array
+    public function requestUri()
     {
         return $this->requestUri;
     }
 
     /**
      * Returns the current URL, including the request path
+     * and query
      *
      * @return string
      */
     public function requestUrl(): string
     {
-        $path = $this->requestPath();
-        $base = $this->url();
-
-        if (empty($path) === true) {
-            return $base;
-        }
-
-        return rtrim($base, '/') . '/' . $path;
+        return $this->requestUri()->toString();
     }
 
     /**
@@ -1015,7 +995,7 @@ class Environment
             'isBehindProxy' => $this->isBehindProxy,
             'path'          => $this->path,
             'port'          => $this->port,
-            'requestUri'    => $this->requestUri,
+            'requestUri'    => $this->requestUrl(),
             'scriptPath'    => $this->scriptPath,
             'url'           => $this->url
         ];
