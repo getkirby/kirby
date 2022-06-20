@@ -107,6 +107,13 @@ class Environment
     protected $scriptPath;
 
     /**
+     * Full base URL object
+     *
+     * @var string
+     */
+    protected $uri;
+
+    /**
      * Full base URL
      *
      * @var string
@@ -201,7 +208,7 @@ class Environment
         }
 
         // build the URL based on the detected params
-        $this->url = $this->detectUrl();
+        $this->detectUrl();
 
         // return the sanitized $_SERVER array
         return $this->info;
@@ -244,7 +251,7 @@ class Environment
 
         // build the url based on the detected environment
         // to compare it against what is allowed
-        $this->url = $this->detectUrl();
+        $this->detectUrl();
 
         foreach ($allowed as $url) {
             // skip invalid URLs
@@ -591,14 +598,14 @@ class Environment
      */
     protected function detectUrl(): string
     {
-        $uri = new Uri([
+        $this->uri = new Uri([
             'host'   => $this->host,
             'path'   => $this->path,
             'port'   => $this->port,
             'scheme' => $this->https ? 'https' : 'http',
         ]);
 
-        return $uri->toString();
+        return $this->url = $this->uri->toString();
     }
 
     /**
@@ -1012,6 +1019,16 @@ class Environment
             'scriptPath'    => $this->scriptPath,
             'url'           => $this->url
         ];
+    }
+
+    /**
+     * Returns the full base URL object
+     *
+     * @return \Kirby\Http\Uri
+     */
+    public function uri()
+    {
+        return $this->uri;
     }
 
     /**

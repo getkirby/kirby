@@ -1222,11 +1222,11 @@ class App
             return $this->path;
         }
 
-        $requestUri  = $this->request()->url()->path()->toString();
-        $scriptPath  = $this->environment()->scriptPath();
-        $requestPath = Str::afterStart($requestUri, $scriptPath);
+        $current = $this->request()->path()->toString();
+        $index   = $this->environment()->uri()->path()->toString();
+        $path    = Str::afterStart($current, $index);
 
-        return $this->setPath($requestPath)->path;
+        return $this->setPath($path)->path;
     }
 
     /**

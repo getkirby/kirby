@@ -1329,6 +1329,16 @@ class EnvironmentTest extends TestCase
     }
 
     /**
+     * @covers ::uri
+     */
+    public function testUri()
+    {
+        // nothing given
+        $env = new Environment();
+        $this->assertInstanceOf('Kirby\Http\Uri', $env->uri());
+    }
+
+    /**
      * @covers ::url
      */
     public function testUrl()
