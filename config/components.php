@@ -143,14 +143,12 @@ return [
      * @return string
      * @todo remove $inline parameter in in 3.8.0
      */
-    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = null): string {
+    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
         static $config;
 
         // warning for deprecated fourth parameter
-        if ($inline === null) {
-            $inline = false;
-        } elseif (isset($options['inline']) === false) {
+        if (func_num_args() === 4 && isset($options['inline']) === false) {
             // @codeCoverageIgnoreStart
             Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
             // @codeCoverageIgnoreEnd
@@ -166,7 +164,7 @@ return [
             $config   = $options;
         }
 
-        return $markdown->parse($text, $options['inline']);
+        return $markdown->parse($text, $options['inline'] ?? false);
     },
 
     /**
