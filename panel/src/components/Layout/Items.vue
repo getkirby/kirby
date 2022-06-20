@@ -44,7 +44,12 @@
 export default {
   inheritAttrs: false,
   props: {
-    columns: Object,
+    columns: {
+      type: [Object, Array],
+      default() {
+        return {};
+      }
+    },
     items: {
       type: Array,
       default() {
