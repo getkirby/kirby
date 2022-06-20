@@ -173,75 +173,9 @@ class ServerTest extends TestCase
         $this->assertSame(null, Server::port());
     }
 
-    public function provideRequestUri(): array
+    public function testRequestUri()
     {
-        return [
-            [
-                null,
-                [
-                    'path'  => null,
-                    'query' => null
-                ]
-            ],
-            [
-                '/',
-                [
-                    'path'  => '/',
-                    'query' => null
-                ]
-            ],
-            [
-                '/foo/bar',
-                [
-                    'path'  => '/foo/bar',
-                    'query' => null
-                ]
-            ],
-            [
-                '/foo/bar?foo=bar',
-                [
-                    'path'  => '/foo/bar',
-                    'query' => 'foo=bar'
-                ]
-            ],
-            [
-                '/foo/bar/page:2?foo=bar',
-                [
-                    'path'  => '/foo/bar/page:2',
-                    'query' => 'foo=bar'
-                ]
-            ],
-            [
-                '/foo/bar/page;2?foo=bar',
-                [
-                    'path'  => '/foo/bar/page;2',
-                    'query' => 'foo=bar'
-                ]
-            ],
-            [
-                'index.php?foo=bar',
-                [
-                    'path'  => null,
-                    'query' => 'foo=bar'
-                ]
-            ],
-            [
-                'https://getkirby.com/foo/bar?foo=bar',
-                [
-                    'path'  => '/foo/bar',
-                    'query' => 'foo=bar'
-                ]
-            ]
-        ];
-    }
-
-    /**
-     * @dataProvider provideRequestUri
-     */
-    public function testRequestUri($input, $expected)
-    {
-        $_SERVER['REQUEST_URI'] = $input;
-        $this->assertSame($expected, Server::requestUri());
+        $this->assertInstanceOf('Kirby\Http\Uri', Server::requestUri());
     }
 
     public function provideSanitize()
