@@ -403,6 +403,9 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+.k-tags-input .k-tag {
+  border-radius: var(--rounded-sm);
+}
 .k-tags-input .k-sortable-ghost {
   background: var(--color-focus);
 }
