@@ -35,16 +35,18 @@ return [
 
             if ($this->image !== false) {
                 $columns['image'] = [
-                    'label' => ' ',
-                    'type'  => 'image',
-                    'width' => 'var(--table-row-height)'
+                    'label'  => ' ',
+                    'type'   => 'image',
+                    'mobile' => true,
+                    'width'  => 'var(--table-row-height)'
                 ];
             }
 
             if ($this->text) {
                 $columns['title'] = [
-                    'label' => I18n::translate('title'),
-                    'type'  => 'url'
+                    'label'  => I18n::translate('title'),
+                    'type'   => 'url',
+                    'mobile' => true
                 ];
             }
 
@@ -62,9 +64,10 @@ return [
 
             if ($this->type === 'pages') {
                 $columns['flag'] = [
-                    'label' => ' ',
-                    'type'  => 'flag',
-                    'width' => 'var(--table-row-height)'
+                    'label'  => ' ',
+                    'type'   => 'flag',
+                    'width'  => 'var(--table-row-height)',
+                    'mobile' => true,
                 ];
             }
 

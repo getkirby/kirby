@@ -31,7 +31,8 @@
           :columns="{
             name: {
               label: $t('name'),
-              type: 'url'
+              type: 'url',
+              mobile: true
             },
             author: {
               label: $t('author')
@@ -41,7 +42,8 @@
             },
             version: {
               label: $t('version'),
-              width: '8rem'
+              width: '8rem',
+              mobile: true
             }
           }"
           :rows="plugins"
