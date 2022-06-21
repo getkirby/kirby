@@ -2,7 +2,6 @@
   <!-- Single option = button -->
   <k-button
     v-if="hasSingleOption"
-    v-bind="options[0]"
     :icon="options[0].icon || icon"
     :tooltip="options[0].tooltip || options[0].text"
     class="k-options-dropdown-toggle"
