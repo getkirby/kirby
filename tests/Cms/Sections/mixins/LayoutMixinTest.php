@@ -50,9 +50,10 @@ class LayoutMixinTest extends TestCase
 
         $expected = [
             'image' => [
-                'label' => ' ',
-                'type'  => 'image',
-                'width' => 'var(--table-row-height)'
+                'label'  => ' ',
+                'mobile' => true,
+                'type'   => 'image',
+                'width'  => 'var(--table-row-height)'
             ]
         ];
 
@@ -69,13 +70,15 @@ class LayoutMixinTest extends TestCase
 
         $expected = [
             'image' => [
-                'label' => ' ',
-                'type'  => 'image',
-                'width' => 'var(--table-row-height)'
+                'label'  => ' ',
+                'mobile' => true,
+                'type'   => 'image',
+                'width'  => 'var(--table-row-height)'
             ],
             'title' => [
-                'label' => 'Title',
-                'type'  => 'url'
+                'label'  => 'Title',
+                'mobile' => true,
+                'type'   => 'url'
             ]
         ];
 
@@ -93,17 +96,19 @@ class LayoutMixinTest extends TestCase
 
         $expected = [
             'image' => [
-                'label' => ' ',
-                'type'  => 'image',
-                'width' => 'var(--table-row-height)',
+                'label'  => ' ',
+                'mobile' => true,
+                'type'   => 'image',
+                'width'  => 'var(--table-row-height)',
             ],
             'title' => [
-                'label' => 'Title',
-                'type'  => 'url'
+                'label'  => 'Title',
+                'mobile' => true,
+                'type'   => 'url'
             ],
             'info' => [
-                'label' => 'Info',
-                'type'  => 'text'
+                'label'  => 'Info',
+                'type'   => 'text'
             ]
         ];
 
@@ -119,14 +124,16 @@ class LayoutMixinTest extends TestCase
 
         $expected = [
             'image' => [
-                'label' => ' ',
-                'type'  => 'image',
-                'width' => 'var(--table-row-height)',
+                'label'  => ' ',
+                'mobile' => true,
+                'type'   => 'image',
+                'width'  => 'var(--table-row-height)',
             ],
             'flag' => [
-                'label' => ' ',
-                'type'  => 'flag',
-                'width' => 'var(--table-row-height)'
+                'label'  => ' ',
+                'mobile' => true,
+                'type'   => 'flag',
+                'width'  => 'var(--table-row-height)'
             ]
         ];
 
@@ -149,6 +156,7 @@ class LayoutMixinTest extends TestCase
         $expected = [
             'image' => [
                 'label' => ' ',
+                'mobile' => true,
                 'type'  => 'image',
                 'width' => 'var(--table-row-height)',
             ],

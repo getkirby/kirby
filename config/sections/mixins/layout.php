@@ -36,8 +36,8 @@ return [
             if ($this->image !== false) {
                 $columns['image'] = [
                     'label'  => ' ',
-                    'type'   => 'image',
                     'mobile' => true,
+                    'type'   => 'image',
                     'width'  => 'var(--table-row-height)'
                 ];
             }
@@ -45,8 +45,8 @@ return [
             if ($this->text) {
                 $columns['title'] = [
                     'label'  => I18n::translate('title'),
+                    'mobile' => true,
                     'type'   => 'url',
-                    'mobile' => true
                 ];
             }
 
@@ -65,9 +65,9 @@ return [
             if ($this->type === 'pages') {
                 $columns['flag'] = [
                     'label'  => ' ',
+                    'mobile' => true,
                     'type'   => 'flag',
                     'width'  => 'var(--table-row-height)',
-                    'mobile' => true,
                 ];
             }
 
