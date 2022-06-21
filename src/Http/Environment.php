@@ -213,7 +213,7 @@ class Environment
         // @codeCoverageIgnoreStart
         if (is_int($options['allowed']) === true) {
             Helpers::deprecated('
-                Using `Server::` constants for the `baseUrl` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
+                Using `Server::` constants for the `allowed` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
             ');
 
             $options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
