@@ -114,19 +114,19 @@ class Request
         $this->method  = $this->detectRequestMethod($options['method'] ?? null);
 
         if (isset($options['body']) === true) {
-            $this->body = new Body($options['body']);
+            $this->body = is_a($options['body'], Body::class) ? $options['body'] : new Body($options['body']);
         }
 
         if (isset($options['files']) === true) {
-            $this->files = new Files($options['files']);
+            $this->files = is_a($options['files'], Files::class) ? $options['files'] : new Files($options['files']);
         }
 
         if (isset($options['query']) === true) {
-            $this->query = new Query($options['query']);
+            $this->query = is_a($options['query'], Query::class) === true ? $options['query'] : new Query($options['query']);
         }
 
         if (isset($options['url']) === true) {
-            $this->url = new Uri($options['url']);
+            $this->url = is_a($options['url'], Uri::class) === true ? $options['url'] : new Uri($options['url']);
         }
     }
 

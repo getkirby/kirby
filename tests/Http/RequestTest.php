@@ -26,17 +26,35 @@ class RequestTest extends TestCase
             'error'    => 0
         ];
 
+        // simple
         $request = new Request([
             'method' => 'POST',
             'body'   => ['a' => 'a'],
             'query'  => ['b' => 'b'],
-            'files'  => ['upload' => $file]
+            'files'  => ['upload' => $file],
+            'url'    => 'https://getkirby.com'
         ]);
 
         $this->assertTrue($request->is('POST'));
-        $this->assertEquals('a', $request->body()->get('a'));
-        $this->assertEquals('b', $request->query()->get('b'));
-        $this->assertEquals($file, $request->file('upload'));
+        $this->assertSame('a', $request->body()->get('a'));
+        $this->assertSame('b', $request->query()->get('b'));
+        $this->assertSame($file, $request->file('upload'));
+        $this->assertSame('https://getkirby.com', $request->url()->toString());
+
+        // with instances
+        $request = new Request([
+            'method' => 'POST',
+            'body'   => new Request\Body(['a' => 'a']),
+            'query'  => new Request\Query(['b' => 'b']),
+            'files'  => new Request\Files(['upload' => $file]),
+            'url'    => new Uri('https://getkirby.com')
+        ]);
+
+        $this->assertTrue($request->is('POST'));
+        $this->assertSame('a', $request->body()->get('a'));
+        $this->assertSame('b', $request->query()->get('b'));
+        $this->assertSame($file, $request->file('upload'));
+        $this->assertSame('https://getkirby.com', $request->url()->toString());
     }
 
     public function testData()

@@ -1223,7 +1223,7 @@ class App
         }
 
         $current = $this->request()->path()->toString();
-        $index   = $this->environment()->uri()->path()->toString();
+        $index   = $this->environment()->baseUri()->path()->toString();
         $path    = Str::afterStart($current, $index);
 
         return $this->setPath($path)->path;
@@ -1257,7 +1257,7 @@ class App
 
         return $this->request = new Request([
             'cli' => $env->cli(),
-            'url' => $env->requestUrl()
+            'url' => $env->requestUri()
         ]);
     }
 

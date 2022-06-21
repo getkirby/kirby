@@ -337,7 +337,7 @@ class Uri
         if ($app = App::instance(null, true)) {
             $url = $app->url('index');
         } else {
-            $url = (new Environment())->url();
+            $url = (new Environment())->baseUrl();
         }
 
         return new static($url, $props);

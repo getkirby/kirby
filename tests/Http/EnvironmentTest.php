@@ -31,7 +31,7 @@ class EnvironmentTest extends TestCase
             'HTTP_HOST' => 'example.com'
         ]);
 
-        $this->assertSame('http://example.com', $env->url());
+        $this->assertSame('http://example.com', $env->baseUrl());
         $this->assertSame('example.com', $env->host());
     }
 
@@ -44,7 +44,7 @@ class EnvironmentTest extends TestCase
             'HTTP_X_FORWARDED_HOST' => 'example.com'
         ]);
 
-        $this->assertSame('http://example.com', $env->url());
+        $this->assertSame('http://example.com', $env->baseUrl());
         $this->assertSame('example.com', $env->host());
     }
 
@@ -57,7 +57,7 @@ class EnvironmentTest extends TestCase
 
         ]);
 
-        $this->assertSame('/', $env->url());
+        $this->assertSame('/', $env->baseUrl());
         $this->assertNull($env->host());
     }
 
@@ -70,7 +70,7 @@ class EnvironmentTest extends TestCase
 
         ]);
 
-        $this->assertSame('/subfolder', $env->url());
+        $this->assertSame('/subfolder', $env->baseUrl());
         $this->assertNull($env->host());
     }
 
@@ -83,7 +83,7 @@ class EnvironmentTest extends TestCase
             'SERVER_NAME' => 'example.com'
         ]);
 
-        $this->assertSame('http://example.com', $env->url());
+        $this->assertSame('http://example.com', $env->baseUrl());
         $this->assertSame('example.com', $env->host());
     }
 
@@ -96,7 +96,7 @@ class EnvironmentTest extends TestCase
             'HTTP_HOST' => 'example.com'
         ]);
 
-        $this->assertSame('http://example.com', $env->url());
+        $this->assertSame('http://example.com', $env->baseUrl());
         $this->assertSame('example.com', $env->host());
     }
 
@@ -113,7 +113,7 @@ class EnvironmentTest extends TestCase
             'HTTP_HOST' => 'example.com'
         ]);
 
-        $this->assertSame('http://example.com', $env->url());
+        $this->assertSame('http://example.com', $env->baseUrl());
         $this->assertSame('example.com', $env->host());
     }
 
@@ -132,7 +132,7 @@ class EnvironmentTest extends TestCase
             'SCRIPT_NAME' => '/path-a/index.php'
         ]);
 
-        $this->assertSame('http://localhost/path-a', $env->url());
+        $this->assertSame('http://localhost/path-a', $env->baseUrl());
         $this->assertSame('localhost', $env->host());
     }
 
@@ -148,8 +148,69 @@ class EnvironmentTest extends TestCase
             'SCRIPT_NAME' => '/index.php'
         ]);
 
-        $this->assertSame('http://getkirby.com', $env->url());
+        $this->assertSame('http://getkirby.com', $env->baseUrl());
         $this->assertSame('getkirby.com', $env->host());
+    }
+
+    /**
+     * @covers ::baseUri
+     */
+    public function testBaseUri()
+    {
+        // nothing given
+        $env = new Environment();
+        $this->assertInstanceOf('Kirby\Http\Uri', $env->baseUri());
+    }
+
+    /**
+     * @covers ::baseUrl
+     */
+    public function testBaseUrl()
+    {
+        // nothing given
+        $env = new Environment();
+        $this->assertSame('/', $env->baseUrl());
+
+        // host only
+        $env = new Environment(['cli' => false], [
+            'SERVER_NAME' => 'getkirby.com'
+        ]);
+
+        $this->assertSame('http://getkirby.com', $env->baseUrl());
+
+        // empty host in subfolder
+        $env = new Environment(['cli' => false], [
+            'SCRIPT_NAME' => '/subfolder/index.php'
+        ]);
+
+        $this->assertSame('/subfolder', $env->baseUrl());
+
+        // server address
+        $env = new Environment(['cli' => false], [
+            'SERVER_ADDR' => '127.0.0.1',
+            'SERVER_PORT' => 8888
+        ]);
+
+        $this->assertSame('http://127.0.0.1:8888', $env->baseUrl());
+
+        // all parts
+        $env = new Environment(['cli' => false], [
+            'HTTPS'       => true,
+            'SERVER_NAME' => 'getkirby.com',
+            'SERVER_PORT' => 8888,
+            'SCRIPT_NAME' => '/subfolder/index.php'
+        ]);
+
+        $this->assertSame('https://getkirby.com:8888/subfolder', $env->baseUrl());
+
+        // proxy
+        $env = new Environment(['cli' => false, 'allowed' => '*'], [
+            'HTTP_X_FORWARDED_SSL'  => true,
+            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
+            'HTTP_X_FORWARDED_PORT' => 8888,
+        ]);
+
+        $this->assertSame('https://getkirby.com:8888', $env->baseUrl());
     }
 
     /**
@@ -1290,6 +1351,7 @@ class EnvironmentTest extends TestCase
         ]);
 
         $this->assertSame([
+            'baseUrl'       => 'http://example.com',
             'host'          => 'example.com',
             'https'         => false,
             'info'          => [
@@ -1299,70 +1361,8 @@ class EnvironmentTest extends TestCase
             'isBehindProxy' => false,
             'path'          => '',
             'port'          => null,
-            'requestUri'    => 'http://example.com',
+            'requestUrl'    => 'http://example.com',
             'scriptPath'    => '',
-            'url'           => 'http://example.com'
         ], $env->toArray());
-    }
-
-    /**
-     * @covers ::uri
-     */
-    public function testUri()
-    {
-        // nothing given
-        $env = new Environment();
-        $this->assertInstanceOf('Kirby\Http\Uri', $env->uri());
-    }
-
-    /**
-     * @covers ::url
-     */
-    public function testUrl()
-    {
-        // nothing given
-        $env = new Environment();
-        $this->assertSame('/', $env->url());
-
-        // host only
-        $env = new Environment(['cli' => false], [
-            'SERVER_NAME' => 'getkirby.com'
-        ]);
-
-        $this->assertSame('http://getkirby.com', $env->url());
-
-        // empty host in subfolder
-        $env = new Environment(['cli' => false], [
-            'SCRIPT_NAME' => '/subfolder/index.php'
-        ]);
-
-        $this->assertSame('/subfolder', $env->url());
-
-        // server address
-        $env = new Environment(['cli' => false], [
-            'SERVER_ADDR' => '127.0.0.1',
-            'SERVER_PORT' => 8888
-        ]);
-
-        $this->assertSame('http://127.0.0.1:8888', $env->url());
-
-        // all parts
-        $env = new Environment(['cli' => false], [
-            'HTTPS'       => true,
-            'SERVER_NAME' => 'getkirby.com',
-            'SERVER_PORT' => 8888,
-            'SCRIPT_NAME' => '/subfolder/index.php'
-        ]);
-
-        $this->assertSame('https://getkirby.com:8888/subfolder', $env->url());
-
-        // proxy
-        $env = new Environment(['cli' => false, 'allowed' => '*'], [
-            'HTTP_X_FORWARDED_SSL'  => true,
-            'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
-            'HTTP_X_FORWARDED_PORT' => 8888,
-        ]);
-
-        $this->assertSame('https://getkirby.com:8888', $env->url());
     }
 }
