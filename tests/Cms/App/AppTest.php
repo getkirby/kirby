@@ -1139,4 +1139,44 @@ class AppTest extends TestCase
 
         $this->assertSame(['title' => 'Site'], $app->controller('none', [], 'json'));
     }
+
+    /**
+     * @covers ::path
+     */
+    public function testPath()
+    {
+        $app = new App();
+        $this->assertSame('', $app->path());
+
+        // with custom request
+        $app = new App([
+            'request' => [
+                'url' => [
+                    'path' => '/foo/bar'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
+
+        // from request uri
+        $app = new App([
+            'server' => [
+                'REQUEST_URI' => '/foo/bar'
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
+
+        // with params
+        $app = new App([
+            'request' => [
+                'url' => [
+                    'path' => '/foo/bar/page:1'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
+    }
 }

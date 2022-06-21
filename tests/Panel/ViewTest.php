@@ -279,6 +279,27 @@ class ViewTest extends TestCase
     /**
      * @covers ::data
      */
+    public function testDataWithCustomRequestUrl(): void
+    {
+        $this->app = $this->app->clone([
+            'cli' => false,
+            'options' => [
+                'url' => 'https://localhost.com:8888'
+            ],
+            'server' => [
+                'REQUEST_URI' => '/foo/bar/?foo=bar'
+            ]
+        ]);
+
+        // without custom data
+        $data = View::data();
+
+        $this->assertSame('https://localhost.com:8888/foo/bar?foo=bar', $data['$url']);
+    }
+
+    /**
+     * @covers ::data
+     */
     public function testDataWithCustomProps(): void
     {
         $data = View::data([

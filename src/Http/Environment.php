@@ -25,6 +25,20 @@ use Kirby\Toolkit\Str;
 class Environment
 {
     /**
+     * Full base URL object
+     *
+     * @var \Kirby\Http\Uri
+     */
+    protected $baseUri;
+
+    /**
+     * Full base URL
+     *
+     * @var string
+     */
+    protected $baseUrl;
+
+    /**
      * Whether the request is being served by the CLI
      *
      * @var bool
@@ -90,12 +104,19 @@ class Environment
     protected $portInHost;
 
     /**
-     * Array with path and query
-     * from the `REQUEST_URI`
+     * Uri object for the full request URI.
+     * It is a combination of the base URL and `REQUEST_URI`
      *
-     * @var array
+     * @var \Kirby\Http\Uri
      */
     protected $requestUri;
+
+    /**
+     * Full request URL
+     *
+     * @var string
+     */
+    protected $requestUrl;
 
     /**
      * Path to the php script within the
@@ -105,13 +126,6 @@ class Environment
      * @var string
      */
     protected $scriptPath;
-
-    /**
-     * Full base URL
-     *
-     * @var string
-     */
-    protected $url;
 
     /**
      * Class constructor
@@ -133,6 +147,26 @@ class Environment
     public function address(): ?string
     {
         return $this->ip();
+    }
+
+    /**
+     * Returns the full base URL object
+     *
+     * @return \Kirby\Http\Uri
+     */
+    public function baseUri()
+    {
+        return $this->baseUri;
+    }
+
+    /**
+     * Returns the full base URL
+     *
+     * @return string
+     */
+    public function baseUrl(): string
+    {
+        return $this->baseUrl;
     }
 
     /**
@@ -170,7 +204,6 @@ class Environment
         $this->host          = null;
         $this->https         = false;
         $this->isBehindProxy = null;
-        $this->requestUri    = $this->detectRequestUri($this->get('REQUEST_URI'));
         $this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
         $this->path          = $this->detectPath($this->scriptPath);
         $this->port          = null;
@@ -180,7 +213,7 @@ class Environment
         // @codeCoverageIgnoreStart
         if (is_int($options['allowed']) === true) {
             Helpers::deprecated('
-                Using `Server::` constants for the `url` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
+                Using `Server::` constants for the `allowed` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
             ');
 
             $options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
@@ -200,8 +233,11 @@ class Environment
             $this->detectAuto();
         }
 
-        // build the URL based on the detected params
-        $this->url = $this->detectUrl();
+        // build the URI based on the detected params
+        $this->detectBaseUri();
+
+        // build the request URI based on the detected URL
+        $this->detectRequestUri($this->get('REQUEST_URI'));
 
         // return the sanitized $_SERVER array
         return $this->info;
@@ -221,13 +257,13 @@ class Environment
         // with a single allowed URL, the entire
         // environment will be based on that
         if (count($allowed) === 1) {
-            $url = A::first($allowed);
+            $baseUrl = A::first($allowed);
 
-            if (is_string($url) === false) {
+            if (is_string($baseUrl) === false) {
                 throw new InvalidArgumentException('Invalid allow list setup for base URLs');
             }
 
-            $uri = new Uri($url, ['slash' => false]);
+            $uri = new Uri($baseUrl, ['slash' => false]);
 
             $this->host  = $uri->host();
             $this->https = $uri->https();
@@ -242,9 +278,9 @@ class Environment
         // the fixed allowlist below
         $this->detectAuto(true);
 
-        // build the url based on the detected environment
+        // build the baseUrl based on the detected environment
         // to compare it against what is allowed
-        $this->url = $this->detectUrl();
+        $this->detectBaseUri();
 
         foreach ($allowed as $url) {
             // skip invalid URLs
@@ -254,7 +290,7 @@ class Environment
 
             $uri = new Uri($url, ['slash' => false]);
 
-            if ($uri->toString() === $this->url) {
+            if ($uri->toString() === $this->baseUrl) {
                 // the current environment is allowed,
                 // stop before the exception below is thrown
                 return;
@@ -315,6 +351,26 @@ class Environment
         $this->host  = $this->detectHost($insecure);
         $this->https = $this->detectHttps();
         $this->port  = $this->detectPort();
+    }
+
+    /**
+     * Builds the base URL based on the
+     * given environment params
+     *
+     * @return \Kirby\Http\Uri
+     */
+    protected function detectBaseUri()
+    {
+        $this->baseUri = new Uri([
+            'host'   => $this->host,
+            'path'   => $this->path,
+            'port'   => $this->port,
+            'scheme' => $this->https ? 'https' : 'http',
+        ]);
+
+        $this->baseUrl = $this->baseUri->toString();
+
+        return $this->baseUri;
     }
 
     /**
@@ -550,22 +606,31 @@ class Environment
      * Splits any URI into path and query
      *
      * @param string|null $requestUri
-     * @return array
+     * @return \Kirby\Http\Uri
      */
-    protected function detectRequestUri(?string $requestUri = null): array
+    protected function detectRequestUri(?string $requestUri = null)
     {
-        if (Url::isAbsolute($requestUri) === true) {
-            $requestUri = parse_url($requestUri);
-        } else {
-            // the fake domain is needed to make sure the URL parsing is
-            // always correct. Even if there's a colon in the path for params
-            $requestUri = parse_url('http://getkirby.com' . $requestUri);
+        // make sure the URL parser works properly when there's a
+        // colon in the request URI but the URI is relative
+        if (Url::isAbsolute($requestUri) === false) {
+            $requestUri = 'https://getkirby.com' . $requestUri;
         }
 
-        return [
-            'path'  => $requestUri['path']  ?? null,
-            'query' => $requestUri['query'] ?? null,
-        ];
+        $uri = new Uri($requestUri);
+
+        // create the URI object as a combination of base uri parts
+        // and the parts from REQUEST_URI
+        $this->requestUri = $this->baseUri()->clone([
+            'fragment' => $uri->fragment(),
+            'params'   => $uri->params(),
+            'path'     => $uri->path(),
+            'query'    => $uri->query()
+        ]);
+
+        // build the full request URL
+        $this->requestUrl = $this->requestUri->toString();
+
+        return $this->requestUri;
     }
 
     /**
@@ -581,24 +646,6 @@ class Environment
         }
 
         return $this->sanitizeScriptPath($scriptPath);
-    }
-
-    /**
-     * Builds the base URL based on the
-     * given environment params
-     *
-     * @return string
-     */
-    protected function detectUrl(): string
-    {
-        $uri = new Uri([
-            'host'   => $this->host,
-            'path'   => $this->path,
-            'port'   => $this->port,
-            'scheme' => $this->https ? 'https' : 'http',
-        ]);
-
-        return $uri->toString();
     }
 
     /**
@@ -809,48 +856,24 @@ class Environment
     }
 
     /**
-     * Returns the path after the script path
-     * This is the one used for routing
+     * Returns an URI object for the requested URL
      *
-     * @return string
+     * @return \Kirby\Http\Uri
      */
-    public function requestPath(): string
-    {
-        $requestUri = trim($this->requestUri()['path'] ?? '', '/');
-        $requestUri = str_replace('//', '/', $requestUri);
-
-        // remove the script path only from the beginning of the URI
-        $requestUri = Str::afterStart($requestUri, $this->scriptPath());
-
-        return trim($requestUri, '/');
-    }
-
-    /**
-     * Returns an array with path and query
-     * from the `REQUEST_URI`
-     *
-     * @return array
-     */
-    public function requestUri(): array
+    public function requestUri()
     {
         return $this->requestUri;
     }
 
     /**
      * Returns the current URL, including the request path
+     * and query
      *
      * @return string
      */
     public function requestUrl(): string
     {
-        $path = $this->requestPath();
-        $base = $this->url();
-
-        if (empty($path) === true) {
-            return $base;
-        }
-
-        return rtrim($base, '/') . '/' . $path;
+        return $this->requestUrl;
     }
 
     /**
@@ -983,7 +1006,7 @@ class Environment
      *
      * i.e. /subfolder/index.php -> subfolder
      *
-     * This can be used to build the base url
+     * This can be used to build the base baseUrl
      * for subfolder installations
      *
      * @return string
@@ -1001,6 +1024,7 @@ class Environment
     public function toArray(): array
     {
         return [
+            'baseUrl'       => $this->baseUrl,
             'host'          => $this->host,
             'https'         => $this->https,
             'info'          => $this->info,
@@ -1008,19 +1032,8 @@ class Environment
             'isBehindProxy' => $this->isBehindProxy,
             'path'          => $this->path,
             'port'          => $this->port,
-            'requestUri'    => $this->requestUri,
+            'requestUrl'    => $this->requestUrl,
             'scriptPath'    => $this->scriptPath,
-            'url'           => $this->url
         ];
-    }
-
-    /**
-     * Returns the full base URL
-     *
-     * @return string
-     */
-    public function url(): string
-    {
-        return $this->url;
     }
 }
