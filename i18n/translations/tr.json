@@ -49,8 +49,8 @@
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
 
-  "entries": "Entries",
-  "entry": "Entry",
+  "entries": "Girdiler",
+  "entry": "Girdi",
 
   "environment": "Ortam",
 
@@ -343,7 +343,7 @@
   "license.register.label": "Lütfen lisans kodunu giriniz",
   "license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",
   "license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
-  "license.unregistered.label": "Unregistered",
+  "license.unregistered.label": "Kayıtsız",
 
   "link": "Ba\u011flant\u0131",
   "link.text": "Ba\u011flant\u0131 yaz\u0131s\u0131",
@@ -473,7 +473,7 @@
 
   "section.required": "Bölüm gereklidir",
 
-  "security": "Security",
+  "security": "Güvenlik",
   "select": "Seç",
   "server": "Sunucu",
   "settings": "Ayarlar",
@@ -483,13 +483,13 @@
   "slug": "Web Adres Uzantısı",
   "sort": "Sırala",
 
-  "stats.empty": "No reports",
-  "system.issues.content": "The content folder seems to be exposed",
-  "system.issues.debug": "Debugging must be turned off in production",
-  "system.issues.git": "The .git folder seems to be exposed",
-  "system.issues.https": "We recommend HTTPS for all your sites",
-  "system.issues.kirby": "The kirby folder seems to be exposed",
-  "system.issues.site": "The site folder seems to be exposed",
+  "stats.empty": "Rapor yok",
+  "system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
+  "system.issues.debug": "Canlı modda hata ayıklama kapatılmalıdır",
+  "system.issues.git": ".git klasörü açığa çıkmış görünüyor",
+  "system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",
+  "system.issues.kirby": "Kirby klasörü açığa çıkmış görünüyor",
+  "system.issues.site": "Site klasörü açığa çıkmış görünüyor",
 
   "title": "Başlık",
   "template": "\u015eablon",
