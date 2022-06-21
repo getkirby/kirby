@@ -63,6 +63,63 @@ class StructureFieldTest extends TestCase
         $this->assertEquals($expected, $field->data());
     }
 
+    public function testColumnsFromFields()
+    {
+        $field = $this->field('structure', [
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text'
+                ]
+            ],
+        ]);
+
+        $expected = [
+            'a' => [
+                'type' => 'text',
+                'label' => 'a',
+                'mobile' => true // the first column should be automatically kept on mobile
+            ],
+            'b' => [
+                'type' => 'text',
+                'label' => 'b',
+            ],
+        ];
+
+        $this->assertSame($expected, $field->columns());
+    }
+
+    public function testColumnsWithCustomMobileSetup()
+    {
+        $field = $this->field('structure', [
+            'columns' => [
+                'b' => [
+                    'mobile' => true
+                ]
+            ],
+            'fields' => [
+                'a' => [
+                    'type' => 'text'
+                ],
+                'b' => [
+                    'type' => 'text'
+                ]
+            ],
+        ]);
+
+        $expected = [
+            'b' => [
+                'mobile' => true,
+                'type' => 'text',
+                'label' => 'b',
+            ],
+        ];
+
+        $this->assertSame($expected, $field->columns());
+    }
+
     public function testLowerCaseColumnsNames()
     {
         $field = $this->field('structure', [

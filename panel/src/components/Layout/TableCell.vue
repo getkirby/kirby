@@ -1,5 +1,5 @@
 <template>
-  <td :data-align="column.align">
+  <td :data-align="column.align" :data-mobile="mobile">
     <template v-if="$helper.object.isEmpty(value) === false">
       <!-- Table cell type component -->
       <component
@@ -26,6 +26,13 @@ export default {
      * Optional corresponding field options
      */
     field: Object,
+    /**
+     * Keep cell on mobile
+     */
+    mobile: {
+      type: Boolean,
+      default: false
+    },
     /**
      * Current row
      */

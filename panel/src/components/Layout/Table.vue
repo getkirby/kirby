@@ -7,34 +7,36 @@
     <!-- Header row -->
     <thead>
       <tr>
-        <th v-if="hasIndexColumn" class="k-table-index-column">#</th>
+        <th v-if="hasIndexColumn" data-mobile class="k-table-index-column">
+          #
+        </th>
 
-        <template v-for="(column, columnIndex) in columns">
-          <th
-            :key="columnIndex + '-header'"
-            :style="'width:' + width(column.width)"
-            class="k-table-column"
-            @click="
-              onHeader({
-                column,
-                columnIndex
-              })
-            "
+        <th
+          v-for="(column, columnIndex) in columns"
+          :key="columnIndex + '-header'"
+          :data-mobile="column.mobile"
+          :style="'width:' + width(column.width)"
+          class="k-table-column"
+          @click="
+            onHeader({
+              column,
+              columnIndex
+            })
+          "
+        >
+          <slot
+            name="header"
+            v-bind="{
+              column,
+              columnIndex,
+              label: label(column, columnIndex)
+            }"
           >
-            <slot
-              name="header"
-              v-bind="{
-                column,
-                columnIndex,
-                label: label(column, columnIndex)
-              }"
-            >
-              {{ label(column, columnIndex) }}
-            </slot>
-          </th>
-        </template>
+            {{ label(column, columnIndex) }}
+          </slot>
+        </th>
 
-        <th v-if="hasOptions" class="k-table-options-column"></th>
+        <th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
       </tr>
     </thead>
 
@@ -59,6 +61,7 @@
         <td
           v-if="hasIndexColumn"
           :data-sortable="sortable && row.sortable !== false"
+          data-mobile
           class="k-table-index-column"
         >
           <slot
@@ -84,6 +87,7 @@
           :column="column"
           :field="fields[columnIndex]"
           :row="row"
+          :mobile="column.mobile"
           :value="row[columnIndex]"
           :style="'width:' + width(column.width)"
           class="k-table-column"
@@ -105,7 +109,7 @@
         />
 
         <!-- Options -->
-        <td v-if="hasOptions" class="k-table-options-column">
+        <td v-if="hasOptions" data-mobile class="k-table-options-column">
           <slot name="options" v-bind="{ row, rowIndex, options }">
             <k-options-dropdown
               :options="row.options || options"
@@ -402,16 +406,15 @@ export default {
   left: 0;
   right: 0;
   height: 0.5rem;
-  background: -webkit-linear-gradient(top, rgba(#000, 0.05), rgba(#000, 0));
+  background: linear-gradient(to bottom, rgba(#000, 0.05), rgba(#000, 0));
   z-index: 2;
 }
 
 .k-table-index,
 .k-table .k-sort-handle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: var(--table-row-height);
+  display: grid;
+  place-items: center;
+  width: 100%;
   height: var(--table-row-height);
 }
 
@@ -421,7 +424,7 @@ export default {
   display: none;
 }
 .k-table tr:hover .k-sort-handle {
-  display: flex !important;
+  display: grid !important;
 }
 
 .k-table-row-ghost {
@@ -475,23 +478,9 @@ td.k-table-options-column {
 
 /** Mobile */
 @media screen and (max-width: 65em) {
-  .k-table td,
-  .k-table th {
+  .k-table td:not([data-mobile]),
+  .k-table th:not([data-mobile]) {
     display: none;
-  }
-
-  .k-table th:first-child,
-  .k-table[data-indexed="true"] th:nth-child(2),
-  .k-table th:last-child,
-  .k-table td:first-child,
-  .k-table[data-indexed="true"] td:nth-child(2),
-  .k-table td:last-child {
-    display: table-cell;
-  }
-
-  .k-table th.k-table-column:nth-child(2),
-  .k-table td.k-table-column:nth-child(2) {
-    width: auto !important;
   }
 }
 </style>
