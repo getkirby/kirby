@@ -77,7 +77,13 @@ class Block extends Item
             throw new InvalidArgumentException('The block type is missing');
         }
 
-        $this->content  = $params['content']  ?? [];
+        // make sure the content is always defined as array to keep
+        // at least a bit of backward compatibility with older fields
+        if (is_array($params['content'] ?? null) === false) {
+            $params['content'] = [];
+        }
+
+        $this->content  = $params['content'];
         $this->isHidden = $params['isHidden'] ?? false;
         $this->type     = $params['type'];
 
