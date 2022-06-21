@@ -897,13 +897,11 @@ class App
      * @return string
      * @todo remove $inline parameter in in 3.8.0
      */
-    public function kirbytext(string $text = null, array $options = [], bool $inline = null): string
+    public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
     {
         // warning for deprecated fourth parameter
         // @codeCoverageIgnoreStart
-        if ($inline === null) {
-            $inline = false;
-        } else {
+        if (func_num_args() === 3) {
             Helpers::deprecated('Cms\App::kirbytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'markdown\'][\'inline\'] instead.');
         }
         // @codeCoverageIgnoreEnd
@@ -1006,7 +1004,7 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param bool|array $options
+     * @param bool|array $options Boolean inline value is deprecated, use `['inline' => true]` instead
      * @return string
      * @todo remove boolean $options in in 3.8.0
      */
@@ -1030,7 +1028,9 @@ class App
         );
 
         // TODO: remove passing the $inline parameter in 3.8.0
-        $inline = $options['inline'] ?? false;
+        // $options['inline'] is set to `false` to avoid the deprecation
+        // warning in the component; this can also be removed in 3.8.0
+        $inline = $options['inline'] ??= false;
         return ($this->component('markdown'))($this, $text, $options, $inline);
     }
 
