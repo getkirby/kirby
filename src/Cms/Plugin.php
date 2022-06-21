@@ -127,7 +127,7 @@ class Plugin extends Model
         $docs     = $info['support']['docs'] ?? null;
         $source   = $info['support']['source'] ?? null;
 
-        $link = $homepage ?? $docs ?? $source ?? 'https://getkirby.com/plugins/' . $this->id();
+        $link = $homepage ?? $docs ?? $source;
 
         return V::url($link) ? $link : null;
     }
