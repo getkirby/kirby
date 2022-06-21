@@ -38,10 +38,10 @@
         <k-collection
           v-bind="collection"
           :data-invalid="isInvalid"
+          v-on="canAdd ? { empty: onAdd } : {}"
           @action="onAction"
           @change="onChange"
           @sort="onSort"
-          @empty="canAdd ? onAdd() : null"
           @paginate="onPaginate"
         />
       </k-dropzone>

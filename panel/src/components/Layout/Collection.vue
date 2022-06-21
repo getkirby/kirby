@@ -22,7 +22,7 @@
       v-else
       :layout="layout"
       v-bind="empty"
-      @click.stop="$emit('empty')"
+      v-on="$listeners['empty'] ? { click: onEmpty } : {}"
     />
 
     <footer v-if="hasFooter" class="k-collection-footer">
@@ -147,6 +147,10 @@ export default {
     }
   },
   methods: {
+    onEmpty(e) {
+      e.stopPropagation();
+      this.$emit("empty");
+    },
     onOption(...args) {
       this.$emit("action", ...args);
       this.$emit("option", ...args);
