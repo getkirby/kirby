@@ -79,11 +79,11 @@ class Block extends Item
 
         // make sure the content is always defined as array to keep
         // at least a bit of backward compatibility with older fields
-        if (is_array($params['content'] ?? []) === false) {
+        if (is_array($params['content'] ?? null) === false) {
             $params['content'] = [];
         }
 
-        $this->content  = $params['content']  ?? [];
+        $this->content  = $params['content'];
         $this->isHidden = $params['isHidden'] ?? false;
         $this->type     = $params['type'];
 
