@@ -56,7 +56,7 @@ export default {
   background: var(--color-white);
   border-radius: var(--rounded);
   line-height: 1.25rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
 }
 .k-box[data-theme="code"] {
   background: var(--color-gray-900);
