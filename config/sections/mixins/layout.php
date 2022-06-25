@@ -58,6 +58,14 @@ return [
             }
 
             foreach ($this->columns as $columnName => $column) {
+                if ($column === true) {
+                    $column = [];
+                }
+
+                if ($column === false) {
+                    continue;
+                }
+
                 $column['id'] = $columnName;
                 $columns[$columnName . 'Cell'] = $column;
             }
