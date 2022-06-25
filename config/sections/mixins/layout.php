@@ -67,8 +67,17 @@ return [
                     continue;
                 }
 
+                // fallback for labels
                 $column['label'] ??= Str::ucfirst($columnName);
-                $column['id']      = $columnName;
+
+                // make sure to translate labels
+                $column['label'] = I18n::translate($column['label'], $column['label']);
+
+                // keep the original column name as id
+                $column['id'] = $columnName;
+
+                // add the custom column to the array with a key that won't
+                // override the system columns
                 $columns[$columnName . 'Cell'] = $column;
             }
 
