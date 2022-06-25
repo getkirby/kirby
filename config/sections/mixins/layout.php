@@ -53,7 +53,7 @@ return [
 
             if ($this->info) {
                 $columns['info'] = [
-                    'label' => 'Info',
+                    'label' => I18n::translate('info'),
                     'type'  => 'text',
                 ];
             }
