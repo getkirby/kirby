@@ -569,7 +569,7 @@ export default {
 </script>
 
 <style>
-.k-structure-field:not([data-disabled="true"]) .k-table-column {
+.k-structure-field:not([data-disabled="true"]) td.k-table-column {
   cursor: pointer;
 }
 </style>
