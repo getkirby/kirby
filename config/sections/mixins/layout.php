@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
     'props' => [
@@ -66,7 +67,8 @@ return [
                     continue;
                 }
 
-                $column['id'] = $columnName;
+                $column['label'] ??= Str::ucfirst($columnName);
+                $column['id']      = $columnName;
                 $columns[$columnName . 'Cell'] = $column;
             }
 
