@@ -409,8 +409,8 @@ export default {
      * Called when pagination changes in open form
      * @param {number} index index of new row to be shown
      */
-    onFormPaginate(index) {
-      this.save();
+    async onFormPaginate(index) {
+      await this.save();
       this.open(index);
     },
     /**
