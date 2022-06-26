@@ -7,6 +7,9 @@ return [
         'headline',
     ],
     'props' => [
+        /**
+         * Array or query string for reports. Each report needs a `label` and `value` and can have additional `info`, `link` and `theme` settings.
+         */
         'reports' => function ($reports = null) {
             if ($reports === null) {
                 return [];
@@ -22,6 +25,9 @@ return [
 
             return $reports;
         },
+        /**
+         * The size of the report cards. Available sizes: `tiny`, `small`, `medium`, `large`
+         */
         'size' => function (string $size = 'large') {
             return $size;
         }
