@@ -216,8 +216,11 @@ class Cookie
     }
 
     /**
-     * Tells the CMS responder that a cookie was used
-     * to modify the caching behavior
+     * Tells the CMS responder that the response relies on a cookie and
+     * its value (even if the cookie isn't set in the current request);
+     * this ensures that the response is only cached for visitors who don't
+     * have this cookie set;
+     * https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
      *
      * @param string $key
      * @return void

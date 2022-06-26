@@ -157,9 +157,15 @@ class Request
             return $this->auth;
         }
 
-        // modify CMS caching behavior:
         // lazily request the instance for non-CMS use cases
         $kirby = App::instance(null, true);
+
+        // tell the CMS responder that the response relies on
+        // the `Authorization` header and its value (even if
+        // the header isn't set in the current request);
+        // this ensures that the response is only cached for
+        // unauthenticated visitors;
+        // https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
         if ($kirby) {
             $kirby->response()->usesAuth(true);
         }
