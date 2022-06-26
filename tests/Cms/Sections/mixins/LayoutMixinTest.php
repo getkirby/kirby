@@ -149,6 +149,14 @@ class LayoutMixinTest extends TestCase
                 'date' => [
                     'label' => 'Date',
                     'type'  => 'date'
+                ],
+                'simple' => true,
+                'removed' => false,
+                'translated' => [
+                    'label' => [
+                        'en' => 'Translated',
+                        'de' => 'Übersetzt'
+                    ]
                 ]
             ]
         ]);
@@ -164,6 +172,14 @@ class LayoutMixinTest extends TestCase
                 'label' => 'Date',
                 'type'  => 'date',
                 'id'    => 'date'
+            ],
+            'simpleCell' => [
+                'label' => 'Simple',
+                'id'    => 'simple'
+            ],
+            'translatedCell' => [
+                'label' => 'Translated',
+                'id'    => 'translated'
             ]
         ];
 
@@ -199,7 +215,8 @@ class LayoutMixinTest extends TestCase
                 'safeHtml' => [
                     'label' => 'Safe HTML',
                     'value' => '{{ page.html }}'
-                ]
+                ],
+                'removed' => false
             ]
         ]);
 

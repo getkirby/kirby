@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
     'props' => [
@@ -52,13 +53,31 @@ return [
 
             if ($this->info) {
                 $columns['info'] = [
-                    'label' => 'Info',
+                    'label' => I18n::translate('info'),
                     'type'  => 'text',
                 ];
             }
 
             foreach ($this->columns as $columnName => $column) {
+                if ($column === true) {
+                    $column = [];
+                }
+
+                if ($column === false) {
+                    continue;
+                }
+
+                // fallback for labels
+                $column['label'] ??= Str::ucfirst($columnName);
+
+                // make sure to translate labels
+                $column['label'] = I18n::translate($column['label'], $column['label']);
+
+                // keep the original column name as id
                 $column['id'] = $columnName;
+
+                // add the custom column to the array with a key that won't
+                // override the system columns
                 $columns[$columnName . 'Cell'] = $column;
             }
 
