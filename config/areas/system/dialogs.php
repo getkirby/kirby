@@ -10,6 +10,7 @@ return [
         'load' => function () {
             $license = App::instance()->system()->license();
 
+            // @codeCoverageIgnoreStart
             // the system is registered but the license
             // key is only visible for admins
             if ($license === true) {
@@ -27,7 +28,9 @@ return [
                             'text'  => $license ? $license : I18n::translate('license.unregistered.label'),
                             'theme' => $license ? 'code' : 'negative',
                             'help'  => $license ?
+                                // @codeCoverageIgnoreStart
                                 '<a href="https://hub.getkirby.com">' . I18n::translate('license.manage') . ' &rarr;</a>' :
+                                // @codeCoverageIgnoreEnd
                                 '<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
                         ]
                     ],
