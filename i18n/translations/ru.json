@@ -340,6 +340,7 @@
   "license": "Лицензия",
   "license.buy": "Купить лицензию",
   "license.register": "Зарегистрировать",
+  "license.manage": "Manage your licenses",
   "license.register.help": "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
   "license.register.label": "Пожалуйста вставьте код лицензии",
   "license.register.success": "Спасибо за поддержку Kirby",

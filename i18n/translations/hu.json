@@ -340,6 +340,7 @@
   "license": "Kirby licenc",
   "license.buy": "Licenc vásárlása",
   "license.register": "Regisztráció",
+  "license.manage": "Manage your licenses",
   "license.register.help": "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
   "license.register.label": "Kérlek írd be a licenc-kódot",
   "license.register.success": "Köszönjük, hogy támogatod a Kirby-t",

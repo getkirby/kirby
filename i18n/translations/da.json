@@ -340,6 +340,7 @@
   "license": "Kirby licens",
   "license.buy": "Køb en licens",
   "license.register": "Registrer",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Du modtog din licenskode efter købet via email. Venligst kopier og indsæt den for at registrere.",
   "license.register.label": "Indtast venligst din licenskode",
   "license.register.success": "Tak for din støtte af Kirby",

@@ -340,6 +340,7 @@
   "license": "Licentie",
   "license.buy": "Koop een licentie",
   "license.register": "Registreren",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Je hebt de licentie via e-mail gekregen nadat je de aankoop hebt gedaan. Kopieer en plak de licentie om te registreren. ",
   "license.register.label": "Vul je licentie in",
   "license.register.success": "Bedankt dat je Kirby ondersteunt",

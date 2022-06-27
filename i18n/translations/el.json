@@ -340,6 +340,7 @@
   "license": "\u0386\u03b4\u03b5\u03b9\u03b1 \u03a7\u03c1\u03ae\u03c3\u03b7\u03c2 \u03c4\u03bf\u03c5 Kirby",
   "license.buy": "Αγοράστε μια άδεια",
   "license.register": "Εγγραφή",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Έχετε λάβει τον κωδικό άδειας χρήσης μετά την αγορά μέσω ηλεκτρονικού ταχυδρομείου. Παρακαλώ αντιγράψτε και επικολλήστε τον για να εγγραφείτε.",
   "license.register.label": "Παρακαλώ εισαγάγετε τον κωδικό άδειας χρήσης",
   "license.register.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",

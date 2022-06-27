@@ -340,6 +340,7 @@
   "license": "Lisensi Kirby",
   "license.buy": "Beli lisensi",
   "license.register": "Daftar",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Anda menerima kode lisensi via surel setelah pembelian. Salin dan tempel kode tersebut untuk mendaftarkan.",
   "license.register.label": "Masukkan kode lisensi Anda",
   "license.register.success": "Terima kasih atas dukungan untuk Kirby",

@@ -340,6 +340,7 @@
   "license": "라이선스",
   "license.buy": "라이선스 구매",
   "license.register": "등록",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Kirby를 등록하려면 이메일로 전송받은 라이선스 코드와 이메일 주소를 입력하세요.",
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby와 함께해주셔서 감사합니다.",

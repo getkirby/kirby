@@ -340,6 +340,7 @@
   "license": "Llic\u00e8ncia Kirby",
   "license.buy": "Comprar una llicència",
   "license.register": "Registrar",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Heu rebut el codi de la vostra llicència després de la compra, per correu electrònic. Copieu-lo i enganxeu-lo per registrar-vos.",
   "license.register.label": "Si us plau, introdueixi el seu codi de llicència",
   "license.register.success": "Gràcies per donar suport a Kirby",

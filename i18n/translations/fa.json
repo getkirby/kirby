@@ -340,6 +340,7 @@
   "license": "\u0645\u062c\u0648\u0632",
   "license.buy": "خرید مجوز",
   "license.register": "ثبت",
+  "license.manage": "Manage your licenses",
   "license.register.help": "پس از خرید از طریق ایمیل، کد مجوز خود را دریافت کردید. لطفا برای ثبت‌نام آن را کپی و اینجا پیست کنید.",
   "license.register.label": "لطفا کد مجوز خود را وارد کنید",
   "license.register.success": "با تشکر از شما برای حمایت از کربی",

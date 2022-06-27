@@ -340,6 +340,7 @@
   "license": "Lizenz",
   "license.buy": "Kaufe eine Lizenz",
   "license.register": "Registrieren",
+  "license.manage": "Verwalte deine Lizenzen",
   "license.register.help": "Den Lizenzcode findest du in der Bestätigungsmail zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
   "license.register.label": "Bitte gib deinen Lizenzcode ein",
   "license.register.success": "Vielen Dank für deine Unterstützung",

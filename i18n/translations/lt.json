@@ -340,6 +340,7 @@
   "license": "Licenzija",
   "license.buy": "Pirkti licenziją",
   "license.register": "Registruoti",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
   "license.register.label": "Prašome įrašyti jūsų licenzijos kodą",
   "license.register.success": "Ačiū, kad palaikote Kirby",

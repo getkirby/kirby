@@ -75,11 +75,13 @@ export default {
       return [
         {
           label: this.$t("license"),
-          value: this.$license
-            ? this.license
+          value: this.license
+            ? "Kirby 3"
             : this.$t("license.unregistered.label"),
-          theme: this.$lincense ? null : "negative",
-          click: this.$lincense ? null : () => this.$dialog("registration")
+          theme: this.license ? null : "negative",
+          click: this.license
+            ? () => this.$dialog("license")
+            : () => this.$dialog("registration")
         },
         {
           label: this.$t("version"),
