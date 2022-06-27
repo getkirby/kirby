@@ -144,7 +144,7 @@ return [
 
             // render KirbyText in caption
             if ($tag->caption) {
-                $options = ['markdown'=> ['inline' => true]];
+                $options = ['markdown' => ['inline' => true]];
                 $caption = $tag->kirby()->kirbytext($tag->caption, $options);
                 $tag->caption = [$caption];
             }
