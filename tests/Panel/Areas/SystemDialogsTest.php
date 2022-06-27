@@ -11,6 +11,26 @@ class SystemDialogsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testLicense(): void
+    {
+        $dialog = $this->dialog('license');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $field = $props['fields']['license'];
+
+        $this->assertSame('info', $field['type']);
+        $this->assertSame('License', $field['label']);
+        $this->assertSame('Unregistered', $field['text']);
+        $this->assertSame('negative', $field['theme']);
+        $this->assertSame('<a href="https://getkirby.com/buy">Buy a license &rarr;</a>', $field['help']);
+
+        $this->assertSame('medium', $props['size']);
+        $this->assertFalse($props['submitButton']);
+        $this->assertFalse($props['cancelButton']);
+    }
+
     public function testRegistration(): void
     {
         $dialog = $this->dialog('registration');
