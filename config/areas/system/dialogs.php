@@ -25,7 +25,7 @@ return [
                             'type'  => 'info',
                             'label' => I18n::translate('license'),
                             'text'  => $license ? $license : I18n::translate('license.unregistered.label'),
-                            'theme' => $license ? 'code'  : 'negative',
+                            'theme' => $license ? 'code' : 'negative',
                             'help'  => $license ?
                                 '<a href="https://hub.getkirby.com">' . I18n::translate('license.manage') . ' &rarr;</a>' :
                                 '<a href="https://getkirby.com/buy">' . I18n::translate('license.buy') . ' &rarr;</a>'
