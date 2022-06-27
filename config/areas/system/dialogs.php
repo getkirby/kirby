@@ -16,6 +16,7 @@ return [
             if ($license === true) {
                 $license = 'Kirby 3';
             }
+            // @codeCoverageIgnoreEnd
 
             return [
                 'component' => 'k-form-dialog',
