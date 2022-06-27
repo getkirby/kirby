@@ -51,6 +51,16 @@ export default {
 
       return this.$t("add");
     },
+    collection() {
+      return {
+        empty: this.emptyProps,
+        items: this.selected,
+        layout: this.layout,
+        link: this.link,
+        size: this.size,
+        sortable: !this.disabled && this.selected.length > 1
+      };
+    },
     isInvalid() {
       if (this.required && this.selected.length === 0) {
         return true;

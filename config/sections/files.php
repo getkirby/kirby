@@ -5,6 +5,7 @@ use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
+        'details',
         'empty',
         'headline',
         'help',
@@ -13,44 +14,10 @@ return [
         'max',
         'pagination',
         'parent',
+        'search',
+        'sort'
     ],
     'props' => [
-        /**
-         * Enables/disables reverse sorting
-         */
-        'flip' => function (bool $flip = false) {
-            return $flip;
-        },
-        /**
-         * Image options to control the source and look of file previews
-         */
-        'image' => function ($image = null) {
-            return $image ?? [];
-        },
-        /**
-         * Optional info text setup. Info text is shown on the right (lists, cardlets) or below (cards) the filename.
-         */
-        'info' => function ($info = null) {
-            return I18n::translate($info, $info);
-        },
-        /**
-         * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
-         */
-        'size' => function (string $size = 'auto') {
-            return $size;
-        },
-        /**
-         * Enables/disables manual sorting
-         */
-        'sortable' => function (bool $sortable = true) {
-            return $sortable;
-        },
-        /**
-         * Overwrites manual sorting and sorts by the given field and sorting direction (i.e. `filename desc`)
-         */
-        'sortBy' => function (string $sortBy = null) {
-            return $sortBy;
-        },
         /**
          * Filters all files by template and also sets the template, which will be used for all uploads
          */
@@ -87,6 +54,12 @@ return [
             // filter out all protected files
             $files = $files->filter('isReadable', true);
 
+            // search
+            if ($this->search === true && empty($this->searchterm) === false) {
+                $files = $files->search($this->searchterm);
+            }
+
+            // sort
             if ($this->sortBy) {
                 $files = $files->sort(...$files::sortArgs($this->sortBy));
             } else {
@@ -117,12 +90,15 @@ return [
             foreach ($this->files as $file) {
                 $panel = $file->panel();
 
-                $data[] = [
+                $item = [
                     'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
                     'extension' => $file->extension(),
                     'filename'  => $file->filename(),
                     'id'        => $file->id(),
-                    'image'     => $panel->image($this->image, $this->layout),
+                    'image'     => $panel->image(
+                        $this->image,
+                        $this->layout === 'table' ? 'list' : $this->layout
+                    ),
                     'info'      => $file->toSafeString($this->info ?? false),
                     'link'      => $panel->url(true),
                     'mime'      => $file->mime(),
@@ -131,6 +107,12 @@ return [
                     'text'      => $file->toSafeString($this->text),
                     'url'       => $file->url(),
                 ];
+
+                if ($this->layout === 'table') {
+                    $item = $this->columnsValues($item, $file);
+                }
+
+                $data[] = $item;
             }
 
             return $data;
@@ -166,31 +148,8 @@ return [
                 ]
             ];
         },
-        'link' => function () {
-            $modelLink  = $this->model->panel()->url(true);
-            $parentLink = $this->parent->panel()->url(true);
-
-            if ($modelLink !== $parentLink) {
-                return $parentLink;
-            }
-        },
         'pagination' => function () {
             return $this->pagination();
-        },
-        'sortable' => function () {
-            if ($this->sortable === false) {
-                return false;
-            }
-
-            if ($this->sortBy !== null) {
-                return false;
-            }
-
-            if ($this->flip === true) {
-                return false;
-            }
-
-            return true;
         },
         'upload' => function () {
             if ($this->isFull() === true) {
@@ -228,13 +187,15 @@ return [
             'options' => [
                 'accept'   => $this->accept,
                 'apiUrl'   => $this->parent->apiUrl(true),
+                'columns'  => $this->columns,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'help'     => $this->help,
                 'layout'   => $this->layout,
-                'link'     => $this->link,
+                'link'     => $this->link(),
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable,
                 'upload'   => $this->upload

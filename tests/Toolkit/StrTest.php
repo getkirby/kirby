@@ -52,7 +52,7 @@ class StrTest extends TestCase
         // case insensitive
         $this->assertSame(' Wörld', Str::after($string, 'ö', true));
         $this->assertSame(' Wörld', Str::after($string, 'Ö', true));
-        $this->assertSame('', Str::after($string, 'x'));
+        $this->assertSame('', Str::after($string, 'x', true));
 
         // non existing chars
         $this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
@@ -66,6 +66,28 @@ class StrTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The needle must not be empty');
         Str::after('test', '');
+    }
+
+    /**
+     * @covers ::afterStart
+     */
+    public function testAfterStart()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertSame(' Wörld', Str::afterStart($string, 'Hellö'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'HELLÖ'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'x'));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, ''));
+
+        // case insensitive
+        $this->assertSame(' Wörld', Str::afterStart($string, 'Hellö', true));
+        $this->assertSame(' Wörld', Str::afterStart($string, 'HELLÖ', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'Wörld', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, 'x', true));
+        $this->assertSame('Hellö Wörld', Str::afterStart($string, '', true));
     }
 
     /**
@@ -83,7 +105,7 @@ class StrTest extends TestCase
         // case insensitive
         $this->assertSame('Hell', Str::before($string, 'ö', true));
         $this->assertSame('Hell', Str::before($string, 'Ö', true));
-        $this->assertSame('', Str::before($string, 'x'));
+        $this->assertSame('', Str::before($string, 'x', true));
     }
 
     /**
@@ -97,6 +119,28 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::beforeEnd
+     */
+    public function testBeforeEnd()
+    {
+        $string = 'Hellö Wörld';
+
+        // case sensitive
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'Wörld'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'WÖRLD'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'Hellö'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'x'));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, ''));
+
+        // case insensitive
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'Wörld', true));
+        $this->assertSame('Hellö ', Str::beforeEnd($string, 'WÖRLD', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'Hellö', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, 'x', true));
+        $this->assertSame('Hellö Wörld', Str::beforeEnd($string, '', true));
+    }
+
+    /**
      * @covers ::between
      */
     public function testBetween()
@@ -104,6 +148,27 @@ class StrTest extends TestCase
         $this->assertSame('trin', Str::between('string', 's', 'g'), 'string between s and g should be trin');
         $this->assertSame('', Str::between('string', 's', '.'), 'function with non-existing character should return false');
         $this->assertSame('', Str::between('string', '.', 'g'), 'function with non-existing character should return false');
+    }
+
+    /**
+     * @covers ::camel
+     */
+    public function testCamel()
+    {
+        $string = 'foo_bar';
+        $this->assertSame('fooBar', Str::camel($string));
+
+        $string = 'FòôBàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
+
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('fòôBàřBaz', Str::camel($string));
+
+        $string = 'fòô_bàř';
+        $this->assertSame('fòôBàř', Str::camel($string));
     }
 
     /**
@@ -358,6 +423,51 @@ class StrTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The needle must not be empty');
         Str::from('test', '');
+    }
+
+    /**
+     * @covers ::increment
+     */
+    public function testIncrement()
+    {
+        $string = 'Pöst';
+        $this->assertSame('Pöst-1', Str::increment($string));
+
+        $string = 'Pöst-1';
+        $this->assertSame('Pöst-2', Str::increment($string));
+
+        $string = 'Pöst-2';
+        $this->assertSame('Pöst-3', Str::increment($string));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst_1', Str::increment($string, '_'));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst_10', Str::increment($string, '_', 10));
+
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_11', Str::increment($string, '_', 1));
+
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_11', Str::increment($string, '_', 10));
+
+        $string = 'Pöst';
+        $this->assertSame('Pöst 1', Str::increment($string, ' ', 1));
+
+        $string = 'Pöst post 1';
+        $this->assertSame('Pöst post 2', Str::increment($string, ' ', 1));
+
+        $string = 'Pöst_10';
+        $this->assertSame('Pöst_10-1', Str::increment($string, '-'));
+
+        $string = 'Pöst-10';
+        $this->assertSame('Pöst-10_1', Str::increment($string, '_'));
+
+        $string = 'Pöst-5';
+        $this->assertSame('Pöst-6', Str::increment($string, '-', 10));
+
+        $string = 'Pöst-15';
+        $this->assertSame('Pöst-16', Str::increment($string, '-', 10));
     }
 
     /**
@@ -786,6 +896,78 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::similarity
+     */
+    public function testSimilarity()
+    {
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'bar'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', ''));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', 'foo'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', ''));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'fooBar'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 100.0
+        ], Str::similarity('foo', 'foo'));
+
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 75.0
+        ], Str::similarity('Tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'FOO'));
+
+        $this->assertSame([
+            'matches' => 1,
+            'percent' => 20.0
+        ], Str::similarity('Kirby', 'KIRBY'));
+
+        // case-insensitive
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('Tête', 'tête', true));
+
+        $this->assertSame([
+            'matches' => 2,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'FOU', true));
+
+        $this->assertSame([
+            'matches' => 5,
+            'percent' => 100.0
+        ], Str::similarity('Kirby', 'KIRBY', true));
+    }
+
+    /**
      * @covers ::slug
      */
     public function testSlug()
@@ -902,75 +1084,24 @@ EOT;
     }
 
     /**
-     * @covers ::similarity
+     * @covers ::studly
      */
-    public function testSimilarity()
+    public function testStudly()
     {
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', 'bar'));
+        $string = 'foo_bar';
+        $this->assertSame('FooBar', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', ''));
+        $string = 'FòôBàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('', 'foo'));
+        $string = 'Fòô-bàřBaz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('', ''));
+        $string = 'Fòô-bàř_Baz';
+        $this->assertSame('FòôBàřBaz', Str::studly($string));
 
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 66.66666666666667
-        ], Str::similarity('foo', 'fooBar'));
-
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 100.0
-        ], Str::similarity('foo', 'foo'));
-
-        $this->assertSame([
-            'matches' => 4,
-            'percent' => 100.0
-        ], Str::similarity('tête', 'tête'));
-
-        $this->assertSame([
-            'matches' => 3,
-            'percent' => 75.0
-        ], Str::similarity('Tête', 'tête'));
-
-        $this->assertSame([
-            'matches' => 0,
-            'percent' => 0.0
-        ], Str::similarity('foo', 'FOO'));
-
-        $this->assertSame([
-            'matches' => 1,
-            'percent' => 20.0
-        ], Str::similarity('Kirby', 'KIRBY'));
-
-        // case-insensitive
-        $this->assertSame([
-            'matches' => 4,
-            'percent' => 100.0
-        ], Str::similarity('Tête', 'tête', true));
-
-        $this->assertSame([
-            'matches' => 2,
-            'percent' => 66.66666666666667
-        ], Str::similarity('foo', 'FOU', true));
-
-        $this->assertSame([
-            'matches' => 5,
-            'percent' => 100.0
-        ], Str::similarity('Kirby', 'KIRBY', true));
+        $string = 'fòô_bàř';
+        $this->assertSame('FòôBàř', Str::studly($string));
     }
 
     /**
@@ -1056,10 +1187,7 @@ EOT;
      */
     public function testToBytes()
     {
-        $this->assertSame(0, Str::toBytes(0));
         $this->assertSame(0, Str::toBytes(''));
-        $this->assertSame(0, Str::toBytes(null));
-        $this->assertSame(0, Str::toBytes(false));
         $this->assertSame(0, Str::toBytes('x'));
         $this->assertSame(0, Str::toBytes('K'));
         $this->assertSame(0, Str::toBytes('M'));
@@ -1204,5 +1332,17 @@ EOT;
         $this->assertSame('Omelette du&nbsp;fromage?', Str::widont('Omelette du fromage?'));
         $this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
         $this->assertSame('', Str::widont());
+    }
+
+    /**
+     * @covers ::wrap
+     */
+    public function testWrap()
+    {
+        $string = 'Pöst title';
+        $this->assertSame('# Pöst title {.title}', Str::wrap($string, '# ', ' {.title}'));
+
+        $string = 'Pöst title';
+        $this->assertSame('"Pöst title"', Str::wrap($string, '"'));
     }
 }

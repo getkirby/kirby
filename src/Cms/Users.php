@@ -86,7 +86,8 @@ class Users extends Collection
     }
 
     /**
-     * Finds a user in the collection by id or email address
+     * Finds a user in the collection by ID or email address
+     * @internal Use `$users->find()` instead
      *
      * @param string $key
      * @return \Kirby\Cms\User|null

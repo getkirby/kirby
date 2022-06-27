@@ -2,6 +2,7 @@
 
 namespace Kirby\Session;
 
+use Kirby\Cms\App;
 use Kirby\Http\Cookie;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -27,6 +28,7 @@ class SessionsTest extends TestCase
     public function tearDown(): void
     {
         unset($this->sessions, $this->store);
+        App::destroy();
     }
 
     /**
@@ -196,7 +198,7 @@ class SessionsTest extends TestCase
     public function testCurrent()
     {
         Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
 
         $sessions = new Sessions($this->store, ['mode' => 'cookie']);
         $session = $sessions->current();
@@ -208,14 +210,14 @@ class SessionsTest extends TestCase
         $this->assertSame('header', $session->mode());
         $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $this->setAuthorization('');
         $this->assertNull($sessions->current());
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->invalidKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->invalidKey);
         $this->assertNull($sessions->current());
 
         // test self-check: should work again
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
         $session = $sessions->current();
         $this->assertSame('header', $session->mode());
         $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
@@ -239,13 +241,13 @@ class SessionsTest extends TestCase
     public function testCurrentDetected()
     {
         Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
 
         $session = $this->sessions->currentDetected();
         $this->assertSame('header', $session->mode());
         $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+        $this->setAuthorization('');
         $session = $this->sessions->currentDetected();
         $this->assertSame('cookie', $session->mode());
         $this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
@@ -254,11 +256,11 @@ class SessionsTest extends TestCase
         $this->assertNull($this->sessions->currentDetected());
 
         Cookie::set('kirby_session', '9999999999.valid.' . $this->store->validKey);
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->invalidKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->invalidKey);
         $this->assertNull($this->sessions->currentDetected());
 
         // test self-check: should work again
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session 9999999999.valid2.' . $this->store->validKey;
+        $this->setAuthorization('Session 9999999999.valid2.' . $this->store->validKey);
         $session = $this->sessions->currentDetected();
         $this->assertSame('header', $session->mode());
         $this->assertSame('9999999999.valid2.' . $this->store->validKey, $session->token());
@@ -324,15 +326,21 @@ class SessionsTest extends TestCase
         $tokenFromHeader = $reflector->getMethod('tokenFromHeader');
         $tokenFromHeader->setAccessible(true);
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
         $this->assertNull($tokenFromHeader->invoke($this->sessions));
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Session amazingSessionIdFromHeader';
+        $this->setAuthorization('Session amazingSessionIdFromHeader');
         $this->assertSame('amazingSessionIdFromHeader', $tokenFromHeader->invoke($this->sessions));
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer amazingSessionIdFromHeader';
+        $this->setAuthorization('Bearer amazingSessionIdFromHeader');
         $this->assertNull($tokenFromHeader->invoke($this->sessions));
+    }
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+    protected function setAuthorization(string $value): void
+    {
+        new App([
+            'server' => [
+                'HTTP_AUTHORIZATION' => $value
+            ]
+        ]);
     }
 }

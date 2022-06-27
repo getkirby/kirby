@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Str;
 
 /**
@@ -41,6 +42,9 @@ class Cookie
      */
     public static function set(string $key, string $value, array $options = []): bool
     {
+        // modify CMS caching behavior
+        static::trackUsage($key);
+
         // extract options
         $expires  = static::lifetime($options['lifetime'] ?? 0);
         $path     = $options['path']     ?? '/';
@@ -123,6 +127,10 @@ class Cookie
         if ($key === null) {
             return $_COOKIE;
         }
+
+        // modify CMS caching behavior
+        static::trackUsage($key);
+
         $value = $_COOKIE[$key] ?? null;
         return empty($value) ? $default : static::parse($value);
     }
@@ -205,5 +213,25 @@ class Cookie
         }
 
         return false;
+    }
+
+    /**
+     * Tells the CMS responder that the response relies on a cookie and
+     * its value (even if the cookie isn't set in the current request);
+     * this ensures that the response is only cached for visitors who don't
+     * have this cookie set;
+     * https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
+     *
+     * @param string $key
+     * @return void
+     */
+    protected static function trackUsage(string $key): void
+    {
+        // lazily request the instance for non-CMS use cases
+        $kirby = App::instance(null, true);
+
+        if ($kirby) {
+            $kirby->response()->usesCookie($key);
+        }
     }
 }

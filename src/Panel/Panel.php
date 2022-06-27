@@ -2,11 +2,14 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
+use Kirby\Http\Router;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
@@ -55,7 +58,7 @@ class Panel
      */
     public static function areas(): array
     {
-        $kirby  = kirby();
+        $kirby  = App::instance();
         $system = $kirby->system();
         $user   = $kirby->user();
         $areas  = $kirby->load()->areas();
@@ -189,7 +192,7 @@ class Panel
      */
     public static function isFiberRequest(): bool
     {
-        $request = kirby()->request();
+        $request = App::instance()->request();
 
         if ($request->method() === 'GET') {
             return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
@@ -208,9 +211,11 @@ class Panel
      */
     public static function json(array $data, int $code = 200)
     {
-        return Response::json($data, $code, get('_pretty'), [
+        $request = App::instance()->request();
+
+        return Response::json($data, $code, $request->get('_pretty'), [
             'X-Fiber' => 'true',
-            'Cache-Control' => 'no-store'
+            'Cache-Control' => 'no-store, private'
         ]);
     }
 
@@ -222,7 +227,7 @@ class Panel
     public static function multilang(): bool
     {
         // multilang setup check
-        $kirby = kirby();
+        $kirby = App::instance();
         return $kirby->option('languages') || $kirby->multilang();
     }
 
@@ -233,8 +238,10 @@ class Panel
      */
     public static function referrer(): string
     {
-        $referrer = kirby()->request()->header('X-Fiber-Referrer')
-                 ?? get('_referrer')
+        $request = App::instance()->request();
+
+        $referrer = $request->header('X-Fiber-Referrer')
+                 ?? $request->get('_referrer')
                  ?? '';
 
         return '/' . trim($referrer, '/');
@@ -285,7 +292,7 @@ class Panel
      */
     public static function router(string $path = null)
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         if ($kirby->option('panel') === false) {
             return null;
@@ -303,7 +310,7 @@ class Panel
         $routes = static::routes($areas);
 
         // create a micro-router for the Panel
-        return router($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
+        return Router::execute($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
@@ -345,7 +352,7 @@ class Panel
      */
     public static function routes(array $areas): array
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         // the browser incompatibility
         // warning is always needed
@@ -492,7 +499,9 @@ class Panel
                 'type'    => 'search',
                 'area'    => $areaId,
                 'action'  => function () use ($params) {
-                    return $params['query'](get('query'));
+                    $request = App::instance()->request();
+
+                    return $params['query']($request->get('query'));
                 }
             ];
         }
@@ -530,7 +539,7 @@ class Panel
      */
     public static function setLanguage(): ?string
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         // language switcher
         if (static::multilang()) {
@@ -542,7 +551,7 @@ class Panel
 
             $session         = $kirby->session();
             $sessionLanguage = $session->get('panel.language', $fallback);
-            $language        = get('language') ?? $sessionLanguage;
+            $language        = $kirby->request()->get('language') ?? $sessionLanguage;
 
             // keep the language for the next visit
             if ($language !== $sessionLanguage) {
@@ -566,7 +575,7 @@ class Panel
      */
     public static function setTranslation(): string
     {
-        $kirby = kirby();
+        $kirby = App::instance();
 
         if ($user = $kirby->user()) {
             // use the user language for the default translation
@@ -590,7 +599,7 @@ class Panel
      */
     public static function url(?string $url = null): string
     {
-        $slug = kirby()->option('panel.slug', 'panel');
+        $slug = App::instance()->option('panel.slug', 'panel');
 
         // only touch relative paths
         if (Url::isAbsolute($url) === false) {
@@ -603,7 +612,7 @@ class Panel
             }
 
             // create an absolute URL
-            $url = url($path);
+            $url = CmsUrl::to($path);
         }
 
         return $url;

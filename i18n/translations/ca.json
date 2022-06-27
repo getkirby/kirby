@@ -49,6 +49,9 @@
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Environment",
 
   "error.access.code": "Codi invàlid",
@@ -294,6 +297,7 @@
   "hide": "Hide",
   "hour": "Hora",
   "import": "Import",
+  "info": "Info",
   "insert": "Insertar",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -340,6 +344,7 @@
   "license.register.label": "Si us plau, introdueixi el seu codi de llicència",
   "license.register.success": "Gràcies per donar suport a Kirby",
   "license.unregistered": "Aquesta és una demo no registrada de Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Enlla\u00e7",
   "link.text": "Enllaç de text",
@@ -469,19 +474,27 @@
 
   "section.required": "La secció és obligatòria",
 
+  "security": "Security",
   "select": "Seleccionar",
+  "server": "Server",
   "settings": "Configuració",
   "show": "Show",
+  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
   "size": "Tamany",
   "slug": "URL-ap\u00e8ndix",
   "sort": "Ordenar",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Títol",
   "template": "Plantilla",
   "today": "Avui",
-
-  "server": "Server",
-
-  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Codi",
   "toolbar.button.bold": "Negreta",

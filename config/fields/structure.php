@@ -106,6 +106,7 @@ return [
         },
         'columns' => function () {
             $columns = [];
+            $mobile  = 0;
 
             if (empty($this->columns)) {
                 foreach ($this->fields as $field) {
@@ -133,11 +134,21 @@ return [
                         continue;
                     }
 
+                    if (($columnProps['mobile'] ?? false) === true) {
+                        $mobile++;
+                    }
+
                     $columns[$columnName] = array_merge($columnProps, [
                         'type'  => $field['type'],
                         'label' => $field['label'] ?? $field['name']
                     ]);
                 }
+            }
+
+            // make the first column visible on mobile
+            // if no other mobile columns are defined
+            if ($mobile === 0) {
+                $columns[array_key_first($columns)]['mobile'] = true;
             }
 
             return $columns;

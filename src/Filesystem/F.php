@@ -394,6 +394,34 @@ class F
     }
 
     /**
+     * A super simple class autoloader
+     * @since 3.7.0
+     *
+     * @param array $classmap
+     * @param string|null $base
+     * @return void
+     */
+    public static function loadClasses(array $classmap, ?string $base = null): void
+    {
+        // convert all classnames to lowercase
+        $classmap = array_change_key_case($classmap);
+
+        spl_autoload_register(function ($class) use ($classmap, $base) {
+            $class = strtolower($class);
+
+            if (!isset($classmap[$class])) {
+                return false;
+            }
+
+            if ($base) {
+                include $base . '/' . $classmap[$class];
+            } else {
+                include $classmap[$class];
+            }
+        });
+    }
+
+    /**
      * Loads a file with as little as possible in the variable scope
      *
      * @param string $file

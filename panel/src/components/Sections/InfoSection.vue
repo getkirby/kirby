@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import SectionMixin from "@/mixins/section/section.js";
+import SectionMixin from "@/mixins/section.js";
 export default {
   mixins: [SectionMixin],
   data() {

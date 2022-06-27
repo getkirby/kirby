@@ -1,11 +1,12 @@
 <?php
 
 use Kirby\Panel\Panel;
+use Kirby\Toolkit\I18n;
 
 return function ($kirby) {
     return [
         'icon'  => 'user',
-        'label' => t('login'),
+        'label' => I18n::translate('login'),
         'views' => [
             'login' => [
                 'pattern' => 'login',

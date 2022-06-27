@@ -1,11 +1,13 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 $files = require __DIR__ . '/../files/dialogs.php';
 
@@ -15,7 +17,7 @@ return [
     'user.create' => [
         'pattern' => 'users/create',
         'load' => function () {
-            $kirby = kirby();
+            $kirby = App::instance();
             return [
                 'component' => 'k-form-dialog',
                 'props' => [
@@ -33,7 +35,7 @@ return [
                             'required' => true
                         ])
                     ],
-                    'submitButton' => t('create'),
+                    'submitButton' => I18n::translate('create'),
                     'value' => [
                         'name'        => '',
                         'email'       => '',
@@ -45,13 +47,16 @@ return [
             ];
         },
         'submit' => function () {
-            kirby()->users()->create([
-                'name'     => get('name'),
-                'email'    => get('email'),
-                'password' => get('password'),
-                'language' => get('translation'),
-                'role'     => get('role')
+            $kirby = App::instance();
+
+            $kirby->users()->create([
+                'name'     => $kirby->request()->get('name'),
+                'email'    => $kirby->request()->get('email'),
+                'password' => $kirby->request()->get('password'),
+                'language' => $kirby->request()->get('translation'),
+                'role'     => $kirby->request()->get('role')
             ]);
+
             return [
                 'event' => 'user.create'
             ];
@@ -69,13 +74,13 @@ return [
                 'props' => [
                     'fields' => [
                         'email' => [
-                            'label'     => t('email'),
+                            'label'     => I18n::translate('email'),
                             'required'  => true,
                             'type'      => 'email',
                             'preselect' => true
                         ]
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'email' => $user->email()
                     ]
@@ -83,7 +88,10 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::user($id)->changeEmail(get('email'));
+            $request = App::instance()->request();
+
+            Find::user($id)->changeEmail($request->get('email'));
+
             return [
                 'event' => 'user.changeEmail'
             ];
@@ -102,7 +110,7 @@ return [
                     'fields' => [
                         'translation' => Field::translation(['required' => true])
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'translation' => $user->language()
                     ]
@@ -110,7 +118,9 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::user($id)->changeLanguage(get('translation'));
+            $request = App::instance()->request();
+
+            Find::user($id)->changeLanguage($request->get('translation'));
 
             return [
                 'event'  => 'user.changeLanguage',
@@ -135,7 +145,7 @@ return [
                             'preselect' => true
                         ])
                     ],
-                    'submitButton' => t('rename'),
+                    'submitButton' => I18n::translate('rename'),
                     'value' => [
                         'name' => $user->name()->value()
                     ]
@@ -143,7 +153,9 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::user($id)->changeName(get('name'));
+            $request = App::instance()->request();
+
+            Find::user($id)->changeName($request->get('name'));
 
             return [
                 'event' => 'user.changeName'
@@ -162,20 +174,22 @@ return [
                 'props' => [
                     'fields' => [
                         'password' => Field::password([
-                            'label' => t('user.changePassword.new'),
+                            'label' => I18n::translate('user.changePassword.new'),
                         ]),
                         'passwordConfirmation' => Field::password([
-                            'label' => t('user.changePassword.new.confirm'),
+                            'label' => I18n::translate('user.changePassword.new.confirm'),
                         ])
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                 ]
             ];
         },
         'submit' => function (string $id) {
+            $request = App::instance()->request();
+
             $user                 = Find::user($id);
-            $password             = get('password');
-            $passwordConfirmation = get('passwordConfirmation');
+            $password             = $request->get('password');
+            $passwordConfirmation = $request->get('passwordConfirmation');
 
             // validate the password
             UserRules::validPassword($user, $password ?? '');
@@ -207,11 +221,11 @@ return [
                 'props' => [
                     'fields' => [
                         'role' => Field::role([
-                            'label'    => t('user.changeRole.select'),
+                            'label'    => I18n::translate('user.changeRole.select'),
                             'required' => true,
                         ])
                     ],
-                    'submitButton' => t('user.changeRole'),
+                    'submitButton' => I18n::translate('user.changeRole'),
                     'value' => [
                         'role' => $user->role()->name()
                     ]
@@ -219,7 +233,9 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            $user = Find::user($id)->changeRole(get('role'));
+            $request = App::instance()->request();
+
+            $user = Find::user($id)->changeRole($request->get('role'));
 
             return [
                 'event' => 'user.changeRole',
@@ -238,7 +254,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    'text' => tt($i18nPrefix . '.delete.confirm', [
+                    'text' => I18n::template($i18nPrefix . '.delete.confirm', [
                         'email' => Escape::html($user->email())
                     ])
                 ]

@@ -87,6 +87,93 @@ class System
     }
 
     /**
+     * Returns the URL to the file within a system folder
+     * if the file is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
+     * @return string|null
+     */
+    public function exposedFileUrl(string $folder): ?string
+    {
+        if (!$url = $this->folderUrl($folder)) {
+            return null;
+        }
+
+        switch ($folder) {
+            case 'content':
+                return $url . '/' . basename($this->app->site()->contentFile());
+            case 'git':
+                return $url . '/config';
+            case 'kirby':
+                return $url . '/composer.json';
+            case 'site':
+                $root  = $this->app->root('site');
+                $files = glob($root . '/blueprints/*.yml');
+
+                if (empty($files) === true) {
+                    $files = glob($root . '/templates/*.*');
+                }
+
+                if (empty($files) === true) {
+                    $files = glob($root . '/snippets/*.*');
+                }
+
+                if (empty($files) === true || empty($files[0]) === true) {
+                    return $url;
+                }
+
+                $file = $files[0];
+                $file = basename(dirname($file)) . '/' . basename($file);
+
+                return $url . '/' . $file;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Returns the URL to a system folder
+     * if the folder is located in the document
+     * root. Otherwise it will return null.
+     *
+     * @param string $folder 'git', 'content', 'site', 'kirby'
+     * @return string|null
+     */
+    public function folderUrl(string $folder): ?string
+    {
+        $index = $this->app->root('index');
+
+        if ($folder === 'git') {
+            $root = $index . '/.git';
+        } else {
+            $root = $this->app->root($folder);
+        }
+
+        if ($root === null || is_dir($root) === false || is_dir($index) === false) {
+            return null;
+        }
+
+        $root  = realpath($root);
+        $index = realpath($index);
+
+        // windows
+        $root  = str_replace('\\', '/', $root);
+        $index = str_replace('\\', '/', $index);
+
+        // the folder is not within the document root?
+        if (Str::startsWith($root, $index) === false) {
+            return null;
+        }
+
+        // get the path after the document root
+        $path = trim(Str::after($root, $index), '/');
+
+        // build the absolute URL to the folder
+        return Url::to($path);
+    }
+
+    /**
      * Returns the app's human-readable
      * index URL without scheme
      *
@@ -165,44 +252,7 @@ class System
      */
     public function isLocal(): bool
     {
-        $server  = $this->app->server();
-        $visitor = $this->app->visitor();
-        $host    = $server->host();
-
-        if ($host === 'localhost') {
-            return true;
-        }
-
-        if (Str::endsWith($host, '.local') === true) {
-            return true;
-        }
-
-        if (Str::endsWith($host, '.test') === true) {
-            return true;
-        }
-
-        if (in_array($visitor->ip(), ['::1', '127.0.0.1']) === true) {
-            // ensure that there is no reverse proxy in between
-
-            if (
-                isset($_SERVER['HTTP_X_FORWARDED_FOR']) === true &&
-                in_array($_SERVER['HTTP_X_FORWARDED_FOR'], ['::1', '127.0.0.1']) === false
-            ) {
-                return false;
-            }
-
-            if (
-                isset($_SERVER['HTTP_CLIENT_IP']) === true &&
-                in_array($_SERVER['HTTP_CLIENT_IP'], ['::1', '127.0.0.1']) === false
-            ) {
-                return false;
-            }
-
-            // no reverse proxy or the real client also comes from localhost
-            return true;
-        }
-
-        return false;
+        return $this->app->environment()->isLocal();
     }
 
     /**
@@ -508,7 +558,7 @@ class System
             ];
         }
 
-        $software = $_SERVER['SERVER_SOFTWARE'] ?? '';
+        $software = $this->app->environment()->get('SERVER_SOFTWARE', '');
 
         preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
 

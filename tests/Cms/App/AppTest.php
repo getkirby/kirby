@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Route;
-use Kirby\Http\Server;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
@@ -175,6 +174,33 @@ class AppTest extends TestCase
     }
 
     /**
+     * @covers ::collection
+     */
+    public function testCollection()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'collections' => [
+                'test' => function ($pages) {
+                    return $pages;
+                }
+            ]
+        ]);
+
+        $collection = $app->collection('test');
+
+        $this->assertCount(1, $collection);
+        $this->assertSame('test', $collection->first()->slug());
+    }
+
+    /**
      * @covers ::contentToken
      */
     public function testContentToken()
@@ -205,6 +231,57 @@ class AppTest extends TestCase
             ]
         ]);
         $this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
+    }
+
+    /**
+     * @covers ::csrf
+     */
+    public function testCsrf()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'sessions' => $fixtures = __DIR__ . '/fixtures/AppTest/csrf',
+            ]
+        ]);
+
+        $session = $app->session();
+
+        // should generate token
+        $session->remove('kirby.csrf');
+        $token = $app->csrf();
+        $this->assertIsString($token);
+        $this->assertStringMatchesFormat('%x', $token);
+        $this->assertSame(64, strlen($token));
+        $this->assertSame($session->get('kirby.csrf'), $token);
+
+        // should not regenerate when a param is passed
+        $this->assertFalse($app->csrf(null));
+        $this->assertFalse($app->csrf(false));
+        $this->assertFalse($app->csrf(123));
+        $this->assertFalse($app->csrf('some invalid string'));
+        $this->assertSame($token, $session->get('kirby.csrf'));
+
+        // should not regenerate if there is already a token
+        $token2 = $app->csrf();
+        $this->assertSame($token, $token2);
+
+        // should regenerate if there is an invalid token
+        $session->set('kirby.csrf', 123);
+        $token3 = $app->csrf();
+        $this->assertNotEquals($token, $token3);
+        $this->assertSame(64, strlen($token3));
+        $this->assertSame($session->get('kirby.csrf'), $token3);
+
+        // should verify token
+        $this->assertTrue($app->csrf($token3));
+        $this->assertFalse($app->csrf($token2));
+        $this->assertFalse($app->csrf(null));
+        $this->assertFalse($app->csrf(false));
+        $this->assertFalse($app->csrf(123));
+        $this->assertFalse($app->csrf('some invalid string'));
+
+        $session->destroy();
     }
 
     public function testDebugInfo()
@@ -253,6 +330,84 @@ class AppTest extends TestCase
         );
 
         $this->assertInstanceOf('Kirby\Email\PHPMailer', $email);
+    }
+
+    /**
+     * @covers ::environment
+     * @covers ::server
+     */
+    public function testEnvironment()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'server' => $info = [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $this->assertSame($info, $app->environment()->info());
+        $this->assertSame($app->environment(), $app->server());
+        $this->assertSame($info, $app->server()->info());
+    }
+
+    /**
+     * @covers ::environment
+     */
+    public function testEnvironmentBeforeInitialization()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The environment is not allowed');
+
+        new App([
+            'options' => [
+                'debug' => true,
+                'url'   => ['https://getkirby.com', 'https://trykirby.com']
+            ]
+        ]);
+    }
+
+    /**
+     * @covers ::image
+     */
+    public function testImage()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'files' => [
+                    ['filename' => 'sitefile.jpg']
+                ],
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'pagefile.jpg']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $image = $app->image('test/pagefile.jpg');
+        $this->assertInstanceOf(File::class, $image);
+
+        $image = $app->image('/sitefile.jpg');
+        $this->assertInstanceOf(File::class, $image);
+
+        // get the first image of the current page
+        $app->site()->visit('test');
+        $image = $app->image();
+        $this->assertInstanceOf(File::class, $image);
+
+        $image = $app->image('pagefile.jpg');
+        $this->assertInstanceOf(File::class, $image);
+
+        $image = $app->image('does-not-exist.jpg');
+        $this->assertNull($image);
     }
 
     public function testOption()
@@ -353,10 +508,8 @@ class AppTest extends TestCase
     {
         App::destroy();
 
-        // fake a non-CLI environment for testing debug mode
-        Server::$cli = false;
-
         $app = new App([
+            'cli' => false,
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -399,9 +552,6 @@ class AppTest extends TestCase
         $this->assertSame('another-test', $app->site()->errorPageId());
 
         $this->assertSame('ss', Str::$language['ß']);
-
-        // reset global environment
-        Server::$cli = true;
     }
 
     public function testRolesFromFixtures()
@@ -468,14 +618,20 @@ class AppTest extends TestCase
 
         $this->assertInstanceOf(Session::class, $app->session());
 
+        $this->assertTrue($app->response()->cache());
+        $this->assertSame(['Vary' => 'Cookie'], $app->response()->headers());
+
+        // manual session that blocks caching
+        $app->response()->headers([]);
+        $this->assertInstanceOf(Session::class, $app->session(['createMode' => 'manual']));
         $this->assertFalse($app->response()->cache());
-        $this->assertSame(['Cache-Control' => 'no-store'], $app->response()->headers());
+        $this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'no-store, private'], $app->response()->headers());
 
         // test lazy header setter
-        $app->response()->header('Cache-Control', 'custom');
-        $this->assertInstanceOf(Session::class, $app->session());
+        $app->response()->headers(['Cache-Control' => 'custom']);
+        $this->assertInstanceOf(Session::class, $app->session(['createMode' => 'manual']));
         $this->assertFalse($app->response()->cache());
-        $this->assertSame(['Cache-Control' => 'custom'], $app->response()->headers());
+        $this->assertSame(['Vary' => 'Cookie', 'Cache-Control' => 'custom'], $app->response()->headers());
     }
 
     public function testInstance()
@@ -538,13 +694,23 @@ class AppTest extends TestCase
                 'files' => [
                     ['filename' => 'test-a.jpg'],
                     ['filename' => 'test-b.jpg']
+                ],
+                'children' => [
+                    [
+                        'slug'  => 'home',
+                        'files' => [
+                            ['filename' => 'test-c.jpg']
+                        ]
+                    ],
                 ]
             ]
         ]);
 
         $site  = $app->site();
+        $page  = $site->find('home');
         $fileA = $site->file('test-a.jpg');
         $fileB = $site->file('test-b.jpg');
+        $fileC = $page->file('test-c.jpg');
 
         // plain
         $this->assertEquals($fileA, $app->file('test-a.jpg'));
@@ -552,8 +718,14 @@ class AppTest extends TestCase
         // with page parent
         $this->assertEquals($fileA, $app->file('test-a.jpg', $site));
 
+        // with subpage parent
+        $this->assertEquals($fileC, $app->file('home/test-c.jpg'));
+        $this->assertEquals($fileC, $app->file('home/test-c.jpg', $site));
+        $this->assertEquals($fileC, $app->file('test-c.jpg', $page));
+
         // with file parent
         $this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+        $this->assertEquals($fileC, $app->file('test-c.jpg', $fileC));
     }
 
     public function testFindUserFile()
@@ -966,5 +1138,45 @@ class AppTest extends TestCase
         ]);
 
         $this->assertSame(['title' => 'Site'], $app->controller('none', [], 'json'));
+    }
+
+    /**
+     * @covers ::path
+     */
+    public function testPath()
+    {
+        $app = new App();
+        $this->assertSame('', $app->path());
+
+        // with custom request
+        $app = new App([
+            'request' => [
+                'url' => [
+                    'path' => '/foo/bar'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
+
+        // from request uri
+        $app = new App([
+            'server' => [
+                'REQUEST_URI' => '/foo/bar'
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
+
+        // with params
+        $app = new App([
+            'request' => [
+                'url' => [
+                    'path' => '/foo/bar/page:1'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('foo/bar', $app->path());
     }
 }

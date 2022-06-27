@@ -49,6 +49,9 @@
   "email": "E-postadress",
   "email.placeholder": "namn@exempel.se",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Miljö",
 
   "error.access.code": "Ogiltig kod",
@@ -294,6 +297,7 @@
   "hide": "Göm",
   "hour": "Timme",
   "import": "Importera",
+  "info": "Info",
   "insert": "Infoga",
   "insert.after": "Infoga efter",
   "insert.before": "Infoga före",
@@ -340,6 +344,7 @@
   "license.register.label": "Ange din licenskod",
   "license.register.success": "Tack för att du stödjer Kirby",
   "license.unregistered": "Detta är en oregistrerad demo av Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "L\u00e4nk",
   "link.text": "L\u00e4nktext",
@@ -469,19 +474,27 @@
 
   "section.required": "Sektionen krävs",
 
+  "security": "Security",
   "select": "Välj",
+  "server": "Server",
   "settings": "Inställningar",
   "show": "Visa",
+  "site.blueprint": "Webbplatsen har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/site.yml</strong>",
   "size": "Storlek",
   "slug": "URL-appendix",
   "sort": "Sortera",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Titel",
   "template": "Mall",
   "today": "Idag",
-
-  "server": "Server",
-
-  "site.blueprint": "Webbplatsen har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kod",
   "toolbar.button.bold": "Fet",

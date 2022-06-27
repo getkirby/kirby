@@ -6,83 +6,18 @@
       </k-header>
       <section class="k-system-view-section">
         <header class="k-system-view-section-header">
-          <k-headline>Kirby</k-headline>
-        </header>
-
-        <ul class="k-system-info-box" style="--columns: 2">
-          <li>
-            <dl>
-              <dt>{{ $t("license") }}</dt>
-              <dd>
-                <template v-if="$license">
-                  {{ license }}
-                </template>
-                <k-button
-                  v-else
-                  class="k-system-warning"
-                  @click="$dialog('registration')"
-                >
-                  {{ $t("license.unregistered") }}
-                </k-button>
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>{{ $t("version") }}</dt>
-              <dd dir="ltr">
-                <k-link
-                  :to="
-                    'https://github.com/getkirby/kirby/releases/tag/' + version
-                  "
-                >
-                  {{ version }}
-                </k-link>
-              </dd>
-            </dl>
-          </li>
-        </ul>
-      </section>
-
-      <section class="k-system-view-section">
-        <header class="k-system-view-section-header">
           <k-headline>{{ $t("environment") }}</k-headline>
         </header>
 
-        <ul class="k-system-info-box" style="--columns: 4">
-          <li>
-            <dl>
-              <dt>{{ $t("debugging") }}</dt>
-              <dd :class="{ 'k-system-warning': debug }">
-                {{ debug ? $t("on") : $t("off") }}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>HTTPS</dt>
-              <dd :class="{ 'k-system-warning': !https }">
-                {{ https ? $t("on") : $t("off") }}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>PHP</dt>
-              <dd>
-                {{ php }}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl>
-              <dt>{{ $t("server") }}</dt>
-              <dd>
-                {{ server || "?" }}
-              </dd>
-            </dl>
-          </li>
-        </ul>
+        <k-stats :reports="environment" size="medium" class="k-system-info" />
+      </section>
+
+      <section v-if="security.length" class="k-system-view-section">
+        <header class="k-system-view-section-header">
+          <k-headline>{{ $t("security") }}</k-headline>
+          <k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
+        </header>
+        <k-items :items="security" />
       </section>
 
       <section v-if="plugins.length" class="k-system-view-section">
@@ -91,41 +26,28 @@
             {{ $t("plugins") }}
           </k-headline>
         </header>
-        <table class="k-system-plugins">
-          <tr>
-            <th>
-              {{ $t("name") }}
-            </th>
-            <th class="desk">
-              {{ $t("author") }}
-            </th>
-            <th class="desk">
-              {{ $t("license") }}
-            </th>
-            <th style="width: 8rem">
-              {{ $t("version") }}
-            </th>
-          </tr>
-          <tr v-for="plugin in plugins" :key="plugin.name">
-            <td>
-              <k-link v-if="plugin.link" :to="plugin.link">
-                {{ plugin.name }}
-              </k-link>
-              <template v-else>
-                {{ plugin.name }}
-              </template>
-            </td>
-            <td class="desk">
-              {{ plugin.author || "-" }}
-            </td>
-            <td class="desk">
-              {{ plugin.license || "-" }}
-            </td>
-            <td style="width: 8rem">
-              {{ plugin.version || "-" }}
-            </td>
-          </tr>
-        </table>
+        <k-table
+          :index="false"
+          :columns="{
+            name: {
+              label: $t('name'),
+              type: 'url',
+              mobile: true
+            },
+            author: {
+              label: $t('author')
+            },
+            license: {
+              label: $t('license')
+            },
+            version: {
+              label: $t('version'),
+              width: '8rem',
+              mobile: true
+            }
+          }"
+          :rows="plugins"
+        />
       </section>
     </k-view>
   </k-inside>
@@ -140,7 +62,107 @@ export default {
     plugins: Array,
     server: String,
     https: Boolean,
+    urls: Object,
     version: String
+  },
+  data() {
+    return {
+      security: []
+    };
+  },
+  computed: {
+    environment() {
+      return [
+        {
+          label: this.$t("license"),
+          value: this.$license
+            ? this.license
+            : this.$t("license.unregistered.label"),
+          theme: this.$lincense ? null : "negative",
+          click: this.$lincense ? null : () => this.$dialog("registration")
+        },
+        {
+          label: this.$t("version"),
+          value: this.version,
+          link: "https://github.com/getkirby/kirby/releases/tag/" + this.version
+        },
+        {
+          label: "PHP",
+          value: this.php
+        },
+        {
+          label: this.$t("server"),
+          value: this.server || "?"
+        }
+      ];
+    }
+  },
+  async created() {
+    console.info(
+      "Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
+    );
+
+    // `Promise.all` as fallback for older browsers
+    let promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
+
+    await promiseAll([
+      this.check("content"),
+      this.check("debug"),
+      this.check("git"),
+      this.check("https"),
+      this.check("kirby"),
+      this.check("site")
+    ]);
+
+    console.info("System health checks ended.");
+  },
+  methods: {
+    async check(key) {
+      switch (key) {
+        case "debug":
+          if (this.debug === true) {
+            this.securityIssue(key);
+          }
+          break;
+        case "https":
+          if (this.https !== true) {
+            this.securityIssue(key);
+          }
+          break;
+        default:
+          const url = this.urls[key];
+
+          if (!url) {
+            return false;
+          }
+
+          if ((await this.isAccessible(url)) === true) {
+            this.securityIssue(key);
+          }
+      }
+    },
+    securityIssue(key) {
+      this.security.push({
+        image: {
+          back: "var(--color-red-200)",
+          icon: "alert",
+          color: "var(--color-red)"
+        },
+        id: key,
+        text: this.$t("system.issues." + key),
+        link: "https://getkirby.com/security/" + key
+      });
+    },
+    async isAccessible(url) {
+      const response = await fetch(url, {
+        cache: "no-store"
+      });
+
+      return response.status < 400;
+    },
+    retry() {
+      this.$go(window.location.href);
+    }
   }
 };
 </script>
@@ -151,69 +173,13 @@ export default {
 }
 .k-system-view-section-header {
   margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
 }
 .k-system-view-section {
   margin-bottom: 3rem;
 }
-
-.k-system-info-box {
-  display: grid;
-  grid-gap: 1px;
-  font-size: var(--text-sm);
-}
-
-@media screen and (min-width: 45rem) {
-  .k-system-info-box {
-    grid-template-columns: repeat(var(--columns), 1fr);
-  }
-}
-
-.k-system-info-box li {
-  padding: 0.75rem;
-  background: var(--color-white);
-}
-.k-system-info-box dt {
-  font-size: var(--text-sm);
-  color: var(--color-gray-600);
-  margin-bottom: 0.25rem;
-}
-.k-system-warning {
-  color: var(--color-negative);
-  font-weight: var(--font-bold);
-  display: inline-flex;
-}
-.k-system-warning .k-button-text {
-  opacity: 1;
-}
-
-.k-system-plugins {
-  width: 100%;
-  font-variant-numeric: tabular-nums;
-  table-layout: fixed;
-  border-spacing: 1px;
-}
-.k-system-plugins th,
-.k-system-plugins td {
-  text-align: left;
-  padding: 0.75rem;
-  font-weight: var(--font-normal);
-  font-size: var(--text-sm);
-  background: var(--color-white);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.k-system-plugins .desk {
-  display: none;
-}
-
-@media screen and (min-width: 45rem) {
-  .k-system-plugins .desk {
-    display: table-cell;
-  }
-}
-
-.k-system-plugins th {
-  color: var(--color-gray-600);
+.k-system-info [data-theme] .k-stat-value {
+  color: var(--theme);
 }
 </style>

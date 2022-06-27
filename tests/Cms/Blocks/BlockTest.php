@@ -54,6 +54,16 @@ class BlockTest extends TestCase
         $this->assertSame($content, $block->content()->toArray());
     }
 
+    public function testContentWhenNotArray()
+    {
+        $block = new Block([
+            'type'    => 'heading',
+            'content' => 'this is invalid now'
+        ]);
+
+        $this->assertSame([], $block->content()->toArray());
+    }
+
     public function testController()
     {
         $block = new Block([

@@ -49,6 +49,9 @@
   "email": "E-Posta",
   "email.placeholder": "eposta@ornek.com",
 
+  "entries": "Girdiler",
+  "entry": "Girdi",
+
   "environment": "Ortam",
 
   "error.access.code": "Geçersiz kod",
@@ -294,6 +297,7 @@
   "hide": "Gizle",
   "hour": "Saat",
   "import": "İçe aktar",
+  "info": "Bilgi",
   "insert": "Ekle",
   "insert.after": "Sonrasına ekle",
   "insert.before": "Öncesine ekle",
@@ -340,6 +344,7 @@
   "license.register.label": "Lütfen lisans kodunu giriniz",
   "license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",
   "license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
+  "license.unregistered.label": "Kayıtsız",
 
   "link": "Ba\u011flant\u0131",
   "link.text": "Ba\u011flant\u0131 yaz\u0131s\u0131",
@@ -469,19 +474,27 @@
 
   "section.required": "Bölüm gereklidir",
 
+  "security": "Güvenlik",
   "select": "Seç",
+  "server": "Sunucu",
   "settings": "Ayarlar",
   "show": "Göster",
+  "site.blueprint": "Sitenin henüz bir planı yok. Kurulumu <strong>/site/blueprints/site.yml</strong>'de tanımlayabilirsiniz.",
   "size": "Boyut",
   "slug": "Web Adres Uzantısı",
   "sort": "Sırala",
+
+  "stats.empty": "Rapor yok",
+  "system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
+  "system.issues.debug": "Canlı modda hata ayıklama kapatılmalıdır",
+  "system.issues.git": ".git klasörü açığa çıkmış görünüyor",
+  "system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",
+  "system.issues.kirby": "Kirby klasörü açığa çıkmış görünüyor",
+  "system.issues.site": "Site klasörü açığa çıkmış görünüyor",
+
   "title": "Başlık",
   "template": "\u015eablon",
   "today": "Bugün",
-
-  "server": "Sunucu",
-
-  "site.blueprint": "Sitenin henüz bir planı yok. Kurulumu <strong>/site/blueprints/site.yml</strong>'de tanımlayabilirsiniz.",
 
   "toolbar.button.code": "Kod",
   "toolbar.button.bold": "Kalın Yazı",

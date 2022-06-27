@@ -22,6 +22,7 @@
 /* Tabbed */
 [data-tabbed="true"] {
   box-shadow: var(--shadow-outline);
+  border-radius: var(--rounded);
 }
 
 /* Theme */
@@ -71,6 +72,15 @@
 .scroll-y-auto {
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/** Make an input invisible to customize its appearance **/
+.input-hidden {
+  position: absolute;
+  appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
 }
 
 /** Todo: deprecate k-offscreen **/

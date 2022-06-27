@@ -17,9 +17,9 @@ if ($block->location() == 'web') {
 
 ?>
 <?php if ($src): ?>
-<figure<?= attr(['data-ratio' => $ratio, 'data-crop' => $crop], ' ') ?>>
+<figure<?= Html::attr(['data-ratio' => $ratio, 'data-crop' => $crop], null, ' ') ?>>
   <?php if ($link->isNotEmpty()): ?>
-  <a href="<?= esc($link->toUrl()) ?>">
+  <a href="<?= Str::esc($link->toUrl()) ?>">
     <img src="<?= $src ?>" alt="<?= $alt->esc() ?>">
   </a>
   <?php else: ?>

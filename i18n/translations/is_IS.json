@@ -49,6 +49,9 @@
   "email": "Netfang",
   "email.placeholder": "nafn@netfang.is",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Umhverfi",
 
   "error.access.code": "Ógildur kóði",
@@ -294,6 +297,7 @@
   "hide": "Fela",
   "hour": "Klukkustund",
   "import": "Hlaða inn",
+  "info": "Info",
   "insert": "Setja inn",
   "insert.after": "Setja eftir",
   "insert.before": "Setja fyrir",
@@ -340,6 +344,7 @@
   "license.register.label": "Vinsamlegast settu inn leyfiskóðan",
   "license.register.success": "Þakka þér fyrir að velja Kirby",
   "license.unregistered": "Þetta er óskráð prufueintak af Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Tengill",
   "link.text": "Tengilstexti",
@@ -469,19 +474,27 @@
 
   "section.required": "Þetta svæði er nauðsynlegt",
 
+  "security": "Security",
   "select": "Velja",
+  "server": "Vefþjónn",
   "settings": "Stillingar",
   "show": "Sýna",
+  "site.blueprint": "Þessi vefur hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/site.yml</strong>",
   "size": "Stærð",
   "slug": "Slögg",
   "sort": "Raða",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Titill",
   "template": "Sniðmát",
   "today": "Núna",
-
-  "server": "Vefþjónn",
-
-  "site.blueprint": "Þessi vefur hefur ekki skipan (e. blueprint) ennþá. Þú mátt skilgreina skipanina í <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kóðasnið",
   "toolbar.button.bold": "Feitletrun",

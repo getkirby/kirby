@@ -43,7 +43,7 @@ class Responder
      * Flag that defines whether the current
      * response can be cached by Kirby's cache
      *
-     * @var string
+     * @var bool
      */
     protected $cache = true;
 
@@ -60,6 +60,23 @@ class Responder
      * @var string
      */
     protected $type = null;
+
+    /**
+     * Flag that defines whether the current
+     * response uses the HTTP `Authorization`
+     * request header
+     *
+     * @var bool
+     */
+    protected $usesAuth = false;
+
+    /**
+     * List of cookie names the response
+     * relies on
+     *
+     * @var array
+     */
+    protected $usesCookies = [];
 
     /**
      * Creates and sends the response
@@ -99,10 +116,68 @@ class Responder
     public function cache(?bool $cache = null)
     {
         if ($cache === null) {
+            // never ever cache private responses
+            if (static::isPrivate($this->usesAuth(), $this->usesCookies()) === true) {
+                return false;
+            }
+
             return $this->cache;
         }
 
         $this->cache = $cache;
+        return $this;
+    }
+
+    /**
+     * Setter and getter for the flag that defines
+     * whether the current response uses the HTTP
+     * `Authorization` request header
+     * @since 3.7.0
+     *
+     * @param bool|null $usesAuth
+     * @return bool|$this
+     */
+    public function usesAuth(?bool $usesAuth = null)
+    {
+        if ($usesAuth === null) {
+            return $this->usesAuth;
+        }
+
+        $this->usesAuth = $usesAuth;
+        return $this;
+    }
+
+    /**
+     * Setter for a cookie name that is
+     * used by the response
+     * @since 3.7.0
+     *
+     * @param string $name
+     * @return void
+     */
+    public function usesCookie(string $name): void
+    {
+        // only add unique names
+        if (in_array($name, $this->usesCookies) === false) {
+            $this->usesCookies[] = $name;
+        }
+    }
+
+    /**
+     * Setter and getter for the list of cookie
+     * names the response relies on
+     * @since 3.7.0
+     *
+     * @param array|null $usesCookies
+     * @return array|$this
+     */
+    public function usesCookies(?array $usesCookies = null)
+    {
+        if ($usesCookies === null) {
+            return $this->usesCookies;
+        }
+
+        $this->usesCookies = $usesCookies;
         return $this;
     }
 
@@ -179,10 +254,13 @@ class Responder
     public function fromArray(array $response): void
     {
         $this->body($response['body'] ?? null);
-        $this->expires($response['expires'] ?? null);
+        $this->cache($response['cache'] ?? null);
         $this->code($response['code'] ?? null);
+        $this->expires($response['expires'] ?? null);
         $this->headers($response['headers'] ?? null);
         $this->type($response['type'] ?? null);
+        $this->usesAuth($response['usesAuth'] ?? null);
+        $this->usesCookies($response['usesCookies'] ?? null);
     }
 
     /**
@@ -196,7 +274,7 @@ class Responder
     public function header(string $key, $value = null, bool $lazy = false)
     {
         if ($value === null) {
-            return $this->headers[$key] ?? null;
+            return $this->headers()[$key] ?? null;
         }
 
         if ($value === false) {
@@ -221,7 +299,31 @@ class Responder
     public function headers(array $headers = null)
     {
         if ($headers === null) {
-            return $this->headers;
+            $injectedHeaders = [];
+
+            if (static::isPrivate($this->usesAuth(), $this->usesCookies()) === true) {
+                // never ever cache private responses
+                $injectedHeaders['Cache-Control'] = 'no-store, private';
+            } else {
+                // the response is public, but it may
+                // vary based on request headers
+                $vary = [];
+
+                if ($this->usesAuth() === true) {
+                    $vary[] = 'Authorization';
+                }
+
+                if ($this->usesCookies() !== []) {
+                    $vary[] = 'Cookie';
+                }
+
+                if ($vary !== []) {
+                    $injectedHeaders['Vary'] = implode(', ', $vary);
+                }
+            }
+
+            // lazily inject (never override custom headers)
+            return array_merge($injectedHeaders, $this->headers);
         }
 
         $this->headers = $headers;
@@ -283,11 +385,14 @@ class Responder
      */
     public function toArray(): array
     {
+        // the `cache`, `expires`, `usesAuth` and `usesCookies`
+        // values are explicitly *not* serialized as they are
+        // volatile and not to be exported
         return [
-            'body'    => $this->body,
-            'code'    => $this->code,
-            'headers' => $this->headers,
-            'type'    => $this->type,
+            'body'    => $this->body(),
+            'code'    => $this->code(),
+            'headers' => $this->headers(),
+            'type'    => $this->type(),
         ];
     }
 
@@ -309,5 +414,34 @@ class Responder
 
         $this->type = $type;
         return $this;
+    }
+
+    /**
+     * Checks whether the response needs to be exempted from
+     * all caches due to using dynamic data based on auth
+     * and/or cookies; the request data only matters if it
+     * is actually used/relied on by the response
+     * @since 3.7.0
+     * @internal
+     *
+     * @param bool $usesAuth
+     * @param array $usesCookies
+     * @return bool
+     */
+    public static function isPrivate(bool $usesAuth, array $usesCookies): bool
+    {
+        $kirby = App::instance();
+
+        if ($usesAuth === true && $kirby->request()->hasAuth() === true) {
+            return true;
+        }
+
+        foreach ($usesCookies as $cookie) {
+            if (isset($_COOKIE[$cookie]) === true) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -170,7 +171,7 @@ class Str
     }
 
     /**
-     * Returns the rest of the string after the given character
+     * Returns the rest of the string after the given substring or character
      *
      * @param string $string
      * @param string $needle
@@ -186,6 +187,28 @@ class Str
         }
 
         return static::substr($string, $position + static::length($needle));
+    }
+
+    /**
+     * Removes the given substring or character only from the start of the string
+     * @since 3.7.0
+     *
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
+     * @return string
+     */
+    public static function afterStart(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        if ($needle === '') {
+            return $string;
+        }
+
+        if (static::startsWith($string, $needle, $caseInsensitive) === true) {
+            return static::substr($string, static::length($needle));
+        }
+
+        return $string;
     }
 
     /**
@@ -212,7 +235,7 @@ class Str
     }
 
     /**
-     * Returns the beginning of a string before the given character
+     * Returns the beginning of a string before the given substring or character
      *
      * @param string $string
      * @param string $needle
@@ -231,6 +254,28 @@ class Str
     }
 
     /**
+     * Removes the given substring or character only from the end of the string
+     * @since 3.7.0
+     *
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
+     * @return string
+     */
+    public static function beforeEnd(string $string, string $needle, bool $caseInsensitive = false): string
+    {
+        if ($needle === '') {
+            return $string;
+        }
+
+        if (static::endsWith($string, $needle, $caseInsensitive) === true) {
+            return static::substr($string, 0, -static::length($needle));
+        }
+
+        return $string;
+    }
+
+    /**
      * Returns everything between two strings from the first occurrence of a given string
      *
      * @param string $string
@@ -241,6 +286,17 @@ class Str
     public static function between(string $string = null, string $start, string $end): string
     {
         return static::before(static::after($string, $start), $end);
+    }
+
+    /**
+     * Converts a string to camel case
+     *
+     * @param string $value The string to convert
+     * @return string
+     */
+    public static function camel(string $value = null): string
+    {
+        return lcfirst(static::studly($value));
     }
 
     /**
@@ -366,7 +422,7 @@ class Str
      * @param bool $caseInsensitive
      * @return bool
      */
-    public static function endsWith(string $string, string $needle, bool $caseInsensitive = false): bool
+    public static function endsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
         if ($needle === '') {
             return true;
@@ -380,6 +436,23 @@ class Str
         }
 
         return $needle === $probe;
+    }
+
+    /**
+     * Escape string for context specific output
+     * @since 3.7.0
+     *
+     * @param string $string Untrusted data
+     * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
+     * @return string Escaped data
+     */
+    public static function esc(string $string, string $context = 'html'): string
+    {
+        if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
+            return Escape::$context($string);
+        }
+
+        return $string;
     }
 
     /**
@@ -458,17 +531,39 @@ class Str
     }
 
     /**
+     * Adds `-1` to a string or increments the ending number to allow `-2`, `-3`, etc.
+     * @since 3.7.0
+     *
+     * @param string $string The string to increment
+     * @param string $separator
+     * @param int $first Starting number
+     * @return string
+     */
+    public static function increment(string $string, string $separator = '-', int $first = 1): string
+    {
+        preg_match('/(.+)' . preg_quote($separator, '/') . '([0-9]+)$/', $string, $matches);
+
+        if (isset($matches[2]) === true) {
+            // increment the existing ending number
+            return $matches[1] . $separator . ((int)$matches[2] + 1);
+        }
+
+        // append a new ending number
+        return $string . $separator . $first;
+    }
+
+    /**
      * Checks if the given string is a URL
      *
      * @param string|null $string
      * @return bool
      * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
-     * @todo Throw deprecation warning in 3.7.0
      * @todo Remove in 3.8.0
      * @codeCoverageIgnore
      */
     public static function isURL(?string $string = null): bool
     {
+        Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
         return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
 
@@ -1051,6 +1146,18 @@ class Str
     }
 
     /**
+     * Converts a string to studly caps case
+     * @since 3.7.0
+     *
+     * @param string $value The string to convert
+     * @return string
+     */
+    public static function studly(string $value = null): string
+    {
+        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
+    }
+
+    /**
      * A UTF-8 safe version of substr()
      *
      * @param string $string
@@ -1077,36 +1184,19 @@ class Str
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values.
      *                    Supports query syntax.
-     * @param string|array|null $fallback An options array that contains:
-     *                                    - fallback: if a token does not have any matches
-     *                                    - callback: to be able to handle each matching result
-     *                                    - start: start placeholder
-     *                                    - end: end placeholder
-     *                                    A simple fallback string is supported for compatibility (but deprecated).
-     * @param string $start Placeholder start characters (deprecated)
-     * @param string $end Placeholder end characters (deprecated)
-     *
-     * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
-     *
+     * @param array $options An options array that contains:
+     *                       - fallback: if a token does not have any matches
+     *                       - callback: to be able to handle each matching result
+     *                       - start: start placeholder
+     *                       - end: end placeholder
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
+    public static function template(string $string = null, array $data = [], array $options = []): string
     {
-        // @codeCoverageIgnoreStart
-        if (
-            is_string($fallback) === true ||
-            $start !== '{{' ||
-            $end !== '}}'
-        ) {
-            deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
-        }
-        // @codeCoverageIgnoreEnd
-
-        $options  = $fallback;
-        $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
+        $fallback = $options['fallback'] ?? null;
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
-        $start    = (string)($options['start'] ?? $start);
-        $end      = (string)($options['end'] ?? $end);
+        $start    = (string)($options['start'] ?? '{{');
+        $end      = (string)($options['end'] ?? '}}');
 
         // make sure $string is string
         $string ??= '';
@@ -1144,15 +1234,11 @@ class Str
      * Converts a filesize string with shortcuts
      * like M, G or K to an integer value
      *
-     * @param mixed $size
+     * @param string $size
      * @return int
      */
-    public static function toBytes($size): int
+    public static function toBytes(string $size): int
     {
-        // TODO: remove in 3.7.0
-        // in favor of strict parameter type hint
-        $size ??= '';
-
         $size = trim($size);
         $last = strtolower($size[strlen($size)-1] ?? '');
         $size = (int)$size;
@@ -1284,6 +1370,36 @@ class Str
     }
 
     /**
+     * Creates a compliant v4 UUID
+     * Taken from: https://github.com/symfony/polyfill
+     * @since 3.7.0
+     *
+     * @return string
+     */
+    public static function uuid(): string
+    {
+        $uuid = bin2hex(random_bytes(16));
+
+        return sprintf(
+            '%08s-%04s-4%03s-%04x-%012s',
+            // 32 bits for "time_low"
+            substr($uuid, 0, 8),
+            // 16 bits for "time_mid"
+            substr($uuid, 8, 4),
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            substr($uuid, 13, 3),
+            // 16 bits:
+            // * 8 bits for "clk_seq_hi_res",
+            // * 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            hexdec(substr($uuid, 16, 4)) & 0x3fff | 0x8000,
+            // 48 bits for "node"
+            substr($uuid, 20, 12)
+        );
+    }
+
+    /**
      * The widont function makes sure that there are no
      * typographical widows at the end of a paragraph –
      * that's a single word in the last line
@@ -1308,5 +1424,19 @@ class Str
             }
             return '&nbsp;' . $matches[2];
         }, $string);
+    }
+
+    /**
+     * Wraps the string with the given string(s)
+     * @since 3.7.0
+     *
+     * @param string $string String to wrap
+     * @param string $before String to prepend
+     * @param string|null $after String to append (if different from `$before`)
+     * @return string
+     */
+    public static function wrap(string $string, string $before, string $after = null): string
+    {
+        return $before . $string . ($after ?? $before);
     }
 }

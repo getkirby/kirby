@@ -54,12 +54,14 @@ class Pages extends Collection
      */
     public function add($object)
     {
+        $site = App::instance()->site();
+
         // add a pages collection
         if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
         // add a page by id
-        } elseif (is_string($object) === true && $page = page($object)) {
+        } elseif (is_string($object) === true && $page = $site->find($object)) {
             $this->__set($page->id(), $page);
 
         // add a page object
@@ -92,7 +94,7 @@ class Pages extends Collection
      */
     public function children()
     {
-        $children = new Pages([], $this->parent);
+        $children = new Pages([]);
 
         foreach ($this->data as $page) {
             foreach ($page->children() as $childKey => $child) {
@@ -130,7 +132,7 @@ class Pages extends Collection
      */
     public function drafts()
     {
-        $drafts = new Pages([], $this->parent);
+        $drafts = new Pages([]);
 
         foreach ($this->data as $page) {
             foreach ($page->drafts() as $draftKey => $draft) {
@@ -199,51 +201,38 @@ class Pages extends Collection
      * Finds a page in the collection by id.
      * This works recursively for children and
      * children of children, etc.
+     * @deprecated 3.7.0 Use `$pages->get()` or `$pages->find()` instead
+     * @todo 3.8.0 Remove method
+     * @codeCoverageIgnore
      *
      * @param string|null $id
      * @return mixed
      */
     public function findById(string $id = null)
     {
-        if ($id === null) {
-            return null;
-        }
+        Helpers::deprecated('Cms\Pages::findById() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->get() or $pages->find() instead.');
 
-        // remove trailing or leading slashes
-        $id = trim($id, '/');
-
-        // strip extensions from the id
-        if (strpos($id, '.') !== false) {
-            $info = pathinfo($id);
-
-            if ($info['dirname'] !== '.') {
-                $id = $info['dirname'] . '/' . $info['filename'];
-            } else {
-                $id = $info['filename'];
-            }
-        }
-
-        // try the obvious way
-        if ($page = $this->get($id)) {
-            return $page;
-        }
-
-        $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-        $page  = $this->findByIdRecursive($id, $start, App::instance()->multilang());
-
-        return $page;
+        return $this->findByKey($id);
     }
 
     /**
      * Finds a child or child of a child recursively.
+     * @deprecated 3.7.0 Use `$pages->find()` instead
+     * @todo 3.8.0 Integrate code into `findByKey()` and remove this method
      *
      * @param string $id
      * @param string|null $startAt
      * @param bool $multiLang
      * @return mixed
      */
-    public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false)
+    public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false, bool $silenceWarning = false)
     {
+        // @codeCoverageIgnoreStart
+        if ($silenceWarning !== true) {
+            Helpers::deprecated('Cms\Pages::findByIdRecursive() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->find() instead.');
+        }
+        // @codeCoverageIgnoreEnd
+
         $path       = explode('/', $id);
         $item       = null;
         $query      = $startAt;
@@ -272,25 +261,70 @@ class Pages extends Collection
     }
 
     /**
-     * Uses the specialized find by id method
+     * Finds a page by its ID or URI
+     * @internal Use `$pages->find()` instead
      *
      * @param string|null $key
-     * @return mixed
+     * @return \Kirby\Cms\Page|null
      */
-    public function findByKey(string $key = null)
+    public function findByKey(?string $key = null)
     {
-        return $this->findById($key);
+        if ($key === null) {
+            return null;
+        }
+
+        // remove trailing or leading slashes
+        $key = trim($key, '/');
+
+        // strip extensions from the id
+        if (strpos($key, '.') !== false) {
+            $info = pathinfo($key);
+
+            if ($info['dirname'] !== '.') {
+                $key = $info['dirname'] . '/' . $info['filename'];
+            } else {
+                $key = $info['filename'];
+            }
+        }
+
+        // try the obvious way
+        if ($page = $this->get($key)) {
+            return $page;
+        }
+
+        // try to find the page by its (translated) URI by stepping through the page tree
+        $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
+        if ($page = $this->findByIdRecursive($key, $start, App::instance()->multilang(), true)) {
+            return $page;
+        }
+
+        // for secondary languages, try the full translated URI
+        // (for collections without parent that won't have a result above)
+        if (
+            App::instance()->multilang() === true &&
+            App::instance()->language()->isDefault() === false &&
+            $page = $this->findBy('uri', $key)
+        ) {
+            return $page;
+        }
+
+        return null;
     }
 
     /**
-     * Alias for Pages::findById
+     * Alias for `$pages->find()`
+     * @deprecated 3.7.0 Use `$pages->find()` instead
+     * @todo 3.8.0 Remove method
+     * @codeCoverageIgnore
      *
      * @param string $id
      * @return \Kirby\Cms\Page|null
      */
     public function findByUri(string $id)
     {
-        return $this->findById($id);
+        Helpers::deprecated('Cms\Pages::findByUri() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->find() instead.');
+
+        return $this->findByKey($id);
     }
 
     /**
@@ -350,7 +384,7 @@ class Pages extends Collection
             return $index;
         }
 
-        $index = new Pages([], $this->parent);
+        $index = new Pages([]);
 
         foreach ($this->data as $pageKey => $page) {
             $index->data[$pageKey] = $page;

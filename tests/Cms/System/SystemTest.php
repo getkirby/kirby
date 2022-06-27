@@ -11,7 +11,6 @@ use ReflectionClass;
  */
 class SystemTest extends TestCase
 {
-    protected $_SERVER = null;
     protected $app;
     protected $fixtures;
     protected $subFixtures;
@@ -23,32 +22,16 @@ class SystemTest extends TestCase
                 'index' => $this->fixtures = __DIR__ . '/fixtures/SystemTest'
             ]
         ]);
-
-        $this->_SERVER = $_SERVER;
     }
 
     public function tearDown(): void
     {
-        $_SERVER = $this->_SERVER;
-
         if ($this->subFixtures !== null) {
             chmod($this->subFixtures, 0755);
             Dir::remove($this->subFixtures);
         }
 
         Dir::remove($this->fixtures);
-    }
-
-    public function providerForClientAddresses()
-    {
-        return [
-            ['127.0.0.1', '127.0.0.1', true],
-            ['::1', '::1', true],
-            ['127.0.0.1', '::1', true],
-            ['::1', '127.0.0.1', true],
-            ['1.2.3.4', '127.0.0.1', false],
-            ['127.0.0.1', '1.2.3.4', false],
-        ];
     }
 
     public function providerForIndexUrls()
@@ -170,6 +153,151 @@ class SystemTest extends TestCase
     }
 
     /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForContentFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'content' => $this->fixtures . '/content',
+                'index'   => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/content');
+
+        $this->assertNull($system->folderUrl('content'));
+        $this->assertNull($system->exposedFileUrl('content'));
+
+        Dir::make($this->fixtures . '/content');
+
+        $this->assertSame('/content', $system->folderUrl('content'));
+        $this->assertSame('/content/site.txt', $system->exposedFileUrl('content'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForGitFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/.git');
+
+        $this->assertNull($system->folderUrl('git'));
+        $this->assertNull($system->exposedFileUrl('git'));
+
+        Dir::make($this->fixtures . '/.git');
+
+        $this->assertSame('/.git', $system->folderUrl('git'));
+        $this->assertSame('/.git/config', $system->exposedFileUrl('git'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForInsignificantFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures,
+                'media' => $this->fixtures . '/media'
+            ]
+        ]));
+
+        Dir::make($this->fixtures . '/media');
+
+        $this->assertSame('/media', $system->folderUrl('media'));
+        $this->assertNull($system->exposedFileUrl('media'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForKirbyFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'kirby' => $this->fixtures . '/kirby',
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/kirby');
+
+        $this->assertNull($system->folderUrl('kirby'));
+        $this->assertNull($system->exposedFileUrl('kirby'));
+
+        Dir::make($this->fixtures . '/kirby');
+
+        $this->assertSame('/kirby', $system->folderUrl('kirby'));
+        $this->assertSame('/kirby/composer.json', $system->exposedFileUrl('kirby'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForSiteFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'site'  => $this->fixtures . '/site',
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        Dir::remove($this->fixtures . '/site');
+
+        $this->assertNull($system->folderUrl('site'));
+
+        // with blueprints
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/blueprints/site.yml', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/blueprints/site.yml', $system->exposedFileUrl('site'));
+
+        // with templates
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/templates/default.php', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/templates/default.php', $system->exposedFileUrl('site'));
+
+        // with snippets
+        Dir::remove($this->fixtures . '/site');
+        F::write($this->fixtures . '/site/snippets/header.php', 'test');
+
+        $this->assertSame('/site', $system->folderUrl('site'));
+        $this->assertSame('/site/snippets/header.php', $system->exposedFileUrl('site'));
+    }
+
+    /**
+     * @covers ::exposedFileUrl
+     * @covers ::folderUrl
+     */
+    public function testFolderUrlForUnknownFolder()
+    {
+        $system = new System($this->app->clone([
+            'roots' => [
+                'index' => $this->fixtures
+            ]
+        ]));
+
+        $this->assertNull($system->folderUrl('unknown'));
+        $this->assertNull($system->exposedFileUrl('unknown'));
+    }
+
+    /**
      * @covers ::indexUrl
      * @dataProvider providerForIndexUrls
      */
@@ -213,42 +341,17 @@ class SystemTest extends TestCase
     }
 
     /**
-     * @covers ::isLocal
-     * @dataProvider providerForServerNames
-     */
-    public function testIsLocalWithServerName($name, $expected)
-    {
-        $_SERVER['SERVER_NAME'] = $name;
-
-        $system = new System($this->app);
-        $this->assertSame($expected, $system->isLocal());
-    }
-
-    /**
-     * @covers ::isLocal
-     * @dataProvider providerForClientAddresses
-     */
-    public function testIsLocalWithClientAddresses(string $address, string $forwardedAddress, bool $expected)
-    {
-        $system = new System($this->app);
-
-        $_SERVER['REMOTE_ADDR'] = $address;
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = $forwardedAddress;
-        $this->assertSame($expected, $system->isLocal());
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['HTTP_CLIENT_IP'] = $forwardedAddress;
-        $this->assertSame($expected, $system->isLocal());
-    }
-
-    /**
      * @covers ::isInstallable
      */
     public function testIsInstallableOnLocalhost()
     {
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertTrue($system->isInstallable());
     }
@@ -258,9 +361,13 @@ class SystemTest extends TestCase
      */
     public function testIsInstallableOnPublicServer()
     {
-        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertFalse($system->isInstallable());
     }
@@ -270,13 +377,14 @@ class SystemTest extends TestCase
      */
     public function testIsInstallableOnPublicServerWithOverride()
     {
-        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
-
         $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'install' => true
                 ]
+            ],
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
             ]
         ]);
 
@@ -302,14 +410,51 @@ class SystemTest extends TestCase
     }
 
     /**
+     * @covers ::isLocal
+     */
+    public function testIsLocal()
+    {
+        // yep
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+            ]
+        ]);
+
+        $system = new System($app);
+
+        $this->assertTrue($system->isLocal());
+
+        // nope
+        $app = $this->app->clone([
+            'server' => [
+                'REMOTE_ADDR' => '1.2.3.4',
+            ]
+        ]);
+
+        $system = new System($app);
+
+        $this->assertFalse($system->isLocal());
+    }
+
+    /**
      * @covers ::isOk
      */
     public function testIsOk()
     {
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-        $_SERVER['SERVER_SOFTWARE'] = 'Apache';
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'install' => true
+                ]
+            ],
+            'server' => [
+                'REMOTE_ADDR' => '127.0.0.1',
+                'SERVER_SOFTWARE' => 'Apache'
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
 
         $this->assertTrue($system->isOk());
     }
@@ -482,9 +627,13 @@ class SystemTest extends TestCase
      */
     public function testServer($software, $expected)
     {
-        $_SERVER['SERVER_SOFTWARE'] = $software;
+        $app = $this->app->clone([
+            'server' => [
+                'SERVER_SOFTWARE' => $software
+            ]
+        ]);
 
-        $system = new System($this->app);
+        $system = new System($app);
         $server = $system->server();
 
         $this->assertSame($expected, $server);
@@ -502,12 +651,13 @@ class SystemTest extends TestCase
      */
     public function testServerOverwrite()
     {
-        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
-
         // single server
         $app = $this->app->clone([
             'options' => [
                 'servers' => 'symfony'
+            ],
+            'server' => [
+                'SERVER_SOFTWARE' => 'symfony'
             ]
         ]);
 
@@ -521,6 +671,9 @@ class SystemTest extends TestCase
         $app = $this->app->clone([
             'options' => [
                 'servers' => ['symfony', 'apache']
+            ],
+            'server' => [
+                'SERVER_SOFTWARE' => 'symfony'
             ]
         ]);
 

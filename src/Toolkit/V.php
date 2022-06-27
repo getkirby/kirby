@@ -44,6 +44,75 @@ class V
     }
 
     /**
+     * Runs a number of validators on a set of data and
+     * checks if the data is invalid
+     * @since 3.7.0
+     *
+     * @param array $data
+     * @param array $rules
+     * @param array $messages
+     * @return array
+     */
+    public static function invalid(array $data = [], array $rules = [], array $messages = []): array
+    {
+        $errors = [];
+
+        foreach ($rules as $field => $validations) {
+            $validationIndex = -1;
+
+            // See: http://php.net/manual/en/types.comparisons.php
+            // only false for: null, undefined variable, '', []
+            $value   = $data[$field] ?? null;
+            $filled  = $value !== null && $value !== '' && $value !== [];
+            $message = $messages[$field] ?? $field;
+
+            // True if there is an error message for each validation method.
+            $messageArray = is_array($message);
+
+            foreach ($validations as $method => $options) {
+                // If the index is numeric, there is no option
+                // and `$value` is sent directly as a `$options` parameter
+                if (is_numeric($method) === true) {
+                    $method  = $options;
+                    $options = [$value];
+                } else {
+                    if (is_array($options) === false) {
+                        $options = [$options];
+                    }
+
+                    array_unshift($options, $value);
+                }
+
+                $validationIndex++;
+
+                if ($method === 'required') {
+                    if ($filled) {
+                        // Field is required and filled.
+                        continue;
+                    }
+                } elseif ($filled) {
+                    if (V::$method(...$options) === true) {
+                        // Field is filled and passes validation method.
+                        continue;
+                    }
+                } else {
+                    // If a field is not required and not filled, no validation should be done.
+                    continue;
+                }
+
+                // If no continue was called we have a failed validation.
+                if ($messageArray) {
+                    $errors[$field][] = $message[$validationIndex] ?? $field;
+                } else {
+                    $errors[$field] = $message;
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
      * Creates a useful error message for the given validator
      * and the arguments. This is used mainly internally
      * to create error messages
@@ -322,6 +391,23 @@ V::$validators = [
     },
 
     /**
+     * Checks for empty values
+     */
+    'empty' => function ($value = null): bool {
+        $empty = ['', null, []];
+
+        if (in_array($value, $empty, true) === true) {
+            return true;
+        }
+
+        if (is_countable($value) === true) {
+            return count($value) === 0;
+        }
+
+        return false;
+    },
+
+    /**
      * Checks if the given string ends with the given value
      */
     'endsWith' => function (string $value, string $end): bool {
@@ -358,6 +444,19 @@ V::$validators = [
      */
     'ip' => function ($value): bool {
         return filter_var($value, FILTER_VALIDATE_IP) !== false;
+    },
+
+    /**
+     * Checks for valid json
+     */
+    'json' => function ($value): bool {
+        if (!is_string($value) || $value === '') {
+            return false;
+        }
+
+        json_decode($value);
+
+        return json_last_error() === JSON_ERROR_NONE;
     },
 
     /**
@@ -431,6 +530,13 @@ V::$validators = [
     },
 
     /**
+     * Checks that the given value is not empty
+     */
+    'notEmpty' => function ($value): bool {
+        return V::empty($value) === false;
+    },
+
+    /**
      * Checks that the given value is not in the given list of values
      */
     'notIn' => function ($value, $notIn): bool {
@@ -445,11 +551,16 @@ V::$validators = [
     },
 
     /**
-     * Checks if the value is present in the given array
+     * Checks if the value is present
      */
-    'required' => function ($key, array $array): bool {
-        return isset($array[$key]) === true &&
-               V::notIn($array[$key], [null, '', []]) === true;
+    'required' => function ($value, $array = null): bool {
+        // with reference array
+        if (is_array($array) === true) {
+            return isset($array[$value]) === true && V::notEmpty($array[$value]) === true;
+        }
+
+        // without reference array
+        return V::notEmpty($value);
     },
 
     /**

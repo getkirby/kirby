@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class BlocksTest extends TestCase
@@ -54,26 +53,6 @@ class BlocksTest extends TestCase
         $this->assertSame('text', $blocks->last()->type());
     }
 
-    public function testFactoryFromBuilderWithColumns()
-    {
-        $builder = [
-            [
-                '_key' => 'heading',
-                'columns' => 1,
-            ],
-            [
-                '_key' => 'text',
-                'columns' => 2,
-            ]
-        ];
-
-        $blocks = Blocks::factory($builder);
-
-        $this->assertCount(2, $blocks);
-        $this->assertSame('heading', $blocks->first()->type());
-        $this->assertSame('text', $blocks->last()->type());
-    }
-
     public function testHasType()
     {
         $input = [
@@ -97,18 +76,6 @@ class BlocksTest extends TestCase
         ];
 
         $result = Blocks::parse(json_encode($input));
-        $this->assertSame($input, $result);
-    }
-
-    public function testParseYaml()
-    {
-        $input = [
-            [
-                'type' => 'heading'
-            ]
-        ];
-
-        $result = Blocks::parse(Yaml::encode($input));
         $this->assertSame($input, $result);
     }
 

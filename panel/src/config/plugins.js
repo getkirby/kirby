@@ -1,5 +1,5 @@
 import store from "@/store/store.js";
-import section from "../mixins/section/section.js";
+import section from "../mixins/section.js";
 
 export default {
   install(app) {

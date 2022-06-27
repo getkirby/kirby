@@ -96,9 +96,9 @@ class Pagination extends BasePagination
     /**
      * Returns the Url for the first page
      *
-     * @return string
+     * @return string|null
      */
-    public function firstPageUrl(): string
+    public function firstPageUrl(): ?string
     {
         return $this->pageUrl(1);
     }
@@ -106,9 +106,9 @@ class Pagination extends BasePagination
     /**
      * Returns the Url for the last page
      *
-     * @return string
+     * @return string|null
      */
-    public function lastPageUrl(): string
+    public function lastPageUrl(): ?string
     {
         return $this->pageUrl($this->lastPage());
     }

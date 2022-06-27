@@ -60,8 +60,10 @@ class SystemTest extends AreaTestCase
             [
                 'author'  => 'A, B',
                 'license' => 'MIT',
-                'link'    => 'https://getkirby.com',
-                'name'    => 'getkirby/test',
+                'name'    => [
+                    'text' => 'getkirby/test',
+                    'href' => 'https://getkirby.com'
+                ],
                 'version' => '1.0.0'
             ]
         ];

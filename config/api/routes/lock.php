@@ -7,29 +7,6 @@
 return [
     [
         'pattern' => '(:all)/lock',
-        'method'  => 'GET',
-        /**
-         * @deprecated 3.6.0
-         * @todo Remove in 3.7.0
-         */
-        'action'  => function (string $path) {
-            deprecated('The `GET (:all)/lock` API endpoint has been deprecated and will be removed in 3.7.0');
-
-            if ($lock = $this->parent($path)->lock()) {
-                return [
-                    'supported' => true,
-                    'locked'    => $lock->get()
-                ];
-            }
-
-            return [
-                'supported' => false,
-                'locked'    => null
-            ];
-        }
-    ],
-    [
-        'pattern' => '(:all)/lock',
         'method'  => 'PATCH',
         'action'  => function (string $path) {
             if ($lock = $this->parent($path)->lock()) {
@@ -44,30 +21,6 @@ return [
             if ($lock = $this->parent($path)->lock()) {
                 return $lock->remove();
             }
-        }
-    ],
-    [
-        'pattern' => '(:all)/unlock',
-        'method'  => 'GET',
-        /**
-         * @deprecated 3.6.0
-         * @todo Remove in 3.7.0
-         */
-        'action'  => function (string $path) {
-            deprecated('The `GET (:all)/unlock` API endpoint has been deprecated and will be removed in 3.7.0');
-
-
-            if ($lock = $this->parent($path)->lock()) {
-                return [
-                    'supported' => true,
-                    'unlocked'  => $lock->isUnlocked()
-                ];
-            }
-
-            return [
-                'supported' => false,
-                'unlocked'  => null
-            ];
         }
     ],
     [

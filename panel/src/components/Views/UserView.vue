@@ -182,7 +182,9 @@ export default {
 .k-user-view-image .k-icon {
   width: 5rem;
   height: 5rem;
+  border-radius: var(--rounded);
   line-height: 0;
+  overflow: hidden;
 }
 .k-user-view-image[data-disabled="true"] {
   opacity: 1;

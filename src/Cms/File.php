@@ -425,16 +425,11 @@ class File extends ModelWithContent
      * Returns the parent id if a parent exists
      *
      * @internal
-     * @todo 3.7.0 When setParent() is changed, the if check is not needed anymore
-     * @return string|null
+     * @return string
      */
-    public function parentId(): ?string
+    public function parentId(): string
     {
-        if ($parent = $this->parent()) {
-            return $parent->id();
-        }
-
-        return null;
+        return $this->parent()->id();
     }
 
     /**
@@ -511,22 +506,13 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the parent model object;
-     * this property is required for `File::create()` and
-     * will be generally required starting with Kirby 3.7.0
+     * Sets the parent model object
      *
-     * @param \Kirby\Cms\Model|null $parent
+     * @param \Kirby\Cms\Model $parent
      * @return $this
-     * @todo make property required in 3.7.0
      */
-    protected function setParent(Model $parent = null)
+    protected function setParent(Model $parent)
     {
-        // @codeCoverageIgnoreStart
-        if ($parent === null) {
-            deprecated('You are creating a `Kirby\Cms\File` object without passing the `parent` property. While unsupported, this hasn\'t caused any direct errors so far. To fix inconsistencies, the `parent` property will be required when creating a `Kirby\Cms\File` object in Kirby 3.7.0 and higher. Not passing this property will start throwing a breaking error.');
-        }
-        // @codeCoverageIgnoreEnd
-
         $this->parent = $parent;
         return $this;
     }
@@ -641,7 +627,6 @@ class File extends ModelWithContent
      * used in the panel, when the file
      * gets dragged onto a textarea
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -652,6 +637,7 @@ class File extends ModelWithContent
      */
     public function dragText(string $type = null, bool $absolute = false): string
     {
+        Helpers::deprecated('Cms\File::dragText() has been deprecated and will be removed in Kirby 3.8.0. Use $file->panel()->dragText() instead.');
         return $this->panel()->dragText($type, $absolute);
     }
 
@@ -659,7 +645,6 @@ class File extends ModelWithContent
      * Returns an array of all actions
      * that can be performed in the Panel
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @since 3.3.0 This also checks for the lock status
@@ -671,13 +656,13 @@ class File extends ModelWithContent
      */
     public function panelOptions(array $unlock = []): array
     {
+        Helpers::deprecated('Cms\File::panelOptions() has been deprecated and will be removed in Kirby 3.8.0. Use $file->panel()->options() instead.');
         return $this->panel()->options($unlock);
     }
 
     /**
      * Returns the full path without leading slash
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -686,6 +671,7 @@ class File extends ModelWithContent
      */
     public function panelPath(): string
     {
+        Helpers::deprecated('Cms\File::panelPath() has been deprecated and will be removed in Kirby 3.8.0. Use $file->panel()->path() instead.');
         return $this->panel()->path();
     }
 
@@ -693,7 +679,6 @@ class File extends ModelWithContent
      * Prepares the response data for file pickers
      * and file fields
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @param array|null $params
@@ -702,6 +687,7 @@ class File extends ModelWithContent
      */
     public function panelPickerData(array $params = []): array
     {
+        Helpers::deprecated('Cms\File::panelPickerData() has been deprecated and will be removed in Kirby 3.8.0. Use $file->panel()->pickerData() instead.');
         return $this->panel()->pickerData($params);
     }
 
@@ -709,7 +695,6 @@ class File extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -719,6 +704,7 @@ class File extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
+        Helpers::deprecated('Cms\File::panelUrl() has been deprecated and will be removed in Kirby 3.8.0. Use $file->panel()->url() instead.');
         return $this->panel()->url($relative);
     }
 
@@ -732,7 +718,7 @@ class File extends ModelWithContent
     public function previewUrl(): string
     {
         $parent = $this->parent();
-        $url    = url($this->id());
+        $url    = Url::to($this->id());
 
         switch ($parent::CLASS_ALIAS) {
             case 'page':
@@ -749,6 +735,11 @@ class File extends ModelWithContent
                 // through their direct URL to avoid conflicts
                 // with draft token verification
                 if ($parent->isDraft() === true) {
+                    return $this->url();
+                }
+
+                // checks `file::url` component is extended
+                if ($this->kirby()->isNativeComponent('file::url') === false) {
                     return $this->url();
                 }
 

@@ -1,13 +1,14 @@
 <?php
 
+use Kirby\Toolkit\I18n;
 
 return function ($kirby) {
     return [
         'breadcrumbLabel' => function () use ($kirby) {
-            return $kirby->site()->title()->or(t('view.site'))->toString();
+            return $kirby->site()->title()->or(I18n::translate('view.site'))->toString();
         },
         'icon'      => 'home',
-        'label'     => $kirby->site()->blueprint()->title() ?? t('view.site'),
+        'label'     => $kirby->site()->blueprint()->title() ?? I18n::translate('view.site'),
         'menu'      => true,
         'dialogs'   => require __DIR__ . '/site/dialogs.php',
         'dropdowns' => require __DIR__ . '/site/dropdowns.php',

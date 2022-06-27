@@ -649,6 +649,7 @@ export default {
 .k-blocks {
   background: var(--color-white);
   box-shadow: var(--shadow);
+  border-radius: var(--rounded);
 }
 [data-disabled="true"] .k-blocks {
   background: var(--color-background);

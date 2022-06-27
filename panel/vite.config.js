@@ -1,7 +1,7 @@
 /* eslint-env node */
 import fs from "fs";
 import path from "path";
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { createVuePlugin } from "vite-plugin-vue2";
 import postcssAutoprefixer from "autoprefixer";
 import postcssCsso from "postcss-csso";
@@ -46,7 +46,7 @@ export default defineConfig(({ command }) => {
   };
 
   return {
-    plugins: [createVuePlugin(), pluginRewriteAll()],
+    plugins: [createVuePlugin(), pluginRewriteAll(), splitVendorChunkPlugin()],
     define: {
       // Fix vuelidate error
       "process.env.BUILD": JSON.stringify("production")
@@ -65,9 +65,7 @@ export default defineConfig(({ command }) => {
     },
     optimizeDeps: {
       entries: "src/**/*.{js,vue}",
-      exclude: [
-        "vitest"
-      ]
+      exclude: ["vitest"]
     },
     css: {
       postcss: {

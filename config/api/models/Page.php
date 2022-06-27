@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\Form\Form;
 
@@ -22,11 +23,12 @@ return [
         'isSortable'  => fn (Page $page) => $page->isSortable(),
         /**
          * @deprecated 3.6.0
-         * @todo Throw deprecated warning in 3.7.0
          * @todo Remove in 3.8.0
          * @codeCoverageIgnore
          */
         'next' => function (Page $page) {
+            Helpers::deprecated('The API field page.next has been deprecated and will be removed in 3.8.0.');
+
             return $page
                 ->nextAll()
                 ->filter('intendedTemplate', $page->intendedTemplate())
@@ -36,24 +38,17 @@ return [
         },
         'num'     => fn (Page $page) => $page->num(),
         'options' => fn (Page $page) => $page->panel()->options(['preview']),
-        /**
-         * @todo Remove in 3.7.0
-         * @codeCoverageIgnore
-         */
-        'panelIcon' => function (Page $page) {
-            deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
-            return $page->panel()->image();
-        },
         'panelImage' => fn (Page $page) => $page->panel()->image(),
         'parent'     => fn (Page $page) => $page->parent(),
         'parents'    => fn (Page $page) => $page->parents()->flip(),
         /**
          * @deprecated 3.6.0
-         * @todo Throw deprecated warning in 3.7.0
          * @todo Remove in 3.8.0
          * @codeCoverageIgnore
          */
         'prev' => function (Page $page) {
+            Helpers::deprecated('The API field page.prev has been deprecated and will be removed in 3.8.0.');
+
             return $page
                 ->prevAll()
                 ->filter('intendedTemplate', $page->intendedTemplate())

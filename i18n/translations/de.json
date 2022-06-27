@@ -49,6 +49,9 @@
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
 
+  "entries": "Einträge",
+  "entry": "Eintrag",
+
   "environment": "Umgebung",
 
   "error.access.code": "Ungültiger Code",
@@ -294,6 +297,7 @@
   "hide": "Verbergen",
   "hour": "Stunde",
   "import": "Importieren",
+  "info": "Info",
   "insert": "Einf\u00fcgen",
   "insert.after": "Danach einfügen",
   "insert.before": "Davor einfügen",
@@ -340,6 +344,7 @@
   "license.register.label": "Bitte gib deinen Lizenzcode ein",
   "license.register.success": "Vielen Dank für deine Unterstützung",
   "license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",
+  "license.unregistered.label": "Unregistriert",
 
   "link": "Link",
   "link.text": "Linktext",
@@ -469,19 +474,27 @@
 
   "section.required": "Der Bereich ist Pflicht",
 
+  "security": "Sicherheit",
   "select": "Auswählen",
+  "server": "Server",
   "settings": "Einstellungen",
   "show": "Anzeigen",
+  "site.blueprint": "Du kannst zusätzliche Felder und Bereiche für die Seite in <strong>/site/blueprints/site.yml</strong> anlegen",
   "size": "Größe",
   "slug": "URL-Anhang",
   "sort": "Sortieren",
+
+  "stats.empty": "Keine Daten",
+  "system.issues.content": "Der content Ordner scheint öffentlich zugänglich zu sein",
+  "system.issues.debug": "Debugging muss im öffentlichen Betrieb ausgeschaltet sein",
+  "system.issues.git": "Der .git Ordner scheint öffentlich zugänglich zu sein",
+  "system.issues.https": "Wir empfehlen HTTPS für alle deine Seiten",
+  "system.issues.kirby": "Der kirby Ordner scheint öffentlich zugänglich zu sein",
+  "system.issues.site": "Der site Ordner scheint öffentlich zugänglich zu sein",
+
   "title": "Titel",
   "template": "Vorlage",
   "today": "Heute",
-
-  "server": "Server",
-
-  "site.blueprint": "Du kannst zusätzliche Felder und Bereiche für die Seite in <strong>/site/blueprints/site.yml</strong> anlegen",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Fetter Text",

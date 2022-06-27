@@ -47,17 +47,5 @@ export default (extensions = {}) => {
   api.translations = translations(api);
   api.users = users(api);
 
-  /**
-   * @deprecated 3.5.0
-   * @todo remove in 3.7.0
-   */
-  api.files.rename = api.files.changeName;
-  api.pages.slug = api.pages.changeSlug;
-  api.pages.status = api.pages.changeStatus;
-  api.pages.template = api.pages.changeTemplate;
-  api.pages.title = api.pages.changeTitle;
-  api.site.title = api.site.changeTitle;
-  api.system.info = api.system.get;
-
   return api;
 };

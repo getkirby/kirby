@@ -122,9 +122,10 @@ class Plugin extends Model
      */
     public function link(): ?string
     {
-        $homepage = $this->info['homepage'] ?? null;
-        $docs     = $this->info['support']['docs'] ?? null;
-        $source   = $this->info['support']['source'] ?? null;
+        $info     = $this->info();
+        $homepage = $info['homepage'] ?? null;
+        $docs     = $info['support']['docs'] ?? null;
+        $source   = $info['support']['source'] ?? null;
 
         $link = $homepage ?? $docs ?? $source;
 

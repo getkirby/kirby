@@ -49,6 +49,9 @@
   "email": "E-mail",
   "email.placeholder": "mail@example.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Environment",
 
   "error.access.code": "Neplatný  kód",
@@ -294,6 +297,7 @@
   "hide": "Hide",
   "hour": "Hodina",
   "import": "Import",
+  "info": "Info",
   "insert": "Vložiť",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -340,6 +344,7 @@
   "license.register.label": "Prosím, zadajte váš licenčný kód",
   "license.register.success": "Ďakujeme za vašu podporu Kirby",
   "license.unregistered": "Toto je neregistrované demo Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Odkaz",
   "link.text": "Text odkazu",
@@ -469,19 +474,27 @@
 
   "section.required": "The section is required",
 
+  "security": "Security",
   "select": "Zvoliť",
+  "server": "Server",
   "settings": "Nastavenia",
   "show": "Show",
+  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
   "size": "Veľkosť",
   "slug": "URL appendix",
   "sort": "Zoradiť",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Titulok",
   "template": "Šablóna",
   "today": "Dnes",
-
-  "server": "Server",
-
-  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kód",
   "toolbar.button.bold": "Tučný",

@@ -41,7 +41,7 @@ class VTest extends TestCase
         $this->assertFalse(V::me('you'));
     }
 
-    public function testInvalidMethod()
+    public function testCallInvalidMethod()
     {
         $this->expectException('Exception');
         $this->expectExceptionMessage('The validator does not exist: fool');
@@ -209,6 +209,21 @@ class VTest extends TestCase
         $this->assertFalse(V::email('@getkirby.com'));
     }
 
+    public function testEmpty()
+    {
+        $this->assertTrue(V::empty(''));
+        $this->assertTrue(V::empty(null));
+        $this->assertTrue(V::empty([]));
+        $this->assertTrue(V::empty(new Collection()));
+
+        $this->assertFalse(V::empty(0));
+        $this->assertFalse(V::empty('0'));
+        $this->assertFalse(V::empty(false));
+        $this->assertFalse(V::empty(true));
+        $this->assertFalse(V::empty(['']));
+        $this->assertFalse(V::empty(new Collection(['a'])));
+    }
+
     public function testDateComparison()
     {
         $this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
@@ -256,6 +271,159 @@ class VTest extends TestCase
         $this->assertFalse(V::in('bastian', []));
     }
 
+    public function testInvalid()
+    {
+        $data = [
+            'username' => 123,
+            'email'    => 'homersimpson.com',
+            'zip'      => 'abc',
+            'website'  => '',
+            'created'  => '9999-99-99',
+        ];
+
+        $rules = [
+            'username' => ['alpha'],
+            'email'    => ['required', 'email'],
+            'zip'      => ['integer'],
+            'website'  => ['url'],
+            'created'  => ['date']
+        ];
+
+        $messages = [
+            'username' => 'The username must not contain numbers',
+            'email'    => 'Invalid email',
+            'zip'      => 'The ZIP must contain only numbers',
+            'created'  => 'Invalid date',
+        ];
+
+        $result = V::invalid($data, $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $data = [
+            'username' => 'homer',
+            'email'    => 'homer@simpson.com',
+            'zip'      => 123,
+            'website'  => 'http://example.com',
+            'created'  => '2021-01-01',
+        ];
+
+        $result = V::invalid($data, $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidSimple()
+    {
+        $data   = ['homer', null];
+        $rules  = [['alpha'], ['required']];
+        $result = V::invalid($data, $rules);
+        $this->assertSame(1, $result[1]);
+    }
+
+    public function testInvalidRequired()
+    {
+        $rules    = ['email' => ['required']];
+        $messages = ['email' => ''];
+
+        $result = V::invalid(['email' => null], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['name' => 'homer'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => ''], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => []], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['email' => '0'], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => 0], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => false], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $result = V::invalid(['email' => 'homer@simpson.com'], $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidOptions()
+    {
+        $rules = [
+            'username' => ['min' => 6]
+        ];
+
+        $messages = [
+            'username' => ''
+        ];
+
+        $result = V::invalid(['username' => 'homer'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+        $this->assertSame([], $result);
+
+        $rules = [
+            'username' => ['between' => [3, 6]]
+        ];
+
+        $result = V::invalid(['username' => 'ho'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+        $this->assertSame($messages, $result);
+
+        $result = V::invalid(['username' => 'homer'], $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testInvalidWithMultipleMessages()
+    {
+        $data     = ['username' => ''];
+        $rules    = ['username' => ['required', 'alpha', 'min' => 4]];
+        $messages = ['username' => [
+            'The username is required',
+            'The username must contain only letters',
+            'The username must be at least 4 characters long',
+        ]];
+
+        $result   = V::invalid(['username' => ''], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username is required',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result   = V::invalid(['username' => 'a1'], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username must contain only letters',
+                'The username must be at least 4 characters long',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result   = V::invalid(['username' => 'ab'], $rules, $messages);
+        $expected = [
+            'username' => [
+                'The username must be at least 4 characters long',
+            ]
+        ];
+        $this->assertSame($expected, $result);
+
+        $result = V::invalid(['username' => 'abcd'], $rules, $messages);
+        $this->assertSame([], $result);
+    }
+
+    public function testNotEmpty()
+    {
+        $this->assertFalse(V::notEmpty(''));
+        $this->assertTrue(V::notEmpty(0));
+    }
+
     public function testNotIn()
     {
         $this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
@@ -288,6 +456,19 @@ class VTest extends TestCase
         $this->assertFalse(V::ip('192.168'));
         $this->assertFalse(V::ip('192:168:255:12'));
         $this->assertFalse(V::ip('192.168.255.24.23'));
+    }
+
+    public function testJson()
+    {
+        $this->assertTrue(V::json('{"foo": "bar"}'));
+        $this->assertTrue(V::json('{}'));
+        $this->assertTrue(V::json('[]'));
+        $this->assertFalse(V::json('{foo: bar}'));
+        $this->assertFalse(V::json('foo'));
+        $this->assertFalse(V::json([]));
+        $this->assertFalse(V::json(false));
+        $this->assertFalse(V::json(42));
+        $this->assertFalse(V::json(''));
     }
 
     public function testLess()
@@ -356,6 +537,16 @@ class VTest extends TestCase
     }
 
     public function testRequired()
+    {
+        // required
+        $this->assertTrue(V::required(2));
+        $this->assertTrue(V::required(2));
+
+        $this->assertFalse(V::required(''));
+        $this->assertFalse(V::required(''));
+    }
+
+    public function testRequiredWithReferenceArray()
     {
         $this->assertTrue(V::required('a', ['a' => 2]));
         $this->assertTrue(V::required('a', ['a' => 'foo']));

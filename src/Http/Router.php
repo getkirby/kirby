@@ -16,14 +16,25 @@ use Kirby\Toolkit\A;
  */
 class Router
 {
-    public static $beforeEach;
-    public static $afterEach;
+    /**
+     * Hook that is called after each route
+     *
+     * @var \Closure
+     */
+    protected $afterEach;
+
+    /**
+     * Hook that is called before each route
+     *
+     * @var \Closure
+     */
+    protected $beforeEach;
 
     /**
      * Store for the current route,
      * if one can be found
      *
-     * @var Route|null
+     * @var \Kirby\Http\Route|null
      */
     protected $route;
 
@@ -52,9 +63,13 @@ class Router
      * registers all the given routes
      *
      * @param array $routes
+     * @param array<string, \Closure> $hooks Optional `beforeEach` and `afterEach` hooks
      */
-    public function __construct(array $routes = [])
+    public function __construct(array $routes = [], array $hooks = [])
     {
+        $this->beforeEach = $hooks['beforeEach'] ?? null;
+        $this->afterEach  = $hooks['afterEach']  ?? null;
+
         foreach ($routes as $props) {
             if (isset($props['pattern'], $props['action']) === false) {
                 throw new InvalidArgumentException('Invalid route parameters');
@@ -72,7 +87,12 @@ class Router
 
             foreach ($methods as $method) {
                 foreach ($patterns as $pattern) {
-                    $this->routes[$method][] = new Route($pattern, $method, $props['action'], $props);
+                    $this->routes[$method][] = new Route(
+                        $pattern,
+                        $method,
+                        $props['action'],
+                        $props
+                    );
                 }
             }
         }
@@ -100,8 +120,8 @@ class Router
         while ($loop === true) {
             $route = $this->find($path, $method, $ignore);
 
-            if (is_a(static::$beforeEach, 'Closure') === true) {
-                (static::$beforeEach)($route, $path, $method);
+            if (is_a($this->beforeEach, 'Closure') === true) {
+                ($this->beforeEach)($route, $path, $method);
             }
 
             try {
@@ -116,13 +136,29 @@ class Router
                 $ignore[] = $route;
             }
 
-            if (is_a(static::$afterEach, 'Closure') === true) {
+            if (is_a($this->afterEach, 'Closure') === true) {
                 $final  = $loop === false;
-                $result = (static::$afterEach)($route, $path, $method, $result, $final);
+                $result = ($this->afterEach)($route, $path, $method, $result, $final);
             }
         }
 
         return $result;
+    }
+
+    /**
+     * Creates a micro-router and executes
+     * the routing action immediately
+     * @since 3.7.0
+     *
+     * @param string|null $path
+     * @param string $method
+     * @param array $routes
+     * @param \Closure|null $callback
+     * @return mixed
+     */
+    public static function execute(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+    {
+        return (new static($routes))->call($path, $method, $callback);
     }
 
     /**

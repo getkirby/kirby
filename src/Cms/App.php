@@ -9,10 +9,10 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Environment;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
@@ -22,6 +22,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\Properties;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -71,7 +72,6 @@ class App
     protected $roots;
     protected $routes;
     protected $router;
-    protected $server;
     protected $sessionHandler;
     protected $site;
     protected $system;
@@ -97,13 +97,16 @@ class App
             // stuff from config and additional options
             $this->optionsFromConfig();
             $this->optionsFromProps($props['options'] ?? []);
-            $this->optionsFromEnvironment();
+            $this->optionsFromEnvironment($props);
         } finally {
             // register the Whoops error handler inside of a
             // try-finally block to ensure it's still registered
             // even if there is a problem loading the configurations
             $this->handleErrors();
         }
+
+        // a custom request setup must come before defining the path
+        $this->setRequest($props['request'] ?? null);
 
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
@@ -115,7 +118,6 @@ class App
         // configurable properties
         $this->setOptionalProperties($props, [
             'languages',
-            'request',
             'roles',
             'site',
             'user',
@@ -330,26 +332,9 @@ class App
      */
     public function call(string $path = null, string $method = null)
     {
-        $router = $this->router();
-
-        /**
-         * @todo Closures should not defined statically but
-         * for each instance to avoid this constant setting and unsetting
-         */
-        $router::$beforeEach = function ($route, $path, $method) {
-            $this->trigger('route:before', compact('route', 'path', 'method'));
-        };
-
-        $router::$afterEach = function ($route, $path, $method, $result, $final) {
-            return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
-        };
-
-        $result = $router->call($path ?? $this->path(), $method ?? $this->request()->method());
-
-        $router::$beforeEach = null;
-        $router::$afterEach  = null;
-
-        return $result;
+        $path   ??= $this->path();
+        $method ??= $this->request()->method();
+        return $this->router()->call($path, $method);
     }
 
     /**
@@ -530,6 +515,43 @@ class App
     }
 
     /**
+     * Checks/returns a CSRF token
+     * @since 3.7.0
+     *
+     * @param string|null $check Pass a token here to compare it to the one in the session
+     * @return string|bool Either the token or a boolean check result
+     */
+    public function csrf(?string $check = null)
+    {
+        $session = $this->session();
+
+        // no arguments, generate/return a token
+        // (check explicitly if there have been no arguments at all;
+        // checking for null introduces a security issue because null could come
+        // from user input or bugs in the calling code!)
+        if (func_num_args() === 0) {
+            $token = $session->get('kirby.csrf');
+
+            if (is_string($token) !== true) {
+                $token = bin2hex(random_bytes(32));
+                $session->set('kirby.csrf', $token);
+            }
+
+            return $token;
+        }
+
+        // argument has been passed, check the token
+        if (
+            is_string($check) === true &&
+            is_string($session->get('kirby.csrf')) === true
+        ) {
+            return hash_equals($session->get('kirby.csrf'), $check) === true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the default language object
      *
      * @return \Kirby\Cms\Language|null
@@ -595,11 +617,11 @@ class App
      * Returns the environment object with access
      * to the detected host, base url and dedicated options
      *
-     * @return \Kirby\Cms\Environment
+     * @return \Kirby\Http\Environment
      */
     public function environment()
     {
-        return $this->environment;
+        return $this->environment ?? new Environment();
     }
 
     /**
@@ -627,11 +649,13 @@ class App
         if ($id === '.') {
             if ($file = $parent->file($filename)) {
                 return $file;
-            } elseif ($file = $this->site()->file($filename)) {
-                return $file;
-            } else {
-                return null;
             }
+
+            if ($file = $this->site()->file($filename)) {
+                return $file;
+            }
+
+            return null;
         }
 
         if ($page = $this->page($id, $parent, $drafts)) {
@@ -640,6 +664,50 @@ class App
 
         if ($page = $this->page($id, null, $drafts)) {
             return $page->file($filename);
+        }
+
+        return null;
+    }
+
+    /**
+     * Return an image from any page
+     * specified by the path
+     *
+     * Example:
+     * <?= App::image('some/page/myimage.jpg') ?>
+     *
+     * @param string|null $path
+     * @return \Kirby\Cms\File|null
+     *
+     * @todo merge with App::file()
+     */
+    public function image(?string $path = null)
+    {
+        if ($path === null) {
+            return $this->site()->page()->image();
+        }
+
+        $uri      = dirname($path);
+        $filename = basename($path);
+
+        if ($uri === '.') {
+            $uri = null;
+        }
+
+        switch ($uri) {
+            case '/':
+                $parent = $this->site();
+                break;
+            case null:
+                $parent = $this->site()->page();
+                break;
+            default:
+                $parent = $this->site()->page($uri);
+                break;
+        }
+
+        if ($parent) {
+            return $parent->image($filename);
         }
 
         return null;
@@ -770,14 +838,28 @@ class App
      * Renders a single KirbyTag with the given attributes
      *
      * @internal
-     * @param string $type
+     * @param string|array $type Tag type or array with all tag arguments
+     *                           (the key of the first element becomes the type)
      * @param string|null $value
      * @param array $attr
      * @param array $data
      * @return string
      */
-    public function kirbytag(string $type, string $value = null, array $attr = [], array $data = []): string
+    public function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
     {
+        if (is_array($type) === true) {
+            $kirbytag = $type;
+            $type     = key($kirbytag);
+            $value    = current($kirbytag);
+            $attr     = $kirbytag;
+
+            // check data attribute and separate from attr data if exists
+            if (isset($attr['data']) === true) {
+                $data = $attr['data'];
+                unset($attr['data']);
+            }
+        }
+
         $data['kirby']  = $data['kirby']  ?? $this;
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
@@ -813,20 +895,21 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param array $data
-     * @param bool $inline (deprecated: use $data['markdown']['inline'] instead)
+     * @param array $options
+     * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
      * @return string
-     * @todo add deprecation warning for $inline parameter in 3.7.0
-     * @todo rename $data parameter to $options in 3.7.0
      * @todo remove $inline parameter in in 3.8.0
      */
-    public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
+    public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
     {
-        $options = A::merge([
-            'markdown' => [
-                'inline' => $inline
-            ]
-        ], $data);
+        // warning for deprecated fourth parameter
+        // @codeCoverageIgnoreStart
+        if (func_num_args() === 3) {
+            Helpers::deprecated('Cms\App::kirbytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'markdown\'][\'inline\'] instead.');
+        }
+        // @codeCoverageIgnoreEnd
+
+        $options['markdown']['inline'] ??= $inline;
 
         $text = $this->apply('kirbytext:before', compact('text'), 'text');
         $text = $this->kirbytags($text, $options);
@@ -924,23 +1007,22 @@ class App
      *
      * @internal
      * @param string|null $text
-     * @param bool|array $options
+     * @param bool|array $options Boolean inline value is deprecated, use `['inline' => true]` instead
      * @return string
-     * @todo rename $inline parameter to $options in 3.7.0
-     * @todo add deprecation warning for boolean $options in 3.7.0
      * @todo remove boolean $options in in 3.8.0
      */
-    public function markdown(string $text = null, $inline = null): string
+    public function markdown(string $text = null, $options = null): string
     {
-        // TODO: remove after renaming parameter
-        $options = $inline;
-
         // support for the old syntax to enable inline mode as second argument
+        // @codeCoverageIgnoreStart
         if (is_bool($options) === true) {
+            Helpers::deprecated('Cms\App::markdown(): Passing a boolean as second parameter has been deprecated and won\'t be supported anymore in Kirby 3.8.0. Instead pass array with the key "inline" set to true or false.');
+
             $options = [
                 'inline' => $options
             ];
         }
+        // @codeCoverageIgnoreEnd
 
         // merge global options with local options
         $options = array_merge(
@@ -948,9 +1030,10 @@ class App
             (array)$options
         );
 
-        // TODO: deprecate passing the $inline parameter in 3.7.0
         // TODO: remove passing the $inline parameter in 3.8.0
-        $inline = $options['inline'] ?? false;
+        // $options['inline'] is set to `false` to avoid the deprecation
+        // warning in the component; this can also be removed in 3.8.0
+        $inline = $options['inline'] ??= false;
         return ($this->component('markdown'))($this, $text, $options, $inline);
     }
 
@@ -1024,15 +1107,20 @@ class App
      * Load all options for the current
      * server environment
      *
+     * @param array $props
      * @return array
      */
-    protected function optionsFromEnvironment(): array
+    protected function optionsFromEnvironment(array $props = []): array
     {
         // create the environment based on the URL setup
-        $this->environment = new Environment($this->root('config'), $this->options['url'] ?? null);
+        $this->environment = new Environment([
+            'allowed' => $this->options['url'] ?? null,
+            'cli'     => $props['cli'] ?? null,
+        ], $props['server'] ?? null);
 
         // merge into one clean options array
-        return $this->options = array_replace_recursive($this->options, $this->environment->options());
+        $options = $this->environment()->options($this->root('config'));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -1134,14 +1222,11 @@ class App
             return $this->path;
         }
 
-        $requestUri  = '/' . $this->request()->url()->path();
-        $scriptName  = $_SERVER['SCRIPT_NAME'];
-        $scriptFile  = basename($scriptName);
-        $scriptDir   = dirname($scriptName);
-        $scriptPath  = $scriptFile === 'index.php' ? $scriptDir : $scriptName;
-        $requestPath = preg_replace('!^' . preg_quote($scriptPath) . '!', '', $requestUri);
+        $current = $this->request()->path()->toString();
+        $index   = $this->environment()->baseUri()->path()->toString();
+        $path    = Str::afterStart($current, $index);
 
-        return $this->setPath($requestPath)->path;
+        return $this->setPath($path)->path;
     }
 
     /**
@@ -1164,7 +1249,16 @@ class App
      */
     public function request()
     {
-        return $this->request = $this->request ?? new Request();
+        if ($this->request !== null) {
+            return $this->request;
+        }
+
+        $env = $this->environment();
+
+        return $this->request = new Request([
+            'cli' => $env->cli(),
+            'url' => $env->requestUri()
+        ]);
     }
 
     /**
@@ -1201,7 +1295,7 @@ class App
 
         // search for a draft if the page cannot be found
         if (!$page && $draft = $site->draft($path)) {
-            if ($this->user() || $draft->isVerified(get('token'))) {
+            if ($this->user() || $draft->isVerified($this->request()->get('token'))) {
                 $page = $draft;
             }
         }
@@ -1269,9 +1363,9 @@ class App
      * Returns a system root
      *
      * @param string $type
-     * @return string
+     * @return string|null
      */
-    public function root(string $type = 'index'): string
+    public function root(string $type = 'index'): ?string
     {
         return $this->roots->__get($type);
     }
@@ -1314,7 +1408,16 @@ class App
             }
         }
 
-        return $this->router = $this->router ?? new Router($routes);
+        $hooks = [
+            'beforeEach' => function ($route, $path, $method) {
+                $this->trigger('route:before', compact('route', 'path', 'method'));
+            },
+            'afterEach' => function ($route, $path, $method, $result, $final) {
+                return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
+            }
+        ];
+
+        return $this->router ??= new Router($routes, $hooks);
     }
 
     /**
@@ -1344,11 +1447,16 @@ class App
      */
     public function session(array $options = [])
     {
-        // never cache responses that depend on the session
-        $this->response()->cache(false);
-        $this->response()->header('Cache-Control', 'no-store', true);
+        $session = $this->sessionHandler()->get($options);
 
-        return $this->sessionHandler()->get($options);
+        // disable caching for sessions that use the `Authorization` header;
+        // cookie sessions are already covered by the `Cookie` class
+        if ($session->mode() === 'manual') {
+            $this->response()->cache(false);
+            $this->response()->header('Cache-Control', 'no-store, private', true);
+        }
+
+        return $session;
     }
 
     /**
@@ -1447,13 +1555,17 @@ class App
     }
 
     /**
-     * Returns the Server object
+     * Returns the Environment object
+     * @deprecated 3.7.0 Use `$kirby->environment()` instead
      *
-     * @return \Kirby\Http\Server
+     * @return \Kirby\Http\Environment
+     * @todo Start throwing deprecation warnings in 3.8.0
+     * @todo Remove in 3.9.0
+     * @codeCoverageIgnore
      */
     public function server()
     {
-        return $this->server ??= new Server();
+        return $this->environment();
     }
 
     /**
@@ -1505,12 +1617,24 @@ class App
      *
      * @internal
      * @param mixed $name
-     * @param array $data
+     * @param array|object $data Variables or an object that becomes `$item`
+     * @param bool $return On `false`, directly echo the snippet
      * @return string|null
      */
-    public function snippet($name, array $data = []): ?string
+    public function snippet($name, $data = [], bool $return = true): ?string
     {
-        return ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+        if (is_object($data) === true) {
+            $data = ['item' => $data];
+        }
+
+        $snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+
+        if ($return === true) {
+            return $snippet;
+        }
+
+        echo $snippet;
+        return null;
     }
 
     /**
@@ -1602,7 +1726,7 @@ class App
      *
      * @param string $type
      * @param bool $object If set to `true`, the URL is converted to an object
-     * @return string|\Kirby\Http\Uri
+     * @return string|\Kirby\Http\Uri|null
      */
     public function url(string $type = 'index', bool $object = false)
     {

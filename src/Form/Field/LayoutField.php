@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Layout;
@@ -18,7 +19,7 @@ class LayoutField extends BlocksField
 
     public function __construct(array $params)
     {
-        $this->setModel($params['model'] ?? site());
+        $this->setModel($params['model'] ?? App::instance()->site());
         $this->setLayouts($params['layouts'] ?? ['1/1']);
         $this->setSettings($params['settings'] ?? null);
 
@@ -78,15 +79,17 @@ class LayoutField extends BlocksField
             'pattern' => 'layout',
             'method'  => 'POST',
             'action'  => function () use ($field) {
+                $request = App::instance()->request();
+
                 $defaults = $field->attrsForm([])->data(true);
                 $attrs    = $field->attrsForm($defaults)->values();
-                $columns  = get('columns') ?? ['1/1'];
+                $columns  = $request->get('columns') ?? ['1/1'];
 
                 return Layout::factory([
                     'attrs'   => $attrs,
                     'columns' => array_map(fn ($width) => [
                         'blocks' => [],
-                        'id'     => uuid(),
+                        'id'     => Str::uuid(),
                         'width'  => $width,
                     ], $columns)
                 ])->toArray();

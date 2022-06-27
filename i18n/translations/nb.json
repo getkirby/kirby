@@ -49,6 +49,9 @@
   "email": "Epost",
   "email.placeholder": "epost@eksempel.no",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Miljø",
 
   "error.access.code": "Ugyldig kode",
@@ -294,6 +297,7 @@
   "hide": "Skjul",
   "hour": "Tid",
   "import": "Importer",
+  "info": "Info",
   "insert": "Sett Inn",
   "insert.after": "Sett inn etter",
   "insert.before": "Sett inn før",
@@ -340,6 +344,7 @@
   "license.register.label": "Vennligst skriv inn din lisenskode",
   "license.register.success": "Takk for at du støtter Kirby",
   "license.unregistered": "Dette er en uregistrert demo av Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Adresse",
   "link.text": "Koblingstekst",
@@ -469,19 +474,27 @@
 
   "section.required": "Denne seksjonen er påkrevd",
 
+  "security": "Security",
   "select": "Velg",
+  "server": "Server",
   "settings": "Innstillinger",
   "show": "Vis",
+  "site.blueprint": "Denne siden har ikke en blueprint enda. Du kan definere oppsettet i <strong>/site/blueprints/site.yml</strong>",
   "size": "Størrelse",
   "slug": "URL-appendiks",
   "sort": "Sortere",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Tittel",
   "template": "Mal",
   "today": "I dag",
-
-  "server": "Server",
-
-  "site.blueprint": "Denne siden har ikke en blueprint enda. Du kan definere oppsettet i <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kode",
   "toolbar.button.bold": "Fet tekst",

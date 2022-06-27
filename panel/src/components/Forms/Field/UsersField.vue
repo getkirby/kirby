@@ -12,29 +12,22 @@
       </k-button-group>
     </template>
 
-    <template v-if="selected.length">
-      <k-items
-        :items="selected"
-        :layout="layout"
-        :link="link"
-        :size="size"
-        :sortable="!disabled && selected.length > 1"
-        @sort="onInput"
-        @sortChange="$emit('change', $event)"
-      >
-        <template #options="{ index }">
-          <k-button
-            v-if="!disabled"
-            :tooltip="$t('remove')"
-            icon="remove"
-            @click="remove(index)"
-          />
-        </template>
-      </k-items>
-    </template>
-    <k-empty v-else :data-invalid="isInvalid" icon="users" @click="open">
-      {{ empty || $t("field.users.empty") }}
-    </k-empty>
+    <k-collection
+      v-bind="collection"
+      @empty="open"
+      @sort="onInput"
+      @sortChange="$emit('change', $event)"
+    >
+      <template #options="{ index }">
+        <k-button
+          v-if="!disabled"
+          :tooltip="$t('remove')"
+          icon="remove"
+          @click="remove(index)"
+        />
+      </template>
+    </k-collection>
+
     <k-users-dialog ref="selector" @submit="select" />
   </k-field>
 </template>
@@ -43,7 +36,15 @@
 import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker]
+  mixins: [picker],
+  computed: {
+    emptyProps() {
+      return {
+        icon: "users",
+        text: this.empty || this.$t("field.users.empty")
+      };
+    }
+  }
 };
 </script>
 

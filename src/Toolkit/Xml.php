@@ -421,8 +421,7 @@ class Xml
             return $value;
         }
 
-        // TODO: in 3.7.0 use ENT_NOQUOTES | ENT_XML1 instead
-        $encoded = htmlentities($value, ENT_COMPAT);
+        $encoded = htmlentities($value, ENT_NOQUOTES | ENT_XML1);
         if ($encoded === $value) {
             // no CDATA block needed
             return $value;

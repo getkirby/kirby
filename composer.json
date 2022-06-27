@@ -3,7 +3,7 @@
   "description": "The Kirby 3 core",
   "license": "proprietary",
   "type": "kirby-cms",
-  "version": "3.6.6",
+  "version": "3.7.0",
   "keywords": [
     "kirby",
     "cms",
@@ -23,23 +23,40 @@
     "forum": "https://forum.getkirby.com",
     "source": "https://github.com/getkirby/kirby"
   },
-  "_comment": "TODO: psr/log is not used by Kirby; drop pinned version when Kirby no longer supports PHP 7",
   "require": {
     "php": ">=7.4.0 <8.2.0",
+    "ext-SimpleXML": "*",
     "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-filter": "*",
+    "ext-hash": "*",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-libxml": "*",
     "ext-mbstring": "*",
+    "ext-openssl": "*",
     "claviska/simpleimage": "3.6.5",
     "filp/whoops": "2.14.5",
     "getkirby/composer-installer": "^1.2.1",
     "laminas/laminas-escaper": "2.10.0",
     "michelf/php-smartypants": "1.8.1",
-    "phpmailer/phpmailer": "6.5.4",
-    "psr/log": "1.1.4",
-    "symfony/polyfill-intl-idn": "1.25.0",
-    "symfony/polyfill-mbstring": "1.25.0"
+    "phpmailer/phpmailer": "6.6.3",
+    "symfony/polyfill-intl-idn": "1.26.0",
+    "symfony/polyfill-mbstring": "1.26.0"
   },
   "replace": {
     "symfony/polyfill-php72": "*"
+  },
+  "suggest": {
+    "ext-PDO": "Support for using databases",
+    "ext-apcu": "Support for the Apcu cache driver",
+    "ext-exif": "Support for exif information from images",
+    "ext-fileinfo": "Improved mime type detection for files",
+    "ext-intl": "Improved i18n number formatting",
+    "ext-memcached": "Support for the Memcached cache driver",
+    "ext-zip": "Support for ZIP archive file functions",
+    "ext-zlib": "Sanitization and validation for svgz files"
   },
   "autoload": {
     "psr-4": {
@@ -58,6 +75,9 @@
       "getkirby/composer-installer": true
     },
     "optimize-autoloader": true,
+    "platform": {
+      "php": "7.4.0"
+    },
     "platform-check": false
   },
   "extra": {

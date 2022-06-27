@@ -1,8 +1,8 @@
 <template>
   <!-- eslint-disable vue/no-mutating-props -->
   <k-input
-    v-model="value"
     :text="text"
+    :value="value"
     class="k-toggle-field-preview"
     type="toggle"
     @input="$emit('input', $event)"

@@ -1,5 +1,13 @@
 <template>
+  <k-table
+    v-if="layout === 'table'"
+    v-bind="table"
+    @change="$emit('change', $event)"
+    @sort="$emit('sort', $event)"
+    @option="onOption"
+  />
   <k-draggable
+    v-else
     class="k-items"
     :class="'k-' + layout + '-items'"
     :handle="true"
@@ -10,28 +18,25 @@
     @change="$emit('change', $event)"
     @end="$emit('sort', items, $event)"
   >
-    <slot>
-      <k-item
-        v-for="(item, itemIndex) in items"
-        :key="item.id || itemIndex"
-        v-bind="item"
-        :class="{ 'k-draggable-item': sortable && item.sortable }"
-        :image="imageOptions(item)"
-        :layout="layout"
-        :link="link ? item.link : false"
-        :sortable="sortable && item.sortable"
-        :width="item.column"
-        @click="$emit('item', item, itemIndex)"
-        @drag="onDragStart($event, item.dragText)"
-        @flag="$emit('flag', item, itemIndex)"
-        @mouseover.native="$emit('hover', $event, item, itemIndex)"
-        @option="$emit('option', $event, item, itemIndex)"
-      >
-        <template #options>
-          <slot name="options" :item="item" :index="itemIndex" />
-        </template>
-      </k-item>
-    </slot>
+    <k-item
+      v-for="(item, itemIndex) in items"
+      :key="item.id || itemIndex"
+      v-bind="item"
+      :class="{ 'k-draggable-item': sortable && item.sortable }"
+      :image="imageOptions(item)"
+      :layout="layout"
+      :link="link ? item.link : false"
+      :sortable="sortable && item.sortable"
+      :width="item.column"
+      @click="$emit('item', item, itemIndex)"
+      @drag="onDragStart($event, item.dragText)"
+      @mouseover.native="$emit('hover', $event, item, itemIndex)"
+      @option="onOption($event, item, itemIndex)"
+    >
+      <template #options>
+        <slot name="options" v-bind="{ item, itemIndex }" />
+      </template>
+    </k-item>
   </k-draggable>
 </template>
 
@@ -39,6 +44,12 @@
 export default {
   inheritAttrs: false,
   props: {
+    columns: {
+      type: [Object, Array],
+      default() {
+        return {};
+      }
+    },
     items: {
       type: Array,
       default() {
@@ -81,6 +92,16 @@ export default {
         disabled: this.sortable === false,
         draggable: ".k-draggable-item"
       };
+    },
+    table() {
+      let columns = this.columns;
+      let items = this.items;
+
+      return {
+        columns: columns,
+        rows: items,
+        sortable: this.sortable
+      };
     }
   },
   methods: {
@@ -89,6 +110,9 @@ export default {
         type: "text",
         data: dragText
       });
+    },
+    onOption(option, item, itemIndex) {
+      this.$emit("option", option, item, itemIndex);
     },
     imageOptions(item) {
       let globalOptions = this.image;

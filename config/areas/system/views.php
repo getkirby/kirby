@@ -1,12 +1,12 @@
 <?php
 
-use Kirby\Http\Server;
+use Kirby\Cms\App;
 
 return [
     'system' => [
         'pattern' => 'system',
         'action'  => function () {
-            $kirby   = kirby();
+            $kirby   = App::instance();
             $system  = $kirby->system();
             $license = $system->license();
 
@@ -24,8 +24,10 @@ return [
                 return [
                     'author'  => $plugin->authorsNames(),
                     'license' => $plugin->license(),
-                    'link'    => $plugin->link(),
-                    'name'    => $plugin->name(),
+                    'name'    => [
+                        'text' => $plugin->name(),
+                        'href' => $plugin->link(),
+                    ],
                     'version' => $plugin->version(),
                 ];
             });
@@ -38,8 +40,14 @@ return [
                     'plugins' => $plugins,
                     'php'     => phpversion(),
                     'server'  => $system->serverSoftware(),
-                    'https'   => Server::https(),
+                    'https'   => $kirby->environment()->https(),
                     'version' => $kirby->version(),
+                    'urls'    => [
+                        'content' => $system->exposedFileUrl('content'),
+                        'git'     => $system->exposedFileUrl('git'),
+                        'kirby'   => $system->exposedFileUrl('kirby'),
+                        'site'    => $system->exposedFileUrl('site')
+                    ]
                 ]
             ];
         }

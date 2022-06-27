@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
 use Throwable;
@@ -234,25 +235,21 @@ class Uri
 
     /**
      * @param array $props
-     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
      * @return static
      */
-    public static function current(array $props = [], bool $forwarded = false)
+    public static function current(array $props = [])
     {
         if (static::$current !== null) {
             return static::$current;
         }
 
-        $uri = Server::requestUri();
-        $url = new static(array_merge([
-            'scheme' => Server::https() === true ? 'https' : 'http',
-            'host'   => Server::host(),
-            'port'   => Server::port(),
-            'path'   => $uri['path'],
-            'query'  => $uri['query'],
-        ], $props));
+        if ($app = App::instance(null, true)) {
+            $url = $app->url('current');
+        } else {
+            $url = (new Environment())->requestUrl();
+        }
 
-        return $url;
+        return new static($url, $props);
     }
 
     /**
@@ -307,6 +304,14 @@ class Uri
     }
 
     /**
+     * @return bool
+     */
+    public function https(): bool
+    {
+        return $this->scheme() === 'https';
+    }
+
+    /**
      * Tries to convert the internationalized host
      * name to the human-readable UTF8 representation
      *
@@ -325,18 +330,18 @@ class Uri
      * or any other executed script.
      *
      * @param array $props
-     * @param bool $forwarded Deprecated! Todo: remove in 3.7.0
-     * @return string
+     * @return static
      */
-    public static function index(array $props = [], bool $forwarded = false)
+    public static function index(array $props = [])
     {
-        return static::current(array_merge($props, [
-            'path'     => Server::scriptPath(),
-            'query'    => null,
-            'fragment' => null,
-        ]));
-    }
+        if ($app = App::instance(null, true)) {
+            $url = $app->url('index');
+        } else {
+            $url = (new Environment())->baseUrl();
+        }
 
+        return new static($url, $props);
+    }
 
     /**
      * Checks if the host exists

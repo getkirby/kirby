@@ -267,6 +267,7 @@ class Core
             'textarea'    => $this->root . '/fields/textarea.php',
             'time'        => $this->root . '/fields/time.php',
             'toggle'      => $this->root . '/fields/toggle.php',
+            'toggles'     => $this->root . '/fields/toggles.php',
             'url'         => $this->root . '/fields/url.php',
             'users'       => $this->root . '/fields/users.php',
             'writer'      => $this->root . '/fields/writer.php'
@@ -399,6 +400,7 @@ class Core
     public function sectionMixins(): array
     {
         return [
+            'details'    => $this->root . '/sections/mixins/details.php',
             'empty'      => $this->root . '/sections/mixins/empty.php',
             'headline'   => $this->root . '/sections/mixins/headline.php',
             'help'       => $this->root . '/sections/mixins/help.php',
@@ -407,6 +409,8 @@ class Core
             'min'        => $this->root . '/sections/mixins/min.php',
             'pagination' => $this->root . '/sections/mixins/pagination.php',
             'parent'     => $this->root . '/sections/mixins/parent.php',
+            'search'     => $this->root . '/sections/mixins/search.php',
+            'sort'        => $this->root . '/sections/mixins/sort.php',
         ];
     }
 
@@ -424,6 +428,7 @@ class Core
             'files'  => $this->root . '/sections/files.php',
             'info'   => $this->root . '/sections/info.php',
             'pages'  => $this->root . '/sections/pages.php',
+            'stats'  => $this->root . '/sections/stats.php',
         ];
     }
 
@@ -452,7 +457,7 @@ class Core
     public function urls(): array
     {
         return $this->cache['urls'] ??= [
-            'index'   => fn () => $this->kirby->environment()->url(),
+            'index'   => fn () => $this->kirby->environment()->baseUrl(),
             'base'    => fn (array $urls) => rtrim($urls['index'], '/'),
             'current' => function (array $urls) {
                 $path = trim($this->kirby->path(), '/');

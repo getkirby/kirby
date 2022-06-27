@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Toolkit\A;
@@ -465,7 +466,7 @@ class Page extends ModelWithContent
      */
     public function go(array $options = [], int $code = 302)
     {
-        go($this->url($options), $code);
+        Response::go($this->url($options), $code);
     }
 
     /**
@@ -1029,11 +1030,19 @@ class Page extends ModelWithContent
 
         // try to get the page from cache
         if (empty($data) === true && $this->isCacheable() === true) {
-            $cache    = $kirby->cache('pages');
-            $cacheId  = $this->cacheId($contentType);
-            $result   = $cache->get($cacheId);
-            $html     = $result['html'] ?? null;
-            $response = $result['response'] ?? [];
+            $cache       = $kirby->cache('pages');
+            $cacheId     = $this->cacheId($contentType);
+            $result      = $cache->get($cacheId);
+            $html        = $result['html'] ?? null;
+            $response    = $result['response'] ?? [];
+            $usesAuth    = $result['usesAuth'] ?? false;
+            $usesCookies = $result['usesCookies'] ?? [];
+
+            // if the request contains dynamic data that the cached response
+            // relied on, don't use the cache to allow dynamic code to run
+            if (Responder::isPrivate($usesAuth, $usesCookies) === true) {
+                $html = null;
+            }
 
             // reconstruct the response configuration
             if (empty($html) === false && empty($response) === false) {
@@ -1060,15 +1069,15 @@ class Page extends ModelWithContent
             // render the page
             $html = $template->render($kirby->data);
 
-            // convert the response configuration to an array
-            $response = $kirby->response()->toArray();
-
             // cache the result
-            if ($cache !== null && $kirby->response()->cache() === true) {
+            $response = $kirby->response();
+            if ($cache !== null && $response->cache() === true) {
                 $cache->set($cacheId, [
-                    'html'     => $html,
-                    'response' => $response
-                ], $kirby->response()->expires() ?? 0);
+                    'html'        => $html,
+                    'response'    => $response->toArray(),
+                    'usesAuth'    => $response->usesAuth(),
+                    'usesCookies' => $response->usesCookies(),
+                ], $response->expires() ?? 0);
             }
         }
 
@@ -1471,7 +1480,6 @@ class Page extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @deprecated 3.6.0 Use `->panel()->dragText()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1481,6 +1489,7 @@ class Page extends ModelWithContent
      */
     public function dragText(string $type = null): string
     {
+        Helpers::deprecated('Cms\Page::dragText() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->dragText() instead.');
         return $this->panel()->dragText($type);
     }
 
@@ -1489,7 +1498,6 @@ class Page extends ModelWithContent
      * used in the panel to make routing work properly
      *
      * @deprecated 3.6.0 Use `->panel()->id()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1498,6 +1506,7 @@ class Page extends ModelWithContent
      */
     public function panelId(): string
     {
+        Helpers::deprecated('Cms\Page::panelId() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->id() instead.');
         return $this->panel()->id();
     }
 
@@ -1505,7 +1514,6 @@ class Page extends ModelWithContent
      * Returns the full path without leading slash
      *
      * @deprecated 3.6.0 Use `->panel()->path()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1514,6 +1522,7 @@ class Page extends ModelWithContent
      */
     public function panelPath(): string
     {
+        Helpers::deprecated('Cms\Page::panelPath() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->path() instead.');
         return $this->panel()->path();
     }
 
@@ -1522,7 +1531,6 @@ class Page extends ModelWithContent
      * and page fields
      *
      * @deprecated 3.6.0 Use `->panel()->pickerData()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @param array|null $params
@@ -1531,6 +1539,7 @@ class Page extends ModelWithContent
      */
     public function panelPickerData(array $params = []): array
     {
+        Helpers::deprecated('Cms\Page::panelPickerData() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->pickerData() instead.');
         return $this->panel()->pickerData($params);
     }
 
@@ -1539,7 +1548,6 @@ class Page extends ModelWithContent
      * in the panel
      *
      * @deprecated 3.6.0 Use `->panel()->url()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -1549,6 +1557,7 @@ class Page extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
+        Helpers::deprecated('Cms\Page::panelUrl() has been deprecated and will be removed in Kirby 3.8.0. Use $page->panel()->url() instead.');
         return $this->panel()->url($relative);
     }
 }

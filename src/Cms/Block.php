@@ -73,15 +73,17 @@ class Block extends Item
     {
         parent::__construct($params);
 
-        // import old builder format
-        $params = BlockConverter::builderBlock($params);
-        $params = BlockConverter::editorBlock($params);
-
         if (isset($params['type']) === false) {
             throw new InvalidArgumentException('The block type is missing');
         }
 
-        $this->content  = $params['content']  ?? [];
+        // make sure the content is always defined as array to keep
+        // at least a bit of backward compatibility with older fields
+        if (is_array($params['content'] ?? null) === false) {
+            $params['content'] = [];
+        }
+
+        $this->content  = $params['content'];
         $this->isHidden = $params['isHidden'] ?? false;
         $this->type     = $params['type'];
 
@@ -97,34 +99,6 @@ class Block extends Item
     public function __toString(): string
     {
         return $this->toHtml();
-    }
-
-    /**
-     * Deprecated method to return the block type
-     *
-     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::type()` instead
-     * @todo Remove in 3.7.0
-     *
-     * @return string
-     */
-    public function _key(): string
-    {
-        deprecated('Block::_key() has been deprecated. Use Block::type() instead.');
-        return $this->type();
-    }
-
-    /**
-     * Deprecated method to return the block id
-     *
-     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::id()` instead
-     * @todo Remove in 3.7.0
-     *
-     * @return string
-     */
-    public function _uid(): string
-    {
-        deprecated('Block::_uid() has been deprecated. Use Block::id() instead.');
-        return $this->id();
     }
 
     /**
@@ -278,7 +252,8 @@ class Block extends Item
     public function toHtml(): string
     {
         try {
-            return (string)snippet('blocks/' . $this->type(), $this->controller(), true);
+            $kirby = $this->parent()->kirby();
+            return (string)$kirby->snippet('blocks/' . $this->type(), $this->controller(), true);
         } catch (Throwable $e) {
             return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
         }

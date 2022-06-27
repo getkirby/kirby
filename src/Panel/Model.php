@@ -53,7 +53,7 @@ abstract class Model
     public function dragTextFromCallback(string $type, ...$args): ?string
     {
         $option   = 'panel.' . $type . '.' . $this->model::CLASS_ALIAS . 'DragText';
-        $callback = option($option);
+        $callback = $this->model->kirby()->option($option);
 
         if (
             empty($callback) === false &&
@@ -81,7 +81,8 @@ abstract class Model
         $type ??= 'auto';
 
         if ($type === 'auto') {
-            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+            $kirby = $this->model->kirby();
+            $type  = $kirby->option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
         }
 
         return $type === 'markdown' ? 'markdown' : 'kirbytext';
@@ -351,8 +352,9 @@ abstract class Model
     public function props(): array
     {
         $blueprint = $this->model->blueprint();
+        $request   = $this->model->kirby()->request();
         $tabs      = $blueprint->tabs();
-        $tab       = $blueprint->tab(get('tab')) ?? $tabs[0] ?? null;
+        $tab       = $blueprint->tab($request->get('tab')) ?? $tabs[0] ?? null;
 
         $props = [
             'lock'        => $this->lock(),
@@ -407,7 +409,7 @@ abstract class Model
 
         $data = $model->panel()->toLink($tooltip);
 
-        if ($tab = get('tab')) {
+        if ($tab = $model->kirby()->request()->get('tab')) {
             $uri = new Uri($data['link'], [
                 'query' => ['tab' => $tab]
             ]);

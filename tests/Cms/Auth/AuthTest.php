@@ -49,7 +49,7 @@ class AuthTest extends TestCase
     {
         $this->app->session()->destroy();
         Dir::remove($this->fixtures);
-        unset($_SERVER['HTTP_AUTHORIZATION']);
+        App::destroy();
     }
 
     /**
@@ -195,7 +195,11 @@ class AuthTest extends TestCase
      */
     public function testUserBasicAuth()
     {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:springfield123');
+        $this->app->clone([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:springfield123')
+            ]
+        ]);
 
         $user = $this->auth->user();
         $this->assertSame('homer@simpsons.com', $user->email());
@@ -215,7 +219,11 @@ class AuthTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('Invalid login');
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:invalid');
+        $this->app->clone([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:invalid')
+            ]
+        ]);
 
         $this->auth->user();
     }
@@ -228,7 +236,11 @@ class AuthTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('Invalid login');
 
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:invalid');
+        $this->app->clone([
+            'server' => [
+                'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('homer@simpsons.com:invalid')
+            ]
+        ]);
 
         try {
             $this->auth->user();

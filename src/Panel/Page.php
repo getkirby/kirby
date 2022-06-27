@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Toolkit\I18n;
+
 /**
  * Provides information about the page model for the Panel
  * @since 3.6.0
@@ -66,14 +68,11 @@ class Page extends Model
      */
     public function dropdown(array $options = []): array
     {
-        $defaults = [
-            'view'   => get('view'),
-            'sort'   => get('sort'),
-            'delete' => get('delete')
-        ];
+        $page = $this->model;
 
-        $options     = array_merge($defaults, $options);
-        $page        = $this->model;
+        $defaults = $page->kirby()->request()->get(['view', 'sort', 'delete']);
+        $options  = array_merge($defaults, $options);
+
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
@@ -84,7 +83,7 @@ class Page extends Model
                 'link'     => $page->previewUrl(),
                 'target'   => '_blank',
                 'icon'     => 'open',
-                'text'     => t('open'),
+                'text'     => I18n::translate('open'),
                 'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
             ];
             $result[] = '-';
@@ -98,14 +97,14 @@ class Page extends Model
                 ]
             ],
             'icon'     => 'title',
-            'text'     => t('rename'),
+            'text'     => I18n::translate('rename'),
             'disabled' => $this->isDisabledDropdownOption('changeTitle', $options, $permissions)
         ];
 
         $result['duplicate'] = [
             'dialog'   => $url . '/duplicate',
             'icon'     => 'copy',
-            'text'     => t('duplicate'),
+            'text'     => I18n::translate('duplicate'),
             'disabled' => $this->isDisabledDropdownOption('duplicate', $options, $permissions)
         ];
 
@@ -119,14 +118,14 @@ class Page extends Model
                 ]
             ],
             'icon'     => 'url',
-            'text'     => t('page.changeSlug'),
+            'text'     => I18n::translate('page.changeSlug'),
             'disabled' => $this->isDisabledDropdownOption('changeSlug', $options, $permissions)
         ];
 
         $result['changeStatus'] = [
             'dialog'   => $url . '/changeStatus',
             'icon'     => 'preview',
-            'text'     => t('page.changeStatus'),
+            'text'     => I18n::translate('page.changeStatus'),
             'disabled' => $this->isDisabledDropdownOption('changeStatus', $options, $permissions)
         ];
 
@@ -135,14 +134,14 @@ class Page extends Model
         $result['changeSort'] = [
             'dialog'   => $url . '/changeSort',
             'icon'     => 'sort',
-            'text'     => t('page.sort'),
+            'text'     => I18n::translate('page.sort'),
             'disabled' => $siblings->count() === 0 || $this->isDisabledDropdownOption('sort', $options, $permissions)
         ];
 
         $result['changeTemplate'] = [
             'dialog'   => $url . '/changeTemplate',
             'icon'     => 'template',
-            'text'     => t('page.changeTemplate'),
+            'text'     => I18n::translate('page.changeTemplate'),
             'disabled' => $this->isDisabledDropdownOption('changeTemplate', $options, $permissions)
         ];
 
@@ -150,7 +149,7 @@ class Page extends Model
         $result['delete'] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
-            'text'     => t('delete'),
+            'text'     => I18n::translate('delete'),
             'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 

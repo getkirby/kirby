@@ -117,7 +117,7 @@ class HtmlTest extends TestCase
     public function attrProvider()
     {
         return [
-            [[],                         null,  ''],
+            [[],                         null,  null],
             [['B' => 'b', 'A' => 'a'],   null,  'a="a" b="b"'],
             [['B' => 'b', 'A' => 'a'],   true,  'a="a" b="b"'],
             [['B' => 'b', 'A' => 'a'],   false, 'b="b" a="a"'],
@@ -149,6 +149,33 @@ class HtmlTest extends TestCase
 
         $result = Html::attr('a', ['value' => '&', 'escape' => false]);
         $this->assertSame('a="&"', $result);
+    }
+
+    /**
+     * @covers ::attr
+     */
+    public function testAttrWithBeforeValue()
+    {
+        $attr = Html::attr(['test' => 'test'], null, ' ');
+        $this->assertSame(' test="test"', $attr);
+    }
+
+    /**
+     * @covers ::attr
+     */
+    public function testAttrWithAfterValue()
+    {
+        $attr = Html::attr(['test' => 'test'], null, null, ' ');
+        $this->assertSame('test="test" ', $attr);
+    }
+
+    /**
+     * @covers ::attr
+     */
+    public function testAttrWithoutValues()
+    {
+        $attr = Html::attr([]);
+        $this->assertNull($attr);
     }
 
     /**

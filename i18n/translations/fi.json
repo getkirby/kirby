@@ -49,6 +49,9 @@
   "email": "S\u00e4hk\u00f6posti",
   "email.placeholder": "nimi@osoite.fi",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Ympäristö",
 
   "error.access.code": "Väärä koodi",
@@ -294,6 +297,7 @@
   "hide": "Piilota",
   "hour": "Tunti",
   "import": "Tuo",
+  "info": "Info",
   "insert": "Lis\u00e4\u00e4",
   "insert.after": "Lisää eteen",
   "insert.before": "Lisää jälkeen",
@@ -340,6 +344,7 @@
   "license.register.label": "Anna lisenssiavain",
   "license.register.success": "Kiitos kun tuet Kirbyä",
   "license.unregistered": "Tämä on rekisteröimätön demo Kirbystä",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Linkki",
   "link.text": "Linkin teksti",
@@ -469,19 +474,27 @@
 
   "section.required": "Osio on pakollinen",
 
+  "security": "Security",
   "select": "Valitse",
+  "server": "Palvelin",
   "settings": "Asetukset",
   "show": "Näytä",
+  "site.blueprint": "Tällä sivustolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/site.yml</strong>",
   "size": "Koko",
   "slug": "URL-tunniste",
   "sort": "Järjestele",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Nimi",
   "template": "Sivupohja",
   "today": "Tänään",
-
-  "server": "Palvelin",
-
-  "site.blueprint": "Tällä sivustolla ei ole vielä suunnitelmaa. Voit määrittää suunnitelman tiedostoon <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Koodi",
   "toolbar.button.bold": "Lihavointi",

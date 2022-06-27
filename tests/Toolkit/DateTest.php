@@ -290,6 +290,37 @@ class DateTest extends TestCase
     }
 
     /**
+     * @covers ::roundedTimestamp
+     */
+    public function testRoundedTimestamp()
+    {
+        $result = Date::roundedTimestamp('2021-12-12 12:12:12');
+        $this->assertSame('2021-12-12 12:12:12', date('Y-m-d H:i:s', $result));
+    }
+
+    /**
+     * @covers ::roundedTimestamp
+     */
+    public function testRoundedTimestampWithStep()
+    {
+        $result = Date::roundedTimestamp('2021-12-12 12:12:12', [
+            'unit' => 'minute',
+            'size' => 5
+        ]);
+
+        $this->assertSame('2021-12-12 12:10:00', date('Y-m-d H:i:s', $result));
+    }
+
+    /**
+     * @covers ::roundedTimestamp
+     */
+    public function testRoundedTimestampWithInvalidDate()
+    {
+        $result = Date::roundedTimestamp('invalid date');
+        $this->assertNull($result);
+    }
+
+    /**
      * @covers ::second
      */
     public function testSecond()

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 
 class PaginationTest extends TestCase
@@ -19,12 +18,9 @@ class PaginationTest extends TestCase
 
     public function testCustomAppUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'urls' => [
-                'index' => 'https://getkirby.com'
+        $this->app->clone([
+            'options' => [
+                'url' => 'https://getkirby.com'
             ]
         ]);
 
@@ -34,27 +30,14 @@ class PaginationTest extends TestCase
             'total' => 120,
         ]);
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->nextPageUrl());
+        $this->assertSame('https://getkirby.com/page:2', $pagination->nextPageUrl());
     }
 
     public function testSubfolderUrl()
     {
-        $server = $_SERVER;
-
-        // remove any cached uri object
-        Uri::$current = null;
-
-        // if cli detection is activated the index url detection
-        // will fail and fall back to /
-        Server::$cli = false;
-
-        // no additional path
-        $_SERVER['SERVER_NAME'] = 'localhost';
-        $_SERVER['SCRIPT_NAME'] = '/starterkit/index.php';
-
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
+        $this->app->clone([
+            'options' => [
+                'url' => 'http://localhost/starterkit'
             ]
         ]);
 
@@ -64,11 +47,7 @@ class PaginationTest extends TestCase
             'total' => 120,
         ]);
 
-        $this->assertEquals('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
-
-        $_SERVER = $server;
-        Server::$cli = true;
-        Uri::$current = null;
+        $this->assertSame('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
     }
 
     public function testCurrentPageUrl()
@@ -77,7 +56,7 @@ class PaginationTest extends TestCase
             'page' => 2
         ]);
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->pageUrl());
+        $this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
     }
 
     public function testCurrentPageUrlWithFirstPage()
@@ -86,15 +65,15 @@ class PaginationTest extends TestCase
             'page' => 1
         ]);
 
-        $this->assertEquals('https://getkirby.com', $pagination->pageUrl());
+        $this->assertSame('https://getkirby.com', $pagination->pageUrl());
     }
 
     public function testPageUrl()
     {
         $pagination = $this->pagination();
 
-        $this->assertEquals('https://getkirby.com', $pagination->pageUrl(1));
-        $this->assertEquals('https://getkirby.com/page:12', $pagination->pageUrl(12));
+        $this->assertSame('https://getkirby.com', $pagination->pageUrl(1));
+        $this->assertSame('https://getkirby.com/page:12', $pagination->pageUrl(12));
 
         $this->assertNull($pagination->pageUrl(0));
         $this->assertNull($pagination->pageUrl(13));
@@ -103,13 +82,26 @@ class PaginationTest extends TestCase
     public function testFirstPageUrl()
     {
         $pagination = $this->pagination();
-        $this->assertEquals('https://getkirby.com', $pagination->firstPageUrl());
+        $this->assertSame('https://getkirby.com', $pagination->firstPageUrl());
     }
 
     public function testLastPageUrl()
     {
         $pagination = $this->pagination();
-        $this->assertEquals('https://getkirby.com/page:12', $pagination->lastPageUrl());
+        $this->assertSame('https://getkirby.com/page:12', $pagination->lastPageUrl());
+    }
+
+    public function testFirstLastPageUrlNull()
+    {
+        $pagination = new Pagination([
+            'page'  => 1,
+            'limit' => 10,
+            'total' => 0,
+            'url'   => new Uri('https://getkirby.com')
+        ]);
+
+        $this->assertSame(null, $pagination->firstPageUrl());
+        $this->assertSame(null, $pagination->lastPageUrl());
     }
 
     public function testNextPageUrl()
@@ -118,7 +110,7 @@ class PaginationTest extends TestCase
             'page' => 2
         ]);
 
-        $this->assertEquals('https://getkirby.com/page:3', $pagination->nextPageUrl());
+        $this->assertSame('https://getkirby.com/page:3', $pagination->nextPageUrl());
     }
 
     public function testNonExistingNextPage()
@@ -133,7 +125,7 @@ class PaginationTest extends TestCase
             'page' => 3
         ]);
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->prevPageUrl());
+        $this->assertSame('https://getkirby.com/page:2', $pagination->prevPageUrl());
     }
 
     public function testNonExistingPrevPage()
@@ -148,7 +140,7 @@ class PaginationTest extends TestCase
             'page' => 2
         ]);
 
-        $this->assertEquals('https://getkirby.com', $pagination->prevPageUrl());
+        $this->assertSame('https://getkirby.com', $pagination->prevPageUrl());
     }
 
     public function testMethod()

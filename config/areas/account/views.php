@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Panel\Panel;
 
@@ -8,7 +9,7 @@ return [
         'pattern' => 'account',
         'action'  => fn () => [
             'component' => 'k-account-view',
-            'props'     => kirby()->user()->panel()->props(),
+            'props'     => App::instance()->user()->panel()->props(),
         ],
     ],
     'account.file' => [
@@ -21,7 +22,7 @@ return [
         'pattern' => 'logout',
         'auth'    => false,
         'action'  => function () {
-            if ($user = kirby()->user()) {
+            if ($user = App::instance()->user()) {
                 $user->logout();
             }
             Panel::go('login');

@@ -1,13 +1,28 @@
 <template>
   <div class="k-collection">
     <k-items
+      v-if="items.length"
+      :columns="columns"
       :items="items"
       :layout="layout"
+      :link="link"
       :size="size"
       :sortable="sortable"
+      @change="$emit('change', $event)"
+      @item="$emit('item', $event)"
       @option="onOption"
       @sort="$emit('sort', $event)"
-      @change="$emit('change', $event)"
+    >
+      <template #options="{ item, itemIndex: index }">
+        <slot name="options" v-bind="{ item, index }" />
+      </template>
+    </k-items>
+
+    <k-empty
+      v-else
+      :layout="layout"
+      v-bind="empty"
+      v-on="$listeners['empty'] ? { click: onEmpty } : {}"
     />
 
     <footer v-if="hasFooter" class="k-collection-footer">
@@ -42,6 +57,13 @@
  */
 export default {
   props: {
+    columns: {
+      type: [Object, Array],
+      default() {
+        return {};
+      }
+    },
+    empty: Object,
     /**
      * Help text to show below the collection
      */
@@ -59,6 +81,13 @@ export default {
     layout: {
       type: String,
       default: "list"
+    },
+    /**
+     * Enable/disable item links
+     */
+    link: {
+      type: Boolean,
+      default: true
     },
     /**
      * Size for items in cards layout
@@ -118,6 +147,10 @@ export default {
     }
   },
   methods: {
+    onEmpty(e) {
+      e.stopPropagation();
+      this.$emit("empty");
+    },
     onOption(...args) {
       this.$emit("action", ...args);
       this.$emit("option", ...args);

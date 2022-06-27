@@ -19,7 +19,7 @@ class ModelFileTestForceLocked extends ModelFile
 }
 
 /**
- * @coversDefaultClass \Kirby\Panel\File|\Kirby\Panel\Model
+ * @coversDefaultClass \Kirby\Panel\File
  */
 class FileTest extends TestCase
 {
@@ -296,7 +296,7 @@ class FileTest extends TestCase
         ]);
 
         $image = (new File($file))->image();
-        $this->assertSame('file-image', $image['icon']);
+        $this->assertSame('image', $image['icon']);
         $this->assertSame('orange-400', $image['color']);
         $this->assertSame('3/2', $image['ratio']);
         $this->assertSame('pattern', $image['back']);
@@ -326,7 +326,7 @@ class FileTest extends TestCase
             'back' => 'pattern',
             'color' => 'orange-400',
             'cover' => false,
-            'icon' => 'file-image',
+            'icon' => 'image',
             'ratio' => '3/2',
             'url' => '/media/site/' . $hash . '/test.jpg',
             'src' => Model::imagePlaceholder(),
@@ -338,7 +338,7 @@ class FileTest extends TestCase
             'back' => 'pattern',
             'color' => 'orange-400',
             'cover' => true,
-            'icon' => 'file-image',
+            'icon' => 'image',
             'ratio' => '3/2',
             'url' => '/media/site/' . $hash . '/test.jpg',
             'src' => Model::imagePlaceholder(),
@@ -579,7 +579,7 @@ class FileTest extends TestCase
         $this->assertSame('(image: test.jpg)', $data['dragText']);
         $this->assertSame('test/test.jpg', $data['id']);
         $this->assertSame('3/2', $data['image']['ratio']);
-        $this->assertSame('file-image', $data['image']['icon']);
+        $this->assertSame('image', $data['image']['icon']);
         $this->assertSame('/pages/test/files/test.jpg', $data['link']);
         $this->assertSame('test.jpg', $data['text']);
     }

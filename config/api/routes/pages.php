@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Page Routes
  */
@@ -34,21 +35,9 @@ return [
         }
     ],
     [
-        'pattern' => [
-            'pages/(:any)/blueprints',
-            /**
-             * @deprecated
-             * @todo remove in 3.7.0
-             */
-            'pages/(:any)/children/blueprints',
-        ],
+        'pattern' => 'pages/(:any)/blueprints',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            // @codeCoverageIgnoreStart
-            if ($this->route->pattern() === 'pages/([a-zA-Z0-9\.\-_%= \+\@\(\)]+)/children/blueprints') {
-                deprecated('`GET pages/(:any)/children/blueprints` API endpoint has been deprecated and will be removed in 3.7.0. Use `GET pages/(:any)/blueprints` instead');
-            }
-            // @codeCoverageIgnoreEnd
             return $this->page($id)->blueprints($this->requestQuery('section'));
         }
     ],

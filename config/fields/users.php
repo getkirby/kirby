@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
@@ -58,7 +59,7 @@ return [
         },
         'toUsers' => function ($value = null) {
             $users = [];
-            $kirby = kirby();
+            $kirby = App::instance();
 
             foreach (Data::decode($value, 'yaml') as $email) {
                 if (is_array($email) === true) {

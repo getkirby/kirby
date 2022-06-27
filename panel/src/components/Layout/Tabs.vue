@@ -121,8 +121,8 @@ export default {
 .k-tabs {
   position: relative;
   background: #e9e9e9;
-  border-top: 1px solid var(--color-border);
-  border-inline: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--rounded);
 }
 .k-tabs nav {
   display: flex;

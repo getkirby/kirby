@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Toolkit\I18n;
 use Throwable;
 
 /**
@@ -104,14 +105,11 @@ class File extends Model
      */
     public function dropdown(array $options = []): array
     {
-        $defaults = [
-            'view'   => get('view'),
-            'update' => get('update'),
-            'delete' => get('delete')
-        ];
+        $file = $this->model;
 
-        $options     = array_merge($defaults, $options);
-        $file        = $this->model;
+        $defaults = $file->kirby()->request()->get(['view', 'update', 'delete']);
+        $options  = array_merge($defaults, $options);
+
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
@@ -122,7 +120,7 @@ class File extends Model
                 'link'   => $file->previewUrl(),
                 'target' => '_blank',
                 'icon'   => 'open',
-                'text'   => t('open')
+                'text'   => I18n::translate('open')
             ];
             $result[] = '-';
         }
@@ -130,14 +128,14 @@ class File extends Model
         $result[] = [
             'dialog'   => $url . '/changeName',
             'icon'     => 'title',
-            'text'     => t('rename'),
+            'text'     => I18n::translate('rename'),
             'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
         ];
 
         $result[] = [
             'click'    => 'replace',
             'icon'     => 'upload',
-            'text'     => t('replace'),
+            'text'     => I18n::translate('replace'),
             'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
         ];
 
@@ -146,7 +144,7 @@ class File extends Model
             $result[] = [
                 'dialog'   => $url . '/changeSort',
                 'icon'     => 'sort',
-                'text'     => t('file.sort'),
+                'text'     => I18n::translate('file.sort'),
                 'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
             ];
         }
@@ -155,7 +153,7 @@ class File extends Model
         $result[] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
-            'text'     => t('delete'),
+            'text'     => I18n::translate('delete'),
             'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 
@@ -190,7 +188,7 @@ class File extends Model
             'document' => 'red-400',
             'audio'    => 'aqua-400',
             'code'     => 'blue-400',
-            'archive'  => 'white'
+            'archive'  => 'gray-500'
         ];
 
         $extensions = [
@@ -205,7 +203,7 @@ class File extends Model
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageDefaults()['icon'];
+               parent::imageDefaults()['color'];
     }
 
     /**
@@ -229,28 +227,28 @@ class File extends Model
     protected function imageIcon(): string
     {
         $types = [
-            'image'    => 'file-image',
-            'video'    => 'file-video',
-            'document' => 'file-document',
-            'audio'    => 'file-audio',
-            'code'     => 'file-code',
-            'archive'  => 'file-zip'
+            'image'    => 'image',
+            'video'    => 'video',
+            'document' => 'document',
+            'audio'    => 'audio',
+            'code'     => 'code',
+            'archive'  => 'archive'
         ];
 
         $extensions = [
-            'xls'   => 'file-spreadsheet',
-            'xlsx'  => 'file-spreadsheet',
-            'csv'   => 'file-spreadsheet',
-            'docx'  => 'file-word',
-            'doc'   => 'file-word',
-            'rtf'   => 'file-word',
-            'mdown' => 'file-text',
-            'md'    => 'file-text'
+            'xls'   => 'table',
+            'xlsx'  => 'table',
+            'csv'   => 'table',
+            'docx'  => 'pen',
+            'doc'   => 'pen',
+            'rtf'   => 'pen',
+            'mdown' => 'markdown',
+            'md'    => 'markdown'
         ];
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageDefaults()['color'];
+               'file';
     }
 
     /**
@@ -377,29 +375,29 @@ class File extends Model
                     'url'     => $url = $file->previewUrl(),
                     'details' => [
                         [
-                            'title' => t('template'),
+                            'title' => I18n::translate('template'),
                             'text'  => $file->template() ?? '—'
                         ],
                         [
-                            'title' => t('mime'),
+                            'title' => I18n::translate('mime'),
                             'text'  => $file->mime()
                         ],
                         [
-                            'title' => t('url'),
+                            'title' => I18n::translate('url'),
                             'text'  => $id,
                             'link'  => $url
                         ],
                         [
-                            'title' => t('size'),
+                            'title' => I18n::translate('size'),
                             'text'  => $file->niceSize()
                         ],
                         [
-                            'title' => t('dimensions'),
-                            'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . t('pixel') : '—'
+                            'title' => I18n::translate('dimensions'),
+                            'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . I18n::translate('pixel') : '—'
                         ],
                         [
-                            'title' => t('orientation'),
-                            'text'  => $file->type() === 'image' ? t('orientation.' . $dimensions->orientation()) : '—'
+                            'title' => I18n::translate('orientation'),
+                            'text'  => $file->type() === 'image' ? I18n::translate('orientation.' . $dimensions->orientation()) : '—'
                         ],
                     ]
                 ]

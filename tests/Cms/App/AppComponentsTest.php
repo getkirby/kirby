@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\Obj;
 
 class CustomEmailProvider extends Email
 {
@@ -74,6 +75,22 @@ class AppComponentsTest extends TestCase
 
         $expected = '<script src="/test.js"></script>';
         $this->assertSame($expected, js('something.js'));
+    }
+
+    public function testKirbyTag()
+    {
+        $tag = $this->kirby->kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
+        $expected = '<a href="https://getkirby.com">Kirby</a>';
+
+        $this->assertSame($expected, $tag);
+    }
+
+    public function testKirbyTags()
+    {
+        $tag = $this->kirby->kirbytags('(link: https://getkirby.com text: Kirby)');
+        $expected = '<a href="https://getkirby.com">Kirby</a>';
+
+        $this->assertSame($expected, $tag);
     }
 
     public function testKirbytext()
@@ -320,17 +337,18 @@ class AppComponentsTest extends TestCase
     {
         $app = $this->kirby->clone([
             'roots' => [
-                'snippets' => $fixtures = __DIR__ . '/fixtures/snippets'
+                'snippets' => $tmp = __DIR__ . '/tmp/snippets'
             ],
             'snippets' => [
-                'plugin' => $fixtures . '/plugin.php'
+                'plugin' => $tmp . '/plugin-snippet.php' // explicitly different filename
             ]
         ]);
 
-        F::write($fixtures . '/variable.php', '<?= $message;');
-        F::write($fixtures . '/test.php', 'test');
-        F::write($fixtures . '/fallback.php', 'fallback');
-        F::write($fixtures . '/plugin.php', 'plugin');
+        F::write($tmp . '/variable.php', '<?= $message;');
+        F::write($tmp . '/item.php', '<?= $item->method();');
+        F::write($tmp . '/test.php', 'test');
+        F::write($tmp . '/fallback.php', 'fallback');
+        F::write($tmp . '/plugin-snippet.php', 'plugin');
 
         // simple string
         $this->assertSame('test', $app->snippet('test'));
@@ -359,7 +377,15 @@ class AppComponentsTest extends TestCase
         // inject data
         $this->assertSame('test', $app->snippet('variable', ['message' => 'test']));
 
-        Dir::remove($fixtures);
+        // with a passed object that becomes $item
+        $result = $app->snippet('item', new Obj(['method' => 'Hello world']));
+        $this->assertSame('Hello world', $result);
+
+        // with direct output
+        $this->expectOutputString('test');
+        $app->snippet('variable', ['message' => 'test'], false);
+
+        Dir::remove($tmp);
     }
 
     public function testTemplate()

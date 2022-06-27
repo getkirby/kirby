@@ -539,4 +539,229 @@ class PagesSectionTest extends TestCase
         $this->assertSame('en: A', $section->data()[1]['text']);
         $this->assertSame('en: B', $section->data()[2]['text']);
     }
+
+    public function testUnreadable()
+    {
+        $this->app->clone([
+            'blueprints' => [
+                'pages/unreadable' => [
+                    'options' => ['read' => false]
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'subpage-a'],
+                ['slug' => 'subpage-b', 'template' => 'unreadable'],
+                ['slug' => 'subpage-c']
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page
+        ]);
+
+        $this->assertCount(2, $section->data());
+    }
+
+    public function testSearchDefault()
+    {
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model
+        ]);
+
+        $this->assertCount(3, $section->data());
+    }
+
+    public function testSearchWithNoQuery()
+    {
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(3, $section->data());
+    }
+
+    public function testSearchWithQuery1()
+    {
+        $_GET['searchterm'] = 'bike';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('Bike', $section->data()[0]['text']);
+        $this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery2()
+    {
+        $_GET['searchterm'] = 'mount';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('Mount Bike', $section->data()[0]['text']);
+        $this->assertSame('Mountain', $section->data()[1]['text']);
+
+        $_GET = [];
+    }
+
+    public function testSearchWithQuery3()
+    {
+        $_GET['searchterm'] = 'mountain';
+
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        $_GET['searchterm'] = 'mountain';
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(1, $section->data());
+        $this->assertSame('Mountain', $section->data()[0]['text']);
+
+        $_GET = [];
+    }
+
+    public function testTableLayout()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                ['slug' => 'test'],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table'
+        ]);
+
+        $this->assertSame('table', $section->layout());
+
+        $data = $section->data();
+        $item = $data[0];
+
+        $this->assertSame('', $item['info']);
+        $this->assertSame([
+            'text' => 'test',
+            'href' => '/pages/test+test'
+        ], $item['title']);
+    }
+
+    public function testTableLayoutWithCustomColumns()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'test',
+                    'content' => [
+                        'date' => '2012-12-12'
+                    ]
+                ],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'layout' => 'table',
+            'columns' => [
+                'date' => [
+                    'label' => 'Date',
+                    'type'  => 'date'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('2012-12-12', $section->data()[0]['dateCell']);
+    }
+
+    public function testOptions()
+    {
+        $model = new Page([
+            'slug' => 'test',
+            'children' => [
+                [
+                    'slug' => 'test',
+                    'content' => [
+                        'date' => '2012-12-12'
+                    ]
+                ],
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model
+        ]);
+
+        $options = $section->toArray()['options'];
+
+        $this->assertSame([], $options['columns']);
+        $this->assertNull($options['link']);
+    }
 }

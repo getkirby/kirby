@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
 use Whoops\Handler\CallbackHandler;
@@ -46,7 +47,7 @@ trait AppErrors
      */
     protected function handleErrors(): void
     {
-        if ($this->request()->cli() === true) {
+        if ($this->environment()->cli() === true) {
             $this->handleCliErrors();
             return;
         }
@@ -129,7 +130,7 @@ trait AppErrors
                     'code'      => $code,
                     'message'   => $exception->getMessage(),
                     'details'   => $details,
-                    'file'      => ltrim($exception->getFile(), $_SERVER['DOCUMENT_ROOT'] ?? ''),
+                    'file'      => F::relativepath($exception->getFile(), $this->environment()->get('DOCUMENT_ROOT', '')),
                     'line'      => $exception->getLine(),
                 ], $httpCode);
             } else {

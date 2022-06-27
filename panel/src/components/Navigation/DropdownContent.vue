@@ -260,7 +260,7 @@ export default {
   color: var(--color-white);
   z-index: var(--z-dropdown);
   box-shadow: var(--shadow-lg);
-  border-radius: var(--rounded-xs);
+  border-radius: var(--rounded);
   text-align: start;
   margin-bottom: 6rem;
 }

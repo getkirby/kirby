@@ -1,11 +1,13 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 $files = require __DIR__ . '/../files/dialogs.php';
@@ -33,7 +35,7 @@ return [
                     'fields' => [
                         'position' => Field::pagePosition($page),
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'position' => $page->panel()->position()
                     ]
@@ -41,7 +43,13 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::page($id)->changeStatus('listed', get('position'));
+            $request = App::instance()->request();
+
+            Find::page($id)->changeStatus(
+                'listed',
+                $request->get('position')
+            );
+
             return [
                 'event' => 'page.sort',
             ];
@@ -75,7 +83,7 @@ return [
                     return [
                         'component' => 'k-error-dialog',
                         'props'     => [
-                            'message' => t('error.page.changeStatus.incomplete'),
+                            'message' => I18n::translate('error.page.changeStatus.incomplete'),
                             'details' => $errors,
                         ]
                     ];
@@ -84,7 +92,7 @@ return [
 
             $fields = [
                 'status' => [
-                    'label'    => t('page.changeStatus.select'),
+                    'label'    => I18n::translate('page.changeStatus.select'),
                     'type'     => 'radio',
                     'required' => true,
                     'options'  => $states
@@ -105,7 +113,7 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields'       => $fields,
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'status'   => $status,
                         'position' => $position
@@ -114,7 +122,13 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::page($id)->changeStatus(get('status'), get('position'));
+            $request = App::instance()->request();
+
+            Find::page($id)->changeStatus(
+                $request->get('status'),
+                $request->get('position')
+            );
+
             return [
                 'event' => 'page.changeStatus',
             ];
@@ -145,7 +159,7 @@ return [
                             'required' => true
                         ])
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'template' => $page->intendedTemplate()->name()
                     ]
@@ -153,7 +167,10 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::page($id)->changeTemplate(get('template'));
+            $request = App::instance()->request();
+
+            Find::page($id)->changeTemplate($request->get('template'));
+
             return [
                 'event' => 'page.changeTemplate',
             ];
@@ -164,9 +181,11 @@ return [
     'page.changeTitle' => [
         'pattern' => 'pages/(:any)/changeTitle',
         'load' => function (string $id) {
+            $request = App::instance()->request();
+
             $page        = Find::page($id);
             $permissions = $page->permissions();
-            $select      = get('select', 'title');
+            $select      = $request->get('select', 'title');
 
             return [
                 'component' => 'k-form-dialog',
@@ -183,13 +202,13 @@ return [
                             'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
                             'disabled'  => $permissions->can('changeSlug') === false,
                             'wizard'    => [
-                                'text'  => t('page.changeSlug.fromTitle'),
+                                'text'  => I18n::translate('page.changeSlug.fromTitle'),
                                 'field' => 'title'
                             ]
                         ])
                     ],
                     'autofocus' => false,
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'title' => $page->title()->value(),
                         'slug'  => $page->slug(),
@@ -198,9 +217,11 @@ return [
             ];
         },
         'submit' => function (string $id) {
+            $request = App::instance()->request();
+
             $page  = Find::page($id);
-            $title = trim(get('title', ''));
-            $slug  = trim(get('slug', ''));
+            $title = trim($request->get('title', ''));
+            $slug  = trim($request->get('slug', ''));
 
             // basic input validation before we move on
             if (Str::length($title) === 0) {
@@ -256,17 +277,20 @@ return [
     'page.create' => [
         'pattern' => 'pages/create',
         'load' => function () {
+            $kirby   = App::instance();
+            $request = $kirby->request();
+
             // the parent model for the new page
-            $parent = get('parent', 'site');
+            $parent = $request->get('parent', 'site');
 
             // the view on which the add button is located
             // this is important to find the right section
             // and provide the correct templates for the new page
-            $view = get('view', $parent);
+            $view = $request->get('view', $parent);
 
             // templates will be fetched depending on the
             // section settings in the blueprint
-            $section = get('section');
+            $section = $request->get('section');
 
             // this is the parent model
             $model = Find::parent($parent);
@@ -300,7 +324,7 @@ return [
 
             // only show template field if > 1 templates available
             // or when in debug mode
-            if (count($blueprints) > 1 || option('debug') === true) {
+            if (count($blueprints) > 1 || $kirby->option('debug') === true) {
                 $fields['template'] = Field::template($blueprints, [
                     'required' => true
                 ]);
@@ -310,7 +334,7 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => $fields,
-                    'submitButton' => t('page.draft.create'),
+                    'submitButton' => I18n::translate('page.draft.create'),
                     'value' => [
                         'parent'   => $parent,
                         'slug'     => '',
@@ -321,7 +345,8 @@ return [
             ];
         },
         'submit' => function () {
-            $title = trim(get('title', ''));
+            $request = App::instance()->request();
+            $title = trim($request->get('title', ''));
 
             if (Str::length($title) === 0) {
                 throw new InvalidArgumentException([
@@ -329,10 +354,10 @@ return [
                 ]);
             }
 
-            $page = Find::parent(get('parent', 'site'))->createChild([
+            $page = Find::parent($request->get('parent', 'site'))->createChild([
                 'content'  => ['title' => $title],
-                'slug'     => get('slug'),
-                'template' => get('template'),
+                'slug'     => $request->get('slug'),
+                'template' => $request->get('template'),
             ]);
 
             return [
@@ -347,7 +372,7 @@ return [
         'pattern' => 'pages/(:any)/delete',
         'load' => function (string $id) {
             $page = Find::page($id);
-            $text = tt('page.delete.confirm', [
+            $text = I18n::template('page.delete.confirm', [
                 'title' => Escape::html($page->title()->value())
             ]);
 
@@ -359,16 +384,16 @@ return [
                             'info' => [
                                 'type'  => 'info',
                                 'theme' => 'negative',
-                                'text'  => t('page.delete.confirm.subpages')
+                                'text'  => I18n::translate('page.delete.confirm.subpages')
                             ],
                             'check' => [
-                                'label'   => t('page.delete.confirm.title'),
+                                'label'   => I18n::translate('page.delete.confirm.title'),
                                 'type'    => 'text',
                                 'counter' => false
                             ]
                         ],
                         'size'         => 'medium',
-                        'submitButton' => t('delete'),
+                        'submitButton' => I18n::translate('delete'),
                         'text'         => $text,
                         'theme'        => 'negative',
                     ]
@@ -383,12 +408,17 @@ return [
             ];
         },
         'submit' => function (string $id) {
+            $request = App::instance()->request();
+
             $page     = Find::page($id);
             $redirect = false;
             $referrer = Panel::referrer();
             $url      = $page->panel()->url(true);
 
-            if ($page->childrenAndDrafts()->count() > 0 && get('check') !== $page->title()->value()) {
+            if (
+                $page->childrenAndDrafts()->count() > 0 &&
+                $request->get('check') !== $page->title()->value()
+            ) {
                 throw new InvalidArgumentException(['key' => 'page.delete.confirm']);
             }
 
@@ -425,7 +455,7 @@ return [
                     'required' => true,
                     'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
                     'wizard'   => [
-                        'text'  => t('page.changeSlug.fromTitle'),
+                        'text'  => I18n::translate('page.changeSlug.fromTitle'),
                         'field' => 'title'
                     ]
                 ])
@@ -433,7 +463,7 @@ return [
 
             if ($hasFiles === true) {
                 $fields['files'] = [
-                    'label'    => t('page.duplicate.files'),
+                    'label'    => I18n::translate('page.duplicate.files'),
                     'type'     => 'toggle',
                     'required' => true,
                     'width'    => $toggleWidth
@@ -442,7 +472,7 @@ return [
 
             if ($hasChildren === true) {
                 $fields['children'] = [
-                    'label'    => t('page.duplicate.pages'),
+                    'label'    => I18n::translate('page.duplicate.pages'),
                     'type'     => 'toggle',
                     'required' => true,
                     'width'    => $toggleWidth
@@ -453,21 +483,23 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields'       => $fields,
-                    'submitButton' => t('duplicate'),
+                    'submitButton' => I18n::translate('duplicate'),
                     'value' => [
                         'children' => false,
                         'files'    => false,
-                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
-                        'title'    => $page->title() . ' ' . t('page.duplicate.appendix')
+                        'slug'     => $page->slug() . '-' . Str::slug(I18n::translate('page.duplicate.appendix')),
+                        'title'    => $page->title() . ' ' . I18n::translate('page.duplicate.appendix')
                     ]
                 ]
             ];
         },
         'submit' => function (string $id) {
-            $newPage = Find::page($id)->duplicate(get('slug'), [
-                'children' => (bool)get('children'),
-                'files'    => (bool)get('files'),
-                'title'    => (string)get('title'),
+            $request = App::instance()->request();
+
+            $newPage = Find::page($id)->duplicate($request->get('slug'), [
+                'children' => (bool)$request->get('children'),
+                'files'    => (bool)$request->get('files'),
+                'title'    => (string)$request->get('title'),
             ]);
 
             return [
@@ -511,15 +543,17 @@ return [
                             'preselect' => true
                         ])
                     ],
-                    'submitButton' => t('rename'),
+                    'submitButton' => I18n::translate('rename'),
                     'value' => [
-                        'title' => site()->title()->value()
+                        'title' => App::instance()->site()->title()->value()
                     ]
                 ]
             ];
         },
         'submit' => function () {
-            site()->changeTitle(get('title'));
+            $kirby = App::instance();
+
+            $kirby->site()->changeTitle($kirby->request()->get('title'));
             return [
                 'event' => 'site.changeTitle',
             ];

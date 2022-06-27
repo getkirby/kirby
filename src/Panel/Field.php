@@ -2,8 +2,10 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Toolkit\I18n;
 
 /**
  * Provides common field prop definitions
@@ -27,7 +29,7 @@ class Field
     public static function email(array $props = []): array
     {
         return array_merge([
-            'label'   => t('email'),
+            'label'   => I18n::translate('email'),
             'type'    => 'email',
             'counter' => false,
         ], $props);
@@ -68,7 +70,7 @@ class Field
         ];
 
         return array_merge([
-            'label'   => t('file.sort'),
+            'label'   => I18n::translate('file.sort'),
             'type'    => 'select',
             'empty'   => false,
             'options' => $options
@@ -126,7 +128,7 @@ class Field
         }
 
         return array_merge([
-            'label'    => t('page.changeStatus.position'),
+            'label'    => I18n::translate('page.changeStatus.position'),
             'type'     => 'select',
             'empty'    => false,
             'options'  => $options,
@@ -142,7 +144,7 @@ class Field
     public static function password(array $props = []): array
     {
         return array_merge([
-            'label' => t('password'),
+            'label' => I18n::translate('password'),
             'type'  => 'password'
         ], $props);
     }
@@ -155,7 +157,7 @@ class Field
      */
     public static function role(array $props = []): array
     {
-        $kirby   = kirby();
+        $kirby   = App::instance();
         $user    = $kirby->user();
         $isAdmin = $user && $user->isAdmin();
         $roles   = [];
@@ -169,13 +171,13 @@ class Field
 
             $roles[] = [
                 'text'  => $role->title(),
-                'info'  => $role->description() ?? t('role.description.placeholder'),
+                'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
                 'value' => $role->name()
             ];
         }
 
         return array_merge([
-            'label'    => t('role'),
+            'label'    => I18n::translate('role'),
             'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
             'options'  => $roles
         ], $props);
@@ -188,7 +190,7 @@ class Field
     public static function slug(array $props = []): array
     {
         return array_merge([
-            'label' => t('slug'),
+            'label' => I18n::translate('slug'),
             'type'  => 'slug',
         ], $props);
     }
@@ -210,7 +212,7 @@ class Field
         }
 
         return array_merge([
-            'label'    => t('template'),
+            'label'    => I18n::translate('template'),
             'type'     => 'select',
             'empty'    => false,
             'options'  => $options,
@@ -226,7 +228,7 @@ class Field
     public static function title(array $props = []): array
     {
         return array_merge([
-            'label' => t('title'),
+            'label' => I18n::translate('title'),
             'type'  => 'text',
             'icon'  => 'title',
         ], $props);
@@ -241,7 +243,7 @@ class Field
     public static function translation(array $props = []): array
     {
         $translations = [];
-        foreach (kirby()->translations() as $translation) {
+        foreach (App::instance()->translations() as $translation) {
             $translations[] = [
                 'text'  => $translation->name(),
                 'value' => $translation->code()
@@ -249,7 +251,7 @@ class Field
         }
 
         return array_merge([
-            'label'    => t('language'),
+            'label'    => I18n::translate('language'),
             'type'     => 'select',
             'icon'     => 'globe',
             'options'  => $translations,
@@ -265,7 +267,7 @@ class Field
     {
         return array_merge([
             'icon'  => 'user',
-            'label' => t('name'),
+            'label' => I18n::translate('name'),
             'type'  => 'text',
         ], $props);
     }

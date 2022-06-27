@@ -149,7 +149,7 @@ class Inline
 
         // close self-closing elements
         if (Html::isVoid($node->tagName) === true) {
-            return '<' . $node->tagName . attr($attrs, ' ') . ' />';
+            return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
         }
 
         $innerHtml = static::parseInnerHtml($node, $marks);
@@ -160,7 +160,7 @@ class Inline
         }
 
         // create the outer html for the element
-        return '<' . $node->tagName . attr($attrs, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
+        return '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
     }
 
     /**

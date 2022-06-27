@@ -49,6 +49,9 @@
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "구동 환경",
 
   "error.access.code": "코드가 올바르지 않습니다.",
@@ -294,6 +297,7 @@
   "hide": "숨기기",
   "hour": "시",
   "import": "가져오기",
+  "info": "Info",
   "insert": "\uc0bd\uc785",
   "insert.after": "뒤에 삽입",
   "insert.before": "앞에 삽입",
@@ -340,6 +344,7 @@
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby와 함께해주셔서 감사합니다.",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
+  "license.unregistered.label": "Unregistered",
 
   "link": "\uc77c\ubc18 \ub9c1\ud06c",
   "link.text": "\ubb38\uc790",
@@ -469,19 +474,27 @@
 
   "section.required": "섹션이 필요합니다.",
 
+  "security": "Security",
   "select": "선택",
+  "server": "서버",
   "settings": "설정",
   "show": "보기",
+  "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
   "size": "크기",
   "slug": "고유 주소",
   "sort": "정렬",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "최종 결과물에서는 디버깅 모드를 해제하세요.",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "모든 사이트에 HTTPS를 권장합니다.",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "제목",
   "template": "\ud15c\ud50c\ub9bf",
   "today": "오늘",
-
-  "server": "서버",
-
-  "site.blueprint": "블루프린트(<strong>/site/blueprints/site.yml</strong>)를 설정하세요.",
 
   "toolbar.button.code": "코드",
   "toolbar.button.bold": "강조",

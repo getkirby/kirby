@@ -49,6 +49,9 @@
   "email": "Retpoŝto",
   "email.placeholder": "retpoŝto@ekzemplo.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Medio",
 
   "error.access.code": "Nevalida kodo",
@@ -294,6 +297,7 @@
   "hide": "Kaŝi",
   "hour": "Horo",
   "import": "Importi",
+  "info": "Info",
   "insert": "Enmeti",
   "insert.after": "Enmeti post",
   "insert.before": "Enmeti antaŭ",
@@ -340,6 +344,7 @@
   "license.register.label": "Bonvolu entajpi vian kodon de permisilo",
   "license.register.success": "Dankon pro subteni Kirby",
   "license.unregistered": "Ĉi tiu estas neregistrita kopio de Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Ligilo",
   "link.text": "Ligila teksto",
@@ -469,19 +474,27 @@
 
   "section.required": "La sekcio estas deviga",
 
+  "security": "Security",
   "select": "Elekti",
+  "server": "Servilo",
   "settings": "Agordoj",
   "show": "Montri",
+  "site.blueprint": "La retejo ankoraŭ ne havas planon. Vi povas difini planon ĉe <strong>/site/blueprints/site.yml</strong>",
   "size": "Grando",
   "slug": "URL-nomo",
   "sort": "Ordigi",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Titolo",
   "template": "Ŝablono",
   "today": "Hodiaŭ",
-
-  "server": "Servilo",
-
-  "site.blueprint": "La retejo ankoraŭ ne havas planon. Vi povas difini planon ĉe <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kodo",
   "toolbar.button.bold": "Grasa",

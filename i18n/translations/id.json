@@ -49,6 +49,9 @@
   "email": "Surel",
   "email.placeholder": "surel@contoh.com",
 
+  "entries": "Entries",
+  "entry": "Entry",
+
   "environment": "Environment",
 
   "error.access.code": "Kode tidak valid",
@@ -294,6 +297,7 @@
   "hide": "Sembunyikan",
   "hour": "Jam",
   "import": "Import",
+  "info": "Info",
   "insert": "Sisipkan",
   "insert.after": "Sisipkan setelah",
   "insert.before": "Sisipkan sebelum",
@@ -340,6 +344,7 @@
   "license.register.label": "Masukkan kode lisensi Anda",
   "license.register.success": "Terima kasih atas dukungan untuk Kirby",
   "license.unregistered": "Ini adalah demo tidak diregistrasi dari Kirby",
+  "license.unregistered.label": "Unregistered",
 
   "link": "Tautan",
   "link.text": "Teks tautan",
@@ -469,19 +474,27 @@
 
   "section.required": "Bagian ini wajib",
 
+  "security": "Security",
   "select": "Pilih",
+  "server": "Server",
   "settings": "Pengaturan",
   "show": "Tampilkan",
+  "site.blueprint": "Situs ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/site.yml</strong>",
   "size": "Ukuran",
   "slug": "Akhiran URL",
   "sort": "Urutkan",
+
+  "stats.empty": "No reports",
+  "system.issues.content": "The content folder seems to be exposed",
+  "system.issues.debug": "Debugging must be turned off in production",
+  "system.issues.git": "The .git folder seems to be exposed",
+  "system.issues.https": "We recommend HTTPS for all your sites",
+  "system.issues.kirby": "The kirby folder seems to be exposed",
+  "system.issues.site": "The site folder seems to be exposed",
+
   "title": "Judul",
   "template": "Templat",
   "today": "Hari ini",
-
-  "server": "Server",
-
-  "site.blueprint": "Situs ini belum memiliki cetak biru. Anda dapat mendefinisikannya di <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kode",
   "toolbar.button.bold": "Tebal",

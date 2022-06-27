@@ -7,6 +7,7 @@ use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => [
+        'details',
         'empty',
         'headline',
         'help',
@@ -14,7 +15,9 @@ return [
         'min',
         'max',
         'pagination',
-        'parent'
+        'parent',
+        'search',
+        'sort'
     ],
     'props' => [
         /**
@@ -23,42 +26,6 @@ return [
          */
         'create' => function ($create = null) {
             return $create;
-        },
-        /**
-         * Enables/disables reverse sorting
-         */
-        'flip' => function (bool $flip = false) {
-            return $flip;
-        },
-        /**
-         * Image options to control the source and look of page previews
-         */
-        'image' => function ($image = null) {
-            return $image ?? [];
-        },
-        /**
-         * Optional info text setup. Info text is shown on the right (lists) or below (cards) the page title.
-         */
-        'info' => function ($info = null) {
-            return I18n::translate($info, $info);
-        },
-        /**
-         * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
-         */
-        'size' => function (string $size = 'auto') {
-            return $size;
-        },
-        /**
-         * Enables/disables manual sorting
-         */
-        'sortable' => function (bool $sortable = true) {
-            return $sortable;
-        },
-        /**
-         * Overwrites manual sorting and sorts by the given field and sorting direction (i.e. `date desc`)
-         */
-        'sortBy' => function (string $sortBy = null) {
-            return $sortBy;
         },
         /**
          * Filters pages by their status. Available status settings: `draft`, `unlisted`, `listed`, `published`, `all`.
@@ -79,19 +46,16 @@ return [
          */
         'templates' => function ($templates = null) {
             return A::wrap($templates ?? $this->template);
-        },
-        /**
-         * Setup for the main text in the list or cards. By default this will display the page title.
-         */
-        'text' => function ($text = '{{ page.title }}') {
-            return I18n::translate($text, $text);
         }
     ],
     'computed' => [
         'parent' => function () {
             $parent = $this->parentModel();
 
-            if (is_a($parent, 'Kirby\Cms\Site') === false && is_a($parent, 'Kirby\Cms\Page') === false) {
+            if (
+                is_a($parent, 'Kirby\Cms\Site') === false &&
+                is_a($parent, 'Kirby\Cms\Page') === false
+            ) {
                 throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
             }
 
@@ -115,20 +79,28 @@ return [
                     $pages = $this->parent->childrenAndDrafts();
             }
 
-            // loop for the best performance
-            foreach ($pages->data as $id => $page) {
-
+            // filters pages that are protected and not in the templates list
+            // internal `filter()` method used instead of foreach loop that previously included `unset()`
+            // because `unset()` is updating the original data, `filter()` is just filtering
+            // also it has been tested that there is no performance difference
+            // even in 0.1 seconds on 100k virtual pages
+            $pages = $pages->filter(function ($page) {
                 // remove all protected pages
                 if ($page->isReadable() === false) {
-                    unset($pages->data[$id]);
-                    continue;
+                    return false;
                 }
 
                 // filter by all set templates
                 if ($this->templates && in_array($page->intendedTemplate()->name(), $this->templates) === false) {
-                    unset($pages->data[$id]);
-                    continue;
+                    return false;
                 }
+
+                return true;
+            });
+
+            // search
+            if ($this->search === true && empty($this->searchterm) === false) {
+                $pages = $pages->search($this->searchterm);
             }
 
             // sort
@@ -156,27 +128,36 @@ return [
         'data' => function () {
             $data = [];
 
-            foreach ($this->pages as $item) {
-                $panel       = $item->panel();
-                $permissions = $item->permissions();
+            foreach ($this->pages as $page) {
+                $panel       = $page->panel();
+                $permissions = $page->permissions();
 
-                $data[] = [
+                $item = [
                     'dragText'    => $panel->dragText(),
-                    'id'          => $item->id(),
-                    'image'       => $panel->image($this->image, $this->layout),
-                    'info'        => $item->toSafeString($this->info ?? false),
+                    'id'          => $page->id(),
+                    'image'       => $panel->image(
+                        $this->image,
+                        $this->layout === 'table' ? 'list' : $this->layout
+                    ),
+                    'info'        => $page->toSafeString($this->info ?? false),
                     'link'        => $panel->url(true),
-                    'parent'      => $item->parentId(),
+                    'parent'      => $page->parentId(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
                         'changeSlug'   => $permissions->can('changeSlug'),
                         'changeStatus' => $permissions->can('changeStatus'),
                         'changeTitle'  => $permissions->can('changeTitle'),
                     ],
-                    'status'      => $item->status(),
-                    'template'    => $item->intendedTemplate()->name(),
-                    'text'        => $item->toSafeString($this->text),
+                    'status'      => $page->status(),
+                    'template'    => $page->intendedTemplate()->name(),
+                    'text'        => $page->toSafeString($this->text),
                 ];
+
+                if ($this->layout === 'table') {
+                    $item = $this->columnsValues($item, $page);
+                }
+
+                $data[] = $item;
             }
 
             return $data;
@@ -224,35 +205,8 @@ return [
 
             return true;
         },
-        'link' => function () {
-            $modelLink  = $this->model->panel()->url(true);
-            $parentLink = $this->parent->panel()->url(true);
-
-            if ($modelLink !== $parentLink) {
-                return $parentLink;
-            }
-        },
         'pagination' => function () {
             return $this->pagination();
-        },
-        'sortable' => function () {
-            if (in_array($this->status, ['listed', 'published', 'all']) === false) {
-                return false;
-            }
-
-            if ($this->sortable === false) {
-                return false;
-            }
-
-            if ($this->sortBy !== null) {
-                return false;
-            }
-
-            if ($this->flip === true) {
-                return false;
-            }
-
-            return true;
         }
     ],
     'methods' => [
@@ -291,13 +245,15 @@ return [
             'errors'  => $this->errors,
             'options' => [
                 'add'      => $this->add,
+                'columns'  => $this->columns,
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'help'     => $this->help,
                 'layout'   => $this->layout,
-                'link'     => $this->link,
+                'link'     => $this->link(),
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable
             ],

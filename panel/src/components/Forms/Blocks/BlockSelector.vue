@@ -175,6 +175,7 @@ export default {
 .k-block-types .k-button {
   display: flex;
   align-items: flex-start;
+  border-radius: var(--rounded);
   background: rgba(0, 0, 0, 0.5);
   width: 100%;
   text-align: start;

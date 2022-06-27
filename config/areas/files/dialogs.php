@@ -4,6 +4,7 @@ use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 /**
  * Shared file dialogs
@@ -21,7 +22,7 @@ return [
                 'props' => [
                     'fields' => [
                         'name' => [
-                            'label'     => t('name'),
+                            'label'     => I18n::translate('name'),
                             'type'      => 'slug',
                             'required'  => true,
                             'icon'      => 'title',
@@ -30,7 +31,7 @@ return [
                             'preselect' => true
                         ]
                     ],
-                    'submitButton' => t('rename'),
+                    'submitButton' => I18n::translate('rename'),
                     'value' => [
                         'name' => $file->name(),
                     ]
@@ -39,7 +40,7 @@ return [
         },
         'submit' => function (string $path, string $filename) {
             $file     = Find::file($path, $filename);
-            $renamed  = $file->changeName(get('name'));
+            $renamed  = $file->changeName($file->kirby()->request()->get('name'));
             $oldUrl   = $file->panel()->url(true);
             $newUrl   = $renamed->panel()->url(true);
             $response = [
@@ -70,7 +71,7 @@ return [
                     'fields' => [
                         'position' => Field::filePosition($file)
                     ],
-                    'submitButton' => t('change'),
+                    'submitButton' => I18n::translate('change'),
                     'value' => [
                         'position' => $file->sort()->isEmpty() ? $file->siblings(false)->count() + 1 : $file->sort()->toInt(),
                     ]
@@ -81,7 +82,7 @@ return [
             $file     = Find::file($path, $filename);
             $files    = $file->siblings()->sorted();
             $ids      = $files->keys();
-            $newIndex = (int)(get('position')) - 1;
+            $newIndex = (int)($file->kirby()->request()->get('position')) - 1;
             $oldIndex = $files->indexOf($file);
 
             array_splice($ids, $oldIndex, 1);
@@ -101,7 +102,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    'text' => tt('file.delete.confirm', [
+                    'text' => I18n::template('file.delete.confirm', [
                         'filename' => Escape::html($file->filename())
                     ]),
                 ]

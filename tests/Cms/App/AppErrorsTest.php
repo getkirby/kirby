@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
-use Kirby\Http\Server;
 use ReflectionMethod;
 use Whoops\Handler\PlainTextHandler;
 
@@ -81,7 +80,7 @@ class AppErrorsTest extends TestCase
      * @covers ::handleErrors
      * @covers ::getExceptionHookWhoopsHandler
      */
-    public function testHandleErrors()
+    public function testHandleErrors1()
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
@@ -89,35 +88,64 @@ class AppErrorsTest extends TestCase
         $testMethod = new ReflectionMethod(App::class, 'handleErrors');
         $testMethod->setAccessible(true);
 
-        $app    = App::instance();
+        $app = $this->app->clone([
+            'cli' => true
+        ]);
+
         $whoops = $whoopsMethod->invoke($app);
-
-        $oldCli    = Server::$cli;
-        $oldAccept = $_SERVER['HTTP_ACCEPT'] ?? null;
-
-        // CLI
-        Server::$cli = true;
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+    }
 
-        // JSON
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'application/json';
+    /**
+     * @covers ::handleErrors
+     * @covers ::getExceptionHookWhoopsHandler
+     */
+    public function testHandleErrors2()
+    {
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+
+        $testMethod = new ReflectionMethod(App::class, 'handleErrors');
+        $testMethod->setAccessible(true);
+
+        $app = $this->app->clone([
+            'cli' => false,
+            'server' => [
+                'HTTP_ACCEPT' => 'application/json'
+            ]
+        ]);
+
+        $whoops = $whoopsMethod->invoke($app);
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+    }
 
-        // HTML
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $app = new App([
+    /**
+     * @covers ::handleErrors
+     * @covers ::getExceptionHookWhoopsHandler
+     */
+    public function testHandleErrors3()
+    {
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+
+        $testMethod = new ReflectionMethod(App::class, 'handleErrors');
+        $testMethod->setAccessible(true);
+
+        $app = $this->app->clone([
+            'cli' => false,
+            'server' => [
+                'HTTP_ACCEPT' => 'text/html'
+            ],
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -132,10 +160,6 @@ class AppErrorsTest extends TestCase
         $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
-
-        // reset global state
-        Server::$cli            = $oldCli;
-        $_SERVER['HTTP_ACCEPT'] = $oldAccept;
     }
 
     /**
@@ -294,7 +318,7 @@ class AppErrorsTest extends TestCase
             'details' => [
                 'Some error message'
             ],
-            'file' => __FILE__,
+            'file' => basename(__FILE__),
             'line' => $exception->getLine()
         ]), $this->_getBufferedContent($handlers[0]));
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);

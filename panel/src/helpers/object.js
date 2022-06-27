@@ -13,6 +13,32 @@ export function clone(array) {
 }
 
 /**
+ * Checks if value is empty
+ *
+ * @param {mixed} value
+ * @returns {bool}
+ */
+export function isEmpty(value) {
+  if (value === undefined || value === null || value === "") {
+    return true;
+  }
+
+  if (
+    typeof value === "object" &&
+    Object.keys(value).length === 0 &&
+    value.constructor === Object
+  ) {
+    return true;
+  }
+
+  if (value.length !== undefined && value.length === 0) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Merges two objects
  *
  * @param {Object} target
@@ -34,5 +60,6 @@ export function merge(target, source) {
 
 export default {
   clone,
+  isEmpty,
   merge
 };

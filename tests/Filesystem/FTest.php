@@ -366,6 +366,24 @@ class FTest extends TestCase
     }
 
     /**
+     * @covers ::loadClasses
+     */
+    public function testLoadClasses()
+    {
+        F::loadClasses([
+            'ftest\\a' => __DIR__ . '/fixtures/f/load/a/a.php',
+        ]);
+
+        F::loadClasses([
+            'FTest\\B' => 'B.php',
+        ], __DIR__ . '/fixtures/f/load/B');
+
+        $this->assertTrue(class_exists('FTest\\A'));
+        $this->assertTrue(class_exists('FTest\\B'));
+        $this->assertFalse(class_exists('FTest\\C'));
+    }
+
+    /**
      * @covers ::loadOnce
      */
     public function testLoadOnce()

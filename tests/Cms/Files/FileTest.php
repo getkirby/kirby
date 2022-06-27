@@ -375,6 +375,34 @@ class FileTest extends TestCase
         $this->assertSame($file->url(), $file->previewUrl());
     }
 
+    public function testPreviewUrlForExtendedComponent()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'components' => [
+                'file::url' => function ($kirby, $file, array $options = []) {
+                    return 'https://getkirby.com/' . $file->filename();
+                }
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test',
+                        'files'    => [
+                            ['filename' => 'test.pdf']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->file('test/test.pdf');
+        $this->assertSame('https://getkirby.com/test.pdf', $file->previewUrl());
+    }
+
     public function testQuery()
     {
         $file = $this->file();

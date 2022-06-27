@@ -18,7 +18,6 @@
     <k-aspect-ratio v-else :ratio="ratio">
       <k-icon
         :color="$helper.color(image.color)"
-        :size="size"
         :type="image.icon"
         class="k-item-icon"
       />
@@ -31,6 +30,10 @@ export default {
   inheritAttrs: false,
   props: {
     image: [Object, Boolean],
+    /**
+     * Display layout
+     * @values list, cards, cardlets
+     */
     layout: {
       type: String,
       default: "list"

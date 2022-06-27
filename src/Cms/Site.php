@@ -668,7 +668,6 @@ class Site extends ModelWithContent
     /**
      * Returns the full path without leading slash
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -677,6 +676,7 @@ class Site extends ModelWithContent
      */
     public function panelPath(): string
     {
+        Helpers::deprecated('Cms\Site::panelPath() has been deprecated and will be removed in Kirby 3.8.0. Use $site->panel()->path() instead.');
         return $this->panel()->path();
     }
 
@@ -684,7 +684,6 @@ class Site extends ModelWithContent
      * Returns the url to the editing view
      * in the panel
      *
-     * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
      * @internal
@@ -694,6 +693,7 @@ class Site extends ModelWithContent
      */
     public function panelUrl(bool $relative = false): string
     {
+        Helpers::deprecated('Cms\Site::panelUrl() has been deprecated and will be removed in Kirby 3.8.0. Use $site->panel()->url() instead.');
         return $this->panel()->url($relative);
     }
 }

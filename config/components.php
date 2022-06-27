@@ -4,12 +4,12 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
@@ -39,9 +39,12 @@ return [
      * @param mixed $variable
      * @param bool $echo
      * @return string
+     *
+     * @deprecated 3.7.0 Disable `dump()` via `KIRBY_HELPER_DUMP` instead and create your own function
+     * @todo move to `Helpers::dump()`, remove component in 3.8.0
      */
     'dump' => function (App $kirby, $variable, bool $echo = true) {
-        if (Server::cli() === true) {
+        if ($kirby->environment()->cli() === true) {
             $output = print_r($variable, true) . PHP_EOL;
         } else {
             $output = '<pre>' . print_r($variable, true) . '</pre>';
@@ -138,12 +141,18 @@ return [
      * @param array $options Markdown options
      * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
      * @return string
-     * @todo add deprecation warning for $inline parameter in 3.7.0
      * @todo remove $inline parameter in in 3.8.0
      */
     'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
         static $markdown;
         static $config;
+
+        // warning for deprecated fourth parameter
+        if (func_num_args() === 4 && isset($options['inline']) === false) {
+            // @codeCoverageIgnoreStart
+            Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
+            // @codeCoverageIgnoreEnd
+        }
 
         // support for the deprecated fourth argument
         $options['inline'] ??= $inline;
@@ -155,7 +164,7 @@ return [
             $config   = $options;
         }
 
-        return $markdown->parse($text, $options['inline']);
+        return $markdown->parse($text, $options['inline'] ?? false);
     },
 
     /**
@@ -332,8 +341,8 @@ return [
      */
     'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
         $darkroom = Darkroom::factory(
-            option('thumbs.driver', 'gd'),
-            option('thumbs', [])
+            $kirby->option('thumbs.driver', 'gd'),
+            $kirby->option('thumbs', [])
         );
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
@@ -371,7 +380,13 @@ return [
         if ($kirby->multilang() === true) {
             $parts = Str::split($path, '#');
 
-            if ($page = page($parts[0] ?? null)) {
+            if ($parts[0] ?? null) {
+                $page = $kirby->site()->find($parts[0]);
+            } else {
+                $page = $kirby->site()->page();
+            }
+
+            if ($page) {
                 $path = $page->url($language);
 
                 if (isset($parts[1]) === true) {

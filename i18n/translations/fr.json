@@ -49,6 +49,9 @@
   "email": "Courriel",
   "email.placeholder": "mail@example.com",
 
+  "entries": "Entrées",
+  "entry": "Entrée",
+
   "environment": "Environnement",
 
   "error.access.code": "Code incorrect",
@@ -294,6 +297,7 @@
   "hide": "Masquer",
   "hour": "Heure",
   "import": "Importer",
+  "info": "Info",
   "insert": "Insérer",
   "insert.after": "Insérer après",
   "insert.before": "Insérer avant",
@@ -340,6 +344,7 @@
   "license.register.label": "Veuillez saisir votre numéro de licence",
   "license.register.success": "Merci pour votre soutien à Kirby",
   "license.unregistered": "Ceci est une démo non enregistrée de Kirby",
+  "license.unregistered.label": "Non enregistré",
 
   "link": "Lien",
   "link.text": "Texte du lien",
@@ -469,19 +474,27 @@
 
   "section.required": "Cette section est obligatoire",
 
+  "security": "Sécurité",
   "select": "Sélectionner",
+  "server": "Serveur",
   "settings": "Paramètres",
   "show": "Afficher",
+  "site.blueprint": "Ce site n’a pas encore de blueprint. Vous pouvez en définir les paramètres dans <strong>/site/blueprints/site.yml</strong>",
   "size": "Poids",
   "slug": "Identifiant de l’URL",
   "sort": "Trier",
+
+  "stats.empty": "Aucun rapport",
+  "system.issues.content": "Le dossier content semble exposé",
+  "system.issues.debug": "Le débogage doit être désactivé en production",
+  "system.issues.git": "Le dossier .git semble exposé",
+  "system.issues.https": "Nous recommandons HTTPS pour tous vos sites",
+  "system.issues.kirby": "Le dossier kirby semble exposé",
+  "system.issues.site": "Le dossier site semble exposé",
+
   "title": "Titre",
   "template": "Modèle",
   "today": "Aujourd’hui",
-
-  "server": "Serveur",
-
-  "site.blueprint": "Ce site n’a pas encore de blueprint. Vous pouvez en définir les paramètres dans <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Gras",
