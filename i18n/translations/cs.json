@@ -340,6 +340,7 @@
   "license": "Kirby licence",
   "license.buy": "Zakoupit licenci",
   "license.register": "Registrovat",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
   "license.register.label": "Zadejte prosím licenční kód",
   "license.register.success": "Děkujeme Vám za podporu Kirby",

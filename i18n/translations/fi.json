@@ -340,6 +340,7 @@
   "license": "Lisenssi",
   "license.buy": "Osta lisenssi",
   "license.register": "Rekisteröi",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Lisenssiavain on lähetetty oston jälkeen sähköpostiisi. Kopioi ja liitä avain tähän.",
   "license.register.label": "Anna lisenssiavain",
   "license.register.success": "Kiitos kun tuet Kirbyä",

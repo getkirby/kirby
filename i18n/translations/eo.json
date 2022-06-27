@@ -340,6 +340,7 @@
   "license": "Permisilo",
   "license.buy": "Aĉeti permisilon",
   "license.register": "Registriĝi",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Vi ricevis vian kodon de permisilo retpoŝte, post aĉeti ĝin. Bonvolu kopii kaj alglui ĝin por registriĝi.",
   "license.register.label": "Bonvolu entajpi vian kodon de permisilo",
   "license.register.success": "Dankon pro subteni Kirby",

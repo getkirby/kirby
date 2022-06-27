@@ -340,6 +340,7 @@
   "license": "Leyfi",
   "license.buy": "Kaupa leyfi",
   "license.register": "Skr\u00E1 Kirby",
+  "license.manage": "Manage your licenses",
   "license.register.help": "Þú fékkst sendan tölvupóst með leyfiskóðanum þegar þú keyptir leyfi. Vinsamlegast afritaðu hann og settu hann hingað til að skrá þig.",
   "license.register.label": "Vinsamlegast settu inn leyfiskóðan",
   "license.register.success": "Þakka þér fyrir að velja Kirby",

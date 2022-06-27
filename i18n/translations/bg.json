@@ -340,6 +340,7 @@
   "license": "\u041b\u0438\u0446\u0435\u043d\u0437 \u0437\u0430 Kirby",
   "license.buy": "Купи лиценз",
   "license.register": "Регистрирай",
+  "license.manage": "Manage your licenses",
   "license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
   "license.register.label": "Please enter your license code",
   "license.register.success": "Thank you for supporting Kirby",
