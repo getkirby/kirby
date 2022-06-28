@@ -18,7 +18,7 @@
   "create": "Créer",
 
   "date": "Date",
-  "date.select": "Choisissez une date",
+  "date.select": "Choisir une date",
 
   "day": "Jour",
   "days.fri": "Ven",
@@ -340,7 +340,7 @@
   "license": "Licence",
   "license.buy": "Acheter une licence",
   "license.register": "S’enregistrer",
-  "license.manage": "Manage your licenses",
+  "license.manage": "Gérer vos licences",
   "license.register.help": "Vous avez reçu votre numéro de licence par courriel après l'achat. Veuillez le copier et le coller ici pour l'enregistrer.",
   "license.register.label": "Veuillez saisir votre numéro de licence",
   "license.register.success": "Merci pour votre soutien à Kirby",
