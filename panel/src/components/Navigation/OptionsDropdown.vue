@@ -85,8 +85,12 @@ export default {
   },
   methods: {
     onAction(action, item, itemIndex) {
-      this.$emit("action", action, item, itemIndex);
-      this.$emit("option", action, item, itemIndex);
+      if (typeof action === "function") {
+        action.call(this);
+      } else {
+        this.$emit("action", action, item, itemIndex);
+        this.$emit("option", action, item, itemIndex);
+      }
     },
     toggle() {
       this.$refs.options.toggle();
