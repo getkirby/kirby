@@ -144,7 +144,9 @@ return [
 
             // render KirbyText in caption
             if ($tag->caption) {
-                $tag->caption = [$tag->kirby()->kirbytext($tag->caption, [], true)];
+                $options = ['markdown' => ['inline' => true]];
+                $caption = $tag->kirby()->kirbytext($tag->caption, $options);
+                $tag->caption = [$caption];
             }
 
             return Html::figure([ $link($image) ], $tag->caption, [
