@@ -147,7 +147,7 @@ abstract class Sql
             'text'      => '{{ name }} TEXT {{ unique }}',
             'int'       => '{{ name }} INT(11) UNSIGNED {{ null }} {{ default }} {{ unique }}',
             'timestamp' => '{{ name }} TIMESTAMP {{ null }} {{ default }} {{ unique }}',
-            'boolean'   => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}'
+            'bool'   => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}'
         ];
     }
 
