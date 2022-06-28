@@ -340,7 +340,7 @@
   "license": "Lisans",
   "license.buy": "Bir lisans satın al",
   "license.register": "Kayıt Ol",
-  "license.manage": "Manage your licenses",
+  "license.manage": "Lisanslarınızı yönetin",
   "license.register.help": "Satın alma işleminden sonra e-posta yoluyla lisans kodunuzu aldınız. Lütfen kayıt olmak için kodu kopyalayıp yapıştırın.",
   "license.register.label": "Lütfen lisans kodunu giriniz",
   "license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",

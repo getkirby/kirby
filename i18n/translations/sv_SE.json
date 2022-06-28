@@ -49,8 +49,8 @@
   "email": "E-postadress",
   "email.placeholder": "namn@exempel.se",
 
-  "entries": "Entries",
-  "entry": "Entry",
+  "entries": "Poster",
+  "entry": "Post",
 
   "environment": "Miljö",
 
@@ -160,7 +160,7 @@
 
   "error.template.default.notFound": "Standardmallen existerar inte",
 
-  "error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+  "error.unexpected": "Ett oväntat fel uppstod! Aktivera felsökningsläge för mer information: https://getkirby.com/docs/reference/system/options/debug",
 
   "error.user.changeEmail.permission": "Du har inte behörighet att ändra e-postadressen för användaren \"{name}\"",
   "error.user.changeLanguage.permission": "Du har inte behörighet att ändra språket för användaren \"{name}\"",
@@ -340,12 +340,12 @@
   "license": "Licens",
   "license.buy": "Köp en licens",
   "license.register": "Registrera",
-  "license.manage": "Manage your licenses",
+  "license.manage": "Hantera dina licenser",
   "license.register.help": "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
   "license.register.label": "Ange din licenskod",
   "license.register.success": "Tack för att du stödjer Kirby",
   "license.unregistered": "Detta är en oregistrerad demo av Kirby",
-  "license.unregistered.label": "Unregistered",
+  "license.unregistered.label": "Oregistrerad",
 
   "link": "L\u00e4nk",
   "link.text": "L\u00e4nktext",
@@ -475,7 +475,7 @@
 
   "section.required": "Sektionen krävs",
 
-  "security": "Security",
+  "security": "Säkerhet",
   "select": "Välj",
   "server": "Server",
   "settings": "Inställningar",
@@ -485,13 +485,13 @@
   "slug": "URL-appendix",
   "sort": "Sortera",
 
-  "stats.empty": "No reports",
-  "system.issues.content": "The content folder seems to be exposed",
-  "system.issues.debug": "Debugging must be turned off in production",
-  "system.issues.git": "The .git folder seems to be exposed",
-  "system.issues.https": "We recommend HTTPS for all your sites",
-  "system.issues.kirby": "The kirby folder seems to be exposed",
-  "system.issues.site": "The site folder seems to be exposed",
+  "stats.empty": "Inga rapporter",
+  "system.issues.content": "Mappen content verkar vara exponerad",
+  "system.issues.debug": "Felsökningsläget måste vara avstängt i produktion",
+  "system.issues.git": "Mappen .git verkar vara exponerad",
+  "system.issues.https": "Vi rekommenderar HTTPS för alla dina webbplatser",
+  "system.issues.kirby": "Mappen kirby verkar vara exponerad",
+  "system.issues.site": "Mappen site verkar vara exponerad",
 
   "title": "Titel",
   "template": "Mall",
