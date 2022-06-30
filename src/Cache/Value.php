@@ -111,7 +111,7 @@ class Value
 			} else {
 				return null;
 			}
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return null;
 		}
 	}

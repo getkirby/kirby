@@ -124,7 +124,7 @@ class Home
 				// check the firewall
 				return Panel::hasAccess($user, $areaId);
 			});
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}

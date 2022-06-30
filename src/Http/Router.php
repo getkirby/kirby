@@ -132,7 +132,7 @@ class Router
 				}
 
 				$loop = false;
-			} catch (Exceptions\NextRouteException $e) {
+			} catch (Exceptions\NextRouteException) {
 				$ignore[] = $route;
 			}
 

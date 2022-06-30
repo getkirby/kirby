@@ -129,7 +129,7 @@ class LanguageRouter
 					return $route->action()->call($route, $language, ...$route->arguments());
 				}
 			});
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return $kirby->resolve($path, $language->code());
 		}
 	}

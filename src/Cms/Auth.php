@@ -590,7 +590,7 @@ class Auth
 		try {
 			$log  = Data::read($this->logfile(), 'json');
 			$read = true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$log  = [];
 			$read = false;
 		}

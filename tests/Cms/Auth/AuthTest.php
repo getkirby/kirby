@@ -244,7 +244,7 @@ class AuthTest extends TestCase
 
 		try {
 			$this->auth->user();
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			// tested above, this check is for the second call
 		}
 

@@ -183,13 +183,13 @@ class Component
 				if (isset($this->attrs[$propName]) === true) {
 					try {
 						$this->$propName = $this->props[$propName] = $propFunction->call($this, $this->attrs[$propName]);
-					} catch (TypeError $e) {
+					} catch (TypeError) {
 						throw new TypeError('Invalid value for "' . $propName . '"');
 					}
 				} else {
 					try {
 						$this->$propName = $this->props[$propName] = $propFunction->call($this);
-					} catch (ArgumentCountError $e) {
+					} catch (ArgumentCountError) {
 						throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
 					}
 				}

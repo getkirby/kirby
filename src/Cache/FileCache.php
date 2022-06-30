@@ -212,7 +212,7 @@ class FileCache extends Cache
 					break;
 				}
 			}
-		} catch (Exception $e) { // @codeCoverageIgnore
+		} catch (Exception) { // @codeCoverageIgnore
 			// silently stops the process
 		}
 	}

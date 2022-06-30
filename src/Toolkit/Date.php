@@ -313,7 +313,7 @@ class Date extends DateTime
 
 		try {
 			return new static($datetime, $timezone);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return null;
 		}
 	}

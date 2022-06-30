@@ -352,7 +352,7 @@ abstract class ModelWithContent extends Model
 				'model'             => $this,
 				static::CLASS_ALIAS => $this
 			]);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return null;
 		}
 
@@ -374,7 +374,7 @@ abstract class ModelWithContent extends Model
 	{
 		try {
 			return Data::read($this->contentFile($languageCode));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return [];
 		}
 	}

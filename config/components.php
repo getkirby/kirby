@@ -109,7 +109,7 @@ return [
 				Data::write($job, array_merge($options, [
 					'filename' => $file->filename()
 				]));
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				// if thumb doesn't exist yet and job file cannot
 				// be created, return
 				return $file;

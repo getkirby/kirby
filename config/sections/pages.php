@@ -228,7 +228,7 @@ return [
 						'name'  => basename($props['name']),
 						'title' => $props['title'],
 					];
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					$blueprints[] = [
 						'name'  => basename($template),
 						'title' => ucfirst($template),

@@ -816,7 +816,7 @@ abstract class FieldClass
 	{
 		try {
 			return Data::decode($value, 'json');
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return [];
 		}
 	}

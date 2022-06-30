@@ -128,11 +128,11 @@ class Media
 				$kirby->thumb($source, $thumb, $options);
 				F::remove($job);
 				return Response::file($thumb);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				F::remove($thumb);
 				return Response::file($source);
 			}
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
