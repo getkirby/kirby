@@ -6,10 +6,10 @@ import isNodeSelection from "./isNodeSelection";
 import equalNodeType from "./equalNodeType";
 
 export default (nodeType) => (selection) => {
-  if (isNodeSelection(selection)) {
-    const { node, $from } = selection;
-    if (equalNodeType(nodeType, node)) {
-      return { node, pos: $from.pos, depth: $from.depth };
-    }
-  }
+	if (isNodeSelection(selection)) {
+		const { node, $from } = selection;
+		if (equalNodeType(nodeType, node)) {
+			return { node, pos: $from.pos, depth: $from.depth };
+		}
+	}
 };

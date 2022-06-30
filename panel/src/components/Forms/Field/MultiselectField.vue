@@ -1,21 +1,21 @@
 <template>
-  <k-field
-    :input="_uid"
-    :counter="counterOptions"
-    v-bind="$props"
-    class="k-multiselect-field"
-    @blur="blur"
-    @keydown.native.enter.prevent="focus"
-  >
-    <k-input
-      :id="_uid"
-      ref="input"
-      v-bind="$props"
-      theme="field"
-      type="multiselect"
-      v-on="$listeners"
-    />
-  </k-field>
+	<k-field
+		:input="_uid"
+		:counter="counterOptions"
+		v-bind="$props"
+		class="k-multiselect-field"
+		@blur="blur"
+		@keydown.native.enter.prevent="focus"
+	>
+		<k-input
+			:id="_uid"
+			ref="input"
+			v-bind="$props"
+			theme="field"
+			type="multiselect"
+			v-on="$listeners"
+		/>
+	</k-field>
 </template>
 
 <script>
@@ -28,24 +28,24 @@ import counter from "@/mixins/forms/counter.js";
  * Have a look at `<k-field>`, `<k-input>` and `<k-multiselect-input>` for additional information.
  */
 export default {
-  mixins: [Field, Input, MultiselectInput, counter],
-  inheritAttrs: false,
-  props: {
-    icon: {
-      type: String,
-      default: "angle-down"
-    }
-  },
-  mounted() {
-    this.$refs.input.$el.setAttribute("tabindex", 0);
-  },
-  methods: {
-    blur(e) {
-      this.$refs.input.blur(e);
-    },
-    focus() {
-      this.$refs.input.focus();
-    }
-  }
+	mixins: [Field, Input, MultiselectInput, counter],
+	inheritAttrs: false,
+	props: {
+		icon: {
+			type: String,
+			default: "angle-down"
+		}
+	},
+	mounted() {
+		this.$refs.input.$el.setAttribute("tabindex", 0);
+	},
+	methods: {
+		blur(e) {
+			this.$refs.input.blur(e);
+		},
+		focus() {
+			this.$refs.input.focus();
+		}
+	}
 };
 </script>

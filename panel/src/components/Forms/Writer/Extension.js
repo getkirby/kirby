@@ -1,44 +1,44 @@
 export default class Extension {
-  constructor(options = {}) {
-    this.options = {
-      ...this.defaults,
-      ...options
-    };
-  }
+	constructor(options = {}) {
+		this.options = {
+			...this.defaults,
+			...options
+		};
+	}
 
-  init() {
-    return null;
-  }
+	init() {
+		return null;
+	}
 
-  bindEditor(editor = null) {
-    this.editor = editor;
-  }
+	bindEditor(editor = null) {
+		this.editor = editor;
+	}
 
-  get name() {
-    return null;
-  }
+	get name() {
+		return null;
+	}
 
-  get type() {
-    return "extension";
-  }
+	get type() {
+		return "extension";
+	}
 
-  get defaults() {
-    return {};
-  }
+	get defaults() {
+		return {};
+	}
 
-  plugins() {
-    return [];
-  }
+	plugins() {
+		return [];
+	}
 
-  inputRules() {
-    return [];
-  }
+	inputRules() {
+		return [];
+	}
 
-  pasteRules() {
-    return [];
-  }
+	pasteRules() {
+		return [];
+	}
 
-  keys() {
-    return {};
-  }
+	keys() {
+		return {};
+	}
 }

@@ -1,10 +1,10 @@
 export default {
-  props: {
-    id: {
-      type: [Number, String],
-      default() {
-        return this._uid;
-      }
-    }
-  }
+	props: {
+		id: {
+			type: [Number, String],
+			default() {
+				return this._uid;
+			}
+		}
+	}
 };

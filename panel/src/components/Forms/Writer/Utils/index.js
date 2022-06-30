@@ -1,23 +1,23 @@
 // prosemirror
 import {
-  chainCommands,
-  exitCode,
-  setBlockType,
-  toggleMark
+	chainCommands,
+	exitCode,
+	setBlockType,
+	toggleMark
 } from "prosemirror-commands";
 
 // prosemirror-inputrules
 import {
-  wrappingInputRule,
-  textblockTypeInputRule
+	wrappingInputRule,
+	textblockTypeInputRule
 } from "prosemirror-inputrules";
 
 import {
-  addListNodes,
-  wrapInList,
-  splitListItem,
-  liftListItem,
-  sinkListItem
+	addListNodes,
+	wrapInList,
+	splitListItem,
+	liftListItem,
+	sinkListItem
 } from "prosemirror-schema-list";
 
 // custom
@@ -36,35 +36,35 @@ import updateMark from "./updateMark";
 import getNodeAttrs from "./getNodeAttrs";
 
 export default {
-  // prosemirror
-  chainCommands,
-  exitCode,
-  setBlockType,
-  toggleMark,
+	// prosemirror
+	chainCommands,
+	exitCode,
+	setBlockType,
+	toggleMark,
 
-  // prosemirror-inputrules
-  wrappingInputRule,
-  textblockTypeInputRule,
+	// prosemirror-inputrules
+	wrappingInputRule,
+	textblockTypeInputRule,
 
-  // prosemirror-schema-list
-  addListNodes,
-  wrapInList,
-  splitListItem,
-  liftListItem,
-  sinkListItem,
+	// prosemirror-schema-list
+	addListNodes,
+	wrapInList,
+	splitListItem,
+	liftListItem,
+	sinkListItem,
 
-  // custom
-  getMarkAttrs,
-  getNodeAttrs,
-  markInputRule,
-  markIsActive,
-  markPasteRule,
-  minMax,
-  nodeIsActive,
-  nodeInputRule,
-  pasteRule,
-  removeMark,
-  toggleBlockType,
-  toggleList,
-  updateMark
+	// custom
+	getMarkAttrs,
+	getNodeAttrs,
+	markInputRule,
+	markIsActive,
+	markPasteRule,
+	minMax,
+	nodeIsActive,
+	nodeInputRule,
+	pasteRule,
+	removeMark,
+	toggleBlockType,
+	toggleList,
+	updateMark
 };

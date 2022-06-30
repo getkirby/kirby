@@ -1,8 +1,8 @@
 <template>
-  <div :data-align="align" class="k-view">
-    <!-- @slot where your content goes -->
-    <slot />
-  </div>
+	<div :data-align="align" class="k-view">
+		<!-- @slot where your content goes -->
+		<slot />
+	</div>
 </template>
 
 <script>
@@ -13,43 +13,43 @@
 </k-view>
 */
 export default {
-  props: {
-    /**
-     * To center the content
-     * @values centre
-     */
-    align: String
-  }
+	props: {
+		/**
+		 * To center the content
+		 * @values centre
+		 */
+		align: String
+	}
 };
 </script>
 
 <style>
 .k-view {
-  padding-inline: 1.5rem;
-  margin: 0 auto;
-  max-width: 100rem;
+	padding-inline: 1.5rem;
+	margin: 0 auto;
+	max-width: 100rem;
 }
 @media screen and (min-width: 30em) {
-  .k-view {
-    padding-inline: 3rem;
-  }
+	.k-view {
+		padding-inline: 3rem;
+	}
 }
 
 @media screen and (min-width: 90em) {
-  .k-view {
-    padding-inline: 6rem;
-  }
+	.k-view {
+		padding-inline: 6rem;
+	}
 }
 
 .k-view[data-align="center"] {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 3rem;
-  overflow: auto;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 3rem;
+	overflow: auto;
 }
 .k-view[data-align="center"] > * {
-  flex-basis: 22.5rem;
+	flex-basis: 22.5rem;
 }
 </style>

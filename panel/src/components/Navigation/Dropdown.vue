@@ -1,7 +1,7 @@
 <template>
-  <span class="k-dropdown" @click.stop>
-    <slot />
-  </span>
+	<span class="k-dropdown" @click.stop>
+		<slot />
+	</span>
 </template>
 
 <script>
@@ -13,6 +13,6 @@ export default {};
 
 <style>
 .k-dropdown {
-  position: relative;
+	position: relative;
 }
 </style>
