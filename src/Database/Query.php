@@ -522,41 +522,37 @@ class Query
 	{
 		$sql = $this->database->sql();
 
-		switch ($type) {
-			case 'select':
-				return $sql->select([
-					'table'    => $this->table,
-					'columns'  => $this->select,
-					'join'     => $this->join,
-					'distinct' => $this->distinct,
-					'where'    => $this->where,
-					'group'    => $this->group,
-					'having'   => $this->having,
-					'order'    => $this->order,
-					'offset'   => $this->offset,
-					'limit'    => $this->limit,
-					'bindings' => $this->bindings
-				]);
-			case 'update':
-				return $sql->update([
-					'table'    => $this->table,
-					'where'    => $this->where,
-					'values'   => $this->values,
-					'bindings' => $this->bindings
-				]);
-			case 'insert':
-				return $sql->insert([
-					'table'    => $this->table,
-					'values'   => $this->values,
-					'bindings' => $this->bindings
-				]);
-			case 'delete':
-				return $sql->delete([
-					'table'    => $this->table,
-					'where'    => $this->where,
-					'bindings' => $this->bindings
-				]);
-		}
+		return match ($type) {
+			'select' => $sql->select([
+				'table'    => $this->table,
+				'columns'  => $this->select,
+				'join'     => $this->join,
+				'distinct' => $this->distinct,
+				'where'    => $this->where,
+				'group'    => $this->group,
+				'having'   => $this->having,
+				'order'    => $this->order,
+				'offset'   => $this->offset,
+				'limit'    => $this->limit,
+				'bindings' => $this->bindings
+			]),
+			'update' => $sql->update([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'insert' => $sql->insert([
+				'table'    => $this->table,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'delete' => $sql->delete([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'bindings' => $this->bindings
+			])
+		};
 	}
 
 	/**

@@ -338,22 +338,16 @@ V::$validators = [
 			return false;
 		}
 
-		switch ($operator) {
-			case '!=':
-				return $value !== $test;
-			case '<':
-				return $value < $test;
-			case '>':
-				return $value > $test;
-			case '<=':
-				return $value <= $test;
-			case '>=':
-				return $value >= $test;
-			case '==':
-				return $value === $test;
-		}
+		return match ($operator) {
+			'!=' => $value !== $test,
+			'<'  => $value < $test,
+			'>'  => $value > $test,
+			'<='  => $value <= $test,
+			'>='  => $value >= $test,
+			'=='  => $value === $test,
 
-		throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+			default => throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="')
+		};
 	},
 
 	/**
@@ -601,18 +595,13 @@ V::$validators = [
 			throw new Exception('$value is of type without size');
 		}
 
-		switch ($operator) {
-			case '<':
-				return $count < $size;
-			case '>':
-				return $count > $size;
-			case '<=':
-				return $count <= $size;
-			case '>=':
-				return $count >= $size;
-			default:
-				return $count == $size;
-		}
+		return match ($operator) {
+			'<'     => $count < $size,
+			'>'     => $count > $size,
+			'<='    => $count <= $size,
+			'>='    => $count >= $size,
+			default => $count == $size
+		};
 	},
 
 	/**

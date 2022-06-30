@@ -178,16 +178,12 @@ trait PageActions
 	 */
 	public function changeStatus(string $status, int $position = null)
 	{
-		switch ($status) {
-			case 'draft':
-				return $this->changeStatusToDraft();
-			case 'listed':
-				return $this->changeStatusToListed($position);
-			case 'unlisted':
-				return $this->changeStatusToUnlisted();
-			default:
-				throw new InvalidArgumentException('Invalid status: ' . $status);
-		}
+		return match ($status) {
+			'draft'    => $this->changeStatusToDraft(),
+			'listed'   => $this->changeStatusToListed($position),
+			'unlisted' => $this->changeStatusToUnlisted(),
+			default    => throw new InvalidArgumentException('Invalid status: ' . $status)
+		};
 	}
 
 	/**

@@ -135,16 +135,11 @@ class Filename
 				$value = '';
 			}
 
-			switch ($key) {
-				case 'dimensions':
-					$result[] = $value;
-					break;
-				case 'crop':
-					$result[] = ($value === 'center') ? 'crop' : $key . '-' . $value;
-					break;
-				default:
-					$result[] = $key . $value;
-			}
+			$result[] = match ($key) {
+				'dimensions' => $value,
+				'crop'       => ($value === 'center') ? 'crop' : $key . '-' . $value,
+				default      => $key . $value
+			};
 		}
 
 		$result     = array_filter($result);
