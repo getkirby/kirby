@@ -1,7 +1,7 @@
 <?php
 
 return [
-    [
-        'type' => 'line',
-    ]
+	[
+		'type' => 'line',
+	]
 ];

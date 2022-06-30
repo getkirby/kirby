@@ -28,223 +28,223 @@ use Kirby\Filesystem\F;
  */
 class Loader
 {
-    /**
-     * @var \Kirby\Cms\App
-     */
-    protected $kirby;
+	/**
+	 * @var \Kirby\Cms\App
+	 */
+	protected $kirby;
 
-    /**
-     * @var bool
-     */
-    protected $withPlugins;
+	/**
+	 * @var bool
+	 */
+	protected $withPlugins;
 
-    /**
-     * @param \Kirby\Cms\App $kirby
-     * @param bool $withPlugins
-     */
-    public function __construct(App $kirby, bool $withPlugins = true)
-    {
-        $this->kirby       = $kirby;
-        $this->withPlugins = $withPlugins;
-    }
+	/**
+	 * @param \Kirby\Cms\App $kirby
+	 * @param bool $withPlugins
+	 */
+	public function __construct(App $kirby, bool $withPlugins = true)
+	{
+		$this->kirby       = $kirby;
+		$this->withPlugins = $withPlugins;
+	}
 
-    /**
-     * Loads the area definition
-     *
-     * @param string $name
-     * @return array|null
-     */
-    public function area(string $name): ?array
-    {
-        return $this->areas()[$name] ?? null;
-    }
+	/**
+	 * Loads the area definition
+	 *
+	 * @param string $name
+	 * @return array|null
+	 */
+	public function area(string $name): ?array
+	{
+		return $this->areas()[$name] ?? null;
+	}
 
-    /**
-     * Loads all areas and makes sure that plugins
-     * are injected properly
-     *
-     * @return array
-     */
-    public function areas(): array
-    {
-        $areas      = [];
-        $extensions = $this->withPlugins === true ? $this->kirby->extensions('areas') : [];
+	/**
+	 * Loads all areas and makes sure that plugins
+	 * are injected properly
+	 *
+	 * @return array
+	 */
+	public function areas(): array
+	{
+		$areas      = [];
+		$extensions = $this->withPlugins === true ? $this->kirby->extensions('areas') : [];
 
-        // load core areas and extend them with elements from plugins if they exist
-        foreach ($this->kirby->core()->areas() as $id => $area) {
-            $area = $this->resolveArea($area);
+		// load core areas and extend them with elements from plugins if they exist
+		foreach ($this->kirby->core()->areas() as $id => $area) {
+			$area = $this->resolveArea($area);
 
-            if (isset($extensions[$id]) === true) {
-                foreach ($extensions[$id] as $areaExtension) {
-                    $extension = $this->resolveArea($areaExtension);
-                    $area      = array_replace_recursive($area, $extension);
-                }
+			if (isset($extensions[$id]) === true) {
+				foreach ($extensions[$id] as $areaExtension) {
+					$extension = $this->resolveArea($areaExtension);
+					$area      = array_replace_recursive($area, $extension);
+				}
 
-                unset($extensions[$id]);
-            }
+				unset($extensions[$id]);
+			}
 
-            $areas[$id] = $area;
-        }
+			$areas[$id] = $area;
+		}
 
-        // add additional areas from plugins
-        foreach ($extensions as $id => $areaExtensions) {
-            foreach ($areaExtensions as $areaExtension) {
-                $areas[$id] = $this->resolve($areaExtension);
-            }
-        }
+		// add additional areas from plugins
+		foreach ($extensions as $id => $areaExtensions) {
+			foreach ($areaExtensions as $areaExtension) {
+				$areas[$id] = $this->resolve($areaExtension);
+			}
+		}
 
-        return $areas;
-    }
+		return $areas;
+	}
 
-    /**
-     * Loads a core component closure
-     *
-     * @param string $name
-     * @return \Closure|null
-     */
-    public function component(string $name): ?Closure
-    {
-        return $this->extension('components', $name);
-    }
+	/**
+	 * Loads a core component closure
+	 *
+	 * @param string $name
+	 * @return \Closure|null
+	 */
+	public function component(string $name): ?Closure
+	{
+		return $this->extension('components', $name);
+	}
 
-    /**
-     * Loads all core component closures
-     *
-     * @return array
-     */
-    public function components(): array
-    {
-        return $this->extensions('components');
-    }
+	/**
+	 * Loads all core component closures
+	 *
+	 * @return array
+	 */
+	public function components(): array
+	{
+		return $this->extensions('components');
+	}
 
-    /**
-     * Loads a particular extension
-     *
-     * @param string $type
-     * @param string $name
-     * @return mixed
-     */
-    public function extension(string $type, string $name)
-    {
-        return $this->extensions($type)[$name] ?? null;
-    }
+	/**
+	 * Loads a particular extension
+	 *
+	 * @param string $type
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function extension(string $type, string $name)
+	{
+		return $this->extensions($type)[$name] ?? null;
+	}
 
-    /**
-     * Loads all defined extensions
-     *
-     * @param string $type
-     * @return array
-     */
-    public function extensions(string $type): array
-    {
-        return $this->withPlugins === false ? $this->kirby->core()->$type() : $this->kirby->extensions($type);
-    }
+	/**
+	 * Loads all defined extensions
+	 *
+	 * @param string $type
+	 * @return array
+	 */
+	public function extensions(string $type): array
+	{
+		return $this->withPlugins === false ? $this->kirby->core()->$type() : $this->kirby->extensions($type);
+	}
 
-    /**
-     * The resolver takes a string, array or closure.
-     *
-     * 1.) a string is supposed to be a path to an existing file.
-     * The file will either be included when it's a PHP file and
-     * the array contents will be read. Or it will be parsed with
-     * the Data class to read yml or json data into an array
-     *
-     * 2.) arrays are untouched and returned
-     *
-     * 3.) closures will be called and the Kirby instance will be
-     * passed as first argument
-     *
-     * @param mixed $item
-     * @return mixed
-     */
-    public function resolve($item)
-    {
-        if (is_string($item) === true) {
-            if (F::extension($item) !== 'php') {
-                $item = Data::read($item);
-            } else {
-                $item = require $item;
-            }
-        }
+	/**
+	 * The resolver takes a string, array or closure.
+	 *
+	 * 1.) a string is supposed to be a path to an existing file.
+	 * The file will either be included when it's a PHP file and
+	 * the array contents will be read. Or it will be parsed with
+	 * the Data class to read yml or json data into an array
+	 *
+	 * 2.) arrays are untouched and returned
+	 *
+	 * 3.) closures will be called and the Kirby instance will be
+	 * passed as first argument
+	 *
+	 * @param mixed $item
+	 * @return mixed
+	 */
+	public function resolve($item)
+	{
+		if (is_string($item) === true) {
+			if (F::extension($item) !== 'php') {
+				$item = Data::read($item);
+			} else {
+				$item = require $item;
+			}
+		}
 
-        if (is_callable($item)) {
-            $item = $item($this->kirby);
-        }
+		if (is_callable($item)) {
+			$item = $item($this->kirby);
+		}
 
-        return $item;
-    }
+		return $item;
+	}
 
-    /**
-     * Calls `static::resolve()` on all items
-     * in the given array
-     *
-     * @param array $items
-     * @return array
-     */
-    public function resolveAll(array $items): array
-    {
-        $result = [];
+	/**
+	 * Calls `static::resolve()` on all items
+	 * in the given array
+	 *
+	 * @param array $items
+	 * @return array
+	 */
+	public function resolveAll(array $items): array
+	{
+		$result = [];
 
-        foreach ($items as $key => $value) {
-            $result[$key] = $this->resolve($value);
-        }
+		foreach ($items as $key => $value) {
+			$result[$key] = $this->resolve($value);
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
-    /**
-     * Areas need a bit of special treatment
-     * when they are being loaded
-     *
-     * @param string|array|Closure $area
-     * @return array
-     */
-    public function resolveArea($area): array
-    {
-        $area      = $this->resolve($area);
-        $dropdowns = $area['dropdowns'] ?? [];
+	/**
+	 * Areas need a bit of special treatment
+	 * when they are being loaded
+	 *
+	 * @param string|array|Closure $area
+	 * @return array
+	 */
+	public function resolveArea($area): array
+	{
+		$area      = $this->resolve($area);
+		$dropdowns = $area['dropdowns'] ?? [];
 
-        // convert closure dropdowns to an array definition
-        // otherwise they cannot be merged properly later
-        foreach ($dropdowns as $key => $dropdown) {
-            if (is_a($dropdown, 'Closure') === true) {
-                $area['dropdowns'][$key] = [
-                    'options' => $dropdown
-                ];
-            }
-        }
+		// convert closure dropdowns to an array definition
+		// otherwise they cannot be merged properly later
+		foreach ($dropdowns as $key => $dropdown) {
+			if (is_a($dropdown, 'Closure') === true) {
+				$area['dropdowns'][$key] = [
+					'options' => $dropdown
+				];
+			}
+		}
 
-        return $area;
-    }
+		return $area;
+	}
 
-    /**
-     * Loads a particular section definition
-     *
-     * @param string $name
-     * @return array|null
-     */
-    public function section(string $name): ?array
-    {
-        return $this->resolve($this->extension('sections', $name));
-    }
+	/**
+	 * Loads a particular section definition
+	 *
+	 * @param string $name
+	 * @return array|null
+	 */
+	public function section(string $name): ?array
+	{
+		return $this->resolve($this->extension('sections', $name));
+	}
 
-    /**
-     * Loads all section defintions
-     *
-     * @return array
-     */
-    public function sections(): array
-    {
-        return $this->resolveAll($this->extensions('sections'));
-    }
+	/**
+	 * Loads all section defintions
+	 *
+	 * @return array
+	 */
+	public function sections(): array
+	{
+		return $this->resolveAll($this->extensions('sections'));
+	}
 
-    /**
-     * Returns the status flag, which shows
-     * if plugins are loaded as well.
-     *
-     * @return bool
-     */
-    public function withPlugins(): bool
-    {
-        return $this->withPlugins;
-    }
+	/**
+	 * Returns the status flag, which shows
+	 * if plugins are loaded as well.
+	 *
+	 * @return bool
+	 */
+	public function withPlugins(): bool
+	{
+		return $this->withPlugins;
+	}
 }

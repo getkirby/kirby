@@ -16,21 +16,21 @@ namespace Kirby\Panel;
  */
 class Search extends Json
 {
-    protected static $key = '$search';
+	protected static $key = '$search';
 
-    /**
-     * @param mixed $data
-     * @param array $options
-     * @return \Kirby\Http\Response
-     */
-    public static function response($data, array $options = [])
-    {
-        if (is_array($data) === true) {
-            $data = [
-                'results' => $data
-            ];
-        }
+	/**
+	 * @param mixed $data
+	 * @param array $options
+	 * @return \Kirby\Http\Response
+	 */
+	public static function response($data, array $options = [])
+	{
+		if (is_array($data) === true) {
+			$data = [
+				'results' => $data
+			];
+		}
 
-        return parent::response($data, $options);
-    }
+		return parent::response($data, $options);
+	}
 }

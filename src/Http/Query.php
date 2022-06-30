@@ -17,42 +17,42 @@ use Kirby\Toolkit\Obj;
  */
 class Query extends Obj
 {
-    public function __construct($query)
-    {
-        if (is_string($query) === true) {
-            parse_str(ltrim($query, '?'), $query);
-        }
+	public function __construct($query)
+	{
+		if (is_string($query) === true) {
+			parse_str(ltrim($query, '?'), $query);
+		}
 
-        parent::__construct($query ?? []);
-    }
+		parent::__construct($query ?? []);
+	}
 
-    public function isEmpty(): bool
-    {
-        return empty((array)$this) === true;
-    }
+	public function isEmpty(): bool
+	{
+		return empty((array)$this) === true;
+	}
 
-    public function isNotEmpty(): bool
-    {
-        return empty((array)$this) === false;
-    }
+	public function isNotEmpty(): bool
+	{
+		return empty((array)$this) === false;
+	}
 
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
 
-    public function toString($questionMark = false): string
-    {
-        $query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
+	public function toString($questionMark = false): string
+	{
+		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
 
-        if (empty($query) === true) {
-            return '';
-        }
+		if (empty($query) === true) {
+			return '';
+		}
 
-        if ($questionMark === true) {
-            $query = '?' . $query;
-        }
+		if ($questionMark === true) {
+			$query = '?' . $query;
+		}
 
-        return $query;
-    }
+		return $query;
+	}
 }

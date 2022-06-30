@@ -22,175 +22,175 @@ use Kirby\Toolkit\Properties;
  */
 trait IsFile
 {
-    use Properties;
+	use Properties;
 
-    /**
-     * File asset object
-     *
-     * @var \Kirby\Filesystem\File
-     */
-    protected $asset;
+	/**
+	 * File asset object
+	 *
+	 * @var \Kirby\Filesystem\File
+	 */
+	protected $asset;
 
-    /**
-     * Absolute file path
-     *
-     * @var string|null
-     */
-    protected $root;
+	/**
+	 * Absolute file path
+	 *
+	 * @var string|null
+	 */
+	protected $root;
 
-    /**
-     * Absolute file URL
-     *
-     * @var string|null
-     */
-    protected $url;
+	/**
+	 * Absolute file URL
+	 *
+	 * @var string|null
+	 */
+	protected $url;
 
-    /**
-     * Constructor sets all file properties
-     *
-     * @param array $props
-     */
-    public function __construct(array $props)
-    {
-        $this->setProperties($props);
-    }
+	/**
+	 * Constructor sets all file properties
+	 *
+	 * @param array $props
+	 */
+	public function __construct(array $props)
+	{
+		$this->setProperties($props);
+	}
 
-    /**
-     * Magic caller for asset methods
-     *
-     * @param string $method
-     * @param array $arguments
-     * @return mixed
-     * @throws \Kirby\Exception\BadMethodCallException
-     */
-    public function __call(string $method, array $arguments = [])
-    {
-        // public property access
-        if (isset($this->$method) === true) {
-            return $this->$method;
-        }
+	/**
+	 * Magic caller for asset methods
+	 *
+	 * @param string $method
+	 * @param array $arguments
+	 * @return mixed
+	 * @throws \Kirby\Exception\BadMethodCallException
+	 */
+	public function __call(string $method, array $arguments = [])
+	{
+		// public property access
+		if (isset($this->$method) === true) {
+			return $this->$method;
+		}
 
-        // asset method proxy
-        if (method_exists($this->asset(), $method)) {
-            return $this->asset()->$method(...$arguments);
-        }
+		// asset method proxy
+		if (method_exists($this->asset(), $method)) {
+			return $this->asset()->$method(...$arguments);
+		}
 
-        throw new BadMethodCallException('The method: "' . $method . '" does not exist');
-    }
+		throw new BadMethodCallException('The method: "' . $method . '" does not exist');
+	}
 
-    /**
-     * Converts the asset to a string
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return (string)$this->asset();
-    }
+	/**
+	 * Converts the asset to a string
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return (string)$this->asset();
+	}
 
-    /**
-     * Returns the file asset object
-     *
-     * @param array|string|null $props
-     * @return \Kirby\Filesystem\File
-     */
-    public function asset($props = null)
-    {
-        if ($this->asset !== null) {
-            return $this->asset;
-        }
+	/**
+	 * Returns the file asset object
+	 *
+	 * @param array|string|null $props
+	 * @return \Kirby\Filesystem\File
+	 */
+	public function asset($props = null)
+	{
+		if ($this->asset !== null) {
+			return $this->asset;
+		}
 
-        $props = $props ?? [
-            'root' => $this->root(),
-            'url'  => $this->url()
-        ];
+		$props = $props ?? [
+			'root' => $this->root(),
+			'url'  => $this->url()
+		];
 
-        switch ($this->type()) {
-            case 'image':
-                return $this->asset = new Image($props);
-            default:
-                return $this->asset = new File($props);
-        }
-    }
+		switch ($this->type()) {
+			case 'image':
+				return $this->asset = new Image($props);
+			default:
+				return $this->asset = new File($props);
+		}
+	}
 
-    /**
-     * Checks if the file exists on disk
-     *
-     * @return bool
-     */
-    public function exists(): bool
-    {
-        // Important to include this in the trait
-        // to avoid infinite loops when trying
-        // to proxy the method from the asset object
-        return file_exists($this->root()) === true;
-    }
+	/**
+	 * Checks if the file exists on disk
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool
+	{
+		// Important to include this in the trait
+		// to avoid infinite loops when trying
+		// to proxy the method from the asset object
+		return file_exists($this->root()) === true;
+	}
 
 
-    /**
-     * Returns the app instance
-     *
-     * @return \Kirby\Cms\App
-     */
-    public function kirby()
-    {
-        return App::instance();
-    }
+	/**
+	 * Returns the app instance
+	 *
+	 * @return \Kirby\Cms\App
+	 */
+	public function kirby()
+	{
+		return App::instance();
+	}
 
-    /**
-     * Returns the given file path
-     *
-     * @return string|null
-     */
-    public function root(): ?string
-    {
-        return $this->root;
-    }
+	/**
+	 * Returns the given file path
+	 *
+	 * @return string|null
+	 */
+	public function root(): ?string
+	{
+		return $this->root;
+	}
 
-    /**
-     * Setter for the root
-     *
-     * @param string|null $root
-     * @return $this
-     */
-    protected function setRoot(?string $root = null)
-    {
-        $this->root = $root;
-        return $this;
-    }
+	/**
+	 * Setter for the root
+	 *
+	 * @param string|null $root
+	 * @return $this
+	 */
+	protected function setRoot(?string $root = null)
+	{
+		$this->root = $root;
+		return $this;
+	}
 
-    /**
-     * Setter for the file url
-     *
-     * @param string|null $url
-     * @return $this
-     */
-    protected function setUrl(?string $url = null)
-    {
-        $this->url = $url;
-        return $this;
-    }
+	/**
+	 * Setter for the file url
+	 *
+	 * @param string|null $url
+	 * @return $this
+	 */
+	protected function setUrl(?string $url = null)
+	{
+		$this->url = $url;
+		return $this;
+	}
 
-    /**
-     * Returns the file type
-     *
-     * @return string|null
-     */
-    public function type(): ?string
-    {
-        // Important to include this in the trait
-        // to avoid infinite loops when trying
-        // to proxy the method from the asset object
-        return F::type($this->root() ?? $this->url());
-    }
+	/**
+	 * Returns the file type
+	 *
+	 * @return string|null
+	 */
+	public function type(): ?string
+	{
+		// Important to include this in the trait
+		// to avoid infinite loops when trying
+		// to proxy the method from the asset object
+		return F::type($this->root() ?? $this->url());
+	}
 
-    /**
-     * Returns the absolute url for the file
-     *
-     * @return string|null
-     */
-    public function url(): ?string
-    {
-        return $this->url;
-    }
+	/**
+	 * Returns the absolute url for the file
+	 *
+	 * @return string|null
+	 */
+	public function url(): ?string
+	{
+		return $this->url;
+	}
 }

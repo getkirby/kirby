@@ -1,11 +1,11 @@
 <?php
 
 return [
-    [
-        'content' => [
-            'code' => 'Code',
-            'language' => 'php'
-        ],
-        'type' => 'code',
-    ]
+	[
+		'content' => [
+			'code' => 'Code',
+			'language' => 'php'
+		],
+		'type' => 'code',
+	]
 ];

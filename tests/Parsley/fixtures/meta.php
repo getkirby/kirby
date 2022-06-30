@@ -1,10 +1,10 @@
 <?php
 
 return [
-    [
-        'content' => [
-            'text'  => '<p>Test</p>',
-        ],
-        'type' => 'text',
-    ]
+	[
+		'content' => [
+			'text'  => '<p>Test</p>',
+		],
+		'type' => 'text',
+	]
 ];

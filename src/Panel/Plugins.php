@@ -19,91 +19,91 @@ use Kirby\Toolkit\Str;
  */
 class Plugins
 {
-    /**
-     * Cache of all collected plugin files
-     *
-     * @var array
-     */
-    public $files;
+	/**
+	 * Cache of all collected plugin files
+	 *
+	 * @var array
+	 */
+	public $files;
 
-    /**
-     * Collects and returns the plugin files for all plugins
-     *
-     * @return array
-     */
-    public function files(): array
-    {
-        if ($this->files !== null) {
-            return $this->files;
-        }
+	/**
+	 * Collects and returns the plugin files for all plugins
+	 *
+	 * @return array
+	 */
+	public function files(): array
+	{
+		if ($this->files !== null) {
+			return $this->files;
+		}
 
-        $this->files = [];
+		$this->files = [];
 
-        foreach (App::instance()->plugins() as $plugin) {
-            $this->files[] = $plugin->root() . '/index.css';
-            $this->files[] = $plugin->root() . '/index.js';
-        }
+		foreach (App::instance()->plugins() as $plugin) {
+			$this->files[] = $plugin->root() . '/index.css';
+			$this->files[] = $plugin->root() . '/index.js';
+		}
 
-        return $this->files;
-    }
+		return $this->files;
+	}
 
-    /**
-     * Returns the last modification
-     * of the collected plugin files
-     *
-     * @return int
-     */
-    public function modified(): int
-    {
-        $files    = $this->files();
-        $modified = [0];
+	/**
+	 * Returns the last modification
+	 * of the collected plugin files
+	 *
+	 * @return int
+	 */
+	public function modified(): int
+	{
+		$files    = $this->files();
+		$modified = [0];
 
-        foreach ($files as $file) {
-            $modified[] = F::modified($file);
-        }
+		foreach ($files as $file) {
+			$modified[] = F::modified($file);
+		}
 
-        return max($modified);
-    }
+		return max($modified);
+	}
 
-    /**
-     * Read the files from all plugins and concatenate them
-     *
-     * @param string $type
-     * @return string
-     */
-    public function read(string $type): string
-    {
-        $dist = [];
+	/**
+	 * Read the files from all plugins and concatenate them
+	 *
+	 * @param string $type
+	 * @return string
+	 */
+	public function read(string $type): string
+	{
+		$dist = [];
 
-        foreach ($this->files() as $file) {
-            if (F::extension($file) === $type) {
-                if ($content = F::read($file)) {
-                    if ($type === 'js') {
-                        $content = trim($content);
+		foreach ($this->files() as $file) {
+			if (F::extension($file) === $type) {
+				if ($content = F::read($file)) {
+					if ($type === 'js') {
+						$content = trim($content);
 
-                        // make sure that each plugin is ended correctly
-                        if (Str::endsWith($content, ';') === false) {
-                            $content .= ';';
-                        }
-                    }
+						// make sure that each plugin is ended correctly
+						if (Str::endsWith($content, ';') === false) {
+							$content .= ';';
+						}
+					}
 
-                    $dist[] = $content;
-                }
-            }
-        }
+					$dist[] = $content;
+				}
+			}
+		}
 
-        return implode(PHP_EOL . PHP_EOL, $dist);
-    }
+		return implode(PHP_EOL . PHP_EOL, $dist);
+	}
 
-    /**
-     * Absolute url to the cache file
-     * This is used by the panel to link the plugins
-     *
-     * @param string $type
-     * @return string
-     */
-    public function url(string $type): string
-    {
-        return App::instance()->url('media') . '/plugins/index.' . $type . '?' . $this->modified();
-    }
+	/**
+	 * Absolute url to the cache file
+	 * This is used by the panel to link the plugins
+	 *
+	 * @param string $type
+	 * @return string
+	 */
+	public function url(string $type): string
+	{
+		return App::instance()->url('media') . '/plugins/index.' . $type . '?' . $this->modified();
+	}
 }

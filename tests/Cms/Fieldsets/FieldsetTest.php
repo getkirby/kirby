@@ -9,355 +9,355 @@ use PHPUnit\Framework\TestCase;
  */
 class FieldsetTest extends TestCase
 {
-    public function testConstruct()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test'
-        ]);
+	public function testConstruct()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test'
+		]);
 
-        $this->assertSame('test', $fieldset->type());
-        $this->assertSame('Test', $fieldset->name());
-        $this->assertFalse($fieldset->disabled());
-        $this->assertFalse($fieldset->editable());
-        $this->assertNull($fieldset->icon());
-        $this->assertTrue($fieldset->translate());
-    }
+		$this->assertSame('test', $fieldset->type());
+		$this->assertSame('Test', $fieldset->name());
+		$this->assertFalse($fieldset->disabled());
+		$this->assertFalse($fieldset->editable());
+		$this->assertNull($fieldset->icon());
+		$this->assertTrue($fieldset->translate());
+	}
 
-    public function testConstructWithMissingType()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The fieldset type is missing');
-        $fieldset = new Fieldset();
-    }
+	public function testConstructWithMissingType()
+	{
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The fieldset type is missing');
+		$fieldset = new Fieldset();
+	}
 
-    /**
-     * @covers ::disabled
-     */
-    public function testDisabled()
-    {
-        $fieldset = new Fieldset([
-            'type'     => 'test',
-            'disabled' => true
-        ]);
+	/**
+	 * @covers ::disabled
+	 */
+	public function testDisabled()
+	{
+		$fieldset = new Fieldset([
+			'type'     => 'test',
+			'disabled' => true
+		]);
 
-        $this->assertTrue($fieldset->disabled());
-    }
+		$this->assertTrue($fieldset->disabled());
+	}
 
-    /**
-     * @covers ::editable
-     */
-    public function testEditable()
-    {
-        $fieldset = new Fieldset([
-            'type'   => 'test',
-            'fields' => [
-                'text' => [
-                    'type' => 'text'
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::editable
+	 */
+	public function testEditable()
+	{
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
 
-        $this->assertTrue($fieldset->editable());
-    }
+		$this->assertTrue($fieldset->editable());
+	}
 
-    /**
-     * @covers ::editable
-     */
-    public function testEditableWhenDisabled()
-    {
-        $fieldset = new Fieldset([
-            'type'     => 'test',
-            'editable' => false,
-            'fields'   => [
-                'text' => [
-                    'type' => 'text'
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::editable
+	 */
+	public function testEditableWhenDisabled()
+	{
+		$fieldset = new Fieldset([
+			'type'     => 'test',
+			'editable' => false,
+			'fields'   => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
 
-        $this->assertFalse($fieldset->editable());
-    }
+		$this->assertFalse($fieldset->editable());
+	}
 
-    /**
-     * @covers ::fields
-     */
-    public function testFields()
-    {
-        $fieldset = new Fieldset([
-            'type'   => 'test',
-            'fields' => [
-                'text' => [
-                    'type' => 'text'
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::fields
+	 */
+	public function testFields()
+	{
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
 
-        $this->assertSame('text', $fieldset->fields()['text']['type']);
-    }
+		$this->assertSame('text', $fieldset->fields()['text']['type']);
+	}
 
-    /**
-     * @covers ::fields
-     */
-    public function testFieldsInTabs()
-    {
-        $fieldset = new Fieldset([
-            'type'   => 'test',
-            'tabs' => [
-                'content' => [
-                    'fields' => [
-                        'text' => [
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::fields
+	 */
+	public function testFieldsInTabs()
+	{
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'tabs' => [
+				'content' => [
+					'fields' => [
+						'text' => [
+							'type' => 'text'
+						]
+					]
+				]
+			]
+		]);
 
-        $this->assertSame('text', $fieldset->fields()['text']['type']);
-    }
+		$this->assertSame('text', $fieldset->fields()['text']['type']);
+	}
 
-    /**
-     * @covers ::form
-     */
-    public function testForm()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test',
-        ]);
+	/**
+	 * @covers ::form
+	 */
+	public function testForm()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+		]);
 
-        $form = $fieldset->form([
-            'text' => [
-                'type' => 'text'
-            ]
-        ]);
+		$form = $fieldset->form([
+			'text' => [
+				'type' => 'text'
+			]
+		]);
 
-        $this->assertInstanceOf('\Kirby\Cms\Form', $form);
-    }
+		$this->assertInstanceOf('\Kirby\Cms\Form', $form);
+	}
 
-    /**
-     * @covers ::icon
-     */
-    public function testIcon()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test',
-            'icon' => 'test'
-        ]);
+	/**
+	 * @covers ::icon
+	 */
+	public function testIcon()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'icon' => 'test'
+		]);
 
-        $this->assertSame('test', $fieldset->icon());
-    }
+		$this->assertSame('test', $fieldset->icon());
+	}
 
-    /**
-     * @covers ::label
-     */
-    public function testLabel()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'label' => 'Test'
-        ]);
+	/**
+	 * @covers ::label
+	 */
+	public function testLabel()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'label' => 'Test'
+		]);
 
-        $this->assertSame('Test', $fieldset->label());
-    }
+		$this->assertSame('Test', $fieldset->label());
+	}
 
-    /**
-     * @covers ::label
-     */
-    public function testLabelWithTranslation()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'label' => [
-                'en' => 'English',
-                'de' => 'Deutsch'
-            ]
-        ]);
+	/**
+	 * @covers ::label
+	 */
+	public function testLabelWithTranslation()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'label' => [
+				'en' => 'English',
+				'de' => 'Deutsch'
+			]
+		]);
 
-        $this->assertSame('English', $fieldset->label());
-    }
+		$this->assertSame('English', $fieldset->label());
+	}
 
-    /**
-     * @covers ::model
-     */
-    public function testModel()
-    {
-        $fieldset = new Fieldset([
-            'type'   => 'test',
-            'parent' => $model = new Page(['slug' => 'test'])
-        ]);
+	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'parent' => $model = new Page(['slug' => 'test'])
+		]);
 
-        $this->assertSame($model, $fieldset->model());
-    }
+		$this->assertSame($model, $fieldset->model());
+	}
 
-    /**
-     * @covers ::name
-     */
-    public function testName()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'name'  => 'test'
-        ]);
+	/**
+	 * @covers ::name
+	 */
+	public function testName()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'name'  => 'test'
+		]);
 
-        $this->assertSame('test', $fieldset->name());
-    }
+		$this->assertSame('test', $fieldset->name());
+	}
 
-    /**
-     * @covers ::name
-     */
-    public function testNameTranslated()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'name'  => [
-                'en' => 'English name',
-                'de' => 'Deutscher Name',
-            ]
-        ]);
+	/**
+	 * @covers ::name
+	 */
+	public function testNameTranslated()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'name'  => [
+				'en' => 'English name',
+				'de' => 'Deutscher Name',
+			]
+		]);
 
-        $this->assertSame('English name', $fieldset->name());
-    }
+		$this->assertSame('English name', $fieldset->name());
+	}
 
-    /**
-     * @covers ::name
-     */
-    public function testNameFromTitle()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'title' => 'Test Title'
-        ]);
+	/**
+	 * @covers ::name
+	 */
+	public function testNameFromTitle()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'title' => 'Test Title'
+		]);
 
-        $this->assertSame('Test Title', $fieldset->name());
-    }
+		$this->assertSame('Test Title', $fieldset->name());
+	}
 
-    /**
-     * @covers ::name
-     */
-    public function testNameFromTitleTranslated()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'title' => [
-                'en' => 'English name',
-                'de' => 'Deutscher Name',
-            ]
-        ]);
+	/**
+	 * @covers ::name
+	 */
+	public function testNameFromTitleTranslated()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'title' => [
+				'en' => 'English name',
+				'de' => 'Deutscher Name',
+			]
+		]);
 
-        $this->assertSame('English name', $fieldset->name());
-    }
+		$this->assertSame('English name', $fieldset->name());
+	}
 
-    /**
-     * @covers ::preview
-     */
-    public function testPreview()
-    {
-        $fieldset = new Fieldset([
-            'type'    => 'test',
-            'preview' => 'test'
-        ]);
+	/**
+	 * @covers ::preview
+	 */
+	public function testPreview()
+	{
+		$fieldset = new Fieldset([
+			'type'    => 'test',
+			'preview' => 'test'
+		]);
 
-        $this->assertSame('test', $fieldset->preview());
-    }
+		$this->assertSame('test', $fieldset->preview());
+	}
 
-    /**
-     * @covers ::tabs
-     */
-    public function testTabs()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test',
-            'fields' => [
-                'foo' => ['type' => 'text'],
-                'bar' => ['type' => 'text']
-            ]
-        ]);
+	/**
+	 * @covers ::tabs
+	 */
+	public function testTabs()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'fields' => [
+				'foo' => ['type' => 'text'],
+				'bar' => ['type' => 'text']
+			]
+		]);
 
-        $this->assertIsArray($fieldset->tabs());
-        $this->assertArrayHasKey('content', $fieldset->tabs());
-        $this->assertArrayHasKey('fields', $fieldset->tabs()['content']);
-        $this->assertIsArray($fieldset->tabs()['content']['fields']);
-        $this->assertCount(2, $fieldset->tabs()['content']['fields']);
-    }
+		$this->assertIsArray($fieldset->tabs());
+		$this->assertArrayHasKey('content', $fieldset->tabs());
+		$this->assertArrayHasKey('fields', $fieldset->tabs()['content']);
+		$this->assertIsArray($fieldset->tabs()['content']['fields']);
+		$this->assertCount(2, $fieldset->tabs()['content']['fields']);
+	}
 
-    /**
-     * @covers ::translate
-     */
-    public function testTranslate()
-    {
-        $fieldset = new Fieldset([
-            'type'      => 'test',
-            'translate' => false
-        ]);
+	/**
+	 * @covers ::translate
+	 */
+	public function testTranslate()
+	{
+		$fieldset = new Fieldset([
+			'type'      => 'test',
+			'translate' => false
+		]);
 
-        $this->assertFalse($fieldset->translate());
-    }
+		$this->assertFalse($fieldset->translate());
+	}
 
-    /**
-     * @covers ::type
-     */
-    public function testType()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test',
-        ]);
+	/**
+	 * @covers ::type
+	 */
+	public function testType()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+		]);
 
-        $this->assertSame('test', $fieldset->type());
-    }
+		$this->assertSame('test', $fieldset->type());
+	}
 
-    /**
-     * @covers ::toArray
-     */
-    public function testToArray()
-    {
-        $fieldset = new Fieldset([
-            'type' => 'test',
-        ]);
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray()
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+		]);
 
-        $expected = [
-            'disabled'  => false,
-            'editable'  => false,
-            'icon'      => null,
-            'label'     => null,
-            'name'      => 'Test',
-            'preview'   => null,
-            'tabs'      => [
-                'content' => [
-                    'fields' => []
-                ]
-            ],
-            'translate' => true,
-            'type'      => 'test',
-            'unset'     => false,
-            'wysiwyg'   => false,
-        ];
+		$expected = [
+			'disabled'  => false,
+			'editable'  => false,
+			'icon'      => null,
+			'label'     => null,
+			'name'      => 'Test',
+			'preview'   => null,
+			'tabs'      => [
+				'content' => [
+					'fields' => []
+				]
+			],
+			'translate' => true,
+			'type'      => 'test',
+			'unset'     => false,
+			'wysiwyg'   => false,
+		];
 
-        $this->assertSame($expected, $fieldset->toArray());
-    }
+		$this->assertSame($expected, $fieldset->toArray());
+	}
 
-    /**
-     * @covers ::unset
-     */
-    public function testUnset()
-    {
-        $fieldset = new Fieldset([
-            'type'  => 'test',
-            'unset' => true
-        ]);
+	/**
+	 * @covers ::unset
+	 */
+	public function testUnset()
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'unset' => true
+		]);
 
-        $this->assertTrue($fieldset->unset());
-    }
+		$this->assertTrue($fieldset->unset());
+	}
 
-    /**
-     * @covers ::wysiwyg
-     */
-    public function testWysiwyg()
-    {
-        $fieldset = new Fieldset([
-            'type'    => 'test',
-            'wysiwyg' => true
-        ]);
+	/**
+	 * @covers ::wysiwyg
+	 */
+	public function testWysiwyg()
+	{
+		$fieldset = new Fieldset([
+			'type'    => 'test',
+			'wysiwyg' => true
+		]);
 
-        $this->assertTrue($fieldset->wysiwyg());
-    }
+		$this->assertTrue($fieldset->wysiwyg());
+	}
 }

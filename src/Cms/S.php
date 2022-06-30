@@ -15,11 +15,11 @@ use Kirby\Toolkit\Facade;
  */
 class S extends Facade
 {
-    /**
-     * @return \Kirby\Session\Session
-     */
-    public static function instance()
-    {
-        return App::instance()->session();
-    }
+	/**
+	 * @return \Kirby\Session\Session
+	 */
+	public static function instance()
+	{
+		return App::instance()->session();
+	}
 }

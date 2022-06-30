@@ -13,81 +13,81 @@ namespace Kirby\Image;
  */
 class Camera
 {
-    /**
-     * Make exif data
-     *
-     * @var string|null
-     */
-    protected $make;
+	/**
+	 * Make exif data
+	 *
+	 * @var string|null
+	 */
+	protected $make;
 
-    /**
-     * Model exif data
-     *
-     * @var string|null
-     */
-    protected $model;
+	/**
+	 * Model exif data
+	 *
+	 * @var string|null
+	 */
+	protected $model;
 
-    /**
-     * Constructor
-     *
-     * @param array $exif
-     */
-    public function __construct(array $exif)
-    {
-        $this->make  = $exif['Make'] ?? null;
-        $this->model = $exif['Model'] ?? null;
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param array $exif
+	 */
+	public function __construct(array $exif)
+	{
+		$this->make  = $exif['Make'] ?? null;
+		$this->model = $exif['Model'] ?? null;
+	}
 
-    /**
-     * Returns the make of the camera
-     *
-     * @return string
-     */
-    public function make(): ?string
-    {
-        return $this->make;
-    }
+	/**
+	 * Returns the make of the camera
+	 *
+	 * @return string
+	 */
+	public function make(): ?string
+	{
+		return $this->make;
+	}
 
-    /**
-     * Returns the camera model
-     *
-     * @return string
-     */
-    public function model(): ?string
-    {
-        return $this->model;
-    }
+	/**
+	 * Returns the camera model
+	 *
+	 * @return string
+	 */
+	public function model(): ?string
+	{
+		return $this->model;
+	}
 
-    /**
-     * Converts the object into a nicely readable array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'make'  => $this->make,
-            'model' => $this->model
-        ];
-    }
+	/**
+	 * Converts the object into a nicely readable array
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'make'  => $this->make,
+			'model' => $this->model
+		];
+	}
 
-    /**
-     * Returns the full make + model name
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return trim($this->make . ' ' . $this->model);
-    }
+	/**
+	 * Returns the full make + model name
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return trim($this->make . ' ' . $this->model);
+	}
 
-    /**
-     * Improved `var_dump` output
-     *
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return $this->toArray();
-    }
+	/**
+	 * Improved `var_dump` output
+	 *
+	 * @return array
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
 }
