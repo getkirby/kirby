@@ -4,56 +4,56 @@ use Kirby\Toolkit\I18n;
 
 return function (array $props) {
 
-    // load the general templates setting for all sections
-    $templates = $props['templates'] ?? null;
+	// load the general templates setting for all sections
+	$templates = $props['templates'] ?? null;
 
-    $section = function ($headline, $status, $props) use ($templates) {
-        $defaults = [
-            'headline' => $headline,
-            'type'     => 'pages',
-            'layout'   => 'list',
-            'status'   => $status
-        ];
+	$section = function ($headline, $status, $props) use ($templates) {
+		$defaults = [
+			'headline' => $headline,
+			'type'     => 'pages',
+			'layout'   => 'list',
+			'status'   => $status
+		];
 
-        if ($props === true) {
-            $props = [];
-        }
+		if ($props === true) {
+			$props = [];
+		}
 
-        if (is_string($props) === true) {
-            $props = [
-                'headline' => $props
-            ];
-        }
+		if (is_string($props) === true) {
+			$props = [
+				'headline' => $props
+			];
+		}
 
-        // inject the global templates definition
-        if (empty($templates) === false) {
-            $props['templates'] = $props['templates'] ?? $templates;
-        }
+		// inject the global templates definition
+		if (empty($templates) === false) {
+			$props['templates'] = $props['templates'] ?? $templates;
+		}
 
-        return array_replace_recursive($defaults, $props);
-    };
+		return array_replace_recursive($defaults, $props);
+	};
 
-    $sections = [];
+	$sections = [];
 
-    $drafts   = $props['drafts']   ?? [];
-    $unlisted = $props['unlisted'] ?? false;
-    $listed   = $props['listed']   ?? [];
+	$drafts   = $props['drafts']   ?? [];
+	$unlisted = $props['unlisted'] ?? false;
+	$listed   = $props['listed']   ?? [];
 
 
-    if ($drafts !== false) {
-        $sections['drafts'] = $section(I18n::translate('pages.status.draft'), 'drafts', $drafts);
-    }
+	if ($drafts !== false) {
+		$sections['drafts'] = $section(I18n::translate('pages.status.draft'), 'drafts', $drafts);
+	}
 
-    if ($unlisted !== false) {
-        $sections['unlisted'] = $section(I18n::translate('pages.status.unlisted'), 'unlisted', $unlisted);
-    }
+	if ($unlisted !== false) {
+		$sections['unlisted'] = $section(I18n::translate('pages.status.unlisted'), 'unlisted', $unlisted);
+	}
 
-    if ($listed !== false) {
-        $sections['listed'] = $section(I18n::translate('pages.status.listed'), 'listed', $listed);
-    }
+	if ($listed !== false) {
+		$sections['listed'] = $section(I18n::translate('pages.status.listed'), 'listed', $listed);
+	}
 
-    // cleaning up
-    unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
+	// cleaning up
+	unset($props['drafts'], $props['unlisted'], $props['listed'], $props['templates']);
 
-    return array_merge($props, ['sections' => $sections]);
+	return array_merge($props, ['sections' => $sections]);
 };

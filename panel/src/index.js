@@ -43,11 +43,11 @@ Vue.use(Portal);
 Vue.use(Vuelidate);
 
 new Vue({
-  store,
-  created() {
-    window.panel.$vue = window.panel.app = this;
-    window.panel.plugins.created.forEach((plugin) => plugin(this));
-    this.$store.dispatch("content/init");
-  },
-  render: (h) => h(App)
+	store,
+	created() {
+		window.panel.$vue = window.panel.app = this;
+		window.panel.plugins.created.forEach((plugin) => plugin(this));
+		this.$store.dispatch("content/init");
+	},
+	render: (h) => h(App)
 }).$mount("#app");

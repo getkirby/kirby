@@ -24,16 +24,16 @@ Vue.component("k-block-type", BlockType);
 const components = import.meta.globEager("./Types/*.vue");
 
 Object.keys(components).map((key) => {
-  // get name and type by filename
-  const name = key.match(/\/([a-zA-Z]*)\.vue/)[1];
-  const type = name.toLowerCase();
+	// get name and type by filename
+	const name = key.match(/\/([a-zA-Z]*)\.vue/)[1];
+	const type = name.toLowerCase();
 
-  // load the component
-  let component = components[key].default;
+	// load the component
+	let component = components[key].default;
 
-  // extend the component with the block abstract
-  component.extends = BlockType;
+	// extend the component with the block abstract
+	component.extends = BlockType;
 
-  // globally define the block type component
-  Vue.component("k-block-type-" + type, component);
+	// globally define the block type component
+	Vue.component("k-block-type-" + type, component);
 });

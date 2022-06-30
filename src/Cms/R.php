@@ -15,11 +15,11 @@ use Kirby\Toolkit\Facade;
  */
 class R extends Facade
 {
-    /**
-     * @return \Kirby\Http\Request
-     */
-    public static function instance()
-    {
-        return App::instance()->request();
-    }
+	/**
+	 * @return \Kirby\Http\Request
+	 */
+	public static function instance()
+	{
+		return App::instance()->request();
+	}
 }

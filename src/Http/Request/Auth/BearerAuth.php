@@ -15,23 +15,23 @@ use Kirby\Http\Request\Auth;
  */
 class BearerAuth extends Auth
 {
-    /**
-     * Returns the authentication token
-     *
-     * @return string
-     */
-    public function token(): string
-    {
-        return $this->data;
-    }
+	/**
+	 * Returns the authentication token
+	 *
+	 * @return string
+	 */
+	public function token(): string
+	{
+		return $this->data;
+	}
 
-    /**
-     * Returns the auth type
-     *
-     * @return string
-     */
-    public function type(): string
-    {
-        return 'bearer';
-    }
+	/**
+	 * Returns the auth type
+	 *
+	 * @return string
+	 */
+	public function type(): string
+	{
+		return 'bearer';
+	}
 }

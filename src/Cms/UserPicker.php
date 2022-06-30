@@ -17,53 +17,53 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class UserPicker extends Picker
 {
-    /**
-     * Extends the basic defaults
-     *
-     * @return array
-     */
-    public function defaults(): array
-    {
-        $defaults = parent::defaults();
-        $defaults['text'] = '{{ user.username }}';
+	/**
+	 * Extends the basic defaults
+	 *
+	 * @return array
+	 */
+	public function defaults(): array
+	{
+		$defaults = parent::defaults();
+		$defaults['text'] = '{{ user.username }}';
 
-        return $defaults;
-    }
+		return $defaults;
+	}
 
-    /**
-     * Search all users for the picker
-     *
-     * @return \Kirby\Cms\Users|null
-     * @throws \Kirby\Exception\InvalidArgumentException
-     */
-    public function items()
-    {
-        $model = $this->options['model'];
+	/**
+	 * Search all users for the picker
+	 *
+	 * @return \Kirby\Cms\Users|null
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function items()
+	{
+		$model = $this->options['model'];
 
-        // find the right default query
-        if (empty($this->options['query']) === false) {
-            $query = $this->options['query'];
-        } elseif (is_a($model, 'Kirby\Cms\User') === true) {
-            $query = 'user.siblings';
-        } else {
-            $query = 'kirby.users';
-        }
+		// find the right default query
+		if (empty($this->options['query']) === false) {
+			$query = $this->options['query'];
+		} elseif (is_a($model, 'Kirby\Cms\User') === true) {
+			$query = 'user.siblings';
+		} else {
+			$query = 'kirby.users';
+		}
 
-        // fetch all users for the picker
-        $users = $model->query($query);
+		// fetch all users for the picker
+		$users = $model->query($query);
 
-        // catch invalid data
-        if (is_a($users, 'Kirby\Cms\Users') === false) {
-            throw new InvalidArgumentException('Your query must return a set of users');
-        }
+		// catch invalid data
+		if (is_a($users, 'Kirby\Cms\Users') === false) {
+			throw new InvalidArgumentException('Your query must return a set of users');
+		}
 
-        // search
-        $users = $this->search($users);
+		// search
+		$users = $this->search($users);
 
-        // sort
-        $users = $users->sort('username', 'asc');
+		// sort
+		$users = $users->sort('username', 'asc');
 
-        // paginate
-        return $this->paginate($users);
-    }
+		// paginate
+		return $this->paginate($users);
+	}
 }

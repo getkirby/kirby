@@ -10,42 +10,42 @@ import translations from "./translations.js";
 import users from "./users.js";
 
 export default (extensions = {}) => {
-  const defaults = {
-    endpoint: "/api",
-    methodOverwrite: true,
-    onPrepare(options) {
-      return options;
-    },
-    onStart() {},
-    onComplete() {},
-    onSuccess() {},
-    onParserError() {},
-    onError(error) {
-      window.console.log(error.message);
-      throw error;
-    }
-  };
+	const defaults = {
+		endpoint: "/api",
+		methodOverwrite: true,
+		onPrepare(options) {
+			return options;
+		},
+		onStart() {},
+		onComplete() {},
+		onSuccess() {},
+		onParserError() {},
+		onError(error) {
+			window.console.log(error.message);
+			throw error;
+		}
+	};
 
-  const config = {
-    ...defaults,
-    ...(extensions.config || {})
-  };
+	const config = {
+		...defaults,
+		...(extensions.config || {})
+	};
 
-  let api = {
-    ...config,
-    ...request(config),
-    ...extensions
-  };
+	let api = {
+		...config,
+		...request(config),
+		...extensions
+	};
 
-  api.auth = auth(api);
-  api.files = files(api);
-  api.languages = languages(api);
-  api.pages = pages(api);
-  api.roles = roles(api);
-  api.system = system(api);
-  api.site = site(api);
-  api.translations = translations(api);
-  api.users = users(api);
+	api.auth = auth(api);
+	api.files = files(api);
+	api.languages = languages(api);
+	api.pages = pages(api);
+	api.roles = roles(api);
+	api.system = system(api);
+	api.site = site(api);
+	api.translations = translations(api);
+	api.users = users(api);
 
-  return api;
+	return api;
 };

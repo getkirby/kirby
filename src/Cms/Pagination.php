@@ -22,158 +22,158 @@ use Kirby\Toolkit\Pagination as BasePagination;
  */
 class Pagination extends BasePagination
 {
-    /**
-     * Pagination method (param, query, none)
-     *
-     * @var string
-     */
-    protected $method;
+	/**
+	 * Pagination method (param, query, none)
+	 *
+	 * @var string
+	 */
+	protected $method;
 
-    /**
-     * The base URL
-     *
-     * @var string
-     */
-    protected $url;
+	/**
+	 * The base URL
+	 *
+	 * @var string
+	 */
+	protected $url;
 
-    /**
-     * Variable name for query strings
-     *
-     * @var string
-     */
-    protected $variable;
+	/**
+	 * Variable name for query strings
+	 *
+	 * @var string
+	 */
+	protected $variable;
 
-    /**
-     * Creates the pagination object. As a new
-     * property you can now pass the base Url.
-     * That Url must be the Url of the first
-     * page of the collection without additional
-     * pagination information/query parameters in it.
-     *
-     * ```php
-     * $pagination = new Pagination([
-     *     'page'     => 1,
-     *     'limit'    => 10,
-     *     'total'    => 120,
-     *     'method'   => 'query',
-     *     'variable' => 'p',
-     *     'url'      => new Uri('https://getkirby.com/blog')
-     * ]);
-     * ```
-     *
-     * @param array $params
-     */
-    public function __construct(array $params = [])
-    {
-        $kirby   = App::instance();
-        $config  = $kirby->option('pagination', []);
-        $request = $kirby->request();
+	/**
+	 * Creates the pagination object. As a new
+	 * property you can now pass the base Url.
+	 * That Url must be the Url of the first
+	 * page of the collection without additional
+	 * pagination information/query parameters in it.
+	 *
+	 * ```php
+	 * $pagination = new Pagination([
+	 *     'page'     => 1,
+	 *     'limit'    => 10,
+	 *     'total'    => 120,
+	 *     'method'   => 'query',
+	 *     'variable' => 'p',
+	 *     'url'      => new Uri('https://getkirby.com/blog')
+	 * ]);
+	 * ```
+	 *
+	 * @param array $params
+	 */
+	public function __construct(array $params = [])
+	{
+		$kirby   = App::instance();
+		$config  = $kirby->option('pagination', []);
+		$request = $kirby->request();
 
-        $params['limit']    ??= $config['limit']    ?? 20;
-        $params['method']   ??= $config['method']   ?? 'param';
-        $params['variable'] ??= $config['variable'] ?? 'page';
+		$params['limit']    ??= $config['limit']    ?? 20;
+		$params['method']   ??= $config['method']   ?? 'param';
+		$params['variable'] ??= $config['variable'] ?? 'page';
 
-        if (empty($params['url']) === true) {
-            $params['url'] = new Uri($kirby->url('current'), [
-                'params' => $request->params(),
-                'query'  => $request->query()->toArray(),
-            ]);
-        }
+		if (empty($params['url']) === true) {
+			$params['url'] = new Uri($kirby->url('current'), [
+				'params' => $request->params(),
+				'query'  => $request->query()->toArray(),
+			]);
+		}
 
-        if ($params['method'] === 'query') {
-            $params['page'] ??= $params['url']->query()->get($params['variable']);
-        } elseif ($params['method'] === 'param') {
-            $params['page'] ??= $params['url']->params()->get($params['variable']);
-        }
+		if ($params['method'] === 'query') {
+			$params['page'] ??= $params['url']->query()->get($params['variable']);
+		} elseif ($params['method'] === 'param') {
+			$params['page'] ??= $params['url']->params()->get($params['variable']);
+		}
 
-        parent::__construct($params);
+		parent::__construct($params);
 
-        $this->method   = $params['method'];
-        $this->url      = $params['url'];
-        $this->variable = $params['variable'];
-    }
+		$this->method   = $params['method'];
+		$this->url      = $params['url'];
+		$this->variable = $params['variable'];
+	}
 
-    /**
-     * Returns the Url for the first page
-     *
-     * @return string|null
-     */
-    public function firstPageUrl(): ?string
-    {
-        return $this->pageUrl(1);
-    }
+	/**
+	 * Returns the Url for the first page
+	 *
+	 * @return string|null
+	 */
+	public function firstPageUrl(): ?string
+	{
+		return $this->pageUrl(1);
+	}
 
-    /**
-     * Returns the Url for the last page
-     *
-     * @return string|null
-     */
-    public function lastPageUrl(): ?string
-    {
-        return $this->pageUrl($this->lastPage());
-    }
+	/**
+	 * Returns the Url for the last page
+	 *
+	 * @return string|null
+	 */
+	public function lastPageUrl(): ?string
+	{
+		return $this->pageUrl($this->lastPage());
+	}
 
-    /**
-     * Returns the Url for the next page.
-     * Returns null if there's no next page.
-     *
-     * @return string|null
-     */
-    public function nextPageUrl(): ?string
-    {
-        if ($page = $this->nextPage()) {
-            return $this->pageUrl($page);
-        }
+	/**
+	 * Returns the Url for the next page.
+	 * Returns null if there's no next page.
+	 *
+	 * @return string|null
+	 */
+	public function nextPageUrl(): ?string
+	{
+		if ($page = $this->nextPage()) {
+			return $this->pageUrl($page);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Returns the URL of the current page.
-     * If the `$page` variable is set, the URL
-     * for that page will be returned.
-     *
-     * @param int|null $page
-     * @return string|null
-     */
-    public function pageUrl(int $page = null): ?string
-    {
-        if ($page === null) {
-            return $this->pageUrl($this->page());
-        }
+	/**
+	 * Returns the URL of the current page.
+	 * If the `$page` variable is set, the URL
+	 * for that page will be returned.
+	 *
+	 * @param int|null $page
+	 * @return string|null
+	 */
+	public function pageUrl(int $page = null): ?string
+	{
+		if ($page === null) {
+			return $this->pageUrl($this->page());
+		}
 
-        $url      = clone $this->url;
-        $variable = $this->variable;
+		$url      = clone $this->url;
+		$variable = $this->variable;
 
-        if ($this->hasPage($page) === false) {
-            return null;
-        }
+		if ($this->hasPage($page) === false) {
+			return null;
+		}
 
-        $pageValue = $page === 1 ? null : $page;
+		$pageValue = $page === 1 ? null : $page;
 
-        if ($this->method === 'query') {
-            $url->query->$variable = $pageValue;
-        } elseif ($this->method === 'param') {
-            $url->params->$variable = $pageValue;
-        } else {
-            return null;
-        }
+		if ($this->method === 'query') {
+			$url->query->$variable = $pageValue;
+		} elseif ($this->method === 'param') {
+			$url->params->$variable = $pageValue;
+		} else {
+			return null;
+		}
 
-        return $url->toString();
-    }
+		return $url->toString();
+	}
 
-    /**
-     * Returns the Url for the previous page.
-     * Returns null if there's no previous page.
-     *
-     * @return string|null
-     */
-    public function prevPageUrl(): ?string
-    {
-        if ($page = $this->prevPage()) {
-            return $this->pageUrl($page);
-        }
+	/**
+	 * Returns the Url for the previous page.
+	 * Returns null if there's no previous page.
+	 *
+	 * @return string|null
+	 */
+	public function prevPageUrl(): ?string
+	{
+		if ($page = $this->prevPage()) {
+			return $this->pageUrl($page);
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

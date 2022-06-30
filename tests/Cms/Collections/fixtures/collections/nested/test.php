@@ -2,5 +2,5 @@
 
 
 return function () {
-    return 'a';
+	return 'a';
 };

@@ -18,21 +18,21 @@ use Kirby\Toolkit\Facade;
  */
 class Server extends Facade
 {
-    public const HOST_FROM_SERVER = 1;
-    public const HOST_FROM_HEADER = 2;
-    public const HOST_ALLOW_EMPTY = 4;
+	public const HOST_FROM_SERVER = 1;
+	public const HOST_FROM_HEADER = 2;
+	public const HOST_ALLOW_EMPTY = 4;
 
-    public static $cli;
-    public static $hosts;
+	public static $cli;
+	public static $hosts;
 
-    /**
-     * @return \Kirby\Http\Environment
-     */
-    public static function instance()
-    {
-        return new Environment([
-            'cli'     => static::$cli,
-            'allowed' => static::$hosts
-        ]);
-    }
+	/**
+	 * @return \Kirby\Http\Environment
+	 */
+	public static function instance()
+	{
+		return new Environment([
+			'cli'     => static::$cli,
+			'allowed' => static::$hosts
+		]);
+	}
 }

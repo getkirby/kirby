@@ -11,16 +11,16 @@ use Exception;
  */
 function time(): int
 {
-    if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-        throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
-    }
+	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
+		throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
+	}
 
-    return MockTime::$time;
+	return MockTime::$time;
 }
 
 class MockTime
 {
-    public static $time = 1337000000;
+	public static $time = 1337000000;
 }
 
 /**
@@ -32,9 +32,9 @@ class MockTime
  */
 function usleep(int $microSeconds): void
 {
-    if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-        throw new Exception('Mock usleep() function was loaded outside of the test environment. This should never happen.');
-    }
+	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
+		throw new Exception('Mock usleep() function was loaded outside of the test environment. This should never happen.');
+	}
 
-    // do nothing
+	// do nothing
 }

@@ -9,10 +9,10 @@ $ratio   = $block->ratio()->or('auto');
 $src     = null;
 
 if ($block->location() == 'web') {
-    $src = $block->src()->esc();
+	$src = $block->src()->esc();
 } elseif ($image = $block->image()->toFile()) {
-    $alt = $alt ?? $image->alt();
-    $src = $image->url();
+	$alt = $alt ?? $image->alt();
+	$src = $image->url();
 }
 
 ?>

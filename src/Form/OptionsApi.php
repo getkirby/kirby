@@ -23,220 +23,220 @@ use Kirby\Toolkit\Str;
  */
 class OptionsApi
 {
-    use Properties;
+	use Properties;
 
-    /**
-     * @var array
-     */
-    protected $data;
+	/**
+	 * @var array
+	 */
+	protected $data;
 
-    /**
-     * @var string|null
-     */
-    protected $fetch;
+	/**
+	 * @var string|null
+	 */
+	protected $fetch;
 
-    /**
-     * @var array|string|null
-     */
-    protected $options;
+	/**
+	 * @var array|string|null
+	 */
+	protected $options;
 
-    /**
-     * @var string
-     */
-    protected $text = '{{ item.value }}';
+	/**
+	 * @var string
+	 */
+	protected $text = '{{ item.value }}';
 
-    /**
-     * @var string
-     */
-    protected $url;
+	/**
+	 * @var string
+	 */
+	protected $url;
 
-    /**
-     * @var string
-     */
-    protected $value = '{{ item.key }}';
+	/**
+	 * @var string
+	 */
+	protected $value = '{{ item.key }}';
 
-    /**
-     * OptionsApi constructor
-     *
-     * @param array $props
-     */
-    public function __construct(array $props)
-    {
-        $this->setProperties($props);
-    }
+	/**
+	 * OptionsApi constructor
+	 *
+	 * @param array $props
+	 */
+	public function __construct(array $props)
+	{
+		$this->setProperties($props);
+	}
 
-    /**
-     * @return array
-     */
-    public function data(): array
-    {
-        return $this->data;
-    }
+	/**
+	 * @return array
+	 */
+	public function data(): array
+	{
+		return $this->data;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function fetch()
-    {
-        return $this->fetch;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function fetch()
+	{
+		return $this->fetch;
+	}
 
-    /**
-     * @param string $field
-     * @param array $data
-     * @return string
-     */
-    protected function field(string $field, array $data): string
-    {
-        $value = $this->$field();
-        return Str::safeTemplate($value, $data);
-    }
+	/**
+	 * @param string $field
+	 * @param array $data
+	 * @return string
+	 */
+	protected function field(string $field, array $data): string
+	{
+		$value = $this->$field();
+		return Str::safeTemplate($value, $data);
+	}
 
-    /**
-     * @return array
-     * @throws \Exception
-     * @throws \Kirby\Exception\InvalidArgumentException
-     */
-    public function options(): array
-    {
-        if (is_array($this->options) === true) {
-            return $this->options;
-        }
+	/**
+	 * @return array
+	 * @throws \Exception
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function options(): array
+	{
+		if (is_array($this->options) === true) {
+			return $this->options;
+		}
 
-        if (Url::isAbsolute($this->url()) === true) {
-            // URL, request via cURL
-            $data = Remote::get($this->url())->json();
-        } else {
-            // local file, get contents locally
+		if (Url::isAbsolute($this->url()) === true) {
+			// URL, request via cURL
+			$data = Remote::get($this->url())->json();
+		} else {
+			// local file, get contents locally
 
-            // ensure the file exists before trying to load it as the
-            // file_get_contents() warnings need to be suppressed
-            if (is_file($this->url()) !== true) {
-                throw new Exception('Local file ' . $this->url() . ' was not found');
-            }
+			// ensure the file exists before trying to load it as the
+			// file_get_contents() warnings need to be suppressed
+			if (is_file($this->url()) !== true) {
+				throw new Exception('Local file ' . $this->url() . ' was not found');
+			}
 
-            $content = @file_get_contents($this->url());
+			$content = @file_get_contents($this->url());
 
-            if (is_string($content) !== true) {
-                throw new Exception('Unexpected read error'); // @codeCoverageIgnore
-            }
+			if (is_string($content) !== true) {
+				throw new Exception('Unexpected read error'); // @codeCoverageIgnore
+			}
 
-            if (empty($content) === true) {
-                return [];
-            }
+			if (empty($content) === true) {
+				return [];
+			}
 
-            $data = json_decode($content, true);
-        }
+			$data = json_decode($content, true);
+		}
 
-        if (is_array($data) === false) {
-            throw new InvalidArgumentException('Invalid options format');
-        }
+		if (is_array($data) === false) {
+			throw new InvalidArgumentException('Invalid options format');
+		}
 
-        $result  = (new Query($this->fetch(), Nest::create($data)))->result();
-        $options = [];
+		$result  = (new Query($this->fetch(), Nest::create($data)))->result();
+		$options = [];
 
-        foreach ($result as $item) {
-            $data = array_merge($this->data(), ['item' => $item]);
+		foreach ($result as $item) {
+			$data = array_merge($this->data(), ['item' => $item]);
 
-            $options[] = [
-                'text'  => $this->field('text', $data),
-                'value' => $this->field('value', $data),
-            ];
-        }
+			$options[] = [
+				'text'  => $this->field('text', $data),
+				'value' => $this->field('value', $data),
+			];
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    /**
-     * @param array $data
-     * @return $this
-     */
-    protected function setData(array $data)
-    {
-        $this->data = $data;
-        return $this;
-    }
+	/**
+	 * @param array $data
+	 * @return $this
+	 */
+	protected function setData(array $data)
+	{
+		$this->data = $data;
+		return $this;
+	}
 
-    /**
-     * @param string|null $fetch
-     * @return $this
-     */
-    protected function setFetch(?string $fetch = null)
-    {
-        $this->fetch = $fetch;
-        return $this;
-    }
+	/**
+	 * @param string|null $fetch
+	 * @return $this
+	 */
+	protected function setFetch(?string $fetch = null)
+	{
+		$this->fetch = $fetch;
+		return $this;
+	}
 
-    /**
-     * @param array|string|null $options
-     * @return $this
-     */
-    protected function setOptions($options = null)
-    {
-        $this->options = $options;
-        return $this;
-    }
+	/**
+	 * @param array|string|null $options
+	 * @return $this
+	 */
+	protected function setOptions($options = null)
+	{
+		$this->options = $options;
+		return $this;
+	}
 
-    /**
-     * @param string $text
-     * @return $this
-     */
-    protected function setText(?string $text = null)
-    {
-        $this->text = $text;
-        return $this;
-    }
+	/**
+	 * @param string $text
+	 * @return $this
+	 */
+	protected function setText(?string $text = null)
+	{
+		$this->text = $text;
+		return $this;
+	}
 
-    /**
-     * @param string $url
-     * @return $this
-     */
-    protected function setUrl(string $url)
-    {
-        $this->url = $url;
-        return $this;
-    }
+	/**
+	 * @param string $url
+	 * @return $this
+	 */
+	protected function setUrl(string $url)
+	{
+		$this->url = $url;
+		return $this;
+	}
 
-    /**
-     * @param string|null $value
-     * @return $this
-     */
-    protected function setValue(?string $value = null)
-    {
-        $this->value = $value;
-        return $this;
-    }
+	/**
+	 * @param string|null $value
+	 * @return $this
+	 */
+	protected function setValue(?string $value = null)
+	{
+		$this->value = $value;
+		return $this;
+	}
 
-    /**
-     * @return string
-     */
-    public function text(): string
-    {
-        return $this->text;
-    }
+	/**
+	 * @return string
+	 */
+	public function text(): string
+	{
+		return $this->text;
+	}
 
-    /**
-     * @return array
-     * @throws \Kirby\Exception\InvalidArgumentException
-     */
-    public function toArray(): array
-    {
-        return $this->options();
-    }
+	/**
+	 * @return array
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public function toArray(): array
+	{
+		return $this->options();
+	}
 
-    /**
-     * @return string
-     */
-    public function url(): string
-    {
-        return Str::template($this->url, $this->data());
-    }
+	/**
+	 * @return string
+	 */
+	public function url(): string
+	{
+		return Str::template($this->url, $this->data());
+	}
 
-    /**
-     * @return string
-     */
-    public function value(): string
-    {
-        return $this->value;
-    }
+	/**
+	 * @return string
+	 */
+	public function value(): string
+	{
+		return $this->value;
+	}
 }

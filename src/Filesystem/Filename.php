@@ -28,280 +28,280 @@ use Kirby\Toolkit\Str;
  */
 class Filename
 {
-    /**
-     * List of all applicable attributes
-     *
-     * @var array
-     */
-    protected $attributes;
+	/**
+	 * List of all applicable attributes
+	 *
+	 * @var array
+	 */
+	protected $attributes;
 
-    /**
-     * The sanitized file extension
-     *
-     * @var string
-     */
-    protected $extension;
+	/**
+	 * The sanitized file extension
+	 *
+	 * @var string
+	 */
+	protected $extension;
 
-    /**
-     * The source original filename
-     *
-     * @var string
-     */
-    protected $filename;
+	/**
+	 * The source original filename
+	 *
+	 * @var string
+	 */
+	protected $filename;
 
-    /**
-     * The sanitized file name
-     *
-     * @var string
-     */
-    protected $name;
+	/**
+	 * The sanitized file name
+	 *
+	 * @var string
+	 */
+	protected $name;
 
-    /**
-     * The template for the final name
-     *
-     * @var string
-     */
-    protected $template;
+	/**
+	 * The template for the final name
+	 *
+	 * @var string
+	 */
+	protected $template;
 
-    /**
-     * Creates a new Filename object
-     *
-     * @param string $filename
-     * @param string $template
-     * @param array $attributes
-     */
-    public function __construct(string $filename, string $template, array $attributes = [])
-    {
-        $this->filename   = $filename;
-        $this->template   = $template;
-        $this->attributes = $attributes;
-        $this->extension  = $this->sanitizeExtension(
-            $attributes['format'] ??
-            pathinfo($filename, PATHINFO_EXTENSION)
-        );
-        $this->name       = $this->sanitizeName(pathinfo($filename, PATHINFO_FILENAME));
-    }
+	/**
+	 * Creates a new Filename object
+	 *
+	 * @param string $filename
+	 * @param string $template
+	 * @param array $attributes
+	 */
+	public function __construct(string $filename, string $template, array $attributes = [])
+	{
+		$this->filename   = $filename;
+		$this->template   = $template;
+		$this->attributes = $attributes;
+		$this->extension  = $this->sanitizeExtension(
+			$attributes['format'] ??
+			pathinfo($filename, PATHINFO_EXTENSION)
+		);
+		$this->name       = $this->sanitizeName(pathinfo($filename, PATHINFO_FILENAME));
+	}
 
-    /**
-     * Converts the entire object to a string
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->toString();
-    }
+	/**
+	 * Converts the entire object to a string
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
 
-    /**
-     * Converts all processed attributes
-     * to an array. The array keys are already
-     * the shortened versions for the filename
-     *
-     * @return array
-     */
-    public function attributesToArray(): array
-    {
-        $array = [
-            'dimensions' => implode('x', $this->dimensions()),
-            'crop'       => $this->crop(),
-            'blur'       => $this->blur(),
-            'bw'         => $this->grayscale(),
-            'q'          => $this->quality(),
-        ];
+	/**
+	 * Converts all processed attributes
+	 * to an array. The array keys are already
+	 * the shortened versions for the filename
+	 *
+	 * @return array
+	 */
+	public function attributesToArray(): array
+	{
+		$array = [
+			'dimensions' => implode('x', $this->dimensions()),
+			'crop'       => $this->crop(),
+			'blur'       => $this->blur(),
+			'bw'         => $this->grayscale(),
+			'q'          => $this->quality(),
+		];
 
-        $array = array_filter(
-            $array,
-            fn ($item) => $item !== null && $item !== false && $item !== ''
-        );
+		$array = array_filter(
+			$array,
+			fn ($item) => $item !== null && $item !== false && $item !== ''
+		);
 
-        return $array;
-    }
+		return $array;
+	}
 
-    /**
-     * Converts all processed attributes
-     * to a string, that can be used in the
-     * new filename
-     *
-     * @param string|null $prefix The prefix will be used in the filename creation
-     * @return string
-     */
-    public function attributesToString(string $prefix = null): string
-    {
-        $array  = $this->attributesToArray();
-        $result = [];
+	/**
+	 * Converts all processed attributes
+	 * to a string, that can be used in the
+	 * new filename
+	 *
+	 * @param string|null $prefix The prefix will be used in the filename creation
+	 * @return string
+	 */
+	public function attributesToString(string $prefix = null): string
+	{
+		$array  = $this->attributesToArray();
+		$result = [];
 
-        foreach ($array as $key => $value) {
-            if ($value === true) {
-                $value = '';
-            }
+		foreach ($array as $key => $value) {
+			if ($value === true) {
+				$value = '';
+			}
 
-            switch ($key) {
-                case 'dimensions':
-                    $result[] = $value;
-                    break;
-                case 'crop':
-                    $result[] = ($value === 'center') ? 'crop' : $key . '-' . $value;
-                    break;
-                default:
-                    $result[] = $key . $value;
-            }
-        }
+			switch ($key) {
+				case 'dimensions':
+					$result[] = $value;
+					break;
+				case 'crop':
+					$result[] = ($value === 'center') ? 'crop' : $key . '-' . $value;
+					break;
+				default:
+					$result[] = $key . $value;
+			}
+		}
 
-        $result     = array_filter($result);
-        $attributes = implode('-', $result);
+		$result     = array_filter($result);
+		$attributes = implode('-', $result);
 
-        if (empty($attributes) === true) {
-            return '';
-        }
+		if (empty($attributes) === true) {
+			return '';
+		}
 
-        return $prefix . $attributes;
-    }
+		return $prefix . $attributes;
+	}
 
-    /**
-     * Normalizes the blur option value
-     *
-     * @return false|int
-     */
-    public function blur()
-    {
-        $value = $this->attributes['blur'] ?? false;
+	/**
+	 * Normalizes the blur option value
+	 *
+	 * @return false|int
+	 */
+	public function blur()
+	{
+		$value = $this->attributes['blur'] ?? false;
 
-        if ($value === false) {
-            return false;
-        }
+		if ($value === false) {
+			return false;
+		}
 
-        return (int)$value;
-    }
+		return (int)$value;
+	}
 
-    /**
-     * Normalizes the crop option value
-     *
-     * @return false|string
-     */
-    public function crop()
-    {
-        // get the crop value
-        $crop = $this->attributes['crop'] ?? false;
+	/**
+	 * Normalizes the crop option value
+	 *
+	 * @return false|string
+	 */
+	public function crop()
+	{
+		// get the crop value
+		$crop = $this->attributes['crop'] ?? false;
 
-        if ($crop === false) {
-            return false;
-        }
+		if ($crop === false) {
+			return false;
+		}
 
-        return Str::slug($crop);
-    }
+		return Str::slug($crop);
+	}
 
-    /**
-     * Returns a normalized array
-     * with width and height values
-     * if available
-     *
-     * @return array
-     */
-    public function dimensions()
-    {
-        if (empty($this->attributes['width']) === true && empty($this->attributes['height']) === true) {
-            return [];
-        }
+	/**
+	 * Returns a normalized array
+	 * with width and height values
+	 * if available
+	 *
+	 * @return array
+	 */
+	public function dimensions()
+	{
+		if (empty($this->attributes['width']) === true && empty($this->attributes['height']) === true) {
+			return [];
+		}
 
-        return [
-            'width'  => $this->attributes['width']  ?? null,
-            'height' => $this->attributes['height'] ?? null
-        ];
-    }
+		return [
+			'width'  => $this->attributes['width']  ?? null,
+			'height' => $this->attributes['height'] ?? null
+		];
+	}
 
-    /**
-     * Returns the sanitized extension
-     *
-     * @return string
-     */
-    public function extension(): string
-    {
-        return $this->extension;
-    }
+	/**
+	 * Returns the sanitized extension
+	 *
+	 * @return string
+	 */
+	public function extension(): string
+	{
+		return $this->extension;
+	}
 
-    /**
-     * Normalizes the grayscale option value
-     * and also the available ways to write
-     * the option. You can use `grayscale`,
-     * `greyscale` or simply `bw`. The function
-     * will always return `grayscale`
-     *
-     * @return bool
-     */
-    public function grayscale(): bool
-    {
-        // normalize options
-        $value = $this->attributes['grayscale'] ?? $this->attributes['greyscale'] ?? $this->attributes['bw'] ?? false;
+	/**
+	 * Normalizes the grayscale option value
+	 * and also the available ways to write
+	 * the option. You can use `grayscale`,
+	 * `greyscale` or simply `bw`. The function
+	 * will always return `grayscale`
+	 *
+	 * @return bool
+	 */
+	public function grayscale(): bool
+	{
+		// normalize options
+		$value = $this->attributes['grayscale'] ?? $this->attributes['greyscale'] ?? $this->attributes['bw'] ?? false;
 
-        // turn anything into boolean
-        return filter_var($value, FILTER_VALIDATE_BOOLEAN);
-    }
+		// turn anything into boolean
+		return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+	}
 
-    /**
-     * Returns the filename without extension
-     *
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->name;
-    }
+	/**
+	 * Returns the filename without extension
+	 *
+	 * @return string
+	 */
+	public function name(): string
+	{
+		return $this->name;
+	}
 
-    /**
-     * Normalizes the quality option value
-     *
-     * @return false|int
-     */
-    public function quality()
-    {
-        $value = $this->attributes['quality'] ?? false;
+	/**
+	 * Normalizes the quality option value
+	 *
+	 * @return false|int
+	 */
+	public function quality()
+	{
+		$value = $this->attributes['quality'] ?? false;
 
-        if ($value === false || $value === true) {
-            return false;
-        }
+		if ($value === false || $value === true) {
+			return false;
+		}
 
-        return (int)$value;
-    }
+		return (int)$value;
+	}
 
-    /**
-     * Sanitizes the file extension.
-     * The extension will be converted
-     * to lowercase and `jpeg` will be
-     * replaced with `jpg`
-     *
-     * @param string $extension
-     * @return string
-     */
-    protected function sanitizeExtension(string $extension): string
-    {
-        $extension = strtolower($extension);
-        $extension = str_replace('jpeg', 'jpg', $extension);
-        return $extension;
-    }
+	/**
+	 * Sanitizes the file extension.
+	 * The extension will be converted
+	 * to lowercase and `jpeg` will be
+	 * replaced with `jpg`
+	 *
+	 * @param string $extension
+	 * @return string
+	 */
+	protected function sanitizeExtension(string $extension): string
+	{
+		$extension = strtolower($extension);
+		$extension = str_replace('jpeg', 'jpg', $extension);
+		return $extension;
+	}
 
-    /**
-     * Sanitizes the name with Kirby's
-     * Str::slug function
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function sanitizeName(string $name): string
-    {
-        return Str::slug($name);
-    }
+	/**
+	 * Sanitizes the name with Kirby's
+	 * Str::slug function
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	protected function sanitizeName(string $name): string
+	{
+		return Str::slug($name);
+	}
 
-    /**
-     * Returns the converted filename as string
-     *
-     * @return string
-     */
-    public function toString(): string
-    {
-        return Str::template($this->template, [
-            'name'       => $this->name(),
-            'attributes' => $this->attributesToString('-'),
-            'extension'  => $this->extension()
-        ], ['fallback' => '']);
-    }
+	/**
+	 * Returns the converted filename as string
+	 *
+	 * @return string
+	 */
+	public function toString(): string
+	{
+		return Str::template($this->template, [
+			'name'       => $this->name(),
+			'attributes' => $this->attributesToString('-'),
+			'extension'  => $this->extension()
+		], ['fallback' => '']);
+	}
 }

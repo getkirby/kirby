@@ -17,82 +17,82 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRules
 {
-    /**
-     * Validates if the language can be created
-     *
-     * @param \Kirby\Cms\Language $language
-     * @return bool
-     * @throws \Kirby\Exception\DuplicateException If the language already exists
-     */
-    public static function create(Language $language): bool
-    {
-        static::validLanguageCode($language);
-        static::validLanguageName($language);
+	/**
+	 * Validates if the language can be created
+	 *
+	 * @param \Kirby\Cms\Language $language
+	 * @return bool
+	 * @throws \Kirby\Exception\DuplicateException If the language already exists
+	 */
+	public static function create(Language $language): bool
+	{
+		static::validLanguageCode($language);
+		static::validLanguageName($language);
 
-        if ($language->exists() === true) {
-            throw new DuplicateException([
-                'key'  => 'language.duplicate',
-                'data' => [
-                    'code' => $language->code()
-                ]
-            ]);
-        }
+		if ($language->exists() === true) {
+			throw new DuplicateException([
+				'key'  => 'language.duplicate',
+				'data' => [
+					'code' => $language->code()
+				]
+			]);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * Validates if the language can be updated
-     *
-     * @param \Kirby\Cms\Language $language
-     */
-    public static function update(Language $language)
-    {
-        static::validLanguageCode($language);
-        static::validLanguageName($language);
-    }
+	/**
+	 * Validates if the language can be updated
+	 *
+	 * @param \Kirby\Cms\Language $language
+	 */
+	public static function update(Language $language)
+	{
+		static::validLanguageCode($language);
+		static::validLanguageName($language);
+	}
 
-    /**
-     * Validates if the language code is formatted correctly
-     *
-     * @param \Kirby\Cms\Language $language
-     * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException If the language code is not valid
-     */
-    public static function validLanguageCode(Language $language): bool
-    {
-        if (Str::length($language->code()) < 2) {
-            throw new InvalidArgumentException([
-                'key'  => 'language.code',
-                'data' => [
-                    'code' => $language->code(),
-                    'name' => $language->name()
-                ]
-            ]);
-        }
+	/**
+	 * Validates if the language code is formatted correctly
+	 *
+	 * @param \Kirby\Cms\Language $language
+	 * @return bool
+	 * @throws \Kirby\Exception\InvalidArgumentException If the language code is not valid
+	 */
+	public static function validLanguageCode(Language $language): bool
+	{
+		if (Str::length($language->code()) < 2) {
+			throw new InvalidArgumentException([
+				'key'  => 'language.code',
+				'data' => [
+					'code' => $language->code(),
+					'name' => $language->name()
+				]
+			]);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * Validates if the language name is formatted correctly
-     *
-     * @param \Kirby\Cms\Language $language
-     * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException If the language name is invalid
-     */
-    public static function validLanguageName(Language $language): bool
-    {
-        if (Str::length($language->name()) < 1) {
-            throw new InvalidArgumentException([
-                'key'  => 'language.name',
-                'data' => [
-                    'code' => $language->code(),
-                    'name' => $language->name()
-                ]
-            ]);
-        }
+	/**
+	 * Validates if the language name is formatted correctly
+	 *
+	 * @param \Kirby\Cms\Language $language
+	 * @return bool
+	 * @throws \Kirby\Exception\InvalidArgumentException If the language name is invalid
+	 */
+	public static function validLanguageName(Language $language): bool
+	{
+		if (Str::length($language->name()) < 1) {
+			throw new InvalidArgumentException([
+				'key'  => 'language.name',
+				'data' => [
+					'code' => $language->code(),
+					'name' => $language->name()
+				]
+			]);
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

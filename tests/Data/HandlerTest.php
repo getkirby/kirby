@@ -12,40 +12,40 @@ require_once __DIR__ . '/mocks.php';
  */
 class HandlerTest extends TestCase
 {
-    /**
-     * @covers ::read
-     * @covers ::write
-     */
-    public function testReadWrite()
-    {
-        $data = [
-            'name'  => 'Homer Simpson',
-            'email' => 'homer@simpson.com'
-        ];
+	/**
+	 * @covers ::read
+	 * @covers ::write
+	 */
+	public function testReadWrite()
+	{
+		$data = [
+			'name'  => 'Homer Simpson',
+			'email' => 'homer@simpson.com'
+		];
 
-        $file = __DIR__ . '/tmp/data.json';
+		$file = __DIR__ . '/tmp/data.json';
 
-        // clean up first
-        @unlink($file);
+		// clean up first
+		@unlink($file);
 
-        CustomHandler::write($file, $data);
-        $this->assertFileExists($file);
-        $this->assertSame(CustomHandler::encode($data), F::read($file));
+		CustomHandler::write($file, $data);
+		$this->assertFileExists($file);
+		$this->assertSame(CustomHandler::encode($data), F::read($file));
 
-        $result = CustomHandler::read($file);
-        $this->assertSame($data, $result);
-    }
+		$result = CustomHandler::read($file);
+		$this->assertSame($data, $result);
+	}
 
-    /**
-     * @covers ::read
-     */
-    public function testReadFileMissing()
-    {
-        $file = __DIR__ . '/tmp/does-not-exist.json';
+	/**
+	 * @covers ::read
+	 */
+	public function testReadFileMissing()
+	{
+		$file = __DIR__ . '/tmp/does-not-exist.json';
 
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('The file "' . $file . '" does not exist');
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The file "' . $file . '" does not exist');
 
-        CustomHandler::read($file);
-    }
+		CustomHandler::read($file);
+	}
 }
