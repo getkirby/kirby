@@ -56,7 +56,7 @@ class LayoutField extends BlocksField
 		]);
 	}
 
-	public function layouts(): ?array
+	public function layouts(): array|null
 	{
 		return $this->layouts;
 	}

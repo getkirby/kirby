@@ -210,7 +210,7 @@ class Site extends ModelWithContent
 	 * @param string|null $languageCode
 	 * @return array
 	 */
-	public function contentFileData(array $data, ?string $languageCode = null): array
+	public function contentFileData(array $data, string|null $languageCode = null): array
 	{
 		return A::prepend($data, [
 			'title' => $data['title'] ?? null,
@@ -364,7 +364,7 @@ class Site extends ModelWithContent
 	 * @param string|null $handler
 	 * @return int|string
 	 */
-	public function modified(?string $format = null, ?string $handler = null)
+	public function modified(string|null $format = null, string|null $handler = null)
 	{
 		return Dir::modified(
 			$this->root(),
@@ -386,7 +386,7 @@ class Site extends ModelWithContent
 	 *                          otherwise e.g. `notes/across-the-ocean`
 	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page(?string $path = null)
+	public function page(string|null $path = null)
 	{
 		if ($path !== null) {
 			return $this->find($path);
@@ -439,7 +439,7 @@ class Site extends ModelWithContent
 	 * @internal
 	 * @return string|null
 	 */
-	public function previewUrl(): ?string
+	public function previewUrl(): string|null
 	{
 		$preview = $this->blueprint()->preview();
 
@@ -485,7 +485,7 @@ class Site extends ModelWithContent
 	 * @param array $params
 	 * @return \Kirby\Cms\Pages
 	 */
-	public function search(?string $query = null, $params = [])
+	public function search(string|null $query = null, $params = [])
 	{
 		return $this->index()->search($query, $params);
 	}
@@ -496,7 +496,7 @@ class Site extends ModelWithContent
 	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(?array $blueprint = null)
+	protected function setBlueprint(array|null $blueprint = null)
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -555,7 +555,7 @@ class Site extends ModelWithContent
 	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(?string $url = null)
+	protected function setUrl(string|null $url = null)
 	{
 		$this->url = $url;
 		return $this;
@@ -587,7 +587,7 @@ class Site extends ModelWithContent
 	 * @param string|null $language
 	 * @return string
 	 */
-	public function url(?string $language = null): string
+	public function url(string|null $language = null): string
 	{
 		if ($language !== null || $this->kirby()->multilang() === true) {
 			return $this->urlForLanguage($language);
@@ -604,7 +604,7 @@ class Site extends ModelWithContent
 	 * @param array|null $options
 	 * @return string
 	 */
-	public function urlForLanguage(?string $languageCode = null, ?array $options = null): string
+	public function urlForLanguage(string|null $languageCode = null, array|null $options = null): string
 	{
 		if ($language = $this->kirby()->language($languageCode)) {
 			return $language->url();
@@ -623,7 +623,7 @@ class Site extends ModelWithContent
 	 * @param string|null $languageCode
 	 * @return \Kirby\Cms\Page
 	 */
-	public function visit($page, ?string $languageCode = null)
+	public function visit($page, string|null $languageCode = null)
 	{
 		if ($languageCode !== null) {
 			$this->kirby()->setCurrentTranslation($languageCode);

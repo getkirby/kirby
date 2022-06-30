@@ -1194,7 +1194,7 @@ class DomTest extends TestCase
 	 * @dataProvider listContainsNameProvider
 	 * @covers ::listContainsName
 	 */
-	public function testListContainsName(array $list, array $node, $allowedNamespaces, ?Closure $compare, $expected)
+	public function testListContainsName(array $list, array $node, $allowedNamespaces, Closure|null $compare, $expected)
 	{
 		[$nodeName, $nodeNS] = $node;
 		if ($nodeNS !== null) {

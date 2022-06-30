@@ -104,7 +104,7 @@ class Inline
 	 * @param DOMNode $node
 	 * @return string|null
 	 */
-	public static function parseInnerHtml(DOMNode $node, array $marks = []): ?string
+	public static function parseInnerHtml(DOMNode $node, array $marks = []): string|null
 	{
 		$html = static::parseChildren($node->childNodes, $marks);
 
@@ -128,7 +128,7 @@ class Inline
 	 * @param array $marks
 	 * @return string|null
 	 */
-	public static function parseNode(DOMNode $node, array $marks = []): ?string
+	public static function parseNode(DOMNode $node, array $marks = []): string|null
 	{
 		if (is_a($node, 'DOMText') === true) {
 			return Html::encode($node->textContent);

@@ -521,7 +521,7 @@ class App
 	 * @param string|null $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
-	public function csrf(?string $check = null)
+	public function csrf(string|null $check = null)
 	{
 		$session = $this->session();
 
@@ -681,7 +681,7 @@ class App
 	 *
 	 * @todo merge with App::file()
 	 */
-	public function image(?string $path = null)
+	public function image(string|null $path = null)
 	{
 		if ($path === null) {
 			return $this->site()->page()->image();
@@ -845,7 +845,7 @@ class App
 	 * @param array $data
 	 * @return string
 	 */
-	public function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
+	public function kirbytag($type, string|null $value = null, array $attr = [], array $data = []): string
 	{
 		if (is_array($type) === true) {
 			$kirbytag = $type;
@@ -954,7 +954,7 @@ class App
 	 * @param string|null $languageCode
 	 * @return string|null
 	 */
-	public function languageCode(string $languageCode = null): ?string
+	public function languageCode(string $languageCode = null): string|null
 	{
 		if ($language = $this->language($languageCode)) {
 			return $language->code();
@@ -1202,7 +1202,7 @@ class App
 	 * @param bool $drafts
 	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page(?string $id = null, $parent = null, bool $drafts = true)
+	public function page(string|null $id = null, $parent = null, bool $drafts = true)
 	{
 		if ($id === null) {
 			return null;
@@ -1379,7 +1379,7 @@ class App
 	 * @param string $type
 	 * @return string|null
 	 */
-	public function root(string $type = 'index'): ?string
+	public function root(string $type = 'index'): string|null
 	{
 		return $this->roots->__get($type);
 	}
@@ -1635,7 +1635,7 @@ class App
 	 * @param bool $return On `false`, directly echo the snippet
 	 * @return string|null
 	 */
-	public function snippet($name, $data = [], bool $return = true): ?string
+	public function snippet($name, $data = [], bool $return = true): string|null
 	{
 		if (is_object($data) === true) {
 			$data = ['item' => $data];
@@ -1778,7 +1778,7 @@ class App
 	 * @return string|null
 	 * @throws \Kirby\Exception\LogicException if the Kirby version cannot be detected
 	 */
-	public static function version(): ?string
+	public static function version(): string|null
 	{
 		try {
 			return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;

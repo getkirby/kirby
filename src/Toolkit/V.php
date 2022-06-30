@@ -121,7 +121,7 @@ class V
 	 * @param mixed ...$params
 	 * @return string|null
 	 */
-	public static function message(string $validatorName, ...$params): ?string
+	public static function message(string $validatorName, ...$params): string|null
 	{
 		$validatorName  = strtolower($validatorName);
 		$translationKey = 'error.validation.' . $validatorName;
@@ -317,7 +317,7 @@ V::$validators = [
 	 * Pass an operator as second argument and another date as
 	 * third argument to compare them.
 	 */
-	'date' => function (?string $value, string $operator = null, string $test = null): bool {
+	'date' => function (string|null $value, string $operator = null, string $test = null): bool {
 		// make sure $value is a string
 		$value ??= '';
 

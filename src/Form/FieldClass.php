@@ -162,7 +162,7 @@ abstract class FieldClass
 	/**
 	 * @return string|null
 	 */
-	public function after(): ?string
+	public function after(): string|null
 	{
 		return $this->stringTemplate($this->after);
 	}
@@ -186,7 +186,7 @@ abstract class FieldClass
 	/**
 	 * @return string|null
 	 */
-	public function before(): ?string
+	public function before(): string|null
 	{
 		return $this->stringTemplate($this->before);
 	}
@@ -259,7 +259,7 @@ abstract class FieldClass
 	 *
 	 * @return string|null
 	 */
-	public function help(): ?string
+	public function help(): string|null
 	{
 		if (empty($this->help) === false) {
 			$help = $this->stringTemplate($this->help);
@@ -274,7 +274,7 @@ abstract class FieldClass
 	 * @param string|array|null $param
 	 * @return string|null
 	 */
-	protected function i18n($param = null): ?string
+	protected function i18n($param = null): string|null
 	{
 		return empty($param) === false ? I18n::translate($param, $param) : null;
 	}
@@ -284,7 +284,7 @@ abstract class FieldClass
 	 *
 	 * @return string|null
 	 */
-	public function icon(): ?string
+	public function icon(): string|null
 	{
 		return $this->icon;
 	}
@@ -457,7 +457,7 @@ abstract class FieldClass
 	 *
 	 * @return string|null
 	 */
-	public function placeholder(): ?string
+	public function placeholder(): string|null
 	{
 		return $this->stringTemplate($this->placeholder);
 	}
@@ -578,7 +578,7 @@ abstract class FieldClass
 	 * @param string|null $icon
 	 * @return void
 	 */
-	protected function setIcon(?string $icon = null)
+	protected function setIcon(string|null $icon = null)
 	{
 		$this->icon = $icon;
 	}
@@ -684,7 +684,7 @@ abstract class FieldClass
 	 * @param string|null $string
 	 * @return string|null
 	 */
-	protected function stringTemplate(?string $string = null): ?string
+	protected function stringTemplate(string|null $string = null): string|null
 	{
 		if ($string !== null) {
 			return $this->model->toString($string);
@@ -858,7 +858,7 @@ abstract class FieldClass
 	 *
 	 * @return array|null
 	 */
-	public function when(): ?array
+	public function when(): array|null
 	{
 		return $this->when;
 	}

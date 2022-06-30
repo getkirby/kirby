@@ -54,7 +54,7 @@ class Loader
 	 * @param string $name
 	 * @return array|null
 	 */
-	public function area(string $name): ?array
+	public function area(string $name): array|null
 	{
 		return $this->areas()[$name] ?? null;
 	}
@@ -102,7 +102,7 @@ class Loader
 	 * @param string $name
 	 * @return \Closure|null
 	 */
-	public function component(string $name): ?Closure
+	public function component(string $name): Closure|null
 	{
 		return $this->extension('components', $name);
 	}
@@ -222,7 +222,7 @@ class Loader
 	 * @param string $name
 	 * @return array|null
 	 */
-	public function section(string $name): ?array
+	public function section(string $name): array|null
 	{
 		return $this->resolve($this->extension('sections', $name));
 	}

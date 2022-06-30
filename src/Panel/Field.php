@@ -200,7 +200,7 @@ class Field
 	 * @param array $props
 	 * @return array
 	 */
-	public static function template(?array $blueprints = [], ?array $props = []): array
+	public static function template(array|null $blueprints = [], array|null $props = []): array
 	{
 		$options = [];
 

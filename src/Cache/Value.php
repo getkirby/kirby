@@ -68,7 +68,7 @@ class Value
 	 *
 	 * @return int|null
 	 */
-	public function expires(): ?int
+	public function expires(): int|null
 	{
 		// 0 = keep forever
 		if ($this->minutes === 0) {

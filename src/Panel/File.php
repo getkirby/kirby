@@ -424,11 +424,11 @@ class File extends Model
 		);
 
 		return [
-			'next' => function () use ($file, $siblings): ?array {
+			'next' => function () use ($file, $siblings): array|null {
 				$next = $siblings->nth($siblings->indexOf($file) + 1);
 				return $this->toPrevNextLink($next, 'filename');
 			},
-			'prev' => function () use ($file, $siblings): ?array {
+			'prev' => function () use ($file, $siblings): array|null {
 				$prev = $siblings->nth($siblings->indexOf($file) - 1);
 				return $this->toPrevNextLink($prev, 'filename');
 			}

@@ -326,7 +326,7 @@ class Str
 	 * @param string $handler date, intl or strftime
 	 * @return string|int
 	 */
-	public static function date(?int $time = null, $format = null, string $handler = 'date')
+	public static function date(int|null $time = null, $format = null, string $handler = 'date')
 	{
 		if (is_null($format) === true) {
 			return $time;
@@ -561,7 +561,7 @@ class Str
 	 * @todo Remove in 3.8.0
 	 * @codeCoverageIgnore
 	 */
-	public static function isURL(?string $string = null): bool
+	public static function isURL(string|null $string = null): bool
 	{
 		Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
 		return filter_var($string, FILTER_VALIDATE_URL) !== false;

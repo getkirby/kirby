@@ -146,7 +146,7 @@ class Route
 	 *
 	 * @return string|null
 	 */
-	public function name(): ?string
+	public function name(): string|null
 	{
 		return $this->attributes['name'] ?? null;
 	}

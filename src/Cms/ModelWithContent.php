@@ -196,7 +196,7 @@ abstract class ModelWithContent extends Model
 	 * @internal
 	 * @return string|null
 	 */
-	public function contentFileDirectory(): ?string
+	public function contentFileDirectory(): string|null
 	{
 		return $this->root();
 	}
@@ -384,7 +384,7 @@ abstract class ModelWithContent extends Model
 	 *
 	 * @return string|null
 	 */
-	abstract public function root(): ?string;
+	abstract public function root(): string|null;
 
 	/**
 	 * Stores the content on disk
@@ -662,7 +662,7 @@ abstract class ModelWithContent extends Model
 	 * @return array|null
 	 * @codeCoverageIgnore
 	 */
-	public function panelIcon(array $params = null): ?array
+	public function panelIcon(array $params = null): array|null
 	{
 		Helpers::deprecated('Cms\ModelWithContent::panelIcon() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
 		return $this->panel()->image($params);
@@ -677,7 +677,7 @@ abstract class ModelWithContent extends Model
 	 * @return array|null
 	 * @codeCoverageIgnore
 	 */
-	public function panelImage($settings = null): ?array
+	public function panelImage($settings = null): array|null
 	{
 		Helpers::deprecated('Cms\ModelWithContent::panelImage() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
 		return $this->panel()->image($settings);

@@ -118,7 +118,7 @@ abstract class Sql
 	 * @param bool $enforceQualified If true, a qualified identifier is returned in all cases
 	 * @return string|null Identifier or null if the table or column is invalid
 	 */
-	public function columnName(string $table, string $column, bool $enforceQualified = false): ?string
+	public function columnName(string $table, string $column, bool $enforceQualified = false): string|null
 	{
 		// ensure we have clean $table and $column values without qualified identifiers
 		list($table, $column) = $this->splitIdentifier($table, $column);
@@ -146,8 +146,7 @@ abstract class Sql
 			'varchar'   => '{{ name }} varchar(255) {{ null }} {{ default }} {{ unique }}',
 			'text'      => '{{ name }} TEXT {{ unique }}',
 			'int'       => '{{ name }} INT(11) UNSIGNED {{ null }} {{ default }} {{ unique }}',
-			'timestamp' => '{{ name }} TIMESTAMP {{ null }} {{ default }} {{ unique }}',
-			'bool'      => '{{ name }} TINYINT(1) {{ null }} {{ default }} {{ unique }}'
+			'timestamp' => '{{ name }} TIMESTAMP {{ null }} {{ default }} {{ unique }}'
 		];
 	}
 

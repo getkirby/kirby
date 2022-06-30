@@ -112,7 +112,7 @@ class Api extends BaseApi
 	 *
 	 * @return string|null
 	 */
-	public function language(): ?string
+	public function language(): string|null
 	{
 		return $this->requestQuery('language') ?? $this->requestHeaders('x-language');
 	}

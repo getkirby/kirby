@@ -303,7 +303,7 @@ class Auth
 	 * @return \Kirby\Cms\User|null
 	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
 	 */
-	public function impersonate(?string $who = null)
+	public function impersonate(string|null $who = null)
 	{
 		// clear the status cache
 		$this->status = null;
@@ -671,7 +671,7 @@ class Auth
 	 * @param bool $triggerHook If `false`, no user.login:failed hook is triggered
 	 * @return bool
 	 */
-	public function track(?string $email, bool $triggerHook = true): bool
+	public function track(string|null $email, bool $triggerHook = true): bool
 	{
 		if ($triggerHook === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));

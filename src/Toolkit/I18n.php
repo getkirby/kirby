@@ -189,7 +189,7 @@ class I18n
 	 * @param string|null $locale
 	 * @return string
 	 */
-	public static function template(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
+	public static function template(string $key, $fallback = null, array|null $replace = null, string|null $locale = null): string
 	{
 		if (is_array($fallback) === true) {
 			$replace  = $fallback;

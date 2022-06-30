@@ -58,7 +58,7 @@ class BasicAuth extends Auth
 	 *
 	 * @return string|null
 	 */
-	public function password(): ?string
+	public function password(): string|null
 	{
 		return $this->password;
 	}
@@ -78,7 +78,7 @@ class BasicAuth extends Auth
 	 *
 	 * @return string|null
 	 */
-	public function username(): ?string
+	public function username(): string|null
 	{
 		return $this->username;
 	}

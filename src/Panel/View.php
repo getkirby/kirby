@@ -60,7 +60,7 @@ class View
 	 * @param string|null $globals
 	 * @return array
 	 */
-	public static function applyGlobals(array $data, ?string $globals = null): array
+	public static function applyGlobals(array $data, string|null $globals = null): array
 	{
 		// split globals string into an array of fields
 		$globalKeys = Str::split($globals, ',');
@@ -94,7 +94,7 @@ class View
 	 * @param string|null $only
 	 * @return array
 	 */
-	public static function applyOnly(array $data, ?string $only = null): array
+	public static function applyOnly(array $data, string|null $only = null): array
 	{
 		// split include string into an array of fields
 		$onlyKeys = Str::split($only, ',');
@@ -329,7 +329,7 @@ class View
 	 * @param string|null $current
 	 * @return array
 	 */
-	public static function menu(?array $areas = [], ?array $permissions = [], ?string $current = null): array
+	public static function menu(array|null $areas = [], array|null $permissions = [], string|null $current = null): array
 	{
 		$menu = [];
 

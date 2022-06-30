@@ -26,7 +26,7 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
 	 * @return string|null
 	 */
-	public static function css($url, $options = null): ?string
+	public static function css($url, $options = null): string|null
 	{
 		if (is_array($url) === true) {
 			$links = A::map($url, fn ($url) => static::css($url, $options));
@@ -83,7 +83,7 @@ class Html extends \Kirby\Toolkit\Html
 	 * @param string|array $options
 	 * @return string|null
 	 */
-	public static function js($url, $options = null): ?string
+	public static function js($url, $options = null): string|null
 	{
 		if (is_array($url) === true) {
 			$scripts = A::map($url, fn ($url) => static::js($url, $options));

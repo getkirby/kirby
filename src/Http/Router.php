@@ -156,7 +156,7 @@ class Router
 	 * @param \Closure|null $callback
 	 * @return mixed
 	 */
-	public static function execute(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+	public static function execute(string|null $path = null, string $method = 'GET', array $routes = [], Closure|null $callback = null)
 	{
 		return (new static($routes))->call($path, $method, $callback);
 	}

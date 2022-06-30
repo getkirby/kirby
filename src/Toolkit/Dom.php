@@ -442,7 +442,7 @@ class Dom
 	 * @param \Closure|null Comparison callback that returns whether the expected and real name match
 	 * @return string|false Matched name in the list or `false`
 	 */
-	public static function listContainsName(array $list, DOMNode $node, array $options, ?Closure $compare = null)
+	public static function listContainsName(array $list, DOMNode $node, array $options, Closure|null $compare = null)
 	{
 		$allowedNamespaces = $options['allowedNamespaces'];
 		$localName         = $node->localName;

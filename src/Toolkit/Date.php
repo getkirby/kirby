@@ -84,7 +84,7 @@ class Date extends DateTime
 	 * @param int|null $day
 	 * @return int
 	 */
-	public function day(?int $day = null): int
+	public function day(int|null $day = null): int
 	{
 		if ($day === null) {
 			return (int)$this->format('d');
@@ -126,7 +126,7 @@ class Date extends DateTime
 	 * @param int|null $hour
 	 * @return int
 	 */
-	public function hour(?int $hour = null): int
+	public function hour(int|null $hour = null): int
 	{
 		if ($hour === null) {
 			return (int)$this->format('H');
@@ -234,7 +234,7 @@ class Date extends DateTime
 	 * @param int|null $minute
 	 * @return int
 	 */
-	public function minute(?int $minute = null): int
+	public function minute(int|null $minute = null): int
 	{
 		if ($minute === null) {
 			return (int)$this->format('i');
@@ -250,7 +250,7 @@ class Date extends DateTime
 	 * @param int|null $month
 	 * @return int
 	 */
-	public function month(?int $month = null): int
+	public function month(int|null $month = null): int
 	{
 		if ($month === null) {
 			return (int)$this->format('m');
@@ -305,7 +305,7 @@ class Date extends DateTime
 	 * @param \DateTimeZone|null $timezone
 	 * @return static|null
 	 */
-	public static function optional(?string $datetime = null, ?DateTimeZone $timezone = null)
+	public static function optional(string|null $datetime = null, ?DateTimeZone $timezone = null)
 	{
 		if (empty($datetime) === true) {
 			return null;
@@ -368,7 +368,7 @@ class Date extends DateTime
 	 * @param int|array|null $step array of `unit` and `size` to round to nearest
 	 * @return int|null
 	 */
-	public static function roundedTimestamp(?string $date = null, $step = null): ?int
+	public static function roundedTimestamp(string|null $date = null, $step = null): int|null
 	{
 		if ($date = static::optional($date)) {
 			if ($step !== null) {
@@ -391,7 +391,7 @@ class Date extends DateTime
 	 * @param int|null $second
 	 * @return int
 	 */
-	public function second(?int $second = null): int
+	public function second(int|null $second = null): int
 	{
 		if ($second === null) {
 			return (int)$this->format('s');
@@ -421,7 +421,7 @@ class Date extends DateTime
 	 * @param array|null $default Default values to use if one or both values are not provided
 	 * @return array
 	 */
-	public static function stepConfig($input = null, ?array $default = null): array
+	public static function stepConfig($input = null, array|null $default = null): array
 	{
 		$default ??= [
 			'size' => 1,
@@ -529,7 +529,7 @@ class Date extends DateTime
 	 * @param int|null $year
 	 * @return int
 	 */
-	public function year(?int $year = null): int
+	public function year(int|null $year = null): int
 	{
 		if ($year === null) {
 			return (int)$this->format('Y');

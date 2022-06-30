@@ -298,7 +298,7 @@ return [
 	 * @param array $data Data array for the snippet
 	 * @return string|null
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): ?string {
+	'snippet' => function (App $kirby, $name, array $data = []): string|null {
 		$snippets = A::wrap($name);
 
 		foreach ($snippets as $name) {

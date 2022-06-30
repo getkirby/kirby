@@ -157,7 +157,7 @@ class Email
 	 *
 	 * @return \Closure|null
 	 */
-	public function beforeSend(): ?Closure
+	public function beforeSend(): Closure|null
 	{
 		return $this->beforeSend;
 	}
@@ -199,7 +199,7 @@ class Email
 	 *
 	 * @return string|null
 	 */
-	public function fromName(): ?string
+	public function fromName(): string|null
 	{
 		return $this->fromName;
 	}
@@ -239,7 +239,7 @@ class Email
 	 *
 	 * @return string|null
 	 */
-	public function replyToName(): ?string
+	public function replyToName(): string|null
 	{
 		return $this->replyToName;
 	}
@@ -338,7 +338,7 @@ class Email
 	 * @param \Closure|null $beforeSend
 	 * @return $this
 	 */
-	protected function setBeforeSend(?Closure $beforeSend = null)
+	protected function setBeforeSend(Closure|null $beforeSend = null)
 	{
 		$this->beforeSend = $beforeSend;
 		return $this;

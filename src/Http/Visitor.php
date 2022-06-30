@@ -185,7 +185,7 @@ class Visitor
 	 * @param string ...$mimeTypes MIME types to query for
 	 * @return string|null Preferred MIME type
 	 */
-	public function preferredMimeType(string ...$mimeTypes): ?string
+	public function preferredMimeType(string ...$mimeTypes): string|null
 	{
 		foreach ($this->acceptedMimeTypes() as $acceptedMime) {
 			// look for direct matches
