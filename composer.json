@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": ">=7.4.0 <8.2.0",
+		"php": ">=8.0.0 <8.2.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -76,7 +76,7 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "7.4.0"
+			"php": "8.0.0"
 		},
 		"platform-check": false
 	},
