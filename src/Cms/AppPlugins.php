@@ -903,6 +903,8 @@ trait AppPlugins
                 // to be picked up by the Panel\Document class when
                 // rendering the Panel view
                 static::plugin('plugins/' . $dirname, ['root' => $dir]);
+            } else {
+                continue;
             }
 
             $loaded[] = $dir;
