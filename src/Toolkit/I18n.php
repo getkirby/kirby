@@ -145,7 +145,7 @@ class I18n
 			if (isset($key[$locale])) {
 				return $key[$locale];
 			}
-			// try to use lagnuage code, e.g. `es` when locale is `es_ES`
+			// try to use language code, e.g. `es` when locale is `es_ES`
 			$lang = Str::before($locale, '_');
 			if (isset($key[$lang])) {
 				return $key[$lang];
@@ -225,7 +225,7 @@ class I18n
 			return static::$translations[$locale] = (static::$load)($locale);
 		}
 
-		// try to use lagnuage code, e.g. `es` when locale is `es_ES`
+		// try to use language code, e.g. `es` when locale is `es_ES`
 		$lang = Str::before($locale, '_');
 		if (isset(static::$translations[$lang]) === true) {
 			return static::$translations[$lang];
