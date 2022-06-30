@@ -885,14 +885,27 @@ trait AppPlugins
                 continue;
             }
 
-            $dir   = $root . '/' . $dirname;
-            $entry = $dir . '/index.php';
+            $dir = $root . '/' . $dirname;
 
-            if (is_dir($dir) !== true || is_file($entry) !== true) {
+            if (is_dir($dir) !== true) {
                 continue;
             }
 
-            F::loadOnce($entry);
+            $entry  = $dir . '/index.php';
+            $script = $dir . '/index.js';
+            $styles = $dir . '/index.css';
+
+            if (is_file($entry) === true) {
+                F::loadOnce($entry);
+            } elseif (is_file($script) === true || is_file($styles) === true) {
+                // if no PHP file is present but an index.js or index.css,
+                // register as anonymous plugin (without actual extensions)
+                // to be picked up by the Panel\Document class when
+                // rendering the Panel view
+                static::plugin('plugins/' . $dirname, ['root' => $dir]);
+            } else {
+                continue;
+            }
 
             $loaded[] = $dir;
         }
