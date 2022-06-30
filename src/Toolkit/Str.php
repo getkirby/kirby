@@ -1208,7 +1208,7 @@ class Str
 			if (strpos($query, '.') !== false) {
 				try {
 					$result = (new Query($match[1], $data))->result();
-				} catch (Exception $e) {
+				} catch (Exception) {
 					$result = null;
 				}
 			} else {

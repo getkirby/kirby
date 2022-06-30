@@ -193,7 +193,7 @@ class F
 		try {
 			static::realpath($file, $in);
 			return true;
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return false;
 		}
 	}
@@ -362,7 +362,7 @@ class F
 
 		try {
 			return $method($source, $link) === true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
@@ -793,7 +793,7 @@ class F
 
 		try {
 			return filesize($file);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return 0;
 		}
 	}

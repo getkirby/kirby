@@ -184,7 +184,7 @@ class User extends ModelWithContent
 
 		try {
 			return $this->blueprint = UserBlueprint::factory('users/' . $this->role(), 'users/default', $this);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return $this->blueprint = new UserBlueprint([
 				'model' => $this,
 				'name'  => 'default',

@@ -398,7 +398,7 @@ class Site extends ModelWithContent
 
 		try {
 			return $this->page = $this->homePage();
-		} catch (LogicException $e) {
+		} catch (LogicException) {
 			return $this->page = null;
 		}
 	}

@@ -263,7 +263,7 @@ trait UserActions
 
 				// we can't really test for a random match
 				// @codeCoverageIgnoreStart
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				$length++;
 			}
 		} while (true);

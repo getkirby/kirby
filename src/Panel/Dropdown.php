@@ -54,7 +54,7 @@ class Dropdown extends Json
 				}
 
 				$options[] = $option;
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				continue;
 			}
 		}

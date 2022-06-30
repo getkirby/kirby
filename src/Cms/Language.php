@@ -350,7 +350,7 @@ class Language extends Model
 
 		try {
 			return Data::read($file);
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			return [];
 		}
 	}
@@ -456,7 +456,7 @@ class Language extends Model
 	{
 		try {
 			$existingData = Data::read($this->root());
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$existingData = [];
 		}
 

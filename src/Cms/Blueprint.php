@@ -208,7 +208,7 @@ class Blueprint
 				$mixin = static::find($extend);
 				$mixin = static::extend($mixin);
 				$props = A::merge($mixin, $props, A::MERGE_REPLACE);
-			} catch (Exception $e) {
+			} catch (Exception) {
 				// keep the props unextended if the snippet wasn't found
 			}
 		}
@@ -231,7 +231,7 @@ class Blueprint
 	{
 		try {
 			$props = static::load($name);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$props = $fallback !== null ? static::load($fallback) : null;
 		}
 

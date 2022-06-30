@@ -121,7 +121,7 @@ trait AppUsers
 		} else {
 			try {
 				return $this->auth()->user(null, $allowImpersonation);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				return null;
 			}
 		}
