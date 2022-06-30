@@ -117,25 +117,14 @@ class Find
 
 		$kirby = App::instance();
 
-		switch ($modelName) {
-			case 'site':
-				$model = $kirby->site();
-				break;
-			case 'account':
-				$model = static::user();
-				break;
-			case 'page':
-				$model = static::page(basename($path));
-				break;
-			case 'file':
-				$model = static::file(...explode('/files/', $path));
-				break;
-			case 'user':
-				$model = $kirby->user(basename($path));
-				break;
-			default:
-				throw new InvalidArgumentException('Invalid model type: ' . $modelType);
-		}
+		$model = match ($modelName) {
+			'site'    => $kirby->site(),
+			'account' => static::user(),
+			'page'    => static::page(basename($path)),
+			'file'    => static::file(...explode('/files/', $path)),
+			'user'    => $kirby->user(basename($path)),
+			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
+		};
 
 		return $model ?? throw new NotFoundException([
 			'key' => $modelName . '.undefined'

@@ -10,14 +10,11 @@ return [
 		'action'  => function () {
 			$kirby = $this->kirby();
 
-			switch ($kirby->request()->get('canBe')) {
-				case 'changed':
-					return $kirby->roles()->canBeChanged();
-				case 'created':
-					return $kirby->roles()->canBeCreated();
-				default:
-					return $kirby->roles();
-			}
+			return match ($kirby->request()->get('canBe')) {
+				'changed' => $kirby->roles()->canBeChanged(),
+				'created' => $kirby->roles()->canBeCreated(),
+				default   => $kirby->roles()
+			};
 		}
 	],
 	[

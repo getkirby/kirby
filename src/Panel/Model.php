@@ -147,18 +147,11 @@ abstract class Model
 			if ($image->isResizable() === true) {
 				$settings['src'] = static::imagePlaceholder();
 
-				switch ($layout) {
-					case 'cards':
-						$sizes = [352, 864, 1408];
-						break;
-					case 'cardlets':
-						$sizes = [96, 192];
-						break;
-					case 'list':
-					default:
-						$sizes = [38, 76];
-						break;
-				}
+				$sizes = match ($layout) {
+					'cards'    => [352, 864, 1408],
+					'cardlets' => [96, 192],
+					default    => [38, 76]
+				};
 
 				if (($settings['cover'] ?? false) === false || $layout === 'cards') {
 					$settings['srcset'] = $image->srcset($sizes);
