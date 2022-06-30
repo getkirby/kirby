@@ -141,9 +141,16 @@ class I18n
 		$locale ??= static::locale();
 
 		if (is_array($key) === true) {
+			// try to use actual locale
 			if (isset($key[$locale])) {
 				return $key[$locale];
 			}
+			// try to use language code, e.g. `es` when locale is `es_ES`
+			$lang = Str::before($locale, '_');
+			if (isset($key[$lang])) {
+				return $key[$lang];
+			}
+			// use fallback
 			if (is_array($fallback)) {
 				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
 			}
@@ -216,6 +223,12 @@ class I18n
 
 		if (is_a(static::$load, 'Closure') === true) {
 			return static::$translations[$locale] = (static::$load)($locale);
+		}
+
+		// try to use language code, e.g. `es` when locale is `es_ES`
+		$lang = Str::before($locale, '_');
+		if (isset(static::$translations[$lang]) === true) {
+			return static::$translations[$lang];
 		}
 
 		return static::$translations[$locale] = [];

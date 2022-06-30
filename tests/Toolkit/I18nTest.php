@@ -161,6 +161,16 @@ class I18nTest extends TestCase
 	/**
 	 * @covers ::translate
 	 */
+	public function testTranslateWithLanguageCode()
+	{
+		I18n::$locale = 'es_ES';
+
+		$this->assertSame('vamos', I18n::translate(['es' => 'vamos']));
+	}
+
+	/**
+	 * @covers ::translate
+	 */
 	public function testTranslateWithFallback()
 	{
 		I18n::$translations = [
@@ -364,6 +374,9 @@ class I18nTest extends TestCase
 			],
 			'de' => [
 				'test' => 'juhu'
+			],
+			'es' => [
+				'test' => 'vamos'
 			]
 		];
 
@@ -372,6 +385,9 @@ class I18nTest extends TestCase
 
 		I18n::$locale = 'de';
 		$this->assertSame('juhu', I18n::translate('test'));
+
+		I18n::$locale = 'es_ES';
+		$this->assertSame('vamos', I18n::translate('test'));
 
 		I18n::$locale = 'fr';
 		I18n::$fallback = 'fr';
