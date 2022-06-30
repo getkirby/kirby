@@ -95,7 +95,6 @@ class Collection extends Iterator implements Countable
 	 *
 	 * @param string $key string or array
 	 * @param mixed $value
-	 * @return $this
 	 */
 	public function __set(string $key, $value)
 	{
@@ -104,8 +103,6 @@ class Collection extends Iterator implements Countable
 		} else {
 			$this->data[strtolower($key)] = $value;
 		}
-
-		return $this;
 	}
 
 	/**

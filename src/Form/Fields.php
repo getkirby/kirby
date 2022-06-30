@@ -23,7 +23,6 @@ class Fields extends Collection
 	 *
 	 * @param string $name
 	 * @param object|array $field
-	 * @return $this
 	 */
 	public function __set(string $name, $field)
 	{
@@ -33,7 +32,7 @@ class Fields extends Collection
 			$field = Field::factory($field['type'], $field, $this);
 		}
 
-		return parent::__set($field->name(), $field);
+		parent::__set($field->name(), $field);
 	}
 
 	/**

@@ -59,6 +59,6 @@ class Structure extends Collection
 			]);
 		}
 
-		return parent::__set($object->id(), $object);
+		parent::__set($object->id(), $object);
 	}
 }
