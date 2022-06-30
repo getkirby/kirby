@@ -87,6 +87,17 @@ class Plugin extends Model
 	}
 
 	/**
+	 * Kirby plugin getter
+	 *
+	 * @param string $name
+	 * @return \Kirby\Cms\Plugin|null
+	 */
+	public static function get(string $name)
+	{
+		return App::plugin($name);
+	}
+
+	/**
 	 * Returns the unique id for the plugin
 	 *
 	 * @return string
@@ -171,6 +182,18 @@ class Plugin extends Model
 	public function option(string $key)
 	{
 		return $this->kirby()->option($this->prefix() . '.' . $key);
+	}
+
+	/**
+	 * Registers a plugin in the CMS
+	 *
+	 * @param string $name
+	 * @param array $extends
+	 * @return \Kirby\Cms\Plugin
+	 */
+	public static function register(string $name, array $extends = [])
+	{
+		return App::plugin($name, $extends);
 	}
 
 	/**

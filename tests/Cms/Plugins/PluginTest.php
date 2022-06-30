@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 /**
- * @coversDefaultClass Kirby\Cms\Plugin
+ * @coversDefaultClass \Kirby\Cms\Plugin
  */
 class PluginTest extends TestCase
 {
@@ -77,6 +77,17 @@ class PluginTest extends TestCase
 		]);
 
 		$this->assertSame($extends, $plugin->extends());
+	}
+
+	/**
+	 * @covers ::get
+	 */
+	public function testGet()
+	{
+		$plugin = Plugin::register('getkirby/test-plugin', []);
+
+		$this->assertSame($plugin, Plugin::get('getkirby/test-plugin'));
+		$this->assertSame(Plugin::get('getkirby/test-plugin'), App::instance()->plugin('getkirby/test-plugin'));
 	}
 
 	/**
@@ -307,6 +318,16 @@ class PluginTest extends TestCase
 		$plugin = new Plugin('getkirby/test-plugin', []);
 
 		$this->assertSame('getkirby.test-plugin', $plugin->prefix());
+	}
+
+	/**
+	 * @covers ::register
+	 */
+	public function testRegister()
+	{
+		$plugin = Plugin::register('getkirby/test-plugin', []);
+
+		$this->assertSame($plugin, App::instance()->plugin('getkirby/test-plugin'));
 	}
 
 	/**

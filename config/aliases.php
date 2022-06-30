@@ -13,6 +13,7 @@ return [
 	'page'       => 'Kirby\Cms\Page',
 	'pages'      => 'Kirby\Cms\Pages',
 	'pagination' => 'Kirby\Cms\Pagination',
+	'plugin'     => 'Kirby\Cms\Plugin',
 	'r'          => 'Kirby\Cms\R',
 	'response'   => 'Kirby\Cms\Response',
 	's'          => 'Kirby\Cms\S',
