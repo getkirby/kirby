@@ -161,7 +161,7 @@ trait AppTranslations
 	 * @param string|null $locale Locale name or `null` for the current locale
 	 * @return \Kirby\Cms\Translation
 	 */
-	public function translation(?string $locale = null)
+	public function translation(string|null $locale = null)
 	{
 		$locale = $locale ?? I18n::locale();
 		$locale = basename($locale);

@@ -118,7 +118,7 @@ class User extends Model
 	/**
 	 * @return string|null
 	 */
-	public function home(): ?string
+	public function home(): string|null
 	{
 		if ($home = ($this->model->blueprint()->home() ?? null)) {
 			$url = $this->model->toString($home);

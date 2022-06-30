@@ -48,7 +48,7 @@ class Query
 	 * @param string|null $query
 	 * @param array|object $data
 	 */
-	public function __construct(?string $query = null, $data = [])
+	public function __construct(string|null $query = null, $data = [])
 	{
 		$this->query = $query;
 		$this->data  = $data;

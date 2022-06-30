@@ -94,7 +94,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function exposedFileUrl(string $folder): ?string
+	public function exposedFileUrl(string $folder): string|null
 	{
 		if (!$url = $this->folderUrl($folder)) {
 			return null;
@@ -140,7 +140,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function folderUrl(string $folder): ?string
+	public function folderUrl(string $folder): string|null
 	{
 		$index = $this->app->root('index');
 
@@ -544,7 +544,7 @@ class System
 	 *
 	 * @return string|null
 	 */
-	public function serverSoftware(): ?string
+	public function serverSoftware(): string|null
 	{
 		if ($servers = $this->app->option('servers')) {
 			$servers = A::wrap($servers);

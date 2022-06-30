@@ -86,7 +86,7 @@ class Status
 	 *                                user to avoid leaking whether the pending user exists
 	 * @return string|null
 	 */
-	public function challenge(bool $automaticFallback = true): ?string
+	public function challenge(bool $automaticFallback = true): string|null
 	{
 		// never return a challenge type if the status doesn't match
 		if ($this->status() !== 'pending') {
@@ -105,7 +105,7 @@ class Status
 	 *
 	 * @return string|null
 	 */
-	public function email(): ?string
+	public function email(): string|null
 	{
 		return $this->email;
 	}
@@ -156,7 +156,7 @@ class Status
 	 * @param string|null $challenge
 	 * @return $this
 	 */
-	protected function setChallenge(?string $challenge = null)
+	protected function setChallenge(string|null $challenge = null)
 	{
 		$this->challenge = $challenge;
 		return $this;
@@ -169,7 +169,7 @@ class Status
 	 * @param string|null $challengeFallback
 	 * @return $this
 	 */
-	protected function setChallengeFallback(?string $challengeFallback = null)
+	protected function setChallengeFallback(string|null $challengeFallback = null)
 	{
 		$this->challengeFallback = $challengeFallback;
 		return $this;
@@ -181,7 +181,7 @@ class Status
 	 * @param string|null $email
 	 * @return $this
 	 */
-	protected function setEmail(?string $email = null)
+	protected function setEmail(string|null $email = null)
 	{
 		$this->email = $email;
 		return $this;

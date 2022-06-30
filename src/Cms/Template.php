@@ -122,7 +122,7 @@ class Template
 	 *
 	 * @return string|null
 	 */
-	public function file(): ?string
+	public function file(): string|null
 	{
 		if ($this->hasDefaultType() === true) {
 			try {

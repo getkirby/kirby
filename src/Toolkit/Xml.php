@@ -71,7 +71,7 @@ class Xml
 	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
-	public static function attr($name, $value = null): ?string
+	public static function attr($name, $value = null): string|null
 	{
 		if (is_array($name) === true) {
 			if ($value !== false) {
@@ -198,7 +198,7 @@ class Xml
 	 * @param string|null $string
 	 * @return string
 	 */
-	public static function decode(?string $string): string
+	public static function decode(string|null $string): string
 	{
 		if ($string === null) {
 			$string = '';
@@ -223,7 +223,7 @@ class Xml
 	 * @param bool $html True = Convert to HTML-safe first
 	 * @return string
 	 */
-	public static function encode(?string $string, bool $html = true): string
+	public static function encode(string|null $string, bool $html = true): string
 	{
 		if ($string === null) {
 			return '';
@@ -256,7 +256,7 @@ class Xml
 	 * @param string $xml
 	 * @return array|null Parsed array or `null` on error
 	 */
-	public static function parse(string $xml): ?array
+	public static function parse(string $xml): array|null
 	{
 		$xml = @simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);
 
@@ -366,7 +366,7 @@ class Xml
 	 * @param int $level Indentation level
 	 * @return string The generated XML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, ?string $indent = null, int $level = 0): string
+	public static function tag(string $name, $content = '', array $attr = null, string|null $indent = null, int $level = 0): string
 	{
 		$attr       = static::attr($attr);
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
@@ -399,7 +399,7 @@ class Xml
 	 * @param mixed $value
 	 * @return string|null
 	 */
-	public static function value($value): ?string
+	public static function value($value): string|null
 	{
 		if ($value === true) {
 			return 'true';

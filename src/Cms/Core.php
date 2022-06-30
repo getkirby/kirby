@@ -54,7 +54,7 @@ class Core
 	 * @param string $name
 	 * @return array|null
 	 */
-	public function area(string $name): ?array
+	public function area(string $name): array|null
 	{
 		return $this->load()->area($name);
 	}

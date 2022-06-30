@@ -138,7 +138,7 @@ class Remote
 	 *
 	 * @return int|null
 	 */
-	public function code(): ?int
+	public function code(): int|null
 	{
 		return $this->info['http_code'] ?? null;
 	}

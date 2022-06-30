@@ -376,7 +376,7 @@ class File
 	 * @param string|null $handler date, intl or strftime
 	 * @return mixed
 	 */
-	public function modified($format = null, ?string $handler = null)
+	public function modified($format = null, string|null $handler = null)
 	{
 		$kirby = $this->kirby();
 
@@ -472,7 +472,7 @@ class File
 	 *
 	 * @return string|null
 	 */
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return $this->root;
 	}
@@ -483,7 +483,7 @@ class File
 	 * @param string|null $root
 	 * @return $this
 	 */
-	protected function setRoot(?string $root = null)
+	protected function setRoot(string|null $root = null)
 	{
 		$this->root = $root;
 		return $this;
@@ -495,7 +495,7 @@ class File
 	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(?string $url = null)
+	protected function setUrl(string|null $url = null)
 	{
 		$this->url = $url;
 		return $this;
@@ -506,7 +506,7 @@ class File
 	 *
 	 * @return string|null
 	 */
-	public function url(): ?string
+	public function url(): string|null
 	{
 		return $this->url;
 	}
@@ -595,7 +595,7 @@ class File
 	 *
 	 * @return string|null
 	 */
-	public function type(): ?string
+	public function type(): string|null
 	{
 		return F::type($this->root);
 	}

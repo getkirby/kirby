@@ -37,7 +37,7 @@ abstract class Challenge
 	 * @return string|null The generated and sent code or `null` in case
 	 *                     there was no code to generate by this algorithm
 	 */
-	abstract public static function create(User $user, array $options): ?string;
+	abstract public static function create(User $user, array $options): string|null;
 
 	/**
 	 * Verifies the provided code against the created one;

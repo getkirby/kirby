@@ -120,7 +120,7 @@ class Event
 	 *
 	 * @return string|null
 	 */
-	public function action(): ?string
+	public function action(): string|null
 	{
 		return $this->action;
 	}
@@ -158,7 +158,7 @@ class Event
 	 * @param \Closure $hook
 	 * @return mixed
 	 */
-	public function call(?object $bind, Closure $hook)
+	public function call(object|null $bind, Closure $hook)
 	{
 		// collect the list of possible hook arguments
 		$data = $this->arguments();
@@ -232,7 +232,7 @@ class Event
 	 *
 	 * @return string|null
 	 */
-	public function state(): ?string
+	public function state(): string|null
 	{
 		return $this->state;
 	}

@@ -267,7 +267,7 @@ class Pages extends Collection
 	 * @param string|null $key
 	 * @return \Kirby\Cms\Page|null
 	 */
-	public function findByKey(?string $key = null)
+	public function findByKey(string|null $key = null)
 	{
 		if ($key === null) {
 			return null;

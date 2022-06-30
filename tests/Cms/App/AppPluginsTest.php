@@ -21,7 +21,7 @@ class DummyAuthChallenge extends Challenge
 		return true;
 	}
 
-	public static function create(User $user, array $options): ?string
+	public static function create(User $user, array $options): string|null
 	{
 		return 'test';
 	}
@@ -945,23 +945,6 @@ class AppPluginsTest extends TestCase
 
 		// hook should have been called only once after the firs initialization
 		$this->assertEquals(1, $executed);
-	}
-
-	public function testPluginLoaderAnonymous()
-	{
-		$kirby = new App([
-			'roots' => [
-				'index'   => $this->fixtures = __DIR__ . '/fixtures/AppPluginsTest',
-				'plugins' => $dir = $this->fixtures . '/site/plugins-loader-anonymous'
-			]
-		]);
-
-		$plugins = $kirby->plugins();
-		$this->assertSame(1, count($plugins));
-
-		$plugin = array_pop($plugins);
-		$this->assertSame('plugins/test5', $plugin->name());
-		$this->assertSame($dir . '/test5', $plugin->root());
 	}
 
 	public function testThirdPartyExtensions()

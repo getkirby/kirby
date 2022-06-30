@@ -12,7 +12,7 @@ return [
 		}
 	],
 	'computed' => [
-		'searchterm' => function (): ?string {
+		'searchterm' => function (): string|null {
 			return App::instance()->request()->get('searchterm');
 		}
 	]

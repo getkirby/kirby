@@ -162,7 +162,7 @@ class Mime
 	 * @param string $extension
 	 * @return string|null
 	 */
-	public static function fromExtension(string $extension): ?string
+	public static function fromExtension(string $extension): string|null
 	{
 		$mime = static::$types[$extension] ?? null;
 		return is_array($mime) === true ? array_shift($mime) : $mime;

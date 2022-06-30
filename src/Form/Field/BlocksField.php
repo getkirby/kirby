@@ -87,7 +87,7 @@ class BlocksField extends FieldClass
 		return $this->fieldsets;
 	}
 
-	public function fieldsetGroups(): ?array
+	public function fieldsetGroups(): array|null
 	{
 		$fieldsetGroups = $this->fieldsets()->groups();
 		return empty($fieldsetGroups) === true ? null : $fieldsetGroups;

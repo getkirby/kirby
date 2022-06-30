@@ -195,7 +195,7 @@ class Parsley
 	 * @param \Kirby\Parsley\Element|string $element
 	 * @return array|null
 	 */
-	public function fallback($element): ?array
+	public function fallback($element): array|null
 	{
 		if ($fallback = $this->schema->fallback($element)) {
 			return $fallback;

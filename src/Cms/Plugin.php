@@ -120,7 +120,7 @@ class Plugin extends Model
 	 *
 	 * @return string|null
 	 */
-	public function link(): ?string
+	public function link(): string|null
 	{
 		$info     = $this->info();
 		$homepage = $info['homepage'] ?? null;

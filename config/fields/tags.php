@@ -31,7 +31,7 @@ return [
 		 * Set to `list` to display each tag with 100% width,
 		 * otherwise the tags are displayed inline
 		 */
-		'layout' => function (?string $layout = null) {
+		'layout' => function (string|null $layout = null) {
 			return $layout;
 		},
 		/**

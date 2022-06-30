@@ -22,7 +22,7 @@ class Schema
 	 * @param \Kirby\Parsley\Element|string $element
 	 * @return array|null
 	 */
-	public function fallback($element): ?array
+	public function fallback($element): array|null
 	{
 		return null;
 	}

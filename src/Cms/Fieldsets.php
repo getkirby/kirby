@@ -93,7 +93,7 @@ class Fieldsets extends Items
 		return $this->options['groups'] ?? [];
 	}
 
-	public function toArray(?Closure $map = null): array
+	public function toArray(Closure|null $map = null): array
 	{
 		return A::map(
 			$this->data,

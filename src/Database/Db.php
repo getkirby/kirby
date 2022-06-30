@@ -37,7 +37,7 @@ class Db
 	 *                           don't pass any argument to get the current connection
 	 * @return \Kirby\Database\Database
 	 */
-	public static function connect(?array $params = null)
+	public static function connect(array|null $params = null)
 	{
 		if ($params === null && static::$connection !== null) {
 			return static::$connection;

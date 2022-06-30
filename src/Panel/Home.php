@@ -162,7 +162,7 @@ class Home
 	 * @param string $url
 	 * @return string|null
 	 */
-	public static function panelPath(string $url): ?string
+	public static function panelPath(string $url): string|null
 	{
 		$after = Str::after($url, App::instance()->url('panel'));
 		return trim($after, '/');
@@ -176,7 +176,7 @@ class Home
 	 *
 	 * @return string|null
 	 */
-	public static function remembered(): ?string
+	public static function remembered(): string|null
 	{
 		// check for a stored path after login
 		$remembered = App::instance()->session()->pull('panel.path');

@@ -116,7 +116,7 @@ class Translation
 	 * @param string|null $default
 	 * @return string|null
 	 */
-	public function get(string $key, string $default = null): ?string
+	public function get(string $key, string $default = null): string|null
 	{
 		return $this->data[$key] ?? $default;
 	}

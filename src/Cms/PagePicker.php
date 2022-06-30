@@ -101,7 +101,7 @@ class PagePicker extends Picker
 	 * @param \Kirby\Cms\Site|\Kirby\Cms\Page|null
 	 * @return array|null
 	 */
-	public function modelToArray($model = null): ?array
+	public function modelToArray($model = null): array|null
 	{
 		if ($model === null) {
 			return null;
