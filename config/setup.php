@@ -3,7 +3,9 @@
 /**
  * Constants
  */
-define('DS', '/');
+if (!defined('DS')) {
+	define('DS', '/');
+}
 
 /**
  * Class aliases
