@@ -244,12 +244,12 @@ class Uri
         }
 
         if ($app = App::instance(null, true)) {
-            $url = $app->url('current');
+            $environment = $app->environment();
         } else {
-            $url = (new Environment())->requestUrl();
+            $environment = new Environment();
         }
 
-        return new static($url, $props);
+        return new static($environment->requestUrl(), $props);
     }
 
     /**
