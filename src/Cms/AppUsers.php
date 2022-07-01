@@ -48,7 +48,7 @@ trait AppUsers
 	 *               if called with callback: Return value from the callback
 	 * @throws \Throwable
 	 */
-	public function impersonate(?string $who = null, ?Closure $callback = null)
+	public function impersonate(string|null $who = null, Closure|null $callback = null)
 	{
 		$auth = $this->auth();
 
@@ -110,7 +110,7 @@ trait AppUsers
 	 *                                 (when `$id` is passed as `null`)
 	 * @return \Kirby\Cms\User|null
 	 */
-	public function user(?string $id = null, bool $allowImpersonation = true)
+	public function user(string|null $id = null, bool $allowImpersonation = true)
 	{
 		if ($id !== null) {
 			return $this->users()->find($id);

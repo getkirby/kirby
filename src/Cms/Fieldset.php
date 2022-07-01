@@ -92,7 +92,7 @@ class Fieldset extends Item
 	 * @param array|string $name
 	 * @return string|null
 	 */
-	protected function createName($name): ?string
+	protected function createName($name): string|null
 	{
 		return I18n::translate($name, $name);
 	}
@@ -101,7 +101,7 @@ class Fieldset extends Item
 	 * @param array|string $label
 	 * @return string|null
 	 */
-	protected function createLabel($label = null): ?string
+	protected function createLabel($label = null): string|null
 	{
 		return I18n::translate($label, $label);
 	}
@@ -195,7 +195,7 @@ class Fieldset extends Item
 	/**
 	 * @return string|null
 	 */
-	public function icon(): ?string
+	public function icon(): string|null
 	{
 		return $this->icon;
 	}
@@ -203,7 +203,7 @@ class Fieldset extends Item
 	/**
 	 * @return string|null
 	 */
-	public function label(): ?string
+	public function label(): string|null
 	{
 		return $this->label;
 	}

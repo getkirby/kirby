@@ -194,7 +194,7 @@ class Uri
 	 *
 	 * @return string|null
 	 */
-	public function auth(): ?string
+	public function auth(): string|null
 	{
 		$auth = trim($this->username . ':' . $this->password);
 		return $auth !== ':' ? $auth : null;
@@ -206,7 +206,7 @@ class Uri
 	 *
 	 * @return string|null
 	 */
-	public function base(): ?string
+	public function base(): string|null
 	{
 		if ($domain = $this->domain()) {
 			return $this->scheme ? $this->scheme . '://' . $domain : $domain;
@@ -257,7 +257,7 @@ class Uri
 	 *
 	 * @return string|null
 	 */
-	public function domain(): ?string
+	public function domain(): string|null
 	{
 		if (empty($this->host) === true || $this->host === '/') {
 			return null;

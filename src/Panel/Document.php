@@ -137,7 +137,7 @@ class Document
 	 * @param string $option asset option name
 	 * @return string|null
 	 */
-	public static function customAsset(string $option): ?string
+	public static function customAsset(string $option): string|null
 	{
 		if ($path = App::instance()->option($option)) {
 			$asset = new Asset($path);
@@ -155,7 +155,7 @@ class Document
 	 * @todo remove in 3.8.0
 	 * @codeCoverageIgnore
 	 */
-	public static function customCss(): ?string
+	public static function customCss(): string|null
 	{
 		Helpers::deprecated('Panel\Document::customCss() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.css\') instead.');
 		return static::customAsset('panel.css');
@@ -166,7 +166,7 @@ class Document
 	 * @todo remove in 3.8.0
 	 * @codeCoverageIgnore
 	 */
-	public static function customJs(): ?string
+	public static function customJs(): string|null
 	{
 		Helpers::deprecated('Panel\Document::customJs() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.js\') instead.');
 		return static::customAsset('panel.js');

@@ -236,7 +236,7 @@ class User extends ModelWithContent
 	 *
 	 * @return string
 	 */
-	public function email(): ?string
+	public function email(): string|null
 	{
 		return $this->email ??= $this->credentials()['email'] ?? null;
 	}
@@ -276,7 +276,7 @@ class User extends ModelWithContent
 	 * @param string|null $password
 	 * @return string|null
 	 */
-	public static function hashPassword($password): ?string
+	public static function hashPassword($password): string|null
 	{
 		if ($password !== null) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
@@ -594,7 +594,7 @@ class User extends ModelWithContent
 	 *
 	 * @return string|null
 	 */
-	public function password(): ?string
+	public function password(): string|null
 	{
 		if ($this->password !== null) {
 			return $this->password;
@@ -848,7 +848,7 @@ class User extends ModelWithContent
 	 *
 	 * @return string|null
 	 */
-	public function username(): ?string
+	public function username(): string|null
 	{
 		return $this->name()->or($this->email())->value();
 	}

@@ -251,7 +251,7 @@ class Blueprint
 	 * @param string $name
 	 * @return array|null
 	 */
-	public function field(string $name): ?array
+	public function field(string $name): array|null
 	{
 		return $this->fields[$name] ?? null;
 	}
@@ -780,7 +780,7 @@ class Blueprint
 	 * @param string|null $name
 	 * @return array|null
 	 */
-	public function tab(?string $name = null): ?array
+	public function tab(string|null $name = null): array|null
 	{
 		if ($name === null) {
 			return A::first($this->tabs);

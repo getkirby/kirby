@@ -46,13 +46,13 @@ return [
 		/**
 		 * Latest date, which can be selected/saved (Y-m-d)
 		 */
-		'max' => function (string $max = null): ?string {
+		'max' => function (string $max = null): string|null {
 			return Date::optional($max);
 		},
 		/**
 		 * Earliest date, which can be selected/saved (Y-m-d)
 		 */
-		'min' => function (string $min = null): ?string {
+		'min' => function (string $min = null): string|null {
 			return Date::optional($min);
 		},
 

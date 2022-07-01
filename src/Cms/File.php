@@ -461,7 +461,7 @@ class File extends ModelWithContent
 	 *
 	 * @return string|null
 	 */
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
 	}
@@ -578,7 +578,7 @@ class File extends ModelWithContent
 	 *
 	 * @return string|null
 	 */
-	public function template(): ?string
+	public function template(): string|null
 	{
 		return $this->template ??= $this->content()->get('template')->value();
 	}

@@ -192,7 +192,7 @@ class OptionsQuery
 	 * @param array|null $aliases
 	 * @return $this
 	 */
-	protected function setAliases(?array $aliases = null)
+	protected function setAliases(array|null $aliases = null)
 	{
 		$this->aliases = $aliases;
 		return $this;

@@ -29,7 +29,7 @@ class ExtendedModelWithContent extends ModelWithContent
 		return null;
 	}
 
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return '/tmp';
 	}
@@ -37,7 +37,7 @@ class ExtendedModelWithContent extends ModelWithContent
 
 class BrokenModelWithContent extends ExtendedModelWithContent
 {
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return null;
 	}

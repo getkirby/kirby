@@ -118,7 +118,7 @@ class Panel
 	 * @param string|null $areaId
 	 * @return bool
 	 */
-	public static function firewall(?User $user = null, ?string $areaId = null): bool
+	public static function firewall(?User $user = null, string|null $areaId = null): bool
 	{
 		// a user has to be logged in
 		if ($user === null) {
@@ -161,7 +161,7 @@ class Panel
 	 * @return void
 	 * @codeCoverageIgnore
 	 */
-	public static function go(?string $url = null, int $code = 302): void
+	public static function go(string|null $url = null, int $code = 302): void
 	{
 		throw new Redirect(static::url($url), $code);
 	}
@@ -537,7 +537,7 @@ class Panel
 	 *
 	 * @return string|null
 	 */
-	public static function setLanguage(): ?string
+	public static function setLanguage(): string|null
 	{
 		$kirby = App::instance();
 
@@ -597,7 +597,7 @@ class Panel
 	 * @param string|null $url
 	 * @return string
 	 */
-	public static function url(?string $url = null): string
+	public static function url(string|null $url = null): string
 	{
 		$slug = App::instance()->option('panel.slug', 'panel');
 

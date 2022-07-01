@@ -62,7 +62,7 @@ class Blocks extends Plain
 	 * @param \Kirby\Parsley\Element|string $element
 	 * @return array|null
 	 */
-	public function fallback($element): ?array
+	public function fallback($element): array|null
 	{
 		if (is_a($element, Element::class) === true) {
 			$html = $element->innerHtml();

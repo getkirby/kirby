@@ -64,7 +64,7 @@ class Response
 	 * @param array $headers
 	 * @param string $charset
 	 */
-	public function __construct($body = '', ?string $type = null, ?int $code = null, ?array $headers = null, ?string $charset = null)
+	public function __construct($body = '', string|null $type = null, int|null $code = null, array|null $headers = null, string|null $charset = null)
 	{
 		// array construction
 		if (is_array($body) === true) {
@@ -223,7 +223,7 @@ class Response
 	 * @param string $key Name of the header
 	 * @return string|null
 	 */
-	public function header(string $key): ?string
+	public function header(string $key): string|null
 	{
 		return $this->headers[$key] ?? null;
 	}
@@ -248,7 +248,7 @@ class Response
 	 * @param array $headers
 	 * @return static
 	 */
-	public static function json($body = '', ?int $code = null, ?bool $pretty = null, array $headers = [])
+	public static function json($body = '', int|null $code = null, bool|null $pretty = null, array $headers = [])
 	{
 		if (is_array($body) === true) {
 			$body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : 0);

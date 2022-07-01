@@ -142,7 +142,7 @@ trait IsFile
 	 *
 	 * @return string|null
 	 */
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return $this->root;
 	}
@@ -153,7 +153,7 @@ trait IsFile
 	 * @param string|null $root
 	 * @return $this
 	 */
-	protected function setRoot(?string $root = null)
+	protected function setRoot(string|null $root = null)
 	{
 		$this->root = $root;
 		return $this;
@@ -165,7 +165,7 @@ trait IsFile
 	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(?string $url = null)
+	protected function setUrl(string|null $url = null)
 	{
 		$this->url = $url;
 		return $this;
@@ -176,7 +176,7 @@ trait IsFile
 	 *
 	 * @return string|null
 	 */
-	public function type(): ?string
+	public function type(): string|null
 	{
 		// Important to include this in the trait
 		// to avoid infinite loops when trying
@@ -189,7 +189,7 @@ trait IsFile
 	 *
 	 * @return string|null
 	 */
-	public function url(): ?string
+	public function url(): string|null
 	{
 		return $this->url;
 	}

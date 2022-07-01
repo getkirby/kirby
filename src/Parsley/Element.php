@@ -49,7 +49,7 @@ class Element
 	 * @param string|null $fallback
 	 * @return string|null
 	 */
-	public function attr(string $attr, string $fallback = null): ?string
+	public function attr(string $attr, string $fallback = null): string|null
 	{
 		if ($this->node->hasAttribute($attr)) {
 			return $this->node->getAttribute($attr) ?? $fallback;
@@ -83,7 +83,7 @@ class Element
 	 *
 	 * @return string|null
 	 */
-	public function className(): ?string
+	public function className(): string|null
 	{
 		return $this->attr('class');
 	}

@@ -24,7 +24,7 @@ class Tpl
 	 * @return string
 	 * @throws Throwable
 	 */
-	public static function load(?string $file = null, array $data = []): string
+	public static function load(string|null $file = null, array $data = []): string
 	{
 		if ($file === null || is_file($file) === false) {
 			return '';

@@ -401,7 +401,7 @@ class F
 	 * @param string|null $base
 	 * @return void
 	 */
-	public static function loadClasses(array $classmap, ?string $base = null): void
+	public static function loadClasses(array $classmap, string|null $base = null): void
 	{
 		// convert all classnames to lowercase
 		$classmap = array_change_key_case($classmap);
@@ -841,7 +841,7 @@ class F
 	 * @param string $type
 	 * @return array|null
 	 */
-	public static function typeToExtensions(string $type): ?array
+	public static function typeToExtensions(string $type): array|null
 	{
 		return static::$types[$type] ?? null;
 	}

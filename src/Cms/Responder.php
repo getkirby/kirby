@@ -113,7 +113,7 @@ class Responder
 	 * @param bool|null $cache
 	 * @return bool|$this
 	 */
-	public function cache(?bool $cache = null)
+	public function cache(bool|null $cache = null)
 	{
 		if ($cache === null) {
 			// never ever cache private responses
@@ -137,7 +137,7 @@ class Responder
 	 * @param bool|null $usesAuth
 	 * @return bool|$this
 	 */
-	public function usesAuth(?bool $usesAuth = null)
+	public function usesAuth(bool|null $usesAuth = null)
 	{
 		if ($usesAuth === null) {
 			return $this->usesAuth;
@@ -171,7 +171,7 @@ class Responder
 	 * @param array|null $usesCookies
 	 * @return array|$this
 	 */
-	public function usesCookies(?array $usesCookies = null)
+	public function usesCookies(array|null $usesCookies = null)
 	{
 		if ($usesCookies === null) {
 			return $this->usesCookies;
@@ -352,7 +352,7 @@ class Responder
 	 * @param int|null $code
 	 * @return $this
 	 */
-	public function redirect(?string $location = null, ?int $code = null)
+	public function redirect(string|null $location = null, int|null $code = null)
 	{
 		$location = Url::to($location ?? '/');
 		$location = Url::unIdn($location);

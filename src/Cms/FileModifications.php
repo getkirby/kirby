@@ -127,7 +127,7 @@ trait FileModifications
 	 * @param array|string|null $sizes
 	 * @return string|null
 	 */
-	public function srcset($sizes = null): ?string
+	public function srcset($sizes = null): string|null
 	{
 		if (empty($sizes) === true) {
 			$sizes = $this->kirby()->option('thumbs.srcsets.default', []);

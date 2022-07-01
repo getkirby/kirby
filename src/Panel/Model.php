@@ -50,7 +50,7 @@ abstract class Model
 	 * @param mixed ...$args
 	 * @return string|null
 	 */
-	public function dragTextFromCallback(string $type, ...$args): ?string
+	public function dragTextFromCallback(string $type, ...$args): string|null
 	{
 		$option   = 'panel.' . $type . '.' . $this->model::CLASS_ALIAS . 'DragText';
 		$callback = $this->model->kirby()->option($option);
@@ -112,7 +112,7 @@ abstract class Model
 	 * @param string|array|false|null $settings
 	 * @return array|null
 	 */
-	public function image($settings = [], string $layout = 'list'): ?array
+	public function image($settings = [], string $layout = 'list'): array|null
 	{
 		// completely switched off
 		if ($settings === false) {
@@ -231,7 +231,7 @@ abstract class Model
 	 * @param string|null $query
 	 * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
 	 */
-	protected function imageSource(?string $query = null)
+	protected function imageSource(string|null $query = null)
 	{
 		$image = $this->model->query($query ?? null);
 
@@ -401,7 +401,7 @@ abstract class Model
 	 * @param string $tooltip
 	 * @return array
 	 */
-	protected function toPrevNextLink($model = null, string $tooltip = 'title'): ?array
+	protected function toPrevNextLink($model = null, string $tooltip = 'title'): array|null
 	{
 		if ($model === null) {
 			return null;
