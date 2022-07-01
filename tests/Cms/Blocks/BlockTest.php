@@ -181,6 +181,48 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
+	public function testToHtmlInvalid()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'snippets' => __DIR__ . '/fixtures/snippets'
+			]
+		]);
+
+		$block = new Block([
+			'content' => [
+				'text' => 'Test'
+			],
+			'type' => 'debug'
+		]);
+
+		$this->assertSame('', $block->toHtml());
+	}
+
+	public function testToHtmlInvalidWithDebugMode()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null',
+				'snippets' => __DIR__ . '/fixtures/snippets'
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$block = new Block([
+			'content' => [
+				'text' => 'Test'
+			],
+			'type' => 'debug'
+		]);
+
+		$expected = '<p>Block error: "Call to undefined function shouldThrowException()" in block type: "debug"</p>';
+		$this->assertSame($expected, $block->toHtml());
+	}
+
 	public function testToHtmlWithCustomSnippets()
 	{
 		$this->app = new App([
