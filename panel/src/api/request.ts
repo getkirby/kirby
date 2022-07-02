@@ -1,23 +1,57 @@
-export async function toJson(response) {
-	const text = await response.text();
-	let data;
+import { toJson } from "../helpers/response";
+import { ApiConfig } from "./index";
 
-	try {
-		data = JSON.parse(text);
-	} catch (e) {
-		window.panel.$vue.$api.onParserError({ html: text });
-		return false;
-	}
+export interface ApiRequest {
+	/** Numer of currently running (parallel) requests */
+	running: number;
 
-	return data;
+	/** Send generic fetch request */
+	request(
+		path: string,
+		options?: RequestInit,
+		silent?: boolean
+	): Promise<object>;
+
+	/** Send GET request */
+	get(
+		path: string,
+		query?: object,
+		options?: RequestInit,
+		silent?: boolean
+	): Promise<object>;
+
+	/** Send POST request */
+	post(
+		path: string,
+		data?: object,
+		options?: RequestInit,
+		method?: string,
+		silent?: boolean
+	): Promise<object>;
+
+	/** Send PATCH request */
+	patch(
+		path: string,
+		data?: object,
+		options?: RequestInit,
+		silent?: boolean
+	): Promise<object>;
+
+	/** Send DELETE request */
+	delete(
+		path: string,
+		data?: object,
+		options?: RequestInit,
+		silent?: boolean
+	): Promise<object>;
 }
 
-export default (config) => {
+export default (config: ApiConfig): ApiRequest => {
 	return {
 		running: 0,
-		async request(path, options, silent = false) {
+		async request(path, options = {}, silent = false) {
 			// create options object
-			options = Object.assign(options || {}, {
+			options = Object.assign(options, {
 				credentials: "same-origin",
 				cache: "no-store",
 				headers: {
@@ -85,7 +119,7 @@ export default (config) => {
 				throw e;
 			}
 		},
-		async get(path, query, options, silent = false) {
+		async get(path, query, options = {}, silent = false) {
 			if (query) {
 				path +=
 					"?" +
@@ -97,26 +131,26 @@ export default (config) => {
 
 			return this.request(
 				path,
-				Object.assign(options || {}, {
+				Object.assign(options, {
 					method: "GET"
 				}),
 				silent
 			);
 		},
-		async post(path, data, options, method = "POST", silent = false) {
+		async post(path, data, options = {}, method = "POST", silent = false) {
 			return this.request(
 				path,
-				Object.assign(options || {}, {
+				Object.assign(options, {
 					method: method,
 					body: JSON.stringify(data)
 				}),
 				silent
 			);
 		},
-		async patch(path, data, options, silent = false) {
+		async patch(path, data, options = {}, silent = false) {
 			return this.post(path, data, options, "PATCH", silent);
 		},
-		async delete(path, data, options, silent = false) {
+		async delete(path, data, options = {}, silent = false) {
 			return this.post(path, data, options, "DELETE", silent);
 		}
 	};

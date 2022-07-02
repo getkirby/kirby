@@ -1,4 +1,4 @@
-import Api from "@/api/index.js";
+import Api from "@/api/index";
 
 export default {
 	install(Vue, store) {

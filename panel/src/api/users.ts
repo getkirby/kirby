@@ -1,4 +1,26 @@
-export default (api) => {
+import { ApiInterface } from "./index";
+
+export interface ApiUsersEndpoints {
+	blueprint: (id: string) => Promise<object>;
+	blueprints: (id: string, section: string) => Promise<object>;
+	changeEmail: (id: string, email: string) => Promise<object>;
+	changeLanguage: (id: string, language: string) => Promise<object>;
+	changeName: (id: string, name: string) => Promise<object>;
+	changePassword: (id: string, password: string) => Promise<object>;
+	changeRole: (id: string, role: string) => Promise<object>;
+	create: (data: object) => Promise<object>;
+	delete: (id: string) => Promise<object>;
+	deleteAvatar: (id: string) => Promise<object>;
+	link: (id: string, path: string) => string;
+	list: (query: object) => Promise<object>;
+	get: (id: string, query: object) => Promise<object>;
+	roles: (id: string) => Promise<object>;
+	search: (query: object) => Promise<object>;
+	update: (id: string, data: object) => Promise<object>;
+	url: (id: string, path: string) => string;
+}
+
+export default (api: Partial<ApiInterface>): ApiUsersEndpoints => {
 	return {
 		async blueprint(id) {
 			return api.get("users/" + id + "/blueprint");
@@ -9,19 +31,19 @@ export default (api) => {
 			});
 		},
 		async changeEmail(id, email) {
-			return api.patch("users/" + id + "/email", { email: email });
+			return api.patch("users/" + id + "/email", { email });
 		},
 		async changeLanguage(id, language) {
-			return api.patch("users/" + id + "/language", { language: language });
+			return api.patch("users/" + id + "/language", { language });
 		},
 		async changeName(id, name) {
-			return api.patch("users/" + id + "/name", { name: name });
+			return api.patch("users/" + id + "/name", { name });
 		},
 		async changePassword(id, password) {
-			return api.patch("users/" + id + "/password", { password: password });
+			return api.patch("users/" + id + "/password", { password });
 		},
 		async changeRole(id, role) {
-			return api.patch("users/" + id + "/role", { role: role });
+			return api.patch("users/" + id + "/role", { role });
 		},
 		async create(data) {
 			return api.post("users", data);
