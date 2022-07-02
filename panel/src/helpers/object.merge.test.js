@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { merge } from "./object.js";
+import { merge } from "./object";
 
 describe("$helper.object.merge", () => {
 	it("should merge two objects", () => {

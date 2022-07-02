@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { slug } from "./string.js";
+import { slug } from "./string";
 
 describe.concurrent("$helper.string.slug()", () => {
 	it("should replace spaces", () => {

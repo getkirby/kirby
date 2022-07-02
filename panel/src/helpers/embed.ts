@@ -1,4 +1,12 @@
-export function youtube(url, doNotTrack = false) {
+/**
+ * Returns embed URL for YouTube URL
+ */
+export function youtube(
+	/** YouTube video or playlist URL */
+	url: string,
+	/** Whether to enforce not-tracking URL */
+	doNotTrack = false
+): string | false {
 	if (!url.match("youtu")) {
 		return false;
 	}
@@ -19,7 +27,7 @@ export function youtube(url, doNotTrack = false) {
 		(doNotTrack === true ? "www.youtube-nocookie.com" : uri.host) +
 		"/embed";
 
-	const isYoutubeId = (id) => {
+	const isYoutubeId = (id: string): boolean => {
 		if (!id) {
 			return false;
 		}
@@ -27,7 +35,7 @@ export function youtube(url, doNotTrack = false) {
 		return id.match(/^[a-zA-Z0-9_-]+$/) !== null;
 	};
 
-	let query = uri.searchParams;
+	const query = uri.searchParams;
 
 	// build the correct base URL for the embed,
 	// the query params are appended below
@@ -80,7 +88,15 @@ export function youtube(url, doNotTrack = false) {
 	return src;
 }
 
-export function vimeo(url, doNotTrack = false) {
+/**
+ * Returns embed URL for Vimeo URL
+ */
+export function vimeo(
+	/** Vimeo video URL */
+	url: string,
+	/** Whether to enforce not-tracking URL */
+	doNotTrack = false
+): string | false {
 	let uri = null;
 
 	try {
@@ -89,9 +105,9 @@ export function vimeo(url, doNotTrack = false) {
 		return false;
 	}
 
-	const path = uri.pathname.split("/").filter((item) => item !== "");
+	const path = uri.pathname.split("/").filter((item: string) => item !== "");
 
-	let query = uri.searchParams;
+	const query = uri.searchParams;
 	let id = null;
 
 	if (doNotTrack === true) {
@@ -123,7 +139,15 @@ export function vimeo(url, doNotTrack = false) {
 	return src;
 }
 
-export function video(url, doNotTrack = false) {
+/**
+ * Returns embed URL for YouTube or Vimeo URL
+ */
+export function video(
+	/** YouTube video or playlist or Vimeo video URL */
+	url: string,
+	/** Whether to enforce not-tracking URL */
+	doNotTrack = false
+): string | false {
 	if (url.includes("youtu")) {
 		return youtube(url, doNotTrack);
 	}

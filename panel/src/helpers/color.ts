@@ -1,10 +1,7 @@
 /**
- * Resolves CSS property alias to proper CSS color values
- *
- * @param {string} string
- * @returns {string}
+ * Resolves CSS alias to proper color value
  */
-export default function (string) {
+export default function (string: string): string {
 	if (typeof string !== "string") {
 		return;
 	}
@@ -16,17 +13,17 @@ export default function (string) {
 		return `var(--color-gray-800) var(--bg-pattern)`;
 	}
 
-	// check pre-defined color variables
+	// check if pre-defined color variables exists and can be used;
 	// no need to check if string starts with `#` or `var(`
 	// for ex: `#000` or `var(--color-white)`
 	if (string.startsWith("#") === false && string.startsWith("var(") === false) {
-		const colorVariable = "--color-" + string;
-		const colorComputed = window
+		const variable = "--color-" + string;
+		const computed = window
 			.getComputedStyle(document.documentElement)
-			.getPropertyValue(colorVariable);
+			.getPropertyValue(variable);
 
-		if (colorComputed) {
-			return `var(${colorVariable})`;
+		if (computed) {
+			return `var(${variable})`;
 		}
 	}
 

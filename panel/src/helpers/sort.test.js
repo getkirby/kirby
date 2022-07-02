@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import sort from "./sort.js";
+import sort from "./sort";
 
 describe.concurrent("$helper.sort()", () => {
 	it("should sort", () => {

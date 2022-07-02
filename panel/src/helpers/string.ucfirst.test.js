@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import string from "./string.js";
+import string from "./string";
 
 describe.concurrent("$helper.string.ucfirst", () => {
 	it("should convert first character to uppercase", () => {

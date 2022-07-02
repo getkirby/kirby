@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-import { clone, merge } from "../helpers/object.js";
+import { clone, merge } from "../helpers/object";
 
 export default class Fiber {
 	/**

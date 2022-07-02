@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { clone } from "./object.js";
+import { clone } from "./object";
 
 describe.concurrent("$helper.object.clone()", () => {
 	it("should clone the object", () => {

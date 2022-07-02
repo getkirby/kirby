@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import debounce from "@/helpers/debounce.js";
+import debounce from "@/helpers/debounce";
 
 export default {
 	props: {

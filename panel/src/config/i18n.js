@@ -1,4 +1,4 @@
-import { template } from "../helpers/string.js";
+import { template } from "../helpers/string";
 
 export default {
 	install(app) {

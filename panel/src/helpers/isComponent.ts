@@ -2,10 +2,8 @@ import Vue from "vue";
 
 /**
  * Checks if the coponent is registered globally
- * @param {string} name component name
- * @returns {bool}
  */
-export default (name) => {
+export default (name: string): boolean => {
 	if (Vue.options.components[name] !== undefined) {
 		return true;
 	}

@@ -1,4 +1,7 @@
-export function read(e) {
+/**
+ * Read clipboard data from event
+ */
+export function read(e: Event): string | null {
 	if (!e) {
 		return null;
 	}
@@ -14,15 +17,16 @@ export function read(e) {
 			e.clipboardData.getData("text/plain") ||
 			null;
 
-		if (html) {
-			return html.replace(/\u00a0/g, " ");
-		}
+		return html?.replace(/\u00a0/g, " ");
 	}
 
 	return null;
 }
 
-export function write(value, e) {
+/**
+ * Writes value to clipboard
+ */
+export function write(value: string | object, e?: Event): boolean {
 	// create pretty json of objects and arrays
 	if (typeof value !== "string") {
 		value = JSON.stringify(value, null, 2);
@@ -43,7 +47,7 @@ export function write(value, e) {
 
 	// iOS
 	if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
-		input.contentEditable = true;
+		input.contentEditable = "true";
 		input.readOnly = true;
 
 		const range = document.createRange();

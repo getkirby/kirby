@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import embed from "./embed.js";
+import embed from "./embed";
 
 describe.concurrent("$helper.embed()", () => {
 	it("should create the right embed URLs", () => {

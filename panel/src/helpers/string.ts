@@ -1,18 +1,14 @@
-import "./regex.js";
+import "./regex";
 
 /**
  * Converts camel-case to kebab-case
- * @param {string} string
- * @returns {string}
  */
-export function camelToKebab(string) {
+export function camelToKebab(string: string): string {
 	return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 /**
  * Escapes HTML in string
- * @param {string} string
- * @returns {string}
  *
  * Source: https://github.com/janl/mustache.js/blob/v4.2.0/mustache.js#L60-L75
  *
@@ -39,7 +35,7 @@ export function camelToKebab(string) {
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-export function escapeHTML(string) {
+export function escapeHTML(string: string): string {
 	const entityMap = {
 		"&": "&amp;",
 		"<": "&lt;",
@@ -56,10 +52,8 @@ export function escapeHTML(string) {
 
 /**
  * Checks if string contains an emoji
- * @param {string} string
- * @returns {bool}
  */
-export function hasEmoji(string) {
+export function hasEmoji(string: string): boolean {
 	if (typeof string !== "string") {
 		return false;
 	}
@@ -75,21 +69,16 @@ export function hasEmoji(string) {
 
 /**
  * Turns first letter lowercase
- * @param {string} string
- * @returns {string}
  */
-export function lcfirst(string) {
+export function lcfirst(string: string): string {
 	const str = String(string);
 	return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 /**
  * Prefixes string with 0 until length is reached
- * @param {string} value
- * @param {number} length
- * @returns
  */
-export function pad(value, length = 2) {
+export function pad(value: string, length = 2): string {
 	value = String(value);
 	let pad = "";
 
@@ -102,28 +91,30 @@ export function pad(value, length = 2) {
 
 /**
  * Generate random alpha-num string of specified length
- * @param {number} length
- * @returns {string}
  */
-export function random(length) {
+export function random(length: number): string {
 	let result = "";
 	const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	const count = pool.length;
-	for (var i = 0; i < length; i++) {
+	for (let i = 0; i < length; i++) {
 		result += pool.charAt(Math.floor(Math.random() * count));
 	}
 	return result;
 }
 
 /**
- * Convert string to ASCII slug
- * @param {string} string string to be converted
- * @param {array} rules ruleset to convert non-ASCII characters
- * @param {array} allowed list of allowed non-ASCII characters
- * @param {string} separator character used to replace e.g. spaces
- * @returns {string}
+ * Converts string to ASCII slug
  */
-export function slug(string, rules = [], allowed = "", separator = "-") {
+export function slug(
+	/** String to be converted */
+	string: string,
+	/** Rulesets to convert non-ASCII characters */
+	rules: { [key: string]: string }[] = [],
+	/** Allowed non-ASCII characters */
+	allowed = "",
+	/** Character used to replace e.g. spaces */
+	separator = "-"
+): string {
 	if (!string) {
 		return "";
 	}
@@ -168,22 +159,17 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
 
 /**
  * Strips HTML tags from string
- * @param {string} string
- * @returns {string}
  */
-export function stripHTML(string) {
+export function stripHTML(string: string): string {
 	return String(string).replace(/(<([^>]+)>)/gi, "");
 }
 
 /**
  * Replaces template placeholders in string
  * with provided values
- * @param {string} string
- * @param {Object} values
- * @returns {string}
  */
-export function template(string, values = {}) {
-	const resolve = (parts, data = {}) => {
+export function template(string: string, values: object = {}): string {
+	const resolve = (parts: string[], data = {}) => {
 		const part = escapeHTML(parts.shift());
 		const value = data[part] ?? null;
 
@@ -210,20 +196,16 @@ export function template(string, values = {}) {
 
 /**
  * Turns first letter uppercase
- * @param {string} string
- * @returns {string}
  */
-export function ucfirst(string) {
+export function ucfirst(string: string): string {
 	const str = String(string);
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
  * Turns first letter of each word uppercase
- * @param {string} string
- * @returns {string}
  */
-export function ucwords(string) {
+export function ucwords(string: string): string {
 	return String(string)
 		.split(/ /g)
 		.map((word) => ucfirst(word))
@@ -232,12 +214,11 @@ export function ucwords(string) {
 
 /**
  * Returns a unique ID
- * @returns {string}
  */
-export function uuid() {
+export function uuid(): string {
 	let uuid = "",
-		i,
-		random;
+		i: number,
+		random: number;
 	for (i = 0; i < 32; i++) {
 		random = (Math.random() * 16) | 0;
 

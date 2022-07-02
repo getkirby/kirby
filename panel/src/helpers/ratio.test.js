@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import ratio from "./ratio.js";
+import ratio from "./ratio";
 
 describe.concurrent("$helper.ratio()", () => {
 	const data = {

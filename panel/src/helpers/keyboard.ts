@@ -1,8 +1,7 @@
 /**
- * Returns name of meta key for current OS
- * @returns {string} `cmd` or `ctrl`
+ * Returns name of meta key for current OS (`cmd` or `ctrl`)
  */
-export function metaKey() {
+export function metaKey(): string {
 	return window.navigator.userAgent.indexOf("Mac") > -1 ? "cmd" : "ctrl";
 }
 

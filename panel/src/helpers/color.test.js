@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import color from "./color.js";
+import color from "./color";
 
 describe.concurrent("$helper.css.color()", () => {
 	document.documentElement.style.setProperty("--color-white", "white");

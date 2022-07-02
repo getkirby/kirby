@@ -3,7 +3,7 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { isEmpty } from "./object.js";
+import { isEmpty } from "./object";
 
 describe.concurrent("$helper.object.isEmpty()", () => {
 	it("should detect empty values as true", () => {

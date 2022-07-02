@@ -1,10 +1,7 @@
 /**
  * Clone provided object or array
- *
- * @param {Object|array} array
- * @returns  {Object|array}
  */
-export function clone(array) {
+export function clone(array: object | []): object | [] {
 	if (array === undefined) {
 		return undefined;
 	}
@@ -14,11 +11,8 @@ export function clone(array) {
 
 /**
  * Checks if value is empty
- *
- * @param {mixed} value
- * @returns {bool}
  */
-export function isEmpty(value) {
+export function isEmpty(value: any): boolean {
 	if (value === undefined || value === null || value === "") {
 		return true;
 	}
@@ -40,12 +34,8 @@ export function isEmpty(value) {
 
 /**
  * Merges two objects
- *
- * @param {Object} target
- * @param {Object} source
- * @returns {Object}
  */
-export function merge(target, source) {
+export function merge(target: object, source: object): object {
 	// Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
 	for (const key of Object.keys(source)) {
 		if (source[key] instanceof Object) {
