@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiSystemEndpoints {
 	get: (options: object) => Promise<object>;
@@ -6,7 +6,7 @@ export interface ApiSystemEndpoints {
 	register: (license: object) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiSystemEndpoints => {
+export default (api: ApiSetup): ApiSystemEndpoints => {
 	return {
 		async get(options = { view: "panel" }) {
 			return api.get("system", options);

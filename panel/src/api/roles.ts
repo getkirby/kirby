@@ -1,11 +1,11 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiRolesEndpoints {
 	list: (params: object) => Promise<object>;
 	get: (name: string) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiRolesEndpoints => {
+export default (api: ApiSetup): ApiRolesEndpoints => {
 	return {
 		async list(params) {
 			return api.get("roles", params);

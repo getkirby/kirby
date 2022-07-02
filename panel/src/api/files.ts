@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiFilesEndpoints {
 	/** Change name of file */
@@ -15,7 +15,7 @@ export interface ApiFilesEndpoints {
 	url: (parent: string, filename: string, path: string) => string;
 }
 
-export default (api: Partial<ApiInterface>): ApiFilesEndpoints => {
+export default (api: ApiSetup): ApiFilesEndpoints => {
 	return {
 		async changeName(parent, filename, to) {
 			return api.patch(parent + "/files/" + filename + "/name", {

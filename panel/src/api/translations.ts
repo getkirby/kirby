@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiTranslationsEndpoints {
 	/** Get all languages */
@@ -7,7 +7,7 @@ export interface ApiTranslationsEndpoints {
 	get: (locale: string) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiTranslationsEndpoints => {
+export default (api: ApiSetup): ApiTranslationsEndpoints => {
 	return {
 		async list() {
 			return api.get("translations");

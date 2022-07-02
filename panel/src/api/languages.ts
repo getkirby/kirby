@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiLanguagesEndpoints {
 	/** Create a new language */
@@ -13,7 +13,7 @@ export interface ApiLanguagesEndpoints {
 	update: (code: string, values: object) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiLanguagesEndpoints => {
+export default (api: ApiSetup): ApiLanguagesEndpoints => {
 	return {
 		create: async (values) => api.post("languages", values),
 		delete: async (code) => api.delete("languages/" + code),

@@ -5,6 +5,9 @@
 		"moduleResolution": "node",
 		"importHelpers": true,
 		"isolatedModules": true,
-		"noEmit": true
+		"noEmit": true,
+		"paths": {
+			"@*": ["./src"]
+		}
 	}
 }

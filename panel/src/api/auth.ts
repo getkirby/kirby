@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiAuthEndpoints {
 	/** Attempt to sign in the user */
@@ -15,7 +15,7 @@ export interface ApiAuthEndpoints {
 	verifyCode: (code: string) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiAuthEndpoints => {
+export default (api: ApiSetup): ApiAuthEndpoints => {
 	return {
 		async login(user) {
 			const data = {

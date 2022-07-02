@@ -5,14 +5,21 @@ export interface ApiRequest {
 	/** Numer of currently running (parallel) requests */
 	running: number;
 
-	/** Send generic fetch request */
+	/**
+	 * Send generic fetch request
+	 */
 	request(
+		/** Relative path to specific endpoint */
 		path: string,
+		/** Options, e.g. headers */
 		options?: RequestInit,
+		/** Whether the request should run siltently, without progress UI */
 		silent?: boolean
 	): Promise<object>;
 
-	/** Send GET request */
+	/**
+	 * Send GET request
+	 */
 	get(
 		path: string,
 		query?: object,

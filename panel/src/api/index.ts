@@ -16,7 +16,7 @@ import users, { ApiUsersEndpoints } from "./users";
 export interface ApiConfig {
 	endpoint: string;
 	methodOverwrite: boolean;
-	onPrepare: (options: object) => object;
+	onPrepare: (options: RequestInit) => RequestInit;
 	onStart: (id: string, silent: boolean) => void;
 	onComplete: (id: string) => void;
 	onSuccess: (json: object) => void;
@@ -41,18 +41,16 @@ interface ApiExtensions {
 	[key: string]: any;
 }
 
-export interface ApiInterface
-	extends ApiConfig,
-		ApiRequest,
-		ApiEndpoints,
-		ApiExtensions {}
+export interface ApiSetup extends ApiConfig, ApiRequest, ApiExtensions {}
+
+export interface ApiInterface extends ApiSetup, ApiEndpoints {}
 
 /**
  * Setup
  */
 
 export default (extensions: ApiExtensions = {}): ApiInterface => {
-	const defaults = {
+	const defaults: ApiConfig = {
 		endpoint: "/api",
 		methodOverwrite: true,
 		onPrepare(options) {
@@ -73,21 +71,22 @@ export default (extensions: ApiExtensions = {}): ApiInterface => {
 		...(extensions.config || {})
 	};
 
-	const api: Partial<ApiInterface> = {
+	const setup: ApiSetup = {
 		...config,
 		...request(config),
 		...extensions
 	};
 
-	api.auth = auth(api);
-	api.files = files(api);
-	api.languages = languages(api);
-	api.pages = pages(api);
-	api.roles = roles(api);
-	api.system = system(api);
-	api.site = site(api);
-	api.translations = translations(api);
-	api.users = users(api);
-
-	return api as ApiInterface;
+	return {
+		...setup,
+		auth: auth(setup),
+		files: files(setup),
+		languages: languages(setup),
+		pages: pages(setup),
+		roles: roles(setup),
+		system: system(setup),
+		site: site(setup),
+		translations: translations(setup),
+		users: users(setup)
+	};
 };

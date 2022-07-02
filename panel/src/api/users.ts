@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiUsersEndpoints {
 	blueprint: (id: string) => Promise<object>;
@@ -20,7 +20,7 @@ export interface ApiUsersEndpoints {
 	url: (id: string, path: string) => string;
 }
 
-export default (api: Partial<ApiInterface>): ApiUsersEndpoints => {
+export default (api: ApiSetup): ApiUsersEndpoints => {
 	return {
 		async blueprint(id) {
 			return api.get("users/" + id + "/blueprint");

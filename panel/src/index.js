@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import Api from "./config/api.js";
+import Api from "./config/api";
 import App from "./fiber/app.js";
 import Errors from "./config/errors.js";
 import Events from "./config/events.js";

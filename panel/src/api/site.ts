@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiSiteEndpoints {
 	blueprint: () => Promise<object>;
@@ -9,7 +9,7 @@ export interface ApiSiteEndpoints {
 	update: (data: object) => Promise<object>;
 }
 
-export default (api: Partial<ApiInterface>): ApiSiteEndpoints => {
+export default (api: ApiSetup): ApiSiteEndpoints => {
 	return {
 		async blueprint() {
 			return api.get("site/blueprint");

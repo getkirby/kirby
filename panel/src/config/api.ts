@@ -1,8 +1,16 @@
-import Api from "@/api/index";
+import createApi, { ApiInterface, ApiConfig } from "../api/index";
+
+interface AppApiExtensions {
+	config?: Partial<ApiConfig>;
+	ping?: number;
+	requests: Promise<any>[];
+}
+
+interface AppApiInterface extends ApiInterface, AppApiExtensions {}
 
 export default {
 	install(Vue, store) {
-		Vue.prototype.$api = Vue.$api = Api({
+		const api: AppApiExtensions = {
 			config: {
 				endpoint: window.panel.$urls.api,
 				onComplete: (requestId) => {
@@ -56,8 +64,15 @@ export default {
 			},
 			ping: null,
 			requests: []
-		});
+		};
 
+		Vue.prototype.$api = Vue.$api = createApi(api) as AppApiInterface;
 		Vue.$api.ping = setInterval(Vue.$api.auth.user, 5 * 60 * 1000);
 	}
 };
+
+declare module "vue/types/vue" {
+	interface Vue {
+		$api: AppApiInterface;
+	}
+}

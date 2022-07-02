@@ -1,4 +1,4 @@
-import { ApiInterface } from "./index";
+import { ApiSetup } from "./index";
 
 export interface ApiPagesEndpoints {
 	/** Get blueprint info for page */
@@ -43,7 +43,7 @@ export interface ApiPagesEndpoints {
 	url: (id: string, path: string) => string;
 }
 
-export default (api: Partial<ApiInterface>): ApiPagesEndpoints => {
+export default (api: ApiSetup): ApiPagesEndpoints => {
 	return {
 		async blueprint(parent) {
 			return api.get("pages/" + this.id(parent) + "/blueprint");
