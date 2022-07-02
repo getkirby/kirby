@@ -47,6 +47,11 @@ return [
 				return false;
 			}
 
+			// don't allow sorting while column sorting on table layout
+			if ($this->layout === 'table' && empty($this->sortColumn()) === false) {
+				return false;
+			}
+
 			return true;
 		}
 	]

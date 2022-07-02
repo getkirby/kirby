@@ -9,6 +9,7 @@
 			:size="size"
 			:sortable="sortable"
 			@change="$emit('change', $event)"
+			@header="$emit('header', $event)"
 			@item="$emit('item', $event)"
 			@option="onOption"
 			@sort="$emit('sort', $event)"

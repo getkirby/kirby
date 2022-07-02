@@ -16,6 +16,7 @@
 					:key="columnIndex + '-header'"
 					:data-align="column.align"
 					:data-mobile="column.mobile"
+					:data-sortable="column.sortable"
 					:style="'width:' + width(column.width)"
 					class="k-table-column"
 					@click="
@@ -30,14 +31,24 @@
 						v-bind="{
 							column,
 							columnIndex,
+							icon: icon(column, columnIndex),
 							label: label(column, columnIndex)
 						}"
 					>
-						{{ label(column, columnIndex) }}
+						<k-button
+							:icon="icon(column, columnIndex)"
+							:text="label(column, columnIndex)"
+						/>
 					</slot>
 				</th>
 
-				<th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
+				<th v-if="hasOptions" data-mobile class="k-table-options-column">
+					<k-button
+						v-if="sortColumn"
+						icon="undo"
+						@click.prevent="resetSort"
+					/>
+				</th>
 			</tr>
 		</thead>
 
@@ -176,6 +187,8 @@ export default {
 	},
 	data() {
 		return {
+			sortColumn: null,
+			sortDirection: null,
 			values: this.rows
 		};
 	},
@@ -222,6 +235,19 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Returns sort icon for a column
+		 * @returns {string|undefined}
+		 */
+		icon(column, columnIndex) {
+			if (column?.sortable === true) {
+				if (this.sortColumn === columnIndex && this.sortDirection) {
+					return this.sortDirection === 'asc' ? 'angle-up' : 'angle-down';
+				}
+
+				return 'filter'
+			}
+		},
 		/**
 		 * Checks if specific column is fully empty
 		 * @param {number} columnIndex
@@ -270,7 +296,16 @@ export default {
 		 * @param {mixed} params
 		 */
 		onHeader(params) {
-			this.$emit("header", params);
+			if (params?.column?.sortable === true) {
+				this.sortColumn = params.columnIndex ?? null;
+				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+			}
+
+			this.$emit("header", {
+				...params,
+				sortColumn: this.sortColumn,
+				sortDirection: this.sortDirection
+			});
 		},
 		/**
 		 * When an option from the dropdown is engaged
@@ -288,6 +323,15 @@ export default {
 		onSort() {
 			this.$emit("input", this.values);
 			this.$emit("sort", this.values);
+		},
+		/**
+		 * Reset column sorting
+		 */
+		resetSort() {
+			this.sortColumn = null;
+			this.sortDirection = null;
+
+			this.onHeader();
 		},
 		/**
 		 * Returns width styling based on column fraction
@@ -431,6 +475,10 @@ export default {
 	opacity: 0 !important;
 }
 
+.k-table th[data-sortable] {
+	cursor: pointer;
+}
+
 /** Index column **/
 th.k-table-index-column,
 td.k-table-index-column,
@@ -438,6 +486,7 @@ th.k-table-options-column,
 td.k-table-options-column {
 	width: var(--table-row-height);
 	text-align: center !important;
+	text-overflow: clip !important;
 }
 .k-table-index {
 	font-size: var(--text-xs);

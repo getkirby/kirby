@@ -40,6 +40,7 @@
 					:data-invalid="isInvalid"
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
+					@header="onHeader"
 					@change="onChange"
 					@sort="onSort"
 					@paginate="onPaginate"
@@ -85,6 +86,8 @@ export default {
 				page: null
 			},
 			searchterm: null,
+			sortColumn: null,
+			sortDirection: null,
 			searching: false
 		};
 	},
@@ -206,7 +209,12 @@ export default {
 			try {
 				const response = await this.$api.get(
 					this.parent + "/sections/" + this.name,
-					{ page: this.pagination.page, searchterm: this.searchterm }
+					{
+						page: this.pagination.page,
+						searchterm: this.searchterm,
+						sortColumn: this.sortColumn,
+						sortDirection: this.sortDirection
+					}
 				);
 
 				this.options = response.options;
@@ -224,6 +232,11 @@ export default {
 		onAdd() {},
 		onChange() {},
 		onDrop() {},
+		onHeader(params) {
+			this.sortColumn = params.sortColumn ?? null;
+			this.sortDirection = params.sortDirection || "asc";
+			this.reload();
+		},
 		onSort() {},
 		onPaginate(pagination) {
 			localStorage.setItem(this.paginationId, pagination.page);

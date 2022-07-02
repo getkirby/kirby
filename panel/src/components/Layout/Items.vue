@@ -3,6 +3,7 @@
 		v-if="layout === 'table'"
 		v-bind="table"
 		@change="$emit('change', $event)"
+		@header="$emit('header', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	/>

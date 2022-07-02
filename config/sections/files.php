@@ -115,6 +115,9 @@ return [
 				$data[] = $item;
 			}
 
+			// handle custom sort
+			$data = $this->sortData($data);
+
 			return $data;
 		},
 		'total' => function () {

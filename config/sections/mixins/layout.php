@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -45,16 +46,18 @@ return [
 
 			if ($this->text) {
 				$columns['title'] = [
-					'label'  => I18n::translate('title'),
-					'mobile' => true,
-					'type'   => 'url',
+					'label'    => I18n::translate('title'),
+					'mobile'   => true,
+					'sortable' => true,
+					'type'     => 'url',
 				];
 			}
 
 			if ($this->info) {
 				$columns['info'] = [
-					'label' => I18n::translate('info'),
-					'type'  => 'text',
+					'label'    => I18n::translate('info'),
+					'type'     => 'text',
+					'sortable' => true,
 				];
 			}
 
@@ -91,7 +94,7 @@ return [
 			}
 
 			return $columns;
-		},
+		}
 	],
 	'methods' => [
 		'columnsValues' => function (array $item, $model) {
@@ -124,6 +127,39 @@ return [
 			}
 
 			return $item;
-		}
+		},
+		'sortColumn' => function () {
+			return App::instance()->request()->get('sortColumn');
+		},
+		'sortData' => function (array $data = []) {
+			$sortColumn    = $this->sortColumn();
+			$sortDirection = $this->sortDirection();
+
+			// check table layout and sort column
+			if ($this->layout !== 'table' || empty($sortColumn) === true) {
+				return $data;
+			}
+
+			usort($data, function ($a, $b) use ($sortColumn, $sortDirection) {
+				if ($sortDirection === 'asc') {
+					if (is_array($a[$sortColumn]) === true) {
+						return $a[$sortColumn]['text'] <=> $b[$sortColumn]['text'];
+					} else {
+						return $a[$sortColumn] <=> $b[$sortColumn];
+					}
+				} else {
+					if (is_array($b[$sortColumn])) {
+						return $b[$sortColumn]['text'] <=> $a[$sortColumn]['text'];
+					} else {
+						return $b[$sortColumn] <=> $a[$sortColumn];
+					}
+				}
+			});
+
+			return $data;
+		},
+		'sortDirection' => function () {
+			return App::instance()->request()->get('sortDirection', 'asc');
+		},
 	],
 ];
