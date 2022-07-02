@@ -10,12 +10,12 @@ describe.concurrent("$helper.ratio()", () => {
 		"should return default ratio": [[undefined, "66.67%"]],
 		"should return padding for 16/9": [["16/9", "56.25%"]],
 		"should return 100% on invalid fractions": [
-			["0/16", "100%"],
-			["16/0", "100%"]
+			["0/16", "100.00%"],
+			["16/0", "100.00%"]
 		],
 		"should return 100% on invalid input": [
-			[1, "100%"],
-			[{}, "100%"]
+			[1, "100.00%"],
+			[{}, "100.00%"]
 		]
 	};
 

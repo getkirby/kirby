@@ -5,7 +5,7 @@ export default (
 	/** Fraction to convert to a percentage */
 	fraction = "3/2",
 	/** Default value if fraction cannot be parsed */
-	fallback = "100%",
+	fallback = "100.00%",
 	/** Whether the fraction is applied to vertical or horizontal orientation */
 	vertical = true
 ): string => {
