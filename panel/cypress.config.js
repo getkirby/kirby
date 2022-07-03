@@ -5,7 +5,7 @@ module.exports = defineConfig({
 
 	e2e: {
 		baseUrl: "http://sandbox.test",
-		specPattern: "src//**/*.e2e.js",
+		specPattern: "src/**/*.e2e.js",
 		supportFile: false
 	}
 });
