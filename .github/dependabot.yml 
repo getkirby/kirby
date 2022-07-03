@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    vendor: true
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Update dependencies"
+    labels:
+      - "type: refactoring ♻️"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/panel"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Update dependencies"
+    labels:
+      - "type: refactoring ♻️"
+    open-pull-requests-limit: 10
