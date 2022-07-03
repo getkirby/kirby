@@ -715,14 +715,14 @@ class App
 	public static function instance(self $instance = null, bool $lazy = false)
 	{
 		if ($instance !== null) {
-            return static::$instance = $instance;
-        }
+			return static::$instance = $instance;
+		}
 
-        if ($lazy === true) {
-            return static::$instance;
-        }
+		if ($lazy === true) {
+			return static::$instance;
+		}
 
-        return static::$instance ?? new static();
+		return static::$instance ?? new static();
 	}
 
 	/**
