@@ -40,9 +40,11 @@ class Structure extends Collection
 	 *
 	 * @param string $id
 	 * @param array|StructureObject $props
+	 * @return void
+	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function __set(string $id, $props)
+	public function __set(string $id, $props): void
 	{
 		if (is_a($props, 'Kirby\Cms\StructureObject') === true) {
 			$object = $props;
@@ -59,6 +61,6 @@ class Structure extends Collection
 			]);
 		}
 
-		return parent::__set($object->id(), $object);
+		parent::__set($object->id(), $object);
 	}
 }
