@@ -597,9 +597,10 @@ class Api
 		}
 
 		$result = match ($result) {
-			null  => $this->responseFor404(),
-			false => $this->responseFor400(),
-			true  => $this->responseFor200()
+			null    => $this->responseFor404(),
+			false   => $this->responseFor400(),
+			true    => $this->responseFor200(),
+			default => $result
 		};
 
 		if (is_array($result) === false) {
