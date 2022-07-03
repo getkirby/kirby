@@ -1,0 +1,21 @@
+version: 1
+updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Update dependencies"
+    labels:
+      - "type: refactoring ♻️"
+
+  - package-ecosystem: "npm"
+    directory: "/panel"
+    target-branch: "develop"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "Update dependencies"
+    labels:
+      - "type: refactoring ♻️"
