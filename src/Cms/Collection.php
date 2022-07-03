@@ -71,8 +71,9 @@ class Collection extends BaseCollection
 	 *
 	 * @param string $id
 	 * @param object $object
+	 * @return void
 	 */
-	public function __set(string $id, $object)
+	public function __set(string $id, $object): void
 	{
 		$this->data[$id] = $object;
 	}

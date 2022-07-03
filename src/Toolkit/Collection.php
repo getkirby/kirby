@@ -95,8 +95,9 @@ class Collection extends Iterator implements Countable
 	 *
 	 * @param string $key string or array
 	 * @param mixed $value
+	 * @return void
 	 */
-	public function __set(string $key, $value)
+	public function __set(string $key, $value): void
 	{
 		if ($this->caseSensitive === true) {
 			$this->data[$key] = $value;

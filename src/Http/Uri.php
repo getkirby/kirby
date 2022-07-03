@@ -167,8 +167,9 @@ class Uri
 	 *
 	 * @param string $property
 	 * @param mixed $value
+	 * @return void
 	 */
-	public function __set(string $property, $value)
+	public function __set(string $property, $value): void
 	{
 		if (method_exists($this, 'set' . $property) === true) {
 			$this->{'set' . $property}($value);

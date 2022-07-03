@@ -23,8 +23,9 @@ class Fields extends Collection
 	 *
 	 * @param string $name
 	 * @param object|array $field
+	 * @return void
 	 */
-	public function __set(string $name, $field)
+	public function __set(string $name, $field): void
 	{
 		if (is_array($field) === true) {
 			// use the array key as name if the name is not set
