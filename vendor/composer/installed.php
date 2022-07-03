@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '3.7.0.1',
-        'version' => '3.7.0.1',
+        'pretty_version' => '3.7.0.2',
+        'version' => '3.7.0.2',
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '3.7.0.1',
-            'version' => '3.7.0.1',
+            'pretty_version' => '3.7.0.2',
+            'version' => '3.7.0.2',
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
