@@ -1,7 +1,8 @@
-version: 1
+version: 2
 updates:
   - package-ecosystem: "composer"
     directory: "/"
+    vendor: true
     target-branch: "develop"
     schedule:
       interval: "weekly"
