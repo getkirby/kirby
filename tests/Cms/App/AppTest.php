@@ -504,6 +504,29 @@ class AppTest extends TestCase
 		$this->assertSame($options, $app->options());
 	}
 
+	public function testOptionsFromFile()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'HTTPS'       => true
+			]
+		]);
+
+		$this->assertSame([
+			'option1' => 'global',
+			'option2' => 'getkirby',
+			'url'     => 'https://getkirby.com/docs',
+			'option3' => 'getkirby'
+		], $app->options());
+	}
+
 	public function testOptionsOnReady()
 	{
 		App::destroy();
@@ -981,6 +1004,46 @@ class AppTest extends TestCase
 
 		// reset SERVER_ADDR
 		$_SERVER['SERVER_ADDR'] = null;
+	}
+
+	public function testUrlFromEnvWithDetection()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options'
+			],
+			'server' => [
+				'SERVER_NAME' => 'trykirby.com',
+				'HTTPS'       => true
+			]
+		]);
+
+		$this->assertSame(['https://getkirby.com', 'https://trykirby.com'], $app->option('url'));
+		$this->assertSame('https://trykirby.com', $app->url('index'));
+		$this->assertSame('https://trykirby.com/panel', $app->url('panel'));
+	}
+
+	public function testUrlFromEnvWithOverride()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'HTTPS'       => true
+			]
+		]);
+
+		$this->assertSame('https://getkirby.com/docs', $app->option('url'));
+		$this->assertSame('https://getkirby.com/docs', $app->url('index'));
+		$this->assertSame('https://getkirby.com/docs/panel', $app->url('panel'));
 	}
 
 	public function testVersionHash()
