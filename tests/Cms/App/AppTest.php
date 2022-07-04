@@ -14,18 +14,18 @@ use ReflectionMethod;
  */
 class AppTest extends TestCase
 {
-	protected $fixtures;
+	protected $tmp;
 	protected $_SERVER;
 
 	public function setUp(): void
 	{
 		$this->_SERVER = $_SERVER;
-		$this->fixtures = __DIR__ . '/fixtures/AppTest';
+		$this->tmp = __DIR__ . '/tmp';
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 		$_SERVER = $this->_SERVER;
 	}
 
@@ -241,7 +241,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'sessions' => $fixtures = __DIR__ . '/fixtures/AppTest/csrf',
+				'sessions' => $this->tmp,
 			]
 		]);
 
@@ -609,7 +609,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'sessions' => $fixtures = __DIR__ . '/fixtures/AppTest/sessions',
+				'sessions' => $this->tmp,
 			]
 		]);
 
@@ -761,7 +761,7 @@ class AppTest extends TestCase
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $fixtures = __DIR__ . '/fixtures/AppTest/blueprints',
+				'blueprints' => $this->tmp,
 			],
 			'blueprints' => [
 				'pages/a' => ['title' => 'A'],
@@ -770,9 +770,9 @@ class AppTest extends TestCase
 			]
 		]);
 
-		Data::write($fixtures . '/pages/b.yml', ['title' => 'B']);
-		Data::write($fixtures . '/pages/c.yml', ['title' => 'C']);
-		Data::write($fixtures . '/files/b.yml', ['title' => 'File B']);
+		Data::write($this->tmp . '/pages/b.yml', ['title' => 'B']);
+		Data::write($this->tmp . '/pages/c.yml', ['title' => 'C']);
+		Data::write($this->tmp . '/files/b.yml', ['title' => 'File B']);
 
 		$expected = [
 			'a',
@@ -791,8 +791,6 @@ class AppTest extends TestCase
 		];
 
 		$this->assertEquals($expected, $app->blueprints('files'));
-
-		Dir::remove($fixtures);
 	}
 
 	/**
