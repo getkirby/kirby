@@ -2,12 +2,11 @@ version: 2
 updates:
   - package-ecosystem: "composer"
     directory: "/"
-    vendor: true
     target-branch: "develop"
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "Update dependencies"
+      prefix: "composer"
     labels:
       - "type: refactoring ♻️"
     open-pull-requests-limit: 10
@@ -18,7 +17,7 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "Update dependencies"
+      prefix: "npm"
     labels:
       - "type: refactoring ♻️"
     open-pull-requests-limit: 10
