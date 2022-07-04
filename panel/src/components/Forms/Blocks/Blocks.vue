@@ -174,6 +174,7 @@ export default {
 		}
 	},
 	created() {
+		this.$events.$on("blur", this.onBlur);
 		this.$events.$on("copy", this.copy);
 		this.$events.$on("focus", this.onOutsideFocus);
 		this.$events.$on("keydown", this.onKey);
@@ -181,6 +182,7 @@ export default {
 		this.$events.$on("paste", this.onPaste);
 	},
 	destroyed() {
+		this.$events.$off("blur", this.onBlur);
 		this.$events.$off("copy", this.copy);
 		this.$events.$off("focus", this.onOutsideFocus);
 		this.$events.$off("keydown", this.onKey);
@@ -467,6 +469,14 @@ export default {
 			}
 
 			return true;
+		},
+		onBlur() {
+			// resets multi selecting on tab change
+			// keep only if there are already multiple selections
+			// triggers `blur` event when tab changed
+			if (this.batch.length === 0) {
+				this.isMultiSelectKey = false;
+			}
 		},
 		onKey(event) {
 			this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
