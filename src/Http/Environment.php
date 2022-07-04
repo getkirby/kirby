@@ -332,17 +332,25 @@ class Environment
 	protected function detectAuto(bool $insecure = false): void
 	{
 		// proxy server setup
-		if (
-			$insecure === true &&
-			empty($this->info['HTTP_X_FORWARDED_HOST']) === false
-		) {
-			$this->isBehindProxy = true;
+		if ($insecure === true) {
+			$forwarded = $this->detectForwarded();
 
-			$this->host  = $this->detectForwardedHost();
-			$this->https = $this->detectForwardedHttps();
-			$this->port  = $this->detectForwardedPort();
+			$host  = $forwarded['host'];
+			$port  = $forwarded['port'];
+			$https = $forwarded['https'];
 
-			return;
+			if ($host || $port || $https) {
+				$this->isBehindProxy = true;
+
+				// if a port or scheme is defined but no host, assume
+				// that the host is the same as PHP's own hostname
+				// (which is often the case with reverse proxies)
+				$this->host  = $host ?? $this->detectHost($insecure);
+				$this->port  = $port;
+				$this->https = $https;
+
+				return;
+			}
 		}
 
 		// local server setup
@@ -399,6 +407,27 @@ class Environment
 	}
 
 	/**
+	 * Detects the host, protocol and port from
+	 * the `X-Forwarded-*` headers
+	 *
+	 * @return array
+	 */
+	protected function detectForwarded(): array
+	{
+		$data = [
+			'host'  => null,
+			'port'  => null,
+			'https' => false
+		];
+
+		$data['host']  = $this->detectForwardedHost();
+		$data['https'] = $this->detectForwardedHttps();
+		$data['port']  = $this->detectForwardedPort($data['https']);
+
+		return $data;
+	}
+
+	/**
 	 * Detects the host name of the reverse proxy
 	 *
 	 * @return string|null
@@ -434,9 +463,10 @@ class Environment
 	/**
 	 * Detects the port of the reverse proxy
 	 *
+	 * @param bool $https Whether HTTPS was detected
 	 * @return int|null
 	 */
-	protected function detectForwardedPort(): ?int
+	protected function detectForwardedPort(bool $https): ?int
 	{
 		// based on forwarded port
 		$port = $this->get('HTTP_X_FORWARDED_PORT');
@@ -451,7 +481,7 @@ class Environment
 		}
 
 		// based on the detected https state
-		if ($this->https === true) {
+		if ($https === true) {
 			return 443;
 		}
 
