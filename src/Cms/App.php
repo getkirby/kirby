@@ -1322,7 +1322,7 @@ class App
 				}
 
 				return $response->body($output);
-			} catch (NotFoundException $e) {
+			} catch (NotFoundException) {
 				return null;
 			}
 		}
@@ -1768,7 +1768,7 @@ class App
 	{
 		try {
 			return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
 		}
 	}

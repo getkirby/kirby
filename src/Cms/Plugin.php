@@ -107,7 +107,7 @@ class Plugin extends Model
 
 		try {
 			$info = Data::read($this->manifest());
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// there is no manifest file or it is invalid
 			$info = [];
 		}

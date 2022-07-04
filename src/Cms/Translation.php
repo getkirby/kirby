@@ -145,7 +145,7 @@ class Translation
 	{
 		try {
 			$data = array_merge(Data::read($root), $inject);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$data = [];
 		}
 

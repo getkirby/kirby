@@ -385,7 +385,7 @@ class Dir
 
 		try {
 			return symlink($source, $link) === true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}

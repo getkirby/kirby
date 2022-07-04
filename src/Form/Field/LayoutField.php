@@ -201,7 +201,7 @@ class LayoutField extends BlocksField
 
 							try {
 								$blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
-							} catch (Throwable $e) {
+							} catch (Throwable) {
 								// skip invalid blocks
 								continue;
 							}

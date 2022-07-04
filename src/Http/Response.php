@@ -110,7 +110,7 @@ class Response
 	{
 		try {
 			return $this->send();
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return '';
 		}
 	}

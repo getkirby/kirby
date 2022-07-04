@@ -196,28 +196,28 @@ class System
 		// init /site/accounts
 		try {
 			Dir::make($this->app->root('accounts'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The accounts directory could not be created');
 		}
 
 		// init /site/sessions
 		try {
 			Dir::make($this->app->root('sessions'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The sessions directory could not be created');
 		}
 
 		// init /content
 		try {
 			Dir::make($this->app->root('content'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The content directory could not be created');
 		}
 
 		// init /media
 		try {
 			Dir::make($this->app->root('media'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The media directory could not be created');
 		}
 	}
@@ -277,7 +277,7 @@ class System
 	{
 		try {
 			$license = Json::read($this->app->root('license'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 

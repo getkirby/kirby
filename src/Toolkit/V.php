@@ -146,7 +146,7 @@ class V
 						}
 					}
 					$value = implode(', ', $value);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					$value = '-';
 				}
 			}
@@ -380,7 +380,7 @@ V::$validators = [
 		if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
 			try {
 				$email = Idn::encodeEmail($value);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				return false;
 			}
 

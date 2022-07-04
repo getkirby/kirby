@@ -282,7 +282,7 @@ class File extends Model
 			// check if the file type is allowed at all,
 			// otherwise it cannot be replaced
 			$this->model->match($this->model->blueprint()->accept());
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$options['replace'] = false;
 		}
 

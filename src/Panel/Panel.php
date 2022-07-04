@@ -179,7 +179,7 @@ class Panel
 		try {
 			static::firewall($user, $area);
 			return true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
