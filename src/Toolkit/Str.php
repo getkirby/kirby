@@ -5,7 +5,6 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 
 /**

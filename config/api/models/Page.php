@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\Form\Form;
 

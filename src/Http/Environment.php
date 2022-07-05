@@ -3,7 +3,6 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;

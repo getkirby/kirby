@@ -889,14 +889,13 @@ class App
 	 * @internal
 	 * @param string|null $text
 	 * @param array $options
-	 * @param bool $inline
 	 * @return string
 	 */
 	public function kirbytext(string $text = null, array $options = []): string
 	{
 		$text = $this->apply('kirbytext:before', compact('text'), 'text');
 		$text = $this->kirbytags($text, $options);
-		$text = $this->markdown($text, $options['markdown']);
+		$text = $this->markdown($text, $options['markdown'] ?? []);
 
 		if ($this->option('smartypants', false) !== false) {
 			$text = $this->smartypants($text);
