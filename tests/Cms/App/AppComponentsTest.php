@@ -108,9 +108,10 @@ class AppComponentsTest extends TestCase
 
 		$this->assertEquals($expected, $this->kirby->kirbytext($text, [
 			'markdown' => [
-				'safe' => true
+				'safe'   => true,
+				'inline' => true
 			]
-		], true));
+		]));
 	}
 
 	public function testKirbytextInline()
@@ -123,14 +124,6 @@ class AppComponentsTest extends TestCase
 				'inline' => true
 			]
 		], true));
-	}
-
-	public function testKirbytextInlineDeprecated()
-	{
-		$text     = 'Test';
-		$expected = 'Test';
-
-		$this->assertEquals($expected, $this->kirby->kirbytext($text, [], true));
 	}
 
 	public function testMarkdown()
@@ -147,12 +140,6 @@ class AppComponentsTest extends TestCase
 		$expected = 'Test';
 
 		$this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
-
-		// deprecated boolean second option
-		$this->assertEquals($expected, $this->kirby->markdown($text, true));
-
-		// deprecated fourth argument
-		$this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], true));
 	}
 
 	public function testMarkdownWithSafeMode()
@@ -198,20 +185,8 @@ class AppComponentsTest extends TestCase
 		$expected = '<pre><code><p>Test _case_</p></pre></code>';
 		$this->assertEquals($expected, $this->kirby->markdown($text));
 
-		// deprecated boolean second option
-		$this->assertEquals($expected, $this->kirby->markdown($text, false));
-
-		// deprecated fourth argument
-		$this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], false));
-
 		$expected = '<pre><code>Test _case_</pre></code>';
 		$this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
-
-		// deprecated boolean second option
-		$this->assertEquals($expected, $this->kirby->markdown($text, true));
-
-		// deprecated fourth argument
-		$this->assertEquals($expected, $this->kirby->component('markdown')($this->kirby, $text, [], true));
 	}
 
 	public function testSmartypants()
