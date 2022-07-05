@@ -326,23 +326,31 @@ class Environment
 	/**
 	 * Sets the host name, port and protocol without configuration
 	 *
-	 * @param bool $insecure Include the `Host` and `X-Forwarded-*` headers in the search
+	 * @param bool $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
 	 * @return void
 	 */
 	protected function detectAuto(bool $insecure = false): void
 	{
 		// proxy server setup
-		if (
-			$insecure === true &&
-			empty($this->info['HTTP_X_FORWARDED_HOST']) === false
-		) {
-			$this->isBehindProxy = true;
+		if ($insecure === true) {
+			$forwarded = $this->detectForwarded();
 
-			$this->host  = $this->detectForwardedHost();
-			$this->https = $this->detectForwardedHttps();
-			$this->port  = $this->detectForwardedPort();
+			$host  = $forwarded['host'];
+			$port  = $forwarded['port'];
+			$https = $forwarded['https'];
 
-			return;
+			if ($host || $port || $https) {
+				$this->isBehindProxy = true;
+
+				// if a port or scheme is defined but no host, assume
+				// that the host is the same as PHP's own hostname
+				// (which is often the case with reverse proxies)
+				$this->host  = $host ?? $this->detectHost($insecure);
+				$this->port  = $port;
+				$this->https = $https;
+
+				return;
+			}
 		}
 
 		// local server setup
@@ -399,7 +407,68 @@ class Environment
 	}
 
 	/**
+	 * Detects the host, protocol and port from
+	 * the `Forwarded` and `X-Forwarded-*` headers
+	 *
+	 * @return array
+	 */
+	protected function detectForwarded(): array
+	{
+		$data = [
+			'host'  => null,
+			'port'  => null,
+			'https' => false
+		];
+
+		// prefer the standardized `Forwarded` header if defined
+		$forwarded = $this->get('HTTP_FORWARDED');
+		if ($forwarded) {
+			// only use the first (outermost) proxy
+			$forwarded = Str::before($forwarded, ',');
+
+			// split into separate key=value;key=value fields by semicolon,
+			// but only split outside of quotes
+			$rawFields = preg_split($forwarded, '/"[^"]*"(*SKIP)(*F)|;/');
+
+			// split key and value into an associative array
+			$fields = [];
+			foreach ($fields as $field) {
+				$key   = Str::lower(Str::before($field, '='));
+				$value = Str::after($field, '=');
+
+				// trim the surrounding quotes
+				if (Str::substr($value, 0, 1) === '"') {
+					$value = Str::substr($value, 1, -1);
+				}
+
+				$fields[$key] = $value;
+			}
+
+			// assemble the normalized data
+			if (isset($fields['host']) === true) {
+				$parts = $this->detectPortInHost($fields['host']);
+				$data['host'] = $parts['host'];
+				$data['port'] = $parts['port'];
+			}
+
+			if (isset($fields['proto']) === true) {
+				$data['https'] = $this->detectHttpsProtocol($fields['proto']);
+			}
+
+			return $data;
+		}
+
+		// no success, try the `X-Forwarded-*` headers
+		$data['host']  = $this->detectForwardedHost();
+		$data['https'] = $this->detectForwardedHttps();
+		$data['port']  = $this->detectForwardedPort($data['https']);
+
+		return $data;
+	}
+
+	/**
 	 * Detects the host name of the reverse proxy
+	 * from the `X-Forwarded-Host` header
 	 *
 	 * @return string|null
 	 */
@@ -414,7 +483,8 @@ class Environment
 	}
 
 	/**
-	 * Detects the protocol of the reverse proxy
+	 * Detects the protocol of the reverse proxy from the
+	 * `X-Forwarded-SSL` or `X-Forwarded-Proto` header
 	 *
 	 * @return bool
 	 */
@@ -432,11 +502,13 @@ class Environment
 	}
 
 	/**
-	 * Detects the port of the reverse proxy
+	 * Detects the port of the reverse proxy from the
+	 * `X-Forwarded-Host` or `X-Forwarded-Port` header
 	 *
+	 * @param bool $https Whether HTTPS was detected
 	 * @return int|null
 	 */
-	protected function detectForwardedPort(): int|null
+	protected function detectForwardedPort(bool $https): int|null
 	{
 		// based on forwarded port
 		$port = $this->get('HTTP_X_FORWARDED_PORT');
@@ -451,7 +523,7 @@ class Environment
 		}
 
 		// based on the detected https state
-		if ($this->https === true) {
+		if ($https === true) {
 			return 443;
 		}
 

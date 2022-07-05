@@ -8,6 +8,9 @@ export default {
 			$on: emitter.on,
 			$off: emitter.off,
 			$emit: emitter.emit,
+			blur(e) {
+				bus.$emit("blur", e);
+			},
 			click(e) {
 				bus.$emit("click", e);
 			},
@@ -90,19 +93,21 @@ export default {
 			}
 		};
 
-		window.addEventListener("online", bus.online);
-		window.addEventListener("offline", bus.offline);
-		window.addEventListener("dragenter", bus.dragenter, false);
-		window.addEventListener("dragover", bus.prevent, false);
-		window.addEventListener("dragexit", bus.prevent, false);
-		window.addEventListener("dragleave", bus.dragleave, false);
-		window.addEventListener("drop", bus.drop, false);
-		window.addEventListener("keydown", bus.keydown, false);
-		window.addEventListener("keyup", bus.keyup, false);
 		document.addEventListener("click", bus.click, false);
 		document.addEventListener("copy", bus.copy, true);
 		document.addEventListener("focus", bus.focus, true);
 		document.addEventListener("paste", bus.paste, true);
+
+		window.addEventListener("blur", bus.blur, false);
+		window.addEventListener("dragenter", bus.dragenter, false);
+		window.addEventListener("dragexit", bus.prevent, false);
+		window.addEventListener("dragleave", bus.dragleave, false);
+		window.addEventListener("drop", bus.drop, false);
+		window.addEventListener("dragover", bus.prevent, false);
+		window.addEventListener("keydown", bus.keydown, false);
+		window.addEventListener("keyup", bus.keyup, false);
+		window.addEventListener("offline", bus.offline);
+		window.addEventListener("online", bus.online);
 
 		app.prototype.$events = bus;
 	}

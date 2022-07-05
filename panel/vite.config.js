@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
-import { createVuePlugin } from "vite-plugin-vue2";
+import vue from "@vitejs/plugin-vue2";
 import postcssAutoprefixer from "autoprefixer";
 import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
@@ -46,7 +46,7 @@ export default defineConfig(({ command }) => {
 	};
 
 	return {
-		plugins: [createVuePlugin(), pluginRewriteAll(), splitVendorChunkPlugin()],
+		plugins: [vue(), pluginRewriteAll(), splitVendorChunkPlugin()],
 		define: {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")

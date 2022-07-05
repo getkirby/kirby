@@ -255,7 +255,11 @@ class Block extends Item
 			$kirby = $this->parent()->kirby();
 			return (string)$kirby->snippet('blocks/' . $this->type(), $this->controller(), true);
 		} catch (Throwable $e) {
-			return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
+			if ($kirby->option('debug') === true) {
+				return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
+			}
+
+			return '';
 		}
 	}
 }

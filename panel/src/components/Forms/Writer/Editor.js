@@ -471,10 +471,8 @@ export default class Editor extends Emitter {
 	setContent(content = {}, emitUpdate = false, parseOptions) {
 		const { doc, tr } = this.state;
 		const document = this.createDocument(content, parseOptions);
-		const selection = TextSelection.create(doc, 0, doc.content.size);
 		const transaction = tr
-			.setSelection(selection)
-			.replaceSelectionWith(document, false)
+			.replaceWith(0, doc.content.size, document)
 			.setMeta("preventUpdate", !emitUpdate);
 
 		this.view.dispatch(transaction);

@@ -1112,15 +1112,29 @@ class App
 	 */
 	protected function optionsFromEnvironment(array $props = []): array
 	{
+		$globalUrl = $this->options['url'] ?? null;
+
 		// create the environment based on the URL setup
 		$this->environment = new Environment([
-			'allowed' => $this->options['url'] ?? null,
+			'allowed' => $globalUrl,
 			'cli'     => $props['cli'] ?? null,
 		], $props['server'] ?? null);
 
 		// merge into one clean options array
 		$options = $this->environment()->options($this->root('config'));
-		return $this->options = array_replace_recursive($this->options, $options);
+		$this->options = array_replace_recursive($this->options, $options);
+
+		// reload the environment if the environment config has overridden
+		// the `url` option; this ensures that the base URL is correct
+		$envUrl = $this->options['url'] ?? null;
+		if ($envUrl !== $globalUrl) {
+			$this->environment->detect([
+				'allowed' => $envUrl,
+				'cli'     => $props['cli'] ?? null
+			], $props['server'] ?? null);
+		}
+
+		return $this->options;
 	}
 
 	/**
