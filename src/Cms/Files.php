@@ -106,22 +106,6 @@ class Files extends Collection
 	}
 
 	/**
-	 * Tries to find a file by id/filename
-	 * @deprecated 3.7.0 Use `$files->find()` instead
-	 * @todo 3.8.0 Remove method
-	 * @codeCoverageIgnore
-	 *
-	 * @param string $id
-	 * @return \Kirby\Cms\File|null
-	 */
-	public function findById(string $id)
-	{
-		Helpers::deprecated('Cms\Files::findById() has been deprecated and will be removed in Kirby 3.8.0. Use $files->find() instead.');
-
-		return $this->findByKey($id);
-	}
-
-	/**
 	 * Finds a file by its filename
 	 * @internal Use `$files->find()` instead
 	 *

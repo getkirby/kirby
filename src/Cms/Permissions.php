@@ -159,12 +159,6 @@ class Permissions
 	 */
 	protected function setAction(string $category, string $action, $setting)
 	{
-		// deprecated fallback for the settings/system view
-		// TODO: remove in 3.8.0
-		if ($category === 'access' && $action === 'settings') {
-			$action = 'system';
-		}
-
 		// wildcard to overwrite the entire category
 		if ($action === '*') {
 			return $this->setCategory($category, $setting);

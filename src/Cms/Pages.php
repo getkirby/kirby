@@ -198,24 +198,6 @@ class Pages extends Collection
 	}
 
 	/**
-	 * Finds a page in the collection by id.
-	 * This works recursively for children and
-	 * children of children, etc.
-	 * @deprecated 3.7.0 Use `$pages->get()` or `$pages->find()` instead
-	 * @todo 3.8.0 Remove method
-	 * @codeCoverageIgnore
-	 *
-	 * @param string|null $id
-	 * @return mixed
-	 */
-	public function findById(string $id = null)
-	{
-		Helpers::deprecated('Cms\Pages::findById() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->get() or $pages->find() instead.');
-
-		return $this->findByKey($id);
-	}
-
-	/**
 	 * Finds a child or child of a child recursively.
 	 * @deprecated 3.7.0 Use `$pages->find()` instead
 	 * @todo 3.8.0 Integrate code into `findByKey()` and remove this method
@@ -309,22 +291,6 @@ class Pages extends Collection
 		}
 
 		return null;
-	}
-
-	/**
-	 * Alias for `$pages->find()`
-	 * @deprecated 3.7.0 Use `$pages->find()` instead
-	 * @todo 3.8.0 Remove method
-	 * @codeCoverageIgnore
-	 *
-	 * @param string $id
-	 * @return \Kirby\Cms\Page|null
-	 */
-	public function findByUri(string $id)
-	{
-		Helpers::deprecated('Cms\Pages::findByUri() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->find() instead.');
-
-		return $this->findByKey($id);
 	}
 
 	/**

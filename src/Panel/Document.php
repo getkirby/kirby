@@ -151,28 +151,6 @@ class Document
 	}
 
 	/**
-	 * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
-	 * @todo remove in 3.8.0
-	 * @codeCoverageIgnore
-	 */
-	public static function customCss(): string|null
-	{
-		Helpers::deprecated('Panel\Document::customCss() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.css\') instead.');
-		return static::customAsset('panel.css');
-	}
-
-	/**
-	 * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
-	 * @todo remove in 3.8.0
-	 * @codeCoverageIgnore
-	 */
-	public static function customJs(): string|null
-	{
-		Helpers::deprecated('Panel\Document::customJs() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.js\') instead.');
-		return static::customAsset('panel.js');
-	}
-
-	/**
 	 * Returns array of favion icons
 	 * based on config option
 	 * @since 3.7.0
