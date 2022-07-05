@@ -703,19 +703,19 @@ abstract class Sql
 		// split by dot, but only outside of quotes
 		$parts = preg_split('/(?:`[^`]*`|"[^"]*")(*SKIP)(*F)|\./', $identifier);
 
-		switch (count($parts)) {
+		return match (count($parts)) {
 			// non-qualified identifier
-			case 1:
-				return [$table, $this->unquoteIdentifier($parts[0])];
+			1 => [$table, $this->unquoteIdentifier($parts[0])],
 
 			// qualified identifier
-			case 2:
-				return [$this->unquoteIdentifier($parts[0]), $this->unquoteIdentifier($parts[1])];
+			2 => [
+				$this->unquoteIdentifier($parts[0]),
+				$this->unquoteIdentifier($parts[1])
+			],
 
 			// every other number is an error
-			default:
-				throw new InvalidArgumentException('Invalid identifier ' . $identifier);
-		}
+			default => throw new InvalidArgumentException('Invalid identifier ' . $identifier)
+		};
 	}
 
 	/**

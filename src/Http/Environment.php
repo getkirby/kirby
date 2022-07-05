@@ -946,18 +946,17 @@ class Environment
 			return $key;
 		}
 
-		switch ($key) {
-			case 'SERVER_ADDR':
-			case 'SERVER_NAME':
-			case 'HTTP_HOST':
-			case 'HTTP_X_FORWARDED_HOST':
-				return static::sanitizeHost($value);
-			case 'SERVER_PORT':
-			case 'HTTP_X_FORWARDED_PORT':
-				return static::sanitizePort($value);
-			default:
-				return $value;
-		}
+		return match ($key) {
+			'SERVER_ADDR',
+			'SERVER_NAME',
+			'HTTP_HOST',
+			'HTTP_X_FORWARDED_HOST' => static::sanitizeHost($value),
+
+			'SERVER_PORT',
+			'HTTP_X_FORWARDED_PORT' => static::sanitizePort($value),
+
+			default => $value
+		};
 	}
 
 	/**

@@ -502,19 +502,12 @@ class Date extends DateTime
 	 */
 	public function toString(string $mode = 'datetime', bool $timezone = true): string
 	{
-		switch ($mode) {
-			case 'date':
-				$format = 'Y-m-d';
-				break;
-			case 'time':
-				$format = 'H:i:s';
-				break;
-			case 'datetime':
-				$format = 'Y-m-d H:i:s';
-				break;
-			default:
-				throw new InvalidArgumentException('Invalid mode');
-		}
+		$format = match ($mode) {
+			'date'     => 'Y-m-d',
+			'time'     => 'H:i:s',
+			'datetime' => 'Y-m-d H:i:s',
+			default    => throw new InvalidArgumentException('Invalid mode')
+		};
 
 		if ($timezone === true) {
 			$format .= 'P';
