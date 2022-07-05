@@ -133,11 +133,7 @@ class Event
 	 */
 	public function argument(string $name)
 	{
-		if (isset($this->arguments[$name]) === true) {
-			return $this->arguments[$name];
-		}
-
-		return null;
+		return $this->arguments[$name] ?? null;
 	}
 
 	/**
@@ -204,7 +200,9 @@ class Event
 				'*:' . $this->state,
 				'*'
 			];
-		} elseif ($this->state !== null) {
+		}
+
+		if ($this->state !== null) {
 			// event without action: $type:$state
 
 			return [
@@ -212,7 +210,9 @@ class Event
 				'*:' . $this->state,
 				'*'
 			];
-		} elseif ($this->action !== null) {
+		}
+
+		if ($this->action !== null) {
 			// event without state: $type.$action
 
 			return [
@@ -220,11 +220,10 @@ class Event
 				'*.' . $this->action,
 				'*'
 			];
-		} else {
-			// event with a simple name
-
-			return ['*'];
 		}
+
+		// event with a simple name
+		return ['*'];
 	}
 
 	/**

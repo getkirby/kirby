@@ -55,15 +55,14 @@ class FilePicker extends Picker
 		// help mitigate some typical query usage issues
 		// by converting site and page objects to proper
 		// pages by returning their children
-		if (is_a($files, 'Kirby\Cms\Site') === true) {
-			$files = $files->files();
-		} elseif (is_a($files, 'Kirby\Cms\Page') === true) {
-			$files = $files->files();
-		} elseif (is_a($files, 'Kirby\Cms\User') === true) {
-			$files = $files->files();
-		} elseif (is_a($files, 'Kirby\Cms\Files') === false) {
-			throw new InvalidArgumentException('Your query must return a set of files');
-		}
+		$files = match ($files::class) {
+			'Kirby\Cms\Site',
+			'Kirby\Cms\Page',
+			'Kirby\Cms\User'  => $files->files(),
+			'Kirby\Cms\Files' => $files,
+
+			default => throw new InvalidArgumentException('Your query must return a set of files')
+		};
 
 		// search
 		$files = $this->search($files);

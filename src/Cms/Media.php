@@ -47,10 +47,10 @@ class Media
 				// if at least the token was correct, redirect
 				if (Str::startsWith($hash, $file->mediaToken() . '-') === true) {
 					return Response::redirect($file->mediaUrl(), 307);
-				} else {
-					// don't leak the correct token, render the error page
-					return false;
 				}
+
+				// don't leak the correct token, render the error page
+				return false;
 			}
 
 			// send the file to the browser

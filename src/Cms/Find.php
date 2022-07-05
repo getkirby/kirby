@@ -137,11 +137,7 @@ class Find
 				throw new InvalidArgumentException('Invalid model type: ' . $modelType);
 		}
 
-		if ($model) {
-			return $model;
-		}
-
-		throw new NotFoundException([
+		return $model ?? throw new NotFoundException([
 			'key' => $modelName . '.undefined'
 		]);
 	}
@@ -167,21 +163,18 @@ class Find
 
 		// get the authenticated user
 		if ($id === null) {
-			if ($user = $kirby->user(null, $kirby->option('api.allowImpersonation', false))) {
-				return $user;
-			}
+			$user = $kirby->user(
+				null,
+				$kirby->option('api.allowImpersonation', false)
+			);
 
-			throw new NotFoundException([
+			return $user ?? throw new NotFoundException([
 				'key' => 'user.undefined'
 			]);
 		}
 
 		// get a specific user by id
-		if ($user = $kirby->user($id)) {
-			return $user;
-		}
-
-		throw new NotFoundException([
+		return $kirby->user($id) ?? throw new NotFoundException([
 			'key'  => 'user.notFound',
 			'data' => [
 				'name' => $id

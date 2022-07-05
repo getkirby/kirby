@@ -622,13 +622,9 @@ class User extends ModelWithContent
 			return $this->role;
 		}
 
-		$roleName = $this->role ?? $this->credentials()['role'] ?? 'visitor';
+		$name = $this->role ?? $this->credentials()['role'] ?? 'visitor';
 
-		if ($role = $this->kirby()->roles()->find($roleName)) {
-			return $this->role = $role;
-		}
-
-		return $this->role = Role::nobody();
+		return $this->role = $this->kirby()->roles()->find($name) ?? Role::nobody();
 	}
 
 	/**
@@ -647,19 +643,16 @@ class User extends ModelWithContent
 		$myRole = $roles->filter('id', $this->role()->id());
 
 		// if there's an authenticated user …
-		if ($user = $kirby->user()) {
-
-			// admin users can select pretty much any role
-			if ($user->isAdmin() === true) {
-				// except if the user is the last admin
-				if ($this->isLastAdmin() === true) {
-					// in which case they have to stay admin
-					return $myRole;
-				}
-
-				// return all roles for mighty admins
-				return $roles;
+		// admin users can select pretty much any role
+		if ($kirby->user()?->isAdmin() === true) {
+			// except if the user is the last admin
+			if ($this->isLastAdmin() === true) {
+				// in which case they have to stay admin
+				return $myRole;
 			}
+
+			// return all roles for mighty admins
+			return $roles;
 		}
 
 		// any other user can only keep their role
@@ -834,10 +827,7 @@ class User extends ModelWithContent
 	 */
 	public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
 	{
-		if ($template === null) {
-			$template = $this->email();
-		}
-
+		$template ??= $this->email();
 		return parent::toString($template, $data, $fallback, $handler);
 	}
 

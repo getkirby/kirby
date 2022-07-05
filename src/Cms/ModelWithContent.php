@@ -97,7 +97,10 @@ abstract class ModelWithContent extends Model
 		} else {
 
 			// only fetch from cache for the default language
-			if ($languageCode === null && is_a($this->content, 'Kirby\Cms\Content') === true) {
+			if (
+				$languageCode === null &&
+				is_a($this->content, 'Kirby\Cms\Content') === true
+			) {
 				return $this->content;
 			}
 
@@ -137,21 +140,21 @@ abstract class ModelWithContent extends Model
 		if ($force === true) {
 			if (empty($languageCode) === false) {
 				return $directory . '/' . $filename . '.' . $languageCode . '.' . $extension;
-			} else {
-				return $directory . '/' . $filename . '.' . $extension;
 			}
+
+			return $directory . '/' . $filename . '.' . $extension;
 		}
 
 		// add and validate the language code in multi language mode
 		if ($this->kirby()->multilang() === true) {
 			if ($language = $this->kirby()->languageCode($languageCode)) {
 				return $directory . '/' . $filename . '.' . $language . '.' . $extension;
-			} else {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 			}
-		} else {
-			return $directory . '/' . $filename . '.' . $extension;
+
+			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 		}
+
+		return $directory . '/' . $filename . '.' . $extension;
 	}
 
 	/**
@@ -167,11 +170,11 @@ abstract class ModelWithContent extends Model
 				$files[] = $this->contentFile($code);
 			}
 			return $files;
-		} else {
-			return [
-				$this->contentFile()
-			];
 		}
+
+		return [
+			$this->contentFile()
+		];
 	}
 
 	/**
@@ -399,9 +402,9 @@ abstract class ModelWithContent extends Model
 	{
 		if ($this->kirby()->multilang() === true) {
 			return $this->saveTranslation($data, $languageCode, $overwrite);
-		} else {
-			return $this->saveContent($data, $overwrite);
 		}
+
+		return $this->saveContent($data, $overwrite);
 	}
 
 	/**

@@ -200,13 +200,12 @@ class PagePicker extends Picker
 		// help mitigate some typical query usage issues
 		// by converting site and page objects to proper
 		// pages by returning their children
-		if (is_a($items, 'Kirby\Cms\Site') === true) {
-			$items = $items->children();
-		} elseif (is_a($items, 'Kirby\Cms\Page') === true) {
-			$items = $items->children();
-		} elseif (is_a($items, 'Kirby\Cms\Pages') === false) {
-			throw new InvalidArgumentException('Your query must return a set of pages');
-		}
+		$items = match ($items::class) {
+			'Kirby\Cms\Site', 'Kirby\Cms\Page' => $items->children(),
+			'Kirby\Cms\Pages'                  => $items,
+
+			default => throw new InvalidArgumentException('Your query must return a set of pages')
+		};
 
 		return $this->itemsForQuery = $items;
 	}

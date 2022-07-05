@@ -87,13 +87,13 @@ return [
 					'status' => 'ok',
 					'user'   => $this->resolve($user)->view('auth')->toArray()
 				];
-			} else {
-				return [
-					'code'      => 200,
-					'status'    => 'ok',
-					'challenge' => $status->challenge()
-				];
 			}
+
+			return [
+				'code'      => 200,
+				'status'    => 'ok',
+				'challenge' => $status->challenge()
+			];
 		}
 	],
 	[

@@ -223,10 +223,7 @@ class ContentLock
 	 */
 	protected function user(): User
 	{
-		if ($user = $this->kirby()->user()) {
-			return $user;
-		}
-
-		throw new PermissionException('No user authenticated.');
+		return $this->kirby()->user() ??
+			throw new PermissionException('No user authenticated.');
 	}
 }

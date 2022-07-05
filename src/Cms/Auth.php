@@ -564,9 +564,9 @@ class Auth
 			// otherwise hide it to avoid leaking security-relevant information
 			if ($this->kirby->option('debug') === true) {
 				throw $e;
-			} else {
-				throw new PermissionException(['key' => 'access.login']);
 			}
+
+			throw new PermissionException(['key' => 'access.login']);
 		}
 	}
 
@@ -725,11 +725,13 @@ class Auth
 
 		if ($basicAuth === true && $auth && $auth->type() === 'basic') {
 			return 'basic';
-		} elseif ($allowImpersonation === true && $this->impersonate !== null) {
-			return 'impersonate';
-		} else {
-			return 'session';
 		}
+
+		if ($allowImpersonation === true && $this->impersonate !== null) {
+			return 'impersonate';
+		}
+
+		return 'session';
 	}
 
 	/**
@@ -756,16 +758,18 @@ class Auth
 			}
 
 			return null;
-		} elseif ($this->user !== false) {
+		}
+
+		if ($this->user !== false) {
 			return $this->user;
 		}
 
 		try {
 			if ($this->type() === 'basic') {
 				return $this->user = $this->currentUserFromBasicAuth();
-			} else {
-				return $this->user = $this->currentUserFromSession($session);
 			}
+
+			return $this->user = $this->currentUserFromSession($session);
 		} catch (Throwable $e) {
 			$this->user = null;
 
