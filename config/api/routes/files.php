@@ -60,9 +60,9 @@ return [
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));
-			} else {
-				return $files->query($this->requestBody());
 			}
+
+			return $files->query($this->requestBody());
 		}
 	],
 	[
@@ -86,16 +86,20 @@ return [
 		'pattern' => $pattern . '/files/(:any)',
 		'method'  => 'PATCH',
 		'action'  => function (string $path, string $filename) {
-			return $this->file($path, $filename)->update($this->requestBody(), $this->language(), true);
+			return $this->file($path, $filename)->update(
+				$this->requestBody(),
+				$this->language(),
+				true
+			);
 		}
 	],
 	[
 		'pattern' => $pattern . '/files/(:any)',
 		'method'  => 'POST',
 		'action'  => function (string $path, string $filename) {
-			return $this->upload(function ($source) use ($path, $filename) {
-				return $this->file($path, $filename)->replace($source);
-			});
+			return $this->upload(
+				fn ($source) => $this->file($path, $filename)->replace($source)
+			);
 		}
 	],
 	[
@@ -124,9 +128,9 @@ return [
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));
-			} else {
-				return $files->query($this->requestBody());
 			}
+
+			return $files->query($this->requestBody());
 		}
 	],
 ];

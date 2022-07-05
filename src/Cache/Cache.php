@@ -95,7 +95,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid cache value
-		if (!is_a($value, 'Kirby\Cache\Value')) {
+		if (is_a($value, 'Kirby\Cache\Value') === false) {
 			return $default;
 		}
 
@@ -140,7 +140,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid Value object
-		if (!is_a($value, 'Kirby\Cache\Value')) {
+		if (is_a($value, 'Kirby\Cache\Value') === false) {
 			return false;
 		}
 
@@ -160,11 +160,13 @@ abstract class Cache
 
 		if ($expires === null) {
 			return false;
-		} elseif (!is_int($expires)) {
-			return true;
-		} else {
-			return time() >= $expires;
 		}
+
+		if (is_int($expires) === false) {
+			return true;
+		}
+
+		return time() >= $expires;
 	}
 
 	/**
@@ -181,7 +183,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid Value object
-		if (!is_a($value, 'Kirby\Cache\Value')) {
+		if (is_a($value, 'Kirby\Cache\Value') === false) {
 			return false;
 		}
 

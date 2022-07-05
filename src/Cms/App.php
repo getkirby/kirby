@@ -647,15 +647,7 @@ class App
 		}
 
 		if ($id === '.') {
-			if ($file = $parent->file($filename)) {
-				return $file;
-			}
-
-			if ($file = $this->site()->file($filename)) {
-				return $file;
-			}
-
-			return null;
+			return $parent->file($filename) ?? $this->site()->file($filename);
 		}
 
 		if ($page = $this->page($id, $parent, $drafts)) {
@@ -722,15 +714,15 @@ class App
 	 */
 	public static function instance(self $instance = null, bool $lazy = false)
 	{
-		if ($instance === null) {
-			if ($lazy === true) {
-				return static::$instance;
-			} else {
-				return static::$instance ?? new static();
-			}
+		if ($instance !== null) {
+			return static::$instance = $instance;
 		}
 
-		return static::$instance = $instance;
+		if ($lazy === true) {
+			return static::$instance;
+		}
+
+		return static::$instance ?? new static();
 	}
 
 	/**
@@ -807,10 +799,11 @@ class App
 				return $this->io($e);
 			}
 
-			if ($input->isErrorPage() === true) {
-				if ($response->code() === null) {
-					$response->code(404);
-				}
+			if (
+				$input->isErrorPage() === true &&
+				$response->code() === null
+			) {
+				$response->code(404);
 			}
 
 			return $response->send($html);
@@ -1309,7 +1302,10 @@ class App
 
 		// search for a draft if the page cannot be found
 		if (!$page && $draft = $site->draft($path)) {
-			if ($this->user() || $draft->isVerified($this->request()->get('token'))) {
+			if (
+				$this->user() ||
+				$draft->isVerified($this->request()->get('token'))
+			) {
 				$page = $draft;
 			}
 		}

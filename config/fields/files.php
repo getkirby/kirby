@@ -34,7 +34,10 @@ return [
 	],
 	'computed' => [
 		'parentModel' => function () {
-			if (is_string($this->parent) === true && $model = $this->model()->query($this->parent, 'Kirby\Cms\Model')) {
+			if (
+				is_string($this->parent) === true &&
+				$model = $this->model()->query($this->parent, 'Kirby\Cms\Model')
+			) {
 				return $model;
 			}
 
@@ -71,7 +74,10 @@ return [
 					$id = $id['id'] ?? null;
 				}
 
-				if ($id !== null && ($file = $this->kirby()->file($id, $this->model()))) {
+				if (
+					$id !== null &&
+					($file = $this->kirby()->file($id, $this->model()))
+				) {
 					$files[] = $this->fileResponse($file);
 				}
 			}

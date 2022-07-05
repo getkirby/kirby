@@ -269,7 +269,9 @@ class File extends ModelWithContent
 
 		if (is_a($this->parent(), 'Kirby\Cms\Page') === true) {
 			return $this->id = $this->parent()->id() . '/' . $this->filename();
-		} elseif (is_a($this->parent(), 'Kirby\Cms\User') === true) {
+		}
+
+		if (is_a($this->parent(), 'Kirby\Cms\User') === true) {
 			return $this->id = $this->parent()->id() . '/' . $this->filename();
 		}
 

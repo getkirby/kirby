@@ -93,7 +93,10 @@ class ContentTranslation
 		$content = $this->content;
 
 		// merge with the default content
-		if ($this->isDefault() === false && $defaultLanguage = $parent->kirby()->defaultLanguage()) {
+		if (
+			$this->isDefault() === false &&
+			$defaultLanguage = $parent->kirby()->defaultLanguage()
+		) {
 			$default = [];
 
 			if ($defaultTranslation = $parent->translation($defaultLanguage->code())) {

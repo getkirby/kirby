@@ -546,21 +546,17 @@ class System
 	 */
 	public function serverSoftware(): string|null
 	{
-		if ($servers = $this->app->option('servers')) {
-			$servers = A::wrap($servers);
-		} else {
-			$servers = [
-				'apache',
-				'caddy',
-				'litespeed',
-				'nginx',
-				'php'
-			];
-		}
+		$servers = $this->app->option('servers', [
+			'apache',
+			'caddy',
+			'litespeed',
+			'nginx',
+			'php'
+		]);
 
 		$software = $this->app->environment()->get('SERVER_SOFTWARE', '');
 
-		preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
+		preg_match('!(' . implode('|', A::wrap($servers)) . ')!i', $software, $matches);
 
 		return $matches[0] ?? null;
 	}

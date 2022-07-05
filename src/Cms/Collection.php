@@ -208,7 +208,9 @@ class Collection extends BaseCollection
 		foreach ($keys as $key) {
 			if (is_array($key) === true) {
 				return $this->not(...$key);
-			} elseif (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+			}
+
+			if (is_a($key, 'Kirby\Toolkit\Collection') === true) {
 				$collection = $collection->not(...$key->keys());
 			} elseif (is_object($key) === true) {
 				$key = $key->id();
@@ -256,11 +258,14 @@ class Collection extends BaseCollection
 	{
 		if (count($args) === 1) {
 			// try to determine the key from the provided item
-			if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+			if (
+				is_object($args[0]) === true &&
+				is_callable([$args[0], 'id']) === true
+			) {
 				return parent::prepend($args[0]->id(), $args[0]);
-			} else {
-				return parent::prepend($args[0]);
 			}
+
+			return parent::prepend($args[0]);
 		}
 
 		return parent::prepend(...$args);

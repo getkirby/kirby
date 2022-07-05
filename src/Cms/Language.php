@@ -365,9 +365,9 @@ class Language extends Model
 	{
 		if ($category !== null) {
 			return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
-		} else {
-			return $this->locale;
 		}
+
+		return $this->locale;
 	}
 
 	/**
