@@ -108,9 +108,9 @@ class FileCache extends Cache
 
 		if (isset($this->options['extension'])) {
 			return $file . '.' . $this->options['extension'];
-		} else {
-			return $file;
 		}
+
+		return $file;
 	}
 
 	/**
@@ -225,7 +225,10 @@ class FileCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		if (Dir::remove($this->root) === true && Dir::make($this->root) === true) {
+		if (
+			Dir::remove($this->root) === true &&
+			Dir::make($this->root) === true
+		) {
 			return true;
 		}
 

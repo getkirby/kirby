@@ -63,9 +63,9 @@ class MemoryCache extends Cache
 		if (isset($this->store[$key])) {
 			unset($this->store[$key]);
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**

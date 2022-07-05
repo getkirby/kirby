@@ -465,9 +465,9 @@ class Core
 
 				if (empty($path) === true) {
 					return $urls['index'];
-				} else {
-					return $urls['base'] . '/' . $path;
 				}
+
+				return $urls['base'] . '/' . $path;
 			},
 			'assets' => fn (array $urls) => $urls['base'] . '/assets',
 			'api'    => fn (array $urls) => $urls['base'] . '/' . $this->kirby->option('api.slug', 'api'),

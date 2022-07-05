@@ -297,7 +297,8 @@ class Blueprint
 		// now ensure that we always return the data array
 		if (is_string($file) === true && F::exists($file) === true) {
 			return static::$loaded[$name] = Data::read($file);
-		} elseif (is_array($file) === true) {
+		}
+		if (is_array($file) === true) {
 			return static::$loaded[$name] = $file;
 		}
 

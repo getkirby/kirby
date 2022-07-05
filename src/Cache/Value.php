@@ -106,11 +106,11 @@ class Value
 		try {
 			$array = json_decode($json, true);
 
-			if (is_array($array)) {
+			if (is_array($array) === true) {
 				return static::fromArray($array);
-			} else {
-				return null;
 			}
+
+			return null;
 		} catch (Throwable) {
 			return null;
 		}

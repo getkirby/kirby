@@ -62,7 +62,10 @@ class Model
 		$this->select = $schema['select'] ?? null;
 		$this->views  = $schema['views']  ?? [];
 
-		if ($this->select === null && array_key_exists('default', $this->views)) {
+		if (
+			$this->select === null &&
+			array_key_exists('default', $this->views)
+		) {
 			$this->view('default');
 		}
 

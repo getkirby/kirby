@@ -49,9 +49,9 @@ trait AppTranslations
 		I18n::$locale = function (): string {
 			if ($this->multilang() === true) {
 				return $this->defaultLanguage()->code();
-			} else {
-				return 'en';
 			}
+
+			return 'en';
 		};
 
 		I18n::$fallback = function (): array {
@@ -71,9 +71,9 @@ trait AppTranslations
 				$fallback[] = 'en';
 
 				return $fallback;
-			} else {
-				return ['en'];
 			}
+
+			return ['en'];
 		};
 
 		I18n::$translations = [];
@@ -127,11 +127,8 @@ trait AppTranslations
 			return $this->language = null;
 		}
 
-		if ($language = $this->language($languageCode)) {
-			$this->language = $language;
-		} else {
-			$this->language = $this->defaultLanguage();
-		}
+		$this->language   = $this->language($languageCode);
+		$this->language ??= $this->defaultLanguage();
 
 		if ($this->language) {
 			Locale::set($this->language->locale());

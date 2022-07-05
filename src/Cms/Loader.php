@@ -159,11 +159,10 @@ class Loader
 	public function resolve($item)
 	{
 		if (is_string($item) === true) {
-			if (F::extension($item) !== 'php') {
-				$item = Data::read($item);
-			} else {
-				$item = require $item;
-			}
+			$item = match (F::extension($item)) {
+				'php'   => require $item,
+				default => Data::read($item)
+			};
 		}
 
 		if (is_callable($item)) {

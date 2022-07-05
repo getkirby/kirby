@@ -596,13 +596,11 @@ class Api
 			$result = $this->responseForException($e);
 		}
 
-		if ($result === null) {
-			$result = $this->responseFor404();
-		} elseif ($result === false) {
-			$result = $this->responseFor400();
-		} elseif ($result === true) {
-			$result = $this->responseFor200();
-		}
+		$result = match ($result) {
+			null  => $this->responseFor404(),
+			false => $this->responseFor400(),
+			true  => $this->responseFor200()
+		};
 
 		if (is_array($result) === false) {
 			return $result;
@@ -757,9 +755,9 @@ class Api
 
 			if ($postMaxSize < $uploadMaxFileSize) {
 				throw new Exception(I18n::translate('upload.error.iniPostSize'));
-			} else {
-				throw new Exception(I18n::translate('upload.error.noFiles'));
 			}
+
+			throw new Exception(I18n::translate('upload.error.noFiles'));
 		}
 
 		foreach ($files as $upload) {
