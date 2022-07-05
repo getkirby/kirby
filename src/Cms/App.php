@@ -889,21 +889,11 @@ class App
 	 * @internal
 	 * @param string|null $text
 	 * @param array $options
-	 * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
+	 * @param bool $inline
 	 * @return string
-	 * @todo remove $inline parameter in in 3.8.0
 	 */
-	public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
+	public function kirbytext(string $text = null, array $options = []): string
 	{
-		// warning for deprecated fourth parameter
-		// @codeCoverageIgnoreStart
-		if (func_num_args() === 3) {
-			Helpers::deprecated('Cms\App::kirbytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'markdown\'][\'inline\'] instead.');
-		}
-		// @codeCoverageIgnoreEnd
-
-		$options['markdown']['inline'] ??= $inline;
-
 		$text = $this->apply('kirbytext:before', compact('text'), 'text');
 		$text = $this->kirbytags($text, $options);
 		$text = $this->markdown($text, $options['markdown']);
@@ -1000,34 +990,18 @@ class App
 	 *
 	 * @internal
 	 * @param string|null $text
-	 * @param bool|array $options Boolean inline value is deprecated, use `['inline' => true]` instead
+	 * @param array $options
 	 * @return string
-	 * @todo remove boolean $options in in 3.8.0
 	 */
-	public function markdown(string $text = null, $options = null): string
+	public function markdown(string $text = null, array $options = null): string
 	{
-		// support for the old syntax to enable inline mode as second argument
-		// @codeCoverageIgnoreStart
-		if (is_bool($options) === true) {
-			Helpers::deprecated('Cms\App::markdown(): Passing a boolean as second parameter has been deprecated and won\'t be supported anymore in Kirby 3.8.0. Instead pass array with the key "inline" set to true or false.');
-
-			$options = [
-				'inline' => $options
-			];
-		}
-		// @codeCoverageIgnoreEnd
-
 		// merge global options with local options
 		$options = array_merge(
 			$this->options['markdown'] ?? [],
 			(array)$options
 		);
 
-		// TODO: remove passing the $inline parameter in 3.8.0
-		// $options['inline'] is set to `false` to avoid the deprecation
-		// warning in the component; this can also be removed in 3.8.0
-		$inline = $options['inline'] ??= false;
-		return ($this->component('markdown'))($this, $text, $options, $inline);
+		return ($this->component('markdown'))($this, $text, $options);
 	}
 
 	/**

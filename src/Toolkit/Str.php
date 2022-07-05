@@ -553,21 +553,6 @@ class Str
 	}
 
 	/**
-	 * Checks if the given string is a URL
-	 *
-	 * @param string|null $string
-	 * @return bool
-	 * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
-	 * @todo Remove in 3.8.0
-	 * @codeCoverageIgnore
-	 */
-	public static function isURL(string|null $string = null): bool
-	{
-		Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
-		return filter_var($string, FILTER_VALIDATE_URL) !== false;
-	}
-
-	/**
 	 * Convert a string to kebab case.
 	 *
 	 * @param string $value
