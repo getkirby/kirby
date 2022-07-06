@@ -38,5 +38,6 @@ export default {
 }
 .k-panel-view {
   flex-grow: 1;
+  padding-bottom: 6rem;
 }
 </style>
