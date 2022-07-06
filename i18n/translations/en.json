@@ -360,7 +360,7 @@
   "lock.unlock": "Unlock",
   "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
 
-  "login": "Login",
+  "login": "Log in",
   "login.code.label.login": "Login code",
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",
