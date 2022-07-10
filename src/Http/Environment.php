@@ -397,6 +397,7 @@ class Environment
 			return true;
 		}
 
+		// @codeCoverageIgnoreStart
 		$term = getenv('TERM');
 
 		if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
@@ -404,6 +405,7 @@ class Environment
 		}
 
 		return false;
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**

@@ -25,7 +25,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_HEADER
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -38,7 +37,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureForwardedHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_HEADER
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
@@ -51,7 +49,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromRelativeUrl()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => '/'
 		], [
 
@@ -64,7 +61,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromRelativeUrlWithSubfolder()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => '/subfolder'
 		], [
 
@@ -77,7 +73,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromServerName()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'SERVER_NAME' => 'example.com'
@@ -90,7 +85,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrl()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => 'http://example.com'
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -103,7 +97,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrls()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				null,
 				'http://example.com',
@@ -121,7 +114,6 @@ class EnvironmentTest extends TestCase
 	{
 		$env = new Environment([
 			'cli'     => false,
-			'root'    => $this->config,
 			'allowed' => [
 				true,
 				'http://localhost/path-a',
@@ -139,7 +131,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrlsWithSlash()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				'http://getkirby.com/',
 			]
@@ -248,7 +239,6 @@ class EnvironmentTest extends TestCase
 	public function testDisallowFromInsecureHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -263,7 +253,6 @@ class EnvironmentTest extends TestCase
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				'http://localhost/path-b',
 				'http://localhost/path-c'
@@ -489,6 +478,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::https
+	 * @covers ::detectHttps
 	 * @dataProvider providerForHttpsValues
 	 */
 	public function testHttps($value, $expected)
@@ -609,6 +599,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::https
+	 * @covers ::detectHttpsProtocol
 	 * @dataProvider providerForHttpsProtocols
 	 */
 	public function testHttpsFromProtocol($value, $expected)
@@ -650,7 +641,6 @@ class EnvironmentTest extends TestCase
 	public function testIgnoreFromInsecureForwardedHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
@@ -691,7 +681,6 @@ class EnvironmentTest extends TestCase
 		$this->expectExceptionMessage('Invalid allow list setup for base URLs');
 
 		new Environment([
-			'root'    => $this->config,
 			'allowed' => new \stdClass()
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -885,6 +874,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::port
+	 * @covers ::detectPort
 	 */
 	public function testPort()
 	{
@@ -1250,6 +1240,11 @@ class EnvironmentTest extends TestCase
 				9999
 			],
 			[
+				'SERVER_PORT',
+				'abc',
+				null
+			],
+			[
 				'HTTP_X_FORWARDED_PORT',
 				'abc9999',
 				9999
@@ -1259,6 +1254,8 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::sanitize
+	 * @covers ::sanitizeHost
+	 * @covers ::sanitizePort
 	 * @dataProvider providerForSanitize
 	 */
 	public function testSanitize($key, $value, $expected)
@@ -1268,6 +1265,8 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::sanitize
+	 * @covers ::sanitizeHost
+	 * @covers ::sanitizePort
 	 */
 	public function testSanitizeAll()
 	{
@@ -1318,6 +1317,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::scriptPath
+	 * @covers ::sanitizeScriptPath
 	 * @dataProvider providerForScriptPaths
 	 */
 	public function testScriptPath($value, $expected)
