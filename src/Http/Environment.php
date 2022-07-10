@@ -425,16 +425,19 @@ class Environment
 		// prefer the standardized `Forwarded` header if defined
 		$forwarded = $this->get('HTTP_FORWARDED');
 		if ($forwarded) {
-			// only use the first (outermost) proxy
-			$forwarded = Str::before($forwarded, ',');
+			// only use the first (outermost) proxy by using the first set of values
+			// before the first comma (but only a comma outside of quotes)
+			if (Str::contains($forwarded, ',') === true) {
+				$forwarded = preg_split('/"[^"]*"(*SKIP)(*F)|,/', $forwarded)[0];
+			}
 
 			// split into separate key=value;key=value fields by semicolon,
 			// but only split outside of quotes
-			$rawFields = preg_split($forwarded, '/"[^"]*"(*SKIP)(*F)|;/');
+			$rawFields = preg_split('/"[^"]*"(*SKIP)(*F)|;/', $forwarded);
 
 			// split key and value into an associative array
 			$fields = [];
-			foreach ($fields as $field) {
+			foreach ($rawFields as $field) {
 				$key   = Str::lower(Str::before($field, '='));
 				$value = Str::after($field, '=');
 
@@ -455,6 +458,10 @@ class Environment
 
 			if (isset($fields['proto']) === true) {
 				$data['https'] = $this->detectHttpsProtocol($fields['proto']);
+			}
+
+			if ($data['port'] === null && $data['https'] === true) {
+				$data['port'] = 443;
 			}
 
 			return $data;
