@@ -32,7 +32,7 @@ class LoginTest extends AreaTestCase
 		$props = $view['props'];
 
 		$this->assertSame('login', $view['id']);
-		$this->assertSame('Login', $view['title']);
+		$this->assertSame('Log in', $view['title']);
 		$this->assertSame('k-login-view', $view['component']);
 		$this->assertSame(['password'], $props['methods']);
 		$this->assertNull($props['pending']['email']);
