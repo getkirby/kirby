@@ -1045,6 +1045,14 @@ class EnvironmentTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_FORWARDED' => 'for="' . $forwardedFor . '"',
+			'HTTP_CLIENT_IP' => $clientIp,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
 	}
 
 	public function providerForServerNames()

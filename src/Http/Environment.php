@@ -409,17 +409,18 @@ class Environment
 	}
 
 	/**
-	 * Detects the host, protocol and port from
-	 * the `Forwarded` and `X-Forwarded-*` headers
+	 * Detects the host, protocol, port and client IP
+	 * from the `Forwarded` and `X-Forwarded-*` headers
 	 *
 	 * @return array
 	 */
 	protected function detectForwarded(): array
 	{
 		$data = [
+			'for'   => null,
 			'host'  => null,
-			'port'  => null,
-			'https' => false
+			'https' => false,
+			'port'  => null
 		];
 
 		// prefer the standardized `Forwarded` header if defined
@@ -464,6 +465,8 @@ class Environment
 				$data['port'] = 443;
 			}
 
+			$data['for'] = $parts['for'] ?? null;
+
 			return $data;
 		}
 
@@ -471,6 +474,7 @@ class Environment
 		$data['host']  = $this->detectForwardedHost();
 		$data['https'] = $this->detectForwardedHttps();
 		$data['port']  = $this->detectForwardedPort($data['https']);
+		$data['for']   = $this->get('HTTP_X_FORWARDED_FOR');
 
 		return $data;
 	}
@@ -869,6 +873,10 @@ class Environment
 			$this->get('HTTP_X_FORWARDED_FOR'),
 			$this->get('HTTP_CLIENT_IP')
 		];
+
+		if ($this->get('HTTP_FORWARDED')) {
+			$ips[] = $this->detectForwarded()['for'];
+		}
 
 		// remove duplicates and empty ips
 		$ips = array_unique(array_filter($ips));
