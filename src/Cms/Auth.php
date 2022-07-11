@@ -308,20 +308,19 @@ class Auth
 		// clear the status cache
 		$this->status = null;
 
-		return match ($who) {
-			null     => $this->impersonate = null,
-			'kirby'  => $this->impersonate = new User([
+		return $this->impersonate = match ($who) {
+			null     => null,
+			'kirby'  => new User([
 				'email' => 'kirby@getkirby.com',
 				'id'    => 'kirby',
 				'role'  => 'admin',
 			]),
-			'nobody' => $this->impersonate = new User([
+			'nobody' => new User([
 				'email' => 'nobody@getkirby.com',
 				'id'    => 'nobody',
 				'role'  => 'nobody',
 			]),
-			default  => $this->impersonate = $this->kirby->users()->find($who)
-				?? throw new NotFoundException('The user "' . $who . '" cannot be found')
+			default  => $this->kirby->users()->find($who) ?? throw new NotFoundException('The user "' . $who . '" cannot be found')
 		};
 	}
 
