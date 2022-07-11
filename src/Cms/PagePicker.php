@@ -200,9 +200,10 @@ class PagePicker extends Picker
 		// help mitigate some typical query usage issues
 		// by converting site and page objects to proper
 		// pages by returning their children
-		$items = match ($items::class) {
-			'Kirby\Cms\Site', 'Kirby\Cms\Page' => $items->children(),
-			'Kirby\Cms\Pages'                  => $items,
+		$items = match (true) {
+			$items instanceof Site,
+			$items instanceof Page  => $items->children(),
+			$items instanceof Pages => $items,
 
 			default => throw new InvalidArgumentException('Your query must return a set of pages')
 		};
