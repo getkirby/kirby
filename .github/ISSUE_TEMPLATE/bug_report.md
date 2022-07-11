@@ -16,7 +16,7 @@ about: Create a report to help us improve
 
 
 ## To reproduce
-<!-- Please help us by otulining step by step how to reproduce the bug. -->
+<!-- Please help us by outlining step by step how to reproduce the bug. -->
 
 1. Go to '...'
 2. Click on '....'
