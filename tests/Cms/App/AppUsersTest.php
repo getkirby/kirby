@@ -73,11 +73,10 @@ class AppUsersTest extends TestCase
 		$this->assertNull($app->user(null, false));
 
 		// with callback
-		$result = $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
-			$self->assertSame($app, $this);
-			$self->assertSame($user, $this->user());
-			$self->assertSame('homer@simpsons.com', $user->email());
-			$self->assertNull($app->user(null, false));
+		$result = $app->impersonate('homer@simpsons.com', function ($user) use ($app) {
+			$this->assertSame($user, $app->user());
+			$this->assertSame('homer@simpsons.com', $user->email());
+			$this->assertNull($app->user(null, false));
 
 			return 'test1';
 		});
@@ -89,11 +88,10 @@ class AppUsersTest extends TestCase
 		$app->impersonate('kirby');
 		$caught = false;
 		try {
-			$app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
-				$self->assertSame($app, $this);
-				$self->assertSame($user, $this->user());
-				$self->assertSame('homer@simpsons.com', $user->email());
-				$self->assertNull($app->user(null, false));
+			$app->impersonate('homer@simpsons.com', function ($user) use ($app) {
+				$this->assertSame($user, $app->user());
+				$this->assertSame('homer@simpsons.com', $user->email());
+				$this->assertNull($app->user(null, false));
 
 				throw new Exception('Something bad happened');
 			});
