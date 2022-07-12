@@ -551,7 +551,8 @@ class Query
 				'table'    => $this->table,
 				'where'    => $this->where,
 				'bindings' => $this->bindings
-			])
+			]),
+			default => null
 		};
 	}
 
