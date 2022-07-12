@@ -320,7 +320,7 @@ class Auth
 				'id'    => 'nobody',
 				'role'  => 'nobody',
 			]),
-			default  => $this->kirby->users()->find($who) ?? throw new NotFoundException('The user "' . $who . '" cannot be found')
+			default  => ($this->kirby->users()->find($who) ?? throw new NotFoundException('The user "' . $who . '" cannot be found'))
 		};
 	}
 
