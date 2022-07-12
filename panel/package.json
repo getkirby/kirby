@@ -28,7 +28,7 @@
 		"prosemirror-model": "^1.17.0",
 		"prosemirror-schema-list": "^1.2.0",
 		"prosemirror-view": "^1.24.1",
-		"vue": "^2.7.0",
+		"vue": "^2.7.4",
 		"vuedraggable": "^2.24.3",
 		"vuelidate": "^0.7.7",
 		"vuex": "^3.6.2"
@@ -53,7 +53,7 @@
 		"vite-plugin-rewrite-all": "^0.1.2",
 		"vitest": "^0.13.0",
 		"vue-docgen-api": "^4.47.0",
-		"vue-template-compiler": "^2.7.0"
+		"vue-template-compiler": "^2.7.4"
 	},
 	"browserslist": [
 		"last 2 Android versions",
