@@ -1,5 +1,5 @@
 <?php
 
 return function () {
-    return 'loaded';
+	return 'loaded';
 };

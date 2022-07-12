@@ -16,33 +16,33 @@ use Kirby\Http\Request\Auth;
  */
 class SessionAuth extends Auth
 {
-    /**
-     * Tries to return the session object
-     *
-     * @return \Kirby\Session\Session
-     */
-    public function session()
-    {
-        return App::instance()->sessionHandler()->getManually($this->data);
-    }
+	/**
+	 * Tries to return the session object
+	 *
+	 * @return \Kirby\Session\Session
+	 */
+	public function session()
+	{
+		return App::instance()->sessionHandler()->getManually($this->data);
+	}
 
-    /**
-     * Returns the session token
-     *
-     * @return string
-     */
-    public function token(): string
-    {
-        return $this->data;
-    }
+	/**
+	 * Returns the session token
+	 *
+	 * @return string
+	 */
+	public function token(): string
+	{
+		return $this->data;
+	}
 
-    /**
-     * Returns the authentication type
-     *
-     * @return string
-     */
-    public function type(): string
-    {
-        return 'session';
-    }
+	/**
+	 * Returns the authentication type
+	 *
+	 * @return string
+	 */
+	public function type(): string
+	{
+		return 'session';
+	}
 }

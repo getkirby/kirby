@@ -16,280 +16,293 @@ use NumberFormatter;
  */
 class I18n
 {
-    /**
-     * Custom loader function
-     *
-     * @var Closure
-     */
-    public static $load = null;
+	/**
+	 * Custom loader function
+	 *
+	 * @var Closure
+	 */
+	public static $load = null;
 
-    /**
-     * Current locale
-     *
-     * @var string|\Closure
-     */
-    public static $locale = 'en';
+	/**
+	 * Current locale
+	 *
+	 * @var string|\Closure
+	 */
+	public static $locale = 'en';
 
-    /**
-     * All registered translations
-     *
-     * @var array
-     */
-    public static $translations = [];
+	/**
+	 * All registered translations
+	 *
+	 * @var array
+	 */
+	public static $translations = [];
 
-    /**
-     * The fallback locale or a
-     * list of fallback locales
-     *
-     * @var string|array|\Closure
-     */
-    public static $fallback = ['en'];
+	/**
+	 * The fallback locale or a
+	 * list of fallback locales
+	 *
+	 * @var string|array|\Closure
+	 */
+	public static $fallback = ['en'];
 
-    /**
-     * Cache of `NumberFormatter` objects by locale
-     *
-     * @var array
-     */
-    protected static $decimalsFormatters = [];
+	/**
+	 * Cache of `NumberFormatter` objects by locale
+	 *
+	 * @var array
+	 */
+	protected static $decimalsFormatters = [];
 
-    /**
-     * Returns the list of fallback locales
-     *
-     * @return array
-     */
-    public static function fallbacks(): array
-    {
-        if (
-            is_array(static::$fallback) === true ||
-            is_string(static::$fallback) === true
-        ) {
-            return A::wrap(static::$fallback);
-        }
+	/**
+	 * Returns the list of fallback locales
+	 *
+	 * @return array
+	 */
+	public static function fallbacks(): array
+	{
+		if (
+			is_array(static::$fallback) === true ||
+			is_string(static::$fallback) === true
+		) {
+			return A::wrap(static::$fallback);
+		}
 
-        if (is_callable(static::$fallback) === true) {
-            return static::$fallback = A::wrap((static::$fallback)());
-        }
+		if (is_callable(static::$fallback) === true) {
+			return static::$fallback = A::wrap((static::$fallback)());
+		}
 
-        return static::$fallback = ['en'];
-    }
+		return static::$fallback = ['en'];
+	}
 
-    /**
-     * Returns singular or plural
-     * depending on the given number
-     *
-     * @param int $count
-     * @param bool $none If true, 'none' will be returned if the count is 0
-     * @return string
-     */
-    public static function form(int $count, bool $none = false): string
-    {
-        if ($none === true && $count === 0) {
-            return 'none';
-        }
+	/**
+	 * Returns singular or plural
+	 * depending on the given number
+	 *
+	 * @param int $count
+	 * @param bool $none If true, 'none' will be returned if the count is 0
+	 * @return string
+	 */
+	public static function form(int $count, bool $none = false): string
+	{
+		if ($none === true && $count === 0) {
+			return 'none';
+		}
 
-        return $count === 1 ? 'singular' : 'plural';
-    }
+		return $count === 1 ? 'singular' : 'plural';
+	}
 
-    /**
-     * Formats a number
-     *
-     * @param int|float $number
-     * @param string $locale
-     * @return string
-     */
-    public static function formatNumber($number, string $locale = null): string
-    {
-        $locale ??= static::locale();
+	/**
+	 * Formats a number
+	 *
+	 * @param int|float $number
+	 * @param string $locale
+	 * @return string
+	 */
+	public static function formatNumber($number, string $locale = null): string
+	{
+		$locale ??= static::locale();
 
-        $formatter = static::decimalNumberFormatter($locale);
-        if ($formatter !== null) {
-            $number = $formatter->format($number);
-        }
+		$formatter = static::decimalNumberFormatter($locale);
+		if ($formatter !== null) {
+			$number = $formatter->format($number);
+		}
 
-        return (string)$number;
-    }
+		return (string)$number;
+	}
 
-    /**
-     * Returns the locale code
-     *
-     * @return string
-     */
-    public static function locale(): string
-    {
-        if (is_string(static::$locale) === true) {
-            return static::$locale;
-        }
+	/**
+	 * Returns the locale code
+	 *
+	 * @return string
+	 */
+	public static function locale(): string
+	{
+		if (is_string(static::$locale) === true) {
+			return static::$locale;
+		}
 
-        if (is_callable(static::$locale) === true) {
-            return static::$locale = (static::$locale)();
-        }
+		if (is_callable(static::$locale) === true) {
+			return static::$locale = (static::$locale)();
+		}
 
-        return static::$locale = 'en';
-    }
+		return static::$locale = 'en';
+	}
 
-    /**
-     * Translates a given message
-     * according to the currently set locale
-     *
-     * @param string|array $key
-     * @param string|array|null $fallback
-     * @param string|null $locale
-     * @return string|array|null
-     */
-    public static function translate($key, $fallback = null, string $locale = null)
-    {
-        $locale ??= static::locale();
+	/**
+	 * Translates a given message
+	 * according to the currently set locale
+	 *
+	 * @param string|array $key
+	 * @param string|array|null $fallback
+	 * @param string|null $locale
+	 * @return string|array|null
+	 */
+	public static function translate($key, $fallback = null, string $locale = null)
+	{
+		$locale ??= static::locale();
 
-        if (is_array($key) === true) {
-            if (isset($key[$locale])) {
-                return $key[$locale];
-            }
-            if (is_array($fallback)) {
-                return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
-            }
-            return $fallback;
-        }
+		if (is_array($key) === true) {
+			// try to use actual locale
+			if (isset($key[$locale])) {
+				return $key[$locale];
+			}
+			// try to use language code, e.g. `es` when locale is `es_ES`
+			$lang = Str::before($locale, '_');
+			if (isset($key[$lang])) {
+				return $key[$lang];
+			}
+			// use fallback
+			if (is_array($fallback)) {
+				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
+			}
+			return $fallback;
+		}
 
-        if ($translation = static::translation($locale)[$key] ?? null) {
-            return $translation;
-        }
+		if ($translation = static::translation($locale)[$key] ?? null) {
+			return $translation;
+		}
 
-        if ($fallback !== null) {
-            return $fallback;
-        }
+		if ($fallback !== null) {
+			return $fallback;
+		}
 
-        foreach (static::fallbacks() as $fallback) {
-            // skip locales we have already tried
-            if ($locale === $fallback) {
-                continue;
-            }
+		foreach (static::fallbacks() as $fallback) {
+			// skip locales we have already tried
+			if ($locale === $fallback) {
+				continue;
+			}
 
-            if ($translation = static::translation($fallback)[$key] ?? null) {
-                return $translation;
-            }
-        }
+			if ($translation = static::translation($fallback)[$key] ?? null) {
+				return $translation;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Translate by key and then replace
-     * placeholders in the text
-     *
-     * @param string $key
-     * @param string|array|null $fallback
-     * @param array|null $replace
-     * @param string|null $locale
-     * @return string
-     */
-    public static function template(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
-    {
-        if (is_array($fallback) === true) {
-            $replace  = $fallback;
-            $fallback = null;
-            $locale   = null;
-        }
+	/**
+	 * Translate by key and then replace
+	 * placeholders in the text
+	 *
+	 * @param string $key
+	 * @param string|array|null $fallback
+	 * @param array|null $replace
+	 * @param string|null $locale
+	 * @return string
+	 */
+	public static function template(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
+	{
+		if (is_array($fallback) === true) {
+			$replace  = $fallback;
+			$fallback = null;
+			$locale   = null;
+		}
 
-        $template = static::translate($key, $fallback, $locale);
-        return Str::template($template, $replace, [
-            'fallback' => '-',
-            'start'    => '{',
-            'end'      => '}'
-        ]);
-    }
+		$template = static::translate($key, $fallback, $locale);
+		return Str::template($template, $replace, [
+			'fallback' => '-',
+			'start'    => '{',
+			'end'      => '}'
+		]);
+	}
 
-    /**
-     * Returns the current or any other translation
-     * by locale. If the translation does not exist
-     * yet, the loader will try to load it, if defined.
-     *
-     * @param string|null $locale
-     * @return array
-     */
-    public static function translation(string $locale = null): array
-    {
-        $locale ??= static::locale();
+	/**
+	 * Returns the current or any other translation
+	 * by locale. If the translation does not exist
+	 * yet, the loader will try to load it, if defined.
+	 *
+	 * @param string|null $locale
+	 * @return array
+	 */
+	public static function translation(string $locale = null): array
+	{
+		$locale ??= static::locale();
 
-        if (isset(static::$translations[$locale]) === true) {
-            return static::$translations[$locale];
-        }
+		if (isset(static::$translations[$locale]) === true) {
+			return static::$translations[$locale];
+		}
 
-        if (is_a(static::$load, 'Closure') === true) {
-            return static::$translations[$locale] = (static::$load)($locale);
-        }
+		if (is_a(static::$load, 'Closure') === true) {
+			return static::$translations[$locale] = (static::$load)($locale);
+		}
 
-        return static::$translations[$locale] = [];
-    }
+		// try to use language code, e.g. `es` when locale is `es_ES`
+		$lang = Str::before($locale, '_');
+		if (isset(static::$translations[$lang]) === true) {
+			return static::$translations[$lang];
+		}
 
-    /**
-     * Returns all loaded or defined translations
-     *
-     * @return array
-     */
-    public static function translations(): array
-    {
-        return static::$translations;
-    }
+		return static::$translations[$locale] = [];
+	}
 
-    /**
-     * Returns (and creates) a decimal number formatter for a given locale
-     *
-     * @return \NumberFormatter|null
-     */
-    protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
-    {
-        if (isset(static::$decimalsFormatters[$locale])) {
-            return static::$decimalsFormatters[$locale];
-        }
+	/**
+	 * Returns all loaded or defined translations
+	 *
+	 * @return array
+	 */
+	public static function translations(): array
+	{
+		return static::$translations;
+	}
 
-        if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
-            return null; // @codeCoverageIgnore
-        }
+	/**
+	 * Returns (and creates) a decimal number formatter for a given locale
+	 *
+	 * @return \NumberFormatter|null
+	 */
+	protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
+	{
+		if (isset(static::$decimalsFormatters[$locale])) {
+			return static::$decimalsFormatters[$locale];
+		}
 
-        return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-    }
+		if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
+			return null; // @codeCoverageIgnore
+		}
 
-    /**
-     * Translates amounts
-     *
-     * Translation definition options:
-     * - Translation is a simple string: `{{ count }}` gets replaced in the template
-     * - Translation is an array with a value for each count: Chooses the correct template and
-     *   replaces `{{ count }}` in the template; if no specific template for the input count is
-     *   defined, the template that is defined last in the translation array is used
-     * - Translation is a callback with a `$count` argument: Returns the callback return value
-     *
-     * @param string $key
-     * @param int $count
-     * @param string|null $locale
-     * @param bool $formatNumber If set to `false`, the count is not formatted
-     * @return mixed
-     */
-    public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
-    {
-        $locale    ??= static::locale();
-        $translation = static::translate($key, null, $locale);
+		return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+	}
 
-        if ($translation === null) {
-            return null;
-        }
+	/**
+	 * Translates amounts
+	 *
+	 * Translation definition options:
+	 * - Translation is a simple string: `{{ count }}` gets replaced in the template
+	 * - Translation is an array with a value for each count: Chooses the correct template and
+	 *   replaces `{{ count }}` in the template; if no specific template for the input count is
+	 *   defined, the template that is defined last in the translation array is used
+	 * - Translation is a callback with a `$count` argument: Returns the callback return value
+	 *
+	 * @param string $key
+	 * @param int $count
+	 * @param string|null $locale
+	 * @param bool $formatNumber If set to `false`, the count is not formatted
+	 * @return mixed
+	 */
+	public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
+	{
+		$locale    ??= static::locale();
+		$translation = static::translate($key, null, $locale);
 
-        if (is_a($translation, 'Closure') === true) {
-            return $translation($count);
-        }
+		if ($translation === null) {
+			return null;
+		}
 
-        if (is_string($translation) === true) {
-            $message = $translation;
-        } elseif (isset($translation[$count]) === true) {
-            $message = $translation[$count];
-        } else {
-            $message = end($translation);
-        }
+		if (is_a($translation, 'Closure') === true) {
+			return $translation($count);
+		}
 
-        if ($formatNumber === true) {
-            $count = static::formatNumber($count, $locale);
-        }
+		if (is_string($translation) === true) {
+			$message = $translation;
+		} elseif (isset($translation[$count]) === true) {
+			$message = $translation[$count];
+		} else {
+			$message = end($translation);
+		}
 
-        return str_replace('{{ count }}', $count, $message);
-    }
+		if ($formatNumber === true) {
+			$count = static::formatNumber($count, $locale);
+		}
+
+		return str_replace('{{ count }}', $count, $message);
+	}
 }

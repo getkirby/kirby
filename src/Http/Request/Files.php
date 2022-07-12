@@ -17,57 +17,57 @@ namespace Kirby\Http\Request;
  */
 class Files
 {
-    use Data;
+	use Data;
 
-    /**
-     * Sanitized array of all received files
-     *
-     * @var array
-     */
-    protected $files;
+	/**
+	 * Sanitized array of all received files
+	 *
+	 * @var array
+	 */
+	protected $files;
 
-    /**
-     * Creates a new Files object
-     * Pass your own array to mock
-     * uploads.
-     *
-     * @param array|null $files
-     */
-    public function __construct($files = null)
-    {
-        if ($files === null) {
-            $files = $_FILES;
-        }
+	/**
+	 * Creates a new Files object
+	 * Pass your own array to mock
+	 * uploads.
+	 *
+	 * @param array|null $files
+	 */
+	public function __construct($files = null)
+	{
+		if ($files === null) {
+			$files = $_FILES;
+		}
 
-        $this->files = [];
+		$this->files = [];
 
-        foreach ($files as $key => $file) {
-            if (is_array($file['name'])) {
-                foreach ($file['name'] as $i => $name) {
-                    $this->files[$key][] = [
-                        'name'     => $file['name'][$i]      ?? null,
-                        'type'     => $file['type'][$i]      ?? null,
-                        'tmp_name' => $file['tmp_name'][$i]  ?? null,
-                        'error'    => $file['error'][$i]     ?? null,
-                        'size'     => $file['size'][$i]      ?? null,
-                    ];
-                }
-            } else {
-                $this->files[$key] = $file;
-            }
-        }
-    }
+		foreach ($files as $key => $file) {
+			if (is_array($file['name'])) {
+				foreach ($file['name'] as $i => $name) {
+					$this->files[$key][] = [
+						'name'     => $file['name'][$i]      ?? null,
+						'type'     => $file['type'][$i]      ?? null,
+						'tmp_name' => $file['tmp_name'][$i]  ?? null,
+						'error'    => $file['error'][$i]     ?? null,
+						'size'     => $file['size'][$i]      ?? null,
+					];
+				}
+			} else {
+				$this->files[$key] = $file;
+			}
+		}
+	}
 
-    /**
-     * The data method returns the files
-     * array. This is only needed to make
-     * the Data trait work for the Files::get($key)
-     * method.
-     *
-     * @return array
-     */
-    public function data(): array
-    {
-        return $this->files;
-    }
+	/**
+	 * The data method returns the files
+	 * array. This is only needed to make
+	 * the Data trait work for the Files::get($key)
+	 * method.
+	 *
+	 * @return array
+	 */
+	public function data(): array
+	{
+		return $this->files;
+	}
 }

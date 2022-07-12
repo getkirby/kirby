@@ -9,8 +9,8 @@ use Kirby\Toolkit\I18n;
  * @var int $timeout
  */
 echo I18n::template(
-    'login.email.password-reset.body',
-    null,
-    compact('user', 'site', 'code', 'timeout'),
-    $user->language()
+	'login.email.password-reset.body',
+	null,
+	compact('user', 'site', 'code', 'timeout'),
+	$user->language()
 );

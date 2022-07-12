@@ -6,7 +6,7 @@ import "./regex.js";
  * @returns {string}
  */
 export function camelToKebab(string) {
-  return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+	return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 }
 
 /**
@@ -40,18 +40,18 @@ export function camelToKebab(string) {
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 export function escapeHTML(string) {
-  const entityMap = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
-    "/": "&#x2F;",
-    "`": "&#x60;",
-    "=": "&#x3D;"
-  };
+	const entityMap = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': "&quot;",
+		"'": "&#39;",
+		"/": "&#x2F;",
+		"`": "&#x60;",
+		"=": "&#x3D;"
+	};
 
-  return String(string).replace(/[&<>"'`=/]/g, (char) => entityMap[char]);
+	return String(string).replace(/[&<>"'`=/]/g, (char) => entityMap[char]);
 }
 
 /**
@@ -60,17 +60,17 @@ export function escapeHTML(string) {
  * @returns {bool}
  */
 export function hasEmoji(string) {
-  if (typeof string !== "string") {
-    return false;
-  }
+	if (typeof string !== "string") {
+		return false;
+	}
 
-  // Source: https://thekevinscott.com/emojis-in-javascript/
-  const result = string.match(
-    // eslint-disable-next-line no-misleading-character-class
-    /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c\ude32-\ude3a]|[\ud83c\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/i
-  );
+	// Source: https://thekevinscott.com/emojis-in-javascript/
+	const result = string.match(
+		// eslint-disable-next-line no-misleading-character-class
+		/(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|[\ud83c\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|[\ud83c\ude32-\ude3a]|[\ud83c\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/i
+	);
 
-  return result !== null && result.length !== null;
+	return result !== null && result.length !== null;
 }
 
 /**
@@ -79,8 +79,8 @@ export function hasEmoji(string) {
  * @returns {string}
  */
 export function lcfirst(string) {
-  const str = String(string);
-  return str.charAt(0).toLowerCase() + str.slice(1);
+	const str = String(string);
+	return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 /**
@@ -90,14 +90,14 @@ export function lcfirst(string) {
  * @returns
  */
 export function pad(value, length = 2) {
-  value = String(value);
-  let pad = "";
+	value = String(value);
+	let pad = "";
 
-  while (pad.length < length - value.length) {
-    pad += "0";
-  }
+	while (pad.length < length - value.length) {
+		pad += "0";
+	}
 
-  return pad + value;
+	return pad + value;
 }
 
 /**
@@ -106,13 +106,13 @@ export function pad(value, length = 2) {
  * @returns {string}
  */
 export function random(length) {
-  let result = "";
-  const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const count = pool.length;
-  for (var i = 0; i < length; i++) {
-    result += pool.charAt(Math.floor(Math.random() * count));
-  }
-  return result;
+	let result = "";
+	const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	const count = pool.length;
+	for (var i = 0; i < length; i++) {
+		result += pool.charAt(Math.floor(Math.random() * count));
+	}
+	return result;
 }
 
 /**
@@ -124,46 +124,46 @@ export function random(length) {
  * @returns {string}
  */
 export function slug(string, rules = [], allowed = "", separator = "-") {
-  if (!string) {
-    return "";
-  }
+	if (!string) {
+		return "";
+	}
 
-  allowed = "a-z0-9" + allowed;
-  string = string.trim().toLowerCase();
+	allowed = "a-z0-9" + allowed;
+	string = string.trim().toLowerCase();
 
-  // replace according to language and ascii rules
-  for (const ruleset of rules) {
-    for (const rule in ruleset) {
-      const isTrimmed = rule.slice(0, 1) !== "/";
-      const trimmed = rule.slice(1, rule.length - 1);
-      const regex = isTrimmed ? rule : trimmed;
-      string = string.replace(
-        new RegExp(RegExp.escape(regex), "g"),
-        ruleset[rule]
-      );
-    }
-  }
+	// replace according to language and ascii rules
+	for (const ruleset of rules) {
+		for (const rule in ruleset) {
+			const isTrimmed = rule.slice(0, 1) !== "/";
+			const trimmed = rule.slice(1, rule.length - 1);
+			const regex = isTrimmed ? rule : trimmed;
+			string = string.replace(
+				new RegExp(RegExp.escape(regex), "g"),
+				ruleset[rule]
+			);
+		}
+	}
 
-  // remove all other non-ASCII characters
-  string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
+	// remove all other non-ASCII characters
+	string = string.replace("/[^\x09\x0A\x0D\x20-\x7E]/", "");
 
-  // replace spaces with simple dashes
-  string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
+	// replace spaces with simple dashes
+	string = string.replace(new RegExp("[^" + allowed + "]", "ig"), separator);
 
-  // remove double separators
-  string = string.replace(
-    new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
-    separator
-  );
+	// remove double separators
+	string = string.replace(
+		new RegExp("[" + RegExp.escape(separator) + "]{2,}", "g"),
+		separator
+	);
 
-  // replace slashes with dashes
-  string = string.replace("/", separator);
+	// replace slashes with dashes
+	string = string.replace("/", separator);
 
-  // trim leading and trailing non-word-chars
-  string = string.replace(new RegExp("^[^" + allowed + "]+", "g"), "");
-  string = string.replace(new RegExp("[^" + allowed + "]+$", "g"), "");
+	// trim leading and trailing non-word-chars
+	string = string.replace(new RegExp("^[^" + allowed + "]+", "g"), "");
+	string = string.replace(new RegExp("[^" + allowed + "]+$", "g"), "");
 
-  return string;
+	return string;
 }
 
 /**
@@ -172,7 +172,7 @@ export function slug(string, rules = [], allowed = "", separator = "-") {
  * @returns {string}
  */
 export function stripHTML(string) {
-  return String(string).replace(/(<([^>]+)>)/gi, "");
+	return String(string).replace(/(<([^>]+)>)/gi, "");
 }
 
 /**
@@ -183,29 +183,29 @@ export function stripHTML(string) {
  * @returns {string}
  */
 export function template(string, values = {}) {
-  const resolve = (parts, data = {}) => {
-    const part = escapeHTML(parts.shift());
-    const value = data[part] ?? null;
+	const resolve = (parts, data = {}) => {
+		const part = escapeHTML(parts.shift());
+		const value = data[part] ?? null;
 
-    if (value === null) {
-      return Object.prototype.hasOwnProperty.call(data, part) || "…";
-    }
-    if (parts.length === 0) {
-      return value;
-    }
+		if (value === null) {
+			return Object.prototype.hasOwnProperty.call(data, part) || "…";
+		}
+		if (parts.length === 0) {
+			return value;
+		}
 
-    return resolve(parts, value);
-  };
+		return resolve(parts, value);
+	};
 
-  const opening = "[{]{1,2}[\\s]?";
-  const closing = "[\\s]?[}]{1,2}";
+	const opening = "[{]{1,2}[\\s]?";
+	const closing = "[\\s]?[}]{1,2}";
 
-  string = string.replace(
-    new RegExp(`${opening}(.*?)${closing}`, "gi"),
-    ($0, $1) => resolve($1.split("."), values)
-  );
+	string = string.replace(
+		new RegExp(`${opening}(.*?)${closing}`, "gi"),
+		($0, $1) => resolve($1.split("."), values)
+	);
 
-  return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
+	return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
 }
 
 /**
@@ -214,8 +214,8 @@ export function template(string, values = {}) {
  * @returns {string}
  */
 export function ucfirst(string) {
-  const str = String(string);
-  return str.charAt(0).toUpperCase() + str.slice(1);
+	const str = String(string);
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 /**
@@ -224,10 +224,10 @@ export function ucfirst(string) {
  * @returns {string}
  */
 export function ucwords(string) {
-  return String(string)
-    .split(/ /g)
-    .map((word) => ucfirst(word))
-    .join(" ");
+	return String(string)
+		.split(/ /g)
+		.map((word) => ucfirst(word))
+		.join(" ");
 }
 
 /**
@@ -235,31 +235,31 @@ export function ucwords(string) {
  * @returns {string}
  */
 export function uuid() {
-  let uuid = "",
-    i,
-    random;
-  for (i = 0; i < 32; i++) {
-    random = (Math.random() * 16) | 0;
+	let uuid = "",
+		i,
+		random;
+	for (i = 0; i < 32; i++) {
+		random = (Math.random() * 16) | 0;
 
-    if (i == 8 || i == 12 || i == 16 || i == 20) {
-      uuid += "-";
-    }
-    uuid += (i == 12 ? 4 : i == 16 ? (random & 3) | 8 : random).toString(16);
-  }
-  return uuid;
+		if (i == 8 || i == 12 || i == 16 || i == 20) {
+			uuid += "-";
+		}
+		uuid += (i == 12 ? 4 : i == 16 ? (random & 3) | 8 : random).toString(16);
+	}
+	return uuid;
 }
 
 export default {
-  camelToKebab,
-  escapeHTML,
-  hasEmoji,
-  lcfirst,
-  pad,
-  random,
-  slug,
-  stripHTML,
-  template,
-  ucfirst,
-  ucwords,
-  uuid
+	camelToKebab,
+	escapeHTML,
+	hasEmoji,
+	lcfirst,
+	pad,
+	random,
+	slug,
+	stripHTML,
+	template,
+	ucfirst,
+	ucwords,
+	uuid
 };

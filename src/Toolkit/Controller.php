@@ -19,49 +19,49 @@ use ReflectionFunction;
  */
 class Controller
 {
-    protected $function;
+	protected $function;
 
-    public function __construct(Closure $function)
-    {
-        $this->function = $function;
-    }
+	public function __construct(Closure $function)
+	{
+		$this->function = $function;
+	}
 
-    public function arguments(array $data = []): array
-    {
-        $info = new ReflectionFunction($this->function);
-        $args = [];
+	public function arguments(array $data = []): array
+	{
+		$info = new ReflectionFunction($this->function);
+		$args = [];
 
-        foreach ($info->getParameters() as $parameter) {
-            $name = $parameter->getName();
-            $args[] = $data[$name] ?? null;
-        }
+		foreach ($info->getParameters() as $parameter) {
+			$name = $parameter->getName();
+			$args[] = $data[$name] ?? null;
+		}
 
-        return $args;
-    }
+		return $args;
+	}
 
-    public function call($bind = null, $data = [])
-    {
-        $args = $this->arguments($data);
+	public function call($bind = null, $data = [])
+	{
+		$args = $this->arguments($data);
 
-        if ($bind === null) {
-            return call_user_func($this->function, ...$args);
-        }
+		if ($bind === null) {
+			return call_user_func($this->function, ...$args);
+		}
 
-        return $this->function->call($bind, ...$args);
-    }
+		return $this->function->call($bind, ...$args);
+	}
 
-    public static function load(string $file)
-    {
-        if (is_file($file) === false) {
-            return null;
-        }
+	public static function load(string $file)
+	{
+		if (is_file($file) === false) {
+			return null;
+		}
 
-        $function = F::load($file);
+		$function = F::load($file);
 
-        if (is_a($function, 'Closure') === false) {
-            return null;
-        }
+		if (is_a($function, 'Closure') === false) {
+			return null;
+		}
 
-        return new static($function);
-    }
+		return new static($function);
+	}
 }

@@ -16,16 +16,16 @@ use Kirby\Toolkit\Collection as BaseCollection;
  */
 class NestCollection extends BaseCollection
 {
-    /**
-     * Converts all objects in the collection
-     * to an array. This can also take a callback
-     * function to further modify the array result.
-     *
-     * @param \Closure|null $map
-     * @return array
-     */
-    public function toArray(Closure $map = null): array
-    {
-        return parent::toArray($map ?? fn ($object) => $object->toArray());
-    }
+	/**
+	 * Converts all objects in the collection
+	 * to an array. This can also take a callback
+	 * function to further modify the array result.
+	 *
+	 * @param \Closure|null $map
+	 * @return array
+	 */
+	public function toArray(Closure $map = null): array
+	{
+		return parent::toArray($map ?? fn ($object) => $object->toArray());
+	}
 }

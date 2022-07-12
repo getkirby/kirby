@@ -6,9 +6,9 @@ import Vue from "vue";
  * @returns {bool}
  */
 export default (name) => {
-  if (Vue.options.components[name] !== undefined) {
-    return true;
-  }
+	if (Vue.options.components[name] !== undefined) {
+		return true;
+	}
 
-  return false;
+	return false;
 };

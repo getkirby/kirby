@@ -28,276 +28,276 @@ use Throwable;
  */
 class Document
 {
-    /**
-     * Generates an array with all assets
-     * that need to be loaded for the panel (js, css, icons)
-     *
-     * @return array
-     */
-    public static function assets(): array
-    {
-        $kirby = App::instance();
-        $nonce = $kirby->nonce();
+	/**
+	 * Generates an array with all assets
+	 * that need to be loaded for the panel (js, css, icons)
+	 *
+	 * @return array
+	 */
+	public static function assets(): array
+	{
+		$kirby = App::instance();
+		$nonce = $kirby->nonce();
 
-        // get the assets from the Vite dev server in dev mode;
-        // dev mode = explicitly enabled in the config AND Vite is running
-        $dev   = $kirby->option('panel.dev', false);
-        $isDev = $dev !== false && is_file($kirby->roots()->panel() . '/.vite-running') === true;
+		// get the assets from the Vite dev server in dev mode;
+		// dev mode = explicitly enabled in the config AND Vite is running
+		$dev   = $kirby->option('panel.dev', false);
+		$isDev = $dev !== false && is_file($kirby->roots()->panel() . '/.vite-running') === true;
 
-        if ($isDev === true) {
-            // vite on explicitly configured base URL or port 3000
-            // of the current Kirby request
-            if (is_string($dev) === true) {
-                $url = $dev;
-            } else {
-                $url = rtrim($kirby->request()->url([
-                    'port'   => 3000,
-                    'path'   => null,
-                    'params' => null,
-                    'query'  => null
-                ])->toString(), '/');
-            }
-        } else {
-            // vite is not running, use production assets
-            $url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
-        }
+		if ($isDev === true) {
+			// vite on explicitly configured base URL or port 3000
+			// of the current Kirby request
+			if (is_string($dev) === true) {
+				$url = $dev;
+			} else {
+				$url = rtrim($kirby->request()->url([
+					'port'   => 3000,
+					'path'   => null,
+					'params' => null,
+					'query'  => null
+				])->toString(), '/');
+			}
+		} else {
+			// vite is not running, use production assets
+			$url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
+		}
 
-        // fetch all plugins
-        $plugins = new Plugins();
+		// fetch all plugins
+		$plugins = new Plugins();
 
-        $assets = [
-            'css' => [
-                'index'   => $url . '/css/style.css',
-                'plugins' => $plugins->url('css'),
-                'custom'  => static::customAsset('panel.css'),
-            ],
-            'icons' => static::favicon($url),
-            'js' => [
-                'vendor'       => [
-                    'nonce' => $nonce,
-                    'src'   => $url . '/js/vendor.js',
-                    'type'  => 'module'
-                ],
-                'pluginloader' => [
-                    'nonce' => $nonce,
-                    'src'   => $url . '/js/plugins.js',
-                    'type'  => 'module'
-                ],
-                'plugins'      => [
-                    'nonce' => $nonce,
-                    'src'   => $plugins->url('js'),
-                    'defer' => true
-                ],
-                'custom'       => [
-                    'nonce' => $nonce,
-                    'src'   => static::customAsset('panel.js'),
-                    'type'  => 'module'
-                ],
-                'index'        => [
-                    'nonce' => $nonce,
-                    'src'   => $url . '/js/index.js',
-                    'type'  => 'module'
-                ],
-            ]
-        ];
+		$assets = [
+			'css' => [
+				'index'   => $url . '/css/style.css',
+				'plugins' => $plugins->url('css'),
+				'custom'  => static::customAsset('panel.css'),
+			],
+			'icons' => static::favicon($url),
+			'js' => [
+				'vendor'       => [
+					'nonce' => $nonce,
+					'src'   => $url . '/js/vendor.js',
+					'type'  => 'module'
+				],
+				'pluginloader' => [
+					'nonce' => $nonce,
+					'src'   => $url . '/js/plugins.js',
+					'type'  => 'module'
+				],
+				'plugins'      => [
+					'nonce' => $nonce,
+					'src'   => $plugins->url('js'),
+					'defer' => true
+				],
+				'custom'       => [
+					'nonce' => $nonce,
+					'src'   => static::customAsset('panel.js'),
+					'type'  => 'module'
+				],
+				'index'        => [
+					'nonce' => $nonce,
+					'src'   => $url . '/js/index.js',
+					'type'  => 'module'
+				],
+			]
+		];
 
-        // during dev mode, add vite client and adapt
-        // path to `index.js` - vendor and stylesheet
-        // don't need to be loaded in dev mode
-        if ($isDev === true) {
-            $assets['js']['vite']   = [
-                'nonce' => $nonce,
-                'src'   => $url . '/@vite/client',
-                'type'  => 'module'
-            ];
-            $assets['js']['index']  = [
-                'nonce' => $nonce,
-                'src'   => $url . '/src/index.js',
-                'type'  => 'module'
-            ];
+		// during dev mode, add vite client and adapt
+		// path to `index.js` - vendor and stylesheet
+		// don't need to be loaded in dev mode
+		if ($isDev === true) {
+			$assets['js']['vite']   = [
+				'nonce' => $nonce,
+				'src'   => $url . '/@vite/client',
+				'type'  => 'module'
+			];
+			$assets['js']['index']  = [
+				'nonce' => $nonce,
+				'src'   => $url . '/src/index.js',
+				'type'  => 'module'
+			];
 
-            unset($assets['css']['index'], $assets['js']['vendor']);
-        }
+			unset($assets['css']['index'], $assets['js']['vendor']);
+		}
 
-        // remove missing files
-        $assets['css'] = array_filter($assets['css']);
-        $assets['js']  = array_filter(
-            $assets['js'],
-            fn ($js) => empty($js['src']) === false
-        );
+		// remove missing files
+		$assets['css'] = array_filter($assets['css']);
+		$assets['js']  = array_filter(
+			$assets['js'],
+			fn ($js) => empty($js['src']) === false
+		);
 
-        return $assets;
-    }
+		return $assets;
+	}
 
-    /**
-     * Check for a custom asset file from the
-     * config (e.g. panel.css or panel.js)
-     * @since 3.7.0
-     *
-     * @param string $option asset option name
-     * @return string|null
-     */
-    public static function customAsset(string $option): ?string
-    {
-        if ($path = App::instance()->option($option)) {
-            $asset = new Asset($path);
+	/**
+	 * Check for a custom asset file from the
+	 * config (e.g. panel.css or panel.js)
+	 * @since 3.7.0
+	 *
+	 * @param string $option asset option name
+	 * @return string|null
+	 */
+	public static function customAsset(string $option): ?string
+	{
+		if ($path = App::instance()->option($option)) {
+			$asset = new Asset($path);
 
-            if ($asset->exists() === true) {
-                return $asset->url() . '?' . $asset->modified();
-            }
-        }
+			if ($asset->exists() === true) {
+				return $asset->url() . '?' . $asset->modified();
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
-     * @todo remove in 3.8.0
-     * @codeCoverageIgnore
-     */
-    public static function customCss(): ?string
-    {
-        Helpers::deprecated('Panel\Document::customCss() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.css\') instead.');
-        return static::customAsset('panel.css');
-    }
+	/**
+	 * @deprecated 3.7.0 Use `Document::customAsset('panel.css)` instead
+	 * @todo remove in 3.8.0
+	 * @codeCoverageIgnore
+	 */
+	public static function customCss(): ?string
+	{
+		Helpers::deprecated('Panel\Document::customCss() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.css\') instead.');
+		return static::customAsset('panel.css');
+	}
 
-    /**
-     * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
-     * @todo remove in 3.8.0
-     * @codeCoverageIgnore
-     */
-    public static function customJs(): ?string
-    {
-        Helpers::deprecated('Panel\Document::customJs() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.js\') instead.');
-        return static::customAsset('panel.js');
-    }
+	/**
+	 * @deprecated 3.7.0 Use `Document::customAsset('panel.js)` instead
+	 * @todo remove in 3.8.0
+	 * @codeCoverageIgnore
+	 */
+	public static function customJs(): ?string
+	{
+		Helpers::deprecated('Panel\Document::customJs() has been deprecated and will be removed in Kirby 3.8.0. Use Panel\Document::customAsset(\'panel.js\') instead.');
+		return static::customAsset('panel.js');
+	}
 
-    /**
-     * Returns array of favion icons
-     * based on config option
-     * @since 3.7.0
-     *
-     * @param string $url URL prefix for default icons
-     * @return array
-     */
-    public static function favicon(string $url = ''): array
-    {
-        $kirby = App::instance();
-        $icons = $kirby->option('panel.favicon', [
-            'apple-touch-icon' => [
-                'type' => 'image/png',
-                'url'  => $url . '/apple-touch-icon.png',
-            ],
-            'shortcut icon' => [
-                'type' => 'image/svg+xml',
-                'url'  => $url . '/favicon.svg',
-            ],
-            'alternate icon' => [
-                'type' => 'image/png',
-                'url'  => $url . '/favicon.png',
-            ]
-        ]);
+	/**
+	 * Returns array of favion icons
+	 * based on config option
+	 * @since 3.7.0
+	 *
+	 * @param string $url URL prefix for default icons
+	 * @return array
+	 */
+	public static function favicon(string $url = ''): array
+	{
+		$kirby = App::instance();
+		$icons = $kirby->option('panel.favicon', [
+			'apple-touch-icon' => [
+				'type' => 'image/png',
+				'url'  => $url . '/apple-touch-icon.png',
+			],
+			'shortcut icon' => [
+				'type' => 'image/svg+xml',
+				'url'  => $url . '/favicon.svg',
+			],
+			'alternate icon' => [
+				'type' => 'image/png',
+				'url'  => $url . '/favicon.png',
+			]
+		]);
 
-        if (is_array($icons) === true) {
-            return $icons;
-        }
+		if (is_array($icons) === true) {
+			return $icons;
+		}
 
-        // make sure to convert favicon string to array
-        if (is_string($icons) === true) {
-            return [
-                'shortcut icon' => [
-                    'type' => F::mime($icons),
-                    'url'  => $icons,
-                ]
-            ];
-        }
+		// make sure to convert favicon string to array
+		if (is_string($icons) === true) {
+			return [
+				'shortcut icon' => [
+					'type' => F::mime($icons),
+					'url'  => $icons,
+				]
+			];
+		}
 
-        throw new InvalidArgumentException('Invalid panel.favicon option');
-    }
+		throw new InvalidArgumentException('Invalid panel.favicon option');
+	}
 
-    /**
-     * Load the SVG icon sprite
-     * This will be injected in the
-     * initial HTML document for the Panel
-     *
-     * @return string
-     */
-    public static function icons(): string
-    {
-        return F::read(App::instance()->root('kirby') . '/panel/dist/img/icons.svg');
-    }
+	/**
+	 * Load the SVG icon sprite
+	 * This will be injected in the
+	 * initial HTML document for the Panel
+	 *
+	 * @return string
+	 */
+	public static function icons(): string
+	{
+		return F::read(App::instance()->root('kirby') . '/panel/dist/img/icons.svg');
+	}
 
-    /**
-     * Links all dist files in the media folder
-     * and returns the link to the requested asset
-     *
-     * @return bool
-     * @throws \Kirby\Exception\Exception If Panel assets could not be moved to the public directory
-     */
-    public static function link(): bool
-    {
-        $kirby       = App::instance();
-        $mediaRoot   = $kirby->root('media') . '/panel';
-        $panelRoot   = $kirby->root('panel') . '/dist';
-        $versionHash = $kirby->versionHash();
-        $versionRoot = $mediaRoot . '/' . $versionHash;
+	/**
+	 * Links all dist files in the media folder
+	 * and returns the link to the requested asset
+	 *
+	 * @return bool
+	 * @throws \Kirby\Exception\Exception If Panel assets could not be moved to the public directory
+	 */
+	public static function link(): bool
+	{
+		$kirby       = App::instance();
+		$mediaRoot   = $kirby->root('media') . '/panel';
+		$panelRoot   = $kirby->root('panel') . '/dist';
+		$versionHash = $kirby->versionHash();
+		$versionRoot = $mediaRoot . '/' . $versionHash;
 
-        // check if the version already exists
-        if (is_dir($versionRoot) === true) {
-            return false;
-        }
+		// check if the version already exists
+		if (is_dir($versionRoot) === true) {
+			return false;
+		}
 
-        // delete the panel folder and all previous versions
-        Dir::remove($mediaRoot);
+		// delete the panel folder and all previous versions
+		Dir::remove($mediaRoot);
 
-        // recreate the panel folder
-        Dir::make($mediaRoot, true);
+		// recreate the panel folder
+		Dir::make($mediaRoot, true);
 
-        // copy assets to the dist folder
-        if (Dir::copy($panelRoot, $versionRoot) !== true) {
-            throw new Exception('Panel assets could not be linked');
-        }
+		// copy assets to the dist folder
+		if (Dir::copy($panelRoot, $versionRoot) !== true) {
+			throw new Exception('Panel assets could not be linked');
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * Renders the panel document
-     *
-     * @param array $fiber
-     * @return \Kirby\Http\Response
-     */
-    public static function response(array $fiber)
-    {
-        $kirby = App::instance();
+	/**
+	 * Renders the panel document
+	 *
+	 * @param array $fiber
+	 * @return \Kirby\Http\Response
+	 */
+	public static function response(array $fiber)
+	{
+		$kirby = App::instance();
 
-        // Full HTML response
-        // @codeCoverageIgnoreStart
-        try {
-            if (static::link() === true) {
-                usleep(1);
-                Response::go($kirby->url('index') . '/' . $kirby->path());
-            }
-        } catch (Throwable $e) {
-            die('The Panel assets cannot be installed properly. ' . $e->getMessage());
-        }
-        // @codeCoverageIgnoreEnd
+		// Full HTML response
+		// @codeCoverageIgnoreStart
+		try {
+			if (static::link() === true) {
+				usleep(1);
+				Response::go($kirby->url('index') . '/' . $kirby->path());
+			}
+		} catch (Throwable $e) {
+			die('The Panel assets cannot be installed properly. ' . $e->getMessage());
+		}
+		// @codeCoverageIgnoreEnd
 
-        // get the uri object for the panel url
-        $uri = new Uri($url = $kirby->url('panel'));
+		// get the uri object for the panel url
+		$uri = new Uri($url = $kirby->url('panel'));
 
-        // proper response code
-        $code = $fiber['$view']['code'] ?? 200;
+		// proper response code
+		$code = $fiber['$view']['code'] ?? 200;
 
-        // load the main Panel view template
-        $body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
-            'assets'   => static::assets(),
-            'icons'    => static::icons(),
-            'nonce'    => $kirby->nonce(),
-            'fiber'    => $fiber,
-            'panelUrl' => $uri->path()->toString(true) . '/',
-        ]);
+		// load the main Panel view template
+		$body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
+			'assets'   => static::assets(),
+			'icons'    => static::icons(),
+			'nonce'    => $kirby->nonce(),
+			'fiber'    => $fiber,
+			'panelUrl' => $uri->path()->toString(true) . '/',
+		]);
 
-        return new Response($body, 'text/html', $code);
-    }
+		return new Response($body, 'text/html', $code);
+	}
 }

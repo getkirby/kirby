@@ -16,121 +16,121 @@ use Kirby\Toolkit\Config;
  */
 class Db
 {
-    /**
-     * Query shortcuts
-     *
-     * @var array
-     */
-    public static $queries = [];
+	/**
+	 * Query shortcuts
+	 *
+	 * @var array
+	 */
+	public static $queries = [];
 
-    /**
-     * The singleton Database object
-     *
-     * @var \Kirby\Database\Database
-     */
-    public static $connection = null;
+	/**
+	 * The singleton Database object
+	 *
+	 * @var \Kirby\Database\Database
+	 */
+	public static $connection = null;
 
-    /**
-     * (Re)connect the database
-     *
-     * @param array|null $params Pass `[]` to use the default params from the config,
-     *                           don't pass any argument to get the current connection
-     * @return \Kirby\Database\Database
-     */
-    public static function connect(?array $params = null)
-    {
-        if ($params === null && static::$connection !== null) {
-            return static::$connection;
-        }
+	/**
+	 * (Re)connect the database
+	 *
+	 * @param array|null $params Pass `[]` to use the default params from the config,
+	 *                           don't pass any argument to get the current connection
+	 * @return \Kirby\Database\Database
+	 */
+	public static function connect(?array $params = null)
+	{
+		if ($params === null && static::$connection !== null) {
+			return static::$connection;
+		}
 
-        // try to connect with the default
-        // connection settings if no params are set
-        $params ??= [
-            'type'     => Config::get('db.type', 'mysql'),
-            'host'     => Config::get('db.host', 'localhost'),
-            'user'     => Config::get('db.user', 'root'),
-            'password' => Config::get('db.password', ''),
-            'database' => Config::get('db.database', ''),
-            'prefix'   => Config::get('db.prefix', ''),
-            'port'     => Config::get('db.port', '')
-        ];
+		// try to connect with the default
+		// connection settings if no params are set
+		$params ??= [
+			'type'     => Config::get('db.type', 'mysql'),
+			'host'     => Config::get('db.host', 'localhost'),
+			'user'     => Config::get('db.user', 'root'),
+			'password' => Config::get('db.password', ''),
+			'database' => Config::get('db.database', ''),
+			'prefix'   => Config::get('db.prefix', ''),
+			'port'     => Config::get('db.port', '')
+		];
 
-        return static::$connection = new Database($params);
-    }
+		return static::$connection = new Database($params);
+	}
 
-    /**
-     * Returns the current database connection
-     *
-     * @return \Kirby\Database\Database|null
-     */
-    public static function connection()
-    {
-        return static::$connection;
-    }
+	/**
+	 * Returns the current database connection
+	 *
+	 * @return \Kirby\Database\Database|null
+	 */
+	public static function connection()
+	{
+		return static::$connection;
+	}
 
-    /**
-     * Sets the current table which should be queried. Returns a
-     * Query object, which can be used to build a full query for
-     * that table.
-     *
-     * @param string $table
-     * @return \Kirby\Database\Query
-     */
-    public static function table(string $table)
-    {
-        $db = static::connect();
-        return $db->table($table);
-    }
+	/**
+	 * Sets the current table which should be queried. Returns a
+	 * Query object, which can be used to build a full query for
+	 * that table.
+	 *
+	 * @param string $table
+	 * @return \Kirby\Database\Query
+	 */
+	public static function table(string $table)
+	{
+		$db = static::connect();
+		return $db->table($table);
+	}
 
-    /**
-     * Executes a raw SQL query which expects a set of results
-     *
-     * @param string $query
-     * @param array $bindings
-     * @param array $params
-     * @return mixed
-     */
-    public static function query(string $query, array $bindings = [], array $params = [])
-    {
-        $db = static::connect();
-        return $db->query($query, $bindings, $params);
-    }
+	/**
+	 * Executes a raw SQL query which expects a set of results
+	 *
+	 * @param string $query
+	 * @param array $bindings
+	 * @param array $params
+	 * @return mixed
+	 */
+	public static function query(string $query, array $bindings = [], array $params = [])
+	{
+		$db = static::connect();
+		return $db->query($query, $bindings, $params);
+	}
 
-    /**
-     * Executes a raw SQL query which expects no set of results (i.e. update, insert, delete)
-     *
-     * @param string $query
-     * @param array $bindings
-     * @return bool
-     */
-    public static function execute(string $query, array $bindings = []): bool
-    {
-        $db = static::connect();
-        return $db->execute($query, $bindings);
-    }
+	/**
+	 * Executes a raw SQL query which expects no set of results (i.e. update, insert, delete)
+	 *
+	 * @param string $query
+	 * @param array $bindings
+	 * @return bool
+	 */
+	public static function execute(string $query, array $bindings = []): bool
+	{
+		$db = static::connect();
+		return $db->execute($query, $bindings);
+	}
 
-    /**
-     * Magic calls for other static Db methods are
-     * redirected to either a predefined query or
-     * the respective method of the Database object
-     *
-     * @param string $method
-     * @param mixed $arguments
-     * @return mixed
-     * @throws \Kirby\Exception\InvalidArgumentException
-     */
-    public static function __callStatic(string $method, $arguments)
-    {
-        if (isset(static::$queries[$method])) {
-            return (static::$queries[$method])(...$arguments);
-        }
+	/**
+	 * Magic calls for other static Db methods are
+	 * redirected to either a predefined query or
+	 * the respective method of the Database object
+	 *
+	 * @param string $method
+	 * @param mixed $arguments
+	 * @return mixed
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public static function __callStatic(string $method, $arguments)
+	{
+		if (isset(static::$queries[$method])) {
+			return (static::$queries[$method])(...$arguments);
+		}
 
-        if (static::$connection !== null && method_exists(static::$connection, $method) === true) {
-            return call_user_func_array([static::$connection, $method], $arguments);
-        }
+		if (static::$connection !== null && method_exists(static::$connection, $method) === true) {
+			return call_user_func_array([static::$connection, $method], $arguments);
+		}
 
-        throw new InvalidArgumentException('Invalid static Db method: ' . $method);
-    }
+		throw new InvalidArgumentException('Invalid static Db method: ' . $method);
+	}
 }
 
 // @codeCoverageIgnoreStart
@@ -147,7 +147,7 @@ class Db
  * @return mixed
  */
 Db::$queries['select'] = function (string $table, $columns = '*', $where = null, string $order = null, int $offset = 0, int $limit = null) {
-    return Db::table($table)->select($columns)->where($where)->order($order)->offset($offset)->limit($limit)->all();
+	return Db::table($table)->select($columns)->where($where)->order($order)->offset($offset)->limit($limit)->all();
 };
 
 /**
@@ -162,7 +162,7 @@ Db::$queries['select'] = function (string $table, $columns = '*', $where = null,
  * @return mixed
  */
 Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (string $table, $columns = '*', $where = null, string $order = null) {
-    return Db::table($table)->select($columns)->where($where)->order($order)->first();
+	return Db::table($table)->select($columns)->where($where)->order($order)->first();
 };
 
 /**
@@ -177,7 +177,7 @@ Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (st
  * @return mixed
  */
 Db::$queries['column'] = function (string $table, string $column, $where = null, string $order = null, int $offset = 0, int $limit = null) {
-    return Db::table($table)->where($where)->order($order)->offset($offset)->limit($limit)->column($column);
+	return Db::table($table)->where($where)->order($order)->offset($offset)->limit($limit)->column($column);
 };
 
 /**
@@ -188,7 +188,7 @@ Db::$queries['column'] = function (string $table, string $column, $where = null,
  * @return mixed Returns the last inserted id on success or false
  */
 Db::$queries['insert'] = function (string $table, array $values) {
-    return Db::table($table)->insert($values);
+	return Db::table($table)->insert($values);
 };
 
 /**
@@ -200,7 +200,7 @@ Db::$queries['insert'] = function (string $table, array $values) {
  * @return bool
  */
 Db::$queries['update'] = function (string $table, array $values, $where = null): bool {
-    return Db::table($table)->where($where)->update($values);
+	return Db::table($table)->where($where)->update($values);
 };
 
 /**
@@ -211,7 +211,7 @@ Db::$queries['update'] = function (string $table, array $values, $where = null):
  * @return bool
  */
 Db::$queries['delete'] = function (string $table, $where = null): bool {
-    return Db::table($table)->where($where)->delete();
+	return Db::table($table)->where($where)->delete();
 };
 
 /**
@@ -222,7 +222,7 @@ Db::$queries['delete'] = function (string $table, $where = null): bool {
  * @return int
  */
 Db::$queries['count'] = function (string $table, $where = null): int {
-    return Db::table($table)->where($where)->count();
+	return Db::table($table)->where($where)->count();
 };
 
 /**
@@ -234,7 +234,7 @@ Db::$queries['count'] = function (string $table, $where = null): int {
  * @return float
  */
 Db::$queries['min'] = function (string $table, string $column, $where = null): float {
-    return Db::table($table)->where($where)->min($column);
+	return Db::table($table)->where($where)->min($column);
 };
 
 /**
@@ -246,7 +246,7 @@ Db::$queries['min'] = function (string $table, string $column, $where = null): f
  * @return float
  */
 Db::$queries['max'] = function (string $table, string $column, $where = null): float {
-    return Db::table($table)->where($where)->max($column);
+	return Db::table($table)->where($where)->max($column);
 };
 
 /**
@@ -258,7 +258,7 @@ Db::$queries['max'] = function (string $table, string $column, $where = null): f
  * @return float
  */
 Db::$queries['avg'] = function (string $table, string $column, $where = null): float {
-    return Db::table($table)->where($where)->avg($column);
+	return Db::table($table)->where($where)->avg($column);
 };
 
 /**
@@ -270,7 +270,7 @@ Db::$queries['avg'] = function (string $table, string $column, $where = null): f
  * @return float
  */
 Db::$queries['sum'] = function (string $table, string $column, $where = null): float {
-    return Db::table($table)->where($where)->sum($column);
+	return Db::table($table)->where($where)->sum($column);
 };
 
 // @codeCoverageIgnoreEnd

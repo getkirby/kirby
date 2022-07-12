@@ -6,53 +6,53 @@ use PHPUnit\Framework\TestCase;
 
 class EmptySectionMixinTest extends TestCase
 {
-    protected $app;
-    protected $page;
+	protected $app;
+	protected $page;
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-        $this->page = new Page(['slug' => 'test']);
+		$this->page = new Page(['slug' => 'test']);
 
-        Section::$types['test'] = [
-            'mixins' => ['empty'],
-        ];
-    }
+		Section::$types['test'] = [
+			'mixins' => ['empty'],
+		];
+	}
 
-    public function testDefaultEmpty()
-    {
-        $section = new Section('test', [
-            'model' => $this->page,
-        ]);
+	public function testDefaultEmpty()
+	{
+		$section = new Section('test', [
+			'model' => $this->page,
+		]);
 
-        $this->assertEquals(null, $section->empty());
-    }
+		$this->assertEquals(null, $section->empty());
+	}
 
-    public function testEmpty()
-    {
-        $section = new Section('test', [
-            'model' => $this->page,
-            'empty' => 'Test'
-        ]);
+	public function testEmpty()
+	{
+		$section = new Section('test', [
+			'model' => $this->page,
+			'empty' => 'Test'
+		]);
 
-        $this->assertEquals('Test', $section->empty());
-    }
+		$this->assertEquals('Test', $section->empty());
+	}
 
-    public function testTranslateEmpty()
-    {
-        $section = new Section('test', [
-            'model' => $this->page,
-            'empty' => [
-                'en' => 'EN',
-                'de' => 'DE',
-            ]
-        ]);
+	public function testTranslateEmpty()
+	{
+		$section = new Section('test', [
+			'model' => $this->page,
+			'empty' => [
+				'en' => 'EN',
+				'de' => 'DE',
+			]
+		]);
 
-        $this->assertEquals('EN', $section->empty());
-    }
+		$this->assertEquals('EN', $section->empty());
+	}
 }

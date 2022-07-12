@@ -18,67 +18,67 @@ namespace Kirby\Http\Request;
  */
 trait Data
 {
-    /**
-     * Improved `var_dump` output
-     *
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return $this->toArray();
-    }
+	/**
+	 * Improved `var_dump` output
+	 *
+	 * @return array
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
 
-    /**
-     * The data provider method has to be
-     * implemented by each class using this Trait
-     * and has to return an associative array
-     * for the get method
-     *
-     * @return array
-     */
-    abstract public function data(): array;
+	/**
+	 * The data provider method has to be
+	 * implemented by each class using this Trait
+	 * and has to return an associative array
+	 * for the get method
+	 *
+	 * @return array
+	 */
+	abstract public function data(): array;
 
-    /**
-     * The get method is the heart and soul of this
-     * Trait. You can use it to fetch a single value
-     * of the data array by key or multiple values by
-     * passing an array of keys.
-     *
-     * @param string|array $key
-     * @param mixed|null $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        if (is_array($key) === true) {
-            $result = [];
-            foreach ($key as $k) {
-                $result[$k] = $this->get($k);
-            }
-            return $result;
-        }
+	/**
+	 * The get method is the heart and soul of this
+	 * Trait. You can use it to fetch a single value
+	 * of the data array by key or multiple values by
+	 * passing an array of keys.
+	 *
+	 * @param string|array $key
+	 * @param mixed|null $default
+	 * @return mixed
+	 */
+	public function get($key, $default = null)
+	{
+		if (is_array($key) === true) {
+			$result = [];
+			foreach ($key as $k) {
+				$result[$k] = $this->get($k);
+			}
+			return $result;
+		}
 
-        return $this->data()[$key] ?? $default;
-    }
+		return $this->data()[$key] ?? $default;
+	}
 
-    /**
-     * Returns the data array.
-     * This is basically an alias for Data::data()
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return $this->data();
-    }
+	/**
+	 * Returns the data array.
+	 * This is basically an alias for Data::data()
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return $this->data();
+	}
 
-    /**
-     * Converts the data array to json
-     *
-     * @return string
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->data());
-    }
+	/**
+	 * Converts the data array to json
+	 *
+	 * @return string
+	 */
+	public function toJson(): string
+	{
+		return json_encode($this->data());
+	}
 }

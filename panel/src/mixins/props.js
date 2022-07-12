@@ -10,14 +10,14 @@ import name from "./props/name.js";
 import required from "./props/required.js";
 
 export {
-  after,
-  autofocus,
-  before,
-  disabled,
-  help,
-  id,
-  invalid,
-  label,
-  name,
-  required
+	after,
+	autofocus,
+	before,
+	disabled,
+	help,
+	id,
+	invalid,
+	label,
+	name,
+	required
 };

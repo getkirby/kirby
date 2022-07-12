@@ -16,254 +16,254 @@ use Kirby\Form\Form;
  */
 class Content
 {
-    /**
-     * The raw data array
-     *
-     * @var array
-     */
-    protected $data = [];
+	/**
+	 * The raw data array
+	 *
+	 * @var array
+	 */
+	protected $data = [];
 
-    /**
-     * Cached field objects
-     * Once a field is being fetched
-     * it is added to this array for
-     * later reuse
-     *
-     * @var array
-     */
-    protected $fields = [];
+	/**
+	 * Cached field objects
+	 * Once a field is being fetched
+	 * it is added to this array for
+	 * later reuse
+	 *
+	 * @var array
+	 */
+	protected $fields = [];
 
-    /**
-     * A potential parent object.
-     * Not necessarily needed. Especially
-     * for testing, but field methods might
-     * need it.
-     *
-     * @var Model
-     */
-    protected $parent;
+	/**
+	 * A potential parent object.
+	 * Not necessarily needed. Especially
+	 * for testing, but field methods might
+	 * need it.
+	 *
+	 * @var Model
+	 */
+	protected $parent;
 
-    /**
-     * Magic getter for content fields
-     *
-     * @param string $name
-     * @param array $arguments
-     * @return \Kirby\Cms\Field
-     */
-    public function __call(string $name, array $arguments = [])
-    {
-        return $this->get($name);
-    }
+	/**
+	 * Magic getter for content fields
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @return \Kirby\Cms\Field
+	 */
+	public function __call(string $name, array $arguments = [])
+	{
+		return $this->get($name);
+	}
 
-    /**
-     * Creates a new Content object
-     *
-     * @param array|null $data
-     * @param object|null $parent
-     * @param bool $normalize Set to `false` if the input field keys are already lowercase
-     */
-    public function __construct(array $data = [], $parent = null, bool $normalize = true)
-    {
-        if ($normalize === true) {
-            $data = array_change_key_case($data, CASE_LOWER);
-        }
+	/**
+	 * Creates a new Content object
+	 *
+	 * @param array|null $data
+	 * @param object|null $parent
+	 * @param bool $normalize Set to `false` if the input field keys are already lowercase
+	 */
+	public function __construct(array $data = [], $parent = null, bool $normalize = true)
+	{
+		if ($normalize === true) {
+			$data = array_change_key_case($data, CASE_LOWER);
+		}
 
-        $this->data   = $data;
-        $this->parent = $parent;
-    }
+		$this->data   = $data;
+		$this->parent = $parent;
+	}
 
-    /**
-     * Same as `self::data()` to improve
-     * `var_dump` output
-     *
-     * @see self::data()
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return $this->toArray();
-    }
+	/**
+	 * Same as `self::data()` to improve
+	 * `var_dump` output
+	 *
+	 * @see self::data()
+	 * @return array
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
 
-    /**
-     * Converts the content to a new blueprint
-     *
-     * @param string $to
-     * @return array
-     */
-    public function convertTo(string $to): array
-    {
-        // prepare data
-        $data    = [];
-        $content = $this;
+	/**
+	 * Converts the content to a new blueprint
+	 *
+	 * @param string $to
+	 * @return array
+	 */
+	public function convertTo(string $to): array
+	{
+		// prepare data
+		$data    = [];
+		$content = $this;
 
-        // blueprints
-        $old       = $this->parent->blueprint();
-        $subfolder = dirname($old->name());
-        $new       = Blueprint::factory($subfolder . '/' . $to, $subfolder . '/default', $this->parent);
+		// blueprints
+		$old       = $this->parent->blueprint();
+		$subfolder = dirname($old->name());
+		$new       = Blueprint::factory($subfolder . '/' . $to, $subfolder . '/default', $this->parent);
 
-        // forms
-        $oldForm = new Form(['fields' => $old->fields(), 'model' => $this->parent]);
-        $newForm = new Form(['fields' => $new->fields(), 'model' => $this->parent]);
+		// forms
+		$oldForm = new Form(['fields' => $old->fields(), 'model' => $this->parent]);
+		$newForm = new Form(['fields' => $new->fields(), 'model' => $this->parent]);
 
-        // fields
-        $oldFields = $oldForm->fields();
-        $newFields = $newForm->fields();
+		// fields
+		$oldFields = $oldForm->fields();
+		$newFields = $newForm->fields();
 
-        // go through all fields of new template
-        foreach ($newFields as $newField) {
-            $name     = $newField->name();
-            $oldField = $oldFields->get($name);
+		// go through all fields of new template
+		foreach ($newFields as $newField) {
+			$name     = $newField->name();
+			$oldField = $oldFields->get($name);
 
-            // field name and type matches with old template
-            if ($oldField && $oldField->type() === $newField->type()) {
-                $data[$name] = $content->get($name)->value();
-            } else {
-                $data[$name] = $newField->default();
-            }
-        }
+			// field name and type matches with old template
+			if ($oldField && $oldField->type() === $newField->type()) {
+				$data[$name] = $content->get($name)->value();
+			} else {
+				$data[$name] = $newField->default();
+			}
+		}
 
-        // preserve existing fields
-        return array_merge($this->data, $data);
-    }
+		// preserve existing fields
+		return array_merge($this->data, $data);
+	}
 
-    /**
-     * Returns the raw data array
-     *
-     * @return array
-     */
-    public function data(): array
-    {
-        return $this->data;
-    }
+	/**
+	 * Returns the raw data array
+	 *
+	 * @return array
+	 */
+	public function data(): array
+	{
+		return $this->data;
+	}
 
-    /**
-     * Returns all registered field objects
-     *
-     * @return array
-     */
-    public function fields(): array
-    {
-        foreach ($this->data as $key => $value) {
-            $this->get($key);
-        }
-        return $this->fields;
-    }
+	/**
+	 * Returns all registered field objects
+	 *
+	 * @return array
+	 */
+	public function fields(): array
+	{
+		foreach ($this->data as $key => $value) {
+			$this->get($key);
+		}
+		return $this->fields;
+	}
 
-    /**
-     * Returns either a single field object
-     * or all registered fields
-     *
-     * @param string|null $key
-     * @return \Kirby\Cms\Field|array
-     */
-    public function get(string $key = null)
-    {
-        if ($key === null) {
-            return $this->fields();
-        }
+	/**
+	 * Returns either a single field object
+	 * or all registered fields
+	 *
+	 * @param string|null $key
+	 * @return \Kirby\Cms\Field|array
+	 */
+	public function get(string $key = null)
+	{
+		if ($key === null) {
+			return $this->fields();
+		}
 
-        $key = strtolower($key);
+		$key = strtolower($key);
 
-        if (isset($this->fields[$key])) {
-            return $this->fields[$key];
-        }
+		if (isset($this->fields[$key])) {
+			return $this->fields[$key];
+		}
 
-        $value = $this->data()[$key] ?? null;
+		$value = $this->data()[$key] ?? null;
 
-        return $this->fields[$key] = new Field($this->parent, $key, $value);
-    }
+		return $this->fields[$key] = new Field($this->parent, $key, $value);
+	}
 
-    /**
-     * Checks if a content field is set
-     *
-     * @param string $key
-     * @return bool
-     */
-    public function has(string $key): bool
-    {
-        return isset($this->data[strtolower($key)]) === true;
-    }
+	/**
+	 * Checks if a content field is set
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function has(string $key): bool
+	{
+		return isset($this->data[strtolower($key)]) === true;
+	}
 
-    /**
-     * Returns all field keys
-     *
-     * @return array
-     */
-    public function keys(): array
-    {
-        return array_keys($this->data());
-    }
+	/**
+	 * Returns all field keys
+	 *
+	 * @return array
+	 */
+	public function keys(): array
+	{
+		return array_keys($this->data());
+	}
 
-    /**
-     * Returns a clone of the content object
-     * without the fields, specified by the
-     * passed key(s)
-     *
-     * @param string ...$keys
-     * @return static
-     */
-    public function not(...$keys)
-    {
-        $copy = clone $this;
-        $copy->fields = null;
+	/**
+	 * Returns a clone of the content object
+	 * without the fields, specified by the
+	 * passed key(s)
+	 *
+	 * @param string ...$keys
+	 * @return static
+	 */
+	public function not(...$keys)
+	{
+		$copy = clone $this;
+		$copy->fields = null;
 
-        foreach ($keys as $key) {
-            unset($copy->data[strtolower($key)]);
-        }
+		foreach ($keys as $key) {
+			unset($copy->data[strtolower($key)]);
+		}
 
-        return $copy;
-    }
+		return $copy;
+	}
 
-    /**
-     * Returns the parent
-     * Site, Page, File or User object
-     *
-     * @return \Kirby\Cms\Model
-     */
-    public function parent()
-    {
-        return $this->parent;
-    }
+	/**
+	 * Returns the parent
+	 * Site, Page, File or User object
+	 *
+	 * @return \Kirby\Cms\Model
+	 */
+	public function parent()
+	{
+		return $this->parent;
+	}
 
-    /**
-     * Set the parent model
-     *
-     * @param \Kirby\Cms\Model $parent
-     * @return $this
-     */
-    public function setParent(Model $parent)
-    {
-        $this->parent = $parent;
-        return $this;
-    }
+	/**
+	 * Set the parent model
+	 *
+	 * @param \Kirby\Cms\Model $parent
+	 * @return $this
+	 */
+	public function setParent(Model $parent)
+	{
+		$this->parent = $parent;
+		return $this;
+	}
 
-    /**
-     * Returns the raw data array
-     *
-     * @see self::data()
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return $this->data();
-    }
+	/**
+	 * Returns the raw data array
+	 *
+	 * @see self::data()
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return $this->data();
+	}
 
-    /**
-     * Updates the content and returns
-     * a cloned object
-     *
-     * @param array|null $content
-     * @param bool $overwrite
-     * @return $this
-     */
-    public function update(array $content = null, bool $overwrite = false)
-    {
-        $content = array_change_key_case((array)$content, CASE_LOWER);
-        $this->data = $overwrite === true ? $content : array_merge($this->data, $content);
+	/**
+	 * Updates the content and returns
+	 * a cloned object
+	 *
+	 * @param array|null $content
+	 * @param bool $overwrite
+	 * @return $this
+	 */
+	public function update(array $content = null, bool $overwrite = false)
+	{
+		$content = array_change_key_case((array)$content, CASE_LOWER);
+		$this->data = $overwrite === true ? $content : array_merge($this->data, $content);
 
-        // clear cache of Field objects
-        $this->fields = [];
+		// clear cache of Field objects
+		$this->fields = [];
 
-        return $this;
-    }
+		return $this;
+	}
 }

@@ -20,255 +20,255 @@ use Kirby\Toolkit\I18n;
  */
 class Field
 {
-    /**
-     * A standard email field
-     *
-     * @param array $props
-     * @return array
-     */
-    public static function email(array $props = []): array
-    {
-        return array_merge([
-            'label'   => I18n::translate('email'),
-            'type'    => 'email',
-            'counter' => false,
-        ], $props);
-    }
+	/**
+	 * A standard email field
+	 *
+	 * @param array $props
+	 * @return array
+	 */
+	public static function email(array $props = []): array
+	{
+		return array_merge([
+			'label'   => I18n::translate('email'),
+			'type'    => 'email',
+			'counter' => false,
+		], $props);
+	}
 
-    /**
-     * File position
-     *
-     * @param \Kirby\Cms\File
-     * @param array $props
-     * @return array
-     */
-    public static function filePosition(File $file, array $props = []): array
-    {
-        $index   = 0;
-        $options = [];
+	/**
+	 * File position
+	 *
+	 * @param \Kirby\Cms\File
+	 * @param array $props
+	 * @return array
+	 */
+	public static function filePosition(File $file, array $props = []): array
+	{
+		$index   = 0;
+		$options = [];
 
-        foreach ($file->siblings(false)->sorted() as $sibling) {
-            $index++;
+		foreach ($file->siblings(false)->sorted() as $sibling) {
+			$index++;
 
-            $options[] = [
-                'value' => $index,
-                'text'  => $index
-            ];
+			$options[] = [
+				'value' => $index,
+				'text'  => $index
+			];
 
-            $options[] = [
-                'value'    => $sibling->id(),
-                'text'     => $sibling->filename(),
-                'disabled' => true
-            ];
-        }
+			$options[] = [
+				'value'    => $sibling->id(),
+				'text'     => $sibling->filename(),
+				'disabled' => true
+			];
+		}
 
-        $index++;
+		$index++;
 
-        $options[] = [
-            'value' => $index,
-            'text'  => $index
-        ];
+		$options[] = [
+			'value' => $index,
+			'text'  => $index
+		];
 
-        return array_merge([
-            'label'   => I18n::translate('file.sort'),
-            'type'    => 'select',
-            'empty'   => false,
-            'options' => $options
-        ], $props);
-    }
+		return array_merge([
+			'label'   => I18n::translate('file.sort'),
+			'type'    => 'select',
+			'empty'   => false,
+			'options' => $options
+		], $props);
+	}
 
 
-    /**
-     * @return array
-     */
-    public static function hidden(): array
-    {
-        return ['type' => 'hidden'];
-    }
+	/**
+	 * @return array
+	 */
+	public static function hidden(): array
+	{
+		return ['type' => 'hidden'];
+	}
 
-    /**
-     * Page position
-     *
-     * @param \Kirby\Cms\Page
-     * @param array $props
-     * @return array
-     */
-    public static function pagePosition(Page $page, array $props = []): array
-    {
-        $index    = 0;
-        $options  = [];
-        $siblings = $page->parentModel()->children()->listed()->not($page);
+	/**
+	 * Page position
+	 *
+	 * @param \Kirby\Cms\Page
+	 * @param array $props
+	 * @return array
+	 */
+	public static function pagePosition(Page $page, array $props = []): array
+	{
+		$index    = 0;
+		$options  = [];
+		$siblings = $page->parentModel()->children()->listed()->not($page);
 
-        foreach ($siblings as $sibling) {
-            $index++;
+		foreach ($siblings as $sibling) {
+			$index++;
 
-            $options[] = [
-                'value' => $index,
-                'text'  => $index
-            ];
+			$options[] = [
+				'value' => $index,
+				'text'  => $index
+			];
 
-            $options[] = [
-                'value'    => $sibling->id(),
-                'text'     => $sibling->title()->value(),
-                'disabled' => true
-            ];
-        }
+			$options[] = [
+				'value'    => $sibling->id(),
+				'text'     => $sibling->title()->value(),
+				'disabled' => true
+			];
+		}
 
-        $index++;
+		$index++;
 
-        $options[] = [
-            'value' => $index,
-            'text'  => $index
-        ];
+		$options[] = [
+			'value' => $index,
+			'text'  => $index
+		];
 
-        // if only one available option,
-        // hide field when not in debug mode
-        if (count($options) < 2) {
-            return static::hidden();
-        }
+		// if only one available option,
+		// hide field when not in debug mode
+		if (count($options) < 2) {
+			return static::hidden();
+		}
 
-        return array_merge([
-            'label'    => I18n::translate('page.changeStatus.position'),
-            'type'     => 'select',
-            'empty'    => false,
-            'options'  => $options,
-        ], $props);
-    }
+		return array_merge([
+			'label'    => I18n::translate('page.changeStatus.position'),
+			'type'     => 'select',
+			'empty'    => false,
+			'options'  => $options,
+		], $props);
+	}
 
-    /**
-     * A regular password field
-     *
-     * @param array $props
-     * @return array
-     */
-    public static function password(array $props = []): array
-    {
-        return array_merge([
-            'label' => I18n::translate('password'),
-            'type'  => 'password'
-        ], $props);
-    }
+	/**
+	 * A regular password field
+	 *
+	 * @param array $props
+	 * @return array
+	 */
+	public static function password(array $props = []): array
+	{
+		return array_merge([
+			'label' => I18n::translate('password'),
+			'type'  => 'password'
+		], $props);
+	}
 
-    /**
-     * User role radio buttons
-     *
-     * @param array $props
-     * @return array
-     */
-    public static function role(array $props = []): array
-    {
-        $kirby   = App::instance();
-        $user    = $kirby->user();
-        $isAdmin = $user && $user->isAdmin();
-        $roles   = [];
+	/**
+	 * User role radio buttons
+	 *
+	 * @param array $props
+	 * @return array
+	 */
+	public static function role(array $props = []): array
+	{
+		$kirby   = App::instance();
+		$user    = $kirby->user();
+		$isAdmin = $user && $user->isAdmin();
+		$roles   = [];
 
-        foreach ($kirby->roles() as $role) {
-            // exclude the admin role, if the user
-            // is not allowed to change role to admin
-            if ($role->name() === 'admin' && $isAdmin === false) {
-                continue;
-            }
+		foreach ($kirby->roles() as $role) {
+			// exclude the admin role, if the user
+			// is not allowed to change role to admin
+			if ($role->name() === 'admin' && $isAdmin === false) {
+				continue;
+			}
 
-            $roles[] = [
-                'text'  => $role->title(),
-                'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
-                'value' => $role->name()
-            ];
-        }
+			$roles[] = [
+				'text'  => $role->title(),
+				'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
+				'value' => $role->name()
+			];
+		}
 
-        return array_merge([
-            'label'    => I18n::translate('role'),
-            'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
-            'options'  => $roles
-        ], $props);
-    }
+		return array_merge([
+			'label'    => I18n::translate('role'),
+			'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
+			'options'  => $roles
+		], $props);
+	}
 
-    /**
-     * @param array $props
-     * @return array
-     */
-    public static function slug(array $props = []): array
-    {
-        return array_merge([
-            'label' => I18n::translate('slug'),
-            'type'  => 'slug',
-        ], $props);
-    }
+	/**
+	 * @param array $props
+	 * @return array
+	 */
+	public static function slug(array $props = []): array
+	{
+		return array_merge([
+			'label' => I18n::translate('slug'),
+			'type'  => 'slug',
+		], $props);
+	}
 
-    /**
-     * @param array $blueprints
-     * @param array $props
-     * @return array
-     */
-    public static function template(?array $blueprints = [], ?array $props = []): array
-    {
-        $options = [];
+	/**
+	 * @param array $blueprints
+	 * @param array $props
+	 * @return array
+	 */
+	public static function template(?array $blueprints = [], ?array $props = []): array
+	{
+		$options = [];
 
-        foreach ($blueprints as $blueprint) {
-            $options[] = [
-                'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
-                'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
-            ];
-        }
+		foreach ($blueprints as $blueprint) {
+			$options[] = [
+				'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
+				'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
+			];
+		}
 
-        return array_merge([
-            'label'    => I18n::translate('template'),
-            'type'     => 'select',
-            'empty'    => false,
-            'options'  => $options,
-            'icon'     => 'template',
-            'disabled' => count($options) <= 1
-        ], $props);
-    }
+		return array_merge([
+			'label'    => I18n::translate('template'),
+			'type'     => 'select',
+			'empty'    => false,
+			'options'  => $options,
+			'icon'     => 'template',
+			'disabled' => count($options) <= 1
+		], $props);
+	}
 
-    /**
-     * @param array $props
-     * @return array
-     */
-    public static function title(array $props = []): array
-    {
-        return array_merge([
-            'label' => I18n::translate('title'),
-            'type'  => 'text',
-            'icon'  => 'title',
-        ], $props);
-    }
+	/**
+	 * @param array $props
+	 * @return array
+	 */
+	public static function title(array $props = []): array
+	{
+		return array_merge([
+			'label' => I18n::translate('title'),
+			'type'  => 'text',
+			'icon'  => 'title',
+		], $props);
+	}
 
-    /**
-     * Panel translation select box
-     *
-     * @param array $props
-     * @return array
-     */
-    public static function translation(array $props = []): array
-    {
-        $translations = [];
-        foreach (App::instance()->translations() as $translation) {
-            $translations[] = [
-                'text'  => $translation->name(),
-                'value' => $translation->code()
-            ];
-        }
+	/**
+	 * Panel translation select box
+	 *
+	 * @param array $props
+	 * @return array
+	 */
+	public static function translation(array $props = []): array
+	{
+		$translations = [];
+		foreach (App::instance()->translations() as $translation) {
+			$translations[] = [
+				'text'  => $translation->name(),
+				'value' => $translation->code()
+			];
+		}
 
-        return array_merge([
-            'label'    => I18n::translate('language'),
-            'type'     => 'select',
-            'icon'     => 'globe',
-            'options'  => $translations,
-            'empty'    => false
-        ], $props);
-    }
+		return array_merge([
+			'label'    => I18n::translate('language'),
+			'type'     => 'select',
+			'icon'     => 'globe',
+			'options'  => $translations,
+			'empty'    => false
+		], $props);
+	}
 
-    /**
-     * @param array $props
-     * @return array
-     */
-    public static function username(array $props = []): array
-    {
-        return array_merge([
-            'icon'  => 'user',
-            'label' => I18n::translate('name'),
-            'type'  => 'text',
-        ], $props);
-    }
+	/**
+	 * @param array $props
+	 * @return array
+	 */
+	public static function username(array $props = []): array
+	{
+		return array_merge([
+			'icon'  => 'user',
+			'label' => I18n::translate('name'),
+			'type'  => 'text',
+		], $props);
+	}
 }

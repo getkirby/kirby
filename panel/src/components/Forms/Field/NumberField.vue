@@ -1,14 +1,14 @@
 <template>
-  <k-field :input="_uid" v-bind="$props" class="k-number-field">
-    <k-input
-      :id="_uid"
-      ref="input"
-      v-bind="$props"
-      theme="field"
-      type="number"
-      v-on="$listeners"
-    />
-  </k-field>
+	<k-field :input="_uid" v-bind="$props" class="k-number-field">
+		<k-input
+			:id="_uid"
+			ref="input"
+			v-bind="$props"
+			theme="field"
+			type="number"
+			v-on="$listeners"
+		/>
+	</k-field>
 </template>
 
 <script>
@@ -21,12 +21,12 @@ import { props as NumberInput } from "../Input/NumberInput.vue";
  * @example <k-number-field v-model="number" name="number" label="Number" />
  */
 export default {
-  mixins: [Field, Input, NumberInput],
-  inheritAttrs: false,
-  methods: {
-    focus() {
-      this.$refs.input.focus();
-    }
-  }
+	mixins: [Field, Input, NumberInput],
+	inheritAttrs: false,
+	methods: {
+		focus() {
+			this.$refs.input.focus();
+		}
+	}
 };
 </script>

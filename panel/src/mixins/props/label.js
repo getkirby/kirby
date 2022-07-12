@@ -1,5 +1,5 @@
 export default {
-  props: {
-    label: String
-  }
+	props: {
+		label: String
+	}
 };

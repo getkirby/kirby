@@ -4,27 +4,27 @@ namespace Kirby\Cms;
 
 class SiteChildrenTest extends TestCase
 {
-    public function testDefaultChildren()
-    {
-        $site = new Site();
-        $this->assertInstanceOf(Pages::class, $site->children());
-    }
+	public function testDefaultChildren()
+	{
+		$site = new Site();
+		$this->assertInstanceOf(Pages::class, $site->children());
+	}
 
-    public function testInvalidChildren()
-    {
-        $this->expectException('TypeError');
+	public function testInvalidChildren()
+	{
+		$this->expectException('TypeError');
 
-        $site = new Site([
-            'children' => 'children'
-        ]);
-    }
+		$site = new Site([
+			'children' => 'children'
+		]);
+	}
 
-    public function testPages()
-    {
-        $site = new Site([
-            'children' => []
-        ]);
+	public function testPages()
+	{
+		$site = new Site([
+			'children' => []
+		]);
 
-        $this->assertInstanceOf(Pages::class, $site->children());
-    }
+		$this->assertInstanceOf(Pages::class, $site->children());
+	}
 }

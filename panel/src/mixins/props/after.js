@@ -1,5 +1,5 @@
 export default {
-  props: {
-    after: String
-  }
+	props: {
+		after: String
+	}
 };

@@ -5,69 +5,69 @@ use Kirby\Cms\File;
 use Kirby\Exception\Exception;
 
 return [
-    'props' => [
-        /**
-         * Sets the upload options for linked files (since 3.2.0)
-         */
-        'uploads' => function ($uploads = []) {
-            if ($uploads === false) {
-                return false;
-            }
+	'props' => [
+		/**
+		 * Sets the upload options for linked files (since 3.2.0)
+		 */
+		'uploads' => function ($uploads = []) {
+			if ($uploads === false) {
+				return false;
+			}
 
-            if (is_string($uploads) === true) {
-                $uploads = ['template' => $uploads];
-            }
+			if (is_string($uploads) === true) {
+				$uploads = ['template' => $uploads];
+			}
 
-            if (is_array($uploads) === false) {
-                $uploads = [];
-            }
+			if (is_array($uploads) === false) {
+				$uploads = [];
+			}
 
-            $template = $uploads['template'] ?? null;
+			$template = $uploads['template'] ?? null;
 
-            if ($template) {
-                $file = new File([
-                    'filename' => 'tmp',
-                    'parent'   => $this->model(),
-                    'template' => $template
-                ]);
+			if ($template) {
+				$file = new File([
+					'filename' => 'tmp',
+					'parent'   => $this->model(),
+					'template' => $template
+				]);
 
-                $uploads['accept'] = $file->blueprint()->acceptMime();
-            } else {
-                $uploads['accept'] = '*';
-            }
+				$uploads['accept'] = $file->blueprint()->acceptMime();
+			} else {
+				$uploads['accept'] = '*';
+			}
 
-            return $uploads;
-        },
-    ],
-    'methods' => [
-        'upload' => function (Api $api, $params, Closure $map) {
-            if ($params === false) {
-                throw new Exception('Uploads are disabled for this field');
-            }
+			return $uploads;
+		},
+	],
+	'methods' => [
+		'upload' => function (Api $api, $params, Closure $map) {
+			if ($params === false) {
+				throw new Exception('Uploads are disabled for this field');
+			}
 
-            if ($parentQuery = ($params['parent'] ?? null)) {
-                $parent = $this->model()->query($parentQuery);
-            } else {
-                $parent = $this->model();
-            }
+			if ($parentQuery = ($params['parent'] ?? null)) {
+				$parent = $this->model()->query($parentQuery);
+			} else {
+				$parent = $this->model();
+			}
 
-            if (is_a($parent, 'Kirby\Cms\File') === true) {
-                $parent = $parent->parent();
-            }
+			if (is_a($parent, 'Kirby\Cms\File') === true) {
+				$parent = $parent->parent();
+			}
 
-            return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
-                $file = $parent->createFile([
-                    'source'   => $source,
-                    'template' => $params['template'] ?? null,
-                    'filename' => $filename,
-                ]);
+			return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
+				$file = $parent->createFile([
+					'source'   => $source,
+					'template' => $params['template'] ?? null,
+					'filename' => $filename,
+				]);
 
-                if (is_a($file, 'Kirby\Cms\File') === false) {
-                    throw new Exception('The file could not be uploaded');
-                }
+				if (is_a($file, 'Kirby\Cms\File') === false) {
+					throw new Exception('The file could not be uploaded');
+				}
 
-                return $map($file, $parent);
-            });
-        }
-    ]
+				return $map($file, $parent);
+			});
+		}
+	]
 ];
