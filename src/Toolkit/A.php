@@ -73,13 +73,17 @@ class A
 	 * </code>
 	 *
 	 * @param array $array The source array
-	 * @param mixed $key The key to look for
-	 * @param mixed $default Optional default value, which should be
-	 *                       returned if no element has been found
+	 * @param string|int|array|null $key The key to look for
+	 * @param mixed $default Optional default value, which
+	 *                       should be returned if no element
+	 *                       has been found
 	 * @return mixed
 	 */
-	public static function get($array, $key, $default = null)
-	{
+	public static function get(
+		$array,
+		string|int|array|null $key,
+		mixed $default = null
+	): mixed {
 		if (is_array($array) === false) {
 			return $array;
 		}
@@ -141,12 +145,14 @@ class A
 	}
 
 	/**
-	 * @param mixed $value
-	 * @param mixed $separator
+	 * @param array|string $value
+	 * @param array|string $separator
 	 * @return string
 	 */
-	public static function join($value, $separator = ', ')
-	{
+	public static function join(
+		array|string $value,
+		array|string $separator = ', '
+	): string {
 		if (is_string($value) === true) {
 			return $value;
 		}
@@ -168,7 +174,7 @@ class A
 	 *                  A::MERGE_REPLACE:   non-associative arrays are completely replaced
 	 * @return array
 	 */
-	public static function merge($array1, $array2, int $mode = A::MERGE_APPEND)
+	public static function merge(array $array1, array $array2, int $mode = A::MERGE_APPEND): array
 	{
 		$merged = $array1;
 
@@ -231,7 +237,7 @@ class A
 	 * @return array The result array with all values
 	 *               from that column.
 	 */
-	public static function pluck(array $array, string $key)
+	public static function pluck(array $array, string $key): array
 	{
 		$output = [];
 		foreach ($array as $a) {
@@ -308,7 +314,7 @@ class A
 	 * @param array $array The source array
 	 * @return mixed The first element
 	 */
-	public static function first(array $array)
+	public static function first(array $array): mixed
 	{
 		return array_shift($array);
 	}
@@ -330,7 +336,7 @@ class A
 	 * @param array $array The source array
 	 * @return mixed The last element
 	 */
-	public static function last(array $array)
+	public static function last(array $array): mixed
 	{
 		return array_pop($array);
 	}
@@ -743,11 +749,13 @@ class A
 	{
 		if ($array === null) {
 			return [];
-		} elseif (is_array($array) === false) {
-			return [$array];
-		} else {
-			return $array;
 		}
+
+		if (is_array($array) === false) {
+			return [$array];
+		}
+
+		return $array;
 	}
 
 	/**
@@ -772,14 +780,15 @@ class A
 	 * @param int|string|array $keys
 	 * @return array
 	 */
-	public static function without(array $array, $keys): array
+	public static function without(array $array, int|string|array $keys): array
 	{
 		if (is_int($keys) || is_string($keys)) {
 			$keys = static::wrap($keys);
 		}
 
-		return static::filter($array, function ($value, $key) use ($keys) {
-			return in_array($key, $keys, true) === false;
-		});
+		return static::filter(
+			$array,
+			fn ($value, $key) => in_array($key, $keys, true) === false
+		);
 	}
 }
