@@ -60,8 +60,7 @@ trait AppUsers
 		}
 
 		try {
-			// bind the App object to the callback
-			return $callback->call($this, $userAfter);
+			return $callback($userAfter);
 		} catch (Throwable $e) {
 			throw $e;
 		} finally {
