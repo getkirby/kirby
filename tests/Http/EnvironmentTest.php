@@ -25,7 +25,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_HEADER
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -38,7 +37,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureForwardedHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_HEADER
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
@@ -51,7 +49,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromRelativeUrl()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => '/'
 		], [
 
@@ -64,7 +61,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromRelativeUrlWithSubfolder()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => '/subfolder'
 		], [
 
@@ -77,7 +73,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromServerName()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'SERVER_NAME' => 'example.com'
@@ -90,7 +85,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrl()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => 'http://example.com'
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -103,7 +97,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrls()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				null,
 				'http://example.com',
@@ -121,7 +114,6 @@ class EnvironmentTest extends TestCase
 	{
 		$env = new Environment([
 			'cli'     => false,
-			'root'    => $this->config,
 			'allowed' => [
 				true,
 				'http://localhost/path-a',
@@ -139,7 +131,6 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromUrlsWithSlash()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				'http://getkirby.com/',
 			]
@@ -203,7 +194,14 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame('https://getkirby.com:8888/subfolder', $env->baseUrl());
 
-		// proxy
+		// proxy with Forwarded header
+		$env = new Environment(['cli' => false, 'allowed' => '*'], [
+			'HTTP_FORWARDED' => 'proto=https;host="getkirby.com:8888"'
+		]);
+
+		$this->assertSame('https://getkirby.com:8888', $env->baseUrl());
+
+		// proxy with X-Forwarded-* headers
 		$env = new Environment(['cli' => false, 'allowed' => '*'], [
 			'HTTP_X_FORWARDED_SSL'  => true,
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
@@ -245,10 +243,147 @@ class EnvironmentTest extends TestCase
 		$this->assertSame([], $env->detect(null, []));
 	}
 
+	public function providerForForwarded(): array
+	{
+		return [
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com'],
+				'http://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com;proto=https'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com:443;proto=https'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com:8888'],
+				'http://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com:abc'],
+				'http://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host=getkirby.com:8888;proto=https'],
+				'https://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'host="getkirby.com";proto="https"'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'HOST="getkirby.com";PrOtO="https"'],
+				'https://getkirby.com'
+			],
+			[
+				[
+					'SERVER_NAME' => 'trykirby.com',
+					'HTTP_FORWARDED' => 'host="getkirby.com";proto="https", host="backend.getkirby.com:8080";proto=http'
+				],
+				'https://getkirby.com'
+			],
+			[
+				[
+					'SERVER_NAME' => 'trykirby.com',
+					'HTTP_FORWARDED' => 'host="getkirby.com";field="with,comma";proto="https"'
+				],
+				'https://getkirby.com'
+			],
+			[
+				[
+					'SERVER_NAME' => 'trykirby.com',
+					'HTTP_FORWARDED' => 'host="getkirby.com";proto="https";field="with;proto=http;"'
+				],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_FORWARDED' => 'proto=https'],
+				'https://trykirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com'],
+				'http://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com', 'HTTP_X_FORWARDED_PROTO' => 'https'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com', 'HTTP_X_FORWARDED_PROTO' => 'http'],
+				'http://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com', 'HTTP_X_FORWARDED_PROTO' => 'https, http'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com', 'HTTP_X_FORWARDED_SSL' => 'on'],
+				'https://getkirby.com'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com', 'HTTP_X_FORWARDED_PORT' => '8888'],
+				'http://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com:8888'],
+				'http://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com:8888', 'HTTP_X_FORWARDED_SSL' => 'on'],
+				'https://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_HOST' => 'getkirby.com:abc', 'HTTP_X_FORWARDED_SSL' => 'on'],
+				'https://getkirby.com'
+			],
+			[
+				[
+					'SERVER_NAME'            => 'trykirby.com',
+					'HTTP_X_FORWARDED_HOST'  => 'getkirby.com',
+					'HTTP_X_FORWARDED_PORT'  => '8888',
+					'HTTP_X_FORWARDED_PROTO' => 'https'
+				],
+				'https://getkirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_PORT' => '8888'],
+				'http://trykirby.com:8888'
+			],
+			[
+				['SERVER_NAME' => 'trykirby.com', 'HTTP_X_FORWARDED_PROTO' => 'https'],
+				'https://trykirby.com'
+			],
+			[
+				[
+					'SERVER_NAME' => 'trykirby.com',
+					'HTTP_X_FORWARDED_PORT' => '8888',
+					'HTTP_X_FORWARDED_PROTO' => 'https'
+				],
+				'https://trykirby.com:8888'
+			],
+		];
+	}
+
+	/**
+	 * @covers ::detectForwarded
+	 * @covers ::detectForwardedHost
+	 * @covers ::detectForwardedHttps
+	 * @covers ::detectForwardedPort
+	 * @dataProvider providerForForwarded
+	 */
+	public function testDetectForwarded($info, $expected)
+	{
+		$env = new Environment(['allowed' => '*'], $info);
+
+		$this->assertSame($expected, $env->baseUrl());
+	}
+
 	public function testDisallowFromInsecureHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -263,7 +398,6 @@ class EnvironmentTest extends TestCase
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment([
-			'root'    => $this->config,
 			'allowed' => [
 				'http://localhost/path-b',
 				'http://localhost/path-c'
@@ -399,6 +533,13 @@ class EnvironmentTest extends TestCase
 
 		// via insecure forwarded host is also fine
 		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host="test.getkirby.com"'
+		]);
+
+		$this->assertSame('test.getkirby.com', $env->host());
+
+		// also with the X-Forwarded-Host header
+		$env = new Environment($options, [
 			'HTTP_X_FORWARDED_HOST' => 'test.getkirby.com'
 		]);
 
@@ -440,6 +581,12 @@ class EnvironmentTest extends TestCase
 
 		// not possible via insecure forwarded header
 		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
+		]);
+
+		$this->assertNull($env->host());
+
+		$env = new Environment(null, [
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
 		]);
 
@@ -454,6 +601,13 @@ class EnvironmentTest extends TestCase
 		// insecure host header
 		$env = new Environment(['allowed' => '*'], [
 			'HTTP_HOST' => 'getkirby.com'
+		]);
+
+		$this->assertSame('getkirby.com', $env->host());
+
+		// insecure Forwarded header
+		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
 		]);
 
 		$this->assertSame('getkirby.com', $env->host());
@@ -489,6 +643,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::https
+	 * @covers ::detectHttps
 	 * @dataProvider providerForHttpsValues
 	 */
 	public function testHttps($value, $expected)
@@ -536,6 +691,27 @@ class EnvironmentTest extends TestCase
 		$env = new Environment($options, [
 			'HTTPS'       => 'on',
 			'SERVER_NAME' => 'b.getkirby.com'
+		]);
+
+		$this->assertTrue($env->https());
+
+		// via Forwarded: no proto
+		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host="a.getkirby.com"'
+		]);
+
+		$this->assertFalse($env->https());
+
+		// via Forwarded: https off
+		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host="a.getkirby.com";proto=http'
+		]);
+
+		$this->assertFalse($env->https());
+
+		// via Forwarded: https on
+		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host="b.getkirby.com";proto=https'
 		]);
 
 		$this->assertTrue($env->https());
@@ -609,10 +785,17 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::https
+	 * @covers ::detectHttpsProtocol
 	 * @dataProvider providerForHttpsProtocols
 	 */
 	public function testHttpsFromProtocol($value, $expected)
 	{
+		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com;proto="' . $value . '"',
+		]);
+
+		$this->assertSame($expected, $env->https());
+
 		$env = new Environment(['allowed' => '*'], [
 			'HTTP_X_FORWARDED_HOST'  => 'getkirby.com',
 			'HTTP_X_FORWARDED_PROTO' => $value
@@ -627,6 +810,12 @@ class EnvironmentTest extends TestCase
 	public function testHttpsIgnoreInsecure()
 	{
 		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'proto=https'
+		]);
+
+		$this->assertFalse($env->https());
+
+		$env = new Environment(null, [
 			'HTTP_X_FORWARDED_SSL' => 'on'
 		]);
 
@@ -640,6 +829,13 @@ class EnvironmentTest extends TestCase
 	{
 		// insecure forwarded https header
 		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com;proto=https'
+		]);
+
+		$this->assertTrue($env->https());
+
+		// insecure forwarded https header
+		$env = new Environment(['allowed' => '*'], [
 			'HTTP_X_FORWARDED_SSL'  => 'on',
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
 		]);
@@ -650,7 +846,14 @@ class EnvironmentTest extends TestCase
 	public function testIgnoreFromInsecureForwardedHost()
 	{
 		$env = new Environment([
-			'root'    => $this->config,
+			'allowed' => Server::HOST_FROM_SERVER
+		], [
+			'HTTP_FORWARDED' => 'host=example.com'
+		]);
+
+		$this->assertNull($env->host());
+
+		$env = new Environment([
 			'allowed' => Server::HOST_FROM_SERVER
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
@@ -691,7 +894,6 @@ class EnvironmentTest extends TestCase
 		$this->expectExceptionMessage('Invalid allow list setup for base URLs');
 
 		new Environment([
-			'root'    => $this->config,
 			'allowed' => new \stdClass()
 		], [
 			'HTTP_HOST' => 'example.com'
@@ -728,14 +930,30 @@ class EnvironmentTest extends TestCase
 		$env = new Environment();
 		$this->assertFalse($env->isBehindProxy());
 
-		// given host but with secure checking
+		// given host but with secure checking 1
+		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
+		]);
+
+		$this->assertFalse($env->isBehindProxy());
+
+		// given host but with secure checking 2
 		$env = new Environment(null, [
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
 		]);
 
 		$this->assertFalse($env->isBehindProxy());
 
-		// given host with allowlist
+		// given host with allowlist 1
+		$env = new Environment([
+			'allowed' => ['http://getkirby.com', 'http://trykirby.com']
+		], [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
+		]);
+
+		$this->assertTrue($env->isBehindProxy());
+
+		// given host with allowlist 2
 		$env = new Environment([
 			'allowed' => ['http://getkirby.com', 'http://trykirby.com']
 		], [
@@ -744,7 +962,16 @@ class EnvironmentTest extends TestCase
 
 		$this->assertTrue($env->isBehindProxy());
 
-		// given host with fixed host
+		// given host with fixed host 1
+		$env = new Environment([
+			'allowed' => 'http://getkirby.com'
+		], [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
+		]);
+
+		$this->assertNull($env->isBehindProxy());
+
+		// given host with fixed host 2
 		$env = new Environment([
 			'allowed' => 'http://getkirby.com'
 		], [
@@ -753,7 +980,16 @@ class EnvironmentTest extends TestCase
 
 		$this->assertNull($env->isBehindProxy());
 
-		// given host with wildcard
+		// given host with wildcard 1
+		$env = new Environment([
+			'allowed' => '*'
+		], [
+			'HTTP_FORWARDED' => 'host=getkirby.com'
+		]);
+
+		$this->assertTrue($env->isBehindProxy());
+
+		// given host with wildcard 2
 		$env = new Environment([
 			'allowed' => '*'
 		], [
@@ -762,7 +998,16 @@ class EnvironmentTest extends TestCase
 
 		$this->assertTrue($env->isBehindProxy());
 
-		// empty host
+		// empty host 1
+		$env = new Environment([
+			'allowed' => '*'
+		], [
+			'HTTP_FORWARDED' => 'host='
+		]);
+
+		$this->assertFalse($env->isBehindProxy());
+
+		// empty host 2
 		$env = new Environment([
 			'allowed' => '*'
 		], [
@@ -796,6 +1041,14 @@ class EnvironmentTest extends TestCase
 		$env = new Environment(null, [
 			'REMOTE_ADDR' => $address,
 			'HTTP_X_FORWARDED_FOR' => $forwardedFor,
+			'HTTP_CLIENT_IP' => $clientIp,
+		]);
+
+		$this->assertSame($expected, $env->isLocal());
+
+		$env = new Environment(null, [
+			'REMOTE_ADDR' => $address,
+			'HTTP_FORWARDED' => 'for="' . $forwardedFor . '"',
 			'HTTP_CLIENT_IP' => $clientIp,
 		]);
 
@@ -885,6 +1138,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::port
+	 * @covers ::detectPort
 	 */
 	public function testPort()
 	{
@@ -909,6 +1163,20 @@ class EnvironmentTest extends TestCase
 		// via https
 		$env = new Environment(null, [
 			'HTTPS' => true
+		]);
+
+		$this->assertSame(443, $env->port());
+
+		// via Forwarded with port
+		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com:8888'
+		]);
+
+		$this->assertSame(8888, $env->port());
+
+		// via Forwarded with proto
+		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com;proto=https'
 		]);
 
 		$this->assertSame(443, $env->port());
@@ -976,7 +1244,14 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame(9999, $env->port());
 
-		// via proxy: no port
+		// via proxy: no port 1
+		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host=getkirby.com',
+		]);
+
+		$this->assertNull($env->port());
+
+		// via proxy: no port 2
 		$env = new Environment($options, [
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com',
 		]);
@@ -991,7 +1266,14 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame(9999, $env->port());
 
-		// via proxy: port in host
+		// via proxy: port in host 1
+		$env = new Environment($options, [
+			'HTTP_FORWARDED' => 'host=getkirby.com:9999'
+		]);
+
+		$this->assertSame(9999, $env->port());
+
+		// via proxy: port in host 2
 		$env = new Environment($options, [
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com:9999',
 		]);
@@ -1026,6 +1308,12 @@ class EnvironmentTest extends TestCase
 	public function testPortIgnoreInsecure()
 	{
 		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'host=getkirby.com:8888'
+		]);
+
+		$this->assertNull($env->port());
+
+		$env = new Environment(null, [
 			'HTTP_X_FORWARDED_PORT' => 8888
 		]);
 
@@ -1037,7 +1325,12 @@ class EnvironmentTest extends TestCase
 	 */
 	public function testPortInsecure()
 	{
-		// insecure forwarded port
+		$env = new Environment(['allowed' => '*'], [
+			'HTTP_FORWARDED' => 'host=getkirby.com:9999'
+		]);
+
+		$this->assertSame(9999, $env->port());
+
 		$env = new Environment(['allowed' => '*'], [
 			'HTTP_X_FORWARDED_PORT'  => 9999,
 			'HTTP_X_FORWARDED_HOST' => 'getkirby.com'
@@ -1250,6 +1543,11 @@ class EnvironmentTest extends TestCase
 				9999
 			],
 			[
+				'SERVER_PORT',
+				'abc',
+				null
+			],
+			[
 				'HTTP_X_FORWARDED_PORT',
 				'abc9999',
 				9999
@@ -1259,6 +1557,8 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::sanitize
+	 * @covers ::sanitizeHost
+	 * @covers ::sanitizePort
 	 * @dataProvider providerForSanitize
 	 */
 	public function testSanitize($key, $value, $expected)
@@ -1268,6 +1568,8 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::sanitize
+	 * @covers ::sanitizeHost
+	 * @covers ::sanitizePort
 	 */
 	public function testSanitizeAll()
 	{
@@ -1318,6 +1620,7 @@ class EnvironmentTest extends TestCase
 
 	/**
 	 * @covers ::scriptPath
+	 * @covers ::sanitizeScriptPath
 	 * @dataProvider providerForScriptPaths
 	 */
 	public function testScriptPath($value, $expected)

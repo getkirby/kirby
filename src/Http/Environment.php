@@ -397,6 +397,7 @@ class Environment
 			return true;
 		}
 
+		// @codeCoverageIgnoreStart
 		$term = getenv('TERM');
 
 		if (substr(PHP_SAPI, 0, 3) === 'cgi' && $term && $term !== 'unknown') {
@@ -404,35 +405,40 @@ class Environment
 		}
 
 		return false;
+		// @codeCoverageIgnoreEnd
 	}
 
 	/**
-	 * Detects the host, protocol and port from
-	 * the `Forwarded` and `X-Forwarded-*` headers
+	 * Detects the host, protocol, port and client IP
+	 * from the `Forwarded` and `X-Forwarded-*` headers
 	 *
 	 * @return array
 	 */
 	protected function detectForwarded(): array
 	{
 		$data = [
+			'for'   => null,
 			'host'  => null,
-			'port'  => null,
-			'https' => false
+			'https' => false,
+			'port'  => null
 		];
 
 		// prefer the standardized `Forwarded` header if defined
 		$forwarded = $this->get('HTTP_FORWARDED');
 		if ($forwarded) {
-			// only use the first (outermost) proxy
-			$forwarded = Str::before($forwarded, ',');
+			// only use the first (outermost) proxy by using the first set of values
+			// before the first comma (but only a comma outside of quotes)
+			if (Str::contains($forwarded, ',') === true) {
+				$forwarded = preg_split('/"[^"]*"(*SKIP)(*F)|,/', $forwarded)[0];
+			}
 
 			// split into separate key=value;key=value fields by semicolon,
 			// but only split outside of quotes
-			$rawFields = preg_split($forwarded, '/"[^"]*"(*SKIP)(*F)|;/');
+			$rawFields = preg_split('/"[^"]*"(*SKIP)(*F)|;/', $forwarded);
 
 			// split key and value into an associative array
 			$fields = [];
-			foreach ($fields as $field) {
+			foreach ($rawFields as $field) {
 				$key   = Str::lower(Str::before($field, '='));
 				$value = Str::after($field, '=');
 
@@ -455,6 +461,12 @@ class Environment
 				$data['https'] = $this->detectHttpsProtocol($fields['proto']);
 			}
 
+			if ($data['port'] === null && $data['https'] === true) {
+				$data['port'] = 443;
+			}
+
+			$data['for'] = $parts['for'] ?? null;
+
 			return $data;
 		}
 
@@ -462,6 +474,7 @@ class Environment
 		$data['host']  = $this->detectForwardedHost();
 		$data['https'] = $this->detectForwardedHttps();
 		$data['port']  = $this->detectForwardedPort($data['https']);
+		$data['for']   = $this->get('HTTP_X_FORWARDED_FOR');
 
 		return $data;
 	}
@@ -860,6 +873,10 @@ class Environment
 			$this->get('HTTP_X_FORWARDED_FOR'),
 			$this->get('HTTP_CLIENT_IP')
 		];
+
+		if ($this->get('HTTP_FORWARDED')) {
+			$ips[] = $this->detectForwarded()['for'];
+		}
 
 		// remove duplicates and empty ips
 		$ips = array_unique(array_filter($ips));
