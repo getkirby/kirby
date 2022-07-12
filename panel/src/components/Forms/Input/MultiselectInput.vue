@@ -330,6 +330,9 @@ export default {
 .k-multiselect-input .k-sortable-ghost {
 	background: var(--color-focus);
 }
+.k-multiselect-input .k-tag {
+  border-radius: var(--rounded-sm);
+}
 
 .k-multiselect-input .k-dropdown-content {
 	width: 100%;
