@@ -19,15 +19,8 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Files extends Collection
+class Files extends Models
 {
-	/**
-	 * All registered files methods
-	 *
-	 * @var array
-	 */
-	public static $methods = [];
-
 	/**
 	 * Adds a single file or
 	 * an entire second collection to the
@@ -44,7 +37,10 @@ class Files extends Collection
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a file by id
-		} elseif (is_string($object) === true && $file = App::instance()->file($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$file = App::instance()->file($object)
+		) {
 			$this->__set($file->id(), $file);
 
 		// add a file object

@@ -19,15 +19,8 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Users extends Collection
+class Users extends Models
 {
-	/**
-	 * All registered users methods
-	 *
-	 * @var array
-	 */
-	public static $methods = [];
-
 	public function create(array $data)
 	{
 		return User::create($data);
@@ -49,7 +42,10 @@ class Users extends Collection
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a user by id
-		} elseif (is_string($object) === true && $user = App::instance()->user($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$user = App::instance()->user($object)
+		) {
 			$this->__set($user->id(), $user);
 
 		// add a user object

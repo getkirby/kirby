@@ -20,7 +20,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Pages extends Collection
+class Pages extends Models
 {
 	/**
 	 * Cache for the index only listed and unlisted pages
@@ -35,13 +35,6 @@ class Pages extends Collection
 	 * @var \Kirby\Cms\Pages|null
 	 */
 	protected $indexWithDrafts = null;
-
-	/**
-	 * All registered pages methods
-	 *
-	 * @var array
-	 */
-	public static $methods = [];
 
 	/**
 	 * Adds a single page or
@@ -61,7 +54,10 @@ class Pages extends Collection
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a page by id
-		} elseif (is_string($object) === true && $page = $site->find($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$page = $site->find($object)
+		) {
 			$this->__set($page->id(), $page);
 
 		// add a page object
