@@ -168,10 +168,10 @@ class AppComponentsTest extends TestCase
 	{
 		$this->kirby = $this->kirby->clone([
 			'components' => [
-				'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false) {
+				'markdown' => function (App $kirby, string $text = null, array $options = []) {
 					$result = Html::encode($text);
 
-					if (!$inline) {
+					if (($options['inline'] ?? false) === false) {
 						$result = '<p>' . $result . '</p>';
 					}
 
