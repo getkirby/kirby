@@ -7,7 +7,6 @@ import postcssAutoprefixer from "autoprefixer";
 import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 import postcssLogical from "postcss-logical";
-import pluginRewriteAll from "vite-plugin-rewrite-all";
 
 let custom;
 try {
@@ -46,7 +45,7 @@ export default defineConfig(({ command }) => {
 	};
 
 	return {
-		plugins: [vue(), pluginRewriteAll(), splitVendorChunkPlugin()],
+		plugins: [vue(), splitVendorChunkPlugin()],
 		define: {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")

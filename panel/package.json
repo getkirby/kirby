@@ -51,7 +51,6 @@
 		"prettier": "^2.6.2",
 		"terser": "^5.14.1",
 		"vite": "^3.0.0",
-		"vite-plugin-rewrite-all": "^0.1.2",
 		"vitest": "^0.18.0",
 		"vue-docgen-api": "^4.47.0",
 		"vue-template-compiler": "^2.7.4"
