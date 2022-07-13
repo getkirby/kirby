@@ -37,7 +37,7 @@ class Inline
 	public function __construct(DOMNode $node, array $marks = [])
 	{
 		$this->createMarkRules($marks);
-		$this->html = trim(static::parseNode($node, $this->marks));
+		$this->html = trim(static::parseNode($node, $this->marks) ?? '');
 	}
 
 	/**
