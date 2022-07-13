@@ -19,17 +19,14 @@ namespace Kirby\Cms;
  */
 class AppUsersImpersonateProxy
 {
-
 	public function __construct(protected App $app)
-	{}
+	{
+	}
 
-    public function __call($name, $arguments)
+	public function __call($name, $arguments)
 	{
 		Helpers::deprecated('Calling $kirby->' . $name . '() as $this->' . $name . '() has been deprecated inside the $kirby->impersonate() callback function. Use a dedicated $kirby object for your call instead of $this. In Kirby 3.9.0 $this will no longer refer to the $kirby object, but the current context of the callback function.');
 
 		return $this->app->$name(...$arguments);
 	}
-
-
-
 }
