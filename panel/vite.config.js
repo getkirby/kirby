@@ -95,6 +95,7 @@ export default defineConfig(({ command }) => {
 				"/env": proxy,
 				"/media": proxy
 			},
+			port: 3000,
 			...custom
 		},
 		test: {
