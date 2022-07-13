@@ -73,10 +73,10 @@ class AppUsersTest extends TestCase
 		$this->assertNull($app->user(null, false));
 
 		// with callback
-		$result = $app->impersonate('homer@simpsons.com', function ($user) use ($app) {
-			$this->assertSame($user, $app->user());
-			$this->assertSame('homer@simpsons.com', $user->email());
-			$this->assertNull($app->user(null, false));
+		$result = $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
+			$self->assertSame($user, $app->user());
+			$self->assertSame('homer@simpsons.com', $user->email());
+			$self->assertNull($app->user(null, false));
 
 			return 'test1';
 		});
@@ -88,10 +88,10 @@ class AppUsersTest extends TestCase
 		$app->impersonate('kirby');
 		$caught = false;
 		try {
-			$app->impersonate('homer@simpsons.com', function ($user) use ($app) {
-				$this->assertSame($user, $app->user());
-				$this->assertSame('homer@simpsons.com', $user->email());
-				$this->assertNull($app->user(null, false));
+			$app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
+				$self->assertSame($user, $app->user());
+				$self->assertSame('homer@simpsons.com', $user->email());
+				$self->assertNull($app->user(null, false));
 
 				throw new Exception('Something bad happened');
 			});
@@ -111,6 +111,40 @@ class AppUsersTest extends TestCase
 	{
 		$this->expectException('Kirby\Exception\NotFoundException');
 		$this->app->impersonate('homer@simpsons.com');
+	}
+
+	/**
+	 * @todo remove in 3.9.0
+	 */
+	public function testImpersonateDeprecatedThisAsApp()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'debug' => false
+			],
+			'site' => [
+				'content' => ['title' => 'Foo']
+			]
+		]);
+
+		$self = $this;
+		$app->impersonate('kirby', function () use ($self) {
+			$self->assertSame('Foo', (string)$this->site()->title());
+		});
+
+		// with debug mode on
+
+		$app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->expectExceptionMessage('Calling $kirby->site() as $this->site() has been deprecated inside the $kirby->impersonate() callback function. Use a dedicated $kirby object for your call instead of $this. In Kirby 3.9.0 $this will no longer refer to the $kirby object, but the current context of the callback function.');
+
+		$app->impersonate('kirby', function () {
+			$this->site()->title();
+		});
 	}
 
 	public function testLoad()
