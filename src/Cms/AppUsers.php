@@ -60,8 +60,10 @@ trait AppUsers
 		}
 
 		try {
-			// bind the App object to the callback
-			return $callback->call($this, $userAfter);
+			// TODO: switch over in 3.9.0 to
+			// return $callback($userAfter);
+			$proxy = new AppUsersImpersonateProxy($this);
+			return $callback->call($proxy, $userAfter);
 		} catch (Throwable $e) {
 			throw $e;
 		} finally {
