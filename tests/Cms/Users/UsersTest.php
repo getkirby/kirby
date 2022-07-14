@@ -125,6 +125,35 @@ class UsersTest extends TestCase
 		$this->assertEquals('b@getkirby.com', $users->find('b@getkirby.com')->email());
 	}
 
+	public function testFiles()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'a@getkirby.com',
+					'files' => [['filename' => 'a.jpg']]
+				],
+				[
+					'email' => 'b@getkirby.com',
+					'files' => [['filename' => 'b.jpg']]
+				],
+				[
+					'id'	=> 'user-c',
+					'email' => 'c@getkirby.com',
+					'files' => [['filename' => 'c.jpg']]
+				],
+			]
+		]);
+
+		$files = $app->users()->files();
+		$this->assertSame(3, $files->count());
+		$this->assertSame('a.jpg', $files->first()->filename());
+		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
+	}
+
 	public function testCustomMethods()
 	{
 		Users::$methods = [

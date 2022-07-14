@@ -130,7 +130,7 @@ class Files extends Collection
 	 */
 	public function findByKey(string $key)
 	{
-		return $this->get(ltrim($this->parent->id() . '/' . $key, '/'));
+		return $this->get(ltrim($this->parent?->id() . '/' . $key, '/'));
 	}
 
 	/**
