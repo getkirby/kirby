@@ -25,7 +25,7 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureHost()
 	{
 		$env = new Environment([
-			'allowed' => Server::HOST_FROM_HEADER
+			'allowed' => '*'
 		], [
 			'HTTP_HOST' => 'example.com'
 		]);
@@ -37,7 +37,7 @@ class EnvironmentTest extends TestCase
 	public function testAllowFromInsecureForwardedHost()
 	{
 		$env = new Environment([
-			'allowed' => Server::HOST_FROM_HEADER
+			'allowed' => '*'
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
 		]);
@@ -72,9 +72,7 @@ class EnvironmentTest extends TestCase
 
 	public function testAllowFromServerName()
 	{
-		$env = new Environment([
-			'allowed' => Server::HOST_FROM_SERVER
-		], [
+		$env = new Environment([], [
 			'SERVER_NAME' => 'example.com'
 		]);
 
@@ -383,9 +381,7 @@ class EnvironmentTest extends TestCase
 
 	public function testDisallowFromInsecureHost()
 	{
-		$env = new Environment([
-			'allowed' => Server::HOST_FROM_SERVER
-		], [
+		$env = new Environment([], [
 			'HTTP_HOST' => 'example.com'
 		]);
 
@@ -845,17 +841,13 @@ class EnvironmentTest extends TestCase
 
 	public function testIgnoreFromInsecureForwardedHost()
 	{
-		$env = new Environment([
-			'allowed' => Server::HOST_FROM_SERVER
-		], [
+		$env = new Environment([], [
 			'HTTP_FORWARDED' => 'host=example.com'
 		]);
 
 		$this->assertNull($env->host());
 
-		$env = new Environment([
-			'allowed' => Server::HOST_FROM_SERVER
-		], [
+		$env = new Environment([], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
 		]);
 

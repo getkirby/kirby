@@ -139,23 +139,16 @@ return [
 	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options Markdown options
-	 * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
+	 * @param bool $inline Whether to wrap the text in `<p>` tags
 	 * @return string
-	 * @todo remove $inline parameter in in 3.8.0
 	 */
-	'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
+	'markdown' => function (
+		App $kirby,
+		string $text = null,
+		array $options = []
+	): string {
 		static $markdown;
 		static $config;
-
-		// warning for deprecated fourth parameter
-		if (func_num_args() === 4 && isset($options['inline']) === false) {
-			// @codeCoverageIgnoreStart
-			Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
-			// @codeCoverageIgnoreEnd
-		}
-
-		// support for the deprecated fourth argument
-		$options['inline'] ??= $inline;
 
 		// if the config options have changed or the component is called for the first time,
 		// (re-)initialize the parser object

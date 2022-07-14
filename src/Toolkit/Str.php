@@ -5,7 +5,6 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -550,21 +549,6 @@ class Str
 
 		// append a new ending number
 		return $string . $separator . $first;
-	}
-
-	/**
-	 * Checks if the given string is a URL
-	 *
-	 * @param string|null $string
-	 * @return bool
-	 * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
-	 * @todo Remove in 3.8.0
-	 * @codeCoverageIgnore
-	 */
-	public static function isURL(string|null $string = null): bool
-	{
-		Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
-		return filter_var($string, FILTER_VALIDATE_URL) !== false;
 	}
 
 	/**

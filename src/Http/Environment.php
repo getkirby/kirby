@@ -3,7 +3,6 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
@@ -208,18 +207,6 @@ class Environment
 		$this->path          = $this->detectPath($this->scriptPath);
 		$this->port          = null;
 
-		// keep Server flags compatible for now
-		// TODO: remove in 3.8.0
-		// @codeCoverageIgnoreStart
-		if (is_int($options['allowed']) === true) {
-			Helpers::deprecated('
-                Using `Server::` constants for the `allowed` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
-            ');
-
-			$options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
-		}
-		// @codeCoverageIgnoreEnd
-
 		// insecure auto-detection
 		if ($options['allowed'] === '*' || $options['allowed'] === ['*']) {
 			$this->detectAuto(true);
@@ -298,29 +285,6 @@ class Environment
 		}
 
 		throw new InvalidArgumentException('The environment is not allowed');
-	}
-
-	/**
-	 * The URL option receives a set of Server constant flags
-	 *
-	 * Server::HOST_FROM_SERVER
-	 * Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY
-	 * Server::HOST_FROM_HEADER
-	 * Server::HOST_FROM_HEADER | Server::HOST_ALLOW_EMPTY
-	 * @todo Remove in 3.8.0
-	 *
-	 * @param int $flags
-	 * @return string|null
-	 */
-	protected function detectAllowedFromFlag(int $flags): string|null
-	{
-		// allow host detection from host headers
-		if ($flags & Server::HOST_FROM_HEADER) {
-			return '*';
-		}
-
-		// detect host only from server name
-		return null;
 	}
 
 	/**
