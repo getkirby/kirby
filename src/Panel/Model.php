@@ -329,7 +329,7 @@ abstract class Model
 	public function pickerData(array $params = []): array
 	{
 		return [
-			'id'       => $this->model->id(),
+			'id'       => $this->model->uuid(),
 			'image'    => $this->image(
 				$params['image'] ?? [],
 				$params['layout'] ?? 'list'

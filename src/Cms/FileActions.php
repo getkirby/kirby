@@ -52,12 +52,7 @@ trait FileActions
 				throw new LogicException('The new file exists and cannot be overwritten');
 			}
 
-			// remove the lock of the old file
-			if ($lock = $oldFile->lock()) {
-				$lock->remove();
-			}
-
-			// remove all public versions
+			// remove all public versions, lock and clear UUID cache
 			$oldFile->unpublish();
 
 			// rename the main file
@@ -75,6 +70,7 @@ trait FileActions
 				F::move($oldFile->contentFile(), $newFile->contentFile());
 			}
 
+			// update collections
 			$newFile->parent()->files()->remove($oldFile->id());
 			$newFile->parent()->files()->set($newFile->id(), $newFile);
 
@@ -195,7 +191,7 @@ trait FileActions
 		// run the hook
 		return $file->commit('create', compact('file', 'upload'), function ($file, $upload) {
 
-			// delete all public versions
+			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
 			// overwrite the original
@@ -216,6 +212,9 @@ trait FileActions
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
 
+			// create UUID
+			Uuid::for($file);
+
 			// return a fresh clone
 			return $file->clone();
 		});
@@ -231,13 +230,8 @@ trait FileActions
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
 
-			// remove all versions in the media folder
+			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
-
-			// remove the lock of the old file
-			if ($lock = $file->lock()) {
-				$lock->remove();
-			}
 
 			if ($file->kirby()->multilang() === true) {
 				foreach ($file->translations() as $translation) {
@@ -310,7 +304,15 @@ trait FileActions
 	 */
 	public function unpublish()
 	{
+		// unpublish media files
 		Media::unpublish($this->parent()->mediaRoot(), $this);
+
+		// remove the lock
+		$this->lock()?->remove();
+
+		// clear UUID cache
+		Uuid::for($this)->clear();
+
 		return $this;
 	}
 }

@@ -57,7 +57,7 @@ class Page extends Model
 			return '[' . $this->model->title() . '](' . $this->model->url() . ')';
 		}
 
-		return '(link: ' . $this->model->id() . ' text: ' . $this->model->title() . ')';
+		return '(link: ' . $this->model->uuid() . ' text: ' . $this->model->title() . ')';
 	}
 
 	/**

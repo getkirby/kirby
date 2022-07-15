@@ -19,7 +19,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Files extends Collection
+class Files extends Models
 {
 	/**
 	 * All registered files methods
@@ -114,6 +114,10 @@ class Files extends Collection
 	 */
 	public function findByKey(string $key)
 	{
+		if ($file = $this->findByUuid($key, 'file')) {
+			return $file;
+		}
+
 		return $this->get(ltrim($this->parent?->id() . '/' . $key, '/'));
 	}
 

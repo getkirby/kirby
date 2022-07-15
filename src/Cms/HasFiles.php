@@ -90,6 +90,11 @@ trait HasFiles
 			return $this->$in()->first();
 		}
 
+		// find by global UUID
+		if (Uuid::is($filename, 'file') === true) {
+			return Uuid::for($filename)->toModel();
+		}
+
 		if (strpos($filename, '/') !== false) {
 			$path     = dirname($filename);
 			$filename = basename($filename);

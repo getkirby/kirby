@@ -113,9 +113,7 @@ trait PageActions
 
 			if ($oldPage->exists() === true) {
 				// remove the lock of the old page
-				if ($lock = $oldPage->lock()) {
-					$lock->remove();
-				}
+				$oldPage->lock()?->remove();
 
 				// actually move stuff on disk
 				if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
@@ -134,6 +132,9 @@ trait PageActions
 			} else {
 				$newPage->parentModel()->children()->set($newPage->id(), $newPage);
 			}
+
+			// clear UUID cache recursively (for children and files as well)
+			Uuid::for($oldPage)->clear(true);
 
 			return $newPage;
 		});
@@ -510,6 +511,9 @@ trait PageActions
 				$page->parentModel()->children()->append($page->id(), $page);
 			}
 
+			// create UUID
+			Uuid::for($page);
+
 			return $page;
 		});
 
@@ -622,6 +626,9 @@ trait PageActions
 			foreach ($page->children() as $child) {
 				$child->delete(true);
 			}
+
+			// clear UUID cache
+			Uuid::for($page)->clear();
 
 			// actually remove the page from disc
 			if ($page->exists() === true) {

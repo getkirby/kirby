@@ -20,7 +20,7 @@ use Kirby\Exception\InvalidArgumentException;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Pages extends Collection
+class Pages extends Models
 {
 	/**
 	 * Cache for the index only listed and unlisted pages
@@ -253,6 +253,10 @@ class Pages extends Collection
 	{
 		if ($key === null) {
 			return null;
+		}
+
+		if ($page = $this->findByUuid($key, 'page')) {
+			return $page;
 		}
 
 		// remove trailing or leading slashes

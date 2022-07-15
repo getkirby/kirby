@@ -638,6 +638,11 @@ class App
 		$id       = dirname($path);
 		$filename = basename($path);
 
+		// find by global UUID
+		if (Uuid::is($path, 'file') === true) {
+			return Uuid::for($path)->toModel();
+		}
+
 		if (is_a($parent, 'Kirby\Cms\User') === true) {
 			return $parent->file($filename);
 		}
@@ -1172,6 +1177,11 @@ class App
 	{
 		if ($id === null) {
 			return null;
+		}
+
+		// find by global UUID
+		if (Uuid::is($id, 'page') === true) {
+			return Uuid::for($id)->toModel();
 		}
 
 		$parent = $parent ?? $this->site();

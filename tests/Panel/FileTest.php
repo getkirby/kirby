@@ -640,7 +640,7 @@ class FileTest extends TestCase
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
-				['filename' => 'test.jpg']
+				['filename' => 'test.jpg', 'content' => ['uuid' => 'test-file']]
 			]
 		]);
 
@@ -651,7 +651,7 @@ class FileTest extends TestCase
 		$panel = new File($page->file('test.jpg'));
 		$data  = $panel->pickerData(['model' => $model]);
 
-		$this->assertSame('(image: test/test.jpg)', $data['dragText']);
+		$this->assertSame('(image: file://test-file)', $data['dragText']);
 	}
 
 	/**

@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Users extends Collection
+class Users extends Models
 {
 	/**
 	 * All registered users methods
@@ -86,22 +86,6 @@ class Users extends Collection
 	}
 
 	/**
-	 * Finds a user in the collection by ID or email address
-	 * @internal Use `$users->find()` instead
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cms\User|null
-	 */
-	public function findByKey(string $key)
-	{
-		if (Str::contains($key, '@') === true) {
-			return parent::findBy('email', Str::lower($key));
-		}
-
-		return parent::findByKey($key);
-	}
-
-	/**
 	 * Returns all files of all users
 	 *
 	 * @return \Kirby\Cms\Files
@@ -117,6 +101,26 @@ class Users extends Collection
 		}
 
 		return $files;
+	}
+
+	/**
+	 * Finds a user in the collection by ID or email address
+	 * @internal Use `$users->find()` instead
+	 *
+	 * @param string $key
+	 * @return \Kirby\Cms\User|null
+	 */
+	public function findByKey(string $key)
+	{
+		if ($user = $this->findByUuid($key, 'user')) {
+			return $user;
+		}
+
+		if (Str::contains($key, '@') === true) {
+			return parent::findBy('email', Str::lower($key));
+		}
+
+		return parent::findByKey($key);
 	}
 
 	/**

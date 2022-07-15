@@ -113,22 +113,24 @@ class PageTest extends TestCase
 	public function testDragText()
 	{
 		$page = new ModelPage([
-			'slug' => 'test'
+			'slug' => 'test',
+			'content' => ['uuid' => 'test-page']
 		]);
 
 		$panel = new Page($page);
-		$this->assertSame('(link: test text: test)', $panel->dragText());
+		$this->assertSame('(link: page://test-page text: test)', $panel->dragText());
 
 		// with title
 		$page = new ModelPage([
 			'slug' => 'test',
 			'content' => [
-				'title' => 'Test Title'
+				'title' => 'Test Title',
+				'uuid' => 'test-page'
 			]
 		]);
 
 		$panel = new Page($page);
-		$this->assertSame('(link: test text: Test Title)', $panel->dragText());
+		$this->assertSame('(link: page://test-page text: Test Title)', $panel->dragText());
 	}
 
 	/**
@@ -442,15 +444,16 @@ class PageTest extends TestCase
 		$page = new ModelPage([
 			'slug' => 'test',
 			'content' => [
-				'title' => 'Test Title'
+				'title' => 'Test Title',
+				'uuid'  => 'test-page'
 			]
 		]);
 
 		$panel = new Page($page);
 		$data  = $panel->pickerData();
 
-		$this->assertSame('(link: test text: Test Title)', $data['dragText']);
-		$this->assertSame('test', $data['id']);
+		$this->assertSame('(link: page://test-page text: Test Title)', $data['dragText']);
+		$this->assertSame('page://test-page', $data['id']);
 		$this->assertSame('/pages/test', $data['link']);
 		$this->assertSame('Test Title', $data['text']);
 	}

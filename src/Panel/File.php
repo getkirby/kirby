@@ -87,14 +87,17 @@ class File extends Model
 			return '[' . $this->model->filename() . '](' . $url . ')';
 		}
 
+		// for Kirbytext, rather use UUIDs instead IDs when absolute
+		$id  = $absolute ? $this->model->uuid() : $this->model->filename();
+
 		if ($this->model->type() === 'image') {
-			return '(image: ' . $url . ')';
+			return '(image: ' . $id . ')';
 		}
 		if ($this->model->type() === 'video') {
-			return '(video: ' . $url . ')';
+			return '(video: ' . $id . ')';
 		}
 
-		return '(file: ' . $url . ')';
+		return '(file: ' . $id . ')';
 	}
 
 	/**
@@ -308,12 +311,10 @@ class File extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$id   = $this->model->id();
 		$name = $this->model->filename();
 
 		if (empty($params['model']) === false) {
 			$parent   = $this->model->parent();
-			$uuid     = $parent === $params['model'] ? $name : $id;
 			$absolute = $parent !== $params['model'];
 		}
 
@@ -323,8 +324,7 @@ class File extends Model
 			'filename' => $name,
 			'dragText' => $this->dragText('auto', $absolute ?? false),
 			'type'     => $this->model->type(),
-			'url'      => $this->model->url(),
-			'uuid'     => $uuid ?? $id,
+			'url'      => $this->model->url()
 		]);
 	}
 
