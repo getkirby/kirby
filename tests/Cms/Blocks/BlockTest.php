@@ -260,4 +260,94 @@ class BlockTest extends TestCase
 		$this->assertSame('Lorem ipsum dolor …', $block->excerpt(20));
 		$this->assertSame($expected, (string)$block);
 	}
+
+	public function samplePrevNextBlocks()
+	{
+		return Blocks::factory([
+			[
+				'type' => 'code',
+				'isHidden' => true
+			],
+			[
+				'type' => 'gallery',
+				'isHidden' => true
+			],
+			[
+				'type' => 'heading',
+				'isHidden' => false
+			],
+			[
+				'type' => 'image',
+				'isHidden' => false
+			],
+			[
+				'type' => 'line',
+				'isHidden' => false
+			],
+			[
+				'type' => 'list',
+				'isHidden' => true
+			],
+			[
+				'type' => 'markdown',
+				'isHidden' => false
+			],
+			[
+				'type' => 'quote',
+				'isHidden' => true
+			],
+			[
+				'type' => 'table',
+				'isHidden' => false
+			],
+			[
+				'type' => 'text',
+				'isHidden' => true
+			],
+			[
+				'type' => 'video',
+				'isHidden' => false
+			],
+		]);
+	}
+
+	public function testHiddenSiblings()
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->first();
+
+		$this->assertCount(5, $block->siblings());
+		$this->assertNull($block->prev());
+	}
+
+	public function testVisibleSiblings()
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->last();
+
+		$this->assertCount(6, $block->siblings());
+		$this->assertNull($block->next());
+	}
+
+	public function testPrevNextVisible()
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->nth(4);
+
+		$this->assertSame('line', $block->type());
+		$this->assertFalse($block->isHidden());
+		$this->assertSame('image', $block->prev()->type());
+		$this->assertSame('markdown', $block->next()->type());
+	}
+
+	public function testPrevNextHidden()
+	{
+		$blocks = $this->samplePrevNextBlocks();
+		$block = $blocks->nth(5);
+
+		$this->assertSame('list', $block->type());
+		$this->assertTrue($block->isHidden());
+		$this->assertSame('gallery', $block->prev()->type());
+		$this->assertSame('quote', $block->next()->type());
+	}
 }
