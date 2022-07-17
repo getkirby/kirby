@@ -44,6 +44,19 @@ class AssetTest extends TestCase
 		$this->assertSame('/dev/null/' . $file, $asset->id());
 		$this->assertSame('https://getkirby.com/' . $file, $asset->url());
 		$this->assertSame('images', $asset->path());
+
+		$this->app->clone([
+			'urls' => [
+				'index' => '/'
+			]
+		]);
+
+		$asset = $this->_asset($file = 'images/logo.svg');
+
+		$this->assertSame('/dev/null/' . $file, $asset->root());
+		$this->assertSame('/dev/null/' . $file, $asset->id());
+		$this->assertSame('/' . $file, $asset->url());
+		$this->assertSame('images', $asset->path());
 	}
 
 	/**

@@ -342,8 +342,8 @@ class ModelTest extends TestCase
 		$site  = new ModelSiteWithImageMethod([]);
 		$panel = new CustomPanelModel($site);
 		$image = $panel->image('site.cover');
-		$this->assertSame('//tmp/test.svg', $image['url']);
-		$this->assertSame('//tmp/test.svg', $image['src']);
+		$this->assertSame('/tmp/test.svg', $image['url']);
+		$this->assertSame('/tmp/test.svg', $image['src']);
 	}
 
 	/**
