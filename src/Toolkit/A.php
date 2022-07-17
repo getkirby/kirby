@@ -21,10 +21,6 @@ class A
 {
 	/**
 	 * Appends the given array
-	 *
-	 * @param array $array
-	 * @param array $append
-	 * @return array
 	 */
 	public static function append(array $array, array $append): array
 	{
@@ -37,9 +33,7 @@ class A
 	 * applying the passed parameters
 	 * @since 3.5.6
 	 *
-	 * @param array $array
 	 * @param mixed ...$args Parameters to pass to the closures
-	 * @return array
 	 */
 	public static function apply(array $array, ...$args): array
 	{
@@ -77,7 +71,6 @@ class A
 	 * @param mixed $default Optional default value, which
 	 *                       should be returned if no element
 	 *                       has been found
-	 * @return mixed
 	 */
 	public static function get(
 		$array,
@@ -145,9 +138,7 @@ class A
 	}
 
 	/**
-	 * @param array|string $value
-	 * @param array|string $separator
-	 * @return string
+	 * Joins the elements of an array to a string
 	 */
 	public static function join(
 		array|string $value,
@@ -166,13 +157,10 @@ class A
 	/**
 	 * Merges arrays recursively
 	 *
-	 * @param array $array1
-	 * @param array $array2
 	 * @param int $mode Behavior for elements with numeric keys;
 	 *                  A::MERGE_APPEND:    elements are appended, keys are reset;
 	 *                  A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
 	 *                  A::MERGE_REPLACE:   non-associative arrays are completely replaced
-	 * @return array
 	 */
 	public static function merge(array $array1, array $array2, int $mode = A::MERGE_APPEND): array
 	{
@@ -251,10 +239,6 @@ class A
 
 	/**
 	 * Prepends the given array
-	 *
-	 * @param array $array
-	 * @param array $prepend
-	 * @return array
 	 */
 	public static function prepend(array $array, array $prepend): array
 	{
@@ -344,11 +328,6 @@ class A
 	/**
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
-	 *
-	 * @param array $array
-	 * @param int $count
-	 * @param bool $shuffle
-	 * @return array
 	 */
 	public static function random(array $array, int $count = 1, bool $shuffle = false): array
 	{
@@ -407,10 +386,6 @@ class A
 	 * A simple wrapper around array_map
 	 * with a sane argument order
 	 * @since 3.6.0
-	 *
-	 * @param array $array
-	 * @param callable $map
-	 * @return array
 	 */
 	public static function map(array $array, callable $map): array
 	{
@@ -419,11 +394,6 @@ class A
 
 	/**
 	 * Move an array item to a new index
-	 *
-	 * @param array $array
-	 * @param int $from
-	 * @param int $to
-	 * @return array
 	 */
 	public static function move(array $array, int $from, int $to): array
 	{
@@ -487,10 +457,8 @@ class A
 	 * Normalizes an array into a nested form by converting
 	 * dot notation in keys to nested structures
 	 *
-	 * @param array $array
 	 * @param array $ignore List of keys in dot notation that should
 	 *                      not be converted to a nested structure
-	 * @return array
 	 */
 	public static function nest(array $array, array $ignore = []): array
 	{
@@ -688,11 +656,8 @@ class A
 	 * //   'password' => 'super-secret'
 	 * // ];
 	 * </code>
-	 *
-	 * @param array ...$arrays
-	 * @return array
 	 */
-	public static function extend(...$arrays): array
+	public static function extend(array ...$arrays): array
 	{
 		return array_merge_recursive(...$arrays);
 	}
@@ -720,10 +685,6 @@ class A
 	 *   }
 	 * ]);
 	 * </code>
-	 *
-	 * @param array $array
-	 * @param array $update
-	 * @return array
 	 */
 	public static function update(array $array, array $update): array
 	{
@@ -741,11 +702,8 @@ class A
 	/**
 	 * Wraps the given value in an array
 	 * if it's not an array yet.
-	 *
-	 * @param mixed|null $array
-	 * @return array
 	 */
-	public static function wrap($array = null): array
+	public static function wrap(mixed $array = null): array
 	{
 		if ($array === null) {
 			return [];
@@ -762,10 +720,6 @@ class A
 	 * Filter the array using the given callback
 	 * using both value and key
 	 * @since 3.6.5
-	 *
-	 * @param array $array
-	 * @param callable $callback
-	 * @return array
 	 */
 	public static function filter(array $array, callable $callback): array
 	{
@@ -775,10 +729,6 @@ class A
 	/**
 	 * Remove key(s) from an array
 	 * @since 3.6.5
-	 *
-	 * @param array $array
-	 * @param int|string|array $keys
-	 * @return array
 	 */
 	public static function without(array $array, int|string|array $keys): array
 	{
