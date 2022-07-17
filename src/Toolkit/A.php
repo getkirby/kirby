@@ -140,10 +140,8 @@ class A
 	/**
 	 * Joins the elements of an array to a string
 	 */
-	public static function join(
-		array|string $value,
-		array|string $separator = ', '
-	): string {
+	public static function join(array|string $value, string $separator = ', '): string
+	{
 		if (is_string($value) === true) {
 			return $value;
 		}
