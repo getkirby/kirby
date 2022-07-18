@@ -1534,7 +1534,9 @@ class App
 	 */
 	public function server()
 	{
+		// @codeCoverageIgnoreStart
 		Helpers::deprecated('$kirby->server() has been deprecated and will be removed in Kirby 3.9.0. Use $kirby->environment() instead.');
+		// @codeCoverageIgnoreEnd
 
 		return $this->environment();
 	}

@@ -44,18 +44,18 @@ class FilesSectionTest extends TestCase
 	{
 		// single headline
 		$section = new Section('files', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => 'Test'
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => 'Test'
 		]);
 
 		$this->assertEquals('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('files', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => [
 				'en' => 'Files',
 				'de' => 'Dateien'
 			]

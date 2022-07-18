@@ -399,9 +399,9 @@ class Blueprint
 			if (empty($columnProps['sections']) === true) {
 				$columnProps['sections'] = [
 					$tabName . '-info-' . $columnKey => [
-						'headline' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
-						'type'     => 'info',
-						'text'     => 'No sections yet'
+						'label' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
+						'type'  => 'info',
+						'text'  => 'No sections yet'
 					]
 				];
 			}
@@ -623,17 +623,17 @@ class Blueprint
 
 			if (empty($type) === true || is_string($type) === false) {
 				$sections[$sectionName] = [
-					'name' => $sectionName,
-					'headline' => 'Invalid section type for section "' . $sectionName . '"',
-					'type' => 'info',
-					'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+					'name'  => $sectionName,
+					'label' => 'Invalid section type for section "' . $sectionName . '"',
+					'type'  => 'info',
+					'text'  => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
 				];
 			} elseif (isset(Section::$types[$type]) === false) {
 				$sections[$sectionName] = [
-					'name' => $sectionName,
-					'headline' => 'Invalid section type ("' . $type . '")',
-					'type' => 'info',
-					'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+					'name'  => $sectionName,
+					'label' => 'Invalid section type ("' . $type . '")',
+					'type'  => 'info',
+					'text'  => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
 				];
 			}
 
