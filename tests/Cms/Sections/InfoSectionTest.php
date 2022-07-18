@@ -23,18 +23,18 @@ class InfoSectionTest extends TestCase
 	{
 		// single headline
 		$section = new Section('info', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => 'Test'
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => 'Test'
 		]);
 
 		$this->assertEquals('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('info', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => [
 				'en' => 'Information',
 				'de' => 'Informationen'
 			]
@@ -81,17 +81,17 @@ class InfoSectionTest extends TestCase
 	public function testToArray()
 	{
 		$section = new Section('info', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => 'Test Headline',
-			'text'     => 'Test Text',
-			'theme'    => 'notice'
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => 'Test Headline',
+			'text'  => 'Test Text',
+			'theme' => 'notice'
 		]);
 
 		$expected = [
-			'headline' => 'Test Headline',
-			'text'     => '<p>Test Text</p>',
-			'theme'    => 'notice'
+			'label' => 'Test Headline',
+			'text'  => '<p>Test Text</p>',
+			'theme' => 'notice'
 		];
 
 		$this->assertEquals($expected, $section->toArray());
