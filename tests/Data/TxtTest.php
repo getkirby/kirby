@@ -139,7 +139,8 @@ class TxtTest extends TestCase
 	{
 		$array = [
 			'title' => 'Title',
-			'text'  => ['a', 'b', 'c']
+			'text'  => ['a', 'b', 'c'],
+			'text2' => ['a']
 		];
 
 		$data = Txt::encode($array);
