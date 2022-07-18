@@ -24,22 +24,8 @@ class Yaml extends Handler
 	 */
 	public static function encode($data): string
 	{
-		// TODO: The locale magic should no longer be
-		//       necessary when support for PHP 7.x is dropped
-
-		// fetch the current locale setting for numbers
-		$locale = setlocale(LC_NUMERIC, 0);
-
-		// change to english numerics to avoid issues with floats
-		setlocale(LC_NUMERIC, 'C');
-
 		// $data, $indent, $wordwrap, $no_opening_dashes
-		$yaml = Spyc::YAMLDump($data, false, false, true);
-
-		// restore the previous locale settings
-		setlocale(LC_NUMERIC, $locale);
-
-		return $yaml;
+		return Spyc::YAMLDump($data, false, false, true);
 	}
 
 	/**
