@@ -35,7 +35,7 @@ return [
 			}
 
 			// don't allow sorting while search filter is active
-			if (empty($this->searchterm) === false) {
+			if (empty($this->searchterm()) === false) {
 				return false;
 			}
 
