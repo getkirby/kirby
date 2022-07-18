@@ -1528,12 +1528,14 @@ class App
 	 * @deprecated 3.7.0 Use `$kirby->environment()` instead
 	 *
 	 * @return \Kirby\Http\Environment
-	 * @todo Start throwing deprecation warnings in 3.8.0
+	 * @deprecated Will be removed in Kirby 3.9.0
 	 * @todo Remove in 3.9.0
 	 * @codeCoverageIgnore
 	 */
 	public function server()
 	{
+		Helpers::deprecated('$kirby->server() has been deprecated and will be removed in Kirby 3.9.0. Use $kirby->environment() instead.');
+
 		return $this->environment();
 	}
 
