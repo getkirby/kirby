@@ -27,9 +27,6 @@ class View
 	 * query parameters. Requests can return only
 	 * certain data fields that way or globals can
 	 * be injected on demand.
-	 *
-	 * @param array $data
-	 * @return array
 	 */
 	public static function apply(array $data): array
 	{
@@ -55,10 +52,6 @@ class View
 	 *
 	 * A global request can be activated with the `X-Fiber-Globals` header or the
 	 * `_globals` query parameter.
-	 *
-	 * @param array $data
-	 * @param string|null $globals
-	 * @return array
 	 */
 	public static function applyGlobals(array $data, string|null $globals = null): array
 	{
@@ -89,10 +82,6 @@ class View
 	 *
 	 * Such requests can fetch shared data or globals.
 	 * Globals will be loaded on demand.
-	 *
-	 * @param array $data
-	 * @param string|null $only
-	 * @return array
 	 */
 	public static function applyOnly(array $data, string|null $only = null): array
 	{
@@ -133,10 +122,6 @@ class View
 	 * The full shared data is always sent on every JSON and
 	 * full document request unless the `X-Fiber-Only` header or
 	 * the `_only` query parameter is set.
-	 *
-	 * @param array $view
-	 * @param array $options
-	 * @return array
 	 */
 	public static function data(array $view = [], array $options = []): array
 	{
@@ -239,10 +224,6 @@ class View
 
 	/**
 	 * Renders the error view with provided message
-	 *
-	 * @param string $message
-	 * @param int $code
-	 * @return array
 	 */
 	public static function error(string $message, int $code = 404)
 	{
@@ -265,8 +246,6 @@ class View
 	 * is only requested once on the first page load.
 	 * It can be loaded partially later if needed,
 	 * but is otherwise not included in Fiber calls.
-	 *
-	 * @return array
 	 */
 	public static function globals(): array
 	{
@@ -323,11 +302,6 @@ class View
 
 	/**
 	 * Creates the menu for the topbar
-	 *
-	 * @param array $areas
-	 * @param array $permissions
-	 * @param string|null $current
-	 * @return array
 	 */
 	public static function menu(array|null $areas = [], array|null $permissions = [], string|null $current = null): array
 	{
@@ -391,12 +365,8 @@ class View
 	 * Renders the main panel view either as
 	 * JSON response or full HTML document based
 	 * on the request header or query params
-	 *
-	 * @param mixed $data
-	 * @param array $options
-	 * @return \Kirby\Http\Response
 	 */
-	public static function response($data, array $options = [])
+	public static function response(mixed $data, array $options = []): Response
 	{
 		// handle redirects
 		if (is_a($data, 'Kirby\Panel\Redirect') === true) {
@@ -438,7 +408,7 @@ class View
 		return Document::response($fiber);
 	}
 
-	public static function searches(array $areas, array $permissions)
+	public static function searches(array $areas, array $permissions): array
 	{
 		$searches = [];
 

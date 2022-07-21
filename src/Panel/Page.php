@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\File as CmsFile;
+use Kirby\Filesystem\Asset;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -17,14 +19,7 @@ use Kirby\Toolkit\I18n;
 class Page extends Model
 {
 	/**
-	 * @var \Kirby\Cms\Page
-	 */
-	protected $model;
-
-	/**
 	 * Breadcrumb array
-	 *
-	 * @return array
 	 */
 	public function breadcrumb(): array
 	{
@@ -43,9 +38,8 @@ class Page extends Model
 	 *
 	 * @internal
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
-	 * @return string
 	 */
-	public function dragText(string $type = null): string
+	public function dragText(string|null $type = null): string
 	{
 		$type = $this->dragTextType($type);
 
@@ -62,9 +56,6 @@ class Page extends Model
 
 	/**
 	 * Provides options for the page dropdown
-	 *
-	 * @param array $options
-	 * @return array
 	 */
 	public function dropdown(array $options = []): array
 	{
@@ -160,8 +151,6 @@ class Page extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
-	 *
-	 * @return array
 	 */
 	public function dropdownOption(): array
 	{
@@ -173,8 +162,6 @@ class Page extends Model
 	/**
 	 * Returns the escaped Id, which is
 	 * used in the panel to make routing work properly
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
@@ -183,8 +170,6 @@ class Page extends Model
 
 	/**
 	 * Default settings for the page's Panel image
-	 *
-	 * @return array
 	 */
 	protected function imageDefaults(): array
 	{
@@ -201,11 +186,10 @@ class Page extends Model
 	 * Returns the image file object based on provided query
 	 *
 	 * @internal
-	 * @param string|null $query
-	 * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
 	 */
-	protected function imageSource(string $query = null)
-	{
+	protected function imageSource(
+		string|null $query = null
+	): CmsFile|Asset|null {
 		if ($query === null) {
 			$query = 'page.image';
 		}
@@ -217,7 +201,6 @@ class Page extends Model
 	 * Returns the full path without leading slash
 	 *
 	 * @internal
-	 * @return string
 	 */
 	public function path(): string
 	{
@@ -227,9 +210,6 @@ class Page extends Model
 	/**
 	 * Prepares the response data for page pickers
 	 * and page fields
-	 *
-	 * @param array|null $params
-	 * @return array
 	 */
 	public function pickerData(array $params = []): array
 	{
@@ -245,12 +225,11 @@ class Page extends Model
 	/**
 	 * The best applicable position for
 	 * the position/status dialog
-	 *
-	 * @return int
 	 */
 	public function position(): int
 	{
-		return $this->model->num() ?? $this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
+		return $this->model->num() ??
+			   $this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
 	}
 
 	/**
@@ -259,8 +238,6 @@ class Page extends Model
 	 * based on blueprint definition
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function prevNext(): array
 	{
@@ -323,8 +300,6 @@ class Page extends Model
 	 * view's component props
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function props(): array
 	{
@@ -334,7 +309,7 @@ class Page extends Model
 			parent::props(),
 			$this->prevNext(),
 			[
-				'blueprint' => $this->model->intendedTemplate()->name(),
+				'blueprint' => $page->intendedTemplate()->name(),
 				'model' => [
 					'content'    => $this->content(),
 					'id'         => $page->id(),
@@ -358,8 +333,6 @@ class Page extends Model
 	 * this model's Panel view
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function view(): array
 	{
