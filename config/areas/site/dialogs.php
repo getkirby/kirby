@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Panel\Redirect;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -354,15 +355,21 @@ return [
 				]);
 			}
 
-			$page = Find::parent($request->get('parent', 'site'))->createChild([
-				'content'  => ['title' => $title],
-				'slug'     => $request->get('slug'),
-				'template' => $request->get('template'),
-			]);
+			try {
+				$page = Find::parent($request->get('parent', 'site'))->createChild([
+					'content'  => ['title' => $title],
+					'slug'     => $request->get('slug'),
+					'template' => $request->get('template'),
+				]);
+
+				$redirect = $page->panel()->url(true);
+			} catch (Redirect $exception) {
+				$redirect = $exception->location();
+			}
 
 			return [
 				'event'    => 'page.create',
-				'redirect' => $page->panel()->url(true)
+				'redirect' => $redirect
 			];
 		}
 	],
