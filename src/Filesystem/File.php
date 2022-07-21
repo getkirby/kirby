@@ -43,10 +43,8 @@ class File
 
 	/**
 	 * Validation rules to be used for `::match()`
-	 *
-	 * @var array
 	 */
-	public static $validations = [
+	public static array $validations = [
 		'maxsize' => ['size', 'max'],
 		'minsize' => ['size', 'min']
 	];
