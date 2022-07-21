@@ -397,17 +397,6 @@ class DateTest extends TestCase
 	/**
 	 * @covers ::stepConfig
 	 */
-	public function testStepConfigWithInvalidInput()
-	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid input');
-
-		Date::stepConfig(new Date());
-	}
-
-	/**
-	 * @covers ::stepConfig
-	 */
 	public function testStepConfigWithString()
 	{
 		$config = Date::stepConfig('Minute');

@@ -22,17 +22,13 @@ class Str
 {
 	/**
 	 * Language translation table
-	 *
-	 * @var array
 	 */
-	public static $language = [];
+	public static array $language = [];
 
 	/**
 	 * Ascii translation table
-	 *
-	 * @var array
 	 */
-	public static $ascii = [
+	public static array $ascii = [
 		'/°|₀/' => '0',
 		'/¹|₁/' => '1',
 		'/²|₂/' => '2',
@@ -114,10 +110,8 @@ class Str
 
 	/**
 	 * Default settings for class methods
-	 *
-	 * @var array
 	 */
-	public static $defaults = [
+	public static array $defaults = [
 		'slug' => [
 			'separator' => '-',
 			'allowed'   => 'a-z0-9'
@@ -127,9 +121,6 @@ class Str
 	/**
 	 * Parse accepted values and their quality from an
 	 * accept string like an Accept or Accept-Language header
-	 *
-	 * @param string $input
-	 * @return array
 	 */
 	public static function accepted(string $input): array
 	{
@@ -171,11 +162,6 @@ class Str
 
 	/**
 	 * Returns the rest of the string after the given substring or character
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
 	 */
 	public static function after(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -191,11 +177,6 @@ class Str
 	/**
 	 * Removes the given substring or character only from the start of the string
 	 * @since 3.7.0
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
 	 */
 	public static function afterStart(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -212,9 +193,6 @@ class Str
 
 	/**
 	 * Convert a string to 7-bit ASCII.
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	public static function ascii(string $string): string
 	{
@@ -234,12 +212,8 @@ class Str
 	}
 
 	/**
-	 * Returns the beginning of a string before the given substring or character
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
+	 * Returns the beginning of a string before
+	 * the given substring or character
 	 */
 	public static function before(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -253,13 +227,9 @@ class Str
 	}
 
 	/**
-	 * Removes the given substring or character only from the end of the string
+	 * Removes the given substring or character
+	 * only from the end of the string
 	 * @since 3.7.0
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
 	 */
 	public static function beforeEnd(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -275,14 +245,10 @@ class Str
 	}
 
 	/**
-	 * Returns everything between two strings from the first occurrence of a given string
-	 *
-	 * @param string $string
-	 * @param string $start
-	 * @param string $end
-	 * @return string
+	 * Returns everything between two strings
+	 * from the first occurrence of a given string
 	 */
-	public static function between(string $string = null, string $start, string $end): string
+	public static function between(string|null $string = null, string $start, string $end): string
 	{
 		return static::before(static::after($string, $start), $end);
 	}
@@ -290,23 +256,17 @@ class Str
 	/**
 	 * Converts a string to camel case
 	 *
-	 * @param string $value The string to convert
-	 * @return string
+	 * @param string|null $value The string to convert
 	 */
-	public static function camel(string $value = null): string
+	public static function camel(string|null $value = null): string
 	{
 		return lcfirst(static::studly($value));
 	}
 
 	/**
-	 * Checks if a str contains another string
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return bool
+	 * Checks if a string contains another string
 	 */
-	public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
+	public static function contains(string|null $string = null, string $needle, bool $caseInsensitive = false): bool
 	{
 		if ($needle === '') {
 			return true;
@@ -320,13 +280,13 @@ class Str
 	 * Convert timestamp to date string
 	 * according to locale settings
 	 *
-	 * @param int|null $time
-	 * @param string|\IntlDateFormatter|null $format
 	 * @param string $handler date, intl or strftime
-	 * @return string|int
 	 */
-	public static function date(int|null $time = null, $format = null, string $handler = 'date')
-	{
+	public static function date(
+		int|null $time = null,
+		string|IntlDateFormatter|null $format = null,
+		string $handler = 'date'
+	): string|int {
 		if (is_null($format) === true) {
 			return $time;
 		}
@@ -362,13 +322,8 @@ class Str
 
 	/**
 	 * Converts a string to a different encoding
-	 *
-	 * @param string $string
-	 * @param string $targetEncoding
-	 * @param string $sourceEncoding (optional)
-	 * @return string
 	 */
-	public static function convert($string, $targetEncoding, $sourceEncoding = null)
+	public static function convert(string $string, string $targetEncoding, string|null $sourceEncoding = null): string
 	{
 		// detect the source encoding if not passed as third argument
 		if ($sourceEncoding === null) {
@@ -385,9 +340,6 @@ class Str
 
 	/**
 	 * Encode a string (used for email addresses)
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	public static function encode(string $string): string
 	{
@@ -404,9 +356,6 @@ class Str
 
 	/**
 	 * Tries to detect the string encoding
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	public static function encoding(string $string): string
 	{
@@ -415,13 +364,8 @@ class Str
 
 	/**
 	 * Checks if a string ends with the passed needle
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return bool
 	 */
-	public static function endsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
+	public static function endsWith(string|null $string = null, string $needle, bool $caseInsensitive = false): bool
 	{
 		if ($needle === '') {
 			return true;
@@ -465,8 +409,12 @@ class Str
 	 * @param string $rep The element, which should be added if the string is too long. Ellipsis is the default.
 	 * @return string The shortened string
 	 */
-	public static function excerpt($string, $chars = 140, $strip = true, $rep = ' …')
-	{
+	public static function excerpt(
+		string $string,
+		int $chars = 140,
+		bool $strip = true,
+		string $rep = ' …'
+	): string {
 		if ($strip === true) {
 			$string = strip_tags(str_replace('<', ' <', $string));
 		}
@@ -491,11 +439,8 @@ class Str
 	/**
 	 * Convert the value to a float with a decimal
 	 * point, no matter what the locale setting is
-	 *
-	 * @param string|int|float $value
-	 * @return string
 	 */
-	public static function float($value): string
+	public static function float(string|int|float|null $value): string
 	{
 		// make sure $value is not null
 		$value ??= '';
@@ -512,11 +457,6 @@ class Str
 
 	/**
 	 * Returns the rest of the string starting from the given character
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
 	 */
 	public static function from(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -534,9 +474,7 @@ class Str
 	 * @since 3.7.0
 	 *
 	 * @param string $string The string to increment
-	 * @param string $separator
 	 * @param int $first Starting number
-	 * @return string
 	 */
 	public static function increment(string $string, string $separator = '-', int $first = 1): string
 	{
@@ -553,43 +491,30 @@ class Str
 
 	/**
 	 * Convert a string to kebab case.
-	 *
-	 * @param string $value
-	 * @return string
 	 */
-	public static function kebab(string $value = null): string
+	public static function kebab(string|null $string = null): string
 	{
-		return static::snake($value, '-');
+		return static::snake($string, '-');
 	}
 
 	/**
 	 * A UTF-8 safe version of strlen()
-	 *
-	 * @param string $string
-	 * @return int
 	 */
-	public static function length(string $string = null): int
+	public static function length(string|null $string = null): int
 	{
 		return mb_strlen($string ?? '', 'UTF-8');
 	}
 
 	/**
 	 * A UTF-8 safe version of strtolower()
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function lower(string $string = null): string
+	public static function lower(string|null $string = null): string
 	{
 		return mb_strtolower($string ?? '', 'UTF-8');
 	}
 
 	/**
 	 * Safe ltrim alternative
-	 *
-	 * @param string $string
-	 * @param string $trim
-	 * @return string
 	 */
 	public static function ltrim(string $string, string $trim = ' '): string
 	{
@@ -599,12 +524,8 @@ class Str
 
 	/**
 	 * Get a character pool with various possible combinations
-	 *
-	 * @param string|array $type
-	 * @param bool $array
-	 * @return string|array
 	 */
-	public static function pool($type, bool $array = true)
+	public static function pool(string|array $type, bool $array = true): string|array
 	{
 		$pool = [];
 
@@ -629,14 +550,12 @@ class Str
 	/**
 	 * Returns the position of a needle in a string
 	 * if it can be found
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return int|bool
 	 */
-	public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
-	{
+	public static function position(
+		string|null $string = null,
+		string $needle,
+		bool $caseInsensitive = false
+	): int|false {
 		if ($needle === '') {
 			throw new InvalidArgumentException('The needle must not be empty');
 		}
@@ -652,12 +571,8 @@ class Str
 	/**
 	 * Runs a string query.
 	 * Check out the Query class for more information.
-	 *
-	 * @param string $query
-	 * @param array $data
-	 * @return string|null
 	 */
-	public static function query(string $query, array $data = [])
+	public static function query(string $query, array $data = []): mixed
 	{
 		return (new Query($query, $data))->result();
 	}
@@ -667,9 +582,8 @@ class Str
 	 *
 	 * @param int $length The length of the random string
 	 * @param string $type Pool type (type of allowed characters)
-	 * @return string
 	 */
-	public static function random(int $length = null, string $type = 'alphaNum')
+	public static function random(int|null $length = null, string $type = 'alphaNum'): string|false
 	{
 		if ($length === null) {
 			$length = random_int(5, 10);
@@ -701,18 +615,22 @@ class Str
 	 * Replaces all or some occurrences of the search string with the replacement string
 	 * Extension of the str_replace() function in PHP with an additional $limit parameter
 	 *
-	 * @param string|array $string String being replaced on (haystack);
-	 *                             can be an array of multiple subject strings
-	 * @param string|array $search Value being searched for (needle)
-	 * @param string|array $replace Value to replace matches with
+	 * @param string|array|object $string String being replaced on (haystack);
+	 *                                    can be an array of multiple subject strings
+	 * @param string|array|object $search Value being searched for (needle)
+	 * @param string|array|object $replace Value to replace matches with
 	 * @param int|array $limit Maximum possible replacements for each search value;
 	 *                         multiple limits for each search value are supported;
 	 *                         defaults to no limit
 	 * @return string|array String with replaced values;
 	 *                      if $string is an array, array of strings
 	 */
-	public static function replace($string, $search, $replace, $limit = -1)
-	{
+	public static function replace(
+		string|array|object $string,
+		string|array|object $search,
+		string|array|object $replace,
+		int|array $limit = -1
+	): string|array {
 		// convert Kirby collections to arrays
 		if (is_a($string, 'Kirby\Toolkit\Collection') === true) {
 			$string = $string->toArray();
@@ -766,8 +684,11 @@ class Str
 	 * @return array List of replacement arrays, each with a
 	 *               'search', 'replace' and 'limit' attribute
 	 */
-	public static function replacements($search, $replace, $limit): array
-	{
+	public static function replacements(
+		string|array $search,
+		string|array $replace,
+		int|array $limit
+	): array {
 		$replacements = [];
 
 		if (is_array($search) === true && is_array($replace) === true) {
@@ -796,7 +717,11 @@ class Str
 
 				$replacements[] = ['search' => $s, 'replace' => $replace, 'limit' => $l];
 			}
-		} elseif (is_string($search) === true && is_string($replace) === true && is_int($limit) === true) {
+		} elseif (
+			is_string($search) === true &&
+			is_string($replace) === true &&
+			is_int($limit) === true
+		) {
 			$replacements[] = compact('search', 'replace', 'limit');
 		} else {
 			throw new Exception('Invalid combination of $search, $replace and $limit params.');
@@ -849,10 +774,6 @@ class Str
 
 	/**
 	 * Safe rtrim alternative
-	 *
-	 * @param string $string
-	 * @param string $trim
-	 * @return string
 	 */
 	public static function rtrim(string $string, string $trim = ' '): string
 	{
@@ -876,8 +797,11 @@ class Str
 	 *
 	 * @return string The filled-in and partially escaped string
 	 */
-	public static function safeTemplate(string $string = null, array $data = [], array $options = []): string
-	{
+	public static function safeTemplate(
+		string|null $string = null,
+		array $data = [],
+		array $options = []
+	): string {
 		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
 		$fallback = $options['fallback'] ?? '';
 
@@ -919,15 +843,18 @@ class Str
 	 *
 	 * </code>
 	 *
-	 * @param string $string The string to be shortened
+	 * @param string|null $string The string to be shortened
 	 * @param int $length The final number of characters the
 	 *                    string should have
 	 * @param string $appendix The element, which should be added if the
 	 *                         string is too long. Ellipsis is the default.
 	 * @return string The shortened string
 	 */
-	public static function short(string $string = null, int $length = 0, string $appendix = '…'): string
-	{
+	public static function short(
+		string|null $string = null,
+		int $length = 0,
+		string $appendix = '…'
+	): string {
 		if ($string === null) {
 			return '';
 		}
@@ -950,8 +877,7 @@ class Str
 	 * @author Based on the work of Antal Áron
 	 * @copyright Original Copyright (c) 2017, Antal Áron
 	 * @license https://github.com/antalaron/mb-similar-text/blob/master/LICENSE MIT License
-	 * @param string $first
-	 * @param string $second
+	 *
 	 * @param bool $caseInsensitive If `true`, strings are compared case-insensitively
 	 * @return array matches: Number of matching chars in both strings
 	 *               percent: Similarity in percent
@@ -1019,15 +945,19 @@ class Str
 	/**
 	 * Convert a string to a safe version to be used in a URL
 	 *
-	 * @param string $string The unsafe string
-	 * @param string $separator To be used instead of space and
-	 *                          other non-word characters.
-	 * @param string $allowed List of all allowed characters (regex)
+	 * @param string|null $string The unsafe string
+	 * @param string|null $separator To be used instead of space and
+	 *                               other non-word characters.
+	 * @param string|null $allowed List of all allowed characters (regex)
 	 * @param int $maxlength The maximum length of the slug
 	 * @return string The safe string
 	 */
-	public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
-	{
+	public static function slug(
+		string|null $string = null,
+		string|null $separator = null,
+		string|null $allowed = null,
+		int $maxlength = 128
+	): string {
 		$separator ??= static::$defaults['slug']['separator'];
 		$allowed   ??= static::$defaults['slug']['allowed'];
 
@@ -1056,18 +986,14 @@ class Str
 
 	/**
 	 * Convert a string to snake case.
-	 *
-	 * @param string $value
-	 * @param string $delimiter
-	 * @return string
 	 */
-	public static function snake(string $value = null, string $delimiter = '_'): string
+	public static function snake(string|null $string = null, string $delimiter = '_'): string
 	{
-		if (!ctype_lower($value)) {
-			$value = preg_replace('/\s+/u', '', ucwords($value));
-			$value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $value));
+		if (!ctype_lower($string)) {
+			$string = preg_replace('/\s+/u', '', ucwords($string));
+			$string = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $string));
 		}
-		return $value;
+		return $string;
 	}
 
 	/**
@@ -1081,8 +1007,11 @@ class Str
 	 * @param int $length The min length of values.
 	 * @return array An array of found values
 	 */
-	public static function split($string, string $separator = ',', int $length = 1): array
-	{
+	public static function split(
+		string|array|null $string,
+		string $separator = ',',
+		int $length = 1
+	): array {
 		if (is_array($string) === true) {
 			return $string;
 		}
@@ -1105,13 +1034,8 @@ class Str
 
 	/**
 	 * Checks if a string starts with the passed needle
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return bool
 	 */
-	public static function startsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
+	public static function startsWith(string|null $string = null, string $needle, bool $caseInsensitive = false): bool
 	{
 		if ($needle === '') {
 			return true;
@@ -1123,9 +1047,6 @@ class Str
 	/**
 	 * Converts a string to studly caps case
 	 * @since 3.7.0
-	 *
-	 * @param string $value The string to convert
-	 * @return string
 	 */
 	public static function studly(string $value = null): string
 	{
@@ -1134,13 +1055,8 @@ class Str
 
 	/**
 	 * A UTF-8 safe version of substr()
-	 *
-	 * @param string $string
-	 * @param int $start
-	 * @param int $length
-	 * @return string
 	 */
-	public static function substr(string $string = null, int $start = 0, int $length = null): string
+	public static function substr(string|null $string = null, int $start = 0, int|null $length = null): string
 	{
 		return mb_substr($string ?? '', $start, $length, 'UTF-8');
 	}
@@ -1166,7 +1082,7 @@ class Str
 	 *                       - end: end placeholder
 	 * @return string The filled-in string
 	 */
-	public static function template(string $string = null, array $data = [], array $options = []): string
+	public static function template(string|null $string = null, array $data = [], array $options = []): string
 	{
 		$fallback = $options['fallback'] ?? null;
 		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
@@ -1208,9 +1124,6 @@ class Str
 	/**
 	 * Converts a filesize string with shortcuts
 	 * like M, G or K to an integer value
-	 *
-	 * @param string $size
-	 * @return int
 	 */
 	public static function toBytes(string $size): int
 	{
@@ -1234,12 +1147,8 @@ class Str
 
 	/**
 	 * Convert the string to the given type
-	 *
-	 * @param string $string
-	 * @param mixed $type
-	 * @return mixed
 	 */
-	public static function toType($string, $type)
+	public static function toType(string|null $string, mixed $type): mixed
 	{
 		if (is_string($type) === false) {
 			$type = gettype($type);
@@ -1256,10 +1165,6 @@ class Str
 
 	/**
 	 * Safe trim alternative
-	 *
-	 * @param string $string
-	 * @param string $trim
-	 * @return string
 	 */
 	public static function trim(string $string, string $trim = ' '): string
 	{
@@ -1268,22 +1173,16 @@ class Str
 
 	/**
 	 * A UTF-8 safe version of ucfirst()
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function ucfirst(string $string = null): string
+	public static function ucfirst(string|null $string = null): string
 	{
 		return static::upper(static::substr($string, 0, 1)) . static::lower(static::substr($string, 1));
 	}
 
 	/**
 	 * A UTF-8 safe version of ucwords()
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function ucwords(string $string = null): string
+	public static function ucwords(string|null $string = null): string
 	{
 		return mb_convert_case($string ?? '', MB_CASE_TITLE, 'UTF-8');
 	}
@@ -1297,22 +1196,14 @@ class Str
 	 * // output: some uber crazy stuff
 	 *
 	 * </code>
-	 *
-	 * @param string $string
-	 * @return string The html string
 	 */
-	public static function unhtml(string $string = null): string
+	public static function unhtml(string|null $string = null): string
 	{
 		return Html::decode($string);
 	}
 
 	/**
 	 * Returns the beginning of a string until the given character
-	 *
-	 * @param string $string
-	 * @param string $needle
-	 * @param bool $caseInsensitive
-	 * @return string
 	 */
 	public static function until(string $string, string $needle, bool $caseInsensitive = false): string
 	{
@@ -1327,11 +1218,8 @@ class Str
 
 	/**
 	 * A UTF-8 safe version of strotoupper()
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function upper(string $string = null): string
+	public static function upper(string|null $string = null): string
 	{
 		return mb_strtoupper($string ?? '', 'UTF-8');
 	}
@@ -1340,8 +1228,6 @@ class Str
 	 * Creates a compliant v4 UUID
 	 * Taken from: https://github.com/symfony/polyfill
 	 * @since 3.7.0
-	 *
-	 * @return string
 	 */
 	public static function uuid(): string
 	{
@@ -1370,11 +1256,8 @@ class Str
 	 * The widont function makes sure that there are no
 	 * typographical widows at the end of a paragraph –
 	 * that's a single word in the last line
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function widont(string $string = null): string
+	public static function widont(string|null $string = null): string
 	{
 		// make sure $string is string
 		$string ??= '';
@@ -1400,9 +1283,8 @@ class Str
 	 * @param string $string String to wrap
 	 * @param string $before String to prepend
 	 * @param string|null $after String to append (if different from `$before`)
-	 * @return string
 	 */
-	public static function wrap(string $string, string $before, string $after = null): string
+	public static function wrap(string $string, string $before, string|null $after = null): string
 	{
 		return $before . $string . ($after ?? $before);
 	}

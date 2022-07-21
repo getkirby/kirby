@@ -19,11 +19,8 @@ use ReflectionFunction;
  */
 class Controller
 {
-	protected $function;
-
-	public function __construct(Closure $function)
+	public function __construct(protected Closure $function)
 	{
-		$this->function = $function;
 	}
 
 	public function arguments(array $data = []): array
@@ -39,7 +36,7 @@ class Controller
 		return $args;
 	}
 
-	public function call($bind = null, $data = [])
+	public function call(object|null $bind = null, array $data = []): mixed
 	{
 		$args = $this->arguments($data);
 
@@ -50,7 +47,7 @@ class Controller
 		return $this->function->call($bind, ...$args);
 	}
 
-	public static function load(string $file)
+	public static function load(string $file): static|null
 	{
 		if (is_file($file) === false) {
 			return null;

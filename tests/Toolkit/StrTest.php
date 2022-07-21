@@ -686,16 +686,6 @@ class StrTest extends TestCase
 	/**
 	 * @covers ::replace
 	 */
-	public function testReplaceInvalid2()
-	{
-		$this->expectException('Exception');
-
-		Str::replace('some string', 'string', 'other string', 'some invalid string as limit');
-	}
-
-	/**
-	 * @covers ::replace
-	 */
 	public function testReplaceInvalid3()
 	{
 		$this->expectException('Exception');

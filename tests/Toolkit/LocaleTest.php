@@ -146,11 +146,6 @@ class LocaleTest extends TestCase
 		$this->assertSame([
 			LC_ALL => 'test'
 		], Locale::normalize('test'));
-
-		// invalid argument
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Locale must be string or array');
-		Locale::normalize(123);
 	}
 
 	/**

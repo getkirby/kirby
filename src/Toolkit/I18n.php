@@ -18,44 +18,32 @@ class I18n
 {
 	/**
 	 * Custom loader function
-	 *
-	 * @var Closure
 	 */
-	public static $load = null;
+	public static Closure|null $load = null;
 
 	/**
 	 * Current locale
-	 *
-	 * @var string|\Closure
 	 */
-	public static $locale = 'en';
+	public static string|Closure|null $locale = 'en';
 
 	/**
 	 * All registered translations
-	 *
-	 * @var array
 	 */
-	public static $translations = [];
+	public static array $translations = [];
 
 	/**
 	 * The fallback locale or a
 	 * list of fallback locales
-	 *
-	 * @var string|array|\Closure
 	 */
-	public static $fallback = ['en'];
+	public static string|array|Closure|null $fallback = ['en'];
 
 	/**
 	 * Cache of `NumberFormatter` objects by locale
-	 *
-	 * @var array
 	 */
-	protected static $decimalsFormatters = [];
+	protected static array $decimalsFormatters = [];
 
 	/**
 	 * Returns the list of fallback locales
-	 *
-	 * @return array
 	 */
 	public static function fallbacks(): array
 	{
@@ -77,9 +65,7 @@ class I18n
 	 * Returns singular or plural
 	 * depending on the given number
 	 *
-	 * @param int $count
 	 * @param bool $none If true, 'none' will be returned if the count is 0
-	 * @return string
 	 */
 	public static function form(int $count, bool $none = false): string
 	{
@@ -92,12 +78,8 @@ class I18n
 
 	/**
 	 * Formats a number
-	 *
-	 * @param int|float $number
-	 * @param string $locale
-	 * @return string
 	 */
-	public static function formatNumber($number, string $locale = null): string
+	public static function formatNumber(int|float $number, string|null $locale = null): string
 	{
 		$locale    ??= static::locale();
 		$formatter   = static::decimalNumberFormatter($locale);
@@ -107,8 +89,6 @@ class I18n
 
 	/**
 	 * Returns the locale code
-	 *
-	 * @return string
 	 */
 	public static function locale(): string
 	{
@@ -126,14 +106,12 @@ class I18n
 	/**
 	 * Translates a given message
 	 * according to the currently set locale
-	 *
-	 * @param string|array $key
-	 * @param string|array|null $fallback
-	 * @param string|null $locale
-	 * @return string|array|null
 	 */
-	public static function translate($key, $fallback = null, string $locale = null)
-	{
+	public static function translate(
+		string|array|null $key,
+		string|array|null $fallback = null,
+		string|null $locale = null
+	): mixed {
 		$locale ??= static::locale();
 
 		if (is_array($key) === true) {
@@ -178,15 +156,13 @@ class I18n
 	/**
 	 * Translate by key and then replace
 	 * placeholders in the text
-	 *
-	 * @param string $key
-	 * @param string|array|null $fallback
-	 * @param array|null $replace
-	 * @param string|null $locale
-	 * @return string
 	 */
-	public static function template(string $key, $fallback = null, array|null $replace = null, string|null $locale = null): string
-	{
+	public static function template(
+		string $key,
+		string|array|null $fallback = null,
+		array|null $replace = null,
+		string|null $locale = null
+	): string {
 		if (is_array($fallback) === true) {
 			$replace  = $fallback;
 			$fallback = null;
@@ -205,11 +181,8 @@ class I18n
 	 * Returns the current or any other translation
 	 * by locale. If the translation does not exist
 	 * yet, the loader will try to load it, if defined.
-	 *
-	 * @param string|null $locale
-	 * @return array
 	 */
-	public static function translation(string $locale = null): array
+	public static function translation(string|null $locale = null): array
 	{
 		$locale ??= static::locale();
 
@@ -232,8 +205,6 @@ class I18n
 
 	/**
 	 * Returns all loaded or defined translations
-	 *
-	 * @return array
 	 */
 	public static function translations(): array
 	{
@@ -242,16 +213,17 @@ class I18n
 
 	/**
 	 * Returns (and creates) a decimal number formatter for a given locale
-	 *
-	 * @return \NumberFormatter|null
 	 */
-	protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
+	protected static function decimalNumberFormatter(string $locale): NumberFormatter|null
 	{
 		if (isset(static::$decimalsFormatters[$locale])) {
 			return static::$decimalsFormatters[$locale];
 		}
 
-		if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
+		if (
+			extension_loaded('intl') !== true ||
+			class_exists('NumberFormatter') !== true
+		) {
 			return null; // @codeCoverageIgnore
 		}
 
@@ -268,14 +240,14 @@ class I18n
 	 *   defined, the template that is defined last in the translation array is used
 	 * - Translation is a callback with a `$count` argument: Returns the callback return value
 	 *
-	 * @param string $key
-	 * @param int $count
-	 * @param string|null $locale
 	 * @param bool $formatNumber If set to `false`, the count is not formatted
-	 * @return mixed
 	 */
-	public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
-	{
+	public static function translateCount(
+		string $key,
+		int $count,
+		string|null $locale = null,
+		bool $formatNumber = true
+	): string|null {
 		$locale    ??= static::locale();
 		$translation = static::translate($key, null, $locale);
 

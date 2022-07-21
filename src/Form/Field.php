@@ -38,17 +38,13 @@ class Field extends Component
 
 	/**
 	 * Registry for all component mixins
-	 *
-	 * @var array
 	 */
-	public static $mixins = [];
+	public static array $mixins = [];
 
 	/**
 	 * Registry for all component types
-	 *
-	 * @var array
 	 */
-	public static $types = [];
+	public static array $types = [];
 
 	/**
 	 * Field constructor

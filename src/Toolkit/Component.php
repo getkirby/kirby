@@ -21,69 +21,49 @@ class Component
 {
 	/**
 	 * Registry for all component mixins
-	 *
-	 * @var array
 	 */
-	public static $mixins = [];
+	public static array $mixins = [];
 
 	/**
 	 * Registry for all component types
-	 *
-	 * @var array
 	 */
-	public static $types = [];
+	public static array $types = [];
 
 	/**
 	 * An array of all passed attributes
-	 *
-	 * @var array
 	 */
-	protected $attrs = [];
+	protected array $attrs = [];
 
 	/**
 	 * An array of all computed properties
-	 *
-	 * @var array
 	 */
-	protected $computed = [];
+	protected array $computed = [];
 
 	/**
 	 * An array of all registered methods
-	 *
-	 * @var array
 	 */
-	protected $methods = [];
+	protected array $methods = [];
 
 	/**
 	 * An array of all component options
 	 * from the component definition
-	 *
-	 * @var array
 	 */
-	protected $options = [];
+	protected array|string $options = [];
 
 	/**
 	 * An array of all resolved props
-	 *
-	 * @var array
 	 */
-	protected $props = [];
+	protected array $props = [];
 
 	/**
 	 * The component type
-	 *
-	 * @var string
 	 */
-	protected $type;
+	protected string $type;
 
 	/**
 	 * Magic caller for defined methods and properties
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $name, array $arguments = [])
+	public function __call(string $name, array $arguments = []): mixed
 	{
 		if (array_key_exists($name, $this->computed) === true) {
 			return $this->computed[$name];
@@ -102,9 +82,6 @@ class Component
 
 	/**
 	 * Creates a new component for the given type
-	 *
-	 * @param string $type
-	 * @param array $attrs
 	 */
 	public function __construct(string $type, array $attrs = [])
 	{
@@ -136,8 +113,6 @@ class Component
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -148,7 +123,6 @@ class Component
 	 * Fallback for missing properties to return
 	 * null instead of an error
 	 *
-	 * @param string $attr
 	 * @return null
 	 */
 	public function __get(string $attr)
@@ -161,8 +135,6 @@ class Component
 	 * This can be overwritten by extended classes
 	 * to define basic options that should always
 	 * be applied.
-	 *
-	 * @return array
 	 */
 	public static function defaults(): array
 	{
@@ -172,9 +144,6 @@ class Component
 	/**
 	 * Register all defined props and apply the
 	 * passed values.
-	 *
-	 * @param array $props
-	 * @return void
 	 */
 	protected function applyProps(array $props): void
 	{
@@ -202,9 +171,6 @@ class Component
 	/**
 	 * Register all computed properties and calculate their values.
 	 * This must happen after all props are registered.
-	 *
-	 * @param array $computed
-	 * @return void
 	 */
 	protected function applyComputed(array $computed): void
 	{
@@ -217,9 +183,6 @@ class Component
 
 	/**
 	 * Load a component definition by type
-	 *
-	 * @param string $type
-	 * @return array
 	 */
 	public static function load(string $type): array
 	{
@@ -242,9 +205,6 @@ class Component
 	 * mixes in the defaults from the defaults method and
 	 * then injects all additional mixins, defined in the
 	 * component options.
-	 *
-	 * @param string $type
-	 * @return array
 	 */
 	public static function setup(string $type): array
 	{
@@ -278,8 +238,6 @@ class Component
 
 	/**
 	 * Converts all props and computed props to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

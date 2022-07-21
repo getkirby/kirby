@@ -19,8 +19,6 @@ class Obj extends stdClass
 {
 	/**
 	 * Constructor
-	 *
-	 * @param array $data
 	 */
 	public function __construct(array $data = [])
 	{
@@ -31,20 +29,14 @@ class Obj extends stdClass
 
 	/**
 	 * Magic getter
-	 *
-	 * @param string $property
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $property, array $arguments)
+	public function __call(string $property, array $arguments): mixed
 	{
 		return $this->$property ?? null;
 	}
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -53,11 +45,8 @@ class Obj extends stdClass
 
 	/**
 	 * Magic property getter
-	 *
-	 * @param string $property
-	 * @return mixed
 	 */
-	public function __get(string $property)
+	public function __get(string $property): mixed
 	{
 		return null;
 	}
@@ -65,12 +54,10 @@ class Obj extends stdClass
 	/**
 	 * Gets one or multiple properties of the object
 	 *
-	 * @param string|array $property
 	 * @param mixed $fallback If multiple properties are requested:
 	 *                        Associative array of fallback values per key
-	 * @return mixed
 	 */
-	public function get($property, $fallback = null)
+	public function get(string|array $property, mixed $fallback = null): mixed
 	{
 		if (is_array($property)) {
 			if ($fallback === null) {
@@ -93,15 +80,16 @@ class Obj extends stdClass
 
 	/**
 	 * Converts the object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
 		$result = [];
 
 		foreach ((array)$this as $key => $value) {
-			if (is_object($value) === true && method_exists($value, 'toArray')) {
+			if (
+				is_object($value) === true &&
+				method_exists($value, 'toArray')
+			) {
 				$result[$key] = $value->toArray();
 			} else {
 				$result[$key] = $value;
@@ -113,9 +101,6 @@ class Obj extends stdClass
 
 	/**
 	 * Converts the object to a json string
-	 *
-	 * @param mixed ...$arguments
-	 * @return string
 	 */
 	public function toJson(...$arguments): string
 	{

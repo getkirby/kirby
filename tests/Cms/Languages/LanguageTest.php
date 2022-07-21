@@ -159,16 +159,6 @@ class LanguageTest extends TestCase
 		$this->assertEquals('en_US', $language->locale(LC_MONETARY));
 	}
 
-	public function testLocaleInvalid()
-	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-
-		$language = new Language([
-			'code' => 'en',
-			'locale' => 123
-		]);
-	}
-
 	public function testLocaleDefault()
 	{
 		$language = new Language([
