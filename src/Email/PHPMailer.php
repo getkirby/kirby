@@ -21,8 +21,6 @@ class PHPMailer extends Email
 	/**
 	 * Sends email via PHPMailer library
 	 *
-	 * @param bool $debug
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function send(bool $debug = false): bool

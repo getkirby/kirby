@@ -24,89 +24,31 @@ class Email
 	/**
 	 * If set to `true`, the debug mode is enabled
 	 * for all emails
-	 *
-	 * @var bool
 	 */
-	public static $debug = false;
+	public static bool $debug = false;
 
 	/**
 	 * Store for sent emails when `Email::$debug`
 	 * is set to `true`
-	 *
-	 * @var array
 	 */
-	public static $emails = [];
+	public static array $emails = [];
 
-	/**
-	 * @var array|null
-	 */
-	protected $attachments;
-
-	/**
-	 * @var \Kirby\Email\Body|null
-	 */
-	protected $body;
-
-	/**
-	 * @var array|null
-	 */
-	protected $bcc;
-
-	/**
-	 * @var \Closure|null
-	 */
-	protected $beforeSend;
-
-	/**
-	 * @var array|null
-	 */
-	protected $cc;
-
-	/**
-	 * @var string|null
-	 */
-	protected $from;
-
-	/**
-	 * @var string|null
-	 */
-	protected $fromName;
-
-	/**
-	 * @var string|null
-	 */
-	protected $replyTo;
-
-	/**
-	 * @var string|null
-	 */
-	protected $replyToName;
-
-	/**
-	 * @var bool
-	 */
-	protected $isSent = false;
-
-	/**
-	 * @var string|null
-	 */
-	protected $subject;
-
-	/**
-	 * @var array|null
-	 */
-	protected $to;
-
-	/**
-	 * @var array|null
-	 */
-	protected $transport;
+	protected array|null $attachments = null;
+	protected Body|null $body = null;
+	protected array|null $bcc = null;
+	protected Closure|null $beforeSend = null;
+	protected array|null $cc = null;
+	protected string|null $from = null;
+	protected string|null $fromName = null;
+	protected string|null $replyTo = null;
+	protected string|null $replyToName = null;
+	protected bool $isSent = false;
+	protected string|null $subject = null;
+	protected array|null $to = null;
+	protected array|null $transport = null;
 
 	/**
 	 * Email constructor
-	 *
-	 * @param array $props
-	 * @param bool $debug
 	 */
 	public function __construct(array $props = [], bool $debug = false)
 	{
@@ -123,8 +65,6 @@ class Email
 
 	/**
 	 * Returns the email attachments
-	 *
-	 * @return array
 	 */
 	public function attachments(): array
 	{
@@ -133,18 +73,14 @@ class Email
 
 	/**
 	 * Returns the email body
-	 *
-	 * @return \Kirby\Email\Body|null
 	 */
-	public function body()
+	public function body(): Body|null
 	{
 		return $this->body;
 	}
 
 	/**
 	 * Returns "bcc" recipients
-	 *
-	 * @return array
 	 */
 	public function bcc(): array
 	{
@@ -154,8 +90,6 @@ class Email
 	/**
 	 * Returns the beforeSend callback closure,
 	 * which has access to the PHPMailer instance
-	 *
-	 * @return \Closure|null
 	 */
 	public function beforeSend(): Closure|null
 	{
@@ -164,8 +98,6 @@ class Email
 
 	/**
 	 * Returns "cc" recipients
-	 *
-	 * @return array
 	 */
 	public function cc(): array
 	{
@@ -174,8 +106,6 @@ class Email
 
 	/**
 	 * Returns default transport settings
-	 *
-	 * @return array
 	 */
 	protected function defaultTransport(): array
 	{
@@ -186,8 +116,6 @@ class Email
 
 	/**
 	 * Returns the "from" email address
-	 *
-	 * @return string
 	 */
 	public function from(): string
 	{
@@ -196,8 +124,6 @@ class Email
 
 	/**
 	 * Returns the "from" name
-	 *
-	 * @return string|null
 	 */
 	public function fromName(): string|null
 	{
@@ -206,18 +132,14 @@ class Email
 
 	/**
 	 * Checks if the email has an HTML body
-	 *
-	 * @return bool
 	 */
-	public function isHtml()
+	public function isHtml(): bool
 	{
 		return empty($this->body()->html()) === false;
 	}
 
 	/**
 	 * Checks if the email has been sent successfully
-	 *
-	 * @return bool
 	 */
 	public function isSent(): bool
 	{
@@ -226,8 +148,6 @@ class Email
 
 	/**
 	 * Returns the "reply to" email address
-	 *
-	 * @return string
 	 */
 	public function replyTo(): string
 	{
@@ -236,8 +156,6 @@ class Email
 
 	/**
 	 * Returns the "reply to" name
-	 *
-	 * @return string|null
 	 */
 	public function replyToName(): string|null
 	{
@@ -247,13 +165,12 @@ class Email
 	/**
 	 * Converts single or multiple email addresses to a sanitized format
 	 *
-	 * @param string|array|null $email
-	 * @param bool $multiple
-	 * @return array|mixed|string
 	 * @throws \Exception
 	 */
-	protected function resolveEmail($email = null, bool $multiple = true)
-	{
+	protected function resolveEmail(
+		string|array|null $email = null,
+		bool $multiple = true
+	): array|string {
 		if ($email === null) {
 			return $multiple === true ? [] : '';
 		}
@@ -284,8 +201,6 @@ class Email
 
 	/**
 	 * Sends the email
-	 *
-	 * @return bool
 	 */
 	public function send(): bool
 	{
@@ -295,10 +210,9 @@ class Email
 	/**
 	 * Sets the email attachments
 	 *
-	 * @param array|null $attachments
 	 * @return $this
 	 */
-	protected function setAttachments($attachments = null)
+	protected function setAttachments(array|null $attachments = null): static
 	{
 		$this->attachments = $attachments ?? [];
 		return $this;
@@ -307,10 +221,9 @@ class Email
 	/**
 	 * Sets the email body
 	 *
-	 * @param string|array $body
 	 * @return $this
 	 */
-	protected function setBody($body)
+	protected function setBody(string|array $body): static
 	{
 		if (is_string($body) === true) {
 			$body = ['text' => $body];
@@ -323,10 +236,9 @@ class Email
 	/**
 	 * Sets "bcc" recipients
 	 *
-	 * @param string|array|null $bcc
 	 * @return $this
 	 */
-	protected function setBcc($bcc = null)
+	protected function setBcc(string|array|null $bcc = null): static
 	{
 		$this->bcc = $this->resolveEmail($bcc);
 		return $this;
@@ -335,10 +247,9 @@ class Email
 	/**
 	 * Sets the "beforeSend" callback
 	 *
-	 * @param \Closure|null $beforeSend
 	 * @return $this
 	 */
-	protected function setBeforeSend(Closure|null $beforeSend = null)
+	protected function setBeforeSend(Closure|null $beforeSend = null): static
 	{
 		$this->beforeSend = $beforeSend;
 		return $this;
@@ -347,10 +258,9 @@ class Email
 	/**
 	 * Sets "cc" recipients
 	 *
-	 * @param string|array|null $cc
 	 * @return $this
 	 */
-	protected function setCc($cc = null)
+	protected function setCc(string|array|null $cc = null): static
 	{
 		$this->cc = $this->resolveEmail($cc);
 		return $this;
@@ -359,10 +269,9 @@ class Email
 	/**
 	 * Sets the "from" email address
 	 *
-	 * @param string $from
 	 * @return $this
 	 */
-	protected function setFrom(string $from)
+	protected function setFrom(string $from): static
 	{
 		$this->from = $this->resolveEmail($from, false);
 		return $this;
@@ -371,10 +280,9 @@ class Email
 	/**
 	 * Sets the "from" name
 	 *
-	 * @param string|null $fromName
 	 * @return $this
 	 */
-	protected function setFromName(string $fromName = null)
+	protected function setFromName(string|null $fromName = null): static
 	{
 		$this->fromName = $fromName;
 		return $this;
@@ -383,10 +291,9 @@ class Email
 	/**
 	 * Sets the "reply to" email address
 	 *
-	 * @param string|null $replyTo
 	 * @return $this
 	 */
-	protected function setReplyTo(string $replyTo = null)
+	protected function setReplyTo(string|null $replyTo = null): static
 	{
 		$this->replyTo = $this->resolveEmail($replyTo, false);
 		return $this;
@@ -395,10 +302,9 @@ class Email
 	/**
 	 * Sets the "reply to" name
 	 *
-	 * @param string|null $replyToName
 	 * @return $this
 	 */
-	protected function setReplyToName(string $replyToName = null)
+	protected function setReplyToName(string|null $replyToName = null): static
 	{
 		$this->replyToName = $replyToName;
 		return $this;
@@ -407,10 +313,9 @@ class Email
 	/**
 	 * Sets the email subject
 	 *
-	 * @param string $subject
 	 * @return $this
 	 */
-	protected function setSubject(string $subject)
+	protected function setSubject(string $subject): static
 	{
 		$this->subject = $subject;
 		return $this;
@@ -419,10 +324,9 @@ class Email
 	/**
 	 * Sets the recipients of the email
 	 *
-	 * @param string|array $to
 	 * @return $this
 	 */
-	protected function setTo($to)
+	protected function setTo(string|array $to): static
 	{
 		$this->to = $this->resolveEmail($to);
 		return $this;
@@ -431,10 +335,9 @@ class Email
 	/**
 	 * Sets the email transport settings
 	 *
-	 * @param array|null $transport
 	 * @return $this
 	 */
-	protected function setTransport($transport = null)
+	protected function setTransport(array|null $transport = null): static
 	{
 		$this->transport = $transport;
 		return $this;
@@ -442,8 +345,6 @@ class Email
 
 	/**
 	 * Returns the email subject
-	 *
-	 * @return string
 	 */
 	public function subject(): string
 	{
@@ -452,8 +353,6 @@ class Email
 
 	/**
 	 * Returns the email recipients
-	 *
-	 * @return array
 	 */
 	public function to(): array
 	{
@@ -462,8 +361,6 @@ class Email
 
 	/**
 	 * Returns the email transports settings
-	 *
-	 * @return array
 	 */
 	public function transport(): array
 	{
