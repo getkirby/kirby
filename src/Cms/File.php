@@ -74,7 +74,7 @@ class File extends ModelWithContent
 	 *
 	 * @var string|null
 	 */
-	protected $root;
+	protected string|null $root = null;
 
 	/**
 	 * @var string
@@ -86,7 +86,7 @@ class File extends ModelWithContent
 	 *
 	 * @var string
 	 */
-	protected $url;
+	protected string|null $url = null;
 
 	/**
 	 * Magic caller for file methods
