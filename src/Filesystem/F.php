@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Exception;
+use IntlDateFormatter;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -22,10 +23,7 @@ use ZipArchive;
  */
 class F
 {
-	/**
-	 * @var array
-	 */
-	public static $types = [
+	public static array $types = [
 		'archive' => [
 			'gz',
 			'gzip',
@@ -110,17 +108,23 @@ class F
 		],
 	];
 
-	/**
-	 * @var array
-	 */
-	public static $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	public static array $units = [
+		'B',
+		'KB',
+		'MB',
+		'GB',
+		'TB',
+		'PB',
+		'EB',
+		'ZB',
+		'YB'
+	];
 
 	/**
 	 * Appends new content to an existing file
 	 *
 	 * @param string $file The path for the file
 	 * @param mixed $content Either a string or an array. Arrays will be converted to JSON.
-	 * @return bool
 	 */
 	public static function append(string $file, $content): bool
 	{
@@ -131,7 +135,6 @@ class F
 	 * Returns the file content as base64 encoded string
 	 *
 	 * @param string $file The path for the file
-	 * @return string
 	 */
 	public static function base64(string $file): string
 	{
@@ -140,11 +143,6 @@ class F
 
 	/**
 	 * Copy a file to a new location.
-	 *
-	 * @param string $source
-	 * @param string $target
-	 * @param bool $force
-	 * @return bool
 	 */
 	public static function copy(string $source, string $target, bool $force = false): bool
 	{
@@ -173,7 +171,6 @@ class F
 	 * </code>
 	 *
 	 * @param string $file The path
-	 * @return string
 	 */
 	public static function dirname(string $file): string
 	{
@@ -182,12 +179,8 @@ class F
 
 	/**
 	 * Checks if the file exists on disk
-	 *
-	 * @param string $file
-	 * @param string $in
-	 * @return bool
 	 */
-	public static function exists(string $file, string $in = null): bool
+	public static function exists(string $file, string|null $in = null): bool
 	{
 		try {
 			static::realpath($file, $in);
@@ -200,12 +193,13 @@ class F
 	/**
 	 * Gets the extension of a file
 	 *
-	 * @param string $file The filename or path
-	 * @param string $extension Set an optional extension to overwrite the current one
-	 * @return string
+	 * @param string|null $file The filename or path
+	 * @param string|null $extension Set an optional extension to overwrite the current one
 	 */
-	public static function extension(string $file = null, string $extension = null): string
-	{
+	public static function extension(
+		string|null $file = null,
+		string|null $extension = null
+	): string {
 		// overwrite the current extension
 		if ($extension !== null) {
 			return static::name($file) . '.' . $extension;
@@ -217,22 +211,16 @@ class F
 
 	/**
 	 * Converts a file extension to a mime type
-	 *
-	 * @param string $extension
-	 * @return string|false
 	 */
-	public static function extensionToMime(string $extension)
+	public static function extensionToMime(string $extension): string|null
 	{
 		return Mime::fromExtension($extension);
 	}
 
 	/**
 	 * Returns the file type for a passed extension
-	 *
-	 * @param string $extension
-	 * @return string|false
 	 */
-	public static function extensionToType(string $extension)
+	public static function extensionToType(string $extension): string|false
 	{
 		foreach (static::$types as $type => $extensions) {
 			if (in_array($extension, $extensions) === true) {
@@ -245,11 +233,8 @@ class F
 
 	/**
 	 * Returns all extensions for a certain file type
-	 *
-	 * @param string $type
-	 * @return array
 	 */
-	public static function extensions(string $type = null)
+	public static function extensions(string|null $type = null): array
 	{
 		if ($type === null) {
 			return array_keys(Mime::types());
@@ -269,7 +254,6 @@ class F
 	 * </code>
 	 *
 	 * @param string $name The path
-	 * @return string
 	 */
 	public static function filename(string $name): string
 	{
@@ -280,15 +264,17 @@ class F
 	 * Invalidate opcode cache for file.
 	 *
 	 * @param string $file The path of the file
-	 * @return bool
 	 */
 	public static function invalidateOpcodeCache(string $file): bool
 	{
-		if (function_exists('opcache_invalidate') && strlen(ini_get('opcache.restrict_api')) === 0) {
+		if (
+			function_exists('opcache_invalidate') &&
+			strlen(ini_get('opcache.restrict_api')) === 0
+		) {
 			return opcache_invalidate($file, true);
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**
@@ -296,7 +282,6 @@ class F
 	 *
 	 * @param string $file Full path to the file
 	 * @param string $value An extension or mime type
-	 * @return bool
 	 */
 	public static function is(string $file, string $value): bool
 	{
@@ -315,9 +300,6 @@ class F
 
 	/**
 	 * Checks if the file is readable
-	 *
-	 * @param string $file
-	 * @return bool
 	 */
 	public static function isReadable(string $file): bool
 	{
@@ -326,9 +308,6 @@ class F
 
 	/**
 	 * Checks if the file is writable
-	 *
-	 * @param string $file
-	 * @return bool
 	 */
 	public static function isWritable(string $file): bool
 	{
@@ -341,11 +320,6 @@ class F
 
 	/**
 	 * Create a (symbolic) link to a file
-	 *
-	 * @param string $source
-	 * @param string $link
-	 * @param string $method
-	 * @return bool
 	 */
 	public static function link(string $source, string $link, string $method = 'link'): bool
 	{
@@ -370,12 +344,9 @@ class F
 	 * Loads a file and returns the result or `false` if the
 	 * file to load does not exist
 	 *
-	 * @param string $file
-	 * @param mixed $fallback
 	 * @param array $data Optional array of variables to extract in the variable scope
-	 * @return mixed
 	 */
-	public static function load(string $file, $fallback = null, array $data = [])
+	public static function load(string $file, mixed $fallback = null, array $data = []): mixed
 	{
 		if (is_file($file) === false) {
 			return $fallback;
@@ -396,10 +367,6 @@ class F
 	/**
 	 * A super simple class autoloader
 	 * @since 3.7.0
-	 *
-	 * @param array $classmap
-	 * @param string|null $base
-	 * @return void
 	 */
 	public static function loadClasses(array $classmap, string|null $base = null): void
 	{
@@ -424,11 +391,9 @@ class F
 	/**
 	 * Loads a file with as little as possible in the variable scope
 	 *
-	 * @param string $file
 	 * @param array $data Optional array of variables to extract in the variable scope
-	 * @return mixed
 	 */
-	protected static function loadIsolated(string $file, array $data = [])
+	protected static function loadIsolated(string $file, array $data = []): mixed
 	{
 		// extract the $data variables in this scope to be accessed by the included file;
 		// protect $file against being overwritten by a $data variable
@@ -439,10 +404,8 @@ class F
 	}
 
 	/**
-	 * Loads a file using `include_once()` and returns whether loading was successful
-	 *
-	 * @param string $file
-	 * @return bool
+	 * Loads a file using `include_once()` and
+	 * returns whether loading was successful
 	 */
 	public static function loadOnce(string $file): bool
 	{
@@ -456,33 +419,24 @@ class F
 
 	/**
 	 * Returns the mime type of a file
-	 *
-	 * @param string $file
-	 * @return string|false
 	 */
-	public static function mime(string $file)
+	public static function mime(string $file): string|null
 	{
 		return Mime::type($file);
 	}
 
 	/**
 	 * Converts a mime type to a file extension
-	 *
-	 * @param string $mime
-	 * @return string|false
 	 */
-	public static function mimeToExtension(string $mime = null)
+	public static function mimeToExtension(string|null $mime = null): string|false
 	{
 		return Mime::toExtension($mime);
 	}
 
 	/**
 	 * Returns the type for a given mime
-	 *
-	 * @param string $mime
-	 * @return string|false
 	 */
-	public static function mimeToType(string $mime)
+	public static function mimeToType(string $mime): string|false
 	{
 		return static::extensionToType(Mime::toExtension($mime));
 	}
@@ -490,13 +444,13 @@ class F
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string $file
-	 * @param string|\IntlDateFormatter|null $format
 	 * @param string $handler date, intl or strftime
-	 * @return mixed
 	 */
-	public static function modified(string $file, $format = null, string $handler = 'date')
-	{
+	public static function modified(
+		string $file,
+		string|IntlDateFormatter|null $format = null,
+		string $handler = 'date'
+	): string|int|false {
 		if (file_exists($file) !== true) {
 			return false;
 		}
@@ -512,7 +466,6 @@ class F
 	 * @param string $oldRoot The current path for the file
 	 * @param string $newRoot The path to the new location
 	 * @param bool $force Force move if the target file exists
-	 * @return bool
 	 */
 	public static function move(string $oldRoot, string $newRoot, bool $force = false): bool
 	{
@@ -542,7 +495,6 @@ class F
 	 * Extracts the name from a file path or filename without extension
 	 *
 	 * @param string $name The path or filename
-	 * @return string
 	 */
 	public static function name(string $name): string
 	{
@@ -552,14 +504,15 @@ class F
 	/**
 	 * Converts an integer size into a human readable format
 	 *
-	 * @param mixed $size The file size, a file path or array of paths
-	 * @param string|null|false $locale Locale for number formatting,
+	 * @param int|string|array $size The file size, a file path or array of paths
+	 * @param string|false|null $locale Locale for number formatting,
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
-	 * @return string
 	 */
-	public static function niceSize($size, $locale = null): string
-	{
+	public static function niceSize(
+		int|string|array $size,
+		string|false|null $locale = null
+	): string {
 		// file mode
 		if (is_string($size) === true || is_array($size) === true) {
 			$size = static::size($size);
@@ -589,9 +542,8 @@ class F
 	 * contents of a remote HTTP or HTTPS URL
 	 *
 	 * @param string $file The path for the file or an absolute URL
-	 * @return string|false
 	 */
-	public static function read(string $file)
+	public static function read(string $file): string|false
 	{
 		if (
 			is_file($file) !== true &&
@@ -608,12 +560,9 @@ class F
 	 * Changes the name of the file without
 	 * touching the extension
 	 *
-	 * @param string $file
-	 * @param string $newName
 	 * @param bool $overwrite Force overwrite existing files
-	 * @return string|false
 	 */
-	public static function rename(string $file, string $newName, bool $overwrite = false)
+	public static function rename(string $file, string $newName, bool $overwrite = false): string|false
 	{
 		// create the new name
 		$name = static::safeName(basename($newName));
@@ -635,12 +584,8 @@ class F
 
 	/**
 	 * Returns the absolute path to the file if the file can be found.
-	 *
-	 * @param string $file
-	 * @param string $in
-	 * @return string|null
 	 */
-	public static function realpath(string $file, string $in = null)
+	public static function realpath(string $file, string|null $in = null): string
 	{
 		$realpath = realpath($file);
 
@@ -668,12 +613,8 @@ class F
 	 * starting after $in
 	 *
 	 * @SuppressWarnings(PHPMD.CountInLoopExpression)
-	 *
-	 * @param string $file
-	 * @param string $in
-	 * @return string
 	 */
-	public static function relativepath(string $file, string $in = null): string
+	public static function relativepath(string $file, string|null $in = null): string
 	{
 		if (empty($in) === true) {
 			return basename($file);
@@ -714,7 +655,6 @@ class F
 	 * </code>
 	 *
 	 * @param string $file The path for the file
-	 * @return bool
 	 */
 	public static function remove(string $file): bool
 	{
@@ -746,7 +686,6 @@ class F
 	 * </code>
 	 *
 	 * @param string $string The file name
-	 * @return string
 	 */
 	public static function safeName(string $string): string
 	{
@@ -761,10 +700,6 @@ class F
 	/**
 	 * Tries to find similar or the same file by
 	 * building a glob based on the path
-	 *
-	 * @param string $path
-	 * @param string $pattern
-	 * @return array
 	 */
 	public static function similar(string $path, string $pattern = '*'): array
 	{
@@ -779,9 +714,8 @@ class F
 	 * Returns the size of a file or an array of files.
 	 *
 	 * @param string|array $file file path or array of paths
-	 * @return int
 	 */
-	public static function size($file): int
+	public static function size(string|array $file): int
 	{
 		if (is_array($file) === true) {
 			return array_reduce(
@@ -802,9 +736,8 @@ class F
 	 * Categorize the file
 	 *
 	 * @param string $file Either the file path or extension
-	 * @return string|null
 	 */
-	public static function type(string $file)
+	public static function type(string $file): string|null
 	{
 		$length = strlen($file);
 
@@ -837,9 +770,6 @@ class F
 	/**
 	 * Returns all extensions of a given file type
 	 * or `null` if the file type is unknown
-	 *
-	 * @param string $type
-	 * @return array|null
 	 */
 	public static function typeToExtensions(string $type): array|null
 	{
@@ -848,10 +778,6 @@ class F
 
 	/**
 	 * Unzips a zip file
-	 *
-	 * @param string $file
-	 * @param string $to
-	 * @return bool
 	 */
 	public static function unzip(string $file, string $to): bool
 	{
@@ -874,9 +800,8 @@ class F
 	 * Returns the file as data uri
 	 *
 	 * @param string $file The path for the file
-	 * @return string|false
 	 */
-	public static function uri(string $file)
+	public static function uri(string $file): string|false
 	{
 		if ($mime = static::mime($file)) {
 			return 'data:' . $mime . ';base64,' . static::base64($file);
@@ -891,9 +816,8 @@ class F
 	 * @param string $file The path for the new file
 	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 * @param bool $append true: append the content to an existing file if available. false: overwrite.
-	 * @return bool
 	 */
-	public static function write(string $file, $content, bool $append = false): bool
+	public static function write(string $file, mixed $content, bool $append = false): bool
 	{
 		if (is_array($content) === true || is_object($content) === true) {
 			$content = serialize($content);
