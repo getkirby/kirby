@@ -32,8 +32,8 @@ return [
 		'slugs'        => fn () => Str::$language,
 		'title'        => fn () => $this->site()->title()->value(),
 		'translation' => function () {
-			$code   = $this->user()?->language();
-			$code ??= $this->kirby()->panelLanguage();
+			$code = $this->user()?->language() ??
+					$this->kirby()->panelLanguage();
 
 			if ($translation = $this->kirby()->translation($code)) {
 				return $translation;
