@@ -34,8 +34,7 @@ class KirbyTag
 		array $attrs = [],
 		array $data = [],
 		array $options = []
-	)
-	{
+	) {
 		// type aliases
 		if (isset(static::$types[$type]) === false) {
 			if (isset(static::$aliases[$type]) === false) {
