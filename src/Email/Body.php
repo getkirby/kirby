@@ -19,20 +19,11 @@ class Body
 {
 	use Properties;
 
-	/**
-	 * @var string
-	 */
-	protected $html;
-
-	/**
-	 * @var string
-	 */
-	protected $text;
+	protected string|null $html = null;
+	protected string|null $text = null;
 
 	/**
 	 * Email body constructor
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props = [])
 	{
@@ -41,20 +32,16 @@ class Body
 
 	/**
 	 * Returns the HTML content of the email body
-	 *
-	 * @return string
 	 */
-	public function html()
+	public function html(): string
 	{
 		return $this->html ?? '';
 	}
 
 	/**
 	 * Returns the plain text content of the email body
-	 *
-	 * @return string
 	 */
-	public function text()
+	public function text(): string
 	{
 		return $this->text ?? '';
 	}
@@ -62,10 +49,9 @@ class Body
 	/**
 	 * Sets the HTML content for the email body
 	 *
-	 * @param string|null $html
 	 * @return $this
 	 */
-	protected function setHtml(string $html = null)
+	protected function setHtml(string|null $html = null): static
 	{
 		$this->html = $html;
 		return $this;
@@ -74,10 +60,9 @@ class Body
 	/**
 	 * Sets the plain text content for the email body
 	 *
-	 * @param string|null $text
 	 * @return $this
 	 */
-	protected function setText(string $text = null)
+	protected function setText(string|null $text = null): static
 	{
 		$this->text = $text;
 		return $this;
