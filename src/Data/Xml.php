@@ -18,22 +18,16 @@ class Xml extends Handler
 {
 	/**
 	 * Converts an array to an encoded XML string
-	 *
-	 * @param mixed $data
-	 * @return string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		return XmlConverter::create($data, 'data');
 	}
 
 	/**
 	 * Parses an encoded XML string and returns a multi-dimensional array
-	 *
-	 * @param mixed $string
-	 * @return array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
@@ -57,8 +51,8 @@ class Xml extends Handler
 			}
 
 			return $result;
-		} else {
-			throw new InvalidArgumentException('XML string is invalid');
 		}
+
+		throw new InvalidArgumentException('XML string is invalid');
 	}
 }

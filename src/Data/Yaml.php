@@ -18,11 +18,8 @@ class Yaml extends Handler
 {
 	/**
 	 * Converts an array to an encoded YAML string
-	 *
-	 * @param mixed $data
-	 * @return string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		// TODO: The locale magic should no longer be
 		//       necessary when support for PHP 7.x is dropped
@@ -44,11 +41,8 @@ class Yaml extends Handler
 
 	/**
 	 * Parses an encoded YAML string and returns a multi-dimensional array
-	 *
-	 * @param mixed $string
-	 * @return array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
