@@ -4,7 +4,7 @@ namespace Kirby\Email;
 
 use Closure;
 use Exception;
-use Kirby\Toolkit\Properties;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\V;
 
 /**
@@ -19,8 +19,6 @@ use Kirby\Toolkit\V;
  */
 class Email
 {
-	use Properties;
-
 	/**
 	 * If set to `true`, the debug mode is enabled
 	 * for all emails
@@ -33,26 +31,83 @@ class Email
 	 */
 	public static array $emails = [];
 
-	protected array|null $attachments = null;
-	protected Body|null $body = null;
-	protected array|null $bcc = null;
-	protected Closure|null $beforeSend = null;
-	protected array|null $cc = null;
-	protected string|null $from = null;
-	protected string|null $fromName = null;
-	protected string|null $replyTo = null;
-	protected string|null $replyToName = null;
+	protected array $attachments;
+	protected Body $body;
+	protected array $bcc;
+	protected Closure|null $beforeSend;
+	protected array $cc;
+	protected string $from;
+	protected string|null $fromName;
+	protected string|null $replyTo;
+	protected string|null $replyToName;
 	protected bool $isSent = false;
-	protected string|null $subject = null;
-	protected array|null $to = null;
-	protected array|null $transport = null;
+	protected string $subject;
+	protected array $to;
+	protected array|null $transport;
 
 	/**
 	 * Email constructor
 	 */
-	public function __construct(array $props = [], bool $debug = false)
-	{
-		$this->setProperties($props);
+	public function __construct(
+		array $props = null,
+		bool $debug = false,
+		array|null $attachments = null,
+		string|array $body = null,
+		string|array|null $bcc = null,
+		Closure|null $beforeSend = null,
+		string|array|null $cc = null,
+		// TODO: make required when dropping $props array
+		string|null $from = null,
+		string|null $fromName = null,
+		string|null $replyTo = null,
+		string|null $replyToName = null,
+		// TODO: make required when dropping $props array
+		string|null $subject = null,
+		string|array|null $to = null,
+		string|array|null $transport = null,
+	) {
+		// support deprecated passign props as array
+		// TODO: add deprecation warning at some point
+		// @codeCoverageIgnoreStart
+		if (is_array($props) === true) {
+			$attachments ??= $props['attachments'] ?? null;
+			$body 		 ??= $props['body'] ?? null;
+			$bcc 		 ??= $props['bcc'] ?? null;
+			$beforeSend  ??= $props['beforeSend'] ?? null;
+			$cc 		 ??= $props['cc'] ?? null;
+			$from 		 ??= $props['from'] ?? null;
+			$fromName 	 ??= $props['fromName'] ?? null;
+			$replyTo 	 ??= $props['replyTo'] ?? null;
+			$replyToName ??= $props['replyToName'] ?? null;
+			$subject 	 ??= $props['subject'] ?? null;
+			$to 		 ??= $props['to'] ?? null;
+			$transport   ??= $props['transport'] ?? null;
+		}
+		// @codeCoverageIgnoreEnd
+
+		// normalize parameters
+		if (is_string($body) === true) {
+			$body = ['text' => $body];
+		}
+
+		if ($from === null || $subject === null) {
+			// TODO: make parameters required when deprecating $props array
+			throw new InvalidArgumentException('$from, $subject are required');
+		}
+
+		// assign props
+		$this->attachments = $attachments ?? [];
+		$this->body 	   = new Body($body);
+		$this->bcc         = $this->resolveEmail($bcc);
+		$this->beforeSend  = $beforeSend;
+		$this->cc	       = $this->resolveEmail($cc);
+		$this->from	       = $this->resolveEmail($from, false);
+		$this->fromName	   = $fromName;
+		$this->replyTo	   = $this->resolveEmail($replyTo, false);
+		$this->replyToName = $replyToName;
+		$this->subject     = $subject;
+		$this->to	       = $this->resolveEmail($to);
+		$this->transport   = $transport;
 
 		// @codeCoverageIgnoreStart
 		if (static::$debug === false && $debug === false) {
@@ -205,142 +260,6 @@ class Email
 	public function send(): bool
 	{
 		return $this->isSent = true;
-	}
-
-	/**
-	 * Sets the email attachments
-	 *
-	 * @return $this
-	 */
-	protected function setAttachments(array|null $attachments = null): static
-	{
-		$this->attachments = $attachments ?? [];
-		return $this;
-	}
-
-	/**
-	 * Sets the email body
-	 *
-	 * @return $this
-	 */
-	protected function setBody(string|array $body): static
-	{
-		if (is_string($body) === true) {
-			$body = ['text' => $body];
-		}
-
-		$this->body = new Body($body);
-		return $this;
-	}
-
-	/**
-	 * Sets "bcc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setBcc(string|array|null $bcc = null): static
-	{
-		$this->bcc = $this->resolveEmail($bcc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "beforeSend" callback
-	 *
-	 * @return $this
-	 */
-	protected function setBeforeSend(Closure|null $beforeSend = null): static
-	{
-		$this->beforeSend = $beforeSend;
-		return $this;
-	}
-
-	/**
-	 * Sets "cc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setCc(string|array|null $cc = null): static
-	{
-		$this->cc = $this->resolveEmail($cc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" email address
-	 *
-	 * @return $this
-	 */
-	protected function setFrom(string $from): static
-	{
-		$this->from = $this->resolveEmail($from, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" name
-	 *
-	 * @return $this
-	 */
-	protected function setFromName(string|null $fromName = null): static
-	{
-		$this->fromName = $fromName;
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" email address
-	 *
-	 * @return $this
-	 */
-	protected function setReplyTo(string|null $replyTo = null): static
-	{
-		$this->replyTo = $this->resolveEmail($replyTo, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" name
-	 *
-	 * @return $this
-	 */
-	protected function setReplyToName(string|null $replyToName = null): static
-	{
-		$this->replyToName = $replyToName;
-		return $this;
-	}
-
-	/**
-	 * Sets the email subject
-	 *
-	 * @return $this
-	 */
-	protected function setSubject(string $subject): static
-	{
-		$this->subject = $subject;
-		return $this;
-	}
-
-	/**
-	 * Sets the recipients of the email
-	 *
-	 * @return $this
-	 */
-	protected function setTo(string|array $to): static
-	{
-		$this->to = $this->resolveEmail($to);
-		return $this;
-	}
-
-	/**
-	 * Sets the email transport settings
-	 *
-	 * @return $this
-	 */
-	protected function setTransport(array|null $transport = null): static
-	{
-		$this->transport = $transport;
-		return $this;
 	}
 
 	/**

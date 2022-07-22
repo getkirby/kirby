@@ -53,7 +53,7 @@ class EmailTest extends TestCase
 	public function testRequiredProperty()
 	{
 		$this->expectException('Exception');
-		$this->expectExceptionMessage('The property "from" is required');
+		$this->expectExceptionMessage('$from, $subject are required');
 
 		$email = $this->_email([
 			'from' => null
