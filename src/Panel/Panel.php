@@ -73,7 +73,10 @@ class Panel
 		// not yet authenticated
 		if (!$user) {
 			return [
-				'login' => static::area('login', $areas['login']),
+				'logout' => static::area('logout', $areas['logout']),
+
+				// login area last because it defines a fallback route
+				'login'  => static::area('login', $areas['login']),
 			];
 		}
 
