@@ -2,8 +2,6 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\Obj;
-
 /**
  * A wrapper around a URL query string
  * that converts it into a Kirby Obj for easier
@@ -15,33 +13,18 @@ use Kirby\Toolkit\Obj;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Query extends Obj
+class Query extends Identifiers
 {
-	public function __construct($query)
+	public function __construct(string|array|null $query)
 	{
 		if (is_string($query) === true) {
 			parse_str(ltrim($query, '?'), $query);
 		}
 
-		parent::__construct($query ?? []);
+		parent::__construct($query);
 	}
 
-	public function isEmpty(): bool
-	{
-		return empty((array)$this) === true;
-	}
-
-	public function isNotEmpty(): bool
-	{
-		return empty((array)$this) === false;
-	}
-
-	public function __toString(): string
-	{
-		return $this->toString();
-	}
-
-	public function toString($questionMark = false): string
+	public function toString(bool $questionMark = false): string
 	{
 		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
 

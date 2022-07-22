@@ -20,29 +20,10 @@ use Kirby\Toolkit\Str;
  */
 class Visitor
 {
-	/**
-	 * IP address
-	 * @var string|null
-	 */
-	protected $ip;
-
-	/**
-	 * user agent
-	 * @var string|null
-	 */
-	protected $userAgent;
-
-	/**
-	 * accepted language
-	 * @var string|null
-	 */
-	protected $acceptedLanguage;
-
-	/**
-	 * accepted mime type
-	 * @var string|null
-	 */
-	protected $acceptedMimeType;
+	protected string|null $ip = null;
+	protected string|null $userAgent = null;
+	protected string|null $acceptedLanguage = null;
+	protected string|null $acceptedMimeType = null;
 
 	/**
 	 * Creates a new visitor object.
@@ -50,8 +31,6 @@ class Visitor
 	 * modify the information about the visitor.
 	 *
 	 * By default everything is pulled from $_SERVER
-	 *
-	 * @param array $arguments
 	 */
 	public function __construct(array $arguments = [])
 	{
@@ -65,11 +44,8 @@ class Visitor
 	 * Sets the accepted language if
 	 * provided or returns the user's
 	 * accepted language otherwise
-	 *
-	 * @param string|null $acceptedLanguage
-	 * @return \Kirby\Toolkit\Obj|\Kirby\Http\Visitor|null
 	 */
-	public function acceptedLanguage(string $acceptedLanguage = null)
+	public function acceptedLanguage(string|null $acceptedLanguage = null): Obj|Visitor|null
 	{
 		if ($acceptedLanguage === null) {
 			return $this->acceptedLanguages()->first();
@@ -82,10 +58,8 @@ class Visitor
 	/**
 	 * Returns an array of all accepted languages
 	 * including their quality and locale
-	 *
-	 * @return \Kirby\Toolkit\Collection
 	 */
-	public function acceptedLanguages()
+	public function acceptedLanguages(): Collection
 	{
 		$accepted  = Str::accepted($this->acceptedLanguage);
 		$languages = [];
@@ -111,9 +85,6 @@ class Visitor
 
 	/**
 	 * Checks if the user accepts the given language
-	 *
-	 * @param string $code
-	 * @return bool
 	 */
 	public function acceptsLanguage(string $code): bool
 	{
@@ -133,10 +104,9 @@ class Visitor
 	 * provided or returns the user's
 	 * accepted mime type otherwise
 	 *
-	 * @param string|null $acceptedMimeType
-	 * @return \Kirby\Toolkit\Obj|\Kirby\Http\Visitor
+	 * @return $this|\Kirby\Toolkit\Obj|null
 	 */
-	public function acceptedMimeType(string $acceptedMimeType = null)
+	public function acceptedMimeType(string|null $acceptedMimeType = null): static|Obj|null
 	{
 		if ($acceptedMimeType === null) {
 			return $this->acceptedMimeTypes()->first();
@@ -148,10 +118,8 @@ class Visitor
 
 	/**
 	 * Returns a collection of all accepted mime types
-	 *
-	 * @return \Kirby\Toolkit\Collection
 	 */
-	public function acceptedMimeTypes()
+	public function acceptedMimeTypes(): Collection
 	{
 		$accepted = Str::accepted($this->acceptedMimeType);
 		$mimes    = [];
@@ -168,9 +136,6 @@ class Visitor
 
 	/**
 	 * Checks if the user accepts the given mime type
-	 *
-	 * @param string $mimeType
-	 * @return bool
 	 */
 	public function acceptsMimeType(string $mimeType): bool
 	{
@@ -208,8 +173,6 @@ class Visitor
 	 * Returns true if the visitor prefers a JSON response over
 	 * an HTML response based on the `Accept` request header
 	 * @since 3.3.0
-	 *
-	 * @return bool
 	 */
 	public function prefersJson(): bool
 	{
@@ -221,10 +184,9 @@ class Visitor
 	 * or returns the ip of the current
 	 * visitor otherwise
 	 *
-	 * @param string|null $ip
-	 * @return string|Visitor|null
+	 * @return $this|string|null
 	 */
-	public function ip(string $ip = null)
+	public function ip(string|null $ip = null): static|string|null
 	{
 		if ($ip === null) {
 			return $this->ip;
@@ -238,10 +200,9 @@ class Visitor
 	 * or returns the user agent string of
 	 * the current visitor otherwise
 	 *
-	 * @param string|null $userAgent
-	 * @return string|Visitor|null
+	 * @return $this|string|null
 	 */
-	public function userAgent(string $userAgent = null)
+	public function userAgent(string|null $userAgent = null): static|string|null
 	{
 		if ($userAgent === null) {
 			return $this->userAgent;

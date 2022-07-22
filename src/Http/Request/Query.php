@@ -19,10 +19,8 @@ class Query
 
 	/**
 	 * The Query data array
-	 *
-	 * @var array|null
 	 */
-	protected $data;
+	protected array|null $data;
 
 	/**
 	 * Creates a new Query object.
@@ -30,10 +28,8 @@ class Query
 	 * or a parsable query string. If
 	 * null is passed, the current Query
 	 * will be taken from $_GET
-	 *
-	 * @param array|string|null $data
 	 */
-	public function __construct($data = null)
+	public function __construct(array|string|null $data = null)
 	{
 		if ($data === null) {
 			$this->data = $_GET;
@@ -47,8 +43,6 @@ class Query
 
 	/**
 	 * Returns the Query data as array
-	 *
-	 * @return array
 	 */
 	public function data(): array
 	{
@@ -57,8 +51,6 @@ class Query
 
 	/**
 	 * Returns `true` if the request doesn't contain query variables
-	 *
-	 * @return bool
 	 */
 	public function isEmpty(): bool
 	{
@@ -67,8 +59,6 @@ class Query
 
 	/**
 	 * Returns `true` if the request contains query variables
-	 *
-	 * @return bool
 	 */
 	public function isNotEmpty(): bool
 	{
@@ -78,8 +68,6 @@ class Query
 	/**
 	 * Converts the query data array
 	 * back to a query string
-	 *
-	 * @return string
 	 */
 	public function toString(): string
 	{
@@ -88,8 +76,6 @@ class Query
 
 	/**
 	 * Magic string converter
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{

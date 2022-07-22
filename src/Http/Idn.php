@@ -17,31 +17,22 @@ class Idn
 {
 	/**
 	 * Convert domain name from IDNA ASCII to Unicode
-	 *
-	 * @param string $domain
-	 * @return string|false
 	 */
-	public static function decode(string $domain)
+	public static function decode(string $domain): string|false
 	{
 		return idn_to_utf8($domain);
 	}
 
 	/**
 	 * Convert domain name to IDNA ASCII form
-	 *
-	 * @param string $domain
-	 * @return string|false
 	 */
-	public static function encode(string $domain)
+	public static function encode(string $domain): string|false
 	{
 		return idn_to_ascii($domain);
 	}
 
 	/**
 	 * Decodes a email address to the Unicode format
-	 *
-	 * @param string $email
-	 * @return string
 	 */
 	public static function decodeEmail(string $email): string
 	{
@@ -57,9 +48,6 @@ class Idn
 
 	/**
 	 * Encodes a email address to the Punycode format
-	 *
-	 * @param string $email
-	 * @return string
 	 */
 	public static function encodeEmail(string $email): string
 	{

@@ -19,9 +19,8 @@ class Cookie
 {
 	/**
 	 * Key to use for cookie signing
-	 * @var string
 	 */
-	public static $key = 'KirbyHttpCookieKey';
+	public static string $key = 'KirbyHttpCookieKey';
 
 	/**
 	 * Set a new cookie
@@ -68,7 +67,6 @@ class Cookie
 	 * Calculates the lifetime for a cookie
 	 *
 	 * @param int $minutes Number of minutes or timestamp
-	 * @return int
 	 */
 	public static function lifetime(int $minutes): int
 	{
@@ -122,7 +120,7 @@ class Cookie
 	 *                             if the cookie has not been found
 	 * @return mixed The found value
 	 */
-	public static function get(string $key = null, string $default = null)
+	public static function get(string|null $key = null, string|null $default = null): mixed
 	{
 		if ($key === null) {
 			return $_COOKIE;
@@ -137,9 +135,6 @@ class Cookie
 
 	/**
 	 * Checks if a cookie exists
-	 *
-	 * @param string $key
-	 * @return bool
 	 */
 	public static function exists(string $key): bool
 	{
@@ -149,9 +144,6 @@ class Cookie
 	/**
 	 * Creates a HMAC for the cookie value
 	 * Used as a cookie signature to prevent easy tampering with cookie data
-	 *
-	 * @param string $value
-	 * @return string
 	 */
 	protected static function hmac(string $value): string
 	{
@@ -161,11 +153,8 @@ class Cookie
 	/**
 	 * Parses the hashed value from a cookie
 	 * and tries to extract the value
-	 *
-	 * @param string $string
-	 * @return mixed
 	 */
-	protected static function parse(string $string)
+	protected static function parse(string $string): string|null
 	{
 		// if no hash-value separator is present, we can't parse the value
 		if (strpos($string, '+') === false) {
@@ -178,7 +167,11 @@ class Cookie
 
 		// if the hash or the value is missing at all return null
 		// $value can be an empty string, $hash can't be!
-		if (!is_string($hash) || $hash === '' || !is_string($value)) {
+		if (
+			is_string($hash) === false ||
+			$hash === '' ||
+			is_string($value) === false
+		) {
 			return null;
 		}
 
@@ -221,9 +214,6 @@ class Cookie
 	 * this ensures that the response is only cached for visitors who don't
 	 * have this cookie set;
 	 * https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
-	 *
-	 * @param string $key
-	 * @return void
 	 */
 	protected static function trackUsage(string $key): void
 	{

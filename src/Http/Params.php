@@ -15,34 +15,26 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Params extends Query
+class Params extends Identifiers
 {
-	/**
-	 * @var null|string
-	 */
-	public static $separator;
+	public static string|null $separator = null;
 
 	/**
 	 * Creates a new params object
-	 *
-	 * @param array|string $params
 	 */
-	public function __construct($params)
+	public function __construct(array|string|null $params)
 	{
 		if (is_string($params) === true) {
 			$params = static::extract($params)['params'];
 		}
 
-		parent::__construct($params ?? []);
+		parent::__construct($params);
 	}
 
 	/**
 	 * Extract the params from a string or array
-	 *
-	 * @param string|array|null $path
-	 * @return array
 	 */
-	public static function extract($path = null): array
+	public static function extract(string|array|null $path = null): array
 	{
 		if (empty($path) === true) {
 			return [
@@ -99,8 +91,6 @@ class Params extends Query
 	 *
 	 * Unix = ':'
 	 * Windows = ';'
-	 *
-	 * @return string
 	 */
 	public static function separator(): string
 	{
@@ -110,26 +100,16 @@ class Params extends Query
 
 		if (DIRECTORY_SEPARATOR === '/') {
 			return static::$separator = ':';
-		} else {
-			return static::$separator = ';';
 		}
+
+		return static::$separator = ';';
 	}
 
 	/**
 	 * Converts the params object to a params string
 	 * which can then be used in the URL builder again
-	 *
-	 * @param bool $leadingSlash
-	 * @param bool $trailingSlash
-	 * @return string|null
-	 *
-	 * @todo The argument $leadingSlash is incompatible with
-	 *       Query::toString($questionMark = false); the Query class
-	 *       should be extracted into a common parent class for both
-	 *       Query and Params
-	 * @psalm-suppress ParamNameMismatch
 	 */
-	public function toString($leadingSlash = false, $trailingSlash = false): string
+	public function toString(bool $leadingSlash = false, bool $trailingSlash = false): string
 	{
 		if ($this->isEmpty() === true) {
 			return '';
