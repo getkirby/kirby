@@ -206,6 +206,16 @@ class Block extends Item
 	}
 
 	/**
+	 * Returns the sibling collection that filtered by block status
+	 *
+	 * @return \Kirby\Cms\Collection
+	 */
+	protected function siblingsCollection()
+	{
+		return $this->siblings->filter('isHidden', $this->isHidden());
+	}
+
+	/**
 	 * Returns the block type
 	 *
 	 * @return string
