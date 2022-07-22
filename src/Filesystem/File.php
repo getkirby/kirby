@@ -9,7 +9,6 @@ use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
-use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\V;
 
 /**
@@ -26,17 +25,15 @@ use Kirby\Toolkit\V;
  */
 class File
 {
-	use Properties;
-
 	/**
 	 * Absolute file path
 	 */
-	protected string|null $root = null;
+	protected string|null $root;
 
 	/**
 	 * Absolute file URL
 	 */
-	protected string|null $url = null;
+	protected string|null $url;
 
 	/**
 	 * Validation rules to be used for `::match()`
@@ -50,25 +47,19 @@ class File
 
 	/**
 	 * Constructor sets all file properties
-	 *
-	 * @param array|string|null $props Properties or deprecated `$root` string
-	 * @param string|null $url Deprecated argument, use `$props['url']` instead
 	 */
 	public function __construct(
-		array|string|null $props = null,
+		string|null|array $root = null,
 		string|null $url = null
 	) {
-		// Legacy support for old constructor of
-		// the `Kirby\Image\Image` class
-		// @todo 4.0.0 remove
-		if (is_array($props) === false) {
-			$props = [
-				'root' => $props,
-				'url'  => $url
-			];
+		// TODO: remove when dropping $props array support
+		if (is_array($root) === true) {
+			$url ??= $root['url'] ?? null;
+			$root  = $root['root'] ?? null;
 		}
 
-		$this->setProperties($props);
+		$this->root = $root;
+		$this->url  = $url;
 	}
 
 	/**
@@ -420,28 +411,6 @@ class File
 	public function root(): string|null
 	{
 		return $this->root;
-	}
-
-	/**
-	 * Setter for the root
-	 *
-	 * @return $this
-	 */
-	protected function setRoot(string|null $root = null): static
-	{
-		$this->root = $root;
-		return $this;
-	}
-
-	/**
-	 * Setter for the file url
-	 *
-	 * @return $this
-	 */
-	protected function setUrl(string|null $url = null): static
-	{
-		$this->url = $url;
-		return $this;
 	}
 
 	/**
