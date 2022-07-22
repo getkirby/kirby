@@ -360,7 +360,7 @@
   "lock.unlock": "Déverrouiller",
   "lock.isUnlocked": "Vos modifications non enregistrées ont été écrasées pas un autre utilisateur. Vous pouvez télécharger vos modifications pour les fusionner manuellement.",
 
-  "login": "Se connecter",
+  "login": "Connexion",
   "login.code.label.login": "Code de connexion",
   "login.code.label.password-reset": "Code de réinitialisation du mot de passe",
   "login.code.placeholder.email": "000 000",

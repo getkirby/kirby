@@ -360,7 +360,7 @@
   "lock.unlock": "Odblokuj",
   "lock.isUnlocked": "Twoje niezapisane zmiany zostały nadpisane przez innego użytkownika. Możesz pobrać swoje zmiany, by scalić je ręcznie.",
 
-  "login": "Zaloguj",
+  "login": "Zaloguj się",
   "login.code.label.login": "Kod logowania się",
   "login.code.label.password-reset": "Kod resetowania hasła",
   "login.code.placeholder.email": "000 000",
