@@ -94,7 +94,7 @@ class Uri
 	 * Make sure that cloning also clones
 	 * the path and query objects
 	 */
-	public function __clone(): void
+	public function __clone()
 	{
 		$this->path   = clone $this->path;
 		$this->query  = clone $this->query;
