@@ -360,7 +360,7 @@
   "lock.unlock": "Kilidi Aç",
   "lock.isUnlocked": "Kaydedilmemiş değişikliklerin üzerine başka bir kullanıcı yazmış. Değişikliklerinizi el ile birleştirmek için değişikliklerinizi indirebilirsiniz.",
 
-  "login": "Giri\u015f",
+  "login": "Giriş",
   "login.code.label.login": "Giriş kodu",
   "login.code.label.password-reset": "Şifre sıfırlama kodu",
   "login.code.placeholder.email": "000 000",
