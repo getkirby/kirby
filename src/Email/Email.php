@@ -4,6 +4,7 @@ namespace Kirby\Email;
 
 use Closure;
 use Exception;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\V;
 
@@ -47,26 +48,29 @@ class Email
 
 	/**
 	 * Email constructor
+	 *
+	 * @todo Drop support for $props array,
+	 * 		 make parameters required for required props
 	 */
 	public function __construct(
+		// legacy parameters
 		array $props = null,
 		bool $debug = false,
-		array|null $attachments = null,
+		// new named parameters
+		array $attachments = null,
 		string|array $body = null,
-		string|array|null $bcc = null,
-		Closure|null $beforeSend = null,
-		string|array|null $cc = null,
-		// TODO: make required when dropping $props array
-		string|null $from = null,
-		string|null $fromName = null,
-		string|null $replyTo = null,
-		string|null $replyToName = null,
-		// TODO: make required when dropping $props array
-		string|null $subject = null,
-		string|array|null $to = null,
-		string|array|null $transport = null,
+		string|array $bcc = null,
+		Closure $beforeSend = null,
+		string|array $cc = null,
+		string $from = null,
+		string $fromName = null,
+		string $replyTo = null,
+		string $replyToName = null,
+		string $subject = null,
+		string|array $to = null,
+		string|array $transport = null,
 	) {
-		// support deprecated passign props as array
+		// support deprecated $props array
 		// TODO: add deprecation warning at some point
 		// @codeCoverageIgnoreStart
 		if (is_array($props) === true) {
@@ -83,16 +87,16 @@ class Email
 			$to 		 ??= $props['to'] ?? null;
 			$transport   ??= $props['transport'] ?? null;
 		}
+
+		// TODO: remove once parameters are non-optional
+		if ($from === null || $subject === null) {
+			throw new InvalidArgumentException('$from, $subject are required');
+		}
 		// @codeCoverageIgnoreEnd
 
 		// normalize parameters
 		if (is_string($body) === true) {
 			$body = ['text' => $body];
-		}
-
-		if ($from === null || $subject === null) {
-			// TODO: make parameters required when deprecating $props array
-			throw new InvalidArgumentException('$from, $subject are required');
 		}
 
 		// assign props
@@ -160,6 +164,73 @@ class Email
 	}
 
 	/**
+	 * Clone the email instance and
+	 * pass modified properties
+	 */
+	public function clone(
+		// legacy parameters
+		array $props = null,
+		// new named parameters
+		array $attachments = null,
+		string|array $body = null,
+		string|array $bcc = null,
+		Closure $beforeSend = null,
+		string|array $cc = null,
+		string $from = null,
+		string $fromName = null,
+		string $replyTo = null,
+		string $replyToName = null,
+		string $subject = null,
+		string|array $to = null,
+		string|array $transport = null,
+	): static {
+		// gather property values for new instance:
+		// passed value overrules value from legacy $props
+		// overrules old value from cloned properties
+		$args = [
+			'attachments' 	=> $attachments ??
+							   $props['attachments'] ??
+							   $this->attachments(),
+			'body' 			=> $body ??
+							   $props['body'] ??
+							   $this->body()?->toArray(),
+			'bcc' 			=> $bcc ??
+							   $props['bcc'] ??
+							   $this->bcc(),
+			'beforeSend'	=> $beforeSend ??
+							   $props['beforeSend'] ??
+							   $this->beforeSend(),
+			'cc'			=> $cc ??
+							   $props['cc'] ??
+							   $this->cc(),
+			'from'			=> $from ??
+							   $props['from'] ??
+							   $this->from(),
+			'fromName'		=> $fromName ??
+							   $props['fromName'] ??
+							   $this->fromName(),
+			'replyTo'		=> $replyTo ??
+							   $props['replyTo'] ??
+							   $this->replyTo(),
+			'replyToName'	=> $replyToName ??
+							   $props['replyToName'] ??
+							   $this->replyToName(),
+			'subject'		=> $subject ??
+							   $props['subject'] ??
+							   $this->subject(),
+			'to'			=> $to ??
+							   $props['to'] ??
+							   $this->to(),
+			'transport'		=> $transport ??
+							   $props['transport'] ??
+							   $this->transport()
+		];
+
+		// remove null values and create new instance
+		return new static(...array_filter($args));
+	}
+
+	/**
 	 * Returns the "from" email address
 	 */
 	public function from(): string
@@ -174,6 +245,21 @@ class Email
 	{
 		return $this->fromName;
 	}
+
+	/**
+	 * Creates an exact copy clone of
+	 * the existing instance
+	 *
+	 * @deprecated 3.8.0 Use `->clone()` instead
+	 * @todo Remove in 3.9.0
+	 * @codeCoverageIgnore
+	 */
+	public function hardcopy(): static
+	{
+		Helpers::deprecated('$email->hardcopy has been deprecated and will be remove in Kirby 3.9.0. Use $email->clone() instead.');
+		return $this->clone();
+	}
+
 
 	/**
 	 * Checks if the email has an HTML body

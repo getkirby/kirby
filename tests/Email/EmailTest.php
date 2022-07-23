@@ -55,7 +55,7 @@ class EmailTest extends TestCase
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('$from, $subject are required');
 
-		$email = $this->_email([
+		$this->_email([
 			'from' => null
 		]);
 	}
@@ -218,4 +218,21 @@ class EmailTest extends TestCase
 
 		$mail->send(true);
 	}
+
+	public function testClone()
+	{
+		$email = $this->_email([
+			'from' 	  => $from = 'no-reply@supercompany.com',
+			'body'	  => $body = 'We will never reply',
+			'to' 	  => $to = 'someone@gmail.com',
+			'subject' => $subject = 'Thank you'
+		]);
+		$clone = $email->clone(to: 'homer@simpson.com');
+
+		$this->assertSame($from, $clone->from());
+		$this->assertSame($body, $clone->body()->text());
+		$this->assertSame(['homer@simpson.com' => null], $clone->to());
+		$this->assertSame($subject, $clone->subject());
+	}
+
 }

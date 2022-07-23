@@ -51,4 +51,15 @@ class Body
 	{
 		return $this->text;
 	}
+
+	/**
+	 * Returns array of plain text and html
+	 */
+	public function toArray()
+	{
+		return [
+			'text' => $this->text(),
+			'html' => $this->html()
+		];
+	}
 }
