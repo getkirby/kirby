@@ -43,7 +43,7 @@ class Email
 	protected bool $isSent = false;
 	protected string $subject;
 	protected array $to;
-	protected array|null $transport;
+	protected array $transport;
 
 	/**
 	 * Email constructor
@@ -107,7 +107,7 @@ class Email
 		$this->replyToName = $replyToName;
 		$this->subject     = $subject;
 		$this->to	       = $this->resolveEmail($to);
-		$this->transport   = $transport;
+		$this->transport   = $transport ?? ['type' => 'mail'];
 
 		// @codeCoverageIgnoreStart
 		if (static::$debug === false && $debug === false) {
@@ -157,16 +157,6 @@ class Email
 	public function cc(): array
 	{
 		return $this->cc;
-	}
-
-	/**
-	 * Returns default transport settings
-	 */
-	protected function defaultTransport(): array
-	{
-		return [
-			'type' => 'mail'
-		];
 	}
 
 	/**
@@ -283,6 +273,6 @@ class Email
 	 */
 	public function transport(): array
 	{
-		return $this->transport ?? $this->defaultTransport();
+		return $this->transport;
 	}
 }
