@@ -27,11 +27,7 @@ trait AppTranslations
 	protected function i18n(): void
 	{
 		I18n::$load = function ($locale): array {
-			$data = [];
-
-			if ($translation = $this->translation($locale)) {
-				$data = $translation->data();
-			}
+			$data = $this->translation($locale)?->data() ?? [];
 
 			// inject translations from the current language
 			if (

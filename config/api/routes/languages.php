@@ -29,18 +29,14 @@ return [
 		'pattern' => 'languages/(:any)',
 		'method'  => 'PATCH',
 		'action'  => function (string $code) {
-			if ($language = $this->kirby()->languages()->find($code)) {
-				return $language->update($this->requestBody());
-			}
+			return $this->kirby()->languages()->find($code)?->update($this->requestBody());
 		}
 	],
 	[
 		'pattern' => 'languages/(:any)',
 		'method'  => 'DELETE',
 		'action'  => function (string $code) {
-			if ($language = $this->kirby()->languages()->find($code)) {
-				return $language->delete();
-			}
+			return $this->kirby()->languages()->find($code)?->delete();
 		}
 	]
 ];

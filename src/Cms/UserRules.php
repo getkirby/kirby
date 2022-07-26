@@ -179,14 +179,14 @@ class UserRules
 		$currentUser = $user->kirby()->user();
 
 		// admins are allowed everything
-		if ($currentUser && $currentUser->isAdmin() === true) {
+		if ($currentUser?->isAdmin() === true) {
 			return true;
 		}
 
 		// only admins are allowed to add admins
 		$role = $props['role'] ?? null;
 
-		if ($role === 'admin' && $currentUser && $currentUser->isAdmin() === false) {
+		if ($role === 'admin' && $currentUser?->isAdmin() === false) {
 			throw new PermissionException([
 				'key' => 'user.create.permission'
 			]);

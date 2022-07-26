@@ -698,11 +698,7 @@ class App
 				break;
 		}
 
-		if ($parent) {
-			return $parent->image($filename);
-		}
-
-		return null;
+		return $parent?->image($filename);
 	}
 
 	/**
@@ -938,11 +934,7 @@ class App
 	 */
 	public function languageCode(string $languageCode = null): string|null
 	{
-		if ($language = $this->language($languageCode)) {
-			return $language->code();
-		}
-
-		return null;
+		return $this->language($languageCode)?->code();
 	}
 
 	/**
