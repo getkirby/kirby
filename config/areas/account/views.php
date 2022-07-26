@@ -2,7 +2,6 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Panel\Panel;
 
 return [
 	'account' => [
@@ -17,16 +16,6 @@ return [
 		'action'  => function (string $filename) {
 			return Find::file('account', $filename)->panel()->view();
 		}
-	],
-	'account.logout' => [
-		'pattern' => 'logout',
-		'auth'    => false,
-		'action'  => function () {
-			if ($user = App::instance()->user()) {
-				$user->logout();
-			}
-			Panel::go('login');
-		},
 	],
 	'account.password' => [
 		'pattern' => 'reset-password',

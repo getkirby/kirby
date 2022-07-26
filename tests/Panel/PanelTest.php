@@ -98,7 +98,8 @@ class PanelTest extends TestCase
 		$areas = Panel::areas($this->app);
 
 		$this->assertArrayHasKey('login', $areas);
-		$this->assertCount(1, $areas);
+		$this->assertArrayHasKey('logout', $areas);
+		$this->assertCount(2, $areas);
 
 		// simulate a logged in user
 		$this->app->impersonate('test@getkirby.com');
@@ -110,7 +111,8 @@ class PanelTest extends TestCase
 		$this->assertArrayHasKey('system', $areas);
 		$this->assertArrayHasKey('users', $areas);
 		$this->assertArrayHasKey('account', $areas);
-		$this->assertCount(4, $areas);
+		$this->assertArrayHasKey('logout', $areas);
+		$this->assertCount(5, $areas);
 
 		// authenticated with plugins
 		$app = $this->app->clone([
@@ -126,7 +128,7 @@ class PanelTest extends TestCase
 		$areas = Panel::areas($app);
 
 		$this->assertArrayHasKey('todos', $areas);
-		$this->assertCount(5, $areas);
+		$this->assertCount(6, $areas);
 	}
 
 	/**

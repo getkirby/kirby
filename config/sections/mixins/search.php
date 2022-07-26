@@ -11,8 +11,8 @@ return [
 			return $search;
 		}
 	],
-	'computed' => [
-		'searchterm' => function (): string|null {
+	'methods' => [
+		'searchterm' => function (): string|null  {
 			return App::instance()->request()->get('searchterm');
 		}
 	]

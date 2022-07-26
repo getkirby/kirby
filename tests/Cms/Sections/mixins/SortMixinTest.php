@@ -86,8 +86,8 @@ class SortMixinTest extends TestCase
 	public function testSortableWhileSearching()
 	{
 		$section = new Section('test', [
-			'model' => $this->page,
-			'query' => 'searching …'
+			'model'      => $this->page,
+			'searchterm' => 'searching …'
 		]);
 
 		$this->assertFalse($section->sortable());

@@ -24,6 +24,7 @@
 			@discard="onFormDiscard"
 			@paginate="onFormPaginate($event.offset)"
 			@submit="onFormSubmit"
+			@input="onInput"
 		/>
 
 		<!-- Empty State -->

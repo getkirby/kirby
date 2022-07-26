@@ -99,8 +99,8 @@ return [
 			});
 
 			// search
-			if ($this->search === true && empty($this->searchterm) === false) {
-				$pages = $pages->search($this->searchterm);
+			if ($this->search === true && empty($this->searchterm()) === false) {
+				$pages = $pages->search($this->searchterm());
 			}
 
 			// sort

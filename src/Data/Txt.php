@@ -71,6 +71,7 @@ class Txt extends Handler
 	 */
 	protected static function encodeResult(string $key, string $value): string
 	{
+		$value = trim($value);
 		$result = $key . ':';
 
 		// multi-line content
@@ -80,7 +81,7 @@ class Txt extends Handler
 			$result .= ' ';
 		}
 
-		$result .= trim($value);
+		$result .= $value;
 
 		return $result;
 	}
