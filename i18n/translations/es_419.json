@@ -360,7 +360,7 @@
   "lock.unlock": "Desbloquear",
   "lock.isUnlocked": "Tus cambios sin guardar han sido sobrescritos por otro usuario. Puedes descargar los cambios y fusionarlos manualmente.",
 
-  "login": "Iniciar sesi\u00f3n",
+  "login": "Iniciar sesión",
   "login.code.label.login": "Login code",
   "login.code.label.password-reset": "Password reset code",
   "login.code.placeholder.email": "000 000",

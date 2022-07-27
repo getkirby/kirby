@@ -61,21 +61,6 @@ class AccountTest extends AreaTestCase
 		$this->assertSame('The file "no-exist.jpg" cannot be found', $props['error']);
 	}
 
-	public function testLogout(): void
-	{
-		$this->install();
-		$this->login();
-
-		$this->assertRedirect('logout', 'login');
-	}
-
-	public function testLogoutGuestAccess(): void
-	{
-		$this->install();
-
-		$this->assertRedirect('logout', 'login');
-	}
-
 	public function testResetPassword(): void
 	{
 		$this->install();
