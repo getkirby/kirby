@@ -3,6 +3,8 @@
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
 use Kirby\Cms\PluginAssets;
+use Kirby\Cms\Response;
+use Kirby\Filesystem\F;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
@@ -47,7 +49,21 @@ return function ($kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/index.(css|js)',
+			'pattern' => $media . "/panel/(:any)/js/_index.js",
+			'env'			=> 'media',
+			'action'	=> function ($hash) use ($kirby, $media) {
+				$script = F::read($kirby->root('media') . "/panel/$hash/js/index.js");
+				$plugin_url = $media . '/plugins/index.mjs';
+
+				// only prepend if browser supports top-level await
+				// or option is set?
+				$script = "import \"$plugin_url\";$script";
+
+				return new Response($script, 'mjs');
+			}
+		],
+		[
+			'pattern' => $media . '/plugins/index.(css|m?js)',
 			'env'     => 'media',
 			'action'  => function (string $type) use ($kirby) {
 				$plugins = new Plugins();

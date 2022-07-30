@@ -95,7 +95,7 @@ class Document
 				],
 				'index'        => [
 					'nonce' => $nonce,
-					'src'   => $url . '/js/index.js',
+					'src'   => $url . '/js/_index.js',
 					'type'  => 'module'
 				],
 			]

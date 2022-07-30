@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Kirby\Toolkit\A;
+use Kirby\Data\Json;
 
 /**
  * The Plugins class takes care of collecting
@@ -42,6 +44,7 @@ class Plugins
 		foreach (App::instance()->plugins() as $plugin) {
 			$this->files[] = $plugin->root() . '/index.css';
 			$this->files[] = $plugin->root() . '/index.js';
+			$this->files[] = $plugin->root() . '/index.mjs';
 		}
 
 		return $this->files;
@@ -75,9 +78,24 @@ class Plugins
 	{
 		$dist = [];
 
-		foreach ($this->files() as $file) {
+		$files = $this->files();
+
+		// filter out .js files that have an .mjs counterpart (which takes precedence)
+		if ($type === 'js') {
+			$files = A::filter(
+			  $files,
+			  fn($f) => Str::endsWith($f, '.js') && !F::exists(preg_replace('/\.js$/', '.mjs', $f))
+		  );
+		}
+
+		foreach ($files as $file) {
 			if (F::extension($file) === $type) {
 				if ($content = F::read($file)) {
+					if ($type === 'mjs') {
+						$path = F::relativepath($file, App::instance()->root());
+						$content = App::instance()->url() . $path;
+					}
+
 					if ($type === 'js') {
 						$content = trim($content);
 
@@ -90,6 +108,11 @@ class Plugins
 					$dist[] = $content;
 				}
 			}
+		}
+
+		if ($type === 'mjs') {
+			$modules = Json::encode($dist);
+			return "try { await Promise.all($modules.map(url => import(url)))} catch (e) {console.error(e)}";
 		}
 
 		return implode(PHP_EOL . PHP_EOL, $dist);
