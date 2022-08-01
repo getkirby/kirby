@@ -86,11 +86,7 @@ class PagePicker extends Picker
 			return $this->parent();
 		}
 
-		if ($items = $this->items()) {
-			return $items->parent();
-		}
-
-		return null;
+		return $this->items()?->parent();
 	}
 
 	/**
@@ -238,11 +234,7 @@ class PagePicker extends Picker
 	public function start()
 	{
 		if (empty($this->options['query']) === false) {
-			if ($items = $this->itemsForQuery()) {
-				return $items->parent();
-			}
-
-			return $this->site;
+			return $this->itemsForQuery()?->parent() ?? $this->site;
 		}
 
 		return $this->site;

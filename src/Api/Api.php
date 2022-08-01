@@ -133,11 +133,7 @@ class Api
 	 */
 	public function authenticate()
 	{
-		if ($auth = $this->authentication()) {
-			return $auth->call($this);
-		}
-
-		return true;
+		return $this->authentication()?->call($this) ?? true;
 	}
 
 	/**

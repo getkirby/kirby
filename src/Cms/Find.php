@@ -33,7 +33,7 @@ class Find
 		$filename = urldecode($filename);
 		$file     = static::parent($path)->file($filename);
 
-		if ($file && $file->isReadable() === true) {
+		if ($file?->isReadable() === true) {
 			return $file;
 		}
 
@@ -78,7 +78,7 @@ class Find
 		$id   = str_replace(['+', ' '], '/', $id);
 		$page = App::instance()->page($id);
 
-		if ($page && $page->isReadable() === true) {
+		if ($page?->isReadable() === true) {
 			return $page;
 		}
 

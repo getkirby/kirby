@@ -117,11 +117,8 @@ return [
 					return $img;
 				}
 
-				if ($link = $tag->file($tag->link)) {
-					$link = $link->url();
-				} else {
-					$link = $tag->link === 'self' ? $tag->src : $tag->link;
-				}
+				$link   = $tag->file($tag->link)?->url();
+				$link ??= $tag->link === 'self' ? $tag->src : $tag->link;
 
 				return Html::a($link, [$img], [
 					'rel'    => $tag->rel,

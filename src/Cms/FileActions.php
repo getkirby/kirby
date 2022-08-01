@@ -235,9 +235,7 @@ trait FileActions
 			$file->unpublish();
 
 			// remove the lock of the old file
-			if ($lock = $file->lock()) {
-				$lock->remove();
-			}
+			$file->lock()?->remove();
 
 			if ($file->kirby()->multilang() === true) {
 				foreach ($file->translations() as $translation) {

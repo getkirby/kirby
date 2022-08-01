@@ -99,13 +99,9 @@ class I18n
 	 */
 	public static function formatNumber($number, string $locale = null): string
 	{
-		$locale ??= static::locale();
-
-		$formatter = static::decimalNumberFormatter($locale);
-		if ($formatter !== null) {
-			$number = $formatter->format($number);
-		}
-
+		$locale    ??= static::locale();
+		$formatter   = static::decimalNumberFormatter($locale);
+		$number      = $formatter?->format($number) ?? $number;
 		return (string)$number;
 	}
 

@@ -12,9 +12,7 @@ return [
 		'pattern' => $pattern . '/files/(:any)/sections/(:any)',
 		'method'  => 'GET',
 		'action'  => function (string $path, string $filename, string $sectionName) {
-			if ($section = $this->file($path, $filename)->blueprint()->section($sectionName)) {
-				return $section->toResponse();
-			}
+			return $this->file($path, $filename)->blueprint()->section($sectionName)?->toResponse();
 		}
 	],
 	[

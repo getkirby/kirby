@@ -636,9 +636,7 @@ class Auth
 		$this->impersonate = null;
 
 		// logout the current user if it exists
-		if ($user = $this->user()) {
-			$user->logout();
-		}
+		$this->user()?->logout();
 
 		// clear the pending challenge
 		$session = $this->kirby->session();
