@@ -105,12 +105,10 @@ trait IsFile
 			'url'  => $this->url()
 		];
 
-		switch ($this->type()) {
-			case 'image':
-				return $this->asset = new Image($props);
-			default:
-				return $this->asset = new File($props);
-		}
+		return $this->asset = match ($this->type()) {
+			'image' => new Image($props),
+			default => new File($props)
+		};
 	}
 
 	/**

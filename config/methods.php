@@ -99,13 +99,10 @@ return function (App $app) {
 		 * @return array
 		 */
 		'toData' => function (Field $field, string $method = ',') {
-			switch ($method) {
-				case 'yaml':
-				case 'json':
-					return Data::decode($field->value, $method);
-				default:
-					return $field->split($method);
-			}
+			return match ($method) {
+				'yaml', 'json' => Data::decode($field->value, $method),
+				default        => $field->split($method)
+			};
 		},
 
 		/**

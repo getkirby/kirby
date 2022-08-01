@@ -527,17 +527,12 @@ class Html extends Xml
 		$uri   = new Uri($url);
 		$path  = $uri->path();
 		$query = $uri->query();
-		$id    = null;
 
-		switch ($uri->host()) {
-			case 'vimeo.com':
-			case 'www.vimeo.com':
-				$id = $path->last();
-				break;
-			case 'player.vimeo.com':
-				$id = $path->nth(1);
-				break;
-		}
+		$id = match ($uri->host()) {
+			'vimeo.com', 'www.vimeo.com' => $path->last(),
+			'player.vimeo.com'           => $path->nth(1),
+			default                      => null
+		};
 
 		if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
 			return null;

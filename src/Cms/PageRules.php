@@ -97,16 +97,12 @@ class PageRules
 			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
 		}
 
-		switch ($status) {
-			case 'draft':
-				return static::changeStatusToDraft($page);
-			case 'listed':
-				return static::changeStatusToListed($page, $position);
-			case 'unlisted':
-				return static::changeStatusToUnlisted($page);
-			default:
-				throw new InvalidArgumentException(['key' => 'page.status.invalid']);
-		}
+		return match ($status) {
+			'draft'     => static::changeStatusToDraft($page),
+			'listed'    => static::changeStatusToListed($page, $position),
+			'unlisted'  => static::changeStatusToUnlisted($page),
+			default     => throw new InvalidArgumentException(['key' => 'page.status.invalid'])
+		};
 	}
 
 	/**

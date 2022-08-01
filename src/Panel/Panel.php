@@ -275,16 +275,12 @@ class Panel
 		}
 
 		// handle different response types (view, dialog, ...)
-		switch ($options['type'] ?? null) {
-			case 'dialog':
-				return Dialog::response($result, $options);
-			case 'dropdown':
-				return Dropdown::response($result, $options);
-			case 'search':
-				return Search::response($result, $options);
-			default:
-				return View::response($result, $options);
-		}
+		return match ($options['type'] ?? null) {
+			'dialog'   => Dialog::response($result, $options),
+			'dropdown' => Dropdown::response($result, $options),
+			'search'   => Search::response($result, $options),
+			default    => View::response($result, $options)
+		};
 	}
 
 	/**

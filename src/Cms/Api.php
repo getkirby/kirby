@@ -140,20 +140,14 @@ class Api extends BaseApi
 	{
 		$parent = $parentId === null ? $this->site() : $this->page($parentId);
 
-		switch ($status) {
-			case 'all':
-				return $parent->childrenAndDrafts();
-			case 'draft':
-			case 'drafts':
-				return $parent->drafts();
-			case 'listed':
-				return $parent->children()->listed();
-			case 'unlisted':
-				return $parent->children()->unlisted();
-			case 'published':
-			default:
-				return $parent->children();
-		}
+		return match ($status) {
+			'all'             => $parent->childrenAndDrafts(),
+			'draft', 'drafts' => $parent->drafts(),
+			'listed'          => $parent->children()->listed(),
+			'unlisted'        => $parent->children()->unlisted(),
+			'published'       => $parent->children(),
+			default           => $parent->children()
+		};
 	}
 
 	/**

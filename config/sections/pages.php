@@ -62,22 +62,13 @@ return [
 			return $parent;
 		},
 		'pages' => function () {
-			switch ($this->status) {
-				case 'draft':
-					$pages = $this->parent->drafts();
-					break;
-				case 'listed':
-					$pages = $this->parent->children()->listed();
-					break;
-				case 'published':
-					$pages = $this->parent->children();
-					break;
-				case 'unlisted':
-					$pages = $this->parent->children()->unlisted();
-					break;
-				default:
-					$pages = $this->parent->childrenAndDrafts();
-			}
+			$pages = match ($this->status) {
+				'draft'     => $this->parent->drafts(),
+				'listed'    => $this->parent->children()->listed(),
+				'published' => $this->parent->children(),
+				'unlisted'  => $this->parent->children()->unlisted(),
+				default     => $this->parent->childrenAndDrafts()
+			};
 
 			// filters pages that are protected and not in the templates list
 			// internal `filter()` method used instead of foreach loop that previously included `unset()`

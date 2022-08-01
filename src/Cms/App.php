@@ -686,17 +686,11 @@ class App
 			$uri = null;
 		}
 
-		switch ($uri) {
-			case '/':
-				$parent = $this->site();
-				break;
-			case null:
-				$parent = $this->site()->page();
-				break;
-			default:
-				$parent = $this->site()->page($uri);
-				break;
-		}
+		$parent = match ($uri) {
+			'/'     => $this->site(),
+			null    => $this->site()->page(),
+			default => $this->site()->page($uri)
+		};
 
 		return $parent?->image($filename);
 	}
