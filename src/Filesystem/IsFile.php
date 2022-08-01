@@ -105,9 +105,9 @@ trait IsFile
 			'url'  => $this->url()
 		];
 
-		return match ($this->type()) {
-			'image' => $this->asset = new Image($props),
-			default => $this->asset = new File($props)
+		return $this->asset = match ($this->type()) {
+			'image' => new Image($props),
+			default => new File($props)
 		};
 	}
 
