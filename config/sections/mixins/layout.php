@@ -96,9 +96,13 @@ return [
 	'methods' => [
 		'columnsValues' => function (array $item, $model) {
 			$item['title'] = [
-				'text' => $item['text'],
+				'text' => $model->toString($this->text),
 				'href' => $model->panel()->url(true)
 			];
+
+			if ($this->info) {
+				$item['info'] = $model->toString($this->info);
+			}
 
 			foreach ($this->columns as $columnName => $column) {
 				// don't overwrite essential columns
@@ -107,11 +111,7 @@ return [
 				}
 
 				if (empty($column['value']) === false) {
-					if ($column['type'] ?? false === 'html') {
-						$value = $model->toString($column['value']);
-					} else {
-						$value = $model->toSafeString($column['value']);
-					}
+					$value = $model->toString($column['value']);
 				} else {
 					$value = $model->content()->get($column['id'] ?? $columnName)->value();
 				}
