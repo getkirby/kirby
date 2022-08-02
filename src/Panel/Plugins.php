@@ -44,7 +44,8 @@ class Plugins
 		foreach (App::instance()->plugins() as $plugin) {
 			$this->files[] = $plugin->root() . '/index.css';
 			$this->files[] = $plugin->root() . '/index.js';
-			$this->files[] = $plugin->root() . '/index.mjs';
+			// used by kirbyup during plugin development
+			$this->files[] = $plugin->root() . '/_index.mjs';
 		}
 
 		return $this->files;
@@ -80,11 +81,13 @@ class Plugins
 
 		$files = $this->files();
 
-		// filter out .js files that have an .mjs counterpart (which takes precedence)
+		// filter out index.js files that have an _index.mjs counterpart (which takes precedence)
 		if ($type === 'js') {
 			$files = A::filter(
 			  $files,
-			  fn($f) => Str::endsWith($f, '.js') && !F::exists(preg_replace('/\.js$/', '.mjs', $f))
+			  fn($f) => !(
+					Str::endsWith($f, 'index.js') && F::exists(preg_replace('/index\.js$/', '_index.mjs', $f))
+				)
 		  );
 		}
 
@@ -92,8 +95,7 @@ class Plugins
 			if (F::extension($file) === $type) {
 				if ($content = F::read($file)) {
 					if ($type === 'mjs') {
-						$path = F::relativepath($file, App::instance()->root());
-						$content = App::instance()->url() . $path;
+						$content = F::uri($file);
 					}
 
 					if ($type === 'js') {
@@ -111,8 +113,13 @@ class Plugins
 		}
 
 		if ($type === 'mjs') {
+			if (empty($dist)) {
+				return "";
+			}
+
 			$modules = Json::encode($dist);
-			return "try { await Promise.all($modules.map(url => import(url)))} catch (e) {console.error(e)}";
+			$modulePromise = "Promise.all($modules.map(url => import(url)))";
+			return "try { await $modulePromise } catch (e) { console.error(e) }";
 		}
 
 		return implode(PHP_EOL . PHP_EOL, $dist);
