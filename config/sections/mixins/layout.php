@@ -96,11 +96,15 @@ return [
 	'methods' => [
 		'columnsValues' => function (array $item, $model) {
 			$item['title'] = [
+				// override toSafeString() coming from `$item`
+				// because the table cells don't use v-html
 				'text' => $model->toString($this->text),
 				'href' => $model->panel()->url(true)
 			];
 
 			if ($this->info) {
+				// override toSafeString() coming from `$item`
+				// because the table cells don't use v-html
 				$item['info'] = $model->toString($this->info);
 			}
 
