@@ -212,10 +212,6 @@ class LayoutMixinTest extends TestCase
 					'type'  => 'html',
 					'value' => '{{ page.html }}'
 				],
-				'safeHtml' => [
-					'label' => 'Safe HTML',
-					'value' => '{{ page.html }}'
-				],
 				'removed' => false
 			]
 		]);
@@ -235,7 +231,6 @@ class LayoutMixinTest extends TestCase
 			'image' => null,
 			'dateCell' => '2012-12-12',
 			'htmlCell' => '<i>Some HTML</i>',
-			'safeHtmlCell' => '&lt;i&gt;Some HTML&lt;/i&gt;'
 		];
 
 		$this->assertSame($expected, $section->columnsValues($item, $model));
