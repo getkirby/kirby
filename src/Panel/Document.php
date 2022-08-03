@@ -72,6 +72,7 @@ class Document
 				'custom'  => static::customAsset('panel.css'),
 			],
 			'icons' => static::favicon($url),
+			'imports' => $plugins->read('mjs'),
 			'js' => [
 				'vendor'       => [
 					'nonce' => $nonce,
@@ -98,8 +99,7 @@ class Document
 					'src'   => $url . '/js/index.js',
 					'type'  => 'module'
 				],
-			],
-			'plugin-imports' => $plugins->read('mjs')
+			]
 		];
 
 		// during dev mode, add vite client and adapt
