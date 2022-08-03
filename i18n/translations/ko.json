@@ -29,7 +29,7 @@
   "days.tue": "\ud654",
   "days.wed": "\uc218",
 
-  "debugging": "디버깅",
+  "debugging": "디버그",
 
   "delete": "\uc0ad\uc81c",
   "delete.all": "모두 삭제",
@@ -49,8 +49,8 @@
   "email": "\uc774\uba54\uc77c \uc8fc\uc18c",
   "email.placeholder": "mail@example.com",
 
-  "entries": "Entries",
-  "entry": "Entry",
+  "entries": "항목",
+  "entry": "항목",
 
   "environment": "구동 환경",
 
@@ -297,7 +297,7 @@
   "hide": "숨기기",
   "hour": "시",
   "import": "가져오기",
-  "info": "Info",
+  "info": "정보",
   "insert": "\uc0bd\uc785",
   "insert.after": "뒤에 삽입",
   "insert.before": "앞에 삽입",
@@ -306,15 +306,15 @@
   "installation": "설치",
   "installation.completed": "패널을 설치했습니다.",
   "installation.disabled": "패널 설치 관리자는 로컬 서버에서 실행하거나 <code>panel.install</code> 옵션을 설정하세요.",
-  "installation.issues.accounts": "폴더(<code>/site/accounts</code>)에 쓰기 권한이 없습니다.",
-  "installation.issues.content": "폴더(<code>/content</code>)에 쓰기 권한이 없습니다.",
+  "installation.issues.accounts": "<code>/site/accounts</code> 폴더의 쓰기 권한을 확인하세요.",
+  "installation.issues.content": "<code>/content</code> 폴더의 쓰기 권한을 확인하세요.",
   "installation.issues.curl": "<code>cURL</code> 확장 모듈이 필요합니다.",
   "installation.issues.headline": "패널을 설치할 수 없습니다.",
   "installation.issues.mbstring": "<code>MB String</code> 확장 모듈이 필요합니다.",
-  "installation.issues.media": "폴더(<code>/media</code>)에 쓰기 권한이 없습니다.",
+  "installation.issues.media": "<code>/media</code> 폴더의 쓰기 권한을 확인하세요.",
   "installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
   "installation.issues.server": "Kirby를 실행하려면 <code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
-  "installation.issues.sessions": "폴더(<code>/site/sessions</code>)에 쓰기 권한이 없습니다.",
+  "installation.issues.sessions": "<code>/site/sessions</code> 폴더의 쓰기 권한을 확인하세요.",
 
   "language": "\uc5b8\uc5b4",
   "language.code": "언어 코드",
@@ -327,7 +327,7 @@
   "language.direction.ltr": "왼쪽에서 오른쪽",
   "language.direction.rtl": "오른쪽에서 왼쪽",
   "language.locale": "PHP 로캘 문자열",
-  "language.locale.warning": "사용자 지정 로캘을 사용 중입니다. 폴더(<code>/site/languages</code>)의 언어 파일을 수정하세요.",
+  "language.locale.warning": "사용자 지정 로캘을 사용 중입니다. <code>/site/languages</code> 폴더의 언어 파일을 수정하세요.",
   "language.name": "언어명",
   "language.updated": "언어를 변경했습니다.",
 
@@ -340,12 +340,12 @@
   "license": "라이선스",
   "license.buy": "라이선스 구매",
   "license.register": "등록",
-  "license.manage": "Manage your licenses",
+  "license.manage": "라이선스 관리",
   "license.register.help": "Kirby를 등록하려면 이메일로 전송받은 라이선스 코드와 이메일 주소를 입력하세요.",
   "license.register.label": "라이선스 코드를 입력하세요.",
   "license.register.success": "Kirby와 함께해주셔서 감사합니다.",
   "license.unregistered": "Kirby가 등록되지 않았습니다.",
-  "license.unregistered.label": "Unregistered",
+  "license.unregistered.label": "Kirby가 등록되지 않았습니다.",
 
   "link": "\uc77c\ubc18 \ub9c1\ud06c",
   "link.text": "\ubb38\uc790",
@@ -475,7 +475,7 @@
 
   "section.required": "섹션이 필요합니다.",
 
-  "security": "Security",
+  "security": "보안",
   "select": "선택",
   "server": "서버",
   "settings": "설정",
@@ -485,13 +485,13 @@
   "slug": "고유 주소",
   "sort": "정렬",
 
-  "stats.empty": "No reports",
-  "system.issues.content": "The content folder seems to be exposed",
-  "system.issues.debug": "최종 결과물에서는 디버깅 모드를 해제하세요.",
-  "system.issues.git": "The .git folder seems to be exposed",
-  "system.issues.https": "모든 사이트에 HTTPS를 권장합니다.",
-  "system.issues.kirby": "The kirby folder seems to be exposed",
-  "system.issues.site": "The site folder seems to be exposed",
+  "stats.empty": "관련 기록이 없습니다.",
+  "system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
+  "system.issues.debug": "공개 서버상에서는 디버그 모드를 해제하세요.",
+  "system.issues.git": "<code>/.git</code> 폴더의 권한을 확인하세요.",
+  "system.issues.https": "HTTPS를 권장합니다.",
+  "system.issues.kirby": "<code>/kirby</code> 폴더의 권한을 확인하세요.",
+  "system.issues.site": "<code>/site</code> 폴더의 권한을 확인하세요.",
 
   "title": "제목",
   "template": "\ud15c\ud50c\ub9bf",
