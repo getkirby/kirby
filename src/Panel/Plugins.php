@@ -3,10 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Filesystem\F;
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\A;
 use Kirby\Data\Json;
+use Kirby\Filesystem\F;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 /**
  * The Plugins class takes care of collecting
@@ -84,11 +84,11 @@ class Plugins
 		// filter out index.js files that have an _index.mjs counterpart (which takes precedence)
 		if ($type === 'js') {
 			$files = A::filter(
-			  $files,
-			  fn($f) => !(
+				$files,
+				fn ($f) => !(
 					Str::endsWith($f, 'index.js') && F::exists(preg_replace('/index\.js$/', '_index.mjs', $f))
 				)
-		  );
+			);
 		}
 
 		foreach ($files as $file) {
@@ -114,7 +114,7 @@ class Plugins
 
 		if ($type === 'mjs') {
 			if (empty($dist)) {
-				return "";
+				return '';
 			}
 
 			$modules = Json::encode($dist);

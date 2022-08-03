@@ -79,19 +79,19 @@ class FileCache extends Cache
 				case '/':
 					break;
 
-				// backslashes get their own marker in the path
-				// to differentiate the cache key from one with forward slashes
+					// backslashes get their own marker in the path
+					// to differentiate the cache key from one with forward slashes
 				case '\\':
 					$keyParts[] = '_backslash';
 					break;
 
-				// empty part means two slashes in a row;
-				// special marker like for backslashes
+					// empty part means two slashes in a row;
+					// special marker like for backslashes
 				case '':
 					$keyParts[] = '_empty';
 					break;
 
-				// an actual path segment
+					// an actual path segment
 				default:
 					// check if the segment only contains safe characters;
 					// underscores are *not* safe to guarantee uniqueness
