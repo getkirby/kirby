@@ -47,7 +47,7 @@ return function ($kirby) {
 			}
 		],
 		[
-			'pattern' => $media . '/plugins/index.(css|m?js)',
+			'pattern' => $media . '/plugins/index.(css|js)',
 			'env'     => 'media',
 			'action'  => function (string $type) use ($kirby) {
 				$plugins = new Plugins();

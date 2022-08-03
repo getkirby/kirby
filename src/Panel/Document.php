@@ -93,17 +93,13 @@ class Document
 					'src'   => static::customAsset('panel.js'),
 					'type'  => 'module'
 				],
-				'plugins-mjs'      => [
-					'nonce' => $nonce,
-					'src'   => $plugins->url('mjs'),
-					'type'  => 'module'
-				],
 				'index'        => [
 					'nonce' => $nonce,
 					'src'   => $url . '/js/index.js',
 					'type'  => 'module'
 				],
-			]
+			],
+			'plugin-imports' => $plugins->read('mjs')
 		];
 
 		// during dev mode, add vite client and adapt

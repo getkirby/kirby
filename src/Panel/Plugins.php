@@ -45,7 +45,7 @@ class Plugins
 			$this->files[] = $plugin->root() . '/index.css';
 			$this->files[] = $plugin->root() . '/index.js';
 			// used by kirbyup during plugin development
-			$this->files[] = $plugin->root() . '/_index.mjs';
+			$this->files[] = $plugin->root() . '/index.dev.mjs';
 		}
 
 		return $this->files;
@@ -81,12 +81,12 @@ class Plugins
 
 		$files = $this->files();
 
-		// filter out index.js files that have an _index.mjs counterpart (which takes precedence)
+		// filter out index.js files that have an index.dev.mjs counterpart (which takes precedence)
 		if ($type === 'js') {
 			$files = A::filter(
 				$files,
 				fn ($f) => !(
-					Str::endsWith($f, 'index.js') && F::exists(preg_replace('/index\.js$/', '_index.mjs', $f))
+					Str::endsWith($f, 'index.js') && F::exists(preg_replace('/\.js$/', '.dev.mjs', $f))
 				)
 			);
 		}
@@ -119,7 +119,7 @@ class Plugins
 
 			$modules = Json::encode($dist);
 			$modulePromise = "Promise.all($modules.map(url => import(url)))";
-			return "try { await $modulePromise } catch (e) { console.error(e) }";
+			return "try { await $modulePromise } catch (e) { console.error(e) }" . PHP_EOL;
 		}
 
 		return implode(PHP_EOL . PHP_EOL, $dist);
