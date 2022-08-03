@@ -7,7 +7,7 @@
 		:data-role="role"
 		:data-translation="$translation.code"
 		:data-user="user"
-		:dir="$translation.direction"
+		:dir="dir"
 		class="k-panel"
 	>
 		<slot />
@@ -37,6 +37,9 @@ export default {
 		dialog() {
 			return this.$helper.clone(this.$store.state.dialog);
 		},
+		dir() {
+			return this.$translation.direction;
+		},
 		language() {
 			return this.$language ? this.$language.code : null;
 		},
@@ -45,6 +48,19 @@ export default {
 		},
 		user() {
 			return this.$user ? this.$user.id : null;
+		}
+	},
+	watch: {
+		dir: {
+			handler() {
+				/**
+				 * Some elements – i.e. drag ghosts -
+				 * are injected into the body and not the panel div.
+				 * They need the dir to be displayed correctly
+				 */
+				document.body.dir = this.dir;
+			},
+			immediate: true
 		}
 	},
 	created() {
