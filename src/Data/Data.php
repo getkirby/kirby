@@ -86,7 +86,7 @@ class Data
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
 	 */
-	public static function read(string $file, string $type = null): array
+	public static function read(string $file, string|null $type = null): array
 	{
 		return static::handler($type ?? F::extension($file))->read($file);
 	}
@@ -97,7 +97,7 @@ class Data
 	 * the extension if not specified
 	 */
 	public static function write(
-		string|null $file = null,
+		string $file,
 		mixed $data = [],
 		string|null $type = null
 	): bool {

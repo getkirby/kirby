@@ -65,7 +65,7 @@ class PHP extends Handler
 	/**
 	 * Creates a PHP file with the given data
 	 */
-	public static function write(string|null $file = null, mixed $data = []): bool
+	public static function write(string $file, mixed $data = []): bool
 	{
 		$php = static::encode($data);
 		$php = "<?php\n\nreturn $php;";
