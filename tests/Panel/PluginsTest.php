@@ -16,8 +16,13 @@ class PluginsTest extends TestCase
 	protected $tmp = __DIR__ . '/tmp';
 	protected $cssA;
 	protected $cssB;
+	protected $cssC;
 	protected $jsA;
 	protected $jsB;
+	protected $jsC;
+	protected $mjsA;
+	protected $mjsB;
+	protected $mjsC;
 
 	public function setUp(): void
 	{
@@ -38,6 +43,7 @@ class PluginsTest extends TestCase
 		touch($this->cssA, $time);
 		F::write($this->jsA = $this->tmp . '/site/plugins/a/index.js', 'a');
 		touch($this->jsA, $time);
+		$this->mjsA = $this->tmp . '/site/plugins/a/index.dev.mjs';
 
 		F::write($this->tmp . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
 		touch($this->tmp . '/site/plugins/b/index.php', $time);
@@ -45,6 +51,16 @@ class PluginsTest extends TestCase
 		touch($this->cssB, $time);
 		F::write($this->jsB = $this->tmp . '/site/plugins/b/index.js', 'b');
 		touch($this->jsB, $time);
+		$this->mjsB = $this->tmp . '/site/plugins/b/index.dev.mjs';
+
+		F::write($this->tmp . '/site/plugins/c/index.php', '<?php Kirby::plugin("test/c", []);');
+		touch($this->tmp . '/site/plugins/c/index.php', $time);
+		F::write($this->cssC = $this->tmp . '/site/plugins/c/index.css', 'c');
+		touch($this->cssC, $time);
+		F::write($this->jsC = $this->tmp . '/site/plugins/c/index.js', 'c');
+		touch($this->jsC, $time);
+		F::write($this->mjsC = $this->tmp . '/site/plugins/c/index.dev.mjs', 'c');
+		touch($this->mjsC, $time);
 
 		return $time;
 	}
@@ -65,7 +81,17 @@ class PluginsTest extends TestCase
 		$app = $this->app->clone();
 
 		$plugins  = new Plugins();
-		$expected = [$this->cssA, $this->jsA, $this->cssB, $this->jsB];
+		$expected = [
+			$this->cssA,
+			$this->jsA,
+			$this->mjsA,
+			$this->cssB,
+			$this->jsB,
+			$this->mjsB,
+			$this->cssC,
+			$this->jsC,
+			$this->mjsC
+		];
 
 		$this->assertSame($expected, $plugins->files());
 		// from cached property
@@ -105,12 +131,16 @@ class PluginsTest extends TestCase
 		$plugins = new Plugins();
 
 		// css
-		$expected = "a\n\nb";
+		$expected = "a\n\nb\n\nc";
 		$this->assertSame($expected, $plugins->read('css'));
 
-		// js
+		// js - shouldn't include c because c has an index.dev.mjs
 		$expected = "a;\n\nb;";
 		$this->assertSame($expected, $plugins->read('js'));
+
+		// mjs - c as base64 data uri
+		$expected = 'try { await Promise.all(["data:text/javascript;base64,Yw=="].map(url => import(url))) } catch (e) { console.error(e) }\n';
+		$this->assertSame($expected, $plugins->read('mjs'));
 	}
 
 	/**
