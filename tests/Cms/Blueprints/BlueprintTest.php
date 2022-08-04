@@ -71,10 +71,10 @@ class BlueprintTest extends TestCase
 						'width' => '1/3',
 						'sections' => [
 							'main-info-0' => [
-								'headline' => 'Column (1/3)',
-								'type'     => 'info',
-								'text'     => 'No sections yet',
-								'name'     => 'main-info-0'
+								'label' => 'Column (1/3)',
+								'type'  => 'info',
+								'text'  => 'No sections yet',
+								'name'  => 'main-info-0'
 							]
 						]
 					],
@@ -82,10 +82,10 @@ class BlueprintTest extends TestCase
 						'width' => '2/3',
 						'sections' => [
 							'main-info-1' => [
-								'headline' => 'Column (2/3)',
-								'type'     => 'info',
-								'text'     => 'No sections yet',
-								'name'     => 'main-info-1'
+								'label' => 'Column (2/3)',
+								'type'  => 'info',
+								'text'  => 'No sections yet',
+								'name'  => 'main-info-1'
 							]
 						]
 					]
@@ -470,8 +470,8 @@ class BlueprintTest extends TestCase
 		$this->assertEquals(true, is_array($sections));
 		$this->assertEquals(1, sizeof($sections));
 		$this->assertEquals(true, array_key_exists('main', $sections));
-		$this->assertEquals(true, array_key_exists('headline', $sections['main']));
-		$this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
+		$this->assertEquals(true, array_key_exists('label', $sections['main']));
+		$this->assertEquals('Invalid section type for section "main"', $sections['main']['label']);
 	}
 
 	/**

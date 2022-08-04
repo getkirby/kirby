@@ -50,19 +50,6 @@ class AppComponentsTest extends TestCase
 		$this->assertSame($expected, css('something.css'));
 	}
 
-	public function testDump()
-	{
-		$kirby = $this->kirby->clone([
-			'components' => [
-				'dump' => function ($kirby, $variable) {
-					return $variable;
-				}
-			]
-		]);
-
-		$this->assertSame('test', dump('test'));
-	}
-
 	public function testJsPlugin()
 	{
 		$this->kirby->clone([
