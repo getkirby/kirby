@@ -19,6 +19,8 @@ class PHP extends Handler
 {
 	/**
 	 * Converts an array to PHP file content
+	 *
+	 * @param string $indent For internal use only
 	 */
 	public static function encode(mixed $data, string $indent = ''): string
 	{
