@@ -76,7 +76,7 @@ class Page extends ModelWithContent
 	 *
 	 * @var string
 	 */
-	protected $diruri;
+	protected $dirpath;
 
 	/**
 	 * Draft status flag
@@ -84,13 +84,6 @@ class Page extends ModelWithContent
 	 * @var bool
 	 */
 	protected $isDraft;
-
-	/**
-	 * The Page id
-	 *
-	 * @var string
-	 */
-	protected $id;
 
 	/**
 	 * The template, that should be loaded
@@ -118,6 +111,13 @@ class Page extends ModelWithContent
 	 * @var \Kirby\Cms\Page|null
 	 */
 	protected $parent;
+
+	/**
+	 * The page path
+	 *
+	 * @var string
+	 */
+	protected $path;
 
 	/**
 	 * Absolute path to the page directory
@@ -289,7 +289,7 @@ class Page extends ModelWithContent
 	 */
 	protected function cacheId(string $contentType): string
 	{
-		$cacheId = [$this->id()];
+		$cacheId = [$this->path(false)];
 
 		if ($this->kirby()->multilang() === true) {
 			$cacheId[] = $this->kirby()->language()->code();
@@ -384,7 +384,7 @@ class Page extends ModelWithContent
 	 */
 	public function depth(): int
 	{
-		return $this->depth ??= (substr_count($this->id(), '/') + 1);
+		return $this->depth ??= (substr_count($this->path(false), '/') + 1);
 	}
 
 	/**
@@ -399,10 +399,10 @@ class Page extends ModelWithContent
 		}
 
 		if ($this->num() !== null) {
-			return $this->dirname = $this->num() . Dir::$numSeparator . $this->uid();
+			return $this->dirname = $this->num() . Dir::$numSeparator . $this->slug(false);
 		}
 
-		return $this->dirname = $this->uid();
+		return $this->dirname = $this->slug(false);
 	}
 
 	/**
@@ -410,10 +410,10 @@ class Page extends ModelWithContent
 	 *
 	 * @return string
 	 */
-	public function diruri(): string
+	public function dirpath(): string
 	{
-		if (is_string($this->diruri) === true) {
-			return $this->diruri;
+		if (is_string($this->dirpath) === true) {
+			return $this->dirpath;
 		}
 
 		if ($this->isDraft() === true) {
@@ -423,10 +423,21 @@ class Page extends ModelWithContent
 		}
 
 		if ($parent = $this->parent()) {
-			return $this->diruri = $parent->diruri() . '/' . $dirname;
+			return $this->dirpath = $parent->dirpath() . '/' . $dirname;
 		}
 
-		return $this->diruri = $dirname;
+		return $this->dirpath = $dirname;
+	}
+
+	/**
+	 * Sorting number + Slug
+	 * @deprecated 3.8.0 Please use `$page->dirpath()` instead
+	 *
+	 * @return string
+	 */
+	public function diruri(): string
+	{
+		return $this->dirpath();
 	}
 
 	/**
@@ -483,21 +494,13 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the Page Id
+	 * @deprecated 3.8.0 Please use `$page->path(false)` instead
 	 *
 	 * @return string
 	 */
 	public function id(): string
 	{
-		if ($this->id !== null) {
-			return $this->id;
-		}
-
-		// set the id, depending on the parent
-		if ($parent = $this->parent()) {
-			return $this->id = $parent->id() . '/' . $this->uid();
-		}
-
-		return $this->id = $this->uid();
+		return $this->path(false);
 	}
 
 	/**
@@ -558,7 +561,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return $this->id() === $page->id();
+		return $this->path(false) === $page->path(false);
 	}
 
 	/**
@@ -583,7 +586,7 @@ class Page extends ModelWithContent
 	 */
 	public function isAncestorOf(Page $child): bool
 	{
-		return $child->parents()->has($this->id()) === true;
+		return $child->parents()->has($this->path(false)) === true;
 	}
 
 	/**
@@ -632,7 +635,7 @@ class Page extends ModelWithContent
 
 		// ignore pages by id
 		if (is_array($ignore) === true) {
-			if (in_array($this->id(), $ignore) === true) {
+			if (in_array($this->path(false), $ignore) === true) {
 				return false;
 			}
 		}
@@ -667,7 +670,7 @@ class Page extends ModelWithContent
 			return false;
 		}
 
-		return $this->parents()->has($parent->id()) === true;
+		return $this->parents()->has($parent->path(false)) === true;
 	}
 
 	/**
@@ -701,7 +704,7 @@ class Page extends ModelWithContent
 	 */
 	public function isErrorPage(): bool
 	{
-		return $this->id() === $this->site()->errorPageId();
+		return $this->path(false) === $this->site()->errorPageId();
 	}
 
 	/**
@@ -711,7 +714,7 @@ class Page extends ModelWithContent
 	 */
 	public function isHomePage(): bool
 	{
-		return $this->id() === $this->site()->homePageId();
+		return $this->path(false) === $this->site()->homePageId();
 	}
 
 	/**
@@ -749,7 +752,7 @@ class Page extends ModelWithContent
 			return true;
 		}
 
-		if ($this->site()->page()?->parents()->has($this->id()) === true) {
+		if ($this->site()->page()?->parents()->has($this->path(false)) === true) {
 			return true;
 		}
 
@@ -836,7 +839,7 @@ class Page extends ModelWithContent
 	 */
 	public function mediaRoot(): string
 	{
-		return $this->kirby()->root('media') . '/pages/' . $this->id();
+		return $this->kirby()->root('media') . '/pages/' . $this->path(false);
 	}
 
 	/**
@@ -847,7 +850,7 @@ class Page extends ModelWithContent
 	 */
 	public function mediaUrl(): string
 	{
-		return $this->kirby()->url('media') . '/pages/' . $this->id();
+		return $this->kirby()->url('media') . '/pages/' . $this->path(false);
 	}
 
 	/**
@@ -926,7 +929,7 @@ class Page extends ModelWithContent
 	 */
 	public function parentId(): string|null
 	{
-		return $this->parent()?->id();
+		return $this->parent()?->path(false);
 	}
 
 	/**
@@ -953,11 +956,42 @@ class Page extends ModelWithContent
 		$page    = $this->parent();
 
 		while ($page !== null) {
-			$parents->append($page->id(), $page);
+			$parents->append($page->path(false), $page);
 			$page = $page->parent();
 		}
 
 		return $parents;
+	}
+
+	/**
+	 * Returns the page path,
+	 * e.g. `projects/project-b`
+	 *
+	 * @param string|false|null $lang
+	 * @return string
+	 */
+	public function path(string|false|null $lang = null): string
+	{
+		if ($lang === false) {
+			if ($this->path !== null) {
+				return $this->path;
+			}
+
+			// set the path, depending on the parent
+			if ($parent = $this->parent()) {
+				return $this->path = $parent->path() . '/' . $this->slug(false);
+			}
+
+			return $this->path = $this->slug(false);
+		}
+
+		// translated path:
+		// set the path, depending on the parent
+		if ($parent = $this->parent()) {
+			return $parent->path($lang) . '/' . $this->slug($lang);
+		}
+
+		return $this->slug($lang);
 	}
 
 	/**
@@ -1100,7 +1134,7 @@ class Page extends ModelWithContent
 	 */
 	public function root(): string
 	{
-		return $this->root ??= $this->kirby()->root('content') . '/' . $this->diruri();
+		return $this->root ??= $this->kirby()->root('content') . '/' . $this->dirpath();
 	}
 
 	/**
@@ -1249,21 +1283,25 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Returns the slug of the page
+	 * Returns the (translated) slug of the page
 	 *
-	 * @param string|null $languageCode
+	 * @param string|false|null $lang
 	 * @return string
 	 */
-	public function slug(string $languageCode = null): string
+	public function slug(string|false|null $lang = null): string
 	{
-		if ($this->kirby()->multilang() === true) {
-			if ($languageCode === null) {
-				$languageCode = $this->kirby()->languageCode();
+		// translated slug
+		if ($this->kirby()->multilang() === true && $lang !== false) {
+			if ($lang === null) {
+				$lang = $this->kirby()->languageCode();
 			}
 
-			$defaultLanguageCode = $this->kirby()->defaultLanguage()->code();
+			$defaultLang = $this->kirby()->defaultLanguage()->code();
 
-			if ($languageCode !== $defaultLanguageCode && $translation = $this->translations()->find($languageCode)) {
+			if (
+				$lang !== $defaultLang &&
+				$translation = $this->translations()->find($lang)
+			) {
 				return $translation->slug() ?? $this->slug;
 			}
 		}
@@ -1332,16 +1370,19 @@ class Page extends ModelWithContent
 			'children'     => $this->children()->keys(),
 			'content'      => $this->content()->toArray(),
 			'files'        => $this->files()->keys(),
-			'id'           => $this->id(),
+			// TODO: deprecate eventually
+			'id'           => $this->path(false),
 			'mediaUrl'     => $this->mediaUrl(),
 			'mediaRoot'    => $this->mediaRoot(),
 			'num'          => $this->num(),
-			'parent'       => $this->parent() ? $this->parent()->id() : null,
+			'parent'       => $this->parent() ? $this->parent()->path(false) : null,
 			'slug'         => $this->slug(),
 			'template'     => $this->template(),
 			'translations' => $this->translations()->toArray(),
-			'uid'          => $this->uid(),
-			'uri'          => $this->uri(),
+			// TODO: deprecate eventually
+			'uid'          => $this->slug(false),
+			// TODO: deprecate eventually
+			'uri'          => $this->path(),
 			'url'          => $this->url()
 		];
 	}
@@ -1354,7 +1395,7 @@ class Page extends ModelWithContent
 	 */
 	protected function token(): string
 	{
-		return $this->kirby()->contentToken($this, $this->id() . $this->template());
+		return $this->kirby()->contentToken($this, $this->path(false) . $this->template());
 	}
 
 	/**
@@ -1363,30 +1404,27 @@ class Page extends ModelWithContent
 	 * slug, but stays the same on
 	 * multi-language sites. Whereas the slug
 	 * can be translated.
+	 * @deprecated 3.8.0 Use `$page->slug(false)` instead
 	 *
 	 * @see self::slug()
 	 * @return string
 	 */
 	public function uid(): string
 	{
-		return $this->slug;
+		return $this->slug(false);
 	}
 
 	/**
 	 * The uri is the same as the id, except
 	 * that it will be translated in multi-language setups
+	 * @deprecated 3.8.0 Use `$page->path($languageCode|null)` instead
 	 *
 	 * @param string|null $languageCode
 	 * @return string
 	 */
-	public function uri(string $languageCode = null): string
+	public function uri(string|null $languageCode = null): string
 	{
-		// set the id, depending on the parent
-		if ($parent = $this->parent()) {
-			return $parent->uri($languageCode) . '/' . $this->slug($languageCode);
-		}
-
-		return $this->slug($languageCode);
+		return $this->path($languageCode);
 	}
 
 	/**
@@ -1419,13 +1457,13 @@ class Page extends ModelWithContent
 
 		if ($parent = $this->parent()) {
 			if ($parent->isHomePage() === true) {
-				return $this->url = $this->kirby()->url('base') . '/' . $parent->uid() . '/' . $this->uid();
+				return $this->url = $this->kirby()->url('base') . '/' . $parent->slug(false) . '/' . $this->slug(false);
 			}
 
-			return $this->url = $this->parent()->url() . '/' . $this->uid();
+			return $this->url = $this->parent()->url() . '/' . $this->slug(false);
 		}
 
-		return $this->url = $this->kirby()->url('base') . '/' . $this->uid();
+		return $this->url = $this->kirby()->url('base') . '/' . $this->slug(false);
 	}
 
 	/**
