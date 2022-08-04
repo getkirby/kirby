@@ -72,7 +72,8 @@ trait AppCaches
 	 */
 	protected function cacheOptions(string $key): array
 	{
-		$options = $this->option($this->cacheOptionsKey($key), false);
+		$options   = $this->option($this->cacheOptionsKey($key), null);
+		$options ??= $this->core()->caches()[$key] ?? false;
 
 		if ($options === false) {
 			return [
@@ -94,9 +95,9 @@ trait AppCaches
 
 		if ($options === true) {
 			return $defaults;
-		} else {
-			return array_merge($defaults, $options);
 		}
+
+		return array_merge($defaults, $options);
 	}
 
 	/**
