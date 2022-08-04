@@ -93,7 +93,7 @@ class ParsleyTest extends TestCase
 	 */
 	public function testFallbackWithEmptyInput()
 	{
-		$this->assertNull($this->parser()->fallback([]));
+		$this->assertNull($this->parser()->fallback(''));
 	}
 
 	/**

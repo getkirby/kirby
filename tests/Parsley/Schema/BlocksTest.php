@@ -183,7 +183,7 @@ class BlocksTest extends TestCase
 	 */
 	public function testFallbackForInvalidContent()
 	{
-		return $this->assertNull($this->schema->fallback([]));
+		return $this->assertNull($this->schema->fallback(''));
 	}
 
 	public function testHeading()
