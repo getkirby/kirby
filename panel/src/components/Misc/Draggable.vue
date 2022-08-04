@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import Draggable from "vuedraggable/src/vuedraggable";
-
 /**
  * The Draggable component implements the
  * [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
@@ -33,7 +31,7 @@ import Draggable from "vuedraggable/src/vuedraggable";
  */
 export default {
 	components: {
-		draggable: Draggable
+		draggable: () => import("vuedraggable/src/vuedraggable")
 	},
 	props: {
 		data: Object,
