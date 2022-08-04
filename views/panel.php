@@ -67,7 +67,10 @@ use Kirby\Cms\Url;
 
   <?php foreach ($assets['js'] as $key => $js): ?>
   <?php if ($key === 'index'): ?>
-  <?= Html::tag('script', [$assets['imports'], "import('{$js['src']}')"], A::without($js, 'src')) . PHP_EOL ?>
+  <script type="module" nonce="$nonce">
+    <?= $assets['imports'] ?>
+    import('<?= $js['src'] ?>')
+  </script>
   <?php else: ?>
   <?= Html::tag('script', '', $js) . PHP_EOL ?>
   <?php endif ?>
