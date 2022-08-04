@@ -53,7 +53,7 @@ class Location
 	/**
 	 * Converts the gps coordinates
 	 */
-	protected function gps(string|array $coord, string $hemi): float
+	protected function gps(array $coord, string $hemi): float
 	{
 		$degrees = count($coord) > 0 ? $this->num($coord[0]) : 0;
 		$minutes = count($coord) > 1 ? $this->num($coord[1]) : 0;

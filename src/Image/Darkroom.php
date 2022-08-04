@@ -37,7 +37,7 @@ class Darkroom
 	 *
 	 * @throws \Exception
 	 */
-	public static function factory(string $type, array $settings = []): static
+	public static function factory(string $type, array $settings = []): object
 	{
 		if (isset(static::$types[$type]) === false) {
 			throw new Exception('Invalid Darkroom type');

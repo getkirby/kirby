@@ -199,7 +199,7 @@ class Exif
 	/**
 	 * Return the timestamp when the picture has been taken
 	 */
-	protected function parseTimestamp(): string|int
+	protected function parseTimestamp(): string
 	{
 		if (isset($this->data['DateTimeOriginal']) === true) {
 			return strtotime($this->data['DateTimeOriginal']);
