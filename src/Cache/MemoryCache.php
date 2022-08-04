@@ -15,9 +15,8 @@ class MemoryCache extends Cache
 {
 	/**
 	 * Cache data
-	 * @var array
 	 */
-	protected $store = [];
+	protected array $store = [];
 
 	/**
 	 * Writes an item to the cache for a given number of minutes and
@@ -27,13 +26,8 @@ class MemoryCache extends Cache
 	 *   // put an item in the cache for 15 minutes
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @param int $minutes
-	 * @return bool
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function set(string $key, mixed $value, int $minutes = 0): bool
 	{
 		$this->store[$key] = new Value($value, $minutes);
 		return true;
@@ -42,11 +36,8 @@ class MemoryCache extends Cache
 	/**
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cache\Value|null
 	 */
-	public function retrieve(string $key)
+	public function retrieve(string $key): Value|null
 	{
 		return $this->store[$key] ?? null;
 	}
@@ -54,9 +45,6 @@ class MemoryCache extends Cache
 	/**
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
-	 *
-	 * @param string $key
-	 * @return bool
 	 */
 	public function remove(string $key): bool
 	{
@@ -71,8 +59,6 @@ class MemoryCache extends Cache
 	/**
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
-	 *
-	 * @return bool
 	 */
 	public function flush(): bool
 	{
