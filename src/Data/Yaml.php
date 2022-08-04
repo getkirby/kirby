@@ -18,11 +18,8 @@ class Yaml extends Handler
 {
 	/**
 	 * Converts an array to an encoded YAML string
-	 *
-	 * @param mixed $data
-	 * @return string
 	 */
-	public static function encode($data): string
+	public static function encode(mixed $data): string
 	{
 		// $data, $indent, $wordwrap, $no_opening_dashes
 		return Spyc::YAMLDump($data, false, false, true);
@@ -30,11 +27,8 @@ class Yaml extends Handler
 
 	/**
 	 * Parses an encoded YAML string and returns a multi-dimensional array
-	 *
-	 * @param mixed $string
-	 * @return array
 	 */
-	public static function decode($string): array
+	public static function decode(mixed $string): array
 	{
 		if ($string === null || $string === '') {
 			return [];
