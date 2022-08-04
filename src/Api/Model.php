@@ -21,40 +21,18 @@ use Kirby\Toolkit\Str;
  */
 class Model
 {
-	/**
-	 * @var \Kirby\Api\Api
-	 */
-	protected $api;
-
-	/**
-	 * @var mixed|null
-	 */
-	protected $data;
-
-	/**
-	 * @var array|mixed
-	 */
-	protected $fields;
-
-	/**
-	 * @var mixed|null
-	 */
-	protected $select;
-
-	/**
-	 * @var array|mixed
-	 */
-	protected $views;
+	protected Api $api;
+	protected mixed $data;
+	protected mixed $fields;
+	protected mixed $select;
+	protected mixed $views;
 
 	/**
 	 * Model constructor
 	 *
-	 * @param \Kirby\Api\Api $api
-	 * @param mixed $data
-	 * @param array $schema
 	 * @throws \Exception
 	 */
-	public function __construct(Api $api, $data, array $schema)
+	public function __construct(Api $api, mixed $data, array $schema)
 	{
 		$this->api    = $api;
 		$this->data   = $data;
@@ -86,11 +64,10 @@ class Model
 	}
 
 	/**
-	 * @param null $keys
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function select($keys = null)
+	public function select(mixed $keys = null): static
 	{
 		if ($keys === false) {
 			return $this;
@@ -109,7 +86,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Exception
 	 */
 	public function selection(): array
@@ -156,7 +132,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -202,7 +177,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -227,11 +201,10 @@ class Model
 	}
 
 	/**
-	 * @param string $name
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function view(string $name)
+	public function view(string $name): static
 	{
 		if ($name === 'any') {
 			return $this->select(null);

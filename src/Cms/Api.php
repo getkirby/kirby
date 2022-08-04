@@ -25,13 +25,8 @@ class Api extends BaseApi
 	/**
 	 * Execute an API call for the given path,
 	 * request method and optional request data
-	 *
-	 * @param string|null $path
-	 * @param string $method
-	 * @param array $requestData
-	 * @return mixed
 	 */
-	public function call(string $path = null, string $method = 'GET', array $requestData = [])
+	public function call(string|null $path = null, string $method = 'GET', array $requestData = []): mixed
 	{
 		$this->setRequestMethod($method);
 		$this->setRequestData($requestData);
