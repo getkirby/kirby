@@ -39,9 +39,9 @@ use Kirby\Cms\Url;
   <?php endforeach ?>
 
   <?php foreach ($assets['js'] as $js): ?>
-    <?php if (($js['type'] ?? null) === 'module'): ?>
-    <link rel="modulepreload" href="<?= $js['src'] ?>">
-    <?php endif ?>
+  <?php if (($js['type'] ?? null) === 'module'): ?>
+  <link rel="modulepreload" href="<?= $js['src'] ?>">
+  <?php endif ?>
   <?php endforeach ?>
 
   <base href="<?= $panelUrl ?>">
@@ -66,11 +66,11 @@ use Kirby\Cms\Url;
   </script>
 
   <?php foreach ($assets['js'] as $key => $js): ?>
-    <?php if ($key === 'index'): ?>
-    <?= Html::tag('script', [$assets['imports'], "import('{$js['src']}')"], A::without($js, 'src')) . PHP_EOL ?>
-    <?php else: ?>
-    <?= Html::tag('script', '', $js) . PHP_EOL ?>
-    <?php endif ?>
+  <?php if ($key === 'index'): ?>
+  <?= Html::tag('script', [$assets['imports'], "import('{$js['src']}')"], A::without($js, 'src')) . PHP_EOL ?>
+  <?php else: ?>
+  <?= Html::tag('script', '', $js) . PHP_EOL ?>
+  <?php endif ?>
   <?php endforeach ?>
 
 </body>
