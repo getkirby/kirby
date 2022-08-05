@@ -160,8 +160,8 @@ export default {
 				link: (editor) => {
 					this.$refs.linkDialog.open(editor.getMarkAttrs("link"));
 				},
-				email: (editor) => {
-					this.$refs.emailDialog.open(editor.getMarkAttrs("email"));
+				email: () => {
+					this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
 				},
 				paste: this.paste,
 				toolbar: (toolbar) => {
@@ -174,13 +174,13 @@ export default {
 					}
 				},
 				update: (payload) => {
-					if (!payload.editor) {
+					if (!this.editor) {
 						return;
 					}
 
 					// compare documents to avoid minor HTML differences
 					// to cause unwanted updates
-					const jsonNew = JSON.stringify(payload.editor.getJSON());
+					const jsonNew = JSON.stringify(this.editor.getJSON());
 					const jsonOld = JSON.stringify(this.json);
 
 					if (jsonNew === jsonOld) {
