@@ -36,13 +36,6 @@ class Html extends DomHandler
 	];
 
 	/**
-	 * Allowed hostnames for HTTP(S) URLs
-	 *
-	 * @var array
-	 */
-	public static $allowedDomains = true;
-
-	/**
 	 * Associative array of all allowed tag names with the value
 	 * of either an array with the list of all allowed attributes
 	 * for this tag, `true` to allow any attribute from the

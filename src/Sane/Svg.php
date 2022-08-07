@@ -267,6 +267,13 @@ class Svg extends Xml
 	];
 
 	/**
+	 * Allowed hostnames for HTTP(S) URLs
+	 *
+	 * @var array|true
+	 */
+	public static $allowedDomains = [];
+
+	/**
 	 * Associative array of all allowed namespace URIs
 	 *
 	 * @var array
