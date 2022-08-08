@@ -1,10 +1,8 @@
 <template>
-	<k-writer
+	<component
+		:is="component"
 		ref="input"
-		:inline="textField.inline"
-		:marks="textField.marks"
-		:nodes="textField.nodes"
-		:placeholder="textField.placeholder"
+		v-bind="textField"
 		:value="content.text"
 		class="k-block-type-text-input"
 		@input="update({ text: $event })"
@@ -17,10 +15,23 @@
  * @internal
  */
 export default {
-	props: {
-		endpoints: Object
-	},
 	computed: {
+		component() {
+			const type = this.textField.type;
+			if (type === "writer") {
+				return "k-writer";
+			}
+
+			// try load custom component
+			const component = "k-" + type + "-input";
+
+			if (this.$helper.isComponent(component)) {
+				return component;
+			}
+
+			// fallback to writer
+			return "k-writer";
+		},
 		textField() {
 			return this.field("text", {});
 		}
