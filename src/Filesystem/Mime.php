@@ -145,6 +145,9 @@ class Mime
 			],
 			'image/svg' => [
 				'svg' => 'image/svg+xml'
+			],
+			'application/octet-stream' => [
+				'mjs' => 'text/javascript'
 			]
 		];
 
