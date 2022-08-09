@@ -139,7 +139,7 @@ class PluginsTest extends TestCase
 		$this->assertSame($expected, $plugins->read('js'));
 
 		// mjs - c as base64 data uri
-		$expected = 'try { await Promise.all(["data:text/javascript;base64,Yw=="].map(url => import(url))) } catch (e) { console.error(e) }\n';
+		$expected = 'try { await Promise.all(["data:text/javascript;base64,Yw=="].map(url => import(url))) } catch (e) { console.error(e) }';
 		$this->assertSame($expected, $plugins->read('mjs'));
 	}
 
