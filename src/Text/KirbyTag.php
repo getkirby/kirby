@@ -2,6 +2,7 @@
 
 namespace Kirby\Text;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Model;
@@ -44,8 +45,7 @@ class KirbyTag
 			$type = static::$aliases[$type];
 		}
 
-		$kirby    = $data['kirby'] ?? App::instance();
-		$defaults = $kirby->option('kirbytext.' . $type, []);
+		$defaults = $this->kirby()->option('kirbytext.' . $type, []);
 		$attrs    = array_replace($defaults, $attrs);
 
 		// all available tag attributes
@@ -120,7 +120,7 @@ class KirbyTag
 		}
 
 		if (
-			is_a($parent, 'Kirby\Cms\File') === true &&
+			is_a($parent, File::class) === true &&
 			$file = $parent->page()->file($path)
 		) {
 			return $file;
@@ -155,7 +155,8 @@ class KirbyTag
 			$tag = substr($tag, 0, -1);
 		}
 
-		$type = trim(substr($tag, 0, strpos($tag, ':')));
+		$pos  = strpos($tag, ':');
+		$type = trim(substr($tag, 0, $pos ? $pos : null));
 		$type = strtolower($type);
 		$attr = static::$types[$type]['attr'] ?? [];
 
@@ -201,7 +202,7 @@ class KirbyTag
 	{
 		$callback = static::$types[$this->type]['html'] ?? null;
 
-		if (is_a($callback, 'Closure') === true) {
+		if (is_a($callback, Closure::class) === true) {
 			return (string)$callback($this);
 		}
 

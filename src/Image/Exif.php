@@ -131,7 +131,7 @@ class Exif
 	/**
 	 * Returns the iso value
 	 */
-	public function iso(): int|null
+	public function iso(): string|null
 	{
 		return $this->iso;
 	}
@@ -202,7 +202,9 @@ class Exif
 	protected function parseTimestamp(): string
 	{
 		if (isset($this->data['DateTimeOriginal']) === true) {
-			return strtotime($this->data['DateTimeOriginal']);
+			if ($time = strtotime($this->data['DateTimeOriginal'])) {
+				return (string)$time;
+			}
 		}
 
 		return $this->data['FileDateTime'] ?? $this->image->modified();
@@ -224,8 +226,8 @@ class Exif
 	public function toArray(): array
 	{
 		return [
-			'camera'      => $this->camera()?->toArray(),
-			'location'    => $this->location()?->toArray(),
+			'camera'      => $this->camera()->toArray(),
+			'location'    => $this->location()->toArray(),
 			'timestamp'   => $this->timestamp(),
 			'exposure'    => $this->exposure(),
 			'aperture'    => $this->aperture(),

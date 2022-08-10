@@ -111,7 +111,8 @@ class Image extends File
 	 */
 	public function html(array $attr = []): string
 	{
-		return Html::img($this->url(), $attr);
+		$url = $this->url() ?? '';
+		return Html::img($url, $attr);
 	}
 
 	/**
@@ -175,7 +176,7 @@ class Image extends File
 	 * Returns the orientation as string
 	 * `landscape` | `portrait` | `square`
 	 */
-	public function orientation(): string
+	public function orientation(): string|false
 	{
 		return $this->dimensions()->orientation();
 	}

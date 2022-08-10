@@ -179,7 +179,13 @@ class FileCache extends Cache
 
 			// checks all directory segments until reaching the root directory
 			while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
-				$files = array_diff(scandir($dir) ?? [], ['.', '..']);
+				$files = scandir($dir);
+
+				if ($files === false) {
+					$files = [];
+				}
+
+				$files = array_diff($files, ['.', '..']);
 
 				if (empty($files) === true && Dir::remove($dir) === true) {
 					// continue with the next level up

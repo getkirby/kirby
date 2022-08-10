@@ -38,7 +38,7 @@ class PHP extends Handler
 				return $data ? 'true' : 'false';
 			case 'integer':
 			case 'double':
-				return $data;
+				return (string)$data;
 			default:
 				return var_export($data, true);
 		}

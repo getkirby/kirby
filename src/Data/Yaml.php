@@ -46,12 +46,12 @@ class Yaml extends Handler
 		$string = str_replace("\xEF\xBB\xBF", '', $string);
 		$result = Spyc::YAMLLoadString($string);
 
-		if (is_array($result)) {
+		if (is_array($result) === true) {
 			return $result;
-		} else {
-			// apparently Spyc always returns an array, even for invalid YAML syntax
-			// so this Exception should currently never be thrown
-			throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
 		}
+
+		// apparently Spyc always returns an array, even for invalid YAML syntax
+		// so this Exception should currently never be thrown
+		throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
 	}
 }
