@@ -20,7 +20,7 @@ export default {
   props: {
     /**
      * Changes the text alignment
-     * @values left, centre, right 
+     * @values left, center, right
      */
     align: String,
     /**
