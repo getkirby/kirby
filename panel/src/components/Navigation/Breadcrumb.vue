@@ -126,6 +126,9 @@ export default {
 .k-breadcrumb-icon {
 	margin-inline-end: 0.5rem;
 }
+.k-breadcrumb-icon.k-loader {
+	opacity: 0.5;
+}
 .k-breadcrumb-link-text {
 	white-space: nowrap;
 	overflow: hidden;

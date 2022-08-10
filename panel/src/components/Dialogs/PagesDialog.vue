@@ -34,7 +34,7 @@
 				<template #options="{ item: page }">
 					<k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
 					<k-button
-						v-if="page"
+						v-if="model"
 						:disabled="!page.hasChildren"
 						:tooltip="$t('open')"
 						icon="angle-right"
