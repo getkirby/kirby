@@ -2,6 +2,8 @@
 
 namespace Kirby\Email;
 
+use Kirby\Cms\Helpers;
+
 /**
  * Representation of a an Email body
  * with a text and optional html version
@@ -49,6 +51,17 @@ class Body
 			html: $html ?? $props['html'] ?? $this->html(),
 			text: $text ?? $props['text'] ?? $this->text()
 		);
+	}
+
+	/**
+	 * @deprecated 3.8.0 Use `->clone()` instead
+	 * @todo Remove in 3.9.0
+	 * @codeCoverageIgnore
+	 */
+	public function hardcopy(): static
+	{
+		Helpers::deprecated('$body->hardcopy has been deprecated and will be remove in Kirby 3.9.0. Use $body->clone() instead.');
+		return $this->clone();
 	}
 
 	/**

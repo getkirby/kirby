@@ -169,7 +169,8 @@ class Email
 	 * Clone the email instance and
 	 * pass modified properties
 	 */
-	public function clone(...$args): static {
+	public function clone(...$args): static
+	{
 		$props 	   = get_object_vars($this);
 		$fallbacks = ['body' => $this->body()?->toArray()];
 
