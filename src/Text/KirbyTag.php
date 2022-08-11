@@ -45,7 +45,8 @@ class KirbyTag
 			$type = static::$aliases[$type];
 		}
 
-		$defaults = $this->kirby()->option('kirbytext.' . $type, []);
+		$kirby    = $data['kirby'] ?? App::instance();
+		$defaults = $kirby->option('kirbytext.' . $type, []);
 		$attrs    = array_replace($defaults, $attrs);
 
 		// all available tag attributes
