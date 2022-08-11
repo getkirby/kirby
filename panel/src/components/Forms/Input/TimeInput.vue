@@ -1,70 +1,75 @@
 <script>
 import DateInput from "./DateInput.vue";
 
+export const props = {
+	props: {
+		/**
+		 * Format to parse and display the time
+		 * @values HH, H, hh, h, mm, m, ss, s, a
+		 * @example `hh:mm a`
+		 */
+		display: {
+			type: String,
+			default: "HH:mm"
+		},
+		/**
+		 * The last allowed time
+		 * as ISO time string
+		 * @example `22:30:00`
+		 */
+		max: String,
+		/**
+		 * The first allowed time
+		 * as ISO time string
+		 * @example `01:30:00`
+		 */
+		min: String,
+		/**
+		 * Rounding to the nearest step.
+		 * Requires an object with a `unit`
+		 * and a `size` key
+		 * @example { unit: 'second', size: 15 }
+		 */
+		step: {
+			type: Object,
+			default() {
+				return {
+					size: 5,
+					unit: "minute"
+				};
+			}
+		},
+		type: {
+			type: String,
+			default: "time"
+		},
+		/**
+		 * Value must be provided as ISO time string
+		 * @example `22:33:00`
+		 */
+		value: String
+	}
+};
+
 /**
+ * Form input to handle a time value.
+ *
+ * Extends `k-date-input` and makes sure that values
+ * get parsed and emitted as time-only ISO string `HH:mm:ss`
+ *
  * @example <k-input v-model="time" name="time" type="time" />
+ * @public
  */
 export default {
-  extends: DateInput,
-  props: {
-    display: {
-      type: String,
-      default: "HH:mm"
-    },
-    max: String,
-    min: String,
-    step: {
-      type: Object,
-      default() {
-        return {
-          size: 5,
-          unit: "minute"
-        };
-      }
-    },
-    type: {
-      type: String,
-      default: "time"
-    }
-  },
-  computed: {
-    is12HourFormat() {
-      return this.display.toLowerCase().includes("a")
-    },
-    /**
-     * Map for matching time units with dayjs tokens
-     */
-    map() {
-      return {
-        second: ["s", "ss"],
-        minute: ["m", "mm"],
-        hour:   this.is12HourFormat ? ["h", "hh"] : ["H", "HH"]
-      };
-    },
-    /**
-     *  All variations of parsing patterns
-     *  for dayjs tokens included in `display`
-     */
-    patterns() {
-      // get computed patterns prop from original DateInput component
-      let patterns = DateInput.computed.patterns.apply(this);
-
-      // add patterns for am/pm token
-      if (this.is12HourFormat) {
-        patterns = patterns.map(pattern => pattern  + "a").concat(patterns);
-      }
-
-      return patterns;
-    }
-  },
-  methods: {
-    emit(event) {
-      const value = this.toFormat(this.parsed, "HH:mm:ss") || "";
-      this.$emit(event, value);
-    },
-    toDatetime(string) {
-      return this.$library.dayjs.utc(string, "HH:mm:ss");
-    },
-  }
+	mixins: [DateInput, props],
+	computed: {
+		/**
+		 * Use the time part for handling input values
+		 * @returns {string}
+		 */
+		inputType() {
+			return "time";
+		}
+	}
 };
 </script>

@@ -5,7 +5,6 @@ fields:
   level:
     type: select
     width: 1/2
-    default: 1
     empty: false
     default: "2"
     options:

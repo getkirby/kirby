@@ -1,81 +1,55 @@
 <template>
-  <k-field v-bind="$props" class="k-users-field">
-    <k-button-group slot="options" class="k-field-options">
-      <k-button
-        v-if="more && !disabled"
-        :icon="btnIcon"
-        class="k-field-options-button"
-        @click="open"
-      >
-        {{ btnLabel }}
-      </k-button>
-    </k-button-group>
+	<k-field v-bind="$props" class="k-users-field">
+		<template #options>
+			<k-button-group class="k-field-options">
+				<k-button
+					v-if="more && !disabled"
+					:icon="btnIcon"
+					:text="btnLabel"
+					class="k-field-options-button"
+					@click="open"
+				/>
+			</k-button-group>
+		</template>
 
-    <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :list="selected"
-        :handle="true"
-        :data-invalid="isInvalid"
-        @end="onInput"
-      >
-        <component
-          :is="elements.item"
-          v-for="(user, index) in selected"
-          :key="user.email"
-          :sortable="!disabled && selected.length > 1"
-          :text="user.text"
-          :info="user.info"
-          :link="link ? $api.users.link(user.id) : null"
-          :image="user.image"
-          :icon="user.icon"
-        >
-          <k-button
-            v-if="!disabled"
-            slot="options"
-            icon="remove"
-            @click="remove(index)"
-          />
-        </component>
-      </k-draggable>
-    </template>
-    <k-empty 
-      v-else 
-      :data-invalid="isInvalid" 
-      icon="users" 
-      @click="open"
-    >
-      {{ empty || $t("field.users.empty") }}
-    </k-empty>
-    <k-users-dialog ref="selector" @submit="select" />
-  </k-field>
+		<k-collection
+			v-bind="collection"
+			@empty="open"
+			@sort="onInput"
+			@sortChange="$emit('change', $event)"
+		>
+			<template #options="{ index }">
+				<k-button
+					v-if="!disabled"
+					:tooltip="$t('remove')"
+					icon="remove"
+					@click="remove(index)"
+				/>
+			</template>
+		</k-collection>
+
+		<k-users-dialog ref="selector" @submit="select" />
+	</k-field>
 </template>
 
 <script>
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    open() {
-      if (this.disabled) {
-        return false;
-      }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(user => user.id)
-      });
-    }
-  }
+	mixins: [picker],
+	computed: {
+		emptyProps() {
+			return {
+				icon: "users",
+				text: this.empty || this.$t("field.users.empty")
+			};
+		}
+	}
 };
 </script>
 
-<style lang="scss">
-.k-users-field[data-disabled] * {
-  pointer-events: all !important;
+<style>
+.k-users-field[data-disabled="true"] * {
+	pointer-events: all !important;
 }
 </style>

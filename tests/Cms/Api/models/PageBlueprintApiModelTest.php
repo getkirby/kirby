@@ -2,122 +2,107 @@
 
 namespace Kirby\Cms;
 
-class PageBlueprintApiModelTest extends TestCase
+use Kirby\Cms\Api\ApiModelTestCase;
+
+class PageBlueprintApiModelTest extends ApiModelTestCase
 {
-    protected $api;
-    protected $app;
+	public $page;
 
-    public function attr($object, $attr)
-    {
-        return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-    }
+	public function setUp(): void
+	{
+		parent::setUp();
+		$this->page = new Page(['slug' => 'test']);
+	}
 
-    public function assertAttr($object, $attr, $value)
-    {
-        $this->assertEquals($this->attr($object, $attr), $value);
-    }
+	public function testName()
+	{
+		$blueprint = new PageBlueprint([
+			'name'  => 'test',
+			'model' => $this->page
+		]);
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
+		$this->assertAttr($blueprint, 'name', 'test');
+	}
 
-        $this->api  = $this->app->api();
-        $this->page = new Page(['slug' => 'test']);
-    }
+	public function testNum()
+	{
+		$blueprint = new PageBlueprint([
+			'name'  => 'test',
+			'model' => $this->page,
+			'num'   => '{{ page.year }}'
+		]);
 
-    public function testName()
-    {
-        $blueprint = new PageBlueprint([
-            'name'  => 'test',
-            'model' => $this->page
-        ]);
+		$this->assertAttr($blueprint, 'num', '{{ page.year }}');
+	}
 
-        $this->assertAttr($blueprint, 'name', 'test');
-    }
+	public function testOptions()
+	{
+		$blueprint = new PageBlueprint([
+			'name'  => 'test',
+			'model' => $this->page
+		]);
 
-    public function testNum()
-    {
-        $blueprint = new PageBlueprint([
-            'name'  => 'test',
-            'model' => $this->page,
-            'num'   => '{{ page.year }}'
-        ]);
+		$options = $this->attr($blueprint, 'options');
 
-        $this->assertAttr($blueprint, 'num', '{{ page.year }}');
-    }
+		$this->assertArrayHasKey('changeSlug', $options);
+		$this->assertArrayHasKey('changeStatus', $options);
+		$this->assertArrayHasKey('changeTemplate', $options);
+		$this->assertArrayHasKey('changeTitle', $options);
+		$this->assertArrayHasKey('create', $options);
+		$this->assertArrayHasKey('delete', $options);
+		$this->assertArrayHasKey('read', $options);
+		$this->assertArrayHasKey('preview', $options);
+		$this->assertArrayHasKey('sort', $options);
+		$this->assertArrayHasKey('update', $options);
+	}
 
-    public function testOptions()
-    {
-        $blueprint = new PageBlueprint([
-            'name'  => 'test',
-            'model' => $this->page
-        ]);
+	public function testPreview()
+	{
+		$blueprint = new PageBlueprint([
+			'name'    => 'test',
+			'model'   => $this->page,
+			'options' => [
+				'preview' => 'test'
+			]
+		]);
 
-        $options = $this->attr($blueprint, 'options');
+		$this->assertAttr($blueprint, 'preview', 'test');
+	}
 
-        $this->assertArrayHasKey('changeSlug', $options);
-        $this->assertArrayHasKey('changeStatus', $options);
-        $this->assertArrayHasKey('changeTemplate', $options);
-        $this->assertArrayHasKey('changeTitle', $options);
-        $this->assertArrayHasKey('create', $options);
-        $this->assertArrayHasKey('delete', $options);
-        $this->assertArrayHasKey('read', $options);
-        $this->assertArrayHasKey('preview', $options);
-        $this->assertArrayHasKey('sort', $options);
-        $this->assertArrayHasKey('update', $options);
-    }
+	public function testStatus()
+	{
+		$blueprint = new PageBlueprint([
+			'name'    => 'test',
+			'model'   => $this->page,
+			'status'  => $status = [
+				'draft' => [
+					'label' => 'Test',
+					'text'  => 'Test'
+				],
+			]
+		]);
 
-    public function testPreview()
-    {
-        $blueprint = new PageBlueprint([
-            'name'    => 'test',
-            'model'   => $this->page,
-            'options' => [
-                'preview' => 'test'
-            ]
-        ]);
+		$this->assertAttr($blueprint, 'status', $status);
+	}
 
-        $this->assertAttr($blueprint, 'preview', 'test');
-    }
+	public function testTabs()
+	{
+		$blueprint = new PageBlueprint([
+			'name'  => 'test',
+			'model' => $this->page
+		]);
 
-    public function testStatus()
-    {
-        $blueprint = new PageBlueprint([
-            'name'    => 'test',
-            'model'   => $this->page,
-            'status'  => $status = [
-                'draft' => [
-                    'label' => 'Test',
-                    'text'  => 'Test'
-                ],
-            ]
-        ]);
+		$this->assertAttr($blueprint, 'tabs', []);
+	}
 
-        $this->assertAttr($blueprint, 'status', $status);
-    }
+	public function testTitle()
+	{
+		$blueprint = new PageBlueprint([
+			'name'  => 'test',
+			'title' => 'Test',
+			'model' => $this->page
+		]);
 
-    public function testTabs()
-    {
-        $blueprint = new PageBlueprint([
-            'name'  => 'test',
-            'model' => $this->page
-        ]);
-
-        $this->assertAttr($blueprint, 'tabs', []);
-    }
-
-    public function testTitle()
-    {
-        $blueprint = new PageBlueprint([
-            'name'  => 'test',
-            'title' => 'Test',
-            'model' => $this->page
-        ]);
-
-        $this->assertAttr($blueprint, 'title', 'Test');
-    }
+		$this->assertAttr($blueprint, 'title', 'Test');
+	}
 }

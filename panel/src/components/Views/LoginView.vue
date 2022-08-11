@@ -1,159 +1,113 @@
 <template>
-  <k-error-view v-if="issue">
-    {{ issue.message }}
-  </k-error-view>
-  <k-view v-else-if="ready && form === 'login'" align="center" class="k-login-view">
-    <k-login-plugin />
-  </k-view>
-  <k-view v-else-if="ready && form === 'code'" align="center" class="k-login-code-view">
-    <k-login-code />
-  </k-view>
+	<k-panel>
+		<k-view v-if="form === 'login'" align="center" class="k-login-view">
+			<k-login-plugin :methods="methods" />
+		</k-view>
+		<k-view
+			v-else-if="form === 'code'"
+			align="center"
+			class="k-login-code-view"
+		>
+			<k-login-code v-bind="$props" />
+		</k-view>
+	</k-panel>
 </template>
 
 <script>
 import LoginForm from "../Forms/Login.vue";
 
 export default {
-  components: {
-    "k-login-plugin": window.panel.plugins.login || LoginForm
-  },
-  data() {
-    return {
-      ready: false,
-      issue: null
-    };
-  },
-  computed: {
-    form() {
-      if (this.$store.state.user.pendingEmail) {
-        return "code";
-      } else if (!this.$store.state.user.current) {
-        return "login";
-      }
+	components: {
+		"k-login-plugin": window.panel.plugins.login || LoginForm
+	},
+	props: {
+		methods: Array,
+		pending: Object
+	},
+	computed: {
+		form() {
+			if (this.pending.email) {
+				return "code";
+			}
 
-      return null;
-    }
-  },
-  created() {
-    this.$store.dispatch("content/current", null);
-    this.$store
-      .dispatch("system/load")
-      .then(system => {
-        if (!system.isReady) {
-          this.$go("/installation");
-        }
+			if (!this.$user) {
+				return "login";
+			}
 
-        if (system.user && system.user.id) {
-          this.$go("/");
-        }
-
-        if (system.authStatus.status === "pending") {
-          this.$store.dispatch("user/pending", system.authStatus);
-        }
-
-        this.ready = true;
-        this.$store.dispatch("title", this.$t("login"));
-      })
-      .catch(error => {
-        this.issue = error;
-      });
-  }
+			return null;
+		}
+	},
+	created() {
+		this.$store.dispatch("content/clear");
+	}
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-login-fields {
-  position: relative;
+	position: relative;
 }
 
 .k-login-toggler {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	z-index: 1;
 
-  text-decoration: underline;
-  font-size: 0.875rem;
+	text-decoration: underline;
+	font-size: 0.875rem;
 }
 
 .k-login-form label abbr {
-  visibility: hidden;
+	visibility: hidden;
 }
 
 .k-login-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 1.5rem 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 1.5rem 0;
 }
 
 .k-login-button {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  transition: opacity 0.3s;
-
-  [dir="ltr"] & {
-    margin-right: -1rem;
-  }
-
-  [dir="rtl"] & {
-    margin-left: -1rem;
-  }
+	padding: 0.5rem 1rem;
+	font-weight: 500;
+	transition: opacity 0.3s;
+	margin-inline-end: -1rem;
 }
 
 .k-login-button span {
-  opacity: 1;
+	opacity: 1;
 }
 
 .k-login-button[disabled] {
-  opacity: 0.25;
+	opacity: 0.25;
 }
 
 .k-login-back-button,
 .k-login-checkbox {
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
+	display: flex;
+	align-items: center;
+	flex-grow: 1;
 }
 
 .k-login-back-button {
-  [dir="ltr"] & {
-    margin-left: -1rem;
-  }
-
-  [dir="rtl"] & {
-    margin-right: -1rem;
-  }
+	margin-inline-start: -1rem;
 }
 
 .k-login-checkbox {
-  padding: 0.5rem 0;
-  font-size: $text-sm;
-  cursor: pointer;
+	padding: 0.5rem 0;
+	font-size: var(--text-sm);
+	cursor: pointer;
 }
 
 .k-login-checkbox .k-checkbox-text {
-  opacity: 0.75;
-  transition: opacity 0.3s;
+	opacity: 0.75;
+	transition: opacity 0.3s;
 }
 
 .k-login-checkbox:hover span,
 .k-login-checkbox:focus span {
-  opacity: 1;
-}
-
-.k-login-alert {
-  padding: .5rem .75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 38px;
-  margin-bottom: 2rem;
-  background: $color-negative;
-  color: #fff;
-  font-size: $text-sm;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow-lg;
-  cursor: pointer;
+	opacity: 1;
 }
 </style>

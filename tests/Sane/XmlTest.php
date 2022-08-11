@@ -7,170 +7,247 @@ namespace Kirby\Sane;
  */
 class XmlTest extends TestCase
 {
-    protected $type = 'xml';
+	protected $type = 'xml';
 
-    public function setUp(): void
-    {
-        Xml::$allowedDomains = ['getkirby.com'];
-    }
+	public function setUp(): void
+	{
+		Xml::$allowedDomains = ['getkirby.com'];
+	}
 
-    public function tearDown(): void
-    {
-        Xml::$allowedDomains = [];
-    }
+	public function tearDown(): void
+	{
+		Xml::$allowedDomains = [];
+	}
 
-    /**
-     * @dataProvider allowedProvider
-     */
-    public function testAllowed(string $file)
-    {
-        $this->assertNull(Xml::validateFile($this->fixture($file)));
-    }
+	/**
+	 * @dataProvider allowedProvider
+	 */
+	public function testAllowed(string $file)
+	{
+		$fixture = $this->fixture($file);
 
-    public function allowedProvider()
-    {
-        return $this->fixtureList('allowed', 'xml');
-    }
+		$this->assertNull(Xml::validateFile($fixture));
 
-    /**
-     * @dataProvider invalidProvider
-     */
-    public function testInvalid(string $file)
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The file could not be parsed');
+		$sanitized = Xml::sanitize(file_get_contents($fixture));
+		$this->assertStringEqualsFile($fixture, $sanitized);
+	}
 
-        Xml::validateFile($this->fixture($file));
-    }
+	public function allowedProvider()
+	{
+		return $this->fixtureList('allowed', 'xml');
+	}
 
-    public function invalidProvider()
-    {
-        return $this->fixtureList('invalid', 'xml');
-    }
+	/**
+	 * @dataProvider invalidProvider
+	 */
+	public function testInvalid(string $file)
+	{
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The markup could not be parsed');
 
-    public function testIsAllowedUrlJavascript()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2)');
+		Xml::validateFile($this->fixture($file));
+	}
 
-        Xml::validate("<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
-    }
+	public function invalidProvider()
+	{
+		return $this->fixtureList('invalid', 'xml');
+	}
 
-    public function testIsAllowedUrlJavascriptWithUnicodeLS()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 1)');
+	public function testDisallowedJavascriptUrl()
+	{
+		$fixture   = "<xml>\n<a href='javascript:alert(1)'></a>\n</xml>";
+		$sanitized = "<xml>\n<a/>\n</xml>";
 
-        /**
-         * Test fixture inspired by DOMPurify
-         * @link https://github.com/cure53/DOMPurify
-         * @copyright 2015 Mario Heiderich
-         * @license https://www.apache.org/licenses/LICENSE-2.0
-         */
-        Xml::validate('<xml>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></xml>');
-    }
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
 
-    public function testIsAllowedUrlXlink()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
+		Xml::validate($fixture);
+	}
 
-        Xml::validateFile($this->fixture('disallowed/xlink-attack.xml'));
-    }
+	public function testDisallowedJavascriptUrlWithUnicodeLS()
+	{
+		/**
+		 * Test fixture inspired by DOMPurify
+		 * @link https://github.com/cure53/DOMPurify
+		 * @copyright 2015 Mario Heiderich
+		 * @license https://www.apache.org/licenses/LICENSE-2.0
+		 */
+		$fixture   = '<xml>123<a href="\u2028javascript:alert(1)">I am a dolphin!</a></xml>';
+		$sanitized = '<xml>123<a>I am a dolphin!</a></xml>';
 
-    public function testValidateAttrsDataUri1()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 7)');
+		$this->assertSame($sanitized, Xml::sanitize($fixture));
 
-        Xml::validateFile($this->fixture('disallowed/data-uri-svg-1.xml'));
-    }
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
+		Xml::validate($fixture);
+	}
 
-    public function testValidateAttrsDataUri2()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: filter (line 7)');
+	public function testDisallowedXlinkAttack()
+	{
+		$fixture   = $this->fixture('disallowed/xlink-attack.xml');
+		$sanitized = $this->fixture('sanitized/xlink-attack.xml');
 
-        Xml::validateFile($this->fixture('disallowed/data-uri-svg-2.xml'));
-    }
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-    public function testValidateAttrsExternalSource1()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 3)');
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
+		Xml::validateFile($fixture);
+	}
 
-        Xml::validateFile($this->fixture('disallowed/external-source-1.xml'));
-    }
+	public function testDisallowedDataUriSvg1()
+	{
+		$fixture   = $this->fixture('disallowed/data-uri-svg-1.xml');
+		$sanitized = $this->fixture('sanitized/data-uri-svg-1.xml');
 
-    public function testValidateAttrsExternalSource2()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 3)');
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-        Xml::validateFile($this->fixture('disallowed/external-source-2.xml'));
-    }
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 7): Invalid data URI');
+		Xml::validateFile($fixture);
+	}
 
-    public function testValidateAttrsNamespace1()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 1)');
+	public function testDisallowedDataUriSvg2()
+	{
+		$fixture   = $this->fixture('disallowed/data-uri-svg-2.xml');
+		$sanitized = $this->fixture('sanitized/data-uri-svg-2.xml');
 
-        Xml::validateFile($this->fixture('disallowed/namespace-svg.xml'));
-    }
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-    public function testValidateAttrsNamespace2()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 1)');
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7): Invalid data URI');
+		Xml::validateFile($fixture);
+	}
 
-        Xml::validateFile($this->fixture('disallowed/namespace-xhtml.xml'));
-    }
+	public function testDisallowedExternalSource1()
+	{
+		$fixture   = $this->fixture('disallowed/external-source-1.xml');
+		$sanitized = $this->fixture('sanitized/external-source-1.xml');
 
-    public function testValidateDoctypeExternalSubset1()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The doctype must not reference external files');
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-        Xml::validateFile($this->fixture('disallowed/doctype-external-1.xml'));
-    }
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
+		Xml::validateFile($fixture);
+	}
 
-    public function testValidateDoctypeExternalSubset2()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The doctype must not reference external files');
+	public function testDisallowedExternalSource2()
+	{
+		$fixture   = $this->fixture('disallowed/external-source-2.xml');
+		$sanitized = $this->fixture('sanitized/external-source-2.xml');
 
-        Xml::validateFile($this->fixture('disallowed/doctype-external-2.xml'));
-    }
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-    public function testValidateDoctypeInternalSubset()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The doctype must not define a subset');
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): The hostname "malicious.com" is not allowed');
+		Xml::validateFile($fixture);
+	}
 
-        Xml::validateFile($this->fixture('disallowed/doctype-entity-attack.xml'));
-    }
+	public function testDisallowedNamespaceSvg()
+	{
+		$fixture   = $this->fixture('disallowed/namespace-svg.xml');
+		$sanitized = $this->fixture('sanitized/namespace-svg.xml');
 
-    public function testValidateDoctypeSvg()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The doctype is not allowed in XML files');
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-        Xml::validateFile($this->fixture('disallowed/doctype-svg.xml'));
-    }
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
+		Xml::validateFile($fixture);
+	}
 
-    public function testValidateDoctypeXhtml()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The doctype is not allowed in XML files');
+	public function testDisallowedNamespaceXhtml1()
+	{
+		$fixture   = $this->fixture('disallowed/namespace-xhtml-1.xml');
+		$sanitized = $this->fixture('sanitized/namespace-xhtml-1.xml');
 
-        Xml::validateFile($this->fixture('disallowed/doctype-xhtml.xml'));
-    }
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-    public function testValidateProcessingInstructionsStylesheet()
-    {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
+		Xml::validateFile($fixture);
+	}
 
-        Xml::validateFile($this->fixture('disallowed/stylesheet.xml'));
-    }
+	public function testDisallowedNamespaceXhtml2()
+	{
+		$fixture   = $this->fixture('disallowed/namespace-xhtml-2.xml');
+		$sanitized = $this->fixture('sanitized/namespace-xhtml-2.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeExternal1()
+	{
+		$fixture   = $this->fixture('disallowed/doctype-external-1.xml');
+		$sanitized = $this->fixture('sanitized/doctype-external-1.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The doctype must not reference external files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeExternal2()
+	{
+		$fixture   = $this->fixture('disallowed/doctype-external-2.xml');
+		$sanitized = $this->fixture('sanitized/doctype-external-2.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The doctype must not reference external files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeEntityAttack()
+	{
+		$fixture   = $this->fixture('disallowed/doctype-entity-attack.xml');
+		$sanitized = $this->fixture('sanitized/doctype-entity-attack.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The doctype must not define a subset');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeSvg()
+	{
+		$fixture   = $this->fixture('disallowed/doctype-svg.xml');
+		$sanitized = $this->fixture('sanitized/doctype-svg.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The doctype is not allowed in XML files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedDoctypeXhtml()
+	{
+		$fixture   = $this->fixture('disallowed/doctype-xhtml.xml');
+		$sanitized = $this->fixture('sanitized/doctype-xhtml.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The doctype is not allowed in XML files');
+		Xml::validateFile($fixture);
+	}
+
+	public function testDisallowedStylesheet()
+	{
+		$fixture   = $this->fixture('disallowed/stylesheet.xml');
+		$sanitized = $this->fixture('sanitized/stylesheet.xml');
+
+		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
+		Xml::validateFile($fixture);
+	}
 }

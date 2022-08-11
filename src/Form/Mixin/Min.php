@@ -4,15 +4,15 @@ namespace Kirby\Form\Mixin;
 
 trait Min
 {
-    protected $min;
+	protected $min;
 
-    public function min(): ?int
-    {
-        return $this->min;
-    }
+	public function min(): ?int
+	{
+		return $this->min;
+	}
 
-    protected function setMin(int $min = null)
-    {
-        $this->min = $min;
-    }
+	protected function setMin(int $min = null)
+	{
+		$this->min = $min;
+	}
 }

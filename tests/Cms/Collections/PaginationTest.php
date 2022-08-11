@@ -2,178 +2,170 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Http\Server;
 use Kirby\Http\Uri;
 
 class PaginationTest extends TestCase
 {
-    protected function pagination(array $options = [])
-    {
-        return new Pagination(array_merge([
-            'page'  => 1,
-            'limit' => 10,
-            'total' => 120,
-            'url'   => new Uri('https://getkirby.com')
-        ], $options));
-    }
+	protected function pagination(array $options = [])
+	{
+		return new Pagination(array_merge([
+			'page'  => 1,
+			'limit' => 10,
+			'total' => 120,
+			'url'   => new Uri('https://getkirby.com')
+		], $options));
+	}
 
-    public function testCustomAppUrl()
-    {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'urls' => [
-                'index' => 'https://getkirby.com'
-            ]
-        ]);
+	public function testCustomAppUrl()
+	{
+		$this->app->clone([
+			'options' => [
+				'url' => 'https://getkirby.com'
+			]
+		]);
 
-        $pagination = new Pagination([
-            'page'  => 1,
-            'limit' => 10,
-            'total' => 120,
-        ]);
+		$pagination = new Pagination([
+			'page'  => 1,
+			'limit' => 10,
+			'total' => 120,
+		]);
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->nextPageUrl());
-    }
+		$this->assertSame('https://getkirby.com/page:2', $pagination->nextPageUrl());
+	}
 
-    public function testSubfolderUrl()
-    {
-        $server = $_SERVER;
+	public function testSubfolderUrl()
+	{
+		$this->app->clone([
+			'options' => [
+				'url' => 'http://localhost/starterkit'
+			]
+		]);
 
-        // remove any cached uri object
-        Uri::$current = null;
+		$pagination = new Pagination([
+			'page'  => 1,
+			'limit' => 10,
+			'total' => 120,
+		]);
 
-        // if cli detection is activated the index url detection
-        // will fail and fall back to /
-        Server::$cli = false;
+		$this->assertSame('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
+	}
 
-        // no additional path
-        $_SERVER['SERVER_NAME'] = 'localhost';
-        $_SERVER['SCRIPT_NAME'] = '/starterkit/index.php';
+	public function testCurrentPageUrl()
+	{
+		$pagination = $this->pagination([
+			'page' => 2
+		]);
 
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+		$this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
+	}
 
-        $pagination = new Pagination([
-            'page'  => 1,
-            'limit' => 10,
-            'total' => 120,
-        ]);
+	public function testCurrentPageUrlWithFirstPage()
+	{
+		$pagination = $this->pagination([
+			'page' => 1
+		]);
 
-        $this->assertEquals('http://localhost/starterkit/page:2', $pagination->nextPageUrl());
+		$this->assertSame('https://getkirby.com', $pagination->pageUrl());
+	}
 
-        $_SERVER = $server;
-        Server::$cli = true;
-        Uri::$current = null;
-    }
+	public function testPageUrl()
+	{
+		$pagination = $this->pagination();
 
-    public function testCurrentPageUrl()
-    {
-        $pagination = $this->pagination([
-            'page' => 2
-        ]);
+		$this->assertSame('https://getkirby.com', $pagination->pageUrl(1));
+		$this->assertSame('https://getkirby.com/page:12', $pagination->pageUrl(12));
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->pageUrl());
-    }
+		$this->assertNull($pagination->pageUrl(0));
+		$this->assertNull($pagination->pageUrl(13));
+	}
 
-    public function testCurrentPageUrlWithFirstPage()
-    {
-        $pagination = $this->pagination([
-            'page' => 1
-        ]);
+	public function testFirstPageUrl()
+	{
+		$pagination = $this->pagination();
+		$this->assertSame('https://getkirby.com', $pagination->firstPageUrl());
+	}
 
-        $this->assertEquals('https://getkirby.com', $pagination->pageUrl());
-    }
+	public function testLastPageUrl()
+	{
+		$pagination = $this->pagination();
+		$this->assertSame('https://getkirby.com/page:12', $pagination->lastPageUrl());
+	}
 
-    public function testPageUrl()
-    {
-        $pagination = $this->pagination();
+	public function testFirstLastPageUrlNull()
+	{
+		$pagination = new Pagination([
+			'page'  => 1,
+			'limit' => 10,
+			'total' => 0,
+			'url'   => new Uri('https://getkirby.com')
+		]);
 
-        $this->assertEquals('https://getkirby.com', $pagination->pageUrl(1));
-        $this->assertEquals('https://getkirby.com/page:12', $pagination->pageUrl(12));
+		$this->assertSame(null, $pagination->firstPageUrl());
+		$this->assertSame(null, $pagination->lastPageUrl());
+	}
 
-        $this->assertNull($pagination->pageUrl(0));
-        $this->assertNull($pagination->pageUrl(13));
-    }
+	public function testNextPageUrl()
+	{
+		$pagination = $this->pagination([
+			'page' => 2
+		]);
 
-    public function testFirstPageUrl()
-    {
-        $pagination = $this->pagination();
-        $this->assertEquals('https://getkirby.com', $pagination->firstPageUrl());
-    }
+		$this->assertSame('https://getkirby.com/page:3', $pagination->nextPageUrl());
+	}
 
-    public function testLastPageUrl()
-    {
-        $pagination = $this->pagination();
-        $this->assertEquals('https://getkirby.com/page:12', $pagination->lastPageUrl());
-    }
+	public function testNonExistingNextPage()
+	{
+		$pagination = $this->pagination(['page' => 12]);
+		$this->assertNull($pagination->nextPageUrl());
+	}
 
-    public function testNextPageUrl()
-    {
-        $pagination = $this->pagination([
-            'page' => 2
-        ]);
+	public function testPrevPageUrl()
+	{
+		$pagination = $this->pagination([
+			'page' => 3
+		]);
 
-        $this->assertEquals('https://getkirby.com/page:3', $pagination->nextPageUrl());
-    }
+		$this->assertSame('https://getkirby.com/page:2', $pagination->prevPageUrl());
+	}
 
-    public function testNonExistingNextPage()
-    {
-        $pagination = $this->pagination(['page' => 12]);
-        $this->assertNull($pagination->nextPageUrl());
-    }
+	public function testNonExistingPrevPage()
+	{
+		$pagination = $this->pagination(['page' => 1]);
+		$this->assertNull($pagination->prevPageUrl());
+	}
 
-    public function testPrevPageUrl()
-    {
-        $pagination = $this->pagination([
-            'page' => 3
-        ]);
+	public function testPrevPageUrlWithFirstPage()
+	{
+		$pagination = $this->pagination([
+			'page' => 2
+		]);
 
-        $this->assertEquals('https://getkirby.com/page:2', $pagination->prevPageUrl());
-    }
+		$this->assertSame('https://getkirby.com', $pagination->prevPageUrl());
+	}
 
-    public function testNonExistingPrevPage()
-    {
-        $pagination = $this->pagination(['page' => 1]);
-        $this->assertNull($pagination->prevPageUrl());
-    }
+	public function testMethod()
+	{
+		$pagination = $this->pagination([
+			'page' => 2
+		]);
+		$this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
 
-    public function testPrevPageUrlWithFirstPage()
-    {
-        $pagination = $this->pagination([
-            'page' => 2
-        ]);
+		$pagination = $this->pagination([
+			'page'   => 2,
+			'method' => 'query'
+		]);
+		$this->assertSame('https://getkirby.com?page=2', $pagination->pageUrl());
 
-        $this->assertEquals('https://getkirby.com', $pagination->prevPageUrl());
-    }
+		$pagination = $this->pagination([
+			'page'   => 2,
+			'method' => 'param'
+		]);
+		$this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
 
-    public function testMethod()
-    {
-        $pagination = $this->pagination([
-            'page' => 2
-        ]);
-        $this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
-
-        $pagination = $this->pagination([
-            'page'   => 2,
-            'method' => 'query'
-        ]);
-        $this->assertSame('https://getkirby.com?page=2', $pagination->pageUrl());
-
-        $pagination = $this->pagination([
-            'page'   => 2,
-            'method' => 'param'
-        ]);
-        $this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
-
-        $pagination = $this->pagination([
-            'page'   => 2,
-            'method' => 'none'
-        ]);
-        $this->assertNull($pagination->pageUrl());
-    }
+		$pagination = $this->pagination([
+			'page'   => 2,
+			'method' => 'none'
+		]);
+		$this->assertNull($pagination->pageUrl());
+	}
 }

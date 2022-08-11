@@ -6,185 +6,139 @@ use PHPUnit\Framework\TestCase;
 
 class DarkroomTest extends TestCase
 {
-    public function file(string $driver = null)
-    {
-        if ($driver !== null) {
-            return __DIR__ . '/fixtures/image/cat-' . $driver . '.jpg';
-        }
+	public function file(string $driver = null)
+	{
+		if ($driver !== null) {
+			return __DIR__ . '/fixtures/image/cat-' . $driver . '.jpg';
+		}
 
-        return __DIR__ . '/fixtures/image/cat.jpg';
-    }
+		return __DIR__ . '/fixtures/image/cat.jpg';
+	}
 
-    public function testFactory()
-    {
-        $instance = Darkroom::factory('gd');
+	public function testFactory()
+	{
+		$instance = Darkroom::factory('gd');
+		$this->assertInstanceOf(Darkroom\GdLib::class, $instance);
 
-        $this->assertInstanceOf(Darkroom\GdLib::class, $instance);
+		$instance = Darkroom::factory('im');
+		$this->assertInstanceOf(Darkroom\ImageMagick::class, $instance);
+	}
 
-        $instance = Darkroom::factory('im');
+	public function testFactoryWithInvalidType()
+	{
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('Invalid Darkroom type');
 
-        $this->assertInstanceOf(Darkroom\ImageMagick::class, $instance);
-    }
+		$instance = Darkroom::factory('does-not-exist');
+	}
 
-    public function testFactoryWithInvalidType()
-    {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid Darkroom type');
+	public function testCropWithoutPosition()
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'crop'  => true,
+			'width' => 100
+		]);
 
-        $instance = Darkroom::factory('does-not-exist');
-    }
+		$this->assertEquals('center', $options['crop']);
+	}
 
-    public function testCropWithoutPosition()
-    {
-        $darkroom = new Darkroom();
-        $options  = $darkroom->preprocess($this->file(), [
-            'crop'  => true,
-            'width' => 100
-        ]);
+	public function testBlurWithoutPosition()
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'blur' => true,
+		]);
 
-        $this->assertEquals('center', $options['crop']);
-    }
+		$this->assertEquals(10, $options['blur']);
+	}
 
-    public function testBlurWithoutPosition()
-    {
-        $darkroom = new Darkroom();
-        $options  = $darkroom->preprocess($this->file(), [
-            'blur' => true,
-        ]);
+	public function testQualityWithoutValue()
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'quality' => null,
+		]);
 
-        $this->assertEquals(10, $options['blur']);
-    }
+		$this->assertEquals(90, $options['quality']);
+	}
 
-    public function testQualityWithoutValue()
-    {
-        $darkroom = new Darkroom();
-        $options  = $darkroom->preprocess($this->file(), [
-            'quality' => null,
-        ]);
+	public function testDefaults()
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess('/dev/null');
 
-        $this->assertEquals(90, $options['quality']);
-    }
+		$this->assertEquals(true, $options['autoOrient']);
+		$this->assertEquals(false, $options['crop']);
+		$this->assertEquals(false, $options['blur']);
+		$this->assertEquals(false, $options['grayscale']);
+		$this->assertEquals(null, $options['height']);
+		$this->assertEquals(90, $options['quality']);
+		$this->assertEquals(null, $options['width']);
+	}
 
-    public function testDefaults()
-    {
-        $darkroom = new Darkroom();
-        $options  = $darkroom->preprocess('/dev/null');
+	public function testGlobalOptions()
+	{
+		$darkroom = new Darkroom([
+			'quality' => 20
+		]);
 
-        $this->assertEquals(true, $options['autoOrient']);
-        $this->assertEquals(false, $options['crop']);
-        $this->assertEquals(false, $options['blur']);
-        $this->assertEquals(false, $options['grayscale']);
-        $this->assertEquals(null, $options['height']);
-        $this->assertEquals(90, $options['quality']);
-        $this->assertEquals(null, $options['width']);
-    }
+		$options = $darkroom->preprocess($this->file());
 
-    public function testGlobalOptions()
-    {
-        $darkroom = new Darkroom([
-            'quality' => 20
-        ]);
+		$this->assertEquals(20, $options['quality']);
+	}
 
-        $options = $darkroom->preprocess($this->file());
+	public function testPassedOptions()
+	{
+		$darkroom = new Darkroom([
+			'quality' => 20
+		]);
 
-        $this->assertEquals(20, $options['quality']);
-    }
+		$options = $darkroom->preprocess($this->file(), [
+			'quality' => 30
+		]);
 
-    public function testPassedOptions()
-    {
-        $darkroom = new Darkroom([
-            'quality' => 20
-        ]);
+		$this->assertEquals(30, $options['quality']);
+	}
 
-        $options = $darkroom->preprocess($this->file(), [
-            'quality' => 30
-        ]);
+	public function testProcess()
+	{
+		$darkroom = new Darkroom([
+			'quality' => 20
+		]);
 
-        $this->assertEquals(30, $options['quality']);
-    }
+		$options = $darkroom->process($this->file(), [
+			'quality' => 30
+		]);
 
-    public function testProcess()
-    {
-        $darkroom = new Darkroom([
-            'quality' => 20
-        ]);
+		$this->assertEquals(30, $options['quality']);
+	}
 
-        $options = $darkroom->process($this->file(), [
-            'quality' => 30
-        ]);
+	public function testGrayscaleFixes()
+	{
+		$darkroom = new Darkroom();
 
-        $this->assertEquals(30, $options['quality']);
-    }
+		// grayscale
+		$options = $darkroom->preprocess($this->file(), [
+			'grayscale' => true
+		]);
 
-    public function testGrayscaleFixes()
-    {
-        $darkroom = new Darkroom();
+		$this->assertEquals(true, $options['grayscale']);
 
-        // grayscale
-        $options = $darkroom->preprocess($this->file(), [
-            'grayscale' => true
-        ]);
+		// greyscale
+		$options = $darkroom->preprocess($this->file(), [
+			'greyscale' => true
+		]);
 
-        $this->assertEquals(true, $options['grayscale']);
+		$this->assertEquals(true, $options['grayscale']);
+		$this->assertEquals(false, isset($options['greyscale']));
 
-        // greyscale
-        $options = $darkroom->preprocess($this->file(), [
-            'greyscale' => true
-        ]);
+		// bw
+		$options = $darkroom->preprocess($this->file(), [
+			'bw' => true
+		]);
 
-        $this->assertEquals(true, $options['grayscale']);
-        $this->assertEquals(false, isset($options['greyscale']));
-
-        // bw
-        $options = $darkroom->preprocess($this->file(), [
-            'bw' => true
-        ]);
-
-        $this->assertEquals(true, $options['grayscale']);
-        $this->assertEquals(false, isset($options['bw']));
-    }
-
-    public function testGdProcess()
-    {
-        $instance = Darkroom::factory('gd');
-
-        // since the same file is used in other tests
-        // it is tested on a copy and deleted
-        copy($this->file(), $file = $this->file('gd'));
-
-        $this->assertSame([
-            'autoOrient' => true,
-            'crop' => false,
-            'blur' => false,
-            'grayscale' => false,
-            'height' => 500,
-            'quality' => 90,
-            'width' => 500,
-        ], $instance->process($file));
-
-        @unlink($file);
-    }
-
-    public function testImProcess()
-    {
-        $instance = Darkroom::factory('im');
-
-        // since the same file is used in other tests
-        // it is tested on a copy and deleted
-        copy($this->file(), $file = $this->file('im'));
-
-        $this->assertSame([
-            'autoOrient' => true,
-            'crop' => false,
-            'blur' => false,
-            'grayscale' => false,
-            'height' => 500,
-            'quality' => 90,
-            'width' => 500,
-            'bin' => 'convert',
-            'interlace' => false
-        ], $instance->process($file));
-
-        @unlink($file);
-    }
+		$this->assertEquals(true, $options['grayscale']);
+		$this->assertEquals(false, isset($options['bw']));
+	}
 }

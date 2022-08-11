@@ -1,72 +1,52 @@
 <?php
 
-use Kirby\Cms\Form;
 use Kirby\Cms\Site;
+use Kirby\Form\Form;
 
 /**
  * Site
  */
 return [
-    'default' => function () {
-        return $this->site();
-    },
-    'fields' => [
-        'blueprint' => function (Site $site) {
-            return $site->blueprint();
-        },
-        'children' => function (Site $site) {
-            return $site->children();
-        },
-        'content' => function (Site $site) {
-            return Form::for($site)->values();
-        },
-        'drafts' => function (Site $site) {
-            return $site->drafts();
-        },
-        'files' => function (Site $site) {
-            return $site->files()->sort('sort', 'asc', 'filename', 'asc');
-        },
-        'options' => function (Site $site) {
-            return $site->permissions()->toArray();
-        },
-        'previewUrl' => function (Site $site) {
-            return $site->previewUrl();
-        },
-        'title' => function (Site $site) {
-            return $site->title()->value();
-        },
-        'url' => function (Site $site) {
-            return $site->url();
-        },
-    ],
-    'type' => 'Kirby\Cms\Site',
-    'views' => [
-        'compact' => [
-            'title',
-            'url'
-        ],
-        'default' => [
-            'content',
-            'options',
-            'title',
-            'url'
-        ],
-        'panel' => [
-            'title',
-            'blueprint',
-            'content',
-            'options',
-            'previewUrl',
-            'url'
-        ],
-        'selector' => [
-            'title',
-            'children' => [
-                'id',
-                'title',
-                'panelIcon',
-                'hasChildren'
-            ],
-        ]
-    ]
+	'default' => fn () => $this->site(),
+	'fields' => [
+		'blueprint'  => fn (Site $site) => $site->blueprint(),
+		'children'   => fn (Site $site) => $site->children(),
+		'content'    => fn (Site $site) => Form::for($site)->values(),
+		'drafts'     => fn (Site $site) => $site->drafts(),
+		'files'      => fn (Site $site) => $site->files()->sorted(),
+		'options'    => fn (Site $site) => $site->permissions()->toArray(),
+		'previewUrl' => fn (Site $site) => $site->previewUrl(),
+		'title'      => fn (Site $site) => $site->title()->value(),
+		'url'        => fn (Site $site) => $site->url(),
+	],
+	'type' => 'Kirby\Cms\Site',
+	'views' => [
+		'compact' => [
+			'title',
+			'url'
+		],
+		'default' => [
+			'content',
+			'options',
+			'title',
+			'url'
+		],
+		'panel' => [
+			'title',
+			'blueprint',
+			'content',
+			'options',
+			'previewUrl',
+			'url'
+		],
+		'selector' => [
+			'title',
+			'children' => [
+				'id',
+				'title',
+				'panelIcon',
+				'hasChildren'
+			],
+		]
+	]
 ];

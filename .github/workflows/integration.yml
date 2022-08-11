@@ -1,0 +1,135 @@
+name: CI - Integration
+on:
+  push:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - "**"
+      - "!.github/**"
+      - ".github/workflows/integration.yml"
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!panel/scripts/**"
+      - "!scripts/**"
+  pull_request:
+    branches-ignore:
+      - "main"
+      - "release/**"
+    paths:
+      - "**"
+      - "!.github/**"
+      - ".github/workflows/integration.yml"
+      - "!.tx/**"
+      - "!.vscode/**"
+      - "!assets/**"
+      - "!panel/scripts/**"
+      - "!scripts/**"
+  workflow_call:
+
+jobs:
+  e2e:
+    name: "E2E tests"
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      php: "8.0"
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        with:
+          path: kirby
+
+      - name: Checkout Sandbox
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        with:
+          repository: getkirby/sandbox
+          path: sandbox
+          submodules: true
+
+      - name: Preparations
+        run: |
+          # set up log directory
+          mkdir -p ${{ github.workspace }}/_logs
+
+          # link Kirby to Sandbox
+          rm -rf ${{ github.workspace }}/sandbox/kirby
+          ln -s ${{ github.workspace }}/kirby ${{ github.workspace }}/sandbox/kirby
+
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@fc01a9cdc93341e96c2078d848f2e96240d83c17 # pin@v1
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          key: e2e-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # pin@v2
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          coverage: none
+
+      - name: Install dependencies
+        uses: cypress-io/github-action@be2de7b1fe1cdafb4a3c8da0a3746476ef636b65 # pin@v4
+        with:
+          working-directory: kirby/panel
+          runTests: false
+
+      - name: Build Panel dist files
+        run: npm run build
+        working-directory: kirby/panel
+
+      - name: Start the PHP server
+        run: php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
+        working-directory: kirby/panel
+
+      - name: Run tests
+        uses: cypress-io/github-action@be2de7b1fe1cdafb4a3c8da0a3746476ef636b65 # pin@v4
+        with:
+          working-directory: kirby/panel
+          install: false
+          wait-on: "http://127.0.0.1:8000/panel/login"
+          wait-on-timeout: 5
+          config: baseUrl=http://127.0.0.1:8000
+
+      - name: Print log files
+        if: always()
+        run: |
+          for log in ${{ github.workspace }}/_logs/*; do
+            echo "::group::$(basename $log)"
+            cat $log
+            echo "::endgroup::"
+          done
+
+      - name: Archive Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3
+        with:
+          name: cypress-screenshots
+          path: kirby/panel/cypress/screenshots
+
+      - name: Archive Cypress videos
+        if: always()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3
+        with:
+          name: cypress-videos
+          path: kirby/panel/cypress/videos

@@ -1,0 +1,8 @@
+// Vitest Snapshot v1
+
+exports[`PrevNext.vue > has CSS selector 1`] = `
+<k-button-group-stub
+  buttons="[object Object],[object Object]"
+  class="k-prev-next"
+/>
+`;

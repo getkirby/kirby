@@ -2,296 +2,536 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Blueprint
+ */
 class BlueprintTest extends TestCase
 {
-    protected $app;
-    protected $model;
+	protected $app;
+	protected $model;
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-        $this->model = new Page(['slug' => 'a']);
-    }
+		$this->model = new Page(['slug' => 'a']);
+	}
 
-    public function testConvertColumnsToTabs()
-    {
-        $columns = [
-            [
-                'width'    => '1/3',
-                'sections' => []
-            ],
-            [
-                'width'    => '2/3',
-                'sections' => []
-            ]
-        ];
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithoutModel()
+	{
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('A blueprint model is required');
 
-        $blueprint = new Blueprint([
-            'model'   => $this->model,
-            'columns' => $columns
-        ]);
+		new Blueprint([]);
+	}
 
-        $expected = [
-            'main' => [
-                'name'    => 'main',
-                'label'   => 'Main',
-                'columns' => [
-                    [
-                        'width' => '1/3',
-                        'sections' => [
-                            'main-info-0' => [
-                                'headline' => 'Column (1/3)',
-                                'type'     => 'info',
-                                'text'     => 'No sections yet',
-                                'name'     => 'main-info-0'
-                            ]
-                        ]
-                    ],
-                    [
-                        'width' => '2/3',
-                        'sections' => [
-                            'main-info-1' => [
-                                'headline' => 'Column (2/3)',
-                                'type'     => 'info',
-                                'text'     => 'No sections yet',
-                                'name'     => 'main-info-1'
-                            ]
-                        ]
-                    ]
-                ],
-                'icon'    => null
-            ]
-        ];
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructInvalidModel()
+	{
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid blueprint model');
 
-        $this->assertEquals($expected, $blueprint->toArray()['tabs']);
-    }
+		new Blueprint(['model' => new \stdClass()]);
+	}
 
-    public function testSectionsToColumns()
-    {
-        $sections = [
-            'pages' => [
-                'name' => 'pages',
-                'type' => 'pages'
-            ],
-            'files' => [
-                'name' => 'files',
-                'type' => 'files'
-            ]
-        ];
+	public function testConvertColumnsToTabs()
+	{
+		$columns = [
+			[
+				'width'    => '1/3',
+				'sections' => []
+			],
+			[
+				'width'    => '2/3',
+				'sections' => []
+			]
+		];
 
-        $blueprint = new Blueprint([
-            'model'    => $this->model,
-            'sections' => $sections
-        ]);
+		$blueprint = new Blueprint([
+			'model'   => $this->model,
+			'columns' => $columns
+		]);
 
-        $expected = [
-            'main' => [
-                'name'    => 'main',
-                'label'   => 'Main',
-                'columns' => [
-                    [
-                        'width'    => '1/1',
-                        'sections' => $sections
-                    ]
-                ],
-                'icon'    => null
-            ]
-        ];
+		$expected = [
+			'main' => [
+				'columns' => [
+					[
+						'width' => '1/3',
+						'sections' => [
+							'main-info-0' => [
+								'headline' => 'Column (1/3)',
+								'type'     => 'info',
+								'text'     => 'No sections yet',
+								'name'     => 'main-info-0'
+							]
+						]
+					],
+					[
+						'width' => '2/3',
+						'sections' => [
+							'main-info-1' => [
+								'headline' => 'Column (2/3)',
+								'type'     => 'info',
+								'text'     => 'No sections yet',
+								'name'     => 'main-info-1'
+							]
+						]
+					]
+				],
+				'icon'    => null,
+				'label'   => 'Main',
+				'link'    => '/pages/a/?tab=main',
+				'name'    => 'main'
+			]
+		];
 
-        $this->assertEquals($expected, $blueprint->toArray()['tabs']);
-    }
+		$this->assertSame($expected, $blueprint->toArray()['tabs']);
+		$this->assertSame($expected['main'], $blueprint->tab());
+	}
 
-    public function testFieldsToSections()
-    {
-        $fields = [
-            'headline' => [
-                'label' => 'Headline',
-                'name'  => 'headline',
-                'type'  => 'text',
-                'width' => '1/1'
-            ]
-        ];
+	/**
+	 * @covers ::__debugInfo
+	 */
+	public function testDebugInfo()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default'
+		]);
 
-        $blueprint = new Blueprint([
-            'model'  => $this->model,
-            'fields' => $fields
-        ]);
+		$expected = [
+			'name'  => 'default',
+			'title' => 'Default',
+			'tabs'  => []
+		];
 
-        $expected = [
-            'main' => [
-                'name'    => 'main',
-                'label'   => 'Main',
-                'columns' => [
-                    [
-                        'width'    => '1/1',
-                        'sections' => [
-                            'main-fields' => [
-                                'name'   => 'main-fields',
-                                'type'   => 'fields',
-                                'fields' => $fields
-                            ]
-                        ]
-                    ]
-                ],
-                'icon'    => null
-            ]
-        ];
+		$this->assertSame($expected, $blueprint->__debugInfo());
+	}
 
-        $this->assertEquals($expected, $blueprint->toArray()['tabs']);
-    }
+	public function testSectionsToColumns()
+	{
+		$sections = [
+			'pages' => [
+				'name' => 'pages',
+				'type' => 'pages'
+			],
+			'files' => [
+				'name' => 'files',
+				'type' => 'files'
+			]
+		];
 
-    public function testTitle()
-    {
-        $blueprint = new Blueprint([
-            'title' => 'Test',
-            'model' => $this->model
-        ]);
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => $sections
+		]);
 
-        $this->assertEquals('Test', $blueprint->title());
-    }
+		$expected = [
+			'main' => [
+				'name'    => 'main',
+				'label'   => 'Main',
+				'columns' => [
+					[
+						'width'    => '1/1',
+						'sections' => $sections
+					]
+				],
+				'icon'    => null,
+				'link'    => '/pages/a/?tab=main'
+			]
+		];
 
-    public function testTitleTranslated()
-    {
-        $blueprint = new Blueprint([
-            'title' => ['en' => 'Test'],
-            'model' => $this->model
-        ]);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+	}
 
-        $this->assertEquals('Test', $blueprint->title());
-    }
+	public function testFieldsToSections()
+	{
+		$fields = [
+			'headline' => [
+				'label' => 'Headline',
+				'name'  => 'headline',
+				'type'  => 'text',
+				'width' => '1/1'
+			]
+		];
 
-    public function testTitleFromName()
-    {
-        $blueprint = new Blueprint([
-            'model' => $this->model
-        ]);
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => $fields
+		]);
 
-        $this->assertEquals('Default', $blueprint->title());
+		$expected = [
+			'main' => [
+				'name'    => 'main',
+				'label'   => 'Main',
+				'columns' => [
+					[
+						'width'    => '1/1',
+						'sections' => [
+							'main-fields' => [
+								'name'   => 'main-fields',
+								'type'   => 'fields',
+								'fields' => $fields
+							]
+						]
+					]
+				],
+				'icon'    => null,
+				'link'    => '/pages/a/?tab=main'
+			]
+		];
 
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'name'  => 'test'
-        ]);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+	}
 
-        $this->assertEquals('Test', $blueprint->title());
-    }
+	/**
+	 * @covers ::title
+	 */
+	public function testTitle()
+	{
+		$blueprint = new Blueprint([
+			'title' => 'Test',
+			'model' => $this->model
+		]);
 
-    public function testExtend()
-    {
-        new App([
-            'blueprints' => [
-                'test' => [
-                    'title' => 'Extension Test'
-                ]
-            ]
-        ]);
+		$this->assertEquals('Test', $blueprint->title());
+	}
 
-        $blueprint = new Blueprint([
-            'extends' => 'test',
-            'model'   => 'test'
-        ]);
+	/**
+	 * @covers ::title
+	 */
+	public function testTitleTranslated()
+	{
+		$blueprint = new Blueprint([
+			'title' => ['en' => 'Test'],
+			'model' => $this->model
+		]);
 
-        $this->assertEquals('Extension Test', $blueprint->title());
-    }
+		$this->assertEquals('Test', $blueprint->title());
+	}
 
-    public function testFields()
-    {
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'fields' => $fields = [
-                'test' => [
-                    'type'  => 'text',
-                    'name'  => 'test',
-                    'label' => 'Test',
-                    'width' => '1/1'
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::title
+	 */
+	public function testTitleFromName()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model
+		]);
 
-        $this->assertEquals($fields, $blueprint->fields());
-        $this->assertEquals($fields['test'], $blueprint->field('test'));
-    }
+		$this->assertEquals('Default', $blueprint->title());
 
-    public function testNestedFields()
-    {
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'fields' => $fields = [
-                'test' => [
-                    'type'   => 'structure',
-                    'fields' => [
-                        'child-field' => [
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'test'
+		]);
 
-        $this->assertCount(1, $blueprint->fields());
-        $this->assertArrayHasKey('test', $blueprint->fields());
-        $this->assertArrayNotHasKey('child-field', $blueprint->fields());
-    }
+		$this->assertEquals('Test', $blueprint->title());
+	}
 
-    public function testInvalidSectionType()
-    {
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'sections' => [
-                'main' => [
-                    'type' => [
-                        'headline' => [
-                            'label' => 'Headline',
-                            'name'  => 'headline',
-                            'type'  => 'text',
-                            'width' => '1/1'
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::extend
+	 */
+	public function testExtend()
+	{
+		new App([
+			'blueprints' => [
+				'test' => [
+					'title' => 'Extension Test'
+				]
+			]
+		]);
 
-        try {
-            $sections = $blueprint->tab('main')['columns'][0]['sections'];
-        } catch (\Exception $e) {
-            $this->assertNull($e->getMessage(), 'Failed to get sections.');
-        }
+		$blueprint = new Blueprint([
+			'extends' => 'test',
+			'model'   => new Page(['slug' => 'test'])
+		]);
 
-        $this->assertEquals(true, is_array($sections));
-        $this->assertEquals(1, sizeof($sections));
-        $this->assertEquals(true, array_key_exists('main', $sections));
-        $this->assertEquals(true, array_key_exists('headline', $sections['main']));
-        $this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
-    }
+		$this->assertSame('Extension Test', $blueprint->title());
+	}
 
-    public function testSectionTypeFromName()
-    {
-        // with options
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'sections' => [
-                'info' => [
-                ]
-            ]
-        ]);
+	/**
+	 * @covers ::extend
+	 */
+	public function testExtendWithInvalidSnippet()
+	{
+		$blueprint = new Blueprint([
+			'extends' => 'notFound',
+			'model'   => new Page(['slug' => 'test'])
+		]);
 
-        $this->assertEquals('info', $blueprint->sections()['info']->type());
+		$this->assertSame('Default', $blueprint->title());
+	}
 
-        // by just passing true
-        $blueprint = new Blueprint([
-            'model' => $this->model,
-            'sections' => [
-                'info' => true
-            ]
-        ]);
+	/**
+	 * @covers ::extend
+	 */
+	public function testExtendMultiple()
+	{
+		new App([
+			'blueprints' => [
+				'props/after' => ['after' => 'foo'],
+				'props/before' => ['before' => 'bar'],
+				'props/required' => ['required' => true],
+				'props/text' => ['type' => 'text'],
+				'props/translatable' => ['translatable' => false],
+				'props/width' => ['width' => '1/3']
+			]
+		]);
 
-        $this->assertEquals('info', $blueprint->sections()['info']->type());
-    }
+		$blueprint = new Blueprint([
+			'model' => new Page(['slug' => 'test']),
+			'fields' => [
+				'test' => [
+					'label' => 'Test',
+					'extends'  => [
+						'props/after',
+						'props/before',
+						'props/required',
+						'props/text',
+						'props/translatable',
+						'props/width',
+					]
+				]
+			]
+		]);
+
+		$field = $blueprint->field('test');
+
+		$this->assertSame('foo', $field['after']);
+		$this->assertSame('bar', $field['before']);
+		$this->assertSame(true, $field['required']);
+		$this->assertSame('text', $field['type']);
+		$this->assertSame(false, $field['translatable']);
+		$this->assertSame('1/3', $field['width']);
+	}
+
+	/**
+	 * @covers ::factory
+	 * @covers ::find
+	 */
+	public function testFactory()
+	{
+		Blueprint::$loaded = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => ['title' => 'Test']
+			]
+		]);
+
+		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+		$this->assertSame('Test', $blueprint->title());
+		$this->assertSame('pages/test', $blueprint->name());
+	}
+
+	/**
+	 * @covers ::factory
+	 * @covers ::find
+	 */
+	public function testFactoryWithCallbackArray()
+	{
+		Blueprint::$loaded = [];
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => function () {
+					return ['title' => 'Test'];
+				}
+			]
+		]);
+
+		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+		$this->assertSame('Test', $blueprint->title());
+		$this->assertSame('pages/test', $blueprint->name());
+	}
+
+	/**
+	 * @covers ::factory
+	 * @covers ::find
+	 */
+	public function testFactoryWithCallbackString()
+	{
+		Blueprint::$loaded = [];
+
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index' => '/dev/null',
+				'blueprints' => $fixtures = __DIR__ . '/fixtures/BlueprintTest/factoryWithCallbackString',
+			],
+			'blueprints' => [
+				'pages/test' => function () use ($fixtures) {
+					return $fixtures . '/custom/test.yml';
+				}
+			]
+		]);
+
+		Data::write($fixtures . '/custom/test.yml', ['title' => 'Test']);
+
+		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+		$this->assertSame('Test', $blueprint->title());
+		$this->assertSame('pages/test', $blueprint->name());
+	}
+
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactoryForMissingBlueprint()
+	{
+		$blueprint = Blueprint::factory('notFound', null, new Page(['slug' => 'test']));
+		$this->assertNull($blueprint);
+	}
+
+	/**
+	 * @covers ::fields
+	 * @covers ::field
+	 */
+	public function testFields()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => $fields = [
+				'test' => [
+					'type'  => 'text',
+					'name'  => 'test',
+					'label' => 'Test',
+					'width' => '1/1'
+				]
+			]
+		]);
+
+		$this->assertEquals($fields, $blueprint->fields());
+		$this->assertEquals($fields['test'], $blueprint->field('test'));
+	}
+
+	/**
+	 * @covers ::fields
+	 */
+	public function testNestedFields()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => $fields = [
+				'test' => [
+					'type'   => 'structure',
+					'fields' => [
+						'child-field' => [
+							'type' => 'text'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertCount(1, $blueprint->fields());
+		$this->assertArrayHasKey('test', $blueprint->fields());
+		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
+	}
+
+	public function testInvalidSectionType()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'sections' => [
+				'main' => [
+					'type' => [
+						'headline' => [
+							'label' => 'Headline',
+							'name'  => 'headline',
+							'type'  => 'text',
+							'width' => '1/1'
+						]
+					]
+				]
+			]
+		]);
+
+		try {
+			$sections = $blueprint->tab('main')['columns'][0]['sections'];
+		} catch (\Exception $e) {
+			$this->assertNull($e->getMessage(), 'Failed to get sections.');
+		}
+
+		$this->assertEquals(true, is_array($sections));
+		$this->assertEquals(1, sizeof($sections));
+		$this->assertEquals(true, array_key_exists('main', $sections));
+		$this->assertEquals(true, array_key_exists('headline', $sections['main']));
+		$this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
+	}
+
+	/**
+	 * @covers ::isDefault
+	 */
+	public function testIsDefault()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default'
+		]);
+
+		$this->assertTrue($blueprint->isDefault());
+	}
+
+	public function testSectionTypeFromName()
+	{
+		// with options
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'sections' => [
+				'info' => [
+				]
+			]
+		]);
+
+		$this->assertEquals('info', $blueprint->sections()['info']->type());
+
+		// by just passing true
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'sections' => [
+				'info' => true
+			]
+		]);
+
+		$this->assertEquals('info', $blueprint->sections()['info']->type());
+	}
+
+	/**
+	 * @covers ::preset
+	 */
+	public function testPreset()
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'preset' => 'page'
+		]);
+
+		$preset = $blueprint->toArray();
+
+		$this->assertSame('page', $preset['preset']);
+		$this->assertSame('default', $preset['name']);
+		$this->assertSame('Default', $preset['title']);
+		$this->assertArrayHasKey('tabs', $preset);
+		$this->assertArrayHasKey('main', $preset['tabs']);
+		$this->assertNull($preset['tabs']['main']['icon']);
+		$this->assertArrayHasKey('columns', $preset['tabs']['main']);
+		$this->assertSame('Main', $preset['tabs']['main']['label']);
+		$this->assertSame('/pages/a/?tab=main', $preset['tabs']['main']['link']);
+		$this->assertSame('main', $preset['tabs']['main']['name']);
+	}
 }

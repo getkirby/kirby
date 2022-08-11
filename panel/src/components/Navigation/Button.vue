@@ -1,12 +1,10 @@
 <template>
-  <component
-    :is="component"
-    ref="button"
-    v-bind="$props"
-    v-on="$listeners"
-  >
-    <slot />
-  </component>
+	<component :is="component" ref="button" v-bind="$props" v-on="$listeners">
+		<template v-if="text">
+			{{ text }}
+		</template>
+		<slot v-else />
+	</component>
 </template>
 
 <script>
@@ -14,161 +12,158 @@
  * @example <k-button icon="check">Save</k-button>
  */
 export default {
-  inheritAttrs: false,
-  props: {
-    autofocus: Boolean,
-    /**
-     * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
-     */
-    current: [String, Boolean],
-    /**
-     * A disabled button will have no pointer events and the opacity is be reduced.
-     */
-    disabled: Boolean,
-    /**
-     * Adds an icon to the button.
-     */
-    icon: String,
-    id: [String, Number],
-    /**
-     * If the link attribute is set, the button will automatically be converted to a proper `a` tag.
-     */
-    link: String,
-    /**
-     * A responsive button will hide the button text on smaller screens automatically and only keep the icon. An icon must be set in this case.
-     */
-    responsive: Boolean,
-    rel: String,
-    role: String,
-    /**
-     * In connection with the `link` attribute, you can also set the target of the link. This does not apply to regular buttons.
-     */
-    target: String,
-    tabindex: String,
-    /**
-     * With the theme you can control the general design of the button.
-     * @values positive, negative
-     */
-    theme: String,
-    /**
+	inheritAttrs: false,
+	props: {
+		autofocus: Boolean,
+		/**
+		 * Pass instead of a link URL to be triggered on clicking the button
+		 */
+		click: Function,
+		/**
+		 * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
+		 */
+		current: [String, Boolean],
+		/**
+		 * A disabled button will have no pointer events and the opacity is be reduced.
+		 */
+		disabled: Boolean,
+		/**
+		 * Adds an icon to the button.
+		 */
+		icon: String,
+		id: [String, Number],
+		/**
+		 * If the link attribute is set, the button will automatically be converted to a proper `a` tag.
+		 */
+		link: String,
+		/**
+		 * A responsive button will hide the button text on smaller screens automatically and only keep the icon. An icon must be set in this case.
+		 */
+		responsive: Boolean,
+		rel: String,
+		role: String,
+		/**
+		 * In connection with the `link` attribute, you can also set the target of the link. This does not apply to regular buttons.
+		 */
+		target: String,
+		tabindex: String,
+		/**
+		 * Use either the default slot or this prop for the button text
+		 */
+		text: [String, Number],
+		/**
+		 * With the theme you can control the general design of the button.
+		 * @values positive, negative
+		 */
+		theme: String,
+		/**
      * The tooltip attribute can be used to add additional text to the button, which is shown on mouseover (with the `title` attribute).
 
      */
-    tooltip: String,
-    /**
-     * The type attribute sets the button type like in HTML.
-     * @values button, submit, reset
-     */
-    type: {
-      type: String,
-      default: "button"
-    }
-  },
-  computed: {
-    component() {
-      if (this.disabled === true) {
-        return "k-button-disabled";
-      }
+		tooltip: String,
+		/**
+		 * The type attribute sets the button type like in HTML.
+		 * @values button, submit, reset
+		 */
+		type: {
+			type: String,
+			default: "button"
+		}
+	},
+	computed: {
+		component() {
+			if (this.disabled === true) {
+				return "k-button-disabled";
+			}
 
-      return this.link ? "k-button-link" : "k-button-native";
-    },
-  },
-  methods: {
-    focus() {
-      if (this.$refs.button.focus) {
-        this.$refs.button.focus();
-      }
-    },
-    tab() {
-      if (this.$refs.button.tab) {
-        this.$refs.button.tab();
-      }
-    },
-    untab() {
-      if (this.$refs.button.untab) {
-        this.$refs.button.untab();
-      }
-    }
-  }
+			return this.link ? "k-button-link" : "k-button-native";
+		}
+	},
+	methods: {
+		focus() {
+			if (this.$refs.button.focus) {
+				this.$refs.button.focus();
+			}
+		},
+		tab() {
+			if (this.$refs.button.tab) {
+				this.$refs.button.tab();
+			}
+		},
+		untab() {
+			if (this.$refs.button.untab) {
+				this.$refs.button.untab();
+			}
+		}
+	}
 };
 </script>
 
-<style lang="scss">
+<style>
 button {
-  line-height: inherit;
-  border: 0;
-  font-family: $font-sans;
-  font-size: 1rem;
-  color: currentColor;
-  background: none;
-  cursor: pointer;
+	line-height: inherit;
+	border: 0;
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	color: currentColor;
+	background: none;
+	cursor: pointer;
 }
 button::-moz-focus-inner {
-  padding: 0;
-  border: 0;
+	padding: 0;
+	border: 0;
 }
 
 .k-button {
-  display: inline-block;
-  position: relative;
-  font-size: $text-sm;
-  transition: color 0.3s;
+	display: inline-block;
+	position: relative;
+	font-size: var(--text-sm);
+	transition: color 0.3s;
+	outline: none;
+}
+.k-button:focus,
+.k-button:hover {
+	outline: none;
+}
 
-  &:focus,
-  &:hover {
-    outline: none;
-  }
-
-  @include highlight-tabbed;
-
-  * {
-    vertical-align: middle;
-  }
+.k-button * {
+	vertical-align: middle;
 }
 
 /* hide button text on small screens */
-.k-button[data-responsive] .k-button-text {
-  display: none;
-
-  @media screen and (min-width: $breakpoint-sm) {
-    display: inline;
-  }
+.k-button[data-responsive="true"] .k-button-text {
+	display: none;
+}
+@media screen and (min-width: 30em) {
+	.k-button[data-responsive="true"] .k-button-text {
+		display: inline;
+	}
 }
 
-.k-button[data-theme="positive"] {
-  color: $color-positive;
-}
-
-.k-button[data-theme="negative"] {
-  color: $color-negative;
+.k-button[data-theme] {
+	color: var(--theme);
 }
 
 .k-button-icon {
-  display: inline-flex;
-  align-items: center;
-  line-height: 0;
+	display: inline-flex;
+	align-items: center;
+	line-height: 0;
 }
 
 .k-button-icon ~ .k-button-text {
-  [dir="ltr"] & {
-    padding-left: 0.5rem;
-  }
-
-  [dir="rtl"] & {
-    padding-right: 0.5rem;
-  }
+	padding-inline-start: 0.5rem;
 }
 
 .k-button-text {
-  opacity: 0.75;
+	opacity: 0.75;
 }
 .k-button:focus .k-button-text,
 .k-button:hover .k-button-text {
-  opacity: 1;
+	opacity: 1;
 }
 
 .k-button-text span,
 .k-button-text b {
-  vertical-align: baseline;
+	vertical-align: baseline;
 }
 </style>

@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
@@ -11,177 +12,236 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
-    public function testCustomProps()
-    {
-        $file = [
-            'name'     => 'test.txt',
-            'tmp_name' => '/tmp/abc',
-            'size'     => 123,
-            'error'    => 0
-        ];
+	public function tearDown(): void
+	{
+		App::destroy();
+	}
 
-        $request = new Request([
-            'method' => 'POST',
-            'body'   => ['a' => 'a'],
-            'query'  => ['b' => 'b'],
-            'files'  => ['upload' => $file]
-        ]);
+	public function testCustomProps()
+	{
+		$file = [
+			'name'     => 'test.txt',
+			'tmp_name' => '/tmp/abc',
+			'size'     => 123,
+			'error'    => 0
+		];
 
-        $this->assertTrue($request->is('POST'));
-        $this->assertEquals('a', $request->body()->get('a'));
-        $this->assertEquals('b', $request->query()->get('b'));
-        $this->assertEquals($file, $request->file('upload'));
-    }
+		// simple
+		$request = new Request([
+			'method' => 'POST',
+			'body'   => ['a' => 'a'],
+			'query'  => ['b' => 'b'],
+			'files'  => ['upload' => $file],
+			'url'    => 'https://getkirby.com'
+		]);
 
-    public function testData()
-    {
-        $request = new Request([
-            'body'   => ['a' => 'a'],
-            'query'  => ['b' => 'b'],
-        ]);
+		$this->assertTrue($request->is('POST'));
+		$this->assertSame('a', $request->body()->get('a'));
+		$this->assertSame('b', $request->query()->get('b'));
+		$this->assertSame($file, $request->file('upload'));
+		$this->assertSame('https://getkirby.com', $request->url()->toString());
 
-        $this->assertEquals(['a' => 'a', 'b' => 'b'], $request->data());
-        $this->assertEquals('a', $request->get('a'));
-        $this->assertEquals('b', $request->get('b'));
-        $this->assertEquals(null, $request->get('c'));
-    }
+		// with instances
+		$request = new Request([
+			'method' => 'POST',
+			'body'   => new Request\Body(['a' => 'a']),
+			'query'  => new Request\Query(['b' => 'b']),
+			'files'  => new Request\Files(['upload' => $file]),
+			'url'    => new Uri('https://getkirby.com')
+		]);
 
-    public function test__debuginfo()
-    {
-        $request = new Request();
-        $info    = $request->__debugInfo();
+		$this->assertTrue($request->is('POST'));
+		$this->assertSame('a', $request->body()->get('a'));
+		$this->assertSame('b', $request->query()->get('b'));
+		$this->assertSame($file, $request->file('upload'));
+		$this->assertSame('https://getkirby.com', $request->url()->toString());
+	}
 
-        $this->assertArrayHasKey('body', $info);
-        $this->assertArrayHasKey('query', $info);
-        $this->assertArrayHasKey('files', $info);
-        $this->assertArrayHasKey('method', $info);
-        $this->assertArrayHasKey('url', $info);
-    }
+	public function testData()
+	{
+		$request = new Request([
+			'body'   => ['a' => 'a'],
+			'query'  => ['b' => 'b'],
+		]);
 
-    public function testAuthMissing()
-    {
-        $request = new Request();
-        $this->assertFalse($request->auth());
-    }
+		$this->assertEquals(['a' => 'a', 'b' => 'b'], $request->data());
+		$this->assertEquals('a', $request->get('a'));
+		$this->assertEquals('b', $request->get('b'));
+		$this->assertEquals(null, $request->get('c'));
+	}
 
-    public function testBasicAuth()
-    {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode($credentials = 'testuser:testpass');
+	public function test__debuginfo()
+	{
+		$request = new Request();
+		$info    = $request->__debugInfo();
 
-        $request = new Request();
+		$this->assertArrayHasKey('body', $info);
+		$this->assertArrayHasKey('query', $info);
+		$this->assertArrayHasKey('files', $info);
+		$this->assertArrayHasKey('method', $info);
+		$this->assertArrayHasKey('url', $info);
+	}
 
-        $this->assertInstanceOf(BasicAuth::class, $request->auth());
-        $this->assertEquals('testuser', $request->auth()->username());
-        $this->assertEquals('testpass', $request->auth()->password());
+	public function testAuthMissing()
+	{
+		$request = new Request();
+		$this->assertFalse($request->auth());
+	}
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
-    }
+	public function testBasicAuth()
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($credentials = 'testuser:testpass')
+			]
+		]);
 
-    public function testBearerAuth()
-    {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer abcd';
+		$request = new Request();
 
-        $request = new Request();
+		$this->assertInstanceOf(BasicAuth::class, $request->auth());
+		$this->assertEquals('testuser', $request->auth()->username());
+		$this->assertEquals('testpass', $request->auth()->password());
+	}
 
-        $this->assertInstanceOf(BearerAuth::class, $request->auth());
-        $this->assertEquals('abcd', $request->auth()->token());
+	public function testBearerAuth()
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Bearer abcd'
+			]
+		]);
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
-    }
+		$request = new Request();
 
-    public function testUnknownAuth()
-    {
-        $_SERVER['HTTP_AUTHORIZATION'] = 'Unknown abcd';
+		$this->assertInstanceOf(BearerAuth::class, $request->auth());
+		$this->assertEquals('abcd', $request->auth()->token());
+	}
 
-        $request = new Request();
+	public function testCli()
+	{
+		$request = new Request();
+		$this->assertTrue($request->cli());
 
-        $this->assertFalse($request->auth());
+		$request = new Request(['cli' => true]);
+		$this->assertTrue($request->cli());
 
-        unset($_SERVER['HTTP_AUTHORIZATION']);
-    }
+		$request = new Request(['cli' => false]);
+		$this->assertFalse($request->cli());
+	}
 
-    public function testMethod()
-    {
-        $request = new Request();
 
-        $this->assertInstanceOf(Query::class, $request->query());
-        $this->assertInstanceOf(Body::class, $request->body());
-        $this->assertInstanceOf(Files::class, $request->files());
-    }
+	public function testUnknownAuth()
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Unknown abcd'
+			]
+		]);
 
-    public function testQuery()
-    {
-        $request = new Request();
-        $this->assertInstanceOf('Kirby\Http\Request\Query', $request->query());
-    }
+		$request = new Request();
 
-    public function testBody()
-    {
-        $request = new Request();
-        $this->assertInstanceOf('Kirby\Http\Request\Body', $request->body());
-    }
+		$this->assertFalse($request->auth());
+	}
 
-    public function testFiles()
-    {
-        $request = new Request();
-        $this->assertInstanceOf('Kirby\Http\Request\Files', $request->files());
-    }
+	public function testAuthTrack()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-    public function testFile()
-    {
-        $request = new Request();
-        $this->assertNull($request->file('test'));
-    }
+		$this->assertFalse($app->response()->usesAuth());
 
-    public function testIs()
-    {
-        $request = new Request();
-        $this->assertTrue($request->is('GET'));
-    }
+		$request = new Request();
+		$request->auth();
 
-    public function testIsWithLowerCaseInput()
-    {
-        $request = new Request();
-        $this->assertTrue($request->is('get'));
-    }
+		$this->assertTrue($app->response()->usesAuth());
+	}
 
-    public function testUrl()
-    {
-        $request = new Request();
-        $this->assertInstanceOf(Uri::class, $request->url());
-    }
+	public function testMethod()
+	{
+		$request = new Request();
 
-    public function testUrlUpdates()
-    {
-        $request = new Request();
+		$this->assertInstanceOf(Query::class, $request->query());
+		$this->assertInstanceOf(Body::class, $request->body());
+		$this->assertInstanceOf(Files::class, $request->files());
+	}
 
-        $uriBefore = $request->url();
+	public function testQuery()
+	{
+		$request = new Request();
+		$this->assertInstanceOf('Kirby\Http\Request\Query', $request->query());
+	}
 
-        $clone = $request->url([
-            'host'  => 'getkirby.com',
-            'path'  => 'yay',
-            'query' => ['foo' => 'bar']
-        ]);
+	public function testBody()
+	{
+		$request = new Request();
+		$this->assertInstanceOf('Kirby\Http\Request\Body', $request->body());
+	}
 
-        $uriAfter = $request->url();
+	public function testFiles()
+	{
+		$request = new Request();
+		$this->assertInstanceOf('Kirby\Http\Request\Files', $request->files());
+	}
 
-        $this->assertNotEquals($uriBefore, $clone);
-        $this->assertEquals($uriBefore, $uriAfter);
-        $this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
-    }
+	public function testFile()
+	{
+		$request = new Request();
+		$this->assertNull($request->file('test'));
+	}
 
-    public function testPath()
-    {
-        $request = new Request();
-        $this->assertInstanceOf(Path::class, $request->path());
-    }
+	public function testIs()
+	{
+		$request = new Request();
+		$this->assertTrue($request->is('GET'));
+	}
 
-    public function testDomain()
-    {
-        $request = new Request([
-            'url' => 'https://getkirby.com/a/b'
-        ]);
+	public function testIsWithLowerCaseInput()
+	{
+		$request = new Request();
+		$this->assertTrue($request->is('get'));
+	}
 
-        $this->assertEquals('getkirby.com', $request->domain());
-    }
+	public function testUrl()
+	{
+		$request = new Request();
+		$this->assertInstanceOf(Uri::class, $request->url());
+	}
+
+	public function testUrlUpdates()
+	{
+		$request = new Request();
+
+		$uriBefore = $request->url();
+
+		$clone = $request->url([
+			'host'  => 'getkirby.com',
+			'path'  => 'yay',
+			'query' => ['foo' => 'bar'],
+			'slash' => false,
+		]);
+
+		$uriAfter = $request->url();
+
+		$this->assertNotSame($uriBefore, $clone);
+		$this->assertSame($uriBefore, $uriAfter);
+		$this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
+	}
+
+	public function testPath()
+	{
+		$request = new Request();
+		$this->assertInstanceOf(Path::class, $request->path());
+	}
+
+	public function testDomain()
+	{
+		$request = new Request([
+			'url' => 'https://getkirby.com/a/b'
+		]);
+
+		$this->assertEquals('getkirby.com', $request->domain());
+	}
 }

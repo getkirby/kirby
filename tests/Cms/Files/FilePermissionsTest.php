@@ -6,50 +6,58 @@ use PHPUnit\Framework\TestCase;
 
 class FilePermissionsTest extends TestCase
 {
-    public function actionProvider()
-    {
-        return [
-            ['changeName'],
-            ['create'],
-            ['delete'],
-            ['replace'],
-            ['update']
-        ];
-    }
+	public function actionProvider()
+	{
+		return [
+			['changeName'],
+			['create'],
+			['delete'],
+			['replace'],
+			['update']
+		];
+	}
 
-    /**
-     * @dataProvider actionProvider
-     */
-    public function testWithAdmin($action)
-    {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+	/**
+	 * @dataProvider actionProvider
+	 */
+	public function testWithAdmin($action)
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-        $kirby->impersonate('kirby');
+		$kirby->impersonate('kirby');
 
-        $file  = new File(['filename' => 'test.jpg']);
-        $perms = $file->permissions();
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-        $this->assertTrue($perms->can($action));
-    }
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$perms = $file->permissions();
 
-    /**
-     * @dataProvider actionProvider
-     */
-    public function testWithNobody($action)
-    {
-        $kirby = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+		$this->assertTrue($perms->can($action));
+	}
 
-        $file  = new File(['filename' => 'test.jpg']);
-        $perms = $file->permissions();
+	/**
+	 * @dataProvider actionProvider
+	 */
+	public function testWithNobody($action)
+	{
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-        $this->assertFalse($perms->can($action));
-    }
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$perms = $file->permissions();
+
+		$this->assertFalse($perms->can($action));
+	}
 }

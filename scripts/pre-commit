@@ -43,9 +43,17 @@ git diff-index --cached --name-only HEAD | while read -r file; do
         ;;
 
         *.js | *.vue)
+            cd panel
+
             echo "### ESLint on $file"
-            npm --prefix panel run lint -- --no-fix "../$file"
+            npm exec -c "eslint --no-fix '../$file'"
             echo
+
+            echo "### Prettier on $file"
+            npm exec -c "prettier --check '../$file'"
+            echo
+
+            cd ..
         ;;
 
         composer.json | composer.lock)

@@ -10,111 +10,118 @@ namespace Kirby\Cms;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Layout extends Item
 {
-    const ITEMS_CLASS = '\Kirby\Cms\Layouts';
+	use HasMethods;
 
-    /**
-     * @var \Kirby\Cms\Content
-     */
-    protected $attrs;
+	public const ITEMS_CLASS = '\Kirby\Cms\Layouts';
 
-    /**
-     * @var \Kirby\Cms\LayoutColumns
-     */
-    protected $columns;
+	/**
+	 * @var \Kirby\Cms\Content
+	 */
+	protected $attrs;
 
-    /**
-     * Proxy for attrs
-     *
-     * @param string $method
-     * @param array $args
-     * @return \Kirby\Cms\Field
-     */
-    public function __call(string $method, array $args = [])
-    {
-        return $this->attrs()->get($method);
-    }
+	/**
+	 * @var \Kirby\Cms\LayoutColumns
+	 */
+	protected $columns;
 
-    /**
-     * Creates a new Layout object
-     *
-     * @param array $params
-     */
-    public function __construct(array $params = [])
-    {
-        parent::__construct($params);
+	/**
+	 * Proxy for attrs
+	 *
+	 * @param string $method
+	 * @param array $args
+	 * @return \Kirby\Cms\Field
+	 */
+	public function __call(string $method, array $args = [])
+	{
+		// layout methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
 
-        $this->columns = LayoutColumns::factory($params['columns'] ?? [], [
-            'parent' => $this->parent
-        ]);
+		return $this->attrs()->get($method);
+	}
 
-        // create the attrs object
-        $this->attrs = new Content($params['attrs'] ?? [], $this->parent);
-    }
+	/**
+	 * Creates a new Layout object
+	 *
+	 * @param array $params
+	 */
+	public function __construct(array $params = [])
+	{
+		parent::__construct($params);
 
-    /**
-     * Returns the attrs object
-     *
-     * @return \Kirby\Cms\Content
-     */
-    public function attrs()
-    {
-        return $this->attrs;
-    }
+		$this->columns = LayoutColumns::factory($params['columns'] ?? [], [
+			'parent' => $this->parent
+		]);
 
-    /**
-     * Returns the columns in this layout
-     *
-     * @return \Kirby\Cms\LayoutColumns
-     */
-    public function columns()
-    {
-        return $this->columns;
-    }
+		// create the attrs object
+		$this->attrs = new Content($params['attrs'] ?? [], $this->parent);
+	}
 
-    /**
-     * Checks if the layout is empty
-     * @since 3.5.2
-     *
-     * @return bool
-     */
-    public function isEmpty(): bool
-    {
-        return $this
-            ->columns()
-            ->filter(function ($column) {
-                return $column->isNotEmpty();
-            })
-            ->count() === 0;
-    }
+	/**
+	 * Returns the attrs object
+	 *
+	 * @return \Kirby\Cms\Content
+	 */
+	public function attrs()
+	{
+		return $this->attrs;
+	}
 
-    /**
-     * Checks if the layout is not empty
-     * @since 3.5.2
-     *
-     * @return bool
-     */
-    public function isNotEmpty(): bool
-    {
-        return $this->isEmpty() === false;
-    }
+	/**
+	 * Returns the columns in this layout
+	 *
+	 * @return \Kirby\Cms\LayoutColumns
+	 */
+	public function columns()
+	{
+		return $this->columns;
+	}
 
-    /**
-     * The result is being sent to the editor
-     * via the API in the panel
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'attrs'   => $this->attrs()->toArray(),
-            'columns' => $this->columns()->toArray(),
-            'id'      => $this->id(),
-        ];
-    }
+	/**
+	 * Checks if the layout is empty
+	 * @since 3.5.2
+	 *
+	 * @return bool
+	 */
+	public function isEmpty(): bool
+	{
+		return $this
+			->columns()
+			->filter(function ($column) {
+				return $column->isNotEmpty();
+			})
+			->count() === 0;
+	}
+
+	/**
+	 * Checks if the layout is not empty
+	 * @since 3.5.2
+	 *
+	 * @return bool
+	 */
+	public function isNotEmpty(): bool
+	{
+		return $this->isEmpty() === false;
+	}
+
+	/**
+	 * The result is being sent to the editor
+	 * via the API in the panel
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'attrs'   => $this->attrs()->toArray(),
+			'columns' => $this->columns()->toArray(),
+			'id'      => $this->id(),
+		];
+	}
 }

@@ -1,417 +1,439 @@
 <template>
-  <k-text-input
-    ref="input"
-    v-model="input"
-    v-bind="$props"
-    :class="`k-${type}-input`"
-    :placeholder="display"
-    :spellcheck="false"
-    type="text"
-    @blur="onBlur"
-    @input="onInput"
-    @invalid="onInvalid"
-    @focus="$emit('focus')"
-    @keydown.down.stop.prevent="onDown"
-    @keydown.up.stop.prevent="onUp"
-    @keydown.enter="onEnter"
-    @keydown.tab="onTab"
-  />
+	<input
+		:id="id"
+		ref="input"
+		v-model="formatted"
+		v-direction
+		:autofocus="autofocus"
+		:class="`k-text-input k-${type}-input`"
+		:disabled="disabled"
+		:placeholder="display"
+		:required="required"
+		autocomplete="off"
+		spellcheck="false"
+		type="text"
+		@blur="onBlur"
+		@focus="$emit('focus')"
+		@input="onInput($event.target.value)"
+		@keydown.down.stop.prevent="onArrowDown"
+		@keydown.up.stop.prevent="onArrowUp"
+		@keydown.enter.stop.prevent="onEnter"
+		@keydown.tab="onTab"
+	/>
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { autofocus, disabled, id, required } from "@/mixins/props.js";
+
+export const props = {
+	mixins: [autofocus, disabled, id, required],
+	props: {
+		/**
+		 * Format to parse and display the date
+		 * @values YYYY, YY, MM, M, DD, D
+		 * @example `MM/DD/YY`
+		 */
+		display: {
+			type: String,
+			default: "DD.MM.YYYY"
+		},
+		/**
+		 * The last allowed date as ISO date string
+		 * @example `2025-12-31`
+		 */
+		max: String,
+		/**
+		 * The first allowed date as ISO date string
+		 * @example `2020-01-01`
+		 */
+		min: String,
+		/**
+		 * Rounding to the nearest step.
+		 * Requires an object with a `unit`
+		 * and a `size` key
+		 * @example { unit: 'minute', size: 30 }
+		 */
+		step: {
+			type: Object,
+			default() {
+				return {
+					size: 1,
+					unit: "day"
+				};
+			}
+		},
+		type: {
+			type: String,
+			default: "date"
+		},
+		/**
+		 * Value must be provided as ISO date string
+		 * @example `2012-12-12`
+		 */
+		value: String
+	}
+};
 
 /**
+ * Form input to handle a date value.
+ *
+ * Component allows some degree of free input and parses the
+ * input value to a dayjs object. Supports rounding to a
+ * nearest `step` as well as keyboard interactions
+ * (altering value by arrow up/down, selecting of
+ * input parts via tab key).
+ *
  * @example <k-input v-model="date" type="date" name="date" />
+ * @public
  */
 export default {
-  inheritAttrs: false,
-  props: {
-    autofocus: Boolean,
-    disabled: Boolean,
-    display: {
-      type: String,
-      default: "DD.MM.YYYY"
-    },
-    id: [String, Number],
-    /**
-     * The last allowed date
-     */
-    max: String,
-    /**
-     * The first allowed date
-     */
-    min: String,
-    required: Boolean,
-    step: {
-      type: Object,
-      default() {
-        return {
-          size: 1,
-          unit: "day"
-        };
-      }
-    },
-    type: {
-      type: String,
-      default: "date"
-    },
-    /**
-     * The date must be provided as iso date string
-     * @example `2012-12-12 22:33:00`
-     */
-    value: String
-  },
-  data() {
-    return {
-      input: this.toFormat(this.value),
-      selected: null,
-    };
-  },
-  computed: {
-    /**
-     * Map for matching date units with dayjs tokens
-     */
-    map() {
-      return {
-        day:    ["D", "DD"],
-        month:  ["M", "MM", "MMM", "MMMM"],
-        year:   ["YY", "YYYY"]
-      };
-    },
-    /**
-     * Input parsed as dateime object rounded to nearest step
-     */
-    parsed() {
-      if (this.input) {
-        // loop through parsing patterns to find
-        // first result where input is a valid date
-        for (let i = 0; i < this.patterns.length; i++) {
-          const dt = this.$library.dayjs.utc(this.input, this.patterns[i]);
+	mixins: [props],
+	inheritAttrs: false,
+	data() {
+		return {
+			dt: null,
+			formatted: null
+		};
+	},
+	computed: {
+		/**
+		 * Use the date part for handling input values
+		 * @returns {string}
+		 */
+		inputType() {
+			return "date";
+		},
+		/**
+		 * dayjs pattern class for `display` pattern
+		 * @returns {Object}
+		 */
+		pattern() {
+			return this.$library.dayjs.pattern(this.display);
+		},
+		/**
+		 * Merges step donfiguration with defaults
+		 * @returns {Object}
+		 */
+		rounding() {
+			return {
+				...this.$options.props.step.default(),
+				...this.step
+			};
+		}
+	},
+	watch: {
+		value: {
+			handler(newValue, oldValue) {
+				if (newValue !== oldValue) {
+					const dt = this.toDatetime(newValue);
+					this.commit(dt);
+				}
+			},
+			immediate: true
+		}
+	},
+	created() {
+		// make sure to commit input value when Cmd+S is hit
+		this.$events.$on("keydown.cmd.s", this.onBlur);
+	},
+	destroyed() {
+		this.$events.$off("keydown.cmd.s", this.onBlur);
+	},
+	methods: {
+		/**
+		 * Increment/decrement the current dayjs object based on the
+		 * cursor position in the input element and ensuring steps
+		 * @param {string} operator `add`|`substract`
+		 */
+		alter(operator) {
+			// since manipulation command can occur while
+			// typing new value, make sure to first update
+			// datetime object from current input value
+			let dt = this.parse() || this.round(this.$library.dayjs());
 
-          if (dt.isValid()) {
-            return dt;
-          }
-        }
-      }
+			// what unit to alter and by how much:
+			// as default use the step unit and size
+			let unit = this.rounding.unit;
+			let size = this.rounding.size;
 
-      return null;
-    },
-    /**
-     * Array of the current input parts
-     */
-    parts() {
-      return String(this.input).split(/\W/);
-    },
-    /**
-     *  All variations of parsing patterns
-     *  for dayjs tokens included in `display`
-     */
-    patterns() {
-      let patterns = [];
-      let previous = [];
+			// if a part in the input is selected,
+			// manipulate that part
+			const selected = this.selection();
 
-      // For each token present…
-      for (let i = 0; i < this.tokens.length; i++) {
-        // … get variants of the token …
-        const tokens = this.toTokens(this.tokens[i]);
+			if (selected !== null) {
+				// handle  meridiem to toggle between am/pm
+				// instead of e.g. skipping to next day
+				if (selected.unit === "meridiem") {
+					operator = dt.format("a") === "pm" ? "subtract" : "add";
+					unit = "hour";
+					size = 12;
+				} else {
+					// handle manipulation of all other units
+					unit = selected.unit;
 
-        if (tokens) {
-          // … and generate all necessary patterns …
-          let current = [];
+					// only use step size for step unit,
+					// otherwise use size of 1
+					if (unit !== this.rounding.unit) {
+						size = 1;
+					}
+				}
+			}
 
-          // … by either just adding all variants, if the first chunk …
-          if (patterns.length === 0) {
-            current = tokens.map(token => [token]);
+			// change `dt` by determined size and unit
+			// and emit as `update` event
+			dt = dt[operator](size, unit).round(
+				this.rounding.unit,
+				this.rounding.size
+			);
 
-          // … or adding each variant to all patterns from the previous token
-          } else {
-            tokens.forEach(token => {
-              current = current.concat(previous.map(prev => prev.concat([token])));
-            })
-          }
-          patterns  = patterns.concat(current);
-          previous  = current;
-          current   = [];
-        }
-      }
+			this.commit(dt);
+			this.emit(dt);
 
-      // join components with some separator
-      // and make sure the more detailed patterns go first
-      return patterns.map(format => format.join(this.separator)).reverse();
-    },
-    /**
-     * Separator from `display` format
-     */
-    separator() {
-      return this.display.match(/[\W]/)[0];
-    },
-    /**
-     * Array of used dayjs format tokens
-     */
-    tokens() {
-      return this.display.split(/\W/);
-    }
-  },
-  watch: {
-    value(value) {
-      this.input = this.toFormat(value);
-      this.onInvalid();
-    }
-  },
-  mounted() {
-    this.onInvalid();
-  },
-  methods: {
-    emit(event) {
-      const value = this.toFormat(this.parsed, "YYYY-MM-DD HH:mm:ss") || "";
-      this.$emit(event, value);
-    },
-    focus() {
-      this.$refs.input.focus();
-    },
-    manipulate(operator) {
-      let dt;
+			this.$nextTick(() => this.select(selected));
+		},
+		/**
+		 * Updates the in data stored dayjs object
+		 * as well as formatted string representation
+		 * @param {Object} dt dayjs object
+		 */
+		commit(dt) {
+			this.dt = dt;
+			this.formatted = this.pattern.format(dt);
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
+		/**
+		 * Convert the dayjs object to an ISO string
+		 * and emit the input event
+		 * @param {Object} dt dayjs object
+		 */
+		emit(dt) {
+			this.$emit("input", this.toISO(dt));
+		},
+		/**
+		 * Focuses the input element
+		 * @public
+		 */
+		focus() {
+			this.$refs.input.focus();
+		},
+		/**
+		 * Decrement the currently
+		 * selected input part
+		 */
+		onArrowDown() {
+			this.alter("subtract");
+		},
+		/**
+		 * Increment the currently
+		 * selected input part
+		 */
+		onArrowUp() {
+			this.alter("add");
+		},
+		/**
+		 * When blurring the input, update
+		 * data from parsed value and emit
+		 */
+		onBlur() {
+			const dt = this.parse();
+			this.commit(dt);
+			this.emit(dt);
+		},
+		/**
+		 * When hitting enter, blur the input
+		 * but also emit additional submit event
+		 */
+		onEnter() {
+			this.onBlur();
+			this.$nextTick(() => this.$emit("submit"));
+		},
+		/**
+		 * Takes the current input value and
+		 * tries to interpret/parse it as dayjs object.
+		 * For empty inputs and input values that
+		 * already are complete (equal to formatted string),
+		 * field emits the current value as input to parent.
+		 * @param {string} value
+		 */
+		onInput(value) {
+			// get the parsed dayjs object
+			const dt = this.parse();
 
-      // if a parsed result exists already, modify…
-      if (this.parsed) {
-        // as default use the step unit and size
-        let unit = this.step.unit;
-        let size = this.step.size;
+			// get the formatted string for dayjs value
+			const formatted = this.pattern.format(dt);
 
-        // update selected based on cursor position
-        this.selected = this.toCursorIndex();
+			// if input is empty or if the input value
+			// matches the formatted dayjs interpretation
+			// directly commit and emit value
+			if (!value || formatted == value) {
+				this.commit(dt);
+				return this.emit(dt);
+			}
+		},
+		/**
+		 * Handle tab key in input
+		 *
+		 * a. cursor is somewhere in the input, no selection
+		 *    => select the part where the cursor is located
+		 * b. cursor selection already covers a part fully
+		 *    => select the next part
+		 * c. cursor selection covers more than one part
+		 *    => select the last affected part
+		 * d. cursor selection cover last part
+		 *    => tab should blur the input, focus on next tabbale element
+		 *
+		 * @param {Event} event
+		 */
+		onTab(event) {
+			// step out of the field if it is empty
+			if (this.$refs.input.value == "") {
+				return;
+			}
 
-        // if a part in the input is selected,
-        // resolve what unit that parts represent
-        // and set size to 1 (if not the step unit is selected)
-        if (this.selected !== null) {
-          const token = this.tokens[this.selected];
+			// make sure to confirm any current input
+			this.onBlur();
+			this.$nextTick(() => {
+				const selection = this.selection();
 
-          // handle manipulation of am/pm
-          if (token.toLowerCase() === "a") {
-            unit = "hour";
-            size = 12;
+				// if an exact part is selected
+				if (
+					this.$refs.input &&
+					selection.start === this.$refs.input.selectionStart &&
+					selection.end === this.$refs.input.selectionEnd - 1
+				) {
+					// move backward on shift + tab
+					if (event.shiftKey) {
+						// if the first part is selected, jump out
+						if (selection.index === 0) {
+							return;
+						}
 
-            if (this.parts[this.selected] === "pm") {
-              operator = "subtract";
-            } else {
-              operator = "add";
-            }
+						// select previous part
+						this.selectPrev(selection.index);
 
-          // handle manipulation of all other units
-          } else {
-            unit = this.toUnit(token);
+						// move forward on tab
+					} else {
+						// if the last part is selected, jump out
+						if (selection.index === this.pattern.parts.length - 1) {
+							return;
+						}
 
-            if (unit !== this.step.unit) {
-              size = 1;
-            }
-          }          
-        }
+						// select next part
+						this.selectNext(selection.index);
+					}
+				} else {
+					// select default part (step unit)
+					event.shiftKey ? this.selectLast() : this.selectFirst();
+				}
 
-        // manipulate datetime by size and unit
-        dt = this.parsed.clone()[operator](size, unit);
+				event.preventDefault();
+			});
+		},
+		/**
+		 * Takes current input value and
+		 * tries to interpret it as datetime object
+		 * based on the `display` pattern
+		 * @return {Object|null}
+		 */
+		parse() {
+			let value = this.$refs.input.value;
+			// interpret and round to nearest step
+			value = this.$library.dayjs.interpret(value, this.inputType);
+			return this.round(value);
+		},
+		/**
+		 * Rounds the provided dayjs object to
+		 * the nearest step
+		 * @param {Object} dt dayjs object
+		 * @returns {Object|null}
+		 */
+		round(dt) {
+			return dt?.round(this.rounding.unit, this.rounding.size) || null;
+		},
+		/**
+		 * Sets the cursor selection in the input element
+		 * that includes the provided part
+		 * @param {Object} part
+		 * @public
+		 */
+		select(part) {
+			if (!part) {
+				part = this.selection();
+			}
 
-      // if no parsed result exist, fill with current datetime
-      // and mark the part that represent the step unit to be selected
-      } else {
-        dt = this.toNearest(this.$library.dayjs());
-        this.selected = this.toIndex();
-      }
-
-      // update input and emit
-      this.input = this.toFormat(dt);
-      this.emit("update");
-
-      // select modified part in input
-      this.$nextTick(() => {
-        this.select();
-      });
-    },
-    onBlur() {
-      if (!this.parsed) {
-        this.input = null;
-      }
-
-      this.selected = null;
-      this.emit("update");
-    },
-    onDown() {
-      this.manipulate("subtract");
-    },
-    onEnter() {
-      this.onBlur();
-      this.emit("enter");
-    },
-    onInput() {
-      this.emit("input");
-    },
-    onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
-    },
-    onTab(event) {
-      const cursor = this.toCursorIndex();
-
-      // nothing has been selected so far,
-      // select at cursor position or from start
-      if (this.selected === null) {
-        this.selected = cursor || 0;
-
-      // cursor position is not at currently selected,
-      // select at cursor position
-      } else if (cursor !== this.selected) {
-        this.selected = cursor;
-
-      // otherwise select next part
-      } else {
-        this.selected++;
-      }
-
-      // if selected is beyong available parts, reset
-      if (this.selected >= this.parts.length) {
-        this.selected = null;
-
-      // otherwise, capture event and select
-      } else {
-        event.preventDefault();
-        event.stopPropagation();
-        this.select();
-      }
-    },
-    onUp() {
-      this.manipulate("add");
-    },
-    select() {
-      if (this.selected !== null) {
-        // get selection range
-        const range = this.toRange(this.selected);
-
-        // make sure to not select leading separator
-        if (this.selected > 0) {
-          range.start++;
-        }
-
-        // select part in input
-        this.$refs.input.$refs.input.setSelectionRange(range.start, range.end);
-      }
-    },
-    toCursorIndex() {
-      // if whole input is selected, return
-      if (
-        this.$refs.input.$refs.input.selectionStart === 0 &&
-        this.$refs.input.$refs.input.selectionEnd === String(this.input).length
-      ) {
-        return null;
-      }
-
-      // based on the current cursor position,
-      // return the matching part's index
-      for (let i = 0; i < this.parts.length; i++) {
-        const range = this.toRange(i);
-        if (
-          range.start <= this.$refs.input.$refs.input.selectionStart &&
-          range.end >= this.$refs.input.$refs.input.selectionEnd
-        ) {
-          return i;
-        }
-      }
-    },
-    toDatetime(string) {
-      return this.$library.dayjs.utc(string);
-    },
-    toFormat(value, format = this.display) {
-      if (!value) {
-        return null;
-      }
-
-      // parse value as datetime object if string,
-      // otherwise expect dayjs object was provided as value
-      if (typeof value == "string") {
-        value = this.toDatetime(value)
-      }
-
-      if (value.isValid() === false) {
-        return null;
-      }
-
-      // formats datetime according to `display` prop
-      return this.toNearest(value).format(format);
-    },
-    toNearest(dt, unit = this.step.unit, size = this.step.size) {
-      // make sure it's dayjs syntax compatible
-      if (unit === "day") {
-        unit = "date";
-      }
-
-      // round datetime to nearest step
-      // based on step unit and size
-      const current = dt.get(unit);
-      const nearest = Math.round(current / size) * size;
-      return dt.set(unit, nearest).startOf(unit);
-    },
-    toIndex(unit = this.step.unit) {
-      // get index/position of provided unit
-      // in input/display format
-      const tokens = this.map[unit];
-
-      for (let i = 0; i < tokens.length; i++) {
-        const index = this.tokens.indexOf(tokens[i]);
-
-        if (index !== -1) {
-          return index;
-        }
-      }
-
-    },
-    toRange(partIndex) {
-      // get an index/position range for the part at provided index
-      return {
-        start: this.parts.slice(0, partIndex).join(this.separator).length,
-        end:   this.parts.slice(0, partIndex + 1).join(this.separator).length
-      };
-    },
-    toTokens(token) {
-      // get all token variants for provided token
-      const values  = Object.values(this.map);
-      const matches = values.filter(tokens => tokens.includes(token));
-      return matches[0];
-    },
-    toUnit(token, nearest = true) {
-      // get unit for provided token
-      const keys   = Object.keys(this.map);
-      const values = Object.values(this.map);
-      let index    = values.findIndex(tokens => tokens.includes(token));
-
-      // if nearest unit is required,
-      // make sure no unit below the step unit is returned
-      const step = this.step.unit;
-      if (nearest === true && index < keys.indexOf(step)) {
-        return step;
-      }
-
-      return keys[index];
-    }
-  },
-  validations() {
-    return {
-      value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-        required: this.required ? required : true,
-      }
-    }
-  }
+			this.$refs.input?.setSelectionRange(part.start, part.end + 1);
+		},
+		/**
+		 * Selects the first pattern if available
+		 * @public
+		 */
+		selectFirst() {
+			this.select(this.pattern.parts[0]);
+		},
+		/**
+		 * Selects the last pattern if available
+		 * @public
+		 */
+		selectLast() {
+			this.select(this.pattern.parts[this.pattern.parts.length - 1]);
+		},
+		/**
+		 * Selects the next pattern if available
+		 * @param {Number} index
+		 * @public
+		 */
+		selectNext(index) {
+			this.select(this.pattern.parts[index + 1]);
+		},
+		/**
+		 * Selects the previous pattern if available
+		 * @param {Number} index
+		 * @public
+		 */
+		selectPrev(index) {
+			this.select(this.pattern.parts[index - 1]);
+		},
+		/**
+		 * Get pattern part for current cursor selection
+		 * @returns {Object}
+		 */
+		selection() {
+			return this.pattern.at(
+				this.$refs.input.selectionStart,
+				this.$refs.input.selectionEnd
+			);
+		},
+		/**
+		 * Converts ISO string to dayjs object
+		 * @param {string} string ISO string
+		 * @return {Object|null}
+		 */
+		toDatetime(string) {
+			return this.round(this.$library.dayjs.iso(string, this.inputType));
+		},
+		/**
+		 * Converts dayjs object to ISO string
+		 * @param {Object} dt dayjs object
+		 * @return {Object|null}
+		 */
+		toISO(dt) {
+			return dt?.toISO(this.inputType) || null;
+		}
+	},
+	validations() {
+		return {
+			value: {
+				min:
+					this.dt && this.min
+						? () => this.dt.validate(this.min, "min", this.rounding.unit)
+						: true,
+				max:
+					this.dt && this.max
+						? () => this.dt.validate(this.max, "max", this.rounding.unit)
+						: true,
+				required: this.required ? () => !!this.dt : true
+			}
+		};
+	}
 };
 </script>

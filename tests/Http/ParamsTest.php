@@ -6,94 +6,118 @@ use PHPUnit\Framework\TestCase;
 
 class ParamsTest extends TestCase
 {
-    public function testConstructWithArray()
-    {
-        $params = new Params([
-            'a' => 'value-a',
-            'b' => 'value-b'
-        ]);
+	public function testConstructWithArray()
+	{
+		$params = new Params([
+			'a' => 'value-a',
+			'b' => 'value-b'
+		]);
 
-        $this->assertEquals('value-a', $params->a);
-        $this->assertEquals('value-b', $params->b);
-    }
+		$this->assertEquals('value-a', $params->a);
+		$this->assertEquals('value-b', $params->b);
+	}
 
-    public function testConstructWithString()
-    {
-        $params = new Params('a:value-a/b:value-b');
+	public function testConstructWithString()
+	{
+		$params = new Params('a:value-a/b:value-b');
 
-        $this->assertEquals('value-a', $params->a);
-        $this->assertEquals('value-b', $params->b);
-    }
+		$this->assertEquals('value-a', $params->a);
+		$this->assertEquals('value-b', $params->b);
+	}
 
-    public function testConstructWithEmptyValue()
-    {
-        $params = new Params('a:/b:');
+	public function testConstructWithEmptyValue()
+	{
+		$params = new Params('a:/b:');
 
-        $this->assertEquals(null, $params->a);
-        $this->assertEquals(null, $params->b);
-    }
+		$this->assertEquals(null, $params->a);
+		$this->assertEquals(null, $params->b);
+	}
 
-    public function testExtractFromEmptyString()
-    {
-        $params   = Params::extract('');
-        $expected = [
-            'path'   => null,
-            'params' => null,
-            'slash'  => false
-        ];
+	public function testExtractFromNull()
+	{
+		$params   = Params::extract();
+		$expected = [
+			'path'   => null,
+			'params' => null,
+			'slash'  => false
+		];
 
-        $this->assertEquals($expected, $params);
-    }
+		$this->assertEquals($expected, $params);
+	}
 
-    public function testToString()
-    {
-        $params = new Params([
-            'a' => 'value-a',
-            'b' => 'value-b'
-        ]);
+	public function testExtractFromEmptyString()
+	{
+		$params   = Params::extract('');
+		$expected = [
+			'path'   => null,
+			'params' => null,
+			'slash'  => false
+		];
 
-        $this->assertEquals('a:value-a/b:value-b', $params->toString());
-    }
+		$this->assertEquals($expected, $params);
+	}
 
-    public function testToStringWithLeadingSlash()
-    {
-        $params = new Params([
-            'a' => 'value-a',
-            'b' => 'value-b'
-        ]);
+	public function testExtractFromSeparator()
+	{
+		$params   = Params::extract(Params::separator());
+		$expected = [
+			'path'   => [],
+			'params' => [],
+			'slash'  => false
+		];
 
-        $this->assertEquals('/a:value-a/b:value-b', $params->toString(true));
-    }
+		$this->assertEquals($expected, $params);
+	}
 
-    public function testToStringWithTrailingSlash()
-    {
-        $params = new Params([
-            'a' => 'value-a',
-            'b' => 'value-b'
-        ]);
+	public function testToString()
+	{
+		$params = new Params([
+			'a' => 'value-a',
+			'b' => 'value-b'
+		]);
 
-        $this->assertEquals('a:value-a/b:value-b/', $params->toString(false, true));
-    }
+		$this->assertEquals('a:value-a/b:value-b', $params->toString());
+	}
 
-    public function testToStringWithWindowsSeparator()
-    {
-        Params::$separator = ';';
+	public function testToStringWithLeadingSlash()
+	{
+		$params = new Params([
+			'a' => 'value-a',
+			'b' => 'value-b'
+		]);
 
-        $params = new Params([
-            'a' => 'value-a',
-            'b' => 'value-b'
-        ]);
+		$this->assertEquals('/a:value-a/b:value-b', $params->toString(true));
+	}
 
-        $this->assertEquals('a;value-a/b;value-b/', $params->toString(false, true));
+	public function testToStringWithTrailingSlash()
+	{
+		$params = new Params([
+			'a' => 'value-a',
+			'b' => 'value-b'
+		]);
 
-        Params::$separator = null;
-    }
+		$this->assertEquals('a:value-a/b:value-b/', $params->toString(false, true));
+	}
 
-    public function testUnsetParam()
-    {
-        $params = new Params(['foo' => 'bar']);
-        $params->foo = null;
+	public function testToStringWithWindowsSeparator()
+	{
+		Params::$separator = ';';
 
-        $this->assertEquals('', $params->toString());
-    }
+		$params = new Params([
+			'a' => 'value-a',
+			'b' => 'value-b'
+		]);
+
+		$this->assertEquals('a;value-a/b;value-b/', $params->toString(false, true));
+
+		Params::$separator = null;
+	}
+
+	public function testUnsetParam()
+	{
+		$params = new Params(['foo' => 'bar']);
+		$params->foo = null;
+
+		$this->assertEquals('', $params->toString());
+	}
 }

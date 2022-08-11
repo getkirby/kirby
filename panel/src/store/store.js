@@ -2,108 +2,75 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
-import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
-import heartbeat from "./modules/heartbeat.js";
-import languages from "./modules/languages.js";
 import notification from "./modules/notification.js";
-import system from "./modules/system.js";
-import translation from "./modules/translation.js";
-import user from "./modules/user.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  // eslint-disable-next-line
-  strict: process.env.NODE_ENV !== "production",
-  state: {
-    breadcrumb: [],
-    dialog: null,
-    drag: null,
-    fatal: null,
-    isLoading: false,
-    title: null,
-    view: null
-  },
-  mutations: {
-    SET_BREADCRUMB(state, breadcrumb) {
-      state.breadcrumb = breadcrumb;
-    },
-    SET_DIALOG(state, dialog) {
-      state.dialog = dialog;
-    },
-    SET_DRAG(state, drag) {
-      state.drag = drag;
-    },
-    SET_FATAL(state, html) {
-      state.fatal = html;
-    },
-    SET_TITLE(state, title) {
-      state.title = title;
-    },
-    SET_VIEW(state, view) {
-      state.view = view;
-    },
-    START_LOADING(state) {
-      state.isLoading = true;
-    },
-    STOP_LOADING(state) {
-      state.isLoading = false;
-    }
-  },
-  actions: {
-    breadcrumb(context, breadcrumb) {
-      context.commit("SET_BREADCRUMB", breadcrumb);
-    },
-    dialog(context, dialog) {
-      context.commit("SET_DIALOG", dialog);
-    },
-    drag(context, drag) {
-      context.commit("SET_DRAG", drag);
-    },
-    fatal(context, html) {
-      context.commit("SET_FATAL", html);
-    },
-    isLoading(context, loading) {
-      context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
-    },
-    title(context, title) {
-      let site;
+	// eslint-disable-next-line
+	strict: process.env.NODE_ENV !== "production",
+	state: {
+		dialog: null,
+		drag: null,
+		fatal: false,
+		isLoading: false
+	},
+	mutations: {
+		SET_DIALOG(state, dialog) {
+			state.dialog = dialog;
+		},
+		SET_DRAG(state, drag) {
+			state.drag = drag;
+		},
+		SET_FATAL(state, html) {
+			state.fatal = html;
+		},
+		SET_LOADING(state, loading) {
+			state.isLoading = loading;
+		}
+	},
+	actions: {
+		dialog(context, dialog) {
+			context.commit("SET_DIALOG", dialog);
+		},
+		drag(context, drag) {
+			context.commit("SET_DRAG", drag);
+		},
+		fatal(context, options) {
+			// close the fatal window if false
+			// is passed as options
+			if (options === false) {
+				context.commit("SET_FATAL", false);
+				return;
+			}
 
-      if (context.state.user.current) {
-        site = Vue.$api.site.get(["title"]);
-      } else {
-        site = new Promise(resolve => {
-          resolve(context.state.system.info);
-        });
-      }
+			console.error("The JSON response could not be parsed");
 
-      site.then(site => {
-        context.commit("SET_TITLE", title);
-        context.dispatch("system/title", site.title);
-        document.title = title || "";
+			// show the full response in the console
+			// if debug mode is enabled
+			if (window.panel.$config.debug) {
+				console.info(options.html);
+			}
 
-        if (title !== null) {
-          document.title += " | " + site.title;
-        } else {
-          document.title += site.title;
-        }
-      });
-    },
-    view(context, view) {
-      context.commit("SET_VIEW", view);
-    }
-  },
-  modules: {
-    blocks: blocks,
-    content: content,
-    drawers: drawers,
-    heartbeat: heartbeat,
-    languages: languages,
-    notification: notification,
-    system: system,
-    translation: translation,
-    user: user
-  }
+			// only show the fatal dialog if the silent
+			// option is not set to true
+			if (!options.silent) {
+				context.commit("SET_FATAL", options.html);
+			}
+		},
+		isLoading(context, loading) {
+			context.commit("SET_LOADING", loading === true);
+		},
+		navigate(context) {
+			context.dispatch("dialog", null);
+			context.dispatch("drawers/close");
+		}
+	},
+	modules: {
+		content: content,
+		drawers: drawers,
+		notification: notification
+	}
 });

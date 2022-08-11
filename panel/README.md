@@ -2,19 +2,15 @@
 
 ## Installation
 
-The Panel dev server is a proxy of another web server like Apache or Nginx that serves an actual Kirby project. Point the dev server to that project with an `.env` file similar to the `.env.example` one in this folder:
+Our setup expects that you are running [Kirby Sandbox](https://github.com/getkirby/sandbox), our our local test environment, at `http://sandbox.test`. You can reach the Panel at `http://sandbox.test/panel`.
 
-```
-VUE_APP_DEV_SERVER = http://kir.by
-```
+If you are using a different setup, you might need to create a `/panel/vite.config.custom.js` where you can point `vite` to the right server.
 
-…where `kir.by` is the project domain. You can set up such a domain by editing your machine's `hosts` file and your web server's configuration.
-
-Make sure to add a dummy CSRF token in the `site/config/config.php` of your Kirby project:
+When developing, make sure to put Kirby into development mode by adding the following line to `site/config/config.php` of your Kirby project (unless you are using the Sandbox, which uses dev mode by default):
 
 ```php
 return [
-  'api.csrf' => 'dev'
+  'panel.dev' => true
 ];
 ```
 
@@ -24,20 +20,20 @@ Afterwards install the Panel dependencies…
 npm i
 ```
 
-And start webpack:
+And start `vite`:
 
 ```
-npm run serve
+npm run dev
 ```
 
 ## Commands
 
 ### Serve
 
-To start the webpack watcher and browsersync
+To start the `vite` development watcher and server
 
 ```
-npm run serve
+npm run dev
 ```
 
 ### Build
@@ -48,10 +44,10 @@ To upate the dist files
 npm run build
 ```
 
-### e2e
+### Test
 
 To start end to end tests via Cypress
 
 ```
-npm run e2e
+npm run test
 ```

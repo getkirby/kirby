@@ -1,9 +1,0 @@
-{
-    "baseUrl": "http://localhost:8080",
-    "env": {
-        "host": "http://sandbox.test"
-    },
-    "integrationFolder": "src/",
-    "testFiles": "**/*.spec.js",
-    "video": false
-}

@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    branches:
+      - "main"
+      - "release/**"
+  pull_request:
+    branches:
+      - "main"
+      - "release/**"
+
+jobs:
+  release_backend:
+    name: "Release: CI - Backend"
+    uses: ./.github/workflows/backend.yml
+  release_frontend:
+    name: "Release: CI - Frontend"
+    uses: ./.github/workflows/frontend.yml
+  release_integration:
+    name: "Release: CI - Integration"
+    uses: ./.github/workflows/integration.yml

@@ -1,77 +1,110 @@
 {
-  "name": "getkirby/cms",
-  "type": "kirby-cms",
-  "description": "The Kirby 3 core",
-  "keywords": [
-    "kirby",
-    "cms",
-    "core"
-  ],
-  "homepage": "https://getkirby.com",
-  "version": "3.5.7.1",
-  "license": "proprietary",
-  "authors": [
-    {
-      "name": "Kirby Team",
-      "email": "support@getkirby.com",
-      "homepage": "https://getkirby.com"
-    }
-  ],
-  "require": {
-    "php": ">=7.3.0 <8.1.0",
-    "ext-ctype": "*",
-    "ext-mbstring": "*",
-    "claviska/simpleimage": "3.6.3",
-    "filp/whoops": "2.12.1",
-    "getkirby/composer-installer": "^1.2.0",
-    "laminas/laminas-escaper": "2.7.0",
-    "michelf/php-smartypants": "1.8.1",
-    "mustangostang/spyc": "0.6.3",
-    "phpmailer/phpmailer": "6.5.0",
-    "true/punycode": "2.1.1"
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "platform-check": false
-  },
-  "autoload": {
-    "psr-4": {
-      "Kirby\\": "src/"
-    },
-    "classmap": [
-      "dependencies/"
-    ],
-    "files": [
-      "config/setup.php",
-      "config/helpers.php"
-    ]
-  },
-  "scripts": {
-    "post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
-    "analyze": [
-      "@analyze:composer",
-      "@analyze:psalm",
-      "@analyze:phpcpd",
-      "@analyze:phpmd"
-    ],
-    "analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-    "analyze:phpcpd": "phpcpd --fuzzy --exclude tests --exclude vendor .",
-    "analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
-    "analyze:psalm": "psalm",
-    "build": "./scripts/build",
-    "ci": [
-      "@fix",
-      "@analyze",
-      "@test"
-    ],
-    "fix": "php-cs-fixer fix",
-    "test": "phpunit --stderr --coverage-html=tests/coverage",
-    "zip": "composer archive --format=zip --file=dist"
-  },
-  "support": {
-    "email": "support@getkirby.com",
-    "issues": "https://github.com/getkirby/kirby/issues",
-    "forum": "https://forum.getkirby.com",
-    "source": "https://github.com/getkirby/kirby"
-  }
+	"name": "getkirby/cms",
+	"description": "The Kirby 3 core",
+	"license": "proprietary",
+	"type": "kirby-cms",
+	"version": "3.7.3",
+	"keywords": [
+		"kirby",
+		"cms",
+		"core"
+	],
+	"authors": [
+		{
+			"name": "Kirby Team",
+			"email": "support@getkirby.com",
+			"homepage": "https://getkirby.com"
+		}
+	],
+	"homepage": "https://getkirby.com",
+	"support": {
+		"email": "support@getkirby.com",
+		"issues": "https://github.com/getkirby/kirby/issues",
+		"forum": "https://forum.getkirby.com",
+		"source": "https://github.com/getkirby/kirby"
+	},
+	"require": {
+		"php": ">=7.4.0 <8.2.0",
+		"ext-SimpleXML": "*",
+		"ext-ctype": "*",
+		"ext-curl": "*",
+		"ext-dom": "*",
+		"ext-filter": "*",
+		"ext-hash": "*",
+		"ext-iconv": "*",
+		"ext-json": "*",
+		"ext-libxml": "*",
+		"ext-mbstring": "*",
+		"ext-openssl": "*",
+		"claviska/simpleimage": "3.6.5",
+		"filp/whoops": "2.14.5",
+		"getkirby/composer-installer": "^1.2.1",
+		"laminas/laminas-escaper": "2.10.0",
+		"michelf/php-smartypants": "1.8.1",
+		"phpmailer/phpmailer": "6.6.3",
+		"symfony/polyfill-intl-idn": "1.26.0",
+		"symfony/polyfill-mbstring": "1.26.0"
+	},
+	"replace": {
+		"symfony/polyfill-php72": "*"
+	},
+	"suggest": {
+		"ext-PDO": "Support for using databases",
+		"ext-apcu": "Support for the Apcu cache driver",
+		"ext-exif": "Support for exif information from images",
+		"ext-fileinfo": "Improved mime type detection for files",
+		"ext-intl": "Improved i18n number formatting",
+		"ext-memcached": "Support for the Memcached cache driver",
+		"ext-zip": "Support for ZIP archive file functions",
+		"ext-zlib": "Sanitization and validation for svgz files"
+	},
+	"autoload": {
+		"psr-4": {
+			"Kirby\\": "src/"
+		},
+		"classmap": [
+			"dependencies/"
+		],
+		"files": [
+			"config/setup.php",
+			"config/helpers.php"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"getkirby/composer-installer": true
+		},
+		"optimize-autoloader": true,
+		"platform": {
+			"php": "7.4.0"
+		},
+		"platform-check": false
+	},
+	"extra": {
+		"unused": [
+			"symfony/polyfill-intl-idn"
+		]
+	},
+	"scripts": {
+		"post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
+		"analyze": [
+			"@analyze:composer",
+			"@analyze:psalm",
+			"@analyze:phpcpd",
+			"@analyze:phpmd"
+		],
+		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
+		"analyze:phpcpd": "phpcpd --fuzzy --exclude tests --exclude vendor .",
+		"analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
+		"analyze:psalm": "psalm",
+		"build": "./scripts/build",
+		"ci": [
+			"@fix",
+			"@analyze",
+			"@test"
+		],
+		"fix": "php-cs-fixer fix",
+		"test": "phpunit --stderr --coverage-html=tests/coverage",
+		"zip": "composer archive --format=zip --file=dist"
+	}
 }

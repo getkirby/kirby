@@ -10,16 +10,16 @@ use Kirby\Toolkit\Facade;
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier GmbH
+ * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class S extends Facade
 {
-    /**
-     * @return \Kirby\Session\Session
-     */
-    public static function instance()
-    {
-        return App::instance()->session();
-    }
+	/**
+	 * @return \Kirby\Session\Session
+	 */
+	public static function instance()
+	{
+		return App::instance()->session();
+	}
 }

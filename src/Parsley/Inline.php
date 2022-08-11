@@ -2,71 +2,174 @@
 
 namespace Kirby\Parsley;
 
+use DOMNode;
+use DOMNodeList;
+use Kirby\Toolkit\Html;
+
+/**
+ * Represents an inline element
+ * in an HTML document
+ *
+ * @since 3.5.0
+ *
+ * @package   Kirby Parsley
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class Inline
 {
-    protected $html = '';
-    protected $marks = [];
+	/**
+	 * @var string
+	 */
+	protected $html = '';
 
-    public function __construct($node, array $marks = [])
-    {
-        $this->createMarkRules($marks);
-        $this->html = trim($this->parseNode($node));
-    }
+	/**
+	 * @var array
+	 */
+	protected $marks = [];
 
-    public function createMarkRules($marks)
-    {
-        foreach ($marks as $mark) {
-            $this->marks[$mark['tag']] = $mark;
-        }
-    }
+	/**
+	 * @param \DOMNode $node
+	 * @param array $marks
+	 */
+	public function __construct(DOMNode $node, array $marks = [])
+	{
+		$this->createMarkRules($marks);
+		$this->html = trim(static::parseNode($node, $this->marks) ?? '');
+	}
 
-    public function parseChildren($children): string
-    {
-        if (!$children) {
-            return '';
-        }
+	/**
+	 * Loads all mark rules
+	 *
+	 * @param array $marks
+	 * @return array
+	 */
+	protected function createMarkRules(array $marks)
+	{
+		foreach ($marks as $mark) {
+			$this->marks[$mark['tag']] = $mark;
+		}
 
-        $html = '';
-        foreach ($children as $child) {
-            $html .= $this->parseNode($child);
-        }
-        return $html;
-    }
+		return $this->marks;
+	}
 
-    public function parseNode($node)
-    {
-        if (is_a($node, 'DOMText') === true) {
-            return $node->textContent;
-        }
+	/**
+	 * Get all allowed attributes for a DOMNode
+	 * as clean array
+	 *
+	 * @param DOMNode $node
+	 * @param array $marks
+	 * @return array
+	 */
+	public static function parseAttrs(DOMNode $node, array $marks = []): array
+	{
+		$attrs    = [];
+		$mark     = $marks[$node->tagName];
+		$defaults = $mark['defaults'] ?? [];
 
-        // ignore comments
-        if (is_a($node, 'DOMComment') === true) {
-            return '';
-        }
+		foreach ($mark['attrs'] ?? [] as $attr) {
+			if ($node->hasAttribute($attr)) {
+				$attrs[$attr] = $node->getAttribute($attr);
+			} else {
+				$attrs[$attr] = $defaults[$attr] ?? null;
+			}
+		}
 
-        // known marks
-        if (array_key_exists($node->tagName, $this->marks) === true) {
-            $mark     = $this->marks[$node->tagName];
-            $attrs    = [];
-            $defaults = $mark['defaults'] ?? [];
+		return $attrs;
+	}
 
-            foreach ($mark['attrs'] ?? [] as $attr) {
-                if ($node->hasAttribute($attr)) {
-                    $attrs[$attr] = $node->getAttribute($attr);
-                } else {
-                    $attrs[$attr] = $defaults[$attr] ?? null;
-                }
-            }
+	/**
+	 * Parses all children and creates clean HTML
+	 * for each of them.
+	 *
+	 * @param \DOMNodeList $children
+	 * @param array $marks
+	 * @return string
+	 */
+	public static function parseChildren(DOMNodeList $children, array $marks): string
+	{
+		$html = '';
+		foreach ($children as $child) {
+			$html .= static::parseNode($child, $marks);
+		}
+		return $html;
+	}
 
-            return '<' . $node->tagName . attr($attrs, ' ') . '>' . $this->parseChildren($node->childNodes) . '</' . $node->tagName . '>';
-        }
+	/**
+	 * Go through all child elements and create
+	 * clean inner HTML for them
+	 *
+	 * @param DOMNode $node
+	 * @return string|null
+	 */
+	public static function parseInnerHtml(DOMNode $node, array $marks = []): ?string
+	{
+		$html = static::parseChildren($node->childNodes, $marks);
 
-        // unknown marks
-        return $this->parseChildren($node->childNodes);
-    }
+		// trim the inner HTML for paragraphs
+		if ($node->tagName === 'p') {
+			$html = trim($html);
+		}
 
-    public function innerHtml()
-    {
-        return $this->html;
-    }
+		// return null for empty inner HTML
+		if ($html === '') {
+			return null;
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Converts the given node to clean HTML
+	 *
+	 * @param \DOMNode $node
+	 * @param array $marks
+	 * @return string|null
+	 */
+	public static function parseNode(DOMNode $node, array $marks = []): ?string
+	{
+		if (is_a($node, 'DOMText') === true) {
+			return Html::encode($node->textContent);
+		}
+
+		// ignore comments
+		if (is_a($node, 'DOMComment') === true) {
+			return null;
+		}
+
+		// unknown marks
+		if (array_key_exists($node->tagName, $marks) === false) {
+			return static::parseChildren($node->childNodes, $marks);
+		}
+
+		// collect all allowed attributes
+		$attrs = static::parseAttrs($node, $marks);
+
+		// close self-closing elements
+		if (Html::isVoid($node->tagName) === true) {
+			return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
+		}
+
+		$innerHtml = static::parseInnerHtml($node, $marks);
+
+		// skip empty paragraphs
+		if ($innerHtml === null && $node->tagName === 'p') {
+			return null;
+		}
+
+		// create the outer html for the element
+		return '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
+	}
+
+	/**
+	 * Returns the HTML contents of the element
+	 *
+	 * @return string
+	 */
+	public function innerHtml(): string
+	{
+		return $this->html;
+	}
 }

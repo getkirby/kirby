@@ -2,218 +2,225 @@
 
 namespace Kirby\Image;
 
-use Kirby\Http\Response;
+use PHPUnit\Framework\TestCase as TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Image\Image
+ */
 class ImageTest extends TestCase
 {
-    protected function _image($filename = 'cat.jpg', $url = 'http://getkirby.com/cat.jpg')
-    {
-        return new Image(static::FIXTURES . '/image/' . $filename, $url);
-    }
+	protected function _image($file = 'cat.jpg')
+	{
+		return new Image([
+			'root' => __DIR__ . '/fixtures/image/' . $file,
+			'url'  => 'https://foo.bar/' . $file
+		]);
+	}
 
-    public function setUp(): void
-    {
-        // ensure the translations are loaded
-        kirby();
-    }
+	/**
+	 * @covers ::dimensions
+	 */
+	public function testDimensions()
+	{
+		// jpg
+		$file = $this->_image();
+		$this->assertInstanceOf('Kirby\Image\Dimensions', $file->dimensions());
 
-    public function testConstruct()
-    {
-        $image = $this->_image();
-        $this->assertEquals(static::FIXTURES . '/image/cat.jpg', $image->root());
-        $this->assertEquals('http://getkirby.com/cat.jpg', $image->url());
-    }
+		// svg with width and height
+		$file = $this->_image('square.svg');
+		$this->assertEquals(100, $file->dimensions()->width());
+		$this->assertEquals(100, $file->dimensions()->height());
 
-    public function testHeader()
-    {
-        $image  = $this->_image();
-        $this->assertInstanceOf(Response::class, $image->header(false));
-    }
+		// svg with viewBox
+		$file = $this->_image('circle.svg');
+		$this->assertEquals(50, $file->dimensions()->width());
+		$this->assertEquals(50, $file->dimensions()->height());
 
-    public function testHeaderSend()
-    {
-        $image  = $this->_image();
-        $this->assertEquals('', $image->header());
-    }
+		// webp
+		$file = $this->_image('valley.webp');
+		$this->assertEquals(550, $file->dimensions()->width());
+		$this->assertEquals(368, $file->dimensions()->height());
 
-    public function testDownload()
-    {
-        $image  = $this->_image();
-        $this->assertIsString($image->download());
-        $this->assertIsString($image->download('meow.jpg'));
-    }
+		// non-image file
+		$file = $this->_image('blank.pdf');
+		$this->assertEquals(0, $file->dimensions()->width());
+		$this->assertEquals(0, $file->dimensions()->height());
 
-    public function testExif()
-    {
-        $image  = $this->_image();
-        $this->assertInstanceOf(Exif::class, $image->exif());
-        $this->assertInstanceOf(Exif::class, $image->exif());
-    }
+		// cached object
+		$this->assertInstanceOf('Kirby\Image\Dimensions', $file->dimensions());
+	}
 
-    public function testImagesize()
-    {
-        $image  = $this->_image();
-        $this->assertEquals([
-            500,
-            500,
-            2,
-            'width="500" height="500"',
-            'bits'     => 8,
-            'channels' => 3,
-            'mime'     => 'image/jpeg'
-        ], $image->imagesize());
-    }
+	/**
+	 * @covers ::exif
+	 */
+	public function testExif()
+	{
+		$file = $this->_image();
+		$this->assertInstanceOf('Kirby\Image\Exif', $file->exif());
+		// cached object
+		$this->assertInstanceOf('Kirby\Image\Exif', $file->exif());
+	}
 
-    public function testDimensions()
-    {
-        // jpg
-        $image  = $this->_image();
-        $this->assertInstanceOf(Dimensions::class, $image->dimensions());
+	/**
+	 * @covers ::height
+	 */
+	public function testHeight()
+	{
+		$file = $this->_image();
+		$this->assertSame(500, $file->height());
+	}
 
-        // svg with width and height
-        $image  = $this->_image('square.svg');
-        $this->assertEquals(100, $image->dimensions()->width());
-        $this->assertEquals(100, $image->dimensions()->height());
+	/**
+	 * @covers ::html
+	 */
+	public function testHtml()
+	{
+		$file = $this->_image();
+		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
+	}
 
-        // svg with viewBox
-        $image  = $this->_image('circle.svg');
-        $this->assertEquals(50, $image->dimensions()->width());
-        $this->assertEquals(50, $image->dimensions()->height());
+	/**
+	 * @covers ::imagesize
+	 */
+	public function testImagesize()
+	{
+		$file = $this->_image();
+		$this->assertIsArray($file->imagesize());
+		$this->assertSame(500, $file->imagesize()[0]);
+	}
 
-        // webp
-        $image  = $this->_image('valley.webp');
-        $this->assertEquals(550, $image->dimensions()->width());
-        $this->assertEquals(368, $image->dimensions()->height());
+	/**
+	 * @covers ::isPortrait
+	 */
+	public function testIsPortrait()
+	{
+		$file = $this->_image();
+		$this->assertFalse($file->isPortrait());
+	}
 
-        // non-image file
-        $image  = $this->_image('blank.pdf');
-        $this->assertEquals(0, $image->dimensions()->width());
-        $this->assertEquals(0, $image->dimensions()->height());
+	/**
+	 * @covers ::isLandscape
+	 */
+	public function testIsLandscape()
+	{
+		$file = $this->_image();
+		$this->assertFalse($file->isLandscape());
+	}
 
-        // cached object
-        $this->assertInstanceOf(Dimensions::class, $image->dimensions());
-    }
+	/**
+	 * @covers ::isSquare
+	 */
+	public function testIsSquare()
+	{
+		$file = $this->_image();
+		$this->assertTrue($file->isSquare());
+	}
 
-    public function testMatch()
-    {
-        $rules = [
-            'miMe'        => ['image/png', 'image/jpeg', 'application/pdf'],
-            'extensION'   => ['jpg', 'pdf'],
-            'tYPe'        => ['image', 'video'],
-            'MINsize'     => 20000,
-            'maxSIze'     => 25000,
-            'minheiGHt'   => 400,
-            'maxHeight'   => 600,
-            'minWIdth'    => 400,
-            'maxwiDth'    => 600,
-            'oriEntation' => 'square'
-        ];
+	/**
+	 * @covers ::isresizable
+	 */
+	public function testIsResizable()
+	{
+		$file = $this->_image();
+		$this->assertTrue($file->isResizable());
 
-        $this->assertTrue($this->_image()->match($rules));
-    }
+		$file = $this->_image('test.heic');
+		$this->assertFalse($file->isResizable());
+	}
 
-    public function testMatchMimeException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid mime type: image/jpeg');
+	/**
+	 * @covers ::isViewable
+	 */
+	public function testIsViewable()
+	{
+		$file = $this->_image();
+		$this->assertTrue($file->isResizable());
 
-        $this->_image()->match(['mime' => ['image/png', 'application/pdf']]);
-    }
+		$file = $this->_image('test.heic');
+		$this->assertFalse($file->isResizable());
+	}
 
-    public function testMatchExtensionException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid extension: jpg');
+	/**
+	 * @covers ::match
+	 */
+	public function testMatch()
+	{
+		$rules = [
+			'miMe'        => ['image/png', 'image/jpeg', 'application/pdf'],
+			'extensION'   => ['jpg', 'pdf'],
+			'tYPe'        => ['image', 'video'],
+			'MINsize'     => 20000,
+			'maxSIze'     => 25000,
+			'minheiGHt'   => 400,
+			'maxHeight'   => 600,
+			'minWIdth'    => 400,
+			'maxwiDth'    => 600,
+			'oriEntation' => 'square'
+		];
 
-        $this->_image()->match(['extension' => ['png', 'pdf']]);
-    }
+		$this->assertTrue($this->_image()->match($rules));
+	}
 
-    public function testMatchTypeException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid file type: image');
+	/**
+	 * @covers ::match
+	 */
+	public function testMatchOrientationException()
+	{
+		// Make sure i18n files are loaded
+		$kirby = kirby();
 
-        $this->_image()->match(['type' => ['document', 'video']]);
-    }
+		$this->expectException('Kirby\Exception\Exception');
+		$this->expectExceptionMessage('The orientation of the image must be "portrait"');
 
-    public function testMatchOrientationException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('The orientation of the image must be "portrait"');
+		$this->_image()->match(['orientation' => 'portrait']);
+	}
 
-        $this->_image()->match(['orientation' => 'portrait']);
-    }
+	/**
+	 * @covers ::orientation
+	 */
+	public function testOrientation()
+	{
+		$file = $this->_image();
+		$this->assertSame('square', $file->orientation());
+	}
 
-    public function testWidth()
-    {
-        $image  = $this->_image();
-        $this->assertEquals(500, $image->width());
-    }
+	/**
+	 * @covers ::ratio
+	 */
+	public function testRatio()
+	{
+		$image  = $this->_image();
+		$this->assertEquals(1.0, $image->ratio());
+	}
 
-    public function testHeight()
-    {
-        $image  = $this->_image();
-        $this->assertEquals(500, $image->height());
-    }
+	/**
+	 * @covers ::toArray
+	 */
+	public function testToArray()
+	{
+		$file = $this->_image();
+		$this->assertSame('cat.jpg', $file->toArray()['filename']);
+		$this->assertIsArray($file->toArray()['exif']);
+		$this->assertIsArray($file->toArray()['dimensions']);
+	}
 
-    public function testRatio()
-    {
-        $image  = $this->_image();
-        $this->assertEquals(1.0, $image->ratio());
-    }
+	/**
+	 * @covers ::__toString
+	 */
+	public function testToString()
+	{
+		$file = $this->_image();
+		$expected = '<img alt="" src="https://foo.bar/cat.jpg">';
+		$this->assertSame($expected, $file->__toString());
+		$this->assertSame($expected, (string)$file);
+	}
 
-    public function testIsPortrait()
-    {
-        $image  = $this->_image();
-        $this->assertFalse($image->isPortrait());
-    }
-
-    public function testIsLandscape()
-    {
-        $image  = $this->_image();
-        $this->assertFalse($image->isLandscape());
-    }
-
-    public function testIsSquare()
-    {
-        $image  = $this->_image();
-        $this->assertTrue($image->isSquare());
-    }
-
-    public function testOrientation()
-    {
-        $image  = $this->_image();
-        $this->assertEquals('square', $image->orientation());
-    }
-
-    public function testHtml()
-    {
-        $image = $this->_image();
-        $html  = $image->html();
-        $this->assertEquals('<img alt="" src="http://getkirby.com/cat.jpg">', $html);
-    }
-
-    public function testToArray()
-    {
-        $image  = $this->_image();
-        $this->assertIsArray($image->toArray());
-    }
-
-    public function testToJson()
-    {
-        $image  = $this->_image();
-        $this->assertIsString($image->toJson());
-    }
-
-    public function testToString()
-    {
-        $image  = $this->_image();
-        $this->assertEquals(__DIR__ . '/fixtures/image/cat.jpg', (string)$image);
-    }
-
-    public function testDebuginfo()
-    {
-        $image  = $this->_image();
-        $this->assertIsArray($image->__debugInfo());
-    }
+	/**
+	 * @covers ::width
+	 */
+	public function testWidth()
+	{
+		$file = $this->_image();
+		$this->assertSame(500, $file->width());
+	}
 }

@@ -1,4 +1,7 @@
 <?php
 
 return [
+	[
+		'type' => 'line',
+	]
 ];

@@ -2,70 +2,65 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class SystemRoutesTest extends TestCase
 {
-    protected $app;
+	protected $app;
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => $fixtures = __DIR__ . '/fixtures/SystemRoutesTest'
-            ],
-        ]);
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => $fixtures = __DIR__ . '/fixtures/SystemRoutesTest'
+			]
+		]);
 
-        Dir::remove($fixtures);
-    }
+		Dir::remove($fixtures);
+	}
 
-    public function testGetWithInvalidServerSoftware()
-    {
-        // keep the original software to reset it later
-        $originalSoftware = $_SERVER['SERVER_SOFTWARE'] ?? null;
+	public function testGetWithInvalidServerSoftware()
+	{
+		// set invalid server software
+		$app = $this->app->clone([
+			'server' => [
+				'SERVER_SOFTWARE' => 'invalid'
+			]
+		]);
 
-        // set invalid server software
-        $_SERVER['SERVER_SOFTWARE'] = 'invalid';
+		$response = $app->api()->call('system', 'GET');
 
-        $response = $this->app->api()->call('system', 'GET');
+		$this->assertFalse($response['data']['isOk']);
+		$this->assertFalse($response['data']['requirements']['server']);
+	}
 
-        $this->assertFalse($response['data']['isOk']);
-        $this->assertFalse($response['data']['requirements']['server']);
+	public function testGetWithValidServerSoftware()
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'SERVER_SOFTWARE' => 'apache'
+			]
+		]);
 
-        // reset the server software
-        $_SERVER['SERVER_SOFTWARE'] = $originalSoftware;
-    }
+		$response = $app->api()->call('system', 'GET');
 
-    public function testGetWithValidServerSoftware()
-    {
-        // keep the original software to reset it later
-        $originalSoftware = $_SERVER['SERVER_SOFTWARE'] ?? null;
+		$this->assertTrue($response['data']['isOk']);
+	}
 
-        // set invalid server software
-        $_SERVER['SERVER_SOFTWARE'] = 'apache';
+	public function testGetWithoutUser()
+	{
+		$response = $this->app->api()->call('system', 'GET');
 
-        $response = $this->app->api()->call('system', 'GET');
+		$this->assertArrayNotHasKey('user', $response['data']);
+	}
 
-        $this->assertTrue($response['data']['isOk']);
+	public function testGetWithUser()
+	{
+		$this->app->impersonate('kirby');
 
-        // reset the server software
-        $_SERVER['SERVER_SOFTWARE'] = $originalSoftware;
-    }
+		$response = $this->app->api()->call('system', 'GET');
 
-    public function testGetWithoutUser()
-    {
-        $response = $this->app->api()->call('system', 'GET');
-
-        $this->assertArrayNotHasKey('user', $response['data']);
-    }
-
-    public function testGetWithUser()
-    {
-        $this->app->impersonate('kirby');
-
-        $response = $this->app->api()->call('system', 'GET');
-
-        $this->assertArrayHasKey('user', $response['data']);
-    }
+		$this->assertArrayHasKey('user', $response['data']);
+	}
 }

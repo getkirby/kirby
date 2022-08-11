@@ -1,0 +1,98 @@
+/* Align */
+[data-align="left"] {
+  --align: start;
+}
+[data-align="center"] {
+  --align: center;
+}
+[data-align="right"] {
+  --align: end;
+}
+
+/* Invalid */
+[data-invalid="true"] {
+  border: 1px solid var(--color-negative-outline);
+  box-shadow: var(--color-negative-outline) 0 0 3px 2px;
+}
+[data-invalid="true"]:focus-within {
+  border: var(--field-input-invalid-focus-border) !important;
+  box-shadow: var(--color-negative-outline) 0 0 0 2px !important;
+}
+
+/* Tabbed */
+[data-tabbed="true"] {
+  box-shadow: var(--shadow-outline);
+  border-radius: var(--rounded);
+}
+
+/* Theme */
+[data-theme="positive"],
+[data-theme="success"] {
+  --theme: var(--color-positive);
+  --theme-light: var(--color-positive-light);
+  --theme-bg: var(--color-green-300);
+}
+
+[data-theme="negative"],
+[data-theme="error"] {
+  --theme: var(--color-negative);
+  --theme-light: var(--color-negative-light);
+  --theme-bg: var(--color-red-300);
+}
+[data-theme="notice"] {
+  --theme: var(--color-notice);
+  --theme-light: var(--color-notice-light);
+  --theme-bg: var(--color-orange-300);
+}
+[data-theme="info"] {
+  --theme: var(--color-focus);
+  --theme-light: var(--color-focus-light);
+  --theme-bg: var(--color-blue-200);
+}
+
+.scroll-x,
+.scroll-x-auto,
+.scroll-y,
+.scroll-y-auto {
+  -webkit-overflow-scrolling: touch;
+  transform: translate3d(0, 0, 0);
+}
+.scroll-x {
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.scroll-x-auto {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.scroll-y {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.scroll-y-auto {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/** Make an input invisible to customize its appearance **/
+.input-hidden {
+  position: absolute;
+  appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+/** Todo: deprecate k-offscreen **/
+.sr-only,
+.k-offscreen {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -4,15 +4,21 @@ namespace Kirby\Http\Request\Auth;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Kirby\Http\Request\Auth
+ * @covers \Kirby\Http\Request\Auth\BasicAuth
+ */
 class BasicAuthTest extends TestCase
 {
-    public function testInstance()
-    {
-        $auth = new BasicAuth(base64_encode($credentials = 'testuser:testpass'));
+	public function testInstance()
+	{
+		$auth = new BasicAuth($data = base64_encode($credentials = 'testuser:testpass'));
 
-        $this->assertEquals($credentials, $auth->credentials());
-        $this->assertEquals('testpass', $auth->password());
-        $this->assertEquals('basic', $auth->type());
-        $this->assertEquals('testuser', $auth->username());
-    }
+		$this->assertSame('basic', $auth->type());
+		$this->assertSame($data, $auth->data());
+		$this->assertSame($credentials, $auth->credentials());
+		$this->assertSame('testpass', $auth->password());
+		$this->assertSame('testuser', $auth->username());
+		$this->assertSame('Basic ' . $data, (string)$auth);
+	}
 }

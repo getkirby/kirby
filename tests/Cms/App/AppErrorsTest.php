@@ -3,8 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
-use Kirby\Http\Server;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use ReflectionMethod;
 use Whoops\Handler\PlainTextHandler;
 
@@ -13,317 +12,392 @@ use Whoops\Handler\PlainTextHandler;
  */
 class AppErrorsTest extends TestCase
 {
-    public function tearDown(): void
-    {
-        $unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
-        $unsetMethod->setAccessible(true);
+	public function tearDown(): void
+	{
+		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
+		$unsetMethod->setAccessible(true);
 
-        $app = App::instance();
-        $unsetMethod->invoke($app);
+		$app = App::instance();
+		$unsetMethod->invoke($app);
 
-        parent::tearDown();
-    }
+		parent::tearDown();
+	}
 
-    /**
-     * @covers ::handleCliErrors
-     */
-    public function testHandleCliErrors()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+	/**
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testExceptionHook()
+	{
+		$result = null;
 
-        $testMethod = new ReflectionMethod(App::class, 'handleCliErrors');
-        $testMethod->setAccessible(true);
+		$app = $this->app->clone([
+			'hooks' => [
+				'system.exception' => function ($exception) use (&$result) {
+					$result = $exception->getMessage();
+				}
+			]
+		]);
 
-        $app    = App::instance();
-        $whoops = $whoopsMethod->invoke($app);
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
-    }
+		$whoops  = $whoopsMethod->invoke($app);
+		$handler = $whoops->getHandlers()[1];
 
-    /**
-     * @covers ::handleErrors
-     */
-    public function testHandleErrors()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+		// test CallbackHandler with \Exception class
+		$exception = new \Exception('Some error message');
+		$handler->setException($exception);
 
-        $testMethod = new ReflectionMethod(App::class, 'handleErrors');
-        $testMethod->setAccessible(true);
+		// handle the exception
+		$this->_getBufferedContent($handler);
 
-        $app    = App::instance();
-        $whoops = $whoopsMethod->invoke($app);
+		$this->assertSame('Some error message', $result);
+	}
 
-        $oldCli    = Server::$cli;
-        $oldAccept = $_SERVER['HTTP_ACCEPT'] ?? null;
+	/**
+	 * @covers ::handleCliErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleCliErrors()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        // CLI
-        Server::$cli = true;
+		$testMethod = new ReflectionMethod(App::class, 'handleCliErrors');
+		$testMethod->setAccessible(true);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
 
-        // JSON
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'application/json';
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+	/**
+	 * @covers ::handleErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleErrors1()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        // HTML
-        Server::$cli = false;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'options' => [
-                'debug' => true
-            ]
-        ]);
-        $whoops = $whoopsMethod->invoke($app);
+		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
+		$testMethod->setAccessible(true);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
+		$app = $this->app->clone([
+			'cli' => true
+		]);
 
-        // reset global state
-        Server::$cli            = $oldCli;
-        $_SERVER['HTTP_ACCEPT'] = $oldAccept;
-    }
+		$whoops = $whoopsMethod->invoke($app);
 
-    /**
-     * @covers ::handleHtmlErrors
-     */
-    public function testHandleHtmlErrors()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
 
-        $optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
-        $optionsMethod->setAccessible(true);
+	/**
+	 * @covers ::handleErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleErrors2()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        $testMethod = new ReflectionMethod(App::class, 'handleHtmlErrors');
-        $testMethod->setAccessible(true);
+		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
+		$testMethod->setAccessible(true);
 
-        $app    = App::instance();
-        $whoops = $whoopsMethod->invoke($app);
+		$app = $this->app->clone([
+			'cli' => false,
+			'server' => [
+				'HTTP_ACCEPT' => 'application/json'
+			]
+		]);
 
-        // without options
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
-        $this->assertSame($this->_getBufferedContent($app->root('kirby') . '/views/fatal.php'), $this->_getBufferedContent($handlers[0]));
+		$whoops = $whoopsMethod->invoke($app);
 
-        // without fatal closure
-        $optionsMethod->invoke($app, ['fatal' => function () {
-            return 'Fatal Error Test!';
-        }]);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
-        $this->assertSame('Fatal Error Test!', $this->_getBufferedContent($handlers[0]));
+	/**
+	 * @covers ::handleErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleErrors3()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        // disabling Whoops without debugging doesn't matter
-        $optionsMethod->invoke($app, ['debug' => false, 'whoops' => false]);
+		$testMethod = new ReflectionMethod(App::class, 'handleErrors');
+		$testMethod->setAccessible(true);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$app = $this->app->clone([
+			'cli' => false,
+			'server' => [
+				'HTTP_ACCEPT' => 'text/html'
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+		$whoops = $whoopsMethod->invoke($app);
 
-        // with debugging enabled
-        $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
-        $this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
-        $this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
-        $this->assertFalse($handlers[0]->getEditorHref('test', 1));
+	/**
+	 * @covers ::handleHtmlErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleHtmlErrors()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        // with debugging enabled and editor
-        $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true, 'editor' => 'vscode']);
+		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
+		$optionsMethod->setAccessible(true);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
-        $this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
-        $this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
-        $this->assertSame('vscode://file/test:1', $handlers[0]->getEditorHref('test', 1));
+		$testMethod = new ReflectionMethod(App::class, 'handleHtmlErrors');
+		$testMethod->setAccessible(true);
 
-        // with debugging enabled, but without Whoops
-        $optionsMethod->invoke($app, ['debug' => true, 'whoops' => false]);
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(0, $handlers);
-    }
+		// without options
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertSame($this->_getBufferedContent($app->root('kirby') . '/views/fatal.php'), $this->_getBufferedContent($handlers[0]));
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-    /**
-     * @covers ::handleJsonErrors
-     */
-    public function testHandleJsonErrors()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+		// without fatal closure
+		$optionsMethod->invoke($app, ['fatal' => function () {
+			return 'Fatal Error Test!';
+		}]);
 
-        $optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
-        $optionsMethod->setAccessible(true);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertSame('Fatal Error Test!', $this->_getBufferedContent($handlers[0]));
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        $testMethod = new ReflectionMethod(App::class, 'handleJsonErrors');
-        $testMethod->setAccessible(true);
+		// disabling Whoops without debugging doesn't matter
+		$optionsMethod->invoke($app, ['debug' => false, 'whoops' => false]);
 
-        $app    = App::instance();
-        $whoops = $whoopsMethod->invoke($app);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        $testMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		// with debugging enabled
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
 
-        // test CallbackHandler with default
-        $this->assertSame(json_encode([
-            'status' => 'error',
-            'code' => 500,
-            'details' => null,
-            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
-        ]), $this->_getBufferedContent($handlers[0]));
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
+		$this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
+		$this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
+		$this->assertFalse($handlers[0]->getEditorHref('test', 1));
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        // test CallbackHandler with \Exception class
-        $exception = new \Exception('Some error message', 30);
-        $handlers[0]->setException($exception);
+		// with debugging enabled and editor
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => true, 'editor' => 'vscode']);
 
-        $this->assertSame(json_encode([
-            'status' => 'error',
-            'code' => 30,
-            'details' => null,
-            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
-        ]), $this->_getBufferedContent($handlers[0]));
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
 
-        // test CallbackHandler with \Kirby\Exception\Exception class
-        $exception = new Exception([
-            'data' => [],
-            'details'  => [
-                'Some error message'
-            ]
-        ]);
-        $handlers[0]->setException($exception);
+		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
+		$this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
+		$this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
+		$this->assertSame('vscode://file/test:1', $handlers[0]->getEditorHref('test', 1));
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        $this->assertSame(json_encode([
-            'status' => 'error',
-            'code' => 'error.general',
-            'details' => [
-                'Some error message'
-            ],
-            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
-        ]), $this->_getBufferedContent($handlers[0]));
+		// with debugging enabled, but without Whoops
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => false]);
 
-        // with debugging enabled
-        $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(0, $handlers);
+	}
 
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+	/**
+	 * @covers ::handleJsonErrors
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testHandleJsonErrors()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        $this->assertSame(json_encode([
-            'status' => 'error',
-            'exception' => 'Kirby\Exception\Exception',
-            'code' => 'error.general',
-            'message' => 'An error occurred',
-            'details' => [
-                'Some error message'
-            ],
-            'file' => __FILE__,
-            'line' => $exception->getLine()
-        ]), $this->_getBufferedContent($handlers[0]));
-    }
+		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
+		$optionsMethod->setAccessible(true);
 
-    /**
-     * @covers ::setWhoopsHandler
-     * @covers ::unsetWhoopsHandler
-     */
-    public function testSetUnsetWhoopsHandler()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+		$testMethod = new ReflectionMethod(App::class, 'handleJsonErrors');
+		$testMethod->setAccessible(true);
 
-        $setMethod = new ReflectionMethod(App::class, 'setWhoopsHandler');
-        $setMethod->setAccessible(true);
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
 
-        $unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
-        $unsetMethod->setAccessible(true);
+		$testMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
-        $app    = App::instance();
-        $whoops = $whoopsMethod->invoke($app);
+		// test CallbackHandler with default
+		$this->assertSame(json_encode([
+			'status' => 'error',
+			'code' => 500,
+			'details' => null,
+			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+		]), $this->_getBufferedContent($handlers[0]));
 
-        $setMethod->invoke($app, new PlainTextHandler());
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\PlaintextHandler', $handlers[0]);
+		// test CallbackHandler with \Exception class
+		$exception = new \Exception('Some error message', 30);
+		$handlers[0]->setException($exception);
 
-        $setMethod->invoke($app, function () {
-            // empty callback
-        });
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
-        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertSame(json_encode([
+			'status' => 'error',
+			'code' => 30,
+			'details' => null,
+			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+		]), $this->_getBufferedContent($handlers[0]));
 
-        $unsetMethod->invoke($app);
-        $handlers = $whoops->getHandlers();
-        $this->assertCount(0, $handlers);
-    }
+		// test CallbackHandler with \Kirby\Exception\Exception class
+		$exception = new Exception([
+			'data' => [],
+			'details'  => [
+				'Some error message'
+			]
+		]);
+		$handlers[0]->setException($exception);
 
-    /**
-     * @covers ::whoops
-     */
-    public function testWhoops()
-    {
-        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
-        $whoopsMethod->setAccessible(true);
+		$this->assertSame(json_encode([
+			'status' => 'error',
+			'code' => 'error.general',
+			'details' => [
+				'Some error message'
+			],
+			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+		]), $this->_getBufferedContent($handlers[0]));
 
-        $app = App::instance();
+		// with debugging enabled
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
 
-        $whoops1 = $whoopsMethod->invoke($app);
-        $this->assertInstanceOf('Whoops\Run', $whoops1);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
 
-        $whoops2 = $whoopsMethod->invoke($app);
-        $this->assertInstanceOf('Whoops\Run', $whoops2);
-        $this->assertSame($whoops1, $whoops2);
-    }
+		$this->assertSame(json_encode([
+			'status' => 'error',
+			'exception' => 'Kirby\Exception\Exception',
+			'code' => 'error.general',
+			'message' => 'An error occurred',
+			'details' => [
+				'Some error message'
+			],
+			'file' => basename(__FILE__),
+			'line' => $exception->getLine()
+		]), $this->_getBufferedContent($handlers[0]));
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
 
-    /**
-     * Convert output to returned variable
-     *
-     * @param string|\Whoops\Handler\CallbackHandler $path
-     * @return false|string
-     */
-    protected function _getBufferedContent($path)
-    {
-        ob_start();
+	/**
+	 * @covers ::setWhoopsHandler
+	 * @covers ::unsetWhoopsHandler
+	 * @covers ::getExceptionHookWhoopsHandler
+	 */
+	public function testSetUnsetWhoopsHandler()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
 
-        if (is_a($path, '\Whoops\Handler\CallbackHandler') === true) {
-            $path->handle();
-        } else {
-            F::load($path);
-        }
+		$setMethod = new ReflectionMethod(App::class, 'setWhoopsHandler');
+		$setMethod->setAccessible(true);
 
-        $response = ob_get_clean();
+		$unsetMethod = new ReflectionMethod(App::class, 'unsetWhoopsHandler');
+		$unsetMethod->setAccessible(true);
 
-        return $response;
-    }
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
+
+		$setMethod->invoke($app, new PlainTextHandler());
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\PlaintextHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+
+		$setMethod->invoke($app, function () {
+			// empty callback
+		});
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(2, $handlers);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+
+		$unsetMethod->invoke($app);
+		$handlers = $whoops->getHandlers();
+		$this->assertCount(0, $handlers);
+	}
+
+	/**
+	 * @covers ::whoops
+	 */
+	public function testWhoops()
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$whoopsMethod->setAccessible(true);
+
+		$app = App::instance();
+
+		$whoops1 = $whoopsMethod->invoke($app);
+		$this->assertInstanceOf('Whoops\Run', $whoops1);
+
+		$whoops2 = $whoopsMethod->invoke($app);
+		$this->assertInstanceOf('Whoops\Run', $whoops2);
+		$this->assertSame($whoops1, $whoops2);
+	}
+
+	/**
+	 * Convert output to returned variable
+	 *
+	 * @param string|\Whoops\Handler\CallbackHandler $path
+	 * @return false|string
+	 */
+	protected function _getBufferedContent($path)
+	{
+		ob_start();
+
+		if (is_a($path, '\Whoops\Handler\CallbackHandler') === true) {
+			$path->handle();
+		} else {
+			F::load($path);
+		}
+
+		$response = ob_get_clean();
+
+		return $response;
+	}
 }

@@ -1,438 +1,434 @@
 <template>
-  <div class="k-calendar-input">
-    <nav>
-      <k-button icon="angle-left" @click="prev" />
-      <span class="k-calendar-selects">
-        <k-select-input
-          v-model.number="view.month"
-          :options="months"
-          :disabled="disabled"
-          :required="true"
-        />
-        <k-select-input
-          v-model.number="view.year"
-          :options="years"
-          :disabled="disabled"
-          :required="true"
-        />
-      </span>
-      <k-button icon="angle-right" @click="next" />
-    </nav>
+	<div class="k-calendar-input">
+		<!-- Month + year selects -->
+		<nav>
+			<k-button icon="angle-left" @click="onPrev" />
+			<span class="k-calendar-selects">
+				<k-select-input
+					v-model.number="current.month"
+					:options="months"
+					:disabled="disabled"
+					:required="true"
+				/>
+				<k-select-input
+					v-model.number="current.year"
+					:options="years"
+					:disabled="disabled"
+					:required="true"
+				/>
+			</span>
+			<k-button icon="angle-right" @click="onNext" />
+		</nav>
 
-    <table class="k-calendar-table">
-      <thead>
-        <tr>
-          <th v-for="day in weekdays" :key="'weekday_' + day">
-            {{ day }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="week in numberOfWeeks" :key="'week_' + week">
-          <td
-            v-for="(day, dayIndex) in days(week)"
-            :key="'day_' + dayIndex"
-            :aria-current="isToday(day) ? 'date' : false"
-            :aria-selected="isSelected(day) ? 'date' : false"
-            :data-between="isBetween(day)"
-            :data-first="isFirst(day)"
-            :data-last="isLast(day)"
-            class="k-calendar-day"
-          >
-            <k-button
-              v-if="day"
-              :disabled="isDisabled(day)"
-              @click="select(day)"
-            >
-              {{ day }}
-            </k-button>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td class="k-calendar-today" colspan="7">
-            <k-button @click="select('today')">
-              {{ $t("today") }}
-            </k-button>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </div>
+		<table class="k-calendar-table">
+			<!-- Weekdays -->
+			<thead>
+				<tr>
+					<th v-for="day in weekdays" :key="'weekday_' + day">
+						{{ day }}
+					</th>
+				</tr>
+			</thead>
+			<!-- Dates grid -->
+			<tbody>
+				<tr v-for="week in weeks" :key="'week_' + week">
+					<td
+						v-for="(day, dayIndex) in days(week)"
+						:key="'day_' + dayIndex"
+						:aria-current="isToday(day) ? 'date' : false"
+						:aria-selected="isSelected(day) ? 'date' : false"
+						class="k-calendar-day"
+					>
+						<k-button
+							v-if="day"
+							:disabled="isDisabled(day)"
+							:text="day"
+							@click="select(day)"
+						/>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<!-- Today button -->
+				<tr>
+					<td class="k-calendar-today" colspan="7">
+						<k-button :text="$t('today')" @click="select('today')" />
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
 </template>
 
 <script>
 /**
  * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
- * @example <k-calendar value="2012-12-12" @input="selectDate" />
+ * @public
+ *
+ * @example <k-calendar value="2012-12-12" @input="onInput" />
  */
 export default {
-  props: {
-    disabled: Boolean,
-    multiple: Boolean,
-    max: String,
-    min: String,
-    /**
-     * ISO date string/s, i.e. `2012-12-12`
-     */
-    value: [Array, String],
-  },
-  data() {
-    return this.toData(this.value);
-  },
-  computed: {
-    numberOfDays() {
-      return this.viewDt.daysInMonth();
-    },
-    numberOfWeeks() {
-      return Math.ceil((this.numberOfDays + this.firstWeekday - 1) / 7);
-    },
-    firstWeekday() {
-      const weekday = this.viewDt.day();
-      return weekday > 0 ? weekday : 7;
-    },
-    weekdays() {
-      return [
-        this.$t('days.mon'),
-        this.$t('days.tue'),
-        this.$t('days.wed'),
-        this.$t('days.thu'),
-        this.$t('days.fri'),
-        this.$t('days.sat'),
-        this.$t('days.sun'),
-      ];
-    },
-    monthnames() {
-      return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december'),
-      ];
-    },
-    months() {
-      var options = [];
+	props: {
+		/**
+		 * Disables whole calendar
+		 */
+		disabled: Boolean,
+		/**
+		 * The last allowed date
+		 * @example `2020-12-31`
+		 */
+		max: String,
+		/**
+		 * The first allowed date
+		 * @example `2020-01-01`
+		 */
+		min: String,
+		/**
+		 * ISO date/datetime string
+		 * @example `2020-03-05`
+		 */
+		value: String
+	},
+	data() {
+		return this.data(this.value);
+	},
+	computed: {
+		/**
+		 * Number of days in the current month
+		 * @returns {number}
+		 */
+		numberOfDays() {
+			return this.toDate().daysInMonth();
+		},
+		/**
+		 * Adjusted weekday number (Sunday is 7 not 0)
+		 * @returns {number}
+		 */
+		firstWeekday() {
+			const weekday = this.toDate().day();
+			return weekday > 0 ? weekday : 7;
+		},
+		/**
+		 * Translated weekday names
+		 * @returns {array}
+		 */
+		weekdays() {
+			return ["mon", "tue", "wed", "thu", "fri", "sat", "sun"].map((day) =>
+				this.$t("days." + day)
+			);
+		},
+		/**
+		 * Weeks in the currently viewed month
+		 * @returns {number}
+		 */
+		weeks() {
+			// in which column do we need to start
+			const offset = this.firstWeekday - 1;
+			// how many weeks/rows do we need
+			// to cover offset and all days
+			return Math.ceil((this.numberOfDays + offset) / 7);
+		},
+		/**
+		 * Translated month names
+		 * @returns {array}
+		 */
+		monthnames() {
+			return [
+				"january",
+				"february",
+				"march",
+				"april",
+				"may",
+				"june",
+				"july",
+				"august",
+				"september",
+				"october",
+				"november",
+				"december"
+			].map((day) => this.$t("months." + day));
+		},
+		/**
+		 * Select options for all months
+		 * @returns {array}
+		 */
+		months() {
+			var options = [];
 
-      this.monthnames.forEach((item, index) => {
-        // get date object for 1st of the month
-        const date = this.toDate(1, index);
+			this.monthnames.forEach((item, index) => {
+				// get date object for 1st of the month
+				const date = this.toDate(1, index);
 
-        options.push({
-          value: index,
-          text: item,
-          disabled: date.isBefore(this.view.min, "month") ||
-                    date.isAfter(this.view.max, "month")
-        });
-      });
+				options.push({
+					value: index,
+					text: item,
+					disabled:
+						date.isBefore(this.current.min, "month") ||
+						date.isAfter(this.current.max, "month")
+				});
+			});
 
-      return options;
-    },
-    years() {
-      var options = [];
+			return options;
+		},
+		/**
+		 * Select options for all years
+		 * (either from min to max or +/-20 years from current view)
+		 * @returns {array}
+		 */
+		years() {
+			const min = this.current.min?.get("year") ?? this.current.year - 20;
+			const max = this.current.max?.get("year") ?? this.current.year + 20;
+			return this.toOptions(min, max);
+		}
+	},
+	watch: {
+		value(value) {
+			const data = this.data(value);
+			this.dt = data.dt;
+			this.current = data.current;
+		}
+	},
+	methods: {
+		/**
+		 * Internal method to set and update the
+		 * data object on initialization and when
+		 * the `value` prop changes
+		 * @param {string} value
+		 */
+		data(value) {
+			const dt = this.$library.dayjs.iso(value);
+			const now = this.$library.dayjs();
 
-      const min = this.view.min
-                ? this.view.min.get("year")
-                : this.view.year - 20;
-      const max = this.view.max
-                ? this.view.max.get("year")
-                : this.view.year + 20;
+			return {
+				// datetime object of selection
+				dt: dt,
+				// current calendar view
+				current: {
+					month: (dt ?? now).month(),
+					year: (dt ?? now).year(),
+					min: this.$library.dayjs.iso(this.min),
+					max: this.$library.dayjs.iso(this.max)
+				}
+			};
+		},
+		/**
+		 * Dates for a specific week in the current view (month + year)
+		 * @param {number} week number of week in the current month
+		 * @returns {array}
+		 */
+		days(week) {
+			let days = [];
 
-      for (var x = min; x <= max; x++) {
-        options.push({
-          value: x,
-          text: this.$helper.pad(x)
-        });
-      }
+			const start = (week - 1) * 7 + 1;
+			const end = start + 7;
 
-      return options;
-    },
-    viewDt() {
-      const dt = `${this.view.year}-${this.view.month + 1}-01 00:00:00`;
-      return this.$library.dayjs.utc(dt);
-    }
-  },
-  watch: {
-    value(value) {
-      const data     = this.toData(value);
-      this.datetimes = data.datetimes;
-      this.view      = data.view;
-    }
-  },
-  methods: {
-    days(week) {
-      let days    = [];
-      const start = (week - 1) * 7 + 1;
+			for (let x = start; x < end; x++) {
+				const day = x - (this.firstWeekday - 1);
+				const isPlaceholder = day <= 0 || day > this.numberOfDays;
+				days.push(!isPlaceholder ? day : "");
+			}
 
-      for (let x = start; x < start + 7; x++) {
-        let day = x - (this.firstWeekday - 1);
-        if (day <= 0 || day > this.numberOfDays) {
-          days.push("");
-        } else {
-          days.push(day);
-        }
-      }
+			return days;
+		},
+		/**
+		 * Whether a specified day in the current view (month + year)
+		 * should be disabled
+		 * @param {number} day day number
+		 * @returns {boolean}
+		 */
+		isDisabled(day) {
+			const date = this.toDate(day);
+			return (
+				this.disabled ||
+				date.isBefore(this.current.min, "day") ||
+				date.isAfter(this.current.max, "day")
+			);
+		},
+		/**
+		 * Whether a specified day in the current view (month + year)
+		 * is the selected datetime object
+		 * @param {number} day day number
+		 * @returns {boolean}
+		 */
+		isSelected(day) {
+			return this.toDate(day).isSame(this.dt, "day");
+		},
+		/**
+		 * Whether a specified day in the current view (month + year)
+		 * is today's date
+		 * @param {number} day day number
+		 * @returns {boolean}
+		 */
+		isToday(day) {
+			const now = this.$library.dayjs();
+			return this.toDate(day).isSame(now, "day");
+		},
+		/**
+		 * Emits the current datetime as ISO string
+		 */
+		onInput() {
+			/**
+			 * The input event is fired when a date is selected.
+			 * @property {string} iso data as ISO date string
+			 */
+			this.$emit("input", this.dt?.toISO("date") || null);
+		},
+		/**
+		 * Shows the following month
+		 */
+		onNext() {
+			const next = this.toDate().add(1, "month");
+			this.show(next);
+		},
+		/**
+		 * Shows the previous month
+		 */
+		onPrev() {
+			const prev = this.toDate().subtract(1, "month");
+			this.show(prev);
+		},
+		/**
+		 * Selects a day and updates datetime object
+		 * based on current view (month + year)
+		 */
+		select(day) {
+			// when selecting today, make sure to merge in current time selects
+			const date =
+				day === "today"
+					? this.$library.dayjs().merge(this.toDate(), "time")
+					: this.toDate(day);
+			this.dt = date;
+			this.show(date);
+			this.onInput();
+		},
+		/**
+		 * Updates the calendar to display the
+		 * month of the provided dayjs object
+		 * @param {Object} dt
+		 */
+		show(dt) {
+			this.current.year = dt.year();
+			this.current.month = dt.month();
+		},
+		/**
+		 * Creates a dayjs object for a specified day and
+		 * optional month
+		 * @param {number} day
+		 * @param {number} month
+		 */
+		toDate(day = 1, month = this.current.month) {
+			return this.$library.dayjs(`${this.current.year}-${month + 1}-${day}`);
+		},
+		/**
+		 * Generates select options between min and max
+		 * @param {number} min
+		 * @param {number} max
+		 * @returns {array}
+		 */
+		toOptions(min, max) {
+			var options = [];
 
-      return days;
-    },
-    isBetween(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
-        return false;
-      }
+			for (var x = min; x <= max; x++) {
+				options.push({
+					value: x,
+					text: this.$helper.pad(x)
+				});
+			}
 
-      const date = this.toDate(day);
-      return this.isFirst(day) ||
-            this.isLast(day) ||
-            (
-              date.isAfter(this.datetimes[0], "day") &&
-              date.isBefore(this.datetimes[1], "day")
-            );
-
-    },
-    isDisabled(day) {
-      const date = this.toDate(day);
-      return date.isBefore(this.view.min, "day") ||
-             date.isAfter(this.view.max, "day");
-    },
-    isFirst(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
-        return false;
-      }
-
-      const date = this.toDate(day);
-      return date.isSame(this.datetimes[0], "day");
-    },
-    isLast(day) {
-      if (
-        day === "" ||
-        this.multiple == false ||
-        this.datetimes.length < 2
-      ) {
-        return false;
-      }
-
-      const date = this.toDate(day);
-      return date.isSame(this.datetimes[1], "day");
-    },
-    isSelected(day) {
-      if (day === "") {
-        return false;
-      }
-
-      const date = this.toDate(day);
-      return this.datetimes.some(current => date.isSame(current, "day"));
-    },
-    isToday(day) {
-      return this.toDate(day).isSame(this.toToday(), "day");
-    },
-    next() {
-      let next = this.viewDt.clone().add(1, "month");
-      this.show(next);
-    },
-    prev() {
-      let prev = this.viewDt.clone().subtract(1, "month");
-      this.show(prev);
-    },
-    mergeTime(dt1, dt2) {
-      return dt1.clone().set("second", dt2.get("second"))
-                        .set("minute", dt2.get("minute"))
-                        .set("hour", dt2.get("hour"));
-    },
-    select(day) {
-      const reference = this.datetimes[0] || this.toToday();
-
-      if (day === "today") {
-        const today = this.mergeTime(this.$library.dayjs(), reference);
-        this.datetimes = [today];
-        this.show(today);
-
-      } else {
-        let date = this.toDate(day);
-        date = this.mergeTime(date, reference);
-
-        if (
-          this.multiple === false ||
-          this.datetimes.length === 0 ||
-          this.datetimes.length === 2 ||
-          date.isBefore(this.datetimes[0])
-        ) {
-          this.datetimes = [date];
-        } else {
-          this.datetimes.push(date);
-        }
-      }
-
-      const iso = this.multiple ? 
-                  this.datetimes.map(date => this.toISO(date)) : 
-                  this.toISO(this.datetimes[0]);
-
-      /**
-       * The input event is fired when a date is selected. 
-       * @property {string} iso data as ISO date string
-       */
-      this.$emit("input", iso);
-    },
-    show(date) {
-      this.view.year  = date.year();
-      this.view.month = date.month();
-    },
-    toData(value) {
-      const today     = this.toToday();
-      const datetimes = this.toDatetimes(value);
-
-      return {
-        datetimes: datetimes,
-        view: {
-          month: (datetimes[0] || today).month(),
-          year: (datetimes[0] || today).year(),
-          min: this.min ? this.$library.dayjs.utc(this.min) : null,
-          max: this.max ? this.$library.dayjs.utc(this.max) : null,
-        }
-      }
-    },
-    toDate(day, month = this.view.month, year = this.view.year) {
-      return this.$library.dayjs.utc(`${year}-${month + 1}-${day} 00:00:00`);
-    },
-    toDatetimes(value) {
-      if (!value) {
-        return [];
-      }
-
-      if (typeof value === "string") {
-        return [this.$library.dayjs.utc(value)];
-      }
-
-      return value.map(date => this.$library.dayjs.utc(date));
-    },
-    toISO(dt) {
-      return dt.format("YYYY-MM-DD HH:mm:ss");
-    },
-    toToday() {
-      return this.$library.dayjs.utc();
-    },
-  }
+			return options;
+		}
+	}
 };
 </script>
 
-<style lang="scss">
-$cell-padding: 0.25rem 0.5rem;
-
+<style>
 .k-calendar-input {
-  padding: 0.5rem;
-  background: $color-gray-900;
-  color: $color-light;
-  border-radius: $rounded-xs;
+	--cell-padding: 0.25rem 0.5rem;
+
+	padding: 0.5rem;
+	color: var(--color-light);
+	border-radius: var(--rounded-xs);
 }
 .k-calendar-table {
-  table-layout: fixed;
-  width: 100%;
-  min-width: 15rem;
-  padding-top: .5rem;
+	table-layout: fixed;
+	width: 100%;
+	min-width: 15rem;
+	padding-top: 0.5rem;
 }
 
 .k-calendar-input > nav {
-  display: flex;
-  direction: ltr;
-
-  .k-button {
-    padding: 0.5rem;
-  }
+	display: flex;
+	direction: ltr;
+}
+.k-calendar-input > nav .k-button {
+	padding: 0.5rem;
 }
 .k-calendar-selects {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  [dir="ltr"] & {
-    direction: ltr;
-  }
-
-  [dir="rtl"] & {
-    direction: rtl;
-  }
-
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+[dir="ltr"] .k-calendar-selects {
+	direction: ltr;
+}
+[dir="rtl"] .k-calendar-selects {
+	direction: rtl;
 }
 .k-calendar-selects .k-select-input {
-  padding: 0 0.5rem;
-  font-weight: $font-normal;
-  font-size: $text-sm;
+	padding: 0 0.5rem;
+	font-weight: var(--font-normal);
+	font-size: var(--text-sm);
 }
 .k-calendar-selects .k-select-input:focus-within {
-  color: $color-focus-on-dark !important;
+	color: var(--color-focus-light) !important;
 }
 .k-calendar-input th {
-  padding: 0.5rem 0;
-  color: $color-light-grey;
-  font-size: $text-xs;
-  font-weight: 400;
-  text-align: center;
+	padding: 0.5rem 0;
+	color: var(--color-gray-500);
+	font-size: var(--text-xs);
+	font-weight: 400;
+	text-align: center;
 }
 .k-calendar-day .k-button {
-  width: 2rem;
-  height: 2rem;
-  margin: 0 auto;
-  color: $color-white;
-  line-height: 1.75rem;
-  display: flex;
-  justify-content: center;
-  border-radius: 50%;
-  border: 2px solid transparent;
+	width: 2rem;
+	height: 2rem;
+	margin-inline: auto;
+	color: var(--color-white);
+	line-height: 1.75rem;
+	display: flex;
+	justify-content: center;
+	border-radius: 50%;
+	border: 2px solid transparent;
 }
 .k-calendar-day .k-button .k-button-text {
-  opacity: 1;
+	opacity: 1;
 }
 .k-calendar-table .k-button:hover {
-  color: $color-white;
+	color: var(--color-white);
 }
-.k-calendar-day:hover .k-button:not([data-disabled]) {
-  border-color: rgba($color-white, 0.25);
+.k-calendar-day:hover .k-button:not([data-disabled="true"]) {
+	border-color: rgba(255, 255, 255, 0.25);
 }
 .k-calendar-day[aria-current="date"] .k-button {
-  color: $color-yellow-600;
-  font-weight: 500;
+	text-decoration: underline;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-  border-color: $color-focus-on-dark;
-  color: $color-focus-on-dark;
-}
-.k-calendar-day[data-between] {
-  background: #333;
-}
-.k-calendar-day[data-first] {
-  border-top-left-radius: 100%;
-  border-bottom-left-radius: 100%;
-}
-.k-calendar-day[data-last] {
-  border-top-right-radius: 100%;
-  border-bottom-right-radius: 100%;
+	border-color: currentColor;
+	font-weight: 600;
+	color: var(--color-focus-light);
 }
 .k-calendar-today {
-  text-align: center;
-  padding-top: .5rem;
+	text-align: center;
+	padding-top: 0.5rem;
 }
 .k-calendar-today .k-button {
-  color: $color-focus-on-dark;
-  font-size: $text-xs;
-  padding: 1rem;
+	font-size: var(--text-xs);
+	padding: 1rem;
+	text-decoration: underline;
 }
 .k-calendar-today .k-button-text {
-  opacity: 1;
+	opacity: 1;
+	vertical-align: baseline;
 }
 </style>

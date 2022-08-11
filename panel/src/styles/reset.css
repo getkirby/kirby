@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+noscript {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+html {
+  font-family: var(--font-sans);
+  background: var(--color-background);
+}
+
+html,
+body {
+  color: var(--color-gray-900);
+  height: 100%;
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+strong,
+b {
+  font-weight: var(--font-bold);
+}
+
