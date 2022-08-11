@@ -56,8 +56,7 @@ class Data
 		// find a handler or alias
 		$alias   = static::$aliases[$type] ?? null;
 		$handler = static::$handlers[$type] ??
-				   ($alias ? static::$handlers[$alias] : null) ??
-				   null;
+				   ($alias ? static::$handlers[$alias] ?? null : null);
 
 		if ($handler === null || class_exists($handler) === false) {
 			throw new Exception('Missing handler for type: "' . $type . '"');
