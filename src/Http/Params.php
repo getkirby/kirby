@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 
 /**
@@ -15,7 +16,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-class Params extends Identifiers
+class Params extends Obj
 {
 	public static string|null $separator = null;
 
@@ -28,7 +29,7 @@ class Params extends Identifiers
 			$params = static::extract($params)['params'];
 		}
 
-		parent::__construct($params);
+		parent::__construct($params ?? []);
 	}
 
 	/**
@@ -85,6 +86,16 @@ class Params extends Identifiers
 		];
 	}
 
+	public function isEmpty(): bool
+	{
+		return empty((array)$this) === true;
+	}
+
+	public function isNotEmpty(): bool
+	{
+		return empty((array)$this) === false;
+	}
+
 	/**
 	 * Returns the param separator according
 	 * to the operating system.
@@ -134,5 +145,10 @@ class Params extends Identifiers
 		$trailingSlash = $trailingSlash === true ? '/' : null;
 
 		return $leadingSlash . $params . $trailingSlash;
+	}
+
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 }
