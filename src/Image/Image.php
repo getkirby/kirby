@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Exception;
 use Kirby\Filesystem\File;
 use Kirby\Toolkit\Html;
 
@@ -111,8 +112,11 @@ class Image extends File
 	 */
 	public function html(array $attr = []): string
 	{
-		$url = $this->url() ?? '';
-		return Html::img($url, $attr);
+		if ($url = $this->url()) {
+			return Html::img($url, $attr);
+		}
+
+		throw new Exception('Calling Image::html() requires that the URL property is not null');
 	}
 
 	/**
