@@ -13,13 +13,13 @@
 </k-view>
 */
 export default {
-  props: {
-    /**
-     * To center the content
-     * @values center
-     */
-    align: String
-  }
+	props: {
+		/**
+		 * To center the content
+		 * @values center
+		 */
+		align: String
+	}
 };
 </script>
 
