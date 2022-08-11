@@ -2,8 +2,6 @@
 
 namespace Kirby\Email;
 
-use Kirby\Toolkit\Properties;
-
 /**
  * Representation of a an Email body
  * with a text and optional html version
@@ -17,17 +15,40 @@ use Kirby\Toolkit\Properties;
  */
 class Body
 {
-	use Properties;
-
-	protected string|null $html = null;
-	protected string|null $text = null;
+	protected string $html;
+	protected string $text;
 
 	/**
 	 * Email body constructor
 	 */
-	public function __construct(array $props = [])
-	{
-		$this->setProperties($props);
+	public function __construct(
+		string|array|null $html = null,
+		string|null $text = null
+	) {
+		// support deprecated passign props as array
+		// TODO: add deprecation warning at some point
+		if (is_array($html) === true) {
+			$text ??= $html['text'] ?? null;
+			$html   = $html['html'] ?? null;
+		}
+
+		$this->html = $html ?? '';
+		$this->text = $text ?? '';
+	}
+
+	/**
+	 * Clone the body instance and
+	 * pass modified properties
+	 */
+	public function clone(
+		array|null $props = null,
+		string|array|null $html = null,
+		string|null $text = null
+	): static {
+		return new static(
+			html: $html ?? $props['html'] ?? $this->html(),
+			text: $text ?? $props['text'] ?? $this->text()
+		);
 	}
 
 	/**
@@ -35,7 +56,7 @@ class Body
 	 */
 	public function html(): string
 	{
-		return $this->html ?? '';
+		return $this->html;
 	}
 
 	/**
@@ -43,28 +64,17 @@ class Body
 	 */
 	public function text(): string
 	{
-		return $this->text ?? '';
+		return $this->text;
 	}
 
 	/**
-	 * Sets the HTML content for the email body
-	 *
-	 * @return $this
+	 * Returns array of plain text and html
 	 */
-	protected function setHtml(string|null $html = null): static
+	public function toArray()
 	{
-		$this->html = $html;
-		return $this;
-	}
-
-	/**
-	 * Sets the plain text content for the email body
-	 *
-	 * @return $this
-	 */
-	protected function setText(string|null $text = null): static
-	{
-		$this->text = $text;
-		return $this;
+		return [
+			'text' => $this->text(),
+			'html' => $this->html()
+		];
 	}
 }

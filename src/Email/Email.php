@@ -4,7 +4,9 @@ namespace Kirby\Email;
 
 use Closure;
 use Exception;
-use Kirby\Toolkit\Properties;
+use Kirby\Cms\Helpers;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Props;
 use Kirby\Toolkit\V;
 
 /**
@@ -19,8 +21,6 @@ use Kirby\Toolkit\V;
  */
 class Email
 {
-	use Properties;
-
 	/**
 	 * If set to `true`, the debug mode is enabled
 	 * for all emails
@@ -33,26 +33,87 @@ class Email
 	 */
 	public static array $emails = [];
 
-	protected array|null $attachments = null;
-	protected Body|null $body = null;
-	protected array|null $bcc = null;
-	protected Closure|null $beforeSend = null;
-	protected array|null $cc = null;
-	protected string|null $from = null;
-	protected string|null $fromName = null;
-	protected string|null $replyTo = null;
-	protected string|null $replyToName = null;
+	protected array $attachments;
+	protected Body $body;
+	protected array $bcc;
+	protected Closure|null $beforeSend;
+	protected array $cc;
+	protected string $from;
+	protected string|null $fromName;
+	protected string|null $replyTo;
+	protected string|null $replyToName;
 	protected bool $isSent = false;
-	protected string|null $subject = null;
-	protected array|null $to = null;
-	protected array|null $transport = null;
+	protected string $subject;
+	protected array $to;
+	protected array $transport;
 
 	/**
 	 * Email constructor
+	 *
+	 * @todo Drop support for $props array,
+	 * 		 make parameters required for required props
 	 */
-	public function __construct(array $props = [], bool $debug = false)
-	{
-		$this->setProperties($props);
+	public function __construct(
+		// legacy parameters
+		array $props = null,
+		bool $debug = false,
+
+		// new named parameters
+		string $from = null,
+		string $subject = null,
+		array|null $attachments = null,
+		string|array|null $body = null,
+		string|array|null $bcc = null,
+		Closure|null $beforeSend = null,
+		string|array|null $cc = null,
+		string|null $fromName = null,
+		string|null $replyTo = null,
+		string|null $replyToName = null,
+		string|array|null $to = null,
+		string|array|null $transport = null,
+	) {
+		// support deprecated $props array
+		// TODO: add deprecation warning at some point
+		// @codeCoverageIgnoreStart
+		if (is_array($props) === true) {
+			$attachments ??= $props['attachments'] ?? null;
+			$body 		 ??= $props['body'] ?? null;
+			$bcc 		 ??= $props['bcc'] ?? null;
+			$beforeSend  ??= $props['beforeSend'] ?? null;
+			$cc 		 ??= $props['cc'] ?? null;
+			$from 		 ??= $props['from'] ?? null;
+			$fromName 	 ??= $props['fromName'] ?? null;
+			$replyTo 	 ??= $props['replyTo'] ?? null;
+			$replyToName ??= $props['replyToName'] ?? null;
+			$subject 	 ??= $props['subject'] ?? null;
+			$to 		 ??= $props['to'] ?? null;
+			$transport   ??= $props['transport'] ?? null;
+		}
+
+		// TODO: remove once parameters are non-optional
+		if ($from === null || $subject === null) {
+			throw new InvalidArgumentException('$from, $subject are required');
+		}
+		// @codeCoverageIgnoreEnd
+
+		// normalize parameters
+		if (is_string($body) === true) {
+			$body = ['text' => $body];
+		}
+
+		// assign props
+		$this->attachments = $attachments ?? [];
+		$this->body 	   = new Body($body);
+		$this->bcc         = $this->resolveEmail($bcc);
+		$this->beforeSend  = $beforeSend;
+		$this->cc	       = $this->resolveEmail($cc);
+		$this->from	       = $this->resolveEmail($from, false);
+		$this->fromName	   = $fromName;
+		$this->replyTo	   = $this->resolveEmail($replyTo, false);
+		$this->replyToName = $replyToName;
+		$this->subject     = $subject;
+		$this->to	       = $this->resolveEmail($to);
+		$this->transport   = $transport ?? ['type' => 'mail'];
 
 		// @codeCoverageIgnoreStart
 		if (static::$debug === false && $debug === false) {
@@ -105,13 +166,21 @@ class Email
 	}
 
 	/**
-	 * Returns default transport settings
+	 * Clone the email instance and
+	 * pass modified properties
 	 */
-	protected function defaultTransport(): array
-	{
-		return [
-			'type' => 'mail'
-		];
+	public function clone(...$args): static {
+		$props 	   = get_object_vars($this);
+		$fallbacks = ['body' => $this->body()?->toArray()];
+
+		foreach ($props as $prop => $value) {
+			$props[$prop] = $args[$prop]
+						 ?? $args['props'][$prop]
+						 ?? $fallbacks[$prop]
+						 ?? $value;
+		}
+
+		return new static(...array_filter($props));
 	}
 
 	/**
@@ -129,6 +198,21 @@ class Email
 	{
 		return $this->fromName;
 	}
+
+	/**
+	 * Creates an exact copy clone of
+	 * the existing instance
+	 *
+	 * @deprecated 3.8.0 Use `->clone()` instead
+	 * @todo Remove in 3.9.0
+	 * @codeCoverageIgnore
+	 */
+	public function hardcopy(): static
+	{
+		Helpers::deprecated('$email->hardcopy has been deprecated and will be remove in Kirby 3.9.0. Use $email->clone() instead.');
+		return $this->clone();
+	}
+
 
 	/**
 	 * Checks if the email has an HTML body
@@ -208,142 +292,6 @@ class Email
 	}
 
 	/**
-	 * Sets the email attachments
-	 *
-	 * @return $this
-	 */
-	protected function setAttachments(array|null $attachments = null): static
-	{
-		$this->attachments = $attachments ?? [];
-		return $this;
-	}
-
-	/**
-	 * Sets the email body
-	 *
-	 * @return $this
-	 */
-	protected function setBody(string|array $body): static
-	{
-		if (is_string($body) === true) {
-			$body = ['text' => $body];
-		}
-
-		$this->body = new Body($body);
-		return $this;
-	}
-
-	/**
-	 * Sets "bcc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setBcc(string|array|null $bcc = null): static
-	{
-		$this->bcc = $this->resolveEmail($bcc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "beforeSend" callback
-	 *
-	 * @return $this
-	 */
-	protected function setBeforeSend(Closure|null $beforeSend = null): static
-	{
-		$this->beforeSend = $beforeSend;
-		return $this;
-	}
-
-	/**
-	 * Sets "cc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setCc(string|array|null $cc = null): static
-	{
-		$this->cc = $this->resolveEmail($cc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" email address
-	 *
-	 * @return $this
-	 */
-	protected function setFrom(string $from): static
-	{
-		$this->from = $this->resolveEmail($from, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" name
-	 *
-	 * @return $this
-	 */
-	protected function setFromName(string|null $fromName = null): static
-	{
-		$this->fromName = $fromName;
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" email address
-	 *
-	 * @return $this
-	 */
-	protected function setReplyTo(string|null $replyTo = null): static
-	{
-		$this->replyTo = $this->resolveEmail($replyTo, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" name
-	 *
-	 * @return $this
-	 */
-	protected function setReplyToName(string|null $replyToName = null): static
-	{
-		$this->replyToName = $replyToName;
-		return $this;
-	}
-
-	/**
-	 * Sets the email subject
-	 *
-	 * @return $this
-	 */
-	protected function setSubject(string $subject): static
-	{
-		$this->subject = $subject;
-		return $this;
-	}
-
-	/**
-	 * Sets the recipients of the email
-	 *
-	 * @return $this
-	 */
-	protected function setTo(string|array $to): static
-	{
-		$this->to = $this->resolveEmail($to);
-		return $this;
-	}
-
-	/**
-	 * Sets the email transport settings
-	 *
-	 * @return $this
-	 */
-	protected function setTransport(array|null $transport = null): static
-	{
-		$this->transport = $transport;
-		return $this;
-	}
-
-	/**
 	 * Returns the email subject
 	 */
 	public function subject(): string
@@ -364,6 +312,6 @@ class Email
 	 */
 	public function transport(): array
 	{
-		return $this->transport ?? $this->defaultTransport();
+		return $this->transport;
 	}
 }
