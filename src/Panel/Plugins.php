@@ -102,6 +102,8 @@ class Plugins
 			if (F::extension($file) === $type) {
 				if ($content = F::read($file)) {
 					if ($type === 'mjs') {
+						// index.dev.mjs files are turned into data URIs so they can be imported
+						// without having to copy them to /media, then later remove them again
 						$content = F::uri($file);
 					}
 
