@@ -44,7 +44,11 @@ class Plugins
 		foreach (App::instance()->plugins() as $plugin) {
 			$this->files[] = $plugin->root() . '/index.css';
 			$this->files[] = $plugin->root() . '/index.js';
-			// used by kirbyup during plugin development
+			// During plugin development, kirbyup adds an index.dev.mjs as entry point, which
+			// Kirby will load instead of the regular index.js. Since kirbyup is based on Vite,
+			// it can't use the standard index.js as entry for its development server:
+			// Vite requires an entry of type module so it can use JavaScript imports,
+			// but Kirbyup needs index.js to load as a regular script, synchronously.
 			$this->files[] = $plugin->root() . '/index.dev.mjs';
 		}
 
@@ -81,7 +85,7 @@ class Plugins
 
 		$files = $this->files();
 
-		// filter out index.js files that have an index.dev.mjs counterpart (which takes precedence)
+		// Filter out all index.js files that shouldn't be loaded because an index.dev.mjs exists
 		if ($type === 'js') {
 			$files = A::filter(
 				$files,
@@ -116,6 +120,9 @@ class Plugins
 		}
 
 		if ($type === 'mjs') {
+			// If no index.dev.mjs modules exist, we MUST return an empty string instead of loading an empty array.
+			// This is because the module loader code uses top level await, which is not compatible with Kirby's
+			// minimum browser version requirements and therefore mustn't appear in a default setup.
 			if (empty($dist)) {
 				return '';
 			}

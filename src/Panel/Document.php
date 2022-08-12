@@ -72,7 +72,8 @@ class Document
 				'custom'  => static::customAsset('panel.css'),
 			],
 			'icons' => static::favicon($url),
-			'imports' => $plugins->read('mjs'),
+			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
+			'plugin_imports' => $plugins->read('mjs'),
 			'js' => [
 				'vendor'       => [
 					'nonce' => $nonce,
