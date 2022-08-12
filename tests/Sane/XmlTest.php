@@ -9,14 +9,9 @@ class XmlTest extends TestCase
 {
 	protected $type = 'xml';
 
-	public function setUp(): void
-	{
-		Xml::$allowedDomains = ['getkirby.com'];
-	}
-
 	public function tearDown(): void
 	{
-		Xml::$allowedDomains = [];
+		Xml::$allowedDomains = true;
 	}
 
 	/**
@@ -35,6 +30,18 @@ class XmlTest extends TestCase
 	public function allowedProvider()
 	{
 		return $this->fixtureList('allowed', 'xml');
+	}
+
+	public function testAllowedCustomDomainAllowlist()
+	{
+		Xml::$allowedDomains = ['getkirby.com'];
+
+		$fixture = $this->fixture('allowed/allowed-external-source.xml');
+
+		$this->assertNull(Xml::validateFile($fixture));
+
+		$sanitized = Xml::sanitize(file_get_contents($fixture));
+		$this->assertStringEqualsFile($fixture, $sanitized);
 	}
 
 	/**
@@ -121,10 +128,19 @@ class XmlTest extends TestCase
 
 	public function testDisallowedExternalSource1()
 	{
-		$fixture   = $this->fixture('disallowed/external-source-1.xml');
-		$sanitized = $this->fixture('sanitized/external-source-1.xml');
+		$fixture    = $this->fixture('disallowed/external-source-1.xml');
+		$sanitized1 = $this->fixture('sanitized/external-source-1.xml');
+		$sanitized2 = $this->fixture('sanitized/external-source-1_disallowed.xml');
 
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+		// with default $allowedDomains setting
+		$this->assertNull(Xml::validateFile($fixture));
+
+		$this->assertStringEqualsFile($sanitized1, Xml::sanitize(file_get_contents($fixture)));
+
+		// with custom allowlist
+		Xml::$allowedDomains = ['getkirby.com'];
+
+		$this->assertStringEqualsFile($sanitized2, Xml::sanitize(file_get_contents($fixture)));
 
 		$this->expectException('Kirby\Exception\InvalidArgumentException');
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
@@ -133,10 +149,19 @@ class XmlTest extends TestCase
 
 	public function testDisallowedExternalSource2()
 	{
-		$fixture   = $this->fixture('disallowed/external-source-2.xml');
-		$sanitized = $this->fixture('sanitized/external-source-2.xml');
+		$fixture    = $this->fixture('disallowed/external-source-2.xml');
+		$sanitized1 = $this->fixture('sanitized/external-source-2.xml');
+		$sanitized2 = $this->fixture('sanitized/external-source-2_disallowed.xml');
 
-		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
+		// with default $allowedDomains setting
+		$this->assertNull(Xml::validateFile($fixture));
+
+		$this->assertStringEqualsFile($sanitized1, Xml::sanitize(file_get_contents($fixture)));
+
+		// with custom allowlist
+		Xml::$allowedDomains = ['getkirby.com'];
+
+		$this->assertStringEqualsFile($sanitized2, Xml::sanitize(file_get_contents($fixture)));
 
 		$this->expectException('Kirby\Exception\InvalidArgumentException');
 		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): The hostname "malicious.com" is not allowed');

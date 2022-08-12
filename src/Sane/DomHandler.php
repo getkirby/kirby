@@ -41,9 +41,9 @@ class DomHandler extends Handler
 	/**
 	 * Allowed hostnames for HTTP(S) URLs
 	 *
-	 * @var array
+	 * @var array|true
 	 */
-	public static $allowedDomains = [];
+	public static $allowedDomains = true;
 
 	/**
 	 * Names of allowed XML processing instructions
