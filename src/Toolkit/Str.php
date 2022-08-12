@@ -1048,7 +1048,7 @@ class Str
 	 * Converts a string to studly caps case
 	 * @since 3.7.0
 	 */
-	public static function studly(string $value = null): string
+	public static function studly(string|null $value = null): string
 	{
 		return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $value)));
 	}
