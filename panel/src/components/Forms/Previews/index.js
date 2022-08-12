@@ -40,3 +40,4 @@ Vue.component("k-multiselect-field-preview", BubblesFieldPreview);
 Vue.component("k-radio-field-preview", BubblesFieldPreview);
 Vue.component("k-select-field-preview", BubblesFieldPreview);
 Vue.component("k-tags-field-preview", BubblesFieldPreview);
+Vue.component("k-toggles-field-preview", BubblesFieldPreview);
