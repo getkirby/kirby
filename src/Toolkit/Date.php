@@ -249,7 +249,7 @@ class Date extends DateTime
 	 *
 	 * @param string|int|\DateTimeInterface ...$datetime Datetime strings, UNIX timestamps or objects
 	 */
-	public function nearest(...$datetime): string|int|DateTimeInterface
+	public function nearest(string|int|DateTimeInterface ...$datetime): string|int|DateTimeInterface
 	{
 		$timestamp = $this->timestamp();
 		$minDiff   = PHP_INT_MAX;
