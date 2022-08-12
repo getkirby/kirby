@@ -72,7 +72,6 @@ class File extends ModelWithContent
 	/**
 	 * The absolute path to the file
 	 *
-	 * @var string|null
 	 */
 	protected string|null $root = null;
 
@@ -84,7 +83,6 @@ class File extends ModelWithContent
 	/**
 	 * The public file Url
 	 *
-	 * @var string
 	 */
 	protected string|null $url = null;
 
