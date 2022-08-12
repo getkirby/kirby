@@ -85,9 +85,12 @@ class Plugins
 		if ($type === 'js') {
 			$files = A::filter(
 				$files,
-				fn ($f) => !(
-					Str::endsWith($f, 'index.js') && F::exists(preg_replace('/\.js$/', '.dev.mjs', $f))
-				)
+				function ($file) {
+					$is_js = Str::endsWith($file, 'index.js');
+					$has_dev_mjs = F::exists(preg_replace('/\.js$/', '.dev.mjs', $file));
+
+					return ($is_js && $has_dev_mjs) === false;
+				}
 			);
 		}
 
