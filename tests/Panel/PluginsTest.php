@@ -33,7 +33,7 @@ class PluginsTest extends TestCase
 		]);
 	}
 
-	public function createPlugins()
+	public function createPlugins($add_dev_mjs = false)
 	{
 		$time = \time() + 2;
 
@@ -59,8 +59,12 @@ class PluginsTest extends TestCase
 		touch($this->cssC, $time);
 		F::write($this->jsC = $this->tmp . '/site/plugins/c/index.js', 'c');
 		touch($this->jsC, $time);
-		F::write($this->mjsC = $this->tmp . '/site/plugins/c/index.dev.mjs', 'c');
-		touch($this->mjsC, $time);
+		$this->mjsC = $this->tmp . '/site/plugins/c/index.dev.mjs';
+
+		if ($add_dev_mjs) {
+			F::write($this->mjsC, 'c');
+			touch($this->mjsC, $time);
+		}
 
 		return $time;
 	}
@@ -134,11 +138,36 @@ class PluginsTest extends TestCase
 		$expected = "a\n\nb\n\nc";
 		$this->assertSame($expected, $plugins->read('css'));
 
+		// js
+		$expected = "a;\n\nb;\n\nc;";
+		$this->assertSame($expected, $plugins->read('js'));
+
+		// mjs - must be completely empty and not include the loader code
+		$expected = '';
+		$this->assertSame($expected, $plugins->read('mjs'));
+	}
+
+	/**
+	 * @covers ::read
+	 */
+	public function testReadWithDevMjs()
+	{
+		$this->createPlugins(true);
+
+		// app must be created again to load the new plugins
+		$app = $this->app->clone();
+
+		$plugins = new Plugins();
+
+		// css
+		$expected = "a\n\nb\n\nc";
+		$this->assertSame($expected, $plugins->read('css'));
+
 		// js - shouldn't include c because c has an index.dev.mjs
 		$expected = "a;\n\nb;";
 		$this->assertSame($expected, $plugins->read('js'));
 
-		// mjs - c as base64 data uri
+		// mjs - c as base64 data uri wrapped in the loader code
 		$expected = 'try { await Promise.all(["data:text/javascript;base64,Yw=="].map(url => import(url))) } catch (e) { console.error(e) }' . PHP_EOL;
 		$this->assertSame($expected, $plugins->read('mjs'));
 	}
