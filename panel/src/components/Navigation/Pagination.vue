@@ -79,7 +79,7 @@ export default {
 	props: {
 		/**
 		 * The align prop makes it possible to move the pagination component according to the wrapper component.
-		 * @values left, centre, right
+		 * @values left, center, right
 		 */
 		align: {
 			type: String,

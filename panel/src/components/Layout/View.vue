@@ -16,7 +16,7 @@ export default {
 	props: {
 		/**
 		 * To center the content
-		 * @values centre
+		 * @values center
 		 */
 		align: String
 	}
