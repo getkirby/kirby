@@ -33,7 +33,7 @@ class PluginsTest extends TestCase
 		]);
 	}
 
-	public function createPlugins($add_dev_mjs = false)
+	public function createPlugins(bool $addDevMjs = false)
 	{
 		$time = \time() + 2;
 
@@ -61,7 +61,7 @@ class PluginsTest extends TestCase
 		touch($this->jsC, $time);
 		$this->mjsC = $this->tmp . '/site/plugins/c/index.dev.mjs';
 
-		if ($add_dev_mjs) {
+		if ($addDevMjs === true) {
 			F::write($this->mjsC, 'c');
 			touch($this->mjsC, $time);
 		}

@@ -73,7 +73,7 @@ class Document
 			],
 			'icons' => static::favicon($url),
 			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
-			'plugin_imports' => $plugins->read('mjs'),
+			'plugin-imports' => $plugins->read('mjs'),
 			'js' => [
 				'vendor'       => [
 					'nonce' => $nonce,

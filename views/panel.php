@@ -68,7 +68,7 @@ use Kirby\Cms\Url;
   <?php foreach ($assets['js'] as $key => $js): ?>
   <?php if ($key === 'index'): ?>
   <script type="module" nonce="<?= $nonce ?>">
-    <?= $assets['plugin_imports'] ?>
+    <?= $assets['plugin-imports'] ?>
     import('<?= $js['src'] ?>')
   </script>
   <?php else: ?>
