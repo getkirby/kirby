@@ -48,7 +48,7 @@ class Component
 	 * An array of all component options
 	 * from the component definition
 	 */
-	protected array $options = [];
+	protected array|string $options = [];
 
 	/**
 	 * An array of all resolved props
