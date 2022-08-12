@@ -1076,7 +1076,7 @@ class Str
 	 * and it has a built-in way to skip values
 	 * which are too short.
 	 *
-	 * @param string $string The string to split
+	 * @param string|array|null $string The string to split
 	 * @param string $separator The string to split by
 	 * @param int $length The min length of values.
 	 * @return array An array of found values

@@ -40,7 +40,7 @@ class Txt extends Handler
 	/**
 	 * Helper for converting the value
 	 */
-	protected static function encodeValue(array|string $value): string
+	protected static function encodeValue(array|string|float $value): string
 	{
 		// avoid problems with arrays
 		if (is_array($value) === true) {
@@ -102,18 +102,24 @@ class Txt extends Handler
 
 		// loop through all fields and add them to the content
 		foreach ($fields as $field) {
-			$pos = strpos($field, ':');
-			$key = str_replace(['-', ' '], '_', strtolower(trim(substr($field, 0, $pos))));
+			if ($pos = strpos($field, ':')) {
+				$key = strtolower(trim(substr($field, 0, $pos)));
+				$key = str_replace(['-', ' '], '_', $key);
 
-			// Don't add fields with empty keys
-			if (empty($key) === true) {
-				continue;
+				// Don't add fields with empty keys
+				if (empty($key) === true) {
+					continue;
+				}
+
+				$value = trim(substr($field, $pos + 1));
+
+				// unescape escaped dividers within a field
+				$data[$key] = preg_replace(
+					'!(?<=\n|^)\\\\----!',
+					'----',
+					$value
+				);
 			}
-
-			$value = trim(substr($field, $pos + 1));
-
-			// unescape escaped dividers within a field
-			$data[$key] = preg_replace('!(?<=\n|^)\\\\----!', '----', $value);
 		}
 
 		return $data;

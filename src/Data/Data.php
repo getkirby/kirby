@@ -54,15 +54,21 @@ class Data
 		$type = strtolower($type);
 
 		// find a handler or alias
+		$alias   = static::$aliases[$type] ?? null;
 		$handler = static::$handlers[$type] ??
-				   static::$handlers[static::$aliases[$type] ?? null] ??
-				   null;
+				   ($alias ? static::$handlers[$alias] ?? null : null);
 
-		if ($handler !== null && class_exists($handler)) {
-			return new $handler();
+		if ($handler === null || class_exists($handler) === false) {
+			throw new Exception('Missing handler for type: "' . $type . '"');
 		}
 
-		throw new Exception('Missing handler for type: "' . $type . '"');
+		$handler = new $handler();
+
+		if (is_a($handler, Handler::class) === false) {
+			throw new Exception('Handler for type: "' . $type . '" needs to extend Kirby\\Data\\Handler');
+		}
+
+		return $handler;
 	}
 
 	/**

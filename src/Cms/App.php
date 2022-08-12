@@ -934,7 +934,6 @@ class App
 	/**
 	 * Returns all available site languages
 	 *
-	 * @param bool
 	 * @return \Kirby\Cms\Languages
 	 */
 	public function languages(bool $clone = true)

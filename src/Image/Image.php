@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\File;
 use Kirby\Toolkit\Html;
 
@@ -111,7 +112,11 @@ class Image extends File
 	 */
 	public function html(array $attr = []): string
 	{
-		return Html::img($this->url(), $attr);
+		if ($url = $this->url()) {
+			return Html::img($url, $attr);
+		}
+
+		throw new LogicException('Calling Image::html() requires that the URL property is not null');
 	}
 
 	/**
@@ -175,7 +180,7 @@ class Image extends File
 	 * Returns the orientation as string
 	 * `landscape` | `portrait` | `square`
 	 */
-	public function orientation(): string
+	public function orientation(): string|false
 	{
 		return $this->dimensions()->orientation();
 	}
