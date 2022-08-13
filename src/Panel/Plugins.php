@@ -21,15 +21,11 @@ class Plugins
 {
 	/**
 	 * Cache of all collected plugin files
-	 *
-	 * @var array
 	 */
-	public $files;
+	public array|null $files = null;
 
 	/**
 	 * Collects and returns the plugin files for all plugins
-	 *
-	 * @return array
 	 */
 	public function files(): array
 	{
@@ -50,8 +46,6 @@ class Plugins
 	/**
 	 * Returns the last modification
 	 * of the collected plugin files
-	 *
-	 * @return int
 	 */
 	public function modified(): int
 	{
@@ -67,9 +61,6 @@ class Plugins
 
 	/**
 	 * Read the files from all plugins and concatenate them
-	 *
-	 * @param string $type
-	 * @return string
 	 */
 	public function read(string $type): string
 	{
@@ -98,9 +89,6 @@ class Plugins
 	/**
 	 * Absolute url to the cache file
 	 * This is used by the panel to link the plugins
-	 *
-	 * @param string $type
-	 * @return string
 	 */
 	public function url(string $type): string
 	{
