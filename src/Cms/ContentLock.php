@@ -19,21 +19,14 @@ class ContentLock
 {
 	/**
 	 * Lock data
-	 *
-	 * @var array
 	 */
-	protected $data;
+	protected array $data;
 
 	/**
 	 * The model to manage locking/unlocking for
-	 *
-	 * @var ModelWithContent
 	 */
-	protected $model;
+	protected ModelWithContent $model;
 
-	/**
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 */
 	public function __construct(ModelWithContent $model)
 	{
 		$this->model = $model;
@@ -42,8 +35,6 @@ class ContentLock
 
 	/**
 	 * Clears the lock unconditionally
-	 *
-	 * @return bool
 	 */
 	protected function clearLock(): bool
 	{
@@ -61,7 +52,6 @@ class ContentLock
 	/**
 	 * Sets lock with the current user
 	 *
-	 * @return bool
 	 * @throws \Kirby\Exception\DuplicateException
 	 */
 	public function create(): bool
@@ -86,10 +76,8 @@ class ContentLock
 	/**
 	 * Returns either `false` or array  with `user`, `email`,
 	 * `time` and `unlockable` keys
-	 *
-	 * @return array|bool
 	 */
-	public function get()
+	public function get(): array|false
 	{
 		$data = $this->data['lock'] ?? [];
 
@@ -114,8 +102,6 @@ class ContentLock
 
 	/**
 	 * Returns if the model is locked by another user
-	 *
-	 * @return bool
 	 */
 	public function isLocked(): bool
 	{
@@ -130,8 +116,6 @@ class ContentLock
 
 	/**
 	 * Returns if the current user's lock has been removed by another user
-	 *
-	 * @return bool
 	 */
 	public function isUnlocked(): bool
 	{
@@ -142,8 +126,6 @@ class ContentLock
 
 	/**
 	 * Returns the app instance
-	 *
-	 * @return \Kirby\Cms\App
 	 */
 	protected function kirby(): App
 	{
@@ -153,7 +135,6 @@ class ContentLock
 	/**
 	 * Removes lock of current user
 	 *
-	 * @return bool
 	 * @throws \Kirby\Exception\LogicException
 	 */
 	public function remove(): bool
@@ -176,8 +157,6 @@ class ContentLock
 
 	/**
 	 * Removes unlock information for current user
-	 *
-	 * @return bool
 	 */
 	public function resolve(): bool
 	{
@@ -197,8 +176,6 @@ class ContentLock
 
 	/**
 	 * Removes current lock and adds lock user to unlock data
-	 *
-	 * @return bool
 	 */
 	public function unlock(): bool
 	{
@@ -218,7 +195,6 @@ class ContentLock
 	 * Returns currently authenticated user;
 	 * throws exception if none is authenticated
 	 *
-	 * @return \Kirby\Cms\User
 	 * @throws \Kirby\Exception\PermissionException
 	 */
 	protected function user(): User

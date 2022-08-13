@@ -3,6 +3,7 @@
 namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
 
@@ -23,45 +24,33 @@ class Status
 
 	/**
 	 * Type of the active challenge
-	 *
-	 * @var string|null
 	 */
-	protected $challenge = null;
+	protected string|null $challenge = null;
 
 	/**
 	 * Challenge type to use as a fallback
 	 * when $challenge is `null`
-	 *
-	 * @var string|null
 	 */
-	protected $challengeFallback = null;
+	protected string|null $challengeFallback = null;
 
 	/**
 	 * Email address of the current/pending user
-	 *
-	 * @var string|null
 	 */
-	protected $email = null;
+	protected string|null $email = null;
 
 	/**
 	 * Kirby instance for user lookup
-	 *
-	 * @var \Kirby\Cms\App
 	 */
-	protected $kirby;
+	protected App|null $kirby = null;
 
 	/**
 	 * Authentication status:
 	 * `active|impersonated|pending|inactive`
-	 *
-	 * @var string
 	 */
-	protected $status;
+	protected string|null $status = null;
 
 	/**
 	 * Class constructor
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
@@ -70,8 +59,6 @@ class Status
 
 	/**
 	 * Returns the authentication status
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -84,7 +71,6 @@ class Status
 	 * @param bool $automaticFallback If set to `false`, no faked challenge is returned;
 	 *                                WARNING: never send the resulting `null` value to the
 	 *                                user to avoid leaking whether the pending user exists
-	 * @return string|null
 	 */
 	public function challenge(bool $automaticFallback = true): string|null
 	{
@@ -95,15 +81,13 @@ class Status
 
 		if ($automaticFallback === false) {
 			return $this->challenge;
-		} else {
-			return $this->challenge ?? $this->challengeFallback;
 		}
+
+		return $this->challenge ?? $this->challengeFallback;
 	}
 
 	/**
 	 * Returns the email address of the current/pending user
-	 *
-	 * @return string|null
 	 */
 	public function email(): string|null
 	{
@@ -122,8 +106,6 @@ class Status
 
 	/**
 	 * Returns an array with all public status data
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -136,10 +118,8 @@ class Status
 
 	/**
 	 * Returns the currently logged in user
-	 *
-	 * @return \Kirby\Cms\User
 	 */
-	public function user()
+	public function user(): User|null
 	{
 		// for security, only return the user if they are
 		// already logged in
@@ -153,10 +133,9 @@ class Status
 	/**
 	 * Sets the type of the active challenge
 	 *
-	 * @param string|null $challenge
 	 * @return $this
 	 */
-	protected function setChallenge(string|null $challenge = null)
+	protected function setChallenge(string|null $challenge = null): static
 	{
 		$this->challenge = $challenge;
 		return $this;
@@ -166,10 +145,9 @@ class Status
 	 * Sets the challenge type to use as
 	 * a fallback when $challenge is `null`
 	 *
-	 * @param string|null $challengeFallback
 	 * @return $this
 	 */
-	protected function setChallengeFallback(string|null $challengeFallback = null)
+	protected function setChallengeFallback(string|null $challengeFallback = null): static
 	{
 		$this->challengeFallback = $challengeFallback;
 		return $this;
@@ -178,10 +156,9 @@ class Status
 	/**
 	 * Sets the email address of the current/pending user
 	 *
-	 * @param string|null $email
 	 * @return $this
 	 */
-	protected function setEmail(string|null $email = null)
+	protected function setEmail(string|null $email = null): static
 	{
 		$this->email = $email;
 		return $this;
@@ -190,10 +167,9 @@ class Status
 	/**
 	 * Sets the Kirby instance for user lookup
 	 *
-	 * @param \Kirby\Cms\App $kirby
 	 * @return $this
 	 */
-	protected function setKirby(App $kirby)
+	protected function setKirby(App $kirby): static
 	{
 		$this->kirby = $kirby;
 		return $this;
@@ -205,7 +181,7 @@ class Status
 	 * @param string $status `active|impersonated|pending|inactive`
 	 * @return $this
 	 */
-	protected function setStatus(string $status)
+	protected function setStatus(string $status): static
 	{
 		if (in_array($status, ['active', 'impersonated', 'pending', 'inactive']) !== true) {
 			throw new InvalidArgumentException([

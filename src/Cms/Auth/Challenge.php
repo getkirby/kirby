@@ -22,7 +22,6 @@ abstract class Challenge
 	 *
 	 * @param \Kirby\Cms\User $user User the code will be generated for
 	 * @param string $mode Purpose of the code ('login', 'reset' or '2fa')
-	 * @return bool
 	 */
 	abstract public static function isAvailable(User $user, string $mode): bool;
 
@@ -46,7 +45,6 @@ abstract class Challenge
 	 *
 	 * @param \Kirby\Cms\User $user User to check the code for
 	 * @param string $code Code to verify
-	 * @return bool
 	 */
 	public static function verify(User $user, string $code): bool
 	{

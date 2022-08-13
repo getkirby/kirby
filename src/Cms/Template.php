@@ -20,38 +20,26 @@ class Template
 {
 	/**
 	 * Global template data
-	 *
-	 * @var array
 	 */
-	public static $data = [];
+	public static array $data = [];
 
 	/**
 	 * The name of the template
-	 *
-	 * @var string
 	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * Template type (html, json, etc.)
-	 *
-	 * @var string
 	 */
-	protected $type;
+	protected string $type;
 
 	/**
 	 * Default template type if no specific type is set
-	 *
-	 * @var string
 	 */
-	protected $defaultType;
+	protected string $defaultType;
 
 	/**
 	 * Creates a new template object
-	 *
-	 * @param string $name
-	 * @param string $type
-	 * @param string $defaultType
 	 */
 	public function __construct(string $name, string $type = 'html', string $defaultType = 'html')
 	{
@@ -63,8 +51,6 @@ class Template
 	/**
 	 * Converts the object to a simple string
 	 * This is used in template filters for example
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -73,8 +59,6 @@ class Template
 
 	/**
 	 * Checks if the template exists
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -87,8 +71,6 @@ class Template
 
 	/**
 	 * Returns the expected template file extension
-	 *
-	 * @return string
 	 */
 	public function extension(): string
 	{
@@ -97,8 +79,6 @@ class Template
 
 	/**
 	 * Returns the default template type
-	 *
-	 * @return string
 	 */
 	public function defaultType(): string
 	{
@@ -108,8 +88,6 @@ class Template
 	/**
 	 * Returns the place where templates are located
 	 * in the site folder and and can be found in extensions
-	 *
-	 * @return string
 	 */
 	public function store(): string
 	{
@@ -119,8 +97,6 @@ class Template
 	/**
 	 * Detects the location of the template file
 	 * if it exists.
-	 *
-	 * @return string|null
 	 */
 	public function file(): string|null
 	{
@@ -154,18 +130,12 @@ class Template
 
 	/**
 	 * Returns the template name
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
 		return $this->name;
 	}
 
-	/**
-	 * @param array $data
-	 * @return string
-	 */
 	public function render(array $data = []): string
 	{
 		return Tpl::load($this->file(), $data);
@@ -173,8 +143,6 @@ class Template
 
 	/**
 	 * Returns the root to the templates directory
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -183,8 +151,6 @@ class Template
 
 	/**
 	 * Returns the template type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{
@@ -193,13 +159,9 @@ class Template
 
 	/**
 	 * Checks if the template uses the default type
-	 *
-	 * @return bool
 	 */
 	public function hasDefaultType(): bool
 	{
-		$type = $this->type();
-
-		return $type === null || $type === $this->defaultType();
+		return $this->type() === $this->defaultType();
 	}
 }
