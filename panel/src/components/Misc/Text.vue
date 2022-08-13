@@ -19,7 +19,7 @@ export default {
 	props: {
 		/**
 		 * Changes the text alignment
-		 * @values start, centre, end
+		 * @values start, center, end
 		 */
 		align: String,
 		/**
