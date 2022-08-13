@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
@@ -21,40 +22,18 @@ use Kirby\Toolkit\Str;
  */
 class Model
 {
-	/**
-	 * @var \Kirby\Api\Api
-	 */
-	protected $api;
-
-	/**
-	 * @var mixed|null
-	 */
-	protected $data;
-
-	/**
-	 * @var array|mixed
-	 */
-	protected $fields;
-
-	/**
-	 * @var mixed|null
-	 */
-	protected $select;
-
-	/**
-	 * @var array|mixed
-	 */
-	protected $views;
+	protected Api $api;
+	protected mixed $data;
+	protected mixed $fields;
+	protected mixed $select;
+	protected mixed $views;
 
 	/**
 	 * Model constructor
 	 *
-	 * @param \Kirby\Api\Api $api
-	 * @param mixed $data
-	 * @param array $schema
 	 * @throws \Exception
 	 */
-	public function __construct(Api $api, $data, array $schema)
+	public function __construct(Api $api, mixed $data, array $schema)
 	{
 		$this->api    = $api;
 		$this->data   = $data;
@@ -70,7 +49,7 @@ class Model
 		}
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, 'Closure') === false) {
+			if (is_a($schema['default'] ?? null, Closure::class) === false) {
 				throw new Exception('Missing model data');
 			}
 
@@ -86,11 +65,10 @@ class Model
 	}
 
 	/**
-	 * @param null $keys
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function select($keys = null)
+	public function select(mixed $keys = null): static
 	{
 		if ($keys === false) {
 			return $this;
@@ -109,7 +87,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Exception
 	 */
 	public function selection(): array
@@ -156,7 +133,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -166,7 +142,10 @@ class Model
 		$result = [];
 
 		foreach ($this->fields as $key => $resolver) {
-			if (array_key_exists($key, $select) === false || is_a($resolver, 'Closure') === false) {
+			if (
+				array_key_exists($key, $select) === false ||
+				is_a($resolver, Closure::class) === false
+			) {
 				continue;
 			}
 
@@ -177,8 +156,8 @@ class Model
 			}
 
 			if (
-				is_a($value, 'Kirby\Api\Collection') === true ||
-				is_a($value, 'Kirby\Api\Model') === true
+				is_a($value, Collection::class) === true ||
+				is_a($value, Model::class) === true
 			) {
 				$selection = $select[$key];
 
@@ -202,7 +181,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -227,11 +205,10 @@ class Model
 	}
 
 	/**
-	 * @param string $name
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function view(string $name)
+	public function view(string $name): static
 	{
 		if ($name === 'any') {
 			return $this->select(null);
