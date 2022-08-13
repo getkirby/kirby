@@ -145,7 +145,10 @@ class Locale
 	 */
 	protected static function normalizeConstant(int|string $constant): int|string
 	{
-		if (is_string($constant) === true && Str::startsWith($constant, 'LC_') === true) {
+		if (
+			is_string($constant) === true &&
+			Str::startsWith($constant, 'LC_') === true
+		) {
 			return constant($constant);
 		}
 

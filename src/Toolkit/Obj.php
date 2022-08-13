@@ -56,22 +56,23 @@ class Obj extends stdClass
 	 *
 	 * @param mixed $fallback If multiple properties are requested:
 	 *                        Associative array of fallback values per key
+	 * @psalm-return ($property is array ? array : mixed)
 	 */
 	public function get(string|array $property, mixed $fallback = null): mixed
 	{
-		if (is_array($property)) {
-			if ($fallback === null) {
-				$fallback = [];
-			}
+		if (is_array($property) === true) {
+			$fallback ??= [];
 
-			if (!is_array($fallback)) {
+			if (is_array($fallback) === false) {
 				throw new InvalidArgumentException('The fallback value must be an array when getting multiple properties');
 			}
 
 			$result = [];
+
 			foreach ($property as $key) {
 				$result[$key] = $this->$key ?? $fallback[$key] ?? null;
 			}
+
 			return $result;
 		}
 

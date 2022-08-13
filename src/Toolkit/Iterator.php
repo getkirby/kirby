@@ -18,18 +18,8 @@ use IteratorAggregate;
  */
 class Iterator implements IteratorAggregate
 {
-	/**
-	 * The data array
-	 */
-	public array $data = [];
-
-	/**
-	 * Constructor
-	 */
-	public function __construct(array $data = [])
-	{
-		$this->data = $data;
-	}
+	public function __construct(public array $data = [])
+	{}
 
 	/**
 	 * Get an iterator for the items.
@@ -132,7 +122,7 @@ class Iterator implements IteratorAggregate
 	 */
 	public function has(mixed $key): bool
 	{
-		return isset($this->data[$key]);
+		return isset($this->data[$key]) === true;
 	}
 
 	/**
