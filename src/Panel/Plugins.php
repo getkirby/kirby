@@ -83,43 +83,48 @@ class Plugins
 	{
 		$dist = [];
 
-		$files = $this->files();
+		foreach ($this->files() as $file) {
+			// filter out files with a different type
+			if (F::extension($file) !== $type) {
+				continue;
+			}
 
-		// Filter out all index.js files that shouldn't be loaded because an index.dev.mjs exists
-		if ($type === 'js') {
-			$files = A::filter(
-				$files,
-				fn ($file) => F::exists(preg_replace('/\.js$/', '.dev.mjs', $file))
-			);
-		}
+			// filter out empty files and files that don't exist
+			$content = F::read($file);
+			if (!$content) {
+				continue;
+			}
 
-		foreach ($files as $file) {
-			if (F::extension($file) === $type) {
-				if ($content = F::read($file)) {
-					if ($type === 'mjs') {
-						// index.dev.mjs files are turned into data URIs so they can be imported
-						// without having to copy them to /media, then later remove them again
-						$content = F::uri($file);
-					}
+			if ($type === 'mjs') {
+				// index.dev.mjs files are turned into data URIs so they
+				// can be imported without having to copy them to /media
+				// (avoids having to clean the files from /media again)
+				$content = F::uri($file);
+			}
 
-					if ($type === 'js') {
-						$content = trim($content);
+			if ($type === 'js') {
+				// filter out all index.js files that shouldn't be loaded
+				// because an index.dev.mjs exists
+				if (F::exists(preg_replace('/\.js$/', '.dev.mjs', $file)) === true) {
+					continue;
+				}
 
-						// make sure that each plugin is ended correctly
-						if (Str::endsWith($content, ';') === false) {
-							$content .= ';';
-						}
-					}
+				$content = trim($content);
 
-					$dist[] = $content;
+				// make sure that each plugin is ended correctly
+				if (Str::endsWith($content, ';') === false) {
+					$content .= ';';
 				}
 			}
+
+			$dist[] = $content;
 		}
 
 		if ($type === 'mjs') {
-			// If no index.dev.mjs modules exist, we MUST return an empty string instead of loading an empty array.
-			// This is because the module loader code uses top level await, which is not compatible with Kirby's
-			// minimum browser version requirements and therefore mustn't appear in a default setup.
+			// if no index.dev.mjs modules exist, we MUST return an empty string instead
+			// of loading an empty array; this is because the module loader code uses
+			// top level await, which is not compatible with Kirby's minimum browser
+			// version requirements and therefore must not appear in a default setup
 			if (empty($dist)) {
 				return '';
 			}
