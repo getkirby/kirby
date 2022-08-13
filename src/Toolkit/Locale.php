@@ -113,11 +113,8 @@ class Locale
 			return $convertedLocale;
 		}
 
-		if (is_string($locale) === true) {
-			return [LC_ALL => $locale];
-		}
-
-		throw new InvalidArgumentException('Locale must be string or array');
+		// $locale is string
+		return [LC_ALL => $locale];
 	}
 
 	/**

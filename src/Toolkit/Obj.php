@@ -102,7 +102,7 @@ class Obj extends stdClass
 	/**
 	 * Converts the object to a json string
 	 */
-	public function toJson(...$arguments): string
+	public function toJson(int ...$arguments): string
 	{
 		return json_encode($this->toArray(), ...$arguments);
 	}

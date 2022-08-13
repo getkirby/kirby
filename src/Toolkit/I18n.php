@@ -169,7 +169,9 @@ class I18n
 			$locale   = null;
 		}
 
-		$template = static::translate($key, $fallback, $locale);
+		$template  = static::translate($key, $fallback, $locale);
+		$replace ??= [];
+
 		return Str::template($template, $replace, [
 			'fallback' => '-',
 			'start'    => '{',
@@ -190,7 +192,7 @@ class I18n
 			return static::$translations[$locale];
 		}
 
-		if (is_a(static::$load, 'Closure') === true) {
+		if (is_a(static::$load, Closure::class) === true) {
 			return static::$translations[$locale] = (static::$load)($locale);
 		}
 
@@ -255,7 +257,7 @@ class I18n
 			return null;
 		}
 
-		if (is_a($translation, 'Closure') === true) {
+		if (is_a($translation, Closure::class) === true) {
 			return $translation($count);
 		}
 
@@ -271,6 +273,6 @@ class I18n
 			$count = static::formatNumber($count, $locale);
 		}
 
-		return str_replace('{{ count }}', $count, $message);
+		return str_replace('{{ count }}', (string)$count, $message);
 	}
 }

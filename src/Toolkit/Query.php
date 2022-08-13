@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -30,26 +31,21 @@ class Query
 
 	/**
 	 * The query string
-	 *
-	 * @var string
 	 */
-	protected $query;
+	protected string|null $query;
 
 	/**
 	 * Queryable data
-	 *
-	 * @var array
 	 */
-	protected $data;
+	protected array|object $data;
 
 	/**
 	 * Creates a new Query object
-	 *
-	 * @param string|null $query
-	 * @param array|object $data
 	 */
-	public function __construct(string|null $query = null, $data = [])
-	{
+	public function __construct(
+		string|null $query = null,
+		array|object $data = []
+	) {
 		$this->query = $query;
 		$this->data  = $data;
 	}
@@ -57,10 +53,8 @@ class Query
 	/**
 	 * Returns the query result if anything
 	 * can be found, otherwise returns null
-	 *
-	 * @return mixed
 	 */
-	public function result()
+	public function result(): mixed
 	{
 		if (empty($this->query) === true) {
 			return $this->data;
@@ -73,15 +67,15 @@ class Query
 	 * Resolves the query if anything
 	 * can be found, otherwise returns null
 	 *
-	 * @param string $query
-	 * @return mixed
-	 *
 	 * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
 	 */
-	protected function resolve(string $query)
+	protected function resolve(string $query): mixed
 	{
 		// direct key access in arrays
-		if (is_array($this->data) === true && array_key_exists($query, $this->data) === true) {
+		if (
+			is_array($this->data) === true &&
+			array_key_exists($query, $this->data) === true
+		) {
 			return $this->data[$query];
 		}
 
@@ -98,7 +92,7 @@ class Query
 				if (array_key_exists($method, $data) === true) {
 					$value = $data[$method];
 
-					if (is_a($value, 'Closure') === true) {
+					if (is_a($value, Closure::class) === true) {
 						$value = $value(...$args);
 					} elseif ($args !== []) {
 						throw new InvalidArgumentException('Cannot access array element ' . $method . ' with arguments');
@@ -106,7 +100,7 @@ class Query
 				} else {
 					static::accessError($data, $method, 'property');
 				}
-			} elseif (is_object($data)) {
+			} elseif (is_object($data) === true) {
 				if (
 					method_exists($data, $method) === true ||
 					method_exists($data, '__call') === true

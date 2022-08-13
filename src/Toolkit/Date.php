@@ -36,7 +36,7 @@ class Date extends DateTime
 			$datetime = date('r', $datetime);
 		}
 
-		if (is_a($datetime, 'DateTimeInterface') === true) {
+		if (is_a($datetime, DateTimeInterface::class) === true) {
 			$datetime = $datetime->format('r');
 		}
 
@@ -207,7 +207,7 @@ class Date extends DateTime
 	 */
 	public function microsecond(): int
 	{
-		return $this->format('u');
+		return (int)$this->format('u');
 	}
 
 	/**
@@ -215,7 +215,7 @@ class Date extends DateTime
 	 */
 	public function millisecond(): int
 	{
-		return $this->format('v');
+		return (int)$this->format('v');
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Date extends DateTime
 	 *
 	 * @param string|int|\DateTimeInterface ...$datetime Datetime strings, UNIX timestamps or objects
 	 */
-	public function nearest(string|int|DateTimeInterface ...$datetime): string|int|DateTimeInterface
+	public function nearest(string|int|DateTimeInterface ...$datetime): string|int|DateTimeInterface|null
 	{
 		$timestamp = $this->timestamp();
 		$minDiff   = PHP_INT_MAX;
@@ -420,11 +420,8 @@ class Date extends DateTime
 			return array_merge($default, ['size' => $input]);
 		}
 
-		if (is_string($input) === true) {
-			return array_merge($default, ['unit' => strtolower($input)]);
-		}
-
-		throw new InvalidArgumentException('Invalid input');
+		// can only be a string now
+		return array_merge($default, ['unit' => strtolower($input)]);
 	}
 
 	/**

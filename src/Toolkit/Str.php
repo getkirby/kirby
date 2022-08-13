@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
@@ -292,7 +293,7 @@ class Str
 		}
 
 		// $format is an IntlDateFormatter instance
-		if (is_a($format, 'IntlDateFormatter') === true) {
+		if (is_a($format, IntlDateFormatter::class) === true) {
 			return $format->format($time ?? time());
 		}
 
@@ -391,7 +392,7 @@ class Str
 	 */
 	public static function esc(string $string, string $context = 'html'): string
 	{
-		if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
+		if (method_exists(Escape::class, $context) === true) {
 			return Escape::$context($string);
 		}
 
@@ -433,14 +434,18 @@ class Str
 			return $string;
 		}
 
-		return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . $rep;
+		return static::substr(
+			$string,
+			0,
+			mb_strrpos(static::substr($string, 0, $chars), ' ')
+		) . $rep;
 	}
 
 	/**
 	 * Convert the value to a float with a decimal
 	 * point, no matter what the locale setting is
 	 */
-	public static function float(string|int|float|null $value): string
+	public static function float(string|null $value = ''): string
 	{
 		// make sure $value is not null
 		$value ??= '';
@@ -589,6 +594,7 @@ class Str
 			$length = random_int(5, 10);
 		}
 
+		/** @var string $pool */
 		$pool = static::pool($type, false);
 
 		// catch invalid pools
@@ -632,15 +638,15 @@ class Str
 		int|array $limit = -1
 	): string|array {
 		// convert Kirby collections to arrays
-		if (is_a($string, 'Kirby\Toolkit\Collection') === true) {
+		if (is_a($string, Collection::class) === true) {
 			$string = $string->toArray();
 		}
 
-		if (is_a($search, 'Kirby\Toolkit\Collection') === true) {
+		if (is_a($search, Collection::class) === true) {
 			$search  = $search->toArray();
 		}
 
-		if (is_a($replace, 'Kirby\Toolkit\Collection') === true) {
+		if (is_a($replace, Collection::class) === true) {
 			$replace = $replace->toArray();
 		}
 
@@ -802,7 +808,7 @@ class Str
 		array $data = [],
 		array $options = []
 	): string {
-		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+		$callback = is_a(($options['callback'] ?? null), Closure::class) === true ? $options['callback'] : null;
 		$fallback = $options['fallback'] ?? '';
 
 		// replace and escape
@@ -1085,7 +1091,7 @@ class Str
 	public static function template(string|null $string = null, array $data = [], array $options = []): string
 	{
 		$fallback = $options['fallback'] ?? null;
-		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+		$callback = is_a(($options['callback'] ?? null), Closure::class) === true ? $options['callback'] : null;
 		$start    = (string)($options['start'] ?? '{{');
 		$end      = (string)($options['end'] ?? '}}');
 

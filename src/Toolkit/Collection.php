@@ -36,7 +36,7 @@ class Collection extends Iterator implements Countable
 
 	/**
 	 * Pagination object
-	 * @var \Kirby\Toolkit\Pagination
+	 * @var \Kirby\Toolkit\Pagination|null
 	 */
 	protected $pagination;
 
@@ -743,7 +743,10 @@ class Collection extends Iterator implements Countable
 		$this->pagination = Pagination::for($this, ...$arguments);
 
 		// slice and clone the collection according to the pagination
-		return $this->slice($this->pagination->offset(), $this->pagination->limit());
+		return $this->slice(
+			$this->pagination->offset(),
+			$this->pagination->limit()
+		);
 	}
 
 	/**

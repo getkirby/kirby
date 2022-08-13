@@ -382,14 +382,14 @@ class Html extends Xml
 	 * Builds an HTML tag
 	 *
 	 * @param string $name Tag name
-	 * @param array|string $content Scalar value or array with multiple lines of content; self-closing
-	 *                              tags are generated automatically based on the `Html::isVoid()` list
+	 * @param array|string|null $content Scalar value or array with multiple lines of content; self-closing
+	 *                                   tags are generated automatically based on the `Html::isVoid()` list
 	 * @param array $attr An associative array with additional attributes for the tag
 	 * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
 	 * @param int $level Indentation level
 	 * @return string The generated HTML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
+	public static function tag(string $name, array|string|null $content = '', array $attr = null, string $indent = null, int $level = 0): string
 	{
 		// treat an explicit `null` value as an empty tag
 		// as void tags are already covered below
@@ -576,7 +576,7 @@ class Html extends Xml
 				return false;
 			}
 
-			return preg_match('!^[a-zA-Z0-9_-]+$!', $id);
+			return preg_match('!^[a-zA-Z0-9_-]+$!', $id) === 1;
 		};
 
 		switch ($path->toString()) {

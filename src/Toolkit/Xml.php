@@ -366,7 +366,7 @@ class Xml
 	 * @param int $level Indentation level
 	 * @return string The generated XML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string|null $indent = null, int $level = 0): string
+	public static function tag(string $name, array|string|null $content = '', array $attr = null, string|null $indent = null, int $level = 0): string
 	{
 		$attr       = static::attr($attr);
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';

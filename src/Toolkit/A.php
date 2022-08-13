@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Exception;
 
 /**
@@ -35,10 +36,10 @@ class A
 	 *
 	 * @param mixed ...$args Parameters to pass to the closures
 	 */
-	public static function apply(array $array, ...$args): array
+	public static function apply(array $array, mixed ...$args): array
 	{
-		array_walk_recursive($array, function (&$item) use ($args) {
-			if (is_a($item, 'Closure')) {
+		array_walk_recursive($array, function (mixed &$item) use ($args) {
+			if (is_a($item, Closure::class)) {
 				$item = $item(...$args);
 			}
 		});
@@ -66,14 +67,14 @@ class A
 	 * // result: ['cat' => 'miao', 'dog' => 'wuff'];
 	 * </code>
 	 *
-	 * @param array $array The source array
+	 * @param mixed $array The source array
 	 * @param string|int|array|null $key The key to look for
 	 * @param mixed $default Optional default value, which
 	 *                       should be returned if no element
 	 *                       has been found
 	 */
 	public static function get(
-		$array,
+		mixed $array,
 		string|int|array|null $key,
 		mixed $default = null
 	): mixed {
@@ -100,7 +101,7 @@ class A
 		}
 
 		// extract data from nested array structures using the dot notation
-		if (strpos($key, '.') !== false) {
+		if (is_string($key) === true && strpos($key, '.') !== false) {
 			$keys     = explode('.', $key);
 			$firstKey = array_shift($keys);
 
@@ -327,9 +328,16 @@ class A
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
 	 */
-	public static function random(array $array, int $count = 1, bool $shuffle = false): array
-	{
-		if ($shuffle) {
+	public static function random(
+		array $array,
+		int $count = 1,
+		bool $shuffle = false
+	): array {
+		if (empty($array) === true) {
+			return $array;
+		}
+
+		if ($shuffle === true) {
 			return array_slice(self::shuffle($array), 0, $count);
 		}
 
@@ -474,7 +482,7 @@ class A
 			$key     = array_shift($subKeys);
 
 			// skip the magic for ignored keys
-			if (isset($ignore[$key]) === true && $ignore[$key] === true) {
+			if (($ignore[$key] ?? null) === true) {
 				$result[$fullKey] = $value;
 				continue;
 			}
@@ -687,7 +695,7 @@ class A
 	public static function update(array $array, array $update): array
 	{
 		foreach ($update as $key => $value) {
-			if (is_a($value, 'Closure') === true) {
+			if (is_a($value, Closure::class) === true) {
 				$array[$key] = call_user_func($value, static::get($array, $key));
 			} else {
 				$array[$key] = $value;
