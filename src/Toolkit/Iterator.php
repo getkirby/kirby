@@ -19,7 +19,8 @@ use IteratorAggregate;
 class Iterator implements IteratorAggregate
 {
 	public function __construct(public array $data = [])
-	{}
+	{
+	}
 
 	/**
 	 * Get an iterator for the items.
