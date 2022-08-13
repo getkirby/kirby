@@ -276,7 +276,7 @@ class Document
 		try {
 			if (static::link() === true) {
 				usleep(1);
-				Response::go($kirby->url('index') . '/' . $kirby->path());
+				Response::go($kirby->url('base') . '/' . $kirby->path());
 			}
 		} catch (Throwable $e) {
 			die('The Panel assets cannot be installed properly. ' . $e->getMessage());
