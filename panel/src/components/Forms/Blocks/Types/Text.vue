@@ -17,13 +17,7 @@
 export default {
 	computed: {
 		component() {
-			const type = this.textField.type;
-			if (type === "writer") {
-				return "k-writer";
-			}
-
-			// try load custom component
-			const component = "k-" + type + "-input";
+			const component = "k-" + this.textField.type + "-input";
 
 			if (this.$helper.isComponent(component)) {
 				return component;
