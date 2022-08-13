@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Cms\User;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -60,12 +61,12 @@ class Api
 	/**
 	 * The current route
 	 */
-	protected Route $route;
+	protected Route|null $route = null;
 
 	/**
 	 * The Router instance
 	 */
-	protected Router $router;
+	protected Router|null $router = null;
 
 	/**
 	 * Route definition
@@ -137,14 +138,14 @@ class Api
 
 		$this->router = new Router($this->routes());
 		$this->route  = $this->router->find($path, $method);
-		$auth   = $this->route->attributes()['auth'] ?? true;
+		$auth = $this->route?->attributes()['auth'] ?? true;
 
 		if ($auth !== false) {
 			$user = $this->authenticate();
 
 			// set PHP locales based on *user* language
 			// so that e.g. strftime() gets formatted correctly
-			if (is_a($user, 'Kirby\Cms\User') === true) {
+			if (is_a($user, User::class) === true) {
 				$language = $user->language();
 
 				// get the locale from the translation
@@ -175,14 +176,17 @@ class Api
 		$validate = Pagination::$validate;
 		Pagination::$validate = false;
 
-		$output = $this->route->action()->call($this, ...$this->route->arguments());
+		$output = $this->route?->action()->call(
+			$this,
+			...$this->route->arguments()
+		);
 
 		// restore old pagination validation mode
 		Pagination::$validate = $validate;
 
 		if (
 			is_object($output) === true &&
-			is_a($output, 'Kirby\\Http\\Response') !== true
+			is_a($output, Response::class) !== true
 		) {
 			return $this->resolve($output)->toResponse();
 		}
@@ -230,7 +234,7 @@ class Api
 		}
 
 		// lazy-load data wrapped in Closures
-		if (is_a($this->data[$key], 'Closure') === true) {
+		if (is_a($this->data[$key], Closure::class) === true) {
 			return $this->data[$key]->call($this, ...$args);
 		}
 
@@ -356,7 +360,7 @@ class Api
 	/**
 	 * Returns the request method
 	 */
-	public function requestMethod(): string
+	public function requestMethod(): string|null
 	{
 		return $this->requestMethod;
 	}
@@ -377,7 +381,10 @@ class Api
 	 */
 	public function resolve(mixed $object): Model|Collection
 	{
-		if (is_a($object, 'Kirby\Api\Model') === true || is_a($object, 'Kirby\Api\Collection') === true) {
+		if (
+			is_a($object, Model::class) === true ||
+			is_a($object, Collection::class) === true
+		) {
 			return $object;
 		}
 
@@ -592,7 +599,7 @@ class Api
 			'file'      => F::relativepath($e->getFile(), $docRoot),
 			'line'      => $e->getLine(),
 			'details'   => [],
-			'route'     => $this->route ? $this->route->pattern() : null
+			'route'     => $this->route?->pattern()
 		];
 
 		// extend the information for Kirby Exceptions
@@ -654,7 +661,10 @@ class Api
 		}
 
 		foreach ($files as $upload) {
-			if (isset($upload['tmp_name']) === false && is_array($upload)) {
+			if (
+				isset($upload['tmp_name']) === false &&
+				is_array($upload) === true
+			) {
 				continue;
 			}
 
@@ -671,7 +681,10 @@ class Api
 
 				// try to detect the correct mime and add the extension
 				// accordingly. This will avoid .tmp filenames
-				if (empty($extension) === true || in_array($extension, ['tmp', 'temp'])) {
+				if (
+					empty($extension) === true ||
+					in_array($extension, ['tmp', 'temp']) === true
+				) {
 					$mime      = F::mime($upload['tmp_name']);
 					$extension = F::mimeToExtension($mime);
 					$filename  = F::name($upload['name']) . '.' . $extension;

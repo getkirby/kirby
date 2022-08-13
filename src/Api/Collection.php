@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
@@ -39,7 +40,7 @@ class Collection
 		$this->view   = $schema['view'] ?? null;
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, 'Closure') === false) {
+			if (is_a($schema['default'] ?? null, Closure::class) === false) {
 				throw new Exception('Missing collection data');
 			}
 

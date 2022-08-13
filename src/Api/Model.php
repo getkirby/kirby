@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
@@ -48,7 +49,7 @@ class Model
 		}
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, 'Closure') === false) {
+			if (is_a($schema['default'] ?? null, Closure::class) === false) {
 				throw new Exception('Missing model data');
 			}
 
@@ -141,7 +142,10 @@ class Model
 		$result = [];
 
 		foreach ($this->fields as $key => $resolver) {
-			if (array_key_exists($key, $select) === false || is_a($resolver, 'Closure') === false) {
+			if (
+				array_key_exists($key, $select) === false ||
+				is_a($resolver, Closure::class) === false
+			) {
 				continue;
 			}
 
@@ -152,8 +156,8 @@ class Model
 			}
 
 			if (
-				is_a($value, 'Kirby\Api\Collection') === true ||
-				is_a($value, 'Kirby\Api\Model') === true
+				is_a($value, Collection::class) === true ||
+				is_a($value, Model::class) === true
 			) {
 				$selection = $select[$key];
 
