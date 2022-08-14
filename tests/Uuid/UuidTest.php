@@ -121,6 +121,11 @@ class UuidTest extends TestCase
 		$uuid = Uuid::for($model);
 		$this->assertSame('page', $uuid->type());
 		$this->assertSame('my-id', $uuid->id());
+
+		$model = new User(['id' => 'my-user']);
+		$uuid = Uuid::for($model);
+		$this->assertSame('user', $uuid->type());
+		$this->assertSame('my-user', $uuid->id());
 	}
 
 	/**

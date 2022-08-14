@@ -160,6 +160,9 @@ class IndexTest extends TestCase
 	{
 		$uuid = Uuid::for('page://nothing-to-see');
 		$this->assertNull(Index::find($uuid));
+
+		$uuid = Uuid::for('user://does-not-need-index');
+		$this->assertNull(Index::find($uuid));
 	}
 
 	/**

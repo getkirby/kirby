@@ -75,6 +75,8 @@ class Index
 				)->first()
 			);
 		}
+
+		return null;
 	}
 
 	/**
