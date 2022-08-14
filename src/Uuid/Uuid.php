@@ -195,7 +195,7 @@ class Uuid
 	 * Tries to find the idetifiable model in cache
 	 * or index and return the object
 	 */
-	public function resolve(): Identifiable|null
+	public function resolve(bool $lazy = false): Identifiable|null
 	{
 		// @codeCoverageIgnoreStart
 		if ($this->model !== null) {
@@ -215,12 +215,14 @@ class Uuid
 			return $this->model;
 		}
 
-		if ($this->model = Index::find($this)) {
-			// lazily fill cache by writing to cache
-			// whenever looked up from index
-			$this->populate();
+		if ($lazy === false) {
+			if ($this->model = Index::find($this)) {
+				// lazily fill cache by writing to cache
+				// whenever looked up from index
+				$this->populate();
 
-			return $this->model;
+				return $this->model;
+			}
 		}
 
 		return null;

@@ -870,6 +870,19 @@ class PageTest extends TestCase
 		Page::$models = [];
 	}
 
+	/**
+	 * @covers ::permalink
+	 */
+	public function testPermalink()
+	{
+		$page = Page::factory([
+			'slug'    => 'test',
+			'content' => ['uuid' => 'my-page-uuid']
+		]);
+
+		$this->assertSame('//@/page/my-page-uuid', $page->permalink());
+	}
+
 	public function testController()
 	{
 		$app = new App([

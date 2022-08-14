@@ -2,7 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -10,32 +9,12 @@ use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
-use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\Uuid
  */
 class UuidTest extends TestCase
 {
-	protected $tmp = __DIR__ . '/tmp';
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => $this->tmp,
-			]
-		]);
-
-		Dir::make($this->tmp);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->tmp);
-		Cache::store()->flush();
-	}
-
 	/**
 	 * @covers ::__construct
 	 */
@@ -256,7 +235,7 @@ class UuidTest extends TestCase
 		$uuid->populate();
 		$id = $uuid->render();
 
-		$model = Uuid::for($id)->resolve();
+		$model = Uuid::for($id)->resolve(true);
 		$this->assertTrue($page->is($model));
 	}
 
