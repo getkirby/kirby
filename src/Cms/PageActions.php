@@ -13,6 +13,7 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * PageActions
@@ -123,6 +124,9 @@ trait PageActions
 
 			// overwrite the new page in the parent collection
 			static::updateParentCollections($newPage, 'set');
+
+			// clear UUID cache recursively (for children and files as well)
+			Uuid::for($oldPage)->clear(true);
 
 			return $newPage;
 		});
@@ -596,6 +600,9 @@ trait PageActions
 			foreach ($page->children() as $child) {
 				$child->delete(true);
 			}
+
+			// clear UUID cache
+			Uuid::for($page)->clear();
 
 			// actually remove the page from disc
 			if ($page->exists() === true) {

@@ -44,6 +44,9 @@ trait FileActions
 				'filename' => $name . '.' . $oldFile->extension(),
 			]);
 
+			// remove all public versions, lock and clear UUID cache
+			$oldFile->unpublish();
+
 			if ($oldFile->exists() === false) {
 				return $newFile;
 			}
@@ -51,14 +54,6 @@ trait FileActions
 			if ($newFile->exists() === true) {
 				throw new LogicException('The new file exists and cannot be overwritten');
 			}
-
-			// remove the lock of the old file
-			if ($lock = $oldFile->lock()) {
-				$lock->remove();
-			}
-
-			// remove all public versions
-			$oldFile->unpublish();
 
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
@@ -75,6 +70,7 @@ trait FileActions
 				F::move($oldFile->contentFile(), $newFile->contentFile());
 			}
 
+			// update collections
 			$newFile->parent()->files()->remove($oldFile->id());
 			$newFile->parent()->files()->set($newFile->id(), $newFile);
 
@@ -195,7 +191,7 @@ trait FileActions
 		// run the hook
 		return $file->commit('create', compact('file', 'upload'), function ($file, $upload) {
 
-			// delete all public versions
+			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
 			// overwrite the original
@@ -231,7 +227,7 @@ trait FileActions
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
 
-			// remove all versions in the media folder
+			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
 			// remove the lock of the old file
@@ -308,7 +304,15 @@ trait FileActions
 	 */
 	public function unpublish()
 	{
+		// unpublish media files
 		Media::unpublish($this->parent()->mediaRoot(), $this);
+
+		// remove the lock
+		$this->lock()?->remove();
+
+		// clear UUID cache
+		$this->uuid()->clear();
+
 		return $this;
 	}
 }
