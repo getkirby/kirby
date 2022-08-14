@@ -91,7 +91,7 @@ class Uri
 	protected $scheme = 'http';
 
 	/**
-	 * supported schemes
+	 * Supported schemes
 	 *
 	 * @var array
 	 */
