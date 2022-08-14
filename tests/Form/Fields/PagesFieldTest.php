@@ -176,6 +176,7 @@ class PagesFieldTest extends TestCase
 						'slug' => 'test',
 						'content' => [
 							'title' => 'Test Title',
+							'uuid'  => 'my-test-uuid'
 						],
 						'blueprint' => [
 							'title' => 'Test',
@@ -216,7 +217,7 @@ class PagesFieldTest extends TestCase
 			'link' => '/pages/test',
 			'sortable' => true,
 			'text' => 'Test Title',
-			'dragText' => '(link: test text: Test Title)',
+			'dragText' => '(link: page://my-test-uuid text: Test Title)',
 			'hasChildren' => false,
 			'url' => '/test',
 		], $api['data'][0]);

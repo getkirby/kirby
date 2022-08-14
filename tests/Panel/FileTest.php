@@ -178,6 +178,51 @@ class FileTest extends TestCase
 	/**
 	 * @covers ::dragText
 	 */
+	public function testDragTextAbsolute()
+	{
+		$page = new ModelPage([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'test.jpg', 'content' => ['uuid' => 'my-file']],
+			]
+		]);
+		$panel = new File($page->file('test.jpg'));
+		$this->assertSame('(image: file://my-file)', $panel->dragText(null, true));
+	}
+
+	/**
+	 * @covers ::dragText
+	 */
+	public function testDragTextAbsoluteMarkdown()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'kirbytext' => false
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => ['uuid' => 'my-file']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame('![](//@/file/my-file)', $file->panel()->dragText(null, true));
+	}
+
+	/**
+	 * @covers ::dragText
+	 */
 	public function testDragTextCustomMarkdown()
 	{
 		$app = $this->app->clone([
@@ -640,7 +685,7 @@ class FileTest extends TestCase
 		$page = new ModelPage([
 			'slug'  => 'test',
 			'files' => [
-				['filename' => 'test.jpg']
+				['filename' => 'test.jpg', 'content' => ['uuid' => 'test-file']]
 			]
 		]);
 
@@ -651,7 +696,7 @@ class FileTest extends TestCase
 		$panel = new File($page->file('test.jpg'));
 		$data  = $panel->pickerData(['model' => $model]);
 
-		$this->assertSame('(image: test/test.jpg)', $data['dragText']);
+		$this->assertSame('(image: file://test-file)', $data['dragText']);
 	}
 
 	/**
