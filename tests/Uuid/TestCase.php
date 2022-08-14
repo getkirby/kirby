@@ -8,20 +8,22 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $tmp = __DIR__ . '/tmp';
+	protected $fixtures;
+	protected $tmp;
 
-	public function setUp(): void
+	protected function setUp(): void
 	{
+		$this->fixtures =  __DIR__ . '/fixtures';
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->tmp,
+				'index' => $this->tmp = __DIR__ . '/tmp',
 			]
 		]);
 
 		Dir::make($this->tmp);
 	}
 
-	public function tearDown(): void
+	protected function tearDown(): void
 	{
 		Dir::remove($this->tmp);
 		Cache::store()->flush();

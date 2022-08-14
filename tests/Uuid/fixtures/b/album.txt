@@ -1,0 +1,7 @@
+Photographer:
+-
+  name: Einstein
+
+----
+
+Notes: [{"content":{"text":"<p>Foo bar<\/p>"},"id":"a24ad437-7f82-4dcc-bf44-a1462fca2959","isHidden":false,"type":"text"},{"content":{"text":"<ul><li>one<\/li><li>two<\/li><li>three<\/li><\/ul>"},"id":"6f35c13b-0682-4916-861e-73daba4ef363","isHidden":false,"type":"list"}]

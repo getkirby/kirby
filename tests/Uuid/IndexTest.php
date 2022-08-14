@@ -2,6 +2,7 @@
 
 namespace Kirby\Uuid;
 
+use Generator;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 
@@ -15,10 +16,23 @@ class IndexTest extends TestCase
 	 */
 	public function testCollection()
 	{
+		// without
+		$uuid       = Uuid::for('page://my-id');
+		$collection = Index::collection($uuid);
+		$this->assertInstanceOf(Generator::class, $collection);
+		$this->assertSame(0, iterator_count($collection));
+
+		// with
+		$pages      = Pages::factory([['slug' => 'a'], ['slug' => 'b']]);
+		$uuid       = Uuid::for('page://my-id', $pages);
+		$collection = Index::collection($uuid);
+		$this->assertInstanceOf(Generator::class, $collection);
+		$this->assertSame(2, iterator_count($collection));
 	}
 
 	/**
 	 * @covers ::find
+	 * @covers ::findInContent
 	 */
 	public function testFindPage()
 	{
@@ -65,6 +79,7 @@ class IndexTest extends TestCase
 
 	/**
 	 * @covers ::find
+	 * @covers ::findInContent
 	 */
 	public function testFindFile()
 	{
@@ -132,8 +147,10 @@ class IndexTest extends TestCase
 
 	/**
 	 * @covers ::populate
+	 * @covers ::blocks
+	 * @covers ::fields
 	 * @covers ::pages
-	 * @covers ::users
+	 * @covers ::structures
 	 */
 	public function testPopulate()
 	{
@@ -188,5 +205,67 @@ class IndexTest extends TestCase
 		$this->assertTrue(Uuid::for($pageFile)->isCached());
 		$this->assertTrue(Uuid::for($siteFile)->isCached());
 		$this->assertTrue(Uuid::for($userFile)->isCached());
+	}
+
+	/**
+	 * @covers ::fields
+	 * @covers ::blocks
+	 */
+	public function testBlocks()
+	{
+		$this->app->clone([
+			'roots' => [
+				'content' => $this->fixtures,
+			],
+			'blueprints' => [
+				'pages/album' => [
+					'fields' => [
+						'photographer' => ['type' => 'structure'],
+						'notes' => ['type' => 'blocks'],
+						'foo' => ['type' => 'radio']
+					]
+				],
+				'pages/note' => [
+					'fields' => [
+						'author' => ['type' => 'structure'],
+						'text' => ['type' => 'blocks'],
+						'foo' => ['type' => 'select']
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(2, iterator_count(Index::blocks()));
+	}
+
+	/**
+	 * @covers ::fields
+	 * @covers ::structures
+	 */
+	public function testStructures()
+	{
+		$this->app->clone([
+			'roots' => [
+				'content' => $this->fixtures,
+			],
+			'blueprints' => [
+				'pages/album' => [
+					'fields' => [
+						'photographer' => ['type' => 'structure'],
+						'notes' => ['type' => 'blocks'],
+						'foo' => ['type' => 'radio']
+					]
+				],
+				'pages/note' => [
+					'fields' => [
+						'author' => ['type' => 'structure'],
+						'text' => ['type' => 'blocks'],
+						'foo' => ['type' => 'select']
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(3, iterator_count(Index::structures()));
 	}
 }

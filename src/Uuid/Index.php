@@ -59,8 +59,8 @@ class Index
 			// TODO: this, once we know how UUID is applied to these objects
 			'block'  => null,
 			'strcut' => null,
-			default  => null
 			// @codeCoverageIgnoreEnd
+			default  => null
 		};
 	}
 
@@ -132,7 +132,7 @@ class Index
 	public static function blocks(): Generator
 	{
 		return static::fields(
-			'strcuture',
+			'blocks',
 			fn ($field) => $field->toBlocks()
 		);
 	}
@@ -227,7 +227,7 @@ class Index
 	public static function structures(): Generator
 	{
 		return static::fields(
-			'strcuture',
+			'structure',
 			fn ($field) => $field->toStructure()
 		);
 	}
