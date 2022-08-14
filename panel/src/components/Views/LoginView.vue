@@ -61,6 +61,13 @@ export default {
 				return;
 			}
 
+			if (error.details.challengeDestroyed === true) {
+				// reset from the LoginCode component back to Login
+				await this.$reload({
+					globals: ["$system"]
+				});
+			}
+
 			this.issue = error.message;
 		}
 	}

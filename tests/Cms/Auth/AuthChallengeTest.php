@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
+use Throwable;
 
 require_once __DIR__ . '/../mocks.php';
 
@@ -97,7 +98,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertNull($this->failedEmail);
-		$session->remove('kirby.challenge.type');
+		$session->clear();
 
 		// non-existing user
 		$status = $auth->createChallenge('invalid@example.com');
@@ -109,6 +110,7 @@ class AuthChallengeTest extends TestCase
 		$this->assertNull($status->challenge(false));
 		$this->assertSame('invalid@example.com', $session->get('kirby.challenge.email'));
 		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertSame('invalid@example.com', $this->failedEmail);
 
 		// verify rate-limiting log
@@ -150,11 +152,6 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testCreateChallengeDebugRateLimit()
 	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'debug' => true
-			]
-		]);
 		$auth = $this->app->auth();
 
 		$auth->createChallenge('marge@simpsons.com');
@@ -173,12 +170,14 @@ class AuthChallengeTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'auth.challenge.timeout' => 10
+				'auth.challenge.timeout' => 10,
+				'debug' => false
 			]
 		]);
 		$auth    = $this->app->auth();
 		$session = $this->app->session();
 
+		// existing user
 		$status = $auth->createChallenge('marge@simpsons.com');
 		$this->assertSame([
 			'challenge' => 'email',
@@ -186,7 +185,17 @@ class AuthChallengeTest extends TestCase
 			'status'    => 'pending'
 		], $status->toArray());
 		$this->assertSame('email', $status->challenge(false));
+		$this->assertSame(MockTime::$time + 10, $session->get('kirby.challenge.timeout'));
+		$session->clear();
 
+		// non-existing user
+		$status = $auth->createChallenge('invalid@example.com');
+		$this->assertSame([
+			'challenge' => 'email',
+			'email'     => 'invalid@example.com',
+			'status'    => 'pending'
+		], $status->toArray());
+		$this->assertNull($status->challenge(false));
 		$this->assertSame(MockTime::$time + 10, $session->get('kirby.challenge.timeout'));
 	}
 
@@ -347,10 +356,15 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeNoChallenge1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('No authentication challenge is active');
+		try {
+			$this->auth->verifyChallenge('123456');
 
-		$this->auth->verifyChallenge('123456');
+			$this->fail('No InvalidArgumentException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\InvalidArgumentException', $e);
+			$this->assertSame('No authentication challenge is active', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+		}
 	}
 
 	/**
@@ -358,17 +372,22 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeNoChallenge2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('No authentication challenge is active');
+		try {
+			$this->app->session()->set('kirby.challenge.email', 'marge@simpsons.com');
+			$this->auth->verifyChallenge('123456');
 
-		$this->app->session()->set('kirby.challenge.email', 'marge@simpsons.com');
-		$this->auth->verifyChallenge('123456');
+			$this->fail('No InvalidArgumentException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\InvalidArgumentException', $e);
+			$this->assertSame('No authentication challenge is active', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
+		}
 	}
 
 	/**
 	 * @covers ::verifyChallenge
 	 */
-	public function testVerifyChallengeNoChallengeNoDebug()
+	public function testVerifyChallengeNoChallengeNoDebug1()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
@@ -377,10 +396,39 @@ class AuthChallengeTest extends TestCase
 		]);
 		$auth = $this->app->auth();
 
-		$this->expectException('Kirby\Exception\PermissionException');
-		$this->expectExceptionMessage('Invalid code');
+		try {
+			$auth->verifyChallenge('123456');
 
-		$auth->verifyChallenge('123456');
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+		}
+	}
+
+	/**
+	 * @covers ::verifyChallenge
+	 */
+	public function testVerifyChallengeNoChallengeNoDebug2()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => false
+			]
+		]);
+		$auth = $this->app->auth();
+
+		try {
+			$this->app->session()->set('kirby.challenge.email', 'marge@simpsons.com');
+			$auth->verifyChallenge('123456');
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
+		}
 	}
 
 	/**
@@ -420,9 +468,6 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeTimeLimited()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
-		$this->expectExceptionMessage('Authentication challenge timeout');
-
 		$session = $this->app->session();
 
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
@@ -430,7 +475,54 @@ class AuthChallengeTest extends TestCase
 		$session->set('kirby.challenge.type', 'email');
 		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
 
-		$this->auth->verifyChallenge('123456');
+		try {
+			$this->auth->verifyChallenge('123456');
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertSame('Authentication challenge timeout', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+		}
+
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.timeout'));
+	}
+
+	/**
+	 * @covers ::verifyChallenge
+	 */
+	public function testVerifyChallengeTimeLimitedNoDebug()
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => false
+			]
+		]);
+		$auth = $this->app->auth();
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', MockTime::$time - 1);
+
+		try {
+			$auth->verifyChallenge('123456');
+
+			$this->fail('No PermissionException was thrown');
+		} catch (Throwable $e) {
+			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertSame('Invalid code', $e->getMessage());
+			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
+		}
+
+		$this->assertNull($session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.code'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.timeout'));
 	}
 
 	/**
