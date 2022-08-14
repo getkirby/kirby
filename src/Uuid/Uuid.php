@@ -3,8 +3,14 @@
 namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Block;
 use Kirby\Cms\Collection;
+use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\StructureObject;
+use Kirby\Cms\User;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
@@ -54,15 +60,16 @@ class Uuid
 
 		// if object is provided to create instance
 		if ($model) {
-			$type = explode('\\', get_class($model));
-			$type = array_pop($type);
-			$type = strtolower($type);
-
-			// @codeCoverageIgnoreStart
-			if ($type === 'structureobject') {
-				$type = 'struct';
-			}
-			// @codeCoverageIgnoreEnd
+			$type = match (true) {
+				$model instanceof Site => 'site',
+				$model instanceof Page => 'page',
+				$model instanceof File => 'file',
+				$model instanceof User => 'user',
+				// @codeCoverageIgnoreStart
+				$model instanceof Block => 'block',
+				$model instanceof StructureObject => 'struct'
+				// @codeCoverageIgnoreEnd
+			};
 
 			$this->uri = new Uri([
 				'scheme' => $type,
