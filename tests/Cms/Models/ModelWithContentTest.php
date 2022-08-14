@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\Uuid;
+
 class ExtendedModelWithContent extends ModelWithContent
 {
 	public function blueprint()
@@ -177,5 +179,14 @@ class ModelWithContentTest extends TestCase
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertSame('foo', $model->toString());
+	}
+
+	public function testUuid()
+	{
+		$model = new Site();
+		$this->assertInstanceOf(Uuid::class, $model->uuid());
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertInstanceOf(Uuid::class, $model->uuid());
 	}
 }
