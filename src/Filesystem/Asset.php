@@ -38,7 +38,7 @@ class Asset
 		$this->setProperties([
 			'path' => dirname($path),
 			'root' => $this->kirby()->root('index') . '/' . $path,
-			'url'  => $this->kirby()->url('index') . '/' . $path
+			'url'  => $this->kirby()->url('base') . '/' . $path
 		]);
 	}
 
