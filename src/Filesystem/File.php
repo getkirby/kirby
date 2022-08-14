@@ -29,6 +29,13 @@ class File
 	use Properties;
 
 	/**
+	 * Parent file model
+	 *
+	 * @var \Kirby\Cms\File
+	 */
+	protected $model;
+
+	/**
 	 * Absolute file path
 	 */
 	protected string|null $root = null;
@@ -447,7 +454,7 @@ class File
 	 */
 	public function url(): string|null
 	{
-		return $this->url;
+		return $this->url ??= $this->model !== null ? $this->model->url() : null;
 	}
 
 	/**
