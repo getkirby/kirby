@@ -27,6 +27,7 @@ class LocaleTest extends TestCase
 
 		// now set a baseline
 		setlocale(LC_ALL, 'C');
+		locale_set_default('en-US');
 	}
 
 	public function tearDown(): void
@@ -158,9 +159,11 @@ class LocaleTest extends TestCase
 	public function testSetString()
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
+		$this->assertSame('en-US', locale_get_default());
 
 		Locale::set('de_DE.' . $this->localeSuffix);
 		$this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_ALL, '0'));
+		$this->assertSame('de_DE.' . $this->localeSuffix, locale_get_default());
 	}
 
 	/**
@@ -169,6 +172,7 @@ class LocaleTest extends TestCase
 	public function testSetArray1()
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
+		$this->assertSame('en-US', locale_get_default());
 
 		Locale::set([
 			'LC_ALL'   => 'de_AT.' . $this->localeSuffix,
@@ -178,6 +182,7 @@ class LocaleTest extends TestCase
 		$this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_CTYPE, '0'));
 		$this->assertSame('de_CH.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
+		$this->assertSame('de_AT.' . $this->localeSuffix, locale_get_default());
 	}
 
 	/**
@@ -186,14 +191,17 @@ class LocaleTest extends TestCase
 	public function testSetArray2()
 	{
 		$this->assertSame('C', setlocale(LC_ALL, '0'));
+		$this->assertSame('en-US', locale_get_default());
 
 		Locale::set([
 			'LC_CTYPE' => 'de_DE.' . $this->localeSuffix,
 			LC_NUMERIC => 'de_CH.' . $this->localeSuffix,
-			'LC_ALL'   => 'de_AT.' . $this->localeSuffix
+			'LC_ALL'   => 'de_AT.' . $this->localeSuffix,
+			'LC_TIME'  => 'de_CH.' . $this->localeSuffix
 		]);
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_CTYPE, '0'));
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
 		$this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
+		$this->assertSame('de_CH.' . $this->localeSuffix, locale_get_default());
 	}
 }

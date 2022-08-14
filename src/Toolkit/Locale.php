@@ -135,8 +135,17 @@ class Locale
 	{
 		$locale = static::normalize($locale);
 
+		// locale for core string functions
 		foreach ($locale as $key => $value) {
 			setlocale($key, $value);
+		}
+
+		// locale for the intl extension
+		if (
+			function_exists('locale_set_default') === true &&
+			$timeLocale = $locale[LC_TIME] ?? $locale[LC_ALL] ?? null
+		) {
+			locale_set_default($timeLocale);
 		}
 	}
 
