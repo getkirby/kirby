@@ -23,6 +23,15 @@ class MimeTest extends TestCase
 	/**
 	 * @covers ::fix
 	 */
+	public function testFixMjs()
+	{
+		$this->assertSame('text/javascript', Mime::fix('something.mjs', 'text/x-java', 'mjs'));
+		$this->assertSame('text/javascript', Mime::fix('something.mjs', 'text/plain', 'mjs'));
+	}
+
+	/**
+	 * @covers ::fix
+	 */
 	public function testFixSvg()
 	{
 		$this->assertSame('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));

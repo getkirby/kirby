@@ -69,6 +69,8 @@ class Document
 				'custom'  => static::customAsset('panel.css'),
 			],
 			'icons' => static::favicon($url),
+			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
+			'plugin-imports' => $plugins->read('mjs'),
 			'js' => [
 				'vendor'       => [
 					'nonce' => $nonce,
@@ -243,7 +245,7 @@ class Document
 		try {
 			if (static::link() === true) {
 				usleep(1);
-				Response::go($kirby->url('index') . '/' . $kirby->path());
+				Response::go($kirby->url('base') . '/' . $kirby->path());
 			}
 		} catch (Throwable $e) {
 			die('The Panel assets cannot be installed properly. ' . $e->getMessage());

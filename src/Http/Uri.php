@@ -91,6 +91,13 @@ class Uri
 	protected $scheme = 'http';
 
 	/**
+	 * Supported schemes
+	 *
+	 * @var array
+	 */
+	protected static $schemes = ['http', 'https', 'ftp'];
+
+	/**
 	 * @var bool
 	 */
 	protected $slash = false;
@@ -446,7 +453,7 @@ class Uri
 	 */
 	public function setScheme(string $scheme = null)
 	{
-		if ($scheme !== null && in_array($scheme, ['http', 'https', 'ftp']) === false) {
+		if ($scheme !== null && in_array($scheme, static::$schemes) === false) {
 			throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
 		}
 
