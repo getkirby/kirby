@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$users` object refers to a collection
@@ -21,6 +22,8 @@ use Kirby\Toolkit\Str;
  */
 class Users extends Collection
 {
+	use HasUuids;
+
 	/**
 	 * All registered users methods
 	 *
@@ -89,22 +92,6 @@ class Users extends Collection
 	}
 
 	/**
-	 * Finds a user in the collection by ID or email address
-	 * @internal Use `$users->find()` instead
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cms\User|null
-	 */
-	public function findByKey(string $key)
-	{
-		if (Str::contains($key, '@') === true) {
-			return parent::findBy('email', Str::lower($key));
-		}
-
-		return parent::findByKey($key);
-	}
-
-	/**
 	 * Returns all files of all users
 	 *
 	 * @return \Kirby\Cms\Files
@@ -120,6 +107,26 @@ class Users extends Collection
 		}
 
 		return $files;
+	}
+
+	/**
+	 * Finds a user in the collection by ID or email address
+	 * @internal Use `$users->find()` instead
+	 *
+	 * @param string $key
+	 * @return \Kirby\Cms\User|null
+	 */
+	public function findByKey(string $key)
+	{
+		if ($user = $this->findByUuid($key, 'user')) {
+			return $user;
+		}
+
+		if (Str::contains($key, '@') === true) {
+			return parent::findBy('email', Str::lower($key));
+		}
+
+		return parent::findByKey($key);
 	}
 
 	/**

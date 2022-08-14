@@ -265,6 +265,7 @@ return array(
     'Kirby\\Toolkit\\View' => $baseDir . '/src/Toolkit/View.php',
     'Kirby\\Toolkit\\Xml' => $baseDir . '/src/Toolkit/Xml.php',
     'Kirby\\Uuid\\Cache' => $baseDir . '/src/Uuid/Cache.php',
+    'Kirby\\Uuid\\HasUuids' => $baseDir . '/src/Uuid/HasUuids.php',
     'Kirby\\Uuid\\Id' => $baseDir . '/src/Uuid/Id.php',
     'Kirby\\Uuid\\Identifiable' => $baseDir . '/src/Uuid/Identifiable.php',
     'Kirby\\Uuid\\Index' => $baseDir . '/src/Uuid/Index.php',

@@ -365,6 +365,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Toolkit\\View' => __DIR__ . '/../..' . '/src/Toolkit/View.php',
         'Kirby\\Toolkit\\Xml' => __DIR__ . '/../..' . '/src/Toolkit/Xml.php',
         'Kirby\\Uuid\\Cache' => __DIR__ . '/../..' . '/src/Uuid/Cache.php',
+        'Kirby\\Uuid\\HasUuids' => __DIR__ . '/../..' . '/src/Uuid/HasUuids.php',
         'Kirby\\Uuid\\Id' => __DIR__ . '/../..' . '/src/Uuid/Id.php',
         'Kirby\\Uuid\\Identifiable' => __DIR__ . '/../..' . '/src/Uuid/Identifiable.php',
         'Kirby\\Uuid\\Index' => __DIR__ . '/../..' . '/src/Uuid/Index.php',
