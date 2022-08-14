@@ -11,6 +11,25 @@ use PHPUnit\Framework\TestCase;
 
 class KirbyTagsTest extends TestCase
 {
+	protected $app;
+	protected $tmp;
+
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp'
+			]
+		]);
+
+		Dir::make($this->tmp);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
+	}
+
 	public function dataProvider()
 	{
 		$tests = [];
@@ -174,10 +193,7 @@ class KirbyTagsTest extends TestCase
 	 */
 	public function testWithMarkdown($kirbytext, $expected)
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'markdown' => [
 					'extra' => false
@@ -193,10 +209,7 @@ class KirbyTagsTest extends TestCase
 	 */
 	public function testWithMarkdownExtra($kirbytext, $expected)
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'markdown' => [
 					'extra' => true
@@ -209,10 +222,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testImageWithoutFigure()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'kirbytext' => [
 					'image' => [
@@ -229,12 +239,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testImageWithCaption()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
+		$kirby    = $this->app->clone();
 		$expected = '<figure><img alt="" src="/myimage.jpg"><figcaption>This is an <em>awesome</em> image and this a <a href="">link</a></figcaption></figure>';
 
 		$this->assertEquals($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
@@ -242,10 +247,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testImageWithFileLink()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -275,12 +277,39 @@ class KirbyTagsTest extends TestCase
 		$this->assertEquals($expected, $page->text()->kt()->value());
 	}
 
+	public function testImageWithFileUUID()
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: file://image-uuid)',
+							'uuid' => 'page-uuid' // this is just to make sure that the test doesn't try to create a content file for this page with a generated UUID
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+								'content' => ['uuid' => 'image-uuid']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '"></figure>';
+
+		$this->assertEquals($expected, $page->text()->kt()->value());
+	}
+
 	public function testFile()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -306,12 +335,39 @@ class KirbyTagsTest extends TestCase
 		$this->assertEquals($expected, $page->text()->kt()->value());
 	}
 
+	public function testFileWithUUID()
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(file: file://file-a)',
+							'uuid' => 'page-uuid' // this is just to make sure that the test doesn't try to create a content file for this page with a generated UUID
+						],
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => ['uuid' => 'file-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $kirby->page('a');
+		$file = $page->file('a.jpg');
+
+		$expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
+
+		$this->assertEquals($expected, $page->text()->kt()->value());
+	}
+
 	public function testFileWithDisabledDownloadOption()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -339,10 +395,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testFileWithinFile()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -372,10 +425,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testLinkWithLangAttribute()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$app = $this->app->clone([
 			'urls' => [
 				'index' => 'https://getkirby.com'
 			],
@@ -400,10 +450,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testLinkWithHash()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$app = $this->app->clone([
 			'urls' => [
 				'index' => 'https://getkirby.com'
 			],
@@ -428,12 +475,35 @@ class KirbyTagsTest extends TestCase
 		$this->assertEquals('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
 	}
 
+	public function testLinkWithUuid()
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['uuid' => 'page-uuid'],
+						'files'   => [
+							[
+								'filename' => 'foo.jpg',
+								'content' => ['uuid' => 'file-uuid'],
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertEquals('<a href="https://getkirby.com/a">getkirby.com/a</a>', $app->kirbytags('(link: page://page-uuid)'));
+		$this->assertEquals('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $app->kirbytags('(link: file://file-uuid text: file)'));
+	}
+
 	public function testHooks()
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
+		$app = $this->app->clone([
 			'hooks' => [
 				'kirbytags:before' => function ($text, $data, $options) {
 					return 'before';
@@ -456,10 +526,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testVideoLocal()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -485,10 +552,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testVideoInlineAttrs()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -527,10 +591,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testVideoPredefinedAttrs()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'kirbytext' => [
 					'video' => [
@@ -575,10 +636,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testVideoOptions()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'kirbytext' => [
 					'video' => [
@@ -610,10 +668,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testVideoRemote()
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
@@ -663,10 +718,7 @@ class KirbyTagsTest extends TestCase
 	 */
 	public function testGlobalOptions($kirbytext, $expected)
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'options' => [
 				'kirbytext' => [
 					'image' => [

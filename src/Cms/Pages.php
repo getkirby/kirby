@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$pages` object refers to a
@@ -22,6 +23,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Pages extends Collection
 {
+	use HasUuids;
+
 	/**
 	 * Cache for the index only listed and unlisted pages
 	 *
@@ -253,6 +256,10 @@ class Pages extends Collection
 	{
 		if ($key === null) {
 			return null;
+		}
+
+		if ($page = $this->findByUuid($key, 'page')) {
+			return $page;
 		}
 
 		// remove trailing or leading slashes

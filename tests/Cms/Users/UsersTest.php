@@ -96,6 +96,35 @@ class UsersTest extends TestCase
 		$users->add($site);
 	}
 
+	public function testFiles()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'email' => 'a@getkirby.com',
+					'files' => [['filename' => 'a.jpg']]
+				],
+				[
+					'email' => 'b@getkirby.com',
+					'files' => [['filename' => 'b.jpg']]
+				],
+				[
+					'id'	=> 'user-c',
+					'email' => 'c@getkirby.com',
+					'files' => [['filename' => 'c.jpg']]
+				],
+			]
+		]);
+
+		$files = $app->users()->files();
+		$this->assertSame(3, $files->count());
+		$this->assertSame('a.jpg', $files->first()->filename());
+		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
+	}
+
 	public function testFind()
 	{
 		$users = new Users([
@@ -125,33 +154,21 @@ class UsersTest extends TestCase
 		$this->assertEquals('b@getkirby.com', $users->find('b@getkirby.com')->email());
 	}
 
-	public function testFiles()
+	public function testFindByUuid()
 	{
 		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
 			'users' => [
-				[
-					'email' => 'a@getkirby.com',
-					'files' => [['filename' => 'a.jpg']]
-				],
-				[
-					'email' => 'b@getkirby.com',
-					'files' => [['filename' => 'b.jpg']]
-				],
-				[
-					'id'	=> 'user-c',
-					'email' => 'c@getkirby.com',
-					'files' => [['filename' => 'c.jpg']]
-				],
+				['id' => 'homer', 'email' => $a = 'a@getkirby.com'],
+				['id' => 'foo', 'email' => $b = 'b@getkirby.com']
 			]
 		]);
 
-		$files = $app->users()->files();
-		$this->assertSame(3, $files->count());
-		$this->assertSame('a.jpg', $files->first()->filename());
-		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
+		$users = $app->users();
+		$this->assertSame($a, $users->find('user://homer')->email());
+		$this->assertSame($b, $users->find('user://foo')->email());
+
+		$this->assertSame($a, $app->user('user://homer')->email());
+		$this->assertSame($b, $app->user('user://foo')->email());
 	}
 
 	public function testCustomMethods()

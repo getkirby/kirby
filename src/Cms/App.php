@@ -23,6 +23,7 @@ use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -634,6 +635,12 @@ class App
 	 */
 	public function file(string $path, $parent = null, bool $drafts = true)
 	{
+		// find by global UUID
+		if (Uuid::is($path, 'file') === true) {
+			// prefer files of parent, when parent given
+			return Uuid::for($path, $parent?->files())->resolve();
+		}
+
 		$parent   = $parent ?? $this->site();
 		$id       = dirname($path);
 		$filename = basename($path);
@@ -1155,6 +1162,11 @@ class App
 	{
 		if ($id === null) {
 			return null;
+		}
+
+		// find by global UUID
+		if (Uuid::is($id, 'page') === true) {
+			return Uuid::for($id, $parent?->childrenAndDrafts())->resolve();
 		}
 
 		$parent = $parent ?? $this->site();

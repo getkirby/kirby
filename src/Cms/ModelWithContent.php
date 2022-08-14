@@ -7,6 +7,8 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Identifiable;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -18,7 +20,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent extends Model
+abstract class ModelWithContent extends Model implements Identifiable
 {
 	/**
 	 * The content
@@ -591,6 +593,19 @@ abstract class ModelWithContent extends Model
 		}
 
 		return $this->translations;
+	}
+
+	public function permalink(): string
+	{
+		return $this->uuid()->url();
+	}
+
+	/**
+	 * Returns the model's unique global ID
+	 */
+	public function uuid(): Uuid
+	{
+		return Uuid::for($this);
 	}
 
 	/**
