@@ -43,7 +43,8 @@
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.6.3",
 		"symfony/polyfill-intl-idn": "1.26.0",
-		"symfony/polyfill-mbstring": "1.26.0"
+		"symfony/polyfill-mbstring": "1.26.0",
+		"hidehalo/nanoid-php": "^1.1"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"

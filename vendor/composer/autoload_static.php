@@ -38,6 +38,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             'Kirby\\' => 6,
         ),
+        'H' => 
+        array (
+            'Hidehalo\\Nanoid\\' => 16,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -74,6 +78,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
             0 => __DIR__ . '/../..' . '/src',
             1 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
+        'Hidehalo\\Nanoid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hidehalo/nanoid-php/src',
+        ),
     );
 
     public static $fallbackDirsPsr4 = array (
@@ -99,6 +107,11 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Hidehalo\\Nanoid\\Client' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Client.php',
+        'Hidehalo\\Nanoid\\Core' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Core.php',
+        'Hidehalo\\Nanoid\\CoreInterface' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/CoreInterface.php',
+        'Hidehalo\\Nanoid\\Generator' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Generator.php',
+        'Hidehalo\\Nanoid\\GeneratorInterface' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/GeneratorInterface.php',
         'Kirby\\Api\\Api' => __DIR__ . '/../..' . '/src/Api/Api.php',
         'Kirby\\Api\\Collection' => __DIR__ . '/../..' . '/src/Api/Collection.php',
         'Kirby\\Api\\Model' => __DIR__ . '/../..' . '/src/Api/Model.php',
@@ -351,6 +364,13 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Toolkit\\V' => __DIR__ . '/../..' . '/src/Toolkit/V.php',
         'Kirby\\Toolkit\\View' => __DIR__ . '/../..' . '/src/Toolkit/View.php',
         'Kirby\\Toolkit\\Xml' => __DIR__ . '/../..' . '/src/Toolkit/Xml.php',
+        'Kirby\\Uuid\\Cache' => __DIR__ . '/../..' . '/src/Uuid/Cache.php',
+        'Kirby\\Uuid\\HasUuids' => __DIR__ . '/../..' . '/src/Uuid/HasUuids.php',
+        'Kirby\\Uuid\\Id' => __DIR__ . '/../..' . '/src/Uuid/Id.php',
+        'Kirby\\Uuid\\Identifiable' => __DIR__ . '/../..' . '/src/Uuid/Identifiable.php',
+        'Kirby\\Uuid\\Index' => __DIR__ . '/../..' . '/src/Uuid/Index.php',
+        'Kirby\\Uuid\\Uri' => __DIR__ . '/../..' . '/src/Uuid/Uri.php',
+        'Kirby\\Uuid\\Uuid' => __DIR__ . '/../..' . '/src/Uuid/Uuid.php',
         'Laminas\\Escaper\\Escaper' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Escaper.php',
         'Laminas\\Escaper\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/ExceptionInterface.php',
         'Laminas\\Escaper\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/InvalidArgumentException.php',

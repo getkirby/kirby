@@ -1,0 +1,62 @@
+{
+    "name": "hidehalo/nanoid-php",
+    "type": "library",
+    "description": "A copy of nanoid in PHP",
+    "keywords": [
+        "hidehalo",
+        "nanoid-php"
+    ],
+    "homepage": "https://github.com/hidehalo/nanoid-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "hidehalo",
+            "email": "tianchen_cc@yeah.net",
+            "homepage": "https://github.com/hidehalo",
+            "role": "Owner"
+        }
+    ],
+    "require": {
+        "php": "~5.6|~7.0|~8.0",
+        "paragonie/random_compat": ">=2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : ">=5.6",
+        "squizlabs/php_codesniffer": "^2.3"
+    },
+    "archive": {
+        "exclude": [
+            "tests/",
+            "benchmark/",
+            "examples/",
+            ".gitignore",
+            ".editorconfig",
+            "*.md",
+            "*.yml",
+            "*.xml"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Hidehalo\\Nanoid\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hidehalo\\Nanoid\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "check-style": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests",
+        "fix-style": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src tests"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
