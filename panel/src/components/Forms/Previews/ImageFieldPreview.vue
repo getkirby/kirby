@@ -6,8 +6,8 @@
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
 export default {
-	inheritAttrs: false,
 	mixins: [FieldPreview],
+	inheritAttrs: false,
 	props: {
 		value: [Object]
 	}

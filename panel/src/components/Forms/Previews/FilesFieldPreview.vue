@@ -2,8 +2,8 @@
 import BubblesFieldPreview from "./BubblesFieldPreview.vue";
 
 export default {
-	inheritAttrs: false,
 	extends: BubblesFieldPreview,
+	inheritAttrs: false,
 	class: "k-files-field-preview",
 	computed: {
 		bubbles() {
