@@ -63,8 +63,13 @@ class Id
 			// @codeCoverageIgnoreStart
 			$model instanceof StructureObject
 			// @codeCoverageIgnoreEnd
-				=> $model->content()->get('uuid')->value()
+				=> static::fromContent($model)
 		};
+	}
+
+	public static function fromContent(ModelWithContent $model): string|null
+	{
+		return $model->content()->get('uuid')->value();
 	}
 
 	/**

@@ -2,13 +2,13 @@
 
 namespace Kirby\Uuid;
 
+use Closure;
+use Generator;
 use Kirby\Cms\App;
-use Kirby\Cms\Blocks;
 use Kirby\Cms\Collection;
-use Kirby\Cms\Files;
-use Kirby\Cms\Pages;
-use Kirby\Cms\Structure;
-use Kirby\Cms\Users;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Toolkit\A;
 
 /**
  * @package   Kirby Uuid
@@ -20,35 +20,21 @@ use Kirby\Cms\Users;
 class Index
 {
 	/**
-	 * Returns global index collection for traversing content files.
-	 * Not needed for site/users as they can be directly looked
-	 * up via ID without need to search through index.
+	 * Returns local context collection as generator
+	 *
+	 * @return \Generator|\Kirby\Uuid\Identifiable[]
 	 */
-	public static function collection(Uuid $uuid): Collection
+	public static function collection(Uuid $uuid): Generator
 	{
-		$collection = match ($uuid->type()) {
-			'page'  	=> static::pages(),
-			'file'  	=> static::files(),
-			// @codeCoverageIgnoreStart
-			'block' 	=> static::blocks(),
-			'structure' => static::structures()
-			// @codeCoverageIgnoreEnd
-		};
-
-		// if a current collection was passed, remove it from
-		// the global index as we have already checked it separately
-		if ($context = $uuid->context()) {
-			$collection = $collection->not($context);
+		foreach ($uuid->context() ?? [] as $model) {
+			yield $model;
 		}
-
-		return $collection;
 	}
 
 	/**
-	 * Look up model by traversing through local context/global
-	 * index and finding the matching UUID in content file.
+	 * Look up model by traversing step-by-step through first local context,
+	 * then global index and stop as soon as matching UUID has been found.
 	 * Not needed for site/users as they can be directly looked up.
-	 * @todo make more performant
 	 */
 	public static function find(Uuid $uuid): Identifiable|null
 	{
@@ -57,23 +43,41 @@ class Index
 
 		// lookup helper that first checks local context,
 		// then global index by applying the provided lookup function
-		$get = fn ($find) => $find($uuid->context()) ??
-							 $find(static::collection($uuid));
+		$find = fn ($finder, $in) =>
+			$finder(static::collection($uuid)) ?? $finder($in);
 
-		// TODO: does this work?
-		// TODO: structure?
-		// @codeCoverageIgnoreStart
-		if ($type === 'block') {
-			return $get(fn ($models) => $models?->get($id));
-		}
-		// @codeCoverageIgnoreEnd
+		return match ($type) {
+			'page' => $find(
+				fn ($in) => static::findInContent($id, $in),
+				static::pages()
+			),
+			'file' => $find(
+				fn ($in) => static::findInContent($id, $in),
+				static::files()
+			),
+			// @codeCoverageIgnoreStart
+			// TODO: this, once we know how UUID is applied to these objects
+			'block'  => null,
+			'strcut' => null,
+			default  => null
+			// @codeCoverageIgnoreEnd
+		};
+	}
 
-		if ($type === 'page' || $type === 'file') {
-			return $get(
-				fn ($models) => $models?->filter(
-					fn ($model) => $model->content()->get('uuid')->value() === $id
-				)->first()
-			);
+	/**
+	 * Finds first model from generator collection
+	 * which has a matching `uuid` content field value
+	 *
+	 * @param \Generator|\Kirby\Cms\ModelWithContent[] $collection
+	 */
+	public static function findInContent(
+		string $id,
+		Generator $collection
+	): ModelWithContent|null {
+		foreach ($collection as $model) {
+			if (Id::fromContent($model) === $id) {
+				return $model;
+			}
 		}
 
 		return null;
@@ -94,13 +98,15 @@ class Index
 			}
 		}
 
+		$kirby = App::instance();
+
 		// site files
-		foreach (App::instance()->site()->files() as $file) {
+		foreach ($kirby->site()->files() as $file) {
 			Uuid::for($file)->populate();
 		}
 
 		// user files
-		foreach (static::users()->files() as $file) {
+		foreach ($kirby->users()->files() as $file) {
 			Uuid::for($file)->populate();
 		}
 
@@ -118,53 +124,111 @@ class Index
 	}
 
 	/**
-	 * Returns collection of all blocks in the site
-	 * @todo implement this
-	 * @codeCoverageIgnore
+	 * Returns generator for all blocks in the site
+	 * (in any page's, file's or user's content file)
+	 *
+	 * @return \Generator|\Kirby\Cms\Block[]
 	 */
-	public static function blocks(): Blocks
+	public static function blocks(): Generator
 	{
-		return new Blocks();
+		return static::fields(
+			'strcuture',
+			fn ($field) => $field->toBlocks()
+		);
 	}
 
 	/**
-	 * Returns collection of all files in the site
-	 * @todo make more performant
+	 * Returns generator for all fields of type in the site
+	 * (in any page's, file's or user's content file)
 	 */
-	public static function files(): Files
+	public static function fields(string $type, Closure $convert): Generator
 	{
-		$site  = App::instance()->site()->files();
-		$pages = static::pages()->files();
-		$users = static::users()->files();
+		$generate = function (Generator|Collection $models) use ($type, $convert): Generator {
+			foreach ($models as $model) {
+				$fields = $model->blueprint()->fields();
 
-		return $site->add($pages)->add($users);
+				foreach ($fields as $name => $field) {
+					// skip all fields, except fields of specified type
+					if (A::get($field, 'type') !== $type) {
+						continue;
+					}
+
+					foreach ($convert($model->$name()) as $object) {
+						yield $object;
+					}
+				}
+			}
+		};
+
+		foreach ($generate(static::pages()) as $structure) {
+			yield $structure;
+		}
+
+		foreach ($generate(static::files()) as $structure) {
+			yield $structure;
+		}
+
+		foreach ($generate(App::instance()->users()) as $structure) {
+			yield $structure;
+		}
 	}
 
 	/**
-	 * Returns collection of all pages (incl. drafts) in the site
-	 * @todo make more performant
+	 * Returns generator for all files in the site
+	 * (of all pages, users and site)
+	 *
+	 * @return \Generator|\Kirby\Cms\File[]
 	 */
-	public static function pages(): Pages
+	public static function files(): Generator
 	{
-		return App::instance()->site()->index(true);
+		$kirby = App::instance();
+
+		foreach (static::pages() as $page) {
+			foreach ($page->files() as $file) {
+				yield $file;
+			}
+		}
+
+		foreach ($kirby->site()->files() as $file) {
+			yield $file;
+		}
+
+		foreach ($kirby->users() as $user) {
+			foreach ($user->files() as $file) {
+				yield $file;
+			}
+		}
 	}
 
 	/**
-	 * Returns collection of all structure entries in the site
-	 * @todo implement this
-	 * @codeCoverageIgnore
+	 * Returns generator for all pages and drafts in the site
+	 *
+	 * @return \Generator|\Kirby\Cms\Page[]
 	 */
-	public static function structures(): Structure
+	public static function pages(Page|null $entry = null): Generator
 	{
-		return new Structure();
+		$entry ??= App::instance()->site();
+
+		foreach ($entry->childrenAndDrafts() as $page) {
+			yield $page;
+
+			foreach (static::pages($page) as $subpage) {
+				yield $subpage;
+			}
+		}
 	}
 
 	/**
-	 * Returns collection of all users
-	 * @todo make more performant
+	 * Returns generator for all structure entries in the site
+	 * (in any page's, file's or user's content file)
+	 *
+	 * @return \Generator|\Kirby\Cms\StructureObject[]
 	 */
-	public static function users(): Users
+	public static function structures(): Generator
 	{
-		return App::instance()->users();
+		return static::fields(
+			'strcuture',
+			fn ($field) => $field->toStructure()
+		);
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 
@@ -13,43 +12,9 @@ class IndexTest extends TestCase
 {
 	/**
 	 * @covers ::collection
-	 * @covers ::pages
-	 * @covers ::files
 	 */
 	public function testCollection()
 	{
-		$uuid = Uuid::for('page://my-id');
-		$this->assertInstanceOf(Pages::class, Index::collection($uuid));
-
-		$uuid = Uuid::for('file://my-id');
-		$this->assertInstanceOf(Files::class, Index::collection($uuid));
-	}
-
-	/**
-	 * @covers ::collection
-	 */
-	public function testCollectionWithoutContext()
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'    => 'a',
-						'children' => [
-							['slug' => 'b'],
-							['slug' => 'c']
-						]
-					]
-				]
-			]
-		]);
-
-		$uuid = Uuid::for('page://my-id');
-		$this->assertSame(3, Index::collection($uuid)->count());
-
-		// with context collection that should be excluded
-		$uuid = Uuid::for('page://my-id', $app->page('a')->children());
-		$this->assertSame(1, Index::collection($uuid)->count());
 	}
 
 	/**
