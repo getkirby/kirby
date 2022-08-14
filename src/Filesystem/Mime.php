@@ -61,6 +61,7 @@ class Mime
 		'mid'   => 'audio/midi',
 		'midi'  => 'audio/midi',
 		'mif'   => 'application/vnd.mif',
+		'mjs'   => 'text/javascript',
 		'mov'   => 'video/quicktime',
 		'movie' => 'video/x-sgi-movie',
 		'mp2'   => 'audio/mpeg',
@@ -133,13 +134,20 @@ class Mime
 			'text/plain' => [
 				'css'  => 'text/css',
 				'json' => 'application/json',
+				'mjs' => 'text/javascript',
 				'svg'  => ['Kirby\Filesystem\Mime', 'fromSvg'],
 			],
 			'text/x-asm' => [
 				'css' => 'text/css'
 			],
+			'text/x-java' => [
+				'mjs' => 'text/javascript',
+			],
 			'image/svg' => [
 				'svg' => 'image/svg+xml'
+			],
+			'application/octet-stream' => [
+				'mjs' => 'text/javascript'
 			]
 		];
 
