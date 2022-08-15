@@ -12,7 +12,7 @@
 			@mousedown="close"
 		>
 			<k-loader v-if="loading" class="k-overlay-loader" />
-			<slot v-else :close="close" :isOpen="isOpen" />
+			<slot v-else :close="close" :is-open="isOpen" />
 		</div>
 	</portal>
 </template>

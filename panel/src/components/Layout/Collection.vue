@@ -26,14 +26,7 @@
 		/>
 
 		<footer v-if="hasFooter" class="k-collection-footer">
-			<!-- eslint-disable vue/no-v-html -->
-			<k-text
-				v-if="help"
-				theme="help"
-				class="k-collection-help"
-				v-html="help"
-			/>
-			<!-- eslint-enable vue/no-v-html -->
+			<k-text v-if="help" theme="help" class="k-collection-help" :html="help" />
 			<div class="k-collection-pagination">
 				<!--
           Emitted when the pagination changes

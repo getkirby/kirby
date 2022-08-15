@@ -2,8 +2,7 @@
 	<div :data-theme="theme" class="k-box" v-on="$listeners">
 		<!-- @slot Use instead of `text` prop -->
 		<slot>
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<k-text v-if="html" v-html="text" />
+			<k-text v-if="html" :html="text" />
 			<k-text v-else>
 				{{ text }}
 			</k-text>

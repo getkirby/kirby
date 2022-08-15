@@ -331,7 +331,7 @@ export default {
 	background: var(--color-focus);
 }
 .k-multiselect-input .k-tag {
-  border-radius: var(--rounded-sm);
+	border-radius: var(--rounded-sm);
 }
 
 .k-multiselect-input .k-dropdown-content {

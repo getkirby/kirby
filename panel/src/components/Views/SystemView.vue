@@ -131,7 +131,7 @@ export default {
 						this.securityIssue(key);
 					}
 					break;
-				default:
+				default: {
 					const url = this.urls[key];
 
 					if (!url) {
@@ -141,6 +141,7 @@ export default {
 					if ((await this.isAccessible(url)) === true) {
 						this.securityIssue(key);
 					}
+				}
 			}
 		},
 		securityIssue(key) {
