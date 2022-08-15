@@ -1,7 +1,9 @@
 <template>
 	<div :data-align="align" :data-size="size" :data-theme="theme" class="k-text">
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<span v-if="html" v-html="html" />
 		<!-- @slot Text content -->
-		<slot />
+		<slot v-else />
 	</div>
 </template>
 
@@ -22,6 +24,11 @@ export default {
 		 * @values start, center, end
 		 */
 		align: String,
+		/**
+		 * HTML content to render instead
+		 * of the default slot
+		 */
+		html: String,
 		/**
 		 * Font size of the text
 		 * @values tiny, small, medium, large, huge
