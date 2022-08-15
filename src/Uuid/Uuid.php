@@ -67,10 +67,8 @@ class Uuid
 				$model instanceof Page => 'page',
 				$model instanceof File => 'file',
 				$model instanceof User => 'user',
-				// @codeCoverageIgnoreStart
+				$model instanceof StructureObject => 'struct',
 				$model instanceof Block => 'block',
-				$model instanceof StructureObject => 'struct'
-				// @codeCoverageIgnoreEnd
 			};
 
 			$this->uri = new Uri([
@@ -123,9 +121,12 @@ class Uuid
 	 */
 	public function clear(bool $recursive = false): bool
 	{
-		// For pages: if $recursive, also clear UUIDs
-		// from cache for all children recursively
-		if ($recursive === true && $this->type() === 'page') {
+		// For all models with children: if $recursive,
+		// also clear UUIDs rom cache for all children
+		if (
+			$recursive === true &&
+			method_exists($this->model, 'children') === true
+		) {
 			foreach ($this->model->children() as $child) {
 				$child->uuid()->clear(true);
 			}

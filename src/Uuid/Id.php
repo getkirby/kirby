@@ -53,16 +53,12 @@ class Id
 				=> '',
 
 			$model instanceof User,
-			// @codeCoverageIgnoreStart
+			$model instanceof StructureObject,
 			$model instanceof Block,
-			$model instanceof StructureObject
-			// @codeCoverageIgnoreEnd
-				=> $model->id(),
+			=> $model->id(),
 
 			$model instanceof Page,
 			$model instanceof File
-			// @codeCoverageIgnoreStart
-			// @codeCoverageIgnoreEnd
 				=> static::fromContent($model)
 		};
 	}

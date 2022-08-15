@@ -1,5 +1,0 @@
-Author:
--
-  name: Homer Simpson
--
-  name: Lisa Simpson

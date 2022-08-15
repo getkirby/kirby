@@ -4,6 +4,8 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Identifiable;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -18,7 +20,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Block extends Item
+class Block extends Item implements Identifiable
 {
 	use HasMethods;
 
@@ -28,6 +30,8 @@ class Block extends Item
 	 * @var \Kirby\Cms\Content
 	 */
 	protected $content;
+
+	protected Field|null $field;
 
 	/**
 	 * @var bool
@@ -84,6 +88,7 @@ class Block extends Item
 		}
 
 		$this->content  = $params['content'];
+		$this->field    = $params['field'] ?? null;
 		$this->isHidden = $params['isHidden'] ?? false;
 		$this->type     = $params['type'];
 
@@ -172,6 +177,11 @@ class Block extends Item
 		}
 
 		return new static($params);
+	}
+
+	public function field(): Field|null
+	{
+		return $this->field;
 	}
 
 	/**
@@ -271,5 +281,13 @@ class Block extends Item
 
 			return '';
 		}
+	}
+
+	/**
+	 * Returns the block's unique global ID
+	 */
+	public function uuid(): Uuid
+	{
+		return Uuid::for($this);
 	}
 }

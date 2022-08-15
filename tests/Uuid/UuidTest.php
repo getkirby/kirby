@@ -126,6 +126,16 @@ class UuidTest extends TestCase
 		$uuid = Uuid::for($model);
 		$this->assertSame('user', $uuid->type());
 		$this->assertSame('my-user', $uuid->id());
+
+		$model = new StructureObject(['id' => 'my-struct']);
+		$uuid = Uuid::for($model);
+		$this->assertSame('struct', $uuid->type());
+		$this->assertSame('my-struct', $uuid->id());
+
+		$model = new Block(['id' => 'my-block', 'type' => 'test']);
+		$uuid = Uuid::for($model);
+		$this->assertSame('block', $uuid->type());
+		$this->assertSame('my-block', $uuid->id());
 	}
 
 	/**
@@ -336,17 +346,15 @@ class UuidTest extends TestCase
 			['page://page-id', 'page'],
 			['file://file-id', 'file'],
 			['user://user-id', 'user'],
-			// TODO: ativate after implemting suport
-			// ['block://block-id', 'block'],
-			// ['struct://structure-id', 'struct'],
+			['block://block-id', 'block'],
+			['struct://structure-id', 'struct'],
 			// model objects
 			[new Site(), 'site'],
 			[$p = new Page(['slug' => 'a']), 'page'],
 			[new File(['filename' => 'a', 'parent' => $p]), 'file'],
 			[new User([]), 'user'],
-			// TODO: ativate after implemting suport
-			// [new Block(['type' => 'a']), 'block'],
-			// [new StructureObject(['id' => 'a']), 'struct'],
+			[new Block(['id' => 'a', 'type' => 'a']), 'block'],
+			[new StructureObject(['id' => 'a']), 'struct'],
 		];
 	}
 

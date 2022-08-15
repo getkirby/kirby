@@ -3,10 +3,12 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use Kirby\Block\Block;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\StructureObject;
 use Kirby\Toolkit\A;
 
 /**
@@ -31,7 +33,7 @@ class Index
 		// lookup helper that first checks local context,
 		// then global index by applying the provided lookup function
 		$find = fn ($finder, $in) =>
-			$finder($uuid->context() ?? []) ?? $finder($in);
+			$finder(static::local($uuid)) ?? $finder($in);
 
 		return match ($uuid->type()) {
 			'page' => $find(
@@ -42,21 +44,46 @@ class Index
 				fn ($in) => static::findInContent($in, $uuid->id()),
 				static::files()
 			),
-			// @codeCoverageIgnoreStart
-			// TODO: this, once we know how UUID is applied to these objects
-			'block'  => null,
-			'struct' => null,
-			// @codeCoverageIgnoreEnd
+			'struct' => $find(
+				fn ($in) => static::findInCollection($in, $uuid->id()),
+				static::structures()
+			),
+			'block'  => $find(
+				fn ($in) => static::findInCollection($in, $uuid->id()),
+				static::blocks()
+			),
+
 			default  => null
 		};
 	}
 
 	/**
 	 * Finds first model from generator collection
+	 * which has a matching child key
+	 *
+	 * @param \Generator|\Kirby\Cms\Collection[] $collection
+	 */
+	public static function findInCollection(
+		Generator $collection,
+		string $id
+	): StructureObject|Block|null {
+		foreach ($collection as $model) {
+			if ($found = $model->get($id)) {
+				return $found;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Finds first model from generator collection
 	 * which has a matching `uuid` content field value
+	 *
+	 * @param \Generator|\Kirby\Cms\ModelWithContent[] $collection
 	 */
 	public static function findInContent(
-		iterable $collection,
+		Generator $collection,
 		string $id
 	): ModelWithContent|null {
 		foreach ($collection as $model) {
@@ -66,6 +93,15 @@ class Index
 		}
 
 		return null;
+	}
+
+	/**
+	 * Generator for the local context collection
+	 * which has priority when looking up an UUID
+	 */
+	protected static function local(Uuid $uuid): Generator
+	{
+		yield from $uuid->context() ?? [];
 	}
 
 	/**
@@ -109,10 +145,10 @@ class Index
 	}
 
 	/**
-	 * Returns generator for all blocks in the site
-	 * (in any page's, file's or user's content file)
+	 * Returns generator for all Blocks collections
+	 * in the site (in any page's, file's or user's content file)
 	 *
-	 * @return \Generator|\Kirby\Cms\Block[]
+	 * @return \Generator|\Kirby\Cms\Blocks[]
 	 */
 	public static function blocks(): Generator
 	{
@@ -186,15 +222,15 @@ class Index
 	}
 
 	/**
-	 * Returns generator for all structure entries in the site
-	 * (in any page's, file's or user's content file)
+	 * Returns generator for all Structure collections
+	 * in the site (in any page's, file's or user's content file)
 	 *
-	 * @return \Generator|\Kirby\Cms\StructureObject[]
+	 * @return \Generator|\Kirby\Cms\Structure[]
 	 */
 	public static function structures(): Generator
 	{
 		foreach (static::fields('structure') as $field) {
-			yield from $field->toStructure();
+			yield $field->toStructure();
 		}
 	}
 }

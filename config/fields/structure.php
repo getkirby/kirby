@@ -3,6 +3,7 @@
 use Kirby\Data\Data;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
+use Kirby\Uuid\Id;
 
 return [
 	'mixins' => ['min'],
@@ -170,8 +171,14 @@ return [
 			return $value;
 		},
 		'form' => function (array $values = []) {
+			$fields = $this->attrs['fields'];
+
+			// enforce uuid field
+			$fields['uuid']   = ['type' => 'hidden'];
+			$values['uuid'] ??= Id::generate();
+
 			return new Form([
-				'fields' => $this->attrs['fields'],
+				'fields' => $fields,
 				'values' => $values,
 				'model'  => $this->model
 			]);
@@ -183,7 +190,8 @@ return [
 				'pattern' => 'validate',
 				'method'  => 'ALL',
 				'action'  => function () {
-					return array_values($this->field()->form($this->requestBody())->errors());
+					$body = $this->requestBody();
+					return array_values($this->field()->form($body)->errors());
 				}
 			]
 		];

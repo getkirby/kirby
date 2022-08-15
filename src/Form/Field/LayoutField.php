@@ -10,6 +10,7 @@ use Kirby\Cms\Layouts;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Id;
 use Throwable;
 
 class LayoutField extends BlocksField
@@ -89,7 +90,7 @@ class LayoutField extends BlocksField
 					'attrs'   => $attrs,
 					'columns' => array_map(fn ($width) => [
 						'blocks' => [],
-						'id'     => Str::uuid(),
+						'id'     => Id::generate(),
 						'width'  => $width,
 					], $columns)
 				])->toArray();

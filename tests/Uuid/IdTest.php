@@ -36,7 +36,13 @@ class IdTest extends TestCase
 				'children' => [
 					[
 						'slug'    => 'a',
-						'content' => ['uuid' => 'my-id'],
+						'content' => [
+							'uuid' => 'my-id',
+							'foo' => '
+-
+  uuid: my-struct
+'
+						],
 						'files' => [
 							[
 								'filename' => 'a.jpg',
@@ -51,15 +57,17 @@ class IdTest extends TestCase
 			]
 		]);
 
-		$site = $app->site();
-		$page = $site->find('a');
-		$file = $page->file('a.jpg');
-		$user = $app->user('my-user');
+		$site   = $app->site();
+		$page   = $site->find('a');
+		$file   = $page->file('a.jpg');
+		$user   = $app->user('my-user');
+		$struct = $page->foo()->toStructure()->first();
 
 		$this->assertSame('', Id::get($site));
 		$this->assertSame('my-id', Id::get($page));
 		$this->assertSame('my-file', Id::get($file));
 		$this->assertSame('my-user', Id::get($user));
+		$this->assertSame('my-struct', Id::get($struct));
 	}
 
 	/**

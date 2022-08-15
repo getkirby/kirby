@@ -74,7 +74,6 @@ class Cache
 				$model    = $parent->file($filename);
 				break;
 
-				// @codeCoverageIgnoreStart
 			case 'block':
 			case 'struct':
 				// value is itself another UUID protocol string
@@ -92,10 +91,8 @@ class Cache
 					'struct' => $field ->toStructure()
 				};
 
-				// TODO:ist this really how we cna pick one out the crowd?
 				$model = $collection->get($id);
 				break;
-			// @codeCoverageIgnoreEnd
 		}
 
 		return $model;
@@ -156,11 +153,8 @@ class Cache
 
 			// for blocks and structure objects,
 			// use parent's UUID and field name as part of the path
-			// TODO: $block->field() doesn't exist yet
-			// @codeCoverageIgnoreStart
 			'block',
-			'struct' => Uuid::for($model->parent())->render() . '/' . $model->field()->name() . '/' . $model->id()
-			// @codeCoverageIgnoreEnd
+			'struct' => Uuid::for($model->parent())->render() . '/' . $model->field()->key() . '/' . $model->id()
 		};
 	}
 }

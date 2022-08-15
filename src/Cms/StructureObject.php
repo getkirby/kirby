@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\Identifiable;
+use Kirby\Uuid\Uuid;
+
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects
@@ -18,16 +21,18 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureObject extends Model
+class StructureObject extends Model implements Identifiable
 {
 	use HasSiblings;
 
 	/**
 	 * The content
 	 *
-	 * @var Content
+	 * @var \Kirby\Cms\Content|null
 	 */
 	protected $content;
+
+	protected Field|null $field;
 
 	/**
 	 * @var string
@@ -35,26 +40,22 @@ class StructureObject extends Model
 	protected $id;
 
 	/**
-	 * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null
+	 * @var \Kirby\Cms\ModelWithContent|null
 	 */
 	protected $parent;
 
 	/**
 	 * The parent Structure collection
 	 *
-	 * @var Structure
+	 * @var \Kirby\Cms\Structure|null
 	 */
 	protected $structure;
 
 	/**
 	 * Modified getter to also return fields
 	 * from the object's content
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -66,20 +67,17 @@ class StructureObject extends Model
 
 	/**
 	 * Creates a new StructureObject with the given props
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
+		$this->field = $props['field'] ?? null;
 		$this->setProperties($props);
 	}
 
 	/**
 	 * Returns the content
-	 *
-	 * @return \Kirby\Cms\Content
 	 */
-	public function content()
+	public function content(): Content
 	{
 		if ($this->content instanceof Content) {
 			return $this->content;
@@ -92,10 +90,13 @@ class StructureObject extends Model
 		return $this->content = new Content($this->content, $this->parent());
 	}
 
+	public function field(): Field|null
+	{
+		return $this->field;
+	}
+
 	/**
 	 * Returns the required id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
@@ -104,25 +105,20 @@ class StructureObject extends Model
 
 	/**
 	 * Compares the current object with the given structure object
-	 *
-	 * @param mixed $structure
-	 * @return bool
 	 */
-	public function is($structure): bool
+	public function is(mixed $structure): bool
 	{
 		if ($structure instanceof self === false) {
 			return false;
 		}
 
-		return $this === $structure;
+		return $this->id() === $structure->id();
 	}
 
 	/**
-	 * Returns the parent Model object
-	 *
-	 * @return \Kirby\Cms\Model
+	 * Returns the parent object
 	 */
-	public function parent()
+	public function parent(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
@@ -130,10 +126,9 @@ class StructureObject extends Model
 	/**
 	 * Sets the Content object with the given parent
 	 *
-	 * @param array|null $content
 	 * @return $this
 	 */
-	protected function setContent(array $content = null)
+	protected function setContent(array|null $content = null): static
 	{
 		$this->content = $content;
 		return $this;
@@ -145,10 +140,9 @@ class StructureObject extends Model
 	 * class will use the index, if no id is
 	 * specified.
 	 *
-	 * @param string $id
 	 * @return $this
 	 */
-	protected function setId(string $id)
+	protected function setId(string $id): static
 	{
 		$this->id = $id;
 		return $this;
@@ -158,9 +152,8 @@ class StructureObject extends Model
 	 * Sets the parent Model
 	 *
 	 * @return $this
-	 * @param \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null $parent
 	 */
-	protected function setParent(Model $parent = null)
+	protected function setParent(ModelWithContent|null $parent = null): static
 	{
 		$this->parent = $parent;
 		return $this;
@@ -169,10 +162,9 @@ class StructureObject extends Model
 	/**
 	 * Sets the parent Structure collection
 	 *
-	 * @param \Kirby\Cms\Structure|null $structure
 	 * @return $this
 	 */
-	protected function setStructure(Structure $structure = null)
+	protected function setStructure(Structure|null $structure = null): static
 	{
 		$this->structure = $structure;
 		return $this;
@@ -180,10 +172,8 @@ class StructureObject extends Model
 
 	/**
 	 * Returns the parent Structure collection as siblings
-	 *
-	 * @return \Kirby\Cms\Structure
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Structure|null
 	{
 		return $this->structure;
 	}
@@ -194,8 +184,6 @@ class StructureObject extends Model
 	 * injected into the array afterwards
 	 * to make sure it's always present and
 	 * not overloaded in the content.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -205,5 +193,13 @@ class StructureObject extends Model
 		ksort($array);
 
 		return $array;
+	}
+
+	/**
+	 * Returns the structure's unique global ID
+	 */
+	public function uuid(): Uuid
+	{
+		return Uuid::for($this);
 	}
 }

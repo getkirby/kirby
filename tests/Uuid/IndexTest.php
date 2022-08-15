@@ -115,6 +115,44 @@ class IndexTest extends TestCase
 
 	/**
 	 * @covers ::find
+	 * @covers ::findInCollection
+	 */
+	public function testFindStructure()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'template' => 'album',
+						'content' => [
+							'uuid' => 'my-id',
+							'foo' => '
+-
+  uuid: my-struct-1
+-
+  uuid: my-struct-2
+'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/album' => [
+					'fields' => [
+						'foo' => ['type' => 'structure']
+					]
+				]
+			]
+		]);
+
+		$model = $app->page('a')->foo()->toStructure()->nth(1);
+		$uuid = Uuid::for('struct://my-struct-2');
+		$this->assertTrue($model->is(Index::find($uuid)));
+	}
+
+	/**
+	 * @covers ::find
 	 */
 	public function testFindNotFound()
 	{
@@ -195,15 +233,44 @@ class IndexTest extends TestCase
 	public function testBlocks()
 	{
 		$this->app->clone([
-			'roots' => [
-				'content' => $this->fixtures,
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'template' => 'note',
+						'content' => [
+							'uuid' => 'my-id',
+							'author' => '
+-
+  name: Homer Simpson
+  uuid: my-homer
+-
+  name: Lisa Simpson
+  uuid: my-lisa
+'
+						]
+					],
+					[
+						'slug'    => 'b',
+						'template' => 'album',
+						'content' => [
+							'uuid' => 'my-id-2',
+							'photographer' => '
+-
+  name: Einstein
+  uuid: my-einstein
+',
+							'notes' => '[{"content":{"text":"<p>Foo bar<\/p>"},"id":"a24ad437-7f82-4dcc-bf44-a1462fca2959","isHidden":false,"type":"text"},{"content":{"text":"<ul><li>one<\/li><li>two<\/li><li>three<\/li><\/ul>"},"id":"6f35c13b-0682-4916-861e-73daba4ef363","isHidden":false,"type":"list"}]'
+						]
+					]
+				]
 			],
 			'blueprints' => [
 				'pages/album' => [
 					'fields' => [
 						'photographer' => ['type' => 'structure'],
-						'notes' => ['type' => 'blocks'],
-						'foo' => ['type' => 'radio']
+						'notes'        => ['type' => 'blocks'],
+						'foo'          => ['type' => 'radio']
 					]
 				],
 				'pages/note' => [
@@ -226,8 +293,37 @@ class IndexTest extends TestCase
 	public function testStructures()
 	{
 		$this->app->clone([
-			'roots' => [
-				'content' => $this->fixtures,
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'template' => 'note',
+						'content' => [
+							'uuid' => 'my-id',
+							'author' => '
+-
+  name: Homer Simpson
+  uuid: my-homer
+-
+  name: Lisa Simpson
+  uuid: my-lisa
+'
+						]
+					],
+					[
+						'slug'    => 'b',
+						'template' => 'album',
+						'content' => [
+							'uuid' => 'my-id-2',
+							'photographer' => '
+-
+  name: Einstein
+  uuid: my-einstein
+',
+							'notes' => '[{"content":{"text":"<p>Foo bar<\/p>"},"id":"a24ad437-7f82-4dcc-bf44-a1462fca2959","isHidden":false,"type":"text"},{"content":{"text":"<ul><li>one<\/li><li>two<\/li><li>three<\/li><\/ul>"},"id":"6f35c13b-0682-4916-861e-73daba4ef363","isHidden":false,"type":"list"}]'
+						]
+					]
+				]
 			],
 			'blueprints' => [
 				'pages/album' => [
@@ -247,6 +343,6 @@ class IndexTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(3, iterator_count(Index::structures()));
+		$this->assertSame(2, iterator_count(Index::structures()));
 	}
 }
