@@ -467,7 +467,18 @@ class File
 	 */
 	public function url(): string|null
 	{
-		return $this->url ??= $this->model !== null ? $this->model->url() : null;
+		if ($this->url !== null) {
+			return $this->url;
+		}
+
+		// lazily determine the URL from the model object
+		// only if it's needed to avoid breaking custom file::url
+		// components that rely on `$cmsFile->asset()` methods
+		if ($this->model !== null) {
+			return $this->url = $this->model->url();
+		}
+
+		return null;
 	}
 
 	/**
