@@ -44,8 +44,10 @@ class Visitor
 	 * Sets the accepted language if
 	 * provided or returns the user's
 	 * accepted language otherwise
+	 *
+	 * @return $this|\Kirby\Toolkit\Obj|null
 	 */
-	public function acceptedLanguage(string|null $acceptedLanguage = null): Obj|Visitor|null
+	public function acceptedLanguage(string|null $acceptedLanguage = null): static|Obj|null
 	{
 		if ($acceptedLanguage === null) {
 			return $this->acceptedLanguages()->first();

@@ -118,9 +118,9 @@ class Cookie
 	 * @param string|null $key The name of the cookie
 	 * @param string|null $default The default value, which should be returned
 	 *                             if the cookie has not been found
-	 * @return mixed The found value
+	 * @return string|array|null The found value
 	 */
-	public static function get(string|null $key = null, string|null $default = null): mixed
+	public static function get(string|null $key = null, string|null $default = null): string|array|null
 	{
 		if ($key === null) {
 			return $_COOKIE;
