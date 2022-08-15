@@ -54,14 +54,14 @@ class Id
 
 			$model instanceof User,
 			// @codeCoverageIgnoreStart
-			$model instanceof Block
+			$model instanceof Block,
+			$model instanceof StructureObject
 			// @codeCoverageIgnoreEnd
 				=> $model->id(),
 
 			$model instanceof Page,
-			$model instanceof File,
+			$model instanceof File
 			// @codeCoverageIgnoreStart
-			$model instanceof StructureObject
 			// @codeCoverageIgnoreEnd
 				=> static::fromContent($model)
 		};

@@ -74,7 +74,6 @@ class Cache
 				$model    = $parent->file($filename);
 				break;
 
-				// TODO: actually implement this
 				// @codeCoverageIgnoreStart
 			case 'block':
 			case 'struct':
@@ -88,12 +87,12 @@ class Cache
 				$id		= $uuid->path()->last();
 				$field  = $parent->$field();
 
-				if ($type === 'block') {
-					$collection = $field->toBlocks();
-				} else {
-					$collection = $field ->toStructure();
-				}
+				$collection = match ($type) {
+					'block'  => $field->toBlocks(),
+					'struct' => $field ->toStructure()
+				};
 
+				// TODO:ist this really how we cna pick one out the crowd?
 				$model = $collection->get($id);
 				break;
 			// @codeCoverageIgnoreEnd

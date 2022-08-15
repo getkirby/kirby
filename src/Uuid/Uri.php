@@ -6,6 +6,8 @@ use Kirby\Http\Uri as BaseUri;
 use Kirby\Toolkit\Str;
 
 /**
+ * Uri protocol for UUIDsw
+ *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

@@ -149,6 +149,7 @@ class IndexTest extends TestCase
 	 * @covers ::populate
 	 * @covers ::blocks
 	 * @covers ::fields
+	 * @covers ::files
 	 * @covers ::pages
 	 * @covers ::structures
 	 */

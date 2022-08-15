@@ -2,7 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Closure;
 use Generator;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
@@ -11,6 +10,9 @@ use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
 
 /**
+ * Handles finding an object by its UUID from
+ * inside the whole site through indexes
+ *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -48,17 +50,17 @@ class Index
 
 		return match ($type) {
 			'page' => $find(
-				fn ($in) => static::findInContent($id, $in),
+				fn ($in) => static::findInContent($in, $id),
 				static::pages()
 			),
 			'file' => $find(
-				fn ($in) => static::findInContent($id, $in),
+				fn ($in) => static::findInContent($in, $id),
 				static::files()
 			),
 			// @codeCoverageIgnoreStart
 			// TODO: this, once we know how UUID is applied to these objects
 			'block'  => null,
-			'strcut' => null,
+			'struct' => null,
 			// @codeCoverageIgnoreEnd
 			default  => null
 		};
@@ -71,8 +73,8 @@ class Index
 	 * @param \Generator|\Kirby\Cms\ModelWithContent[] $collection
 	 */
 	public static function findInContent(
-		string $id,
-		Generator $collection
+		Generator $collection,
+		string $id
 	): ModelWithContent|null {
 		foreach ($collection as $model) {
 			if (Id::fromContent($model) === $id) {
@@ -91,10 +93,10 @@ class Index
 	{
 		// pages and page files
 		foreach (static::pages() as $page) {
-			Uuid::for($page)->populate();
+			$page->uuid()->populate();
 
 			foreach ($page->files() as $file) {
-				Uuid::for($file)->populate();
+				$file->uuid()->populate();
 			}
 		}
 
@@ -102,23 +104,23 @@ class Index
 
 		// site files
 		foreach ($kirby->site()->files() as $file) {
-			Uuid::for($file)->populate();
+			$file->uuid()->populate();
 		}
 
 		// user files
 		foreach ($kirby->users()->files() as $file) {
-			Uuid::for($file)->populate();
+			$file->uuid()->populate();
 		}
 
 		// @codeCoverageIgnoreStart
 		// blocks
 		foreach (static::blocks() as $block) {
-			Uuid::for($block)->populate();
+			$block->uuid()->populate();
 		}
 
 		// structure entries
 		foreach (static::structures() as $structure) {
-			Uuid::for($structure)->populate();
+			$structure->uuid()->populate();
 		}
 		// @codeCoverageIgnoreEnd
 	}
@@ -131,19 +133,22 @@ class Index
 	 */
 	public static function blocks(): Generator
 	{
-		return static::fields(
-			'blocks',
-			fn ($field) => $field->toBlocks()
-		);
+		foreach (static::fields('blocks') as $field) {
+			foreach ($field->toBlocks() as $block) {
+				yield $block;
+			}
+		}
 	}
 
 	/**
 	 * Returns generator for all fields of type in the site
 	 * (in any page's, file's or user's content file)
+	 *
+	 * @return \Generator|\Kirby\Cms\Field[]
 	 */
-	public static function fields(string $type, Closure $convert): Generator
+	public static function fields(string $type): Generator
 	{
-		$generate = function (Generator|Collection $models) use ($type, $convert): Generator {
+		$generate = function (Generator|Collection $models) use ($type): Generator {
 			foreach ($models as $model) {
 				$fields = $model->blueprint()->fields();
 
@@ -153,24 +158,14 @@ class Index
 						continue;
 					}
 
-					foreach ($convert($model->$name()) as $object) {
-						yield $object;
-					}
+					yield $model->$name();
 				}
 			}
 		};
 
-		foreach ($generate(static::pages()) as $structure) {
-			yield $structure;
-		}
-
-		foreach ($generate(static::files()) as $structure) {
-			yield $structure;
-		}
-
-		foreach ($generate(App::instance()->users()) as $structure) {
-			yield $structure;
-		}
+		yield from $generate(static::pages());
+		yield from $generate(static::files());
+		yield from $generate(App::instance()->users());
 	}
 
 	/**
@@ -226,9 +221,10 @@ class Index
 	 */
 	public static function structures(): Generator
 	{
-		return static::fields(
-			'structure',
-			fn ($field) => $field->toStructure()
-		);
+		foreach (static::fields('structure') as $field) {
+			foreach ($field->toStructure() as $structure) {
+				yield $structure;
+			}
+		}
 	}
 }

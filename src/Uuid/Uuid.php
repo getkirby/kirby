@@ -22,14 +22,16 @@ use Kirby\Toolkit\Str;
  * for faster lookup.
  *
  * ```
- * // general usage
- * Uuid::for($model)->render();
+ * // get UUID string
+ * $model->uuid()->render();
+ *
+ * // get model from an UUID string
  * Uuid::for('page://HhX1YtRR2ImG6h4')->resolve();
  *
  * // cache actions
  * Uuid::for($model)->populate();
  * Uuid::for($model)->clear();
- * Uuid::index();
+ * Index::populate();
  * ```
  *
  * @package   Kirby Uuid
@@ -125,7 +127,7 @@ class Uuid
 		// from cache for all children recursively
 		if ($recursive === true && $this->type() === 'page') {
 			foreach ($this->model->children() as $child) {
-				static::for($child)->clear(true);
+				$child->uuid()->clear(true);
 			}
 		}
 
