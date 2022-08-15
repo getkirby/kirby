@@ -4,8 +4,8 @@ namespace Kirby\Filesystem;
 
 use IntlDateFormatter;
 use Kirby\Cms\App;
-use Kirby\Cms\File as CmsFile;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
@@ -32,7 +32,7 @@ class File
 	/**
 	 * Parent file model
 	 *
-	 * @var \Kirby\Cms\File
+	 * @var \Kirby\Filesystem\IsFile|null
 	 */
 	protected $model;
 
@@ -431,11 +431,17 @@ class File
 	/**
 	 * Setter for the parent file model
 	 *
-	 * @param \Kirby\Cms\File $model
+	 * @param \Kirby\Filesystem\IsFile|null $model
 	 * @return $this
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	protected function setModel(?CmsFile $model = null)
+	protected function setModel($model = null)
 	{
+		if ($model !== null && in_array(IsFile::class, class_uses($model)) !== true) {
+			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+		}
+
 		$this->model = $model;
 		return $this;
 	}
