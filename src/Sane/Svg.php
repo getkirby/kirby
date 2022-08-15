@@ -33,20 +33,16 @@ class Svg extends Xml
 
 	/**
 	 * Global list of allowed attribute prefixes
-	 *
-	 * @var array
 	 */
-	public static $allowedAttrPrefixes = [
+	public static array $allowedAttrPrefixes = [
 		'aria-',
 		'data-',
 	];
 
 	/**
 	 * Global list of allowed attributes
-	 *
-	 * @var array
 	 */
-	public static $allowedAttrs = [
+	public static array $allowedAttrs = [
 		// core attributes
 		'id',
 		'lang',
@@ -271,14 +267,12 @@ class Svg extends Xml
 	 *
 	 * @var array|true
 	 */
-	public static $allowedDomains = [];
+	public static array|bool $allowedDomains = [];
 
 	/**
 	 * Associative array of all allowed namespace URIs
-	 *
-	 * @var array
 	 */
-	public static $allowedNamespaces = [
+	public static array $allowedNamespaces = [
 		''      => 'http://www.w3.org/2000/svg',
 		'xlink' => 'http://www.w3.org/1999/xlink'
 	];
@@ -289,10 +283,8 @@ class Svg extends Xml
 	 * for this tag, `true` to allow any attribute from the
 	 * `allowedAttrs` list or `false` to allow the tag without
 	 * any attributes
-	 *
-	 * @var array
 	 */
-	public static $allowedTags = [
+	public static array $allowedTags = [
 		'a' => true,
 		'altGlyph' => true,
 		'altGlyphDef' => true,
@@ -367,10 +359,8 @@ class Svg extends Xml
 	 *
 	 * IMPORTANT: Use lower-case names here because
 	 * of the case-insensitive matching
-	 *
-	 * @var array
 	 */
-	public static $disallowedTags = [
+	public static array $disallowedTags = [
 		'animate',
 		'color-profile',
 		'cursor',
@@ -400,7 +390,6 @@ class Svg extends Xml
 	 * Custom callback for additional attribute sanitization
 	 * @internal
 	 *
-	 * @param \DOMAttr $attr
 	 * @return array Array with exception objects for each modification
 	 */
 	public static function sanitizeAttr(DOMAttr $attr): array
@@ -422,7 +411,7 @@ class Svg extends Xml
 
 			// the target must not contain any other <use> elements
 			if (
-				is_a($target, 'DOMElement') === true &&
+				is_a($target, DOMElement::class) === true &&
 				$target->getElementsByTagName('use')->count() > 0
 			) {
 				$errors[] = new InvalidArgumentException(
@@ -440,7 +429,6 @@ class Svg extends Xml
 	 * Custom callback for additional element sanitization
 	 * @internal
 	 *
-	 * @param \DOMElement $element
 	 * @return array Array with exception objects for each modification
 	 */
 	public static function sanitizeElement(DOMElement $element): array
@@ -466,9 +454,6 @@ class Svg extends Xml
 	/**
 	 * Custom callback for additional doctype validation
 	 * @internal
-	 *
-	 * @param \DOMDocumentType $doctype
-	 * @return void
 	 */
 	public static function validateDoctype(DOMDocumentType $doctype): void
 	{
@@ -479,8 +464,6 @@ class Svg extends Xml
 
 	/**
 	 * Returns the sanitization options for the handler
-	 *
-	 * @return array
 	 */
 	protected static function options(): array
 	{
@@ -496,12 +479,9 @@ class Svg extends Xml
 	/**
 	 * Parses the given string into a `Toolkit\Dom` object
 	 *
-	 * @param string $string
-	 * @return \Kirby\Toolkit\Dom
-	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 */
-	protected static function parse(string $string)
+	protected static function parse(string $string): Dom
 	{
 		$svg = parent::parse($string);
 
