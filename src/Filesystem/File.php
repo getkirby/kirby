@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use IntlDateFormatter;
 use Kirby\Cms\App;
+use Kirby\Cms\File as CmsFile;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
@@ -425,6 +426,18 @@ class File
 	public function root(): string|null
 	{
 		return $this->root;
+	}
+
+	/**
+	 * Setter for the parent file model
+	 *
+	 * @param \Kirby\Cms\File $model
+	 * @return $this
+	 */
+	protected function setModel(?CmsFile $model = null)
+	{
+		$this->model = $model;
+		return $this;
 	}
 
 	/**
