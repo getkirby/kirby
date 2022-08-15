@@ -537,7 +537,7 @@ class Dir
 		}
 
 		if (is_link($dir) === true) {
-			return unlink($dir);
+			return F::unlink($dir);
 		}
 
 		foreach (scandir($dir) as $childName) {
@@ -547,12 +547,10 @@ class Dir
 
 			$child = $dir . '/' . $childName;
 
-			if (is_link($child) === true) {
-				unlink($child);
-			} elseif (is_dir($child) === true) {
+			if (is_dir($child) === true && is_link($child) === false) {
 				static::remove($child);
 			} else {
-				F::remove($child);
+				F::unlink($child);
 			}
 		}
 

@@ -729,11 +729,7 @@ class F
 
 		$file = realpath($file);
 
-		if (file_exists($file) === false) {
-			return true;
-		}
-
-		return unlink($file);
+		return static::unlink($file);
 	}
 
 	/**
