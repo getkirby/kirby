@@ -37,6 +37,7 @@ export default {
 		 * Current row
 		 */
 		row: Object,
+		// eslint-disable-next-line vue/require-prop-types
 		value: {
 			default: ""
 		}
