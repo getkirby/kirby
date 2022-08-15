@@ -2,7 +2,6 @@
 
 namespace Kirby\Uuid;
 
-use Generator;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 
@@ -11,25 +10,6 @@ use Kirby\Cms\Pages;
  */
 class IndexTest extends TestCase
 {
-	/**
-	 * @covers ::collection
-	 */
-	public function testCollection()
-	{
-		// without
-		$uuid       = Uuid::for('page://my-id');
-		$collection = Index::collection($uuid);
-		$this->assertInstanceOf(Generator::class, $collection);
-		$this->assertSame(0, iterator_count($collection));
-
-		// with
-		$pages      = Pages::factory([['slug' => 'a'], ['slug' => 'b']]);
-		$uuid       = Uuid::for('page://my-id', $pages);
-		$collection = Index::collection($uuid);
-		$this->assertInstanceOf(Generator::class, $collection);
-		$this->assertSame(2, iterator_count($collection));
-	}
-
 	/**
 	 * @covers ::find
 	 * @covers ::findInContent

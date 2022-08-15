@@ -22,39 +22,24 @@ use Kirby\Toolkit\A;
 class Index
 {
 	/**
-	 * Returns local context collection as generator
-	 *
-	 * @return \Generator|\Kirby\Uuid\Identifiable[]
-	 */
-	public static function collection(Uuid $uuid): Generator
-	{
-		foreach ($uuid->context() ?? [] as $model) {
-			yield $model;
-		}
-	}
-
-	/**
 	 * Look up model by traversing step-by-step through first local context,
 	 * then global index and stop as soon as matching UUID has been found.
 	 * Not needed for site/users as they can be directly looked up.
 	 */
 	public static function find(Uuid $uuid): Identifiable|null
 	{
-		$id   = $uuid->id();
-		$type = $uuid->type();
-
 		// lookup helper that first checks local context,
 		// then global index by applying the provided lookup function
 		$find = fn ($finder, $in) =>
-			$finder(static::collection($uuid)) ?? $finder($in);
+			$finder($uuid->context() ?? []) ?? $finder($in);
 
-		return match ($type) {
+		return match ($uuid->type()) {
 			'page' => $find(
-				fn ($in) => static::findInContent($in, $id),
+				fn ($in) => static::findInContent($in, $uuid->id()),
 				static::pages()
 			),
 			'file' => $find(
-				fn ($in) => static::findInContent($in, $id),
+				fn ($in) => static::findInContent($in, $uuid->id()),
 				static::files()
 			),
 			// @codeCoverageIgnoreStart
@@ -69,11 +54,9 @@ class Index
 	/**
 	 * Finds first model from generator collection
 	 * which has a matching `uuid` content field value
-	 *
-	 * @param \Generator|\Kirby\Cms\ModelWithContent[] $collection
 	 */
 	public static function findInContent(
-		Generator $collection,
+		iterable $collection,
 		string $id
 	): ModelWithContent|null {
 		foreach ($collection as $model) {
@@ -134,9 +117,7 @@ class Index
 	public static function blocks(): Generator
 	{
 		foreach (static::fields('blocks') as $field) {
-			foreach ($field->toBlocks() as $block) {
-				yield $block;
-			}
+			yield from $field->toBlocks();
 		}
 	}
 
@@ -148,7 +129,7 @@ class Index
 	 */
 	public static function fields(string $type): Generator
 	{
-		$generate = function (Generator|Collection $models) use ($type): Generator {
+		$fields = function (Generator|Collection $models) use ($type): Generator {
 			foreach ($models as $model) {
 				$fields = $model->blueprint()->fields();
 
@@ -163,9 +144,9 @@ class Index
 			}
 		};
 
-		yield from $generate(static::pages());
-		yield from $generate(static::files());
-		yield from $generate(App::instance()->users());
+		yield from $fields(static::pages());
+		yield from $fields(static::files());
+		yield from $fields(App::instance()->users());
 	}
 
 	/**
@@ -178,20 +159,14 @@ class Index
 	{
 		$kirby = App::instance();
 
-		foreach (static::pages() as $page) {
-			foreach ($page->files() as $file) {
-				yield $file;
-			}
-		}
+		yield from $kirby->site()->files();
 
-		foreach ($kirby->site()->files() as $file) {
-			yield $file;
+		foreach (static::pages() as $page) {
+			yield from $page->files();
 		}
 
 		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				yield $file;
-			}
+			yield from $user->files();
 		}
 	}
 
@@ -206,10 +181,7 @@ class Index
 
 		foreach ($entry->childrenAndDrafts() as $page) {
 			yield $page;
-
-			foreach (static::pages($page) as $subpage) {
-				yield $subpage;
-			}
+			yield from static::pages($page);
 		}
 	}
 
@@ -222,9 +194,7 @@ class Index
 	public static function structures(): Generator
 	{
 		foreach (static::fields('structure') as $field) {
-			foreach ($field->toStructure() as $structure) {
-				yield $structure;
-			}
+			yield from $field->toStructure();
 		}
 	}
 }
