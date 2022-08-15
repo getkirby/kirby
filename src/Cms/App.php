@@ -1697,6 +1697,7 @@ class App
 	 * @param string $type
 	 * @param bool $object If set to `true`, the URL is converted to an object
 	 * @return string|\Kirby\Http\Uri|null
+	 * @psalm-return ($object is false ? string|null : \Kirby\Http\Uri)
 	 */
 	public function url(string $type = 'index', bool $object = false)
 	{

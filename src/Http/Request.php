@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Http\Request\Auth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Query;
@@ -22,7 +23,7 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
-	public static $authTypes = [
+	public static array $authTypes = [
 		'basic'   => 'Kirby\Http\Request\Auth\BasicAuth',
 		'bearer'  => 'Kirby\Http\Request\Auth\BearerAuth',
 		'session' => 'Kirby\Http\Request\Auth\SessionAuth',
@@ -30,10 +31,8 @@ class Request
 
 	/**
 	 * The auth object if available
-	 *
-	 * @var \Kirby\Http\Request\Auth|false|null
 	 */
-	protected $auth;
+	protected Auth|false|null $auth = null;
 
 	/**
 	 * The Body object is a wrapper around
@@ -44,10 +43,8 @@ class Request
 	 * Examples:
 	 *
 	 * `$request->body()->get('foo')`
-	 *
-	 * @var Body
 	 */
-	protected $body;
+	protected Body|null $body = null;
 
 	/**
 	 * The Files object is a wrapper around
@@ -59,25 +56,19 @@ class Request
 	 *
 	 * `$request->files()->get('upload')['size']`
 	 * `$request->file('upload')['size']`
-	 *
-	 * @var Files
 	 */
-	protected $files;
+	protected Files|null $files = null;
 
 	/**
 	 * The Method type
-	 *
-	 * @var string
 	 */
-	protected $method;
+	protected string $method;
 
 	/**
 	 * All options that have been passed to
 	 * the request in the constructor
-	 *
-	 * @var array
 	 */
-	protected $options;
+	protected array $options;
 
 	/**
 	 * The Query object is a wrapper around
@@ -88,25 +79,19 @@ class Request
 	 * Examples:
 	 *
 	 * `$request->query()->get('foo')`
-	 *
-	 * @var Query
 	 */
-	protected $query;
+	protected Query $query;
 
 	/**
 	 * Request URL object
-	 *
-	 * @var Uri
 	 */
-	protected $url;
+	protected Uri $url;
 
 	/**
 	 * Creates a new Request object
 	 * You can either pass your own request
 	 * data via the $options array or use
 	 * the data from the incoming request.
-	 *
-	 * @param array $options
 	 */
 	public function __construct(array $options = [])
 	{
@@ -132,8 +117,6 @@ class Request
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -148,10 +131,8 @@ class Request
 
 	/**
 	 * Returns the Auth object if authentication is set
-	 *
-	 * @return \Kirby\Http\Request\Auth|null
 	 */
-	public function auth()
+	public function auth(): Auth|false|null
 	{
 		if ($this->auth !== null) {
 			return $this->auth;
@@ -189,18 +170,14 @@ class Request
 
 	/**
 	 * Returns the Body object
-	 *
-	 * @return \Kirby\Http\Request\Body
 	 */
-	public function body()
+	public function body(): Body
 	{
 		return $this->body ??= new Body();
 	}
 
 	/**
 	 * Checks if the request has been made from the command line
-	 *
-	 * @return bool
 	 */
 	public function cli(): bool
 	{
@@ -209,8 +186,6 @@ class Request
 
 	/**
 	 * Returns a CSRF token if stored in a header or the query
-	 *
-	 * @return string|null
 	 */
 	public function csrf(): string|null
 	{
@@ -219,8 +194,6 @@ class Request
 
 	/**
 	 * Returns the request input as array
-	 *
-	 * @return array
 	 */
 	public function data(): array
 	{
@@ -230,11 +203,8 @@ class Request
 	/**
 	 * Detect the request method from various
 	 * options: given method, query string, server vars
-	 *
-	 * @param string $method
-	 * @return string
 	 */
-	public function detectRequestMethod(string $method = null): string
+	public function detectRequestMethod(string|null $method = null): string
 	{
 		// all possible methods
 		$methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'];
@@ -262,8 +232,6 @@ class Request
 
 	/**
 	 * Returns the domain
-	 *
-	 * @return string
 	 */
 	public function domain(): string
 	{
@@ -273,21 +241,16 @@ class Request
 	/**
 	 * Fetches a single file array
 	 * from the Files object by key
-	 *
-	 * @param string $key
-	 * @return array|null
 	 */
-	public function file(string $key)
+	public function file(string $key): array|null
 	{
 		return $this->files()->get($key);
 	}
 
 	/**
 	 * Returns the Files object
-	 *
-	 * @return \Kirby\Cms\Files
 	 */
-	public function files()
+	public function files(): Files
 	{
 		return $this->files ??= new Files();
 	}
@@ -295,12 +258,8 @@ class Request
 	/**
 	 * Returns any data field from the request
 	 * if it exists
-	 *
-	 * @param string|null|array $key
-	 * @param mixed $fallback
-	 * @return mixed
 	 */
-	public function get($key = null, $fallback = null)
+	public function get(string|array|null $key = null, mixed $fallback = null): mixed
 	{
 		return A::get($this->data(), $key, $fallback);
 	}
@@ -309,8 +268,6 @@ class Request
 	 * Returns whether the request contains
 	 * the `Authorization` header
 	 * @since 3.7.0
-	 *
-	 * @return bool
 	 */
 	public function hasAuth(): bool
 	{
@@ -321,12 +278,8 @@ class Request
 
 	/**
 	 * Returns a header by key if it exists
-	 *
-	 * @param string $key
-	 * @param mixed $fallback
-	 * @return mixed
 	 */
-	public function header(string $key, $fallback = null)
+	public function header(string $key, mixed $fallback = null): mixed
 	{
 		$headers = array_change_key_case($this->headers());
 		return $headers[strtolower($key)] ?? $fallback;
@@ -335,8 +288,6 @@ class Request
 	/**
 	 * Return all headers with polyfill for
 	 * missing getallheaders function
-	 *
-	 * @return array
 	 */
 	public function headers(): array
 	{
@@ -371,9 +322,6 @@ class Request
 	/**
 	 * Checks if the given method name
 	 * matches the name of the request method.
-	 *
-	 * @param string $method
-	 * @return bool
 	 */
 	public function is(string $method): bool
 	{
@@ -382,8 +330,6 @@ class Request
 
 	/**
 	 * Returns the request method
-	 *
-	 * @return string
 	 */
 	public function method(): string
 	{
@@ -393,7 +339,7 @@ class Request
 	/**
 	 * Shortcut to the Params object
 	 */
-	public function params()
+	public function params(): Params
 	{
 		return $this->url()->params();
 	}
@@ -401,25 +347,21 @@ class Request
 	/**
 	 * Shortcut to the Path object
 	 */
-	public function path()
+	public function path(): Path
 	{
 		return $this->url()->path();
 	}
 
 	/**
 	 * Returns the Query object
-	 *
-	 * @return \Kirby\Http\Request\Query
 	 */
-	public function query()
+	public function query(): Query
 	{
 		return $this->query ??= new Query();
 	}
 
 	/**
 	 * Checks for a valid SSL connection
-	 *
-	 * @return bool
 	 */
 	public function ssl(): bool
 	{
@@ -431,11 +373,8 @@ class Request
 	 * If you pass props you can safely modify
 	 * the Url with new parameters without destroying
 	 * the original object.
-	 *
-	 * @param array $props
-	 * @return \Kirby\Http\Uri
 	 */
-	public function url(array $props = null)
+	public function url(array|null $props = null): Uri
 	{
 		if ($props !== null) {
 			return $this->url()->clone($props);

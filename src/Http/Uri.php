@@ -22,101 +22,70 @@ class Uri
 
 	/**
 	 * Cache for the current Uri object
-	 *
-	 * @var Uri|null
 	 */
-	public static $current;
+	public static Uri|null $current = null;
 
 	/**
 	 * The fragment after the hash
-	 *
-	 * @var string|false
 	 */
-	protected $fragment;
+	protected string|false|null $fragment = null;
 
 	/**
 	 * The host address
-	 *
-	 * @var string
 	 */
-	protected $host;
+	protected string|null $host = null;
 
 	/**
 	 * The optional password for basic authentication
-	 *
-	 * @var string|false
 	 */
-	protected $password;
+	protected string|false|null $password = null;
 
 	/**
 	 * The optional list of params
-	 *
-	 * @var Params
 	 */
-	protected $params;
+	protected Params|null $params = null;
 
 	/**
 	 * The optional path
-	 *
-	 * @var Path
 	 */
-	protected $path;
+	protected Path|null $path = null;
 
 	/**
 	 * The optional port number
-	 *
-	 * @var int|false
 	 */
-	protected $port;
+	protected int|false|null $port = null;
 
 	/**
 	 * All original properties
-	 *
-	 * @var array
 	 */
-	protected $props;
+	protected array $props;
 
 	/**
 	 * The optional query string without leading ?
-	 *
-	 * @var Query
 	 */
-	protected $query;
+	protected Query|null $query = null;
 
 	/**
 	 * https or http
-	 *
-	 * @var string
 	 */
-	protected $scheme = 'http';
+	protected string|null $scheme = 'http';
 
 	/**
 	 * Supported schemes
-	 *
-	 * @var array
 	 */
-	protected static $schemes = ['http', 'https', 'ftp'];
+	protected static array $schemes = ['http', 'https', 'ftp'];
 
-	/**
-	 * @var bool
-	 */
-	protected $slash = false;
+	protected bool $slash = false;
 
 	/**
 	 * The optional username for basic authentication
-	 *
-	 * @var string|false
 	 */
-	protected $username;
+	protected string|false|null $username = null;
 
 	/**
 	 * Magic caller to access all properties
-	 *
-	 * @param string $property
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $property, array $arguments = [])
+	public function __call(string $property, array $arguments = []): mixed
 	{
 		return $this->$property ?? null;
 	}
@@ -124,8 +93,6 @@ class Uri
 	/**
 	 * Make sure that cloning also clones
 	 * the path and query objects
-	 *
-	 * @return void
 	 */
 	public function __clone()
 	{
@@ -137,10 +104,9 @@ class Uri
 	/**
 	 * Creates a new URI object
 	 *
-	 * @param array|string $props
 	 * @param array $inject Additional props to inject if a URL string is passed
 	 */
-	public function __construct($props = [], array $inject = [])
+	public function __construct(array|string $props = [], array $inject = [])
 	{
 		if (is_string($props) === true) {
 			$props = parse_url($props);
@@ -160,23 +126,16 @@ class Uri
 
 	/**
 	 * Magic getter
-	 *
-	 * @param string $property
-	 * @return mixed
 	 */
-	public function __get(string $property)
+	public function __get(string $property): mixed
 	{
 		return $this->$property ?? null;
 	}
 
 	/**
 	 * Magic setter
-	 *
-	 * @param string $property
-	 * @param mixed $value
-	 * @return void
 	 */
-	public function __set(string $property, $value): void
+	public function __set(string $property, mixed $value): void
 	{
 		if (method_exists($this, 'set' . $property) === true) {
 			$this->{'set' . $property}($value);
@@ -185,8 +144,6 @@ class Uri
 
 	/**
 	 * Converts the URL object to string
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -199,8 +156,6 @@ class Uri
 
 	/**
 	 * Returns the auth details (username:password)
-	 *
-	 * @return string|null
 	 */
 	public function auth(): string|null
 	{
@@ -211,8 +166,6 @@ class Uri
 	/**
 	 * Returns the base url (scheme + host)
 	 * without trailing slash
-	 *
-	 * @return string|null
 	 */
 	public function base(): string|null
 	{
@@ -226,11 +179,8 @@ class Uri
 	/**
 	 * Clones the Uri object and applies optional
 	 * new props.
-	 *
-	 * @param array $props
-	 * @return static
 	 */
-	public function clone(array $props = [])
+	public function clone(array $props = []): static
 	{
 		$clone = clone $this;
 
@@ -241,11 +191,7 @@ class Uri
 		return $clone;
 	}
 
-	/**
-	 * @param array $props
-	 * @return static
-	 */
-	public static function current(array $props = [])
+	public static function current(array $props = []): static
 	{
 		if (static::$current !== null) {
 			return static::$current;
@@ -262,8 +208,6 @@ class Uri
 
 	/**
 	 * Returns the domain without scheme, path or query
-	 *
-	 * @return string|null
 	 */
 	public function domain(): string|null
 	{
@@ -287,33 +231,21 @@ class Uri
 		return $domain;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function hasFragment(): bool
 	{
 		return empty($this->fragment) === false;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function hasPath(): bool
 	{
 		return $this->path()->isNotEmpty();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function hasQuery(): bool
 	{
 		return $this->query()->isNotEmpty();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function https(): bool
 	{
 		return $this->scheme() === 'https';
@@ -325,7 +257,7 @@ class Uri
 	 *
 	 * @return $this
 	 */
-	public function idn()
+	public function idn(): static
 	{
 		if (empty($this->host) === false) {
 			$this->setHost(Idn::decode($this->host));
@@ -336,11 +268,8 @@ class Uri
 	/**
 	 * Creates an Uri object for the URL to the index.php
 	 * or any other executed script.
-	 *
-	 * @param array $props
-	 * @return static
 	 */
-	public static function index(array $props = [])
+	public static function index(array $props = []): static
 	{
 		if ($app = App::instance(null, true)) {
 			$url = $app->url('index');
@@ -353,8 +282,6 @@ class Uri
 
 	/**
 	 * Checks if the host exists
-	 *
-	 * @return bool
 	 */
 	public function isAbsolute(): bool
 	{
@@ -362,30 +289,27 @@ class Uri
 	}
 
 	/**
-	 * @param string|null $fragment
 	 * @return $this
 	 */
-	public function setFragment(string $fragment = null)
+	public function setFragment(string|null $fragment = null): static
 	{
 		$this->fragment = $fragment ? ltrim($fragment, '#') : null;
 		return $this;
 	}
 
 	/**
-	 * @param string $host
 	 * @return $this
 	 */
-	public function setHost(string $host = null)
+	public function setHost(string|null $host = null): static
 	{
 		$this->host = $host;
 		return $this;
 	}
 
 	/**
-	 * @param \Kirby\Http\Params|string|array|false|null $params
 	 * @return $this
 	 */
-	public function setParams($params = null)
+	public function setParams(Params|string|array|false|null $params = null): static
 	{
 		// ensure that the special constructor value of `false`
 		// is never passed through as it's not supported by `Params`
@@ -393,35 +317,32 @@ class Uri
 			$params = [];
 		}
 
-		$this->params = is_a($params, 'Kirby\Http\Params') === true ? $params : new Params($params);
+		$this->params = is_a($params, Params::class) === true ? $params : new Params($params);
 		return $this;
 	}
 
 	/**
-	 * @param string|null $password
 	 * @return $this
 	 */
-	public function setPassword(string $password = null)
+	public function setPassword(string|null $password = null): static
 	{
 		$this->password = $password;
 		return $this;
 	}
 
 	/**
-	 * @param \Kirby\Http\Path|string|array|null $path
 	 * @return $this
 	 */
-	public function setPath($path = null)
+	public function setPath(Path|string|array|null $path = null): static
 	{
-		$this->path = is_a($path, 'Kirby\Http\Path') === true ? $path : new Path($path);
+		$this->path = is_a($path, Path::class) === true ? $path : new Path($path);
 		return $this;
 	}
 
 	/**
-	 * @param int|null $port
 	 * @return $this
 	 */
-	public function setPort(int $port = null)
+	public function setPort(int|null $port = null): static
 	{
 		if ($port === 0) {
 			$port = null;
@@ -438,20 +359,18 @@ class Uri
 	}
 
 	/**
-	 * @param \Kirby\Http\Query|string|array|null $query
 	 * @return $this
 	 */
-	public function setQuery($query = null)
+	public function setQuery(Query|string|array|null $query = null): static
 	{
-		$this->query = is_a($query, 'Kirby\Http\Query') === true ? $query : new Query($query);
+		$this->query = is_a($query, Query::class) === true ? $query : new Query($query);
 		return $this;
 	}
 
 	/**
-	 * @param string $scheme
 	 * @return $this
 	 */
-	public function setScheme(string $scheme = null)
+	public function setScheme(string|null $scheme = null): static
 	{
 		if ($scheme !== null && in_array($scheme, static::$schemes) === false) {
 			throw new InvalidArgumentException('Invalid URL scheme: ' . $scheme);
@@ -465,20 +384,18 @@ class Uri
 	 * Set if a trailing slash should be added to
 	 * the path when the URI is being built
 	 *
-	 * @param bool $slash
 	 * @return $this
 	 */
-	public function setSlash(bool $slash = false)
+	public function setSlash(bool $slash = false): static
 	{
 		$this->slash = $slash;
 		return $this;
 	}
 
 	/**
-	 * @param string|null $username
 	 * @return $this
 	 */
-	public function setUsername(string $username = null)
+	public function setUsername(string|null $username = null): static
 	{
 		$this->username = $username;
 		return $this;
@@ -486,8 +403,6 @@ class Uri
 
 	/**
 	 * Converts the Url object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -513,8 +428,6 @@ class Uri
 
 	/**
 	 * Returns the full URL as string
-	 *
-	 * @return string
 	 */
 	public function toString(): string
 	{
@@ -548,7 +461,7 @@ class Uri
 	 *
 	 * @return $this
 	 */
-	public function unIdn()
+	public function unIdn(): static
 	{
 		if (empty($this->host) === false) {
 			$this->setHost(Idn::encode($this->host));
@@ -560,7 +473,6 @@ class Uri
 	 * Parses the path inside the props and extracts
 	 * the params unless disabled
 	 *
-	 * @param array $props
 	 * @return array Modified props array
 	 */
 	protected static function parsePath(array $props): array
