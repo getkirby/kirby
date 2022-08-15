@@ -167,11 +167,7 @@ class Cookie
 
 		// if the hash or the value is missing at all return null
 		// $value can be an empty string, $hash can't be!
-		if (
-			is_string($hash) === false ||
-			$hash === '' ||
-			is_string($value) === false
-		) {
+		if ($hash === '') {
 			return null;
 		}
 
@@ -200,7 +196,7 @@ class Cookie
 	 */
 	public static function remove(string $key): bool
 	{
-		if (isset($_COOKIE[$key])) {
+		if (isset($_COOKIE[$key]) === true) {
 			unset($_COOKIE[$key]);
 			return setcookie($key, '', 1, '/') && setcookie($key, false);
 		}

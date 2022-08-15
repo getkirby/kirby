@@ -317,7 +317,7 @@ class Uri
 			$params = [];
 		}
 
-		$this->params = is_a($params, 'Kirby\Http\Params') === true ? $params : new Params($params);
+		$this->params = is_a($params, Params::class) === true ? $params : new Params($params);
 		return $this;
 	}
 
@@ -335,7 +335,7 @@ class Uri
 	 */
 	public function setPath(Path|string|array|null $path = null): static
 	{
-		$this->path = is_a($path, 'Kirby\Http\Path') === true ? $path : new Path($path);
+		$this->path = is_a($path, Path::class) === true ? $path : new Path($path);
 		return $this;
 	}
 
@@ -363,7 +363,7 @@ class Uri
 	 */
 	public function setQuery(Query|string|array|null $query = null): static
 	{
-		$this->query = is_a($query, 'Kirby\Http\Query') === true ? $query : new Query($query);
+		$this->query = is_a($query, Query::class) === true ? $query : new Query($query);
 		return $this;
 	}
 

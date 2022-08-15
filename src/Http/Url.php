@@ -60,8 +60,9 @@ class Url
 
 	/**
 	 * Tries to fix a broken url without protocol
+	 * @psalm-return ($url is null ? string|null : string)
 	 */
-	public static function fix(string|null $url = null): string
+	public static function fix(string|null $url = null): string|null
 	{
 		// make sure to not touch absolute urls
 		return (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) ? 'http://' . $url : $url;

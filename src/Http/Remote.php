@@ -128,7 +128,7 @@ class Remote
 			CURLOPT_FOLLOWLOCATION   => true,
 			CURLOPT_MAXREDIRS        => 10,
 			CURLOPT_HEADER           => false,
-			CURLOPT_HEADERFUNCTION   => function ($curl, $header) {
+			CURLOPT_HEADERFUNCTION   => function ($curl, $header): int {
 				$parts = Str::split($header, ':');
 
 				if (empty($parts[0]) === false && empty($parts[1]) === false) {

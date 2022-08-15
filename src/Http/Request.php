@@ -339,7 +339,7 @@ class Request
 	/**
 	 * Shortcut to the Params object
 	 */
-	public function params()
+	public function params(): Params
 	{
 		return $this->url()->params();
 	}
@@ -347,7 +347,7 @@ class Request
 	/**
 	 * Shortcut to the Path object
 	 */
-	public function path()
+	public function path(): Path
 	{
 		return $this->url()->path();
 	}

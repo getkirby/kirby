@@ -78,7 +78,7 @@ class Environment
 	 * Intermediary value of the port
 	 * extracted from the host name
 	 */
-	protected int|null $portInHost;
+	protected int|null $portInHost = null;
 
 	/**
 	 * Uri object for the full request URI.
@@ -461,6 +461,8 @@ class Environment
 	 */
 	protected function detectHost(bool $insecure = false): string|null
 	{
+		$hosts = [];
+
 		if ($insecure === true) {
 			$hosts[] = $this->get('HTTP_HOST');
 		}
@@ -882,7 +884,7 @@ class Environment
 	/**
 	 * Sanitizes the given port number
 	 */
-	protected static function sanitizePort(string|int|null $port = null): int|null
+	protected static function sanitizePort(string|int|false|null $port = null): int|null
 	{
 		// already fine
 		if (is_int($port) === true) {
@@ -895,7 +897,7 @@ class Environment
 		}
 
 		// remove any character that is not an integer
-		$port = preg_replace('![^0-9]+!', '', (string)($port ?? ''));
+		$port = preg_replace('![^0-9]+!', '', $port);
 
 		// no port
 		if ($port === '') {

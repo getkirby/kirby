@@ -116,6 +116,7 @@ class Header
 	 * @param int|string|null $code The HTTP status code
 	 * @param bool $send If set to false the header will be returned instead
 	 * @return string|void
+	 * @psalm-return ($send is false ? string : void)
 	 */
 	public static function status(int|string|null $code = null, bool $send = true)
 	{
