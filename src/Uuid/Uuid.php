@@ -2,20 +2,21 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\App;
+use Closure;
+use Generator;
+use Hidehalo\Nanoid\Client as Nanoid;
+use InvalidArgumentException;
 use Kirby\Cms\Block;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
-use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
 /**
- * The `Uuid` class provides an interface to connect
+ * The `Uuid` classes provide an interface to connect
  * indetifiable models (page, file, site, user, blocks,
  * structure entries) with a dedicated UUID string.
  * It also provides methods to cache these connections
@@ -29,9 +30,8 @@ use Kirby\Toolkit\Str;
  * Uuid::for('page://HhX1YtRR2ImG6h4')->resolve();
  *
  * // cache actions
- * Uuid::for($model)->populate();
- * Uuid::for($model)->clear();
- * Index::populate();
+ * $model->uuid()->populate();
+ * $model->uuid()->clear();
  * ```
  *
  * @package   Kirby Uuid
@@ -42,10 +42,17 @@ use Kirby\Toolkit\Str;
  */
 class Uuid
 {
-	protected Cache|null $cache = null;
-	protected Collection|null $context;
-	protected Uri|null $uri;
-	protected Identifiable|null $model;
+	protected const TYPE = 'uuid';
+
+	/**
+	 * Customisable callback function for generating new ID strings
+	 * instead of using Nanoid. Receives length of string as parameter.
+	 */
+	public static Closure|null $generator = null;
+
+	public Collection|null $context;
+	public Identifiable|null $model;
+	public Uri|null $uri;
 
 	public function __construct(
 		string|null $uuid = null,
@@ -55,69 +62,19 @@ class Uuid
 		$this->context = $context;
 		$this->model   = $model;
 
-		// if UUID string is passed
-		if ($uuid) {
+		if ($model) {
+			$this->uri = new Uri([
+				'scheme' => static::TYPE,
+				'host'   => static::retrieveId($model)
+			]);
+		} elseif ($uuid) {
 			$this->uri = new Uri($uuid);
 		}
-
-		// if object is provided to create instance
-		if ($model) {
-			$type = match (true) {
-				$model instanceof Site => 'site',
-				$model instanceof Page => 'page',
-				$model instanceof File => 'file',
-				$model instanceof User => 'user',
-				$model instanceof StructureObject => 'struct',
-				$model instanceof Block => 'block',
-			};
-
-			$this->uri = new Uri([
-				'scheme' => $type,
-				'host'   => Id::get($model)
-			]);
-		}
-	}
-
-
-	/**
-	 * Returns (and initiates) UUID cache object
-	 */
-	public function cache(): Cache
-	{
-		return $this->cache ??= new Cache($this);
 	}
 
 	/**
-	 * Returns the collection of models that serve
-	 * as context for looking up an UUID (will first
-	 * search in context collection before searching
-	 * in global index)
-	 */
-	public function context(): Collection|null
-	{
-		return $this->context;
-	}
-
-	/**
-	 * Creates a new UUID id string and updates
-	 * the model's content file to store it permanently
-	 */
-	protected function create(): string
-	{
-		if (is_a($this->model, ModelWithContent::class) === true) {
-			// generate ID and write to content file
-			$id = Id::generate();
-			$this->model = Id::write($this->model, $id);
-			// update the Uri object
-			$this->uri->host($id);
-			return $id;
-		}
-
-		throw new LogicException('Can only create and write ID string to model with content');
-	}
-
-	/**
-	 * Clears UUID from cache
+	 * Removes Uuid from cache,
+	 * recursively if needed
 	 */
 	public function clear(bool $recursive = false): bool
 	{
@@ -132,38 +89,125 @@ class Uuid
 			}
 		}
 
-		return $this->cache()->clear();
+		return Uuids::cache()->remove($this->key());
+	}
+
+	/**
+	 * Generator function for the local context
+	 * collection, which takes priority when looking
+	 * up the UUID/model from index
+	 * @internal
+	 */
+	final public function context(): Generator
+	{
+		yield from $this->context ?? [];
+	}
+
+	/**
+	 * Look up Uuid in cache and resolve
+	 * to identifiable model object.
+	 * Implemented on child classes.
+	 */
+	protected function findByCache(): Identifiable|null
+	{
+		return null;
+	}
+
+	/**
+	 * Look up Uuid in local and global index
+	 * and return the identifiable model object.
+	 * Implemented on child classes.
+	 */
+	protected function findByIndex(): Identifiable|null
+	{
+		return null;
 	}
 
 	/**
 	 * Shorthand to create instance
 	 * by passing either UUID or model
 	 */
-	public static function for(
+	final public static function for(
 		string|Identifiable $seed,
 		Collection|null $context = null
 	): static {
 		if (is_string($seed) === true) {
-			return new static(uuid: $seed, context: $context);
+			return match (Str::before($seed, '://')) {
+				'page'   => new PageUuid(uuid: $seed, context: $context),
+				'file'   => new FileUuid(uuid: $seed, context: $context),
+				'site'   => new SiteUuid(uuid: $seed, context: $context),
+				'user'   => new UserUuid(uuid: $seed, context: $context),
+				'block'  => new BlockUuid(uuid: $seed, context: $context),
+				'struct' => new StructureUuid(uuid: $seed, context: $context),
+				default  => throw new InvalidArgumentException('Invalid uuid uri:' . $seed)
+			};
 		}
 
-		return new static(model: $seed, context: $context);
+		return match (true) {
+			$seed instanceof Page
+				=> new PageUuid(model: $seed, context: $context),
+			$seed instanceof File
+				=> new FileUuid(model: $seed, context: $context),
+			$seed instanceof Site
+				=> new SiteUuid(model: $seed, context: $context),
+			$seed instanceof User
+				=> new UserUuid(model: $seed, context: $context),
+			$seed instanceof Block
+				=> new BlockUuid(model: $seed, context: $context),
+			$seed instanceof StructureObject
+				=> new StructureUuid(model: $seed, context: $context),
+			default
+			=> throw new InvalidArgumentException('Uuid not supported for:' . get_class($seed))
+		};
 	}
 
 	/**
-	 * Returns the UUID's id string. If not set yet,
-	 * creates a neq unique ID and writes it to content file
+	 * Generate a new ID string
+	 */
+	final public static function generate(int $length = 15): string
+	{
+		if (static::$generator !== null) {
+			return (static::$generator)($length);
+		}
+
+		return (new Nanoid())->generateId($length);
+	}
+
+	/**
+	 * Returns the UUID's id string
 	 */
 	public function id(): string
 	{
-		return $this->uri->host() ?? $this->create();
+		return $this->uri->host();
+	}
+
+	/**
+	 * Generator function that creates an index of
+	 * all identifiable model object globally
+	 */
+	public static function index(): Generator
+	{
+		yield from [];
+	}
+
+	/**
+	 * Merges local and global index generators
+	 * into one iterator
+	 * @internal
+	 */
+	final public function indexes(): Generator
+	{
+		yield from $this->context();
+		yield from static::index();
 	}
 
 	/**
 	 * Checks if a string resembles an UUID uri
 	 */
-	public static function is(string $string, string|null $type = null): bool
-	{
+	final public static function is(
+		string $string,
+		string|null $type = null
+	): bool {
 		if ($type !== null) {
 			return Str::startsWith($string, $type . '://');
 		}
@@ -174,28 +218,44 @@ class Uuid
 	}
 
 	/**
-	 * Whether the UUID has been already cached
+	 * Checks if Uuid has already been cached
 	 */
 	public function isCached(): bool
 	{
-		return $this->cache()->exists();
+		return Uuids::cache()->exists($this->key());
 	}
 
 	/**
-	 * Write UUID to cache
+	 * Returns key for cache entry
+	 */
+	public function key(): string
+	{
+		$id = $this->id();
+
+		// for better performance when using a file-based cache,
+		// turn first two characters of the id into a directory
+		$id = substr($id, 0, 2) . '/' . substr($id, 2);
+
+		return static::TYPE . '/' . $id;
+	}
+
+	/**
+	 * Feeds Uuid into the cache
+	 *
+	 * @return bool
 	 */
 	public function populate(): bool
 	{
-		return $this->cache()->populate();
+		return Uuids::cache()->set($this->key(), $this->value());
 	}
-
 
 	/**
 	 * Returns the full UUID string incl. schema
 	 */
 	public function render(): string
 	{
-		// trigger delayed ID generation
+		// make sure id is generated if
+		// it doesn't exist yet
 		$this->id();
 
 		return $this->uri->toString();
@@ -207,26 +267,16 @@ class Uuid
 	 */
 	public function resolve(bool $lazy = false): Identifiable|null
 	{
-		// @codeCoverageIgnoreStart
 		if ($this->model !== null) {
 			return $this->model;
 		}
-		// @codeCoverageIgnoreEnd
 
-		if ($this->type() === 'site') {
-			return $this->model = App::instance()->site();
-		}
-
-		if ($this->type() === 'user') {
-			return $this->model = App::instance()->user($this->id());
-		}
-
-		if ($this->model = Cache::find($this)) {
+		if ($this->model = $this->findByCache()) {
 			return $this->model;
 		}
 
 		if ($lazy === false) {
-			if ($this->model = Index::find($this)) {
+			if ($this->model = $this->findByIndex()) {
 				// lazily fill cache by writing to cache
 				// whenever looked up from index
 				$this->populate();
@@ -239,20 +289,19 @@ class Uuid
 	}
 
 	/**
-	 * Returns the model type
+	 * Retrieves the existing ID string for the model
 	 */
-	public function type(): string
+	public static function retrieveId(Identifiable $model): string|null
 	{
-		return $this->uri->type();
+		return $model->id();
 	}
 
 	/**
-	 * Returns permalink url
+	 * Returns value to be stored in cache
 	 */
-	public function url(): string
+	public function value(): string
 	{
-		$site = App::instance()->site()->url();
-		return $site . '/@/' . $this->type() . '/' . $this->id();
+		return $this->resolve()->id();
 	}
 
 	/**

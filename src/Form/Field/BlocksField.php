@@ -13,7 +13,7 @@ use Kirby\Form\Form;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
-use Kirby\Uuid\Id;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 class BlocksField extends FieldClass
@@ -144,7 +144,7 @@ class BlocksField extends FieldClass
 		return [
 			[
 				'pattern' => 'uuid',
-				'action'  => fn () => ['uuid' => Id::generate()]
+				'action'  => fn () => ['uuid' => Uuid::generate()]
 			],
 			[
 				'pattern' => 'paste',

@@ -2,7 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Uuid\Uuid;
+use Kirby\Uuid\PageUuid;
+use Kirby\Uuid\SiteUuid;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
@@ -184,9 +185,9 @@ class ModelWithContentTest extends TestCase
 	public function testUuid()
 	{
 		$model = new Site();
-		$this->assertInstanceOf(Uuid::class, $model->uuid());
+		$this->assertInstanceOf(SiteUuid::class, $model->uuid());
 
 		$model = new Page(['slug' => 'foo']);
-		$this->assertInstanceOf(Uuid::class, $model->uuid());
+		$this->assertInstanceOf(PageUuid::class, $model->uuid());
 	}
 }

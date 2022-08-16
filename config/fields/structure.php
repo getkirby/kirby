@@ -3,7 +3,7 @@
 use Kirby\Data\Data;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
-use Kirby\Uuid\Id;
+use Kirby\Uuid\Uuid;
 
 return [
 	'mixins' => ['min'],
@@ -175,7 +175,7 @@ return [
 
 			// enforce uuid field
 			$fields['uuid']   = ['type' => 'hidden'];
-			$values['uuid'] ??= Id::generate();
+			$values['uuid'] ??= Uuid::generate();
 
 			return new Form([
 				'fields' => $fields,

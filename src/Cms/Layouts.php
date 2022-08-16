@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Uuid\Id;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -28,7 +28,7 @@ class Layouts extends Items
 		if (array_key_exists('content', $first) === true || array_key_exists('type', $first) === true) {
 			$items = [
 				[
-					'id'      => Id::generate(),
+					'id'      => Uuid::generate(),
 					'columns' => [
 						[
 							'width'  => '1/1',

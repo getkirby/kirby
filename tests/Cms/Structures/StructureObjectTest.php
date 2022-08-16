@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\StructureUuid;
+
 class StructureObjectTest extends TestCase
 {
 	public function testId()
@@ -39,6 +41,16 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertEquals($content, $object->content()->toArray());
+	}
+
+	public function testField()
+	{
+		$object = new StructureObject(['id' => 'test']);
+		$this->assertNull($object->field());
+
+		$field = new Field(null, 'notes', '');
+		$object = new StructureObject(['id' => 'test', 'field' => $field]);
+		$this->assertSame($field, $object->field());
 	}
 
 	public function testToDate()
@@ -135,5 +147,11 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertEquals($expected, $object->toArray());
+	}
+
+	public function testUuid()
+	{
+		$object = new StructureObject(['id' => 'test']);
+		$this->assertInstanceOf(StructureUuid::class, $object->uuid());
 	}
 }

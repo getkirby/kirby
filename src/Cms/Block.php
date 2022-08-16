@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\BlockUuid;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
 use Throwable;
@@ -284,10 +285,10 @@ class Block extends Item implements Identifiable
 	}
 
 	/**
-	 * Returns the block's unique global ID
+	 * Returns the block's Uuid
 	 */
-	public function uuid(): Uuid
+	public function uuid(): BlockUuid
 	{
-		return Uuid::for($this);
+		return new BlockUuid(model: $this);
 	}
 }

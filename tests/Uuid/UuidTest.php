@@ -2,13 +2,9 @@
 
 namespace Kirby\Uuid;
 
-use Kirby\Cms\Block;
-use Kirby\Cms\Collection;
-use Kirby\Cms\File;
+use Generator;
 use Kirby\Cms\Page;
-use Kirby\Cms\Site;
-use Kirby\Cms\StructureObject;
-use Kirby\Cms\User;
+use Kirby\Toolkit\Str;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\Uuid
@@ -18,62 +14,65 @@ class UuidTest extends TestCase
 	/**
 	 * @covers ::__construct
 	 */
-	public function testConstructInvalidType()
+	public function testConstructUuidString()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid URL scheme: foo');
-		new Uuid(uuid: 'foo://bar');
+		$uuid = new Uuid($uri = 'page://my-page-uuid');
+		$this->assertInstanceOf(Uri::class, $uuid->uri);
+		$this->assertSame($uri, $uuid->uri->toString());
+		$this->assertNull($uuid->model);
+		$this->assertNull($uuid->context);
 	}
 
 	/**
-	 * @covers ::cache
+	 * @covers ::__construct
 	 */
-	public function testCache()
+	public function testConstructModel()
 	{
-		$uuid = new Uuid();
-		$this->assertInstanceOf(Cache::class, $uuid->cache());
+		$app      = $this->app;
+		$page     = $app->page('page-a');
+		$siblings = $app->site()->children();
+		$uuid = new PageUuid(
+			model: $page,
+			context: $siblings
+		);
+		$this->assertInstanceOf(Uri::class, $uuid->uri);
+		$this->assertSame('page://my-page', $uuid->uri->toString());
+		$this->assertSame($page, $uuid->model);
+		$this->assertSame($siblings, $uuid->context);
 	}
 
 	/**
 	 * @covers ::clear
+	 * @covers ::isCached
+	 * @covers ::populate
 	 */
-	public function testClear()
+	public function testCache()
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'children' => [
-							[
-								'slug' => 'b'
-							]
-						]
-					]
-				]
-			]
-		]);
+		$page    = $this->app->page('page-a');
+		$subpage = $page->children()->find('subpage-a');
 
-		$page    = $app->page('a')->uuid();
-		$subpage = $app->page('a/b')->uuid();
+		$page    = $page->uuid();
+		$subpage = $subpage->uuid();
 
+		// not cached so far
+		$this->assertFalse($page->isCached());
+		$this->assertFalse($subpage->isCached());
+
+		// cache them
 		$page->populate();
 		$subpage->populate();
+		$this->assertTrue($page->isCached());
+		$this->assertTrue($subpage->isCached());
 
-		$this->assertTrue($page->cache()->exists());
-		$this->assertTrue($subpage->cache()->exists());
-
-		// only page
+		// clear only page
 		$page->clear();
+		$this->assertFalse($page->isCached());
+		$this->assertTrue($subpage->isCached());
 
-		$this->assertFalse($page->cache()->exists());
-		$this->assertTrue($subpage->cache()->exists());
-
-		// recursively also subpage
+		// clear recursively
 		$page->clear(true);
-
-		$this->assertFalse($page->cache()->exists());
-		$this->assertFalse($subpage->cache()->exists());
+		$this->assertFalse($page->isCached());
+		$this->assertFalse($subpage->isCached());
 	}
 
 	/**
@@ -81,61 +80,68 @@ class UuidTest extends TestCase
 	 */
 	public function testContext()
 	{
-		// without
-		$uuid = new Uuid();
-		$this->assertNull($uuid->context());
+		$uuid = $this->app->page('page-a')->uuid();
+		$this->assertInstanceOf(Generator::class, $uuid->context());
+		$this->assertSame(0, iterator_count($uuid->context()));
 
-		// with
-		$uuid = new Uuid(context: $expected = new Collection());
-		$this->assertSame($expected, $uuid->context());
+		$uuid = new Uuid(
+			uuid: 'page://my-app',
+			context: $this->app->site()->children()
+		);
+		$this->assertInstanceOf(Generator::class, $uuid->context());
+		$this->assertSame(2, iterator_count($uuid->context()));
 	}
 
 	/**
-	 * @covers ::create
-	 */
-	public function testCreate()
-	{
-		$model = new Block(['type' => 'a']);
-		$uuid  = Uuid::for($model);
-
-		$this->expectException('Kirby\Exception\LogicException');
-		$this->expectExceptionMessage('Can only create and write ID string to model with content');
-
-		// calling protected `create` method
-		(fn () => $this->create())->call($uuid);
-	}
-
-	/**
-	 * @covers ::__construct
 	 * @covers ::for
 	 */
-	public function testFor()
+	public function testForUuidString()
 	{
-		// with string
-		$uuid = Uuid::for('page://my-id');
-		$this->assertSame('page', $uuid->type());
-		$this->assertSame('my-id', $uuid->id());
+		$this->assertInstanceOf(PageUuid::class, Uuid::for('page://my-id'));
+		$this->assertInstanceOf(FileUuid::class, Uuid::for('file://my-id'));
+		$this->assertInstanceOf(SiteUuid::class, Uuid::for('site://'));
+		$this->assertInstanceOf(UserUuid::class, Uuid::for('user://my-id'));
+		$this->assertInstanceOf(BlockUuid::class, Uuid::for('block://my-id'));
+		$this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
+	}
 
-		// with object
-		$model = new Page(['slug' => 'a', 'content' => ['uuid' => 'my-id']]);
-		$uuid = Uuid::for($model);
-		$this->assertSame('page', $uuid->type());
-		$this->assertSame('my-id', $uuid->id());
+	/**
+	 * @covers ::for
+	 */
+	public function testForObject()
+	{
+		$site   = $this->app->site();
+		$page   = $site->find('page-a');
+		$file   = $page->file('test.pdf');
+		$user   = $this->app->user('my-user');
+		$block  = $page->notes()->toBlocks()->first();
+		$struct = $page->authors()->toStructure()->first();
 
-		$model = new User(['id' => 'my-user']);
-		$uuid = Uuid::for($model);
-		$this->assertSame('user', $uuid->type());
-		$this->assertSame('my-user', $uuid->id());
+		$this->assertInstanceOf(PageUuid::class, Uuid::for($page));
+		$this->assertInstanceOf(FileUuid::class, Uuid::for($file));
+		$this->assertInstanceOf(SiteUuid::class, Uuid::for($site));
+		$this->assertInstanceOf(UserUuid::class, Uuid::for($user));
+		$this->assertInstanceOf(BlockUuid::class, Uuid::for($block));
+		$this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
+	}
 
-		$model = new StructureObject(['id' => 'my-struct']);
-		$uuid = Uuid::for($model);
-		$this->assertSame('struct', $uuid->type());
-		$this->assertSame('my-struct', $uuid->id());
+	/**
+	 * @covers ::generate
+	 */
+	public function testGenerate()
+	{
+		// default length
+		$id = Uuid::generate();
+		$this->assertSame(15, strlen($id));
 
-		$model = new Block(['id' => 'my-block', 'type' => 'test']);
-		$uuid = Uuid::for($model);
-		$this->assertSame('block', $uuid->type());
-		$this->assertSame('my-block', $uuid->id());
+		// custom length
+		$id = Uuid::generate(5);
+		$this->assertSame(5, strlen($id));
+
+		// custom generator callback
+		Uuid::$generator = fn ($length) => 'veryunique' . $length;
+		$this->assertSame('veryunique13', Uuid::generate(13));
+		Uuid::$generator = null;
 	}
 
 	/**
@@ -143,15 +149,38 @@ class UuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		// with string
-		$uuid = Uuid::for('page://my-id');
-		$this->assertSame('my-id', $uuid->id());
+		$uuid = new Uuid('page://my-uuid-id');
+		$this->assertSame('my-uuid-id', $uuid->id());
 
-		// with object
-		$model = new Page(['slug' => 'a']);
-		$uuid = Uuid::for($model);
-		$this->assertSame(15, strlen($uuid->id()));
-		$this->assertSame(Id::get($uuid->resolve()), $uuid->id());
+		$uuid = $this->app->page('page-a')->uuid();
+		$this->assertSame('my-page', $uuid->id());
+	}
+
+
+	/**
+	 * @covers ::index
+	 */
+	public function testIndex()
+	{
+		$this->assertInstanceOf(Generator::class, Uuid::index());
+		$this->assertSame(0, iterator_count(Uuid::index()));
+	}
+
+	/**
+	 * @covers ::indexes
+	 */
+	public function testIndexes()
+	{
+		$uuid = new Uuid('page://my-uuid');
+		$this->assertInstanceOf(Generator::class, $uuid->indexes());
+		$this->assertSame(0, iterator_count($uuid->indexes()));
+
+		$uuid = new Uuid(
+			uuid: 'page://my-app',
+			context: $this->app->site()->children()
+		);
+		$this->assertInstanceOf(Generator::class, $uuid->indexes());
+		$this->assertSame(2, iterator_count($uuid->indexes()));
 	}
 
 	/**
@@ -186,194 +215,75 @@ class UuidTest extends TestCase
 	}
 
 	/**
-	 * @covers ::isCached
+	 * @covers ::key
 	 */
-	public function testIsCached()
+	public function testKey()
 	{
-		$model = new Page(['slug' => 'a', 'content' => ['uuid' => 'my-id']]);
-		$uuid  = Uuid::for($model);
-		$this->assertFalse($uuid->isCached());
-		$uuid->populate();
-		$this->assertTrue($uuid->isCached());
+		$uuid = $this->app->page('page-a')->uuid();
+		$this->assertSame('page/my/-page', $uuid->key());
 	}
 
 	/**
-	 * @covers ::populate
-	 */
-	public function testPopulate()
-	{
-		$model = new Page(['slug' => 'a', 'content' => ['uuid' => 'my-id']]);
-		$uuid = Uuid::for($model);
-
-		$this->assertFalse($uuid->cache()->exists());
-		$uuid->populate();
-		$this->assertTrue($uuid->cache()->exists());
-	}
-
-	/**
-	 * @covers ::create
+	 * @covers ::id
 	 * @covers ::render
 	 * @covers ::__toString
 	 */
 	public function testRender()
 	{
 		// with ID already stored in content
-		$model = new Page(['slug' => 'a', 'content' => ['uuid' => 'my-id']]);
-		$uuid  = Uuid::for($model);
-		$this->assertSame('page://my-id', $uuid->render());
-		$this->assertSame('page://my-id', (string)$uuid);
+		$uuid = $this->app->page('page-a')->uuid();
+		$this->assertSame('page://my-page', $uuid->render());
+		$this->assertSame('page://my-page', (string)$uuid);
 
 		// with creating new ID
-		$model = new Page(['slug' => 'a']);
-		$uuid  = Uuid::for($model);
+		$uuid = $this->app->page('page-b')->uuid();
 		$this->assertIsString($id = $uuid->render());
 		$this->assertSame($id, (string)$uuid);
+		$this->assertSame(Str::after($id, '://'), $this->app->page('page-b')->content()->get('uuid')->value());
 	}
 
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolvePageFromCache()
+	public function testResolve()
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a'
-					]
-				]
-			]
-		]);
+		// for Uuid that was constructed from model
+		$page = $this->app->page('page-a');
+		$uuid = $page->uuid();
+		$this->assertSame($page, $uuid->resolve());
 
-		$page = $app->page('a');
-		$uuid = Uuid::for($page);
+		// from cache (enforce via $lazy)
+		$uuid = new PageUuid('page://my-page');
+		$this->assertFalse($uuid->isCached());
+		$this->assertNull($uuid->resolve(true));
 		$uuid->populate();
-		$id = $uuid->render();
+		$this->assertTrue($uuid->isCached());
+		$this->assertSame($page, $uuid->resolve(true));
+		$uuid->clear(true);
 
-		$model = Uuid::for($id)->resolve(true);
-		$this->assertTrue($page->is($model));
+		// from index
+		$uuid = new PageUuid('page://my-page');
+		$this->assertFalse($uuid->isCached());
+		$this->assertNull($uuid->resolve(true));
+		$this->assertSame($page, $uuid->resolve());
+		$this->assertTrue($uuid->isCached());
 	}
 
 	/**
-	 * @covers ::resolve
+	 * @covers ::retrieveId
 	 */
-	public function testResolvePageFromIndex()
+	public function testRetrieveId()
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => ['uuid' => 'test-a']
-					]
-				]
-			]
-		]);
-
-		$page = $app->page('a');
-
-		// with UUID string
-		$model = Uuid::for('page://test-a')->resolve();
-		$this->assertSame($page, $model);
-
-		// with object instance
-		$model = Uuid::for($page)->resolve();
-		$this->assertSame($page, $model);
+		$page = $this->app->page('page-a');
+		$this->assertSame('page-a', Uuid::retrieveId($page));
 	}
 
 	/**
-	 * @covers ::resolve
+	 * @covers ::value
 	 */
-	public function testResolveSite()
+	public function testValue()
 	{
-		// with UUID string
-		$site = site();
-		$model = Uuid::for('site://')->resolve();
-		$this->assertSame($site, $model);
-
-		// with site instance
-		$model = Uuid::for($site)->resolve();
-		$this->assertSame($site, $model);
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveUser()
-	{
-		$app = $this->app->clone([
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com'
-				],
-				[
-					'id'    => 'homer',
-					'email' => 'homer@simpson.com'
-				]
-			]
-		]);
-
-		$user1 = $app->user('test');
-		$user2 = $app->user('homer');
-
-		// with UUID string
-		$model = Uuid::for('user://test')->resolve();
-		$this->assertSame($user1, $model);
-		$model = Uuid::for('user://homer')->resolve();
-		$this->assertSame($user2, $model);
-
-		// with user instance
-		$model = Uuid::for($user1)->resolve();
-		$this->assertSame($user1, $model);
-		$model = Uuid::for($user2)->resolve();
-		$this->assertSame($user2, $model);
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolveNotFound()
-	{
-		$this->assertNull(Uuid::for('file://homer-simpson')->resolve());
-	}
-
-	public function typeProvider()
-	{
-		return [
-			// UUID strings
-			['site://', 'site'],
-			['page://page-id', 'page'],
-			['file://file-id', 'file'],
-			['user://user-id', 'user'],
-			['block://block-id', 'block'],
-			['struct://structure-id', 'struct'],
-			// model objects
-			[new Site(), 'site'],
-			[$p = new Page(['slug' => 'a']), 'page'],
-			[new File(['filename' => 'a', 'parent' => $p]), 'file'],
-			[new User([]), 'user'],
-			[new Block(['id' => 'a', 'type' => 'a']), 'block'],
-			[new StructureObject(['id' => 'a']), 'struct'],
-		];
-	}
-
-	/**
-	 * @covers ::type
-	 * @dataProvider typeProvider
-	 */
-	public function testType(string|Identifiable $seed, string $type)
-	{
-		$uuid = Uuid::for($seed);
-		$this->assertSame($type, $uuid->type());
-	}
-
-	/**
-	 * @covers ::url
-	 */
-	public function testUrl()
-	{
-		$url = Uuid::for('page://a-b-c')->url();
-		$this->assertSame('//@/page/a-b-c', $url);
+		$page = $this->app->page($dir = 'page-a/subpage-a');
+		$this->assertSame($dir, $page->uuid()->value());
 	}
 }

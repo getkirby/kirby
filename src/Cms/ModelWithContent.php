@@ -635,7 +635,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Returns the model's unique global ID
+	 * Returns the model's Uuid
 	 */
 	public function uuid(): Uuid
 	{

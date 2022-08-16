@@ -20,12 +20,12 @@ class PermalinksTest extends TestCase
 		// not cached, should fail (redirect to error)
 		$response = $app->router()->call('/@/page/my-id')->send();
 		$this->assertSame(302, $response->code());
-		$this->assertSame('/error', $response->header('Location'));
+		$this->assertSame('https://getkirby.com/error', $response->header('Location'));
 
 		// cached, should redirect to page A
 		$app->page('a')->uuid()->populate();
 		$response = $app->router()->call('/@/page/my-id')->send();
 		$this->assertSame(302, $response->code());
-		$this->assertSame('/a', $response->header('Location'));
+		$this->assertSame('https://getkirby.com/a', $response->header('Location'));
 	}
 }

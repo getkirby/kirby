@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Uuid\Identifiable;
+use Kirby\Uuid\StructureUuid;
 use Kirby\Uuid\Uuid;
 
 /**
@@ -112,6 +113,10 @@ class StructureObject extends Model implements Identifiable
 			return false;
 		}
 
+		if ($this === $structure) {
+			return true;
+		}
+
 		return $this->id() === $structure->id();
 	}
 
@@ -196,10 +201,10 @@ class StructureObject extends Model implements Identifiable
 	}
 
 	/**
-	 * Returns the structure's unique global ID
+	 * Returns the structure object's Uuid
 	 */
-	public function uuid(): Uuid
+	public function uuid(): StructureUuid
 	{
-		return Uuid::for($this);
+		return new StructureUuid(model: $this);
 	}
 }

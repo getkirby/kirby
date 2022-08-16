@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Uuid\Id;
+use Kirby\Uuid\Uuid;
 
 /**
  * The Item class is the foundation
@@ -55,7 +56,7 @@ class Item
 	{
 		$siblingsClass = static::ITEMS_CLASS;
 
-		$this->id       = $params['id']       ?? Id::generate();
+		$this->id       = $params['id']       ?? Uuid::generate();
 		$this->params   = $params;
 		$this->parent   = $params['parent']   ?? App::instance()->site();
 		$this->siblings = $params['siblings'] ?? new $siblingsClass();

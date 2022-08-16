@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\BlockUuid;
 use PHPUnit\Framework\TestCase;
 
 class BlockTest extends TestCase
@@ -261,6 +262,16 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
+	public function testField()
+	{
+		$block = new Block(['type' => 'heading']);
+		$this->assertNull($block->field());
+
+		$field = new Field(null, 'notes', '');
+		$block = new Block(['type' => 'heading', 'field' => $field]);
+		$this->assertSame($field, $block->field());
+	}
+
 	public function samplePrevNextBlocks()
 	{
 		return Blocks::factory([
@@ -349,5 +360,11 @@ class BlockTest extends TestCase
 		$this->assertTrue($block->isHidden());
 		$this->assertSame('gallery', $block->prev()->type());
 		$this->assertSame('quote', $block->next()->type());
+	}
+
+	public function testUuid()
+	{
+		$block = new Block(['type' => 'heading']);
+		$this->assertInstanceOf(BlockUuid::class, $block->uuid());
 	}
 }
