@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -22,6 +23,11 @@ class BlueprintTest extends TestCase
 		]);
 
 		$this->model = new Page(['slug' => 'a']);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove(__DIR__ . '/tmp');
 	}
 
 	/**
@@ -371,16 +377,16 @@ class BlueprintTest extends TestCase
 		$this->app = $this->app->clone([
 			'roots' => [
 				'index' => '/dev/null',
-				'blueprints' => $fixtures = __DIR__ . '/fixtures/BlueprintTest/factoryWithCallbackString',
+				'blueprints' => $tmp = __DIR__ . '/tmp/BlueprintTest/factoryWithCallbackString',
 			],
 			'blueprints' => [
-				'pages/test' => function () use ($fixtures) {
-					return $fixtures . '/custom/test.yml';
+				'pages/test' => function () use ($tmp) {
+					return $tmp . '/custom/test.yml';
 				}
 			]
 		]);
 
-		Data::write($fixtures . '/custom/test.yml', ['title' => 'Test']);
+		Data::write($tmp . '/custom/test.yml', ['title' => 'Test']);
 
 		$blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
 
