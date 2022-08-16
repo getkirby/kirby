@@ -29,9 +29,7 @@
 		<slot name="footer">
 			<footer v-if="help || $slots.help" class="k-field-footer">
 				<slot name="help">
-					<!-- eslint-disable vue/no-v-html -->
-					<k-text v-if="help" theme="help" class="k-field-help" v-html="help" />
-					<!-- eslint-enable vue/no-v-html -->
+					<k-text v-if="help" theme="help" class="k-field-help" :html="help" />
 				</slot>
 			</footer>
 		</slot>

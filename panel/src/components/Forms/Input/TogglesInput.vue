@@ -43,8 +43,8 @@ export const props = {
 };
 
 export default {
-	inheritAttrs: false,
 	mixins: [props],
+	inheritAttrs: false,
 	watch: {
 		value() {
 			this.onInvalid();

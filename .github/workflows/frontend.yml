@@ -80,6 +80,7 @@ jobs:
           cache-dependency-path: panel/package-lock.json
 
       - name: Install npm dependencies
+        id: finishPrepare
         run: npm ci
         working-directory: panel
 

@@ -65,8 +65,7 @@
 			theme="negative"
 			@submit="revert"
 		>
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<k-text v-html="$t('revert.confirm')" />
+			<k-text :html="$t('revert.confirm')" />
 		</k-dialog>
 	</nav>
 </template>

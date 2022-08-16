@@ -2,8 +2,8 @@
 import TextFieldPreview from "./TextFieldPreview.vue";
 
 export default {
-	inheritAttrs: false,
 	extends: TextFieldPreview,
+	inheritAttrs: false,
 	props: {
 		value: String
 	},

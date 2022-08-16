@@ -8,8 +8,7 @@
 		@submit="$refs.form.submit()"
 	>
 		<template v-if="text">
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<k-text v-html="text" />
+			<k-text :html="text" />
 		</template>
 		<k-form
 			v-if="hasFields"
