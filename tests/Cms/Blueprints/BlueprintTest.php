@@ -33,6 +33,11 @@ class BlueprintTest extends TestCase
 		Dir::remove($this->tmp);
 	}
 
+	public function tearDown(): void
+	{
+		Dir::remove(__DIR__ . '/tmp');
+	}
+
 	/**
 	 * @covers ::__construct
 	 */
