@@ -9,6 +9,16 @@ use Kirby\Toolkit\Obj;
  */
 class HelpersTest extends TestCase
 {
+	protected $hasErrorHandler = false;
+
+	public function tearDown(): void
+	{
+		if ($this->hasErrorHandler === true) {
+			restore_error_handler();
+			$this->hasErrorHandler = false;
+		}
+	}
+
 	/**
 	 * @covers ::deprecated
 	 */
@@ -59,6 +69,99 @@ class HelpersTest extends TestCase
 		$this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
 		Helpers::dump('test1');
 		Helpers::dump('test2', true);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsNoWarning()
+	{
+		$this->assertSame('return', Helpers::handleErrors(
+			fn () => 'return',
+			function (&$override) {
+				$this->fail('Handler should not be called because no warning was triggered');
+			}
+		));
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaught1()
+	{
+		$this->hasErrorHandler = true;
+
+		$called = false;
+		set_error_handler(function (int $errno, string $errstr) use (&$called) {
+			$called = true;
+		});
+
+		$this->assertSame('handled', Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (&$override, int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+
+				$override = 'handled';
+
+				// drop error
+				return true;
+			}
+		));
+
+		$this->assertFalse($called);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaught2()
+	{
+		$this->hasErrorHandler = true;
+
+		$called = false;
+		set_error_handler(function (int $errno, string $errstr) use (&$called) {
+			$called = true;
+
+			$this->assertSame(E_USER_WARNING, $errno);
+			$this->assertSame('Some warning', $errstr);
+		});
+
+		$this->assertSame('handled', Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (&$override, int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+
+				$override = 'handled';
+
+				// continue the handler chain
+				return false;
+			}
+		));
+
+		$this->assertTrue($called);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningNotCaught()
+	{
+		$this->expectExceptionMessage('Some warning');
+
+		Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (&$override, int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+
+				$override = 'handled';
+
+				// continue the handler chain
+				return false;
+			}
+		);
 	}
 
 	/**
