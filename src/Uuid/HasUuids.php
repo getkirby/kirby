@@ -21,6 +21,8 @@ trait HasUuids
 		string|null $schema = null
 	): Identifiable|null {
 		if (Uuid::is($uuid, $schema) === true) {
+			// Look up model by UUID while prioritizing
+			// $this collection when searching
 			return Uuid::for($uuid, $this)->resolve();
 		}
 

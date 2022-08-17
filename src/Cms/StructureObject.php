@@ -2,10 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Uuid\Identifiable;
-use Kirby\Uuid\StructureUuid;
-use Kirby\Uuid\Uuid;
-
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects
@@ -22,7 +18,7 @@ use Kirby\Uuid\Uuid;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureObject extends Model implements Identifiable
+class StructureObject extends Model
 {
 	use HasSiblings;
 
@@ -198,13 +194,5 @@ class StructureObject extends Model implements Identifiable
 		ksort($array);
 
 		return $array;
-	}
-
-	/**
-	 * Returns the structure object's Uuid
-	 */
-	public function uuid(): StructureUuid
-	{
-		return new StructureUuid(model: $this);
 	}
 }

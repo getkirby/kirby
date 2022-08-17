@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Uuid\StructureUuid;
-
 class StructureObjectTest extends TestCase
 {
 	public function testId()
@@ -147,11 +145,5 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertEquals($expected, $object->toArray());
-	}
-
-	public function testUuid()
-	{
-		$object = new StructureObject(['id' => 'test']);
-		$this->assertInstanceOf(StructureUuid::class, $object->uuid());
 	}
 }

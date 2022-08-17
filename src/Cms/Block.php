@@ -4,9 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
-use Kirby\Uuid\BlockUuid;
-use Kirby\Uuid\Identifiable;
-use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -21,7 +18,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Block extends Item implements Identifiable
+class Block extends Item
 {
 	use HasMethods;
 
@@ -282,13 +279,5 @@ class Block extends Item implements Identifiable
 
 			return '';
 		}
-	}
-
-	/**
-	 * Returns the block's Uuid
-	 */
-	public function uuid(): BlockUuid
-	{
-		return new BlockUuid(model: $this);
 	}
 }

@@ -101,8 +101,9 @@ class UuidTest extends TestCase
 		$this->assertInstanceOf(FileUuid::class, Uuid::for('file://my-id'));
 		$this->assertInstanceOf(SiteUuid::class, Uuid::for('site://'));
 		$this->assertInstanceOf(UserUuid::class, Uuid::for('user://my-id'));
-		$this->assertInstanceOf(BlockUuid::class, Uuid::for('block://my-id'));
-		$this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertInstanceOf(BlockUuid::class, Uuid::for('block://my-id'));
+		// $this->assertInstanceOf(StructureUuid::class, Uuid::for('struct://my-id'));
 	}
 
 	/**
@@ -121,8 +122,9 @@ class UuidTest extends TestCase
 		$this->assertInstanceOf(FileUuid::class, Uuid::for($file));
 		$this->assertInstanceOf(SiteUuid::class, Uuid::for($site));
 		$this->assertInstanceOf(UserUuid::class, Uuid::for($user));
-		$this->assertInstanceOf(BlockUuid::class, Uuid::for($block));
-		$this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertInstanceOf(BlockUuid::class, Uuid::for($block));
+		// $this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
 	}
 
 	/**
@@ -193,9 +195,10 @@ class UuidTest extends TestCase
 		$this->assertTrue(Uuid::is('user://something'));
 		$this->assertTrue(Uuid::is('file://something'));
 		$this->assertTrue(Uuid::is('file://something/else'));
-		$this->assertTrue(Uuid::is('struct://something'));
-		$this->assertTrue(Uuid::is('block://something'));
-		$this->assertTrue(Uuid::is('block://something/else'));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertTrue(Uuid::is('struct://something'));
+		// $this->assertTrue(Uuid::is('block://something'));
+		// $this->assertTrue(Uuid::is('block://something/else'));
 
 		$this->assertTrue(Uuid::is('site://', 'site'));
 		$this->assertTrue(Uuid::is('page://something', 'page'));

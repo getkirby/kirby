@@ -22,8 +22,9 @@ class UriTest extends TestCase
 			['page://page-id', 'page',  'page-id', null],
 			['file://file-id', 'file', 'file-id', null],
 			['user://user-id', 'user', 'user-id', null],
-			['block://block-id', 'block', 'block-id', null],
-			['struct://structure-id', 'struct', 'structure-id', null],
+			// TODO: activate for  uuid-block-structure-support
+			// ['block://block-id', 'block', 'block-id', null],
+			// ['struct://structure-id', 'struct', 'structure-id', null],
 
 			// mixed UUIDs
 			['site://a.jpg', 'site', null, 'a.jpg'],

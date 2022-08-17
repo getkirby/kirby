@@ -24,8 +24,9 @@ class Uri extends BaseUri
 		'page',
 		'file',
 		'user',
-		'block',
-		'struct'
+		// TODO: acitivate for uuid-block-structure-support
+		// 'block',
+		// 'struct'
 	];
 
 	public function __construct(array|string $props = [], array $inject = [])
@@ -75,8 +76,8 @@ class Uri extends BaseUri
 	{
 		$url = parent::toString();
 
-		// correction for site protocols,
-		// since site has no host
+		// correction for protocols without host,
+		// e.g. mainly `site://`
 		$url = Str::replace($url, ':///', '://');
 
 		return $url;

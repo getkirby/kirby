@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Uuid\BlockUuid;
 use PHPUnit\Framework\TestCase;
 
 class BlockTest extends TestCase
@@ -360,11 +359,5 @@ class BlockTest extends TestCase
 		$this->assertTrue($block->isHidden());
 		$this->assertSame('gallery', $block->prev()->type());
 		$this->assertSame('quote', $block->next()->type());
-	}
-
-	public function testUuid()
-	{
-		$block = new Block(['type' => 'heading']);
-		$this->assertInstanceOf(BlockUuid::class, $block->uuid());
 	}
 }

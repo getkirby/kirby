@@ -10,6 +10,11 @@ use Kirby\Cms\Blocks;
  */
 class BlockUuidTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->markTestSkipped('Uuid doesn\'t support blocks yet.');
+	}
+
 	/**
 	 * @covers ::fieldToCollection
 	 */

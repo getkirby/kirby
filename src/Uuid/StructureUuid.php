@@ -8,6 +8,9 @@ use Kirby\Cms\Structure;
 /**
  * Uuid for \Kirby\Cms\StructureObject
  *
+ * Not yet supported
+ * @todo Finish for uuid-block-structure-support
+ *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

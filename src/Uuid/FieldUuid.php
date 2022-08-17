@@ -11,6 +11,9 @@ use Kirby\Toolkit\A;
  * Base for Uuids for models form content fields,
  * such as blocks and structure entries
  *
+ * Not yet supported
+ * @todo Finish for uuid-block-structure-support
+ *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com

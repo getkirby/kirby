@@ -10,6 +10,11 @@ use Kirby\Cms\Structure;
  */
 class StructureUuidTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$this->markTestSkipped('Uuid doesn\'t support structure entries yet.');
+	}
+
 	/**
 	 * @covers ::fieldToCollection
 	 */

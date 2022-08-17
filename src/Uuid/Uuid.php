@@ -137,8 +137,9 @@ class Uuid
 				'file'   => new FileUuid(uuid: $seed, context: $context),
 				'site'   => new SiteUuid(uuid: $seed, context: $context),
 				'user'   => new UserUuid(uuid: $seed, context: $context),
-				'block'  => new BlockUuid(uuid: $seed, context: $context),
-				'struct' => new StructureUuid(uuid: $seed, context: $context),
+				// TODO: activate for uuid-block-structure-support
+				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
+				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
 				default  => throw new InvalidArgumentException('Invalid uuid uri:' . $seed)
 			};
 		}
@@ -152,10 +153,11 @@ class Uuid
 				=> new SiteUuid(model: $seed, context: $context),
 			$seed instanceof User
 				=> new UserUuid(model: $seed, context: $context),
-			$seed instanceof Block
-				=> new BlockUuid(model: $seed, context: $context),
-			$seed instanceof StructureObject
-				=> new StructureUuid(model: $seed, context: $context),
+			// TODO: activate for uuid-block-structure-support
+			// $seed instanceof Block
+			// 	=> new BlockUuid(model: $seed, context: $context),
+			// $seed instanceof StructureObject
+			// 	=> new StructureUuid(model: $seed, context: $context),
 			default
 			=> throw new InvalidArgumentException('Uuid not supported for:' . get_class($seed))
 		};

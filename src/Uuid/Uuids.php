@@ -56,20 +56,21 @@ class Uuids
 			}
 		}
 
-		if ($type === 'all' || $type === 'blocks') {
-			foreach (BlockUuid::index() as $blocks) {
-				foreach ($blocks as $block) {
-					Uuid::for($block)->populate();
-				}
-			}
-		}
+		// TODO: activate for uuid-block-structure-support
+		// if ($type === 'all' || $type === 'blocks') {
+		// 	foreach (BlockUuid::index() as $blocks) {
+		// 		foreach ($blocks as $block) {
+		// 			Uuid::for($block)->populate();
+		// 		}
+		// 	}
+		// }
 
-		if ($type === 'all' || $type === 'structures') {
-			foreach (StructureUuid::index() as $structure) {
-				foreach ($structure as $entry) {
-					Uuid::for($entry)->populate();
-				}
-			}
-		}
+		// if ($type === 'all' || $type === 'structures') {
+		// 	foreach (StructureUuid::index() as $structure) {
+		// 		foreach ($structure as $entry) {
+		// 			Uuid::for($entry)->populate();
+		// 		}
+		// 	}
+		// }
 	}
 }
