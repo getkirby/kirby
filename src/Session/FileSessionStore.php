@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -322,7 +323,7 @@ class FileSessionStore extends SessionStore
 		}
 
 		// file still exists, delete it
-		if (@unlink($path) !== true) {
+		if (@F::unlink($path) !== true) {
 			// @codeCoverageIgnoreStart
 			throw new Exception([
 				'key'       => 'session.filestore.unexpectedFilesystemError',
