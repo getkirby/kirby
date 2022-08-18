@@ -68,12 +68,6 @@ class Dom
 		$this->doc  = new DOMDocument();
 
 		$loaderSetting = null;
-		if (\PHP_VERSION_ID < 80000) {
-			// prevent loading external entities to protect against XXE attacks;
-			// only needed for PHP versions before 8.0 (the function was deprecated
-			// as the disabled state is the new default in PHP 8.0+)
-			$loaderSetting = libxml_disable_entity_loader(true);
-		}
 
 		// switch to "user error handling"
 		$intErrorsSetting = libxml_use_internal_errors(true);
@@ -104,12 +98,6 @@ class Dom
 			}
 		} else {
 			$load = $this->doc->loadXML($code);
-		}
-
-		if (\PHP_VERSION_ID < 80000) {
-			// ensure that we don't alter global state by
-			// resetting the original value
-			libxml_disable_entity_loader($loaderSetting);
 		}
 
 		// get one error for use below and reset the global state
