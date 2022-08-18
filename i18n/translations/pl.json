@@ -49,8 +49,8 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
-  "entries": "Entries",
-  "entry": "Entry",
+  "entries": "Wpisy",
+  "entry": "Wpis",
 
   "environment": "Środowisko",
 
@@ -297,7 +297,7 @@
   "hide": "Ukryj",
   "hour": "Godzina",
   "import": "Importuj",
-  "info": "Info",
+  "info": "Informacje",
   "insert": "Wstaw",
   "insert.after": "Wstaw po",
   "insert.before": "Wstaw przed",
@@ -340,12 +340,12 @@
   "license": "Licencja",
   "license.buy": "Kup licencję",
   "license.register": "Zarejestruj",
-  "license.manage": "Manage your licenses",
+  "license.manage": "Zarządzaj swoimi licencjami",
   "license.register.help": "Po zakupieniu licencji otrzymałaś/-eś mailem klucz. Skopiuj go i wklej tutaj, aby dokonać rejestracji.",
   "license.register.label": "Wprowadź swój kod licencji",
   "license.register.success": "Dziękujemy za wspieranie Kirby",
   "license.unregistered": "To jest niezarejestrowana wersja demonstracyjna Kirby",
-  "license.unregistered.label": "Unregistered",
+  "license.unregistered.label": "Niezarejestrowane",
 
   "link": "Link",
   "link.text": "Tekst linku",
@@ -475,7 +475,7 @@
 
   "section.required": "Sekcja jest wymagana",
 
-  "security": "Security",
+  "security": "Bezpieczeństwo",
   "select": "Wybierz",
   "server": "Serwer",
   "settings": "Ustawienia",
@@ -485,13 +485,13 @@
   "slug": "Końcówka URL",
   "sort": "Sortuj",
 
-  "stats.empty": "No reports",
-  "system.issues.content": "The content folder seems to be exposed",
-  "system.issues.debug": "Debugging must be turned off in production",
-  "system.issues.git": "The .git folder seems to be exposed",
-  "system.issues.https": "We recommend HTTPS for all your sites",
-  "system.issues.kirby": "The kirby folder seems to be exposed",
-  "system.issues.site": "The site folder seems to be exposed",
+  "stats.empty": "Brak raportów",
+  "system.issues.content": "Zdaje się, że folder „content” jest wystawiony na publiczny dostęp",
+  "system.issues.debug": "Debugowanie musi być wyłączone w środowisku produkcyjnym",
+  "system.issues.git": "Zdaje się, że folder „.git” jest wystawiony na publiczny dostęp",
+  "system.issues.https": "Zalecamy HTTPS dla wszystkich Twoich witryn",
+  "system.issues.kirby": "Zdaje się, że folder „kirby” jest wystawiony na publiczny dostęp",
+  "system.issues.site": "Zdaje się, że folder „site” jest wystawiony na publiczny dostęp",
 
   "title": "Tytuł",
   "template": "Szablon",
