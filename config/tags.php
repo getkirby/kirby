@@ -246,6 +246,7 @@ return [
 			'height',
 			'loop',
 			'muted',
+			'playsinline',
 			'poster',
 			'preload',
 			'style',
@@ -292,6 +293,7 @@ return [
 				$attrs['controls'] = Str::toType($tag->controls ?? true, 'bool');
 				$attrs['loop']     = Str::toType($tag->loop, 'bool');
 				$attrs['muted']    = Str::toType($tag->muted ?? $autoplay, 'bool');
+				$attrs['playsinline'] = Str::toType($tag->playsinline ?? $autoplay, 'bool');
 				$attrs['poster']   = $tag->poster;
 				$attrs['preload']  = $tag->preload;
 			}
