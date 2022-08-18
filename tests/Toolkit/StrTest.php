@@ -206,7 +206,7 @@ class StrTest extends TestCase
 		$this->assertSame('29.01.2020', Str::date($time, 'd.m.Y'));
 
 		// `intl` handler
-		$formatter = new IntlDateFormatter(null, IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
+		$formatter = new IntlDateFormatter('en-US', IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
 		$this->assertSame($time, Str::date($time, null, 'intl'));
 		$this->assertSame('29/1/2020 01:01', Str::date($time, 'd/M/yyyy HH:mm', 'intl'));
 		$this->assertSame('January 29, 2020 at 1:01 AM', Str::date($time, $formatter));
