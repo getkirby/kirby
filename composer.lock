@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "039b76eb24f9d5016bc5284c5b366718",
+    "content-hash": "2700a736f70cdc862c7234376f224501",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -617,12 +617,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -714,6 +714,7 @@
                 "issues": "https://github.com/true/php-punycode/issues",
                 "source": "https://github.com/true/php-punycode/tree/master"
             },
+            "abandoned": true,
             "time": "2016-11-16T10:37:54+00:00"
         }
     ],
@@ -729,5 +730,5 @@
         "ext-mbstring": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
