@@ -728,6 +728,9 @@ class F
 		}
 
 		$file = realpath($file);
+		if (is_string($file) === false) {
+			return true;
+		}
 
 		return static::unlink($file);
 	}

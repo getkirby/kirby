@@ -538,9 +538,52 @@ class FTest extends TestCase
 
 		$this->assertFileExists($a);
 
-		F::remove($this->tmp . '/a.jpg');
+		$this->assertTrue(F::remove($a));
 
 		$this->assertFileDoesNotExist($a);
+	}
+
+	/**
+	 * @covers ::remove
+	 */
+	public function testRemoveAlreadyRemoved()
+	{
+		$this->assertFileDoesNotExist($a = $this->tmp . '/a.jpg');
+
+		$this->assertTrue(F::remove($a));
+
+		$this->assertFileDoesNotExist($a);
+	}
+
+	/**
+	 * @covers ::remove
+	 */
+	public function testRemoveDirectory()
+	{
+		Dir::make($a = $this->tmp . '/a');
+
+		$this->assertDirectoryExists($a);
+
+		$this->assertFalse(@F::remove($a));
+
+		$this->assertDirectoryExists($a);
+	}
+
+	/**
+	 * @covers ::remove
+	 */
+	public function testRemoveLink()
+	{
+		F::write($a = $this->tmp . '/a.jpg', '');
+		symlink($a, $b = $this->tmp . '/b.jpg');
+
+		$this->assertFileExists($a);
+		$this->assertTrue(is_link($b));
+
+		$this->assertTrue(F::remove($b));
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertTrue(is_link($b));
 	}
 
 	/**
