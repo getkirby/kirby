@@ -1,9 +1,9 @@
 <template>
-	<div :data-align="align" :data-size="size" :data-theme="theme" class="k-text">
-		<!-- eslint-disable-next-line vue/no-v-html -->
-		<span v-if="html" v-html="html" />
+	<!-- eslint-disable-next-line vue/no-v-html -->
+	<div v-if="html" v-bind="attrs" v-html="html"></div>
+	<div v-else v-bind="attrs">
 		<!-- @slot Text content -->
-		<slot v-else />
+		<slot />
 	</div>
 </template>
 
@@ -39,6 +39,16 @@ export default {
 		 * @values help
 		 */
 		theme: String
+	},
+	computed: {
+		attrs() {
+			return {
+				class: "k-text",
+				"data-align": this.align,
+				"data-size": this.size,
+				"data-theme": this.theme
+			};
+		}
 	}
 };
 </script>
