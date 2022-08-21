@@ -22,8 +22,7 @@
       @dblclick.native="edit(tag)"
       @remove="remove(tag)"
     >
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="tag.text" />
+      {{ tag.text }}
     </k-tag>
 
     <span slot="footer" class="k-tags-input-element">
