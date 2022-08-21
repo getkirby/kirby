@@ -43,10 +43,10 @@ export default {
 	computed: {
 		attrs() {
 			return {
+				class: "k-text",
 				"data-align": this.align,
 				"data-size": this.size,
-				"data-theme": this.theme,
-				class: "k-text"
+				"data-theme": this.theme
 			};
 		}
 	}
