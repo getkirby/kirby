@@ -58,8 +58,7 @@
         >
           <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="option.display" />
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span class="k-multiselect-value" v-html="option.info" />
+          <span class="k-multiselect-value" v-text="option.info" />
         </k-dropdown-item>
 
         <k-dropdown-item
