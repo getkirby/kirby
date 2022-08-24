@@ -625,22 +625,23 @@ class HelperFunctionsTest extends TestCase
 	{
 		$this->kirby->clone([
 			'server' => [
-				'REQUEST_URI' => '/projects/filter:current'
+				'REQUEST_URI' => '/projects/filter:current/b%2Fb%3A:value-B%2FB%3A'
 			]
 		]);
 
 		$this->assertSame('current', param('filter'));
+		$this->assertSame('value-B/B:', param('b/b:'));
 	}
 
 	public function testParams()
 	{
 		$this->kirby->clone([
 			'server' => [
-				'REQUEST_URI' => '/projects/a:value-a/b:value-b?foo=path'
+				'REQUEST_URI' => '/projects/a:value-a/b%2Fb%3A:value-B%2FB%3A?foo=path'
 			],
 		]);
 
-		$this->assertSame(['a' => 'value-a', 'b' => 'value-b'], params());
+		$this->assertSame(['a' => 'value-a', 'b/b:' => 'value-B/B:'], params());
 	}
 
 	public function testR()

@@ -19,8 +19,7 @@
 			@keydown.native.right="navigate('next')"
 			@keydown.native.down="$refs.dropdown.open"
 		>
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-html="tag.text" />
+			{{ tag.text }}
 		</k-tag>
 
 		<template #footer>
