@@ -17,7 +17,7 @@ use Kirby\Toolkit\Obj;
  */
 class Query extends Obj
 {
-	public function __construct($query)
+	public function __construct(string|array|null $query)
 	{
 		if (is_string($query) === true) {
 			parse_str(ltrim($query, '?'), $query);
@@ -36,12 +36,7 @@ class Query extends Obj
 		return empty((array)$this) === false;
 	}
 
-	public function __toString(): string
-	{
-		return $this->toString();
-	}
-
-	public function toString($questionMark = false): string
+	public function toString(bool $questionMark = false): string
 	{
 		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
 
@@ -54,5 +49,11 @@ class Query extends Obj
 		}
 
 		return $query;
+	}
+
+
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 }

@@ -66,7 +66,7 @@ class PlainTest extends TestCase
 	 */
 	public function testFallbackForInvalidContent()
 	{
-		$this->assertNull($this->schema->fallback([]));
+		$this->assertNull($this->schema->fallback(''));
 	}
 
 	/**

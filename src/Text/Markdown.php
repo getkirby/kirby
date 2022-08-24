@@ -23,16 +23,12 @@ class Markdown
 	/**
 	 * Array with all configured options
 	 * for the parser
-	 *
-	 * @var array
 	 */
-	protected $options = [];
+	protected array $options = [];
 
 	/**
 	 * Returns default values for all
 	 * available parser options
-	 *
-	 * @return array
 	 */
 	public function defaults(): array
 	{
@@ -46,8 +42,6 @@ class Markdown
 	/**
 	 * Creates a new Markdown parser
 	 * with the given options
-	 *
-	 * @param array $options
 	 */
 	public function __construct(array $options = [])
 	{
@@ -56,12 +50,8 @@ class Markdown
 
 	/**
 	 * Parses the given text and returns the HTML
-	 *
-	 * @param string|null $text
-	 * @param bool $inline
-	 * @return string
 	 */
-	public function parse(string $text = null, bool $inline = false): string
+	public function parse(string|null $text = null, bool $inline = false): string
 	{
 		if ($this->options['extra'] === true) {
 			$parser = new ParsedownExtra();
@@ -74,8 +64,8 @@ class Markdown
 
 		if ($inline === true) {
 			return @$parser->line($text);
-		} else {
-			return @$parser->text($text);
 		}
+
+		return @$parser->text($text);
 	}
 }

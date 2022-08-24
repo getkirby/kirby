@@ -104,7 +104,6 @@ class CoreTest extends TestCase
 		$components = $this->core->components();
 
 		$this->assertArrayHasKey('css', $components);
-		$this->assertArrayHasKey('dump', $components);
 		$this->assertArrayHasKey('file::url', $components);
 		$this->assertArrayHasKey('file::version', $components);
 		$this->assertArrayHasKey('js', $components);

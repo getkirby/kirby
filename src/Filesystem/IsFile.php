@@ -26,29 +26,21 @@ trait IsFile
 
 	/**
 	 * File asset object
-	 *
-	 * @var \Kirby\Filesystem\File
 	 */
-	protected $asset;
+	protected File|null $asset = null;
 
 	/**
 	 * Absolute file path
-	 *
-	 * @var string|null
 	 */
-	protected $root;
+	protected string|null $root = null;
 
 	/**
 	 * Absolute file URL
-	 *
-	 * @var string|null
 	 */
-	protected $url;
+	protected string|null $url = null;
 
 	/**
 	 * Constructor sets all file properties
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
@@ -58,12 +50,9 @@ trait IsFile
 	/**
 	 * Magic caller for asset methods
 	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -80,8 +69,6 @@ trait IsFile
 
 	/**
 	 * Converts the asset to a string
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -90,11 +77,8 @@ trait IsFile
 
 	/**
 	 * Returns the file asset object
-	 *
-	 * @param array|string|null $props
-	 * @return \Kirby\Filesystem\File
 	 */
-	public function asset($props = null)
+	public function asset(array|string|null $props = null): File
 	{
 		if ($this->asset !== null) {
 			return $this->asset;
@@ -105,18 +89,14 @@ trait IsFile
 			'url'  => $this->url()
 		];
 
-		switch ($this->type()) {
-			case 'image':
-				return $this->asset = new Image($props);
-			default:
-				return $this->asset = new File($props);
-		}
+		return $this->asset = match ($this->type()) {
+			'image' => new Image($props),
+			default => new File($props)
+		};
 	}
 
 	/**
 	 * Checks if the file exists on disk
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -129,20 +109,16 @@ trait IsFile
 
 	/**
 	 * Returns the app instance
-	 *
-	 * @return \Kirby\Cms\App
 	 */
-	public function kirby()
+	public function kirby(): App
 	{
 		return App::instance();
 	}
 
 	/**
 	 * Returns the given file path
-	 *
-	 * @return string|null
 	 */
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return $this->root;
 	}
@@ -150,10 +126,9 @@ trait IsFile
 	/**
 	 * Setter for the root
 	 *
-	 * @param string|null $root
 	 * @return $this
 	 */
-	protected function setRoot(?string $root = null)
+	protected function setRoot(string|null $root = null): static
 	{
 		$this->root = $root;
 		return $this;
@@ -162,10 +137,9 @@ trait IsFile
 	/**
 	 * Setter for the file url
 	 *
-	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(?string $url = null)
+	protected function setUrl(string|null $url = null): static
 	{
 		$this->url = $url;
 		return $this;
@@ -173,10 +147,8 @@ trait IsFile
 
 	/**
 	 * Returns the file type
-	 *
-	 * @return string|null
 	 */
-	public function type(): ?string
+	public function type(): string|null
 	{
 		// Important to include this in the trait
 		// to avoid infinite loops when trying
@@ -186,10 +158,8 @@ trait IsFile
 
 	/**
 	 * Returns the absolute url for the file
-	 *
-	 * @return string|null
 	 */
-	public function url(): ?string
+	public function url(): string|null
 	{
 		return $this->url;
 	}

@@ -94,7 +94,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function exposedFileUrl(string $folder): ?string
+	public function exposedFileUrl(string $folder): string|null
 	{
 		if (!$url = $this->folderUrl($folder)) {
 			return null;
@@ -140,7 +140,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function folderUrl(string $folder): ?string
+	public function folderUrl(string $folder): string|null
 	{
 		$index = $this->app->root('index');
 
@@ -196,28 +196,28 @@ class System
 		// init /site/accounts
 		try {
 			Dir::make($this->app->root('accounts'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The accounts directory could not be created');
 		}
 
 		// init /site/sessions
 		try {
 			Dir::make($this->app->root('sessions'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The sessions directory could not be created');
 		}
 
 		// init /content
 		try {
 			Dir::make($this->app->root('content'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The content directory could not be created');
 		}
 
 		// init /media
 		try {
 			Dir::make($this->app->root('media'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The media directory could not be created');
 		}
 	}
@@ -277,7 +277,7 @@ class System
 	{
 		try {
 			$license = Json::read($this->app->root('license'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 
@@ -454,7 +454,7 @@ class System
 	public function php(): bool
 	{
 		return
-			version_compare(PHP_VERSION, '7.4.0', '>=') === true &&
+			version_compare(PHP_VERSION, '8.0.0', '>=') === true &&
 			version_compare(PHP_VERSION, '8.2.0', '<')  === true;
 	}
 
@@ -544,23 +544,19 @@ class System
 	 *
 	 * @return string|null
 	 */
-	public function serverSoftware(): ?string
+	public function serverSoftware(): string|null
 	{
-		if ($servers = $this->app->option('servers')) {
-			$servers = A::wrap($servers);
-		} else {
-			$servers = [
-				'apache',
-				'caddy',
-				'litespeed',
-				'nginx',
-				'php'
-			];
-		}
+		$servers = $this->app->option('servers', [
+			'apache',
+			'caddy',
+			'litespeed',
+			'nginx',
+			'php'
+		]);
 
 		$software = $this->app->environment()->get('SERVER_SOFTWARE', '');
 
-		preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
+		preg_match('!(' . implode('|', A::wrap($servers)) . ')!i', $software, $matches);
 
 		return $matches[0] ?? null;
 	}

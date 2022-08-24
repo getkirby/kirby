@@ -1,11 +1,6 @@
 <?php
 
 /**
- * Constants
- */
-define('DS', '/');
-
-/**
  * Class aliases
  */
 $aliases = require_once __DIR__ . '/aliases.php';

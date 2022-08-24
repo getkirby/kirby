@@ -170,7 +170,7 @@ class Mime
 	 * @param string $extension
 	 * @return string|null
 	 */
-	public static function fromExtension(string $extension): ?string
+	public static function fromExtension(string $extension): string|null
 	{
 		$mime = static::$types[$extension] ?? null;
 		return is_array($mime) === true ? array_shift($mime) : $mime;
@@ -312,12 +312,8 @@ class Mime
 
 	/**
 	 * Returns the MIME type of a file
-	 *
-	 * @param string $file
-	 * @param string $extension
-	 * @return string|false
 	 */
-	public static function type(string $file, string $extension = null)
+	public static function type(string $file, string|null $extension = null): string|null
 	{
 		// use the standard finfo extension
 		$mime = static::fromFileInfo($file);

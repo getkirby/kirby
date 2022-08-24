@@ -4,6 +4,7 @@ namespace Kirby\Http\Request\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Http\Request\Auth;
+use Kirby\Session\Session;
 
 /**
  * Authentication data using Kirby's session
@@ -18,18 +19,14 @@ class SessionAuth extends Auth
 {
 	/**
 	 * Tries to return the session object
-	 *
-	 * @return \Kirby\Session\Session
 	 */
-	public function session()
+	public function session(): Session
 	{
 		return App::instance()->sessionHandler()->getManually($this->data);
 	}
 
 	/**
 	 * Returns the session token
-	 *
-	 * @return string
 	 */
 	public function token(): string
 	{
@@ -38,8 +35,6 @@ class SessionAuth extends Auth
 
 	/**
 	 * Returns the authentication type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{

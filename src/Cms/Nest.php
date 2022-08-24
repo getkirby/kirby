@@ -39,10 +39,10 @@ class Nest
 			}
 		}
 
-		if (is_int(key($data))) {
+		if (is_int(key($data)) === true) {
 			return new NestCollection($result);
-		} else {
-			return new NestObject($result);
 		}
+
+		return new NestObject($result);
 	}
 }

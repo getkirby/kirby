@@ -2,7 +2,10 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\Translation;
 use Kirby\Cms\Url;
+use Kirby\Filesystem\Asset;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -18,14 +21,7 @@ use Kirby\Toolkit\I18n;
 class User extends Model
 {
 	/**
-	 * @var \Kirby\Cms\User
-	 */
-	protected $model;
-
-	/**
 	 * Breadcrumb array
-	 *
-	 * @return array
 	 */
 	public function breadcrumb(): array
 	{
@@ -39,9 +35,6 @@ class User extends Model
 
 	/**
 	 * Provides options for the user dropdown
-	 *
-	 * @param array $options
-	 * @return array
 	 */
 	public function dropdown(array $options = []): array
 	{
@@ -104,8 +97,6 @@ class User extends Model
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
 	 * for example.
-	 *
-	 * @return array
 	 */
 	public function dropdownOption(): array
 	{
@@ -115,10 +106,7 @@ class User extends Model
 		] + parent::dropdownOption();
 	}
 
-	/**
-	 * @return string|null
-	 */
-	public function home(): ?string
+	public function home(): string|null
 	{
 		if ($home = ($this->model->blueprint()->home() ?? null)) {
 			$url = $this->model->toString($home);
@@ -130,8 +118,6 @@ class User extends Model
 
 	/**
 	 * Default settings for the user's Panel image
-	 *
-	 * @return array
 	 */
 	protected function imageDefaults(): array
 	{
@@ -144,12 +130,11 @@ class User extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
-	 * @param string|null $query
-	 * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
+	 * @internal
 	 */
-	protected function imageSource(string $query = null)
-	{
+	protected function imageSource(
+		string|null $query = null
+	): CmsFile|Asset|null {
 		if ($query === null) {
 			return $this->model->avatar();
 		}
@@ -159,8 +144,6 @@ class User extends Model
 
 	/**
 	 * Returns the full path without leading slash
-	 *
-	 * @return string
 	 */
 	public function path(): string
 	{
@@ -174,11 +157,8 @@ class User extends Model
 
 	/**
 	 * Returns prepared data for the panel user picker
-	 *
-	 * @param array|null $params
-	 * @return array
 	 */
-	public function pickerData(array $params = null): array
+	public function pickerData(array $params = []): array
 	{
 		$params['text'] ??= '{{ user.username }}';
 
@@ -193,8 +173,6 @@ class User extends Model
 	 * previous and next user
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function prevNext(): array
 	{
@@ -211,8 +189,6 @@ class User extends Model
 	 * view's component props
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function props(): array
 	{
@@ -244,10 +220,8 @@ class User extends Model
 	/**
 	 * Returns the Translation object
 	 * for the selected Panel language
-	 *
-	 * @return \Kirby\Cms\Translation
 	 */
-	public function translation()
+	public function translation(): Translation
 	{
 		$kirby = $this->model->kirby();
 		$lang  = $this->model->language();
@@ -259,8 +233,6 @@ class User extends Model
 	 * this model's Panel view
 	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function view(): array
 	{

@@ -521,7 +521,7 @@ class App
 	 * @param string|null $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
-	public function csrf(?string $check = null)
+	public function csrf(string|null $check = null)
 	{
 		$session = $this->session();
 
@@ -647,15 +647,7 @@ class App
 		}
 
 		if ($id === '.') {
-			if ($file = $parent->file($filename)) {
-				return $file;
-			}
-
-			if ($file = $this->site()->file($filename)) {
-				return $file;
-			}
-
-			return null;
+			return $parent->file($filename) ?? $this->site()->file($filename);
 		}
 
 		if ($page = $this->page($id, $parent, $drafts)) {
@@ -681,7 +673,7 @@ class App
 	 *
 	 * @todo merge with App::file()
 	 */
-	public function image(?string $path = null)
+	public function image(string|null $path = null)
 	{
 		if ($path === null) {
 			return $this->site()->page()->image();
@@ -694,23 +686,13 @@ class App
 			$uri = null;
 		}
 
-		switch ($uri) {
-			case '/':
-				$parent = $this->site();
-				break;
-			case null:
-				$parent = $this->site()->page();
-				break;
-			default:
-				$parent = $this->site()->page($uri);
-				break;
-		}
+		$parent = match ($uri) {
+			'/'     => $this->site(),
+			null    => $this->site()->page(),
+			default => $this->site()->page($uri)
+		};
 
-		if ($parent) {
-			return $parent->image($filename);
-		}
-
-		return null;
+		return $parent?->image($filename);
 	}
 
 	/**
@@ -722,15 +704,15 @@ class App
 	 */
 	public static function instance(self $instance = null, bool $lazy = false)
 	{
-		if ($instance === null) {
-			if ($lazy === true) {
-				return static::$instance;
-			} else {
-				return static::$instance ?? new static();
-			}
+		if ($instance !== null) {
+			return static::$instance = $instance;
 		}
 
-		return static::$instance = $instance;
+		if ($lazy === true) {
+			return static::$instance;
+		}
+
+		return static::$instance ?? new static();
 	}
 
 	/**
@@ -807,10 +789,11 @@ class App
 				return $this->io($e);
 			}
 
-			if ($input->isErrorPage() === true) {
-				if ($response->code() === null) {
-					$response->code(404);
-				}
+			if (
+				$input->isErrorPage() === true &&
+				$response->code() === null
+			) {
+				$response->code(404);
 			}
 
 			return $response->send($html);
@@ -845,7 +828,7 @@ class App
 	 * @param array $data
 	 * @return string
 	 */
-	public function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
+	public function kirbytag($type, string|null $value = null, array $attr = [], array $data = []): string
 	{
 		if (is_array($type) === true) {
 			$kirbytag = $type;
@@ -896,24 +879,13 @@ class App
 	 * @internal
 	 * @param string|null $text
 	 * @param array $options
-	 * @param bool $inline (deprecated: use $options['markdown']['inline'] instead)
 	 * @return string
-	 * @todo remove $inline parameter in in 3.8.0
 	 */
-	public function kirbytext(string $text = null, array $options = [], bool $inline = false): string
+	public function kirbytext(string $text = null, array $options = []): string
 	{
-		// warning for deprecated fourth parameter
-		// @codeCoverageIgnoreStart
-		if (func_num_args() === 3) {
-			Helpers::deprecated('Cms\App::kirbytext(): the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'markdown\'][\'inline\'] instead.');
-		}
-		// @codeCoverageIgnoreEnd
-
-		$options['markdown']['inline'] ??= $inline;
-
 		$text = $this->apply('kirbytext:before', compact('text'), 'text');
 		$text = $this->kirbytags($text, $options);
-		$text = $this->markdown($text, $options['markdown']);
+		$text = $this->markdown($text, $options['markdown'] ?? []);
 
 		if ($this->option('smartypants', false) !== false) {
 			$text = $this->smartypants($text);
@@ -954,22 +926,15 @@ class App
 	 * @param string|null $languageCode
 	 * @return string|null
 	 */
-	public function languageCode(string $languageCode = null): ?string
+	public function languageCode(string $languageCode = null): string|null
 	{
-		if ($language = $this->language($languageCode)) {
-			return $language->code();
-		}
-
-		return null;
+		return $this->language($languageCode)?->code();
 	}
 
 	/**
 	 * Returns all available site languages
-	 *
-	 * @param bool
-	 * @return \Kirby\Cms\Languages
 	 */
-	public function languages(bool $clone = true)
+	public function languages(bool $clone = true): Languages
 	{
 		if ($this->languages !== null) {
 			return $clone === true ? clone $this->languages : $this->languages;
@@ -1007,34 +972,18 @@ class App
 	 *
 	 * @internal
 	 * @param string|null $text
-	 * @param bool|array $options Boolean inline value is deprecated, use `['inline' => true]` instead
+	 * @param array $options
 	 * @return string
-	 * @todo remove boolean $options in in 3.8.0
 	 */
-	public function markdown(string $text = null, $options = null): string
+	public function markdown(string $text = null, array $options = null): string
 	{
-		// support for the old syntax to enable inline mode as second argument
-		// @codeCoverageIgnoreStart
-		if (is_bool($options) === true) {
-			Helpers::deprecated('Cms\App::markdown(): Passing a boolean as second parameter has been deprecated and won\'t be supported anymore in Kirby 3.8.0. Instead pass array with the key "inline" set to true or false.');
-
-			$options = [
-				'inline' => $options
-			];
-		}
-		// @codeCoverageIgnoreEnd
-
 		// merge global options with local options
 		$options = array_merge(
 			$this->options['markdown'] ?? [],
 			(array)$options
 		);
 
-		// TODO: remove passing the $inline parameter in 3.8.0
-		// $options['inline'] is set to `false` to avoid the deprecation
-		// warning in the component; this can also be removed in 3.8.0
-		$inline = $options['inline'] ??= false;
-		return ($this->component('markdown'))($this, $text, $options, $inline);
+		return ($this->component('markdown'))($this, $text, $options);
 	}
 
 	/**
@@ -1202,7 +1151,7 @@ class App
 	 * @param bool $drafts
 	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page(?string $id = null, $parent = null, bool $drafts = true)
+	public function page(string|null $id = null, $parent = null, bool $drafts = true)
 	{
 		if ($id === null) {
 			return null;
@@ -1309,7 +1258,10 @@ class App
 
 		// search for a draft if the page cannot be found
 		if (!$page && $draft = $site->draft($path)) {
-			if ($this->user() || $draft->isVerified($this->request()->get('token'))) {
+			if (
+				$this->user() ||
+				$draft->isVerified($this->request()->get('token'))
+			) {
 				$page = $draft;
 			}
 		}
@@ -1336,7 +1288,7 @@ class App
 				}
 
 				return $response->body($output);
-			} catch (NotFoundException $e) {
+			} catch (NotFoundException) {
 				return null;
 			}
 		}
@@ -1379,7 +1331,7 @@ class App
 	 * @param string $type
 	 * @return string|null
 	 */
-	public function root(string $type = 'index'): ?string
+	public function root(string $type = 'index'): string|null
 	{
 		return $this->roots->__get($type);
 	}
@@ -1573,12 +1525,16 @@ class App
 	 * @deprecated 3.7.0 Use `$kirby->environment()` instead
 	 *
 	 * @return \Kirby\Http\Environment
-	 * @todo Start throwing deprecation warnings in 3.8.0
+	 * @deprecated Will be removed in Kirby 3.9.0
 	 * @todo Remove in 3.9.0
 	 * @codeCoverageIgnore
 	 */
 	public function server()
 	{
+		// @codeCoverageIgnoreStart
+		Helpers::deprecated('$kirby->server() has been deprecated and will be removed in Kirby 3.9.0. Use $kirby->environment() instead.');
+		// @codeCoverageIgnoreEnd
+
 		return $this->environment();
 	}
 
@@ -1635,7 +1591,7 @@ class App
 	 * @param bool $return On `false`, directly echo the snippet
 	 * @return string|null
 	 */
-	public function snippet($name, $data = [], bool $return = true): ?string
+	public function snippet($name, $data = [], bool $return = true): string|null
 	{
 		if (is_object($data) === true) {
 			$data = ['item' => $data];
@@ -1741,6 +1697,7 @@ class App
 	 * @param string $type
 	 * @param bool $object If set to `true`, the URL is converted to an object
 	 * @return string|\Kirby\Http\Uri|null
+	 * @psalm-return ($object is false ? string|null : \Kirby\Http\Uri)
 	 */
 	public function url(string $type = 'index', bool $object = false)
 	{
@@ -1778,11 +1735,11 @@ class App
 	 * @return string|null
 	 * @throws \Kirby\Exception\LogicException if the Kirby version cannot be detected
 	 */
-	public static function version(): ?string
+	public static function version(): string|null
 	{
 		try {
 			return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
 		}
 	}

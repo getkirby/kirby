@@ -236,7 +236,10 @@ class Email
 		$this->props[$addressProp] = $address;
 
 		// only use the name from the user if no custom name was set
-		if (isset($this->props[$nameProp]) === false || $this->props[$nameProp] === null) {
+		if (
+			isset($this->props[$nameProp]) === false ||
+			$this->props[$nameProp] === null
+		) {
 			$this->props[$nameProp] = $name;
 		}
 	}

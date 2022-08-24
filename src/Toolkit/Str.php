@@ -5,7 +5,6 @@ namespace Kirby\Toolkit;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -326,7 +325,7 @@ class Str
 	 * @param string $handler date, intl or strftime
 	 * @return string|int
 	 */
-	public static function date(?int $time = null, $format = null, string $handler = 'date')
+	public static function date(int|null $time = null, $format = null, string $handler = 'date')
 	{
 		if (is_null($format) === true) {
 			return $time;
@@ -553,21 +552,6 @@ class Str
 	}
 
 	/**
-	 * Checks if the given string is a URL
-	 *
-	 * @param string|null $string
-	 * @return bool
-	 * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
-	 * @todo Remove in 3.8.0
-	 * @codeCoverageIgnore
-	 */
-	public static function isURL(?string $string = null): bool
-	{
-		Helpers::deprecated('Toolkit\Str::isUrl() has been deprecated and will be removed in Kirby 3.8.0. Use Toolkit\V::url() instead.');
-		return filter_var($string, FILTER_VALIDATE_URL) !== false;
-	}
-
-	/**
 	 * Convert a string to kebab case.
 	 *
 	 * @param string $value
@@ -629,23 +613,14 @@ class Str
 				$pool = array_merge($pool, static::pool($t));
 			}
 		} else {
-			switch (strtolower($type)) {
-				case 'alphalower':
-					$pool = range('a', 'z');
-					break;
-				case 'alphaupper':
-					$pool = range('A', 'Z');
-					break;
-				case 'alpha':
-					$pool = static::pool(['alphaLower', 'alphaUpper']);
-					break;
-				case 'num':
-					$pool = range(0, 9);
-					break;
-				case 'alphanum':
-					$pool = static::pool(['alpha', 'num']);
-					break;
-			}
+			$pool = match (strtolower($type)) {
+				'alphalower' => range('a', 'z'),
+				'alphaupper' => range('A', 'Z'),
+				'alpha'      => static::pool(['alphaLower', 'alphaUpper']),
+				'num'        => range(0, 9),
+				'alphanum'   => static::pool(['alpha', 'num']),
+				default      => $pool
+			};
 		}
 
 		return $array ? $pool : implode('', $pool);
@@ -1101,7 +1076,7 @@ class Str
 	 * and it has a built-in way to skip values
 	 * which are too short.
 	 *
-	 * @param string $string The string to split
+	 * @param string|array|null $string The string to split
 	 * @param string $separator The string to split by
 	 * @param int $length The min length of values.
 	 * @return array An array of found values
@@ -1208,7 +1183,7 @@ class Str
 			if (strpos($query, '.') !== false) {
 				try {
 					$result = (new Query($match[1], $data))->result();
-				} catch (Exception $e) {
+				} catch (Exception) {
 					$result = null;
 				}
 			} else {
@@ -1270,21 +1245,13 @@ class Str
 			$type = gettype($type);
 		}
 
-		switch ($type) {
-			case 'array':
-				return (array)$string;
-			case 'bool':
-			case 'boolean':
-				return filter_var($string, FILTER_VALIDATE_BOOLEAN);
-			case 'double':
-			case 'float':
-				return (float)$string;
-			case 'int':
-			case 'integer':
-				return (int)$string;
-		}
-
-		return (string)$string;
+		return match ($type) {
+			'array'           => (array)$string,
+			'bool', 'boolean' => filter_var($string, FILTER_VALIDATE_BOOLEAN),
+			'double', 'float' => (float)$string,
+			'int', 'integer'  => (int)$string,
+			default           => (string)$string
+		};
 	}
 
 	/**

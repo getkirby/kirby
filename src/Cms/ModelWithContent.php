@@ -97,7 +97,10 @@ abstract class ModelWithContent extends Model
 		} else {
 
 			// only fetch from cache for the default language
-			if ($languageCode === null && is_a($this->content, 'Kirby\Cms\Content') === true) {
+			if (
+				$languageCode === null &&
+				is_a($this->content, 'Kirby\Cms\Content') === true
+			) {
 				return $this->content;
 			}
 
@@ -137,21 +140,21 @@ abstract class ModelWithContent extends Model
 		if ($force === true) {
 			if (empty($languageCode) === false) {
 				return $directory . '/' . $filename . '.' . $languageCode . '.' . $extension;
-			} else {
-				return $directory . '/' . $filename . '.' . $extension;
 			}
+
+			return $directory . '/' . $filename . '.' . $extension;
 		}
 
 		// add and validate the language code in multi language mode
 		if ($this->kirby()->multilang() === true) {
 			if ($language = $this->kirby()->languageCode($languageCode)) {
 				return $directory . '/' . $filename . '.' . $language . '.' . $extension;
-			} else {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 			}
-		} else {
-			return $directory . '/' . $filename . '.' . $extension;
+
+			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 		}
+
+		return $directory . '/' . $filename . '.' . $extension;
 	}
 
 	/**
@@ -167,11 +170,11 @@ abstract class ModelWithContent extends Model
 				$files[] = $this->contentFile($code);
 			}
 			return $files;
-		} else {
-			return [
-				$this->contentFile()
-			];
 		}
+
+		return [
+			$this->contentFile()
+		];
 	}
 
 	/**
@@ -196,7 +199,7 @@ abstract class ModelWithContent extends Model
 	 * @internal
 	 * @return string|null
 	 */
-	public function contentFileDirectory(): ?string
+	public function contentFileDirectory(): string|null
 	{
 		return $this->root();
 	}
@@ -352,7 +355,7 @@ abstract class ModelWithContent extends Model
 				'model'             => $this,
 				static::CLASS_ALIAS => $this
 			]);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return null;
 		}
 
@@ -374,7 +377,7 @@ abstract class ModelWithContent extends Model
 	{
 		try {
 			return Data::read($this->contentFile($languageCode));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return [];
 		}
 	}
@@ -384,7 +387,7 @@ abstract class ModelWithContent extends Model
 	 *
 	 * @return string|null
 	 */
-	abstract public function root(): ?string;
+	abstract public function root(): string|null;
 
 	/**
 	 * Stores the content on disk
@@ -399,9 +402,9 @@ abstract class ModelWithContent extends Model
 	{
 		if ($this->kirby()->multilang() === true) {
 			return $this->saveTranslation($data, $languageCode, $overwrite);
-		} else {
-			return $this->saveContent($data, $overwrite);
 		}
+
+		return $this->saveContent($data, $overwrite);
 	}
 
 	/**
@@ -644,60 +647,5 @@ abstract class ModelWithContent extends Model
 			$this->contentFile($languageCode),
 			$this->contentFileData($data, $languageCode)
 		);
-	}
-
-
-	/**
-	 * Deprecated!
-	 */
-
-	/**
-	 * Returns the panel icon definition
-	 *
-	 * @deprecated 3.6.0 Use `->panel()->image()` instead
-	 * @todo Remove in 3.8.0
-	 *
-	 * @internal
-	 * @param array|null $params
-	 * @return array|null
-	 * @codeCoverageIgnore
-	 */
-	public function panelIcon(array $params = null): ?array
-	{
-		Helpers::deprecated('Cms\ModelWithContent::panelIcon() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
-		return $this->panel()->image($params);
-	}
-
-	/**
-	 * @deprecated 3.6.0 Use `->panel()->image()` instead
-	 * @todo Remove in 3.8.0
-	 *
-	 * @internal
-	 * @param string|array|false|null $settings
-	 * @return array|null
-	 * @codeCoverageIgnore
-	 */
-	public function panelImage($settings = null): ?array
-	{
-		Helpers::deprecated('Cms\ModelWithContent::panelImage() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->image() instead.');
-		return $this->panel()->image($settings);
-	}
-
-	/**
-	 * Returns an array of all actions
-	 * that can be performed in the Panel
-	 * This also checks for the lock status
-	 *
-	 * @deprecated 3.6.0 Use `->panel()->options()` instead
-	 * @todo Remove in 3.8.0
-	 *
-	 * @param array $unlock An array of options that will be force-unlocked
-	 * @return array
-	 * @codeCoverageIgnore
-	 */
-	public function panelOptions(array $unlock = []): array
-	{
-		Helpers::deprecated('Cms\ModelWithContent::panelOptions() has been deprecated and will be removed in Kirby 3.8.0. Use $model->panel()->options() instead.');
-		return $this->panel()->options($unlock);
 	}
 }

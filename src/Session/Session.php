@@ -139,12 +139,12 @@ class Session
 		if ($this->tokenExpiry !== null) {
 			if (is_string($this->tokenKey)) {
 				return $this->tokenExpiry . '.' . $this->tokenId . '.' . $this->tokenKey;
-			} else {
-				return $this->tokenExpiry . '.' . $this->tokenId;
 			}
-		} else {
-			return null;
+
+			return $this->tokenExpiry . '.' . $this->tokenId;
 		}
+
+		return null;
 	}
 
 	/**

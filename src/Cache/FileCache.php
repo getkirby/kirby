@@ -20,10 +20,8 @@ class FileCache extends Cache
 {
 	/**
 	 * Full root including prefix
-	 *
-	 * @var string
 	 */
-	protected $root;
+	protected string $root;
 
 	/**
 	 * Sets all parameters which are needed for the file cache
@@ -44,6 +42,7 @@ class FileCache extends Cache
 
 		// build the full root including prefix
 		$this->root = $this->options['root'];
+
 		if (empty($this->options['prefix']) === false) {
 			$this->root .= '/' . $this->options['prefix'];
 		}
@@ -54,8 +53,6 @@ class FileCache extends Cache
 
 	/**
 	 * Returns the full root including prefix
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -64,9 +61,6 @@ class FileCache extends Cache
 
 	/**
 	 * Returns the full path to a file for a given key
-	 *
-	 * @param string $key
-	 * @return string
 	 */
 	protected function file(string $key): string
 	{
@@ -79,19 +73,19 @@ class FileCache extends Cache
 				case '/':
 					break;
 
-				// backslashes get their own marker in the path
-				// to differentiate the cache key from one with forward slashes
+					// backslashes get their own marker in the path
+					// to differentiate the cache key from one with forward slashes
 				case '\\':
 					$keyParts[] = '_backslash';
 					break;
 
-				// empty part means two slashes in a row;
-				// special marker like for backslashes
+					// empty part means two slashes in a row;
+					// special marker like for backslashes
 				case '':
 					$keyParts[] = '_empty';
 					break;
 
-				// an actual path segment
+					// an actual path segment
 				default:
 					// check if the segment only contains safe characters;
 					// underscores are *not* safe to guarantee uniqueness
@@ -108,9 +102,9 @@ class FileCache extends Cache
 
 		if (isset($this->options['extension'])) {
 			return $file . '.' . $this->options['extension'];
-		} else {
-			return $file;
 		}
+
+		return $file;
 	}
 
 	/**
@@ -121,13 +115,8 @@ class FileCache extends Cache
 	 *   // put an item in the cache for 15 minutes
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @param int $minutes
-	 * @return bool
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function set(string $key, mixed $value, int $minutes = 0): bool
 	{
 		$file = $this->file($key);
 
@@ -137,11 +126,8 @@ class FileCache extends Cache
 	/**
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cache\Value|null
 	 */
-	public function retrieve(string $key)
+	public function retrieve(string $key): Value|null
 	{
 		$file  = $this->file($key);
 		$value = F::read($file);
@@ -153,11 +139,8 @@ class FileCache extends Cache
 	 * Checks when the cache has been created;
 	 * returns the creation timestamp on success
 	 * and false if the item does not exist
-	 *
-	 * @param string $key
-	 * @return mixed
 	 */
-	public function created(string $key)
+	public function created(string $key): int|false
 	{
 		// use the modification timestamp
 		// as indicator when the cache has been created/overwritten
@@ -165,15 +148,12 @@ class FileCache extends Cache
 
 		// get the file for this cache key
 		$file = $this->file($key);
-		return file_exists($file) ? filemtime($this->file($key)) : false;
+		return file_exists($file) ? filemtime($file) : false;
 	}
 
 	/**
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
-	 *
-	 * @param string $key
-	 * @return bool
 	 */
 	public function remove(string $key): bool
 	{
@@ -190,9 +170,6 @@ class FileCache extends Cache
 	/**
 	 * Removes empty directories safely by checking each directory
 	 * up to the root directory
-	 *
-	 * @param string $dir
-	 * @return void
 	 */
 	protected function removeEmptyDirectories(string $dir): void
 	{
@@ -202,7 +179,13 @@ class FileCache extends Cache
 
 			// checks all directory segments until reaching the root directory
 			while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
-				$files = array_diff(scandir($dir) ?? [], ['.', '..']);
+				$files = scandir($dir);
+
+				if ($files === false) {
+					$files = [];
+				}
+
+				$files = array_diff($files, ['.', '..']);
 
 				if (empty($files) === true && Dir::remove($dir) === true) {
 					// continue with the next level up
@@ -212,7 +195,7 @@ class FileCache extends Cache
 					break;
 				}
 			}
-		} catch (Exception $e) { // @codeCoverageIgnore
+		} catch (Exception) { // @codeCoverageIgnore
 			// silently stops the process
 		}
 	}
@@ -220,12 +203,13 @@ class FileCache extends Cache
 	/**
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful
-	 *
-	 * @return bool
 	 */
 	public function flush(): bool
 	{
-		if (Dir::remove($this->root) === true && Dir::make($this->root) === true) {
+		if (
+			Dir::remove($this->root) === true &&
+			Dir::make($this->root) === true
+		) {
 			return true;
 		}
 

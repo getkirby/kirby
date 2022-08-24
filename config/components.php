@@ -4,7 +4,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
-use Kirby\Cms\Helpers;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
@@ -29,33 +28,6 @@ return [
 	 * @param string|array $options An array of attributes for the link tag or a media attribute string
 	 */
 	'css' => fn (App $kirby, string $url, $options = null): string => $url,
-
-
-	/**
-	 * Object and variable dumper
-	 * to help with debugging.
-	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
-	 * @param mixed $variable
-	 * @param bool $echo
-	 * @return string
-	 *
-	 * @deprecated 3.7.0 Disable `dump()` via `KIRBY_HELPER_DUMP` instead and create your own function
-	 * @todo move to `Helpers::dump()`, remove component in 3.8.0
-	 */
-	'dump' => function (App $kirby, $variable, bool $echo = true) {
-		if ($kirby->environment()->cli() === true) {
-			$output = print_r($variable, true) . PHP_EOL;
-		} else {
-			$output = '<pre>' . print_r($variable, true) . '</pre>';
-		}
-
-		if ($echo === true) {
-			echo $output;
-		}
-
-		return $output;
-	},
 
 	/**
 	 * Add your own email provider
@@ -109,7 +81,7 @@ return [
 				Data::write($job, array_merge($options, [
 					'filename' => $file->filename()
 				]));
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				// if thumb doesn't exist yet and job file cannot
 				// be created, return
 				return $file;
@@ -139,23 +111,15 @@ return [
 	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string $text Text to parse
 	 * @param array $options Markdown options
-	 * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
 	 * @return string
-	 * @todo remove $inline parameter in in 3.8.0
 	 */
-	'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
+	'markdown' => function (
+		App $kirby,
+		string $text = null,
+		array $options = []
+	): string {
 		static $markdown;
 		static $config;
-
-		// warning for deprecated fourth parameter
-		if (func_num_args() === 4 && isset($options['inline']) === false) {
-			// @codeCoverageIgnoreStart
-			Helpers::deprecated('markdown component: the $inline parameter is deprecated and will be removed in Kirby 3.8.0. Use $options[\'inline\'] instead.');
-			// @codeCoverageIgnoreEnd
-		}
-
-		// support for the deprecated fourth argument
-		$options['inline'] ??= $inline;
 
 		// if the config options have changed or the component is called for the first time,
 		// (re-)initialize the parser object
@@ -298,7 +262,7 @@ return [
 	 * @param array $data Data array for the snippet
 	 * @return string|null
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): ?string {
+	'snippet' => function (App $kirby, $name, array $data = []): string|null {
 		$snippets = A::wrap($name);
 
 		foreach ($snippets as $name) {

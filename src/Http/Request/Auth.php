@@ -16,15 +16,11 @@ abstract class Auth
 	/**
 	 * Raw authentication data after the first space
 	 * in the `Authorization` header
-	 *
-	 * @var string
 	 */
-	protected $data;
+	protected string $data;
 
 	/**
 	 * Constructor
-	 *
-	 * @param string $data
 	 */
 	public function __construct(string $data)
 	{
@@ -33,8 +29,6 @@ abstract class Auth
 
 	/**
 	 * Converts the object to a string
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -44,8 +38,6 @@ abstract class Auth
 	/**
 	 * Returns the raw authentication data after the
 	 * first space in the `Authorization` header
-	 *
-	 * @return string
 	 */
 	public function data(): string
 	{
@@ -54,8 +46,6 @@ abstract class Auth
 
 	/**
 	 * Returns the name of the auth type (lowercase)
-	 *
-	 * @return string
 	 */
 	abstract public function type(): string;
 }

@@ -53,18 +53,18 @@ class StatsSectionTest extends TestCase
 	{
 		// single headline
 		$section = new Section('stats', [
-			'name'     => 'test',
-			'model'    => $this->model,
-			'headline' => 'Test'
+			'name'  => 'test',
+			'model' => $this->model,
+			'label' => 'Test'
 		]);
 
 		$this->assertEquals('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('stats', [
-			'name'     => 'test',
-			'model'    => $this->model,
-			'headline' => [
+			'name'  => 'test',
+			'model' => $this->model,
+			'label' => [
 				'en' => 'Stats',
 				'de' => 'Statistik'
 			]

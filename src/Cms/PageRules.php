@@ -61,26 +61,22 @@ class PageRules
 		$siblings = $page->parentModel()->children();
 		$drafts   = $page->parentModel()->drafts();
 
-		if ($duplicate = $siblings->find($slug)) {
-			if ($duplicate->is($page) === false) {
-				throw new DuplicateException([
-					'key'  => 'page.duplicate',
-					'data' => [
-						'slug' => $slug
-					]
-				]);
-			}
+		if ($siblings->find($slug)?->is($page) === false) {
+			throw new DuplicateException([
+				'key'  => 'page.duplicate',
+				'data' => [
+					'slug' => $slug
+				]
+			]);
 		}
 
-		if ($duplicate = $drafts->find($slug)) {
-			if ($duplicate->is($page) === false) {
-				throw new DuplicateException([
-					'key'  => 'page.draft.duplicate',
-					'data' => [
-						'slug' => $slug
-					]
-				]);
-			}
+		if ($drafts->find($slug)?->is($page) === false) {
+			throw new DuplicateException([
+				'key'  => 'page.draft.duplicate',
+				'data' => [
+					'slug' => $slug
+				]
+			]);
 		}
 
 		return true;
@@ -101,16 +97,12 @@ class PageRules
 			throw new InvalidArgumentException(['key' => 'page.status.invalid']);
 		}
 
-		switch ($status) {
-			case 'draft':
-				return static::changeStatusToDraft($page);
-			case 'listed':
-				return static::changeStatusToListed($page, $position);
-			case 'unlisted':
-				return static::changeStatusToUnlisted($page);
-			default:
-				throw new InvalidArgumentException(['key' => 'page.status.invalid']);
-		}
+		return match ($status) {
+			'draft'     => static::changeStatusToDraft($page),
+			'listed'    => static::changeStatusToListed($page, $position),
+			'unlisted'  => static::changeStatusToUnlisted($page),
+			default     => throw new InvalidArgumentException(['key' => 'page.status.invalid'])
+		};
 	}
 
 	/**

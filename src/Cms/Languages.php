@@ -66,11 +66,7 @@ class Languages extends Collection
 	 */
 	public function default()
 	{
-		if ($language = $this->findBy('isDefault', true)) {
-			return $language;
-		} else {
-			return $this->first();
-		}
+		return $this->findBy('isDefault', true) ?? $this->first();
 	}
 
 	/**

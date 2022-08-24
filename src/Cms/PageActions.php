@@ -88,10 +88,8 @@ trait PageActions
 		// in multi-language installations the slug for the non-default
 		// languages is stored in the text file. The changeSlugForLanguage
 		// method takes care of that.
-		if ($language = $this->kirby()->language($languageCode)) {
-			if ($language->isDefault() === false) {
-				return $this->changeSlugForLanguage($slug, $languageCode);
-			}
+		if ($this->kirby()->language($languageCode)?->isDefault() === false) {
+			return $this->changeSlugForLanguage($slug, $languageCode);
 		}
 
 		// if the slug stays exactly the same,
@@ -110,9 +108,7 @@ trait PageActions
 
 			if ($oldPage->exists() === true) {
 				// remove the lock of the old page
-				if ($lock = $oldPage->lock()) {
-					$lock->remove();
-				}
+				$oldPage->lock()?->remove();
 
 				// actually move stuff on disk
 				if (Dir::move($oldPage->root(), $newPage->root()) !== true) {
@@ -182,16 +178,12 @@ trait PageActions
 	 */
 	public function changeStatus(string $status, int $position = null)
 	{
-		switch ($status) {
-			case 'draft':
-				return $this->changeStatusToDraft();
-			case 'listed':
-				return $this->changeStatusToListed($position);
-			case 'unlisted':
-				return $this->changeStatusToUnlisted();
-			default:
-				throw new InvalidArgumentException('Invalid status: ' . $status);
-		}
+		return match ($status) {
+			'draft'    => $this->changeStatusToDraft(),
+			'listed'   => $this->changeStatusToListed($position),
+			'unlisted' => $this->changeStatusToUnlisted(),
+			default    => throw new InvalidArgumentException('Invalid status: ' . $status)
+		};
 	}
 
 	/**

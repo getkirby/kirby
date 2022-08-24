@@ -17,8 +17,6 @@ class BearerAuth extends Auth
 {
 	/**
 	 * Returns the authentication token
-	 *
-	 * @return string
 	 */
 	public function token(): string
 	{
@@ -27,8 +25,6 @@ class BearerAuth extends Auth
 
 	/**
 	 * Returns the auth type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{
