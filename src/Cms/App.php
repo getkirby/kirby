@@ -1061,19 +1061,27 @@ class App
 	 */
 	protected function optionsFromEnvironment(array $props = []): array
 	{
-		$globalUrl = $this->options['url'] ?? null;
+		$root = $this->root('config');
 
-		// create the environment based on the URL setup
+		// first load `config/env.php` to access its `url` option
+		$envOptions = F::load($root . '/env.php', []);
+
+		// use the option from the main `config.php`,
+		// but allow the `env.php` to override it
+		$globalUrl = $envOptions['url'] ?? $this->options['url'] ?? null;
+
+		// create the URL setup based on hostname and server IP address
 		$this->environment = new Environment([
 			'allowed' => $globalUrl,
 			'cli'     => $props['cli'] ?? null,
 		], $props['server'] ?? null);
 
-		// merge into one clean options array
-		$options = $this->environment()->options($this->root('config'));
-		$this->options = array_replace_recursive($this->options, $options);
+		// merge into one clean options array;
+		// the `env.php` options always override everything else
+		$hostAddrOptions = $this->environment()->options($root);
+		$this->options = array_replace_recursive($this->options, $hostAddrOptions, $envOptions);
 
-		// reload the environment if the environment config has overridden
+		// reload the environment if the host/address config has overridden
 		// the `url` option; this ensures that the base URL is correct
 		$envUrl = $this->options['url'] ?? null;
 		if ($envUrl !== $globalUrl) {

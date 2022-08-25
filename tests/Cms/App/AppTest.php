@@ -515,6 +515,7 @@ class AppTest extends TestCase
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
 				'HTTPS'       => true
 			]
 		]);
@@ -523,7 +524,62 @@ class AppTest extends TestCase
 			'option1' => 'global',
 			'option2' => 'getkirby',
 			'url'     => 'https://getkirby.com/docs',
-			'option3' => 'getkirby'
+			'option3' => '10.1.2.3',
+			'option4' => '10.1.2.3'
+		], $app->options());
+	}
+
+	public function testOptionsFromFileWithEnv1()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options-env1'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
+				'HTTPS'       => true
+			]
+		]);
+
+		$this->assertSame([
+			'option1' => 'global',
+			'option2' => 'getkirby',
+			'url'     => 'https://getkirby.com/docs',
+			'option3' => '10.1.2.3',
+			'option4' => 'env',
+			'option5' => 'env'
+		], $app->options());
+	}
+
+	public function testOptionsFromFileWithEnv2()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options-env2'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
+				'HTTPS'       => true
+			]
+		]);
+
+		// the env file determines the allowed base URL
+		// and therefore the loaded host-specific config file
+		$this->assertSame([
+			'option1' => 'global',
+			'option2' => 'trykirby',
+			'url'     => 'https://trykirby.com',
+			'option3' => '10.1.2.3',
+			'option4' => 'env',
+			'option5' => 'env'
 		], $app->options());
 	}
 
