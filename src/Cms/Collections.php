@@ -101,7 +101,7 @@ class Collections
 		try {
 			$this->load($name);
 			return true;
-		} catch (NotFoundException $e) {
+		} catch (NotFoundException) {
 			return false;
 		}
 	}

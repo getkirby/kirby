@@ -303,33 +303,25 @@ class Auth
 	 * @return \Kirby\Cms\User|null
 	 * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
 	 */
-	public function impersonate(?string $who = null)
+	public function impersonate(string|null $who = null)
 	{
 		// clear the status cache
 		$this->status = null;
 
-		switch ($who) {
-			case null:
-				return $this->impersonate = null;
-			case 'kirby':
-				return $this->impersonate = new User([
-					'email' => 'kirby@getkirby.com',
-					'id'    => 'kirby',
-					'role'  => 'admin',
-				]);
-			case 'nobody':
-				return $this->impersonate = new User([
-					'email' => 'nobody@getkirby.com',
-					'id'    => 'nobody',
-					'role'  => 'nobody',
-				]);
-			default:
-				if ($user = $this->kirby->users()->find($who)) {
-					return $this->impersonate = $user;
-				}
-
-				throw new NotFoundException('The user "' . $who . '" cannot be found');
-		}
+		return $this->impersonate = match ($who) {
+			null     => null,
+			'kirby'  => new User([
+				'email' => 'kirby@getkirby.com',
+				'id'    => 'kirby',
+				'role'  => 'admin',
+			]),
+			'nobody' => new User([
+				'email' => 'nobody@getkirby.com',
+				'id'    => 'nobody',
+				'role'  => 'nobody',
+			]),
+			default  => ($this->kirby->users()->find($who) ?? throw new NotFoundException('The user "' . $who . '" cannot be found'))
+		};
 	}
 
 	/**
@@ -564,9 +556,9 @@ class Auth
 			// otherwise hide it to avoid leaking security-relevant information
 			if ($this->kirby->option('debug') === true) {
 				throw $e;
-			} else {
-				throw new PermissionException(['key' => 'access.login']);
 			}
+
+			throw new PermissionException(['key' => 'access.login']);
 		}
 	}
 
@@ -590,7 +582,7 @@ class Auth
 		try {
 			$log  = Data::read($this->logfile(), 'json');
 			$read = true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$log  = [];
 			$read = false;
 		}
@@ -636,9 +628,7 @@ class Auth
 		$this->impersonate = null;
 
 		// logout the current user if it exists
-		if ($user = $this->user()) {
-			$user->logout();
-		}
+		$this->user()?->logout();
 
 		// clear the pending challenge
 		$session = $this->kirby->session();
@@ -671,7 +661,7 @@ class Auth
 	 * @param bool $triggerHook If `false`, no user.login:failed hook is triggered
 	 * @return bool
 	 */
-	public function track(?string $email, bool $triggerHook = true): bool
+	public function track(string|null $email, bool $triggerHook = true): bool
 	{
 		if ($triggerHook === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
@@ -725,11 +715,13 @@ class Auth
 
 		if ($basicAuth === true && $auth && $auth->type() === 'basic') {
 			return 'basic';
-		} elseif ($allowImpersonation === true && $this->impersonate !== null) {
-			return 'impersonate';
-		} else {
-			return 'session';
 		}
+
+		if ($allowImpersonation === true && $this->impersonate !== null) {
+			return 'impersonate';
+		}
+
+		return 'session';
 	}
 
 	/**
@@ -756,16 +748,18 @@ class Auth
 			}
 
 			return null;
-		} elseif ($this->user !== false) {
+		}
+
+		if ($this->user !== false) {
 			return $this->user;
 		}
 
 		try {
 			if ($this->type() === 'basic') {
 				return $this->user = $this->currentUserFromBasicAuth();
-			} else {
-				return $this->user = $this->currentUserFromSession($session);
 			}
+
+			return $this->user = $this->currentUserFromSession($session);
 		} catch (Throwable $e) {
 			$this->user = null;
 

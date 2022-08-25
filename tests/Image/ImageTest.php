@@ -80,6 +80,17 @@ class ImageTest extends TestCase
 	}
 
 	/**
+	 * @covers ::html
+	 */
+	public function testHtmlWithoutUrl()
+	{
+		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectExceptionMessage('Calling Image::html() requires that the URL property is not null');
+		$file = new Image(['root' => __DIR__ . '/fixtures/image/cat.jpg']);
+		$file->html();
+	}
+
+	/**
 	 * @covers ::imagesize
 	 */
 	public function testImagesize()

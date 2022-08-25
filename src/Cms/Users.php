@@ -102,6 +102,24 @@ class Users extends Collection
 	}
 
 	/**
+	 * Returns all files of all users
+	 *
+	 * @return \Kirby\Cms\Files
+	 */
+	public function files()
+	{
+		$files = new Files([], $this->parent);
+
+		foreach ($this->data as $user) {
+			foreach ($user->files() as $fileKey => $file) {
+				$files->data[$fileKey] = $file;
+			}
+		}
+
+		return $files;
+	}
+
+	/**
 	 * Loads a user from disk by passing the absolute path (root)
 	 *
 	 * @param string $root

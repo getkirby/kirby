@@ -17,7 +17,7 @@ use Kirby\Toolkit\Str;
  */
 class Path extends Collection
 {
-	public function __construct($items)
+	public function __construct(string|array|null $items)
 	{
 		if (is_string($items) === true) {
 			$items = Str::split($items, '/');

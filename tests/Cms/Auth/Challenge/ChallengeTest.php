@@ -13,7 +13,7 @@ class MockChallenge extends Challenge
 	{
 	}
 
-	public static function create(User $user, array $options): ?string
+	public static function create(User $user, array $options): string|null
 	{
 	}
 }

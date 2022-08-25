@@ -2,7 +2,10 @@
 
 namespace Kirby\Text;
 
+use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Model;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -17,27 +20,23 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class KirbyTag
 {
-	public static $aliases = [];
-	public static $types = [];
+	public static array $aliases = [];
+	public static array $types = [];
 
-	public $attrs = [];
-	public $data = [];
-	public $options = [];
-	public $type  = null;
-	public $value = null;
+	public array $attrs = [];
+	public array $data = [];
+	public array $options = [];
+	public string $type;
+	public string|null $value = null;
 
-	public function __call(string $name, array $arguments = [])
-	{
-		return $this->data[$name] ?? $this->$name;
-	}
-
-	public static function __callStatic(string $type, array $arguments = [])
-	{
-		return (new static($type, ...$arguments))->render();
-	}
-
-	public function __construct(string $type, string $value = null, array $attrs = [], array $data = [], array $options = [])
-	{
+	public function __construct(
+		string $type,
+		string|null $value = null,
+		array $attrs = [],
+		array $data = [],
+		array $options = []
+	) {
+		// type aliases
 		if (isset(static::$types[$type]) === false) {
 			if (isset(static::$aliases[$type]) === false) {
 				throw new InvalidArgumentException('Undefined tag type: ' . $type);
@@ -70,19 +69,35 @@ class KirbyTag
 		$this->value   = $value;
 	}
 
-	public function __get(string $attr)
+	/**
+	 * Magic data and property getter
+	 */
+	public function __call(string $name, array $arguments = []): mixed
+	{
+		return $this->data[$name] ?? $this->$name;
+	}
+
+	/**
+	 * Magic call `KirbyTag::myType($parameter1, $parameter2)`
+	 */
+	public static function __callStatic(string $type, array $arguments = []): string
+	{
+		return (new static($type, ...$arguments))->render();
+	}
+
+	public function __get(string $attr): mixed
 	{
 		$attr = strtolower($attr);
 		return $this->$attr ?? null;
 	}
 
-	public function attr(string $name, $default = null)
+	public function attr(string $name, mixed $default = null): mixed
 	{
 		$name = strtolower($name);
 		return $this->$name ?? $default;
 	}
 
-	public static function factory(...$arguments)
+	public static function factory(...$arguments): string
 	{
 		return (new static(...$arguments))->render();
 	}
@@ -92,11 +107,8 @@ class KirbyTag
 	 * The method first searches the file
 	 * in the current parent, if it's a page.
 	 * Afterwards it uses Kirby's global file finder.
-	 *
-	 * @param string $path
-	 * @return \Kirby\Cms\File|null
 	 */
-	public function file(string $path)
+	public function file(string $path): File|null
 	{
 		$parent = $this->parent();
 
@@ -109,7 +121,7 @@ class KirbyTag
 		}
 
 		if (
-			is_a($parent, 'Kirby\Cms\File') === true &&
+			is_a($parent, File::class) === true &&
 			$file = $parent->page()->file($path)
 		) {
 			return $file;
@@ -119,27 +131,22 @@ class KirbyTag
 	}
 	/**
 	 * Returns the current Kirby instance
-	 *
-	 * @return \Kirby\Cms\App
 	 */
-	public function kirby()
+	public function kirby(): App
 	{
 		return $this->data['kirby'] ?? App::instance();
 	}
 
-	public function option(string $key, $default = null)
+	public function option(string $key, mixed $default = null): mixed
 	{
 		return $this->options[$key] ?? $default;
 	}
 
-	/**
-	 * @param string $string
-	 * @param array $data
-	 * @param array $options
-	 * @return static
-	 */
-	public static function parse(string $string, array $data = [], array $options = [])
-	{
+	public static function parse(
+		string $string,
+		array $data = [],
+		array $options = []
+	): static {
 		// remove the brackets, extract the first attribute (the tag type)
 		$tag  = trim(ltrim($string, '('));
 
@@ -149,7 +156,8 @@ class KirbyTag
 			$tag = substr($tag, 0, -1);
 		}
 
-		$type = trim(substr($tag, 0, strpos($tag, ':')));
+		$pos  = strpos($tag, ':');
+		$type = trim(substr($tag, 0, $pos ? $pos : null));
 		$type = strtolower($type);
 		$attr = static::$types[$type]['attr'] ?? [];
 
@@ -185,10 +193,8 @@ class KirbyTag
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return \Kirby\Cms\Model|null
 	 */
-	public function parent()
+	public function parent(): Model|null
 	{
 		return $this->data['parent'];
 	}
@@ -197,7 +203,7 @@ class KirbyTag
 	{
 		$callback = static::$types[$this->type]['html'] ?? null;
 
-		if (is_a($callback, 'Closure') === true) {
+		if (is_a($callback, Closure::class) === true) {
 			return (string)$callback($this);
 		}
 

@@ -22,10 +22,8 @@ class DomHandler extends Handler
 	/**
 	 * List of all MIME types that may
 	 * be used in data URIs
-	 *
-	 * @var array
 	 */
-	public static $allowedDataUris = [
+	public static array $allowedDataUris = [
 		'data:image/png',
 		'data:image/gif',
 		'data:image/jpg',
@@ -41,30 +39,23 @@ class DomHandler extends Handler
 	/**
 	 * Allowed hostnames for HTTP(S) URLs
 	 *
-	 * @var array
+	 * @var array|true
 	 */
-	public static $allowedDomains = [];
+	public static array|bool $allowedDomains = true;
 
 	/**
 	 * Names of allowed XML processing instructions
-	 *
-	 * @var array
 	 */
-	public static $allowedPIs = [];
+	public static array $allowedPIs = [];
 
 	/**
 	 * The document type (`'HTML'` or `'XML'`)
 	 * (to be set in child classes)
-	 *
-	 * @var string
 	 */
-	protected static $type = 'XML';
+	protected static string $type = 'XML';
 
 	/**
 	 * Sanitizes the given string
-	 *
-	 * @param string $string
-	 * @return string
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 */
@@ -77,9 +68,6 @@ class DomHandler extends Handler
 
 	/**
 	 * Validates file contents
-	 *
-	 * @param string $string
-	 * @return void
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
@@ -98,7 +86,6 @@ class DomHandler extends Handler
 	 * Custom callback for additional attribute sanitization
 	 * @internal
 	 *
-	 * @param \DOMAttr $attr
 	 * @return array Array with exception objects for each modification
 	 */
 	public static function sanitizeAttr(DOMAttr $attr): array
@@ -111,7 +98,6 @@ class DomHandler extends Handler
 	 * Custom callback for additional element sanitization
 	 * @internal
 	 *
-	 * @param \DOMElement $element
 	 * @return array Array with exception objects for each modification
 	 */
 	public static function sanitizeElement(DOMElement $element): array
@@ -123,9 +109,6 @@ class DomHandler extends Handler
 	/**
 	 * Custom callback for additional doctype validation
 	 * @internal
-	 *
-	 * @param \DOMDocumentType $doctype
-	 * @return void
 	 */
 	public static function validateDoctype(DOMDocumentType $doctype): void
 	{
@@ -135,8 +118,6 @@ class DomHandler extends Handler
 	/**
 	 * Returns the sanitization options for the handler
 	 * (to be extended in child classes)
-	 *
-	 * @return array
 	 */
 	protected static function options(): array
 	{
@@ -153,12 +134,9 @@ class DomHandler extends Handler
 	/**
 	 * Parses the given string into a `Toolkit\Dom` object
 	 *
-	 * @param string $string
-	 * @return \Kirby\Toolkit\Dom
-	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 */
-	protected static function parse(string $string)
+	protected static function parse(string $string): Dom
 	{
 		return new Dom($string, static::$type);
 	}

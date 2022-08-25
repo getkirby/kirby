@@ -105,30 +105,23 @@ class Options
 	 */
 	public static function factory($options, array $props = [], $model = null): array
 	{
-		switch ($options) {
-			case 'api':
-				$options = static::api($props['api'], $model);
-				break;
-			case 'query':
-				$options = static::query($props['query'], $model);
-				break;
-			case 'children':
-			case 'grandChildren':
-			case 'siblings':
-			case 'index':
-			case 'files':
-			case 'images':
-			case 'documents':
-			case 'videos':
-			case 'audio':
-			case 'code':
-			case 'archives':
-				$options = static::query('page.' . $options, $model);
-				break;
-			case 'pages':
-				$options = static::query('site.index', $model);
-				break;
-		}
+		$options = match ($options) {
+			'api'      => static::api($props['api'], $model),
+			'query'    => static::query($props['query'], $model),
+			'pages'    => static::query('site.index', $model),
+			'children',
+			'grandChildren',
+			'siblings',
+			'index',
+			'files',
+			'images',
+			'documents',
+			'videos',
+			'audio',
+			'code',
+			'archives' => static::query('page.' . $options, $model),
+			default    => $options
+		};
 
 		if (is_array($options) === false) {
 			return [];

@@ -25,18 +25,18 @@ class PagesSectionTest extends TestCase
 
 		// single headline
 		$section = new Section('pages', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => 'Test'
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => 'Test'
 		]);
 
 		$this->assertEquals('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('pages', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => [
 				'en' => 'Pages',
 				'de' => 'Seiten'
 			]

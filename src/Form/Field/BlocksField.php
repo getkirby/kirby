@@ -57,7 +57,7 @@ class BlocksField extends FieldClass
 				$block['content'] = $this->form($fields[$type], $block['content'])->$to();
 
 				$result[] = $block;
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				$result[] = $block;
 
 				// skip invalid blocks
@@ -87,7 +87,7 @@ class BlocksField extends FieldClass
 		return $this->fieldsets;
 	}
 
-	public function fieldsetGroups(): ?array
+	public function fieldsetGroups(): array|null
 	{
 		$fieldsetGroups = $this->fieldsets()->groups();
 		return empty($fieldsetGroups) === true ? null : $fieldsetGroups;
@@ -254,7 +254,7 @@ class BlocksField extends FieldClass
 
 					try {
 						$blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
-					} catch (Throwable $e) {
+					} catch (Throwable) {
 						// skip invalid blocks
 						continue;
 					}

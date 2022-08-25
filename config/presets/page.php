@@ -10,7 +10,7 @@ return function ($props) {
 
 		if (is_string($props) === true) {
 			$props = [
-				'headline' => $props
+				'label' => $props
 			];
 		}
 
@@ -27,18 +27,18 @@ return function ($props) {
 
 		if ($pages !== false) {
 			$sidebar['pages'] = $section([
-				'headline' => I18n::translate('pages'),
-				'type'     => 'pages',
-				'status'   => 'all',
-				'layout'   => 'list',
+				'label'  => I18n::translate('pages'),
+				'type'   => 'pages',
+				'status' => 'all',
+				'layout' => 'list',
 			], $pages);
 		}
 
 		if ($files !== false) {
 			$sidebar['files'] = $section([
-				'headline' => I18n::translate('files'),
-				'type'     => 'files',
-				'layout'   => 'list'
+				'label'  => I18n::translate('files'),
+				'type'   => 'files',
+				'layout' => 'list'
 			], $files);
 		}
 	}

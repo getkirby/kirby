@@ -121,7 +121,7 @@ class V
 	 * @param mixed ...$params
 	 * @return string|null
 	 */
-	public static function message(string $validatorName, ...$params): ?string
+	public static function message(string $validatorName, ...$params): string|null
 	{
 		$validatorName  = strtolower($validatorName);
 		$translationKey = 'error.validation.' . $validatorName;
@@ -146,7 +146,7 @@ class V
 						}
 					}
 					$value = implode(', ', $value);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					$value = '-';
 				}
 			}
@@ -317,7 +317,7 @@ V::$validators = [
 	 * Pass an operator as second argument and another date as
 	 * third argument to compare them.
 	 */
-	'date' => function (?string $value, string $operator = null, string $test = null): bool {
+	'date' => function (string|null $value, string $operator = null, string $test = null): bool {
 		// make sure $value is a string
 		$value ??= '';
 
@@ -338,22 +338,16 @@ V::$validators = [
 			return false;
 		}
 
-		switch ($operator) {
-			case '!=':
-				return $value !== $test;
-			case '<':
-				return $value < $test;
-			case '>':
-				return $value > $test;
-			case '<=':
-				return $value <= $test;
-			case '>=':
-				return $value >= $test;
-			case '==':
-				return $value === $test;
-		}
+		return match ($operator) {
+			'!=' => $value !== $test,
+			'<'  => $value < $test,
+			'>'  => $value > $test,
+			'<='  => $value <= $test,
+			'>='  => $value >= $test,
+			'=='  => $value === $test,
 
-		throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+			default => throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="')
+		};
 	},
 
 	/**
@@ -380,7 +374,7 @@ V::$validators = [
 		if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
 			try {
 				$email = Idn::encodeEmail($value);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				return false;
 			}
 
@@ -601,18 +595,13 @@ V::$validators = [
 			throw new Exception('$value is of type without size');
 		}
 
-		switch ($operator) {
-			case '<':
-				return $count < $size;
-			case '>':
-				return $count > $size;
-			case '<=':
-				return $count <= $size;
-			case '>=':
-				return $count >= $size;
-			default:
-				return $count == $size;
-		}
+		return match ($operator) {
+			'<'     => $count < $size,
+			'>'     => $count > $size,
+			'<='    => $count <= $size,
+			'>='    => $count >= $size,
+			default => $count == $size
+		};
 	},
 
 	/**

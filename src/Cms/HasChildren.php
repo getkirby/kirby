@@ -217,9 +217,9 @@ trait HasChildren
 	{
 		if ($drafts === true) {
 			return $this->childrenAndDrafts()->index($drafts);
-		} else {
-			return $this->children()->index();
 		}
+
+		return $this->children()->index();
 	}
 
 	/**

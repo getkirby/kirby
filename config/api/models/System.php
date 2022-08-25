@@ -32,28 +32,23 @@ return [
 		'slugs'        => fn () => Str::$language,
 		'title'        => fn () => $this->site()->title()->value(),
 		'translation' => function () {
-			if ($user = $this->user()) {
-				$translationCode = $user->language();
-			} else {
-				$translationCode = $this->kirby()->panelLanguage();
+			$code = $this->user()?->language() ??
+					$this->kirby()->panelLanguage();
+
+			if ($translation = $this->kirby()->translation($code)) {
+				return $translation;
 			}
 
-			if ($translation = $this->kirby()->translation($translationCode)) {
-				return $translation;
-			} else {
-				return $this->kirby()->translation('en');
-			}
+			return $this->kirby()->translation('en');
 		},
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
 		'user' => fn () => $this->user(),
 		'version' => function () {
-			$user = $this->user();
-
-			if ($user && $user->role()->permissions()->for('access', 'system') === true) {
+			if ($this->user()?->role()->permissions()->for('access', 'system') === true) {
 				return $this->kirby()->version();
-			} else {
-				return null;
 			}
+
+			return null;
 		}
 	],
 	'type'   => 'Kirby\Cms\System',

@@ -55,7 +55,7 @@ class Role extends Model
 	{
 		try {
 			return static::load('admin');
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return static::factory(static::defaults()['admin'], $inject);
 		}
 	}
@@ -152,7 +152,7 @@ class Role extends Model
 	{
 		try {
 			return static::load('nobody');
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return static::factory(static::defaults()['nobody'], $inject);
 		}
 	}

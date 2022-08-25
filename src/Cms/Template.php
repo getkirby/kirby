@@ -122,13 +122,13 @@ class Template
 	 *
 	 * @return string|null
 	 */
-	public function file(): ?string
+	public function file(): string|null
 	{
 		if ($this->hasDefaultType() === true) {
 			try {
 				// Try the default template in the default template directory.
 				return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
-			} catch (Exception $e) {
+			} catch (Exception) {
 				// ignore errors, continue searching
 			}
 
@@ -145,7 +145,7 @@ class Template
 		try {
 			// Try the template with type extension in the default template directory.
 			return F::realpath($this->root() . '/' . $name . '.' . $this->extension(), $this->root());
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// Look for the template with type extension provided by an extension.
 			// This might be null if the template does not exist.
 			return App::instance()->extension($this->store(), $name);

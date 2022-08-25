@@ -318,7 +318,7 @@ class Form
 	 * @param string|null $language
 	 * @return array
 	 */
-	protected static function prepareFieldsForLanguage(array $fields, ?string $language = null): array
+	protected static function prepareFieldsForLanguage(array $fields, string|null $language = null): array
 	{
 		$kirby = App::instance(null, true);
 

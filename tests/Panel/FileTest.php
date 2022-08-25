@@ -166,13 +166,13 @@ class FileTest extends TestCase
 		]);
 
 		$file = $app->page('test')->file('test.jpg');
-		$this->assertSame('![](test.jpg)', $file->dragText());
+		$this->assertSame('![](test.jpg)', $file->panel()->dragText());
 
 		$file = $app->page('test')->file('test.mp4');
-		$this->assertSame('[test.mp4](test.mp4)', $file->dragText());
+		$this->assertSame('[test.mp4](test.mp4)', $file->panel()->dragText());
 
 		$file = $app->page('test')->file('test.pdf');
-		$this->assertSame('[test.pdf](test.pdf)', $file->dragText());
+		$this->assertSame('[test.pdf](test.pdf)', $file->panel()->dragText());
 	}
 
 	/**

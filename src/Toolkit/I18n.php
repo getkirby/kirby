@@ -99,13 +99,9 @@ class I18n
 	 */
 	public static function formatNumber($number, string $locale = null): string
 	{
-		$locale ??= static::locale();
-
-		$formatter = static::decimalNumberFormatter($locale);
-		if ($formatter !== null) {
-			$number = $formatter->format($number);
-		}
-
+		$locale    ??= static::locale();
+		$formatter   = static::decimalNumberFormatter($locale);
+		$number      = $formatter?->format($number) ?? $number;
 		return (string)$number;
 	}
 
@@ -189,7 +185,7 @@ class I18n
 	 * @param string|null $locale
 	 * @return string
 	 */
-	public static function template(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
+	public static function template(string $key, $fallback = null, array|null $replace = null, string|null $locale = null): string
 	{
 		if (is_array($fallback) === true) {
 			$replace  = $fallback;

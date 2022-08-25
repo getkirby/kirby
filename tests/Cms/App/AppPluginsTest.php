@@ -21,7 +21,7 @@ class DummyAuthChallenge extends Challenge
 		return true;
 	}
 
-	public static function create(User $user, array $options): ?string
+	public static function create(User $user, array $options): string|null
 	{
 		return 'test';
 	}

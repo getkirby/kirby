@@ -68,7 +68,7 @@ return function (App $app) {
 				]);
 
 				return $blocks->filter('isHidden', false);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				if ($field->parent() === null) {
 					$message = 'Invalid blocks data for "' . $field->key() . '" field';
 				} else {
@@ -99,13 +99,10 @@ return function (App $app) {
 		 * @return array
 		 */
 		'toData' => function (Field $field, string $method = ',') {
-			switch ($method) {
-				case 'yaml':
-				case 'json':
-					return Data::decode($field->value, $method);
-				default:
-					return $field->split($method);
-			}
+			return match ($method) {
+				'yaml', 'json' => Data::decode($field->value, $method),
+				default        => $field->split($method)
+			};
 		},
 
 		/**
@@ -252,7 +249,7 @@ return function (App $app) {
 		'toStructure' => function (Field $field) {
 			try {
 				return new Structure(Data::decode($field->value, 'yaml'), $field->parent());
-			} catch (Exception $e) {
+			} catch (Exception) {
 				if ($field->parent() === null) {
 					$message = 'Invalid structure data for "' . $field->key() . '" field';
 				} else {
