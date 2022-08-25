@@ -535,18 +535,18 @@ class KirbyTagsTest extends TestCase
 			'options' => [
 				'kirbytext' => [
 					'video' => [
-						'autoplay' => true,
-						'caption'  => 'Lorem ipsum',
-						'controls' => false,
-						'class'    => 'video-class',
-						'height'   => 350,
-						'loop'     => true,
-						'muted'    => true,
+						'autoplay'    => true,
+						'caption'     => 'Lorem ipsum',
+						'controls'    => false,
+						'class'       => 'video-class',
+						'height'      => 350,
+						'loop'        => true,
+						'muted'       => true,
 						'playsinline' => true,
-						'poster'   => 'sample.jpg',
-						'preload'  => 'auto',
-						'style'    => 'border: none',
-						'width'    => 500
+						'poster'      => 'sample.jpg',
+						'preload'     => 'auto',
+						'style'       => 'border: none',
+						'width'       => 500
 					]
 				]
 			],
