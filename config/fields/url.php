@@ -10,6 +10,7 @@ return [
 		 */
 		'converter'  => null,
 		'counter'    => null,
+		'pattern'    => null,
 		'spellcheck' => null,
 
 		/**
