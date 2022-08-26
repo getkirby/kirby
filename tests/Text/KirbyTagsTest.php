@@ -574,7 +574,7 @@ class KirbyTagsTest extends TestCase
 		$expected = '<figure class="video-class" style="border: none"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
-	
+
 	public function testVideoAutoplayRelatedAttrs()
 	{
 		$kirby = new App([
