@@ -86,7 +86,7 @@ class Query
 	/**
 	 * GROUP BY clause
 	 */
-	protected mixed $group = null;
+	protected string|null $group = null;
 
 	/**
 	 * HAVING clause
@@ -237,10 +237,10 @@ class Query
 	 * Sets the columns, which should be selected from the table
 	 * By default all columns will be selected
 	 *
-	 * @param mixed $select Pass either a string of columns or an array
+	 * @param array|string|null $select Pass either a string of columns or an array
 	 * @return $this
 	 */
-	public function select(mixed $select): static
+	public function select(array|string|null $select): static
 	{
 		$this->select = $select;
 		return $this;
@@ -308,7 +308,7 @@ class Query
 	 * @param mixed $values Can either be a string or an array of values
 	 * @return $this
 	 */
-	public function values($values = [])
+	public function values($values = []): static
 	{
 		if ($values !== null) {
 			$this->values = $values;
@@ -446,7 +446,7 @@ class Query
 	 *
 	 * @return $this
 	 */
-	public function offset(int|null $offset = null): static
+	public function offset(int $offset): static
 	{
 		$this->offset = $offset;
 		return $this;
@@ -554,7 +554,7 @@ class Query
 	 *
 	 * @param int $default An optional default value, which should be returned if the query fails
 	 */
-	public function aggregate(string $method, string $column = '*', $default = 0): mixed
+	public function aggregate(string $method, string $column = '*', int $default = 0): mixed
 	{
 		// reset the sorting to avoid counting issues
 		$this->order = null;
@@ -854,14 +854,12 @@ class Query
 
 				// ->where('username like "myuser"');
 				} elseif (is_string($args[0]) === true) {
-
 					// simply add the entire string to the where clause
 					// escaping or using bindings has to be done before calling this method
 					$result = $args[0];
 
 				// ->where(['username' => 'myuser']);
 				} elseif (is_array($args[0]) === true) {
-
 					// simple array mode (AND operator)
 					$sql = $this->database->sql()->values($this->table, $args[0], ' AND ', true, true);
 
@@ -888,7 +886,6 @@ class Query
 
 				// ->where('username like :username', ['username' => 'myuser'])
 				if (is_string($args[0]) === true && is_array($args[1]) === true) {
-
 					// prepared where clause
 					$result = $args[0];
 
@@ -897,7 +894,6 @@ class Query
 
 				// ->where('username like ?', 'myuser')
 				} elseif (is_string($args[0]) === true && is_string($args[1]) === true) {
-
 					// prepared where clause
 					$result = $args[0];
 
@@ -910,7 +906,6 @@ class Query
 
 				// ->where('username', 'like', 'myuser');
 				if (is_string($args[0]) === true && is_string($args[1]) === true) {
-
 					// validate column
 					$sql = $this->database->sql();
 					$key = $sql->columnName($this->table, $args[0]);
@@ -959,7 +954,6 @@ class Query
 				}
 
 				break;
-
 		}
 
 		// attach the where clause

@@ -603,7 +603,6 @@ abstract class Sql
 
 		// array of columns
 		if (is_array($columns) === true) {
-
 			// validate columns
 			$result = [];
 
@@ -765,8 +764,12 @@ abstract class Sql
 	/**
 	 * Creates a list of fields and values
 	 */
-	public function valueList(string $table, string|array $values, string $separator = ',', bool $enforceQualified = false): array
-	{
+	public function valueList(
+		string $table,
+		string|array $values,
+		string $separator = ',',
+		bool $enforceQualified = false
+	): array {
 		$fields   = [];
 		$query    = [];
 		$bindings = [];
@@ -805,8 +808,12 @@ abstract class Sql
 	/**
 	 * Creates a set of values
 	 */
-	public function valueSet(string $table, string|array $values, string $separator = ',', bool $enforceQualified = false): array
-	{
+	public function valueSet(
+		string $table,
+		string|array $values,
+		string $separator = ',',
+		bool $enforceQualified = false
+	): array {
 		$query    = [];
 		$bindings = [];
 

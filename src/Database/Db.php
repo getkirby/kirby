@@ -147,7 +147,7 @@ Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (
 	mixed $columns = '*',
 	mixed $where = null,
 	string|null $order = null
-) {
+): mixed {
 	return Db::table($table)->select($columns)->where($where)->order($order)->first();
 };
 
@@ -165,7 +165,7 @@ Db::$queries['column'] = function (
 	string|null $order = null,
 	int $offset = 0,
 	int|null $limit = null
-) {
+): mixed {
 	return Db::table($table)->where($where)->order($order)->offset($offset)->limit($limit)->column($column);
 };
 
