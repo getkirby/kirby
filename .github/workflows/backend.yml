@@ -111,6 +111,10 @@ jobs:
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          PHP: ${{ matrix.php }}
+        if: env.token != ''
         uses: codecov/codecov-action@66b3de25f6f91f65eb92c514d31d6b6f13d5ab18 # pin@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
@@ -118,8 +122,6 @@ jobs:
           files: ${{ github.workspace }}/clover.xml
           flags: backend
           env_vars: PHP
-        env:
-          PHP: ${{ matrix.php }}
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
