@@ -407,7 +407,7 @@ class Query
 		$mode = A::last($args);
 
 		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR']) === true) {
+		if (in_array($mode, ['AND', 'OR'], true) === true) {
 			// remove that from the list of arguments
 			array_pop($args);
 		}
@@ -431,7 +431,7 @@ class Query
 		$mode = A::last($args);
 
 		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR']) === true) {
+		if (in_array($mode, ['AND', 'OR'], true) === true) {
 			// remove that from the list of arguments
 			array_pop($args);
 		}
@@ -941,7 +941,7 @@ class Query
 		$result = '';
 
 		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'])) {
+		if (in_array($mode, ['AND', 'OR'], true) === true) {
 			// remove that from the list of arguments
 			array_pop($args);
 		} else {
