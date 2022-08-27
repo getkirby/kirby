@@ -138,16 +138,16 @@ class I18n
 
 		if (is_array($key) === true) {
 			// try to use actual locale
-			if (isset($key[$locale])) {
+			if (isset($key[$locale]) === true) {
 				return $key[$locale];
 			}
 			// try to use language code, e.g. `es` when locale is `es_ES`
 			$lang = Str::before($locale, '_');
-			if (isset($key[$lang])) {
+			if (isset($key[$lang]) === true) {
 				return $key[$lang];
 			}
 			// use fallback
-			if (is_array($fallback)) {
+			if (is_array($fallback) === true) {
 				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
 			}
 			return $fallback;

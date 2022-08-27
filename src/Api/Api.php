@@ -223,7 +223,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
 	 */
-	public function data(string|null $key = null, ...$args): mixed
+	public function data(string|null $key = null, mixed ...$args): mixed
 	{
 		if ($key === null) {
 			return $this->data;
@@ -692,7 +692,10 @@ class Api
 
 				// move the file to a location including the extension,
 				// for better mime detection
-				if ($debug === false && move_uploaded_file($upload['tmp_name'], $source) === false) {
+				if (
+					$debug === false &&
+					move_uploaded_file($upload['tmp_name'], $source) === false
+				) {
 					throw new Exception(I18n::translate('upload.error.cantMove'));
 				}
 
