@@ -711,6 +711,7 @@ class Str
 	 *                         defaults to no limit
 	 * @return string|array String with replaced values;
 	 *                      if $string is an array, array of strings
+	 * @psalm-return ($string is array ? array : string)
 	 */
 	public static function replace($string, $search, $replace, $limit = -1)
 	{

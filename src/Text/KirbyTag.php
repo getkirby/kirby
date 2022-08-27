@@ -122,7 +122,7 @@ class KirbyTag
 
 		if (
 			$parent instanceof File &&
-			$file = $parent->page()->file($path)
+			$file = $parent->page()?->file($path)
 		) {
 			return $file;
 		}

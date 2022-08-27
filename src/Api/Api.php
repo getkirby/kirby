@@ -150,8 +150,7 @@ class Api
 				$language = $user->language();
 
 				// get the locale from the translation
-				$translation = $user->kirby()->translation($language);
-				$locale = ($translation !== null) ? $translation->locale() : $language;
+				$locale = $user->kirby()->translation($language)->locale();
 
 				// provide some variants as fallbacks to be
 				// compatible with as many systems as possible
@@ -224,7 +223,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
 	 */
-	public function data(string|null $key = null, ...$args): mixed
+	public function data(string|null $key = null, mixed ...$args): mixed
 	{
 		if ($key === null) {
 			return $this->data;
@@ -284,14 +283,10 @@ class Api
 	public function model(string|null $name = null, mixed $object = null): Model
 	{
 		// Try to auto-match object with API models
-		if ($name === null) {
-			if ($model = $this->match($this->models, $object)) {
-				$name = $model;
-			}
-		}
+		$name ??= $this->match($this->models, $object);
 
 		if (isset($this->models[$name]) === false) {
-			throw new NotFoundException(sprintf('The model "%s" does not exist', $name));
+			throw new NotFoundException(sprintf('The model "%s" does not exist', $name ?? 'NULL'));
 		}
 
 		return new Model($this, $object, $this->models[$name]);
@@ -697,7 +692,10 @@ class Api
 
 				// move the file to a location including the extension,
 				// for better mime detection
-				if ($debug === false && move_uploaded_file($upload['tmp_name'], $source) === false) {
+				if (
+					$debug === false &&
+					move_uploaded_file($upload['tmp_name'], $source) === false
+				) {
 					throw new Exception(I18n::translate('upload.error.cantMove'));
 				}
 

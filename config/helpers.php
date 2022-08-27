@@ -459,6 +459,7 @@ if (Helpers::hasOverride('param') === false) { // @codeCoverageIgnore
 	 * @param string $key
 	 * @param string|null $fallback
 	 * @return string|null
+	 * @psalm-return ($fallback is string ? string : string|null)
 	 */
 	function param(string $key, string|null $fallback = null): string|null
 	{
