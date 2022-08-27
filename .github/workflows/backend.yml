@@ -174,7 +174,7 @@ jobs:
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:2.4.1, composer-normalize:2.28.3, composer-require-checker:4.1.0,
+            composer:2.3.8, composer-normalize:2.28.3, composer-require-checker:4.1.0,
             composer-unused:0.7.12, phpcpd:6.0.3, phpmd:2.12.0
 
       - name: Validate composer.json/composer.lock
