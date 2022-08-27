@@ -22,7 +22,11 @@ class KirbyTagTest extends TestCase
 			'invalidHtml' => [
 				'attr' => ['a', 'b'],
 				'html' => 'some string'
-			]
+			],
+			'file' => [
+				'attr' => ['a'],
+				'html' => 'some string'
+			],
 		];
 	}
 
@@ -238,6 +242,10 @@ class KirbyTagTest extends TestCase
 			'a' => 'attrA',
 			'b' => 'attrB c: attrC'
 		], $tag->attrs);
+
+		$tag = KirbyTag::parse('file: file://abc a: attrA b: attrB c: attrC');
+		$this->assertSame('file://abc', $tag->value);
+		$this->assertSame(['a' => 'attrA b: attrB c: attrC'], $tag->attrs);
 	}
 
 	public function testParseInvalid()
