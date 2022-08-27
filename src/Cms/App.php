@@ -707,6 +707,7 @@ class App
 	 * @param \Kirby\Cms\App|null $instance
 	 * @param bool $lazy If `true`, the instance is only returned if already existing
 	 * @return static|null
+	 * @psalm-return ($lazy is false ? static : static|null)
 	 */
 	public static function instance(self $instance = null, bool $lazy = false)
 	{
