@@ -45,7 +45,7 @@ class FileVersion
 		}
 
 		// content fields
-		if (is_a($this->original(), 'Kirby\Cms\File') === true) {
+		if ($this->original() instanceof File) {
 			return $this->original()->content()->get($method, $arguments);
 		}
 	}

@@ -111,7 +111,7 @@ trait HasFiles
 	 */
 	public function files()
 	{
-		if (is_a($this->files, 'Kirby\Cms\Files') === true) {
+		if ($this->files instanceof Files) {
 			return $this->files;
 		}
 

@@ -102,7 +102,7 @@ class Media
 		if (is_string($model) === true) {
 			$root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
 		// parent files for file model that already included hash
-		} elseif (is_a($model, '\Kirby\Cms\File')) {
+		} elseif ($model instanceof File) {
 			$root = dirname($model->mediaRoot());
 		// model files
 		} else {

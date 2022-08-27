@@ -11,6 +11,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Session\Session;
 use Kirby\Toolkit\A;
 use Throwable;
 
@@ -873,7 +874,7 @@ class Auth
 		}
 
 		// try session in header or cookie
-		if (is_a($session, 'Kirby\Session\Session') === false) {
+		if ($session instanceof Session === false) {
 			return $this->kirby->session(['detect' => true]);
 		}
 

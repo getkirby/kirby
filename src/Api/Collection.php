@@ -40,7 +40,7 @@ class Collection
 		$this->view   = $schema['view'] ?? null;
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, Closure::class) === false) {
+			if (($schema['default'] ?? null) instanceof Closure === false) {
 				throw new Exception('Missing collection data');
 			}
 
@@ -49,7 +49,7 @@ class Collection
 
 		if (
 			isset($schema['type']) === true &&
-			is_a($this->data, $schema['type']) === false
+			$this->data instanceof $schema['type'] === false
 		) {
 			throw new Exception('Invalid collection type');
 		}

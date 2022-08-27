@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
@@ -234,7 +235,7 @@ class Panel
 	public static function response(mixed $result, array $options = []): Response
 	{
 		// pass responses directly down to the Kirby router
-		if (is_a($result, 'Kirby\Http\Response') === true) {
+		if ($result instanceof Response) {
 			return $result;
 		}
 
@@ -412,7 +413,7 @@ class Panel
 		foreach ($dropdowns as $name => $dropdown) {
 			// Handle shortcuts for dropdowns. The name is the pattern
 			// and options are defined in a Closure
-			if (is_a($dropdown, 'Closure') === true) {
+			if ($dropdown instanceof Closure) {
 				$dropdown = [
 					'pattern' => $name,
 					'action'  => $dropdown

@@ -187,7 +187,7 @@ class Field
 			return $this;
 		}
 
-		if (is_a($fallback, 'Kirby\Cms\Field') === true) {
+		if ($fallback instanceof self) {
 			return $fallback;
 		}
 

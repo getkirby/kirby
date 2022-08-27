@@ -77,7 +77,7 @@ class TestCase extends BaseTestCase
 			$this->assertEquals($id, $input->id());
 		}
 
-		if (is_a($id, Page::class)) {
+		if ($id instanceof Page) {
 			$this->assertEquals($input, $id);
 		}
 	}
@@ -90,7 +90,7 @@ class TestCase extends BaseTestCase
 			$this->assertEquals($id, $input->id());
 		}
 
-		if (is_a($id, File::class)) {
+		if ($id instanceof File) {
 			$this->assertEquals($input, $id);
 		}
 	}

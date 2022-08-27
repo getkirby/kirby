@@ -317,7 +317,7 @@ class Uri
 			$params = [];
 		}
 
-		$this->params = is_a($params, Params::class) === true ? $params : new Params($params);
+		$this->params = $params instanceof Params ? $params : new Params($params);
 		return $this;
 	}
 
@@ -335,7 +335,7 @@ class Uri
 	 */
 	public function setPath(Path|string|array|null $path = null): static
 	{
-		$this->path = is_a($path, Path::class) === true ? $path : new Path($path);
+		$this->path = $path instanceof Path ? $path : new Path($path);
 		return $this;
 	}
 
@@ -363,7 +363,7 @@ class Uri
 	 */
 	public function setQuery(Query|string|array|null $query = null): static
 	{
-		$this->query = is_a($query, Query::class) === true ? $query : new Query($query);
+		$this->query = $query instanceof Query ? $query : new Query($query);
 		return $this;
 	}
 

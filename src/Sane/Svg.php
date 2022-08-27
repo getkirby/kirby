@@ -411,7 +411,7 @@ class Svg extends Xml
 
 			// the target must not contain any other <use> elements
 			if (
-				is_a($target, DOMElement::class) === true &&
+				$target instanceof DOMElement &&
 				$target->getElementsByTagName('use')->count() > 0
 			) {
 				$errors[] = new InvalidArgumentException(

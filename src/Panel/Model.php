@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Filesystem\Asset;
@@ -48,12 +49,8 @@ abstract class Model
 		$option   = 'panel.' . $type . '.' . $this->model::CLASS_ALIAS . 'DragText';
 		$callback = $this->model->kirby()->option($option);
 
-		if (
-			empty($callback) === false &&
-			is_a($callback, 'Closure') === true &&
-			($dragText = $callback($this->model, ...$args)) !== null
-		) {
-			return $dragText;
+		if ($callback instanceof Closure) {
+			return $callback($this->model, ...$args);
 		}
 
 		return null;
@@ -210,8 +207,8 @@ abstract class Model
 
 		// validate the query result
 		if (
-			is_a($image, 'Kirby\Cms\File') === true ||
-			is_a($image, 'Kirby\Filesystem\Asset') === true
+			$image instanceof CmsFile ||
+			$image instanceof Asset
 		) {
 			return $image;
 		}

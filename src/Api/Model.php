@@ -49,7 +49,7 @@ class Model
 		}
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, Closure::class) === false) {
+			if (($schema['default'] ?? null) instanceof Closure === false) {
 				throw new Exception('Missing model data');
 			}
 
@@ -58,7 +58,7 @@ class Model
 
 		if (
 			isset($schema['type']) === true &&
-			is_a($this->data, $schema['type']) === false
+			$this->data instanceof $schema['type'] === false
 		) {
 			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', get_class($this->data), $schema['type']));
 		}
@@ -144,7 +144,7 @@ class Model
 		foreach ($this->fields as $key => $resolver) {
 			if (
 				array_key_exists($key, $select) === false ||
-				is_a($resolver, Closure::class) === false
+				$resolver instanceof Closure === false
 			) {
 				continue;
 			}
@@ -156,8 +156,8 @@ class Model
 			}
 
 			if (
-				is_a($value, Collection::class) === true ||
-				is_a($value, Model::class) === true
+				$value instanceof Collection ||
+				$value instanceof self
 			) {
 				$selection = $select[$key];
 

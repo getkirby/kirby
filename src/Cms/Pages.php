@@ -57,15 +57,18 @@ class Pages extends Collection
 		$site = App::instance()->site();
 
 		// add a pages collection
-		if (is_a($object, self::class) === true) {
+		if ($object instanceof self) {
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a page by id
-		} elseif (is_string($object) === true && $page = $site->find($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$page = $site->find($object)
+		) {
 			$this->__set($page->id(), $page);
 
 		// add a page object
-		} elseif (is_a($object, 'Kirby\Cms\Page') === true) {
+		} elseif ($object instanceof Page) {
 			$this->__set($object->id(), $object);
 
 		// give a useful error message on invalid input;
@@ -157,7 +160,7 @@ class Pages extends Collection
 		$children = new static([], $model);
 		$kirby    = $model->kirby();
 
-		if (is_a($model, 'Kirby\Cms\Page') === true) {
+		if ($model instanceof Page) {
 			$parent = $model;
 			$site   = $model->site();
 		} else {
@@ -275,7 +278,7 @@ class Pages extends Collection
 		}
 
 		// try to find the page by its (translated) URI by stepping through the page tree
-		$start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
+		$start = $this->parent instanceof Page ? $this->parent->id() : '';
 		if ($page = $this->findByIdRecursive($key, $start, App::instance()->multilang(), true)) {
 			return $page;
 		}
@@ -346,7 +349,7 @@ class Pages extends Collection
 		// get object property by cache mode
 		$index = $drafts === true ? $this->indexWithDrafts : $this->index;
 
-		if (is_a($index, 'Kirby\Cms\Pages') === true) {
+		if ($index instanceof self) {
 			return $index;
 		}
 
@@ -417,14 +420,14 @@ class Pages extends Collection
 		}
 
 		// merge an entire collection
-		if (is_a($args[0], self::class) === true) {
+		if ($args[0] instanceof self) {
 			$collection = clone $this;
 			$collection->data = array_merge($collection->data, $args[0]->data);
 			return $collection;
 		}
 
 		// append a single page
-		if (is_a($args[0], 'Kirby\Cms\Page') === true) {
+		if ($args[0] instanceof Page) {
 			$collection = clone $this;
 			return $collection->set($args[0]->id(), $args[0]);
 		}

@@ -154,7 +154,7 @@ class OptionsQuery
 
 		// slow but precise resolving
 		foreach ($this->aliases as $className => $alias) {
-			if (is_a($object, $className) === true) {
+			if ($object instanceof $className) {
 				return $alias;
 			}
 		}
@@ -181,7 +181,7 @@ class OptionsQuery
 			$result = new Collection($result);
 		}
 
-		if (is_a($result, 'Kirby\Toolkit\Collection') === false) {
+		if ($result instanceof Collection === false) {
 			throw new InvalidArgumentException('Invalid query result data');
 		}
 

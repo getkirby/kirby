@@ -121,7 +121,7 @@ class Html extends \Kirby\Toolkit\Html
 	{
 		// support for Kirby's file objects
 		if (
-			is_a($file, 'Kirby\Cms\File') === true &&
+			$file instanceof File &&
 			$file->extension() === 'svg'
 		) {
 			return $file->read();

@@ -45,7 +45,7 @@ trait HasChildren
 	 */
 	public function children()
 	{
-		if (is_a($this->children, 'Kirby\Cms\Pages') === true) {
+		if ($this->children instanceof Pages) {
 			return $this->children;
 		}
 
@@ -59,7 +59,7 @@ trait HasChildren
 	 */
 	public function childrenAndDrafts()
 	{
-		if (is_a($this->childrenAndDrafts, 'Kirby\Cms\Pages') === true) {
+		if ($this->childrenAndDrafts instanceof Pages) {
 			return $this->childrenAndDrafts;
 		}
 
@@ -118,7 +118,7 @@ trait HasChildren
 	 */
 	public function drafts()
 	{
-		if (is_a($this->drafts, 'Kirby\Cms\Pages') === true) {
+		if ($this->drafts instanceof Pages) {
 			return $this->drafts;
 		}
 

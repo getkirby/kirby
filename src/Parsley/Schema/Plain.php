@@ -26,7 +26,7 @@ class Plain extends Schema
 	 */
 	public function fallback(Element|string $element): array|null
 	{
-		if (is_a($element, Element::class) === true) {
+		if ($element instanceof Element) {
 			$text = $element->innerText();
 		} elseif (is_string($element) === true) {
 			$text = trim($element);

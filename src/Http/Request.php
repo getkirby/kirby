@@ -99,19 +99,19 @@ class Request
 		$this->method  = $this->detectRequestMethod($options['method'] ?? null);
 
 		if (isset($options['body']) === true) {
-			$this->body = is_a($options['body'], Body::class) ? $options['body'] : new Body($options['body']);
+			$this->body = $options['body'] instanceof Body ? $options['body'] : new Body($options['body']);
 		}
 
 		if (isset($options['files']) === true) {
-			$this->files = is_a($options['files'], Files::class) ? $options['files'] : new Files($options['files']);
+			$this->files = $options['files'] instanceof Files ? $options['files'] : new Files($options['files']);
 		}
 
 		if (isset($options['query']) === true) {
-			$this->query = is_a($options['query'], Query::class) === true ? $options['query'] : new Query($options['query']);
+			$this->query = $options['query'] instanceof Query ? $options['query'] : new Query($options['query']);
 		}
 
 		if (isset($options['url']) === true) {
-			$this->url = is_a($options['url'], Uri::class) === true ? $options['url'] : new Uri($options['url']);
+			$this->url = $options['url'] instanceof Uri ? $options['url'] : new Uri($options['url']);
 		}
 	}
 

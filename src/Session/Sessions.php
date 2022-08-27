@@ -40,7 +40,7 @@ class Sessions
 	{
 		if (is_string($store)) {
 			$this->store = new FileSessionStore($store);
-		} elseif (is_a($store, 'Kirby\Session\SessionStore') === true) {
+		} elseif ($store instanceof SessionStore) {
 			$this->store = $store;
 		} else {
 			throw new InvalidArgumentException([

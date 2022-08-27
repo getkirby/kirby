@@ -104,7 +104,7 @@ class PagePicker extends Picker
 		}
 
 		// the selected model is the site. there's nothing above
-		if (is_a($model, 'Kirby\Cms\Site') === true) {
+		if ($model instanceof Site) {
 			return [
 				'id'     => null,
 				'parent' => null,

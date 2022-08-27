@@ -87,9 +87,12 @@ class Collection extends BaseCollection
 	 */
 	public function add($object)
 	{
-		if (is_a($object, self::class) === true) {
+		if ($object instanceof self) {
 			$this->data = array_merge($this->data, $object->data);
-		} elseif (is_object($object) === true && method_exists($object, 'id') === true) {
+		} elseif (
+			is_object($object) === true &&
+			method_exists($object, 'id') === true
+		) {
 			$this->__set($object->id(), $object);
 		} else {
 			$this->append($object);
@@ -210,7 +213,7 @@ class Collection extends BaseCollection
 				return $this->not(...$key);
 			}
 
-			if (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+			if ($key instanceof BaseCollection) {
 				$collection = $collection->not(...$key->keys());
 			} elseif (is_object($key) === true) {
 				$key = $key->id();

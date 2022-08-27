@@ -2,8 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\ErrorPageException;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -435,7 +437,7 @@ class App
 
 		$salt = $this->option('content.salt', $default);
 
-		if (is_a($salt, 'Closure') === true) {
+		if ($salt instanceof Closure) {
 			$salt = $salt($model);
 		}
 
@@ -497,7 +499,11 @@ class App
 
 		// registry controller
 		if ($controller = $this->extension('controllers', $name)) {
-			return is_a($controller, 'Kirby\Toolkit\Controller') ? $controller : new Controller($controller);
+			if ($controller instanceof Controller) {
+				return $controller;
+			}
+
+			return new Controller($controller);
 		}
 
 		return null;
@@ -638,11 +644,11 @@ class App
 		$id       = dirname($path);
 		$filename = basename($path);
 
-		if (is_a($parent, 'Kirby\Cms\User') === true) {
+		if ($parent instanceof User) {
 			return $parent->file($filename);
 		}
 
-		if (is_a($parent, 'Kirby\Cms\File') === true) {
+		if ($parent instanceof File) {
 			$parent = $parent->parent();
 		}
 
@@ -729,8 +735,8 @@ class App
 		$response = $this->response();
 
 		// any direct exception will be turned into an error page
-		if (is_a($input, 'Throwable') === true) {
-			if (is_a($input, 'Kirby\Exception\Exception') === true) {
+		if ($input instanceof Throwable) {
+			if ($input instanceof Exception) {
 				$code = $input->getHttpCode();
 			} else {
 				$code = $input->getCode();
@@ -761,7 +767,7 @@ class App
 		}
 
 		// (Modified) global response configuration, e.g. in routes
-		if (is_a($input, 'Kirby\Cms\Responder') === true) {
+		if ($input instanceof Responder) {
 			// return the passed object unmodified (without injecting headers
 			// from the global object) to allow a complete response override
 			// https://github.com/getkirby/kirby/pull/4144#issuecomment-1034766726
@@ -769,20 +775,23 @@ class App
 		}
 
 		// Responses
-		if (is_a($input, 'Kirby\Http\Response') === true) {
+		if ($input instanceof Response) {
 			$data = $input->toArray();
 
 			// inject headers from the global response configuration
 			// lazily (only if they are not already set);
 			// the case-insensitive nature of headers will be
 			// handled by PHP's `header()` function
-			$data['headers'] = array_merge($response->headers(), $data['headers']);
+			$data['headers'] = array_merge(
+				$response->headers(),
+				$data['headers']
+			);
 
 			return new Response($data);
 		}
 
 		// Pages
-		if (is_a($input, 'Kirby\Cms\Page')) {
+		if ($input instanceof Page) {
 			try {
 				$html = $input->render();
 			} catch (ErrorPageException $e) {
@@ -800,7 +809,7 @@ class App
 		}
 
 		// Files
-		if (is_a($input, 'Kirby\Cms\File')) {
+		if ($input instanceof File) {
 			return $response->redirect($input->mediaUrl(), 307)->send();
 		}
 

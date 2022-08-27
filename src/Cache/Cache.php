@@ -77,7 +77,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid cache value
-		if (is_a($value, Value::class) === false) {
+		if ($value instanceof Value === false) {
 			return $default;
 		}
 
@@ -116,7 +116,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid Value object
-		if (is_a($value, Value::class) === false) {
+		if ($value instanceof Value === false) {
 			return false;
 		}
 
@@ -153,7 +153,7 @@ abstract class Cache
 		$value = $this->retrieve($key);
 
 		// check for a valid Value object
-		if (is_a($value, Value::class) === false) {
+		if ($value instanceof Value === false) {
 			return false;
 		}
 

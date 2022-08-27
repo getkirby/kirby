@@ -1,6 +1,8 @@
 <?php
 
 use Kirby\Cms\Blueprint;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -53,8 +55,8 @@ return [
 			$parent = $this->parentModel();
 
 			if (
-				is_a($parent, 'Kirby\Cms\Site') === false &&
-				is_a($parent, 'Kirby\Cms\Page') === false
+				$parent instanceof Site === false &&
+				$parent instanceof Page === false
 			) {
 				throw new InvalidArgumentException('The parent is invalid. You must choose the site or a page as parent.');
 			}

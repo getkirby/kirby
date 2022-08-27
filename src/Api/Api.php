@@ -5,6 +5,7 @@ namespace Kirby\Api;
 use Closure;
 use Exception;
 use Kirby\Cms\User;
+use Kirby\Exception\Exception as ExceptionException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -145,7 +146,7 @@ class Api
 
 			// set PHP locales based on *user* language
 			// so that e.g. strftime() gets formatted correctly
-			if (is_a($user, User::class) === true) {
+			if ($user instanceof User) {
 				$language = $user->language();
 
 				// get the locale from the translation
@@ -186,7 +187,7 @@ class Api
 
 		if (
 			is_object($output) === true &&
-			is_a($output, Response::class) !== true
+			$output instanceof Response === false
 		) {
 			return $this->resolve($output)->toResponse();
 		}
@@ -234,7 +235,7 @@ class Api
 		}
 
 		// lazy-load data wrapped in Closures
-		if (is_a($this->data[$key], Closure::class) === true) {
+		if ($this->data[$key] instanceof Closure) {
 			return $this->data[$key]->call($this, ...$args);
 		}
 
@@ -267,7 +268,7 @@ class Api
 	protected function match(array $array, mixed $object = null): string|null
 	{
 		foreach ($array as $definition => $model) {
-			if (is_a($object, $model['type']) === true) {
+			if ($object instanceof $model['type']) {
 				return $definition;
 			}
 		}
@@ -382,8 +383,8 @@ class Api
 	public function resolve(mixed $object): Model|Collection
 	{
 		if (
-			is_a($object, Model::class) === true ||
-			is_a($object, Collection::class) === true
+			$object instanceof Model ||
+			$object instanceof Collection
 		) {
 			return $object;
 		}
@@ -603,7 +604,7 @@ class Api
 		];
 
 		// extend the information for Kirby Exceptions
-		if (is_a($e, 'Kirby\Exception\Exception') === true) {
+		if ($e instanceof ExceptionException) {
 			$result['key']     = $e->getKey();
 			$result['details'] = $e->getDetails();
 			$result['code']    = $e->getHttpCode();

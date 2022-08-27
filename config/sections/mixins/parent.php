@@ -1,5 +1,9 @@
 <?php
 
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 
 return [
@@ -24,10 +28,10 @@ return [
 				}
 
 				if (
-					is_a($parent, 'Kirby\Cms\Page') === false &&
-					is_a($parent, 'Kirby\Cms\Site') === false &&
-					is_a($parent, 'Kirby\Cms\File') === false &&
-					is_a($parent, 'Kirby\Cms\User') === false
+					$parent instanceof Page === false &&
+					$parent instanceof Site === false &&
+					$parent instanceof File === false &&
+					$parent instanceof User === false
 				) {
 					throw new Exception('The parent for the section "' . $this->name() . '" has to be a page, site or user object');
 				}

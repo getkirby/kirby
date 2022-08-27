@@ -9,6 +9,7 @@ use DOMDocumentType;
 use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
+use DOMText;
 use DOMXPath;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
@@ -577,7 +578,7 @@ class Dom
 		// convert the `DOMNodeList` to an array first, otherwise removing
 		// nodes would shift the list and make subsequent operations fail
 		foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
-			if (is_a($child, 'DOMDocumentType') === true) {
+			if ($child instanceof DOMDocumentType) {
 				$this->sanitizeDoctype($child, $options, $errors);
 			}
 		}
@@ -634,7 +635,7 @@ class Dom
 		foreach ($node->childNodes as $childNode) {
 			// discard text nodes as they can be unexpected
 			// directly in the parent element
-			if (is_a($childNode, 'DOMText') === true) {
+			if ($childNode instanceof DOMText) {
 				continue;
 			}
 

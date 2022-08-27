@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -229,7 +230,7 @@ class Page extends ModelWithContent
 	 */
 	public function blueprint()
 	{
-		if (is_a($this->blueprint, 'Kirby\Cms\PageBlueprint') === true) {
+		if ($this->blueprint instanceof PageBlueprint) {
 			return $this->blueprint;
 		}
 
@@ -361,7 +362,7 @@ class Page extends ModelWithContent
 
 			foreach ($controllerData as $key => $value) {
 				if (array_key_exists($key, $classes) === true) {
-					if (is_a($value, $classes[$key]) === true) {
+					if ($value instanceof $classes[$key]) {
 						$data[$key] = $value;
 					} else {
 						throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
@@ -545,7 +546,7 @@ class Page extends ModelWithContent
 	 */
 	public function is($page): bool
 	{
-		if (is_a($page, 'Kirby\Cms\Page') === false) {
+		if ($page instanceof self === false) {
 			if (is_string($page) === false) {
 				return false;
 			}
@@ -553,7 +554,7 @@ class Page extends ModelWithContent
 			$page = $this->kirby()->page($page);
 		}
 
-		if (is_a($page, 'Kirby\Cms\Page') === false) {
+		if ($page instanceof self === false) {
 			return false;
 		}
 
@@ -623,7 +624,7 @@ class Page extends ModelWithContent
 		}
 
 		// check for a custom ignore rule
-		if (is_a($ignore, 'Closure') === true) {
+		if ($ignore instanceof Closure) {
 			if ($ignore($this) === true) {
 				return false;
 			}
@@ -862,7 +863,7 @@ class Page extends ModelWithContent
 		if ($class = (static::$models[$name] ?? null)) {
 			$object = new $class($props);
 
-			if (is_a($object, 'Kirby\Cms\Page') === true) {
+			if ($object instanceof self) {
 				return $object;
 			}
 		}

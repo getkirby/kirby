@@ -428,7 +428,10 @@ class Database
 		}
 
 		// define the default flag for the fetch method
-		if ($options['fetch'] instanceof Closure || $options['fetch'] === 'array') {
+		if (
+			$options['fetch'] instanceof Closure ||
+			$options['fetch'] === 'array'
+		) {
 			$flags = PDO::FETCH_ASSOC;
 		} else {
 			$flags = PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE;

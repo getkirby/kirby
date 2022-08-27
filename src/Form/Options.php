@@ -87,7 +87,7 @@ class Options
 
 		// add the model by the proper alias
 		foreach (static::aliases() as $className => $alias) {
-			if (is_a($model, $className) === true) {
+			if ($model instanceof $className) {
 				$data[$alias] = $model;
 			}
 		}

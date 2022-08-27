@@ -86,7 +86,7 @@ abstract class ModelWithContent extends Model
 
 		// single language support
 		if ($this->kirby()->multilang() === false) {
-			if (is_a($this->content, 'Kirby\Cms\Content') === true) {
+			if ($this->content instanceof Content) {
 				return $this->content;
 			}
 
@@ -99,7 +99,7 @@ abstract class ModelWithContent extends Model
 			// only fetch from cache for the default language
 			if (
 				$languageCode === null &&
-				is_a($this->content, 'Kirby\Cms\Content') === true
+				$this->content instanceof Content
 			) {
 				return $this->content;
 			}
@@ -351,7 +351,7 @@ abstract class ModelWithContent extends Model
 		try {
 			$result = Str::query($query, [
 				'kirby'             => $this->kirby(),
-				'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+				'site'              => $this instanceof Site ? $this : $this->site(),
 				'model'             => $this,
 				static::CLASS_ALIAS => $this
 			]);
@@ -359,7 +359,7 @@ abstract class ModelWithContent extends Model
 			return null;
 		}
 
-		if ($expect !== null && is_a($result, $expect) !== true) {
+		if ($expect !== null && $result instanceof $expect === false) {
 			return null;
 		}
 
@@ -548,7 +548,7 @@ abstract class ModelWithContent extends Model
 
 		$result = Str::$handler($template, array_replace([
 			'kirby'             => $this->kirby(),
-			'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+			'site'              => $this instanceof Site ? $this : $this->site(),
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,
 		], $data), ['fallback' => $fallback]);

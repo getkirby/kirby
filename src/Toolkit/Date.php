@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -32,7 +33,7 @@ class Date extends DateTime
 			$datetime = date('r', $datetime);
 		}
 
-		if (is_a($datetime, 'DateTimeInterface') === true) {
+		if ($datetime instanceof DateTimeInterface) {
 			$datetime = $datetime->format('r');
 		}
 

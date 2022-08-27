@@ -51,7 +51,7 @@ return [
 				$parent = $this->model();
 			}
 
-			if (is_a($parent, 'Kirby\Cms\File') === true) {
+			if ($parent instanceof File) {
 				$parent = $parent->parent();
 			}
 
@@ -62,7 +62,7 @@ return [
 					'filename' => $filename,
 				]);
 
-				if (is_a($file, 'Kirby\Cms\File') === false) {
+				if ($file instanceof File === false) {
 					throw new Exception('The file could not be uploaded');
 				}
 

@@ -121,7 +121,7 @@ class KirbyTag
 		}
 
 		if (
-			is_a($parent, File::class) === true &&
+			$parent instanceof File &&
 			$file = $parent->page()->file($path)
 		) {
 			return $file;
@@ -203,7 +203,7 @@ class KirbyTag
 	{
 		$callback = static::$types[$this->type]['html'] ?? null;
 
-		if (is_a($callback, Closure::class) === true) {
+		if ($callback instanceof Closure) {
 			return (string)$callback($this);
 		}
 

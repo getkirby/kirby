@@ -136,7 +136,7 @@ trait AppUsers
 	 */
 	public function users()
 	{
-		if (is_a($this->users, 'Kirby\Cms\Users') === true) {
+		if ($this->users instanceof Users) {
 			return $this->users;
 		}
 

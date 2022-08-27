@@ -43,7 +43,7 @@ class FilePicker extends Picker
 		// find the right default query
 		if (empty($this->options['query']) === false) {
 			$query = $this->options['query'];
-		} elseif (is_a($model, 'Kirby\Cms\File') === true) {
+		} elseif ($model instanceof File) {
 			$query = 'file.siblings';
 		} else {
 			$query = $model::CLASS_ALIAS . '.files';

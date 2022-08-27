@@ -205,7 +205,7 @@ class Loader
 		// convert closure dropdowns to an array definition
 		// otherwise they cannot be merged properly later
 		foreach ($dropdowns as $key => $dropdown) {
-			if (is_a($dropdown, 'Closure') === true) {
+			if ($dropdown instanceof Closure) {
 				$area['dropdowns'][$key] = [
 					'options' => $dropdown
 				];
