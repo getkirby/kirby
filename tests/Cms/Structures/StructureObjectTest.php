@@ -41,16 +41,6 @@ class StructureObjectTest extends TestCase
 		$this->assertEquals($content, $object->content()->toArray());
 	}
 
-	public function testField()
-	{
-		$object = new StructureObject(['id' => 'test']);
-		$this->assertNull($object->field());
-
-		$field = new Field(null, 'notes', '');
-		$object = new StructureObject(['id' => 'test', 'field' => $field]);
-		$this->assertSame($field, $object->field());
-	}
-
 	public function testToDate()
 	{
 		$object = new StructureObject([

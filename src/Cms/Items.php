@@ -75,7 +75,6 @@ class Items extends Collection
 			}
 
 			$params['options']  = $options['options'];
-			$params['field']    = $options['field'] ?? null;
 			$params['parent']   = $options['parent'];
 			$params['siblings'] = $collection;
 			$class = static::ITEM_CLASS;

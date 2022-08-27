@@ -29,8 +29,6 @@ class Block extends Item
 	 */
 	protected $content;
 
-	protected Field|null $field;
-
 	/**
 	 * @var bool
 	 */
@@ -86,7 +84,6 @@ class Block extends Item
 		}
 
 		$this->content  = $params['content'];
-		$this->field    = $params['field'] ?? null;
 		$this->isHidden = $params['isHidden'] ?? false;
 		$this->type     = $params['type'];
 
@@ -175,11 +172,6 @@ class Block extends Item
 		}
 
 		return new static($params);
-	}
-
-	public function field(): Field|null
-	{
-		return $this->field;
 	}
 
 	/**

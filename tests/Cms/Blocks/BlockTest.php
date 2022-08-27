@@ -261,16 +261,6 @@ class BlockTest extends TestCase
 		$this->assertSame($expected, (string)$block);
 	}
 
-	public function testField()
-	{
-		$block = new Block(['type' => 'heading']);
-		$this->assertNull($block->field());
-
-		$field = new Field(null, 'notes', '');
-		$block = new Block(['type' => 'heading', 'field' => $field]);
-		$this->assertSame($field, $block->field());
-	}
-
 	public function samplePrevNextBlocks()
 	{
 		return Blocks::factory([

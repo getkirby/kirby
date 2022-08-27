@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Uuid\Uuid;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -28,7 +28,7 @@ class Layouts extends Items
 		if (array_key_exists('content', $first) === true || array_key_exists('type', $first) === true) {
 			$items = [
 				[
-					'id'      => Uuid::generate(),
+					'id'      => Str::uuid(),
 					'columns' => [
 						[
 							'width'  => '1/1',
@@ -65,7 +65,7 @@ class Layouts extends Items
 		if (empty($input) === false && is_array($input) === false) {
 			try {
 				$input = Data::decode($input, 'json');
-			} catch (Throwable) {
+			} catch (Throwable $e) {
 				return [];
 			}
 		}

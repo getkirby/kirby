@@ -24,12 +24,10 @@ class Structure extends Collection
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param array $objects Kirby\Cms\StructureObject` objects or props arrays
+	 * @param object|null $parent
 	 */
-	public function __construct(
-		array $objects = [],
-		object|null $parent = null,
-		protected Field|null $field = null
-	) {
+	public function __construct($objects = [], $parent = null)
+	{
 		$this->parent = $parent;
 		$this->set($objects);
 	}
@@ -39,6 +37,10 @@ class Structure extends Collection
 	 * This makes sure that nothing unexpected ends
 	 * up in the collection. You can pass arrays or
 	 * StructureObjects
+	 *
+	 * @param string $id
+	 * @param array|StructureObject $props
+	 * @return void
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
@@ -53,8 +55,7 @@ class Structure extends Collection
 
 			$object = new StructureObject([
 				'content'    => $props,
-				'id'         => $props['uuid'] ?? $id,
-				'field'      => $this->field,
+				'id'         => $props['id'] ?? $id,
 				'parent'     => $this->parent,
 				'structure'  => $this
 			]);
