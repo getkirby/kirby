@@ -62,9 +62,22 @@ return function (App $app) {
 		 * @return \Kirby\Cms\Blocks
 		 */
 		'toBlocks' => function (Field $field) {
-			$blocks = Blocks::parse($field->value());
-			$blocks = Blocks::factory($blocks, ['parent' => $field->parent()]);
-			return $blocks->filter('isHidden', false);
+			try {
+				$blocks = Blocks::parse($field->value());
+				$blocks = Blocks::factory($blocks, [
+					'parent' => $field->parent()
+				]);
+				return $blocks->filter('isHidden', false);
+
+			} catch (Throwable) {
+				$message = 'Invalid blocks data for "' . $field->key() . '" field';
+
+				if ($field->parent() !== null) {
+					$message .= ' on parent "' . $field->parent()->title() . '"';
+				}
+
+				throw new InvalidArgumentException($message);
+			}
 		},
 
 		/**
