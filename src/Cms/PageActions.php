@@ -478,7 +478,6 @@ trait PageActions
 
 		// run the hooks and creation action
 		$page = $page->commit('create', ['page' => $page, 'input' => $props], function ($page, $props) {
-
 			// always create pages in the default language
 			if ($page->kirby()->multilang() === true) {
 				$languageCode = $page->kirby()->defaultLanguage()->code();
@@ -594,7 +593,6 @@ trait PageActions
 	public function delete(bool $force = false): bool
 	{
 		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
-
 			// delete all files individually
 			foreach ($page->files() as $file) {
 				$file->delete();
@@ -607,7 +605,6 @@ trait PageActions
 
 			// actually remove the page from disc
 			if ($page->exists() === true) {
-
 				// delete all public media files
 				Dir::remove($page->mediaRoot());
 

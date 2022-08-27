@@ -41,7 +41,6 @@ class Media
 		// try to find a file by model and filename
 		// this should work for all original files
 		if ($file = $model->file($filename)) {
-
 			// check if the request contained an outdated media hash
 			if ($file->mediaHash() !== $hash) {
 				// if at least the token was correct, redirect

@@ -101,7 +101,6 @@ return [
 
 		// check if the thumb already exists
 		if (file_exists($thumbRoot) === false) {
-
 			// if not, create job file
 			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 

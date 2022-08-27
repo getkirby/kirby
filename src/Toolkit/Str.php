@@ -846,11 +846,9 @@ class Str
 			if (is_int($replacement['limit']) === false) {
 				throw new Exception('Invalid limit "' . $replacement['limit'] . '".');
 			} elseif ($replacement['limit'] === -1) {
-
 				// no limit, we don't need our special replacement routine
 				$string = str_replace($replacement['search'], $replacement['replace'], $string);
 			} elseif ($replacement['limit'] > 0) {
-
 				// limit given, only replace for $replacement['limit'] times per replacement
 				$position = -1;
 

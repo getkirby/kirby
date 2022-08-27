@@ -122,7 +122,6 @@ trait Properties
 
 		// handle empty values
 		if ($value === null) {
-
 			// replace null with a default value, if a default handler exists
 			if (method_exists($this, 'default' . $name) === true) {
 				$value = $this->{'default' . $name}();

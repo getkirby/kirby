@@ -55,7 +55,6 @@ class PermissionsTest extends TestCase
 	 */
 	public function testActions(string $category, $action)
 	{
-
 		// default
 		$p = new Permissions();
 		$this->assertTrue($p->for($category, $action));

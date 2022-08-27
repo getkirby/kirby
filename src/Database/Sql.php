@@ -672,7 +672,6 @@ abstract class Sql
 
 		// array of columns
 		if (is_array($columns) === true) {
-
 			// validate columns
 			$result = [];
 
@@ -708,11 +707,11 @@ abstract class Sql
 			case 1:
 				return [$table, $this->unquoteIdentifier($parts[0])];
 
-			// qualified identifier
+				// qualified identifier
 			case 2:
 				return [$this->unquoteIdentifier($parts[0]), $this->unquoteIdentifier($parts[1])];
 
-			// every other number is an error
+				// every other number is an error
 			default:
 				throw new InvalidArgumentException('Invalid identifier ' . $identifier);
 		}

@@ -194,7 +194,6 @@ trait FileActions
 
 		// run the hook
 		return $file->commit('create', compact('file', 'upload'), function ($file, $upload) {
-
 			// delete all public versions
 			$file->unpublish();
 
@@ -230,7 +229,6 @@ trait FileActions
 	public function delete(): bool
 	{
 		return $this->commit('delete', ['file' => $this], function ($file) {
-
 			// remove all versions in the media folder
 			$file->unpublish();
 
@@ -289,7 +287,6 @@ trait FileActions
 		];
 
 		return $this->commit('replace', $arguments, function ($file, $upload) {
-
 			// delete all public versions
 			$file->unpublish();
 

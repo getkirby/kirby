@@ -506,7 +506,6 @@ class Blueprint
 		}
 
 		foreach ($fields as $fieldName => $fieldProps) {
-
 			// extend field from string
 			if (is_string($fieldProps) === true) {
 				$fieldProps = [
@@ -600,7 +599,6 @@ class Blueprint
 	protected function normalizeSections(string $tabName, array $sections): array
 	{
 		foreach ($sections as $sectionName => $sectionProps) {
-
 			// unset / remove section if its property is false
 			if ($sectionProps === false) {
 				unset($sections[$sectionName]);
@@ -686,7 +684,6 @@ class Blueprint
 		}
 
 		foreach ($tabs as $tabName => $tabProps) {
-
 			// unset / remove tab if its property is false
 			if ($tabProps === false) {
 				unset($tabs[$tabName]);

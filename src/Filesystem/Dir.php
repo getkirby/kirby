@@ -239,7 +239,6 @@ class Dir
 		natsort($items);
 
 		foreach ($items as $item) {
-
 			// ignore all items with a leading dot
 			if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
 				continue;
@@ -248,7 +247,6 @@ class Dir
 			$root = $dir . '/' . $item;
 
 			if (is_dir($root) === true) {
-
 				// extract the slug and num of the directory
 				if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
 					$num  = (int)$match[1];
@@ -313,7 +311,6 @@ class Dir
 	 */
 	protected static function inventoryContent(array $inventory, array $content): array
 	{
-
 		// filter meta files from the content file
 		if (empty($content) === true) {
 			$inventory['template'] = 'default';
@@ -321,7 +318,6 @@ class Dir
 		}
 
 		foreach ($content as $contentName) {
-
 			// could be a meta file. i.e. cover.jpg
 			if (isset($inventory['files'][$contentName]) === true) {
 				continue;
