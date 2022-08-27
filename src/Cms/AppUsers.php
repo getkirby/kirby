@@ -120,12 +120,12 @@ trait AppUsers
 
 		if ($allowImpersonation === true && is_string($this->user) === true) {
 			return $this->auth()->impersonate($this->user);
-		} else {
-			try {
-				return $this->auth()->user(null, $allowImpersonation);
-			} catch (Throwable) {
-				return null;
-			}
+		}
+
+		try {
+			return $this->auth()->user(null, $allowImpersonation);
+		} catch (Throwable) {
+			return null;
 		}
 	}
 

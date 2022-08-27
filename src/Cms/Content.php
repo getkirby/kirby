@@ -115,7 +115,7 @@ class Content
 			$oldField = $oldFields->get($name);
 
 			// field name and type matches with old template
-			if ($oldField && $oldField->type() === $newField->type()) {
+			if ($oldField?->type() === $newField->type()) {
 				$data[$name] = $content->get($name)->value();
 			} else {
 				$data[$name] = $newField->default();

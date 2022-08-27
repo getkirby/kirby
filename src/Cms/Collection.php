@@ -114,11 +114,14 @@ class Collection extends BaseCollection
 	{
 		if (count($args) === 1) {
 			// try to determine the key from the provided item
-			if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+			if (
+				is_object($args[0]) === true &&
+				is_callable([$args[0], 'id']) === true
+			) {
 				return parent::append($args[0]->id(), $args[0]);
-			} else {
-				return parent::append($args[0]);
 			}
+
+			return parent::append($args[0]);
 		}
 
 		return parent::append(...$args);

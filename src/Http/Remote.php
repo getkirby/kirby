@@ -323,9 +323,9 @@ class Remote
 	{
 		if (is_object($data) || is_array($data)) {
 			return http_build_query($data);
-		} else {
-			return $data;
 		}
+
+		return $data;
 	}
 
 	/**

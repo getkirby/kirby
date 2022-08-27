@@ -165,12 +165,12 @@ class Query
 			$args = array_map('self::parameter', $args);
 
 			return compact('method', 'args');
-		} else {
-			return [
-				'method' => $part,
-				'args'   => []
-			];
 		}
+
+		return [
+			'method' => $part,
+			'args'   => []
+		];
 	}
 
 	/**

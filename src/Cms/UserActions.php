@@ -311,9 +311,9 @@ trait UserActions
 			$credentials = F::load($path);
 
 			return is_array($credentials) === false ? [] : $credentials;
-		} else {
-			return [];
 		}
+
+		return [];
 	}
 
 	/**

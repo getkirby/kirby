@@ -860,14 +860,17 @@ class Auth
 					$this->status = null;
 
 					return $user;
-				} else {
-					throw new PermissionException(['key' => 'access.code']);
 				}
+
+				throw new PermissionException(['key' => 'access.code']);
 			}
 
 			throw new LogicException('Invalid authentication challenge: ' . $challenge);
 		} catch (Throwable $e) {
-			if (empty($email) === false && $e->getMessage() !== 'Rate limit exceeded') {
+			if (
+				empty($email) === false &&
+				$e->getMessage() !== 'Rate limit exceeded'
+			) {
 				$this->track($email);
 			}
 

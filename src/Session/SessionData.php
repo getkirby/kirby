@@ -177,14 +177,19 @@ class SessionData
 	{
 		if (is_string($key)) {
 			return $this->data[$key] ?? $default;
-		} elseif ($key === null) {
-			return $this->data;
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::get', 'argument' => 'key'],
-				'translate' => false
-			]);
 		}
+
+		if ($key === null) {
+			return $this->data;
+		}
+
+		throw new InvalidArgumentException([
+			'data' => [
+				'method'   => 'SessionData::get',
+				'argument' => 'key'
+			],
+			'translate' => false
+		]);
 	}
 
 	/**

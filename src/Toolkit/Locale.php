@@ -117,11 +117,13 @@ class Locale
 			}
 
 			return $convertedLocale;
-		} elseif (is_string($locale)) {
-			return [LC_ALL => $locale];
-		} else {
-			throw new InvalidArgumentException('Locale must be string or array');
 		}
+
+		if (is_string($locale) === true) {
+			return [LC_ALL => $locale];
+		}
+
+		throw new InvalidArgumentException('Locale must be string or array');
 	}
 
 	/**

@@ -322,12 +322,11 @@ class System
 
 		// only return the actual license key if the
 		// current user has appropriate permissions
-		$user = $this->app->user();
-		if ($user && $user->isAdmin() === true) {
+		if ($this->app->user()?->isAdmin() === true) {
 			return $license['license'];
-		} else {
-			return true;
 		}
+
+		return true;
 	}
 
 	/**

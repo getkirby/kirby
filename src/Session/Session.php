@@ -611,12 +611,15 @@ class Session
 		// now make sure that we have a valid timestamp
 		if (is_int($time)) {
 			return $time;
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::timeToTimestamp', 'argument' => '$time'],
-				'translate' => false
-			]);
 		}
+
+		throw new InvalidArgumentException([
+			'data' => [
+				'method'   => 'Session::timeToTimestamp',
+				'argument' => '$time'
+			],
+			'translate' => false
+		]);
 	}
 
 	/**
