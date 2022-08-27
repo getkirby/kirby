@@ -246,6 +246,7 @@ return [
 			'height',
 			'loop',
 			'muted',
+			'playsinline',
 			'poster',
 			'preload',
 			'style',
@@ -288,12 +289,13 @@ return [
 				// booleans: autoplay, controls, loop, muted
 				// strings : poster, preload
 				// for ex  : `autoplay` will not work if `false` is a `string` instead of a `boolean`
-				$attrs['autoplay'] = $autoplay = Str::toType($tag->autoplay, 'bool');
-				$attrs['controls'] = Str::toType($tag->controls ?? true, 'bool');
-				$attrs['loop']     = Str::toType($tag->loop, 'bool');
-				$attrs['muted']    = Str::toType($tag->muted ?? $autoplay, 'bool');
-				$attrs['poster']   = $tag->poster;
-				$attrs['preload']  = $tag->preload;
+				$attrs['autoplay']    = $autoplay = Str::toType($tag->autoplay, 'bool');
+				$attrs['controls']    = Str::toType($tag->controls ?? true, 'bool');
+				$attrs['loop']        = Str::toType($tag->loop, 'bool');
+				$attrs['muted']       = Str::toType($tag->muted ?? $autoplay, 'bool');
+				$attrs['playsinline'] = Str::toType($tag->playsinline ?? $autoplay, 'bool');
+				$attrs['poster']      = $tag->poster;
+				$attrs['preload']     = $tag->preload;
 			}
 
 			// handles local and remote video file
