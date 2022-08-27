@@ -333,6 +333,22 @@ class QueryTest extends TestCase
 
 	public function testWhere()
 	{
+		// numeric comparison
+		$count = $this->database
+			->table('users')
+			->where('balance', '>', 100)
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// numeric comparison (value 0)
+		$count = $this->database
+			->table('users')
+			->where('balance', '>', 0)
+			->count();
+
+		$this->assertSame(4, $count);
+
 		// like 1
 		$count = $this->database
 			->table('users')
@@ -356,14 +372,27 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(2, $count);
+	}
 
-		// invalid predicate
+	public function testWhereInvalidPredicate()
+	{
 		$this->expectException('InvalidArgumentException');
 		$this->expectExceptionMessage('Invalid predicate INV');
 
 		$this->database
 			->table('users')
 			->where('username', 'INV', ['john', 'paul'])
+			->count();
+	}
+
+	public function testWhereInvalidPredicateOperator()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid predicate/operator <!>');
+
+		$this->database
+			->table('users')
+			->where('username', '<!>', 'john')
 			->count();
 	}
 
@@ -378,6 +407,17 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(1, $count);
+
+		// with value 0
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 3
+			])
+			->andWhere('balance', '>', 0)
+			->count();
+
+		$this->assertSame(2, $count);
 	}
 
 	public function testOrWhere()
@@ -391,6 +431,17 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(3, $count);
+
+		// with value 0
+		$count = $this->database
+			->table('users')
+			->where([
+				'role_id' => 1
+			])
+			->orWhere('balance', '<=', 0)
+			->count();
+
+		$this->assertSame(1, $count);
 	}
 
 	public function testWhereCallback()
