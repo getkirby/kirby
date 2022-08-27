@@ -68,7 +68,6 @@ return function (App $app) {
 					'parent' => $field->parent()
 				]);
 				return $blocks->filter('isHidden', false);
-
 			} catch (Throwable) {
 				$message = 'Invalid blocks data for "' . $field->key() . '" field';
 
