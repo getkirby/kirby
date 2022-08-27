@@ -6,12 +6,10 @@ use Closure;
 use Generator;
 use Hidehalo\Nanoid\Client as Nanoid;
 use InvalidArgumentException;
-use Kirby\Cms\Block;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
-use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
 use Kirby\Toolkit\Str;
 
