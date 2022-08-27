@@ -19,9 +19,9 @@ class FieldMethodsTest extends TestCase
 		]);
 	}
 
-	public function field($value = '')
+	public function field($value = '', $parent = null)
 	{
-		return new Field(null, 'test', $value);
+		return new Field($parent, 'test', $value);
 	}
 
 	public function testFieldMethodCaseInsensitivity()
@@ -376,7 +376,25 @@ class FieldMethodsTest extends TestCase
 		$this->expectException('Kirby\Exception\InvalidArgumentException');
 		$this->expectExceptionMessage('Invalid structure data for "test" field');
 
-		$structure = $field->toStructure();
+		$field->toStructure();
+	}
+
+	public function testToStructureWithInvalidDataWithParent()
+	{
+		$data = [
+			['title' => 'a'],
+			['title' => 'b'],
+			'title'
+		];
+
+		$yaml  = Yaml::encode($data);
+		$page  = new Page(['slug' => 'test']);
+		$field = $this->field($yaml, $page);
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid structure data for "test" field on parent "test"');
+
+		$field->toStructure();
 	}
 
 	public function testToDefaultUrl()
