@@ -106,7 +106,6 @@ class Email
 	protected function template(): void
 	{
 		if (isset($this->props['template']) === true) {
-
 			// prepare data to be passed to template
 			$data = $this->props['data'] ?? [];
 
@@ -123,7 +122,7 @@ class Email
 					$this->props['body']['text'] = $text->render($data);
 				}
 
-				// fallback to single email text template
+			// fallback to single email text template
 			} elseif ($text->exists()) {
 				$this->props['body'] = $text->render($data);
 			} else {

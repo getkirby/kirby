@@ -75,24 +75,24 @@ class FileCache extends Cache
 		$keyParts = [];
 		foreach (preg_split('#([\/\\\\])#', $key, 0, PREG_SPLIT_DELIM_CAPTURE) as $part) {
 			switch ($part) {
-				// forward slashes don't need special treatment
 				case '/':
+					// forward slashes don't need special treatment
 					break;
 
-				// backslashes get their own marker in the path
-				// to differentiate the cache key from one with forward slashes
 				case '\\':
+					// backslashes get their own marker in the path
+					// to differentiate the cache key from one with forward slashes
 					$keyParts[] = '_backslash';
 					break;
 
-				// empty part means two slashes in a row;
-				// special marker like for backslashes
 				case '':
+					// empty part means two slashes in a row;
+					// special marker like for backslashes
 					$keyParts[] = '_empty';
 					break;
 
-				// an actual path segment
 				default:
+					// an actual path segment:
 					// check if the segment only contains safe characters;
 					// underscores are *not* safe to guarantee uniqueness
 					// as they are used in the special cases

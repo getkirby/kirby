@@ -177,7 +177,6 @@ class A
 		}
 
 		foreach ($array2 as $key => $value) {
-
 			// append to the merged array, don't overwrite numeric keys
 			if (is_int($key) === true && $mode === static::MERGE_APPEND) {
 				$merged[] = $value;

@@ -184,7 +184,6 @@ class ATest extends TestCase
 	 */
 	public function testMerge()
 	{
-
 		// simple non-associative arrays
 		$this->assertSame(['a', 'b', 'c', 'd'], A::merge(['a', 'b'], ['c', 'd']));
 		$this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge(['a', 'b'], ['c', 'd', 'a']));

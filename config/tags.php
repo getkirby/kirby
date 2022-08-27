@@ -214,7 +214,6 @@ return [
 			'title'
 		],
 		'html' => function ($tag) {
-
 			// get and sanitize the username
 			$username = str_replace('@', '', $tag->value);
 

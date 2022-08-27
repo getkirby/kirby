@@ -399,7 +399,6 @@ class ApiTest extends TestCase
 
 	public function testFileGetRoute()
 	{
-
 		// regular
 		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
 

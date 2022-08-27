@@ -339,7 +339,6 @@ class AppPluginsTest extends TestCase
 
 	public function testCollectionFilters()
 	{
-
 		// fetch all previous filters
 		$prevFilters = Collection::$filters;
 

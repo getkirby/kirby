@@ -585,17 +585,17 @@ class Html extends Xml
 		};
 
 		switch ($path->toString()) {
-			// playlists
 			case 'embed/videoseries':
 			case 'playlist':
+				// playlists
 				if ($isYoutubeId($query->list) === true) {
 					$src = $host . '/videoseries';
 				}
 
 				break;
 
-			// regular video URLs
 			case 'watch':
+				// regular video URLs
 				if ($isYoutubeId($query->v) === true) {
 					$src = $host . '/' . $query->v;
 

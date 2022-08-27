@@ -648,7 +648,6 @@ class User extends ModelWithContent
 
 		// if there's an authenticated user …
 		if ($user = $kirby->user()) {
-
 			// admin users can select pretty much any role
 			if ($user->isAdmin() === true) {
 				// except if the user is the last admin
