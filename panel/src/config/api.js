@@ -60,7 +60,6 @@ export default {
 		});
 
 		// regularly ping API to keep session alive
-		// (if any user is authenticated)
 		Vue.$api.ping = setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
 	}
 };
