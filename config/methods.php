@@ -63,16 +63,16 @@ return function (App $app) {
 		 */
 		'toBlocks' => function (Field $field) {
 			try {
-				$blocks = Blocks::factory(Blocks::parse($field->value()), [
-					'parent' => $field->parent(),
+				$blocks = Blocks::parse($field->value());
+				$blocks = Blocks::factory($blocks, [
+					'parent' => $field->parent()
 				]);
-
 				return $blocks->filter('isHidden', false);
 			} catch (Throwable) {
-				if ($field->parent() === null) {
-					$message = 'Invalid blocks data for "' . $field->key() . '" field';
-				} else {
-					$message = 'Invalid blocks data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+				$message = 'Invalid blocks data for "' . $field->key() . '" field';
+
+				if ($parent = $field->parent()) {
+					$message .= ' on parent "' . $parent->title() . '"';
 				}
 
 				throw new InvalidArgumentException($message);
@@ -250,10 +250,10 @@ return function (App $app) {
 			try {
 				return new Structure(Data::decode($field->value, 'yaml'), $field->parent());
 			} catch (Exception) {
-				if ($field->parent() === null) {
-					$message = 'Invalid structure data for "' . $field->key() . '" field';
-				} else {
-					$message = 'Invalid structure data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+				$message = 'Invalid structure data for "' . $field->key() . '" field';
+
+				if ($parent = $field->parent()) {
+					$message .= ' on parent "' . $parent->title() . '"';
 				}
 
 				throw new InvalidArgumentException($message);

@@ -19,9 +19,9 @@ class FieldMethodsTest extends TestCase
 		]);
 	}
 
-	public function field($value = '')
+	public function field($value = '', $parent = null)
 	{
-		return new Field(null, 'test', $value);
+		return new Field($parent, 'test', $value);
 	}
 
 	public function testFieldMethodCaseInsensitivity()
@@ -371,12 +371,12 @@ class FieldMethodsTest extends TestCase
 		];
 
 		$yaml  = Yaml::encode($data);
-		$field = $this->field($yaml);
+		$field = $this->field($yaml, kirby()->page('files'));
 
 		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid structure data for "test" field');
+		$this->expectExceptionMessage('Invalid structure data for "test" field on parent "files"');
 
-		$structure = $field->toStructure();
+		$field->toStructure();
 	}
 
 	public function testToDefaultUrl()
@@ -795,6 +795,25 @@ class FieldMethodsTest extends TestCase
 			$this->assertSame($row['content'], $block->content()->data());
 			$this->assertNotEmpty($block->toHtml());
 		}
+	}
+
+	public function testToBlocksWithInvalidData()
+	{
+		$data = [
+			[
+				'content' => [
+					'text' => 'foo',
+				]
+			]
+		];
+
+		$json   = Json::encode($data);
+		$field  = new Field(kirby()->page('files'), 'test', $json);
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
+
+		$field->toBlocks();
 	}
 
 	public function testToLayouts()
