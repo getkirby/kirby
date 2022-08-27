@@ -526,6 +526,7 @@ class App
 	 *
 	 * @param string|null $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
+	 * @psalm-return ($check is string ? bool : string)
 	 */
 	public function csrf(string|null $check = null)
 	{
