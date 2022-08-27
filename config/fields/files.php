@@ -71,7 +71,7 @@ return [
 
 			foreach (Data::decode($value, 'yaml') as $id) {
 				if (is_array($id) === true) {
-					$id = $id['id'] ?? null;
+					$id = $id['uuid'] ?? $id['id'] ?? null;
 				}
 
 				if (
@@ -128,7 +128,7 @@ return [
 		];
 	},
 	'save' => function ($value = null) {
-		return A::pluck($value, 'uuid');
+		return A::pluck($value, $this->store);
 	},
 	'validations' => [
 		'max',

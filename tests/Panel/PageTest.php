@@ -88,47 +88,29 @@ class PageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::dropdownOption
-	 */
-	public function testDropdownOption()
-	{
-		$page = new ModelPage([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test page'
-			]
-		]);
-
-		$panel  = new Page($page);
-		$option = $panel->dropdownOption();
-
-		$this->assertSame('page', $option['icon']);
-		$this->assertSame('Test page', $option['text']);
-		$this->assertSame('/panel/pages/test', $option['link']);
-	}
-
-	/**
 	 * @covers ::dragText
 	 */
 	public function testDragText()
 	{
 		$page = new ModelPage([
-			'slug' => 'test'
+			'slug' => 'test',
+			'content' => ['uuid' => 'test-page']
 		]);
 
 		$panel = new Page($page);
-		$this->assertSame('(link: test text: test)', $panel->dragText());
+		$this->assertSame('(link: page://test-page text: test)', $panel->dragText());
 
 		// with title
 		$page = new ModelPage([
 			'slug' => 'test',
 			'content' => [
-				'title' => 'Test Title'
+				'title' => 'Test Title',
+				'uuid' => 'test-page'
 			]
 		]);
 
 		$panel = new Page($page);
-		$this->assertSame('(link: test text: Test Title)', $panel->dragText());
+		$this->assertSame('(link: page://test-page text: Test Title)', $panel->dragText());
 	}
 
 	/**
@@ -145,12 +127,14 @@ class PageTest extends TestCase
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'a'
+						'slug' => 'a',
+						'content' => ['uuid' => 'my-a']
 					],
 					[
 						'slug' => 'b',
 						'content' => [
-							'title' => 'Test Title'
+							'title' => 'Test Title',
+							'uuid'  => 'my-b'
 						]
 					]
 				]
@@ -158,10 +142,10 @@ class PageTest extends TestCase
 		]);
 
 		$panel = new Page($app->page('a'));
-		$this->assertSame('[a](/a)', $panel->dragText());
+		$this->assertSame('[a](//@/page/my-a)', $panel->dragText());
 
 		$panel = new Page($app->page('b'));
-		$this->assertSame('[Test Title](/b)', $panel->dragText());
+		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
 	}
 
 	/**
@@ -225,6 +209,26 @@ class PageTest extends TestCase
 
 		$panel = new Page($app->page('test'));
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
+	}
+
+	/**
+	 * @covers ::dropdownOption
+	 */
+	public function testDropdownOption()
+	{
+		$page = new ModelPage([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test page'
+			]
+		]);
+
+		$panel  = new Page($page);
+		$option = $panel->dropdownOption();
+
+		$this->assertSame('page', $option['icon']);
+		$this->assertSame('Test page', $option['text']);
+		$this->assertSame('/panel/pages/test', $option['link']);
 	}
 
 	/**
@@ -442,14 +446,15 @@ class PageTest extends TestCase
 		$page = new ModelPage([
 			'slug' => 'test',
 			'content' => [
-				'title' => 'Test Title'
+				'title' => 'Test Title',
+				'uuid'  => 'test-page'
 			]
 		]);
 
 		$panel = new Page($page);
 		$data  = $panel->pickerData();
 
-		$this->assertSame('(link: test text: Test Title)', $data['dragText']);
+		$this->assertSame('(link: page://test-page text: Test Title)', $data['dragText']);
 		$this->assertSame('test', $data['id']);
 		$this->assertSame('/pages/test', $data['link']);
 		$this->assertSame('Test Title', $data['text']);

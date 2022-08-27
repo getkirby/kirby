@@ -68,11 +68,18 @@ return [
 		},
 
 		/**
+		 * Whethter to store UUID or path in
+		 * content file
+		 */
+		'store' => function (string $store = 'uuid') {
+			return $store;
+		},
+
+		/**
 		 * Main text for each item
 		 */
 		'text' => function (string $text = null) {
 			return $text;
 		},
-
 	],
 ];

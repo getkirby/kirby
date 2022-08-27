@@ -223,7 +223,8 @@ class FilesSectionTest extends TestCase
 						'slug'  => 'a',
 						'files' => [
 							[
-								'filename' => 'a.jpg'
+								'filename' => 'a.jpg',
+								'content' => ['uuid' => 'test-file-a']
 							],
 							[
 								'filename' => 'b.jpg'
@@ -245,7 +246,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertEquals('(image: a/a.jpg)', $data[0]['dragText']);
+		$this->assertEquals('(image: file://test-file-a)', $data[0]['dragText']);
 	}
 
 	public function testHelp()

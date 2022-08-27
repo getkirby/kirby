@@ -68,28 +68,33 @@ class File extends Model
 	public function dragText(string|null $type = null, bool $absolute = false): string
 	{
 		$type = $this->dragTextType($type);
-		$url  = $absolute ? $this->model->id() : $this->model->filename();
+		$url  = $this->model->filename();
+		$file = $this->model->type();
+
+		// By default only the filename is added as relative URL.
+		// If an absolute URL is required, either use the permalink
+		// for markdown notation or the UUID for Kirbytext (since
+		// Kirbytags support can resolve UUIDs directly)
+		if ($absolute === true) {
+			$url = $type === 'markdown' ? $this->model->permalink() : $this->model->uuid();
+		}
+
 
 		if ($dragTextFromCallback = $this->dragTextFromCallback($type, $url)) {
 			return $dragTextFromCallback;
 		}
 
 		if ($type === 'markdown') {
-			if ($this->model->type() === 'image') {
-				return '![' . $this->model->alt() . '](' . $url . ')';
-			}
-
-			return '[' . $this->model->filename() . '](' . $url . ')';
+			return match ($file) {
+				'image' => '![' . $this->model->alt() . '](' . $url . ')',
+				default => '[' . $this->model->filename() . '](' . $url . ')'
+			};
 		}
 
-		if ($this->model->type() === 'image') {
-			return '(image: ' . $url . ')';
-		}
-		if ($this->model->type() === 'video') {
-			return '(video: ' . $url . ')';
-		}
-
-		return '(file: ' . $url . ')';
+		return match ($file) {
+			'image', 'video' => '(' . $file . ': ' . $url . ')',
+			default 		 => '(file: ' . $url . ')'
+		};
 	}
 
 	/**
@@ -284,12 +289,10 @@ class File extends Model
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$id   = $this->model->id();
 		$name = $this->model->filename();
 
 		if (empty($params['model']) === false) {
 			$parent   = $this->model->parent();
-			$uuid     = $parent === $params['model'] ? $name : $id;
 			$absolute = $parent !== $params['model'];
 		}
 
@@ -299,8 +302,7 @@ class File extends Model
 			'filename' => $name,
 			'dragText' => $this->dragText('auto', $absolute ?? false),
 			'type'     => $this->model->type(),
-			'url'      => $this->model->url(),
-			'uuid'     => $uuid ?? $id,
+			'url'      => $this->model->url()
 		]);
 	}
 
