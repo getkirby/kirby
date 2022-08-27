@@ -43,7 +43,7 @@ class SiteTest extends AreaTestCase
 		$this->assertSame([], $props['tabs']);
 
 		// model
-		$this->assertSame(['title' => 'Test'], $model['content']);
+		$this->assertSame('Test', $model['content']['title']);
 		$this->assertSame('test', $model['id']);
 		$this->assertSame('draft', $model['status']);
 		$this->assertSame('Test', $model['title']);

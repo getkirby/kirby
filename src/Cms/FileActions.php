@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Uuid\Uuid;
 
 /**
  * FileActions
@@ -151,7 +152,12 @@ trait FileActions
 			F::copy($contentFile, $page->root() . '/' . basename($contentFile));
 		}
 
-		return $page->clone()->file($this->filename());
+		$copy = $page->clone()->file($this->filename());
+
+		// overwrite with new UUID (remove old, add new)
+		$copy = $copy->save(['uuid' => Uuid::generate()]);
+
+		return $copy;
 	}
 
 	/**
@@ -180,10 +186,14 @@ trait FileActions
 		$file = static::factory($props);
 		$upload = $file->asset($props['source']);
 
+		// gather content
+		$content = $props['content'] ?? [];
+		// make sure that a UUID gets generated and
+		// added to content right away
+		$content['uuid'] = Uuid::generate();
+
 		// create a form for the file
-		$form = Form::for($file, [
-			'values' => $props['content'] ?? []
-		]);
+		$form = Form::for($file, ['values' => $content]);
 
 		// inject the content
 		$file = $file->clone(['content' => $form->strings(true)]);
