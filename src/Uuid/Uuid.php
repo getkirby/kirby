@@ -105,6 +105,8 @@ class Uuid
 	 * Look up Uuid in cache and resolve
 	 * to identifiable model object.
 	 * Implemented on child classes.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function findByCache(): Identifiable|null
 	{
@@ -115,6 +117,8 @@ class Uuid
 	 * Look up Uuid in local and global index
 	 * and return the identifiable model object.
 	 * Implemented on child classes.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function findByIndex(): Identifiable|null
 	{

@@ -217,6 +217,7 @@ class PagesFieldTest extends TestCase
 			'link' => '/pages/test',
 			'sortable' => true,
 			'text' => 'Test Title',
+			'uuid' => 'page://my-test-uuid',
 			'dragText' => '(link: page://my-test-uuid text: Test Title)',
 			'hasChildren' => false,
 			'url' => '/test',
