@@ -297,6 +297,24 @@ class FileTest extends TestCase
 		$this->assertInstanceOf('Kirby\Panel\File', $file->panel());
 	}
 
+	/**
+	 * @covers ::permalink
+	 */
+	public function testPermalink()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				[
+					'filename' => 'test.pdf',
+					'content'  => ['uuid' => 'my-file-uuid']
+				]
+			]
+		]);
+
+		$this->assertSame('//@/file/my-file-uuid', $page->file('test.pdf')->permalink());
+	}
+
 	public function testPreviewUrl()
 	{
 		$page = new Page([

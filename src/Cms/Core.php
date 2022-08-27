@@ -119,6 +119,16 @@ class Core
 	}
 
 	/**
+	 * Returns a list of all core caches
+	 */
+	public function caches(): array
+	{
+		return [
+			'uuid' => true
+		];
+	}
+
+	/**
 	 * Returns a list of all cache driver classes
 	 */
 	public function cacheTypes(): array
@@ -129,14 +139,6 @@ class Core
 			'memcached' => 'Kirby\Cache\MemCached',
 			'memory'    => 'Kirby\Cache\MemoryCache',
 		];
-	}
-
-	/**
-	 * Returns a list of all core caches
-	 */
-	public function caches(): array
-	{
-		return [];
 	}
 
 	/**
@@ -242,6 +244,7 @@ class Core
 			'toggles'     => $this->root . '/fields/toggles.php',
 			'url'         => $this->root . '/fields/url.php',
 			'users'       => $this->root . '/fields/users.php',
+			'uuid'        => $this->root . '/fields/uuid.php',
 			'writer'      => $this->root . '/fields/writer.php'
 		];
 	}

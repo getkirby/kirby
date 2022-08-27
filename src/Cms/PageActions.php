@@ -13,6 +13,7 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * PageActions
@@ -123,6 +124,9 @@ trait PageActions
 
 			// overwrite the new page in the parent collection
 			static::updateParentCollections($newPage, 'set');
+
+			// clear UUID cache recursively (for children and files as well)
+			Uuid::for($oldPage)->clear(true);
 
 			return $newPage;
 		});
@@ -438,6 +442,9 @@ trait PageActions
 			}
 		}
 
+		// overwrite with new UUID (remove old, add new)
+		$copy = $copy->save(['uuid' => Uuid::generate()]);
+
 		// add copy to siblings
 		static::updateParentCollections($copy, 'append', $parentModel);
 
@@ -460,10 +467,14 @@ trait PageActions
 		// create a temporary page object
 		$page = Page::factory($props);
 
+		// gather content
+		$content = $props['content'] ?? [];
+		// make sure that a UUID gets generated and
+		// added to content right away
+		$content['uuid'] = Uuid::generate();
+
 		// create a form for the page
-		$form = Form::for($page, [
-			'values' => $props['content'] ?? []
-		]);
+		$form = Form::for($page, ['values' => $content]);
 
 		// inject the content
 		$page = $page->clone(['content' => $form->strings(true)]);
@@ -594,6 +605,9 @@ trait PageActions
 			foreach ($page->children() as $child) {
 				$child->delete(true);
 			}
+
+			// clear UUID cache
+			Uuid::for($page)->clear();
 
 			// actually remove the page from disc
 			if ($page->exists() === true) {

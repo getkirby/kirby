@@ -961,6 +961,14 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Return the permanent URL to the page using its UUID
+	 */
+	public function permalink(): string
+	{
+		return $this->uuid()->url();
+	}
+
+	/**
 	 * Returns the permissions object for this page
 	 *
 	 * @return \Kirby\Cms\PagePermissions

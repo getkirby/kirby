@@ -421,7 +421,7 @@ class AppTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('bar', $app->option('foo'));
+		$this->assertSame('bar', $app->option('foo'));
 	}
 
 	public function testOptionWithDotNotation()
@@ -437,7 +437,7 @@ class AppTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $app->option('mother.child'));
+		$this->assertSame('test', $app->option('mother.child'));
 	}
 
 	public function testOptionFromPlugin()
@@ -754,13 +754,13 @@ class AppTest extends TestCase
 		$fileB = $page->file('test-b.jpg');
 
 		// plain
-		$this->assertEquals($fileA, $app->file('test/test-a.jpg'));
+		$this->assertSame($fileA, $app->file('test/test-a.jpg'));
 
 		// with page parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $page));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $page));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
 	}
 
 	public function testFindSiteFile()
@@ -792,19 +792,19 @@ class AppTest extends TestCase
 		$fileC = $page->file('test-c.jpg');
 
 		// plain
-		$this->assertEquals($fileA, $app->file('test-a.jpg'));
+		$this->assertSame($fileA, $app->file('test-a.jpg'));
 
 		// with page parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $site));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $site));
 
 		// with subpage parent
-		$this->assertEquals($fileC, $app->file('home/test-c.jpg'));
-		$this->assertEquals($fileC, $app->file('home/test-c.jpg', $site));
-		$this->assertEquals($fileC, $app->file('test-c.jpg', $page));
+		$this->assertSame($fileC, $app->file('home/test-c.jpg'));
+		$this->assertSame($fileC, $app->file('home/test-c.jpg', $site));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $page));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
-		$this->assertEquals($fileC, $app->file('test-c.jpg', $fileC));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $fileC));
 	}
 
 	public function testFindUserFile()
@@ -829,10 +829,40 @@ class AppTest extends TestCase
 		$fileB = $user->file('test-b.jpg');
 
 		// with user parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $user));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $user));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFindFileByUUID()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'test-a.jpg',
+								'content'  => ['uuid' => 'my-file']
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$file = $page->file('test-a.jpg');
+
+		$this->assertSame($file, $app->file('file://my-file'));
 	}
 
 	public function testBlueprints()
@@ -861,7 +891,7 @@ class AppTest extends TestCase
 			'default'
 		];
 
-		$this->assertEquals($expected, $app->blueprints());
+		$this->assertSame($expected, $app->blueprints());
 
 		$expected = [
 			'a',
@@ -869,7 +899,7 @@ class AppTest extends TestCase
 			'default'
 		];
 
-		$this->assertEquals($expected, $app->blueprints('files'));
+		$this->assertSame($expected, $app->blueprints('files'));
 	}
 
 	/**
@@ -1104,7 +1134,7 @@ class AppTest extends TestCase
 
 	public function testVersionHash()
 	{
-		$this->assertEquals(md5(App::version()), App::versionHash());
+		$this->assertSame(md5(App::version()), App::versionHash());
 	}
 
 	public function testSlugsOption()
@@ -1295,5 +1325,28 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame('foo/bar', $app->path());
+	}
+
+	/**
+	 * @covers ::page
+	 */
+	public function testPageWithUUID()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'content'  => ['uuid' => 'my-page']
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$this->assertSame($page, $app->page('page://my-page'));
 	}
 }

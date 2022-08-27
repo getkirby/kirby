@@ -53,7 +53,7 @@ abstract class Model
 	/**
 	 * Each model must return a unique id
 	 *
-	 * @return string|int
+	 * @return string|null
 	 */
 	public function id()
 	{
