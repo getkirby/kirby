@@ -83,7 +83,7 @@ export default (config) => {
 				config.onComplete(id);
 
 				// pass to error callback and throw error
-				// except when callback explcitly suppresses it
+				// except when callback explicitly suppresses it
 				if (config.onError(e) !== false) {
 					throw e;
 				}

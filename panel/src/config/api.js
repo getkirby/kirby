@@ -49,13 +49,18 @@ export default {
 					}
 
 					Vue.$api.requests.push(requestId);
+				},
+				onSuccess: () => {
+					clearInterval(Vue.$api.ping);
+					Vue.$api.ping = setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
 				}
 			},
+			ping: null,
 			requests: []
 		});
 
 		// regularly ping API to keep session alive
-		// (if any use is authenticated)
-		setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
+		// (if any user is authenticated)
+		Vue.$api.ping = setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
 	}
 };

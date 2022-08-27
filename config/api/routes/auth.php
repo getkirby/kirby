@@ -110,7 +110,8 @@ return [
 		'method'  => 'POST',
 		'auth'    => false,
 		'action'  => function () {
-			$this->kirby()->auth()->user();
+			// refresh the session timeout
+			$this->kirby()->session();
 			return true;
 		}
 	],
