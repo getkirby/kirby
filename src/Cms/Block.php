@@ -157,7 +157,7 @@ class Block extends Item
 		if (empty($type) === false && $class = (static::$models[$type] ?? null)) {
 			$object = new $class($params);
 
-			if (is_a($object, 'Kirby\Cms\Block') === true) {
+			if ($object instanceof self) {
 				return $object;
 			}
 		}
@@ -166,7 +166,7 @@ class Block extends Item
 		if ($class = (static::$models['Kirby\Cms\Block'] ?? null)) {
 			$object = new $class($params);
 
-			if (is_a($object, 'Kirby\Cms\Block') === true) {
+			if ($object instanceof self) {
 				return $object;
 			}
 		}

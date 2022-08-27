@@ -3,7 +3,9 @@
 namespace Kirby\Parsley;
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
+use DOMText;
 use Kirby\Parsley\Schema\Plain;
 use Kirby\Toolkit\Dom;
 
@@ -159,7 +161,7 @@ class Parsley
 	 */
 	public function isBlock(DOMNode $element): bool
 	{
-		if (is_a($element, 'DOMElement') === false) {
+		if ($element instanceof DOMElement === false) {
 			return false;
 		}
 
@@ -171,11 +173,11 @@ class Parsley
 	 */
 	public function isInline(DOMNode $element): bool
 	{
-		if (is_a($element, 'DOMText') === true) {
+		if ($element instanceof DOMText) {
 			return true;
 		}
 
-		if (is_a($element, 'DOMElement') === true) {
+		if ($element instanceof DOMElement) {
 			// all spans will be treated as inline elements
 			if ($element->tagName === 'span') {
 				return true;

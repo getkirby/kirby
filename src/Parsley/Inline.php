@@ -2,8 +2,10 @@
 
 namespace Kirby\Parsley;
 
+use DOMComment;
 use DOMNode;
 use DOMNodeList;
+use DOMText;
 use Kirby\Toolkit\Html;
 
 /**
@@ -101,12 +103,12 @@ class Inline
 	 */
 	public static function parseNode(DOMNode $node, array $marks = []): string|null
 	{
-		if (is_a($node, 'DOMText') === true) {
+		if ($node instanceof DOMText) {
 			return Html::encode($node->textContent);
 		}
 
 		// ignore comments
-		if (is_a($node, 'DOMComment') === true) {
+		if ($node instanceof DOMComment) {
 			return null;
 		}
 

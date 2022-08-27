@@ -109,7 +109,7 @@ class Router
 		while ($loop === true) {
 			$route = $this->find($path, $method, $ignore);
 
-			if (is_a($this->beforeEach, Closure::class) === true) {
+			if ($this->beforeEach instanceof Closure) {
 				($this->beforeEach)($route, $path, $method);
 			}
 
@@ -125,7 +125,7 @@ class Router
 				$ignore[] = $route;
 			}
 
-			if (is_a($this->afterEach, Closure::class) === true) {
+			if ($this->afterEach instanceof Closure) {
 				$final  = $loop === false;
 				$result = ($this->afterEach)($route, $path, $method, $result, $final);
 			}

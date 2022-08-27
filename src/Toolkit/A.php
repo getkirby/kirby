@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Exception;
 
 /**
@@ -38,7 +39,7 @@ class A
 	public static function apply(array $array, ...$args): array
 	{
 		array_walk_recursive($array, function (&$item) use ($args) {
-			if (is_a($item, 'Closure')) {
+			if ($item instanceof Closure) {
 				$item = $item(...$args);
 			}
 		});
@@ -687,7 +688,7 @@ class A
 	public static function update(array $array, array $update): array
 	{
 		foreach ($update as $key => $value) {
-			if (is_a($value, 'Closure') === true) {
+			if ($value instanceof Closure) {
 				$array[$key] = call_user_func($value, static::get($array, $key));
 			} else {
 				$array[$key] = $value;

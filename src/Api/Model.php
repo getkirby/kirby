@@ -144,7 +144,7 @@ class Model
 		foreach ($this->fields as $key => $resolver) {
 			if (
 				array_key_exists($key, $select) === false ||
-				is_a($resolver, Closure::class) === false
+				$resolver instanceof Closure === false
 			) {
 				continue;
 			}
@@ -156,8 +156,8 @@ class Model
 			}
 
 			if (
-				is_a($value, Collection::class) === true ||
-				is_a($value, Model::class) === true
+				$value instanceof Collection ||
+				$value instanceof self
 			) {
 				$selection = $select[$key];
 

@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Model;
 use Kirby\Data\Data;
@@ -262,7 +263,7 @@ class Form
 
 		// convert closures to values
 		foreach ($values as $key => $value) {
-			if (is_a($value, 'Closure') === true) {
+			if ($value instanceof Closure) {
 				$values[$key] = $value($original[$key] ?? null);
 			}
 		}

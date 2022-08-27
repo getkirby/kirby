@@ -2,6 +2,7 @@
 
 namespace Kirby\Email;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
@@ -96,10 +97,10 @@ class PHPMailer extends Email
 		// accessible phpMailer instance
 		$beforeSend = $this->beforeSend();
 
-		if (empty($beforeSend) === false && is_a($beforeSend, 'Closure') === true) {
+		if ($beforeSend instanceof Closure) {
 			$mailer = $beforeSend->call($this, $mailer) ?? $mailer;
 
-			if (is_a($mailer, 'PHPMailer\PHPMailer\PHPMailer') === false) {
+			if ($mailer instanceof Mailer === false) {
 				throw new InvalidArgumentException('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
 			}
 		}

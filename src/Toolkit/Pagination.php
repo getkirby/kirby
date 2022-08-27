@@ -75,7 +75,7 @@ class Pagination
 
 		$params = [];
 
-		if (is_a($a, static::class) === true) {
+		if ($a instanceof static) {
 			/**
 			 * First argument is a pagination/self object
 			 */

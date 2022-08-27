@@ -358,7 +358,7 @@ class UserRules
 	 */
 	public static function validRole(User $user, string $role): bool
 	{
-		if (is_a($user->kirby()->roles()->find($role), 'Kirby\Cms\Role') === true) {
+		if ($user->kirby()->roles()->find($role) instanceof Role) {
 			return true;
 		}
 

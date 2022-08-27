@@ -8,6 +8,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
+use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 
 /**
@@ -178,7 +179,7 @@ class User extends ModelWithContent
 	 */
 	public function blueprint()
 	{
-		if (is_a($this->blueprint, 'Kirby\Cms\Blueprint') === true) {
+		if ($this->blueprint instanceof Blueprint) {
 			return $this->blueprint;
 		}
 
@@ -509,7 +510,7 @@ class User extends ModelWithContent
 		if ($class = (static::$models[$name] ?? null)) {
 			$object = new $class($props);
 
-			if (is_a($object, 'Kirby\Cms\User') === true) {
+			if ($object instanceof self) {
 				return $object;
 			}
 		}
@@ -618,7 +619,7 @@ class User extends ModelWithContent
 	 */
 	public function role()
 	{
-		if (is_a($this->role, 'Kirby\Cms\Role') === true) {
+		if ($this->role instanceof Role) {
 			return $this->role;
 		}
 
@@ -781,7 +782,7 @@ class User extends ModelWithContent
 		// use passed session options or session object if set
 		if (is_array($session) === true) {
 			$session = $this->kirby()->session($session);
-		} elseif (is_a($session, 'Kirby\Session\Session') === false) {
+		} elseif ($session instanceof Session === false) {
 			$session = $this->kirby()->session(['detect' => true]);
 		}
 

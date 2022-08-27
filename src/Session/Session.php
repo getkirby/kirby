@@ -727,7 +727,7 @@ class Session
 		$this->renewable    = $data['renewable'];
 
 		// reload data into existing object to avoid breaking memory references
-		if (is_a($this->data, 'Kirby\Session\SessionData')) {
+		if ($this->data instanceof SessionData) {
 			$this->data()->reload($data['data']);
 		} else {
 			$this->data = new SessionData($this, $data['data']);

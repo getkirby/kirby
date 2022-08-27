@@ -2,11 +2,14 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
+use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The View response class handles Fiber
@@ -320,7 +323,7 @@ class View
 			$menuSetting = $area['menu'] ?? false;
 
 			// menu settings can be a callback that can return true, false or disabled
-			if (is_a($menuSetting, 'Closure') === true) {
+			if ($menuSetting instanceof Closure) {
 				$menuSetting = $menuSetting($areas, $permissions, $current);
 			}
 
@@ -369,15 +372,15 @@ class View
 	public static function response(mixed $data, array $options = []): Response
 	{
 		// handle redirects
-		if (is_a($data, 'Kirby\Panel\Redirect') === true) {
+		if ($data instanceof Redirect) {
 			return Response::redirect($data->location(), $data->code());
 
 		// handle Kirby exceptions
-		} elseif (is_a($data, 'Kirby\Exception\Exception') === true) {
+		} elseif ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
 		// handle regular exceptions
-		} elseif (is_a($data, 'Throwable') === true) {
+		} elseif ($data instanceof Throwable) {
 			$data = static::error($data->getMessage(), 500);
 
 		// only expect arrays from here on

@@ -58,7 +58,7 @@ class Blueprint
 			throw new InvalidArgumentException('A blueprint model is required');
 		}
 
-		if (is_a($props['model'], ModelWithContent::class) === false) {
+		if ($props['model'] instanceof ModelWithContent === false) {
 			throw new InvalidArgumentException('Invalid blueprint model');
 		}
 

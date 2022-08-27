@@ -2,6 +2,8 @@
 
 namespace Kirby\Parsley\Schema;
 
+use DOMElement;
+use DOMText;
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Str;
 
@@ -26,12 +28,12 @@ class Blocks extends Plain
 
 		// get all the text for the quote
 		foreach ($node->children() as $child) {
-			if (is_a($child, 'DOMText') === true) {
+			if ($child instanceof DOMText) {
 				$text[] = trim($child->textContent);
 			}
 
 			if (
-				is_a($child, 'DOMElement') === true &&
+				$child instanceof DOMElement &&
 				$child->tagName !== 'footer'
 			) {
 				$text[] = (new Element($child))->innerHTML($this->marks());
@@ -61,7 +63,7 @@ class Blocks extends Plain
 	 */
 	public function fallback(Element|string $element): array|null
 	{
-		if (is_a($element, Element::class) === true) {
+		if ($element instanceof Element) {
 			$html = $element->innerHtml();
 
 			// wrap the inner HTML in a p tag if it doesn't
@@ -192,9 +194,9 @@ class Blocks extends Plain
 			$innerHtml = '';
 
 			foreach ($li->children() as $child) {
-				if (is_a($child, 'DOMText') === true) {
+				if ($child instanceof DOMText) {
 					$innerHtml .= $child->textContent;
-				} elseif (is_a($child, 'DOMElement') === true) {
+				} elseif ($child instanceof DOMElement) {
 					$child = new Element($child);
 
 					if (in_array($child->tagName(), ['ul', 'ol']) === true) {

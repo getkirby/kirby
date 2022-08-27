@@ -217,7 +217,7 @@ class I18n
 			return static::$translations[$locale];
 		}
 
-		if (is_a(static::$load, 'Closure') === true) {
+		if (static::$load instanceof Closure) {
 			return static::$translations[$locale] = (static::$load)($locale);
 		}
 
@@ -283,7 +283,7 @@ class I18n
 			return null;
 		}
 
-		if (is_a($translation, 'Closure') === true) {
+		if ($translation instanceof Closure) {
 			return $translation($count);
 		}
 

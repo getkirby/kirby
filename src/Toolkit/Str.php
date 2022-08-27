@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use DateTime;
 use Exception;
 use IntlDateFormatter;
@@ -332,7 +333,7 @@ class Str
 		}
 
 		// $format is an IntlDateFormatter instance
-		if (is_a($format, 'IntlDateFormatter') === true) {
+		if ($format instanceof IntlDateFormatter) {
 			return $format->format($time ?? time());
 		}
 
@@ -714,15 +715,15 @@ class Str
 	public static function replace($string, $search, $replace, $limit = -1)
 	{
 		// convert Kirby collections to arrays
-		if (is_a($string, 'Kirby\Toolkit\Collection') === true) {
+		if ($string instanceof Collection) {
 			$string = $string->toArray();
 		}
 
-		if (is_a($search, 'Kirby\Toolkit\Collection') === true) {
+		if ($search instanceof Collection) {
 			$search  = $search->toArray();
 		}
 
-		if (is_a($replace, 'Kirby\Toolkit\Collection') === true) {
+		if ($replace instanceof Collection) {
 			$replace = $replace->toArray();
 		}
 
@@ -878,7 +879,7 @@ class Str
 	 */
 	public static function safeTemplate(string $string = null, array $data = [], array $options = []): string
 	{
-		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+		$callback = ($options['callback'] ?? null) instanceof Closure ? $options['callback'] : null;
 		$fallback = $options['fallback'] ?? '';
 
 		// replace and escape
@@ -1169,7 +1170,7 @@ class Str
 	public static function template(string $string = null, array $data = [], array $options = []): string
 	{
 		$fallback = $options['fallback'] ?? null;
-		$callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+		$callback = ($options['callback'] ?? null) instanceof Closure ? $options['callback'] : null;
 		$start    = (string)($options['start'] ?? '{{');
 		$end      = (string)($options['end'] ?? '}}');
 

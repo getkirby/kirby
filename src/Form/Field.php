@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Closure;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
@@ -86,7 +87,7 @@ class Field extends Component
 	{
 		if (
 			isset($this->options['api']) === true &&
-			is_a($this->options['api'], 'Closure') === true
+			$this->options['api'] instanceof Closure
 		) {
 			return $this->options['api']->call($this);
 		}
@@ -112,7 +113,7 @@ class Field extends Component
 			return null;
 		}
 
-		if (is_a($save, 'Closure') === true) {
+		if ($save instanceof Closure) {
 			return $save->call($this, $value);
 		}
 
@@ -472,7 +473,7 @@ class Field extends Component
 				continue;
 			}
 
-			if (is_a($validation, 'Closure') === true) {
+			if ($validation instanceof Closure) {
 				try {
 					$validation->call($this, $this->value());
 				} catch (Exception $e) {

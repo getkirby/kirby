@@ -2,9 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
+use Throwable;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\Handler;
 use Whoops\Handler\PlainTextHandler;
@@ -84,7 +87,7 @@ trait AppErrors
 			$handler = new CallbackHandler(function ($exception, $inspector, $run) {
 				$fatal = $this->option('fatal');
 
-				if (is_a($fatal, 'Closure') === true) {
+				if ($fatal instanceof Closure) {
 					echo $fatal($this, $exception);
 				} else {
 					include $this->root('kirby') . '/views/fatal.php';
@@ -109,11 +112,11 @@ trait AppErrors
 	protected function handleJsonErrors(): void
 	{
 		$handler = new CallbackHandler(function ($exception, $inspector, $run) {
-			if (is_a($exception, 'Kirby\Exception\Exception') === true) {
+			if ($exception instanceof Exception) {
 				$httpCode = $exception->getHttpCode();
 				$code     = $exception->getCode();
 				$details  = $exception->getDetails();
-			} elseif (is_a($exception, '\Throwable') === true) {
+			} elseif ($exception instanceof Throwable) {
 				$httpCode = 500;
 				$code     = $exception->getCode();
 				$details  = null;

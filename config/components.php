@@ -4,7 +4,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Page;
 use Kirby\Cms\Template;
+use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
@@ -177,11 +179,11 @@ return [
 			$keys = array_keys($data);
 			$keys[] = 'id';
 
-			if (is_a($item, 'Kirby\Cms\User') === true) {
+			if ($item instanceof User) {
 				$keys[] = 'name';
 				$keys[] = 'email';
 				$keys[] = 'role';
-			} elseif (is_a($item, 'Kirby\Cms\Page') === true) {
+			} elseif ($item instanceof Page) {
 				// apply the default score for pages
 				$options['score'] = array_merge([
 					'id'    => 64,

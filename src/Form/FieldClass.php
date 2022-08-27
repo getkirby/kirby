@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Closure;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\HasSiblings;
@@ -767,7 +768,7 @@ abstract class FieldClass
 				continue;
 			}
 
-			if (is_a($validation, 'Closure') === true) {
+			if ($validation instanceof Closure) {
 				try {
 					$validation->call($this, $value);
 				} catch (Exception $e) {
