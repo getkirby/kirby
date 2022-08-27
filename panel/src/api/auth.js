@@ -12,6 +12,10 @@ export default (api) => {
 		async logout() {
 			return api.post("auth/logout");
 		},
+		async ping() {
+			console.log("ping");
+			return api.post("auth/ping");
+		},
 		async user(params) {
 			return api.get("auth", params);
 		},
