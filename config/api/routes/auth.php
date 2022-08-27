@@ -105,4 +105,14 @@ return [
 			return true;
 		}
 	],
+	[
+		'pattern' => 'auth/ping',
+		'method'  => 'POST',
+		'auth'    => false,
+		'action'  => function () {
+			// refresh the session timeout
+			$this->kirby()->session();
+			return true;
+		}
+	],
 ];

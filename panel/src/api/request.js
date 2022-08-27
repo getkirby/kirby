@@ -81,8 +81,12 @@ export default (config) => {
 			} catch (e) {
 				this.running--;
 				config.onComplete(id);
-				config.onError(e);
-				throw e;
+
+				// pass to error callback and throw error
+				// except when callback explicitly suppresses it
+				if (config.onError(e) !== false) {
+					throw e;
+				}
 			}
 		},
 		async get(path, query, options, silent = false) {
