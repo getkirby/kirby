@@ -154,7 +154,7 @@ class OptionsQuery
 
 		// slow but precise resolving
 		foreach ($this->aliases as $className => $alias) {
-			if (is_a($object, $className) === true) {
+			if ($object instanceof $className) {
 				return $alias;
 			}
 		}

@@ -49,7 +49,7 @@ class Collection
 
 		if (
 			isset($schema['type']) === true &&
-			is_a($this->data, $schema['type']) === false
+			$this->data instanceof $schema['type'] === false
 		) {
 			throw new Exception('Invalid collection type');
 		}

@@ -268,7 +268,7 @@ class Api
 	protected function match(array $array, mixed $object = null): string|null
 	{
 		foreach ($array as $definition => $model) {
-			if (is_a($object, $model['type']) === true) {
+			if ($object instanceof $model['type']) {
 				return $definition;
 			}
 		}

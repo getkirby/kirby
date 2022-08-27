@@ -49,7 +49,7 @@ class Model
 		}
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, Closure::class) === false) {
+			if (($schema['default'] ?? null) instanceof Closure === false) {
 				throw new Exception('Missing model data');
 			}
 
@@ -58,7 +58,7 @@ class Model
 
 		if (
 			isset($schema['type']) === true &&
-			is_a($this->data, $schema['type']) === false
+			$this->data instanceof $schema['type'] === false
 		) {
 			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', get_class($this->data), $schema['type']));
 		}

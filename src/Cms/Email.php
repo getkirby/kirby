@@ -194,7 +194,7 @@ class Email
 				} else {
 					$result[] = $item;
 				}
-			} elseif (is_a($item, $class) === true) {
+			} elseif ($item instanceof $class) {
 				// value is a model object, get value through content method(s)
 				if ($contentKey !== null) {
 					$result[(string)$item->$contentKey()] = (string)$item->$contentValue();

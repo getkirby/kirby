@@ -359,7 +359,7 @@ abstract class ModelWithContent extends Model
 			return null;
 		}
 
-		if ($expect !== null && is_a($result, $expect) !== true) {
+		if ($expect !== null && $result instanceof $expect === false) {
 			return null;
 		}
 
