@@ -190,8 +190,7 @@ return [
 				'pattern' => 'validate',
 				'method'  => 'ALL',
 				'action'  => function () {
-					$body = $this->requestBody();
-					return array_values($this->field()->form($body)->errors());
+					return array_values($this->field()->form($this->requestBody())->errors());
 				}
 			]
 		];

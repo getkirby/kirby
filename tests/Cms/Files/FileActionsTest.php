@@ -9,13 +9,24 @@ use Kirby\Filesystem\File as BaseFile;
 class FileActionsTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp;
+
+	public function setUp(): void
+	{
+		Dir::make($this->tmp = __DIR__ . '/tmp');
+		$this->app = $this->app();
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
+	}
 
 	public function app()
 	{
 		return new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileActionsTest'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -59,17 +70,6 @@ class FileActionsTest extends TestCase
 				]
 			]
 		]);
-	}
-
-	public function setUp(): void
-	{
-		$this->app = $this->app();
-		Dir::make($this->fixtures);
-	}
-
-	public function tearDown(): void
-	{
-		Dir::remove($this->fixtures);
 	}
 
 	public function parentProvider()
@@ -131,8 +131,6 @@ class FileActionsTest extends TestCase
 		$app = $this->appWithLanguages();
 		$app->impersonate('kirby');
 
-		Dir::make($this->fixtures);
-
 		// create an empty dummy file
 		F::write($file->root(), '');
 		// ...and empty content files for it
@@ -152,12 +150,38 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($result->contentFile('de'));
 	}
 
+	public function testCopyRenewUuid()
+	{
+		// create dumy file
+		F::write($source = $this->tmp . '/original.md', '# Foo');
+
+		$file = File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+
+		$oldUuid = $file->content()->get('uuid')->value();
+		$this->assertIsString($oldUuid);
+
+		$destination = new Page([
+			'slug' => 'newly',
+			'root' => $this->tmp . '/new-page'
+		]);
+
+		$copy = $file->copy($destination);
+
+		$newUuid = $copy->content()->get('uuid')->value();
+		$this->assertIsString($newUuid);
+		$this->assertNotSame($oldUuid, $newUuid);
+	}
+
 	/**
 	 * @dataProvider parentProvider
 	 */
 	public function testCreate($parent)
 	{
-		$source = $this->fixtures . '/source.md';
+		$source = $this->tmp . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -171,6 +195,9 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
 		$this->assertInstanceOf('Kirby\Filesystem\File', $result->asset());
+
+		// make sure file received UUID right away
+		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
 	/**
@@ -178,7 +205,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaults($parent)
 	{
-		$source = $this->fixtures . '/source.md';
+		$source = $this->tmp . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -211,7 +238,7 @@ class FileActionsTest extends TestCase
 	 */
 	public function testCreateWithDefaultsAndContent($parent)
 	{
-		$source = $this->fixtures . '/source.md';
+		$source = $this->tmp . '/source.md';
 
 		// create the dummy source
 		F::write($source, '# Test');
@@ -285,7 +312,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->fixtures . '/source.md', '# Test');
+		F::write($source = $this->tmp . '/source.md', '# Test');
 
 		$result = File::create([
 			'filename' => 'test.md',
@@ -338,8 +365,8 @@ class FileActionsTest extends TestCase
 	 */
 	public function testReplace($parent)
 	{
-		$original    = $this->fixtures . '/original.md';
-		$replacement = $this->fixtures . '/replacement.md';
+		$original    = $this->tmp . '/original.md';
+		$replacement = $this->tmp . '/replacement.md';
 
 		// create the dummy files
 		F::write($original, '# Original');
@@ -520,7 +547,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->fixtures . '/source.md', '# Test');
+		F::write($source = $this->tmp . '/source.md', '# Test');
 
 		$file = File::create([
 			'filename' => 'test.md',
@@ -563,7 +590,7 @@ class FileActionsTest extends TestCase
 		]);
 
 		// create the dummy source
-		F::write($source = $this->fixtures . '/replace.csv', 'Replace');
+		F::write($source = $this->tmp . '/replace.csv', 'Replace');
 
 		File::create([
 			'filename' => 'replace.csv',

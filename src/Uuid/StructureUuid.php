@@ -10,6 +10,7 @@ use Kirby\Cms\Structure;
  *
  * Not yet supported
  * @todo Finish for uuid-block-structure-support
+ * @codeCoverageIgnore
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
