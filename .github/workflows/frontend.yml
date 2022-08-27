@@ -54,6 +54,9 @@ jobs:
       # TODO: Disabled until Vitest coverage reporting is accurate and
       #       Kirby's frontend tests are useful enough that we need this metric
       # - name: Upload coverage results to Codecov
+      #   env:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #   if: env.token != ''
       #   uses: codecov/codecov-action@66b3de25f6f91f65eb92c514d31d6b6f13d5ab18 # pin@v3
       #   with:
       #     token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
