@@ -71,8 +71,8 @@ return function (App $app) {
 			} catch (Throwable) {
 				$message = 'Invalid blocks data for "' . $field->key() . '" field';
 
-				if ($field->parent() !== null) {
-					$message .= ' on parent "' . $field->parent()->title() . '"';
+				if ($parent = $field->parent()) {
+					$message .= ' on parent "' . $parent->title() . '"';
 				}
 
 				throw new InvalidArgumentException($message);
