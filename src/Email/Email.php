@@ -33,17 +33,47 @@ class Email
 	 */
 	public static array $emails = [];
 
+	/**
+	 * @var array
+	 */
 	protected array|null $attachments = null;
+
 	protected Body|null $body = null;
+
+	/**
+	 * @var array
+	 */
 	protected array|null $bcc = null;
+
 	protected Closure|null $beforeSend = null;
+
+	/**
+	 * @var array
+	 */
 	protected array|null $cc = null;
+
+	/**
+	 * @var string
+	 */
 	protected string|null $from = null;
 	protected string|null $fromName = null;
+
+	protected bool $isSent = false;
+
+	/**
+	 * @var string
+	 */
 	protected string|null $replyTo = null;
 	protected string|null $replyToName = null;
-	protected bool $isSent = false;
+
+	/**
+	 * @var string
+	 */
 	protected string|null $subject = null;
+
+	/**
+	 * @var array
+	 */
 	protected array|null $to = null;
 	protected array|null $transport = null;
 
