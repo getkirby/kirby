@@ -283,14 +283,10 @@ class Api
 	public function model(string|null $name = null, mixed $object = null): Model
 	{
 		// Try to auto-match object with API models
-		if ($name === null) {
-			if ($model = $this->match($this->models, $object)) {
-				$name = $model;
-			}
-		}
+		$name ??= $this->match($this->models, $object);
 
 		if (isset($this->models[$name]) === false) {
-			throw new NotFoundException(sprintf('The model "%s" does not exist', $name));
+			throw new NotFoundException(sprintf('The model "%s" does not exist', $name ?? 'NULL'));
 		}
 
 		return new Model($this, $object, $this->models[$name]);
