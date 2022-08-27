@@ -1,13 +1,5 @@
 <template>
 	<form class="k-login-form" @submit.prevent="login">
-		<h1 class="sr-only">
-			{{ $t("login") }}
-		</h1>
-
-		<k-login-alert v-if="issue" @click="issue = null">
-			{{ issue }}
-		</k-login-alert>
-
 		<div class="k-login-fields">
 			<button
 				v-if="canToggle === true"
@@ -51,7 +43,6 @@ export default {
 		return {
 			currentForm: null,
 			isLoading: false,
-			issue: "",
 			user: {
 				email: "",
 				password: "",
@@ -128,7 +119,7 @@ export default {
 			}
 		},
 		async login() {
-			this.issue = null;
+			this.$emit("error", null);
 			this.isLoading = true;
 
 			// clear field data that is not needed for login
@@ -149,7 +140,7 @@ export default {
 					globals: ["$system", "$translation"]
 				});
 			} catch (error) {
-				this.issue = error.message;
+				this.$emit("error", error);
 			} finally {
 				this.isLoading = false;
 			}

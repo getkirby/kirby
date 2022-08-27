@@ -1,13 +1,5 @@
 <template>
 	<form class="k-login-form k-login-code-form" @submit.prevent="login">
-		<h1 class="sr-only">
-			{{ $t("login") }}
-		</h1>
-
-		<k-login-alert v-if="issue" @click="issue = null">
-			{{ issue }}
-		</k-login-alert>
-
 		<k-user-info :user="pending.email" />
 
 		<k-text-field
@@ -51,8 +43,7 @@ export default {
 		return {
 			code: "",
 			isLoadingBack: false,
-			isLoadingLogin: false,
-			issue: ""
+			isLoadingLogin: false
 		};
 	},
 	computed: {
@@ -70,7 +61,7 @@ export default {
 			this.$go("/logout");
 		},
 		async login() {
-			this.issue = null;
+			this.$emit("error", null);
 			this.isLoadingLogin = true;
 
 			try {
@@ -83,7 +74,7 @@ export default {
 					this.$reload();
 				}
 			} catch (error) {
-				this.issue = error.message;
+				this.$emit("error", error);
 			} finally {
 				this.isLoadingLogin = false;
 			}
