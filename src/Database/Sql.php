@@ -703,16 +703,16 @@ abstract class Sql
 		$parts = preg_split('/(?:`[^`]*`|"[^"]*")(*SKIP)(*F)|\./', $identifier);
 
 		switch (count($parts)) {
-			// non-qualified identifier
 			case 1:
+				// non-qualified identifier
 				return [$table, $this->unquoteIdentifier($parts[0])];
 
-				// qualified identifier
 			case 2:
+				// qualified identifier
 				return [$this->unquoteIdentifier($parts[0]), $this->unquoteIdentifier($parts[1])];
 
-				// every other number is an error
 			default:
+				// every other number is an error
 				throw new InvalidArgumentException('Invalid identifier ' . $identifier);
 		}
 	}
