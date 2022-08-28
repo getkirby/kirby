@@ -12,15 +12,6 @@ class PageTestModel extends Page
 
 class PageTest extends TestCase
 {
-	/**
-	 * Deregister any plugins for the page
-	 *
-	 * @return void
-	 */
-	public function setUp(): void
-	{
-		parent::setUp();
-	}
 
 	public function tearDown(): void
 	{
@@ -958,6 +949,11 @@ class PageTest extends TestCase
 
 	public function testToArray()
 	{
+		$this->app->clone([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 		$page = new Page([
 			'slug' => 'test'
 		]);

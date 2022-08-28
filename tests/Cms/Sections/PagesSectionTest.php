@@ -2,22 +2,30 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
 use PHPUnit\Framework\TestCase;
 
 class PagesSectionTest extends TestCase
 {
 	protected $app;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		App::destroy();
+		Dir::make($this->tmp = __DIR__ . '/tmp');
 
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		]);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	public function testHeadline()

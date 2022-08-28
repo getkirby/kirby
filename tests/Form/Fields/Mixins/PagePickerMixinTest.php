@@ -10,11 +10,7 @@ class PagePickerMixinTest extends TestCase
 {
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		parent::setUp();
 
 		// otherwise all pages won't be readable
 		$this->app->impersonate('kirby');

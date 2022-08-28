@@ -2,15 +2,23 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class FilesSectionTest extends TestCase
 {
 	protected $app;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
+		Dir::make($this->tmp);
 		$this->app();
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	public function app(array $props = [])
@@ -18,7 +26,7 @@ class FilesSectionTest extends TestCase
 		App::destroy();
 		$this->app = new App(array_replace_recursive([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		], $props));
 

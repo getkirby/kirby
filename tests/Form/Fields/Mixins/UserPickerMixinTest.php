@@ -10,9 +10,11 @@ class UserPickerMixinTest extends TestCase
 {
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'roles' => [
 				['name' => 'admin'],

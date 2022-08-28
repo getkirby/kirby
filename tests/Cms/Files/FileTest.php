@@ -94,7 +94,7 @@ class FileTest extends TestCase
 				'alt' => 'This is the alt text'
 			]
 		]);
-		$this->assertSame('<img alt="This is the alt text" src="/media/site/f563e6e59b-0/test.jpg">', $file->html());
+		$this->assertSame('<img alt="This is the alt text" src="/media/site/f1bbb380f3-0/test.jpg">', $file->html());
 	}
 
 	public function testUrl()

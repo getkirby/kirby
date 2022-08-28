@@ -9,9 +9,11 @@ class PagesFieldTest extends TestCase
 {
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -167,7 +169,7 @@ class PagesFieldTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => ['api.allowImpersonation' => true],
 			'site' => [
