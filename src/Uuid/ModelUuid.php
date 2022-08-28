@@ -4,7 +4,6 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
-use Throwable;
 
 /**
  * Base for Uuids for models where id string

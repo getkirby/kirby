@@ -12,7 +12,6 @@ class PageTestModel extends Page
 
 class PageTest extends TestCase
 {
-
 	public function tearDown(): void
 	{
 		parent::tearDown();
