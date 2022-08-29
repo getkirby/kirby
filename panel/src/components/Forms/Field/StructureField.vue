@@ -24,6 +24,7 @@
 			@discard="onFormDiscard"
 			@paginate="onFormPaginate($event.offset)"
 			@submit="onFormSubmit"
+			@input="onFormInput"
 		/>
 
 		<!-- Empty State -->
@@ -563,6 +564,13 @@ export default {
 			} else {
 				return true;
 			}
+		},
+		/**
+		 * When the field's value changes
+		 * @param {array} values
+		 */
+		onFormInput(e) {
+			this.$emit("onFormInput", e);
 		}
 	}
 };
