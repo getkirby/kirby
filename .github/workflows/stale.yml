@@ -14,7 +14,7 @@ jobs:
       - uses: actions/stale@9c1b1c6e115ca2af09755448e0dbba24e5061cc8 # pin@v5
         with:
           # Comment on the staled issues
-          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 14 days. if no further activity occurs."
+          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. It will be closed in 14 days if no further activity occurs."
 
           # Idle number of days before marking issues stale, set `-1` to disable
           days-before-issue-stale: 180
@@ -30,3 +30,6 @@ jobs:
 
           # Labels on issues exempted from stale
           exempt-issue-labels: "critical: roadblock 🚧,type: regression 🚨"
+          
+          # Reason to use when closing issues
+          close-issue-reason: not_planned
