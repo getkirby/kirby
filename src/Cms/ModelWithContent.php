@@ -83,7 +83,6 @@ abstract class ModelWithContent extends Model
 	 */
 	public function content(string $languageCode = null)
 	{
-
 		// single language support
 		if ($this->kirby()->multilang() === false) {
 			if ($this->content instanceof Content) {
@@ -95,7 +94,6 @@ abstract class ModelWithContent extends Model
 
 		// multi language support
 		} else {
-
 			// only fetch from cache for the default language
 			if (
 				$languageCode === null &&

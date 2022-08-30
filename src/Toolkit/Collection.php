@@ -525,7 +525,6 @@ class Collection extends Iterator implements Countable
 	 */
 	public function group($field, bool $i = true)
 	{
-
 		// group by field name
 		if (is_string($field) === true) {
 			return $this->group(function ($item) use ($field, $i) {
@@ -541,7 +540,6 @@ class Collection extends Iterator implements Countable
 			$groups = [];
 
 			foreach ($this->data as $key => $item) {
-
 				// get the value to group by
 				$value = $field($item);
 
@@ -1005,7 +1003,6 @@ class Collection extends Iterator implements Countable
 		$fields = [];
 
 		foreach ($args as $arg) {
-
 			// get the index of the latest field array inside the $fields array
 			$currentField = $fields ? count($fields) - 1 : 0;
 

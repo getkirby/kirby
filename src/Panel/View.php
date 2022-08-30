@@ -393,7 +393,6 @@ class View
 
 		// if requested, send $fiber data as JSON
 		if (Panel::isFiberRequest() === true) {
-
 			// filter data, if only or globals headers or
 			// query parameters are set
 			$fiber = static::apply($fiber);

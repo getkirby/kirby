@@ -20,7 +20,6 @@ class InfoFieldTest extends TestCase
 
 	public function testText()
 	{
-
 		// simple text
 		$field = $this->field('info', [
 			'text' => 'test'

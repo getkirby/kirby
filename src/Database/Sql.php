@@ -672,7 +672,6 @@ abstract class Sql
 
 		// array of columns
 		if (is_array($columns) === true) {
-
 			// validate columns
 			$result = [];
 

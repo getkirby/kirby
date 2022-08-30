@@ -380,7 +380,6 @@ class Database
 			// store the final sql to add it to the trace later
 			$this->lastQuery = $this->statement->queryString;
 		} catch (Throwable $e) {
-
 			// store the error
 			$this->affected  = 0;
 			$this->lastError = $e;

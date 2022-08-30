@@ -71,7 +71,6 @@ return [
 
 			// transform into value-text objects
 			return array_map(function ($option) use ($options) {
-
 				// already a valid object
 				if (is_array($option) === true && isset($option['value'], $option['text']) === true) {
 					return $option;

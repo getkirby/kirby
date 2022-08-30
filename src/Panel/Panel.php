@@ -281,7 +281,6 @@ class Panel
 
 		// create a micro-router for the Panel
 		return Router::execute($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
-
 			// route needs authentication?
 			$auth   = $route->attributes()['auth'] ?? true;
 			$areaId = $route->attributes()['area'] ?? null;
@@ -377,7 +376,6 @@ class Panel
 		$routes  = [];
 
 		foreach ($dialogs as $key => $dialog) {
-
 			// create the full pattern with dialogs prefix
 			$pattern = 'dialogs/' . trim(($dialog['pattern'] ?? $key), '/');
 
@@ -445,7 +443,6 @@ class Panel
 		$routes   = [];
 
 		foreach ($searches as $name => $params) {
-
 			// create the full routing pattern
 			$pattern = 'search/' . $name;
 

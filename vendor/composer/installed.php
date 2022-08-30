@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '3.7.4',
-        'version' => '3.7.4.0',
+        'pretty_version' => '3.7.5',
+        'version' => '3.7.5.0',
         'reference' => NULL,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'claviska/simpleimage' => array(
-            'pretty_version' => '3.6.5',
-            'version' => '3.6.5.0',
-            'reference' => '00f90662686696b9b7157dbb176183aabe89700f',
+            'pretty_version' => '3.7.0',
+            'version' => '3.7.0.0',
+            'reference' => 'abd15ced313c7b8041d7d73d8d2398b4f2510cf1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../claviska/simpleimage',
             'aliases' => array(),
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '3.7.4',
-            'version' => '3.7.4.0',
+            'pretty_version' => '3.7.5',
+            'version' => '3.7.5.0',
             'reference' => NULL,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -80,9 +80,9 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.6.3',
-            'version' => '6.6.3.0',
-            'reference' => '9400f305a898f194caff5521f64e5dfa926626f3',
+            'pretty_version' => 'v6.6.4',
+            'version' => '6.6.4.0',
+            'reference' => 'a94fdebaea6bd17f51be0c2373ab80d3d681269b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),

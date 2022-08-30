@@ -107,7 +107,6 @@ return function ($kirby) {
 	if ($kirby->multilang() === true) {
 		$after = LanguageRoutes::create($kirby);
 	} else {
-
 		// Single-language home
 		$after[] = [
 			'pattern' => '',

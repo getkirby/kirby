@@ -22,7 +22,6 @@ class PagesSectionTest extends TestCase
 
 	public function testHeadline()
 	{
-
 		// single headline
 		$section = new Section('pages', [
 			'name'  => 'test',
@@ -465,7 +464,6 @@ class PagesSectionTest extends TestCase
 
 	public function testHelp()
 	{
-
 		// single help
 		$section = new Section('pages', [
 			'name'  => 'test',
