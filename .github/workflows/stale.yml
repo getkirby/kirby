@@ -23,7 +23,7 @@ jobs:
           days-before-close: 14
 
           # Comment on the staled issues
-          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. This is for us to prioritize issues that are still relevant to our community. It will be closed if no further activity occurs within the next 14 days. If this issue still relevant to you, please leave a comment."
+          stale-issue-message: "This issue has been automatically marked as stale because it has not had recent activity. This is for us to prioritize issues that are still relevant to our community. It will be closed if no further activity occurs within the next 14 days. If this issue is still relevant to you, please leave a comment."
 
           # Label to apply on staled issues
           stale-issue-label: "type: stale 💤"
