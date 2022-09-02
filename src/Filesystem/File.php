@@ -31,8 +31,9 @@ class File
 
 	/**
 	 * Parent file model
+	 * The model object must use the "Kirby\Filesystem\IsFile" trait
 	 *
-	 * @var \Kirby\Filesystem\IsFile|null
+	 * @var object|null
 	 */
 	protected $model;
 
@@ -431,7 +432,7 @@ class File
 	/**
 	 * Setter for the parent file model
 	 *
-	 * @param \Kirby\Filesystem\IsFile|null $model
+	 * @param object|null $model
 	 * @return $this
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
