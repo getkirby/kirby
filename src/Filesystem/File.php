@@ -426,11 +426,7 @@ class File
 	 */
 	public function root(): string|null
 	{
-		if ($this->root !== null) {
-			return $this->root;
-		}
-
-		return $this->root = $this->model?->root();
+		return $this->root ??= $this->model?->root();
 	}
 
 	/**
@@ -478,18 +474,10 @@ class File
 	 */
 	public function url(): string|null
 	{
-		if ($this->url !== null) {
-			return $this->url;
-		}
-
 		// lazily determine the URL from the model object
 		// only if it's needed to avoid breaking custom file::url
 		// components that rely on `$cmsFile->asset()` methods
-		if ($this->model !== null) {
-			return $this->url = $this->model->url();
-		}
-
-		return null;
+		return $this->url ??= $this->model?->url();
 	}
 
 	/**
