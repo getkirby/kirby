@@ -1,17 +1,16 @@
 <template>
 	<k-draggable
-		ref="box"
 		v-direction
 		:list="tags"
-		:data-layout="layout"
 		:options="dragOptions"
+		:data-layout="layout"
 		class="k-tags-input"
 		@end="onInput"
 	>
 		<k-tag
-			v-for="(tag, tagIndex) in tags"
+			v-for="tag in tags"
 			:ref="tag.value"
-			:key="tagIndex"
+			:key="tag.value"
 			:removable="!disabled"
 			name="tag"
 			@click.native.stop
@@ -22,7 +21,8 @@
 			@dblclick.native="edit(tag)"
 			@remove="remove(tag)"
 		>
-			{{ tag.text }}
+			<!-- eslint-disable-next-line vue/no-v-html -->
+			<span v-html="tag.text" />
 		</k-tag>
 
 		<template #footer>
@@ -44,13 +44,13 @@
 						:name="name"
 						autocomplete="off"
 						type="text"
-						@input="type($event.target.value)"
-						@blur="blurInput"
-						@keydown.meta.s="blurInput"
-						@keydown.left.exact="leaveInput"
-						@keydown.enter.exact="enter"
-						@keydown.tab.exact="tab"
-						@keydown.backspace.exact="leaveInput"
+						@input="onType($event.target.value)"
+						@blur="onBlur"
+						@keydown.meta.s="onBlur"
+						@keydown.left.exact="onBack"
+						@keydown.enter.exact="onEnter"
+						@keydown.tab.exact="onTab"
+						@keydown.backspace.exact="onBack"
 					/>
 				</k-autocomplete>
 			</span>
@@ -121,7 +121,7 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			tags: this.prepareTags(this.value),
+			tags: this.toValues(this.value),
 			selected: null,
 			newTag: null,
 			tagOptions: this.options.map((tag) => {
@@ -149,7 +149,7 @@ export default {
 	},
 	watch: {
 		value(value) {
-			this.tags = this.prepareTags(value);
+			this.tags = this.toValues(value);
 			this.onInvalid();
 		}
 	},
@@ -168,30 +168,22 @@ export default {
 
 			string = string.trim();
 
-			if (string.includes(this.separator)) {
-				string.split(this.separator).forEach((tag) => {
-					this.addString(tag);
-				});
-
-				return;
-			}
-
 			if (string.length === 0) {
 				return;
 			}
 
-			if (this.accept === "options") {
-				const option = this.options.filter(
-					(option) => option.text === string
-				)[0];
-
-				if (!option) {
-					return;
+			if (string.includes(this.separator) === true) {
+				for (const tag of string.split(this.separator)) {
+					this.addString(tag);
 				}
 
-				this.addTag(option);
-			} else {
-				this.addTag({ text: string, value: string });
+				return;
+			}
+
+			const tag = this.toValue(string);
+
+			if (tag) {
+				this.addTag(tag);
 			}
 		},
 		addTag(tag) {
@@ -201,9 +193,9 @@ export default {
 		},
 		addTagToIndex(tag) {
 			if (this.accept === "options") {
-				const option = this.options.filter(
+				const option = this.options.find(
 					(option) => option.value === tag.value
-				)[0];
+				);
 
 				if (!option) {
 					return;
@@ -220,33 +212,10 @@ export default {
 
 			this.newTag = null;
 		},
-		blurInput(event) {
-			let related = event.relatedTarget || event.explicitOriginalTarget;
-
-			if (
-				this.$refs.autocomplete.$el &&
-				this.$refs.autocomplete.$el.contains(related)
-			) {
-				return;
-			}
-
-			if (this.$refs.input.value.length) {
-				this.addTagToIndex(this.$refs.input.value);
-				this.$refs.autocomplete.close();
-			}
-		},
 		edit(tag) {
 			this.newTag = tag.text;
 			this.$refs.input.select();
 			this.remove(tag);
-		},
-		enter(event) {
-			if (!this.newTag || this.newTag.length === 0) {
-				return true;
-			}
-
-			event.preventDefault();
-			this.addString(this.newTag);
 		},
 		focus() {
 			this.$refs.input.focus();
@@ -306,23 +275,6 @@ export default {
 		index(tag) {
 			return this.tags.findIndex((item) => item.value === tag.value);
 		},
-		onInput() {
-			this.$emit("input", this.tags);
-		},
-		onInvalid() {
-			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		leaveInput(e) {
-			if (
-				e.target.selectionStart === 0 &&
-				e.target.selectionStart === e.target.selectionEnd &&
-				this.tags.length !== 0
-			) {
-				this.$refs.autocomplete.close();
-				this.navigate("last");
-				e.preventDefault();
-			}
-		},
 		navigate(position) {
 			var result = this.get(position);
 			if (result) {
@@ -333,21 +285,52 @@ export default {
 				this.selectTag(null);
 			}
 		},
-		prepareTags(value) {
-			if (Array.isArray(value) === false) {
-				return [];
+		onBack(event) {
+			if (
+				event.target.selectionStart === 0 &&
+				event.target.selectionStart === event.target.selectionEnd &&
+				this.tags.length !== 0
+			) {
+				this.$refs.autocomplete.close();
+				this.navigate("last");
+				event.preventDefault();
+			}
+		},
+		onBlur(event) {
+			let related = event.relatedTarget || event.explicitOriginalTarget;
+
+			if (this.$refs.autocomplete.$el?.contains(related)) {
+				return;
 			}
 
-			return value.map((tag) => {
-				if (typeof tag === "string") {
-					return {
-						text: tag,
-						value: tag
-					};
-				} else {
-					return tag;
-				}
-			});
+			if (this.$refs.input.value.length) {
+				this.addTagToIndex(this.$refs.input.value);
+				this.$refs.autocomplete.close();
+			}
+		},
+		onEnter(event) {
+			if (!this.newTag || this.newTag.length === 0) {
+				return true;
+			}
+
+			event.preventDefault();
+			this.addString(this.newTag);
+		},
+		onInput() {
+			this.$emit("input", this.tags);
+		},
+		onInvalid() {
+			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
+		onTab(event) {
+			if (this.newTag?.length > 0) {
+				event.preventDefault();
+				this.addString(this.newTag);
+			}
+		},
+		onType(value) {
+			this.newTag = value;
+			this.$refs.autocomplete.search(value);
 		},
 		remove(tag) {
 			// get neighboring tags
@@ -374,15 +357,47 @@ export default {
 		selectTag(tag) {
 			this.selected = tag;
 		},
-		tab(event) {
-			if (this.newTag?.length > 0) {
-				event.preventDefault();
-				this.addString(this.newTag);
+		/**
+		 * @param {String,Object} value
+		 * @returns {text: String, value: String}
+		 */
+		toValue(value) {
+			const option = this.options.find((option) => option.value === value);
+
+			// if only options are allwed as value
+			if (this.accept === "options") {
+				return option;
 			}
+
+			// always prefer options as source
+			// as they can be trusted without escaping
+			if (option) {
+				return option;
+			}
+
+			if (typeof value === "string") {
+				value = { value: value };
+			}
+
+			return {
+				value: value.value,
+				// always strip HTML from text for tags that
+				// can't be matched with any defined option
+				// to avoid XSS when displaying via `v-html`
+				text: this.$helper.string.stripHTML(value.text ?? value.value)
+			};
 		},
-		type(value) {
-			this.newTag = value;
-			this.$refs.autocomplete.search(value);
+		toValues(values) {
+			// objects to array
+			if (typeof values === "object") {
+				values = Object.values(values);
+			}
+
+			if (Array.isArray(values) === false) {
+				return [];
+			}
+
+			return values.map(this.toValue).filter((item) => item);
 		}
 	},
 	validations() {

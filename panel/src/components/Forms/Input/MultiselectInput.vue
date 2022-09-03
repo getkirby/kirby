@@ -9,7 +9,7 @@
 		@end="onInput"
 	>
 		<k-tag
-			v-for="tag in sorted"
+			v-for="tag in tags"
 			:ref="tag.value"
 			:key="tag.value"
 			:removable="true"
@@ -19,7 +19,8 @@
 			@keydown.native.right="navigate('next')"
 			@keydown.native.down="$refs.dropdown.open"
 		>
-			{{ tag.text }}
+			<!-- eslint-disable-next-line vue/no-v-html -->
+			<span v-html="tag.text" />
 		</k-tag>
 
 		<template #footer>
@@ -61,9 +62,7 @@
 						@keydown.native.space.prevent.stop="select(option)"
 					>
 						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span v-html="option.display" />
-						<!-- eslint-disable-next-line vue/no-v-html -->
-						<span class="k-multiselect-value" v-html="option.info" />
+						<span v-html="option.text" />
 					</k-dropdown-item>
 
 					<k-dropdown-item
@@ -101,12 +100,7 @@ export const props = {
 		max: Number,
 		min: Number,
 		layout: String,
-		options: {
-			type: Array,
-			default() {
-				return [];
-			}
-		},
+		options: Array,
 		search: [Object, Boolean],
 		separator: {
 			type: String,
@@ -153,21 +147,16 @@ export default {
 			return this.$t("options.none");
 		},
 		filtered() {
-			if (this.q?.length >= (this.search.min || 0)) {
-				return this.options
-					.filter((option) => this.isFiltered(option))
-					.map((option) => ({
-						...option,
-						display: this.toHighlightedString(option.text),
-						info: this.toHighlightedString(option.value)
-					}));
+			if (this.q?.length < (this.search.min || 0)) {
+				return this.options;
 			}
 
-			return this.options.map((option) => ({
-				...option,
-				display: option.text,
-				info: option.value
-			}));
+			return this.options
+				.filter((option) => this.isFiltered(option))
+				.map((option) => ({
+					...option,
+					text: this.toHighlightedString(option.text)
+				}));
 		},
 		more() {
 			return !this.max || this.state.length < this.max;
@@ -175,15 +164,17 @@ export default {
 		regex() {
 			return new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 		},
-		sorted() {
+		tags() {
+			const tags = this.state.map((value) =>
+				this.options.find((option) => option.value === value)
+			);
+
 			if (this.sort === false) {
-				return this.state;
+				return tags;
 			}
 
-			let items = this.state;
-
 			const index = (x) => this.options.findIndex((y) => y.value === x.value);
-			return items.sort((a, b) => index(a) - index(b));
+			return tags.sort((a, b) => index(a) - index(b));
 		},
 		visible() {
 			if (this.limit) {
@@ -377,17 +368,6 @@ export default {
 .k-multiselect-option b {
 	color: var(--color-focus-light);
 	font-weight: 700;
-}
-
-.k-multiselect-value {
-	color: var(--color-gray-500);
-	margin-inline-start: 0.25rem;
-}
-.k-multiselect-value::before {
-	content: " (";
-}
-.k-multiselect-value::after {
-	content: ")";
 }
 
 .k-multiselect-input[data-layout="list"] .k-tag {

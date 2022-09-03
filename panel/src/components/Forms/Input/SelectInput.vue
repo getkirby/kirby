@@ -53,12 +53,7 @@ export const props = {
 		 * The text, that is shown when no option is selected yet.
 		 */
 		placeholder: String,
-		options: {
-			type: Array,
-			default: () => {
-				return [];
-			}
-		},
+		options: Array,
 		value: {
 			type: [String, Number, Boolean],
 			default: ""

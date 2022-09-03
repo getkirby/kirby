@@ -7,6 +7,7 @@ return [
 		 * Unset inherited props
 		 */
 		'columns' => null,
+		'html'    => false,
 
 		/**
 		 * Custom icon to replace the arrow down.

@@ -44,12 +44,12 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			selected: this.valueToArray(this.value)
+			selected: this.toArray(this.value)
 		};
 	},
 	watch: {
 		value(value) {
-			this.selected = this.valueToArray(value);
+			this.selected = this.toArray(value);
 		},
 		selected() {
 			this.onInvalid();
@@ -83,7 +83,7 @@ export default {
 		select() {
 			this.focus();
 		},
-		valueToArray(value) {
+		toArray(value) {
 			if (Array.isArray(value) === true) {
 				return value;
 			}

@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\Str;
+
 return [
 	'extends' => 'tags',
 	'props' => [
@@ -28,5 +30,18 @@ return [
 		'sort' => function (bool $sort = false) {
 			return $sort;
 		},
-	]
+	],
+	'methods' => [
+		'toValues' => function ($value) {
+			if (is_null($value) === true) {
+				return [];
+			}
+
+			if (is_array($value) === false) {
+				$value = Str::split($value, $this->separator());
+			}
+
+			return $this->sanitizeOptions($value);
+		}
+	],
 ];
