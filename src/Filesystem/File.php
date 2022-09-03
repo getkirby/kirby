@@ -333,6 +333,14 @@ class File
 	}
 
 	/**
+	 * Returns the parent file model
+	 */
+	public function model(): object|null
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Returns the file's last modification time
 	 *
 	 * @param string|null $handler date, intl or strftime

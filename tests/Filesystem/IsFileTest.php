@@ -43,7 +43,22 @@ class IsFileTest extends TestCase
 	public function testAsset()
 	{
 		$asset = $this->_asset();
-		$this->assertInstanceOf('Kirby\Filesystem\File', $asset->asset());
+		$file = $asset->asset();
+
+		$this->assertInstanceOf('Kirby\Filesystem\File', $file);
+		$this->assertSame($file, $asset->asset());
+	}
+
+	/**
+	 * @covers ::asset
+	 */
+	public function testAssetStringProp()
+	{
+		$asset = $this->_asset();
+		$file =  $asset->asset('/dev/null/blank.pdf');
+
+		$this->assertInstanceOf('Kirby\Filesystem\File', $file);
+		$this->assertSame('/dev/null/blank.pdf', $file->root());
 	}
 
 	/**
