@@ -17,8 +17,6 @@ class NestObject extends Obj
 {
 	/**
 	 * Converts the object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -30,7 +28,10 @@ class NestObject extends Obj
 				continue;
 			}
 
-			if (is_object($value) === true && method_exists($value, 'toArray')) {
+			if (
+				is_object($value) === true &&
+				method_exists($value, 'toArray')
+			) {
 				$result[$key] = $value->toArray();
 				continue;
 			}
