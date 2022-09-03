@@ -570,7 +570,7 @@ export default {
 		 * @param {array} values
 		 */
 		onFormInput(e) {
-			this.$emit("onFormInput", e);
+			this.$emit("formInput", e);
 		}
 	}
 };
