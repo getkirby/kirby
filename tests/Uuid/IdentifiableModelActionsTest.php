@@ -2,7 +2,7 @@
 
 namespace Kirby\Uuid;
 
-class ModelActionsTest extends TestCase
+class IdentifiableModelActionsTest extends TestCase
 {
 	public function testFileChangeName()
 	{

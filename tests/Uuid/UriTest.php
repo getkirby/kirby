@@ -67,7 +67,6 @@ class UriTest extends TestCase
 	}
 
 	/**
-	 * @covers ::path
 	 * @dataProvider provider
 	 */
 	public function testPath(string $input, string $scheme, string|null $domain, string|null $path)

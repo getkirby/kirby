@@ -10,6 +10,9 @@ class PageTestModel extends Page
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Page
+ */
 class PageTest extends TestCase
 {
 	public function tearDown(): void
