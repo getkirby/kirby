@@ -32,10 +32,8 @@ class File
 	/**
 	 * Parent file model
 	 * The model object must use the "Kirby\Filesystem\IsFile" trait
-	 *
-	 * @var object|null
 	 */
-	protected $model;
+	protected object|null $model = null;
 
 	/**
 	 * Absolute file path
@@ -432,12 +430,11 @@ class File
 	/**
 	 * Setter for the parent file model
 	 *
-	 * @param object|null $model
 	 * @return $this
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	protected function setModel($model = null)
+	protected function setModel(object|null $model = null): static
 	{
 		if ($model !== null && in_array(IsFile::class, class_uses($model)) !== true) {
 			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
