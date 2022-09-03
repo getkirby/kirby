@@ -84,10 +84,10 @@ trait IsFile
 			return $this->asset;
 		}
 
-		if (is_array($props) === false) {
-			$props = [
-				'root' => $props ?? $this->root()
-			];
+		$props ??= [];
+
+		if (is_string($props) === true) {
+			$props = ['root' => $props];
 		}
 
 		$props['model'] ??= $this;
