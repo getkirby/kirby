@@ -45,17 +45,15 @@ class Collection extends BaseCollection
 
 	/**
 	 * Validate the type of every item that is being
-	 * added to the collection. They can either have
-	 * the class defined by static::TYPE or be a
-	 * promise that gets resolved later.
+	 * added to the collection. They cneed to have
+	 * the class defined by static::TYPE.
 	 */
 	public function __set(string $key, $value): void
 	{
 		if (
-			is_a($value, static::TYPE) === false &&
-			is_a($value, Promise::class) === false
+			is_a($value, static::TYPE) === false
 		) {
-			throw new TypeError('Each value in the collection must be an instance of ' . static::TYPE . ' or a promise');
+			throw new TypeError('Each value in the collection must be an instance of ' . static::TYPE);
 		}
 
 		parent::__set($key, $value);

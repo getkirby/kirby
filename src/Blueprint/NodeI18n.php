@@ -3,8 +3,6 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Field\FieldLabel;
-use Kirby\Field\TextField;
 use Kirby\Toolkit\I18n;
 
 /**

@@ -12,7 +12,6 @@ use Kirby\Option\OptionsQuery;
  */
 class FieldOptionsTest extends TestCase
 {
-
 	/**
 	 * @covers ::factory
 	 */

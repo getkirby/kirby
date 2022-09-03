@@ -115,5 +115,4 @@ class Node
 		$this->$property = Factory::forProperty(static::class, $property, $value);
 		return $this;
 	}
-
 }

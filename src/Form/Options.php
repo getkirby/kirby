@@ -16,6 +16,8 @@ use Kirby\Toolkit\I18n;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated 3.8.0 Use `Kirby\Option\Options` instead
  */
 class Options
 {

@@ -26,7 +26,7 @@ class FieldOptions extends Node
 
 	public function defaults(): static
 	{
-		$this->options ??= new Options;
+		$this->options ??= new Options();
 
 		return parent::defaults();
 	}

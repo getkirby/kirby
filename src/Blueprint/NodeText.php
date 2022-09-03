@@ -3,7 +3,6 @@
 namespace Kirby\Blueprint;
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\A;
 
 /**
  * The text node is translatable
