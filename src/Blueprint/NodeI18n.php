@@ -45,11 +45,6 @@ class NodeI18n extends NodeProperty
 			return $this->translations[$locale];
 		}
 
-		if (isset($this->translations['*']) === true) {
-			$translations = $this->translations['*'];
-			return I18n::translation($locale)[$translations] ?? $translations;
-		}
-
-		return $this->translations['en'] ?? null;
+		return $this->translations['*'] ?? $this->translations['en'] ?? null;
 	}
 }
