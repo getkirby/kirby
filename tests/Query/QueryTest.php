@@ -89,29 +89,4 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 		$query = new Query('kirby');
 		$this->assertInstanceOf(App::class, $query->resolve());
 	}
-
-	public function testDefaultFunctionCache()
-	{
-		$cache = App::instance()->cache('queries');
-		$query = new Query('cache("my.key", () => foo.bar)');
-		$data  = ['foo' => ['bar' => 'homer']];
-
-		$this->assertFalse($cache->exists('my.key'));
-		$this->assertSame('homer', $query->resolve($data));
-		$this->assertTrue($cache->exists('my.key'));
-		$this->assertSame('homer', $cache->get('my.key'));
-		$cache->flush();
-	}
-
-	public function testDefaultFunctionT()
-	{
-		$query = new Query('t("add")');
-		$this->assertSame('Add', $query->resolve());
-
-		$query = new Query('t("notfound", "fallback")');
-		$this->assertSame('fallback', $query->resolve());
-
-		$query = new Query('t("add", null, "de")');
-		$this->assertSame('Hinzufügen', $query->resolve());
-	}
 }

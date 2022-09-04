@@ -43,6 +43,7 @@ trait SiteActions
 		$kirby->trigger('site.' . $action . ':after', ['newSite' => $result, 'oldSite' => $old]);
 
 		$kirby->cache('pages')->flush();
+		$kirby->cache('queries')->flush();
 		return $result;
 	}
 

@@ -132,6 +132,7 @@ trait FileActions
 		$kirby->trigger('file.' . $action . ':after', $argumentsAfter);
 
 		$kirby->cache('pages')->flush();
+		$kirby->cache('queries')->flush();
 		return $result;
 	}
 

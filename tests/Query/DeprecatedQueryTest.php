@@ -8,7 +8,7 @@ use stdClass;
 /**
  * TODO: remove in 3.9
  */
-class QueryTest extends \PHPUnit\Framework\TestCase
+class DeprecatedQueryTest extends \PHPUnit\Framework\TestCase
 {
 	public function testWithEmptyQuery()
 	{

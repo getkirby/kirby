@@ -116,8 +116,8 @@ Query::$entries['t'] = function (
 
 Query::$entries['cache'] = function (
 	string $key,
-	Closure $set,
-	int $minutes = 1
-): string|null {
-	return App::instance()->cache('queries')->getOrSet($key, $set, $minutes);
+	Closure $getter,
+	int $minutes = 0
+): mixed {
+	return App::instance()->cache('queries')->getOrSet($key, $getter, $minutes);
 };

@@ -186,6 +186,7 @@ trait UserActions
 		$kirby->trigger('user.' . $action . ':after', $argumentsAfter);
 
 		$kirby->cache('pages')->flush();
+		$kirby->cache('queries')->flush();
 		return $result;
 	}
 
