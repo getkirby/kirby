@@ -154,8 +154,8 @@ abstract class Cache
 	 * the cache for future retrieval
 	 */
 	public function getOrSet(
-		string $key, Closure
-		$getter,
+		string $key,
+		Closure $getter,
 		int $minutes = 0
 	): mixed {
 		if ($value = $this->get($key)) {
