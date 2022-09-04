@@ -294,7 +294,7 @@ class Remote
 	 *
 	 * @param bool $array decode as array or object
 	 */
-	public function json(bool $array = true): array|stdClass
+	public function json(bool $array = true): array|stdClass|null
 	{
 		return json_decode($this->content(), $array);
 	}
