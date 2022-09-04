@@ -136,7 +136,9 @@ class Core
 	 */
 	public function caches(): array
 	{
-		return [];
+		return [
+			'queries' => true
+		];
 	}
 
 	/**

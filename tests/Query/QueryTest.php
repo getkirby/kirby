@@ -74,10 +74,33 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame('simpson', $bar);
 	}
 
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveDefaultFunctionWithoutRequiredArgs()
+	{
+		$this->expectException('ArgumentCountError');
+		$query = new Query('cache');
+		$query->resolve();
+	}
+
 	public function testDefaultEntryKirby()
 	{
 		$query = new Query('kirby');
 		$this->assertInstanceOf(App::class, $query->resolve());
+	}
+
+	public function testDefaultFunctionCache()
+	{
+		$cache = App::instance()->cache('queries');
+		$query = new Query('cache("my.key", () => foo.bar)');
+		$data  = ['foo' => ['bar' => 'homer']];
+
+		$this->assertFalse($cache->exists('my.key'));
+		$this->assertSame('homer', $query->resolve($data));
+		$this->assertTrue($cache->exists('my.key'));
+		$this->assertSame('homer', $cache->get('my.key'));
+		$cache->flush();
 	}
 
 	public function testDefaultFunctionT()

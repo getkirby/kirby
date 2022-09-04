@@ -113,3 +113,11 @@ Query::$entries['t'] = function (
 ): string|null {
 	return I18n::translate($key, $fallback, $locale);
 };
+
+Query::$entries['cache'] = function (
+	string $key,
+	Closure $set,
+	int $minutes = 1
+): string|null {
+	return App::instance()->cache('queries')->getOrSet($key, $set, $minutes);
+};
