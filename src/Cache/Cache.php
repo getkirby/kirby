@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Closure;
+
 /**
  * Cache foundation
  * This abstract class is used as
@@ -144,6 +146,22 @@ abstract class Cache
 
 		// return the pure value
 		return $value->value();
+	}
+
+	/**
+	 * Returns a value by either getting it from the cache
+	 * or via the callback function which then it stored in
+	 * the cache for future retrieval
+	 */
+	public function getOrSet(string $key, Closure $set, int $minutes = 0): mixed
+	{
+		if ($value = $this->get($key)) {
+			return $value;
+		}
+
+		$value = $set();
+		$this->set($key, $value, $minutes);
+		return $value;
 	}
 
 	/**
