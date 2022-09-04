@@ -274,6 +274,7 @@ class BlocksField extends FieldClass
 								'data' => [
 									'field' => $field->label(),
 									'fieldset' => $fieldset->name(),
+									'index' => $index
 								]
 							]);
 						}

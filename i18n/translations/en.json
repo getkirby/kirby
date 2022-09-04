@@ -70,7 +70,7 @@
   "error.blocks.max.singular": "You must not add more than one block",
   "error.blocks.min.plural": "You must add at least {min} blocks",
   "error.blocks.min.singular": "You must add at least one block",
-  "error.blocks.validation": "There's an error on \"{field}\" in \"{fieldset}\" block",
+  "error.blocks.validation": "There's an error on the \"{field}\" field  in block no. {index} using the \"{fieldset}\" fieldset",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
