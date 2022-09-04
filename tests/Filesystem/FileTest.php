@@ -2,6 +2,8 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase as TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -411,8 +413,8 @@ class FileTest extends TestCase
 	 */
 	public function testModel()
 	{
-		$parent = \Kirby\Cms\Page::factory(['slug' => 'test']);
-		$model = \Kirby\Cms\File::factory([
+		$parent = Page::factory(['slug' => 'test']);
+		$model = CmsFile::factory([
 			'filename' => 'test.js',
 			'parent' => $parent
 		]);
@@ -460,7 +462,7 @@ class FileTest extends TestCase
 
 		new File([
 			'root' => $this->fixtures . '/test.js',
-			'model' => \Kirby\Cms\Page::factory(['slug' => 'test'])
+			'model' => Page::factory(['slug' => 'test'])
 		]);
 	}
 

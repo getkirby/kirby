@@ -31,7 +31,7 @@ class File
 
 	/**
 	 * Parent file model
-	 * The model object must use the "Kirby\Filesystem\IsFile" trait
+	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
 	 */
 	protected object|null $model = null;
 
