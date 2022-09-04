@@ -272,9 +272,9 @@ class BlocksField extends FieldClass
 							throw new InvalidArgumentException([
 								'key' => 'blocks.validation',
 								'data' => [
-									'field' => $field->label(),
+									'field'    => $field->label(),
 									'fieldset' => $fieldset->name(),
-									'index' => $index
+									'index'    => $index
 								]
 							]);
 						}

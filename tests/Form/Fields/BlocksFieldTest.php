@@ -434,7 +434,7 @@ class BlocksFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame([
-			'blocks' => 'There\'s an error on the "Video-URL" field  in block no. 2 using the "Video" fieldset'
+			'blocks' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" fieldset'
 		], $field->errors());
 	}
 
