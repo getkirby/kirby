@@ -1,8 +1,8 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Query;
 
-class QueryTestUser
+class TestUser
 {
 	public function username()
 	{

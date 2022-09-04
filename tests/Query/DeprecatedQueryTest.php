@@ -2,12 +2,13 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Query\TestUser;
 use stdClass;
 
 /**
- * @covers Kirby\Toolkit\Query
+ * TODO: remove in 3.9
  */
-class QueryTest extends TestCase
+class QueryTest extends \PHPUnit\Framework\TestCase
 {
 	public function testWithEmptyQuery()
 	{
@@ -176,7 +177,7 @@ class QueryTest extends TestCase
 		$this->expectExceptionMessage('Cannot access array element user with arguments');
 
 		$query = new Query('user("test")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$query->result();
@@ -203,7 +204,7 @@ class QueryTest extends TestCase
 	public function testWithObject1Level()
 	{
 		$query = new Query('user.username', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('homer', $query->result());
@@ -212,7 +213,7 @@ class QueryTest extends TestCase
 	public function testWithObject2Level()
 	{
 		$query = new Query('user.profiles.twitter', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('@homer', $query->result());
@@ -242,7 +243,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithInteger()
 	{
 		$query = new Query('user.age(12)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame(12, $query->result());
@@ -252,14 +253,14 @@ class QueryTest extends TestCase
 	{
 		// true
 		$query = new Query('user.isYello(true)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertTrue($query->result());
 
 		// false
 		$query = new Query('user.isYello(false)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertFalse($query->result());
@@ -268,7 +269,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithNull()
 	{
 		$query = new Query('user.brainDump(null)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertNull($query->result());
@@ -278,14 +279,14 @@ class QueryTest extends TestCase
 	{
 		// double quotes
 		$query = new Query('user.says("hello world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello world', $query->result());
 
 		// single quotes
 		$query = new Query("user.says('hello world')", [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello world', $query->result());
@@ -295,14 +296,14 @@ class QueryTest extends TestCase
 	{
 		// double quotes
 		$query = new Query('user.says("")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('', $query->result());
 
 		// single quotes
 		$query = new Query("user.says('')", [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('', $query->result());
@@ -312,14 +313,14 @@ class QueryTest extends TestCase
 	{
 		// double quotes
 		$query = new Query('user.says("hello \" world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello " world', $query->result());
 
 		// single quotes
 		$query = new Query("user.says('hello \' world')", [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame("hello ' world", $query->result());
@@ -328,21 +329,21 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithMultipleArguments()
 	{
 		$query = new Query('user.says("hello", "world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello : world', $query->result());
 
 		// with escaping
 		$query = new Query('user.says("hello\"", "world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello" : world', $query->result());
 
 		// with mixed quotes
 		$query = new Query('user.says(\'hello\\\'\', "world\"")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello\' : world"', $query->result());
@@ -351,14 +352,14 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithMultipleArgumentsAndComma()
 	{
 		$query = new Query('user.says("hello,", "world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello, : world', $query->result());
 
 		// with escaping
 		$query = new Query('user.says("hello,\"", "world")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello," : world', $query->result());
@@ -367,14 +368,14 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithMultipleArgumentsAndDot()
 	{
 		$query = new Query('user.says("I like", "love.jpg")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('I like : love.jpg', $query->result());
 
 		// with escaping
 		$query = new Query('user.says("I \" like", "love.\"jpg")', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('I " like : love."jpg', $query->result());
@@ -383,7 +384,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithTrickyCharacters()
 	{
 		$query = new Query("user.likes(['(', ',', ']', '[', ')']).self.brainDump('hello')", [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertSame('hello', $query->result());
@@ -392,7 +393,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithArray()
 	{
 		$query = new Query('user.self.check("gin", "tonic", ["gin", "tonic", "cucumber"])', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertTrue($query->result());
@@ -401,7 +402,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithObjectMethodAsParameter()
 	{
 		$query = new Query('user.self.check("gin", "tonic", user.drink)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertTrue($query->result());
@@ -410,7 +411,7 @@ class QueryTest extends TestCase
 	public function testWithNestedMethodCall()
 	{
 		$query = new Query('user.check("gin", "tonic", user.array("gin", "tonic").args)', [
-			'user' => new QueryTestUser()
+			'user' => new TestUser()
 		]);
 
 		$this->assertTrue($query->result());
@@ -419,7 +420,7 @@ class QueryTest extends TestCase
 	public function testWithObjectMethodWithObjectMethodAsParameterAndMoreLevels()
 	{
 		$query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', ')', '['])).self", [
-			'user' => $user = new QueryTestUser()
+			'user' => $user = new TestUser()
 		]);
 
 		$this->assertSame($user, $query->result());

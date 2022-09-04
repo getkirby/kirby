@@ -77,4 +77,5 @@ return [
 	'kirby\toolkit\f'          => 'Kirby\Filesystem\F',
 	'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
 	'kirby\toolkit\mime'       => 'Kirby\Filesystem\Mime',
+	'kirby\toolkit\query'      => 'Kirby\Query\Query',
 ];

@@ -348,7 +348,6 @@ abstract class ModelWithContent extends Model
 
 		try {
 			$result = Str::query($query, [
-				'kirby'             => $this->kirby(),
 				'site'              => $this instanceof Site ? $this : $this->site(),
 				'model'             => $this,
 				static::CLASS_ALIAS => $this
@@ -545,7 +544,6 @@ abstract class ModelWithContent extends Model
 		}
 
 		$result = Str::$handler($template, array_replace([
-			'kirby'             => $this->kirby(),
 			'site'              => $this instanceof Site ? $this : $this->site(),
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,

@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use IntlDateFormatter;
+use Kirby\Query\TestUser as QueryTestUser;
 use PHPUnit\Framework\TestCase;
 
 /**
