@@ -2,6 +2,9 @@
 
 namespace Kirby\Query;
 
+use Closure;
+use Kirby\Toolkit\Str;
+
 /**
  * The Argument class represents a single
  * parameter passed to a method in a chained query
@@ -30,11 +33,11 @@ final class Argument
 		// string with single or double quotes
 		if (
 			(
-				substr($argument, 0, 1) === '"' &&
-				substr($argument, -1) === '"'
+				Str::startsWith($argument, '"') &&
+				Str::endsWith($argument, '"')
 			) || (
-				substr($argument, 0, 1) === "'" &&
-				substr($argument, -1) === "'"
+				Str::startsWith($argument, "'") &&
+				Str::endsWith($argument, "'")
 			)
 		) {
 			$string = substr($argument, 1, -1);
@@ -44,8 +47,8 @@ final class Argument
 
 		// array: split and recursive sanitizing
 		if (
-			substr($argument, 0, 1) === '[' &&
-			substr($argument, -1) === ']'
+			Str::startsWith($argument, '[') &&
+			Str::endsWith($argument, ']')
 		) {
 			$array = substr($argument, 1, -1);
 			$array = Arguments::factory($array);
@@ -55,6 +58,13 @@ final class Argument
 		// numeric
 		if (is_numeric($argument) === true) {
 			return new static((float)$argument);
+		}
+
+		// Closure
+		if (Str::startsWith($argument, '() =>')) {
+			$query = Str::after($argument, '() =>');
+			$query = trim($query);
+			return new static(fn () => $query);
 		}
 
 		return new static(match ($argument) {
@@ -73,6 +83,14 @@ final class Argument
 	 */
 	public function resolve(array|object $data = []): mixed
 	{
+		// don't resolve the Closure immediately, instead
+		// resolve it to the sub-query and create a new Closure
+		// that resolves the sub-query with the same data set once called
+		if ($this->value instanceof Closure) {
+			$query = ($this->value)();
+			return fn () => static::factory($query)->resolve($data);
+		}
+
 		if (is_object($this->value) === true) {
 			return $this->value->resolve($data);
 		}

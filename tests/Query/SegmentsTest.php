@@ -96,7 +96,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame('@homer', $segments->resolve($data));
 	}
 
-	protected function scalarProvider(): array
+	public function scalarProvider(): array
 	{
 		return [
 			['test', 'string'],

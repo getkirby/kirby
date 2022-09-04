@@ -2,6 +2,8 @@
 
 namespace Kirby\Query;
 
+use Closure;
+
 /**
  * @coversDefaultClass Kirby\Query\Argument
  */
@@ -59,5 +61,16 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 		// nested query
 		$argument = Argument::factory('foo')->resolve(['foo' => 'bar']);
 		$this->assertSame('bar', $argument);
+	}
+
+	/**
+	 * @covers ::factory
+	 * @covers ::resolve
+	 */
+	public function testWithClosure()
+	{
+		$argument = Argument::factory('() => site.children');
+		$this->assertInstanceOf(Closure::class, $argument->value);
+		$this->assertInstanceOf(Closure::class, $argument->resolve());
 	}
 }
