@@ -51,7 +51,7 @@ class UuidsTest extends TestCase
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertFalse($struct->uuid()->isCached());
 
-		Uuids::populate('files');
+		Uuids::populate('file');
 
 		$this->assertTrue($pageFile->uuid()->isCached());
 		$this->assertTrue($siteFile->uuid()->isCached());
@@ -69,7 +69,7 @@ class UuidsTest extends TestCase
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertFalse($struct->uuid()->isCached());
 
-		Uuids::populate('blocks');
+		Uuids::populate('block');
 
 		$this->assertFalse($pageFile->uuid()->isCached());
 		$this->assertFalse($siteFile->uuid()->isCached());
@@ -87,7 +87,7 @@ class UuidsTest extends TestCase
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertFalse($struct->uuid()->isCached());
 
-		Uuids::populate('structures');
+		Uuids::populate('struct');
 
 		$this->assertFalse($pageFile->uuid()->isCached());
 		$this->assertFalse($siteFile->uuid()->isCached());
