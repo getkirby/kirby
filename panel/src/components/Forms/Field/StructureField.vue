@@ -566,8 +566,7 @@ export default {
 			}
 		},
 		/**
-		 * When the field's value changes
-		 * @param {array} values
+		 * Triggered whenever any form field value changes
 		 */
 		onFormInput(e) {
 			this.$emit("onFormInput", e);
