@@ -14,6 +14,7 @@
 				<th
 					v-for="(column, columnIndex) in columns"
 					:key="columnIndex + '-header'"
+					:data-align="column.align"
 					:data-mobile="column.mobile"
 					:style="'width:' + width(column.width)"
 					class="k-table-column"
@@ -354,27 +355,14 @@ export default {
 	overflow: visible;
 }
 
-[dir="ltr"] .k-table th,
-[dir="ltr"] .k-table td {
-	border-right: 1px solid var(--color-background);
-}
-
-[dir="rtl"] .k-table th,
-[dir="rtl"] .k-table td {
-	border-left: 1px solid var(--color-background);
+.k-table th,
+.k-table td {
+	border-inline-end: 1px solid var(--color-background);
+	text-align: start;
 }
 
 .k-table tbody tr:hover td {
 	background: rgba(239, 239, 239, 0.25);
-}
-
-/* Text aligment */
-.k-table-column[data-align] {
-	text-align: var(--align);
-}
-.k-table-column[data-align="right"] > .k-input {
-	flex-direction: column;
-	align-items: flex-end;
 }
 
 /** Sticky header **/
@@ -390,15 +378,8 @@ export default {
 	font-weight: 400;
 	color: var(--color-gray-600);
 	background: var(--color-gray-100);
-	text-align: start;
-}
-[dir="ltr"] .k-table th {
-	text-align: left;
 }
 
-[dir="rtl"] .k-table th {
-	text-align: right;
-}
 .k-table th::after {
 	content: "";
 	position: absolute;
@@ -416,6 +397,15 @@ export default {
 	place-items: center;
 	width: 100%;
 	height: var(--table-row-height);
+}
+
+/* Text aligment */
+.k-table-column[data-align] {
+	text-align: var(--align) !important;
+}
+.k-table-column[data-align="right"] > .k-input {
+	flex-direction: column;
+	align-items: flex-end;
 }
 
 /** Sort handle */
