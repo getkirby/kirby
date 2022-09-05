@@ -243,7 +243,7 @@ class Uuid
 
 		// for better performance when using a file-based cache,
 		// turn first two characters of the id into a directory
-		$id = substr($id, 0, 2) . '/' . substr($id, 2);
+		$id = Str::substr($id, 0, 2) . '/' . Str::substr($id, 2);
 
 		return static::TYPE . '/' . $id;
 	}
