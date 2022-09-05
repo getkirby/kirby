@@ -25,16 +25,18 @@ class Uuids
 	/**
 	 * Populates cache with Uuids for all identifiable models
 	 * that need to be cached (not site and users)
+	 *
+	 * @param string $type which models to include  `all`|`page`,|`file`|`block`|`struct`
 	 */
 	public static function populate(string $type = 'all'): void
 	{
-		if ($type === 'all' || $type === 'pages' || $type === 'files') {
+		if ($type === 'all' || $type === 'page' || $type === 'file') {
 			foreach (PageUuid::index() as $page) {
 				if ($type === 'all' || $type === 'pages') {
 					Uuid::for($page)->populate();
 				}
 
-				if ($type === 'all' || $type === 'files') {
+				if ($type === 'all' || $type === 'file') {
 					foreach ($page->files() as $file) {
 						Uuid::for($file)->populate();
 					}
@@ -42,7 +44,7 @@ class Uuids
 			}
 		}
 
-		if ($type === 'all' || $type === 'files') {
+		if ($type === 'all' || $type === 'file') {
 			foreach (SiteUuid::index() as $site) {
 				foreach ($site->files() as $file) {
 					Uuid::for($file)->populate();
@@ -57,7 +59,7 @@ class Uuids
 		}
 
 		// TODO: activate for uuid-block-structure-support
-		// if ($type === 'all' || $type === 'blocks') {
+		// if ($type === 'all' || $type === 'block') {
 		// 	foreach (BlockUuid::index() as $blocks) {
 		// 		foreach ($blocks as $block) {
 		// 			Uuid::for($block)->populate();
@@ -65,7 +67,7 @@ class Uuids
 		// 	}
 		// }
 
-		// if ($type === 'all' || $type === 'structures') {
+		// if ($type === 'all' || $type === 'struct') {
 		// 	foreach (StructureUuid::index() as $structure) {
 		// 		foreach ($structure as $entry) {
 		// 			Uuid::for($entry)->populate();
