@@ -569,7 +569,7 @@ export default {
 		 * Triggered whenever any form field value changes
 		 */
 		onFormInput(e) {
-			this.$emit("onFormInput", e);
+			this.$emit("formInput", e);
 		}
 	}
 };
