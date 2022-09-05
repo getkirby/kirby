@@ -244,7 +244,6 @@ class Core
 			'toggles'     => $this->root . '/fields/toggles.php',
 			'url'         => $this->root . '/fields/url.php',
 			'users'       => $this->root . '/fields/users.php',
-			'uuid'        => $this->root . '/fields/uuid.php',
 			'writer'      => $this->root . '/fields/writer.php'
 		];
 	}

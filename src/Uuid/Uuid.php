@@ -15,7 +15,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * The `Uuid` classes provide an interface to connect
- * indetifiable models (page, file, site, user, blocks,
+ * identifiable models (page, file, site, user, blocks,
  * structure entries) with a dedicated UUID string.
  * It also provides methods to cache these connections
  * for faster lookup.
@@ -44,11 +44,16 @@ class Uuid
 
 	/**
 	 * Customisable callback function for generating new ID strings
-	 * instead of using Nanoid. Receives length of string as parameter.
+	 * instead of using Nano ID. Receives length of string as parameter.
 	 */
 	public static Closure|null $generator = null;
 
+	/**
+	 * Collection that is likely to contain the model and
+	 * that will be checked first to speed up the lookup
+	 */
 	public Collection|null $context;
+
 	public Identifiable|null $model;
 	public Uri|null $uri;
 
@@ -77,7 +82,7 @@ class Uuid
 	public function clear(bool $recursive = false): bool
 	{
 		// For all models with children: if $recursive,
-		// also clear UUIDs rom cache for all children
+		// also clear UUIDs from cache for all children
 		if (
 			$recursive === true &&
 			method_exists($this->model, 'children') === true
@@ -142,7 +147,7 @@ class Uuid
 				// TODO: activate for uuid-block-structure-support
 				// 'block'  => new BlockUuid(uuid: $seed, context: $context),
 				// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-				default  => throw new InvalidArgumentException('Invalid uuid uri:' . $seed)
+				default  => throw new InvalidArgumentException('Invalid UUID URI: ' . $seed)
 			};
 		}
 
@@ -161,7 +166,7 @@ class Uuid
 			// $seed instanceof StructureObject
 			// 	=> new StructureUuid(model: $seed, context: $context),
 			default
-			=> throw new InvalidArgumentException('Uuid not supported for:' . get_class($seed))
+			=> throw new InvalidArgumentException('UUID not supported for: ' . get_class($seed))
 		};
 	}
 
@@ -254,7 +259,7 @@ class Uuid
 	}
 
 	/**
-	 * Returns the full UUID string incl. schema
+	 * Returns the full UUID string incl. scheme
 	 */
 	public function render(): string
 	{
@@ -266,8 +271,10 @@ class Uuid
 	}
 
 	/**
-	 * Tries to find the idetifiable model in cache
-	 * or index and return the object
+	 * Tries to find the identifiable model in cache
+	 * or index and returns the object
+	 *
+	 * @param bool $lazy If `true`, only lookup from cache
 	 */
 	public function resolve(bool $lazy = false): Identifiable|null
 	{
