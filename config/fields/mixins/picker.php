@@ -68,8 +68,10 @@ return [
 		},
 
 		/**
-		 * Whethter to store UUID or path in
-		 * content file
+		 * Whether to store UUID or path in
+		 * the content file
+		 *
+		 * @param string $store 'uuid'|'id'
 		 */
 		'store' => function (string $store = 'uuid') {
 			return $store;
