@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use IntlDateFormatter;
+use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -858,6 +859,26 @@ class F
 
 		if (static::isWritable($file) === false) {
 			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		if (App::instance()->option('content.protection', false) === true) {
+			$temp = $file . '.temp';
+			$write = file_put_contents($temp, $content, $mode) !== false;
+
+			$errors = error_get_last();
+			if ($errorMessage = $errors['message'] ?? null) {
+				if (
+					Str::contains($errorMessage, 'errno=122') ||
+					Str::contains($errorMessage, 'Disk quota exceeded')
+				) {
+					F::unlink($temp);
+					throw new Exception('Disk quota exceeded');
+				}
+			}
+
+			rename($temp, $file);
+
+			return $write;
 		}
 
 		return file_put_contents($file, $content, $mode) !== false;
