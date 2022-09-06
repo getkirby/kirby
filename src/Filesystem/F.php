@@ -889,10 +889,15 @@ class F
 			}
 		);
 
-		// if everything is ok rename temporary file with original
-		if ($result === true) {
-			rename($temp, $file);
-			return true;
+		try {
+			// if everything is ok, rename temporary file with original
+			if ($result === true) {
+				rename($temp, $file);
+
+				return true;
+			}
+		} catch (Throwable) {
+			$result = false;
 		}
 
 		// removes the temporary file if the result is failed (on warnings)
