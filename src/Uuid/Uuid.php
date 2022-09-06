@@ -77,7 +77,6 @@ class Uuid
 			if ($uuid && $uuid !== $this->uri->toString()) {
 				throw new LogicException('UUID: can\'t reate new instance from both, model and UUID string, that do not match');
 			}
-
 		} elseif ($uuid) {
 			$this->uri = new Uri($uuid);
 		}
