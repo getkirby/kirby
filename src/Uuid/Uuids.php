@@ -32,7 +32,7 @@ class Uuids
 	{
 		if ($type === 'all' || $type === 'page' || $type === 'file') {
 			foreach (PageUuid::index() as $page) {
-				if ($type === 'all' || $type === 'pages') {
+				if ($type === 'all' || $type === 'page') {
 					Uuid::for($page)->populate();
 				}
 

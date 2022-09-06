@@ -56,7 +56,7 @@ class Uuid
 	public Collection|null $context;
 
 	public Identifiable|null $model;
-	public Uri|null $uri;
+	public Uri $uri;
 
 	public function __construct(
 		string|null $uuid = null,
@@ -92,6 +92,7 @@ class Uuid
 		// also clear UUIDs from cache for all children
 		if (
 			$recursive === true &&
+			$this->model &&
 			method_exists($this->model, 'children') === true
 		) {
 			foreach ($this->model->children() as $child) {
@@ -210,6 +211,8 @@ class Uuid
 	 * Merges local and global index generators
 	 * into one iterator
 	 * @internal
+	 *
+	 * @return \Generator|\Kirby\Uuid\Identifiable[]
 	 */
 	final public function indexes(): Generator
 	{

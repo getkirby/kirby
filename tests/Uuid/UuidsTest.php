@@ -43,6 +43,25 @@ class UuidsTest extends TestCase
 
 		Uuids::cache()->flush();
 
+		// only pages
+		$this->assertFalse($page->uuid()->isCached());
+		$this->assertFalse($pageFile->uuid()->isCached());
+		$this->assertFalse($siteFile->uuid()->isCached());
+		$this->assertFalse($userFile->uuid()->isCached());
+		// $this->assertFalse($block->uuid()->isCached());
+		// $this->assertFalse($struct->uuid()->isCached());
+
+		Uuids::populate('page');
+
+		$this->assertTrue($page->uuid()->isCached());
+		$this->assertFalse($pageFile->uuid()->isCached());
+		$this->assertFalse($siteFile->uuid()->isCached());
+		$this->assertFalse($userFile->uuid()->isCached());
+		// $this->assertFalse($block->uuid()->isCached());
+		// $this->assertFalse($struct->uuid()->isCached());
+
+		Uuids::cache()->flush();
+
 		// only files
 		$this->assertFalse($page->uuid()->isCached());
 		$this->assertFalse($pageFile->uuid()->isCached());
