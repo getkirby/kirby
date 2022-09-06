@@ -840,6 +840,8 @@ class F
 	 * @param string $file The path for the new file
 	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 * @param bool $append true: append the content to an existing file if available. false: overwrite.
+	 *
+	 * @throws Exception
 	 */
 	public static function write(string $file, mixed $content, bool $append = false): bool
 	{
@@ -860,6 +862,8 @@ class F
 			throw new Exception('The file "' . $file . '" is not writable');
 		}
 
+		// the name of the temporary file it will write
+		// to before it starts overwriting the original file
 		$temp = $file . '~';
 
 		$result = Helpers::handleErrors(
@@ -872,10 +876,12 @@ class F
 				// consider an exceeded disk quota as a hard error
 				// to make the issue visible to the user
 				if (
-					Str::contains($errstr, 'errno=122') ||
-					Str::contains($errstr, 'Disk quota exceeded')
+					Str::contains($errstr, 'error 122', true) ||
+					Str::contains($errstr, 'errno=122', true) ||
+					Str::contains($errstr, 'Quota exceeded', true) ||
+					Str::contains($errstr, 'Disk quota exceeded', true)
 				) {
-					throw new Exception('Disk quota exceeded');
+					throw new Exception($errstr);
 				}
 
 				// handle every other warning normally
@@ -883,12 +889,15 @@ class F
 			}
 		);
 
+		// if everything is ok rename temporary file with original
 		if ($result === true) {
 			rename($temp, $file);
 			return true;
 		}
 
+		// removes the temporary file if the result is failed (on warnings)
 		F::unlink($temp);
+
 		return $result;
 	}
 }
