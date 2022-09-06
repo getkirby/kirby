@@ -866,8 +866,9 @@ class F
 		// to before it starts overwriting the original file
 		$temp = $file . '~';
 
+		// @codeCoverageIgnoreStart
 		$result = Helpers::handleErrors(
-			fn (): bool => file_put_contents($temp, $content, $mode),
+			fn (): bool => file_put_contents($temp, $content, $mode) !== false,
 			function (&$override, int $errno, string $errstr) use ($temp): bool {
 				// ensure the temp file gets deleted even
 				// if an exception gets thrown
@@ -888,6 +889,7 @@ class F
 				return false;
 			}
 		);
+		// @codeCoverageIgnoreEnd
 
 		try {
 			// if everything is ok, rename temporary file with original

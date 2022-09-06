@@ -21,7 +21,7 @@ class FTest extends TestCase
 		$this->fixtures = __DIR__ . '/fixtures/f';
 		$this->sample   = $this->fixtures . '/test.txt';
 		$this->tmp      = __DIR__ . '/tmp';
-		$this->test    = $this->tmp . '/moved.txt';
+		$this->test     = $this->tmp . '/moved.txt';
 
 		Dir::remove($this->tmp);
 		Dir::make($this->tmp);
@@ -805,6 +805,7 @@ class FTest extends TestCase
 	public function testWrite()
 	{
 		$this->assertTrue(F::write($this->test, 'my content'));
+		$this->assertFalse(file_exists($this->test . '~'));
 	}
 
 	/**
@@ -831,6 +832,22 @@ class FTest extends TestCase
 
 		$result = unserialize(F::read($this->test));
 		$this->assertEquals($input, $result);
+	}
+
+	/**
+	 * @covers ::write
+	 */
+	public function testWriteHandleWarning()
+	{
+		// try to write a directory
+		$path = $this->tmp . '/test';
+		$temp = $path . '~';
+
+		Dir::make($path);
+		$result = F::write($path, ['a' => 'a']);
+
+		$this->assertFalse($result);
+		$this->assertFalse(file_exists($temp));
 	}
 
 	/**
