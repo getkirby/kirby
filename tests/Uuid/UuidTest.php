@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\Page;
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -39,6 +40,28 @@ class UuidTest extends TestCase
 		$this->assertSame('page://my-page', $uuid->uri->toString());
 		$this->assertSame($page, $uuid->model);
 		$this->assertSame($siblings, $uuid->context);
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructModelStringNoMatch()
+	{
+		$app  = $this->app;
+		$page = $app->page('page-a');
+
+		new PageUuid(
+			model: $page,
+			uuid: 'page://my-page'
+		);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('UUID: can\'t reate new instance from both, model and UUID string, that do not match');
+
+		new PageUuid(
+			model: $page,
+			uuid: 'your-page'
+		);
 	}
 
 	/**

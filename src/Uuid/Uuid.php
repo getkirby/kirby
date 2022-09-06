@@ -11,6 +11,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -70,6 +71,13 @@ class Uuid
 				'scheme' => static::TYPE,
 				'host'   => static::retrieveId($model)
 			]);
+
+			// in the rare case that both model and ID string
+			// got passed, make sure they match
+			if ($uuid && $uuid !== $this->uri->toString()) {
+				throw new LogicException('UUID: can\'t reate new instance from both, model and UUID string, that do not match');
+			}
+
 		} elseif ($uuid) {
 			$this->uri = new Uri($uuid);
 		}
