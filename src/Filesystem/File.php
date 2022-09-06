@@ -333,7 +333,7 @@ class File
 	}
 
 	/**
-	 * Returns the parent file model
+	 * Returns the parent file model, which uses this instance as proxied file asset
 	 */
 	public function model(): object|null
 	{
@@ -436,11 +436,11 @@ class File
 	}
 
 	/**
-	 * Setter for the parent file model
+	 * Setter for the parent file model, which uses this instance as proxied file asset
 	 *
 	 * @return $this
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	protected function setModel(object|null $model = null): static
 	{
