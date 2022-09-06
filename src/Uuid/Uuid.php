@@ -123,7 +123,7 @@ class Uuid
 	 */
 	protected function findByCache(): Identifiable|null
 	{
-		return null;
+		throw new LogicException('UUID class needs to implement the ::findByCache() method');
 	}
 
 	/**
@@ -135,7 +135,7 @@ class Uuid
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
-		return null;
+		throw new LogicException('UUID class needs to implement the ::findByIndex() method');
 	}
 
 	/**
