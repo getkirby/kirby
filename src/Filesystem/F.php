@@ -4,7 +4,6 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use IntlDateFormatter;
-use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -861,26 +860,35 @@ class F
 			throw new Exception('The file "' . $file . '" is not writable');
 		}
 
-		if (App::instance()->option('content.protection', false) === true) {
-			$temp = $file . '.temp';
-			$write = file_put_contents($temp, $content, $mode) !== false;
+		$temp = $file . '~';
 
-			$errors = error_get_last();
-			if ($errorMessage = $errors['message'] ?? null) {
+		$result = Helpers::handleErrors(
+			fn (): bool => file_put_contents($temp, $content, $mode),
+			function (&$override, int $errno, string $errstr) use ($temp): bool {
+				// ensure the temp file gets deleted even
+				// if an exception gets thrown
+				F::unlink($temp);
+
+				// consider an exceeded disk quota as a hard error
+				// to make the issue visible to the user
 				if (
-					Str::contains($errorMessage, 'errno=122') ||
-					Str::contains($errorMessage, 'Disk quota exceeded')
+					Str::contains($errstr, 'errno=122') ||
+					Str::contains($errstr, 'Disk quota exceeded')
 				) {
-					F::unlink($temp);
 					throw new Exception('Disk quota exceeded');
 				}
+
+				// handle every other warning normally
+				return false;
 			}
+		);
 
+		if ($result === true) {
 			rename($temp, $file);
-
-			return $write;
+			return true;
 		}
 
-		return file_put_contents($file, $content, $mode) !== false;
+		F::unlink($temp);
+		return $result;
 	}
 }
