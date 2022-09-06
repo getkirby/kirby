@@ -109,10 +109,14 @@ return function ($kirby) {
 			'env'     => 'site',
 			'action'  => function (string $type, string $id) use ($kirby) {
 				// try to resolve to model, but only from UUID cache
-				$model = Uuid::for($type . '://' . $id)->resolve(true);
-				return $kirby
-					->response()
-					->redirect($model?->url() ?? 'error');
+				if ($model = Uuid::for($type . '://' . $id)->resolve(true)) {
+					return $kirby
+						->response()
+						->redirect($model->url());
+				}
+
+				// render the error page
+				return false;
 			}
 		],
 	];
