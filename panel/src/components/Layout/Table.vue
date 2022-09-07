@@ -43,11 +43,7 @@
 				</th>
 
 				<th v-if="hasOptions" data-mobile class="k-table-options-column">
-					<k-button
-						v-if="sortColumn"
-						icon="undo"
-						@click.prevent="resetSort"
-					/>
+					<k-button v-if="sortColumn" icon="undo" @click.prevent="resetSort" />
 				</th>
 			</tr>
 		</thead>
@@ -242,10 +238,10 @@ export default {
 		icon(column, columnIndex) {
 			if (column?.sortable === true) {
 				if (this.sortColumn === columnIndex && this.sortDirection) {
-					return this.sortDirection === 'asc' ? 'angle-up' : 'angle-down';
+					return this.sortDirection === "asc" ? "angle-up" : "angle-down";
 				}
 
-				return 'filter'
+				return "filter";
 			}
 		},
 		/**
