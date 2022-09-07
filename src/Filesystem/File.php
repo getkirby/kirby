@@ -5,6 +5,7 @@ namespace Kirby\Filesystem;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
@@ -27,6 +28,12 @@ use Kirby\Toolkit\V;
 class File
 {
 	use Properties;
+
+	/**
+	 * Parent file model
+	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
+	 */
+	protected object|null $model = null;
 
 	/**
 	 * Absolute file path
@@ -98,8 +105,8 @@ class File
 	 */
 	public function copy(string $target, bool $force = false): static
 	{
-		if (F::copy($this->root, $target, $force) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be copied');
+		if (F::copy($this->root(), $target, $force) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be copied');
 		}
 
 		return new static($target);
@@ -124,8 +131,8 @@ class File
 	 */
 	public function delete(): bool
 	{
-		if (F::remove($this->root) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be deleted');
+		if (F::remove($this->root()) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be deleted');
 		}
 
 		return true;
@@ -140,7 +147,7 @@ class File
 	 */
 	public function download(string|null $filename = null): string
 	{
-		return Response::download($this->root, $filename ?? $this->filename());
+		return Response::download($this->root(), $filename ?? $this->filename());
 	}
 
 	/**
@@ -148,7 +155,7 @@ class File
 	 */
 	public function exists(): bool
 	{
-		return file_exists($this->root) === true;
+		return file_exists($this->root()) === true;
 	}
 
 	/**
@@ -156,7 +163,7 @@ class File
 	 */
 	public function extension(): string
 	{
-		return F::extension($this->root);
+		return F::extension($this->root());
 	}
 
 	/**
@@ -164,7 +171,7 @@ class File
 	 */
 	public function filename(): string
 	{
-		return basename($this->root);
+		return basename($this->root());
 	}
 
 	/**
@@ -172,7 +179,7 @@ class File
 	 */
 	public function hash(): string
 	{
-		return md5($this->root);
+		return md5($this->root());
 	}
 
 	/**
@@ -205,7 +212,7 @@ class File
 	 */
 	public function is(string $value): bool
 	{
-		return F::is($this->root, $value);
+		return F::is($this->root(), $value);
 	}
 
 	/**
@@ -213,7 +220,7 @@ class File
 	 */
 	public function isReadable(): bool
 	{
-		return is_readable($this->root) === true;
+		return is_readable($this->root()) === true;
 	}
 
 	/**
@@ -238,7 +245,7 @@ class File
 	 */
 	public function isWritable(): bool
 	{
-		return F::isWritable($this->root);
+		return F::isWritable($this->root());
 	}
 
 	/**
@@ -322,7 +329,15 @@ class File
 	 */
 	public function mime(): string|null
 	{
-		return Mime::type($this->root);
+		return Mime::type($this->root());
+	}
+
+	/**
+	 * Returns the parent file model, which uses this instance as proxied file asset
+	 */
+	public function model(): object|null
+	{
+		return $this->model;
 	}
 
 	/**
@@ -337,7 +352,7 @@ class File
 		$kirby = $this->kirby();
 
 		return F::modified(
-			$this->root,
+			$this->root(),
 			$format,
 			$handler ?? ($kirby ? $kirby->option('date.handler', 'date') : 'date')
 		);
@@ -350,8 +365,8 @@ class File
 	 */
 	public function move(string $newRoot, bool $overwrite = false): static
 	{
-		if (F::move($this->root, $newRoot, $overwrite) !== true) {
-			throw new Exception('The file: "' . $this->root . '" could not be moved to: "' . $newRoot . '"');
+		if (F::move($this->root(), $newRoot, $overwrite) !== true) {
+			throw new Exception('The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"');
 		}
 
 		return new static($newRoot);
@@ -363,7 +378,7 @@ class File
 	 */
 	public function name(): string
 	{
-		return pathinfo($this->root, PATHINFO_FILENAME);
+		return pathinfo($this->root(), PATHINFO_FILENAME);
 	}
 
 	/**
@@ -376,7 +391,7 @@ class File
 	 */
 	public function niceSize(string|false|null $locale = null): string
 	{
-		return F::niceSize($this->root, $locale);
+		return F::niceSize($this->root(), $locale);
 	}
 
 	/**
@@ -384,7 +399,7 @@ class File
 	 */
 	public function read(): string|false
 	{
-		return F::read($this->root);
+		return F::read($this->root());
 	}
 
 	/**
@@ -392,7 +407,7 @@ class File
 	 */
 	public function realpath(): string
 	{
-		return realpath($this->root);
+		return realpath($this->root());
 	}
 
 	/**
@@ -403,10 +418,10 @@ class File
 	 */
 	public function rename(string $newName, bool $overwrite = false): static
 	{
-		$newRoot = F::rename($this->root, $newName, $overwrite);
+		$newRoot = F::rename($this->root(), $newName, $overwrite);
 
 		if ($newRoot === false) {
-			throw new Exception('The file: "' . $this->root . '" could not be renamed to: "' . $newName . '"');
+			throw new Exception('The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"');
 		}
 
 		return new static($newRoot);
@@ -417,7 +432,24 @@ class File
 	 */
 	public function root(): string|null
 	{
-		return $this->root;
+		return $this->root ??= $this->model?->root();
+	}
+
+	/**
+	 * Setter for the parent file model, which uses this instance as proxied file asset
+	 *
+	 * @return $this
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
+	 */
+	protected function setModel(object|null $model = null): static
+	{
+		if ($model !== null && in_array(IsFile::class, class_uses($model)) !== true) {
+			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+		}
+
+		$this->model = $model;
+		return $this;
 	}
 
 	/**
@@ -447,7 +479,10 @@ class File
 	 */
 	public function url(): string|null
 	{
-		return $this->url;
+		// lazily determine the URL from the model object
+		// only if it's needed to avoid breaking custom file::url
+		// components that rely on `$cmsFile->asset()` methods
+		return $this->url ??= $this->model?->url();
 	}
 
 	/**
@@ -475,7 +510,7 @@ class File
 	 */
 	public function sha1(): string
 	{
-		return sha1_file($this->root);
+		return sha1_file($this->root());
 	}
 
 	/**
@@ -483,7 +518,7 @@ class File
 	 */
 	public function size(): int
 	{
-		return F::size($this->root);
+		return F::size($this->root());
 	}
 
 	/**
@@ -525,7 +560,7 @@ class File
 	 */
 	public function type(): string|null
 	{
-		return F::type($this->root);
+		return F::type($this->root());
 	}
 
 	/**
@@ -549,8 +584,8 @@ class File
 	 */
 	public function write(string $content): bool
 	{
-		if (F::write($this->root, $content) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be written');
+		if (F::write($this->root(), $content) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be written');
 		}
 
 		return true;

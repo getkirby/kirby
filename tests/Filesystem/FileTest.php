@@ -2,6 +2,8 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\File as CmsFile;
+use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase as TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -297,6 +299,15 @@ class FileTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isReadable
+	 */
+	public function testIsReadable()
+	{
+		$file = $this->_file();
+		$this->assertSame(is_readable($file->root()), $file->isReadable());
+	}
+
+	/**
 	 * @covers ::isResizable
 	 */
 	public function testIsResizable()
@@ -394,6 +405,65 @@ class FileTest extends TestCase
 	{
 		$file = $this->_file();
 		$this->assertSame('text/plain', $file->mime());
+	}
+
+	/**
+	 * @covers ::model
+	 * @covers ::setModel
+	 */
+	public function testModel()
+	{
+		$parent = Page::factory(['slug' => 'test']);
+		$model = CmsFile::factory([
+			'filename' => 'test.js',
+			'parent' => $parent
+		]);
+
+		$file = new File([
+			'root' => $this->fixtures . '/test.js',
+			'model' => $model
+		]);
+
+		$this->assertTrue(in_array(IsFile::class, class_uses($file->model())));
+		$this->assertSame($model, $file->model());
+	}
+
+	/**
+	 * @covers ::model
+	 * @covers ::setModel
+	 */
+	public function testParentModel()
+	{
+		$parent = Page::factory([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				['filename' => 'c.jpg'],
+			]
+		]);
+
+		$file = $parent->file('a.jpg');
+		$asset = $file->asset();
+
+		$this->assertTrue(in_array(IsFile::class, class_uses($asset->model())));
+		$this->assertSame($file, $asset->model());
+		$this->assertSame($file->url(), $asset->url());
+		$this->assertSame($file->root(), $asset->root());
+	}
+
+	/**
+	 * @covers ::setModel
+	 */
+	public function testInvalidModel()
+	{
+		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
+
+		new File([
+			'root' => $this->fixtures . '/test.js',
+			'model' => Page::factory(['slug' => 'test'])
+		]);
 	}
 
 	/**

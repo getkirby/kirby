@@ -84,10 +84,13 @@ trait IsFile
 			return $this->asset;
 		}
 
-		$props = $props ?? [
-			'root' => $this->root(),
-			'url'  => $this->url()
-		];
+		$props ??= [];
+
+		if (is_string($props) === true) {
+			$props = ['root' => $props];
+		}
+
+		$props['model'] ??= $this;
 
 		return $this->asset = match ($this->type()) {
 			'image' => new Image($props),
