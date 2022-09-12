@@ -261,9 +261,8 @@ return [
 	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
-	 * @return string|null
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): string|null {
+	'snippet' => function (App $kirby, $name, array $data = []): string {
 		$snippets = A::wrap($name);
 
 		foreach ($snippets as $name) {
