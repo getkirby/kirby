@@ -1602,7 +1602,6 @@ class App
 	 * Uses the snippet component to create
 	 * and return a template snippet
 	 *
-	 * @internal
 	 * @param mixed $name
 	 * @param array|object $data Variables or an object that becomes `$item`
 	 * @param bool $return On `false`, directly echo the snippet
