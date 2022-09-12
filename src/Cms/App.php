@@ -1602,11 +1602,11 @@ class App
 	 * Uses the snippet component to create
 	 * and return a template snippet
 	 *
-	 * @internal
 	 * @param mixed $name
 	 * @param array|object $data Variables or an object that becomes `$item`
 	 * @param bool $return On `false`, directly echo the snippet
 	 * @return string|null
+	 * @psalm-return ($return is true ? string : null)
 	 */
 	public function snippet($name, $data = [], bool $return = true): string|null
 	{
