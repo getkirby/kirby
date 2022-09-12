@@ -67,7 +67,7 @@ abstract class ModelUuid extends Uuid
 		$kirby = App::instance();
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
-		$this->model = $this->model->update(['uuid' => $id]);
+		$this->model = $this->model->save(['uuid' => $id]);
 		$kirby->impersonate($user);
 
 		// TODO: replace the above in 3.9.0 with
