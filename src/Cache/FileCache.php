@@ -90,7 +90,7 @@ class FileCache extends Cache
 					// check if the segment only contains safe characters;
 					// underscores are *not* safe to guarantee uniqueness
 					// as they are used in the special cases
-					if (preg_match('/^[a-zA-Z0-9-]+$/', $part) === 1) {
+					if (preg_match('/^[a-zA-Z0-9-_]+$/', $part) === 1) {
 						$keyParts[] = $part;
 					} else {
 						$keyParts[] = Str::slug($part) . '_' . sha1($part);
