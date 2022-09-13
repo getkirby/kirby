@@ -72,15 +72,24 @@ class TagsFieldTest extends TestCase
 		$expected = [
 			[
 				'value' => 'design',
-				'text'  => 'design'
+				'text'  => 'design',
+				'disabled' => false,
+				'icon' => null,
+				'info' => null
 			],
 			[
 				'value' => 'photography',
-				'text'  => 'photography'
+				'text'  => 'photography',
+				'disabled' => false,
+				'icon' => null,
+				'info' => null
 			],
 			[
 				'value' => 'architecture',
-				'text'  => 'architecture'
+				'text'  => 'architecture',
+				'disabled' => false,
+				'icon' => null,
+				'info' => null
 			]
 		];
 
