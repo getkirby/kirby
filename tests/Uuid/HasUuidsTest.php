@@ -25,10 +25,15 @@ class HasUuidsTest extends TestCase
 		$b     = $pages->find('b');
 
 		// without schema (= all schema allowed)
-		$this->assertSame($b, $pages->findByUuid('page://my-id-b'));
+		$result = (fn () => $this->findByUuid('page://my-id-b'))->call($pages);
+		$this->assertTrue($b->is($result));
+
 		// with correct schema
-		$this->assertSame($b, $pages->findByUuid('page://my-id-b', 'page'));
+		$result = (fn () => $this->findByUuid('page://my-id-b', 'page'))->call($pages);
+		$this->assertTrue($b->is($result));
+
 		// with wrong schema
-		$this->assertNull($pages->findByUuid('page://my-id-b', 'file'));
+		$result = (fn () => $this->findByUuid('page://my-id-b', 'file'))->call($pages);
+		$this->assertNull($result);
 	}
 }

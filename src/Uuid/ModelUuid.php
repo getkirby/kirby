@@ -83,8 +83,8 @@ abstract class ModelUuid extends Uuid
 	}
 
 	/**
-	 * Retrieves the existing ID string (UUID without scheme)
-	 * for the model or generates a new one, if required
+	 * Retrieves the ID string (UUID without scheme) for the model
+	 * from the content file, if it is already stored there
 	 *
 	 * @param \Kirby\Cms\ModelWithContent $model
 	 */

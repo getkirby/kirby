@@ -63,7 +63,7 @@ class PageUuidTest extends TestCase
 
 		$id   = $uuid->id();
 		$page = $this->app->page('page-b'); // since $page is immutable
-		$this->assertSame(15, strlen($id));
+		$this->assertSame(16, strlen($id));
 		$this->assertSame($page->content()->get('uuid')->value(), $id);
 	}
 

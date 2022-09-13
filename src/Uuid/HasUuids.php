@@ -16,7 +16,7 @@ trait HasUuids
 	/**
 	 * Find a single element by global UUID
 	 */
-	public function findByUuid(
+	protected function findByUuid(
 		string $uuid,
 		string|null $scheme = null
 	): Identifiable|null {

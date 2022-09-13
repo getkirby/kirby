@@ -157,7 +157,7 @@ class UuidTest extends TestCase
 	{
 		// default length
 		$id = Uuid::generate();
-		$this->assertSame(15, strlen($id));
+		$this->assertSame(16, strlen($id));
 
 		// custom length
 		$id = Uuid::generate(5);

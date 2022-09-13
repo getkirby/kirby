@@ -4,12 +4,12 @@ namespace Kirby\Uuid;
 
 use Closure;
 use Generator;
-use InvalidArgumentException;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
@@ -89,13 +89,11 @@ class Uuid
 	{
 		// For all models with children: if $recursive,
 		// also clear UUIDs from cache for all children
-		if (
-			$recursive === true &&
-			$this->model &&
-			method_exists($this->model, 'children') === true
-		) {
-			foreach ($this->model->children() as $child) {
-				$child->uuid()->clear(true);
+		if ($recursive === true && $model = $this->resolve()) {
+			if (method_exists($model, 'children') === true) {
+				foreach ($model->children() as $child) {
+					$child->uuid()->clear(true);
+				}
 			}
 		}
 
@@ -180,7 +178,7 @@ class Uuid
 	/**
 	 * Generates a new ID string
 	 */
-	final public static function generate(int $length = 15): string
+	final public static function generate(int $length = 16): string
 	{
 		if (static::$generator !== null) {
 			return (static::$generator)($length);

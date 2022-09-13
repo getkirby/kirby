@@ -63,7 +63,7 @@ class FileUuidTest extends TestCase
 
 		$id   = $uuid->id();
 		$file = $this->app->file('page-b/foo.pdf'); // since $file is immutable
-		$this->assertSame(15, strlen($id));
+		$this->assertSame(16, strlen($id));
 		$this->assertSame($file->content()->get('uuid')->value(), $id);
 	}
 
