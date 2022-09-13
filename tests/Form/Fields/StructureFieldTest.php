@@ -41,19 +41,15 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$expectedValue = [
+		$expected = [
 			[
-				'text' => 'a',
-				'value' => 'a'
-			],
-			[
-				'text' => 'b',
-				'value' => 'b'
+				'tags' => 'a, b'
 			]
 		];
 
-		$this->assertEquals($expectedValue, $field->value()[0]['tags']);
+		$this->assertEquals($expected, $field->data());
 		$this->assertEquals('a, b', $field->data()[0]['tags']);
+		$this->assertEquals(['a', 'b'], $field->value()[0]['tags']);
 	}
 
 	public function testColumnsFromFields()

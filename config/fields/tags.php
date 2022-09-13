@@ -80,7 +80,7 @@ return [
 	],
 	'save' => function (array $value = null): string {
 		return A::join(
-			A::pluck($value, 'value'),
+			$value,
 			$this->separator() . ' '
 		);
 	},
