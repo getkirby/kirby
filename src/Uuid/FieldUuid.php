@@ -46,18 +46,13 @@ abstract class FieldUuid extends Uuid
 			return null;
 		}
 
-		// value is itself another UUID protocol string
-		// e.g. page://page-uuid/myField/the-uuid
-		$uri = new Uri($value);
-
-		// resolve e.g. page://page-uuid
-		$parent     = Uuid::for($uri->base())->resolve();
-		$field      = $uri->path()->first();
-		$id		    = $uri->path()->last();
-		$field      = $parent->$field();
+		// value is an array containing
+		// the UUID for the parent, the field name
+		// and the specific ID
+		$parent     = Uuid::for($value['parent'])->resolve();
+		$field      = $parent->{$value['field']}();
 		$collection = $this->fieldToCollection($field);
-
-		return $collection->get($id);
+		return $collection->filgete($value['id']);
 	}
 
 	/**
@@ -107,10 +102,8 @@ abstract class FieldUuid extends Uuid
 	 * - parent UUID including scheme
 	 * - field name
 	 * - UUID id string for model
-	 *
-	 * e.g. `page://my-page-uuid/myField/my-block-uuid`
 	 */
-	public function value(): string
+	public function value(): array
 	{
 		$model  = $this->resolve();
 		$parent = Uuid::for($model->parent());
@@ -119,6 +112,10 @@ abstract class FieldUuid extends Uuid
 		// as well when resolving model later on
 		$parent->populate();
 
-		return $parent->render() . '/' . $model->field()->key() . '/' . $model->id();
+		return [
+			'parent' => $parent->render(),
+			'field'  => $model->field()->key(),
+			'id'     => $model->id()
+		];
 	}
 }

@@ -104,6 +104,7 @@ class FileUuidTest extends TestCase
 	{
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid = $file->uuid();
-		$this->assertSame('page://my-page/test.pdf', $uuid->value());
+		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
+		$this->assertSame($expected, $uuid->value());
 	}
 }

@@ -325,7 +325,7 @@ class Uuid
 	/**
 	 * Returns value to be stored in cache
 	 */
-	public function value(): string
+	public function value(): string|array
 	{
 		return $this->resolve()->id();
 	}

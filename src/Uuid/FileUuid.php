@@ -39,16 +39,10 @@ class FileUuid extends ModelUuid
 			return null;
 		}
 
-		// value is itself another Uuid\Uri string
-		// e.g. page://page-uuid/filename.jpg
-		$uuid = new Uri($value);
-
-		// we need to resolve the parent UUID to its model
-		// and then query for the file by filename
-		$parent   = Uuid::for($uuid->base())->resolve();
-		$filename = $uuid->path()->toString();
-
-		return $parent->file($filename);
+		// value is an array containing
+		// the UUID for the parent and the filename
+		$parent = Uuid::for($value['parent'])->resolve();
+		return $parent->file($value['filename']);
 	}
 
 	/**
@@ -75,7 +69,7 @@ class FileUuid extends ModelUuid
 	/**
 	 * Returns value to be stored in cache
 	 */
-	public function value(): string
+	public function value(): array
 	{
 		$model  = $this->resolve();
 		$parent = Uuid::for($model->parent());
@@ -84,6 +78,9 @@ class FileUuid extends ModelUuid
 		// as well when resolving model later on
 		$parent->populate();
 
-		return $parent->render() . '/' . $model->filename();
+		return [
+			'parent'   => $parent->render(),
+			'filename' => $model->filename()
+		];
 	}
 }

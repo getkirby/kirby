@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuids;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Files
@@ -123,8 +124,14 @@ class FilesTest extends TestCase
 		$app = new App([
 			'site' => [
 				'files' => [
-					['filename' => $a = 'a.jpg', 'content' => ['uuid' => 'test-a']],
-					['filename' => $b = 'b.jpg', 'content' => ['uuid' => 'test-b']]
+					[
+						'filename' => $a = 'a.jpg',
+						'content' => ['uuid' => 'test-a']
+					],
+					[
+						'filename' => $b = 'b.jpg',
+						'content' => ['uuid' => 'test-b']
+					]
 				]
 			]
 		]);
@@ -135,6 +142,8 @@ class FilesTest extends TestCase
 
 		$this->assertSame($a, $app->file('file://test-a')->filename());
 		$this->assertSame($b, $app->file('file://test-b')->filename());
+
+		Uuids::cache()->flush();
 	}
 
 	/**
