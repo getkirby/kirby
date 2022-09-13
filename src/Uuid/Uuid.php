@@ -4,7 +4,6 @@ namespace Kirby\Uuid;
 
 use Closure;
 use Generator;
-use Hidehalo\Nanoid\Client as Nanoid;
 use InvalidArgumentException;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
@@ -187,7 +186,7 @@ class Uuid
 			return (static::$generator)($length);
 		}
 
-		return (new Nanoid())->generateId($length);
+		return Str::random($length);
 	}
 
 	/**

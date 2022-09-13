@@ -38,10 +38,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             'Kirby\\' => 6,
         ),
-        'H' => 
-        array (
-            'Hidehalo\\Nanoid\\' => 16,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -78,10 +74,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
             0 => __DIR__ . '/../..' . '/src',
             1 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
         ),
-        'Hidehalo\\Nanoid\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/hidehalo/nanoid-php/src',
-        ),
     );
 
     public static $fallbackDirsPsr4 = array (
@@ -107,11 +99,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Hidehalo\\Nanoid\\Client' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Client.php',
-        'Hidehalo\\Nanoid\\Core' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Core.php',
-        'Hidehalo\\Nanoid\\CoreInterface' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/CoreInterface.php',
-        'Hidehalo\\Nanoid\\Generator' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/Generator.php',
-        'Hidehalo\\Nanoid\\GeneratorInterface' => __DIR__ . '/..' . '/hidehalo/nanoid-php/src/GeneratorInterface.php',
         'Kirby\\Api\\Api' => __DIR__ . '/../..' . '/src/Api/Api.php',
         'Kirby\\Api\\Collection' => __DIR__ . '/../..' . '/src/Api/Collection.php',
         'Kirby\\Api\\Model' => __DIR__ . '/../..' . '/src/Api/Model.php',

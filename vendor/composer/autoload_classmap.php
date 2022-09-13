@@ -7,11 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Hidehalo\\Nanoid\\Client' => $vendorDir . '/hidehalo/nanoid-php/src/Client.php',
-    'Hidehalo\\Nanoid\\Core' => $vendorDir . '/hidehalo/nanoid-php/src/Core.php',
-    'Hidehalo\\Nanoid\\CoreInterface' => $vendorDir . '/hidehalo/nanoid-php/src/CoreInterface.php',
-    'Hidehalo\\Nanoid\\Generator' => $vendorDir . '/hidehalo/nanoid-php/src/Generator.php',
-    'Hidehalo\\Nanoid\\GeneratorInterface' => $vendorDir . '/hidehalo/nanoid-php/src/GeneratorInterface.php',
     'Kirby\\Api\\Api' => $baseDir . '/src/Api/Api.php',
     'Kirby\\Api\\Collection' => $baseDir . '/src/Api/Collection.php',
     'Kirby\\Api\\Model' => $baseDir . '/src/Api/Model.php',
