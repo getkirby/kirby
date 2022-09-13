@@ -161,7 +161,7 @@ export default {
 		}
 	},
 	methods: {
-		addString(string) {
+		addString(string, focus = true) {
 			if (!string) {
 				return;
 			}
@@ -183,13 +183,16 @@ export default {
 			const tag = this.toValue(string);
 
 			if (tag) {
-				this.addTag(tag);
+				this.addTag(tag, focus);
 			}
 		},
-		addTag(tag) {
+		addTag(tag, focus = true) {
 			this.addTagToIndex(tag);
 			this.$refs.autocomplete.close();
-			this.$refs.input.focus();
+
+			if (focus) {
+				this.$refs.input.focus();
+			}
 		},
 		addTagToIndex(tag) {
 			if (this.accept === "options") {
@@ -303,10 +306,7 @@ export default {
 				return;
 			}
 
-			if (this.$refs.input.value.length) {
-				this.addTagToIndex(this.$refs.input.value);
-				this.$refs.autocomplete.close();
-			}
+			this.addString(this.$refs.input.value, false);
 		},
 		onEnter(event) {
 			if (!this.newTag || this.newTag.length === 0) {
@@ -317,7 +317,9 @@ export default {
 			this.addString(this.newTag);
 		},
 		onInput() {
-			this.$emit("input", this.tags);
+			// make sure to only emit values
+			const tags = this.tags.map((tag) => tag.value);
+			this.$emit("input", tags);
 		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
@@ -381,10 +383,10 @@ export default {
 
 			return {
 				value: value.value,
-				// always strip HTML from text for tags that
+				// always escape HTML in text for tags that
 				// can't be matched with any defined option
 				// to avoid XSS when displaying via `v-html`
-				text: this.$helper.string.stripHTML(value.text ?? value.value)
+				text: this.$helper.string.escapeHTML(value.text ?? value.value)
 			};
 		},
 		toValues(values) {
