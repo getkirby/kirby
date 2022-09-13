@@ -221,7 +221,7 @@ class LayoutFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertSame([
-			'layout' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" fieldset in layout 1'
+			'layout' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" block type in layout 1'
 		], $field->errors());
 	}
 
