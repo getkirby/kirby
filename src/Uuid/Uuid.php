@@ -186,7 +186,7 @@ class Uuid
 			return (static::$generator)($length);
 		}
 
-		return Str::random($length);
+		return Str::random($length, 'alphaNum');
 	}
 
 	/**
