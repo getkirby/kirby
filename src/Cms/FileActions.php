@@ -239,9 +239,6 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			// remove the lock of the old file
-			$file->lock()?->remove();
-
 			if ($file->kirby()->multilang() === true) {
 				foreach ($file->translations() as $translation) {
 					F::remove($file->contentFile($translation->code()));
@@ -293,7 +290,7 @@ trait FileActions
 
 		return $this->commit('replace', $arguments, function ($file, $upload) {
 			// delete all public versions
-			$file->unpublish();
+			$file->unpublish(true);
 
 			// overwrite the original
 			if (F::copy($upload->root(), $file->root(), true) !== true) {
@@ -310,16 +307,18 @@ trait FileActions
 	 *
 	 * @return $this
 	 */
-	public function unpublish()
+	public function unpublish(bool $onlyMedia = false)
 	{
 		// unpublish media files
 		Media::unpublish($this->parent()->mediaRoot(), $this);
 
-		// remove the lock
-		$this->lock()?->remove();
+		if ($onlyMedia !== true) {
+			// remove the lock
+			$this->lock()?->remove();
 
-		// clear UUID cache
-		$this->uuid()->clear();
+			// clear UUID cache
+			$this->uuid()->clear();
+		}
 
 		return $this;
 	}
