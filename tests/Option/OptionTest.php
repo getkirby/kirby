@@ -63,14 +63,10 @@ class OptionTest extends TestCase
 	{
 		$option = Option::factory([
 			'value' => 'test',
-			'text'  => 'Test Option',
-			'info'  => '{{ page.slug }}'
+			'text'  => 'Test Option'
 		]);
 
 		$expected = [
-			'disabled' => false,
-			'icon'     => null,
-			'info'     => 'test',
 			'text'     => 'Test Option',
 			'value'    => 'test',
 		];
