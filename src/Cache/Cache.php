@@ -156,16 +156,17 @@ abstract class Cache
 	 */
 	public function getOrSet(
 		string $key,
-		Closure $getter,
+		Closure $result,
 		int $minutes = 0
 	): mixed {
-		if ($value = $this->get($key)) {
-			return $value;
+		$value  = $this->get($key);
+		$result = $value ?? $result();
+
+		if ($value === null) {
+			$this->set($key, $result, $minutes);
 		}
 
-		$value = $getter();
-		$this->set($key, $value, $minutes);
-		return $value;
+		return $result;
 	}
 
 	/**
