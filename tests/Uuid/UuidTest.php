@@ -56,7 +56,7 @@ class UuidTest extends TestCase
 		);
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('UUID: can\'t reate new instance from both, model and UUID string, that do not match');
+		$this->expectExceptionMessage('UUID: can\'t create new instance from both model and UUID string that do not match');
 
 		new PageUuid(
 			model: $page,
