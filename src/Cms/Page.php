@@ -432,6 +432,7 @@ class Page extends ModelWithContent
 	/**
 	 * Sorting number + Slug
 	 * @deprecated 3.8.0 Please use `$page->dirpath()` instead
+	 * @codeCoverageIgnore
 	 *
 	 * @return string
 	 */
@@ -495,6 +496,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the Page Id
 	 * @deprecated 3.8.0 Please use `$page->path(false)` instead
+	 * @codeCoverageIgnore
 	 *
 	 * @return string
 	 */
@@ -1405,6 +1407,7 @@ class Page extends ModelWithContent
 	 * multi-language sites. Whereas the slug
 	 * can be translated.
 	 * @deprecated 3.8.0 Use `$page->slug(false)` instead
+	 * @codeCoverageIgnore
 	 *
 	 * @see self::slug()
 	 * @return string
@@ -1418,6 +1421,7 @@ class Page extends ModelWithContent
 	 * The uri is the same as the id, except
 	 * that it will be translated in multi-language setups
 	 * @deprecated 3.8.0 Use `$page->path($languageCode|null)` instead
+	 * @codeCoverageIgnore
 	 *
 	 * @param string|null $languageCode
 	 * @return string
