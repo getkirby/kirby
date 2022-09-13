@@ -25,7 +25,7 @@ class Option
 		public NodeText|null $info = null,
 		public NodeText|null $text = null
 	) {
-		$this->text ??= new NodeText(['*' => $this->value]);
+		$this->text ??= new NodeText(['en' => $this->value]);
 	}
 
 	public static function factory(float|int|string|null|array $props): static

@@ -17,10 +17,10 @@ class OptionsTest extends TestCase
 		$options = Options::factory(['a', 'b']);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('a', $options->first()->text->translations['*']);
+		$this->assertSame('a', $options->first()->text->translations['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('b', $options->last()->text->translations['*']);
+		$this->assertSame('b', $options->last()->text->translations['en']);
 	}
 
 	/**
@@ -34,10 +34,10 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['*']);
+		$this->assertSame('Option A', $options->first()->text->translations['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['*']);
+		$this->assertSame('Option B', $options->last()->text->translations['en']);
 	}
 
 	/**
@@ -51,9 +51,9 @@ class OptionsTest extends TestCase
 		]);
 
 		$this->assertSame('a', $options->first()->value);
-		$this->assertSame('Option A', $options->first()->text->translations['*']);
+		$this->assertSame('Option A', $options->first()->text->translations['en']);
 
 		$this->assertSame('b', $options->last()->value);
-		$this->assertSame('Option B', $options->last()->text->translations['*']);
+		$this->assertSame('Option B', $options->last()->text->translations['en']);
 	}
 }

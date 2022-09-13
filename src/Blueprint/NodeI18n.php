@@ -31,7 +31,7 @@ class NodeI18n extends NodeProperty
 		}
 
 		if (is_array($value) === false) {
-			$value = ['*' => $value];
+			$value = ['en' => $value];
 		}
 
 		return new static($value);
@@ -45,6 +45,11 @@ class NodeI18n extends NodeProperty
 			return $this->translations[$locale];
 		}
 
-		return $this->translations['*'] ?? $this->translations['en'] ?? null;
+		if (isset($this->translations['*']) === true) {
+			$translations = $this->translations['*'];
+			return I18n::translation($locale)[$translations] ?? $translations;
+		}
+
+		return $this->translations['en'] ?? null;
 	}
 }
