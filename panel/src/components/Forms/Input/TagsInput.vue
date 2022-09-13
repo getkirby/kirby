@@ -46,7 +46,7 @@
 						type="text"
 						@input="onType($event.target.value)"
 						@blur="onBlur"
-						@keydown.meta.s="onBlur"
+						@keydown.meta.s="onSubmit"
 						@keydown.left.exact="onBack"
 						@keydown.enter.exact="onEnter"
 						@keydown.tab.exact="onTab"
@@ -123,13 +123,7 @@ export default {
 		return {
 			tags: this.toValues(this.value),
 			selected: null,
-			newTag: null,
-			tagOptions: this.options.map((tag) => {
-				if (this.icon?.length > 0) {
-					tag.icon = this.icon;
-				}
-				return tag;
-			}, this)
+			newTag: null
 		};
 	},
 	computed: {
@@ -323,6 +317,17 @@ export default {
 		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
+		},
+		onSubmit(event) {
+			// prevent immediate saving just yet
+			event.preventDefault();
+			event.stopImmediatePropagation();
+
+			// blur input (which also commits current input as tags)
+			this.onBlur(event);
+
+			// trigger saving
+			this.$emit("submit", event);
 		},
 		onTab(event) {
 			if (this.newTag?.length > 0) {
