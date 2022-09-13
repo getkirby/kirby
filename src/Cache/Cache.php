@@ -152,6 +152,7 @@ abstract class Cache
 	 * Returns a value by either getting it from the cache
 	 * or via the callback function which then it stored in
 	 * the cache for future retrieval
+	 * @since 3.8.0
 	 */
 	public function getOrSet(
 		string $key,
