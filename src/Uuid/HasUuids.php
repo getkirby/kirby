@@ -18,9 +18,9 @@ trait HasUuids
 	 */
 	public function findByUuid(
 		string $uuid,
-		string|null $schema = null
+		string|null $scheme = null
 	): Identifiable|null {
-		if (Uuid::is($uuid, $schema) === true) {
+		if (Uuid::is($uuid, $scheme) === true) {
 			// look up model by UUID while prioritizing
 			// $this collection when searching
 			return Uuid::for($uuid, $this)->resolve();
