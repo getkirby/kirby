@@ -6,7 +6,7 @@ use Kirby\Http\Uri as BaseUri;
 use Kirby\Toolkit\Str;
 
 /**
- * Uri protocol for UUIDsw
+ * Uri protocol for UUIDs
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -17,7 +17,7 @@ use Kirby\Toolkit\Str;
 class Uri extends BaseUri
 {
 	/**
-	 * supported schemes
+	 * Supported schemes
 	 */
 	public static array $schemes = [
 		'site',

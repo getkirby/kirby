@@ -8,7 +8,7 @@ use Kirby\Cms\Field;
 use Kirby\Toolkit\A;
 
 /**
- * Base for Uuids for models form content fields,
+ * Base for UUIDs for models from content fields,
  * such as blocks and structure entries
  *
  * Not yet supported
@@ -26,15 +26,15 @@ abstract class FieldUuid extends Uuid
 	protected const FIELD = 'field';
 
 	/**
-	 * Converts content field to a related
+	 * Converts a content field to a related
 	 * models collection (e.g. Blocks or Structure)
 	 * @internal
 	 */
 	abstract public static function fieldToCollection(Field $field): Collection;
 
 	/**
-	 * Look up Uuid in cache and resolve
-	 * to object
+	 * Looks up UUID in cache and resolves
+	 * to identifiable model object
 	 */
 	protected function findByCache(): Identifiable|null
 	{
@@ -61,8 +61,8 @@ abstract class FieldUuid extends Uuid
 	}
 
 	/**
-	 * Look up Uuid in local and global index
-	 * and return the identifiable model object.
+	 * Looks up UUID in local and global index
+	 * and returns the identifiable model object
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
@@ -104,7 +104,7 @@ abstract class FieldUuid extends Uuid
 	/**
 	 * Returns value to be stored in cache,
 	 * constisting of three parts:
-	 * - parent UUID incl. schema
+	 * - parent UUID including scheme
 	 * - field name
 	 * - UUID id string for model
 	 *

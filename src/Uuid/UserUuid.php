@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\User;
 
 /**
- * Uuid for \Kirby\Cms\User
+ * UUID for \Kirby\Cms\User
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

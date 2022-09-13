@@ -6,7 +6,7 @@ use Generator;
 use Kirby\Cms\File;
 
 /**
- * Uuid for \Kirby\Cms\File
+ * UUID for \Kirby\Cms\File
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -24,10 +24,10 @@ class FileUuid extends ModelUuid
 	public Identifiable|null $model;
 
 	/**
-	 * Look up Uuid in cache and resolve to file object.
-	 * Special for  FileUuid as the value stored in cache
-	 * is a hybrid Uri from parent Uuid and filename. Needs
-	 * to resolve parent Uuid and then get file by filename.
+	 * Looks up UUID in cache and resolves to file object;
+	 * special for `FileUuid` as the value stored in cache is
+	 * a hybrid URI from the parent's UUID and filename; needs
+	 * to resolve parent UUID and then get file by filename
 	 */
 	protected function findByCache(): File|null
 	{

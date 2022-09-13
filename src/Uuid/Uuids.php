@@ -6,6 +6,8 @@ use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 
 /**
+ * Helper methods that deal with the entirety of UUIDs in the system
+ *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
@@ -15,7 +17,7 @@ use Kirby\Cms\App;
 class Uuids
 {
 	/**
-	 * Get instance for lookup cache
+	 * Returns the instance for the lookup cache
 	 */
 	public static function cache(): Cache
 	{
@@ -23,10 +25,10 @@ class Uuids
 	}
 
 	/**
-	 * Populates cache with Uuids for all identifiable models
+	 * Populates cache with UUIDs for all identifiable models
 	 * that need to be cached (not site and users)
 	 *
-	 * @param string $type which models to include  `all`|`page`,|`file`|`block`|`struct`
+	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
 	 */
 	public static function populate(string $type = 'all'): void
 	{

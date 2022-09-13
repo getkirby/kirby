@@ -6,7 +6,7 @@ use Kirby\Cms\Blocks;
 use Kirby\Cms\Field;
 
 /**
- * Uuid for \Kirby\Cms\Block
+ * UUID for \Kirby\Cms\Block
  *
  * Not yet supported
  * @todo Finish for uuid-block-structure-support

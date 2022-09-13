@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Page;
 
 /**
- * Uuid for \Kirby\Cms\File
+ * UUID for \Kirby\Cms\File
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -25,7 +25,7 @@ class PageUuid extends ModelUuid
 	public Identifiable|null $model;
 
 	/**
-	 * Look up Uuid in cache and resolve
+	 * Looks up UUID in cache and resolves
 	 * to page object
 	 */
 	protected function findByCache(): Page|null

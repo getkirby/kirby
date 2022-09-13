@@ -74,7 +74,7 @@ class Uuid
 			// in the rare case that both model and ID string
 			// got passed, make sure they match
 			if ($uuid && $uuid !== $this->uri->toString()) {
-				throw new LogicException('UUID: can\'t reate new instance from both, model and UUID string, that do not match');
+				throw new LogicException('UUID: can\'t create new instance from both model and UUID string that do not match');
 			}
 		} elseif ($uuid) {
 			$this->uri = new Uri($uuid);
@@ -82,8 +82,8 @@ class Uuid
 	}
 
 	/**
-	 * Removes Uuid from cache,
-	 * recursively if needed
+	 * Removes the current UUID from cache,
+	 * recursively including all children if needed
 	 */
 	public function clear(bool $recursive = false): bool
 	{
@@ -114,9 +114,9 @@ class Uuid
 	}
 
 	/**
-	 * Look up Uuid in cache and resolve
-	 * to identifiable model object.
-	 * Implemented on child classes.
+	 * Looks up UUID in cache and resolves
+	 * to identifiable model object;
+	 * implemented on child classes
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -126,9 +126,9 @@ class Uuid
 	}
 
 	/**
-	 * Look up Uuid in local and global index
-	 * and return the identifiable model object.
-	 * Implemented on child classes.
+	 * Looks up UUID in local and global index
+	 * and returns the identifiable model object;
+	 * implemented on child classes
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -178,7 +178,7 @@ class Uuid
 	}
 
 	/**
-	 * Generate a new ID string
+	 * Generates a new ID string
 	 */
 	final public static function generate(int $length = 15): string
 	{
@@ -190,7 +190,9 @@ class Uuid
 	}
 
 	/**
-	 * Returns the UUID's id string
+	 * Returns the UUID's id string (UUID without scheme);
+	 * in child classes, this method must ensure that the
+	 * model has an ID
 	 */
 	public function id(): string
 	{
@@ -199,7 +201,8 @@ class Uuid
 
 	/**
 	 * Generator function that creates an index of
-	 * all identifiable model object globally
+	 * all identifiable model objects globally;
+	 * implemented in child classes
 	 */
 	public static function index(): Generator
 	{
@@ -220,7 +223,8 @@ class Uuid
 	}
 
 	/**
-	 * Checks if a string resembles an UUID uri
+	 * Checks if a string resembles an UUID URI,
+	 * optionally of the given type (scheme)
 	 */
 	final public static function is(
 		string $string,
@@ -236,7 +240,7 @@ class Uuid
 	}
 
 	/**
-	 * Checks if Uuid has already been cached
+	 * Checks if the UUID has already been cached
 	 */
 	public function isCached(): bool
 	{
@@ -258,7 +262,7 @@ class Uuid
 	}
 
 	/**
-	 * Feeds Uuid into the cache
+	 * Feeds the UUID into the cache
 	 *
 	 * @return bool
 	 */
@@ -268,7 +272,7 @@ class Uuid
 	}
 
 	/**
-	 * Returns the full UUID string incl. scheme
+	 * Returns the full UUID string including scheme
 	 */
 	public function render(): string
 	{
@@ -298,7 +302,8 @@ class Uuid
 		if ($lazy === false) {
 			if ($this->model = $this->findByIndex()) {
 				// lazily fill cache by writing to cache
-				// whenever looked up from index
+				// whenever looked up from index to speed
+				// up future lookups of the same UUID
 				$this->populate();
 
 				return $this->model;
@@ -309,7 +314,10 @@ class Uuid
 	}
 
 	/**
-	 * Retrieves the existing ID string for the model
+	 * Retrieves the existing ID string (UUID without
+	 * scheme) for the model;
+	 * can be overridden in child classes depending
+	 * on how the model stores the UUID
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{

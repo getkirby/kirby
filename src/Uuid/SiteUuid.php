@@ -7,7 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Site;
 
 /**
- * Uuid for \Kirby\Cms\Site
+ * UUID for \Kirby\Cms\Site
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -25,7 +25,7 @@ class SiteUuid extends Uuid
 	public Identifiable|null $model;
 
 	/**
-	 * Generator for site
+	 * Generator for the one and only site object
 	 *
 	 * @return \Generator|\Kirby\Cms\Site[]
 	 */
@@ -43,7 +43,7 @@ class SiteUuid extends Uuid
 	}
 
 	/**
-	 * Returns the full UUID string incl. schema
+	 * Returns the full UUID string including scheme
 	 */
 	public function render(): string
 	{

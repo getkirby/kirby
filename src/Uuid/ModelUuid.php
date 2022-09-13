@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 
 /**
- * Base for Uuids for models where id string
+ * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
  *
  * @package   Kirby Uuid
@@ -35,8 +35,8 @@ abstract class ModelUuid extends Uuid
 	}
 
 	/**
-	 * Look up Uuid in local and global index
-	 * and return the identifiable model object.
+	 * Looks up UUID in local and global index
+	 * and returns the identifiable model object
 	 */
 	protected function findByIndex(): Identifiable|null
 	{
@@ -50,8 +50,8 @@ abstract class ModelUuid extends Uuid
 	}
 
 	/**
-	 * Returns the UUID's id string. If not set yet,
-	 * creates a neq unique ID and writes it to content file
+	 * Returns the UUID's id string; if not set yet,
+	 * creates a new unique ID and writes it to content file
 	 */
 	public function id(): string
 	{
@@ -83,8 +83,8 @@ abstract class ModelUuid extends Uuid
 	}
 
 	/**
-	 * Retrieves the existing ID string for the model
-	 * or generates a new one, if required
+	 * Retrieves the existing ID string (UUID without scheme)
+	 * for the model or generates a new one, if required
 	 *
 	 * @param \Kirby\Cms\ModelWithContent $model
 	 */
