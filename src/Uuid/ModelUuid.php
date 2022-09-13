@@ -73,7 +73,7 @@ abstract class ModelUuid extends Uuid
 		// TODO: replace the above in 3.9.0 with
 		// App::instance()->impersonate(
 		// 	'kirby',
-		// 	fn () => $this->model = $this->model->update(['uuid' => $id])
+		// 	fn () => $this->model = $this->model->save(['uuid' => $id])
 		// );
 
 		// update the Uri object
