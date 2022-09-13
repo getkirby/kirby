@@ -469,6 +469,7 @@ trait PageActions
 
 		// gather content
 		$content = $props['content'] ?? [];
+
 		// make sure that a UUID gets generated and
 		// added to content right away
 		$content['uuid'] = Uuid::generate();

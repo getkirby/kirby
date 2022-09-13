@@ -235,7 +235,7 @@ class Uuid
 		}
 
 		// try to match any of the supported schemes
-		$pattern = sprintf('/^(%s):\/\//', implode('|', Uri::$schemes));
+		$pattern = sprintf('!^(%s)://!', implode('|', Uri::$schemes));
 		return preg_match($pattern, $string) === 1;
 	}
 
