@@ -98,6 +98,11 @@ abstract class ModelUuid extends Uuid
 	 */
 	public function url(): string
 	{
+		// make sure UUID is cached
+		if ($this->isCached() === false) {
+			$this->populate();
+		}
+
 		$site = App::instance()->site()->url();
 		return $site . '/@/' . static::TYPE . '/' . $this->id();
 	}
