@@ -98,7 +98,8 @@ abstract class ModelUuid extends Uuid
 	 */
 	public function url(): string
 	{
-		// make sure UUID is cached
+		// make sure UUID is cached because the permalink
+		// route only looks up UUIDs from cache
 		if ($this->isCached() === false) {
 			$this->populate();
 		}

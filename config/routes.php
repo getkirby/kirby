@@ -108,7 +108,10 @@ return function ($kirby) {
 			'method'  => 'ALL',
 			'env'     => 'site',
 			'action'  => function (string $type, string $id) use ($kirby) {
-				// try to resolve to model, but only from UUID cache
+				// try to resolve to model, but only from UUID cache;
+				// this ensures that only existing UUIDs can be queried
+				// and attackers can't force Kirby to go through the whole
+				// site index with a non-existing UUID
 				if ($model = Uuid::for($type . '://' . $id)->model(true)) {
 					return $kirby
 						->response()
