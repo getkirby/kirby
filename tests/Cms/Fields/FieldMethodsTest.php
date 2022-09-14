@@ -864,4 +864,19 @@ class FieldMethodsTest extends TestCase
 		$this->assertArrayHasKey('columns', $layout);
 		$this->assertArrayHasKey('id', $layout);
 	}
+
+	public function testToObject()
+	{
+		$data = [
+			'heading' => 'Heading',
+			'text'    => 'Text'
+		];
+
+		$field  = $this->field(Yaml::encode($data));
+		$object = $field->toObject();
+
+		$this->assertInstanceOf('\Kirby\Cms\Content', $object);
+
+		$this->assertSame('Heading', $object->heading()->value());
+	}
 }

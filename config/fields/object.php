@@ -3,14 +3,37 @@
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Toolkit\A;
 
 return [
 	'props' => [
+		/**
+		 * Unset inherited props
+		 */
+		'after'       => null,
+		'before'      => null,
+		'autofocus'   => null,
+		'icon'        => null,
+		'placeholder' => null,
+
+		/**
+		 * Set the default values for the object
+		 */
+		'default' => function (array $default = []) {
+			return $default;
+		},
+
+		/**
+		 * Fields setup for the object form. Works just like fields in regular forms.
+		 */
 		'fields' => function (array $fields = []) {
 			return $fields;
 		}
 	],
 	'computed' => [
+		'default' => function () {
+			return $this->form($this->default)->values();
+		},
 		'fields' => function () {
 			if (empty($this->fields) === true) {
 				throw new Exception('Please provide some fields for the object');
@@ -34,7 +57,7 @@ return [
 		},
 	],
 	'save' => function ($value) {
-		return $this->form($value)->values();
+		return $this->form($value)->content();
 	},
 	'validations' => [
 		'object' => function ($value) {
@@ -52,7 +75,6 @@ return [
 					]
 				]);
 			}
-
 		}
 	]
 ];
