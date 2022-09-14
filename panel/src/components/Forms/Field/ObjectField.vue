@@ -7,10 +7,7 @@
 						<button type="button">{{ field.label }}</button>
 					</th>
 					<k-table-cell
-						:column="{
-							label: field.label,
-							type: field.type
-						}"
+						:column="field"
 						:field="field"
 						:mobile="true"
 						:value="value[field.name]"
@@ -69,6 +66,10 @@ export default {
 			this.$emit("input", this.object);
 		},
 		open(field) {
+			if (this.disabled) {
+				return false;
+			}
+
 			this.$refs.drawer.open(null, field);
 		}
 	}

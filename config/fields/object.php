@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 
 return [
@@ -35,4 +36,23 @@ return [
 	'save' => function ($value) {
 		return $this->form($value)->values();
 	},
+	'validations' => [
+		'object' => function ($value) {
+			$errors = $this->form($value)->errors();
+
+			if (empty($errors) === false) {
+				// use the first error for details
+				$error = A::first($errors);
+
+				throw new InvalidArgumentException([
+					'key'  => 'object.validation',
+					'data' => [
+						'label' => $error['label'],
+						'message' => A::first($error['message'])
+					]
+				]);
+			}
+
+		}
+	]
 ];
