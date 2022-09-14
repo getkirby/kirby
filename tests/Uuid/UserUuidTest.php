@@ -22,20 +22,20 @@ class UserUuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$user = $this->app->user('my-user');
+		$this->assertSame($user, Uuid::for('user://my-user')->model());
+	}
+
+	/**
 	 * @covers ::populate
 	 */
 	public function testPopulate()
 	{
 		$uuid = $this->app->user('my-user')->uuid();
 		$this->assertSame(true, $uuid->populate());
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolve()
-	{
-		$user = $this->app->user('my-user');
-		$this->assertSame($user, Uuid::for('user://my-user')->resolve());
 	}
 }

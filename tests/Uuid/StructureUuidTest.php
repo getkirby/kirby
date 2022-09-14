@@ -32,14 +32,14 @@
 // 		// not yet in cache
 // 		$uuid  = new StructureUuid('struct://my-struct');
 // 		$this->assertFalse($uuid->isCached());
-// 		$this->assertNull($uuid->resolve(true));
+// 		$this->assertNull($uuid->model(true));
 
 // 		// fill cache
 // 		$struct->uuid()->populate();
 
 // 		// retrieve from cache
 // 		$this->assertTrue($uuid->isCached());
-// 		$this->assertTrue($struct->is($uuid->resolve(true)));
+// 		$this->assertTrue($struct->is($uuid->model(true)));
 // 	}
 
 // 	/**
@@ -50,13 +50,13 @@
 // 		$struct = $this->app->page('page-a')->authors()->toStructure()->first();
 // 		$uuid   = new StructureUuid('struct://my-struct');
 // 		$this->assertFalse($uuid->isCached());
-// 		$this->assertNull($uuid->resolve(true));
-// 		$this->assertTrue($struct->is($uuid->resolve()));
+// 		$this->assertNull($uuid->model(true));
+// 		$this->assertTrue($struct->is($uuid->model()));
 // 		$this->assertTrue($uuid->isCached());
 
 // 		// not found
 // 		$uuid = new StructureUuid('struct://does-not-exist');
-// 		$this->assertNull($uuid->resolve());
+// 		$this->assertNull($uuid->model());
 // 	}
 
 // 	/**

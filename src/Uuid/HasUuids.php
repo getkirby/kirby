@@ -23,7 +23,7 @@ trait HasUuids
 		if (Uuid::is($uuid, $scheme) === true) {
 			// look up model by UUID while prioritizing
 			// $this collection when searching
-			return Uuid::for($uuid, $this)->resolve();
+			return Uuid::for($uuid, $this)->model();
 		}
 
 		return null;

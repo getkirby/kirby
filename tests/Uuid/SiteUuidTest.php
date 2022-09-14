@@ -22,6 +22,15 @@ class SiteUuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::model
+	 */
+	public function testModel()
+	{
+		$site = $this->app->site();
+		$this->assertSame($site, Uuid::for('site://')->model());
+	}
+
+	/**
 	 * @covers ::populate
 	 */
 	public function testPopulate()
@@ -31,22 +40,13 @@ class SiteUuidTest extends TestCase
 	}
 
 	/**
-	 * @covers ::render
+	 * @covers ::toString
 	 * @covers ::__toString
 	 */
-	public function testRender()
+	public function testToString()
 	{
 		$uuid = $this->app->site()->uuid();
-		$this->assertSame('site://', $uuid->render());
+		$this->assertSame('site://', $uuid->toString());
 		$this->assertSame('site://', (string)$uuid);
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolve()
-	{
-		$site = $this->app->site();
-		$this->assertSame($site, Uuid::for('site://')->resolve());
 	}
 }

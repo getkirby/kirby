@@ -31,14 +31,14 @@
 // 		// not yet in cache
 // 		$uuid  = new BlockUuid('block://my-block-2');
 // 		$this->assertFalse($uuid->isCached());
-// 		$this->assertNull($uuid->resolve(true));
+// 		$this->assertNull($uuid->model(true));
 
 // 		// fill cache
 // 		$block->uuid()->populate();
 
 // 		// retrieve from cache
 // 		$this->assertTrue($uuid->isCached());
-// 		$this->assertTrue($block->is($uuid->resolve(true)));
+// 		$this->assertTrue($block->is($uuid->model(true)));
 // 	}
 
 // 	/**
@@ -49,13 +49,13 @@
 // 		$block = $this->app->page('page-a')->notes()->toBlocks()->nth(1);
 // 		$uuid  = new BlockUuid('block://my-block-2');
 // 		$this->assertFalse($uuid->isCached());
-// 		$this->assertNull($uuid->resolve(true));
-// 		$this->assertTrue($block->is($uuid->resolve()));
+// 		$this->assertNull($uuid->model(true));
+// 		$this->assertTrue($block->is($uuid->model()));
 // 		$this->assertTrue($uuid->isCached());
 
 // 		// not found
 // 		$uuid = new BlockUuid('block://does-not-exist');
-// 		$this->assertNull($uuid->resolve());
+// 		$this->assertNull($uuid->model());
 // 	}
 
 // 	/**

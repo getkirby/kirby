@@ -35,27 +35,19 @@ class SiteUuid extends Uuid
 	}
 
 	/**
+	 * Returns the site object
+	 */
+	public function model(bool $lazy = false): Site
+	{
+		return $this->model ??= App::instance()->site();
+	}
+
+	/**
 	 * Pretends to fill cache - we don't need it in cache
 	 */
 	public function populate(): bool
 	{
 		return true;
-	}
-
-	/**
-	 * Returns the full UUID string including scheme
-	 */
-	public function render(): string
-	{
-		return 'site://';
-	}
-
-	/**
-	 * Returns the site object
-	 */
-	public function resolve(bool $lazy = false): Site
-	{
-		return $this->model ??= App::instance()->site();
 	}
 
 	/**
@@ -65,5 +57,13 @@ class SiteUuid extends Uuid
 	public static function retrieveId(Identifiable $model): string
 	{
 		return '';
+	}
+
+	/**
+	 * Returns the full UUID string including scheme
+	 */
+	public function toString(): string
+	{
+		return 'site://';
 	}
 }

@@ -250,48 +250,29 @@ class UuidTest extends TestCase
 	}
 
 	/**
-	 * @covers ::id
-	 * @covers ::render
-	 * @covers ::__toString
+	 * @covers ::model
 	 */
-	public function testRender()
-	{
-		// with ID already stored in content
-		$uuid = $this->app->page('page-a')->uuid();
-		$this->assertSame('page://my-page', $uuid->render());
-		$this->assertSame('page://my-page', (string)$uuid);
-
-		// with creating new ID
-		$uuid = $this->app->page('page-b')->uuid();
-		$this->assertIsString($id = $uuid->render());
-		$this->assertSame($id, (string)$uuid);
-		$this->assertSame(Str::after($id, '://'), $this->app->page('page-b')->content()->get('uuid')->value());
-	}
-
-	/**
-	 * @covers ::resolve
-	 */
-	public function testResolve()
+	public function testModel()
 	{
 		// for Uuid that was constructed from model
 		$page = $this->app->page('page-a');
 		$uuid = $page->uuid();
-		$this->assertSame($page, $uuid->resolve());
+		$this->assertSame($page, $uuid->model());
 
 		// from cache (enforce via $lazy)
 		$uuid = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
+		$this->assertNull($uuid->model(true));
 		$uuid->populate();
 		$this->assertTrue($uuid->isCached());
-		$this->assertSame($page, $uuid->resolve(true));
+		$this->assertSame($page, $uuid->model(true));
 		$uuid->clear(true);
 
 		// from index
 		$uuid = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
-		$this->assertSame($page, $uuid->resolve());
+		$this->assertNull($uuid->model(true));
+		$this->assertSame($page, $uuid->model());
 		$this->assertTrue($uuid->isCached());
 	}
 
@@ -302,6 +283,25 @@ class UuidTest extends TestCase
 	{
 		$page = $this->app->page('page-a');
 		$this->assertSame('page-a', Uuid::retrieveId($page));
+	}
+
+	/**
+	 * @covers ::id
+	 * @covers ::toString
+	 * @covers ::__toString
+	 */
+	public function testToString()
+	{
+		// with ID already stored in content
+		$uuid = $this->app->page('page-a')->uuid();
+		$this->assertSame('page://my-page', $uuid->toString());
+		$this->assertSame('page://my-page', (string)$uuid);
+
+		// with creating new ID
+		$uuid = $this->app->page('page-b')->uuid();
+		$this->assertIsString($id = $uuid->toString());
+		$this->assertSame($id, (string)$uuid);
+		$this->assertSame(Str::after($id, '://'), $this->app->page('page-b')->content()->get('uuid')->value());
 	}
 
 	/**

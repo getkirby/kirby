@@ -20,14 +20,14 @@ class PageUuidTest extends TestCase
 		// not yet in cache
 		$uuid  = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
+		$this->assertNull($uuid->model(true));
 
 		// fill cache
 		$page->uuid()->populate();
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertTrue($page->is($uuid->resolve(true)));
+		$this->assertTrue($page->is($uuid->model(true)));
 	}
 
 	/**
@@ -38,13 +38,13 @@ class PageUuidTest extends TestCase
 		$page = $this->app->page('page-a');
 		$uuid  = new PageUuid('page://my-page');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
-		$this->assertTrue($page->is($uuid->resolve()));
+		$this->assertNull($uuid->model(true));
+		$this->assertTrue($page->is($uuid->model()));
 		$this->assertTrue($uuid->isCached());
 
 		// not found
 		$uuid = new PageUuid('page://does-not-exist');
-		$this->assertNull($uuid->resolve());
+		$this->assertNull($uuid->model());
 	}
 
 	/**

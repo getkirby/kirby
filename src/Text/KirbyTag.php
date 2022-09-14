@@ -123,7 +123,7 @@ class KirbyTag
 				$context = $parent->files();
 			}
 
-			return Uuid::for($path, $context ?? null)->resolve();
+			return Uuid::for($path, $context ?? null)->model();
 		}
 
 		if (

@@ -41,7 +41,7 @@ class FileUuid extends ModelUuid
 
 		// value is an array containing
 		// the UUID for the parent and the filename
-		$parent = Uuid::for($value['parent'])->resolve();
+		$parent = Uuid::for($value['parent'])->model();
 		return $parent->file($value['filename']);
 	}
 
@@ -71,7 +71,7 @@ class FileUuid extends ModelUuid
 	 */
 	public function value(): array
 	{
-		$model  = $this->resolve();
+		$model  = $this->model();
 		$parent = Uuid::for($model->parent());
 
 		// populate parent to cache itself as we'll need it
@@ -79,7 +79,7 @@ class FileUuid extends ModelUuid
 		$parent->populate();
 
 		return [
-			'parent'   => $parent->render(),
+			'parent'   => $parent->toString(),
 			'filename' => $model->filename()
 		];
 	}

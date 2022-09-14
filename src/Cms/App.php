@@ -643,7 +643,7 @@ class App
 		// find by global UUID
 		if (Uuid::is($path, 'file') === true) {
 			// prefer files of parent, when parent given
-			return Uuid::for($path, $parent?->files())->resolve();
+			return Uuid::for($path, $parent?->files())->model();
 		}
 
 		$parent   = $parent ?? $this->site();
@@ -1183,7 +1183,7 @@ class App
 
 		// find by global UUID
 		if (Uuid::is($id, 'page') === true) {
-			return Uuid::for($id, $parent?->childrenAndDrafts())->resolve();
+			return Uuid::for($id, $parent?->childrenAndDrafts())->model();
 		}
 
 		$parent = $parent ?? $this->site();

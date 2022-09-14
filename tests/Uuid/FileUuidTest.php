@@ -20,14 +20,14 @@ class FileUuidTest extends TestCase
 		// not yet in cache
 		$uuid  = new FileUuid('file://my-file');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
+		$this->assertNull($uuid->model(true));
 
 		// fill cache
 		$file->uuid()->populate();
 
 		// retrieve from cache
 		$this->assertTrue($uuid->isCached());
-		$this->assertTrue($file->is($uuid->resolve(true)));
+		$this->assertTrue($file->is($uuid->model(true)));
 	}
 
 	/**
@@ -38,13 +38,13 @@ class FileUuidTest extends TestCase
 		$file = $this->app->file('page-a/test.pdf');
 		$uuid  = new FileUuid('file://my-file');
 		$this->assertFalse($uuid->isCached());
-		$this->assertNull($uuid->resolve(true));
-		$this->assertTrue($file->is($uuid->resolve()));
+		$this->assertNull($uuid->model(true));
+		$this->assertTrue($file->is($uuid->model()));
 		$this->assertTrue($uuid->isCached());
 
 		// not found
 		$uuid = new FileUuid('file://does-not-exist');
-		$this->assertNull($uuid->resolve());
+		$this->assertNull($uuid->model());
 	}
 
 	/**

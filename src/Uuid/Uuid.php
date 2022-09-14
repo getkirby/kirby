@@ -22,10 +22,10 @@ use Kirby\Toolkit\Str;
  *
  * ```
  * // get UUID string
- * $model->uuid()->render();
+ * $model->uuid()->toString();
  *
  * // get model from an UUID string
- * Uuid::for('page://HhX1YtRR2ImG6h4')->resolve();
+ * Uuid::for('page://HhX1YtRR2ImG6h4')->model();
  *
  * // cache actions
  * $model->uuid()->populate();
@@ -89,7 +89,7 @@ class Uuid
 	{
 		// For all models with children: if $recursive,
 		// also clear UUIDs from cache for all children
-		if ($recursive === true && $model = $this->resolve()) {
+		if ($recursive === true && $model = $this->model()) {
 			if (method_exists($model, 'children') === true) {
 				foreach ($model->children() as $child) {
 					$child->uuid()->clear(true);
@@ -260,34 +260,12 @@ class Uuid
 	}
 
 	/**
-	 * Feeds the UUID into the cache
-	 *
-	 * @return bool
-	 */
-	public function populate(): bool
-	{
-		return Uuids::cache()->set($this->key(), $this->value());
-	}
-
-	/**
-	 * Returns the full UUID string including scheme
-	 */
-	public function render(): string
-	{
-		// make sure id is generated if
-		// it doesn't exist yet
-		$this->id();
-
-		return $this->uri->toString();
-	}
-
-	/**
 	 * Tries to find the identifiable model in cache
 	 * or index and returns the object
 	 *
 	 * @param bool $lazy If `true`, only lookup from cache
 	 */
-	public function resolve(bool $lazy = false): Identifiable|null
+	public function model(bool $lazy = false): Identifiable|null
 	{
 		if ($this->model !== null) {
 			return $this->model;
@@ -312,6 +290,16 @@ class Uuid
 	}
 
 	/**
+	 * Feeds the UUID into the cache
+	 *
+	 * @return bool
+	 */
+	public function populate(): bool
+	{
+		return Uuids::cache()->set($this->key(), $this->value());
+	}
+
+	/**
 	 * Retrieves the existing ID string (UUID without
 	 * scheme) for the model;
 	 * can be overridden in child classes depending
@@ -323,11 +311,23 @@ class Uuid
 	}
 
 	/**
+	 * Returns the full UUID string including scheme
+	 */
+	public function toString(): string
+	{
+		// make sure id is generated if
+		// it doesn't exist yet
+		$this->id();
+
+		return $this->uri->toString();
+	}
+
+	/**
 	 * Returns value to be stored in cache
 	 */
 	public function value(): string|array
 	{
-		return $this->resolve()->id();
+		return $this->model()->id();
 	}
 
 	/**
@@ -335,6 +335,6 @@ class Uuid
 	 */
 	public function __toString(): string
 	{
-		return $this->render();
+		return $this->toString();
 	}
 }

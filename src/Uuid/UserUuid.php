@@ -35,18 +35,18 @@ class UserUuid extends Uuid
 	}
 
 	/**
+	 * Returns the user object
+	 */
+	public function model(bool $lazy = false): User
+	{
+		return $this->model ??= App::instance()->user($this->id());
+	}
+
+	/**
 	 * Pretends to fill cache - we don't need it in cache
 	 */
 	public function populate(): bool
 	{
 		return true;
-	}
-
-	/**
-	 * Returns the user object
-	 */
-	public function resolve(bool $lazy = false): User
-	{
-		return $this->model ??= App::instance()->user($this->id());
 	}
 }

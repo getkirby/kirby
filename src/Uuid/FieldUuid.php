@@ -49,7 +49,7 @@ abstract class FieldUuid extends Uuid
 		// value is an array containing
 		// the UUID for the parent, the field name
 		// and the specific ID
-		$parent     = Uuid::for($value['parent'])->resolve();
+		$parent     = Uuid::for($value['parent'])->model();
 		$field      = $parent->{$value['field']}();
 		$collection = $this->fieldToCollection($field);
 		return $collection->filgete($value['id']);
@@ -105,7 +105,7 @@ abstract class FieldUuid extends Uuid
 	 */
 	public function value(): array
 	{
-		$model  = $this->resolve();
+		$model  = $this->model();
 		$parent = Uuid::for($model->parent());
 
 		// populate parent to cache itself as we'll need it
