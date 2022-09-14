@@ -52,7 +52,7 @@ abstract class FieldUuid extends Uuid
 		$parent     = Uuid::for($value['parent'])->model();
 		$field      = $parent->{$value['field']}();
 		$collection = $this->fieldToCollection($field);
-		return $collection->filgete($value['id']);
+		return $collection->get($value['id']);
 	}
 
 	/**
