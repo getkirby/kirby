@@ -157,17 +157,7 @@ export default {
 		 * @returns {Object}
 		 */
 		form() {
-			const fields = this.$helper.field.subfields(this, this.fields);
-
-			const autofocusField = Object.values(fields).find(
-				(field) => field.autofocus === true
-			);
-
-			if (autofocusField) {
-				this.autofocus = autofocusField.name;
-			}
-
-			return fields;
+			return this.$helper.field.subfields(this, this.fields);
 		},
 		/**
 		 * Index of first row that is displayed

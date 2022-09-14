@@ -36,11 +36,6 @@ export default {
 			object: this.value
 		};
 	},
-	watch: {
-		value() {
-			this.object = this.value;
-		}
-	},
 	computed: {
 		drawer() {
 			return {
@@ -54,6 +49,11 @@ export default {
 				title: this.label,
 				value: this.object
 			};
+		}
+	},
+	watch: {
+		value() {
+			this.object = this.value;
 		}
 	},
 	methods: {
