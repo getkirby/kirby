@@ -140,21 +140,18 @@ return [
 				return $data;
 			}
 
-			usort($data, function ($a, $b) use ($sortColumn, $sortDirection) {
-				if ($sortDirection === 'asc') {
-					if (is_array($a[$sortColumn]) === true) {
-						return $a[$sortColumn]['text'] <=> $b[$sortColumn]['text'];
-					} else {
-						return $a[$sortColumn] <=> $b[$sortColumn];
-					}
-				} else {
-					if (is_array($b[$sortColumn])) {
-						return $b[$sortColumn]['text'] <=> $a[$sortColumn]['text'];
-					} else {
-						return $b[$sortColumn] <=> $a[$sortColumn];
-					}
-				}
-			});
+			// extract the sort column value from each row
+			$columnData = array_map(function ($row) use ($sortColumn) {
+				$value = $row[$sortColumn];
+				return is_array($value) ? $value['text'] : $value;
+			}, $data);
+
+			// sort $data by the sort column values
+			array_multisort(
+				$columnData,
+				$sortDirection === 'desc' ? SORT_DESC : SORT_ASC,
+				$data
+			);
 
 			return $data;
 		},
