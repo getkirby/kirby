@@ -118,7 +118,7 @@ abstract class FieldUuid extends Uuid
 		$parent->populate();
 
 		return [
-			'parent' => $parent->render(),
+			'parent' => $parent->toString(),
 			'field'  => $model->field()->key(),
 			'id'     => $model->id()
 		];
