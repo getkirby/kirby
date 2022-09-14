@@ -80,10 +80,14 @@ export default {
 
 			if (focus !== false) {
 				setTimeout(() => {
-					let autofocus =
-						Object.values(this.fields).filter(
+					let autofocus = focus;
+
+					if (autofocus === true) {
+						autofocus = Object.values(this.fields).find(
 							(field) => field.autofocus === true
-						)[0] || null;
+						)?.name;
+					}
+
 					this.focus(autofocus);
 				}, 1);
 			}
