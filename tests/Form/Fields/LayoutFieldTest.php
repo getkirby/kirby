@@ -220,7 +220,9 @@ class LayoutFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertSame(['layout' => 'There\'s an error in block 2 in layout 1'], $field->errors());
+		$this->assertSame([
+			'layout' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" block type in layout 1'
+		], $field->errors());
 	}
 
 	public function testValidationsSettings()

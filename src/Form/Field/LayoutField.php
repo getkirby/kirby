@@ -200,6 +200,7 @@ class LayoutField extends BlocksField
 							$blockType = $block['type'];
 
 							try {
+								$fieldset    = $this->fieldset($blockType);
 								$blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 							} catch (Throwable) {
 								// skip invalid blocks
@@ -219,6 +220,8 @@ class LayoutField extends BlocksField
 										'key' => 'layout.validation.block',
 										'data' => [
 											'blockIndex'  => $blockIndex,
+											'field'       => $field->label(),
+											'fieldset'    => $fieldset->name(),
 											'layoutIndex' => $layoutIndex
 										]
 									]);

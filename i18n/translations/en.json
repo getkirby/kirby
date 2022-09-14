@@ -70,7 +70,7 @@
   "error.blocks.max.singular": "You must not add more than one block",
   "error.blocks.min.plural": "You must add at least {min} blocks",
   "error.blocks.min.singular": "You must add at least one block",
-  "error.blocks.validation": "There's an error in block {index}",
+  "error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
@@ -107,7 +107,7 @@
   "error.language.name": "Please enter a valid name for the language",
   "error.language.notFound": "The language could not be found",
 
-  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Please enter a valid license key",
