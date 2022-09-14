@@ -157,24 +157,15 @@ export default {
 		 * @returns {Object}
 		 */
 		form() {
-			let fields = {};
+			const fields = this.$helper.field.subfields(this, this.fields);
 
-			Object.keys(this.fields).forEach((name) => {
-				let field = this.fields[name];
+			const autofocusField = Object.values(fields).find(
+				(field) => field.autofocus === true
+			);
 
-				field.section = this.name;
-				field.endpoints = {
-					field: this.endpoints.field + "+" + name,
-					section: this.endpoints.section,
-					model: this.endpoints.model
-				};
-
-				if (this.autofocus === null && field.autofocus === true) {
-					this.autofocus = name;
-				}
-
-				fields[name] = field;
-			});
+			if (autofocusField) {
+				this.autofocus = autofocusField.name;
+			}
 
 			return fields;
 		},
