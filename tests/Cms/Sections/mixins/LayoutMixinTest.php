@@ -78,6 +78,7 @@ class LayoutMixinTest extends TestCase
 			'title' => [
 				'label'  => 'Title',
 				'mobile' => true,
+				'sortable' => true,
 				'type'   => 'url'
 			]
 		];
@@ -102,13 +103,15 @@ class LayoutMixinTest extends TestCase
 				'width'  => 'var(--table-row-height)',
 			],
 			'title' => [
-				'label'  => 'Title',
-				'mobile' => true,
-				'type'   => 'url'
+				'label'    => 'Title',
+				'mobile'   => true,
+				'sortable' => true,
+				'type'     => 'url'
 			],
 			'info' => [
-				'label'  => 'Info',
-				'type'   => 'text'
+				'label'    => 'Info',
+				'type'     => 'text',
+				'sortable' => true
 			]
 		];
 
