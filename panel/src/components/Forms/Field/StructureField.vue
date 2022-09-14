@@ -266,6 +266,10 @@ export default {
 		 * @returns {Array}
 		 */
 		options() {
+			if (this.disabled) {
+				return [];
+			}
+
 			let options = [];
 			let more = this.duplicate && this.more && this.currentIndex === null;
 

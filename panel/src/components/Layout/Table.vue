@@ -211,7 +211,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.options ||
+				(this.options && this.options.length > 0) ||
 				Object.values(this.values).filter((row) => row.options).length > 0
 			);
 		}
@@ -474,13 +474,11 @@ td.k-table-options-column {
 
 /** Disabled */
 [data-disabled="true"] .k-table {
-	background: var(--color-background);
+	background: var(--color-gray-100);
 }
 [data-disabled="true"] .k-table th,
-[data-disabled="true"] .k-table td {
-	background: var(--color-background);
-	border-bottom: 1px solid var(--color-border);
-	border-inline-end: 1px solid var(--color-border);
+[data-disabled="true"] .k-table tbody td {
+	border-color: var(--color-gray-200);
 }
 [data-disabled="true"] .k-table td:last-child {
 	overflow: hidden;
