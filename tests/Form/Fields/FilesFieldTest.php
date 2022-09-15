@@ -11,9 +11,11 @@ class FilesFieldTest extends TestCase
 {
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -235,7 +237,7 @@ class FilesFieldTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => ['api.allowImpersonation' => true],
 			'site' => [

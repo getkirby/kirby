@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$files` object extends the general
@@ -21,6 +22,8 @@ use Kirby\Filesystem\F;
  */
 class Files extends Collection
 {
+	use HasUuids;
+
 	/**
 	 * All registered files methods
 	 *
@@ -117,6 +120,10 @@ class Files extends Collection
 	 */
 	public function findByKey(string $key)
 	{
+		if ($file = $this->findByUuid($key, 'file')) {
+			return $file;
+		}
+
 		return $this->get(ltrim($this->parent?->id() . '/' . $key, '/'));
 	}
 

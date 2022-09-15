@@ -90,15 +90,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$expected = [
-			'structure' => [
-				[
-					'tags' => 'a, b'
-				]
-			]
-		];
-
-		$this->assertEquals($expected, $form->data());
+		$this->assertEquals('a, b', $form->data()['structure'][0]['tags']);
 	}
 
 	public function testInvalidFieldType()

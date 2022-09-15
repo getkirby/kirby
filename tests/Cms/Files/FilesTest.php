@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuids;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Files
@@ -112,6 +113,37 @@ class FilesTest extends TestCase
 		$site  = new Site();
 		$files = new Files();
 		$files->add($site);
+	}
+
+	/**
+	 * @covers ::findByKey
+	 * @covers ::findByUuid
+	 */
+	public function testFindByUuid()
+	{
+		$app = new App([
+			'site' => [
+				'files' => [
+					[
+						'filename' => $a = 'a.jpg',
+						'content' => ['uuid' => 'test-a']
+					],
+					[
+						'filename' => $b = 'b.jpg',
+						'content' => ['uuid' => 'test-b']
+					]
+				]
+			]
+		]);
+
+		$files = $app->site()->files();
+		$this->assertSame($a, $files->find('file://test-a')->filename());
+		$this->assertSame($b, $files->find('file://test-b')->filename());
+
+		$this->assertSame($a, $app->file('file://test-a')->filename());
+		$this->assertSame($b, $app->file('file://test-b')->filename());
+
+		Uuids::cache()->flush();
 	}
 
 	/**

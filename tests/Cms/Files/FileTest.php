@@ -9,6 +9,9 @@ class FileTestModel extends File
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\File
+ */
 class FileTest extends TestCase
 {
 	protected function defaults(?App $kirby = null): array
@@ -88,13 +91,13 @@ class FileTest extends TestCase
 	{
 		$file = $this->file([
 			'filename' => 'test.jpg',
-			'url' => null,
-			'parent' => new Site(),
+			'url'      => 'http://getkirby.com/test.jpg',
+			'parent'   => new Site(),
 			'content' => [
 				'alt' => 'This is the alt text'
 			]
 		]);
-		$this->assertSame('<img alt="This is the alt text" src="/media/site/f563e6e59b-0/test.jpg">', $file->html());
+		$this->assertSame('<img alt="This is the alt text" src="http://getkirby.com/test.jpg">', $file->html());
 	}
 
 	public function testUrl()
@@ -295,6 +298,24 @@ class FileTest extends TestCase
 
 		$file = $page->file('test.pdf');
 		$this->assertInstanceOf('Kirby\Panel\File', $file->panel());
+	}
+
+	/**
+	 * @covers ::permalink
+	 */
+	public function testPermalink()
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				[
+					'filename' => 'test.pdf',
+					'content'  => ['uuid' => 'my-file-uuid']
+				]
+			]
+		]);
+
+		$this->assertSame('//@/file/my-file-uuid', $page->file('test.pdf')->permalink());
 	}
 
 	public function testPreviewUrl()

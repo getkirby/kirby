@@ -448,6 +448,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Return the permanent URL to the file using its UUID
+	 */
+	public function permalink(): string
+	{
+		return $this->uuid()->url();
+	}
+
+	/**
 	 * Returns the permissions object for this file
 	 *
 	 * @return \Kirby\Cms\FilePermissions

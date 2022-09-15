@@ -8,6 +8,8 @@ use Kirby\Cms\File;
 use Kirby\Cms\Model;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Uuid\Uri as UuidUri;
+use Kirby\Uuid\Uuid;
 
 /**
  * Representation and parse of a single KirbyTag.
@@ -112,6 +114,18 @@ class KirbyTag
 	{
 		$parent = $this->parent();
 
+		// check first for UUID
+		if (Uuid::is($path, 'file') === true) {
+			if (
+				is_object($parent) === true &&
+				method_exists($parent, 'files') === true
+			) {
+				$context = $parent->files();
+			}
+
+			return Uuid::for($path, $context ?? null)->model();
+		}
+
 		if (
 			is_object($parent) === true &&
 			method_exists($parent, 'file') === true &&
@@ -165,8 +179,11 @@ class KirbyTag
 		// to the list of possible attributes
 		array_unshift($attr, $type);
 
+		// ensure that UUIDs protocols aren't matched as attributes
+		$uuids = sprintf('(?!(%s):\/\/)', implode('|', UuidUri::$schemes));
+
 		// extract all attributes
-		$regex = sprintf('/(%s):/i', implode('|', $attr));
+		$regex = sprintf('/%s(%s):/i', $uuids, implode('|', $attr));
 		$search = preg_split($regex, $tag, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
 		// $search is now an array with alternating keys and values

@@ -2,15 +2,23 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class FilesSectionTest extends TestCase
 {
 	protected $app;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
+		Dir::make($this->tmp);
 		$this->app();
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	public function app(array $props = [])
@@ -18,7 +26,7 @@ class FilesSectionTest extends TestCase
 		App::destroy();
 		$this->app = new App(array_replace_recursive([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		], $props));
 
@@ -223,7 +231,8 @@ class FilesSectionTest extends TestCase
 						'slug'  => 'a',
 						'files' => [
 							[
-								'filename' => 'a.jpg'
+								'filename' => 'a.jpg',
+								'content' => ['uuid' => 'test-file-a']
 							],
 							[
 								'filename' => 'b.jpg'
@@ -245,7 +254,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertEquals('(image: a/a.jpg)', $data[0]['dragText']);
+		$this->assertEquals('(image: file://test-file-a)', $data[0]['dragText']);
 	}
 
 	public function testHelp()

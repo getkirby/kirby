@@ -47,11 +47,12 @@ class Page extends Model
 			return $callback;
 		}
 
-		if ($type === 'markdown') {
-			return '[' . $this->model->title() . '](' . $this->model->url() . ')';
-		}
+		$title = $this->model->title();
 
-		return '(link: ' . $this->model->id() . ' text: ' . $this->model->title() . ')';
+		return match ($type) {
+			'markdown' => '[' . $title . '](' . $this->model->permalink() . ')',
+			default    => '(link: ' . $this->model->uuid() . ' text: ' . $title . ')'
+		};
 	}
 
 	/**

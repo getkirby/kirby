@@ -9,9 +9,11 @@ class PagesFieldTest extends TestCase
 {
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -167,7 +169,7 @@ class PagesFieldTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => ['api.allowImpersonation' => true],
 			'site' => [
@@ -176,6 +178,7 @@ class PagesFieldTest extends TestCase
 						'slug' => 'test',
 						'content' => [
 							'title' => 'Test Title',
+							'uuid'  => 'my-test-uuid'
 						],
 						'blueprint' => [
 							'title' => 'Test',
@@ -216,7 +219,8 @@ class PagesFieldTest extends TestCase
 			'link' => '/pages/test',
 			'sortable' => true,
 			'text' => 'Test Title',
-			'dragText' => '(link: test text: Test Title)',
+			'uuid' => 'page://my-test-uuid',
+			'dragText' => '(link: page://my-test-uuid text: Test Title)',
 			'hasChildren' => false,
 			'url' => '/test',
 		], $api['data'][0]);

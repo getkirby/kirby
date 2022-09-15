@@ -777,6 +777,10 @@ class PageActionsTest extends TestCase
 		$page->lock()->create();
 		$this->assertFileExists($this->app->locks()->file($page));
 
+		// check UUID exists
+		$oldUuid = $page->content()->get('uuid')->value();
+		$this->assertIsString($oldUuid);
+
 		$drafts = $this->app->site()->drafts();
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
 
@@ -786,6 +790,11 @@ class PageActionsTest extends TestCase
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
+
+		// check UUID got updated
+		$newUuid = $copy->content()->get('uuid')->value();
+		$this->assertIsString($newUuid);
+		$this->assertNotSame($oldUuid, $newUuid);
 	}
 
 	public function testDuplicateMultiLang()

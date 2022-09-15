@@ -119,6 +119,16 @@ class Core
 	}
 
 	/**
+	 * Returns a list of all core caches
+	 */
+	public function caches(): array
+	{
+		return [
+			'uuid' => true
+		];
+	}
+
+	/**
 	 * Returns a list of all cache driver classes
 	 */
 	public function cacheTypes(): array
@@ -129,14 +139,6 @@ class Core
 			'memcached' => 'Kirby\Cache\MemCached',
 			'memory'    => 'Kirby\Cache\MemoryCache',
 		];
-	}
-
-	/**
-	 * Returns a list of all core caches
-	 */
-	public function caches(): array
-	{
-		return [];
 	}
 
 	/**

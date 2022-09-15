@@ -269,6 +269,35 @@ class PagesTest extends TestCase
 		$this->assertIsPage($this->pages()->find('b.json'), 'b');
 	}
 
+	public function testFindByUuid()
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					['slug' => 'a', 'content' => ['uuid' => 'test-a']],
+					['slug' => 'b', 'content' => ['uuid' => 'test-b']],
+					[
+						'slug' => 'c',
+						'content' => ['uuid' => 'test-c'],
+						'children' => [
+							['slug' => 'd', 'content' => ['uuid' => 'test-d']]
+						]
+					]
+				]
+			]
+		]);
+
+		$pages = $app->site()->children();
+		$this->assertIsPage($pages->find('page://test-a'), 'a');
+		$this->assertIsPage($pages->find('page://test-b'), 'b');
+		$this->assertIsPage($pages->find('page://test-c'), 'c');
+
+		$this->assertIsPage($app->page('page://test-a'), 'a');
+		$this->assertIsPage($app->page('page://test-b'), 'b');
+		$this->assertIsPage($app->page('page://test-c'), 'c');
+		$this->assertIsPage($app->page('page://test-d'), 'c/d');
+	}
+
 	public function testFindChildren()
 	{
 		$site = new Site([

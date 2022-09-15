@@ -7,6 +7,8 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Identifiable;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -18,7 +20,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent extends Model
+abstract class ModelWithContent extends Model implements Identifiable
 {
 	/**
 	 * The content
@@ -399,10 +401,17 @@ abstract class ModelWithContent extends Model
 	public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
 	{
 		if ($this->kirby()->multilang() === true) {
-			return $this->saveTranslation($data, $languageCode, $overwrite);
+			$model = $this->saveTranslation($data, $languageCode, $overwrite);
+		} else {
+			$model = $this->saveContent($data, $overwrite);
 		}
 
-		return $this->saveContent($data, $overwrite);
+		// update model in siblings collection
+		if (method_exists($model, 'siblings') === true) {
+			$model->siblings()->add($model);
+		}
+
+		return $model;
 	}
 
 	/**
@@ -620,14 +629,16 @@ abstract class ModelWithContent extends Model
 
 		$arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
 		return $this->commit('update', $arguments, function ($model, $values, $strings, $languageCode) {
-			// save updated values
-			$model = $model->save($strings, $languageCode, true);
-
-			// update model in siblings collection
-			$model->siblings()->add($model);
-
-			return $model;
+			return $model->save($strings, $languageCode, true);
 		});
+	}
+
+	/**
+	 * Returns the model's UUID
+	 */
+	public function uuid(): Uuid
+	{
+		return Uuid::for($this);
 	}
 
 	/**
