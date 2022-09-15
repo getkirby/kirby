@@ -716,6 +716,10 @@ class Auth
 
 		if (
 			$basicAuth === true &&
+
+			// only get the auth object if the option is enabled
+			// to avoid triggering `$responder->usesAuth()` if
+			// the option is disabled
 			$request->auth() &&
 			$request->auth()->type() === 'basic'
 		) {
