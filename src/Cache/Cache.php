@@ -2,6 +2,8 @@
 
 namespace Kirby\Cache;
 
+use Closure;
+
 /**
  * Cache foundation
  * This abstract class is used as
@@ -30,66 +32,32 @@ abstract class Cache
 	}
 
 	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful;
-	 * this needs to be defined by the driver
-	 *
-	 * <code>
-	 *   // put an item in the cache for 15 minutes
-	 *   $cache->set('value', 'my value', 15);
-	 * </code>
+	 * Checks when the cache has been created;
+	 * returns the creation timestamp on success
+	 * and false if the item does not exist
 	 */
-	abstract public function set(string $key, mixed $value, int $minutes = 0): bool;
-
-	/**
-	 * Adds the prefix to the key if given
-	 */
-	protected function key(string $key): string
+	public function created(string $key): int|false
 	{
-		if (empty($this->options['prefix']) === false) {
-			$key = $this->options['prefix'] . '/' . $key;
-		}
-
-		return $key;
-	}
-
-	/**
-	 * Internal method to retrieve the raw cache value;
-	 * needs to return a Value object or null if not found;
-	 * this needs to be defined by the driver
-	 */
-	abstract public function retrieve(string $key): Value|null;
-
-	/**
-	 * Gets an item from the cache
-	 *
-	 * <code>
-	 *   // get an item from the cache driver
-	 *   $value = $cache->get('value');
-	 *
-	 *   // return a default value if the requested item isn't cached
-	 *   $value = $cache->get('value', 'default value');
-	 * </code>
-	 */
-	public function get(string $key, mixed $default = null): mixed
-	{
-		// get the Value
+		// get the Value object
 		$value = $this->retrieve($key);
 
-		// check for a valid cache value
+		// check for a valid Value object
 		if ($value instanceof Value === false) {
-			return $default;
+			return false;
 		}
 
-		// remove the item if it is expired
-		if ($value->expires() > 0 && time() >= $value->expires()) {
-			$this->remove($key);
-			return $default;
-		}
-
-		// return the pure value
-		return $value->value();
+		// return the expires timestamp
+		return $value->created();
 	}
+
+	/**
+	 * Determines if an item exists in the cache
+	 */
+	public function exists(string $key): bool
+	{
+		return $this->expired($key) === false;
+	}
+
 
 	/**
 	 * Calculates the expiration timestamp
@@ -143,22 +111,75 @@ abstract class Cache
 	}
 
 	/**
-	 * Checks when the cache has been created;
-	 * returns the creation timestamp on success
-	 * and false if the item does not exist
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful;
+	 * this needs to be defined by the driver
 	 */
-	public function created(string $key): int|false
+	abstract public function flush(): bool;
+
+	/**
+	 * Gets an item from the cache
+	 *
+	 * <code>
+	 *   // get an item from the cache driver
+	 *   $value = $cache->get('value');
+	 *
+	 *   // return a default value if the requested item isn't cached
+	 *   $value = $cache->get('value', 'default value');
+	 * </code>
+	 */
+	public function get(string $key, mixed $default = null): mixed
 	{
-		// get the Value object
+		// get the Value
 		$value = $this->retrieve($key);
 
-		// check for a valid Value object
+		// check for a valid cache value
 		if ($value instanceof Value === false) {
-			return false;
+			return $default;
 		}
 
-		// return the expires timestamp
-		return $value->created();
+		// remove the item if it is expired
+		if ($value->expires() > 0 && time() >= $value->expires()) {
+			$this->remove($key);
+			return $default;
+		}
+
+		// return the pure value
+		return $value->value();
+	}
+
+	/**
+	 * Returns a value by either getting it from the cache
+	 * or via the callback function which then is stored in
+	 * the cache for future retrieval. This method cannot be
+	 * used for `null` as value to be cached.
+	 * @since 3.8.0
+	 */
+	public function getOrSet(
+		string $key,
+		Closure $result,
+		int $minutes = 0
+	): mixed {
+		$value  = $this->get($key);
+		$result = $value ?? $result();
+
+		if ($value === null) {
+			$this->set($key, $result, $minutes);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Adds the prefix to the key if given
+	 */
+	protected function key(string $key): string
+	{
+		if (empty($this->options['prefix']) === false) {
+			$key = $this->options['prefix'] . '/' . $key;
+		}
+
+		return $key;
 	}
 
 	/**
@@ -170,11 +191,11 @@ abstract class Cache
 	}
 
 	/**
-	 * Determines if an item exists in the cache
+	 * Returns all passed cache options
 	 */
-	public function exists(string $key): bool
+	public function options(): array
 	{
-		return $this->expired($key) === false;
+		return $this->options;
 	}
 
 	/**
@@ -185,17 +206,21 @@ abstract class Cache
 	abstract public function remove(string $key): bool;
 
 	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful;
+	 * Internal method to retrieve the raw cache value;
+	 * needs to return a Value object or null if not found;
 	 * this needs to be defined by the driver
 	 */
-	abstract public function flush(): bool;
+	abstract public function retrieve(string $key): Value|null;
 
 	/**
-	 * Returns all passed cache options
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful;
+	 * this needs to be defined by the driver
+	 *
+	 * <code>
+	 *   // put an item in the cache for 15 minutes
+	 *   $cache->set('value', 'my value', 15);
+	 * </code>
 	 */
-	public function options(): array
-	{
-		return $this->options;
-	}
+	abstract public function set(string $key, mixed $value, int $minutes = 0): bool;
 }

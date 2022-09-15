@@ -70,6 +70,26 @@ class CacheTest extends TestCase
 	}
 
 	/**
+	 * @covers ::getOrSet
+	 */
+	public function testGetOrSet()
+	{
+		$cache = new TestCache();
+		$count = 0;
+
+		$callback = function () use (&$count) {
+			$count++;
+			return 'foo';
+		};
+
+		$this->assertSame(0, $count);
+		$this->assertSame('foo', $cache->getOrSet('bar', $callback));
+		$this->assertSame(1, $count);
+		$this->assertSame('foo', $cache->getOrSet('bar', $callback));
+		$this->assertSame(1, $count);
+	}
+
+	/**
 	 * @covers ::expiration
 	 */
 	public function testExpiration()
