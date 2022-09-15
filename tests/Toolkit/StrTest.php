@@ -369,6 +369,18 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::excerpt
+	 */
+	public function testExcerptWithTagFollowedByInterpunctuation()
+	{
+		$string   = 'Why not <a href="https://getkirby.com/">Get Kirby</a>?';
+		$expected = 'Why not Get Kirby?';
+		$result   = Str::excerpt($string, 100);
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
 	 * @covers ::float
 	 */
 	public function testFloat()
