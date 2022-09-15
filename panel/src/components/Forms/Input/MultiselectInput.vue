@@ -43,7 +43,7 @@
 								? $t('search.min', { min: search.min })
 								: $t('search') + ' …'
 						"
-						@keydown.esc.stop="escape"
+						@keydown.esc.stop="onEscape"
 					/>
 				</k-dropdown-item>
 
@@ -97,9 +97,21 @@ import {
 export const props = {
 	mixins: [disabled, id, required],
 	props: {
+		/**
+		 * Maximum number for selected options
+		 */
 		max: Number,
+		/**
+		 * Minimum number for selected options
+		 */
 		min: Number,
+		/**
+		 * @values "list"
+		 */
 		layout: String,
+		/**
+		 * Available options to select
+		 */
 		options: Array,
 		search: [Object, Boolean],
 		separator: {
@@ -122,16 +134,25 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
+			// array of selected values
 			state: this.value,
+			// current search filter string
 			q: null,
 			limit: true,
 			scrollTop: 0
 		};
 	},
 	computed: {
+		/**
+		 * Whether tags can be manually sorted by dragging
+		 * @returns {boolean}
+		 */
 		draggable() {
 			return this.state.length > 1 && !this.sort;
 		},
+		/**
+		 * Options for k-draggable
+		 */
 		dragOptions() {
 			return {
 				disabled: !this.draggable,
@@ -139,6 +160,10 @@ export default {
 				delay: 1
 			};
 		},
+		/**
+		 * Text to show in empty dropdown
+		 * @returns {string}
+		 */
 		emptyLabel() {
 			if (this.q) {
 				return this.$t("search.results.none");
@@ -146,6 +171,11 @@ export default {
 
 			return this.$t("options.none");
 		},
+		/**
+		 * Filtered (and highlited) list of
+		 * options for dropdown
+		 * @returns {Array}
+		 */
 		filtered() {
 			if (this.q?.length >= (this.search.min || 0)) {
 				return this.options
@@ -158,12 +188,25 @@ export default {
 
 			return this.options;
 		},
+		/**
+		 * Whether more options can be selected
+		 * @returns {boolean}
+		 */
 		more() {
 			return !this.max || this.state.length < this.max;
 		},
+		/**
+		 * Regular expression for current search term
+		 * @returns {RegExp}
+		 */
 		regex() {
 			return new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 		},
+		/**
+		 * Text-value options for the selected option
+		 * to be used with `k-tag`
+		 * @returns {Array}
+		 */
 		tags() {
 			const tags = this.state.map((value) =>
 				this.options.find((option) => option.value === value)
@@ -176,6 +219,10 @@ export default {
 			const index = (x) => this.options.findIndex((y) => y.value === x.value);
 			return tags.sort((a, b) => index(a) - index(b));
 		},
+		/**
+		 * Options to show in dropdown (filtered and limited)
+		 * @returns {Array}
+		 */
 		visible() {
 			if (this.limit) {
 				return this.filtered.slice(
@@ -189,6 +236,7 @@ export default {
 	},
 	watch: {
 		value(value) {
+			// array of selected values
 			this.state = value;
 			this.onInvalid();
 		}
@@ -203,6 +251,10 @@ export default {
 		this.$events.$off("keydown.cmd.s", this.close);
 	},
 	methods: {
+		/**
+		 * Adds new value as selected
+		 * @param {string} value
+		 */
 		add(value) {
 			if (this.more === true) {
 				this.state.push(value);
@@ -218,17 +270,13 @@ export default {
 				this.limit = true;
 			}
 		},
-		escape() {
-			if (this.q) {
-				this.q = null;
-				return;
-			}
-
-			this.close();
-		},
 		focus() {
 			this.$refs.dropdown.open();
 		},
+		/**
+		 * Gets index of option in array of selected values
+		 * @param {object} option
+		 */
 		index(option) {
 			return this.state.findIndex((item) => item === option.value);
 		},
@@ -238,6 +286,11 @@ export default {
 				String(option.value).match(this.regex)
 			);
 		},
+		/**
+		 * Whether option exists in the currently selected items
+		 * @param {object} option
+		 * @returns {boolean}
+		 */
 		isSelected(option) {
 			return this.index(option) !== -1;
 		},
@@ -257,6 +310,14 @@ export default {
 				this.$parent.$el.focus();
 			}
 		},
+		onEscape() {
+			if (this.q) {
+				this.q = null;
+				return;
+			}
+
+			this.close();
+		},
 		onInput() {
 			this.$emit("input", this.state);
 		},
@@ -272,10 +333,18 @@ export default {
 				).scrollTop = this.scrollTop;
 			});
 		},
+		/**
+		 * Removes value from selected
+		 * @param {string} value
+		 */
 		remove(value) {
 			this.state.splice(this.index(value), 1);
 			this.onInput();
 		},
+		/**
+		 * Toggles selection status of option
+		 * @param {object} option
+		 */
 		select(option) {
 			this.scrollTop = this.$refs.dropdown.$el.querySelector(
 				".k-multiselect-options"
