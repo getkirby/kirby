@@ -469,7 +469,12 @@ class Str
 	public static function excerpt($string, $chars = 140, $strip = true, $rep = ' …')
 	{
 		if ($strip === true) {
-			$string = strip_tags(str_replace('<', ' <', $string));
+			// ensure that opening tags are preceded by a space, so that
+			// when tags are skipped we can be sure that words stay separate
+			$string = preg_replace('#\s*<([^\/])#', ' <${1}', $string);
+
+			// strip tags
+			$string = strip_tags($string);
 		}
 
 		// replace line breaks with spaces
