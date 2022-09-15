@@ -473,7 +473,7 @@ class Str
 			// when tags are skipped we can be sure that words stay separate
 			$string = preg_replace('#\s*<([^\/])#', ' <${1}', $string);
 
-			// strip tags
+			// in strip mode, we always return plain text
 			$string = strip_tags($string);
 		}
 
