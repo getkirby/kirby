@@ -147,16 +147,16 @@ export default {
 			return this.$t("options.none");
 		},
 		filtered() {
-			if (this.q?.length < (this.search.min || 0)) {
-				return this.options;
+			if (this.q?.length >= (this.search.min || 0)) {
+				return this.options
+					.filter((option) => this.isFiltered(option))
+					.map((option) => ({
+						...option,
+						text: this.toHighlightedString(option.text)
+					}));
 			}
 
-			return this.options
-				.filter((option) => this.isFiltered(option))
-				.map((option) => ({
-					...option,
-					text: this.toHighlightedString(option.text)
-				}));
+			return this.options;
 		},
 		more() {
 			return !this.max || this.state.length < this.max;
