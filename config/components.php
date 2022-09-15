@@ -172,6 +172,11 @@ return [
 			return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
 		}, $searchWords);
 
+		// returns an empty collection if there is no search word
+		if (empty($searchWords) === true) {
+			return $collection->limit(0);
+		}
+
 		$preg    = '!(' . implode('|', $searchWords) . ')!i';
 		$results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery, $exactQuery) {
 			$data = $item->content()->toArray();
