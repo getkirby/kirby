@@ -140,6 +140,112 @@ class AuthTest extends TestCase
 	}
 
 	/**
+	 * @covers ::type
+	 */
+	public function testTypeBasic1()
+	{
+		$app = $this->app->clone([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('testuser:testpass')
+			]
+		]);
+
+		// existing basic auth should be preferred
+		// over impersonation
+		$app->auth()->impersonate('kirby');
+
+		$this->assertSame('basic', $app->auth()->type());
+
+		// auth object should have been accessed
+		$this->assertTrue($app->response()->usesAuth());
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeBasic2()
+	{
+		// non-existing basic auth should
+		// fall back to impersonation
+		$this->auth->impersonate('kirby');
+
+		$this->assertSame('impersonate', $this->auth->type());
+
+		// auth object should have been accessed
+		$this->assertTrue($this->app->response()->usesAuth());
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeBasic3()
+	{
+		// non-existing basic auth without
+		// impersonation should fall back to session
+		$this->assertSame('session', $this->auth->type());
+
+		// auth object should have been accessed
+		$this->assertTrue($this->app->response()->usesAuth());
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeBasic4()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth' => false
+				]
+			],
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('testuser:testpass')
+			]
+		]);
+
+		// disabled option should fall back to session
+		$this->assertSame('session', $app->auth()->type());
+
+		// auth object should *not* have been accessed
+		$this->assertFalse($app->response()->usesAuth());
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeImpersonate()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth' => false
+				]
+			]
+		]);
+
+		$app->auth()->impersonate('kirby');
+
+		$this->assertSame('impersonate', $app->auth()->type());
+	}
+
+	/**
+	 * @covers ::type
+	 */
+	public function testTypeSession()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth' => false
+				]
+			]
+		]);
+
+		$this->assertSame('session', $app->auth()->type());
+	}
+
+	/**
 	 * @covers ::status
 	 * @covers ::user
 	 */
