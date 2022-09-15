@@ -634,8 +634,12 @@ class A
 	 * @param int $decimals The number of decimals to return
 	 * @return float The average value
 	 */
-	public static function average(array $array, int $decimals = 0): float
+	public static function average(array $array, int $decimals = 0): float|null
 	{
+		if (empty($array) === true) {
+			return null;
+		}
+
 		return round((array_sum($array) / sizeof($array)), $decimals);
 	}
 
