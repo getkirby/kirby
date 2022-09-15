@@ -49,7 +49,6 @@ class SystemTest extends AreaTestCase
 				],
 				'homepage' => 'https://getkirby.com',
 				'version'  => '1.0.0',
-				'license'  => 'MIT'
 			]
 		]);
 
@@ -59,7 +58,7 @@ class SystemTest extends AreaTestCase
 		$expected = [
 			[
 				'author'  => 'A, B',
-				'license' => 'MIT',
+				'license' => '–',
 				'name'    => [
 					'text' => 'getkirby/test',
 					'href' => 'https://getkirby.com'
