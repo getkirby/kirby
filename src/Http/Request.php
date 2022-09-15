@@ -151,7 +151,7 @@ class Request
 			$kirby->response()->usesAuth(true);
 		}
 
-		if ($auth = $this->options['auth'] ?? $this->header('authorization')) {
+		if ($auth = $this->authString()) {
 			$type = Str::lower(Str::before($auth, ' '));
 			$data = Str::after($auth, ' ');
 
@@ -271,9 +271,7 @@ class Request
 	 */
 	public function hasAuth(): bool
 	{
-		$header = $this->options['auth'] ?? $this->header('authorization');
-
-		return $header !== null;
+		return $this->authString() !== null;
 	}
 
 	/**
@@ -381,5 +379,28 @@ class Request
 		}
 
 		return $this->url ??= Uri::current();
+	}
+
+	/**
+	 * Returns the raw auth string from the `auth` option
+	 * or `Authorization` header unless both are empty
+	 */
+	protected function authString(): string|null
+	{
+		// both variants need to be checked separately
+		// because empty strings are treated as invalid
+		// but the `??` operator wouldn't do the fallback
+
+		$option = $this->options['auth'] ?? null;
+		if (empty($option) === false) {
+			return $option;
+		}
+
+		$header = $this->header('authorization');
+		if (empty($header) === false) {
+			return $header;
+		}
+
+		return null;
 	}
 }
