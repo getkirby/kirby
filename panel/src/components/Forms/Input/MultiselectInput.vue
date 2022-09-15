@@ -230,7 +230,7 @@ export default {
 			this.$refs.dropdown.open();
 		},
 		index(option) {
-			return this.state.findIndex((item) => item.value === option.value);
+			return this.state.findIndex((item) => item === option.value);
 		},
 		isFiltered(option) {
 			return (
