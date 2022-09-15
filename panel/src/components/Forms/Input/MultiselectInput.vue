@@ -203,9 +203,9 @@ export default {
 		this.$events.$off("keydown.cmd.s", this.close);
 	},
 	methods: {
-		add(option) {
+		add(value) {
 			if (this.more === true) {
-				this.state.push(option);
+				this.state.push(value);
 				this.onInput();
 			}
 		},
@@ -258,7 +258,7 @@ export default {
 			}
 		},
 		onInput() {
-			this.$emit("input", this.sorted);
+			this.$emit("input", this.state);
 		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
@@ -272,8 +272,8 @@ export default {
 				).scrollTop = this.scrollTop;
 			});
 		},
-		remove(option) {
-			this.state.splice(this.index(option), 1);
+		remove(value) {
+			this.state.splice(this.index(value), 1);
 			this.onInput();
 		},
 		select(option) {
@@ -281,12 +281,10 @@ export default {
 				".k-multiselect-options"
 			).scrollTop;
 
-			option = { text: option.text, value: option.value };
-
 			if (this.isSelected(option)) {
-				this.remove(option);
+				this.remove(option.value);
 			} else {
-				this.add(option);
+				this.add(option.value);
 			}
 		},
 		toHighlightedString(string) {
