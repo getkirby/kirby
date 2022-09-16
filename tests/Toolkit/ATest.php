@@ -631,6 +631,7 @@ class ATest extends TestCase
 		$this->assertSame(6.0, A::average($array));
 		$this->assertSame(5.5, A::average($array, 1));
 		$this->assertSame(5.54, A::average($array, 2));
+		$this->assertNull(A::average([]));
 	}
 
 	/**
