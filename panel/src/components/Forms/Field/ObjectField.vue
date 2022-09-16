@@ -80,7 +80,13 @@ export default {
 	table-layout: auto;
 }
 .k-table.k-object-field-table tbody td,
-.k-table.k-object-field-table tbody th {
+.k-table.k-object-field-table tbody th,
+.k-table.k-object-field-table tbody th button {
 	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.k-table.k-object-field-table tbody td {
+	max-width: 0;
 }
 </style>

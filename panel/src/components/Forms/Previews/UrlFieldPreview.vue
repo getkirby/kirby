@@ -36,11 +36,13 @@ export default {
 	padding: 0.325rem 0.75rem;
 }
 .k-url-field-preview a {
+	display: block;
 	color: var(--color-focus);
 	text-decoration: underline;
 	transition: color 0.3s;
 	white-space: nowrap;
-	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .k-url-field-preview a:hover {
 	color: var(--color-black);
