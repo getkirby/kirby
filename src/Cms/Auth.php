@@ -712,9 +712,17 @@ class Auth
 	public function type(bool $allowImpersonation = true): string
 	{
 		$basicAuth = $this->kirby->option('api.basicAuth', false);
-		$auth      = $this->kirby->request()->auth();
+		$request   = $this->kirby->request();
 
-		if ($basicAuth === true && $auth && $auth->type() === 'basic') {
+		if (
+			$basicAuth === true &&
+
+			// only get the auth object if the option is enabled
+			// to avoid triggering `$responder->usesAuth()` if
+			// the option is disabled
+			$request->auth() &&
+			$request->auth()->type() === 'basic'
+		) {
 			return 'basic';
 		}
 

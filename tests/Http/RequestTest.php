@@ -159,6 +159,39 @@ class RequestTest extends TestCase
 		$this->assertTrue($app->response()->usesAuth());
 	}
 
+	/**
+	 * @dataProvider hasAuthProvider
+	 */
+	public function testHasAuth($option, $header, $expected)
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => $header
+			]
+		]);
+
+		$request = new Request([
+			'auth' => $option
+		]);
+
+		$this->assertSame($expected, $request->hasAuth());
+	}
+
+	public function hasAuthProvider(): array
+	{
+		return [
+			[null, null, false],
+			[null, '', false],
+			['', null, false],
+			['', '', false],
+			['Basic abc', '', true],
+			['', 'Basic abc', true],
+			['Basic abc', null, true],
+			[null, 'Basic abc', true],
+			['Basic abc', 'Basic def', true],
+		];
+	}
+
 	public function testMethod()
 	{
 		$request = new Request();
