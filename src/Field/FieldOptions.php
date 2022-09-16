@@ -58,6 +58,12 @@ class FieldOptions extends Node
 
 		unset($props['api'], $props['query']);
 
+		// when HTML is allowed for field,
+		// also set as default for options
+		if (isset($props['html']) === true) {
+			$props['options']['html'] ??= $props['html'];
+		}
+
 		if (($props['options']['type'] ?? null) !== null) {
 			return $props;
 		}
@@ -67,12 +73,6 @@ class FieldOptions extends Node
 				'type'    => 'array',
 				'options' => $props['options']
 			];
-		}
-
-		// when HTML is allowed for field,
-		// also set as default for options
-		if ($props['html'] ?? null === true) {
-			$props['options']['html'] ??= true;
 		}
 
 		return $props;
