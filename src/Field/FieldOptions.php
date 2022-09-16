@@ -58,12 +58,6 @@ class FieldOptions extends Node
 
 		unset($props['api'], $props['query']);
 
-		// when HTML is allowed for field,
-		// also set as default for options
-		if (isset($props['html']) === true) {
-			$props['options']['html'] ??= $props['html'];
-		}
-
 		if (($props['options']['type'] ?? null) !== null) {
 			return $props;
 		}

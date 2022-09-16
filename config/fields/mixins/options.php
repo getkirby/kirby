@@ -11,12 +11,6 @@ return [
 			return $api;
 		},
 		/**
-		 * Whether to render HTML (only do for trusted sources, could enable XSS attacks)
-		 */
-		'html' => function ($html = false) {
-			return $html;
-		},
-		/**
 		 * An array with options
 		 */
 		'options' => function ($options = []) {

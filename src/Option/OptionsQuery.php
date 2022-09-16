@@ -30,8 +30,7 @@ class OptionsQuery extends OptionsProvider
 	public function __construct(
 		public string $query,
 		public string|null $text = null,
-		public string|null $value = null,
-		public bool|null $html = null
+		public string|null $value = null
 	) {
 	}
 
@@ -44,8 +43,7 @@ class OptionsQuery extends OptionsProvider
 		return new static(
 			query: $props['query'] ?? $props['fetch'],
 			text: $props['text'] ?? null,
-			value: $props['value'] ?? null,
-			html: $props['html'] ?? null
+			value: $props['value'] ?? null
 		);
 	}
 
@@ -128,9 +126,6 @@ class OptionsQuery extends OptionsProvider
 		}
 		// @codeCoverageIgnoreEnd
 
-		// apply property defaults
-		$this->defaults();
-
 		// run query
 		$result = $model->query($this->query);
 
@@ -159,11 +154,7 @@ class OptionsQuery extends OptionsProvider
 
 			// text is only a raw string when HTML prop
 			// is explicitly set to true
-			if ($this->html === true) {
-				$text = $model->toString($this->text ?? $text, $data);
-			} else {
-				$text = $model->toSafeString($this->text ?? $text, $data);
-			}
+			$text = $model->toSafeString($this->text ?? $text, $data);
 
 			return compact('text', 'value');
 		});

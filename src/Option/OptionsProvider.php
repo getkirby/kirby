@@ -17,13 +17,6 @@ use Kirby\Cms\ModelWithContent;
 abstract class OptionsProvider
 {
 	public Options|null $options = null;
-
-	public function defaults(): static
-	{
-		$this->html  ??= false;
-		return $this;
-	}
-
 	/**
 	 * Returns options as array
 	 */

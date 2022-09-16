@@ -20,7 +20,6 @@ class OptionsApiTest extends TestCase
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
-		$this->assertNull($options->html);
 	}
 
 	/**
@@ -32,14 +31,12 @@ class OptionsApiTest extends TestCase
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
-		$this->assertNull($options->html);
 
 		$options->defaults();
 
 		$this->assertSame($url, $options->url);
 		$this->assertSame('{{ item.value }}', $options->text);
 		$this->assertSame('{{ item.key }}', $options->value);
-		$this->assertSame(false, $options->html);
 	}
 
 	/**
@@ -52,21 +49,18 @@ class OptionsApiTest extends TestCase
 			'query' => $query = 'Companies',
 			'text'  => $text = '{{ item.name }}',
 			'value' => $value =  '{{ item.id }}',
-			'html'  => $html = true
 		]);
 
 		$this->assertSame($url, $options->url);
 		$this->assertSame($query, $options->query);
 		$this->assertSame($text, $options->text);
 		$this->assertSame($value, $options->value);
-		$this->assertSame($html, $options->html);
 
 		$options = OptionsApi::factory($url = 'https://api.getkirby.com');
 		$this->assertSame($url, $options->url);
 		$this->assertNull($options->query);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
-		$this->assertNull($options->html);
 	}
 
 	/**
@@ -137,7 +131,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model = new Page(['slug' => 'test']);
 
-		// escaped (html = false, default)
+		// text escaped by default
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
 			query: 'Directory.Companies',
@@ -152,14 +146,12 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 
-		// unescaped (html = true)
-		// escaped (html = false, default)
+		// text unescaped using {< >}
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
 			query: 'Directory.Companies',
-			text: '{{ item.slogan }}',
-			value: '{{ item.slogan }}',
-			html: true
+			text: '{< item.slogan >}',
+			value: '{{ item.slogan }}'
 		);
 		$result = $options->render($model);
 		$this->assertSame('We are <b>great</b>', $result[0]['text']);

@@ -23,21 +23,15 @@ class FieldOptionsTest extends TestCase
 		]);
 		$this->assertInstanceOf(OptionsApi::class, $options->options);
 		$this->assertSame($url, $options->options->url);
-		$this->assertNull($options->options->html);
 
 		$options = FieldOptions::factory([
 			'type'  => 'query',
-			'query' => $query = 'site.children',
-			'html'  => true
+			'query' => $query = 'site.children'
 		]);
 		$this->assertInstanceOf(OptionsQuery::class, $options->options);
 		$this->assertSame($query, $options->options->query);
 
 		$options = FieldOptions::factory(['type'  => 'array', 'options' => ['a', 'b']]);
-		$this->assertInstanceOf(Options::class, $options->options);
-		$this->assertSame(2, $options->options->count());
-
-		$options = FieldOptions::factory(['a' => 'Option A', 'b' => 'Option B']);
 		$this->assertInstanceOf(Options::class, $options->options);
 		$this->assertSame(2, $options->options->count());
 	}
@@ -65,9 +59,8 @@ class FieldOptionsTest extends TestCase
 		$props = FieldOptions::polyfill(['options' => ['a', 'b', 'c']]);
 		$this->assertSame($expected, $props);
 
-		// if global HTML is passed to options props
-		$props = FieldOptions::polyfill(['html' => true, 'options' => ['a', 'b', 'c']]);
-		$this->assertTrue($props['options']['html']);
+		$props = FieldOptions::polyfill(['options' => $options = ['a' => 'Option A', 'b' => 'Option B']]);
+		$this->assertSame(['options' => ['type' => 'array', 'options' => $options]], $props);
 	}
 
 	/**

@@ -41,7 +41,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame($query, $options->query);
 		$this->assertSame('{{ page.slug }}', $options->text);
 		$this->assertNull($options->value);
-		$this->assertNull($options->html);
 	}
 
 	/**
@@ -53,14 +52,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame($query, $options->query);
 		$this->assertNull($options->text);
 		$this->assertNull($options->value);
-		$this->assertNull($options->html);
-
-		$options->defaults();
-
-		$this->assertSame($query, $options->query);
-		$this->assertNull($options->text);
-		$this->assertNull($options->value);
-		$this->assertSame(false, $options->html);
 	}
 
 	/**
@@ -70,14 +61,12 @@ class OptionsQueryTest extends TestCase
 	{
 		$options = OptionsQuery::factory([
 			'query' => $query = 'site.children',
-			'text'  => $text = '{{ page.slug }}',
-			'html'  => $html = true
+			'text'  => $text = '{{ page.slug }}'
 		]);
 
 		$this->assertSame($query, $options->query);
 		$this->assertSame($text, $options->text);
 		$this->assertNull($options->value);
-		$this->assertSame(true, $options->html);
 
 		$options = OptionsQuery::factory($query);
 		$this->assertSame($query, $options->query);
@@ -303,7 +292,7 @@ class OptionsQueryTest extends TestCase
 	{
 		$model   = new MyPage(['slug' => 'a']);
 
-		// escaped (html = false, default)
+		// text escaped by default
 		$options = (new OptionsQuery(
 			query: 'page.myHtmlArray',
 			text: '{{ item.slogan }}',
@@ -316,13 +305,11 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
 
-		// unescaped (html = true)
-		// escaped (html = false, default)
+		// text unescaped via {< >}
 		$options = (new OptionsQuery(
 			query: 'page.myHtmlArray',
-			text: '{{ item.slogan }}',
-			value: '{{ item.slogan }}',
-			html: true
+			text: '{< item.slogan >}',
+			value: '{{ item.slogan }}'
 		))->render($model);
 		$this->assertSame('We are <b>great</b>', $options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
