@@ -1,26 +1,30 @@
 <template>
 	<ul :style="'--columns:' + columns" class="k-radio-input">
-		<li v-for="(option, index) in options" :key="index">
-			<input
-				:id="id + '-' + index"
-				:value="option.value"
-				:name="id"
-				:checked="value === option.value"
-				type="radio"
-				class="k-radio-input-native"
-				@change="onInput(option.value)"
-			/>
+		<template v-if="options.length">
+			<li v-for="(option, index) in options" :key="index">
+				<input
+					:id="id + '-' + index"
+					:value="option.value"
+					:name="id"
+					:checked="value === option.value"
+					type="radio"
+					class="k-radio-input-native"
+					@change="onInput(option.value)"
+				/>
 
-			<!-- eslint-disable vue/no-v-html -->
-			<label v-if="option.info" :for="id + '-' + index">
-				<span class="k-radio-input-text" v-html="option.text" />
-				<span class="k-radio-input-info" v-html="option.info" />
-			</label>
-			<label v-else :for="id + '-' + index" v-html="option.text" />
-			<!-- eslint-enable vue/no-v-html -->
+				<!-- eslint-disable vue/no-v-html -->
+				<label v-if="option.info" :for="id + '-' + index">
+					<span class="k-radio-input-text" v-html="option.text" />
+					<span class="k-radio-input-info" v-html="option.info" />
+				</label>
+				<label v-else :for="id + '-' + index" v-html="option.text" />
+				<!-- eslint-enable vue/no-v-html -->
 
-			<k-icon v-if="option.icon" :type="option.icon" />
-		</li>
+				<k-icon v-if="option.icon" :type="option.icon" />
+			</li>
+		</template>
+
+		<k-box v-else theme="info">{{ $t("options.none") }}</k-box>
 	</ul>
 </template>
 
