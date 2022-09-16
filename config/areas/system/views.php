@@ -21,14 +21,15 @@ return [
 			// @codeCoverageIgnoreEnd
 
 			$plugins = $system->plugins()->values(function ($plugin) {
+				$authors = $plugin->authorsNames();
 				return [
-					'author'  => $plugin->authorsNames(),
-					'license' => $plugin->license(),
+					'author'  => empty($authors) ? '–' : $authors,
+					'license' => $plugin->license() ?? '–',
 					'name'    => [
-						'text' => $plugin->name(),
-						'href' => $plugin->link(),
+						'text' => $plugin->name() ?? '–',
+						'href' => $plugin->link() ?? '–',
 					],
-					'version' => $plugin->version(),
+					'version' => $plugin->version() ?? '–',
 				];
 			});
 
