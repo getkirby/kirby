@@ -4,6 +4,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 
 return [
 	'props' => [
@@ -24,6 +25,13 @@ return [
 		},
 
 		/**
+		 * The placeholder text if no information has been added yet
+		 */
+		'empty' => function ($empty = null) {
+			return I18n::translate($empty, $empty);
+		},
+
+		/**
 		 * Fields setup for the object form. Works just like fields in regular forms.
 		 */
 		'fields' => function (array $fields = []) {
@@ -32,6 +40,10 @@ return [
 	],
 	'computed' => [
 		'default' => function () {
+			if (empty($this->default) === true) {
+				return null;
+			}
+
 			return $this->form($this->default)->values();
 		},
 		'fields' => function () {
@@ -43,6 +55,10 @@ return [
 		},
 		'value' => function () {
 			$data = Data::decode($this->value, 'yaml');
+
+			if (empty($data) === true) {
+				return null;
+			}
 
 			return $this->form($data)->values();
 		}
@@ -57,10 +73,18 @@ return [
 		},
 	],
 	'save' => function ($value) {
+		if (empty($value) === true) {
+			return null;
+		}
+
 		return $this->form($value)->content();
 	},
 	'validations' => [
 		'object' => function ($value) {
+			if (empty($value) === true) {
+				return true;
+			}
+
 			$errors = $this->form($value)->errors();
 
 			if (empty($errors) === false) {

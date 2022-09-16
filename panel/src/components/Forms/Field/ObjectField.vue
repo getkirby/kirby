@@ -1,6 +1,12 @@
 <template>
 	<k-field v-bind="$props" class="k-object-field">
-		<table class="k-table k-object-field-table">
+		<!-- Remove button -->
+		<template #options>
+			<k-button v-if="isEmpty" icon="add" @click="onAdd" />
+			<k-button v-else icon="remove" @click="onRemove" />
+		</template>
+
+		<table v-if="!isEmpty" class="k-table k-object-field-table">
 			<tbody>
 				<tr v-for="field in fields" :key="field.name" @click="open(field.name)">
 					<th data-mobile="true">
@@ -16,6 +22,10 @@
 				</tr>
 			</tbody>
 		</table>
+		<k-empty v-else :data-invalid="isInvalid" icon="box" @click="onAdd">
+			{{ empty || $t("field.object.empty") }}
+		</k-empty>
+
 		<k-form-drawer ref="drawer" v-bind="drawer" @input="onDrawerInput" />
 	</k-field>
 </template>
@@ -27,6 +37,7 @@ import { props as Input } from "../Input.vue";
 export default {
 	mixins: [Field, Input],
 	props: {
+		empty: String,
 		fields: Object,
 		value: Object
 	},
@@ -48,20 +59,53 @@ export default {
 				title: this.label,
 				value: this.object
 			};
+		},
+		isEmpty() {
+			if (!this.value) {
+				return true;
+			}
+
+			if (this.value && Object.keys(this.value).length === 0) {
+				return true;
+			}
+
+			return false;
+		},
+		isInvalid() {
+			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {
-		value() {
-			this.object = this.value;
+		value(value) {
+			this.object = value;
 		}
 	},
 	methods: {
+		onAdd() {
+			this.object = {};
+
+			for (const fieldName in this.fields) {
+				const field = this.fields[fieldName];
+				const value = field.default ? this.$helper.clone(field.default) : null;
+
+				this.object[fieldName] = value;
+			}
+
+			console.log(this.object);
+
+			this.$emit("input", this.object);
+			this.open();
+		},
 		onCellInput(name, value) {
 			this.$set(this.object, name, value);
 			this.$emit("input", this.object);
 		},
 		onDrawerInput(value) {
 			this.object = value;
+			this.$emit("input", this.object);
+		},
+		onRemove() {
+			this.object = {};
 			this.$emit("input", this.object);
 		},
 		open(field) {
