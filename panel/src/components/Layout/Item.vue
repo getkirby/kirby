@@ -123,7 +123,8 @@ export default {
 .k-item:focus {
 	outline: 0;
 }
-.k-item:focus-within {
+.k-item:focus-within,
+.k-item.k-sortable-ghost {
 	box-shadow: var(--shadow-outline);
 }
 .k-item a:focus {
