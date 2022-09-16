@@ -32,7 +32,6 @@ export default {
 	},
 	data() {
 		return {
-			autofocus: null,
 			object: this.value
 		};
 	},

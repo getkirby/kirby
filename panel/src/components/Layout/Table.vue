@@ -211,7 +211,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				(this.options && this.options.length > 0) ||
+				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row.options).length > 0
 			);
 		}
