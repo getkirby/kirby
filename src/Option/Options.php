@@ -30,7 +30,11 @@ class Options extends Collection
 		$collection = new static();
 
 		foreach ($items as $key => $option) {
-			if (is_array($option) === false) {
+			// skip if option is already an array of option props
+			if (
+				is_array($option) === false ||
+				array_key_exists('value', $option) === false
+			) {
 				if (is_string($key) === true) {
 					$option = ['value' => $key, 'text' => $option];
 				} else {

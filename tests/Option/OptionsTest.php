@@ -56,4 +56,23 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->value);
 		$this->assertSame('Option B', $options->last()->text->translations['en']);
 	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructWithTranslatedOptions()
+	{
+		$options = Options::factory([
+			'a' => ['en' => 'Option A', 'de' => 'Variante A'],
+			'b' => ['en' => 'Option B', 'de' => 'Variante B']
+		]);
+
+		$this->assertSame('a', $options->first()->value);
+		$this->assertSame('Option A', $options->first()->text->translations['en']);
+		$this->assertSame('Variante A', $options->first()->text->translations['de']);
+
+		$this->assertSame('b', $options->last()->value);
+		$this->assertSame('Option B', $options->last()->text->translations['en']);
+		$this->assertSame('Variante B', $options->last()->text->translations['de']);
+	}
 }
