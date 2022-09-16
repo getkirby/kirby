@@ -253,11 +253,11 @@ export default {
 	methods: {
 		/**
 		 * Adds new value as selected
-		 * @param {string} value
+		 * @param {object} option
 		 */
-		add(value) {
+		add(option) {
 			if (this.more === true) {
-				this.state.push(value);
+				this.state.push(option.value);
 				this.onInput();
 			}
 		},
@@ -335,10 +335,11 @@ export default {
 		},
 		/**
 		 * Removes value from selected
-		 * @param {string} value
+		 * @param {object} option
 		 */
-		remove(value) {
-			this.state.splice(this.index(value), 1);
+		remove(option) {
+			const index = this.index(option);
+			this.state.splice(index, 1);
 			this.onInput();
 		},
 		/**
@@ -351,9 +352,9 @@ export default {
 			).scrollTop;
 
 			if (this.isSelected(option)) {
-				this.remove(option.value);
+				this.remove(option);
 			} else {
-				this.add(option.value);
+				this.add(option);
 			}
 		},
 		toHighlightedString(string) {
