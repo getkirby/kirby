@@ -18,20 +18,33 @@ export function clone(array) {
  * @param {mixed} value
  * @returns {bool}
  */
-export function isEmpty(value) {
+export function isEmpty(value, strict = true) {
+	// check for native empty states
 	if (value === undefined || value === null || value === "") {
 		return true;
 	}
 
+	// object with no keys
 	if (
 		typeof value === "object" &&
 		value.constructor === Object &&
-		(Object.keys(value).length === 0 ||
-			Object.values(value).filter(Boolean).length === 0)
+		Object.keys(value).length === 0
 	) {
 		return true;
 	}
 
+	// non-strict:
+	// object with no non-empty values
+	if (
+		strict === false &&
+		typeof value === "object" &&
+		value.constructor === Object &&
+		Object.values(value).filter(Boolean).length === 0
+	) {
+		return true;
+	}
+
+	// arrays, strings...
 	if (value.length !== undefined && value.length === 0) {
 		return true;
 	}
