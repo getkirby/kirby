@@ -232,7 +232,7 @@ class Component
 				throw new Exception('Component definition ' . $definition . ' does not exist');
 			}
 
-			static::$types[$type] = $definition = F::load($definition);
+			static::$types[$type] = $definition = F::load($definition, allowOutput: false);
 		}
 
 		return $definition;
@@ -254,7 +254,11 @@ class Component
 
 		if (isset($definition['extends']) === true) {
 			// extend other definitions
-			$options = array_replace_recursive(static::defaults(), static::load($definition['extends']), $definition);
+			$options = array_replace_recursive(
+				static::defaults(),
+				static::load($definition['extends']),
+				$definition
+			);
 		} else {
 			// inject defaults
 			$options = array_replace_recursive(static::defaults(), $definition);
@@ -266,10 +270,14 @@ class Component
 				if (isset(static::$mixins[$mixin]) === true) {
 					if (is_string(static::$mixins[$mixin]) === true) {
 						// resolve a path to a mixin on demand
-						static::$mixins[$mixin] = include static::$mixins[$mixin];
+
+						static::$mixins[$mixin] = F::load(static::$mixins[$mixin], allowOutput: false);
 					}
 
-					$options = array_replace_recursive(static::$mixins[$mixin], $options);
+					$options = array_replace_recursive(
+						static::$mixins[$mixin],
+						$options
+					);
 				}
 			}
 		}
