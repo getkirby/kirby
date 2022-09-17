@@ -5,10 +5,10 @@
 			v-for="(report, id) in reports"
 			:key="id"
 			:data-theme="report.theme"
-			:data-click="!!report.click"
+			:data-click="!!(report.click || report.dialog)"
 			:to="report.link"
 			class="k-stat"
-			@click="report.click ? report.click() : null"
+			@click="onClick(report)"
 		>
 			<dt class="k-stat-label">{{ report.label }}</dt>
 			<dd class="k-stat-value">{{ report.value }}</dd>
@@ -24,6 +24,17 @@ export default {
 		size: {
 			type: String,
 			default: "large"
+		}
+	},
+	methods: {
+		onClick(report) {
+			if (report.click) {
+				report.click();
+			}
+
+			if (report.dialog) {
+				this.$dialog(report.dialog);
+			}
 		}
 	}
 };
