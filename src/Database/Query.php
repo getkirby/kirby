@@ -404,18 +404,7 @@ class Query
 	 */
 	public function orWhere(...$args)
 	{
-		$mode = A::last($args);
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-		}
-
-		// make sure to always attach the OR mode indicator
-		$args[] = 'OR';
-
-		$this->where(...$args);
+		$this->where = $this->filterQuery($args, $this->where, 'OR');
 		return $this;
 	}
 
@@ -428,18 +417,7 @@ class Query
 	 */
 	public function andWhere(...$args)
 	{
-		$mode = A::last($args);
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-		}
-
-		// make sure to always attach the AND mode indicator
-		$args[] = 'AND';
-
-		$this->where(...$args);
+		$this->where = $this->filterQuery($args, $this->where, 'AND');
 		return $this;
 	}
 
@@ -932,17 +910,19 @@ class Query
 	 * @param mixed $current Current value (like $this->where)
 	 * @return string
 	 */
-	protected function filterQuery(array $args, $current)
+	protected function filterQuery(array $args, $current, string $mode = null)
 	{
-		$mode   = A::last($args);
 		$result = '';
+		$last   = A::last($args);
 
 		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
+		if (in_array($last, ['AND', 'OR'], true) === true) {
 			// remove that from the list of arguments
 			array_pop($args);
+			// and use it as mode if not explicitly provided
+			$mode ??= $last;
 		} else {
-			$mode = 'AND';
+			$mode ??= 'AND';
 		}
 
 		switch (count($args)) {
