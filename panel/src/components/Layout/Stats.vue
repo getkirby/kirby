@@ -1,14 +1,12 @@
 <template>
 	<dl class="k-stats" :data-size="size">
 		<component
-			:is="report.link ? 'k-link' : 'div'"
+			:is="component(report)"
 			v-for="(report, id) in reports"
 			:key="id"
 			:data-theme="report.theme"
-			:data-click="!!(report.click || report.dialog)"
-			:to="report.link"
+			:to="target(report)"
 			class="k-stat"
-			@click="onClick(report)"
 		>
 			<dt class="k-stat-label">{{ report.label }}</dt>
 			<dd class="k-stat-value">{{ report.value }}</dd>
@@ -27,14 +25,27 @@ export default {
 		}
 	},
 	methods: {
-		onClick(report) {
+		component(report) {
+			if (this.target(report) !== null) {
+				return "k-link";
+			}
+
+			return "div";
+		},
+		target(report) {
+			if (report.link) {
+				return report.link;
+			}
+
 			if (report.click) {
-				report.click();
+				return report.click;
 			}
 
 			if (report.dialog) {
-				this.$dialog(report.dialog);
+				return () => this.$dialog(report.dialog);
 			}
+
+			return null;
 		}
 	}
 };
@@ -55,8 +66,7 @@ export default {
 	line-height: var(--leading-normal);
 	border-radius: var(--rounded);
 }
-.k-stat.k-link:hover,
-.k-stat[data-click="true"]:hover {
+.k-stat.k-link:hover {
 	cursor: pointer;
 	background: var(--color-gray-100);
 }
