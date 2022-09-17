@@ -12,12 +12,12 @@
 				<k-stats :reports="environment" size="medium" class="k-system-info" />
 			</section>
 
-			<section v-if="securityMerged.length" class="k-system-view-section">
+			<section v-if="securityIssues.length" class="k-system-view-section">
 				<header class="k-system-view-section-header">
 					<k-headline>{{ $t("security") }}</k-headline>
 					<k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
 				</header>
-				<k-items :items="securityMerged" />
+				<k-items :items="securityIssues" />
 			</section>
 
 			<section v-if="plugins.length" class="k-system-view-section">
@@ -63,26 +63,28 @@ export default {
 	},
 	data() {
 		return {
-			securityDynamic: []
+			accessible: []
 		};
 	},
 	computed: {
-		securityMerged() {
-			// merge messages from props and from dynamic checks
-			let messages = this.security.concat(this.securityDynamic);
+		securityIssues() {
+			// transform accesible URLs into security messages
+			const accessible = this.accessible.map((key) => ({
+				id: key,
+				text: this.$t("system.issues." + key),
+				link: "https://getkirby.com/security/" + key
+			}));
 
-			// give each message an image prop unless it already has one
-			return messages.map((issue) => {
-				if (!issue.image) {
-					issue.image = {
-						back: "var(--color-red-200)",
-						icon: "alert",
-						color: "var(--color-red)"
-					};
+			// merge messages from backend and from dynamic URL checks
+			return this.security.concat(accessible).map((issue) => ({
+				...issue,
+				// give each message an image prop unless it already has one
+				image: {
+					back: "var(--color-red-200)",
+					icon: "alert",
+					color: "var(--color-red)"
 				}
-
-				return issue;
-			});
+			}));
 		}
 	},
 	async created() {
@@ -91,41 +93,29 @@ export default {
 		);
 
 		// `Promise.all` as fallback for older browsers
-		let promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
+		const promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
 
 		// call the check method on every URL in the `urls` object
-		let promises = Object.entries(this.urls).map(([key, url]) =>
-			this.check(key, url)
-		);
+		const promises = Object.entries(this.urls).map(this.check);
 
 		await promiseAll(promises);
 
 		console.info("System health checks ended.");
 	},
 	methods: {
-		async check(key, url) {
+		async check([key, url]) {
 			if (!url) {
 				return false;
 			}
 
-			let result = await this.isAccessible(url);
+			const result = await this.isAccessible(url);
 
 			if (result === true) {
-				this.securityIssue(key);
+				this.accessible.push(key);
 			}
 		},
-		securityIssue(key) {
-			this.securityDynamic.push({
-				id: key,
-				text: this.$t("system.issues." + key),
-				link: "https://getkirby.com/security/" + key
-			});
-		},
 		async isAccessible(url) {
-			const response = await fetch(url, {
-				cache: "no-store"
-			});
-
+			const response = await fetch(url, { cache: "no-store" });
 			return response.status < 400;
 		},
 		retry() {
