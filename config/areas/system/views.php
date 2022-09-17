@@ -27,7 +27,7 @@ return [
 					'license' => $plugin->license() ?? '–',
 					'name'    => [
 						'text' => $plugin->name() ?? '–',
-						'href' => $plugin->link() ?? '–',
+						'href' => $plugin->link(),
 					],
 					'version' => $plugin->version() ?? '–',
 				];
