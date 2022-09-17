@@ -12,12 +12,12 @@
 				<k-stats :reports="environment" size="medium" class="k-system-info" />
 			</section>
 
-			<section v-if="security.length" class="k-system-view-section">
+			<section v-if="securityMerged.length" class="k-system-view-section">
 				<header class="k-system-view-section-header">
 					<k-headline>{{ $t("security") }}</k-headline>
 					<k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
 				</header>
-				<k-items :items="security" />
+				<k-items :items="securityMerged" />
 			</section>
 
 			<section v-if="plugins.length" class="k-system-view-section">
@@ -56,47 +56,33 @@
 <script>
 export default {
 	props: {
-		debug: Boolean,
-		license: String,
-		php: String,
+		environment: Array,
 		plugins: Array,
-		server: String,
-		https: Boolean,
-		urls: Object,
-		version: String
+		security: Array,
+		urls: Object
 	},
 	data() {
 		return {
-			security: []
+			securityDynamic: []
 		};
 	},
 	computed: {
-		environment() {
-			return [
-				{
-					label: this.$t("license"),
-					value: this.license
-						? "Kirby 3"
-						: this.$t("license.unregistered.label"),
-					theme: this.license ? null : "negative",
-					click: this.license
-						? () => this.$dialog("license")
-						: () => this.$dialog("registration")
-				},
-				{
-					label: this.$t("version"),
-					value: this.version,
-					link: "https://github.com/getkirby/kirby/releases/tag/" + this.version
-				},
-				{
-					label: "PHP",
-					value: this.php
-				},
-				{
-					label: this.$t("server"),
-					value: this.server || "?"
+		securityMerged() {
+			// merge messages from props and from dynamic checks
+			let messages = this.security.concat(this.securityDynamic);
+
+			// give each message an image prop unless it already has one
+			return messages.map((issue) => {
+				if (!issue.image) {
+					issue.image = {
+						back: "var(--color-red-200)",
+						icon: "alert",
+						color: "var(--color-red)"
+					};
 				}
-			];
+
+				return issue;
+			});
 		}
 	},
 	async created() {
@@ -107,50 +93,29 @@ export default {
 		// `Promise.all` as fallback for older browsers
 		let promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
 
-		await promiseAll([
-			this.check("content"),
-			this.check("debug"),
-			this.check("git"),
-			this.check("https"),
-			this.check("kirby"),
-			this.check("site")
-		]);
+		// call the check method on every URL in the `urls` object
+		let promises = Object.entries(this.urls).map(([key, url]) =>
+			this.check(key, url)
+		);
+
+		await promiseAll(promises);
 
 		console.info("System health checks ended.");
 	},
 	methods: {
-		async check(key) {
-			switch (key) {
-				case "debug":
-					if (this.debug === true) {
-						this.securityIssue(key);
-					}
-					break;
-				case "https":
-					if (this.https !== true) {
-						this.securityIssue(key);
-					}
-					break;
-				default: {
-					const url = this.urls[key];
+		async check(key, url) {
+			if (!url) {
+				return false;
+			}
 
-					if (!url) {
-						return false;
-					}
+			let result = await this.isAccessible(url);
 
-					if ((await this.isAccessible(url)) === true) {
-						this.securityIssue(key);
-					}
-				}
+			if (result === true) {
+				this.securityIssue(key);
 			}
 		},
 		securityIssue(key) {
-			this.security.push({
-				image: {
-					back: "var(--color-red-200)",
-					icon: "alert",
-					color: "var(--color-red)"
-				},
+			this.securityDynamic.push({
 				id: key,
 				text: this.$t("system.issues." + key),
 				link: "https://getkirby.com/security/" + key
