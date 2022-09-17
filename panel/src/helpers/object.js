@@ -25,8 +25,9 @@ export function isEmpty(value) {
 
 	if (
 		typeof value === "object" &&
-		Object.keys(value).length === 0 &&
-		value.constructor === Object
+		value.constructor === Object &&
+		(Object.keys(value).length === 0 ||
+			Object.values(value).filter(Boolean).length === 0)
 	) {
 		return true;
 	}

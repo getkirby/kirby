@@ -7,11 +7,15 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeDefault
  * @internal
  */
-export default {};
+export default {
+	extends: BlockType
+};
 </script>
 
 <style>

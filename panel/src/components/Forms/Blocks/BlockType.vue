@@ -23,6 +23,11 @@ export default {
 		open() {
 			this.$emit("open");
 		},
+		onBackspace() {
+			if (this.$helper.object.isEmpty(this.content) === true) {
+				this.$emit("remove-by-input");
+			}
+		},
 		update(content) {
 			this.$emit("update", {
 				...this.content,

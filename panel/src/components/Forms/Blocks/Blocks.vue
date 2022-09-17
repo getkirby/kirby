@@ -38,6 +38,7 @@
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
+					@remove-by-input="removeByInput(block)"
 					@sortDown="sort(block, index, index + 1)"
 					@sortUp="sort(block, index, index - 1)"
 					@show="show(block)"
@@ -588,6 +589,15 @@ export default {
 			this.blocks = [];
 			this.save();
 			this.$refs.removeAll.close();
+		},
+		removeByInput(block) {
+			const index = this.findIndex(block.id);
+			this.remove(block);
+
+			if (index > 0) {
+				const above = this.blocks[index - 1];
+				this.$refs["block-" + above.id][0].focus();
+			}
 		},
 		removeSelected() {
 			this.batch.forEach((id) => {

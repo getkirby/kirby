@@ -16,11 +16,15 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeGallery
  * @internal
  */
-export default {};
+export default {
+	extends: BlockType
+};
 </script>
 
 <style>

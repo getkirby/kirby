@@ -168,9 +168,7 @@ export default {
 					this.toolbar = toolbar;
 
 					if (this.toolbar.visible) {
-						this.$nextTick(() => {
-							this.onToolbarOpen();
-						});
+						this.$nextTick(() => this.onToolbarOpen);
 					}
 				},
 				update: (payload) => {
@@ -214,7 +212,7 @@ export default {
 				// Extensions
 				new History(),
 				new Insert(),
-				new Toolbar(),
+				new Toolbar({ nodes: this.showNodes }),
 				...(this.extensions || [])
 			],
 			inline: this.inline

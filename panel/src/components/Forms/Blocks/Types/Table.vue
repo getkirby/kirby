@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * Preview for the `table` block
  *
@@ -16,6 +18,7 @@
  * @internal
  */
 export default {
+	extends: BlockType,
 	inheritAttrs: false,
 	computed: {
 		/**

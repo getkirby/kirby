@@ -5,11 +5,15 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeLine
  * @internal
  */
-export default {};
+export default {
+	extends: BlockType
+};
 </script>
 
 <style>

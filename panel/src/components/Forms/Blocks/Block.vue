@@ -11,10 +11,12 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
-		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
-		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
 		@focus="$emit('focus')"
 		@focusin="onFocusIn"
+		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
+		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
+		@keydown.ctrl.enter.prevent="$emit('chooseToAppend')"
+		@remove-by-input="$emit('remove-by-input')"
 	>
 		<div :class="className" class="k-block">
 			<component

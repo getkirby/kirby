@@ -28,13 +28,8 @@ export default class Toolbar extends Extension {
 
 		this.visible = false;
 
-		this.editor.on("blur", () => {
-			this.close();
-		});
-
-		this.editor.on("deselect", () => {
-			this.close();
-		});
+		this.editor.on("blur", this.close);
+		this.editor.on("deselect", this.close);
 
 		this.editor.on("select", ({ hasChanged }) => {
 			/**

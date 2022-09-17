@@ -6,20 +6,24 @@
 		:value="content.text"
 		class="k-block-type-text-input"
 		@input="update({ text: $event })"
+		@keydown.native.backspace.exact="onBackspace"
 	/>
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeText
  * @internal
  */
 export default {
+	extends: BlockType,
 	computed: {
 		component() {
 			const component = "k-" + this.textField.type + "-input";
 
-			if (this.$helper.isComponent(component)) {
+			if (this.$helper.isComponent(component) === true) {
 				return component;
 			}
 
@@ -32,7 +36,7 @@ export default {
 	},
 	methods: {
 		focus() {
-			this.$refs.input.focus();
+			this.$refs.input.focus("end");
 		}
 	}
 };

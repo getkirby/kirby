@@ -19,11 +19,14 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeVideo
  * @internal
  */
 export default {
+	extends: BlockType,
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;

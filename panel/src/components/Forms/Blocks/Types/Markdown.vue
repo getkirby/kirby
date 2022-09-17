@@ -12,11 +12,14 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeMarkdown
  * @internal
  */
 export default {
+	extends: BlockType,
 	computed: {
 		placeholder() {
 			return this.field("text", {}).placeholder;

@@ -12,11 +12,14 @@
 </template>
 
 <script>
+import BlockType from "../BlockType.vue";
+
 /**
  * @displayName BlockTypeHeading
  * @internal
  */
 export default {
+	extends: BlockType,
 	computed: {
 		textField() {
 			return this.field("text", {

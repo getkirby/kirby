@@ -31,9 +31,6 @@ Object.keys(components).map((key) => {
 	// load the component
 	let component = components[key].default;
 
-	// extend the component with the block abstract
-	component.extends = BlockType;
-
 	// globally define the block type component
 	Vue.component("k-block-type-" + type, component);
 });
