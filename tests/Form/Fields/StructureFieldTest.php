@@ -104,9 +104,9 @@ class StructureFieldTest extends TestCase
 
 		$expected = [
 			'b' => [
-				'mobile' => true,
 				'type' => 'text',
 				'label' => 'b',
+				'mobile' => true,
 			],
 		];
 
