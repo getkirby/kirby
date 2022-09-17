@@ -1,11 +1,11 @@
 <template>
 	<dl class="k-stats" :data-size="size">
 		<component
-			:is="isLink(report)"
+			:is="component(report)"
 			v-for="(report, id) in reports"
 			:key="id"
 			:data-theme="report.theme"
-			:to="onClick(report)"
+			:to="target(report)"
 			class="k-stat"
 		>
 			<dt class="k-stat-label">{{ report.label }}</dt>
@@ -25,14 +25,14 @@ export default {
 		}
 	},
 	methods: {
-		isLink(report) {
-			if (this.onClick(report) !== null) {
+		component(report) {
+			if (this.target(report) !== null) {
 				return "k-link";
 			}
 
 			return "div";
 		},
-		onClick(report) {
+		target(report) {
 			if (report.link) {
 				return report.link;
 			}
