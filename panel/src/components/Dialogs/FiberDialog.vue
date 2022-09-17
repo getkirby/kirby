@@ -2,8 +2,9 @@
 	<component
 		:is="component"
 		ref="dialog"
-		:visible="true"
 		v-bind="props"
+		:disabled="isProcessing"
+		:visible="true"
 		@cancel="onCancel"
 		@submit="onSubmit"
 	/>
@@ -18,6 +19,11 @@ export default {
 		props: Object,
 		referrer: String
 	},
+	data() {
+		return {
+			isProcessing: false
+		};
+	},
 	methods: {
 		close() {
 			this.$refs.dialog.close();
@@ -29,6 +35,7 @@ export default {
 		},
 		async onSubmit(value) {
 			let dialog = null;
+			this.isProcessing = true;
 
 			try {
 				if (typeof this.$store.state.dialog.submit === "function") {
@@ -55,21 +62,10 @@ export default {
 					return false;
 				}
 
-				// everything went fine. We can close the dialog
-				this.close();
-
-				// show the smiley in the topbar
-				this.$store.dispatch("notification/success", ":)");
-
-				// fire events that might have been defined in the response
-				if (dialog.event) {
-					if (typeof dialog.event === "string") {
-						dialog.event = [dialog.event];
-					}
-					dialog.event.forEach((event) => {
-						this.$events.$emit(event, dialog);
-					});
-				}
+				// everything went fine. We can close the dialog,
+				// show the smiley in the topbar, fire events that
+				// might have been defined in the response
+				this.$refs.dialog.success(dialog);
 
 				// dispatch store actions that might have been defined in the response
 				if (dialog.dispatch) {
@@ -90,6 +86,8 @@ export default {
 				}
 			} catch (e) {
 				this.$refs.dialog.error(e);
+			} finally {
+				this.isProcessing = false;
 			}
 		}
 	}
