@@ -9,6 +9,12 @@ class SystemTest extends AreaTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+
+		$this->app([
+			'options' => [
+				'url' => 'https://example.com'
+			]
+		]);
 		$this->install();
 	}
 
@@ -27,12 +33,79 @@ class SystemTest extends AreaTestCase
 		$this->assertSame('system', $view['id']);
 		$this->assertSame('System', $view['title']);
 		$this->assertSame('k-system-view', $view['component']);
-		$this->assertFalse($props['debug']);
-		$this->assertNull($props['license']);
+		$this->assertSame([
+			[
+				'label' => 'License',
+				'value' => 'Unregistered',
+				'theme' => 'negative',
+				'dialog' => 'registration'
+			],
+			[
+				'label' => 'Version',
+				'value' => $this->app->version(),
+				'link' => 'https://github.com/getkirby/kirby/releases/tag/' . $this->app->version()
+			],
+			[
+				'label' => 'PHP',
+				'value' => phpversion()
+			],
+			[
+				'label' => 'Server',
+				'value' => 'php'
+			],
+		], $props['environment']);
 		$this->assertSame([], $props['plugins']);
-		$this->assertSame(phpversion(), $props['php']);
-		$this->assertSame('php', $props['server']);
-		$this->assertSame($this->app->version(), $props['version']);
+		$this->assertSame([], $props['security']);
+		$this->assertSame([
+			'content' => 'https://example.com/content/site.txt',
+			'git' => null,
+			'kirby' => null,
+			'site' => 'https://example.com/site'
+		], $props['urls']);
+	}
+
+	public function testViewDebug(): void
+	{
+		$this->app([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertSame([
+			[
+				'id'   => 'debug',
+				'text' => 'Debugging must be turned off in production',
+				'link' => 'https://getkirby.com/security/debug'
+			]
+		], $props['security']);
+	}
+
+	public function testViewHttps(): void
+	{
+		$this->app([
+			'options' => [
+				'url' => 'http://example.com'
+			]
+		]);
+
+		$this->login();
+
+		$view  = $this->view('system');
+		$props = $view['props'];
+
+		$this->assertSame([
+			[
+				'id'   => 'https',
+				'text' => 'We recommend HTTPS for all your sites',
+				'link' => 'https://getkirby.com/security/https'
+			]
+		], $props['security']);
 	}
 
 	public function testViewWithPlugins(): void
