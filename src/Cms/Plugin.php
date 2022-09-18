@@ -73,7 +73,7 @@ class Plugin extends Model
 	}
 
 	/**
-	 * Returns the associative array of plugin extensions
+	 * Returns the associative array of extensions the plugin bundles
 	 */
 	public function extends(): array
 	{
