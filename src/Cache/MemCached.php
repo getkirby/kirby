@@ -16,9 +16,14 @@ use Memcached as MemcachedExt;
 class MemCached extends Cache
 {
 	/**
-	 * store for the memcache connection
+	 * Store for the memcache connection
 	 */
 	protected MemcachedExt $connection;
+
+	/**
+	 * Stores whether the connection was successful
+	 */
+	protected bool $enabled;
 
 	/**
 	 * Sets all parameters which are needed to connect to Memcached
@@ -38,10 +43,19 @@ class MemCached extends Cache
 		parent::__construct(array_merge($defaults, $options));
 
 		$this->connection = new MemcachedExt();
-		$this->connection->addServer(
+		$this->enabled = $this->connection->addServer(
 			$this->options['host'],
 			$this->options['port']
 		);
+	}
+
+	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		return $this->enabled;
 	}
 
 	/**

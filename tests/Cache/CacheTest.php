@@ -8,7 +8,7 @@ use ReflectionMethod;
 require_once __DIR__ . '/mocks.php';
 
 /**
- * @coversDefaultClass \Kirby\Cache\NullCache
+ * @coversDefaultClass \Kirby\Cache\Cache
  */
 class CacheTest extends TestCase
 {
@@ -87,6 +87,16 @@ class CacheTest extends TestCase
 		$this->assertSame(1, $count);
 		$this->assertSame('foo', $cache->getOrSet('bar', $callback));
 		$this->assertSame(1, $count);
+	}
+
+	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$cache = new TestCache();
+
+		$this->assertTrue($cache->enabled());
 	}
 
 	/**

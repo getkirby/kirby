@@ -51,6 +51,18 @@ abstract class Cache
 	}
 
 	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		// TODO: Make this method abstract in a future
+		// release to ensure that cache drivers override it;
+		// until then, we assume that the cache is enabled
+		return true;
+	}
+
+	/**
 	 * Determines if an item exists in the cache
 	 */
 	public function exists(string $key): bool

@@ -16,6 +16,15 @@ use APCUIterator;
 class ApcuCache extends Cache
 {
 	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		return apcu_enabled();
+	}
+
+	/**
 	 * Determines if an item exists in the cache
 	 */
 	public function exists(string $key): bool
