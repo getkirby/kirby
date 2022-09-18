@@ -188,10 +188,10 @@ class Response
 	{
 		$before = headers_sent();
 		$result = $callback($args);
-		$after  = headers_sent();
+		$after  = headers_sent($file, $line);
 
 		if ($before === false && $after === true) {
-			throw new LogicException('Disallowed output from file $file:$line, possible accidental whitespace?');
+			throw new LogicException("Disallowed output from file $file:$line, possible accidental whitespace?");
 		}
 
 		return $result;
