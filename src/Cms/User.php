@@ -823,10 +823,11 @@ class User extends ModelWithContent
 	 *
 	 * @param string|null $template
 	 * @param array|null $data
-	 * @param string $fallback Fallback for tokens in the template that cannot be replaced
+	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
+	 *                              (`null` to keep the original token)
 	 * @return string
 	 */
-	public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
+	public function toString(string $template = null, array $data = [], string|null $fallback = '', string $handler = 'template'): string
 	{
 		$template ??= $this->email();
 		return parent::toString($template, $data, $fallback, $handler);
