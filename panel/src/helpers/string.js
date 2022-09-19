@@ -5,7 +5,7 @@ const escapingMap = {
 	"<": "&lt;",
 	">": "&gt;",
 	'"': "&quot;",
-	"'": "&#39;",
+	"'": "&#039;",
 	"/": "&#x2F;",
 	"`": "&#x60;",
 	"=": "&#x3D;"
@@ -236,8 +236,12 @@ export function ucwords(string) {
  * @returns  {string}
  */
 export function unescapeHTML(string) {
+	console.log(string);
 	for (const symbol in escapingMap) {
+		console.log(escapingMap[symbol]);
+		console.log(symbol);
 		string = String(string).replaceAll(escapingMap[symbol], symbol);
+		console.log(string);
 	}
 	return string;
 }
