@@ -2,6 +2,7 @@
 
 namespace Kirby\Database;
 
+use Kirby\Toolkit\Collection;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -298,7 +299,7 @@ class QueryTest extends TestCase
 			])
 			->column('username');
 
-		$this->assertInstanceOf('\Kirby\Toolkit\Collection', $users);
+		$this->assertInstanceOf(Collection::class, $users);
 		$this->assertCount(2, $users->data());
 		$this->assertSame(['george', 'mark'], $users->data());
 	}
@@ -372,6 +373,24 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(2, $count);
+
+		// AND mode
+		$count = $this->database
+			->table('users')
+			->where('balance', '>', 0)
+			->where('balance', '<', 150, 'AND')
+			->count();
+
+		$this->assertSame(2, $count);
+
+		// OR mode
+		$count = $this->database
+			->table('users')
+			->where('balance', '>', 0)
+			->where('balance', '<', 150, 'OR')
+			->count();
+
+		$this->assertSame(4, $count);
 	}
 
 	public function testWhereInvalidPredicate()
