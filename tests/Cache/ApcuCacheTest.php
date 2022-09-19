@@ -18,8 +18,17 @@ class ApcuCacheTest extends TestCase
 			apcu_enabled() === false
 		) {
 			$this->markTestSkipped('APCu is not available.');
-			return;
 		}
+	}
+
+	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$cache = new ApcuCache();
+
+		$this->assertTrue($cache->enabled());
 	}
 
 	/**

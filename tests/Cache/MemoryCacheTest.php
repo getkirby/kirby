@@ -12,6 +12,16 @@ require_once __DIR__ . '/mocks.php';
 class MemoryCacheTest extends TestCase
 {
 	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$cache = new MemoryCache();
+
+		$this->assertTrue($cache->enabled());
+	}
+
+	/**
 	 * @covers ::set
 	 * @covers ::retrieve
 	 * @covers ::remove

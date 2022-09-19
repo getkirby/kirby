@@ -10,6 +10,16 @@ use PHPUnit\Framework\TestCase;
 class NullCacheTest extends TestCase
 {
 	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$cache = new NullCache();
+
+		$this->assertTrue($cache->enabled());
+	}
+
+	/**
 	 * @covers ::set
 	 * @covers ::retrieve
 	 * @covers ::remove

@@ -52,6 +52,15 @@ class FileCache extends Cache
 	}
 
 	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		return is_writable($this->root) === true;
+	}
+
+	/**
 	 * Returns the full root including prefix
 	 */
 	public function root(): string
@@ -182,7 +191,7 @@ class FileCache extends Cache
 				$files = scandir($dir);
 
 				if ($files === false) {
-					$files = [];
+					$files = []; // @codeCoverageIgnore
 				}
 
 				$files = array_diff($files, ['.', '..']);

@@ -14,6 +14,15 @@ namespace Kirby\Cache;
 class NullCache extends Cache
 {
 	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		return true;
+	}
+
+	/**
 	 * Writes an item to the cache for a given number of minutes and
 	 * returns whether the operation was successful
 	 *
