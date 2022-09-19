@@ -25,6 +25,7 @@
 				:fields="fields"
 				:value="$helper.clone(value)"
 				@input="$emit('input', $event)"
+				@invalid="$emit('invalid', $event)"
 			/>
 		</template>
 	</k-drawer>

@@ -6,7 +6,11 @@
 			<k-button v-else icon="remove" @click="onRemove" />
 		</template>
 
-		<table v-if="!isEmpty" class="k-table k-object-field-table">
+		<table
+			v-if="!isEmpty"
+			:data-invalid="isInvalid"
+			class="k-table k-object-field-table"
+		>
 			<tbody>
 				<template v-for="field in fields">
 					<tr
@@ -32,7 +36,12 @@
 			{{ empty || $t("field.object.empty") }}
 		</k-empty>
 
-		<k-form-drawer ref="drawer" v-bind="drawer" @input="onDrawerInput" />
+		<k-form-drawer
+			ref="drawer"
+			v-bind="drawer"
+			@input="onDrawerInput"
+			@invalid="onErrors"
+		/>
 	</k-field>
 </template>
 
@@ -49,7 +58,8 @@ export default {
 	},
 	data() {
 		return {
-			object: this.value
+			object: this.value,
+			errors: []
 		};
 	},
 	computed: {
@@ -78,12 +88,33 @@ export default {
 			return false;
 		},
 		isInvalid() {
-			return this.required === true && this.isEmpty;
+			// if field itself is required and empty
+			if (this.required === true && this.isEmpty) {
+				return true;
+			}
+
+			// if subfields are required but empty
+			for (const field in this.fields) {
+				if (
+					this.fields[field].required === true &&
+					this.$helper.object.isEmpty(this.value[field]) === true
+				) {
+					return true;
+				}
+			}
+
+			// if subfields has any error
+			if (this.errors.length > 0) {
+				return true;
+			}
+
+			return false;
 		}
 	},
 	watch: {
 		value(value) {
 			this.object = value;
+			this.errors = [];
 		}
 	},
 	methods: {
@@ -109,6 +140,11 @@ export default {
 		onDrawerInput(value) {
 			this.object = value;
 			this.$emit("input", this.object);
+		},
+		onErrors(fields) {
+			this.errors = Object.keys(fields).filter(
+				(field) => fields[field].$invalid
+			);
 		},
 		onRemove() {
 			this.object = {};
