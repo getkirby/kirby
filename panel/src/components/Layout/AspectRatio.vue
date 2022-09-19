@@ -1,9 +1,5 @@
 <template>
-	<span
-		:data-cover="cover"
-		:style="{ 'padding-bottom': ratioPadding }"
-		class="k-aspect-ratio"
-	>
+	<span :data-cover="cover" :style="'--ratio:' + ratio" class="k-aspect-ratio">
 		<!-- @slot Content -->
 		<slot />
 	</span>
@@ -33,11 +29,9 @@ export default {
 		 *
 		 * @values e.g. `1/1`, `16/9` or `4/5`
 		 */
-		ratio: String
-	},
-	computed: {
-		ratioPadding() {
-			return this.$helper.ratio(this.ratio);
+		ratio: {
+			type: String,
+			default: "1/1"
 		}
 	}
 };
@@ -48,7 +42,7 @@ export default {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	padding-bottom: 100%;
+	aspect-ratio: var(--ratio);
 }
 .k-aspect-ratio > * {
 	position: absolute !important;

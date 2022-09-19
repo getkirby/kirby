@@ -1,24 +1,22 @@
 <template>
 	<span
-		:data-ratio="ratio"
 		:data-back="back"
 		:data-cover="cover"
+		:style="'--ratio:' + ratio"
 		class="k-image"
 		v-on="$listeners"
 	>
-		<span :style="'padding-bottom:' + ratioPadding">
-			<img
-				v-if="loaded"
-				:key="src"
-				:alt="alt || ''"
-				:src="src"
-				:srcset="srcset"
-				:sizes="sizes"
-				@dragstart.prevent
-			/>
-			<k-loader v-if="!loaded && !error" position="center" theme="light" />
-			<k-icon v-if="!loaded && error" class="k-image-error" type="cancel" />
-		</span>
+		<img
+			v-if="loaded"
+			:key="src"
+			:alt="alt || ''"
+			:src="src"
+			:srcset="srcset"
+			:sizes="sizes"
+			@dragstart.prevent
+		/>
+		<k-loader v-if="!loaded && !error" position="center" theme="light" />
+		<k-icon v-if="!loaded && error" class="k-image-error" type="cancel" />
 	</span>
 </template>
 
@@ -67,7 +65,10 @@ export default {
 		 *
 		 * @values e.g. `1/1`, `16/9` or `4/5`
 		 */
-		ratio: String,
+		ratio: {
+			type: String,
+			default: "1/1"
+		},
 		/**
 		 * For responsive images, pass the `sizes` attribute
 		 */
@@ -92,11 +93,6 @@ export default {
 				default: false
 			}
 		};
-	},
-	computed: {
-		ratioPadding() {
-			return this.$helper.ratio(this.ratio || "1/1");
-		}
 	},
 	created() {
 		let img = new Image();
@@ -123,11 +119,11 @@ export default {
 </script>
 
 <style>
-.k-image span {
+.k-image {
 	position: relative;
 	display: block;
 	line-height: 0;
-	padding-bottom: 100%;
+	aspect-ratio: var(--ratio);
 }
 .k-image img {
 	position: absolute;
