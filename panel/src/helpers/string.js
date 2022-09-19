@@ -1,5 +1,16 @@
 import "./regex.js";
 
+const escapingMap = {
+	"&": "&amp;",
+	"<": "&lt;",
+	">": "&gt;",
+	'"': "&quot;",
+	"'": "&#039;",
+	"/": "&#x2F;",
+	"`": "&#x60;",
+	"=": "&#x3D;"
+};
+
 /**
  * Converts camel-case to kebab-case
  * @param {string} string
@@ -40,18 +51,7 @@ export function camelToKebab(string) {
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 export function escapeHTML(string) {
-	const entityMap = {
-		"&": "&amp;",
-		"<": "&lt;",
-		">": "&gt;",
-		'"': "&quot;",
-		"'": "&#39;",
-		"/": "&#x2F;",
-		"`": "&#x60;",
-		"=": "&#x3D;"
-	};
-
-	return String(string).replace(/[&<>"'`=/]/g, (char) => entityMap[char]);
+	return String(string).replace(/[&<>"'`=/]/g, (char) => escapingMap[char]);
 }
 
 /**
@@ -231,6 +231,22 @@ export function ucwords(string) {
 }
 
 /**
+ * Turns escaped HTML entities into actual characters again
+ * @param {string}
+ * @returns  {string}
+ */
+export function unescapeHTML(string) {
+	console.log(string);
+	for (const symbol in escapingMap) {
+		console.log(escapingMap[symbol]);
+		console.log(symbol);
+		string = String(string).replaceAll(escapingMap[symbol], symbol);
+		console.log(string);
+	}
+	return string;
+}
+
+/**
  * Returns a unique ID
  * @returns {string}
  */
@@ -261,5 +277,6 @@ export default {
 	template,
 	ucfirst,
 	ucwords,
+	unescapeHTML,
 	uuid
 };
