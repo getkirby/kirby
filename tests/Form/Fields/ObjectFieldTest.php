@@ -17,7 +17,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame('object', $field->type());
 		$this->assertSame('object', $field->name());
 		$this->assertTrue(is_array($field->fields()));
-		$this->assertSame(['text' => ''], $field->value());
+		$this->assertNull($field->value());
 		$this->assertTrue($field->save());
 	}
 
@@ -35,18 +35,7 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$expectedValue = [
-			[
-				'value' => 'a',
-				'text'  => 'a'
-			],
-			[
-				'value' => 'b',
-				'text'  => 'b'
-			]
-		];
-
-		$this->assertSame($expectedValue, $field->value()['tags']);
+		$this->assertSame(['a', 'b'], $field->value()['tags']);
 
 		$expected = [
 			'tags' => 'a, b'
