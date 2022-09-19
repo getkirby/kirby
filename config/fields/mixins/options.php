@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Form\Options;
+use Kirby\Field\FieldOptions;
 
 return [
 	'props' => [
@@ -30,19 +30,17 @@ return [
 	],
 	'methods' => [
 		'getOptions' => function () {
-			return Options::factory(
-				$this->options(),
-				$this->props,
-				$this->model()
-			);
+			$props   = FieldOptions::polyfill($this->props);
+			$options = FieldOptions::factory($props['options']);
+			return $options->render($this->model());
 		},
-		'sanitizeOption' => function ($option) {
-			$allowed = array_column($this->options(), 'value');
-			return in_array($option, $allowed, true) === true ? $option : null;
+		'sanitizeOption' => function ($value) {
+			$options = array_column($this->options(), 'value');
+			return in_array($value, $options, true) === true ? $value : null;
 		},
-		'sanitizeOptions' => function ($options) {
-			$allowed = array_column($this->options(), 'value');
-			return array_intersect($options, $allowed);
+		'sanitizeOptions' => function ($values) {
+			$options = array_column($this->options(), 'value');
+			return array_intersect($values, $options);
 		},
 	]
 ];

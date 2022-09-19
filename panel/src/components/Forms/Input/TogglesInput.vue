@@ -18,9 +18,8 @@
 			/>
 			<label :for="id + '-' + index" :title="option.text">
 				<k-icon v-if="option.icon" :type="option.icon" />
-				<span v-if="labels" class="k-toggles-text">
-					{{ option.text }}
-				</span>
+				<!-- eslint-disable-next-line vue/no-v-html -->
+				<span v-if="labels" class="k-toggles-text" v-html="option.text" />
 			</label>
 		</li>
 	</ul>

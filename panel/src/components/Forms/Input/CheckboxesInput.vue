@@ -1,13 +1,17 @@
 <template>
 	<ul :style="'--columns:' + columns" class="k-checkboxes-input">
-		<li v-for="(option, index) in options" :key="index">
-			<k-checkbox-input
-				:id="id + '-' + index"
-				:label="option.text"
-				:value="selected.indexOf(option.value) !== -1"
-				@input="onInput(option.value, $event)"
-			/>
-		</li>
+		<template v-if="options.length">
+			<li v-for="(option, index) in options" :key="index">
+				<k-checkbox-input
+					:id="id + '-' + index"
+					:label="option.text"
+					:value="selected.indexOf(option.value) !== -1"
+					@input="onInput(option.value, $event)"
+				/>
+			</li>
+		</template>
+
+		<k-box v-else theme="info">{{ $t("options.none") }}</k-box>
 	</ul>
 </template>
 
@@ -44,12 +48,12 @@ export default {
 	inheritAttrs: false,
 	data() {
 		return {
-			selected: this.valueToArray(this.value)
+			selected: this.toArray(this.value)
 		};
 	},
 	watch: {
 		value(value) {
-			this.selected = this.valueToArray(value);
+			this.selected = this.toArray(value);
 		},
 		selected() {
 			this.onInvalid();
@@ -83,7 +87,7 @@ export default {
 		select() {
 			this.focus();
 		},
-		valueToArray(value) {
+		toArray(value) {
 			if (Array.isArray(value) === true) {
 				return value;
 			}
