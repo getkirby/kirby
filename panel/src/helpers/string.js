@@ -237,7 +237,7 @@ export function ucwords(string) {
  */
 export function unescapeHTML(string) {
 	for (const symbol in escapingMap) {
-		string = String(string).replace(escapingMap[symbol], symbol);
+		string = String(string).replaceAll(escapingMap[symbol], symbol);
 	}
 	return string;
 }

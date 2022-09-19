@@ -210,6 +210,8 @@ export default {
 			this.newTag = null;
 		},
 		edit(tag) {
+			// since the text for manual tags got escaped, we need
+			// to unescape it when trying to edit it manually again
 			this.newTag = this.$helper.string.unescapeHTML(tag.text);
 			this.$refs.input.select();
 			this.remove(tag);
