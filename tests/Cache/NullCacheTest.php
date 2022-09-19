@@ -16,7 +16,7 @@ class NullCacheTest extends TestCase
 	{
 		$cache = new NullCache();
 
-		$this->assertTrue($cache->enabled());
+		$this->assertFalse($cache->enabled());
 	}
 
 	/**
