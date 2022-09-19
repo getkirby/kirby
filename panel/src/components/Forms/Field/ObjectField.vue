@@ -1,7 +1,7 @@
 <template>
 	<k-field v-bind="$props" class="k-object-field">
 		<!-- Remove button -->
-		<template #options>
+		<template v-if="!disabled" #options>
 			<k-button v-if="isEmpty" icon="add" @click="onAdd" />
 			<k-button v-else icon="remove" @click="onRemove" />
 		</template>
