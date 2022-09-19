@@ -36,7 +36,9 @@ class Nest
 			}
 		}
 
-		if (is_int(key($data)) === true) {
+		$key = key($data);
+
+		if ($key === null || is_int($key) === true) {
 			return new NestCollection($result);
 		}
 
