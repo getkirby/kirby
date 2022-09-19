@@ -50,6 +50,10 @@ export default {
 			default: true
 		},
 		/**
+		 * Whether to disable the submit button
+		 */
+		disabled: Boolean,
+		/**
 		 * The icon type for the submit button
 		 */
 		icon: {
@@ -105,7 +109,8 @@ export default {
 					text: this.submitButtonLabel,
 					theme: this.theme,
 					class: "k-dialog-button-submit",
-					click: this.submit
+					click: this.submit,
+					disabled: this.disabled
 				});
 			}
 
