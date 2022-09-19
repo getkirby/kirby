@@ -210,7 +210,7 @@ export default {
 			this.newTag = null;
 		},
 		edit(tag) {
-			this.newTag = tag.text;
+			this.newTag = this.$helper.string.unescapeHTML(tag.text);
 			this.$refs.input.select();
 			this.remove(tag);
 		},
