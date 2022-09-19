@@ -114,7 +114,7 @@
 	"error.license.email": "Please enter a valid email address",
 	"error.license.verification": "The license could not be verified",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n {message}",
+	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
 	"error.offline": "The Panel is currently offline",
 

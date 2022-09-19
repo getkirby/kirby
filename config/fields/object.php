@@ -3,7 +3,6 @@
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -89,13 +88,14 @@ return [
 
 			if (empty($errors) === false) {
 				// use the first error for details
-				$error = A::first($errors);
+				$name  = array_key_first($errors);
+				$error = $errors[$name];
 
 				throw new InvalidArgumentException([
 					'key'  => 'object.validation',
 					'data' => [
-						'label' => $error['label'],
-						'message' => A::first($error['message'])
+						'label'   => $error['label'] ?? $name,
+						'message' => implode("\n", $error['message'])
 					]
 				]);
 			}
