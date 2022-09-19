@@ -34,6 +34,11 @@ export default {
 			}
 		},
 		async onSubmit(value) {
+			// do not handle a new request while a request is in progress
+			if (this.isProcessing === true) {
+				return false;
+			}
+
 			let dialog = null;
 			this.isProcessing = true;
 
