@@ -8,18 +8,24 @@
 
 		<table v-if="!isEmpty" class="k-table k-object-field-table">
 			<tbody>
-				<tr v-for="field in fields" :key="field.name" @click="open(field.name)">
-					<th data-mobile="true">
-						<button type="button">{{ field.label }}</button>
-					</th>
-					<k-table-cell
-						:column="field"
-						:field="field"
-						:mobile="true"
-						:value="value[field.name]"
-						@input="onCellInput(field.name, $event)"
-					/>
-				</tr>
+				<template v-for="field in fields">
+					<tr
+						v-if="$helper.field.isVisible(field, value)"
+						:key="field.name"
+						@click="open(field.name)"
+					>
+						<th data-mobile="true">
+							<button type="button">{{ field.label }}</button>
+						</th>
+						<k-table-cell
+							:column="field"
+							:field="field"
+							:mobile="true"
+							:value="value[field.name]"
+							@input="onCellInput(field.name, $event)"
+						/>
+					</tr>
+				</template>
 			</tbody>
 		</table>
 		<k-empty v-else :data-invalid="isInvalid" icon="box" @click="onAdd">
