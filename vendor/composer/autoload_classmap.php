@@ -7,6 +7,18 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Composer\\Semver\\Comparator' => $vendorDir . '/composer/semver/src/Comparator.php',
+    'Composer\\Semver\\CompilingMatcher' => $vendorDir . '/composer/semver/src/CompilingMatcher.php',
+    'Composer\\Semver\\Constraint\\Bound' => $vendorDir . '/composer/semver/src/Constraint/Bound.php',
+    'Composer\\Semver\\Constraint\\Constraint' => $vendorDir . '/composer/semver/src/Constraint/Constraint.php',
+    'Composer\\Semver\\Constraint\\ConstraintInterface' => $vendorDir . '/composer/semver/src/Constraint/ConstraintInterface.php',
+    'Composer\\Semver\\Constraint\\MatchAllConstraint' => $vendorDir . '/composer/semver/src/Constraint/MatchAllConstraint.php',
+    'Composer\\Semver\\Constraint\\MatchNoneConstraint' => $vendorDir . '/composer/semver/src/Constraint/MatchNoneConstraint.php',
+    'Composer\\Semver\\Constraint\\MultiConstraint' => $vendorDir . '/composer/semver/src/Constraint/MultiConstraint.php',
+    'Composer\\Semver\\Interval' => $vendorDir . '/composer/semver/src/Interval.php',
+    'Composer\\Semver\\Intervals' => $vendorDir . '/composer/semver/src/Intervals.php',
+    'Composer\\Semver\\Semver' => $vendorDir . '/composer/semver/src/Semver.php',
+    'Composer\\Semver\\VersionParser' => $vendorDir . '/composer/semver/src/VersionParser.php',
     'Kirby\\Api\\Api' => $baseDir . '/src/Api/Api.php',
     'Kirby\\Api\\Collection' => $baseDir . '/src/Api/Collection.php',
     'Kirby\\Api\\Model' => $baseDir . '/src/Api/Model.php',
