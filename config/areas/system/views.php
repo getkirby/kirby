@@ -7,9 +7,10 @@ return [
 	'system' => [
 		'pattern' => 'system',
 		'action'  => function () {
-			$kirby   = App::instance();
-			$system  = $kirby->system();
-			$license = $system->license();
+			$kirby        = App::instance();
+			$system       = $kirby->system();
+			$updateStatus = $system->updateStatus();
+			$license      = $system->license();
 
 			$environment = [
 				[
@@ -21,7 +22,13 @@ return [
 				[
 					'label' => I18n::translate('version'),
 					'value' => $kirby->version(),
-					'link'  => 'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version()
+					'info'  => $updateStatus?->label(),
+					'link'  => (
+						$updateStatus ?
+						$updateStatus->url() :
+						'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version()
+					),
+					'theme' => $updateStatus?->theme()
 				],
 				[
 					'label' => 'PHP',
@@ -35,6 +42,12 @@ return [
 
 			$plugins = $system->plugins()->values(function ($plugin) {
 				$authors = $plugin->authorsNames();
+				$version = (
+					$plugin->version() ?
+					$plugin->updateStatus()?->toArray() :
+					null
+				) ?? $plugin->version() ?? '–';
+
 				return [
 					'author'  => empty($authors) ? '–' : $authors,
 					'license' => $plugin->license() ?? '–',
@@ -42,11 +55,11 @@ return [
 						'text' => $plugin->name() ?? '–',
 						'href' => $plugin->link(),
 					],
-					'version' => $plugin->version() ?? '–',
+					'version' => $version,
 				];
 			});
 
-			$security = [];
+			$security = $updateStatus?->messages() ?? [];
 
 			if ($kirby->option('debug', false) === true) {
 				$security[] = [

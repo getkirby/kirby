@@ -42,7 +42,7 @@
 						},
 						version: {
 							label: $t('version'),
-							width: '8rem',
+							type: 'update-status',
 							mobile: true
 						}
 					}"
