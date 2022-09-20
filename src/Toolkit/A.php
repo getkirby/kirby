@@ -156,47 +156,65 @@ class A
 	/**
 	 * Merges arrays recursively
 	 *
-	 * @param int $mode Behavior for elements with numeric keys;
-	 *                  A::MERGE_APPEND:    elements are appended, keys are reset;
-	 *                  A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
-	 *                  A::MERGE_REPLACE:   non-associative arrays are completely replaced
+	 * If last argument is an integer, it defines the
+	 * behavior for elements with numeric keys;
+	 * - A::MERGE_OVERWRITE:  elements are overwritten, keys are preserved
+	 * - A::MERGE_APPEND:     elements are appended, keys are reset;
+	 * - A::MERGE_REPLACE:    non-associative arrays are completely replaced
 	 */
-	public static function merge(array $array1, array $array2, int $mode = A::MERGE_APPEND): array
+	public static function merge(array|int ...$arrays): array
 	{
-		$merged = $array1;
+		// get mode from parameters
+		$last = A::last($arrays);
+		$mode = is_int($last) ? array_pop($arrays) : A::MERGE_APPEND;
+
+		// get the first two arrays that should be merged
+		$merged = array_shift($arrays);
+		$join   = array_shift($arrays);
 
 		if (
-			static::isAssociative($array1) === false &&
+			static::isAssociative($merged) === false &&
 			$mode === static::MERGE_REPLACE
 		) {
-			return $array2;
-		}
+			$merged = $join;
+		} else {
+			foreach ($join as $key => $value) {
+				// append to the merged array, don't overwrite numeric keys
+				if (
+					is_int($key) === true &&
+					$mode === static::MERGE_APPEND
+				) {
+					$merged[] = $value;
 
-		foreach ($array2 as $key => $value) {
-			// append to the merged array, don't overwrite numeric keys
-			if (is_int($key) === true && $mode === static::MERGE_APPEND) {
-				$merged[] = $value;
+				// recursively merge the two array values
+				} elseif (
+					is_array($value) === true &&
+					isset($merged[$key]) === true &&
+					is_array($merged[$key]) === true
+				) {
+					$merged[$key] = static::merge($merged[$key], $value, $mode);
 
-			// recursively merge the two array values
-			} elseif (
-				is_array($value) === true &&
-				isset($merged[$key]) === true &&
-				is_array($merged[$key]) === true
-			) {
-				$merged[$key] = static::merge($merged[$key], $value, $mode);
+				// simply overwrite with the value from the second array
+				} else {
+					$merged[$key] = $value;
+				}
+			}
 
-			// simply overwrite with the value from the second array
-			} else {
-				$merged[$key] = $value;
+			if ($mode === static::MERGE_APPEND) {
+				// the keys don't make sense anymore, reset them
+				// array_merge() is the simplest way to renumber
+				// arrays that have both numeric and string keys;
+				// besides the keys, nothing changes here
+				$merged = array_merge($merged, []);
 			}
 		}
 
-		if ($mode === static::MERGE_APPEND) {
-			// the keys don't make sense anymore, reset them
-			// array_merge() is the simplest way to renumber
-			// arrays that have both numeric and string keys;
-			// besides the keys, nothing changes here
-			$merged = array_merge($merged, []);
+		// if more than two arrays need to be merged, add the result
+		// as first array and the mode to the end and call the method again
+		if (count($arrays) > 0) {
+			array_unshift($arrays, $merged);
+			array_push($arrays, $mode);
+			return static::merge(...$arrays);
 		}
 
 		return $merged;

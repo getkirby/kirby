@@ -209,36 +209,140 @@ class ATest extends TestCase
 	public function testMerge()
 	{
 		// simple non-associative arrays
-		$this->assertSame(['a', 'b', 'c', 'd'], A::merge(['a', 'b'], ['c', 'd']));
-		$this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge(['a', 'b'], ['c', 'd', 'a']));
+		$a        = ['a', 'b'];
+		$b        = ['c', 'd'];
+		$expected = ['a', 'b', 'c', 'd'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+
+		$a        = ['a', 'b'];
+		$b        = ['c', 'd', 'a'];
+		$expected = ['a', 'b', 'c', 'd', 'a'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
 
 		// simple associative arrays
-		$this->assertSame(['a' => 'b', 'c' => 'd'], A::merge(['a' => 'b'], ['c' => 'd']));
-		$this->assertSame(['a' => 'c'], A::merge(['a' => 'b'], ['a' => 'c']));
+		$a        = ['a' => 'b'];
+		$b        = ['c' => 'd'];
+		$expected = ['a' => 'b', 'c' => 'd'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+
+		$a        = ['a' => 'b'];
+		$b        = ['a' => 'c'];
+		$expected = ['a' => 'c'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
 
 		// recursive merging
-		$this->assertSame(['a' => ['b', 'c', 'b', 'd']], A::merge(['a' => ['b', 'c']], ['a' => ['b', 'd']]));
-		$this->assertSame(['a' => ['b' => 'd', 'd' => 'e']], A::merge(['a' => ['b' => 'c', 'd' => 'e']], ['a' => ['b' => 'd']]));
-		$this->assertSame(['a' => ['b', 'c']], A::merge(['a' => 'b'], ['a' => ['b', 'c']]));
-		$this->assertSame(['a' => 'b'], A::merge(['a' => ['b', 'c']], ['a' => 'b']));
+		$a        = ['a' => ['b', 'c']];
+		$b        = ['a' => ['b', 'd']];
+		$expected = ['a' => ['b', 'c', 'b', 'd']];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
 
-		// append feature
-		$this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a']));
-		$this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], true));
-		$this->assertSame([1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], false));
-		$this->assertSame(['a' => ['b', 'c', 'e', 'd']], A::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
-		$this->assertSame(['a' => [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a']], A::merge(['a' => [1 => 'a', 4 => 'b']], ['a' => [1 => 'c', 3 => 'd', 5 => 'a']], false));
+		$a        = ['a' => ['b' => 'c', 'd' => 'e']];
+		$b        = ['a' => ['b' => 'd']];
+		$expected = ['a' => ['b' => 'd', 'd' => 'e']];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
 
-		// replace feature
-		$a = [
-			'a' => ['a', 'b', 'c']
-		];
+		$a        = ['a' => 'b'];
+		$b        = ['a' => ['c', 'd']];
+		$expected = ['a' => ['c', 'd']];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
 
-		$b = [
-			'a' => ['d', 'e', 'f']
-		];
+		$a        = ['a' => ['c', 'd']];
+		$b        = ['a' => 'b'];
+		$expected = ['a' => 'b'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+	}
 
-		$this->assertSame($b, A::merge($a, $b, A::MERGE_REPLACE));
+	/**
+	 * @covers ::merge
+	 */
+	public function testMergeMultiples()
+	{
+		// simple non-associative arrays
+		$a        = ['a', 'b'];
+		$b        = ['c', 'd'];
+		$c        = ['e', 'f'];
+		$expected = ['a', 'b', 'c', 'd', 'e', 'f'];
+		$result   = A::merge($a, $b, $c);
+		$this->assertSame($expected, $result);
+
+		// simple associative arrays
+		$a        = ['a' => 'b'];
+		$b        = ['c' => 'd'];
+		$c        = ['e' => 'f'];
+		$expected = ['a' => 'b', 'c' => 'd', 'e' => 'f'];
+		$result   = A::merge($a, $b, $c);
+		$this->assertSame($expected, $result);
+
+		// recursive merging
+		$a        = ['a' => ['b', 'c']];
+		$b        = ['a' => ['b', 'd']];
+		$c        = ['a' => ['e'], 'e' => 'f'];
+		$expected = ['a' => ['b', 'c', 'b', 'd', 'e'], 'e' => 'f'];
+		$result   = A::merge($a, $b, $c);
+		$this->assertSame($expected, $result);
+	}
+
+	/**
+	 * @covers ::merge
+	 */
+	public function testMergeModes()
+	{
+		// simple non-associative arrays
+		$a        = [1 => 'a', 4 => 'b'];
+		$b        = [1 => 'c', 3 => 'd', 5 => 'a'];
+
+		// A::MERGE_APPEND
+		$expected = ['a', 'b', 'c', 'd', 'a'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result, true);
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result, A::MERGE_APPEND);
+
+		// A::MERGE_OVERWRITE
+		$expected = [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'];
+		$result   = A::merge($a, $b, false);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
+		$this->assertSame($expected, $result);
+
+
+		// recursive merging
+		$a        = ['a' => [1 => 'b', 4 => 'c']];
+		$b        = ['a' => [1 => 'c', 3 => 'd', 5 => 'a']];
+
+		// A::MERGE_APPEND
+		$expected = ['a' => ['b', 'c', 'c', 'd', 'a']];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, true);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_APPEND);
+		$this->assertSame($expected, $result);
+
+		// A::MERGE_OVERWRITE
+		$expected = ['a' => [1 => 'c', 4 => 'c', 3 => 'd', 5 => 'a']];
+		$result   = A::merge($a, $b, false);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
+		$this->assertSame($expected, $result);
+
+
+		// A::MERGE_REPLACE
+		$a        = ['a' => ['a', 'b', 'c']];
+		$b        = ['a' => ['d', 'e', 'f']];
+		$expected = ['a' => ['d', 'e', 'f']];
+		$result   = A::merge($a, $b, A::MERGE_REPLACE);
+		$this->assertSame($expected, $result);
 	}
 
 	/**
