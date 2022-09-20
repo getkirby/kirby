@@ -17,7 +17,7 @@
 					/>
 				</template>
 
-				<template #right>
+				<template v-if="roles.length > 1" #right>
 					<k-button-group>
 						<k-dropdown>
 							<k-button
