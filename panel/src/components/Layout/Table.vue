@@ -322,6 +322,11 @@ export default {
 	border-radius: var(--rounded);
 	font-variant-numeric: tabular-nums;
 }
+.k-table[data-invalid] {
+	border: 0;
+	box-shadow: var(--color-negative-outline) 0 0 0 1px,
+		var(--color-negative-outline) 0 0 3px 2px;
+}
 
 /** Cells **/
 .k-table th,

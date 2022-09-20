@@ -128,8 +128,6 @@ export default {
 				this.object[fieldName] = value;
 			}
 
-			console.log(this.object);
-
 			this.$emit("input", this.object);
 			this.open();
 		},
