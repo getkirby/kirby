@@ -72,18 +72,19 @@ export default {
 			const accessible = this.accessible.map((key) => ({
 				id: key,
 				text: this.$t("system.issues." + key),
-				link: "https://getkirby.com/security/" + key
+				link: "https://getkirby.com/security/" + key,
+				icon: "folder"
 			}));
 
 			// merge messages from backend and from dynamic URL checks
 			return this.security.concat(accessible).map((issue) => ({
-				...issue,
 				// give each message an image prop unless it already has one
 				image: {
 					back: "var(--color-red-200)",
-					icon: "alert",
+					icon: issue.icon || "alert",
 					color: "var(--color-red)"
-				}
+				},
+				...issue
 			}));
 		}
 	},
