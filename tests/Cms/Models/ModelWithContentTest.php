@@ -173,6 +173,83 @@ class ModelWithContentTest extends TestCase
 		], $model->blueprints('menu'));
 	}
 
+	public function testToSafeString()
+	{
+		$model = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
+		$this->assertSame('Hello value &amp; foo', $model->toSafeString('Hello {{ model.title }} {{ model.slug }}'));
+		$this->assertSame('Hello value & foo', $model->toSafeString('Hello {< model.title >} {{ model.slug }}'));
+	}
+
+	public function testToSafeStringWithData()
+	{
+		$model = new Site();
+		$this->assertSame(
+			'Hello home in value &amp; value',
+			$model->toSafeString('Hello {{ model.homePageId }} in {{ key }}', ['key' => 'value & value'])
+		);
+		$this->assertSame(
+			'Hello home in value & value',
+			$model->toSafeString('Hello {{ model.homePageId }} in {< key >}', ['key' => 'value & value'])
+		);
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame(
+			'Hello foo/home in value &amp; value',
+			$model->toSafeString('Hello {{ model.slug }}/{{ site.homePageId }} in {{ key }}', ['key' => 'value & value'])
+		);
+		$this->assertSame(
+			'Hello foo/home in value & value',
+			$model->toSafeString('Hello {{ model.slug }}/{{ site.homePageId }} in {< key >}', ['key' => 'value & value'])
+		);
+	}
+
+	public function testToSafeStringWithFallback()
+	{
+		$model = new Site();
+		$this->assertSame('Hello ', $model->toSafeString('Hello {{ invalid }}', []));
+		$this->assertSame('Hello world', $model->toSafeString('Hello {{ invalid }}', [], 'world'));
+		$this->assertSame('Hello {{ invalid }}', $model->toSafeString('Hello {{ invalid }}', [], null));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', []));
+		$this->assertSame('Hello foo/world', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', [], 'world'));
+		$this->assertSame('Hello foo/{{ invalid }}', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', [], null));
+	}
+
+	public function testToString()
+	{
+		$model = new Site();
+		$this->assertSame('Hello home', $model->toString('Hello {{ model.homePageId }}'));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/home', $model->toString('Hello {{ model.slug }}/{{ site.homePageId }}'));
+	}
+
+	public function testToStringWithData()
+	{
+		$model = new Site();
+		$this->assertSame('Hello home in value', $model->toString('Hello {{ model.homePageId }} in {{ key }}', ['key' => 'value']));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame(
+			'Hello foo/home in value',
+			$model->toString('Hello {{ model.slug }}/{{ site.homePageId }} in {{ key }}', ['key' => 'value'])
+		);
+	}
+
+	public function testToStringWithFallback()
+	{
+		$model = new Site();
+		$this->assertSame('Hello ', $model->toString('Hello {{ invalid }}', []));
+		$this->assertSame('Hello world', $model->toString('Hello {{ invalid }}', [], 'world'));
+		$this->assertSame('Hello {{ invalid }}', $model->toString('Hello {{ invalid }}', [], null));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/', $model->toString('Hello {{ model.slug }}/{{ invalid }}', []));
+		$this->assertSame('Hello foo/world', $model->toString('Hello {{ model.slug }}/{{ invalid }}', [], 'world'));
+		$this->assertSame('Hello foo/{{ invalid }}', $model->toString('Hello {{ model.slug }}/{{ invalid }}', [], null));
+	}
+
 	public function testToStringWithoutValue()
 	{
 		$model = new Site();

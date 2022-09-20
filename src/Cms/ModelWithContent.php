@@ -526,10 +526,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 *
 	 * @param string|null $template Template string or `null` to use the model ID
 	 * @param array $data
-	 * @param string $fallback Fallback for tokens in the template that cannot be replaced
+	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
+	 *                              (`null` to keep the original token)
 	 * @return string
 	 */
-	public function toSafeString(string $template = null, array $data = [], string $fallback = ''): string
+	public function toSafeString(string $template = null, array $data = [], string|null $fallback = ''): string
 	{
 		return $this->toString($template, $data, $fallback, 'safeTemplate');
 	}
@@ -539,11 +540,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 *
 	 * @param string|null $template Template string or `null` to use the model ID
 	 * @param array $data
-	 * @param string $fallback Fallback for tokens in the template that cannot be replaced
+	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
+	 *                              (`null` to keep the original token)
 	 * @param string $handler For internal use
 	 * @return string
 	 */
-	public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
+	public function toString(string $template = null, array $data = [], string|null $fallback = '', string $handler = 'template'): string
 	{
 		if ($template === null) {
 			return $this->id() ?? '';
