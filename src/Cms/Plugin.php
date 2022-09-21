@@ -228,7 +228,7 @@ class Plugin extends Model
 		}
 
 		$kirby  = $this->kirby();
-		$option = $kirby->option('update.plugins');
+		$option = $kirby->option('updates.plugins');
 
 		// specific configuration per plugin
 		if (is_array($option) === true) {
@@ -247,7 +247,7 @@ class Plugin extends Model
 		}
 
 		if ($option === null) {
-			$option = $kirby->option('update') ?? 'display';
+			$option = $kirby->option('updates') ?? 'display';
 		}
 
 		if ($option === false) {

@@ -633,7 +633,7 @@ class System
 		}
 
 		$kirby  = $this->app;
-		$option = $kirby->option('update.kirby') ?? $kirby->option('update') ?? 'display';
+		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? 'display';
 
 		if ($option === false) {
 			return null;
