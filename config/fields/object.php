@@ -40,7 +40,7 @@ return [
 	'computed' => [
 		'default' => function () {
 			if (empty($this->default) === true) {
-				return null;
+				return '';
 			}
 
 			return $this->form($this->default)->values();
@@ -56,7 +56,7 @@ return [
 			$data = Data::decode($this->value, 'yaml');
 
 			if (empty($data) === true) {
-				return null;
+				return '';
 			}
 
 			return $this->form($data)->values();
@@ -73,7 +73,7 @@ return [
 	],
 	'save' => function ($value) {
 		if (empty($value) === true) {
-			return null;
+			return '';
 		}
 
 		return $this->form($value)->content();

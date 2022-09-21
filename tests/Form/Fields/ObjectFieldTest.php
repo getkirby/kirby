@@ -30,7 +30,7 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertNull($field->data());
+		$this->assertSame('', $field->data());
 	}
 
 	public function testDefaultProps()
@@ -46,7 +46,7 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame('object', $field->type());
 		$this->assertSame('object', $field->name());
 		$this->assertTrue(is_array($field->fields()));
-		$this->assertNull($field->value());
+		$this->assertSame('', $field->value());
 		$this->assertTrue($field->save());
 	}
 

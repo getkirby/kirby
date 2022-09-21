@@ -25,7 +25,7 @@
 							:column="field"
 							:field="field"
 							:mobile="true"
-							:value="value[field.name]"
+							:value="object[field.name]"
 							@input="onCellInput(field.name, $event)"
 						/>
 					</tr>
@@ -49,11 +49,11 @@ export default {
 	props: {
 		empty: String,
 		fields: Object,
-		value: Object
+		value: [String, Object]
 	},
 	data() {
 		return {
-			object: this.value
+			object: this.valueToObject(this.value)
 		};
 	},
 	computed: {
@@ -71,11 +71,11 @@ export default {
 			};
 		},
 		isEmpty() {
-			if (!this.value) {
+			if (!this.object) {
 				return true;
 			}
 
-			if (this.value && Object.keys(this.value).length === 0) {
+			if (this.object && Object.keys(this.object).length === 0) {
 				return true;
 			}
 
@@ -87,7 +87,7 @@ export default {
 	},
 	watch: {
 		value(value) {
-			this.object = value;
+			this.object = this.valueToObject(value);
 		}
 	},
 	methods: {
@@ -122,6 +122,9 @@ export default {
 			}
 
 			this.$refs.drawer.open(null, field);
+		},
+		valueToObject(value) {
+			return typeof value !== "object" ? null : value;
 		}
 	}
 };
