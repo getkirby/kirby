@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blocks;
+use Kirby\Cms\Content;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
@@ -217,6 +218,17 @@ return function (App $app) {
 			}
 
 			return Html::a($href, $field->value, $attr ?? []);
+		},
+
+		/**
+		 * Parse yaml data and convert it to a
+		 * content object
+		 *
+		 * @param \Kirby\Cms\Field $field
+		 * @return \Kirby\Cms\Content
+		 */
+		'toObject' => function (Field $field) {
+			return new Content($field->yaml(), $field->parent(), true);
 		},
 
 		/**
@@ -497,10 +509,11 @@ return function (App $app) {
 		 *
 		 * @param \Kirby\Cms\Field $field
 		 * @param array $data
-		 * @param string $fallback Fallback for tokens in the template that cannot be replaced
+		 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
+		 *                              (`null` to keep the original token)
 		 * @return \Kirby\Cms\Field
 		 */
-		'replace' => function (Field $field, array $data = [], string $fallback = '') use ($app) {
+		'replace' => function (Field $field, array $data = [], string|null $fallback = '') use ($app) {
 			if ($parent = $field->parent()) {
 				// never pass `null` as the $template to avoid the fallback to the model ID
 				$field->value = $parent->toString($field->value ?? '', $data, $fallback);

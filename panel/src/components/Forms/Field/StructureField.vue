@@ -157,26 +157,7 @@ export default {
 		 * @returns {Object}
 		 */
 		form() {
-			let fields = {};
-
-			Object.keys(this.fields).forEach((name) => {
-				let field = this.fields[name];
-
-				field.section = this.name;
-				field.endpoints = {
-					field: this.endpoints.field + "+" + name,
-					section: this.endpoints.section,
-					model: this.endpoints.model
-				};
-
-				if (this.autofocus === null && field.autofocus === true) {
-					this.autofocus = name;
-				}
-
-				fields[name] = field;
-			});
-
-			return fields;
+			return this.$helper.field.subfields(this, this.fields);
 		},
 		/**
 		 * Index of first row that is displayed
@@ -275,6 +256,10 @@ export default {
 		 * @returns {Array}
 		 */
 		options() {
+			if (this.disabled) {
+				return [];
+			}
+
 			let options = [];
 			let more = this.duplicate && this.more && this.currentIndex === null;
 

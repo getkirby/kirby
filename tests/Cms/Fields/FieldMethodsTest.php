@@ -644,6 +644,20 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame('Title: Hello world', $page->text()->replace()->value());
 		$this->assertSame('', $page->doesNotExist()->replace()->value());
+
+		// with fallback
+		$this->assertSame(
+			'Hello ',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'])->value()
+		);
+		$this->assertSame(
+			'Hello fallback',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], 'fallback')->value()
+		);
+		$this->assertSame(
+			'Hello {{ invalid }}',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], null)->value()
+		);
 	}
 
 	public function testShort()
@@ -863,5 +877,20 @@ class FieldMethodsTest extends TestCase
 		$this->assertArrayHasKey('attrs', $layout);
 		$this->assertArrayHasKey('columns', $layout);
 		$this->assertArrayHasKey('id', $layout);
+	}
+
+	public function testToObject()
+	{
+		$data = [
+			'heading' => 'Heading',
+			'text'    => 'Text'
+		];
+
+		$field  = $this->field(Yaml::encode($data));
+		$object = $field->toObject();
+
+		$this->assertInstanceOf('\Kirby\Cms\Content', $object);
+
+		$this->assertSame('Heading', $object->heading()->value());
 	}
 }

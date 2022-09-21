@@ -25,6 +25,7 @@
 				:fields="fields"
 				:value="$helper.clone(value)"
 				@input="$emit('input', $event)"
+				@invalid="$emit('invalid', $event)"
 			/>
 		</template>
 	</k-drawer>
@@ -80,11 +81,13 @@ export default {
 
 			if (focus !== false) {
 				setTimeout(() => {
-					let autofocus =
-						Object.values(this.fields).filter(
+					if (focus === true) {
+						focus = Object.values(this.fields).find(
 							(field) => field.autofocus === true
-						)[0] || null;
-					this.focus(autofocus);
+						)?.name;
+					}
+
+					this.focus(focus);
 				}, 1);
 			}
 		}
