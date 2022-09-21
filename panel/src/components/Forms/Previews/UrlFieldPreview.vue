@@ -34,6 +34,8 @@ export default {
 <style>
 .k-url-field-preview {
 	padding: 0.325rem 0.75rem;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 .k-url-field-preview a {
 	color: var(--color-focus);
