@@ -250,15 +250,11 @@ class Plugin extends Model
 			$option = $kirby->option('updates') ?? true;
 		}
 
-		if ($option === false) {
+		if ($option !== true) {
 			return null;
 		}
 
-		return $this->updateStatus = new UpdateStatus(
-			$this,
-			$option === 'security',
-			$data
-		);
+		return $this->updateStatus = new UpdateStatus($this, false, $data);
 	}
 
 	/**
