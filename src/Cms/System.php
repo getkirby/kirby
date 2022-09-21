@@ -633,7 +633,7 @@ class System
 		}
 
 		$kirby  = $this->app;
-		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? 'display';
+		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? true;
 
 		if ($option === false) {
 			return null;
@@ -641,7 +641,7 @@ class System
 
 		return $this->updateStatus = new UpdateStatus(
 			$kirby,
-			$option === 'display-security',
+			$option === 'security',
 			$data
 		);
 	}

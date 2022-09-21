@@ -243,11 +243,11 @@ class Plugin extends Model
 			array_multisort($keys, SORT_DESC, $option);
 
 			// use the first and therefore longest key (= most specific match)
-			$option = reset($option) ?? 'display';
+			$option = reset($option) ?? true;
 		}
 
 		if ($option === null) {
-			$option = $kirby->option('updates') ?? 'display';
+			$option = $kirby->option('updates') ?? true;
 		}
 
 		if ($option === false) {
@@ -256,7 +256,7 @@ class Plugin extends Model
 
 		return $this->updateStatus = new UpdateStatus(
 			$this,
-			$option === 'display-security',
+			$option === 'security',
 			$data
 		);
 	}
