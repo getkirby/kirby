@@ -113,7 +113,11 @@ class UpdateStatus
 			return $this->messages;
 		}
 
-		if (!$this->data || !$this->currentVersion) {
+		if (
+			$this->data === null ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
 			return null;
 		}
 
@@ -243,7 +247,11 @@ class UpdateStatus
 			return $this->vulnerabilities;
 		}
 
-		if (!$this->data || !$this->currentVersion) {
+		if (
+			$this->data === null ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
 			return null;
 		}
 
@@ -315,7 +323,7 @@ class UpdateStatus
 	protected function findMinimumSecurityUpdate(): string|null
 	{
 		$versionEntry = $this->versionEntry();
-		if (!$versionEntry || isset($versionEntry['latest']) !== true) {
+		if ($versionEntry === null || isset($versionEntry['latest']) !== true) {
 			return null;
 		}
 
@@ -510,7 +518,7 @@ class UpdateStatus
 
 		// check if we have valid data to compare to
 		$versionEntry = $this->versionEntry();
-		if (!$versionEntry) {
+		if ($versionEntry === null) {
 			return $this->targetData = [
 				'status'  => 'error',
 				'url'     => (
@@ -598,7 +606,7 @@ class UpdateStatus
 	 */
 	protected function urlFor(string $version, string $purpose): string|null
 	{
-		if (!$this->data) {
+		if ($this->data === null) {
 			return null;
 		}
 
@@ -647,7 +655,11 @@ class UpdateStatus
 			return $this->versionEntry;
 		}
 
-		if (!$this->data || !$this->currentVersion) {
+		if (
+			$this->data === null ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
 			return null;
 		}
 
