@@ -121,12 +121,11 @@ class ContentTranslation
 
 	/**
 	 * Checks if the translation file exists
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
-		return file_exists($this->contentFile()) === true;
+		return empty($this->content) === false ||
+			   file_exists($this->contentFile()) === true;
 	}
 
 	/**

@@ -73,6 +73,15 @@ class ContentTranslationTest extends TestCase
 		]);
 
 		$this->assertFalse($translation->exists());
+
+
+		$translation = new ContentTranslation([
+			'parent'  => $page,
+			'code'    => 'de',
+			'content' => ['a' => 'A']
+		]);
+
+		$this->assertTrue($translation->exists());
 	}
 
 	public function testToArrayAndDebugInfo()
@@ -88,7 +97,7 @@ class ContentTranslationTest extends TestCase
 		$expected = [
 			'code'    => 'de',
 			'content' => $content,
-			'exists'  => false,
+			'exists'  => true,
 			'slug'    => null
 		];
 
