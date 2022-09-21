@@ -8,7 +8,7 @@ use Kirby\Option\OptionsApi;
 use Kirby\Option\OptionsQuery;
 
 /**
- * @covers \Kirby\Field\FieldOptions
+ * @coversDefaultClass \Kirby\Field\FieldOptions
  */
 class FieldOptionsTest extends TestCase
 {
