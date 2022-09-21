@@ -76,6 +76,21 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns the Panel icon for the status value
+	 *
+	 * @return string 'check'|'alert'|'info'
+	 */
+	public function icon(): string
+	{
+		return match ($this->status()) {
+			'up-to-date', 'not-vulnerable' => 'check',
+			'security-update', 'security-upgrade' => 'alert',
+			'update', 'upgrade' => 'info',
+			default => 'question'
+		};
+	}
+
+	/**
 	 * Returns the human-readable and translated label
 	 * for the update status
 	 */
@@ -198,10 +213,13 @@ class UpdateStatus
 	public function toArray(): array
 	{
 		return [
-			'label'   => $this->label(),
-			'theme'   => $this->theme(),
-			'url'     => $this->url(),
-			'version' => $this->currentVersion ?? '–',
+			'icon'          => $this->icon(),
+			'label'         => $this->label(),
+			'name'          => $this->pluginName,
+			'theme'         => $this->theme(),
+			'url'           => $this->url(),
+			'version'       => $this->currentVersion ?? '?',
+			'targetVersion' => $this->targetVersion() ?? $this->currentVersion ?? '?'
 		];
 	}
 
