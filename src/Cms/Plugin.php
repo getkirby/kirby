@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
 
 /**
@@ -232,10 +233,9 @@ class Plugin extends Model
 		// specific configuration per plugin
 		if (is_array($option) === true) {
 			// filter all option values by glob match
-			$option = array_filter(
+			$option = A::filter(
 				$option,
-				fn ($value, $key) => fnmatch($key, $this->name()) === true,
-				ARRAY_FILTER_USE_BOTH
+				fn ($value, $key) => fnmatch($key, $this->name()) === true
 			);
 
 			// sort the matches by key length (with longest key first)
