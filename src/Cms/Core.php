@@ -229,6 +229,7 @@ class Core
 			'list'        => $this->root . '/fields/list.php',
 			'multiselect' => $this->root . '/fields/multiselect.php',
 			'number'      => $this->root . '/fields/number.php',
+			'object'      => $this->root . '/fields/object.php',
 			'pages'       => $this->root . '/fields/pages.php',
 			'radio'       => $this->root . '/fields/radio.php',
 			'range'       => $this->root . '/fields/range.php',

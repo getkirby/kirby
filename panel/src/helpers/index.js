@@ -2,6 +2,7 @@ import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
+import field from "./field.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
@@ -44,6 +45,7 @@ export default {
 			isComponent,
 			isUploadEvent,
 			debounce,
+			field,
 			keyboard,
 			object,
 			pad: string.pad,

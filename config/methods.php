@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blocks;
+use Kirby\Cms\Content;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
@@ -217,6 +218,17 @@ return function (App $app) {
 			}
 
 			return Html::a($href, $field->value, $attr ?? []);
+		},
+
+		/**
+		 * Parse yaml data and convert it to a
+		 * content object
+		 *
+		 * @param \Kirby\Cms\Field $field
+		 * @return \Kirby\Cms\Content
+		 */
+		'toObject' => function (Field $field) {
+			return new Content($field->yaml(), $field->parent(), true);
 		},
 
 		/**
