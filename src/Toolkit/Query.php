@@ -16,6 +16,10 @@ use Kirby\Exception\InvalidArgumentException;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated 3.8.2 Use `Kirby\Query\Query` instead
+ * // TODO: throw warnings in 3.9.0
+ * // TODO: Remove in 3.10.0
  */
 class Query
 {
