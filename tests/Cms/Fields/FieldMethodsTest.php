@@ -644,6 +644,20 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame('Title: Hello world', $page->text()->replace()->value());
 		$this->assertSame('', $page->doesNotExist()->replace()->value());
+
+		// with fallback
+		$this->assertSame(
+			'Hello ',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'])->value()
+		);
+		$this->assertSame(
+			'Hello fallback',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], 'fallback')->value()
+		);
+		$this->assertSame(
+			'Hello {{ invalid }}',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], null)->value()
+		);
 	}
 
 	public function testShort()

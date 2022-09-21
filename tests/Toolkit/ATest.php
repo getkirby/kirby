@@ -19,6 +19,30 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::append
+	 */
+	public function testAppend()
+	{
+		// associative
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
+		$result = A::append($one, $two);
+		$this->assertSame(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd' => 'D', 'e' => 'E', 'f' => 'F'], $result);
+
+		// numeric
+		$one    = ['a', 'b', 'c'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::append($one, $two);
+		$this->assertSame(['a', 'b', 'c', 'd', 'e', 'f'], $result);
+
+		// mixed
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::append($one, $two);
+		$this->assertSame(['a' => 'A', 'b' => 'B', 'c' => 'C', 'd', 'e', 'f'], $result);
+	}
+
+	/**
 	 * @covers ::apply
 	 */
 	public function testApply()

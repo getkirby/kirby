@@ -15,6 +15,10 @@ import DialogMixin from "@/mixins/dialog.js";
 export default {
 	mixins: [DialogMixin],
 	props: {
+		/**
+		 * Whether to disable the submit button
+		 */
+		disabled: Boolean,
 		text: String
 	}
 };
