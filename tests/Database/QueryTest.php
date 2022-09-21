@@ -101,7 +101,7 @@ class QueryTest extends TestCase
 			'lname'    => 'Bar',
 			'email'    => 'foo@bar.com',
 			'password' => 'AND',
-			'balance'  => 0
+			'balance'  => -30
 		]);
 	}
 
@@ -255,7 +255,7 @@ class QueryTest extends TestCase
 			->select('password')
 			->all();
 
-		// all passwords is same, query result count should one with distinct
+		// there are two different passwords in use
 		$this->assertCount(2, $users);
 	}
 
@@ -265,7 +265,7 @@ class QueryTest extends TestCase
 			->table('users')
 			->min('balance');
 
-		$this->assertSame((float)0, $balance);
+		$this->assertSame((float)-30, $balance);
 	}
 
 	public function testMax()
@@ -336,10 +336,10 @@ class QueryTest extends TestCase
 		$users = $this->database
 			->table('users')
 			->group('id')
-			->having('balance', '<=', 100)
+			->having('balance', '<=', 70)
 			->all();
 
-		$this->assertCount(3, $users);
+		$this->assertCount(2, $users);
 	}
 
 	public function testWhere()
