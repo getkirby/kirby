@@ -36,12 +36,7 @@
 			{{ empty || $t("field.object.empty") }}
 		</k-empty>
 
-		<k-form-drawer
-			ref="drawer"
-			v-bind="drawer"
-			@input="onDrawerInput"
-			@invalid="onErrors"
-		/>
+		<k-form-drawer ref="drawer" v-bind="drawer" @input="onDrawerInput" />
 	</k-field>
 </template>
 
@@ -58,8 +53,7 @@ export default {
 	},
 	data() {
 		return {
-			object: this.value,
-			errors: []
+			object: this.value
 		};
 	},
 	computed: {
@@ -94,7 +88,6 @@ export default {
 	watch: {
 		value(value) {
 			this.object = value;
-			this.errors = [];
 		}
 	},
 	methods: {
@@ -118,11 +111,6 @@ export default {
 		onDrawerInput(value) {
 			this.object = value;
 			this.$emit("input", this.object);
-		},
-		onErrors(fields) {
-			this.errors = Object.keys(fields).filter(
-				(field) => fields[field].$invalid
-			);
 		},
 		onRemove() {
 			this.object = {};
