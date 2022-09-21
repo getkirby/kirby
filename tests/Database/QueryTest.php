@@ -97,7 +97,7 @@ class QueryTest extends TestCase
 		$this->database->table('users')->insert([
 			'role_id'  => 4,
 			'username' => 'foo',
-			'fname'    => 'Foo',
+			'fname'    => 'Mark',
 			'lname'    => 'Bar',
 			'email'    => 'foo@bar.com',
 			'password' => 'AND',
@@ -160,7 +160,7 @@ class QueryTest extends TestCase
 			->table('users')
 			->sum('balance');
 
-		$this->assertSame((float)500, $sum);
+		$this->assertSame((float)470, $sum);
 	}
 
 	public function testAvg()
@@ -437,6 +437,15 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(2, $count);
+
+		// 'AND' as value
+		$count = $this->database
+			->table('users')
+			->where('fname', '=', 'Mark')
+			->andWhere('password', '=', 'AND')
+			->count();
+
+		$this->assertSame(1, $count);
 	}
 
 	public function testOrWhere()
@@ -461,6 +470,15 @@ class QueryTest extends TestCase
 			->count();
 
 		$this->assertSame(2, $count);
+
+		// 'AND' as value
+		$count = $this->database
+			->table('users')
+			->where('balance', '>=', 100)
+			->orWhere('password', '=', 'AND')
+			->count();
+
+		$this->assertSame(4, $count);
 	}
 
 	public function testWhereCallback()
