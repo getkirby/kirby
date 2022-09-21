@@ -519,14 +519,12 @@ class UpdateStatus
 		// check if we have valid data to compare to
 		$versionEntry = $this->versionEntry();
 		if ($versionEntry === null) {
+			$version = $this->data['latest'] ?? null;
+
 			return $this->targetData = [
 				'status'  => 'error',
-				'url'     => (
-					$this->currentVersion ?
-					$this->urlFor($this->currentVersion, 'changes') :
-					null
-				),
-				'version' => null,
+				'url'     => $version ? $this->urlFor($version, 'changes') : null,
+				'version' => $version
 			];
 		}
 
@@ -535,7 +533,7 @@ class UpdateStatus
 			return $this->targetData = [
 				'status'  => 'up-to-date',
 				'url'     => $this->urlFor($this->currentVersion, 'changes'),
-				'version' => null,
+				'version' => null
 			];
 		}
 
@@ -544,7 +542,7 @@ class UpdateStatus
 			return $this->targetData = [
 				'status'  => 'unreleased',
 				'url'     => null,
-				'version' => null,
+				'version' => null
 			];
 		}
 
