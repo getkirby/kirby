@@ -25,7 +25,7 @@ class A
 	 */
 	public static function append(array $array, array $append): array
 	{
-		return $array + $append;
+		return static::merge($array, $append, A::MERGE_APPEND);
 	}
 
 	/**
@@ -165,7 +165,10 @@ class A
 	{
 		$merged = $array1;
 
-		if (static::isAssociative($array1) === false && $mode === static::MERGE_REPLACE) {
+		if (
+			static::isAssociative($array1) === false &&
+			$mode === static::MERGE_REPLACE
+		) {
 			return $array2;
 		}
 
@@ -175,7 +178,11 @@ class A
 				$merged[] = $value;
 
 			// recursively merge the two array values
-			} elseif (is_array($value) === true && isset($merged[$key]) === true && is_array($merged[$key]) === true) {
+			} elseif (
+				is_array($value) === true &&
+				isset($merged[$key]) === true &&
+				is_array($merged[$key]) === true
+			) {
 				$merged[$key] = static::merge($merged[$key], $value, $mode);
 
 			// simply overwrite with the value from the second array

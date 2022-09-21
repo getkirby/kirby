@@ -884,7 +884,7 @@ class Str
 	public static function safeTemplate(string $string = null, array $data = [], array $options = []): string
 	{
 		$callback = ($options['callback'] ?? null) instanceof Closure ? $options['callback'] : null;
-		$fallback = $options['fallback'] ?? '';
+		$fallback = $options['fallback'] ?? null;
 
 		// replace and escape
 		$string = static::template($string, $data, [
@@ -1202,7 +1202,14 @@ class Str
 
 			// callback on result if given
 			if ($callback !== null) {
-				$result = $callback((string)$result, $query, $data);
+				$callbackResult = $callback((string)$result, $query, $data);
+
+				if ($result === null && $callbackResult === '') {
+					// the empty string came just from string casting,
+					// keep the null value and ignore the callback result
+				} else {
+					$result = $callbackResult;
+				}
 			}
 
 			// if we still don't have a result, keep the original placeholder

@@ -19,7 +19,7 @@ class NullCache extends Cache
 	 */
 	public function enabled(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**
