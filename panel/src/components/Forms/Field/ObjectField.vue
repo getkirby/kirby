@@ -88,27 +88,7 @@ export default {
 			return false;
 		},
 		isInvalid() {
-			// if field itself is required and empty
-			if (this.required === true && this.isEmpty) {
-				return true;
-			}
-
-			// if subfields are required but empty
-			for (const field in this.fields) {
-				if (
-					this.fields[field].required === true &&
-					this.$helper.object.isEmpty(this.value[field]) === true
-				) {
-					return true;
-				}
-			}
-
-			// if subfields has any error
-			if (this.errors.length > 0) {
-				return true;
-			}
-
-			return false;
+			return this.required === true && this.isEmpty;
 		}
 	},
 	watch: {
