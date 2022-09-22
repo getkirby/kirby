@@ -1,17 +1,9 @@
 <template>
-	<div
-		class="k-table-update-status-cell"
-		:data-theme="hasInfo ? value.theme : 'notice'"
-	>
-		<!-- TODO: This shouldn't be a button because it's not clickable -->
-		<k-button
-			v-if="hasInfo === false"
-			class="k-table-update-status-cell-button"
-			icon="question"
-		>
+	<div class="k-table-update-status-cell">
+		<template v-if="hasInfo === false">
 			{{ value }}
-		</k-button>
-		<k-dropdown v-else>
+		</template>
+		<k-dropdown v-else :data-theme="value.theme">
 			<k-button
 				class="k-table-update-status-cell-button"
 				:icon="value.icon"
@@ -72,15 +64,13 @@ export default {
 .k-table-update-status-cell-button {
 	display: inline-flex;
 	padding: 0.25rem 0.325rem;
+	padding-right: 1.5rem;
 	border-radius: var(--rounded);
 	line-height: 1;
 	align-items: center;
 	background: var(--color-gray-200);
 }
-.k-table-update-status-cell .k-dropdown > .k-button {
-	padding-right: 1.5rem;
-}
-.k-table-update-status-cell .k-dropdown > .k-button .k-button-text::after {
+.k-table-update-status-cell-button .k-button-text::after {
 	position: absolute;
 	top: 50%;
 	right: 0.5rem;

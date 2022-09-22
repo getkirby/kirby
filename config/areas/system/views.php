@@ -42,7 +42,7 @@ return [
 
 			$plugins = $system->plugins()->values(function ($plugin) {
 				$authors = $plugin->authorsNames();
-				$version = $plugin->updateStatus()?->toArray() ?? $plugin->version() ?? '?';
+				$version = $plugin->updateStatus()?->toArray() ?? $plugin->version() ?? '–';
 
 				return [
 					'author'  => empty($authors) ? '–' : $authors,
