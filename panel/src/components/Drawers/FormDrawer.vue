@@ -80,7 +80,7 @@ export default {
 			this.tab = tab || this.firstTab.name;
 
 			if (focus !== false) {
-				setTimeout(() => {
+				this.$nextTick(() => {
 					if (focus === true) {
 						focus = Object.values(this.fields).find(
 							(field) => field.autofocus === true
@@ -88,7 +88,7 @@ export default {
 					}
 
 					this.focus(focus);
-				}, 1);
+				});
 			}
 		}
 	}
