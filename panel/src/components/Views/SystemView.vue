@@ -43,7 +43,8 @@
 						version: {
 							label: $t('version'),
 							type: 'update-status',
-							mobile: true
+							mobile: true,
+							width: '10rem'
 						}
 					}"
 					:rows="plugins"
