@@ -910,20 +910,9 @@ class Query
 	 * @param mixed $current Current value (like $this->where)
 	 * @return string
 	 */
-	protected function filterQuery(array $args, $current, string $mode = null)
+	protected function filterQuery(array $args, $current, string $mode = 'AND')
 	{
 		$result = '';
-		$last   = A::last($args);
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($last, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-			// and use it as mode if not explicitly provided
-			$mode ??= $last;
-		} else {
-			$mode ??= 'AND';
-		}
 
 		switch (count($args)) {
 			case 1:
