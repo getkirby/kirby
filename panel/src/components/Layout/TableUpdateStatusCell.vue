@@ -32,7 +32,11 @@
 					</div>
 				</dl>
 
-				<k-dropdown-item icon="open" :link="value.url">
+				<k-dropdown-item
+					:disabled="value.url === null"
+					icon="open"
+					:link="value.url"
+				>
 					Version information
 				</k-dropdown-item>
 			</k-dropdown-content>
