@@ -314,7 +314,7 @@ class UpdateStatus
 	}
 
 	/**
-	 * Finds the minimum possible secrity update
+	 * Finds the minimum possible security update
 	 * to fix all known vulnerabilities
 	 *
 	 * @return string|null Version number of the update or
