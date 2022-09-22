@@ -6,7 +6,7 @@ use Kirby\Cms\Page;
 use Kirby\Field\TestCase;
 
 /**
- * @covers \Kirby\Option\OptionsApi
+ * @coversDefaultClass \Kirby\Option\OptionsApi
  */
 class OptionsApiTest extends TestCase
 {

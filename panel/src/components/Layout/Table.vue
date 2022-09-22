@@ -445,8 +445,9 @@ export default {
 
 .k-table-row-ghost {
 	background: var(--color-white);
-	box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
-	outline: 2px solid var(--color-focus);
+	box-shadow: var(--shadow-outline);
+	outline: 2px solid var(--color-black);
+	border-radius: var(--rounded);
 	margin-bottom: 2px;
 	cursor: grabbing;
 	cursor: -moz-grabbing;

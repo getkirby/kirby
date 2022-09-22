@@ -5,7 +5,7 @@ namespace Kirby\Option;
 use Kirby\Field\TestCase;
 
 /**
- * @covers \Kirby\Option\Options
+ * @coversDefaultClass \Kirby\Option\Options
  */
 class OptionsTest extends TestCase
 {
