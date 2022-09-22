@@ -1,6 +1,6 @@
 <template>
 	<div class="k-table-update-status-cell">
-		<template v-if="hasInfo === false">
+		<template v-if="typeof this.value === 'string'">
 			{{ value }}
 		</template>
 		<k-dropdown v-else :data-theme="value.theme">
@@ -44,11 +44,6 @@
 export default {
 	props: {
 		value: [String, Object]
-	},
-	computed: {
-		hasInfo() {
-			return typeof this.value !== "string";
-		}
 	}
 };
 </script>
