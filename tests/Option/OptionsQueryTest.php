@@ -28,7 +28,7 @@ class MyPage extends Page
 }
 
 /**
- * @covers \Kirby\Option\OptionsQuery
+ * @coversDefaultClass \Kirby\Option\OptionsQuery
  */
 class OptionsQueryTest extends TestCase
 {
@@ -44,7 +44,7 @@ class OptionsQueryTest extends TestCase
 	}
 
 	/**
-	 * @covers ::defaults
+	 * @coversNothing
 	 */
 	public function testDefaults()
 	{
