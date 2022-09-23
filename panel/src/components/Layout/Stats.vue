@@ -55,6 +55,7 @@ export default {
 .k-stats {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	grid-auto-rows: 1fr;
 	grid-gap: var(--spacing-2px);
 }
 .k-stat {
