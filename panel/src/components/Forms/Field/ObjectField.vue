@@ -14,7 +14,7 @@
 			<tbody>
 				<template v-for="field in fields">
 					<tr
-						v-if="$helper.field.isVisible(field, value)"
+						v-if="field.saveable && $helper.field.isVisible(field, value)"
 						:key="field.name"
 						@click="open(field.name)"
 					>
