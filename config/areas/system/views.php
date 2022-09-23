@@ -16,6 +16,7 @@ return [
 				[
 					'label'  => I18n::translate('license'),
 					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
+					'info'   => $license ? null : I18n::translate('license.register.label'),
 					'theme'  => $license ? null : 'negative',
 					'dialog' => $license ? 'license' : 'registration'
 				],
