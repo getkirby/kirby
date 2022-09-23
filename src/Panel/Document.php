@@ -149,11 +149,12 @@ class Document
 	}
 
 	/**
-	 * Returns array of favion icons
+	 * Returns array of favicon icons
 	 * based on config option
 	 * @since 3.7.0
 	 *
 	 * @param string $url URL prefix for default icons
+	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function favicon(string $url = ''): array
 	{
@@ -163,13 +164,13 @@ class Document
 				'type' => 'image/png',
 				'url'  => $url . '/apple-touch-icon.png',
 			],
-			'shortcut icon' => [
-				'type' => 'image/svg+xml',
-				'url'  => $url . '/favicon.svg',
-			],
 			'alternate icon' => [
 				'type' => 'image/png',
 				'url'  => $url . '/favicon.png',
+			],
+			'shortcut icon' => [
+				'type' => 'image/svg+xml',
+				'url'  => $url . '/favicon.svg',
 			]
 		]);
 
