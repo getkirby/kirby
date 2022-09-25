@@ -168,7 +168,7 @@ export default {
 				return 1;
 			}
 
-			return (this.page - 1) * this.limit;
+			return (this.page - 1) * this.limit + 1;
 		},
 		/**
 		 * Returns if new entries can be added
