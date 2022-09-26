@@ -15,19 +15,19 @@
 			<k-dropdown-content ref="dropdown" align="right">
 				<dl class="k-plugin-info">
 					<div>
-						<dt>Plugin</dt>
+						<dt>{{ $t("plugin") }}</dt>
 						<dd>{{ value.name }}</dd>
 					</div>
 					<div>
-						<dt>Current version</dt>
+						<dt>{{ $t("version.current") }}</dt>
 						<dd>{{ value.currentVersion }}</dd>
 					</div>
 					<div>
-						<dt>Latest version</dt>
+						<dt>{{ $t("version.latest") }}</dt>
 						<dd>{{ value.latestVersion }}</dd>
 					</div>
 					<div>
-						<dt>Status</dt>
+						<dt>{{ $t("system.updateStatus") }}</dt>
 						<dd :data-theme="value.theme">{{ value.label }}</dd>
 					</div>
 				</dl>
@@ -37,7 +37,7 @@
 					icon="open"
 					:link="value.url"
 				>
-					Version information
+					{{ $t("versionInformation") }}
 				</k-dropdown-item>
 			</k-dropdown-content>
 		</k-dropdown>

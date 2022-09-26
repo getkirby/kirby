@@ -454,6 +454,7 @@
 	"paste": "Paste",
 	"paste.after": "Paste after",
 	"pixel": "Pixel",
+	"plugin": "Plugin",
 	"plugins": "Plugins",
 	"prev": "Previous",
 	"preview": "Preview",
@@ -502,6 +503,7 @@
 	"system.issues.site": "The site folder seems to be exposed",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
+	"system.updateStatus": "Update status",
 	"system.updateStatus.error": "Could not check for updates",
 	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
 	"system.updateStatus.security-update": "Free security update { version } available",
@@ -576,6 +578,9 @@
 	"users": "Users",
 
 	"version": "Version",
+	"version.current": "Current version",
+	"version.latest": "Latest version",
+	"versionInformation": "Version information",
 
 	"view.account": "Your account",
 	"view.installation": "Installation",
