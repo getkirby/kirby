@@ -19,7 +19,7 @@ return [
 		/**
 		 * Set the default values for the object
 		 */
-		'default' => function (array $default = []) {
+		'default' => function ($default = null) {
 			return $default;
 		},
 
