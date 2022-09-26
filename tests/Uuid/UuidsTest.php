@@ -12,6 +12,62 @@ use Kirby\Cache\NullCache;
 class UuidsTest extends TestCase
 {
 	/**
+	 * @covers ::cache
+	 */
+	public function testCache()
+	{
+		$this->assertInstanceOf(Cache::class, Uuids::cache());
+
+		$this->app->clone([
+			'options' => [
+				'cache' => [
+					'uuid' => ['type' => 'memory']
+				]
+			]
+		]);
+		$this->assertInstanceOf(MemoryCache::class, Uuids::cache());
+
+		$this->app->clone([
+			'options' => [
+				'cache' => [
+					'uuid' => false
+				]
+			]
+		]);
+		$this->assertInstanceOf(NullCache::class, Uuids::cache());
+	}
+
+	/**
+	 * @covers ::each
+	 */
+	public function testEach()
+	{
+		$models = 0;
+		Uuids::each(function ($model) use (&$models) {
+			$models++;
+		});
+		$this->assertSame(7, $models);
+	}
+
+	/**
+	 * @covers ::generate
+	 */
+	public function testGenerate()
+	{
+		$page = $this->app->page('page-b');
+		$file = $this->app->file('page-b/foo.pdf');
+		$this->assertNull($page->content()->get('uuid')->value());
+		$this->assertNull($file->content()->get('uuid')->value());
+
+		Uuids::generate();
+
+		$page = $this->app->page('page-b'); // since $page is immutable
+		$file = $this->app->file('page-b/foo.pdf'); // since $file is immutable
+		$this->assertNotNull($page->content()->get('uuid')->value());
+		$this->assertNotNull($file->content()->get('uuid')->value());
+	}
+
+	/**
 	 * @covers ::populate
 	 */
 	public function testPopulate()
@@ -113,31 +169,5 @@ class UuidsTest extends TestCase
 		$this->assertFalse($userFile->uuid()->isCached());
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertTrue($struct->uuid()->isCached());
-	}
-
-	/**
-	 * @covers ::cache
-	 */
-	public function testStore()
-	{
-		$this->assertInstanceOf(Cache::class, Uuids::cache());
-
-		$this->app->clone([
-			'options' => [
-				'cache' => [
-					'uuid' => ['type' => 'memory']
-				]
-			]
-		]);
-		$this->assertInstanceOf(MemoryCache::class, Uuids::cache());
-
-		$this->app->clone([
-			'options' => [
-				'cache' => [
-					'uuid' => false
-				]
-			]
-		]);
-		$this->assertInstanceOf(NullCache::class, Uuids::cache());
 	}
 }

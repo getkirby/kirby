@@ -2,6 +2,7 @@
 
 namespace Kirby\Uuid;
 
+use Closure;
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
 
@@ -25,22 +26,21 @@ class Uuids
 	}
 
 	/**
-	 * Populates cache with UUIDs for all identifiable models
-	 * that need to be cached (not site and users)
+	 * Runs the callback for each identifiable model of type
 	 *
 	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
 	 */
-	public static function populate(string $type = 'all'): void
+	public static function each(Closure $callback, string $type = 'all'): void
 	{
 		if ($type === 'all' || $type === 'page' || $type === 'file') {
 			foreach (PageUuid::index() as $page) {
 				if ($type === 'all' || $type === 'page') {
-					Uuid::for($page)->populate();
+					$callback($page);
 				}
 
 				if ($type === 'all' || $type === 'file') {
 					foreach ($page->files() as $file) {
-						Uuid::for($file)->populate();
+						$callback($file);
 					}
 				}
 			}
@@ -49,13 +49,13 @@ class Uuids
 		if ($type === 'all' || $type === 'file') {
 			foreach (SiteUuid::index() as $site) {
 				foreach ($site->files() as $file) {
-					Uuid::for($file)->populate();
+					$callback($file);
 				}
 			}
 
 			foreach (UserUuid::index() as $user) {
 				foreach ($user->files() as $file) {
-					Uuid::for($file)->populate();
+					$callback($file);
 				}
 			}
 		}
@@ -64,7 +64,7 @@ class Uuids
 		// if ($type === 'all' || $type === 'block') {
 		// 	foreach (BlockUuid::index() as $blocks) {
 		// 		foreach ($blocks as $block) {
-		// 			Uuid::for($block)->populate();
+		// 			$callback($block);
 		// 		}
 		// 	}
 		// }
@@ -72,9 +72,36 @@ class Uuids
 		// if ($type === 'all' || $type === 'struct') {
 		// 	foreach (StructureUuid::index() as $structure) {
 		// 		foreach ($structure as $entry) {
-		// 			Uuid::for($entry)->populate();
+		// 			$callback($entry);
 		// 		}
 		// 	}
 		// }
+	}
+
+	/**
+	 * Generates UUID for all identifiable models of type
+	 *
+	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 */
+	public static function generate(string $type = 'all'): void
+	{
+		static::each(
+			fn (Identifiable $model) => Uuid::for($model)->id(),
+			$type
+		);
+	}
+
+	/**
+	 * Populates cache with UUIDs for all identifiable models
+	 * that need to be cached (not site and users)
+	 *
+	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 */
+	public static function populate(string $type = 'all'): void
+	{
+		static::each(
+			fn (Identifiable $model) => Uuid::for($model)->populate(),
+			$type
+		);
 	}
 }
