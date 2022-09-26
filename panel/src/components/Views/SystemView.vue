@@ -139,4 +139,8 @@ export default {
 .k-system-view-section {
 	margin-bottom: 3rem;
 }
+
+.k-system-info .k-stat-label {
+	color: var(--theme, var(--color-black));
+}
 </style>

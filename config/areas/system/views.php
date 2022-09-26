@@ -14,16 +14,14 @@ return [
 
 			$environment = [
 				[
-					'label'  => I18n::translate('license'),
+					'label'  => $license ? I18n::translate('license') : I18n::translate('license.register.label'),
 					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
-					'info'   => $license ? null : I18n::translate('license.register.label'),
 					'theme'  => $license ? null : 'negative',
 					'dialog' => $license ? 'license' : 'registration'
 				],
 				[
-					'label' => I18n::translate('version'),
+					'label' => $updateStatus?->label() ?? I18n::translate('version'),
 					'value' => $kirby->version(),
-					'info'  => $updateStatus?->label(),
 					'link'  => (
 						$updateStatus ?
 						$updateStatus->url() :
