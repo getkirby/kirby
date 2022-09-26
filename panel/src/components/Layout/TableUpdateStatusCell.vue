@@ -1,6 +1,6 @@
 <template>
 	<div class="k-table-update-status-cell">
-		<template v-if="typeof this.value === 'string'">
+		<template v-if="typeof value === 'string'">
 			{{ value }}
 		</template>
 		<k-dropdown v-else :data-theme="value.theme">
