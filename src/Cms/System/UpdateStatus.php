@@ -217,13 +217,13 @@ class UpdateStatus
 	public function toArray(): array
 	{
 		return [
+			'currentVersion' => $this->currentVersion ?? '?',
 			'icon'           => $this->icon(),
 			'label'          => $this->label(),
-			'name'           => $this->pluginName,
+			'latestVersion'  => $this->data['latest'] ?? '?',
+			'pluginName'     => $this->pluginName,
 			'theme'          => $this->theme(),
 			'url'            => $this->url(),
-			'currentVersion' => $this->currentVersion ?? '?',
-			'latestVersion'  => $this->data['latest'] ?? '?',
 		];
 	}
 

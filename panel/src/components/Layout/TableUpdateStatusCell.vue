@@ -16,7 +16,7 @@
 				<dl class="k-plugin-info">
 					<div>
 						<dt>{{ $t("plugin") }}</dt>
-						<dd>{{ value.name }}</dd>
+						<dd>{{ value.pluginName }}</dd>
 					</div>
 					<div>
 						<dt>{{ $t("version.current") }}</dt>
