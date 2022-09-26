@@ -96,9 +96,10 @@ export default {
 
 			for (const fieldName in this.fields) {
 				const field = this.fields[fieldName];
-				const value = field.default ? this.$helper.clone(field.default) : null;
 
-				this.object[fieldName] = value;
+				if (field.default) {
+					this.object[fieldName] = this.$helper.clone(field.default);
+				}
 			}
 
 			this.$emit("input", this.object);
