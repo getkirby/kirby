@@ -219,6 +219,8 @@ abstract class AreaTestCase extends TestCase
 
 		// clean up server software fakes
 		unset($_SERVER['SERVER_SOFTWARE']);
+
+		App::destroy();
 	}
 
 	public function view(string $path = null): array

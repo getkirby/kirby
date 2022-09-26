@@ -49,15 +49,14 @@ class SystemTest extends AreaTestCase
 		$this->assertSame('k-system-view', $view['component']);
 		$this->assertSame([
 			[
-				'label' => 'License',
+				'label' => 'Please enter your license code',
 				'value' => 'Unregistered',
 				'theme' => 'negative',
 				'dialog' => 'registration'
 			],
 			[
-				'label' => 'Version',
+				'label' => 'Free update 88888.8.8 available',
 				'value' => $this->app->version(),
-				'info' => 'Free update 88888.8.8 available',
 				'link' => 'https://getkirby.com/releases/88888.8.8',
 				'theme' => 'info'
 			],
@@ -178,7 +177,15 @@ class SystemTest extends AreaTestCase
 					'text' => 'getkirby/private',
 					'href' => null
 				],
-				'version' => '–'
+				'version' => [
+					'currentVersion' => '?',
+					'icon' => 'question',
+					'label' => 'Could not check for updates',
+					'latestVersion' => '?',
+					'pluginName' => 'getkirby/private',
+					'theme' => 'notice',
+					'url' => null
+				]
 			],
 			[
 				'author'  => 'A, B',
@@ -188,10 +195,13 @@ class SystemTest extends AreaTestCase
 					'href' => 'https://getkirby.com'
 				],
 				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon' => 'info',
 					'label' => 'Free update 88888.8.8 available',
+					'latestVersion' => '99999.9.9',
+					'pluginName' => 'getkirby/public',
 					'theme' => 'info',
-					'url' => 'https://github.com/getkirby/public-plugin/releases/tag/88888.8.8',
-					'version' => '1.0.0'
+					'url' => 'https://github.com/getkirby/public-plugin/releases/tag/88888.8.8'
 				]
 			],
 			[
@@ -202,24 +212,25 @@ class SystemTest extends AreaTestCase
 					'href' => null
 				],
 				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon' => 'question',
 					'label' => 'Could not check for updates',
+					'latestVersion' => '?',
+					'pluginName' => 'getkirby/unknown',
 					'theme' => 'notice',
-					'url' => null,
-					'version' => '1.0.0'
+					'url' => null
 				]
 			]
 		];
 
 		$this->assertSame($expected, $view['props']['plugins']);
-
-		App::destroy();
 	}
 
 	public function testViewWithoutUpdateCheck(): void
 	{
 		$this->app([
 			'options' => [
-				'update' => false,
+				'updates' => false,
 			]
 		]);
 
@@ -245,7 +256,7 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame([
 			[
-				'label' => 'License',
+				'label' => 'Please enter your license code',
 				'value' => 'Unregistered',
 				'theme' => 'negative',
 				'dialog' => 'registration'
@@ -253,7 +264,6 @@ class SystemTest extends AreaTestCase
 			[
 				'label' => 'Version',
 				'value' => $this->app->version(),
-				'info' => null,
 				'link' => 'https://github.com/getkirby/kirby/releases/tag/' . $this->app->version(),
 				'theme' => null
 			],
@@ -278,7 +288,5 @@ class SystemTest extends AreaTestCase
 				'version' => '1.0.0'
 			]
 		], $props['plugins']);
-
-		App::destroy();
 	}
 }
