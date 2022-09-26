@@ -85,11 +85,9 @@ export default {
 				)?.name;
 			}
 
-			this.$nextTick(() => {
-				this.$nextTick(() => {
-					this.focus(focus);
-				});
-			});
+			setTimeout(() => {
+				this.focus(focus);
+			}, 10);
 		}
 	}
 };

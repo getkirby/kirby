@@ -265,13 +265,13 @@ export default {
 			this.close();
 		},
 		close() {
-			if (this.$refs.dropdown.isOpen === true) {
+			if (this.$refs.dropdown?.isOpen === true) {
 				this.$refs.dropdown.close();
 				this.limit = true;
 			}
 		},
 		focus() {
-			this.$refs.dropdown.open();
+			this.$refs.dropdown?.open();
 		},
 		/**
 		 * Gets index of option in array of selected values
@@ -302,7 +302,7 @@ export default {
 			document.activeElement?.[direction + "Sibling"]?.focus?.();
 		},
 		onClose() {
-			if (this.$refs.dropdown.isOpen === false) {
+			if (this.$refs.dropdown?.isOpen === false) {
 				if (document.activeElement === this.$parent.$el) {
 					this.q = null;
 				}
@@ -328,9 +328,11 @@ export default {
 			this.$nextTick(() => {
 				this.$refs.search?.focus?.();
 
-				this.$refs.dropdown.$el.querySelector(
-					".k-multiselect-options"
-				).scrollTop = this.scrollTop;
+				if (this.$refs.dropdown?.$el) {
+					this.$refs.dropdown.$el.querySelector(
+						".k-multiselect-options"
+					).scrollTop = this.scrollTop;
+				}
 			});
 		},
 		/**
