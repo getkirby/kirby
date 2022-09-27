@@ -10,7 +10,6 @@ return [
 			$kirby        = App::instance();
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
-			$exceptions   = $updateStatus?->exceptions() ?? [];
 			$license      = $system->license();
 
 			$environment = [
@@ -39,6 +38,8 @@ return [
 					'value' => $system->serverSoftware() ?? '?'
 				]
 			];
+
+			$exceptions = $updateStatus?->exceptions() ?? [];
 
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
