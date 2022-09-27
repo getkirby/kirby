@@ -79,17 +79,15 @@ export default {
 			this.$refs.drawer.open();
 			this.tab = tab || this.firstTab.name;
 
-			if (focus !== false) {
-				setTimeout(() => {
-					if (focus === true) {
-						focus = Object.values(this.fields).find(
-							(field) => field.autofocus === true
-						)?.name;
-					}
-
-					this.focus(focus);
-				}, 1);
+			if (focus === true) {
+				focus = Object.values(this.fields).find(
+					(field) => field.autofocus === true
+				)?.name;
 			}
+
+			setTimeout(() => {
+				this.focus(focus);
+			}, 10);
 		}
 	}
 };

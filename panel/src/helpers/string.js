@@ -232,16 +232,12 @@ export function ucwords(string) {
 
 /**
  * Turns escaped HTML entities into actual characters again
- * @param {string}
+ * @param {string} string
  * @returns  {string}
  */
 export function unescapeHTML(string) {
-	console.log(string);
 	for (const symbol in escapingMap) {
-		console.log(escapingMap[symbol]);
-		console.log(symbol);
 		string = String(string).replaceAll(escapingMap[symbol], symbol);
-		console.log(string);
 	}
 	return string;
 }

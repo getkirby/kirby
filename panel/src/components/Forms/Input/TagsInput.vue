@@ -217,7 +217,7 @@ export default {
 			this.remove(tag);
 		},
 		focus() {
-			this.$refs.input.focus();
+			this.$refs.input?.focus();
 		},
 		get(position) {
 			let nextIndex = null;
