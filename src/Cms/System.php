@@ -623,6 +623,7 @@ class System
 	/**
 	 * Returns the update status object unless
 	 * the update check for Kirby has been disabled
+	 * @since 3.8.0
 	 *
 	 * @param array|null $data Custom override for the getkirby.com update data
 	 */

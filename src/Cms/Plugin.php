@@ -218,6 +218,7 @@ class Plugin extends Model
 	/**
 	 * Returns the update status object unless the
 	 * update check has been disabled for the plugin
+	 * @since 3.8.0
 	 *
 	 * @param array|null $data Custom override for the getkirby.com update data
 	 */

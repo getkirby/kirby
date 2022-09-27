@@ -14,6 +14,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Checks for updates and affected vulnerabilities
+ * @since 3.8.0
  *
  * @package   Kirby Cms
  * @author    Lukas Bestle <lukas@getkirby.com>
