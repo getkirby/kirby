@@ -618,6 +618,35 @@ class VTest extends TestCase
 		$this->assertFalse(V::time('24:24:24'));
 	}
 
+	public function testUuid()
+	{
+		$this->assertTrue(V::uuid('site://'));
+		$this->assertTrue(V::uuid('page://something'));
+		$this->assertTrue(V::uuid('user://something'));
+		$this->assertTrue(V::uuid('file://something'));
+		$this->assertTrue(V::uuid('file://something/else'));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertTrue(V::uuid('struct://something'));
+		// $this->assertTrue(V::uuid('block://something'));
+		// $this->assertTrue(V::uuid('block://something/else'));
+
+		$this->assertTrue(V::uuid('site://', 'site'));
+		$this->assertTrue(V::uuid('page://something', 'page'));
+		$this->assertTrue(V::uuid('user://something', 'user'));
+		$this->assertTrue(V::uuid('file://something', 'file'));
+
+		$this->assertFalse(V::uuid('site://', 'block'));
+		$this->assertFalse(V::uuid('page://something', 'block'));
+		$this->assertFalse(V::uuid('user://something', 'block'));
+		$this->assertFalse(V::uuid('file://something', 'block'));
+
+		$this->assertFalse(V::uuid('file:/something'));
+		$this->assertFalse(V::uuid('foo://something'));
+		$this->assertFalse(V::uuid('page//something'));
+		$this->assertFalse(V::uuid('page//something', 'page'));
+		$this->assertFalse(V::uuid('not a page://something'));
+	}
+
 	public function testUrl()
 	{
 		// based on https://mathiasbynens.be/demo/url-regex
