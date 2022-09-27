@@ -412,6 +412,11 @@ class Collection extends Iterator implements Countable
 	 */
 	public function findBy(string $attribute, $value)
 	{
+		// $value: cast object to string, e.g. UUID object
+		if (is_object($value) === true) {
+			$value = (string)$value;
+		}
+
 		foreach ($this->data as $item) {
 			if ($this->getAttribute($item, $attribute) == $value) {
 				return $item;
