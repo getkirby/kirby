@@ -58,6 +58,7 @@
 export default {
 	props: {
 		environment: Array,
+		exceptions: Array,
 		plugins: Array,
 		security: Array,
 		urls: Object
@@ -90,6 +91,9 @@ export default {
 		}
 	},
 	async created() {
+		// print exceptions from the update check to console for debugging
+		this.exceptions.map((exception) => console.error(exception));
+
 		console.info(
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);

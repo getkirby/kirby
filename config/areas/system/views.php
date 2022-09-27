@@ -10,6 +10,7 @@ return [
 			$kirby        = App::instance();
 			$system       = $kirby->system();
 			$updateStatus = $system->updateStatus();
+			$exceptions   = $updateStatus?->exceptions() ?? [];
 			$license      = $system->license();
 
 			$environment = [
@@ -39,9 +40,14 @@ return [
 				]
 			];
 
-			$plugins = $system->plugins()->values(function ($plugin) {
-				$authors = $plugin->authorsNames();
-				$version = $plugin->updateStatus()?->toArray() ?? $plugin->version() ?? '–';
+			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
+				$authors      = $plugin->authorsNames();
+				$updateStatus = $plugin->updateStatus();
+				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
+
+				if ($updateStatus !== null) {
+					$exceptions = array_merge($exceptions, $updateStatus->exceptions());
+				}
 
 				return [
 					'author'  => empty($authors) ? '–' : $authors,
@@ -72,10 +78,18 @@ return [
 				];
 			}
 
+			// pass a list of exception message strings in debug mode
+			// (will be printed to the browser console)
+			$exceptionMessages = [];
+			if ($kirby->option('debug') === true) {
+				$exceptionMessages = array_map(fn ($e) => $e->getMessage(), $exceptions);
+			}
+
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
 					'environment' => $environment,
+					'exceptions'  => $exceptionMessages,
 					'plugins'     => $plugins,
 					'security'    => $security,
 					'urls'        => [

@@ -42,20 +42,18 @@ class UpdateStatus
 	protected string|null $pluginName;
 	protected bool $securityOnly;
 
+	// props updated throughout the class
+	protected array $exceptions = [];
+	protected bool|null $noVulns = null;
+
 	// caches
 	protected array $messages;
 	protected array $targetData;
 	protected array|null $versionEntry;
 	protected array $vulnerabilities;
 
-	// helper props
-	protected bool|null $noVulns = null;
-
 	/**
 	 * @param array|null $data Custom override for the getkirby.com update data
-	 *
-	 * @throws \Kirby\Exception\Exception If the cache is not working (in debug mode)
-	 * @throws \Kirby\Exception\Exception If the update data couldn't be fetched (in debug mode)
 	 */
 	public function __construct(
 		App|Plugin $package,
@@ -74,6 +72,15 @@ class UpdateStatus
 		$this->currentVersion = $package->version();
 
 		$this->data = $data ?? $this->loadData();
+	}
+
+	/**
+	 * Returns the list of exception objects that were
+	 * collected during data fetching and processing
+	 */
+	public function exceptions(): array
+	{
+		return $this->exceptions;
 	}
 
 	/**
@@ -395,9 +402,6 @@ class UpdateStatus
 	/**
 	 * Loads the getkirby.com update data
 	 * from cache or via HTTP
-	 *
-	 * @throws \Kirby\Exception\Exception If the cache is not working (in debug mode)
-	 * @throws \Kirby\Exception\Exception If the update data couldn't be fetched (in debug mode)
 	 */
 	protected function loadData(): array|null
 	{
@@ -419,8 +423,11 @@ class UpdateStatus
 			return $data;
 		}
 
-		// special empty cache value (on request error)
-		if ($data === false) {
+		// exception message (on previous request error)
+		if (is_string($data) === true) {
+			// restore the exception to make it visible when debugging
+			$this->exceptions[] = new KirbyException($data);
+
 			return null;
 		}
 
@@ -430,15 +437,13 @@ class UpdateStatus
 			$cache->enabled() === false ||
 			$cache instanceof MemoryCache
 		) {
-			if ($this->app->option('debug') === true) {
-				throw new KirbyException('Cannot check for updates without a working "updates" cache');
-			}
+			$this->exceptions[] = new KirbyException('Cannot check for updates without a working "updates" cache');
 
 			return null;
 		}
 
 		// first catch every exception;
-		// rethrow it in debug mode, otherwise use a fallback
+		// we collect it below for debugging
 		try {
 			if (static::$timedOut === true) {
 				throw new Exception('Previous remote request timed out');
@@ -460,6 +465,15 @@ class UpdateStatus
 				throw new Exception('Invalid JSON data');
 			}
 		} catch (Exception $e) {
+			$package = $this->packageName();
+			$message = 'Could not load update data for ' . $package . ': ' . $e->getMessage();
+
+			$exception = new KirbyException([
+				'fallback' => $message,
+				'previous' => $e
+			]);
+			$this->exceptions[] = $exception;
+
 			// if the request timed out, prevent additional
 			// requests for other packages (e.g. plugins)
 			// to avoid long Panel hangs
@@ -467,20 +481,12 @@ class UpdateStatus
 				static::$timedOut = true;
 			} elseif (static::$timedOut === false) {
 				// different error than timeout;
-				// cache an empty result to prevent
-				// additional requests (e.g. if a plugin
+				// prevent additional requests in the
+				// next three days (e.g. if a plugin
 				// does not have a page on getkirby.com)
-				$cache->set($key, false, 3 * 24 * 60);
-			}
-
-			if ($this->app->option('debug') === true) {
-				$package = $this->packageName();
-				$message = 'Could not load update data for ' . $package . ': ' . $e->getMessage();
-
-				throw new KirbyException([
-					'fallback' => $message,
-					'previous' => $e
-				]);
+				// by caching the exception message
+				// instead of the data array
+				$cache->set($key, $exception->getMessage(), 3 * 24 * 60);
 			}
 
 			return null;
@@ -600,8 +606,6 @@ class UpdateStatus
 
 	/**
 	 * Returns the URL for a specific version and purpose
-	 *
-	 * @throws \Kirby\Exception\Exception If no matching URL was found (in debug mode)
 	 */
 	protected function urlFor(string $version, string $purpose): string|null
 	{
@@ -625,12 +629,10 @@ class UpdateStatus
 		}
 
 		if ($url === null) {
-			if ($this->app->option('debug') === true) {
-				$package = $this->packageName();
-				$message = 'Update check: No matching URL found for ' . $package . '@' . $version;
+			$package = $this->packageName();
+			$message = 'Update check: No matching URL found for ' . $package . '@' . $version;
 
-				throw new KirbyException($message);
-			}
+			$this->exceptions[] = new KirbyException($message);
 
 			return null;
 		}
@@ -645,8 +647,6 @@ class UpdateStatus
 	/**
 	 * Extracts the first matching version entry from
 	 * the data array unless no data is available
-	 *
-	 * @throws \Kirby\Exception\Exception If no matching entry was found (in debug mode)
 	 */
 	protected function versionEntry(): array|null
 	{
@@ -697,11 +697,11 @@ class UpdateStatus
 			break;
 		}
 
-		if ($versionEntry === null && $this->app->option('debug') === true) {
+		if ($versionEntry === null) {
 			$package = $this->packageName();
 			$message = 'Update check: No matching version entry found for ' . $package . '@' . $this->currentVersion;
 
-			throw new KirbyException($message);
+			$this->exceptions[] = new KirbyException($message);
 		}
 
 		return $this->versionEntry = $versionEntry;
