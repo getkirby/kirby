@@ -645,7 +645,7 @@ class VTest extends TestCase
 		$this->assertFalse(V::uuid('page//something'));
 		$this->assertFalse(V::uuid('page//something', 'page'));
 		$this->assertFalse(V::uuid('not a page://something'));
-    }
+	}
 
 	public function testUrl()
 	{
