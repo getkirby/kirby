@@ -229,7 +229,7 @@ class Uuid
 		string|null $type = null
 	): bool {
 		$type  ??= implode('|', Uri::$schemes);
-		$pattern = sprintf('!^(%s)://([a-zA-Z0-9]*)!', $type);
+		$pattern = sprintf('!^(%s)://(.*)!', $type);
 
 		if (preg_match($pattern, $string, $matches) !== 1) {
 			return false;
