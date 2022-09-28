@@ -84,6 +84,17 @@ class CoreTest extends TestCase
 	}
 
 	/**
+	 * @covers ::caches
+	 */
+	public function testCaches()
+	{
+		$caches = $this->core->caches();
+
+		$this->assertArrayHasKey('updates', $caches);
+		$this->assertArrayHasKey('uuid', $caches);
+	}
+
+	/**
 	 * @covers ::cacheTypes
 	 */
 	public function testCacheTypes()

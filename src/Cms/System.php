@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -34,6 +35,9 @@ class System
 	 * @var \Kirby\Cms\App
 	 */
 	protected $app;
+
+	// cache
+	protected UpdateStatus|null $updateStatus = null;
 
 	/**
 	 * @param \Kirby\Cms\App $app
@@ -614,6 +618,33 @@ class System
 	public function toArray(): array
 	{
 		return $this->status();
+	}
+
+	/**
+	 * Returns the update status object unless
+	 * the update check for Kirby has been disabled
+	 * @since 3.8.0
+	 *
+	 * @param array|null $data Custom override for the getkirby.com update data
+	 */
+	public function updateStatus(array|null $data = null): UpdateStatus|null
+	{
+		if ($this->updateStatus !== null) {
+			return $this->updateStatus;
+		}
+
+		$kirby  = $this->app;
+		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? true;
+
+		if ($option === false) {
+			return null;
+		}
+
+		return $this->updateStatus = new UpdateStatus(
+			$kirby,
+			$option === 'security',
+			$data
+		);
 	}
 
 	/**

@@ -1,0 +1,29 @@
+{
+	"latest": "99999.9.9",
+	"versions": {
+		"99999.9.9": {
+			"description": "Latest Kirby release",
+			"status": "latest"
+		},
+		"*": {
+			"description": "Actively supported",
+			"latest": "88888.8.8",
+			"status": "active-support"
+		}
+	},
+	"urls": {
+		"*": {
+			"changes": "https://getkirby.com/releases/{{ version }}",
+			"download": "https://repoofthefuture.com/{{ version }}.zip",
+			"upgrade": "https://getkirby.com/releases/99999"
+		}
+	},
+	"incidents": [],
+	"messages": [
+		{
+			"text": "This is a very important announcement!",
+			"kirby": "*",
+			"php": "*"
+		}
+	]
+}

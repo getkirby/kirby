@@ -42,8 +42,9 @@
 						},
 						version: {
 							label: $t('version'),
-							width: '8rem',
-							mobile: true
+							type: 'update-status',
+							mobile: true,
+							width: '10rem'
 						}
 					}"
 					:rows="plugins"
@@ -57,6 +58,7 @@
 export default {
 	props: {
 		environment: Array,
+		exceptions: Array,
 		plugins: Array,
 		security: Array,
 		urls: Object
@@ -72,22 +74,26 @@ export default {
 			const accessible = this.accessible.map((key) => ({
 				id: key,
 				text: this.$t("system.issues." + key),
-				link: "https://getkirby.com/security/" + key
+				link: "https://getkirby.com/security/" + key,
+				icon: "folder"
 			}));
 
 			// merge messages from backend and from dynamic URL checks
 			return this.security.concat(accessible).map((issue) => ({
-				...issue,
 				// give each message an image prop unless it already has one
 				image: {
 					back: "var(--color-red-200)",
-					icon: "alert",
+					icon: issue.icon || "alert",
 					color: "var(--color-red)"
-				}
+				},
+				...issue
 			}));
 		}
 	},
 	async created() {
+		// print exceptions from the update check to console for debugging
+		this.exceptions.map((exception) => console.error(exception));
+
 		console.info(
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);
@@ -137,7 +143,8 @@ export default {
 .k-system-view-section {
 	margin-bottom: 3rem;
 }
-.k-system-info [data-theme] .k-stat-value {
-	color: var(--theme);
+
+.k-system-info .k-stat-label {
+	color: var(--theme, var(--color-black));
 }
 </style>

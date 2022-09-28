@@ -3,8 +3,10 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
 
 /**
@@ -26,6 +28,7 @@ class Plugin extends Model
 
 	// caches
 	protected array|null $info = null;
+	protected UpdateStatus|null $updateStatus = null;
 
 	/**
 	 * Allows access to any composer.json field by method call
@@ -210,6 +213,54 @@ class Plugin extends Model
 			'root'        => $this->root(),
 			'version'     => $this->version()
 		];
+	}
+
+	/**
+	 * Returns the update status object unless the
+	 * update check has been disabled for the plugin
+	 * @since 3.8.0
+	 *
+	 * @param array|null $data Custom override for the getkirby.com update data
+	 */
+	public function updateStatus(array|null $data = null): UpdateStatus|null
+	{
+		if ($this->updateStatus !== null) {
+			return $this->updateStatus;
+		}
+
+		$kirby  = $this->kirby();
+		$option = $kirby->option('updates.plugins');
+
+		// specific configuration per plugin
+		if (is_array($option) === true) {
+			// filter all option values by glob match
+			$option = A::filter(
+				$option,
+				fn ($value, $key) => fnmatch($key, $this->name()) === true
+			);
+
+			// sort the matches by key length (with longest key first)
+			$keys = array_map('strlen', array_keys($option));
+			array_multisort($keys, SORT_DESC, $option);
+
+			if (count($option) > 0) {
+				// use the first and therefore longest key (= most specific match)
+				$option = reset($option);
+			} else {
+				// fallback to the default option value
+				$option = true;
+			}
+		}
+
+		if ($option === null) {
+			$option = $kirby->option('updates') ?? true;
+		}
+
+		if ($option !== true) {
+			return null;
+		}
+
+		return $this->updateStatus = new UpdateStatus($this, false, $data);
 	}
 
 	/**

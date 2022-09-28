@@ -1,5 +1,5 @@
 <template>
-	<p class="k-url-field-preview" :class="$options.class">
+	<p class="k-url-field-preview" :class="$options.class" :data-link="link">
 		{{ column.before }}
 		<k-link :to="link" @click.native.stop>
 			{{ text }}
@@ -36,6 +36,8 @@ export default {
 	padding: 0.325rem 0.75rem;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
+}
+.k-url-field-preview[data-link] {
 	color: var(--color-focus);
 }
 .k-url-field-preview a {

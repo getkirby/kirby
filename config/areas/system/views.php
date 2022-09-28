@@ -7,21 +7,27 @@ return [
 	'system' => [
 		'pattern' => 'system',
 		'action'  => function () {
-			$kirby   = App::instance();
-			$system  = $kirby->system();
-			$license = $system->license();
+			$kirby        = App::instance();
+			$system       = $kirby->system();
+			$updateStatus = $system->updateStatus();
+			$license      = $system->license();
 
 			$environment = [
 				[
-					'label'  => I18n::translate('license'),
+					'label'  => $license ? I18n::translate('license') : I18n::translate('license.register.label'),
 					'value'  => $license ? 'Kirby 3' : I18n::translate('license.unregistered.label'),
 					'theme'  => $license ? null : 'negative',
 					'dialog' => $license ? 'license' : 'registration'
 				],
 				[
-					'label' => I18n::translate('version'),
+					'label' => $updateStatus?->label() ?? I18n::translate('version'),
 					'value' => $kirby->version(),
-					'link'  => 'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version()
+					'link'  => (
+						$updateStatus ?
+						$updateStatus->url() :
+						'https://github.com/getkirby/kirby/releases/tag/' . $kirby->version()
+					),
+					'theme' => $updateStatus?->theme()
 				],
 				[
 					'label' => 'PHP',
@@ -33,8 +39,17 @@ return [
 				]
 			];
 
-			$plugins = $system->plugins()->values(function ($plugin) {
-				$authors = $plugin->authorsNames();
+			$exceptions = $updateStatus?->exceptionMessages() ?? [];
+
+			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
+				$authors      = $plugin->authorsNames();
+				$updateStatus = $plugin->updateStatus();
+				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
+
+				if ($updateStatus !== null) {
+					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
+				}
+
 				return [
 					'author'  => empty($authors) ? '–' : $authors,
 					'license' => $plugin->license() ?? '–',
@@ -42,11 +57,11 @@ return [
 						'text' => $plugin->name() ?? '–',
 						'href' => $plugin->link(),
 					],
-					'version' => $plugin->version() ?? '–',
+					'version' => $version,
 				];
 			});
 
-			$security = [];
+			$security = $updateStatus?->messages() ?? [];
 
 			if ($kirby->option('debug', false) === true) {
 				$security[] = [
@@ -68,6 +83,7 @@ return [
 				'component' => 'k-system-view',
 				'props'     => [
 					'environment' => $environment,
+					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
 					'plugins'     => $plugins,
 					'security'    => $security,
 					'urls'        => [
