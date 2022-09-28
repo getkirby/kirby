@@ -32,11 +32,7 @@
 					</div>
 				</dl>
 
-				<k-dropdown-item
-					:disabled="value.url === null"
-					icon="open"
-					:link="value.url"
-				>
+				<k-dropdown-item v-if="value.url" icon="open" :link="value.url">
 					{{ $t("versionInformation") }}
 				</k-dropdown-item>
 			</k-dropdown-content>
@@ -85,8 +81,6 @@ export default {
 
 .k-plugin-info {
 	padding: 1rem;
-	border-bottom: 1px solid var(--color-gray-700);
-	margin-bottom: 0.5rem;
 	width: 20rem;
 }
 .k-plugin-info div {
@@ -101,5 +95,9 @@ export default {
 }
 .k-plugin-info dd[data-theme] {
 	color: var(--theme-light);
+}
+.k-plugin-info + .k-dropdown-item {
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--color-gray-700);
 }
 </style>
