@@ -91,9 +91,6 @@ export default {
 		}
 	},
 	async created() {
-		// print exceptions from the update check to console for debugging
-		this.exceptions.map((exception) => console.error(exception));
-
 		console.info(
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);
@@ -106,7 +103,18 @@ export default {
 
 		await promiseAll(promises);
 
-		console.info("System health checks ended.");
+		console.info(
+			`System health checks ended. ${
+				promises.length - this.accessible.length
+			} issues found.`
+		);
+
+		// print exceptions from the update check to console for debugging
+		if (this.exceptions.length > 0) {
+			console.info("----");
+			console.info("Running plugin version checks for the Panel system view:");
+			this.exceptions.map((exception) => console.warn(exception));
+		}
 	},
 	methods: {
 		async check([key, url]) {
