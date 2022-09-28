@@ -764,6 +764,9 @@ class SystemTest extends TestCase
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
 
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
+
 		// should use the requested data and
 		// suggest feature updates by default
 		$this->assertSame('update', $updateStatus->status());
@@ -824,6 +827,9 @@ class SystemTest extends TestCase
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
 
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
+
 		// should use the requested data and
 		// only suggest security updates
 		$this->assertSame('not-vulnerable', $updateStatus->status());
@@ -845,6 +851,9 @@ class SystemTest extends TestCase
 		$updateStatus = $system->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
 
 		// should use the requested data and
 		// only suggest security updates
@@ -877,6 +886,9 @@ class SystemTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
 
 		// should use the passed data
 		$this->assertSame('upgrade', $updateStatus->status());

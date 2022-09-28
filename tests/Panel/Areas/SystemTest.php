@@ -69,6 +69,7 @@ class SystemTest extends AreaTestCase
 				'value' => 'php'
 			],
 		], $props['environment']);
+		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([], $props['plugins']);
 		$this->assertSame([
 			[
@@ -98,6 +99,7 @@ class SystemTest extends AreaTestCase
 		$view  = $this->view('system');
 		$props = $view['props'];
 
+		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([
 			[
 				'text' => 'This is a very important announcement!',
@@ -224,6 +226,106 @@ class SystemTest extends AreaTestCase
 		];
 
 		$this->assertSame($expected, $view['props']['plugins']);
+		$this->assertSame([], $view['props']['exceptions']);
+	}
+
+	public function testViewWithPluginsDebug(): void
+	{
+		App::plugin('getkirby/private', [
+			'info' => []
+		]);
+
+		App::plugin('getkirby/public', [
+			'info' => [
+				'authors' => [
+					[
+						'name' => 'A'
+					],
+					[
+						'name' => 'B'
+					]
+				],
+				'homepage' => 'https://getkirby.com',
+				'version'  => '1.0.0',
+			]
+		]);
+
+		App::plugin('getkirby/unknown', [
+			'info' => [
+				'version' => '1.0.0'
+			]
+		]);
+
+		$this->app([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->login();
+
+		$view     = $this->view('system');
+		$expected = [
+			[
+				'author'  => '–',
+				'license' => '–',
+				'name'    => [
+					'text' => 'getkirby/private',
+					'href' => null
+				],
+				'version' => [
+					'currentVersion' => '?',
+					'icon' => 'question',
+					'label' => 'Could not check for updates',
+					'latestVersion' => '?',
+					'pluginName' => 'getkirby/private',
+					'theme' => 'notice',
+					'url' => null
+				]
+			],
+			[
+				'author'  => 'A, B',
+				'license' => '–',
+				'name'    => [
+					'text' => 'getkirby/public',
+					'href' => 'https://getkirby.com'
+				],
+				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon' => 'info',
+					'label' => 'Free update 88888.8.8 available',
+					'latestVersion' => '99999.9.9',
+					'pluginName' => 'getkirby/public',
+					'theme' => 'info',
+					'url' => 'https://github.com/getkirby/public-plugin/releases/tag/88888.8.8'
+				]
+			],
+			[
+				'author'  => '–',
+				'license' => '–',
+				'name'    => [
+					'text' => 'getkirby/unknown',
+					'href' => null
+				],
+				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon' => 'question',
+					'label' => 'Could not check for updates',
+					'latestVersion' => '?',
+					'pluginName' => 'getkirby/unknown',
+					'theme' => 'notice',
+					'url' => null
+				]
+			]
+		];
+
+		$this->assertSame($expected, $view['props']['plugins']);
+		$this->assertSame([
+			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
+			__DIR__ . '/fixtures/SystemTest/plugins/getkirby/private.json',
+			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
+			__DIR__ . '/fixtures/SystemTest/plugins/getkirby/unknown.json',
+		], $view['props']['exceptions']);
 	}
 
 	public function testViewWithoutUpdateCheck(): void
@@ -288,5 +390,6 @@ class SystemTest extends AreaTestCase
 				'version' => '1.0.0'
 			]
 		], $props['plugins']);
+		$this->assertSame([], $props['exceptions']);
 	}
 }

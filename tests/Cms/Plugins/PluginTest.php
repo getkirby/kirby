@@ -2,11 +2,27 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\System\UpdateStatus;
+
 /**
  * @coversDefaultClass Kirby\Cms\Plugin
+ * @covers ::__construct
  */
 class PluginTest extends TestCase
 {
+	protected static $updateStatusHost;
+
+	public static function setUpBeforeClass(): void
+	{
+		static::$updateStatusHost = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$updateStatusHost;
+	}
+
 	public function setUp(): void
 	{
 		App::destroy();
@@ -26,7 +42,6 @@ class PluginTest extends TestCase
 			'root' => __DIR__ . '/fixtures/plugin'
 		]);
 
-		$this->assertSame('1.0.0', $plugin->version());
 		$this->assertSame('MIT', $plugin->license());
 	}
 
@@ -95,7 +110,7 @@ class PluginTest extends TestCase
 	public function testInfo()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => __DIR__ . '/fixtures/plugin'
+			'root' => __DIR__ . '/fixtures/plugin-version'
 		]);
 
 		$authors = [
@@ -337,7 +352,7 @@ class PluginTest extends TestCase
 	public function testToArray()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = __DIR__ . '/fixtures/plugin'
+			'root' => $root = __DIR__ . '/fixtures/plugin-version'
 		]);
 
 		$expected = [
@@ -354,5 +369,209 @@ class PluginTest extends TestCase
 		];
 
 		$this->assertSame($expected, $plugin->toArray());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatus()
+	{
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the requested data and
+		// suggest feature updates by default
+		$this->assertSame('update', $updateStatus->status());
+		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusWithoutVersion()
+	{
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the requested data;
+		// error (because no current version is known)
+		$this->assertSame('error', $updateStatus->status());
+		$this->assertNull($updateStatus->targetVersion());
+		$this->assertSame([], $updateStatus->exceptionMessages());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusUnknownPlugin()
+	{
+		$plugin = new Plugin('getkirby/unknown', [
+			'root' => __DIR__ . '/fixtures/plugin'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the requested data;
+		// error (because getkirby.com provides no data)
+		$this->assertSame('error', $updateStatus->status());
+		$this->assertNull($updateStatus->targetVersion());
+		$this->assertSame([
+			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
+			__DIR__ . '/fixtures/updateStatus/plugins/getkirby/unknown.json'
+		], $updateStatus->exceptionMessages());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusDisabled1()
+	{
+		new App([
+			'options' => [
+				'updates' => [
+					'plugins' => false
+				]
+			]
+		]);
+
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertNull($updateStatus);
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusDisabled2()
+	{
+		new App([
+			'options' => [
+				'updates' => [
+					'plugins' => [
+						'*' => true,
+						'getkirby/*' => true,
+						'getkirby/something' => true,
+						'getkirby/pub*' => false
+					]
+				]
+			]
+		]);
+
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertNull($updateStatus);
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusDisabled3()
+	{
+		new App([
+			'options' => [
+				'updates' => false
+			]
+		]);
+
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertNull($updateStatus);
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusDisabled4()
+	{
+		// the plugin update check does not support the
+		// security mode yet because the hub is missing
+		// where plugin devs can manage the security status
+		// of their plugins
+		new App([
+			'options' => [
+				'updates' => 'security'
+			]
+		]);
+
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertNull($updateStatus);
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusNoCustomConfig()
+	{
+		new App([
+			'options' => [
+				'updates' => [
+					'plugins' => [
+						'getkirby/something' => false
+					]
+				]
+			]
+		]);
+
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersion1()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+
+		$this->assertSame('1.0.0', $plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersion2()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin'
+		]);
+
+		$this->assertNull($plugin->version());
 	}
 }
