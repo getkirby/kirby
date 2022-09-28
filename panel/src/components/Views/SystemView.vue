@@ -112,7 +112,7 @@ export default {
 		// print exceptions from the update check to console for debugging
 		if (this.exceptions.length > 0) {
 			console.info("----");
-			console.info("Running plugin version checks for the Panel system view:");
+			console.info("Running the update check for Kirby and plugins.");
 			this.exceptions.map((exception) => console.warn(exception));
 		}
 	},
