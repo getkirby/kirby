@@ -104,7 +104,6 @@ abstract class ModelUuid extends Uuid
 			$this->populate();
 		}
 
-		$site = App::instance()->site()->url();
-		return $site . '/@/' . static::TYPE . '/' . $this->id();
+		return App::instance()->url() . '/@/' . static::TYPE . '/' . $this->id();
 	}
 }
