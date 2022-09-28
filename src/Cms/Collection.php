@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * The Collection class serves as foundation
@@ -121,6 +122,23 @@ class Collection extends BaseCollection
 		}
 
 		return parent::append(...$args);
+	}
+
+	/**
+	 * Find a single element by an attribute and its value
+	 *
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @return mixed|null
+	 */
+	public function findBy(string $attribute, $value)
+	{
+		// $value: cast UUID object to string
+		if ($value instanceof Uuid) {
+			$value = $value->toString();
+		}
+
+		return parent::findBy($attribute, $value);
 	}
 
 	/**
