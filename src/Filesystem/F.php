@@ -347,7 +347,7 @@ class F
 	 *
 	 * @param array $data Optional array of variables to extract in the variable scope
 	 */
-	public static function load(string $file, mixed $fallback = null, array $data = []): mixed
+	public static function load(string $file, mixed $fallback = null, array $data = [])
 	{
 		if (is_file($file) === false) {
 			return $fallback;
@@ -394,7 +394,7 @@ class F
 	 *
 	 * @param array $data Optional array of variables to extract in the variable scope
 	 */
-	protected static function loadIsolated(string $file, array $data = []): mixed
+	protected static function loadIsolated(string $file, array $data = [])
 	{
 		// extract the $data variables in this scope to be accessed by the included file;
 		// protect $file against being overwritten by a $data variable

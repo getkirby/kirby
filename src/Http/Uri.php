@@ -85,7 +85,7 @@ class Uri
 	/**
 	 * Magic caller to access all properties
 	 */
-	public function __call(string $property, array $arguments = []): mixed
+	public function __call(string $property, array $arguments = [])
 	{
 		return $this->$property ?? null;
 	}
@@ -127,7 +127,7 @@ class Uri
 	/**
 	 * Magic getter
 	 */
-	public function __get(string $property): mixed
+	public function __get(string $property)
 	{
 		return $this->$property ?? null;
 	}

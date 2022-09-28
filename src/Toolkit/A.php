@@ -77,7 +77,7 @@ class A
 		$array,
 		string|int|array|null $key,
 		mixed $default = null
-	): mixed {
+	) {
 		if (is_array($array) === false) {
 			return $array;
 		}
@@ -303,7 +303,7 @@ class A
 	 * @param array $array The source array
 	 * @return mixed The first element
 	 */
-	public static function first(array $array): mixed
+	public static function first(array $array)
 	{
 		return array_shift($array);
 	}
@@ -325,7 +325,7 @@ class A
 	 * @param array $array The source array
 	 * @return mixed The last element
 	 */
-	public static function last(array $array): mixed
+	public static function last(array $array)
 	{
 		return array_pop($array);
 	}

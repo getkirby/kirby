@@ -85,7 +85,7 @@ class Node
 		return $props;
 	}
 
-	public function render(ModelWithContent $model): mixed
+	public function render(ModelWithContent $model)
 	{
 		// apply default values
 		$this->defaults();

@@ -129,7 +129,7 @@ class Value
 	/**
 	 * Returns the pure value
 	 */
-	public function value(): mixed
+	public function value()
 	{
 		return $this->value;
 	}
