@@ -93,7 +93,7 @@ class KirbyTag
 		return $this->$attr ?? null;
 	}
 
-	public function attr(string $name, mixed $default = null)
+	public function attr(string $name, $default = null)
 	{
 		$name = strtolower($name);
 		return $this->$name ?? $default;
@@ -151,7 +151,7 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
-	public function option(string $key, mixed $default = null)
+	public function option(string $key, $default = null)
 	{
 		return $this->options[$key] ?? $default;
 	}

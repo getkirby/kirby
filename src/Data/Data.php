@@ -74,7 +74,7 @@ class Data
 	/**
 	 * Decodes data with the specified handler
 	 */
-	public static function decode(mixed $string, string $type): array
+	public static function decode($string, string $type): array
 	{
 		return static::handler($type)->decode($string);
 	}
@@ -82,7 +82,7 @@ class Data
 	/**
 	 * Encodes data with the specified handler
 	 */
-	public static function encode(mixed $data, string $type): string
+	public static function encode($data, string $type): string
 	{
 		return static::handler($type)->encode($data);
 	}
@@ -104,7 +104,7 @@ class Data
 	 */
 	public static function write(
 		string $file,
-		mixed $data = [],
+		$data = [],
 		string|null $type = null
 	): bool {
 		return static::handler($type ?? F::extension($file))->write($file, $data);

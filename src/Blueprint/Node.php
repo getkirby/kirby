@@ -110,7 +110,7 @@ class Node
 	/**
 	 * Universal setter for properties
 	 */
-	public function set(string $property, mixed $value): static
+	public function set(string $property, $value): static
 	{
 		$this->$property = Factory::forProperty(static::class, $property, $value);
 		return $this;

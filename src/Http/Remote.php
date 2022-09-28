@@ -319,7 +319,7 @@ class Remote
 	/**
 	 * Internal method to handle post field data
 	 */
-	protected function postfields(mixed $data)
+	protected function postfields($data)
 	{
 		if (is_object($data) || is_array($data)) {
 			return http_build_query($data);

@@ -23,17 +23,17 @@ use Kirby\Toolkit\Str;
 class Model
 {
 	protected Api $api;
-	protected mixed $data;
-	protected mixed $fields;
-	protected mixed $select;
-	protected mixed $views;
+	protected $data;
+	protected $fields;
+	protected $select;
+	protected $views;
 
 	/**
 	 * Model constructor
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct(Api $api, mixed $data, array $schema)
+	public function __construct(Api $api, $data, array $schema)
 	{
 		$this->api    = $api;
 		$this->data   = $data;
@@ -68,7 +68,7 @@ class Model
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function select(mixed $keys = null): static
+	public function select($keys = null): static
 	{
 		if ($keys === false) {
 			return $this;

@@ -41,7 +41,7 @@ class Helpers
 	 * @param bool $echo
 	 * @return string
 	 */
-	public static function dump(mixed $variable, bool $echo = true): string
+	public static function dump($variable, bool $echo = true): string
 	{
 		$kirby = App::instance();
 

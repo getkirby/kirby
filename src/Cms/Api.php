@@ -49,7 +49,7 @@ class Api extends BaseApi
 	/**
 	 * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
 	 */
-	public function fieldApi(mixed $model, string $name, string|null $path = null)
+	public function fieldApi($model, string $name, string|null $path = null)
 	{
 		$field = Form::for($model)->field($name);
 

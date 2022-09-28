@@ -40,7 +40,7 @@ trait Data
 	 * of the data array by key or multiple values by
 	 * passing an array of keys.
 	 */
-	public function get(string|array $key, mixed $default = null)
+	public function get(string|array $key, $default = null)
 	{
 		if (is_array($key) === true) {
 			$result = [];

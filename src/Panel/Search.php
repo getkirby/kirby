@@ -20,7 +20,7 @@ class Search extends Json
 {
 	protected static string $key = '$search';
 
-	public static function response(mixed $data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		if (is_array($data) === true) {
 			$data = [

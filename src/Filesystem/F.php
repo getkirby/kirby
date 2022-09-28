@@ -347,7 +347,7 @@ class F
 	 *
 	 * @param array $data Optional array of variables to extract in the variable scope
 	 */
-	public static function load(string $file, mixed $fallback = null, array $data = [])
+	public static function load(string $file, $fallback = null, array $data = [])
 	{
 		if (is_file($file) === false) {
 			return $fallback;
@@ -841,7 +841,7 @@ class F
 	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 * @param bool $append true: append the content to an existing file if available. false: overwrite.
 	 */
-	public static function write(string $file, mixed $content, bool $append = false): bool
+	public static function write(string $file, $content, bool $append = false): bool
 	{
 		if (is_array($content) === true || is_object($content) === true) {
 			$content = serialize($content);

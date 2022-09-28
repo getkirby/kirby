@@ -76,7 +76,7 @@ class A
 	public static function get(
 		$array,
 		string|int|array|null $key,
-		mixed $default = null
+		$default = null
 	) {
 		if (is_array($array) === false) {
 			return $array;
@@ -712,7 +712,7 @@ class A
 	 * Wraps the given value in an array
 	 * if it's not an array yet.
 	 */
-	public static function wrap(mixed $array = null): array
+	public static function wrap($array = null): array
 	{
 		if ($array === null) {
 			return [];
