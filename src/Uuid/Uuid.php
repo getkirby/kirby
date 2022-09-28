@@ -43,8 +43,8 @@ class Uuid
 	protected const TYPE = 'uuid';
 
 	/**
-	 * Customisable callback function for generating new ID strings
-	 * instead of using Nano ID. Receives length of string as parameter.
+	 * Customizable callback function for generating new ID strings instead
+	 * of `Str::random()`. Receives length of string as parameter.
 	 */
 	public static Closure|null $generator = null;
 
