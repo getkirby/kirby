@@ -39,7 +39,7 @@ return [
 				]
 			];
 
-			$exceptions = $updateStatus?->exceptions() ?? [];
+			$exceptions = $updateStatus?->exceptionMessages() ?? [];
 
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
@@ -47,7 +47,7 @@ return [
 				$version      = $updateStatus?->toArray() ?? $plugin->version() ?? '–';
 
 				if ($updateStatus !== null) {
-					$exceptions = array_merge($exceptions, $updateStatus->exceptions());
+					$exceptions = array_merge($exceptions, $updateStatus->exceptionMessages());
 				}
 
 				return [
@@ -79,18 +79,11 @@ return [
 				];
 			}
 
-			// pass a list of exception message strings in debug mode
-			// (will be printed to the browser console)
-			$exceptionMessages = [];
-			if ($kirby->option('debug') === true) {
-				$exceptionMessages = array_map(fn ($e) => $e->getMessage(), $exceptions);
-			}
-
 			return [
 				'component' => 'k-system-view',
 				'props'     => [
 					'environment' => $environment,
-					'exceptions'  => $exceptionMessages,
+					'exceptions'  => $kirby->option('debug') === true ? $exceptions : [],
 					'plugins'     => $plugins,
 					'security'    => $security,
 					'urls'        => [

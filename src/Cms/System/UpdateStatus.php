@@ -84,6 +84,15 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns the list of exception message strings that
+	 * were collected during data fetching and processing
+	 */
+	public function exceptionMessages(): array
+	{
+		return array_map(fn ($e) => $e->getMessage(), $this->exceptions);
+	}
+
+	/**
 	 * Returns the Panel icon for the status value
 	 *
 	 * @return string 'check'|'alert'|'info'
