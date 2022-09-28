@@ -243,8 +243,13 @@ class Plugin extends Model
 			$keys = array_map('strlen', array_keys($option));
 			array_multisort($keys, SORT_DESC, $option);
 
-			// use the first and therefore longest key (= most specific match)
-			$option = reset($option) ?? true;
+			if (count($option) > 0) {
+				// use the first and therefore longest key (= most specific match)
+				$option = reset($option);
+			} else {
+				// fallback to the default option value
+				$option = true;
+			}
 		}
 
 		if ($option === null) {

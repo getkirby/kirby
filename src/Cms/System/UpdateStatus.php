@@ -89,7 +89,7 @@ class UpdateStatus
 	 */
 	public function exceptionMessages(): array
 	{
-		return array_map(fn ($e) => $e->getMessage(), $this->exceptions);
+		return array_map(fn ($e) => $e->getMessage(), $this->exceptions());
 	}
 
 	/**
