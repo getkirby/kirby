@@ -15,13 +15,17 @@ class HasUuidsTest extends TestCase
 					],
 					[
 						'slug'    => 'b',
-						'content' => ['uuid' => 'my-id-b'],
+						'content' => [
+							'uuid' => 'my-id-b',
+							'related' => 'page://my-id-a'
+						],
 					]
 				]
 			]
 		]);
 
 		$pages = $app->site()->children();
+		$a     = $pages->find('a');
 		$b     = $pages->find('b');
 
 		// without schema (= all schema allowed)
@@ -35,5 +39,9 @@ class HasUuidsTest extends TestCase
 		// with wrong schema
 		$result = (fn () => $this->findByUuid('page://my-id-b', 'file'))->call($pages);
 		$this->assertNull($result);
+
+		// find reverse
+		$result = $pages->findBy('related', $a->uuid());
+		$this->assertTrue($b->is($result));
 	}
 }
