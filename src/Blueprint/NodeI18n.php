@@ -39,15 +39,12 @@ class NodeI18n extends NodeProperty
 
 	public function render(ModelWithContent $model): string|null
 	{
-		$locale = I18n::locale();
-
-		if (isset($this->translations[$locale]) === true) {
-			return $this->translations[$locale];
+		if ($text = I18n::translate($this->translations)) {
+			return $text;
 		}
 
 		if (isset($this->translations['*']) === true) {
-			$translations = $this->translations['*'];
-			return I18n::translation($locale)[$translations] ?? $translations;
+			return I18n::translate($this->translations['*'], $this->translations['*']);
 		}
 
 		return $this->translations['en'] ?? null;
