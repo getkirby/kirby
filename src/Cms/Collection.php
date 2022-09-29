@@ -133,7 +133,8 @@ class Collection extends BaseCollection
 	 */
 	public function findBy(string $attribute, $value)
 	{
-		// $value: cast UUID object to string
+		// $value: cast UUID object to string to allow uses
+		// like `$pages->findBy('related', $page->uuid())`
 		if ($value instanceof Uuid) {
 			$value = $value->toString();
 		}
