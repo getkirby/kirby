@@ -319,6 +319,10 @@ class Uuid
 		// it doesn't exist yet
 		$this->id();
 
+		// make sure the id is cached
+		// that it can be found again
+		$this->populate();
+
 		return $this->uri->toString();
 	}
 

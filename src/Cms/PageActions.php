@@ -811,6 +811,25 @@ trait PageActions
 	}
 
 	/**
+	 * Stores the content on disk
+	 *
+	 * @internal
+	 * @param array|null $data
+	 * @param string|null $languageCode
+	 * @param bool $overwrite
+	 * @return static
+	 */
+	public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
+	{
+		$page = parent::save($data, $languageCode, $overwrite);
+
+		// overwrite the updated page in the parent collection
+		static::updateParentCollections($page, 'set');
+
+		return $page;
+	}
+
+	/**
 	 * Convert a page from listed or
 	 * unlisted to draft.
 	 *
