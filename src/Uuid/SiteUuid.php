@@ -8,6 +8,7 @@ use Kirby\Cms\Site;
 
 /**
  * UUID for \Kirby\Cms\Site
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

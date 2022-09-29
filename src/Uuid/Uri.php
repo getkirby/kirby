@@ -7,6 +7,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Uri protocol for UUIDs
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

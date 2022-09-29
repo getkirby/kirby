@@ -31,6 +31,7 @@ use Kirby\Toolkit\Str;
  * $model->uuid()->populate();
  * $model->uuid()->clear();
  * ```
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

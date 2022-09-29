@@ -6,6 +6,7 @@ namespace Kirby\Uuid;
  * Qualifies an object (e.g. page, file) to
  * be identifiable via UUID. Mostly useful for
  * type-hinting inside the Uuid classes.
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
