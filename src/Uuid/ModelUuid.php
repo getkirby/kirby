@@ -8,6 +8,7 @@ use Kirby\Cms\Collection;
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
