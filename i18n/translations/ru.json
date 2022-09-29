@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Вы не можете добавить больше одного блока",
 	"error.blocks.min.plural": "Вы должны добавить хотя бы {min} блоков",
 	"error.blocks.min.singular": "Вы должны добавить хотя бы один блок",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "Ошибка в поле \"{field}\" в блоке {index} типа \"{fieldset}\"",
 
 	"error.email.preset.notFound": "Шаблон эл. почты \"{name}\" не найден",
 
@@ -107,14 +107,14 @@
 	"error.language.name": "Пожалуйста, впишите правильное название языка",
 	"error.language.notFound": "Не получилось найти этот язык",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "Ошибка в поле \"{field}\" в блоке {blockIndex} типа \"{fieldset}\" внутри разметки {layoutIndex}",
 	"error.layout.validation.settings": "Ошибка в настройках макета {index}",
 
 	"error.license.format": "Пожалуйста, введите правильный лицензионный код",
 	"error.license.email": "Пожалуйста, введите правильный Email",
 	"error.license.verification": "Лицензия не подтверждена",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "Ошибка в поле \"{label}\":\n{message}",
 
 	"error.offline": "Панель управления не в сети",
 
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Строк нет",
 	"field.layout.select": "Выберите разметку",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Пока нет информации",
 
 	"field.pages.empty": "Страницы не выбраны",
 
@@ -454,6 +454,7 @@
 	"paste": "Вставить",
 	"paste.after": "Вставить после",
 	"pixel": "Пиксель",
+	"plugin": "Plugin",
 	"plugins": "Плагины",
 	"prev": "Предыдущий",
 	"preview": "Предпросмотр",
@@ -493,11 +494,24 @@
 
 	"stats.empty": "Статистики нет",
 	"system.issues.content": "Похоже, к папке content есть несанкционированный доступ",
+	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Включен режим отладки (debugging). Используйте его только при разработке.",
 	"system.issues.git": "Похоже, к папке .git есть несанкционированный доступ",
 	"system.issues.https": "Рекомендуется использовать HTTPS на всех сайтах",
 	"system.issues.kirby": "Похоже, к папке kirby есть несанкционированный доступ",
 	"system.issues.site": "Похоже, к папке site есть несанкционированный доступ",
+	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
+	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
+	"system.updateStatus": "Update status",
+	"system.updateStatus.error": "Could not check for updates",
+	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
+	"system.updateStatus.security-update": "Free security update { version } available",
+	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
+	"system.updateStatus.unreleased": "Unreleased version",
+	"system.updateStatus.up-to-date": "Up to date",
+	"system.updateStatus.update": "Free update { version } available",
+	"system.updateStatus.upgrade": "Upgrade { version } available",
 
 	"title": "Название",
 	"template": "\u0428\u0430\u0431\u043b\u043e\u043d",
@@ -564,6 +578,9 @@
 	"users": "Пользователи",
 
 	"version": "Версия",
+	"version.current": "Current version",
+	"version.latest": "Latest version",
+	"versionInformation": "Version information",
 
 	"view.account": "\u0412\u0430\u0448 \u0430\u043a\u043a\u0430\u0443\u043d\u0442",
 	"view.installation": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430",
