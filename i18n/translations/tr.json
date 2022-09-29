@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Birden fazla blok eklememelisiniz",
 	"error.blocks.min.plural": "En az {min} blok eklemelisiniz",
 	"error.blocks.min.singular": "En az bir blok eklemelisiniz",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "\"{fieldset}\" blok türünü kullanan {index}. bloktaki \"{field}\" alanında bir hata var",
 
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
@@ -107,14 +107,14 @@
 	"error.language.name": "Lütfen dil için geçerli bir isim girin",
 	"error.language.notFound": "Dil bulunamadı",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "{layoutIndex}. sıradaki düzende \"{fieldset}\" blok türünü kullanan {blockIndex}. bloktaki \"{field}\" alanında bir hata var",
 	"error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
 
 	"error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
 	"error.license.email": "Lütfen geçerli bir e-posta adresi girin",
 	"error.license.verification": "Lisans doğrulanamadı",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "\"{label}\" alanında bir hata var:\n{message}",
 
 	"error.offline": "Panel şu anda çevrimdışı",
 
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Henüz satır yok",
 	"field.layout.select": "Bir düzen seçin",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Henüz bilgi yok",
 
 	"field.pages.empty": "Henüz sayfa seçilmedi",
 
@@ -454,6 +454,7 @@
 	"paste": "Yapıştır",
 	"paste.after": "Sonrasına yapıştır",
 	"pixel": "Piksel",
+	"plugin": "Plugin",
 	"plugins": "Eklentiler",
 	"prev": "Önceki",
 	"preview": "Önizle",
@@ -493,11 +494,24 @@
 
 	"stats.empty": "Rapor yok",
 	"system.issues.content": "İçerik klasörü açığa çıkmış görünüyor",
+	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Canlı modda hata ayıklama kapatılmalıdır",
 	"system.issues.git": ".git klasörü açığa çıkmış görünüyor",
 	"system.issues.https": "Tüm siteleriniz için HTTPS'yi öneriyoruz",
 	"system.issues.kirby": "Kirby klasörü açığa çıkmış görünüyor",
 	"system.issues.site": "Site klasörü açığa çıkmış görünüyor",
+	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
+	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
+	"system.updateStatus": "Update status",
+	"system.updateStatus.error": "Could not check for updates",
+	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
+	"system.updateStatus.security-update": "Free security update { version } available",
+	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
+	"system.updateStatus.unreleased": "Unreleased version",
+	"system.updateStatus.up-to-date": "Up to date",
+	"system.updateStatus.update": "Free update { version } available",
+	"system.updateStatus.upgrade": "Upgrade { version } available",
 
 	"title": "Başlık",
 	"template": "\u015eablon",
@@ -564,6 +578,9 @@
 	"users": "Kullanıcılar",
 
 	"version": "Versiyon",
+	"version.current": "Current version",
+	"version.latest": "Latest version",
+	"versionInformation": "Version information",
 
 	"view.account": "Hesap Bilgilerin",
 	"view.installation": "Kurulum",
