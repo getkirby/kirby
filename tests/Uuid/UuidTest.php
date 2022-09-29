@@ -228,6 +228,12 @@ class UuidTest extends TestCase
 		$this->assertTrue(Uuid::is('user://something', 'user'));
 		$this->assertTrue(Uuid::is('file://something', 'file'));
 
+		$this->assertFalse(Uuid::is('page://'));
+		$this->assertFalse(Uuid::is('file://'));
+		$this->assertFalse(Uuid::is('user://'));
+		$this->assertFalse(Uuid::is('page://', 'page'));
+		$this->assertFalse(Uuid::is('file://', 'file'));
+		$this->assertFalse(Uuid::is('user://', 'user'));
 		$this->assertFalse(Uuid::is('site://', 'block'));
 		$this->assertFalse(Uuid::is('page://something', 'block'));
 		$this->assertFalse(Uuid::is('user://something', 'block'));

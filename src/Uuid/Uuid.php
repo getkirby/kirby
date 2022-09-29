@@ -228,13 +228,18 @@ class Uuid
 		string $string,
 		string|null $type = null
 	): bool {
-		if ($type !== null) {
-			return Str::startsWith($string, $type . '://');
+		$type  ??= implode('|', Uri::$schemes);
+		$pattern = sprintf('!^(%s)://(.*)!', $type);
+
+		if (preg_match($pattern, $string, $matches) !== 1) {
+			return false;
 		}
 
-		// try to match any of the supported schemes
-		$pattern = sprintf('!^(%s)://!', implode('|', Uri::$schemes));
-		return preg_match($pattern, $string) === 1;
+		if ($matches[1] === 'site') {
+			return strlen($matches[2]) === 0;
+		}
+
+		return strlen($matches[2]) > 0;
 	}
 
 	/**
