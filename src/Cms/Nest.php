@@ -19,7 +19,7 @@ namespace Kirby\Cms;
 class Nest
 {
 	public static function create(
-		mixed $data,
+		$data,
 		object|null $parent = null
 	): NestCollection|NestObject|Field {
 		if (is_scalar($data) === true) {

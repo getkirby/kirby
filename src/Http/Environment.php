@@ -637,7 +637,7 @@ class Environment
 	 * @param mixed $default Optional default value, which should be
 	 *                       returned if no element has been found
 	 */
-	public function get(string|false|null $key = null, mixed $default = null): mixed
+	public function get(string|false|null $key = null, $default = null)
 	{
 		if (is_string($key) === false) {
 			return $this->info;
@@ -660,7 +660,7 @@ class Environment
 	 * @param mixed $default Optional default value, which should be
 	 *                       returned if no element has been found
 	 */
-	public static function getGlobally(string|false|null $key = null, mixed $default = null): mixed
+	public static function getGlobally(string|false|null $key = null, $default = null)
 	{
 		// first try the global `Environment` object if the CMS is running
 		$app = App::instance(null, true);
@@ -833,7 +833,7 @@ class Environment
 	/**
 	 * Sanitizes some `$_SERVER` keys
 	 */
-	public static function sanitize(string|array $key, mixed $value = null): mixed
+	public static function sanitize(string|array $key, $value = null)
 	{
 		if (is_array($key) === true) {
 			foreach ($key as $k => $v) {

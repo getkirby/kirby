@@ -20,7 +20,7 @@ class Value
 	/**
 	 * Cached value
 	 */
-	protected mixed $value;
+	protected $value;
 
 	/**
 	 * the number of minutes until the value expires
@@ -41,7 +41,7 @@ class Value
 	 *                     or an absolute UNIX timestamp
 	 * @param int $created the UNIX timestamp when the value has been created
 	 */
-	public function __construct(mixed $value, int $minutes = 0, int|null $created = null)
+	public function __construct($value, int $minutes = 0, int|null $created = null)
 	{
 		$this->value   = $value;
 		$this->minutes = $minutes;
@@ -129,7 +129,7 @@ class Value
 	/**
 	 * Returns the pure value
 	 */
-	public function value(): mixed
+	public function value()
 	{
 		return $this->value;
 	}

@@ -20,7 +20,7 @@ class Txt extends Handler
 	/**
 	 * Converts an array to an encoded Kirby txt string
 	 */
-	public static function encode(mixed $data): string
+	public static function encode($data): string
 	{
 		$result = [];
 
@@ -79,7 +79,7 @@ class Txt extends Handler
 	/**
 	 * Parses a Kirby txt string and returns a multi-dimensional array
 	 */
-	public static function decode(mixed $string): array
+	public static function decode($string): array
 	{
 		if ($string === null || $string === '') {
 			return [];

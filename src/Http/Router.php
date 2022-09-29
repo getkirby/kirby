@@ -100,7 +100,7 @@ class Router
 		string|null $path = null,
 		string $method = 'GET',
 		Closure|null $callback = null
-	): mixed {
+	) {
 		$path ??= '';
 		$ignore = [];
 		$result = null;
@@ -139,7 +139,7 @@ class Router
 	 * the routing action immediately
 	 * @since 3.7.0
 	 */
-	public static function execute(string|null $path = null, string $method = 'GET', array $routes = [], Closure|null $callback = null): mixed
+	public static function execute(string|null $path = null, string $method = 'GET', array $routes = [], Closure|null $callback = null)
 	{
 		return (new static($routes))->call($path, $method, $callback);
 	}

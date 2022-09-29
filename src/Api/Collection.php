@@ -21,17 +21,17 @@ use Kirby\Toolkit\Str;
 class Collection
 {
 	protected Api $api;
-	protected mixed $data;
-	protected mixed $model;
-	protected mixed $select;
-	protected mixed $view;
+	protected $data;
+	protected $model;
+	protected $select;
+	protected $view;
 
 	/**
 	 * Collection constructor
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct(Api $api, mixed $data, array $schema)
+	public function __construct(Api $api, $data, array $schema)
 	{
 		$this->api    = $api;
 		$this->data   = $data;
@@ -59,7 +59,7 @@ class Collection
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function select(mixed $keys = null): static
+	public function select($keys = null): static
 	{
 		if ($keys === false) {
 			return $this;

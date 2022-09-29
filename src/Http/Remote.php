@@ -52,7 +52,7 @@ class Remote
 	/**
 	 * Magic getter for request info data
 	 */
-	public function __call(string $method, array $arguments = []): mixed
+	public function __call(string $method, array $arguments = [])
 	{
 		$method = str_replace('-', '_', Str::kebab($method));
 		return $this->info[$method] ?? null;
@@ -319,7 +319,7 @@ class Remote
 	/**
 	 * Internal method to handle post field data
 	 */
-	protected function postfields(mixed $data): mixed
+	protected function postfields($data)
 	{
 		if (is_object($data) || is_array($data)) {
 			return http_build_query($data);

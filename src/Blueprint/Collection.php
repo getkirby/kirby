@@ -77,7 +77,7 @@ class Collection extends BaseCollection
 		return $collection;
 	}
 
-	public function render(ModelWithContent $model): mixed
+	public function render(ModelWithContent $model)
 	{
 		$props = [];
 

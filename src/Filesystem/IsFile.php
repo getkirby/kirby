@@ -52,7 +52,7 @@ trait IsFile
 	 *
 	 * @throws \Kirby\Exception\BadMethodCallException
 	 */
-	public function __call(string $method, array $arguments = []): mixed
+	public function __call(string $method, array $arguments = [])
 	{
 		// public property access
 		if (isset($this->$method) === true) {

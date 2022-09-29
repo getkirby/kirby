@@ -67,7 +67,7 @@ class MemCached extends Cache
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
 	 */
-	public function set(string $key, mixed $value, int $minutes = 0): bool
+	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$key     = $this->key($key);
 		$value   = (new Value($value, $minutes))->toJson();

@@ -37,7 +37,7 @@ abstract class Json
 	/**
 	 * Prepares the JSON response for the Panel
 	 */
-	public static function response(mixed $data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		// handle redirects
 		if ($data instanceof Redirect) {

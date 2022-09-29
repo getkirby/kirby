@@ -369,7 +369,7 @@ class View
 	 * JSON response or full HTML document based
 	 * on the request header or query params
 	 */
-	public static function response(mixed $data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		// handle redirects
 		if ($data instanceof Redirect) {

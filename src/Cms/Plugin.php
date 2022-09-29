@@ -33,7 +33,7 @@ class Plugin extends Model
 	/**
 	 * Allows access to any composer.json field by method call
 	 */
-	public function __call(string $key, array $arguments = null): mixed
+	public function __call(string $key, array $arguments = null)
 	{
 		return $this->info()[$key] ?? null;
 	}
@@ -161,7 +161,7 @@ class Plugin extends Model
 	/**
 	 * Returns a Kirby option value for this plugin
 	 */
-	public function option(string $key): mixed
+	public function option(string $key)
 	{
 		return $this->kirby()->option($this->prefix() . '.' . $key);
 	}
