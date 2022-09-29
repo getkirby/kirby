@@ -39,19 +39,6 @@ class NodeI18n extends NodeProperty
 
 	public function render(ModelWithContent $model): string|null
 	{
-		if ($text = I18n::translate($this->translations)) {
-			return $text;
-		}
-
-		if (isset($this->translations['*']) === true) {
-			$key = $this->translations['*'];
-			return I18n::translate($key, $key);
-		}
-
-		if (isset($this->translations['en']) === true) {
-			return $this->translations['en'];
-		}
-
-		return array_values($this->translations)[0] ?? null;
+		return I18n::translate($this->translations, $this->translations);
 	}
 }

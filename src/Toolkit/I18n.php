@@ -146,10 +146,17 @@ class I18n
 			if (isset($key[$lang]) === true) {
 				return $key[$lang];
 			}
+			// use global wildcard as i18n key
+			if (isset($key['*']) === true) {
+				return static::translate($key['*'], $key['*']);
+			}
 			// use fallback
 			if (is_array($fallback) === true) {
-				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
+				return $fallback[$locale] ??
+					   $fallback['en'] ??
+					   reset($fallback);
 			}
+
 			return $fallback;
 		}
 
