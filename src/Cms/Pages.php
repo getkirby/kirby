@@ -204,51 +204,6 @@ class Pages extends Collection
 	}
 
 	/**
-	 * Finds a child or child of a child recursively.
-	 * @deprecated 3.7.0 Use `$pages->find()` instead
-	 * @todo 3.8.0 Integrate code into `findByKey()` and remove this method
-	 *
-	 * @param string $id
-	 * @param string|null $startAt
-	 * @param bool $multiLang
-	 * @return mixed
-	 */
-	public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false, bool $silenceWarning = false)
-	{
-		// @codeCoverageIgnoreStart
-		if ($silenceWarning !== true) {
-			Helpers::deprecated('Cms\Pages::findByIdRecursive() has been deprecated and will be removed in Kirby 3.8.0. Use $pages->find() instead.');
-		}
-		// @codeCoverageIgnoreEnd
-
-		$path       = explode('/', $id);
-		$item       = null;
-		$query      = $startAt;
-
-		foreach ($path as $key) {
-			$collection = $item ? $item->children() : $this;
-			$query = ltrim($query . '/' . $key, '/');
-			$item  = $collection->get($query) ?? null;
-
-			if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
-				if (count($path) > 1 || $collection->parent()) {
-					// either the desired path is definitely not a slug, or collection is the children of another collection
-					$item = $collection->findBy('slug', $key);
-				} else {
-					// desired path _could_ be a slug or a "top level" uri
-					$item = $collection->findBy('uri', $key);
-				}
-			}
-
-			if ($item === null) {
-				return null;
-			}
-		}
-
-		return $item;
-	}
-
-	/**
 	 * Finds a page by its ID or URI
 	 * @internal Use `$pages->find()` instead
 	 *
@@ -286,7 +241,7 @@ class Pages extends Collection
 
 		// try to find the page by its (translated) URI by stepping through the page tree
 		$start = $this->parent instanceof Page ? $this->parent->id() : '';
-		if ($page = $this->findByIdRecursive($key, $start, App::instance()->multilang(), true)) {
+		if ($page = $this->findByKeyRecursive($key, $start, App::instance()->multilang())) {
 			return $page;
 		}
 
@@ -301,6 +256,40 @@ class Pages extends Collection
 		}
 
 		return null;
+	}
+
+	/**
+	 * Finds a child or child of a child recursively
+	 *
+	 * @return mixed
+	 */
+	protected function findByKeyRecursive(string $id, string $startAt = null, bool $multiLang = false)
+	{
+		$path       = explode('/', $id);
+		$item       = null;
+		$query      = $startAt;
+
+		foreach ($path as $key) {
+			$collection = $item ? $item->children() : $this;
+			$query = ltrim($query . '/' . $key, '/');
+			$item  = $collection->get($query) ?? null;
+
+			if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
+				if (count($path) > 1 || $collection->parent()) {
+					// either the desired path is definitely not a slug, or collection is the children of another collection
+					$item = $collection->findBy('slug', $key);
+				} else {
+					// desired path _could_ be a slug or a "top level" uri
+					$item = $collection->findBy('uri', $key);
+				}
+			}
+
+			if ($item === null) {
+				return null;
+			}
+		}
+
+		return $item;
 	}
 
 	/**
