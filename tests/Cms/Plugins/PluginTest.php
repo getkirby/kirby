@@ -389,6 +389,29 @@ class PluginTest extends TestCase
 		// should use the requested data and
 		// suggest feature updates by default
 		$this->assertSame('update', $updateStatus->status());
+		$this->assertSame('1.0.0', $updateStatus->currentVersion());
+		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusWithPrefix()
+	{
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version-prefix'
+		]);
+		$updateStatus = $plugin->updateStatus();
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the requested data and
+		// suggest feature updates by default
+		$this->assertSame('update', $updateStatus->status());
+		$this->assertSame('1.0.0', $updateStatus->currentVersion());
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
 	}
 
@@ -410,6 +433,7 @@ class PluginTest extends TestCase
 		// should use the requested data;
 		// error (because no current version is known)
 		$this->assertSame('error', $updateStatus->status());
+		$this->assertNull($updateStatus->currentVersion());
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([], $updateStatus->exceptionMessages());
 	}
@@ -420,7 +444,7 @@ class PluginTest extends TestCase
 	public function testUpdateStatusUnknownPlugin()
 	{
 		$plugin = new Plugin('getkirby/unknown', [
-			'root' => __DIR__ . '/fixtures/plugin'
+			'root' => __DIR__ . '/fixtures/plugin-version'
 		]);
 		$updateStatus = $plugin->updateStatus();
 
@@ -432,6 +456,7 @@ class PluginTest extends TestCase
 		// should use the requested data;
 		// error (because getkirby.com provides no data)
 		$this->assertSame('error', $updateStatus->status());
+		$this->assertSame('1.0.0', $updateStatus->currentVersion());
 		$this->assertNull($updateStatus->targetVersion());
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
@@ -549,12 +574,58 @@ class PluginTest extends TestCase
 		$updateStatus = $plugin->updateStatus();
 
 		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the requested data and
+		// suggest feature updates by default
+		$this->assertSame('update', $updateStatus->status());
+		$this->assertSame('1.0.0', $updateStatus->currentVersion());
+		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
+	}
+
+	/**
+	 * @covers ::updateStatus
+	 */
+	public function testUpdateStatusCustomData()
+	{
+		$plugin = new Plugin('getkirby/public', [
+			'root' => __DIR__ . '/fixtures/plugin-version'
+		]);
+		$updateStatus = $plugin->updateStatus([
+			'latest' => '87654.3.2',
+			'versions' => [
+				'*' => [
+					'latest' => $plugin->version(),
+					'status' => 'active-support'
+				]
+			],
+			'urls' => [
+				'*' => [
+					'changes' => 'https://other-domain.com/releases/{{ version }}',
+					'upgrade' => 'https://other-domain.com/releases/87654'
+				]
+			],
+			'incidents' => [],
+			'messages' => []
+		]);
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $plugin->updateStatus());
+
+		// should use the passed data
+		$this->assertSame('upgrade', $updateStatus->status());
+		$this->assertSame('87654.3.2', $updateStatus->targetVersion());
+		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
 	}
 
 	/**
 	 * @covers ::version
 	 */
-	public function testVersion1()
+	public function testVersion()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => __DIR__ . '/fixtures/plugin-version'
@@ -566,10 +637,34 @@ class PluginTest extends TestCase
 	/**
 	 * @covers ::version
 	 */
-	public function testVersion2()
+	public function testVersionMissing()
 	{
 		$plugin = new Plugin('getkirby/test-plugin', [
 			'root' => __DIR__ . '/fixtures/plugin'
+		]);
+
+		$this->assertNull($plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionPrefixed()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version-prefix'
+		]);
+
+		$this->assertSame('1.0.0', $plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionInvalid()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version-invalid'
 		]);
 
 		$this->assertNull($plugin->version());
