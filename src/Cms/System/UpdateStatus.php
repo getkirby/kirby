@@ -75,6 +75,14 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns the currently installed version
+	 */
+	public function currentVersion(): string|null
+	{
+		return $this->currentVersion;
+	}
+
+	/**
 	 * Returns the list of exception objects that were
 	 * collected during data fetching and processing
 	 */
@@ -118,6 +126,14 @@ class UpdateStatus
 			'?',
 			['version' => $this->targetVersion()]
 		);
+	}
+
+	/**
+	 * Returns the latest available version
+	 */
+	public function latestVersion(): string|null
+	{
+		return $this->data['latest'] ?? null;
 	}
 
 	/**
@@ -234,10 +250,10 @@ class UpdateStatus
 	public function toArray(): array
 	{
 		return [
-			'currentVersion' => $this->currentVersion ?? '?',
+			'currentVersion' => $this->currentVersion() ?? '?',
 			'icon'           => $this->icon(),
 			'label'          => $this->label(),
-			'latestVersion'  => $this->data['latest'] ?? '?',
+			'latestVersion'  => $this->latestVersion() ?? '?',
 			'pluginName'     => $this->pluginName,
 			'theme'          => $this->theme(),
 			'url'            => $this->url(),
