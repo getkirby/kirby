@@ -264,11 +264,25 @@ class Plugin extends Model
 	}
 
 	/**
-	 * Returns the version number
+	 * Returns the normalized version number
 	 * from the composer.json file
 	 */
 	public function version(): string|null
 	{
-		return $this->info()['version'] ?? null;
+		$version = $this->info()['version'] ?? null;
+
+		if (is_string($version) !== true || $version === '') {
+			return null;
+		}
+
+		// normalize the version number to be without leading `v`
+		$version = ltrim($version, 'vV');
+
+		// ensure that the version number now starts with a digit
+		if (preg_match('/^[0-9]/', $version) !== 1) {
+			return null;
+		}
+
+		return $version;
 	}
 }
