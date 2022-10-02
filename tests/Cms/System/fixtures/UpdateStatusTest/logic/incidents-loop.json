@@ -1,0 +1,36 @@
+{
+	"latest": "88888.8.8",
+	"versions": {
+		"88888.8.8": {
+			"status": "latest"
+		},
+		">=77777.5.5": {
+			"status": "no-vulnerabilities"
+		},
+		"77777.*": {
+			"latest": "77777.7.7",
+			"status": "active-support"
+		},
+		"<77777.0.0": {
+			"latest": "66666.6.6",
+			"status": "end-of-life"
+		}
+	},
+	"urls": {
+		"*": {
+			"changes": "https://getkirby.com/releases/{{ version }}",
+			"download": "https://repoofthefuture.com/{{ version }}.zip",
+			"upgrade": "https://getkirby.com/releases/88888"
+		}
+	},
+	"incidents": [
+		{
+			"affected": "<=66666.5.4 || 77777.0.0 - 88888.5.4",
+			"description": "Some incident",
+			"fixed": "66666.5.5, 77777.5.5, 88888.5.5",
+			"link": "https://getkirby.com/security/some-incident",
+			"severity": "high"
+		}
+	],
+	"messages": []
+}

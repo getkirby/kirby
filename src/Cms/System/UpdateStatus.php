@@ -387,7 +387,7 @@ class UpdateStatus
 	{
 		$versionEntry = $this->versionEntry();
 		if ($versionEntry === null || isset($versionEntry['latest']) !== true) {
-			return null;
+			return null; // @codeCoverageIgnore
 		}
 
 		$affected   = $this->vulnerabilities();
@@ -502,7 +502,7 @@ class UpdateStatus
 		// we collect it below for debugging
 		try {
 			if (static::$timedOut === true) {
-				throw new Exception('Previous remote request timed out');
+				throw new Exception('Previous remote request timed out'); // @codeCoverageIgnore
 			}
 
 			$response = Remote::get(
@@ -512,7 +512,7 @@ class UpdateStatus
 
 			// allow status code HTTP 200 or 0 (e.g. for the file:// protocol)
 			if (in_array($response->code(), [0, 200], true) !== true) {
-				throw new Exception('HTTP error ' . $response->code());
+				throw new Exception('HTTP error ' . $response->code()); // @codeCoverageIgnore
 			}
 
 			$data = $response->json();
@@ -534,7 +534,7 @@ class UpdateStatus
 			// requests for other packages (e.g. plugins)
 			// to avoid long Panel hangs
 			if ($e->getCode() === 28) {
-				static::$timedOut = true;
+				static::$timedOut = true; // @codeCoverageIgnore
 			} elseif (static::$timedOut === false) {
 				// different error than timeout;
 				// prevent additional requests in the
