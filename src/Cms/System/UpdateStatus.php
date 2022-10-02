@@ -49,7 +49,7 @@ class UpdateStatus
 	// caches
 	protected array $messages;
 	protected array $targetData;
-	protected array|null $versionEntry;
+	protected array|bool $versionEntry;
 	protected array $vulnerabilities;
 
 	/**
@@ -707,6 +707,11 @@ class UpdateStatus
 	protected function versionEntry(): array|null
 	{
 		if (isset($this->versionEntry) === true) {
+			// no version entry found on last call
+			if ($this->versionEntry === false) {
+				return null;
+			}
+
 			return $this->versionEntry;
 		}
 
@@ -760,6 +765,7 @@ class UpdateStatus
 			$this->exceptions[] = new KirbyException($message);
 		}
 
-		return $this->versionEntry = $versionEntry;
+		$this->versionEntry = $versionEntry ?? false;
+		return $versionEntry;
 	}
 }
