@@ -37,7 +37,7 @@ class UpdateStatus
 	// props set in constructor
 	protected App $app;
 	protected string|null $currentVersion;
-	protected array|null $data = null;
+	protected array|null $data;
 	protected string|null $pluginName;
 	protected bool $securityOnly;
 
@@ -157,8 +157,8 @@ class UpdateStatus
 
 		// collect all matching custom messages
 		$filters = [
-			'kirby'  => $this->app->version(),
-			'php'    => phpversion()
+			'kirby' => $this->app->version(),
+			'php'   => phpversion()
 		];
 
 		if ($type === 'plugin') {
@@ -686,7 +686,7 @@ class UpdateStatus
 
 		if ($url === null) {
 			$package = $this->packageName();
-			$message = 'Update check: No matching URL found for ' . $package . '@' . $version;
+			$message = 'No matching URL found for ' . $package . '@' . $version;
 
 			$this->exceptions[] = new KirbyException($message);
 
@@ -760,7 +760,7 @@ class UpdateStatus
 
 		if ($versionEntry === null) {
 			$package = $this->packageName();
-			$message = 'Update check: No matching version entry found for ' . $package . '@' . $this->currentVersion;
+			$message = 'No matching version entry found for ' . $package . '@' . $this->currentVersion;
 
 			$this->exceptions[] = new KirbyException($message);
 		}
