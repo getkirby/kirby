@@ -197,7 +197,7 @@ class UpdateStatus
 					'plugin' => I18n::template(
 						'system.issues.eol.plugin',
 						null,
-						['plugin' => $this->package->name()]
+						['plugin' => $this->pluginName]
 					),
 					default => I18n::translate('system.issues.eol.kirby')
 				},
