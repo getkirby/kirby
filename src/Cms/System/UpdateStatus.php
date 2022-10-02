@@ -360,10 +360,14 @@ class UpdateStatus
 	{
 		return array_filter($array, function ($item) use ($filters, $reason): bool {
 			foreach ($filters as $key => $version) {
-				if (
-					isset($item[$key]) !== true ||
-					$this->checkConstraint($version, $item[$key], $reason) !== true
-				) {
+				if (isset($item[$key]) !== true) {
+					$package = $this->packageName();
+					$this->exceptions[] = new KirbyException('Missing constraint ' . $key . ' for ' . $package . ' ' . $reason);
+
+					return false;
+				}
+
+				if ($this->checkConstraint($version, $item[$key], $reason) !== true) {
 					return false;
 				}
 			}
