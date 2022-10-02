@@ -146,10 +146,17 @@ class I18n
 			if (isset($key[$lang]) === true) {
 				return $key[$lang];
 			}
+			// use global wildcard as i18n key
+			if (isset($key['*']) === true) {
+				return static::translate($key['*'], $key['*']);
+			}
 			// use fallback
 			if (is_array($fallback) === true) {
-				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
+				return $fallback[$locale] ??
+					   $fallback['en'] ??
+					   reset($fallback);
 			}
+
 			return $fallback;
 		}
 
@@ -205,9 +212,6 @@ class I18n
 	 * Returns the current or any other translation
 	 * by locale. If the translation does not exist
 	 * yet, the loader will try to load it, if defined.
-	 *
-	 * @param string|null $locale
-	 * @return array
 	 */
 	public static function translation(string $locale = null): array
 	{
@@ -232,8 +236,6 @@ class I18n
 
 	/**
 	 * Returns all loaded or defined translations
-	 *
-	 * @return array
 	 */
 	public static function translations(): array
 	{
@@ -242,16 +244,17 @@ class I18n
 
 	/**
 	 * Returns (and creates) a decimal number formatter for a given locale
-	 *
-	 * @return \NumberFormatter|null
 	 */
-	protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
+	protected static function decimalNumberFormatter(string $locale): NumberFormatter|null
 	{
-		if (isset(static::$decimalsFormatters[$locale])) {
+		if (isset(static::$decimalsFormatters[$locale]) === true) {
 			return static::$decimalsFormatters[$locale];
 		}
 
-		if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
+		if (
+			extension_loaded('intl') !== true ||
+			class_exists('NumberFormatter') !== true
+		) {
 			return null; // @codeCoverageIgnore
 		}
 
