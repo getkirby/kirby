@@ -123,7 +123,7 @@ class UpdateStatus
 		return I18n::template(
 			'system.updateStatus.' . $this->status(),
 			'?',
-			['version' => $this->targetVersion()]
+			['version' => $this->targetVersion() ?? '?']
 		);
 	}
 
