@@ -166,9 +166,10 @@ class UpdateStatus
 			$filters['plugin'] = $this->currentVersion;
 		}
 
-		$messages = static::filterArrayByVersion(
+		$messages = $this->filterArrayByVersion(
 			$this->data['messages'] ?? [],
-			$filters
+			$filters,
+			'while filtering messages'
 		);
 
 		// add a message for each vulnerability
@@ -301,9 +302,10 @@ class UpdateStatus
 		preg_match('/^([0-9.]+)/', $this->currentVersion, $matches);
 		$currentVersion = $matches[1];
 
-		$vulnerabilities = static::filterArrayByVersion(
+		$vulnerabilities = $this->filterArrayByVersion(
 			$this->data['incidents'] ?? [],
-			['affected' => $currentVersion]
+			['affected' => $currentVersion],
+			'while filtering incidents'
 		);
 
 		// sort the vulnerabilities by severity (with critical first)
@@ -323,20 +325,45 @@ class UpdateStatus
 	}
 
 	/**
+	 * Compares a version against a Composer version constraint
+	 * and returns whether the constraint is satisfied
+	 *
+	 * @param string $reason Suffix for error messages
+	 */
+	protected function checkConstraint(string $version, string $constraint, string $reason): bool
+	{
+		try {
+			return Semver::satisfies($version, $constraint);
+		} catch (Exception $e) {
+			$package = $this->packageName();
+			$message = 'Error comparing version constraint for ' . $package . ' ' . $reason . ': ' . $e->getMessage();
+
+			$exception = new KirbyException([
+				'fallback' => $message,
+				'previous' => $e
+			]);
+			$this->exceptions[] = $exception;
+
+			return false;
+		}
+	}
+
+	/**
 	 * Filters a two-level array with one or multiple version constraints
 	 * for each value by one or multiple version filters;
 	 * values that don't contain the filter keys are removed
 	 *
 	 * @param array $array Array that contains associative arrays
 	 * @param array $filters Associative array `field => version`
+	 * @param string $reason Suffix for error messages
 	 */
-	protected static function filterArrayByVersion(array $array, array $filters): array
+	protected function filterArrayByVersion(array $array, array $filters, string $reason): array
 	{
-		return array_filter($array, function ($item) use ($filters): bool {
+		return array_filter($array, function ($item) use ($filters, $reason): bool {
 			foreach ($filters as $key => $version) {
 				if (
 					isset($item[$key]) !== true ||
-					Semver::satisfies($version, $item[$key]) !== true
+					$this->checkConstraint($version, $item[$key], $reason) !== true
 				) {
 					return false;
 				}
@@ -418,7 +445,11 @@ class UpdateStatus
 
 			// run another loop to verify that the suggested version
 			// doesn't have any known vulnerabilities on its own
-			$affected = static::filterArrayByVersion($incidents, ['affected' => $version]);
+			$affected = $this->filterArrayByVersion(
+				$incidents,
+				['affected' => $version],
+				'while filtering incidents'
+			);
 		}
 
 		return $version;
@@ -642,7 +673,7 @@ class UpdateStatus
 		$url = null;
 		foreach ($this->data['urls'] ?? [] as $constraint => $entry) {
 			// filter out every entry that does not match the version
-			if (Semver::satisfies($version, $constraint) !== true) {
+			if ($this->checkConstraint($version, $constraint, 'while finding URL') !== true) {
 				continue;
 			}
 
@@ -701,7 +732,7 @@ class UpdateStatus
 		$versionEntry = null;
 		foreach ($this->data['versions'] ?? [] as $constraint => $entry) {
 			// filter out every entry that does not match the current version
-			if (Semver::satisfies($this->currentVersion, $constraint) !== true) {
+			if ($this->checkConstraint($this->currentVersion, $constraint, 'while finding version entry') !== true) {
 				continue;
 			}
 
