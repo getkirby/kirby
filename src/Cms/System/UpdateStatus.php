@@ -4,7 +4,6 @@ namespace Kirby\Cms\System;
 
 use Composer\Semver\Semver;
 use Exception;
-use Kirby\Cache\MemoryCache;
 use Kirby\Cms\App;
 use Kirby\Cms\Plugin;
 use Kirby\Exception\Exception as KirbyException;
@@ -489,10 +488,7 @@ class UpdateStatus
 
 		// before we request the data, ensure we have a writable cache;
 		// this reduces strain on the CDN from repeated requests
-		if (
-			$cache->enabled() === false ||
-			$cache instanceof MemoryCache
-		) {
+		if ($cache->enabled() === false) {
 			$this->exceptions[] = new KirbyException('Cannot check for updates without a working "updates" cache');
 
 			return null;
