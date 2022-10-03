@@ -115,7 +115,7 @@ export default {
 		console.info(
 			`System health checks ended. ${
 				promises.length - this.accessible.length
-			} issues found.`
+			} issues found (see the security list in the system view).`
 		);
 	},
 	methods: {
