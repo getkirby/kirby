@@ -41,5 +41,4 @@ class LockRoutesTest extends TestCase
 
 		$this->assertSame($expected, $response);
 	}
-
 }
