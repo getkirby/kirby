@@ -1,0 +1,23 @@
+{
+	"latest": "99999.9.9",
+	"versions": {
+		"99999.9.9": {
+			"description": "Latest plugin release",
+			"status": "latest"
+		},
+		"*": {
+			"description": "Actively supported",
+			"latest": "88888.8.8",
+			"status": "active-support"
+		}
+	},
+	"urls": {
+		"*": {
+			"changes": "https://github.com/getkirby/public-plugin/releases/tag/{{ version }}",
+			"download": "https://github.com/getkirby/public-plugin/archive/refs/tags/{{ version }}.zip",
+			"upgrade": "https://getkirby.com/releases/99999"
+		}
+	},
+	"incidents": [],
+	"messages": []
+}

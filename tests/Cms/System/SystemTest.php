@@ -21,7 +21,7 @@ class SystemTest extends TestCase
 	public static function setUpBeforeClass(): void
 	{
 		static::$updateStatusHost = UpdateStatus::$host;
-		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
+		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/SystemTest';
 	}
 
 	public static function tearDownAfterClass(): void
