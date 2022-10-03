@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -391,7 +392,20 @@ class Dir
 			throw new Exception(sprintf('The directory "%s" cannot be created', $dir));
 		}
 
-		return mkdir($dir);
+		return Helpers::handleErrors(
+			fn (): bool => mkdir($dir),
+			function (&$override, int $errno, string $errstr): bool {
+				// if the dir was already created (race condition),
+				// consider it a success
+				if (Str::endsWith($errstr, 'File exists') === true) {
+					// drop the warning
+					return $override = true;
+				}
+
+				// handle every other warning normally
+				return false;
+			}
+		);
 	}
 
 	/**
