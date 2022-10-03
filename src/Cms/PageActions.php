@@ -467,7 +467,7 @@ trait PageActions
 		// make sure that a UUID gets generated and
 		// added to content right away
 		$props['content'] ??= [];
-		$props['content']['uuid'] = Uuid::generate();
+		$props['content']['uuid'] ??= Uuid::generate();
 
 		// create a temporary page object
 		$page = Page::factory($props);
