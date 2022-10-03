@@ -5,21 +5,15 @@
  * Content Lock Routes
  */
 return [
-    [
-        'pattern' => '(:all)/lock',
-        'method'  => 'GET',
-        'action'  => function (string $path) {
-			if ($lock = $this->parent($path)->lock()) {
-                return [
-					'lock' => $lock->toArray()
-				];
-			}
-
-            return [
-                'lock' => false
-            ];
-        }
-    ],
+	[
+		'pattern' => '(:all)/lock',
+		'method'  => 'GET',
+		'action'  => function (string $path) {
+			return [
+				'lock' => $this->parent($path)->lock()?->toArray() ?? false
+			];
+		}
+	],
 	[
 		'pattern' => '(:all)/lock',
 		'method'  => 'PATCH',

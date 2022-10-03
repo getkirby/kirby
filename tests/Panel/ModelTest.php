@@ -3,13 +3,20 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Cms\ContentLock;
+use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
-class CustomContentLockIsLocked
+class CustomContentLockIsLocked extends ContentLock
 {
+	public function __construct()
+	{
+		$this->model = new ModelPage(['slug' => 'test']);
+	}
+
 	public function get(): array
 	{
 		return ['email' => 'foo@bar.com'];
@@ -26,7 +33,7 @@ class CustomContentLockIsLocked
 	}
 }
 
-class CustomContentLockIsUnlocked
+class CustomContentLockIsUnlocked extends CustomContentLockIslocked
 {
 	public function isUnlocked(): bool
 	{
@@ -416,7 +423,7 @@ class ModelTest extends TestCase
 
 		// no lock or unlock
 		$site = new ModelSite();
-		$this->assertSame(['state' => null], $site->panel()->lock());
+		$this->assertSame(['state' => null, 'data' => false], $site->panel()->lock());
 
 		// lock
 		$site = new ModelSiteTestForceLocked();
@@ -426,7 +433,7 @@ class ModelTest extends TestCase
 
 		// unlock
 		$site = new ModelSiteTestForceUnlocked();
-		$this->assertSame(['state' => 'unlock'], $site->panel()->lock());
+		$this->assertSame('unlock', $site->panel()->lock()['state']);
 	}
 
 	/**

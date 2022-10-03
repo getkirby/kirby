@@ -196,6 +196,19 @@ class ContentLock
 	}
 
 	/**
+	 * Returns the state for the
+	 * form buttons in the frontend
+	 */
+	public function state(): ?string
+	{
+		return match(true) {
+			$this->isUnlocked() => 'unlock',
+			$this->isLocked()   => 'lock',
+			default => null
+		};
+	}
+
+	/**
 	 * Returns a usable lock array
 	 * for the frontend
 	 *
@@ -203,18 +216,10 @@ class ContentLock
 	 */
 	public function toArray(): array
 	{
-		if ($this->isUnlocked() === true) {
-			return ['state' => 'unlock'];
-		}
-
-		if ($this->isLocked() === true) {
-			return [
-				'state' => 'lock',
-				'data'  => $this->get()
-			];
-		}
-
-		return ['state' => null];
+		return [
+			'state' => $this->state(),
+			'data'  => $this->get()
+		];
 	}
 
 	/**
