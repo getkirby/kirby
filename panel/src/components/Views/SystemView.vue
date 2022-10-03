@@ -91,6 +91,15 @@ export default {
 		}
 	},
 	async created() {
+		// print exceptions from the update check to console for debugging
+		if (this.exceptions.length > 0) {
+			console.info(
+				"The following errors occurred during the update check of Kirby and/or plugins:"
+			);
+			this.exceptions.map((exception) => console.warn(exception));
+			console.info("End of errors from the update check.");
+		}
+
 		console.info(
 			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
 		);
@@ -108,13 +117,6 @@ export default {
 				promises.length - this.accessible.length
 			} issues found.`
 		);
-
-		// print exceptions from the update check to console for debugging
-		if (this.exceptions.length > 0) {
-			console.info("----");
-			console.info("Running the update check for Kirby and plugins.");
-			this.exceptions.map((exception) => console.warn(exception));
-		}
 	},
 	methods: {
 		async check([key, url]) {
