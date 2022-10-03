@@ -235,18 +235,7 @@ abstract class Model
 	public function lock(): array|false
 	{
 		if ($lock = $this->model->lock()) {
-			if ($lock->isUnlocked() === true) {
-				return ['state' => 'unlock'];
-			}
-
-			if ($lock->isLocked() === true) {
-				return [
-					'state' => 'lock',
-					'data'  => $lock->get()
-				];
-			}
-
-			return ['state' => null];
+			return $lock->toArray();
 		}
 
 		return false;

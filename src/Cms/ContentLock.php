@@ -196,6 +196,28 @@ class ContentLock
 	}
 
 	/**
+	 * Returns a usable lock array
+	 * for the frontend
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		if ($this->isUnlocked() === true) {
+			return ['state' => 'unlock'];
+		}
+
+		if ($this->isLocked() === true) {
+			return [
+				'state' => 'lock',
+				'data'  => $this->get()
+			];
+		}
+
+		return ['state' => null];
+	}
+
+	/**
 	 * Removes current lock and adds lock user to unlock data
 	 *
 	 * @return bool
