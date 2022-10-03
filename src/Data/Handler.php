@@ -23,12 +23,12 @@ abstract class Handler
 	 *
 	 * @throws \Exception if the file can't be parsed
 	 */
-	abstract public static function decode(mixed $string): array;
+	abstract public static function decode($string): array;
 
 	/**
 	 * Converts an array to an encoded string
 	 */
-	abstract public static function encode(mixed $data): string;
+	abstract public static function encode($data): string;
 
 	/**
 	 * Reads data from a file
@@ -46,7 +46,7 @@ abstract class Handler
 	/**
 	 * Writes data to a file
 	 */
-	public static function write(string $file, mixed $data = []): bool
+	public static function write(string $file, $data = []): bool
 	{
 		return F::write($file, static::encode($data));
 	}

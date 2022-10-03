@@ -140,7 +140,7 @@ abstract class Cache
 	 *   $value = $cache->get('value', 'default value');
 	 * </code>
 	 */
-	public function get(string $key, mixed $default = null): mixed
+	public function get(string $key, $default = null)
 	{
 		// get the Value
 		$value = $this->retrieve($key);
@@ -171,7 +171,7 @@ abstract class Cache
 		string $key,
 		Closure $result,
 		int $minutes = 0
-	): mixed {
+	) {
 		$value  = $this->get($key);
 		$result = $value ?? $result();
 
@@ -234,5 +234,5 @@ abstract class Cache
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
 	 */
-	abstract public function set(string $key, mixed $value, int $minutes = 0): bool;
+	abstract public function set(string $key, $value, int $minutes = 0): bool;
 }

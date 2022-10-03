@@ -1,0 +1,17 @@
+{
+	"latest": "88888.8.8",
+	"versions": {
+		"88888.8.8": {
+			"status": "latest"
+		},
+		">=77777.5.5": {
+			"status": "no-vulnerabilities"
+		},
+		"*": {
+			"latest": "77777.7.7",
+			"status": "active-support"
+		}
+	},
+	"incidents": [],
+	"messages": []
+}

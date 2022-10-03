@@ -36,7 +36,7 @@ class MemoryCache extends Cache
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
 	 */
-	public function set(string $key, mixed $value, int $minutes = 0): bool
+	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		$this->store[$key] = new Value($value, $minutes);
 		return true;

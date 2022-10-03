@@ -18,7 +18,7 @@ class Json extends Handler
 	/**
 	 * Converts an array to an encoded JSON string
 	 */
-	public static function encode(mixed $data): string
+	public static function encode($data): string
 	{
 		return json_encode(
 			$data,
@@ -29,7 +29,7 @@ class Json extends Handler
 	/**
 	 * Parses an encoded JSON string and returns a multi-dimensional array
 	 */
-	public static function decode(mixed $string): array
+	public static function decode($string): array
 	{
 		if ($string === null || $string === '') {
 			return [];

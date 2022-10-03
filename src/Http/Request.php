@@ -259,7 +259,7 @@ class Request
 	 * Returns any data field from the request
 	 * if it exists
 	 */
-	public function get(string|array|null $key = null, mixed $fallback = null): mixed
+	public function get(string|array|null $key = null, $fallback = null)
 	{
 		return A::get($this->data(), $key, $fallback);
 	}
@@ -277,7 +277,7 @@ class Request
 	/**
 	 * Returns a header by key if it exists
 	 */
-	public function header(string $key, mixed $fallback = null): mixed
+	public function header(string $key, $fallback = null)
 	{
 		$headers = array_change_key_case($this->headers());
 		return $headers[strtolower($key)] ?? $fallback;

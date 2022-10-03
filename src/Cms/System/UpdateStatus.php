@@ -4,7 +4,6 @@ namespace Kirby\Cms\System;
 
 use Composer\Semver\Semver;
 use Exception;
-use Kirby\Cache\MemoryCache;
 use Kirby\Cms\App;
 use Kirby\Cms\Plugin;
 use Kirby\Exception\Exception as KirbyException;
@@ -38,7 +37,7 @@ class UpdateStatus
 	// props set in constructor
 	protected App $app;
 	protected string|null $currentVersion;
-	protected array|null $data = null;
+	protected array|null $data;
 	protected string|null $pluginName;
 	protected bool $securityOnly;
 
@@ -49,7 +48,7 @@ class UpdateStatus
 	// caches
 	protected array $messages;
 	protected array $targetData;
-	protected array|null $versionEntry;
+	protected array|bool $versionEntry;
 	protected array $vulnerabilities;
 
 	/**
@@ -72,6 +71,14 @@ class UpdateStatus
 		$this->currentVersion = $package->version();
 
 		$this->data = $data ?? $this->loadData();
+	}
+
+	/**
+	 * Returns the currently installed version
+	 */
+	public function currentVersion(): string|null
+	{
+		return $this->currentVersion;
 	}
 
 	/**
@@ -116,8 +123,16 @@ class UpdateStatus
 		return I18n::template(
 			'system.updateStatus.' . $this->status(),
 			'?',
-			['version' => $this->targetVersion()]
+			['version' => $this->targetVersion() ?? '?']
 		);
+	}
+
+	/**
+	 * Returns the latest available version
+	 */
+	public function latestVersion(): string|null
+	{
+		return $this->data['latest'] ?? null;
 	}
 
 	/**
@@ -142,17 +157,18 @@ class UpdateStatus
 
 		// collect all matching custom messages
 		$filters = [
-			'kirby'  => $this->app->version(),
-			'php'    => phpversion()
+			'kirby' => $this->app->version(),
+			'php'   => phpversion()
 		];
 
 		if ($type === 'plugin') {
 			$filters['plugin'] = $this->currentVersion;
 		}
 
-		$messages = static::filterArrayByVersion(
+		$messages = $this->filterArrayByVersion(
 			$this->data['messages'] ?? [],
-			$filters
+			$filters,
+			'while filtering messages'
 		);
 
 		// add a message for each vulnerability
@@ -181,7 +197,7 @@ class UpdateStatus
 					'plugin' => I18n::template(
 						'system.issues.eol.plugin',
 						null,
-						['plugin' => $this->package->name()]
+						['plugin' => $this->pluginName]
 					),
 					default => I18n::translate('system.issues.eol.kirby')
 				},
@@ -234,10 +250,10 @@ class UpdateStatus
 	public function toArray(): array
 	{
 		return [
-			'currentVersion' => $this->currentVersion ?? '?',
+			'currentVersion' => $this->currentVersion() ?? '?',
 			'icon'           => $this->icon(),
 			'label'          => $this->label(),
-			'latestVersion'  => $this->data['latest'] ?? '?',
+			'latestVersion'  => $this->latestVersion() ?? '?',
 			'pluginName'     => $this->pluginName,
 			'theme'          => $this->theme(),
 			'url'            => $this->url(),
@@ -285,9 +301,10 @@ class UpdateStatus
 		preg_match('/^([0-9.]+)/', $this->currentVersion, $matches);
 		$currentVersion = $matches[1];
 
-		$vulnerabilities = static::filterArrayByVersion(
+		$vulnerabilities = $this->filterArrayByVersion(
 			$this->data['incidents'] ?? [],
-			['affected' => $currentVersion]
+			['affected' => $currentVersion],
+			'while filtering incidents'
 		);
 
 		// sort the vulnerabilities by severity (with critical first)
@@ -307,21 +324,50 @@ class UpdateStatus
 	}
 
 	/**
+	 * Compares a version against a Composer version constraint
+	 * and returns whether the constraint is satisfied
+	 *
+	 * @param string $reason Suffix for error messages
+	 */
+	protected function checkConstraint(string $version, string $constraint, string $reason): bool
+	{
+		try {
+			return Semver::satisfies($version, $constraint);
+		} catch (Exception $e) {
+			$package = $this->packageName();
+			$message = 'Error comparing version constraint for ' . $package . ' ' . $reason . ': ' . $e->getMessage();
+
+			$exception = new KirbyException([
+				'fallback' => $message,
+				'previous' => $e
+			]);
+			$this->exceptions[] = $exception;
+
+			return false;
+		}
+	}
+
+	/**
 	 * Filters a two-level array with one or multiple version constraints
 	 * for each value by one or multiple version filters;
 	 * values that don't contain the filter keys are removed
 	 *
 	 * @param array $array Array that contains associative arrays
 	 * @param array $filters Associative array `field => version`
+	 * @param string $reason Suffix for error messages
 	 */
-	protected static function filterArrayByVersion(array $array, array $filters): array
+	protected function filterArrayByVersion(array $array, array $filters, string $reason): array
 	{
-		return array_filter($array, function ($item) use ($filters): bool {
+		return array_filter($array, function ($item) use ($filters, $reason): bool {
 			foreach ($filters as $key => $version) {
-				if (
-					isset($item[$key]) !== true ||
-					Semver::satisfies($version, $item[$key]) !== true
-				) {
+				if (isset($item[$key]) !== true) {
+					$package = $this->packageName();
+					$this->exceptions[] = new KirbyException('Missing constraint ' . $key . ' for ' . $package . ' ' . $reason);
+
+					return false;
+				}
+
+				if ($this->checkConstraint($version, $item[$key], $reason) !== true) {
 					return false;
 				}
 			}
@@ -341,7 +387,7 @@ class UpdateStatus
 	{
 		$versionEntry = $this->versionEntry();
 		if ($versionEntry === null || isset($versionEntry['latest']) !== true) {
-			return null;
+			return null; // @codeCoverageIgnore
 		}
 
 		$affected   = $this->vulnerabilities();
@@ -402,7 +448,11 @@ class UpdateStatus
 
 			// run another loop to verify that the suggested version
 			// doesn't have any known vulnerabilities on its own
-			$affected = static::filterArrayByVersion($incidents, ['affected' => $version]);
+			$affected = $this->filterArrayByVersion(
+				$incidents,
+				['affected' => $version],
+				'while filtering incidents'
+			);
 		}
 
 		return $version;
@@ -442,10 +492,7 @@ class UpdateStatus
 
 		// before we request the data, ensure we have a writable cache;
 		// this reduces strain on the CDN from repeated requests
-		if (
-			$cache->enabled() === false ||
-			$cache instanceof MemoryCache
-		) {
+		if ($cache->enabled() === false) {
 			$this->exceptions[] = new KirbyException('Cannot check for updates without a working "updates" cache');
 
 			return null;
@@ -455,7 +502,7 @@ class UpdateStatus
 		// we collect it below for debugging
 		try {
 			if (static::$timedOut === true) {
-				throw new Exception('Previous remote request timed out');
+				throw new Exception('Previous remote request timed out'); // @codeCoverageIgnore
 			}
 
 			$response = Remote::get(
@@ -465,7 +512,7 @@ class UpdateStatus
 
 			// allow status code HTTP 200 or 0 (e.g. for the file:// protocol)
 			if (in_array($response->code(), [0, 200], true) !== true) {
-				throw new Exception('HTTP error ' . $response->code());
+				throw new Exception('HTTP error ' . $response->code()); // @codeCoverageIgnore
 			}
 
 			$data = $response->json();
@@ -487,7 +534,7 @@ class UpdateStatus
 			// requests for other packages (e.g. plugins)
 			// to avoid long Panel hangs
 			if ($e->getCode() === 28) {
-				static::$timedOut = true;
+				static::$timedOut = true; // @codeCoverageIgnore
 			} elseif (static::$timedOut === false) {
 				// different error than timeout;
 				// prevent additional requests in the
@@ -626,7 +673,7 @@ class UpdateStatus
 		$url = null;
 		foreach ($this->data['urls'] ?? [] as $constraint => $entry) {
 			// filter out every entry that does not match the version
-			if (Semver::satisfies($version, $constraint) !== true) {
+			if ($this->checkConstraint($version, $constraint, 'while finding URL') !== true) {
 				continue;
 			}
 
@@ -639,7 +686,7 @@ class UpdateStatus
 
 		if ($url === null) {
 			$package = $this->packageName();
-			$message = 'Update check: No matching URL found for ' . $package . '@' . $version;
+			$message = 'No matching URL found for ' . $package . '@' . $version;
 
 			$this->exceptions[] = new KirbyException($message);
 
@@ -660,6 +707,11 @@ class UpdateStatus
 	protected function versionEntry(): array|null
 	{
 		if (isset($this->versionEntry) === true) {
+			// no version entry found on last call
+			if ($this->versionEntry === false) {
+				return null;
+			}
+
 			return $this->versionEntry;
 		}
 
@@ -685,7 +737,7 @@ class UpdateStatus
 		$versionEntry = null;
 		foreach ($this->data['versions'] ?? [] as $constraint => $entry) {
 			// filter out every entry that does not match the current version
-			if (Semver::satisfies($this->currentVersion, $constraint) !== true) {
+			if ($this->checkConstraint($this->currentVersion, $constraint, 'while finding version entry') !== true) {
 				continue;
 			}
 
@@ -708,11 +760,12 @@ class UpdateStatus
 
 		if ($versionEntry === null) {
 			$package = $this->packageName();
-			$message = 'Update check: No matching version entry found for ' . $package . '@' . $this->currentVersion;
+			$message = 'No matching version entry found for ' . $package . '@' . $this->currentVersion;
 
 			$this->exceptions[] = new KirbyException($message);
 		}
 
-		return $this->versionEntry = $versionEntry;
+		$this->versionEntry = $versionEntry ?? false;
+		return $versionEntry;
 	}
 }

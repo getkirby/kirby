@@ -28,7 +28,7 @@ class Url
 	/**
 	 * Facade for all Uri object methods
 	 */
-	public static function __callStatic(string $method, array $arguments): mixed
+	public static function __callStatic(string $method, array $arguments)
 	{
 		return (new Uri($arguments[0] ?? static::current()))->$method(...array_slice($arguments, 1));
 	}

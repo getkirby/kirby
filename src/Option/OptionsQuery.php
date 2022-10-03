@@ -3,9 +3,9 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Block;
+use Kirby\Cms\Field;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Cms\Nest;
 use Kirby\Cms\Page;
 use Kirby\Cms\StructureObject;
 use Kirby\Cms\User;
@@ -34,6 +34,20 @@ class OptionsQuery extends OptionsProvider
 	) {
 	}
 
+	protected function collection(array $array): Collection
+	{
+		foreach ($array as $key => $value) {
+			if (is_scalar($value) === true) {
+				$array[$key] = new Obj([
+					'key'   => new Field(null, 'key', $key),
+					'value' => new Field(null, 'value', $value),
+				]);
+			}
+		}
+
+		return new Collection($array);
+	}
+
 	public static function factory(string|array $props): static
 	{
 		if (is_string($props) === true) {
@@ -51,19 +65,20 @@ class OptionsQuery extends OptionsProvider
 	 * Returns defaults for the following based on item type:
 	 * [query entry alias, default text query, default value query]
 	 */
-	protected function itemToDefaults(object $item): array
+	protected function itemToDefaults(array|object $item): array
 	{
 		return match (true) {
+			is_array($item),
 			$item instanceof Obj => [
 				'arrayItem',
-				'{{ arrayItem.value }}',
-				'{{ arrayItem.value }}'
+				'{{ item.value }}',
+				'{{ item.value }}'
 			],
 
 			$item instanceof StructureObject => [
 				'structureItem',
-				'{{ structureItem.title }}',
-				'{{ structureItem.id }}'
+				'{{ item.title }}',
+				'{{ item.id }}'
 			],
 
 			$item instanceof Block => [
@@ -136,7 +151,7 @@ class OptionsQuery extends OptionsProvider
 
 		// convert result to a collection
 		if (is_array($result) === true) {
-			$result = Nest::create($result);
+			$result = $this->collection($result);
 		}
 
 		if ($result instanceof Collection === false) {

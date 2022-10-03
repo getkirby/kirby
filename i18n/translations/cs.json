@@ -49,8 +49,8 @@
 	"email": "Email",
 	"email.placeholder": "mail@example.com",
 
-	"entries": "Entries",
-	"entry": "Entry",
+	"entries": "Záznamy",
+	"entry": "Záznam",
 
 	"environment": "Prostředí",
 
@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Nelze přidat více než jeden blok",
 	"error.blocks.min.plural": "Musíte přidat alespoň {min} bloků",
 	"error.blocks.min.singular": "Musíte přidat alespoň jeden blok",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "V poli \"{field}\" v bloku {index} je při použití \"{fieldset}\" typu chyba",
 
 	"error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
 
@@ -107,14 +107,14 @@
 	"error.language.name": "Zadejte prosím platné jméno jazyka",
 	"error.language.notFound": "Jazyk nebyl nalezen",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "V rozvržení {layoutIndex} je v poli \"{field}\" v bloku {blockIndex} při použití \"{fieldset}\" typu chyba",
 	"error.layout.validation.settings": "Chyba v nastavení rozvržení {index}",
 
 	"error.license.format": "Zadejte prosím platné licenční číslo",
 	"error.license.email": "Zadejte prosím platnou emailovou adresu",
 	"error.license.verification": "Licenci nelze ověřit",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "V poli \"{label}\" je chyba:\n{message}",
 
 	"error.offline": "Panel je v současnosti off-line",
 
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Zatím žádné řádky",
 	"field.layout.select": "Vyberte rozložení",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Zatím žádná informace",
 
 	"field.pages.empty": "Nebyly zatím vybrány žádné stránky",
 
@@ -303,7 +303,7 @@
 	"hide": "Skrýt",
 	"hour": "Hodina",
 	"import": "Import",
-	"info": "Info",
+	"info": "Informace",
 	"insert": "Vlo\u017eit",
 	"insert.after": "Vložit za",
 	"insert.before": "Vložit před",
@@ -346,12 +346,12 @@
 	"license": "Kirby licence",
 	"license.buy": "Zakoupit licenci",
 	"license.register": "Registrovat",
-	"license.manage": "Manage your licenses",
+	"license.manage": "Spravovat licence",
 	"license.register.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
 	"license.register.label": "Zadejte prosím licenční kód",
 	"license.register.success": "Děkujeme Vám za podporu Kirby",
 	"license.unregistered": "Toto je neregistrovaná kopie Kirby",
-	"license.unregistered.label": "Unregistered",
+	"license.unregistered.label": "Neregistrovaný",
 
 	"link": "Odkaz",
 	"link.text": "Text odkazu",
@@ -366,7 +366,7 @@
 	"lock.unlock": "Odemknout",
 	"lock.isUnlocked": "Vaše neuložené změny byly přepsány jiným uživatelem. Můžeze si své úpravy stáhnout a zapracovat je ručně.",
 
-	"login": "Log in",
+	"login": "Přihlásit se",
 	"login.code.label.login": "Kód pro přihlášení",
 	"login.code.label.password-reset": "Kód pro resetování hesla",
 	"login.code.placeholder.email": "000 000",
@@ -454,6 +454,7 @@
 	"paste": "Vložit",
 	"paste.after": "Vložit za",
 	"pixel": "Pixel",
+	"plugin": "Plugin",
 	"plugins": "Doplňky",
 	"prev": "Předchozí",
 	"preview": "Náhled",
@@ -481,7 +482,7 @@
 
 	"section.required": "Sekce musí být vyplněna",
 
-	"security": "Security",
+	"security": "Zabezpečení",
 	"select": "Vybrat",
 	"server": "Server",
 	"settings": "Nastavení",
@@ -491,13 +492,26 @@
 	"slug": "P\u0159\u00edpona URL",
 	"sort": "Řadit",
 
-	"stats.empty": "No reports",
-	"system.issues.content": "The content folder seems to be exposed",
-	"system.issues.debug": "Debugging must be turned off in production",
-	"system.issues.git": "The .git folder seems to be exposed",
-	"system.issues.https": "We recommend HTTPS for all your sites",
-	"system.issues.kirby": "The kirby folder seems to be exposed",
-	"system.issues.site": "The site folder seems to be exposed",
+	"stats.empty": "Žádná hlášení",
+	"system.issues.content": "Složka content je zřejmě přístupná zvenčí",
+	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.debug": "Debug mode musí být v produkci vypnutý",
+	"system.issues.git": "Složka .git je zřejmě přístupná zvenčí",
+	"system.issues.https": "Při všechny stránky doporučujeme používat protokol HTTPS",
+	"system.issues.kirby": "Složka kirby je zřejmě přístupná zvenčí",
+	"system.issues.site": "Složka site je zřejmě přístupná zvenčí",
+	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
+	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
+	"system.updateStatus": "Update status",
+	"system.updateStatus.error": "Could not check for updates",
+	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
+	"system.updateStatus.security-update": "Free security update { version } available",
+	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
+	"system.updateStatus.unreleased": "Unreleased version",
+	"system.updateStatus.up-to-date": "Up to date",
+	"system.updateStatus.update": "Free update { version } available",
+	"system.updateStatus.upgrade": "Upgrade { version } available",
 
 	"title": "Název",
 	"template": "\u0160ablona",
@@ -564,6 +578,9 @@
 	"users": "Uživatelé",
 
 	"version": "Verze Kirby",
+	"version.current": "Current version",
+	"version.latest": "Latest version",
+	"versionInformation": "Version information",
 
 	"view.account": "V\u00e1\u0161 \u00fa\u010det",
 	"view.installation": "Instalace",

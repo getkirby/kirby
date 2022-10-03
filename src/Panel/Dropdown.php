@@ -72,7 +72,7 @@ class Dropdown extends Json
 	/**
 	 * Renders dropdowns
 	 */
-	public static function response(mixed $data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		if (is_array($data) === true) {
 			$data = [

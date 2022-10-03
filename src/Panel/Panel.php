@@ -232,7 +232,7 @@ class Panel
 	 * Creates a Response object from the result of
 	 * a Panel route call
 	 */
-	public static function response(mixed $result, array $options = []): Response
+	public static function response($result, array $options = []): Response
 	{
 		// pass responses directly down to the Kirby router
 		if ($result instanceof Response) {

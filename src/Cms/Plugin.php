@@ -33,7 +33,7 @@ class Plugin extends Model
 	/**
 	 * Allows access to any composer.json field by method call
 	 */
-	public function __call(string $key, array $arguments = null): mixed
+	public function __call(string $key, array $arguments = null)
 	{
 		return $this->info()[$key] ?? null;
 	}
@@ -161,7 +161,7 @@ class Plugin extends Model
 	/**
 	 * Returns a Kirby option value for this plugin
 	 */
-	public function option(string $key): mixed
+	public function option(string $key)
 	{
 		return $this->kirby()->option($this->prefix() . '.' . $key);
 	}
@@ -264,11 +264,25 @@ class Plugin extends Model
 	}
 
 	/**
-	 * Returns the version number
+	 * Returns the normalized version number
 	 * from the composer.json file
 	 */
 	public function version(): string|null
 	{
-		return $this->info()['version'] ?? null;
+		$version = $this->info()['version'] ?? null;
+
+		if (is_string($version) !== true || $version === '') {
+			return null;
+		}
+
+		// normalize the version number to be without leading `v`
+		$version = ltrim($version, 'vV');
+
+		// ensure that the version number now starts with a digit
+		if (preg_match('/^[0-9]/', $version) !== 1) {
+			return null;
+		}
+
+		return $version;
 	}
 }

@@ -74,7 +74,7 @@ class KirbyTag
 	/**
 	 * Magic data and property getter
 	 */
-	public function __call(string $name, array $arguments = []): mixed
+	public function __call(string $name, array $arguments = [])
 	{
 		return $this->data[$name] ?? $this->$name;
 	}
@@ -87,13 +87,13 @@ class KirbyTag
 		return (new static($type, ...$arguments))->render();
 	}
 
-	public function __get(string $attr): mixed
+	public function __get(string $attr)
 	{
 		$attr = strtolower($attr);
 		return $this->$attr ?? null;
 	}
 
-	public function attr(string $name, mixed $default = null): mixed
+	public function attr(string $name, $default = null)
 	{
 		$name = strtolower($name);
 		return $this->$name ?? $default;
@@ -151,7 +151,7 @@ class KirbyTag
 		return $this->data['kirby'] ?? App::instance();
 	}
 
-	public function option(string $key, mixed $default = null): mixed
+	public function option(string $key, $default = null)
 	{
 		return $this->options[$key] ?? $default;
 	}

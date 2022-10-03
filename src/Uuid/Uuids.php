@@ -8,6 +8,7 @@ use Kirby\Cms\App;
 
 /**
  * Helper methods that deal with the entirety of UUIDs in the system
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

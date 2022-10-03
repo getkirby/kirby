@@ -303,6 +303,25 @@ trait FileActions
 	}
 
 	/**
+	 * Stores the content on disk
+	 *
+	 * @internal
+	 * @param array|null $data
+	 * @param string|null $languageCode
+	 * @param bool $overwrite
+	 * @return static
+	 */
+	public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
+	{
+		$file = parent::save($data, $languageCode, $overwrite);
+
+		// update model in siblings collection
+		$file->parent()->files()->set($file->id(), $file);
+
+		return $file;
+	}
+
+	/**
 	 * Remove all public versions of this file
 	 *
 	 * @return $this

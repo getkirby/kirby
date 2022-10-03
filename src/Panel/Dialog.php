@@ -23,7 +23,7 @@ class Dialog extends Json
 	/**
 	 * Renders dialogs
 	 */
-	public static function response(mixed $data, array $options = []): Response
+	public static function response($data, array $options = []): Response
 	{
 		// interpret true as success
 		if ($data === true) {

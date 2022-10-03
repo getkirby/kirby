@@ -1,0 +1,61 @@
+{
+	"latest": "88888.8.8",
+	"versions": {
+		"88888.8.8": {
+			"status": "latest"
+		},
+		">=77777.5.5": {
+			"status": "no-vulnerabilities"
+		},
+		"77777.*": {
+			"latest": "77777.7.7",
+			"status": "active-support"
+		},
+		"66666.*": {
+			"latest": "66666.6.6",
+			"status": "security-support"
+		},
+		"55555.*": {
+			"latest": "55555.5.5",
+			"status": "security-support"
+		},
+		"<55555.0.0": {
+			"latest": "44444.4.4",
+			"status": "end-of-life",
+			"status-link": "https://getkirby.com/44444-is-eol"
+		}
+	},
+	"urls": {
+		"*": {
+			"changes": "https://getkirby.com/releases/{{ version }}",
+			"download": "https://repoofthefuture.com/{{ version }}.zip",
+			"upgrade": "https://getkirby.com/releases/88888"
+		}
+	},
+	"incidents": [
+		{
+			"affected": "<=66666.5.4 || 77777.0.0 - 77777.5.4",
+			"description": "Some incident",
+			"fixed": "66666.5.5, 77777.5.5",
+			"link": "https://getkirby.com/security/some-incident",
+			"severity": "high"
+		}
+	],
+	"messages": [
+		{
+			"text": "Some message that matches",
+			"kirby": "77777.6.0",
+			"php": "*"
+		},
+		{
+			"text": "Some message with wrong PHP version",
+			"kirby": "77777.6.0",
+			"php": "5.4.*"
+		},
+		{
+			"text": "Some message with different Kirby version",
+			"kirby": "12345.6.7",
+			"php": "*"
+		}
+	]
+}

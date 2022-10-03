@@ -7,6 +7,7 @@ use Kirby\Cms\File;
 
 /**
  * UUID for \Kirby\Cms\File
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>

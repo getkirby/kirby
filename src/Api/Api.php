@@ -91,7 +91,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function __call(string $method, array $args = []): mixed
+	public function __call(string $method, array $args = [])
 	{
 		return $this->data($method, ...$args);
 	}
@@ -108,7 +108,7 @@ class Api
 	 * Runs the authentication method
 	 * if set
 	 */
-	public function authenticate(): mixed
+	public function authenticate()
 	{
 		return $this->authentication()?->call($this) ?? true;
 	}
@@ -130,7 +130,7 @@ class Api
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
-	public function call(string|null $path = null, string $method = 'GET', array $requestData = []): mixed
+	public function call(string|null $path = null, string $method = 'GET', array $requestData = [])
 	{
 		$path = rtrim($path ?? '', '/');
 
@@ -223,7 +223,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
 	 */
-	public function data(string|null $key = null, mixed ...$args): mixed
+	public function data(string|null $key = null, ...$args)
 	{
 		if ($key === null) {
 			return $this->data;
@@ -264,7 +264,7 @@ class Api
 	 * @param array models or collections
 	 * @return string|null key of match
 	 */
-	protected function match(array $array, mixed $object = null): string|null
+	protected function match(array $array, $object = null): string|null
 	{
 		foreach ($array as $definition => $model) {
 			if ($object instanceof $model['type']) {
@@ -280,7 +280,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If no model for `$name` exists
 	 */
-	public function model(string|null $name = null, mixed $object = null): Model
+	public function model(string|null $name = null, $object = null): Model
 	{
 		// Try to auto-match object with API models
 		$name ??= $this->match($this->models, $object);
@@ -313,8 +313,8 @@ class Api
 	public function requestData(
 		string|null $type = null,
 		string|null $key = null,
-		mixed $default = null
-	): mixed {
+		$default = null
+	) {
 		if ($type === null) {
 			return $this->requestData;
 		}
@@ -332,7 +332,7 @@ class Api
 	/**
 	 * Returns the request body if available
 	 */
-	public function requestBody(string|null $key = null, mixed $default = null): mixed
+	public function requestBody(string|null $key = null, $default = null)
 	{
 		return $this->requestData('body', $key, $default);
 	}
@@ -340,7 +340,7 @@ class Api
 	/**
 	 * Returns the files from the request if available
 	 */
-	public function requestFiles(string|null $key = null, mixed $default = null): mixed
+	public function requestFiles(string|null $key = null, $default = null)
 	{
 		return $this->requestData('files', $key, $default);
 	}
@@ -348,7 +348,7 @@ class Api
 	/**
 	 * Returns all headers from the request if available
 	 */
-	public function requestHeaders(string|null $key = null, mixed $default = null): mixed
+	public function requestHeaders(string|null $key = null, $default = null)
 	{
 		return $this->requestData('headers', $key, $default);
 	}
@@ -364,7 +364,7 @@ class Api
 	/**
 	 * Returns the request query if available
 	 */
-	public function requestQuery(string|null $key = null, mixed $default = null): mixed
+	public function requestQuery(string|null $key = null, $default = null)
 	{
 		return $this->requestData('query', $key, $default);
 	}
@@ -375,7 +375,7 @@ class Api
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If `$object` cannot be resolved
 	 */
-	public function resolve(mixed $object): Model|Collection
+	public function resolve($object): Model|Collection
 	{
 		if (
 			$object instanceof Model ||
@@ -497,7 +497,7 @@ class Api
 	/**
 	 * Renders the API call
 	 */
-	public function render(string $path, string $method = 'GET', array $requestData = []): mixed
+	public function render(string $path, string $method = 'GET', array $requestData = [])
 	{
 		try {
 			$result = $this->call($path, $method, $requestData);

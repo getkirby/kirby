@@ -17,10 +17,11 @@ use Kirby\Cms\ModelWithContent;
 abstract class OptionsProvider
 {
 	public Options|null $options = null;
+
 	/**
 	 * Returns options as array
 	 */
-	public function render(ModelWithContent $model): mixed
+	public function render(ModelWithContent $model)
 	{
 		return $this->resolve($model)->render($model);
 	}

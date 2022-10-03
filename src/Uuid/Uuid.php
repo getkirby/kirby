@@ -31,6 +31,7 @@ use Kirby\Toolkit\Str;
  * $model->uuid()->populate();
  * $model->uuid()->clear();
  * ```
+ * @since 3.8.0
  *
  * @package   Kirby Uuid
  * @author    Nico Hoffmann <nico@getkirby.com>
@@ -228,13 +229,18 @@ class Uuid
 		string $string,
 		string|null $type = null
 	): bool {
-		if ($type !== null) {
-			return Str::startsWith($string, $type . '://');
+		$type  ??= implode('|', Uri::$schemes);
+		$pattern = sprintf('!^(%s)://(.*)!', $type);
+
+		if (preg_match($pattern, $string, $matches) !== 1) {
+			return false;
 		}
 
-		// try to match any of the supported schemes
-		$pattern = sprintf('!^(%s)://!', implode('|', Uri::$schemes));
-		return preg_match($pattern, $string) === 1;
+		if ($matches[1] === 'site') {
+			return strlen($matches[2]) === 0;
+		}
+
+		return strlen($matches[2]) > 0;
 	}
 
 	/**
@@ -318,6 +324,10 @@ class Uuid
 		// make sure id is generated if
 		// it doesn't exist yet
 		$this->id();
+
+		// make sure the id is cached
+		// that it can be found again
+		$this->populate();
 
 		return $this->uri->toString();
 	}
