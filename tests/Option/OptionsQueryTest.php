@@ -13,6 +13,11 @@ class MyPage extends Page
 		return [['name' => 'foo'], ['name' => 'bar']];
 	}
 
+	public function mySimpleArray(): array
+	{
+		return ['tag1', 'tag2', 'tag3'];
+	}
+
 	public function myHtmlArray(): array
 	{
 		return [
@@ -114,6 +119,18 @@ class OptionsQueryTest extends TestCase
 
 		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
+
+		// with non-associative array
+		$options = (new OptionsQuery(
+			query: 'page.mySimpleArray',
+			value: '{{ arrayItem.value }}',
+			text:  '{{ arrayItem.value }}',
+		))->render($model);
+
+		$this->assertSame('tag1', $options[0]['value']);
+		$this->assertSame('tag2', $options[1]['value']);
+		$this->assertSame('tag3', $options[2]['value']);
+		$this->assertSame('tag3', $options[2]['text']);
 	}
 
 	/**
