@@ -464,21 +464,19 @@ trait PageActions
 		$props['template'] = $props['model'] = strtolower($props['template'] ?? 'default');
 		$props['isDraft']  = ($props['draft'] ?? true);
 
+		// make sure that a UUID gets generated and
+		// added to content right away
+		$props['content'] ??= [];
+		$props['content']['uuid'] = Uuid::generate();
+
 		// create a temporary page object
 		$page = Page::factory($props);
 
-		// make sure that a UUID gets generated and
-		// added to the page object right away
-		$page = $page->clone(['content' => ['uuid' => Uuid::generate()]]);
-
-		// gather content
-		$content = $props['content'] ?? [];
-
 		// create a form for the page
-		$form = Form::for($page, ['values' => $content]);
+		$form = Form::for($page, ['values' => $props['content']]);
 
 		// inject the content
-		$page->content()->update($form->strings(true));
+		$page = $page->clone(['content' => $form->strings(true)]);
 
 		// run the hooks and creation action
 		$page = $page->commit('create', ['page' => $page, 'input' => $props], function ($page, $props) {
