@@ -163,12 +163,9 @@ export default {
 		this.$events.$off("keydown.cmd.s", this.onSave);
 	},
 	methods: {
-		check() {
-			this.$reload({
-				navigate: false,
-				only: "$view.props.lock",
-				silent: true
-			});
+		async check() {
+			const { lock } = await this.$api.get(this.$view.path + "/lock");
+			this.$set(this.$view.props, "lock", lock);
 		},
 		async onLock(lock = true) {
 			const api = [this.$view.path + "/lock", null, null, true];

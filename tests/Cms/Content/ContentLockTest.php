@@ -283,4 +283,65 @@ class ContentLockTest extends TestCase
 		$app->impersonate('homer@simpson.com');
 		$this->assertTrue($page->lock()->isUnlocked());
 	}
+
+	public function testState()
+	{
+		$app = $this->app;
+		$page = $app->page('test');
+
+		$app->impersonate('peter@lustig.de');
+
+		$page->lock()->create();
+
+		$this->assertSame(null, $page->lock()->state());
+
+		$app->impersonate('test@getkirby.com');
+
+		// state is locked
+		$this->assertSame('lock', $page->lock()->state());
+
+		// user force unlocks the lock
+		$page->lock()->unlock();
+
+		$app->impersonate('peter@lustig.de');
+
+		// state is now unlock for the original user
+		$this->assertSame('unlock', $page->lock()->state());
+	}
+
+	public function testToArray()
+	{
+		$app = $this->app;
+		$page = $app->page('test');
+
+		$app->impersonate('peter@lustig.de');
+
+		$page->lock()->create();
+
+		$expected = [
+			'state' => null,
+			'data'  => false
+		];
+
+		$this->assertSame($expected, $page->lock()->toArray());
+
+		$app->impersonate('test@getkirby.com');
+
+		$lockArray = $page->lock()->toArray();
+
+		// state is locked
+		$this->assertSame('lock', $lockArray['state']);
+		$this->assertSame('peter@lustig.de', $lockArray['data']['email']);
+
+		// user force unlocks the lock
+		$page->lock()->unlock();
+
+		$app->impersonate('peter@lustig.de');
+
+		$lockArray = $page->lock()->toArray();
+
+		// state is locked
+		$this->assertSame('unlock', $lockArray['state']);
+		$this->assertSame(false, $lockArray['data']);
+	}
 }
