@@ -201,7 +201,7 @@ class ContentLock
 	 */
 	public function state(): ?string
 	{
-		return match(true) {
+		return match (true) {
 			$this->isUnlocked() => 'unlock',
 			$this->isLocked()   => 'lock',
 			default => null
