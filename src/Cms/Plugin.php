@@ -2,12 +2,14 @@
 
 namespace Kirby\Cms;
 
+use Composer\InstalledVersions;
 use Exception;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
+use Throwable;
 
 /**
  * Represents a Plugin and handles parsing of
@@ -270,6 +272,14 @@ class Plugin extends Model
 	public function version(): string|null
 	{
 		$version = $this->info()['version'] ?? null;
+
+		try {
+			// if plugin doesn't have version key in composer.json file
+			// try to get version from "vendor/composer/installed.php"
+			$version ??= InstalledVersions::getPrettyVersion($this->name());
+		} catch (Throwable) {
+			return null;
+		}
 
 		if (is_string($version) !== true || $version === '') {
 			return null;
