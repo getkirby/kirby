@@ -1,7 +1,7 @@
 <template>
 	<section class="k-info-section">
-		<k-headline class="k-info-section-headline">
-			{{ headline }}
+		<k-headline class="k-info-section-label">
+			{{ label }}
 		</k-headline>
 		<k-box :theme="theme">
 			<k-text :html="text" />
@@ -15,14 +15,14 @@ export default {
 	mixins: [SectionMixin],
 	data() {
 		return {
-			headline: null,
+			label: null,
 			text: null,
 			theme: null
 		};
 	},
 	async created() {
 		const response = await this.load();
-		this.headline = response.headline;
+		this.label = response.label;
 		this.text = response.text;
 		this.theme = response.theme || "info";
 	}
@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style>
-.k-info-section-headline {
+.k-info-section-label {
 	margin-bottom: 0.5rem;
 }
 </style>
