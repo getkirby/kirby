@@ -64,6 +64,7 @@ export default {
 	line-height: 1;
 	align-items: center;
 	background: var(--color-gray-200);
+	font-variant-numeric: tabular-nums;
 }
 .k-table-update-status-cell-button .k-button-text::after {
 	position: absolute;
