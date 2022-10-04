@@ -82,10 +82,11 @@ class UuidTest extends TestCase
 		$this->assertFalse($subpage->isCached());
 
 		// cache them
-		$page->populate();
-		$subpage->populate();
+		$this->assertTrue($page->populate());
+		$this->assertTrue($subpage->populate());
 		$this->assertTrue($page->isCached());
 		$this->assertTrue($subpage->isCached());
+		$this->assertTrue($page->populate());
 
 		// clear only page
 		$page->clear();
