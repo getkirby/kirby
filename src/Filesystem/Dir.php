@@ -394,17 +394,10 @@ class Dir
 
 		return Helpers::handleErrors(
 			fn (): bool => mkdir($dir),
-			function (&$override, int $errno, string $errstr): bool {
-				// if the dir was already created (race condition),
-				// consider it a success
-				if (Str::endsWith($errstr, 'File exists') === true) {
-					// drop the warning
-					return $override = true;
-				}
-
-				// handle every other warning normally
-				return false;
-			}
+			// if the dir was already created (race condition),
+			fn (int $errno, string $errstr): bool => Str::endsWith($errstr, 'File exists'),
+			// consider it a success
+			true
 		);
 	}
 

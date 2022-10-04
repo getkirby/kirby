@@ -784,19 +784,10 @@ class F
 	{
 		return Helpers::handleErrors(
 			fn (): bool => unlink($file),
-			function (&$override, int $errno, string $errstr): bool {
-				// if the file or link was already deleted (race condition),
-				// consider it a success
-				if (Str::endsWith($errstr, 'No such file or directory') === true) {
-					$override = true;
-
-					// drop the warning
-					return true;
-				}
-
-				// handle every other warning normally
-				return false;
-			}
+			// if the file or link was already deleted (race condition),
+			fn (int $errno, string $errstr): bool => Str::endsWith($errstr, 'No such file or directory'),
+			// consider it a success
+			true
 		);
 	}
 

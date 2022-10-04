@@ -78,9 +78,7 @@ class HelpersTest extends TestCase
 	{
 		$this->assertSame('return', Helpers::handleErrors(
 			fn () => 'return',
-			function (&$override) {
-				$this->fail('Handler should not be called because no warning was triggered');
-			}
+			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
 		));
 	}
 
@@ -98,15 +96,13 @@ class HelpersTest extends TestCase
 
 		$this->assertSame('handled', Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
-			function (&$override, int $errno, string $errstr) {
+			function (int $errno, string $errstr) {
 				$this->assertSame(E_USER_WARNING, $errno);
 				$this->assertSame('Some warning', $errstr);
-
-				$override = 'handled';
-
 				// drop error
 				return true;
-			}
+			},
+			'handled'
 		));
 
 		$this->assertFalse($called);
@@ -127,20 +123,33 @@ class HelpersTest extends TestCase
 			$this->assertSame('Some warning', $errstr);
 		});
 
-		$this->assertSame('handled', Helpers::handleErrors(
+		$this->assertSame(true, Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
-			function (&$override, int $errno, string $errstr) {
+			function (int $errno, string $errstr) {
 				$this->assertSame(E_USER_WARNING, $errno);
 				$this->assertSame('Some warning', $errstr);
 
-				$override = 'handled';
-
 				// continue the handler chain
 				return false;
-			}
+			},
+			'handled'
 		));
 
 		$this->assertTrue($called);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaughtCallbackValue()
+	{
+		$this->hasErrorHandler = true;
+
+		$this->assertSame('handled', Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			fn (int $errno, string $errstr) => true,
+			fn () => 'handled'
+		));
 	}
 
 	/**
@@ -152,15 +161,14 @@ class HelpersTest extends TestCase
 
 		Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
-			function (&$override, int $errno, string $errstr) {
+			function (int $errno, string $errstr) {
 				$this->assertSame(E_USER_WARNING, $errno);
 				$this->assertSame('Some warning', $errstr);
 
-				$override = 'handled';
-
 				// continue the handler chain
 				return false;
-			}
+			},
+			'handled'
 		);
 	}
 
