@@ -81,10 +81,6 @@ export default {
 
 .k-plugin-info {
 	padding: 1rem;
-	width: 20rem;
-}
-.k-plugin-info div {
-	display: flex;
 }
 .k-plugin-info div + div {
 	margin-top: 0.5rem;
@@ -99,5 +95,14 @@ export default {
 .k-plugin-info + .k-dropdown-item {
 	padding-top: 0.75rem;
 	border-top: 1px solid var(--color-gray-700);
+}
+
+@media screen and (min-width: 30em) {
+	.k-plugin-info {
+		width: 20rem;
+	}
+	.k-plugin-info div {
+		display: flex;
+	}
 }
 </style>
