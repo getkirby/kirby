@@ -1,0 +1,8 @@
+{
+    "name": "getkirby/test-plugin",
+    "description": "Some really nice description",
+    "type": "plugin",
+    "license": "MIT",
+    "homepage": "https://getkirby.com",
+    "require": {}
+}
