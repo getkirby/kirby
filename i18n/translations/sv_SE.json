@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Du får inte lägga till mer än ett block",
 	"error.blocks.min.plural": "Du måste lägga till minst {min} block",
 	"error.blocks.min.singular": "Du måste lägga till minst ett block",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "Det finns ett fel i fältet \"{field}\" i block {index} med blocktypen \"{fieldset}\"",
 
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
@@ -107,14 +107,14 @@
 	"error.language.name": "Ange ett giltigt namn för språket",
 	"error.language.notFound": "Språket hittades inte",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "Det finns ett fel i fältet \"{field}\" i blocket {blockIndex} med blocktypen \"{fieldset}\" i layouten {layoutIndex}",
 	"error.layout.validation.settings": "Det finns ett fel i inställningarna för layout {index}",
 
 	"error.license.format": "Ange en giltig licensnyckel",
 	"error.license.email": "Ange en giltig e-postadress",
 	"error.license.verification": "Licensen kunde inte verifieras",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "Det finns ett fel i fältet \"{label}\":\n{message}",
 
 	"error.offline": "Panelen är för närvarande offline",
 
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Inga rader än",
 	"field.layout.select": "Välj en layout",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Ingen information ännu",
 
 	"field.pages.empty": "Inga sidor valda än",
 
@@ -454,7 +454,7 @@
 	"paste": "Klistra in",
 	"paste.after": "Klistra in efter",
 	"pixel": "Pixel",
-	"plugin": "Plugin",
+	"plugin": "Tillägg",
 	"plugins": "Tillägg",
 	"prev": "Föregående",
 	"preview": "Förhandsgranska",
@@ -494,24 +494,24 @@
 
 	"stats.empty": "Inga rapporter",
 	"system.issues.content": "Mappen content verkar vara exponerad",
-	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
-	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.kirby": "Din installerade Kirby-version har nått slutet av sin livscykel och kommer inte att få fler säkerhetsuppdateringar",
+	"system.issues.eol.plugin": "Den installerade versionen av tillägget { plugin } har nått slutet på sin livscykel och kommer inte att få fler säkerhetsuppdateringar.",
 	"system.issues.debug": "Felsökningsläget måste vara avstängt i produktion",
 	"system.issues.git": "Mappen .git verkar vara exponerad",
 	"system.issues.https": "Vi rekommenderar HTTPS för alla dina webbplatser",
 	"system.issues.kirby": "Mappen kirby verkar vara exponerad",
 	"system.issues.site": "Mappen site verkar vara exponerad",
-	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
-	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
-	"system.updateStatus": "Update status",
-	"system.updateStatus.error": "Could not check for updates",
-	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
-	"system.updateStatus.security-update": "Free security update { version } available",
-	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
-	"system.updateStatus.unreleased": "Unreleased version",
-	"system.updateStatus.up-to-date": "Up to date",
-	"system.updateStatus.update": "Free update { version } available",
-	"system.updateStatus.upgrade": "Upgrade { version } available",
+	"system.issues.vulnerability.kirby": "Din installation kan vara påverkad av följande sårbarhet ({ severity } allvarlighetsgrad): { description }",
+	"system.issues.vulnerability.plugin": "Din installation kan vara påverkad av följande sårbarhet i tillägget { plugin } ({ severity } allvarlighetsgrad): { description }",
+	"system.updateStatus": "Uppdatera status",
+	"system.updateStatus.error": "Det gick inte att söka efter uppdateringar",
+	"system.updateStatus.not-vulnerable": "Inga kända sårbarheter",
+	"system.updateStatus.security-update": "Gratis säkerhetsuppdatering { version } tillgänglig",
+	"system.updateStatus.security-upgrade": "Uppgradering { version } med säkerhetskorrigeringar är tillgänglig",
+	"system.updateStatus.unreleased": "Osläppt version",
+	"system.updateStatus.up-to-date": "Uppdaterad",
+	"system.updateStatus.update": "Gratis uppdatering { version } tillgänglig",
+	"system.updateStatus.upgrade": "Uppgradering { version } tillgänglig",
 
 	"title": "Titel",
 	"template": "Mall",
@@ -578,9 +578,9 @@
 	"users": "Användare",
 
 	"version": "Version",
-	"version.current": "Current version",
-	"version.latest": "Latest version",
-	"versionInformation": "Version information",
+	"version.current": "Aktuell version",
+	"version.latest": "Senaste versionen",
+	"versionInformation": "Versionsinformation",
 
 	"view.account": "Ditt konto",
 	"view.installation": "Installation",
