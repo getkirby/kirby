@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Vous ne devez pas ajouter plus d'un bloc",
 	"error.blocks.min.plural": "Vous devez ajouter au moins {min} blocs",
 	"error.blocks.min.singular": "Vous devez ajouter au moins un bloc",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "Il y a une erreur sur le champ \"{field}\" du bloc {index} utilisant le type de bloc \"{fieldset}\"",
 
 	"error.email.preset.notFound": "La configuration de courriel « {name} » n’a pu être trouvé ",
 
@@ -107,14 +107,14 @@
 	"error.language.name": "Veuillez saisir un nom valide pour cette langue",
 	"error.language.notFound": "La langue n’a pu être trouvée",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "Il y a une erreur sur le champ \"{field}\" du bloc {blockIndex} utilisant le type de bloc \"{fieldset}\" dans le layout {layoutIndex}.",
 	"error.layout.validation.settings": "Il y a une erreur dans les paramètres de la disposition {index}",
 
 	"error.license.format": "Veuillez saisir un numéro de licence valide",
 	"error.license.email": "Veuillez saisir un courriel valide",
 	"error.license.verification": "La licence n’a pu être vérifiée",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "Il y a une erreur dans le champ \"{label}\" :\n{message}",
 
 	"error.offline": "Le Panel est actuellement hors ligne",
 
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Pas encore de rangées",
 	"field.layout.select": "Choisir une disposition",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Pas encore d‘information",
 
 	"field.pages.empty": "Pas encore de page sélectionnée",
 
@@ -371,7 +371,7 @@
 	"login.code.label.password-reset": "Code de réinitialisation du mot de passe",
 	"login.code.placeholder.email": "000 000",
 	"login.code.text.email": "Si votre adresse de courriel est enregistrée, le code demandé vous sera envoyé par courriel.",
-	"login.email.login.body": "Bonjour {user.nameOrEmail},\n\nVous avez récemment demandé un code de connexion pour le Panel de {site}.\nLe codede connexion suivant sera valide pendant {timeout} minutes :\n\n{code}\n\nSi vous n’avez pas demandé de codede connexion, veuillez ignorer cet email ou contacter votre administrateur si vous avez des questions.\nPar sécurité, merci de ne PAS faire suivre cet email.",
+	"login.email.login.body": "Bonjour {user.nameOrEmail},\n\nVous avez récemment demandé un code de connexion pour le Panel de {site}.\nLe code de connexion suivant sera valide pendant {timeout} minutes :\n\n{code}\n\nSi vous n’avez pas demandé de code de connexion, veuillez ignorer cet email ou contacter votre administrateur si vous avez des questions.\nPar sécurité, merci de ne PAS faire suivre cet email.",
 	"login.email.login.subject": "Votre code de connexion",
 	"login.email.password-reset.body": "Bonjour {user.nameOrEmail},\n\nVous avez récemment demandé un code de réinitialisation de mot de passe pour le Panel de {site}.\nLe code de réinitialisation de mot de passe suivant sera valide pendant {timeout} minutes :\n\n{code}\n\nSi vous n’avez pas demandé de code de réinitialisation de mot de passe, veuillez ignorer cet email ou contacter votre administrateur si vous avez des questions.\nPar sécurité, merci de ne PAS faire suivre cet email.",
 	"login.email.password-reset.subject": "Votre code de réinitialisation du mot de passe",
@@ -494,24 +494,24 @@
 
 	"stats.empty": "Aucun rapport",
 	"system.issues.content": "Le dossier content semble exposé",
-	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
-	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.kirby": "La version de Kirby installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
+	"system.issues.eol.plugin": "La version du plugin { plugin } installée a atteint la fin de son cycle de vie et ne recevra plus de mises à jour de sécurité",
 	"system.issues.debug": "Le débogage doit être désactivé en production",
 	"system.issues.git": "Le dossier .git semble exposé",
 	"system.issues.https": "Nous recommandons HTTPS pour tous vos sites",
 	"system.issues.kirby": "Le dossier kirby semble exposé",
 	"system.issues.site": "Le dossier site semble exposé",
-	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
-	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
-	"system.updateStatus": "Update status",
-	"system.updateStatus.error": "Could not check for updates",
-	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
-	"system.updateStatus.security-update": "Free security update { version } available",
-	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
-	"system.updateStatus.unreleased": "Unreleased version",
-	"system.updateStatus.up-to-date": "Up to date",
-	"system.updateStatus.update": "Free update { version } available",
-	"system.updateStatus.upgrade": "Upgrade { version } available",
+	"system.issues.vulnerability.kirby": "Votre installation pourrait être affectée par la vulnérabilité suivante ({ severity } gravité) : { description }",
+	"system.issues.vulnerability.plugin": "Votre installation pourrait être affectée par la vulnérabilité suivante du plugin { plugin } ({ severity } gravité) : { description }",
+	"system.updateStatus": "Statut des mises à jour",
+	"system.updateStatus.error": "Les mises à jour n'ont pu être vérifiées",
+	"system.updateStatus.not-vulnerable": "Aucune vulnérabilité connue",
+	"system.updateStatus.security-update": "Mise à jour gratuite { version } disponible",
+	"system.updateStatus.security-upgrade": "Mise à jour { version } avec correctifs de sécurité disponible",
+	"system.updateStatus.unreleased": "Version non diffusée",
+	"system.updateStatus.up-to-date": "À jour",
+	"system.updateStatus.update": "Mise à jour gratuite { version } disponible",
+	"system.updateStatus.upgrade": "Mise à jour { version } disponible",
 
 	"title": "Titre",
 	"template": "Modèle",
@@ -578,9 +578,9 @@
 	"users": "Utilisateurs",
 
 	"version": "Version",
-	"version.current": "Current version",
-	"version.latest": "Latest version",
-	"versionInformation": "Version information",
+	"version.current": "Version actuelle",
+	"version.latest": "Dernière version",
+	"versionInformation": "Informations de version",
 
 	"view.account": "Votre compte",
 	"view.installation": "Installation",
