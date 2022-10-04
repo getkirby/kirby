@@ -302,6 +302,10 @@ class Uuid
 	 */
 	public function populate(): bool
 	{
+		if ($this->isCached() === true) {
+			return true;
+		}
+
 		return Uuids::cache()->set($this->key(), $this->value());
 	}
 
