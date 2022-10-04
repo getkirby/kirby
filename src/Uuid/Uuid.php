@@ -63,6 +63,12 @@ class Uuid
 		Identifiable|null $model = null,
 		Collection|null $context = null
 	) {
+		// throw exception when globally disabled
+		if (Uuids::enabled() === false) {
+			throw new LogicException('UUIDs have been disabled via the `content.uuid` config option.');
+		}
+
+
 		$this->context = $context;
 		$this->model   = $model;
 
@@ -143,7 +149,13 @@ class Uuid
 	final public static function for(
 		string|Identifiable $seed,
 		Collection|null $context = null
-	): static {
+	): static|null {
+		// if globally disabled, return null
+		if (Uuids::enabled() === false) {
+			return null;
+		}
+
+		// for UUID string
 		if (is_string($seed) === true) {
 			return match (Str::before($seed, '://')) {
 				'page'   => new PageUuid(uuid: $seed, context: $context),
@@ -157,6 +169,7 @@ class Uuid
 			};
 		}
 
+		// for model object
 		return match (true) {
 			$seed instanceof Page
 				=> new PageUuid(model: $seed, context: $context),
@@ -229,6 +242,11 @@ class Uuid
 		string $string,
 		string|null $type = null
 	): bool {
+		// always return false when UUIDs have been disabled
+		if (Uuids::enabled() === false) {
+			return false;
+		}
+
 		$type  ??= implode('|', Uri::$schemes);
 		$pattern = sprintf('!^(%s)://(.*)!', $type);
 

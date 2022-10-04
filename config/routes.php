@@ -112,7 +112,7 @@ return function ($kirby) {
 				// this ensures that only existing UUIDs can be queried
 				// and attackers can't force Kirby to go through the whole
 				// site index with a non-existing UUID
-				if ($model = Uuid::for($type . '://' . $id)->model(true)) {
+				if ($model = Uuid::for($type . '://' . $id)?->model(true)) {
 					return $kirby
 						->response()
 						->redirect($model->url());

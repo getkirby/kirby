@@ -79,6 +79,11 @@ class Uuids
 		// }
 	}
 
+	public static function enabled(): bool
+	{
+		return App::instance()->option('content.uuid') !== false;
+	}
+
 	/**
 	 * Generates UUID for all identifiable models of type
 	 *
