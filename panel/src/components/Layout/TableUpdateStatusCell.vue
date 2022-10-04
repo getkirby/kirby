@@ -1,8 +1,11 @@
 <template>
 	<div class="k-table-update-status-cell">
-		<template v-if="typeof value === 'string'">
+		<span
+			v-if="typeof value === 'string'"
+			class="k-table-update-status-cell-version"
+		>
 			{{ value }}
-		</template>
+		</span>
 		<k-dropdown v-else :data-theme="value.theme">
 			<k-button
 				class="k-table-update-status-cell-button"
@@ -56,6 +59,11 @@ export default {
 	height: 100%;
 }
 
+.k-table-update-status-cell-version,
+.k-table-update-status-cell-button {
+	font-variant-numeric: tabular-nums;
+}
+
 .k-table-update-status-cell-button {
 	display: inline-flex;
 	padding: 0.25rem 0.325rem;
@@ -64,7 +72,6 @@ export default {
 	line-height: 1;
 	align-items: center;
 	background: var(--color-gray-200);
-	font-variant-numeric: tabular-nums;
 }
 .k-table-update-status-cell-button .k-button-text::after {
 	position: absolute;
