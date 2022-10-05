@@ -2,7 +2,7 @@
 
 return [
 	'root' => [
-		'name' => 'getkirby/test-plugin-composer',
+		'name' => 'getkirby/test-plugin-composer-override',
 		'pretty_version' => 'v5.2.3',
 		'version' => '5.2.3.0',
 		'reference' => null,
@@ -12,7 +12,7 @@ return [
 		'dev' => true,
 	],
 	'versions' => [
-		'getkirby/test-plugin-composer' => [
+		'getkirby/test-plugin-composer-override' => [
 			'pretty_version' => 'v5.2.3',
 			'version' => '5.2.3.0',
 			'reference' => null,

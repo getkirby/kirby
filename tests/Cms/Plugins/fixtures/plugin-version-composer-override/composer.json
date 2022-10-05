@@ -1,7 +1,8 @@
 {
-    "name": "getkirby/test-plugin-composer",
+    "name": "getkirby/test-plugin-composer-override",
     "description": "Some really nice description",
     "type": "plugin",
+	  "version": "3.1.2",
     "license": "MIT",
     "homepage": "https://getkirby.com",
     "require": {}

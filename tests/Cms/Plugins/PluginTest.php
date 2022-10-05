@@ -18,12 +18,14 @@ class PluginTest extends TestCase
 		static::$updateStatusHost = UpdateStatus::$host;
 		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
 		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->register();
+		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer-override'))->register();
 	}
 
 	public static function tearDownAfterClass(): void
 	{
 		UpdateStatus::$host = static::$updateStatusHost;
 		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->unregister();
+		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer-override'))->unregister();
 	}
 
 	public function setUp(): void
@@ -678,10 +680,22 @@ class PluginTest extends TestCase
 	 */
 	public function testVersionComposer()
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
+		$plugin = new Plugin('getkirby/test-plugin-composer', [
 			'root' => __DIR__ . '/fixtures/plugin-version-composer'
 		]);
 
 		$this->assertSame('5.2.3', $plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionOverrideComposer()
+	{
+		$plugin = new Plugin('getkirby/test-plugin-composer-override', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer-override'
+		]);
+
+		$this->assertSame('3.1.2', $plugin->version());
 	}
 }
