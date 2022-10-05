@@ -8,6 +8,11 @@ use PHPUnit\Framework\TestCase as TestCase;
 
 require_once __DIR__ . '/mocks.php';
 
+class InvalidFileModel
+{
+	public string $foo = 'bar';
+}
+
 /**
  * @coversDefaultClass \Kirby\Filesystem\File
  */
@@ -462,7 +467,7 @@ class FileTest extends TestCase
 
 		new File([
 			'root' => $this->fixtures . '/test.js',
-			'model' => Page::factory(['slug' => 'test'])
+			'model' => new InvalidFileModel()
 		]);
 	}
 

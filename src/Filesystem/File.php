@@ -444,7 +444,7 @@ class File
 	 */
 	protected function setModel(object|null $model = null): static
 	{
-		if ($model !== null && in_array(IsFile::class, class_uses($model)) !== true) {
+		if ($model !== null && method_exists($model, 'hasIsFileTrait') !== true) {
 			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
 		}
 

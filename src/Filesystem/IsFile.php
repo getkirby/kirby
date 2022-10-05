@@ -109,6 +109,16 @@ trait IsFile
 		return file_exists($this->root()) === true;
 	}
 
+	/**
+	 * To check the existence of the IsFile trait
+	 *
+	 * @todo Switch to class constant in traits when min PHP version 8.2 required
+	 * @codeCoverageIgnore
+	 */
+	protected function hasIsFileTrait(): bool
+	{
+		return true;
+	}
 
 	/**
 	 * Returns the app instance
