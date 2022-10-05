@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Route;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
@@ -1348,5 +1349,35 @@ class AppTest extends TestCase
 
 		$page = $app->page('test');
 		$this->assertSame($page, $app->page('page://my-page'));
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRender()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp,
+				'templates' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+					]
+				]
+			]
+		]);
+
+		F::write($this->tmp . '/default.php', 'Hello');
+
+		$this->assertSame('Hello', $app->render()->body());
+
+		$_ENV['KIRBY_RENDER'] = false;
+
+		$this->assertNull($app->render());
+
+		unset($_ENV['KIRBY_RENDER']);
 	}
 }
