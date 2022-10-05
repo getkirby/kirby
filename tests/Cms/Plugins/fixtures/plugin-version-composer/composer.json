@@ -1,5 +1,5 @@
 {
-    "name": "getkirby/test-plugin-composer",
+    "name": "getkirby/kirby-test-plugin-composer",
     "description": "Some really nice description",
     "type": "plugin",
     "license": "MIT",

@@ -271,12 +271,13 @@ class Plugin extends Model
 	 */
 	public function version(): string|null
 	{
-		$version = $this->info()['version'] ?? null;
+		$composerName = $this->info()['name'] ?? null;
+		$version      = $this->info()['version'] ?? null;
 
 		try {
 			// if plugin doesn't have version key in composer.json file
 			// try to get version from "vendor/composer/installed.php"
-			$version ??= InstalledVersions::getPrettyVersion($this->name());
+			$version ??= InstalledVersions::getPrettyVersion($composerName);
 		} catch (Throwable) {
 			return null;
 		}

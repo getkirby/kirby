@@ -2,17 +2,17 @@
 
 return [
 	'root' => [
-		'name' => 'getkirby/test-plugin-composer',
-		'pretty_version' => 'v5.2.3',
-		'version' => '5.2.3.0',
+		'name' => 'some/site',
+		'pretty_version' => 'v9.8.7',
+		'version' => '9.8.7.0',
 		'reference' => null,
-		'type' => 'kirby-plugin',
+		'type' => 'project',
 		'install_path' => __DIR__ . '/../',
 		'aliases' => [],
 		'dev' => true,
 	],
 	'versions' => [
-		'getkirby/test-plugin-composer' => [
+		'getkirby/kirby-test-plugin-composer' => [
 			'pretty_version' => 'v5.2.3',
 			'version' => '5.2.3.0',
 			'reference' => null,
