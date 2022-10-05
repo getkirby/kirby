@@ -373,7 +373,6 @@ class AppPluginsTest extends TestCase
 			'commands' => [
 				'test' => $command = [
 					'command' => function () {
-
 					}
 				]
 			],

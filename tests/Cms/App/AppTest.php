@@ -1380,5 +1380,4 @@ class AppTest extends TestCase
 
 		unset($_ENV['KIRBY_RENDER']);
 	}
-
 }
