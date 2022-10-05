@@ -79,7 +79,7 @@ class Helpers
 			// check if suppress condition is met
 			$suppress = $condition(...func_get_args());
 
-			if ($suppress === false) {
+			if ($suppress !== true) {
 				// handle other warnings with Whoops if loaded
 				if (is_callable($handler) === true) {
 					return $handler(...func_get_args());
