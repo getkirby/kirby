@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Composer\Autoload\ClassLoader;
 use Kirby\Cms\System\UpdateStatus;
 
 /**
@@ -16,11 +17,13 @@ class PluginTest extends TestCase
 	{
 		static::$updateStatusHost = UpdateStatus::$host;
 		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
+		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->register();
 	}
 
 	public static function tearDownAfterClass(): void
 	{
 		UpdateStatus::$host = static::$updateStatusHost;
+		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->unregister();
 	}
 
 	public function setUp(): void
@@ -668,5 +671,17 @@ class PluginTest extends TestCase
 		]);
 
 		$this->assertNull($plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionComposer()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer'
+		]);
+
+		$this->assertSame('5.2.3', $plugin->version());
 	}
 }
