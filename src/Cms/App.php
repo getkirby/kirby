@@ -1231,6 +1231,10 @@ class App
 	 */
 	public function render(string $path = null, string $method = null)
 	{
+		if (($_ENV['KIRBY_RENDER'] ?? true) === false) {
+			return null;
+		}
+
 		return $this->io($this->call($path, $method));
 	}
 

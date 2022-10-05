@@ -52,6 +52,7 @@ trait AppPlugins
 		'blueprints' => [],
 		'cacheTypes' => [],
 		'collections' => [],
+		'commands' => [],
 		'components' => [],
 		'controllers' => [],
 		'collectionFilters' => [],
@@ -213,6 +214,17 @@ trait AppPlugins
 	protected function extendCacheTypes(array $cacheTypes): array
 	{
 		return $this->extensions['cacheTypes'] = array_merge($this->extensions['cacheTypes'], $cacheTypes);
+	}
+
+	/**
+	 * Registers additional CLI commands
+	 *
+	 * @param array $commands
+	 * @return array
+	 */
+	protected function extendCommands(array $commands): array
+	{
+		return $this->extensions['commands'] = array_merge($this->extensions['commands'], $commands);
 	}
 
 	/**

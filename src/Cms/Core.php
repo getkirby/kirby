@@ -306,6 +306,7 @@ class Core
 			'blueprints'  => fn (array $roots) => $roots['site'] . '/blueprints',
 			'cache'       => fn (array $roots) => $roots['site'] . '/cache',
 			'collections' => fn (array $roots) => $roots['site'] . '/collections',
+			'commands'    => fn (array $roots) => $roots['site'] . '/commands',
 			'config'      => fn (array $roots) => $roots['site'] . '/config',
 			'controllers' => fn (array $roots) => $roots['site'] . '/controllers',
 			'languages'   => fn (array $roots) => $roots['site'] . '/languages',
