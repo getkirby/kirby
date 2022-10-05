@@ -11,21 +11,23 @@ use Kirby\Cms\System\UpdateStatus;
  */
 class PluginTest extends TestCase
 {
+	protected static $classLoader;
 	protected static $updateStatusHost;
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$updateStatusHost = UpdateStatus::$host;
 		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
-		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->register();
-		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer-override'))->register();
+
+		static::$classLoader = new ClassLoader(__DIR__ . '/fixtures/vendor');
+		static::$classLoader->register();
 	}
 
 	public static function tearDownAfterClass(): void
 	{
 		UpdateStatus::$host = static::$updateStatusHost;
-		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer'))->unregister();
-		(new ClassLoader(__DIR__ . '/fixtures/plugin-version-composer-override'))->unregister();
+
+		static::$classLoader->unregister();
 	}
 
 	public function setUp(): void
@@ -690,9 +692,9 @@ class PluginTest extends TestCase
 	/**
 	 * @covers ::version
 	 */
-	public function testVersionOverrideComposer()
+	public function testVersionComposerOverride()
 	{
-		$plugin = new Plugin('getkirby/test-plugin-composer-override', [
+		$plugin = new Plugin('getkirby/test-plugin-composer', [
 			'root' => __DIR__ . '/fixtures/plugin-version-composer-override'
 		]);
 
