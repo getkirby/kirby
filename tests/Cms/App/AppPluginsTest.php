@@ -363,6 +363,25 @@ class AppPluginsTest extends TestCase
 		Collection::$filters = $prevFilters;
 	}
 
+	public function testCommands()
+	{
+		$pages = new Pages([]);
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'commands' => [
+				'test' => $command = [
+					'command' => function () {
+
+					}
+				]
+			],
+		]);
+
+		$this->assertSame($command, $kirby->extension('commands', 'test'));
+	}
+
 	public function testController()
 	{
 		$kirby = new App([

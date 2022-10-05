@@ -291,6 +291,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('blueprints', $roots);
 		$this->assertArrayHasKey('cache', $roots);
 		$this->assertArrayHasKey('collections', $roots);
+		$this->assertArrayHasKey('commands', $roots);
 		$this->assertArrayHasKey('config', $roots);
 		$this->assertArrayHasKey('controllers', $roots);
 		$this->assertArrayHasKey('languages', $roots);
