@@ -262,7 +262,7 @@ class Database
 	 *
 	 * @return string|null
 	 */
-	public function prefix(): ?string
+	public function prefix(): string|null
 	{
 		return $this->prefix;
 	}
@@ -303,7 +303,7 @@ class Database
 	 *
 	 * @return int|null
 	 */
-	public function affected(): ?int
+	public function affected(): int|null
 	{
 		return $this->affected;
 	}
@@ -313,7 +313,7 @@ class Database
 	 *
 	 * @return int|null
 	 */
-	public function lastId(): ?int
+	public function lastId(): int|null
 	{
 		return $this->lastId;
 	}
@@ -323,7 +323,7 @@ class Database
 	 *
 	 * @return string|null
 	 */
-	public function lastQuery(): ?string
+	public function lastQuery(): string|null
 	{
 		return $this->lastQuery;
 	}
@@ -353,7 +353,7 @@ class Database
 	 *
 	 * @return string|null
 	 */
-	public function name(): ?string
+	public function name(): string|null
 	{
 		return $this->database;
 	}
@@ -427,7 +427,10 @@ class Database
 		}
 
 		// define the default flag for the fetch method
-		if ($options['fetch'] instanceof Closure || $options['fetch'] === 'array') {
+		if (
+			$options['fetch'] instanceof Closure ||
+			$options['fetch'] === 'array'
+		) {
 			$flags = PDO::FETCH_ASSOC;
 		} else {
 			$flags = PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE;

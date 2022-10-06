@@ -16,36 +16,14 @@ namespace Kirby\Image;
  */
 class Dimensions
 {
-	/**
-	 * the height of the parent object
-	 *
-	 * @var int
-	 */
-	public $height = 0;
-
-	/**
-	 * the width of the parent object
-	 *
-	 * @var int
-	 */
-	public $width = 0;
-
-	/**
-	 * Constructor
-	 *
-	 * @param int $width
-	 * @param int $height
-	 */
-	public function __construct(int $width, int $height)
-	{
-		$this->width  = $width;
-		$this->height = $height;
+	public function __construct(
+		public int $width,
+		public int $height
+	) {
 	}
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -54,8 +32,6 @@ class Dimensions
 
 	/**
 	 * Echos the dimensions as width × height
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -65,11 +41,9 @@ class Dimensions
 	/**
 	 * Crops the dimensions by width and height
 	 *
-	 * @param int $width
-	 * @param int|null $height
 	 * @return $this
 	 */
-	public function crop(int $width, int $height = null)
+	public function crop(int $width, int|null $height = null): static
 	{
 		$this->width  = $width;
 		$this->height = $width;
@@ -83,10 +57,8 @@ class Dimensions
 
 	/**
 	 * Returns the height
-	 *
-	 * @return int
 	 */
-	public function height()
+	public function height(): int
 	{
 		return $this->height;
 	}
@@ -112,7 +84,7 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	public function fit(int $box, bool $force = false)
+	public function fit(int $box, bool $force = false): static
 	{
 		if ($this->width === 0 || $this->height === 0) {
 			$this->width  = $box;
@@ -164,7 +136,7 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	public function fitHeight(int $fit = null, bool $force = false)
+	public function fitHeight(int|null $fit = null, bool $force = false): static
 	{
 		return $this->fitSize('height', $fit, $force);
 	}
@@ -178,7 +150,7 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	protected function fitSize(string $ref, int $fit = null, bool $force = false)
+	protected function fitSize(string $ref, int|null $fit = null, bool $force = false): static
 	{
 		if ($fit === 0 || $fit === null) {
 			return $this;
@@ -217,7 +189,7 @@ class Dimensions
 	 *                    upscaled to fit the box if smaller
 	 * @return $this object with recalculated dimensions
 	 */
-	public function fitWidth(int $fit = null, bool $force = false)
+	public function fitWidth(int|null $fit = null, bool $force = false): static
 	{
 		return $this->fitSize('width', $fit, $force);
 	}
@@ -227,11 +199,13 @@ class Dimensions
 	 *
 	 * @param int|null $width the max height
 	 * @param int|null $height the max width
-	 * @param bool $force
 	 * @return $this
 	 */
-	public function fitWidthAndHeight(int $width = null, int $height = null, bool $force = false)
-	{
+	public function fitWidthAndHeight(
+		int|null $width = null,
+		int|null $height = null,
+		bool $force = false
+	): static {
 		if ($this->width > $this->height) {
 			$this->fitWidth($width, $force);
 
@@ -253,11 +227,8 @@ class Dimensions
 
 	/**
 	 * Detect the dimensions for an image file
-	 *
-	 * @param string $root
-	 * @return static
 	 */
-	public static function forImage(string $root)
+	public static function forImage(string $root): static
 	{
 		if (file_exists($root) === false) {
 			return new static(0, 0);
@@ -269,11 +240,8 @@ class Dimensions
 
 	/**
 	 * Detect the dimensions for a svg file
-	 *
-	 * @param string $root
-	 * @return static
 	 */
-	public static function forSvg(string $root)
+	public static function forSvg(string $root): static
 	{
 		// avoid xml errors
 		libxml_use_internal_errors(true);
@@ -299,8 +267,6 @@ class Dimensions
 
 	/**
 	 * Checks if the dimensions are landscape
-	 *
-	 * @return bool
 	 */
 	public function landscape(): bool
 	{
@@ -309,10 +275,8 @@ class Dimensions
 
 	/**
 	 * Returns a string representation of the orientation
-	 *
-	 * @return string|false
 	 */
-	public function orientation()
+	public function orientation(): string|false
 	{
 		if (!$this->ratio()) {
 			return false;
@@ -331,8 +295,6 @@ class Dimensions
 
 	/**
 	 * Checks if the dimensions are portrait
-	 *
-	 * @return bool
 	 */
 	public function portrait(): bool
 	{
@@ -349,8 +311,6 @@ class Dimensions
 	 * // output: 1.5625
 	 *
 	 * </code>
-	 *
-	 * @return float
 	 */
 	public function ratio(): float
 	{
@@ -362,20 +322,19 @@ class Dimensions
 	}
 
 	/**
-	 * @param int|null $width
-	 * @param int|null $height
-	 * @param bool $force
+	 * Resizes image
 	 * @return $this
 	 */
-	public function resize(int $width = null, int $height = null, bool $force = false)
-	{
+	public function resize(
+		int|null $width = null,
+		int|null $height = null,
+		bool $force = false
+	): static {
 		return $this->fitWidthAndHeight($width, $height, $force);
 	}
 
 	/**
 	 * Checks if the dimensions are square
-	 *
-	 * @return bool
 	 */
 	public function square(): bool
 	{
@@ -385,10 +344,9 @@ class Dimensions
 	/**
 	 * Resize and crop
 	 *
-	 * @param array $options
 	 * @return $this
 	 */
-	public function thumb(array $options = [])
+	public function thumb(array $options = []): static
 	{
 		$width  = $options['width']  ?? null;
 		$height = $options['height'] ?? null;
@@ -405,8 +363,6 @@ class Dimensions
 	/**
 	 * Converts the dimensions object
 	 * to a plain PHP array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -420,8 +376,6 @@ class Dimensions
 
 	/**
 	 * Returns the width
-	 *
-	 * @return int
 	 */
 	public function width(): int
 	{

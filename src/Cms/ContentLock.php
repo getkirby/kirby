@@ -196,6 +196,33 @@ class ContentLock
 	}
 
 	/**
+	 * Returns the state for the
+	 * form buttons in the frontend
+	 */
+	public function state(): ?string
+	{
+		return match (true) {
+			$this->isUnlocked() => 'unlock',
+			$this->isLocked()   => 'lock',
+			default => null
+		};
+	}
+
+	/**
+	 * Returns a usable lock array
+	 * for the frontend
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'state' => $this->state(),
+			'data'  => $this->get()
+		];
+	}
+
+	/**
 	 * Removes current lock and adds lock user to unlock data
 	 *
 	 * @return bool
@@ -223,10 +250,7 @@ class ContentLock
 	 */
 	protected function user(): User
 	{
-		if ($user = $this->kirby()->user()) {
-			return $user;
-		}
-
-		throw new PermissionException('No user authenticated.');
+		return $this->kirby()->user() ??
+			throw new PermissionException('No user authenticated.');
 	}
 }

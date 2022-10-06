@@ -2,7 +2,6 @@
 
 namespace Kirby\Form\Fields;
 
-use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Form\Field;
 
@@ -10,11 +9,7 @@ class PagePickerMixinTest extends TestCase
 {
 	public function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
+		parent::setUp();
 
 		// otherwise all pages won't be readable
 		$this->app->impersonate('kirby');

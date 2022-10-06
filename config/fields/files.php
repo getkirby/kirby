@@ -34,7 +34,10 @@ return [
 	],
 	'computed' => [
 		'parentModel' => function () {
-			if (is_string($this->parent) === true && $model = $this->model()->query($this->parent, 'Kirby\Cms\Model')) {
+			if (
+				is_string($this->parent) === true &&
+				$model = $this->model()->query($this->parent, 'Kirby\Cms\Model')
+			) {
 				return $model;
 			}
 
@@ -68,10 +71,13 @@ return [
 
 			foreach (Data::decode($value, 'yaml') as $id) {
 				if (is_array($id) === true) {
-					$id = $id['id'] ?? null;
+					$id = $id['uuid'] ?? $id['id'] ?? null;
 				}
 
-				if ($id !== null && ($file = $this->kirby()->file($id, $this->model()))) {
+				if (
+					$id !== null &&
+					($file = $this->kirby()->file($id, $this->model()))
+				) {
 					$files[] = $this->fileResponse($file);
 				}
 			}
@@ -122,7 +128,7 @@ return [
 		];
 	},
 	'save' => function ($value = null) {
-		return A::pluck($value, 'uuid');
+		return A::pluck($value, $this->store);
 	},
 	'validations' => [
 		'max',

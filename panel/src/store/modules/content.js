@@ -330,7 +330,14 @@ export default {
 		},
 		update(context, [field, value, id]) {
 			id = id || context.state.current;
-			context.commit("UPDATE", [id, field, value]);
+
+			if (field === null) {
+				for (const field in value) {
+					context.commit("UPDATE", [id, field, value[field]]);
+				}
+			} else {
+				context.commit("UPDATE", [id, field, value]);
+			}
 		}
 	}
 };

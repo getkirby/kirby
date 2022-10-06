@@ -266,6 +266,52 @@ class I18nTest extends TestCase
 	}
 
 	/**
+	 * @covers ::translate
+	 */
+	public function testTranslateArrayWithI18nKey()
+	{
+		I18n::$locale = 'de';
+
+		I18n::$translations = [
+			'de' => ['save' => 'Speichern']
+		];
+
+		$this->assertSame('Speichern', I18n::translate([
+			'*' => 'save'
+		]));
+	}
+
+	/**
+	 * @covers ::translate
+	 */
+	public function testTranslateArrayWithFallbackEnglish()
+	{
+		I18n::$locale = 'de';
+
+		$translations = [
+			'en' => 'Some',
+			'es' => 'Algunos'
+		];
+
+		$this->assertSame('Some', I18n::translate($translations, $translations));
+	}
+
+	/**
+	 * @covers ::translate
+	 */
+	public function testTranslateArrayWithFallbackFirstLanguage()
+	{
+		I18n::$locale = 'en';
+
+		$translations = [
+			'es' => 'Algunos',
+			'de' => 'Einige',
+		];
+
+		$this->assertSame('Algunos', I18n::translate($translations, $translations));
+	}
+
+	/**
 	 * @covers ::translateCount
 	 */
 	public function testTranslateCount()

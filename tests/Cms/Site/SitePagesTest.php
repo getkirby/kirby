@@ -105,6 +105,65 @@ class SitePagesTest extends TestCase
 		$this->assertCount(2, $collection);
 	}
 
+	public function testSearchMinlength()
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'foo-a'],
+				['slug' => 'bar-b'],
+			]
+		]);
+
+		$collection = $site->search('foo', [
+			'minlength' => 5
+		]);
+
+		$this->assertCount(0, $collection);
+	}
+
+	public function testSearchStopWords()
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'baz'],
+				['slug' => 'foo-bar'],
+				['slug' => 'foo-baz'],
+			]
+		]);
+
+		$collection = $site->search('foo bar', [
+			'stopwords' => ['bar']
+		]);
+
+		$this->assertCount(3, $collection);
+	}
+
+	public function testSearchStopWordsNoResults()
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home'],
+				['slug' => 'foo'],
+				['slug' => 'bar'],
+				['slug' => 'baz'],
+				['slug' => 'foo-bar'],
+				['slug' => 'foo-baz'],
+			]
+		]);
+
+		$collection = $site->search('new foo', [
+			'stopwords' => ['foo']
+		]);
+
+		$this->assertCount(0, $collection);
+	}
+
 	public function testPages()
 	{
 		$site = new Site([

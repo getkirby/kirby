@@ -17,6 +17,7 @@
 		</include>
 
 		<exclude>
+			<directory suffix=".php">./config/blocks</directory>
 			<directory suffix=".php">./config/templates</directory>
 			<file>./config/aliases.php</file>
 			<file>./config/setup.php</file>

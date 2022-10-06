@@ -16,6 +16,8 @@ use Kirby\Toolkit\I18n;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @deprecated 3.8.0 Use `Kirby\Option\Options` instead
  */
 class Options
 {
@@ -87,7 +89,7 @@ class Options
 
 		// add the model by the proper alias
 		foreach (static::aliases() as $className => $alias) {
-			if (is_a($model, $className) === true) {
+			if ($model instanceof $className) {
 				$data[$alias] = $model;
 			}
 		}
@@ -105,30 +107,23 @@ class Options
 	 */
 	public static function factory($options, array $props = [], $model = null): array
 	{
-		switch ($options) {
-			case 'api':
-				$options = static::api($props['api'], $model);
-				break;
-			case 'query':
-				$options = static::query($props['query'], $model);
-				break;
-			case 'children':
-			case 'grandChildren':
-			case 'siblings':
-			case 'index':
-			case 'files':
-			case 'images':
-			case 'documents':
-			case 'videos':
-			case 'audio':
-			case 'code':
-			case 'archives':
-				$options = static::query('page.' . $options, $model);
-				break;
-			case 'pages':
-				$options = static::query('site.index', $model);
-				break;
-		}
+		$options = match ($options) {
+			'api'      => static::api($props['api'], $model),
+			'query'    => static::query($props['query'], $model),
+			'pages'    => static::query('site.index', $model),
+			'children',
+			'grandChildren',
+			'siblings',
+			'index',
+			'files',
+			'images',
+			'documents',
+			'videos',
+			'audio',
+			'code',
+			'archives' => static::query('page.' . $options, $model),
+			default    => $options
+		};
 
 		if (is_array($options) === false) {
 			return [];

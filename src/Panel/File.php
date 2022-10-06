@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\File as CmsFile;
+use Kirby\Filesystem\Asset;
 use Kirby\Toolkit\I18n;
 use Throwable;
 
@@ -18,14 +20,7 @@ use Throwable;
 class File extends Model
 {
 	/**
-	 * @var \Kirby\Cms\File
-	 */
-	protected $model;
-
-	/**
 	 * Breadcrumb array
-	 *
-	 * @return array
 	 */
 	public function breadcrumb(): array
 	{
@@ -34,6 +29,7 @@ class File extends Model
 
 		switch ($parent::CLASS_ALIAS) {
 			case 'user':
+				/** @var \Kirby\Cms\User $parent */
 				// The breadcrumb is not necessary
 				// on the account view
 				if ($parent->isLoggedIn() === false) {
@@ -44,6 +40,7 @@ class File extends Model
 				}
 				break;
 			case 'page':
+				/** @var \Kirby\Cms\Page $parent */
 				$breadcrumb = $this->model->parents()->flip()->values(fn ($parent) => [
 					'label' => $parent->title()->toString(),
 					'link'  => $parent->panel()->url(true),
@@ -67,41 +64,41 @@ class File extends Model
 	 *
 	 * @internal
 	 * @param string|null $type (`auto`|`kirbytext`|`markdown`)
-	 * @param bool $absolute
-	 * @return string
 	 */
-	public function dragText(string $type = null, bool $absolute = false): string
+	public function dragText(string|null $type = null, bool $absolute = false): string
 	{
 		$type = $this->dragTextType($type);
-		$url  = $absolute ? $this->model->id() : $this->model->filename();
+		$url  = $this->model->filename();
+		$file = $this->model->type();
+
+		// By default only the filename is added as relative URL.
+		// If an absolute URL is required, either use the permalink
+		// for markdown notation or the UUID for Kirbytext (since
+		// Kirbytags support can resolve UUIDs directly)
+		if ($absolute === true) {
+			$url = $type === 'markdown' ? $this->model->permalink() : $this->model->uuid();
+		}
+
 
 		if ($dragTextFromCallback = $this->dragTextFromCallback($type, $url)) {
 			return $dragTextFromCallback;
 		}
 
 		if ($type === 'markdown') {
-			if ($this->model->type() === 'image') {
-				return '![' . $this->model->alt() . '](' . $url . ')';
-			}
-
-			return '[' . $this->model->filename() . '](' . $url . ')';
+			return match ($file) {
+				'image' => '![' . $this->model->alt() . '](' . $url . ')',
+				default => '[' . $this->model->filename() . '](' . $url . ')'
+			};
 		}
 
-		if ($this->model->type() === 'image') {
-			return '(image: ' . $url . ')';
-		}
-		if ($this->model->type() === 'video') {
-			return '(video: ' . $url . ')';
-		}
-
-		return '(file: ' . $url . ')';
+		return match ($file) {
+			'image', 'video' => '(' . $file . ': ' . $url . ')',
+			default 		 => '(file: ' . $url . ')'
+		};
 	}
 
 	/**
 	 * Provides options for the file dropdown
-	 *
-	 * @param array $options
-	 * @return array
 	 */
 	public function dropdown(array $options = []): array
 	{
@@ -163,9 +160,7 @@ class File extends Model
 	/**
 	 * Returns the setup for a dropdown option
 	 * which is used in the changes dropdown
-	 * for example.
-	 *
-	 * @return array
+	 * for example
 	 */
 	public function dropdownOption(): array
 	{
@@ -177,8 +172,6 @@ class File extends Model
 
 	/**
 	 * Returns the Panel icon color
-	 *
-	 * @return string
 	 */
 	protected function imageColor(): string
 	{
@@ -208,8 +201,6 @@ class File extends Model
 
 	/**
 	 * Default settings for the file's Panel image
-	 *
-	 * @return array
 	 */
 	protected function imageDefaults(): array
 	{
@@ -221,8 +212,6 @@ class File extends Model
 
 	/**
 	 * Returns the Panel icon type
-	 *
-	 * @return string
 	 */
 	protected function imageIcon(): string
 	{
@@ -253,13 +242,11 @@ class File extends Model
 
 	/**
 	 * Returns the image file object based on provided query
-	 *
 	 * @internal
-	 * @param string|null $query
-	 * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
 	 */
-	protected function imageSource(string $query = null)
-	{
+	protected function imageSource(
+		string|null $query = null
+	): CmsFile|Asset|null {
 		if ($query === null && $this->model->isViewable()) {
 			return $this->model;
 		}
@@ -272,7 +259,6 @@ class File extends Model
 	 * that can be performed in the Panel
 	 *
 	 * @param array $unlock An array of options that will be force-unlocked
-	 * @return array
 	 */
 	public function options(array $unlock = []): array
 	{
@@ -282,7 +268,7 @@ class File extends Model
 			// check if the file type is allowed at all,
 			// otherwise it cannot be replaced
 			$this->model->match($this->model->blueprint()->accept());
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$options['replace'] = false;
 		}
 
@@ -291,8 +277,6 @@ class File extends Model
 
 	/**
 	 * Returns the full path without leading slash
-	 *
-	 * @return string
 	 */
 	public function path(): string
 	{
@@ -302,18 +286,13 @@ class File extends Model
 	/**
 	 * Prepares the response data for file pickers
 	 * and file fields
-	 *
-	 * @param array|null $params
-	 * @return array
 	 */
 	public function pickerData(array $params = []): array
 	{
-		$id   = $this->model->id();
 		$name = $this->model->filename();
 
 		if (empty($params['model']) === false) {
 			$parent   = $this->model->parent();
-			$uuid     = $parent === $params['model'] ? $name : $id;
 			$absolute = $parent !== $params['model'];
 		}
 
@@ -323,18 +302,14 @@ class File extends Model
 			'filename' => $name,
 			'dragText' => $this->dragText('auto', $absolute ?? false),
 			'type'     => $this->model->type(),
-			'url'      => $this->model->url(),
-			'uuid'     => $uuid ?? $id,
+			'url'      => $this->model->url()
 		]);
 	}
 
 	/**
 	 * Returns the data array for the
 	 * view's component props
-	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function props(): array
 	{
@@ -408,10 +383,7 @@ class File extends Model
 	/**
 	 * Returns navigation array with
 	 * previous and next file
-	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function prevNext(): array
 	{
@@ -424,11 +396,11 @@ class File extends Model
 		);
 
 		return [
-			'next' => function () use ($file, $siblings): ?array {
+			'next' => function () use ($file, $siblings): array|null {
 				$next = $siblings->nth($siblings->indexOf($file) + 1);
 				return $this->toPrevNextLink($next, 'filename');
 			},
-			'prev' => function () use ($file, $siblings): ?array {
+			'prev' => function () use ($file, $siblings): array|null {
 				$prev = $siblings->nth($siblings->indexOf($file) - 1);
 				return $this->toPrevNextLink($prev, 'filename');
 			}
@@ -437,9 +409,6 @@ class File extends Model
 	/**
 	 * Returns the url to the editing view
 	 * in the panel
-	 *
-	 * @param bool $relative
-	 * @return string
 	 */
 	public function url(bool $relative = false): string
 	{
@@ -450,21 +419,16 @@ class File extends Model
 	/**
 	 * Returns the data array for
 	 * this model's Panel view
-	 *
 	 * @internal
-	 *
-	 * @return array
 	 */
 	public function view(): array
 	{
-		$file = $this->model;
-
 		return [
-			'breadcrumb' => fn (): array => $file->panel()->breadcrumb(),
+			'breadcrumb' => fn (): array => $this->model->panel()->breadcrumb(),
 			'component'  => 'k-file-view',
 			'props'      => $this->props(),
 			'search'     => 'files',
-			'title'      => $file->filename(),
+			'title'      => $this->model->filename(),
 		];
 	}
 }

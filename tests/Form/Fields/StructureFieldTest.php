@@ -41,19 +41,6 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$expectedValue = [
-			[
-				'text' => 'a',
-				'value' => 'a'
-			],
-			[
-				'text' => 'b',
-				'value' => 'b'
-			]
-		];
-
-		$this->assertEquals($expectedValue, $field->value()[0]['tags']);
-
 		$expected = [
 			[
 				'tags' => 'a, b'
@@ -61,6 +48,8 @@ class StructureFieldTest extends TestCase
 		];
 
 		$this->assertEquals($expected, $field->data());
+		$this->assertEquals('a, b', $field->data()[0]['tags']);
+		$this->assertEquals(['a', 'b'], $field->value()[0]['tags']);
 	}
 
 	public function testColumnsFromFields()
@@ -111,9 +100,9 @@ class StructureFieldTest extends TestCase
 
 		$expected = [
 			'b' => [
-				'mobile' => true,
 				'type' => 'text',
 				'label' => 'b',
+				'mobile' => true,
 			],
 		];
 
@@ -197,15 +186,19 @@ class StructureFieldTest extends TestCase
 			'value' => $value = [
 				[
 					'name' => 'Marge',
+					'uuid' => 'my-marge',
 					'children' => [
 						[
 							'name' => 'Lisa',
+							'uuid' => 'my-lisa'
 						],
 						[
 							'name' => 'Maggie',
+							'uuid' => 'my-maggie'
 						],
 						[
 							'name' => 'Bart',
+							'uuid' => 'my-bart'
 						]
 					]
 				]
@@ -217,13 +210,16 @@ class StructureFieldTest extends TestCase
 
 		// empty mother form
 		$motherForm = $field->form();
+		$data       = $motherForm->data();
 
 		$expected = [
 			'name'     => null,
 			'children' => []
 		];
 
-		$this->assertEquals($expected, $motherForm->data());
+		unset($data['uuid']);
+
+		$this->assertEquals($expected, $data);
 
 		// filled mother form
 		$motherForm = $field->form($value[0]);
@@ -239,14 +235,14 @@ class StructureFieldTest extends TestCase
 		// empty children form
 		$childrenForm = $childrenField->form();
 
-		$this->assertEquals(['name' => null], $childrenForm->data());
+		$this->assertEquals(null, $childrenForm->data()['name']);
 
 		// filled children form
 		$childrenForm = $childrenField->form([
 			'name' => 'Test'
 		]);
 
-		$this->assertEquals(['name' => 'Test'], $childrenForm->data());
+		$this->assertEquals('Test', $childrenForm->data()['name']);
 
 		// children name field
 		$childrenNameField = $childrenField->form()->fields()->name();
@@ -356,7 +352,7 @@ class StructureFieldTest extends TestCase
 					'type' => 'text',
 				]
 			],
-			'default' => $data = [
+			'default' => [
 				[
 					'a' => 'A',
 					'b' => 'B'
@@ -364,7 +360,8 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($data, $field->data(true));
+		$this->assertEquals('A', $field->data(true)[0]['a']);
+		$this->assertEquals('B', $field->data(true)[0]['b']);
 	}
 
 	public function testRequiredProps()

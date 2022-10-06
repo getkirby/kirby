@@ -2,8 +2,10 @@
 
 namespace Kirby\Filesystem;
 
+use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
@@ -28,25 +30,25 @@ class File
 	use Properties;
 
 	/**
-	 * Absolute file path
-	 *
-	 * @var string
+	 * Parent file model
+	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
 	 */
-	protected $root;
+	protected object|null $model = null;
+
+	/**
+	 * Absolute file path
+	 */
+	protected string|null $root = null;
 
 	/**
 	 * Absolute file URL
-	 *
-	 * @var string|null
 	 */
-	protected $url;
+	protected string|null $url = null;
 
 	/**
 	 * Validation rules to be used for `::match()`
-	 *
-	 * @var array
 	 */
-	public static $validations = [
+	public static array $validations = [
 		'maxsize' => ['size', 'max'],
 		'minsize' => ['size', 'min']
 	];
@@ -57,8 +59,10 @@ class File
 	 * @param array|string|null $props Properties or deprecated `$root` string
 	 * @param string|null $url Deprecated argument, use `$props['url']` instead
 	 */
-	public function __construct($props = null, string $url = null)
-	{
+	public function __construct(
+		array|string|null $props = null,
+		string|null $url = null
+	) {
 		// Legacy support for old constructor of
 		// the `Kirby\Image\Image` class
 		// @todo 4.0.0 remove
@@ -74,8 +78,6 @@ class File
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -84,8 +86,6 @@ class File
 
 	/**
 	 * Returns the URL for the file object
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -94,8 +94,6 @@ class File
 
 	/**
 	 * Returns the file content as base64 encoded string
-	 *
-	 * @return string
 	 */
 	public function base64(): string
 	{
@@ -104,15 +102,11 @@ class File
 
 	/**
 	 * Copy a file to a new location.
-	 *
-	 * @param string $target
-	 * @param bool $force
-	 * @return static
 	 */
-	public function copy(string $target, bool $force = false)
+	public function copy(string $target, bool $force = false): static
 	{
-		if (F::copy($this->root, $target, $force) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be copied');
+		if (F::copy($this->root(), $target, $force) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be copied');
 		}
 
 		return new static($target);
@@ -122,7 +116,6 @@ class File
 	 * Returns the file as data uri
 	 *
 	 * @param bool $base64 Whether the data should be base64 encoded or not
-	 * @return string
 	 */
 	public function dataUri(bool $base64 = true): string
 	{
@@ -135,77 +128,64 @@ class File
 
 	/**
 	 * Deletes the file
-	 *
-	 * @return bool
 	 */
 	public function delete(): bool
 	{
-		if (F::remove($this->root) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be deleted');
+		if (F::remove($this->root()) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be deleted');
 		}
 
 		return true;
 	}
 
 	/*
-	 * Automatically sends all needed headers for the file to be downloaded
-	 * and echos the file's content
+	 * Automatically sends all needed headers
+	 * for the file to be downloaded and
+	 * echos the file's content
 	 *
 	 * @param string|null $filename Optional filename for the download
-	 * @return string
 	 */
-	public function download($filename = null): string
+	public function download(string|null $filename = null): string
 	{
-		return Response::download($this->root, $filename ?? $this->filename());
+		return Response::download($this->root(), $filename ?? $this->filename());
 	}
 
 	/**
 	 * Checks if the file actually exists
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
-		return file_exists($this->root) === true;
+		return file_exists($this->root()) === true;
 	}
 
 	/**
 	 * Returns the current lowercase extension (without .)
-	 *
-	 * @return string
 	 */
 	public function extension(): string
 	{
-		return F::extension($this->root);
+		return F::extension($this->root());
 	}
 
 	/**
 	 * Returns the filename
-	 *
-	 * @return string
 	 */
 	public function filename(): string
 	{
-		return basename($this->root);
+		return basename($this->root());
 	}
 
 	/**
 	 * Returns a md5 hash of the root
-	 *
-	 * @return string
 	 */
 	public function hash(): string
 	{
-		return md5($this->root);
+		return md5($this->root());
 	}
 
 	/**
 	 * Sends an appropriate header for the asset
-	 *
-	 * @param bool $send
-	 * @return \Kirby\Http\Response|void
 	 */
-	public function header(bool $send = true)
+	public function header(bool $send = true): Response|null
 	{
 		$response = new Response('', $this->mime());
 
@@ -214,13 +194,11 @@ class File
 		}
 
 		$response->send();
+		return null;
 	}
 
 	/**
 	 * Converts the file to html
-	 *
-	 * @param array $attr
-	 * @return string
 	 */
 	public function html(array $attr = []): string
 	{
@@ -231,27 +209,22 @@ class File
 	 * Checks if a file is of a certain type
 	 *
 	 * @param string $value An extension or mime type
-	 * @return bool
 	 */
 	public function is(string $value): bool
 	{
-		return F::is($this->root, $value);
+		return F::is($this->root(), $value);
 	}
 
 	/**
 	 * Checks if the file is readable
-	 *
-	 * @return bool
 	 */
 	public function isReadable(): bool
 	{
-		return is_readable($this->root) === true;
+		return is_readable($this->root()) === true;
 	}
 
 	/**
 	 * Checks if the file is a resizable image
-	 *
-	 * @return bool
 	 */
 	public function isResizable(): bool
 	{
@@ -261,8 +234,6 @@ class File
 	/**
 	 * Checks if a preview can be displayed for the file
 	 * in the panel or in the frontend
-	 *
-	 * @return bool
 	 */
 	public function isViewable(): bool
 	{
@@ -271,20 +242,16 @@ class File
 
 	/**
 	 * Checks if the file is writable
-	 *
-	 * @return bool
 	 */
 	public function isWritable(): bool
 	{
-		return F::isWritable($this->root);
+		return F::isWritable($this->root());
 	}
 
 	/**
 	 * Returns the app instance if it exists
-	 *
-	 * @return \Kirby\Cms\App|null
 	 */
-	public function kirby()
+	public function kirby(): App|null
 	{
 		return App::instance(null, true);
 	}
@@ -293,8 +260,6 @@ class File
 	 * Runs a set of validations on the file object
 	 * (mainly for images).
 	 *
-	 * @param array $rules
-	 * @return bool
 	 * @throws \Kirby\Exception\Exception
 	 */
 	public function match(array $rules): bool
@@ -361,27 +326,33 @@ class File
 
 	/**
 	 * Detects the mime type of the file
-	 *
-	 * @return string|null
 	 */
-	public function mime()
+	public function mime(): string|null
 	{
-		return Mime::type($this->root);
+		return Mime::type($this->root());
+	}
+
+	/**
+	 * Returns the parent file model, which uses this instance as proxied file asset
+	 */
+	public function model(): object|null
+	{
+		return $this->model;
 	}
 
 	/**
 	 * Returns the file's last modification time
 	 *
-	 * @param string|\IntlDateFormatter|null $format
 	 * @param string|null $handler date, intl or strftime
-	 * @return mixed
 	 */
-	public function modified($format = null, ?string $handler = null)
-	{
+	public function modified(
+		string|IntlDateFormatter|null $format = null,
+		string|null $handler = null
+	): string|int|false {
 		$kirby = $this->kirby();
 
 		return F::modified(
-			$this->root,
+			$this->root(),
 			$format,
 			$handler ?? ($kirby ? $kirby->option('date.handler', 'date') : 'date')
 		);
@@ -390,14 +361,12 @@ class File
 	/**
 	 * Move the file to a new location
 	 *
-	 * @param string $newRoot
 	 * @param bool $overwrite Force overwriting any existing files
-	 * @return static
 	 */
-	public function move(string $newRoot, bool $overwrite = false)
+	public function move(string $newRoot, bool $overwrite = false): static
 	{
-		if (F::move($this->root, $newRoot, $overwrite) !== true) {
-			throw new Exception('The file: "' . $this->root . '" could not be moved to: "' . $newRoot . '"');
+		if (F::move($this->root(), $newRoot, $overwrite) !== true) {
+			throw new Exception('The file: "' . $this->root() . '" could not be moved to: "' . $newRoot . '"');
 		}
 
 		return new static($newRoot);
@@ -406,62 +375,53 @@ class File
 	/**
 	 * Getter for the name of the file
 	 * without the extension
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
-		return pathinfo($this->root, PATHINFO_FILENAME);
+		return pathinfo($this->root(), PATHINFO_FILENAME);
 	}
 
 	/**
 	 * Returns the file size in a
 	 * human-readable format
 	 *
-	 * @param string|null|false $locale Locale for number formatting,
+	 * @param string|false|null $locale Locale for number formatting,
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
-	 * @return string
 	 */
-	public function niceSize($locale = null): string
+	public function niceSize(string|false|null $locale = null): string
 	{
-		return F::niceSize($this->root, $locale);
+		return F::niceSize($this->root(), $locale);
 	}
 
 	/**
 	 * Reads the file content and returns it.
-	 *
-	 * @return string|false
 	 */
-	public function read()
+	public function read(): string|false
 	{
-		return F::read($this->root);
+		return F::read($this->root());
 	}
 
 	/**
 	 * Returns the absolute path to the file
-	 *
-	 * @return string
 	 */
 	public function realpath(): string
 	{
-		return realpath($this->root);
+		return realpath($this->root());
 	}
 
 	/**
 	 * Changes the name of the file without
 	 * touching the extension
 	 *
-	 * @param string $newName
 	 * @param bool $overwrite Force overwrite existing files
-	 * @return static
 	 */
-	public function rename(string $newName, bool $overwrite = false)
+	public function rename(string $newName, bool $overwrite = false): static
 	{
-		$newRoot = F::rename($this->root, $newName, $overwrite);
+		$newRoot = F::rename($this->root(), $newName, $overwrite);
 
 		if ($newRoot === false) {
-			throw new Exception('The file: "' . $this->root . '" could not be renamed to: "' . $newName . '"');
+			throw new Exception('The file: "' . $this->root() . '" could not be renamed to: "' . $newName . '"');
 		}
 
 		return new static($newRoot);
@@ -469,21 +429,35 @@ class File
 
 	/**
 	 * Returns the given file path
-	 *
-	 * @return string|null
 	 */
-	public function root(): ?string
+	public function root(): string|null
 	{
-		return $this->root;
+		return $this->root ??= $this->model?->root();
+	}
+
+	/**
+	 * Setter for the parent file model, which uses this instance as proxied file asset
+	 *
+	 * @return $this
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
+	 */
+	protected function setModel(object|null $model = null): static
+	{
+		if ($model !== null && method_exists($model, 'hasIsFileTrait') !== true) {
+			throw new InvalidArgumentException('The model object must use the "Kirby\Filesystem\IsFile" trait');
+		}
+
+		$this->model = $model;
+		return $this;
 	}
 
 	/**
 	 * Setter for the root
 	 *
-	 * @param string|null $root
 	 * @return $this
 	 */
-	protected function setRoot(?string $root = null)
+	protected function setRoot(string|null $root = null): static
 	{
 		$this->root = $root;
 		return $this;
@@ -492,10 +466,9 @@ class File
 	/**
 	 * Setter for the file url
 	 *
-	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(?string $url = null)
+	protected function setUrl(string|null $url = null): static
 	{
 		$this->url = $url;
 		return $this;
@@ -503,12 +476,13 @@ class File
 
 	/**
 	 * Returns the absolute url for the file
-	 *
-	 * @return string|null
 	 */
-	public function url(): ?string
+	public function url(): string|null
 	{
-		return $this->url;
+		// lazily determine the URL from the model object
+		// only if it's needed to avoid breaking custom file::url
+		// components that rely on `$cmsFile->asset()` methods
+		return $this->url ??= $this->model?->url();
 	}
 
 	/**
@@ -519,14 +493,13 @@ class File
 	 * @param string|bool $typeLazy Explicit sane handler type string,
 	 *                              `true` for lazy autodetection or
 	 *                              `false` for normal autodetection
-	 * @return void
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 * @throws \Kirby\Exception\LogicException If more than one handler applies
 	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
 	 * @throws \Kirby\Exception\Exception On other errors
 	 */
-	public function sanitizeContents($typeLazy = false): void
+	public function sanitizeContents(string|bool $typeLazy = false): void
 	{
 		Sane::sanitizeFile($this->root(), $typeLazy);
 	}
@@ -534,29 +507,23 @@ class File
 	/**
 	 * Returns the sha1 hash of the file
 	 * @since 3.6.0
-	 *
-	 * @return string
 	 */
 	public function sha1(): string
 	{
-		return sha1_file($this->root);
+		return sha1_file($this->root());
 	}
 
 	/**
 	 * Returns the raw size of the file
-	 *
-	 * @return int
 	 */
 	public function size(): int
 	{
-		return F::size($this->root);
+		return F::size($this->root());
 	}
 
 	/**
 	 * Converts the media object to a
 	 * plain PHP array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -582,8 +549,6 @@ class File
 	/**
 	 * Converts the entire file array into
 	 * a json string
-	 *
-	 * @return string
 	 */
 	public function toJson(): string
 	{
@@ -592,12 +557,10 @@ class File
 
 	/**
 	 * Returns the file type.
-	 *
-	 * @return string|null
 	 */
-	public function type(): ?string
+	public function type(): string|null
 	{
-		return F::type($this->root);
+		return F::type($this->root());
 	}
 
 	/**
@@ -606,27 +569,23 @@ class File
 	 * @param string|bool $typeLazy Explicit sane handler type string,
 	 *                              `true` for lazy autodetection or
 	 *                              `false` for normal autodetection
-	 * @return void
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
 	 * @throws \Kirby\Exception\Exception On other errors
 	 */
-	public function validateContents($typeLazy = false): void
+	public function validateContents(string|bool $typeLazy = false): void
 	{
 		Sane::validateFile($this->root(), $typeLazy);
 	}
 
 	/**
 	 * Writes content to the file
-	 *
-	 * @param string $content
-	 * @return bool
 	 */
-	public function write($content): bool
+	public function write(string $content): bool
 	{
-		if (F::write($this->root, $content) !== true) {
-			throw new Exception('The file "' . $this->root . '" could not be written');
+		if (F::write($this->root(), $content) !== true) {
+			throw new Exception('The file "' . $this->root() . '" could not be written');
 		}
 
 		return true;

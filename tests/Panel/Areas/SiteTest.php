@@ -37,13 +37,13 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('default', $props['blueprint']);
-		$this->assertSame(['state' => null], $props['lock']);
+		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
 
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
 
 		// model
-		$this->assertSame(['title' => 'Test'], $model['content']);
+		$this->assertSame('Test', $model['content']['title']);
 		$this->assertSame('test', $model['id']);
 		$this->assertSame('draft', $model['status']);
 		$this->assertSame('Test', $model['title']);
@@ -91,7 +91,7 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null], $props['lock']);
+		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
 
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);
@@ -159,7 +159,7 @@ class SiteTest extends AreaTestCase
 		$model = $props['model'];
 
 		$this->assertSame('image', $props['blueprint']);
-		$this->assertSame(['state' => null], $props['lock']);
+		$this->assertSame(['state' => null, 'data' => false], $props['lock']);
 
 		$this->assertArrayNotHasKey('tab', $props);
 		$this->assertSame([], $props['tabs']);

@@ -40,7 +40,7 @@ class Sessions
 	{
 		if (is_string($store)) {
 			$this->store = new FileSessionStore($store);
-		} elseif (is_a($store, 'Kirby\Session\SessionStore') === true) {
+		} elseif ($store instanceof SessionStore) {
 			$this->store = $store;
 		} else {
 			throw new InvalidArgumentException([
@@ -131,38 +131,33 @@ class Sessions
 	 * - In `manual` mode: Fails and throws an Exception
 	 *
 	 * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
+	 * @throws \Kirby\Exception\Exception
+	 * @throws \Kirby\Exception\LogicException
 	 */
 	public function current()
 	{
-		$token = null;
-		switch ($this->mode) {
-			case 'cookie':
-				$token = $this->tokenFromCookie();
-				break;
-			case 'header':
-				$token = $this->tokenFromHeader();
-				break;
-			case 'manual':
-				throw new LogicException([
-					'key'       => 'session.sessions.manualMode',
-					'fallback'  => 'Cannot automatically get current session in manual mode',
-					'translate' => false,
-					'httpCode'  => 500
-				]);
-			default:
-				// unexpected error that shouldn't occur
-				throw new Exception(['translate' => false]); // @codeCoverageIgnore
-		}
+		$token = match ($this->mode) {
+			'cookie' => $this->tokenFromCookie(),
+			'header' => $this->tokenFromHeader(),
+			'manual' => throw new LogicException([
+				'key'       => 'session.sessions.manualMode',
+				'fallback'  => 'Cannot automatically get current session in manual mode',
+				'translate' => false,
+				'httpCode'  => 500
+			]),
+			// unexpected error that shouldn't occur
+			default => throw new Exception(['translate' => false]) // @codeCoverageIgnore
+		};
 
 		// no token was found, no session
-		if (!is_string($token)) {
+		if (is_string($token) === false) {
 			return null;
 		}
 
 		// token was found, try to get the session
 		try {
 			return $this->get($token);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return null;
 		}
 	}
@@ -192,7 +187,7 @@ class Sessions
 		try {
 			$mode = (is_string($tokenFromHeader)) ? 'header' : 'cookie';
 			return $this->get($token, $mode);
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return null;
 		}
 	}
@@ -253,11 +248,11 @@ class Sessions
 	{
 		$value = Cookie::get($this->cookieName());
 
-		if (is_string($value)) {
-			return $value;
-		} else {
+		if (is_string($value) === false) {
 			return null;
 		}
+
+		return $value;
 	}
 
 	/**
@@ -271,7 +266,7 @@ class Sessions
 		$headers = $request->headers();
 
 		// check if the header exists at all
-		if (!isset($headers['Authorization'])) {
+		if (isset($headers['Authorization']) === false) {
 			return null;
 		}
 

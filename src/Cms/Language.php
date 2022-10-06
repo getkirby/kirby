@@ -350,7 +350,7 @@ class Language extends Model
 
 		try {
 			return Data::read($file);
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			return [];
 		}
 	}
@@ -365,9 +365,9 @@ class Language extends Model
 	{
 		if ($category !== null) {
 			return $this->locale[$category] ?? $this->locale[LC_ALL] ?? null;
-		} else {
-			return $this->locale;
 		}
+
+		return $this->locale;
 	}
 
 	/**
@@ -456,7 +456,7 @@ class Language extends Model
 	{
 		try {
 			$existingData = Data::read($this->root());
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			$existingData = [];
 		}
 
@@ -662,9 +662,7 @@ class Language extends Model
 
 		// convert the current default to a non-default language
 		if ($updated->isDefault() === true) {
-			if ($oldDefault = $kirby->defaultLanguage()) {
-				$oldDefault->clone(['default' => false])->save();
-			}
+			$kirby->defaultLanguage()?->clone(['default' => false])->save();
 
 			$code = $this->code();
 			$site = $kirby->site();

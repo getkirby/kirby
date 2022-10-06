@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -48,7 +49,7 @@ class Query
 	 * @param string|null $query
 	 * @param array|object $data
 	 */
-	public function __construct(?string $query = null, $data = [])
+	public function __construct(string|null $query = null, $data = [])
 	{
 		$this->query = $query;
 		$this->data  = $data;
@@ -98,7 +99,7 @@ class Query
 				if (array_key_exists($method, $data) === true) {
 					$value = $data[$method];
 
-					if (is_a($value, 'Closure') === true) {
+					if ($value instanceof Closure) {
 						$value = $value(...$args);
 					} elseif ($args !== []) {
 						throw new InvalidArgumentException('Cannot access array element ' . $method . ' with arguments');

@@ -3,7 +3,6 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
@@ -26,143 +25,108 @@ class Environment
 {
 	/**
 	 * Full base URL object
-	 *
-	 * @var \Kirby\Http\Uri
 	 */
-	protected $baseUri;
+	protected Uri $baseUri;
 
 	/**
 	 * Full base URL
-	 *
-	 * @var string
 	 */
-	protected $baseUrl;
+	protected string $baseUrl;
 
 	/**
 	 * Whether the request is being served by the CLI
-	 *
-	 * @var bool
 	 */
-	protected $cli;
+	protected bool $cli;
 
 	/**
 	 * Current host name
-	 *
-	 * @var string
 	 */
-	protected $host;
+	protected string|null $host;
 
 	/**
 	 * Whether the HTTPS protocol is used
-	 *
-	 * @var bool
 	 */
-	protected $https;
+	protected bool $https;
 
 	/**
 	 * Sanitized `$_SERVER` data
-	 *
-	 * @var array
 	 */
-	protected $info;
+	protected array $info;
 
 	/**
 	 * Current server's IP address
-	 *
-	 * @var string
 	 */
-	protected $ip;
+	protected string|null $ip;
 
 	/**
 	 * Whether the site is behind a reverse proxy;
 	 * `null` if not known (fixed allowed URL setup)
-	 *
-	 * @var bool|null
 	 */
-	protected $isBehindProxy;
+	protected bool|null $isBehindProxy;
 
 	/**
 	 * URI path to the base
-	 *
-	 * @var string
 	 */
-	protected $path;
+	protected string $path;
 
 	/**
 	 * Port number in the site URL
-	 *
-	 * @var int|null
 	 */
-	protected $port;
+	protected int|null $port;
 
 	/**
 	 * Intermediary value of the port
 	 * extracted from the host name
-	 *
-	 * @var int|null
 	 */
-	protected $portInHost;
+	protected int|null $portInHost = null;
 
 	/**
 	 * Uri object for the full request URI.
 	 * It is a combination of the base URL and `REQUEST_URI`
-	 *
-	 * @var \Kirby\Http\Uri
 	 */
-	protected $requestUri;
+	protected Uri $requestUri;
 
 	/**
 	 * Full request URL
-	 *
-	 * @var string
 	 */
-	protected $requestUrl;
+	protected string $requestUrl;
 
 	/**
 	 * Path to the php script within the
 	 * document root without the
 	 * filename of the script
-	 *
-	 * @var string
 	 */
-	protected $scriptPath;
+	protected string $scriptPath;
 
 	/**
 	 * Class constructor
 	 *
-	 * @param array|null $options
 	 * @param array|null $info Optional override for `$_SERVER`
 	 */
-	public function __construct(?array $options = null, ?array $info = null)
+	public function __construct(array|null $options = null, array|null $info = null)
 	{
 		$this->detect($options, $info);
 	}
 
 	/**
 	 * Returns the server's IP address
-	 *
 	 * @see static::ip
-	 * @return string|null
 	 */
-	public function address(): ?string
+	public function address(): string|null
 	{
 		return $this->ip();
 	}
 
 	/**
 	 * Returns the full base URL object
-	 *
-	 * @return \Kirby\Http\Uri
 	 */
-	public function baseUri()
+	public function baseUri(): Uri
 	{
 		return $this->baseUri;
 	}
 
 	/**
 	 * Returns the full base URL
-	 *
-	 * @return string
 	 */
 	public function baseUrl(): string
 	{
@@ -171,8 +135,6 @@ class Environment
 
 	/**
 	 * Checks if the request is being served by the CLI
-	 *
-	 * @return bool
 	 */
 	public function cli(): bool
 	{
@@ -186,9 +148,7 @@ class Environment
 	 * the stored information and re-detect the
 	 * environment if necessary.
 	 *
-	 * @param array|null $options
 	 * @param array|null $info Optional override for `$_SERVER`
-	 * @return array
 	 */
 	public function detect(array $options = null, array $info = null): array
 	{
@@ -207,18 +167,6 @@ class Environment
 		$this->scriptPath    = $this->detectScriptPath($this->get('SCRIPT_NAME'));
 		$this->path          = $this->detectPath($this->scriptPath);
 		$this->port          = null;
-
-		// keep Server flags compatible for now
-		// TODO: remove in 3.8.0
-		// @codeCoverageIgnoreStart
-		if (is_int($options['allowed']) === true) {
-			Helpers::deprecated('
-                Using `Server::` constants for the `allowed` option has been deprecated and support will be removed in 3.8.0. Use one of the following instead: a single fixed URL, an array of allowed URLs to match dynamically, `*` wildcard to match dynamically even from insecure headers, or `true` to match automtically from safe server variables.
-            ');
-
-			$options['allowed'] = $this->detectAllowedFromFlag($options['allowed']);
-		}
-		// @codeCoverageIgnoreEnd
 
 		// insecure auto-detection
 		if ($options['allowed'] === '*' || $options['allowed'] === ['*']) {
@@ -246,11 +194,8 @@ class Environment
 	/**
 	 * Sets the host name, port, path and protocol from the
 	 * fixed list of allowed URLs
-	 *
-	 * @param array|string $allowed
-	 * @return void
 	 */
-	protected function detectAllowed($allowed): void
+	protected function detectAllowed(array|string|object $allowed): void
 	{
 		$allowed = A::wrap($allowed);
 
@@ -301,33 +246,9 @@ class Environment
 	}
 
 	/**
-	 * The URL option receives a set of Server constant flags
-	 *
-	 * Server::HOST_FROM_SERVER
-	 * Server::HOST_FROM_SERVER | Server::HOST_ALLOW_EMPTY
-	 * Server::HOST_FROM_HEADER
-	 * Server::HOST_FROM_HEADER | Server::HOST_ALLOW_EMPTY
-	 * @todo Remove in 3.8.0
-	 *
-	 * @param int $flags
-	 * @return string|null
-	 */
-	protected function detectAllowedFromFlag(int $flags): ?string
-	{
-		// allow host detection from host headers
-		if ($flags & Server::HOST_FROM_HEADER) {
-			return '*';
-		}
-
-		// detect host only from server name
-		return null;
-	}
-
-	/**
 	 * Sets the host name, port and protocol without configuration
 	 *
 	 * @param bool $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
-	 * @return void
 	 */
 	protected function detectAuto(bool $insecure = false): void
 	{
@@ -364,10 +285,8 @@ class Environment
 	/**
 	 * Builds the base URL based on the
 	 * given environment params
-	 *
-	 * @return \Kirby\Http\Uri
 	 */
-	protected function detectBaseUri()
+	protected function detectBaseUri(): Uri
 	{
 		$this->baseUri = new Uri([
 			'host'   => $this->host,
@@ -385,9 +304,8 @@ class Environment
 	 * Detects if the request is served by the CLI
 	 *
 	 * @param bool|null $override Set to a boolean to override detection (for testing)
-	 * @return bool
 	 */
-	protected function detectCli(?bool $override = null): bool
+	protected function detectCli(bool|null $override = null): bool
 	{
 		if (is_bool($override) === true) {
 			return $override;
@@ -411,8 +329,6 @@ class Environment
 	/**
 	 * Detects the host, protocol, port and client IP
 	 * from the `Forwarded` and `X-Forwarded-*` headers
-	 *
-	 * @return array
 	 */
 	protected function detectForwarded(): array
 	{
@@ -482,10 +398,8 @@ class Environment
 	/**
 	 * Detects the host name of the reverse proxy
 	 * from the `X-Forwarded-Host` header
-	 *
-	 * @return string|null
 	 */
-	protected function detectForwardedHost(): ?string
+	protected function detectForwardedHost(): string|null
 	{
 		$host  = $this->get('HTTP_X_FORWARDED_HOST');
 		$parts = $this->detectPortInHost($host);
@@ -498,8 +412,6 @@ class Environment
 	/**
 	 * Detects the protocol of the reverse proxy from the
 	 * `X-Forwarded-SSL` or `X-Forwarded-Proto` header
-	 *
-	 * @return bool
 	 */
 	protected function detectForwardedHttps(): bool
 	{
@@ -519,9 +431,8 @@ class Environment
 	 * `X-Forwarded-Host` or `X-Forwarded-Port` header
 	 *
 	 * @param bool $https Whether HTTPS was detected
-	 * @return int|null
 	 */
-	protected function detectForwardedPort(bool $https): ?int
+	protected function detectForwardedPort(bool $https): int|null
 	{
 		// based on forwarded port
 		$port = $this->get('HTTP_X_FORWARDED_PORT');
@@ -547,10 +458,11 @@ class Environment
 	 * Detects the host name from various headers
 	 *
 	 * @param bool $insecure Include the `Host` header in the search
-	 * @return string|null
 	 */
-	protected function detectHost(bool $insecure = false): ?string
+	protected function detectHost(bool $insecure = false): string|null
 	{
+		$hosts = [];
+
 		if ($insecure === true) {
 			$hosts[] = $this->get('HTTP_HOST');
 		}
@@ -571,8 +483,6 @@ class Environment
 
 	/**
 	 * Detects the HTTPS status
-	 *
-	 * @return bool
 	 */
 	protected function detectHttps(): bool
 	{
@@ -585,11 +495,8 @@ class Environment
 
 	/**
 	 * Normalizes the HTTPS status into a boolean
-	 *
-	 * @param string|bool|null|int $value
-	 * @return bool
 	 */
-	protected function detectHttpsOn($value): bool
+	protected function detectHttpsOn(string|int|bool|null $value): bool
 	{
 		// off can mean many things :)
 		$off = ['off', null, '', 0, '0', false, 'false', -1, '-1'];
@@ -599,11 +506,8 @@ class Environment
 
 	/**
 	 * Detects the HTTPS status from a `X-Forwarded-Proto` string
-	 *
-	 * @param string|null $protocol
-	 * @return bool
 	 */
-	protected function detectHttpsProtocol(?string $protocol = null): bool
+	protected function detectHttpsProtocol(string|null $protocol = null): bool
 	{
 		if ($protocol === null) {
 			return false;
@@ -614,21 +518,16 @@ class Environment
 
 	/**
 	 * Detects the server's IP address
-	 *
-	 * @return string|null
 	 */
-	protected function detectIp(): ?string
+	protected function detectIp(): string|null
 	{
 		return $this->get('SERVER_ADDR');
 	}
 
 	/**
 	 * Detects the URI path unless in CLI mode
-	 *
-	 * @param string|null $path
-	 * @return string
 	 */
-	protected function detectPath(?string $path = null): string
+	protected function detectPath(string|null $path = null): string
 	{
 		if ($this->cli === true) {
 			return '';
@@ -639,10 +538,8 @@ class Environment
 
 	/**
 	 * Detects the port from various sources
-	 *
-	 * @return int|null
 	 */
-	protected function detectPort(): ?int
+	protected function detectPort(): int|null
 	{
 		// based on server port
 		$port = $this->get('SERVER_PORT');
@@ -666,11 +563,8 @@ class Environment
 
 	/**
 	 * Splits a hostname:port string into its components
-	 *
-	 * @param string|null $host
-	 * @return array
 	 */
-	protected function detectPortInHost(?string $host = null): array
+	protected function detectPortInHost(string|null $host = null): array
 	{
 		if (empty($host) === true) {
 			return [
@@ -689,11 +583,8 @@ class Environment
 
 	/**
 	 * Splits any URI into path and query
-	 *
-	 * @param string|null $requestUri
-	 * @return \Kirby\Http\Uri
 	 */
-	protected function detectRequestUri(?string $requestUri = null)
+	protected function detectRequestUri(string|null $requestUri = null): Uri
 	{
 		// make sure the URL parser works properly when there's a
 		// colon in the request URI but the URI is relative
@@ -720,11 +611,8 @@ class Environment
 
 	/**
 	 * Returns the sanitized script path unless in CLI mode
-	 *
-	 * @param string|null $scriptPath
-	 * @return string
 	 */
-	protected function detectScriptPath(?string $scriptPath = null): string
+	protected function detectScriptPath(string|null $scriptPath = null): string
 	{
 		if ($this->cli === true) {
 			return '';
@@ -748,9 +636,8 @@ class Environment
 	 *                               to return the entire server array.
 	 * @param mixed $default Optional default value, which should be
 	 *                       returned if no element has been found
-	 * @return mixed
 	 */
-	public function get($key = null, $default = null)
+	public function get(string|false|null $key = null, $default = null)
 	{
 		if (is_string($key) === false) {
 			return $this->info;
@@ -772,9 +659,8 @@ class Environment
 	 *                               to return the entire server array.
 	 * @param mixed $default Optional default value, which should be
 	 *                       returned if no element has been found
-	 * @return mixed
 	 */
-	public static function getGlobally($key = null, $default = null)
+	public static function getGlobally(string|false|null $key = null, $default = null)
 	{
 		// first try the global `Environment` object if the CMS is running
 		$app = App::instance(null, true);
@@ -795,18 +681,14 @@ class Environment
 
 	/**
 	 * Returns the current host name
-	 *
-	 * @return string|null
 	 */
-	public function host(): ?string
+	public function host(): string|null
 	{
 		return $this->host;
 	}
 
 	/**
 	 * Returns whether the HTTPS protocol is used
-	 *
-	 * @return bool
 	 */
 	public function https(): bool
 	{
@@ -815,8 +697,6 @@ class Environment
 
 	/**
 	 * Returns the sanitized `$_SERVER` array
-	 *
-	 * @return array
 	 */
 	public function info(): array
 	{
@@ -825,10 +705,8 @@ class Environment
 
 	/**
 	 * Returns the server's IP address
-	 *
-	 * @return string|null
 	 */
-	public function ip(): ?string
+	public function ip(): string|null
 	{
 		return $this->ip;
 	}
@@ -836,10 +714,8 @@ class Environment
 	/**
 	 * Returns if the server is behind a
 	 * reverse proxy server
-	 *
-	 * @return bool|null
 	 */
-	public function isBehindProxy(): ?bool
+	public function isBehindProxy(): bool|null
 	{
 		return $this->isBehindProxy;
 	}
@@ -847,8 +723,6 @@ class Environment
 	/**
 	 * Checks if this is a local installation;
 	 * returns `false` if in doubt
-	 *
-	 * @return bool
 	 */
 	public function isLocal(): bool
 	{
@@ -901,7 +775,6 @@ class Environment
 	 * PHP files (by host name and server IP address)
 	 *
 	 * @param string $root Root directory to load configs from
-	 * @return array
 	 */
 	public function options(string $root): array
 	{
@@ -926,30 +799,24 @@ class Environment
 
 	/**
 	 * Returns the detected path
-	 *
-	 * @return string|null
 	 */
-	public function path(): ?string
+	public function path(): string|null
 	{
 		return $this->path;
 	}
 
 	/**
 	 * Returns the correct port number
-	 *
-	 * @return int|null
 	 */
-	public function port(): ?int
+	public function port(): int|null
 	{
 		return $this->port;
 	}
 
 	/**
 	 * Returns an URI object for the requested URL
-	 *
-	 * @return \Kirby\Http\Uri
 	 */
-	public function requestUri()
+	public function requestUri(): Uri
 	{
 		return $this->requestUri;
 	}
@@ -957,8 +824,6 @@ class Environment
 	/**
 	 * Returns the current URL, including the request path
 	 * and query
-	 *
-	 * @return string
 	 */
 	public function requestUrl(): string
 	{
@@ -967,12 +832,8 @@ class Environment
 
 	/**
 	 * Sanitizes some `$_SERVER` keys
-	 *
-	 * @param string|array $key
-	 * @param mixed $value
-	 * @return mixed
 	 */
-	public static function sanitize($key, $value = null)
+	public static function sanitize(string|array $key, $value = null)
 	{
 		if (is_array($key) === true) {
 			foreach ($key as $k => $v) {
@@ -982,27 +843,23 @@ class Environment
 			return $key;
 		}
 
-		switch ($key) {
-			case 'SERVER_ADDR':
-			case 'SERVER_NAME':
-			case 'HTTP_HOST':
-			case 'HTTP_X_FORWARDED_HOST':
-				return static::sanitizeHost($value);
-			case 'SERVER_PORT':
-			case 'HTTP_X_FORWARDED_PORT':
-				return static::sanitizePort($value);
-			default:
-				return $value;
-		}
+		return match ($key) {
+			'SERVER_ADDR',
+			'SERVER_NAME',
+			'HTTP_HOST',
+			'HTTP_X_FORWARDED_HOST' => static::sanitizeHost($value),
+
+			'SERVER_PORT',
+			'HTTP_X_FORWARDED_PORT' => static::sanitizePort($value),
+
+			default => $value
+		};
 	}
 
 	/**
 	 * Sanitizes the given host name
-	 *
-	 * @param string|null $host
-	 * @return string|null
 	 */
-	protected static function sanitizeHost(?string $host = null): ?string
+	protected static function sanitizeHost(string|null $host = null): string|null
 	{
 		if (empty($host) === true) {
 			return null;
@@ -1026,11 +883,8 @@ class Environment
 
 	/**
 	 * Sanitizes the given port number
-	 *
-	 * @param string|int|null $port
-	 * @return int|null
 	 */
-	protected static function sanitizePort($port = null): ?int
+	protected static function sanitizePort(string|int|false|null $port = null): int|null
 	{
 		// already fine
 		if (is_int($port) === true) {
@@ -1043,7 +897,7 @@ class Environment
 		}
 
 		// remove any character that is not an integer
-		$port = preg_replace('![^0-9]+!', '', (string)($port ?? ''));
+		$port = preg_replace('![^0-9]+!', '', $port);
 
 		// no port
 		if ($port === '') {
@@ -1056,11 +910,8 @@ class Environment
 
 	/**
 	 * Sanitizes the given script path
-	 *
-	 * @param string|null $scriptPath
-	 * @return string
 	 */
-	protected function sanitizeScriptPath(?string $scriptPath = null): string
+	protected function sanitizeScriptPath(string|null $scriptPath = null): string
 	{
 		$scriptPath ??= '';
 		$scriptPath = trim($scriptPath);
@@ -1097,8 +948,6 @@ class Environment
 	 *
 	 * This can be used to build the base baseUrl
 	 * for subfolder installations
-	 *
-	 * @return string
 	 */
 	public function scriptPath(): string
 	{
@@ -1107,8 +956,6 @@ class Environment
 
 	/**
 	 * Returns all environment data as array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

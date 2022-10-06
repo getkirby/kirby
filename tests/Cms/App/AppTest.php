@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Route;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
@@ -421,7 +422,7 @@ class AppTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('bar', $app->option('foo'));
+		$this->assertSame('bar', $app->option('foo'));
 	}
 
 	public function testOptionWithDotNotation()
@@ -437,7 +438,7 @@ class AppTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $app->option('mother.child'));
+		$this->assertSame('test', $app->option('mother.child'));
 	}
 
 	public function testOptionFromPlugin()
@@ -515,6 +516,7 @@ class AppTest extends TestCase
 			],
 			'server' => [
 				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
 				'HTTPS'       => true
 			]
 		]);
@@ -523,7 +525,62 @@ class AppTest extends TestCase
 			'option1' => 'global',
 			'option2' => 'getkirby',
 			'url'     => 'https://getkirby.com/docs',
-			'option3' => 'getkirby'
+			'option3' => '10.1.2.3',
+			'option4' => '10.1.2.3'
+		], $app->options());
+	}
+
+	public function testOptionsFromFileWithEnv1()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options-env1'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
+				'HTTPS'       => true
+			]
+		]);
+
+		$this->assertSame([
+			'option1' => 'global',
+			'option2' => 'getkirby',
+			'url'     => 'https://getkirby.com/docs',
+			'option3' => '10.1.2.3',
+			'option4' => 'env',
+			'option5' => 'env'
+		], $app->options());
+	}
+
+	public function testOptionsFromFileWithEnv2()
+	{
+		App::destroy();
+
+		$app = new App([
+			'roots' => [
+				'index'  => '/dev/null',
+				'config' => __DIR__ . '/fixtures/AppTest/options-env2'
+			],
+			'server' => [
+				'SERVER_NAME' => 'getkirby.com',
+				'SERVER_ADDR' => '10.1.2.3',
+				'HTTPS'       => true
+			]
+		]);
+
+		// the env file determines the allowed base URL
+		// and therefore the loaded host-specific config file
+		$this->assertSame([
+			'option1' => 'global',
+			'option2' => 'trykirby',
+			'url'     => 'https://trykirby.com',
+			'option3' => '10.1.2.3',
+			'option4' => 'env',
+			'option5' => 'env'
 		], $app->options());
 	}
 
@@ -698,13 +755,13 @@ class AppTest extends TestCase
 		$fileB = $page->file('test-b.jpg');
 
 		// plain
-		$this->assertEquals($fileA, $app->file('test/test-a.jpg'));
+		$this->assertSame($fileA, $app->file('test/test-a.jpg'));
 
 		// with page parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $page));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $page));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
 	}
 
 	public function testFindSiteFile()
@@ -736,19 +793,19 @@ class AppTest extends TestCase
 		$fileC = $page->file('test-c.jpg');
 
 		// plain
-		$this->assertEquals($fileA, $app->file('test-a.jpg'));
+		$this->assertSame($fileA, $app->file('test-a.jpg'));
 
 		// with page parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $site));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $site));
 
 		// with subpage parent
-		$this->assertEquals($fileC, $app->file('home/test-c.jpg'));
-		$this->assertEquals($fileC, $app->file('home/test-c.jpg', $site));
-		$this->assertEquals($fileC, $app->file('test-c.jpg', $page));
+		$this->assertSame($fileC, $app->file('home/test-c.jpg'));
+		$this->assertSame($fileC, $app->file('home/test-c.jpg', $site));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $page));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
-		$this->assertEquals($fileC, $app->file('test-c.jpg', $fileC));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileC, $app->file('test-c.jpg', $fileC));
 	}
 
 	public function testFindUserFile()
@@ -773,10 +830,40 @@ class AppTest extends TestCase
 		$fileB = $user->file('test-b.jpg');
 
 		// with user parent
-		$this->assertEquals($fileA, $app->file('test-a.jpg', $user));
+		$this->assertSame($fileA, $app->file('test-a.jpg', $user));
 
 		// with file parent
-		$this->assertEquals($fileB, $app->file('test-b.jpg', $fileA));
+		$this->assertSame($fileB, $app->file('test-b.jpg', $fileA));
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFindFileByUUID()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'test-a.jpg',
+								'content'  => ['uuid' => 'my-file']
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$file = $page->file('test-a.jpg');
+
+		$this->assertSame($file, $app->file('file://my-file'));
 	}
 
 	public function testBlueprints()
@@ -805,7 +892,7 @@ class AppTest extends TestCase
 			'default'
 		];
 
-		$this->assertEquals($expected, $app->blueprints());
+		$this->assertSame($expected, $app->blueprints());
 
 		$expected = [
 			'a',
@@ -813,7 +900,7 @@ class AppTest extends TestCase
 			'default'
 		];
 
-		$this->assertEquals($expected, $app->blueprints('files'));
+		$this->assertSame($expected, $app->blueprints('files'));
 	}
 
 	/**
@@ -1048,7 +1135,7 @@ class AppTest extends TestCase
 
 	public function testVersionHash()
 	{
-		$this->assertEquals(md5(App::version()), App::versionHash());
+		$this->assertSame(md5(App::version()), App::versionHash());
 	}
 
 	public function testSlugsOption()
@@ -1239,5 +1326,58 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame('foo/bar', $app->path());
+	}
+
+	/**
+	 * @covers ::page
+	 */
+	public function testPageWithUUID()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'content'  => ['uuid' => 'my-page']
+					],
+				]
+			]
+		]);
+
+		$page = $app->page('test');
+		$this->assertSame($page, $app->page('page://my-page'));
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRender()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp,
+				'templates' => $this->tmp
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+					]
+				]
+			]
+		]);
+
+		F::write($this->tmp . '/default.php', 'Hello');
+
+		$this->assertSame('Hello', $app->render()->body());
+
+		$_ENV['KIRBY_RENDER'] = false;
+
+		$this->assertNull($app->render());
+
+		unset($_ENV['KIRBY_RENDER']);
 	}
 }

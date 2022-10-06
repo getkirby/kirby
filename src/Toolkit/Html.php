@@ -137,7 +137,7 @@ class Html extends Xml
 	 * @param string|null $after An optional string that will be appended if the result is not empty
 	 * @return string|null The generated HTML attributes string
 	 */
-	public static function attr($name, $value = null, ?string $before = null, ?string $after = null): ?string
+	public static function attr($name, $value = null, string|null $before = null, string|null $after = null): string|null
 	{
 		// HTML supports boolean attributes without values
 		if (is_array($name) === false && is_bool($value) === true) {
@@ -219,7 +219,7 @@ class Html extends Xml
 	 *
 	 * @psalm-suppress ParamNameMismatch
 	 */
-	public static function encode(?string $string, bool $keepTags = false): string
+	public static function encode(string|null $string, bool $keepTags = false): string
 	{
 		if ($string === null) {
 			return '';
@@ -279,7 +279,7 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<script>` tag
 	 * @return string The generated HTML
 	 */
-	public static function gist(string $url, ?string $file = null, array $attr = []): string
+	public static function gist(string $url, string|null $file = null, array $attr = []): string
 	{
 		if ($file === null) {
 			$src = $url . '.js';
@@ -363,7 +363,7 @@ class Html extends Xml
 	 * @param string|null $target Current `target` value
 	 * @return string|null New `rel` value or `null` if not needed
 	 */
-	public static function rel(?string $rel = null, ?string $target = null): ?string
+	public static function rel(string|null $rel = null, string|null $target = null): string|null
 	{
 		$rel = trim($rel ?? '');
 
@@ -430,7 +430,7 @@ class Html extends Xml
 	 * @param mixed $value
 	 * @return string|null
 	 */
-	public static function value($value): ?string
+	public static function value($value): string|null
 	{
 		if ($value === true) {
 			return 'true';
@@ -462,7 +462,7 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function video(string $url, array $options = [], array $attr = []): ?string
+	public static function video(string $url, array $options = [], array $attr = []): string|null
 	{
 		// YouTube video
 		if (Str::contains($url, 'youtu', true) === true) {
@@ -522,22 +522,17 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function vimeo(string $url, array $options = [], array $attr = []): ?string
+	public static function vimeo(string $url, array $options = [], array $attr = []): string|null
 	{
 		$uri   = new Uri($url);
 		$path  = $uri->path();
 		$query = $uri->query();
-		$id    = null;
 
-		switch ($uri->host()) {
-			case 'vimeo.com':
-			case 'www.vimeo.com':
-				$id = $path->last();
-				break;
-			case 'player.vimeo.com':
-				$id = $path->nth(1);
-				break;
-		}
+		$id = match ($uri->host()) {
+			'vimeo.com', 'www.vimeo.com' => $path->last(),
+			'player.vimeo.com'           => $path->nth(1),
+			default                      => null
+		};
 
 		if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
 			return null;
@@ -562,7 +557,7 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function youtube(string $url, array $options = [], array $attr = []): ?string
+	public static function youtube(string $url, array $options = [], array $attr = []): string|null
 	{
 		if (preg_match('!youtu!i', $url) !== 1) {
 			return null;
@@ -576,7 +571,7 @@ class Html extends Xml
 		$host   = 'https://' . $uri->host() . '/embed';
 		$src    = null;
 
-		$isYoutubeId = function (?string $id = null): bool {
+		$isYoutubeId = function (string|null $id = null): bool {
 			if (empty($id) === true) {
 				return false;
 			}

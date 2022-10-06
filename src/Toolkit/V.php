@@ -2,9 +2,12 @@
 
 namespace Kirby\Toolkit;
 
+use Countable;
 use Exception;
+use Kirby\Cms\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Idn;
+use Kirby\Uuid\Uuid;
 use ReflectionFunction;
 use Throwable;
 
@@ -121,7 +124,7 @@ class V
 	 * @param mixed ...$params
 	 * @return string|null
 	 */
-	public static function message(string $validatorName, ...$params): ?string
+	public static function message(string $validatorName, ...$params): string|null
 	{
 		$validatorName  = strtolower($validatorName);
 		$translationKey = 'error.validation.' . $validatorName;
@@ -146,7 +149,7 @@ class V
 						}
 					}
 					$value = implode(', ', $value);
-				} catch (Throwable $e) {
+				} catch (Throwable) {
 					$value = '-';
 				}
 			}
@@ -317,7 +320,7 @@ V::$validators = [
 	 * Pass an operator as second argument and another date as
 	 * third argument to compare them.
 	 */
-	'date' => function (?string $value, string $operator = null, string $test = null): bool {
+	'date' => function (string|null $value, string $operator = null, string $test = null): bool {
 		// make sure $value is a string
 		$value ??= '';
 
@@ -338,22 +341,16 @@ V::$validators = [
 			return false;
 		}
 
-		switch ($operator) {
-			case '!=':
-				return $value !== $test;
-			case '<':
-				return $value < $test;
-			case '>':
-				return $value > $test;
-			case '<=':
-				return $value <= $test;
-			case '>=':
-				return $value >= $test;
-			case '==':
-				return $value === $test;
-		}
+		return match ($operator) {
+			'!=' => $value !== $test,
+			'<'  => $value < $test,
+			'>'  => $value > $test,
+			'<='  => $value <= $test,
+			'>='  => $value >= $test,
+			'=='  => $value === $test,
 
-		throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+			default => throw new InvalidArgumentException('Invalid date comparison operator: "' . $operator . '". Allowed operators: "==", "!=", "<", "<=", ">", ">="')
+		};
 	},
 
 	/**
@@ -380,7 +377,7 @@ V::$validators = [
 		if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
 			try {
 				$email = Idn::encodeEmail($value);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				return false;
 			}
 
@@ -579,7 +576,7 @@ V::$validators = [
 	'size' => function ($value, $size, $operator = '=='): bool {
 		// if value is field object, first convert it to a readable value
 		// it is important to check at the beginning as the value can be string or numeric
-		if (is_a($value, '\Kirby\Cms\Field') === true) {
+		if ($value instanceof Field) {
 			$value = $value->value();
 		}
 
@@ -590,7 +587,7 @@ V::$validators = [
 		} elseif (is_array($value) === true) {
 			$count = count($value);
 		} elseif (is_object($value) === true) {
-			if ($value instanceof \Countable) {
+			if ($value instanceof Countable) {
 				$count = count($value);
 			} elseif (method_exists($value, 'count') === true) {
 				$count = $value->count();
@@ -601,18 +598,13 @@ V::$validators = [
 			throw new Exception('$value is of type without size');
 		}
 
-		switch ($operator) {
-			case '<':
-				return $count < $size;
-			case '>':
-				return $count > $size;
-			case '<=':
-				return $count <= $size;
-			case '>=':
-				return $count >= $size;
-			default:
-				return $count == $size;
-		}
+		return match ($operator) {
+			'<'     => $count < $size,
+			'>'     => $count > $size,
+			'<='    => $count <= $size,
+			'>='    => $count >= $size,
+			default => $count == $size
+		};
 	},
 
 	/**
@@ -637,5 +629,12 @@ V::$validators = [
 		// Added localhost support and removed 127.*.*.* ip restriction
 		$regex = '_^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:localhost)|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:\/[^\s]*)?$_iu';
 		return preg_match($regex, $value ?? '') !== 0;
+	},
+
+	/**
+	 * Checks for a valid Uuid, optionally for specific model type
+	 */
+	'uuid' => function (string $value, string $type = null): bool {
+		return Uuid::is($value, $type);
 	}
 ];

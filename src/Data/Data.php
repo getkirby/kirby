@@ -26,10 +26,8 @@ class Data
 {
 	/**
 	 * Handler Type Aliases
-	 *
-	 * @var array
 	 */
-	public static $aliases = [
+	public static array $aliases = [
 		'md'    => 'txt',
 		'mdown' => 'txt',
 		'rss'   => 'xml',
@@ -38,10 +36,8 @@ class Data
 
 	/**
 	 * All registered handlers
-	 *
-	 * @var array
 	 */
-	public static $handlers = [
+	public static array $handlers = [
 		'json' => 'Kirby\Data\Json',
 		'php'  => 'Kirby\Data\PHP',
 		'txt'  => 'Kirby\Data\Txt',
@@ -51,33 +47,32 @@ class Data
 
 	/**
 	 * Handler getter
-	 *
-	 * @param string $type
-	 * @return \Kirby\Data\Handler
 	 */
-	public static function handler(string $type)
+	public static function handler(string $type): Handler
 	{
 		// normalize the type
 		$type = strtolower($type);
 
 		// find a handler or alias
+		$alias   = static::$aliases[$type] ?? null;
 		$handler = static::$handlers[$type] ??
-				   static::$handlers[static::$aliases[$type] ?? null] ??
-				   null;
+				   ($alias ? static::$handlers[$alias] ?? null : null);
 
-		if ($handler !== null && class_exists($handler)) {
-			return new $handler();
+		if ($handler === null || class_exists($handler) === false) {
+			throw new Exception('Missing handler for type: "' . $type . '"');
 		}
 
-		throw new Exception('Missing handler for type: "' . $type . '"');
+		$handler = new $handler();
+
+		if ($handler instanceof Handler === false) {
+			throw new Exception('Handler for type: "' . $type . '" needs to extend Kirby\\Data\\Handler');
+		}
+
+		return $handler;
 	}
 
 	/**
 	 * Decodes data with the specified handler
-	 *
-	 * @param mixed $string
-	 * @param string $type
-	 * @return array
 	 */
 	public static function decode($string, string $type): array
 	{
@@ -86,10 +81,6 @@ class Data
 
 	/**
 	 * Encodes data with the specified handler
-	 *
-	 * @param mixed $data
-	 * @param string $type
-	 * @return string
 	 */
 	public static function encode($data, string $type): string
 	{
@@ -100,12 +91,8 @@ class Data
 	 * Reads data from a file;
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
-	 *
-	 * @param string $file
-	 * @param string $type
-	 * @return array
 	 */
-	public static function read(string $file, string $type = null): array
+	public static function read(string $file, string|null $type = null): array
 	{
 		return static::handler($type ?? F::extension($file))->read($file);
 	}
@@ -114,14 +101,12 @@ class Data
 	 * Writes data to a file;
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
-	 *
-	 * @param string $file
-	 * @param mixed $data
-	 * @param string $type
-	 * @return bool
 	 */
-	public static function write(string $file = null, $data = [], string $type = null): bool
-	{
+	public static function write(
+		string $file,
+		$data = [],
+		string|null $type = null
+	): bool {
 		return static::handler($type ?? F::extension($file))->write($file, $data);
 	}
 }

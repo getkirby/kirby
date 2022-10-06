@@ -35,7 +35,7 @@ if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
 	 * @param string|null $after An optional string that will be appended if the result is not empty
 	 * @return string|null
 	 */
-	function attr(?array $attr = null, ?string $before = null, ?string $after = null): ?string
+	function attr(array|null $attr = null, string|null $before = null, string|null $after = null): string|null
 	{
 		return Html::attr($attr, null, $before, $after);
 	}
@@ -61,7 +61,7 @@ if (Helpers::hasOverride('csrf') === false) { // @codeCoverageIgnore
 	 * @param string|null $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
-	function csrf(?string $check = null)
+	function csrf(string|null $check = null)
 	{
 		// check explicitly if there have been no arguments at all;
 		// checking for null introduces a security issue because null could come
@@ -82,7 +82,7 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	 * @param string|array $options Pass an array of attributes for the link tag or a media attribute string
 	 * @return string|null
 	 */
-	function css($url, $options = null): ?string
+	function css($url, $options = null): string|null
 	{
 		return Html::css($url, $options);
 	}
@@ -167,7 +167,7 @@ if (Helpers::hasOverride('gist') === false) { // @codeCoverageIgnore
 	 * @param string|null $file
 	 * @return string
 	 */
-	function gist(string $url, ?string $file = null): string
+	function gist(string $url, string|null $file = null): string
 	{
 		return App::instance()->kirbytag([
 			'gist' => $url,
@@ -199,7 +199,7 @@ if (Helpers::hasOverride('h') === false) { // @codeCoverageIgnore
 	 * @param bool $keepTags
 	 * @return string
 	 */
-	function h(?string $string, bool $keepTags = false): string
+	function h(string|null $string, bool $keepTags = false): string
 	{
 		return Html::encode($string, $keepTags);
 	}
@@ -213,7 +213,7 @@ if (Helpers::hasOverride('html') === false) { // @codeCoverageIgnore
 	 * @param bool $keepTags
 	 * @return string
 	 */
-	function html(?string $string, bool $keepTags = false): string
+	function html(string|null $string, bool $keepTags = false): string
 	{
 		return Html::encode($string, $keepTags);
 	}
@@ -230,7 +230,7 @@ if (Helpers::hasOverride('image') === false) { // @codeCoverageIgnore
 	 * @param string|null $path
 	 * @return \Kirby\Cms\File|null
 	 */
-	function image(?string $path = null)
+	function image(string|null $path = null)
 	{
 		return App::instance()->image($path);
 	}
@@ -259,7 +259,7 @@ if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
 	 * @param string|array $options
 	 * @return string|null
 	 */
-	function js($url, $options = null): ?string
+	function js($url, $options = null): string|null
 	{
 		return Html::js($url, $options);
 	}
@@ -287,7 +287,7 @@ if (Helpers::hasOverride('kirbytag') === false) { // @codeCoverageIgnore
 	 * @param array $data
 	 * @return string
 	 */
-	function kirbytag($type, ?string $value = null, array $attr = [], array $data = []): string
+	function kirbytag($type, string|null $value = null, array $attr = [], array $data = []): string
 	{
 		return App::instance()->kirbytag($type, $value, $attr, $data);
 	}
@@ -302,7 +302,7 @@ if (Helpers::hasOverride('kirbytags') === false) { // @codeCoverageIgnore
 	 * @param array $data
 	 * @return string
 	 */
-	function kirbytags(?string $text = null, array $data = []): string
+	function kirbytags(string|null $text = null, array $data = []): string
 	{
 		return App::instance()->kirbytags($text, $data);
 	}
@@ -317,7 +317,7 @@ if (Helpers::hasOverride('kirbytext') === false) { // @codeCoverageIgnore
 	 * @param array $data
 	 * @return string
 	 */
-	function kirbytext(?string $text = null, array $data = []): string
+	function kirbytext(string|null $text = null, array $data = []): string
 	{
 		return App::instance()->kirbytext($text, $data);
 	}
@@ -333,7 +333,7 @@ if (Helpers::hasOverride('kirbytextinline') === false) { // @codeCoverageIgnore
 	 * @param array $options
 	 * @return string
 	 */
-	function kirbytextinline(?string $text = null, array $options = []): string
+	function kirbytextinline(string|null $text = null, array $options = []): string
 	{
 		$options['markdown']['inline'] = true;
 		return App::instance()->kirbytext($text, $options);
@@ -348,7 +348,7 @@ if (Helpers::hasOverride('kt') === false) { // @codeCoverageIgnore
 	 * @param array $data
 	 * @return string
 	 */
-	function kt(?string $text = null, array $data = []): string
+	function kt(string|null $text = null, array $data = []): string
 	{
 		return App::instance()->kirbytext($text, $data);
 	}
@@ -363,7 +363,7 @@ if (Helpers::hasOverride('kti') === false) { // @codeCoverageIgnore
 	 * @param array $options
 	 * @return string
 	 */
-	function kti(?string $text = null, array $options = []): string
+	function kti(string|null $text = null, array $options = []): string
 	{
 		$options['markdown']['inline'] = true;
 		return App::instance()->kirbytext($text, $options);
@@ -378,7 +378,7 @@ if (Helpers::hasOverride('load') === false) { // @codeCoverageIgnore
 	 * @param string|null $base
 	 * @return void
 	 */
-	function load(array $classmap, ?string $base = null): void
+	function load(array $classmap, string|null $base = null): void
 	{
 		F::loadClasses($classmap, $base);
 	}
@@ -393,7 +393,7 @@ if (Helpers::hasOverride('markdown') === false) { // @codeCoverageIgnore
 	 * @param array $options
 	 * @return string
 	 */
-	function markdown(?string $text = null, array $options = []): string
+	function markdown(string|null $text = null, array $options = []): string
 	{
 		return App::instance()->markdown($text, $options);
 	}
@@ -421,7 +421,7 @@ if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
 	 * @param string|null $id
 	 * @return \Kirby\Cms\Page|null
 	 */
-	function page(?string $id = null)
+	function page(string|null $id = null)
 	{
 		if (empty($id) === true) {
 			return App::instance()->site()->page();
@@ -459,8 +459,9 @@ if (Helpers::hasOverride('param') === false) { // @codeCoverageIgnore
 	 * @param string $key
 	 * @param string|null $fallback
 	 * @return string|null
+	 * @psalm-return ($fallback is string ? string : string|null)
 	 */
-	function param(string $key, ?string $fallback = null): ?string
+	function param(string $key, string|null $fallback = null): string|null
 	{
 		return App::instance()->request()->url()->params()->$key ?? $fallback;
 	}
@@ -505,7 +506,7 @@ if (Helpers::hasOverride('router') === false) { // @codeCoverageIgnore
 	 * @param \Closure|null $callback
 	 * @return mixed
 	 */
-	function router(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+	function router(string|null $path = null, string $method = 'GET', array $routes = [], Closure|null $callback = null)
 	{
 		return Router::execute($path, $method, $routes, $callback);
 	}
@@ -545,7 +546,7 @@ if (Helpers::hasOverride('smartypants') === false) { // @codeCoverageIgnore
 	 * @param string|null $text
 	 * @return string
 	 */
-	function smartypants(?string $text = null): string
+	function smartypants(string|null $text = null): string
 	{
 		return App::instance()->smartypants($text);
 	}
@@ -560,7 +561,7 @@ if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
 	 * @param bool $return
 	 * @return string|null
 	 */
-	function snippet($name, $data = [], bool $return = false): ?string
+	function snippet($name, $data = [], bool $return = false): string|null
 	{
 		return App::instance()->snippet($name, $data, $return);
 	}
@@ -624,7 +625,7 @@ if (Helpers::hasOverride('timestamp') === false) { // @codeCoverageIgnore
 	 * @param int|array|null $step array of `unit` and `size` to round to nearest
 	 * @return int|null
 	 */
-	function timestamp(?string $date = null, $step = null): ?int
+	function timestamp(string|null $date = null, $step = null): int|null
 	{
 		return Date::roundedTimestamp($date, $step);
 	}
@@ -641,7 +642,7 @@ if (Helpers::hasOverride('tt') === false) { // @codeCoverageIgnore
 	 * @param string|null $locale
 	 * @return string
 	 */
-	function tt(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
+	function tt(string $key, $fallback = null, array|null $replace = null, string|null $locale = null): string
 	{
 		return I18n::template($key, $fallback, $replace, $locale);
 	}
@@ -657,7 +658,7 @@ if (Helpers::hasOverride('twitter') === false) { // @codeCoverageIgnore
 	 * @param string|null $class
 	 * @return string
 	 */
-	function twitter(string $username, ?string $text = null, ?string $title = null, ?string $class = null): string
+	function twitter(string $username, string|null $text = null, string|null $title = null, string|null $class = null): string
 	{
 		return App::instance()->kirbytag([
 			'twitter' => $username,
@@ -676,7 +677,7 @@ if (Helpers::hasOverride('u') === false) { // @codeCoverageIgnore
 	 * @param array|string|null $options
 	 * @return string
 	 */
-	function u(?string $path = null, $options = null): string
+	function u(string|null $path = null, $options = null): string
 	{
 		return Url::to($path, $options);
 	}
@@ -690,7 +691,7 @@ if (Helpers::hasOverride('url') === false) { // @codeCoverageIgnore
 	 * @param array|string|null $options
 	 * @return string
 	 */
-	function url(?string $path = null, $options = null): string
+	function url(string|null $path = null, $options = null): string
 	{
 		return Url::to($path, $options);
 	}
@@ -719,7 +720,7 @@ if (Helpers::hasOverride('video') === false) { // @codeCoverageIgnore
 	 * @param array $attr
 	 * @return string|null
 	 */
-	function video(string $url, array $options = [], array $attr = []): ?string
+	function video(string $url, array $options = [], array $attr = []): string|null
 	{
 		return Html::video($url, $options, $attr);
 	}
@@ -734,7 +735,7 @@ if (Helpers::hasOverride('vimeo') === false) { // @codeCoverageIgnore
 	 * @param array $attr
 	 * @return string|null
 	 */
-	function vimeo(string $url, array $options = [], array $attr = []): ?string
+	function vimeo(string $url, array $options = [], array $attr = []): string|null
 	{
 		return Html::vimeo($url, $options, $attr);
 	}
@@ -764,7 +765,7 @@ if (Helpers::hasOverride('youtube') === false) { // @codeCoverageIgnore
 	 * @param array $attr
 	 * @return string|null
 	 */
-	function youtube(string $url, array $options = [], array $attr = []): ?string
+	function youtube(string $url, array $options = [], array $attr = []): string|null
 	{
 		return Html::youtube($url, $options, $attr);
 	}

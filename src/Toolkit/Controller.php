@@ -58,7 +58,7 @@ class Controller
 
 		$function = F::load($file);
 
-		if (is_a($function, 'Closure') === false) {
+		if ($function instanceof Closure === false) {
 			return null;
 		}
 

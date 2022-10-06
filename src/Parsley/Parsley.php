@@ -2,7 +2,10 @@
 
 namespace Kirby\Parsley;
 
+use DOMDocument;
+use DOMElement;
 use DOMNode;
+use DOMText;
 use Kirby\Parsley\Schema\Plain;
 use Kirby\Toolkit\Dom;
 
@@ -20,56 +23,18 @@ use Kirby\Toolkit\Dom;
  */
 class Parsley
 {
-	/**
-	 * @var array
-	 */
-	protected $blocks = [];
+	protected array $blocks = [];
+	protected DOMDocument $doc;
+	protected Dom $dom;
+	protected array $inline = [];
+	protected array $marks = [];
+	protected array $nodes = [];
+	protected Schema $schema;
+	protected array $skip = [];
 
-	/**
-	 * @var \DOMDocument
-	 */
-	protected $doc;
+	public static bool $useXmlExtension = true;
 
-	/**
-	 * @var \Kirby\Toolkit\Dom
-	 */
-	protected $dom;
-
-	/**
-	 * @var array
-	 */
-	protected $inline = [];
-
-	/**
-	 * @var array
-	 */
-	protected $marks = [];
-
-	/**
-	 * @var array
-	 */
-	protected $nodes = [];
-
-	/**
-	 * @var \Kirby\Parsley\Schema
-	 */
-	protected $schema;
-
-	/**
-	 * @var array
-	 */
-	protected $skip = [];
-
-	/**
-	 * @var bool
-	 */
-	public static $useXmlExtension = true;
-
-	/**
-	 * @param string $html
-	 * @param \Kirby\Parsley\Schema|null $schema
-	 */
-	public function __construct(string $html, Schema $schema = null)
+	public function __construct(string $html, Schema|null $schema = null)
 	{
 		// fail gracefully if the XML extension is not installed
 		// or should be skipped
@@ -110,8 +75,6 @@ class Parsley
 
 	/**
 	 * Returns all detected blocks
-	 *
-	 * @return array
 	 */
 	public function blocks(): array
 	{
@@ -120,9 +83,6 @@ class Parsley
 
 	/**
 	 * Load all node rules from the schema
-	 *
-	 * @param array $nodes
-	 * @return array
 	 */
 	public function createNodeRules(array $nodes): array
 	{
@@ -136,9 +96,6 @@ class Parsley
 	/**
 	 * Checks if the given element contains
 	 * any other block level elements
-	 *
-	 * @param \DOMNode $element
-	 * @return bool
 	 */
 	public function containsBlock(DOMNode $element): bool
 	{
@@ -162,10 +119,8 @@ class Parsley
 	 * if the type matches, or will be appended.
 	 *
 	 * The inline cache will be reset afterwards
-	 *
-	 * @return void
 	 */
-	public function endInlineBlock()
+	public function endInlineBlock(): void
 	{
 		if (empty($this->inline) === true) {
 			return;
@@ -191,11 +146,8 @@ class Parsley
 	 * Creates a fallback block type for the given
 	 * element. The element can either be a element object
 	 * or a simple HTML/plain text string
-	 *
-	 * @param \Kirby\Parsley\Element|string $element
-	 * @return array|null
 	 */
-	public function fallback($element): ?array
+	public function fallback(Element|string $element): array|null
 	{
 		if ($fallback = $this->schema->fallback($element)) {
 			return $fallback;
@@ -206,13 +158,10 @@ class Parsley
 
 	/**
 	 * Checks if the given DOMNode is a block element
-	 *
-	 * @param DOMNode $element
-	 * @return bool
 	 */
 	public function isBlock(DOMNode $element): bool
 	{
-		if (is_a($element, 'DOMElement') === false) {
+		if ($element instanceof DOMElement === false) {
 			return false;
 		}
 
@@ -221,17 +170,14 @@ class Parsley
 
 	/**
 	 * Checks if the given DOMNode is an inline element
-	 *
-	 * @param \DOMNode $element
-	 * @return bool
 	 */
 	public function isInline(DOMNode $element): bool
 	{
-		if (is_a($element, 'DOMText') === true) {
+		if ($element instanceof DOMText) {
 			return true;
 		}
 
-		if (is_a($element, 'DOMElement') === true) {
+		if ($element instanceof DOMElement) {
 			// all spans will be treated as inline elements
 			if ($element->tagName === 'span') {
 				return true;
@@ -252,11 +198,7 @@ class Parsley
 		return false;
 	}
 
-	/**
-	 * @param array $block
-	 * @return void
-	 */
-	public function mergeOrAppend(array $block)
+	public function mergeOrAppend(array $block): void
 	{
 		$lastIndex = count($this->blocks) - 1;
 		$lastItem  = $this->blocks[$lastIndex] ?? null;
@@ -274,9 +216,6 @@ class Parsley
 	/**
 	 * Parses the given DOM node and tries to
 	 * convert it to a block or a list of blocks
-	 *
-	 * @param \DOMNode $element
-	 * @return void
 	 */
 	public function parseNode(DOMNode $element): bool
 	{
@@ -339,9 +278,6 @@ class Parsley
 		return true;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function useXmlExtension(): bool
 	{
 		if (static::$useXmlExtension !== true) {

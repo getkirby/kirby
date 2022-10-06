@@ -19,7 +19,6 @@ class Value
 {
 	/**
 	 * Cached value
-	 * @var mixed
 	 */
 	protected $value;
 
@@ -27,35 +26,30 @@ class Value
 	 * the number of minutes until the value expires
 	 * @todo Rename this property to $expiry to reflect
 	 *       both minutes and absolute timestamps
-	 * @var int
 	 */
-	protected $minutes;
+	protected int $minutes;
 
 	/**
 	 * Creation timestamp
-	 * @var int
 	 */
-	protected $created;
+	protected int $created;
 
 	/**
 	 * Constructor
 	 *
-	 * @param mixed $value
 	 * @param int $minutes the number of minutes until the value expires
 	 *                     or an absolute UNIX timestamp
 	 * @param int $created the UNIX timestamp when the value has been created
 	 */
-	public function __construct($value, int $minutes = 0, int $created = null)
+	public function __construct($value, int $minutes = 0, int|null $created = null)
 	{
 		$this->value   = $value;
-		$this->minutes = $minutes ?? 0;
+		$this->minutes = $minutes;
 		$this->created = $created ?? time();
 	}
 
 	/**
 	 * Returns the creation date as UNIX timestamp
-	 *
-	 * @return int
 	 */
 	public function created(): int
 	{
@@ -65,10 +59,8 @@ class Value
 	/**
 	 * Returns the expiration date as UNIX timestamp or
 	 * null if the value never expires
-	 *
-	 * @return int|null
 	 */
-	public function expires(): ?int
+	public function expires(): int|null
 	{
 		// 0 = keep forever
 		if ($this->minutes === 0) {
@@ -85,41 +77,37 @@ class Value
 
 	/**
 	 * Creates a value object from an array
-	 *
-	 * @param array $array
-	 * @return static
 	 */
-	public static function fromArray(array $array)
+	public static function fromArray(array $array): static
 	{
-		return new static($array['value'] ?? null, $array['minutes'] ?? 0, $array['created'] ?? null);
+		return new static(
+			$array['value'] ?? null,
+			$array['minutes'] ?? 0,
+			$array['created'] ?? null
+		);
 	}
 
 	/**
 	 * Creates a value object from a JSON string;
 	 * returns null on error
-	 *
-	 * @param string $json
-	 * @return static|null
 	 */
-	public static function fromJson(string $json)
+	public static function fromJson(string $json): static|null
 	{
 		try {
 			$array = json_decode($json, true);
 
-			if (is_array($array)) {
+			if (is_array($array) === true) {
 				return static::fromArray($array);
-			} else {
-				return null;
 			}
-		} catch (Throwable $e) {
+
+			return null;
+		} catch (Throwable) {
 			return null;
 		}
 	}
 
 	/**
 	 * Converts the object to a JSON string
-	 *
-	 * @return string
 	 */
 	public function toJson(): string
 	{
@@ -128,8 +116,6 @@ class Value
 
 	/**
 	 * Converts the object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -142,8 +128,6 @@ class Value
 
 	/**
 	 * Returns the pure value
-	 *
-	 * @return mixed
 	 */
 	public function value()
 	{

@@ -52,6 +52,7 @@ trait AppPlugins
 		'blueprints' => [],
 		'cacheTypes' => [],
 		'collections' => [],
+		'commands' => [],
 		'components' => [],
 		'controllers' => [],
 		'collectionFilters' => [],
@@ -120,14 +121,14 @@ trait AppPlugins
 	protected function extendApi($api): array
 	{
 		if (is_array($api) === true) {
-			if (is_a($api['routes'] ?? [], 'Closure') === true) {
+			if (($api['routes'] ?? []) instanceof Closure) {
 				$api['routes'] = $api['routes']($this);
 			}
 
 			return $this->extensions['api'] = A::merge($this->extensions['api'], $api, A::MERGE_APPEND);
-		} else {
-			return $this->extensions['api'];
 		}
+
+		return $this->extensions['api'];
 	}
 
 	/**
@@ -213,6 +214,17 @@ trait AppPlugins
 	protected function extendCacheTypes(array $cacheTypes): array
 	{
 		return $this->extensions['cacheTypes'] = array_merge($this->extensions['cacheTypes'], $cacheTypes);
+	}
+
+	/**
+	 * Registers additional CLI commands
+	 *
+	 * @param array $commands
+	 * @return array
+	 */
+	protected function extendCommands(array $commands): array
+	{
+		return $this->extensions['commands'] = array_merge($this->extensions['commands'], $commands);
 	}
 
 	/**
@@ -520,7 +532,7 @@ trait AppPlugins
 	 */
 	protected function extendRoutes($routes): array
 	{
-		if (is_a($routes, 'Closure') === true) {
+		if ($routes instanceof Closure) {
 			$routes = $routes($this);
 		}
 

@@ -1175,11 +1175,7 @@ class Collection extends Iterator implements Countable
 			return $callback->call($this, $condition);
 		}
 
-		if ($fallback !== null) {
-			return $fallback->call($this, $condition);
-		}
-
-		return $this;
+		return $fallback?->call($this, $condition) ?? $this;
 	}
 
 	/**

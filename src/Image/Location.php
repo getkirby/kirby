@@ -14,19 +14,8 @@ namespace Kirby\Image;
  */
 class Location
 {
-	/**
-	 * latitude
-	 *
-	 * @var float|null
-	 */
-	protected $lat;
-
-	/**
-	 * longitude
-	 *
-	 * @var float|null
-	 */
-	protected $lng;
+	protected float|null $lat = null;
+	protected float|null $lng = null;
 
 	/**
 	 * Constructor
@@ -47,32 +36,24 @@ class Location
 
 	/**
 	 * Returns the latitude
-	 *
-	 * @return float|null
 	 */
-	public function lat()
+	public function lat(): float|null
 	{
 		return $this->lat;
 	}
 
 	/**
 	 * Returns the longitude
-	 *
-	 * @return float|null
 	 */
-	public function lng()
+	public function lng(): float|null
 	{
 		return $this->lng;
 	}
 
 	/**
 	 * Converts the gps coordinates
-	 *
-	 * @param string|array $coord
-	 * @param string $hemi
-	 * @return float
 	 */
-	protected function gps($coord, string $hemi): float
+	protected function gps(array $coord, string $hemi): float
 	{
 		$degrees = count($coord) > 0 ? $this->num($coord[0]) : 0;
 		$minutes = count($coord) > 1 ? $this->num($coord[1]) : 0;
@@ -86,9 +67,6 @@ class Location
 
 	/**
 	 * Converts coordinates to floats
-	 *
-	 * @param string $part
-	 * @return float
 	 */
 	protected function num(string $part): float
 	{
@@ -103,8 +81,6 @@ class Location
 
 	/**
 	 * Converts the object into a nicely readable array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -116,8 +92,6 @@ class Location
 
 	/**
 	 * Echos the entire location as lat, lng
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -126,8 +100,6 @@ class Location
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{

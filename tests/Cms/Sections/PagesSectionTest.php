@@ -2,40 +2,48 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
 use PHPUnit\Framework\TestCase;
 
 class PagesSectionTest extends TestCase
 {
 	protected $app;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		App::destroy();
+		Dir::make($this->tmp = __DIR__ . '/tmp');
 
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		]);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	public function testHeadline()
 	{
 		// single headline
 		$section = new Section('pages', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => 'Test'
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => 'Test'
 		]);
 
 		$this->assertEquals('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('pages', [
-			'name'     => 'test',
-			'model'    => new Page(['slug' => 'test']),
-			'headline' => [
+			'name'  => 'test',
+			'model' => new Page(['slug' => 'test']),
+			'label' => [
 				'en' => 'Pages',
 				'de' => 'Seiten'
 			]

@@ -68,8 +68,10 @@ export default {
 				this.isLoading = false;
 			}
 		},
-		onSubmit($event) {
-			this.$events.$emit("keydown.cmd.s", $event);
+		onSubmit(values) {
+			// ensure that all values are actually commited to content store
+			this.$store.dispatch("content/update", [null, values]);
+			this.$events.$emit("keydown.cmd.s", values);
 		}
 	}
 };

@@ -96,7 +96,7 @@ class Field
 	 * @param string $key
 	 * @param mixed $value
 	 */
-	public function __construct(?object $parent, string $key, $value)
+	public function __construct(object|null $parent, string $key, $value)
 	{
 		$this->key    = $key;
 		$this->value  = $value;
@@ -187,7 +187,7 @@ class Field
 			return $this;
 		}
 
-		if (is_a($fallback, 'Kirby\Cms\Field') === true) {
+		if ($fallback instanceof self) {
 			return $fallback;
 		}
 

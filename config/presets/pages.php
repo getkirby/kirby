@@ -6,12 +6,12 @@ return function (array $props) {
 	// load the general templates setting for all sections
 	$templates = $props['templates'] ?? null;
 
-	$section = function ($headline, $status, $props) use ($templates) {
+	$section = function ($label, $status, $props) use ($templates) {
 		$defaults = [
-			'headline' => $headline,
-			'type'     => 'pages',
-			'layout'   => 'list',
-			'status'   => $status
+			'label'  => $label,
+			'type'   => 'pages',
+			'layout' => 'list',
+			'status' => $status
 		];
 
 		if ($props === true) {
@@ -20,7 +20,7 @@ return function (array $props) {
 
 		if (is_string($props) === true) {
 			$props = [
-				'headline' => $props
+				'label' => $props
 			];
 		}
 

@@ -369,6 +369,18 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::excerpt
+	 */
+	public function testExcerptWithTagFollowedByInterpunctuation()
+	{
+		$string   = 'Why not <a href="https://getkirby.com/">Get Kirby</a>?';
+		$expected = 'Why not Get Kirby?';
+		$result   = Str::excerpt($string, 100);
+
+		$this->assertSame($expected, $result);
+	}
+
+	/**
 	 * @covers ::float
 	 */
 	public function testFloat()
@@ -838,10 +850,19 @@ class StrTest extends TestCase
 		]));
 
 		// fallback
-		$this->assertSame('From - to -', Str::safeTemplate(
+		$this->assertSame('From here to {{ b }}', Str::safeTemplate(
 			'From {{ a }} to {{ b }}',
-			[],
+			['a' => 'here']
+		));
+		$this->assertSame('From here to -', Str::safeTemplate(
+			'From {{ a }} to {{ b }}',
+			['a' => 'here'],
 			['fallback' => '-']
+		));
+		$this->assertSame('From here to ', Str::safeTemplate(
+			'From {{ a }} to {{ b }}',
+			['a' => 'here'],
+			['fallback' => '']
 		));
 
 		// callback
@@ -862,6 +883,30 @@ class StrTest extends TestCase
 					$this->assertSame($data, $callbackData);
 					return strtoupper($result);
 				}
+			]
+		));
+
+		// callback with fallback
+		$this->assertSame('This is a FALLBACK with <HTML>', Str::safeTemplate(
+			'This is a {{ invalid }} with {< html >}',
+			$data,
+			[
+				'callback' => function ($result, $query, $callbackData) use ($data) {
+					$this->assertSame($data, $callbackData);
+					return strtoupper($result);
+				},
+				'fallback' => 'fallback'
+			]
+		));
+		$this->assertSame('This is a {{ invalid }} with <HTML>', Str::safeTemplate(
+			'This is a {{ invalid }} with {< html >}',
+			$data,
+			[
+				'callback' => function ($result, $query, $callbackData) use ($data) {
+					$this->assertSame($data, $callbackData);
+					return strtoupper($result);
+				},
+				'fallback' => null
 			]
 		));
 	}

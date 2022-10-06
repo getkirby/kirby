@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\PageUuid;
+use Kirby\Uuid\SiteUuid;
+
 class ExtendedModelWithContent extends ModelWithContent
 {
 	public function blueprint()
@@ -29,7 +32,7 @@ class ExtendedModelWithContent extends ModelWithContent
 		return null;
 	}
 
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return '/tmp';
 	}
@@ -37,7 +40,7 @@ class ExtendedModelWithContent extends ModelWithContent
 
 class BrokenModelWithContent extends ExtendedModelWithContent
 {
-	public function root(): ?string
+	public function root(): string|null
 	{
 		return null;
 	}
@@ -170,6 +173,83 @@ class ModelWithContentTest extends TestCase
 		], $model->blueprints('menu'));
 	}
 
+	public function testToSafeString()
+	{
+		$model = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
+		$this->assertSame('Hello value &amp; foo', $model->toSafeString('Hello {{ model.title }} {{ model.slug }}'));
+		$this->assertSame('Hello value & foo', $model->toSafeString('Hello {< model.title >} {{ model.slug }}'));
+	}
+
+	public function testToSafeStringWithData()
+	{
+		$model = new Site();
+		$this->assertSame(
+			'Hello home in value &amp; value',
+			$model->toSafeString('Hello {{ model.homePageId }} in {{ key }}', ['key' => 'value & value'])
+		);
+		$this->assertSame(
+			'Hello home in value & value',
+			$model->toSafeString('Hello {{ model.homePageId }} in {< key >}', ['key' => 'value & value'])
+		);
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame(
+			'Hello foo/home in value &amp; value',
+			$model->toSafeString('Hello {{ model.slug }}/{{ site.homePageId }} in {{ key }}', ['key' => 'value & value'])
+		);
+		$this->assertSame(
+			'Hello foo/home in value & value',
+			$model->toSafeString('Hello {{ model.slug }}/{{ site.homePageId }} in {< key >}', ['key' => 'value & value'])
+		);
+	}
+
+	public function testToSafeStringWithFallback()
+	{
+		$model = new Site();
+		$this->assertSame('Hello ', $model->toSafeString('Hello {{ invalid }}', []));
+		$this->assertSame('Hello world', $model->toSafeString('Hello {{ invalid }}', [], 'world'));
+		$this->assertSame('Hello {{ invalid }}', $model->toSafeString('Hello {{ invalid }}', [], null));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', []));
+		$this->assertSame('Hello foo/world', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', [], 'world'));
+		$this->assertSame('Hello foo/{{ invalid }}', $model->toSafeString('Hello {{ model.slug }}/{{ invalid }}', [], null));
+	}
+
+	public function testToString()
+	{
+		$model = new Site();
+		$this->assertSame('Hello home', $model->toString('Hello {{ model.homePageId }}'));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/home', $model->toString('Hello {{ model.slug }}/{{ site.homePageId }}'));
+	}
+
+	public function testToStringWithData()
+	{
+		$model = new Site();
+		$this->assertSame('Hello home in value', $model->toString('Hello {{ model.homePageId }} in {{ key }}', ['key' => 'value']));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame(
+			'Hello foo/home in value',
+			$model->toString('Hello {{ model.slug }}/{{ site.homePageId }} in {{ key }}', ['key' => 'value'])
+		);
+	}
+
+	public function testToStringWithFallback()
+	{
+		$model = new Site();
+		$this->assertSame('Hello ', $model->toString('Hello {{ invalid }}', []));
+		$this->assertSame('Hello world', $model->toString('Hello {{ invalid }}', [], 'world'));
+		$this->assertSame('Hello {{ invalid }}', $model->toString('Hello {{ invalid }}', [], null));
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertSame('Hello foo/', $model->toString('Hello {{ model.slug }}/{{ invalid }}', []));
+		$this->assertSame('Hello foo/world', $model->toString('Hello {{ model.slug }}/{{ invalid }}', [], 'world'));
+		$this->assertSame('Hello foo/{{ invalid }}', $model->toString('Hello {{ model.slug }}/{{ invalid }}', [], null));
+	}
+
 	public function testToStringWithoutValue()
 	{
 		$model = new Site();
@@ -177,5 +257,14 @@ class ModelWithContentTest extends TestCase
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertSame('foo', $model->toString());
+	}
+
+	public function testUuid()
+	{
+		$model = new Site();
+		$this->assertInstanceOf(SiteUuid::class, $model->uuid());
+
+		$model = new Page(['slug' => 'foo']);
+		$this->assertInstanceOf(PageUuid::class, $model->uuid());
 	}
 }

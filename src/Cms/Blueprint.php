@@ -58,7 +58,7 @@ class Blueprint
 			throw new InvalidArgumentException('A blueprint model is required');
 		}
 
-		if (is_a($props['model'], ModelWithContent::class) === false) {
+		if ($props['model'] instanceof ModelWithContent === false) {
 			throw new InvalidArgumentException('Invalid blueprint model');
 		}
 
@@ -208,7 +208,7 @@ class Blueprint
 				$mixin = static::find($extend);
 				$mixin = static::extend($mixin);
 				$props = A::merge($mixin, $props, A::MERGE_REPLACE);
-			} catch (Exception $e) {
+			} catch (Exception) {
 				// keep the props unextended if the snippet wasn't found
 			}
 		}
@@ -231,7 +231,7 @@ class Blueprint
 	{
 		try {
 			$props = static::load($name);
-		} catch (Exception $e) {
+		} catch (Exception) {
 			$props = $fallback !== null ? static::load($fallback) : null;
 		}
 
@@ -251,7 +251,7 @@ class Blueprint
 	 * @param string $name
 	 * @return array|null
 	 */
-	public function field(string $name): ?array
+	public function field(string $name): array|null
 	{
 		return $this->fields[$name] ?? null;
 	}
@@ -297,7 +297,8 @@ class Blueprint
 		// now ensure that we always return the data array
 		if (is_string($file) === true && F::exists($file) === true) {
 			return static::$loaded[$name] = Data::read($file);
-		} elseif (is_array($file) === true) {
+		}
+		if (is_array($file) === true) {
 			return static::$loaded[$name] = $file;
 		}
 
@@ -398,9 +399,9 @@ class Blueprint
 			if (empty($columnProps['sections']) === true) {
 				$columnProps['sections'] = [
 					$tabName . '-info-' . $columnKey => [
-						'headline' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
-						'type'     => 'info',
-						'text'     => 'No sections yet'
+						'label' => 'Column (' . ($columnProps['width'] ?? '1/1') . ')',
+						'type'  => 'info',
+						'text'  => 'No sections yet'
 					]
 				];
 			}
@@ -620,17 +621,17 @@ class Blueprint
 
 			if (empty($type) === true || is_string($type) === false) {
 				$sections[$sectionName] = [
-					'name' => $sectionName,
-					'headline' => 'Invalid section type for section "' . $sectionName . '"',
-					'type' => 'info',
-					'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+					'name'  => $sectionName,
+					'label' => 'Invalid section type for section "' . $sectionName . '"',
+					'type'  => 'info',
+					'text'  => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
 				];
 			} elseif (isset(Section::$types[$type]) === false) {
 				$sections[$sectionName] = [
-					'name' => $sectionName,
-					'headline' => 'Invalid section type ("' . $type . '")',
-					'type' => 'info',
-					'text' => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
+					'name'  => $sectionName,
+					'label' => 'Invalid section type ("' . $type . '")',
+					'type'  => 'info',
+					'text'  => 'The following section types are available: ' . $this->helpList(array_keys(Section::$types))
 				];
 			}
 
@@ -777,7 +778,7 @@ class Blueprint
 	 * @param string|null $name
 	 * @return array|null
 	 */
-	public function tab(?string $name = null): ?array
+	public function tab(string|null $name = null): array|null
 	{
 		if ($name === null) {
 			return A::first($this->tabs);

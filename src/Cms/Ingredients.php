@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * The Ingredients class is the foundation for
  * `$kirby->urls()` and `$kirby->roots()` objects.
@@ -75,7 +77,7 @@ class Ingredients
 	public static function bake(array $ingredients)
 	{
 		foreach ($ingredients as $name => $ingredient) {
-			if (is_a($ingredient, 'Closure') === true) {
+			if ($ingredient instanceof Closure) {
 				$ingredients[$name] = $ingredient($ingredients);
 			}
 		}

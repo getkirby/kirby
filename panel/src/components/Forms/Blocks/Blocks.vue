@@ -190,10 +190,12 @@ export default {
 		this.$events.$off("paste", this.onPaste);
 	},
 	mounted() {
-		// focus first block
-		if (this.$props.autofocus === true) {
-			this.focus();
-		}
+		setTimeout(() => {
+			// focus first block
+			if (this.$props.autofocus === true) {
+				this.focus();
+			}
+		}, 100);
 	},
 	methods: {
 		append(what, index) {
@@ -408,15 +410,7 @@ export default {
 			return this.blocks.findIndex((element) => element.id === id);
 		},
 		focus(block) {
-			if (block?.id && this.$refs["block-" + block.id]) {
-				this.$refs["block-" + block.id][0].focus();
-				return;
-			}
-
-			if (this.blocks[0]) {
-				this.focus(this.blocks[0]);
-				return;
-			}
+			this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0]?.focus();
 		},
 		focusOrOpen(block) {
 			if (this.fieldsets[block.type].wysiwyg) {

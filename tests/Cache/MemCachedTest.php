@@ -33,6 +33,16 @@ class MemCachedTest extends TestCase
 	}
 
 	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$cache = new MemCached();
+
+		$this->assertTrue($cache->enabled());
+	}
+
+	/**
 	 * @covers ::set
 	 * @covers ::retrieve
 	 * @covers ::remove

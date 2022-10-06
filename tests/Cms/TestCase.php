@@ -3,22 +3,26 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-	protected $page = null;
 	protected $app;
+	protected $page = null;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		App::destroy();
 
+		Dir::make($this->tmp);
+
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		]);
 
@@ -33,6 +37,7 @@ class TestCase extends BaseTestCase
 	public function tearDown(): void
 	{
 		App::destroy();
+		Dir::remove($this->tmp);
 		Blueprint::$loaded = [];
 	}
 
@@ -77,7 +82,7 @@ class TestCase extends BaseTestCase
 			$this->assertEquals($id, $input->id());
 		}
 
-		if (is_a($id, Page::class)) {
+		if ($id instanceof Page) {
 			$this->assertEquals($input, $id);
 		}
 	}
@@ -90,7 +95,7 @@ class TestCase extends BaseTestCase
 			$this->assertEquals($id, $input->id());
 		}
 
-		if (is_a($id, File::class)) {
+		if ($id instanceof File) {
 			$this->assertEquals($input, $id);
 		}
 	}

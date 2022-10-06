@@ -9,6 +9,8 @@ class UsersFieldTest extends TestCase
 {
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->app = new App([
 			'roots' => [
 				'index' => '/dev/null'

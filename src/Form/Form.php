@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Model;
 use Kirby\Data\Data;
@@ -260,7 +261,7 @@ class Form
 
 		// convert closures to values
 		foreach ($values as $key => $value) {
-			if (is_a($value, 'Closure') === true) {
+			if ($value instanceof Closure) {
 				$values[$key] = $value($original[$key] ?? null);
 			}
 		}
@@ -316,7 +317,7 @@ class Form
 	 * @param string|null $language
 	 * @return array
 	 */
-	protected static function prepareFieldsForLanguage(array $fields, ?string $language = null): array
+	protected static function prepareFieldsForLanguage(array $fields, string|null $language = null): array
 	{
 		$kirby = App::instance(null, true);
 

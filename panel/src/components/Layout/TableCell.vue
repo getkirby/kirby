@@ -62,6 +62,10 @@ export default {
 				return "k-array-field-preview";
 			}
 
+			if (typeof this.value === "object") {
+				return "k-object-field-preview";
+			}
+
 			return "k-text-field-preview";
 		},
 		type() {

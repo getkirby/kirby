@@ -30,6 +30,11 @@ class MockObject extends Model
 	{
 		return ['id' => $this->id];
 	}
+
+	public function uuid()
+	{
+		return $this->id;
+	}
 }
 
 class CollectionTest extends TestCase
@@ -136,6 +141,27 @@ class CollectionTest extends TestCase
 
 		$this->assertEquals(['a', 'b', 'c', 0, 1], $collection->keys());
 		$this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
+	}
+
+	public function testFindByUuid()
+	{
+		$collection = new Collection([
+			$page = new Page([
+				'slug' => 'test',
+				'content' => [
+					'uuid' => 'test'
+				]
+			])
+		]);
+
+		$result = $collection->findBy('uuid', 'page://test');
+		$this->assertSame($page, $result);
+
+		$result = $collection->findBy('uuid', $page->uuid());
+		$this->assertSame($page, $result);
+
+		$result = $collection->findBy('uuid', 'page://foo');
+		$this->assertNull($result);
 	}
 
 	public function testGroup()

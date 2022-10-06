@@ -26,6 +26,7 @@ export default {
 							error.key === "access.panel")
 					) {
 						Vue.prototype.$go("/logout");
+						return false;
 					}
 				},
 				onParserError: ({ html, silent }) => {
@@ -51,13 +52,14 @@ export default {
 				},
 				onSuccess: () => {
 					clearInterval(Vue.$api.ping);
-					Vue.$api.ping = setInterval(Vue.$api.auth.user, 5 * 60 * 1000);
+					Vue.$api.ping = setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
 				}
 			},
 			ping: null,
 			requests: []
 		});
 
-		Vue.$api.ping = setInterval(Vue.$api.auth.user, 5 * 60 * 1000);
+		// regularly ping API to keep session alive
+		Vue.$api.ping = setInterval(Vue.$api.auth.ping, 5 * 60 * 1000);
 	}
 };

@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$users` object refers to a collection
@@ -21,6 +22,8 @@ use Kirby\Toolkit\Str;
  */
 class Users extends Collection
 {
+	use HasUuids;
+
 	/**
 	 * All registered users methods
 	 *
@@ -45,15 +48,18 @@ class Users extends Collection
 	public function add($object)
 	{
 		// add a users collection
-		if (is_a($object, self::class) === true) {
+		if ($object instanceof self) {
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a user by id
-		} elseif (is_string($object) === true && $user = App::instance()->user($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$user = App::instance()->user($object)
+		) {
 			$this->__set($user->id(), $user);
 
 		// add a user object
-		} elseif (is_a($object, 'Kirby\Cms\User') === true) {
+		} elseif ($object instanceof User) {
 			$this->__set($object->id(), $object);
 
 		// give a useful error message on invalid input;
@@ -86,6 +92,24 @@ class Users extends Collection
 	}
 
 	/**
+	 * Returns all files of all users
+	 *
+	 * @return \Kirby\Cms\Files
+	 */
+	public function files()
+	{
+		$files = new Files([], $this->parent);
+
+		foreach ($this->data as $user) {
+			foreach ($user->files() as $fileKey => $file) {
+				$files->data[$fileKey] = $file;
+			}
+		}
+
+		return $files;
+	}
+
+	/**
 	 * Finds a user in the collection by ID or email address
 	 * @internal Use `$users->find()` instead
 	 *
@@ -94,6 +118,10 @@ class Users extends Collection
 	 */
 	public function findByKey(string $key)
 	{
+		if ($user = $this->findByUuid($key, 'user')) {
+			return $user;
+		}
+
 		if (Str::contains($key, '@') === true) {
 			return parent::findBy('email', Str::lower($key));
 		}

@@ -2,6 +2,7 @@
 
 /**
  * Constants
+ * @deprecated 3.8.0 Use `/` instead
  */
 define('DS', '/');
 

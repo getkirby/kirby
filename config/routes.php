@@ -6,6 +6,7 @@ use Kirby\Cms\PluginAssets;
 use Kirby\Panel\Panel;
 use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 return function ($kirby) {
 	$api   = $kirby->option('api.slug', 'api');
@@ -99,6 +100,26 @@ return function ($kirby) {
 			'env'     => 'panel',
 			'action'  => function ($path = null) {
 				return Panel::router($path);
+			}
+		],
+		// permalinks for page/file UUIDs
+		[
+			'pattern' => '@/(page|file)/(:all)',
+			'method'  => 'ALL',
+			'env'     => 'site',
+			'action'  => function (string $type, string $id) use ($kirby) {
+				// try to resolve to model, but only from UUID cache;
+				// this ensures that only existing UUIDs can be queried
+				// and attackers can't force Kirby to go through the whole
+				// site index with a non-existing UUID
+				if ($model = Uuid::for($type . '://' . $id)->model(true)) {
+					return $kirby
+						->response()
+						->redirect($model->url());
+				}
+
+				// render the error page
+				return false;
 			}
 		],
 	];

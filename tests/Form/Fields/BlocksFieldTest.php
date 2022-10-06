@@ -433,7 +433,9 @@ class BlocksFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertSame(['blocks' => 'There\'s an error in block 2'], $field->errors());
+		$this->assertSame([
+			'blocks' => 'There\'s an error on the "Video-URL" field in block 2 using the "Video" block type'
+		], $field->errors());
 	}
 
 	public function testEmpty()

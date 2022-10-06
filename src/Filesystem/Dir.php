@@ -4,6 +4,7 @@ namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
 use Kirby\Cms\Page;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -30,10 +31,8 @@ class Dir
 {
 	/**
 	 * Ignore when scanning directories
-	 *
-	 * @var array
 	 */
-	public static $ignore = [
+	public static array $ignore = [
 		'.',
 		'..',
 		'.DS_Store',
@@ -45,19 +44,17 @@ class Dir
 		'@eaDir'
 	];
 
-	public static $numSeparator = '_';
+	public static string $numSeparator = '_';
 
 	/**
 	 * Copy the directory to a new destination
-	 *
-	 * @param string $dir
-	 * @param string $target
-	 * @param bool $recursive
-	 * @param array $ignore
-	 * @return bool
 	 */
-	public static function copy(string $dir, string $target, bool $recursive = true, array $ignore = []): bool
-	{
+	public static function copy(
+		string $dir,
+		string $target,
+		bool $recursive = true,
+		array $ignore = []
+	): bool {
 		if (is_dir($dir) === false) {
 			throw new Exception('The directory "' . $dir . '" does not exist');
 		}
@@ -91,15 +88,14 @@ class Dir
 
 	/**
 	 * Get all subdirectories
-	 *
-	 * @param string $dir
-	 * @param array $ignore
-	 * @param bool $absolute
-	 * @return array
 	 */
-	public static function dirs(string $dir, array $ignore = null, bool $absolute = false): array
-	{
-		$result = array_values(array_filter(static::read($dir, $ignore, true), 'is_dir'));
+	public static function dirs(
+		string $dir,
+		array|null $ignore = null,
+		bool $absolute = false
+	): array {
+		$scan   = static::read($dir, $ignore, true);
+		$result = array_values(array_filter($scan, 'is_dir'));
 
 		if ($absolute !== true) {
 			$result = array_map('basename', $result);
@@ -110,9 +106,6 @@ class Dir
 
 	/**
 	 * Checks if the directory exists on disk
-	 *
-	 * @param string $dir
-	 * @return bool
 	 */
 	public static function exists(string $dir): bool
 	{
@@ -121,15 +114,14 @@ class Dir
 
 	/**
 	 * Get all files
-	 *
-	 * @param string $dir
-	 * @param array $ignore
-	 * @param bool $absolute
-	 * @return array
 	 */
-	public static function files(string $dir, array $ignore = null, bool $absolute = false): array
-	{
-		$result = array_values(array_filter(static::read($dir, $ignore, true), 'is_file'));
+	public static function files(
+		string $dir,
+		array|null $ignore = null,
+		bool $absolute = false
+	): array {
+		$scan   = static::read($dir, $ignore, true);
+		$result = array_values(array_filter($scan, 'is_file'));
 
 		if ($absolute !== true) {
 			$result = array_map('basename', $result);
@@ -140,15 +132,13 @@ class Dir
 
 	/**
 	 * Read the directory and all subdirectories
-	 *
-	 * @param string $dir
-	 * @param bool $recursive
-	 * @param array $ignore
-	 * @param string $path
-	 * @return array
 	 */
-	public static function index(string $dir, bool $recursive = false, array $ignore = null, string $path = null)
-	{
+	public static function index(
+		string $dir,
+		bool $recursive = false,
+		array|null $ignore = null,
+		string $path = null
+	): array {
 		$result = [];
 		$dir    = realpath($dir);
 		$items  = static::read($dir);
@@ -168,9 +158,6 @@ class Dir
 
 	/**
 	 * Checks if the folder has any contents
-	 *
-	 * @param string $dir
-	 * @return bool
 	 */
 	public static function isEmpty(string $dir): bool
 	{
@@ -179,9 +166,6 @@ class Dir
 
 	/**
 	 * Checks if the directory is readable
-	 *
-	 * @param string $dir
-	 * @return bool
 	 */
 	public static function isReadable(string $dir): bool
 	{
@@ -190,9 +174,6 @@ class Dir
 
 	/**
 	 * Checks if the directory is writable
-	 *
-	 * @param string $dir
-	 * @return bool
 	 */
 	public static function isWritable(string $dir): bool
 	{
@@ -209,15 +190,13 @@ class Dir
 	 * Don't use outside the Cms context.
 	 *
 	 * @internal
-	 *
-	 * @param string $dir
-	 * @param string $contentExtension
-	 * @param array|null $contentIgnore
-	 * @param bool $multilang
-	 * @return array
 	 */
-	public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, bool $multilang = false): array
-	{
+	public static function inventory(
+		string $dir,
+		string $contentExtension = 'txt',
+		array|null $contentIgnore = null,
+		bool $multilang = false
+	): array {
 		$dir = realpath($dir);
 
 		$inventory = [
@@ -304,10 +283,6 @@ class Dir
 	 * Take all content files,
 	 * remove those who are meta files and
 	 * detect the main content file
-	 *
-	 * @param array $inventory
-	 * @param array $content
-	 * @return array
 	 */
 	protected static function inventoryContent(array $inventory, array $content): array
 	{
@@ -333,16 +308,17 @@ class Dir
 	/**
 	 * Go through all inventory children
 	 * and inject a model for each
-	 *
-	 * @param array $inventory
-	 * @param string $contentExtension
-	 * @param bool $multilang
-	 * @return array
 	 */
-	protected static function inventoryModels(array $inventory, string $contentExtension, bool $multilang = false): array
-	{
+	protected static function inventoryModels(
+		array $inventory,
+		string $contentExtension,
+		bool $multilang = false
+	): array {
 		// inject models
-		if (empty($inventory['children']) === false && empty(Page::$models) === false) {
+		if (
+			empty($inventory['children']) === false &&
+			empty(Page::$models) === false
+		) {
 			if ($multilang === true) {
 				$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
 			}
@@ -362,10 +338,6 @@ class Dir
 
 	/**
 	 * Create a (symbolic) link to a directory
-	 *
-	 * @param string $source
-	 * @param string $link
-	 * @return bool
 	 */
 	public static function link(string $source, string $link): bool
 	{
@@ -381,7 +353,7 @@ class Dir
 
 		try {
 			return symlink($source, $link) === true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
@@ -420,7 +392,13 @@ class Dir
 			throw new Exception(sprintf('The directory "%s" cannot be created', $dir));
 		}
 
-		return mkdir($dir);
+		return Helpers::handleErrors(
+			fn (): bool => mkdir($dir),
+			// if the dir was already created (race condition),
+			fn (int $errno, string $errstr): bool => Str::endsWith($errstr, 'File exists'),
+			// consider it a success
+			true
+		);
 	}
 
 	/**
@@ -428,11 +406,8 @@ class Dir
 	 * subfolders have been modified for the last time.
 	 *
 	 * @param string $dir The path of the directory
-	 * @param string $format
-	 * @param string $handler
-	 * @return int|string
 	 */
-	public static function modified(string $dir, string $format = null, string $handler = 'date')
+	public static function modified(string $dir, string $format = null, string $handler = 'date'): int|string
 	{
 		$modified = filemtime($dir);
 		$items    = static::read($dir);
@@ -478,13 +453,14 @@ class Dir
 	 * Returns a nicely formatted size of all the contents of the folder
 	 *
 	 * @param string $dir The path of the directory
-	 * @param string|null|false $locale Locale for number formatting,
+	 * @param string|false|null $locale Locale for number formatting,
 	 *                                  `null` for the current locale,
 	 *                                  `false` to disable number formatting
-	 * @return mixed
 	 */
-	public static function niceSize(string $dir, $locale = null)
-	{
+	public static function niceSize(
+		string $dir,
+		string|false|null $locale = null
+	): string {
 		return F::niceSize(static::size($dir), $locale);
 	}
 
@@ -497,8 +473,11 @@ class Dir
 	 * @param bool $absolute If true, the full path for each item will be returned
 	 * @return array An array of filenames
 	 */
-	public static function read(string $dir, array $ignore = null, bool $absolute = false): array
-	{
+	public static function read(
+		string $dir,
+		array|null $ignore = null,
+		bool $absolute = false
+	): array {
 		if (is_dir($dir) === false) {
 			return [];
 		}
@@ -520,9 +499,6 @@ class Dir
 
 	/**
 	 * Removes a folder including all containing files and folders
-	 *
-	 * @param string $dir
-	 * @return bool
 	 */
 	public static function remove(string $dir): bool
 	{
@@ -558,9 +534,8 @@ class Dir
 	 *
 	 * @param string $dir The path of the directory
 	 * @param bool $recursive Include all subfolders and their files
-	 * @return mixed
 	 */
-	public static function size(string $dir, bool $recursive = true)
+	public static function size(string $dir, bool $recursive = true): int|false
 	{
 		if (is_dir($dir) === false) {
 			return false;
@@ -582,10 +557,6 @@ class Dir
 	/**
 	 * Checks if the directory or any subdirectory has been
 	 * modified after the given timestamp
-	 *
-	 * @param string $dir
-	 * @param int $time
-	 * @return bool
 	 */
 	public static function wasModifiedAfter(string $dir, int $time): bool
 	{

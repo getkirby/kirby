@@ -21,7 +21,7 @@ class DummyAuthChallenge extends Challenge
 		return true;
 	}
 
-	public static function create(User $user, array $options): ?string
+	public static function create(User $user, array $options): string|null
 	{
 		return 'test';
 	}
@@ -361,6 +361,24 @@ class AppPluginsTest extends TestCase
 
 		// restore previous filters
 		Collection::$filters = $prevFilters;
+	}
+
+	public function testCommands()
+	{
+		$pages = new Pages([]);
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'commands' => [
+				'test' => $command = [
+					'command' => function () {
+					}
+				]
+			],
+		]);
+
+		$this->assertSame($command, $kirby->extension('commands', 'test'));
 	}
 
 	public function testController()

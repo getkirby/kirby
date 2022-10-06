@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;
@@ -32,12 +33,8 @@ class Panel
 {
 	/**
 	 * Normalize a panel area
-	 *
-	 * @param string $id
-	 * @param array|string $area
-	 * @return array
 	 */
-	public static function area(string $id, $area): array
+	public static function area(string $id, array|string $area): array
 	{
 		$area['id']                = $id;
 		$area['label']           ??= $id;
@@ -53,8 +50,6 @@ class Panel
 
 	/**
 	 * Collect all registered areas
-	 *
-	 * @return array
 	 */
 	public static function areas(): array
 	{
@@ -116,13 +111,11 @@ class Panel
 
 	/**
 	 * Check for access permissions
-	 *
-	 * @param \Kirby\Cms\User|null $user
-	 * @param string|null $areaId
-	 * @return bool
 	 */
-	public static function firewall(?User $user = null, ?string $areaId = null): bool
-	{
+	public static function firewall(
+		User|null $user = null,
+		string|null $areaId = null
+	): bool {
 		// a user has to be logged in
 		if ($user === null) {
 			throw new PermissionException(['key' => 'access.panel']);
@@ -158,13 +151,10 @@ class Panel
 	/**
 	 * Redirect to a Panel url
 	 *
-	 * @param string|null $path
-	 * @param int $code
 	 * @throws \Kirby\Panel\Redirect
-	 * @return void
 	 * @codeCoverageIgnore
 	 */
-	public static function go(?string $url = null, int $code = 302): void
+	public static function go(string|null $url = null, int $code = 302): void
 	{
 		throw new Redirect(static::url($url), $code);
 	}
@@ -172,17 +162,15 @@ class Panel
 	/**
 	 * Check if the given user has access to the panel
 	 * or to a given area
-	 *
-	 * @param \Kirby\Cms\User|null $user
-	 * @param string|null $area
-	 * @return bool
 	 */
-	public static function hasAccess(?User $user = null, string $area = null): bool
-	{
+	public static function hasAccess(
+		User|null $user = null,
+		string|null $area = null
+	): bool {
 		try {
 			static::firewall($user, $area);
 			return true;
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
@@ -190,8 +178,6 @@ class Panel
 	/**
 	 * Checks for a Fiber request
 	 * via get parameters or headers
-	 *
-	 * @return bool
 	 */
 	public static function isFiberRequest(): bool
 	{
@@ -207,12 +193,8 @@ class Panel
 	/**
 	 * Returns a JSON response
 	 * for Fiber calls
-	 *
-	 * @param array $data
-	 * @param int $code
-	 * @return \Kirby\Http\Response
 	 */
-	public static function json(array $data, int $code = 200)
+	public static function json(array $data, int $code = 200): Response
 	{
 		$request = App::instance()->request();
 
@@ -224,8 +206,6 @@ class Panel
 
 	/**
 	 * Checks for a multilanguage installation
-	 *
-	 * @return bool
 	 */
 	public static function multilang(): bool
 	{
@@ -236,8 +216,6 @@ class Panel
 
 	/**
 	 * Returns the referrer path if present
-	 *
-	 * @return string
 	 */
 	public static function referrer(): string
 	{
@@ -253,15 +231,11 @@ class Panel
 	/**
 	 * Creates a Response object from the result of
 	 * a Panel route call
-	 *
-	 * @params mixed $result
-	 * @params array $options
-	 * @return \Kirby\Http\Response
 	 */
-	public static function response($result, array $options = [])
+	public static function response($result, array $options = []): Response
 	{
 		// pass responses directly down to the Kirby router
-		if (is_a($result, 'Kirby\Http\Response') === true) {
+		if ($result instanceof Response) {
 			return $result;
 		}
 
@@ -275,25 +249,18 @@ class Panel
 		}
 
 		// handle different response types (view, dialog, ...)
-		switch ($options['type'] ?? null) {
-			case 'dialog':
-				return Dialog::response($result, $options);
-			case 'dropdown':
-				return Dropdown::response($result, $options);
-			case 'search':
-				return Search::response($result, $options);
-			default:
-				return View::response($result, $options);
-		}
+		return match ($options['type'] ?? null) {
+			'dialog'   => Dialog::response($result, $options),
+			'dropdown' => Dropdown::response($result, $options),
+			'search'   => Search::response($result, $options),
+			default    => View::response($result, $options)
+		};
 	}
 
 	/**
 	 * Router for the Panel views
-	 *
-	 * @param string $path
-	 * @return \Kirby\Http\Response|false
 	 */
-	public static function router(string $path = null)
+	public static function router(string|null $path = null): Response|null
 	{
 		$kirby = App::instance();
 
@@ -349,8 +316,6 @@ class Panel
 	/**
 	 * Extract the routes from the given array
 	 * of active areas.
-	 *
-	 * @return array
 	 */
 	public static function routes(array $areas): array
 	{
@@ -404,10 +369,6 @@ class Panel
 
 	/**
 	 * Extract all routes from an area
-	 *
-	 * @param string $areaId
-	 * @param array $area
-	 * @return array
 	 */
 	public static function routesForDialogs(string $areaId, array $area): array
 	{
@@ -441,10 +402,6 @@ class Panel
 
 	/**
 	 * Extract all routes for dropdowns
-	 *
-	 * @param string $areaId
-	 * @param array $area
-	 * @return array
 	 */
 	public static function routesForDropdowns(string $areaId, array $area): array
 	{
@@ -454,7 +411,7 @@ class Panel
 		foreach ($dropdowns as $name => $dropdown) {
 			// Handle shortcuts for dropdowns. The name is the pattern
 			// and options are defined in a Closure
-			if (is_a($dropdown, 'Closure') === true) {
+			if ($dropdown instanceof Closure) {
 				$dropdown = [
 					'pattern' => $name,
 					'action'  => $dropdown
@@ -479,10 +436,6 @@ class Panel
 
 	/**
 	 * Extract all routes for searches
-	 *
-	 * @param string $areaId
-	 * @param array $area
-	 * @return array
 	 */
 	public static function routesForSearches(string $areaId, array $area): array
 	{
@@ -511,10 +464,6 @@ class Panel
 
 	/**
 	 * Extract all views from an area
-	 *
-	 * @param string $areaId
-	 * @param array $area
-	 * @return array
 	 */
 	public static function routesForViews(string $areaId, array $area): array
 	{
@@ -534,10 +483,8 @@ class Panel
 	 * Set the current language in multi-lang
 	 * installations based on the session or the
 	 * query language query parameter
-	 *
-	 * @return string|null
 	 */
-	public static function setLanguage(): ?string
+	public static function setLanguage(): string|null
 	{
 		$kirby = App::instance();
 
@@ -570,8 +517,6 @@ class Panel
 	/**
 	 * Set the currently active Panel translation
 	 * based on the current user or config
-	 *
-	 * @return string
 	 */
 	public static function setTranslation(): string
 	{
@@ -593,11 +538,8 @@ class Panel
 	/**
 	 * Creates an absolute Panel URL
 	 * independent of the Panel slug config
-	 *
-	 * @param string|null $url
-	 * @return string
 	 */
-	public static function url(?string $url = null): string
+	public static function url(string|null $url = null): string
 	{
 		$slug = App::instance()->option('panel.slug', 'panel');
 

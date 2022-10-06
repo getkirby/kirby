@@ -2,6 +2,10 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Exception\Exception;
+use Kirby\Http\Response;
+use Throwable;
+
 /**
  * The Json abstract response class provides
  * common framework for Fiber requests
@@ -17,16 +21,12 @@ namespace Kirby\Panel;
  */
 abstract class Json
 {
-	protected static $key = '$response';
+	protected static string $key = '$response';
 
 	/**
 	 * Renders the error response with the provided message
-	 *
-	 * @param string $message
-	 * @param int $code
-	 * @return array
 	 */
-	public static function error(string $message, int $code = 404)
+	public static function error(string $message, int $code = 404): array
 	{
 		return [
 			'code'  => $code,
@@ -36,26 +36,22 @@ abstract class Json
 
 	/**
 	 * Prepares the JSON response for the Panel
-	 *
-	 * @param mixed $data
-	 * @param array $options
-	 * @return mixed
 	 */
-	public static function response($data, array $options = [])
+	public static function response($data, array $options = []): Response
 	{
 		// handle redirects
-		if (is_a($data, 'Kirby\Panel\Redirect') === true) {
+		if ($data instanceof Redirect) {
 			$data = [
 				'redirect' => $data->location(),
 				'code'     => $data->code()
 			];
 
 		// handle Kirby exceptions
-		} elseif (is_a($data, 'Kirby\Exception\Exception') === true) {
+		} elseif ($data instanceof Exception) {
 			$data = static::error($data->getMessage(), $data->getHttpCode());
 
 		// handle exceptions
-		} elseif (is_a($data, 'Throwable') === true) {
+		} elseif ($data instanceof Throwable) {
 			$data = static::error($data->getMessage(), 500);
 
 		// only expect arrays from here on

@@ -16,10 +16,14 @@ use Memcached as MemcachedExt;
 class MemCached extends Cache
 {
 	/**
-	 * store for the memcache connection
-	 * @var \Memcached
+	 * Store for the memcache connection
 	 */
-	protected $connection;
+	protected MemcachedExt $connection;
+
+	/**
+	 * Stores whether the connection was successful
+	 */
+	protected bool $enabled;
 
 	/**
 	 * Sets all parameters which are needed to connect to Memcached
@@ -39,7 +43,19 @@ class MemCached extends Cache
 		parent::__construct(array_merge($defaults, $options));
 
 		$this->connection = new MemcachedExt();
-		$this->connection->addServer($this->options['host'], $this->options['port']);
+		$this->enabled = $this->connection->addServer(
+			$this->options['host'],
+			$this->options['port']
+		);
+	}
+
+	/**
+	 * Returns whether the cache is ready to
+	 * store values
+	 */
+	public function enabled(): bool
+	{
+		return $this->enabled;
 	}
 
 	/**
@@ -50,35 +66,28 @@ class MemCached extends Cache
 	 *   // put an item in the cache for 15 minutes
 	 *   $cache->set('value', 'my value', 15);
 	 * </code>
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @param int $minutes
-	 * @return bool
 	 */
 	public function set(string $key, $value, int $minutes = 0): bool
 	{
-		return $this->connection->set($this->key($key), (new Value($value, $minutes))->toJson(), $this->expiration($minutes));
+		$key     = $this->key($key);
+		$value   = (new Value($value, $minutes))->toJson();
+		$expires = $this->expiration($minutes);
+		return $this->connection->set($key, $value, $expires);
 	}
 
 	/**
 	 * Internal method to retrieve the raw cache value;
 	 * needs to return a Value object or null if not found
-	 *
-	 * @param string $key
-	 * @return \Kirby\Cache\Value|null
 	 */
-	public function retrieve(string $key)
+	public function retrieve(string $key): Value|null
 	{
-		return Value::fromJson($this->connection->get($this->key($key)));
+		$value = $this->connection->get($this->key($key));
+		return Value::fromJson($value);
 	}
 
 	/**
 	 * Removes an item from the cache and returns
 	 * whether the operation was successful
-	 *
-	 * @param string $key
-	 * @return bool
 	 */
 	public function remove(string $key): bool
 	{
@@ -89,8 +98,6 @@ class MemCached extends Cache
 	 * Flushes the entire cache and returns
 	 * whether the operation was successful;
 	 * WARNING: Memcached only supports flushing the whole cache at once!
-	 *
-	 * @return bool
 	 */
 	public function flush(): bool
 	{

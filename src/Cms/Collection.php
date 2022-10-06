@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * The Collection class serves as foundation
@@ -87,9 +88,12 @@ class Collection extends BaseCollection
 	 */
 	public function add($object)
 	{
-		if (is_a($object, self::class) === true) {
+		if ($object instanceof self) {
 			$this->data = array_merge($this->data, $object->data);
-		} elseif (is_object($object) === true && method_exists($object, 'id') === true) {
+		} elseif (
+			is_object($object) === true &&
+			method_exists($object, 'id') === true
+		) {
 			$this->__set($object->id(), $object);
 		} else {
 			$this->append($object);
@@ -118,6 +122,24 @@ class Collection extends BaseCollection
 		}
 
 		return parent::append(...$args);
+	}
+
+	/**
+	 * Find a single element by an attribute and its value
+	 *
+	 * @param string $attribute
+	 * @param mixed $value
+	 * @return mixed|null
+	 */
+	public function findBy(string $attribute, $value)
+	{
+		// $value: cast UUID object to string to allow uses
+		// like `$pages->findBy('related', $page->uuid())`
+		if ($value instanceof Uuid) {
+			$value = $value->toString();
+		}
+
+		return parent::findBy($attribute, $value);
 	}
 
 	/**
@@ -208,7 +230,9 @@ class Collection extends BaseCollection
 		foreach ($keys as $key) {
 			if (is_array($key) === true) {
 				return $this->not(...$key);
-			} elseif (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+			}
+
+			if ($key instanceof BaseCollection) {
 				$collection = $collection->not(...$key->keys());
 			} elseif (is_object($key) === true) {
 				$key = $key->id();
@@ -256,11 +280,14 @@ class Collection extends BaseCollection
 	{
 		if (count($args) === 1) {
 			// try to determine the key from the provided item
-			if (is_object($args[0]) === true && is_callable([$args[0], 'id']) === true) {
+			if (
+				is_object($args[0]) === true &&
+				is_callable([$args[0], 'id']) === true
+			) {
 				return parent::prepend($args[0]->id(), $args[0]);
-			} else {
-				return parent::prepend($args[0]);
 			}
+
+			return parent::prepend($args[0]);
 		}
 
 		return parent::prepend(...$args);

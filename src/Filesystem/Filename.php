@@ -30,45 +30,31 @@ class Filename
 {
 	/**
 	 * List of all applicable attributes
-	 *
-	 * @var array
 	 */
-	protected $attributes;
+	protected array $attributes;
 
 	/**
 	 * The sanitized file extension
-	 *
-	 * @var string
 	 */
-	protected $extension;
+	protected string $extension;
 
 	/**
 	 * The source original filename
-	 *
-	 * @var string
 	 */
-	protected $filename;
+	protected string $filename;
 
 	/**
 	 * The sanitized file name
-	 *
-	 * @var string
 	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * The template for the final name
-	 *
-	 * @var string
 	 */
-	protected $template;
+	protected string $template;
 
 	/**
 	 * Creates a new Filename object
-	 *
-	 * @param string $filename
-	 * @param string $template
-	 * @param array $attributes
 	 */
 	public function __construct(string $filename, string $template, array $attributes = [])
 	{
@@ -84,8 +70,6 @@ class Filename
 
 	/**
 	 * Converts the entire object to a string
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -96,8 +80,6 @@ class Filename
 	 * Converts all processed attributes
 	 * to an array. The array keys are already
 	 * the shortened versions for the filename
-	 *
-	 * @return array
 	 */
 	public function attributesToArray(): array
 	{
@@ -123,9 +105,8 @@ class Filename
 	 * new filename
 	 *
 	 * @param string|null $prefix The prefix will be used in the filename creation
-	 * @return string
 	 */
-	public function attributesToString(string $prefix = null): string
+	public function attributesToString(string|null $prefix = null): string
 	{
 		$array  = $this->attributesToArray();
 		$result = [];
@@ -135,16 +116,11 @@ class Filename
 				$value = '';
 			}
 
-			switch ($key) {
-				case 'dimensions':
-					$result[] = $value;
-					break;
-				case 'crop':
-					$result[] = ($value === 'center') ? 'crop' : $key . '-' . $value;
-					break;
-				default:
-					$result[] = $key . $value;
-			}
+			$result[] = match ($key) {
+				'dimensions' => $value,
+				'crop'       => ($value === 'center') ? 'crop' : $key . '-' . $value,
+				default      => $key . $value
+			};
 		}
 
 		$result     = array_filter($result);
@@ -159,10 +135,8 @@ class Filename
 
 	/**
 	 * Normalizes the blur option value
-	 *
-	 * @return false|int
 	 */
-	public function blur()
+	public function blur(): int|false
 	{
 		$value = $this->attributes['blur'] ?? false;
 
@@ -175,10 +149,8 @@ class Filename
 
 	/**
 	 * Normalizes the crop option value
-	 *
-	 * @return false|string
 	 */
-	public function crop()
+	public function crop(): string|false
 	{
 		// get the crop value
 		$crop = $this->attributes['crop'] ?? false;
@@ -194,10 +166,8 @@ class Filename
 	 * Returns a normalized array
 	 * with width and height values
 	 * if available
-	 *
-	 * @return array
 	 */
-	public function dimensions()
+	public function dimensions(): array
 	{
 		if (empty($this->attributes['width']) === true && empty($this->attributes['height']) === true) {
 			return [];
@@ -211,8 +181,6 @@ class Filename
 
 	/**
 	 * Returns the sanitized extension
-	 *
-	 * @return string
 	 */
 	public function extension(): string
 	{
@@ -225,8 +193,6 @@ class Filename
 	 * the option. You can use `grayscale`,
 	 * `greyscale` or simply `bw`. The function
 	 * will always return `grayscale`
-	 *
-	 * @return bool
 	 */
 	public function grayscale(): bool
 	{
@@ -239,8 +205,6 @@ class Filename
 
 	/**
 	 * Returns the filename without extension
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
@@ -249,10 +213,8 @@ class Filename
 
 	/**
 	 * Normalizes the quality option value
-	 *
-	 * @return false|int
 	 */
-	public function quality()
+	public function quality(): int|false
 	{
 		$value = $this->attributes['quality'] ?? false;
 
@@ -268,9 +230,6 @@ class Filename
 	 * The extension will be converted
 	 * to lowercase and `jpeg` will be
 	 * replaced with `jpg`
-	 *
-	 * @param string $extension
-	 * @return string
 	 */
 	protected function sanitizeExtension(string $extension): string
 	{
@@ -282,9 +241,6 @@ class Filename
 	/**
 	 * Sanitizes the name with Kirby's
 	 * Str::slug function
-	 *
-	 * @param string $name
-	 * @return string
 	 */
 	protected function sanitizeName(string $name): string
 	{
@@ -293,8 +249,6 @@ class Filename
 
 	/**
 	 * Returns the converted filename as string
-	 *
-	 * @return string
 	 */
 	public function toString(): string
 	{

@@ -193,7 +193,7 @@ class Email
 				} else {
 					$result[] = $item;
 				}
-			} elseif (is_a($item, $class) === true) {
+			} elseif ($item instanceof $class) {
 				// value is a model object, get value through content method(s)
 				if ($contentKey !== null) {
 					$result[(string)$item->$contentKey()] = (string)$item->$contentValue();
@@ -235,7 +235,10 @@ class Email
 		$this->props[$addressProp] = $address;
 
 		// only use the name from the user if no custom name was set
-		if (isset($this->props[$nameProp]) === false || $this->props[$nameProp] === null) {
+		if (
+			isset($this->props[$nameProp]) === false ||
+			$this->props[$nameProp] === null
+		) {
 			$this->props[$nameProp] = $name;
 		}
 	}

@@ -27,11 +27,7 @@ trait AppTranslations
 	protected function i18n(): void
 	{
 		I18n::$load = function ($locale): array {
-			$data = [];
-
-			if ($translation = $this->translation($locale)) {
-				$data = $translation->data();
-			}
+			$data = $this->translation($locale)?->data() ?? [];
 
 			// inject translations from the current language
 			if (
@@ -49,9 +45,9 @@ trait AppTranslations
 		I18n::$locale = function (): string {
 			if ($this->multilang() === true) {
 				return $this->defaultLanguage()->code();
-			} else {
-				return 'en';
 			}
+
+			return 'en';
 		};
 
 		I18n::$fallback = function (): array {
@@ -71,9 +67,9 @@ trait AppTranslations
 				$fallback[] = 'en';
 
 				return $fallback;
-			} else {
-				return ['en'];
 			}
+
+			return ['en'];
 		};
 
 		I18n::$translations = [];
@@ -127,11 +123,8 @@ trait AppTranslations
 			return $this->language = null;
 		}
 
-		if ($language = $this->language($languageCode)) {
-			$this->language = $language;
-		} else {
-			$this->language = $this->defaultLanguage();
-		}
+		$this->language   = $this->language($languageCode);
+		$this->language ??= $this->defaultLanguage();
 
 		if ($this->language) {
 			Locale::set($this->language->locale());
@@ -161,13 +154,13 @@ trait AppTranslations
 	 * @param string|null $locale Locale name or `null` for the current locale
 	 * @return \Kirby\Cms\Translation
 	 */
-	public function translation(?string $locale = null)
+	public function translation(string|null $locale = null)
 	{
 		$locale = $locale ?? I18n::locale();
 		$locale = basename($locale);
 
 		// prefer loading them from the translations collection
-		if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
+		if ($this->translations instanceof Translations) {
 			if ($translation = $this->translations()->find($locale)) {
 				return $translation;
 			}
@@ -192,7 +185,7 @@ trait AppTranslations
 	 */
 	public function translations()
 	{
-		if (is_a($this->translations, 'Kirby\Cms\Translations') === true) {
+		if ($this->translations instanceof Translations) {
 			return $this->translations;
 		}
 

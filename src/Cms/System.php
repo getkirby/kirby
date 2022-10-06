@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -34,6 +35,9 @@ class System
 	 * @var \Kirby\Cms\App
 	 */
 	protected $app;
+
+	// cache
+	protected UpdateStatus|null $updateStatus = null;
 
 	/**
 	 * @param \Kirby\Cms\App $app
@@ -94,7 +98,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function exposedFileUrl(string $folder): ?string
+	public function exposedFileUrl(string $folder): string|null
 	{
 		if (!$url = $this->folderUrl($folder)) {
 			return null;
@@ -140,7 +144,7 @@ class System
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
 	 * @return string|null
 	 */
-	public function folderUrl(string $folder): ?string
+	public function folderUrl(string $folder): string|null
 	{
 		$index = $this->app->root('index');
 
@@ -196,28 +200,28 @@ class System
 		// init /site/accounts
 		try {
 			Dir::make($this->app->root('accounts'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The accounts directory could not be created');
 		}
 
 		// init /site/sessions
 		try {
 			Dir::make($this->app->root('sessions'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The sessions directory could not be created');
 		}
 
 		// init /content
 		try {
 			Dir::make($this->app->root('content'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The content directory could not be created');
 		}
 
 		// init /media
 		try {
 			Dir::make($this->app->root('media'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			throw new PermissionException('The media directory could not be created');
 		}
 	}
@@ -277,7 +281,7 @@ class System
 	{
 		try {
 			$license = Json::read($this->app->root('license'));
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 
@@ -454,7 +458,7 @@ class System
 	public function php(): bool
 	{
 		return
-			version_compare(PHP_VERSION, '7.4.0', '>=') === true &&
+			version_compare(PHP_VERSION, '8.0.0', '>=') === true &&
 			version_compare(PHP_VERSION, '8.2.0', '<')  === true;
 	}
 
@@ -544,23 +548,19 @@ class System
 	 *
 	 * @return string|null
 	 */
-	public function serverSoftware(): ?string
+	public function serverSoftware(): string|null
 	{
-		if ($servers = $this->app->option('servers')) {
-			$servers = A::wrap($servers);
-		} else {
-			$servers = [
-				'apache',
-				'caddy',
-				'litespeed',
-				'nginx',
-				'php'
-			];
-		}
+		$servers = $this->app->option('servers', [
+			'apache',
+			'caddy',
+			'litespeed',
+			'nginx',
+			'php'
+		]);
 
 		$software = $this->app->environment()->get('SERVER_SOFTWARE', '');
 
-		preg_match('!(' . implode('|', $servers) . ')!i', $software, $matches);
+		preg_match('!(' . implode('|', A::wrap($servers)) . ')!i', $software, $matches);
 
 		return $matches[0] ?? null;
 	}
@@ -618,6 +618,33 @@ class System
 	public function toArray(): array
 	{
 		return $this->status();
+	}
+
+	/**
+	 * Returns the update status object unless
+	 * the update check for Kirby has been disabled
+	 * @since 3.8.0
+	 *
+	 * @param array|null $data Custom override for the getkirby.com update data
+	 */
+	public function updateStatus(array|null $data = null): UpdateStatus|null
+	{
+		if ($this->updateStatus !== null) {
+			return $this->updateStatus;
+		}
+
+		$kirby  = $this->app;
+		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? true;
+
+		if ($option === false) {
+			return null;
+		}
+
+		return $this->updateStatus = new UpdateStatus(
+			$kirby,
+			$option === 'security',
+			$data
+		);
 	}
 
 	/**

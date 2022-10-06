@@ -15,47 +15,35 @@ class Route
 {
 	/**
 	 * The callback action function
-	 *
-	 * @var Closure
 	 */
-	protected $action;
+	protected Closure $action;
 
 	/**
 	 * Listed of parsed arguments
-	 *
-	 * @var array
 	 */
-	protected $arguments = [];
+	protected array $arguments = [];
 
 	/**
 	 * An array of all passed attributes
-	 *
-	 * @var array
 	 */
-	protected $attributes = [];
+	protected array $attributes = [];
 
 	/**
 	 * The registered request method
-	 *
-	 * @var string
 	 */
-	protected $method;
+	protected string $method;
 
 	/**
 	 * The registered pattern
-	 *
-	 * @var string
 	 */
-	protected $pattern;
+	protected string $pattern;
 
 	/**
 	 * Wildcards, which can be used in
 	 * Route patterns to make regular expressions
 	 * a little more human
-	 *
-	 * @var array
 	 */
-	protected $wildcards = [
+	protected array $wildcards = [
 		'required' => [
 			'(:num)'      => '(-?[0-9]+)',
 			'(:alpha)'    => '([a-zA-Z]+)',
@@ -74,10 +62,6 @@ class Route
 
 	/**
 	 * Magic getter for route attributes
-	 *
-	 * @param string $key
-	 * @param array $arguments
-	 * @return mixed
 	 */
 	public function __call(string $key, array $arguments = null)
 	{
@@ -87,13 +71,8 @@ class Route
 	/**
 	 * Creates a new Route object for the given
 	 * pattern(s), method(s) and the callback action
-	 *
-	 * @param string|array $pattern
-	 * @param string|array $method
-	 * @param Closure $action
-	 * @param array $attributes
 	 */
-	public function __construct($pattern, $method, Closure $action, array $attributes = [])
+	public function __construct(string $pattern, string $method, Closure $action, array $attributes = [])
 	{
 		$this->action     = $action;
 		$this->attributes = $attributes;
@@ -103,18 +82,14 @@ class Route
 
 	/**
 	 * Getter for the action callback
-	 *
-	 * @return Closure
 	 */
-	public function action()
+	public function action(): Closure
 	{
 		return $this->action;
 	}
 
 	/**
 	 * Returns all parsed arguments
-	 *
-	 * @return array
 	 */
 	public function arguments(): array
 	{
@@ -123,8 +98,6 @@ class Route
 
 	/**
 	 * Getter for additional attributes
-	 *
-	 * @return array
 	 */
 	public function attributes(): array
 	{
@@ -133,8 +106,6 @@ class Route
 
 	/**
 	 * Getter for the method
-	 *
-	 * @return string
 	 */
 	public function method(): string
 	{
@@ -143,10 +114,8 @@ class Route
 
 	/**
 	 * Returns the route name if set
-	 *
-	 * @return string|null
 	 */
-	public function name(): ?string
+	public function name(): string|null
 	{
 		return $this->attributes['name'] ?? null;
 	}
@@ -155,8 +124,6 @@ class Route
 	 * Throws a specific exception to tell
 	 * the router to jump to the next route
 	 * @since 3.0.3
-	 *
-	 * @return void
 	 */
 	public static function next(): void
 	{
@@ -165,8 +132,6 @@ class Route
 
 	/**
 	 * Getter for the pattern
-	 *
-	 * @return string
 	 */
 	public function pattern(): string
 	{
@@ -176,9 +141,6 @@ class Route
 	/**
 	 * Converts the pattern into a full regular
 	 * expression by replacing all the wildcards
-	 *
-	 * @param string $pattern
-	 * @return string
 	 */
 	public function regex(string $pattern): string
 	{
@@ -200,12 +162,8 @@ class Route
 	/**
 	 * Tries to match the path with the regular expression and
 	 * extracts all arguments for the Route action
-	 *
-	 * @param string $pattern
-	 * @param string $path
-	 * @return array|false
 	 */
-	public function parse(string $pattern, string $path)
+	public function parse(string $pattern, string $path): array|false
 	{
 		// check for direct matches
 		if ($pattern === $path) {

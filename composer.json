@@ -3,7 +3,7 @@
 	"description": "The Kirby 3 core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "3.7.5",
+	"version": "3.8.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": ">=7.4.0 <8.2.0",
+		"php": ">=8.0.0 <8.2.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -37,6 +37,7 @@
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
 		"claviska/simpleimage": "3.7.0",
+		"composer/semver": "3.3.2",
 		"filp/whoops": "2.14.5",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.10.0",
@@ -76,7 +77,7 @@
 		},
 		"optimize-autoloader": true,
 		"platform": {
-			"php": "7.4.0"
+			"php": "8.0.0"
 		},
 		"platform-check": false
 	},

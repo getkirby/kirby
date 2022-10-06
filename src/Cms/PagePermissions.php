@@ -39,7 +39,7 @@ class PagePermissions extends ModelPermissions
 	 */
 	protected function canChangeTemplate(): bool
 	{
-		if ($this->model->isHomeOrErrorPage() === true) {
+		if ($this->model->isErrorPage() === true) {
 			return false;
 		}
 

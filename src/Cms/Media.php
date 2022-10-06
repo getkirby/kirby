@@ -46,10 +46,10 @@ class Media
 				// if at least the token was correct, redirect
 				if (Str::startsWith($hash, $file->mediaToken() . '-') === true) {
 					return Response::redirect($file->mediaUrl(), 307);
-				} else {
-					// don't leak the correct token, render the error page
-					return false;
 				}
+
+				// don't leak the correct token, render the error page
+				return false;
 			}
 
 			// send the file to the browser
@@ -101,7 +101,7 @@ class Media
 		if (is_string($model) === true) {
 			$root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
 		// parent files for file model that already included hash
-		} elseif (is_a($model, '\Kirby\Cms\File')) {
+		} elseif ($model instanceof File) {
 			$root = dirname($model->mediaRoot());
 		// model files
 		} else {
@@ -127,11 +127,11 @@ class Media
 				$kirby->thumb($source, $thumb, $options);
 				F::remove($job);
 				return Response::file($thumb);
-			} catch (Throwable $e) {
+			} catch (Throwable) {
 				F::remove($thumb);
 				return Response::file($source);
 			}
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}

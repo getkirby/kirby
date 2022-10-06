@@ -14,6 +14,7 @@
 				<th
 					v-for="(column, columnIndex) in columns"
 					:key="columnIndex + '-header'"
+					:data-align="column.align"
 					:data-mobile="column.mobile"
 					:style="'width:' + width(column.width)"
 					class="k-table-column"
@@ -210,7 +211,7 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.options ||
+				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row.options).length > 0
 			);
 		}
@@ -321,6 +322,11 @@ export default {
 	border-radius: var(--rounded);
 	font-variant-numeric: tabular-nums;
 }
+.k-table[data-invalid] {
+	border: 0;
+	box-shadow: var(--color-negative-outline) 0 0 0 1px,
+		var(--color-negative-outline) 0 0 3px 2px;
+}
 
 /** Cells **/
 .k-table th,
@@ -333,10 +339,10 @@ export default {
 	line-height: 1.25em;
 }
 
-.k-table th:first-child {
+.k-table thead th:first-child {
 	border-start-start-radius: var(--rounded);
 }
-.k-table th:last-child {
+.k-table thead th:last-child {
 	border-start-end-radius: var(--rounded);
 }
 .k-table th:last-child,
@@ -347,69 +353,81 @@ export default {
 
 .k-table th,
 .k-table tr:not(:last-child) td {
-	border-bottom: 1px solid var(--color-background);
+	border-block-end: 1px solid var(--color-background);
 }
 
 .k-table td:last-child {
 	overflow: visible;
 }
 
-[dir="ltr"] .k-table th,
-[dir="ltr"] .k-table td {
-	border-right: 1px solid var(--color-background);
+.k-table th,
+.k-table td {
+	border-inline-end: 1px solid var(--color-background);
+	text-align: start;
 }
 
-[dir="rtl"] .k-table th,
-[dir="rtl"] .k-table td {
-	border-left: 1px solid var(--color-background);
+.k-table th {
+	padding: 0 0.75rem;
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	font-weight: 400;
+	color: var(--color-gray-600);
+	background: var(--color-gray-100);
+	width: 100%;
+}
+
+.k-table th button {
+	font: inherit;
+	display: block;
+	padding: 0 0.75rem;
+	height: 100%;
+	width: 100%;
+	border-radius: var(--rounded);
+	text-align: start;
+}
+.k-table th button:focus-visible {
+	outline: 2px solid var(--color-black);
+	outline-offset: -2px;
 }
 
 .k-table tbody tr:hover td {
 	background: rgba(239, 239, 239, 0.25);
 }
 
-/* Text aligment */
+/** Sticky header **/
+.k-table thead th {
+	position: sticky;
+	top: 0;
+	inset-inline: 0;
+	z-index: 1;
+}
+
+/** Header cells in the body **/
+.k-table tbody th {
+	width: auto;
+	white-space: nowrap;
+	padding: 0;
+	overflow: visible;
+	border-radius: 0;
+}
+.k-table tbody tr:first-child th {
+	border-start-start-radius: var(--rounded);
+}
+.k-table tbody tr:last-child th {
+	border-end-start-radius: var(--rounded);
+	border-block-end: 0;
+}
+
+/** Text aligment **/
 .k-table-column[data-align] {
-	text-align: var(--align);
+	text-align: var(--align) !important;
 }
 .k-table-column[data-align="right"] > .k-input {
 	flex-direction: column;
 	align-items: flex-end;
 }
 
-/** Sticky header **/
-.k-table th {
-	position: sticky;
-	top: 0;
-	inset-inline: 0;
-	width: 100%;
-	padding: 0 0.75rem;
-	z-index: 1;
-	font-family: var(--font-mono);
-	font-size: var(--text-xs);
-	font-weight: 400;
-	color: var(--color-gray-600);
-	background: var(--color-gray-100);
-	text-align: start;
-}
-[dir="ltr"] .k-table th {
-	text-align: left;
-}
-
-[dir="rtl"] .k-table th {
-	text-align: right;
-}
-.k-table th::after {
-	content: "";
-	position: absolute;
-	top: 100%;
-	left: 0;
-	right: 0;
-	height: 0.5rem;
-	background: linear-gradient(to bottom, rgba(#000, 0.05), rgba(#000, 0));
-	z-index: 2;
-}
-
+/** Index & Sort handle */
 .k-table-index,
 .k-table .k-sort-handle {
 	display: grid;
@@ -417,8 +435,6 @@ export default {
 	width: 100%;
 	height: var(--table-row-height);
 }
-
-/** Sort handle */
 .k-table .k-sort-handle,
 .k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
 	display: none;
@@ -429,8 +445,9 @@ export default {
 
 .k-table-row-ghost {
 	background: var(--color-white);
-	box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
-	outline: 2px solid var(--color-focus);
+	box-shadow: var(--shadow-outline);
+	outline: 2px solid var(--color-black);
+	border-radius: var(--rounded);
 	margin-bottom: 2px;
 	cursor: grabbing;
 	cursor: -moz-grabbing;
@@ -463,13 +480,11 @@ td.k-table-options-column {
 
 /** Disabled */
 [data-disabled="true"] .k-table {
-	background: var(--color-background);
+	background: var(--color-gray-100);
 }
 [data-disabled="true"] .k-table th,
-[data-disabled="true"] .k-table td {
-	background: var(--color-background);
-	border-bottom: 1px solid var(--color-border);
-	border-inline-end: 1px solid var(--color-border);
+[data-disabled="true"] .k-table tbody td {
+	border-color: var(--color-gray-200);
 }
 [data-disabled="true"] .k-table td:last-child {
 	overflow: hidden;

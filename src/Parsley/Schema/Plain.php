@@ -23,13 +23,10 @@ class Plain extends Schema
 	/**
 	 * Creates the fallback block type
 	 * if no other block can be found
-	 *
-	 * @param \Kirby\Parsley\Element|string $element
-	 * @return array|null
 	 */
-	public function fallback($element): ?array
+	public function fallback(Element|string $element): array|null
 	{
-		if (is_a($element, Element::class) === true) {
+		if ($element instanceof Element) {
 			$text = $element->innerText();
 		} elseif (is_string($element) === true) {
 			$text = trim($element);
@@ -52,8 +49,6 @@ class Plain extends Schema
 	/**
 	 * Returns a list of all elements that
 	 * should be skipped during parsing
-	 *
-	 * @return array
 	 */
 	public function skip(): array
 	{

@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 use ReflectionMethod;
+use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
 /**
@@ -390,7 +391,7 @@ class AppErrorsTest extends TestCase
 	{
 		ob_start();
 
-		if (is_a($path, '\Whoops\Handler\CallbackHandler') === true) {
+		if ($path instanceof CallbackHandler) {
 			$path->handle();
 		} else {
 			F::load($path);

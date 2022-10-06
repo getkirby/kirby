@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Form\Form;
 
 return [
@@ -31,7 +33,10 @@ return [
 		'fields' => function () {
 			$fields = $this->form->fields()->toArray();
 
-			if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
+			if (
+				$this->model instanceof Page ||
+				$this->model instanceof Site
+			) {
 				// the title should never be updated directly via
 				// fields section to avoid conflicts with the rename dialog
 				unset($fields['title']);

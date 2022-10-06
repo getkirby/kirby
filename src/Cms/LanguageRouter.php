@@ -123,11 +123,11 @@ class LanguageRouter
 
 				if ($page = $route->page()) {
 					return $route->action()->call($route, $language, $page, ...$route->arguments());
-				} else {
-					return $route->action()->call($route, $language, ...$route->arguments());
 				}
+
+				return $route->action()->call($route, $language, ...$route->arguments());
 			});
-		} catch (Exception $e) {
+		} catch (Exception) {
 			return $kirby->resolve($path, $language->code());
 		}
 	}

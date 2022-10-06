@@ -77,6 +77,9 @@ export default {
 .k-error-details dd:not(:last-of-type) {
 	margin-bottom: 1.5em;
 }
+.k-error-details li {
+	white-space: pre-line;
+}
 .k-error-details li:not(:last-child) {
 	border-bottom: 1px solid var(--color-background);
 	padding-bottom: 0.25rem;

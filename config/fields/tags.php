@@ -31,7 +31,7 @@ return [
 		 * Set to `list` to display each tag with 100% width,
 		 * otherwise the tags are displayed inline
 		 */
-		'layout' => function (?string $layout = null) {
+		'layout' => function (string|null $layout = null) {
 			return $layout;
 		},
 		/**
@@ -55,43 +55,32 @@ return [
 	],
 	'computed' => [
 		'default' => function (): array {
-			return $this->toTags($this->default);
+			return $this->toValues($this->default);
 		},
 		'value' => function (): array {
-			return $this->toTags($this->value);
+			return $this->toValues($this->value);
 		}
 	],
 	'methods' => [
-		'toTags' => function ($value) {
+		'toValues' => function ($value) {
 			if (is_null($value) === true) {
 				return [];
 			}
 
-			$options = $this->options();
+			if (is_array($value) === false) {
+				$value = Str::split($value, $this->separator());
+			}
 
-			// transform into value-text objects
-			return array_map(function ($option) use ($options) {
-				// already a valid object
-				if (is_array($option) === true && isset($option['value'], $option['text']) === true) {
-					return $option;
-				}
+			if ($this->accept === 'options') {
+				$value = $this->sanitizeOptions($value);
+			}
 
-				$index = array_search($option, array_column($options, 'value'));
-
-				if ($index !== false) {
-					return $options[$index];
-				}
-
-				return [
-					'value' => $option,
-					'text'  => $option,
-				];
-			}, Str::split($value, $this->separator()));
+			return $value;
 		}
 	],
 	'save' => function (array $value = null): string {
 		return A::join(
-			A::pluck($value, 'value'),
+			$value,
 			$this->separator() . ' '
 		);
 	},

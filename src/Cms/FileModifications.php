@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Asset;
 
 /**
  * Trait for image resizing, blurring etc.
@@ -53,7 +54,7 @@ trait FileModifications
 			$quality = $options;
 		} elseif (is_string($options)) {
 			$crop = $options;
-		} elseif (is_a($options, 'Kirby\Cms\Field') === true) {
+		} elseif ($options instanceof Field) {
 			$crop = $options->value();
 		} elseif (is_array($options)) {
 			$quality = $options['quality'] ?? $quality;
@@ -127,7 +128,7 @@ trait FileModifications
 	 * @param array|string|null $sizes
 	 * @return string|null
 	 */
-	public function srcset($sizes = null): ?string
+	public function srcset($sizes = null): string|null
 	{
 		if (empty($sizes) === true) {
 			$sizes = $this->kirby()->option('thumbs.srcsets.default', []);
@@ -202,9 +203,9 @@ trait FileModifications
 		$result    = $component($this->kirby(), $this, $options);
 
 		if (
-			is_a($result, 'Kirby\Cms\FileVersion') === false &&
-			is_a($result, 'Kirby\Cms\File') === false &&
-			is_a($result, 'Kirby\Filesystem\Asset') === false
+			$result instanceof FileVersion === false &&
+			$result instanceof File === false &&
+			$result instanceof Asset === false
 		) {
 			throw new InvalidArgumentException('The file::version component must return a File, FileVersion or Asset object');
 		}

@@ -19,9 +19,6 @@ class Svgz extends Svg
 	/**
 	 * Sanitizes the given string
 	 *
-	 * @param string $string
-	 * @return string
-	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed or recompressed
 	 */
 	public static function sanitize(string $string): string
@@ -40,9 +37,6 @@ class Svgz extends Svg
 	/**
 	 * Validates file contents
 	 *
-	 * @param string $string
-	 * @return void
-	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
 	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
 	 */
@@ -53,9 +47,6 @@ class Svgz extends Svg
 
 	/**
 	 * Uncompresses the SVGZ data
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	protected static function uncompress(string $string): string
 	{

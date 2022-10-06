@@ -17,26 +17,18 @@ class Url
 {
 	/**
 	 * The base Url to build absolute Urls from
-	 *
-	 * @var string
 	 */
-	public static $home = '/';
+	public static string|null $home = '/';
 
 	/**
-	 * The current Uri object
-	 *
-	 * @var Uri
+	 * The current Uri object as string
 	 */
-	public static $current = null;
+	public static string|null $current = null;
 
 	/**
 	 * Facade for all Uri object methods
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public static function __callStatic(string $method, $arguments)
+	public static function __callStatic(string $method, array $arguments)
 	{
 		return (new Uri($arguments[0] ?? static::current()))->$method(...array_slice($arguments, 1));
 	}
@@ -44,20 +36,14 @@ class Url
 	/**
 	 * Url Builder
 	 * Actually just a factory for `new Uri($parts)`
-	 *
-	 * @param array $parts
-	 * @param string|null $url
-	 * @return string
 	 */
-	public static function build(array $parts = [], string $url = null): string
+	public static function build(array $parts = [], string|null $url = null): string
 	{
 		return (string)(new Uri($url ?? static::current()))->clone($parts);
 	}
 
 	/**
 	 * Returns the current url with all bells and whistles
-	 *
-	 * @return string
 	 */
 	public static function current(): string
 	{
@@ -66,8 +52,6 @@ class Url
 
 	/**
 	 * Returns the url for the current directory
-	 *
-	 * @return string
 	 */
 	public static function currentDir(): string
 	{
@@ -76,11 +60,9 @@ class Url
 
 	/**
 	 * Tries to fix a broken url without protocol
-	 *
-	 * @param string|null $url
-	 * @return string
+	 * @psalm-return ($url is null ? string|null : string)
 	 */
-	public static function fix(string $url = null): string
+	public static function fix(string|null $url = null): string|null
 	{
 		// make sure to not touch absolute urls
 		return (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) ? 'http://' . $url : $url;
@@ -88,8 +70,6 @@ class Url
 
 	/**
 	 * Returns the home url if defined
-	 *
-	 * @return string
 	 */
 	public static function home(): string
 	{
@@ -98,9 +78,6 @@ class Url
 
 	/**
 	 * Returns the url to the executed script
-	 *
-	 * @param array $props
-	 * @return string
 	 */
 	public static function index(array $props = []): string
 	{
@@ -109,11 +86,8 @@ class Url
 
 	/**
 	 * Checks if an URL is absolute
-	 *
-	 * @param string|null $url
-	 * @return bool
 	 */
-	public static function isAbsolute(string $url = null): bool
+	public static function isAbsolute(string|null $url = null): bool
 	{
 		// matches the following groups of URLs:
 		//  //example.com/uri
@@ -124,12 +98,8 @@ class Url
 
 	/**
 	 * Convert a relative path into an absolute URL
-	 *
-	 * @param string|null $path
-	 * @param string|null $home
-	 * @return string
 	 */
-	public static function makeAbsolute(string $path = null, string $home = null): string
+	public static function makeAbsolute(string|null $path = null, string|null $home = null): string
 	{
 		if ($path === '' || $path === '/' || $path === null) {
 			return $home ?? static::home();
@@ -156,32 +126,22 @@ class Url
 
 	/**
 	 * Returns the path for the given url
-	 *
-	 * @param string|array|null $url
-	 * @param bool $leadingSlash
-	 * @param bool $trailingSlash
-	 * @return string
 	 */
-	public static function path($url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
+	public static function path(string|array|null $url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
 	{
 		return Url::toObject($url)->path()->toString($leadingSlash, $trailingSlash);
 	}
 
 	/**
 	 * Returns the query for the given url
-	 *
-	 * @param string|array|null $url
-	 * @return string
 	 */
-	public static function query($url = null): string
+	public static function query(string|array|null $url = null): string
 	{
 		return Url::toObject($url)->query()->toString();
 	}
 
 	/**
 	 * Return the last url the user has been on if detectable
-	 *
-	 * @return string
 	 */
 	public static function last(): string
 	{
@@ -190,14 +150,8 @@ class Url
 
 	/**
 	 * Shortens the Url by removing all unnecessary parts
-	 *
-	 * @param string $url
-	 * @param int $length
-	 * @param bool $base
-	 * @param string $rep
-	 * @return string
 	 */
-	public static function short($url = null, int $length = 0, bool $base = false, string $rep = '…'): string
+	public static function short(string|null $url = null, int $length = 0, bool $base = false, string $rep = '…'): string
 	{
 		$uri = static::toObject($url);
 
@@ -219,45 +173,32 @@ class Url
 
 	/**
 	 * Removes the path from the Url
-	 *
-	 * @param string $url
-	 * @return string
 	 */
-	public static function stripPath($url = null): string
+	public static function stripPath(string|null $url = null): string
 	{
 		return static::toObject($url)->setPath(null)->toString();
 	}
 
 	/**
 	 * Removes the query string from the Url
-	 *
-	 * @param string $url
-	 * @return string
 	 */
-	public static function stripQuery($url = null): string
+	public static function stripQuery(string|null $url = null): string
 	{
 		return static::toObject($url)->setQuery(null)->toString();
 	}
 
 	/**
 	 * Removes the fragment (hash) from the Url
-	 *
-	 * @param string $url
-	 * @return string
 	 */
-	public static function stripFragment($url = null): string
+	public static function stripFragment(string|null $url = null): string
 	{
 		return static::toObject($url)->setFragment(null)->toString();
 	}
 
 	/**
 	 * Smart resolver for internal and external urls
-	 *
-	 * @param string $path
-	 * @param mixed $options
-	 * @return string
 	 */
-	public static function to(string $path = null, $options = null): string
+	public static function to(string|null $path = null, array $options = null): string
 	{
 		// make sure $path is string
 		$path ??= '';
@@ -278,11 +219,8 @@ class Url
 
 	/**
 	 * Converts the Url to a Uri object
-	 *
-	 * @param string $url
-	 * @return \Kirby\Http\Uri
 	 */
-	public static function toObject($url = null)
+	public static function toObject(string|null $url = null): Uri
 	{
 		return $url === null ? Uri::current() : new Uri($url);
 	}

@@ -18,35 +18,27 @@ class Router
 {
 	/**
 	 * Hook that is called after each route
-	 *
-	 * @var \Closure
 	 */
-	protected $afterEach;
+	protected Closure|null $afterEach;
 
 	/**
 	 * Hook that is called before each route
-	 *
-	 * @var \Closure
 	 */
-	protected $beforeEach;
+	protected Closure|null $beforeEach;
 
 	/**
 	 * Store for the current route,
 	 * if one can be found
-	 *
-	 * @var \Kirby\Http\Route|null
 	 */
-	protected $route;
+	protected Route|null $route = null;
 
 	/**
 	 * All registered routes, sorted by
 	 * their request method. This makes
 	 * it faster to find the right route
 	 * later.
-	 *
-	 * @var array
 	 */
-	protected $routes = [
+	protected array $routes = [
 		'GET'     => [],
 		'HEAD'    => [],
 		'POST'    => [],
@@ -62,7 +54,6 @@ class Router
 	 * Creates a new router object and
 	 * registers all the given routes
 	 *
-	 * @param array $routes
 	 * @param array<string, \Closure> $hooks Optional `beforeEach` and `afterEach` hooks
 	 */
 	public function __construct(array $routes = [], array $hooks = [])
@@ -104,14 +95,12 @@ class Router
 	 * and then call the Route action with
 	 * the appropriate arguments and a Result
 	 * object.
-	 *
-	 * @param string $path
-	 * @param string $method
-	 * @param Closure|null $callback
-	 * @return mixed
 	 */
-	public function call(string $path = null, string $method = 'GET', Closure $callback = null)
-	{
+	public function call(
+		string|null $path = null,
+		string $method = 'GET',
+		Closure|null $callback = null
+	) {
 		$path ??= '';
 		$ignore = [];
 		$result = null;
@@ -120,7 +109,7 @@ class Router
 		while ($loop === true) {
 			$route = $this->find($path, $method, $ignore);
 
-			if (is_a($this->beforeEach, 'Closure') === true) {
+			if ($this->beforeEach instanceof Closure) {
 				($this->beforeEach)($route, $path, $method);
 			}
 
@@ -128,15 +117,15 @@ class Router
 				if ($callback) {
 					$result = $callback($route);
 				} else {
-					$result = $route->action()->call($route, ...$route->arguments());
+					$result = $route?->action()->call($route, ...$route->arguments());
 				}
 
 				$loop = false;
-			} catch (Exceptions\NextRouteException $e) {
+			} catch (Exceptions\NextRouteException) {
 				$ignore[] = $route;
 			}
 
-			if (is_a($this->afterEach, 'Closure') === true) {
+			if ($this->afterEach instanceof Closure) {
 				$final  = $loop === false;
 				$result = ($this->afterEach)($route, $path, $method, $result, $final);
 			}
@@ -149,14 +138,8 @@ class Router
 	 * Creates a micro-router and executes
 	 * the routing action immediately
 	 * @since 3.7.0
-	 *
-	 * @param string|null $path
-	 * @param string $method
-	 * @param array $routes
-	 * @param \Closure|null $callback
-	 * @return mixed
 	 */
-	public static function execute(?string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+	public static function execute(string|null $path = null, string $method = 'GET', array $routes = [], Closure|null $callback = null)
 	{
 		return (new static($routes))->call($path, $method, $callback);
 	}
@@ -166,13 +149,8 @@ class Router
 	 * The Route's arguments method is used to
 	 * find matches and return all the found
 	 * arguments in the path.
-	 *
-	 * @param string $path
-	 * @param string $method
-	 * @param array $ignore
-	 * @return \Kirby\Http\Route|null
 	 */
-	public function find(string $path, string $method, array $ignore = null)
+	public function find(string $path, string $method, array|null $ignore = null): Route|null
 	{
 		if (isset($this->routes[$method]) === false) {
 			throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
@@ -199,10 +177,8 @@ class Router
 	 * This will only return something,
 	 * once Router::find() has been called
 	 * and only if a route was found.
-	 *
-	 * @return \Kirby\Http\Route|null
 	 */
-	public function route()
+	public function route(): Route|null
 	{
 		return $this->route;
 	}

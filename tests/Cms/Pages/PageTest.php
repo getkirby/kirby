@@ -10,18 +10,11 @@ class PageTestModel extends Page
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Page
+ */
 class PageTest extends TestCase
 {
-	/**
-	 * Deregister any plugins for the page
-	 *
-	 * @return void
-	 */
-	public function setUp(): void
-	{
-		parent::setUp();
-	}
-
 	public function tearDown(): void
 	{
 		parent::tearDown();
@@ -870,6 +863,19 @@ class PageTest extends TestCase
 		Page::$models = [];
 	}
 
+	/**
+	 * @covers ::permalink
+	 */
+	public function testPermalink()
+	{
+		$page = Page::factory([
+			'slug'    => 'test',
+			'content' => ['uuid' => 'my-page-uuid']
+		]);
+
+		$this->assertSame('//@/page/my-page-uuid', $page->permalink());
+	}
+
 	public function testController()
 	{
 		$app = new App([
@@ -945,6 +951,11 @@ class PageTest extends TestCase
 
 	public function testToArray()
 	{
+		$this->app->clone([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 		$page = new Page([
 			'slug' => 'test'
 		]);

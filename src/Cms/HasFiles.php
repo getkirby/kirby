@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Uuid\Uuid;
+
 /**
  * HasFiles
  *
@@ -90,6 +92,11 @@ trait HasFiles
 			return $this->$in()->first();
 		}
 
+		// find by global UUID
+		if (Uuid::is($filename, 'file') === true) {
+			return Uuid::for($filename, $this->files())->model();
+		}
+
 		if (strpos($filename, '/') !== false) {
 			$path     = dirname($filename);
 			$filename = basename($filename);
@@ -111,7 +118,7 @@ trait HasFiles
 	 */
 	public function files()
 	{
-		if (is_a($this->files, 'Kirby\Cms\Files') === true) {
+		if ($this->files instanceof Files) {
 			return $this->files;
 		}
 

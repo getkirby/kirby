@@ -2,11 +2,13 @@
 
 namespace Kirby\Http;
 
+use CurlHandle;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
+use stdClass;
 
 /**
  * A handy little class to handle
@@ -23,10 +25,7 @@ class Remote
 	public const CA_INTERNAL = 1;
 	public const CA_SYSTEM   = 2;
 
-	/**
-	 * @var array
-	 */
-	public static $defaults = [
+	public static array $defaults = [
 		'agent'     => null,
 		'basicAuth' => null,
 		'body'      => true,
@@ -41,52 +40,17 @@ class Remote
 		'timeout'   => 10,
 	];
 
-	/**
-	 * @var string
-	 */
-	public $content;
-
-	/**
-	 * @var resource
-	 */
-	public $curl;
-
-	/**
-	 * @var array
-	 */
-	public $curlopt = [];
-
-	/**
-	 * @var int
-	 */
-	public $errorCode;
-
-	/**
-	 * @var string
-	 */
-	public $errorMessage;
-
-	/**
-	 * @var array
-	 */
-	public $headers = [];
-
-	/**
-	 * @var array
-	 */
-	public $info = [];
-
-	/**
-	 * @var array
-	 */
-	public $options = [];
+	public string|null $content = null;
+	public CurlHandle|false $curl;
+	public array $curlopt = [];
+	public int $errorCode;
+	public string $errorMessage;
+	public array $headers = [];
+	public array $info = [];
+	public array $options = [];
 
 	/**
 	 * Magic getter for request info data
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
 	public function __call(string $method, array $arguments = [])
 	{
@@ -96,9 +60,6 @@ class Remote
 
 	/**
 	 * Constructor
-	 *
-	 * @param string $url
-	 * @param array $options
 	 */
 	public function __construct(string $url, array $options = [])
 	{
@@ -128,27 +89,23 @@ class Remote
 		$this->fetch();
 	}
 
-	public static function __callStatic(string $method, array $arguments = [])
+	public static function __callStatic(string $method, array $arguments = []): static
 	{
 		return new static($arguments[0], array_merge(['method' => strtoupper($method)], $arguments[1] ?? []));
 	}
 
 	/**
 	 * Returns the http status code
-	 *
-	 * @return int|null
 	 */
-	public function code(): ?int
+	public function code(): int|null
 	{
 		return $this->info['http_code'] ?? null;
 	}
 
 	/**
 	 * Returns the response content
-	 *
-	 * @return mixed
 	 */
-	public function content()
+	public function content(): string|null
 	{
 		return $this->content;
 	}
@@ -158,7 +115,7 @@ class Remote
 	 *
 	 * @return $this
 	 */
-	public function fetch()
+	public function fetch(): static
 	{
 		// curl options
 		$this->curlopt = [
@@ -171,7 +128,7 @@ class Remote
 			CURLOPT_FOLLOWLOCATION   => true,
 			CURLOPT_MAXREDIRS        => 10,
 			CURLOPT_HEADER           => false,
-			CURLOPT_HEADERFUNCTION   => function ($curl, $header) {
+			CURLOPT_HEADERFUNCTION   => function ($curl, $header): int {
 				$parts = Str::split($header, ':');
 
 				if (empty($parts[0]) === false && empty($parts[1]) === false) {
@@ -295,12 +252,8 @@ class Remote
 
 	/**
 	 * Static method to send a GET request
-	 *
-	 * @param string $url
-	 * @param array $params
-	 * @return static
 	 */
-	public static function get(string $url, array $params = [])
+	public static function get(string $url, array $params = []): static
 	{
 		$defaults = [
 			'method' => 'GET',
@@ -322,8 +275,6 @@ class Remote
 
 	/**
 	 * Returns all received headers
-	 *
-	 * @return array
 	 */
 	public function headers(): array
 	{
@@ -332,8 +283,6 @@ class Remote
 
 	/**
 	 * Returns the request info
-	 *
-	 * @return array
 	 */
 	public function info(): array
 	{
@@ -344,17 +293,14 @@ class Remote
 	 * Decode the response content
 	 *
 	 * @param bool $array decode as array or object
-	 * @return array|\stdClass
 	 */
-	public function json(bool $array = true)
+	public function json(bool $array = true): array|stdClass|null
 	{
 		return json_decode($this->content(), $array);
 	}
 
 	/**
 	 * Returns the request method
-	 *
-	 * @return string
 	 */
 	public function method(): string
 	{
@@ -364,8 +310,6 @@ class Remote
 	/**
 	 * Returns all options which have been
 	 * set for the current request
-	 *
-	 * @return array
 	 */
 	public function options(): array
 	{
@@ -374,9 +318,6 @@ class Remote
 
 	/**
 	 * Internal method to handle post field data
-	 *
-	 * @param mixed $data
-	 * @return mixed
 	 */
 	protected function postfields($data)
 	{
@@ -389,20 +330,14 @@ class Remote
 
 	/**
 	 * Static method to init this class and send a request
-	 *
-	 * @param string $url
-	 * @param array $params
-	 * @return static
 	 */
-	public static function request(string $url, array $params = [])
+	public static function request(string $url, array $params = []): static
 	{
 		return new static($url, $params);
 	}
 
 	/**
 	 * Returns the request Url
-	 *
-	 * @return string
 	 */
 	public function url(): string
 	{

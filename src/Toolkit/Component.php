@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use ArgumentCountError;
+use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
@@ -179,17 +180,17 @@ class Component
 	protected function applyProps(array $props): void
 	{
 		foreach ($props as $propName => $propFunction) {
-			if (is_a($propFunction, 'Closure') === true) {
+			if ($propFunction instanceof Closure) {
 				if (isset($this->attrs[$propName]) === true) {
 					try {
 						$this->$propName = $this->props[$propName] = $propFunction->call($this, $this->attrs[$propName]);
-					} catch (TypeError $e) {
+					} catch (TypeError) {
 						throw new TypeError('Invalid value for "' . $propName . '"');
 					}
 				} else {
 					try {
 						$this->$propName = $this->props[$propName] = $propFunction->call($this);
-					} catch (ArgumentCountError $e) {
+					} catch (ArgumentCountError) {
 						throw new ArgumentCountError('Please provide a value for "' . $propName . '"');
 					}
 				}
@@ -209,7 +210,7 @@ class Component
 	protected function applyComputed(array $computed): void
 	{
 		foreach ($computed as $computedName => $computedFunction) {
-			if (is_a($computedFunction, 'Closure') === true) {
+			if ($computedFunction instanceof Closure) {
 				$this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
 			}
 		}
@@ -283,7 +284,7 @@ class Component
 	 */
 	public function toArray(): array
 	{
-		if (is_a($this->options['toArray'] ?? null, 'Closure') === true) {
+		if (($this->options['toArray'] ?? null) instanceof Closure) {
 			return $this->options['toArray']->call($this);
 		}
 

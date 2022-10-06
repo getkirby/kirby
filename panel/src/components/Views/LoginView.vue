@@ -1,14 +1,20 @@
 <template>
 	<k-panel>
-		<k-view v-if="form === 'login'" align="center" class="k-login-view">
-			<k-login-plugin :methods="methods" />
-		</k-view>
-		<k-view
-			v-else-if="form === 'code'"
-			align="center"
-			class="k-login-code-view"
-		>
-			<k-login-code v-bind="$props" />
+		<k-view align="center" :class="viewClass">
+			<!-- <div> as a wrapper so that <k-view>
+			     has a single child for Flexbox layout -->
+			<div>
+				<h1 class="sr-only">
+					{{ $t("login") }}
+				</h1>
+
+				<k-login-alert v-if="issue" @click="issue = null">
+					{{ issue }}
+				</k-login-alert>
+
+				<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
+				<k-login-plugin v-else :methods="methods" @error="onError" />
+			</div>
 		</k-view>
 	</k-panel>
 </template>
@@ -24,21 +30,46 @@ export default {
 		methods: Array,
 		pending: Object
 	},
+	data() {
+		return {
+			issue: ""
+		};
+	},
 	computed: {
 		form() {
 			if (this.pending.email) {
 				return "code";
 			}
 
-			if (!this.$user) {
-				return "login";
+			return "login";
+		},
+		viewClass() {
+			if (this.form === "code") {
+				return "k-login-code-view";
 			}
 
-			return null;
+			return "k-login-view";
 		}
 	},
 	created() {
 		this.$store.dispatch("content/clear");
+	},
+	methods: {
+		async onError(error) {
+			if (error === null) {
+				this.issue = null;
+				return;
+			}
+
+			if (error.details.challengeDestroyed === true) {
+				// reset from the LoginCode component back to Login
+				await this.$reload({
+					globals: ["$system"]
+				});
+			}
+
+			this.issue = error.message;
+		}
 	}
 };
 </script>

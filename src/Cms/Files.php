@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$files` object extends the general
@@ -21,6 +22,8 @@ use Kirby\Filesystem\F;
  */
 class Files extends Collection
 {
+	use HasUuids;
+
 	/**
 	 * All registered files methods
 	 *
@@ -40,15 +43,18 @@ class Files extends Collection
 	public function add($object)
 	{
 		// add a files collection
-		if (is_a($object, self::class) === true) {
+		if ($object instanceof self) {
 			$this->data = array_merge($this->data, $object->data);
 
 		// add a file by id
-		} elseif (is_string($object) === true && $file = App::instance()->file($object)) {
+		} elseif (
+			is_string($object) === true &&
+			$file = App::instance()->file($object)
+		) {
 			$this->__set($file->id(), $file);
 
 		// add a file object
-		} elseif (is_a($object, 'Kirby\Cms\File') === true) {
+		} elseif ($object instanceof File) {
 			$this->__set($object->id(), $object);
 
 		// give a useful error message on invalid input;
@@ -106,22 +112,6 @@ class Files extends Collection
 	}
 
 	/**
-	 * Tries to find a file by id/filename
-	 * @deprecated 3.7.0 Use `$files->find()` instead
-	 * @todo 3.8.0 Remove method
-	 * @codeCoverageIgnore
-	 *
-	 * @param string $id
-	 * @return \Kirby\Cms\File|null
-	 */
-	public function findById(string $id)
-	{
-		Helpers::deprecated('Cms\Files::findById() has been deprecated and will be removed in Kirby 3.8.0. Use $files->find() instead.');
-
-		return $this->findByKey($id);
-	}
-
-	/**
 	 * Finds a file by its filename
 	 * @internal Use `$files->find()` instead
 	 *
@@ -130,7 +120,11 @@ class Files extends Collection
 	 */
 	public function findByKey(string $key)
 	{
-		return $this->get(ltrim($this->parent->id() . '/' . $key, '/'));
+		if ($file = $this->findByUuid($key, 'file')) {
+			return $file;
+		}
+
+		return $this->get(ltrim($this->parent?->id() . '/' . $key, '/'));
 	}
 
 	/**

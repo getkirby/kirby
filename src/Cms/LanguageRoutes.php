@@ -33,7 +33,11 @@ class LanguageRoutes
 				'method'  => 'ALL',
 				'env'     => 'site',
 				'action'  => function ($path = null) use ($language) {
-					if ($result = $language->router()->call($path)) {
+					$result = $language->router()->call($path);
+
+					// explicitly test for null as $result can
+					// contain falsy values that should still be returned
+					if ($result !== null) {
 						return $result;
 					}
 

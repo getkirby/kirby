@@ -21,19 +21,15 @@ class Files
 
 	/**
 	 * Sanitized array of all received files
-	 *
-	 * @var array
 	 */
-	protected $files;
+	protected array $files;
 
 	/**
 	 * Creates a new Files object
 	 * Pass your own array to mock
 	 * uploads.
-	 *
-	 * @param array|null $files
 	 */
-	public function __construct($files = null)
+	public function __construct(array|null $files = null)
 	{
 		if ($files === null) {
 			$files = $_FILES;
@@ -63,8 +59,6 @@ class Files
 	 * array. This is only needed to make
 	 * the Data trait work for the Files::get($key)
 	 * method.
-	 *
-	 * @return array
 	 */
 	public function data(): array
 	{

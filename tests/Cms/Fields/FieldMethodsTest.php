@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Filesystem\Dir;
 
 class FieldMethodsTest extends TestCase
 {
@@ -11,17 +12,26 @@ class FieldMethodsTest extends TestCase
 	{
 		parent::setUp();
 
+
 		new App([
 			'roots' => [
-				'index'   => '/dev/null',
+				'index'   => $this->tmp = __DIR__ . '/tmp',
 				'content' => __DIR__ . '/fixtures'
 			]
 		]);
+
+		Dir::make($this->tmp);
 	}
 
-	public function field($value = '')
+	public function tearDown(): void
 	{
-		return new Field(null, 'test', $value);
+		parent::tearDown();
+		Dir::remove($this->tmp);
+	}
+
+	public function field($value = '', $parent = null)
+	{
+		return new Field($parent, 'test', $value);
 	}
 
 	public function testFieldMethodCaseInsensitivity()
@@ -108,7 +118,7 @@ class FieldMethodsTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => [
 				'date.handler' => 'strftime'
@@ -142,15 +152,21 @@ class FieldMethodsTest extends TestCase
 	{
 		$page = new Page([
 			'content' => [
-				'cover' => 'cover.jpg'
+				'cover'   => 'cover.jpg',
+				'coverid' => 'file://file-cover-uuid'
 			],
 			'files' => [
-				['filename' => 'cover.jpg']
+				[
+					'filename' => 'cover.jpg',
+					'content'  => ['uuid' => 'file-cover-uuid']
+				]
 			],
 			'slug' => 'test'
 		]);
 
 		$this->assertSame('cover.jpg', $page->cover()->toFile()->filename());
+		$this->assertSame('cover.jpg', $page->coverid()->toFile()->filename());
+		Dir::remove(__DIR__ . '/fixtures/test');
 	}
 
 	public function testToFiles()
@@ -173,7 +189,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -280,31 +296,35 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
 					['slug' => 'a'],
-					['slug' => 'b']
+					['slug' => 'b'],
+					['slug' => 'c', 'content' => ['uuid' => 'uuid-c']]
 				]
 			]
 		]);
 
 		$a = $app->page('a');
 		$b = $app->page('b');
+		$c = $app->page('c');
 
 		$this->assertSame($a, $this->field('a')->toPage());
 		$this->assertSame($b, $this->field('b')->toPage());
+		$this->assertSame($c, $this->field('page://uuid-c')->toPage());
 
 		$this->assertSame($a, $this->field(Yaml::encode(['a']))->toPage());
 		$this->assertSame($b, $this->field(Yaml::encode(['b', 'a']))->toPage());
+		$this->assertSame($c, $this->field(Yaml::encode(['page://uuid-c', 'b', 'a']))->toPage());
 	}
 
 	public function testToPages()
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -371,12 +391,12 @@ class FieldMethodsTest extends TestCase
 		];
 
 		$yaml  = Yaml::encode($data);
-		$field = $this->field($yaml);
+		$field = $this->field($yaml, kirby()->page('files'));
 
 		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid structure data for "test" field');
+		$this->expectExceptionMessage('Invalid structure data for "test" field on parent "files"');
 
-		$structure = $field->toStructure();
+		$field->toStructure();
 	}
 
 	public function testToDefaultUrl()
@@ -391,7 +411,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'urls' => [
 				'index' => 'https://getkirby.com'
@@ -408,19 +428,22 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'users' => [
 				['email' => 'a@company.com'],
-				['email' => 'b@company.com']
+				['email' => 'b@company.com'],
+				['email' => 'c@company.com', 'id' => 'my-user']
 			]
 		]);
 
 		$a = $app->user('a@company.com');
 		$b = $app->user('b@company.com');
+		$c = $app->user('c@company.com');
 
 		$this->assertSame($a, $this->field('a@company.com')->toUser());
 		$this->assertSame($b, $this->field('b@company.com')->toUser());
+		$this->assertSame($c, $this->field('user://my-user')->toUser());
 
 		$this->assertSame($a, $this->field(Yaml::encode(['a@company.com']))->toUser());
 		$this->assertSame($b, $this->field(Yaml::encode(['b@company.com', 'a@company.com']))->toUser());
@@ -430,7 +453,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'users' => [
 				['email' => 'a@company.com'],
@@ -621,6 +644,20 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame('Title: Hello world', $page->text()->replace()->value());
 		$this->assertSame('', $page->doesNotExist()->replace()->value());
+
+		// with fallback
+		$this->assertSame(
+			'Hello ',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'])->value()
+		);
+		$this->assertSame(
+			'Hello fallback',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], 'fallback')->value()
+		);
+		$this->assertSame(
+			'Hello {{ invalid }}',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], null)->value()
+		);
 	}
 
 	public function testShort()
@@ -640,7 +677,7 @@ class FieldMethodsTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => [
 				'smartypants' => true
@@ -797,6 +834,25 @@ class FieldMethodsTest extends TestCase
 		}
 	}
 
+	public function testToBlocksWithInvalidData()
+	{
+		$data = [
+			[
+				'content' => [
+					'text' => 'foo',
+				]
+			]
+		];
+
+		$json   = Json::encode($data);
+		$field  = new Field(kirby()->page('files'), 'test', $json);
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
+
+		$field->toBlocks();
+	}
+
 	public function testToLayouts()
 	{
 		$data = [
@@ -821,5 +877,20 @@ class FieldMethodsTest extends TestCase
 		$this->assertArrayHasKey('attrs', $layout);
 		$this->assertArrayHasKey('columns', $layout);
 		$this->assertArrayHasKey('id', $layout);
+	}
+
+	public function testToObject()
+	{
+		$data = [
+			'heading' => 'Heading',
+			'text'    => 'Text'
+		];
+
+		$field  = $this->field(Yaml::encode($data));
+		$object = $field->toObject();
+
+		$this->assertInstanceOf('\Kirby\Cms\Content', $object);
+
+		$this->assertSame('Heading', $object->heading()->value());
 	}
 }

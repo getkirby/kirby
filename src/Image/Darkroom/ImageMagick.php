@@ -20,52 +20,42 @@ class ImageMagick extends Darkroom
 	/**
 	 * Activates imagemagick's auto-orient feature unless
 	 * it is deactivated via the options
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
-	protected function autoOrient(string $file, array $options)
+	protected function autoOrient(string $file, array $options): string|null
 	{
 		if ($options['autoOrient'] === true) {
 			return '-auto-orient';
 		}
+
+		return null;
 	}
 
 	/**
 	 * Applies the blur settings
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
-	protected function blur(string $file, array $options)
+	protected function blur(string $file, array $options): string|null
 	{
 		if ($options['blur'] !== false) {
 			return '-blur ' . escapeshellarg('0x' . $options['blur']);
 		}
+
+		return null;
 	}
 
 	/**
 	 * Keep animated gifs
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
-	protected function coalesce(string $file, array $options)
+	protected function coalesce(string $file, array $options): string|null
 	{
 		if (F::extension($file) === 'gif') {
 			return '-coalesce';
 		}
+
+		return null;
 	}
 
 	/**
 	 * Creates the convert command with the right path to the binary file
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
 	protected function convert(string $file, array $options): string
 	{
@@ -88,8 +78,6 @@ class ImageMagick extends Darkroom
 
 	/**
 	 * Returns additional default parameters for imagemagick
-	 *
-	 * @return array
 	 */
 	protected function defaults(): array
 	{
@@ -101,40 +89,33 @@ class ImageMagick extends Darkroom
 
 	/**
 	 * Applies the correct settings for grayscale images
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
-	protected function grayscale(string $file, array $options)
+	protected function grayscale(string $file, array $options): string|null
 	{
 		if ($options['grayscale'] === true) {
 			return '-colorspace gray';
 		}
+
+		return null;
 	}
 
 	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
-	protected function interlace(string $file, array $options)
+	protected function interlace(string $file, array $options): string|null
 	{
 		if ($options['interlace'] === true) {
 			return '-interlace line';
 		}
+
+		return null;
 	}
 
 	/**
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return array
 	 * @throws \Exception
 	 */
 	public function process(string $file, array $options = []): array
@@ -169,10 +150,6 @@ class ImageMagick extends Darkroom
 
 	/**
 	 * Applies the correct JPEG compression quality settings
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
 	protected function quality(string $file, array $options): string
 	{
@@ -182,10 +159,6 @@ class ImageMagick extends Darkroom
 	/**
 	 * Creates the correct options to crop or resize the image
 	 * and translates the crop positions for imagemagick
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
 	protected function resize(string $file, array $options): string
 	{
@@ -218,10 +191,6 @@ class ImageMagick extends Darkroom
 
 	/**
 	 * Creates the option for the output file
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
 	protected function save(string $file, array $options): string
 	{
@@ -234,10 +203,6 @@ class ImageMagick extends Darkroom
 
 	/**
 	 * Removes all metadata from the image
-	 *
-	 * @param string $file
-	 * @param array $options
-	 * @return string
 	 */
 	protected function strip(string $file, array $options): string
 	{

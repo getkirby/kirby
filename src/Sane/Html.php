@@ -17,30 +17,19 @@ class Html extends DomHandler
 {
 	/**
 	 * Global list of allowed attribute prefixes
-	 *
-	 * @var array
 	 */
-	public static $allowedAttrPrefixes = [
+	public static array $allowedAttrPrefixes = [
 		'aria-',
 		'data-',
 	];
 
 	/**
 	 * Global list of allowed attributes
-	 *
-	 * @var array
 	 */
-	public static $allowedAttrs = [
+	public static array $allowedAttrs = [
 		'class',
 		'id',
 	];
-
-	/**
-	 * Allowed hostnames for HTTP(S) URLs
-	 *
-	 * @var array
-	 */
-	public static $allowedDomains = true;
 
 	/**
 	 * Associative array of all allowed tag names with the value
@@ -48,10 +37,8 @@ class Html extends DomHandler
 	 * for this tag, `true` to allow any attribute from the
 	 * `allowedAttrs` list or `false` to allow the tag without
 	 * any attributes
-	 *
-	 * @var array
 	 */
-	public static $allowedTags = [
+	public static array $allowedTags = [
 		'a'          => ['href', 'rel', 'title', 'target'],
 		'abbr'       => ['title'],
 		'b'          => true,
@@ -95,10 +82,8 @@ class Html extends DomHandler
 	 *
 	 * IMPORTANT: Use lower-case names here because
 	 * of the case-insensitive matching
-	 *
-	 * @var array
 	 */
-	public static $disallowedTags = [
+	public static array $disallowedTags = [
 		'iframe',
 		'meta',
 		'object',
@@ -108,10 +93,8 @@ class Html extends DomHandler
 
 	/**
 	 * List of attributes that may contain URLs
-	 *
-	 * @var array
 	 */
-	public static $urlAttrs = [
+	public static array $urlAttrs = [
 		'href',
 		'src',
 		'xlink:href',
@@ -119,15 +102,11 @@ class Html extends DomHandler
 
 	/**
 	 * The document type (`'HTML'` or `'XML'`)
-	 *
-	 * @var string
 	 */
-	protected static $type = 'HTML';
+	protected static string $type = 'HTML';
 
 	/**
 	 * Returns the sanitization options for the handler
-	 *
-	 * @return array
 	 */
 	protected static function options(): array
 	{

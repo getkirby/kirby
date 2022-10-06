@@ -38,9 +38,6 @@ class Home
 	 * It will go through the entire menu and
 	 * take the first area which is not disabled
 	 * or locked in other ways
-	 *
-	 * @param \Kirby\Cms\User $user
-	 * @return string
 	 */
 	public static function alternative(User $user): string
 	{
@@ -85,10 +82,6 @@ class Home
 	 * panel path. This is quite tricky, because we
 	 * need to call a trimmed down router to check
 	 * for available routes and their firewall status.
-	 *
-	 * @param \Kirby\Cms\User
-	 * @param string $path
-	 * @return bool
 	 */
 	public static function hasAccess(User $user, string $path): bool
 	{
@@ -124,7 +117,7 @@ class Home
 				// check the firewall
 				return Panel::hasAccess($user, $areaId);
 			});
-		} catch (Throwable $e) {
+		} catch (Throwable) {
 			return false;
 		}
 	}
@@ -134,9 +127,6 @@ class Home
 	 * as the index URL of the Kirby installation.
 	 * This is used to block external URLs to third-party
 	 * domains as redirect options.
-	 *
-	 * @param \Kirby\Http\Uri $uri
-	 * @return bool
 	 */
 	public static function hasValidDomain(Uri $uri): bool
 	{
@@ -145,10 +135,7 @@ class Home
 	}
 
 	/**
-	 * Checks if the given URL is a Panel Url.
-	 *
-	 * @param string $url
-	 * @return bool
+	 * Checks if the given URL is a Panel Url
 	 */
 	public static function isPanelUrl(string $url): bool
 	{
@@ -158,11 +145,8 @@ class Home
 	/**
 	 * Returns the path after /panel/ which can then
 	 * be used in the router or to find a matching view
-	 *
-	 * @param string $url
-	 * @return string|null
 	 */
-	public static function panelPath(string $url): ?string
+	public static function panelPath(string $url): string|null
 	{
 		$after = Str::after($url, App::instance()->url('panel'));
 		return trim($after, '/');
@@ -173,10 +157,8 @@ class Home
 	 * before the last logout. We take this Url if possible
 	 * to redirect the user back to the last point where they
 	 * left before they got logged out.
-	 *
-	 * @return string|null
 	 */
-	public static function remembered(): ?string
+	public static function remembered(): string|null
 	{
 		// check for a stored path after login
 		$remembered = App::instance()->session()->pull('panel.path');
@@ -206,8 +188,6 @@ class Home
 	 * Afterwards, we also check for permissions before the redirect happens
 	 * to avoid redirects to inaccessible Panel views. In such a case
 	 * the next best accessible view is picked from the menu.
-	 *
-	 * @return string
 	 */
 	public static function url(): string
 	{

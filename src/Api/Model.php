@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
@@ -21,37 +22,15 @@ use Kirby\Toolkit\Str;
  */
 class Model
 {
-	/**
-	 * @var \Kirby\Api\Api
-	 */
-	protected $api;
-
-	/**
-	 * @var mixed|null
-	 */
+	protected Api $api;
 	protected $data;
-
-	/**
-	 * @var array|mixed
-	 */
 	protected $fields;
-
-	/**
-	 * @var mixed|null
-	 */
 	protected $select;
-
-	/**
-	 * @var array|mixed
-	 */
 	protected $views;
 
 	/**
 	 * Model constructor
 	 *
-	 * @param \Kirby\Api\Api $api
-	 * @param mixed $data
-	 * @param array $schema
 	 * @throws \Exception
 	 */
 	public function __construct(Api $api, $data, array $schema)
@@ -62,12 +41,15 @@ class Model
 		$this->select = $schema['select'] ?? null;
 		$this->views  = $schema['views']  ?? [];
 
-		if ($this->select === null && array_key_exists('default', $this->views)) {
+		if (
+			$this->select === null &&
+			array_key_exists('default', $this->views)
+		) {
 			$this->view('default');
 		}
 
 		if ($data === null) {
-			if (is_a($schema['default'] ?? null, 'Closure') === false) {
+			if (($schema['default'] ?? null) instanceof Closure === false) {
 				throw new Exception('Missing model data');
 			}
 
@@ -76,18 +58,17 @@ class Model
 
 		if (
 			isset($schema['type']) === true &&
-			is_a($this->data, $schema['type']) === false
+			$this->data instanceof $schema['type'] === false
 		) {
 			throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', get_class($this->data), $schema['type']));
 		}
 	}
 
 	/**
-	 * @param null $keys
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function select($keys = null)
+	public function select($keys = null): static
 	{
 		if ($keys === false) {
 			return $this;
@@ -106,7 +87,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Exception
 	 */
 	public function selection(): array
@@ -153,7 +133,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -163,7 +142,10 @@ class Model
 		$result = [];
 
 		foreach ($this->fields as $key => $resolver) {
-			if (array_key_exists($key, $select) === false || is_a($resolver, 'Closure') === false) {
+			if (
+				array_key_exists($key, $select) === false ||
+				$resolver instanceof Closure === false
+			) {
 				continue;
 			}
 
@@ -174,8 +156,8 @@ class Model
 			}
 
 			if (
-				is_a($value, 'Kirby\Api\Collection') === true ||
-				is_a($value, 'Kirby\Api\Model') === true
+				$value instanceof Collection ||
+				$value instanceof self
 			) {
 				$selection = $select[$key];
 
@@ -199,7 +181,6 @@ class Model
 	}
 
 	/**
-	 * @return array
 	 * @throws \Kirby\Exception\NotFoundException
 	 * @throws \Exception
 	 */
@@ -224,11 +205,10 @@ class Model
 	}
 
 	/**
-	 * @param string $name
 	 * @return $this
 	 * @throws \Exception
 	 */
-	public function view(string $name)
+	public function view(string $name): static
 	{
 		if ($name === 'any') {
 			return $this->select(null);

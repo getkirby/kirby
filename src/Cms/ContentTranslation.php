@@ -93,7 +93,10 @@ class ContentTranslation
 		$content = $this->content;
 
 		// merge with the default content
-		if ($this->isDefault() === false && $defaultLanguage = $parent->kirby()->defaultLanguage()) {
+		if (
+			$this->isDefault() === false &&
+			$defaultLanguage = $parent->kirby()->defaultLanguage()
+		) {
 			$default = [];
 
 			if ($defaultTranslation = $parent->translation($defaultLanguage->code())) {
@@ -118,12 +121,11 @@ class ContentTranslation
 
 	/**
 	 * Checks if the translation file exists
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
-		return file_exists($this->contentFile()) === true;
+		return empty($this->content) === false ||
+			   file_exists($this->contentFile()) === true;
 	}
 
 	/**
@@ -211,7 +213,7 @@ class ContentTranslation
 	 *
 	 * @return string|null
 	 */
-	public function slug(): ?string
+	public function slug(): string|null
 	{
 		return $this->slug ??= ($this->content()['slug'] ?? null);
 	}

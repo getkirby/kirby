@@ -3,6 +3,7 @@
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 /**
  * Default KirbyTags definition
@@ -117,11 +118,8 @@ return [
 					return $img;
 				}
 
-				if ($link = $tag->file($tag->link)) {
-					$link = $link->url();
-				} else {
-					$link = $tag->link === 'self' ? $tag->src : $tag->link;
-				}
+				$link   = $tag->file($tag->link)?->url();
+				$link ??= $tag->link === 'self' ? $tag->src : $tag->link;
 
 				return Html::a($link, [$img], [
 					'rel'    => $tag->rel,
@@ -171,6 +169,15 @@ return [
 		'html' => function ($tag) {
 			if (empty($tag->lang) === false) {
 				$tag->value = Url::to($tag->value, $tag->lang);
+			}
+
+			// if value is a UUID, resolve to page/file model
+			// and use the URL as value
+			if (
+				Uuid::is($tag->value, 'page') === true ||
+				Uuid::is($tag->value, 'file') === true
+			) {
+				$tag->value = Uuid::for($tag->value)->model()->url();
 			}
 
 			return Html::a($tag->value, $tag->text, [

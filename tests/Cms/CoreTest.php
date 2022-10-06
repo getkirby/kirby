@@ -84,6 +84,17 @@ class CoreTest extends TestCase
 	}
 
 	/**
+	 * @covers ::caches
+	 */
+	public function testCaches()
+	{
+		$caches = $this->core->caches();
+
+		$this->assertArrayHasKey('updates', $caches);
+		$this->assertArrayHasKey('uuid', $caches);
+	}
+
+	/**
 	 * @covers ::cacheTypes
 	 */
 	public function testCacheTypes()
@@ -104,7 +115,6 @@ class CoreTest extends TestCase
 		$components = $this->core->components();
 
 		$this->assertArrayHasKey('css', $components);
-		$this->assertArrayHasKey('dump', $components);
 		$this->assertArrayHasKey('file::url', $components);
 		$this->assertArrayHasKey('file::version', $components);
 		$this->assertArrayHasKey('js', $components);
@@ -281,6 +291,7 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('blueprints', $roots);
 		$this->assertArrayHasKey('cache', $roots);
 		$this->assertArrayHasKey('collections', $roots);
+		$this->assertArrayHasKey('commands', $roots);
 		$this->assertArrayHasKey('config', $roots);
 		$this->assertArrayHasKey('controllers', $roots);
 		$this->assertArrayHasKey('languages', $roots);

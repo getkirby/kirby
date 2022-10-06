@@ -777,6 +777,10 @@ class PageActionsTest extends TestCase
 		$page->lock()->create();
 		$this->assertFileExists($this->app->locks()->file($page));
 
+		// check UUID exists
+		$oldUuid = $page->content()->get('uuid')->value();
+		$this->assertIsString($oldUuid);
+
 		$drafts = $this->app->site()->drafts();
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
 
@@ -786,6 +790,11 @@ class PageActionsTest extends TestCase
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
+
+		// check UUID got updated
+		$newUuid = $copy->content()->get('uuid')->value();
+		$this->assertIsString($newUuid);
+		$this->assertNotSame($oldUuid, $newUuid);
 	}
 
 	public function testDuplicateMultiLang()
@@ -900,17 +909,16 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-					$phpunit->assertSame([
-						'slug' => 'test',
-						'model' => 'default',
-						'template' => 'default',
-						'isDraft' => true
-					], $input);
+					$phpunit->assertInstanceOf(Page::class, $page);
+					$phpunit->assertSame('test', $input['slug']);
+					$phpunit->assertSame('default', $input['model']);
+					$phpunit->assertSame('default', $input['template']);
+					$phpunit->assertTrue($input['isDraft']);
+					$phpunit->assertArrayHasKey('uuid', $input['content']);
 					$calls++;
 				},
 				'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+					$phpunit->assertInstanceOf(Page::class, $page);
 					$phpunit->assertSame('test', $page->slug());
 					$calls++;
 				}
@@ -934,14 +942,14 @@ class PageActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'page.delete:before' => function (Page $page, $force) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+					$phpunit->assertInstanceOf(Page::class, $page);
 					$phpunit->assertFalse($force);
 					$phpunit->assertFileExists($page->root());
 					$calls++;
 				},
 				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
 					$phpunit->assertTrue($status);
-					$phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+					$phpunit->assertInstanceOf(Page::class, $page);
 					$phpunit->assertFileDoesNotExist($page->root());
 					$calls++;
 				}

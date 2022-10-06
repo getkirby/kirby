@@ -404,18 +404,7 @@ class Query
 	 */
 	public function orWhere(...$args)
 	{
-		$mode = A::last($args);
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-		}
-
-		// make sure to always attach the OR mode indicator
-		$args[] = 'OR';
-
-		$this->where(...$args);
+		$this->where = $this->filterQuery($args, $this->where, 'OR');
 		return $this;
 	}
 
@@ -428,18 +417,7 @@ class Query
 	 */
 	public function andWhere(...$args)
 	{
-		$mode = A::last($args);
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-		}
-
-		// make sure to always attach the AND mode indicator
-		$args[] = 'AND';
-
-		$this->where(...$args);
+		$this->where = $this->filterQuery($args, $this->where, 'AND');
 		return $this;
 	}
 
@@ -522,41 +500,38 @@ class Query
 	{
 		$sql = $this->database->sql();
 
-		switch ($type) {
-			case 'select':
-				return $sql->select([
-					'table'    => $this->table,
-					'columns'  => $this->select,
-					'join'     => $this->join,
-					'distinct' => $this->distinct,
-					'where'    => $this->where,
-					'group'    => $this->group,
-					'having'   => $this->having,
-					'order'    => $this->order,
-					'offset'   => $this->offset,
-					'limit'    => $this->limit,
-					'bindings' => $this->bindings
-				]);
-			case 'update':
-				return $sql->update([
-					'table'    => $this->table,
-					'where'    => $this->where,
-					'values'   => $this->values,
-					'bindings' => $this->bindings
-				]);
-			case 'insert':
-				return $sql->insert([
-					'table'    => $this->table,
-					'values'   => $this->values,
-					'bindings' => $this->bindings
-				]);
-			case 'delete':
-				return $sql->delete([
-					'table'    => $this->table,
-					'where'    => $this->where,
-					'bindings' => $this->bindings
-				]);
-		}
+		return match ($type) {
+			'select' => $sql->select([
+				'table'    => $this->table,
+				'columns'  => $this->select,
+				'join'     => $this->join,
+				'distinct' => $this->distinct,
+				'where'    => $this->where,
+				'group'    => $this->group,
+				'having'   => $this->having,
+				'order'    => $this->order,
+				'offset'   => $this->offset,
+				'limit'    => $this->limit,
+				'bindings' => $this->bindings
+			]),
+			'update' => $sql->update([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'insert' => $sql->insert([
+				'table'    => $this->table,
+				'values'   => $this->values,
+				'bindings' => $this->bindings
+			]),
+			'delete' => $sql->delete([
+				'table'    => $this->table,
+				'where'    => $this->where,
+				'bindings' => $this->bindings
+			]),
+			default => null
+		};
 	}
 
 	/**
@@ -935,18 +910,9 @@ class Query
 	 * @param mixed $current Current value (like $this->where)
 	 * @return string
 	 */
-	protected function filterQuery(array $args, $current)
+	protected function filterQuery(array $args, $current, string $mode = 'AND')
 	{
-		$mode   = A::last($args);
 		$result = '';
-
-		// if there's a where clause mode attribute attached…
-		if (in_array($mode, ['AND', 'OR'], true) === true) {
-			// remove that from the list of arguments
-			array_pop($args);
-		} else {
-			$mode = 'AND';
-		}
 
 		switch (count($args)) {
 			case 1:

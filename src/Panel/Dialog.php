@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Http\Response;
+
 /**
  * The Dialog response class handles Fiber
  * requests to render the JSON object for
@@ -16,16 +18,12 @@ namespace Kirby\Panel;
  */
 class Dialog extends Json
 {
-	protected static $key = '$dialog';
+	protected static string $key = '$dialog';
 
 	/**
 	 * Renders dialogs
-	 *
-	 * @param mixed $data
-	 * @param array $options
-	 * @return \Kirby\Http\Response
 	 */
-	public static function response($data, array $options = [])
+	public static function response($data, array $options = []): Response
 	{
 		// interpret true as success
 		if ($data === true) {

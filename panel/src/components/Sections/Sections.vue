@@ -13,7 +13,7 @@
 			:sticky="column.sticky"
 		>
 			<template v-for="(section, sectionIndex) in column.sections">
-				<template v-if="meetsCondition(section)">
+				<template v-if="$helper.field.isVisible(section, content)">
 					<component
 						:is="'k-' + section.type + '-section'"
 						v-if="exists(section.type)"
@@ -67,24 +67,6 @@ export default {
 	methods: {
 		exists(type) {
 			return this.$helper.isComponent(`k-${type}-section`);
-		},
-		meetsCondition(section) {
-			if (!section.when) {
-				return true;
-			}
-
-			let result = true;
-
-			Object.keys(section.when).forEach((key) => {
-				const value = this.content[key.toLowerCase()];
-				const condition = section.when[key];
-
-				if (value !== condition) {
-					result = false;
-				}
-			});
-
-			return result;
 		}
 	}
 };

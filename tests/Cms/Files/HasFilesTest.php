@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+
 class HasFileTraitUser
 {
 	use HasFiles;
@@ -23,14 +25,22 @@ class HasFileTraitUser
 class HasFilesTest extends TestCase
 {
 	protected $app;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp = __DIR__ . '/tmp'
 			]
 		]);
+
+		Dir::make($this->tmp);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	public function fileProvider()
@@ -121,5 +131,22 @@ class HasFilesTest extends TestCase
 		]);
 
 		$this->assertTrue($parent->hasFiles());
+	}
+
+	public function testFileWithUUID()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$parent = new HasFileTraitUser([
+			new File([
+				'filename' => 'test.jpg',
+				'content'  => ['uuid' => 'file-test'],
+				'parent'   => $page
+			])
+		]);
+
+		$this->assertSame('test.jpg', $parent->file('file://file-test')->filename());
 	}
 }
