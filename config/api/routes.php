@@ -13,7 +13,8 @@ return function ($kirby) {
 		include __DIR__ . '/routes/files.php',
 		include __DIR__ . '/routes/lock.php',
 		include __DIR__ . '/routes/system.php',
-		include __DIR__ . '/routes/translations.php'
+		include __DIR__ . '/routes/translations.php',
+		include __DIR__ . '/routes/kql.php'
 	);
 
 	// only add the language routes if the

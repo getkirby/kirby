@@ -8,6 +8,7 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
+use Kirby\Kql\Kql;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -369,6 +370,14 @@ if (Helpers::hasOverride('kti') === false) { // @codeCoverageIgnore
 		return App::instance()->kirbytext($text, $options);
 	}
 }
+
+if (Helpers::hasOverride('kql') === false) { // @codeCoverageIgnore
+	function kql($input, $model = null)
+	{
+		return Kql::run($input, $model);
+	}
+}
+
 
 if (Helpers::hasOverride('load') === false) { // @codeCoverageIgnore
 	/**

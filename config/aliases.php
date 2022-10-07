@@ -50,6 +50,9 @@ return [
 	// image classes
 	'dimensions' => 'Kirby\Image\Dimensions',
 
+	// kql classes
+	'kql' 	     => 'Kirby\Kql\Kql',
+
 	// panel classes
 	'panel'      => 'Kirby\Panel\Panel',
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Roles Routes
+ * Languages Routes
  */
 return [
 	[
