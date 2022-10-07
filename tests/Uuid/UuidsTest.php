@@ -50,6 +50,16 @@ class UuidsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$this->assertTrue(Uuids::enabled());
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertFalse(Uuids::enabled());
+	}
+
+	/**
 	 * @covers ::generate
 	 */
 	public function testGenerate()
