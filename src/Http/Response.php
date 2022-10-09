@@ -184,6 +184,10 @@ class Response
 		die(static::redirect($url, $code));
 	}
 
+	/**
+	 * Ensures that the callback does not produce the first body output
+	 * (used to show when loading a file creates side effects)
+	 */
 	public static function guardAgainstOutput(Closure $callback, ...$args): mixed
 	{
 		$before = headers_sent();
