@@ -692,6 +692,18 @@ class PluginTest extends TestCase
 	/**
 	 * @covers ::version
 	 */
+	public function testVersionComposerNoVersionSet()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer-noversionset'
+		]);
+
+		$this->assertNull($plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
 	public function testVersionComposerOverride()
 	{
 		$plugin = new Plugin('getkirby/test-plugin-composer', [

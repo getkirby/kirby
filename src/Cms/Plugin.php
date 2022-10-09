@@ -8,6 +8,7 @@ use Kirby\Cms\System\UpdateStatus;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Throwable;
 
@@ -282,7 +283,11 @@ class Plugin extends Model
 			return null;
 		}
 
-		if (is_string($version) !== true || $version === '') {
+		if (
+			is_string($version) !== true ||
+			$version === '' ||
+			Str::endsWith($version, '+no-version-set')
+		) {
 			return null;
 		}
 

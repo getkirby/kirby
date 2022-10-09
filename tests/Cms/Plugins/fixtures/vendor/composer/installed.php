@@ -21,5 +21,14 @@ return [
 			'aliases' => [],
 			'dev_requirement' => false,
 		],
+		'getkirby/kirby-test-plugin-composer-noversionset' => [
+			'pretty_version' => '1.0.0+no-version-set',
+			'version' => '1.0.0.0',
+			'reference' => null,
+			'type' => 'kirby-plugin',
+			'install_path' => __DIR__ . '/../',
+			'aliases' => [],
+			'dev_requirement' => false,
+		],
 	],
 ];
