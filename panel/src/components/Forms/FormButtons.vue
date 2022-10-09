@@ -83,6 +83,7 @@ export default {
 	},
 	computed: {
 		api() {
+			// always use silent requests (without loading spinner)
 			return [this.$view.path + "/lock", null, null, true];
 		},
 		hasChanges() {
