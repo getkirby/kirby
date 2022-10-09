@@ -187,7 +187,7 @@ class Response
 	public static function guardAgainstOutput(Closure $callback, ...$args): mixed
 	{
 		$before = headers_sent();
-		$result = $callback($args);
+		$result = $callback(...$args);
 		$after  = headers_sent($file, $line);
 
 		if ($before === false && $after === true) {
