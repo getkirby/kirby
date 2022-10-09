@@ -2,9 +2,32 @@
 
 namespace Kirby\Http;
 
+class HeadersSent
+{
+	public static $value = false;
+}
+
 class IniStore
 {
 	public static $data = [];
+}
+
+/**
+ * Mock for the PHP headers_sent() function (otherwise not available on CLI)
+ */
+function headers_sent(string &$file = null, int &$line = null): bool
+{
+	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
+		throw new Exception('Mock headers_sent() was loaded outside of the test environment. This should never happen.');
+	}
+
+	if (HeadersSent::$value === true) {
+		$file = 'file.php';
+		$line = 123;
+		return true;
+	}
+
+	return false;
 }
 
 /**

@@ -2,10 +2,21 @@
 
 namespace Kirby\Http;
 
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/mocks.php';
+
+/**
+ * @coversDefaultClass \Kirby\Http\Response
+ */
 class ResponseTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		HeadersSent::$value = false;
+	}
+
 	public function testBody()
 	{
 		$response = new Response();
@@ -79,6 +90,45 @@ class ResponseTest extends TestCase
 		$this->expectExceptionMessage('The file could not be found');
 
 		Response::download('does/not/exist.txt');
+	}
+
+	/**
+	 * @covers ::guardAgainstOutput
+	 */
+	public function testGuardAgainstOutput()
+	{
+		$result = Response::guardAgainstOutput(function ($arg1, $arg2) {
+			return $arg1 . '-' . $arg2;
+		}, '12', '34');
+
+		$this->assertSame('12-34', $result);
+	}
+
+	/**
+	 * @covers ::guardAgainstOutput
+	 */
+	public function testGuardAgainstOutputWithSubsequentOutput()
+	{
+		HeadersSent::$value = true;
+
+		$result = Response::guardAgainstOutput(function ($arg1, $arg2) {
+			return $arg1 . '-' . $arg2;
+		}, '12', '34');
+
+		$this->assertSame('12-34', $result);
+	}
+
+	/**
+	 * @covers ::guardAgainstOutput
+	 */
+	public function testGuardAgainstOutputWithFirstOutput()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+
+		Response::guardAgainstOutput(function () {
+			HeadersSent::$value = true;
+		});
 	}
 
 	public function testHeaders()
