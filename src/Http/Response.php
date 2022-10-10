@@ -2,7 +2,9 @@
 
 namespace Kirby\Http;
 
+use Closure;
 use Exception;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Throwable;
 
@@ -180,6 +182,23 @@ class Response
 	public static function go(string $url = '/', int $code = 302): void
 	{
 		die(static::redirect($url, $code));
+	}
+
+	/**
+	 * Ensures that the callback does not produce the first body output
+	 * (used to show when loading a file creates side effects)
+	 */
+	public static function guardAgainstOutput(Closure $callback, ...$args): mixed
+	{
+		$before = headers_sent();
+		$result = $callback(...$args);
+		$after  = headers_sent($file, $line);
+
+		if ($before === false && $after === true) {
+			throw new LogicException("Disallowed output from file $file:$line, possible accidental whitespace?");
+		}
+
+		return $result;
 	}
 
 	/**

@@ -148,7 +148,7 @@ class Users extends Collection
 			// get role information
 			$path = $root . '/' . $userDirectory . '/index.php';
 			if (is_file($path) === true) {
-				$credentials = F::load($path);
+				$credentials = F::load($path, allowOutput: false);
 			}
 
 			// create user model based on role

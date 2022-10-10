@@ -123,7 +123,7 @@ class Collections
 		$file = $kirby->root('collections') . '/' . $name . '.php';
 
 		if (is_file($file) === true) {
-			$collection = F::load($file);
+			$collection = F::load($file, allowOutput: false);
 
 			if ($collection instanceof Closure) {
 				return $collection;

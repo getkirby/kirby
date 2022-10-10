@@ -160,12 +160,12 @@ class Loader
 	{
 		if (is_string($item) === true) {
 			$item = match (F::extension($item)) {
-				'php'   => require $item,
+				'php'   => F::load($item, allowOutput: false),
 				default => Data::read($item)
 			};
 		}
 
-		if (is_callable($item)) {
+		if (is_callable($item) === true) {
 			$item = $item($this->kirby);
 		}
 

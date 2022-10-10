@@ -2,9 +2,13 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Exception\LogicException;
+use Kirby\Http\HeadersSent;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as TestCase;
+
+require_once dirname(__DIR__) . '/Http/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\F
@@ -35,6 +39,8 @@ class FTest extends TestCase
 			restore_error_handler();
 			$this->hasErrorHandler = false;
 		}
+
+		HeadersSent::$value = false;
 	}
 
 	/**
@@ -369,6 +375,27 @@ class FTest extends TestCase
 
 		// with overwritten $file
 		$this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'file' => null]));
+
+		// protection against accidental output (without output)
+		F::write($file = $this->tmp . '/test.php', '<?php return "foo";');
+		$this->assertSame('foo', F::load($file, allowOutput: false));
+
+		// no protection against accidental output (with output)
+		F::write($file = $this->tmp . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		$this->assertSame('foo', F::load($file));
+	}
+
+	/**
+	 * @covers ::load
+	 */
+	public function testLoadAccidentalOutput()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+
+		F::write($file = $this->tmp . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+
+		F::load($file, allowOutput: false);
 	}
 
 	/**
@@ -378,6 +405,7 @@ class FTest extends TestCase
 	{
 		F::loadClasses([
 			'ftest\\a' => __DIR__ . '/fixtures/f/load/a/a.php',
+			'ftest\\output' => __DIR__ . '/fixtures/f/load/output.php'
 		]);
 
 		F::loadClasses([
@@ -387,6 +415,10 @@ class FTest extends TestCase
 		$this->assertTrue(class_exists('FTest\\A'));
 		$this->assertTrue(class_exists('FTest\\B'));
 		$this->assertFalse(class_exists('FTest\\C'));
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+		class_exists('FTest\\Output');
 	}
 
 	/**
@@ -395,11 +427,32 @@ class FTest extends TestCase
 	public function testLoadOnce()
 	{
 		// basic behavior
-		F::write($file = $this->tmp . '/test.php', '<?php return "foo";');
+		F::write($file = $this->tmp . '/test1.php', '<?php return "foo";');
 		$this->assertTrue(F::loadOnce($file));
 
 		// non-existing file
 		$this->assertFalse(F::loadOnce('does-not-exist.php'));
+
+		// protection against accidental output (without output)
+		F::write($file = $this->tmp . '/test2.php', '<?php return "foo";');
+		$this->assertTrue(F::loadOnce($file, allowOutput: false));
+
+		// no protection against accidental output (with output)
+		F::write($file = $this->tmp . '/test3.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+		$this->assertTrue(F::loadOnce($file));
+	}
+
+	/**
+	 * @covers ::loadOnce
+	 */
+	public function testLoadOnceAccidentalOutput()
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+
+		F::write($file = $this->tmp . '/test4.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+
+		F::loadOnce($file, allowOutput: false);
 	}
 
 	/**

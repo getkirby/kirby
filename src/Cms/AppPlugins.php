@@ -717,7 +717,7 @@ trait AppPlugins
 			$class = str_replace(['.', '-', '_'], '', $name) . 'Page';
 
 			// load the model class
-			F::loadOnce($model);
+			F::loadOnce($model, allowOutput: false);
 
 			if (class_exists($class) === true) {
 				$models[$name] = $class;
@@ -908,7 +908,7 @@ trait AppPlugins
 			$styles = $dir . '/index.css';
 
 			if (is_file($entry) === true) {
-				F::loadOnce($entry);
+				F::loadOnce($entry, allowOutput: false);
 			} elseif (is_file($script) === true || is_file($styles) === true) {
 				// if no PHP file is present but an index.js or index.css,
 				// register as anonymous plugin (without actual extensions)
