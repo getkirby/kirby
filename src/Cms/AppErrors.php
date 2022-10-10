@@ -168,10 +168,8 @@ trait AppErrors
 	}
 
 	/**
-	 * Whoops callback handler for triggering the `system.exception` hook
-	 * and ensure logging exceptions
-	 *
-	 * @return CallbackHandler
+	 * Whoops callback handler for additional error handling
+	 * (`system.exception` hook and output to error log)
 	 */
 	protected function getAdditionalWhoopsHandler(): CallbackHandler
 	{
