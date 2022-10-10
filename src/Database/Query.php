@@ -899,8 +899,6 @@ class Query
 			$column = Str::lower($match[1]);
 			return $this->findBy($column, $arguments[0]);
 		}
-
-
 		throw new InvalidArgumentException('Invalid query method: ' . $method, static::ERROR_INVALID_QUERY_METHOD);
 	}
 
