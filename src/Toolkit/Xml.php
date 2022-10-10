@@ -182,9 +182,9 @@ class Xml
 
 		if ($head === true) {
 			return '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . $result;
-		} else {
-			return $result;
 		}
+
+		return $result;
 	}
 
 	/**
@@ -345,13 +345,12 @@ class Xml
 			// we didn't find any XML children above, only use the string value
 			$element = (string)$element;
 
-			if (count($array) > 0) {
-				$array['@value'] = $element;
-
-				return $array;
-			} else {
+			if (count($array) === 0) {
 				return $element;
 			}
+
+			$array['@value'] = $element;
+			return $array;
 		}
 	}
 

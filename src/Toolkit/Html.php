@@ -281,10 +281,10 @@ class Html extends Xml
 	 */
 	public static function gist(string $url, string|null $file = null, array $attr = []): string
 	{
-		if ($file === null) {
-			$src = $url . '.js';
-		} else {
-			$src = $url . '.js?file=' . $file;
+		$src = $url . '.js';
+
+		if ($file !== null) {
+			$src .= '?file=' . $file;
 		}
 
 		return static::tag('script', '', array_merge($attr, ['src' => $src]));

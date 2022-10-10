@@ -95,9 +95,9 @@ class Status
 
 		if ($automaticFallback === false) {
 			return $this->challenge;
-		} else {
-			return $this->challenge ?? $this->challengeFallback;
 		}
+
+		return $this->challenge ?? $this->challengeFallback;
 	}
 
 	/**

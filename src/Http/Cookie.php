@@ -73,12 +73,14 @@ class Cookie
 		if ($minutes > 1000000000) {
 			// absolute timestamp
 			return $minutes;
-		} elseif ($minutes > 0) {
+		}
+
+		if ($minutes > 0) {
 			// minutes from now
 			return time() + ($minutes * 60);
-		} else {
-			return 0;
 		}
+
+		return 0;
 	}
 
 	/**
