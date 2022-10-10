@@ -163,33 +163,21 @@ trait AppErrors
 		$whoops = $this->whoops();
 		$whoops->clearHandlers();
 		$whoops->pushHandler($handler);
-		$whoops->pushHandler($this->getExceptionHookWhoopsHandler());
-		$whoops->pushHandler($this->getFatalErrorLogWhoopsHandler());
+		$whoops->pushHandler($this->getAdditionalWhoopsHandler());
 		$whoops->register(); // will only do something if not already registered
 	}
 
 	/**
-	 * Initializes a callback handler for triggering the `system.exception` hook
+	 * Whoops callback handler for triggering the `system.exception` hook
+	 * and ensure logging exceptions
 	 *
-	 * @return \Whoops\Handler\CallbackHandler
+	 * @return CallbackHandler
 	 */
-	protected function getExceptionHookWhoopsHandler(): CallbackHandler
+	protected function getAdditionalWhoopsHandler(): CallbackHandler
 	{
 		return new CallbackHandler(function ($exception, $inspector, $run) {
 			$this->trigger('system.exception', compact('exception'));
-			return Handler::DONE;
-		});
-	}
-
-	/**
-	 * Initializes a callback handler for logging all fatal errors
-	 *
-	 * @return \Whoops\Handler\CallbackHandler
-	 */
-	protected function getFatalErrorLogWhoopsHandler(): CallbackHandler
-	{
-		return new CallbackHandler(function ($exception, $inspector, $run) {
-			error_log($exception->getMessage());
+			error_log($exception);
 			return Handler::DONE;
 		});
 	}
