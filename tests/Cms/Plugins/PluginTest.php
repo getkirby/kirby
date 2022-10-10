@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Composer\Autoload\ClassLoader;
 use Kirby\Cms\System\UpdateStatus;
 
 /**
@@ -10,17 +11,23 @@ use Kirby\Cms\System\UpdateStatus;
  */
 class PluginTest extends TestCase
 {
+	protected static $classLoader;
 	protected static $updateStatusHost;
 
 	public static function setUpBeforeClass(): void
 	{
 		static::$updateStatusHost = UpdateStatus::$host;
 		UpdateStatus::$host = 'file://' . __DIR__ . '/fixtures/updateStatus';
+
+		static::$classLoader = new ClassLoader(__DIR__ . '/fixtures/vendor');
+		static::$classLoader->register();
 	}
 
 	public static function tearDownAfterClass(): void
 	{
 		UpdateStatus::$host = static::$updateStatusHost;
+
+		static::$classLoader->unregister();
 	}
 
 	public function setUp(): void
@@ -668,5 +675,41 @@ class PluginTest extends TestCase
 		]);
 
 		$this->assertNull($plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionComposer()
+	{
+		$plugin = new Plugin('getkirby/test-plugin-composer', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer'
+		]);
+
+		$this->assertSame('5.2.3', $plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionComposerNoVersionSet()
+	{
+		$plugin = new Plugin('getkirby/test-plugin', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer-noversionset'
+		]);
+
+		$this->assertNull($plugin->version());
+	}
+
+	/**
+	 * @covers ::version
+	 */
+	public function testVersionComposerOverride()
+	{
+		$plugin = new Plugin('getkirby/test-plugin-composer', [
+			'root' => __DIR__ . '/fixtures/plugin-version-composer-override'
+		]);
+
+		$this->assertSame('3.1.2', $plugin->version());
 	}
 }
