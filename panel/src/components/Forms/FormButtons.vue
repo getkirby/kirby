@@ -82,6 +82,10 @@ export default {
 		};
 	},
 	computed: {
+		api() {
+			// always use silent requests (without loading spinner)
+			return [this.$view.path + "/lock", null, null, true];
+		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
 		},
@@ -164,16 +168,14 @@ export default {
 	},
 	methods: {
 		async check() {
-			const { lock } = await this.$api.get(this.$view.path + "/lock");
+			const { lock } = await this.$api.get(...this.api);
 			this.$set(this.$view.props, "lock", lock);
 		},
 		async onLock(lock = true) {
-			const api = [this.$view.path + "/lock", null, null, true];
-
 			// writing lock
 			if (lock === true) {
 				try {
-					await this.$api.patch(...api);
+					await this.$api.patch(...this.api);
 				} catch (error) {
 					// If setting lock failed, a competing lock has been set between
 					// API calls. In that case, discard changes, stop setting lock
@@ -185,7 +187,7 @@ export default {
 			// removing lock
 			else {
 				clearInterval(this.isLocking);
-				await this.$api.delete(...api);
+				await this.$api.delete(...this.api);
 			}
 		},
 		/**
