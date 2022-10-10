@@ -46,15 +46,17 @@ export default defineConfig(({ command }) => {
 		secure: false
 	};
 
-	const plugins = [
-		vue(),
-		splitVendorChunkPlugin(),
-		// Externalize Vue so it's not loaded from node_modules but accessed via window.Vue
-		{
-			...externalGlobals({ vue: "window.Vue" }),
-			enforce: "post"
-		}
-	];
+	const plugins = [vue(), splitVendorChunkPlugin()];
+
+	if (!process.env.VITEST) {
+		plugins.push(
+			// Externalize Vue so it's not loaded from node_modules but accessed via window.Vue
+			{
+				...externalGlobals({ vue: "Vue" }),
+				enforce: "post"
+			}
+		);
+	}
 
 	if (command === "build") {
 		plugins.push(
