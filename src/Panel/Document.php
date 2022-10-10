@@ -72,6 +72,10 @@ class Document
 			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
 			'plugin-imports' => $plugins->read('mjs'),
 			'js' => [
+				'vue'       => [
+					'nonce' => $nonce,
+					'src'   => $url . '/js/vue.js'
+				],
 				'vendor'       => [
 					'nonce' => $nonce,
 					'src'   => $url . '/js/vendor.js',
@@ -103,6 +107,7 @@ class Document
 		// during dev mode, add vite client and adapt
 		// path to `index.js` - vendor and stylesheet
 		// don't need to be loaded in dev mode
+		// also, load the development version of vue
 		if ($isDev === true) {
 			$assets['js']['vite']   = [
 				'nonce' => $nonce,
@@ -114,6 +119,7 @@ class Document
 				'src'   => $url . '/src/index.js',
 				'type'  => 'module'
 			];
+			$assets['js']['vue']['src'] = $url . '/node_modules/vue/dist/vue.js';
 
 			unset($assets['css']['index'], $assets['js']['vendor']);
 		}
