@@ -49,9 +49,17 @@ class Page extends Model
 
 		$title = $this->model->title();
 
+		// get permalink/UUID as URL
+		$url = match ($type) {
+			'markdown' => $this->model->permalink(),
+			default    => $this->model->uuid()
+		};
+		// if UUIDs are disabled, fall back to actual URL
+		$url ??= $this->model->url();
+
 		return match ($type) {
-			'markdown' => '[' . $title . '](' . $this->model->permalink() . ')',
-			default    => '(link: ' . $this->model->uuid() . ' text: ' . $title . ')'
+			'markdown' => '[' . $title . '](' . $url . ')',
+			default    => '(link: ' . $url . ' text: ' . $title . ')'
 		};
 	}
 
