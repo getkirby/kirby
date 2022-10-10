@@ -269,7 +269,7 @@ class UuidTest extends TestCase
 	/**
 	 * @covers ::is
 	 */
-	public function testSsConfigDisabled()
+	public function testIsConfigDisabled()
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$this->assertFalse(Uuid::is('site://'));
