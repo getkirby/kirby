@@ -55,6 +55,12 @@ class Uuid
 	 */
 	public Collection|null $context;
 
+	/**
+	 * Flag whether the model instance was
+	 * looked up from the cache
+	 */
+	protected bool $fromCache = false;
+
 	public Identifiable|null $model;
 	public Uri $uri;
 
@@ -103,6 +109,9 @@ class Uuid
 				}
 			}
 		}
+
+		// reset cache flag as UUID won't be in cache anymore
+		$this->fromCache = false;
 
 		return Uuids::cache()->remove($this->key());
 	}
@@ -295,10 +304,14 @@ class Uuid
 			return $this->model;
 		}
 
+		// try to look up model by checking UUID cache
 		if ($this->model = $this->findByCache()) {
+			$this->fromCache = true;
 			return $this->model;
 		}
 
+		// look up model by iterating through index
+		// until model with matching UUID has been found
 		if ($lazy === false) {
 			if ($this->model = $this->findByIndex()) {
 				// lazily fill cache by writing to cache
@@ -320,11 +333,20 @@ class Uuid
 	 */
 	public function populate(): bool
 	{
+		$key   = $this->key();
+		$value = $this->value();
+
+		// when the model object was retrieved from the cache,
+		// no need to populate the cache once more
+		if ($this->fromCache === true) {
+			return true;
+		}
+
 		if ($this->isCached() === true) {
 			return true;
 		}
 
-		return Uuids::cache()->set($this->key(), $this->value());
+		return Uuids::cache()->set($key, $value);
 	}
 
 	/**
