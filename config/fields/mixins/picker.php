@@ -69,7 +69,7 @@ return [
 		},
 
 		/**
-		 * Whether to store UUID or ID in the 
+		 * Whether to store UUID or ID in the
 		 * content file of the model
 		 *
 		 * @param string $store 'uuid'|'id'
