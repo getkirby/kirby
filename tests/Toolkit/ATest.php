@@ -305,8 +305,8 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 		$result   = A::merge($a, $b);
 		$this->assertSame($expected, $result, true);
-		$result   = A::merge($a, $b);
-		$this->assertSame($expected, $result, A::MERGE_APPEND);
+		$result   = A::merge($a, $b, A::MERGE_APPEND);
+		$this->assertSame($expected, $result);
 
 		// A::MERGE_OVERWRITE
 		$expected = [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'];
