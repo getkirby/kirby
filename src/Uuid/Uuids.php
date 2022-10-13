@@ -91,8 +91,12 @@ class Uuids
 	 */
 	public static function generate(string $type = 'all'): void
 	{
+		if (static::enabled() === false) {
+			return;
+		}
+
 		static::each(
-			fn (Identifiable $model) => Uuid::for($model)?->id(),
+			fn (Identifiable $model) => Uuid::for($model)->id(),
 			$type
 		);
 	}
@@ -105,8 +109,12 @@ class Uuids
 	 */
 	public static function populate(string $type = 'all'): void
 	{
+		if (static::enabled() === false) {
+			return;
+		}
+
 		static::each(
-			fn (Identifiable $model) => Uuid::for($model)?->populate(),
+			fn (Identifiable $model) => Uuid::for($model)->populate(),
 			$type
 		);
 	}

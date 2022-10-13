@@ -78,6 +78,24 @@ class UuidsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::generate
+	 */
+	public function testGenerateIfDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertFalse(Uuids::enabled());
+
+		// page without UUID
+		$page = $this->app->page('page-b');
+
+		$this->assertNull($page->content()->get('uuid')->value());
+
+		Uuids::generate();
+
+		$this->assertNull($page->content()->get('uuid')->value());
+	}
+
+	/**
 	 * @covers ::populate
 	 */
 	public function testPopulate()
@@ -179,5 +197,7 @@ class UuidsTest extends TestCase
 		$this->assertFalse($userFile->uuid()->isCached());
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertTrue($struct->uuid()->isCached());
+
+		Uuids::cache()->flush();
 	}
 }
