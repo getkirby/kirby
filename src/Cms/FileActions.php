@@ -336,7 +336,7 @@ trait FileActions
 			$this->lock()?->remove();
 
 			// clear UUID cache
-			$this->uuid()->clear();
+			$this->uuid()?->clear();
 		}
 
 		return $this;

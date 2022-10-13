@@ -108,7 +108,7 @@ trait PageActions
 			]);
 
 			// clear UUID cache recursively (for children and files as well)
-			$oldPage->uuid()->clear(true);
+			$oldPage->uuid()?->clear(true);
 
 			if ($oldPage->exists() === true) {
 				// remove the lock of the old page
@@ -596,7 +596,7 @@ trait PageActions
 	{
 		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
 			// clear UUID cache
-			$page->uuid()->clear();
+			$page->uuid()?->clear();
 
 			// delete all files individually
 			foreach ($page->files() as $file) {

@@ -76,7 +76,9 @@ class File extends Model
 		// for markdown notation or the UUID for Kirbytext (since
 		// Kirbytags support can resolve UUIDs directly)
 		if ($absolute === true) {
-			$url = $type === 'markdown' ? $this->model->permalink() : $this->model->uuid();
+			$url   = $type === 'markdown' ? $this->model->permalink() : $this->model->uuid();
+			// if UUIDs are disabled, fall back to URL
+			$url ??= $this->model->url();
 		}
 
 
