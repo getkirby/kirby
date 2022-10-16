@@ -166,7 +166,7 @@ class Auth
 		// sleep for a random amount of milliseconds
 		// to make automated attacks harder and to
 		// avoid leaking whether the user exists
-		usleep(random_int(1000, 300000));
+		usleep(random_int(50000, 300000));
 
 		// clear the status cache
 		$this->status = null;
@@ -559,7 +559,7 @@ class Auth
 
 			// sleep for a random amount of milliseconds
 			// to make automated attacks harder
-			usleep(random_int(1000, 2000000));
+			usleep(random_int(10000, 2000000));
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
@@ -854,7 +854,7 @@ class Auth
 			// sleep for a random amount of milliseconds
 			// to make automated attacks harder and to
 			// avoid leaking whether the user exists
-			usleep(random_int(1000, 2000000));
+			usleep(random_int(10000, 2000000));
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
