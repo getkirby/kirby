@@ -95,7 +95,8 @@ class Auth
 	 */
 	public function createChallenge(string $email, bool $long = false, string $mode = 'login')
 	{
-		$email = $this->validateEmail($email);
+		$email = Idn::decodeEmail($email);
+		$this->checkRateLimit($email);
 
 		// rate-limit the number of challenges for DoS/DDoS protection
 		$this->track($email, false);
@@ -479,19 +480,12 @@ class Auth
 	}
 
 	/**
-	 * Ensure that email addresses with IDN domains are in Unicode format
-	 * and that rate limit was not exceeded
-	 *
-	 * @param string $email
-	 * @return string
+	 * Ensures that the rate limit was not exceeded
 	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
 	 */
-	public function validateEmail(string $email): string
+	protected function checkRateLimit(string $email): void
 	{
-		// ensure that email addresses with IDN domains are in Unicode format
-		$email = Idn::decodeEmail($email);
-
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
 
@@ -504,8 +498,6 @@ class Auth
 
 			throw new PermissionException($message);
 		}
-
-		return $email;
 	}
 
 	/**
@@ -522,7 +514,8 @@ class Auth
 	 */
 	public function validatePassword(string $email, string $password)
 	{
-		$email = $this->validateEmail($email);
+		$email = Idn::decodeEmail($email);
+		$this->checkRateLimit($email);
 
 		// validate the user
 		try {
