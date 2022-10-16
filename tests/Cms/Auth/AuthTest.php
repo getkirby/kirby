@@ -25,6 +25,9 @@ class AuthTest extends TestCase
 				'api' => [
 					'basicAuth'     => true,
 					'allowInsecure' => true
+				],
+				'auth' => [
+					'debug' => false
 				]
 			],
 			'users' => [
