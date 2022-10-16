@@ -154,9 +154,7 @@ class Auth
 			}
 		} catch (Throwable $e) {
 			// only throw the exception in auth debug mode
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			}
+			$this->fail($e);
 		}
 
 		// always set the email and timeout, even if the challenge
@@ -556,11 +554,7 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			}
-
-			throw new PermissionException(['key' => 'access.login']);
+			$this->fail($e, new PermissionException(['key' => 'access.login']));
 		}
 	}
 
@@ -880,20 +874,18 @@ class Auth
 			// avoid leaking whether the user exists
 			usleep(random_int(10000, 2000000));
 
+			// specifically copy over the marker for a destroyed challenge
+			// even in production (used by the Panel to reset to the login form)
+			$challengeDestroyed = $e->getDetails()['challengeDestroyed'] ?? false;
+
+			$fallback = new PermissionException([
+				'details' => compact('challengeDestroyed'),
+				'key'     => 'access.code'
+			]);
+
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			} else {
-				// specifically copy over the marker for a destroyed challenge
-				// even in production (used by the Panel to reset to the login form)
-				$challengeDestroyed = $e->getDetails()['challengeDestroyed'] ?? false;
-
-				throw new PermissionException([
-					'details' => compact('challengeDestroyed'),
-					'key'     => 'access.code'
-				]);
-			}
+			$this->fail($e, $fallback);
 		}
 	}
 
