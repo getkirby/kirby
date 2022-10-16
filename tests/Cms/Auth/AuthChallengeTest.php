@@ -33,8 +33,10 @@ class AuthChallengeTest extends TestCase
 				}
 			],
 			'options' => [
-				'auth.trials' => 2,
-				'debug' => true
+				'auth' => [
+					'debug'  => true,
+					'trials' => 2
+				]
 			],
 			'roots' => [
 				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
@@ -74,7 +76,9 @@ class AuthChallengeTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth    = $this->app->auth();
@@ -173,7 +177,10 @@ class AuthChallengeTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'auth.challenge.timeout' => 10
+				'auth' => [
+					'challenge.timeout' => 10,
+					'debug' => false
+				]
 			]
 		]);
 		$auth    = $this->app->auth();
@@ -372,7 +379,9 @@ class AuthChallengeTest extends TestCase
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth = $this->app->auth();
