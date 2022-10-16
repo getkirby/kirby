@@ -106,10 +106,26 @@ class Auth
 			'long'       => $long === true
 		]);
 
-		$challenge = null;
-		if ($user = $this->kirby->users()->find($email)) {
+		// catch every exception to hide them from attackers
+		// unless auth debugging is enabled
+		try {
 			$timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
+			// try to find the provided user
+			$user = $this->kirby->users()->find($email);
+			if ($user === null) {
+				$this->kirby->trigger('user.login:failed', compact('email'));
+
+				throw new NotFoundException([
+					'key'  => 'user.notFound',
+					'data' => [
+						'name' => $email
+					]
+				]);
+			}
+
+			// try to find an enabled challenge that is available for that user
+			$challenge = null;
 			foreach ($this->enabledChallenges() as $name) {
 				$class = static::$challenges[$name] ?? null;
 				if (
@@ -132,22 +148,14 @@ class Auth
 				}
 			}
 
-			// if no suitable challenge was found, `$challenge === null` at this point;
-			// only leak this in debug mode
-			if ($challenge === null && $this->kirby->option('debug') === true) {
+			// if no suitable challenge was found, `$challenge === null` at this point
+			if ($challenge === null) {
 				throw new LogicException('Could not find a suitable authentication challenge');
 			}
-		} else {
-			$this->kirby->trigger('user.login:failed', compact('email'));
-
-			// only leak the non-existing user in debug mode
+		} catch (Throwable $e) {
+			// only throw the exception in auth debug mode
 			if ($this->kirby->option('debug') === true) {
-				throw new NotFoundException([
-					'key'  => 'user.notFound',
-					'data' => [
-						'name' => $email
-					]
-				]);
+				throw $e;
 			}
 		}
 
