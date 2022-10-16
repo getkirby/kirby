@@ -24,6 +24,11 @@ class AuthProtectionTest extends TestCase
 		$self = $this;
 
 		$this->app = new App([
+			'options' => [
+				'auth' => [
+					'debug' => false
+				]
+			],
 			'roots' => [
 				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
 			],
@@ -277,7 +282,9 @@ class AuthProtectionTest extends TestCase
 		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => true
+				'auth' => [
+					'debug' => true
+				]
 			]
 		]);
 		$this->auth = new Auth($this->app);
@@ -305,7 +312,9 @@ class AuthProtectionTest extends TestCase
 		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => true
+				'auth' => [
+					'debug' => true
+				]
 			]
 		]);
 		$this->auth = new Auth($this->app);
@@ -334,7 +343,9 @@ class AuthProtectionTest extends TestCase
 		copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => true
+				'auth' => [
+					'debug' => true
+				]
 			]
 		]);
 		$this->auth = new Auth($this->app);
