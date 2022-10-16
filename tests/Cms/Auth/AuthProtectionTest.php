@@ -210,6 +210,7 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordInvalid1()
@@ -232,6 +233,7 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordInvalid2()
@@ -255,6 +257,7 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordBlocked()
@@ -276,6 +279,7 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordDebugInvalid1()
@@ -306,6 +310,7 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordDebugInvalid2()
@@ -337,6 +342,8 @@ class AuthProtectionTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::fail
 	 * @covers ::validatePassword
 	 */
 	public function testValidatePasswordDebugBlocked()
