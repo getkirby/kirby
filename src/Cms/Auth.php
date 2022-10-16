@@ -898,6 +898,34 @@ class Auth
 	}
 
 	/**
+	 * Throws an exception only in debug mode, otherwise falls back
+	 * to a public error without sensitive information
+	 *
+	 * @throws \Throwable Either the passed `$exception` or the `$fallback`
+	 *                    (no exception if debugging is disabled and no fallback was passed)
+	 */
+	protected function fail(Throwable $exception, Throwable $fallback = null): void
+	{
+		$debug = $this->kirby->option('auth.debug', 'log');
+
+		// throw the original exception only in debug mode
+		if ($debug === true) {
+			throw $exception;
+		}
+
+		// otherwise hide the real error and only print it to the error log
+		// unless disabled by setting `auth.debug` to `false`
+		if ($debug === 'log') {
+			error_log($exception); // @codeCoverageIgnore
+		}
+
+		// only throw an error in production if requested by the calling method
+		if ($fallback !== null) {
+			throw $fallback;
+		}
+	}
+
+	/**
 	 * Creates a session object from the passed options
 	 *
 	 * @param \Kirby\Session\Session|array|null $session
