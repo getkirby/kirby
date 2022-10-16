@@ -154,9 +154,7 @@ class Auth
 			}
 		} catch (Throwable $e) {
 			// only throw the exception in auth debug mode
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			}
+			$this->fail($e);
 		}
 
 		// always set the email, even if the challenge won't be
@@ -549,11 +547,7 @@ class Auth
 
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			} else {
-				throw new PermissionException(['key' => 'access.login']);
-			}
+			$this->fail($e, new PermissionException(['key' => 'access.login']));
 		}
 	}
 
