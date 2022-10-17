@@ -96,10 +96,6 @@ class Auth
 	public function createChallenge(string $email, bool $long = false, string $mode = 'login')
 	{
 		$email = Idn::decodeEmail($email);
-		$this->checkRateLimit($email);
-
-		// rate-limit the number of challenges for DoS/DDoS protection
-		$this->track($email, false);
 
 		$session = $this->kirby->session([
 			'createMode' => 'cookie',
@@ -109,6 +105,11 @@ class Auth
 		// catch every exception to hide them from attackers
 		// unless auth debugging is enabled
 		try {
+			$this->checkRateLimit($email);
+
+			// rate-limit the number of challenges for DoS/DDoS protection
+			$this->track($email, false);
+
 			$timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
 			// try to find the provided user
@@ -495,14 +496,10 @@ class Auth
 		if ($this->isBlocked($email) === true) {
 			$this->kirby->trigger('user.login:failed', compact('email'));
 
-			if ($this->kirby->option('debug') === true) {
-				$message = 'Rate limit exceeded';
-			} else {
-				// avoid leaking security-relevant information
-				$message = ['key' => 'access.login'];
-			}
-
-			throw new PermissionException($message);
+			throw new PermissionException([
+				'details'  => ['reason' => 'rate-limited'],
+				'fallback' => 'Rate limit exceeded'
+			]);
 		}
 	}
 
@@ -521,10 +518,11 @@ class Auth
 	public function validatePassword(string $email, string $password)
 	{
 		$email = Idn::decodeEmail($email);
-		$this->checkRateLimit($email);
 
-		// validate the user
 		try {
+			$this->checkRateLimit($email);
+
+			// validate the user and its password
 			if ($user = $this->kirby->users()->find($email)) {
 				if ($user->validatePassword($password) === true) {
 					return $user;
@@ -538,8 +536,10 @@ class Auth
 				]
 			]);
 		} catch (Throwable $e) {
-			// log invalid login trial
-			$this->track($email);
+			// log invalid login trial unless the rate limit is already active
+			if (($e->getDetails()['reason'] ?? null) !== 'rate-limited') {
+				$this->track($email);
+			}
 
 			// sleep for a random amount of milliseconds
 			// to make automated attacks harder
@@ -794,10 +794,7 @@ class Auth
 			}
 
 			// rate-limiting
-			if ($this->isBlocked($email) === true) {
-				$this->kirby->trigger('user.login:failed', compact('email'));
-				throw new PermissionException('Rate limit exceeded');
-			}
+			$this->checkRateLimit($email);
 
 			// time-limiting
 			$timeout = $session->get('kirby.challenge.timeout');
@@ -826,7 +823,7 @@ class Auth
 
 			throw new LogicException('Invalid authentication challenge: ' . $challenge);
 		} catch (Throwable $e) {
-			if ($e->getMessage() !== 'Rate limit exceeded') {
+			if (($e->getDetails()['reason'] ?? null) !== 'rate-limited') {
 				$this->track($email);
 			}
 
@@ -835,13 +832,11 @@ class Auth
 			// avoid leaking whether the user exists
 			usleep(random_int(10000, 2000000));
 
+			$fallback = new PermissionException(['key' => 'access.code']);
+
 			// keep throwing the original error in debug mode,
 			// otherwise hide it to avoid leaking security-relevant information
-			if ($this->kirby->option('debug') === true) {
-				throw $e;
-			} else {
-				throw new PermissionException(['key' => 'access.code']);
-			}
+			$this->fail($e, $fallback);
 		}
 	}
 
