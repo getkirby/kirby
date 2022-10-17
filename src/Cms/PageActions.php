@@ -14,6 +14,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 /**
  * PageActions
@@ -443,8 +444,8 @@ trait PageActions
 		}
 
 		// overwrite with new UUID (remove old, add new)
-		if ($uuid = static::uuidGenerate()) {
-			$copy = $copy->save(['uuid' => $uuid]);
+		if (Uuids::enabled() === true) {
+			$copy = $copy->save(['uuid' => Uuid::generate()]);
 		}
 
 		// add copy to siblings
@@ -469,7 +470,10 @@ trait PageActions
 		// make sure that a UUID gets generated and
 		// added to content right away
 		$props['content'] ??= [];
-		$props['content']['uuid'] ??= static::uuidGenerate();
+
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
+		}
 
 		// create a temporary page object
 		$page = Page::factory($props);
