@@ -155,7 +155,9 @@ trait FileActions
 		$copy = $page->clone()->file($this->filename());
 
 		// overwrite with new UUID (remove old, add new)
-		$copy = $copy->save(['uuid' => Uuid::generate()]);
+		if ($uuid = static::uuidGenerate()) {
+			$copy = $copy->save(['uuid' => $uuid]);
+		}
 
 		return $copy;
 	}
@@ -191,7 +193,7 @@ trait FileActions
 
 		// make sure that a UUID gets generated and
 		// added to content right away
-		$content['uuid'] = Uuid::generate();
+		$content['uuid'] ??= static::uuidGenerate();
 
 		// create a form for the file
 		$form = Form::for($file, ['values' => $content]);

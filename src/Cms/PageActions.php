@@ -443,7 +443,9 @@ trait PageActions
 		}
 
 		// overwrite with new UUID (remove old, add new)
-		$copy = $copy->save(['uuid' => Uuid::generate()]);
+		if ($uuid = static::uuidGenerate()) {
+			$copy = $copy->save(['uuid' => $uuid]);
+		}
 
 		// add copy to siblings
 		static::updateParentCollections($copy, 'append', $parentModel);
@@ -467,7 +469,7 @@ trait PageActions
 		// make sure that a UUID gets generated and
 		// added to content right away
 		$props['content'] ??= [];
-		$props['content']['uuid'] ??= Uuid::generate();
+		$props['content']['uuid'] ??= static::uuidGenerate();
 
 		// create a temporary page object
 		$page = Page::factory($props);

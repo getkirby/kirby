@@ -9,6 +9,7 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 use Throwable;
 
 /**
@@ -635,6 +636,19 @@ abstract class ModelWithContent extends Model implements Identifiable
 	public function uuid(): Uuid|null
 	{
 		return Uuid::for($this);
+	}
+
+	/**
+	 * Returns a new ID string if `content.uuid` option not disabled
+	 * @since 3.8.1
+	 */
+	public static function uuidGenerate(): string|null
+	{
+		if (Uuids::enabled() === false) {
+			return null;
+		}
+
+		return Uuid::generate();
 	}
 
 	/**
