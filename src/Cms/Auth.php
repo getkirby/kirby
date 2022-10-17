@@ -538,7 +538,12 @@ class Auth
 		} catch (Throwable $e) {
 			// log invalid login trial unless the rate limit is already active
 			if (($e->getDetails()['reason'] ?? null) !== 'rate-limited') {
-				$this->track($email);
+				try {
+					$this->track($email);
+				} catch (Throwable $e) {
+					// $e is overwritten with the exception
+					// from the track method if there's one
+				}
 			}
 
 			// sleep for a random amount of milliseconds
