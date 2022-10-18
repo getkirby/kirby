@@ -550,8 +550,10 @@ class Auth
 				]
 			]);
 		} catch (Throwable $e) {
+            $details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+
 			// log invalid login trial unless the rate limit is already active
-			if (($e->getDetails()['reason'] ?? null) !== 'rate-limited') {
+			if (($details['reason'] ?? null) !== 'rate-limited') {
 				try {
 					$this->track($email);
 				} catch (Throwable $e) {
