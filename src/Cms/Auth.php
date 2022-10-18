@@ -550,7 +550,7 @@ class Auth
 				]
 			]);
 		} catch (Throwable $e) {
-            $details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+			$details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
 
 			// log invalid login trial unless the rate limit is already active
 			if (($details['reason'] ?? null) !== 'rate-limited') {
@@ -845,7 +845,7 @@ class Auth
 
 			throw new LogicException('Invalid authentication challenge: ' . $challenge);
 		} catch (Throwable $e) {
-            $details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+			$details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
 
 			if (
 				empty($email) === false &&
