@@ -5,6 +5,7 @@ namespace Kirby\Filesystem;
 use Exception;
 use IntlDateFormatter;
 use Kirby\Cms\Helpers;
+use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -347,8 +348,12 @@ class F
 	 *
 	 * @param array $data Optional array of variables to extract in the variable scope
 	 */
-	public static function load(string $file, $fallback = null, array $data = [])
-	{
+	public static function load(
+		string $file,
+		mixed $fallback = null,
+		array $data = [],
+		bool $allowOutput = true
+	) {
 		if (is_file($file) === false) {
 			return $fallback;
 		}
@@ -356,9 +361,21 @@ class F
 		// we use the loadIsolated() method here to prevent the included
 		// file from overwriting our $fallback in this variable scope; see
 		// https://www.php.net/manual/en/function.include.php#example-124
-		$result = static::loadIsolated($file, $data);
+		$callback = fn () => static::loadIsolated($file, $data);
 
-		if ($fallback !== null && gettype($result) !== gettype($fallback)) {
+		// if the loaded file should not produce any output,
+		// call the loaidIsolated method from the Response class
+		// which checks for unintended ouput and throws an error if detected
+		if ($allowOutput === false) {
+			$result = Response::guardAgainstOutput($callback);
+		} else {
+			$result = $callback();
+		}
+
+		if (
+			$fallback !== null &&
+			gettype($result) !== gettype($fallback)
+		) {
 			return $fallback;
 		}
 
@@ -369,24 +386,28 @@ class F
 	 * A super simple class autoloader
 	 * @since 3.7.0
 	 */
-	public static function loadClasses(array $classmap, string|null $base = null): void
-	{
+	public static function loadClasses(
+		array $classmap,
+		string|null $base = null
+	): void {
 		// convert all classnames to lowercase
 		$classmap = array_change_key_case($classmap);
 
-		spl_autoload_register(function ($class) use ($classmap, $base) {
-			$class = strtolower($class);
+		spl_autoload_register(
+			fn ($class) => Response::guardAgainstOutput(function () use ($class, $classmap, $base) {
+				$class = strtolower($class);
 
-			if (!isset($classmap[$class])) {
-				return false;
-			}
+				if (isset($classmap[$class]) === false) {
+					return false;
+				}
 
-			if ($base) {
-				include $base . '/' . $classmap[$class];
-			} else {
-				include $classmap[$class];
-			}
-		});
+				if ($base) {
+					include $base . '/' . $classmap[$class];
+				} else {
+					include $classmap[$class];
+				}
+			})
+		);
 	}
 
 	/**
@@ -408,13 +429,22 @@ class F
 	 * Loads a file using `include_once()` and
 	 * returns whether loading was successful
 	 */
-	public static function loadOnce(string $file): bool
-	{
+	public static function loadOnce(
+		string $file,
+		bool $allowOutput = true
+	): bool {
 		if (is_file($file) === false) {
 			return false;
 		}
 
-		include_once $file;
+		$callback = fn () => include_once $file;
+
+		if ($allowOutput === false) {
+			Response::guardAgainstOutput($callback);
+		} else {
+			$callback();
+		}
+
 		return true;
 	}
 

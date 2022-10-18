@@ -3,10 +3,10 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
+use Kirby\Cms\Response;
 use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
-use Kirby\Http\Response;
 use Kirby\Http\Router;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;

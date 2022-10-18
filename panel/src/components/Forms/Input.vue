@@ -200,6 +200,7 @@ export default {
 .k-input[data-theme="field"] .k-text-input {
 	padding: var(--field-input-padding);
 	line-height: var(--field-input-line-height);
+	border-radius: var(--rounded);
 }
 
 .k-input[data-theme="field"] .k-date-input .k-select-input,

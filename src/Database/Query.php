@@ -898,9 +898,8 @@ class Query
 		if (preg_match('!^findBy([a-z]+)!i', $method, $match)) {
 			$column = Str::lower($match[1]);
 			return $this->findBy($column, $arguments[0]);
-		} else {
-			throw new InvalidArgumentException('Invalid query method: ' . $method, static::ERROR_INVALID_QUERY_METHOD);
 		}
+		throw new InvalidArgumentException('Invalid query method: ' . $method, static::ERROR_INVALID_QUERY_METHOD);
 	}
 
 	/**
@@ -1027,8 +1026,8 @@ class Query
 		// attach the where clause
 		if (empty($current) === false) {
 			return $current . ' ' . $mode . ' ' . $result;
-		} else {
-			return $result;
 		}
+
+		return $result;
 	}
 }

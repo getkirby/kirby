@@ -50,6 +50,16 @@ class UuidsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::enabled
+	 */
+	public function testEnabled()
+	{
+		$this->assertTrue(Uuids::enabled());
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertFalse(Uuids::enabled());
+	}
+
+	/**
 	 * @covers ::generate
 	 */
 	public function testGenerate()
@@ -65,6 +75,19 @@ class UuidsTest extends TestCase
 		$file = $this->app->file('page-b/foo.pdf'); // since $file is immutable
 		$this->assertNotNull($page->content()->get('uuid')->value());
 		$this->assertNotNull($file->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @covers ::generate
+	 */
+	public function testGenerateIfDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+
+		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+
+		Uuids::generate();
 	}
 
 	/**
@@ -169,5 +192,20 @@ class UuidsTest extends TestCase
 		$this->assertFalse($userFile->uuid()->isCached());
 		// $this->assertFalse($block->uuid()->isCached());
 		// $this->assertTrue($struct->uuid()->isCached());
+
+		Uuids::cache()->flush();
+	}
+
+	/**
+	 * @covers ::populate
+	 */
+	public function testPopulateIfDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+
+		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+
+		Uuids::populate();
 	}
 }

@@ -786,12 +786,20 @@ class Environment
 
 		// load the config for the host
 		if (empty($host) === false) {
-			$configHost = F::load($root . '/config.' . $host . '.php', []);
+			$configHost = F::load(
+				file: $root . '/config.' . $host . '.php',
+				fallback: [],
+				allowOutput: false
+			);
 		}
 
 		// load the config for the server IP
 		if (empty($addr) === false) {
-			$configAddr = F::load($root . '/config.' . $addr . '.php', []);
+			$configAddr = F::load(
+				file: $root . '/config.' . $addr . '.php',
+				fallback: [],
+				allowOutput: false
+			);
 		}
 
 		return array_replace_recursive($configHost, $configAddr);

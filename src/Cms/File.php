@@ -451,9 +451,9 @@ class File extends ModelWithContent
 	 * Return the permanent URL to the file using its UUID
 	 * @since 3.8.0
 	 */
-	public function permalink(): string
+	public function permalink(): string|null
 	{
-		return $this->uuid()->url();
+		return $this->uuid()?->url();
 	}
 
 	/**

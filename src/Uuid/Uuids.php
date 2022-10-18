@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Closure;
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 
 /**
  * Helper methods that deal with the entirety of UUIDs in the system
@@ -79,6 +80,11 @@ class Uuids
 		// }
 	}
 
+	public static function enabled(): bool
+	{
+		return App::instance()->option('content.uuid') !== false;
+	}
+
 	/**
 	 * Generates UUID for all identifiable models of type
 	 *
@@ -86,6 +92,10 @@ class Uuids
 	 */
 	public static function generate(string $type = 'all'): void
 	{
+		if (static::enabled() === false) {
+			throw new LogicException('UUIDs have been disabled via the `content.uuid` config option.');
+		}
+
 		static::each(
 			fn (Identifiable $model) => Uuid::for($model)->id(),
 			$type
@@ -100,6 +110,10 @@ class Uuids
 	 */
 	public static function populate(string $type = 'all'): void
 	{
+		if (static::enabled() === false) {
+			throw new LogicException('UUIDs have been disabled via the `content.uuid` config option.');
+		}
+
 		static::each(
 			fn (Identifiable $model) => Uuid::for($model)->populate(),
 			$type

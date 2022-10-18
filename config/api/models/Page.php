@@ -29,9 +29,9 @@ return [
 		'siblings'    => function (Page $page) {
 			if ($page->isDraft() === true) {
 				return $page->parentModel()->children()->not($page);
-			} else {
-				return $page->siblings();
 			}
+
+			return $page->siblings();
 		},
 		'slug'     => fn (Page $page) => $page->slug(),
 		'status'   => fn (Page $page) => $page->status(),

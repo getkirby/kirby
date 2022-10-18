@@ -14,6 +14,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 
 /**
  * PageActions
@@ -108,7 +109,7 @@ trait PageActions
 			]);
 
 			// clear UUID cache recursively (for children and files as well)
-			$oldPage->uuid()->clear(true);
+			$oldPage->uuid()?->clear(true);
 
 			if ($oldPage->exists() === true) {
 				// remove the lock of the old page
@@ -443,7 +444,9 @@ trait PageActions
 		}
 
 		// overwrite with new UUID (remove old, add new)
-		$copy = $copy->save(['uuid' => Uuid::generate()]);
+		if (Uuids::enabled() === true) {
+			$copy = $copy->save(['uuid' => Uuid::generate()]);
+		}
 
 		// add copy to siblings
 		static::updateParentCollections($copy, 'append', $parentModel);
@@ -467,7 +470,10 @@ trait PageActions
 		// make sure that a UUID gets generated and
 		// added to content right away
 		$props['content'] ??= [];
-		$props['content']['uuid'] ??= Uuid::generate();
+
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] ??= Uuid::generate();
+		}
 
 		// create a temporary page object
 		$page = Page::factory($props);
@@ -596,7 +602,7 @@ trait PageActions
 	{
 		return $this->commit('delete', ['page' => $this, 'force' => $force], function ($page, $force) {
 			// clear UUID cache
-			$page->uuid()->clear();
+			$page->uuid()?->clear();
 
 			// delete all files individually
 			foreach ($page->files() as $file) {

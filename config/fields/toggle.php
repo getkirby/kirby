@@ -49,9 +49,9 @@ return [
 		'value' => function () {
 			if ($this->props['value'] === null) {
 				return $this->default();
-			} else {
-				return $this->toBool($this->props['value']);
 			}
+
+			return $this->toBool($this->props['value']);
 		}
 	],
 	'methods' => [

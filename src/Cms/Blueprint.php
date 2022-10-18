@@ -731,7 +731,7 @@ class Blueprint
 		$preset = static::$presets[$props['preset']];
 
 		if (is_string($preset) === true) {
-			$preset = require $preset;
+			$preset = F::load($preset, allowOutput: false);
 		}
 
 		return $preset($props);

@@ -49,10 +49,15 @@ class Page extends Model
 
 		$title = $this->model->title();
 
-		return match ($type) {
-			'markdown' => '[' . $title . '](' . $this->model->permalink() . ')',
-			default    => '(link: ' . $this->model->uuid() . ' text: ' . $title . ')'
-		};
+		// type: markdown
+		if ($type === 'markdown') {
+			$url = $this->model->permalink() ?? $this->model->url();
+			return '[' . $title . '](' . $url . ')';
+		}
+
+		// type: kirbytext
+		$link = $this->model->uuid() ?? $this->model->uri();
+		return '(link: ' . $link . ' text: ' . $title . ')';
 	}
 
 	/**

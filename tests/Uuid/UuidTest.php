@@ -65,6 +65,17 @@ class UuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructConfigDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
+		new Uuid('page://my-page-uuid');
+	}
+
+	/**
 	 * @covers ::clear
 	 * @covers ::isCached
 	 * @covers ::populate
@@ -149,6 +160,15 @@ class UuidTest extends TestCase
 		// TODO: activate for  uuid-block-structure-support
 		// $this->assertInstanceOf(BlockUuid::class, Uuid::for($block));
 		// $this->assertInstanceOf(StructureUuid::class, Uuid::for($struct));
+	}
+
+	/**
+	 * @covers ::for
+	 */
+	public function testForConfigDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertNull(Uuid::for('page://my-page-uuid'));
 	}
 
 	/**
@@ -245,6 +265,19 @@ class UuidTest extends TestCase
 		$this->assertFalse(Uuid::is('page//something'));
 		$this->assertFalse(Uuid::is('page//something', 'page'));
 		$this->assertFalse(Uuid::is('not a page://something'));
+	}
+
+	/**
+	 * @covers ::is
+	 */
+	public function testIsConfigDisabled()
+	{
+		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
+		$this->assertFalse(Uuid::is('site://'));
+		$this->assertFalse(Uuid::is('page://something'));
+		$this->assertFalse(Uuid::is('user://something'));
+		$this->assertFalse(Uuid::is('file://something'));
+		$this->assertFalse(Uuid::is('file://something/else'));
 	}
 
 	/**

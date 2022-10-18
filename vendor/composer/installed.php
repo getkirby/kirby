@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '3.8.0',
-        'version' => '3.8.0.0',
+        'pretty_version' => '3.8.1',
+        'version' => '3.8.1.0',
         'reference' => NULL,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -38,8 +38,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '3.8.0',
-            'version' => '3.8.0.0',
+            'pretty_version' => '3.8.1',
+            'version' => '3.8.1.0',
             'reference' => NULL,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -56,9 +56,9 @@
             'dev_requirement' => false,
         ),
         'laminas/laminas-escaper' => array(
-            'pretty_version' => '2.10.0',
-            'version' => '2.10.0.0',
-            'reference' => '58af67282db37d24e584a837a94ee55b9c7552be',
+            'pretty_version' => '2.12.0',
+            'version' => '2.12.0.0',
+            'reference' => 'ee7a4c37bf3d0e8c03635d5bddb5bb3184ead490',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laminas/laminas-escaper',
             'aliases' => array(),
@@ -89,9 +89,9 @@
             'dev_requirement' => false,
         ),
         'phpmailer/phpmailer' => array(
-            'pretty_version' => 'v6.6.4',
-            'version' => '6.6.4.0',
-            'reference' => 'a94fdebaea6bd17f51be0c2373ab80d3d681269b',
+            'pretty_version' => 'v6.6.5',
+            'version' => '6.6.5.0',
+            'reference' => '8b6386d7417526d1ea4da9edb70b8352f7543627',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpmailer/phpmailer',
             'aliases' => array(),

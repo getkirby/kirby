@@ -1,10 +1,10 @@
 [main]
 host = https://www.transifex.com
 
-[panel.v3]
-file_filter = i18n/translations/<lang>.json
+[o:getkirby:p:panel:r:v3]
+file_filter  = i18n/translations/<lang>.json
+source_file  = i18n/translations/en.json
+source_lang  = en
+type         = KEYVALUEJSON
 minimum_perc = 0
-source_file = i18n/translations/en.json
-source_lang = en
-type = KEYVALUEJSON
 

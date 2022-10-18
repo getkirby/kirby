@@ -31,10 +31,10 @@ class Silo
 	{
 		if (is_array($key) === true) {
 			return static::$data = array_merge(static::$data, $key);
-		} else {
-			static::$data[$key] = $value;
-			return static::$data;
 		}
+
+		static::$data[$key] = $value;
+		return static::$data;
 	}
 
 	/**

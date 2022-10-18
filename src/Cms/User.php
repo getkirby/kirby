@@ -157,9 +157,9 @@ class User extends ModelWithContent
 	{
 		if ($relative === true) {
 			return 'users/' . $this->id();
-		} else {
-			return $this->kirby()->url('api') . '/users/' . $this->id();
 		}
+
+		return $this->kirby()->url('api') . '/users/' . $this->id();
 	}
 
 	/**

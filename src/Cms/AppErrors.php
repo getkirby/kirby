@@ -163,19 +163,19 @@ trait AppErrors
 		$whoops = $this->whoops();
 		$whoops->clearHandlers();
 		$whoops->pushHandler($handler);
-		$whoops->pushHandler($this->getExceptionHookWhoopsHandler());
+		$whoops->pushHandler($this->getAdditionalWhoopsHandler());
 		$whoops->register(); // will only do something if not already registered
 	}
 
 	/**
-	 * Initializes a callback handler for triggering the `system.exception` hook
-	 *
-	 * @return \Whoops\Handler\CallbackHandler
+	 * Whoops callback handler for additional error handling
+	 * (`system.exception` hook and output to error log)
 	 */
-	protected function getExceptionHookWhoopsHandler(): CallbackHandler
+	protected function getAdditionalWhoopsHandler(): CallbackHandler
 	{
 		return new CallbackHandler(function ($exception, $inspector, $run) {
 			$this->trigger('system.exception', compact('exception'));
+			error_log($exception);
 			return Handler::DONE;
 		});
 	}

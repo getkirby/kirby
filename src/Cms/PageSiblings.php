@@ -122,9 +122,9 @@ trait PageSiblings
 	{
 		if ($this->isDraft() === true) {
 			return $this->parentModel()->drafts();
-		} else {
-			return $this->parentModel()->children();
 		}
+
+		return $this->parentModel()->children();
 	}
 
 	/**

@@ -684,9 +684,9 @@ abstract class Sql
 			}
 
 			return implode(', ', $result);
-		} else {
-			return $columns;
 		}
+
+		return $columns;
 	}
 
 	/**
@@ -833,9 +833,9 @@ abstract class Sql
 
 		if ($set === true) {
 			return $this->valueSet($table, $values, $separator, $enforceQualified);
-		} else {
-			return $this->valueList($table, $values, $separator, $enforceQualified);
 		}
+
+		return $this->valueList($table, $values, $separator, $enforceQualified);
 	}
 
 	/**

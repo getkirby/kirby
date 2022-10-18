@@ -286,7 +286,7 @@ abstract class Model
 			'link'     => $this->url(true),
 			'sortable' => true,
 			'text'     => $this->model->toSafeString($params['text'] ?? false),
-			'uuid'     => $this->model->uuid()->toString(),
+			'uuid'     => $this->model->uuid()?->toString() ?? $this->model->id(),
 		];
 	}
 

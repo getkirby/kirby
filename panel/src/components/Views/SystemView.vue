@@ -113,9 +113,7 @@ export default {
 		await promiseAll(promises);
 
 		console.info(
-			`System health checks ended. ${
-				promises.length - this.accessible.length
-			} issues found (see the security list in the system view).`
+			`System health checks ended. ${this.accessible.length} issues with accessible files/folders found (see the security list in the system view).`
 		);
 	},
 	methods: {

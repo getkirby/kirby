@@ -3,7 +3,7 @@
 namespace Kirby\Blueprint;
 
 /**
- * @covers \Kirby\Blueprint\NodeI18n
+ * @coversDefaultClass \Kirby\Blueprint\NodeI18n
  */
 class NodeI18nTest extends TestCase
 {

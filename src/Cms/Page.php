@@ -964,9 +964,9 @@ class Page extends ModelWithContent
 	 * Return the permanent URL to the page using its UUID
 	 * @since 3.8.0
 	 */
-	public function permalink(): string
+	public function permalink(): string|null
 	{
-		return $this->uuid()->url();
+		return $this->uuid()?->url();
 	}
 
 	/**
