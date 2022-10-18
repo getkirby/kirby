@@ -2,11 +2,13 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Auth\ErrorneousChallenge;
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
 use Throwable;
 
 require_once __DIR__ . '/../mocks.php';
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Cms\Auth
@@ -17,10 +19,11 @@ class AuthChallengeTest extends TestCase
 
 	protected $app;
 	protected $auth;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
+		Auth::$challenges['errorneous'] = ErrorneousChallenge::class;
 		Email::$debug = true;
 		Email::$emails = [];
 		$_SERVER['SERVER_NAME'] = 'kirby.test';
@@ -34,11 +37,14 @@ class AuthChallengeTest extends TestCase
 				}
 			],
 			'options' => [
-				'auth.trials' => 2,
-				'debug' => true
+				'auth' => [
+					'challenges' => ['errorneous', 'email'],
+					'debug'      => true,
+					'trials'     => 3
+				]
 			],
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
+				'index' => $this->tmp = __DIR__ . '/tmp'
 			],
 			'users' => [
 				[
@@ -47,11 +53,16 @@ class AuthChallengeTest extends TestCase
 					'password' => password_hash('springfield123', PASSWORD_DEFAULT)
 				],
 				[
-					'email' => 'test@exämple.com'
+					'email' => 'test@exämple.com',
+					'id'    => 'idn'
+				],
+				[
+					'email' => 'error@getkirby.com',
+					'id'    => 'error'
 				]
 			]
 		]);
-		Dir::make($this->fixtures . '/site/accounts');
+		Dir::make($this->tmp . '/site/accounts');
 
 		$this->auth = new Auth($this->app);
 	}
@@ -59,8 +70,9 @@ class AuthChallengeTest extends TestCase
 	public function tearDown(): void
 	{
 		$this->app->session()->destroy();
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 
+		unset(Auth::$challenges['errorneous']);
 		Email::$debug = false;
 		Email::$emails = [];
 		unset($_SERVER['SERVER_NAME']);
@@ -68,14 +80,18 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
 	 * @covers ::createChallenge
+	 * @covers ::fail
 	 * @covers ::status
 	 */
 	public function testCreateChallenge()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth    = $this->app->auth();
@@ -113,16 +129,33 @@ class AuthChallengeTest extends TestCase
 		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
 		$this->assertSame('invalid@example.com', $this->failedEmail);
 
+		// error in the challenge
+		$status = $auth->createChallenge('error@getkirby.com');
+		$this->assertSame([
+			'challenge' => 'email',
+			'email'     => 'error@getkirby.com',
+			'status'    => 'pending'
+		], $status->toArray());
+		$this->assertNull($status->challenge(false));
+		$this->assertSame('error@getkirby.com', $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
+		$this->assertSame('invalid@example.com', $this->failedEmail); // a challenge error is not considered a failed login
+
 		// verify rate-limiting log
 		$data = [
 			'by-ip' => [
 				'87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
 					'time'   => MockTime::$time,
-					'trials' => 2
+					'trials' => 3
 				]
 			],
 			'by-email' => [
 				'marge@simpsons.com' => [
+					'time'   => MockTime::$time,
+					'trials' => 1
+				],
+				'error@getkirby.com' => [
 					'time'   => MockTime::$time,
 					'trials' => 1
 				]
@@ -130,14 +163,36 @@ class AuthChallengeTest extends TestCase
 		];
 		$this->assertSame($data, $auth->log());
 
-		// cannot create challenge when rate-limited
-		$this->expectException('Kirby\Exception\PermissionException');
-		$this->expectExceptionMessage('Invalid login');
-		$auth->createChallenge('marge@simpsons.com');
+		// fake challenge when rate-limited
+		$status = $auth->createChallenge('marge@simpsons.com');
+		$this->assertSame([
+			'challenge' => 'email',
+			'email'     => 'marge@simpsons.com',
+			'status'    => 'pending'
+		], $status->toArray());
+		$this->assertNull($status->challenge(false));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
+		$this->assertSame('marge@simpsons.com', $this->failedEmail);
 	}
 
 	/**
 	 * @covers ::createChallenge
+	 * @covers ::fail
+	 */
+	public function testCreateChallengeDebugError()
+	{
+		$auth = $this->app->auth();
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('An error occurred in the challenge');
+		$auth->createChallenge('error@getkirby.com');
+	}
+
+	/**
+	 * @covers ::createChallenge
+	 * @covers ::fail
 	 */
 	public function testCreateChallengeDebugNotFound()
 	{
@@ -148,12 +203,15 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
 	 * @covers ::createChallenge
+	 * @covers ::fail
 	 */
 	public function testCreateChallengeDebugRateLimit()
 	{
 		$auth = $this->app->auth();
 
+		$auth->createChallenge('marge@simpsons.com');
 		$auth->createChallenge('marge@simpsons.com');
 		$auth->createChallenge('marge@simpsons.com');
 
@@ -164,14 +222,17 @@ class AuthChallengeTest extends TestCase
 
 	/**
 	 * @covers ::createChallenge
+	 * @covers ::fail
 	 * @covers ::status
 	 */
 	public function testCreateChallengeCustomTimeout()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'auth.challenge.timeout' => 10,
-				'debug' => false
+				'auth' => [
+					'challenge.timeout' => 10,
+					'debug' => false
+				]
 			]
 		]);
 		$auth    = $this->app->auth();
@@ -241,12 +302,22 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testEnabledChallenges()
 	{
-		$this->assertSame(['email'], $this->auth->enabledChallenges());
+		// default
+		$app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => null
+				]
+			]
+		]);
+		$this->assertSame(['email'], $app->auth()->enabledChallenges());
 
 		// a single challenge
 		$app = $this->app->clone([
 			'options' => [
-				'auth.challenges' => 'totp'
+				'auth' => [
+					'challenges' => 'totp'
+				]
 			]
 		]);
 		$this->assertSame(['totp'], $app->auth()->enabledChallenges());
@@ -254,7 +325,9 @@ class AuthChallengeTest extends TestCase
 		// multiple challenges
 		$app = $this->app->clone([
 			'options' => [
-				'auth.challenges' => ['totp', 'sms']
+				'auth' => [
+					'challenges' => ['totp', 'sms']
+				]
 			]
 		]);
 		$this->assertSame(['totp', 'sms'], $app->auth()->enabledChallenges());
@@ -309,6 +382,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::login2fa
 	 */
 	public function testLogin2faInvalidUser()
@@ -321,6 +395,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::login2fa
 	 */
 	public function testLogin2faInvalidPassword()
@@ -352,6 +427,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeNoChallenge1()
@@ -368,6 +444,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeNoChallenge2()
@@ -385,13 +462,16 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeNoChallengeNoDebug1()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth = $this->app->auth();
@@ -408,13 +488,16 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeNoChallengeNoDebug2()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth = $this->app->auth();
@@ -432,6 +515,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeInvalidEmail()
@@ -445,6 +529,8 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::checkRateLimit
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeRateLimited()
@@ -456,6 +542,7 @@ class AuthChallengeTest extends TestCase
 
 		$this->auth->track('marge@simpsons.com');
 		$this->auth->track('homer@simpsons.com');
+		$this->auth->track('homer@simpsons.com');
 		$session->set('kirby.challenge.email', 'marge@simpsons.com');
 		$session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
 		$session->set('kirby.challenge.type', 'email');
@@ -464,6 +551,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeTimeLimited()
@@ -492,13 +580,16 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeTimeLimitedNoDebug()
 	{
 		$this->app = $this->app->clone([
 			'options' => [
-				'debug' => false
+				'auth' => [
+					'debug' => false
+				]
 			]
 		]);
 		$auth = $this->app->auth();
@@ -526,6 +617,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeInvalidCode()
@@ -544,6 +636,7 @@ class AuthChallengeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::fail
 	 * @covers ::verifyChallenge
 	 */
 	public function testVerifyChallengeInvalidChallenge()
