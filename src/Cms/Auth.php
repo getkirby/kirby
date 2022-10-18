@@ -866,7 +866,7 @@ class Auth
 
 			throw new LogicException('Invalid authentication challenge: ' . $challenge);
 		} catch (Throwable $e) {
-			$details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+			$details = $e instanceof \Kirby\Exception\Exception ? $e->getDetails() : [];
 
 			if (
 				empty($email) === false &&
@@ -882,7 +882,7 @@ class Auth
 
 			// specifically copy over the marker for a destroyed challenge
 			// even in production (used by the Panel to reset to the login form)
-			$challengeDestroyed = $e->getDetails()['challengeDestroyed'] ?? false;
+			$challengeDestroyed = $details['challengeDestroyed'] ?? false;
 
 			$fallback = new PermissionException([
 				'details' => compact('challengeDestroyed'),
