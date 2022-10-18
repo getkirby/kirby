@@ -12,7 +12,7 @@ describe("LoginView", () => {
 		cy.get('input[type="email"]').type("test@getkirby.com");
 		cy.get('input[type="password"]').type("abcdefgh");
 		cy.get("form").submit();
-		cy.get(".k-login-alert").should("contain", "Wrong password");
+		cy.get(".k-login-alert").should("contain", "Invalid login");
 	});
 
 	it("should login and redirect to SiteView", () => {
