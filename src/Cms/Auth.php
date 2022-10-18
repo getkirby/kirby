@@ -830,7 +830,9 @@ class Auth
 
             throw new LogicException('Invalid authentication challenge: ' . $challenge);
         } catch (Throwable $e) {
-            if (($e->getDetails()['reason'] ?? null) !== 'rate-limited') {
+            $details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+
+            if (($details['reason'] ?? null) !== 'rate-limited') {
                 $this->track($email);
             }
 
