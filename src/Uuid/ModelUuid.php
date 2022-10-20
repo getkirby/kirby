@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
+use Kirby\Exception\LogicException;
 
 /**
  * Base for UUIDs for models where id string
@@ -69,13 +70,24 @@ abstract class ModelUuid extends Uuid
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
 
-		$content = $this->model->content();
-		$content->update([
-			'uuid' => $id
-		]);
+		// get the content array from the page
+		$data = $this->model->content()->toArray();
+
+		// check for an empty content array
+		// and read content from file again, just to be sure
+		// we don't loose content
+		if (empty($data) === true) {
+			$data = $this->model->readContent();
+		}
+
+		// add the UUID to the content array
+		$data['uuid'] ??= $id;
+
+		// update the content object
+		$this->model->content()->update($data);
 
 		// use the most basic write method to avoid object cloning
-		$this->model->writeContent($content->toArray());
+		$this->model->writeContent($data);
 
 		$kirby->impersonate($user);
 
