@@ -317,6 +317,16 @@ class UuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::model
+	 */
+	public function testModelNotFound()
+	{
+		$this->assertNull(Uuid::for('page://something')->model());
+		$this->assertNull(Uuid::for('user://something')->model());
+		$this->assertNull(Uuid::for('file://something')->model());
+	}
+
+	/**
 	 * @covers ::retrieveId
 	 */
 	public function testRetrieveId()
