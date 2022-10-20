@@ -65,10 +65,18 @@ abstract class ModelUuid extends Uuid
 
 		// make sure Kirby has the required permissions
 		// for the update action
-		$kirby = App::instance();
+		$kirby = $this->model->kirby();
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
-		$this->model = $this->model->save(['uuid' => $id]);
+
+		$content = $this->model->content();
+		$content->update([
+			'uuid' => $id
+		]);
+
+		// use the most basic write method to avoid object cloning
+		$this->model->writeContent($content->toArray());
+
 		$kirby->impersonate($user);
 
 		// TODO: replace the above in 3.9.0 with
