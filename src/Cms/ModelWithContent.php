@@ -378,10 +378,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 		$file = $this->contentFile($languageCode);
 
 		if (file_exists($file) === false) {
+			error_log('The content file does not exist: ' . $file);
 			return [];
 		}
 
-		return Data::read($file);
+		try {
+			return Data::read($file);
+		} catch (Throwable $e) {
+			error_log($e);
+			throw $e;
+		}
 	}
 
 	/**

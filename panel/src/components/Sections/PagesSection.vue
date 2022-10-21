@@ -41,7 +41,6 @@ export default {
 		}
 	},
 	created() {
-		this.load();
 		this.$events.$on("page.changeStatus", this.reload);
 		this.$events.$on("page.sort", this.reload);
 	},
