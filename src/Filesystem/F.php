@@ -584,7 +584,7 @@ class F
 			return false;
 		}
 
-		return @file_get_contents($file);
+		return file_get_contents($file);
 	}
 
 	/**
