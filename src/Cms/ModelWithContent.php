@@ -379,8 +379,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 		// only if the content file really does not exist, it's ok
 		// to return empty content. Otherwise this could lead to
-		// content loss in case of file reading exceptions
-		// (i.e. if the file is locked)
+		// content loss in case of file reading issues
 		if (file_exists($file) === false) {
 			return [];
 		}
