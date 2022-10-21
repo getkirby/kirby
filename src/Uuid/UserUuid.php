@@ -38,7 +38,7 @@ class UserUuid extends Uuid
 	/**
 	 * Returns the user object
 	 */
-	public function model(bool $lazy = false): User
+	public function model(bool $lazy = false): User|null
 	{
 		return $this->model ??= App::instance()->user($this->id());
 	}
