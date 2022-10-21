@@ -76,7 +76,7 @@ abstract class ModelUuid extends Uuid
 		// and read content from file again, just to be sure
 		// we don't loose content
 		if (empty($data) === true) {
-		    usleep(1000);
+			usleep(1000);
 			$data = $this->model->readContent();
 		}
 
