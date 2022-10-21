@@ -4,7 +4,6 @@ namespace Kirby\Uuid;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
-use Kirby\Exception\LogicException;
 
 /**
  * Base for UUIDs for models where id string

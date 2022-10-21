@@ -56,15 +56,12 @@ class FileUuidTest extends TestCase
 		$uuid = new FileUuid('file://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
 
-		// with model with nothing in its content file yet
+		// model is updated
 		$file = $this->app->file('page-b/foo.pdf');
 		$uuid = $file->uuid();
-		$this->assertNull($file->content()->get('uuid')->value());
 
-		$id   = $uuid->id();
-		$file = $this->app->file('page-b/foo.pdf'); // since $file is immutable
-		$this->assertSame(16, strlen($id));
-		$this->assertSame($file->content()->get('uuid')->value(), $id);
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}
 
 	/**
