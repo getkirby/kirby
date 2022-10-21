@@ -36,8 +36,9 @@ abstract class Handler
 	public static function read(string $file): array
 	{
 		$contents = F::read($file);
+
 		if ($contents === false) {
-			throw new Exception('The file "' . $file . '" does not exist');
+			throw new Exception('The file "' . $file . '" does not exist or cannot be read');
 		}
 
 		return static::decode($contents);
