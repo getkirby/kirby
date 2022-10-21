@@ -375,11 +375,13 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function readContent(string $languageCode = null): array
 	{
-		try {
-			return Data::read($this->contentFile($languageCode));
-		} catch (Throwable) {
+		$file = $this->contentFile($languageCode);
+
+		if (file_exists($file) === false) {
 			return [];
 		}
+
+		return Data::read($file);
 	}
 
 	/**
