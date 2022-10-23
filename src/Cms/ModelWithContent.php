@@ -9,6 +9,7 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 use Throwable;
 
 /**
@@ -465,6 +466,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 				if (($field['translate'] ?? true) === false) {
 					$content[strtolower($field['name'])] = null;
 				}
+			}
+
+			// remove UUID for non-default languages
+			if (Uuids::enabled() === true && isset($content['uuid']) === true) {
+				$content['uuid'] = null;
 			}
 
 			// merge the translation with the new data

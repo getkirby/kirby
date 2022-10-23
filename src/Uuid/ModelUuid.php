@@ -69,15 +69,31 @@ abstract class ModelUuid extends Uuid
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
 
+		// needed for multi-language setup
+		$languageCode = null;
+		$isMultilang = $kirby->multilang() === true &&
+			$kirby->languageCode() !== $kirby->defaultLanguage()->code();
+
+		// if multilang enabled and current language is not default
+		// get UUID from the default language content
+		if ($isMultilang === true) {
+			$languageCode = $kirby->defaultLanguage()->code();
+		}
+
 		// get the content array from the page
-		$data = $this->model->content()->toArray();
+		$data = $this->model->content($languageCode)->toArray();
 
 		// check for an empty content array
 		// and read content from file again,
 		// just to be sure we don't lose content
 		if (empty($data) === true) {
 			usleep(1000);
-			$data = $this->model->readContent();
+			$data = $this->model->readContent($languageCode);
+		}
+
+		// return UUID from the default language content if available
+		if ($isMultilang === true && empty($data['uuid']) === false) {
+			return $data['uuid'];
 		}
 
 		// add the UUID to the content array
@@ -87,15 +103,15 @@ abstract class ModelUuid extends Uuid
 
 		// overwrite the content in memory and in the content file;
 		// use the most basic write method to avoid object cloning
-		$this->model->content()->update($data);
-		$this->model->writeContent($data);
+		$this->model->content($languageCode)->update($data);
+		$this->model->writeContent($data, $languageCode);
 
 		$kirby->impersonate($user);
 
 		// TODO: replace the above in 3.9.0 with
 		// App::instance()->impersonate(
 		// 	'kirby',
-		// 	fn () => $this->model = $this->model->writeContent($data)
+		// 	fn () => $this->model = $this->model->writeContent($data, $languageCode)
 		// );
 
 		// update the Uri object
