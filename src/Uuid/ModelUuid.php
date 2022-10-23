@@ -60,7 +60,7 @@ abstract class ModelUuid extends Uuid
 			return $id;
 		}
 
-		// generate ID and write to content file
+		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
 		// make sure Kirby has the required permissions
@@ -73,8 +73,8 @@ abstract class ModelUuid extends Uuid
 		$data = $this->model->content()->toArray();
 
 		// check for an empty content array
-		// and read content from file again, just to be sure
-		// we don't loose content
+		// and read content from file again,
+		// just to be sure we don't lose content
 		if (empty($data) === true) {
 			usleep(1000);
 			$data = $this->model->readContent();
@@ -85,10 +85,9 @@ abstract class ModelUuid extends Uuid
 			$data['uuid'] = $id;
 		}
 
-		// update the content object
-		$this->model->content()->update($data);
-
+		// overwrite the content in memory and in the content file;
 		// use the most basic write method to avoid object cloning
+		$this->model->content()->update($data);
 		$this->model->writeContent($data);
 
 		$kirby->impersonate($user);
