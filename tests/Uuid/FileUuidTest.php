@@ -52,14 +52,31 @@ class FileUuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		// with UUID string
 		$uuid = new FileUuid('file://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
+	}
 
-		// model is updated
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerate()
+	{
 		$file = $this->app->file('page-b/foo.pdf');
-		$uuid = $file->uuid();
 
+		$uuid = $file->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerateExistingButEmpty()
+	{
+		$file = $this->app->file('page-b/foo.pdf');
+		$file->content()->update(['uuid' => '']);
+
+		$uuid = $file->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
 		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}

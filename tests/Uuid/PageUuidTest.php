@@ -52,14 +52,31 @@ class PageUuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		// with UUID string
 		$uuid = new PageUuid('page://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
+	}
 
-		// model is updated
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerate()
+	{
 		$page = $this->app->page('page-b');
-		$uuid = $page->uuid();
 
+		$uuid = $page->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerateExistingButEmpty()
+	{
+		$page = $this->app->page('page-b');
+		$page->content()->update(['uuid' => '']);
+
+		$uuid = $page->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}

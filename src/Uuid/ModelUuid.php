@@ -81,7 +81,9 @@ abstract class ModelUuid extends Uuid
 		}
 
 		// add the UUID to the content array
-		$data['uuid'] ??= $id;
+		if (empty($data['uuid']) === true) {
+			$data['uuid'] = $id;
+		}
 
 		// update the content object
 		$this->model->content()->update($data);
