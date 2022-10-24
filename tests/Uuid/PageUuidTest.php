@@ -52,19 +52,33 @@ class PageUuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		// with UUID string
 		$uuid = new PageUuid('page://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
+	}
 
-		// with model with nothing in its content file yet
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerate()
+	{
 		$page = $this->app->page('page-b');
-		$uuid = $page->uuid();
-		$this->assertNull($page->content()->get('uuid')->value());
 
-		$id   = $uuid->id();
-		$page = $this->app->page('page-b'); // since $page is immutable
-		$this->assertSame(16, strlen($id));
-		$this->assertSame($page->content()->get('uuid')->value(), $id);
+		$uuid = $page->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerateExistingButEmpty()
+	{
+		$page = $this->app->page('page-b');
+		$page->content()->update(['uuid' => '']);
+
+		$uuid = $page->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
 	/**

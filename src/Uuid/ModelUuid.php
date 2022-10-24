@@ -60,21 +60,42 @@ abstract class ModelUuid extends Uuid
 			return $id;
 		}
 
-		// generate ID and write to content file
+		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
 		// make sure Kirby has the required permissions
 		// for the update action
-		$kirby = App::instance();
+		$kirby = $this->model->kirby();
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
-		$this->model = $this->model->save(['uuid' => $id]);
+
+		// get the content array from the page
+		$data = $this->model->content()->toArray();
+
+		// check for an empty content array
+		// and read content from file again,
+		// just to be sure we don't lose content
+		if (empty($data) === true) {
+			usleep(1000);
+			$data = $this->model->readContent();
+		}
+
+		// add the UUID to the content array
+		if (empty($data['uuid']) === true) {
+			$data['uuid'] = $id;
+		}
+
+		// overwrite the content in memory and in the content file;
+		// use the most basic write method to avoid object cloning
+		$this->model->content()->update($data);
+		$this->model->writeContent($data);
+
 		$kirby->impersonate($user);
 
 		// TODO: replace the above in 3.9.0 with
 		// App::instance()->impersonate(
 		// 	'kirby',
-		// 	fn () => $this->model = $this->model->save(['uuid' => $id])
+		// 	fn () => $this->model = $this->model->writeContent($data)
 		// );
 
 		// update the Uri object
