@@ -63,50 +63,8 @@ abstract class ModelUuid extends Uuid
 		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
-		// make sure Kirby has the required permissions
-		// for the update action
-		$kirby = $this->model->kirby();
-		$user  = $kirby->auth()->currentUserFromImpersonation();
-		$kirby->impersonate('kirby');
-
-		// if multilang enabled and current language is not default
-		// we store the UUID to the default language
-		$languageCode = null;
-		if (
-			$kirby->multilang() === true &&
-			$kirby->languageCode() !== $kirby->defaultLanguage()->code()
-		) {
-			$languageCode = $kirby->defaultLanguage()->code();
-		}
-
-		// get the content array from the page
-		$data = $this->model->content($languageCode)->toArray();
-
-		// check for an empty content array
-		// and read content from file again,
-		// just to be sure we don't lose content
-		if (empty($data) === true) {
-			usleep(1000);
-			$data = $this->model->readContent($languageCode);
-		}
-
-		// add the UUID to the content array
-		if (empty($data['uuid']) === true) {
-			$data['uuid'] = $id;
-		}
-
-		// overwrite the content in memory and in the content file;
-		// use the most basic write method to avoid object cloning
-		$this->model->content($languageCode)->update($data);
-		$this->model->writeContent($data, $languageCode);
-
-		$kirby->impersonate($user);
-
-		// TODO: replace the above in 3.9.0 with
-		// App::instance()->impersonate(
-		// 	'kirby',
-		// 	fn () => $this->model = $this->model->writeContent($data, $languageCode)
-		// );
+		// store the new UUID
+		$this->model = static::storeId($this->model, $id);
 
 		// update the Uri object
 		$this->uri->host($id);
@@ -129,6 +87,63 @@ abstract class ModelUuid extends Uuid
 			$kirby->defaultLanguage()->code() : null;
 
 		return $model->content($languageCode)->get('uuid')->value();
+	}
+
+	/**
+	 * Stores the UUID for the model and makes sure
+	 * to update the content file and content object cache
+	 *
+	 * @param \Kirby\Cms\ModelWithContent $model
+	 * @param string $id
+	 */
+	public static function storeId(Identifiable $model, string $id): Identifiable
+	{
+		// make sure Kirby has the required permissions
+		// for the update action
+		$kirby = $model->kirby();
+		$user  = $kirby->auth()->currentUserFromImpersonation();
+		$kirby->impersonate('kirby');
+
+		// if multilang is enabled, store the UUID in the default language
+		$multilang    = $kirby->multilang();
+		$languageCode = $multilang === true ? $kirby->defaultLanguage()->code() : null;
+
+		// get the content array from the page
+		$data = $model->readContent($languageCode);
+
+		// check for an empty content array
+		// and read content from file again,
+		// just to be sure we don't lose content
+		if (empty($data) === true) {
+			usleep(1000);
+			$data = $model->readContent($languageCode);
+		}
+
+		// add the UUID to the content array
+		if (empty($data['uuid']) === true) {
+			$data['uuid'] = $id;
+		}
+
+		// overwrite the content in memory and in the content file;
+		// use the most basic write method to avoid object cloning
+		$model->content($languageCode)->update($data);
+		$model->writeContent($data, $languageCode);
+
+		// update the default translation
+		if ($multilang === true) {
+			$model->translation($languageCode)->update($data);
+		}
+
+		// switch back to the original user
+		$kirby->impersonate($user);
+
+		// TODO: replace the above in 3.9.0 with
+		// App::instance()->impersonate(
+		// 	'kirby',
+		// 	fn () => $model->writeContent($data, $languageCode)
+		// );
+
+		return $model;
 	}
 
 	/**

@@ -94,32 +94,33 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 			// don't normalize field keys (already handled by the `Data` class)
 			return $this->content = new Content($this->readContent(), $this, false);
+		}
 
 		// multi language support
-		} else {
-			// only fetch from cache for the default language
-			if (
-				$languageCode === null &&
-				$this->content instanceof Content
-			) {
-				return $this->content;
-			}
+		$isDefaultLanguage = $languageCode === null || $languageCode === $this->kirby()->defaultLanguage()?->code();
 
-			// get the translation by code
-			if ($translation = $this->translation($languageCode)) {
-				// don't normalize field keys (already handled by the `ContentTranslation` class)
-				$content = new Content($translation->content(), $this, false);
-			} else {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			// only store the content for the current language
-			if ($languageCode === null) {
-				$this->content = $content;
-			}
-
-			return $content;
+		// only fetch from cache for the default language
+		if (
+			$isDefaultLanguage === true &&
+			$this->content instanceof Content
+		) {
+			return $this->content;
 		}
+
+		// get the translation by code
+		if ($translation = $this->translation($languageCode)) {
+			// don't normalize field keys (already handled by the `ContentTranslation` class)
+			$content = new Content($translation->content(), $this, false);
+		} else {
+			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+		}
+
+		// only store the content for the default language
+		if ($isDefaultLanguage === true) {
+			$this->content = $content;
+		}
+
+		return $content;
 	}
 
 	/**
