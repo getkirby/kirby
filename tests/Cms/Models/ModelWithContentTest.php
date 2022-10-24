@@ -123,6 +123,39 @@ class ModelWithContentTest extends TestCase
 		];
 	}
 
+	public function testContentForInvalidTranslation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$app->page('foo')->content('fr');
+	}
+
 	public function testContentLock()
 	{
 		$model = new ExtendedModelWithContent();
