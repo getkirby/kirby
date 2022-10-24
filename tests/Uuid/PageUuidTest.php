@@ -3,6 +3,7 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use Kirby\Cms\App;
 use Kirby\Cms\Page;
 
 /**
@@ -109,5 +110,56 @@ class PageUuidTest extends TestCase
 		$page = $this->app->page('page-a');
 		$url  = 'https://getkirby.com/@/page/my-page';
 		$this->assertSame($url, $page->uuid()->url());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testMultilang()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title' => 'Foo',
+									'uuid'  => 'my-page-uuid'
+								]
+							],
+							[
+								'code' => 'de',
+								'slug' => 'bar',
+								'content' => [
+									'title' => 'Bar',
+								]
+							],
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->call('de/foo');
+		$this->assertSame('Bar', $page->title()->value());
+		$this->assertSame('my-page-uuid', $page->uuid()->id());
 	}
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 
 /**
@@ -120,5 +121,62 @@ class FileUuidTest extends TestCase
 		$uuid = $file->uuid();
 		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
 		$this->assertSame($expected, $uuid->value());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testMultilang()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'translations' => [
+									[
+										'code' => 'en',
+										'content' => [
+											'title' => 'Foo',
+											'uuid'  => 'my-file-uuid'
+										]
+									],
+									[
+										'code' => 'de',
+										'content' => [
+											'title' => 'Bar',
+										]
+									],
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->call('de/foo');
+		$file = $page->files()->first();
+
+		$this->assertSame('Bar', $file->title()->value());
+		$this->assertSame('my-file-uuid', $file->uuid()->id());
 	}
 }
