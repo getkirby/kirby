@@ -91,11 +91,6 @@ abstract class ModelUuid extends Uuid
 			$data = $this->model->readContent($languageCode);
 		}
 
-		// return UUID from the default language content if available
-		if ($isMultilang === true && empty($data['uuid']) === false) {
-			return $data['uuid'];
-		}
-
 		// add the UUID to the content array
 		if (empty($data['uuid']) === true) {
 			$data['uuid'] = $id;
@@ -128,7 +123,13 @@ abstract class ModelUuid extends Uuid
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{
-		return $model->content()->get('uuid')->value();
+		$kirby = $model->kirby();
+
+		// make sure that retrieve always from default language
+		$languageCode = $kirby->multilang() === true ?
+			$kirby->defaultLanguage()->code() : null;
+
+		return $model->content($languageCode)->get('uuid')->value();
 	}
 
 	/**
