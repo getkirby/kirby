@@ -112,10 +112,19 @@ class PageUuidTest extends TestCase
 		$this->assertSame($url, $page->uuid()->url());
 	}
 
+	public function providerForMultilang(): array
+	{
+		return [
+			['en', 'Foo'],
+			['de', 'Bar'],
+		];
+	}
+
 	/**
+	 * @dataProvider providerForMultilang
 	 * @covers ::id
 	 */
-	public function testMultilang()
+	public function testMultilang(string $language, string $title)
 	{
 		$app = new App([
 			'roots' => [
@@ -142,7 +151,6 @@ class PageUuidTest extends TestCase
 								'code' => 'en',
 								'content' => [
 									'title' => 'Foo',
-									'uuid'  => 'my-page-uuid'
 								]
 							],
 							[
@@ -158,8 +166,9 @@ class PageUuidTest extends TestCase
 			]
 		]);
 
-		$page = $app->call('de/foo');
-		$this->assertSame('Bar', $page->title()->value());
-		$this->assertSame('my-page-uuid', $page->uuid()->id());
+		$page = $app->call($language . '/foo');
+		$this->assertSame($title, $page->title()->value());
+		$this->assertSame(16, strlen($page->uuid()->id()));
+		$this->assertTrue($page->content('en')->get('uuid')->value() === $page->content('de')->get('uuid')->value());
 	}
 }

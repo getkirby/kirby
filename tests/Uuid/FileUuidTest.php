@@ -123,10 +123,19 @@ class FileUuidTest extends TestCase
 		$this->assertSame($expected, $uuid->value());
 	}
 
+	public function providerForMultilang(): array
+	{
+		return [
+			['en', 'Foo'],
+			['de', 'Bar'],
+		];
+	}
+
 	/**
+	 * @dataProvider providerForMultilang
 	 * @covers ::id
 	 */
-	public function testMultilang()
+	public function testMultilang(string $language, string $title)
 	{
 		$app = new App([
 			'roots' => [
@@ -156,7 +165,6 @@ class FileUuidTest extends TestCase
 										'code' => 'en',
 										'content' => [
 											'title' => 'Foo',
-											'uuid'  => 'my-file-uuid'
 										]
 									],
 									[
@@ -175,10 +183,11 @@ class FileUuidTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$page = $app->call('de/foo');
+		$page = $app->call($language . '/foo');
 		$file = $page->files()->first();
 
-		$this->assertSame('Bar', $file->title()->value());
-		$this->assertSame('my-file-uuid', $file->uuid()->id());
+		$this->assertSame($title, $file->title()->value());
+		$this->assertSame(16, strlen($file->uuid()->id()));
+		$this->assertTrue($file->content('en')->get('uuid')->value() === $file->content('de')->get('uuid')->value());
 	}
 }
