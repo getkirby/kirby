@@ -80,13 +80,7 @@ abstract class ModelUuid extends Uuid
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{
-		$kirby = $model->kirby();
-
-		// make sure to always retrieve the UUID from the default language
-		$languageCode = $kirby->multilang() === true ?
-			$kirby->defaultLanguage()->code() : null;
-
-		return $model->content($languageCode)->get('uuid')->value();
+		return $model->content('default')->get('uuid')->value();
 	}
 
 	/**
@@ -104,19 +98,15 @@ abstract class ModelUuid extends Uuid
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
 
-		// if multilang is enabled, store the UUID in the default language
-		$multilang    = $kirby->multilang();
-		$languageCode = $multilang === true ? $kirby->defaultLanguage()->code() : null;
-
 		// get the content array from the page
-		$data = $model->readContent($languageCode);
+		$data = $model->readContent('default');
 
 		// check for an empty content array
 		// and read content from file again,
 		// just to be sure we don't lose content
 		if (empty($data) === true) {
 			usleep(1000);
-			$data = $model->readContent($languageCode);
+			$data = $model->readContent('default');
 		}
 
 		// add the UUID to the content array
@@ -126,12 +116,12 @@ abstract class ModelUuid extends Uuid
 
 		// overwrite the content in memory and in the content file;
 		// use the most basic write method to avoid object cloning
-		$model->content($languageCode)->update($data);
-		$model->writeContent($data, $languageCode);
+		$model->content('default')->update($data);
+		$model->writeContent($data, 'default');
 
 		// update the default translation
-		if ($multilang === true) {
-			$model->translation($languageCode)->update($data);
+		if ($kirby->multilang() === true) {
+			$model->translation('default')->update($data);
 		}
 
 		// switch back to the original user
