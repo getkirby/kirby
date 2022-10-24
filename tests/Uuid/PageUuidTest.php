@@ -119,7 +119,7 @@ class PageUuidTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => [
 				'languages' => true

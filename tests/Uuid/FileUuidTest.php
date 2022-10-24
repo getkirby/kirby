@@ -130,7 +130,7 @@ class FileUuidTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'options' => [
 				'languages' => true
@@ -172,6 +172,8 @@ class FileUuidTest extends TestCase
 				]
 			]
 		]);
+
+		$app->impersonate('kirby');
 
 		$page = $app->call('de/foo');
 		$file = $page->files()->first();
