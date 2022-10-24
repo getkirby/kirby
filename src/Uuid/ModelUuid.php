@@ -69,14 +69,13 @@ abstract class ModelUuid extends Uuid
 		$user  = $kirby->auth()->currentUserFromImpersonation();
 		$kirby->impersonate('kirby');
 
-		// needed for multi-language setup
-		$languageCode = null;
-		$isMultilang = $kirby->multilang() === true &&
-			$kirby->languageCode() !== $kirby->defaultLanguage()->code();
-
 		// if multilang enabled and current language is not default
-		// get UUID from the default language content
-		if ($isMultilang === true) {
+		// we store the UUID to the default language
+		$languageCode = null;
+		if (
+			$kirby->multilang() === true &&
+			$kirby->languageCode() !== $kirby->defaultLanguage()->code()
+		) {
 			$languageCode = $kirby->defaultLanguage()->code();
 		}
 
@@ -125,7 +124,7 @@ abstract class ModelUuid extends Uuid
 	{
 		$kirby = $model->kirby();
 
-		// make sure that retrieve always from default language
+		// make sure to always retrieve the UUID from the default language
 		$languageCode = $kirby->multilang() === true ?
 			$kirby->defaultLanguage()->code() : null;
 
