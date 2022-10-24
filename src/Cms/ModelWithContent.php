@@ -96,27 +96,30 @@ abstract class ModelWithContent extends Model implements Identifiable
 			return $this->content = new Content($this->readContent(), $this, false);
 		}
 
-		// multi language support
-		$isDefaultLanguage = $languageCode === null || $languageCode === $this->kirby()->defaultLanguage()?->code();
+		// get the targeted language
+		$language = $this->kirby()->language($languageCode);
+
+		// stop if the language does not exist
+		if ($language === null) {
+			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+		}
+
+		// check if the language is the default language
+		$languageIsDefault = $language->isDefault();
 
 		// only fetch from cache for the default language
-		if (
-			$isDefaultLanguage === true &&
-			$this->content instanceof Content
-		) {
+		if ($languageIsDefault === true && $this->content instanceof Content) {
 			return $this->content;
 		}
 
 		// get the translation by code
-		if ($translation = $this->translation($languageCode)) {
-			// don't normalize field keys (already handled by the `ContentTranslation` class)
-			$content = new Content($translation->content(), $this, false);
-		} else {
-			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-		}
+		$translation = $this->translation($language->code());
+
+		// don't normalize field keys (already handled by the `ContentTranslation` class)
+		$content = new Content($translation->content(), $this, false);
 
 		// only store the content for the default language
-		if ($isDefaultLanguage === true) {
+		if ($languageIsDefault === true) {
 			$this->content = $content;
 		}
 
@@ -579,7 +582,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function translation(string $languageCode = null)
 	{
-		return $this->translations()->find($languageCode ?? $this->kirby()->language()->code());
+		if ($language = $this->kirby()->language($languageCode)) {
+			return $this->translations()->find($language->code());
+		}
+
+		return null;
 	}
 
 	/**
