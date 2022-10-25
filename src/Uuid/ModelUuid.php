@@ -99,7 +99,7 @@ abstract class ModelUuid extends Uuid
 		$kirby->impersonate('kirby');
 
 		// get the content array from the page
-		$data = $model->readContent('default');
+		$data = $model->content('default')->toArray();
 
 		// check for an empty content array
 		// and read content from file again,
