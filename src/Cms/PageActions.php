@@ -776,9 +776,9 @@ trait PageActions
 		foreach ($sorted as $key => $id) {
 			if ($id === $this->id()) {
 				continue;
-			} elseif ($sibling = $siblings->get($id)) {
-				$sibling->changeNum($key + 1);
 			}
+
+			$siblings->get($id)?->changeNum($key + 1);
 		}
 
 		$parent = $this->parentModel();

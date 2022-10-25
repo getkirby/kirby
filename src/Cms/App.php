@@ -383,7 +383,7 @@ class App
 	 */
 	public function collections()
 	{
-		return $this->collections = $this->collections ?? new Collections();
+		return $this->collections ??= new Collections();
 	}
 
 	/**
@@ -564,7 +564,7 @@ class App
 	 */
 	public function defaultLanguage()
 	{
-		return $this->defaultLanguage = $this->defaultLanguage ?? $this->languages()->default();
+		return $this->defaultLanguage ??= $this->languages()->default();
 	}
 
 	/**
@@ -1029,7 +1029,7 @@ class App
 	 */
 	public function nonce(): string
 	{
-		return $this->nonce = $this->nonce ?? base64_encode(random_bytes(20));
+		return $this->nonce ??= base64_encode(random_bytes(20));
 	}
 
 	/**
@@ -1349,7 +1349,7 @@ class App
 	 */
 	public function response()
 	{
-		return $this->response = $this->response ?? new Responder();
+		return $this->response ??= new Responder();
 	}
 
 	/**
@@ -1359,7 +1359,7 @@ class App
 	 */
 	public function roles()
 	{
-		return $this->roles = $this->roles ?? Roles::load($this->root('roles'));
+		return $this->roles ??= Roles::load($this->root('roles'));
 	}
 
 	/**
@@ -1582,7 +1582,7 @@ class App
 	 */
 	public function site()
 	{
-		return $this->site = $this->site ?? new Site([
+		return $this->site ??= new Site([
 			'errorPageId' => $this->options['error'] ?? 'error',
 			'homePageId'  => $this->options['home']  ?? 'home',
 			'kirby'       => $this,
@@ -1651,7 +1651,7 @@ class App
 	 */
 	public function system()
 	{
-		return $this->system = $this->system ?? new System($this);
+		return $this->system ??= new System($this);
 	}
 
 	/**
@@ -1775,7 +1775,7 @@ class App
 	public static function version(): string|null
 	{
 		try {
-			return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
+			return static::$version ??= Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
 		} catch (Throwable) {
 			throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
 		}
@@ -1798,6 +1798,6 @@ class App
 	 */
 	public function visitor()
 	{
-		return $this->visitor = $this->visitor ?? new Visitor();
+		return $this->visitor ??= new Visitor();
 	}
 }

@@ -157,7 +157,9 @@ class FileSessionStore extends SessionStore
 		// check if the file is already unlocked or doesn't exist
 		if (!isset($this->isLocked[$name])) {
 			return;
-		} elseif ($this->exists($expiryTime, $id) === false) {
+		}
+
+		if ($this->exists($expiryTime, $id) === false) {
 			unset($this->isLocked[$name]);
 			return;
 		}

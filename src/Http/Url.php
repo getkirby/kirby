@@ -47,7 +47,7 @@ class Url
 	 */
 	public static function current(): string
 	{
-		return static::$current = static::$current ?? static::toObject()->toString();
+		return static::$current ??= static::toObject()->toString();
 	}
 
 	/**
