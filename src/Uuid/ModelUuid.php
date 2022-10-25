@@ -117,7 +117,6 @@ abstract class ModelUuid extends Uuid
 
 		// use the most basic write method to avoid object cloning
 		$this->model->writeContent($data, 'default');
-
 	}
 
 	/**
