@@ -105,16 +105,18 @@ abstract class ModelUuid extends Uuid
 			$data['uuid'] = $id;
 		}
 
+		// overwrite the content in memory for the current request
 		if ($this->model->kirby()->multilang() === true) {
-			// Update the default translation instead of the content object.
-			// The default content object is always freshly loaded from the
-			// default translation afterwards. That's why updating the default
-			// content object would not have any effect.
+			// update the default translation instead of the content object
+			// (the default content object is always freshly loaded from the
+			// default translation afterwards, so updating the default
+			// content object would not have any effect)
 			$this->model->translation('default')->update($data);
 		} else {
 			$this->model->content('default')->update($data);
 		}
 
+		// overwrite the content in the file;
 		// use the most basic write method to avoid object cloning
 		$this->model->writeContent($data, 'default');
 	}
