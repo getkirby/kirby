@@ -528,12 +528,30 @@ class KirbyTagsTest extends TestCase
 			'site' => [
 				'children' => [
 					[
-						'slug'    => 'a',
-						'content' => ['uuid' => 'page-uuid'],
-						'files'   => [
+						'slug'  => 'a',
+						'files' => [
 							[
-								'filename' => 'foo.jpg',
-								'content' => ['uuid' => 'file-uuid'],
+								'filename'     => 'foo.jpg',
+								'translations' => [
+									[
+										'code' => 'en',
+										'content' => ['uuid' => 'file-uuid']
+									],
+									[
+										'code' => 'de',
+										'content' => []
+									]
+								]
+							]
+						],
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => ['uuid' => 'page-uuid']
+							],
+							[
+								'code' => 'de',
+								'content' => ['slug' => 'ae']
 							]
 						]
 					]
@@ -542,7 +560,7 @@ class KirbyTagsTest extends TestCase
 		]);
 
 		$result = $app->kirbytags('(link: page://page-uuid lang: de)');
-		$this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $result);
+		$this->assertEquals('<a href="https://getkirby.com/de/ae">getkirby.com/de/ae</a>', $result);
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file lang: de)');
 		$this->assertEquals('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);

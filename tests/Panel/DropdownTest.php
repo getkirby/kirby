@@ -165,7 +165,11 @@ class DropdownTest extends TestCase
 				]
 			],
 			'languages' => [
-				['code' => 'en', 'name' => 'English']
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true,
+				]
 			]
 		]);
 
