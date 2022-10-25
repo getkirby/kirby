@@ -64,7 +64,7 @@ abstract class ModelUuid extends Uuid
 		$id = static::generate();
 
 		// store the new UUID
-		$this->model = static::storeId($this->model, $id);
+		$this->storeId($id);
 
 		// update the Uri object
 		$this->uri->host($id);
@@ -86,21 +86,18 @@ abstract class ModelUuid extends Uuid
 	/**
 	 * Stores the UUID for the model and makes sure
 	 * to update the content file and content object cache
-	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @param string $id
 	 */
-	public static function storeId(Identifiable $model, string $id): Identifiable
+	protected function storeId(string $id): void
 	{
 		// get the content array from the page
-		$data = $model->content('default')->toArray();
+		$data = $this->model->content('default')->toArray();
 
 		// check for an empty content array
 		// and read content from file again,
 		// just to be sure we don't lose content
 		if (empty($data) === true) {
 			usleep(1000);
-			$data = $model->readContent('default');
+			$data = $this->model->readContent('default');
 		}
 
 		// add the UUID to the content array
@@ -109,17 +106,15 @@ abstract class ModelUuid extends Uuid
 		}
 
 		// overwrite the content in memory and in the content file
-		$model->content('default')->update($data);
+		$this->model->content('default')->update($data);
 
 		// use the most basic write method to avoid object cloning
-		$model->writeContent($data, 'default');
+		$this->model->writeContent($data, 'default');
 
 		// update the default translation
-		if ($model->kirby()->multilang() === true) {
-			$model->translation('default')->update($data);
+		if ($this->model->kirby()->multilang() === true) {
+			$this->model->translation('default')->update($data);
 		}
-
-		return $model;
 	}
 
 	/**
