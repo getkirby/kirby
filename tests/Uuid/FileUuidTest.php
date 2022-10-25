@@ -3,6 +3,7 @@
 namespace Kirby\Uuid;
 
 use Generator;
+use Kirby\Cms\App;
 use Kirby\Cms\File;
 
 /**
@@ -52,19 +53,33 @@ class FileUuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		// with UUID string
 		$uuid = new FileUuid('file://just-a-file');
 		$this->assertSame('just-a-file', $uuid->id());
+	}
 
-		// with model with nothing in its content file yet
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerate()
+	{
 		$file = $this->app->file('page-b/foo.pdf');
-		$uuid = $file->uuid();
-		$this->assertNull($file->content()->get('uuid')->value());
 
-		$id   = $uuid->id();
-		$file = $this->app->file('page-b/foo.pdf'); // since $file is immutable
-		$this->assertSame(16, strlen($id));
-		$this->assertSame($file->content()->get('uuid')->value(), $id);
+		$uuid = $file->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @covers ::id
+	 */
+	public function testIdGenerateExistingButEmpty()
+	{
+		$file = $this->app->file('page-b/foo.pdf');
+		$file->content()->update(['uuid' => '']);
+
+		$uuid = $file->uuid();
+		$this->assertSame(16, strlen($uuid->id()));
+		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}
 
 	/**
@@ -106,5 +121,90 @@ class FileUuidTest extends TestCase
 		$uuid = $file->uuid();
 		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
 		$this->assertSame($expected, $uuid->value());
+	}
+
+	public function providerForMultilang(): array
+	{
+		return [
+			['en', 'Foo'],
+			['de', 'Bar'],
+		];
+	}
+
+	/**
+	 * @dataProvider providerForMultilang
+	 * @covers ::id
+	 */
+	public function testMultilang(string $language, string $title)
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'translations' => [
+									[
+										'code' => 'en',
+										'content' => [
+											'title' => 'Foo',
+										]
+									],
+									[
+										'code' => 'de',
+										'content' => [
+											'title' => 'Bar',
+										]
+									],
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->call($language . '/foo');
+		$file = $page->files()->first();
+
+		// the title should be translated properly
+		$this->assertSame($title, $file->title()->value());
+
+		// the uuid should have been created
+		$this->assertSame(16, strlen($file->uuid()->id()));
+
+		// the uuid must match between languages
+		$this->assertTrue($file->content('en')->get('uuid')->value() === $file->content('de')->get('uuid')->value());
+
+		// the translation for the default language must be updated
+		$this->assertSame($file->translation('en')->content()['uuid'], $file->uuid()->id());
+
+		// the translation for the secondary language must inherit the UUID
+		$this->assertSame($file->translation('de')->content()['uuid'], $file->uuid()->id());
+
+		// the uuid must be stored in the primary language file
+		$this->assertSame($file->readContent('en')['uuid'], $file->uuid()->id());
+
+		// the secondary language must not have the uuid in the content file
+		$this->assertNull($file->readContent('de')['uuid'] ?? null);
 	}
 }

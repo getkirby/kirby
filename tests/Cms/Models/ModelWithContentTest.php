@@ -123,6 +123,98 @@ class ModelWithContentTest extends TestCase
 		];
 	}
 
+	public function testContentForInvalidTranslation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectExceptionMessage('Invalid language: fr');
+
+		$app->page('foo')->content('fr');
+	}
+
+	public function testContentUpdate()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		// update the content of the current language
+		$this->assertNull($page->content()->get('title')->value());
+		$page->content()->update(['title' => 'Test']);
+		$this->assertSame('Test', $page->content()->get('title')->value());
+	}
+
+	public function testContentUpdateWithMultipleLanguages()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		// update the content of the current language
+		$this->assertNull($page->content()->get('title')->value());
+		$page->content()->update(['title' => 'Test']);
+		$this->assertSame('Test', $page->content()->get('title')->value());
+	}
+
+
 	public function testContentLock()
 	{
 		$model = new ExtendedModelWithContent();
@@ -257,6 +349,65 @@ class ModelWithContentTest extends TestCase
 
 		$model = new Page(['slug' => 'foo']);
 		$this->assertSame('foo', $model->toString());
+	}
+
+	public function testTranslation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title' => 'English Title'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title' => 'Deutscher Titel'
+								]
+							]
+						]
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$app->setCurrentLanguage('de');
+
+		$en = $app->page('foo')->translation('en');
+		$this->assertSame('English Title', $en->content()['title']);
+
+		$de = $app->page('foo')->translation('de');
+		$this->assertSame('Deutscher Titel', $de->content()['title']);
+
+		$default = $app->page('foo')->translation('default');
+		$this->assertSame('English Title', $default->content()['title']);
+
+		$current = $app->page('foo')->translation();
+		$this->assertSame('Deutscher Titel', $current->content()['title']);
+
+		$fr = $app->page('foo')->translation('fr');
+		$this->assertNull($fr);
 	}
 
 	public function testUuid()

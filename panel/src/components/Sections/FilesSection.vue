@@ -51,7 +51,6 @@ export default {
 		}
 	},
 	created() {
-		this.load();
 		this.$events.$on("model.update", this.reload);
 		this.$events.$on("file.sort", this.reload);
 	},
