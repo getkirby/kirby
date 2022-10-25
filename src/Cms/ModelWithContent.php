@@ -104,11 +104,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 		}
 
-		// check if the language is the default language
-		$languageIsDefault = $language->isDefault();
-
-		// only fetch from cache for the default language
-		if ($languageIsDefault === true && $this->content instanceof Content) {
+		// only fetch from cache for the current language
+		if ($languageCode === null && $this->content instanceof Content) {
 			return $this->content;
 		}
 
@@ -118,8 +115,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 		// don't normalize field keys (already handled by the `ContentTranslation` class)
 		$content = new Content($translation->content(), $this, false);
 
-		// only store the content for the default language
-		if ($languageIsDefault === true) {
+		// only store the content for the current language
+		if ($languageCode === null) {
 			$this->content = $content;
 		}
 
