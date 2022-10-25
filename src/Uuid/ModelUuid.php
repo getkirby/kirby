@@ -60,22 +60,11 @@ abstract class ModelUuid extends Uuid
 			return $id;
 		}
 
-		// generate ID and write to content file
+		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
-		// make sure Kirby has the required permissions
-		// for the update action
-		$kirby = App::instance();
-		$user  = $kirby->auth()->currentUserFromImpersonation();
-		$kirby->impersonate('kirby');
-		$this->model = $this->model->save(['uuid' => $id]);
-		$kirby->impersonate($user);
-
-		// TODO: replace the above in 3.9.0 with
-		// App::instance()->impersonate(
-		// 	'kirby',
-		// 	fn () => $this->model = $this->model->save(['uuid' => $id])
-		// );
+		// store the new UUID
+		$this->storeId($id);
 
 		// update the Uri object
 		$this->uri->host($id);
@@ -91,7 +80,45 @@ abstract class ModelUuid extends Uuid
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{
-		return $model->content()->get('uuid')->value();
+		return $model->content('default')->get('uuid')->value();
+	}
+
+	/**
+	 * Stores the UUID for the model and makes sure
+	 * to update the content file and content object cache
+	 */
+	protected function storeId(string $id): void
+	{
+		// get the content array from the page
+		$data = $this->model->content('default')->toArray();
+
+		// check for an empty content array
+		// and read content from file again,
+		// just to be sure we don't lose content
+		if (empty($data) === true) {
+			usleep(1000);
+			$data = $this->model->readContent('default');
+		}
+
+		// add the UUID to the content array
+		if (empty($data['uuid']) === true) {
+			$data['uuid'] = $id;
+		}
+
+		// overwrite the content in memory for the current request
+		if ($this->model->kirby()->multilang() === true) {
+			// update the default translation instead of the content object
+			// (the default content object is always freshly loaded from the
+			// default translation afterwards, so updating the default
+			// content object would not have any effect)
+			$this->model->translation('default')->update($data);
+		} else {
+			$this->model->content('default')->update($data);
+		}
+
+		// overwrite the content in the file;
+		// use the most basic write method to avoid object cloning
+		$this->model->writeContent($data, 'default');
 	}
 
 	/**

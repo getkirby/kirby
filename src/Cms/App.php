@@ -925,14 +925,14 @@ class App
 		}
 
 		if ($code === 'default') {
-			return $this->languages()->default();
+			return $this->defaultLanguage();
 		}
 
 		if ($code !== null) {
 			return $this->languages()->find($code);
 		}
 
-		return $this->language = $this->language ?? $this->languages()->default();
+		return $this->language = $this->language ?? $this->defaultLanguage();
 	}
 
 	/**

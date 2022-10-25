@@ -9,6 +9,7 @@ use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
 use Throwable;
 
 /**
@@ -93,32 +94,33 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 			// don't normalize field keys (already handled by the `Data` class)
 			return $this->content = new Content($this->readContent(), $this, false);
-
-		// multi language support
-		} else {
-			// only fetch from cache for the default language
-			if (
-				$languageCode === null &&
-				$this->content instanceof Content
-			) {
-				return $this->content;
-			}
-
-			// get the translation by code
-			if ($translation = $this->translation($languageCode)) {
-				// don't normalize field keys (already handled by the `ContentTranslation` class)
-				$content = new Content($translation->content(), $this, false);
-			} else {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			// only store the content for the current language
-			if ($languageCode === null) {
-				$this->content = $content;
-			}
-
-			return $content;
 		}
+
+		// get the targeted language
+		$language = $this->kirby()->language($languageCode);
+
+		// stop if the language does not exist
+		if ($language === null) {
+			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+		}
+
+		// only fetch from cache for the current language
+		if ($languageCode === null && $this->content instanceof Content) {
+			return $this->content;
+		}
+
+		// get the translation by code
+		$translation = $this->translation($language->code());
+
+		// don't normalize field keys (already handled by the `ContentTranslation` class)
+		$content = new Content($translation->content(), $this, false);
+
+		// only store the content for the current language
+		if ($languageCode === null) {
+			$this->content = $content;
+		}
+
+		return $content;
 	}
 
 	/**
@@ -375,11 +377,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function readContent(string $languageCode = null): array
 	{
-		try {
-			return Data::read($this->contentFile($languageCode));
-		} catch (Throwable) {
+		$file = $this->contentFile($languageCode);
+
+		// only if the content file really does not exist, it's ok
+		// to return empty content. Otherwise this could lead to
+		// content loss in case of file reading issues
+		if (file_exists($file) === false) {
 			return [];
 		}
+
+		return Data::read($file);
 	}
 
 	/**
@@ -460,6 +467,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 				if (($field['translate'] ?? true) === false) {
 					$content[strtolower($field['name'])] = null;
 				}
+			}
+
+			// remove UUID for non-default languages
+			if (Uuids::enabled() === true && isset($content['uuid']) === true) {
+				$content['uuid'] = null;
 			}
 
 			// merge the translation with the new data
@@ -567,7 +579,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function translation(string $languageCode = null)
 	{
-		return $this->translations()->find($languageCode ?? $this->kirby()->language()->code());
+		if ($language = $this->kirby()->language($languageCode)) {
+			return $this->translations()->find($language->code());
+		}
+
+		return null;
 	}
 
 	/**

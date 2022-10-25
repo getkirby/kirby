@@ -29,7 +29,7 @@
 	"days.tue": "Ti",
 	"days.wed": "Ke",
 
-	"debugging": "Debugging",
+	"debugging": "Virheenkäsittelytila",
 
 	"delete": "Poista",
 	"delete.all": "Poista kaikki",
@@ -162,7 +162,7 @@
 
 	"error.template.default.notFound": "Oletussivupohjaa ei ole määritetty",
 
-	"error.unexpected": "An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug",
+	"error.unexpected": "Pahus, määrittelemätön virhe! Laita virheenkäsittelytila päälle saadaksesi lisätietoja: https://getkirby.com/docs/reference/system/options/debug",
 
 	"error.user.changeEmail.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" sähköpostiosoitetta",
 	"error.user.changeLanguage.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" kieltä",
@@ -493,14 +493,14 @@
 	"sort": "Järjestele",
 
 	"stats.empty": "Ei raportteja",
-	"system.issues.content": "The content folder seems to be exposed",
+	"system.issues.content": "Content-kansio näyttäisi olevan julkinen",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
-	"system.issues.debug": "Debugging must be turned off in production",
-	"system.issues.git": "The .git folder seems to be exposed",
+	"system.issues.debug": "Virheenkäsittelytila pitää poistaa käytöstä tuotantoympäristössä",
+	"system.issues.git": ".git-kansio näyttäisi olevan julkinen",
 	"system.issues.https": "Suosittelemme HTTPS:n käyttöä kaikilla sivustoillasi",
-	"system.issues.kirby": "The kirby folder seems to be exposed",
-	"system.issues.site": "The site folder seems to be exposed",
+	"system.issues.kirby": "Kirby-kansio näyttäisi olevan julkinen",
+	"system.issues.site": "Site-kansio näyttäisi olevan julkinen",
 	"system.issues.vulnerability.kirby": "Asennuksesi voi olla altis seuraaville haavoittuvuuksille ({ severity } vakavuus): { description }",
 	"system.issues.vulnerability.plugin": "Asennuksesi käyttämä liitännäinen { plugin } voi olla altis haavoittuvuudelle ({ severity } vakavuus): { description }",
 	"system.updateStatus": "Päivitysten tilanne",
