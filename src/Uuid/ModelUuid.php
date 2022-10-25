@@ -92,14 +92,8 @@ abstract class ModelUuid extends Uuid
 	 */
 	public static function storeId(Identifiable $model, string $id): Identifiable
 	{
-		// make sure Kirby has the required permissions
-		// for the update action
-		$kirby = $model->kirby();
-		$user  = $kirby->auth()->currentUserFromImpersonation();
-		$kirby->impersonate('kirby');
-
 		// get the content array from the page
-		$data = $model->readContent('default');
+		$data = $model->content('default')->toArray();
 
 		// check for an empty content array
 		// and read content from file again,
@@ -114,24 +108,16 @@ abstract class ModelUuid extends Uuid
 			$data['uuid'] = $id;
 		}
 
-		// overwrite the content in memory and in the content file;
-		// use the most basic write method to avoid object cloning
+		// overwrite the content in memory and in the content file
 		$model->content('default')->update($data);
+
+		// use the most basic write method to avoid object cloning
 		$model->writeContent($data, 'default');
 
 		// update the default translation
-		if ($kirby->multilang() === true) {
+		if ($model->kirby()->multilang() === true) {
 			$model->translation('default')->update($data);
 		}
-
-		// switch back to the original user
-		$kirby->impersonate($user);
-
-		// TODO: replace the above in 3.9.0 with
-		// App::instance()->impersonate(
-		// 	'kirby',
-		// 	fn () => $model->writeContent($data, $languageCode)
-		// );
 
 		return $model;
 	}
