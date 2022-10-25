@@ -156,6 +156,65 @@ class ModelWithContentTest extends TestCase
 		$app->page('foo')->content('fr');
 	}
 
+	public function testContentUpdate()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		// update the content of the current language
+		$this->assertNull($page->content()->get('title')->value());
+		$page->content()->update(['title' => 'Test']);
+		$this->assertSame('Test', $page->content()->get('title')->value());
+	}
+
+	public function testContentUpdateWithMultipleLanguages()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$page = $app->page('foo');
+
+		// update the content of the current language
+		$this->assertNull($page->content()->get('title')->value());
+		$page->content()->update(['title' => 'Test']);
+		$this->assertSame('Test', $page->content()->get('title')->value());
+	}
+
+
 	public function testContentLock()
 	{
 		$model = new ExtendedModelWithContent();
