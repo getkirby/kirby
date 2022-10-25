@@ -292,6 +292,65 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('foo', $model->toString());
 	}
 
+	public function testTranslation()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title' => 'English Title'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title' => 'Deutscher Titel'
+								]
+							]
+						]
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
+
+		$app->setCurrentLanguage('de');
+
+		$en = $app->page('foo')->translation('en');
+		$this->assertSame('English Title', $en->content()['title']);
+
+		$de = $app->page('foo')->translation('de');
+		$this->assertSame('Deutscher Titel', $de->content()['title']);
+
+		$default = $app->page('foo')->translation('default');
+		$this->assertSame('English Title', $default->content()['title']);
+
+		$current = $app->page('foo')->translation();
+		$this->assertSame('Deutscher Titel', $current->content()['title']);
+
+		$fr = $app->page('foo')->translation('fr');
+		$this->assertNull($fr);
+	}
+
 	public function testUuid()
 	{
 		$model = new Site();
