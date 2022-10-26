@@ -106,12 +106,11 @@ class Api extends BaseApi
 	/**
 	 * Returns the page object for the given id
 	 *
-	 * @param string $id Page's id
 	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
 	 */
-	public function page(string $id): Page|null
+	public function page(string $id, bool $decode = true): Page|null
 	{
-		return Find::page($id);
+		return Find::page($id, $decode);
 	}
 
 	/**

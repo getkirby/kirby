@@ -55,6 +55,11 @@ export default (api) => {
 			return page;
 		},
 		id(id) {
+			// UUID
+			if (id.includes("://") === true) {
+				return "@/" + id.substring(id.indexOf("://") + 3);
+			}
+
 			return id.replace(/\//g, "+");
 		},
 		async files(id, query) {

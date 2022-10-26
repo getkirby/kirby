@@ -5,7 +5,15 @@
  * Page Routes
  */
 return [
-
+	[
+		'pattern' => 'pages/@/(:any)',
+		'method'  => 'GET',
+		'action'  => function (string $id) {
+			// make sure not to decode ID again (replace + with /)
+			// as UUID strings can legitimately contain +
+			return $this->page('page://' . $id, false);
+		}
+	],
 	[
 		'pattern' => 'pages/(:any)',
 		'method'  => 'GET',

@@ -69,13 +69,16 @@ class Find
 	/**
 	 * Returns the page object for the given id
 	 *
-	 * @param string $id Page's id
 	 * @return \Kirby\Cms\Page|null
 	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
 	 */
-	public static function page(string $id)
+	public static function page(string $id, bool $decode = true)
 	{
-		$id   = str_replace(['+', ' '], '/', $id);
+		// add slashes back into path (were replaced with + in frontend)
+		if ($decode === true) {
+			$id = str_replace(['+', ' '], '/', $id);
+		}
+
 		$page = App::instance()->page($id);
 
 		if ($page?->isReadable() === true) {
