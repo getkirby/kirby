@@ -35,11 +35,10 @@ class Options extends Collection
 				is_array($option) === false ||
 				array_key_exists('value', $option) === false
 			) {
-				if (is_string($key) === true) {
-					$option = ['value' => $key, 'text' => $option];
-				} else {
-					$option = ['value' => $option];
-				}
+				$option = match (true) {
+					is_string($key) => ['value' => $key, 'text' => $option],
+					default         => ['value' => $option]
+				};
 			}
 
 			$option = Option::factory($option);

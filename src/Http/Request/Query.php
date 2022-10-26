@@ -33,7 +33,7 @@ class Query
 	{
 		if ($data === null) {
 			$this->data = $_GET;
-		} elseif (is_array($data)) {
+		} elseif (is_array($data) === true) {
 			$this->data = $data;
 		} else {
 			parse_str($data, $parsed);

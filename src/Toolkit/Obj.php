@@ -101,7 +101,10 @@ class Obj extends stdClass
 		$result = [];
 
 		foreach ((array)$this as $key => $value) {
-			if (is_object($value) === true && method_exists($value, 'toArray')) {
+			if (
+				is_object($value) === true &&
+				method_exists($value, 'toArray')
+			) {
 				$result[$key] = $value->toArray();
 			} else {
 				$result[$key] = $value;

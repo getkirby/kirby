@@ -119,19 +119,15 @@ class FileBlueprint extends Blueprint
 	 */
 	protected function normalizeAccept($accept = null): array
 	{
-		if (is_string($accept) === true) {
-			$accept = [
-				'mime' => $accept
-			];
-		} elseif ($accept === true) {
+		$accept = match (true) {
+			is_string($accept) 		=> ['mime' => $accept],
 			// explicitly no restrictions at all
-			$accept = [
-				'mime' => null
-			];
-		} elseif (empty($accept) === true) {
+			$accept === true 		=> ['mime' => null],
 			// no custom restrictions
-			$accept = [];
-		}
+			empty($accept) === true => [],
+			// custom restrictions
+			default 				=> $accept
+		};
 
 		$accept = array_change_key_case($accept);
 

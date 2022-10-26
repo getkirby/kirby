@@ -138,7 +138,10 @@ abstract class Model
 					default    => [38, 76]
 				};
 
-				if (($settings['cover'] ?? false) === false || $layout === 'cards') {
+				if (
+					($settings['cover'] ?? false) === false ||
+					$layout === 'cards'
+				) {
 					$settings['srcset'] = $image->srcset($sizes);
 				} else {
 					$settings['srcset'] = $image->srcset([

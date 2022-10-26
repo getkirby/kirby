@@ -522,13 +522,10 @@ class Panel
 	{
 		$kirby = App::instance();
 
-		if ($user = $kirby->user()) {
-			// use the user language for the default translation
-			$translation = $user->language();
-		} else {
-			// fall back to the language from the config
-			$translation = $kirby->panelLanguage();
-		}
+		// use the user language for the default translation or
+		// fall back to the language from the config
+		$translation = $kirby->user()?->language() ??
+						$kirby->panelLanguage();
 
 		$kirby->setCurrentTranslation($translation);
 

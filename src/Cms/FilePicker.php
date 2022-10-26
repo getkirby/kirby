@@ -41,13 +41,14 @@ class FilePicker extends Picker
 		$model = $this->options['model'];
 
 		// find the right default query
-		if (empty($this->options['query']) === false) {
-			$query = $this->options['query'];
-		} elseif ($model instanceof File) {
-			$query = 'file.siblings';
-		} else {
-			$query = $model::CLASS_ALIAS . '.files';
-		}
+		$query = match (true) {
+			empty($this->options['query']) === false
+				=> $this->options['query'],
+			$model instanceof File
+				=> 'file.siblings',
+			default
+			=> $model::CLASS_ALIAS . '.files'
+		};
 
 		// fetch all files for the picker
 		$files = $model->query($query);

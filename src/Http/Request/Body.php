@@ -46,15 +46,11 @@ class Body
 	 */
 	public function contents(): string|array
 	{
-		if ($this->contents === null) {
-			if (empty($_POST) === false) {
-				$this->contents = $_POST;
-			} else {
-				$this->contents = file_get_contents('php://input');
-			}
+		if (empty($_POST) === false) {
+			return $this->contents ??= $_POST;
 		}
 
-		return $this->contents;
+		return $this->contents ??= file_get_contents('php://input');
 	}
 
 	/**

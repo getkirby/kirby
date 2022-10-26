@@ -1603,7 +1603,9 @@ class App
 
 		if ($options === false) {
 			return $text;
-		} elseif (is_array($options) === false) {
+		}
+
+		if (is_array($options) === false) {
 			$options = [];
 		}
 

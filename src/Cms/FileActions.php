@@ -120,13 +120,12 @@ trait FileActions
 
 		$result = $callback(...$argumentValues);
 
-		if ($action === 'create') {
-			$argumentsAfter = ['file' => $result];
-		} elseif ($action === 'delete') {
-			$argumentsAfter = ['status' => $result, 'file' => $old];
-		} else {
-			$argumentsAfter = ['newFile' => $result, 'oldFile' => $old];
-		}
+		$argumentsAfter = match ($action) {
+			'create' => ['file' => $result],
+			'delete' => ['status' => $result, 'file' => $old],
+			default  => ['newFile' => $result, 'oldFile' => $old]
+		};
+
 		$kirby->trigger('file.' . $action . ':after', $argumentsAfter);
 
 		$kirby->cache('pages')->flush();

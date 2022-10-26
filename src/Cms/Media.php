@@ -97,16 +97,17 @@ class Media
 	{
 		$kirby = App::instance();
 
-		// assets
-		if (is_string($model) === true) {
-			$root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
-		// parent files for file model that already included hash
-		} elseif ($model instanceof File) {
-			$root = dirname($model->mediaRoot());
-		// model files
-		} else {
-			$root = $model->mediaRoot() . '/' . $hash;
-		}
+		$root = match (true) {
+			// assets
+			is_string($model)
+				=> $kirby->root('media') . '/assets/' . $model . '/' . $hash,
+			// parent files for file model that already included hash
+			$model instanceof File
+				=> dirname($model->mediaRoot()),
+			// model files
+			default
+			=> $model->mediaRoot() . '/' . $hash
+		};
 
 		try {
 			$thumb   = $root . '/' . $filename;
@@ -117,11 +118,12 @@ class Media
 				return false;
 			}
 
-			if (is_string($model) === true) {
-				$source = $kirby->root('index') . '/' . $model . '/' . $options['filename'];
-			} else {
-				$source = $model->file($options['filename'])->root();
-			}
+			$source = match (true) {
+				is_string($model) === true
+					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
+				default
+				=> $model->file($options['filename'])->root()
+			};
 
 			try {
 				$kirby->thumb($source, $thumb, $options);
