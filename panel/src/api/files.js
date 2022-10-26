@@ -9,7 +9,22 @@ export default (api) => {
 			return api.delete(parent + "/files/" + filename);
 		},
 		async get(parent, filename, query) {
-			let file = await api.get(parent + "/files/" + filename, query);
+			let file;
+
+			if (parent.includes("://") === true) {
+				// UUID: $api.files.get("file://hbjkh324k234", { query })
+				if (!query && filename) {
+					query = filename;
+				}
+
+				file = await api.get(
+					"files/@/" + parent.substring(parent.indexOf("://") + 3),
+					query
+				);
+			} else {
+				// standard model ID + filename
+				file = await api.get(parent + "/files/" + filename, query);
+			}
 
 			if (Array.isArray(file.content) === true) {
 				file.content = {};

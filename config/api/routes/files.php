@@ -7,7 +7,13 @@ $pattern = '(account|pages/[^/]+|site|users/[^/]+)';
  * Files Routes
  */
 return [
-
+	[
+		'pattern' => 'files/@/(:any)',
+		'method'  => 'GET',
+		'action'  => function (string $id) {
+			return $this->file('file://' . $id, false);
+		}
+	],
 	[
 		'pattern' => $pattern . '/files/(:any)/sections/(:any)',
 		'method'  => 'GET',
