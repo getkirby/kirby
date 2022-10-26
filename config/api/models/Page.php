@@ -38,7 +38,7 @@ return [
 		'template' => fn (Page $page) => $page->intendedTemplate()->name(),
 		'title'    => fn (Page $page) => $page->title()->value(),
 		'url'      => fn (Page $page) => $page->url(),
-		'uuid'     => fn (Page $page) => $page->uuid()?->toString() ?? $page->id()
+		'uuid'     => fn (Page $page) => $page->uuid()?->toString()
 	],
 	'type' => 'Kirby\Cms\Page',
 	'views' => [

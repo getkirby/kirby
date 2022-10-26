@@ -57,7 +57,7 @@ return [
 		},
 		'type'       => fn (File $file) => $file->type(),
 		'url'        => fn (File $file) => $file->url(),
-		'uuid'       => fn (File $file) => $file->uuid()?->toString() ?? $file->id()
+		'uuid'       => fn (File $file) => $file->uuid()?->toString()
 	],
 	'type'  => 'Kirby\Cms\File',
 	'views' => [

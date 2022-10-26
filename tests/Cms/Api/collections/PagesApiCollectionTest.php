@@ -2,22 +2,10 @@
 
 namespace Kirby\Cms;
 
-class PagesApiCollectionTest extends TestCase
+use Kirby\Cms\Api\ApiCollectionTestCase;
+
+class PagesApiCollectionTest extends ApiCollectionTestCase
 {
-	protected $api;
-	protected $app;
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-		]);
-
-		$this->api = $this->app->api();
-	}
-
 	public function testCollection()
 	{
 		$collection = $this->api->collection('pages', new Pages([

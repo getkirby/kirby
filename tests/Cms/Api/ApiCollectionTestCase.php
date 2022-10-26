@@ -6,7 +6,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\TestCase as TestCase;
 use Kirby\Filesystem\Dir;
 
-class ApiModelTestCase extends TestCase
+class ApiCollectionTestCase extends TestCase
 {
 	protected $api;
 	protected $app;
@@ -27,15 +27,5 @@ class ApiModelTestCase extends TestCase
 	public function tearDown(): void
 	{
 		Dir::remove($this->tmp);
-	}
-
-	public function attr($object, $attr)
-	{
-		return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-	}
-
-	public function assertAttr($object, $attr, $value)
-	{
-		$this->assertEquals($this->attr($object, $attr), $value);
 	}
 }

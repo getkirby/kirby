@@ -2,16 +2,16 @@
 
 namespace Kirby\Cms;
 
-class LanguagesApiCollectionTest extends TestCase
-{
-	protected $api;
-	protected $app;
+use Kirby\Cms\Api\ApiCollectionTestCase;
+use Kirby\Filesystem\Dir;
 
+class LanguagesApiCollectionTest extends ApiCollectionTestCase
+{
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			],
 			'languages' => [
 				[
@@ -25,6 +25,7 @@ class LanguagesApiCollectionTest extends TestCase
 		]);
 
 		$this->api = $this->app->api();
+		Dir::make($this->tmp);
 	}
 
 	public function testCollection()
