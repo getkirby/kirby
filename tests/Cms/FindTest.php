@@ -2,18 +2,29 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+
 /**
  * @coversDefaultClass \Kirby\Cms\Find
  */
 class FindTest extends TestCase
 {
+	protected $tmp = __DIR__ . '/tmp';
+
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index' => $this->tmp
 			]
 		]);
+
+		Dir::make($this->tmp);
+	}
+
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
 	}
 
 	/**
@@ -82,6 +93,31 @@ class FindTest extends TestCase
 
 		$app->impersonate('kirby');
 		$this->assertEquals('test.jpg', Find::file('users/test@getkirby.com', 'test.jpg')->filename());
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFileForUUID(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => ['uuid' => 'my-file']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$this->assertEquals('a.jpg', Find::file('file://my-file')->filename());
 	}
 
 	/**
@@ -182,6 +218,27 @@ class FindTest extends TestCase
 
 		$this->assertEquals($a, Find::page('a'));
 		$this->assertEquals($aa, Find::page('a+aa'));
+	}
+
+	/**
+	 * @covers ::page
+	 */
+	public function testPageUUID()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => ['uuid' => 'my-page'],
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$a  = $app->page('a');
+		$this->assertEquals($a, Find::page('page://my-page'));
 	}
 
 	/**
