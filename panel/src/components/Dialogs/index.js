@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import Dialog from "./Dialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
 import FiberDialog from "./FiberDialog.vue";
@@ -11,13 +9,17 @@ import RemoveDialog from "./RemoveDialog.vue";
 import TextDialog from "./TextDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
 
-Vue.component("k-dialog", Dialog);
-Vue.component("k-error-dialog", ErrorDialog);
-Vue.component("k-fiber-dialog", FiberDialog);
-Vue.component("k-files-dialog", FilesDialog);
-Vue.component("k-form-dialog", FormDialog);
-Vue.component("k-language-dialog", LanguageDialog);
-Vue.component("k-pages-dialog", PagesDialog);
-Vue.component("k-remove-dialog", RemoveDialog);
-Vue.component("k-text-dialog", TextDialog);
-Vue.component("k-users-dialog", UsersDialog);
+export default {
+	install(app) {
+		app.component("k-dialog", Dialog);
+		app.component("k-error-dialog", ErrorDialog);
+		app.component("k-fiber-dialog", FiberDialog);
+		app.component("k-files-dialog", FilesDialog);
+		app.component("k-form-dialog", FormDialog);
+		app.component("k-language-dialog", LanguageDialog);
+		app.component("k-pages-dialog", PagesDialog);
+		app.component("k-remove-dialog", RemoveDialog);
+		app.component("k-text-dialog", TextDialog);
+		app.component("k-users-dialog", UsersDialog);
+	}
+};
