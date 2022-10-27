@@ -165,8 +165,8 @@ class Query
 
 			// the args are everything inside the *outer* parentheses
 			$args = Str::substr($part, Str::position($part, '(') + 1, -1);
-			$args = preg_split(self::PARAMETERS, $args);
-			$args = array_map('self::parameter', $args);
+			$args = preg_split(static::PARAMETERS, $args);
+			$args = array_map([$this, 'parameter'], $args);
 
 			return compact('method', 'args');
 		}
@@ -217,7 +217,7 @@ class Query
 		if (substr($arg, 0, 1) === '[' && substr($arg, -1) === ']') {
 			$arg = substr($arg, 1, -1);
 			$arg = preg_split(self::PARAMETERS, $arg);
-			return array_map('self::parameter', $arg);
+			return array_map([$this, 'parameter'], $arg);
 		}
 
 		// resolve parameter for objects and methods itself
