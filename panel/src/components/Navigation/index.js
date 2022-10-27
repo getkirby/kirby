@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import Breadcrumb from "./Breadcrumb.vue";
 import Button from "./Button.vue";
 import ButtonDisabled from "./ButtonDisabled.vue";
@@ -18,20 +16,24 @@ import Search from "./Search.vue";
 import Tag from "./Tag.vue";
 import Topbar from "./Topbar.vue";
 
-Vue.component("k-breadcrumb", Breadcrumb);
-Vue.component("k-button", Button);
-Vue.component("k-button-disabled", ButtonDisabled);
-Vue.component("k-button-group", ButtonGroup);
-Vue.component("k-button-link", ButtonLink);
-Vue.component("k-button-native", ButtonNative);
-Vue.component("k-dropdown", Dropdown);
-Vue.component("k-dropdown-content", DropdownContent);
-Vue.component("k-dropdown-item", DropdownItem);
-Vue.component("k-languages-dropdown", Languages);
-Vue.component("k-link", Link);
-Vue.component("k-options-dropdown", OptionsDropdown);
-Vue.component("k-pagination", Pagination);
-Vue.component("k-prev-next", PrevNext);
-Vue.component("k-search", Search);
-Vue.component("k-tag", Tag);
-Vue.component("k-topbar", Topbar);
+export default {
+	install(app) {
+		app.component("k-breadcrumb", Breadcrumb);
+		app.component("k-button", Button);
+		app.component("k-button-disabled", ButtonDisabled);
+		app.component("k-button-group", ButtonGroup);
+		app.component("k-button-link", ButtonLink);
+		app.component("k-button-native", ButtonNative);
+		app.component("k-dropdown", Dropdown);
+		app.component("k-dropdown-content", DropdownContent);
+		app.component("k-dropdown-item", DropdownItem);
+		app.component("k-languages-dropdown", Languages);
+		app.component("k-link", Link);
+		app.component("k-options-dropdown", OptionsDropdown);
+		app.component("k-pagination", Pagination);
+		app.component("k-prev-next", PrevNext);
+		app.component("k-search", Search);
+		app.component("k-tag", Tag);
+		app.component("k-topbar", Topbar);
+	}
+};

@@ -27,7 +27,8 @@ import "./styles/reset.css";
 import "./styles/animations.css";
 
 // Load components
-import "./config/components.js";
+import Components from "./components/index.js";
+Vue.use(Components);
 
 // Load utilities after components
 // to increase specificity
