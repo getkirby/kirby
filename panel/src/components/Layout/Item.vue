@@ -1,7 +1,7 @@
 <template>
 	<article
-		:class="layout ? 'k-' + layout + '-item' : false"
 		v-bind="data"
+		:class="layout ? 'k-' + layout + '-item' : false"
 		:data-has-figure="hasFigure"
 		:data-has-flag="Boolean(flag)"
 		:data-has-info="Boolean(info)"

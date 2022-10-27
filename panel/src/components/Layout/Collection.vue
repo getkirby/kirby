@@ -20,8 +20,8 @@
 
 		<k-empty
 			v-else
-			:layout="layout"
 			v-bind="empty"
+			:layout="layout"
 			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
 		/>
 
