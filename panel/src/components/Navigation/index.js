@@ -1,0 +1,37 @@
+import Vue from "vue";
+
+import Breadcrumb from "./Breadcrumb.vue";
+import Button from "./Button.vue";
+import ButtonDisabled from "./ButtonDisabled.vue";
+import ButtonGroup from "./ButtonGroup.vue";
+import ButtonLink from "./ButtonLink.vue";
+import ButtonNative from "./ButtonNative.vue";
+import Dropdown from "./Dropdown.vue";
+import DropdownContent from "./DropdownContent.vue";
+import DropdownItem from "./DropdownItem.vue";
+import Link from "./Link.vue";
+import Languages from "./Languages.vue";
+import OptionsDropdown from "./OptionsDropdown.vue";
+import Pagination from "./Pagination.vue";
+import PrevNext from "./PrevNext.vue";
+import Search from "./Search.vue";
+import Tag from "./Tag.vue";
+import Topbar from "./Topbar.vue";
+
+Vue.component("k-breadcrumb", Breadcrumb);
+Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
+Vue.component("k-button-group", ButtonGroup);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
+Vue.component("k-dropdown", Dropdown);
+Vue.component("k-dropdown-content", DropdownContent);
+Vue.component("k-dropdown-item", DropdownItem);
+Vue.component("k-languages-dropdown", Languages);
+Vue.component("k-link", Link);
+Vue.component("k-options-dropdown", OptionsDropdown);
+Vue.component("k-pagination", Pagination);
+Vue.component("k-prev-next", PrevNext);
+Vue.component("k-search", Search);
+Vue.component("k-tag", Tag);
+Vue.component("k-topbar", Topbar);
