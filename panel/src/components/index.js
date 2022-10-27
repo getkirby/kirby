@@ -9,6 +9,9 @@ import Views from "@/components/Views/index.js";
 import Blocks from "@/components/Forms/Blocks/index.js";
 import Previews from "@/components/Forms/Previews/index.js";
 
+// 3rd party libraries
+import Portal from "@linusborg/vue-simple-portal";
+
 export default {
 	install(app) {
 		app.use(Dialogs);
@@ -21,5 +24,7 @@ export default {
 		app.use(Views);
 		app.use(Blocks);
 		app.use(Previews);
+
+		app.use(Portal);
 	}
 };
