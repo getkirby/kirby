@@ -928,11 +928,15 @@ class App
 			return $this->defaultLanguage();
 		}
 
+		// if requesting a non-default language,
+		// find it but don't cache it
 		if ($code !== null) {
 			return $this->languages()->find($code);
 		}
 
-		return $this->language = $this->language ?? $this->defaultLanguage();
+		// otherwise return language set by `AppTranslation::setCurrentLanguage`
+		// or default language
+		return $this->language ??= $this->defaultLanguage();
 	}
 
 	/**
