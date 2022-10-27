@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { set } from "vue";
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
@@ -106,7 +107,7 @@ export default {
 			this.open();
 		},
 		onCellInput(name, value) {
-			this.$set(this.object, name, value);
+			set(this.object, name, value);
 			this.$emit("input", this.object);
 		},
 		onDrawerInput(value) {

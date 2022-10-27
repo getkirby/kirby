@@ -1,3 +1,4 @@
+import { set } from "vue";
 import debounce from "@/helpers/debounce.js";
 
 export default {
@@ -102,9 +103,7 @@ export default {
 			this.selected = {};
 
 			this.options.selected.forEach((id) => {
-				this.$set(this.selected, id, {
-					id: id
-				});
+				set(this.selected, id, { id: id });
 			});
 
 			if (fetch) {
@@ -145,7 +144,7 @@ export default {
 				return;
 			}
 
-			this.$set(this.selected, item.id, item);
+			set(this.selected, item.id, item);
 		},
 		toggleBtn(item) {
 			const isSelected = this.isSelected(item);
