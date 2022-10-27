@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { set } from "vue";
 import Pasteboard from "./BlockPasteboard.vue";
 
 export default {
@@ -420,7 +421,7 @@ export default {
 			}
 		},
 		hide(block) {
-			this.$set(block, "isHidden", true);
+			set(block, "isHidden", true);
 			this.save();
 		},
 		isBatched(block) {
@@ -620,7 +621,7 @@ export default {
 			this.batch = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
-			this.$set(block, "isHidden", false);
+			set(block, "isHidden", false);
 			this.save();
 		},
 		sort(block, from, to) {
@@ -639,9 +640,9 @@ export default {
 		update(block, content) {
 			const index = this.findIndex(block.id);
 			if (index !== -1) {
-				Object.entries(content).forEach(([key, value]) => {
-					this.$set(this.blocks[index].content, key, value);
-				});
+				for (const key in content) {
+					set(this.blocks[index].content, key, content[key]);
+				}
 			}
 			this.save();
 		}

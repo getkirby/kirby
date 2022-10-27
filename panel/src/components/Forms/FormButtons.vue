@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import { set } from "vue";
+
 export default {
 	props: {
 		lock: [Boolean, Object]
@@ -169,7 +171,7 @@ export default {
 	methods: {
 		async check() {
 			const { lock } = await this.$api.get(...this.api);
-			this.$set(this.$view.props, "lock", lock);
+			set(this.$view.props, "lock", lock);
 		},
 		async onLock(lock = true) {
 			// writing lock
