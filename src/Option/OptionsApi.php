@@ -110,7 +110,7 @@ class OptionsApi extends OptionsProvider
 
 		// turn data into Nest so that it can be queried
 		$data = Nest::create($data);
-		$data = (new Query($this->query))->resolve($data);
+		$data = Query::factory($this->query)->resolve($data);
 
 		// create options by resolving text and value query strings
 		// for each item from the data
