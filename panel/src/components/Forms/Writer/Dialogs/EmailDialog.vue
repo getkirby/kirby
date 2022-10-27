@@ -1,10 +1,11 @@
 <template>
 	<k-form-dialog
 		ref="dialog"
-		v-model="email"
 		:fields="fields"
 		:submit-button="$t('confirm')"
+		:value="email"
 		size="medium"
+		@input="email = $event"
 		@close="$emit('close')"
 		@submit="submit"
 	/>

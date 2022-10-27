@@ -37,7 +37,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="toggle" name="toggle" type="toggle" />
+ * @example <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
  */
 export default {
 	mixins: [props],

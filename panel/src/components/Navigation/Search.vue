@@ -24,12 +24,12 @@
 				<!-- Input -->
 				<input
 					ref="input"
-					v-model="q"
 					:placeholder="$t('search') + ' …'"
 					:aria-label="$t('search')"
 					:autofocus="true"
+					:value="q"
 					type="text"
-					@input="hasResults = true"
+					@input="onInput"
 					@keydown.down.prevent="onDown"
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
@@ -142,6 +142,10 @@ export default {
 		},
 		onHover(e, icon, index) {
 			this.select(index);
+		},
+		onInput(q) {
+			this.q = q;
+			this.hasResults = true;
 		},
 		onTab() {
 			const item = this.items[this.selected];

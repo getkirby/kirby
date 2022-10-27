@@ -16,13 +16,16 @@
 							:is="'k-' + field.type + '-field'"
 							v-if="hasFieldType(field.type)"
 							:ref="fieldName"
-							v-model="value[fieldName]"
+							:disabled="disabled || field.disabled"
 							:form-data="value"
 							:name="fieldName"
 							:novalidate="novalidate"
-							:disabled="disabled || field.disabled"
+							:value="value[fieldName]"
 							v-bind="field"
-							@input="$emit('input', value, field, fieldName)"
+							@input="
+								value[fieldName] = $event;
+								$emit('input', value, field, fieldName);
+							"
 							@focus="$emit('focus', $event, field, fieldName)"
 							@invalid="
 								($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
@@ -43,7 +46,7 @@
 
 <script>
 /**
- * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and a v-model and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
+ * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
  */
 export default {
 	props: {

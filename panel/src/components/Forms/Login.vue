@@ -12,9 +12,10 @@
 
 			<k-fieldset
 				ref="fieldset"
-				v-model="user"
 				:novalidate="true"
 				:fields="fields"
+				:value="user"
+				@input="user = $event"
 			/>
 		</div>
 

@@ -17,7 +17,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="password" name="password" type="password" />
+ * @example <k-input :value="password" @input="password = $event" name="password" type="password" />
  */
 export default {
 	extends: TextInput,

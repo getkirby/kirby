@@ -2,9 +2,10 @@
 	<k-inside>
 		<k-view class="k-password-reset-view" align="center">
 			<k-form
-				v-model="values"
 				:fields="fields"
 				:submit-button="$t('change')"
+				:value="values"
+				@input="values = $event"
 				@submit="submit"
 			>
 				<template #header>

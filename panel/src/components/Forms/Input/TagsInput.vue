@@ -38,10 +38,10 @@
 					<input
 						:id="id"
 						ref="input"
-						v-model.trim="newTag"
 						:autofocus="autofocus"
 						:disabled="disabled || (max && tags.length >= max)"
 						:name="name"
+						:value="newTag?.trim()"
 						autocomplete="off"
 						type="text"
 						@input="onType($event.target.value)"

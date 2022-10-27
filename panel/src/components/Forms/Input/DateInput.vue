@@ -2,13 +2,13 @@
 	<input
 		:id="id"
 		ref="input"
-		v-model="formatted"
 		v-direction
 		:autofocus="autofocus"
 		:class="`k-text-input k-${type}-input`"
 		:disabled="disabled"
 		:placeholder="display"
 		:required="required"
+		:value="formatted"
 		autocomplete="off"
 		spellcheck="false"
 		type="text"
@@ -83,7 +83,7 @@ export const props = {
  * (altering value by arrow up/down, selecting of
  * input parts via tab key).
  *
- * @example <k-input v-model="date" type="date" name="date" />
+ * @example <k-input :value="date" @input="date = $event" type="date" name="date" />
  * @public
  */
 export default {
