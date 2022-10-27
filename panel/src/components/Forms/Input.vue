@@ -14,8 +14,8 @@
 				<component
 					:is="'k-' + type + '-input'"
 					ref="input"
-					:value="value"
 					v-bind="inputProps"
+					:value="value"
 					v-on="listeners"
 				/>
 			</slot>

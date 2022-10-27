@@ -1,9 +1,9 @@
 <template>
-	<k-field :input="_uid" :counter="false" v-bind="$props" class="k-list-field">
+	<k-field v-bind="$props" :input="_uid" :counter="false" class="k-list-field">
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			:marks="marks"
 			:value="value"
 			type="list"
