@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue, { h } from "vue";
 
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
@@ -42,12 +42,14 @@ Vue.use(Api, store);
 Vue.use(Portal);
 Vue.use(Vuelidate);
 
-new Vue({
+const app = new Vue({
 	store,
 	created() {
 		window.panel.$vue = window.panel.app = this;
 		window.panel.plugins.created.forEach((plugin) => plugin(this));
 		this.$store.dispatch("content/init");
 	},
-	render: (h) => h(App)
-}).$mount("#app");
+	render: () => h(App)
+});
+
+app.$mount("#app");
