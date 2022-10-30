@@ -1,4 +1,3 @@
-import store from "@/store/store.js";
 import section from "../mixins/section.js";
 
 export default {
@@ -17,7 +16,7 @@ export default {
 		)) {
 			// make sure component has something to show
 			if (!options.template && !options.render && !options.extends) {
-				store.dispatch(
+				window.panel.$store.dispatch(
 					"notification/error",
 					`Neither template or render method provided nor extending a component when loading plugin component "${name}". The component has not been registered.`
 				);

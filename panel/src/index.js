@@ -9,7 +9,7 @@ import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
 import Libraries from "./libraries/index.js";
 import Plugins from "./config/plugins.js";
-import store from "./store/store.js";
+import Stores from "./stores/index.js";
 
 import Portal from "@linusborg/vue-simple-portal";
 import Vuelidate from "vuelidate";
@@ -17,6 +17,7 @@ import Vuelidate from "vuelidate";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
+Vue.use(Stores);
 Vue.use(Errors);
 Vue.use(Helpers);
 Vue.use(Libraries);
@@ -37,13 +38,12 @@ Vue.use(Plugins);
 Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Fiber);
-Vue.use(Api, store);
+Vue.use(Api);
 
 Vue.use(Portal);
 Vue.use(Vuelidate);
 
 const app = new Vue({
-	store,
 	created() {
 		window.panel.$vue = window.panel.app = this;
 		window.panel.plugins.created.forEach((plugin) => plugin(this));
