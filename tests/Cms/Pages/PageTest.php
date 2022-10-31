@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use ReflectionMethod;
@@ -932,7 +933,7 @@ class PageTest extends TestCase
 		$this->assertSame('New Foo Title', $data['page']->title()->value());
 
 		// invalid test
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The returned variable "page" from the controller "bar" is not of the required type "Kirby\Cms\Page"');
 
 		$page = $app->page('bar');

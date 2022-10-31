@@ -38,7 +38,7 @@ class FieldTest extends TestCase
 			'test' => []
 		];
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Field requires a model');
 
 		$field = new Field('test');

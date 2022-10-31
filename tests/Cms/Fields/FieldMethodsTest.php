@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 
 class FieldMethodsTest extends TestCase
@@ -393,7 +394,7 @@ class FieldMethodsTest extends TestCase
 		$yaml  = Yaml::encode($data);
 		$field = $this->field($yaml, kirby()->page('files'));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid structure data for "test" field on parent "files"');
 
 		$field->toStructure();
@@ -847,7 +848,7 @@ class FieldMethodsTest extends TestCase
 		$json   = Json::encode($data);
 		$field  = new Field(kirby()->page('files'), 'test', $json);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
 
 		$field->toBlocks();

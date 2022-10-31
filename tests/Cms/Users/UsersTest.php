@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class UsersTest extends TestCase
 {
 	public function testAddUser()
@@ -88,7 +90,7 @@ class UsersTest extends TestCase
 
 	public function testAddInvalidObject()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Users or User object or an ID of an existing user to the Users collection');
 
 		$site  = new Site();

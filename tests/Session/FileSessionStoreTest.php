@@ -2,6 +2,9 @@
 
 namespace Kirby\Session;
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -62,7 +65,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testConstructorNotWritable()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.session.filestore.dirNotWritable');
 
 		Dir::make($this->root, true);
@@ -132,7 +135,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testLockNonExistingFile()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
 
 		$this->store->lock(1234567890, 'someotherid');
@@ -188,7 +191,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testGetNonExistingFile()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
 
 		$this->store->get(1234567890, 'someotherid');
@@ -202,7 +205,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testGetUnreadableFile()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.session.filestore.notOpened');
 
 		// session files need to have read and write permissions even for reading
@@ -235,7 +238,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testSetNonExistingFile()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
 
 		$this->store->set(1234567890, 'someotherid', 'some other data');
@@ -248,7 +251,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testSetWithoutLock()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.filestore.notLocked');
 
 		$this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
@@ -301,7 +304,7 @@ class FileSessionStoreTest extends TestCase
 	 */
 	public function testAccessAfterDestroy()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.filestore.notFound');
 
 		// make sure we get a handle

@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
+
 class PageRulesTest extends TestCase
 {
 	public function appWithAdmin()
@@ -33,7 +37,7 @@ class PageRulesTest extends TestCase
 
 	public function testInvalidChangeNum()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.num.invalid');
 
 		$page = new Page([
@@ -76,7 +80,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the URL appendix for "test"');
 
 		PageRules::changeSlug($page, 'test');
@@ -84,7 +88,7 @@ class PageRulesTest extends TestCase
 
 	public function testChangeSlugWithHomepage()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeSlug.permission');
 
 		$app = new App([
@@ -105,7 +109,7 @@ class PageRulesTest extends TestCase
 
 	public function testChangeSlugWithErrorPage()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeSlug.permission');
 
 		$app = new App([
@@ -145,7 +149,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The status for this page cannot be changed');
 
 		PageRules::{'changeStatusTo' . $status}($page, ...$args);
@@ -160,7 +164,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The status for this page cannot be changed');
 
 		PageRules::changeStatusToDraft($page);
@@ -168,7 +172,7 @@ class PageRulesTest extends TestCase
 
 	public function testChangeStatusInvalid()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.changeStatus.toDraft.invalid');
 
 		$app = new App([
@@ -253,7 +257,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the template for "test"');
 
 		PageRules::changeTemplate($page, 'test');
@@ -266,7 +270,7 @@ class PageRulesTest extends TestCase
 			'kirby' => $this->appWithAdmin(),
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.changeTitle.empty');
 
 		PageRules::changeTitle($page, '');
@@ -281,7 +285,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the title for "test"');
 
 		PageRules::changeTitle($page, 'test');
@@ -296,7 +300,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to create "test"');
 
 		PageRules::create($page);
@@ -311,7 +315,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
 
 		PageRules::create($page);
@@ -359,7 +363,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to update "test"');
 
 		PageRules::update($page, []);
@@ -384,7 +388,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to delete "test"');
 
 		PageRules::delete($page);
@@ -402,7 +406,7 @@ class PageRulesTest extends TestCase
 
 	public function testDeleteHomepage()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.delete.permission');
 
 		$app = new App([
@@ -423,7 +427,7 @@ class PageRulesTest extends TestCase
 
 	public function testDeleteErrorPage()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.page.delete.permission');
 
 		$app = new App([
@@ -444,7 +448,7 @@ class PageRulesTest extends TestCase
 
 	public function testDeleteWithChildren()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.page.delete.hasChildren');
 
 		$page = new Page([
@@ -506,7 +510,7 @@ class PageRulesTest extends TestCase
 		$page->method('slug')->willReturn('test');
 		$page->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to duplicate "test"');
 
 		PageRules::duplicate($page, 'something');
@@ -557,7 +561,7 @@ class PageRulesTest extends TestCase
 		$this->assertSame(273, strlen($page->slug()));
 
 		// invalid
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.maxlength');
 
 		$page = new Page([

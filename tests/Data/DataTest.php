@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
@@ -88,7 +89,7 @@ class DataTest extends TestCase
 	public function testDecodeInvalid1($handler)
 	{
 		// decode invalid integer value
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(1, $handler);
 	}
@@ -100,7 +101,7 @@ class DataTest extends TestCase
 	public function testDecodeInvalid2($handler)
 	{
 		// decode invalid object value
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(new \stdClass(), $handler);
 	}
@@ -112,7 +113,7 @@ class DataTest extends TestCase
 	public function testDecodeInvalid3($handler)
 	{
 		// decode invalid boolean value
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
 		Data::decode(true, $handler);
 	}

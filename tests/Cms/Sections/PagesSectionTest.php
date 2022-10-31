@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Model;
 use PHPUnit\Framework\TestCase;
@@ -116,7 +117,7 @@ class PagesSectionTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The parent is invalid. You must choose the site or a page as parent.');
 
 		new Section('pages', [

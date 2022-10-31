@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
 class EmailTest extends TestCase
@@ -56,7 +57,7 @@ class EmailTest extends TestCase
 
 	public function testInvalidPreset()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.email.preset.notFound');
 
 		$email = new Email('not-a-preset', []);
@@ -108,7 +109,7 @@ class EmailTest extends TestCase
 
 	public function testInvalidTemplate()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The email template "subscription" cannot be found');
 
 		$email = new Email([

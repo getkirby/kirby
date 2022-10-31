@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\Http\Route;
 use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase
@@ -86,7 +86,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The home page does not exist');
 
 		$app->call('/');
@@ -606,7 +606,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The home page does not exist');
 
 		$app->call('/');

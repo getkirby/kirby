@@ -9,7 +9,7 @@ class LayoutColumnTest extends TestCase
 	public function testConstruct()
 	{
 		$column = new LayoutColumn();
-		$this->assertInstanceOf('Kirby\Cms\Blocks', $column->blocks());
+		$this->assertInstanceOf(Blocks::class, $column->blocks());
 		$this->assertSame('1/1', $column->width());
 		$this->assertSame(12, $column->span());
 	}

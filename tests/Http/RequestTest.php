@@ -204,19 +204,19 @@ class RequestTest extends TestCase
 	public function testQuery()
 	{
 		$request = new Request();
-		$this->assertInstanceOf('Kirby\Http\Request\Query', $request->query());
+		$this->assertInstanceOf(Query::class, $request->query());
 	}
 
 	public function testBody()
 	{
 		$request = new Request();
-		$this->assertInstanceOf('Kirby\Http\Request\Body', $request->body());
+		$this->assertInstanceOf(Body::class, $request->body());
 	}
 
 	public function testFiles()
 	{
 		$request = new Request();
-		$this->assertInstanceOf('Kirby\Http\Request\Files', $request->files());
+		$this->assertInstanceOf(Files::class, $request->files());
 	}
 
 	public function testFile()

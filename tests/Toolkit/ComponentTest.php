@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class ComponentTest extends TestCase
 {
 	public function tearDown(): void
@@ -226,7 +228,7 @@ class ComponentTest extends TestCase
 
 	public function testInvalidType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined component type: test');
 
 		$component = new Component('test');

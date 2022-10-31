@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Cms\Field;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CanBeCounted implements \Countable
@@ -248,7 +249,7 @@ class VTest extends TestCase
 		$this->assertTrue(V::date('2344-12-31', '<=', '01.01.2345'));
 		$this->assertFalse(V::date('2345-01-02', '<=', '01.01.2345'));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
 
 		V::date('2345-01-01', '<>', '2345-01-01');

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,7 +26,7 @@ class FieldsetTest extends TestCase
 
 	public function testConstructWithMissingType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The fieldset type is missing');
 		$fieldset = new Fieldset();
 	}

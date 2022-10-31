@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
@@ -100,7 +101,7 @@ class PageTemplateTest extends TestCase
 
 	public function testRepresentationError()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The content representation cannot be found');
 
 		$page = $this->app->page('with-template');

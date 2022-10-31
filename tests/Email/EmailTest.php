@@ -2,6 +2,7 @@
 
 namespace Kirby\Email;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPMailer\PHPMailer\PHPMailer as Mailer;
 
 class EmailTest extends TestCase
@@ -211,7 +212,7 @@ class EmailTest extends TestCase
 			}
 		], PHPMailer::class);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
 		$this->assertSame($mail->beforeSend(), $beforeSend);
 		$this->assertInstanceOf('Closure', $mail->beforeSend());

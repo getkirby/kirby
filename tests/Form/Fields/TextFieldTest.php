@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class TextFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -50,7 +52,7 @@ class TextFieldTest extends TestCase
 
 	public function testInvalidConverter()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid converter "does-not-exist"');
 
 		$field = $this->field('text', [

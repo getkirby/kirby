@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\Fieldsets;
+
 class LayoutFieldTest extends TestCase
 {
 	public function testDefaultProps()
@@ -11,7 +13,7 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('layout', $field->type());
 		$this->assertSame('layout', $field->name());
 		$this->assertSame(null, $field->max());
-		$this->assertInstanceOf('Kirby\Cms\Fieldsets', $field->fieldsets());
+		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 		$this->assertSame([], $field->value());
 		$this->assertSame([['1/1']], $field->layouts());
 		$this->assertNull($field->settings());

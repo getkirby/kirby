@@ -450,7 +450,7 @@ class Str
 	 */
 	public static function esc(string $string, string $context = 'html'): string
 	{
-		if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
+		if (method_exists(Escape::class, $context) === true) {
 			return Escape::$context($string);
 		}
 

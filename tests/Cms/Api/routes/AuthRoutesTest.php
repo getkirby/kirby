@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -39,7 +40,7 @@ class AuthRoutesTest extends TestCase
 
 	public function testLoginWithoutCSRF()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid CSRF token');
 
 		$response = $this->app->api()->call('auth/login', 'POST');

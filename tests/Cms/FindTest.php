@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+
 /**
  * @coversDefaultClass \Kirby\Cms\Find
  */
@@ -89,7 +92,7 @@ class FindTest extends TestCase
 	 */
 	public function testFileNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
 
 		Find::file('site', 'nope.jpg');
@@ -111,7 +114,7 @@ class FindTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
 
 		Find::file('site', 'protected.jpg');
@@ -149,7 +152,7 @@ class FindTest extends TestCase
 	{
 		$this->app->impersonate('kirby');
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The language could not be found');
 
 		Find::language('en');
@@ -207,7 +210,7 @@ class FindTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "a" cannot be found');
 
 		Find::page('a');
@@ -218,7 +221,7 @@ class FindTest extends TestCase
 	 */
 	public function testPageNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
 
 		Find::page('does-not-exist');
@@ -284,7 +287,7 @@ class FindTest extends TestCase
 	 */
 	public function testParentWithInvalidModelType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid model type: something');
 		$this->assertNull(Find::parent('something/something'));
 	}
@@ -294,7 +297,7 @@ class FindTest extends TestCase
 	 */
 	public function testParentNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
 		$this->assertNull(Find::parent('pages/does-not-exist'));
 	}
@@ -304,7 +307,7 @@ class FindTest extends TestCase
 	 */
 	public function testParentUndefined()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user cannot be found');
 		$this->assertNull(Find::parent('users/does-not-exist'));
 	}
@@ -364,7 +367,7 @@ class FindTest extends TestCase
 
 		$app->impersonate('test@getkirby.com');
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user cannot be found');
 
 		Find::user()->email();
@@ -398,7 +401,7 @@ class FindTest extends TestCase
 	 */
 	public function testUserNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
 
 		Find::user('nope@getkirby.com');

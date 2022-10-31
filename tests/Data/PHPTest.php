@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
@@ -31,7 +32,7 @@ class PHPTest extends TestCase
 	 */
 	public function testDecode()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The PHP::decode() method is not implemented');
 
 		$input  = include __DIR__ . '/fixtures/php/input.php';

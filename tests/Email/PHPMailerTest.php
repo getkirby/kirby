@@ -2,6 +2,8 @@
 
 namespace Kirby\Email;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class PHPMailerTest extends TestCase
 {
 	protected function _email($props = [], $mailer = PHPMailer::class)
@@ -90,7 +92,7 @@ class PHPMailerTest extends TestCase
 
 	public function testBeforeSendInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
 
 		$email = $this->_email([
@@ -228,7 +230,7 @@ class PHPMailerTest extends TestCase
 
 	public function testSMTPTransportSecurityInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Could not automatically detect the "security" protocol from the "port" option, please set it explicitly to "tls" or "ssl".');
 
 		$email = $this->_email([

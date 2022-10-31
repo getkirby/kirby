@@ -266,7 +266,7 @@ class CoreTest extends TestCase
 	{
 		$loader = $this->core->load();
 
-		$this->assertInstanceOf('Kirby\Cms\Loader', $loader);
+		$this->assertInstanceOf(Loader::class, $loader);
 		$this->assertFalse($loader->withPlugins());
 	}
 

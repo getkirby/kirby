@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class BlueprintFieldTest extends TestCase
@@ -50,7 +51,7 @@ class BlueprintFieldTest extends TestCase
 
 	public function testMissingFieldName()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The field name is missing');
 
 		$props = Blueprint::fieldProps([]);
@@ -58,7 +59,7 @@ class BlueprintFieldTest extends TestCase
 
 	public function testInvalidFieldType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid field type ("test")');
 
 		$props = Blueprint::fieldProps([

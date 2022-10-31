@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * @covers \Kirby\Sane\Xml
  */
@@ -49,7 +51,7 @@ class XmlTest extends TestCase
 	 */
 	public function testInvalid(string $file)
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The markup could not be parsed');
 
 		Xml::validateFile($this->fixture($file));
@@ -67,7 +69,7 @@ class XmlTest extends TestCase
 
 		$this->assertSame($sanitized, Xml::sanitize($fixture));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
 		Xml::validate($fixture);
 	}
@@ -85,7 +87,7 @@ class XmlTest extends TestCase
 
 		$this->assertSame($sanitized, Xml::sanitize($fixture));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 1): Unknown URL type');
 		Xml::validate($fixture);
 	}
@@ -97,7 +99,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
 		Xml::validateFile($fixture);
 	}
@@ -109,7 +111,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 7): Invalid data URI');
 		Xml::validateFile($fixture);
 	}
@@ -121,7 +123,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "filter" (line 7): Invalid data URI');
 		Xml::validateFile($fixture);
 	}
@@ -142,7 +144,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized2, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style" (line 2): The hostname "malicious.com" is not allowed');
 		Xml::validateFile($fixture);
 	}
@@ -163,7 +165,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized2, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): The hostname "malicious.com" is not allowed');
 		Xml::validateFile($fixture);
 	}
@@ -175,7 +177,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
 		Xml::validateFile($fixture);
 	}
@@ -187,7 +189,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
 		Xml::validateFile($fixture);
 	}
@@ -199,7 +201,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
 		Xml::validateFile($fixture);
 	}
@@ -211,7 +213,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype must not reference external files');
 		Xml::validateFile($fixture);
 	}
@@ -223,7 +225,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype must not reference external files');
 		Xml::validateFile($fixture);
 	}
@@ -235,7 +237,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype must not define a subset');
 		Xml::validateFile($fixture);
 	}
@@ -247,7 +249,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype is not allowed in XML files');
 		Xml::validateFile($fixture);
 	}
@@ -259,7 +261,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype is not allowed in XML files');
 		Xml::validateFile($fixture);
 	}
@@ -271,7 +273,7 @@ class XmlTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "xml-stylesheet" processing instruction (line 6) is not allowed');
 		Xml::validateFile($fixture);
 	}

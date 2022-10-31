@@ -5,6 +5,7 @@ namespace Kirby\Blueprint;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -28,7 +29,7 @@ class TestCase extends BaseTestCase
 
 	public function assertValidationError(string $message)
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage($message);
 	}
 

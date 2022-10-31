@@ -10,7 +10,7 @@ class ModelTest extends TestCase
 	{
 		$model = new Model(new Api([]), [], []);
 
-		$this->assertInstanceOf('Kirby\Api\Model', $model);
+		$this->assertInstanceOf(Model::class, $model);
 	}
 	public function testConstructInvalidModel()
 	{

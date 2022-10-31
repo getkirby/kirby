@@ -134,7 +134,7 @@ class KirbyTagsTest extends TestCase
 
 	public function testParseWithExceptionDebug2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Just for fun');
 
 		KirbyTag::$types = [

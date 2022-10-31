@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\PermissionException;
+
 class SiteRulesTest extends TestCase
 {
 	public function testChangeTitleWithoutPermissions()
@@ -12,7 +14,7 @@ class SiteRulesTest extends TestCase
 		$site = $this->createMock(Site::class);
 		$site->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the title');
 
 		SiteRules::changeTitle($site, 'test');
@@ -37,7 +39,7 @@ class SiteRulesTest extends TestCase
 		$site = $this->createMock(Site::class);
 		$site->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to update the site');
 
 		SiteRules::update($site, []);

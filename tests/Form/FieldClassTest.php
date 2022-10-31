@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class TestField extends FieldClass
@@ -489,7 +490,7 @@ class FieldClassTest extends TestCase
 	public function testSiblings()
 	{
 		$field = new TestField();
-		$this->assertInstanceOf('Kirby\Form\Fields', $field->siblings());
+		$this->assertInstanceOf(Fields::class, $field->siblings());
 		$this->assertCount(1, $field->siblings());
 		$this->assertSame($field, $field->siblings()->first());
 
@@ -626,7 +627,7 @@ class FieldClassTest extends TestCase
 		$this->assertSame([], $field->value());
 
 		// use invalid value
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
 		new YamlField(['value' => new \stdClass()]);
 	}

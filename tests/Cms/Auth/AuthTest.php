@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Session\AutoSession;
 use Throwable;
@@ -136,7 +138,7 @@ class AuthTest extends TestCase
 	 */
 	public function testImpersonateInvalidUser()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
 
 		$this->auth->impersonate('lisa@simpsons.com');
@@ -325,7 +327,7 @@ class AuthTest extends TestCase
 	 */
 	public function testUserBasicAuthInvalid1()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
 
 		$this->app->clone([
@@ -342,7 +344,7 @@ class AuthTest extends TestCase
 	 */
 	public function testUserBasicAuthInvalid2()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid login');
 
 		$this->app->clone([

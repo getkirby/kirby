@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class ObjTest extends TestCase
 {
 	public function test__call()
@@ -40,7 +42,7 @@ class ObjTest extends TestCase
 
 	public function testGetMultipleInvalidFallback()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('fallback value must be an array');
 
 		$obj = new Obj(['one' => 'first']);

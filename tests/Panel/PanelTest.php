@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
@@ -137,7 +138,7 @@ class PanelTest extends TestCase
 	 */
 	public function testFirewallWithoutUser(): void
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to access the panel');
 
 		// no user
@@ -151,7 +152,7 @@ class PanelTest extends TestCase
 	 */
 	public function testFirewallWithoutAcceptedUser(): void
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to access the panel');
 
 		// user without panel access
@@ -224,7 +225,7 @@ class PanelTest extends TestCase
 		$this->assertTrue(Panel::hasAccess($app->user(), 'foo'));
 		Panel::firewall($app->user(), 'foo');
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to access this part of the panel');
 
 		// no area access
