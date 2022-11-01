@@ -45,13 +45,17 @@ class Body
 	 * or uses the passed contents.
 	 */
 	public function contents(): string|array
-	{
-		if (empty($_POST) === false) {
-			return $this->contents ??= $_POST;
-		}
+{
+    if ($this->contents !== null) {
+        return $this->contents;
+    }
 
-		return $this->contents ??= file_get_contents('php://input');
-	}
+    if (empty($_POST) === false) {
+        return $this->contents = $_POST;
+    }
+
+    return $this->contents = file_get_contents('php://input');
+}
 
 	/**
 	 * Parses the raw contents once and caches
