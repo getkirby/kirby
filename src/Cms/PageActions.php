@@ -434,18 +434,38 @@ trait PageActions
 
 		$copy = $parentModel->clone()->findPageOrDraft($slug);
 
-		// remove all translated slugs
 		if ($this->kirby()->multilang() === true) {
+			// remove all translated slugs
 			foreach ($this->kirby()->languages() as $language) {
-				if ($language->isDefault() === false && $copy->translation($language)->exists() === true) {
+				if (
+					Uuids::enabled() === true &&
+					$language->isDefault() === true
+				) {
+					// overwrite with new UUID for the page and files
+					// for default language (remove old, add new)
+					$copy = $copy->save(['uuid' => Uuid::generate()], $language->code());
+
+					if ($files !== false) {
+						foreach ($copy->files() as $file) {
+							$file->save(['uuid' => Uuid::generate()], $language->code());
+						}
+					}
+				} elseif (
+					$language->isDefault() === false &&
+					$copy->translation($language)->exists() === true
+				) {
 					$copy = $copy->save(['slug' => null], $language->code());
 				}
 			}
-		}
-
-		// overwrite with new UUID (remove old, add new)
-		if (Uuids::enabled() === true) {
+		} elseif (Uuids::enabled() === true) {
+			// overwrite with new UUID for the page and files (remove old, add new)
 			$copy = $copy->save(['uuid' => Uuid::generate()]);
+
+			if ($files !== false) {
+				foreach ($copy->files() as $file) {
+					$file->save(['uuid' => Uuid::generate()]);
+				}
+			}
 		}
 
 		// add copy to siblings
