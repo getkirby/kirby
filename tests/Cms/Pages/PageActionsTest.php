@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 class PageActionsTest extends TestCase
@@ -835,6 +836,64 @@ class PageActionsTest extends TestCase
 
 		$this->assertSame($page, $drafts->find('test'));
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
+	}
+
+	public function testDuplicateFiles()
+	{
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->site()->createChild([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'foo.jpg'],
+			]
+		]);
+
+		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+
+		$copy = $page->duplicate('test-copy', ['files' => true]);
+
+		$origFile = $page->file('foo.jpg');
+		$copyFile = $copy->file('foo.jpg');
+
+		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
+	}
+
+	public function testDuplicateFilesMultiLang()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$app->site()->createChild([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'foo.jpg'],
+			]
+		]);
+
+		F::write($this->tmp . '/content/_drafts/test/foo.jpg', '');
+
+		$page = $app->call('de/test');
+		$page->duplicate('test-copy', ['files' => true]);
+		$copy = $app->call('de/test-copy');
+
+		$origFile = $page->file('foo.jpg');
+		$copyFile = $copy->file('foo.jpg');
+
+		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
 	}
 
 	public function testChangeSlugHooks()
