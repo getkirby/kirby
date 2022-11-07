@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue, { h } from "vue";
 
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
@@ -45,6 +45,5 @@ Vue.use(Plugins);
 
 // Load CSS utilities after components
 // to increase specificity
-import "./styles/utilities.css";
 
 app.$mount("#app");

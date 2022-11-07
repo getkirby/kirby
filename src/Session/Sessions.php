@@ -101,9 +101,7 @@ class Sessions
 	public function create(array $options = [])
 	{
 		// fall back to default mode
-		if (!isset($options['mode'])) {
-			$options['mode'] = $this->mode;
-		}
+		$options['mode'] ??= $this->mode;
 
 		return new Session($this, null, $options);
 	}
@@ -117,11 +115,7 @@ class Sessions
 	 */
 	public function get(string $token, string $mode = null)
 	{
-		if (isset($this->cache[$token])) {
-			return $this->cache[$token];
-		}
-
-		return $this->cache[$token] = new Session($this, $token, ['mode' => $mode ?? $this->mode]);
+		return $this->cache[$token] ??= new Session($this, $token, ['mode' => $mode ?? $this->mode]);
 	}
 
 	/**

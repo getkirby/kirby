@@ -7,8 +7,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
 use Kirby\Http\Url;
+use Kirby\Query\Query;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 
 /**
@@ -134,7 +134,7 @@ class OptionsApi
 			throw new InvalidArgumentException('Invalid options format');
 		}
 
-		$result  = (new Query($this->fetch(), Nest::create($data)))->result();
+		$result  = (new Query($this->fetch()))->resolve(Nest::create($data));
 		$options = [];
 
 		foreach ($result as $item) {

@@ -49,14 +49,10 @@ class Email
 		$this->props = array_merge($preset, $props);
 
 		// add transport settings
-		if (isset($this->props['transport']) === false) {
-			$this->props['transport'] = $this->options['transport'] ?? [];
-		}
+		$this->props['transport'] ??= $this->options['transport'] ?? [];
 
 		// add predefined beforeSend option
-		if (isset($this->props['beforeSend']) === false) {
-			$this->props['beforeSend'] = $this->options['beforeSend'] ?? null;
-		}
+		$this->props['beforeSend'] ??= $this->options['beforeSend'] ?? null;
 
 		// transform model objects to values
 		$this->transformUserSingle('from', 'fromName');
@@ -235,12 +231,7 @@ class Email
 		$this->props[$addressProp] = $address;
 
 		// only use the name from the user if no custom name was set
-		if (
-			isset($this->props[$nameProp]) === false ||
-			$this->props[$nameProp] === null
-		) {
-			$this->props[$nameProp] = $name;
-		}
+		$this->props[$nameProp] ??= $name;
 	}
 
 	/**

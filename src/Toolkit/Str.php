@@ -7,6 +7,8 @@ use DateTime;
 use Exception;
 use IntlDateFormatter;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Query\Query;
+use Throwable;
 
 /**
  * The String class provides a set
@@ -665,7 +667,7 @@ class Str
 	 */
 	public static function query(string $query, array $data = [])
 	{
-		return (new Query($query, $data))->result();
+		return Query::factory($query)->resolve($data);
 	}
 
 	/**
@@ -1181,40 +1183,37 @@ class Str
 		// make sure $string is string
 		$string ??= '';
 
-		return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
-			$query = trim($match[1]);
+		return preg_replace_callback(
+			'!' . $start . '(.*?)' . $end . '!',
+			function ($match) use ($data, $fallback, $callback) {
+				$query = trim($match[1]);
 
-			// if the placeholder contains a dot, it is a query
-			if (strpos($query, '.') !== false) {
 				try {
-					$result = (new Query($match[1], $data))->result();
-				} catch (Exception) {
+					$result = Query::factory($query)->resolve($data);
+				} catch (Throwable) {
 					$result = null;
 				}
-			} else {
-				$result = $data[$query] ?? null;
-			}
 
-			// if we don't have a result, use the fallback if given
-			if ($result === null && $fallback !== null) {
-				$result = $fallback;
-			}
+				// if we don't have a result, use the fallback if given
+				$result ??= $fallback;
 
-			// callback on result if given
-			if ($callback !== null) {
-				$callbackResult = $callback((string)$result, $query, $data);
+				// callback on result if given
+				if ($callback !== null) {
+					$callbackResult = $callback((string)$result, $query, $data);
 
-				if ($result === null && $callbackResult === '') {
-					// the empty string came just from string casting,
-					// keep the null value and ignore the callback result
-				} else {
-					$result = $callbackResult;
+					if ($result === null && $callbackResult === '') {
+						// the empty string came just from string casting,
+						// keep the null value and ignore the callback result
+					} else {
+						$result = $callbackResult;
+					}
 				}
-			}
 
-			// if we still don't have a result, keep the original placeholder
-			return $result ?? $match[0];
-		}, $string);
+				// if we still don't have a result, keep the original placeholder
+				return $result ?? $match[0];
+			},
+			$string
+		);
 	}
 
 	/**
