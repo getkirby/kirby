@@ -48,8 +48,6 @@ trait PageActions
 							$file->save(['uuid' => Uuid::generate()], $language->code());
 						}
 					}
-
-					return $copy;
 				}
 
 				// remove all translated slugs
@@ -57,9 +55,11 @@ trait PageActions
 					$language->isDefault() === false &&
 					$copy->translation($language)->exists() === true
 				) {
-					return $copy->save(['slug' => null], $language->code());
+					$copy = $copy->save(['slug' => null], $language->code());
 				}
 			}
+
+			return $copy;
 		}
 
 		// overwrite with new UUID for the page and files (remove old, add new)
