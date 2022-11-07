@@ -838,6 +838,43 @@ class PageActionsTest extends TestCase
 		$this->assertSame($page, $childrenAndDrafts->find('test'));
 	}
 
+	public function testDuplicateMultiLangSlug()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->site()->createChild([
+			'slug'    => 'test',
+		]);
+
+		$page = $page->update([
+			'slug'  => 'test-de'
+		], 'de');
+
+		$this->assertFileExists($page->contentFile('en'));
+		$this->assertFileExists($page->contentFile('de'));
+		$this->assertSame('test', $page->slug());
+		$this->assertSame('test-de', $page->slug('de'));
+
+		$copy = $page->duplicate('test-copy');
+
+		$this->assertSame('test-copy', $copy->slug());
+		$this->assertSame('test-copy', $copy->slug('de'));
+	}
+
 	public function testDuplicateFiles()
 	{
 		$this->app->impersonate('kirby');
