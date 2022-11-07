@@ -777,11 +777,7 @@ class Page extends ModelWithContent
 
 		$template = $this->intendedTemplate()->name();
 
-		if (isset($readable[$template]) === true) {
-			return $readable[$template];
-		}
-
-		return $readable[$template] = $this->permissions()->can('read');
+		return $readable[$template] ??= $this->permissions()->can('read');
 	}
 
 	/**

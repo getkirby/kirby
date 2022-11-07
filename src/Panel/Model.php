@@ -159,9 +159,7 @@ abstract class Model
 			}
 		}
 
-		if (isset($settings['query']) === true) {
-			unset($settings['query']);
-		}
+		unset($settings['query']);
 
 		// resolve remaining options defined as query
 		return A::map($settings, function ($option) {
