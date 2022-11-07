@@ -931,6 +931,9 @@ class PageActionsTest extends TestCase
 		$copyFile = $copy->file('foo.jpg');
 
 		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
+
+		// check if the files collection has been properly updated
+		$this->assertSame($copy->files()->find('foo.jpg')->uuid()->id(), $copyFile->uuid()->id());
 	}
 
 	public function testChangeSlugHooks()
