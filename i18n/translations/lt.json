@@ -1,10 +1,10 @@
 {
-	"account.changeName": "Change your name",
-	"account.delete": "Delete your account",
-	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+	"account.changeName": "Pakeisti savo vardą",
+	"account.delete": "Panaikinti savo paskyrą",
+	"account.delete.confirm": "Ar tikrai norite panaikinti savo paskyrą? Jūs iš karto atsijungsite. Paskyros bus neįmanoma atstatyti.",
 
 	"add": "Pridėti",
-	"author": "Author",
+	"author": "Autorius",
 	"avatar": "Profilio nuotrauka",
 	"back": "Atgal",
 	"cancel": "Atšaukti",
@@ -49,10 +49,10 @@
 	"email": "El. paštas",
 	"email.placeholder": "mail@example.com",
 
-	"entries": "Entries",
-	"entry": "Entry",
+	"entries": "Įrašai",
+	"entry": "Įrašas",
 
-	"environment": "Environment",
+	"environment": "Aplinka",
 
 	"error.access.code": "Neteisinas kodas",
 	"error.access.login": "Neteisingas prisijungimo vardas",
@@ -70,7 +70,7 @@
 	"error.blocks.max.singular": "Jūs galite pridėti daugiausiai vieną bloką",
 	"error.blocks.min.plural": "Minimalus blokų kiekis: {min}",
 	"error.blocks.min.singular": "Jūs turite pridėti bent vieną bloką",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "Yra klaida laukelyje \"{field}\" bloke {index} naudojant bloko tipą \"{fieldset}\"",
 
 	"error.email.preset.notFound": "El. pašto paruoštukas \"{name}\" nerastas",
 
@@ -116,7 +116,7 @@
 
 	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
 
-	"error.offline": "The Panel is currently offline",
+	"error.offline": "Valdymo pultas dabar yra offline",
 
 	"error.page.changeSlug.permission": "Neturite teisės pakeisti \"{slug}\" URL",
 	"error.page.changeStatus.incomplete": "Puslapis turi klaidų ir negali būti paskelbtas",
@@ -284,7 +284,7 @@
 	"field.layout.empty": "Dar nėra eilučių",
 	"field.layout.select": "Pasirinkite išdėstymą",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Dar nėra informacijos",
 
 	"field.pages.empty": "Dar nėra puslapių",
 
@@ -346,12 +346,12 @@
 	"license": "Licenzija",
 	"license.buy": "Pirkti licenziją",
 	"license.register": "Registruoti",
-	"license.manage": "Manage your licenses",
+	"license.manage": "Valdyti savo licencijas",
 	"license.register.help": "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
 	"license.register.label": "Prašome įrašyti jūsų licenzijos kodą",
 	"license.register.success": "Ačiū, kad palaikote Kirby",
 	"license.unregistered": "Tai neregistruota Kirby demo versija",
-	"license.unregistered.label": "Unregistered",
+	"license.unregistered.label": "Neregistruota",
 
 	"link": "Nuoroda",
 	"link.text": "Nuorodos tekstas",
@@ -454,8 +454,8 @@
 	"paste": "Įterpti",
 	"paste.after": "Įterpti po",
 	"pixel": "Pikselis",
-	"plugin": "Plugin",
-	"plugins": "Plugins",
+	"plugin": "Įskiepas",
+	"plugins": "Įskiepai",
 	"prev": "Ankstesnis",
 	"preview": "Peržiūra",
 	"remove": "Pašalinti",
@@ -482,9 +482,9 @@
 
 	"section.required": "Sekcija privaloma",
 
-	"security": "Security",
+	"security": "Saugumas",
 	"select": "Pasirinkti",
-	"server": "Server",
+	"server": "Serveris",
 	"settings": "Nustatymai",
 	"show": "Rodyti",
 	"site.blueprint": "Svetainė neturi blueprint. Jūs galite nustatyti jį <strong>/site/blueprints/site.yml</strong>",
@@ -492,7 +492,7 @@
 	"slug": "URL pabaiga",
 	"sort": "Rikiuoti",
 
-	"stats.empty": "No reports",
+	"stats.empty": "Nėra pranešimų",
 	"system.issues.content": "The content folder seems to be exposed",
 	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
@@ -503,15 +503,15 @@
 	"system.issues.site": "The site folder seems to be exposed",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
 	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
-	"system.updateStatus": "Update status",
-	"system.updateStatus.error": "Could not check for updates",
-	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
-	"system.updateStatus.security-update": "Free security update { version } available",
-	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
-	"system.updateStatus.unreleased": "Unreleased version",
-	"system.updateStatus.up-to-date": "Up to date",
-	"system.updateStatus.update": "Free update { version } available",
-	"system.updateStatus.upgrade": "Upgrade { version } available",
+	"system.updateStatus": "Atnaujinimų statusas",
+	"system.updateStatus.error": "Nepavyko patikrinti atnaujinimų",
+	"system.updateStatus.not-vulnerable": "Nėra žinomų saugumo spragų",
+	"system.updateStatus.security-update": "Prieinamas nemokamas saugumo atnaujinimas { version }",
+	"system.updateStatus.security-upgrade": "Prieinama nauja { version } versija su saugumo atnaujinimais",
+	"system.updateStatus.unreleased": "Neišleista versija",
+	"system.updateStatus.up-to-date": "Naujausia versija",
+	"system.updateStatus.update": "Prieinamas nemokamas atnaujinimas { version }",
+	"system.updateStatus.upgrade": "Prieinamas atnaujinimas { version }",
 
 	"title": "Pavadinimas",
 	"template": "Puslapio šablonas",
@@ -578,16 +578,16 @@
 	"users": "Vartotojai",
 
 	"version": "Versija",
-	"version.current": "Current version",
-	"version.latest": "Latest version",
-	"versionInformation": "Version information",
+	"version.current": "Dabartinė versija",
+	"version.latest": "Naujausia versija",
+	"versionInformation": "Versijos informacija",
 
 	"view.account": "Jūsų paskyra",
 	"view.installation": "Installation",
 	"view.languages": "Kalbos",
 	"view.resetPassword": "Sukurti naują slaptažodį",
 	"view.site": "Svetainė",
-	"view.system": "System",
+	"view.system": "Sistema",
 	"view.users": "Vartotojai",
 
 	"welcome": "Sveiki",
