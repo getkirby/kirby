@@ -96,7 +96,7 @@ class Page extends ModelWithContent
 	 * The template, that should be loaded
 	 * if it exists
 	 *
-	 * @var \Kirby\Cms\Template
+	 * @var \Kirby\Template\Template
 	 */
 	protected $intendedTemplate;
 
@@ -143,7 +143,7 @@ class Page extends ModelWithContent
 	/**
 	 * The intended page template
 	 *
-	 * @var \Kirby\Cms\Template
+	 * @var \Kirby\Template\Template
 	 */
 	protected $template;
 
@@ -504,7 +504,7 @@ class Page extends ModelWithContent
 	 * Returns the template that should be
 	 * loaded if it exists.
 	 *
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	public function intendedTemplate()
 	{
@@ -1081,7 +1081,7 @@ class Page extends ModelWithContent
 	/**
 	 * @internal
 	 * @param mixed $type
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
 	 */
 	public function representation($type)
@@ -1298,7 +1298,7 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the final template
 	 *
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	public function template()
 	{

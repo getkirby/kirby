@@ -5,7 +5,6 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Page;
-use Kirby\Cms\Template;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
@@ -16,6 +15,7 @@ use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
+use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl as Snippet;
@@ -293,7 +293,7 @@ return [
 	 * @param string $name Template name
 	 * @param string $type Extension type
 	 * @param string $defaultType Default extension type
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
 		return new Template($name, $type, $defaultType);

@@ -73,6 +73,7 @@ return [
 	'kirby\cms\form'           => 'Kirby\Form\Form',
 	'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
 	'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
+	'kirby\cms\template'       => 'Kirby\Template\Template',
 	'kirby\toolkit\dir'        => 'Kirby\Filesystem\Dir',
 	'kirby\toolkit\f'          => 'Kirby\Filesystem\F',
 	'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
