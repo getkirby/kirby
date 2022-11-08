@@ -1648,7 +1648,7 @@ class App
 	 * and return the Template object
 	 *
 	 * @internal
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 * @param string $name
 	 * @param string $type
 	 * @param string $defaultType

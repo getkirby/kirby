@@ -132,7 +132,7 @@ class Email
 	 *
 	 * @param string $name Template name
 	 * @param string|null $type `html` or `text`
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	protected function getTemplate(string $name, string $type = null)
 	{
