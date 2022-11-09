@@ -45,5 +45,6 @@ Vue.use(Plugins);
 
 // Load CSS utilities after components
 // to increase specificity
+import "./styles/utilities.css";
 
 app.$mount("#app");
