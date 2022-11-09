@@ -23,7 +23,7 @@ const app = new Vue({
 		window.panel.plugins.created.forEach((plugin) => plugin(this));
 		this.$store.dispatch("content/init");
 	},
-	render: (h) => h(App)
+	render: () => h(App)
 });
 
 // Global styles
