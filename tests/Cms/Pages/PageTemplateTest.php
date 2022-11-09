@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
+use Kirby\Template\Template;
 use PHPUnit\Framework\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
