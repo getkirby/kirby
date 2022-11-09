@@ -574,10 +574,11 @@ if (Helpers::hasOverride('slots') === false) { // @codeCoverageIgnore
 	 */
 	function slots(string $name, array $props = []): Kirby\Template\Container
 	{
+		$kirby     = App::instance();
 		$container = new Kirby\Template\Container(
 			name: $name,
-			props: array_replace_recursive(kirby()->data, $props),
-			root: kirby()->root('snippets'),
+			props: array_replace_recursive($kirby->data, $props),
+			root: $kirby->root('snippets'),
 		);
 
 		return $container->open();
