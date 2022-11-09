@@ -131,6 +131,26 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	}
 }
 
+if (Helpers::hasOverride('endslot') === false) { // @codeCoverageIgnore
+	/**
+	 * Ends the last started template slot
+	 */
+	function endslot(): void
+	{
+		Kirby\Template\Container::$current?->endslot();
+	}
+}
+
+if (Helpers::hasOverride('endslots') === false) { // @codeCoverageIgnore
+	/**
+	 * Renders the currently active slot container
+	 */
+	function endslots(): void
+	{
+		echo Kirby\Template\Container::$current?->render();
+	}
+}
+
 if (Helpers::hasOverride('esc') === false) { // @codeCoverageIgnore
 	/**
 	 * Escape context specific output
@@ -535,6 +555,32 @@ if (Helpers::hasOverride('size') === false) { // @codeCoverageIgnore
 	function size($value): int
 	{
 		return Helpers::size($value);
+	}
+}
+
+if (Helpers::hasOverride('slot') === false) { // @codeCoverageIgnore
+	/**
+	 * Starts a new template slot
+	 */
+	function slot(string $name = 'default'): void
+	{
+		Kirby\Template\Container::$current?->slot($name);
+	}
+}
+
+if (Helpers::hasOverride('slots') === false) { // @codeCoverageIgnore
+	/**
+	 * Starts a new slot container
+	 */
+	function slots(string $name, array $props = []): Kirby\Template\Container
+	{
+		$container = new Kirby\Template\Container(
+			name: $name,
+			props: array_replace_recursive(kirby()->data, $props),
+			root: kirby()->root('snippets'),
+		);
+
+		return $container->open();
 	}
 }
 
