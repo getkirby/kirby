@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Template\Template;
 use PHPUnit\Framework\TestCase as TestCase;
 
 class PageTemplateTest extends TestCase
