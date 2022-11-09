@@ -8,6 +8,7 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
+use Kirby\Template\Container;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -137,7 +138,7 @@ if (Helpers::hasOverride('endslot') === false) { // @codeCoverageIgnore
 	 */
 	function endslot(): void
 	{
-		Kirby\Template\Container::$current?->endslot();
+		Container::$current?->endslot();
 	}
 }
 
@@ -147,7 +148,7 @@ if (Helpers::hasOverride('endslots') === false) { // @codeCoverageIgnore
 	 */
 	function endslots(): void
 	{
-		echo Kirby\Template\Container::$current?->render();
+		echo Container::$current?->render();
 	}
 }
 
@@ -564,7 +565,7 @@ if (Helpers::hasOverride('slot') === false) { // @codeCoverageIgnore
 	 */
 	function slot(string $name = 'default'): void
 	{
-		Kirby\Template\Container::$current?->slot($name);
+		Container::$current?->slot($name);
 	}
 }
 
@@ -575,7 +576,7 @@ if (Helpers::hasOverride('slots') === false) { // @codeCoverageIgnore
 	function slots(string $name, array $props = []): Kirby\Template\Container
 	{
 		$kirby     = App::instance();
-		$container = new Kirby\Template\Container(
+		$container = new Container(
 			name: $name,
 			props: array_replace_recursive($kirby->data, $props),
 			root: $kirby->root('snippets'),
