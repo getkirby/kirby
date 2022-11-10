@@ -54,6 +54,8 @@ class ComponentTest extends TestCase
 	/**
 	 * @covers ::begin
 	 * @covers ::end
+	 * @covers \Kirby\Template\Slot::begin
+	 * @covers \Kirby\Template\Slot::end
 	 */
 	public function testHelpers()
 	{
@@ -272,6 +274,7 @@ class ComponentTest extends TestCase
 	 * @covers ::close
 	 * @covers ::slot
 	 * @covers ::endslot
+	 * @covers ::slots
 	 */
 	public function testSlots()
 	{
