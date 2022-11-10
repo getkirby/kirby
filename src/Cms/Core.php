@@ -307,6 +307,7 @@ class Core
 			'cache'       => fn (array $roots) => $roots['site'] . '/cache',
 			'collections' => fn (array $roots) => $roots['site'] . '/collections',
 			'commands'    => fn (array $roots) => $roots['site'] . '/commands',
+			'components'  => fn (array $roots) => $roots['site'] . '/components',
 			'config'      => fn (array $roots) => $roots['site'] . '/config',
 			'controllers' => fn (array $roots) => $roots['site'] . '/controllers',
 			'languages'   => fn (array $roots) => $roots['site'] . '/languages',

@@ -24,10 +24,10 @@ class Slot
 	public bool $open = false;
 
 	/**
-	 * Creates a new slot for the given container
+	 * Creates a new slot for the given component
 	 */
 	public function __construct(
-		public Container $container,
+		public Component $component,
 		public string $name,
 		public string|null $content = null
 	) {
@@ -43,6 +43,14 @@ class Slot
 	}
 
 	/**
+	 * Used in the slot helper
+	 */
+	public static function begin(string $name = 'default'): void
+	{
+		Component::$current?->slot($name);
+	}
+
+	/**
 	 * Closes a slot and catches all the content
 	 * that has been printed since the slot has
 	 * been opened
@@ -54,6 +62,14 @@ class Slot
 		}
 
 		$this->content = ob_get_clean();
+	}
+
+	/**
+	 * Used in the endslot helper
+	 */
+	public static function end(): void
+	{
+		Component::$current?->endslot();
 	}
 
 	/**
