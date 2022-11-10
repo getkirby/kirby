@@ -8,7 +8,8 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
-use Kirby\Template\Container;
+use Kirby\Template\Component;
+use Kirby\Template\Slot;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -138,17 +139,17 @@ if (Helpers::hasOverride('endslot') === false) { // @codeCoverageIgnore
 	 */
 	function endslot(): void
 	{
-		Container::$current?->endslot();
+		Slot::end();
 	}
 }
 
-if (Helpers::hasOverride('endslots') === false) { // @codeCoverageIgnore
+if (Helpers::hasOverride('endcomponent') === false) { // @codeCoverageIgnore
 	/**
-	 * Renders the currently active slot container
+	 * Renders the currently active component
 	 */
-	function endslots(): void
+	function endcomponent(): void
 	{
-		echo Container::$current?->render();
+		Component::end();
 	}
 }
 
@@ -565,24 +566,17 @@ if (Helpers::hasOverride('slot') === false) { // @codeCoverageIgnore
 	 */
 	function slot(string $name = 'default'): void
 	{
-		Container::$current?->slot($name);
+		Slot::begin($name);
 	}
 }
 
-if (Helpers::hasOverride('slots') === false) { // @codeCoverageIgnore
+if (Helpers::hasOverride('component') === false) { // @codeCoverageIgnore
 	/**
-	 * Starts a new slot container
+	 * Starts a new slot component
 	 */
-	function slots(string $name, array $props = []): Kirby\Template\Container
+	function component(string $name, array $props = []): Component
 	{
-		$kirby     = App::instance();
-		$container = new Container(
-			name: $name,
-			props: array_replace_recursive($kirby->data, $props),
-			root: $kirby->root('snippets'),
-		);
-
-		return $container->open();
+		return Component::begin($name, $props);
 	}
 }
 

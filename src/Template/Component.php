@@ -2,11 +2,12 @@
 
 namespace Kirby\Template;
 
+use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Tpl;
 
 /**
- * The container class handles
+ * The component class handles
  * components, layouts or however we want to call it
  * in templates and allows to pass content to various
  * predefined slots.
@@ -17,7 +18,7 @@ use Kirby\Toolkit\Tpl;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Container
+class Component
 {
 	/**
 	 * Contains all slots that are opened
@@ -27,24 +28,24 @@ class Container
 
 	/**
 	 * Cache for the currently active
-	 * container. This is used to start
-	 * and end slots within this container
+	 * component. This is used to start
+	 * and end slots within this component
 	 * in the helper functions
 	 */
 	public static self|null $current = null;
 
 	/**
-	 * The parent container
+	 * The parent component
 	 */
 	public self|null $parent = null;
 
 	/**
-	 * Keeps track of the state of the container
+	 * Keeps track of the state of the component
 	 */
 	public bool $open = false;
 
 	/**
-	 * Self-closing containers can be useful if all
+	 * Self-closing components can be useful if all
 	 * slots are optional or no slots are defined
 	 * They will be rendered immediately after being
 	 * openend.
@@ -53,12 +54,12 @@ class Container
 
 	/**
 	 * The collection of closed slots that will be used
-	 * to pass down to the template for the container.
+	 * to pass down to the template for the component.
 	 */
 	public array $slots = [];
 
 	/**
-	 * Creates a new container
+	 * Creates a new component
 	 */
 	public function __construct(
 		public string $name,
@@ -72,7 +73,23 @@ class Container
 	}
 
 	/**
-	 * Closes the container and catches
+	 * Creates and opens a new component. This can be used
+	 * directly in a template or via the slots() helper
+	 */
+	public static function begin(string $name, array $props = [], string|null $root = null): static
+	{
+		$kirby     = App::instance();
+		$component = new static(
+			name: $name,
+			props: array_replace_recursive($kirby->data, $props),
+			root: $root ?? $kirby->root('components'),
+		);
+
+		return $component->open();
+	}
+
+	/**
+	 * Closes the component and catches
 	 * the default slot if no slots have been
 	 * defined in between opening and closing.
 	 */
@@ -82,7 +99,7 @@ class Container
 		// is only supported if the component has
 		// been started before
 		if ($this->open === false) {
-			throw new LogicException('The container has not been opened');
+			throw new LogicException('The component has not been opened');
 		}
 
 		// switch back to the parent in nested
@@ -106,6 +123,14 @@ class Container
 	}
 
 	/**
+	 * Used in the endslots() helper
+	 */
+	public static function end(): void
+	{
+		echo static::$current?->render();
+	}
+
+	/**
 	 * Closes the last openend slot
 	 */
 	public function endslot(): void
@@ -122,7 +147,7 @@ class Container
 
 	/**
 	 * Absolute path to the template file for
-	 * the container
+	 * the component
 	 */
 	public function file(): string
 	{
@@ -130,7 +155,7 @@ class Container
 	}
 
 	/**
-	 * Opens the container and starts output
+	 * Opens the component and starts output
 	 * buffering to catch all slots in between
 	 */
 	public function open(): static
@@ -148,7 +173,7 @@ class Container
 	}
 
 	/**
-	 * Renders the container and passes the scope
+	 * Renders the component and passes the scope
 	 * with all slots and props
 	 */
 	public function render(array $props = [], array $slots = []): string
@@ -169,7 +194,7 @@ class Container
 
 	/**
 	 * Defines the full scope that will be passed
-	 * to the container template. This includes
+	 * to the component template. This includes
 	 * the props from the constructor and
 	 * the slots collection.
 	 */

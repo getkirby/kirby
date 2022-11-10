@@ -9,10 +9,10 @@ class SlotsTest extends TestCase
 {
 	public function testSlots()
 	{
-		$container = new Container('test');
-		$header    = new Slot($container, 'header');
-		$footer    = new Slot($container, 'footer');
-		$slots     = new Slots($container, [
+		$component = new Component('test');
+		$header    = new Slot($component, 'header');
+		$footer    = new Slot($component, 'footer');
+		$slots     = new Slots($component, [
 			'header' => $header,
 			'footer' => $footer
 		]);

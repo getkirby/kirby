@@ -11,10 +11,10 @@ class SlotTest extends TestCase
 {
 	public function testConstruct()
 	{
-		$container = new Container('test');
-		$slot      = new Slot($container, 'test');
+		$component = new Component('test');
+		$slot      = new Slot($component, 'test');
 
-		$this->assertSame($container, $slot->container);
+		$this->assertSame($component, $slot->component);
 		$this->assertSame('test', $slot->name);
 		$this->assertFalse($slot->open);
 		$this->assertNull($slot->content);
@@ -24,7 +24,7 @@ class SlotTest extends TestCase
 
 	public function testSlot()
 	{
-		$slot    = new Slot(new Container('test'), 'test');
+		$slot    = new Slot(new Component('test'), 'test');
 		$content = 'Test content';
 
 		$slot->open();
@@ -38,7 +38,7 @@ class SlotTest extends TestCase
 
 	public function testCloseWhenNotOpen()
 	{
-		$slot = new Slot(new Container('test'), 'test');
+		$slot = new Slot(new Component('test'), 'test');
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The slot has not been opened');
