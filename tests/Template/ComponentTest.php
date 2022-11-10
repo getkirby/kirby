@@ -4,9 +4,6 @@ namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
 
-/**
- * @coversDefaultClass \Kirby\Template\Component
- */
 class ComponentTest extends TestCase
 {
 	public function testComponent()
@@ -20,9 +17,6 @@ class ComponentTest extends TestCase
 		$this->assertSame([], $component->props);
 	}
 
-	/**
-	 * @covers ::close
-	 */
 	public function testCloseWhenNotOpen()
 	{
 		$component = new Component('test');
@@ -33,30 +27,18 @@ class ComponentTest extends TestCase
 		$component->close();
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFile()
 	{
 		$component = new Component('test');
 		$this->assertSame('/test.php', $component->file());
 	}
 
-	/**
-	 * @covers ::file
-	 */
 	public function testFileWithCustomRoot()
 	{
 		$component = new Component(name: 'test', root: __DIR__);
 		$this->assertSame(__DIR__ . '/test.php', $component->file());
 	}
 
-	/**
-	 * @covers ::begin
-	 * @covers ::end
-	 * @covers \Kirby\Template\Slot::begin
-	 * @covers \Kirby\Template\Slot::end
-	 */
 	public function testHelpers()
 	{
 		ob_start();
@@ -70,10 +52,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('Nice', ob_get_clean());
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
 	public function testNestedComponents()
 	{
 		$a = new Component(name: 'a');
@@ -96,10 +74,6 @@ class ComponentTest extends TestCase
 		$this->assertSame($a, $b->parent);
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
 	public function testOpenCloseWithSlotsAndSwallowedDefaultContent()
 	{
 		$component = new Component('test');
@@ -118,10 +92,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 */
 	public function testOpenCloseWithDefaultSlotContent()
 	{
 		$component = new Component('test');
@@ -134,9 +104,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithSlots()
 	{
 		$component = new Component(name: 'slots', root: __DIR__ . '/templates');
@@ -167,9 +134,6 @@ class ComponentTest extends TestCase
 		$this->assertSame($expected, $component->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithLazySlots()
 	{
 		$component = new Component(name: 'slots', root: __DIR__ . '/templates');
@@ -187,9 +151,6 @@ class ComponentTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithProps()
 	{
 		$component = new Component(
@@ -201,9 +162,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello', $component->render());
 	}
 
-	/**
-	 * @covers ::render
-	 */
 	public function testRenderWithLazyProps()
 	{
 		$component = new Component(
@@ -214,9 +172,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('hello', $component->render(props: ['message' => 'hello']));
 	}
 
-	/**
-	 * @covers ::scope
-	 */
 	public function testScope()
 	{
 		$component = new Component(name: 'test', props: $props = [
@@ -231,9 +186,6 @@ class ComponentTest extends TestCase
 		$this->assertNull($scope['slot']);
 	}
 
-	/**
-	 * @covers ::scope
-	 */
 	public function testScopeWithDefaultSlot()
 	{
 		$component = new Component('test');
@@ -244,9 +196,6 @@ class ComponentTest extends TestCase
 		$this->assertSame($slot, $component->scope()['slot']);
 	}
 
-	/**
-	 * @covers ::scope
-	 */
 	public function testScopeWithProps()
 	{
 		$component = new Component(name: 'test');
@@ -269,13 +218,6 @@ class ComponentTest extends TestCase
 		$this->assertSame('test', $component->name);
 	}
 
-	/**
-	 * @covers ::open
-	 * @covers ::close
-	 * @covers ::slot
-	 * @covers ::endslot
-	 * @covers ::slots
-	 */
 	public function testSlots()
 	{
 		$component = new Component('test');
@@ -293,6 +235,7 @@ class ComponentTest extends TestCase
 
 		$slots = $component->slots();
 
+		$this->assertInstanceOf(Slots::class, $slots);
 		$this->assertSame('Header', $slots->header()->render());
 		$this->assertSame('Footer', $slots->footer()->render());
 	}
