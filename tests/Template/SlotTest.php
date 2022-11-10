@@ -4,9 +4,6 @@ namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
 
-/**
- * @coversDefaultClass \Kirby\Template\Slot
- */
 class SlotTest extends TestCase
 {
 	public function testConstruct()

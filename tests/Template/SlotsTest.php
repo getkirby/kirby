@@ -2,9 +2,6 @@
 
 namespace Kirby\Template;
 
-/**
- * @coversDefaultClass \Kirby\Template\Slots
- */
 class SlotsTest extends TestCase
 {
 	public function testSlots()
