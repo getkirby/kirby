@@ -53,6 +53,10 @@ return [
 	// panel classes
 	'panel'      => 'Kirby\Panel\Panel',
 
+	// template classes
+	'component'  => 'Kirby\Template\Component',
+	'slot'       => 'Kirby\Template\Slot',
+
 	// toolkit classes
 	'a'          => 'Kirby\Toolkit\A',
 	'c'          => 'Kirby\Toolkit\Config',
