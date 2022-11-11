@@ -33,11 +33,26 @@ if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
 	 * @param array|null $attr A list of attributes as key/value array
 	 * @param string|null $before An optional string that will be prepended if the result is not empty
 	 * @param string|null $after An optional string that will be appended if the result is not empty
-	 * @return string|null
+	 * @return \Kirby\Toolkit\Attributes
 	 */
-	function attr(array|null $attr = null, string|null $before = null, string|null $after = null): string|null
+	function attr(?array $attr = null, ?string $before = null, ?string $after = null): Attributes
 	{
-		return Html::attr($attr, null, $before, $after);
+		return Attributes::from($attr)
+			->before($before)
+			->after($after);
+	}
+}
+
+if (Helpers::hasOverride('classes') === false) { // @codeCoverageIgnore
+	/**
+	 * Returns the result of a collection by name
+	 *
+	 * @param string $classes
+	 * @return \Kirby\Toolkit\Attributes
+	 */
+	function classes(array|string $classes = []): Attributes
+	{
+		return Attributes::from()->class($classes);
 	}
 }
 
@@ -476,6 +491,20 @@ if (Helpers::hasOverride('params') === false) { // @codeCoverageIgnore
 	function params(): array
 	{
 		return App::instance()->request()->url()->params()->toArray();
+	}
+}
+
+if (Helpers::hasOverride('prepends') === false) { // @codeCoverageIgnore
+	/**
+	 * Generates a list of HTML attribute whose value will be merged
+	 * instead of replaced, when merging its value.
+	 *
+	 * @param mixed $value A list of attributes as key/value array
+	 * @return \Kirby\Toolkit\Attribute
+	 */
+	function prepends(mixed $value): Attribute
+	{
+		return Attribute::prepends($value);
 	}
 }
 
