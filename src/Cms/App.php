@@ -1636,6 +1636,8 @@ class App
 
 		$snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
 
+		// TODO: currently would return also Snippet objects
+
 		if ($return === true) {
 			return $snippet;
 		}

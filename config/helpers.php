@@ -8,8 +8,8 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
-use Kirby\Template\Component;
 use Kirby\Template\Slot;
+use Kirby\Template\Snippet;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -143,13 +143,13 @@ if (Helpers::hasOverride('endslot') === false) { // @codeCoverageIgnore
 	}
 }
 
-if (Helpers::hasOverride('endcomponent') === false) { // @codeCoverageIgnore
+if (Helpers::hasOverride('endsnippet') === false) { // @codeCoverageIgnore
 	/**
-	 * Renders the currently active component
+	 * Renders the currently active snippet
 	 */
-	function endcomponent(): void
+	function endsnippet(): void
 	{
-		Component::end();
+		Snippet::end();
 	}
 }
 
@@ -567,16 +567,6 @@ if (Helpers::hasOverride('slot') === false) { // @codeCoverageIgnore
 	function slot(string $name = 'default'): void
 	{
 		Slot::begin($name);
-	}
-}
-
-if (Helpers::hasOverride('component') === false) { // @codeCoverageIgnore
-	/**
-	 * Starts a new slot component
-	 */
-	function component(string $name, array $props = []): Component
-	{
-		return Component::begin($name, $props);
 	}
 }
 

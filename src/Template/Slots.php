@@ -18,10 +18,10 @@ class Slots
 {
 	/**
 	 * Creates a new slots collection
-	 * for the given component
+	 * for the given snippet
 	 */
 	public function __construct(
-		public Component $component,
+		public Snippet $snippet,
 		public array $slots
 	) {
 	}

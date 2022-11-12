@@ -6,7 +6,7 @@ class SlotsTest extends TestCase
 {
 	public function testSlots()
 	{
-		$component = new Component('test');
+		$component = new Snippet('test');
 		$header    = new Slot($component, 'header');
 		$footer    = new Slot($component, 'footer');
 		$slots     = new Slots($component, [

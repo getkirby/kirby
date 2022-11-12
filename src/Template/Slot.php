@@ -24,10 +24,10 @@ class Slot
 	public bool $open = false;
 
 	/**
-	 * Creates a new slot for the given component
+	 * Creates a new slot for the given snippet
 	 */
 	public function __construct(
-		public Component $component,
+		public Snippet $snippet,
 		public string $name,
 		public string|null $content = null
 	) {
@@ -47,7 +47,7 @@ class Slot
 	 */
 	public static function begin(string $name = 'default'): void
 	{
-		Component::$current?->slot($name);
+		Snippet::$current?->slot($name);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class Slot
 	 */
 	public static function end(): void
 	{
-		Component::$current?->endslot();
+		Snippet::$current?->endslot();
 	}
 
 	/**

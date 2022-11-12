@@ -7,103 +7,88 @@ use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Tpl;
 
 /**
- * The component class handles
- * components, layouts or however we want to call it
- * in templates and allows to pass content to various
- * predefined slots.
+ * The Snippet class handles reusable code parts, components,
+ * layouts or however we want to call it in templates
+ * allows to pass variables as well as content via predefined slots.
  *
  * @package   Kirby Template
- * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * 			  Lukas Bestle <lukas@getkirby.com>,
+ * 			  Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Component
+class Snippet
 {
 	/**
-	 * Contains all slots that are opened
-	 * but not yet closed
+	 * Contains all slots that are currently
+	 * opened but not yet closed
 	 */
 	public array $capture = [];
 
 	/**
 	 * Cache for the currently active
-	 * component. This is used to start
-	 * and end slots within this component
-	 * in the helper functions
+	 * snippet. This is used to start
+	 * and end slots within this snippet
+	 * by the helper functions
 	 */
 	public static self|null $current = null;
 
 	/**
-	 * The parent component
+	 * A parent snippet
 	 */
 	public self|null $parent = null;
 
 	/**
-	 * Keeps track of the state of the component
+	 * Keeps track of the state of the snippet
+	 * when it contains slots
 	 */
 	public bool $open = false;
 
 	/**
-	 * Self-closing components can be useful if all
-	 * slots are optional or no slots are defined
-	 * They will be rendered immediately after being
-	 * openend.
-	 */
-	public bool $selfClosing = false;
-
-	/**
 	 * The collection of closed slots that will be used
-	 * to pass down to the template for the component.
+	 * to pass down to the template for the snippet.
 	 */
 	public array $slots = [];
 
+	protected bool $rendered = false;
+
 	/**
-	 * Creates a new component
+	 * Creates a new snippet
 	 */
 	public function __construct(
 		public string $name,
 		public array $props = [],
-		public string $root = '',
+		public string $root = ''
 	) {
-		if (str_ends_with($this->name, '/') === true) {
-			$this->name        = rtrim($this->name, '/');
-			$this->selfClosing = true;
-		}
 	}
 
 	/**
-	 * Creates and opens a new component. This can be used
+	 * Creates and opens a new snippet. This can be used
 	 * directly in a template or via the slots() helper
 	 */
 	public static function begin(string $name, array $props = [], string|null $root = null): static
 	{
-		$kirby     = App::instance();
-		$component = new static(
-			name: $name,
-			props: array_replace_recursive($kirby->data, $props),
-			root: $root ?? $kirby->root('components'),
-		);
-
-		return $component->open();
+		return static::factory($name, $props, $root)->open();
 	}
 
 	/**
-	 * Closes the component and catches
+	 * Closes the snippet and catches
 	 * the default slot if no slots have been
 	 * defined in between opening and closing.
 	 */
 	public function close(): static
 	{
-		// make sure that ending a component
-		// is only supported if the component has
+		// make sure that ending a snippet
+		// is only supported if the snippet has
 		// been started before
 		if ($this->open === false) {
-			throw new LogicException('The component has not been opened');
+			throw new LogicException('The snippet has not been opened');
 		}
 
 		// switch back to the parent in nested
-		// component stacks
+		// snippet stacks
 		static::$current = $this->parent;
 
 		// create a default slot for the content
@@ -145,17 +130,47 @@ class Component
 		$this->slots[$slot->name] = $slot;
 	}
 
-	/**
-	 * Absolute path to the template file for
-	 * the component
-	 */
-	public function file(): string
+	public function exists(): bool
 	{
-		return $this->root . '/' . $this->name . '.php';
+		return file_exists($this->file()) === true;
 	}
 
 	/**
-	 * Opens the component and starts output
+	 * Creates a new snippet
+	 */
+	public static function factory(string $name, array $props = [], string|null $root = null): static
+	{
+		$kirby   = App::instance();
+		$snippet = new static(
+			name: $name,
+			props: array_replace_recursive($kirby->data, $props),
+			root: $root ?? $kirby->root('snippets'),
+		);
+
+		return $snippet;
+	}
+
+	/**
+	 * Absolute path to the template file for
+	 * the snippet
+	 */
+	public function file(): string
+	{
+		$file = $this->root . '/' . $this->name . '.php';
+
+		// TODO: is this the right palce? somehow clashes with the concept of a root property
+		// snippet from plugins
+		if (file_exists($file) === false) {
+			if ($extensions = App::instance()->extensions('snippets')[$this->name] ?? null) {
+				$file = $extensions;
+			}
+		}
+
+		return $file;
+	}
+
+	/**
+	 * Opens the snippet and starts output
 	 * buffering to catch all slots in between
 	 */
 	public function open(): static
@@ -173,12 +188,12 @@ class Component
 	}
 
 	/**
-	 * Renders the component and passes the scope
+	 * Renders the snippet and passes the scope
 	 * with all slots and props
 	 */
 	public function render(array $props = [], array $slots = []): string
 	{
-		// always make sure that the component
+		// always make sure that the snippet
 		// is closed before it can be rendered
 		if ($this->open === true) {
 			$this->close();
@@ -189,12 +204,14 @@ class Component
 			$this->slots[$slotName] = new Slot($this, $slotName, $slotContent);
 		}
 
-		return Tpl::load($this->file(), $this->scope($props));
+		$this->rendered = true;
+		$data = $this->scope($props);
+		return Tpl::load($this->file(), $data);
 	}
 
 	/**
 	 * Defines the full scope that will be passed
-	 * to the component template. This includes
+	 * to the snippet template. This includes
 	 * the props from the constructor and
 	 * the slots collection.
 	 */
@@ -228,5 +245,17 @@ class Component
 	public function slots(): Slots
 	{
 		return new Slots($this, $this->slots);
+	}
+
+	public function __destruct()
+	{
+		if ($this->rendered === false) {
+			$this->render();
+		}
+	}
+
+	public function __toString()
+	{
+		$this->render();
 	}
 }

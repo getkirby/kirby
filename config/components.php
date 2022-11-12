@@ -13,12 +13,12 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
+use Kirby\Template\Snippet;
 use Kirby\Template\Template;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl as Snippet;
 
 return [
 
@@ -262,28 +262,24 @@ return [
 
 	/**
 	 * Add your own snippet loader
-	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
-	 * @param string|array $name Snippet name
-	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): string {
+	'snippet' => function (App $kirby, string|array $name, array $data = []): Snippet {
+		// array of snippet names to fall back to
+		// if the initial snippet name isn't available
 		$snippets = A::wrap($name);
 
 		foreach ($snippets as $name) {
-			$name = (string)$name;
-			$file = $kirby->root('snippets') . '/' . $name . '.php';
+			$snippet = Snippet::factory(
+				name: $name,
+				props: $data
+			);
 
-			if (file_exists($file) === false) {
-				$file = $kirby->extensions('snippets')[$name] ?? null;
-			}
-
-			if ($file) {
+			if ($snippet->exists() === false) {
 				break;
 			}
 		}
 
-		return Snippet::load($file, $data);
+		return $snippet;
 	},
 
 	/**
