@@ -140,10 +140,7 @@ trait AppPlugins
 	protected function extendAreas(array $areas): array
 	{
 		foreach ($areas as $id => $area) {
-			if (isset($this->extensions['areas'][$id]) === false) {
-				$this->extensions['areas'][$id] = [];
-			}
-
+			$this->extensions['areas'][$id] ??= [];
 			$this->extensions['areas'][$id][] = $area;
 		}
 
@@ -388,9 +385,7 @@ trait AppPlugins
 	protected function extendHooks(array $hooks): array
 	{
 		foreach ($hooks as $name => $callbacks) {
-			if (isset($this->extensions['hooks'][$name]) === false) {
-				$this->extensions['hooks'][$name] = [];
-			}
+			$this->extensions['hooks'][$name] ??= [];
 
 			if (is_array($callbacks) === false) {
 				$callbacks = [$callbacks];

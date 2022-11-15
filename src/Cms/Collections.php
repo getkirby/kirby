@@ -63,9 +63,7 @@ class Collections
 	public function get(string $name, array $data = [])
 	{
 		// if not yet loaded
-		if (isset($this->collections[$name]) === false) {
-			$this->collections[$name] = $this->load($name);
-		}
+		$this->collections[$name] ??= $this->load($name);
 
 		// if not yet cached
 		if (

@@ -57,6 +57,7 @@ return [
 		},
 		'type'       => fn (File $file) => $file->type(),
 		'url'        => fn (File $file) => $file->url(),
+		'uuid'       => fn (File $file) => $file->uuid()?->toString()
 	],
 	'type'  => 'Kirby\Cms\File',
 	'views' => [
@@ -79,7 +80,8 @@ return [
 			'size',
 			'template',
 			'type',
-			'url'
+			'url',
+			'uuid'
 		],
 		'compact' => [
 			'filename',
@@ -87,6 +89,7 @@ return [
 			'link',
 			'type',
 			'url',
+			'uuid'
 		],
 		'panel' => [
 			'blueprint',
@@ -109,7 +112,8 @@ return [
 			'prevWithTemplate' => 'compact',
 			'template',
 			'type',
-			'url'
+			'url',
+			'uuid'
 		]
 	],
 ];

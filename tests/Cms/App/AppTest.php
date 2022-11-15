@@ -411,6 +411,20 @@ class AppTest extends TestCase
 		$this->assertNull($image);
 	}
 
+	/**
+	 * @covers ::nonce
+	 */
+	public function testNonce()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		$this->assertIsString($nonce = $app->nonce());
+	}
+
 	public function testOption()
 	{
 		$app = new App([

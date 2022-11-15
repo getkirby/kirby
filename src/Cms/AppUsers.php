@@ -31,7 +31,7 @@ trait AppUsers
 	 */
 	public function auth()
 	{
-		return $this->auth = $this->auth ?? new Auth($this);
+		return $this->auth ??= new Auth($this);
 	}
 
 	/**

@@ -602,14 +602,19 @@ class Html extends Xml
 
 			default:
 				// short URLs
-				if (Str::contains($uri->host(), 'youtu.be') === true && $isYoutubeId($first) === true) {
+				if (
+					Str::contains($uri->host(), 'youtu.be') === true &&
+					$isYoutubeId($first) === true
+				) {
 					$src = 'https://www.youtube.com/embed/' . $first;
 
 					$query->start = $query->t;
 					unset($query->t);
-
-				// embedded video URLs
-				} elseif ($first === 'embed' && $isYoutubeId($second) === true) {
+				} elseif (
+					in_array($first, ['embed', 'shorts']) === true &&
+					$isYoutubeId($second) === true
+				) {
+					// embedded and shorts video URLs
 					$src = $host . '/' . $second;
 				}
 		}

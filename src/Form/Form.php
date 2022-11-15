@@ -109,9 +109,7 @@ class Form
 			$input = array_merge($values, $input);
 
 			foreach ($input as $key => $value) {
-				if (isset($this->values[$key]) === false) {
-					$this->values[$key] = $value;
-				}
+				$this->values[$key] ??= $value;
 			}
 		}
 	}

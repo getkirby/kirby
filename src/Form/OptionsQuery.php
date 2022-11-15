@@ -5,10 +5,10 @@ namespace Kirby\Form;
 use Kirby\Cms\Field;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Query\Query;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
 
 /**
@@ -117,8 +117,8 @@ class OptionsQuery
 		}
 
 		$data    = $this->data();
-		$query   = new Query($this->query(), $data);
-		$result  = $query->result();
+		$query   = new Query($this->query());
+		$result  = $query->resolve($data);
 		$result  = $this->resultToCollection($result);
 		$options = [];
 

@@ -2,22 +2,10 @@
 
 namespace Kirby\Cms;
 
-class TranslationsApiCollectionTest extends TestCase
+use Kirby\Cms\Api\ApiCollectionTestCase;
+
+class TranslationsApiCollectionTest extends ApiCollectionTestCase
 {
-	protected $api;
-	protected $app;
-
-	public function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-		]);
-
-		$this->api = $this->app->api();
-	}
-
 	public function testCollection()
 	{
 		$collection = $this->api->collection('translations', $this->app->translations()->filter('id', 'en'));

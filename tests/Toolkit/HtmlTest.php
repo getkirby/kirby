@@ -594,6 +594,10 @@ class HtmlTest extends TestCase
 				'https://www.youtube.com/embed/d9NF2edxy-M'
 			],
 			[
+				'http://www.youtube.com/shorts/z-zDhFM_oAo',
+				'https://www.youtube.com/embed/z-zDhFM_oAo'
+			],
+			[
 				'http://www.youtube.com/embed/d9NF2edxy-M?start=10',
 				'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
 			],

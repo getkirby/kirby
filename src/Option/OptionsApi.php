@@ -8,7 +8,7 @@ use Kirby\Data\Json;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Remote;
 use Kirby\Http\Url;
-use Kirby\Toolkit\Query;
+use Kirby\Query\Query;
 
 /**
  * Options fetched from any REST API
@@ -108,7 +108,9 @@ class OptionsApi extends OptionsProvider
 			throw new NotFoundException('Options could not be loaded from API: ' . $model->toSafeString($this->url));
 		}
 
-		$data = (new Query($this->query, Nest::create($data)))->result();
+		// turn data into Nest so that it can be queried
+		$data = Nest::create($data);
+		$data = Query::factory($this->query)->resolve($data);
 
 		// create options by resolving text and value query strings
 		// for each item from the data
