@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue, { set, del } from "vue";
 import { clone } from "@/helpers/object.js";
 
 const keep = (id, data) => {
@@ -129,7 +129,7 @@ export default {
 			// otherwise fallback to provided changes
 			let changes = state.models[id] ? state.models[id].changes : model.changes;
 
-			Vue.set(state.models, id, {
+			set(state.models, id, {
 				api: model.api,
 				originals: model.originals,
 				changes: changes || {}
@@ -141,8 +141,8 @@ export default {
 		MOVE(state, [from, to]) {
 			// move state
 			const model = clone(state.models[from]);
-			Vue.delete(state.models, from);
-			Vue.set(state.models, to, model);
+			del(state.models, from);
+			set(state.models, to, model);
 
 			// move local storage
 			const storage = localStorage.getItem("kirby$content$" + from);
@@ -150,17 +150,17 @@ export default {
 			localStorage.setItem("kirby$content$" + to, storage);
 		},
 		REMOVE(state, id) {
-			Vue.delete(state.models, id);
+			del(state.models, id);
 			localStorage.removeItem("kirby$content$" + id);
 		},
 		REVERT(state, id) {
 			if (state.models[id]) {
-				Vue.set(state.models[id], "changes", {});
+				set(state.models[id], "changes", {});
 				localStorage.removeItem("kirby$content$" + id);
 			}
 		},
 		STATUS(state, enabled) {
-			Vue.set(state.status, "enabled", enabled);
+			set(state.status, "enabled", enabled);
 		},
 		UPDATE(state, [id, field, value]) {
 			// avoid updating without a valid model
@@ -181,10 +181,10 @@ export default {
 
 			if (original == current) {
 				// if the same, there are no unsaved changes
-				Vue.delete(state.models[id].changes, field);
+				del(state.models[id].changes, field);
 			} else {
 				// if they differ, set as unsaved change
-				Vue.set(state.models[id].changes, field, value);
+				set(state.models[id].changes, field, value);
 			}
 
 			keep(id, {
