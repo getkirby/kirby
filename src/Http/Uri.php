@@ -207,7 +207,9 @@ class Uri
 	}
 
 	/**
-	 * Returns the domain without scheme, path or query
+	 * Returns the domain without scheme, path or query.
+	 * Includes auth part when not empty.
+	 * Includes port number when different from 80 or 443.
 	 */
 	public function domain(): string|null
 	{
