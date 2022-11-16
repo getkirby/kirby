@@ -18,26 +18,21 @@ class Db
 {
 	/**
 	 * Query shortcuts
-	 *
-	 * @var array
 	 */
-	public static $queries = [];
+	public static array $queries = [];
 
 	/**
 	 * The singleton Database object
-	 *
-	 * @var \Kirby\Database\Database
 	 */
-	public static $connection = null;
+	public static Database|null $connection = null;
 
 	/**
 	 * (Re)connect the database
 	 *
 	 * @param array|null $params Pass `[]` to use the default params from the config,
 	 *                           don't pass any argument to get the current connection
-	 * @return \Kirby\Database\Database
 	 */
-	public static function connect(array|null $params = null)
+	public static function connect(array|null $params = null): Database
 	{
 		if ($params === null && static::$connection !== null) {
 			return static::$connection;
@@ -60,10 +55,8 @@ class Db
 
 	/**
 	 * Returns the current database connection
-	 *
-	 * @return \Kirby\Database\Database|null
 	 */
-	public static function connection()
+	public static function connection(): Database|null
 	{
 		return static::$connection;
 	}
@@ -72,11 +65,8 @@ class Db
 	 * Sets the current table which should be queried. Returns a
 	 * Query object, which can be used to build a full query for
 	 * that table.
-	 *
-	 * @param string $table
-	 * @return \Kirby\Database\Query
 	 */
-	public static function table(string $table)
+	public static function table(string $table): Query
 	{
 		$db = static::connect();
 		return $db->table($table);
@@ -84,11 +74,6 @@ class Db
 
 	/**
 	 * Executes a raw SQL query which expects a set of results
-	 *
-	 * @param string $query
-	 * @param array $bindings
-	 * @param array $params
-	 * @return mixed
 	 */
 	public static function query(string $query, array $bindings = [], array $params = [])
 	{
@@ -97,11 +82,8 @@ class Db
 	}
 
 	/**
-	 * Executes a raw SQL query which expects no set of results (i.e. update, insert, delete)
-	 *
-	 * @param string $query
-	 * @param array $bindings
-	 * @return bool
+	 * Executes a raw SQL query which expects
+	 * no set of results (i.e. update, insert, delete)
 	 */
 	public static function execute(string $query, array $bindings = []): bool
 	{
@@ -114,9 +96,6 @@ class Db
 	 * redirected to either a predefined query or
 	 * the respective method of the Database object
 	 *
-	 * @param string $method
-	 * @param mixed $arguments
-	 * @return mixed
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function __callStatic(string $method, $arguments)
@@ -125,7 +104,10 @@ class Db
 			return (static::$queries[$method])(...$arguments);
 		}
 
-		if (static::$connection !== null && method_exists(static::$connection, $method) === true) {
+		if (
+			static::$connection !== null &&
+			method_exists(static::$connection, $method) === true
+		) {
 			return call_user_func_array([static::$connection, $method], $arguments);
 		}
 
@@ -141,13 +123,22 @@ class Db
  * @param string $table The name of the table which should be queried
  * @param mixed $columns Either a string with columns or an array of column names
  * @param mixed $where The WHERE clause; can be a string or an array
- * @param string $order
- * @param int $offset
- * @param int $limit
- * @return mixed
  */
-Db::$queries['select'] = function (string $table, $columns = '*', $where = null, string $order = null, int $offset = 0, int $limit = null) {
-	return Db::table($table)->select($columns)->where($where)->order($order)->offset($offset)->limit($limit)->all();
+Db::$queries['select'] = function (
+	string $table,
+	$columns = '*',
+	$where = null,
+	string|null $order = null,
+	int $offset = 0,
+	int|null $limit = null
+) {
+	return Db::table($table)
+		->select($columns)
+		->where($where)
+		->order($order)
+		->offset($offset)
+		->limit($limit)
+		->all();
 };
 
 /**
@@ -156,13 +147,18 @@ Db::$queries['select'] = function (string $table, $columns = '*', $where = null,
  * @param string $table The name of the table which should be queried
  * @param mixed $columns Either a string with columns or an array of column names
  * @param mixed $where The WHERE clause; can be a string or an array
- * @param string $order
- * @param int $offset
- * @param int $limit
- * @return mixed
  */
-Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (string $table, $columns = '*', $where = null, string $order = null) {
-	return Db::table($table)->select($columns)->where($where)->order($order)->first();
+Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (
+	string $table,
+	$columns = '*',
+	$where = null,
+	string|null $order = null
+) {
+	return Db::table($table)
+		->select($columns)
+		->where($where)
+		->order($order)
+		->first();
 };
 
 /**
@@ -171,13 +167,21 @@ Db::$queries['first'] = Db::$queries['row'] = Db::$queries['one'] = function (st
  * @param string $table The name of the table which should be queried
  * @param string $column The name of the column to select from
  * @param mixed $where The WHERE clause; can be a string or an array
- * @param string $order
- * @param int $offset
- * @param int $limit
- * @return mixed
  */
-Db::$queries['column'] = function (string $table, string $column, $where = null, string $order = null, int $offset = 0, int $limit = null) {
-	return Db::table($table)->where($where)->order($order)->offset($offset)->limit($limit)->column($column);
+Db::$queries['column'] = function (
+	string $table,
+	string $column,
+	$where = null,
+	string|null $order = null,
+	int $offset = 0,
+	int|null $limit = null
+) {
+	return Db::table($table)
+		->where($where)
+		->order($order)
+		->offset($offset)
+		->limit($limit)
+		->column($column);
 };
 
 /**
@@ -197,9 +201,12 @@ Db::$queries['insert'] = function (string $table, array $values) {
  * @param string $table The name of the table which should be queried
  * @param array $values An array of values which should be inserted
  * @param mixed $where An optional WHERE clause
- * @return bool
  */
-Db::$queries['update'] = function (string $table, array $values, $where = null): bool {
+Db::$queries['update'] = function (
+	string $table,
+	array $values,
+	$where = null
+): bool {
 	return Db::table($table)->where($where)->update($values);
 };
 
@@ -208,7 +215,6 @@ Db::$queries['update'] = function (string $table, array $values, $where = null):
  *
  * @param string $table The name of the table which should be queried
  * @param mixed $where An optional WHERE clause
- * @return bool
  */
 Db::$queries['delete'] = function (string $table, $where = null): bool {
 	return Db::table($table)->where($where)->delete();
@@ -231,9 +237,12 @@ Db::$queries['count'] = function (string $table, $where = null): int {
  * @param string $table The name of the table which should be queried
  * @param string $column The name of the column of which the minimum should be calculated
  * @param mixed $where An optional WHERE clause
- * @return float
  */
-Db::$queries['min'] = function (string $table, string $column, $where = null): float {
+Db::$queries['min'] = function (
+	string $table,
+	string $column,
+	$where = null
+): float {
 	return Db::table($table)->where($where)->min($column);
 };
 
@@ -243,9 +252,12 @@ Db::$queries['min'] = function (string $table, string $column, $where = null): f
  * @param string $table The name of the table which should be queried
  * @param string $column The name of the column of which the maximum should be calculated
  * @param mixed $where An optional WHERE clause
- * @return float
  */
-Db::$queries['max'] = function (string $table, string $column, $where = null): float {
+Db::$queries['max'] = function (
+	string $table,
+	string $column,
+	$where = null
+): float {
 	return Db::table($table)->where($where)->max($column);
 };
 
@@ -255,9 +267,12 @@ Db::$queries['max'] = function (string $table, string $column, $where = null): f
  * @param string $table The name of the table which should be queried
  * @param string $column The name of the column of which the average should be calculated
  * @param mixed $where An optional WHERE clause
- * @return float
  */
-Db::$queries['avg'] = function (string $table, string $column, $where = null): float {
+Db::$queries['avg'] = function (
+	string $table,
+	string $column,
+	$where = null
+): float {
 	return Db::table($table)->where($where)->avg($column);
 };
 
@@ -267,9 +282,12 @@ Db::$queries['avg'] = function (string $table, string $column, $where = null): f
  * @param string $table The name of the table which should be queried
  * @param string $column The name of the column of which the sum should be calculated
  * @param mixed $where An optional WHERE clause
- * @return float
  */
-Db::$queries['sum'] = function (string $table, string $column, $where = null): float {
+Db::$queries['sum'] = function (
+	string $table,
+	string $column,
+	$where = null
+): float {
 	return Db::table($table)->where($where)->sum($column);
 };
 
