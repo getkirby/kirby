@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import AccountView from "./AccountView.vue";
 import ErrorView from "./ErrorView.vue";
 import FileView from "./FileView.vue";
@@ -14,16 +12,20 @@ import SystemView from "./SystemView.vue";
 import UsersView from "./UsersView.vue";
 import UserView from "./UserView.vue";
 
-Vue.component("k-account-view", AccountView);
-Vue.component("k-error-view", ErrorView);
-Vue.component("k-file-view", FileView);
-Vue.component("k-installation-view", InstallationView);
-Vue.component("k-languages-view", LanguagesView);
-Vue.component("k-login-view", LoginView);
-Vue.component("k-page-view", PageView);
-Vue.component("k-plugin-view", PluginView);
-Vue.component("k-reset-password-view", ResetPasswordView);
-Vue.component("k-site-view", SiteView);
-Vue.component("k-system-view", SystemView);
-Vue.component("k-users-view", UsersView);
-Vue.component("k-user-view", UserView);
+export default {
+	install(app) {
+		app.component("k-account-view", AccountView);
+		app.component("k-error-view", ErrorView);
+		app.component("k-file-view", FileView);
+		app.component("k-installation-view", InstallationView);
+		app.component("k-languages-view", LanguagesView);
+		app.component("k-login-view", LoginView);
+		app.component("k-page-view", PageView);
+		app.component("k-plugin-view", PluginView);
+		app.component("k-reset-password-view", ResetPasswordView);
+		app.component("k-site-view", SiteView);
+		app.component("k-system-view", SystemView);
+		app.component("k-users-view", UsersView);
+		app.component("k-user-view", UserView);
+	}
+};
