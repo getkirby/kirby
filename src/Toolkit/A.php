@@ -521,10 +521,10 @@ class A
 				is_array($result[$key]) === true &&
 				is_array($value) === true
 			) {
-				$result[$key] = array_replace_recursive($result[$key], $value);
-			} else {
-				$result[$key] = $value;
+				$value = array_replace_recursive($result[$key], $value);
 			}
+
+			$result[$key] = $value;
 		}
 
 		return $result;
@@ -717,10 +717,10 @@ class A
 	{
 		foreach ($update as $key => $value) {
 			if ($value instanceof Closure) {
-				$array[$key] = call_user_func($value, static::get($array, $key));
-			} else {
-				$array[$key] = $value;
+				$value = call_user_func($value, static::get($array, $key));
 			}
+
+			$array[$key] = $value;
 		}
 
 		return $array;
