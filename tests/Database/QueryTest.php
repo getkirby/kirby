@@ -2,7 +2,9 @@
 
 namespace Kirby\Database;
 
+use InvalidArgumentException;
 use Kirby\Toolkit\Collection;
+use PDOException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -131,6 +133,34 @@ class QueryTest extends TestCase
 		$this->assertSame('admin', $user->role());
 	}
 
+	public function testLeftJoin()
+	{
+		$user = $this->database
+			->table('users')
+			->leftJoin('roles', 'roles.id = users.role_id')
+			->where([
+				'username' => 'john'
+			])
+			->first();
+
+		$this->assertSame('admin', $user->role());
+	}
+
+	public function testRightJoin()
+	{
+		$query = $this->database
+			->table('users')
+			->rightJoin('roles', 'users.role_id = roles.id')
+			->build('select');
+
+		// the result of the query should be correct, but we cannot
+		// test it directly against SQLite because it does not support
+		// right joins
+		$expected = 'SELECT * FROM "users" RIGHT JOIN "roles" ON users.role_id = roles.id';
+
+		$this->assertSame($expected, $query['query']);
+	}
+
 	public function testOrder()
 	{
 		$user = $this->database
@@ -161,6 +191,19 @@ class QueryTest extends TestCase
 			->sum('balance');
 
 		$this->assertSame((float)470, $sum);
+	}
+
+	public function testAggregateAndDebug()
+	{
+		$result = $this->database
+			->table('users')
+			->debug(true)
+			->aggregate('avg', 'balance');
+
+
+		$this->assertArrayHasKey('query', $result);
+		$this->assertArrayHasKey('bindings', $result);
+		$this->assertArrayHasKey('options', $result);
 	}
 
 	public function testAvg()
@@ -236,6 +279,26 @@ class QueryTest extends TestCase
 			->findByUsername('george');
 
 		$this->assertSame('george', $user->username());
+	}
+
+	public function testFail()
+	{
+		// should not throw an exception
+		$this->database
+			->table('users')
+			->fail(false)
+			->where('foo = "bar"')
+			->one();
+
+		$this->expectException(PDOException::class);
+		$this->expectExceptionMessage('SQLSTATE[HY000]: General error: 1 no such column: foo');
+
+		// should throw an exception
+		$this->database
+			->table('users')
+			->fail(true)
+			->where('foo = "bar"')
+			->one();
 	}
 
 	public function testFind()
@@ -537,5 +600,17 @@ class QueryTest extends TestCase
 		$this->assertSame(4, $pagination->start());
 		$this->assertSame(5, $pagination->end());
 		$this->assertSame(3, $pagination->limit());
+	}
+
+	public function testTable()
+	{
+		// should not throw an exception
+		$this->database->table('users');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid table: accounts');
+
+		// should throw an exception
+		$this->database->table('accounts');
 	}
 }

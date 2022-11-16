@@ -4,6 +4,8 @@ namespace Kirby\Database;
 
 use Closure;
 use InvalidArgumentException;
+use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
 
@@ -30,12 +32,12 @@ class Query
 	 * The object which should be fetched for each row
 	 * or function to call for each row
 	 */
-	protected string|Closure $fetch = 'Kirby\Toolkit\Obj';
+	protected string|Closure $fetch = Obj::class;
 
 	/**
 	 * The iterator class, which should be used for result sets
 	 */
-	protected string $iterator = 'Kirby\Toolkit\Collection';
+	protected string $iterator = Collection::class;
 
 	/**
 	 * An array of bindings for the final query
@@ -274,7 +276,7 @@ class Query
 	 */
 	public function leftJoin(string $table, string $on): static
 	{
-		return $this->join($table, $on, 'left');
+		return $this->join($table, $on, 'left join');
 	}
 
 	/**
@@ -286,7 +288,7 @@ class Query
 	 */
 	public function rightJoin(string $table, string $on): static
 	{
-		return $this->join($table, $on, 'right');
+		return $this->join($table, $on, 'right join');
 	}
 
 	/**
@@ -543,7 +545,7 @@ class Query
 		}
 
 		$fetch  = $this->fetch;
-		$row    = $this->select($method . '(' . $column . ') as aggregation')->fetch('Obj')->first();
+		$row    = $this->select($method . '(' . $column . ') as aggregation')->fetch(Obj::class)->first();
 
 		if ($this->debug === true) {
 			return $row;
@@ -621,7 +623,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function first(): object|false
+	public function first(): object|array|false
 	{
 		return $this->query($this->offset(0)->limit(1)->build('select'), [
 			'fetch'    => $this->fetch,
@@ -633,7 +635,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function row(): object|false
+	public function row(): object|array|false
 	{
 		return $this->first();
 	}
@@ -641,7 +643,7 @@ class Query
 	/**
 	 * Selects only one row from a table
 	 */
-	public function one(): object|false
+	public function one(): object|array|false
 	{
 		return $this->first();
 	}
