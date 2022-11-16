@@ -122,8 +122,8 @@ class DatabaseTest extends TestCase
 			'type'     => 'sqlite'
 		]);
 
-		$this->assertInstanceOf('\Kirby\Database\Database', $db);
-		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->assertInstanceOf(Database::class, $db);
+		$this->expectException(InvalidArgumentException::class);
 
 		new Database([
 			'database' => ':memory:',

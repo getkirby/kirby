@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
@@ -65,7 +66,7 @@ class PageRulesTest extends TestCase
 
 		$this->assertTrue(PageRules::changeSlug($page, 'test-a'));
 
-		$this->expectException('\Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A page with the URL appendix "test-b" already exists');
 
 		PageRules::changeSlug($page, 'test-b');
@@ -331,7 +332,7 @@ class PageRulesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('\Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionCode('error.page.duplicate');
 
 		$page = new Page([
@@ -495,7 +496,7 @@ class PageRulesTest extends TestCase
 			'kirby' => $this->appWithAdmin(),
 		]);
 
-		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.page.slug.invalid');
 
 		PageRules::duplicate($page, '');

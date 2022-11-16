@@ -465,7 +465,7 @@ class FileTest extends TestCase
 	 */
 	public function testInvalidModel()
 	{
-		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
 
 		new File([

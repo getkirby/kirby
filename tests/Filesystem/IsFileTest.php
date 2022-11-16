@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use PHPUnit\Framework\TestCase as TestCase;
 
@@ -105,7 +106,7 @@ class IsFileTest extends TestCase
 	public function testCallNotExisting()
 	{
 		$asset = $this->_asset();
-		$this->expectException('\Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
 	}
