@@ -132,4 +132,30 @@ class StatsSectionTest extends TestCase
 
 		$this->assertSame([], $section->reports());
 	}
+
+	public function testReportsTranslatedInfo()
+	{
+		$section = new Section('stats', [
+			'name'     => 'test',
+			'model'    => Page::factory(['slug' => 'test']),
+			'reports'  => [
+				[
+					'label' => 'C',
+					'value' => 'Value C',
+					'info'  => [
+						'en' => 'Extra information',
+						'de' => 'Zusatzinformation'
+					],
+					'link'  => null,
+					'theme' => null,
+				]
+			]
+		]);
+
+		$report = $section->reports()[0];
+
+		$this->assertSame('C', $report['label']);
+		$this->assertSame('Value C', $report['value']);
+		$this->assertSame('Extra information', $report['info']);
+	}
 }
