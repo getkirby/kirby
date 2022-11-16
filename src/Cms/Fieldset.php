@@ -19,7 +19,7 @@ use Kirby\Toolkit\Str;
  */
 class Fieldset extends Item
 {
-	public const ITEMS_CLASS = '\Kirby\Cms\Fieldsets';
+	public const ITEMS_CLASS = Fieldsets::class;
 
 	protected $disabled;
 	protected $editable;

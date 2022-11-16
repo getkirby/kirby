@@ -19,7 +19,7 @@ class LayoutColumn extends Item
 {
 	use HasMethods;
 
-	public const ITEMS_CLASS = '\Kirby\Cms\LayoutColumns';
+	public const ITEMS_CLASS = LayoutColumns::class;
 
 	/**
 	 * @var \Kirby\Cms\Blocks

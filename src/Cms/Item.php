@@ -24,7 +24,7 @@ class Item
 {
 	use HasSiblings;
 
-	public const ITEMS_CLASS = '\Kirby\Cms\Items';
+	public const ITEMS_CLASS = Items::class;
 
 	/**
 	 * @var string
