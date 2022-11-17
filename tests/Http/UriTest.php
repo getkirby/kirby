@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class UriTest extends TestCase
@@ -145,7 +146,7 @@ class UriTest extends TestCase
 
 	public function testInvalidScheme()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid URL scheme: abc');
 
 		$url = new Uri();
@@ -202,7 +203,7 @@ class UriTest extends TestCase
 
 	public function testInvalidPortFormat2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid port format: 12010210210');
 
 		$url = new Uri(['port' => 12010210210]);

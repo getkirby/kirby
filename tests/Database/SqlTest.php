@@ -193,13 +193,13 @@ class SqlTest extends TestCase
 		$this->assertFalse($column['unique']);
 
 		// fail with no type
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->sql->createColumn('test', [
 			'default' => 'amazing default'
 		]);
 
 		// fail with invalid type
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->sql->createColumn('test', [
 			'type'    => 'nonexisting',
 			'default' => 'amazing default'
@@ -211,7 +211,7 @@ class SqlTest extends TestCase
 	 */
 	public function testCreateColumnNoType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('No column type given for column test');
 
 		$this->sql->createColumn('test', []);
@@ -222,7 +222,7 @@ class SqlTest extends TestCase
 	 */
 	public function testCreateColumnInvalidType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Unsupported column type: invalid');
 
 		$this->sql->createColumn('test', ['type' => 'invalid']);

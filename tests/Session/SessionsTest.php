@@ -3,6 +3,9 @@
 namespace Kirby\Session;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -60,7 +63,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidStore()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(new InvalidSessionStore());
 	}
@@ -89,7 +92,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidMode()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(__DIR__ . '/fixtures/store', ['mode' => 'invalid']);
 	}
@@ -99,7 +102,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidCookieName()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(__DIR__ . '/fixtures/store', ['cookieName' => 123]);
 	}
@@ -125,7 +128,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testConstructorInvalidGcInterval()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Sessions(__DIR__ . '/fixtures/store', ['gcInterval' => 0]);
 	}
@@ -186,7 +189,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testGetInvalid()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.notFound');
 
 		$this->sessions->get('9999999999.doesNotExist.' . $this->store->validKey);
@@ -228,7 +231,7 @@ class SessionsTest extends TestCase
 	 */
 	public function testCurrentManualMode()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.sessions.manualMode');
 
 		$sessions = new Sessions($this->store, ['mode' => 'manual']);

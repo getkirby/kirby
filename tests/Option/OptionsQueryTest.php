@@ -4,6 +4,7 @@ namespace Kirby\Option;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Field\TestCase;
 
 class MyPage extends Page
@@ -296,7 +297,7 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid query result data: Kirby\Cms\Field');
 
 		$options = (new OptionsQuery('site.foo'))->render($app->site());

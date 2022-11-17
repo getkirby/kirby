@@ -5,6 +5,7 @@ namespace Kirby\Panel\Areas;
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
+use Kirby\Http\Response;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
@@ -36,7 +37,7 @@ abstract class AreaTestCase extends TestCase
 		$response = $this->response($source);
 		$location = $response->header('Location');
 
-		$this->assertInstanceOf('Kirby\Http\Response', $response);
+		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame($code, $response->code());
 		$this->assertSame($dest, ltrim(Str::after($location, '/panel'), '/'));
 	}

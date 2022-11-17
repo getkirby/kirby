@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use IntlDateFormatter;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use PHPUnit\Framework\TestCase;
 
@@ -64,7 +65,7 @@ class StrTest extends TestCase
 	 */
 	public function testAfterWithEmptyNeedle()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The needle must not be empty');
 		Str::after('test', '');
 	}
@@ -114,7 +115,7 @@ class StrTest extends TestCase
 	 */
 	public function testBeforeWithEmptyNeedle()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The needle must not be empty');
 		Str::before('test', '');
 	}
@@ -433,7 +434,7 @@ class StrTest extends TestCase
 	 */
 	public function testFromWithEmptyNeedle()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The needle must not be empty');
 		Str::from('test', '');
 	}
@@ -590,7 +591,7 @@ class StrTest extends TestCase
 	 */
 	public function testPositionWithEmptyNeedle()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The needle must not be empty');
 		Str::position('test', '');
 	}
@@ -1348,7 +1349,7 @@ EOT;
 	 */
 	public function testUntilWithEmptyNeedle()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The needle must not be empty');
 		Str::until('test', '');
 	}

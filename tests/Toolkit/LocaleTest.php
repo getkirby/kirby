@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -103,7 +105,7 @@ class LocaleTest extends TestCase
 	 */
 	public function testGetInvalid1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid locale category "KIRBY_AWESOME_LOCALE"');
 
 		Locale::get('KIRBY_AWESOME_LOCALE');
@@ -116,7 +118,7 @@ class LocaleTest extends TestCase
 	 */
 	public function testGetInvalid2()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Could not determine locale for category "987654321"');
 
 		Locale::get(987654321);
@@ -148,7 +150,7 @@ class LocaleTest extends TestCase
 		], Locale::normalize('test'));
 
 		// invalid argument
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Locale must be string or array');
 		Locale::normalize(123);
 	}

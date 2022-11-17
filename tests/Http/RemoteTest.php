@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -147,7 +148,7 @@ class RemoteTest extends TestCase
 		$this->assertArrayNotHasKey(CURLOPT_CAINFO, $request->curlopt);
 		$this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid "ca" option for the Remote class');
 		$request = Remote::get('https://getkirby.com', [
 			'ca' => 'does-not-exist'

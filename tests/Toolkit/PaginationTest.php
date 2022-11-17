@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\ErrorPageException;
+use Kirby\Exception\Exception;
 use PHPUnit\Framework\TestCase;
 
 class PaginationTest extends TestCase
@@ -370,7 +372,7 @@ class PaginationTest extends TestCase
 
 	public function testCloneInvalid1()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid pagination limit: 0');
 
 		$pagination = new Pagination();
@@ -379,7 +381,7 @@ class PaginationTest extends TestCase
 
 	public function testCloneInvalid2()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid total number of items: -1');
 
 		$pagination = new Pagination();
@@ -388,7 +390,7 @@ class PaginationTest extends TestCase
 
 	public function testCloneInvalid3()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid page number: -1');
 
 		$pagination = new Pagination();
@@ -397,7 +399,7 @@ class PaginationTest extends TestCase
 
 	public function testCloneOutOfBounds1()
 	{
-		$this->expectException('Kirby\Exception\ErrorPageException');
+		$this->expectException(ErrorPageException::class);
 		$this->expectExceptionMessage('Pagination page 3 does not exist, expected 1-2');
 
 		$pagination = new Pagination();
@@ -406,7 +408,7 @@ class PaginationTest extends TestCase
 
 	public function testCloneOutOfBounds2()
 	{
-		$this->expectException('Kirby\Exception\ErrorPageException');
+		$this->expectException(ErrorPageException::class);
 		$this->expectExceptionMessage('Pagination page 0 does not exist, expected 1-2');
 
 		$pagination = new Pagination();

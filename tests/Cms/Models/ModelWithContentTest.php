@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 
@@ -150,7 +151,7 @@ class ModelWithContentTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
 
 		$app->page('foo')->content('fr');

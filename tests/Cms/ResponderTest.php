@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 require_once __DIR__ . '/mocks.php';
 
 /**
@@ -123,7 +125,7 @@ class ResponderTest extends TestCase
 	 */
 	public function testExpiresInvalidString()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid time string "abcde"');
 
 		$responder = new Responder();

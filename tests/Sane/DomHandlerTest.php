@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\InvalidArgumentException;
+
 require_once __DIR__ . '/mocks.php';
 
 /**
@@ -32,7 +34,7 @@ class DomHandlerTest extends TestCase
 
 	public function testValidateException1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "href" (line 2): Unknown URL type');
 
 		DomHandler::validate("<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
@@ -40,7 +42,7 @@ class DomHandlerTest extends TestCase
 
 	public function testValidateException2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype must not reference external files');
 
 		DomHandler::validate("<!DOCTYPE xml SYSTEM \"https://malicious.com/something.dtd\">\n<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");

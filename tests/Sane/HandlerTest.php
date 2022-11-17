@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\InvalidArgumentException;
+
 require_once __DIR__ . '/mocks.php';
 
 /**
@@ -57,7 +59,7 @@ class HandlerTest extends TestCase
 	 */
 	public function testValidateFileError()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "style"');
 
 		CustomHandler::validateFile($this->fixture('external-source-1.svg'));

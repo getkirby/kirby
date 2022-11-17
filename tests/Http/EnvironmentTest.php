@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -148,7 +149,7 @@ class EnvironmentTest extends TestCase
 	{
 		// nothing given
 		$env = new Environment();
-		$this->assertInstanceOf('Kirby\Http\Uri', $env->baseUri());
+		$this->assertInstanceOf(Uri::class, $env->baseUri());
 	}
 
 	/**
@@ -390,7 +391,7 @@ class EnvironmentTest extends TestCase
 
 	public function testDisallowFromInvalidSubfolders()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment([
@@ -547,7 +548,7 @@ class EnvironmentTest extends TestCase
 	 */
 	public function testHostForbidden()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment(
@@ -750,7 +751,7 @@ class EnvironmentTest extends TestCase
 	 */
 	public function testHttpsForbidden()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment(
@@ -882,7 +883,7 @@ class EnvironmentTest extends TestCase
 
 	public function testInvalidAllowList()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid allow list setup for base URLs');
 
 		new Environment([
@@ -1278,7 +1279,7 @@ class EnvironmentTest extends TestCase
 	 */
 	public function testPortForbidden()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new Environment(

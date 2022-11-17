@@ -2,6 +2,9 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Image\Image;
 use PHPUnit\Framework\TestCase as TestCase;
 
 class AFile
@@ -45,7 +48,7 @@ class IsFileTest extends TestCase
 		$asset = $this->_asset();
 		$file = $asset->asset();
 
-		$this->assertInstanceOf('Kirby\Filesystem\File', $file);
+		$this->assertInstanceOf(File::class, $file);
 		$this->assertSame($file, $asset->asset());
 	}
 
@@ -57,7 +60,7 @@ class IsFileTest extends TestCase
 		$asset = $this->_asset();
 		$file =  $asset->asset('/dev/null/blank.pdf');
 
-		$this->assertInstanceOf('Kirby\Filesystem\File', $file);
+		$this->assertInstanceOf(File::class, $file);
 		$this->assertSame('/dev/null/blank.pdf', $file->root());
 	}
 
@@ -67,7 +70,7 @@ class IsFileTest extends TestCase
 	public function testAssetImage()
 	{
 		$asset = $this->_asset('cat.jpg');
-		$this->assertInstanceOf('Kirby\Image\Image', $asset->asset());
+		$this->assertInstanceOf(Image::class, $asset->asset());
 	}
 
 	/**
@@ -76,7 +79,7 @@ class IsFileTest extends TestCase
 	public function testKirby()
 	{
 		$asset = $this->_asset();
-		$this->assertInstanceOf('Kirby\Cms\App', $asset->kirby());
+		$this->assertInstanceOf(App::class, $asset->kirby());
 	}
 
 	/**
@@ -103,7 +106,7 @@ class IsFileTest extends TestCase
 	public function testCallNotExisting()
 	{
 		$asset = $this->_asset();
-		$this->expectException('\Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
 	}

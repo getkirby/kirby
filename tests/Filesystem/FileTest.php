@@ -4,6 +4,9 @@ namespace Kirby\Filesystem;
 
 use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase as TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -375,7 +378,7 @@ class FileTest extends TestCase
 	 */
 	public function testMatchMimeException()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid mime type: text/plain');
 
 		$this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
@@ -386,7 +389,7 @@ class FileTest extends TestCase
 	 */
 	public function testMatchExtensionException()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid extension: js');
 
 		$this->_file()->match(['extension' => ['png', 'pdf']]);
@@ -397,7 +400,7 @@ class FileTest extends TestCase
 	 */
 	public function testMatchTypeException()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Invalid file type: code');
 
 		$this->_file()->match(['type' => ['document', 'video']]);
@@ -462,7 +465,7 @@ class FileTest extends TestCase
 	 */
 	public function testInvalidModel()
 	{
-		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The model object must use the "Kirby\Filesystem\IsFile" trait');
 
 		new File([
@@ -691,7 +694,7 @@ class FileTest extends TestCase
 		$file->sanitizeContents(true);
 
 		// default mode
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Missing handler for type: "js"');
 
 		$file->sanitizeContents();
@@ -799,7 +802,7 @@ class FileTest extends TestCase
 	 */
 	public function testValidateContentsWrongType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
 
 		$file = new File($this->fixtures . '/real.svg');
@@ -817,7 +820,7 @@ class FileTest extends TestCase
 		$file->validateContents(true);
 
 		// default mode
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Missing handler for type: "js"');
 
 		$file->validateContents();

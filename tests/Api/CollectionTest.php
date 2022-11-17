@@ -13,7 +13,7 @@ class CollectionTest extends TestCase
 		$api = new Api([]);
 		$collection = new Collection($api, [], []);
 
-		$this->assertInstanceOf('Kirby\Api\Collection', $collection);
+		$this->assertInstanceOf(Collection::class, $collection);
 	}
 
 	public function testSelect()
@@ -89,7 +89,7 @@ class CollectionTest extends TestCase
 		$api = new Api([
 			'models' => [
 				'test' => [
-					'type'   => '\Kirby\Cms\Page',
+					'type'   => Page::class,
 					'fields' => [
 						'value' => function ($model) {
 							return $model->slug();

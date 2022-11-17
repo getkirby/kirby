@@ -2,6 +2,8 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * @covers \Kirby\Sane\Svgz
  */
@@ -36,7 +38,7 @@ class SvgzTest extends TestCase
 	 */
 	public function testInvalid(string $file)
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Could not uncompress gzip data');
 
 		Svgz::validateFile($this->fixture($file));
@@ -54,7 +56,7 @@ class SvgzTest extends TestCase
 
 		$this->assertStringEqualsFile($sanitized, gzdecode(Svgz::sanitize(file_get_contents($fixture))));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The doctype must not define a subset');
 		Svgz::validateFile($fixture);
 	}

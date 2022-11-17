@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Uuid\Uuids;
@@ -107,7 +108,7 @@ class FilesTest extends TestCase
 
 	public function testAddInvalidObject()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Files or File object or an ID of an existing file to the Files collection');
 
 		$site  = new Site();

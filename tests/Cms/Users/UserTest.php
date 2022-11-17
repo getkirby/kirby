@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -209,7 +211,7 @@ class UserTest extends TestCase
 		]);
 
 		if ($valid === false) {
-			$this->expectException('Kirby\Exception\InvalidArgumentException');
+			$this->expectException(InvalidArgumentException::class);
 			$user->validatePassword($input);
 		} else {
 			$this->assertTrue($user->validatePassword($input));
@@ -248,7 +250,7 @@ class UserTest extends TestCase
 			'email' => 'test@getkirby.com',
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$user->validatePassword('test');
 	}
 

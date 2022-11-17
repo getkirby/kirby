@@ -2,6 +2,7 @@
 
 namespace Kirby\Database;
 
+use Kirby\Exception\InvalidArgumentException;
 use PDOException;
 use PHPUnit\Framework\TestCase;
 
@@ -121,8 +122,8 @@ class DatabaseTest extends TestCase
 			'type'     => 'sqlite'
 		]);
 
-		$this->assertInstanceOf('\Kirby\Database\Database', $db);
-		$this->expectException('\Kirby\Exception\InvalidArgumentException');
+		$this->assertInstanceOf(Database::class, $db);
+		$this->expectException(InvalidArgumentException::class);
 
 		new Database([
 			'database' => ':memory:',
@@ -148,7 +149,7 @@ class DatabaseTest extends TestCase
 	{
 		$this->assertTrue($this->database->dropTable('users'));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->database->fail()->dropTable('nonexisting');
 	}
 
@@ -217,7 +218,7 @@ class DatabaseTest extends TestCase
 	{
 		$dsn = Database::$types['mysql']['dsn'];
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The mysql connection requires either a "host" or a "socket" parameter');
 
 		$dsn([]);
@@ -227,7 +228,7 @@ class DatabaseTest extends TestCase
 	{
 		$dsn = Database::$types['mysql']['dsn'];
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The mysql connection requires a "database" parameter');
 
 		$dsn(['host' => 'localhost']);
@@ -246,7 +247,7 @@ class DatabaseTest extends TestCase
 		$this->assertSame('sqlite:kirby', $connectionString);
 
 		// no database
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The sqlite connection requires a "database" parameter');
 
 		$dsn([]);

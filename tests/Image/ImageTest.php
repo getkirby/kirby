@@ -2,6 +2,8 @@
 
 namespace Kirby\Image;
 
+use Kirby\Exception\Exception;
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase as TestCase;
 
 /**
@@ -24,7 +26,7 @@ class ImageTest extends TestCase
 	{
 		// jpg
 		$file = $this->_image();
-		$this->assertInstanceOf('Kirby\Image\Dimensions', $file->dimensions());
+		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
 
 		// svg with width and height
 		$file = $this->_image('square.svg');
@@ -47,7 +49,7 @@ class ImageTest extends TestCase
 		$this->assertEquals(0, $file->dimensions()->height());
 
 		// cached object
-		$this->assertInstanceOf('Kirby\Image\Dimensions', $file->dimensions());
+		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
 	}
 
 	/**
@@ -56,9 +58,9 @@ class ImageTest extends TestCase
 	public function testExif()
 	{
 		$file = $this->_image();
-		$this->assertInstanceOf('Kirby\Image\Exif', $file->exif());
+		$this->assertInstanceOf(Exif::class, $file->exif());
 		// cached object
-		$this->assertInstanceOf('Kirby\Image\Exif', $file->exif());
+		$this->assertInstanceOf(Exif::class, $file->exif());
 	}
 
 	/**
@@ -84,7 +86,7 @@ class ImageTest extends TestCase
 	 */
 	public function testHtmlWithoutUrl()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Calling Image::html() requires that the URL property is not null');
 		$file = new Image(['root' => __DIR__ . '/fixtures/image/cat.jpg']);
 		$file->html();
@@ -180,7 +182,7 @@ class ImageTest extends TestCase
 		// Make sure i18n files are loaded
 		$kirby = kirby();
 
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('The orientation of the image must be "portrait"');
 
 		$this->_image()->match(['orientation' => 'portrait']);

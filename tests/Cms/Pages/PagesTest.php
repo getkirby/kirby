@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class PagesTest extends TestCase
 {
 	public function pages()
@@ -100,7 +102,7 @@ class PagesTest extends TestCase
 
 	public function testAddInvalidObject()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
 
 		$site  = new Site();

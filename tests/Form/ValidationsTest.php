@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ValidationsTest extends TestCase
@@ -41,7 +42,7 @@ class ValidationsTest extends TestCase
 
 	public function testBooleanInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please confirm or deny');
 
 		$page  = new Page(['slug' => 'test']);
@@ -58,7 +59,7 @@ class ValidationsTest extends TestCase
 
 	public function testDateInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid date');
 
 		$page  = new Page(['slug' => 'test']);
@@ -75,7 +76,7 @@ class ValidationsTest extends TestCase
 
 	public function testEmailInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid email address');
 
 		$page  = new Page(['slug' => 'test']);
@@ -96,7 +97,7 @@ class ValidationsTest extends TestCase
 
 	public function testMaxInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a value equal to or lower than 5');
 
 		$page  = new Page(['slug' => 'test']);
@@ -121,7 +122,7 @@ class ValidationsTest extends TestCase
 
 	public function testMaxLengthInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
@@ -146,7 +147,7 @@ class ValidationsTest extends TestCase
 
 	public function testMinInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a value equal to or greater than 5');
 
 		$page  = new Page(['slug' => 'test']);
@@ -171,7 +172,7 @@ class ValidationsTest extends TestCase
 
 	public function testMinLengthInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
@@ -199,7 +200,7 @@ class ValidationsTest extends TestCase
 
 	public function testPatternInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The value does not match the expected pattern');
 
 		$page  = new Page(['slug' => 'test']);
@@ -224,7 +225,7 @@ class ValidationsTest extends TestCase
 
 	public function testRequiredInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter something');
 
 		$page  = new Page(['slug' => 'test']);
@@ -252,7 +253,7 @@ class ValidationsTest extends TestCase
 
 	public function testOptionInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
@@ -283,7 +284,7 @@ class ValidationsTest extends TestCase
 
 	public function testOptionsInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
@@ -307,7 +308,7 @@ class ValidationsTest extends TestCase
 
 	public function testTimeInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid time');
 
 		$page  = new Page(['slug' => 'test']);

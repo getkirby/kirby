@@ -9,7 +9,7 @@ class LayoutTest extends TestCase
 	public function testConstruct()
 	{
 		$layout = new Layout();
-		$this->assertInstanceOf('Kirby\Cms\LayoutColumns', $layout->columns());
+		$this->assertInstanceOf(LayoutColumns::class, $layout->columns());
 	}
 
 	public function testIsEmpty()

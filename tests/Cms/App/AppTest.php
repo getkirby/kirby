@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Email\PHPMailer;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Route;
@@ -330,7 +332,7 @@ class AppTest extends TestCase
 			]
 		);
 
-		$this->assertInstanceOf('Kirby\Email\PHPMailer', $email);
+		$this->assertInstanceOf(PHPMailer::class, $email);
 	}
 
 	/**
@@ -358,7 +360,7 @@ class AppTest extends TestCase
 	 */
 	public function testEnvironmentBeforeInitialization()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The environment is not allowed');
 
 		new App([

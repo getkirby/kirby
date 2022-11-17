@@ -3,6 +3,9 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Request\Auth\BasicAuth;
 
@@ -109,7 +112,7 @@ class AppUsersTest extends TestCase
 
 	public function testImpersonateErrorMissingUser()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->app->impersonate('homer@simpsons.com');
 	}
 
@@ -205,7 +208,7 @@ class AppUsersTest extends TestCase
 
 	public function testUserFromBasicAuthDisabled()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is not activated');
 
 		$app = $this->basicAuthApp()->clone([
@@ -222,7 +225,7 @@ class AppUsersTest extends TestCase
 
 	public function testUserFromBasicAuthOverHttp()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Basic authentication is only allowed over HTTPS');
 
 		$app = $this->basicAuthApp()->clone([
@@ -237,7 +240,7 @@ class AppUsersTest extends TestCase
 
 	public function testUserFromBasicAuthWithInvalidHeader()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid authorization header');
 
 		$app = $this->basicAuthApp()->clone([

@@ -102,7 +102,7 @@ class ExceptionTest extends TestCase
 	 */
 	public function testPHPUnitTesting()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.key.unique');
 
 		$class = new WillFail();

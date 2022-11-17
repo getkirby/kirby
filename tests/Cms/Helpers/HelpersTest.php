@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
 
 /**
@@ -190,7 +191,7 @@ class HelpersTest extends TestCase
 		$this->assertSame(3, Helpers::size(new Collection(['a', 'b', 'c'])));
 
 		// invalid type
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Could not determine the size of the given value');
 		Helpers::size(new Obj());
 	}

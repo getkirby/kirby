@@ -4,6 +4,8 @@ namespace Kirby\Api;
 
 use Kirby\Cms\Response;
 use Kirby\Cms\User;
+use Kirby\Exception\NotFoundException;
+use Kirby\Http\Response as HttpResponse;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -186,7 +188,7 @@ class ApiTest extends TestCase
 		$this->assertEquals($expected, $data);
 
 		// missing collection
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The collection "not-available" does not exist');
 
 		$api->collection('not-available', $instance);
@@ -211,7 +213,7 @@ class ApiTest extends TestCase
 		$this->assertEquals('B', $api->data('b'));
 		$this->assertEquals('C', $api->data('c', 'C'));
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Api data for "d" does not exist');
 
 		$api->data('d');
@@ -249,7 +251,7 @@ class ApiTest extends TestCase
 		$this->assertEquals($expected, $data);
 
 		// missing model
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The model "not-available" does not exist');
 
 		$api->model('not-available', $instance);
@@ -283,7 +285,7 @@ class ApiTest extends TestCase
 
 	public function testModelResolverWithMissingModel()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 
 		$api = new Api([]);
 		$api->resolve(new MockModel());
@@ -364,7 +366,7 @@ class ApiTest extends TestCase
 
 		$result = $api->render('test', 'POST');
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode(['a' => 'A']), $result->body());
 	}
 
@@ -390,7 +392,7 @@ class ApiTest extends TestCase
 			'code' => 200
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 
@@ -416,7 +418,7 @@ class ApiTest extends TestCase
 			'code'    => 400
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 
@@ -442,7 +444,7 @@ class ApiTest extends TestCase
 			'code'    => 404
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 
@@ -470,7 +472,7 @@ class ApiTest extends TestCase
 			'details'  => []
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 
@@ -506,7 +508,7 @@ class ApiTest extends TestCase
 			'route'     => 'test'
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 
 		unset($_SERVER['DOCUMENT_ROOT']);
@@ -542,7 +544,7 @@ class ApiTest extends TestCase
 			'details' => ['a' => 'A'],
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 
@@ -584,7 +586,7 @@ class ApiTest extends TestCase
 			'route'     => 'test',
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(HttpResponse::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 
 		unset($_SERVER['DOCUMENT_ROOT']);

@@ -5,6 +5,7 @@ namespace Kirby\Uuid;
 use Kirby\Cache\Cache;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cache\NullCache;
+use Kirby\Exception\LogicException;
 
 /**
  * @coversDefaultClass \Kirby\Uuid\Uuids
@@ -84,7 +85,7 @@ class UuidsTest extends TestCase
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
 
 		Uuids::generate();
@@ -203,7 +204,7 @@ class UuidsTest extends TestCase
 	{
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
 
 		Uuids::populate();

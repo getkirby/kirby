@@ -21,7 +21,7 @@ class LayoutsTest extends TestCase
 			]
 		]);
 
-		$this->assertInstanceOf('Kirby\Cms\Layout', $layouts->first());
+		$this->assertInstanceOf(Layout::class, $layouts->first());
 		$this->assertSame('1/2', $layouts->first()->columns()->first()->width());
 	}
 
@@ -38,7 +38,7 @@ class LayoutsTest extends TestCase
 			]
 		]);
 
-		$this->assertInstanceOf('Kirby\Cms\Layout', $layouts->first());
+		$this->assertInstanceOf(Layout::class, $layouts->first());
 
 		$columns = $layouts->first()->columns();
 		$blocks  = $columns->first()->blocks();
@@ -135,7 +135,7 @@ class LayoutsTest extends TestCase
 		$blocks = Layouts::factory($data)->toBlocks();
 
 		$this->assertCount(2, $blocks);
-		$this->assertInstanceOf('Kirby\Cms\Blocks', $blocks);
+		$this->assertInstanceOf(Blocks::class, $blocks);
 	}
 
 	public function testHiddenBlocks()

@@ -4,6 +4,8 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Blueprint;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Uri;
 use PHPUnit\Framework\TestCase;
@@ -177,7 +179,7 @@ class HomeTest extends TestCase
 
 		$user = $this->app->impersonate('test@getkirby.com');
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('There’s no available Panel page to redirect to');
 
 		Home::alternative($user);
@@ -395,7 +397,7 @@ class HomeTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
 
 		Home::url();

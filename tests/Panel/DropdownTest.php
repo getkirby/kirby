@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase;
@@ -192,7 +193,7 @@ class DropdownTest extends TestCase
 	 */
 	public function testChangesWithoutOptions()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('No changes for given models');
 
 		Dropdown::changes();

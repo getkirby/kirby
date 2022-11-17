@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class SitePagesTest extends TestCase
 {
 	public function testErrorPage()
@@ -82,7 +84,7 @@ class SitePagesTest extends TestCase
 
 	public function testVisitInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid page object');
 
 		$site = new Site();

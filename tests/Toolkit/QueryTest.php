@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
@@ -117,7 +119,7 @@ class QueryTest extends TestCase
 	 */
 	public function testWithArrayScalarValueError($scalar, $type)
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property method on ' . $type);
 
 		$query = new Query('value.method', [
@@ -149,7 +151,7 @@ class QueryTest extends TestCase
 
 	public function testWithArrayNullValueError()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to method/property method on null');
 
 		$query = new Query('value.method', [
@@ -172,7 +174,7 @@ class QueryTest extends TestCase
 
 	public function testWithArrayCallError()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Cannot access array element user with arguments');
 
 		$query = new Query('user("test")', [
@@ -184,7 +186,7 @@ class QueryTest extends TestCase
 
 	public function testWithArrayMissingKey1()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing property user on array');
 
 		$query = new Query('user', []);
@@ -193,7 +195,7 @@ class QueryTest extends TestCase
 
 	public function testWithArrayMissingKey2()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing property user on array');
 
 		$query = new Query('user.username', []);
@@ -229,7 +231,7 @@ class QueryTest extends TestCase
 
 	public function testWithObjectPropertyCallError()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method test on object');
 
 		$obj = new stdClass();
@@ -427,7 +429,7 @@ class QueryTest extends TestCase
 
 	public function testWithObjectMissingMethod1()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method/property username on object');
 
 		$query = new Query('user.username', ['user' => new stdClass()]);
@@ -436,7 +438,7 @@ class QueryTest extends TestCase
 
 	public function testWithObjectMissingMethod2()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Access to non-existing method username on object');
 
 		$query = new Query('user.username(12)', ['user' => new stdClass()]);

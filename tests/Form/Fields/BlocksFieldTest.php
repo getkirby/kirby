@@ -3,7 +3,9 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 
 class BlocksFieldTest extends TestCase
@@ -15,7 +17,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertSame('blocks', $field->type());
 		$this->assertSame('blocks', $field->name());
 		$this->assertSame(null, $field->max());
-		$this->assertInstanceOf('Kirby\Cms\Fieldsets', $field->fieldsets());
+		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 		$this->assertSame([], $field->value());
 		$this->assertTrue($field->save());
 	}
@@ -383,7 +385,7 @@ class BlocksFieldTest extends TestCase
 		$this->assertTrue($field->fieldset('heading')->disabled());
 
 		// invalid fieldset calling
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The fieldset not-exists could not be found');
 
 		$field->fieldset('not-exists');
