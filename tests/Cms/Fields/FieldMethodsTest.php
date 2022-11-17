@@ -821,8 +821,8 @@ class FieldMethodsTest extends TestCase
 		$field  = new Field(kirby()->page('files'), 'test', $json);
 		$blocks = $field->toBlocks();
 
-		$this->assertInstanceOf('\Kirby\Cms\Blocks', $blocks);
-		$this->assertInstanceOf('\Kirby\Cms\Page', $blocks->parent());
+		$this->assertInstanceOf(Blocks::class, $blocks);
+		$this->assertInstanceOf(Page::class, $blocks->parent());
 		$this->assertCount(count($data), $blocks);
 		$this->assertCount(count($data), $blocks->data());
 
@@ -870,8 +870,8 @@ class FieldMethodsTest extends TestCase
 		$field = $this->field(json_encode($data));
 		$layouts = $field->toLayouts();
 
-		$this->assertInstanceOf('\Kirby\Cms\Layouts', $layouts);
-		$this->assertInstanceOf('\Kirby\Cms\Site', $layouts->parent());
+		$this->assertInstanceOf(Layouts::class, $layouts);
+		$this->assertInstanceOf(Site::class, $layouts->parent());
 		$this->assertCount(1, $layouts->data());
 
 		$layout = $layouts->first()->toArray();
@@ -890,7 +890,7 @@ class FieldMethodsTest extends TestCase
 		$field  = $this->field(Yaml::encode($data));
 		$object = $field->toObject();
 
-		$this->assertInstanceOf('\Kirby\Cms\Content', $object);
+		$this->assertInstanceOf(Content::class, $object);
 
 		$this->assertSame('Heading', $object->heading()->value());
 	}

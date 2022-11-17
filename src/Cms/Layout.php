@@ -17,7 +17,7 @@ class Layout extends Item
 {
 	use HasMethods;
 
-	public const ITEMS_CLASS = '\Kirby\Cms\Layouts';
+	public const ITEMS_CLASS = Layouts::class;
 
 	/**
 	 * @var \Kirby\Cms\Content

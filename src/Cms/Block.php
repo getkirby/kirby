@@ -22,7 +22,7 @@ class Block extends Item
 {
 	use HasMethods;
 
-	public const ITEMS_CLASS = '\Kirby\Cms\Blocks';
+	public const ITEMS_CLASS = Blocks::class;
 
 	/**
 	 * @var \Kirby\Cms\Content

@@ -89,7 +89,7 @@ class CollectionTest extends TestCase
 		$api = new Api([
 			'models' => [
 				'test' => [
-					'type'   => '\Kirby\Cms\Page',
+					'type'   => Page::class,
 					'fields' => [
 						'value' => function ($model) {
 							return $model->slug();
