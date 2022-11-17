@@ -3,7 +3,6 @@ import ErrorBoundary from "./ErrorBoundary.vue";
 import Fatal from "./Fatal.vue";
 import Headline from "./Headline.vue";
 import Icon from "./Icon.vue";
-import Icons from "./Icons.vue";
 import Image from "./Image.vue";
 import Loader from "./Loader.vue";
 import OfflineWarning from "./OfflineWarning.vue";
@@ -21,7 +20,6 @@ export default {
 		app.component("k-fatal", Fatal);
 		app.component("k-headline", Headline);
 		app.component("k-icon", Icon);
-		app.component("k-icons", Icons);
 		app.component("k-image", Image);
 		app.component("k-loader", Loader);
 		app.component("k-offline-warning", OfflineWarning);

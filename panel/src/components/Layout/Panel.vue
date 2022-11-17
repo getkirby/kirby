@@ -22,9 +22,6 @@
 
 		<!-- Offline warning -->
 		<k-offline-warning v-if="$system.isLocal === false" />
-
-		<!-- Icons -->
-		<k-icons />
 	</div>
 </template>
 
