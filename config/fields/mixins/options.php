@@ -40,7 +40,8 @@ return [
 		},
 		'sanitizeOptions' => function ($values) {
 			$options = array_column($this->options(), 'value');
-			return array_intersect($values, $options);
+			$options = array_intersect($values, $options);
+			return array_values($options);
 		},
 	]
 ];
