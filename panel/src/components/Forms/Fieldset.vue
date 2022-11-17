@@ -22,10 +22,7 @@
 							:novalidate="novalidate"
 							:value="value[fieldName]"
 							v-bind="field"
-							@input="
-								value[fieldName] = $event;
-								$emit('input', value, field, fieldName);
-							"
+							@input="onInput($event, field, fieldName)"
 							@focus="$emit('focus', $event, field, fieldName)"
 							@invalid="
 								($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
@@ -116,6 +113,10 @@ export default {
 		onInvalid($invalid, $v, field, fieldName) {
 			this.errors[fieldName] = $v;
 			this.$emit("invalid", this.errors);
+		},
+		onInput(value, field, name) {
+			const values = { ...this.value, [name]: value };
+			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
 			return Object.keys(this.errors).length;
