@@ -210,6 +210,9 @@ class Language extends Model
 			$props['default'] = true;
 		}
 
+		// trigger before hook
+		$kirby->trigger('language.create:before', compact('props'));
+
 		$language = new static($props);
 
 		// validate the new language
@@ -223,6 +226,9 @@ class Language extends Model
 
 		// update the main languages collection in the app instance
 		App::instance()->languages(false)->append($language->code(), $language);
+
+		// trigger after hook
+		$kirby->trigger('language.create:after', compact('language', 'props'));
 
 		return $language;
 	}

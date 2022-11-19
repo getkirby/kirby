@@ -504,4 +504,35 @@ class LanguageTest extends TestCase
 
 		$this->assertSame('English', $language->name());
 	}
+
+	public function testCreateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures = __DIR__ . '/fixtures/CreateHooksTest',
+			],
+			'hooks' => [
+				'language.create:before' => function (array $props) use ($phpunit, &$calls) {
+					$phpunit->assertSame('de', $props['code']);
+					$phpunit->assertTrue($props['default']);
+					$calls++;
+				},
+				'language.create:after' => function (Language $language, array $props) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $props['code']);
+					$phpunit->assertTrue($props['default']);
+					$calls++;
+				}
+			]
+		]);
+
+		Language::create([
+			'code' => 'de'
+		]);
+
+		$this->assertSame(2, $calls);
+	}
 }
