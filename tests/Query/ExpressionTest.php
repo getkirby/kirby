@@ -2,6 +2,8 @@
 
 namespace Kirby\Query;
 
+use Kirby\Exception\LogicException;
+
 /**
  * @coversDefaultClass Kirby\Query\Expression
  */
@@ -106,5 +108,18 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$expression = Expression::factory('user.isYello(true) ? user.says("me") : "you"');
 		$data = ['user' => new TestUser()];
 		$this->assertSame('me', $expression->resolve($data));
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveIncompleteTernary()
+	{
+		$expression = Expression::factory('"a" ? "b"');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Query: Incomplete ternary operator (missing matching `? :`)');
+
+		$expression->resolve();
 	}
 }

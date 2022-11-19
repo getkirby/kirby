@@ -58,8 +58,8 @@ class Expression
 		// (parantheses, quotes etc.)
 		return preg_split(
 			'/\s*([\?\:]+)\s*|' . Arguments::OUTSIDE . '/',
-			$string,
-			flags: PREG_SPLIT_DELIM_CAPTURE
+			trim($string),
+			flags: PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
 		);
 	}
 
@@ -97,7 +97,7 @@ class Expression
 			// `a ? b : c`
 			// if `a` isn't false, return `b`, otherwise `c`
 			if ($part === '?') {
-				if ($this->parts[$index + 2] !== ':') {
+				if (($this->parts[$index + 2] ?? null) !== ':') {
 					throw new LogicException('Query: Incomplete ternary operator (missing matching `? :`)');
 				}
 
