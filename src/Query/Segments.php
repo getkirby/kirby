@@ -15,7 +15,7 @@ use Kirby\Toolkit\Collection;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-final class Segments extends Collection
+class Segments extends Collection
 {
 	public function __construct(
 		array $data = [],

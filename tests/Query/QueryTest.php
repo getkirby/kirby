@@ -42,6 +42,16 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveWithComparisonExpresion()
+	{
+		$query = new Query('user.nothing ?? (user.nothing ?? user.isYello(false)) ? user.says("error") : (user.nothing ?? user.says("success"))');
+		$data  = ['user' => new TestUser()];
+		$this->assertSame('success', $query->resolve($data));
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveWithExactArrayMatch()
 	{
 		$query = new Query('user');
