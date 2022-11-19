@@ -1043,4 +1043,40 @@ class PageTest extends TestCase
 		$page = $app->page('foo');
 		$this->assertSame('foo - Foo Title', $page->render());
 	}
+
+	public function testVisitHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test title',
+						]
+					]
+				],
+			],
+			'hooks' => [
+				'page.visit:before' => function (Page $page) use ($phpunit, &$calls) {
+					$phpunit->assertSame('Test title', ($page->title()->value()));
+					$calls++;
+				},
+				'page.visit:after' => function (Page $page) use ($phpunit, &$calls) {
+					$phpunit->assertSame('Test title', ($page->title()->value()));
+					$calls++;
+				}
+			]
+		]);
+
+		$app->site()->visit('test');
+
+		$this->assertSame(2, $calls);
+	}
 }

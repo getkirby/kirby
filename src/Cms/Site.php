@@ -640,8 +640,14 @@ class Site extends ModelWithContent
 			throw new InvalidArgumentException('Invalid page object');
 		}
 
+		// trigger before hook
+		$this->kirby()->trigger('page.visit:before', compact('page', 'languageCode'));
+
 		// set the current active page
 		$this->setPage($page);
+
+		// trigger after hook
+		$this->kirby()->trigger('page.visit:after', compact('page', 'languageCode'));
 
 		// return the page
 		return $page;
