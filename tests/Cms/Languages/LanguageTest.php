@@ -577,4 +577,39 @@ class LanguageTest extends TestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	public function testDeleteHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures = __DIR__ . '/fixtures/DeleteHooksTest',
+			],
+			'hooks' => [
+				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
+					$calls++;
+				},
+				'language.delete:after' => function (Language $language) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
+					$calls++;
+				}
+			]
+		]);
+
+		$language = Language::create([
+			'code' => 'en',
+			'name' => 'English'
+		]);
+		$language->delete();
+
+
+		$this->assertSame(2, $calls);
+	}
 }
