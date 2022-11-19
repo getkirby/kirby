@@ -3,6 +3,7 @@
 namespace Kirby\Cache;
 
 use Closure;
+use Kirby\Cms\App;
 
 /**
  * Cache foundation
@@ -200,6 +201,21 @@ abstract class Cache
 	public function modified(string $key): int|false
 	{
 		return static::created($key);
+	}
+
+	/**
+	 * Trigger hook for after cache flush
+	 */
+	public function triggerFlushHook(Closure $closure): bool
+	{
+		$status = $closure();
+
+		App::instance()->trigger('cache.flush:after', [
+			'cache'  => $this,
+			'status' => $status
+		]);
+
+		return $status;
 	}
 
 	/**

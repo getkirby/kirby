@@ -2,6 +2,7 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
@@ -433,5 +434,34 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryDoesNotExist($root . '/foo/bar');
 		$this->assertDirectoryExists($root . '/foo');
 		$this->assertDirectoryExists($root);
+	}
+
+	/**
+	 * @covers ::flush
+	 * @covers ::triggerFlushHook
+	 */
+	public function testFlushHook()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		new App([
+			'roots' => [
+				'index' => $root = __DIR__ . '/tmp'
+			],
+			'hooks' => [
+				'cache.flush:after' => function (Cache $cache, bool $status) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Cache::class, $cache);
+					$phpunit->assertTrue($status);
+					$calls++;
+				}
+			]
+		]);
+
+		$cache = new FileCache(['root' => $root]);
+		$cache->set('a', 'A basic value');
+		$cache->flush();
+
+		$this->assertSame(1, $calls);
 	}
 }

@@ -71,7 +71,9 @@ class MemoryCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		$this->store = [];
-		return true;
+		return $this->triggerFlushHook(function () {
+			$this->store = [];
+			return true;
+		});
 	}
 }

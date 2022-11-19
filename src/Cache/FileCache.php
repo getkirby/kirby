@@ -215,13 +215,15 @@ class FileCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		if (
-			Dir::remove($this->root) === true &&
-			Dir::make($this->root) === true
-		) {
-			return true;
-		}
+		return $this->triggerFlushHook(function () {
+			if (
+				Dir::remove($this->root) === true &&
+				Dir::make($this->root) === true
+			) {
+				return true;
+			}
 
-		return false; // @codeCoverageIgnore
+			return false; // @codeCoverageIgnore
+		});
 	}
 }

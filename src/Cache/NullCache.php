@@ -60,6 +60,6 @@ class NullCache extends Cache
 	 */
 	public function flush(): bool
 	{
-		return true;
+		return $this->triggerFlushHook(fn () => true);
 	}
 }

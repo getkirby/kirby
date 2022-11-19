@@ -101,6 +101,6 @@ class MemCached extends Cache
 	 */
 	public function flush(): bool
 	{
-		return $this->connection->flush();
+		return $this->triggerFlushHook(fn () => $this->connection->flush());
 	}
 }
