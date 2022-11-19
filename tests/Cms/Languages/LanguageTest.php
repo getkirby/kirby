@@ -535,4 +535,46 @@ class LanguageTest extends TestCase
 
 		$this->assertSame(2, $calls);
 	}
+
+	public function testUpdateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->fixtures = __DIR__ . '/fixtures/UpdateHooksTest';
+		Dir::make($this->fixtures . '/content');
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures,
+			],
+			'hooks' => [
+				'language.update:before' => function (Language $language, array $props) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertTrue($language->isDefault());
+					$phpunit->assertSame('English', $props['name']);
+					$phpunit->assertSame('en', $language->name());
+					$calls++;
+				},
+				'language.update:after' => function (Language $oldLanguage, Language $newLanguage, array $props) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $oldLanguage);
+					$phpunit->assertInstanceOf(Language::class, $newLanguage);
+					$phpunit->assertSame('en', $oldLanguage->code());
+					$phpunit->assertSame('en', $newLanguage->code());
+					$phpunit->assertTrue($oldLanguage->isDefault());
+					$phpunit->assertTrue($newLanguage->isDefault());
+					$phpunit->assertSame('English', $props['name']);
+					$phpunit->assertSame('en', $oldLanguage->name());
+					$phpunit->assertSame('English', $newLanguage->name());
+					$calls++;
+				}
+			]
+		]);
+
+		$language = Language::create(['code' => 'en']);
+		$language->update(['name' => 'English']);
+
+		$this->assertSame(2, $calls);
+	}
 }

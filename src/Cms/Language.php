@@ -666,6 +666,12 @@ class Language extends Model
 		// validate the updated language
 		LanguageRules::update($updated);
 
+		// trigger before hook
+		$kirby->trigger('language.update:before', [
+			'language' => $this,
+			'props' => $props
+		]);
+
 		// convert the current default to a non-default language
 		if ($updated->isDefault() === true) {
 			$kirby->defaultLanguage()?->clone(['default' => false])->save();
@@ -692,6 +698,13 @@ class Language extends Model
 
 		// make sure the language is also updated in the Kirby language collection
 		App::instance()->languages(false)->set($language->code(), $language);
+
+		// trigger after hook
+		$kirby->trigger('language.update:after', [
+			'newLanguage' => $language,
+			'oldLanguage' => $this,
+			'props' => $props
+		]);
 
 		return $language;
 	}
