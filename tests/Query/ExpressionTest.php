@@ -63,6 +63,10 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 			[
 				'null ?? (null ?? null ?? (false ? "what" : 42)) ?? "no"',
 				['null', '??', '(null ?? null ?? (false ? "what" : 42))', '??', '"no"']
+			],
+			[
+				'page.cover.toFile?.url ?? page.image?.url',
+				['page.cover.toFile?.url', '??', 'page.image?.url']
 			]
 		];
 	}

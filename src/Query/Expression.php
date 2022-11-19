@@ -57,7 +57,7 @@ class Expression
 		// split by multiples of `?` and `:`, but not inside skip groups
 		// (parantheses, quotes etc.)
 		return preg_split(
-			'/\s*([\?\:]+)\s*|' . Arguments::OUTSIDE . '/',
+			'/\s+([\?\:]+)\s+|' . Arguments::OUTSIDE . '/',
 			trim($string),
 			flags: PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
 		);
