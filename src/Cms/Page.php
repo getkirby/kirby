@@ -1060,8 +1060,23 @@ class Page extends ModelWithContent
 
 			$kirby->data = $this->controller($data, $contentType);
 
+			// trigger before hook and apply for `data`
+			$kirby->data = $kirby->apply('page.render:before', [
+				'contentType' => $contentType,
+				'data'        => $kirby->data,
+				'page'        => $this
+			], 'data');
+
 			// render the page
 			$html = $template->render($kirby->data);
+
+			// trigger after hook and apply for `html`
+			$html = $kirby->apply('page.render:after', [
+				'contentType' => $contentType,
+				'data'        => $kirby->data,
+				'html'        => $html,
+				'page'        => $this
+			], 'html');
 
 			// cache the result
 			$response = $kirby->response();
