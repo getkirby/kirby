@@ -248,6 +248,11 @@ class Language extends Model
 		$code      = $this->code();
 		$isLast    = $languages->count() === 1;
 
+		// trigger before hook
+		$kirby->trigger('language.delete:before', [
+			'language' => $this
+		]);
+
 		if (F::remove($this->root()) !== true) {
 			throw new Exception('The language could not be deleted');
 		}
@@ -260,6 +265,11 @@ class Language extends Model
 
 		// get the original language collection and remove the current language
 		$kirby->languages(false)->remove($code);
+
+		// trigger after hook
+		$kirby->trigger('language.delete:after', [
+			'language' => $this
+		]);
 
 		return true;
 	}
