@@ -2,14 +2,26 @@
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
 		<!-- Add button -->
 		<template #options>
-			<k-button
-				v-if="more && currentIndex === null"
-				:id="_uid"
-				ref="add"
-				:text="$t('add')"
-				icon="add"
-				@click="onAdd"
-			/>
+			<k-button-group>
+				<k-button
+					v-if="items.length > 0 && !disabled && currentIndex === null"
+					:id="_uid"
+					ref="removeAll"
+					:text="$t('delete.all')"
+					icon="trash"
+					theme="negative"
+					@click="confirmToRemoveAll"
+				/>
+
+				<k-button
+					v-if="more && currentIndex === null"
+					:id="_uid"
+					ref="add"
+					:text="$t('add')"
+					icon="add"
+					@click="onAdd"
+				/>
+			</k-button-group>
 		</template>
 
 		<!-- Form -->
@@ -54,15 +66,21 @@
 				@option="onOption"
 			/>
 			<k-pagination v-if="limit" v-bind="pagination" @paginate="paginate" />
-			<k-dialog
+
+			<k-remove-dialog
 				v-if="!disabled"
 				ref="remove"
-				:submit-button="$t('delete')"
 				theme="negative"
+				:submit-button="$t('delete')"
+				:text="$t('field.structure.delete.confirm')"
 				@submit="onRemove"
-			>
-				<k-text>{{ $t("field.structure.delete.confirm") }}</k-text>
-			</k-dialog>
+			/>
+
+			<k-remove-dialog
+				ref="dialogRemoveAll"
+				:text="$t('field.structure.delete.confirm.all')"
+				@submit="onRemoveAll"
+			/>
 		</template>
 	</k-field>
 </template>
@@ -314,6 +332,9 @@ export default {
 				this.items.push(value);
 			}
 		},
+		confirmToRemoveAll() {
+			this.$refs.dialogRemoveAll.open();
+		},
 		/**
 		 * Focuses the add button
 		 * @public
@@ -460,6 +481,16 @@ export default {
 
 			this.items = this.sort(this.items);
 		},
+		/**
+		 * When removal has been confirmed,
+		 * remove all entries
+		 */
+		onRemoveAll() {
+			this.items = [];
+			this.onInput();
+			this.$refs.dialogRemoveAll.close();
+		},
+
 		/**
 		 * Edit the structure field entry at `index` position
 		 * in the structure form with field `field` focused
