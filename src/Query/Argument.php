@@ -35,7 +35,7 @@ class Argument
 			Str::startsWith($argument, '(') &&
 			Str::endsWith($argument, ')')
 		) {
-			$argument = substr($argument, 1, -1);
+			$argument = trim(substr($argument, 1, -1));
 		}
 
 		// string with single or double quotes

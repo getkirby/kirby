@@ -10,6 +10,7 @@ use Kirby\Exception\LogicException;
 class ExpressionTest extends \PHPUnit\Framework\TestCase
 {
 	/**
+	 * @covers ::__construct
 	 * @covers ::factory
 	 */
 	public function testFactory()
@@ -32,7 +33,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf(Segments::class, $expression);
 	}
 
-	protected function providerParse(): array
+	public function providerParse(): array
 	{
 		return [
 			[
@@ -76,7 +77,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame($result, $parts);
 	}
 
-	protected function providerResolve(): array
+	public function providerResolve(): array
 	{
 		return [
 			['true ? "yes" : "no"', 'yes'],
