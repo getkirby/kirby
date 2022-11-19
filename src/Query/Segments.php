@@ -37,7 +37,7 @@ class Segments extends Collection
 			$segments,
 			function ($segment) use (&$position) {
 				// leave connectors as they are
-				if (in_array($segment, ['.', '.?']) === true) {
+				if (in_array($segment, ['.', '?.']) === true) {
 					return $segment;
 				}
 
@@ -53,13 +53,13 @@ class Segments extends Collection
 
 	/**
 	 * Splits the string of a segment chaing into an
-	 * array of segments as well as conenctors (`.` or `.?`)
+	 * array of segments as well as conenctors (`.` or `?.`)
 	 * @internal
 	 */
 	public static function parse(string $string): array
 	{
 		return preg_split(
-			'/(\.\??)|(\(([^()]+|(?2))*+\))(*SKIP)(*FAIL)/',
+			'/(\??\.)|(\(([^()]+|(?2))*+\))(*SKIP)(*FAIL)/',
 			trim($string),
 			flags: PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY
 		);
@@ -69,7 +69,7 @@ class Segments extends Collection
 	 * Resolves the segments chain by looping through
 	 * each segment call to be applied to the value of
 	 * all previous segment calls, returning gracefully at
-	 * `.?` when current value is `null`
+	 * `?.` when current value is `null`
 	 */
 	public function resolve(array|object $data = [])
 	{
@@ -77,7 +77,7 @@ class Segments extends Collection
 
 		foreach ($this->data as $segment) {
 			// optional chaining: stop if current value is null
-			if ($segment === '.?' && $value === null) {
+			if ($segment === '?.' && $value === null) {
 				return null;
 			}
 

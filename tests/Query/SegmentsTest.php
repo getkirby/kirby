@@ -34,20 +34,20 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	{
 		return [
 			[
-				'foo.bar(homer.simpson).?url',
-				['foo', '.', 'bar(homer.simpson)', '.?', 'url']
+				'foo.bar(homer.simpson)?.url',
+				['foo', '.', 'bar(homer.simpson)', '?.', 'url']
 			],
 			[
 				'user.check("gin", "tonic", user.array("gin", "tonic").args)',
 				['user', '.', 'check("gin", "tonic", user.array("gin", "tonic").args)']
 			],
 			[
-				'a().b(foo.bar).?c(homer.simpson(2))',
-				['a()', '.', 'b(foo.bar)', '.?', 'c(homer.simpson(2))']
+				'a().b(foo.bar)?.c(homer.simpson(2))',
+				['a()', '.', 'b(foo.bar)', '?.', 'c(homer.simpson(2))']
 			],
 			[
-				'foo.bar(() => foo.homer.?url).foo.?bar',
-				['foo', '.', 'bar(() => foo.homer.?url)', '.', 'foo', '.?', 'bar']
+				'foo.bar(() => foo.homer?.url).foo?.bar',
+				['foo', '.', 'bar(() => foo.homer?.url)', '.', 'foo', '?.', 'bar']
 			]
 		];
 	}
@@ -511,7 +511,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithOptionalChaining()
 	{
-		$segments = Segments::factory('user.nothing.?says("hi")');
+		$segments = Segments::factory('user.nothing?.says("hi")');
 		$data     = ['user' => new TestUser()];
 		$this->assertNull($segments->resolve($data));
 
