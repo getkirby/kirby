@@ -174,7 +174,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayScalarValueError($scalar, $type)
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to method/property method on ' . $type);
+		$this->expectExceptionMessage('Access to method/property "method" on ' . $type);
 
 		$segments = Segments::factory('value.method');
 		$data     = ['value' => $scalar];
@@ -197,7 +197,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayNullValueError()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to method/property method on null');
+		$this->expectExceptionMessage('Access to method/property "method" on null');
 
 		$segments = Segments::factory('value.method');
 		$data     = ['value' => null];
@@ -220,7 +220,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayCallError()
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Cannot access array element user with arguments');
+		$this->expectExceptionMessage('Cannot access array element "user" with arguments');
 
 		$segments = Segments::factory('user("test")');
 		$data     = ['user' => new TestUser()];
@@ -233,7 +233,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayMissingKey1()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing property user on array');
+		$this->expectExceptionMessage('Access to non-existing property "user" on array');
 
 		$segments = Segments::factory('user');
 		$segments->resolve();
@@ -245,7 +245,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayMissingKey2()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing property user on array');
+		$this->expectExceptionMessage('Access to non-existing property "user" on array');
 
 		$segments = Segments::factory('user.username');
 		$segments->resolve();
@@ -288,7 +288,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithObjectPropertyCallError()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing method test on object');
+		$this->expectExceptionMessage('Access to non-existing method "test" on object');
 
 		$obj = new stdClass();
 		$obj->test = 'testtest';
@@ -486,7 +486,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithObjectMissingMethod1()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing method/property username on object');
+		$this->expectExceptionMessage('Access to non-existing method/property "username" on object');
 
 		$segments = Segments::factory('user.username');
 		$data     = ['user' => new stdClass()];
@@ -499,7 +499,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithObjectMissingMethod2()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing method username on object');
+		$this->expectExceptionMessage('Access to non-existing method "username" on object');
 
 		$segments = Segments::factory('user.username(12)');
 		$data     = ['user' => new stdClass()];
@@ -516,7 +516,7 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 		$this->assertNull($segments->resolve($data));
 
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to method/property says on null');
+		$this->expectExceptionMessage('Access to method/property "says" on null');
 
 		$segments = Segments::factory('user.nothing.says("hi")');
 		$segments->resolve($data);

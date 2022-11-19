@@ -30,7 +30,7 @@ class Argument
 	{
 		$argument = trim($argument);
 
-		// Remove grouping parantheses
+		// remove grouping parantheses
 		if (
 			Str::startsWith($argument, '(') &&
 			Str::endsWith($argument, ')')

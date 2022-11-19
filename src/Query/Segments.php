@@ -31,17 +31,20 @@ class Segments extends Collection
 	public static function factory(string $query, Query $parent = null): static
 	{
 		$segments = static::parse($query);
-		$index    = 0;
+		$position = 0;
 
 		$segments = A::map(
 			$segments,
-			function ($segment) use (&$index) {
+			function ($segment) use (&$position) {
+				// leave connectors as they are
 				if (in_array($segment, ['.', '.?']) === true) {
 					return $segment;
 				}
 
-				$index++;
-				return Segment::factory($segment, $index - 1);
+				// turn all other parts into Segment objects
+				// and pass their position in the chain (ignoring connectors)
+				$position++;
+				return Segment::factory($segment, $position - 1);
 			}
 		);
 

@@ -29,7 +29,6 @@ class Arguments extends Collection
 	public const OUTSIDE = self::NO_PNTH . '|' . self::NO_SQBR . '|' .
 						   self::NO_DLQU . '|' . self::NO_SLQU;
 
-
 	/**
 	 * Splits list of arguments into individual
 	 * Argument instances while respecting skip groups
