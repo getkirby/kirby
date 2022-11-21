@@ -18,7 +18,7 @@ export function isVisible(field, values) {
 	let result = true;
 
 	Object.keys(field.when).forEach((key) => {
-		const value = values[key.toLowerCase()];
+		const value = values[key.toLowerCase()] ?? "";
 		const condition = field.when[key];
 
 		if (value !== condition) {
