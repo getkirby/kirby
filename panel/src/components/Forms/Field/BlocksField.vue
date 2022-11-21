@@ -55,8 +55,7 @@
 		/>
 
 		<k-button
-			v-if="!isEmpty"
-			:disabled="isFull"
+			v-if="!isEmpty && !isFull"
 			class="k-layout-add-button"
 			icon="add"
 			@click="$refs.blocks.choose(value.length)"
