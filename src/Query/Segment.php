@@ -28,6 +28,7 @@ class Segment
 
 	/**
 	 * Throws an exception for an access to an invalid method
+	 * @internal
 	 *
 	 * @param mixed $data Variable on which the access was tried
 	 * @param string $name Name of the method/property that was accessed
@@ -45,7 +46,7 @@ class Segment
 
 		$nonExisting = in_array($type, ['array', 'object']) ? 'non-existing ' : '';
 
-		$error = 'Access to ' . $nonExisting . $label . ' ' . $name . ' on ' . $type;
+		$error = 'Access to ' . $nonExisting . $label . ' "' . $name . '" on ' . $type;
 
 		throw new BadMethodCallException($error);
 	}
@@ -110,7 +111,7 @@ class Segment
 		}
 
 		if ($args !== []) {
-			throw new InvalidArgumentException('Cannot access array element ' . $this->method . ' with arguments');
+			throw new InvalidArgumentException('Cannot access array element "' . $this->method . '" with arguments');
 		}
 
 		return $value;

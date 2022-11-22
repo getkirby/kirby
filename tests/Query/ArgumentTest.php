@@ -43,6 +43,9 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 
 		$argument = Argument::factory(' false ');
 		$this->assertFalse($argument->value);
+
+		$argument = Argument::factory(' ( "foo") ');
+		$this->assertSame('foo', $argument->value);
 	}
 
 	/**
