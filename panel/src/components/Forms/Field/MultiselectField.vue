@@ -1,16 +1,16 @@
 <template>
 	<k-field
+		v-bind="$props"
 		:input="_uid"
 		:counter="counterOptions"
-		v-bind="$props"
 		class="k-multiselect-field"
 		@blur="blur"
 		@keydown.native.enter.prevent="focus"
 	>
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="multiselect"
 			v-on="$listeners"

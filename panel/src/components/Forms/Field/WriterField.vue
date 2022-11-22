@@ -1,8 +1,8 @@
 <template>
 	<k-field
+		v-bind="$props"
 		:input="_uid"
 		:counter="false"
-		v-bind="$props"
 		class="k-writer-field"
 	>
 		<k-input

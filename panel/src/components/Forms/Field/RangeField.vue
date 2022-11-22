@@ -1,9 +1,9 @@
 <template>
 	<k-field :input="_uid" v-bind="$props" class="k-range-field">
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="range"
 			v-on="$listeners"

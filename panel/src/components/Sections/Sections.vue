@@ -26,13 +26,13 @@
 							'-' +
 							blueprint
 						"
+						v-bind="section"
 						:column="column.width"
 						:lock="lock"
 						:name="section.name"
 						:parent="parent"
 						:timestamp="$view.timestamp"
 						:class="'k-section k-section-name-' + section.name"
-						v-bind="section"
 						@submit="$emit('submit', $event)"
 					/>
 					<template v-else>

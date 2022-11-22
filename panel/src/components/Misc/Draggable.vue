@@ -1,10 +1,10 @@
 <template>
 	<draggable
+		v-bind="dragOptions"
 		:component-data="data"
 		:tag="element"
 		:list="list"
 		:move="move"
-		v-bind="dragOptions"
 		class="k-draggable"
 		v-on="listeners"
 	>

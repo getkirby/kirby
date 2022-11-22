@@ -1,17 +1,17 @@
 <template>
 	<k-field
+		v-bind="$props"
 		:input="_uid"
 		:counter="counterOptions"
-		v-bind="$props"
 		class="k-password-field"
 	>
 		<template #options>
 			<slot name="options" />
 		</template>
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="password"
 			v-on="$listeners"

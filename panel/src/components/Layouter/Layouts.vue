@@ -4,6 +4,7 @@
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
 					v-for="(layout, layoutIndex) in rows"
+					v-bind="layout"
 					:key="layout.id"
 					:disabled="disabled"
 					:endpoints="endpoints"
@@ -11,7 +12,6 @@
 					:fieldsets="fieldsets"
 					:is-selected="selected === layout.id"
 					:settings="settings"
-					v-bind="layout"
 					@append="selectLayout(layoutIndex + 1)"
 					@duplicate="duplicateLayout(layoutIndex, layout)"
 					@prepend="selectLayout(layoutIndex)"
