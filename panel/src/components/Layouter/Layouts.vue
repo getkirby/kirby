@@ -30,8 +30,9 @@
 
 			<k-button
 				v-if="!disabled"
-				class="k-layout-add-button"
+				class="k-field-add-item-button"
 				icon="add"
+				:tooltip="$t('add')"
 				@click="selectLayout(rows.length)"
 			/>
 		</template>
@@ -225,18 +226,5 @@ export default {
 	justify-content: center;
 	font-size: var(--text-xs);
 	align-items: center;
-}
-
-/** Add Button **/
-.k-layout-add-button {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	color: var(--color-gray-500);
-	justify-content: center;
-	padding: 0.75rem 0;
-}
-.k-layout-add-button:hover {
-	color: var(--color-black);
 }
 </style>

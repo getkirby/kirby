@@ -56,8 +56,9 @@
 
 		<k-button
 			v-if="!isEmpty && !isFull"
-			class="k-layout-add-button"
+			class="k-field-add-item-button"
 			icon="add"
+			:tooltip="$t('add')"
 			@click="$refs.blocks.choose(value.length)"
 		/>
 	</k-field>
