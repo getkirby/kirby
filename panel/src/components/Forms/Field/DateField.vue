@@ -1,5 +1,5 @@
 <template>
-	<k-field :input="_uid" v-bind="$props" class="k-date-field">
+	<k-field v-bind="$props" :input="_uid" class="k-date-field">
 		<div
 			ref="body"
 			:data-invalid="!novalidate && isInvalid"
@@ -10,6 +10,7 @@
 			<k-input
 				:id="_uid"
 				ref="dateInput"
+				v-bind="$props"
 				:autofocus="autofocus"
 				:disabled="disabled"
 				:display="display"
@@ -19,7 +20,6 @@
 				:value="value"
 				theme="field"
 				type="date"
-				v-bind="$props"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
 				@submit="$emit('submit')"

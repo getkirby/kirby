@@ -1,9 +1,9 @@
 <template>
-	<k-field :input="_uid" v-bind="$props" class="k-toggle-field">
+	<k-field v-bind="$props" :input="_uid" class="k-toggle-field">
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="toggle"
 			v-on="$listeners"

@@ -2,6 +2,8 @@
 
 namespace Kirby\Query;
 
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 use stdClass;
 
 /**
@@ -15,17 +17,49 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testFactory()
 	{
 		$segments = Segments::factory('a.b.c');
-		$this->assertSame(3, $segments->count());
+		$this->assertSame(5, $segments->count());
 
 		$segments = Segments::factory('a().b(foo.bar).c(homer.simpson(2))');
-		$this->assertSame(3, $segments->count());
-		$this->assertSame('c', $segments->nth(2)->method);
-		$this->assertSame(1, $segments->nth(1)->arguments->count());
-		$this->assertSame(1, $segments->nth(1)->position);
+		$this->assertSame(5, $segments->count());
+		$this->assertSame('c', $segments->nth(4)->method);
+		$this->assertSame(1, $segments->nth(2)->arguments->count());
+		$this->assertSame(1, $segments->nth(2)->position);
 
 		$segments = Segments::factory('user0.profiles1.twitter');
-		$this->assertSame(3, $segments->count());
-		$this->assertSame(2, $segments->nth(2)->position);
+		$this->assertSame(5, $segments->count());
+		$this->assertSame(2, $segments->nth(4)->position);
+	}
+
+	public function providerParse(): array
+	{
+		return [
+			[
+				'foo.bar(homer.simpson)?.url',
+				['foo', '.', 'bar(homer.simpson)', '?.', 'url']
+			],
+			[
+				'user.check("gin", "tonic", user.array("gin", "tonic").args)',
+				['user', '.', 'check("gin", "tonic", user.array("gin", "tonic").args)']
+			],
+			[
+				'a().b(foo.bar)?.c(homer.simpson(2))',
+				['a()', '.', 'b(foo.bar)', '?.', 'c(homer.simpson(2))']
+			],
+			[
+				'foo.bar(() => foo.homer?.url).foo?.bar',
+				['foo', '.', 'bar(() => foo.homer?.url)', '.', 'foo', '?.', 'bar']
+			]
+		];
+	}
+
+	/**
+	 * @covers ::parse
+	 * @dataProvider providerParse
+	 */
+	public function testParse(string $string, array $result)
+	{
+		$segments = Segments::parse($string);
+		$this->assertSame($result, $segments);
 	}
 
 	/**
@@ -139,8 +173,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayScalarValueError($scalar, $type)
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to method/property method on ' . $type);
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method/property "method" on ' . $type);
 
 		$segments = Segments::factory('value.method');
 		$data     = ['value' => $scalar];
@@ -162,8 +196,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayNullValueError()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to method/property method on null');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method/property "method" on null');
 
 		$segments = Segments::factory('value.method');
 		$data     = ['value' => null];
@@ -185,8 +219,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayCallError()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Cannot access array element user with arguments');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Cannot access array element "user" with arguments');
 
 		$segments = Segments::factory('user("test")');
 		$data     = ['user' => new TestUser()];
@@ -198,8 +232,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayMissingKey1()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing property user on array');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing property "user" on array');
 
 		$segments = Segments::factory('user');
 		$segments->resolve();
@@ -210,8 +244,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayMissingKey2()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing property user on array');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing property "user" on array');
 
 		$segments = Segments::factory('user.username');
 		$segments->resolve();
@@ -253,8 +287,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithObjectPropertyCallError()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method test on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method "test" on object');
 
 		$obj = new stdClass();
 		$obj->test = 'testtest';
@@ -451,8 +485,8 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithObjectMissingMethod1()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method/property username on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method/property "username" on object');
 
 		$segments = Segments::factory('user.username');
 		$data     = ['user' => new stdClass()];
@@ -464,11 +498,27 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithObjectMissingMethod2()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method username on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method "username" on object');
 
 		$segments = Segments::factory('user.username(12)');
 		$data     = ['user' => new stdClass()];
+		$segments->resolve($data);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveWithOptionalChaining()
+	{
+		$segments = Segments::factory('user.nothing?.says("hi")');
+		$data     = ['user' => new TestUser()];
+		$this->assertNull($segments->resolve($data));
+
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method/property "says" on null');
+
+		$segments = Segments::factory('user.nothing.says("hi")');
 		$segments->resolve($data);
 	}
 }

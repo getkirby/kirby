@@ -2,6 +2,8 @@
 
 namespace Kirby\Query;
 
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 use stdClass;
 
 class MyObj
@@ -53,8 +55,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testErrorWithScalars($scalar, $label)
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to method foo on ' . $label);
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method "foo" on ' . $label);
 
 		Segment::error($scalar, 'foo', 'method');
 	}
@@ -64,8 +66,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testErrorWithObject()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method foo on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method "foo" on object');
 
 		Segment::error(new stdClass(), 'foo', 'method');
 	}
@@ -131,8 +133,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveArrayInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing property foo on array');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing property "foo" on array');
 
 		$segment = Segment::factory('foo');
 		$segment->resolve(['bar' => 2]);
@@ -144,8 +146,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveArrayArgOnNonClosure()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
-		$this->expectExceptionMessage('Cannot access array element foo with arguments');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Cannot access array element "foo" with arguments');
 
 		$segment = Segment::factory('foo(2)', 1);
 		$segment->resolve(['foo' => 'bar']);
@@ -180,8 +182,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveObjectInvalid()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to method/property foo on string');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method/property "foo" on string');
 
 		$segment = Segment::factory('foo', 1);
 		$segment->resolve('bar');
@@ -193,8 +195,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveObjectInvalidMethod()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method/property notfound on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method/property "notfound" on object');
 
 		$obj     = new MyObj();
 		$segment = Segment::factory('notfound', 1);
@@ -207,8 +209,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveObjectMethodWithoutArgs()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to non-existing method notfound on object');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to non-existing method "notfound" on object');
 
 		$obj     = new MyObj();
 		$segment = Segment::factory('notfound(2)', 1);
@@ -220,8 +222,8 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithArrayNullValueError()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
-		$this->expectExceptionMessage('Access to method/property method on null');
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Access to method/property "method" on null');
 
 		$segment = Segment::factory('method', 1);
 		$segment->resolve(null);
