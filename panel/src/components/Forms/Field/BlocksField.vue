@@ -53,6 +53,14 @@
 			@open="opened = $event"
 			v-on="$listeners"
 		/>
+
+		<k-button
+			v-if="!isEmpty && !isFull"
+			class="k-field-add-item-button"
+			icon="add"
+			:tooltip="$t('add')"
+			@click="$refs.blocks.choose(value.length)"
+		/>
 	</k-field>
 </template>
 
