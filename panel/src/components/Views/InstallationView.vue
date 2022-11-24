@@ -14,7 +14,12 @@
 				<h1 class="sr-only">
 					{{ $t("installation") }}
 				</h1>
-				<k-fieldset v-model="user" :fields="fields" :novalidate="true" />
+				<k-fieldset
+					:fields="fields"
+					:novalidate="true"
+					:value="user"
+					@input="user = $event"
+				/>
 				<k-button :text="$t('install')" type="submit" icon="check" />
 			</form>
 

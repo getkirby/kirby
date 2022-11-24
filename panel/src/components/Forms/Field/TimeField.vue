@@ -36,7 +36,7 @@ import { props as TimeInput } from "../Input/TimeInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-time-input>` for additional information.
  *
- * @example <k-time-field v-model="time" name="time" label="Time" />
+ * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
  * @public
  */
 export default {

@@ -57,7 +57,7 @@ export const props = {
  * Extends `k-date-input` and makes sure that values
  * get parsed and emitted as time-only ISO string `HH:mm:ss`
  *
- * @example <k-input v-model="time" name="time" type="time" />
+ * @example <k-input :value="time" @input="time = $event" name="time" type="time" />
  * @public
  */
 export default {

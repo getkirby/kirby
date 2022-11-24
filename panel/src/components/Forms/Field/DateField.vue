@@ -95,7 +95,7 @@ import { props as DateInput } from "../Input/DateInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-datetime-input>` for additional information.
  *
- * @example <k-date-field v-model="date" name="date" label="Date" />
+ * @example <k-date-field :value="date" name="date" label="Date" @input="value = $event" />
  * @public
  */
 export default {

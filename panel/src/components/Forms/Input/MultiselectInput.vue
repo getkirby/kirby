@@ -37,12 +37,13 @@
 				>
 					<input
 						ref="search"
-						v-model="q"
+						:value="q"
 						:placeholder="
 							search.min
 								? $t('search.min', { min: search.min })
 								: $t('search') + ' …'
 						"
+						@input="q = $event"
 						@keydown.esc.stop="onEscape"
 					/>
 				</k-dropdown-item>

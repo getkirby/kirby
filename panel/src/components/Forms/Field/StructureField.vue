@@ -16,15 +16,15 @@
 		<k-structure-form
 			v-if="currentIndex !== null"
 			ref="form"
-			v-model="currentModel"
 			:fields="form"
 			:index="currentIndex"
 			:total="items.length"
+			:value="currentModel"
 			@close="onFormClose"
 			@discard="onFormDiscard"
+			@input="onFormInput"
 			@paginate="onFormPaginate($event.offset)"
 			@submit="onFormSubmit"
-			@input="onFormInput"
 		/>
 
 		<!-- Empty State -->

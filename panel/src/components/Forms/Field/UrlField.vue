@@ -31,7 +31,7 @@ import { props as UrlInput } from "../Input/UrlInput.vue";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>`
  * for additional information.
- * @example <k-url-field v-model="url" name="url" label="Url" />
+ * @example <k-url-field :value="url" @input="url = $event" name="url" label="Url" />
  */
 export default {
 	mixins: [Field, Input, UrlInput],

@@ -36,7 +36,7 @@ import { required as validateRequired } from "vuelidate/lib/validators";
 
 /**
  *
- * @example <k-input v-model="checkbox" type="checkbox" />
+ * @example <k-input :value="checkbox" @input="checkbox = $event" type="checkbox" />
  */
 export default {
 	mixins: [autofocus, disabled, id, label, required],

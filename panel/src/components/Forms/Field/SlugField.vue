@@ -22,7 +22,7 @@ import { props as Input } from "../Input.vue";
 import { props as SlugInput } from "../Input/SlugInput.vue";
 
 /**
- * @example <k-slug-field v-model="slug" name="slug" label="Slug" />
+ * @example <k-slug-field :value="slug" @input="slug = $event" name="slug" label="Slug" />
  */
 export default {
 	mixins: [Field, Input, SlugInput],

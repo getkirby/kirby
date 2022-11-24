@@ -1,11 +1,12 @@
 <template>
 	<k-form-dialog
 		ref="dialog"
-		v-model="link"
 		:fields="fields"
 		:submit-button="$t('confirm')"
+		:value="link"
 		size="medium"
 		@close="$emit('close')"
+		@input="link = $event"
 		@submit="submit"
 	/>
 </template>

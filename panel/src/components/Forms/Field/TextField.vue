@@ -27,7 +27,7 @@ import counter from "@/mixins/forms/counter.js";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>`
  * for additional information.
- * @example <k-text-field v-model="text" name="text" label="Boring text" />
+ * @example <k-text-field :value="text" @input="text = $event" name="text" label="Boring text" />
  */
 export default {
 	mixins: [Field, Input, TextInput, counter],

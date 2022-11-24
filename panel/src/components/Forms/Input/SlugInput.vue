@@ -45,7 +45,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="slug" name="slug" type="slug" />
+ * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
  */
 export default {
 	extends: TextInput,

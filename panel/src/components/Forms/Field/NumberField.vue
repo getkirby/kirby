@@ -18,7 +18,7 @@ import { props as NumberInput } from "../Input/NumberInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-number-input>` for additional information.
- * @example <k-number-field v-model="number" name="number" label="Number" />
+ * @example <k-number-field :value="number" @input="number = $event" name="number" label="Number" />
  */
 export default {
 	mixins: [Field, Input, NumberInput],
