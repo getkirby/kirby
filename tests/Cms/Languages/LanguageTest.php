@@ -515,15 +515,16 @@ class LanguageTest extends TestCase
 				'index' => $this->fixtures = __DIR__ . '/fixtures/CreateHooksTest',
 			],
 			'hooks' => [
-				'language.create:before' => function (array $props) use ($phpunit, &$calls) {
-					$phpunit->assertSame('de', $props['code']);
-					$phpunit->assertTrue($props['default']);
+				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
 					$calls++;
 				},
-				'language.create:after' => function (Language $language, array $props) use ($phpunit, &$calls) {
+				'language.create:after' => function (Language $language, array $input) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $language);
-					$phpunit->assertSame('de', $props['code']);
-					$phpunit->assertTrue($props['default']);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
 					$calls++;
 				}
 			]
@@ -549,22 +550,22 @@ class LanguageTest extends TestCase
 				'index' => $this->fixtures,
 			],
 			'hooks' => [
-				'language.update:before' => function (Language $language, array $props) use ($phpunit, &$calls) {
+				'language.update:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $language);
 					$phpunit->assertSame('en', $language->code());
 					$phpunit->assertTrue($language->isDefault());
-					$phpunit->assertSame('English', $props['name']);
+					$phpunit->assertSame('English', $input['name']);
 					$phpunit->assertSame('en', $language->name());
 					$calls++;
 				},
-				'language.update:after' => function (Language $oldLanguage, Language $newLanguage, array $props) use ($phpunit, &$calls) {
+				'language.update:after' => function (Language $oldLanguage, Language $newLanguage, array $input) use ($phpunit, &$calls) {
 					$phpunit->assertInstanceOf(Language::class, $oldLanguage);
 					$phpunit->assertInstanceOf(Language::class, $newLanguage);
 					$phpunit->assertSame('en', $oldLanguage->code());
 					$phpunit->assertSame('en', $newLanguage->code());
 					$phpunit->assertTrue($oldLanguage->isDefault());
 					$phpunit->assertTrue($newLanguage->isDefault());
-					$phpunit->assertSame('English', $props['name']);
+					$phpunit->assertSame('English', $input['name']);
 					$phpunit->assertSame('en', $oldLanguage->name());
 					$phpunit->assertSame('English', $newLanguage->name());
 					$calls++;

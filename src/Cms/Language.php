@@ -210,10 +210,16 @@ class Language extends Model
 			$props['default'] = true;
 		}
 
-		// trigger before hook
 		$language = new static($props);
 
-		$kirby->trigger('language.create:before', ['language' => $language, 'input' => $props]);
+		// trigger before hook
+		$kirby->trigger(
+			'language.create:before',
+			[
+				'input'    => $props,
+				'language' => $language
+			]
+		);
 
 		// validate the new language
 		LanguageRules::create($language);
@@ -228,7 +234,13 @@ class Language extends Model
 		$kirby->languages(false)->append($language->code(), $language);
 
 		// trigger after hook
-		$kirby->trigger('language.create:after', ['language' => $language, 'input' => $props]));
+		$kirby->trigger(
+			'language.create:after',
+			[
+				'input'    => $props,
+				'language' => $language
+			]
+		);
 
 		return $language;
 	}
