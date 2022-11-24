@@ -211,9 +211,9 @@ class Language extends Model
 		}
 
 		// trigger before hook
-		$kirby->trigger('language.create:before', compact('props'));
-
 		$language = new static($props);
+
+		$kirby->trigger('language.create:before', ['language' => $language, 'input' => $props]);
 
 		// validate the new language
 		LanguageRules::create($language);
@@ -225,10 +225,10 @@ class Language extends Model
 		}
 
 		// update the main languages collection in the app instance
-		App::instance()->languages(false)->append($language->code(), $language);
+		$kirby->languages(false)->append($language->code(), $language);
 
 		// trigger after hook
-		$kirby->trigger('language.create:after', compact('language', 'props'));
+		$kirby->trigger('language.create:after', ['language' => $language, 'input' => $props]));
 
 		return $language;
 	}
@@ -679,7 +679,7 @@ class Language extends Model
 		// trigger before hook
 		$kirby->trigger('language.update:before', [
 			'language' => $this,
-			'props' => $props
+			'input' => $props
 		]);
 
 		// convert the current default to a non-default language
@@ -713,7 +713,7 @@ class Language extends Model
 		$kirby->trigger('language.update:after', [
 			'newLanguage' => $language,
 			'oldLanguage' => $this,
-			'props' => $props
+			'input' => $props
 		]);
 
 		return $language;
