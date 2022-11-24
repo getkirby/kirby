@@ -1,27 +1,21 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-		<!-- Add button -->
 		<template #options>
-			<k-button-group>
-				<k-button
-					v-if="items.length > 0 && !disabled && currentIndex === null"
-					:id="_uid"
-					ref="removeAll"
-					:text="$t('delete.all')"
-					icon="trash"
-					theme="negative"
-					@click="confirmToRemoveAll"
-				/>
-
-				<k-button
-					v-if="more && currentIndex === null"
-					:id="_uid"
-					ref="add"
-					:text="$t('add')"
-					icon="add"
-					@click="onAdd"
-				/>
-			</k-button-group>
+			<k-dropdown v-if="!currentIndex">
+				<k-button icon="dots" @click="$refs.options.toggle()" />
+				<k-dropdown-content ref="options" align="right">
+					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
+						{{ $t("add") }}
+					</k-dropdown-item>
+					<k-dropdown-item
+						:disabled="items.length === 0 || disabled"
+						icon="trash"
+						@click="confirmToRemoveAll"
+					>
+						{{ $t("delete.all") }}
+					</k-dropdown-item>
+				</k-dropdown-content>
+			</k-dropdown>
 		</template>
 
 		<!-- Form -->
@@ -66,6 +60,14 @@
 				@option="onOption"
 			/>
 			<k-pagination v-if="limit" v-bind="pagination" @paginate="paginate" />
+
+			<k-button
+				v-if="more"
+				class="k-field-add-item-button"
+				icon="add"
+				:tooltip="$t('add')"
+				@click="onAdd"
+			/>
 
 			<k-remove-dialog
 				v-if="!disabled"
