@@ -980,4 +980,67 @@ class PageTest extends TestCase
 
 		$this->assertSame($expected, $page->toArray());
 	}
+
+	public function testRenderBeforeHook()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => __DIR__ . '/fixtures/PageTest'
+			],
+			'templates' => [
+				'bar' => __DIR__ . '/fixtures/PageRenderHookTest/bar.php'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'      => 'bar',
+						'template'  => 'bar',
+						'content'   => [
+							'title' => 'Bar Title',
+						]
+					]
+				],
+			],
+			'hooks' => [
+				'page.render:before' => function ($contentType, $data, $page) {
+					$data['bar'] = 'Test';
+					return $data;
+				}
+			]
+		]);
+
+		$page = $app->page('bar');
+		$this->assertSame('Bar Title : Test', $page->render());
+	}
+
+	public function testRenderAfterHook()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => __DIR__ . '/fixtures/PageTest'
+			],
+			'templates' => [
+				'foo' => __DIR__ . '/fixtures/PageRenderHookTest/foo.php'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'      => 'foo',
+						'template'  => 'foo',
+						'content'   => [
+							'title' => 'Foo Title',
+						]
+					]
+				],
+			],
+			'hooks' => [
+				'page.render:after' => function ($contentType, $data, $html, $page) {
+					return str_replace(':', '-', $html);
+				}
+			]
+		]);
+
+		$page = $app->page('foo');
+		$this->assertSame('foo - Foo Title', $page->render());
+	}
 }
