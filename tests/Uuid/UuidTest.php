@@ -184,7 +184,22 @@ class UuidTest extends TestCase
 		$id = Uuid::generate(5);
 		$this->assertSame(5, strlen($id));
 
-		// custom generator callback
+		// UUID v4 mode
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => 'uuid-v4'
+				]
+			]
+		]);
+		$id = Uuid::generate();
+		$this->assertSame(36, strlen($id));
+
+		// UUID v4 mode with custom length (no effect)
+		$id = Uuid::generate(5);
+		$this->assertSame(36, strlen($id));
+
+		// custom generator callback (overrides the UUID v4 mode)
 		Uuid::$generator = fn ($length) => 'veryunique' . $length;
 		$this->assertSame('veryunique13', Uuid::generate(13));
 		Uuid::$generator = null;
