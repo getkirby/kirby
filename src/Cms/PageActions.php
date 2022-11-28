@@ -53,7 +53,7 @@ trait PageActions
 					// regenerate UUIDs of all page children
 					if ($children !== false) {
 						foreach ($copy->index(true) as $child) {
-							$this->adaptCopy($child, $files, $children);
+							$this->adaptCopy($child, $files);
 						}
 					}
 				}
@@ -84,7 +84,7 @@ trait PageActions
 			// regenerate UUIDs of all page children
 			if ($children !== false) {
 				foreach ($copy->index(true) as $child) {
-					$this->adaptCopy($child, $files, $children);
+					$this->adaptCopy($child, $files);
 				}
 			}
 		}
