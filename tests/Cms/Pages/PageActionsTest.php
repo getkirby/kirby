@@ -936,6 +936,86 @@ class PageActionsTest extends TestCase
 		$this->assertSame($copy->files()->find('foo.jpg')->uuid()->id(), $copyFile->uuid()->id());
 	}
 
+	public function testDuplicateChildren()
+	{
+		$app = $this->app->clone();
+		$app->impersonate('kirby');
+
+		$page = $app->site()->createChild(['slug' => 'test']);
+		$page->createChild(['slug' => 'foo', 'template' => 'default']);
+
+		$page = $app->page('test');
+		$copy = $page->duplicate('test-copy', ['children' => true]);
+
+		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
+		$this->assertNotSame($app->page('test/foo')->uuid()->id(), $app->page('test-copy/foo')->uuid()->id());
+	}
+
+	public function testDuplicateChildrenMultiLang()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->site()->createChild(['slug' => 'test']);
+		$page->createChild(['slug' => 'foo', 'template' => 'default']);
+
+		new ContentTranslation([
+			'parent' => $page,
+			'code'   => 'en'
+		]);
+
+		$copy = $page->duplicate('test-copy', ['children' => true]);
+
+		$this->assertFileExists($copy->contentFile('en'));
+		$this->assertFileDoesNotExist($copy->contentFile('de'));
+
+
+		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
+		$this->assertNotSame($app->page('test/foo')->uuid()->id(), $app->page('test-copy/foo')->uuid()->id());
+	}
+
+	public function testDuplicateChildrenFiles()
+	{
+		$app = $this->app->clone();
+		$app->impersonate('kirby');
+
+		$page = $app->site()->createChild(['slug' => 'test']);
+		$page->createChild([
+			'slug' => 'foo',
+			'template' => 'default',
+			'files' => [
+				['filename' => 'foo.jpg'],
+			]
+		]);
+		F::write($this->tmp . '/content/_drafts/test/_drafts/foo/foo.jpg', '');
+
+		$page = $app->page('test');
+		$copy = $page->duplicate('test-copy', [
+			'children' => true,
+			'files' => true
+		]);
+
+		$this->assertNotSame($page->uuid()->id(), $copy->uuid()->id());
+
+		$origFile = $app->page('test/foo')->file('foo.jpg');
+		$copyFile = $app->page('test-copy/foo')->file('foo.jpg');
+
+		$this->assertNotSame($origFile->uuid()->id(), $copyFile->uuid()->id());
+	}
+
 	public function testChangeSlugHooks()
 	{
 		$calls = 0;
