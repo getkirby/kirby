@@ -53,6 +53,7 @@ trait PageActions
 					// regenerate UUIDs of all page children
 					if ($children !== false) {
 						foreach ($copy->index(true) as $child) {
+							// no $children because we already operate on the index
 							$this->adaptCopy($child, $files);
 						}
 					}
@@ -84,6 +85,7 @@ trait PageActions
 			// regenerate UUIDs of all page children
 			if ($children !== false) {
 				foreach ($copy->index(true) as $child) {
+					// no $children because we already operate on the index
 					$this->adaptCopy($child, $files);
 				}
 			}
