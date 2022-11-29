@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Closure;
 use Generator;
+use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
@@ -196,6 +197,10 @@ class Uuid
 	{
 		if (static::$generator !== null) {
 			return (static::$generator)($length);
+		}
+
+		if (App::instance()->option('content.uuid') === 'uuid-v4') {
+			return Str::uuid();
 		}
 
 		return Str::random($length, 'alphaNum');
