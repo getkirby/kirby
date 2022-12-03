@@ -15,6 +15,8 @@ use IteratorAggregate;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @psalm-suppress MissingTemplateParam
  */
 class Iterator implements IteratorAggregate
 {
