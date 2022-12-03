@@ -1,3 +1,5 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
 name: CI - Frontend
 on:
   push:
@@ -36,7 +38,7 @@ jobs:
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v3
 
       - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # pin@v3
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # pin@v3
         with:
           cache: "npm"
           cache-dependency-path: panel/package-lock.json
@@ -50,7 +52,6 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: npm run test:unit:coverage
         working-directory: panel
-
       # TODO: Disabled until Vitest coverage reporting is accurate and
       #       Kirby's frontend tests are useful enough that we need this metric
       # - name: Upload coverage results to Codecov

@@ -1,3 +1,5 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
 name: CI - Backend
 on:
   push:
@@ -125,7 +127,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@7e72857c42532e0c5757d954def4bf7cb35249fa # pin@v2
+        uses: github/codeql-action/upload-sarif@b2a92eb56d8cb930006a1c6ed86b0782dd8a4297 # pin@v2
         with:
           sarif_file: sarif
 
@@ -199,7 +201,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@7e72857c42532e0c5757d954def4bf7cb35249fa # pin@v2
+        uses: github/codeql-action/upload-sarif@b2a92eb56d8cb930006a1c6ed86b0782dd8a4297 # pin@v2
         with:
           sarif_file: sarif
 

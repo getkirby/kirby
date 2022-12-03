@@ -1,3 +1,5 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
 name: CI - Integration
 on:
   push:
