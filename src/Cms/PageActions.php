@@ -54,7 +54,7 @@ trait PageActions
 					if ($children !== false) {
 						foreach ($copy->index(true) as $child) {
 							// no $children because we already operate on the index
-							$this->adaptCopy($child, $files);
+							$this->adaptCopy($child, true);
 						}
 					}
 				}
@@ -86,7 +86,7 @@ trait PageActions
 			if ($children !== false) {
 				foreach ($copy->index(true) as $child) {
 					// no $children because we already operate on the index
-					$this->adaptCopy($child, $files);
+					$this->adaptCopy($child, true);
 				}
 			}
 		}
