@@ -3,6 +3,7 @@
 		ref="button"
 		v-bind="$props"
 		class="k-dropdown-item"
+		@click="onClick"
 		v-on="listeners"
 	>
 		<!-- @slot The item's content/text -->
@@ -28,23 +29,17 @@ export default {
 		upload: String,
 		current: [String, Boolean]
 	},
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				click: (event) => {
-					this.$parent.close();
-					this.$emit("click", event);
-				}
-			}
-		};
-	},
+	emits: ["click"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();
 		},
 		tab() {
 			this.$refs.button.tab();
+		},
+		onClick(event) {
+			this.$emit("click", event);
+			this.$parent.close();
 		}
 	}
 };
