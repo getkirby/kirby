@@ -6,7 +6,17 @@
 		:list="list"
 		:move="move"
 		class="k-draggable"
-		v-on="listeners"
+		@add="$emit('add', $event)"
+		@change="$emit('change', $event)"
+		@clone="$emit('clone', $event)"
+		@choose="$emit('choose', $event)"
+		@end="onEnd"
+		@filter="$emit('filter', $event)"
+		@remove="$emit('remove', $event)"
+		@sort="$emit('sort', $event)"
+		@start="onStart"
+		@unchoose="$emit('unchoose', $event)"
+		@update="$emit('update', $event)"
 	>
 		<slot />
 		<template #footer>
@@ -49,27 +59,18 @@ export default {
 		move: Function,
 		options: Object
 	},
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				start: (event) => {
-					this.$store.dispatch("drag", {});
-
-					if (this.$listeners.start) {
-						this.$listeners.start(event);
-					}
-				},
-				end: (event) => {
-					this.$store.dispatch("drag", null);
-
-					if (this.$listeners.end) {
-						this.$listeners.end(event);
-					}
-				}
-			}
-		};
-	},
+	emits: [
+		"start",
+		"add",
+		"remove",
+		"update",
+		"end",
+		"choose",
+		"unchoose",
+		"sort",
+		"filter",
+		"clone"
+	],
 	computed: {
 		dragOptions() {
 			let handle = false;
@@ -89,6 +90,16 @@ export default {
 				scroll: document.querySelector(".k-panel-view"),
 				...this.options
 			};
+		}
+	},
+	methods: {
+		onStart(event) {
+			this.$store.dispatch("drag", {});
+			this.$emit("start", event);
+		},
+		onEnd(event) {
+			this.$store.dispatch("drag", null);
+			this.$emit("end", event);
 		}
 	}
 };
