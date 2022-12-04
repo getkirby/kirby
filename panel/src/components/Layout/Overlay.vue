@@ -8,7 +8,6 @@
 			:dir="$translation.direction"
 			:class="$vnode.data.staticClass"
 			class="k-overlay"
-			v-on="$listeners"
 			@mousedown="close"
 		>
 			<k-loader v-if="loading" class="k-overlay-loader" />
@@ -38,6 +37,7 @@ export default {
 			default: false
 		}
 	},
+	emits: ["close", "open", "ready"],
 	data() {
 		return {
 			isOpen: false,
