@@ -85,6 +85,7 @@ export default {
 		 */
 		visible: Boolean
 	},
+	emits: ["cancel", "close", "open", "ready", "submit"],
 	data() {
 		return {
 			notification: null

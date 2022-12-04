@@ -1,5 +1,13 @@
 <template>
-	<k-text-dialog ref="dialog" v-bind="$props" v-on="$listeners">
+	<k-text-dialog
+		ref="dialog"
+		v-bind="$props"
+		@cancel="$emit('cancel', $event)"
+		@close="$emit('close', $event)"
+		@open="$emit('open', $event)"
+		@ready="$emit('ready', $event)"
+		@submit="$emit('submit', $event)"
+	>
 		<slot />
 	</k-text-dialog>
 </template>
@@ -29,6 +37,7 @@ export default {
 			type: String,
 			default: "negative"
 		}
-	}
+	},
+	emits: ["cancel", "close", "open", "ready", "submit", "success"]
 };
 </script>

@@ -23,6 +23,7 @@ export default {
 		theme: String,
 		visible: Boolean
 	},
+	emits: ["close", "open", "success"],
 	methods: {
 		close() {
 			this.$refs.dialog.close();
