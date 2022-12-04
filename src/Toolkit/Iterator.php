@@ -16,7 +16,9 @@ use IteratorAggregate;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @psalm-suppress MissingTemplateParam
+ * @template-covariant TKey
+ * @template-covariant TValue
+ * @template-implements IteratorAggregate<TKey, TValue>
  */
 class Iterator implements IteratorAggregate
 {
@@ -41,6 +43,7 @@ class Iterator implements IteratorAggregate
 	 * Get an iterator for the items.
 	 *
 	 * @return \ArrayIterator
+	 * @psalm-return \ArrayIterator<TKey, TValue>
 	 */
 	public function getIterator(): ArrayIterator
 	{
