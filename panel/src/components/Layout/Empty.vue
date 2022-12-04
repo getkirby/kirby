@@ -4,7 +4,7 @@
 		:data-layout="layout"
 		:type="element === 'button' ? 'button' : false"
 		class="k-empty"
-		v-on="$listeners"
+		@click="$emit('click')"
 	>
 		<k-icon v-if="icon" :type="icon" />
 		<p>
@@ -37,6 +37,7 @@ export default {
 			default: "list"
 		}
 	},
+	emits: ["click"],
 	computed: {
 		element() {
 			return this.$listeners["click"] !== undefined ? "button" : "div";
