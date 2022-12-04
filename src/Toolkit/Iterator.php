@@ -16,9 +16,9 @@ use IteratorAggregate;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @template-covariant TKey
- * @template-covariant TValue
- * @template-implements IteratorAggregate<TKey, TValue>
+ * @psalm-suppress MissingTemplateParam Implementing template params in this class would
+ *                                      require implementing them throughout the code base
+ *                                      https://github.com/getkirby/kirby/pull/4886#pullrequestreview-1203577545
  */
 class Iterator implements IteratorAggregate
 {
@@ -43,7 +43,6 @@ class Iterator implements IteratorAggregate
 	 * Get an iterator for the items.
 	 *
 	 * @return \ArrayIterator
-	 * @psalm-return \ArrayIterator<TKey, TValue>
 	 */
 	public function getIterator(): ArrayIterator
 	{
