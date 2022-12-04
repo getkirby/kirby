@@ -1,11 +1,5 @@
 <template>
-	<component
-		:is="tag"
-		:data-theme="theme"
-		:data-size="size"
-		class="k-headline"
-		v-on="$listeners"
-	>
+	<component :is="tag" :data-theme="theme" :data-size="size" class="k-headline">
 		<k-link v-if="link" :to="link">
 			<!-- @slot Content/text of the headline -->
 			<slot />
