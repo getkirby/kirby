@@ -4,7 +4,6 @@
 		:data-back="back"
 		:data-cover="cover"
 		class="k-image"
-		v-on="$listeners"
 	>
 		<span :style="'padding-bottom:' + ratioPadding">
 			<img
