@@ -4,7 +4,6 @@
 		v-bind="$props"
 		class="k-dropdown-item"
 		@click="onClick"
-		v-on="listeners"
 	>
 		<!-- @slot The item's content/text -->
 		<slot />
