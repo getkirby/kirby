@@ -52,6 +52,7 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: npm run test:unit:coverage
         working-directory: panel
+
       # TODO: Disabled until Vitest coverage reporting is accurate and
       #       Kirby's frontend tests are useful enough that we need this metric
       # - name: Upload coverage results to Codecov
