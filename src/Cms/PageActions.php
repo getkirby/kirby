@@ -53,8 +53,9 @@ trait PageActions
 					// regenerate UUIDs of all page children
 					if ($children !== false) {
 						foreach ($copy->index(true) as $child) {
-							// no $children because we already operate on the index
-							$this->adaptCopy($child, $files);
+							// always adapt files of subpages as they are currently always copied;
+							// but don't adapt children because we already operate on the index
+							$this->adaptCopy($child, true);
 						}
 					}
 				}
@@ -85,8 +86,9 @@ trait PageActions
 			// regenerate UUIDs of all page children
 			if ($children !== false) {
 				foreach ($copy->index(true) as $child) {
-					// no $children because we already operate on the index
-					$this->adaptCopy($child, $files);
+					// always adapt files of subpages as they are currently always copied;
+					// but don't adapt children because we already operate on the index
+					$this->adaptCopy($child, true);
 				}
 			}
 		}
