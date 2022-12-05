@@ -90,8 +90,8 @@ class FilesFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'test/a.jpg',
-			'test/b.jpg'
+			'a.jpg',
+			'b.jpg'
 		];
 
 		$this->assertEquals($expected, $ids);
@@ -145,8 +145,8 @@ class FilesFieldTest extends TestCase
 		$ids   = array_column($value, 'id');
 
 		$expected = [
-			'test-draft/a.jpg',
-			'test-draft/b.jpg'
+			'a.jpg',
+			'b.jpg'
 		];
 
 		$this->assertEquals($expected, $ids);
@@ -270,8 +270,8 @@ class FilesFieldTest extends TestCase
 		$this->assertArrayHasKey('data', $api);
 		$this->assertArrayHasKey('pagination', $api);
 		$this->assertCount(3, $api['data']);
-		$this->assertSame('test/a.jpg', $api['data'][0]['id']);
-		$this->assertSame('test/b.jpg', $api['data'][1]['id']);
-		$this->assertSame('test/c.jpg', $api['data'][2]['id']);
+		$this->assertSame('a.jpg', $api['data'][0]['id']);
+		$this->assertSame('b.jpg', $api['data'][1]['id']);
+		$this->assertSame('c.jpg', $api['data'][2]['id']);
 	}
 }
