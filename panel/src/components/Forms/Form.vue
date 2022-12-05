@@ -19,7 +19,6 @@
 				:fields="fields"
 				:novalidate="novalidate"
 				:value="value"
-				@input="value = $event"
 				v-on="listeners"
 			/>
 		</slot>
@@ -67,6 +66,7 @@ export default {
 			errors: {},
 			listeners: {
 				...this.$listeners,
+				input: this.onInput,
 				submit: this.onSubmit
 			}
 		};
@@ -79,6 +79,9 @@ export default {
 		 */
 		focus(name) {
 			this.$refs.fields?.focus?.(name);
+		},
+		onInput(values, field, name) {
+			this.$emit("input", values, field, name);
 		},
 		onSubmit() {
 			/**
