@@ -35,12 +35,12 @@ import "./styles/animations.css";
 Vue.use(Errors);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Components);
 Vue.use(Api, store);
 Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);
+Vue.use(Components);
 Vue.use(Plugins);
 
 // Load CSS utilities after components

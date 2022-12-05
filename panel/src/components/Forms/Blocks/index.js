@@ -23,7 +23,7 @@ export default {
 		// block types
 		const components = import.meta.glob("./Types/*.vue", { eager: true });
 
-		Object.keys(components).map((key) => {
+		for (const key in components) {
 			// get name and type by filename
 			const name = key.match(/\/([a-zA-Z]*)\.vue/)[1];
 			const type = name.toLowerCase();
@@ -36,6 +36,6 @@ export default {
 
 			// globally define the block type component
 			app.component("k-block-type-" + type, component);
-		});
+		}
 	}
 };

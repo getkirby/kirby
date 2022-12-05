@@ -37,6 +37,9 @@ export default {
 					});
 				} else {
 					// if component doesn't exist, don't extend
+					window.console.warn(
+						`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${options.extends}"`
+					);
 					options.extends = null;
 				}
 			}
@@ -46,9 +49,9 @@ export default {
 			}
 
 			if (options.mixins) {
-				options.mixins = options.mixins.map((mixin) => {
-					return typeof mixin === "string" ? mixins[mixin] : mixin;
-				});
+				options.mixins = options.mixins.map((mixin) =>
+					typeof mixin === "string" ? mixins[mixin] : mixin
+				);
 			}
 
 			if (components[name]) {
