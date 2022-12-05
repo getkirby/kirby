@@ -36,7 +36,7 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
-		"claviska/simpleimage": "3.7.0",
+		"claviska/simpleimage": "3.7.1",
 		"composer/semver": "3.3.2",
 		"filp/whoops": "2.14.6",
 		"getkirby/composer-installer": "^1.2.1",
