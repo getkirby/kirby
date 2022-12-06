@@ -29,7 +29,7 @@
 					:autofocus="true"
 					:value="q"
 					type="text"
-					@input="onInput"
+					@input="onInput($event.target.value)"
 					@keydown.down.prevent="onDown"
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
