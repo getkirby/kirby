@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class StructureTest extends TestCase
 {
 	public function testCreate()
@@ -94,7 +96,7 @@ class StructureTest extends TestCase
 
 	public function testWithInvalidData()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid structure data');
 
 		$structure = new Structure([

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use PHPUnit\Framework\TestCase;
 
 class LanguageRouterTest extends TestCase
@@ -197,7 +198,7 @@ class LanguageRouterTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" does not exist');
 
 		$language = $app->language('en');

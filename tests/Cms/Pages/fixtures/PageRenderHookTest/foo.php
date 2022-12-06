@@ -1,0 +1,1 @@
+<?= $page->uid() ?> : <?= $page->title() ?>

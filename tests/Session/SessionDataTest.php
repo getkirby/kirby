@@ -2,6 +2,8 @@
 
 namespace Kirby\Session;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/mocks.php';
@@ -59,7 +61,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testSetInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->set(123, 'someValue');
 	}
@@ -97,7 +99,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testIncrementInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->increment(123, 10);
 	}
@@ -107,7 +109,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testIncrementInvalidMax()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->increment('someInt', 10, 'some invalid max value');
 	}
@@ -117,7 +119,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testIncrementNonIntValue()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.data.increment.nonInt');
 
 		$this->sessionData->increment('someString', 10);
@@ -156,7 +158,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testDecrementInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->decrement(123, 10);
 	}
@@ -166,7 +168,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testDecrementInvalidMin()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->decrement('someInt', 10, 'some invalid min value');
 	}
@@ -176,7 +178,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testDecrementNonIntValue()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.data.decrement.nonInt');
 
 		$this->sessionData->decrement('someString', 10);
@@ -205,7 +207,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testGetInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->get(123, 456);
 	}
@@ -253,7 +255,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testRemoveInvalidKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->sessionData->remove(123);
 	}

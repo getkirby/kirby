@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -161,7 +162,7 @@ class LanguageTest extends TestCase
 
 	public function testLocaleInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$language = new Language([
 			'code' => 'en',
@@ -502,5 +503,114 @@ class LanguageTest extends TestCase
 		$language = $language->update(['name' => 'English']);
 
 		$this->assertSame('English', $language->name());
+	}
+
+	public function testCreateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures = __DIR__ . '/fixtures/CreateHooksTest',
+			],
+			'hooks' => [
+				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
+					$calls++;
+				},
+				'language.create:after' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('de', $input['code']);
+					$phpunit->assertTrue($input['default']);
+					$calls++;
+				}
+			]
+		]);
+
+		Language::create([
+			'code' => 'de'
+		]);
+
+		$this->assertSame(2, $calls);
+	}
+
+	public function testUpdateHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->fixtures = __DIR__ . '/fixtures/UpdateHooksTest';
+		Dir::make($this->fixtures . '/content');
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures,
+			],
+			'hooks' => [
+				'language.update:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertTrue($language->isDefault());
+					$phpunit->assertSame('English', $input['name']);
+					$phpunit->assertSame('en', $language->name());
+					$calls++;
+				},
+				'language.update:after' => function (Language $oldLanguage, Language $newLanguage, array $input) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $oldLanguage);
+					$phpunit->assertInstanceOf(Language::class, $newLanguage);
+					$phpunit->assertSame('en', $oldLanguage->code());
+					$phpunit->assertSame('en', $newLanguage->code());
+					$phpunit->assertTrue($oldLanguage->isDefault());
+					$phpunit->assertTrue($newLanguage->isDefault());
+					$phpunit->assertSame('English', $input['name']);
+					$phpunit->assertSame('en', $oldLanguage->name());
+					$phpunit->assertSame('English', $newLanguage->name());
+					$calls++;
+				}
+			]
+		]);
+
+		$language = Language::create(['code' => 'en']);
+		$language->update(['name' => 'English']);
+
+		$this->assertSame(2, $calls);
+	}
+
+	public function testDeleteHooks()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		new App([
+			'roots' => [
+				'index' => $this->fixtures = __DIR__ . '/fixtures/DeleteHooksTest',
+			],
+			'hooks' => [
+				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
+					$calls++;
+				},
+				'language.delete:after' => function (Language $language) use ($phpunit, &$calls) {
+					$phpunit->assertInstanceOf(Language::class, $language);
+					$phpunit->assertSame('en', $language->code());
+					$phpunit->assertSame('English', $language->name());
+					$calls++;
+				}
+			]
+		]);
+
+		$language = Language::create([
+			'code' => 'en',
+			'name' => 'English'
+		]);
+		$language->delete();
+
+
+		$this->assertSame(2, $calls);
 	}
 }

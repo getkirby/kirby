@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class FilePickerTest extends TestCase
@@ -102,7 +103,7 @@ class FilePickerTest extends TestCase
 			'query' => 'site.pages'
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Your query must return a set of files');
 
 		$picker->items();

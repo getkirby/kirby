@@ -23,7 +23,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="email" type="email" name="email" />
+ * @example <k-input :value="email" @input="email = $event" type="email" name="email" />
  */
 export default {
 	extends: TextInput,

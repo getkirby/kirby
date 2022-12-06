@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
 import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
 import DateInput from "@/components/Forms/Input/DateInput.vue";
@@ -21,23 +19,27 @@ import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
 import TogglesInput from "@/components/Forms/Input/TogglesInput.vue";
 import UrlInput from "@/components/Forms/Input/UrlInput.vue";
 
-Vue.component("k-checkbox-input", CheckboxInput);
-Vue.component("k-checkboxes-input", CheckboxesInput);
-Vue.component("k-date-input", DateInput);
-Vue.component("k-email-input", EmailInput);
-Vue.component("k-list-input", ListInput);
-Vue.component("k-multiselect-input", MultiselectInput);
-Vue.component("k-number-input", NumberInput);
-Vue.component("k-password-input", PasswordInput);
-Vue.component("k-radio-input", RadioInput);
-Vue.component("k-range-input", RangeInput);
-Vue.component("k-select-input", SelectInput);
-Vue.component("k-slug-input", SlugInput);
-Vue.component("k-tags-input", TagsInput);
-Vue.component("k-tel-input", TelInput);
-Vue.component("k-text-input", TextInput);
-Vue.component("k-textarea-input", TextareaInput);
-Vue.component("k-time-input", TimeInput);
-Vue.component("k-toggle-input", ToggleInput);
-Vue.component("k-toggles-input", TogglesInput);
-Vue.component("k-url-input", UrlInput);
+export default {
+	install(app) {
+		app.component("k-checkbox-input", CheckboxInput);
+		app.component("k-checkboxes-input", CheckboxesInput);
+		app.component("k-date-input", DateInput);
+		app.component("k-email-input", EmailInput);
+		app.component("k-list-input", ListInput);
+		app.component("k-multiselect-input", MultiselectInput);
+		app.component("k-number-input", NumberInput);
+		app.component("k-password-input", PasswordInput);
+		app.component("k-radio-input", RadioInput);
+		app.component("k-range-input", RangeInput);
+		app.component("k-select-input", SelectInput);
+		app.component("k-slug-input", SlugInput);
+		app.component("k-tags-input", TagsInput);
+		app.component("k-tel-input", TelInput);
+		app.component("k-text-input", TextInput);
+		app.component("k-textarea-input", TextareaInput);
+		app.component("k-time-input", TimeInput);
+		app.component("k-toggle-input", ToggleInput);
+		app.component("k-toggles-input", TogglesInput);
+		app.component("k-url-input", UrlInput);
+	}
+};

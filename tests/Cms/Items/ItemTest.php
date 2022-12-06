@@ -6,6 +6,9 @@ use PHPUnit\Framework\TestCase;
 
 class ItemTest extends TestCase
 {
+	protected $app;
+	protected $page;
+
 	public function setUp(): void
 	{
 		$this->app = new App([
@@ -23,8 +26,8 @@ class ItemTest extends TestCase
 
 		$this->assertNotNull($item->id());
 		$this->assertSame($this->app, $item->kirby());
-		$this->assertInstanceOf('Kirby\Cms\Site', $item->parent());
-		$this->assertInstanceOf('Kirby\Cms\Items', $item->siblings());
+		$this->assertInstanceOf(Site::class, $item->parent());
+		$this->assertInstanceOf(Items::class, $item->siblings());
 	}
 
 	public function testIs()

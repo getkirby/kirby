@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
+use Kirby\Image\Image;
 
 class FileActionsTest extends TestCase
 {
@@ -194,7 +195,7 @@ class FileActionsTest extends TestCase
 
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf('Kirby\Filesystem\File', $result->asset());
+		$this->assertInstanceOf(BaseFile::class, $result->asset());
 
 		// make sure file received UUID right away
 		$this->assertIsString($result->content()->get('uuid')->value());
@@ -284,7 +285,7 @@ class FileActionsTest extends TestCase
 
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.jpg');
-		$this->assertInstanceOf('Kirby\Image\Image', $result->asset());
+		$this->assertInstanceOf(Image::class, $result->asset());
 	}
 
 	/**
@@ -379,12 +380,12 @@ class FileActionsTest extends TestCase
 		]);
 
 		$this->assertEquals(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf('Kirby\Filesystem\File', $originalFile->asset());
+		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement);
 
 		$this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
-		$this->assertInstanceOf('Kirby\Filesystem\File', $replacedFile->asset());
+		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
 	/**
@@ -402,12 +403,12 @@ class FileActionsTest extends TestCase
 		]);
 
 		$this->assertSame(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf('Kirby\Image\Image', $originalFile->asset());
+		$this->assertInstanceOf(Image::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement);
 
 		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
-		$this->assertInstanceOf('Kirby\Image\Image', $replacedFile->asset());
+		$this->assertInstanceOf(Image::class, $replacedFile->asset());
 	}
 
 	/**
@@ -461,14 +462,14 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+					$phpunit->assertInstanceOf(File::class, $file);
 					$phpunit->assertSame('test', $name);
 					$phpunit->assertSame('site.csv', $file->filename());
 					$calls++;
 				},
 				'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+					$phpunit->assertInstanceOf(File::class, $newFile);
+					$phpunit->assertInstanceOf(File::class, $oldFile);
 					$phpunit->assertSame('test.csv', $newFile->filename());
 					$phpunit->assertSame('site.csv', $oldFile->filename());
 					$calls++;
@@ -502,14 +503,14 @@ class FileActionsTest extends TestCase
 			],
 			'hooks' => [
 				'file.changeSort:before' => function (File $file, $position) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+					$phpunit->assertInstanceOf(File::class, $file);
 					$phpunit->assertSame(3, $position);
 					$phpunit->assertNull($file->sort()->value());
 					$calls++;
 				},
 				'file.changeSort:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+					$phpunit->assertInstanceOf(File::class, $newFile);
+					$phpunit->assertInstanceOf(File::class, $oldFile);
 					$phpunit->assertSame(3, $newFile->sort()->value());
 					$phpunit->assertNull($oldFile->sort()->value());
 					$calls++;
@@ -571,16 +572,16 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $file);
-					$phpunit->assertInstanceOf('Kirby\Filesystem\File', $upload);
+					$phpunit->assertInstanceOf(File::class, $file);
+					$phpunit->assertInstanceOf(BaseFile::class, $upload);
 					$phpunit->assertSame('site.csv', $file->filename());
 					$phpunit->assertSame('replace.csv', $upload->filename());
 					$phpunit->assertFileDoesNotExist($file->root());
 					$calls++;
 				},
 				'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+					$phpunit->assertInstanceOf(File::class, $newFile);
+					$phpunit->assertInstanceOf(File::class, $oldFile);
 					$phpunit->assertSame('site.csv', $newFile->filename());
 					$phpunit->assertSame('Replace', F::read($newFile->root()));
 					$phpunit->assertSame('site.csv', $oldFile->filename());
@@ -614,15 +615,15 @@ class FileActionsTest extends TestCase
 		$app = $this->app->clone([
 			'hooks' => [
 				'file.update:before' => function (File $file, $values, $strings) use ($phpunit, $input, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+					$phpunit->assertInstanceOf(File::class, $file);
 					$phpunit->assertNull($file->title()->value());
 					$phpunit->assertSame($input, $values);
 					$phpunit->assertSame($input, $strings);
 					$calls++;
 				},
 				'file.update:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
-					$phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+					$phpunit->assertInstanceOf(File::class, $newFile);
+					$phpunit->assertInstanceOf(File::class, $oldFile);
 					$phpunit->assertSame('Test', $newFile->title()->value());
 					$phpunit->assertNull($oldFile->title()->value());
 					$calls++;

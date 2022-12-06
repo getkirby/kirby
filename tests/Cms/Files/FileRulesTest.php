@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
@@ -48,7 +51,7 @@ class FileRulesTest extends TestCase
 		$parent = new Page(['slug' => 'test']);
 		$file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The name must not be empty');
 
 		FileRules::changeName($file, '');
@@ -63,7 +66,7 @@ class FileRulesTest extends TestCase
 		$file->method('permissions')->willReturn($permissions);
 		$file->method('filename')->willReturn('test.jpg');
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the name of "test.jpg"');
 
 		FileRules::changeName($file, 'test');
@@ -92,7 +95,7 @@ class FileRulesTest extends TestCase
 
 	public function testChangeNameToExistingFile()
 	{
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "b.jpg" already exists');
 
 		$page = new Page([
@@ -115,7 +118,7 @@ class FileRulesTest extends TestCase
 		$page = $this->createMock(Page::class);
 		$file->method('parent')->willReturn($page);
 
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
 		$upload = $this->createMock(BaseFile::class);
@@ -198,7 +201,7 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
 		$upload = new BaseFile($testImage);
@@ -239,7 +242,7 @@ class FileRulesTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
 		$upload = new BaseFile(__DIR__ . '/fixtures/files/cat.jpg');
@@ -265,7 +268,7 @@ class FileRulesTest extends TestCase
 
 		$upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
 		FileRules::create($file, $upload);
@@ -280,7 +283,7 @@ class FileRulesTest extends TestCase
 		$file->method('permissions')->willReturn($permissions);
 		$file->method('filename')->willReturn('test.jpg');
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be created');
 
 		$upload = $this->createMock(BaseFile::class);
@@ -296,7 +299,7 @@ class FileRulesTest extends TestCase
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be deleted');
 
 		FileRules::delete($file);
@@ -310,7 +313,7 @@ class FileRulesTest extends TestCase
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be replaced');
 
 		$upload = $this->createMock(BaseFile::class);
@@ -336,7 +339,7 @@ class FileRulesTest extends TestCase
 		$upload->method('mime')->willReturn('image/png');
 		$upload->method('extension')->willReturn('png');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
 
 		FileRules::replace($file, $upload);
@@ -362,7 +365,7 @@ class FileRulesTest extends TestCase
 
 		$upload = new BaseFile(__DIR__ . '/fixtures/files/test.svg');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
 		FileRules::replace($file, $upload);
@@ -376,7 +379,7 @@ class FileRulesTest extends TestCase
 		$file = $this->createMock(File::class);
 		$file->method('permissions')->willReturn($permissions);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be updated');
 
 		FileRules::update($file, []);
@@ -411,7 +414,7 @@ class FileRulesTest extends TestCase
 		$file->method('filename')->willReturn('test');
 
 		if ($expected === false) {
-			$this->expectException('Kirby\Exception\InvalidArgumentException');
+			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
 		}
 
@@ -474,7 +477,7 @@ class FileRulesTest extends TestCase
 		$file->method('mime')->willReturn($mime);
 
 		if ($expected === false) {
-			$this->expectException('Kirby\Exception\InvalidArgumentException');
+			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
 		}
 
@@ -496,7 +499,7 @@ class FileRulesTest extends TestCase
 
 		$this->assertTrue(FileRules::validFile($file, false));
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The media type "text/html" is not allowed');
 		$this->assertTrue(FileRules::validFile($file));
 	}
@@ -522,7 +525,7 @@ class FileRulesTest extends TestCase
 		$file->method('filename')->willReturn($filename);
 
 		if ($expected === false) {
-			$this->expectException('Kirby\Exception\InvalidArgumentException');
+			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
 		}
 
@@ -552,7 +555,7 @@ class FileRulesTest extends TestCase
 		$file->method('filename')->willReturn('test');
 
 		if ($expected === false) {
-			$this->expectException('Kirby\Exception\InvalidArgumentException');
+			$this->expectException(InvalidArgumentException::class);
 			$this->expectExceptionMessage($message);
 		}
 

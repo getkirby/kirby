@@ -15,7 +15,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
-final class Argument
+class Argument
 {
 	public function __construct(
 		public mixed $value
@@ -23,12 +23,20 @@ final class Argument
 	}
 
 	/**
-	 * Sanitizes argument string into
+	 * Sanitizes argument string into actual
 	 * PHP type/object as new Argument instance
 	 */
 	public static function factory(string $argument): static
 	{
 		$argument = trim($argument);
+
+		// remove grouping parantheses
+		if (
+			Str::startsWith($argument, '(') &&
+			Str::endsWith($argument, ')')
+		) {
+			$argument = trim(substr($argument, 1, -1));
+		}
 
 		// string with single or double quotes
 		if (

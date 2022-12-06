@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class SectionTest extends TestCase
@@ -31,7 +32,7 @@ class SectionTest extends TestCase
 	{
 		Section::$types['test'] = [];
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined section model');
 
 		$section = new Section('test', []);

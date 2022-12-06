@@ -12,9 +12,16 @@ use Kirby\Cms\User;
 use Kirby\Toolkit\I18n;
 
 /**
- * The Query class can be used to
- * query arrays and objects, including their
- * methods with a very simple string-based syntax.
+ * The Query class can be used to query arrays and objects,
+ * including their methods with a very simple string-based syntax.
+ *
+ * Namespace structure - what handles what:
+ * - Query			Main interface, direct entries
+ * - Expression		Simple comparisons (`a ? b :c`)
+ * - Segments		Chain of method calls (`site.find('notes').url`)
+ * - Segment		Single method call (`find('notes')`)
+ * - Arguments		Method call parameters (`'template', '!=', 'note'`)
+ * - Argument		Single parameter, resolving into actual types
  *
  * @package   Kirby Query
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -90,7 +97,7 @@ class Query
 		}
 
 		// loop through all segments to resolve query
-		return Segments::factory($this->query, $this)->resolve($data);
+		return Expression::factory($this->query, $this)->resolve($data);
 	}
 }
 

@@ -503,7 +503,7 @@
 	"system.issues.site": "Mappen site verkar vara exponerad",
 	"system.issues.vulnerability.kirby": "Din installation kan vara påverkad av följande sårbarhet ({ severity } allvarlighetsgrad): { description }",
 	"system.issues.vulnerability.plugin": "Din installation kan vara påverkad av följande sårbarhet i tillägget { plugin } ({ severity } allvarlighetsgrad): { description }",
-	"system.updateStatus": "Uppdatera status",
+	"system.updateStatus": "Uppdateringsstatus",
 	"system.updateStatus.error": "Det gick inte att söka efter uppdateringar",
 	"system.updateStatus.not-vulnerable": "Inga kända sårbarheter",
 	"system.updateStatus.security-update": "Gratis säkerhetsuppdatering { version } tillgänglig",
@@ -579,7 +579,7 @@
 
 	"version": "Version",
 	"version.current": "Aktuell version",
-	"version.latest": "Senaste versionen",
+	"version.latest": "Senaste version",
 	"versionInformation": "Versionsinformation",
 
 	"view.account": "Ditt konto",

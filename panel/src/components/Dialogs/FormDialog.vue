@@ -16,8 +16,8 @@
 			:value="model"
 			:fields="fields"
 			:novalidate="novalidate"
-			@input="$emit('input', $event)"
-			@submit="$emit('submit', $event)"
+			@input="onInput"
+			@submit="onSubmit"
 		/>
 		<k-box v-else theme="negative"> This form dialog has no fields </k-box>
 	</k-dialog>
@@ -69,6 +69,9 @@ export default {
 	},
 	data() {
 		return {
+			// Since fiber dialogs don't update their `value` prop
+			// on an emitted `input` event, we need to ensure a local
+			// state of all updated values
 			model: this.value
 		};
 	},
@@ -78,10 +81,20 @@ export default {
 		}
 	},
 	watch: {
-		value(newValue, oldValue) {
-			if (newValue !== oldValue) {
-				this.model = newValue;
-			}
+		value(value) {
+			this.model = value;
+		}
+	},
+	methods: {
+		onInput(values) {
+			// Since fiber dialogs don't update their `value` prop
+			// we need to update our local  state ourselves, so that `k-form`
+			// received up-to-date data
+			this.model = values;
+			this.$emit("input", values);
+		},
+		onSubmit(values) {
+			this.$emit("submit", values);
 		}
 	}
 };

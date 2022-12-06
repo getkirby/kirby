@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +39,7 @@ class BlueprintTest extends TestCase
 	 */
 	public function testConstructWithoutModel()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('A blueprint model is required');
 
 		new Blueprint([]);
@@ -49,7 +50,7 @@ class BlueprintTest extends TestCase
 	 */
 	public function testConstructInvalidModel()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid blueprint model');
 
 		new Blueprint(['model' => new \stdClass()]);

@@ -5,16 +5,18 @@
 			<k-button icon="angle-left" @click="onPrev" />
 			<span class="k-calendar-selects">
 				<k-select-input
-					v-model.number="current.month"
 					:options="months"
 					:disabled="disabled"
 					:required="true"
+					:value="current.month"
+					@input="current.month = $event"
 				/>
 				<k-select-input
-					v-model.number="current.year"
 					:options="years"
 					:disabled="disabled"
 					:required="true"
+					:value="current.year"
+					@input="current.year = $event"
 				/>
 			</span>
 			<k-button icon="angle-right" @click="onNext" />

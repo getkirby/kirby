@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import AspectRatio from "./AspectRatio.vue";
 import Bar from "./Bar.vue";
 import Box from "./Box.vue";
@@ -25,27 +23,31 @@ import TableUpdateStatusCell from "./TableUpdateStatusCell.vue";
 import Tabs from "./Tabs.vue";
 import View from "./View.vue";
 
-Vue.component("k-aspect-ratio", AspectRatio);
-Vue.component("k-bar", Bar);
-Vue.component("k-box", Box);
-Vue.component("k-bubble", Bubble);
-Vue.component("k-bubbles", Bubbles);
-Vue.component("k-collection", Collection);
-Vue.component("k-column", Column);
-Vue.component("k-dropzone", Dropzone);
-Vue.component("k-empty", Empty);
-Vue.component("k-file-preview", FilePreview);
-Vue.component("k-grid", Grid);
-Vue.component("k-header", Header);
-Vue.component("k-inside", Inside);
-Vue.component("k-item", Item);
-Vue.component("k-item-image", ItemImage);
-Vue.component("k-items", Items);
-Vue.component("k-overlay", Overlay);
-Vue.component("k-panel", Panel);
-Vue.component("k-stats", Stats);
-Vue.component("k-table", Table);
-Vue.component("k-table-cell", TableCell);
-Vue.component("k-table-update-status-cell", TableUpdateStatusCell);
-Vue.component("k-tabs", Tabs);
-Vue.component("k-view", View);
+export default {
+	install(app) {
+		app.component("k-aspect-ratio", AspectRatio);
+		app.component("k-bar", Bar);
+		app.component("k-box", Box);
+		app.component("k-bubble", Bubble);
+		app.component("k-bubbles", Bubbles);
+		app.component("k-collection", Collection);
+		app.component("k-column", Column);
+		app.component("k-dropzone", Dropzone);
+		app.component("k-empty", Empty);
+		app.component("k-file-preview", FilePreview);
+		app.component("k-grid", Grid);
+		app.component("k-header", Header);
+		app.component("k-inside", Inside);
+		app.component("k-item", Item);
+		app.component("k-item-image", ItemImage);
+		app.component("k-items", Items);
+		app.component("k-overlay", Overlay);
+		app.component("k-panel", Panel);
+		app.component("k-stats", Stats);
+		app.component("k-table", Table);
+		app.component("k-table-cell", TableCell);
+		app.component("k-table-update-status-cell", TableUpdateStatusCell);
+		app.component("k-tabs", Tabs);
+		app.component("k-view", View);
+	}
+};

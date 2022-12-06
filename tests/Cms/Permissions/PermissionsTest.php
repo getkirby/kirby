@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class PermissionsTest extends TestCase
 {
 	public function tearDown(): void
@@ -119,7 +121,7 @@ class PermissionsTest extends TestCase
 
 	public function testExtendActionsCoreOverride()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The action pages is already a core action');
 
 		Permissions::$extendedActions = [

@@ -33,7 +33,7 @@
 import picker from "@/mixins/forms/picker.js";
 
 /**
- * @example <k-files-field v-model="files" name="files" label="Files" />
+ * @example <k-files-field :value="files" @input="files = $event" name="files" label="Files" />
  */
 export default {
 	mixins: [picker],

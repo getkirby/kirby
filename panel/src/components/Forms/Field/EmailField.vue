@@ -1,9 +1,9 @@
 <template>
 	<k-field :input="_uid" v-bind="$props" class="k-email-field">
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="email"
 			v-on="$listeners"
@@ -30,7 +30,7 @@ import { props as EmailInput } from "../Input/EmailInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>` for additional information.
- * @example <k-email-field v-model="email" name="email" label="Email" />
+ * @example <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
  */
 export default {
 	mixins: [Field, Input, EmailInput],

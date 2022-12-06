@@ -290,13 +290,11 @@ class I18n
 			return $translation($count);
 		}
 
-		if (is_string($translation) === true) {
-			$message = $translation;
-		} elseif (isset($translation[$count]) === true) {
-			$message = $translation[$count];
-		} else {
-			$message = end($translation);
-		}
+		$message = match (true) {
+			is_string($translation)     => $translation,
+			isset($translation[$count]) => $translation[$count],
+			default 				    => end($translation)
+		};
 
 		if ($formatNumber === true) {
 			$count = static::formatNumber($count, $locale);

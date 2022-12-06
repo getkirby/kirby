@@ -1,5 +1,5 @@
 <template>
-	<k-field :input="_uid" v-bind="$props" class="k-date-field">
+	<k-field v-bind="$props" :input="_uid" class="k-date-field">
 		<div
 			ref="body"
 			:data-invalid="!novalidate && isInvalid"
@@ -10,6 +10,7 @@
 			<k-input
 				:id="_uid"
 				ref="dateInput"
+				v-bind="$props"
 				:autofocus="autofocus"
 				:disabled="disabled"
 				:display="display"
@@ -19,7 +20,6 @@
 				:value="value"
 				theme="field"
 				type="date"
-				v-bind="$props"
 				@invalid="onDateInvalid"
 				@input="onDateInput"
 				@submit="$emit('submit')"
@@ -95,7 +95,7 @@ import { props as DateInput } from "../Input/DateInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-datetime-input>` for additional information.
  *
- * @example <k-date-field v-model="date" name="date" label="Date" />
+ * @example <k-date-field :value="date" name="date" label="Date" @input="$emit('input', $event)" />
  * @public
  */
 export default {

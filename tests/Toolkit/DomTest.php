@@ -309,7 +309,7 @@ class DomTest extends TestCase
 	 */
 	public function testParseInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage("The markup could not be parsed: Start tag expected, '<' not found");
 
 		new Dom('{"this": "is not XML"}', 'XML');

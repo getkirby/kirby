@@ -81,7 +81,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="range" name="range" type="range" />
+ * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
  */
 export default {
 	mixins: [props],

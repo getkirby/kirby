@@ -75,11 +75,10 @@ class AutoSession
 		}
 
 		// get the current session
-		if ($options['detect'] === true) {
-			$session = $this->sessions->currentDetected();
-		} else {
-			$session = $this->sessions->current();
-		}
+		$session = match ($options['detect']) {
+			true    => $this->sessions->currentDetected(),
+			default => $this->sessions->current()
+		};
 
 		// create a new session
 		if ($session === null) {

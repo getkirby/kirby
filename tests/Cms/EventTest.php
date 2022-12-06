@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * @coversDefaultClass \Kirby\Cms\Event
  */
@@ -230,7 +232,7 @@ class EventTest extends TestCase
 	 */
 	public function testUpdateArgumentDoesNotExist()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The argument arg3 does not exist');
 
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);

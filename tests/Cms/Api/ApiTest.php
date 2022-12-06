@@ -2,7 +2,11 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
@@ -328,7 +332,7 @@ class ApiTest extends TestCase
 
 	public function testFileNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "nope.jpg" cannot be found');
 
 		$this->api->file('site', 'nope.jpg');
@@ -336,7 +340,7 @@ class ApiTest extends TestCase
 
 	public function testFileNotReadable()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The file "protected.jpg" cannot be found');
 
 		$app = $this->app->clone([
@@ -363,7 +367,7 @@ class ApiTest extends TestCase
 		$this->assertEquals($a, $this->api->page('a'));
 		$this->assertEquals($aa, $this->api->page('a+aa'));
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
 		$this->api->page('does-not-exist');
 	}
@@ -387,7 +391,7 @@ class ApiTest extends TestCase
 		$this->assertEquals('current@getkirby.com', $api->user()->email());
 		$this->assertEquals('test@getkirby.com', $api->user('test@getkirby.com')->email());
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
 		$this->api->user('nope@getkirby.com');
 	}
@@ -421,7 +425,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
@@ -441,7 +445,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
@@ -487,12 +491,12 @@ class ApiTest extends TestCase
 		$this->assertInstanceOf(File::class, $api->parent('users/test@getkirby.com/files/userfile.jpg'));
 
 		// model type is not recognized
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid model type: something');
 		$this->assertNull($api->parent('something/something'));
 
 		// model cannot be found
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page cannot be found');
 		$this->assertNull($api->parent('pages/does-not-exist'));
 	}
@@ -549,7 +553,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The field "nonexists" could not be found');
 
 		$page = $app->page('test');
@@ -566,7 +570,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('No field could be loaded');
 
 		$page = $app->page('test');
@@ -610,7 +614,7 @@ class ApiTest extends TestCase
 			'route'     => 'test'
 		];
 
-		$this->assertInstanceOf('Kirby\Http\Response', $result);
+		$this->assertInstanceOf(Response::class, $result);
 		$this->assertEquals(json_encode($expected), $result->body());
 	}
 }

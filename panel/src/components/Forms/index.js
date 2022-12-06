@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
 import Calendar from "./Calendar.vue";
@@ -28,30 +26,37 @@ import ToolbarEmailDialog from "./Toolbar/EmailDialog.vue";
 import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
 /* Form Inputs */
-import "./Input/index.js";
+import Inputs from "./Input/index.js";
 
 /* Form Fields */
-import "./Field/index.js";
+import Fields from "./Field/index.js";
 
-Vue.component("k-calendar", Calendar);
-Vue.component("k-counter", Counter);
-Vue.component("k-autocomplete", Autocomplete);
-Vue.component("k-form", Form);
-Vue.component("k-form-buttons", FormButtons);
-Vue.component("k-form-indicator", FormIndicator);
-Vue.component("k-field", Field);
-Vue.component("k-fieldset", Fieldset);
-Vue.component("k-input", Input);
-Vue.component("k-login", Login);
-Vue.component("k-login-code", LoginCode);
-Vue.component("k-times", Times);
-Vue.component("k-upload", Upload);
-Vue.component("k-writer", Writer);
+export default {
+	install(app) {
+		app.component("k-calendar", Calendar);
+		app.component("k-counter", Counter);
+		app.component("k-autocomplete", Autocomplete);
+		app.component("k-form", Form);
+		app.component("k-form-buttons", FormButtons);
+		app.component("k-form-indicator", FormIndicator);
+		app.component("k-field", Field);
+		app.component("k-fieldset", Fieldset);
+		app.component("k-input", Input);
+		app.component("k-login", Login);
+		app.component("k-login-code", LoginCode);
+		app.component("k-times", Times);
+		app.component("k-upload", Upload);
+		app.component("k-writer", Writer);
 
-Vue.component("k-login-alert", LoginAlert);
+		app.component("k-login-alert", LoginAlert);
 
-Vue.component("k-structure-form", StructureForm);
+		app.component("k-structure-form", StructureForm);
 
-Vue.component("k-toolbar", Toolbar);
-Vue.component("k-toolbar-email-dialog", ToolbarEmailDialog);
-Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
+		app.component("k-toolbar", Toolbar);
+		app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
+		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
+
+		app.use(Inputs);
+		app.use(Fields);
+	}
+};

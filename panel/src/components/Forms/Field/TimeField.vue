@@ -1,9 +1,9 @@
 <template>
-	<k-field :input="_uid" v-bind="$props" class="k-time-field">
+	<k-field v-bind="$props" :input="_uid" class="k-time-field">
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			theme="field"
 			type="time"
 			@input="$emit('input', $event || '')"
@@ -36,7 +36,7 @@ import { props as TimeInput } from "../Input/TimeInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-time-input>` for additional information.
  *
- * @example <k-time-field v-model="time" name="time" label="Time" />
+ * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
  * @public
  */
 export default {

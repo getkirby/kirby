@@ -135,7 +135,7 @@ class AppTranslationsTest extends TestCase
 		// translation
 		$translation = $app->translation('de');
 
-		$this->assertInstanceOf('Kirby\Cms\Translation', $translation);
+		$this->assertInstanceOf(Translation::class, $translation);
 		$this->assertIsArray($translation->data());
 		$this->assertArrayHasKey('button', $translation->data());
 		$this->assertArrayHasKey('hello', $translation->data());
@@ -147,7 +147,7 @@ class AppTranslationsTest extends TestCase
 		// translations
 		$translation = $app->translations()->find('de');
 
-		$this->assertInstanceOf('Kirby\Cms\Translation', $translation);
+		$this->assertInstanceOf(Translation::class, $translation);
 		$this->assertIsArray($translation->data());
 		$this->assertArrayHasKey('button', $translation->data());
 		$this->assertArrayHasKey('hello', $translation->data());

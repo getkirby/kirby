@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class LanguageRulesTest extends TestCase
@@ -21,7 +23,7 @@ class LanguageRulesTest extends TestCase
 			'code' => 'l',
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid code for the language');
 
 		LanguageRules::create($language);
@@ -34,7 +36,7 @@ class LanguageRulesTest extends TestCase
 			'name' => ''
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid name for the language');
 
 		LanguageRules::create($language);
@@ -47,7 +49,7 @@ class LanguageRulesTest extends TestCase
 		$language->method('name')->willReturn('Deutsch');
 		$language->method('exists')->willReturn(true);
 
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('The language already exists');
 
 		LanguageRules::create($language);
@@ -59,7 +61,7 @@ class LanguageRulesTest extends TestCase
 		$language->method('code')->willReturn('');
 		$language->method('name')->willReturn('Deutsch');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid code for the language');
 
 		LanguageRules::update($language);
@@ -71,7 +73,7 @@ class LanguageRulesTest extends TestCase
 		$language->method('code')->willReturn('de');
 		$language->method('name')->willReturn('');
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid name for the language');
 
 		LanguageRules::update($language);

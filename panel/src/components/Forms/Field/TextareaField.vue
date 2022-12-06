@@ -1,14 +1,14 @@
 <template>
 	<k-field
+		v-bind="$props"
 		:input="_uid"
 		:counter="counterOptions"
-		v-bind="$props"
 		class="k-textarea-field"
 	>
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			type="textarea"
 			theme="field"
 			v-on="$listeners"
@@ -25,7 +25,7 @@ import counter from "@/mixins/forms/counter.js";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-textarea-input>`
  * for additional information.
- * @example <k-textarea-field v-model="text" name="text" label="Text" />
+ * @example <k-textarea-field :value="text" @input="text = $event" name="text" label="Text" />
  */
 export default {
 	mixins: [Field, Input, TextareaInput, counter],

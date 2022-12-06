@@ -17,7 +17,7 @@ export const props = {
 };
 
 /**
- * @example <k-input v-model="url" name="url" type="url" />
+ * @example <k-input :value="url" @input="url = $event" name="url" type="url" />
  */
 export default {
 	extends: TextInput,

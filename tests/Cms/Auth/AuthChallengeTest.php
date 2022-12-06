@@ -4,6 +4,10 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\Auth\ErrorneousChallenge;
 use Kirby\Email\Email;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Throwable;
 
@@ -196,7 +200,7 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testCreateChallengeDebugNotFound()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
 
 		$this->auth->createChallenge('invalid@example.com');
@@ -215,7 +219,7 @@ class AuthChallengeTest extends TestCase
 		$auth->createChallenge('marge@simpsons.com');
 		$auth->createChallenge('marge@simpsons.com');
 
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Rate limit exceeded');
 		$auth->createChallenge('marge@simpsons.com');
 	}
@@ -389,7 +393,7 @@ class AuthChallengeTest extends TestCase
 	{
 		$session = $this->app->session();
 
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
 		$this->auth->login2fa('invalid@example.com', 'springfield123');
 	}
@@ -402,7 +406,7 @@ class AuthChallengeTest extends TestCase
 	{
 		$session = $this->app->session();
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Wrong password');
 		$this->auth->login2fa('marge@simpsons.com', 'springfield456');
 	}
@@ -437,7 +441,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No InvalidArgumentException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\InvalidArgumentException', $e);
+			$this->assertInstanceOf(InvalidArgumentException::class, $e);
 			$this->assertSame('No authentication challenge is active', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 		}
@@ -455,7 +459,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No InvalidArgumentException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\InvalidArgumentException', $e);
+			$this->assertInstanceOf(InvalidArgumentException::class, $e);
 			$this->assertSame('No authentication challenge is active', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
 		}
@@ -481,7 +485,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No PermissionException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertInstanceOf(PermissionException::class, $e);
 			$this->assertSame('Invalid code', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 		}
@@ -508,7 +512,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No PermissionException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertInstanceOf(PermissionException::class, $e);
 			$this->assertSame('Invalid code', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => false], $e->getDetails());
 		}
@@ -520,7 +524,7 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeInvalidEmail()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
 
 		$this->app->session()->set('kirby.challenge.email', 'invalid@example.com');
@@ -535,7 +539,7 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeRateLimited()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Rate limit exceeded');
 
 		$session = $this->app->session();
@@ -568,7 +572,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No PermissionException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertInstanceOf(PermissionException::class, $e);
 			$this->assertSame('Authentication challenge timeout', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 		}
@@ -605,7 +609,7 @@ class AuthChallengeTest extends TestCase
 
 			$this->fail('No PermissionException was thrown');
 		} catch (Throwable $e) {
-			$this->assertInstanceOf('Kirby\Exception\PermissionException', $e);
+			$this->assertInstanceOf(PermissionException::class, $e);
 			$this->assertSame('Invalid code', $e->getMessage());
 			$this->assertSame(['challengeDestroyed' => true], $e->getDetails());
 		}
@@ -622,7 +626,7 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeInvalidCode()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('Invalid code');
 
 		$session = $this->app->session();
@@ -641,7 +645,7 @@ class AuthChallengeTest extends TestCase
 	 */
 	public function testVerifyChallengeInvalidChallenge()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('Invalid authentication challenge: test');
 
 		$session = $this->app->session();

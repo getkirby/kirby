@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -50,7 +51,7 @@ class XmlTest extends TestCase
 	public function testDecodeInvalid1()
 	{
 		// pass invalid object
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid XML data; please pass a string');
 		Xml::decode(new \stdClass());
 	}
@@ -61,7 +62,7 @@ class XmlTest extends TestCase
 	public function testDecodeInvalid2()
 	{
 		// pass invalid int
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid XML data; please pass a string');
 		Xml::decode(1);
 	}

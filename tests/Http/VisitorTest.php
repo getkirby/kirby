@@ -2,6 +2,8 @@
 
 namespace Kirby\Http;
 
+use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Obj;
 use PHPUnit\Framework\TestCase;
 
 class VisitorTest extends TestCase
@@ -13,9 +15,9 @@ class VisitorTest extends TestCase
 		$this->assertEquals('', $visitor->ip());
 		$this->assertEquals('', $visitor->userAgent());
 		$this->assertEquals(null, $visitor->acceptedLanguage());
-		$this->assertInstanceOf('Kirby\Toolkit\Collection', $visitor->acceptedLanguages());
+		$this->assertInstanceOf(Collection::class, $visitor->acceptedLanguages());
 		$this->assertEquals(null, $visitor->acceptedMimeType());
-		$this->assertInstanceOf('Kirby\Toolkit\Collection', $visitor->acceptedMimeTypes());
+		$this->assertInstanceOf(Collection::class, $visitor->acceptedMimeTypes());
 	}
 
 	public function testVisitorWithArguments()
@@ -29,9 +31,9 @@ class VisitorTest extends TestCase
 
 		$this->assertEquals('192.168.1.1', $visitor->ip());
 		$this->assertEquals('Kirby', $visitor->userAgent());
-		$this->assertInstanceOf('Kirby\Toolkit\Obj', $visitor->acceptedLanguage());
+		$this->assertInstanceOf(Obj::class, $visitor->acceptedLanguage());
 		$this->assertEquals('en_US', $visitor->acceptedLanguage()->locale());
-		$this->assertInstanceOf('Kirby\Toolkit\Obj', $visitor->acceptedMimeType());
+		$this->assertInstanceOf(Obj::class, $visitor->acceptedMimeType());
 		$this->assertEquals('text/html', $visitor->acceptedMimeType()->type());
 	}
 

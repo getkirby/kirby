@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -257,7 +258,7 @@ class DateTest extends TestCase
 	 */
 	public function testRoundUnsupportedSize(string $unit, int $size)
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid rounding size for ' . $unit);
 
 		$date = new Date('2020-01-01');
@@ -282,7 +283,7 @@ class DateTest extends TestCase
 	 */
 	public function testRoundUnsupportedUnit()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid rounding unit');
 
 		$date = new Date('2020-01-01');
@@ -399,7 +400,7 @@ class DateTest extends TestCase
 	 */
 	public function testStepConfigWithInvalidInput()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid input');
 
 		Date::stepConfig(new Date());
@@ -515,7 +516,7 @@ class DateTest extends TestCase
 	 */
 	public function testToStringWithInvalidMode()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid mode');
 
 		$date = new Date('12:12:12');

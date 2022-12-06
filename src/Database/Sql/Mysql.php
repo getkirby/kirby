@@ -20,7 +20,6 @@ class Mysql extends Sql
 	 * the query needs to return rows with a column `name`
 	 *
 	 * @param string $table Table name
-	 * @return array
 	 */
 	public function columns(string $table): array
 	{
@@ -42,8 +41,6 @@ class Mysql extends Sql
 	/**
 	 * Returns a query to list the tables of the current database;
 	 * the query needs to return rows with a column `name`
-	 *
-	 * @return array
 	 */
 	public function tables(): array
 	{

@@ -13,12 +13,13 @@
 		<template v-else>
 			<k-input
 				v-if="options.search"
-				v-model="search"
 				:autofocus="true"
 				:placeholder="$t('search') + ' …'"
+				:value="search"
 				type="text"
 				class="k-dialog-search"
 				icon="search"
+				@input="search = $event"
 			/>
 
 			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">

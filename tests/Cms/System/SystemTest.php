@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use ReflectionClass;
@@ -348,7 +350,7 @@ class SystemTest extends TestCase
 		chmod($this->subTmp, 0444);
 
 		// /site/accounts
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The ' . $root . ' directory could not be created');
 
 		new System($app);
@@ -554,7 +556,7 @@ class SystemTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
 		$app->system()->loginMethods();
 	}
@@ -574,7 +576,7 @@ class SystemTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
 		$app->system()->loginMethods();
 	}
@@ -594,7 +596,7 @@ class SystemTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
 		$app->system()->loginMethods();
 	}
@@ -615,7 +617,7 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid license key');
 
 		$system->register('abc');
@@ -628,7 +630,7 @@ class SystemTest extends TestCase
 	{
 		$system = new System($this->app);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Please enter a valid email address');
 
 		$system->register('K3-PRO-abc', 'invalid');

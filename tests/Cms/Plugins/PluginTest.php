@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Composer\Autoload\ClassLoader;
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * @coversDefaultClass Kirby\Cms\Plugin
@@ -299,7 +300,7 @@ class PluginTest extends TestCase
 	 */
 	public function testNameWithInvalidInput()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Plugin('äöü/!!!', []);
 	}

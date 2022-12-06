@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class BlocksTest extends TestCase
 {
+	protected $app;
 	protected $page;
 
 	public function setUp(): void

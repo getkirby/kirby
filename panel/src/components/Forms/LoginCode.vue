@@ -3,7 +3,6 @@
 		<k-user-info :user="pending.email" />
 
 		<k-text-field
-			v-model="code"
 			:autofocus="true"
 			:counter="false"
 			:help="$t('login.code.text.' + pending.challenge)"
@@ -11,9 +10,11 @@
 			:novalidate="true"
 			:placeholder="$t('login.code.placeholder.' + pending.challenge)"
 			:required="true"
+			:value="code"
 			autocomplete="one-time-code"
 			icon="unlock"
 			name="code"
+			@input="code = $event"
 		/>
 
 		<div class="k-login-buttons">

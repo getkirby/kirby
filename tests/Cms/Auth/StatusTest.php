@@ -4,6 +4,7 @@ namespace Kirby\Cms\Auth;
 
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * @coversDefaultClass \Kirby\Cms\Auth\Status
@@ -137,7 +138,7 @@ class StatusTest extends TestCase
 		]);
 		$this->assertSame('inactive', $status->status());
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid argument "$props[\'status\']" in method "Status::__construct"');
 		$status = new Status([
 			'kirby'  => $this->app,

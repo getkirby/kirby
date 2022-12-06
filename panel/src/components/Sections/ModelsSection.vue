@@ -26,11 +26,12 @@
 				<!-- Search filter  -->
 				<k-input
 					v-if="searching && options.search"
-					v-model="searchterm"
 					:autofocus="true"
 					:placeholder="$t('search') + ' …'"
+					:value="searchterm"
 					type="text"
 					class="k-models-section-search"
+					@input="searchterm = $event"
 					@keydown.esc="onSearchToggle"
 				/>
 

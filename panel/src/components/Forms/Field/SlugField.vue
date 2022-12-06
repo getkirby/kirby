@@ -1,13 +1,13 @@
 <template>
-	<k-field :input="_uid" v-bind="$props" :help="preview" class="k-slug-field">
+	<k-field v-bind="$props" :input="_uid" :help="preview" class="k-slug-field">
 		<template v-if="wizard && wizard.text" #options>
 			<k-button :text="wizard.text" icon="wand" @click="onWizard" />
 		</template>
 
 		<k-input
+			v-bind="$props"
 			:id="_uid"
 			ref="input"
-			v-bind="$props"
 			:value="slug"
 			theme="field"
 			type="slug"
@@ -22,7 +22,7 @@ import { props as Input } from "../Input.vue";
 import { props as SlugInput } from "../Input/SlugInput.vue";
 
 /**
- * @example <k-slug-field v-model="slug" name="slug" label="Slug" />
+ * @example <k-slug-field :value="slug" @input="slug = $event" name="slug" label="Slug" />
  */
 export default {
 	mixins: [Field, Input, SlugInput],

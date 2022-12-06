@@ -109,4 +109,17 @@ export default {
 .k-field-help {
 	padding-top: 0.5rem;
 }
+
+/** Add Button **/
+.k-field-add-item-button {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	color: var(--color-gray-500);
+	justify-content: center;
+	padding: 0.75rem 0;
+}
+.k-field-add-item-button:hover {
+	color: var(--color-black);
+}
 </style>

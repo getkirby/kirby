@@ -15,10 +15,10 @@
 			<!-- eslint-disable vue/no-mutating-props -->
 			<k-fieldset
 				ref="fields"
-				v-model="value"
 				:disabled="disabled"
 				:fields="fields"
 				:novalidate="novalidate"
+				:value="value"
 				v-on="listeners"
 			/>
 		</slot>
@@ -32,7 +32,7 @@
 
 <script>
 /**
- * The Form component takes a fields definition and a value/v-model to create a full featured form with grid and everything. If you "just" need the fields, go for the `<k-fieldset>` component instead.
+ * The Form component takes a fields definition and a value to create a full featured form with grid and everything. If you "just" need the fields, go for the `<k-fieldset>` component instead.
  */
 export default {
 	props: {
@@ -66,6 +66,7 @@ export default {
 			errors: {},
 			listeners: {
 				...this.$listeners,
+				input: this.onInput,
 				submit: this.onSubmit
 			}
 		};
@@ -78,6 +79,9 @@ export default {
 		 */
 		focus(name) {
 			this.$refs.fields?.focus?.(name);
+		},
+		onInput(values, field, name) {
+			this.$emit("input", values, field, name);
 		},
 		onSubmit() {
 			/**

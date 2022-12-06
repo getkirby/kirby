@@ -3,8 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
@@ -306,7 +308,7 @@ class DocumentTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid panel.favicon option');
 		$icons = Document::favicon();
 	}
@@ -349,7 +351,7 @@ class DocumentTest extends TestCase
 			'test' => 'Test'
 		]);
 
-		$this->assertInstanceOf('\Kirby\Http\Response', $response);
+		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/html', $response->type());
 		$this->assertSame('UTF-8', $response->charset());

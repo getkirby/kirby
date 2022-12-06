@@ -5,7 +5,13 @@
 		@close="cancel"
 		@submit="$refs.form.submit()"
 	>
-		<k-form ref="form" v-model="value" :fields="fields" @submit="submit" />
+		<k-form
+			ref="form"
+			:fields="fields"
+			:value="value"
+			@input="value = $event"
+			@submit="submit"
+		/>
 	</k-dialog>
 </template>
 

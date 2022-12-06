@@ -16,13 +16,13 @@
 							:is="'k-' + field.type + '-field'"
 							v-if="hasFieldType(field.type)"
 							:ref="fieldName"
-							v-model="value[fieldName]"
+							v-bind="field"
+							:disabled="disabled || field.disabled"
 							:form-data="value"
 							:name="fieldName"
 							:novalidate="novalidate"
-							:disabled="disabled || field.disabled"
-							v-bind="field"
-							@input="$emit('input', value, field, fieldName)"
+							:value="value[fieldName]"
+							@input="onInput($event, field, fieldName)"
 							@focus="$emit('focus', $event, field, fieldName)"
 							@invalid="
 								($invalid, $v) => onInvalid($invalid, $v, field, fieldName)
@@ -43,7 +43,7 @@
 
 <script>
 /**
- * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and a v-model and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
+ * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
  */
 export default {
 	props: {
@@ -113,6 +113,10 @@ export default {
 		onInvalid($invalid, $v, field, fieldName) {
 			this.errors[fieldName] = $v;
 			this.$emit("invalid", this.errors);
+		},
+		onInput(value, field, name) {
+			const values = { ...this.value, [name]: value };
+			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
 			return Object.keys(this.errors).length;

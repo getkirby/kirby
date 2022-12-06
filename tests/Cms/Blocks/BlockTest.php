@@ -2,10 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class BlockTest extends TestCase
 {
+	protected $app;
 	protected $page;
 
 	public function setUp(): void
@@ -23,15 +25,15 @@ class BlockTest extends TestCase
 	{
 		$block = new Block(['type' => 'test']);
 
-		$this->assertInstanceOf('Kirby\Cms\Content', $block->content());
+		$this->assertInstanceOf(Content::class, $block->content());
 		$this->assertFalse($block->isHidden());
-		$this->assertInstanceOf('Kirby\Cms\Blocks', $block->siblings());
+		$this->assertInstanceOf(Blocks::class, $block->siblings());
 		$this->assertSame('test', $block->type());
 	}
 
 	public function testConstructWithoutType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The block type is missing');
 
 		$block = new Block([]);
@@ -87,7 +89,7 @@ class BlockTest extends TestCase
 			'type' => 'heading'
 		]);
 
-		$this->assertInstanceOf('Kirby\Cms\Block', $block);
+		$this->assertInstanceOf(Block::class, $block);
 	}
 
 	public function testIsEmpty()
@@ -159,7 +161,7 @@ class BlockTest extends TestCase
 
 		$expected = "<h2>Test</h2>\n";
 
-		$this->assertInstanceOf('Kirby\Cms\Field', $block->toField());
+		$this->assertInstanceOf(Field::class, $block->toField());
 		$this->assertSame($block->parent(), $block->toField()->parent());
 		$this->assertSame($block->id(), $block->toField()->key());
 		$this->assertSame($expected, $block->toField()->value());

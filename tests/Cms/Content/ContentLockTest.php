@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -55,7 +58,7 @@ class ContentLockTest extends TestCase
 
 	public function testCreateWithExistingLock()
 	{
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('/test is already locked');
 
 		$app = $this->app;
@@ -70,7 +73,7 @@ class ContentLockTest extends TestCase
 
 	public function testCreateUnauthenticated()
 	{
-		$this->expectException('Kirby\Exception\PermissionException');
+		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('No user authenticated');
 
 		$app = $this->app;
@@ -161,7 +164,7 @@ class ContentLockTest extends TestCase
 
 	public function testRemoveFormOtherUser()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The content lock can only be removed by the user who created it. Use unlock instead.');
 
 		$app = $this->app;

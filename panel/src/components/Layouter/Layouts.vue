@@ -4,6 +4,7 @@
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
 					v-for="(layout, layoutIndex) in rows"
+					v-bind="layout"
 					:key="layout.id"
 					:disabled="disabled"
 					:endpoints="endpoints"
@@ -11,7 +12,6 @@
 					:fieldsets="fieldsets"
 					:is-selected="selected === layout.id"
 					:settings="settings"
-					v-bind="layout"
 					@append="selectLayout(layoutIndex + 1)"
 					@duplicate="duplicateLayout(layoutIndex, layout)"
 					@prepend="selectLayout(layoutIndex)"
@@ -30,8 +30,9 @@
 
 			<k-button
 				v-if="!disabled"
-				class="k-layout-add-button"
+				class="k-field-add-item-button"
 				icon="add"
+				:tooltip="$t('add')"
 				@click="selectLayout(rows.length)"
 			/>
 		</template>
@@ -225,18 +226,5 @@ export default {
 	justify-content: center;
 	font-size: var(--text-xs);
 	align-items: center;
-}
-
-/** Add Button **/
-.k-layout-add-button {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	color: var(--color-gray-500);
-	justify-content: center;
-	padding: 0.75rem 0;
-}
-.k-layout-add-button:hover {
-	color: var(--color-black);
 }
 </style>

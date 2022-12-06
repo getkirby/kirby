@@ -46,4 +46,15 @@ class MultiselectFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
+
+	public function testSanitizeOptions()
+	{
+		$field = $this->field('multiselect', [
+			'value'   => 'a, b',
+			'options' => ['b', 'c'],
+		]);
+
+		$this->assertCount(1, $field->value());
+		$this->assertArrayHasKey(0, $field->value());
+	}
 }

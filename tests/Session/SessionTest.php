@@ -2,6 +2,10 @@
 
 namespace Kirby\Session;
 
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Cookie;
 use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
@@ -36,7 +40,7 @@ class SessionTest extends TestCase
 	 */
 	public function testConstructInvalidToken()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Session($this->sessions, 123, []);
 	}
@@ -119,7 +123,7 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidExpiry()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Session($this->sessions, null, [
 			'startTime'  => time() - 3600,
@@ -132,7 +136,7 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidDuration()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Session($this->sessions, null, [
 			'startTime'  => time() + 60,
@@ -145,7 +149,7 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidTimeout()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Session($this->sessions, null, [
 			'timeout' => 'at some point'
@@ -157,7 +161,7 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidRenewable()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		new Session($this->sessions, null, [
 			'renewable' => 'maybe'
@@ -184,7 +188,7 @@ class SessionTest extends TestCase
 	 */
 	public function testModeStartedSession()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'mode' => 'manual'
@@ -232,7 +236,7 @@ class SessionTest extends TestCase
 	 */
 	public function testExpiryTimeInvalidType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -246,7 +250,7 @@ class SessionTest extends TestCase
 	 */
 	public function testExpiryTimeInvalidString()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -260,7 +264,7 @@ class SessionTest extends TestCase
 	 */
 	public function testExpiryTimeInvalidTime1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -274,7 +278,7 @@ class SessionTest extends TestCase
 	 */
 	public function testExpiryTimeInvalidTime2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -315,7 +319,7 @@ class SessionTest extends TestCase
 	 */
 	public function testDurationInvalidTime1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -329,7 +333,7 @@ class SessionTest extends TestCase
 	 */
 	public function testDurationInvalidTime2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'startTime'  => 1000000000,
@@ -372,7 +376,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeoutInvalidType()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'timeout' => 1234
@@ -385,7 +389,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeoutInvalidTimeout1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'timeout' => 1234
@@ -398,7 +402,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeoutInvalidTimeout2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$session = new Session($this->sessions, null, [
 			'timeout' => 1234
@@ -500,7 +504,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInvalidMethod()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 
 		$session = new Session($this->sessions, null, []);
 		$session->someGibberish();
@@ -659,7 +663,7 @@ class SessionTest extends TestCase
 	 */
 	public function testRenewNotRenewable()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.notRenewable');
 
 		$token = '2000000000.nonRenewable.' . $this->store->validKey;
@@ -786,7 +790,7 @@ class SessionTest extends TestCase
 	 */
 	public function testPrepareForWritingReadonly()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.readonly');
 
 		$token = '9999999999.moved.' . $this->store->validKey;
@@ -826,7 +830,7 @@ class SessionTest extends TestCase
 	 */
 	public function testParseTokenInvalidToken1()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$token = '9999999999.thisIsNotAValidToken';
 		$session = new Session($this->sessions, $token, []);
@@ -837,7 +841,7 @@ class SessionTest extends TestCase
 	 */
 	public function testParseTokenInvalidToken2()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$token = 'something.thisIsNotAValidToken.abcdefabcdef';
 		$session = new Session($this->sessions, $token, []);
@@ -849,7 +853,7 @@ class SessionTest extends TestCase
 	 */
 	public function testParseTokenInvalidToken3()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$reflector = new ReflectionClass(Session::class);
 		$parseToken = $reflector->getMethod('parseToken');
@@ -882,7 +886,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeToTimestampInvalidParam()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
@@ -896,7 +900,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeToTimestampInvalidTimeString()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
@@ -965,7 +969,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitNonExisting()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.notFound');
 
 		$token = '9999999999.nonExisting.' . $this->store->validKey;
@@ -978,7 +982,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitWrongKey()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.valid.' . $this->store->invalidKey;
@@ -991,7 +995,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitMissingKey()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid argument "$token" in method "Session::parseToken"');
 
 		$token = '9999999999.valid';
@@ -1004,7 +1008,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitInvalidSerialization()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.invalidSerialization.' . $this->store->validKey;
@@ -1017,7 +1021,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitInvalidStructure()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.invalidStructure.' . $this->store->validKey;
@@ -1030,7 +1034,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitExpired()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '1000000000.expired.' . $this->store->validKey;
@@ -1043,7 +1047,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitNotStarted()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.notStarted.' . $this->store->validKey;
@@ -1103,7 +1107,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitMovedManualRenewal()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.readonly');
 
 		$token = '9999999999.movedRenewal.' . $this->store->validKey;
@@ -1143,7 +1147,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitMovedExpired()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '1000000000.movedExpired.' . $this->store->validKey;
@@ -1156,7 +1160,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitMovedInvalid()
 	{
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionCode('error.session.notFound');
 
 		$token = '9999999999.movedInvalid.' . $this->store->validKey;
@@ -1169,7 +1173,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitMovedWrongKey()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.moved.' . $this->store->invalidKey;
@@ -1182,7 +1186,7 @@ class SessionTest extends TestCase
 	 */
 	public function testInitExpiredTimeout()
 	{
-		$this->expectException('Kirby\Exception\LogicException');
+		$this->expectException(LogicException::class);
 		$this->expectExceptionCode('error.session.invalid');
 
 		$token = '9999999999.timeout.' . $this->store->validKey;

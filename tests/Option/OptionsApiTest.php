@@ -3,6 +3,7 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\NotFoundException;
 use Kirby\Field\TestCase;
 
 /**
@@ -70,7 +71,7 @@ class OptionsApiTest extends TestCase
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(url: 'https://api.getkirby.com');
-		$this->expectException('Kirby\Exception\NotFoundException');
+		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Options could not be loaded from API: https://api.getkirby.com');
 		$options->resolve($model);
 	}

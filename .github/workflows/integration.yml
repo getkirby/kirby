@@ -1,3 +1,5 @@
+# To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
+
 name: CI - Integration
 on:
   push:
@@ -46,12 +48,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v3
         with:
           path: kirby
 
       - name: Checkout Sandbox
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # pin@v3
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v3
         with:
           repository: getkirby/sandbox
           path: sandbox
@@ -68,28 +70,28 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@fc01a9cdc93341e96c2078d848f2e96240d83c17 # pin@v1
+        uses: shivammathur/cache-extensions@861c58f0808a7d49515b111c6f780a7085f63973 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: e2e-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # pin@v3
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # pin@v3
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@3eda58347216592f618bb1dff277810b6698e4ca # pin@v2
+        uses: shivammathur/setup-php@1a18b2267f80291a81ca1d33e7c851fe09e7dfc4 # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@be2de7b1fe1cdafb4a3c8da0a3746476ef636b65 # pin@v4
+        uses: cypress-io/github-action@c5724eda82337bcff977ce14509f47052c12e04c # pin@v5
         with:
           working-directory: kirby/panel
           runTests: false
@@ -103,7 +105,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@be2de7b1fe1cdafb4a3c8da0a3746476ef636b65 # pin@v4
+        uses: cypress-io/github-action@c5724eda82337bcff977ce14509f47052c12e04c # pin@v5
         with:
           working-directory: kirby/panel
           install: false
@@ -122,14 +124,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # pin@v3
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v3
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # pin@v3
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos

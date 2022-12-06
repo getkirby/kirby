@@ -2,8 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Auth\Challenge;
 use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
@@ -133,7 +135,7 @@ class Auth
 				if (
 					$class &&
 					class_exists($class) === true &&
-					is_subclass_of($class, 'Kirby\Cms\Auth\Challenge') === true &&
+					is_subclass_of($class, Challenge::class) === true &&
 					$class::isAvailable($user, $mode) === true
 				) {
 					$challenge = $name;
@@ -543,7 +545,7 @@ class Auth
 				]
 			]);
 		} catch (Throwable $e) {
-			$details = is_a($e, 'Kirby\Exception\Exception') === true ? $e->getDetails() : [];
+			$details = $e instanceof Exception ? $e->getDetails() : [];
 
 			// log invalid login trial unless the rate limit is already active
 			if (($details['reason'] ?? null) !== 'rate-limited') {
@@ -848,7 +850,7 @@ class Auth
 			if (
 				isset(static::$challenges[$challenge]) === true &&
 				class_exists(static::$challenges[$challenge]) === true &&
-				is_subclass_of(static::$challenges[$challenge], 'Kirby\Cms\Auth\Challenge') === true
+				is_subclass_of(static::$challenges[$challenge], Challenge::class) === true
 			) {
 				$class = static::$challenges[$challenge];
 				if ($class::verify($user, $code) === true) {

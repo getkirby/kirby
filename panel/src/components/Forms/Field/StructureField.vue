@@ -16,15 +16,15 @@
 		<k-structure-form
 			v-if="currentIndex !== null"
 			ref="form"
-			v-model="currentModel"
 			:fields="form"
 			:index="currentIndex"
 			:total="items.length"
+			:value="currentModel"
 			@close="onFormClose"
 			@discard="onFormDiscard"
+			@input="onFormInput"
 			@paginate="onFormPaginate($event.offset)"
 			@submit="onFormSubmit"
-			@input="onFormInput"
 		/>
 
 		<!-- Empty State -->
@@ -553,8 +553,9 @@ export default {
 		/**
 		 * Triggered whenever any form field value changes
 		 */
-		onFormInput(e) {
-			this.$emit("formInput", e);
+		onFormInput(model) {
+			this.currentModel = model;
+			this.$emit("formInput", model);
 		}
 	}
 };

@@ -541,7 +541,7 @@ class ViewTest extends TestCase
 			'test' => 'Test'
 		]);
 
-		$this->assertInstanceOf('\Kirby\Http\Response', $response);
+		$this->assertInstanceOf(Response::class, $response);
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/html', $response->type());
 		$this->assertSame('UTF-8', $response->charset());
@@ -767,7 +767,7 @@ class ViewTest extends TestCase
 		$redirect = new \Kirby\Panel\Redirect('https://getkirby.com');
 		$response = View::response($redirect);
 
-		$this->assertInstanceOf('Kirby\Http\Response', $response);
+		$this->assertInstanceOf(Response::class, $response);
 
 		$this->assertSame(302, $response->code());
 		$this->assertSame('https://getkirby.com', $response->header('Location'));

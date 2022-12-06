@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
@@ -125,7 +126,7 @@ class PageCreateTest extends TestCase
 
 	public function testCreateDuplicate()
 	{
-		$this->expectException('Kirby\Exception\DuplicateException');
+		$this->expectException(DuplicateException::class);
 
 		$page = Page::create([
 			'slug' => 'new-page',

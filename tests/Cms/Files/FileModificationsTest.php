@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\TestCase;
 
@@ -114,7 +115,7 @@ class FileModificationsTest extends TestCase
 			]
 		]);
 
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The file::version component must return a File, FileVersion or Asset object');
 
 		$file = $app->file('test.jpg');

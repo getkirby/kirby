@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -134,7 +135,7 @@ class OptionsApiTest extends TestCase
 
 	public function testOptionsFileNotFound()
 	{
-		$this->expectException('Kirby\Exception\Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Local file /does/not/exist was not found');
 
 		$api = new OptionsApi([

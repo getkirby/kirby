@@ -3,6 +3,8 @@
 namespace Kirby\Text;
 
 use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class KirbyTagTest extends TestCase
@@ -250,7 +252,7 @@ class KirbyTagTest extends TestCase
 
 	public function testParseInvalid()
 	{
-		$this->expectException('Kirby\Exception\InvalidArgumentException');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined tag type: invalid');
 
 		KirbyTag::parse('invalid: test value a: attrA b: attrB');
@@ -272,7 +274,7 @@ class KirbyTagTest extends TestCase
 
 	public function testRenderNoHtml()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Invalid tag render function in tag: noHtml');
 
 		$tag = new KirbyTag('noHtml', 'test value', [
@@ -284,7 +286,7 @@ class KirbyTagTest extends TestCase
 
 	public function testRenderInvalidHtml()
 	{
-		$this->expectException('Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('Invalid tag render function in tag: invalidHtml');
 
 		$tag = new KirbyTag('invalidHtml', 'test value', [

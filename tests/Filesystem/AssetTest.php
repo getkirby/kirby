@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
+use Kirby\Exception\BadMethodCallException;
 use PHPUnit\Framework\TestCase as TestCase;
 
 /**
@@ -81,7 +82,7 @@ class AssetTest extends TestCase
 	public function testNonExistingMethod()
 	{
 		$asset = $this->_asset();
-		$this->expectException('\Kirby\Exception\BadMethodCallException');
+		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
 	}

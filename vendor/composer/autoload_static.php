@@ -354,6 +354,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Parsley\\Schema\\Plain' => __DIR__ . '/../..' . '/src/Parsley/Schema/Plain.php',
         'Kirby\\Query\\Argument' => __DIR__ . '/../..' . '/src/Query/Argument.php',
         'Kirby\\Query\\Arguments' => __DIR__ . '/../..' . '/src/Query/Arguments.php',
+        'Kirby\\Query\\Expression' => __DIR__ . '/../..' . '/src/Query/Expression.php',
         'Kirby\\Query\\Query' => __DIR__ . '/../..' . '/src/Query/Query.php',
         'Kirby\\Query\\Segment' => __DIR__ . '/../..' . '/src/Query/Segment.php',
         'Kirby\\Query\\Segments' => __DIR__ . '/../..' . '/src/Query/Segments.php',
