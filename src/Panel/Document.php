@@ -198,7 +198,9 @@ class Document
 	 */
 	public static function icons(): string
 	{
-		return F::read(App::instance()->root('kirby') . '/panel/dist/img/icons.svg');
+		$dev = App::instance()->option('panel.dev', false);
+		$dir = $dev ? 'public' : 'dist';
+		return F::read(App::instance()->root('kirby') . '/panel/' . $dir . '/img/icons.svg');
 	}
 
 	/**
