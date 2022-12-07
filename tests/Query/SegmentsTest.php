@@ -511,6 +511,10 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolveWithOptionalChaining()
 	{
+		$segments = Segments::factory('user?.says("hi")');
+		$data     = ['user' => new TestUser()];
+		$this->assertSame('hi', $segments->resolve($data));
+
 		$segments = Segments::factory('user.nothing?.says("hi")');
 		$data     = ['user' => new TestUser()];
 		$this->assertNull($segments->resolve($data));
