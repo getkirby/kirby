@@ -31,7 +31,7 @@ class SnippetTest extends TestCase
 		$snippet = new Snippet('test.php');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The component has not been opened');
+		$this->expectExceptionMessage('The snippet has not been opened');
 
 		$snippet->close();
 	}

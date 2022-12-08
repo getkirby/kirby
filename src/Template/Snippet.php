@@ -8,10 +8,10 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
 
 /**
- * The component class handles
- * components, layouts or however we want to call it
- * in templates and allows to pass content to various
- * predefined slots.
+ * The Snippet class handles little parts of code,
+ * snippets, layouts or however we want to call it
+ * in templates and allows to pass data as well as
+ * optionally passing content to various predefined slots.
  *
  * @package   Kirby Template
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -30,30 +30,30 @@ class Snippet extends Tpl
 
 	/**
 	 * Cache for the currently active
-	 * component. This is used to start
-	 * and end slots within this component
+	 * snippet. This is used to start
+	 * and end slots within this snippet
 	 * in the helper functions
 	 */
 	public static self|null $current = null;
 
 	/**
-	 * The parent component
+	 * The parent snippet
 	 */
 	public self|null $parent = null;
 
 	/**
-	 * Keeps track of the state of the component
+	 * Keeps track of the state of the snippet
 	 */
 	public bool $open = false;
 
 	/**
 	 * The collection of closed slots that will be used
-	 * to pass down to the template for the component.
+	 * to pass down to the template for the snippet.
 	 */
 	public array $slots = [];
 
 	/**
-	 * Creates a new component
+	 * Creates a new snippet
 	 */
 	public function __construct(
 		public string $file,
@@ -62,7 +62,7 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Creates and opens a new component. This can be used
+	 * Creates and opens a new snippet. This can be used
 	 * directly in a template or via the slots() helper
 	 */
 	public static function begin(string $file, array $data = []): static
@@ -71,22 +71,23 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Closes the component and catches
+	 * Closes the snippet and catches
 	 * the default slot if no slots have been
 	 * defined in between opening and closing.
 	 */
 	public function close(): static
 	{
-		// make sure that ending a component
-		// is only supported if the component has
+		// make sure that ending a snippet
+		// is only supported if the snippet has
 		// been started before
 		if ($this->open === false) {
-			throw new LogicException('The component has not been opened');
+			throw new LogicException('The snippet has not been opened');
 		}
 
-		// switch back to the parent in nested
-		// component stacks
-		static::$current = $this->parent;
+		// close all still open slots
+		while (empty($this->capture) === false) {
+			$this->endslot();
+		}
 
 		// create a default slot for the content
 		// that has been captured between start and end
@@ -100,6 +101,10 @@ class Snippet extends Tpl
 		}
 
 		$this->open = false;
+
+		// switch back to the parent in nested
+		// snippet stacks
+		static::$current = $this->parent;
 
 		return $this;
 	}
@@ -174,7 +179,7 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Opens the component and starts output
+	 * Opens the snippet and starts output
 	 * buffering to catch all slots in between
 	 */
 	public function open(): static
@@ -192,12 +197,12 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Renders the component and passes the scope
+	 * Renders the snippet and passes the scope
 	 * with all slots and data
 	 */
 	public function render(array $data = [], array $slots = []): string
 	{
-		// always make sure that the component
+		// always make sure that the snippet
 		// is closed before it can be rendered
 		if ($this->open === true) {
 			$this->close();
@@ -213,7 +218,7 @@ class Snippet extends Tpl
 
 	/**
 	 * Defines the full scope that will be passed
-	 * to the component template. This includes
+	 * to the snippet template. This includes
 	 * the data from the constructor and
 	 * the slots collection.
 	 */

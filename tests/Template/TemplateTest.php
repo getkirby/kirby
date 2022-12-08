@@ -128,4 +128,22 @@ class TemplateTest extends TestCase
 		$template = new Template('simple');
 		$this->assertSame('Test', $template->render(['slot' => 'Test']));
 	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderOpenSnippets()
+	{
+		new App([
+			'roots' => [
+				'snippets'  => __DIR__ . '/templates',
+				'templates' => __DIR__ . '/templates'
+			]
+		]);
+
+		$template = new Template('with-layout');
+		$this->assertSame('<h1>Layout</h1>
+My content
+', $template->render());
+	}
 }
