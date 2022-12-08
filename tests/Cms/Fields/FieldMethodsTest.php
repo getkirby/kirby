@@ -722,6 +722,7 @@ class FieldMethodsTest extends TestCase
 	{
 		$text = 'this is an example text';
 		$this->assertSame(5, $this->field($text)->words());
+		$this->assertSame(0, $this->field(null)->words());
 	}
 
 	public function testXml()

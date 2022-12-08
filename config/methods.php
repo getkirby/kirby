@@ -326,7 +326,7 @@ return function (App $app) {
 		 * Returns the number of words in the text
 		 */
 		'words' => function (Field $field) {
-			return str_word_count(strip_tags($field->value));
+			return str_word_count(strip_tags($field->value ?? ''));
 		},
 
 		// manipulators
