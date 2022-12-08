@@ -144,6 +144,11 @@ class Html extends Xml
 			return $value === true ? strtolower($name) : null;
 		}
 
+		// HTML attribute names are case-insensitive
+		if (is_string($name) === true) {
+			$name = strtolower($name);
+		}
+
 		// all other cases can share the XML variant
 		$attr = parent::attr($name, $value);
 

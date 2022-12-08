@@ -22,9 +22,9 @@ class XmlTest extends TestCase
 	{
 		return [
 			[[],                         null,  ''],
-			[['B' => 'b', 'A' => 'a'],   null,  'a="a" b="b"'],
-			[['B' => 'b', 'A' => 'a'],   true,  'a="a" b="b"'],
-			[['B' => 'b', 'A' => 'a'],   false, 'b="b" a="a"'],
+			[['B' => 'b', 'A' => 'a'],   null,  'A="a" B="b"'],
+			[['B' => 'b', 'A' => 'a'],   true,  'A="a" B="b"'],
+			[['B' => 'b', 'A' => 'a'],   false, 'B="b" A="a"'],
 			[['a' => 'a', 'b' => true],  null,  'a="a" b="b"'],
 			[['a' => 'a', 'b' => ' '],   null,  'a="a" b=""'],
 			[['a' => 'a', 'b' => ''],    null,  'a="a"'],
