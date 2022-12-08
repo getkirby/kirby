@@ -18,10 +18,10 @@ class Slots
 {
 	/**
 	 * Creates a new slots collection
-	 * for the given component
+	 * for the given snippet
 	 */
 	public function __construct(
-		public Component $component,
+		public Snippet $snippet,
 		public array $slots
 	) {
 	}
@@ -30,7 +30,7 @@ class Slots
 	 * Magic getter for slots
 	 * I.e. `$slots->heading`
 	 */
-	public function __get(string $name): ?Slot
+	public function __get(string $name): Slot|null
 	{
 		return $this->slots[$name] ?? null;
 	}
@@ -39,7 +39,7 @@ class Slots
 	 * Magic getter method for slots
 	 * I.e. `$slots->heading()`
 	 */
-	public function __call(string $name, array $args): ?Slot
+	public function __call(string $name, array $args): Slot|null
 	{
 		return $this->__get($name);
 	}

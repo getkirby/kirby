@@ -4,6 +4,7 @@ namespace Kirby\Template;
 
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
 
 /**
@@ -13,12 +14,13 @@ use Kirby\Toolkit\Tpl;
  * predefined slots.
  *
  * @package   Kirby Template
- * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * 			  Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Component
+class Snippet extends Tpl
 {
 	/**
 	 * Contains all slots that are opened
@@ -45,14 +47,6 @@ class Component
 	public bool $open = false;
 
 	/**
-	 * Self-closing components can be useful if all
-	 * slots are optional or no slots are defined
-	 * They will be rendered immediately after being
-	 * openend.
-	 */
-	public bool $selfClosing = false;
-
-	/**
 	 * The collection of closed slots that will be used
 	 * to pass down to the template for the component.
 	 */
@@ -62,30 +56,18 @@ class Component
 	 * Creates a new component
 	 */
 	public function __construct(
-		public string $name,
-		public array $props = [],
-		public string $root = '',
+		public string $file,
+		public array $data = []
 	) {
-		if (str_ends_with($this->name, '/') === true) {
-			$this->name        = rtrim($this->name, '/');
-			$this->selfClosing = true;
-		}
 	}
 
 	/**
 	 * Creates and opens a new component. This can be used
 	 * directly in a template or via the slots() helper
 	 */
-	public static function begin(string $name, array $props = [], string|null $root = null): static
+	public static function begin(string $file, array $data = []): static
 	{
-		$kirby     = App::instance();
-		$component = new static(
-			name: $name,
-			props: array_replace_recursive($kirby->data, $props),
-			root: $root ?? $kirby->root('components'),
-		);
-
-		return $component->open();
+		return (new static($file, $data))->open();
 	}
 
 	/**
@@ -146,12 +128,48 @@ class Component
 	}
 
 	/**
-	 * Absolute path to the template file for
-	 * the component
+	 * Returns either an open snippet capturing slots
+	 * or the template string for self-enclosed snippets
 	 */
-	public function file(): string
+	public static function factory($name, array $data = [], bool $slots = false): static|string
 	{
-		return $this->root . '/' . $this->name . '.php';
+		$file = static::file($name);
+
+		// for snippets with slots, make sure to open a new
+		// snippet and start capturing slots
+		if ($slots === true) {
+			return static::begin($file, $data);
+		}
+
+		// for snippets without slots, directly load and return
+		// the snippet's template file
+		return static::load($file, $data);
+	}
+
+	/**
+	 * Absolute path to the file for
+	 * the snippet/s taking snippets defined in plugins
+	 * into account
+	 */
+	public static function file(string|array $name): string
+	{
+		$kirby    = App::instance();
+		$snippets = A::wrap($name);
+
+		foreach ($snippets as $name) {
+			$name = (string)$name;
+			$file = $kirby->root('snippets') . '/' . $name . '.php';
+
+			if (file_exists($file) === false) {
+				$file = $kirby->extensions('snippets')[$name] ?? null;
+			}
+
+			if ($file) {
+				break;
+			}
+		}
+
+		return $file;
 	}
 
 	/**
@@ -174,9 +192,9 @@ class Component
 
 	/**
 	 * Renders the component and passes the scope
-	 * with all slots and props
+	 * with all slots and data
 	 */
-	public function render(array $props = [], array $slots = []): string
+	public function render(array $data = [], array $slots = []): string
 	{
 		// always make sure that the component
 		// is closed before it can be rendered
@@ -189,22 +207,22 @@ class Component
 			$this->slots[$slotName] = new Slot($this, $slotName, $slotContent);
 		}
 
-		return Tpl::load($this->file(), $this->scope($props));
+		return static::load($this->file, $this->scope($data));
 	}
 
 	/**
 	 * Defines the full scope that will be passed
 	 * to the component template. This includes
-	 * the props from the constructor and
+	 * the data from the constructor and
 	 * the slots collection.
 	 */
-	public function scope(array $props = []): array
+	public function scope(array $data = []): array
 	{
 		$slots = $this->slots();
-		$props = array_replace_recursive($this->props, $props);
+		$data = array_replace_recursive($this->data, $data);
 
-		return array_merge($props, [
-			'props' => $props,
+		return array_merge($data, [
+			'data'  => $data,
 			'slot'  => $slots->default,
 			'slots' => $slots,
 		]);

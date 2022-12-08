@@ -8,8 +8,8 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
-use Kirby\Template\Component;
 use Kirby\Template\Slot;
+use Kirby\Template\Snippet;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -143,13 +143,13 @@ if (Helpers::hasOverride('endslot') === false) { // @codeCoverageIgnore
 	}
 }
 
-if (Helpers::hasOverride('endcomponent') === false) { // @codeCoverageIgnore
+if (Helpers::hasOverride('endsnippet') === false) { // @codeCoverageIgnore
 	/**
-	 * Renders the currently active component
+	 * Renders the currently active snippet with slots
 	 */
-	function endcomponent(): void
+	function endsnippet(): void
 	{
-		Component::end();
+		Snippet::end();
 	}
 }
 
@@ -570,16 +570,6 @@ if (Helpers::hasOverride('slot') === false) { // @codeCoverageIgnore
 	}
 }
 
-if (Helpers::hasOverride('component') === false) { // @codeCoverageIgnore
-	/**
-	 * Starts a new slot component
-	 */
-	function component(string $name, array $props = []): Component
-	{
-		return Component::begin($name, $props);
-	}
-}
-
 if (Helpers::hasOverride('smartypants') === false) { // @codeCoverageIgnore
 	/**
 	 * Enhances the given string with
@@ -597,15 +587,14 @@ if (Helpers::hasOverride('smartypants') === false) { // @codeCoverageIgnore
 if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
 	/**
 	 * Embeds a snippet from the snippet folder
-	 *
-	 * @param string|array $name
-	 * @param array|object $data
-	 * @param bool $return
-	 * @return string|null
 	 */
-	function snippet($name, $data = [], bool $return = false): string|null
-	{
-		return App::instance()->snippet($name, $data, $return);
+	function snippet(
+		$name,
+		$data = [],
+		bool $return = false,
+		bool $slots = false
+	): Snippet|string|null {
+		return App::instance()->snippet($name, $data, $return, $slots);
 	}
 }
 

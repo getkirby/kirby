@@ -54,7 +54,7 @@ return [
 	'panel'      => 'Kirby\Panel\Panel',
 
 	// template classes
-	'component'  => 'Kirby\Template\Component',
+	'snippet'    => 'Kirby\Template\Snippet',
 	'slot'       => 'Kirby\Template\Slot',
 
 	// toolkit classes

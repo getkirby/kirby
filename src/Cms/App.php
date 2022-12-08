@@ -18,6 +18,7 @@ use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
+use Kirby\Template\Snippet;
 use Kirby\Text\KirbyTag;
 use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
@@ -1617,15 +1618,20 @@ class App
 	 * @return string|null
 	 * @psalm-return ($return is true ? string : null)
 	 */
-	public function snippet($name, $data = [], bool $return = true): string|null
+	public function snippet($name, $data = [], bool $return = true, bool $slots = false): Snippet|string|null
 	{
 		if (is_object($data) === true) {
 			$data = ['item' => $data];
 		}
 
-		$snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+		$snippet = ($this->component('snippet'))(
+			$this,
+			$name,
+			array_merge($this->data, $data),
+			$slots
+		);
 
-		if ($return === true) {
+		if ($return === true || $slots === true) {
 			return $snippet;
 		}
 
