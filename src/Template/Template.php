@@ -59,6 +59,14 @@ class Template
 	}
 
 	/**
+	 * Returns the default template type
+	 */
+	public function defaultType(): string
+	{
+		return $this->defaultType;
+	}
+
+	/**
 	 * Checks if the template exists
 	 */
 	public function exists(): bool
@@ -79,54 +87,50 @@ class Template
 	}
 
 	/**
-	 * Returns the default template type
-	 */
-	public function defaultType(): string
-	{
-		return $this->defaultType;
-	}
-
-	/**
-	 * Returns the place where templates are located
-	 * in the site folder and and can be found in extensions
-	 */
-	public function store(): string
-	{
-		return 'templates';
-	}
-
-	/**
 	 * Detects the location of the template file
 	 * if it exists.
 	 */
 	public function file(): string|null
 	{
+		$name      = $this->name();
+		$extension = $this->extension();
+		$store     = $this->store();
+		$root      = $this->root();
+
 		if ($this->hasDefaultType() === true) {
 			try {
 				// Try the default template in the default template directory.
-				return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
+				return F::realpath($root . '/' . $name . '.' . $extension, $root);
 			} catch (Exception) {
 				// ignore errors, continue searching
 			}
 
 			// Look for the default template provided by an extension.
-			$path = App::instance()->extension($this->store(), $this->name());
+			$path = App::instance()->extension($store, $name);
 
 			if ($path !== null) {
 				return $path;
 			}
 		}
 
-		$name = $this->name() . '.' . $this->type();
+		$name .= '.' . $this->type();
 
 		try {
 			// Try the template with type extension in the default template directory.
-			return F::realpath($this->root() . '/' . $name . '.' . $this->extension(), $this->root());
+			return F::realpath($root . '/' . $name . '.' . $extension, $root);
 		} catch (Exception) {
 			// Look for the template with type extension provided by an extension.
 			// This might be null if the template does not exist.
-			return App::instance()->extension($this->store(), $name);
+			return App::instance()->extension($store, $name);
 		}
+	}
+
+	/**
+	 * Checks if the template uses the default type
+	 */
+	public function hasDefaultType(): bool
+	{
+		return $this->type() === $this->defaultType();
 	}
 
 	/**
@@ -154,20 +158,19 @@ class Template
 	}
 
 	/**
+	 * Returns the place where templates are located
+	 * in the site folder and and can be found in extensions
+	 */
+	public function store(): string
+	{
+		return 'templates';
+	}
+
+	/**
 	 * Returns the template type
 	 */
 	public function type(): string
 	{
 		return $this->type;
-	}
-
-	/**
-	 * Checks if the template uses the default type
-	 */
-	public function hasDefaultType(): bool
-	{
-		$type = $this->type();
-
-		return $type === null || $type === $this->defaultType();
 	}
 }

@@ -2,10 +2,17 @@
 
 namespace Kirby\Template;
 
+use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 
+/**
+ * @coversDefaultClass Kirby\Template\Snippet
+ */
 class SnippetTest extends TestCase
 {
+	/**
+	 * @covers ::__construct
+	 */
 	public function testSnippet()
 	{
 		$snippet = new Snippet('test.php');
@@ -16,6 +23,9 @@ class SnippetTest extends TestCase
 		$this->assertSame([], $snippet->data);
 	}
 
+	/**
+	 * @covers ::close
+	 */
 	public function testCloseWhenNotOpen()
 	{
 		$snippet = new Snippet('test.php');
@@ -26,6 +36,54 @@ class SnippetTest extends TestCase
 		$snippet->close();
 	}
 
+	/**
+	 * @covers ::factory
+	 */
+	public function testFactory()
+	{
+		new App([
+			'roots' => [
+				'snippets' => __DIR__ . '/templates'
+			]
+		]);
+
+		$snippet = Snippet::factory('simple', ['slot' => 'hello']);
+		$this->assertSame('hello', $snippet);
+
+		$snippet = Snippet::factory('simple', ['slot' => 'hello'], slots: true);
+		$this->assertInstanceOf(Snippet::class, $snippet);
+		$this->assertTrue($snippet->open);
+
+		$snippet->close();
+	}
+
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFile()
+	{
+		App::plugin('test/d', [
+			'snippets' => [
+				'foo' => 'bar.php'
+			]
+		]);
+
+		new App([
+			'roots' => [
+				'snippets' => __DIR__ . '/templates'
+			]
+		]);
+
+		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file('simple'));
+		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertSame('bar.php', Snippet::file('foo'));
+	}
+
+	/**
+	 * @covers ::begin
+	 * @covers ::end
+	 */
 	public function testHelpers()
 	{
 		ob_start();
@@ -39,6 +97,10 @@ class SnippetTest extends TestCase
 		$this->assertSame('Nice', ob_get_clean());
 	}
 
+	/**
+	 * @covers ::open
+	 * @covers ::close
+	 */
 	public function testNestedComponents()
 	{
 		$a = new Snippet(file: 'a.php');
@@ -61,6 +123,10 @@ class SnippetTest extends TestCase
 		$this->assertSame($a, $b->parent);
 	}
 
+	/**
+	 * @covers ::open
+	 * @covers ::close
+	 */
 	public function testOpenCloseWithSlotsAndSwallowedDefaultContent()
 	{
 		$snippet = new Snippet('test.php');
@@ -79,6 +145,10 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
+	/**
+	 * @covers ::open
+	 * @covers ::close
+	 */
 	public function testOpenCloseWithDefaultSlotContent()
 	{
 		$snippet = new Snippet('test.php');
@@ -91,6 +161,9 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithSlots()
 	{
 		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
@@ -121,6 +194,22 @@ class SnippetTest extends TestCase
 		$this->assertSame($expected, $snippet->render());
 	}
 
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithoutClosing()
+	{
+		$snippet = new Snippet(__DIR__ . '/templates/layout.php');
+		$snippet->open();
+		echo 'content';
+
+		$this->assertSame('<h1>Layout</h1>
+content', $snippet->render());
+	}
+
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithLazySlots()
 	{
 		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
@@ -138,6 +227,9 @@ class SnippetTest extends TestCase
 		$this->assertSame($expected, $html);
 	}
 
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithData()
 	{
 		$snippet = new Snippet(
@@ -148,6 +240,9 @@ class SnippetTest extends TestCase
 		$this->assertSame('hello', $snippet->render());
 	}
 
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithLazyData()
 	{
 		$snippet = new Snippet(
@@ -157,6 +252,9 @@ class SnippetTest extends TestCase
 		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
 	}
 
+	/**
+	 * @covers ::scope
+	 */
 	public function testScope()
 	{
 		$snippet = new Snippet(file: 'test.php', data: $data = [
@@ -171,6 +269,9 @@ class SnippetTest extends TestCase
 		$this->assertNull($scope['slot']);
 	}
 
+	/**
+	 * @covers ::scope
+	 */
 	public function testScopeWithDefaultSlot()
 	{
 		$snippet = new Snippet('test.php');
@@ -181,6 +282,9 @@ class SnippetTest extends TestCase
 		$this->assertSame($slot, $snippet->scope()['slot']);
 	}
 
+	/**
+	 * @covers ::scope
+	 */
 	public function testScopeWithData()
 	{
 		$snippet = new Snippet(file: 'test.php');
@@ -193,6 +297,11 @@ class SnippetTest extends TestCase
 		$this->assertSame($data, $scope['data']);
 	}
 
+	/**
+	 * @covers ::slots
+	 * @covers ::slot
+	 * @covers ::endslot
+	 */
 	public function testSlots()
 	{
 		$snippet = new Snippet('test.php');

@@ -153,12 +153,13 @@ class Snippet extends Tpl
 	 */
 	public static function file(string|array $name): string
 	{
-		$kirby    = App::instance();
-		$snippets = A::wrap($name);
+		$kirby = App::instance();
+		$root  = $kirby->root('snippets');
+		$names = A::wrap($name);
 
-		foreach ($snippets as $name) {
+		foreach ($names as $name) {
 			$name = (string)$name;
-			$file = $kirby->root('snippets') . '/' . $name . '.php';
+			$file = $root . '/' . $name . '.php';
 
 			if (file_exists($file) === false) {
 				$file = $kirby->extensions('snippets')[$name] ?? null;
@@ -231,13 +232,15 @@ class Snippet extends Tpl
 	/**
 	 * Starts a new slot with the given name
 	 */
-	public function slot(string $name = 'default'): void
+	public function slot(string $name = 'default'): Slot
 	{
 		$slot = new Slot($this, $name);
 		$slot->open();
 
 		// start a new slot
 		$this->capture[] = $slot;
+
+		return $slot;
 	}
 
 	/**

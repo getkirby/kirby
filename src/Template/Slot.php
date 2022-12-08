@@ -45,9 +45,9 @@ class Slot
 	/**
 	 * Used in the slot helper
 	 */
-	public static function begin(string $name = 'default'): void
+	public static function begin(string $name = 'default'): static
 	{
-		Snippet::$current?->slot($name);
+		return Snippet::$current?->slot($name);
 	}
 
 	/**
@@ -62,6 +62,7 @@ class Slot
 		}
 
 		$this->content = ob_get_clean();
+		$this->open    = false;
 	}
 
 	/**

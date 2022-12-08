@@ -77,25 +77,6 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame('test', $collection->first()->slug());
 	}
 
-	public function testComponent()
-	{
-		$this->kirby->clone([
-			'roots' => [
-				'components' => __DIR__ . '/fixtures/HelpersTest'
-			]
-		]);
-
-		ob_start();
-
-		component('component');
-		slot();
-		echo 'Test';
-		endslot();
-		endcomponent();
-
-		$this->assertSame('Test', ob_get_clean());
-	}
-
 	public function testCsrf()
 	{
 		$session = $this->kirby->session();
@@ -796,6 +777,25 @@ class HelperFunctionsTest extends TestCase
 		]);
 
 		snippet('snippet', ['message' => 'world']);
+	}
+
+	public function testSnippetWithSlots()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures/HelpersTest'
+			]
+		]);
+
+		ob_start();
+
+		snippet('snippet-slots', slots: true);
+		slot();
+		echo 'Test';
+		endslot();
+		endsnippet();
+
+		$this->assertSame('Test', ob_get_clean());
 	}
 
 	public function testSvg()

@@ -2,8 +2,16 @@
 
 namespace Kirby\Template;
 
+/**
+ * @coversDefaultClass Kirby\Template\Slots
+ */
 class SlotsTest extends TestCase
 {
+	/**
+	 * @covers ::__construct
+	 * @covers ::__get
+	 * @covers ::__call
+	 */
 	public function testSlots()
 	{
 		$snippet = new Snippet('test.php');
