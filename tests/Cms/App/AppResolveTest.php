@@ -112,6 +112,8 @@ class AppResolveTest extends TestCase
 		// missing representation
 		$result = $app->resolve('test.json');
 		$this->assertNull($result);
+		$result = $app->resolve('test.');
+		$this->assertNull($result);
 
 		// xml representation
 		$result = $app->clone()->resolve('test.xml');

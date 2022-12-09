@@ -1307,7 +1307,7 @@ class App
 		$extension = F::extension($path);
 
 		// no content representation? then return the page
-		if (empty($extension) === true) {
+		if (empty($extension) === true && Str::endsWith($path, '.') === false) {
 			return $page;
 		}
 
