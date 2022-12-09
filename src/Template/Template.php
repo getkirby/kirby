@@ -149,15 +149,10 @@ class Template
 		// load the template
 		$template = Tpl::load($this->file(), $data);
 
-		// without still open snippets, return template
-		if (Snippet::$current === null) {
-			return $template;
-		}
-
-		// as long as there are still open snippets,
+		// if last `endsnippet()` has been ommitted,
 		// take the buffer output as default slot and
 		// render the snippets as final template output
-		while (Snippet::$current !== null) {
+		if (Snippet::$current !== null) {
 			$template = Snippet::$current->render($data, [
 				'default' => $template
 			]);

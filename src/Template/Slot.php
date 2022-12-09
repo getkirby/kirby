@@ -45,7 +45,7 @@ class Slot
 	/**
 	 * Used in the slot helper
 	 */
-	public static function begin(string $name = 'default'): static
+	public static function begin(string $name = 'default'): static|null
 	{
 		return Snippet::$current?->slot($name);
 	}

@@ -67,7 +67,8 @@ class Snippet extends Tpl
 	 */
 	public static function begin(string $file, array $data = []): static
 	{
-		return (new static($file, $data))->open();
+		$snippet = new static($file, $data);
+		return $snippet->open();
 	}
 
 	/**
@@ -148,6 +149,7 @@ class Snippet extends Tpl
 
 		// for snippets without slots, directly load and return
 		// the snippet's template file
+		$data = array_merge(App::instance()->data, $data);
 		return static::load($file, $data);
 	}
 
@@ -233,10 +235,11 @@ class Snippet extends Tpl
 	 */
 	public function scope(array $data = []): array
 	{
+		$kirby = App::instance();
 		$slots = $this->slots();
-		$data = array_replace_recursive($this->data, $data);
+		$data  = array_replace_recursive($this->data, $data);
 
-		return array_merge($data, [
+		return array_merge($kirby->data, $data, [
 			'data'  => $data,
 			'slot'  => $slots->default,
 			'slots' => $slots,
