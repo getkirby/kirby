@@ -59,7 +59,11 @@ export default {
 				return this.$url(this.to);
 			}
 
-			if (this.to.includes("@") === true && this.to.includes("/") === false) {
+			if (
+				this.to.includes("@") === true &&
+				this.to.includes("/") === false &&
+				this.to.startsWith("mailto:") === false
+			) {
 				return `mailto:` + this.to;
 			}
 
