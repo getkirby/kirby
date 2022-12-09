@@ -159,7 +159,7 @@ class Snippet extends Tpl
 	public static function file(string|array $name): string
 	{
 		$kirby = App::instance();
-		$root  = $kirby->root('snippets');
+		$root  = static::root();
 		$names = A::wrap($name);
 
 		foreach ($names as $name) {
@@ -214,6 +214,15 @@ class Snippet extends Tpl
 		}
 
 		return static::load($this->file, $this->scope($data));
+	}
+
+	/**
+	 * Returns the root director for all
+	 * snippet templates
+	 */
+	public static function root(): string
+	{
+		return App::instance()->root('snippets');
 	}
 
 	/**

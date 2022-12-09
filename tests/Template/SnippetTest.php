@@ -253,6 +253,20 @@ content', $snippet->render());
 	}
 
 	/**
+	 * @covers ::root
+	 */
+	public function testRoot()
+	{
+		new App([
+			'roots' => [
+				'snippets' => $root = __DIR__ . '/templates'
+			]
+		]);
+
+		$this->assertSame($root, Snippet::root());
+	}
+
+	/**
 	 * @covers ::scope
 	 */
 	public function testScope()
