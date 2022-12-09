@@ -2,6 +2,8 @@
 
 namespace Kirby\Image;
 
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase as TestCase;
@@ -79,6 +81,20 @@ class ImageTest extends TestCase
 	{
 		$file = $this->_image();
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'cat.jpg',
+			'parent'   => $page,
+			'content'  => ['alt' => 'Test text']
+		]);
+		$image = new Image([
+			'root'  => __DIR__ . '/fixtures/image/cat.jpg',
+			'url'   => 'https://foo.bar/cat.jpg',
+			'model' => $file
+		]);
+
+		$this->assertSame('<img alt="Test text" src="https://foo.bar/cat.jpg">', $image->html());
 	}
 
 	/**

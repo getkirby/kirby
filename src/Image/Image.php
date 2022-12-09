@@ -112,6 +112,12 @@ class Image extends File
 	 */
 	public function html(array $attr = []): string
 	{
+		// if no alt text explicitly provided,
+		// try to infer from model content file
+		if ($alt = $this->model?->alt()) {
+			$attr['alt'] ??= $alt;
+		}
+
 		if ($url = $this->url()) {
 			return Html::img($url, $attr);
 		}
