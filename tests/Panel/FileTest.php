@@ -675,6 +675,7 @@ class FileTest extends TestCase
 		$data  = $panel->pickerData(['model' => $page]);
 
 		$this->assertSame('(image: test.jpg)', $data['dragText']);
+		$this->assertSame('test.jpg', $data['id']);
 	}
 
 	/**
