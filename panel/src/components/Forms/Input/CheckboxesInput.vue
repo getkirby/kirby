@@ -68,7 +68,7 @@ export default {
 	},
 	methods: {
 		focus() {
-			this.$el.querySelector("input").focus();
+			this.$el.querySelector("input")?.focus();
 		},
 		onInput(key, value) {
 			if (value === true) {

@@ -59,7 +59,7 @@ export default {
 	},
 	methods: {
 		focus() {
-			this.$el.querySelector("input").focus();
+			this.$el.querySelector("input")?.focus();
 		},
 		onInput(value) {
 			this.$emit("input", value);
