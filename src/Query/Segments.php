@@ -81,8 +81,9 @@ class Segments extends Collection
 				return null;
 			}
 
-			// for regular connectors, just skip
-			if ($segment === '.') {
+			// for regular connectors and optional chaining on non-null,
+			// just skip this connecting segment
+			if ($segment === '.' || $segment === '?.') {
 				continue;
 			}
 
