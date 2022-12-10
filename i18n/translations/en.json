@@ -350,7 +350,7 @@
 	"license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
 	"license.register.label": "Please enter your license code",
 	"license.register.domain": "Register your license for <strong>{host}</strong>",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there. If sandbox.test is the domain you want to license Kirby to, please continue.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If <strong>{host}</strong> is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Thank you for supporting Kirby",
 	"license.unregistered": "This is an unregistered demo of Kirby",
 	"license.unregistered.label": "Unregistered",
