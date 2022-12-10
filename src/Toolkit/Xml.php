@@ -95,11 +95,11 @@ class Xml
 		}
 
 		if ($value === ' ') {
-			return strtolower($name) . '=""';
+			return $name . '=""';
 		}
 
 		if (is_bool($value) === true) {
-			return $value === true ? strtolower($name) . '="' . strtolower($name) . '"' : null;
+			return $value === true ? $name . '="' . $name . '"' : null;
 		}
 
 		if (is_array($value) === true) {
@@ -115,7 +115,7 @@ class Xml
 			$value = static::encode($value);
 		}
 
-		return strtolower($name) . '="' . $value . '"';
+		return $name . '="' . $value . '"';
 	}
 
 	/**
