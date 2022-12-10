@@ -62,7 +62,10 @@ class Field extends Component
 	public function __construct(string $type, array $attrs = [], ?Fields $formFields = null)
 	{
 		if (isset(static::$types[$type]) === false) {
-			throw new InvalidArgumentException('The field type "' . $type . '" does not exist');
+			throw new InvalidArgumentException([
+				'key'  => 'field.type.missing',
+				'data' => ['name' => $attrs['name'] ?? '-', 'type' => $type]
+			]);
 		}
 
 		if (isset($attrs['model']) === false) {
