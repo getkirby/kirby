@@ -28,25 +28,17 @@ class Locale
 	/**
 	 * Converts a normalized locale array to an array with the
 	 * locale constants replaced with their string representations
-	 *
-	 * @param array $locale
-	 * @return array
 	 */
 	public static function export(array $locale): array
 	{
+		$return    = [];
 		$constants = static::supportedConstants(true);
 
 		// replace the keys in the locale data array with the locale names
-		$return = [];
 		foreach ($locale as $key => $value) {
-			if (isset($constants[$key]) === true) {
-				// the key is a valid constant,
-				// replace it with its string representation
-				$return[$constants[$key]] = $value;
-			} else {
-				// not found, keep it as-is
-				$return[$key] = $value;
-			}
+			// use string representation for key
+			// if it is a valid constant
+			$return[$constants[$key] ?? $key] = $value;
 		}
 
 		return $return;
@@ -63,7 +55,7 @@ class Locale
 	 * @throws \Kirby\Exception\Exception If the locale cannot be determined
 	 * @throws \Kirby\Exception\InvalidArgumentException If the provided locale category is invalid
 	 */
-	public static function get($category = LC_ALL)
+	public static function get(int|string $category = LC_ALL): array|string
 	{
 		$normalizedCategory = static::normalizeConstant($category);
 
@@ -105,11 +97,10 @@ class Locale
 	 * string keys to a normalized constant => value array
 	 *
 	 * @param array|string $locale
-	 * @return array
 	 */
 	public static function normalize($locale): array
 	{
-		if (is_array($locale)) {
+		if (is_array($locale) === true) {
 			// replace string constant keys with the constant values
 			$convertedLocale = [];
 			foreach ($locale as $key => $value) {
@@ -129,11 +120,8 @@ class Locale
 	/**
 	 * Sets the PHP locale with a locale string or
 	 * an array with constant or string keys
-	 *
-	 * @param array|string $locale
-	 * @return void
 	 */
-	public static function set($locale): void
+	public static function set(array|string $locale): void
 	{
 		$locale = static::normalize($locale);
 
@@ -154,13 +142,13 @@ class Locale
 	/**
 	 * Tries to convert an `LC_*` constant name
 	 * to its constant value
-	 *
-	 * @param int|string $constant
-	 * @return int|string
 	 */
-	protected static function normalizeConstant($constant)
+	protected static function normalizeConstant(int|string $constant): int|string
 	{
-		if (is_string($constant) === true && Str::startsWith($constant, 'LC_') === true) {
+		if (
+			is_string($constant) === true &&
+			Str::startsWith($constant, 'LC_') === true
+		) {
 			return constant($constant);
 		}
 
@@ -173,7 +161,6 @@ class Locale
 	 * that are actually supported on this system
 	 *
 	 * @param bool $withAll If set to `true`, `LC_ALL` is returned as well
-	 * @return array
 	 */
 	protected static function supportedConstants(bool $withAll = false): array
 	{
