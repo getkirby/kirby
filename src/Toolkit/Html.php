@@ -634,7 +634,7 @@ class Html extends Xml
 		}
 
 		// build the full video src URL
-		$src = $src . $query->toString(true);
+		$src .= $query->toString(true);
 
 		// render the iframe
 		return static::iframe($src, static::videoAttr($attr));
