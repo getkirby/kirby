@@ -58,12 +58,14 @@ class DomTest extends TestCase
 				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
 			],
 
+			// TODO: activate again, once it produces reliable results in
+			// CI and all local setups
 			// HTML snippet with syntax issue
-			[
-				'html',
-				'<p>This is <strong>important</strong!</p>',
-				'<p>This is <strong>important</strong>!</p>'
-			],
+			// [
+			// 	'html',
+			// 	'<p>This is <strong>important</strong!</p>',
+			// 	'<p>This is <strong>important</strong>!</p>'
+			// ],
 
 			// HTML snippet with doctype
 			[
@@ -192,12 +194,14 @@ class DomTest extends TestCase
 				"<html>\n  <body>\n    <p>Lorem ipsum\n</p>\n  </body>\n</html>\n"
 			],
 
+			// TODO: activate again, once it produces reliable results in
+			// CI and all local setups
 			// HTML snippet with syntax issue
-			[
-				'html',
-				'<p>This is <strong>important</strong!</p>',
-				'<html><body><p>This is <strong>important</strong>!</p></body></html>'
-			],
+			// [
+			// 	'html',
+			// 	'<p>This is <strong>important</strong!</p>',
+			// 	'<html><body><p>This is <strong>important</strong>!</p></body></html>'
+			// ],
 
 			// HTML snippet with doctype
 			[

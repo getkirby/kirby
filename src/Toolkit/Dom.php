@@ -660,7 +660,7 @@ class Dom
 		$metaTag = $this->doc->createElement('meta');
 		$metaTag->setAttribute('http-equiv', 'Content-Type');
 		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
-		$metaTag->setAttribute('id', $metaId = Str::random(10));
+		$metaTag->setAttribute('id', Str::random(10));
 		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
 
 		if (
