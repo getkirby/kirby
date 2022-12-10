@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\Helpers;
 use SimpleXMLElement;
 
 /**
@@ -90,10 +91,18 @@ class Xml
 			return implode(' ', $attributes);
 		}
 
+		// TODO: In 3.10, treat $value === '' to render as name=""
 		if ($value === null || $value === '' || $value === []) {
+			// TODO: Remove in 3.10
+			if ($value === '') {
+				Helpers::deprecated('Passing an empty string as value to `Xml::attr()` has been deprecated. In a future version, passing an empty string won\'t omit the attribute anymore but render it with an empty value. To omit the attribute, please pass `null`.');
+			}
+
 			return null;
 		}
 
+		// TODO: In 3.10, add deprecation message for space = empty attribute
+		// TODO: In 3.11, render space as space
 		if ($value === ' ') {
 			return $name . '=""';
 		}
