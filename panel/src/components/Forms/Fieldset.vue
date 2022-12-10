@@ -31,7 +31,12 @@
 						/>
 						<k-box v-else theme="negative">
 							<k-text size="small">
-								The field type <strong>"{{ fieldName }}"</strong> does not exist
+								{{
+									$t("error.field.type.missing", {
+										name: fieldName,
+										type: field.type
+									})
+								}}
 							</k-text>
 						</k-box>
 					</k-error-boundary>
