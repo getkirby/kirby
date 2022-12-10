@@ -80,10 +80,13 @@ class Xml
 
 			$attributes = [];
 			foreach ($name as $key => $val) {
-				$a = static::attr($key, $val);
+				if (is_int($key) === true) {
+					$key = $val;
+					$val = true;
+				}
 
-				if ($a) {
-					$attributes[] = $a;
+				if ($attribute = static::attr($key, $val)) {
+					$attributes[] = $attribute;
 				}
 			}
 
