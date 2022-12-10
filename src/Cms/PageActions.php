@@ -620,9 +620,7 @@ trait PageActions
 					->count();
 
 				// default positioning at the end
-				if ($num === null) {
-					$num = $max;
-				}
+				$num ??= $max;
 
 				// avoid zeros or negative numbers
 				if ($num < 1) {

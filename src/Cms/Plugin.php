@@ -255,9 +255,7 @@ class Plugin extends Model
 			}
 		}
 
-		if ($option === null) {
-			$option = $kirby->option('updates') ?? true;
-		}
+		$option ??= $kirby->option('updates') ?? true;
 
 		if ($option !== true) {
 			return null;
