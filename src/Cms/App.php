@@ -1272,6 +1272,11 @@ class App
 	 */
 	public function resolve(string $path = null, string $language = null)
 	{
+		// directly prevent path with incomplete content representation
+		if (Str::endsWith($path, '.') === true) {
+			return null;
+		}
+
 		// set the current translation
 		$this->setCurrentTranslation($language);
 
