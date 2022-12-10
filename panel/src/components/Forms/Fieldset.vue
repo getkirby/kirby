@@ -31,7 +31,9 @@
 						/>
 						<k-box v-else theme="negative">
 							<k-text size="small">
-								The field type <strong>"{{ fieldName }}"</strong> does not exist
+								<strong>Field "{{ fieldName }}":</strong> The field type "{{
+									field.type
+								}}"" does not exist
 							</k-text>
 						</k-box>
 					</k-error-boundary>
