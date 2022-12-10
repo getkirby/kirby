@@ -235,6 +235,7 @@ export default class Fiber {
 				cache: "no-store",
 				headers: {
 					...this.options.headers(),
+					"Content-Type": "application/json",
 					"X-Fiber": true,
 					"X-Fiber-Globals": globals,
 					"X-Fiber-Only": only,
