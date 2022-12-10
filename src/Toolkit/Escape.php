@@ -25,10 +25,8 @@ class Escape
 {
 	/**
 	 * The internal singleton escaper instance
-	 *
-	 * @var \Laminas\Escaper\Escaper
 	 */
-	protected static $escaper;
+	protected static Escaper|null $escaper;
 
 	/**
 	 * Escape common HTML attributes data
@@ -44,11 +42,8 @@ class Escape
 	 * <div attr=...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...>content</div>
 	 * <div attr='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'>content</div>
 	 * <div attr="...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">content</div>
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function attr($string)
+	public static function attr(string $string): string
 	{
 		return static::escaper()->escapeHtmlAttr($string);
 	}
@@ -65,21 +60,16 @@ class Escape
 	 * <style>selector { property : ...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...; } </style>
 	 * <style>selector { property : "...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE..."; } </style>
 	 * <span style="property : ...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">text</span>
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function css($string)
+	public static function css(string $string): string
 	{
 		return static::escaper()->escapeCss($string);
 	}
 
 	/**
 	 * Get the escaper instance (and create if needed)
-	 *
-	 * @return \Laminas\Escaper\Escaper
 	 */
-	protected static function escaper()
+	protected static function escaper(): Escaper
 	{
 		return static::$escaper ??= new Escaper('utf-8');
 	}
@@ -95,11 +85,8 @@ class Escape
 	 *
 	 * <body>...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...</body>
 	 * <div>...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...</div>
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function html($string)
+	public static function html(string $string): string
 	{
 		return static::escaper()->escapeHtml($string);
 	}
@@ -113,11 +100,8 @@ class Escape
 	 * <script>alert('...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...')</script>
 	 * <script>x='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'</script>
 	 * <div onmouseover="x='...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...'"</div>
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function js($string)
+	public static function js(string $string): string
 	{
 		return static::escaper()->escapeJs($string);
 	}
@@ -129,11 +113,8 @@ class Escape
 	 * This should not be used to escape an entire URI.
 	 *
 	 * <a href="http://www.somesite.com?test=...ESCAPE UNTRUSTED DATA BEFORE PUTTING HERE...">link</a>
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function url($string)
+	public static function url(string $string): string
 	{
 		return rawurlencode($string);
 	}
@@ -151,11 +132,8 @@ class Escape
 	 * & is replaced with &amp;
 	 * < is replaced with &lt;
 	 * > is replaced with &gt;
-	 *
-	 * @param string $string
-	 * @return string
 	 */
-	public static function xml($string)
+	public static function xml(string $string): string
 	{
 		return htmlspecialchars($string, ENT_QUOTES | ENT_XML1, 'UTF-8');
 	}
