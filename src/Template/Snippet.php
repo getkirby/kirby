@@ -85,11 +85,6 @@ class Snippet extends Tpl
 			throw new LogicException('The snippet has not been opened');
 		}
 
-		// close all still open slots
-		while (empty($this->capture) === false) {
-			$this->endslot();
-		}
-
 		// create a default slot for the content
 		// that has been captured between start and end
 		if (empty($this->slots) === true) {
