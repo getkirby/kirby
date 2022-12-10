@@ -13,7 +13,10 @@ export default {
 
 				page.flag = {
 					status: page.status,
-					tooltip: this.$t("page.status"),
+					tooltip:
+						this.$t("page.status") +
+						": " +
+						this.$t("page.status." + page.status),
 					disabled: !isEnabled,
 					click: () => this.$dialog(page.link + "/changeStatus")
 				};
