@@ -9,6 +9,9 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Text\KirbyTags
+ */
 class KirbyTagsTest extends TestCase
 {
 	protected $app;
@@ -44,13 +47,14 @@ class KirbyTagsTest extends TestCase
 		return $tests;
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParse()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					return 'test';
-				}
+				'html' => fn () => 'test'
 			]
 		];
 
@@ -60,13 +64,14 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('test', KirbyTags::parse('(tEsT: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithValue()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function ($tag) {
-					return $tag->value;
-				}
+				'html' => fn ($tag) => $tag->value
 			]
 		];
 
@@ -75,14 +80,15 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo', KirbyTags::parse('(TEST: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithAttribute()
 	{
 		KirbyTag::$types = [
 			'test' => [
 				'attr' => ['a'],
-				'html' => function ($tag) {
-					return $tag->value . '|' . $tag->a;
-				}
+				'html' => fn ($tag) => $tag->value . '|' . $tag->a
 			]
 		];
 
@@ -91,23 +97,20 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo|bar', KirbyTags::parse('(TEST: foo a: bar)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithException()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					throw new Exception('Just for fun');
-				}
+				'html' => fn () => throw new Exception('Just for fun')
 			],
 			'invalidargument' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Just for fun');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Just for fun')
 			],
 			'undefined' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Undefined tag type: undefined');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
 			]
 		];
 
@@ -116,22 +119,26 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug1()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Just for fun');
 
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					throw new Exception('Just for fun');
-				}
+				'html' => fn () => throw new Exception('Just for fun')
 			]
 		];
 
 		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -139,28 +146,30 @@ class KirbyTagsTest extends TestCase
 
 		KirbyTag::$types = [
 			'invalidargument' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Just for fun');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Just for fun')
 			]
 		];
 
 		KirbyTags::parse('(invalidargument: foo)', [], ['debug' => true]);
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug3()
 	{
 		KirbyTag::$types = [
 			'undefined' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Undefined tag type: undefined');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
 			]
 		];
 
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], ['debug' => true]));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithBrackets()
 	{
 		KirbyTag::$types = [
@@ -189,6 +198,7 @@ class KirbyTagsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::parse
 	 * @dataProvider dataProvider
 	 */
 	public function testWithMarkdown($kirbytext, $expected)
@@ -205,6 +215,7 @@ class KirbyTagsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::parse
 	 * @dataProvider dataProvider
 	 */
 	public function testWithMarkdownExtra($kirbytext, $expected)

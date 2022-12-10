@@ -53,11 +53,10 @@ class Markdown
 	 */
 	public function parse(string|null $text = null, bool $inline = false): string
 	{
-		if ($this->options['extra'] === true) {
-			$parser = new ParsedownExtra();
-		} else {
-			$parser = new Parsedown();
-		}
+		$parser = match ($this->options['extra']) {
+			true    => new ParsedownExtra(),
+			default => new Parsedown()
+		};
 
 		$parser->setBreaksEnabled($this->options['breaks']);
 		$parser->setSafeMode($this->options['safe']);

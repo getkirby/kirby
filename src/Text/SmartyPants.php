@@ -110,7 +110,8 @@ class SmartyPants
 	public function parse(string|null $text = null): string
 	{
 		// prepare the text
-		$text = str_replace('&quot;', '"', $text ?? '');
+		$text ??= '';
+		$text   = str_replace('&quot;', '"', $text);
 
 		// parse the text
 		return $this->parser->transform($text);

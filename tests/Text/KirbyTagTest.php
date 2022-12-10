@@ -7,6 +7,9 @@ use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Text\KirbyTag
+ */
 class KirbyTagTest extends TestCase
 {
 	public function setUp(): void
@@ -14,9 +17,7 @@ class KirbyTagTest extends TestCase
 		KirbyTag::$types = [
 			'test' => [
 				'attr' => ['a', 'b'],
-				'html' => function ($tag) {
-					return 'test: ' . $tag->value . '-' . $tag->a . '-' . $tag->b;
-				}
+				'html' => fn ($tag) => 'test: ' . $tag->value . '-' . $tag->a . '-' . $tag->b
 			],
 			'noHtml' => [
 				'attr' => ['a', 'b']
@@ -34,9 +35,50 @@ class KirbyTagTest extends TestCase
 
 	public function tearDown(): void
 	{
+		KirbyTag::$aliases = [];
 		KirbyTag::$types = [];
 	}
 
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstruct()
+	{
+		KirbyTag::$aliases = [];
+		$tag = KirbyTag::parse('test: foo a: attrA b: attrB c: attrC');
+		$this->assertSame('test', $tag->type);
+		$this->assertSame('foo', $tag->test);
+		$this->assertSame(['a' => 'attrA', 'b' => 'attrB c: attrC'], $tag->attrs);
+		$this->assertSame([], $tag->data);
+		$this->assertSame([], $tag->options);
+		$this->assertSame('foo', $tag->value);
+	}
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructAliasedTagType()
+	{
+		KirbyTag::$aliases = ['foo' => 'test'];
+		$tag = KirbyTag::parse('foo: bar');
+		$this->assertSame('test', $tag->type);
+		$this->assertSame('bar', $tag->test);
+	}
+
+
+	/**
+	 * @covers ::__construct
+	 */
+	public function testConstructMissingTagType()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Undefined tag type: invalid');
+		KirbyTag::parse('invalid: test');
+	}
+
+	/**
+	 * @covers ::__call
+	 */
 	public function test__call()
 	{
 		$attr = [
@@ -56,6 +98,9 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('dataC', $tag->c());
 	}
 
+	/**
+	 * @covers ::__callStatic
+	 */
 	public function test__callStatic()
 	{
 		$attr = [
@@ -64,10 +109,13 @@ class KirbyTagTest extends TestCase
 		];
 
 		$result = KirbyTag::test('test value', $attr);
-
 		$this->assertSame('test: test value-attrA-attrB', $result);
 	}
 
+	/**
+	 * @covers ::__get
+	 * @covers ::attr
+	 */
 	public function testAttr()
 	{
 		$tag = new KirbyTag('test', 'test value', [
@@ -84,6 +132,10 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('attrB', $tag->attr('b', 'fallback'));
 	}
 
+	/**
+	 * @covers ::__get
+	 * @covers ::attr
+	 */
 	public function testAttrFallback()
 	{
 		$tag = new KirbyTag('test', 'test value', [
@@ -94,6 +146,9 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('fallback', $tag->attr('b', 'fallback'));
 	}
 
+	/**
+	 * @covers ::factory
+	 */
 	public function testFactory()
 	{
 		$attr = [
@@ -102,10 +157,12 @@ class KirbyTagTest extends TestCase
 		];
 
 		$result = KirbyTag::factory('test', 'test value', $attr);
-
 		$this->assertSame('test: test value-attrA-attrB', $result);
 	}
 
+	/**
+	 * @covers ::option
+	 */
 	public function testOption()
 	{
 		$attr = [
@@ -165,6 +222,9 @@ class KirbyTagTest extends TestCase
 		]));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParse()
 	{
 		$tag = KirbyTag::parse('(test: test value)', ['some' => 'data'], ['some' => 'options']);
@@ -250,14 +310,9 @@ class KirbyTagTest extends TestCase
 		$this->assertSame(['a' => 'attrA b: attrB c: attrC'], $tag->attrs);
 	}
 
-	public function testParseInvalid()
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Undefined tag type: invalid');
-
-		KirbyTag::parse('invalid: test value a: attrA b: attrB');
-	}
-
+	/**
+	 * @covers ::render
+	 */
 	public function testRender()
 	{
 		$tag = new KirbyTag('test', 'test value', [
@@ -272,6 +327,9 @@ class KirbyTagTest extends TestCase
 		$this->assertSame('test: -attrA-', $tag->render());
 	}
 
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderNoHtml()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -284,6 +342,9 @@ class KirbyTagTest extends TestCase
 		$tag->render();
 	}
 
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderInvalidHtml()
 	{
 		$this->expectException(BadMethodCallException::class);
@@ -296,6 +357,9 @@ class KirbyTagTest extends TestCase
 		$tag->render();
 	}
 
+	/**
+	 * @covers ::type
+	 */
 	public function testType()
 	{
 		$tag = new KirbyTag('test', 'test value');
