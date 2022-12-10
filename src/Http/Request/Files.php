@@ -22,7 +22,7 @@ class Files
 	/**
 	 * Sanitized array of all received files
 	 */
-	protected array $files;
+	protected array $files = [];
 
 	/**
 	 * Creates a new Files object
@@ -31,11 +31,7 @@ class Files
 	 */
 	public function __construct(array|null $files = null)
 	{
-		if ($files === null) {
-			$files = $_FILES;
-		}
-
-		$this->files = [];
+		$files ??= $_FILES;
 
 		foreach ($files as $key => $file) {
 			if (is_array($file['name'])) {
