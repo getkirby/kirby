@@ -95,7 +95,7 @@ class Factory
 		}
 
 		// union types
-		if (is_a($propType, ReflectionUnionType::class) === true) {
+		if ($propType instanceof ReflectionUnionType) {
 			return static::forUnionType($propType, $value);
 		}
 
