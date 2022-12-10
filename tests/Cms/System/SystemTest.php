@@ -711,6 +711,7 @@ class SystemTest extends TestCase
 	 * @covers ::server
 	 * @covers ::status
 	 * @covers ::toArray
+	 * @covers ::__debugInfo
 	 */
 	public function testStatus()
 	{
@@ -728,6 +729,7 @@ class SystemTest extends TestCase
 		];
 		$this->assertSame($expected, $system->status());
 		$this->assertSame($expected, $system->toArray());
+		$this->assertSame($expected, $system->__debugInfo());
 	}
 
 	/**
