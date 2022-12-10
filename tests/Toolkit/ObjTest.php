@@ -4,42 +4,54 @@ namespace Kirby\Toolkit;
 
 use Kirby\Exception\InvalidArgumentException;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Obj
+ */
 class ObjTest extends TestCase
 {
+	/**
+	 * @covers ::__call
+	 */
 	public function test__call()
 	{
-		$obj = new Obj([
-			'foo' => 'bar'
-		]);
-
-		$this->assertEquals('bar', $obj->foo());
+		$obj = new Obj(['foo' => 'bar']);
+		$this->assertSame('bar', $obj->foo());
 	}
 
+	/**
+	 * @covers ::__get
+	 */
 	public function test__get()
 	{
 		$obj = new Obj();
 		$this->assertNull($obj->foo);
 	}
 
+	/**
+	 * @covers ::get
+	 */
 	public function testGetMultiple()
 	{
 		$obj = new Obj([
-			'one' => 'first',
-			'two' => 'second',
+			'one'   => 'first',
+			'two'   => 'second',
 			'three' => 'third'
 		]);
 
-		$this->assertEquals('first', $obj->get('one'));
-		$this->assertEquals(['one' => 'first', 'three' => 'third'], $obj->get(['one', 'three']));
-		$this->assertEquals([
-			'one' => 'first',
+		$this->assertSame('first', $obj->get('one'));
+		$this->assertSame(['one' => 'first', 'three' => 'third'], $obj->get(['one', 'three']));
+		$this->assertSame([
+			'one'   => 'first',
 			'three' => 'third',
-			'four' => 'fallback',
+			'four'  => 'fallback',
 			'eight' => null
 		], $obj->get(['one', 'three', 'four', 'eight'], ['four' => 'fallback']));
-		$this->assertEquals($obj->toArray(), $obj->get(['one', 'two', 'three']));
+		$this->assertSame($obj->toArray(), $obj->get(['one', 'two', 'three']));
 	}
 
+	/**
+	 * @covers ::get
+	 */
 	public function testGetMultipleInvalidFallback()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -49,21 +61,22 @@ class ObjTest extends TestCase
 		$obj->get(['two'], 'invalid fallback');
 	}
 
+	/**
+	 * @covers ::toArray
+	 */
 	public function testToArray()
 	{
-		$obj = new Obj($expected = [
-			'foo' => 'bar'
-		]);
-
-		$this->assertEquals($expected, $obj->toArray());
+		$obj = new Obj($expected = ['foo' => 'bar']);
+		$this->assertSame($expected, $obj->toArray());
 	}
 
+	/**
+	 * @covers ::toArray
+	 */
 	public function testToArrayWithChild()
 	{
 		$parent = new Obj([
-			'child' => new Obj([
-				'foo' => 'bar'
-			])
+			'child' => new Obj(['foo' => 'bar'])
 		]);
 
 		$expected = [
@@ -72,24 +85,24 @@ class ObjTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $parent->toArray());
+		$this->assertSame($expected, $parent->toArray());
 	}
 
+	/**
+	 * @covers ::toJson
+	 */
 	public function testToJson()
 	{
-		$obj = new Obj($expected = [
-			'foo' => 'bar'
-		]);
-
-		$this->assertEquals(json_encode($expected), $obj->toJson());
+		$obj = new Obj($expected = ['foo' => 'bar']);
+		$this->assertSame(json_encode($expected), $obj->toJson());
 	}
 
-	public function test__debuginfo()
+	/**
+	 * @covers ::__debugInfo
+	 */
+	public function test__debugInfo()
 	{
-		$obj = new Obj($expected = [
-			'foo' => 'bar'
-		]);
-
-		$this->assertEquals($expected, $obj->__debugInfo());
+		$obj = new Obj($expected = ['foo' => 'bar']);
+		$this->assertSame($expected, $obj->__debugInfo());
 	}
 }
