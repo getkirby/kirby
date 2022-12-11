@@ -55,6 +55,7 @@ class DirTest extends TestCase
 
 		$this->assertTrue(file_exists($target . '/a.txt'));
 		$this->assertTrue(file_exists($target . '/subfolder/b.txt'));
+		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
 	}
 
 	/**
@@ -71,6 +72,7 @@ class DirTest extends TestCase
 
 		$this->assertTrue(file_exists($target . '/a.txt'));
 		$this->assertFalse(file_exists($target . '/subfolder/b.txt'));
+		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
 	}
 
 	/**
@@ -88,6 +90,25 @@ class DirTest extends TestCase
 		$this->assertTrue(file_exists($target . '/a.txt'));
 		$this->assertTrue(is_dir($target . '/subfolder'));
 		$this->assertFalse(file_exists($target . '/subfolder/b.txt'));
+		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
+	}
+
+	/**
+	 * @covers ::copy
+	 */
+	public function testCopyNoIgnore()
+	{
+		$src    = $this->fixtures . '/copy';
+		$target = $this->tmp . '/copy';
+
+		$result = Dir::copy($src, $target, true, false);
+
+		$this->assertTrue($result);
+
+		$this->assertTrue(file_exists($target . '/a.txt'));
+		$this->assertTrue(is_dir($target . '/subfolder'));
+		$this->assertTrue(file_exists($target . '/subfolder/b.txt'));
+		$this->assertTrue(file_exists($target . '/subfolder/.gitignore'));
 	}
 
 	/**
