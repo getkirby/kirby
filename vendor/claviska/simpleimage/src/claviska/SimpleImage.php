@@ -34,7 +34,7 @@ class SimpleImage {
     ERR_WRITE = 11,
     ERR_INVALID_FLAG = 12;
 
-
+  protected $flags;
   protected $image;
   protected $mimeType;
   protected $exif;
