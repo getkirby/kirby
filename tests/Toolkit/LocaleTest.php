@@ -145,9 +145,7 @@ class LocaleTest extends TestCase
 		]));
 
 		// single string
-		$this->assertSame([
-			LC_ALL => 'test'
-		], Locale::normalize('test'));
+		$this->assertSame([LC_ALL => 'test'], Locale::normalize('test'));
 
 		// invalid argument
 		$this->expectException(InvalidArgumentException::class);
