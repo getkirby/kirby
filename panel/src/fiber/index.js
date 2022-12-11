@@ -24,7 +24,7 @@
  * SOFTWARE.
  */
 
-import { clone, merge } from "../helpers/object.js";
+import { clone, merge, toLowerKeys } from "../helpers/object.js";
 
 export default class Fiber {
 	/**
@@ -234,13 +234,13 @@ export default class Fiber {
 				credentials: "same-origin",
 				cache: "no-store",
 				headers: {
-					...this.options.headers(),
-					"Content-Type": "application/json",
-					"X-Fiber": true,
-					"X-Fiber-Globals": globals,
-					"X-Fiber-Only": only,
-					"X-Fiber-Referrer": this.state.$view?.path || null,
-					...options.headers
+					...toLowerKeys(this.options.headers()),
+					"content-type": "application/json",
+					"x-fiber": true,
+					"x-fiber-globals": globals,
+					"x-fiber-only": only,
+					"x-fiber-referrer": this.state.$view?.path || null,
+					...toLowerKeys(options.headers ?? {})
 				}
 			});
 
