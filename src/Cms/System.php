@@ -208,8 +208,9 @@ class System
 	 */
 	public function isInstallable(): bool
 	{
-		return $this->isLocal() === true ||
-			   $this->app->option('panel.install', false) === true;
+		return
+			$this->isLocal() === true ||
+			$this->app->option('panel.install', false) === true;
 	}
 
 	/**
@@ -571,8 +572,9 @@ class System
 		}
 
 		$kirby  = $this->app;
-		$option = $kirby->option('updates.kirby') ??
-				  $kirby->option('updates', true);
+		$option =
+			$kirby->option('updates.kirby') ??
+			$kirby->option('updates', true);
 
 		if ($option === false) {
 			return null;

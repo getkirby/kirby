@@ -46,13 +46,16 @@ class FieldOptions extends Node
 	{
 		if (is_string($props['options'] ?? null) === true) {
 			$props['options'] = match ($props['options']) {
-				'api'   => ['type' => 'api'] +
-						   OptionsApi::polyfill($props['api'] ?? null),
+				'api' =>
+					['type' => 'api'] +
+					OptionsApi::polyfill($props['api'] ?? null),
 
-				'query' => ['type' => 'query'] +
-						   OptionsQuery::polyfill($props['query'] ?? null),
+				'query' =>
+					['type' => 'query'] +
+					OptionsQuery::polyfill($props['query'] ?? null),
 
-				default  => [ 'type' => 'query', 'query' => $props['options']]
+				default =>
+					[ 'type' => 'query', 'query' => $props['options']]
 			};
 		}
 
