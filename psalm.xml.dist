@@ -25,7 +25,7 @@
 			</errorLevel>
 		</InvalidScope>
 
-		<!-- This check gets flagged by Psalm for unknown reasons in PHP 8.2 -->
+		<!-- TODO: This check gets flagged by Psalm for unknown reasons in PHP 8.2 -->
 		<MethodSignatureMismatch>
 			<errorLevel type="suppress">
 				<file name="src/Toolkit/Date.php" />
