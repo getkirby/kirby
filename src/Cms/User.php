@@ -372,8 +372,9 @@ class User extends ModelWithContent
 	 */
 	public function isLastAdmin(): bool
 	{
-		return $this->role()->isAdmin() === true &&
-			   $this->kirby()->users()->filter('role', 'admin')->count() <= 1;
+		return
+			$this->role()->isAdmin() === true &&
+			$this->kirby()->users()->filter('role', 'admin')->count() <= 1;
 	}
 
 	/**

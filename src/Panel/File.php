@@ -196,9 +196,10 @@ class File extends Model
 			'rtf'   => 'blue-400'
 		];
 
-		return $extensions[$this->model->extension()] ??
-			   $types[$this->model->type()] ??
-			   parent::imageDefaults()['color'];
+		return
+			$extensions[$this->model->extension()] ??
+			$types[$this->model->type()] ??
+			parent::imageDefaults()['color'];
 	}
 
 	/**
@@ -237,9 +238,10 @@ class File extends Model
 			'md'    => 'markdown'
 		];
 
-		return $extensions[$this->model->extension()] ??
-			   $types[$this->model->type()] ??
-			   'file';
+		return
+			$extensions[$this->model->extension()] ??
+			$types[$this->model->type()] ??
+			'file';
 	}
 
 	/**

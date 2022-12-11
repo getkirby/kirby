@@ -234,8 +234,9 @@ class Page extends Model
 	 */
 	public function position(): int
 	{
-		return $this->model->num() ??
-			   $this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
+		return
+			$this->model->num() ??
+			$this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
 	}
 
 	/**

@@ -301,8 +301,9 @@ V::$validators = [
 	 * Checks for numbers within the given range
 	 */
 	'between' => function ($value, $min, $max): bool {
-		return V::min($value, $min) === true &&
-			   V::max($value, $max) === true;
+		return
+			V::min($value, $min) === true &&
+			V::max($value, $max) === true;
 	},
 
 	/**
@@ -415,8 +416,9 @@ V::$validators = [
 	 * Checks for a valid filename
 	 */
 	'filename' => function ($value): bool {
-		return V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
-			   V::min($value, 2) === true;
+		return
+			V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
+			V::min($value, 2) === true;
 	},
 
 	/**

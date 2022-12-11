@@ -26,8 +26,9 @@ class Arguments extends Collection
 	// skip all matches inside of single quotes
 	public const NO_SLQU = '\'(?:[^\'\\\\]|\\\\.)*\'(*SKIP)(*FAIL)';
 	// skip all matches inside of any of the above skip groups
-	public const OUTSIDE = self::NO_PNTH . '|' . self::NO_SQBR . '|' .
-						   self::NO_DLQU . '|' . self::NO_SLQU;
+	public const OUTSIDE =
+		self::NO_PNTH . '|' . self::NO_SQBR . '|' .
+		self::NO_DLQU . '|' . self::NO_SLQU;
 
 	/**
 	 * Splits list of arguments into individual

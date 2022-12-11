@@ -115,8 +115,9 @@ class ContentTranslation
 	 */
 	public function exists(): bool
 	{
-		return empty($this->content) === false ||
-			   file_exists($this->contentFile()) === true;
+		return
+			empty($this->content) === false ||
+			file_exists($this->contentFile()) === true;
 	}
 
 	/**

@@ -152,9 +152,7 @@ class I18n
 			}
 			// use fallback
 			if (is_array($fallback) === true) {
-				return $fallback[$locale] ??
-					   $fallback['en'] ??
-					   reset($fallback);
+				return $fallback[$locale] ?? $fallback['en'] ?? reset($fallback);
 			}
 
 			return $fallback;

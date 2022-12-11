@@ -44,10 +44,17 @@ return [
 	// license registration
 	'registration' => [
 		'load' => function () {
+			$system = App::instance()->system();
+
 			return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
+						'domain' => [
+							'type'  => 'info',
+							'theme' => $system->isLocal() ? 'notice' : 'info',
+							'text'  => I18n::template('license.register.' . ($system->isLocal() ? 'local' : 'domain'), ['host' => $system->indexUrl()])
+						],
 						'license' => [
 							'label'       => I18n::translate('license.register.label'),
 							'type'        => 'text',
@@ -56,9 +63,7 @@ return [
 							'placeholder' => 'K3-',
 							'help'        => I18n::translate('license.register.help')
 						],
-						'email' => Field::email([
-							'required' => true
-						])
+						'email' => Field::email(['required' => true])
 					],
 					'submitButton' => I18n::translate('license.register'),
 					'value' => [

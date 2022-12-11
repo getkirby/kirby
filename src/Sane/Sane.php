@@ -56,8 +56,9 @@ class Sane
 
 		// find a handler or alias
 		$alias   = static::$aliases[$type] ?? null;
-		$handler = static::$handlers[$type] ??
-				   ($alias ? static::$handlers[$alias] ?? null : null);
+		$handler =
+			static::$handlers[$type] ??
+			($alias ? static::$handlers[$alias] ?? null : null);
 
 		if (empty($handler) === false && class_exists($handler) === true) {
 			return new $handler();
