@@ -173,7 +173,7 @@ return [
 		},
 		'form' => function (array $values = []) {
 			return new Form([
-				'fields' => $this->attrs['fields'],
+				'fields' => $this->fields,
 				'values' => $values,
 				'model'  => $this->model
 			]);
