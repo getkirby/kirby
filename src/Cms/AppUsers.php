@@ -60,10 +60,7 @@ trait AppUsers
 		}
 
 		try {
-			// TODO: switch over in 3.9.0 to
-			// return $callback($userAfter);
-			$proxy = new AppUsersImpersonateProxy($this);
-			return $callback->call($proxy, $userAfter);
+			return $callback($userAfter);
 		} catch (Throwable $e) {
 			throw $e;
 		} finally {

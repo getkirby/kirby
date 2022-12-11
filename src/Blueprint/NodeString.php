@@ -13,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage in 3.9
+ * // TODO: include in test coverage in 3.10
  * @codeCoverageIgnore
  */
 class NodeString extends NodeProperty

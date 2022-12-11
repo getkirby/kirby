@@ -1563,24 +1563,6 @@ class App
 	}
 
 	/**
-	 * Returns the Environment object
-	 * @deprecated 3.7.0 Use `$kirby->environment()` instead
-	 *
-	 * @return \Kirby\Http\Environment
-	 * @deprecated Will be removed in Kirby 3.9.0
-	 * @todo Remove in 3.9.0
-	 * @codeCoverageIgnore
-	 */
-	public function server()
-	{
-		// @codeCoverageIgnoreStart
-		Helpers::deprecated('$kirby->server() has been deprecated and will be removed in Kirby 3.9.0. Use $kirby->environment() instead.');
-		// @codeCoverageIgnoreEnd
-
-		return $this->environment();
-	}
-
-	/**
 	 * Initializes and returns the Site object
 	 *
 	 * @return \Kirby\Cms\Site

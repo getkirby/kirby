@@ -337,7 +337,6 @@ class AppTest extends TestCase
 
 	/**
 	 * @covers ::environment
-	 * @covers ::server
 	 */
 	public function testEnvironment()
 	{
@@ -351,8 +350,6 @@ class AppTest extends TestCase
 		]);
 
 		$this->assertSame($info, $app->environment()->info());
-		$this->assertSame($app->environment(), $app->server());
-		$this->assertSame($info, $app->server()->info());
 	}
 
 	/**
