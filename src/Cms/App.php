@@ -1272,16 +1272,16 @@ class App
 	 */
 	public function resolve(string $path = null, string $language = null)
 	{
-		// directly prevent path with incomplete content representation
-		if (Str::endsWith($path, '.') === true) {
-			return null;
-		}
-
 		// set the current translation
 		$this->setCurrentTranslation($language);
 
 		// set the current locale
 		$this->setCurrentLanguage($language);
+
+		// directly prevent path with incomplete content representation
+		if (Str::endsWith($path, '.') === true) {
+			return null;
+		}
 
 		// the site is needed a couple times here
 		$site = $this->site();
