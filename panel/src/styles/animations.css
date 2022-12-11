@@ -1,11 +1,11 @@
 @keyframes LoadingCursor {
-  100% {
-    cursor: progress;
-  }
+	100% {
+		cursor: progress;
+	}
 }
 
 @keyframes Spin {
-  100% {
-    transform: rotate(360deg);
-  }
+	100% {
+		transform: rotate(360deg);
+	}
 }

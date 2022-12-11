@@ -339,7 +339,11 @@ class Session
 		 * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
 		 * @psalm-suppress ParadoxicalCondition
 		 */
-		if ($this->writeMode !== true || $this->tokenExpiry === null || $this->destroyed === true) {
+		if (
+			$this->writeMode !== true ||
+			$this->tokenExpiry === null ||
+			$this->destroyed === true
+		) {
 			return;
 		}
 
@@ -523,7 +527,11 @@ class Session
 		 * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
 		 * @psalm-suppress ParadoxicalCondition
 		 */
-		if ($this->tokenExpiry === null || $this->destroyed === true || $this->writeMode === true) {
+		if (
+			$this->tokenExpiry === null ||
+			$this->destroyed === true ||
+			$this->writeMode === true
+		) {
 			return;
 		}
 
