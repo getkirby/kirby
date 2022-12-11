@@ -1,15 +1,16 @@
 <template>
-	<span
+	<button
 		:id="id"
 		:data-disabled="true"
 		:data-responsive="responsive"
 		:data-theme="theme"
 		:title="tooltip"
 		class="k-button"
+		aria-disabled="true"
 	>
 		<k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
 		<span v-if="$slots.default" class="k-button-text"><slot /></span>
-	</span>
+	</button>
 </template>
 
 <script>
