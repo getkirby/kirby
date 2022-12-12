@@ -5,6 +5,7 @@ namespace Kirby\Http;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Properties;
+use SensitiveParameter;
 use Throwable;
 
 /**
@@ -326,8 +327,10 @@ class Uri
 	/**
 	 * @return $this
 	 */
-	public function setPassword(string|null $password = null): static
-	{
+	public function setPassword(
+		#[SensitiveParameter]
+		string|null $password = null
+	): static {
 		$this->password = $password;
 		return $this;
 	}

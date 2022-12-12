@@ -8,6 +8,7 @@ use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
+use SensitiveParameter;
 
 /**
  * Validators for all user actions
@@ -83,13 +84,13 @@ class UserRules
 	/**
 	 * Validates if the password can be changed
 	 *
-	 * @param \Kirby\Cms\User $user
-	 * @param string $password
-	 * @return bool
 	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
 	 */
-	public static function changePassword(User $user, string $password): bool
-	{
+	public static function changePassword(
+		User $user,
+		#[SensitiveParameter]
+		string $password
+	): bool {
 		if ($user->permissions()->changePassword() !== true) {
 			throw new PermissionException([
 				'key'  => 'user.changePassword.permission',
@@ -332,13 +333,13 @@ class UserRules
 	/**
 	 * Validates a password
 	 *
-	 * @param \Kirby\Cms\User $user
-	 * @param string $password
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is too short
 	 */
-	public static function validPassword(User $user, string $password): bool
-	{
+	public static function validPassword(
+		User $user,
+		#[SensitiveParameter]
+		string $password
+	): bool {
 		if (Str::length($password ?? null) < 8) {
 			throw new InvalidArgumentException([
 				'key' => 'user.password.invalid',
