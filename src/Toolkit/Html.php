@@ -380,7 +380,7 @@ class Html extends Xml
 			return trim($rel . ' noopener noreferrer', ' ');
 		}
 
-		return $rel;
+		return $rel ?: null;
 	}
 
 	/**
