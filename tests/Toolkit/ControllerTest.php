@@ -2,64 +2,80 @@
 
 namespace Kirby\Toolkit;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Controller
+ */
 class ControllerTest extends TestCase
 {
+	/**
+	 * @covers ::call
+	 */
 	public function testCall()
 	{
-		$controller = new Controller(function () {
-			return 'test';
-		});
-
-		$this->assertEquals('test', $controller->call());
+		$controller = new Controller(fn () => 'test');
+		$this->assertSame('test', $controller->call());
 	}
 
+	/**
+	 * @covers ::arguments
+	 */
 	public function testArguments()
 	{
-		$controller = new Controller(function ($a, $b) {
-			return $a . $b;
-		});
+		$controller = new Controller(fn ($a, $b) => $a . $b);
 
-		$this->assertEquals('AB', $controller->call(null, [
+		$this->assertSame('AB', $controller->call(null, [
 			'a' => 'A',
 			'b' => 'B'
 		]));
 	}
 
-	public function testBind()
+	/**
+	 * @covers ::call
+	 */
+	public function testCallBind()
 	{
 		$model = new Obj(['foo' => 'bar']);
 
-		$controller = new Controller(function () {
-			return $this;
-		});
-
-		$this->assertEquals($model, $controller->call($model));
+		$controller = new Controller(fn () => $this);
+		$this->assertSame($model, $controller->call($model));
 	}
 
+	/**
+	 * @covers ::call
+	 */
 	public function testMissingParameter()
 	{
-		$controller = new Controller(function ($a) {
-			return $a;
-		});
-
+		$controller = new Controller(fn ($a) => $a);
 		$this->assertNull($controller->call());
 	}
 
+	/**
+	 * @covers ::load
+	 */
 	public function testLoad()
 	{
-		$controller = Controller::load(__DIR__ . '/fixtures/controller/controller.php');
-		$this->assertEquals('loaded', $controller->call());
+		$root       = __DIR__ . '/fixtures/controller/controller.php';
+		$controller = Controller::load($root);
+		$this->assertSame('loaded', $controller->call());
 	}
 
+	/**
+	 * @covers ::load
+	 */
 	public function testLoadNonExisting()
 	{
-		$controller = Controller::load(__DIR__ . '/fixtures/controller/does-not-exist.php');
-		$this->assertEquals(null, $controller);
+		$root       = __DIR__ . '/fixtures/controller/does-not-exist.php';
+		$controller = Controller::load($root);
+		$this->assertSame(null, $controller);
 	}
 
+	/**
+	 * @covers ::load
+	 */
 	public function testLoadInvalidController()
 	{
-		$controller = Controller::load(__DIR__ . '/fixtures/controller/invalid.php');
+		$root       = __DIR__ . '/fixtures/controller/invalid.php';
+		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}
 }

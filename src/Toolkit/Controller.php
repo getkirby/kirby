@@ -19,24 +19,18 @@ use ReflectionFunction;
  */
 class Controller
 {
-	protected $function;
-
-	public function __construct(Closure $function)
+	public function __construct(protected Closure $function)
 	{
-		$this->function = $function;
 	}
 
 	public function arguments(array $data = []): array
 	{
 		$info = new ReflectionFunction($this->function);
-		$args = [];
 
-		foreach ($info->getParameters() as $parameter) {
-			$name = $parameter->getName();
-			$args[] = $data[$name] ?? null;
-		}
-
-		return $args;
+		return A::map(
+			$info->getParameters(),
+			fn ($parameter) => $data[$parameter->getName()] ?? null
+		);
 	}
 
 	public function call($bind = null, $data = [])
@@ -44,7 +38,7 @@ class Controller
 		$args = $this->arguments($data);
 
 		if ($bind === null) {
-			return call_user_func($this->function, ...$args);
+			return ($this->function)(...$args);
 		}
 
 		return $this->function->call($bind, ...$args);
