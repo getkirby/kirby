@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Template;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Tpl;
 
@@ -10,7 +11,7 @@ use Kirby\Toolkit\Tpl;
  * Represents a Kirby template and takes care
  * of loading the correct file.
  *
- * @package   Kirby Cms
+ * @package   Kirby Template
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
@@ -20,38 +21,26 @@ class Template
 {
 	/**
 	 * Global template data
-	 *
-	 * @var array
 	 */
-	public static $data = [];
+	public static array $data = [];
 
 	/**
 	 * The name of the template
-	 *
-	 * @var string
 	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * Template type (html, json, etc.)
-	 *
-	 * @var string
 	 */
-	protected $type;
+	protected string $type;
 
 	/**
 	 * Default template type if no specific type is set
-	 *
-	 * @var string
 	 */
-	protected $defaultType;
+	protected string $defaultType;
 
 	/**
 	 * Creates a new template object
-	 *
-	 * @param string $name
-	 * @param string $type
-	 * @param string $defaultType
 	 */
 	public function __construct(string $name, string $type = 'html', string $defaultType = 'html')
 	{
@@ -63,8 +52,6 @@ class Template
 	/**
 	 * Converts the object to a simple string
 	 * This is used in template filters for example
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -72,9 +59,15 @@ class Template
 	}
 
 	/**
+	 * Returns the default template type
+	 */
+	public function defaultType(): string
+	{
+		return $this->defaultType;
+	}
+
+	/**
 	 * Checks if the template exists
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -87,8 +80,6 @@ class Template
 
 	/**
 	 * Returns the expected template file extension
-	 *
-	 * @return string
 	 */
 	public function extension(): string
 	{
@@ -96,66 +87,54 @@ class Template
 	}
 
 	/**
-	 * Returns the default template type
-	 *
-	 * @return string
-	 */
-	public function defaultType(): string
-	{
-		return $this->defaultType;
-	}
-
-	/**
-	 * Returns the place where templates are located
-	 * in the site folder and and can be found in extensions
-	 *
-	 * @return string
-	 */
-	public function store(): string
-	{
-		return 'templates';
-	}
-
-	/**
 	 * Detects the location of the template file
 	 * if it exists.
-	 *
-	 * @return string|null
 	 */
 	public function file(): string|null
 	{
+		$name      = $this->name();
+		$extension = $this->extension();
+		$store     = $this->store();
+		$root      = $this->root();
+
 		if ($this->hasDefaultType() === true) {
 			try {
 				// Try the default template in the default template directory.
-				return F::realpath($this->root() . '/' . $this->name() . '.' . $this->extension(), $this->root());
+				return F::realpath($root . '/' . $name . '.' . $extension, $root);
 			} catch (Exception) {
 				// ignore errors, continue searching
 			}
 
 			// Look for the default template provided by an extension.
-			$path = App::instance()->extension($this->store(), $this->name());
+			$path = App::instance()->extension($store, $name);
 
 			if ($path !== null) {
 				return $path;
 			}
 		}
 
-		$name = $this->name() . '.' . $this->type();
+		$name .= '.' . $this->type();
 
 		try {
 			// Try the template with type extension in the default template directory.
-			return F::realpath($this->root() . '/' . $name . '.' . $this->extension(), $this->root());
+			return F::realpath($root . '/' . $name . '.' . $extension, $root);
 		} catch (Exception) {
 			// Look for the template with type extension provided by an extension.
 			// This might be null if the template does not exist.
-			return App::instance()->extension($this->store(), $name);
+			return App::instance()->extension($store, $name);
 		}
 	}
 
 	/**
+	 * Checks if the template uses the default type
+	 */
+	public function hasDefaultType(): bool
+	{
+		return $this->type() === $this->defaultType();
+	}
+
+	/**
 	 * Returns the template name
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
@@ -163,18 +142,27 @@ class Template
 	}
 
 	/**
-	 * @param array $data
-	 * @return string
+	 * Renders the template with the given template data
 	 */
 	public function render(array $data = []): string
 	{
-		return Tpl::load($this->file(), $data);
+		// load the template
+		$template = Tpl::load($this->file(), $data);
+
+		// if last `endsnippet()` has been ommitted,
+		// take the buffer output as default slot and
+		// render the snippets as final template output
+		if (Snippet::$current !== null) {
+			$template = Snippet::$current->render($data, [
+				'default' => $template
+			]);
+		}
+
+		return $template;
 	}
 
 	/**
 	 * Returns the root to the templates directory
-	 *
-	 * @return string
 	 */
 	public function root(): string
 	{
@@ -182,24 +170,19 @@ class Template
 	}
 
 	/**
+	 * Returns the place where templates are located
+	 * in the site folder and and can be found in extensions
+	 */
+	public function store(): string
+	{
+		return 'templates';
+	}
+
+	/**
 	 * Returns the template type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{
 		return $this->type;
-	}
-
-	/**
-	 * Checks if the template uses the default type
-	 *
-	 * @return bool
-	 */
-	public function hasDefaultType(): bool
-	{
-		$type = $this->type();
-
-		return $type === null || $type === $this->defaultType();
 	}
 }

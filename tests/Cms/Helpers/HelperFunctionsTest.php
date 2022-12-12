@@ -779,6 +779,25 @@ class HelperFunctionsTest extends TestCase
 		snippet('snippet', ['message' => 'world']);
 	}
 
+	public function testSnippetWithSlots()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures/HelpersTest'
+			]
+		]);
+
+		ob_start();
+
+		snippet('snippet-slots', slots: true);
+		slot();
+		echo 'Test';
+		endslot();
+		endsnippet();
+
+		$this->assertSame('Test', ob_get_clean());
+	}
+
 	public function testSvg()
 	{
 		$result = svg('test.svg');

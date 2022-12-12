@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Template\Template;
 use Kirby\Toolkit\Obj;
 
 class CustomEmailProvider extends Email

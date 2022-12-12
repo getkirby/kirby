@@ -5,7 +5,6 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Page;
-use Kirby\Cms\Template;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
@@ -14,11 +13,12 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
+use Kirby\Template\Snippet;
+use Kirby\Template\Template;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl as Snippet;
 
 return [
 
@@ -280,23 +280,8 @@ return [
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): string {
-		$snippets = A::wrap($name);
-
-		foreach ($snippets as $name) {
-			$name = (string)$name;
-			$file = $kirby->root('snippets') . '/' . $name . '.php';
-
-			if (file_exists($file) === false) {
-				$file = $kirby->extensions('snippets')[$name] ?? null;
-			}
-
-			if ($file) {
-				break;
-			}
-		}
-
-		return Snippet::load($file, $data);
+	'snippet' => function (App $kirby, $name, array $data = [], bool $slots = false): Snippet|string {
+		return Snippet::factory($name, $data, $slots);
 	},
 
 	/**
@@ -306,7 +291,7 @@ return [
 	 * @param string $name Template name
 	 * @param string $type Extension type
 	 * @param string $defaultType Default extension type
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
 		return new Template($name, $type, $defaultType);
