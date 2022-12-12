@@ -181,18 +181,11 @@ class HelperFunctionsTest extends TestCase
 
 	public function testDeprecated()
 	{
-		// with disabled debug mode
-		$this->assertFalse(deprecated('The xyz method is deprecated.'));
-
-		$this->kirby = $this->kirby->clone([
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		// with enabled debug mode
+		// the deprecation warnings are always triggered in testing mode,
+		// so we cannot test it with disabled debug mode
 		$this->expectException('Whoops\Exception\ErrorException');
 		$this->expectExceptionMessage('The xyz method is deprecated.');
+
 		deprecated('The xyz method is deprecated.');
 	}
 

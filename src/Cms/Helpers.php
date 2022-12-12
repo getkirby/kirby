@@ -26,7 +26,10 @@ class Helpers
 	 */
 	public static function deprecated(string $message): bool
 	{
-		if (App::instance()->option('debug') === true) {
+		if (
+			App::instance()->option('debug') === true ||
+			(defined('KIRBY_TESTING') === true && KIRBY_TESTING === true)
+		) {
 			return trigger_error($message, E_USER_DEPRECATED) === true;
 		}
 
