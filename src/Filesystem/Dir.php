@@ -48,12 +48,16 @@ class Dir
 
 	/**
 	 * Copy the directory to a new destination
+	 *
+	 * @param array|false $ignore List of full paths to skip during copying
+	 *                            or `false` to copy all files, including
+	 *                            those listed in `Dir::$ignore`
 	 */
 	public static function copy(
 		string $dir,
 		string $target,
 		bool $recursive = true,
-		array $ignore = []
+		array|bool $ignore = []
 	): bool {
 		if (is_dir($dir) === false) {
 			throw new Exception('The directory "' . $dir . '" does not exist');
@@ -67,10 +71,13 @@ class Dir
 			throw new Exception('The target directory "' . $target . '" could not be created');
 		}
 
-		foreach (static::read($dir) as $name) {
+		foreach (static::read($dir, $ignore === false ? [] : null) as $name) {
 			$root = $dir . '/' . $name;
 
-			if (in_array($root, $ignore) === true) {
+			if (
+				is_array($ignore) === true &&
+				in_array($root, $ignore) === true
+			) {
 				continue;
 			}
 
