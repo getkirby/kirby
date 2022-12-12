@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\Str;
+use SensitiveParameter;
 use Throwable;
 
 /**
@@ -102,12 +103,11 @@ trait UserActions
 
 	/**
 	 * Changes the user password
-	 *
-	 * @param string $password
-	 * @return static
 	 */
-	public function changePassword(string $password)
-	{
+	public function changePassword(
+		#[SensitiveParameter]
+		string $password
+	): static {
 		return $this->commit('changePassword', ['user' => $this, 'password' => $password], function ($user, $password) {
 			$user = $user->clone([
 				'password' => $password = User::hashPassword($password)
@@ -379,12 +379,11 @@ trait UserActions
 
 	/**
 	 * Writes the password to disk
-	 *
-	 * @param string|null $password
-	 * @return bool
 	 */
-	protected function writePassword(string $password = null): bool
-	{
+	protected function writePassword(
+		#[SensitiveParameter]
+		string $password = null
+	): bool {
 		return F::write($this->root() . '/.htpasswd', $password);
 	}
 }

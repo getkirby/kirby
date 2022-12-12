@@ -4,6 +4,7 @@ namespace Kirby\Http\Request\Auth;
 
 use Kirby\Http\Request\Auth;
 use Kirby\Toolkit\Str;
+use SensitiveParameter;
 
 /**
  * HTTP basic authentication data
@@ -20,8 +21,10 @@ class BasicAuth extends Auth
 	protected string|null $password;
 	protected string|null $username;
 
-	public function __construct(string $data)
-	{
+	public function __construct(
+		#[SensitiveParameter]
+		string $data
+	) {
 		parent::__construct($data);
 
 		$this->credentials = base64_decode($data);
