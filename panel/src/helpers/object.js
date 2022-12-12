@@ -58,8 +58,22 @@ export function merge(target, source) {
 	return target;
 }
 
+/**
+ * Converts to lowercase all keys in an object
+ *
+ * @param {Object} obj
+ * @returns {Object}
+ */
+export function toLowerKeys(obj) {
+	return Object.keys(obj).reduce((item, key) => {
+		item[key.toLowerCase()] = obj[key];
+		return item;
+	}, {});
+}
+
 export default {
 	clone,
 	isEmpty,
-	merge
+	merge,
+	toLowerKeys
 };

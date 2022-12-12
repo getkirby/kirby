@@ -12,6 +12,8 @@ export async function toJson(response) {
 	return data;
 }
 
+import { toLowerKeys } from "../helpers/object.js";
+
 export default (config) => {
 	return {
 		running: 0,
@@ -21,9 +23,8 @@ export default (config) => {
 				credentials: "same-origin",
 				cache: "no-store",
 				headers: {
-					"x-requested-with": "xmlhttprequest",
 					"content-type": "application/json",
-					...options.headers
+					...toLowerKeys(options.headers ?? {})
 				}
 			});
 
