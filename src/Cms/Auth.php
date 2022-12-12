@@ -796,8 +796,10 @@ class Auth
 	 * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
 	 * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid
 	 */
-	public function verifyChallenge(string $code)
-	{
+	public function verifyChallenge(
+		#[SensitiveParameter]
+		string $code
+	) {
 		try {
 			$session = $this->kirby->session();
 
