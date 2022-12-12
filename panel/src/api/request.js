@@ -23,7 +23,6 @@ export default (config) => {
 				credentials: "same-origin",
 				cache: "no-store",
 				headers: {
-					"x-requested-with": "xmlhttprequest",
 					"content-type": "application/json",
 					...toLowerKeys(options.headers ?? {})
 				}
