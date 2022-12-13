@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
 	"error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Namnet får inte vara tomt",
 	"error.file.changeName.permission": "Du har inte behörighet att ändra namnet på \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Inga sidor valda än",
 
 	"field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Inga poster än",
 
 	"field.users.empty": "Inga användare valda än",
@@ -349,6 +351,8 @@
 	"license.manage": "Hantera dina licenser",
 	"license.register.help": "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
 	"license.register.label": "Ange din licenskod",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Tack för att du stödjer Kirby",
 	"license.unregistered": "Detta är en oregistrerad demo av Kirby",
 	"license.unregistered.label": "Oregistrerad",
