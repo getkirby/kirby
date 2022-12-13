@@ -52,14 +52,15 @@
 				:empty="$t('field.structure.empty')"
 				:index="index"
 				:options="options"
+				:pagination="limit ? pagination : false"
 				:rows="paginatedItems"
 				:sortable="isSortable"
 				:data-invalid="isInvalid"
 				@cell="jump($event.rowIndex, $event.columnIndex)"
 				@input="onInput"
 				@option="onOption"
+				@paginate="paginate"
 			/>
-			<k-pagination v-if="limit" v-bind="pagination" @paginate="paginate" />
 
 			<k-button
 				v-if="more"
