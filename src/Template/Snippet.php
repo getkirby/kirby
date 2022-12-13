@@ -153,7 +153,7 @@ class Snippet extends Tpl
 	 * the snippet/s taking snippets defined in plugins
 	 * into account
 	 */
-	public static function file(string|array $name): ?string
+	public static function file(string|array $name): string|null
 	{
 		$kirby = App::instance();
 		$root  = static::root();
