@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
 	"error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "이름을 입력하세요.",
 	"error.file.changeName.permission": "파일명({filename})을 변경할 권한이 없습니다.",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "선택한 페이지가 없습니다.",
 
 	"field.structure.delete.confirm": "이 항목을 삭제할까요?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "항목이 없습니다.",
 
 	"field.users.empty": "선택한 사용자가 없습니다.",
@@ -349,6 +351,8 @@
 	"license.manage": "라이선스 관리",
 	"license.register.help": "Kirby를 등록하려면 이메일로 전송받은 라이선스 코드와 이메일 주소를 입력하세요.",
 	"license.register.label": "라이선스 코드를 입력하세요.",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Kirby와 함께해주셔서 감사합니다.",
 	"license.unregistered": "Kirby가 등록되지 않았습니다.",
 	"license.unregistered.label": "Kirby가 등록되지 않았습니다.",

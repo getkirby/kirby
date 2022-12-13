@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "A \"{name}\" email-beállítás nem található",
 
 	"error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "A név nem lehet üres",
 	"error.file.changeName.permission": "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Nincs oldal kiválasztva",
 
 	"field.structure.delete.confirm": "Biztos t\u00f6r\u00f6lni szeretn\u00e9d ezt a bejegyz\u00e9st?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Nincs m\u00e9g bejegyz\u00e9s",
 
 	"field.users.empty": "Nincs felhasználó kiválasztva",
@@ -349,6 +351,8 @@
 	"license.manage": "Manage your licenses",
 	"license.register.help": "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
 	"license.register.label": "Kérlek írd be a licenc-kódot",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Köszönjük, hogy támogatod a Kirby-t",
 	"license.unregistered": "Jelenleg a Kirby nem regisztrált próbaverzióját használod",
 	"license.unregistered.label": "Unregistered",

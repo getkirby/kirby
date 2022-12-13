@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Nafn skal fylla út",
 	"error.file.changeName.permission": "Þú mátt ekkert breyta nafninu á skránni \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Engar síður valdar ennþá",
 
 	"field.structure.delete.confirm": "Viltu virkilega eyða þessari röð?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Engar færslur enn",
 
 	"field.users.empty": "Engir notendur valdir enn",
@@ -349,6 +351,8 @@
 	"license.manage": "Sýslaðu með leyfin þín",
 	"license.register.help": "Þú fékkst sendan tölvupóst með leyfiskóðanum þegar þú keyptir leyfi. Vinsamlegast afritaðu hann og settu hann hingað til að skrá þig.",
 	"license.register.label": "Vinsamlegast settu inn leyfiskóðan",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Þakka þér fyrir að velja Kirby",
 	"license.unregistered": "Þetta er óskráð prufueintak af Kirby",
 	"license.unregistered.label": "Óskráð",
