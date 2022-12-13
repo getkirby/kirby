@@ -1,127 +1,132 @@
 <template>
-	<table
-		class="k-table"
-		:data-disabled="disabled"
-		:data-indexed="hasIndexColumn"
-	>
-		<!-- Header row -->
-		<thead>
-			<tr>
-				<th v-if="hasIndexColumn" data-mobile class="k-table-index-column">
-					#
-				</th>
+	<div class="k-table">
+		<table :data-disabled="disabled" :data-indexed="hasIndexColumn">
+			<!-- Header row -->
+			<thead>
+				<tr>
+					<th v-if="hasIndexColumn" data-mobile class="k-table-index-column">
+						#
+					</th>
 
-				<th
-					v-for="(column, columnIndex) in columns"
-					:key="columnIndex + '-header'"
-					:data-align="column.align"
-					:data-mobile="column.mobile"
-					:style="'width:' + width(column.width)"
-					class="k-table-column"
-					@click="
-						onHeader({
-							column,
-							columnIndex
-						})
-					"
-				>
-					<slot
-						name="header"
-						v-bind="{
-							column,
-							columnIndex,
-							label: label(column, columnIndex)
-						}"
+					<th
+						v-for="(column, columnIndex) in columns"
+						:key="columnIndex + '-header'"
+						:data-align="column.align"
+						:data-mobile="column.mobile"
+						:style="'width:' + width(column.width)"
+						class="k-table-column"
+						@click="
+							onHeader({
+								column,
+								columnIndex
+							})
+						"
 					>
-						{{ label(column, columnIndex) }}
-					</slot>
-				</th>
+						<slot
+							name="header"
+							v-bind="{
+								column,
+								columnIndex,
+								label: label(column, columnIndex)
+							}"
+						>
+							{{ label(column, columnIndex) }}
+						</slot>
+					</th>
 
-				<th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
-			</tr>
-		</thead>
+					<th v-if="hasOptions" data-mobile class="k-table-options-column"></th>
+				</tr>
+			</thead>
 
-		<k-draggable
-			:list="values"
-			:options="dragOptions"
-			:handle="true"
-			element="tbody"
-			@change="onChange"
-			@end="onSort"
-		>
-			<!-- Empty -->
-			<tr v-if="rows.length === 0">
-				<td :colspan="columnsCount" class="k-table-empty">
-					{{ empty }}
-				</td>
-			</tr>
+			<k-draggable
+				:list="values"
+				:options="dragOptions"
+				:handle="true"
+				element="tbody"
+				@change="onChange"
+				@end="onSort"
+			>
+				<!-- Empty -->
+				<tr v-if="rows.length === 0">
+					<td :colspan="columnsCount" class="k-table-empty">
+						{{ empty }}
+					</td>
+				</tr>
 
-			<!-- Rows -->
-			<tr v-for="(row, rowIndex) in values" v-else :key="rowIndex">
-				<!-- Index & drag handle -->
-				<td
-					v-if="hasIndexColumn"
-					:data-sortable="sortable && row.sortable !== false"
-					data-mobile
-					class="k-table-index-column"
-				>
-					<slot
-						name="index"
-						v-bind="{
-							row,
-							rowIndex
-						}"
+				<!-- Rows -->
+				<tr v-for="(row, rowIndex) in values" v-else :key="rowIndex">
+					<!-- Index & drag handle -->
+					<td
+						v-if="hasIndexColumn"
+						:data-sortable="sortable && row.sortable !== false"
+						data-mobile
+						class="k-table-index-column"
 					>
-						<div class="k-table-index" v-text="index + rowIndex" />
-					</slot>
+						<slot
+							name="index"
+							v-bind="{
+								row,
+								rowIndex
+							}"
+						>
+							<div class="k-table-index" v-text="index + rowIndex" />
+						</slot>
 
-					<k-sort-handle
-						v-if="sortable && row.sortable !== false"
-						class="k-table-sort-handle"
-					/>
-				</td>
-
-				<!-- Cell -->
-				<k-table-cell
-					v-for="(column, columnIndex) in columns"
-					:key="rowIndex + '-' + columnIndex"
-					:column="column"
-					:field="fields[columnIndex]"
-					:row="row"
-					:mobile="column.mobile"
-					:value="row[columnIndex]"
-					:style="'width:' + width(column.width)"
-					class="k-table-column"
-					@click.native="
-						onCell({
-							row,
-							rowIndex,
-							column,
-							columnIndex
-						})
-					"
-					@input="
-						onCellUpdate({
-							columnIndex,
-							rowIndex,
-							value: $event
-						})
-					"
-				/>
-
-				<!-- Options -->
-				<td v-if="hasOptions" data-mobile class="k-table-options-column">
-					<slot name="options" v-bind="{ row, rowIndex, options }">
-						<k-options-dropdown
-							:options="row.options || options"
-							:text="(row.options || options).length > 1"
-							@option="onOption($event, row, rowIndex)"
+						<k-sort-handle
+							v-if="sortable && row.sortable !== false"
+							class="k-table-sort-handle"
 						/>
-					</slot>
-				</td>
-			</tr>
-		</k-draggable>
-	</table>
+					</td>
+
+					<!-- Cell -->
+					<k-table-cell
+						v-for="(column, columnIndex) in columns"
+						:key="rowIndex + '-' + columnIndex"
+						:column="column"
+						:field="fields[columnIndex]"
+						:row="row"
+						:mobile="column.mobile"
+						:value="row[columnIndex]"
+						:style="'width:' + width(column.width)"
+						class="k-table-column"
+						@click.native="
+							onCell({
+								row,
+								rowIndex,
+								column,
+								columnIndex
+							})
+						"
+						@input="
+							onCellUpdate({
+								columnIndex,
+								rowIndex,
+								value: $event
+							})
+						"
+					/>
+
+					<!-- Options -->
+					<td v-if="hasOptions" data-mobile class="k-table-options-column">
+						<slot name="options" v-bind="{ row, rowIndex, options }">
+							<k-options-dropdown
+								:options="row.options || options"
+								:text="(row.options || options).length > 1"
+								@option="onOption($event, row, rowIndex)"
+							/>
+						</slot>
+					</td>
+				</tr>
+			</k-draggable>
+		</table>
+
+		<k-pagination
+			v-if="pagination"
+			class="k-table-pagination"
+			v-bind="pagination"
+			@paginate="$emit('paginate', $event)"
+		/>
+	</div>
 </template>
 
 <script>
@@ -170,6 +175,10 @@ export default {
 		 */
 		options: [Array, Function],
 		/**
+		 * Optional pagination settings
+		 */
+		pagination: [Object, Boolean],
+		/**
 		 * Whether table is sortable
 		 */
 		sortable: Boolean
@@ -180,6 +189,23 @@ export default {
 		};
 	},
 	computed: {
+		/**
+		 * Number of all columns including index and options
+		 * @returns {number}
+		 */
+		colspan() {
+			let span = this.columnsCount;
+
+			if (this.hasIndexColumn) {
+				span++;
+			}
+
+			if (this.hasOptions) {
+				span++;
+			}
+
+			return span;
+		},
 		/**
 		 * Number of columns
 		 * @returns {number}
@@ -313,13 +339,15 @@ export default {
 .k-table {
 	--table-row-height: 38px;
 	position: relative;
-	table-layout: fixed;
-	width: 100%;
 	background: var(--color-white);
 	font-size: var(--text-sm);
-	border-spacing: 0;
 	box-shadow: var(--shadow);
 	border-radius: var(--rounded);
+}
+.k-table table {
+	width: 100%;
+	border-spacing: 0;
+	table-layout: fixed;
 	font-variant-numeric: tabular-nums;
 }
 .k-table[data-invalid] {
@@ -493,9 +521,27 @@ td.k-table-options-column {
 
 /** Mobile */
 @media screen and (max-width: 65em) {
-	.k-table td:not([data-mobile]),
-	.k-table th:not([data-mobile]) {
+	.k-table tbody td:not([data-mobile]),
+	.k-table thead th:not([data-mobile]) {
 		display: none;
 	}
+}
+
+.k-table-pagination.k-pagination {
+	border-top: 1px solid var(--color-gray-200);
+	background: var(--color-gray-100);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: var(--table-row-height);
+	border-end-start-radius: var(--rounded);
+	border-end-end-radius: var(--rounded);
+}
+.k-table-pagination.k-pagination .k-button {
+	padding: 0 0.75rem;
+	display: flex;
+	align-items: center;
+	line-height: 1;
+	height: var(--table-row-height);
 }
 </style>

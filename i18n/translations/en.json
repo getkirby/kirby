@@ -290,6 +290,7 @@
 	"field.pages.empty": "No pages selected yet",
 
 	"field.structure.delete.confirm": "Do you really want to delete this row?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "No entries yet",
 
 	"field.users.empty": "No users selected yet",
