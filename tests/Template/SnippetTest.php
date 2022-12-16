@@ -43,7 +43,7 @@ class SnippetTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/templates'
+				'snippets' => __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -71,12 +71,12 @@ class SnippetTest extends TestCase
 
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/templates'
+				'snippets' => __DIR__ . '/fixtures'
 			]
 		]);
 
-		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file('simple'));
-		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file('simple'));
+		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file(['missin', 'simple']));
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
 
@@ -88,7 +88,7 @@ class SnippetTest extends TestCase
 	{
 		ob_start();
 
-		Snippet::begin(__DIR__ . '/templates/simple.php');
+		Snippet::begin(__DIR__ . '/fixtures/simple.php');
 		Slot::begin();
 		echo 'Nice';
 		Slot::end();
@@ -166,7 +166,7 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithSlots()
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
+		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
 
 		// the template should be empty without any slots
 		$this->assertSame('', trim($snippet->render()));
@@ -199,7 +199,7 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithoutClosing()
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/layout.php');
+		$snippet = new Snippet(__DIR__ . '/fixtures/layout.php');
 		$snippet->open();
 		echo 'content';
 
@@ -212,7 +212,7 @@ content', $snippet->render());
 	 */
 	public function testRenderWithLazySlots()
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
+		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
 
 		$html = $snippet->render(slots: [
 			'header'  => 'Header content',
@@ -233,7 +233,7 @@ content', $snippet->render());
 	public function testRenderWithData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/templates/data.php',
+			file: __DIR__ . '/fixtures/data.php',
 			data: ['message' => 'hello']
 		);
 
@@ -246,7 +246,7 @@ content', $snippet->render());
 	public function testRenderWithLazyData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/templates/data.php',
+			file: __DIR__ . '/fixtures/data.php',
 		);
 
 		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
@@ -259,7 +259,7 @@ content', $snippet->render());
 	{
 		new App([
 			'roots' => [
-				'snippets' => $root = __DIR__ . '/templates'
+				'snippets' => $root = __DIR__ . '/fixtures'
 			]
 		]);
 
