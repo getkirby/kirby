@@ -8,10 +8,9 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
 
 /**
- * The Snippet class handles little parts of code,
- * snippets, layouts or however we want to call it
- * in templates and allows to pass data as well as
- * optionally passing content to various predefined slots.
+ * The Snippet class includes shared code parts
+ * in templates and allows to pass data as well as to
+ * optionally pass content to various predefined slots.
  *
  * @package   Kirby Template
  * @author    Bastian Allgeier <bastian@getkirby.com>,
@@ -106,7 +105,7 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Used in the endslots() helper
+	 * Used in the endsnippet() helper
 	 */
 	public static function end(): void
 	{
@@ -214,7 +213,7 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Returns the root director for all
+	 * Returns the root directory for all
 	 * snippet templates
 	 */
 	public static function root(): string

@@ -66,7 +66,7 @@ class Slot
 	}
 
 	/**
-	 * Used in the endslot helper
+	 * Used in the endslot() helper
 	 */
 	public static function end(): void
 	{

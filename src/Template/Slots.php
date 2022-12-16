@@ -4,7 +4,7 @@ namespace Kirby\Template;
 
 /**
  * The slots collection is simplifying
- * slot access. Slots can be access with
+ * slot access. Slots can be accessed with
  * `$slots->heading()` and accessing a non-existing
  * slot will simply return null.
  *
@@ -27,8 +27,8 @@ class Slots
 	}
 
 	/**
-	 * Magic getter for slots
-	 * I.e. `$slots->heading`
+	 * Magic getter for slots;
+	 * e.g. `$slots->heading`
 	 */
 	public function __get(string $name): Slot|null
 	{
@@ -36,8 +36,8 @@ class Slots
 	}
 
 	/**
-	 * Magic getter method for slots
-	 * I.e. `$slots->heading()`
+	 * Magic getter method for slots;
+	 * e.g. `$slots->heading()`
 	 */
 	public function __call(string $name, array $args): Slot|null
 	{
