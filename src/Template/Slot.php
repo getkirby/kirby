@@ -27,7 +27,6 @@ class Slot
 	 * Creates a new slot for the given snippet
 	 */
 	public function __construct(
-		public Snippet $snippet,
 		protected string $name,
 		public string|null $content = null
 	) {

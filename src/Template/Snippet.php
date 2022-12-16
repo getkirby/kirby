@@ -88,7 +88,7 @@ class Snippet extends Tpl
 		// create a default slot for the content
 		// that has been captured between start and end
 		if (empty($this->slots) === true) {
-			$this->slots['default'] = new Slot($this, 'default');
+			$this->slots['default'] = new Slot('default');
 			$this->slots['default']->content = ob_get_clean();
 		} else {
 			// swallow any "unslotted" content
@@ -210,7 +210,7 @@ class Snippet extends Tpl
 
 		// manually add slots
 		foreach ($slots as $slotName => $slotContent) {
-			$this->slots[$slotName] = new Slot($this, $slotName, $slotContent);
+			$this->slots[$slotName] = new Slot($slotName, $slotContent);
 		}
 
 		return static::load($this->file, $this->scope($data));
@@ -249,7 +249,7 @@ class Snippet extends Tpl
 	 */
 	public function slot(string $name = 'default'): Slot
 	{
-		$slot = new Slot($this, $name);
+		$slot = new Slot($name);
 		$slot->open();
 
 		// start a new slot
@@ -263,6 +263,6 @@ class Snippet extends Tpl
 	 */
 	public function slots(): Slots
 	{
-		return new Slots($this, $this->slots);
+		return new Slots($this->slots);
 	}
 }

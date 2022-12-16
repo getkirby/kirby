@@ -14,10 +14,9 @@ class SlotsTest extends TestCase
 	 */
 	public function testSlots()
 	{
-		$snippet = new Snippet('test.php');
-		$header  = new Slot($snippet, 'header');
-		$footer  = new Slot($snippet, 'footer');
-		$slots   = new Slots($snippet, [
+		$header = new Slot('header');
+		$footer = new Slot('footer');
+		$slots  = new Slots([
 			'header' => $header,
 			'footer' => $footer
 		]);

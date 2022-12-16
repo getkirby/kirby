@@ -20,10 +20,8 @@ class Slots
 	 * Creates a new slots collection
 	 * for the given snippet
 	 */
-	public function __construct(
-		public Snippet $snippet,
-		protected array $slots
-	) {
+	public function __construct(protected array $slots)
+	{
 	}
 
 	/**
