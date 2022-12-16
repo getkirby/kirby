@@ -131,8 +131,11 @@ class Snippet extends Tpl
 	 * Returns either an open snippet capturing slots
 	 * or the template string for self-enclosed snippets
 	 */
-	public static function factory($name, array $data = [], bool $slots = false): static|string
-	{
+	public static function factory(
+		string|array $name,
+		array $data = [],
+		bool $slots = false
+	): static|string {
 		$file = static::file($name);
 
 		// for snippets with slots, make sure to open a new
