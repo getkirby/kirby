@@ -43,7 +43,7 @@
 								? $t('search.min', { min: search.min })
 								: $t('search') + ' …'
 						"
-						@input="q = $event"
+						@input="q = $event.target.value"
 						@keydown.esc.stop="onEscape"
 					/>
 				</k-dropdown-item>
