@@ -292,17 +292,22 @@ class File extends Model
 	public function pickerData(array $params = []): array
 	{
 		$name = $this->model->filename();
+		$id   = $this->model->id();
 
 		if (empty($params['model']) === false) {
 			$parent   = $this->model->parent();
+			// if the file belongs to the current parent model,
+			// store only name as ID to keep its path relative to the model
+			$id       = $parent === $params['model'] ? $name : $id;
 			$absolute = $parent !== $params['model'];
 		}
 
 		$params['text'] ??= '{{ file.filename }}';
 
 		return array_merge(parent::pickerData($params), [
-			'filename' => $name,
 			'dragText' => $this->dragText('auto', $absolute ?? false),
+			'filename' => $name,
+			'id'	   => $id,
 			'type'     => $this->model->type(),
 			'url'      => $this->model->url()
 		]);
