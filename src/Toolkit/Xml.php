@@ -18,10 +18,8 @@ class Xml
 {
 	/**
 	 * HTML to XML conversion table for entities
-	 *
-	 * @var array
 	 */
-	public static $entities = [
+	public static array|null $entities = [
 		'&nbsp;' => '&#160;', '&iexcl;' => '&#161;', '&cent;' => '&#162;', '&pound;' => '&#163;', '&curren;' => '&#164;', '&yen;' => '&#165;', '&brvbar;' => '&#166;', '&sect;' => '&#167;',
 		'&uml;' => '&#168;', '&copy;' => '&#169;', '&ordf;' => '&#170;', '&laquo;' => '&#171;', '&not;' => '&#172;', '&shy;' => '&#173;', '&reg;' => '&#174;', '&macr;' => '&#175;',
 		'&deg;' => '&#176;', '&plusmn;' => '&#177;', '&sup2;' => '&#178;', '&sup3;' => '&#179;', '&acute;' => '&#180;', '&micro;' => '&#181;', '&para;' => '&#182;', '&middot;' => '&#183;',
@@ -66,13 +64,13 @@ class Xml
 	/**
 	 * Generates a single attribute or a list of attributes
 	 *
-	 * @param string|array $name String: A single attribute with that name will be generated.
-	 *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+	 * @param string|array|null $name String: A single attribute with that name will be generated.
+	 *                                Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
 	 * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
 	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
-	public static function attr($name, $value = null): string|null
+	public static function attr(string|array|null $name, $value = null): string|null
 	{
 		if (is_array($name) === true) {
 			if ($value !== false) {
@@ -147,8 +145,13 @@ class Xml
 	 * @param int $level The indentation level (used internally)
 	 * @return string The XML string
 	 */
-	public static function create($props, string $name = 'root', bool $head = true, string $indent = '  ', int $level = 0): string
-	{
+	public static function create(
+		array|string $props,
+		string $name = 'root',
+		bool $head = true,
+		string $indent = '  ',
+		int $level = 0
+	): string {
 		if (is_array($props) === true) {
 			if (A::isAssociative($props) === true) {
 				// a tag with attributes or named children
@@ -208,17 +211,10 @@ class Xml
 	 * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
 	 * // output: some über crazy stuff
 	 * ```
-	 *
-	 * @param string|null $string
-	 * @return string
 	 */
 	public static function decode(string|null $string): string
 	{
-		if ($string === null) {
-			$string = '';
-		}
-
-		$string = strip_tags($string);
+		$string = strip_tags($string ?? '');
 		return html_entity_decode($string, ENT_COMPAT, 'utf-8');
 	}
 
@@ -233,9 +229,7 @@ class Xml
 	 * // output: some &#252;ber crazy stuff
 	 * ```
 	 *
-	 * @param string|null $string
 	 * @param bool $html True = Convert to HTML-safe first
-	 * @return string
 	 */
 	public static function encode(string|null $string, bool $html = true): string
 	{
@@ -256,8 +250,6 @@ class Xml
 
 	/**
 	 * Returns the HTML-to-XML entity translation table
-	 *
-	 * @return array
 	 */
 	public static function entities(): array
 	{
@@ -267,7 +259,6 @@ class Xml
 	/**
 	 * Parses an XML string and returns an array
 	 *
-	 * @param string $xml
 	 * @return array|null Parsed array or `null` on error
 	 */
 	public static function parse(string $xml): array|null
@@ -285,11 +276,9 @@ class Xml
 	 * Breaks a SimpleXMLElement down into a simpler tree
 	 * structure of arrays and strings
 	 *
-	 * @param \SimpleXMLElement $element
 	 * @param bool $collectName Whether the element name should be collected (for the root element)
-	 * @return array|string
 	 */
-	public static function simplify(SimpleXMLElement $element, bool $collectName = true)
+	public static function simplify(SimpleXMLElement $element, bool $collectName = true): array|string
 	{
 		// get all XML namespaces of the whole document to iterate over later;
 		// we don't need the global namespace (empty string) in the list
@@ -408,9 +397,6 @@ class Xml
 
 	/**
 	 * Properly encodes tag contents
-	 *
-	 * @param mixed $value
-	 * @return string|null
 	 */
 	public static function value($value): string|null
 	{

@@ -19,17 +19,13 @@ class Html extends Xml
 {
 	/**
 	 * An internal store for an HTML entities translation table
-	 *
-	 * @var array
 	 */
-	public static $entities;
+	public static array|null $entities;
 
 	/**
 	 * List of HTML tags that can be used inline
-	 *
-	 * @var array
 	 */
-	public static $inlineList = [
+	public static array $inlineList = [
 		'b',
 		'i',
 		'small',
