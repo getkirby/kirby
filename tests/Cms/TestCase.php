@@ -8,6 +8,8 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
+require_once __DIR__ . '/mocks.php';
+
 class TestCase extends BaseTestCase
 {
 	protected $app;
@@ -39,6 +41,9 @@ class TestCase extends BaseTestCase
 		App::destroy();
 		Dir::remove($this->tmp);
 		Blueprint::$loaded = [];
+
+		// mock class
+		ErrorLog::$log = '';
 	}
 
 	public function kirby($props = [])
