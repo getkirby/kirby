@@ -192,12 +192,12 @@ class SnippetTest extends TestCase
 		echo 'Header content';
 		$snippet->endslot();
 
-		$snippet->slot();
-		echo 'Body content';
-		$snippet->endslot();
-
 		$snippet->slot('footer');
 		echo 'Footer content';
+		$snippet->endslot();
+
+		$snippet->slot();
+		echo 'Body content';
 		$snippet->endslot();
 
 		$snippet->close();
