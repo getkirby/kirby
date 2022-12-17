@@ -62,6 +62,9 @@ class SlotTest extends TestCase
 	 */
 	public function testOpenClose()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$slot = new Slot('test');
 
 		$this->assertNull($slot->content);
@@ -95,6 +98,9 @@ class SlotTest extends TestCase
 	 */
 	public function testRender()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$slot    = new Slot('test');
 		$content = 'Test content';
 

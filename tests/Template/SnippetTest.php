@@ -29,6 +29,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testFactory()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		new App([
 			'roots' => [
 				'snippets' => __DIR__ . '/fixtures'
@@ -134,6 +137,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testOpenCloseWithSlotsAndSwallowedDefaultContent()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 
@@ -156,6 +162,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testOpenCloseWithDefaultSlotContent()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 		echo 'Default content';
@@ -181,6 +190,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithSlots(string|null $file, string $expected)
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet($file);
 
 		// the template should be empty without any slots
@@ -210,6 +222,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithoutClosing()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet(__DIR__ . '/fixtures/layout.php');
 		$snippet->open();
 		echo 'content';
@@ -405,6 +420,9 @@ content', $snippet->render());
 	 */
 	public function testSlots()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 
