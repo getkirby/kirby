@@ -57,10 +57,7 @@ class SnippetTest extends TestCase
 
 		$snippet = Snippet::factory('missin', ['message' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
-
-		$snippet->close();
 	}
-
 
 	/**
 	 * @covers ::file
@@ -229,8 +226,7 @@ class SnippetTest extends TestCase
 		$snippet->open();
 		echo 'content';
 
-		$this->assertSame('<h1>Layout</h1>
-content', $snippet->render());
+		$this->assertSame("<h1>Layout</h1>\ncontent", $snippet->render());
 	}
 
 	/**

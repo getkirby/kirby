@@ -52,8 +52,6 @@ class SlotTest extends TestCase
 		Slot::end();
 		$this->assertCount(0, $captureProp->getValue($snippet));
 		$this->assertCount(1, $slotsProp->getValue($snippet));
-
-		$snippet->close();
 	}
 
 	/**
