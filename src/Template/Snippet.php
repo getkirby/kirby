@@ -22,41 +22,42 @@ use Kirby\Toolkit\Tpl;
 class Snippet extends Tpl
 {
 	/**
-	 * Contains all slots that are opened
-	 * but not yet closed
-	 */
-	public array $capture = [];
-
-	/**
 	 * Cache for the currently active
 	 * snippet. This is used to start
 	 * and end slots within this snippet
 	 * in the helper functions
+	 * @internal
 	 */
 	public static self|null $current = null;
 
 	/**
+	 * Contains all slots that are opened
+	 * but not yet closed
+	 */
+	protected array $capture = [];
+
+	/**
 	 * The parent snippet
 	 */
-	public self|null $parent = null;
+	protected self|null $parent = null;
 
 	/**
 	 * Keeps track of the state of the snippet
 	 */
-	public bool $open = false;
+	protected bool $open = false;
 
 	/**
 	 * The collection of closed slots that will be used
 	 * to pass down to the template for the snippet.
 	 */
-	public array $slots = [];
+	protected array $slots = [];
 
 	/**
 	 * Creates a new snippet
 	 */
 	public function __construct(
-		public string $file,
-		public array $data = []
+		protected string $file,
+		protected array $data = []
 	) {
 	}
 
@@ -124,7 +125,7 @@ class Snippet extends Tpl
 		$slot->close();
 
 		// add the slot to the scope
-		$this->slots[$slot->name] = $slot;
+		$this->slots[$slot->name()] = $slot;
 	}
 
 	/**

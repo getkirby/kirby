@@ -21,14 +21,14 @@ class Slot
 	/**
 	 * Keeps track of the slot state
 	 */
-	public bool $open = false;
+	protected bool $open = false;
 
 	/**
 	 * Creates a new slot for the given snippet
 	 */
 	public function __construct(
 		public Snippet $snippet,
-		public string $name,
+		protected string $name,
 		public string|null $content = null
 	) {
 	}
@@ -71,6 +71,23 @@ class Slot
 	public static function end(): void
 	{
 		Snippet::$current?->endslot();
+	}
+
+	/**
+	 * Returns whether the slot is currently
+	 * open and being buffered
+	 */
+	public function isOpen(): bool
+	{
+		return $this->open;
+	}
+
+	/**
+	 * Returns the slot name
+	 */
+	public function name(): string
+	{
+		return $this->name;
 	}
 
 	/**

@@ -4,25 +4,13 @@ namespace Kirby\Template;
 
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass Kirby\Template\Snippet
  */
 class SnippetTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSnippet()
-	{
-		$snippet = new Snippet('test.php');
-
-		$this->assertSame('test.php', $snippet->file);
-		$this->assertFalse($snippet->open);
-		$this->assertNull($snippet->parent);
-		$this->assertSame([], $snippet->data);
-	}
-
 	/**
 	 * @covers ::close
 	 */
@@ -52,7 +40,10 @@ class SnippetTest extends TestCase
 
 		$snippet = Snippet::factory('simple', ['slot' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
-		$this->assertTrue($snippet->open);
+
+		$openProp = new ReflectionProperty($snippet, 'open');
+		$openProp->setAccessible(true);
+		$this->assertTrue($openProp->getValue($snippet));
 
 		$snippet->close();
 	}
@@ -120,7 +111,10 @@ class SnippetTest extends TestCase
 
 		$a->close();
 
-		$this->assertSame($a, $b->parent);
+		$parentProp = new ReflectionProperty(Snippet::class, 'parent');
+		$parentProp->setAccessible(true);
+
+		$this->assertSame($a, $parentProp->getValue($b));
 	}
 
 	/**
@@ -228,6 +222,7 @@ content', $snippet->render());
 	}
 
 	/**
+	 * @covers ::__construct
 	 * @covers ::render
 	 */
 	public function testRenderWithData()
@@ -271,16 +266,29 @@ content', $snippet->render());
 	 */
 	public function testScope()
 	{
-		$snippet = new Snippet(file: 'test.php', data: $data = [
-			'message' => 'Hello'
+		$closure = function ($scope) use (&$data) {
+			$this->assertArrayHasKey('data', $scope);
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('message', $scope);
+
+			$this->assertSame('Hello', $scope['message']);
+			$this->assertSame($data, $scope['data']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertNull($scope['slots']->default);
+			$this->assertNull($scope['slot']);
+
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
+
+		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+			'message' => 'Hello',
+			'closure' => $closure
 		]);
 
-		$scope = $snippet->scope();
-
-		$this->assertSame('Hello', $scope['message']);
-		$this->assertSame($data, $scope['data']);
-		$this->assertInstanceOf(Slots::class, $scope['slots']);
-		$this->assertNull($scope['slot']);
+		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
 	/**
@@ -288,27 +296,33 @@ content', $snippet->render());
 	 */
 	public function testScopeWithDefaultSlot()
 	{
-		$snippet = new Snippet('test.php');
-		$snippet->slots = [
-			'default' => $slot = new Slot($snippet, 'test')
-		];
+		$closure = function ($scope) use (&$data, &$slot) {
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('data', $scope);
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
 
-		$this->assertSame($slot, $snippet->scope()['slot']);
-	}
+			$this->assertSame($data, $scope['data']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertSame($slot, $scope['slots']->default);
+			$this->assertSame($slot, $scope['slot']);
 
-	/**
-	 * @covers ::scope
-	 */
-	public function testScopeWithData()
-	{
-		$snippet = new Snippet(file: 'test.php');
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
 
-		$scope = $snippet->scope(data: $data = [
-			'message' => 'Hello'
+		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+			'closure' => $closure
 		]);
 
-		$this->assertSame('Hello', $scope['message']);
-		$this->assertSame($data, $scope['data']);
+		$slotsProp = new ReflectionProperty($snippet, 'slots');
+		$slotsProp->setAccessible(true);
+
+		$slotsProp->setValue($snippet, [
+			'default' => $slot = new Slot('test')
+		]);
+
+		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
 	/**

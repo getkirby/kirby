@@ -22,7 +22,7 @@ class Slots
 	 */
 	public function __construct(
 		public Snippet $snippet,
-		public array $slots
+		protected array $slots
 	) {
 	}
 
