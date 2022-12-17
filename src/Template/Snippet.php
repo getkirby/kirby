@@ -53,6 +53,12 @@ class Snippet extends Tpl
 	protected array $slots = [];
 
 	/**
+	 * An empty dummy slots object used for snippets
+	 * that were loaded without passing slots
+	 */
+	protected static Slots|null $dummySlots = null;
+
+	/**
 	 * Creates a new snippet
 	 */
 	public function __construct(
@@ -147,8 +153,7 @@ class Snippet extends Tpl
 
 		// for snippets without slots, directly load and return
 		// the snippet's template file
-		$data = array_merge(App::instance()->data, $data);
-		return static::load($file, $data);
+		return static::load($file, static::scope($data));
 	}
 
 	/**
@@ -213,7 +218,10 @@ class Snippet extends Tpl
 			$this->slots[$slotName] = new Slot($slotName, $slotContent);
 		}
 
-		return static::load($this->file, $this->scope($data));
+		// custom data overrides for the data that was passed to the snippet instance
+		$data = array_replace_recursive($this->data, $data);
+
+		return static::load($this->file, static::scope($data, $this->slots()));
 	}
 
 	/**
@@ -223,25 +231,6 @@ class Snippet extends Tpl
 	public static function root(): string
 	{
 		return App::instance()->root('snippets');
-	}
-
-	/**
-	 * Defines the full scope that will be passed
-	 * to the snippet template. This includes
-	 * the data from the constructor and
-	 * the slots collection.
-	 */
-	public function scope(array $data = []): array
-	{
-		$kirby = App::instance();
-		$slots = $this->slots();
-		$data  = array_replace_recursive($this->data, $data);
-
-		return array_merge($kirby->data, $data, [
-			'data'  => $data,
-			'slot'  => $slots->default,
-			'slots' => $slots,
-		]);
 	}
 
 	/**
@@ -264,5 +253,24 @@ class Snippet extends Tpl
 	public function slots(): Slots
 	{
 		return new Slots($this->slots);
+	}
+
+	/**
+	 * Returns the data variables that get passed to a snippet
+	 *
+	 * @param \Kirby\Template\Slots|null $slots If null, an empty dummy object is used
+	 */
+	protected static function scope(array $data = [], Slots|null $slots = null): array
+	{
+		// initialize a dummy slots object and cache it for better performance
+		if ($slots === null) {
+			$slots = static::$dummySlots ??= new Slots([]);
+		}
+
+		return array_merge(App::instance()->data, $data, [
+			'data'  => $data,
+			'slot'  => $slots->default,
+			'slots' => $slots,
+		]);
 	}
 }

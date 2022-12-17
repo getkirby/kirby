@@ -35,8 +35,12 @@ class SnippetTest extends TestCase
 			]
 		]);
 
-		$snippet = Snippet::factory('simple', ['slot' => 'hello']);
+		$snippet = Snippet::factory('data', ['message' => 'hello']);
 		$this->assertSame('hello', $snippet);
+
+		// $slot variable is always set to an empty value
+		$snippet = Snippet::factory('simple', ['slot' => 'hello']);
+		$this->assertSame('', $snippet);
 
 		$snippet = Snippet::factory('simple', ['slot' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
@@ -323,6 +327,62 @@ content', $snippet->render());
 		]);
 
 		$this->assertSame('Scope snippet success', $snippet->render());
+	}
+
+	/**
+	 * @covers ::scope
+	 */
+	public function testScopeWithoutSlots()
+	{
+		new App([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures'
+			]
+		]);
+
+		$slots = null;
+
+		$closure = function ($scope) use (&$data, &$slots) {
+			$this->assertArrayHasKey('data', $scope);
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('message', $scope);
+
+			$this->assertSame('Hello', $scope['message']);
+			$this->assertSame($data, $scope['data']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertNull($scope['slots']->default);
+			$this->assertNull($scope['slot']);
+
+			if ($slots !== null) {
+				$this->assertSame($slots, $scope['slots']);
+			} else {
+				$slots = $scope['slots'];
+			}
+
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
+
+		$result = Snippet::factory(
+			name: 'scope',
+			data: $data = [
+				'message' => 'Hello',
+				'closure' => $closure
+			]
+		);
+		$this->assertSame('Scope snippet success', $result);
+
+		// second run to test the dummy slots cache
+		$result = Snippet::factory(
+			name: 'scope',
+			data: $data = [
+				'message' => 'Hello',
+				'closure' => $closure
+			]
+		);
+		$this->assertSame('Scope snippet success', $result);
 	}
 
 	/**
