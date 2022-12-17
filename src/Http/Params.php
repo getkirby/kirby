@@ -120,8 +120,10 @@ class Params extends Obj
 	 * Converts the params object to a params string
 	 * which can then be used in the URL builder again
 	 */
-	public function toString(bool $leadingSlash = false, bool $trailingSlash = false): string
-	{
+	public function toString(
+		bool $leadingSlash = false,
+		bool $trailingSlash = false
+	): string {
 		if ($this->isEmpty() === true) {
 			return '';
 		}
