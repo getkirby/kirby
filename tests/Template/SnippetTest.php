@@ -49,6 +49,12 @@ class SnippetTest extends TestCase
 		$openProp->setAccessible(true);
 		$this->assertTrue($openProp->getValue($snippet));
 
+		$snippet = Snippet::factory('missin', ['message' => 'hello']);
+		$this->assertSame('', $snippet);
+
+		$snippet = Snippet::factory('missin', ['message' => 'hello'], slots: true);
+		$this->assertInstanceOf(Snippet::class, $snippet);
+
 		$snippet->close();
 	}
 
@@ -72,6 +78,7 @@ class SnippetTest extends TestCase
 
 		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file('simple'));
 		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertNull(Snippet::file('missin'));
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
 
@@ -159,12 +166,22 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
+	public function renderWithSlotsProvider(): array
+	{
+		return [
+			[__DIR__ . '/fixtures/slots.php', 'Header content' . PHP_EOL . 'Body content' . PHP_EOL . 'Footer content'],
+			[__DIR__ . '/fixtures/missin.php', ''],
+			[null, ''],
+		];
+	}
+
 	/**
 	 * @covers ::render
+	 * @dataProvider renderWithSlotsProvider
 	 */
-	public function testRenderWithSlots()
+	public function testRenderWithSlots(string|null $file, string $expected)
 	{
-		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
+		$snippet = new Snippet($file);
 
 		// the template should be empty without any slots
 		$this->assertSame('', trim($snippet->render()));
@@ -184,10 +201,6 @@ class SnippetTest extends TestCase
 		$snippet->endslot();
 
 		$snippet->close();
-
-		$expected  = 'Header content' . PHP_EOL;
-		$expected .= 'Body content' . PHP_EOL;
-		$expected .= 'Footer content';
 
 		$this->assertSame($expected, $snippet->render());
 	}

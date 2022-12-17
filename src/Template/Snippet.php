@@ -62,7 +62,7 @@ class Snippet extends Tpl
 	 * Creates a new snippet
 	 */
 	public function __construct(
-		protected string $file,
+		protected string|null $file,
 		protected array $data = []
 	) {
 	}
@@ -71,7 +71,7 @@ class Snippet extends Tpl
 	 * Creates and opens a new snippet. This can be used
 	 * directly in a template or via the slots() helper
 	 */
-	public static function begin(string $file, array $data = []): static
+	public static function begin(string|null $file, array $data = []): static
 	{
 		$snippet = new static($file, $data);
 		return $snippet->open();
