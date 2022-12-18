@@ -3,6 +3,8 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Helpers;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
@@ -267,10 +269,37 @@ class Snippet extends Tpl
 			$slots = static::$dummySlots ??= new Slots([]);
 		}
 
-		return array_merge(App::instance()->data, $data, [
+		$data = array_merge(App::instance()->data, $data);
+
+		// TODO 3.10: Replace the following code:
+		// if (
+		// 	array_key_exists('data', $data) === true ||
+		// 	array_key_exists('slot', $data) === true ||
+		// 	array_key_exists('slots', $data) === true
+		// ) {
+		// 	throw new InvalidArgumentException('Passing $data, $slot or $slots variables to snippets is not supported.');
+		// }
+		//
+		// return array_merge($data, [
+		// 	'data'  => $data,
+		// 	'slot'  => $slots->default,
+		// 	'slots' => $slots,
+		// ]);
+
+		// @codeCoverageIgnoreStart
+		if (
+			array_key_exists('data', $data) === true ||
+			array_key_exists('slot', $data) === true ||
+			array_key_exists('slots', $data) === true
+		) {
+			Helpers::deprecated('Passing $data, $slot or $slots variables to snippets is deprecated and will break in Kirby 3.10.');
+		}
+		// @codeCoverageIgnoreEnd
+
+		return array_merge([
 			'data'  => $data,
 			'slot'  => $slots->default,
 			'slots' => $slots,
-		]);
+		], $data);
 	}
 }

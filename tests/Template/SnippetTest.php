@@ -41,11 +41,7 @@ class SnippetTest extends TestCase
 		$snippet = Snippet::factory('data', ['message' => 'hello']);
 		$this->assertSame('hello', $snippet);
 
-		// $slot variable is always set to an empty value
-		$snippet = Snippet::factory('simple', ['slot' => 'hello']);
-		$this->assertSame('', $snippet);
-
-		$snippet = Snippet::factory('simple', ['slot' => 'hello'], slots: true);
+		$snippet = Snippet::factory('simple', slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
 
 		$openProp = new ReflectionProperty($snippet, 'open');
