@@ -260,6 +260,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 		return $errors;
 	}
 
+	abstract public function exists(): bool;
+
 	/**
 	 * Increment a given field value
 	 *

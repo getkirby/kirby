@@ -116,9 +116,13 @@ abstract class ModelUuid extends Uuid
 			$this->model->content('default')->update($data);
 		}
 
+		// make sure the model is exists
+		// to prevent creating content file before model actions
 		// overwrite the content in the file;
 		// use the most basic write method to avoid object cloning
-		$this->model->writeContent($data, 'default');
+		if ($this->model->exists() === true) {
+			$this->model->writeContent($data, 'default');
+		}
 	}
 
 	/**

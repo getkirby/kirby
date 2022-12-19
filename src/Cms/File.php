@@ -239,6 +239,16 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the file exists on disk
+	 *
+	 * @return bool
+	 */
+	public function exists(): bool
+	{
+		return is_file($this->root()) === true;
+	}
+
+	/**
 	 * Converts the file to html
 	 *
 	 * @param array $attr
