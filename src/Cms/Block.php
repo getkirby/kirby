@@ -121,6 +121,8 @@ class Block extends Item
 		return [
 			'block'   => $this,
 			'content' => $this->content(),
+			// deprecated block data
+			'data'    => $this,
 			'id'      => $this->id(),
 			'prev'    => $this->prev(),
 			'next'    => $this->next()

@@ -273,31 +273,27 @@ class Snippet extends Tpl
 
 		// TODO 3.10: Replace the following code:
 		// if (
-		// 	array_key_exists('data', $data) === true ||
 		// 	array_key_exists('slot', $data) === true ||
 		// 	array_key_exists('slots', $data) === true
 		// ) {
-		// 	throw new InvalidArgumentException('Passing $data, $slot or $slots variables to snippets is not supported.');
+		// 	throw new InvalidArgumentException('Passing the $slot or $slots variables to snippets is not supported.');
 		// }
 		//
 		// return array_merge($data, [
-		// 	'data'  => $data,
 		// 	'slot'  => $slots->default,
 		// 	'slots' => $slots,
 		// ]);
 
 		// @codeCoverageIgnoreStart
 		if (
-			array_key_exists('data', $data) === true ||
 			array_key_exists('slot', $data) === true ||
 			array_key_exists('slots', $data) === true
 		) {
-			Helpers::deprecated('Passing $data, $slot or $slots variables to snippets is deprecated and will break in Kirby 3.10.');
+			Helpers::deprecated('Passing the $slot or $slots variables to snippets is deprecated and will break in Kirby 3.10.');
 		}
 		// @codeCoverageIgnoreEnd
 
 		return array_merge([
-			'data'  => $data,
 			'slot'  => $slots->default,
 			'slots' => $slots,
 		], $data);

@@ -291,14 +291,12 @@ class SnippetTest extends TestCase
 	public function testScope()
 	{
 		$closure = function ($scope) use (&$data) {
-			$this->assertArrayHasKey('data', $scope);
 			$this->assertArrayHasKey('slots', $scope);
 			$this->assertArrayHasKey('slot', $scope);
 			$this->assertArrayHasKey('closure', $scope);
 			$this->assertArrayHasKey('message', $scope);
 
 			$this->assertSame('Hello', $scope['message']);
-			$this->assertSame($data, $scope['data']);
 			$this->assertInstanceOf(Slots::class, $scope['slots']);
 			$this->assertNull($scope['slots']->default);
 			$this->assertNull($scope['slot']);
@@ -322,11 +320,9 @@ class SnippetTest extends TestCase
 	{
 		$closure = function ($scope) use (&$data, &$slot) {
 			$this->assertArrayHasKey('closure', $scope);
-			$this->assertArrayHasKey('data', $scope);
 			$this->assertArrayHasKey('slots', $scope);
 			$this->assertArrayHasKey('slot', $scope);
 
-			$this->assertSame($data, $scope['data']);
 			$this->assertInstanceOf(Slots::class, $scope['slots']);
 			$this->assertSame($slot, $scope['slots']->default);
 			$this->assertSame($slot, $scope['slot']);
@@ -363,14 +359,12 @@ class SnippetTest extends TestCase
 		$slots = null;
 
 		$closure = function ($scope) use (&$data, &$slots) {
-			$this->assertArrayHasKey('data', $scope);
 			$this->assertArrayHasKey('slots', $scope);
 			$this->assertArrayHasKey('slot', $scope);
 			$this->assertArrayHasKey('closure', $scope);
 			$this->assertArrayHasKey('message', $scope);
 
 			$this->assertSame('Hello', $scope['message']);
-			$this->assertSame($data, $scope['data']);
 			$this->assertInstanceOf(Slots::class, $scope['slots']);
 			$this->assertNull($scope['slots']->default);
 			$this->assertNull($scope['slot']);
