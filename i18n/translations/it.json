@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "Non è stato possibile trovare il preset email \"{name}\"",
 
 	"error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Il nome non dev'essere vuoto",
 	"error.file.changeName.permission": "Non ti è permesso modificare il nome di \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Nessuna pagina selezionata",
 
 	"field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Non ci sono ancora elementi.",
 
 	"field.users.empty": "Nessun utente selezionato",
@@ -349,6 +351,8 @@
 	"license.manage": "Manage your licenses",
 	"license.register.help": "Hai ricevuto il codice di licenza tramite email dopo l'acquisto. Per favore inseriscilo per registrare Kirby.",
 	"license.register.label": "Inserisci il codice di licenza",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Ti ringraziamo per aver supportato Kirby",
 	"license.unregistered": "Questa è una versione demo di Kirby non registrata",
 	"license.unregistered.label": "Unregistered",

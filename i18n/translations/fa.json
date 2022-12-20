@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "قالب ایمیل «{name}» پیدا نشد",
 
 	"error.field.converter.invalid": "مبدل «{converter}» نامعتبر است",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
 	"error.file.changeName.permission": "شما اجازه تنغییر نام فایل «{filename}» را ندارید",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "صفحه‌ای انتخاب نشده است",
 
 	"field.structure.delete.confirm": "\u0645\u062f\u062e\u0644 \u062c\u0627\u0631\u06cc \u062d\u0630\u0641 \u0634\u0648\u062f\u061f",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "\u0645\u0648\u0631\u062f\u06cc \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f.",
 
 	"field.users.empty": "کاربری انتخاب نشده است",
@@ -349,6 +351,8 @@
 	"license.manage": "Manage your licenses",
 	"license.register.help": "پس از خرید از طریق ایمیل، کد مجوز خود را دریافت کردید. لطفا برای ثبت‌نام آن را کپی و اینجا پیست کنید.",
 	"license.register.label": "لطفا کد مجوز خود را وارد کنید",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "با تشکر از شما برای حمایت از کربی",
 	"license.unregistered": "این یک نسخه آزمایشی ثبت نشده از کربی است",
 	"license.unregistered.label": "Unregistered",

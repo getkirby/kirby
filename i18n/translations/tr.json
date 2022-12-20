@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
+	"error.field.type.missing": "\"{ name }\" alanı: \"{ type }\" alan türü mevcut değil",
 
 	"error.file.changeName.empty": "İsim boş olmamalıdır",
 	"error.file.changeName.permission": "\"{filename}\" adını değiştiremezsiniz",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Henüz sayfa seçilmedi",
 
 	"field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
+	"field.structure.delete.confirm.all": "Tüm girdileri gerçekten silmek istiyor musunuz?",
 	"field.structure.empty": "Hen\u00fcz bir girdi yok",
 
 	"field.users.empty": "Henüz kullanıcı seçilmedi",
@@ -349,6 +351,8 @@
 	"license.manage": "Lisanslarınızı yönetin",
 	"license.register.help": "Satın alma işleminden sonra e-posta yoluyla lisans kodunuzu aldınız. Lütfen kayıt olmak için kodu kopyalayıp yapıştırın.",
 	"license.register.label": "Lütfen lisans kodunu giriniz",
+	"license.register.domain": "Lisansınız <strong>{host}</strong> için kaydedilecek.",
+	"license.register.local": "Lisansınızı yerel alan adınız <strong>{host}</strong> için kaydetmek üzeresiniz. Bu site genel bir etki alanına dağıtılacaksa, lütfen bunun yerine lisansı orada kaydedin. Kirby'yi lisanslamak istediğiniz alan adı {host} ise lütfen devam edin.",
 	"license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",
 	"license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
 	"license.unregistered.label": "Kayıtsız",
