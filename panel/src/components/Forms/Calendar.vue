@@ -9,14 +9,14 @@
 					:disabled="disabled"
 					:required="true"
 					:value="current.month"
-					@input="current.month = $event"
+					@input="current.month = Number($event)"
 				/>
 				<k-select-input
 					:options="years"
 					:disabled="disabled"
 					:required="true"
 					:value="current.year"
-					@input="current.year = $event"
+					@input="current.year = Number($event)"
 				/>
 			</span>
 			<k-button icon="angle-right" @click="onNext" />
