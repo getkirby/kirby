@@ -283,7 +283,7 @@ class Str
 	 *
 	 * @param string $handler date, intl or strftime
 	 */
-	public static function date(int|null $time = null, string|IntlDateFormatter $format = null, string $handler = 'date')
+	public static function date(int|null $time = null, string|IntlDateFormatter $format = null, string $handler = 'date'): string|int|false
 	{
 		if (is_null($format) === true) {
 			return $time;
