@@ -47,7 +47,7 @@ class Iterator implements IteratorAggregate
 	/**
 	 * Returns the current key
 	 */
-	public function key(): string
+	public function key(): int|string|null
 	{
 		return key($this->data);
 	}
@@ -125,9 +125,9 @@ class Iterator implements IteratorAggregate
 	 * Tries to find the key for the given element
 	 *
 	 * @param mixed $needle the element to search for
-	 * @return string|false the name of the key or false
+	 * @return int|string|false the name of the key or false
 	 */
-	public function keyOf($needle): string|false
+	public function keyOf($needle): int|string|false
 	{
 		return array_search($needle, $this->data);
 	}
