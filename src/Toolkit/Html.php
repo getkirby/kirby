@@ -390,7 +390,7 @@ class Html extends Xml
 	 * @param int $level Indentation level
 	 * @return string The generated HTML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
+	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
 	{
 		// treat an explicit `null` value as an empty tag
 		// as void tags are already covered below

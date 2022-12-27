@@ -110,8 +110,12 @@ class Xml
 			return $name . '=""';
 		}
 
-		if (is_bool($value) === true) {
-			return $value === true ? $name . '="' . $name . '"' : null;
+		if ($value === true) {
+			return $name . '="' . $name . '"';
+		}
+
+		if ($value === false) {
+			return null;
 		}
 
 		if (is_array($value) === true) {
@@ -194,7 +198,7 @@ class Xml
 		} else {
 			// scalar value
 
-			$result = static::tag($name, $props, null, $indent, $level);
+			$result = static::tag($name, $props, [], $indent, $level);
 		}
 
 		if ($head === true) {
@@ -368,7 +372,7 @@ class Xml
 	 * @param int $level Indentation level
 	 * @return string The generated XML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string|null $indent = null, int $level = 0): string
+	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
 	{
 		$attr       = static::attr($attr);
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
