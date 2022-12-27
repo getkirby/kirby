@@ -273,7 +273,7 @@ class PagesTest extends TestCase
 
 	public function testFindByUuid()
 	{
-		$app = new App([
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					['slug' => 'a', 'content' => ['uuid' => 'test-a']],

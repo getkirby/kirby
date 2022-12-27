@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Composer\Autoload\ClassLoader;
 use Kirby\Cms\System\UpdateStatus;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass Kirby\Cms\Plugin
@@ -14,6 +15,9 @@ class PluginTest extends TestCase
 {
 	protected static $classLoader;
 	protected static $updateStatusHost;
+
+	protected $app;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public static function setUpBeforeClass(): void
 	{
@@ -34,11 +38,20 @@ class PluginTest extends TestCase
 	public function setUp(): void
 	{
 		App::destroy();
+
+		Dir::make($this->tmp);
+
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			]
+		]);
 	}
 
 	public function tearDown(): void
 	{
 		App::destroy();
+		Dir::remove($this->tmp);
 	}
 
 	/**
@@ -240,9 +253,8 @@ class PluginTest extends TestCase
 	 */
 	public function testMediaRoot()
 	{
-		new App([
+		$this->app->clone([
 			'roots' => [
-				'index' => '/dev/null',
 				'media' => $media = __DIR__ . '/media'
 			]
 		]);
@@ -257,10 +269,7 @@ class PluginTest extends TestCase
 	 */
 	public function testMediaUrl()
 	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$this->app->clone([
 			'urls' => [
 				'index' => '/'
 			]
@@ -316,7 +325,7 @@ class PluginTest extends TestCase
 			]
 		]);
 
-		$app = new App();
+		$app = $this->app->clone();
 
 		$this->assertSame('bar', $app->plugin('developer/plugin')->option('foo'));
 		$this->assertSame('bar', $app->option('developer.plugin.foo'));
@@ -477,7 +486,7 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusDisabled1()
 	{
-		new App([
+		$this->app->clone([
 			'options' => [
 				'updates' => [
 					'plugins' => false
@@ -498,7 +507,7 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusDisabled2()
 	{
-		new App([
+		$this->app->clone([
 			'options' => [
 				'updates' => [
 					'plugins' => [
@@ -524,7 +533,7 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusDisabled3()
 	{
-		new App([
+		$this->app->clone([
 			'options' => [
 				'updates' => false
 			]
@@ -547,7 +556,7 @@ class PluginTest extends TestCase
 		// security mode yet because the hub is missing
 		// where plugin devs can manage the security status
 		// of their plugins
-		new App([
+		$this->app->clone([
 			'options' => [
 				'updates' => 'security'
 			]
@@ -566,7 +575,7 @@ class PluginTest extends TestCase
 	 */
 	public function testUpdateStatusNoCustomConfig()
 	{
-		new App([
+		$this->app->clone([
 			'options' => [
 				'updates' => [
 					'plugins' => [
