@@ -64,13 +64,13 @@ class Xml
 	/**
 	 * Generates a single attribute or a list of attributes
 	 *
-	 * @param string|array|null $name String: A single attribute with that name will be generated.
-	 *                                Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+	 * @param string|array $name String: A single attribute with that name will be generated.
+	 *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
 	 * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
 	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
-	public static function attr(string|array|null $name, $value = null): string|null
+	public static function attr(string|array $name, $value = null): string|null
 	{
 		if (is_array($name) === true) {
 			if ($value !== false) {
