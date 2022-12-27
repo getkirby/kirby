@@ -19,17 +19,13 @@ class Html extends Xml
 {
 	/**
 	 * An internal store for an HTML entities translation table
-	 *
-	 * @var array
 	 */
-	public static $entities;
+	public static array|null $entities;
 
 	/**
 	 * List of HTML tags that can be used inline
-	 *
-	 * @var array
 	 */
-	public static $inlineList = [
+	public static array $inlineList = [
 		'b',
 		'i',
 		'small',
@@ -394,7 +390,7 @@ class Html extends Xml
 	 * @param int $level Indentation level
 	 * @return string The generated HTML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
+	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
 	{
 		// treat an explicit `null` value as an empty tag
 		// as void tags are already covered below
