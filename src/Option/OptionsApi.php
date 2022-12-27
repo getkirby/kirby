@@ -88,8 +88,12 @@ class OptionsApi extends OptionsProvider
 	 * Creates the actual options by loading
 	 * data from the API and resolving it to
 	 * the correct text-value entries
+	 *
+	 * @param bool $safeMode Whether to escape special HTML characters in
+	 *                       the option text for safe output in the Panel;
+	 *                       only set to `false` if the text is later escaped!
 	 */
-	public function resolve(ModelWithContent $model): Options
+	public function resolve(ModelWithContent $model, bool $safeMode = true): Options
 	{
 		// use cached options if present
 		// @codeCoverageIgnoreStart
@@ -112,13 +116,16 @@ class OptionsApi extends OptionsProvider
 		$data = Nest::create($data);
 		$data = Query::factory($this->query)->resolve($data);
 
+		$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+
 		// create options by resolving text and value query strings
 		// for each item from the data
 		$options = $data->toArray(fn ($item) => [
 			// value is always a raw string
 			'value' => $model->toString($this->value, ['item' => $item]),
 			// text is only a raw string when using {< >}
-			'text' => $model->toSafeString($this->text, ['item' => $item]),
+			// or when the safe mode is explicitly disabled (select field)
+			'text' => $model->$safeMethod($this->text, ['item' => $item]),
 		]);
 
 		// create Options object and render this subsequently

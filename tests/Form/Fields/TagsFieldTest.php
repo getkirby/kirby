@@ -8,17 +8,17 @@ class TagsFieldTest extends TestCase
 	{
 		$field = $this->field('tags');
 
-		$this->assertEquals('tags', $field->type());
-		$this->assertEquals('tags', $field->name());
-		$this->assertEquals('all', $field->accept());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->default());
-		$this->assertEquals([], $field->options());
-		$this->assertEquals(null, $field->min());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(',', $field->separator());
-		$this->assertEquals('tag', $field->icon());
-		$this->assertEquals(null, $field->counter());
+		$this->assertSame('tags', $field->type());
+		$this->assertSame('tags', $field->name());
+		$this->assertSame('all', $field->accept());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->default());
+		$this->assertSame([], $field->options());
+		$this->assertSame(null, $field->min());
+		$this->assertSame(null, $field->max());
+		$this->assertSame(',', $field->separator());
+		$this->assertSame('tag', $field->icon());
+		$this->assertSame(null, $field->counter());
 		$this->assertTrue($field->save());
 	}
 
@@ -42,7 +42,7 @@ class TagsFieldTest extends TestCase
 							[
 								'filename' => 'b.jpg',
 								'content'  => [
-									'tags' => 'design, photography'
+									'tags' => 'photography, <script>alert("XSS")</script>'
 								]
 							],
 							[
@@ -56,7 +56,7 @@ class TagsFieldTest extends TestCase
 					[
 						'slug' => 'b',
 						'content'  => [
-							'tags' => 'design, photography'
+							'tags' => 'photography, <script>alert("XSS")</script>'
 						],
 					],
 					[
@@ -71,25 +71,32 @@ class TagsFieldTest extends TestCase
 
 		$expected = [
 			[
-				'value' => 'design',
-				'text'  => 'design',
 				'disabled' => false,
 				'icon' => null,
-				'info' => null
+				'info' => null,
+				'text' => 'design',
+				'value' => 'design'
 			],
 			[
-				'value' => 'photography',
-				'text'  => 'photography',
 				'disabled' => false,
 				'icon' => null,
-				'info' => null
+				'info' => null,
+				'text' => 'photography',
+				'value' => 'photography'
 			],
 			[
-				'value' => 'architecture',
-				'text'  => 'architecture',
 				'disabled' => false,
 				'icon' => null,
-				'info' => null
+				'info' => null,
+				'text' => '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;',
+				'value' => '<script>alert("XSS")</script>'
+			],
+			[
+				'disabled' => false,
+				'icon' => null,
+				'info' => null,
+				'text' => 'architecture',
+				'value' => 'architecture'
 			]
 		];
 
@@ -99,7 +106,7 @@ class TagsFieldTest extends TestCase
 			'query'   => 'page.siblings.pluck("tags", ",", true)',
 		]);
 
-		$this->assertEquals($expected, $field->options());
+		$this->assertSame($expected, $field->options());
 
 		$field = $this->field('tags', [
 			'model'   => $app->file('a/b.jpg'),
@@ -107,7 +114,7 @@ class TagsFieldTest extends TestCase
 			'query'   => 'file.siblings.pluck("tags", ",", true)',
 		]);
 
-		$this->assertEquals($expected, $field->options());
+		$this->assertSame($expected, $field->options());
 	}
 
 	public function testMin()
@@ -120,7 +127,7 @@ class TagsFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('min', $field->errors());
-		$this->assertEquals(2, $field->min());
+		$this->assertSame(2, $field->min());
 		$this->assertTrue($field->required());
 	}
 
@@ -133,7 +140,7 @@ class TagsFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(1, $field->max());
+		$this->assertSame(1, $field->max());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
@@ -145,7 +152,7 @@ class TagsFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

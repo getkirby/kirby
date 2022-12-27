@@ -131,8 +131,12 @@ class OptionsQuery extends OptionsProvider
 	 * Creates the actual options by running
 	 * the query on the model and resolving it to
 	 * the correct text-value entries
+	 *
+	 * @param bool $safeMode Whether to escape special HTML characters in
+	 *                       the option text for safe output in the Panel;
+	 *                       only set to `false` if the text is later escaped!
 	 */
-	public function resolve(ModelWithContent $model): Options
+	public function resolve(ModelWithContent $model, bool $safeMode = true): Options
 	{
 		// use cached options if present
 		// @codeCoverageIgnoreStart
@@ -159,7 +163,7 @@ class OptionsQuery extends OptionsProvider
 		}
 
 		// create options array
-		$options = $result->toArray(function ($item) use ($model) {
+		$options = $result->toArray(function ($item) use ($model, $safeMode) {
 			// get defaults based on item type
 			[$alias, $text, $value] = $this->itemToDefaults($item);
 			$data = ['item' => $item, $alias => $item];
@@ -167,9 +171,10 @@ class OptionsQuery extends OptionsProvider
 			// value is always a raw string
 			$value = $model->toString($this->value ?? $value, $data);
 
-			// text is only a raw string when HTML prop
-			// is explicitly set to true
-			$text = $model->toSafeString($this->text ?? $text, $data);
+			// text is only a raw string when using {< >}
+			// or when the safe mode is explicitly disabled (select field)
+			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+			$text = $model->$safeMethod($this->text ?? $text, $data);
 
 			return compact('text', 'value');
 		});

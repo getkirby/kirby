@@ -128,7 +128,7 @@ class OptionsApiTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveHtmlEscpae()
+	public function testResolveHtmlEscape()
 	{
 		$model = new Page(['slug' => 'test']);
 
@@ -146,7 +146,6 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
-
 		// text unescaped using {< >}
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
@@ -155,6 +154,19 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.slogan }}'
 		);
 		$result = $options->render($model);
+		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', $result[0]['value']);
+		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', $result[1]['value']);
+
+		// test unescaped with disabled safe mode
+		$options = new OptionsApi(
+			url: __DIR__ . '/fixtures/data.json',
+			query: 'Directory.Companies',
+			text: '{{ item.slogan }}',
+			value: '{{ item.slogan }}'
+		);
+		$result = $options->resolve($model, false)->render($model);
 		$this->assertSame('We are <b>great</b>', $result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
 		$this->assertSame('We are <b>better</b>', $result[1]['text']);

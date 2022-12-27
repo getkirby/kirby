@@ -25,7 +25,14 @@ class FieldOptions extends Node
 		 * The option source, either a fixed collection or
 		 * a dynamic provider
 		 */
-		public Options|OptionsProvider|null $options = null
+		public Options|OptionsProvider|null $options = null,
+
+		/**
+		 * Whether to escape special HTML characters in
+		 * the option text for safe output in the Panel;
+		 * only set to `false` if the text is later escaped!
+		 */
+		public bool $safeMode = true
 	) {
 	}
 
@@ -36,7 +43,7 @@ class FieldOptions extends Node
 		return parent::defaults();
 	}
 
-	public static function factory(array $props): static
+	public static function factory(array $props, bool $safeMode = true): static
 	{
 		$options = match ($props['type']) {
 			'api'    => OptionsApi::factory($props),
@@ -44,7 +51,7 @@ class FieldOptions extends Node
 			default  => Options::factory($props['options'] ?? [])
 		};
 
-		return new static($options);
+		return new static($options, $safeMode);
 	}
 
 	public static function polyfill(array $props = []): array
@@ -91,7 +98,7 @@ class FieldOptions extends Node
 		}
 
 		// resolve OptionsProvider (OptionsApi or OptionsQuery) to Options
-		return $this->options = $this->options->resolve($model);
+		return $this->options = $this->options->resolve($model, $this->safeMode);
 	}
 
 	public function render(ModelWithContent $model): array
