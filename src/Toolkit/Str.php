@@ -443,7 +443,7 @@ class Str
 	 * Convert the value to a float with a decimal
 	 * point, no matter what the locale setting is
 	 */
-	public static function float($value): string
+	public static function float(string|int|float|null $value): string
 	{
 		// make sure $value is not null
 		$value ??= '';
