@@ -195,7 +195,7 @@ class Environment
 	 * Sets the host name, port, path and protocol from the
 	 * fixed list of allowed URLs
 	 */
-	protected function detectAllowed(array|string|object $allowed): void
+	protected function detectAllowed(array|string $allowed): void
 	{
 		$allowed = A::wrap($allowed);
 

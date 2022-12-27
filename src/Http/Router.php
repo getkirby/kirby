@@ -117,7 +117,7 @@ class Router
 				if ($callback) {
 					$result = $callback($route);
 				} else {
-					$result = $route?->action()->call($route, ...$route->arguments());
+					$result = $route->action()->call($route, ...$route->arguments());
 				}
 
 				$loop = false;
@@ -150,7 +150,7 @@ class Router
 	 * find matches and return all the found
 	 * arguments in the path.
 	 */
-	public function find(string $path, string $method, array|null $ignore = null): Route|null
+	public function find(string $path, string $method, array|null $ignore = null): Route
 	{
 		if (isset($this->routes[$method]) === false) {
 			throw new InvalidArgumentException('Invalid routing method: ' . $method, 400);
