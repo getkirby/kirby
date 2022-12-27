@@ -6,6 +6,7 @@ use Kirby\Blueprint\Node;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Option\Options;
 use Kirby\Option\OptionsApi;
+use Kirby\Option\OptionsProvider;
 use Kirby\Option\OptionsQuery;
 
 /**
@@ -20,7 +21,11 @@ use Kirby\Option\OptionsQuery;
 class FieldOptions extends Node
 {
 	public function __construct(
-		public Options|OptionsApi|OptionsQuery|null $options = null
+		/**
+		 * The option source, either a fixed collection or
+		 * a dynamic provider
+		 */
+		public Options|OptionsProvider|null $options = null
 	) {
 	}
 
@@ -85,7 +90,7 @@ class FieldOptions extends Node
 			return $this->options;
 		}
 
-		// resolve OptionsApi or OptionsQuery to Options
+		// resolve OptionsProvider (OptionsApi or OptionsQuery) to Options
 		return $this->options = $this->options->resolve($model);
 	}
 
