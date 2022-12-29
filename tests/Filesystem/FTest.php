@@ -879,7 +879,9 @@ class FTest extends TestCase
 	 */
 	public function testWriteObject()
 	{
-		$input = new \stdClass();
+		$input = new \stdClass([
+			'a' => 'b'
+		]);
 
 		F::write($this->test, $input);
 
