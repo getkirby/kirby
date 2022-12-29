@@ -91,12 +91,8 @@ class Model
 	 */
 	public function selection(): array
 	{
-		$select = $this->select;
-
-		if ($select === null) {
-			$select = array_keys($this->fields);
-		}
-
+		$select    = $this->select;
+		$select  ??= array_keys($this->fields);
 		$selection = [];
 
 		foreach ($select as $key => $value) {

@@ -374,9 +374,7 @@ class Str
 	public static function convert($string, $targetEncoding, $sourceEncoding = null)
 	{
 		// detect the source encoding if not passed as third argument
-		if ($sourceEncoding === null) {
-			$sourceEncoding = static::encoding($string);
-		}
+		$sourceEncoding ??= static::encoding($string);
 
 		// no need to convert if the target encoding is the same
 		if (strtolower($sourceEncoding) === strtolower($targetEncoding)) {
@@ -679,11 +677,8 @@ class Str
 	 */
 	public static function random(int $length = null, string $type = 'alphaNum')
 	{
-		if ($length === null) {
-			$length = random_int(5, 10);
-		}
-
-		$pool = static::pool($type, false);
+		$length ??= random_int(5, 10);
+		$pool     = static::pool($type, false);
 
 		// catch invalid pools
 		if (!$pool) {

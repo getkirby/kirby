@@ -31,10 +31,7 @@ class Files
 	 */
 	public function __construct(array|null $files = null)
 	{
-		if ($files === null) {
-			$files = $_FILES;
-		}
-
+		$files ??= $_FILES;
 		$this->files = [];
 
 		foreach ($files as $key => $file) {

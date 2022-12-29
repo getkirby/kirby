@@ -394,9 +394,7 @@ class Html extends Xml
 	{
 		// treat an explicit `null` value as an empty tag
 		// as void tags are already covered below
-		if ($content === null) {
-			$content = '';
-		}
+		$content ??= '';
 
 		// force void elements to be self-closing
 		if (static::isVoid($name) === true) {

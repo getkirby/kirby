@@ -324,9 +324,7 @@ class Form
 			return $fields;
 		}
 
-		if ($language === null) {
-			$language = $kirby->language()->code();
-		}
+		$language ??= $kirby->language()->code();
 
 		if ($language !== $kirby->defaultLanguage()->code()) {
 			foreach ($fields as $fieldName => $fieldProps) {
