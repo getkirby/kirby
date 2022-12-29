@@ -8,7 +8,7 @@ use Kirby\Blueprint\NodeText;
 use Kirby\Cms\ModelWithContent;
 
 /**
- * Option for select fields, radio fields, etc
+ * Option for select fields, radio fields, etc.
  *
  * @package   Kirby Option
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -19,7 +19,7 @@ use Kirby\Cms\ModelWithContent;
 class Option
 {
 	public function __construct(
-		public float|int|string|null $value,
+		public string|int|float|null $value,
 		public bool $disabled = false,
 		public NodeIcon|null $icon = null,
 		public NodeText|null $info = null,
@@ -28,7 +28,7 @@ class Option
 		$this->text ??= new NodeText(['en' => $this->value]);
 	}
 
-	public static function factory(float|int|string|null|array $props): static
+	public static function factory(string|int|float|null|array $props): static
 	{
 		if (is_array($props) === false) {
 			$props = ['value' => $props];

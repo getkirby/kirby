@@ -306,7 +306,7 @@ class OptionsQueryTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
-	public function testResolveHtmlEscpae()
+	public function testResolveHtmlEscape()
 	{
 		$model   = new MyPage(['slug' => 'a']);
 
@@ -322,13 +322,23 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
 
-
 		// text unescaped via {< >}
 		$options = (new OptionsQuery(
 			query: 'page.myHtmlArray',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
 		))->render($model);
+		$this->assertSame('We are <b>great</b>', $options[0]['text']);
+		$this->assertSame('We are <b>great</b>', $options[0]['value']);
+		$this->assertSame('We are <b>better</b>', $options[1]['text']);
+		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+
+		// test unescaped with disabled safe mode
+		$options = (new OptionsQuery(
+			query: 'page.myHtmlArray',
+			text: '{{ item.slogan }}',
+			value: '{{ item.slogan }}'
+		))->resolve($model, false)->render($model);
 		$this->assertSame('We are <b>great</b>', $options[0]['text']);
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
 		$this->assertSame('We are <b>better</b>', $options[1]['text']);

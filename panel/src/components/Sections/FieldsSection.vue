@@ -69,7 +69,7 @@ export default {
 			}
 		},
 		onSubmit(values) {
-			// ensure that all values are actually commited to content store
+			// ensure that all values are actually committed to content store
 			this.$store.dispatch("content/update", [null, values]);
 			this.$events.$emit("keydown.cmd.s", values);
 		}

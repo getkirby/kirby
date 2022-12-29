@@ -53,7 +53,6 @@ class Node
 		return Factory::make(static::class, $props);
 	}
 
-
 	public static function load(string|array $props): static
 	{
 		// load by path
