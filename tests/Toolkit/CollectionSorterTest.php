@@ -298,6 +298,6 @@ class CollectionSorterTest extends TestCase
 		]);
 
 		$shuffled = $collection->shuffle();
-		$this->assertSame(3, $shuffled->count());
+		$this->assertCount(3, $shuffled);
 	}
 }

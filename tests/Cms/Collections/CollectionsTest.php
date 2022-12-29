@@ -72,13 +72,13 @@ class CollectionsTest extends TestCase
 		$collections = $app->collections();
 
 		$a = $collections->get('test');
-		$this->assertSame(0, $a->count());
+		$this->assertCount(0, $a);
 
 		$a->add('kirby');
-		$this->assertSame(1, $a->count());
+		$this->assertCount(1, $a);
 
 		$b = $collections->get('test');
-		$this->assertSame(0, $b->count());
+		$this->assertCount(0, $b);
 	}
 
 	public function testHas()

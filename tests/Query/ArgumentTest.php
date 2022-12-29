@@ -27,7 +27,7 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 
 		// arrays
 		$argument = Argument::factory('[1, "a", 3]');
-		$this->assertSame(3, $argument->value->count());
+		$this->assertCount(3, $argument->value);
 
 		// numbers
 		$argument = Argument::factory(' 23  ');

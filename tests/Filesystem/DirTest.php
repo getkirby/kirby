@@ -53,9 +53,9 @@ class DirTest extends TestCase
 
 		$this->assertTrue($result);
 
-		$this->assertTrue(file_exists($target . '/a.txt'));
-		$this->assertTrue(file_exists($target . '/subfolder/b.txt'));
-		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
+		$this->assertFileExists($target . '/a.txt');
+		$this->assertFileExists($target . '/subfolder/b.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
 	/**
@@ -70,9 +70,9 @@ class DirTest extends TestCase
 
 		$this->assertTrue($result);
 
-		$this->assertTrue(file_exists($target . '/a.txt'));
-		$this->assertFalse(file_exists($target . '/subfolder/b.txt'));
-		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
+		$this->assertFileExists($target . '/a.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/b.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
 	/**
@@ -87,10 +87,10 @@ class DirTest extends TestCase
 
 		$this->assertTrue($result);
 
-		$this->assertTrue(file_exists($target . '/a.txt'));
+		$this->assertFileExists($target . '/a.txt');
 		$this->assertTrue(is_dir($target . '/subfolder'));
-		$this->assertFalse(file_exists($target . '/subfolder/b.txt'));
-		$this->assertFalse(file_exists($target . '/subfolder/.gitignore'));
+		$this->assertFileDoesNotExist($target . '/subfolder/b.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
 	/**
@@ -105,10 +105,10 @@ class DirTest extends TestCase
 
 		$this->assertTrue($result);
 
-		$this->assertTrue(file_exists($target . '/a.txt'));
+		$this->assertFileExists($target . '/a.txt');
 		$this->assertTrue(is_dir($target . '/subfolder'));
-		$this->assertTrue(file_exists($target . '/subfolder/b.txt'));
-		$this->assertTrue(file_exists($target . '/subfolder/.gitignore'));
+		$this->assertFileExists($target . '/subfolder/b.txt');
+		$this->assertFileExists($target . '/subfolder/.gitignore');
 	}
 
 	/**

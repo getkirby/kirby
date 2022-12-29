@@ -18,7 +18,7 @@ class NestTest extends TestCase
 	{
 		$n = Nest::create([]);
 		$this->assertInstanceOf(NestCollection::class, $n);
-		$this->assertSame(0, $n->count());
+		$this->assertCount(0, $n);
 	}
 
 	public function testCreateObject()

@@ -83,11 +83,11 @@ class SegmentTest extends \PHPUnit\Framework\TestCase
 
 		$segment = Segment::factory('foo(1, 2)');
 		$this->assertSame('foo', $segment->method);
-		$this->assertSame(2, $segment->arguments->count());
+		$this->assertCount(2, $segment->arguments);
 
 		$segment = Segment::factory('foo(1, bar(2))');
 		$this->assertSame('foo', $segment->method);
-		$this->assertSame(2, $segment->arguments->count());
+		$this->assertCount(2, $segment->arguments);
 	}
 
 	/**

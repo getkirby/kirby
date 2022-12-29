@@ -94,7 +94,7 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertSame(3, $collection->chunk(2)->count());
+		$this->assertCount(3, $collection->chunk(2));
 		$this->assertSame('eins', $collection->chunk(2)->first()->first());
 		$this->assertSame('fünf', $collection->chunk(2)->last()->first());
 	}

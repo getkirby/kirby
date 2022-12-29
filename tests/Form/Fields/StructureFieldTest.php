@@ -20,7 +20,7 @@ class StructureFieldTest extends TestCase
 		$this->assertSame('structure', $field->type());
 		$this->assertSame('structure', $field->name());
 		$this->assertNull($field->limit());
-		$this->assertTrue(is_array($field->fields()));
+		$this->assertIsArray($field->fields());
 		$this->assertSame([], $field->value());
 		$this->assertTrue($field->save());
 	}

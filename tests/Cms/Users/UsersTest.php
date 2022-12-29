@@ -122,7 +122,7 @@ class UsersTest extends TestCase
 		]);
 
 		$files = $app->users()->files();
-		$this->assertSame(3, $files->count());
+		$this->assertCount(3, $files);
 		$this->assertSame('a.jpg', $files->first()->filename());
 		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
 	}

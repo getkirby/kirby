@@ -72,9 +72,9 @@ class FTest extends TestCase
 		$origin = $this->tmp . '/a.txt';
 		F::write($origin, 'test');
 
-		$this->assertFalse(file_exists($this->test));
+		$this->assertFileDoesNotExist($this->test);
 		$this->assertTrue(F::copy($origin, $this->test));
-		$this->assertTrue(file_exists($this->test));
+		$this->assertFileExists($this->test);
 	}
 
 	/**
@@ -464,25 +464,25 @@ class FTest extends TestCase
 		F::write($origin = $this->tmp . '/a.txt', 'test');
 
 		// simply move file
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertTrue(F::move($origin, $this->test));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// replace file via moving
 		F::copy($this->test, $origin);
 
-		$this->assertTrue(file_exists($origin));
-		$this->assertTrue(file_exists($this->test));
+		$this->assertFileExists($origin);
+		$this->assertFileExists($this->test);
 
 		$this->assertFalse(F::move($this->test, $origin));
 		$this->assertTrue(F::move($this->test, $origin, true));
 
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 	}
 
 	/**
@@ -668,36 +668,36 @@ class FTest extends TestCase
 		F::write($origin = $this->tmp . '/a.txt', 'test');
 
 		// simply rename file
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertSame($this->test, F::rename($origin, 'moved'));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// rename file with same name
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		$this->assertSame($this->test, F::rename($this->test, 'moved'));
 		$this->assertSame($this->test, F::rename($this->test, 'moved', true));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// replace file via renaming
 		F::copy($this->test, $origin);
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertFalse(F::rename($this->test, 'a'));
 		$this->assertSame($origin, F::rename($this->test, 'a', true));
 
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 	}
 
 	/**

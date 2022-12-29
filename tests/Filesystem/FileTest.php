@@ -108,14 +108,14 @@ class FileTest extends TestCase
 		$file = new File($oldRoot);
 		$file->write('test');
 
-		$this->assertTrue(file_exists($oldRoot));
-		$this->assertFalse(file_exists($newRoot));
+		$this->assertFileExists($oldRoot);
+		$this->assertFileDoesNotExist($newRoot);
 		$this->assertSame($oldRoot, $file->root());
 
 		$new = $file->copy($newRoot);
 
-		$this->assertTrue(file_exists($oldRoot));
-		$this->assertTrue(file_exists($newRoot));
+		$this->assertFileExists($oldRoot);
+		$this->assertFileExists($newRoot);
 		$this->assertInstanceOf(File::class, $new);
 		$this->assertSame($newRoot, $new->root());
 	}
@@ -501,14 +501,14 @@ class FileTest extends TestCase
 		$file = new File($oldRoot);
 		$file->write('test');
 
-		$this->assertTrue(file_exists($oldRoot));
-		$this->assertFalse(file_exists($newRoot));
+		$this->assertFileExists($oldRoot);
+		$this->assertFileDoesNotExist($newRoot);
 		$this->assertSame($oldRoot, $file->root());
 
 		$moved = $file->move($newRoot);
 
-		$this->assertFalse(file_exists($oldRoot));
-		$this->assertTrue(file_exists($newRoot));
+		$this->assertFileDoesNotExist($oldRoot);
+		$this->assertFileExists($newRoot);
 		$this->assertSame($newRoot, $moved->root());
 	}
 
