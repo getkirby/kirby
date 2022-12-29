@@ -6,8 +6,8 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 
 /**
- * The Argument class represents a single
- * parameter passed to a method in a chained query
+ * The Arguments class helps splitting a
+ * parameter string into processable arguments
  *
  * @package   Kirby Query
  * @author    Nico Hoffmann <nico@getkirby.com>
