@@ -10,11 +10,11 @@ class NumberFieldTest extends TestCase
 
 		$this->assertSame('number', $field->type());
 		$this->assertSame('number', $field->name());
-		$this->assertSame(null, $field->value());
-		$this->assertSame(null, $field->default());
-		$this->assertSame(null, $field->min());
-		$this->assertSame(null, $field->max());
-		$this->assertSame(null, $field->step());
+		$this->assertNull($field->value());
+		$this->assertNull($field->default());
+		$this->assertNull($field->min());
+		$this->assertNull($field->max());
+		$this->assertNull($field->step());
 		$this->assertTrue($field->save());
 	}
 
@@ -51,7 +51,7 @@ class NumberFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 
 		if ($input === null) {
-			$this->assertSame(null, $field->step());
+			$this->assertNull($field->step());
 		} else {
 			$this->assertSame($expected, $field->step());
 		}

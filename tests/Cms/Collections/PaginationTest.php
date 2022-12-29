@@ -100,8 +100,8 @@ class PaginationTest extends TestCase
 			'url'   => new Uri('https://getkirby.com')
 		]);
 
-		$this->assertSame(null, $pagination->firstPageUrl());
-		$this->assertSame(null, $pagination->lastPageUrl());
+		$this->assertNull($pagination->firstPageUrl());
+		$this->assertNull($pagination->lastPageUrl());
 	}
 
 	public function testNextPageUrl()

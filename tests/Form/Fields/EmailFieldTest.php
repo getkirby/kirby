@@ -13,7 +13,7 @@ class EmailFieldTest extends TestCase
 		$this->assertSame('', $field->value());
 		$this->assertSame('email', $field->icon());
 		$this->assertSame('mail@example.com', $field->placeholder());
-		$this->assertSame(null, $field->counter());
+		$this->assertNull($field->counter());
 		$this->assertSame('email', $field->autocomplete());
 		$this->assertTrue($field->save());
 	}

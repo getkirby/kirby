@@ -728,7 +728,7 @@ class FileTest extends TestCase
 		$this->assertSame('blank.pdf', $file->toArray()['filename']);
 		$this->assertSame('blank', $file->toArray()['name']);
 		$this->assertSame('pdf', $file->toArray()['extension']);
-		$this->assertSame(false, $file->toArray()['isResizable']);
+		$this->assertFalse($file->toArray()['isResizable']);
 		$this->assertSame($file->toArray(), $file->__debugInfo());
 	}
 

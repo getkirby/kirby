@@ -45,8 +45,8 @@ class CollectionMutatorTest extends TestCase
 	public function testSet()
 	{
 		$collection = new Collection();
-		$this->assertSame(null, $collection->one);
-		$this->assertSame(null, $collection->two);
+		$this->assertNull($collection->one);
+		$this->assertNull($collection->two);
 
 		$collection->one = 'eins';
 		$this->assertSame('eins', $collection->one);
@@ -107,7 +107,7 @@ class CollectionMutatorTest extends TestCase
 
 		$this->assertSame('zwei', $collection->two());
 		$collection->remove('two');
-		$this->assertSame(null, $collection->two());
+		$this->assertNull($collection->two());
 	}
 
 	public function testUnset()
@@ -119,7 +119,7 @@ class CollectionMutatorTest extends TestCase
 
 		$this->assertSame('zwei', $collection->two());
 		unset($collection->two);
-		$this->assertSame(null, $collection->two());
+		$this->assertNull($collection->two());
 	}
 
 	public function testMap()

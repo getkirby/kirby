@@ -641,7 +641,7 @@ class HelperFunctionsTest extends TestCase
 	{
 		$this->assertSame('a', r(1 === 1, 'a', 'b'));
 		$this->assertSame('b', r(1 === 2, 'a', 'b'));
-		$this->assertSame(null, r(1 === 2, 'a'));
+		$this->assertNull(r(1 === 2, 'a'));
 	}
 
 	public function testRouter()

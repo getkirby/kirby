@@ -11,9 +11,9 @@ class DateFieldTest extends TestCase
 		$this->assertSame('date', $field->type());
 		$this->assertSame('date', $field->name());
 		$this->assertSame('', $field->value());
-		$this->assertSame(null, $field->min());
-		$this->assertSame(null, $field->max());
-		$this->assertSame(false, $field->time());
+		$this->assertNull($field->min());
+		$this->assertNull($field->max());
+		$this->assertFalse($field->time());
 		$this->assertTrue($field->save());
 	}
 
@@ -24,7 +24,7 @@ class DateFieldTest extends TestCase
 		]);
 
 		$this->assertSame('', $field->value());
-		$this->assertSame(null, $field->toString());
+		$this->assertNull($field->toString());
 	}
 
 	public function testMinMax()

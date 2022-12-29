@@ -136,9 +136,9 @@ class LanguageTest extends TestCase
 		$this->assertSame([
 			LC_CTYPE => 'en_US.utf8'
 		], $language->locale());
-		$this->assertSame(null, $language->locale(LC_ALL));
+		$this->assertNull($language->locale(LC_ALL));
 		$this->assertSame('en_US.utf8', $language->locale(LC_CTYPE));
-		$this->assertSame(null, $language->locale(LC_MONETARY));
+		$this->assertNull($language->locale(LC_MONETARY));
 	}
 
 	public function testLocaleArray3()
@@ -258,12 +258,12 @@ class LanguageTest extends TestCase
 		$data = include $file;
 
 		$this->assertSame('de', $data['code']);
-		$this->assertSame(false, $data['default']);
+		$this->assertFalse($data['default']);
 		$this->assertSame('ltr', $data['direction']);
 		$this->assertSame(['LC_ALL' => 'de'], $data['locale']);
 		$this->assertSame('de', $data['name']);
 		$this->assertSame([], $data['translations']);
-		$this->assertSame(null, $data['url'] ?? null);
+		$this->assertNull($data['url'] ?? null);
 
 
 		// custom url
@@ -477,7 +477,7 @@ class LanguageTest extends TestCase
 		]);
 
 		$this->assertSame('en', $language->code());
-		$this->assertSame(true, $language->isDefault());
+		$this->assertTrue($language->isDefault());
 		$this->assertSame('ltr', $language->direction());
 		$this->assertSame('en', $language->name());
 		$this->assertSame('/en', $language->url());

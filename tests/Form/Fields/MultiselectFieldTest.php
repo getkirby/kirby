@@ -13,11 +13,11 @@ class MultiselectFieldTest extends TestCase
 		$this->assertSame([], $field->value());
 		$this->assertSame([], $field->default());
 		$this->assertSame([], $field->options());
-		$this->assertSame(null, $field->min());
-		$this->assertSame(null, $field->max());
+		$this->assertNull($field->min());
+		$this->assertNull($field->max());
 		$this->assertSame(',', $field->separator());
-		$this->assertSame(null, $field->icon());
-		$this->assertSame(null, $field->counter());
+		$this->assertNull($field->icon());
+		$this->assertNull($field->counter());
 		$this->assertTrue($field->search());
 		$this->assertFalse($field->sort());
 		$this->assertTrue($field->save());

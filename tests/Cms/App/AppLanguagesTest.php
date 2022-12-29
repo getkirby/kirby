@@ -46,6 +46,6 @@ class AppLanguagesTest extends TestCase
 		$this->assertSame('de', $app->languageCode('de'));
 		$this->assertSame('en', $app->languageCode('en'));
 		$this->assertSame('en', $app->languageCode());
-		$this->assertSame(null, $app->languageCode('fr'));
+		$this->assertNull($app->languageCode('fr'));
 	}
 }

@@ -66,7 +66,7 @@ class SessionTest extends TestCase
 		$this->assertSame(7200, $session->duration());
 		$this->assertSame(1800, $session->timeout());
 		$this->assertSame(1337000000, $activityProperty->getValue($session)); // timestamp is from mock
-		$this->assertSame(true, $session->renewable());
+		$this->assertTrue($session->renewable());
 		$this->assertSame([], $session->data()->get());
 		$this->assertNull($session->token());
 		$this->assertWriteMode(false, $session);
@@ -82,8 +82,8 @@ class SessionTest extends TestCase
 		$this->assertSame(1337000000 + 3660, $session->expiryTime()); // timestamp is from mock
 		$this->assertSame(3600, $session->duration());
 		$this->assertFalse($session->timeout());
-		$this->assertSame(null, $activityProperty->getValue($session));
-		$this->assertSame(false, $session->renewable());
+		$this->assertNull($activityProperty->getValue($session));
+		$this->assertFalse($session->renewable());
 		$this->assertSame([], $session->data()->get());
 		$this->assertNull($session->token());
 		$this->assertWriteMode(false, $session);
@@ -367,7 +367,7 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(true, $session);
 		$this->assertFalse($session->timeout(false));
 		$this->assertFalse($session->timeout());
-		$this->assertSame(null, $activityProperty->getValue($session));
+		$this->assertNull($activityProperty->getValue($session));
 		$this->assertWriteMode(true, $session);
 	}
 
@@ -566,7 +566,7 @@ class SessionTest extends TestCase
 		$this->assertWriteMode(true, $session);
 		$this->assertTrue(isset($this->store->isLocked['9999999999.valid']));
 		$this->assertSame(1234, $session->timeout());
-		$this->assertSame(false, $session->renewable());
+		$this->assertFalse($session->renewable());
 		$this->assertSame('aDifferentValue', $session->data()->get('someKey'));
 
 		$session->commit();
@@ -769,13 +769,13 @@ class SessionTest extends TestCase
 
 		$this->assertWriteMode(false, $session);
 		$this->assertFalse(isset($this->store->isLocked['9999999999.valid']));
-		$this->assertSame(null, $session->data()->get('someId'));
+		$this->assertNull($session->data()->get('someId'));
 
 		// manually overwrite some data like another thread would do
 		$this->store->sessions['9999999999.valid']['data']['someId'] = 123;
 		$this->assertWriteMode(false, $session);
 		$this->assertFalse(isset($this->store->isLocked['9999999999.valid']));
-		$this->assertSame(null, $session->data()->get('someId'));
+		$this->assertNull($session->data()->get('someId'));
 
 		// now trigger a reload of the session by setting a value
 		$session->data()->increment('someId', 1);

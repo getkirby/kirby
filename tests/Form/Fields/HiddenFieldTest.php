@@ -10,7 +10,7 @@ class HiddenFieldTest extends TestCase
 
 		$this->assertSame('hidden', $field->type());
 		$this->assertSame('hidden', $field->name());
-		$this->assertSame(null, $field->value());
+		$this->assertNull($field->value());
 		$this->assertTrue($field->save());
 	}
 }

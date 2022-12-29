@@ -500,7 +500,7 @@ class FTest extends TestCase
 	public function testMimeToExtension()
 	{
 		$this->assertSame('jpg', F::mimeToExtension('image/jpeg'));
-		$this->assertSame(false, F::mimeToExtension('image/something'));
+		$this->assertFalse(F::mimeToExtension('image/something'));
 	}
 
 	/**
@@ -509,7 +509,7 @@ class FTest extends TestCase
 	public function testMimeToType()
 	{
 		$this->assertSame('image', F::mimeToType('image/jpeg'));
-		$this->assertSame(false, F::mimeToType('image/something'));
+		$this->assertFalse(F::mimeToType('image/something'));
 	}
 
 	/**

@@ -13,7 +13,7 @@ class CollectionGetterTest extends TestCase
 
 		$this->assertSame('eins', $collection->one);
 		$this->assertSame('eins', $collection->ONE);
-		$this->assertSame(null, $collection->three);
+		$this->assertNull($collection->three);
 	}
 
 	public function testGet()
@@ -24,7 +24,7 @@ class CollectionGetterTest extends TestCase
 		]);
 
 		$this->assertSame('eins', $collection->get('one'));
-		$this->assertSame(null, $collection->get('three'));
+		$this->assertNull($collection->get('three'));
 		$this->assertSame('default', $collection->get('three', 'default'));
 	}
 
@@ -37,7 +37,7 @@ class CollectionGetterTest extends TestCase
 
 		$this->assertSame('eins', $collection->one());
 		$this->assertSame('zwei', $collection->two());
-		$this->assertSame(null, $collection->three());
+		$this->assertNull($collection->three());
 	}
 
 	public function testGetAttribute()
@@ -48,9 +48,9 @@ class CollectionGetterTest extends TestCase
 		]);
 
 		$this->assertSame('eins', $collection->getAttribute($collection->toArray(), 'one'));
-		$this->assertSame(null, $collection->getAttribute($collection->toArray(), 'three'));
+		$this->assertNull($collection->getAttribute($collection->toArray(), 'three'));
 
 		$this->assertSame('zwei', $collection->getAttribute($collection, 'two'));
-		$this->assertSame(null, $collection->getAttribute($collection, 'three'));
+		$this->assertNull($collection->getAttribute($collection, 'three'));
 	}
 }

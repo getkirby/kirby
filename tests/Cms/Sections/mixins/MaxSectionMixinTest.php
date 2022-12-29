@@ -35,7 +35,7 @@ class MaxSectionMixinTest extends TestCase
 			'model' => $this->page,
 		]);
 
-		$this->assertSame(null, $section->max());
+		$this->assertNull($section->max());
 	}
 
 	public function testMax()

@@ -355,7 +355,7 @@ class ViewTest extends TestCase
 
 		$this->assertSame($expected, $data['$languages']);
 		$this->assertSame($expected[0], $data['$language']);
-		$this->assertSame(null, $data['$direction']);
+		$this->assertNull($data['$direction']);
 	}
 
 	/**

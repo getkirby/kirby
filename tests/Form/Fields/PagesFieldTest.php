@@ -51,8 +51,8 @@ class PagesFieldTest extends TestCase
 		$this->assertSame('pages', $field->name());
 		$this->assertSame([], $field->value());
 		$this->assertSame([], $field->default());
-		$this->assertSame(null, $field->max());
-		$this->assertSame(true, $field->multiple());
+		$this->assertNull($field->max());
+		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
 	}
 

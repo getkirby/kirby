@@ -12,7 +12,7 @@ class LayoutFieldTest extends TestCase
 
 		$this->assertSame('layout', $field->type());
 		$this->assertSame('layout', $field->name());
-		$this->assertSame(null, $field->max());
+		$this->assertNull($field->max());
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 		$this->assertSame([], $field->value());
 		$this->assertSame([['1/1']], $field->layouts());

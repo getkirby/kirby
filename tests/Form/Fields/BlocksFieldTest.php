@@ -16,7 +16,7 @@ class BlocksFieldTest extends TestCase
 
 		$this->assertSame('blocks', $field->type());
 		$this->assertSame('blocks', $field->name());
-		$this->assertSame(null, $field->max());
+		$this->assertNull($field->max());
 		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
 		$this->assertSame([], $field->value());
 		$this->assertTrue($field->save());

@@ -252,7 +252,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(null, $mother->parentId());
+		$this->assertNull($mother->parentId());
 		$this->assertSame('mother', $mother->find('child')->parentId());
 	}
 
@@ -283,7 +283,7 @@ class PageTest extends TestCase
 		$blog  = $app->page('blog');
 
 		$this->assertSame($blog, $child->parent()->next());
-		$this->assertSame(null, $child->parent()->prev());
+		$this->assertNull($child->parent()->prev());
 	}
 
 	public function testInvalidParent()

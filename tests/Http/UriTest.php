@@ -185,13 +185,13 @@ class UriTest extends TestCase
 		$this->assertSame(1234, $url->port());
 
 		$url = new Uri(['port' => null]);
-		$this->assertSame(null, $url->port());
+		$this->assertNull($url->port());
 	}
 
 	public function testZeroPort()
 	{
 		$url = new Uri(['port' => 0]);
-		$this->assertSame(null, $url->port());
+		$this->assertNull($url->port());
 	}
 
 	public function testInvalidPortFormat1()
@@ -215,7 +215,7 @@ class UriTest extends TestCase
 		$this->assertSame('testuser', $url->username());
 
 		$url = new Uri(['username' => null]);
-		$this->assertSame(null, $url->username());
+		$this->assertNull($url->username());
 	}
 
 	public function testValidPassword()
@@ -224,7 +224,7 @@ class UriTest extends TestCase
 		$this->assertSame('weakpassword', $url->password());
 
 		$url = new Uri(['password' => null]);
-		$this->assertSame(null, $url->password());
+		$this->assertNull($url->password());
 	}
 
 	public function testValidPath()
@@ -263,7 +263,7 @@ class UriTest extends TestCase
 		$this->assertSame('top', $url->fragment());
 
 		$url = new Uri(['fragment' => null]);
-		$this->assertSame(null, $url->fragment());
+		$this->assertNull($url->fragment());
 	}
 
 	public function testAuth()
@@ -289,7 +289,7 @@ class UriTest extends TestCase
 	public function testBaseWithoutHost()
 	{
 		$url = new Uri();
-		$this->assertSame(null, $url->base());
+		$this->assertNull($url->base());
 	}
 
 	public function testToArray()

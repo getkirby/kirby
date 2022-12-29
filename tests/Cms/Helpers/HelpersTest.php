@@ -117,7 +117,7 @@ class HelpersTest extends TestCase
 			$this->assertSame('Some warning', $errstr);
 		});
 
-		$this->assertSame(true, Helpers::handleErrors(
+		$this->assertTrue(Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
 			function (int $errno, string $errstr) {
 				$this->assertSame(E_USER_WARNING, $errno);

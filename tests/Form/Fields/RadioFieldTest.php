@@ -11,7 +11,7 @@ class RadioFieldTest extends TestCase
 		$this->assertSame('radio', $field->type());
 		$this->assertSame('radio', $field->name());
 		$this->assertSame('', $field->value());
-		$this->assertSame(null, $field->icon());
+		$this->assertNull($field->icon());
 		$this->assertSame([], $field->options());
 		$this->assertTrue($field->save());
 	}

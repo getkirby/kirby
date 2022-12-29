@@ -35,7 +35,7 @@ class MinSectionMixinTest extends TestCase
 			'model' => $this->page,
 		]);
 
-		$this->assertSame(null, $section->min());
+		$this->assertNull($section->min());
 	}
 
 	public function testMin()

@@ -57,7 +57,7 @@ class CollectionPaginatorTest extends TestCase
 
 		$this->assertSame('drei', $collection->offset(2)->first());
 		$this->assertSame('vier', $collection->offset(3)->first());
-		$this->assertSame(null, $collection->offset(99)->first());
+		$this->assertNull($collection->offset(99)->first());
 	}
 
 	public function testPaginate()

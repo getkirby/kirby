@@ -203,7 +203,7 @@ class PaginationTest extends TestCase
 		$this->assertSame(1, $pagination->prevPage());
 
 		$pagination = new Pagination(['page' => 1, 'total' => 42]);
-		$this->assertSame(null, $pagination->prevPage());
+		$this->assertNull($pagination->prevPage());
 	}
 
 	public function testHasNextPage()
@@ -224,7 +224,7 @@ class PaginationTest extends TestCase
 		$this->assertSame(2, $pagination->nextPage());
 
 		$pagination = new Pagination(['page' => 2, 'total' => 30]);
-		$this->assertSame(null, $pagination->nextPage());
+		$this->assertNull($pagination->nextPage());
 	}
 
 	public function testIsFirstPage()

@@ -30,7 +30,7 @@ class EmptySectionMixinTest extends TestCase
 			'model' => $this->page,
 		]);
 
-		$this->assertSame(null, $section->empty());
+		$this->assertNull($section->empty());
 	}
 
 	public function testEmpty()

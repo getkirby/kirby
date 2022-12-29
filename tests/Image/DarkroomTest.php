@@ -123,22 +123,22 @@ class DarkroomTest extends TestCase
 			'grayscale' => true
 		]);
 
-		$this->assertSame(true, $options['grayscale']);
+		$this->assertTrue($options['grayscale']);
 
 		// greyscale
 		$options = $darkroom->preprocess($this->file(), [
 			'greyscale' => true
 		]);
 
-		$this->assertSame(true, $options['grayscale']);
-		$this->assertSame(false, isset($options['greyscale']));
+		$this->assertTrue($options['grayscale']);
+		$this->assertFalse(isset($options['greyscale']));
 
 		// bw
 		$options = $darkroom->preprocess($this->file(), [
 			'bw' => true
 		]);
 
-		$this->assertSame(true, $options['grayscale']);
-		$this->assertSame(false, isset($options['bw']));
+		$this->assertTrue($options['grayscale']);
+		$this->assertFalse(isset($options['bw']));
 	}
 }

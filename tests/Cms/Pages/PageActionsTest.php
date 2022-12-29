@@ -460,7 +460,7 @@ class PageActionsTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertSame(null, $page->headline()->value());
+		$this->assertNull($page->headline()->value());
 
 		$drafts = $this->app->site()->drafts();
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();
@@ -568,7 +568,7 @@ class PageActionsTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertSame(null, $page->headline()->value());
+		$this->assertNull($page->headline()->value());
 
 		$drafts = $this->app->site()->drafts();
 		$childrenAndDrafts = $this->app->site()->childrenAndDrafts();

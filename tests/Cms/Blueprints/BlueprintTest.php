@@ -322,9 +322,9 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame('foo', $field['after']);
 		$this->assertSame('bar', $field['before']);
-		$this->assertSame(true, $field['required']);
+		$this->assertTrue($field['required']);
 		$this->assertSame('text', $field['type']);
-		$this->assertSame(false, $field['translatable']);
+		$this->assertFalse($field['translatable']);
 		$this->assertSame('1/3', $field['width']);
 	}
 

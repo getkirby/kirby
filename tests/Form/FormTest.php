@@ -272,7 +272,7 @@ class FormTest extends TestCase
 		$this->assertArrayHasKey('a', $form->toArray()['fields']);
 		$this->assertArrayHasKey('b', $form->toArray()['fields']);
 		$this->assertCount(2, $form->toArray()['fields']);
-		$this->assertSame(false, $form->toArray()['invalid']);
+		$this->assertFalse($form->toArray()['invalid']);
 	}
 
 	public function testContent()

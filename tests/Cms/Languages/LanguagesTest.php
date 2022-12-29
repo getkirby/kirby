@@ -113,7 +113,7 @@ class LanguagesTest extends TestCase
 		]);
 
 		$this->assertSame('tr', $language->code());
-		$this->assertSame(false, $language->isDefault());
+		$this->assertFalse($language->isDefault());
 		$this->assertSame('ltr', $language->direction());
 		$this->assertSame('tr', $language->name());
 		$this->assertSame('/tr', $language->url());

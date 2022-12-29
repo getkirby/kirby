@@ -176,13 +176,13 @@ class RemoteTest extends TestCase
 	public function testContent()
 	{
 		$request = Remote::put('https://getkirby.com');
-		$this->assertSame(null, $request->content());
+		$this->assertNull($request->content());
 	}
 
 	public function testCode()
 	{
 		$request = Remote::put('https://getkirby.com');
-		$this->assertSame(null, $request->code());
+		$this->assertNull($request->code());
 	}
 
 	public function testDelete()

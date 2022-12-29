@@ -84,7 +84,7 @@ class PageSortTest extends TestCase
 		$unlisted = $page->changeStatus('unlisted');
 
 		$this->assertSame('unlisted', $unlisted->status());
-		$this->assertSame(null, $unlisted->num());
+		$this->assertNull($unlisted->num());
 		$this->assertFalse($unlisted->parentModel()->drafts()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
 	}
@@ -105,7 +105,7 @@ class PageSortTest extends TestCase
 		$unlisted = $listed->changeStatus('unlisted');
 
 		$this->assertTrue($unlisted->isUnlisted());
-		$this->assertSame(null, $unlisted->num());
+		$this->assertNull($unlisted->num());
 
 		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
@@ -121,7 +121,7 @@ class PageSortTest extends TestCase
 		$unlisted = $page->changeStatus('unlisted');
 
 		$this->assertTrue($unlisted->isUnlisted());
-		$this->assertSame(null, $unlisted->num());
+		$this->assertNull($unlisted->num());
 
 		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
@@ -151,7 +151,7 @@ class PageSortTest extends TestCase
 
 		$this->assertTrue($draft->isDraft());
 		$this->assertSame('draft', $draft->status());
-		$this->assertSame(null, $draft->num());
+		$this->assertNull($draft->num());
 		$this->assertTrue($draft->parentModel()->drafts()->has($draft));
 		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
 	}
@@ -615,7 +615,7 @@ class PageSortTest extends TestCase
 			$page = $page->changeStatus('unlisted');
 
 			$this->assertTrue($page->exists());
-			$this->assertSame(null, $page->num());
+			$this->assertNull($page->num());
 		}
 
 		$this->assertSame($chars, $this->site()->children()->keys());

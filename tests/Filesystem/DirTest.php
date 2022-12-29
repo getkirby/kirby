@@ -409,7 +409,7 @@ class DirTest extends TestCase
 
 		$this->assertSame('a', $inventory['children'][0]['model']);
 		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertSame(null, $inventory['children'][2]['model']);
+		$this->assertNull($inventory['children'][2]['model']);
 
 		Page::$models = [];
 	}
@@ -453,7 +453,7 @@ class DirTest extends TestCase
 
 		$this->assertSame('a', $inventory['children'][0]['model']);
 		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertSame(null, $inventory['children'][2]['model']);
+		$this->assertNull($inventory['children'][2]['model']);
 
 		Page::$models = [];
 	}

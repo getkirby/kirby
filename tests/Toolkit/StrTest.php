@@ -1262,12 +1262,12 @@ EOT;
 		$this->assertSame(['a'], Str::toType('a', []));
 
 		// string to bool
-		$this->assertSame(true, Str::toType(true, 'bool'));
-		$this->assertSame(true, Str::toType('true', 'bool'));
-		$this->assertSame(true, Str::toType('true', 'boolean'));
-		$this->assertSame(true, Str::toType(1, 'bool'));
-		$this->assertSame(true, Str::toType('1', 'bool'));
-		$this->assertSame(true, Str::toType('1', true));
+		$this->assertTrue(Str::toType(true, 'bool'));
+		$this->assertTrue(Str::toType('true', 'bool'));
+		$this->assertTrue(Str::toType('true', 'boolean'));
+		$this->assertTrue(Str::toType(1, 'bool'));
+		$this->assertTrue(Str::toType('1', 'bool'));
+		$this->assertTrue(Str::toType('1', true));
 		$this->assertFalse(Str::toType(false, 'bool'));
 		$this->assertFalse(Str::toType('false', 'bool'));
 		$this->assertFalse(Str::toType('false', 'boolean'));

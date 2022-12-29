@@ -103,7 +103,7 @@ class UrlTest extends TestCase
 
 	public function testBase()
 	{
-		$this->assertSame(null, Url::base());
+		$this->assertNull(Url::base());
 		$this->assertSame('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
 	}
 

@@ -10,8 +10,8 @@ class HeadlineFieldTest extends TestCase
 
 		$this->assertSame('headline', $field->type());
 		$this->assertSame('headline', $field->name());
-		$this->assertSame(null, $field->value());
-		$this->assertSame(null, $field->label());
+		$this->assertNull($field->value());
+		$this->assertNull($field->label());
 		$this->assertFalse($field->save());
 		$this->assertTrue($field->numbered());
 	}

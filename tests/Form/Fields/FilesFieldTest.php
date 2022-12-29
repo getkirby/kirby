@@ -70,8 +70,8 @@ class FilesFieldTest extends TestCase
 		$this->assertSame([], $field->value());
 		$this->assertSame([], $field->default());
 		$this->assertSame('list', $field->layout());
-		$this->assertSame(null, $field->max());
-		$this->assertSame(true, $field->multiple());
+		$this->assertNull($field->max());
+		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
 	}
 

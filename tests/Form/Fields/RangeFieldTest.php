@@ -10,11 +10,11 @@ class RangeFieldTest extends TestCase
 
 		$this->assertSame('range', $field->type());
 		$this->assertSame('range', $field->name());
-		$this->assertSame(null, $field->value());
-		$this->assertSame(null, $field->default());
-		$this->assertSame(null, $field->min());
+		$this->assertNull($field->value());
+		$this->assertNull($field->default());
+		$this->assertNull($field->min());
 		$this->assertSame(100.0, $field->max());
-		$this->assertSame(null, $field->step());
+		$this->assertNull($field->step());
 		$this->assertTrue($field->tooltip());
 		$this->assertTrue($field->save());
 	}

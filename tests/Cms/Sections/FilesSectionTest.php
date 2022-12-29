@@ -136,7 +136,7 @@ class FilesSectionTest extends TestCase
 			'model' => $a,
 		]);
 
-		$this->assertSame(null, $section->link());
+		$this->assertNull($section->link());
 		$this->assertSame($a, $section->parent());
 		$this->assertSame('pages/a/files', $section->upload()['api']);
 

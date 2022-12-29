@@ -56,7 +56,7 @@ class CacheTest extends TestCase
 		$this->assertSame(1234, $cache->get('foo'));
 
 		$cache->set('foo', null);
-		$this->assertSame(null, $cache->get('foo', 'default'));
+		$this->assertNull($cache->get('foo', 'default'));
 
 		$this->assertSame('default', $cache->get('doesnotexist', 'default'));
 
@@ -124,7 +124,7 @@ class CacheTest extends TestCase
 		$this->assertSame(time() + 720, $cache->expires('foo'));
 
 		$cache->set('foo', 'foo');
-		$this->assertSame(null, $cache->expires('foo'));
+		$this->assertNull($cache->expires('foo'));
 
 		$this->assertFalse($cache->expires('doesnotexist'));
 	}
