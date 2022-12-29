@@ -88,7 +88,7 @@ class DirTest extends TestCase
 		$this->assertTrue($result);
 
 		$this->assertFileExists($target . '/a.txt');
-		$this->assertTrue(is_dir($target . '/subfolder'));
+		$this->assertDirectoryExists($target . '/subfolder');
 		$this->assertFileDoesNotExist($target . '/subfolder/b.txt');
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
@@ -106,7 +106,7 @@ class DirTest extends TestCase
 		$this->assertTrue($result);
 
 		$this->assertFileExists($target . '/a.txt');
-		$this->assertTrue(is_dir($target . '/subfolder'));
+		$this->assertDirectoryExists($target . '/subfolder');
 		$this->assertFileExists($target . '/subfolder/b.txt');
 		$this->assertFileExists($target . '/subfolder/.gitignore');
 	}
@@ -599,9 +599,9 @@ class DirTest extends TestCase
 	{
 		Dir::make($this->tmp);
 
-		$this->assertTrue(is_dir($this->tmp));
+		$this->assertDirectoryExists($this->tmp);
 		$this->assertTrue(Dir::remove($this->tmp));
-		$this->assertFalse(is_dir($this->tmp));
+		$this->assertDirectoryDoesNotExist($this->tmp);
 	}
 
 	/**

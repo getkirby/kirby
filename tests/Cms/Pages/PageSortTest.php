@@ -626,10 +626,10 @@ class PageSortTest extends TestCase
 
 		$this->assertSame(array_reverse($chars), $this->site()->children()->keys());
 
-		$this->assertTrue(is_dir($this->fixtures . '/content/4_a'));
-		$this->assertTrue(is_dir($this->fixtures . '/content/3_b'));
-		$this->assertTrue(is_dir($this->fixtures . '/content/2_c'));
-		$this->assertTrue(is_dir($this->fixtures . '/content/1_d'));
+		$this->assertDirectoryExists($this->fixtures . '/content/4_a');
+		$this->assertDirectoryExists($this->fixtures . '/content/3_b');
+		$this->assertDirectoryExists($this->fixtures . '/content/2_c');
+		$this->assertDirectoryExists($this->fixtures . '/content/1_d');
 	}
 
 	public function testUpdateWithDateBasedNumbering()

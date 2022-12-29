@@ -172,7 +172,7 @@ class FTest extends TestCase
 		F::write($src, 'test');
 
 		$this->assertTrue(F::link($src, $link));
-		$this->assertTrue(is_file($link));
+		$this->assertFileExists($link);
 	}
 
 	/**
@@ -789,7 +789,7 @@ class FTest extends TestCase
 		$this->assertTrue(F::unlink($this->tmp . '/link-exists'));
 		$this->assertTrue(F::unlink($this->tmp . '/link-invalid'));
 
-		$this->assertFalse(is_file($this->tmp . '/file'));
+		$this->assertFileDoesNotExist($this->tmp . '/file');
 		$this->assertFalse(is_link($this->tmp . '/link-exists'));
 		$this->assertFalse(is_link($this->tmp . '/link-invalid'));
 	}
