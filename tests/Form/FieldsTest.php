@@ -35,7 +35,7 @@ class FieldsTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals('a', $fields->first()->name());
-		$this->assertEquals('b', $fields->last()->name());
+		$this->assertSame('a', $fields->first()->name());
+		$this->assertSame('b', $fields->last()->name());
 	}
 }

@@ -30,7 +30,7 @@ class EmptySectionMixinTest extends TestCase
 			'model' => $this->page,
 		]);
 
-		$this->assertEquals(null, $section->empty());
+		$this->assertSame(null, $section->empty());
 	}
 
 	public function testEmpty()
@@ -40,7 +40,7 @@ class EmptySectionMixinTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->empty());
+		$this->assertSame('Test', $section->empty());
 	}
 
 	public function testTranslateEmpty()
@@ -53,6 +53,6 @@ class EmptySectionMixinTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('EN', $section->empty());
+		$this->assertSame('EN', $section->empty());
 	}
 }

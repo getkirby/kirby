@@ -24,7 +24,7 @@ class AppLanguagesTest extends TestCase
 
 		$this->assertTrue($app->multilang());
 		$this->assertCount(2, $app->languages());
-		$this->assertEquals('en', $app->languageCode());
+		$this->assertSame('en', $app->languageCode());
 	}
 
 	public function testLanguageCode()
@@ -43,9 +43,9 @@ class AppLanguagesTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('de', $app->languageCode('de'));
-		$this->assertEquals('en', $app->languageCode('en'));
-		$this->assertEquals('en', $app->languageCode());
-		$this->assertEquals(null, $app->languageCode('fr'));
+		$this->assertSame('de', $app->languageCode('de'));
+		$this->assertSame('en', $app->languageCode('en'));
+		$this->assertSame('en', $app->languageCode());
+		$this->assertSame(null, $app->languageCode('fr'));
 	}
 }

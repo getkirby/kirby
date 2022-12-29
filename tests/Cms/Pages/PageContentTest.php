@@ -18,7 +18,7 @@ class PageContentTest extends TestCase
 		]);
 
 		$this->assertEquals($content, $page->content()->toArray());
-		$this->assertEquals('lorem ipsum', $page->text()->value());
+		$this->assertSame('lorem ipsum', $page->text()->value());
 	}
 
 	public function testInvalidContent()
@@ -38,7 +38,7 @@ class PageContentTest extends TestCase
 			'content' => []
 		]);
 
-		$this->assertEquals($page->slug(), $page->title()->value());
+		$this->assertSame($page->slug(), $page->title()->value());
 	}
 
 	public function testTitle()
@@ -50,6 +50,6 @@ class PageContentTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Custom Title', $page->title()->value());
+		$this->assertSame('Custom Title', $page->title()->value());
 	}
 }

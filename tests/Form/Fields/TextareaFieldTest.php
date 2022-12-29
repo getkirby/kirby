@@ -8,17 +8,17 @@ class TextareaFieldTest extends TestCase
 	{
 		$field = $this->field('textarea');
 
-		$this->assertEquals('textarea', $field->type());
-		$this->assertEquals('textarea', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->icon());
-		$this->assertEquals(null, $field->placeholder());
-		$this->assertEquals(true, $field->counter());
-		$this->assertEquals(null, $field->maxlength());
-		$this->assertEquals(null, $field->minlength());
-		$this->assertEquals(null, $field->size());
-		$this->assertEquals([], $field->files());
-		$this->assertEquals(['accept' => '*'], $field->uploads());
+		$this->assertSame('textarea', $field->type());
+		$this->assertSame('textarea', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertNull($field->icon());
+		$this->assertNull($field->placeholder());
+		$this->assertTrue($field->counter());
+		$this->assertNull($field->maxlength());
+		$this->assertNull($field->minlength());
+		$this->assertNull($field->size());
+		$this->assertSame([], $field->files());
+		$this->assertSame(['accept' => '*'], $field->uploads());
 		$this->assertTrue($field->save());
 	}
 
@@ -40,7 +40,7 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['bold', 'italic'], $field->buttons());
+		$this->assertSame(['bold', 'italic'], $field->buttons());
 	}
 
 	public function testDefaultTrimmed()
@@ -49,7 +49,7 @@ class TextareaFieldTest extends TestCase
 			'default' => 'test '
 		]);
 
-		$this->assertEquals('test', $field->default());
+		$this->assertSame('test', $field->default());
 	}
 
 	public function testFiles()
@@ -61,7 +61,7 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['query' => 'page.images'], $field->files());
+		$this->assertSame(['query' => 'page.images'], $field->files());
 	}
 
 	public function testFilesQuery()
@@ -71,7 +71,7 @@ class TextareaFieldTest extends TestCase
 			'files' => 'page.images'
 		]);
 
-		$this->assertEquals(['query' => 'page.images'], $field->files());
+		$this->assertSame(['query' => 'page.images'], $field->files());
 	}
 
 	public function testFilesWithInvalidInput()
@@ -80,7 +80,7 @@ class TextareaFieldTest extends TestCase
 			'files' => 1
 		]);
 
-		$this->assertEquals([], $field->files());
+		$this->assertSame([], $field->files());
 	}
 
 	public function testMaxLength()
@@ -114,7 +114,7 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
 	}
 
 	public function testUploadsDisabled()
@@ -136,7 +136,7 @@ class TextareaFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
+		$this->assertSame(['parent' => 'page.parent', 'accept' => '*'], $field->uploads());
 	}
 
 	public function testUploadsTemplate()
@@ -146,7 +146,7 @@ class TextareaFieldTest extends TestCase
 			'uploads' => 'test'
 		]);
 
-		$this->assertEquals(['template' => 'test', 'accept' => '*'], $field->uploads());
+		$this->assertSame(['template' => 'test', 'accept' => '*'], $field->uploads());
 	}
 
 	public function testUploadsWithInvalidInput()
@@ -156,7 +156,7 @@ class TextareaFieldTest extends TestCase
 			'uploads' => 1,
 		]);
 
-		$this->assertEquals(['accept' => '*'], $field->uploads());
+		$this->assertSame(['accept' => '*'], $field->uploads());
 	}
 
 	public function testValueTrimmed()
@@ -165,6 +165,6 @@ class TextareaFieldTest extends TestCase
 			'value' => 'test '
 		]);
 
-		$this->assertEquals('test', $field->value());
+		$this->assertSame('test', $field->value());
 	}
 }

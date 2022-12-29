@@ -20,16 +20,16 @@ class ResponseTest extends TestCase
 	public function testBody()
 	{
 		$response = new Response();
-		$this->assertEquals('', $response->body());
+		$this->assertSame('', $response->body());
 
 		$response = new Response('test');
-		$this->assertEquals('test', $response->body());
+		$this->assertSame('test', $response->body());
 
 		$response = new Response([
 			'body' => 'test'
 		]);
 
-		$this->assertEquals('test', $response->body());
+		$this->assertSame('test', $response->body());
 	}
 
 	public function testDownload()
@@ -134,7 +134,7 @@ class ResponseTest extends TestCase
 	public function testHeaders()
 	{
 		$response = new Response();
-		$this->assertEquals([], $response->headers());
+		$this->assertSame([], $response->headers());
 
 		$response = new Response([
 			'headers' => [
@@ -142,7 +142,7 @@ class ResponseTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['test' => 'test'], $response->headers());
+		$this->assertSame(['test' => 'test'], $response->headers());
 	}
 
 	public function testHeader()
@@ -156,16 +156,16 @@ class ResponseTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $response->header('test'));
+		$this->assertSame('test', $response->header('test'));
 	}
 
 	public function testJson()
 	{
 		$response = Response::json();
 
-		$this->assertEquals('application/json', $response->type());
-		$this->assertEquals(200, $response->code());
-		$this->assertEquals('', $response->body());
+		$this->assertSame('application/json', $response->type());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('', $response->body());
 	}
 
 	public function testJsonWithArray()
@@ -174,7 +174,7 @@ class ResponseTest extends TestCase
 		$expected = json_encode($data);
 		$response = Response::json($data);
 
-		$this->assertEquals($expected, $response->body());
+		$this->assertSame($expected, $response->body());
 	}
 
 	public function testJsonWithPrettyArray()
@@ -183,7 +183,7 @@ class ResponseTest extends TestCase
 		$expected = json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 		$response = Response::json($data, 200, true);
 
-		$this->assertEquals($expected, $response->body());
+		$this->assertSame($expected, $response->body());
 	}
 
 	public function testFile()
@@ -214,46 +214,46 @@ class ResponseTest extends TestCase
 	public function testType()
 	{
 		$response = new Response();
-		$this->assertEquals('text/html', $response->type());
+		$this->assertSame('text/html', $response->type());
 
 		$response = new Response('', 'image/jpeg');
-		$this->assertEquals('image/jpeg', $response->type());
+		$this->assertSame('image/jpeg', $response->type());
 
 		$response = new Response([
 			'type' => 'image/jpeg'
 		]);
 
-		$this->assertEquals('image/jpeg', $response->type());
+		$this->assertSame('image/jpeg', $response->type());
 	}
 
 	public function testCharset()
 	{
 		$response = new Response();
-		$this->assertEquals('UTF-8', $response->charset());
+		$this->assertSame('UTF-8', $response->charset());
 
 		$response = new Response('', 'text/html', 200, [], 'test');
-		$this->assertEquals('test', $response->charset());
+		$this->assertSame('test', $response->charset());
 
 		$response = new Response([
 			'charset' => 'test'
 		]);
 
-		$this->assertEquals('test', $response->charset());
+		$this->assertSame('test', $response->charset());
 	}
 
 	public function testCode()
 	{
 		$response = new Response();
-		$this->assertEquals(200, $response->code());
+		$this->assertSame(200, $response->code());
 
 		$response = new Response('', 'text/html', 404);
-		$this->assertEquals(404, $response->code());
+		$this->assertSame(404, $response->code());
 
 		$response = new Response([
 			'code' => 404
 		]);
 
-		$this->assertEquals(404, $response->code());
+		$this->assertSame(404, $response->code());
 	}
 
 	public function testRedirect()
@@ -310,8 +310,8 @@ class ResponseTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertEquals($body, 'test');
-		$this->assertEquals($code, 200);
+		$this->assertSame($body, 'test');
+		$this->assertSame($code, 200);
 	}
 
 	/**
@@ -336,8 +336,8 @@ class ResponseTest extends TestCase
 
 		ob_end_clean();
 
-		$this->assertEquals($body, 'test');
-		$this->assertEquals($code, 200);
+		$this->assertSame($body, 'test');
+		$this->assertSame($code, 200);
 	}
 
 	public function testToArray()
@@ -352,6 +352,6 @@ class ResponseTest extends TestCase
 			'body'    => '',
 		];
 
-		$this->assertEquals($expected, $response->toArray());
+		$this->assertSame($expected, $response->toArray());
 	}
 }

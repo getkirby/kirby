@@ -78,8 +78,8 @@ class PageCreateTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('A', $page->a()->value());
-		$this->assertEquals('B', $page->b()->value());
+		$this->assertSame('A', $page->a()->value());
+		$this->assertSame('B', $page->b()->value());
 	}
 
 	public function testCreateDraftWithDefaultsAndContent()
@@ -105,8 +105,8 @@ class PageCreateTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Custom A', $page->a()->value());
-		$this->assertEquals('B', $page->b()->value());
+		$this->assertSame('Custom A', $page->a()->value());
+		$this->assertSame('B', $page->b()->value());
 	}
 
 	public function testCreateListedPage()
@@ -151,9 +151,9 @@ class PageCreateTest extends TestCase
 		]);
 
 		$this->assertTrue($child->exists());
-		$this->assertEquals('the-template', $child->intendedTemplate()->name());
-		$this->assertEquals('child', $child->slug());
-		$this->assertEquals('mother/child', $child->id());
+		$this->assertSame('the-template', $child->intendedTemplate()->name());
+		$this->assertSame('child', $child->slug());
+		$this->assertSame('mother/child', $child->id());
 		$this->assertTrue($mother->drafts()->has($child->id()));
 	}
 
@@ -185,7 +185,7 @@ class PageCreateTest extends TestCase
 			'source'   => $source
 		]);
 
-		$this->assertEquals('test.md', $file->filename());
-		$this->assertEquals('test/test.md', $file->id());
+		$this->assertSame('test.md', $file->filename());
+		$this->assertSame('test/test.md', $file->id());
 	}
 }

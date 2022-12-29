@@ -58,19 +58,19 @@ class ExifTest extends TestCase
 	public function testExposure()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals(null, $exif->exposure());
+		$this->assertNull($exif->exposure());
 	}
 
 	public function testAperture()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals(null, $exif->aperture());
+		$this->assertNull($exif->aperture());
 	}
 
 	public function testIso()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals(null, $exif->iso());
+		$this->assertNull($exif->iso());
 	}
 
 	public function testIsColor()
@@ -88,7 +88,7 @@ class ExifTest extends TestCase
 	public function testFocalLength()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals(null, $exif->focalLength());
+		$this->assertNull($exif->focalLength());
 	}
 
 	public function testParseTimestampDateTimeOriginal()

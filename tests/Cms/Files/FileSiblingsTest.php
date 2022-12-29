@@ -42,9 +42,9 @@ class FileSiblingsTest extends TestCase
 	{
 		$collection = $this->files();
 
-		$this->assertEquals(0, $collection->first()->indexOf());
-		$this->assertEquals(1, $collection->nth(1)->indexOf());
-		$this->assertEquals(3, $collection->last()->indexOf());
+		$this->assertSame(0, $collection->first()->indexOf());
+		$this->assertSame(1, $collection->nth(1)->indexOf());
+		$this->assertSame(3, $collection->last()->indexOf());
 	}
 
 	public function testIsFirst()
@@ -76,7 +76,7 @@ class FileSiblingsTest extends TestCase
 	{
 		$collection = $this->files();
 
-		$this->assertEquals($collection->first()->next(), $collection->nth(1));
+		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
 	public function testNextAll()
@@ -86,15 +86,15 @@ class FileSiblingsTest extends TestCase
 
 		$this->assertCount(3, $first->nextAll());
 
-		$this->assertEquals($first->nextAll()->first(), $collection->nth(1));
-		$this->assertEquals($first->nextAll()->last(), $collection->nth(3));
+		$this->assertSame($first->nextAll()->first(), $collection->nth(1));
+		$this->assertSame($first->nextAll()->last(), $collection->nth(3));
 	}
 
 	public function testPrev()
 	{
 		$collection = $this->files();
 
-		$this->assertEquals($collection->last()->prev(), $collection->nth(2));
+		$this->assertSame($collection->last()->prev(), $collection->nth(2));
 	}
 
 	public function testPrevAll()
@@ -104,8 +104,8 @@ class FileSiblingsTest extends TestCase
 
 		$this->assertCount(3, $last->prevAll());
 
-		$this->assertEquals($last->prevAll()->first(), $collection->nth(0));
-		$this->assertEquals($last->prevAll()->last(), $collection->nth(2));
+		$this->assertSame($last->prevAll()->first(), $collection->nth(0));
+		$this->assertSame($last->prevAll()->last(), $collection->nth(2));
 	}
 
 	public function testSiblings()
@@ -114,7 +114,7 @@ class FileSiblingsTest extends TestCase
 		$file     = $files->nth(1);
 		$siblings = $files->not($file);
 
-		$this->assertEquals($files, $file->siblings());
+		$this->assertSame($files, $file->siblings());
 		$this->assertEquals($siblings, $file->siblings(false));
 	}
 

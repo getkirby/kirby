@@ -7,13 +7,13 @@ class FieldTest extends TestCase
 	public function test__debuginfo()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals(['title' => 'Title'], $field->__debugInfo());
+		$this->assertSame(['title' => 'Title'], $field->__debugInfo());
 	}
 
 	public function testKey()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals('title', $field->key());
+		$this->assertSame('title', $field->key());
 	}
 
 	public function testExists()
@@ -34,7 +34,7 @@ class FieldTest extends TestCase
 		$model = new Page(['slug' => 'test']);
 		$field = new Field($model, 'title', 'Title');
 
-		$this->assertEquals($model, $field->model());
+		$this->assertSame($model, $field->model());
 	}
 
 	public function testParent()
@@ -42,46 +42,46 @@ class FieldTest extends TestCase
 		$parent = new Page(['slug' => 'test']);
 		$field  = new Field($parent, 'title', 'Title');
 
-		$this->assertEquals($parent, $field->parent());
+		$this->assertSame($parent, $field->parent());
 	}
 
 	public function testToString()
 	{
 		$field = new Field(null, 'title', 'Title');
 
-		$this->assertEquals('Title', $field->toString());
-		$this->assertEquals('Title', $field->__toString());
-		$this->assertEquals('Title', (string)$field);
+		$this->assertSame('Title', $field->toString());
+		$this->assertSame('Title', $field->__toString());
+		$this->assertSame('Title', (string)$field);
 	}
 
 	public function testToArray()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals(['title' => 'Title'], $field->toArray());
+		$this->assertSame(['title' => 'Title'], $field->toArray());
 	}
 
 	public function testValue()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals('Title', $field->value());
+		$this->assertSame('Title', $field->value());
 	}
 
 	public function testValueSetter()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals('Title', $field->value());
+		$this->assertSame('Title', $field->value());
 		$field = $field->value('Modified');
-		$this->assertEquals('Modified', $field->value());
+		$this->assertSame('Modified', $field->value());
 	}
 
 	public function testValueCallbackSetter()
 	{
 		$field = new Field(null, 'title', 'Title');
-		$this->assertEquals('Title', $field->value());
+		$this->assertSame('Title', $field->value());
 		$field = $field->value(function ($value) {
 			return 'Modified';
 		});
-		$this->assertEquals('Modified', $field->value());
+		$this->assertSame('Modified', $field->value());
 	}
 
 	public function testInvalidValueSetter()
@@ -105,8 +105,8 @@ class FieldTest extends TestCase
 		$original = new Field(null, 'title', 'Title');
 		$modified = $original->test();
 
-		$this->assertEquals('Title', $original->value);
-		$this->assertEquals('Test', $modified->value);
+		$this->assertSame('Title', $original->value);
+		$this->assertSame('Test', $modified->value);
 	}
 
 	public function emptyDataProvider()
@@ -130,7 +130,7 @@ class FieldTest extends TestCase
 	public function testIsEmpty($input, $expected)
 	{
 		$field = new Field(null, 'test', $input);
-		$this->assertEquals($expected, $field->isEmpty());
+		$this->assertSame($expected, $field->isEmpty());
 	}
 
 	/**
@@ -139,7 +139,7 @@ class FieldTest extends TestCase
 	public function testIsNotEmpty($input, $expected)
 	{
 		$field = new Field(null, 'test', $input);
-		$this->assertEquals(!$expected, $field->isNotEmpty());
+		$this->assertSame(!$expected, $field->isNotEmpty());
 	}
 
 	public function testCallNonExistingMethod()
@@ -147,7 +147,7 @@ class FieldTest extends TestCase
 		$field  = new Field(null, 'test', 'value');
 		$result = $field->methodDoesNotExist();
 
-		$this->assertEquals($field, $result);
+		$this->assertSame($field, $result);
 	}
 
 	public function testOrWithFieldFallback()
@@ -156,6 +156,6 @@ class FieldTest extends TestCase
 		$field    = new Field(null, 'test', '');
 		$result   = $field->or($fallback);
 
-		$this->assertEquals($fallback, $result);
+		$this->assertSame($fallback, $result);
 	}
 }

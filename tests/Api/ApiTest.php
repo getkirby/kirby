@@ -24,13 +24,13 @@ class ApiTest extends TestCase
 		$api = new Api([]);
 
 		$this->assertNull($api->authentication());
-		$this->assertEquals([], $api->collections());
-		$this->assertEquals([], $api->data());
+		$this->assertSame([], $api->collections());
+		$this->assertSame([], $api->data());
 		$this->assertFalse($api->debug());
-		$this->assertEquals([], $api->models());
-		$this->assertEquals(['query' => [], 'body' => [], 'files' => []], $api->requestData());
-		$this->assertEquals('GET', $api->requestMethod());
-		$this->assertEquals([], $api->routes());
+		$this->assertSame([], $api->models());
+		$this->assertSame(['query' => [], 'body' => [], 'files' => []], $api->requestData());
+		$this->assertSame('GET', $api->requestMethod());
+		$this->assertSame([], $api->routes());
 	}
 
 	public function test__call()
@@ -41,7 +41,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('bar', $api->foo());
+		$this->assertSame('bar', $api->foo());
 	}
 
 	public function testAuthentication()
@@ -53,11 +53,11 @@ class ApiTest extends TestCase
 				'foo' => 'bar'
 			],
 			'authentication' => $callback = function () use ($phpunit) {
-				$phpunit->assertEquals('bar', $this->foo());
+				$phpunit->assertSame('bar', $this->foo());
 			}
 		]);
 
-		$this->assertEquals($callback, $api->authentication());
+		$this->assertSame($callback, $api->authentication());
 		$api->authenticate();
 	}
 
@@ -101,10 +101,10 @@ class ApiTest extends TestCase
 		$result = $api->call('testScalar', 'POST', [
 			'query' => ['foo' => 'bar']
 		]);
-		$this->assertEquals('bar', $result);
+		$this->assertSame('bar', $result);
 
 		$result = $api->call('testModel', 'POST');
-		$this->assertEquals([
+		$this->assertSame([
 			'code'   => 200,
 			'data'   => [
 				'value' => 'Awesome test model as string, yay'
@@ -138,18 +138,18 @@ class ApiTest extends TestCase
 			}
 		]);
 
-		$this->assertEquals('something', $api->call('foo'));
+		$this->assertSame('something', $api->call('foo'));
 		$this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
-		$this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
+		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
 
 		$language = 'pt_BR';
-		$this->assertEquals('something', $api->call('foo'));
+		$this->assertSame('something', $api->call('foo'));
 		$this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
 		$this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
-		$this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
+		$this->assertSame($originalLocale, setlocale(LC_CTYPE, 0));
 	}
 
 	public function testCollections()
@@ -185,7 +185,7 @@ class ApiTest extends TestCase
 			['id' => 'b'],
 		];
 
-		$this->assertEquals($expected, $data);
+		$this->assertSame($expected, $data);
 
 		// missing collection
 		$this->expectException(NotFoundException::class);
@@ -208,10 +208,10 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($data, $api->data());
-		$this->assertEquals('A', $api->data('a'));
-		$this->assertEquals('B', $api->data('b'));
-		$this->assertEquals('C', $api->data('c', 'C'));
+		$this->assertSame($data, $api->data());
+		$this->assertSame('A', $api->data('a'));
+		$this->assertSame('B', $api->data('b'));
+		$this->assertSame('C', $api->data('c', 'C'));
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Api data for "d" does not exist');
@@ -248,7 +248,7 @@ class ApiTest extends TestCase
 		$data     = $model->toArray();
 		$expected = ['id' => 'a'];
 
-		$this->assertEquals($expected, $data);
+		$this->assertSame($expected, $data);
 
 		// missing model
 		$this->expectException(NotFoundException::class);
@@ -302,35 +302,35 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($requestData, $api->requestData());
+		$this->assertSame($requestData, $api->requestData());
 
-		$this->assertEquals($query, $api->requestData('query'));
-		$this->assertEquals($query, $api->requestQuery());
-		$this->assertEquals('A', $api->requestData('query', 'a'));
-		$this->assertEquals('A', $api->requestQuery('a'));
-		$this->assertEquals('fallback', $api->requestData('query', 'x', 'fallback'));
-		$this->assertEquals('fallback', $api->requestQuery('x', 'fallback'));
+		$this->assertSame($query, $api->requestData('query'));
+		$this->assertSame($query, $api->requestQuery());
+		$this->assertSame('A', $api->requestData('query', 'a'));
+		$this->assertSame('A', $api->requestQuery('a'));
+		$this->assertSame('fallback', $api->requestData('query', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestQuery('x', 'fallback'));
 
-		$this->assertEquals($body, $api->requestData('body'));
-		$this->assertEquals($body, $api->requestBody());
-		$this->assertEquals('B', $api->requestData('body', 'b'));
-		$this->assertEquals('B', $api->requestBody('b'));
-		$this->assertEquals('fallback', $api->requestData('body', 'x', 'fallback'));
-		$this->assertEquals('fallback', $api->requestBody('x', 'fallback'));
+		$this->assertSame($body, $api->requestData('body'));
+		$this->assertSame($body, $api->requestBody());
+		$this->assertSame('B', $api->requestData('body', 'b'));
+		$this->assertSame('B', $api->requestBody('b'));
+		$this->assertSame('fallback', $api->requestData('body', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestBody('x', 'fallback'));
 
-		$this->assertEquals($files, $api->requestData('files'));
-		$this->assertEquals($files, $api->requestFiles());
-		$this->assertEquals('C', $api->requestData('files', 'c'));
-		$this->assertEquals('C', $api->requestFiles('c'));
-		$this->assertEquals('fallback', $api->requestData('files', 'x', 'fallback'));
-		$this->assertEquals('fallback', $api->requestFiles('x', 'fallback'));
+		$this->assertSame($files, $api->requestData('files'));
+		$this->assertSame($files, $api->requestFiles());
+		$this->assertSame('C', $api->requestData('files', 'c'));
+		$this->assertSame('C', $api->requestFiles('c'));
+		$this->assertSame('fallback', $api->requestData('files', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestFiles('x', 'fallback'));
 
-		$this->assertEquals($headers, $api->requestData('headers'));
-		$this->assertEquals($headers, $api->requestHeaders());
-		$this->assertEquals('D', $api->requestData('headers', 'd'));
-		$this->assertEquals('D', $api->requestHeaders('d'));
-		$this->assertEquals('fallback', $api->requestData('headers', 'x', 'fallback'));
-		$this->assertEquals('fallback', $api->requestHeaders('x', 'fallback'));
+		$this->assertSame($headers, $api->requestData('headers'));
+		$this->assertSame($headers, $api->requestHeaders());
+		$this->assertSame('D', $api->requestData('headers', 'd'));
+		$this->assertSame('D', $api->requestHeaders('d'));
+		$this->assertSame('fallback', $api->requestData('headers', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
 	}
 
 	public function testRenderString()
@@ -347,7 +347,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $api->render('test', 'POST'));
+		$this->assertSame('test', $api->render('test', 'POST'));
 	}
 
 	public function testRenderArray()
@@ -367,7 +367,7 @@ class ApiTest extends TestCase
 		$result = $api->render('test', 'POST');
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode(['a' => 'A']), $result->body());
+		$this->assertSame(json_encode(['a' => 'A']), $result->body());
 	}
 
 	public function testRenderTrue()
@@ -393,7 +393,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderFalse()
@@ -419,7 +419,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderNull()
@@ -445,7 +445,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderException()
@@ -473,7 +473,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderExceptionWithDebugging()
@@ -509,7 +509,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
@@ -545,7 +545,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderKirbyExceptionWithDebugging()
@@ -587,7 +587,7 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
@@ -608,7 +608,7 @@ class ApiTest extends TestCase
 
 		$result = $api->render('test', 'POST');
 
-		$this->assertEquals(500, $result->code());
+		$this->assertSame(500, $result->code());
 	}
 
 	public function testRequestMethod()
@@ -617,7 +617,7 @@ class ApiTest extends TestCase
 			'requestMethod' => 'POST',
 		]);
 
-		$this->assertEquals('POST', $api->requestMethod());
+		$this->assertSame('POST', $api->requestMethod());
 	}
 
 	public function testRoutes()
@@ -633,7 +633,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($routes, $api->routes());
+		$this->assertSame($routes, $api->routes());
 	}
 
 	public function testUpload()

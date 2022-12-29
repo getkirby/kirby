@@ -38,8 +38,8 @@ class RolesRoutesTest extends TestCase
 
 		$response = $app->api()->call('roles');
 
-		$this->assertEquals('admin', $response['data'][0]['name']);
-		$this->assertEquals('editor', $response['data'][1]['name']);
+		$this->assertSame('admin', $response['data'][0]['name']);
+		$this->assertSame('editor', $response['data'][1]['name']);
 	}
 
 	public function testGet()
@@ -48,7 +48,7 @@ class RolesRoutesTest extends TestCase
 
 		$response = $app->api()->call('roles/editor');
 
-		$this->assertEquals('editor', $response['data']['name']);
-		$this->assertEquals('Editor', $response['data']['title']);
+		$this->assertSame('editor', $response['data']['name']);
+		$this->assertSame('Editor', $response['data']['title']);
 	}
 }

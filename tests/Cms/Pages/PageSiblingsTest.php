@@ -141,9 +141,9 @@ class PageSiblingsTest extends TestCase
 	{
 		$collection = $this->site()->children();
 
-		$this->assertEquals(0, $collection->first()->indexOf());
-		$this->assertEquals(1, $collection->nth(1)->indexOf());
-		$this->assertEquals(2, $collection->last()->indexOf());
+		$this->assertSame(0, $collection->first()->indexOf());
+		$this->assertSame(1, $collection->nth(1)->indexOf());
+		$this->assertSame(2, $collection->last()->indexOf());
 	}
 
 	public function testIndexOfCustomCollection()
@@ -151,8 +151,8 @@ class PageSiblingsTest extends TestCase
 		$collection = $this->site()->children();
 		$page = $collection->first();
 
-		$this->assertEquals(0, $page->indexOf());
-		$this->assertEquals(2, $page->indexOf($collection->flip()));
+		$this->assertSame(0, $page->indexOf());
+		$this->assertSame(2, $page->indexOf($collection->flip()));
 	}
 
 	public function testIsFirst()
@@ -184,7 +184,7 @@ class PageSiblingsTest extends TestCase
 	{
 		$collection = $this->site()->children();
 
-		$this->assertEquals($collection->first()->next(), $collection->nth(1));
+		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
 	public function testNextAll()
@@ -194,8 +194,8 @@ class PageSiblingsTest extends TestCase
 
 		$this->assertCount(2, $first->nextAll());
 
-		$this->assertEquals($first->nextAll()->first(), $collection->nth(1));
-		$this->assertEquals($first->nextAll()->last(), $collection->nth(2));
+		$this->assertSame($first->nextAll()->first(), $collection->nth(1));
+		$this->assertSame($first->nextAll()->last(), $collection->nth(2));
 	}
 
 	public function testNextListed()
@@ -226,7 +226,7 @@ class PageSiblingsTest extends TestCase
 	{
 		$collection = $this->site()->children();
 
-		$this->assertEquals($collection->last()->prev(), $collection->nth(1));
+		$this->assertSame($collection->last()->prev(), $collection->nth(1));
 	}
 
 	public function testPrevAll()
@@ -236,8 +236,8 @@ class PageSiblingsTest extends TestCase
 
 		$this->assertCount(2, $last->prevAll());
 
-		$this->assertEquals($last->prevAll()->first(), $collection->nth(0));
-		$this->assertEquals($last->prevAll()->last(), $collection->nth(1));
+		$this->assertSame($last->prevAll()->first(), $collection->nth(0));
+		$this->assertSame($last->prevAll()->last(), $collection->nth(1));
 	}
 
 	public function testPrevListed()
@@ -271,7 +271,7 @@ class PageSiblingsTest extends TestCase
 		$children = $site->children();
 		$siblings = $children->not($page);
 
-		$this->assertEquals($children, $page->siblings());
+		$this->assertSame($children, $page->siblings());
 		$this->assertEquals($siblings, $page->siblings(false));
 	}
 
@@ -293,7 +293,7 @@ class PageSiblingsTest extends TestCase
 		$drafts = $parent->drafts();
 		$draft  = $drafts->find('c');
 
-		$this->assertEquals($drafts, $draft->siblings());
+		$this->assertSame($drafts, $draft->siblings());
 	}
 
 	public function testTemplateSiblings()

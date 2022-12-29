@@ -18,17 +18,17 @@ class PageTestCase extends TestCase
 
 	public function assertPageSlug(string $slug)
 	{
-		$this->assertEquals($slug, $this->page()->slug());
+		$this->assertSame($slug, $this->page()->slug());
 	}
 
 	public function assertPageTemplate(string $template)
 	{
-		$this->assertEquals($template, $this->page()->template());
+		$this->assertSame($template, $this->page()->template());
 	}
 
 	public function assertPageField(string $key, string $value)
 	{
-		$this->assertEquals($value, $this->page()->content()->get($key)->value());
+		$this->assertSame($value, $this->page()->content()->get($key)->value());
 	}
 
 	public function assertPageModel(string $className)

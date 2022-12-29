@@ -30,7 +30,7 @@ class HeaderTest extends TestCase
 
 	public function testCreateSingle()
 	{
-		$this->assertEquals('Key: Value', Header::create('Key', 'Value'));
+		$this->assertSame('Key: Value', Header::create('Key', 'Value'));
 	}
 
 	public function testCreateMultiple()
@@ -45,22 +45,22 @@ class HeaderTest extends TestCase
 			'b: value b'
 		];
 
-		$this->assertEquals(implode("\r\n", $expected), Header::create($input));
+		$this->assertSame(implode("\r\n", $expected), Header::create($input));
 	}
 
 	public function testNamedStatuses()
 	{
 		$h = $this->statusHeaders;
-		$this->assertEquals($h[200], Header::success(false), 'success status should be 200');
-		$this->assertEquals($h[201], Header::created(false), 'created status should be 201');
-		$this->assertEquals($h[202], Header::accepted(false), 'accepted status should be 202');
-		$this->assertEquals($h[400], Header::error(false), 'error status should be 400');
-		$this->assertEquals($h[403], Header::forbidden(false), 'forbidden status should be 403');
-		$this->assertEquals($h[404], Header::notfound(false), 'notfound status should be 404');
-		$this->assertEquals($h[404], Header::missing(false), 'missing status should be 404');
-		$this->assertEquals($h[410], Header::gone(false), 'gone status should be 410');
-		$this->assertEquals($h[500], Header::panic(false), 'panic status should be 500');
-		$this->assertEquals($h[503], Header::unavailable(false), 'unavailable status should be 503');
+		$this->assertSame($h[200], Header::success(false), 'success status should be 200');
+		$this->assertSame($h[201], Header::created(false), 'created status should be 201');
+		$this->assertSame($h[202], Header::accepted(false), 'accepted status should be 202');
+		$this->assertSame($h[400], Header::error(false), 'error status should be 400');
+		$this->assertSame($h[403], Header::forbidden(false), 'forbidden status should be 403');
+		$this->assertSame($h[404], Header::notfound(false), 'notfound status should be 404');
+		$this->assertSame($h[404], Header::missing(false), 'missing status should be 404');
+		$this->assertSame($h[410], Header::gone(false), 'gone status should be 410');
+		$this->assertSame($h[500], Header::panic(false), 'panic status should be 500');
+		$this->assertSame($h[503], Header::unavailable(false), 'unavailable status should be 503');
 	}
 
 	public function testStatusCodeOnly()
@@ -68,44 +68,44 @@ class HeaderTest extends TestCase
 		$h = $this->statusHeaders;
 
 		// code only
-		$this->assertEquals(
+		$this->assertSame(
 			$h[200],
 			Header::status(200, false),
 			'Accepts integer status code'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			$h[200],
 			Header::status('200', false),
 			'Accepts string status code'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			$h[451],
 			Header::status('451', false),
 			'Can send HTTP 451 code (RFC 7725)'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			$h[500],
 			Header::status(null, false),
 			'Null code results in 500'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			Header::status(500, false),
 			Header::status(999, false),
 			'Unknown code results in 500'
 		);
 
 		// with reason in code parameter
-		$this->assertEquals(
+		$this->assertSame(
 			$h[200],
 			Header::status('200 OK', false),
 			'Can send "200 OK"'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			'HTTP/1.1 999 Custom Header',
 			Header::status('999 Custom Header', false),
 			'Can send a well-formed custom status code and reason'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			$h[500],
 			Header::status("999 This is\nNOT OKAY", false),
 			'Newlines inside of reason results in a 500 code'
@@ -115,12 +115,12 @@ class HeaderTest extends TestCase
 	public function testRedirect()
 	{
 		$h = $this->statusHeaders;
-		$this->assertEquals(
+		$this->assertSame(
 			$h[301] . "\r\nLocation:/x",
 			Header::redirect('/x', 301, false),
 			'Can send a 301 redirect'
 		);
-		$this->assertEquals(
+		$this->assertSame(
 			$h[302] . "\r\nLocation:/x",
 			Header::redirect('/x', 302, false),
 			'Can send a 302 redirect'
@@ -129,25 +129,25 @@ class HeaderTest extends TestCase
 
 	public function testContentType()
 	{
-		$this->assertEquals(
+		$this->assertSame(
 			'Content-type: video/webm',
 			Header::contentType('webm', '', false),
 			'Can send Content-type header with no encoding'
 		);
 
-		$this->assertEquals(
+		$this->assertSame(
 			'Content-type: video/webm',
 			Header::type('webm', '', false),
 			'Can send Content-type header with no encoding'
 		);
 
-		$this->assertEquals(
+		$this->assertSame(
 			'Content-type: application/json; charset=ISO-8859-1',
 			Header::contentType('json', 'ISO-8859-1', false),
 			'Can send Content-type header with custom charset'
 		);
 
-		$this->assertEquals(
+		$this->assertSame(
 			'Content-type: application/json; charset=ISO-8859-1',
 			Header::type('json', 'ISO-8859-1', false),
 			'Can send Content-type header with custom charset'

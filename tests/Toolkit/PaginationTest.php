@@ -16,52 +16,52 @@ class PaginationTest extends TestCase
 	public function testDefaultPage()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->page());
+		$this->assertSame(0, $pagination->page());
 
 		$pagination = new Pagination(['total' => 1]);
-		$this->assertEquals(1, $pagination->page());
+		$this->assertSame(1, $pagination->page());
 	}
 
 	public function testPage()
 	{
 		$pagination = new Pagination(['total' => 100, 'page' => 2]);
-		$this->assertEquals(2, $pagination->page());
+		$this->assertSame(2, $pagination->page());
 	}
 
 	public function testPageString()
 	{
 		$pagination = new Pagination(['total' => 100, 'page' => '2']);
-		$this->assertEquals(2, $pagination->page());
+		$this->assertSame(2, $pagination->page());
 	}
 
 	public function testPageEmptyCollection()
 	{
 		$pagination = new Pagination(['total' => 0, 'page' => 1]);
-		$this->assertEquals(0, $pagination->page());
+		$this->assertSame(0, $pagination->page());
 	}
 
 	public function testTotalDefault()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->total());
+		$this->assertSame(0, $pagination->total());
 	}
 
 	public function testTotal()
 	{
 		$pagination = new Pagination(['total' => 12]);
-		$this->assertEquals(12, $pagination->total());
+		$this->assertSame(12, $pagination->total());
 	}
 
 	public function testLimitDefault()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(20, $pagination->limit());
+		$this->assertSame(20, $pagination->limit());
 	}
 
 	public function testLimit()
 	{
 		$pagination = new Pagination(['limit' => 100]);
-		$this->assertEquals(100, $pagination->limit());
+		$this->assertSame(100, $pagination->limit());
 	}
 
 	public function testStart()
@@ -70,15 +70,15 @@ class PaginationTest extends TestCase
 			'total' => 42
 		]);
 
-		$this->assertEquals(1, $pagination->start());
+		$this->assertSame(1, $pagination->start());
 
 		// go to the second page
 		$pagination = $pagination->clone(['page' => 2]);
-		$this->assertEquals(21, $pagination->start());
+		$this->assertSame(21, $pagination->start());
 
 		// set a different limit
 		$pagination = $pagination->clone(['limit' => 10]);
-		$this->assertEquals(11, $pagination->start());
+		$this->assertSame(11, $pagination->start());
 	}
 
 	public function testEnd()
@@ -87,15 +87,15 @@ class PaginationTest extends TestCase
 			'total' => 42
 		]);
 
-		$this->assertEquals(20, $pagination->end());
+		$this->assertSame(20, $pagination->end());
 
 		// go to the second page
 		$pagination = $pagination->clone(['page' => 2]);
-		$this->assertEquals(40, $pagination->end());
+		$this->assertSame(40, $pagination->end());
 
 		// set a different limit
 		$pagination = $pagination->clone(['limit' => 10]);
-		$this->assertEquals(20, $pagination->end());
+		$this->assertSame(20, $pagination->end());
 	}
 
 	public function testEndWithOneItem()
@@ -104,61 +104,61 @@ class PaginationTest extends TestCase
 			'total' => 1
 		]);
 
-		$this->assertEquals(1, $pagination->end());
+		$this->assertSame(1, $pagination->end());
 	}
 
 	public function testPages()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->pages());
+		$this->assertSame(0, $pagination->pages());
 
 		$pagination = new Pagination(['total' => 1]);
-		$this->assertEquals(1, $pagination->pages());
+		$this->assertSame(1, $pagination->pages());
 
 		$pagination = new Pagination(['total' => 10]);
-		$this->assertEquals(1, $pagination->pages());
+		$this->assertSame(1, $pagination->pages());
 
 		$pagination = new Pagination(['total' => 21]);
-		$this->assertEquals(2, $pagination->pages());
+		$this->assertSame(2, $pagination->pages());
 
 		$pagination = new Pagination(['total' => 11, 'limit' => 5]);
-		$this->assertEquals(3, $pagination->pages());
+		$this->assertSame(3, $pagination->pages());
 	}
 
 	public function testFirstPage()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->firstPage());
+		$this->assertSame(0, $pagination->firstPage());
 
 		$pagination = new Pagination(['total' => 1]);
-		$this->assertEquals(1, $pagination->firstPage());
+		$this->assertSame(1, $pagination->firstPage());
 
 		$pagination = new Pagination(['total' => 42]);
-		$this->assertEquals(1, $pagination->firstPage());
+		$this->assertSame(1, $pagination->firstPage());
 	}
 
 	public function testLastPage()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->lastPage());
+		$this->assertSame(0, $pagination->lastPage());
 
 		$pagination = new Pagination(['total' => 1]);
-		$this->assertEquals(1, $pagination->lastPage());
+		$this->assertSame(1, $pagination->lastPage());
 
 		$pagination = new Pagination(['total' => 42]);
-		$this->assertEquals(3, $pagination->lastPage());
+		$this->assertSame(3, $pagination->lastPage());
 	}
 
 	public function testOffset()
 	{
 		$pagination = new Pagination();
-		$this->assertEquals(0, $pagination->offset());
+		$this->assertSame(0, $pagination->offset());
 
 		$pagination = new Pagination(['total' => 42, 'page' => 2]);
-		$this->assertEquals(20, $pagination->offset());
+		$this->assertSame(20, $pagination->offset());
 
 		$pagination = new Pagination(['total' => 42, 'page' => 2, 'limit' => 10]);
-		$this->assertEquals(10, $pagination->offset());
+		$this->assertSame(10, $pagination->offset());
 	}
 
 	public function testHasPage()
@@ -200,10 +200,10 @@ class PaginationTest extends TestCase
 	public function testPrevPage()
 	{
 		$pagination = new Pagination(['page' => 2, 'total' => 42]);
-		$this->assertEquals(1, $pagination->prevPage());
+		$this->assertSame(1, $pagination->prevPage());
 
 		$pagination = new Pagination(['page' => 1, 'total' => 42]);
-		$this->assertEquals(null, $pagination->prevPage());
+		$this->assertSame(null, $pagination->prevPage());
 	}
 
 	public function testHasNextPage()
@@ -221,10 +221,10 @@ class PaginationTest extends TestCase
 	public function testNextPage()
 	{
 		$pagination = new Pagination(['page' => 1, 'total' => 30]);
-		$this->assertEquals(2, $pagination->nextPage());
+		$this->assertSame(2, $pagination->nextPage());
 
 		$pagination = new Pagination(['page' => 2, 'total' => 30]);
-		$this->assertEquals(null, $pagination->nextPage());
+		$this->assertSame(null, $pagination->nextPage());
 	}
 
 	public function testIsFirstPage()
@@ -355,9 +355,9 @@ class PaginationTest extends TestCase
 		$end   = A::last($case['expected']);
 
 		$this->assertCount($case['count'] ?? $case['range'], $range);
-		$this->assertEquals($case['expected'], $range);
-		$this->assertEquals($start, $pagination->rangeStart($case['range']));
-		$this->assertEquals($end, $pagination->rangeEnd($case['range']));
+		$this->assertSame($case['expected'], $range);
+		$this->assertSame($start, $pagination->rangeStart($case['range']));
+		$this->assertSame($end, $pagination->rangeEnd($case['range']));
 	}
 
 	public function testClone()
@@ -464,10 +464,10 @@ class PaginationTest extends TestCase
 		$collection = new Collection(['a', 'b', 'c']);
 		$pagination = Pagination::for($collection);
 
-		$this->assertEquals(1, $pagination->page());
-		$this->assertEquals(1, $pagination->pages());
-		$this->assertEquals(20, $pagination->limit());
-		$this->assertEquals(3, $pagination->total());
+		$this->assertSame(1, $pagination->page());
+		$this->assertSame(1, $pagination->pages());
+		$this->assertSame(20, $pagination->limit());
+		$this->assertSame(3, $pagination->total());
 	}
 
 	public function testForWithLimit()
@@ -475,9 +475,9 @@ class PaginationTest extends TestCase
 		$collection = new Collection(['a', 'b', 'c']);
 		$pagination = Pagination::for($collection, 1);
 
-		$this->assertEquals(1, $pagination->page());
-		$this->assertEquals(3, $pagination->pages());
-		$this->assertEquals(1, $pagination->limit());
+		$this->assertSame(1, $pagination->page());
+		$this->assertSame(3, $pagination->pages());
+		$this->assertSame(1, $pagination->limit());
 	}
 
 	public function testForWithLimitAndPage()
@@ -485,9 +485,9 @@ class PaginationTest extends TestCase
 		$collection = new Collection(['a', 'b', 'c']);
 		$pagination = Pagination::for($collection, 1, 2);
 
-		$this->assertEquals(2, $pagination->page());
-		$this->assertEquals(3, $pagination->pages());
-		$this->assertEquals(1, $pagination->limit());
+		$this->assertSame(2, $pagination->page());
+		$this->assertSame(3, $pagination->pages());
+		$this->assertSame(1, $pagination->limit());
 	}
 
 	public function testForWithOptionsArray()
@@ -498,9 +498,9 @@ class PaginationTest extends TestCase
 			'page'  => 2
 		]);
 
-		$this->assertEquals(2, $pagination->page());
-		$this->assertEquals(3, $pagination->pages());
-		$this->assertEquals(1, $pagination->limit());
+		$this->assertSame(2, $pagination->page());
+		$this->assertSame(3, $pagination->pages());
+		$this->assertSame(1, $pagination->limit());
 	}
 
 	public function testForWithLimitAndOptionsArray()
@@ -510,8 +510,8 @@ class PaginationTest extends TestCase
 			'page' => 2
 		]);
 
-		$this->assertEquals(2, $pagination->page());
-		$this->assertEquals(3, $pagination->pages());
-		$this->assertEquals(1, $pagination->limit());
+		$this->assertSame(2, $pagination->page());
+		$this->assertSame(3, $pagination->pages());
+		$this->assertSame(1, $pagination->limit());
 	}
 }

@@ -13,8 +13,8 @@ class CollectionNavigatorTest extends TestCase
 			'four'  => 'vier'
 		]);
 
-		$this->assertEquals('eins', $collection->first());
-		$this->assertEquals('vier', $collection->last());
+		$this->assertSame('eins', $collection->first());
+		$this->assertSame('vier', $collection->last());
 	}
 
 	public function testNth()
@@ -26,9 +26,9 @@ class CollectionNavigatorTest extends TestCase
 			'four'  => 'vier'
 		]);
 
-		$this->assertEquals('eins', $collection->nth(0));
-		$this->assertEquals('zwei', $collection->nth(1));
-		$this->assertEquals('drei', $collection->nth(2));
-		$this->assertEquals('vier', $collection->nth(3));
+		$this->assertSame('eins', $collection->nth(0));
+		$this->assertSame('zwei', $collection->nth(1));
+		$this->assertSame('drei', $collection->nth(2));
+		$this->assertSame('vier', $collection->nth(3));
 	}
 }

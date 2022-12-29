@@ -26,7 +26,7 @@ class BlueprintFieldsTest extends TestCase
 	public function testEmptyFields()
 	{
 		$fields = Blueprint::fieldsProps(false);
-		$this->assertEquals([], $fields);
+		$this->assertSame([], $fields);
 	}
 
 	public function testNameOnlyField()

@@ -8,11 +8,11 @@ class RadioFieldTest extends TestCase
 	{
 		$field = $this->field('radio');
 
-		$this->assertEquals('radio', $field->type());
-		$this->assertEquals('radio', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->icon());
-		$this->assertEquals([], $field->options());
+		$this->assertSame('radio', $field->type());
+		$this->assertSame('radio', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame(null, $field->icon());
+		$this->assertSame([], $field->options());
 		$this->assertTrue($field->save());
 	}
 

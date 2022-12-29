@@ -29,8 +29,8 @@ class UriTest extends TestCase
 			'query' => ['foo' => 'bar']
 		]);
 
-		$this->assertEquals('http://getkirby.com/test', $uri->toString());
-		$this->assertEquals('http://getkirby.com/yay?foo=bar', $clone->toString());
+		$this->assertSame('http://getkirby.com/test', $uri->toString());
+		$this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
 	}
 
 	public function testCurrent()
@@ -52,7 +52,7 @@ class UriTest extends TestCase
 	public function testCurrentInCli()
 	{
 		$uri = Uri::current();
-		$this->assertEquals('/', $uri->toString());
+		$this->assertSame('/', $uri->toString());
 	}
 
 	public function testCurrentWithCustomObject()
@@ -158,13 +158,13 @@ class UriTest extends TestCase
 		$url = new Uri();
 
 		$url->setHost('getkirby.com');
-		$this->assertEquals('getkirby.com', $url->host());
+		$this->assertSame('getkirby.com', $url->host());
 	}
 
 	public function testMissingHost()
 	{
 		$url = new Uri(['host' => false]);
-		$this->assertEquals(null, $url->host());
+		$this->assertSame('', $url->host());
 	}
 
 	public function testIsAbsolute()
@@ -182,16 +182,16 @@ class UriTest extends TestCase
 	public function testValidPort()
 	{
 		$url = new Uri(['port' => 1234]);
-		$this->assertEquals(1234, $url->port());
+		$this->assertSame(1234, $url->port());
 
 		$url = new Uri(['port' => null]);
-		$this->assertEquals(null, $url->port());
+		$this->assertSame(null, $url->port());
 	}
 
 	public function testZeroPort()
 	{
 		$url = new Uri(['port' => 0]);
-		$this->assertEquals(null, $url->port());
+		$this->assertSame(null, $url->port());
 	}
 
 	public function testInvalidPortFormat1()
@@ -212,28 +212,28 @@ class UriTest extends TestCase
 	public function testValidUsername()
 	{
 		$url = new Uri(['username' => 'testuser']);
-		$this->assertEquals('testuser', $url->username());
+		$this->assertSame('testuser', $url->username());
 
 		$url = new Uri(['username' => null]);
-		$this->assertEquals(null, $url->username());
+		$this->assertSame(null, $url->username());
 	}
 
 	public function testValidPassword()
 	{
 		$url = new Uri(['password' => 'weakpassword']);
-		$this->assertEquals('weakpassword', $url->password());
+		$this->assertSame('weakpassword', $url->password());
 
 		$url = new Uri(['password' => null]);
-		$this->assertEquals(null, $url->password());
+		$this->assertSame(null, $url->password());
 	}
 
 	public function testValidPath()
 	{
 		$url = new Uri(['path' => '/a/b/c']);
-		$this->assertEquals('a/b/c', $url->path()->toString());
+		$this->assertSame('a/b/c', $url->path()->toString());
 
 		$url = new Uri(['path' => ['a', 'b', 'c']]);
-		$this->assertEquals('a/b/c', $url->path()->toString());
+		$this->assertSame('a/b/c', $url->path()->toString());
 
 		$url = new Uri(['path' => null]);
 		$this->assertTrue($url->path()->isEmpty());
@@ -242,13 +242,13 @@ class UriTest extends TestCase
 	public function testValidQuery()
 	{
 		$url = new Uri(['query' => 'foo=bar']);
-		$this->assertEquals('foo=bar', $url->query()->toString());
+		$this->assertSame('foo=bar', $url->query()->toString());
 
 		$url = new Uri(['query' => '?foo=bar']);
-		$this->assertEquals('foo=bar', $url->query()->toString());
+		$this->assertSame('foo=bar', $url->query()->toString());
 
 		$url = new Uri(['query' => ['foo' => 'bar']]);
-		$this->assertEquals('foo=bar', $url->query()->toString());
+		$this->assertSame('foo=bar', $url->query()->toString());
 
 		$url = new Uri(['query' => null]);
 		$this->assertTrue($url->query()->isEmpty());
@@ -257,39 +257,39 @@ class UriTest extends TestCase
 	public function testValidFragment()
 	{
 		$url = new Uri(['fragment' => 'top']);
-		$this->assertEquals('top', $url->fragment());
+		$this->assertSame('top', $url->fragment());
 
 		$url = new Uri(['fragment' => '#top']);
-		$this->assertEquals('top', $url->fragment());
+		$this->assertSame('top', $url->fragment());
 
 		$url = new Uri(['fragment' => null]);
-		$this->assertEquals(null, $url->fragment());
+		$this->assertSame(null, $url->fragment());
 	}
 
 	public function testAuth()
 	{
 		$url = new Uri(['username' => 'testuser', 'password' => 'weakpassword']);
-		$this->assertEquals('testuser:weakpassword', $url->auth());
+		$this->assertSame('testuser:weakpassword', $url->auth());
 	}
 
 	public function testBase()
 	{
 		$url = new Uri(['scheme' => 'https', 'host' => 'getkirby.com']);
-		$this->assertEquals('https://getkirby.com', $url->base());
+		$this->assertSame('https://getkirby.com', $url->base());
 
 		$url->username = 'testuser';
 		$url->password = 'weakpassword';
 
-		$this->assertEquals('https://testuser:weakpassword@getkirby.com', $url->base());
+		$this->assertSame('https://testuser:weakpassword@getkirby.com', $url->base());
 
 		$url->port = 3000;
-		$this->assertEquals('https://testuser:weakpassword@getkirby.com:3000', $url->base());
+		$this->assertSame('https://testuser:weakpassword@getkirby.com:3000', $url->base());
 	}
 
 	public function testBaseWithoutHost()
 	{
 		$url = new Uri();
-		$this->assertEquals(null, $url->base());
+		$this->assertSame(null, $url->base());
 	}
 
 	public function testToArray()

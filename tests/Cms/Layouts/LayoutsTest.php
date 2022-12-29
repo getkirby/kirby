@@ -43,9 +43,9 @@ class LayoutsTest extends TestCase
 		$columns = $layouts->first()->columns();
 		$blocks  = $columns->first()->blocks();
 
-		$this->assertEquals('heading', $blocks->first()->type());
+		$this->assertSame('heading', $blocks->first()->type());
 		$this->assertEquals('Heading', $blocks->first()->text());
-		$this->assertEquals('text', $blocks->last()->type());
+		$this->assertSame('text', $blocks->last()->type());
 		$this->assertEquals('Text', $blocks->last()->text());
 	}
 

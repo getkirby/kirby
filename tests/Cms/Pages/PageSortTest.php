@@ -45,16 +45,16 @@ class PageSortTest extends TestCase
 
 		$page = $page->save();
 
-		$this->assertEquals(1, $page->num());
-		$this->assertEquals('1_test', $page->dirname());
-		$this->assertEquals(1, $page->parentModel()->find('test')->num());
-		$this->assertEquals(1, $site->find('test')->num());
+		$this->assertSame(1, $page->num());
+		$this->assertSame('1_test', $page->dirname());
+		$this->assertSame(1, $page->parentModel()->find('test')->num());
+		$this->assertSame(1, $site->find('test')->num());
 
 		$page = $page->changeNum(2);
 
-		$this->assertEquals(2, $page->num());
-		$this->assertEquals('2_test', $page->dirname());
-		$this->assertEquals(2, $site->find('test')->num());
+		$this->assertSame(2, $page->num());
+		$this->assertSame('2_test', $page->dirname());
+		$this->assertSame(2, $site->find('test')->num());
 	}
 
 	public function testChangeStatusFromDraftToListed()
@@ -67,8 +67,8 @@ class PageSortTest extends TestCase
 
 		$listed = $page->changeStatus('listed');
 
-		$this->assertEquals('listed', $listed->status());
-		$this->assertEquals(1, $listed->num());
+		$this->assertSame('listed', $listed->status());
+		$this->assertSame(1, $listed->num());
 		$this->assertFalse($listed->parentModel()->drafts()->has($listed));
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
 	}
@@ -83,8 +83,8 @@ class PageSortTest extends TestCase
 
 		$unlisted = $page->changeStatus('unlisted');
 
-		$this->assertEquals('unlisted', $unlisted->status());
-		$this->assertEquals(null, $unlisted->num());
+		$this->assertSame('unlisted', $unlisted->status());
+		$this->assertSame(null, $unlisted->num());
 		$this->assertFalse($unlisted->parentModel()->drafts()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
 	}
@@ -97,7 +97,7 @@ class PageSortTest extends TestCase
 
 		$listed = $page->changeStatus('listed');
 		$this->assertTrue($listed->isListed());
-		$this->assertEquals(1, $listed->num());
+		$this->assertSame(1, $listed->num());
 
 		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
@@ -105,7 +105,7 @@ class PageSortTest extends TestCase
 		$unlisted = $listed->changeStatus('unlisted');
 
 		$this->assertTrue($unlisted->isUnlisted());
-		$this->assertEquals(null, $unlisted->num());
+		$this->assertSame(null, $unlisted->num());
 
 		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
@@ -121,7 +121,7 @@ class PageSortTest extends TestCase
 		$unlisted = $page->changeStatus('unlisted');
 
 		$this->assertTrue($unlisted->isUnlisted());
-		$this->assertEquals(null, $unlisted->num());
+		$this->assertSame(null, $unlisted->num());
 
 		$this->assertFalse($unlisted->parentModel()->children()->listed()->has($unlisted));
 		$this->assertTrue($unlisted->parentModel()->children()->unlisted()->has($unlisted));
@@ -129,7 +129,7 @@ class PageSortTest extends TestCase
 		// change to listed
 		$listed = $unlisted->changeStatus('listed');
 		$this->assertTrue($listed->isListed());
-		$this->assertEquals(1, $listed->num());
+		$this->assertSame(1, $listed->num());
 
 		$this->assertFalse($listed->parentModel()->children()->unlisted()->has($listed));
 		$this->assertTrue($listed->parentModel()->children()->listed()->has($listed));
@@ -143,15 +143,15 @@ class PageSortTest extends TestCase
 
 		$page = $page->changeStatus('listed');
 
-		$this->assertEquals('listed', $page->status());
-		$this->assertEquals(1, $page->num());
+		$this->assertSame('listed', $page->status());
+		$this->assertSame(1, $page->num());
 		$this->assertFalse($page->isDraft());
 
 		$draft = $page->changeStatus('draft');
 
 		$this->assertTrue($draft->isDraft());
-		$this->assertEquals('draft', $draft->status());
-		$this->assertEquals(null, $draft->num());
+		$this->assertSame('draft', $draft->status());
+		$this->assertSame(null, $draft->num());
 		$this->assertTrue($draft->parentModel()->drafts()->has($draft));
 		$this->assertFalse($draft->parentModel()->children()->listed()->has($draft));
 	}
@@ -170,15 +170,15 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('draft', $page->status());
+		$this->assertSame('draft', $page->status());
 
 		$draft = $page->changeStatus('listed');
-		$this->assertEquals('listed', $draft->status());
+		$this->assertSame('listed', $draft->status());
 
 		$this->expectException(InvalidArgumentException::class);
 
 		$unlisted = $page->changeStatus('unlisted');
-		$this->assertEquals('unlisted', $unlisted->status());
+		$this->assertSame('unlisted', $unlisted->status());
 	}
 
 	public function testCreateDefaultNum()
@@ -221,31 +221,31 @@ class PageSortTest extends TestCase
 
 		// no siblings
 		$page = $app->page('one-child/child-a');
-		$this->assertEquals(1, $page->createNum());
+		$this->assertSame(1, $page->createNum());
 
 		// two listed siblings / no position
 		$page = $app->page('three-children/child-c');
-		$this->assertEquals(3, $page->createNum());
+		$this->assertSame(3, $page->createNum());
 
 		// one listed sibling / valid position
 		$page = $app->page('three-children/child-a');
-		$this->assertEquals(2, $page->createNum(2));
+		$this->assertSame(2, $page->createNum(2));
 
 		// one listed sibling / position too low
 		$page = $app->page('three-children/child-a');
-		$this->assertEquals(1, $page->createNum(-1));
+		$this->assertSame(1, $page->createNum(-1));
 
 		// one listed sibling / position too high
 		$page = $app->page('three-children/child-a');
-		$this->assertEquals(2, $page->createNum(3));
+		$this->assertSame(2, $page->createNum(3));
 
 		// draft / no position
 		$page = $app->page('three-children/draft');
-		$this->assertEquals(3, $page->createNum());
+		$this->assertSame(3, $page->createNum());
 
 		// draft / given position
 		$page = $app->page('three-children/draft');
-		$this->assertEquals(1, $page->createNum(1));
+		$this->assertSame(1, $page->createNum(1));
 	}
 
 	public function testCreateZeroBasedNum()
@@ -257,7 +257,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(0, $page->createNum());
+		$this->assertSame(0, $page->createNum());
 
 		$page = new Page([
 			'slug' => 'test',
@@ -266,7 +266,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(0, $page->createNum());
+		$this->assertSame(0, $page->createNum());
 	}
 
 	public function testCreateDateBasedNum()
@@ -292,7 +292,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(20121212, $page->createNum());
+		$this->assertSame(20121212, $page->createNum());
 	}
 
 	public function testCreateDateBasedNumWithDateHandler()
@@ -327,7 +327,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(20121212, $page->createNum());
+		$this->assertSame(20121212, $page->createNum());
 	}
 
 	public function testCreateNumWithTranslations()
@@ -370,12 +370,12 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(20190101, $page->createNum());
+		$this->assertSame(20190101, $page->createNum());
 
 		$app->setCurrentLanguage('de');
 		$app->setCurrentTranslation('de');
 
-		$this->assertEquals(20190101, $page->createNum());
+		$this->assertSame(20190101, $page->createNum());
 	}
 
 	public function testCreateCustomNum()
@@ -400,7 +400,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(2016, $app->page('test')->createNum());
+		$this->assertSame(2016, $app->page('test')->createNum());
 
 		// invalid
 		$app = new App([
@@ -419,7 +419,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(0, $app->page('test')->createNum());
+		$this->assertSame(0, $app->page('test')->createNum());
 
 		// multilang with default language fallback
 		$app = new App([
@@ -463,7 +463,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(2016, $app->page('test')->createNum());
+		$this->assertSame(2016, $app->page('test')->createNum());
 	}
 
 	public function testPublish()
@@ -476,7 +476,7 @@ class PageSortTest extends TestCase
 		$site      = $this->app->site();
 		$published = $page->publish();
 
-		$this->assertEquals('unlisted', $published->status());
+		$this->assertSame('unlisted', $published->status());
 
 		$this->assertFalse($page->parentModel()->drafts()->has($published));
 		$this->assertTrue($page->parentModel()->children()->has($published));
@@ -492,7 +492,7 @@ class PageSortTest extends TestCase
 
 		$published = $child->publish();
 
-		$this->assertEquals('unlisted', $published->status());
+		$this->assertSame('unlisted', $published->status());
 
 		$this->assertFalse($child->parentModel()->drafts()->has($published->id()));
 		$this->assertTrue($child->parentModel()->children()->has($published->id()));
@@ -509,8 +509,8 @@ class PageSortTest extends TestCase
 
 		$page = $page->publish();
 
-		$this->assertEquals('unlisted', $page->status());
-		$this->assertEquals('unlisted', $page->publish()->status());
+		$this->assertSame('unlisted', $page->status());
+		$this->assertSame('unlisted', $page->publish()->status());
 	}
 
 	public function sortProvider()
@@ -551,7 +551,7 @@ class PageSortTest extends TestCase
 		$page = $site->find($id);
 		$page = $page->changeSort($position);
 
-		$this->assertEquals($expected, implode(',', $site->children()->keys()));
+		$this->assertSame($expected, implode(',', $site->children()->keys()));
 	}
 
 	public function testSortDateBased()
@@ -597,12 +597,12 @@ class PageSortTest extends TestCase
 		$page = $site->find('b');
 		$page = $page->changeSort(3);
 
-		$this->assertEquals(1, $site->find('a')->num());
-		$this->assertEquals(2, $site->find('d')->num());
-		$this->assertEquals(3, $site->find('b')->num());
+		$this->assertSame(1, $site->find('a')->num());
+		$this->assertSame(2, $site->find('d')->num());
+		$this->assertSame(3, $site->find('b')->num());
 
-		$this->assertEquals(20180104, $site->find('c')->num());
-		$this->assertEquals(0, $site->find('e')->num());
+		$this->assertSame(20180104, $site->find('c')->num());
+		$this->assertSame(0, $site->find('e')->num());
 	}
 
 	public function testMassSorting()
@@ -615,16 +615,16 @@ class PageSortTest extends TestCase
 			$page = $page->changeStatus('unlisted');
 
 			$this->assertTrue($page->exists());
-			$this->assertEquals(null, $page->num());
+			$this->assertSame(null, $page->num());
 		}
 
-		$this->assertEquals($chars, $this->site()->children()->keys());
+		$this->assertSame($chars, $this->site()->children()->keys());
 
 		foreach ($this->site()->children()->flip()->values() as $index => $page) {
 			$page = $page->changeSort($index + 1);
 		}
 
-		$this->assertEquals(array_reverse($chars), $this->site()->children()->keys());
+		$this->assertSame(array_reverse($chars), $this->site()->children()->keys());
 
 		$this->assertTrue(is_dir($this->fixtures . '/content/4_a'));
 		$this->assertTrue(is_dir($this->fixtures . '/content/3_b'));
@@ -649,12 +649,12 @@ class PageSortTest extends TestCase
 		// publish the new page
 		$page = $page->changeStatus('listed');
 
-		$this->assertEquals(20121212, $page->num());
+		$this->assertSame(20121212, $page->num());
 
 		$modified = $page->update([
 			'date' => '2016-11-21'
 		]);
 
-		$this->assertEquals(20161121, $modified->num());
+		$this->assertSame(20161121, $modified->num());
 	}
 }

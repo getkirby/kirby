@@ -68,7 +68,7 @@ class UsersRoutesTest extends TestCase
 
 		$response = $this->app->api()->call('users/admin@getkirby.com/avatar');
 
-		$this->assertEquals('profile.jpg', $response['data']['filename']);
+		$this->assertSame('profile.jpg', $response['data']['filename']);
 	}
 
 	public function testAvatarDelete()
@@ -289,7 +289,7 @@ class UsersRoutesTest extends TestCase
 
 		$response = $app->api()->call('users/test@getkirby.com/files/a.jpg');
 
-		$this->assertEquals('a.jpg', $response['data']['filename']);
+		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
 	public function testFiles()
@@ -351,8 +351,8 @@ class UsersRoutesTest extends TestCase
 
 		$response = $app->api()->call('users/test@getkirby.com/files');
 
-		$this->assertEquals('b.jpg', $response['data'][0]['filename']);
-		$this->assertEquals('a.jpg', $response['data'][1]['filename']);
+		$this->assertSame('b.jpg', $response['data'][0]['filename']);
+		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
 	public function testGet()
@@ -361,7 +361,7 @@ class UsersRoutesTest extends TestCase
 
 		$response = $app->api()->call('users/admin@getkirby.com');
 
-		$this->assertEquals('admin@getkirby.com', $response['data']['email']);
+		$this->assertSame('admin@getkirby.com', $response['data']['email']);
 	}
 
 	public function testRoles()
@@ -388,7 +388,7 @@ class UsersRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('admin@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
 	}
 
 	public function testSearchWithGetRequest()
@@ -402,7 +402,7 @@ class UsersRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('editor@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
 	}
 
 	public function testSearchWithPostRequest()
@@ -416,7 +416,7 @@ class UsersRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('editor@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][0]['email']);
 	}
 
 	public function testSections()
@@ -472,7 +472,7 @@ class UsersRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('users');
 
-		$this->assertEquals('admin@getkirby.com', $response['data'][0]['email']);
-		$this->assertEquals('editor@getkirby.com', $response['data'][1]['email']);
+		$this->assertSame('admin@getkirby.com', $response['data'][0]['email']);
+		$this->assertSame('editor@getkirby.com', $response['data'][1]['email']);
 	}
 }

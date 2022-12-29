@@ -20,14 +20,14 @@ class IngredientsTest extends TestCase
 
 	public function testGet()
 	{
-		$this->assertEquals('A', $this->ingredients->a);
-		$this->assertEquals('B', $this->ingredients->b);
+		$this->assertSame('A', $this->ingredients->a);
+		$this->assertSame('B', $this->ingredients->b);
 	}
 
 	public function testCall()
 	{
-		$this->assertEquals('A', $this->ingredients->a());
-		$this->assertEquals('B', $this->ingredients->b());
+		$this->assertSame('A', $this->ingredients->a());
+		$this->assertSame('B', $this->ingredients->b());
 	}
 
 	public function testToArray()
@@ -37,7 +37,7 @@ class IngredientsTest extends TestCase
 			'b' => 'B'
 		];
 
-		$this->assertEquals($expected, $this->ingredients->toArray());
-		$this->assertEquals($expected, $this->ingredients->__debugInfo());
+		$this->assertSame($expected, $this->ingredients->toArray());
+		$this->assertSame($expected, $this->ingredients->__debugInfo());
 	}
 }

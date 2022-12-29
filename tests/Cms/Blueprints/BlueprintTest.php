@@ -216,7 +216,7 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -229,7 +229,7 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -241,14 +241,14 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Default', $blueprint->title());
+		$this->assertSame('Default', $blueprint->title());
 
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'test'
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -477,11 +477,11 @@ class BlueprintTest extends TestCase
 			$this->assertNull($e->getMessage(), 'Failed to get sections.');
 		}
 
-		$this->assertEquals(true, is_array($sections));
-		$this->assertEquals(1, sizeof($sections));
-		$this->assertEquals(true, array_key_exists('main', $sections));
-		$this->assertEquals(true, array_key_exists('label', $sections['main']));
-		$this->assertEquals('Invalid section type for section "main"', $sections['main']['label']);
+		$this->assertIsArray($sections);
+		$this->assertCount(1, $sections);
+		$this->assertArrayHasKey('main', $sections);
+		$this->assertArrayHasKey('label', $sections['main']);
+		$this->assertSame('Invalid section type for section "main"', $sections['main']['label']);
 	}
 
 	/**
@@ -508,7 +508,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->sections()['info']->type());
 
 		// by just passing true
 		$blueprint = new Blueprint([
@@ -518,7 +518,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->sections()['info']->type());
 	}
 
 	/**

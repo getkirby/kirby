@@ -26,7 +26,7 @@ class FTest extends TestCase
 		$this->fixtures = __DIR__ . '/fixtures/f';
 		$this->sample   = $this->fixtures . '/test.txt';
 		$this->tmp      = __DIR__ . '/tmp';
-		$this->test    = $this->tmp . '/moved.txt';
+		$this->test     = $this->tmp . '/moved.txt';
 
 		Dir::remove($this->tmp);
 		Dir::make($this->tmp);

@@ -10,9 +10,9 @@ class ToggleFieldTest extends TestCase
 	{
 		$field = $this->field('toggle');
 
-		$this->assertEquals('toggle', $field->type());
-		$this->assertEquals('toggle', $field->name());
-		$this->assertEquals(null, $field->value());
+		$this->assertSame('toggle', $field->type());
+		$this->assertSame('toggle', $field->name());
+		$this->assertFalse($field->value());
 		$this->assertTrue($field->save());
 	}
 
@@ -22,7 +22,7 @@ class ToggleFieldTest extends TestCase
 			'text' => 'Yay {{ page.slug }}'
 		]);
 
-		$this->assertEquals('Yay test', $field->text());
+		$this->assertSame('Yay test', $field->text());
 	}
 
 	public function testTextWithTranslation()
@@ -37,12 +37,12 @@ class ToggleFieldTest extends TestCase
 		I18n::$locale = 'en';
 
 		$field = $this->field('toggle', $props);
-		$this->assertEquals('Yay test', $field->text());
+		$this->assertSame('Yay test', $field->text());
 
 		I18n::$locale = 'de';
 
 		$field = $this->field('toggle', $props);
-		$this->assertEquals('Ja test', $field->text());
+		$this->assertSame('Ja test', $field->text());
 	}
 
 	public function testBooleanDefaultValue()
@@ -71,7 +71,7 @@ class ToggleFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['Yes test', 'No test'], $field->text());
+		$this->assertSame(['Yes test', 'No test'], $field->text());
 	}
 
 	public function testTextToggleWithTranslation()
@@ -86,11 +86,11 @@ class ToggleFieldTest extends TestCase
 		I18n::$locale = 'en';
 
 		$field = $this->field('toggle', $props);
-		$this->assertEquals(['Yes test', 'No test'], $field->text());
+		$this->assertSame(['Yes test', 'No test'], $field->text());
 
 		I18n::$locale = 'de';
 
 		$field = $this->field('toggle', $props);
-		$this->assertEquals(['Ja test', 'Nein test'], $field->text());
+		$this->assertSame(['Ja test', 'Nein test'], $field->text());
 	}
 }

@@ -39,7 +39,7 @@ class SiteRoutesTest extends TestCase
 	{
 		$response = $this->app->api()->call('site', 'GET');
 
-		$this->assertEquals('Test Site', $response['data']['title']);
+		$this->assertSame('Test Site', $response['data']['title']);
 	}
 
 	public function testChildren()
@@ -62,8 +62,8 @@ class SiteRoutesTest extends TestCase
 		$response = $app->api()->call('site/children', 'GET');
 
 		$this->assertCount(2, $response['data']);
-		$this->assertEquals('a', $response['data'][0]['id']);
-		$this->assertEquals('b', $response['data'][1]['id']);
+		$this->assertSame('a', $response['data'][0]['id']);
+		$this->assertSame('b', $response['data'][1]['id']);
 	}
 
 	public function testChildrenWithStatusFilter()
@@ -95,9 +95,9 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(3, $response['data']);
-		$this->assertEquals('child-a', $response['data'][0]['id']);
-		$this->assertEquals('child-b', $response['data'][1]['id']);
-		$this->assertEquals('draft-a', $response['data'][2]['id']);
+		$this->assertSame('child-a', $response['data'][0]['id']);
+		$this->assertSame('child-b', $response['data'][1]['id']);
+		$this->assertSame('draft-a', $response['data'][2]['id']);
 
 		// published
 		$response = $app->api()->call('site/children', 'GET', [
@@ -105,8 +105,8 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(2, $response['data']);
-		$this->assertEquals('child-a', $response['data'][0]['id']);
-		$this->assertEquals('child-b', $response['data'][1]['id']);
+		$this->assertSame('child-a', $response['data'][0]['id']);
+		$this->assertSame('child-b', $response['data'][1]['id']);
 
 		// listed
 		$response = $app->api()->call('site/children', 'GET', [
@@ -114,7 +114,7 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('child-a', $response['data'][0]['id']);
+		$this->assertSame('child-a', $response['data'][0]['id']);
 
 		// unlisted
 		$response = $app->api()->call('site/children', 'GET', [
@@ -122,7 +122,7 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('child-b', $response['data'][0]['id']);
+		$this->assertSame('child-b', $response['data'][0]['id']);
 
 		// drafts
 		$response = $app->api()->call('site/children', 'GET', [
@@ -130,7 +130,7 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('draft-a', $response['data'][0]['id']);
+		$this->assertSame('draft-a', $response['data'][0]['id']);
 	}
 
 	public function testFiles()
@@ -186,8 +186,8 @@ class SiteRoutesTest extends TestCase
 
 		$response = $app->api()->call('site/files');
 
-		$this->assertEquals('b.jpg', $response['data'][0]['filename']);
-		$this->assertEquals('a.jpg', $response['data'][1]['filename']);
+		$this->assertSame('b.jpg', $response['data'][0]['filename']);
+		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
 	public function testFile()
@@ -206,7 +206,7 @@ class SiteRoutesTest extends TestCase
 
 		$response = $app->api()->call('site/files/a.jpg');
 
-		$this->assertEquals('a.jpg', $response['data']['filename']);
+		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
 	public function testFind()
@@ -242,7 +242,7 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $result['data']);
-		$this->assertEquals('a', $result['data'][0]['id']);
+		$this->assertSame('a', $result['data'][0]['id']);
 
 		// find multiple
 		$result = $app->api()->call('site/find', 'POST', [
@@ -254,9 +254,9 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(3, $result['data']);
-		$this->assertEquals('a', $result['data'][0]['id']);
-		$this->assertEquals('a/aa', $result['data'][1]['id']);
-		$this->assertEquals('b', $result['data'][2]['id']);
+		$this->assertSame('a', $result['data'][0]['id']);
+		$this->assertSame('a/aa', $result['data'][1]['id']);
+		$this->assertSame('b', $result['data'][2]['id']);
 	}
 
 
@@ -292,7 +292,7 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('parent/child', $response['data'][0]['id']);
+		$this->assertSame('parent/child', $response['data'][0]['id']);
 	}
 
 	public function testSearchWithPostRequest()
@@ -327,6 +327,6 @@ class SiteRoutesTest extends TestCase
 		]);
 
 		$this->assertCount(1, $response['data']);
-		$this->assertEquals('parent/child', $response['data'][0]['id']);
+		$this->assertSame('parent/child', $response['data'][0]['id']);
 	}
 }

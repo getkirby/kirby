@@ -51,8 +51,8 @@ class EmailTest extends TestCase
 			'to' => $to = 'nobody@web.de'
 		]);
 
-		$this->assertEquals([$to], $email->toArray()['to']);
-		$this->assertEquals([$cc], $email->toArray()['cc']);
+		$this->assertSame([$to], $email->toArray()['to']);
+		$this->assertSame([$cc], $email->toArray()['cc']);
 	}
 
 	public function testInvalidPreset()
@@ -76,7 +76,7 @@ class EmailTest extends TestCase
 				'name' => 'Alex'
 			]
 		]);
-		$this->assertEquals('Cheers, Alex!', $email->toArray()['body']);
+		$this->assertSame('Cheers, Alex!', $email->toArray()['body']);
 	}
 
 	public function testTemplateHtml()
@@ -87,7 +87,7 @@ class EmailTest extends TestCase
 			]
 		]);
 		$email = new Email(['template' => 'media']);
-		$this->assertEquals([
+		$this->assertSame([
 			'html' => '<b>Image:</b> <img src=""/>'
 		], $email->toArray()['body']);
 	}
@@ -101,7 +101,7 @@ class EmailTest extends TestCase
 			]
 		]);
 		$email = new Email(['template' => 'media']);
-		$this->assertEquals([
+		$this->assertSame([
 			'html' => '<b>Image:</b> <img src=""/>',
 			'text' => 'Image: Description'
 		], $email->toArray()['body']);
@@ -132,14 +132,14 @@ class EmailTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('sales@company.com', $email->toArray()['from']);
-		$this->assertEquals('Company Sales', $email->toArray()['fromName']);
-		$this->assertEquals(['ceo@company.com'], $email->toArray()['to']);
-		$this->assertEquals([
+		$this->assertSame('sales@company.com', $email->toArray()['from']);
+		$this->assertSame('Company Sales', $email->toArray()['fromName']);
+		$this->assertSame(['ceo@company.com'], $email->toArray()['to']);
+		$this->assertSame([
 			'someone@gmail.com',
 			'another@gmail.com' => 'Another Gmail'
 		], $email->toArray()['cc']);
-		$this->assertEquals([
+		$this->assertSame([
 			'/amazing/absolute/path.txt'
 		], $email->toArray()['attachments']);
 	}
@@ -181,16 +181,16 @@ class EmailTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('sales@company.com', $email->toArray()['from']);
-		$this->assertEquals('Amazing Sales!', $email->toArray()['fromName']);
-		$this->assertEquals('sales@company.com', $email->toArray()['replyTo']);
-		$this->assertEquals('Company Sales', $email->toArray()['replyToName']);
-		$this->assertEquals([
+		$this->assertSame('sales@company.com', $email->toArray()['from']);
+		$this->assertSame('Amazing Sales!', $email->toArray()['fromName']);
+		$this->assertSame('sales@company.com', $email->toArray()['replyTo']);
+		$this->assertSame('Company Sales', $email->toArray()['replyToName']);
+		$this->assertSame([
 			'ceo@company.com' => 'Company CEO',
 			'someone@gmail.com',
 			'another@gmail.com' => 'Another Gmail'
 		], $email->toArray()['to']);
-		$this->assertEquals([
+		$this->assertSame([
 			'/content/report.pdf',
 			'/content/graph.png',
 			'/amazing/absolute/path.txt'
@@ -206,7 +206,7 @@ class EmailTest extends TestCase
 
 		$email = new Email(['to' => $to]);
 
-		$this->assertEquals([
+		$this->assertSame([
 			'ceo@company.com' => 'Company CEO',
 			'marketing@company.com' => 'Company Marketing'
 		], $email->toArray()['to']);
@@ -240,8 +240,8 @@ class EmailTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['ceo@company.com' => 'Mario'], $email->toArray()['to']);
-		$this->assertEquals('Welcome, Mario!', trim($email->toArray()['body']));
+		$this->assertSame(['ceo@company.com' => 'Mario'], $email->toArray()['to']);
+		$this->assertSame('Welcome, Mario!', trim($email->toArray()['body']));
 	}
 
 	public function testBeforeSend()

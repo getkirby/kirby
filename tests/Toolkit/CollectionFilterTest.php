@@ -77,12 +77,14 @@ class CollectionFilterTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($result, $collection->filter(function ($item) {
-			return $item['role'] === 'founder';
-		}));
-		$this->assertEquals($result, $collection->filterBy(function ($item) {
-			return $item['role'] === 'founder';
-		}));
+		$this->assertEquals(
+			$result,
+			$collection->filter(fn ($item) => $item['role'] === 'founder')
+		);
+		$this->assertEquals(
+			$result,
+			$collection->filterBy(fn ($item) => $item['role'] === 'founder')
+		);
 	}
 
 	public function filterDataProvider()
@@ -663,7 +665,7 @@ class CollectionFilterTest extends TestCase
 		$collection = new Collection($data);
 		$result     = $collection->filter('attribute', $operator, $test, $split);
 
-		$this->assertEquals($expected, $result->keys(), $operator);
+		$this->assertSame($expected, $result->keys(), $operator);
 	}
 
 	public function testNot()

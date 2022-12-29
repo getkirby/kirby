@@ -18,8 +18,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$model = $this->api->resolve($page)->select('children')->toArray();
 
-		$this->assertEquals('test/a', $model['children'][0]['id']);
-		$this->assertEquals('test/b', $model['children'][1]['id']);
+		$this->assertSame('test/a', $model['children'][0]['id']);
+		$this->assertSame('test/b', $model['children'][1]['id']);
 	}
 
 	public function testContent()
@@ -47,8 +47,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$model = $this->api->resolve($page)->select('drafts')->toArray();
 
-		$this->assertEquals('test/a', $model['drafts'][0]['id']);
-		$this->assertEquals('test/b', $model['drafts'][1]['id']);
+		$this->assertSame('test/a', $model['drafts'][0]['id']);
+		$this->assertSame('test/b', $model['drafts'][1]['id']);
 	}
 
 	public function testFiles()
@@ -63,8 +63,8 @@ class PageApiModelTest extends ApiModelTestCase
 
 		$model = $this->api->resolve($page)->select('files')->toArray();
 
-		$this->assertEquals('a.jpg', $model['files'][0]['filename']);
-		$this->assertEquals('b.jpg', $model['files'][1]['filename']);
+		$this->assertSame('a.jpg', $model['files'][0]['filename']);
+		$this->assertSame('b.jpg', $model['files'][1]['filename']);
 	}
 
 	public function testHasDrafts()

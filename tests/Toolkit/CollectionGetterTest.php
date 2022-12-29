@@ -11,9 +11,9 @@ class CollectionGetterTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('eins', $collection->one);
-		$this->assertEquals('eins', $collection->ONE);
-		$this->assertEquals(null, $collection->three);
+		$this->assertSame('eins', $collection->one);
+		$this->assertSame('eins', $collection->ONE);
+		$this->assertSame(null, $collection->three);
 	}
 
 	public function testGet()
@@ -23,9 +23,9 @@ class CollectionGetterTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('eins', $collection->get('one'));
-		$this->assertEquals(null, $collection->get('three'));
-		$this->assertEquals('default', $collection->get('three', 'default'));
+		$this->assertSame('eins', $collection->get('one'));
+		$this->assertSame(null, $collection->get('three'));
+		$this->assertSame('default', $collection->get('three', 'default'));
 	}
 
 	public function testMagicMethods()
@@ -35,9 +35,9 @@ class CollectionGetterTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('eins', $collection->one());
-		$this->assertEquals('zwei', $collection->two());
-		$this->assertEquals(null, $collection->three());
+		$this->assertSame('eins', $collection->one());
+		$this->assertSame('zwei', $collection->two());
+		$this->assertSame(null, $collection->three());
 	}
 
 	public function testGetAttribute()
@@ -47,10 +47,10 @@ class CollectionGetterTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('eins', $collection->getAttribute($collection->toArray(), 'one'));
-		$this->assertEquals(null, $collection->getAttribute($collection->toArray(), 'three'));
+		$this->assertSame('eins', $collection->getAttribute($collection->toArray(), 'one'));
+		$this->assertSame(null, $collection->getAttribute($collection->toArray(), 'three'));
 
-		$this->assertEquals('zwei', $collection->getAttribute($collection, 'two'));
-		$this->assertEquals(null, $collection->getAttribute($collection, 'three'));
+		$this->assertSame('zwei', $collection->getAttribute($collection, 'two'));
+		$this->assertSame(null, $collection->getAttribute($collection, 'three'));
 	}
 }

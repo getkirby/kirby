@@ -86,7 +86,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = '<p>Test</p>';
 
-		$this->assertEquals($expected, $this->kirby->kirbytext($text));
+		$this->assertSame($expected, $this->kirby->kirbytext($text));
 	}
 
 	public function testKirbytextWithSafeMode()
@@ -94,7 +94,7 @@ class AppComponentsTest extends TestCase
 		$text     = '<h1>**Test**</h1>';
 		$expected = '&lt;h1&gt;<strong>Test</strong>&lt;/h1&gt;';
 
-		$this->assertEquals($expected, $this->kirby->kirbytext($text, [
+		$this->assertSame($expected, $this->kirby->kirbytext($text, [
 			'markdown' => [
 				'safe'   => true,
 				'inline' => true
@@ -107,7 +107,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = 'Test';
 
-		$this->assertEquals($expected, $this->kirby->kirbytext($text, [
+		$this->assertSame($expected, $this->kirby->kirbytext($text, [
 			'markdown' => [
 				'inline' => true
 			]
@@ -127,7 +127,7 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test';
 		$expected = 'Test';
 
-		$this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+		$this->assertSame($expected, $this->kirby->markdown($text, ['inline' => true]));
 	}
 
 	public function testMarkdownWithSafeMode()
@@ -135,7 +135,7 @@ class AppComponentsTest extends TestCase
 		$text     = '<div>Test</div>';
 		$expected = '<p>&lt;div&gt;Test&lt;/div&gt;</p>';
 
-		$this->assertEquals($expected, $this->kirby->markdown($text, ['safe' => true]));
+		$this->assertSame($expected, $this->kirby->markdown($text, ['safe' => true]));
 	}
 
 	public function testMarkdownCachedInstance()
@@ -171,10 +171,10 @@ class AppComponentsTest extends TestCase
 		$text     = 'Test _case_';
 
 		$expected = '<pre><code><p>Test _case_</p></pre></code>';
-		$this->assertEquals($expected, $this->kirby->markdown($text));
+		$this->assertSame($expected, $this->kirby->markdown($text));
 
 		$expected = '<pre><code>Test _case_</pre></code>';
-		$this->assertEquals($expected, $this->kirby->markdown($text, ['inline' => true]));
+		$this->assertSame($expected, $this->kirby->markdown($text, ['inline' => true]));
 	}
 
 	public function testSmartypants()

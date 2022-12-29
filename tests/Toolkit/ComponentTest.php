@@ -26,8 +26,8 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['prop' => 'prop value']);
 
-		$this->assertEquals('prop value', $component->prop());
-		$this->assertEquals('prop value', $component->prop);
+		$this->assertSame('prop value', $component->prop());
+		$this->assertSame('prop value', $component->prop);
 	}
 
 	public function testPropWithDefaultValue()
@@ -44,8 +44,8 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 
-		$this->assertEquals('default value', $component->prop());
-		$this->assertEquals('default value', $component->prop);
+		$this->assertSame('default value', $component->prop());
+		$this->assertSame('default value', $component->prop);
 	}
 
 	public function testPropWithFixedValue()
@@ -60,8 +60,8 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 
-		$this->assertEquals('test', $component->prop());
-		$this->assertEquals('test', $component->prop);
+		$this->assertSame('test', $component->prop());
+		$this->assertSame('test', $component->prop);
 	}
 
 	public function testAttrs()
@@ -72,8 +72,8 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['foo' => 'bar']);
 
-		$this->assertEquals('bar', $component->foo());
-		$this->assertEquals('bar', $component->foo);
+		$this->assertSame('bar', $component->foo());
+		$this->assertSame('bar', $component->foo);
 	}
 
 	public function testComputed()
@@ -90,8 +90,8 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 
-		$this->assertEquals('computed prop', $component->prop());
-		$this->assertEquals('computed prop', $component->prop);
+		$this->assertSame('computed prop', $component->prop());
+		$this->assertSame('computed prop', $component->prop);
 	}
 
 	public function testComputedFromProp()
@@ -113,7 +113,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['prop' => 'prop value']);
 
-		$this->assertEquals('computed: prop value', $component->prop());
+		$this->assertSame('computed: prop value', $component->prop());
 	}
 
 	public function testMethod()
@@ -130,7 +130,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 
-		$this->assertEquals('hello world', $component->say());
+		$this->assertSame('hello world', $component->say());
 	}
 
 	public function testPropsInMethods()
@@ -152,7 +152,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['message' => 'hello world']);
 
-		$this->assertEquals('hello world', $component->say());
+		$this->assertSame('hello world', $component->say());
 	}
 
 	public function testComputedPropsInMethods()
@@ -179,7 +179,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['message' => 'hello world']);
 
-		$this->assertEquals('HELLO WORLD', $component->say());
+		$this->assertSame('HELLO WORLD', $component->say());
 	}
 
 	public function testToArray()
@@ -206,7 +206,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['message' => 'hello world']);
 
-		$this->assertEquals(['message' => 'HELLO WORLD'], $component->toArray());
+		$this->assertSame(['message' => 'HELLO WORLD'], $component->toArray());
 	}
 
 	public function testCustomToArray()
@@ -223,7 +223,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test');
 
-		$this->assertEquals(['foo' => 'bar'], $component->toArray());
+		$this->assertSame(['foo' => 'bar'], $component->toArray());
 	}
 
 	public function testInvalidType()
@@ -259,7 +259,7 @@ class ComponentTest extends TestCase
 
 		$component = new Component('test', ['message' => 'hello world']);
 
-		$this->assertEquals('HELLO WORLD', $component->message());
-		$this->assertEquals('HELLO WORLD', $component->message);
+		$this->assertSame('HELLO WORLD', $component->message());
+		$this->assertSame('HELLO WORLD', $component->message);
 	}
 }

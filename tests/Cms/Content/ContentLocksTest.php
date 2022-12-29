@@ -50,7 +50,7 @@ class ContentLocksTest extends TestCase
 	{
 		$app = $this->app;
 		$page = $app->page('test');
-		$this->assertEquals('/test', $app->locks()->id($page));
+		$this->assertSame('/test', $app->locks()->id($page));
 	}
 
 	public function testGetSet()
@@ -60,11 +60,11 @@ class ContentLocksTest extends TestCase
 		$root = $this->fixtures . '/content/test';
 
 		// create fixtures directory
-		$this->assertEquals($root . '/.lock', $app->locks()->file($page));
+		$this->assertSame($root . '/.lock', $app->locks()->file($page));
 		Dir::make($root);
 
 		// check if empty
-		$this->assertEquals([], $app->locks()->get($page));
+		$this->assertSame([], $app->locks()->get($page));
 		$this->assertFalse(F::exists($app->locks()->file($page)));
 
 		// set data
@@ -75,7 +75,7 @@ class ContentLocksTest extends TestCase
 
 		// check if exists
 		$this->assertTrue(F::exists($app->locks()->file($page)));
-		$this->assertEquals([
+		$this->assertSame([
 			'lock' => ['user' => 'homer']
 		], $app->locks()->get($page));
 
@@ -83,7 +83,7 @@ class ContentLocksTest extends TestCase
 		$this->assertTrue($app->locks()->set($page, []));
 
 		// check if empty
-		$this->assertEquals([], $app->locks()->get($page));
+		$this->assertSame([], $app->locks()->get($page));
 		$this->assertFalse(F::exists($app->locks()->file($page)));
 	}
 }

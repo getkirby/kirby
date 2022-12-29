@@ -8,12 +8,12 @@ class DateFieldTest extends TestCase
 	{
 		$field = $this->field('date');
 
-		$this->assertEquals('date', $field->type());
-		$this->assertEquals('date', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->min());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(false, $field->time());
+		$this->assertSame('date', $field->type());
+		$this->assertSame('date', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame(null, $field->min());
+		$this->assertSame(null, $field->max());
+		$this->assertSame(false, $field->time());
 		$this->assertTrue($field->save());
 	}
 
@@ -24,7 +24,7 @@ class DateFieldTest extends TestCase
 		]);
 
 		$this->assertSame('', $field->value());
-		$this->assertEquals('', $field->toString());
+		$this->assertSame(null, $field->toString());
 	}
 
 	public function testMinMax()
@@ -119,14 +119,14 @@ class DateFieldTest extends TestCase
 			'value' => '12.12.2012',
 		]);
 
-		$this->assertEquals('2012-12-12', $field->data());
+		$this->assertSame('2012-12-12', $field->data());
 
 		// empty value
 		$field = $this->field('date', [
 			'value'  => null,
 		]);
 
-		$this->assertEquals('', $field->data());
+		$this->assertSame('', $field->data());
 	}
 
 	/**

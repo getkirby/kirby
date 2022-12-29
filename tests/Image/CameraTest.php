@@ -34,6 +34,6 @@ class CameraTest extends TestCase
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
-		$this->assertEquals('Kirby Kamera Inc. Deluxe Snap 3000', (string)$camera);
+		$this->assertSame('Kirby Kamera Inc. Deluxe Snap 3000', (string)$camera);
 	}
 }

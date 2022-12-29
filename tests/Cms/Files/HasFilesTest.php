@@ -74,7 +74,7 @@ class HasFilesTest extends TestCase
 		]);
 
 		$file = $page->file('child/file.jpg');
-		$this->assertEquals('mother/child/file.jpg', $file->id());
+		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
 	/**
@@ -110,7 +110,7 @@ class HasFilesTest extends TestCase
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
-		$this->assertEquals($expected, $parent->{'has' . $type}());
+		$this->assertSame($expected, $parent->{'has' . $type}());
 	}
 
 	public function testHasFiles()

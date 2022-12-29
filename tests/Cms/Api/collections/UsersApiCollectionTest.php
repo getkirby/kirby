@@ -29,8 +29,8 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 		$result     = $collection->toArray();
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a@getkirby.com', $result[0]['email']);
-		$this->assertEquals('b@getkirby.com', $result[1]['email']);
+		$this->assertSame('a@getkirby.com', $result[0]['email']);
+		$this->assertSame('b@getkirby.com', $result[1]['email']);
 	}
 
 	public function testPassedCollection()
@@ -39,6 +39,6 @@ class UsersApiCollectionTest extends ApiCollectionTestCase
 		$result     = $collection->toArray();
 
 		$this->assertCount(1, $result);
-		$this->assertEquals('b@getkirby.com', $result[0]['email']);
+		$this->assertSame('b@getkirby.com', $result[0]['email']);
 	}
 }

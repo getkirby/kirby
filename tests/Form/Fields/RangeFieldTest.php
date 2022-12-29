@@ -8,13 +8,13 @@ class RangeFieldTest extends TestCase
 	{
 		$field = $this->field('range');
 
-		$this->assertEquals('range', $field->type());
-		$this->assertEquals('range', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->default());
-		$this->assertEquals(0, $field->min());
-		$this->assertEquals(100, $field->max());
-		$this->assertEquals(null, $field->step());
+		$this->assertSame('range', $field->type());
+		$this->assertSame('range', $field->name());
+		$this->assertSame(null, $field->value());
+		$this->assertSame(null, $field->default());
+		$this->assertSame(null, $field->min());
+		$this->assertSame(100.0, $field->max());
+		$this->assertSame(null, $field->step());
 		$this->assertTrue($field->tooltip());
 		$this->assertTrue($field->save());
 	}

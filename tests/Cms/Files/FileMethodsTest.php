@@ -39,12 +39,12 @@ class FileMethodsTest extends TestCase
 	public function testFileMethod()
 	{
 		$file = $this->app->file('test/test.jpg');
-		$this->assertEquals('file method', $file->test());
+		$this->assertSame('file method', $file->test());
 	}
 
 	public function testFilesMethod()
 	{
 		$files = $this->app->page('test')->files();
-		$this->assertEquals('files method', $files->test());
+		$this->assertSame('files method', $files->test());
 	}
 }

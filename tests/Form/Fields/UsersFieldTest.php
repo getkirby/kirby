@@ -38,12 +38,12 @@ class UsersFieldTest extends TestCase
 			'model' => new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals('users', $field->type());
-		$this->assertEquals('users', $field->name());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->default());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(true, $field->multiple());
+		$this->assertSame('users', $field->type());
+		$this->assertSame('users', $field->name());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->default());
+		$this->assertNull($field->max());
+		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
 	}
 
@@ -55,7 +55,7 @@ class UsersFieldTest extends TestCase
 			'model' => new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
 	}
 
 	public function testMultipleDefaultUsers()
@@ -70,8 +70,8 @@ class UsersFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
-		$this->assertEquals('donatello@getkirby.com', $field->default()[1]['email']);
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]['email']);
+		$this->assertSame('donatello@getkirby.com', $field->default()[1]['email']);
 	}
 
 	public function testDefaultUserDisabled()
@@ -83,7 +83,7 @@ class UsersFieldTest extends TestCase
 			'default' => false
 		]);
 
-		$this->assertEquals([], $field->default());
+		$this->assertSame([], $field->default());
 	}
 
 	public function testValue()
@@ -105,7 +105,7 @@ class UsersFieldTest extends TestCase
 			'raphael@getkirby.com'
 		];
 
-		$this->assertEquals($expected, $ids);
+		$this->assertSame($expected, $ids);
 	}
 
 	public function testMin()
@@ -120,7 +120,7 @@ class UsersFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(3, $field->min());
+		$this->assertSame(3, $field->min());
 		$this->assertTrue($field->required());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
@@ -137,7 +137,7 @@ class UsersFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(1, $field->max());
+		$this->assertSame(1, $field->max());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
@@ -148,7 +148,7 @@ class UsersFieldTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -158,7 +158,7 @@ class UsersFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testRequiredProps()
@@ -169,7 +169,7 @@ class UsersFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

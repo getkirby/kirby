@@ -28,8 +28,8 @@ class FilesTest extends TestCase
 		$result = $files->add($file);
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a.jpg', $result->nth(0)->filename());
-		$this->assertEquals('b.jpg', $result->nth(1)->filename());
+		$this->assertSame('a.jpg', $result->nth(0)->filename());
+		$this->assertSame('b.jpg', $result->nth(1)->filename());
 	}
 
 	public function testAddCollection()
@@ -48,9 +48,9 @@ class FilesTest extends TestCase
 		$c = $a->add($b);
 
 		$this->assertCount(3, $c);
-		$this->assertEquals('a.jpg', $c->nth(0)->filename());
-		$this->assertEquals('b.jpg', $c->nth(1)->filename());
-		$this->assertEquals('c.jpg', $c->nth(2)->filename());
+		$this->assertSame('a.jpg', $c->nth(0)->filename());
+		$this->assertSame('b.jpg', $c->nth(1)->filename());
+		$this->assertSame('c.jpg', $c->nth(2)->filename());
 	}
 
 	public function testAddById()
@@ -81,9 +81,9 @@ class FilesTest extends TestCase
 		$files = $app->page('a')->files()->add('b/a.jpg');
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('a/a.jpg', $files->nth(0)->id());
-		$this->assertEquals('a/b.jpg', $files->nth(1)->id());
-		$this->assertEquals('b/a.jpg', $files->nth(2)->id());
+		$this->assertSame('a/a.jpg', $files->nth(0)->id());
+		$this->assertSame('a/b.jpg', $files->nth(1)->id());
+		$this->assertSame('b/a.jpg', $files->nth(2)->id());
 	}
 
 	public function testAddNull()

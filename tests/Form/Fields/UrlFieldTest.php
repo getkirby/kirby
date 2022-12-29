@@ -8,13 +8,13 @@ class UrlFieldTest extends TestCase
 	{
 		$field = $this->field('url');
 
-		$this->assertEquals('url', $field->type());
-		$this->assertEquals('url', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals('url', $field->icon());
-		$this->assertEquals('https://example.com', $field->placeholder());
-		$this->assertEquals(null, $field->counter());
-		$this->assertEquals('url', $field->autocomplete());
+		$this->assertSame('url', $field->type());
+		$this->assertSame('url', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame('url', $field->icon());
+		$this->assertSame('https://example.com', $field->placeholder());
+		$this->assertNull($field->counter());
+		$this->assertSame('url', $field->autocomplete());
 		$this->assertTrue($field->save());
 	}
 

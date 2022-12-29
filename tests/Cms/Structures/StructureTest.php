@@ -13,7 +13,7 @@ class StructureTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(StructureObject::class, $structure->first());
-		$this->assertEquals('0', $structure->first()->id());
+		$this->assertSame('0', $structure->first()->id());
 	}
 
 	public function testParent()
@@ -23,7 +23,7 @@ class StructureTest extends TestCase
 			['test' => 'Test']
 		], $parent);
 
-		$this->assertEquals($parent, $structure->first()->parent());
+		$this->assertSame($parent, $structure->first()->parent());
 	}
 
 	public function testToArray()
@@ -86,7 +86,7 @@ class StructureTest extends TestCase
 		$this->assertEquals('C', $structure->last()->name());
 		$this->assertEquals('B', $structure->last()->prev()->name());
 
-		$this->assertEquals(2, $structure->last()->indexOf());
+		$this->assertSame(2, $structure->last()->indexOf());
 
 		$this->assertTrue($structure->first()->isFirst());
 		$this->assertTrue($structure->last()->isLast());

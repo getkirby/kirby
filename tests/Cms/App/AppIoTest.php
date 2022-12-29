@@ -25,8 +25,8 @@ class AppIoTest extends TestCase
 			'httpCode' => 501
 		]));
 
-		$this->assertEquals(501, $response->code());
-		$this->assertEquals('Nope', $response->body());
+		$this->assertSame(501, $response->code());
+		$this->assertSame('Nope', $response->body());
 	}
 
 	public function testExceptionErrorPage()
@@ -44,24 +44,24 @@ class AppIoTest extends TestCase
 
 		$response = $app->io(new Exception('Nope'));
 
-		$this->assertEquals(500, $response->code());
-		$this->assertEquals('Error: Nope', $response->body());
+		$this->assertSame(500, $response->code());
+		$this->assertSame('Error: Nope', $response->body());
 	}
 
 	public function testExceptionWithInvalidHttpCode()
 	{
 		$response = $this->app()->io(new \Exception('Nope', 8000));
 
-		$this->assertEquals(500, $response->code());
-		$this->assertEquals('Nope', $response->body());
+		$this->assertSame(500, $response->code());
+		$this->assertSame('Nope', $response->body());
 	}
 
 	public function testEmpty()
 	{
 		$response = $this->app()->io('');
 
-		$this->assertEquals(404, $response->code());
-		$this->assertEquals('Not found', $response->body());
+		$this->assertSame(404, $response->code());
+		$this->assertSame('Not found', $response->body());
 	}
 
 	public function testResponder()
@@ -71,8 +71,8 @@ class AppIoTest extends TestCase
 
 		$response = $app->io($input);
 
-		$this->assertEquals(201, $response->code());
-		$this->assertEquals('Test', $response->body());
+		$this->assertSame(201, $response->code());
+		$this->assertSame('Test', $response->body());
 	}
 
 	public function testResponse()
@@ -114,8 +114,8 @@ class AppIoTest extends TestCase
 
 		$response = $this->app()->io($input);
 
-		$this->assertEquals(200, $response->code());
-		$this->assertEquals('Test template', $response->body());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('Test template', $response->body());
 	}
 
 	public function testPageErrorPageException()
@@ -127,8 +127,8 @@ class AppIoTest extends TestCase
 
 		$response = $this->app()->io($input);
 
-		$this->assertEquals(403, $response->code());
-		$this->assertEquals('Exception message', $response->body());
+		$this->assertSame(403, $response->code());
+		$this->assertSame('Exception message', $response->body());
 	}
 
 	public function testPageErrorPageExceptionErrorPage()
@@ -151,23 +151,23 @@ class AppIoTest extends TestCase
 
 		$response = $app->io($input);
 
-		$this->assertEquals(403, $response->code());
-		$this->assertEquals('Error: Exception message', $response->body());
+		$this->assertSame(403, $response->code());
+		$this->assertSame('Error: Exception message', $response->body());
 	}
 
 	public function testString()
 	{
 		$response = $this->app()->io('Test');
 
-		$this->assertEquals(200, $response->code());
-		$this->assertEquals('Test', $response->body());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('Test', $response->body());
 	}
 
 	public function testArray()
 	{
 		$response = $this->app()->io($array = ['foo' => 'bar']);
 
-		$this->assertEquals(200, $response->code());
-		$this->assertEquals(json_encode($array), $response->body());
+		$this->assertSame(200, $response->code());
+		$this->assertSame(json_encode($array), $response->body());
 	}
 }

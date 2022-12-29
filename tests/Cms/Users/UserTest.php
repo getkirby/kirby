@@ -35,7 +35,7 @@ class UserTest extends TestCase
 			'content' => $content = ['name' => 'Test']
 		]);
 
-		$this->assertEquals($content, $user->content()->toArray());
+		$this->assertSame($content, $user->content()->toArray());
 	}
 
 	public function testInvalidContent()
@@ -57,7 +57,7 @@ class UserTest extends TestCase
 			'email' => $email = 'user@domain.com',
 		]);
 
-		$this->assertEquals($email, $user->email());
+		$this->assertSame($email, $user->email());
 	}
 
 	public function testInvalidEmail()
@@ -110,7 +110,7 @@ class UserTest extends TestCase
 			'email' => 'test@getkirby.com'
 		]);
 
-		$this->assertEquals('test@getkirby.com', $user->toString());
+		$this->assertSame('test@getkirby.com', $user->toString());
 	}
 
 	public function testToStringWithTemplate()
@@ -119,7 +119,7 @@ class UserTest extends TestCase
 			'email' => 'test@getkirby.com'
 		]);
 
-		$this->assertEquals('Email: test@getkirby.com', $user->toString('Email: {{ user.email }}'));
+		$this->assertSame('Email: test@getkirby.com', $user->toString('Email: {{ user.email }}'));
 	}
 
 	public function testModified()
@@ -328,7 +328,7 @@ class UserTest extends TestCase
 			'name'  => 'Test User'
 		]);
 
-		$this->assertEquals('homer', $user->test());
+		$this->assertSame('homer', $user->test());
 
 		User::$methods = [];
 	}

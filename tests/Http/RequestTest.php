@@ -64,10 +64,10 @@ class RequestTest extends TestCase
 			'query'  => ['b' => 'b'],
 		]);
 
-		$this->assertEquals(['a' => 'a', 'b' => 'b'], $request->data());
-		$this->assertEquals('a', $request->get('a'));
-		$this->assertEquals('b', $request->get('b'));
-		$this->assertEquals(null, $request->get('c'));
+		$this->assertSame(['a' => 'a', 'b' => 'b'], $request->data());
+		$this->assertSame('a', $request->get('a'));
+		$this->assertSame('b', $request->get('b'));
+		$this->assertNull($request->get('c'));
 	}
 
 	public function test__debuginfo()
@@ -99,8 +99,8 @@ class RequestTest extends TestCase
 		$request = new Request();
 
 		$this->assertInstanceOf(BasicAuth::class, $request->auth());
-		$this->assertEquals('testuser', $request->auth()->username());
-		$this->assertEquals('testpass', $request->auth()->password());
+		$this->assertSame('testuser', $request->auth()->username());
+		$this->assertSame('testpass', $request->auth()->password());
 	}
 
 	public function testBearerAuth()
@@ -114,7 +114,7 @@ class RequestTest extends TestCase
 		$request = new Request();
 
 		$this->assertInstanceOf(BearerAuth::class, $request->auth());
-		$this->assertEquals('abcd', $request->auth()->token());
+		$this->assertSame('abcd', $request->auth()->token());
 	}
 
 	public function testCli()
@@ -275,6 +275,6 @@ class RequestTest extends TestCase
 			'url' => 'https://getkirby.com/a/b'
 		]);
 
-		$this->assertEquals('getkirby.com', $request->domain());
+		$this->assertSame('getkirby.com', $request->domain());
 	}
 }

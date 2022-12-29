@@ -26,7 +26,7 @@ class AppCachesTest extends TestCase
 
 	public function testDisabledCache()
 	{
-		$this->assertEquals(NullCache::class, get_class($this->app()->cache('pages')));
+		$this->assertInstanceOf(NullCache::class, $this->app()->cache('pages'));
 	}
 
 	public function testEnabledCacheWithoutOptions()

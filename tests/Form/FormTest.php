@@ -19,7 +19,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($values, $form->data());
+		$this->assertSame($values, $form->data());
 	}
 
 	public function testValuesWithoutFields()
@@ -32,7 +32,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($values, $form->values());
+		$this->assertSame($values, $form->values());
 	}
 
 	public function testDataFromUnsaveableFields()
@@ -90,7 +90,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('a, b', $form->data()['structure'][0]['tags']);
+		$this->assertSame('a, b', $form->data()['structure'][0]['tags']);
 	}
 
 	public function testInvalidFieldType()
@@ -113,10 +113,10 @@ class FormTest extends TestCase
 
 		$field = $form->fields()->first();
 
-		$this->assertEquals('info', $field->type());
-		$this->assertEquals('negative', $field->theme());
-		$this->assertEquals('Error in "test" field.', $field->label());
-		$this->assertEquals('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
+		$this->assertSame('info', $field->type());
+		$this->assertSame('negative', $field->theme());
+		$this->assertSame('Error in "test" field.', $field->label());
+		$this->assertSame('<p>Field "test": The field type "does-not-exist" does not exist</p>', $field->text());
 	}
 
 	public function testFieldOrder()
@@ -234,10 +234,10 @@ class FormTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $form->errors());
+		$this->assertSame($expected, $form->errors());
 
 		// check for a correct cached array
-		$this->assertEquals($expected, $form->errors());
+		$this->assertSame($expected, $form->errors());
 	}
 
 	public function testToArray()
@@ -268,11 +268,11 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals([], $form->toArray()['errors']);
+		$this->assertSame([], $form->toArray()['errors']);
 		$this->assertArrayHasKey('a', $form->toArray()['fields']);
 		$this->assertArrayHasKey('b', $form->toArray()['fields']);
 		$this->assertCount(2, $form->toArray()['fields']);
-		$this->assertEquals(false, $form->toArray()['invalid']);
+		$this->assertSame(false, $form->toArray()['invalid']);
 	}
 
 	public function testContent()
@@ -285,7 +285,7 @@ class FormTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($values, $form->content());
+		$this->assertSame($values, $form->content());
 	}
 
 	public function testContentFromUnsaveableFields()
@@ -365,7 +365,7 @@ class FormTest extends TestCase
 		$values = $form->values();
 
 		// the title must always be transfered, even if not in the blueprint
-		$this->assertEquals('Updated Title', $values['title']);
+		$this->assertSame('Updated Title', $values['title']);
 
 		// empty fields should be actually empty
 		$this->assertSame('', $values['date']);
@@ -393,8 +393,8 @@ class FormTest extends TestCase
 
 		$values = $form->values();
 
-		$this->assertEquals('AA', $values['a']);
-		$this->assertEquals('B', $values['b']);
+		$this->assertSame('AA', $values['a']);
+		$this->assertSame('B', $values['b']);
 	}
 
 	public function testFileFormWithoutBlueprint()
@@ -419,7 +419,7 @@ class FormTest extends TestCase
 			'values' => ['a' => 'A', 'b' => 'B']
 		]);
 
-		$this->assertEquals(['a' => 'A', 'b' => 'B'], $form->data());
+		$this->assertSame(['a' => 'A', 'b' => 'B'], $form->data());
 	}
 
 	public function testUntranslatedFields()
@@ -470,7 +470,7 @@ class FormTest extends TestCase
 			'b' => 'B'
 		];
 
-		$this->assertEquals($expected, $form->values());
+		$this->assertSame($expected, $form->values());
 
 		// secondary language
 		$form = Form::for($page, [
@@ -486,6 +486,6 @@ class FormTest extends TestCase
 			'b' => ''
 		];
 
-		$this->assertEquals($expected, $form->values());
+		$this->assertSame($expected, $form->values());
 	}
 }

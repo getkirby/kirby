@@ -12,11 +12,11 @@ class VisitorTest extends TestCase
 	{
 		$visitor = new Visitor();
 
-		$this->assertEquals('', $visitor->ip());
-		$this->assertEquals('', $visitor->userAgent());
-		$this->assertEquals(null, $visitor->acceptedLanguage());
+		$this->assertSame('', $visitor->ip());
+		$this->assertSame('', $visitor->userAgent());
+		$this->assertNull($visitor->acceptedLanguage());
 		$this->assertInstanceOf(Collection::class, $visitor->acceptedLanguages());
-		$this->assertEquals(null, $visitor->acceptedMimeType());
+		$this->assertNull($visitor->acceptedMimeType());
 		$this->assertInstanceOf(Collection::class, $visitor->acceptedMimeTypes());
 	}
 
@@ -29,27 +29,27 @@ class VisitorTest extends TestCase
 			'acceptedMimeType' => 'text/html'
 		]);
 
-		$this->assertEquals('192.168.1.1', $visitor->ip());
-		$this->assertEquals('Kirby', $visitor->userAgent());
+		$this->assertSame('192.168.1.1', $visitor->ip());
+		$this->assertSame('Kirby', $visitor->userAgent());
 		$this->assertInstanceOf(Obj::class, $visitor->acceptedLanguage());
-		$this->assertEquals('en_US', $visitor->acceptedLanguage()->locale());
+		$this->assertSame('en_US', $visitor->acceptedLanguage()->locale());
 		$this->assertInstanceOf(Obj::class, $visitor->acceptedMimeType());
-		$this->assertEquals('text/html', $visitor->acceptedMimeType()->type());
+		$this->assertSame('text/html', $visitor->acceptedMimeType()->type());
 	}
 
 	public function testIp()
 	{
 		$visitor = new Visitor();
-		$this->assertEquals(null, $visitor->ip());
+		$this->assertSame('', $visitor->ip());
 		$this->assertInstanceOf(Visitor::class, $visitor->ip('192.168.1.1'));
-		$this->assertEquals('192.168.1.1', $visitor->ip());
+		$this->assertSame('192.168.1.1', $visitor->ip());
 	}
 
 	public function testUserAgent()
 	{
 		$visitor = new Visitor();
 		$this->assertInstanceOf(Visitor::class, $visitor->userAgent('Kirby'));
-		$this->assertEquals('Kirby', $visitor->userAgent());
+		$this->assertSame('Kirby', $visitor->userAgent());
 	}
 
 	public function testAcceptsMimeType()

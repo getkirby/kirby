@@ -38,9 +38,9 @@ class FilePickerMixinTest extends TestCase
 		$files = $field->files();
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('a.jpg', $files[0]['id']);
-		$this->assertEquals('b.jpg', $files[1]['id']);
-		$this->assertEquals('c.jpg', $files[2]['id']);
+		$this->assertSame('a.jpg', $files[0]['id']);
+		$this->assertSame('b.jpg', $files[1]['id']);
+		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
 	public function testFileFiles()
@@ -72,9 +72,9 @@ class FilePickerMixinTest extends TestCase
 		$files = $field->files();
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('test/a.jpg', $files[0]['id']);
-		$this->assertEquals('test/b.jpg', $files[1]['id']);
-		$this->assertEquals('test/c.jpg', $files[2]['id']);
+		$this->assertSame('test/a.jpg', $files[0]['id']);
+		$this->assertSame('test/b.jpg', $files[1]['id']);
+		$this->assertSame('test/c.jpg', $files[2]['id']);
 	}
 
 	public function testUserFiles()
@@ -106,9 +106,9 @@ class FilePickerMixinTest extends TestCase
 		$files = $field->files();
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('a.jpg', $files[0]['id']);
-		$this->assertEquals('b.jpg', $files[1]['id']);
-		$this->assertEquals('c.jpg', $files[2]['id']);
+		$this->assertSame('a.jpg', $files[0]['id']);
+		$this->assertSame('b.jpg', $files[1]['id']);
+		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
 	public function testSiteFiles()
@@ -139,9 +139,9 @@ class FilePickerMixinTest extends TestCase
 		$files = $field->files();
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('a.jpg', $files[0]['id']);
-		$this->assertEquals('b.jpg', $files[1]['id']);
-		$this->assertEquals('c.jpg', $files[2]['id']);
+		$this->assertSame('a.jpg', $files[0]['id']);
+		$this->assertSame('b.jpg', $files[1]['id']);
+		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
 	public function testCustomQuery()
@@ -183,9 +183,9 @@ class FilePickerMixinTest extends TestCase
 		$files = $field->files();
 
 		$this->assertCount(3, $files);
-		$this->assertEquals('a.jpg', $files[0]['id']);
-		$this->assertEquals('b.jpg', $files[1]['id']);
-		$this->assertEquals('c.jpg', $files[2]['id']);
+		$this->assertSame('a.jpg', $files[0]['id']);
+		$this->assertSame('b.jpg', $files[1]['id']);
+		$this->assertSame('c.jpg', $files[2]['id']);
 	}
 
 	public function testMap()
@@ -231,6 +231,6 @@ class FilePickerMixinTest extends TestCase
 			'test/c.jpg'
 		];
 
-		$this->assertEquals($expected, $files);
+		$this->assertSame($expected, $files);
 	}
 }

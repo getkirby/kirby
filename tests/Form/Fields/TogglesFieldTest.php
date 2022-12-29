@@ -8,13 +8,13 @@ class TogglesFieldTest extends TestCase
 	{
 		$field = $this->field('toggles');
 
-		$this->assertEquals('toggles', $field->type());
-		$this->assertEquals('toggles', $field->name());
-		$this->assertEquals(null, $field->value());
+		$this->assertSame('toggles', $field->type());
+		$this->assertSame('toggles', $field->name());
+		$this->assertSame('', $field->value());
 		$this->assertTrue($field->grow());
 		$this->assertTrue($field->labels());
 		$this->assertTrue($field->reset());
-		$this->assertEquals([], $field->options());
+		$this->assertSame([], $field->options());
 		$this->assertTrue($field->save());
 	}
 

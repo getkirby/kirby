@@ -51,9 +51,9 @@ class LanguageRouterTest extends TestCase
 		$routes   = $router->routes();
 
 		$this->assertCount(1, $routes);
-		$this->assertEquals('(:any)', $routes[0]['pattern']);
-		$this->assertEquals('en', $routes[0]['language']);
-		$this->assertEquals('en', $router->call('anything'));
+		$this->assertSame('(:any)', $routes[0]['pattern']);
+		$this->assertSame('en', $routes[0]['language']);
+		$this->assertSame('en', $router->call('anything'));
 	}
 
 	public function testRouteWithoutLanguageScope()
@@ -93,9 +93,9 @@ class LanguageRouterTest extends TestCase
 		$routes   = $router->routes();
 
 		$this->assertCount(1, $routes);
-		$this->assertEquals('(:any)', $routes[0]['pattern']);
-		$this->assertEquals('en|de', $routes[0]['language']);
-		$this->assertEquals('slug', $router->call('slug'));
+		$this->assertSame('(:any)', $routes[0]['pattern']);
+		$this->assertSame('en|de', $routes[0]['language']);
+		$this->assertSame('slug', $router->call('slug'));
 	}
 
 	public function testRouteWildcard()
@@ -117,9 +117,9 @@ class LanguageRouterTest extends TestCase
 		$routes   = $router->routes();
 
 		$this->assertCount(1, $routes);
-		$this->assertEquals('(:any)', $routes[0]['pattern']);
-		$this->assertEquals('*', $routes[0]['language']);
-		$this->assertEquals('slug', $router->call('slug'));
+		$this->assertSame('(:any)', $routes[0]['pattern']);
+		$this->assertSame('*', $routes[0]['language']);
+		$this->assertSame('slug', $router->call('slug'));
 	}
 
 	public function testRouteWithPageScope()
@@ -145,7 +145,7 @@ class LanguageRouterTest extends TestCase
 		$language = $app->language('en');
 		$router   = $language->router();
 
-		$this->assertEquals('slug', $router->call('notes/slug'));
+		$this->assertSame('slug', $router->call('notes/slug'));
 	}
 
 	public function testRouteWithPageScopeAndMultiplePatterns()
@@ -174,8 +174,8 @@ class LanguageRouterTest extends TestCase
 		$language = $app->language('en');
 		$router   = $language->router();
 
-		$this->assertEquals('slug', $router->call('notes/a/slug'));
-		$this->assertEquals('slug', $router->call('notes/b/slug'));
+		$this->assertSame('slug', $router->call('notes/a/slug'));
+		$this->assertSame('slug', $router->call('notes/b/slug'));
 	}
 
 	public function testRouteWithPageScopeAndInvalidPage()

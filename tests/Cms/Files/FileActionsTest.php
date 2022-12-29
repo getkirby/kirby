@@ -109,7 +109,7 @@ class FileActionsTest extends TestCase
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
-		$this->assertEquals('test.csv', $result->filename());
+		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->contentFile());
 	}
@@ -145,7 +145,7 @@ class FileActionsTest extends TestCase
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
-		$this->assertEquals('test.csv', $result->filename());
+		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->contentFile('en'));
 		$this->assertFileExists($result->contentFile('de'));
@@ -230,8 +230,8 @@ class FileActionsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('A', $result->a()->value());
-		$this->assertEquals('B', $result->b()->value());
+		$this->assertSame('A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
 	}
 
 	/**
@@ -266,8 +266,8 @@ class FileActionsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Custom A', $result->a()->value());
-		$this->assertEquals('B', $result->b()->value());
+		$this->assertSame('Custom A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
 	}
 
 	/**
@@ -305,7 +305,7 @@ class FileActionsTest extends TestCase
 				'file.create:after' => function (File $file) use (&$after, $phpunit) {
 					$phpunit->assertTrue($file->siblings(true)->has($file));
 					$phpunit->assertTrue($file->parent()->files()->has($file));
-					$phpunit->assertEquals('test.md', $file->filename());
+					$phpunit->assertSame('test.md', $file->filename());
 
 					$after = true;
 				}
@@ -379,12 +379,12 @@ class FileActionsTest extends TestCase
 			'parent'   => $parent
 		]);
 
-		$this->assertEquals(F::read($original), F::read($originalFile->root()));
+		$this->assertSame(F::read($original), F::read($originalFile->root()));
 		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement);
 
-		$this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
+		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
 		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
@@ -451,7 +451,7 @@ class FileActionsTest extends TestCase
 			'caption' => $caption = 'test'
 		]);
 
-		$this->assertEquals($caption, $file->caption()->value());
+		$this->assertSame($caption, $file->caption()->value());
 	}
 
 	public function testChangeNameHooks()

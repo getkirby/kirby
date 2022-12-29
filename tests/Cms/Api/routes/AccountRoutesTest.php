@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class AccountRoutesTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
@@ -28,7 +28,7 @@ class AccountRoutesTest extends TestCase
 				]
 			],
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/AccountRoutesTest'
+				'index' => $this->tmp
 			],
 			'users' => [
 				[
@@ -43,6 +43,7 @@ class AccountRoutesTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
@@ -50,7 +51,7 @@ class AccountRoutesTest extends TestCase
 		App::destroy();
 		Field::$types = [];
 		Section::$types = [];
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testAvatar()
@@ -64,7 +65,7 @@ class AccountRoutesTest extends TestCase
 
 		$response = $this->app->api()->call('account/avatar');
 
-		$this->assertEquals('profile.jpg', $response['data']['filename']);
+		$this->assertSame('profile.jpg', $response['data']['filename']);
 	}
 
 	public function testAvatarDelete()
@@ -265,7 +266,7 @@ class AccountRoutesTest extends TestCase
 
 		$response = $app->api()->call('account/files/a.jpg');
 
-		$this->assertEquals('a.jpg', $response['data']['filename']);
+		$this->assertSame('a.jpg', $response['data']['filename']);
 	}
 
 	public function testFiles()
@@ -329,8 +330,8 @@ class AccountRoutesTest extends TestCase
 
 		$response = $app->api()->call('account/files');
 
-		$this->assertEquals('b.jpg', $response['data'][0]['filename']);
-		$this->assertEquals('a.jpg', $response['data'][1]['filename']);
+		$this->assertSame('b.jpg', $response['data'][0]['filename']);
+		$this->assertSame('a.jpg', $response['data'][1]['filename']);
 	}
 
 	public function testGet()
@@ -339,7 +340,7 @@ class AccountRoutesTest extends TestCase
 
 		$response = $app->api()->call('account');
 
-		$this->assertEquals('test@getkirby.com', $response['data']['email']);
+		$this->assertSame('test@getkirby.com', $response['data']['email']);
 	}
 
 	public function testRoles()

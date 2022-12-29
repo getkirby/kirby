@@ -23,7 +23,7 @@ class UrlTest extends TestCase
 
 	public function testHome()
 	{
-		$this->assertEquals('https://getkirby.com', Url::home());
+		$this->assertSame('https://getkirby.com', Url::home());
 	}
 
 	public function testTo()
@@ -64,15 +64,15 @@ class UrlTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('https://getkirby.com/en/a', Url::to('a'));
-		$this->assertEquals('https://getkirby.com/en/a', Url::to('a', 'en'));
-		$this->assertEquals('https://getkirby.com/de/a', Url::to('a', 'de'));
+		$this->assertSame('https://getkirby.com/en/a', Url::to('a'));
+		$this->assertSame('https://getkirby.com/en/a', Url::to('a', 'en'));
+		$this->assertSame('https://getkirby.com/de/a', Url::to('a', 'de'));
 
-		$this->assertEquals('https://getkirby.com/en/a', Url::to('a', ['language' => 'en']));
-		$this->assertEquals('https://getkirby.com/de/a', Url::to('a', ['language' => 'de']));
+		$this->assertSame('https://getkirby.com/en/a', Url::to('a', ['language' => 'en']));
+		$this->assertSame('https://getkirby.com/de/a', Url::to('a', ['language' => 'de']));
 
 		// translated slug
-		$this->assertEquals('https://getkirby.com/de/custom', Url::to('c', 'de'));
+		$this->assertSame('https://getkirby.com/de/custom', Url::to('c', 'de'));
 	}
 
 	public function testToTemplateAsset()
@@ -99,13 +99,13 @@ class UrlTest extends TestCase
 
 		$expected = 'https://getkirby.com/assets/css/default.css';
 
-		$this->assertEquals($expected, Url::toTemplateAsset('css', 'css'));
+		$this->assertSame($expected, Url::toTemplateAsset('css', 'css'));
 
 		F::write($app->root('assets') . '/js/default.js', 'test');
 
 		$expected = 'https://getkirby.com/assets/js/default.js';
 
-		$this->assertEquals($expected, Url::toTemplateAsset('js', 'js'));
+		$this->assertSame($expected, Url::toTemplateAsset('js', 'js'));
 
 		Dir::remove($fixtures);
 	}

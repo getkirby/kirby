@@ -8,13 +8,13 @@ class EmailFieldTest extends TestCase
 	{
 		$field = $this->field('email');
 
-		$this->assertEquals('email', $field->type());
-		$this->assertEquals('email', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals('email', $field->icon());
-		$this->assertEquals('mail@example.com', $field->placeholder());
-		$this->assertEquals(null, $field->counter());
-		$this->assertEquals('email', $field->autocomplete());
+		$this->assertSame('email', $field->type());
+		$this->assertSame('email', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame('email', $field->icon());
+		$this->assertSame('mail@example.com', $field->placeholder());
+		$this->assertSame(null, $field->counter());
+		$this->assertSame('email', $field->autocomplete());
 		$this->assertTrue($field->save());
 	}
 

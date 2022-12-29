@@ -35,8 +35,8 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->site(), $file->mediaHash(), $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(200, $result->code());
-		$this->assertEquals('image/svg+xml', $result->type());
+		$this->assertSame(200, $result->code());
+		$this->assertSame('image/svg+xml', $result->type());
 	}
 
 	public function testLinkPageFile()
@@ -47,8 +47,8 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->page('projects'), $file->mediaHash(), $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(200, $result->code());
-		$this->assertEquals('image/svg+xml', $result->type());
+		$this->assertSame(200, $result->code());
+		$this->assertSame('image/svg+xml', $result->type());
 	}
 
 	public function testLinkWithInvalidHash()
@@ -60,7 +60,7 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->page('projects'), $file->mediaToken() . '-12345', $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(307, $result->code());
+		$this->assertSame(307, $result->code());
 
 		// with a completely invalid hash
 		$file   = $this->app->file('projects/test.svg');

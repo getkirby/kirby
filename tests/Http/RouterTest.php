@@ -20,8 +20,8 @@ class RouterTest extends TestCase
 		$result = $router->find('/', 'GET');
 
 		$this->assertInstanceOf(Route::class, $result);
-		$this->assertEquals('', $result->pattern());
-		$this->assertEquals('GET', $result->method());
+		$this->assertSame('', $result->pattern());
+		$this->assertSame('GET', $result->method());
 	}
 
 	public function testRegisterMultipleRoutes()
@@ -45,12 +45,12 @@ class RouterTest extends TestCase
 		$resultB = $router->find('b', 'POST');
 
 		$this->assertInstanceOf(Route::class, $resultA);
-		$this->assertEquals('a', $resultA->pattern());
-		$this->assertEquals('GET', $resultA->method());
+		$this->assertSame('a', $resultA->pattern());
+		$this->assertSame('GET', $resultA->method());
 
 		$this->assertInstanceOf(Route::class, $resultB);
-		$this->assertEquals('b', $resultB->pattern());
-		$this->assertEquals('POST', $resultB->method());
+		$this->assertSame('b', $resultB->pattern());
+		$this->assertSame('POST', $resultB->method());
 	}
 
 	public function testRegisterInvalidRoute()
@@ -95,8 +95,8 @@ class RouterTest extends TestCase
 		$hooks = [
 			'beforeEach' => function ($route, $path, $method) {
 				$this->assertInstanceOf(Route::class, $route);
-				$this->assertEquals('/', $path);
-				$this->assertEquals('GET', $method);
+				$this->assertSame('/', $path);
+				$this->assertSame('GET', $method);
 			}
 		];
 
@@ -119,9 +119,9 @@ class RouterTest extends TestCase
 		$hooks = [
 			'afterEach' => function ($route, $path, $method, $result, $final) {
 				$this->assertInstanceOf(Route::class, $route);
-				$this->assertEquals('/', $path);
-				$this->assertEquals('GET', $method);
-				$this->assertEquals('test', $result);
+				$this->assertSame('/', $path);
+				$this->assertSame('GET', $method);
+				$this->assertSame('test', $result);
 				$this->assertTrue($final);
 
 				return $result . ':after';
@@ -140,7 +140,7 @@ class RouterTest extends TestCase
 			$hooks
 		);
 
-		$this->assertEquals('test:after', $router->call('/', 'GET'));
+		$this->assertSame('test:after', $router->call('/', 'GET'));
 	}
 
 	public function testNext()
@@ -182,13 +182,13 @@ class RouterTest extends TestCase
 		]);
 
 		$result = $router->call('a');
-		$this->assertEquals('a', $result);
+		$this->assertSame('a', $result);
 
 		$result = $router->call('b');
-		$this->assertEquals('b', $result);
+		$this->assertSame('b', $result);
 
 		$result = $router->call('c');
-		$this->assertEquals('c', $result);
+		$this->assertSame('c', $result);
 
 		$this->expectException('Exception');
 		$this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
@@ -231,8 +231,8 @@ class RouterTest extends TestCase
 		);
 
 		$router->call('a');
-		$this->assertEquals(2, $numTotal);
-		$this->assertEquals(1, $numFinal);
+		$this->assertSame(2, $numTotal);
+		$this->assertSame(1, $numFinal);
 	}
 
 	public function testCallWithCallback()
@@ -252,6 +252,6 @@ class RouterTest extends TestCase
 			return $route->arguments()[0];
 		});
 
-		$this->assertEquals('test', $result);
+		$this->assertSame('test', $result);
 	}
 }

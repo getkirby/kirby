@@ -51,14 +51,14 @@ class PagePickerMixinTest extends TestCase
 		$pages    = $response['data'];
 		$model    = $response['model'];
 
-		$this->assertEquals('Test', $model['title']);
+		$this->assertSame('Test', $model['title']);
 		$this->assertNull($model['id']);
 		$this->assertNull($model['parent']);
 
 		$this->assertCount(3, $pages);
-		$this->assertEquals('a', $pages[0]['id']);
-		$this->assertEquals('b', $pages[1]['id']);
-		$this->assertEquals('c', $pages[2]['id']);
+		$this->assertSame('a', $pages[0]['id']);
+		$this->assertSame('b', $pages[1]['id']);
+		$this->assertSame('c', $pages[2]['id']);
 	}
 
 	public function testPagesWithParent()
@@ -104,12 +104,12 @@ class PagePickerMixinTest extends TestCase
 		$pages    = $response['data'];
 		$model    = $response['model'];
 
-		$this->assertEquals('a', $model['title']);
-		$this->assertEquals('a', $model['id']);
+		$this->assertSame('a', $model['title']);
+		$this->assertSame('a', $model['id']);
 		$this->assertNull($model['parent']);
 
 		$this->assertCount(1, $pages);
-		$this->assertEquals('a/aa', $pages[0]['id']);
+		$this->assertSame('a/aa', $pages[0]['id']);
 	}
 
 	public function testPageChildren()
@@ -204,9 +204,9 @@ class PagePickerMixinTest extends TestCase
 
 		$this->assertNull($model);
 		$this->assertCount(3, $pages);
-		$this->assertEquals('test/a', $pages[0]['id']);
-		$this->assertEquals('test/b', $pages[1]['id']);
-		$this->assertEquals('test/c', $pages[2]['id']);
+		$this->assertSame('test/a', $pages[0]['id']);
+		$this->assertSame('test/b', $pages[1]['id']);
+		$this->assertSame('test/c', $pages[2]['id']);
 	}
 
 	public function testMap()
@@ -243,6 +243,6 @@ class PagePickerMixinTest extends TestCase
 		$response = $field->pages();
 		$pages    = $response['data'];
 
-		$this->assertEquals(['test/a', 'test/b', 'test/c'], $pages);
+		$this->assertSame(['test/a', 'test/b', 'test/c'], $pages);
 	}
 }

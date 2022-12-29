@@ -32,10 +32,10 @@ class BlueprintFieldTest extends TestCase
 			'type' => 'text'
 		]);
 
-		$this->assertEquals('test', $props['name']);
-		$this->assertEquals('text', $props['type']);
-		$this->assertEquals('Test', $props['label']);
-		$this->assertEquals('1/1', $props['width']);
+		$this->assertSame('test', $props['name']);
+		$this->assertSame('text', $props['type']);
+		$this->assertSame('Test', $props['label']);
+		$this->assertSame('1/1', $props['width']);
 	}
 
 	public function testFieldTypeFromName()
@@ -44,9 +44,9 @@ class BlueprintFieldTest extends TestCase
 			'name' => 'text',
 		]);
 
-		$this->assertEquals('text', $props['name']);
-		$this->assertEquals('text', $props['type']);
-		$this->assertEquals('Text', $props['label']);
+		$this->assertSame('text', $props['name']);
+		$this->assertSame('text', $props['type']);
+		$this->assertSame('Text', $props['label']);
 	}
 
 	public function testMissingFieldName()
@@ -103,9 +103,9 @@ class BlueprintFieldTest extends TestCase
 	{
 		$props = Blueprint::fieldProps('fields/test');
 
-		$this->assertEquals('test', $props['name']);
-		$this->assertEquals('Test', $props['label']);
-		$this->assertEquals('text', $props['type']);
+		$this->assertSame('test', $props['name']);
+		$this->assertSame('Test', $props['label']);
+		$this->assertSame('text', $props['type']);
 	}
 
 	public function testExtendFieldWithNonAssociativeOptions()
@@ -157,10 +157,10 @@ class BlueprintFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('headline', $props['fields']['headline']['name']);
-		$this->assertEquals('Headline', $props['fields']['headline']['label']);
-		$this->assertEquals('text', $props['fields']['headline']['type']);
-		$this->assertEquals('1/1', $props['fields']['headline']['width']);
+		$this->assertSame('headline', $props['fields']['headline']['name']);
+		$this->assertSame('Headline', $props['fields']['headline']['label']);
+		$this->assertSame('text', $props['fields']['headline']['type']);
+		$this->assertSame('1/1', $props['fields']['headline']['width']);
 	}
 
 	public function testFieldGroup()
