@@ -96,7 +96,7 @@ class BlueprintFieldTest extends TestCase
 			'width' => '1/1'
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testExtendFieldFromString()
@@ -142,7 +142,7 @@ class BlueprintFieldTest extends TestCase
 			'width' => '1/1'
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testNestedFields()
@@ -188,6 +188,6 @@ class BlueprintFieldTest extends TestCase
 			'type' => 'group'
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 }

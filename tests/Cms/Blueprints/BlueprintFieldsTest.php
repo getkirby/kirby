@@ -44,7 +44,7 @@ class BlueprintFieldsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $fields);
+		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldFromString()
@@ -62,7 +62,7 @@ class BlueprintFieldsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $fields);
+		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldGroup()
@@ -105,7 +105,7 @@ class BlueprintFieldsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $fields);
+		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
 	public function testMultipleFieldGroups()
@@ -162,7 +162,7 @@ class BlueprintFieldsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $fields);
+		$this->assertEquals($expected, $fields); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldError()

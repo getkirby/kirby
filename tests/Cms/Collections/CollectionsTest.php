@@ -20,11 +20,11 @@ class CollectionsTest extends TestCase
 
 		// get
 		$result = $app->collections()->get('test');
-		$this->assertEquals($collection, $result);
+		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 
 		// __call
 		$result = $app->collections()->test();
-		$this->assertEquals($collection, $result);
+		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 	}
 
 	public function testGetWithData()

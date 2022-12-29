@@ -205,8 +205,8 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($value, $field->value());
-		$this->assertEquals($value, $field->data());
+		$this->assertEquals($value, $field->value()); // cannot use strict assertion (array order)
+		$this->assertEquals($value, $field->data()); // cannot use strict assertion (array order)
 
 		// empty mother form
 		$motherForm = $field->form();
@@ -225,7 +225,7 @@ class StructureFieldTest extends TestCase
 		$motherForm = $field->form($value[0]);
 		$expected   = $value[0];
 
-		$this->assertEquals($expected, $motherForm->data());
+		$this->assertEquals($expected, $motherForm->data()); // cannot use strict assertion (array order)
 
 		$childrenField = $motherForm->fields()->children();
 

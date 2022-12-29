@@ -163,7 +163,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldsToSections()
@@ -203,7 +203,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
 	/**

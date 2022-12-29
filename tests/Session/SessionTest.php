@@ -959,7 +959,7 @@ class SessionTest extends TestCase
 		$session = new Session($this->sessions, $token, []);
 		$this->assertSame('test-session', $session->data()->get('name'));
 		$this->assertInstanceOf(Obj::class, $session->data()->get('obj'));
-		$this->assertEquals($obj, $session->data()->get('obj')); // cannot use strict test
+		$this->assertEquals($obj, $session->data()->get('obj')); // cannot use strict assertion (serialized data)
 		$this->assertFalse($obj === $session->data()->get('obj'));
 	}
 

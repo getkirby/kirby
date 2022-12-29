@@ -48,7 +48,7 @@ class SiteDropdownsTest extends AreaTestCase
 			]
 		];
 
-		$this->assertEquals($expected, $options);
+		$this->assertEquals($expected, $options); // cannot use strict assertion (array order)
 	}
 
 	public function testPageDropdown(): void

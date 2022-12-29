@@ -625,7 +625,7 @@ class AppPluginsTest extends TestCase
 			'with_underscore' => 'withunderscorePage'
 		];
 
-		$this->assertEquals($expected, Page::$models);
+		$this->assertEquals($expected, Page::$models); // cannot use strict assertion (filesystem sorting)
 	}
 
 	public function testExtensionsFromOptions()
@@ -933,6 +933,7 @@ class AppPluginsTest extends TestCase
 							'kirby/manual2' => new Plugin('kirby/manual2', [])
 						], $this->plugins());
 					} else {
+						// cannot use strict assertion (test for object contents)
 						$phpUnit->assertEquals([
 							'kirby/test1' => new Plugin('kirby/test1', [
 								'hooks' => [
@@ -963,7 +964,7 @@ class AppPluginsTest extends TestCase
 		];
 		$this->assertSame($expected, $kirby->plugins($expected));
 
-		// hook should have been called only once after the firs initialization
+		// hook should have been called only once after the first initialization
 		$this->assertSame(1, $executed);
 	}
 

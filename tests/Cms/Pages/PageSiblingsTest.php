@@ -272,7 +272,7 @@ class PageSiblingsTest extends TestCase
 		$siblings = $children->not($page);
 
 		$this->assertSame($children, $page->siblings());
-		$this->assertEquals($siblings, $page->siblings(false));
+		$this->assertEquals($siblings, $page->siblings(false)); // cannot use strict assertion (cloned object)
 	}
 
 	public function testDraftSiblings()

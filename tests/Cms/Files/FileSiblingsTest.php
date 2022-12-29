@@ -115,7 +115,7 @@ class FileSiblingsTest extends TestCase
 		$siblings = $files->not($file);
 
 		$this->assertSame($files, $file->siblings());
-		$this->assertEquals($siblings, $file->siblings(false));
+		$this->assertEquals($siblings, $file->siblings(false)); // cannot use strict assertion (cloned object)
 	}
 
 	public function testTemplateSiblings()

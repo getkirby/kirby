@@ -261,7 +261,7 @@ class ResponseTest extends TestCase
 		$response = Response::redirect();
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Location' => '/'], $response->headers());
+		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRedirectWithLocation()
@@ -269,7 +269,7 @@ class ResponseTest extends TestCase
 		$response = Response::redirect('https://getkirby.com');
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers());
+		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRedirectWithInternationalLocation()
@@ -277,7 +277,7 @@ class ResponseTest extends TestCase
 		$response = Response::redirect('https://täst.de');
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers());
+		$this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRedirectWithResponseCode()
@@ -285,7 +285,7 @@ class ResponseTest extends TestCase
 		$response = Response::redirect('/', 301);
 		$this->assertSame('', $response->body());
 		$this->assertSame(301, $response->code());
-		$this->assertEquals(['Location' => '/'], $response->headers());
+		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	/**

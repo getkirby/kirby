@@ -77,13 +77,13 @@ class BodyTest extends TestCase
 		$body = new Body();
 		$this->assertSame('', $body->toString());
 		$this->assertSame('', $body->__toString());
-		$this->assertEquals('', $body);
+		$this->assertEquals('', $body); // cannot use strict assertion (string conversion)
 
 		// with data
 		$string = 'foo=bar';
 		$body   = new Body(['foo' => 'bar']);
 		$this->assertSame($string, $body->toString());
 		$this->assertSame($string, $body->__toString());
-		$this->assertEquals($string, $body);
+		$this->assertEquals($string, $body); // cannot use strict assertion (string conversion)
 	}
 }

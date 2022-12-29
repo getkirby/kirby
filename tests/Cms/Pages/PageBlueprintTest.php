@@ -29,7 +29,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function testExtendedOptionsFromString()
@@ -62,7 +62,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function testExtendedOptions()
@@ -98,7 +98,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function numProvider()

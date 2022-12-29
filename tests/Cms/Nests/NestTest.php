@@ -11,7 +11,7 @@ class NestTest extends TestCase
 		$n = Nest::create($expected = 'a');
 
 		$this->assertInstanceOf(Field::class, $n);
-		$this->assertEquals($expected, $n);
+		$this->assertEquals($expected, $n); // cannot use strict assertion (string conversion)
 	}
 
 	public function testCreateEmptyCollection()

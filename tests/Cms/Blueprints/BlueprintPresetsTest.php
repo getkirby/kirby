@@ -261,7 +261,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithLabel()
@@ -286,7 +286,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithLayout()
@@ -311,7 +311,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithTemplate()
@@ -336,7 +336,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithImage()
@@ -361,6 +361,6 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 }

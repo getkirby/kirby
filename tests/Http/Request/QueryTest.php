@@ -58,13 +58,13 @@ class QueryTest extends TestCase
 		$query = new Query();
 		$this->assertSame('', $query->toString());
 		$this->assertSame('', $query->__toString());
-		$this->assertEquals('', $query);
+		$this->assertEquals('', $query); // cannot use strict assertion (string conversion)
 
 		// custom
 		$query = new Query(['foo' => 'bar']);
 		$this->assertSame('foo=bar', $query->toString());
 		$this->assertSame('foo=bar', $query->__toString());
-		$this->assertEquals('foo=bar', $query);
+		$this->assertEquals('foo=bar', $query); // cannot use strict assertion (string conversion)
 	}
 
 	public function testToArrayAndDebuginfo()

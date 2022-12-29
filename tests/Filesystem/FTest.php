@@ -884,7 +884,7 @@ class FTest extends TestCase
 		F::write($this->test, $input);
 
 		$result = unserialize(F::read($this->test));
-		$this->assertEquals($input, $result);
+		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
 	}
 
 	/**

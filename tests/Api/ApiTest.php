@@ -114,7 +114,7 @@ class ApiTest extends TestCase
 		], $result);
 
 		$result = $api->call('testResponse', 'POST');
-		$this->assertEquals(new Response('test', 'text/plain', 201), $result);
+		$this->assertEquals(new Response('test', 'text/plain', 201), $result); // cannot use strict assertion (test for object contents)
 	}
 
 	public function testCallLocale()
