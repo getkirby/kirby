@@ -347,7 +347,7 @@ class FieldMethodsTest extends TestCase
 
 		$result = $this->field($content)->toPages();
 		$this->assertInstanceOf(Pages::class, $result);
-		$this->assertSame([$a], $result->data());
+		$this->assertSame(['a' => $a], $result->data());
 
 		// multiple pages
 		$pages = new Pages([$a, $b], $app->site());
