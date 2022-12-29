@@ -19,11 +19,23 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 		$argument = Argument::factory(" ' 23 '  ");
 		$this->assertSame(' 23 ', $argument->value);
 
+		$argument = Argument::factory("'2\"3'");
+		$this->assertSame('2"3', $argument->value);
+
+		$argument = Argument::factory("'2\\\"3'");
+		$this->assertSame('2\\"3', $argument->value);
+
+		$argument = Argument::factory("'2\\'3'");
+		$this->assertSame("2'3", $argument->value);
+
 		$argument = Argument::factory('"2\'3"');
-		$this->assertSame('2\'3', $argument->value);
+		$this->assertSame("2'3", $argument->value);
 
 		$argument = Argument::factory('"2\\\'3"');
-		$this->assertSame('2\'3', $argument->value);
+		$this->assertSame("2\\'3", $argument->value);
+
+		$argument = Argument::factory('"2\\"3"');
+		$this->assertSame('2"3', $argument->value);
 
 		// arrays
 		$argument = Argument::factory('[1, "a", 3]');

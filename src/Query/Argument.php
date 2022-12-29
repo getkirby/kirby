@@ -38,18 +38,23 @@ class Argument
 			$argument = trim(substr($argument, 1, -1));
 		}
 
-		// string with single or double quotes
+		// string with single quotes
 		if (
-			(
-				Str::startsWith($argument, '"') &&
-				Str::endsWith($argument, '"')
-			) || (
-				Str::startsWith($argument, "'") &&
-				Str::endsWith($argument, "'")
-			)
+			Str::startsWith($argument, "'") &&
+			Str::endsWith($argument, "'")
 		) {
 			$string = substr($argument, 1, -1);
-			$string = str_replace(['\"', "\'"], ['"', "'"], $string);
+			$string = str_replace("\'", "'", $string);
+			return new static($string);
+		}
+
+		// string with double quotes
+		if (
+			Str::startsWith($argument, '"') &&
+			Str::endsWith($argument, '"')
+		) {
+			$string = substr($argument, 1, -1);
+			$string = str_replace('\"', '"', $string);
 			return new static($string);
 		}
 
