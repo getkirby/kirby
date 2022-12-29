@@ -174,7 +174,7 @@ class XmlTest extends TestCase
 		$tag = Xml::tag('name', 'content');
 		$this->assertSame('<name>content</name>', $tag);
 
-		$tag = Xml::tag('name', 'content', null, '  ', 1);
+		$tag = Xml::tag('name', 'content', [], '  ', 1);
 		$this->assertSame('  <name>content</name>', $tag);
 
 		$tag = Xml::tag('name', 'content', ['foo' => 'bar']);

@@ -38,10 +38,7 @@ class Site extends Model
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
-		if ($query === null) {
-			$query = 'site.image';
-		}
-
+		$query ??= 'site.image';
 		return parent::imageSource($query);
 	}
 

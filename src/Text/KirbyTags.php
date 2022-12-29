@@ -25,6 +25,9 @@ class KirbyTags
 		array $data = [],
 		array $options = []
 	): string {
+		// make sure $text is a string
+		$text ??= '';
+
 		$regex = '!
             (?=[^\]])               # positive lookahead that matches a group after the main expression without including ] in the result
             (?=\([a-z0-9_-]+:)      # positive lookahead that requires starts with ( and lowercase ASCII letters, digits, underscores or hyphens followed with : immediately to the right of the current location
@@ -40,7 +43,10 @@ class KirbyTags
 				return KirbyTag::parse($match[0], $data, $options)->render();
 			} catch (InvalidArgumentException $e) {
 				// stay silent in production and ignore non-existing tags
-				if ($debug !== true || Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
+				if (
+					$debug !== true ||
+					Str::startsWith($e->getMessage(), 'Undefined tag type:') === true
+				) {
 					return $match[0];
 				}
 
@@ -52,6 +58,6 @@ class KirbyTags
 
 				return $match[0];
 			}
-		}, $text ?? '');
+		}, $text);
 	}
 }

@@ -96,7 +96,7 @@ class Element
 	 * Tries to find a single nested element by
 	 * query and otherwise returns null
 	 */
-	public function find(string $query): Element|null
+	public function find(string $query): static|null
 	{
 		if ($result = $this->query($query)[0]) {
 			return new static($result);
@@ -107,6 +107,8 @@ class Element
 
 	/**
 	 * Returns the inner HTML of the element
+	 *
+	 * @param array|null $marks List of allowed marks
 	 */
 	public function innerHtml(array|null $marks = null): string
 	{

@@ -887,7 +887,7 @@ class EnvironmentTest extends TestCase
 		$this->expectExceptionMessage('Invalid allow list setup for base URLs');
 
 		new Environment([
-			'allowed' => new \stdClass()
+			'allowed' => [new \stdClass()]
 		], [
 			'HTTP_HOST' => 'example.com'
 		]);

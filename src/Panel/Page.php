@@ -196,10 +196,7 @@ class Page extends Model
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
-		if ($query === null) {
-			$query = 'page.image';
-		}
-
+		$query ??= 'page.image';
 		return parent::imageSource($query);
 	}
 
