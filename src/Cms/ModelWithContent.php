@@ -629,13 +629,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 		]);
 
 		// validate the input
-		if ($validate === true) {
-			if ($form->isInvalid() === true) {
-				throw new InvalidArgumentException([
-					'fallback' => 'Invalid form with errors',
-					'details'  => $form->errors()
-				]);
-			}
+		if ($validate === true && $form->isInvalid() === true) {
+			throw new InvalidArgumentException([
+				'fallback' => 'Invalid form with errors',
+				'details'  => $form->errors()
+			]);
 		}
 
 		$arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
