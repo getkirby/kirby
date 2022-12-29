@@ -323,7 +323,8 @@ class PageTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$this->assertEquals('default', $page->template());
+		$this->assertInstanceOf(Template::class, $page->template());
+		$this->assertSame('default', $page->template()->name());
 	}
 
 	public function testIntendedTemplate()

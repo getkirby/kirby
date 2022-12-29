@@ -213,13 +213,13 @@ class StructureFieldTest extends TestCase
 		$data       = $motherForm->data();
 
 		$expected = [
-			'name'     => null,
+			'name'     => '',
 			'children' => []
 		];
 
 		unset($data['uuid']);
 
-		$this->assertEquals($expected, $data);
+		$this->assertSame($expected, $data);
 
 		// filled mother form
 		$motherForm = $field->form($value[0]);

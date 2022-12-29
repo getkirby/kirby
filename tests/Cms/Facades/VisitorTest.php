@@ -17,6 +17,6 @@ class VisitorTest extends TestCase
 
 	public function testInstance()
 	{
-		$this->assertEquals($this->app->visitor(), Visitor::instance());
+		$this->assertSame($this->app->visitor(), Visitor::instance());
 	}
 }

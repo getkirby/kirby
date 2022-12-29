@@ -34,13 +34,13 @@ class StructureTest extends TestCase
 		];
 
 		$expected = [
-			['id' => 0, 'name' => 'A'],
-			['id' => 1, 'name' => 'B'],
+			['id' => '0', 'name' => 'A'],
+			['id' => '1', 'name' => 'B'],
 		];
 
 		$structure = new Structure($data);
 
-		$this->assertEquals($expected, $structure->toArray());
+		$this->assertSame($expected, $structure->toArray());
 	}
 
 	public function testGroup()
@@ -66,10 +66,13 @@ class StructureTest extends TestCase
 		$this->assertCount(2, $grouped->first());
 		$this->assertCount(1, $grouped->last());
 
-		$this->assertEquals('A', $grouped->first()->first()->name());
-		$this->assertEquals('C', $grouped->first()->last()->name());
+		$this->assertInstanceOf(Field::class, $grouped->first()->first()->name());
+		$this->assertInstanceOf(Field::class, $grouped->first()->last()->name());
+		$this->assertSame('A', $grouped->first()->first()->name()->value());
+		$this->assertSame('C', $grouped->first()->last()->name()->value());
 
-		$this->assertEquals('B', $grouped->last()->first()->name());
+		$this->assertInstanceOf(Field::class, $grouped->last()->first()->name());
+		$this->assertSame('B', $grouped->last()->first()->name()->value());
 	}
 
 	public function testSiblings()
@@ -80,11 +83,14 @@ class StructureTest extends TestCase
 			['name' => 'C']
 		]);
 
-
-		$this->assertEquals('A', $structure->first()->name());
-		$this->assertEquals('B', $structure->first()->next()->name());
-		$this->assertEquals('C', $structure->last()->name());
-		$this->assertEquals('B', $structure->last()->prev()->name());
+		$this->assertInstanceOf(Field::class, $structure->first()->name());
+		$this->assertInstanceOf(Field::class, $structure->first()->next()->name());
+		$this->assertInstanceOf(Field::class, $structure->last()->name());
+		$this->assertInstanceOf(Field::class, $structure->last()->prev()->name());
+		$this->assertSame('A', $structure->first()->name()->value());
+		$this->assertSame('B', $structure->first()->next()->name()->value());
+		$this->assertSame('C', $structure->last()->name()->value());
+		$this->assertSame('B', $structure->last()->prev()->name()->value());
 
 		$this->assertSame(2, $structure->last()->indexOf());
 

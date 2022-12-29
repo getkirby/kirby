@@ -18,6 +18,7 @@ class EmailTest extends TestCase
 			'one'         => 'eins',
 			'two'         => 'zwei',
 			'transport'   => [],
+			'beforeSend'  => null,
 			'from'        => null,
 			'fromName'    => null,
 			'replyTo'     => null,
@@ -25,12 +26,11 @@ class EmailTest extends TestCase
 			'to'          => [],
 			'cc'          => [],
 			'bcc'         => [],
-			'attachments' => [],
-			'beforeSend'  => null
+			'attachments' => []
 		];
 
 		$email = new Email($props);
-		$this->assertEquals($expected, $email->toArray());
+		$this->assertSame($expected, $email->toArray());
 	}
 
 	public function testPresets()

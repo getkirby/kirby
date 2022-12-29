@@ -79,7 +79,7 @@ class BlueprintFieldTest extends TestCase
 			'type'  => 'info'
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testExtendField()

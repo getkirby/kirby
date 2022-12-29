@@ -38,7 +38,7 @@ class AppCachesTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
-		$this->assertEquals($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
+		$this->assertSame($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
 	}
 
 	public function testEnabledCacheWithOptions()
@@ -56,7 +56,7 @@ class AppCachesTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
-		$this->assertEquals($root, $kirby->cache('pages')->options()['root']);
+		$this->assertSame($root, $kirby->cache('pages')->options()['root']);
 
 		$kirby->cache('pages')->set('home', 'test');
 		$this->assertFileExists($root . '/getkirby.com_test/pages/home.cache');
@@ -77,7 +77,7 @@ class AppCachesTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
-		$this->assertEquals($root, $kirby->cache('pages')->options()['root']);
+		$this->assertSame($root, $kirby->cache('pages')->options()['root']);
 
 		$kirby->cache('pages')->set('home', 'test');
 		$this->assertFileExists($root . '/127.0.0.1_8000/pages/home.cache');

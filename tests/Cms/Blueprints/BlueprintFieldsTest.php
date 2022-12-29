@@ -183,6 +183,6 @@ class BlueprintFieldsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 }

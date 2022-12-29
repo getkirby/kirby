@@ -296,19 +296,19 @@ class UriTest extends TestCase
 	{
 		$url = new Uri($this->example2);
 
-		$this->assertEquals([
-			'scheme'   => 'https',
-			'host'     => 'getkirby.com',
-			'port'     => 3000,
-			'path'     => ['docs', 'getting-started'],
-			'username' => 'testuser',
-			'password' => 'weakpassword',
-			'query'    => ['q' => 'awesome'],
+		$this->assertSame([
 			'fragment' => 'top',
+			'host'     => 'getkirby.com',
+			'password' => 'weakpassword',
 			'params'   => [
 				'with' => 'kirby',
 			],
+			'path'     => ['docs', 'getting-started'],
+			'port'     => 3000,
+			'query'    => ['q' => 'awesome'],
+			'scheme'   => 'https',
 			'slash'    => true,
+			'username' => 'testuser',
 		], $url->toArray());
 	}
 

@@ -322,7 +322,10 @@ class AppPluginsTest extends TestCase
 
 	public function testCollection()
 	{
-		$pages = new Pages([]);
+		$pages = new Pages([
+			$page = new Page(['slug' => 'a', 'num' => 1])
+		]);
+
 		$kirby = new App([
 			'roots' => [
 				'index' => '/dev/null'
@@ -334,7 +337,7 @@ class AppPluginsTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals($pages, $kirby->collection('test'));
+		$this->assertSame($page, $kirby->collection('test')->first());
 	}
 
 	public function testCollectionFilters()

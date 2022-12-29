@@ -17,7 +17,7 @@ class PageContentTest extends TestCase
 			'content' => $content = ['text' => 'lorem ipsum']
 		]);
 
-		$this->assertEquals($content, $page->content()->toArray());
+		$this->assertSame($content, $page->content()->toArray());
 		$this->assertSame('lorem ipsum', $page->text()->value());
 	}
 

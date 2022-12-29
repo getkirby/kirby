@@ -36,6 +36,6 @@ class ApiModelTestCase extends TestCase
 
 	public function assertAttr($object, $attr, $value)
 	{
-		$this->assertEquals($this->attr($object, $attr), $value);
+		$this->assertSame($this->attr($object, $attr), $value);
 	}
 }

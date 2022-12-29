@@ -175,7 +175,9 @@ class UrlTest extends TestCase
 
 	public function testIdn()
 	{
-		$this->assertEquals('https://täst.de', Url::idn('https://xn--tst-qla.de'));
+		$object = Url::idn('https://xn--tst-qla.de');
+		$this->assertInstanceOf(Uri::class, $object);
+		$this->assertSame('https://täst.de', $object->toString());
 	}
 
 	public function scriptNameProvider()

@@ -30,7 +30,7 @@ class NestTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(NestObject::class, $n);
-		$this->assertEquals($expected, $n->toArray());
+		$this->assertSame($expected, $n->toArray());
 	}
 
 	public function testCreateCollection()
@@ -38,7 +38,7 @@ class NestTest extends TestCase
 		$n = Nest::create($expected = ['A', 2, false]);
 
 		$this->assertInstanceOf(NestCollection::class, $n);
-		$this->assertEquals('A', $n->first()->value());
-		$this->assertEquals(false, $n->last()->value());
+		$this->assertSame('A', $n->first()->value());
+		$this->assertFalse($n->last()->value());
 	}
 }

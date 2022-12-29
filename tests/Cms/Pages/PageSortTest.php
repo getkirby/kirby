@@ -279,7 +279,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(date('Ymd'), $page->createNum());
+		$this->assertSame((int)date('Ymd'), $page->createNum());
 
 		// with date field
 		$page = new Page([
@@ -314,7 +314,7 @@ class PageSortTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(date('Ymd'), $page->createNum());
+		$this->assertSame((int)date('Ymd'), $page->createNum());
 
 		// with date field
 		$page = new Page([

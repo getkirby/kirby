@@ -18,16 +18,16 @@ class CameraTest extends TestCase
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
-		$this->assertEquals($exif['Make'], $camera->make());
-		$this->assertEquals($exif['Model'], $camera->model());
+		$this->assertSame($exif['Make'], $camera->make());
+		$this->assertSame($exif['Model'], $camera->model());
 	}
 
 	public function testToArray()
 	{
 		$exif   = $this->_exif();
 		$camera = new Camera($exif);
-		$this->assertEquals(array_change_key_case($exif), $camera->toArray());
-		$this->assertEquals(array_change_key_case($exif), $camera->__debugInfo());
+		$this->assertSame(array_change_key_case($exif), $camera->toArray());
+		$this->assertSame(array_change_key_case($exif), $camera->__debugInfo());
 	}
 
 	public function testToString()

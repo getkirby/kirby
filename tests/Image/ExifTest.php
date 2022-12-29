@@ -15,7 +15,7 @@ class ExifTest extends TestCase
 	public function testData()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals([
+		$this->assertSame([
 			'FileName'      => 'cat.jpg',
 			'FileDateTime'  => exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'],
 			'FileSize'      => 23574,
@@ -52,7 +52,7 @@ class ExifTest extends TestCase
 	public function testTimestamp()
 	{
 		$exif  = $this->_exif();
-		$this->assertEquals(exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
+		$this->assertSame((string)exif_read_data(static::FIXTURES . '/image/cat.jpg')['FileDateTime'], $exif->timestamp());
 	}
 
 	public function testExposure()
@@ -107,7 +107,7 @@ class ExifTest extends TestCase
 		$parse = $ref->getMethod('parseTimestamp');
 		$parse->setAccessible(true);
 
-		$this->assertEquals(strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
+		$this->assertSame((string)strtotime('11.12.2016 11:13:14'), $parse->invoke($exif));
 	}
 
 	public function testToArray()

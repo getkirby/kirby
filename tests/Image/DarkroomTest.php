@@ -72,9 +72,9 @@ class DarkroomTest extends TestCase
 		$this->assertFalse($options['crop']);
 		$this->assertFalse($options['blur']);
 		$this->assertFalse($options['grayscale']);
-		$this->assertEquals(null, $options['height']);
+		$this->assertSame(0, $options['height']);
 		$this->assertSame(90, $options['quality']);
-		$this->assertEquals(null, $options['width']);
+		$this->assertSame(0, $options['width']);
 	}
 
 	public function testGlobalOptions()

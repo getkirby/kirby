@@ -102,13 +102,13 @@ class CollectionTest extends TestCase
 	public function testGetAttributeWithField()
 	{
 		$object = new MockObject([
-			'id' => new Field(null, 'id', 'a')
+			'id' => $field = new Field(null, 'id', 'a')
 		]);
 
 		$collection = new Collection();
 		$value      = $collection->getAttribute($object, 'id');
 
-		$this->assertEquals('a', $value);
+		$this->assertSame($field, $value);
 	}
 
 	public function testAppend()

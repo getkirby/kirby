@@ -425,8 +425,8 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($fields, $blueprint->fields());
-		$this->assertEquals($fields['test'], $blueprint->field('test'));
+		$this->assertSame($fields, $blueprint->fields());
+		$this->assertSame($fields['test'], $blueprint->field('test'));
 	}
 
 	/**

@@ -23,7 +23,7 @@ class FileBlueprintTest extends TestCase
 			'update'     => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertSame($expected, $blueprint->options());
 	}
 
 	public function testTemplateFromContent()

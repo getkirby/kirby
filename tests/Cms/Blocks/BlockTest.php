@@ -49,10 +49,14 @@ class BlockTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Test Field A', $block->content()->a());
-		$this->assertEquals('Test Field A', $block->a());
-		$this->assertEquals('Test Field B', $block->content()->b());
-		$this->assertEquals('Test Field B', $block->b());
+		$this->assertInstanceOf(Field::class, $block->content()->a());
+		$this->assertInstanceOf(Field::class, $block->a());
+		$this->assertInstanceOf(Field::class, $block->content()->b());
+		$this->assertInstanceOf(Field::class, $block->b());
+		$this->assertSame('Test Field A', $block->content()->a()->value());
+		$this->assertSame('Test Field A', $block->a()->value());
+		$this->assertSame('Test Field B', $block->content()->b()->value());
+		$this->assertSame('Test Field B', $block->b()->value());
 		$this->assertSame($content, $block->content()->toArray());
 	}
 

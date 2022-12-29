@@ -108,7 +108,7 @@ class DateFieldTest extends TestCase
 			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
 			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
 			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
-			['something', null],
+			['something', ''],
 		];
 	}
 
@@ -153,6 +153,6 @@ class DateFieldTest extends TestCase
 			'time'  => ['step' => $step]
 		]);
 
-		$this->assertEquals($expected, $field->value());
+		$this->assertSame($expected, $field->value());
 	}
 }

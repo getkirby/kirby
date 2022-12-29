@@ -17,6 +17,6 @@ class RTest extends TestCase
 
 	public function testInstance()
 	{
-		$this->assertEquals($this->app->request(), R::instance());
+		$this->assertSame($this->app->request(), R::instance());
 	}
 }

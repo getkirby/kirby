@@ -73,7 +73,8 @@ class UserTest extends TestCase
 			'name' => $name = 'Homer Simpson',
 		]);
 
-		$this->assertEquals($name, $user->name());
+		$this->assertInstanceOf(Field::class, $user->name());
+		$this->assertSame($name, $user->name()->value());
 	}
 
 	public function testNameSanitized()
@@ -82,7 +83,8 @@ class UserTest extends TestCase
 			'name' => '<strong>Homer</strong> Simpson',
 		]);
 
-		$this->assertEquals('Homer Simpson', $user->name());
+		$this->assertInstanceOf(Field::class, $user->name());
+		$this->assertSame('Homer Simpson', $user->name()->value());
 	}
 
 	public function testNameOrEmail()
@@ -92,6 +94,7 @@ class UserTest extends TestCase
 			'name'  => $name = 'Homer Simpson',
 		]);
 
+		$this->assertInstanceOf(Field::class, $user->nameOrEmail());
 		$this->assertSame($name, $user->nameOrEmail()->value());
 		$this->assertSame('name', $user->nameOrEmail()->key());
 
@@ -100,6 +103,7 @@ class UserTest extends TestCase
 			'name'  => ''
 		]);
 
+		$this->assertInstanceOf(Field::class, $user->nameOrEmail());
 		$this->assertSame($email, $user->nameOrEmail()->value());
 		$this->assertSame('email', $user->nameOrEmail()->key());
 	}
@@ -137,15 +141,15 @@ class UserTest extends TestCase
 		$modified = filemtime($file);
 		$user     = $app->user('test');
 
-		$this->assertEquals($modified, $user->modified());
+		$this->assertSame((string)$modified, $user->modified());
 
 		// default date handler
 		$format = 'd.m.Y';
-		$this->assertEquals(date($format, $modified), $user->modified($format));
+		$this->assertSame(date($format, $modified), $user->modified($format));
 
 		// custom date handler
 		$format = '%d.%m.%Y';
-		$this->assertEquals(@strftime($format, $modified), $user->modified($format, 'strftime'));
+		$this->assertSame(@strftime($format, $modified), $user->modified($format, 'strftime'));
 
 		Dir::remove($index);
 	}
@@ -183,8 +187,8 @@ class UserTest extends TestCase
 
 		$user = $app->user('test');
 
-		$this->assertEquals($modifiedEnContent, $user->modified('U', null, 'en'));
-		$this->assertEquals($modifiedDeContent, $user->modified('U', null, 'de'));
+		$this->assertSame((string)$modifiedEnContent, $user->modified('U', null, 'en'));
+		$this->assertSame((string)$modifiedDeContent, $user->modified('U', null, 'de'));
 
 		Dir::remove($index);
 	}
