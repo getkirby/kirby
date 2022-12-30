@@ -75,11 +75,11 @@ class ImageMagick extends Darkroom
 		// frame option to allow selecting layers for multi-layer or frames for animated images
 		$fileOptions = '';
 		if ($options['frame'] !== null) {
-			$fileOptions = '[' . escapeshellarg($options['frame']) . ']';
+			$fileOptions = '[' . $options['frame'] . ']';
 		}
 
 		// append input file
-		return $command . ' ' . escapeshellarg($file) . $fileOptions;
+		return $command . ' ' . escapeshellarg($file . $fileOptions);
 	}
 
 	/**
