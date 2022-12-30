@@ -41,7 +41,7 @@
 						:autofocus="autofocus"
 						:disabled="disabled || (max && tags.length >= max)"
 						:name="name"
-						:value="newTag?.trim()"
+						:value="newTag"
 						autocomplete="off"
 						type="text"
 						@input="onType($event.target.value)"
