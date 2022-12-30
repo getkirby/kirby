@@ -45,7 +45,8 @@ class ImageMagickTest extends TestCase
 			'scaleWidth' => 1,
 			'width' => 500,
 			'bin' => 'convert',
-			'interlace' => false
+			'interlace' => false,
+			'frame' => null
 		], $im->process($file));
 	}
 
