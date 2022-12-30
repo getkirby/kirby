@@ -17,11 +17,11 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('structure', $field->type());
-		$this->assertEquals('structure', $field->name());
-		$this->assertEquals(null, $field->limit());
-		$this->assertTrue(is_array($field->fields()));
-		$this->assertEquals([], $field->value());
+		$this->assertSame('structure', $field->type());
+		$this->assertSame('structure', $field->name());
+		$this->assertNull($field->limit());
+		$this->assertIsArray($field->fields());
+		$this->assertSame([], $field->value());
 		$this->assertTrue($field->save());
 	}
 
@@ -47,9 +47,9 @@ class StructureFieldTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $field->data());
-		$this->assertEquals('a, b', $field->data()[0]['tags']);
-		$this->assertEquals(['a', 'b'], $field->value()[0]['tags']);
+		$this->assertSame($expected, $field->data());
+		$this->assertSame('a, b', $field->data()[0]['tags']);
+		$this->assertSame(['a', 'b'], $field->value()[0]['tags']);
 	}
 
 	public function testColumnsFromFields()
@@ -122,7 +122,7 @@ class StructureFieldTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['camelcase'], array_keys($field->columns()));
+		$this->assertSame(['camelcase'], array_keys($field->columns()));
 	}
 
 	public function testMin()
@@ -140,7 +140,7 @@ class StructureFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(2, $field->min());
+		$this->assertSame(2, $field->min());
 		$this->assertTrue($field->required());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
@@ -161,7 +161,7 @@ class StructureFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(1, $field->max());
+		$this->assertSame(1, $field->max());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
@@ -205,51 +205,51 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($value, $field->value());
-		$this->assertEquals($value, $field->data());
+		$this->assertEquals($value, $field->value()); // cannot use strict assertion (array order)
+		$this->assertEquals($value, $field->data()); // cannot use strict assertion (array order)
 
 		// empty mother form
 		$motherForm = $field->form();
 		$data       = $motherForm->data();
 
 		$expected = [
-			'name'     => null,
+			'name'     => '',
 			'children' => []
 		];
 
 		unset($data['uuid']);
 
-		$this->assertEquals($expected, $data);
+		$this->assertSame($expected, $data);
 
 		// filled mother form
 		$motherForm = $field->form($value[0]);
 		$expected   = $value[0];
 
-		$this->assertEquals($expected, $motherForm->data());
+		$this->assertEquals($expected, $motherForm->data()); // cannot use strict assertion (array order)
 
 		$childrenField = $motherForm->fields()->children();
 
-		$this->assertEquals('structure', $childrenField->type());
-		$this->assertEquals('test', $childrenField->model());
+		$this->assertSame('structure', $childrenField->type());
+		$this->assertSame('test', $childrenField->model());
 
 		// empty children form
 		$childrenForm = $childrenField->form();
 
-		$this->assertEquals(null, $childrenForm->data()['name']);
+		$this->assertSame('', $childrenForm->data()['name']);
 
 		// filled children form
 		$childrenForm = $childrenField->form([
 			'name' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $childrenForm->data()['name']);
+		$this->assertSame('Test', $childrenForm->data()['name']);
 
 		// children name field
 		$childrenNameField = $childrenField->form()->fields()->name();
 
-		$this->assertEquals('text', $childrenNameField->type());
-		$this->assertEquals('test', $childrenNameField->model());
-		$this->assertEquals(null, $childrenNameField->data());
+		$this->assertSame('text', $childrenNameField->type());
+		$this->assertSame('test', $childrenNameField->model());
+		$this->assertSame('', $childrenNameField->data());
 	}
 
 	public function testFloatsWithNonUsLocale()
@@ -281,7 +281,7 @@ class StructureFieldTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -295,7 +295,7 @@ class StructureFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testTranslate()
@@ -360,8 +360,8 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('A', $field->data(true)[0]['a']);
-		$this->assertEquals('B', $field->data(true)[0]['b']);
+		$this->assertSame('A', $field->data(true)[0]['a']);
+		$this->assertSame('B', $field->data(true)[0]['b']);
 	}
 
 	public function testRequiredProps()
@@ -376,7 +376,7 @@ class StructureFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

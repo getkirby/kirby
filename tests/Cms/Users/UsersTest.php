@@ -19,8 +19,8 @@ class UsersTest extends TestCase
 		$result = $users->add($user);
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a@getkirby.com', $result->nth(0)->email());
-		$this->assertEquals('b@getkirby.com', $result->nth(1)->email());
+		$this->assertSame('a@getkirby.com', $result->nth(0)->email());
+		$this->assertSame('b@getkirby.com', $result->nth(1)->email());
 	}
 
 	public function testAddCollection()
@@ -37,9 +37,9 @@ class UsersTest extends TestCase
 		$c = $a->add($b);
 
 		$this->assertCount(3, $c);
-		$this->assertEquals('a@getkirby.com', $c->nth(0)->email());
-		$this->assertEquals('b@getkirby.com', $c->nth(1)->email());
-		$this->assertEquals('c@getkirby.com', $c->nth(2)->email());
+		$this->assertSame('a@getkirby.com', $c->nth(0)->email());
+		$this->assertSame('b@getkirby.com', $c->nth(1)->email());
+		$this->assertSame('c@getkirby.com', $c->nth(2)->email());
 	}
 
 	public function testAddById()
@@ -63,9 +63,9 @@ class UsersTest extends TestCase
 		$users = $users->add('c@getkirby.com');
 
 		$this->assertCount(3, $users);
-		$this->assertEquals('a@getkirby.com', $users->nth(0)->email());
-		$this->assertEquals('b@getkirby.com', $users->nth(1)->email());
-		$this->assertEquals('c@getkirby.com', $users->nth(2)->email());
+		$this->assertSame('a@getkirby.com', $users->nth(0)->email());
+		$this->assertSame('b@getkirby.com', $users->nth(1)->email());
+		$this->assertSame('c@getkirby.com', $users->nth(2)->email());
 	}
 
 	public function testAddNull()
@@ -122,7 +122,7 @@ class UsersTest extends TestCase
 		]);
 
 		$files = $app->users()->files();
-		$this->assertSame(3, $files->count());
+		$this->assertCount(3, $files);
 		$this->assertSame('a.jpg', $files->first()->filename());
 		$this->assertSame('c.jpg', $files->find('user-c/c.jpg')->filename());
 	}
@@ -137,10 +137,10 @@ class UsersTest extends TestCase
 		$first = $users->first();
 		$last  = $users->last();
 
-		$this->assertEquals($first, $users->find($first->id()));
-		$this->assertEquals($last, $users->find($last->id()));
-		$this->assertEquals($first, $users->find($first->email()));
-		$this->assertEquals($last, $users->find($last->email()));
+		$this->assertSame($first, $users->find($first->id()));
+		$this->assertSame($last, $users->find($last->id()));
+		$this->assertSame($first, $users->find($first->email()));
+		$this->assertSame($last, $users->find($last->email()));
 	}
 
 	public function testFindByEmail()
@@ -150,10 +150,10 @@ class UsersTest extends TestCase
 			new User(['email' => 'B@getKirby.com']),
 		]);
 
-		$this->assertEquals('a@getkirby.com', $users->find('a@getkirby.com')->email());
-		$this->assertEquals('a@getkirby.com', $users->find('A@getkirby.com')->email());
-		$this->assertEquals('b@getkirby.com', $users->find('B@getkirby.com')->email());
-		$this->assertEquals('b@getkirby.com', $users->find('b@getkirby.com')->email());
+		$this->assertSame('a@getkirby.com', $users->find('a@getkirby.com')->email());
+		$this->assertSame('a@getkirby.com', $users->find('A@getkirby.com')->email());
+		$this->assertSame('b@getkirby.com', $users->find('B@getkirby.com')->email());
+		$this->assertSame('b@getkirby.com', $users->find('b@getkirby.com')->email());
 	}
 
 	public function testFindByUuid()
@@ -190,7 +190,7 @@ class UsersTest extends TestCase
 			new User(['email' => 'B@getKirby.com']),
 		]);
 
-		$this->assertEquals(2, $users->test());
+		$this->assertSame(2, $users->test());
 
 		Users::$methods = [];
 	}

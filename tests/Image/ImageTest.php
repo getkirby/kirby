@@ -32,23 +32,23 @@ class ImageTest extends TestCase
 
 		// svg with width and height
 		$file = $this->_image('square.svg');
-		$this->assertEquals(100, $file->dimensions()->width());
-		$this->assertEquals(100, $file->dimensions()->height());
+		$this->assertSame(100, $file->dimensions()->width());
+		$this->assertSame(100, $file->dimensions()->height());
 
 		// svg with viewBox
 		$file = $this->_image('circle.svg');
-		$this->assertEquals(50, $file->dimensions()->width());
-		$this->assertEquals(50, $file->dimensions()->height());
+		$this->assertSame(50, $file->dimensions()->width());
+		$this->assertSame(50, $file->dimensions()->height());
 
 		// webp
 		$file = $this->_image('valley.webp');
-		$this->assertEquals(550, $file->dimensions()->width());
-		$this->assertEquals(368, $file->dimensions()->height());
+		$this->assertSame(550, $file->dimensions()->width());
+		$this->assertSame(368, $file->dimensions()->height());
 
 		// non-image file
 		$file = $this->_image('blank.pdf');
-		$this->assertEquals(0, $file->dimensions()->width());
-		$this->assertEquals(0, $file->dimensions()->height());
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
 
 		// cached object
 		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
@@ -219,7 +219,7 @@ class ImageTest extends TestCase
 	public function testRatio()
 	{
 		$image  = $this->_image();
-		$this->assertEquals(1.0, $image->ratio());
+		$this->assertSame(1.0, $image->ratio());
 	}
 
 	/**

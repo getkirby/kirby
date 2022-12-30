@@ -74,8 +74,8 @@ class CollectionTest extends TestCase
 			$c = new MockObject(['id' => 'c', 'name' => 'c'])
 		]);
 
-		$this->assertEquals($a, $collection->first());
-		$this->assertEquals($c, $collection->last());
+		$this->assertSame($a, $collection->first());
+		$this->assertSame($c, $collection->last());
 	}
 
 	public function testWithArray()
@@ -86,8 +86,8 @@ class CollectionTest extends TestCase
 			$c = ['id' => 'c', 'name' => 'c']
 		]);
 
-		$this->assertEquals($a, $collection->first());
-		$this->assertEquals($c, $collection->last());
+		$this->assertSame($a, $collection->first());
+		$this->assertSame($c, $collection->last());
 	}
 
 	public function testGetAttribute()
@@ -96,19 +96,19 @@ class CollectionTest extends TestCase
 		$collection = new Collection();
 		$value      = $collection->getAttribute($object, 'id');
 
-		$this->assertEquals('a', $value);
+		$this->assertSame('a', $value);
 	}
 
 	public function testGetAttributeWithField()
 	{
 		$object = new MockObject([
-			'id' => new Field(null, 'id', 'a')
+			'id' => $field = new Field(null, 'id', 'a')
 		]);
 
 		$collection = new Collection();
 		$value      = $collection->getAttribute($object, 'id');
 
-		$this->assertEquals('a', $value);
+		$this->assertSame($field, $value);
 	}
 
 	public function testAppend()
@@ -128,8 +128,8 @@ class CollectionTest extends TestCase
 		$collection = $collection->append('key-d', $d);
 		$collection = $collection->append('key-e', 'a simple string');
 
-		$this->assertEquals(['key-a', 'key-b', 'key-c', 'key-d', 'key-e'], $collection->keys());
-		$this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
+		$this->assertSame(['key-a', 'key-b', 'key-c', 'key-d', 'key-e'], $collection->keys());
+		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
 
 		// with automatic keys
 		$collection = new Collection();
@@ -139,8 +139,8 @@ class CollectionTest extends TestCase
 		$collection = $collection->append($d);
 		$collection = $collection->append('a simple string');
 
-		$this->assertEquals(['a', 'b', 'c', 0, 1], $collection->keys());
-		$this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
+		$this->assertSame(['a', 'b', 'c', 0, 1], $collection->keys());
+		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
 	}
 
 	public function testFindByUuid()
@@ -206,9 +206,9 @@ class CollectionTest extends TestCase
 			$c = new MockObject(['id' => 'c'])
 		]);
 
-		$this->assertEquals(0, $collection->indexOf($a));
-		$this->assertEquals(1, $collection->indexOf($b));
-		$this->assertEquals(2, $collection->indexOf($c));
+		$this->assertSame(0, $collection->indexOf($a));
+		$this->assertSame(1, $collection->indexOf($b));
+		$this->assertSame(2, $collection->indexOf($c));
 	}
 
 	public function testIndexOfWithString()
@@ -219,9 +219,9 @@ class CollectionTest extends TestCase
 			new MockObject(['id' => 'c'])
 		]);
 
-		$this->assertEquals(0, $collection->indexOf('a'));
-		$this->assertEquals(1, $collection->indexOf('b'));
-		$this->assertEquals(2, $collection->indexOf('c'));
+		$this->assertSame(0, $collection->indexOf('a'));
+		$this->assertSame(1, $collection->indexOf('b'));
+		$this->assertSame(2, $collection->indexOf('c'));
 	}
 
 	public function testNotWithObjects()
@@ -235,14 +235,14 @@ class CollectionTest extends TestCase
 		$result = $collection->not($a);
 
 		$this->assertCount(2, $result);
-		$this->assertEquals($b, $result->first());
-		$this->assertEquals($c, $result->last());
+		$this->assertSame($b, $result->first());
+		$this->assertSame($c, $result->last());
 
 		$result = $collection->not($a, $b);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals($c, $result->first());
-		$this->assertEquals($c, $result->last());
+		$this->assertSame($c, $result->first());
+		$this->assertSame($c, $result->last());
 	}
 
 	public function testNotWithCollection()
@@ -257,7 +257,7 @@ class CollectionTest extends TestCase
 
 		$result = $collection->not($not);
 		$this->assertCount(1, $result);
-		$this->assertEquals('b', $result->first()->id());
+		$this->assertSame('b', $result->first()->id());
 	}
 
 	public function testNotWithSimpleArray()
@@ -328,14 +328,14 @@ class CollectionTest extends TestCase
 		$result = $collection->not('a');
 
 		$this->assertCount(2, $result);
-		$this->assertEquals($b, $result->first());
-		$this->assertEquals($c, $result->last());
+		$this->assertSame($b, $result->first());
+		$this->assertSame($c, $result->last());
 
 		$result = $collection->not('a', 'b');
 
 		$this->assertCount(1, $result);
-		$this->assertEquals($c, $result->first());
-		$this->assertEquals($c, $result->last());
+		$this->assertSame($c, $result->first());
+		$this->assertSame($c, $result->last());
 	}
 
 	public function testPaginate()
@@ -350,22 +350,22 @@ class CollectionTest extends TestCase
 		$result = $collection->paginate(1);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals($a, $result->first());
-		$this->assertEquals($a, $result->last());
+		$this->assertSame($a, $result->first());
+		$this->assertSame($a, $result->last());
 
 		// page: 2
 		$result = $collection->paginate(1, 2);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals($b, $result->first());
-		$this->assertEquals($b, $result->last());
+		$this->assertSame($b, $result->first());
+		$this->assertSame($b, $result->last());
 
 		// page: 3
 		$result = $collection->paginate(1, 3);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals($c, $result->first());
-		$this->assertEquals($c, $result->last());
+		$this->assertSame($c, $result->first());
+		$this->assertSame($c, $result->last());
 	}
 
 	public function testPrepend()
@@ -385,8 +385,8 @@ class CollectionTest extends TestCase
 		$collection = $collection->prepend('key-d', $d);
 		$collection = $collection->prepend('key-e', 'a simple string');
 
-		$this->assertEquals(['key-e', 'key-d', 'key-c', 'key-b', 'key-a'], $collection->keys());
-		$this->assertEquals(['a simple string', $d, $c, $b, $a], $collection->values());
+		$this->assertSame(['key-e', 'key-d', 'key-c', 'key-b', 'key-a'], $collection->keys());
+		$this->assertSame(['a simple string', $d, $c, $b, $a], $collection->values());
 
 		// with automatic keys
 		$collection = new Collection();
@@ -396,8 +396,8 @@ class CollectionTest extends TestCase
 		$collection = $collection->prepend($d);
 		$collection = $collection->prepend('a simple string');
 
-		$this->assertEquals([0, 1, 'c', 'b', 'a'], $collection->keys());
-		$this->assertEquals(['a simple string', $d, $c, $b, $a], $collection->values());
+		$this->assertSame([0, 1, 'c', 'b', 'a'], $collection->keys());
+		$this->assertSame(['a simple string', $d, $c, $b, $a], $collection->values());
 	}
 
 	public function testQuerySearch()
@@ -414,7 +414,7 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals('project-b', $result->first()->id());
+		$this->assertSame('project-b', $result->first()->id());
 
 		// with options array
 		$result = $collection->query([
@@ -424,7 +424,7 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals('project-b', $result->first()->id());
+		$this->assertSame('project-b', $result->first()->id());
 	}
 
 	public function testQueryPagination()
@@ -440,8 +440,8 @@ class CollectionTest extends TestCase
 		]);
 
 		$this->assertCount(1, $result);
-		$this->assertEquals('project-a', $result->first()->id());
-		$this->assertEquals(3, $result->pagination()->pages());
+		$this->assertSame('project-a', $result->first()->id());
+		$this->assertSame(3, $result->pagination()->pages());
 	}
 
 	public function testToArray()
@@ -454,7 +454,7 @@ class CollectionTest extends TestCase
 
 		$array = $collection->toArray();
 
-		$this->assertEquals($array, [
+		$this->assertSame($array, [
 			'a' => [
 				'id' => 'a'
 			],
@@ -479,7 +479,7 @@ class CollectionTest extends TestCase
 			return $object->id();
 		});
 
-		$this->assertEquals($array, [
+		$this->assertSame($array, [
 			'a' => 'a',
 			'b' => 'b',
 			'c' => 'c'

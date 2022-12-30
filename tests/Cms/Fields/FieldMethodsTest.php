@@ -345,7 +345,9 @@ class FieldMethodsTest extends TestCase
 			'a',
 		]);
 
-		$this->assertEquals($pages, $this->field($content)->toPages());
+		$result = $this->field($content)->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertSame(['a' => $a], $result->data());
 
 		// multiple pages
 		$pages = new Pages([$a, $b], $app->site());
@@ -355,7 +357,9 @@ class FieldMethodsTest extends TestCase
 			'b'
 		]);
 
-		$this->assertEquals($pages, $this->field($content)->toPages());
+		$result = $this->field($content)->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertSame($pages->data(), $result->data());
 
 		// no results
 		$content = Yaml::encode([
@@ -363,7 +367,9 @@ class FieldMethodsTest extends TestCase
 			'd'
 		]);
 
-		$this->assertInstanceOf(Pages::class, $this->field($content)->toPages());
+		$result = $this->field($content)->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertSame([], $result->data());
 	}
 
 	public function testToStructure()

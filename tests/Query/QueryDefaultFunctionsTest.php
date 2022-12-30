@@ -42,7 +42,7 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 		$query = new Query('collection("test")');
 		$collection = $query->resolve();
 		$this->assertInstanceOf(Pages::class, $collection);
-		$this->assertSame(1, $collection->count());
+		$this->assertCount(1, $collection);
 	}
 
 	public function testFile()

@@ -29,8 +29,8 @@ class ParamsTest extends TestCase
 	{
 		$params = new Params('a:/b:');
 
-		$this->assertSame(null, $params->a);
-		$this->assertSame(null, $params->b);
+		$this->assertNull($params->a);
+		$this->assertNull($params->b);
 	}
 
 	public function testConstructWithSpecialChars()

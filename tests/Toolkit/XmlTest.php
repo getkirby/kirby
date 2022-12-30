@@ -69,15 +69,14 @@ class XmlTest extends TestCase
 		$this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '    ', 1));
 		$this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '  ', 2));
 
+		$fixtures = __DIR__ . '/fixtures/xml';
 		$data = [
-			'@name' => 'contact',
-			'@attributes' => [
-				'type' => 'husband'
-			],
-			'@value' => 'Homer'
+			'@name'       => 'contact',
+			'@attributes' => ['type' => 'husband'],
+			'@value'      => 'Homer'
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents(__DIR__ . '/fixtures/xml/contact.xml')));
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/contact.xml', Xml::create($data, 'contact'));
+		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/contact.xml')));
+		$this->assertStringEqualsFile($fixtures . '/contact.xml', Xml::create($data, 'contact'));
 
 		$data = [
 			'@name' => 'contacts',
@@ -96,9 +95,9 @@ class XmlTest extends TestCase
 				]
 			]
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents(__DIR__ . '/fixtures/xml/contacts.xml')));
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/contacts_nowrapper.xml', Xml::create($contacts, 'contact', false));
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/contacts.xml', Xml::create($data, 'contacts'));
+		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/contacts.xml')));
+		$this->assertStringEqualsFile($fixtures . '/contacts_nowrapper.xml', Xml::create($contacts, 'contact', false));
+		$this->assertStringEqualsFile($fixtures . '/contacts.xml', Xml::create($data, 'contacts'));
 
 		$data = [
 			'@name' => 'simpsons',
@@ -130,12 +129,12 @@ class XmlTest extends TestCase
 				]
 			]
 		];
-		$this->assertSame($data, Xml::parse(file_get_contents(__DIR__ . '/fixtures/xml/simpsons.xml')));
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons.xml', Xml::create($data, 'invalid'));
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
+		$this->assertSame($data, Xml::parse(file_get_contents($fixtures . '/simpsons.xml')));
+		$this->assertStringEqualsFile($fixtures . '/simpsons.xml', Xml::create($data, 'invalid'));
+		$this->assertStringEqualsFile($fixtures . '/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
 
 		unset($data['@name']);
-		$this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons.xml', Xml::create($data, 'simpsons'));
+		$this->assertStringEqualsFile($fixtures . '/simpsons.xml', Xml::create($data, 'simpsons'));
 
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}

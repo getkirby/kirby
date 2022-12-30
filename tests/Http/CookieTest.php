@@ -88,18 +88,18 @@ class CookieTest extends TestCase
 
 		// separator missing
 		$_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85';
-		$this->assertSame(null, Cookie::get('foo'));
+		$this->assertNull(Cookie::get('foo'));
 		$_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
 		$this->assertSame('bar', Cookie::get('foo'));
 
 		// no hash
 		$_COOKIE['foo'] = '+bar';
-		$this->assertSame(null, Cookie::get('foo'));
+		$this->assertNull(Cookie::get('foo'));
 		$_COOKIE['foo'] = '703a07dc4edca348cb92d9fcb7da1b3931de0a85+bar';
 		$this->assertSame('bar', Cookie::get('foo'));
 
 		// wrong hash
 		$_COOKIE['foo'] = '040df854f89c9f9ca3490fb950c91ad9aa304c97+bar';
-		$this->assertSame(null, Cookie::get('foo'));
+		$this->assertNull(Cookie::get('foo'));
 	}
 }

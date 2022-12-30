@@ -8,12 +8,12 @@ class CollectionMutatorTest extends TestCase
 	{
 		$collection = new Collection();
 
-		$this->assertEquals([], $collection->data());
+		$this->assertSame([], $collection->data());
 
 		$collection->data([
 			'three' => 'drei'
 		]);
-		$this->assertEquals([
+		$this->assertSame([
 			'three' => 'drei'
 		], $collection->data());
 
@@ -21,7 +21,7 @@ class CollectionMutatorTest extends TestCase
 			'one' => 'eins',
 			'two' => 'zwei'
 		]);
-		$this->assertEquals([
+		$this->assertSame([
 			'one' => 'eins',
 			'two' => 'zwei'
 		], $collection->data());
@@ -34,30 +34,30 @@ class CollectionMutatorTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals([
+		$this->assertSame([
 			'one' => 'eins',
 			'two' => 'zwei'
 		], $collection->data());
 
-		$this->assertEquals([], $collection->empty()->data());
+		$this->assertSame([], $collection->empty()->data());
 	}
 
 	public function testSet()
 	{
 		$collection = new Collection();
-		$this->assertEquals(null, $collection->one);
-		$this->assertEquals(null, $collection->two);
+		$this->assertNull($collection->one);
+		$this->assertNull($collection->two);
 
 		$collection->one = 'eins';
-		$this->assertEquals('eins', $collection->one);
+		$this->assertSame('eins', $collection->one);
 
 		$collection->set('two', 'zwei');
-		$this->assertEquals('zwei', $collection->two);
+		$this->assertSame('zwei', $collection->two);
 
 		$collection->set([
 			'three' => 'drei'
 		]);
-		$this->assertEquals('drei', $collection->three);
+		$this->assertSame('drei', $collection->three);
 	}
 
 	public function testAppend()
@@ -66,10 +66,10 @@ class CollectionMutatorTest extends TestCase
 			'one' => 'eins'
 		]);
 
-		$this->assertEquals('eins', $collection->last());
+		$this->assertSame('eins', $collection->last());
 
 		$collection->append('two', 'zwei');
-		$this->assertEquals('zwei', $collection->last());
+		$this->assertSame('zwei', $collection->last());
 	}
 
 	public function testPrepend()
@@ -78,10 +78,10 @@ class CollectionMutatorTest extends TestCase
 			'one' => 'eins'
 		]);
 
-		$this->assertEquals('eins', $collection->first());
+		$this->assertSame('eins', $collection->first());
 
 		$collection->prepend('zero', 'null');
-		$this->assertEquals('null', $collection->zero());
+		$this->assertSame('null', $collection->zero());
 	}
 
 	public function testExtend()
@@ -94,8 +94,8 @@ class CollectionMutatorTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('eins', $result->one());
-		$this->assertEquals('zwei', $result->two());
+		$this->assertSame('eins', $result->one());
+		$this->assertSame('zwei', $result->two());
 	}
 
 	public function testRemove()
@@ -105,9 +105,9 @@ class CollectionMutatorTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('zwei', $collection->two());
+		$this->assertSame('zwei', $collection->two());
 		$collection->remove('two');
-		$this->assertEquals(null, $collection->two());
+		$this->assertNull($collection->two());
 	}
 
 	public function testUnset()
@@ -117,9 +117,9 @@ class CollectionMutatorTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('zwei', $collection->two());
+		$this->assertSame('zwei', $collection->two());
 		unset($collection->two);
-		$this->assertEquals(null, $collection->two());
+		$this->assertNull($collection->two());
 	}
 
 	public function testMap()
@@ -129,11 +129,11 @@ class CollectionMutatorTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('zwei', $collection->two());
+		$this->assertSame('zwei', $collection->two());
 		$collection->map(function ($item) {
 			return $item . '-ish';
 		});
-		$this->assertEquals('zwei-ish', $collection->two());
+		$this->assertSame('zwei-ish', $collection->two());
 	}
 
 	public function testPluck()
@@ -147,7 +147,7 @@ class CollectionMutatorTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['homer', 'marge'], $collection->pluck('username'));
+		$this->assertSame(['homer', 'marge'], $collection->pluck('username'));
 	}
 
 	public function testPluckAndSplit()
@@ -165,7 +165,7 @@ class CollectionMutatorTest extends TestCase
 			'homer', 'marge', 'maggie', 'bart', 'lisa'
 		];
 
-		$this->assertEquals($expected, $collection->pluck('simpsons', ', '));
+		$this->assertSame($expected, $collection->pluck('simpsons', ', '));
 	}
 
 	public function testPluckUnique()
@@ -184,6 +184,6 @@ class CollectionMutatorTest extends TestCase
 
 		$expected = ['homer', 'marge'];
 
-		$this->assertEquals($expected, $collection->pluck('user', null, true));
+		$this->assertSame($expected, $collection->pluck('user', null, true));
 	}
 }

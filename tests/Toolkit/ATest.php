@@ -100,7 +100,7 @@ class ATest extends TestCase
 		$this->assertSame($array, A::get($array, null));
 
 		// fallback value
-		$this->assertSame(null, A::get($array, 'elephant'));
+		$this->assertNull(A::get($array, 'elephant'));
 		$this->assertSame('toot', A::get($array, 'elephant', 'toot'));
 
 		$this->assertSame([

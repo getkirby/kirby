@@ -10,18 +10,18 @@ class QueryTest extends TestCase
 	{
 		// default
 		$query = new Query();
-		$this->assertEquals([], $query->data());
+		$this->assertSame([], $query->data());
 
 		// custom array
 		$data  = ['foo' => 'bar'];
 		$query = new Query($data);
-		$this->assertEquals($data, $query->data());
+		$this->assertSame($data, $query->data());
 
 		// custom string
 		$string = 'foo=bar&kirby[]=bastian&kirby[]=allgeier';
 		$data  = ['foo' => 'bar', 'kirby' => ['bastian', 'allgeier']];
 		$query = new Query($string);
-		$this->assertEquals($data, $query->data());
+		$this->assertSame($data, $query->data());
 	}
 
 	public function testIsEmpty()
@@ -45,40 +45,40 @@ class QueryTest extends TestCase
 
 		// single get
 		$query = new Query(['foo' => 'bar']);
-		$this->assertEquals('bar', $query->get('foo'));
+		$this->assertSame('bar', $query->get('foo'));
 
 		// multiple gets
 		$query = new Query(['a' => 'a', 'b' => 'b']);
-		$this->assertEquals(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
+		$this->assertSame(['a' => 'a', 'b' => 'b', 'c' => null], $query->get(['a', 'b', 'c']));
 	}
 
 	public function testToString()
 	{
 		// default
 		$query = new Query();
-		$this->assertEquals('', $query->toString());
-		$this->assertEquals('', $query->__toString());
-		$this->assertEquals('', $query);
+		$this->assertSame('', $query->toString());
+		$this->assertSame('', $query->__toString());
+		$this->assertEquals('', $query); // cannot use strict assertion (string conversion)
 
 		// custom
 		$query = new Query(['foo' => 'bar']);
-		$this->assertEquals('foo=bar', $query->toString());
-		$this->assertEquals('foo=bar', $query->__toString());
-		$this->assertEquals('foo=bar', $query);
+		$this->assertSame('foo=bar', $query->toString());
+		$this->assertSame('foo=bar', $query->__toString());
+		$this->assertEquals('foo=bar', $query); // cannot use strict assertion (string conversion)
 	}
 
 	public function testToArrayAndDebuginfo()
 	{
 		$data  = ['a' => 'a'];
 		$query = new Query($data);
-		$this->assertEquals($data, $query->toArray());
-		$this->assertEquals($data, $query->__debugInfo());
+		$this->assertSame($data, $query->toArray());
+		$this->assertSame($data, $query->__debugInfo());
 	}
 
 	public function testToJson()
 	{
 		$data  = ['a' => 'a'];
 		$query = new Query($data);
-		$this->assertEquals(json_encode($data), $query->toJson());
+		$this->assertSame(json_encode($data), $query->toJson());
 	}
 }

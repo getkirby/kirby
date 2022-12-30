@@ -48,8 +48,8 @@ class ItemsTest extends TestCase
 
 		$this->assertCount(2, $items);
 		$this->assertSame($items, $items->first()->siblings());
-		$this->assertEquals('a', $items->first()->id());
-		$this->assertEquals('b', $items->last()->id());
+		$this->assertSame('a', $items->first()->id());
+		$this->assertSame('b', $items->last()->id());
 	}
 
 	public function testParent()

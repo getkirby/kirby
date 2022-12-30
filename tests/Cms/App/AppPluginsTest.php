@@ -85,7 +85,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$kirby->impersonate('kirby');
-		$this->assertEquals('nice', $kirby->call('api/awesome'));
+		$this->assertSame('nice', $kirby->call('api/awesome'));
 	}
 
 	public function testApiRoutePlugins()
@@ -142,9 +142,9 @@ class AppPluginsTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$this->assertEquals('a', $app->api()->call('a'));
-		$this->assertEquals('b', $app->api()->call('b'));
-		$this->assertEquals('c', $app->api()->call('c'));
+		$this->assertSame('a', $app->api()->call('a'));
+		$this->assertSame('b', $app->api()->call('b'));
+		$this->assertSame('c', $app->api()->call('c'));
 	}
 
 	public function testApiRouteCallbackPlugins()
@@ -205,9 +205,9 @@ class AppPluginsTest extends TestCase
 
 		$app->impersonate('kirby');
 
-		$this->assertEquals('/dev/null', $app->api()->call('a'));
-		$this->assertEquals('b', $app->api()->call('b'));
-		$this->assertEquals('c', $app->api()->call('c'));
+		$this->assertSame('/dev/null', $app->api()->call('a'));
+		$this->assertSame('b', $app->api()->call('b'));
+		$this->assertSame('c', $app->api()->call('c'));
 	}
 
 	public function testApiRouteCallbackPluginWithOptionAccess()
@@ -240,7 +240,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$this->assertEquals('Test', $app->api()->call('test'));
+		$this->assertSame('Test', $app->api()->call('test'));
 	}
 
 	public function testAuthChallenge()
@@ -296,7 +296,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($file, $kirby->extension('blueprints', 'pages/test'));
+		$this->assertSame($file, $kirby->extension('blueprints', 'pages/test'));
 	}
 
 	public function testCacheType()
@@ -322,7 +322,10 @@ class AppPluginsTest extends TestCase
 
 	public function testCollection()
 	{
-		$pages = new Pages([]);
+		$pages = new Pages([
+			$page = new Page(['slug' => 'a', 'num' => 1])
+		]);
+
 		$kirby = new App([
 			'roots' => [
 				'index' => '/dev/null'
@@ -334,7 +337,7 @@ class AppPluginsTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals($pages, $kirby->collection('test'));
+		$this->assertSame($page, $kirby->collection('test')->first());
 	}
 
 	public function testCollectionFilters()
@@ -357,7 +360,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(Collection::$filters['**'], $filter);
+		$this->assertSame(Collection::$filters['**'], $filter);
 
 		// restore previous filters
 		Collection::$filters = $prevFilters;
@@ -394,7 +397,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['foo' => 'bar'], $kirby->controller('test'));
+		$this->assertSame(['foo' => 'bar'], $kirby->controller('test'));
 	}
 
 	public function testFieldMethod()
@@ -411,7 +414,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals('test', $page->customField()->test());
+		$this->assertSame('test', $page->customField()->test());
 
 		// reset methods
 		Field::$methods = [];
@@ -436,8 +439,8 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(FormField::class, $field);
-		$this->assertEquals('simpson', $field->homer());
-		$this->assertEquals('shaw', $field->peter());
+		$this->assertSame('simpson', $field->homer());
+		$this->assertSame('shaw', $field->peter());
 	}
 
 	public function testKirbyTag()
@@ -460,11 +463,11 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $kirby->kirbytags('(test: foo)'));
-		$this->assertEquals('test', $kirby->kirbytags('(TEST: foo)'));
+		$this->assertSame('test', $kirby->kirbytags('(test: foo)'));
+		$this->assertSame('test', $kirby->kirbytags('(TEST: foo)'));
 
-		$this->assertEquals('test', $kirby->kirbytags('(foo: bar)'));
-		$this->assertEquals('test', $kirby->kirbytags('(FOO: bar)'));
+		$this->assertSame('test', $kirby->kirbytags('(foo: bar)'));
+		$this->assertSame('test', $kirby->kirbytags('(FOO: bar)'));
 	}
 
 	public function testPageMethod()
@@ -481,7 +484,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals('test', $page->test());
+		$this->assertSame('test', $page->test());
 
 		// reset methods
 		Page::$methods = [];
@@ -501,7 +504,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$pages = new Pages([]);
-		$this->assertEquals('test', $pages->test());
+		$this->assertSame('test', $pages->test());
 
 		// reset methods
 		Pages::$methods = [];
@@ -602,7 +605,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('testValue', $kirby->option('testOption'));
+		$this->assertSame('testValue', $kirby->option('testOption'));
 	}
 
 	public function testExtensionsFromFolders()
@@ -622,7 +625,7 @@ class AppPluginsTest extends TestCase
 			'with_underscore' => 'withunderscorePage'
 		];
 
-		$this->assertEquals($expected, Page::$models);
+		$this->assertEquals($expected, Page::$models); // cannot use strict assertion (filesystem sorting)
 	}
 
 	public function testExtensionsFromOptions()
@@ -745,7 +748,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $kirby->call('test'));
+		$this->assertSame('test', $kirby->call('test'));
 	}
 
 	public function testRoutesCallback()
@@ -766,7 +769,7 @@ class AppPluginsTest extends TestCase
 			}
 		]);
 
-		$this->assertEquals('test', $kirby->call('test'));
+		$this->assertSame('test', $kirby->call('test'));
 	}
 
 	public function testSnippet()
@@ -780,7 +783,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($file, $kirby->extension('snippets', 'header'));
+		$this->assertSame($file, $kirby->extension('snippets', 'header'));
 	}
 
 	public function testTemplate()
@@ -794,7 +797,7 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($file, $kirby->extension('templates', 'project'));
+		$this->assertSame($file, $kirby->extension('templates', 'project'));
 	}
 
 	public function testTranslation()
@@ -815,11 +818,11 @@ class AppPluginsTest extends TestCase
 
 		I18n::$locale = 'en';
 
-		$this->assertEquals('English Test', I18n::translate('test'));
+		$this->assertSame('English Test', I18n::translate('test'));
 
 		I18n::$locale = 'de';
 
-		$this->assertEquals('Deutscher Test', I18n::translate('test'));
+		$this->assertSame('Deutscher Test', I18n::translate('test'));
 	}
 
 	public function testTranslationsInPlugin()
@@ -843,11 +846,11 @@ class AppPluginsTest extends TestCase
 
 		I18n::$locale = 'en';
 
-		$this->assertEquals('English Test', I18n::translate('test'));
+		$this->assertSame('English Test', I18n::translate('test'));
 
 		I18n::$locale = 'de';
 
-		$this->assertEquals('Deutscher Test', I18n::translate('test'));
+		$this->assertSame('Deutscher Test', I18n::translate('test'));
 	}
 
 	public function testUserMethod()
@@ -867,7 +870,7 @@ class AppPluginsTest extends TestCase
 			'email' => 'test@getkirby.com',
 			'name'  => 'Test User'
 		]);
-		$this->assertEquals('test', $user->test());
+		$this->assertSame('test', $user->test());
 
 		// reset methods
 		User::$methods = [];
@@ -906,7 +909,7 @@ class AppPluginsTest extends TestCase
 		]);
 
 		$users = new Users([]);
-		$this->assertEquals('test', $users->test());
+		$this->assertSame('test', $users->test());
 
 		// reset methods
 		Users::$methods = [];
@@ -925,11 +928,12 @@ class AppPluginsTest extends TestCase
 			'hooks' => [
 				'system.loadPlugins:after' => function () use ($phpUnit, &$executed) {
 					if (count($this->plugins()) === 2) {
-						$phpUnit->assertEquals([
+						$phpUnit->assertSame([
 							'kirby/manual1' => new Plugin('kirby/manual1', []),
 							'kirby/manual2' => new Plugin('kirby/manual2', [])
 						], $this->plugins());
 					} else {
+						// cannot use strict assertion (test for object contents)
 						$phpUnit->assertEquals([
 							'kirby/test1' => new Plugin('kirby/test1', [
 								'hooks' => [
@@ -958,10 +962,10 @@ class AppPluginsTest extends TestCase
 			'kirby/manual1' => new Plugin('kirby/manual1', []),
 			'kirby/manual2' => new Plugin('kirby/manual2', [])
 		];
-		$this->assertEquals($expected, $kirby->plugins($expected));
+		$this->assertSame($expected, $kirby->plugins($expected));
 
-		// hook should have been called only once after the firs initialization
-		$this->assertEquals(1, $executed);
+		// hook should have been called only once after the first initialization
+		$this->assertSame(1, $executed);
 	}
 
 	public function testPluginLoaderAnonymous()
@@ -1019,8 +1023,8 @@ class AppPluginsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
-		$this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+		$this->assertSame('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
+		$this->assertSame('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
 	}
 
 	/**

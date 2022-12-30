@@ -33,7 +33,7 @@ class RolesApiCollectionTest extends ApiCollectionTestCase
 		$result     = $collection->toArray();
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('admin', $result[0]['name']);
-		$this->assertEquals('editor', $result[1]['name']);
+		$this->assertSame('admin', $result[0]['name']);
+		$this->assertSame('editor', $result[1]['name']);
 	}
 }

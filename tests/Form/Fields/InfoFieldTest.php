@@ -10,11 +10,11 @@ class InfoFieldTest extends TestCase
 	{
 		$field = $this->field('info');
 
-		$this->assertEquals('info', $field->type());
-		$this->assertEquals('info', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->label());
-		$this->assertEquals(null, $field->text());
+		$this->assertSame('info', $field->type());
+		$this->assertSame('info', $field->name());
+		$this->assertNull($field->value());
+		$this->assertNull($field->label());
+		$this->assertNull($field->text());
 		$this->assertFalse($field->save());
 	}
 
@@ -25,7 +25,7 @@ class InfoFieldTest extends TestCase
 			'text' => 'test'
 		]);
 
-		$this->assertEquals('<p>test</p>', $field->text());
+		$this->assertSame('<p>test</p>', $field->text());
 
 		// translated text
 		$field = $this->field('info', [
@@ -35,7 +35,7 @@ class InfoFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>en</p>', $field->text());
+		$this->assertSame('<p>en</p>', $field->text());
 
 		// text template
 		$field = $this->field('info', [
@@ -48,6 +48,6 @@ class InfoFieldTest extends TestCase
 			])
 		]);
 
-		$this->assertEquals('<p>Test</p>', $field->text());
+		$this->assertSame('<p>Test</p>', $field->text());
 	}
 }

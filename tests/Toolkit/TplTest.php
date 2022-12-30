@@ -13,8 +13,7 @@ class TplTest extends TestCase
 	public function testLoadWithBadTemplate()
 	{
 		$this->expectException('Error');
-
-		$tpl = Tpl::load(__DIR__ . '/fixtures/tpl/bad.php');
+		Tpl::load(__DIR__ . '/fixtures/tpl/bad.php');
 	}
 
 	public function testLoadWithNonExistingFile()

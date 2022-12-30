@@ -10,22 +10,22 @@ class BodyTest extends TestCase
 	{
 		// default contents
 		$body = new Body();
-		$this->assertEquals('', $body->contents());
+		$this->assertSame('', $body->contents());
 
 		// array content
 		$contents = ['a' => 'a'];
 		$body     = new Body($contents);
-		$this->assertEquals($contents, $body->contents());
+		$this->assertSame($contents, $body->contents());
 
 		// string
 		$contents = 'foo';
 		$body     = new Body($contents);
-		$this->assertEquals($contents, $body->contents());
+		$this->assertSame($contents, $body->contents());
 
 		// $_POST
 		$body = new Body();
 		$_POST = 'foo';
-		$this->assertEquals('foo', $body->contents());
+		$this->assertSame('foo', $body->contents());
 	}
 
 	public function testData()
@@ -33,57 +33,57 @@ class BodyTest extends TestCase
 		// default
 		$data = [];
 		$body = new Body();
-		$this->assertEquals($data, $body->data());
+		$this->assertSame($data, $body->data());
 
 		// array data
 		$data = ['a' => 'a'];
 		$body = new Body($data);
-		$this->assertEquals($data, $body->data());
+		$this->assertSame($data, $body->data());
 
 		// json data
 		$data = ['a' => 'a'];
 		$body = new Body(json_encode($data));
-		$this->assertEquals($data, $body->data());
+		$this->assertSame($data, $body->data());
 
 		// http query data
 		$data = ['a' => 'a'];
 		$body = new Body(http_build_query($data));
-		$this->assertEquals($data, $body->data());
+		$this->assertSame($data, $body->data());
 
 		// unparsable string
 		$data = 'foo';
 		$body = new Body($data);
-		$this->assertEquals([], $body->data());
+		$this->assertSame([], $body->data());
 	}
 
 	public function testToArrayAndDebuginfo()
 	{
 		$data = ['a' => 'a'];
 		$body = new Body($data);
-		$this->assertEquals($data, $body->toArray());
-		$this->assertEquals($data, $body->__debugInfo());
+		$this->assertSame($data, $body->toArray());
+		$this->assertSame($data, $body->__debugInfo());
 	}
 
 	public function testToJson()
 	{
 		$data = ['a' => 'a'];
 		$body = new Body($data);
-		$this->assertEquals(json_encode($data), $body->toJson());
+		$this->assertSame(json_encode($data), $body->toJson());
 	}
 
 	public function testToString()
 	{
 		// default
 		$body = new Body();
-		$this->assertEquals('', $body->toString());
-		$this->assertEquals('', $body->__toString());
-		$this->assertEquals('', $body);
+		$this->assertSame('', $body->toString());
+		$this->assertSame('', $body->__toString());
+		$this->assertEquals('', $body); // cannot use strict assertion (string conversion)
 
 		// with data
 		$string = 'foo=bar';
 		$body   = new Body(['foo' => 'bar']);
-		$this->assertEquals($string, $body->toString());
-		$this->assertEquals($string, $body->__toString());
-		$this->assertEquals($string, $body);
+		$this->assertSame($string, $body->toString());
+		$this->assertSame($string, $body->__toString());
+		$this->assertEquals($string, $body); // cannot use strict assertion (string conversion)
 	}
 }

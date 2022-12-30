@@ -18,6 +18,6 @@ class FacadeTest extends TestCase
 {
 	public function testCall()
 	{
-		$this->assertEquals('Test', ObjFacade::test());
+		$this->assertSame('Test', ObjFacade::test());
 	}
 }

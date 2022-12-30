@@ -169,7 +169,7 @@ class ModelTest extends TestCase
 		// Custom function does not match and returns null, default case
 		$file  = $app->page('test')->file('test.jpg');
 		$panel = new CustomPanelModel($file);
-		$this->assertSame(null, $panel->dragTextFromCallback('markdown', $file, $file->filename()));
+		$this->assertNull($panel->dragTextFromCallback('markdown', $file, $file->filename()));
 
 		// Custom function should return image tag for heic
 		$file  = $app->page('test')->file('test.heic');
@@ -212,7 +212,7 @@ class ModelTest extends TestCase
 		// Custom function does not match and returns null, default case
 		$file  = $app->page('test')->file('test.jpg');
 		$panel = new CustomPanelModel($file);
-		$this->assertSame(null, $panel->dragTextFromCallback('kirbytext', $file, $file->filename()));
+		$this->assertNull($panel->dragTextFromCallback('kirbytext', $file, $file->filename()));
 
 		// Custom function should return image tag for heic
 		$file  = $app->page('test')->file('test.heic');
@@ -276,7 +276,7 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('cover', $image);
 		$this->assertArrayHasKey('icon', $image);
 		$this->assertArrayHasKey('ratio', $image);
-		$this->assertSame(false, $image['cover']);
+		$this->assertFalse($image['cover']);
 		$this->assertSame('page', $image['icon']);
 		$this->assertSame('3/2', $image['ratio']);
 

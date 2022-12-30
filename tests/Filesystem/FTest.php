@@ -26,7 +26,7 @@ class FTest extends TestCase
 		$this->fixtures = __DIR__ . '/fixtures/f';
 		$this->sample   = $this->fixtures . '/test.txt';
 		$this->tmp      = __DIR__ . '/tmp';
-		$this->test    = $this->tmp . '/moved.txt';
+		$this->test     = $this->tmp . '/moved.txt';
 
 		Dir::remove($this->tmp);
 		Dir::make($this->tmp);
@@ -72,9 +72,9 @@ class FTest extends TestCase
 		$origin = $this->tmp . '/a.txt';
 		F::write($origin, 'test');
 
-		$this->assertFalse(file_exists($this->test));
+		$this->assertFileDoesNotExist($this->test);
 		$this->assertTrue(F::copy($origin, $this->test));
-		$this->assertTrue(file_exists($this->test));
+		$this->assertFileExists($this->test);
 	}
 
 	/**
@@ -172,7 +172,7 @@ class FTest extends TestCase
 		F::write($src, 'test');
 
 		$this->assertTrue(F::link($src, $link));
-		$this->assertTrue(is_file($link));
+		$this->assertFileExists($link);
 	}
 
 	/**
@@ -464,25 +464,25 @@ class FTest extends TestCase
 		F::write($origin = $this->tmp . '/a.txt', 'test');
 
 		// simply move file
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertTrue(F::move($origin, $this->test));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// replace file via moving
 		F::copy($this->test, $origin);
 
-		$this->assertTrue(file_exists($origin));
-		$this->assertTrue(file_exists($this->test));
+		$this->assertFileExists($origin);
+		$this->assertFileExists($this->test);
 
 		$this->assertFalse(F::move($this->test, $origin));
 		$this->assertTrue(F::move($this->test, $origin, true));
 
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 	}
 
 	/**
@@ -500,7 +500,7 @@ class FTest extends TestCase
 	public function testMimeToExtension()
 	{
 		$this->assertSame('jpg', F::mimeToExtension('image/jpeg'));
-		$this->assertSame(false, F::mimeToExtension('image/something'));
+		$this->assertFalse(F::mimeToExtension('image/something'));
 	}
 
 	/**
@@ -509,7 +509,7 @@ class FTest extends TestCase
 	public function testMimeToType()
 	{
 		$this->assertSame('image', F::mimeToType('image/jpeg'));
-		$this->assertSame(false, F::mimeToType('image/something'));
+		$this->assertFalse(F::mimeToType('image/something'));
 	}
 
 	/**
@@ -668,36 +668,36 @@ class FTest extends TestCase
 		F::write($origin = $this->tmp . '/a.txt', 'test');
 
 		// simply rename file
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertSame($this->test, F::rename($origin, 'moved'));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// rename file with same name
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		$this->assertSame($this->test, F::rename($this->test, 'moved'));
 		$this->assertSame($this->test, F::rename($this->test, 'moved', true));
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertFalse(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
 
 		// replace file via renaming
 		F::copy($this->test, $origin);
 
-		$this->assertTrue(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileExists($this->test);
+		$this->assertFileExists($origin);
 
 		$this->assertFalse(F::rename($this->test, 'a'));
 		$this->assertSame($origin, F::rename($this->test, 'a', true));
 
-		$this->assertFalse(file_exists($this->test));
-		$this->assertTrue(file_exists($origin));
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
 	}
 
 	/**
@@ -789,7 +789,7 @@ class FTest extends TestCase
 		$this->assertTrue(F::unlink($this->tmp . '/link-exists'));
 		$this->assertTrue(F::unlink($this->tmp . '/link-invalid'));
 
-		$this->assertFalse(is_file($this->tmp . '/file'));
+		$this->assertFileDoesNotExist($this->tmp . '/file');
 		$this->assertFalse(is_link($this->tmp . '/link-exists'));
 		$this->assertFalse(is_link($this->tmp . '/link-invalid'));
 	}
@@ -879,12 +879,14 @@ class FTest extends TestCase
 	 */
 	public function testWriteObject()
 	{
-		$input = new \stdClass();
+		$input = new \stdClass([
+			'a' => 'b'
+		]);
 
 		F::write($this->test, $input);
 
 		$result = unserialize(F::read($this->test));
-		$this->assertEquals($input, $result);
+		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
 	}
 
 	/**

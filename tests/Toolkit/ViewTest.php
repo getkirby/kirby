@@ -16,7 +16,7 @@ class ViewTest extends TestCase
 	public function testFile()
 	{
 		$view = $this->_view();
-		$this->assertEquals(static::FIXTURES . '/view.php', $view->file());
+		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
 	}
 
 	public function testWithMissingFile()
@@ -31,18 +31,18 @@ class ViewTest extends TestCase
 	public function testData()
 	{
 		$view = $this->_view();
-		$this->assertEquals([], $view->data());
+		$this->assertSame([], $view->data());
 
 		$view = $this->_view(['test']);
-		$this->assertEquals(['test'], $view->data());
+		$this->assertSame(['test'], $view->data());
 	}
 
 	public function testToString()
 	{
 		$view = $this->_view(['name' => 'Tester']);
-		$this->assertEquals('Hello Tester', $view->toString());
-		$this->assertEquals('Hello Tester', $view->__toString());
-		$this->assertEquals('Hello Tester', (string)$view);
+		$this->assertSame('Hello Tester', $view->toString());
+		$this->assertSame('Hello Tester', $view->__toString());
+		$this->assertSame('Hello Tester', (string)$view);
 	}
 
 	public function testWithException()

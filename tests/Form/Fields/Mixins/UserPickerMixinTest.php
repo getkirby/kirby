@@ -52,9 +52,9 @@ class UserPickerMixinTest extends TestCase
 		$users = $field->users();
 
 		$this->assertCount(3, $users);
-		$this->assertEquals('a@getkirby.com', $users[0]['email']);
-		$this->assertEquals('b@getkirby.com', $users[1]['email']);
-		$this->assertEquals('c@getkirby.com', $users[2]['email']);
+		$this->assertSame('a@getkirby.com', $users[0]['email']);
+		$this->assertSame('b@getkirby.com', $users[1]['email']);
+		$this->assertSame('c@getkirby.com', $users[2]['email']);
 	}
 
 	public function testUsersWithQuery()
@@ -83,8 +83,8 @@ class UserPickerMixinTest extends TestCase
 		$users = $field->users();
 
 		$this->assertCount(2, $users);
-		$this->assertEquals('b@getkirby.com', $users[0]['email']);
-		$this->assertEquals('c@getkirby.com', $users[1]['email']);
+		$this->assertSame('b@getkirby.com', $users[0]['email']);
+		$this->assertSame('c@getkirby.com', $users[1]['email']);
 	}
 
 	public function testMap()
@@ -114,7 +114,7 @@ class UserPickerMixinTest extends TestCase
 
 		$users = $field->users();
 
-		$this->assertEquals([
+		$this->assertSame([
 			'a@getkirby.com',
 			'b@getkirby.com',
 			'c@getkirby.com',

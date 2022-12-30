@@ -16,7 +16,7 @@ class PagesApiCollectionTest extends ApiCollectionTestCase
 		$result = $collection->toArray();
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a', $result[0]['id']);
-		$this->assertEquals('b', $result[1]['id']);
+		$this->assertSame('a', $result[0]['id']);
+		$this->assertSame('b', $result[1]['id']);
 	}
 }

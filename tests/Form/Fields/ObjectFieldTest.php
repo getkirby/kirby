@@ -45,7 +45,7 @@ class ObjectFieldTest extends TestCase
 
 		$this->assertSame('object', $field->type());
 		$this->assertSame('object', $field->name());
-		$this->assertTrue(is_array($field->fields()));
+		$this->assertIsArray($field->fields());
 		$this->assertSame('', $field->value());
 		$this->assertTrue($field->save());
 	}

@@ -168,14 +168,14 @@ class DbTest extends TestCase
 	public function testSelect()
 	{
 		$result = Db::select('users');
-		$this->assertSame(3, $result->count());
+		$this->assertCount(3, $result);
 
 		$result = Db::select('users', 'username', ['username' => 'paul']);
-		$this->assertSame(1, $result->count());
+		$this->assertCount(1, $result);
 		$this->assertSame('paul', $result->first()->username());
 
 		$result = Db::select('users', 'username', null, 'username ASC', 1, 1);
-		$this->assertSame(1, $result->count());
+		$this->assertCount(1, $result);
 		$this->assertSame('john', $result->first()->username());
 	}
 

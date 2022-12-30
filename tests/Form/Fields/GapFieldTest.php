@@ -8,8 +8,8 @@ class GapFieldTest extends TestCase
 	{
 		$field = $this->field('gap');
 
-		$this->assertEquals('gap', $field->type());
-		$this->assertEquals('gap', $field->name());
+		$this->assertSame('gap', $field->type());
+		$this->assertSame('gap', $field->name());
 		$this->assertFalse($field->save());
 	}
 }

@@ -47,12 +47,12 @@ class PagesFieldTest extends TestCase
 			'model' => $this->model()
 		]);
 
-		$this->assertEquals('pages', $field->type());
-		$this->assertEquals('pages', $field->name());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->default());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(true, $field->multiple());
+		$this->assertSame('pages', $field->type());
+		$this->assertSame('pages', $field->name());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->default());
+		$this->assertNull($field->max());
+		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
 	}
 
@@ -75,7 +75,7 @@ class PagesFieldTest extends TestCase
 			'a/ab'
 		];
 
-		$this->assertEquals($expected, $ids);
+		$this->assertSame($expected, $ids);
 	}
 
 	public function testMin()
@@ -90,7 +90,7 @@ class PagesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(3, $field->min());
+		$this->assertSame(3, $field->min());
 		$this->assertTrue($field->required());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
@@ -107,7 +107,7 @@ class PagesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(1, $field->max());
+		$this->assertSame(1, $field->max());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
@@ -118,7 +118,7 @@ class PagesFieldTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -128,7 +128,7 @@ class PagesFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testRequiredProps()
@@ -139,7 +139,7 @@ class PagesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

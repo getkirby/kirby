@@ -53,7 +53,7 @@ class SiteActionsTest extends TestCase
 	public function testChangeTitle()
 	{
 		$site = $this->site()->changeTitle('Test');
-		$this->assertEquals('Test', $site->title()->value());
+		$this->assertSame('Test', $site->title()->value());
 	}
 
 	public function testCreateChild()
@@ -63,8 +63,8 @@ class SiteActionsTest extends TestCase
 			'template' => 'test',
 		]);
 
-		$this->assertEquals('test', $page->slug());
-		$this->assertEquals('test', $page->intendedTemplate()->name());
+		$this->assertSame('test', $page->slug());
+		$this->assertSame('test', $page->intendedTemplate()->name());
 	}
 
 	public function testCreateFile()
@@ -76,13 +76,13 @@ class SiteActionsTest extends TestCase
 			'source'   => $source
 		]);
 
-		$this->assertEquals('test.md', $file->filename());
+		$this->assertSame('test.md', $file->filename());
 	}
 
 	public function testSave()
 	{
 		$site = $this->site()->clone(['content' => ['copyright' => 2012]])->save();
-		$this->assertEquals(2012, $site->copyright()->value());
+		$this->assertSame(2012, $site->copyright()->value());
 	}
 
 	public function testUpdate()
@@ -91,7 +91,7 @@ class SiteActionsTest extends TestCase
 			'copyright' => 2018
 		]);
 
-		$this->assertEquals(2018, $site->copyright()->value());
+		$this->assertSame(2018, $site->copyright()->value());
 	}
 
 	public function testChangeTitleHooks()

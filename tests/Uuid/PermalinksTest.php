@@ -19,7 +19,7 @@ class PermalinksTest extends TestCase
 
 		// not cached, should fail (redirect to error)
 		$response = $app->call('/@/page/my-id');
-		$this->assertSame(false, $response);
+		$this->assertFalse($response);
 
 		// cached, should redirect to page A
 		$app->page('a')->uuid()->populate();
@@ -31,7 +31,7 @@ class PermalinksTest extends TestCase
 		$uuid = $app->page('a')->uuid();
 		$uuid->clear();
 		$response = $app->call('/@/page/my-id');
-		$this->assertSame(false, $response);
+		$this->assertFalse($response);
 		$uuid->url();
 		$response = $app->call('/@/page/my-id')->send();
 		$this->assertSame(302, $response->code());

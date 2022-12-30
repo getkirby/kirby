@@ -14,11 +14,11 @@ class TagsFieldTest extends TestCase
 		$this->assertSame([], $field->value());
 		$this->assertSame([], $field->default());
 		$this->assertSame([], $field->options());
-		$this->assertSame(null, $field->min());
-		$this->assertSame(null, $field->max());
+		$this->assertNull($field->min());
+		$this->assertNull($field->max());
 		$this->assertSame(',', $field->separator());
 		$this->assertSame('tag', $field->icon());
-		$this->assertSame(null, $field->counter());
+		$this->assertNull($field->counter());
 		$this->assertTrue($field->save());
 	}
 

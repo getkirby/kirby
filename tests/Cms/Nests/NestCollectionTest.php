@@ -32,6 +32,6 @@ class NestCollectionTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $collection->toArray());
+		$this->assertSame($expected, $collection->toArray());
 	}
 }

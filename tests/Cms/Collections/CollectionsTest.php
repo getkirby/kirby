@@ -20,11 +20,11 @@ class CollectionsTest extends TestCase
 
 		// get
 		$result = $app->collections()->get('test');
-		$this->assertEquals($collection, $result);
+		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 
 		// __call
 		$result = $app->collections()->test();
-		$this->assertEquals($collection, $result);
+		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 	}
 
 	public function testGetWithData()
@@ -35,7 +35,7 @@ class CollectionsTest extends TestCase
 			'b' => 'b'
 		]);
 
-		$this->assertEquals('ab', $result);
+		$this->assertSame('ab', $result);
 	}
 
 	public function testGetWithRearrangedData()
@@ -46,7 +46,7 @@ class CollectionsTest extends TestCase
 			'b' => 'b'
 		]);
 
-		$this->assertEquals('ab', $result);
+		$this->assertSame('ab', $result);
 	}
 
 	public function testGetWithDifferentData()
@@ -57,13 +57,13 @@ class CollectionsTest extends TestCase
 			'a' => 'a',
 			'b' => 'b'
 		]);
-		$this->assertEquals('ab', $result);
+		$this->assertSame('ab', $result);
 
 		$result = $app->collections()->get('string', [
 			'a' => 'c',
 			'b' => 'd'
 		]);
-		$this->assertEquals('cd', $result);
+		$this->assertSame('cd', $result);
 	}
 
 	public function testGetCloned()
@@ -72,13 +72,13 @@ class CollectionsTest extends TestCase
 		$collections = $app->collections();
 
 		$a = $collections->get('test');
-		$this->assertEquals(0, $a->count());
+		$this->assertCount(0, $a);
 
 		$a->add('kirby');
-		$this->assertEquals(1, $a->count());
+		$this->assertCount(1, $a);
 
 		$b = $collections->get('test');
-		$this->assertEquals(0, $b->count());
+		$this->assertCount(0, $b);
 	}
 
 	public function testHas()
@@ -96,13 +96,13 @@ class CollectionsTest extends TestCase
 		$this->assertInstanceOf(Collection::class, $result());
 
 		$result = $app->collections()->load('nested/test');
-		$this->assertEquals('a', $result());
+		$this->assertSame('a', $result());
 	}
 
 	public function testLoadNested()
 	{
 		$app = $this->_app();
 		$result = $app->collections()->load('nested/test');
-		$this->assertEquals('a', $result());
+		$this->assertSame('a', $result());
 	}
 }

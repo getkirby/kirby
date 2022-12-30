@@ -28,7 +28,7 @@ class InfoSectionTest extends TestCase
 			'label' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->headline());
+		$this->assertSame('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('info', [
@@ -40,7 +40,7 @@ class InfoSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Information', $section->headline());
+		$this->assertSame('Information', $section->headline());
 	}
 
 	public function testText()
@@ -52,7 +52,7 @@ class InfoSectionTest extends TestCase
 			'text'     => 'Test'
 		]);
 
-		$this->assertEquals('<p>Test</p>', $section->text());
+		$this->assertSame('<p>Test</p>', $section->text());
 
 		// translated text
 		$section = new Section('info', [
@@ -64,7 +64,7 @@ class InfoSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>Information</p>', $section->text());
+		$this->assertSame('<p>Information</p>', $section->text());
 	}
 
 	public function testTheme()
@@ -75,7 +75,7 @@ class InfoSectionTest extends TestCase
 			'theme' => 'notice'
 		]);
 
-		$this->assertEquals('notice', $section->theme());
+		$this->assertSame('notice', $section->theme());
 	}
 
 	public function testToArray()
@@ -94,6 +94,6 @@ class InfoSectionTest extends TestCase
 			'theme' => 'notice'
 		];
 
-		$this->assertEquals($expected, $section->toArray());
+		$this->assertSame($expected, $section->toArray());
 	}
 }

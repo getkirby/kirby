@@ -43,8 +43,8 @@ class LanguagesRoutesTest extends TestCase
 
 		$response = $app->api()->call('languages');
 
-		$this->assertEquals('en', $response['data'][0]['code']);
-		$this->assertEquals('de', $response['data'][1]['code']);
+		$this->assertSame('en', $response['data'][0]['code']);
+		$this->assertSame('de', $response['data'][1]['code']);
 	}
 
 	public function testListDisabled()
@@ -81,7 +81,7 @@ class LanguagesRoutesTest extends TestCase
 
 		$response = $app->api()->call('languages/de');
 
-		$this->assertEquals('de', $response['data']['code']);
+		$this->assertSame('de', $response['data']['code']);
 	}
 
 	public function testGetDisabled()

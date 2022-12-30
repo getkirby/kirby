@@ -51,7 +51,7 @@ class PluginAssetsTest extends TestCase
 		$response = PluginAssets::resolve('test/test', 'test.css');
 
 		$this->assertTrue(is_link($this->fixtures . '/media/plugins/test/test/test.css'));
-		$this->assertEquals(200, $response->code());
-		$this->assertEquals('text/css', $response->type());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('text/css', $response->type());
 	}
 }

@@ -26,7 +26,7 @@ class PageChildrenTest extends TestCase
 		]);
 
 		$this->assertCount(1, $page->grandChildren());
-		$this->assertEquals('child', $page->grandChildren()->first()->slug());
+		$this->assertSame('child', $page->grandChildren()->first()->slug());
 	}
 
 	public function testHasChildren()

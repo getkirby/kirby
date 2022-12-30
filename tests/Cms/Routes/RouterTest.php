@@ -40,7 +40,7 @@ class RouterTest extends TestCase
 
 		$page = $app->call('');
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
+		$this->assertSame('home', $page->id());
 	}
 
 	public function testHomeFolderRoute()
@@ -55,7 +55,7 @@ class RouterTest extends TestCase
 
 		$response = $app->call('home');
 		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertEquals(302, $response->code());
+		$this->assertSame(302, $response->code());
 	}
 
 	public function testHomeCustomFolderRoute()
@@ -75,7 +75,7 @@ class RouterTest extends TestCase
 
 		$response = $app->call('homie');
 		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertEquals(302, $response->code());
+		$this->assertSame(302, $response->code());
 	}
 
 	public function testHomeRouteWithoutHomePage()
@@ -106,7 +106,7 @@ class RouterTest extends TestCase
 
 		$page = $app->call('projects');
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('projects', $page->id());
+		$this->assertSame('projects', $page->id());
 	}
 
 	public function testPageRepresentationRoute()
@@ -137,7 +137,7 @@ class RouterTest extends TestCase
 		$result = $app->call('test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
+		$this->assertSame('xml', $result->body());
 	}
 
 	public function testPageFileRoute()
@@ -159,7 +159,7 @@ class RouterTest extends TestCase
 
 		$file = $app->call('projects/cover.jpg');
 		$this->assertInstanceOf(File::class, $file);
-		$this->assertEquals('projects/cover.jpg', $file->id());
+		$this->assertSame('projects/cover.jpg', $file->id());
 	}
 
 	public function testSiteFileRoute()
@@ -176,7 +176,7 @@ class RouterTest extends TestCase
 
 		$file = $app->call('background.jpg');
 		$this->assertInstanceOf(File::class, $file);
-		$this->assertEquals('background.jpg', $file->id());
+		$this->assertSame('background.jpg', $file->id());
 	}
 
 	public function testNestedPageRoute()
@@ -198,7 +198,7 @@ class RouterTest extends TestCase
 
 		$page = $app->call('projects/project-a');
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('projects/project-a', $page->id());
+		$this->assertSame('projects/project-a', $page->id());
 	}
 
 	public function testNotFoundRoute()
@@ -283,7 +283,7 @@ class RouterTest extends TestCase
 
 		// the api route should still be there
 		$patterns = array_column($app->routes(), 'pattern');
-		$this->assertEquals('api/(:all)', $patterns[0]);
+		$this->assertSame('api/(:all)', $patterns[0]);
 	}
 
 	public function testDisabledPanel()
@@ -337,7 +337,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $app->call($path));
+		$this->assertSame('test', $app->call($path));
 	}
 
 	public function testBadMethodRoute()
@@ -378,17 +378,17 @@ class RouterTest extends TestCase
 		$page = $app->call('fr');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals('fr', $app->language()->code());
-		$this->assertEquals('fr', I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
 
 		// en
 		$page = $app->call('en');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals('en', $app->language()->code());
-		$this->assertEquals('en', I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
 
 		// redirect
 		$result = $app->call('/');
@@ -426,17 +426,17 @@ class RouterTest extends TestCase
 		$page = $app->call('/');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals('fr', $app->language()->code());
-		$this->assertEquals('fr', I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
 
 		// en
 		$page = $app->call('en');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals('en', $app->language()->code());
-		$this->assertEquals('en', I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
 	}
 
 	public function multiDomainProvider()
@@ -483,9 +483,9 @@ class RouterTest extends TestCase
 		$page = $app->call('');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals($language, $app->language()->code());
-		$this->assertEquals($language, I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame($language, $app->language()->code());
+		$this->assertSame($language, I18n::locale());
 	}
 
 	/**
@@ -528,9 +528,9 @@ class RouterTest extends TestCase
 		$page = $app->call('subfolder');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('home', $page->id());
-		$this->assertEquals($language, $app->language()->code());
-		$this->assertEquals($language, I18n::locale());
+		$this->assertSame('home', $page->id());
+		$this->assertSame($language, $app->language()->code());
+		$this->assertSame($language, I18n::locale());
 	}
 
 	public function acceptedLanguageProvider()
@@ -579,7 +579,7 @@ class RouterTest extends TestCase
 		$response = $app->call('/');
 
 		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertEquals(['Location' => $redirect], $response->headers());
+		$this->assertSame(['Location' => $redirect], $response->headers());
 
 		// reset the accepted visitor language
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
@@ -640,17 +640,17 @@ class RouterTest extends TestCase
 		$page = $app->call('en/projects');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('projects', $page->id());
-		$this->assertEquals('en', $app->language()->code());
-		$this->assertEquals('en', I18n::locale());
+		$this->assertSame('projects', $page->id());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
 
 		// fr
 		$page = $app->call('fr/projects');
 
 		$this->assertInstanceOf(Page::class, $page);
-		$this->assertEquals('projects', $page->id());
-		$this->assertEquals('fr', $app->language()->code());
-		$this->assertEquals('fr', I18n::locale());
+		$this->assertSame('projects', $page->id());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
 	}
 
 	public function testMultilangPageRepresentationRoute()
@@ -692,9 +692,9 @@ class RouterTest extends TestCase
 		$result = $app->call('fr/test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('fr', $app->language()->code());
-		$this->assertEquals('fr', I18n::locale());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
 
 		// EN
 
@@ -706,9 +706,9 @@ class RouterTest extends TestCase
 		$result = $app->call('en/test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('en', $app->language()->code());
-		$this->assertEquals('en', I18n::locale());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
 	}
 
 	public function testMultilangPageRepresentationRouteWithoutLanguageCode()
@@ -751,9 +751,9 @@ class RouterTest extends TestCase
 		$result = $app->call('test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('fr', $app->language()->code());
-		$this->assertEquals('fr', I18n::locale());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
 
 		// EN
 
@@ -765,9 +765,9 @@ class RouterTest extends TestCase
 		$result = $app->call('en/test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('en', $app->language()->code());
-		$this->assertEquals('en', I18n::locale());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
 	}
 
 	public function testCustomMediaFolder()
@@ -782,7 +782,7 @@ class RouterTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($media, $app->url('media'));
+		$this->assertSame($media, $app->url('media'));
 
 		// call custom media route
 		$route = $app->router()->find('thumbs/pages/a/b/1234-5678/test.jpg', 'GET');
@@ -796,12 +796,12 @@ class RouterTest extends TestCase
 
 		// default media route should result in the fallback route
 		$route = $app->router()->find('media/pages/a/b/1234-5678/test.jpg', 'GET');
-		$this->assertEquals('(.*)', $route->pattern());
+		$this->assertSame('(.*)', $route->pattern());
 
 		$route = $app->router()->find('media/site/1234-5678/test.jpg', 'GET');
-		$this->assertEquals('(.*)', $route->pattern());
+		$this->assertSame('(.*)', $route->pattern());
 
 		$route = $app->router()->find('media/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
-		$this->assertEquals('(.*)', $route->pattern());
+		$this->assertSame('(.*)', $route->pattern());
 	}
 }

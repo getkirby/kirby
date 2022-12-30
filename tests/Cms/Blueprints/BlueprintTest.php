@@ -163,7 +163,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldsToSections()
@@ -203,7 +203,7 @@ class BlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']);
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
 	/**
@@ -216,7 +216,7 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -229,7 +229,7 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -241,14 +241,14 @@ class BlueprintTest extends TestCase
 			'model' => $this->model
 		]);
 
-		$this->assertEquals('Default', $blueprint->title());
+		$this->assertSame('Default', $blueprint->title());
 
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'test'
 		]);
 
-		$this->assertEquals('Test', $blueprint->title());
+		$this->assertSame('Test', $blueprint->title());
 	}
 
 	/**
@@ -322,9 +322,9 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame('foo', $field['after']);
 		$this->assertSame('bar', $field['before']);
-		$this->assertSame(true, $field['required']);
+		$this->assertTrue($field['required']);
 		$this->assertSame('text', $field['type']);
-		$this->assertSame(false, $field['translatable']);
+		$this->assertFalse($field['translatable']);
 		$this->assertSame('1/3', $field['width']);
 	}
 
@@ -425,8 +425,8 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($fields, $blueprint->fields());
-		$this->assertEquals($fields['test'], $blueprint->field('test'));
+		$this->assertSame($fields, $blueprint->fields());
+		$this->assertSame($fields['test'], $blueprint->field('test'));
 	}
 
 	/**
@@ -477,11 +477,11 @@ class BlueprintTest extends TestCase
 			$this->assertNull($e->getMessage(), 'Failed to get sections.');
 		}
 
-		$this->assertEquals(true, is_array($sections));
-		$this->assertEquals(1, sizeof($sections));
-		$this->assertEquals(true, array_key_exists('main', $sections));
-		$this->assertEquals(true, array_key_exists('label', $sections['main']));
-		$this->assertEquals('Invalid section type for section "main"', $sections['main']['label']);
+		$this->assertIsArray($sections);
+		$this->assertCount(1, $sections);
+		$this->assertArrayHasKey('main', $sections);
+		$this->assertArrayHasKey('label', $sections['main']);
+		$this->assertSame('Invalid section type for section "main"', $sections['main']['label']);
 	}
 
 	/**
@@ -508,7 +508,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->sections()['info']->type());
 
 		// by just passing true
 		$blueprint = new Blueprint([
@@ -518,7 +518,7 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('info', $blueprint->sections()['info']->type());
+		$this->assertSame('info', $blueprint->sections()['info']->type());
 	}
 
 	/**

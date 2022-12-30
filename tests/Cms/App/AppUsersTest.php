@@ -125,7 +125,7 @@ class AppUsersTest extends TestCase
 		]);
 
 		$this->assertCount(1, $app->users());
-		$this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
 	public function testSet()
@@ -139,7 +139,7 @@ class AppUsersTest extends TestCase
 		]);
 
 		$this->assertCount(1, $app->users());
-		$this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
 	public function basicAuthApp()
@@ -169,7 +169,7 @@ class AppUsersTest extends TestCase
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 
 		$this->assertInstanceOf(User::class, $user);
-		$this->assertEquals('test@getkirby.com', $user->email());
+		$this->assertSame('test@getkirby.com', $user->email());
 	}
 
 	public function testUserFromBasicAuthDisabled()

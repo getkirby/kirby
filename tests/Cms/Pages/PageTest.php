@@ -48,7 +48,7 @@ class PageTest extends TestCase
 		// no blueprints
 		$page = new Page(['slug' => 'test', 'template' => 'a']);
 
-		$this->assertEquals(['A'], array_column($page->blueprints(), 'title'));
+		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 
 		// two different blueprints
 		$page = new Page([
@@ -64,7 +64,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['C', 'A', 'B'], array_column($page->blueprints(), 'title'));
+		$this->assertSame(['C', 'A', 'B'], array_column($page->blueprints(), 'title'));
 
 		// including the same blueprint
 		$page = new Page([
@@ -80,7 +80,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['A', 'B'], array_column($page->blueprints(), 'title'));
+		$this->assertSame(['A', 'B'], array_column($page->blueprints(), 'title'));
 
 		// template option is simply true
 		$page = new Page([
@@ -93,7 +93,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(['A'], array_column($page->blueprints(), 'title'));
+		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 	}
 
 	public function testDepth()
@@ -116,9 +116,9 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(1, $site->find('grandma')->depth());
-		$this->assertEquals(2, $site->find('grandma/mother')->depth());
-		$this->assertEquals(3, $site->find('grandma/mother/child')->depth());
+		$this->assertSame(1, $site->find('grandma')->depth());
+		$this->assertSame(2, $site->find('grandma/mother')->depth());
+		$this->assertSame(3, $site->find('grandma/mother/child')->depth());
 	}
 
 	public function testId()
@@ -127,7 +127,7 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertEquals('test', $page->id());
+		$this->assertSame('test', $page->id());
 	}
 
 	public function testEmptyId()
@@ -153,7 +153,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals([
+		$this->assertSame([
 			'intro' => [
 				'label' => 'Intro',
 				'message' => [
@@ -166,7 +166,7 @@ class PageTest extends TestCase
 	public function testErrorsWithoutBlueprint()
 	{
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals([], $page->errors());
+		$this->assertSame([], $page->errors());
 	}
 
 	public function testErrorsWithInfoSectionInBlueprint()
@@ -185,7 +185,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals([], $page->errors());
+		$this->assertSame([], $page->errors());
 	}
 
 	public function testInvalidId()
@@ -204,7 +204,7 @@ class PageTest extends TestCase
 			'num' => 1
 		]);
 
-		$this->assertEquals(1, $page->num());
+		$this->assertSame(1, $page->num());
 	}
 
 	public function testInvalidNum()
@@ -238,7 +238,7 @@ class PageTest extends TestCase
 			'parent' => $parent
 		]);
 
-		$this->assertEquals($parent, $page->parent());
+		$this->assertSame($parent, $page->parent());
 	}
 
 	public function testParentId()
@@ -252,8 +252,8 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(null, $mother->parentId());
-		$this->assertEquals('mother', $mother->find('child')->parentId());
+		$this->assertNull($mother->parentId());
+		$this->assertSame('mother', $mother->find('child')->parentId());
 	}
 
 	public function testParentPrevNext()
@@ -282,8 +282,8 @@ class PageTest extends TestCase
 		$child = $app->page('projects/project-a');
 		$blog  = $app->page('blog');
 
-		$this->assertEquals($blog, $child->parent()->next());
-		$this->assertEquals(null, $child->parent()->prev());
+		$this->assertSame($blog, $child->parent()->next());
+		$this->assertNull($child->parent()->prev());
 	}
 
 	public function testInvalidParent()
@@ -304,7 +304,7 @@ class PageTest extends TestCase
 			'site' => $site
 		]);
 
-		$this->assertEquals($site, $page->site());
+		$this->assertSame($site, $page->site());
 	}
 
 	public function testInvalidSite()
@@ -323,7 +323,8 @@ class PageTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		$this->assertEquals('default', $page->template());
+		$this->assertInstanceOf(Template::class, $page->template());
+		$this->assertSame('default', $page->template()->name());
 	}
 
 	public function testIntendedTemplate()
@@ -333,7 +334,7 @@ class PageTest extends TestCase
 			'template' => 'testTemplate'
 		]);
 
-		$this->assertEquals('testtemplate', $page->intendedTemplate()->name());
+		$this->assertSame('testtemplate', $page->intendedTemplate()->name());
 	}
 
 	public function testInvalidTemplate()
@@ -353,7 +354,7 @@ class PageTest extends TestCase
 			'url' => 'https://getkirby.com/test'
 		]);
 
-		$this->assertEquals('https://getkirby.com/test', $page->url());
+		$this->assertSame('https://getkirby.com/test', $page->url());
 	}
 
 	public function testUrlWithOptions()
@@ -363,7 +364,7 @@ class PageTest extends TestCase
 			'url' => 'https://getkirby.com/test'
 		]);
 
-		$this->assertEquals('https://getkirby.com/test/foo:bar?q=search', $page->url([
+		$this->assertSame('https://getkirby.com/test/foo:bar?q=search', $page->url([
 			'params' => 'foo:bar',
 			'query'  => 'q=search'
 		]));
@@ -375,7 +376,7 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertEquals('/test', $page->url());
+		$this->assertSame('/test', $page->url());
 	}
 
 	public function testInvalidUrl()
@@ -401,7 +402,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('/', $app->site()->find('home')->url());
+		$this->assertSame('/', $app->site()->find('home')->url());
 	}
 
 	public function testHomeChildUrl()
@@ -422,7 +423,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('/home/a', $app->site()->find('home/a')->url());
+		$this->assertSame('/home/a', $app->site()->find('home/a')->url());
 	}
 
 	public function testMultiLangHomeChildUrl()
@@ -455,8 +456,8 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('/en/home/a', $app->site()->find('home/a')->url());
-		$this->assertEquals('/de/home/a', $app->site()->find('home/a')->url('de'));
+		$this->assertSame('/en/home/a', $app->site()->find('home/a')->url());
+		$this->assertSame('/de/home/a', $app->site()->find('home/a')->url('de'));
 	}
 
 	public function testPreviewUrl()
@@ -474,7 +475,7 @@ class PageTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		$this->assertEquals('/test', $page->previewUrl());
+		$this->assertSame('/test', $page->previewUrl());
 	}
 
 	public function previewUrlProvider()
@@ -530,13 +531,13 @@ class PageTest extends TestCase
 			$expected = str_replace('{token}', 'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->root()), $expected);
 		}
 
-		$this->assertEquals($expected, $page->previewUrl());
+		$this->assertSame($expected, $page->previewUrl());
 	}
 
 	public function testSlug()
 	{
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals('test', $page->slug());
+		$this->assertSame('test', $page->slug());
 	}
 
 	public function testToken()
@@ -612,13 +613,13 @@ class PageTest extends TestCase
 	public function testToString()
 	{
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals('test', $page->toString('{{ page.slug }}'));
+		$this->assertSame('test', $page->toString('{{ page.slug }}'));
 	}
 
 	public function testUid()
 	{
 		$page = new Page(['slug' => 'test']);
-		$this->assertEquals('test', $page->uid());
+		$this->assertSame('test', $page->uid());
 	}
 
 	public function testUri()
@@ -641,7 +642,7 @@ class PageTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('grandma/mother/child', $site->find('grandma/mother/child')->uri());
+		$this->assertSame('grandma/mother/child', $site->find('grandma/mother/child')->uri());
 	}
 
 	public function testUriTranslated()
@@ -691,8 +692,8 @@ class PageTest extends TestCase
 		]);
 
 
-		$this->assertEquals('grandma/mother', $app->site()->find('grandma/mother')->uri());
-		$this->assertEquals('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
+		$this->assertSame('grandma/mother', $app->site()->find('grandma/mother')->uri());
+		$this->assertSame('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
 	}
 
 	public function testModified()
@@ -710,18 +711,18 @@ class PageTest extends TestCase
 		$modified = filemtime($file);
 		$page     = $app->page('test');
 
-		$this->assertEquals($modified, $page->modified());
+		$this->assertSame($modified, $page->modified());
 
 		// default date handler
 		$format = 'd.m.Y';
-		$this->assertEquals(date($format, $modified), $page->modified($format));
+		$this->assertSame(date($format, $modified), $page->modified($format));
 
 		// custom date handler without format
-		$this->assertEquals($modified, $page->modified(null, 'strftime'));
+		$this->assertSame($modified, $page->modified(null, 'strftime'));
 
 		// custom date handler with format
 		$format = '%d.%m.%Y';
-		$this->assertEquals(@strftime($format, $modified), $page->modified($format, 'strftime'));
+		$this->assertSame(@strftime($format, $modified), $page->modified($format, 'strftime'));
 	}
 
 	public function testModifiedInMultilangInstallation()
@@ -748,7 +749,7 @@ class PageTest extends TestCase
 		F::write($file = $index . '/test/test.en.txt', 'test');
 		touch($file, $modified = \time() + 2);
 
-		$this->assertEquals($modified, $app->page('test')->modified());
+		$this->assertSame($modified, $app->page('test')->modified());
 
 		// create the german page
 		F::write($file = $index . '/test/test.de.txt', 'test');
@@ -758,7 +759,7 @@ class PageTest extends TestCase
 		$app->setCurrentLanguage('de');
 		$app->setCurrentTranslation('de');
 
-		$this->assertEquals($modified, $app->page('test')->modified());
+		$this->assertSame($modified, $app->page('test')->modified());
 	}
 
 	public function testModifiedSpecifyingLanguage()
@@ -791,8 +792,8 @@ class PageTest extends TestCase
 
 		$page = $app->page('test');
 
-		$this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
-		$this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
+		$this->assertSame($modifiedEnContent, $page->modified(null, null, 'en'));
+		$this->assertSame($modifiedDeContent, $page->modified(null, null, 'de'));
 	}
 
 	public function testPanel()
@@ -829,8 +830,8 @@ class PageTest extends TestCase
 
 		$page = $app->page('mother/child');
 
-		$this->assertEquals('https://getkirby.com/api/pages/mother+child', $page->apiUrl());
-		$this->assertEquals('pages/mother+child', $page->apiUrl(true));
+		$this->assertSame('https://getkirby.com/api/pages/mother+child', $page->apiUrl());
+		$this->assertSame('pages/mother+child', $page->apiUrl(true));
 	}
 
 	public function testPageMethods()
@@ -843,7 +844,7 @@ class PageTest extends TestCase
 
 		$page = new Page(['slug' => 'test']);
 
-		$this->assertEquals('homer', $page->test());
+		$this->assertSame('homer', $page->test());
 
 		Page::$methods = [];
 	}

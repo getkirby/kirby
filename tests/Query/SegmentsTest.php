@@ -17,16 +17,16 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testFactory()
 	{
 		$segments = Segments::factory('a.b.c');
-		$this->assertSame(5, $segments->count());
+		$this->assertCount(5, $segments);
 
 		$segments = Segments::factory('a().b(foo.bar).c(homer.simpson(2))');
-		$this->assertSame(5, $segments->count());
+		$this->assertCount(5, $segments);
 		$this->assertSame('c', $segments->nth(4)->method);
-		$this->assertSame(1, $segments->nth(2)->arguments->count());
+		$this->assertCount(1, $segments->nth(2)->arguments);
 		$this->assertSame(1, $segments->nth(2)->position);
 
 		$segments = Segments::factory('user0.profiles1.twitter');
-		$this->assertSame(5, $segments->count());
+		$this->assertCount(5, $segments);
 		$this->assertSame(2, $segments->nth(4)->position);
 	}
 

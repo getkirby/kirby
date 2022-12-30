@@ -20,7 +20,7 @@ class FilesApiCollectionTest extends ApiCollectionTestCase
 		$result = $collection->toArray();
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a.jpg', $result[0]['filename']);
-		$this->assertEquals('b.jpg', $result[1]['filename']);
+		$this->assertSame('a.jpg', $result[0]['filename']);
+		$this->assertSame('b.jpg', $result[1]['filename']);
 	}
 }

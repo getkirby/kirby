@@ -160,7 +160,7 @@ class SessionsTest extends TestCase
 		$this->assertSame(1337000000 + 3600, $session->startTime()); // timestamp is from mock
 		$this->assertSame(36000, $session->duration());
 		$this->assertSame(1337000000 + 39600, $session->expiryTime()); // timestamp is from mock
-		$this->assertSame(false, $session->timeout());
+		$this->assertFalse($session->timeout());
 		$this->assertFalse($session->renewable());
 	}
 

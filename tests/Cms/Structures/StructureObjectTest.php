@@ -10,7 +10,7 @@ class StructureObjectTest extends TestCase
 			'id' => 'test'
 		]);
 
-		$this->assertEquals('test', $object->id());
+		$this->assertSame('test', $object->id());
 	}
 
 	public function testInvalidId()
@@ -38,7 +38,7 @@ class StructureObjectTest extends TestCase
 			'content' => $content
 		]);
 
-		$this->assertEquals($content, $object->content()->toArray());
+		$this->assertSame($content, $object->content()->toArray());
 	}
 
 	public function testToDate()
@@ -50,7 +50,7 @@ class StructureObjectTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('12.12.2012', $object->date()->toDate('d.m.Y'));
+		$this->assertSame('12.12.2012', $object->date()->toDate('d.m.Y'));
 	}
 
 	public function testDefaultContent()
@@ -59,7 +59,7 @@ class StructureObjectTest extends TestCase
 			'id' => 'test',
 		]);
 
-		$this->assertEquals([], $object->content()->toArray());
+		$this->assertSame([], $object->content()->toArray());
 	}
 
 	public function testFields()
@@ -75,8 +75,8 @@ class StructureObjectTest extends TestCase
 		$this->assertInstanceOf(Field::class, $object->title());
 		$this->assertInstanceOf(Field::class, $object->text());
 
-		$this->assertEquals('Title', $object->title()->value());
-		$this->assertEquals('Text', $object->text()->value());
+		$this->assertSame('Title', $object->title()->value());
+		$this->assertSame('Text', $object->text()->value());
 	}
 
 	public function testFieldsParent()
@@ -91,8 +91,8 @@ class StructureObjectTest extends TestCase
 			'parent' => $parent
 		]);
 
-		$this->assertEquals($parent, $object->title()->parent());
-		$this->assertEquals($parent, $object->text()->parent());
+		$this->assertSame($parent, $object->title()->parent());
+		$this->assertSame($parent, $object->text()->parent());
 	}
 
 	public function testParent()
@@ -103,7 +103,7 @@ class StructureObjectTest extends TestCase
 			'parent' => $parent
 		]);
 
-		$this->assertEquals($parent, $object->parent());
+		$this->assertSame($parent, $object->parent());
 	}
 
 	public function testInvalidParent()
@@ -134,6 +134,6 @@ class StructureObjectTest extends TestCase
 			'content' => $content
 		]);
 
-		$this->assertEquals($expected, $object->toArray());
+		$this->assertSame($expected, $object->toArray());
 	}
 }

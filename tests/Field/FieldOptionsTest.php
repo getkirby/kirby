@@ -36,7 +36,7 @@ class FieldOptionsTest extends TestCase
 		$options = FieldOptions::factory(['type' => 'array', 'options' => ['a', 'b']]);
 		$this->assertInstanceOf(Options::class, $options->options);
 		$this->assertTrue($options->safeMode);
-		$this->assertSame(2, $options->options->count());
+		$this->assertCount(2, $options->options);
 
 		$options = FieldOptions::factory(
 			[

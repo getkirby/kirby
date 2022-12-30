@@ -105,35 +105,35 @@ class PageTranslationsTest extends TestCase
 		$app = $this->app();
 
 		$page = $app->page('home');
-		$this->assertEquals('/en', $page->url());
-		$this->assertEquals('/de', $page->url('de'));
+		$this->assertSame('/en', $page->url());
+		$this->assertSame('/de', $page->url('de'));
 
 		$page = $app->page('grandma');
-		$this->assertEquals('/en/grandma', $page->url());
-		$this->assertEquals('/de/oma', $page->url('de'));
+		$this->assertSame('/en/grandma', $page->url());
+		$this->assertSame('/de/oma', $page->url('de'));
 
 		$page = $app->page('grandma/mother');
-		$this->assertEquals('/en/grandma/mother', $page->url());
-		$this->assertEquals('/de/oma/mutter', $page->url('de'));
+		$this->assertSame('/en/grandma/mother', $page->url());
+		$this->assertSame('/de/oma/mutter', $page->url('de'));
 
 		$page = $app->page('grandma/mother/child');
-		$this->assertEquals('/en/grandma/mother/child', $page->url());
-		$this->assertEquals('/de/oma/mutter/kind', $page->url('de'));
+		$this->assertSame('/en/grandma/mother/child', $page->url());
+		$this->assertSame('/de/oma/mutter/kind', $page->url('de'));
 	}
 
 	public function testContentInEnglish()
 	{
 		$page = $this->app()->page('grandma');
-		$this->assertEquals('Grandma', $page->title()->value());
-		$this->assertEquals('Untranslated', $page->untranslated()->value());
+		$this->assertSame('Grandma', $page->title()->value());
+		$this->assertSame('Untranslated', $page->untranslated()->value());
 	}
 
 	public function testContentInDeutsch()
 	{
 		$page = $this->app('de')->page('grandma');
-		$this->assertEquals('Oma', $page->title()->value());
+		$this->assertSame('Oma', $page->title()->value());
 
-		$this->assertEquals('Untranslated', $page->untranslated()->value());
+		$this->assertSame('Untranslated', $page->untranslated()->value());
 	}
 
 	public function testContent()
@@ -142,63 +142,63 @@ class PageTranslationsTest extends TestCase
 
 		// without language code
 		$content = $page->content();
-		$this->assertEquals('Grandma', $content->title()->value());
-		$this->assertEquals('Untranslated', $content->untranslated()->value());
+		$this->assertSame('Grandma', $content->title()->value());
+		$this->assertSame('Untranslated', $content->untranslated()->value());
 
 		// with default language code
 		$content = $page->content('en');
-		$this->assertEquals('Grandma', $content->title()->value());
-		$this->assertEquals('Untranslated', $content->untranslated()->value());
+		$this->assertSame('Grandma', $content->title()->value());
+		$this->assertSame('Untranslated', $content->untranslated()->value());
 
 		// with different language code
 		$content = $page->content('de');
-		$this->assertEquals('Oma', $content->title()->value());
-		$this->assertEquals('Untranslated', $content->untranslated()->value());
+		$this->assertSame('Oma', $content->title()->value());
+		$this->assertSame('Untranslated', $content->untranslated()->value());
 
 		// switch back to default
 		$content = $page->content('en');
-		$this->assertEquals('Grandma', $content->title()->value());
-		$this->assertEquals('Untranslated', $content->untranslated()->value());
+		$this->assertSame('Grandma', $content->title()->value());
+		$this->assertSame('Untranslated', $content->untranslated()->value());
 	}
 
 	public function testSlug()
 	{
 		$app = $this->app();
 
-		$this->assertEquals('grandma', $app->page('grandma')->slug());
-		$this->assertEquals('grandma', $app->page('grandma')->slug('en'));
-		$this->assertEquals('oma', $app->page('grandma')->slug('de'));
+		$this->assertSame('grandma', $app->page('grandma')->slug());
+		$this->assertSame('grandma', $app->page('grandma')->slug('en'));
+		$this->assertSame('oma', $app->page('grandma')->slug('de'));
 
-		$this->assertEquals('mother', $app->page('grandma/mother')->slug());
-		$this->assertEquals('mother', $app->page('grandma/mother')->slug('en'));
-		$this->assertEquals('mutter', $app->page('grandma/mother')->slug('de'));
+		$this->assertSame('mother', $app->page('grandma/mother')->slug());
+		$this->assertSame('mother', $app->page('grandma/mother')->slug('en'));
+		$this->assertSame('mutter', $app->page('grandma/mother')->slug('de'));
 
-		$this->assertEquals('child', $app->page('grandma/mother/child')->slug());
-		$this->assertEquals('child', $app->page('grandma/mother/child')->slug('en'));
-		$this->assertEquals('kind', $app->page('grandma/mother/child')->slug('de'));
+		$this->assertSame('child', $app->page('grandma/mother/child')->slug());
+		$this->assertSame('child', $app->page('grandma/mother/child')->slug('en'));
+		$this->assertSame('kind', $app->page('grandma/mother/child')->slug('de'));
 	}
 
 	public function testFindInEnglish()
 	{
 		$app = $this->app();
-		$this->assertEquals('grandma', $app->page('grandma')->id());
-		$this->assertEquals('grandma/mother', $app->page('grandma/mother')->id());
-		$this->assertEquals('grandma/mother/child', $app->page('grandma/mother/child')->id());
+		$this->assertSame('grandma', $app->page('grandma')->id());
+		$this->assertSame('grandma/mother', $app->page('grandma/mother')->id());
+		$this->assertSame('grandma/mother/child', $app->page('grandma/mother/child')->id());
 	}
 
 	public function testFindInDeutsch()
 	{
 		$app = $this->app('de');
-		$this->assertEquals('grandma', $app->page('oma')->id());
-		$this->assertEquals('grandma/mother', $app->page('oma/mutter')->id());
-		$this->assertEquals('grandma/mother/child', $app->page('oma/mutter/kind')->id());
+		$this->assertSame('grandma', $app->page('oma')->id());
+		$this->assertSame('grandma/mother', $app->page('oma/mutter')->id());
+		$this->assertSame('grandma/mother/child', $app->page('oma/mutter/kind')->id());
 	}
 
 	public function testTranslations()
 	{
 		$page = $this->app()->page('grandma');
 		$this->assertCount(2, $page->translations());
-		$this->assertEquals(['en', 'de'], $page->translations()->keys());
+		$this->assertSame(['en', 'de'], $page->translations()->keys());
 	}
 
 	public function testUntranslatableFields()

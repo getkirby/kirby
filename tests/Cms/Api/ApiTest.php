@@ -14,13 +14,13 @@ class ApiTest extends TestCase
 	protected $api;
 	protected $locale;
 	protected $app;
-	protected $fixtures;
+	protected $tmp = __DIR__ . '/tmp';
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/ApiTest'
+				'index' => $this->tmp
 			],
 			'site' => [
 				'children' => [
@@ -72,11 +72,12 @@ class ApiTest extends TestCase
 		$this->api = $this->app->api();
 
 		$this->locale = setlocale(LC_ALL, 0);
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 		setlocale(LC_ALL, $this->locale);
 	}
 
@@ -284,7 +285,7 @@ class ApiTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('de', $api->language());
+		$this->assertSame('de', $api->language());
 	}
 
 	public function testFile()
@@ -324,10 +325,10 @@ class ApiTest extends TestCase
 		$app->impersonate('kirby');
 		$api = $app->api();
 
-		$this->assertEquals('test.jpg', $api->file('site', 'test.jpg')->filename());
-		$this->assertEquals('test.jpg', $api->file('pages/a', 'test.jpg')->filename());
-		$this->assertEquals('test.jpg', $api->file('pages/a+a', 'test.jpg')->filename());
-		$this->assertEquals('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', $api->file('site', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', $api->file('pages/a', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', $api->file('pages/a+a', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
 	public function testFileNotFound()
@@ -364,8 +365,8 @@ class ApiTest extends TestCase
 		$a  = $this->app->page('a');
 		$aa = $this->app->page('a/aa');
 
-		$this->assertEquals($a, $this->api->page('a'));
-		$this->assertEquals($aa, $this->api->page('a+aa'));
+		$this->assertSame($a, $this->api->page('a'));
+		$this->assertSame($aa, $this->api->page('a+aa'));
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The page "does-not-exist" cannot be found');
@@ -388,8 +389,8 @@ class ApiTest extends TestCase
 		$app->impersonate('current@getkirby.com');
 		$api = $app->api();
 
-		$this->assertEquals('current@getkirby.com', $api->user()->email());
-		$this->assertEquals('test@getkirby.com', $api->user('test@getkirby.com')->email());
+		$this->assertSame('current@getkirby.com', $api->user()->email());
+		$this->assertSame('test@getkirby.com', $api->user('test@getkirby.com')->email());
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('The user "nope@getkirby.com" cannot be found');
@@ -398,7 +399,7 @@ class ApiTest extends TestCase
 
 	public function testUsers()
 	{
-		$this->assertEquals($this->app->users(), $this->api->users());
+		$this->assertSame($this->app->users(), $this->api->users());
 	}
 
 	public function testFileGetRoute()
@@ -406,14 +407,14 @@ class ApiTest extends TestCase
 		// regular
 		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
 
-		$this->assertEquals(200, $result['code']);
-		$this->assertEquals('a-regular-file.jpg', $result['data']['filename']);
+		$this->assertSame(200, $result['code']);
+		$this->assertSame('a-regular-file.jpg', $result['data']['filename']);
 
 		// with spaces in filename
 		$result = $this->api->call('pages/a/files/a filename with spaces.jpg', 'GET');
 
-		$this->assertEquals(200, $result['code']);
-		$this->assertEquals('a filename with spaces.jpg', $result['data']['filename']);
+		$this->assertSame(200, $result['code']);
+		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
 	}
 
 	public function testAuthenticationWithoutCsrf()
@@ -615,6 +616,6 @@ class ApiTest extends TestCase
 		];
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(json_encode($expected), $result->body());
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 }

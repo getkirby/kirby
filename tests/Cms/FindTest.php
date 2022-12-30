@@ -46,8 +46,8 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$this->assertEquals('a.jpg', Find::file('pages/a', 'a.jpg')->filename());
-		$this->assertEquals('aa.jpg', Find::file('pages/a+aa', 'aa.jpg')->filename());
+		$this->assertSame('a.jpg', Find::file('pages/a', 'a.jpg')->filename());
+		$this->assertSame('aa.jpg', Find::file('pages/a+aa', 'aa.jpg')->filename());
 	}
 
 	/**
@@ -64,7 +64,7 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$this->assertEquals('test.jpg', Find::file('site', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', Find::file('site', 'test.jpg')->filename());
 	}
 
 	/**
@@ -84,7 +84,7 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$this->assertEquals('test.jpg', Find::file('users/test@getkirby.com', 'test.jpg')->filename());
+		$this->assertSame('test.jpg', Find::file('users/test@getkirby.com', 'test.jpg')->filename());
 	}
 
 	/**
@@ -183,8 +183,8 @@ class FindTest extends TestCase
 		$a  = $app->page('a');
 		$aa = $app->page('a/aa');
 
-		$this->assertEquals($a, Find::page('a'));
-		$this->assertEquals($aa, Find::page('a+aa'));
+		$this->assertSame($a, Find::page('a'));
+		$this->assertSame($aa, Find::page('a+aa'));
 	}
 
 	/**
@@ -327,7 +327,7 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('kirby');
-		$this->assertEquals('test@getkirby.com', Find::user('test@getkirby.com')->email());
+		$this->assertSame('test@getkirby.com', Find::user('test@getkirby.com')->email());
 	}
 
 	/**
@@ -349,7 +349,7 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('test@getkirby.com');
-		$this->assertEquals('test@getkirby.com', Find::user()->email());
+		$this->assertSame('test@getkirby.com', Find::user()->email());
 	}
 
 	/**
@@ -393,7 +393,7 @@ class FindTest extends TestCase
 		]);
 
 		$app->impersonate('test@getkirby.com');
-		$this->assertEquals('test@getkirby.com', Find::user('account')->email());
+		$this->assertSame('test@getkirby.com', Find::user('account')->email());
 	}
 
 	/**

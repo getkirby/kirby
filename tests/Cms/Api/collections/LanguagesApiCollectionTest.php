@@ -34,7 +34,7 @@ class LanguagesApiCollectionTest extends ApiCollectionTestCase
 		$result     = $collection->toArray();
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('en', $result[0]['code']);
-		$this->assertEquals('de', $result[1]['code']);
+		$this->assertSame('en', $result[0]['code']);
+		$this->assertSame('de', $result[1]['code']);
 	}
 }

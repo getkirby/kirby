@@ -26,8 +26,8 @@ class UserApiModelTest extends ApiModelTestCase
 
 		$model = $this->api->resolve($user)->select('files')->toArray();
 
-		$this->assertEquals('a.jpg', $model['files'][0]['filename']);
-		$this->assertEquals('b.jpg', $model['files'][1]['filename']);
+		$this->assertSame('a.jpg', $model['files'][0]['filename']);
+		$this->assertSame('b.jpg', $model['files'][1]['filename']);
 	}
 
 	public function testImage()

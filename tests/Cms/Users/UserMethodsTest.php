@@ -20,7 +20,7 @@ class UserMethodsTest extends TestCase
 			'id'    => 'test',
 			'email' => 'user@domain.com'
 		]);
-		$this->assertEquals('test', $user->id());
+		$this->assertSame('test', $user->id());
 	}
 
 	public function testLanguage()
@@ -30,7 +30,7 @@ class UserMethodsTest extends TestCase
 			'language' => 'en',
 		]);
 
-		$this->assertEquals('en', $user->language());
+		$this->assertSame('en', $user->language());
 	}
 
 	public function testDefaultLanguage()
@@ -39,7 +39,7 @@ class UserMethodsTest extends TestCase
 			'email' => 'user@domain.com',
 		]);
 
-		$this->assertEquals('en', $user->language());
+		$this->assertSame('en', $user->language());
 	}
 
 	public function testRole()
@@ -56,7 +56,7 @@ class UserMethodsTest extends TestCase
 			'kirby' => $kirby
 		]);
 
-		$this->assertEquals('editor', $user->role()->name());
+		$this->assertSame('editor', $user->role()->name());
 	}
 
 	public function testDefaultRole()
@@ -65,6 +65,6 @@ class UserMethodsTest extends TestCase
 			'email' => 'user@domain.com',
 		]);
 
-		$this->assertEquals('nobody', $user->role()->name());
+		$this->assertSame('nobody', $user->role()->name());
 	}
 }

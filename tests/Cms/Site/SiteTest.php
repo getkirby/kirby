@@ -20,7 +20,7 @@ class SiteTest extends TestCase
 	public function testToString()
 	{
 		$site = new Site(['url' => 'https://getkirby.com']);
-		$this->assertEquals('https://getkirby.com', $site->toString('{{ site.url }}'));
+		$this->assertSame('https://getkirby.com', $site->toString('{{ site.url }}'));
 	}
 
 	public function testBreadcrumb()
@@ -50,10 +50,10 @@ class SiteTest extends TestCase
 
 		$crumb = $site->breadcrumb();
 
-		$this->assertEquals($site->find('home'), $crumb->nth(0));
-		$this->assertEquals($site->find('grandma'), $crumb->nth(1));
-		$this->assertEquals($site->find('grandma/mother'), $crumb->nth(2));
-		$this->assertEquals($site->find('grandma/mother/child'), $crumb->nth(3));
+		$this->assertSame($site->find('home'), $crumb->nth(0));
+		$this->assertSame($site->find('grandma'), $crumb->nth(1));
+		$this->assertSame($site->find('grandma/mother'), $crumb->nth(2));
+		$this->assertSame($site->find('grandma/mother/child'), $crumb->nth(3));
 	}
 
 	public function testBreadcrumbSideEffects()
@@ -88,13 +88,13 @@ class SiteTest extends TestCase
 		$page  = $site->visit('grandma/mother/child-b');
 		$crumb = $site->breadcrumb();
 
-		$this->assertEquals($site->find('home'), $crumb->nth(0));
-		$this->assertEquals($site->find('grandma'), $crumb->nth(1));
-		$this->assertEquals($site->find('grandma/mother'), $crumb->nth(2));
-		$this->assertEquals($site->find('grandma/mother/child-b'), $crumb->nth(3));
+		$this->assertSame($site->find('home'), $crumb->nth(0));
+		$this->assertSame($site->find('grandma'), $crumb->nth(1));
+		$this->assertSame($site->find('grandma/mother'), $crumb->nth(2));
+		$this->assertSame($site->find('grandma/mother/child-b'), $crumb->nth(3));
 
-		$this->assertEquals('child-a', $page->prev()->slug());
-		$this->assertEquals('child-c', $page->next()->slug());
+		$this->assertSame('child-a', $page->prev()->slug());
+		$this->assertSame('child-c', $page->next()->slug());
 	}
 
 	public function testModified()
@@ -112,15 +112,15 @@ class SiteTest extends TestCase
 		$modified = filemtime($file);
 		$site     = $app->site();
 
-		$this->assertEquals($modified, $site->modified());
+		$this->assertSame($modified, $site->modified());
 
 		// default date handler
 		$format = 'd.m.Y';
-		$this->assertEquals(date($format, $modified), $site->modified($format));
+		$this->assertSame(date($format, $modified), $site->modified($format));
 
 		// custom date handler
 		$format = '%d.%m.%Y';
-		$this->assertEquals(@strftime($format, $modified), $site->modified($format, 'strftime'));
+		$this->assertSame(@strftime($format, $modified), $site->modified($format, 'strftime'));
 
 		Dir::remove($index);
 	}
@@ -149,7 +149,7 @@ class SiteTest extends TestCase
 		F::write($file = $index . '/site.en.txt', 'test');
 		touch($file, $modified = \time() + 2);
 
-		$this->assertEquals($modified, $app->site()->modified());
+		$this->assertSame($modified, $app->site()->modified());
 
 		// create the german site
 		F::write($file = $index . '/site.de.txt', 'test');
@@ -159,7 +159,7 @@ class SiteTest extends TestCase
 		$app->setCurrentLanguage('de');
 		$app->setCurrentTranslation('de');
 
-		$this->assertEquals($modified, $app->site()->modified());
+		$this->assertSame($modified, $app->site()->modified());
 
 		Dir::remove($index);
 	}
@@ -229,7 +229,7 @@ class SiteTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($expected, $site->previewUrl());
+		$this->assertSame($expected, $site->previewUrl());
 	}
 
 	public function testToArray()

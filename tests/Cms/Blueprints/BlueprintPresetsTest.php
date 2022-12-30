@@ -55,7 +55,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testPagePresetNoFiles()
@@ -87,7 +87,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testPagePresetNoPages()
@@ -118,7 +118,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testPagePresetNoSidebar()
@@ -135,7 +135,7 @@ class BlueprintPresetsTest extends TestCase
 			'fields' => [],
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testPagePresetCustomSidebar()
@@ -170,7 +170,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	/**
@@ -200,7 +200,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	public function testPagesPresetWithUnlisted()
@@ -235,7 +235,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertSame($expected, $props);
 	}
 
 	/**
@@ -261,7 +261,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithLabel()
@@ -286,7 +286,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithLayout()
@@ -311,7 +311,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithTemplate()
@@ -336,7 +336,7 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 
 	public function testFilesPresetWithImage()
@@ -361,6 +361,6 @@ class BlueprintPresetsTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $props);
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
 }

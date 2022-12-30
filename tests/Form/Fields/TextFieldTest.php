@@ -10,16 +10,16 @@ class TextFieldTest extends TestCase
 	{
 		$field = $this->field('text');
 
-		$this->assertEquals('text', $field->type());
-		$this->assertEquals('text', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->icon());
-		$this->assertEquals(null, $field->placeholder());
-		$this->assertEquals(true, $field->counter());
-		$this->assertEquals(null, $field->maxlength());
-		$this->assertEquals(null, $field->minlength());
-		$this->assertEquals(null, $field->pattern());
-		$this->assertEquals(false, $field->spellcheck());
+		$this->assertSame('text', $field->type());
+		$this->assertSame('text', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertNull($field->icon());
+		$this->assertNull($field->placeholder());
+		$this->assertTrue($field->counter());
+		$this->assertNull($field->maxlength());
+		$this->assertNull($field->minlength());
+		$this->assertNull($field->pattern());
+		$this->assertFalse($field->spellcheck());
 		$this->assertTrue($field->save());
 	}
 
@@ -46,8 +46,8 @@ class TextFieldTest extends TestCase
 			'default'   => $input
 		]);
 
-		$this->assertEquals($expected, $field->value());
-		$this->assertEquals($expected, $field->default());
+		$this->assertSame($expected, $field->value());
+		$this->assertSame($expected, $field->default());
 	}
 
 	public function testInvalidConverter()

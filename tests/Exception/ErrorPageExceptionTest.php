@@ -12,8 +12,8 @@ class ErrorPageExceptionTest extends TestCase
 	public function testDefaults()
 	{
 		$exception = new ErrorPageException();
-		$this->assertEquals('error.errorPage', $exception->getKey());
-		$this->assertEquals('Triggered error page', $exception->getMessage());
-		$this->assertEquals(404, $exception->getHttpCode());
+		$this->assertSame('error.errorPage', $exception->getKey());
+		$this->assertSame('Triggered error page', $exception->getMessage());
+		$this->assertSame(404, $exception->getHttpCode());
 	}
 }

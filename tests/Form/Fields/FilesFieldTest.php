@@ -65,13 +65,13 @@ class FilesFieldTest extends TestCase
 			'model' => $this->model()
 		]);
 
-		$this->assertEquals('files', $field->type());
-		$this->assertEquals('files', $field->name());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->default());
-		$this->assertEquals('list', $field->layout());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(true, $field->multiple());
+		$this->assertSame('files', $field->type());
+		$this->assertSame('files', $field->name());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->default());
+		$this->assertSame('list', $field->layout());
+		$this->assertNull($field->max());
+		$this->assertTrue($field->multiple());
 		$this->assertTrue($field->save());
 	}
 
@@ -94,7 +94,7 @@ class FilesFieldTest extends TestCase
 			'b.jpg'
 		];
 
-		$this->assertEquals($expected, $ids);
+		$this->assertSame($expected, $ids);
 	}
 
 	public function testMin()
@@ -109,7 +109,7 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(3, $field->min());
+		$this->assertSame(3, $field->min());
 		$this->assertTrue($field->required());
 		$this->assertArrayHasKey('min', $field->errors());
 	}
@@ -126,7 +126,7 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->isValid());
-		$this->assertEquals(1, $field->max());
+		$this->assertSame(1, $field->max());
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
@@ -149,7 +149,7 @@ class FilesFieldTest extends TestCase
 			'b.jpg'
 		];
 
-		$this->assertEquals($expected, $ids);
+		$this->assertSame($expected, $ids);
 	}
 
 	public function testQueryWithPageParent()
@@ -158,7 +158,7 @@ class FilesFieldTest extends TestCase
 			'model' => new Page(['slug' => 'test']),
 		]);
 
-		$this->assertEquals('page.files', $field->query());
+		$this->assertSame('page.files', $field->query());
 	}
 
 	public function testQueryWithSiteParent()
@@ -167,7 +167,7 @@ class FilesFieldTest extends TestCase
 			'model' => new Site(),
 		]);
 
-		$this->assertEquals('site.files', $field->query());
+		$this->assertSame('site.files', $field->query());
 	}
 
 	public function testQueryWithUserParent()
@@ -176,7 +176,7 @@ class FilesFieldTest extends TestCase
 			'model' => new User(['email' => 'test@getkirby.com']),
 		]);
 
-		$this->assertEquals('user.files', $field->query());
+		$this->assertSame('user.files', $field->query());
 	}
 
 	public function testEmpty()
@@ -186,7 +186,7 @@ class FilesFieldTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -196,7 +196,7 @@ class FilesFieldTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $field->empty());
+		$this->assertSame('Test', $field->empty());
 	}
 
 	public function testRequiredProps()
@@ -207,7 +207,7 @@ class FilesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

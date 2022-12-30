@@ -66,7 +66,7 @@ class ControllerTest extends TestCase
 	{
 		$root       = __DIR__ . '/fixtures/controller/does-not-exist.php';
 		$controller = Controller::load($root);
-		$this->assertSame(null, $controller);
+		$this->assertNull($controller);
 	}
 
 	/**

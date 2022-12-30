@@ -37,7 +37,7 @@ class FileTest extends TestCase
 	{
 		$file = $this->file();
 		$this->assertInstanceOf('Kirby\Filesystem\File', $file->asset());
-		$this->assertEquals('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
+		$this->assertSame('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
 	}
 
 	public function testContent()
@@ -48,7 +48,7 @@ class FileTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Test', $file->content()->get('test')->value());
+		$this->assertSame('Test', $file->content()->get('test')->value());
 	}
 
 	public function testDefaultContent()
@@ -60,7 +60,7 @@ class FileTest extends TestCase
 
 	public function testFilename()
 	{
-		$this->assertEquals($this->defaults()['filename'], $this->file()->filename());
+		$this->assertSame($this->defaults()['filename'], $this->file()->filename());
 	}
 
 	public function testPage()
@@ -102,13 +102,13 @@ class FileTest extends TestCase
 
 	public function testUrl()
 	{
-		$this->assertEquals($this->defaults()['url'], $this->file()->url());
+		$this->assertSame($this->defaults()['url'], $this->file()->url());
 	}
 
 	public function testToString()
 	{
 		$file = $this->file(['filename' => 'super.jpg']);
-		$this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
+		$this->assertSame('super.jpg', $file->toString('{{ file.filename }}'));
 	}
 
 	public function testIsReadable()
@@ -209,15 +209,15 @@ class FileTest extends TestCase
 		$modified = filemtime($file);
 		$file     = $app->file('test.js');
 
-		$this->assertEquals($modified, $file->modified());
+		$this->assertSame($modified, $file->modified());
 
 		// default date handler
 		$format = 'd.m.Y';
-		$this->assertEquals(date($format, $modified), $file->modified($format));
+		$this->assertSame(date($format, $modified), $file->modified($format));
 
 		// custom date handler
 		$format = '%d.%m.%Y';
-		$this->assertEquals(@strftime($format, $modified), $file->modified($format, 'strftime'));
+		$this->assertSame(@strftime($format, $modified), $file->modified($format, 'strftime'));
 
 		Dir::remove(dirname($index));
 	}
@@ -241,7 +241,7 @@ class FileTest extends TestCase
 		$file = $app->file('test.js');
 
 		$this->assertNotEquals($modifiedFile, $file->modified());
-		$this->assertEquals($modifiedContent, $file->modified());
+		$this->assertSame($modifiedContent, $file->modified());
 
 		Dir::remove(dirname($index));
 	}
@@ -279,8 +279,8 @@ class FileTest extends TestCase
 
 		$file = $app->file('test.js');
 
-		$this->assertEquals($modifiedEnContent, $file->modified(null, null, 'en'));
-		$this->assertEquals($modifiedDeContent, $file->modified(null, null, 'de'));
+		$this->assertSame($modifiedEnContent, $file->modified(null, null, 'en'));
+		$this->assertSame($modifiedDeContent, $file->modified(null, null, 'de'));
 
 		Dir::remove(dirname($index));
 	}
@@ -473,20 +473,20 @@ class FileTest extends TestCase
 		// site file
 		$file = $app->file('site-file.jpg');
 
-		$this->assertEquals('https://getkirby.com/api/site/files/site-file.jpg', $file->apiUrl());
-		$this->assertEquals('site/files/site-file.jpg', $file->apiUrl(true));
+		$this->assertSame('https://getkirby.com/api/site/files/site-file.jpg', $file->apiUrl());
+		$this->assertSame('site/files/site-file.jpg', $file->apiUrl(true));
 
 		// page file
 		$file = $app->file('mother/child/page-file.jpg');
 
-		$this->assertEquals('https://getkirby.com/api/pages/mother+child/files/page-file.jpg', $file->apiUrl());
-		$this->assertEquals('pages/mother+child/files/page-file.jpg', $file->apiUrl(true));
+		$this->assertSame('https://getkirby.com/api/pages/mother+child/files/page-file.jpg', $file->apiUrl());
+		$this->assertSame('pages/mother+child/files/page-file.jpg', $file->apiUrl(true));
 
 		// user file
 		$user = $app->user('test@getkirby.com');
 		$file = $user->file('user-file.jpg');
 
-		$this->assertEquals('https://getkirby.com/api/users/test/files/user-file.jpg', $file->apiUrl());
-		$this->assertEquals('users/test/files/user-file.jpg', $file->apiUrl(true));
+		$this->assertSame('https://getkirby.com/api/users/test/files/user-file.jpg', $file->apiUrl());
+		$this->assertSame('users/test/files/user-file.jpg', $file->apiUrl(true));
 	}
 }

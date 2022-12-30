@@ -40,7 +40,7 @@ class ModelTest extends TestCase
 		$model = new MyModel([
 			'kirby' => $kirby
 		]);
-		$this->assertEquals($kirby, $model->kirby());
+		$this->assertSame($kirby, $model->kirby());
 	}
 
 	public function testSite()
@@ -49,7 +49,7 @@ class ModelTest extends TestCase
 		$model = new MyModel([
 			'site' => $site
 		]);
-		$this->assertEquals($site, $model->site());
+		$this->assertSame($site, $model->site());
 	}
 
 	public function testToString()
@@ -58,8 +58,8 @@ class ModelTest extends TestCase
 			'id' => 'test'
 		]);
 
-		$this->assertEquals('test', $model->__toString());
-		$this->assertEquals('test', (string)$model);
+		$this->assertSame('test', $model->__toString());
+		$this->assertSame('test', (string)$model);
 	}
 
 	public function testToArray()
@@ -68,6 +68,6 @@ class ModelTest extends TestCase
 			'id' => 'test'
 		]);
 
-		$this->assertEquals(['id' => 'test'], $model->toArray());
+		$this->assertSame(['id' => 'test'], $model->toArray());
 	}
 }

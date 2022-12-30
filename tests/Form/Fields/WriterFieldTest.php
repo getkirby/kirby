@@ -10,9 +10,9 @@ class WriterFieldTest extends TestCase
 
 		$this->assertSame('writer', $field->type());
 		$this->assertSame('writer', $field->name());
-		$this->assertSame(false, $field->inline());
-		$this->assertSame(true, $field->marks());
-		$this->assertSame(null, $field->nodes());
+		$this->assertFalse($field->inline());
+		$this->assertTrue($field->marks());
+		$this->assertNull($field->nodes());
 		$this->assertTrue($field->save());
 	}
 

@@ -58,8 +58,8 @@ class FieldTest extends TestCase
 			'after' => 'test'
 		]);
 
-		$this->assertEquals('test', $field->after());
-		$this->assertEquals('test', $field->after);
+		$this->assertSame('test', $field->after());
+		$this->assertSame('test', $field->after);
 
 		// translated
 		$field = new Field('test', [
@@ -70,8 +70,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('en', $field->after());
-		$this->assertEquals('en', $field->after);
+		$this->assertSame('en', $field->after());
+		$this->assertSame('en', $field->after);
 
 		// with query
 		$field = new Field('test', [
@@ -79,8 +79,8 @@ class FieldTest extends TestCase
 			'after' => '{{ page.slug }}'
 		]);
 
-		$this->assertEquals('blog', $field->after());
-		$this->assertEquals('blog', $field->after);
+		$this->assertSame('blog', $field->after());
+		$this->assertSame('blog', $field->after);
 	}
 
 	public function testAutofocus()
@@ -123,8 +123,8 @@ class FieldTest extends TestCase
 			'before' => 'test'
 		]);
 
-		$this->assertEquals('test', $field->before());
-		$this->assertEquals('test', $field->before);
+		$this->assertSame('test', $field->before());
+		$this->assertSame('test', $field->before);
 
 		// translated
 		$field = new Field('test', [
@@ -135,8 +135,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('en', $field->before());
-		$this->assertEquals('en', $field->before);
+		$this->assertSame('en', $field->before());
+		$this->assertSame('en', $field->before);
 
 		// with query
 		$field = new Field('test', [
@@ -144,8 +144,8 @@ class FieldTest extends TestCase
 			'before' => '{{ page.slug }}'
 		]);
 
-		$this->assertEquals('blog', $field->before());
-		$this->assertEquals('blog', $field->before);
+		$this->assertSame('blog', $field->before());
+		$this->assertSame('blog', $field->before);
 	}
 
 	public function testDefault()
@@ -172,9 +172,9 @@ class FieldTest extends TestCase
 			'default' => 'test'
 		]);
 
-		$this->assertEquals('test', $field->default());
-		$this->assertEquals('test', $field->default);
-		$this->assertEquals('test', $field->data(true));
+		$this->assertSame('test', $field->default());
+		$this->assertSame('test', $field->default);
+		$this->assertSame('test', $field->data(true));
 
 		// don't overwrite existing values
 		$field = new Field('test', [
@@ -183,11 +183,11 @@ class FieldTest extends TestCase
 			'value'   => 'something'
 		]);
 
-		$this->assertEquals('test', $field->default());
-		$this->assertEquals('test', $field->default);
-		$this->assertEquals('something', $field->value());
-		$this->assertEquals('something', $field->value);
-		$this->assertEquals('something', $field->data(true));
+		$this->assertSame('test', $field->default());
+		$this->assertSame('test', $field->default);
+		$this->assertSame('something', $field->value());
+		$this->assertSame('something', $field->value);
+		$this->assertSame('something', $field->data(true));
 
 		// with query
 		$field = new Field('test', [
@@ -195,9 +195,9 @@ class FieldTest extends TestCase
 			'default' => '{{ page.slug }}'
 		]);
 
-		$this->assertEquals('blog', $field->default());
-		$this->assertEquals('blog', $field->default);
-		$this->assertEquals('blog', $field->data(true));
+		$this->assertSame('blog', $field->default());
+		$this->assertSame('blog', $field->default);
+		$this->assertSame('blog', $field->data(true));
 	}
 
 	public function testDisabled()
@@ -239,7 +239,7 @@ class FieldTest extends TestCase
 			'model' => $page,
 		]);
 
-		$this->assertEquals([], $field->errors());
+		$this->assertSame([], $field->errors());
 
 		// required
 		$field = new Field('test', [
@@ -251,7 +251,7 @@ class FieldTest extends TestCase
 			'required' => 'Please enter something',
 		];
 
-		$this->assertEquals($expected, $field->errors());
+		$this->assertSame($expected, $field->errors());
 	}
 
 	public function testHelp()
@@ -268,8 +268,8 @@ class FieldTest extends TestCase
 			'help' => 'test'
 		]);
 
-		$this->assertEquals('<p>test</p>', $field->help());
-		$this->assertEquals('<p>test</p>', $field->help);
+		$this->assertSame('<p>test</p>', $field->help());
+		$this->assertSame('<p>test</p>', $field->help);
 
 		// translated
 		$field = new Field('test', [
@@ -280,8 +280,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>en</p>', $field->help());
-		$this->assertEquals('<p>en</p>', $field->help);
+		$this->assertSame('<p>en</p>', $field->help());
+		$this->assertSame('<p>en</p>', $field->help);
 	}
 
 	public function testIcon()
@@ -306,8 +306,8 @@ class FieldTest extends TestCase
 			'icon'  => 'test'
 		]);
 
-		$this->assertEquals('test', $field->icon());
-		$this->assertEquals('test', $field->icon);
+		$this->assertSame('test', $field->icon());
+		$this->assertSame('test', $field->icon);
 
 		Field::$types = [
 			'test' => [
@@ -324,8 +324,8 @@ class FieldTest extends TestCase
 			'model' => $page,
 		]);
 
-		$this->assertEquals('test', $field->icon());
-		$this->assertEquals('test', $field->icon);
+		$this->assertSame('test', $field->icon());
+		$this->assertSame('test', $field->icon);
 	}
 
 	public function emptyValuesProvider()
@@ -355,8 +355,8 @@ class FieldTest extends TestCase
 			'value' => $value
 		]);
 
-		$this->assertEquals($expected, $field->isEmpty());
-		$this->assertEquals($expected, $field->isEmpty($value));
+		$this->assertSame($expected, $field->isEmpty());
+		$this->assertSame($expected, $field->isEmpty($value));
 	}
 
 	public function testIsEmptyWithCustomFunction()
@@ -437,7 +437,7 @@ class FieldTest extends TestCase
 			'model' => $model = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals($model->kirby(), $field->kirby());
+		$this->assertSame($model->kirby(), $field->kirby());
 	}
 
 	public function testLabel()
@@ -454,8 +454,8 @@ class FieldTest extends TestCase
 			'label' => 'test'
 		]);
 
-		$this->assertEquals('test', $field->label());
-		$this->assertEquals('test', $field->label);
+		$this->assertSame('test', $field->label());
+		$this->assertSame('test', $field->label);
 
 		// translated
 		$field = new Field('test', [
@@ -466,8 +466,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('en', $field->label());
-		$this->assertEquals('en', $field->label);
+		$this->assertSame('en', $field->label());
+		$this->assertSame('en', $field->label);
 
 		// with query
 		$field = new Field('test', [
@@ -475,8 +475,8 @@ class FieldTest extends TestCase
 			'label' => '{{ page.slug }}'
 		]);
 
-		$this->assertEquals('blog', $field->label());
-		$this->assertEquals('blog', $field->label);
+		$this->assertSame('blog', $field->label());
+		$this->assertSame('blog', $field->label);
 	}
 
 	public function testMixinMin()
@@ -502,7 +502,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isRequired());
-		$this->assertEquals(5, $field->min());
+		$this->assertSame(5, $field->min());
 
 		$field = new Field('test', [
 			'model' => $page,
@@ -510,7 +510,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isRequired());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 
 		$field = new Field('test', [
 			'model'    => $page,
@@ -519,7 +519,7 @@ class FieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->isRequired());
-		$this->assertEquals(5, $field->min());
+		$this->assertSame(5, $field->min());
 	}
 
 	public function testModel()
@@ -532,7 +532,7 @@ class FieldTest extends TestCase
 			'model' => $model = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals($model, $field->model());
+		$this->assertSame($model, $field->model());
 	}
 
 	public function testName()
@@ -546,7 +546,7 @@ class FieldTest extends TestCase
 			'model' => $model = new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals('test', $field->name());
+		$this->assertSame('test', $field->name());
 
 		// specific name
 		$field = new Field('test', [
@@ -554,7 +554,7 @@ class FieldTest extends TestCase
 			'name'  => 'mytest'
 		]);
 
-		$this->assertEquals('mytest', $field->name());
+		$this->assertSame('mytest', $field->name());
 	}
 
 	public function testPlaceholder()
@@ -571,8 +571,8 @@ class FieldTest extends TestCase
 			'placeholder' => 'test'
 		]);
 
-		$this->assertEquals('test', $field->placeholder());
-		$this->assertEquals('test', $field->placeholder);
+		$this->assertSame('test', $field->placeholder());
+		$this->assertSame('test', $field->placeholder);
 
 		// translated
 		$field = new Field('test', [
@@ -583,8 +583,8 @@ class FieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('en', $field->placeholder());
-		$this->assertEquals('en', $field->placeholder);
+		$this->assertSame('en', $field->placeholder());
+		$this->assertSame('en', $field->placeholder);
 
 		// with query
 		$field = new Field('test', [
@@ -592,8 +592,8 @@ class FieldTest extends TestCase
 			'placeholder' => '{{ page.slug }}'
 		]);
 
-		$this->assertEquals('blog', $field->placeholder());
-		$this->assertEquals('blog', $field->placeholder);
+		$this->assertSame('blog', $field->placeholder());
+		$this->assertSame('blog', $field->placeholder);
 	}
 
 	public function testSave()
@@ -644,7 +644,7 @@ class FieldTest extends TestCase
 			'value' => ['a', 'b', 'c']
 		]);
 
-		$this->assertEquals('a, b, c', $field->data());
+		$this->assertSame('a, b, c', $field->data());
 	}
 
 	public function testToArray()
@@ -666,10 +666,10 @@ class FieldTest extends TestCase
 
 		$array = $field->toArray();
 
-		$this->assertEquals('test', $array['name']);
-		$this->assertEquals('test', $array['type']);
-		$this->assertEquals('bar', $array['foo']);
-		$this->assertEquals('1/1', $array['width']);
+		$this->assertSame('test', $array['name']);
+		$this->assertSame('test', $array['type']);
+		$this->assertSame('bar', $array['foo']);
+		$this->assertSame('1/1', $array['width']);
 
 		$this->assertArrayHasKey('signature', $array);
 		$this->assertArrayNotHasKey('model', $array);
@@ -743,8 +743,8 @@ class FieldTest extends TestCase
 			'model' => $page,
 		]);
 
-		$this->assertEquals('1/1', $field->width());
-		$this->assertEquals('1/1', $field->width);
+		$this->assertSame('1/1', $field->width());
+		$this->assertSame('1/1', $field->width);
 
 		// specific width
 		$field = new Field('test', [
@@ -752,8 +752,8 @@ class FieldTest extends TestCase
 			'width' => '1/2'
 		]);
 
-		$this->assertEquals('1/2', $field->width());
-		$this->assertEquals('1/2', $field->width);
+		$this->assertSame('1/2', $field->width());
+		$this->assertSame('1/2', $field->width);
 	}
 
 	public function testValidate()
@@ -772,7 +772,7 @@ class FieldTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals([], $field->errors());
+		$this->assertSame([], $field->errors());
 
 		// required
 		$field = new Field('test', [
@@ -788,7 +788,7 @@ class FieldTest extends TestCase
 			'integer'  => 'Please enter a valid integer',
 		];
 
-		$this->assertEquals($expected, $field->errors());
+		$this->assertSame($expected, $field->errors());
 
 		// invalid
 		$field = new Field('test', [
@@ -803,7 +803,7 @@ class FieldTest extends TestCase
 			'integer' => 'Please enter a valid integer',
 		];
 
-		$this->assertEquals($expected, $field->errors());
+		$this->assertSame($expected, $field->errors());
 	}
 
 	public function testWhenRequired()

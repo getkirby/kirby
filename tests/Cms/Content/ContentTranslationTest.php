@@ -17,9 +17,9 @@ class ContentTranslationTest extends TestCase
 			'code'   => 'de'
 		]);
 
-		$this->assertEquals($page, $translation->parent());
-		$this->assertEquals('de', $translation->code());
-		$this->assertEquals('de', $translation->id());
+		$this->assertSame($page, $translation->parent());
+		$this->assertSame('de', $translation->code());
+		$this->assertSame('de', $translation->id());
 	}
 
 	public function testContentAndSlug()
@@ -37,8 +37,8 @@ class ContentTranslationTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('test', $translation->slug());
-		$this->assertEquals($content, $translation->content());
+		$this->assertSame('test', $translation->slug());
+		$this->assertSame($content, $translation->content());
 	}
 
 	public function testContentFile()
@@ -60,7 +60,7 @@ class ContentTranslationTest extends TestCase
 			'code'   => 'de',
 		]);
 
-		$this->assertEquals('/content/test/project.de.txt', $translation->contentFile());
+		$this->assertSame('/content/test/project.de.txt', $translation->contentFile());
 	}
 
 	public function testExists()
@@ -101,7 +101,7 @@ class ContentTranslationTest extends TestCase
 			'slug'    => null
 		];
 
-		$this->assertEquals($expected, $translation->toArray());
-		$this->assertEquals($expected, $translation->__debugInfo());
+		$this->assertSame($expected, $translation->toArray());
+		$this->assertSame($expected, $translation->__debugInfo());
 	}
 }

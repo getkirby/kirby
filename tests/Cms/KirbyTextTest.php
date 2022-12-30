@@ -19,9 +19,9 @@ class KirbyTextTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>test</p>', $app->kirbytext('Test'));
+		$this->assertSame('<p>test</p>', $app->kirbytext('Test'));
 		// Let's see if it works twice
-		$this->assertEquals('<p>test</p>', $app->kirbytext('Test'));
+		$this->assertSame('<p>test</p>', $app->kirbytext('Test'));
 	}
 
 	public function testAfterHook()
@@ -37,8 +37,8 @@ class KirbyTextTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Test', $app->kirbytext('Test'));
+		$this->assertSame('Test', $app->kirbytext('Test'));
 		// Let's see if it works twice
-		$this->assertEquals('Test', $app->kirbytext('Test'));
+		$this->assertSame('Test', $app->kirbytext('Test'));
 	}
 }

@@ -13,19 +13,19 @@ class ArgumentsTest extends \PHPUnit\Framework\TestCase
 	public function testFactory()
 	{
 		$arguments = Arguments::factory('1, 2, 3');
-		$this->assertSame(3, $arguments->count());
+		$this->assertCount(3, $arguments);
 
 		$arguments = Arguments::factory('1, 2, [3, 4]');
-		$this->assertSame(3, $arguments->count());
+		$this->assertCount(3, $arguments);
 
 		$arguments = Arguments::factory('1, 2, \'3, 4\'');
-		$this->assertSame(3, $arguments->count());
+		$this->assertCount(3, $arguments);
 
 		$arguments = Arguments::factory('1, 2, "3, 4"');
-		$this->assertSame(3, $arguments->count());
+		$this->assertCount(3, $arguments);
 
 		$arguments = Arguments::factory('1, 2, (3, 4)');
-		$this->assertSame(3, $arguments->count());
+		$this->assertCount(3, $arguments);
 	}
 
 	/**

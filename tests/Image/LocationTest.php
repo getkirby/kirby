@@ -19,8 +19,8 @@ class LocationTest extends TestCase
 	public function testLatLng()
 	{
 		$camera = new Location($this->_exif());
-		$this->assertEquals(50.819053333333336, $camera->lat());
-		$this->assertEquals(-0.016666666666666666, $camera->lng());
+		$this->assertSame(50.819053333333336, $camera->lat());
+		$this->assertSame(-0.016666666666666666, $camera->lng());
 	}
 
 	public function testToArray()
@@ -30,8 +30,8 @@ class LocationTest extends TestCase
 			'lat' => 50.819053333333336,
 			'lng' => -0.016666666666666666
 		];
-		$this->assertEquals($array, $camera->toArray());
-		$this->assertEquals($array, $camera->__debugInfo());
+		$this->assertSame($array, $camera->toArray());
+		$this->assertSame($array, $camera->__debugInfo());
 	}
 
 	public function testToString()
