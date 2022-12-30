@@ -56,11 +56,14 @@ return [
 			}
 
 			return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
-				$file = $parent->createFile([
+				$props = [
 					'source'   => $source,
 					'template' => $params['template'] ?? null,
 					'filename' => $filename,
-				]);
+				];
+
+				// move the source file from the temp dir
+				$file = $parent->createFile($props, true);
 
 				if ($file instanceof File === false) {
 					throw new Exception('The file could not be uploaded');
