@@ -22,6 +22,9 @@ class Expression
 	) {
 	}
 
+	/**
+	 * Parses an expression string into its parts
+	 */
 	public static function factory(string $expression, Query $parent = null): static|Segments
 	{
 		// split into different expression parts and operators
