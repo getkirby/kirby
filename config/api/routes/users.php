@@ -82,11 +82,16 @@ return [
 			$this->user($id)->avatar()?->delete();
 
 			return $this->upload(
-				fn ($source, $filename) => $this->user($id)->createFile([
-					'filename' => 'profile.' . F::extension($filename),
-					'template' => 'avatar',
-					'source'   => $source
-				]),
+				function ($source, $filename) {
+					$props = [
+						'filename' => 'profile.' . F::extension($filename),
+						'template' => 'avatar',
+						'source'   => $source
+					];
+
+					// move the source file from the temp dir
+					return $this->user($id)->createFile($props, true);
+				},
 				single: true
 			);
 		}
