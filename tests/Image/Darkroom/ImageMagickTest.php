@@ -50,7 +50,8 @@ class ImageMagickTest extends TestCase
 		], $im->process($file));
 	}
 
-	public function testFrameOption() {
+	public function testFrameOption()
+	{
 		$im = new ImageMagick(['frame' => 1, 'format' => 'png']);
 
 		copy($this->fixtures . '/gif.gif', $file = $this->tmp . '/gif.gif');
