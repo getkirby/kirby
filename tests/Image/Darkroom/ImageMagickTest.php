@@ -50,6 +50,26 @@ class ImageMagickTest extends TestCase
 		], $im->process($file));
 	}
 
+	public function testFrameOption() {
+		$im = new ImageMagick(['frame' => 1, 'format' => 'png']);
+
+		copy($this->fixtures . '/gif.gif', $file = $this->tmp . '/gif.gif');
+		$im->process($file);
+		$this->assertFileExists($this->tmp . '/gif.png');
+
+		// It seems that ImageMagick has some changing EXIF data
+		// we can get rid of by generating new images for each file
+		$generatedImage = imagecreatefrompng($this->tmp . '/gif.png');
+		imagepng($generatedImage, $this->tmp . '/gif.png');
+		imagedestroy($generatedImage);
+
+		$testImage = imagecreatefrompng($this->fixtures . '/gif.png');
+		imagepng($testImage, $this->tmp . '/to-test.png');
+		imagedestroy($testImage);
+
+		$this->assertFileEquals($this->tmp . '/gif.png', $this->tmp . '/to-test.png');
+	}
+
 	/**
 	 * @covers ::save
 	 */
