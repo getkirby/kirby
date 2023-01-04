@@ -105,28 +105,33 @@ class OptionsApi extends OptionsProvider
 		// apply property defaults
 		$this->defaults();
 
-		// load data from URL and narrow down to queried part
+		// load data from URL and convert from JSON to array
 		$data = $this->load($model);
 
 		if ($data === null) {
 			throw new NotFoundException('Options could not be loaded from API: ' . $model->toSafeString($this->url));
 		}
 
-		// turn data into Nest so that it can be queried
-		$data = Nest::create($data);
-		$data = Query::factory($this->query)->resolve($data);
+		// optionally query a substructure inside the data array
+		if ($this->query !== null) {
+			// turn data into Nest so that it can be queried
+			$data = Nest::create($data);
+
+			// actually apply the query and turn the result back into an array
+			$data = Query::factory($this->query)->resolve($data)->toArray();
+		}
 
 		$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
 
 		// create options by resolving text and value query strings
 		// for each item from the data
-		$options = $data->toArray(fn ($item) => [
+		$options = array_map(fn ($item) => [
 			// value is always a raw string
 			'value' => $model->toString($this->value, ['item' => $item]),
 			// text is only a raw string when using {< >}
 			// or when the safe mode is explicitly disabled (select field)
 			'text' => $model->$safeMethod($this->text, ['item' => $item]),
-		]);
+		], $data);
 
 		// create Options object and render this subsequently
 		return $this->options = Options::factory($options);

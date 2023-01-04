@@ -96,11 +96,45 @@ class OptionsApiTest extends TestCase
 	 * @covers ::render
 	 * @covers ::resolve
 	 */
-	public function testResolveForFile()
+	public function testResolve()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(__DIR__ . '/fixtures/data.json');
+		$result  = $options->render($model);
+
+		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveCustomKeys()
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
+			text: '{{ item.name }}',
+			value: '{{ item.email }}',
+		);
+		$result  = $options->render($model);
+
+		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('info@company-a.com', $result[0]['value']);
+		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('info@company-b.com', $result[1]['value']);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveQuery()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(
+			url: __DIR__ . '/fixtures/data-nested.json',
 			query: 'Directory.Companies'
 		);
 		$result  = $options->render($model);
@@ -109,13 +143,19 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('a', $result[0]['value']);
 		$this->assertSame('B', $result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
+	}
 
-		// custom keys
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveCustomKeysAndQuery()
+	{
+		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: __DIR__ . '/fixtures/data.json',
+			url: __DIR__ . '/fixtures/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.name }}',
-			value: '{{ item.email }}',
+			value: '{{ item.email }}'
 		);
 		$result  = $options->render($model);
 
@@ -135,6 +175,19 @@ class OptionsApiTest extends TestCase
 		// text escaped by default
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
+			text: '{{ item.slogan }}',
+			value: '{{ item.slogan }}'
+		);
+		$result = $options->render($model);
+
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', $result[0]['value']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', $result[1]['value']);
+
+		// with query
+		$options = new OptionsApi(
+			url: __DIR__ . '/fixtures/data-nested.json',
 			query: 'Directory.Companies',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
@@ -149,7 +202,6 @@ class OptionsApiTest extends TestCase
 		// text unescaped using {< >}
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
-			query: 'Directory.Companies',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
 		);
@@ -162,7 +214,6 @@ class OptionsApiTest extends TestCase
 		// test unescaped with disabled safe mode
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data.json',
-			query: 'Directory.Companies',
 			text: '{{ item.slogan }}',
 			value: '{{ item.slogan }}'
 		);

@@ -90,7 +90,7 @@ class FieldOptionsTest extends TestCase
 
 		$options = FieldOptions::factory([
 			'type'  => 'api',
-			'url'   =>  __DIR__ . '/../Option/fixtures/data.json',
+			'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
 			'query' => 'Directory.Companies',
 			'text'  => '{{ item.slogan }}'
 		]);
@@ -101,7 +101,7 @@ class FieldOptionsTest extends TestCase
 		$options = FieldOptions::factory(
 			[
 				'type'  => 'api',
-				'url'   =>  __DIR__ . '/../Option/fixtures/data.json',
+				'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
 				'query' => 'Directory.Companies',
 				'text'  => '{{ item.slogan }}'
 			],
