@@ -111,6 +111,21 @@ class OptionsApiTest extends TestCase
 	/**
 	 * @covers ::resolve
 	 */
+	public function testResolveSimple()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple.json');
+		$result  = $options->render($model);
+
+		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
+	}
+
+	/**
+	 * @covers ::resolve
+	 */
 	public function testResolveCustomKeys()
 	{
 		$model   = new Page(['slug' => 'test']);
@@ -185,6 +200,15 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
+		// with simple array
+		$options = new OptionsApi(__DIR__ . '/fixtures/data-simple-html.json');
+		$result = $options->render($model);
+
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
+
 		// with query
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data-nested.json',
@@ -204,6 +228,18 @@ class OptionsApiTest extends TestCase
 			url: __DIR__ . '/fixtures/data.json',
 			text: '{< item.slogan >}',
 			value: '{{ item.slogan }}'
+		);
+		$result = $options->render($model);
+		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', $result[0]['value']);
+		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', $result[1]['value']);
+
+		// text unescaped using {< >} (simple array)
+		$options = new OptionsApi(
+			url: __DIR__ . '/fixtures/data-simple-html.json',
+			text: '{< item.value >}',
+			value: '{{ item.value }}'
 		);
 		$result = $options->render($model);
 		$this->assertSame('We are <b>great</b>', $result[0]['text']);

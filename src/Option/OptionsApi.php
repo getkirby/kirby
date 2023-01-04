@@ -121,17 +121,32 @@ class OptionsApi extends OptionsProvider
 			$data = Query::factory($this->query)->resolve($data)->toArray();
 		}
 
-		$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
-
 		// create options by resolving text and value query strings
 		// for each item from the data
-		$options = array_map(fn ($item) => [
-			// value is always a raw string
-			'value' => $model->toString($this->value, ['item' => $item]),
-			// text is only a raw string when using {< >}
-			// or when the safe mode is explicitly disabled (select field)
-			'text' => $model->$safeMethod($this->text, ['item' => $item]),
-		], $data);
+		$options = array_map(
+			function ($item, $key) use ($model, $safeMode) {
+				// convert simple `key: value` API data
+				if (is_string($item) === true) {
+					$item = [
+						'key'   => $key,
+						'value' => $item
+					];
+				}
+
+				$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
+
+				return [
+					// value is always a raw string
+					'value' => $model->toString($this->value, ['item' => $item]),
+					// text is only a raw string when using {< >}
+					// or when the safe mode is explicitly disabled (select field)
+					'text' => $model->$safeMethod($this->text, ['item' => $item])
+				];
+			},
+			// separately pass values and keys to have the keys available in the callback
+			$data,
+			array_keys($data)
+		);
 
 		// create Options object and render this subsequently
 		return $this->options = Options::factory($options);
