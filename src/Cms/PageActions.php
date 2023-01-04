@@ -534,13 +534,16 @@ trait PageActions
 		}
 
 		// create a temporary page object
-		$page = Page::factory($props);
+		$page = GhostPage::factory($props);
 
 		// create a form for the page
 		$form = Form::for($page, ['values' => $props['content']]);
 
-		// inject the content
-		$page = $page->clone(['content' => $form->strings(true)]);
+		// add the values from the form
+		$props['content'] = $form->strings(true);
+
+		// create the real page
+		$page = Page::factory($props);
 
 		// run the hooks and creation action
 		$page = $page->commit('create', ['page' => $page, 'input' => $props], function ($page, $props) {
