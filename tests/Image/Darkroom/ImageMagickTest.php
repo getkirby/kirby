@@ -14,11 +14,28 @@ class ImageMagickTest extends TestCase
 {
 	protected $fixtures;
 	protected $tmp;
+	protected $defaults;
 
 	public function setUp(): void
 	{
 		$this->fixtures = dirname(__DIR__) . '/fixtures/image';
 		$this->tmp      = dirname(__DIR__) . '/tmp';
+		$this->defaults = [
+			'autoOrient' => true,
+			'blur' => false,
+			'crop' => false,
+			'format' => null,
+			'grayscale' => false,
+			'height' => 500,
+			'quality' => 90,
+			'scaleHeight' => 1,
+			'scaleWidth' => 1,
+			'width' => 500,
+			'bin' => 'convert',
+			'identifyBin' => 'identify',
+			'interlace' => false,
+			'frame' => null
+		];
 
 		Dir::make($this->tmp);
 	}
@@ -34,22 +51,7 @@ class ImageMagickTest extends TestCase
 
 		copy($this->fixtures . '/cat.jpg', $file = $this->tmp . '/cat.jpg');
 
-		$this->assertSame([
-			'autoOrient' => true,
-			'blur' => false,
-			'crop' => false,
-			'format' => null,
-			'grayscale' => false,
-			'height' => 500,
-			'quality' => 90,
-			'scaleHeight' => 1,
-			'scaleWidth' => 1,
-			'width' => 500,
-			'bin' => 'convert',
-			'identifyBin' => 'identify',
-			'interlace' => false,
-			'frame' => null
-		], $im->process($file));
+		$this->assertSame($this->defaults, $im->process($file));
 	}
 
 	public function testFrameOption()
@@ -77,8 +79,8 @@ class ImageMagickTest extends TestCase
 	{
 		$im = new ImageMagick();
 
-		$this->assertSame(2, $im->frameCount($this->fixtures . '/gif.gif'));
-		$this->assertSame(1, $im->frameCount($this->fixtures . '/gif.png'));
+		$this->assertSame(2, $im->frameCount($this->fixtures . '/gif.gif', $this->defaults));
+		$this->assertSame(1, $im->frameCount($this->fixtures . '/gif.png', $this->defaults));
 	}
 
 	public function testFrameOptionInvalid()

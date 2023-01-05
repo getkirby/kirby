@@ -75,7 +75,7 @@ class ImageMagick extends Darkroom
 		// frame option to allow selecting layers for multi-layer or frames for animated images
 		$fileOptions = '';
 		$frame = $options['frame'];
-		$maxFrames = $this->frameCount($file);
+		$maxFrames = $this->frameCount($file, $options);
 		if ($frame !== null) {
 			// check whether frame is in bounds
 			if ($frame < 0) {
@@ -103,9 +103,9 @@ class ImageMagick extends Darkroom
 	/**
 	 * Returns the number of frames in an image
 	 */
-	public function frameCount(string $file): int
+	public function frameCount(string $file, array $options): int
 	{
-		exec('identify ' . escapeshellarg($file), $output, $return);
+		exec($options['identifyBin'] . ' ' . escapeshellarg($file), $output, $return);
 
 		// log broken commands
 		if ($return !== 0) {
