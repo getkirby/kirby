@@ -74,12 +74,45 @@ class ImageMagick extends Darkroom
 
 		// frame option to allow selecting layers for multi-layer or frames for animated images
 		$fileOptions = '';
-		if ($options['frame'] !== null) {
-			$fileOptions = '[' . $options['frame'] . ']';
+		$frame = $options['frame'];
+		$maxFrames = $this->frameCount($file);
+		if ($frame !== null) {
+			// check whether frame is in bounds
+			if ($frame < 0) {
+				throw new Exception('Frame option must be a positive integer');
+			}
+
+			if ($frame !== 0 && $frame >= $maxFrames) {
+				throw new Exception('Frame option must be smaller than the number of frames in the image');
+			}
+
+			$fileOptions = "[{$frame}]";
+		} elseif ($maxFrames > 1) {
+			// if frame is not set and target format doesn't support multi-layer images, select first frame
+			$targetFormat = $options['format'] ?? F::extension($file);
+			$multiLayerFormats = ['gif', 'avif', 'webp'];
+			if (!in_array($targetFormat, $multiLayerFormats)) {
+				$fileOptions = '[0]';
+			}
 		}
 
 		// append input file
 		return $command . ' ' . escapeshellarg($file . $fileOptions);
+	}
+
+	/**
+	 * Returns the number of frames in an image
+	 */
+	public function frameCount(string $file): int
+	{
+		exec('identify ' . escapeshellarg($file), $output, $return);
+
+		// log broken commands
+		if ($return !== 0) {
+			throw new Exception('The ImageMagick frame identification command could not be executed: ' . $file);
+		}
+
+		return count($output);
 	}
 
 	/**
@@ -88,9 +121,10 @@ class ImageMagick extends Darkroom
 	protected function defaults(): array
 	{
 		return parent::defaults() + [
-			'bin'       => 'convert',
-			'interlace' => false,
-			'frame'     => null,
+			'bin'         => 'convert',
+			'identifyBin' => 'identify',
+			'interlace'   => false,
+			'frame'       => null,
 		];
 	}
 

@@ -2,6 +2,7 @@
 
 namespace Kirby\Image\Darkroom;
 
+use Exception;
 use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +46,7 @@ class ImageMagickTest extends TestCase
 			'scaleWidth' => 1,
 			'width' => 500,
 			'bin' => 'convert',
+			'identifyBin' => 'identify',
 			'interlace' => false,
 			'frame' => null
 		], $im->process($file));
@@ -69,6 +71,45 @@ class ImageMagickTest extends TestCase
 		imagedestroy($testImage);
 
 		$this->assertFileEquals($this->tmp . '/gif.png', $this->tmp . '/to-test.png');
+	}
+
+	public function testFrameCount()
+	{
+		$im = new ImageMagick();
+
+		$this->assertSame(2, $im->frameCount($this->fixtures . '/gif.gif'));
+		$this->assertSame(1, $im->frameCount($this->fixtures . '/gif.png'));
+	}
+
+	public function testFrameOptionInvalid()
+	{
+		$im = new ImageMagick(['frame' => 2, 'format' => 'png']);
+
+		copy($this->fixtures . '/gif.gif', $file = $this->tmp . '/gif-invalid.gif');
+		$this->expectException(Exception::class);
+		$im->process($file);
+	}
+
+	public function testFrameOptionFallback()
+	{
+		copy($this->fixtures . '/gif.gif', $fallbackFile = $this->tmp . '/gif-fallback.gif');
+		copy($this->fixtures . '/gif.gif', $selectedFile = $this->tmp . '/gif-fallback-selected.gif');
+
+		$im = new ImageMagick(['format' => 'png']);
+		$im->process($fallbackFile);
+		$im->process($selectedFile, ['frame' => 0]);
+
+		// It seems that ImageMagick has some changing EXIF data
+		// we can get rid of by generating new images for each file
+		$fallbackFrame = imagecreatefrompng($this->tmp . '/gif-fallback.png');
+		imagepng($fallbackFrame, $this->tmp . '/gif-fallback.png');
+		imagedestroy($fallbackFrame);
+
+		$selectedFrame = imagecreatefrompng($this->tmp . '/gif-fallback-selected.png');
+		imagepng($selectedFrame, $this->tmp . '/gif-fallback-selected.png');
+		imagedestroy($selectedFrame);
+
+		$this->assertFileEquals($this->tmp . '/gif-fallback.png', $this->tmp . '/gif-fallback-selected.png');
 	}
 
 	/**
