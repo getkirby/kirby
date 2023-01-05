@@ -112,7 +112,7 @@ class ImageMagick extends Darkroom
 			throw new Exception('The ImageMagick frame identification command could not be executed: ' . $file);
 		}
 
-		return intval($output[0]);
+		return (int)($output[0]);
 	}
 
 	/**
