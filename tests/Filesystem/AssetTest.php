@@ -22,6 +22,11 @@ class AssetTest extends TestCase
 			'urls' => [
 				'index' => 'https://getkirby.com'
 			],
+			'assetMethods' => [
+				'test' => function () {
+					return 'asset method';
+				}
+			]
 		]);
 	}
 
@@ -85,5 +90,11 @@ class AssetTest extends TestCase
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
+	}
+
+	public function testAssetMethod()
+	{
+		$asset = $this->_asset();
+		$this->assertSame('asset method', $asset->test());
 	}
 }
