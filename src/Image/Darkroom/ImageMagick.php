@@ -105,14 +105,14 @@ class ImageMagick extends Darkroom
 	 */
 	public function frameCount(string $file, array $options): int
 	{
-		exec($options['identifyBin'] . ' ' . escapeshellarg($file), $output, $return);
+		exec($options['identifyBin'] . ' -ping -format "%n\n" ' . escapeshellarg($file), $output, $return);
 
 		// log broken commands
 		if ($return !== 0) {
 			throw new Exception('The ImageMagick frame identification command could not be executed: ' . $file);
 		}
 
-		return count($output);
+		return intval($output[0]);
 	}
 
 	/**
