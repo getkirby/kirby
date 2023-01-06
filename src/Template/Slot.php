@@ -19,6 +19,18 @@ use Kirby\Exception\LogicException;
 class Slot
 {
 	/**
+	 * The captured slot content
+	 * @internal
+	 */
+	public string|null $content;
+
+	/**
+	 * The name that was declared during
+	 * the definition of the slot
+	 */
+	protected string $name;
+
+	/**
 	 * Keeps track of the slot state
 	 */
 	protected bool $open = false;
@@ -26,10 +38,10 @@ class Slot
 	/**
 	 * Creates a new slot for the given snippet
 	 */
-	public function __construct(
-		protected string $name,
-		public string|null $content = null
-	) {
+	public function __construct(string $name, string|null $content = null)
+	{
+		$this->name    = $name;
+		$this->content = $content;
 	}
 
 	/**

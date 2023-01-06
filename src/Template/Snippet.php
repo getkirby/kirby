@@ -44,6 +44,18 @@ class Snippet extends Tpl
 	protected self|null $parent = null;
 
 	/**
+	 * Associative array with variables that
+	 * will be set inside the snippet
+	 */
+	protected array $data;
+
+	/**
+	 * Full path to the PHP file of the snippet;
+	 * can be `null` for "dummy" snippets that don't exist
+	 */
+	protected string|null $file;
+
+	/**
 	 * Keeps track of the state of the snippet
 	 */
 	protected bool $open = false;
@@ -63,10 +75,10 @@ class Snippet extends Tpl
 	/**
 	 * Creates a new snippet
 	 */
-	public function __construct(
-		protected string|null $file,
-		protected array $data = []
-	) {
+	public function __construct(string|null $file, array $data = [])
+	{
+		$this->file = $file;
+		$this->data = $data;
 	}
 
 	/**
