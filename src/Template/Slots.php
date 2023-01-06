@@ -18,7 +18,6 @@ class Slots
 {
 	/**
 	 * Creates a new slots collection
-	 * for the given snippet
 	 */
 	public function __construct(protected array $slots)
 	{

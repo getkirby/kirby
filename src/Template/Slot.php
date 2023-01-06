@@ -36,7 +36,7 @@ class Slot
 	protected bool $open = false;
 
 	/**
-	 * Creates a new slot for the given snippet
+	 * Creates a new slot
 	 */
 	public function __construct(string $name, string|null $content = null)
 	{
