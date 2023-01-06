@@ -25,6 +25,11 @@ class Template
 	public static array $data = [];
 
 	/**
+	 * Default template type if no specific type is set
+	 */
+	protected string $defaultType;
+
+	/**
 	 * The name of the template
 	 */
 	protected string $name;
@@ -33,11 +38,6 @@ class Template
 	 * Template type (html, json, etc.)
 	 */
 	protected string $type;
-
-	/**
-	 * Default template type if no specific type is set
-	 */
-	protected string $defaultType;
 
 	/**
 	 * Creates a new template object

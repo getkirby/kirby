@@ -39,15 +39,16 @@ class Snippet extends Tpl
 	protected array $capture = [];
 
 	/**
-	 * The parent snippet
-	 */
-	protected self|null $parent = null;
-
-	/**
 	 * Associative array with variables that
 	 * will be set inside the snippet
 	 */
 	protected array $data;
+
+	/**
+	 * An empty dummy slots object used for snippets
+	 * that were loaded without passing slots
+	 */
+	protected static Slots|null $dummySlots = null;
 
 	/**
 	 * Full path to the PHP file of the snippet;
@@ -61,16 +62,15 @@ class Snippet extends Tpl
 	protected bool $open = false;
 
 	/**
+	 * The parent snippet
+	 */
+	protected self|null $parent = null;
+
+	/**
 	 * The collection of closed slots that will be used
 	 * to pass down to the template for the snippet.
 	 */
 	protected array $slots = [];
-
-	/**
-	 * An empty dummy slots object used for snippets
-	 * that were loaded without passing slots
-	 */
-	protected static Slots|null $dummySlots = null;
 
 	/**
 	 * Creates a new snippet
