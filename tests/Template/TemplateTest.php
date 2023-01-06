@@ -35,7 +35,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => __DIR__ . '/templates'
+				'templates' => __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -65,7 +65,7 @@ class TemplateTest extends TestCase
 
 		new App([
 			'roots' => [
-				'templates' => __DIR__ . '/templates'
+				'templates' => __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -73,10 +73,10 @@ class TemplateTest extends TestCase
 		$this->assertNull($template->file());
 
 		$template = new Template('simple');
-		$this->assertSame(__DIR__ . '/templates/simple.php', $template->file());
+		$this->assertSame(__DIR__ . '/fixtures/simple.php', $template->file());
 
 		$template = new Template('simple', 'rss');
-		$this->assertSame(__DIR__ . '/templates/simple.rss.php', $template->file());
+		$this->assertSame(__DIR__ . '/fixtures/simple.rss.php', $template->file());
 
 		$template = new Template('plugin');
 		$this->assertSame('plugin.php', $template->file());
@@ -105,7 +105,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => $root = __DIR__ . '/templates'
+				'templates' => $root = __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -121,7 +121,7 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'templates' => $root = __DIR__ . '/templates'
+				'templates' => $root = __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -136,8 +136,8 @@ class TemplateTest extends TestCase
 	{
 		new App([
 			'roots' => [
-				'snippets'  => __DIR__ . '/templates',
-				'templates' => __DIR__ . '/templates'
+				'snippets'  => __DIR__ . '/fixtures',
+				'templates' => __DIR__ . '/fixtures'
 			]
 		]);
 

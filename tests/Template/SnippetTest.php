@@ -4,25 +4,13 @@ namespace Kirby\Template;
 
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass Kirby\Template\Snippet
  */
 class SnippetTest extends TestCase
 {
-	/**
-	 * @covers ::__construct
-	 */
-	public function testSnippet()
-	{
-		$snippet = new Snippet('test.php');
-
-		$this->assertSame('test.php', $snippet->file);
-		$this->assertFalse($snippet->open);
-		$this->assertNull($snippet->parent);
-		$this->assertSame([], $snippet->data);
-	}
-
 	/**
 	 * @covers ::close
 	 */
@@ -41,22 +29,31 @@ class SnippetTest extends TestCase
 	 */
 	public function testFactory()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/templates'
+				'snippets' => __DIR__ . '/fixtures'
 			]
 		]);
 
-		$snippet = Snippet::factory('simple', ['slot' => 'hello']);
+		$snippet = Snippet::factory('data', ['message' => 'hello']);
 		$this->assertSame('hello', $snippet);
 
-		$snippet = Snippet::factory('simple', ['slot' => 'hello'], slots: true);
+		$snippet = Snippet::factory('simple', slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
-		$this->assertTrue($snippet->open);
 
-		$snippet->close();
+		$openProp = new ReflectionProperty($snippet, 'open');
+		$openProp->setAccessible(true);
+		$this->assertTrue($openProp->getValue($snippet));
+
+		$snippet = Snippet::factory('missin', ['message' => 'hello']);
+		$this->assertSame('', $snippet);
+
+		$snippet = Snippet::factory('missin', ['message' => 'hello'], slots: true);
+		$this->assertInstanceOf(Snippet::class, $snippet);
 	}
-
 
 	/**
 	 * @covers ::file
@@ -71,12 +68,13 @@ class SnippetTest extends TestCase
 
 		new App([
 			'roots' => [
-				'snippets' => __DIR__ . '/templates'
+				'snippets' => __DIR__ . '/fixtures'
 			]
 		]);
 
-		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file('simple'));
-		$this->assertSame(__DIR__ . '/templates/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file('simple'));
+		$this->assertSame(__DIR__ . '/fixtures/simple.php', Snippet::file(['missin', 'simple']));
+		$this->assertNull(Snippet::file('missin'));
 		$this->assertSame('bar.php', Snippet::file('foo'));
 	}
 
@@ -88,7 +86,7 @@ class SnippetTest extends TestCase
 	{
 		ob_start();
 
-		Snippet::begin(__DIR__ . '/templates/simple.php');
+		Snippet::begin(__DIR__ . '/fixtures/simple.php');
 		Slot::begin();
 		echo 'Nice';
 		Slot::end();
@@ -120,7 +118,10 @@ class SnippetTest extends TestCase
 
 		$a->close();
 
-		$this->assertSame($a, $b->parent);
+		$parentProp = new ReflectionProperty(Snippet::class, 'parent');
+		$parentProp->setAccessible(true);
+
+		$this->assertSame($a, $parentProp->getValue($b));
 	}
 
 	/**
@@ -129,6 +130,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testOpenCloseWithSlotsAndSwallowedDefaultContent()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 
@@ -151,6 +155,9 @@ class SnippetTest extends TestCase
 	 */
 	public function testOpenCloseWithDefaultSlotContent()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 		echo 'Default content';
@@ -161,12 +168,25 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
+	public function renderWithSlotsProvider(): array
+	{
+		return [
+			[__DIR__ . '/fixtures/slots.php', 'Header content' . PHP_EOL . 'Body content' . PHP_EOL . 'Footer content'],
+			[__DIR__ . '/fixtures/missin.php', ''],
+			[null, ''],
+		];
+	}
+
 	/**
 	 * @covers ::render
+	 * @dataProvider renderWithSlotsProvider
 	 */
-	public function testRenderWithSlots()
+	public function testRenderWithSlots(string|null $file, string $expected)
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet($file);
 
 		// the template should be empty without any slots
 		$this->assertSame('', trim($snippet->render()));
@@ -177,19 +197,15 @@ class SnippetTest extends TestCase
 		echo 'Header content';
 		$snippet->endslot();
 
-		$snippet->slot();
-		echo 'Body content';
-		$snippet->endslot();
-
 		$snippet->slot('footer');
 		echo 'Footer content';
 		$snippet->endslot();
 
-		$snippet->close();
+		$snippet->slot();
+		echo 'Body content';
+		$snippet->endslot();
 
-		$expected  = 'Header content' . PHP_EOL;
-		$expected .= 'Body content' . PHP_EOL;
-		$expected .= 'Footer content';
+		$snippet->close();
 
 		$this->assertSame($expected, $snippet->render());
 	}
@@ -199,12 +215,14 @@ class SnippetTest extends TestCase
 	 */
 	public function testRenderWithoutClosing()
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/layout.php');
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet(__DIR__ . '/fixtures/layout.php');
 		$snippet->open();
 		echo 'content';
 
-		$this->assertSame('<h1>Layout</h1>
-content', $snippet->render());
+		$this->assertSame("<h1>Layout</h1>\ncontent", $snippet->render());
 	}
 
 	/**
@@ -212,7 +230,7 @@ content', $snippet->render());
 	 */
 	public function testRenderWithLazySlots()
 	{
-		$snippet = new Snippet(__DIR__ . '/templates/slots.php');
+		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
 
 		$html = $snippet->render(slots: [
 			'header'  => 'Header content',
@@ -228,12 +246,13 @@ content', $snippet->render());
 	}
 
 	/**
+	 * @covers ::__construct
 	 * @covers ::render
 	 */
 	public function testRenderWithData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/templates/data.php',
+			file: __DIR__ . '/fixtures/data.php',
 			data: ['message' => 'hello']
 		);
 
@@ -246,7 +265,7 @@ content', $snippet->render());
 	public function testRenderWithLazyData()
 	{
 		$snippet = new Snippet(
-			file: __DIR__ . '/templates/data.php',
+			file: __DIR__ . '/fixtures/data.php',
 		);
 
 		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
@@ -259,7 +278,7 @@ content', $snippet->render());
 	{
 		new App([
 			'roots' => [
-				'snippets' => $root = __DIR__ . '/templates'
+				'snippets' => $root = __DIR__ . '/fixtures'
 			]
 		]);
 
@@ -271,16 +290,27 @@ content', $snippet->render());
 	 */
 	public function testScope()
 	{
-		$snippet = new Snippet(file: 'test.php', data: $data = [
-			'message' => 'Hello'
+		$closure = function ($scope) use (&$data) {
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('message', $scope);
+
+			$this->assertSame('Hello', $scope['message']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertNull($scope['slots']->default);
+			$this->assertNull($scope['slot']);
+
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
+
+		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+			'message' => 'Hello',
+			'closure' => $closure
 		]);
 
-		$scope = $snippet->scope();
-
-		$this->assertSame('Hello', $scope['message']);
-		$this->assertSame($data, $scope['data']);
-		$this->assertInstanceOf(Slots::class, $scope['slots']);
-		$this->assertNull($scope['slot']);
+		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
 	/**
@@ -288,27 +318,85 @@ content', $snippet->render());
 	 */
 	public function testScopeWithDefaultSlot()
 	{
-		$snippet = new Snippet('test.php');
-		$snippet->slots = [
-			'default' => $slot = new Slot($snippet, 'test')
-		];
+		$closure = function ($scope) use (&$data, &$slot) {
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
 
-		$this->assertSame($slot, $snippet->scope()['slot']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertSame($slot, $scope['slots']->default);
+			$this->assertSame($slot, $scope['slot']);
+
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
+
+		$snippet = new Snippet(file: __DIR__ . '/fixtures/scope.php', data: $data = [
+			'closure' => $closure
+		]);
+
+		$slotsProp = new ReflectionProperty($snippet, 'slots');
+		$slotsProp->setAccessible(true);
+
+		$slotsProp->setValue($snippet, [
+			'default' => $slot = new Slot('test')
+		]);
+
+		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
 	/**
 	 * @covers ::scope
 	 */
-	public function testScopeWithData()
+	public function testScopeWithoutSlots()
 	{
-		$snippet = new Snippet(file: 'test.php');
-
-		$scope = $snippet->scope(data: $data = [
-			'message' => 'Hello'
+		new App([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures'
+			]
 		]);
 
-		$this->assertSame('Hello', $scope['message']);
-		$this->assertSame($data, $scope['data']);
+		$slots = null;
+
+		$closure = function ($scope) use (&$data, &$slots) {
+			$this->assertArrayHasKey('slots', $scope);
+			$this->assertArrayHasKey('slot', $scope);
+			$this->assertArrayHasKey('closure', $scope);
+			$this->assertArrayHasKey('message', $scope);
+
+			$this->assertSame('Hello', $scope['message']);
+			$this->assertInstanceOf(Slots::class, $scope['slots']);
+			$this->assertNull($scope['slots']->default);
+			$this->assertNull($scope['slot']);
+
+			if ($slots !== null) {
+				$this->assertSame($slots, $scope['slots']);
+			} else {
+				$slots = $scope['slots'];
+			}
+
+			// print success output to ensure that this code ran at all
+			echo 'Scope snippet success';
+		};
+
+		$result = Snippet::factory(
+			name: 'scope',
+			data: $data = [
+				'message' => 'Hello',
+				'closure' => $closure
+			]
+		);
+		$this->assertSame('Scope snippet success', $result);
+
+		// second run to test the dummy slots cache
+		$result = Snippet::factory(
+			name: 'scope',
+			data: $data = [
+				'message' => 'Hello',
+				'closure' => $closure
+			]
+		);
+		$this->assertSame('Scope snippet success', $result);
 	}
 
 	/**
@@ -318,6 +406,9 @@ content', $snippet->render());
 	 */
 	public function testSlots()
 	{
+		// all output must be captured
+		$this->expectOutputString('');
+
 		$snippet = new Snippet('test.php');
 		$snippet->open();
 

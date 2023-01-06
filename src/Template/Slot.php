@@ -19,18 +19,29 @@ use Kirby\Exception\LogicException;
 class Slot
 {
 	/**
-	 * Keeps track of the slot state
+	 * The captured slot content
+	 * @internal
 	 */
-	public bool $open = false;
+	public string|null $content;
 
 	/**
-	 * Creates a new slot for the given snippet
+	 * The name that was declared during
+	 * the definition of the slot
 	 */
-	public function __construct(
-		public Snippet $snippet,
-		public string $name,
-		public string|null $content = null
-	) {
+	protected string $name;
+
+	/**
+	 * Keeps track of the slot state
+	 */
+	protected bool $open = false;
+
+	/**
+	 * Creates a new slot
+	 */
+	public function __construct(string $name, string|null $content = null)
+	{
+		$this->name    = $name;
+		$this->content = $content;
 	}
 
 	/**
@@ -66,11 +77,28 @@ class Slot
 	}
 
 	/**
-	 * Used in the endslot helper
+	 * Used in the endslot() helper
 	 */
 	public static function end(): void
 	{
 		Snippet::$current?->endslot();
+	}
+
+	/**
+	 * Returns whether the slot is currently
+	 * open and being buffered
+	 */
+	public function isOpen(): bool
+	{
+		return $this->open;
+	}
+
+	/**
+	 * Returns the slot name
+	 */
+	public function name(): string
+	{
+		return $this->name;
 	}
 
 	/**

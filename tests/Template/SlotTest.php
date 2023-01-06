@@ -3,6 +3,7 @@
 namespace Kirby\Template;
 
 use Kirby\Exception\LogicException;
+use ReflectionProperty;
 
 /**
  * @coversDefaultClass Kirby\Template\Slot
@@ -11,15 +12,15 @@ class SlotTest extends TestCase
 {
 	/**
 	 * @covers ::__construct
+	 * @covers ::isOpen
+	 * @covers ::name
 	 */
 	public function testConstruct()
 	{
-		$snippet = new Snippet('test.php');
-		$slot    = new Slot($snippet, 'test');
+		$slot = new Slot('test');
 
-		$this->assertSame($snippet, $slot->snippet);
-		$this->assertSame('test', $slot->name);
-		$this->assertFalse($slot->open);
+		$this->assertSame('test', $slot->name());
+		$this->assertFalse($slot->isOpen());
 		$this->assertNull($slot->content);
 		$this->assertNull($slot->render());
 		$this->assertSame('', $slot->__toString());
@@ -35,19 +36,22 @@ class SlotTest extends TestCase
 		$snippet = Snippet::begin('test.php');
 		$this->assertSame($snippet, Snippet::$current);
 
-		$this->assertCount(0, $snippet->capture);
-		$this->assertCount(0, $snippet->slots);
+		$captureProp = new ReflectionProperty($snippet, 'capture');
+		$slotsProp   = new ReflectionProperty($snippet, 'slots');
+		$captureProp->setAccessible(true);
+		$slotsProp->setAccessible(true);
+
+		$this->assertCount(0, $captureProp->getValue($snippet));
+		$this->assertCount(0, $slotsProp->getValue($snippet));
 
 		$slot = Slot::begin();
 		$this->assertInstanceOf(Slot::class, $slot);
-		$this->assertCount(1, $snippet->capture);
-		$this->assertCount(0, $snippet->slots);
+		$this->assertCount(1, $captureProp->getValue($snippet));
+		$this->assertCount(0, $slotsProp->getValue($snippet));
 
 		Slot::end();
-		$this->assertCount(0, $snippet->capture);
-		$this->assertCount(1, $snippet->slots);
-
-		$snippet->close();
+		$this->assertCount(0, $captureProp->getValue($snippet));
+		$this->assertCount(1, $slotsProp->getValue($snippet));
 	}
 
 	/**
@@ -56,17 +60,20 @@ class SlotTest extends TestCase
 	 */
 	public function testOpenClose()
 	{
-		$slot = new Slot(new Snippet('test.php'), 'test');
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$slot = new Slot('test');
 
 		$this->assertNull($slot->content);
-		$this->assertFalse($slot->open);
+		$this->assertFalse($slot->isOpen());
 		$slot->open();
-		$this->assertTrue($slot->open);
+		$this->assertTrue($slot->isOpen());
 
 		echo $content = 'Test';
 		$slot->close();
 
-		$this->assertFalse($slot->open);
+		$this->assertFalse($slot->isOpen());
 		$this->assertSame($content, $slot->content);
 	}
 
@@ -75,7 +82,7 @@ class SlotTest extends TestCase
 	 */
 	public function testCloseWhenNotOpen()
 	{
-		$slot = new Slot(new Snippet('test.php'), 'test');
+		$slot = new Slot('test');
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The slot has not been opened');
@@ -89,7 +96,10 @@ class SlotTest extends TestCase
 	 */
 	public function testRender()
 	{
-		$slot    = new Slot(new Snippet('test.php'), 'test');
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$slot    = new Slot('test');
 		$content = 'Test content';
 
 		$slot->open();
