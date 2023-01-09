@@ -9,11 +9,11 @@
 		<!-- @slot Content of the dropdown -->
 		<slot>
 			<template v-for="(option, index) in items">
-				<hr v-if="option === '-'" :key="index + 'separator'" />
+				<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
 				<k-dropdown-item
 					v-else
-					:key="index + '-item'"
-					:ref="index + '-item'"
+					:ref="_uid + '-item-' + index"
+					:key="_uid + '-item-' + index"
 					v-bind="option"
 					@click="onOptionClick(option)"
 				>
@@ -132,11 +132,9 @@ export default {
 			this.isOpen ? this.close() : this.open();
 		},
 		focus(n = 0) {
-			const element = this.$refs[n + "-item"]?.[0];
-
-			if (element?.focus) {
+			if (this.$children[n]?.focus) {
 				this.current = n;
-				element.focus();
+				this.$children[n].focus();
 			}
 		},
 		onOpen() {
@@ -194,8 +192,8 @@ export default {
 						}
 
 						if (
-							this.items[this.current] &&
-							this.items[this.current].disabled === false
+							this.$children[this.current] &&
+							this.$children[this.current].disabled === false
 						) {
 							this.focus(this.current);
 							break;
@@ -209,15 +207,19 @@ export default {
 					while (true) {
 						this.current++;
 
-						if (this.current > this.items.length - 1) {
-							const enabled = this.items.filter((x) => x.disabled === false);
-							this.current = this.items.indexOf(enabled[enabled.length - 1]);
+						if (this.current > this.$children.length - 1) {
+							const enabled = this.$children.filter(
+								(x) => x.disabled === false
+							);
+							this.current = this.$children.indexOf(
+								enabled[enabled.length - 1]
+							);
 							break;
 						}
 
 						if (
-							this.items[this.current] &&
-							this.items[this.current].disabled === false
+							this.$children[this.current] &&
+							this.$children[this.current].disabled === false
 						) {
 							this.focus(this.current);
 							break;
@@ -229,15 +231,15 @@ export default {
 					while (true) {
 						this.current++;
 
-						if (this.current > this.items.length - 1) {
+						if (this.current > this.$children.length - 1) {
 							this.close();
 							this.$emit("leave", e.code);
 							break;
 						}
 
 						if (
-							this.items[this.current] &&
-							this.items[this.current].disabled === false
+							this.$children[this.current] &&
+							this.$children[this.current].disabled === false
 						) {
 							break;
 						}
