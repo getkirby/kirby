@@ -8,6 +8,7 @@ import HeadlineField from "./HeadlineField.vue";
 import InfoField from "./InfoField.vue";
 import LayoutField from "./LayoutField.vue";
 import LineField from "./LineField.vue";
+import LinkField from "./LinkField.vue";
 import ListField from "./ListField.vue";
 import MultiselectField from "./MultiselectField.vue";
 import NumberField from "./NumberField.vue";
@@ -42,6 +43,7 @@ export default {
 		app.component("k-info-field", InfoField);
 		app.component("k-layout-field", LayoutField);
 		app.component("k-line-field", LineField);
+		app.component("k-link-field", LinkField);
 		app.component("k-list-field", ListField);
 		app.component("k-multiselect-field", MultiselectField);
 		app.component("k-number-field", NumberField);

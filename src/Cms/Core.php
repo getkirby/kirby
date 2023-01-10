@@ -227,6 +227,7 @@ class Core
 			'info'        => $this->root . '/fields/info.php',
 			'layout'      => 'Kirby\Form\Field\LayoutField',
 			'line'        => $this->root . '/fields/line.php',
+			'link'        => $this->root . '/fields/link.php',
 			'list'        => $this->root . '/fields/list.php',
 			'multiselect' => $this->root . '/fields/multiselect.php',
 			'number'      => $this->root . '/fields/number.php',
