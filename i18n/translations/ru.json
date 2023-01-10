@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "Шаблон эл. почты \"{name}\" не найден",
 
 	"error.field.converter.invalid": "Неверный конвертер \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Название не может быть пустым",
 	"error.file.changeName.permission": "У вас нет права изменить название \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Страницы не выбраны",
 
 	"field.structure.delete.confirm": "Вы точно хотите удалить эту запись?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Записей нет",
 
 	"field.users.empty": "Пользователей нет",
@@ -349,6 +351,8 @@
 	"license.manage": "Управление лицензиями",
 	"license.register.help": "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
 	"license.register.label": "Пожалуйста вставьте код лицензии",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Спасибо за поддержку Kirby",
 	"license.unregistered": "Это незарегистрированная версия Kirby",
 	"license.unregistered.label": "Не зарегистрировано",

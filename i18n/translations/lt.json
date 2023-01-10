@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "El. pašto paruoštukas \"{name}\" nerastas",
 
 	"error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "Pavadinimas negali būti tuščias",
 	"error.file.changeName.permission": "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Dar nėra puslapių",
 
 	"field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "Dar nėra įrašų",
 
 	"field.users.empty": "Dar nėra vartotojų",
@@ -349,6 +351,8 @@
 	"license.manage": "Valdyti savo licencijas",
 	"license.register.help": "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
 	"license.register.label": "Prašome įrašyti jūsų licenzijos kodą",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Ačiū, kad palaikote Kirby",
 	"license.unregistered": "Tai neregistruota Kirby demo versija",
 	"license.unregistered.label": "Neregistruota",

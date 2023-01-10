@@ -15,10 +15,10 @@
 			<!-- eslint-disable vue/no-mutating-props -->
 			<k-fieldset
 				ref="fields"
+				v-model="value"
 				:disabled="disabled"
 				:fields="fields"
 				:novalidate="novalidate"
-				:value="value"
 				v-on="listeners"
 			/>
 		</slot>
@@ -66,7 +66,6 @@ export default {
 			errors: {},
 			listeners: {
 				...this.$listeners,
-				input: this.onInput,
 				submit: this.onSubmit
 			}
 		};
@@ -79,9 +78,6 @@ export default {
 		 */
 		focus(name) {
 			this.$refs.fields?.focus?.(name);
-		},
-		onInput(values, field, name) {
-			this.$emit("input", values, field, name);
 		},
 		onSubmit() {
 			/**

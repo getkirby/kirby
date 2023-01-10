@@ -11,7 +11,7 @@
 /**
  * We use the counter in many fields to show the character count of an input or the accepted min/max length of items. You can use the counter yourself very easily:
  * @example <k-counter :count="text.length" :min="2" :max="10" />
-<input :value="text" @input="text = $event">
+<input :value="text" @input="text = $event.target.value">
  */
 export default {
 	props: {

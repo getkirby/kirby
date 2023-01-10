@@ -75,6 +75,7 @@
 	"error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
 
 	"error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
+	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
 
 	"error.file.changeName.empty": "The name must not be empty",
 	"error.file.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
@@ -289,6 +290,7 @@
 	"field.pages.empty": "Δεν έχουν επιλεγεί ακόμη σελίδες",
 
 	"field.structure.delete.confirm": "\u0395\u03af\u03c3\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03bf\u03c2 \u03cc\u03c4\u03b9 \u03b8\u03ad\u03bb\u03b5\u03c4\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03b1\u03c7\u03ce\u03c1\u03b9\u03c3\u03b7;",
+	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
 	"field.structure.empty": "\u0394\u03b5\u03bd \u03c5\u03c0\u03ac\u03c1\u03c7\u03bf\u03c5\u03bd \u03b1\u03ba\u03cc\u03bc\u03b7 \u03ba\u03b1\u03c4\u03b1\u03c7\u03c9\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.",
 
 	"field.users.empty": "Δεν έχουν επιλεγεί ακόμη χρήστες",
@@ -349,6 +351,8 @@
 	"license.manage": "Manage your licenses",
 	"license.register.help": "Έχετε λάβει τον κωδικό άδειας χρήσης μετά την αγορά μέσω ηλεκτρονικού ταχυδρομείου. Παρακαλώ αντιγράψτε και επικολλήστε τον για να εγγραφείτε.",
 	"license.register.label": "Παρακαλώ εισαγάγετε τον κωδικό άδειας χρήσης",
+	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
+	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
 	"license.register.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",
 	"license.unregistered": "Αυτό είναι ένα μη καταχωρημένο demo του Kirby",
 	"license.unregistered.label": "Unregistered",
