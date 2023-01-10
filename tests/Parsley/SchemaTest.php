@@ -9,39 +9,39 @@ use PHPUnit\Framework\TestCase;
  */
 class SchemaTest extends TestCase
 {
-    /**
-     * @covers ::fallback
-     */
-    public function testFallback()
-    {
-        $schema = new Schema();
-        return $this->assertNull($schema->fallback('test'));
-    }
+	/**
+	 * @covers ::fallback
+	 */
+	public function testFallback()
+	{
+		$schema = new Schema();
+		return $this->assertNull($schema->fallback('test'));
+	}
 
-    /**
-     * @covers ::marks
-     */
-    public function testMarks()
-    {
-        $schema = new Schema();
-        return $this->assertSame([], $schema->marks());
-    }
+	/**
+	 * @covers ::marks
+	 */
+	public function testMarks()
+	{
+		$schema = new Schema();
+		return $this->assertSame([], $schema->marks());
+	}
 
-    /**
-     * @covers ::nodes
-     */
-    public function testNodes()
-    {
-        $schema = new Schema();
-        return $this->assertSame([], $schema->nodes());
-    }
+	/**
+	 * @covers ::nodes
+	 */
+	public function testNodes()
+	{
+		$schema = new Schema();
+		return $this->assertSame([], $schema->nodes());
+	}
 
-    /**
-     * @covers ::skip
-     */
-    public function testSkip()
-    {
-        $schema = new Schema();
-        return $this->assertSame([], $schema->skip());
-    }
+	/**
+	 * @covers ::skip
+	 */
+	public function testSkip()
+	{
+		$schema = new Schema();
+		return $this->assertSame([], $schema->skip());
+	}
 }

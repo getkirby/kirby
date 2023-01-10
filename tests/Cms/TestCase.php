@@ -3,125 +3,130 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    protected $page = null;
-    protected $app;
+	protected $app;
+	protected $page = null;
+	protected $tmp = __DIR__ . '/tmp';
 
-    public function setUp(): void
-    {
-        App::destroy();
+	public function setUp(): void
+	{
+		App::destroy();
 
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
+		Dir::make($this->tmp);
 
-        Blueprint::$loaded = [];
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			]
+		]);
 
-        I18n::$locale       = null;
-        I18n::$fallback     = 'en';
-        I18n::$translations = [];
-        Str::$language      = [];
-    }
+		Blueprint::$loaded = [];
 
-    public function tearDown(): void
-    {
-        App::destroy();
-        Blueprint::$loaded = [];
-    }
+		I18n::$locale       = null;
+		I18n::$fallback     = 'en';
+		I18n::$translations = [];
+		Str::$language      = [];
+	}
 
-    public function kirby($props = [])
-    {
-        return new App($props);
-    }
+	public function tearDown(): void
+	{
+		App::destroy();
+		Dir::remove($this->tmp);
+		Blueprint::$loaded = [];
+	}
 
-    public function site()
-    {
-        return $this->kirby()->site();
-    }
+	public function kirby($props = [])
+	{
+		return new App($props);
+	}
 
-    public function pages()
-    {
-        return $this->site()->children();
-    }
+	public function site()
+	{
+		return $this->kirby()->site();
+	}
 
-    public function page(string $id = null)
-    {
-        if ($id !== null) {
-            return $this->site()->find($id);
-        }
+	public function pages()
+	{
+		return $this->site()->children();
+	}
 
-        if ($this->page !== null) {
-            return $this->site()->find($this->page);
-        }
+	public function page(string $id = null)
+	{
+		if ($id !== null) {
+			return $this->site()->find($id);
+		}
 
-        return $this->site()->homePage();
-    }
+		if ($this->page !== null) {
+			return $this->site()->find($this->page);
+		}
 
-    public function assertIsSite($input)
-    {
-        $this->assertInstanceOf(Site::class, $input);
-    }
+		return $this->site()->homePage();
+	}
 
-    public function assertIsPage($input, $id = null)
-    {
-        $this->assertInstanceOf(Page::class, $input);
+	public function assertIsSite($input)
+	{
+		$this->assertInstanceOf(Site::class, $input);
+	}
 
-        if (is_string($id)) {
-            $this->assertEquals($id, $input->id());
-        }
+	public function assertIsPage($input, $id = null)
+	{
+		$this->assertInstanceOf(Page::class, $input);
 
-        if (is_a($id, Page::class)) {
-            $this->assertEquals($input, $id);
-        }
-    }
+		if (is_string($id)) {
+			$this->assertEquals($id, $input->id());
+		}
 
-    public function assertIsFile($input, $id = null)
-    {
-        $this->assertInstanceOf(File::class, $input);
+		if ($id instanceof Page) {
+			$this->assertEquals($input, $id);
+		}
+	}
 
-        if (is_string($id)) {
-            $this->assertEquals($id, $input->id());
-        }
+	public function assertIsFile($input, $id = null)
+	{
+		$this->assertInstanceOf(File::class, $input);
 
-        if (is_a($id, File::class)) {
-            $this->assertEquals($input, $id);
-        }
-    }
+		if (is_string($id)) {
+			$this->assertEquals($id, $input->id());
+		}
 
-    public function assertHooks(array $hooks, Closure $action, $appProps = [])
-    {
-        $phpUnit   = $this;
-        $triggered = 0;
+		if ($id instanceof File) {
+			$this->assertEquals($input, $id);
+		}
+	}
 
-        foreach ($hooks as $name => $callback) {
-            $hooks[$name] = function (...$arguments) use ($callback, $phpUnit, &$triggered) {
-                $callback->call($phpUnit, ...$arguments);
-                $triggered++;
-            };
-        }
+	public function assertHooks(array $hooks, Closure $action, $appProps = [])
+	{
+		$phpUnit   = $this;
+		$triggered = 0;
 
-        App::destroy();
+		foreach ($hooks as $name => $callback) {
+			$hooks[$name] = function (...$arguments) use ($callback, $phpUnit, &$triggered) {
+				$callback->call($phpUnit, ...$arguments);
+				$triggered++;
+			};
+		}
 
-        $app = new App(array_merge([
-            'hooks' => $hooks,
-            'roots' => ['index' => '/dev/null'],
-            'user'  => 'test@getkirby.com',
-            'users' => [
-                [
-                    'email' => 'test@getkirby.com',
-                    'role'  => 'admin'
-                ]
-            ]
-        ], $appProps));
+		App::destroy();
 
-        $action->call($this, $app);
-        $this->assertEquals(count($hooks), $triggered);
-    }
+		$app = new App(array_merge([
+			'hooks' => $hooks,
+			'roots' => ['index' => '/dev/null'],
+			'user'  => 'test@getkirby.com',
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		], $appProps));
+
+		$action->call($this, $app);
+		$this->assertEquals(count($hooks), $triggered);
+	}
 }

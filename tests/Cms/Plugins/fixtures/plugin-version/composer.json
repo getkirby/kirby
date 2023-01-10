@@ -1,0 +1,19 @@
+{
+    "name": "getkirby/test-plugin",
+    "description": "Some really nice description",
+    "type": "plugin",
+    "version": "1.0.0",
+    "license": "MIT",
+    "homepage": "https://getkirby.com",
+    "authors": [
+        {
+            "name": "A",
+            "email": "a@getkirby.com"
+        },
+        {
+            "name": "B",
+            "email": "b@getkirby.com"
+        }
+    ],
+    "require": {}
+}

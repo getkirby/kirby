@@ -11,92 +11,92 @@ use PHPUnit\Framework\TestCase;
  */
 class PlainTest extends TestCase
 {
-    protected $schema;
+	protected $schema;
 
-    public function setUp(): void
-    {
-        $this->schema = new Plain();
-    }
+	public function setUp(): void
+	{
+		$this->schema = new Plain();
+	}
 
-    /**
-     * @covers ::fallback
-     */
-    public function testFallback()
-    {
-        $expected = [
-            'content' => [
-                'text' => 'Test'
-            ],
-            'type' => 'text',
-        ];
+	/**
+	 * @covers ::fallback
+	 */
+	public function testFallback()
+	{
+		$expected = [
+			'content' => [
+				'text' => 'Test'
+			],
+			'type' => 'text',
+		];
 
-        return $this->assertSame($expected, $this->schema->fallback('Test'));
-    }
+		return $this->assertSame($expected, $this->schema->fallback('Test'));
+	}
 
-    /**
-     * @covers ::fallback
-     */
-    public function testFallbackForEmptyContent()
-    {
-        return $this->assertNull($this->schema->fallback(''));
-    }
+	/**
+	 * @covers ::fallback
+	 */
+	public function testFallbackForEmptyContent()
+	{
+		return $this->assertNull($this->schema->fallback(''));
+	}
 
-    /**
-     * @covers ::fallback
-     */
-    public function testFallbackForDomElement()
-    {
-        $dom      = new Dom('<p>Test</p>');
-        $p        = $dom->query('//p')[0];
-        $el       = new Element($p);
-        $fallback = $this->schema->fallback($el);
+	/**
+	 * @covers ::fallback
+	 */
+	public function testFallbackForDomElement()
+	{
+		$dom      = new Dom('<p>Test</p>');
+		$p        = $dom->query('//p')[0];
+		$el       = new Element($p);
+		$fallback = $this->schema->fallback($el);
 
-        $expected = [
-            'content' => [
-                'text' => 'Test',
-            ],
-            'type' => 'text'
-        ];
+		$expected = [
+			'content' => [
+				'text' => 'Test',
+			],
+			'type' => 'text'
+		];
 
-        $this->assertSame($expected, $fallback);
-    }
+		$this->assertSame($expected, $fallback);
+	}
 
-    /**
-     * @covers ::fallback
-     */
-    public function testFallbackForInvalidContent()
-    {
-        $this->assertNull($this->schema->fallback([]));
-    }
+	/**
+	 * @covers ::fallback
+	 */
+	public function testFallbackForInvalidContent()
+	{
+		$this->assertNull($this->schema->fallback(''));
+	}
 
-    /**
-     * @covers ::marks
-     */
-    public function testMarks()
-    {
-        return $this->assertSame([], $this->schema->marks());
-    }
+	/**
+	 * @covers ::marks
+	 */
+	public function testMarks()
+	{
+		return $this->assertSame([], $this->schema->marks());
+	}
 
-    /**
-     * @covers ::nodes
-     */
-    public function testNodes()
-    {
-        return $this->assertSame([], $this->schema->nodes());
-    }
+	/**
+	 * @covers ::nodes
+	 */
+	public function testNodes()
+	{
+		return $this->assertSame([], $this->schema->nodes());
+	}
 
-    /**
-     * @covers ::skip
-     */
-    public function testSkip()
-    {
-        return $this->assertSame([
-            'base',
-            'link',
-            'meta',
-            'script',
-            'style',
-            'title'
-        ], $this->schema->skip());
-    }
+	/**
+	 * @covers ::skip
+	 */
+	public function testSkip()
+	{
+		return $this->assertSame([
+			'base',
+			'link',
+			'meta',
+			'script',
+			'style',
+			'title'
+		], $this->schema->skip());
+	}
 }

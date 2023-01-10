@@ -10,13 +10,13 @@ use PHPUnit\Framework\TestCase;
  */
 class BearerAuthTest extends TestCase
 {
-    public function testInstance()
-    {
-        $auth = new BearerAuth('abcd');
+	public function testInstance()
+	{
+		$auth = new BearerAuth('abcd');
 
-        $this->assertSame('bearer', $auth->type());
-        $this->assertSame('abcd', $auth->data());
-        $this->assertSame('abcd', $auth->token());
-        $this->assertSame('Bearer abcd', (string)$auth);
-    }
+		$this->assertSame('bearer', $auth->type());
+		$this->assertSame('abcd', $auth->data());
+		$this->assertSame('abcd', $auth->token());
+		$this->assertSame('Bearer abcd', (string)$auth);
+	}
 }

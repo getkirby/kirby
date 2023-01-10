@@ -18,31 +18,30 @@ namespace Kirby\Cms;
  */
 class Nest
 {
-    /**
-     * @param $data
-     * @param null $parent
-     * @return mixed
-     */
-    public static function create($data, $parent = null)
-    {
-        if (is_scalar($data) === true) {
-            return new Field($parent, $data, $data);
-        }
+	public static function create(
+		$data,
+		object|null $parent = null
+	): NestCollection|NestObject|Field {
+		if (is_scalar($data) === true) {
+			return new Field($parent, $data, $data);
+		}
 
-        $result = [];
+		$result = [];
 
-        foreach ($data as $key => $value) {
-            if (is_array($value) === true) {
-                $result[$key] = static::create($value, $parent);
-            } elseif (is_scalar($value) === true) {
-                $result[$key] = new Field($parent, $key, $value);
-            }
-        }
+		foreach ($data as $key => $value) {
+			if (is_array($value) === true) {
+				$result[$key] = static::create($value, $parent);
+			} elseif (is_scalar($value) === true) {
+				$result[$key] = new Field($parent, $key, $value);
+			}
+		}
 
-        if (is_int(key($data))) {
-            return new NestCollection($result);
-        } else {
-            return new NestObject($result);
-        }
-    }
+		$key = key($data);
+
+		if ($key === null || is_int($key) === true) {
+			return new NestCollection($result);
+		}
+
+		return new NestObject($result);
+	}
 }

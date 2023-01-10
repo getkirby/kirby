@@ -1,34 +1,34 @@
 <template>
-  <header
-    :data-editable="editable"
-    :data-tabs="tabsWithBadges.length > 1"
-    class="k-header"
-  >
-    <k-headline tag="h1" size="huge">
-      <span
-        v-if="editable && $listeners.edit"
-        class="k-headline-editable"
-        @click="$emit('edit')"
-      >
-        <!-- @slot headline -->
-        <slot />
-        <k-icon type="edit" />
-      </span>
-      <slot v-else />
-    </k-headline>
-    <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
-      <template #left>
-        <!-- @slot buttons on the left -->
-        <slot name="left" />
-      </template>
-      <template #right>
-        <!-- @slot buttons on the right -->
-        <slot name="right" />
-      </template>
-    </k-bar>
+	<header
+		:data-editable="editable"
+		:data-tabs="tabsWithBadges.length > 1"
+		class="k-header"
+	>
+		<k-headline tag="h1" size="huge">
+			<span
+				v-if="editable && $listeners.edit"
+				class="k-headline-editable"
+				@click="$emit('edit')"
+			>
+				<!-- @slot headline -->
+				<slot />
+				<k-icon type="edit" />
+			</span>
+			<slot v-else />
+		</k-headline>
+		<k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
+			<template #left>
+				<!-- @slot buttons on the left -->
+				<slot name="left" />
+			</template>
+			<template #right>
+				<!-- @slot buttons on the right -->
+				<slot name="right" />
+			</template>
+		</k-bar>
 
-    <k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
-  </header>
+		<k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
+	</header>
 </template>
 
 <script>
@@ -37,77 +37,77 @@
  * @internal
  */
 export default {
-  props: {
-    /**
-     * Whether the headline is editable
-     */
-    editable: Boolean,
-    tab: String,
-    tabs: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
-  computed: {
-    tabsWithBadges() {
-      const changed = Object.keys(this.$store.getters["content/changes"]());
+	props: {
+		/**
+		 * Whether the headline is editable
+		 */
+		editable: Boolean,
+		tab: String,
+		tabs: {
+			type: Array,
+			default() {
+				return [];
+			}
+		}
+	},
+	computed: {
+		tabsWithBadges() {
+			const changed = Object.keys(this.$store.getters["content/changes"]());
 
-      return this.tabs.map((tab) => {
-        // collect all fields per tab
-        let fields = [];
-        Object.values(tab.columns).forEach((column) => {
-          Object.values(column.sections).forEach((section) => {
-            if (section.type === "fields") {
-              Object.keys(section.fields).forEach((field) => {
-                fields.push(field);
-              });
-            }
-          });
-        });
+			return this.tabs.map((tab) => {
+				// collect all fields per tab
+				let fields = [];
+				Object.values(tab.columns).forEach((column) => {
+					Object.values(column.sections).forEach((section) => {
+						if (section.type === "fields") {
+							Object.keys(section.fields).forEach((field) => {
+								fields.push(field);
+							});
+						}
+					});
+				});
 
-        // get count of changed fields in this tab
-        tab.badge = fields.filter((field) =>
-          changed.includes(field.toLowerCase())
-        ).length;
+				// get count of changed fields in this tab
+				tab.badge = fields.filter((field) =>
+					changed.includes(field.toLowerCase())
+				).length;
 
-        return tab;
-      });
-    }
-  }
+				return tab;
+			});
+		}
+	}
 };
 </script>
 
 <style>
 .k-header {
-  padding-top: 4vh;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border);
+	padding-top: 4vh;
+	margin-bottom: 2rem;
+	border-bottom: 1px solid var(--color-border);
 }
 .k-header[data-tabs="true"] {
-  border-bottom: 0;
+	border-bottom: 0;
 }
 .k-header .k-headline {
-  min-height: 1.25em;
-  margin-bottom: 0.5rem;
-  word-wrap: break-word;
+	min-height: 1.25em;
+	margin-bottom: 0.5rem;
+	word-wrap: break-word;
 }
 .k-header .k-header-buttons {
-  margin-top: -0.5rem;
-  height: 3.25rem;
+	margin-top: -0.5rem;
+	height: 3.25rem;
 }
 .k-header .k-headline-editable {
-  cursor: pointer;
+	cursor: pointer;
 }
 .k-header .k-headline-editable .k-icon {
-  color: var(--color-gray-500);
-  opacity: 0;
-  transition: opacity 0.3s;
-  display: inline-block;
-  margin-inline-start: 0.5rem;
+	color: var(--color-gray-500);
+	opacity: 0;
+	transition: opacity 0.3s;
+	display: inline-block;
+	margin-inline-start: 0.5rem;
 }
 .k-header .k-headline-editable:hover .k-icon {
-  opacity: 1;
+	opacity: 1;
 }
 </style>

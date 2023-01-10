@@ -2,124 +2,151 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+
 class HasFileTraitUser
 {
-    use HasFiles;
+	use HasFiles;
 
-    protected $files;
+	protected $files;
 
-    public function __construct($files)
-    {
-        $this->files = $files;
-    }
+	public function __construct($files)
+	{
+		$this->files = $files;
+	}
 
-    public function files()
-    {
-        return new Files($this->files);
-    }
+	public function files()
+	{
+		return new Files($this->files);
+	}
 }
 
 
 class HasFilesTest extends TestCase
 {
-    protected $app;
+	protected $app;
+	protected $tmp;
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
-    }
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->tmp = __DIR__ . '/tmp'
+			]
+		]);
 
-    public function fileProvider()
-    {
-        return [
-            ['test.mp3', 'audio', true],
-            ['test.jpg', 'audio', false],
-            ['test.json', 'code', true],
-            ['test.jpg', 'code', false],
-            ['test.pdf', 'documents', true],
-            ['test.jpg', 'documents', false],
-            ['test.jpg', 'images', true],
-            ['test.mov', 'images', false],
-            ['test.mov', 'videos', true],
-            ['test.jpg', 'videos', false],
-        ];
-    }
+		Dir::make($this->tmp);
+	}
 
-    public function testFileWithSlash()
-    {
-        $page = new Page([
-            'slug' => 'mother',
-            'children' => [
-                [
-                    'slug' => 'child',
-                    'files' => [
-                        ['filename' => 'file.jpg']
-                    ]
-                ]
-            ]
-        ]);
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
+	}
 
-        $file = $page->file('child/file.jpg');
-        $this->assertEquals('mother/child/file.jpg', $file->id());
-    }
+	public function fileProvider()
+	{
+		return [
+			['test.mp3', 'audio', true],
+			['test.jpg', 'audio', false],
+			['test.json', 'code', true],
+			['test.jpg', 'code', false],
+			['test.pdf', 'documents', true],
+			['test.jpg', 'documents', false],
+			['test.jpg', 'images', true],
+			['test.mov', 'images', false],
+			['test.mov', 'videos', true],
+			['test.jpg', 'videos', false],
+		];
+	}
 
-    /**
-     * @dataProvider fileProvider
-     */
-    public function testTypes($filename, $type, $expected)
-    {
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+	public function testFileWithSlash()
+	{
+		$page = new Page([
+			'slug' => 'mother',
+			'children' => [
+				[
+					'slug' => 'child',
+					'files' => [
+						['filename' => 'file.jpg']
+					]
+				]
+			]
+		]);
 
-        $parent = new HasFileTraitUser([
-            new File(['filename' => $filename, 'parent' => $page])
-        ]);
+		$file = $page->file('child/file.jpg');
+		$this->assertEquals('mother/child/file.jpg', $file->id());
+	}
 
-        if ($expected === true) {
-            $this->assertCount(1, $parent->{$type}());
-        } else {
-            $this->assertCount(0, $parent->{$type}());
-        }
-    }
+	/**
+	 * @dataProvider fileProvider
+	 */
+	public function testTypes($filename, $type, $expected)
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-    /**
-     * @dataProvider fileProvider
-     */
-    public function testHas($filename, $type, $expected)
-    {
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+		$parent = new HasFileTraitUser([
+			new File(['filename' => $filename, 'parent' => $page])
+		]);
 
-        $parent = new HasFileTraitUser([
-            new File(['filename' => $filename, 'parent' => $page])
-        ]);
+		if ($expected === true) {
+			$this->assertCount(1, $parent->{$type}());
+		} else {
+			$this->assertCount(0, $parent->{$type}());
+		}
+	}
 
-        $this->assertEquals($expected, $parent->{'has' . $type}());
-    }
+	/**
+	 * @dataProvider fileProvider
+	 */
+	public function testHas($filename, $type, $expected)
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-    public function testHasFiles()
-    {
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+		$parent = new HasFileTraitUser([
+			new File(['filename' => $filename, 'parent' => $page])
+		]);
 
-        // no files
-        $parent = new HasFileTraitUser([
-        ]);
+		$this->assertEquals($expected, $parent->{'has' . $type}());
+	}
 
-        $this->assertFalse($parent->hasFiles());
+	public function testHasFiles()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-        // files
-        $parent = new HasFileTraitUser([
-            new File(['filename' => 'test.jpg', 'parent' => $page])
-        ]);
+		// no files
+		$parent = new HasFileTraitUser([
+		]);
 
-        $this->assertTrue($parent->hasFiles());
-    }
+		$this->assertFalse($parent->hasFiles());
+
+		// files
+		$parent = new HasFileTraitUser([
+			new File(['filename' => 'test.jpg', 'parent' => $page])
+		]);
+
+		$this->assertTrue($parent->hasFiles());
+	}
+
+	public function testFileWithUUID()
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$parent = new HasFileTraitUser([
+			new File([
+				'filename' => 'test.jpg',
+				'content'  => ['uuid' => 'file-test'],
+				'parent'   => $page
+			])
+		]);
+
+		$this->assertSame('test.jpg', $parent->file('file://file-test')->filename());
+	}
 }

@@ -2,274 +2,282 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class PagesRoutesTest extends TestCase
 {
-    protected $app;
+	protected $app;
+	protected $tmp = __DIR__ . '/tmp';
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'options' => [
-                'api.allowImpersonation' => true
-            ],
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
-    }
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'options' => [
+				'api.allowImpersonation' => true
+			],
+			'roots' => [
+				'index' => $this->tmp,
+			]
+		]);
+		Dir::make($this->tmp);
+	}
 
-    public function testGet()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'a',
-                        'children' => [
-                            [
-                                'slug' => 'b'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
+	}
 
-        $app->impersonate('kirby');
+	public function testGet()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'children' => [
+							[
+								'slug' => 'b'
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/a');
+		$app->impersonate('kirby');
 
-        $this->assertEquals('a', $response['data']['id']);
+		$response = $app->api()->call('pages/a');
 
-        $response = $app->api()->call('pages/a+b');
+		$this->assertEquals('a', $response['data']['id']);
 
-        $this->assertEquals('a/b', $response['data']['id']);
-    }
+		$response = $app->api()->call('pages/a+b');
 
-    public function testChildren()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'parent',
-                        'children' => [
-                            [
-                                'slug' => 'child-a'
-                            ],
-                            [
-                                'slug' => 'child-b'
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$this->assertEquals('a/b', $response['data']['id']);
+	}
 
-        $app->impersonate('kirby');
+	public function testChildren()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'parent',
+						'children' => [
+							[
+								'slug' => 'child-a'
+							],
+							[
+								'slug' => 'child-b'
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/parent/children');
+		$app->impersonate('kirby');
 
-        $this->assertEquals('parent/child-a', $response['data'][0]['id']);
-        $this->assertEquals('parent/child-b', $response['data'][1]['id']);
-    }
+		$response = $app->api()->call('pages/parent/children');
 
-    public function testChildrenWithStatusFilter()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'parent',
-                        'children' => [
-                            [
-                                'slug' => 'child-a',
-                                'num'  => 1
-                            ],
-                            [
-                                'slug' => 'child-b'
-                            ]
-                        ],
-                        'drafts' => [
-                            [
-                                'slug' => 'draft-a'
-                            ]
-                        ]
+		$this->assertEquals('parent/child-a', $response['data'][0]['id']);
+		$this->assertEquals('parent/child-b', $response['data'][1]['id']);
+	}
 
-                    ]
-                ]
-            ]
-        ]);
+	public function testChildrenWithStatusFilter()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'parent',
+						'children' => [
+							[
+								'slug' => 'child-a',
+								'num'  => 1
+							],
+							[
+								'slug' => 'child-b'
+							]
+						],
+						'drafts' => [
+							[
+								'slug' => 'draft-a'
+							]
+						]
 
-        $app->impersonate('kirby');
+					]
+				]
+			]
+		]);
 
-        // all
-        $response = $app->api()->call('pages/parent/children', 'GET', [
-            'query' => ['status' => 'all']
-        ]);
+		$app->impersonate('kirby');
 
-        $this->assertCount(3, $response['data']);
-        $this->assertEquals('parent/child-a', $response['data'][0]['id']);
-        $this->assertEquals('parent/child-b', $response['data'][1]['id']);
-        $this->assertEquals('parent/draft-a', $response['data'][2]['id']);
+		// all
+		$response = $app->api()->call('pages/parent/children', 'GET', [
+			'query' => ['status' => 'all']
+		]);
 
-        // published
-        $response = $app->api()->call('pages/parent/children', 'GET', [
-            'query' => ['status' => 'published']
-        ]);
+		$this->assertCount(3, $response['data']);
+		$this->assertEquals('parent/child-a', $response['data'][0]['id']);
+		$this->assertEquals('parent/child-b', $response['data'][1]['id']);
+		$this->assertEquals('parent/draft-a', $response['data'][2]['id']);
 
-        $this->assertCount(2, $response['data']);
-        $this->assertEquals('parent/child-a', $response['data'][0]['id']);
-        $this->assertEquals('parent/child-b', $response['data'][1]['id']);
+		// published
+		$response = $app->api()->call('pages/parent/children', 'GET', [
+			'query' => ['status' => 'published']
+		]);
 
-        // listed
-        $response = $app->api()->call('pages/parent/children', 'GET', [
-            'query' => ['status' => 'listed']
-        ]);
+		$this->assertCount(2, $response['data']);
+		$this->assertEquals('parent/child-a', $response['data'][0]['id']);
+		$this->assertEquals('parent/child-b', $response['data'][1]['id']);
 
-        $this->assertCount(1, $response['data']);
-        $this->assertEquals('parent/child-a', $response['data'][0]['id']);
+		// listed
+		$response = $app->api()->call('pages/parent/children', 'GET', [
+			'query' => ['status' => 'listed']
+		]);
 
-        // unlisted
-        $response = $app->api()->call('pages/parent/children', 'GET', [
-            'query' => ['status' => 'unlisted']
-        ]);
+		$this->assertCount(1, $response['data']);
+		$this->assertEquals('parent/child-a', $response['data'][0]['id']);
 
-        $this->assertCount(1, $response['data']);
-        $this->assertEquals('parent/child-b', $response['data'][0]['id']);
+		// unlisted
+		$response = $app->api()->call('pages/parent/children', 'GET', [
+			'query' => ['status' => 'unlisted']
+		]);
 
-        // drafts
-        $response = $app->api()->call('pages/parent/children', 'GET', [
-            'query' => ['status' => 'drafts']
-        ]);
+		$this->assertCount(1, $response['data']);
+		$this->assertEquals('parent/child-b', $response['data'][0]['id']);
 
-        $this->assertCount(1, $response['data']);
-        $this->assertEquals('parent/draft-a', $response['data'][0]['id']);
-    }
+		// drafts
+		$response = $app->api()->call('pages/parent/children', 'GET', [
+			'query' => ['status' => 'drafts']
+		]);
 
-    public function testFiles()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'a',
-                        'files' => [
-                            [
-                                'filename' => 'c.jpg',
-                            ],
-                            [
-                                'filename' => 'a.jpg',
-                            ],
-                            [
-                                'filename' => 'b.jpg',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$this->assertCount(1, $response['data']);
+		$this->assertEquals('parent/draft-a', $response['data'][0]['id']);
+	}
 
-        $app->impersonate('kirby');
+	public function testFiles()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'c.jpg',
+							],
+							[
+								'filename' => 'a.jpg',
+							],
+							[
+								'filename' => 'b.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/a/files');
+		$app->impersonate('kirby');
 
-        $this->assertCount(3, $response['data']);
-        $this->assertSame('a.jpg', $response['data'][0]['filename']);
-        $this->assertSame('b.jpg', $response['data'][1]['filename']);
-        $this->assertSame('c.jpg', $response['data'][2]['filename']);
-    }
+		$response = $app->api()->call('pages/a/files');
 
-    public function testFilesOfAPageWithTheSlugFiles()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'files',
-                        'files' => [
-                            [
-                                'filename' => 'c.jpg',
-                            ],
-                            [
-                                'filename' => 'a.jpg',
-                            ],
-                            [
-                                'filename' => 'b.jpg',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$this->assertCount(3, $response['data']);
+		$this->assertSame('a.jpg', $response['data'][0]['filename']);
+		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+		$this->assertSame('c.jpg', $response['data'][2]['filename']);
+	}
 
-        $app->impersonate('kirby');
+	public function testFilesOfAPageWithTheSlugFiles()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'files',
+						'files' => [
+							[
+								'filename' => 'c.jpg',
+							],
+							[
+								'filename' => 'a.jpg',
+							],
+							[
+								'filename' => 'b.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/files/files');
+		$app->impersonate('kirby');
 
-        $this->assertCount(3, $response['data']);
-        $this->assertSame('a.jpg', $response['data'][0]['filename']);
-        $this->assertSame('b.jpg', $response['data'][1]['filename']);
-        $this->assertSame('c.jpg', $response['data'][2]['filename']);
-    }
+		$response = $app->api()->call('pages/files/files');
 
-    public function testFilesSorted()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'a',
-                        'files' => [
-                            [
-                                'filename' => 'a.jpg',
-                                'content'  => [
-                                    'sort' => 2
-                                ]
-                            ],
-                            [
-                                'filename' => 'b.jpg',
-                                'content'  => [
-                                    'sort' => 1
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$this->assertCount(3, $response['data']);
+		$this->assertSame('a.jpg', $response['data'][0]['filename']);
+		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+		$this->assertSame('c.jpg', $response['data'][2]['filename']);
+	}
 
-        $app->impersonate('kirby');
+	public function testFilesSorted()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => [
+									'sort' => 2
+								]
+							],
+							[
+								'filename' => 'b.jpg',
+								'content'  => [
+									'sort' => 1
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/a/files');
+		$app->impersonate('kirby');
 
-        $this->assertEquals('b.jpg', $response['data'][0]['filename']);
-        $this->assertEquals('a.jpg', $response['data'][1]['filename']);
-    }
+		$response = $app->api()->call('pages/a/files');
 
-    public function testFile()
-    {
-        $app = $this->app->clone([
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'a',
-                        'files' => [
-                            [
-                                'filename' => 'a.jpg',
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]);
+		$this->assertEquals('b.jpg', $response['data'][0]['filename']);
+		$this->assertEquals('a.jpg', $response['data'][1]['filename']);
+	}
 
-        $app->impersonate('kirby');
+	public function testFile()
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
 
-        $response = $app->api()->call('pages/a/files/a.jpg');
+		$app->impersonate('kirby');
 
-        $this->assertEquals('a.jpg', $response['data']['filename']);
-    }
+		$response = $app->api()->call('pages/a/files/a.jpg');
+
+		$this->assertEquals('a.jpg', $response['data']['filename']);
+	}
 }

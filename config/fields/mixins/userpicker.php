@@ -3,11 +3,11 @@
 use Kirby\Cms\UserPicker;
 
 return [
-    'methods' => [
-        'userpicker' => function (array $params = []) {
-            $params['model'] = $this->model();
+	'methods' => [
+		'userpicker' => function (array $params = []) {
+			$params['model'] = $this->model();
 
-            return (new UserPicker($params))->toArray();
-        }
-    ]
+			return (new UserPicker($params))->toArray();
+		}
+	]
 ];

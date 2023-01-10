@@ -12,5 +12,5 @@ import findParentNodeClosestToPos from "./findParentNodeClosestToPos";
  * ```
  */
 export default (predicate) =>
-  ({ $from }) =>
-    findParentNodeClosestToPos($from, predicate);
+	({ $from }) =>
+		findParentNodeClosestToPos($from, predicate);

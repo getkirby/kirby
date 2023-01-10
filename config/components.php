@@ -4,7 +4,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
+use Kirby\Cms\Page;
 use Kirby\Cms\Template;
+use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
@@ -20,389 +22,363 @@ use Kirby\Toolkit\Tpl as Snippet;
 
 return [
 
-    /**
-     * Used by the `css()` helper
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $url Relative or absolute URL
-     * @param string|array $options An array of attributes for the link tag or a media attribute string
-     */
-    'css' => fn (App $kirby, string $url, $options = null): string => $url,
+	/**
+	 * Used by the `css()` helper
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $url Relative or absolute URL
+	 * @param string|array $options An array of attributes for the link tag or a media attribute string
+	 */
+	'css' => fn (App $kirby, string $url, $options = null): string => $url,
 
+	/**
+	 * Add your own email provider
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param array $props
+	 * @param bool $debug
+	 */
+	'email' => function (App $kirby, array $props = [], bool $debug = false) {
+		return new Emailer($props, $debug);
+	},
 
-    /**
-     * Object and variable dumper
-     * to help with debugging.
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param mixed $variable
-     * @param bool $echo
-     * @return string
-     *
-     * @deprecated 3.7.0 Disable `dump()` via `KIRBY_HELPER_DUMP` instead and create your own function
-     * @todo move to `Helpers::dump()`, remove component in 3.8.0
-     */
-    'dump' => function (App $kirby, $variable, bool $echo = true) {
-        if ($kirby->environment()->cli() === true) {
-            $output = print_r($variable, true) . PHP_EOL;
-        } else {
-            $output = '<pre>' . print_r($variable, true) . '</pre>';
-        }
+	/**
+	 * Modify URLs for file objects
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param \Kirby\Cms\File $file The original file object
+	 * @return string
+	 */
+	'file::url' => function (App $kirby, File $file): string {
+		return $file->mediaUrl();
+	},
 
-        if ($echo === true) {
-            echo $output;
-        }
+	/**
+	 * Adapt file characteristics
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
+	 * @param array $options All thumb options (width, height, crop, blur, grayscale)
+	 * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
+	 */
+	'file::version' => function (App $kirby, $file, array $options = []) {
+		// if file is not resizable, return
+		if ($file->isResizable() === false) {
+			return $file;
+		}
 
-        return $output;
-    },
+		// create url and root
+		$mediaRoot = dirname($file->mediaRoot());
+		$template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
+		$thumbRoot = (new Filename($file->root(), $template, $options))->toString();
+		$thumbName = basename($thumbRoot);
 
-    /**
-     * Add your own email provider
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param array $props
-     * @param bool $debug
-     */
-    'email' => function (App $kirby, array $props = [], bool $debug = false) {
-        return new Emailer($props, $debug);
-    },
+		// check if the thumb already exists
+		if (file_exists($thumbRoot) === false) {
+			// if not, create job file
+			$job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
-    /**
-     * Modify URLs for file objects
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param \Kirby\Cms\File $file The original file object
-     * @return string
-     */
-    'file::url' => function (App $kirby, File $file): string {
-        return $file->mediaUrl();
-    },
+			try {
+				Data::write($job, array_merge($options, [
+					'filename' => $file->filename()
+				]));
+			} catch (Throwable) {
+				// if thumb doesn't exist yet and job file cannot
+				// be created, return
+				return $file;
+			}
+		}
 
-    /**
-     * Adapt file characteristics
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
-     * @param array $options All thumb options (width, height, crop, blur, grayscale)
-     * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion|\Kirby\Filesystem\Asset
-     */
-    'file::version' => function (App $kirby, $file, array $options = []) {
-        // if file is not resizable, return
-        if ($file->isResizable() === false) {
-            return $file;
-        }
+		return new FileVersion([
+			'modifications' => $options,
+			'original'      => $file,
+			'root'          => $thumbRoot,
+			'url'           => dirname($file->mediaUrl()) . '/' . $thumbName,
+		]);
+	},
 
-        // create url and root
-        $mediaRoot = dirname($file->mediaRoot());
-        $template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumbRoot = (new Filename($file->root(), $template, $options))->toString();
-        $thumbName = basename($thumbRoot);
+	/**
+	 * Used by the `js()` helper
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $url Relative or absolute URL
+	 * @param string|array $options An array of attributes for the link tag or a media attribute string
+	 */
+	'js' => fn (App $kirby, string $url, $options = null): string => $url,
 
-        // check if the thumb already exists
-        if (file_exists($thumbRoot) === false) {
+	/**
+	 * Add your own Markdown parser
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $text Text to parse
+	 * @param array $options Markdown options
+	 * @return string
+	 */
+	'markdown' => function (
+		App $kirby,
+		string $text = null,
+		array $options = []
+	): string {
+		static $markdown;
+		static $config;
 
-            // if not, create job file
-            $job = $mediaRoot . '/.jobs/' . $thumbName . '.json';
+		// if the config options have changed or the component is called for the first time,
+		// (re-)initialize the parser object
+		if ($config !== $options) {
+			$markdown = new Markdown($options);
+			$config   = $options;
+		}
 
-            try {
-                Data::write($job, array_merge($options, [
-                    'filename' => $file->filename()
-                ]));
-            } catch (Throwable $e) {
-                // if thumb doesn't exist yet and job file cannot
-                // be created, return
-                return $file;
-            }
-        }
+		return $markdown->parse($text, $options['inline'] ?? false);
+	},
 
-        return new FileVersion([
-            'modifications' => $options,
-            'original'      => $file,
-            'root'          => $thumbRoot,
-            'url'           => dirname($file->mediaUrl()) . '/' . $thumbName,
-        ]);
-    },
+	/**
+	 * Add your own search engine
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param \Kirby\Cms\Collection $collection Collection of searchable models
+	 * @param string $query
+	 * @param mixed $params
+	 * @return \Kirby\Cms\Collection|bool
+	 */
+	'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
+		if (empty(trim($query ?? '')) === true) {
+			return $collection->limit(0);
+		}
 
-    /**
-     * Used by the `js()` helper
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $url Relative or absolute URL
-     * @param string|array $options An array of attributes for the link tag or a media attribute string
-     */
-    'js' => fn (App $kirby, string $url, $options = null): string => $url,
+		if (is_string($params) === true) {
+			$params = ['fields' => Str::split($params, '|')];
+		}
 
-    /**
-     * Add your own Markdown parser
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $text Text to parse
-     * @param array $options Markdown options
-     * @param bool $inline Whether to wrap the text in `<p>` tags (deprecated: set via $options['inline'] instead)
-     * @return string
-     * @todo add deprecation warning for $inline parameter in 3.7.0
-     * @todo remove $inline parameter in in 3.8.0
-     */
-    'markdown' => function (App $kirby, string $text = null, array $options = [], bool $inline = false): string {
-        static $markdown;
-        static $config;
+		$defaults = [
+			'fields'    => [],
+			'minlength' => 2,
+			'score'     => [],
+			'words'     => false,
+		];
 
-        // support for the deprecated fourth argument
-        $options['inline'] ??= $inline;
+		$options     = array_merge($defaults, $params);
+		$collection  = clone $collection;
+		$searchWords = preg_replace('/(\s)/u', ',', $query);
+		$searchWords = Str::split($searchWords, ',', $options['minlength']);
+		$lowerQuery  = Str::lower($query);
+		$exactQuery  = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
 
-        // if the config options have changed or the component is called for the first time,
-        // (re-)initialize the parser object
-        if ($config !== $options) {
-            $markdown = new Markdown($options);
-            $config   = $options;
-        }
+		if (empty($options['stopwords']) === false) {
+			$searchWords = array_diff($searchWords, $options['stopwords']);
+		}
 
-        return $markdown->parse($text, $options['inline']);
-    },
+		$searchWords = array_map(function ($value) use ($options) {
+			return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
+		}, $searchWords);
 
-    /**
-     * Add your own search engine
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param \Kirby\Cms\Collection $collection Collection of searchable models
-     * @param string $query
-     * @param mixed $params
-     * @return \Kirby\Cms\Collection|bool
-     */
-    'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
-        if (empty(trim($query ?? '')) === true) {
-            return $collection->limit(0);
-        }
+		// returns an empty collection if there is no search word
+		if (empty($searchWords) === true) {
+			return $collection->limit(0);
+		}
 
-        if (is_string($params) === true) {
-            $params = ['fields' => Str::split($params, '|')];
-        }
+		$preg    = '!(' . implode('|', $searchWords) . ')!i';
+		$results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery, $exactQuery) {
+			$data = $item->content()->toArray();
+			$keys = array_keys($data);
+			$keys[] = 'id';
 
-        $defaults = [
-            'fields'    => [],
-            'minlength' => 2,
-            'score'     => [],
-            'words'     => false,
-        ];
+			if ($item instanceof User) {
+				$keys[] = 'name';
+				$keys[] = 'email';
+				$keys[] = 'role';
+			} elseif ($item instanceof Page) {
+				// apply the default score for pages
+				$options['score'] = array_merge([
+					'id'    => 64,
+					'title' => 64,
+				], $options['score']);
+			}
 
-        $options     = array_merge($defaults, $params);
-        $collection  = clone $collection;
-        $searchWords = preg_replace('/(\s)/u', ',', $query);
-        $searchWords = Str::split($searchWords, ',', $options['minlength']);
-        $lowerQuery  = Str::lower($query);
-        $exactQuery  = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
+			if (empty($options['fields']) === false) {
+				$fields = array_map('strtolower', $options['fields']);
+				$keys   = array_intersect($keys, $fields);
+			}
 
-        if (empty($options['stopwords']) === false) {
-            $searchWords = array_diff($searchWords, $options['stopwords']);
-        }
+			$item->searchHits  = 0;
+			$item->searchScore = 0;
 
-        $searchWords = array_map(function ($value) use ($options) {
-            return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
-        }, $searchWords);
+			foreach ($keys as $key) {
+				$score = $options['score'][$key] ?? 1;
+				$value = $data[$key] ?? (string)$item->$key();
 
-        $preg    = '!(' . implode('|', $searchWords) . ')!i';
-        $results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery, $exactQuery) {
-            $data = $item->content()->toArray();
-            $keys = array_keys($data);
-            $keys[] = 'id';
+				$lowerValue = Str::lower($value);
 
-            if (is_a($item, 'Kirby\Cms\User') === true) {
-                $keys[] = 'name';
-                $keys[] = 'email';
-                $keys[] = 'role';
-            } elseif (is_a($item, 'Kirby\Cms\Page') === true) {
-                // apply the default score for pages
-                $options['score'] = array_merge([
-                    'id'    => 64,
-                    'title' => 64,
-                ], $options['score']);
-            }
+				// check for exact matches
+				if ($lowerQuery == $lowerValue) {
+					$item->searchScore += 16 * $score;
+					$item->searchHits  += 1;
 
-            if (empty($options['fields']) === false) {
-                $fields = array_map('strtolower', $options['fields']);
-                $keys   = array_intersect($keys, $fields);
-            }
+				// check for exact beginning matches
+				} elseif ($options['words'] === false && Str::startsWith($lowerValue, $lowerQuery) === true) {
+					$item->searchScore += 8 * $score;
+					$item->searchHits  += 1;
 
-            $item->searchHits  = 0;
-            $item->searchScore = 0;
+				// check for exact query matches
+				} elseif ($matches = preg_match_all('!' . $exactQuery . '!i', $value, $r)) {
+					$item->searchScore += 2 * $score;
+					$item->searchHits  += $matches;
+				}
 
-            foreach ($keys as $key) {
-                $score = $options['score'][$key] ?? 1;
-                $value = $data[$key] ?? (string)$item->$key();
+				// check for any match
+				if ($matches = preg_match_all($preg, $value, $r)) {
+					$item->searchHits  += $matches;
+					$item->searchScore += $matches * $score;
+				}
+			}
 
-                $lowerValue = Str::lower($value);
+			return $item->searchHits > 0;
+		});
 
-                // check for exact matches
-                if ($lowerQuery == $lowerValue) {
-                    $item->searchScore += 16 * $score;
-                    $item->searchHits  += 1;
+		return $results->sort('searchScore', 'desc');
+	},
 
-                // check for exact beginning matches
-                } elseif ($options['words'] === false && Str::startsWith($lowerValue, $lowerQuery) === true) {
-                    $item->searchScore += 8 * $score;
-                    $item->searchHits  += 1;
+	/**
+	 * Add your own SmartyPants parser
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $text Text to parse
+	 * @param array $options SmartyPants options
+	 * @return string
+	 */
+	'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
+		static $smartypants;
+		static $config;
 
-                // check for exact query matches
-                } elseif ($matches = preg_match_all('!' . $exactQuery . '!i', $value, $r)) {
-                    $item->searchScore += 2 * $score;
-                    $item->searchHits  += $matches;
-                }
+		// if the config options have changed or the component is called for the first time,
+		// (re-)initialize the parser object
+		if ($config !== $options) {
+			$smartypants = new Smartypants($options);
+			$config      = $options;
+		}
 
-                // check for any match
-                if ($matches = preg_match_all($preg, $value, $r)) {
-                    $item->searchHits  += $matches;
-                    $item->searchScore += $matches * $score;
-                }
-            }
+		return $smartypants->parse($text);
+	},
 
-            return $item->searchHits > 0;
-        });
+	/**
+	 * Add your own snippet loader
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string|array $name Snippet name
+	 * @param array $data Data array for the snippet
+	 */
+	'snippet' => function (App $kirby, $name, array $data = []): string {
+		$snippets = A::wrap($name);
 
-        return $results->sort('searchScore', 'desc');
-    },
+		foreach ($snippets as $name) {
+			$name = (string)$name;
+			$file = $kirby->root('snippets') . '/' . $name . '.php';
 
-    /**
-     * Add your own SmartyPants parser
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $text Text to parse
-     * @param array $options SmartyPants options
-     * @return string
-     */
-    'smartypants' => function (App $kirby, string $text = null, array $options = []): string {
-        static $smartypants;
-        static $config;
+			if (file_exists($file) === false) {
+				$file = $kirby->extensions('snippets')[$name] ?? null;
+			}
 
-        // if the config options have changed or the component is called for the first time,
-        // (re-)initialize the parser object
-        if ($config !== $options) {
-            $smartypants = new Smartypants($options);
-            $config      = $options;
-        }
+			if ($file) {
+				break;
+			}
+		}
 
-        return $smartypants->parse($text);
-    },
+		return Snippet::load($file, $data);
+	},
 
-    /**
-     * Add your own snippet loader
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string|array $name Snippet name
-     * @param array $data Data array for the snippet
-     * @return string|null
-     */
-    'snippet' => function (App $kirby, $name, array $data = []): ?string {
-        $snippets = A::wrap($name);
+	/**
+	 * Add your own template engine
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $name Template name
+	 * @param string $type Extension type
+	 * @param string $defaultType Default extension type
+	 * @return \Kirby\Cms\Template
+	 */
+	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
+		return new Template($name, $type, $defaultType);
+	},
 
-        foreach ($snippets as $name) {
-            $name = (string)$name;
-            $file = $kirby->root('snippets') . '/' . $name . '.php';
+	/**
+	 * Add your own thumb generator
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string $src Root of the original file
+	 * @param string $dst Template string for the root to the desired destination
+	 * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
+	 * @return string
+	 */
+	'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
+		$darkroom = Darkroom::factory(
+			$kirby->option('thumbs.driver', 'gd'),
+			$kirby->option('thumbs', [])
+		);
+		$options  = $darkroom->preprocess($src, $options);
+		$root     = (new Filename($src, $dst, $options))->toString();
 
-            if (file_exists($file) === false) {
-                $file = $kirby->extensions('snippets')[$name] ?? null;
-            }
+		F::copy($src, $root, true);
+		$darkroom->process($root, $options);
 
-            if ($file) {
-                break;
-            }
-        }
+		return $root;
+	},
 
-        return Snippet::load($file, $data);
-    },
+	/**
+	 * Modify all URLs
+	 *
+	 * @param \Kirby\Cms\App $kirby Kirby instance
+	 * @param string|null $path URL path
+	 * @param array|string|null $options Array of options for the Uri class
+	 * @return string
+	 */
+	'url' => function (App $kirby, string $path = null, $options = null): string {
+		$language = null;
 
-    /**
-     * Add your own template engine
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $name Template name
-     * @param string $type Extension type
-     * @param string $defaultType Default extension type
-     * @return \Kirby\Cms\Template
-     */
-    'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
-        return new Template($name, $type, $defaultType);
-    },
+		// get language from simple string option
+		if (is_string($options) === true) {
+			$language = $options;
+			$options  = null;
+		}
 
-    /**
-     * Add your own thumb generator
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $src Root of the original file
-     * @param string $dst Template string for the root to the desired destination
-     * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
-     * @return string
-     */
-    'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
-        $darkroom = Darkroom::factory(
-            $kirby->option('thumbs.driver', 'gd'),
-            $kirby->option('thumbs', [])
-        );
-        $options  = $darkroom->preprocess($src, $options);
-        $root     = (new Filename($src, $dst, $options))->toString();
+		// get language from array
+		if (is_array($options) === true && isset($options['language']) === true) {
+			$language = $options['language'];
+			unset($options['language']);
+		}
 
-        F::copy($src, $root, true);
-        $darkroom->process($root, $options);
+		// get a language url for the linked page, if the page can be found
+		if ($kirby->multilang() === true) {
+			$parts = Str::split($path, '#');
 
-        return $root;
-    },
+			if ($parts[0] ?? null) {
+				$page = $kirby->site()->find($parts[0]);
+			} else {
+				$page = $kirby->site()->page();
+			}
 
-    /**
-     * Modify all URLs
-     *
-     * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string|null $path URL path
-     * @param array|string|null $options Array of options for the Uri class
-     * @return string
-     */
-    'url' => function (App $kirby, string $path = null, $options = null): string {
-        $language = null;
+			if ($page) {
+				$path = $page->url($language);
 
-        // get language from simple string option
-        if (is_string($options) === true) {
-            $language = $options;
-            $options  = null;
-        }
+				if (isset($parts[1]) === true) {
+					$path .= '#' . $parts[1];
+				}
+			}
+		}
 
-        // get language from array
-        if (is_array($options) === true && isset($options['language']) === true) {
-            $language = $options['language'];
-            unset($options['language']);
-        }
+		// keep relative urls
+		if (
+			$path !== null &&
+			(substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
+		) {
+			return $path;
+		}
 
-        // get a language url for the linked page, if the page can be found
-        if ($kirby->multilang() === true) {
-            $parts = Str::split($path, '#');
+		$url = Url::makeAbsolute($path, $kirby->url());
 
-            if ($parts[0] ?? null) {
-                $page = $kirby->site()->find($parts[0]);
-            } else {
-                $page = $kirby->site()->page();
-            }
+		if ($options === null) {
+			return $url;
+		}
 
-            if ($page) {
-                $path = $page->url($language);
-
-                if (isset($parts[1]) === true) {
-                    $path .= '#' . $parts[1];
-                }
-            }
-        }
-
-        // keep relative urls
-        if (
-            $path !== null &&
-            (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
-        ) {
-            return $path;
-        }
-
-        $url = Url::makeAbsolute($path, $kirby->url());
-
-        if ($options === null) {
-            return $url;
-        }
-
-        return (new Uri($url, $options))->toString();
-    },
+		return (new Uri($url, $options))->toString();
+	},
 
 ];

@@ -9,15 +9,15 @@ $ratio   = $block->ratio()->or('auto');
 $src     = null;
 
 if ($block->location() == 'web') {
-    $src = $block->src()->esc();
+	$src = $block->src()->esc();
 } elseif ($image = $block->image()->toFile()) {
-    $alt = $alt ?? $image->alt();
-    $src = $image->url();
+	$alt = $alt ?? $image->alt();
+	$src = $image->url();
 }
 
 ?>
 <?php if ($src): ?>
-<figure<?= Html::attr(['data-ratio' => $ratio, 'data-crop' => $crop], ' ') ?>>
+<figure<?= Html::attr(['data-ratio' => $ratio, 'data-crop' => $crop], null, ' ') ?>>
   <?php if ($link->isNotEmpty()): ?>
   <a href="<?= Str::esc($link->toUrl()) ?>">
     <img src="<?= $src ?>" alt="<?= $alt->esc() ?>">

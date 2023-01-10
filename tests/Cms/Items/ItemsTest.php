@@ -6,77 +6,80 @@ use PHPUnit\Framework\TestCase;
 
 class ItemsTest extends TestCase
 {
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-            ],
-        ]);
+	protected $app;
+	protected $page;
 
-        $this->page = new Page(['slug' => 'test']);
-    }
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+		]);
 
-    public function testConstruct()
-    {
-        $items = new Items();
+		$this->page = new Page(['slug' => 'test']);
+	}
 
-        $a = new Item(['type' => 'a']);
-        $b = new Item(['type' => 'b']);
+	public function testConstruct()
+	{
+		$items = new Items();
 
-        $items->append($a->id(), $a);
-        $items->append($b->id(), $b);
+		$a = new Item(['type' => 'a']);
+		$b = new Item(['type' => 'b']);
 
-        $this->assertCount(2, $items);
-        $this->assertSame($a->id(), $items->first()->id());
-        $this->assertSame($b->id(), $items->last()->id());
-    }
+		$items->append($a->id(), $a);
+		$items->append($b->id(), $b);
 
-    public function testFactoryFromArray()
-    {
-        $items = Items::factory([
-            [
-                'id' => 'a',
-            ],
-            [
-                'id' => 'b',
-            ]
-        ]);
+		$this->assertCount(2, $items);
+		$this->assertSame($a->id(), $items->first()->id());
+		$this->assertSame($b->id(), $items->last()->id());
+	}
 
-        $this->assertCount(2, $items);
-        $this->assertSame($items, $items->first()->siblings());
-        $this->assertEquals('a', $items->first()->id());
-        $this->assertEquals('b', $items->last()->id());
-    }
+	public function testFactoryFromArray()
+	{
+		$items = Items::factory([
+			[
+				'id' => 'a',
+			],
+			[
+				'id' => 'b',
+			]
+		]);
 
-    public function testParent()
-    {
-        $items = new Items([]);
+		$this->assertCount(2, $items);
+		$this->assertSame($items, $items->first()->siblings());
+		$this->assertEquals('a', $items->first()->id());
+		$this->assertEquals('b', $items->last()->id());
+	}
 
-        $this->assertSame($this->app->site(), $items->parent());
+	public function testParent()
+	{
+		$items = new Items([]);
 
-        $items = new Blocks([], [
-            'parent' => $this->page
-        ]);
+		$this->assertSame($this->app->site(), $items->parent());
 
-        $this->assertSame($this->page, $items->parent());
-    }
+		$items = new Blocks([], [
+			'parent' => $this->page
+		]);
 
-    public function testToArray()
-    {
-        $items = new Items();
+		$this->assertSame($this->page, $items->parent());
+	}
 
-        $a = new Item(['id' => 'a']);
-        $b = new Item(['id' => 'b']);
+	public function testToArray()
+	{
+		$items = new Items();
 
-        $items->append($a->id(), $a);
-        $items->append($b->id(), $b);
+		$a = new Item(['id' => 'a']);
+		$b = new Item(['id' => 'b']);
 
-        $expected = [
-            $a->toArray(),
-            $b->toArray(),
-        ];
+		$items->append($a->id(), $a);
+		$items->append($b->id(), $b);
 
-        $this->assertSame($expected, $items->toArray());
-    }
+		$expected = [
+			$a->toArray(),
+			$b->toArray(),
+		];
+
+		$this->assertSame($expected, $items->toArray());
+	}
 }

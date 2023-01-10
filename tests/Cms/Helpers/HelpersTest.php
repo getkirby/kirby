@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Obj;
 
 /**
@@ -9,78 +10,189 @@ use Kirby\Toolkit\Obj;
  */
 class HelpersTest extends TestCase
 {
-    /**
-     * @covers ::deprecated
-     */
-    public function testDeprecated()
-    {
-        // with disabled debug mode
-        $this->assertFalse(Helpers::deprecated('The xyz method is deprecated.'));
+	protected $hasErrorHandler = false;
 
-        $this->app = $this->app->clone([
-            'options' => [
-                'debug' => true
-            ]
-        ]);
+	public function tearDown(): void
+	{
+		if ($this->hasErrorHandler === true) {
+			restore_error_handler();
+			$this->hasErrorHandler = false;
+		}
+	}
 
-        // with enabled debug mode
-        $this->expectException('Whoops\Exception\ErrorException');
-        $this->expectExceptionMessage('The xyz method is deprecated.');
-        Helpers::deprecated('The xyz method is deprecated.');
-    }
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecated()
+	{
+		// with disabled debug mode
+		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.'));
 
-    /**
-     * @covers ::dump
-     */
-    public function testDumpOnCli()
-    {
-        $this->app = $this->app->clone([
-            'cli' => true
-        ]);
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
 
-        $this->assertSame("test\n", Helpers::dump('test', false));
+		// with enabled debug mode
+		$this->expectException('Whoops\Exception\ErrorException');
+		$this->expectExceptionMessage('The xyz method is deprecated.');
+		Helpers::deprecated('The xyz method is deprecated.');
+	}
 
-        $this->expectOutputString("test\ntest\n");
-        Helpers::dump('test');
-        Helpers::dump('test', true);
-    }
+	/**
+	 * @covers ::dump
+	 */
+	public function testDumpOnCli()
+	{
+		$this->app = $this->app->clone([
+			'cli' => true
+		]);
 
-    /**
-     * @covers ::dump
-     */
-    public function testDumpOnServer()
-    {
-        $this->app = $this->app->clone([
-            'cli' => false
-        ]);
+		$this->assertSame("test\n", Helpers::dump('test', false));
 
-        $this->assertSame('<pre>test</pre>', Helpers::dump('test', false));
+		$this->expectOutputString("test\ntest\n");
+		Helpers::dump('test');
+		Helpers::dump('test', true);
+	}
 
-        $this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
-        Helpers::dump('test1');
-        Helpers::dump('test2', true);
-    }
+	/**
+	 * @covers ::dump
+	 */
+	public function testDumpOnServer()
+	{
+		$this->app = $this->app->clone([
+			'cli' => false
+		]);
 
-    /**
-     * @covers ::size
-     */
-    public function testSize()
-    {
-        // number
-        $this->assertSame(3, Helpers::size(3));
+		$this->assertSame('<pre>test</pre>', Helpers::dump('test', false));
 
-        // string
-        $this->assertSame(3, Helpers::size('abc'));
+		$this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
+		Helpers::dump('test1');
+		Helpers::dump('test2', true);
+	}
 
-        // array
-        $this->assertSame(3, Helpers::size(['a', 'b', 'c']));
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsNoWarning()
+	{
+		$this->assertSame('return', Helpers::handleErrors(
+			fn () => 'return',
+			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
+		));
+	}
 
-        // collection
-        $this->assertSame(3, Helpers::size(new Collection(['a', 'b', 'c'])));
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaught1()
+	{
+		$this->hasErrorHandler = true;
 
-        // invalid type
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Could not determine the size of the given value');
-        Helpers::size(new Obj());
-    }
+		$called = false;
+		set_error_handler(function (int $errno, string $errstr) use (&$called) {
+			$called = true;
+		});
+
+		$this->assertSame('handled', Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+				// drop error
+				return true;
+			},
+			'handled'
+		));
+
+		$this->assertFalse($called);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaught2()
+	{
+		$this->hasErrorHandler = true;
+
+		$called = false;
+		set_error_handler(function (int $errno, string $errstr) use (&$called) {
+			$called = true;
+
+			$this->assertSame(E_USER_WARNING, $errno);
+			$this->assertSame('Some warning', $errstr);
+		});
+
+		$this->assertSame(true, Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+
+				// continue the handler chain
+				return false;
+			},
+			'handled'
+		));
+
+		$this->assertTrue($called);
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningCaughtCallbackValue()
+	{
+		$this->hasErrorHandler = true;
+
+		$this->assertSame('handled', Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			fn (int $errno, string $errstr) => true,
+			fn () => 'handled'
+		));
+	}
+
+	/**
+	 * @covers ::handleErrors
+	 */
+	public function testHandleErrorsWarningNotCaught()
+	{
+		$this->expectExceptionMessage('Some warning');
+
+		Helpers::handleErrors(
+			fn () => trigger_error('Some warning', E_USER_WARNING),
+			function (int $errno, string $errstr) {
+				$this->assertSame(E_USER_WARNING, $errno);
+				$this->assertSame('Some warning', $errstr);
+
+				// continue the handler chain
+				return false;
+			},
+			'handled'
+		);
+	}
+
+	/**
+	 * @covers ::size
+	 */
+	public function testSize()
+	{
+		// number
+		$this->assertSame(3, Helpers::size(3));
+
+		// string
+		$this->assertSame(3, Helpers::size('abc'));
+
+		// array
+		$this->assertSame(3, Helpers::size(['a', 'b', 'c']));
+
+		// collection
+		$this->assertSame(3, Helpers::size(new Collection(['a', 'b', 'c'])));
+
+		// invalid type
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Could not determine the size of the given value');
+		Helpers::size(new Obj());
+	}
 }

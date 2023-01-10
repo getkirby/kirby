@@ -19,60 +19,60 @@ use Kirby\Filesystem\F;
  */
 class Translations extends Collection
 {
-    /**
-     * @param string $code
-     * @return void
-     */
-    public function start(string $code): void
-    {
-        F::move($this->parent->contentFile('', true), $this->parent->contentFile($code, true));
-    }
+	/**
+	 * @param string $code
+	 * @return void
+	 */
+	public function start(string $code): void
+	{
+		F::move($this->parent->contentFile('', true), $this->parent->contentFile($code, true));
+	}
 
-    /**
-     * @param string $code
-     * @return void
-     */
-    public function stop(string $code): void
-    {
-        F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));
-    }
+	/**
+	 * @param string $code
+	 * @return void
+	 */
+	public function stop(string $code): void
+	{
+		F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));
+	}
 
-    /**
-     * @param array $translations
-     * @return static
-     */
-    public static function factory(array $translations)
-    {
-        $collection = new static();
+	/**
+	 * @param array $translations
+	 * @return static
+	 */
+	public static function factory(array $translations)
+	{
+		$collection = new static();
 
-        foreach ($translations as $code => $props) {
-            $translation = new Translation($code, $props);
-            $collection->data[$translation->code()] = $translation;
-        }
+		foreach ($translations as $code => $props) {
+			$translation = new Translation($code, $props);
+			$collection->data[$translation->code()] = $translation;
+		}
 
-        return $collection;
-    }
+		return $collection;
+	}
 
-    /**
-     * @param string $root
-     * @param array $inject
-     * @return static
-     */
-    public static function load(string $root, array $inject = [])
-    {
-        $collection = new static();
+	/**
+	 * @param string $root
+	 * @param array $inject
+	 * @return static
+	 */
+	public static function load(string $root, array $inject = [])
+	{
+		$collection = new static();
 
-        foreach (Dir::read($root) as $filename) {
-            if (F::extension($filename) !== 'json') {
-                continue;
-            }
+		foreach (Dir::read($root) as $filename) {
+			if (F::extension($filename) !== 'json') {
+				continue;
+			}
 
-            $locale      = F::name($filename);
-            $translation = Translation::load($locale, $root . '/' . $filename, $inject[$locale] ?? []);
+			$locale      = F::name($filename);
+			$translation = Translation::load($locale, $root . '/' . $filename, $inject[$locale] ?? []);
 
-            $collection->data[$locale] = $translation;
-        }
+			$collection->data[$locale] = $translation;
+		}
 
-        return $collection;
-    }
+		return $collection;
+	}
 }

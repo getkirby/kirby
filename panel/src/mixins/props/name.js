@@ -1,5 +1,5 @@
 export default {
-  props: {
-    name: [Number, String]
-  }
+	props: {
+		name: [Number, String]
+	}
 };
