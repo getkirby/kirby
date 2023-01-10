@@ -75,7 +75,7 @@
 	"error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
 
 	"error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
-	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
+	"error.field.type.missing": "Pole \"{ name }\": Typ pole \"{ type }\" neexistuje",
 
 	"error.file.changeName.empty": "Toto jméno nesmí být prázdné",
 	"error.file.changeName.permission": "Nemáte povoleno změnit jméno souboru \"{filename}\"",
@@ -290,7 +290,7 @@
 	"field.pages.empty": "Nebyly zatím vybrány žádné stránky",
 
 	"field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
-	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.all": "Opravdu chcete smazat všechny záznamy?",
 	"field.structure.empty": "Zat\u00edm nejsou \u017e\u00e1dn\u00e9 z\u00e1znamy.",
 
 	"field.users.empty": "Nebyli zatím vybráni žádní uživatelé",
@@ -351,8 +351,8 @@
 	"license.manage": "Spravovat licence",
 	"license.register.help": "Licenční kód jste po zakoupení obdrželi na email. Vložte prosím kód a zaregistrujte Vaší kopii.",
 	"license.register.label": "Zadejte prosím licenční kód",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
+	"license.register.domain": "Vaše licence bude zaregistrována na <strong>{host}</strong>.",
+	"license.register.local": "Chystáte se registrovat licenci na Vaší lokální doméně <strong>{host}</strong>. Pokud bude tato stránka nasazena na veřejnou doménu, registrujte prosím licenci až tam. Pokud je {host} opravdu doménou, na které si přejete licenci registrovat, pokračujte prosím dále.",
 	"license.register.success": "Děkujeme Vám za podporu Kirby",
 	"license.unregistered": "Toto je neregistrovaná kopie Kirby",
 	"license.unregistered.label": "Neregistrovaný",
