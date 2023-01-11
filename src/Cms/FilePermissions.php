@@ -13,5 +13,5 @@ namespace Kirby\Cms;
  */
 class FilePermissions extends ModelPermissions
 {
-    protected $category = 'files';
+	protected $category = 'files';
 }

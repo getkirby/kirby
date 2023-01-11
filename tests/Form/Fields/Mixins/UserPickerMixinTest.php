@@ -8,114 +8,116 @@ use Kirby\Form\Field;
 
 class UserPickerMixinTest extends TestCase
 {
-    public function setUp(): void
-    {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'roles' => [
-                ['name' => 'admin'],
-                ['name' => 'editor']
-            ],
-            'users' => [
-                ['email' => 'a@getkirby.com', 'role' => 'admin'],
-                ['email' => 'b@getkirby.com', 'role' => 'editor'],
-                ['email' => 'c@getkirby.com', 'role' => 'editor']
-            ]
-        ]);
-    }
+	public function setUp(): void
+	{
+		parent::setUp();
 
-    public function testUsersWithoutQuery()
-    {
-        Field::$types = [
-            'test' => [
-                'mixins'  => ['userpicker'],
-                'methods' => [
-                    'users' => function () {
-                        return $this->userpicker()['data'];
-                    }
-                ]
-            ]
-        ];
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['email' => 'a@getkirby.com', 'role' => 'admin'],
+				['email' => 'b@getkirby.com', 'role' => 'editor'],
+				['email' => 'c@getkirby.com', 'role' => 'editor']
+			]
+		]);
+	}
 
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+	public function testUsersWithoutQuery()
+	{
+		Field::$types = [
+			'test' => [
+				'mixins'  => ['userpicker'],
+				'methods' => [
+					'users' => function () {
+						return $this->userpicker()['data'];
+					}
+				]
+			]
+		];
 
-        $field = $this->field('test', [
-            'model' => $page
-        ]);
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-        $users = $field->users();
+		$field = $this->field('test', [
+			'model' => $page
+		]);
 
-        $this->assertCount(3, $users);
-        $this->assertEquals('a@getkirby.com', $users[0]['email']);
-        $this->assertEquals('b@getkirby.com', $users[1]['email']);
-        $this->assertEquals('c@getkirby.com', $users[2]['email']);
-    }
+		$users = $field->users();
 
-    public function testUsersWithQuery()
-    {
-        Field::$types = [
-            'test' => [
-                'mixins'  => ['userpicker'],
-                'methods' => [
-                    'users' => function () {
-                        return $this->userpicker([
-                            'query' => 'kirby.users.role("editor")'
-                        ])['data'];
-                    }
-                ]
-            ]
-        ];
+		$this->assertCount(3, $users);
+		$this->assertEquals('a@getkirby.com', $users[0]['email']);
+		$this->assertEquals('b@getkirby.com', $users[1]['email']);
+		$this->assertEquals('c@getkirby.com', $users[2]['email']);
+	}
 
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+	public function testUsersWithQuery()
+	{
+		Field::$types = [
+			'test' => [
+				'mixins'  => ['userpicker'],
+				'methods' => [
+					'users' => function () {
+						return $this->userpicker([
+							'query' => 'kirby.users.role("editor")'
+						])['data'];
+					}
+				]
+			]
+		];
 
-        $field = $this->field('test', [
-            'model' => $page
-        ]);
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-        $users = $field->users();
+		$field = $this->field('test', [
+			'model' => $page
+		]);
 
-        $this->assertCount(2, $users);
-        $this->assertEquals('b@getkirby.com', $users[0]['email']);
-        $this->assertEquals('c@getkirby.com', $users[1]['email']);
-    }
+		$users = $field->users();
 
-    public function testMap()
-    {
-        Field::$types = [
-            'test' => [
-                'mixins'  => ['userpicker'],
-                'methods' => [
-                    'users' => function () {
-                        return $this->userpicker([
-                            'map' => function ($user) {
-                                return $user->email();
-                            }
-                        ])['data'];
-                    }
-                ]
-            ]
-        ];
+		$this->assertCount(2, $users);
+		$this->assertEquals('b@getkirby.com', $users[0]['email']);
+		$this->assertEquals('c@getkirby.com', $users[1]['email']);
+	}
 
-        $page = new Page([
-            'slug' => 'test'
-        ]);
+	public function testMap()
+	{
+		Field::$types = [
+			'test' => [
+				'mixins'  => ['userpicker'],
+				'methods' => [
+					'users' => function () {
+						return $this->userpicker([
+							'map' => function ($user) {
+								return $user->email();
+							}
+						])['data'];
+					}
+				]
+			]
+		];
 
-        $field = $this->field('test', [
-            'model' => $page
-        ]);
+		$page = new Page([
+			'slug' => 'test'
+		]);
 
-        $users = $field->users();
+		$field = $this->field('test', [
+			'model' => $page
+		]);
 
-        $this->assertEquals([
-            'a@getkirby.com',
-            'b@getkirby.com',
-            'c@getkirby.com',
-        ], $users);
-    }
+		$users = $field->users();
+
+		$this->assertEquals([
+			'a@getkirby.com',
+			'b@getkirby.com',
+			'c@getkirby.com',
+		], $users);
+	}
 }

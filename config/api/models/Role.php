@@ -6,18 +6,18 @@ use Kirby\Cms\Role;
  * Role
  */
 return [
-    'fields' => [
-        'description' => fn (Role $role) => $role->description(),
-        'name'        => fn (Role $role) => $role->name(),
-        'permissions' => fn (Role $role) => $role->permissions()->toArray(),
-        'title'       => fn (Role $role) => $role->title(),
-    ],
-    'type'  => 'Kirby\Cms\Role',
-    'views' => [
-        'compact' => [
-            'description',
-            'name',
-            'title'
-        ]
-    ]
+	'fields' => [
+		'description' => fn (Role $role) => $role->description(),
+		'name'        => fn (Role $role) => $role->name(),
+		'permissions' => fn (Role $role) => $role->permissions()->toArray(),
+		'title'       => fn (Role $role) => $role->title(),
+	],
+	'type'  => 'Kirby\Cms\Role',
+	'views' => [
+		'compact' => [
+			'description',
+			'name',
+			'title'
+		]
+	]
 ];

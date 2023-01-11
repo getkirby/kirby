@@ -1,5 +1,5 @@
 export default {
-  props: {
-    invalid: Boolean
-  }
+	props: {
+		invalid: Boolean
+	}
 };

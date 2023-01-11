@@ -1,0 +1,23 @@
+{
+	"latest": "88888.8.8",
+	"versions": {
+		"88888.8.8": {
+			"status": "latest"
+		},
+		">=77777.5.5": {
+			"status": "no-vulnerabilities"
+		},
+		"*": {
+			"latest": "77777.7.7",
+			"status": "active-support"
+		}
+	},
+	"urls": {
+		"*": {
+			"changes": "https://getkirby.com/releases/{{ version }}",
+			"download": "https://repoofthefuture.com/{{ version }}.zip",
+			"upgrade": "https://getkirby.com/releases/88888"
+		}
+	},
+	"incidents": []
+}

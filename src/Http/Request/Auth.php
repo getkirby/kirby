@@ -13,49 +13,39 @@ namespace Kirby\Http\Request;
  */
 abstract class Auth
 {
-    /**
-     * Raw authentication data after the first space
-     * in the `Authorization` header
-     *
-     * @var string
-     */
-    protected $data;
+	/**
+	 * Raw authentication data after the first space
+	 * in the `Authorization` header
+	 */
+	protected string $data;
 
-    /**
-     * Constructor
-     *
-     * @param string $data
-     */
-    public function __construct(string $data)
-    {
-        $this->data = $data;
-    }
+	/**
+	 * Constructor
+	 */
+	public function __construct(string $data)
+	{
+		$this->data = $data;
+	}
 
-    /**
-     * Converts the object to a string
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return ucfirst($this->type()) . ' ' . $this->data();
-    }
+	/**
+	 * Converts the object to a string
+	 */
+	public function __toString(): string
+	{
+		return ucfirst($this->type()) . ' ' . $this->data();
+	}
 
-    /**
-     * Returns the raw authentication data after the
-     * first space in the `Authorization` header
-     *
-     * @return string
-     */
-    public function data(): string
-    {
-        return $this->data;
-    }
+	/**
+	 * Returns the raw authentication data after the
+	 * first space in the `Authorization` header
+	 */
+	public function data(): string
+	{
+		return $this->data;
+	}
 
-    /**
-     * Returns the name of the auth type (lowercase)
-     *
-     * @return string
-     */
-    abstract public function type(): string;
+	/**
+	 * Returns the name of the auth type (lowercase)
+	 */
+	abstract public function type(): string;
 }

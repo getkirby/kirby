@@ -8,23 +8,23 @@ namespace Kirby\Sane;
  */
 class HtmlTest extends TestCase
 {
-    protected $type = 'html';
+	protected $type = 'html';
 
-    /**
-     * @dataProvider allowedProvider
-     */
-    public function testAllowed(string $file)
-    {
-        $fixture = $this->fixture($file);
+	/**
+	 * @dataProvider allowedProvider
+	 */
+	public function testAllowed(string $file)
+	{
+		$fixture = $this->fixture($file);
 
-        $this->assertNull(Html::validateFile($fixture));
+		$this->assertNull(Html::validateFile($fixture));
 
-        $sanitized = Html::sanitize(file_get_contents($fixture));
-        $this->assertStringEqualsFile($fixture, $sanitized);
-    }
+		$sanitized = Html::sanitize(file_get_contents($fixture));
+		$this->assertStringEqualsFile($fixture, $sanitized);
+	}
 
-    public function allowedProvider()
-    {
-        return $this->fixtureList('allowed', 'html');
-    }
+	public function allowedProvider()
+	{
+		return $this->fixtureList('allowed', 'html');
+	}
 }

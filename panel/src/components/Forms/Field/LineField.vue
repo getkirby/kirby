@@ -1,5 +1,5 @@
 <template>
-  <hr class="k-line-field" />
+	<hr class="k-line-field" />
 </template>
 
 <script>
@@ -11,18 +11,18 @@ export default {};
 
 <style>
 .k-line-field {
-  position: relative;
-  border: 0;
-  height: 3rem;
-  width: auto;
+	position: relative;
+	border: 0;
+	height: 3rem;
+	width: auto;
 }
 .k-line-field::after {
-  position: absolute;
-  content: "";
-  top: 50%;
-  margin-top: -1px;
-  inset-inline: 0;
-  height: 1px;
-  background: var(--color-border);
+	position: absolute;
+	content: "";
+	top: 50%;
+	margin-top: -1px;
+	inset-inline: 0;
+	height: 1px;
+	background: var(--color-border);
 }
 </style>

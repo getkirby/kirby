@@ -1,21 +1,21 @@
 <template>
-  <k-field
-    :input="_uid"
-    :counter="counterOptions"
-    v-bind="$props"
-    class="k-text-field"
-  >
-    <template #options>
-      <slot name="options" />
-    </template>
-    <k-input
-      :id="_uid"
-      ref="input"
-      v-bind="$props"
-      theme="field"
-      v-on="$listeners"
-    />
-  </k-field>
+	<k-field
+		v-bind="$props"
+		:input="_uid"
+		:counter="counterOptions"
+		class="k-text-field"
+	>
+		<template #options>
+			<slot name="options" />
+		</template>
+		<k-input
+			v-bind="$props"
+			:id="_uid"
+			ref="input"
+			theme="field"
+			v-on="$listeners"
+		/>
+	</k-field>
 </template>
 
 <script>
@@ -27,27 +27,27 @@ import counter from "@/mixins/forms/counter.js";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>`
  * for additional information.
- * @example <k-text-field v-model="text" name="text" label="Boring text" />
+ * @example <k-text-field :value="text" @input="text = $event" name="text" label="Boring text" />
  */
 export default {
-  mixins: [Field, Input, TextInput, counter],
-  inheritAttrs: false,
-  methods: {
-    focus() {
-      this.$refs.input.focus();
-    },
-    select() {
-      this.$refs.input.select();
-    }
-  }
+	mixins: [Field, Input, TextInput, counter],
+	inheritAttrs: false,
+	methods: {
+		focus() {
+			this.$refs.input.focus();
+		},
+		select() {
+			this.$refs.input.select();
+		}
+	}
 };
 </script>
 
 <style>
 .k-field-counter {
-  display: none;
+	display: none;
 }
 .k-text-field:focus-within .k-field-counter {
-  display: block;
+	display: block;
 }
 </style>

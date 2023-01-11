@@ -2,6 +2,7 @@
 
 namespace Kirby\Api;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Str;
 
@@ -19,160 +20,135 @@ use Kirby\Toolkit\Str;
  */
 class Collection
 {
-    /**
-     * @var \Kirby\Api\Api
-     */
-    protected $api;
+	protected Api $api;
+	protected $data;
+	protected $model;
+	protected $select;
+	protected $view;
 
-    /**
-     * @var mixed|null
-     */
-    protected $data;
+	/**
+	 * Collection constructor
+	 *
+	 * @throws \Exception
+	 */
+	public function __construct(Api $api, $data, array $schema)
+	{
+		$this->api    = $api;
+		$this->data   = $data;
+		$this->model  = $schema['model'] ?? null;
+		$this->select = null;
+		$this->view   = $schema['view'] ?? null;
 
-    /**
-     * @var mixed|null
-     */
-    protected $model;
+		if ($data === null) {
+			if (($schema['default'] ?? null) instanceof Closure === false) {
+				throw new Exception('Missing collection data');
+			}
 
-    /**
-     * @var mixed|null
-     */
-    protected $select;
+			$this->data = $schema['default']->call($this->api);
+		}
 
-    /**
-     * @var mixed|null
-     */
-    protected $view;
+		if (
+			isset($schema['type']) === true &&
+			$this->data instanceof $schema['type'] === false
+		) {
+			throw new Exception('Invalid collection type');
+		}
+	}
 
-    /**
-     * Collection constructor
-     *
-     * @param \Kirby\Api\Api $api
-     * @param mixed|null $data
-     * @param array $schema
-     * @throws \Exception
-     */
-    public function __construct(Api $api, $data, array $schema)
-    {
-        $this->api   = $api;
-        $this->data  = $data;
-        $this->model = $schema['model'] ?? null;
-        $this->view  = $schema['view'] ?? null;
+	/**
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public function select($keys = null): static
+	{
+		if ($keys === false) {
+			return $this;
+		}
 
-        if ($data === null) {
-            if (is_a($schema['default'] ?? null, 'Closure') === false) {
-                throw new Exception('Missing collection data');
-            }
+		if (is_string($keys)) {
+			$keys = Str::split($keys);
+		}
 
-            $this->data = $schema['default']->call($this->api);
-        }
+		if ($keys !== null && is_array($keys) === false) {
+			throw new Exception('Invalid select keys');
+		}
 
-        if (
-            isset($schema['type']) === true &&
-            is_a($this->data, $schema['type']) === false
-        ) {
-            throw new Exception('Invalid collection type');
-        }
-    }
+		$this->select = $keys;
+		return $this;
+	}
 
-    /**
-     * @param string|array|null $keys
-     * @return $this
-     * @throws \Exception
-     */
-    public function select($keys = null)
-    {
-        if ($keys === false) {
-            return $this;
-        }
+	/**
+	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws \Exception
+	 */
+	public function toArray(): array
+	{
+		$result = [];
 
-        if (is_string($keys)) {
-            $keys = Str::split($keys);
-        }
+		foreach ($this->data as $item) {
+			$model = $this->api->model($this->model, $item);
 
-        if ($keys !== null && is_array($keys) === false) {
-            throw new Exception('Invalid select keys');
-        }
+			if ($this->view !== null) {
+				$model = $model->view($this->view);
+			}
 
-        $this->select = $keys;
-        return $this;
-    }
+			if ($this->select !== null) {
+				$model = $model->select($this->select);
+			}
 
-    /**
-     * @return array
-     * @throws \Kirby\Exception\NotFoundException
-     * @throws \Exception
-     */
-    public function toArray(): array
-    {
-        $result = [];
+			$result[] = $model->toArray();
+		}
 
-        foreach ($this->data as $item) {
-            $model = $this->api->model($this->model, $item);
+		return $result;
+	}
 
-            if ($this->view !== null) {
-                $model = $model->view($this->view);
-            }
+	/**
+	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws \Exception
+	 */
+	public function toResponse(): array
+	{
+		if ($query = $this->api->requestQuery('query')) {
+			$this->data = $this->data->query($query);
+		}
 
-            if ($this->select !== null) {
-                $model = $model->select($this->select);
-            }
+		if (!$this->data->pagination()) {
+			$this->data = $this->data->paginate([
+				'page'  => $this->api->requestQuery('page', 1),
+				'limit' => $this->api->requestQuery('limit', 100)
+			]);
+		}
 
-            $result[] = $model->toArray();
-        }
+		$pagination = $this->data->pagination();
 
-        return $result;
-    }
+		if ($select = $this->api->requestQuery('select')) {
+			$this->select($select);
+		}
 
-    /**
-     * @return array
-     * @throws \Kirby\Exception\NotFoundException
-     * @throws \Exception
-     */
-    public function toResponse(): array
-    {
-        if ($query = $this->api->requestQuery('query')) {
-            $this->data = $this->data->query($query);
-        }
+		if ($view = $this->api->requestQuery('view')) {
+			$this->view($view);
+		}
 
-        if (!$this->data->pagination()) {
-            $this->data = $this->data->paginate([
-                'page'  => $this->api->requestQuery('page', 1),
-                'limit' => $this->api->requestQuery('limit', 100)
-            ]);
-        }
+		return [
+			'code'       => 200,
+			'data'       => $this->toArray(),
+			'pagination' => [
+				'page'   => $pagination->page(),
+				'total'  => $pagination->total(),
+				'offset' => $pagination->offset(),
+				'limit'  => $pagination->limit(),
+			],
+			'status' => 'ok',
+			'type'   => 'collection'
+		];
+	}
 
-        $pagination = $this->data->pagination();
-
-        if ($select = $this->api->requestQuery('select')) {
-            $this->select($select);
-        }
-
-        if ($view = $this->api->requestQuery('view')) {
-            $this->view($view);
-        }
-
-        return [
-            'code'       => 200,
-            'data'       => $this->toArray(),
-            'pagination' => [
-                'page'   => $pagination->page(),
-                'total'  => $pagination->total(),
-                'offset' => $pagination->offset(),
-                'limit'  => $pagination->limit(),
-            ],
-            'status' => 'ok',
-            'type'   => 'collection'
-        ];
-    }
-
-    /**
-     * @param string $view
-     * @return $this
-     */
-    public function view(string $view)
-    {
-        $this->view = $view;
-        return $this;
-    }
+	/**
+	 * @return $this
+	 */
+	public function view(string $view): static
+	{
+		$this->view = $view;
+		return $this;
+	}
 }

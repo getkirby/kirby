@@ -3,17 +3,17 @@
 use Kirby\Cms\App;
 
 return [
-    'props' => [
-        /**
-         * Enable/disable the search in the sections
-         */
-        'search' => function (bool $search = false): bool {
-            return $search;
-        }
-    ],
-    'computed' => [
-        'query' => function (): ?string {
-            return App::instance()->request()->get('query');
-        }
-    ]
+	'props' => [
+		/**
+		 * Enable/disable the search in the sections
+		 */
+		'search' => function (bool $search = false): bool {
+			return $search;
+		}
+	],
+	'methods' => [
+		'searchterm' => function (): string|null {
+			return App::instance()->request()->get('searchterm');
+		}
+	]
 ];

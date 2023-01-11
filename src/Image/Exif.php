@@ -15,284 +15,236 @@ use Kirby\Toolkit\V;
  */
 class Exif
 {
-    /**
-     * the parent image object
-     * @var \Kirby\Image\Image
-     */
-    protected $image;
+	/**
+	 * The parent image object
+	 */
+	protected Image $image;
 
-    /**
-     * the raw exif array
-     * @var array
-     */
-    protected $data = [];
+	/**
+	 * The raw exif array
+	 */
+	protected array $data = [];
 
-    /**
-     * the camera object with model and make
-     * @var Camera
-     */
-    protected $camera;
+	/**
+	 * The camera object with model and make
+	 */
+	protected Camera|null $camera = null;
 
-    /**
-     * the location object
-     * @var Location
-     */
-    protected $location;
+	/**
+	 * The location object
+	 */
+	protected Location|null $location = null;
 
-    /**
-     * the timestamp
-     *
-     * @var string
-     */
-    protected $timestamp;
+	/**
+	 * The timestamp
+	 */
+	protected string|null $timestamp = null;
 
-    /**
-     * the exposure value
-     *
-     * @var string
-     */
-    protected $exposure;
+	/**
+	 * The exposure value
+	 */
+	protected string|null $exposure = null;
 
-    /**
-     * the aperture value
-     *
-     * @var string
-     */
-    protected $aperture;
+	/**
+	 * The aperture value
+	 */
+	protected string|null $aperture = null;
 
-    /**
-     * iso value
-     *
-     * @var string
-     */
-    protected $iso;
+	/**
+	 * ISO value
+	 */
+	protected string|null $iso = null;
 
-    /**
-     * focal length
-     *
-     * @var string
-     */
-    protected $focalLength;
+	/**
+	 * Focal length
+	 */
+	protected string|null $focalLength = null;
 
-    /**
-     * color or black/white
-     * @var bool
-     */
-    protected $isColor;
+	/**
+	 * Color or black/white
+	 */
+	protected bool|null $isColor = null;
 
-    /**
-     * Constructor
-     *
-     * @param \Kirby\Image\Image $image
-     */
-    public function __construct(Image $image)
-    {
-        $this->image = $image;
-        $this->data  = $this->read();
-        $this->parse();
-    }
+	public function __construct(Image $image)
+	{
+		$this->image = $image;
+		$this->data  = $this->read();
+		$this->parse();
+	}
 
-    /**
-     * Returns the raw data array from the parser
-     *
-     * @return array
-     */
-    public function data(): array
-    {
-        return $this->data;
-    }
+	/**
+	 * Returns the raw data array from the parser
+	 */
+	public function data(): array
+	{
+		return $this->data;
+	}
 
-    /**
-     * Returns the Camera object
-     *
-     * @return \Kirby\Image\Camera|null
-     */
-    public function camera()
-    {
-        if ($this->camera !== null) {
-            return $this->camera;
-        }
+	/**
+	 * Returns the Camera object
+	 */
+	public function camera(): Camera
+	{
+		if ($this->camera !== null) {
+			return $this->camera;
+		}
 
-        return $this->camera = new Camera($this->data);
-    }
+		return $this->camera = new Camera($this->data);
+	}
 
-    /**
-     * Returns the location object
-     *
-     * @return \Kirby\Image\Location|null
-     */
-    public function location()
-    {
-        if ($this->location !== null) {
-            return $this->location;
-        }
+	/**
+	 * Returns the location object
+	 */
+	public function location(): Location
+	{
+		if ($this->location !== null) {
+			return $this->location;
+		}
 
-        return $this->location = new Location($this->data);
-    }
+		return $this->location = new Location($this->data);
+	}
 
-    /**
-     * Returns the timestamp
-     *
-     * @return string|null
-     */
-    public function timestamp()
-    {
-        return $this->timestamp;
-    }
+	/**
+	 * Returns the timestamp
+	 */
+	public function timestamp(): string|null
+	{
+		return $this->timestamp;
+	}
 
-    /**
-     * Returns the exposure
-     *
-     * @return string|null
-     */
-    public function exposure()
-    {
-        return $this->exposure;
-    }
+	/**
+	 * Returns the exposure
+	 */
+	public function exposure(): string|null
+	{
+		return $this->exposure;
+	}
 
-    /**
-     * Returns the aperture
-     *
-     * @return string|null
-     */
-    public function aperture()
-    {
-        return $this->aperture;
-    }
+	/**
+	 * Returns the aperture
+	 */
+	public function aperture(): string|null
+	{
+		return $this->aperture;
+	}
 
-    /**
-     * Returns the iso value
-     *
-     * @return int|null
-     */
-    public function iso()
-    {
-        return $this->iso;
-    }
+	/**
+	 * Returns the iso value
+	 */
+	public function iso(): string|null
+	{
+		return $this->iso;
+	}
 
-    /**
-     * Checks if this is a color picture
-     *
-     * @return bool|null
-     */
-    public function isColor()
-    {
-        return $this->isColor;
-    }
+	/**
+	 * Checks if this is a color picture
+	 */
+	public function isColor(): bool|null
+	{
+		return $this->isColor;
+	}
 
-    /**
-     * Checks if this is a bw picture
-     *
-     * @return bool|null
-     */
-    public function isBW(): ?bool
-    {
-        return ($this->isColor !== null) ? $this->isColor === false : null;
-    }
+	/**
+	 * Checks if this is a bw picture
+	 */
+	public function isBW(): bool|null
+	{
+		return ($this->isColor !== null) ? $this->isColor === false : null;
+	}
 
-    /**
-     * Returns the focal length
-     *
-     * @return string|null
-     */
-    public function focalLength()
-    {
-        return $this->focalLength;
-    }
+	/**
+	 * Returns the focal length
+	 */
+	public function focalLength(): string|null
+	{
+		return $this->focalLength;
+	}
 
-    /**
-     * Read the exif data of the image object if possible
-     *
-     * @return mixed
-     */
-    protected function read(): array
-    {
-        // @codeCoverageIgnoreStart
-        if (function_exists('exif_read_data') === false) {
-            return [];
-        }
-        // @codeCoverageIgnoreEnd
+	/**
+	 * Read the exif data of the image object if possible
+	 */
+	protected function read(): array
+	{
+		// @codeCoverageIgnoreStart
+		if (function_exists('exif_read_data') === false) {
+			return [];
+		}
+		// @codeCoverageIgnoreEnd
 
-        $data = @exif_read_data($this->image->root());
-        return is_array($data) ? $data : [];
-    }
+		$data = @exif_read_data($this->image->root());
+		return is_array($data) ? $data : [];
+	}
 
-    /**
-     * Get all computed data
-     *
-     * @return array
-     */
-    protected function computed(): array
-    {
-        return $this->data['COMPUTED'] ?? [];
-    }
+	/**
+	 * Get all computed data
+	 */
+	protected function computed(): array
+	{
+		return $this->data['COMPUTED'] ?? [];
+	}
 
-    /**
-     * Pareses and stores all relevant exif data
-     */
-    protected function parse()
-    {
-        $this->timestamp   = $this->parseTimestamp();
-        $this->exposure    = $this->data['ExposureTime'] ?? null;
-        $this->iso         = $this->data['ISOSpeedRatings'] ?? null;
-        $this->focalLength = $this->parseFocalLength();
-        $this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
-        $this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
-    }
+	/**
+	 * Parses and stores all relevant exif data
+	 */
+	protected function parse(): void
+	{
+		$this->timestamp   = $this->parseTimestamp();
+		$this->exposure    = $this->data['ExposureTime'] ?? null;
+		$this->iso         = $this->data['ISOSpeedRatings'] ?? null;
+		$this->focalLength = $this->parseFocalLength();
+		$this->aperture    = $this->computed()['ApertureFNumber'] ?? null;
+		$this->isColor     = V::accepted($this->computed()['IsColor'] ?? null);
+	}
 
-    /**
-     * Return the timestamp when the picture has been taken
-     *
-     * @return string|int
-     */
-    protected function parseTimestamp()
-    {
-        if (isset($this->data['DateTimeOriginal']) === true) {
-            return strtotime($this->data['DateTimeOriginal']);
-        }
+	/**
+	 * Return the timestamp when the picture has been taken
+	 */
+	protected function parseTimestamp(): string
+	{
+		if (isset($this->data['DateTimeOriginal']) === true) {
+			if ($time = strtotime($this->data['DateTimeOriginal'])) {
+				return (string)$time;
+			}
+		}
 
-        return $this->data['FileDateTime'] ?? $this->image->modified();
-    }
+		return $this->data['FileDateTime'] ?? $this->image->modified();
+	}
 
-    /**
-     * Return the focal length
-     *
-     * @return string|null
-     */
-    protected function parseFocalLength()
-    {
-        return $this->data['FocalLength'] ?? $this->data['FocalLengthIn35mmFilm'] ?? null;
-    }
+	/**
+	 * Return the focal length
+	 */
+	protected function parseFocalLength(): string|null
+	{
+		return $this->data['FocalLength'] ??
+			   $this->data['FocalLengthIn35mmFilm'] ??
+			   null;
+	}
 
-    /**
-     * Converts the object into a nicely readable array
-     *
-     * @return array
-     */
-    public function toArray(): array
-    {
-        return [
-            'camera'      => $this->camera() ? $this->camera()->toArray() : null,
-            'location'    => $this->location() ? $this->location()->toArray() : null,
-            'timestamp'   => $this->timestamp(),
-            'exposure'    => $this->exposure(),
-            'aperture'    => $this->aperture(),
-            'iso'         => $this->iso(),
-            'focalLength' => $this->focalLength(),
-            'isColor'     => $this->isColor()
-        ];
-    }
+	/**
+	 * Converts the object into a nicely readable array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'camera'      => $this->camera()->toArray(),
+			'location'    => $this->location()->toArray(),
+			'timestamp'   => $this->timestamp(),
+			'exposure'    => $this->exposure(),
+			'aperture'    => $this->aperture(),
+			'iso'         => $this->iso(),
+			'focalLength' => $this->focalLength(),
+			'isColor'     => $this->isColor()
+		];
+	}
 
-    /**
-     * Improved `var_dump` output
-     *
-     * @return array
-     */
-    public function __debugInfo(): array
-    {
-        return array_merge($this->toArray(), [
-            'camera'   => $this->camera(),
-            'location' => $this->location()
-        ]);
-    }
+	/**
+	 * Improved `var_dump` output
+	 */
+	public function __debugInfo(): array
+	{
+		return array_merge($this->toArray(), [
+			'camera'   => $this->camera(),
+			'location' => $this->location()
+		]);
+	}
 }

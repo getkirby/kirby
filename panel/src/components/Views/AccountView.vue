@@ -2,7 +2,7 @@
 import UserView from "./UserView.vue";
 
 export default {
-  extends: UserView,
-  prevnext: false
+	extends: UserView,
+	prevnext: false
 };
 </script>

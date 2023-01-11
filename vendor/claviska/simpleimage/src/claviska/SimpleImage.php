@@ -31,7 +31,8 @@ class SimpleImage {
     ERR_LIB_NOT_LOADED = 8,
     ERR_UNSUPPORTED_FORMAT = 9,
     ERR_WEBP_NOT_ENABLED = 10,
-    ERR_WRITE = 11;
+    ERR_WRITE = 11,
+    ERR_INVALID_FLAG = 12;
 
 
   protected $image;
@@ -46,15 +47,26 @@ class SimpleImage {
    * Creates a new SimpleImage object.
    *
    * @param string $image An image file or a data URI to load.
+   * @param array $flags Optional override of default flags.
    * @throws \Exception Thrown if the GD library is not found; file|URI or image data is invalid.
    */
-  public function __construct($image = '') {
+  public function __construct($image = '', $flags = []) {
     // Check for the required GD extension
     if(extension_loaded('gd')) {
       // Ignore JPEG warnings that cause imagecreatefromjpeg() to fail
       ini_set('gd.jpeg_ignore_warning', 1);
     } else {
       throw new \Exception('Required extension GD is not loaded.', self::ERR_GD_NOT_ENABLED);
+    }
+
+    // Associative array of flags.
+    $this->flags = [
+      "sslVerify" => true // Skip SSL peer validation
+    ];
+    
+    // Override default flag values.
+    foreach($flags as $flag => $value) {
+      $this->setFlag($flag, $value);
     }
 
     // Load an image through the constructor
@@ -75,6 +87,37 @@ class SimpleImage {
     if($this->image !== null && is_resource($this->image) && $type_check) {
       imagedestroy($this->image);
     }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Helper functions
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Set flag value.
+   *
+   * @param string $flag Name of the flag to set.
+   * @param boolean $value State of the flag.
+   * @throws \Exception Thrown if flag does not exist (no default value).
+   */
+  public function setFlag($flag, $value) {
+    // Throw if flag does not exist
+    if(!in_array($flag, array_keys($this->flags))) {
+      throw new \Exception('Invalid flag.', self::ERR_INVALID_FLAG);
+    }
+
+    // Set flag value by name
+    $this->flags[$flag] = $value;
+  }
+
+  /**
+   * Get flag value.
+   *
+   * @param string $flag Name of the flag to get.
+   * @return boolean|null
+   */
+  public function getFlag($flag) {
+    return in_array($flag, array_keys($this->flags)) ? $this->flags[$flag] : null;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,69 +161,65 @@ class SimpleImage {
    * Loads an image from a file.
    *
    * @param string $file The image file to load.
+   * @param boolean $sslVerify Set to false to skip SSL validation.
    * @throws \Exception Thrown if file or image data is invalid.
    * @return \claviska\SimpleImage
    */
   public function fromFile($file) {
-    // Check if the file exists and is readable. We're using fopen() instead of file_exists()
-    // because not all URL wrappers support the latter.
-    $handle = @fopen($file, 'r');
-    if($handle === false) {
+    // Set fopen options.
+    $sslVerify = $this->getFlag("sslVerify"); // Don't perform peer validation when true
+    $opts = [
+      "ssl" => [
+        "verify_peer"      => $sslVerify,
+        "verify_peer_name" => $sslVerify
+      ]
+    ];
+
+    // Check if the file exists and is readable.
+    $file = @file_get_contents($file, false, stream_context_create($opts));
+    if($file === false) {
       throw new \Exception("File not found: $file", self::ERR_FILE_NOT_FOUND);
     }
-    fclose($handle);
+
+    // Create image object from string
+    $this->image = imagecreatefromstring($file);
 
     // Get image info
-    $info = @getimagesize($file);
+    $info = @getimagesizefromstring($file);
     if($info === false) {
       throw new \Exception("Invalid image file: $file", self::ERR_INVALID_IMAGE);
     }
     $this->mimeType = $info['mime'];
 
-    // Create image object from file
-    switch($this->mimeType) {
-    case 'image/gif':
-      // Load the gif
-      $gif = imagecreatefromgif($file);
-      if($gif) {
-        // Copy the gif over to a true color image to preserve its transparency. This is a
-        // workaround to prevent imagepalettetruecolor() from borking transparency.
-        $width = imagesx($gif);
-        $height = imagesy($gif);
-        $this->image = imagecreatetruecolor((int) $width, (int) $height);
-        $transparentColor = imagecolorallocatealpha($this->image, 0, 0, 0, 127);
-        imagecolortransparent($this->image, $transparentColor);
-        imagefill($this->image, 0, 0, $transparentColor);
-        imagecopy($this->image, $gif, 0, 0, 0, 0, $width, $height);
-        imagedestroy($gif);
-      }
-      break;
-    case 'image/jpeg':
-      $this->image = imagecreatefromjpeg($file);
-      break;
-    case 'image/png':
-      $this->image = imagecreatefrompng($file);
-      break;
-    case 'image/webp':
-      $this->image = imagecreatefromwebp($file);
-      break;
-    case 'image/bmp':
-    case 'image/x-ms-bmp':
-    case 'image/x-windows-bmp':
-      $this->image = imagecreatefrombmp($file);
-      break;
-    }
     if(!$this->image) {
       throw new \Exception("Unsupported format: " . $this->mimeType, self::ERR_UNSUPPORTED_FORMAT);
     }
 
+    switch($this->mimeType) {
+      case 'image/gif':
+        // Copy the gif over to a true color image to preserve its transparency. This is a
+        // workaround to prevent imagepalettetotruecolor() from borking transparency.
+        $width = imagesx($this->image);
+        $height = imagesx($this->image);
+
+        $gif = imagecreatetruecolor((int) $width, (int) $height);
+        $alpha = imagecolorallocatealpha($gif, 0, 0, 0, 127);
+        imagecolortransparent($gif, $alpha);
+        imagefill($gif, 0, 0, $alpha);
+        
+        imagecopy($this->image, $gif, 0, 0, 0, 0, $width, $height);
+        imagedestroy($gif);
+        break;
+      case 'image/jpeg':
+        // Load exif data from JPEG images
+        if(function_exists('exif_read_data')) {
+          $this->exif = @exif_read_data("data://image/jpeg;base64," . base64_encode($file));
+        }
+        break;
+    }
+
     // Convert pallete images to true color images
     imagepalettetotruecolor($this->image);
-
-    // Load exif data from JPEG images
-    if($this->mimeType === 'image/jpeg' && function_exists('exif_read_data')) {
-      $this->exif = @exif_read_data($file);
-    }
 
     return $this;
   }

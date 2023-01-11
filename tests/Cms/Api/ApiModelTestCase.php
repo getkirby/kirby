@@ -4,30 +4,38 @@ namespace Kirby\Cms\Api;
 
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase as TestCase;
+use Kirby\Filesystem\Dir;
 
 class ApiModelTestCase extends TestCase
 {
-    protected $api;
-    protected $app;
+	protected $api;
+	protected $app;
+	protected $tmp = __DIR__ . '/tmp';
 
-    public function attr($object, $attr)
-    {
-        return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-    }
+	public function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->tmp,
+			],
+		]);
 
-    public function assertAttr($object, $attr, $value)
-    {
-        $this->assertEquals($this->attr($object, $attr), $value);
-    }
+		$this->api = $this->app->api();
+		Dir::make($this->tmp);
+	}
 
-    public function setUp(): void
-    {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
+	public function tearDown(): void
+	{
+		Dir::remove($this->tmp);
+	}
 
-        $this->api = $this->app->api();
-    }
+	public function attr($object, $attr)
+	{
+		return $this->api->resolve($object)->select($attr)->toArray()[$attr];
+	}
+
+	public function assertAttr($object, $attr, $value)
+	{
+		$this->assertEquals($this->attr($object, $attr), $value);
+	}
 }

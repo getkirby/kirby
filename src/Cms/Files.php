@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\HasUuids;
 
 /**
  * The `$files` object extends the general
@@ -21,173 +22,170 @@ use Kirby\Filesystem\F;
  */
 class Files extends Collection
 {
-    /**
-     * All registered files methods
-     *
-     * @var array
-     */
-    public static $methods = [];
+	use HasUuids;
 
-    /**
-     * Adds a single file or
-     * an entire second collection to the
-     * current collection
-     *
-     * @param \Kirby\Cms\Files|\Kirby\Cms\File|string $object
-     * @return $this
-     * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
-     */
-    public function add($object)
-    {
-        // add a files collection
-        if (is_a($object, self::class) === true) {
-            $this->data = array_merge($this->data, $object->data);
+	/**
+	 * All registered files methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
 
-        // add a file by id
-        } elseif (is_string($object) === true && $file = App::instance()->file($object)) {
-            $this->__set($file->id(), $file);
+	/**
+	 * Adds a single file or
+	 * an entire second collection to the
+	 * current collection
+	 *
+	 * @param \Kirby\Cms\Files|\Kirby\Cms\File|string $object
+	 * @return $this
+	 * @throws \Kirby\Exception\InvalidArgumentException When no `File` or `Files` object or an ID of an existing file is passed
+	 */
+	public function add($object)
+	{
+		// add a files collection
+		if ($object instanceof self) {
+			$this->data = array_merge($this->data, $object->data);
 
-        // add a file object
-        } elseif (is_a($object, 'Kirby\Cms\File') === true) {
-            $this->__set($object->id(), $object);
+		// add a file by id
+		} elseif (
+			is_string($object) === true &&
+			$file = App::instance()->file($object)
+		) {
+			$this->__set($file->id(), $file);
 
-        // give a useful error message on invalid input;
-        // silently ignore "empty" values for compatibility with existing setups
-        } elseif (in_array($object, [null, false, true], true) !== true) {
-            throw new InvalidArgumentException('You must pass a Files or File object or an ID of an existing file to the Files collection');
-        }
+		// add a file object
+		} elseif ($object instanceof File) {
+			$this->__set($object->id(), $object);
 
-        return $this;
-    }
+		// give a useful error message on invalid input;
+		// silently ignore "empty" values for compatibility with existing setups
+		} elseif (in_array($object, [null, false, true], true) !== true) {
+			throw new InvalidArgumentException('You must pass a Files or File object or an ID of an existing file to the Files collection');
+		}
 
-    /**
-     * Sort all given files by the
-     * order in the array
-     *
-     * @param array $files List of file ids
-     * @param int $offset Sorting offset
-     * @return $this
-     */
-    public function changeSort(array $files, int $offset = 0)
-    {
-        foreach ($files as $filename) {
-            if ($file = $this->get($filename)) {
-                $offset++;
-                $file->changeSort($offset);
-            }
-        }
+		return $this;
+	}
 
-        return $this;
-    }
+	/**
+	 * Sort all given files by the
+	 * order in the array
+	 *
+	 * @param array $files List of file ids
+	 * @param int $offset Sorting offset
+	 * @return $this
+	 */
+	public function changeSort(array $files, int $offset = 0)
+	{
+		foreach ($files as $filename) {
+			if ($file = $this->get($filename)) {
+				$offset++;
+				$file->changeSort($offset);
+			}
+		}
 
-    /**
-     * Creates a files collection from an array of props
-     *
-     * @param array $files
-     * @param \Kirby\Cms\Model $parent
-     * @return static
-     */
-    public static function factory(array $files, Model $parent)
-    {
-        $collection = new static([], $parent);
-        $kirby      = $parent->kirby();
+		return $this;
+	}
 
-        foreach ($files as $props) {
-            $props['collection'] = $collection;
-            $props['kirby']      = $kirby;
-            $props['parent']     = $parent;
+	/**
+	 * Creates a files collection from an array of props
+	 *
+	 * @param array $files
+	 * @param \Kirby\Cms\Model $parent
+	 * @return static
+	 */
+	public static function factory(array $files, Model $parent)
+	{
+		$collection = new static([], $parent);
+		$kirby      = $parent->kirby();
 
-            $file = File::factory($props);
+		foreach ($files as $props) {
+			$props['collection'] = $collection;
+			$props['kirby']      = $kirby;
+			$props['parent']     = $parent;
 
-            $collection->data[$file->id()] = $file;
-        }
+			$file = File::factory($props);
 
-        return $collection;
-    }
+			$collection->data[$file->id()] = $file;
+		}
 
-    /**
-     * Tries to find a file by id/filename
-     *
-     * @param string $id
-     * @return \Kirby\Cms\File|null
-     */
-    public function findById(string $id)
-    {
-        return $this->get(ltrim($this->parent->id() . '/' . $id, '/'));
-    }
+		return $collection;
+	}
 
-    /**
-     * Alias for FilesFinder::findById() which is
-     * used internally in the Files collection to
-     * map the get method correctly.
-     *
-     * @param string $key
-     * @return \Kirby\Cms\File|null
-     */
-    public function findByKey(string $key)
-    {
-        return $this->findById($key);
-    }
+	/**
+	 * Finds a file by its filename
+	 * @internal Use `$files->find()` instead
+	 *
+	 * @param string $key
+	 * @return \Kirby\Cms\File|null
+	 */
+	public function findByKey(string $key)
+	{
+		if ($file = $this->findByUuid($key, 'file')) {
+			return $file;
+		}
 
-    /**
-     * Returns the file size for all
-     * files in the collection in a
-     * human-readable format
-     * @since 3.6.0
-     *
-     * @param string|null|false $locale Locale for number formatting,
-     *                                  `null` for the current locale,
-     *                                  `false` to disable number formatting
-     * @return string
-     */
-    public function niceSize($locale = null): string
-    {
-        return F::niceSize($this->size(), $locale);
-    }
+		return $this->get(ltrim($this->parent?->id() . '/' . $key, '/'));
+	}
 
-    /**
-     * Returns the raw size for all
-     * files in the collection
-     * @since 3.6.0
-     *
-     * @return int
-     */
-    public function size(): int
-    {
-        return F::size($this->values(fn ($file) => $file->root()));
-    }
+	/**
+	 * Returns the file size for all
+	 * files in the collection in a
+	 * human-readable format
+	 * @since 3.6.0
+	 *
+	 * @param string|null|false $locale Locale for number formatting,
+	 *                                  `null` for the current locale,
+	 *                                  `false` to disable number formatting
+	 * @return string
+	 */
+	public function niceSize($locale = null): string
+	{
+		return F::niceSize($this->size(), $locale);
+	}
 
-    /**
-     * Returns the collection sorted by
-     * the sort number and the filename
-     *
-     * @return static
-     */
-    public function sorted()
-    {
-        return $this->sort('sort', 'asc', 'filename', 'asc');
-    }
+	/**
+	 * Returns the raw size for all
+	 * files in the collection
+	 * @since 3.6.0
+	 *
+	 * @return int
+	 */
+	public function size(): int
+	{
+		return F::size($this->values(fn ($file) => $file->root()));
+	}
 
-    /**
-     * Filter all files by the given template
-     *
-     * @param null|string|array $template
-     * @return $this|static
-     */
-    public function template($template)
-    {
-        if (empty($template) === true) {
-            return $this;
-        }
+	/**
+	 * Returns the collection sorted by
+	 * the sort number and the filename
+	 *
+	 * @return static
+	 */
+	public function sorted()
+	{
+		return $this->sort('sort', 'asc', 'filename', 'asc');
+	}
 
-        if ($template === 'default') {
-            $template = ['default', ''];
-        }
+	/**
+	 * Filter all files by the given template
+	 *
+	 * @param null|string|array $template
+	 * @return $this|static
+	 */
+	public function template($template)
+	{
+		if (empty($template) === true) {
+			return $this;
+		}
 
-        return $this->filter(
-            'template',
-            is_array($template) ? 'in' : '==',
-            $template
-        );
-    }
+		if ($template === 'default') {
+			$template = ['default', ''];
+		}
+
+		return $this->filter(
+			'template',
+			is_array($template) ? 'in' : '==',
+			$template
+		);
+	}
 }

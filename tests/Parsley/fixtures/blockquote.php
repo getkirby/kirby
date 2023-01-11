@@ -1,11 +1,11 @@
 <?php
 
 return [
-    [
-        'content' => [
-            'citation' => null,
-            'text' => 'Blockquote',
-        ],
-        'type' => 'quote',
-    ]
+	[
+		'content' => [
+			'citation' => null,
+			'text' => 'Blockquote',
+		],
+		'type' => 'quote',
+	]
 ];

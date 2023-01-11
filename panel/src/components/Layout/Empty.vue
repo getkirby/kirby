@@ -1,16 +1,16 @@
 <template>
-  <component
-    :is="element"
-    :data-layout="layout"
-    :type="element === 'button' ? 'button' : false"
-    class="k-empty"
-    v-on="$listeners"
-  >
-    <k-icon v-if="icon" :type="icon" />
-    <p>
-      <slot>{{ text }}</slot>
-    </p>
-  </component>
+	<component
+		:is="element"
+		:data-layout="layout"
+		:type="element === 'button' ? 'button' : false"
+		class="k-empty"
+		v-on="$listeners"
+	>
+		<k-icon v-if="icon" :type="icon" />
+		<p>
+			<slot>{{ text }}</slot>
+		</p>
+	</component>
 </template>
 
 <script>
@@ -19,84 +19,87 @@
  * @example <k-empty icon="image">No images yet</k-empty>
  */
 export default {
-  props: {
-    /**
-     * Text to show inside the box
-     */
-    text: String,
-    /**
-     * Icon to show inside the box
-     */
-    icon: String,
-    /**
-     * Layout for the box
-     * @types list, cards
-     */
-    layout: {
-      type: String,
-      default: "list"
-    }
-  },
-  computed: {
-    element() {
-      return this.$listeners["click"] !== undefined ? "button" : "div";
-    }
-  }
+	props: {
+		/**
+		 * Text to show inside the box
+		 */
+		text: String,
+		/**
+		 * Icon to show inside the box
+		 */
+		icon: String,
+		/**
+		 * Layout for the box
+		 * @types list, cards
+		 */
+		layout: {
+			type: String,
+			default: "list"
+		}
+	},
+	computed: {
+		element() {
+			return this.$listeners["click"] !== undefined ? "button" : "div";
+		}
+	}
 };
 </script>
 
 <style>
 /* global styles */
 .k-empty {
-  display: flex;
-  align-items: stretch;
-  border-radius: var(--rounded);
-  color: var(--color-gray-600);
-  border: 1px dashed var(--color-border);
+	display: flex;
+	align-items: stretch;
+	border-radius: var(--rounded);
+	color: var(--color-gray-600);
+	border: 1px dashed var(--color-border);
 }
 button.k-empty {
-  width: 100%;
+	width: 100%;
 }
 button.k-empty:focus {
-  outline: none;
+	outline: none;
 }
 .k-empty p {
-  font-size: var(--text-sm);
-  color: var(--color-gray-600);
+	font-size: var(--text-sm);
+	color: var(--color-gray-600);
 }
 .k-empty > .k-icon {
-  color: var(--color-gray-500);
+	color: var(--color-gray-500);
 }
 
 /* layout:cards */
 .k-empty[data-layout="cards"],
 .k-empty[data-layout="cardlets"] {
-  text-align: center;
-  padding: 1.5rem;
-  justify-content: center;
-  flex-direction: column;
+	text-align: center;
+	padding: 1.5rem;
+	justify-content: center;
+	flex-direction: column;
 }
 .k-empty[data-layout="cards"] .k-icon,
 .k-empty[data-layout="cardlets"] .k-icon {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 .k-empty[data-layout="cards"] .k-icon svg,
 .k-empty[data-layout="cardlets"] .k-icon svg {
-  width: 2rem;
-  height: 2rem;
+	width: 2rem;
+	height: 2rem;
 }
 
-/* layout:list */
-.k-empty[data-layout="list"] {
-  min-height: 38px;
+/* layout:list or layout:table */
+.k-empty[data-layout="list"],
+.k-empty[data-layout="table"] {
+	min-height: 38px;
 }
-.k-empty[data-layout="list"] > .k-icon {
-  width: 36px;
-  min-height: 36px;
-  border-inline-end: 1px solid rgba(0, 0, 0, 0.05);
+.k-empty[data-layout="list"] > .k-icon,
+.k-empty[data-layout="table"] > .k-icon {
+	width: 36px;
+	min-height: 36px;
+	border-inline-end: 1px solid rgba(0, 0, 0, 0.05);
 }
-.k-empty[data-layout="list"] > p {
-  line-height: 1.25rem;
-  padding: 0.5rem 0.75rem;
+.k-empty[data-layout="list"] > p,
+.k-empty[data-layout="table"] > p {
+	line-height: 1.25rem;
+	padding: 0.5rem 0.75rem;
 }
 </style>

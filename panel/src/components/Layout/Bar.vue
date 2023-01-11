@@ -1,18 +1,18 @@
 <template>
-  <div class="k-bar">
-    <div v-if="$slots.left" class="k-bar-slot" data-position="left">
-      <!-- @slot Content on the left -->
-      <slot name="left" />
-    </div>
-    <div v-if="$slots.center" class="k-bar-slot" data-position="center">
-      <!-- @slot Content in the center -->
-      <slot name="center" />
-    </div>
-    <div v-if="$slots.right" class="k-bar-slot" data-position="right">
-      <!-- @slot Content on the right -->
-      <slot name="right" />
-    </div>
-  </div>
+	<div class="k-bar">
+		<div v-if="$slots.left" class="k-bar-slot" data-position="left">
+			<!-- @slot Content on the left -->
+			<slot name="left" />
+		</div>
+		<div v-if="$slots.center" class="k-bar-slot" data-position="center">
+			<!-- @slot Content in the center -->
+			<slot name="center" />
+		</div>
+		<div v-if="$slots.right" class="k-bar-slot" data-position="right">
+			<!-- @slot Content on the right -->
+			<slot name="right" />
+		</div>
+	</div>
 </template>
 
 <script>
@@ -35,18 +35,18 @@ export default {};
 
 <style>
 .k-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	line-height: 1;
 }
 .k-bar-slot {
-  flex-grow: 1;
+	flex-grow: 1;
 }
 .k-bar-slot[data-position="center"] {
-  text-align: center;
+	text-align: center;
 }
 .k-bar-slot[data-position="right"] {
-  text-align: end;
+	text-align: end;
 }
 </style>
