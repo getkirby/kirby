@@ -100,14 +100,6 @@ export default {
 	align-items: center;
 	margin-inline: -0.75rem;
 }
-.k-topbar-wrapper::after {
-	position: absolute;
-	content: "";
-	height: 2.5rem;
-	background: var(--bg);
-	inset-inline-start: 100%;
-	width: 3rem;
-}
 
 .k-topbar-menu {
 	flex-shrink: 0;

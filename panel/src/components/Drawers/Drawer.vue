@@ -240,7 +240,7 @@ export default {
 	padding: 1.5rem;
 	flex-grow: 1;
 	background: var(--color-background);
-  overscroll-behavior: contain;
+	overscroll-behavior: contain;
 }
 
 /* Nested drawers */
