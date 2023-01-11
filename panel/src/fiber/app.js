@@ -74,6 +74,8 @@ export default {
 				if (silent !== true) {
 					this.$store.dispatch("isLoading", true);
 				}
+
+				this.saveScrollPosition(this.state.$view);
 			},
 			/**
 			 * Loads the correct view component
@@ -101,6 +103,8 @@ export default {
 				if (options.navigate === true) {
 					this.navigate();
 				}
+
+				this.restoreScrollPosition(state.$view);
 			},
 			/**
 			 * Returns global query parameters
@@ -182,7 +186,35 @@ export default {
 			if (state.$translation) {
 				document.documentElement.lang = state.$translation.code;
 			}
+		},
+
+		saveScrollPosition(view) {
+			let scrollPosition = {
+				height: document.body.scrollHeight,
+				scrollY: window.scrollY
+			}
+			sessionStorage.setItem('kirby$scrollPosition$' + view.path, JSON.stringify(scrollPosition));
+			console.log('saveScrollPosition', view.path, window.scrollY);
+		},
+	
+		restoreScrollPosition(view) {
+			let scrollPosition = sessionStorage.getItem('kirby$scrollPosition$' + view.path) || null;
+			scrollPosition = JSON.parse(scrollPosition);
+			if (scrollPosition && scrollPosition.scrollY > 0) {
+				document.body.style.minHeight = scrollPosition.height + 'px';
+				window.scrollTo(0, scrollPosition.scrollY);
+
+				// TODO: This is quite hacky but it works for now
+				setTimeout(() => {
+					document.body.style.minHeight = 'auto';
+				}, 1000);
+			}
+			else {
+				window.scrollTo(0, 0);
+			}
+			console.log('restoreScrollPosition', view.path, scrollPosition);
 		}
+
 	},
 	render(h) {
 		if (this.component) {

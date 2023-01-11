@@ -26,6 +26,8 @@
 
 import { clone, merge } from "../helpers/object.js";
 
+history.scrollRestoration = "manual";
+
 export default class Fiber {
 	/**
 	 * @param {object} options

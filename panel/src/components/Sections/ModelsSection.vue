@@ -39,6 +39,7 @@
 				<k-collection
 					v-bind="collection"
 					:data-invalid="isInvalid"
+					ref="collection"
 					v-on="canAdd ? { empty: onAdd } : {}"
 					@action="onAction"
 					@change="onChange"
@@ -50,6 +51,16 @@
 			<k-upload ref="upload" @success="onUpload" @error="reload" />
 		</template>
 	</section>
+	<section
+		v-else
+		:class="`k-models-section`"
+	>
+	<header class="k-section-header">
+		<k-headline/>
+	</header>
+	<div class="k-skeleton" ref="skeleton"></div>
+	</section>
+	
 </template>
 
 <script>
@@ -174,6 +185,9 @@ export default {
 		paginationId() {
 			return "kirby$pagination$" + this.parent + "/" + this.name;
 		},
+		heightId() {
+			return "kirby$height$" + this.parent + "/" + this.name;
+		},
 		type() {
 			return "models";
 		}
@@ -188,6 +202,9 @@ export default {
 		timestamp() {
 			this.reload();
 		}
+	},
+	mounted() {
+		this.restoreHeight();
 	},
 	created() {
 		this.load();
@@ -218,6 +235,10 @@ export default {
 			} finally {
 				this.isProcessing = false;
 				this.isLoading = false;
+
+				this.$nextTick(() => {
+					this.saveHeight();
+				});
 			}
 		},
 
@@ -237,6 +258,18 @@ export default {
 		},
 		onUpload() {},
 
+		saveHeight() {
+			sessionStorage.setItem(this.heightId, this.$refs.collection?.$el.offsetHeight);
+		},
+
+		restoreHeight() {
+			if(!sessionStorage.getItem(this.heightId)) {
+				return;
+			}
+			
+			this.$refs.skeleton.style.height = sessionStorage.getItem(this.heightId) + "px";
+		},
+
 		async reload() {
 			await this.load(true);
 		},
@@ -251,6 +284,27 @@ export default {
 <style>
 .k-models-section[data-processing="true"] {
 	pointer-events: none;
+}
+
+@keyframes skeleton {
+	to {
+		transform: translateX(100%);
+	}
+}
+
+.k-skeleton {
+	height: 1000px;
+	border-radius: var(--rounded);
+	overflow: hidden;
+	position: relative;
+}
+.k-skeleton:after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, transparent 0%, var(--color-gray-300) 50%, transparent 100%);
+	transform: translateX(-100%);
+	animation: skeleton 1s linear infinite;
 }
 
 .k-models-section-search.k-input {
