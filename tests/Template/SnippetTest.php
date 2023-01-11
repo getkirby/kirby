@@ -222,7 +222,7 @@ class SnippetTest extends TestCase
 		$snippet->open();
 		echo 'content';
 
-		$this->assertSame("<h1>Layout</h1>\ncontent", $snippet->render());
+		$this->assertSame("<h1>Layout</h1>\ncontent<footer>with other stuff</footer>\n", $snippet->render());
 	}
 
 	/**

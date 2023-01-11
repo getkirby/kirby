@@ -146,13 +146,19 @@ class Template
 	 */
 	public function render(array $data = []): string
 	{
+		// if the template is rendered inside a snippet,
+		// we need to keep the "outside" snippet object
+		// to compare it later
+		$snippet = Snippet::$current;
+
 		// load the template
 		$template = Tpl::load($this->file(), $data);
 
-		// if last `endsnippet()` has been ommitted,
-		// take the buffer output as default slot and
-		// render the snippets as final template output
-		if (Snippet::$current !== null) {
+		// if last `endsnippet()` inside the current template
+		// has been omitted, take the buffer output as default
+		// slot and render the snippet as final template output
+		// (snippet was used as layout snippet)
+		if (Snippet::$current !== $snippet) {
 			$template = Snippet::$current->render($data, [
 				'default' => $template
 			]);

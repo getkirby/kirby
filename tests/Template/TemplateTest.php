@@ -132,7 +132,7 @@ class TemplateTest extends TestCase
 	/**
 	 * @covers ::render
 	 */
-	public function testRenderOpenSnippets()
+	public function testRenderOpenLayoutSnippet()
 	{
 		new App([
 			'roots' => [
@@ -142,8 +142,72 @@ class TemplateTest extends TestCase
 		]);
 
 		$template = new Template('with-layout');
-		$this->assertSame('<h1>Layout</h1>
-My content
-', $template->render());
+		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $template->render());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderOpenParentSnippet1()
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => __DIR__ . '/fixtures',
+				'templates' => __DIR__ . '/fixtures'
+			]
+		]);
+
+		$this->assertSame(
+			"Before rendering\n" .
+			"Simple output\n" .
+			"After rendering\n",
+			$app->snippet('render')
+		);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderOpenParentSnippet2()
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => __DIR__ . '/fixtures',
+				'templates' => __DIR__ . '/fixtures'
+			]
+		]);
+
+		$template = new Template('render-in-slot');
+		$this->assertSame(
+			"Before snippet\n" .
+			"Before rendering\n" .
+			"Simple output\n" .
+			"After rendering\n" .
+			"After snippet\n",
+			$template->render()
+		);
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderOpenParentSnippet3()
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => __DIR__ . '/fixtures',
+				'templates' => __DIR__ . '/fixtures'
+			]
+		]);
+
+		$template = new Template('render-in-slot-layout');
+		$this->assertSame(
+			"Before snippet\n" .
+			"Before rendering\n" .
+			"<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n" .
+			"After rendering\n" .
+			"After snippet\n",
+			$template->render()
+		);
 	}
 }
