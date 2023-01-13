@@ -420,8 +420,12 @@ export default {
 		 * @param {number} index index of new row to be shown
 		 */
 		async onFormPaginate(index) {
-			await this.save();
-			this.open(index);
+			try {
+				await this.save();
+				this.open(index);
+			} catch (e) {
+				// don't change the page
+			}
 		},
 		/**
 		 * Handles the structure form submission
