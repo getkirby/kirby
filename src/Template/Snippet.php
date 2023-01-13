@@ -216,6 +216,14 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Returns the parent snippet if it exists
+	 */
+	public function parent(): static|null
+	{
+		return $this->parent;
+	}
+
+	/**
 	 * Renders the snippet and passes the scope
 	 * with all slots and data
 	 */
