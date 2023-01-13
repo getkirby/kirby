@@ -158,7 +158,10 @@ class Template
 		// has been omitted, take the buffer output as default
 		// slot and render the snippet as final template output
 		// (snippet was used as layout snippet)
-		if (Snippet::$current !== $snippet) {
+		if (
+			Snippet::$current !== null &&
+			Snippet::$current->parent() === $snippet
+		) {
 			$template = Snippet::$current->render($data, [
 				'default' => $template
 			]);
