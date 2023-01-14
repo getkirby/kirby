@@ -21,6 +21,9 @@
 <script>
 import tab from "@/mixins/tab.js";
 
+/**
+ * @deprecated will be removed in v3.10. Use `k-button` directly
+ */
 export default {
 	mixins: [tab],
 	inheritAttrs: false,

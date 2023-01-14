@@ -20,6 +20,9 @@
 </template>
 
 <script>
+/**
+ * @deprecated will be removed in v3.10. Use `k-button` directly
+ */
 export default {
 	inheritAttrs: false,
 	props: {

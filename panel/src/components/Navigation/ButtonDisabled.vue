@@ -13,6 +13,9 @@
 </template>
 
 <script>
+/**
+ * @deprecated will be removed in v3.10. Use `k-button` directly
+ */
 export default {
 	inheritAttrs: false,
 	props: {
@@ -24,14 +27,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-button[data-disabled="true"] {
-	opacity: 0.5;
-	pointer-events: none;
-	cursor: default;
-}
-.k-card-options > .k-button[data-disabled="true"] {
-	display: inline-flex;
-}
-</style>

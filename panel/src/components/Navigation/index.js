@@ -20,10 +20,7 @@ export default {
 	install(app) {
 		app.component("k-breadcrumb", Breadcrumb);
 		app.component("k-button", Button);
-		app.component("k-button-disabled", ButtonDisabled);
 		app.component("k-button-group", ButtonGroup);
-		app.component("k-button-link", ButtonLink);
-		app.component("k-button-native", ButtonNative);
 		app.component("k-dropdown", Dropdown);
 		app.component("k-dropdown-content", DropdownContent);
 		app.component("k-dropdown-item", DropdownItem);
@@ -35,5 +32,12 @@ export default {
 		app.component("k-search", Search);
 		app.component("k-tag", Tag);
 		app.component("k-topbar", Topbar);
+
+		/**
+		 * @deprecated will be removed in v3.10. Use `k-button` directly
+		 */
+		app.component("k-button-disabled", ButtonDisabled);
+		app.component("k-button-link", ButtonLink);
+		app.component("k-button-native", ButtonNative);
 	}
 };

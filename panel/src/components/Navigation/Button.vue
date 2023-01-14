@@ -1,24 +1,38 @@
 <template>
-	<component :is="component" ref="button" v-bind="$props" v-on="$listeners">
+	<component
+		:is="component"
+		ref="button"
+		v-bind="attributes"
+		v-on="$listeners"
+		@click="click"
+	>
+		<k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
+
 		<template v-if="text">
 			{{ text }}
 		</template>
-		<slot v-else />
+		<span v-else-if="$slots.default" class="k-button-text"><slot /></span>
 	</component>
 </template>
 
 <script>
+import tab from "@/mixins/tab.js";
+
 /**
  * @example <k-button icon="check">Save</k-button>
  */
 export default {
+	mixins: [tab],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
 		/**
 		 * Pass instead of a link URL to be triggered on clicking the button
 		 */
-		click: Function,
+		click: {
+			type: Function,
+			default: () => {}
+		},
 		/**
 		 * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
 		 */
@@ -71,29 +85,64 @@ export default {
 		}
 	},
 	computed: {
-		component() {
-			if (this.disabled === true) {
-				return "k-button-disabled";
+		attributes() {
+			const attributes = {
+				class: "k-button",
+				"data-responsive": this.responsive,
+				"data-theme": this.theme,
+				id: this.id,
+				title: this.tooltip
+			};
+
+			// button only
+			if (this.component === "button") {
+				attributes["type"] = this.type;
+				attributes["data-disabled"] = this.disabled;
+				attributes["aria-disabled"] = this.disabled;
 			}
 
-			return this.link ? "k-button-link" : "k-button-native";
+			// link only
+			if (this.component === "k-link") {
+				attributes["rel"] = this.rel;
+				attributes["target"] = this.target;
+				attributes["to"] = this.link;
+			}
+
+			if (this.component === "span") {
+				attributes["data-disabled"] = true;
+			}
+
+			// for buttons and enabled links
+			if (this.component === "button" || this.component === "k-link") {
+				attributes["aria-current"] = this.current;
+				attributes["autofocus"] = this.autofocus;
+				attributes["role"] = this.role;
+				attributes["tabindex"] = this.tabindex;
+			}
+
+			return attributes;
+		},
+		component() {
+			if (!this.link) {
+				return "button";
+			}
+
+			if (!this.disabled) {
+				return "k-link";
+			}
+
+			return "span";
 		}
 	},
 	methods: {
 		focus() {
-			if (this.$refs.button.focus) {
-				this.$refs.button.focus();
-			}
+			this.$refs.button.focus?.();
 		},
 		tab() {
-			if (this.$refs.button.tab) {
-				this.$refs.button.tab();
-			}
+			this.$refs.button.tab?.();
 		},
 		untab() {
-			if (this.$refs.button.untab) {
-				this.$refs.button.untab();
-			}
+			this.$refs.button.untab?.();
 		}
 	}
 };
@@ -165,5 +214,14 @@ button::-moz-focus-inner {
 .k-button-text span,
 .k-button-text b {
 	vertical-align: baseline;
+}
+
+.k-button[data-disabled="true"] {
+	opacity: 0.5;
+	pointer-events: none;
+	cursor: default;
+}
+.k-card-options > .k-button[data-disabled="true"] {
+	display: inline-flex;
 }
 </style>
