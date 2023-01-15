@@ -155,9 +155,13 @@ class Template
 		$template = Tpl::load($this->file(), $data);
 
 		// if last `endsnippet()` inside the current template
-		// has been omitted, take the buffer output as default
-		// slot and render the snippet as final template output
-		// (snippet was used as layout snippet)
+		// has been omitted (= snippet was used as layout snippet),
+		// `Snippet::$current` will point to a snippet that was
+		// opened inside the template; if that snippet is the direct
+		// child of the snippet that was open before the template was
+		// rendered (which could be `null` if no snippet was open),
+		// take the buffer output from the template as default slot
+		// and render the snippet as final template output
 		if (
 			Snippet::$current !== null &&
 			Snippet::$current->parent() === $snippet
