@@ -98,6 +98,7 @@ class SnippetTest extends TestCase
 	/**
 	 * @covers ::open
 	 * @covers ::close
+	 * @covers ::parent
 	 */
 	public function testNestedComponents()
 	{
@@ -118,10 +119,7 @@ class SnippetTest extends TestCase
 
 		$a->close();
 
-		$parentProp = new ReflectionProperty(Snippet::class, 'parent');
-		$parentProp->setAccessible(true);
-
-		$this->assertSame($a, $parentProp->getValue($b));
+		$this->assertSame($a, $b->parent());
 	}
 
 	/**
