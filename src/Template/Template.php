@@ -171,7 +171,7 @@ class Template
 
 		// no slots have been defined, but the template code
 		// should be used as default slot
-		if (count(Snippet::$current->slots()) === 0) {
+		if (Snippet::$current->slots()->count() === 0) {
 			return Snippet::$current->render($data, [
 				'default' => $template
 			]);
