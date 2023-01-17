@@ -16,7 +16,7 @@ use TypeError;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage in 3.9
+ * // TODO: include in test coverage 3.10
  * @codeCoverageIgnore
  */
 class Collection extends BaseCollection
@@ -45,21 +45,22 @@ class Collection extends BaseCollection
 
 	/**
 	 * Validate the type of every item that is being
-	 * added to the collection. They cneed to have
+	 * added to the collection. They need to have
 	 * the class defined by static::TYPE.
 	 */
 	public function __set(string $key, $value): void
 	{
-		if (
-			is_a($value, static::TYPE) === false
-		) {
+		if (is_a($value, static::TYPE) === false) {
 			throw new TypeError('Each value in the collection must be an instance of ' . static::TYPE);
 		}
 
 		parent::__set($key, $value);
 	}
 
-	public static function factory(array $items)
+	/**
+	 * Creates a collection from a nested array structure
+	 */
+	public static function factory(array $items): static
 	{
 		$collection = new static();
 		$className  = static::TYPE;
@@ -77,7 +78,11 @@ class Collection extends BaseCollection
 		return $collection;
 	}
 
-	public function render(ModelWithContent $model)
+	/**
+	 * Renders each item with a model and returns
+	 * an array of all rendered results
+	 */
+	public function render(ModelWithContent $model): array
 	{
 		$props = [];
 

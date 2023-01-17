@@ -8,10 +8,10 @@ class CheckboxesFieldTest extends TestCase
 	{
 		$field = $this->field('checkboxes');
 
-		$this->assertEquals('checkboxes', $field->type());
-		$this->assertEquals('checkboxes', $field->name());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->options());
+		$this->assertSame('checkboxes', $field->type());
+		$this->assertSame('checkboxes', $field->name());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->options());
 		$this->assertTrue($field->save());
 	}
 
@@ -26,14 +26,14 @@ class CheckboxesFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($expected, $field->value());
+		$this->assertSame($expected, $field->value());
 	}
 
 	public function testEmptyValue()
 	{
 		$field = $this->field('checkboxes');
 
-		$this->assertEquals([], $field->value());
+		$this->assertSame([], $field->value());
 	}
 
 	public function testDefaultValueWithInvalidOptions()
@@ -47,8 +47,8 @@ class CheckboxesFieldTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a', 'b'], $field->default());
-		$this->assertEquals('a, b', $field->data(true));
+		$this->assertSame(['a', 'b'], $field->default());
+		$this->assertSame('a, b', $field->data(true));
 	}
 
 	public function testStringConversion()
@@ -62,7 +62,7 @@ class CheckboxesFieldTest extends TestCase
 			'value' => 'a,b,c,d'
 		]);
 
-		$this->assertEquals('a, b, c', $field->data());
+		$this->assertSame('a, b, c', $field->data());
 	}
 
 	public function testIgnoreInvalidOptions()
@@ -76,7 +76,7 @@ class CheckboxesFieldTest extends TestCase
 			'value' => 'a, b, d'
 		]);
 
-		$this->assertEquals(['a', 'b'], $field->value());
+		$this->assertSame(['a', 'b'], $field->value());
 	}
 
 	public function testMin()
@@ -112,7 +112,7 @@ class CheckboxesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->required());
-		$this->assertEquals(1, $field->min());
+		$this->assertSame(1, $field->min());
 	}
 
 	public function testRequiredInvalid()

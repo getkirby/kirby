@@ -23,7 +23,7 @@ class Collection
 	protected Api $api;
 	protected $data;
 	protected $model;
-	protected $select;
+	protected $select = null;
 	protected $view;
 
 	/**
@@ -36,7 +36,6 @@ class Collection
 		$this->api    = $api;
 		$this->data   = $data;
 		$this->model  = $schema['model'] ?? null;
-		$this->select = null;
 		$this->view   = $schema['view'] ?? null;
 
 		if ($data === null) {

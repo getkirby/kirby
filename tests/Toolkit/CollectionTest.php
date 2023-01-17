@@ -157,7 +157,7 @@ class CollectionTest extends TestCase
 
 		$this->assertSame('My second element', $filtered->first());
 		$this->assertSame('My second element', $filtered->last());
-		$this->assertSame(1, $filtered->count());
+		$this->assertCount(1, $filtered);
 		$this->assertIsUntouched();
 	}
 
@@ -267,8 +267,8 @@ class CollectionTest extends TestCase
 			return $item['group'];
 		});
 
-		$this->assertSame(2, $groups->admin()->count());
-		$this->assertSame(1, $groups->client()->count());
+		$this->assertCount(2, $groups->admin());
+		$this->assertCount(1, $groups->client());
 
 		$firstAdmin = $groups->admin()->first();
 		$this->assertSame('peter', $firstAdmin['username']);
@@ -345,8 +345,8 @@ class CollectionTest extends TestCase
 			return $item['group'];
 		});
 
-		$this->assertSame(2, $groups->admin()->count());
-		$this->assertSame(1, $groups->client()->count());
+		$this->assertCount(2, $groups->admin());
+		$this->assertCount(1, $groups->client());
 
 		$firstAdmin = $groups->admin()->first();
 		$this->assertSame('peter', $firstAdmin['username']);
@@ -376,8 +376,8 @@ class CollectionTest extends TestCase
 
 		$groups = $collection->group('group');
 
-		$this->assertSame(2, $groups->admin()->count());
-		$this->assertSame(1, $groups->client()->count());
+		$this->assertCount(2, $groups->admin());
+		$this->assertCount(1, $groups->client());
 
 		$firstAdmin = $groups->admin()->first();
 		$this->assertSame('peter', $firstAdmin['username']);
@@ -588,13 +588,13 @@ class CollectionTest extends TestCase
 	{
 		// remove elements
 		$this->assertSame('My second element', $this->collection->not('first')->first());
-		$this->assertSame(1, $this->collection->not('second')->not('third')->count());
-		$this->assertSame(0, $this->collection->not('first', 'second', 'third')->count());
+		$this->assertCount(1, $this->collection->not('second')->not('third'));
+		$this->assertCount(0, $this->collection->not('first', 'second', 'third'));
 
 		// also check the alternative
 		$this->assertSame('My second element', $this->collection->without('first')->first());
-		$this->assertSame(1, $this->collection->without('second')->not('third')->count());
-		$this->assertSame(0, $this->collection->without('first', 'second', 'third')->count());
+		$this->assertCount(1, $this->collection->without('second')->not('third'));
+		$this->assertCount(0, $this->collection->without('first', 'second', 'third'));
 
 		$this->assertIsUntouched();
 	}
@@ -855,9 +855,9 @@ class CollectionTest extends TestCase
 	public function testSlice()
 	{
 		$this->assertSame(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
-		$this->assertSame(2, $this->collection->slice(1)->count());
+		$this->assertCount(2, $this->collection->slice(1));
 		$this->assertSame(array_slice($this->sampleData, 0, 1), $this->collection->slice(0, 1)->toArray());
-		$this->assertSame(1, $this->collection->slice(0, 1)->count());
+		$this->assertCount(1, $this->collection->slice(0, 1));
 		$this->assertIsUntouched();
 	}
 

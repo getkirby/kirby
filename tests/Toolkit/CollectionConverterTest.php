@@ -11,7 +11,7 @@ class CollectionConverterTest extends TestCase
 			'two'   => 'zwei'
 		];
 		$collection = new Collection($array);
-		$this->assertEquals($array, $collection->toArray());
+		$this->assertSame($array, $collection->toArray());
 	}
 
 	public function testToArrayMap()
@@ -20,7 +20,7 @@ class CollectionConverterTest extends TestCase
 			'one'   => 'eins',
 			'two'   => 'zwei'
 		]);
-		$this->assertEquals([
+		$this->assertSame([
 			'one'   => 'einsy',
 			'two'   => 'zweiy'
 		], $collection->toArray(function ($item) {
@@ -34,7 +34,7 @@ class CollectionConverterTest extends TestCase
 			'one'   => 'eins',
 			'two'   => 'zwei'
 		]);
-		$this->assertEquals('{"one":"eins","two":"zwei"}', $collection->toJson());
+		$this->assertSame('{"one":"eins","two":"zwei"}', $collection->toJson());
 	}
 
 	public function testToString()
@@ -44,7 +44,7 @@ class CollectionConverterTest extends TestCase
 			'two'   => 'zwei'
 		]);
 		$string = 'one<br />two';
-		$this->assertEquals($string, $collection->toString());
-		$this->assertEquals($string, (string)$collection);
+		$this->assertSame($string, $collection->toString());
+		$this->assertSame($string, (string)$collection);
 	}
 }

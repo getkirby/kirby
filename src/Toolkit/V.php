@@ -24,22 +24,15 @@ class V
 {
 	/**
 	 * An array with all installed validators
-	 *
-	 * @var array
 	 */
-	public static $validators = [];
+	public static array $validators = [];
 
 	/**
 	 * Validates the given input with all passed rules
 	 * and returns an array with all error messages.
 	 * The array will be empty if the input is valid
-	 *
-	 * @param mixed $input
-	 * @param array $rules
-	 * @param array $messages
-	 * @return array
 	 */
-	public static function errors($input, array $rules, $messages = []): array
+	public static function errors($input, array $rules, array $messages = []): array
 	{
 		$errors = static::value($input, $rules, $messages, false);
 
@@ -50,11 +43,6 @@ class V
 	 * Runs a number of validators on a set of data and
 	 * checks if the data is invalid
 	 * @since 3.7.0
-	 *
-	 * @param array $data
-	 * @param array $rules
-	 * @param array $messages
-	 * @return array
 	 */
 	public static function invalid(array $data = [], array $rules = [], array $messages = []): array
 	{
@@ -119,10 +107,6 @@ class V
 	 * Creates a useful error message for the given validator
 	 * and the arguments. This is used mainly internally
 	 * to create error messages
-	 *
-	 * @param string $validatorName
-	 * @param mixed ...$params
-	 * @return string|null
 	 */
 	public static function message(string $validatorName, ...$params): string|null
 	{
@@ -162,8 +146,6 @@ class V
 
 	/**
 	 * Return the list of all validators
-	 *
-	 * @return array
 	 */
 	public static function validators(): array
 	{
@@ -174,14 +156,8 @@ class V
 	 * Validate a single value against
 	 * a set of rules, using all registered
 	 * validators
-	 *
-	 * @param mixed $value
-	 * @param array $rules
-	 * @param array $messages
-	 * @param bool $fail
-	 * @return bool|array
 	 */
-	public static function value($value, array $rules, array $messages = [], bool $fail = true)
+	public static function value($value, array $rules, array $messages = [], bool $fail = true): bool|array
 	{
 		$errors = [];
 
@@ -214,10 +190,6 @@ class V
 	 * Validate an input array against
 	 * a set of rules, using all registered
 	 * validators
-	 *
-	 * @param array $input
-	 * @param array $rules
-	 * @return bool
 	 */
 	public static function input(array $input, array $rules): bool
 	{
@@ -252,10 +224,6 @@ class V
 
 	/**
 	 * Calls an installed validator and passes all arguments
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return bool
 	 */
 	public static function __callStatic(string $method, array $arguments): bool
 	{
@@ -301,8 +269,9 @@ V::$validators = [
 	 * Checks for numbers within the given range
 	 */
 	'between' => function ($value, $min, $max): bool {
-		return V::min($value, $min) === true &&
-			   V::max($value, $max) === true;
+		return
+			V::min($value, $min) === true &&
+			V::max($value, $max) === true;
 	},
 
 	/**
@@ -415,8 +384,9 @@ V::$validators = [
 	 * Checks for a valid filename
 	 */
 	'filename' => function ($value): bool {
-		return V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
-			   V::min($value, 2) === true;
+		return
+			V::match($value, '/^[a-z0-9@._-]+$/i') === true &&
+			V::min($value, 2) === true;
 	},
 
 	/**

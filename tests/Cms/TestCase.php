@@ -8,6 +8,8 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
+require_once __DIR__ . '/mocks.php';
+
 class TestCase extends BaseTestCase
 {
 	protected $app;
@@ -39,6 +41,9 @@ class TestCase extends BaseTestCase
 		App::destroy();
 		Dir::remove($this->tmp);
 		Blueprint::$loaded = [];
+
+		// mock class
+		ErrorLog::$log = '';
 	}
 
 	public function kirby($props = [])
@@ -79,11 +84,11 @@ class TestCase extends BaseTestCase
 		$this->assertInstanceOf(Page::class, $input);
 
 		if (is_string($id)) {
-			$this->assertEquals($id, $input->id());
+			$this->assertSame($id, $input->id());
 		}
 
 		if ($id instanceof Page) {
-			$this->assertEquals($input, $id);
+			$this->assertSame($input, $id);
 		}
 	}
 
@@ -92,11 +97,11 @@ class TestCase extends BaseTestCase
 		$this->assertInstanceOf(File::class, $input);
 
 		if (is_string($id)) {
-			$this->assertEquals($id, $input->id());
+			$this->assertSame($id, $input->id());
 		}
 
 		if ($id instanceof File) {
-			$this->assertEquals($input, $id);
+			$this->assertSame($input, $id);
 		}
 	}
 
@@ -127,6 +132,6 @@ class TestCase extends BaseTestCase
 		], $appProps));
 
 		$action->call($this, $app);
-		$this->assertEquals(count($hooks), $triggered);
+		$this->assertSame(count($hooks), $triggered);
 	}
 }

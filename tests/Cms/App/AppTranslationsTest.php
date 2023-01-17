@@ -99,7 +99,7 @@ class AppTranslationsTest extends TestCase
 			$i++;
 		}
 
-		$this->assertEquals($i, $translations->count());
+		$this->assertCount($i, $translations);
 	}
 
 	public function testTranslationFromCurrentLanguage()
@@ -206,13 +206,13 @@ class AppTranslationsTest extends TestCase
 	{
 		$app = $this->app();
 
-		$this->assertEquals('Save', t('save'));
-		$this->assertEquals('Reset', t('reset'));
+		$this->assertSame('Save', t('save'));
+		$this->assertSame('Reset', t('reset'));
 
 		$app->setCurrentTranslation('de');
 
-		$this->assertEquals('Speichern', t('save'));
-		$this->assertEquals('Reset', t('reset'));
+		$this->assertSame('Speichern', t('save'));
+		$this->assertSame('Reset', t('reset'));
 	}
 
 	public function testTranslationInTemplate()
@@ -255,10 +255,10 @@ class AppTranslationsTest extends TestCase
 		]);
 
 		$result = $app->render('de/test');
-		$this->assertEquals('Knopf', $result->body());
+		$this->assertSame('Knopf', $result->body());
 
 		$result = $app->render('en/test');
-		$this->assertEquals('Button', $result->body());
+		$this->assertSame('Button', $result->body());
 	}
 
 	public function testExceptionWithoutLanguage()
@@ -271,8 +271,8 @@ class AppTranslationsTest extends TestCase
 			'fallback' => $fallbackError = 'This would be the fallback error'
 		]);
 
-		$this->assertEquals('error.test', $exception->getKey());
-		$this->assertEquals($fallbackError, $exception->getMessage());
+		$this->assertSame('error.test', $exception->getKey());
+		$this->assertSame($fallbackError, $exception->getMessage());
 	}
 
 	public function testExceptionWithDefaultLanguage()
@@ -283,7 +283,7 @@ class AppTranslationsTest extends TestCase
 			'key' => 'test'
 		]);
 
-		$this->assertEquals('This is a test error', $exception->getMessage());
+		$this->assertSame('This is a test error', $exception->getMessage());
 	}
 
 	public function testExceptionWithTranslation()
@@ -295,7 +295,7 @@ class AppTranslationsTest extends TestCase
 			'key' => 'test'
 		]);
 
-		$this->assertEquals('Das ist ein Testfehler', $exception->getMessage());
+		$this->assertSame('Das ist ein Testfehler', $exception->getMessage());
 	}
 
 	public function testExceptionPinned()
@@ -308,8 +308,8 @@ class AppTranslationsTest extends TestCase
 			'translate' => false
 		]);
 
-		$this->assertEquals('error.test', $exception->getKey());
-		$this->assertEquals('This would be the fallback error', $exception->getMessage());
+		$this->assertSame('error.test', $exception->getKey());
+		$this->assertSame('This would be the fallback error', $exception->getMessage());
 	}
 
 	public function testExceptionInvalidKey()
@@ -321,8 +321,8 @@ class AppTranslationsTest extends TestCase
 			'fallback' => 'This would be the fallback error'
 		]);
 
-		$this->assertEquals('error.no-real-key', $exception->getKey());
-		$this->assertEquals('This would be the fallback error', $exception->getMessage());
+		$this->assertSame('error.no-real-key', $exception->getKey());
+		$this->assertSame('This would be the fallback error', $exception->getMessage());
 	}
 
 	public function testLanguageTranslationWithSlugs()

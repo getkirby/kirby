@@ -19,22 +19,22 @@ class FilesTest extends TestCase
 
 		$files = new Files($upload);
 
-		$this->assertEquals('a.txt', $files->get('upload')[0]['name']);
-		$this->assertEquals('/tmp/a', $files->get('upload')[0]['tmp_name']);
-		$this->assertEquals(123, $files->get('upload')[0]['size']);
-		$this->assertEquals(0, $files->get('upload')[0]['error']);
+		$this->assertSame('a.txt', $files->get('upload')[0]['name']);
+		$this->assertSame('/tmp/a', $files->get('upload')[0]['tmp_name']);
+		$this->assertSame(123, $files->get('upload')[0]['size']);
+		$this->assertSame(0, $files->get('upload')[0]['error']);
 
-		$this->assertEquals('b.txt', $files->get('upload')[1]['name']);
-		$this->assertEquals('/tmp/b', $files->get('upload')[1]['tmp_name']);
-		$this->assertEquals(456, $files->get('upload')[1]['size']);
-		$this->assertEquals(0, $files->get('upload')[1]['error']);
+		$this->assertSame('b.txt', $files->get('upload')[1]['name']);
+		$this->assertSame('/tmp/b', $files->get('upload')[1]['tmp_name']);
+		$this->assertSame(456, $files->get('upload')[1]['size']);
+		$this->assertSame(0, $files->get('upload')[1]['error']);
 	}
 
 	public function testData()
 	{
 		// default
 		$files = new Files();
-		$this->assertEquals([], $files->data());
+		$this->assertSame([], $files->data());
 
 		// custom
 		$upload = [
@@ -47,7 +47,7 @@ class FilesTest extends TestCase
 		];
 
 		$files = new Files($upload);
-		$this->assertEquals($upload, $files->data());
+		$this->assertSame($upload, $files->data());
 	}
 
 	public function testGet()
@@ -66,7 +66,7 @@ class FilesTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals(123, $files->get('upload')['size']);
+		$this->assertSame(123, $files->get('upload')['size']);
 	}
 
 	public function testToArrayAndDebuginfo()
@@ -81,8 +81,8 @@ class FilesTest extends TestCase
 		];
 
 		$files = new Files($data);
-		$this->assertEquals($data, $files->toArray());
-		$this->assertEquals($data, $files->__debugInfo());
+		$this->assertSame($data, $files->toArray());
+		$this->assertSame($data, $files->__debugInfo());
 	}
 
 	public function testToJson()
@@ -97,6 +97,6 @@ class FilesTest extends TestCase
 		];
 
 		$files = new Files($data);
-		$this->assertEquals(json_encode($data), $files->toJson());
+		$this->assertSame(json_encode($data), $files->toJson());
 	}
 }

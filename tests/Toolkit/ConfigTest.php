@@ -16,8 +16,8 @@ class ConfigTest extends TestCase
 
 	public function testGet()
 	{
-		$this->assertEquals('testvalue', Config::get('testvar'));
-		$this->assertEquals('defaultvalue', Config::get('nonexistentvar', 'defaultvalue'));
+		$this->assertSame('testvalue', Config::get('testvar'));
+		$this->assertSame('defaultvalue', Config::get('nonexistentvar', 'defaultvalue'));
 	}
 
 	public function testSet()
@@ -25,15 +25,15 @@ class ConfigTest extends TestCase
 		Config::set('anothervar', 'anothervalue');
 		Config::set('testvar', 'overwrittenvalue');
 
-		$this->assertEquals('anothervalue', Config::get('anothervar'));
-		$this->assertEquals('overwrittenvalue', Config::get('testvar'));
+		$this->assertSame('anothervalue', Config::get('anothervar'));
+		$this->assertSame('overwrittenvalue', Config::get('testvar'));
 
 		Config::set([
 			'var1' => 'value1',
 			'var2' => 'value2'
 		]);
 
-		$this->assertEquals('value1', Config::get('var1'));
-		$this->assertEquals('value2', Config::get('var2'));
+		$this->assertSame('value1', Config::get('var1'));
+		$this->assertSame('value2', Config::get('var2'));
 	}
 }

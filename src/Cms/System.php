@@ -31,63 +31,37 @@ use Throwable;
  */
 class System
 {
-	/**
-	 * @var \Kirby\Cms\App
-	 */
-	protected $app;
-
 	// cache
 	protected UpdateStatus|null $updateStatus = null;
 
-	/**
-	 * @param \Kirby\Cms\App $app
-	 */
-	public function __construct(App $app)
+	public function __construct(protected App $app)
 	{
-		$this->app = $app;
-
 		// try to create all folders that could be missing
 		$this->init();
 	}
 
 	/**
-	 * Improved `var_dump` output
-	 *
-	 * @return array
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
-	}
-
-	/**
 	 * Check for a writable accounts folder
-	 *
-	 * @return bool
 	 */
 	public function accounts(): bool
 	{
-		return is_writable($this->app->root('accounts'));
+		return is_writable($this->app->root('accounts')) === true;
 	}
 
 	/**
 	 * Check for a writable content folder
-	 *
-	 * @return bool
 	 */
 	public function content(): bool
 	{
-		return is_writable($this->app->root('content'));
+		return is_writable($this->app->root('content')) === true;
 	}
 
 	/**
 	 * Check for an existing curl extension
-	 *
-	 * @return bool
 	 */
 	public function curl(): bool
 	{
-		return extension_loaded('curl');
+		return extension_loaded('curl') === true;
 	}
 
 	/**
@@ -96,7 +70,6 @@ class System
 	 * root. Otherwise it will return null.
 	 *
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
-	 * @return string|null
 	 */
 	public function exposedFileUrl(string $folder): string|null
 	{
@@ -142,19 +115,20 @@ class System
 	 * root. Otherwise it will return null.
 	 *
 	 * @param string $folder 'git', 'content', 'site', 'kirby'
-	 * @return string|null
 	 */
 	public function folderUrl(string $folder): string|null
 	{
 		$index = $this->app->root('index');
+		$root  = match ($folder) {
+			'git'   => $index . '/.git',
+			default => $this->app->root($folder)
+		};
 
-		if ($folder === 'git') {
-			$root = $index . '/.git';
-		} else {
-			$root = $this->app->root($folder);
-		}
-
-		if ($root === null || is_dir($root) === false || is_dir($index) === false) {
+		if (
+			$root === null ||
+			is_dir($root) === false ||
+			is_dir($index) === false
+		) {
 			return null;
 		}
 
@@ -180,22 +154,22 @@ class System
 	/**
 	 * Returns the app's human-readable
 	 * index URL without scheme
-	 *
-	 * @return string
 	 */
 	public function indexUrl(): string
 	{
-		return $this->app->url('index', true)->setScheme(null)->setSlash(false)->toString();
+		return $this->app->url('index', true)
+			->setScheme(null)
+			->setSlash(false)
+			->toString();
 	}
 
 	/**
 	 * Create the most important folders
 	 * if they don't exist yet
 	 *
-	 * @return void
 	 * @throws \Kirby\Exception\PermissionException
 	 */
-	public function init()
+	public function init(): void
 	{
 		// init /site/accounts
 		try {
@@ -231,18 +205,16 @@ class System
 	 * On a public server the panel.install
 	 * option must be explicitly set to true
 	 * to get the installer up and running.
-	 *
-	 * @return bool
 	 */
 	public function isInstallable(): bool
 	{
-		return $this->isLocal() === true || $this->app->option('panel.install', false) === true;
+		return
+			$this->isLocal() === true ||
+			$this->app->option('panel.install', false) === true;
 	}
 
 	/**
 	 * Check if Kirby is already installed
-	 *
-	 * @return bool
 	 */
 	public function isInstalled(): bool
 	{
@@ -251,8 +223,6 @@ class System
 
 	/**
 	 * Check if this is a local installation
-	 *
-	 * @return bool
 	 */
 	public function isLocal(): bool
 	{
@@ -261,8 +231,6 @@ class System
 
 	/**
 	 * Check if all tests pass
-	 *
-	 * @return bool
 	 */
 	public function isOk(): bool
 	{
@@ -311,7 +279,9 @@ class System
 		$pubKey = F::read($this->app->root('kirby') . '/kirby.pub');
 
 		// verify the license signature
-		if (openssl_verify(json_encode($data), hex2bin($license['signature']), $pubKey, 'RSA-SHA256') !== 1) {
+		$data      = json_encode($data);
+		$signature = hex2bin($license['signature']);
+		if (openssl_verify($data, $signature, $pubKey, 'RSA-SHA256') !== 1) {
 			return false;
 		}
 
@@ -338,9 +308,7 @@ class System
 	 */
 	protected function licenseUrl(string $url = null): string
 	{
-		if ($url === null) {
-			$url = $this->indexUrl();
-		}
+		$url ??= $this->indexUrl();
 
 		// remove common "testing" subdomains as well as www.
 		// to ensure that installations of the same site have
@@ -370,8 +338,6 @@ class System
 	/**
 	 * Returns the configured UI modes for the login form
 	 * with their respective options
-	 *
-	 * @return array
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the configuration is invalid
 	 *                                                   (only in debug mode)
@@ -431,45 +397,38 @@ class System
 
 	/**
 	 * Check for an existing mbstring extension
-	 *
-	 * @return bool
 	 */
 	public function mbString(): bool
 	{
-		return extension_loaded('mbstring');
+		return extension_loaded('mbstring') === true;
 	}
 
 	/**
 	 * Check for a writable media folder
-	 *
-	 * @return bool
 	 */
 	public function media(): bool
 	{
-		return is_writable($this->app->root('media'));
+		return is_writable($this->app->root('media')) === true;
 	}
 
 	/**
 	 * Check for a valid PHP version
-	 *
-	 * @return bool
 	 */
 	public function php(): bool
 	{
 		return
 			version_compare(PHP_VERSION, '8.0.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.2.0', '<')  === true;
+			version_compare(PHP_VERSION, '8.3.0', '<')  === true;
 	}
 
 	/**
 	 * Returns a sorted collection of all
 	 * installed plugins
-	 *
-	 * @return \Kirby\Cms\Collection
 	 */
-	public function plugins()
+	public function plugins(): Collection
 	{
-		return (new Collection(App::instance()->plugins()))->sortBy('name', 'asc');
+		$plugins = new Collection($this->app->plugins());
+		return $plugins->sortBy('name', 'asc');
 	}
 
 	/**
@@ -477,24 +436,17 @@ class System
 	 * and adds it to the .license file in the config
 	 * folder if possible.
 	 *
-	 * @param string|null $license
-	 * @param string|null $email
-	 * @return bool
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function register(string $license = null, string $email = null): bool
 	{
 		if (Str::startsWith($license, 'K3-PRO-') === false) {
-			throw new InvalidArgumentException([
-				'key' => 'license.format'
-			]);
+			throw new InvalidArgumentException(['key' => 'license.format']);
 		}
 
 		if (V::email($email) === false) {
-			throw new InvalidArgumentException([
-				'key' => 'license.email'
-			]);
+			throw new InvalidArgumentException(['key' => 'license.email']);
 		}
 
 		// @codeCoverageIgnoreStart
@@ -534,8 +486,6 @@ class System
 
 	/**
 	 * Check for a valid server environment
-	 *
-	 * @return bool
 	 */
 	public function server(): bool
 	{
@@ -544,8 +494,6 @@ class System
 
 	/**
 	 * Returns the detected server software
-	 *
-	 * @return string|null
 	 */
 	public function serverSoftware(): string|null
 	{
@@ -566,18 +514,14 @@ class System
 
 	/**
 	 * Check for a writable sessions folder
-	 *
-	 * @return bool
 	 */
 	public function sessions(): bool
 	{
-		return is_writable($this->app->root('sessions'));
+		return is_writable($this->app->root('sessions')) === true;
 	}
 
 	/**
 	 * Get an status array of all checks
-	 *
-	 * @return array
 	 */
 	public function status(): array
 	{
@@ -597,23 +541,18 @@ class System
 	 * Returns the site's title as defined in the
 	 * content file or `site.yml` blueprint
 	 * @since 3.6.0
-	 *
-	 * @return string
 	 */
 	public function title(): string
 	{
 		$site = $this->app->site();
 
-		if ($site->title()->isNotEmpty()) {
+		if ($site->title()->isNotEmpty() === true) {
 			return $site->title()->value();
 		}
 
 		return $site->blueprint()->title();
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
 		return $this->status();
@@ -633,7 +572,9 @@ class System
 		}
 
 		$kirby  = $this->app;
-		$option = $kirby->option('updates.kirby') ?? $kirby->option('updates') ?? true;
+		$option =
+			$kirby->option('updates.kirby') ??
+			$kirby->option('updates', true);
 
 		if ($option === false) {
 			return null;
@@ -648,11 +589,8 @@ class System
 
 	/**
 	 * Upgrade to the new folder separator
-	 *
-	 * @param string $root
-	 * @return void
 	 */
-	public static function upgradeContent(string $root)
+	public static function upgradeContent(string $root): void
 	{
 		$index = Dir::read($root);
 
@@ -665,5 +603,13 @@ class System
 				static::upgradeContent($newRoot);
 			}
 		}
+	}
+
+	/**
+	 * Improved `var_dump` output
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
 	}
 }

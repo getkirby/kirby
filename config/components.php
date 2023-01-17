@@ -5,7 +5,6 @@ use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Page;
-use Kirby\Cms\Template;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
@@ -14,11 +13,12 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
+use Kirby\Template\Snippet;
+use Kirby\Template\Template;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl as Snippet;
 
 return [
 
@@ -142,6 +142,7 @@ return [
 	 * @return \Kirby\Cms\Collection|bool
 	 */
 	'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
+		// empty search query
 		if (empty(trim($query ?? '')) === true) {
 			return $collection->limit(0);
 		}
@@ -159,28 +160,31 @@ return [
 
 		$options     = array_merge($defaults, $params);
 		$collection  = clone $collection;
-		$searchWords = preg_replace('/(\s)/u', ',', $query);
-		$searchWords = Str::split($searchWords, ',', $options['minlength']);
-		$lowerQuery  = Str::lower($query);
-		$exactQuery  = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
+
+		$words = preg_replace('/(\s)/u', ',', $query);
+		$words = Str::split($words, ',', $options['minlength']);
+		$exact = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
+		$query = Str::lower($query);
 
 		if (empty($options['stopwords']) === false) {
-			$searchWords = array_diff($searchWords, $options['stopwords']);
+			$words = array_diff($words, $options['stopwords']);
 		}
 
-		$searchWords = array_map(function ($value) use ($options) {
-			return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
-		}, $searchWords);
+		$words = A::map(
+			$words,
+			fn ($value) => $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value)
+		);
 
 		// returns an empty collection if there is no search word
-		if (empty($searchWords) === true) {
+		if (empty($words) === true) {
 			return $collection->limit(0);
 		}
 
-		$preg    = '!(' . implode('|', $searchWords) . ')!i';
-		$results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery, $exactQuery) {
-			$data = $item->content()->toArray();
-			$keys = array_keys($data);
+		$preg    = '!(' . implode('|', $words) . ')!i';
+		$scores  = [];
+		$results = $collection->filter(function ($item) use ($query, $exact, $preg, $options, &$scores) {
+			$data   = $item->content()->toArray();
+			$keys   = array_keys($data);
 			$keys[] = 'id';
 
 			if ($item instanceof User) {
@@ -200,8 +204,10 @@ return [
 				$keys   = array_intersect($keys, $fields);
 			}
 
-			$item->searchHits  = 0;
-			$item->searchScore = 0;
+			$scoring = [
+				'hits'  => 0,
+				'score' => 0
+			];
 
 			foreach ($keys as $key) {
 				$score = $options['score'][$key] ?? 1;
@@ -210,32 +216,39 @@ return [
 				$lowerValue = Str::lower($value);
 
 				// check for exact matches
-				if ($lowerQuery == $lowerValue) {
-					$item->searchScore += 16 * $score;
-					$item->searchHits  += 1;
+				if ($query == $lowerValue) {
+					$scoring['score'] += 16 * $score;
+					$scoring['hits']  += 1;
 
 				// check for exact beginning matches
-				} elseif ($options['words'] === false && Str::startsWith($lowerValue, $lowerQuery) === true) {
-					$item->searchScore += 8 * $score;
-					$item->searchHits  += 1;
+				} elseif (
+					$options['words'] === false &&
+					Str::startsWith($lowerValue, $query) === true
+				) {
+					$scoring['score'] += 8 * $score;
+					$scoring['hits']  += 1;
 
 				// check for exact query matches
-				} elseif ($matches = preg_match_all('!' . $exactQuery . '!i', $value, $r)) {
-					$item->searchScore += 2 * $score;
-					$item->searchHits  += $matches;
+				} elseif ($matches = preg_match_all('!' . $exact . '!i', $value, $r)) {
+					$scoring['score'] += 2 * $score;
+					$scoring['hits']  += $matches;
 				}
 
 				// check for any match
 				if ($matches = preg_match_all($preg, $value, $r)) {
-					$item->searchHits  += $matches;
-					$item->searchScore += $matches * $score;
+					$scoring['score'] += $matches * $score;
+					$scoring['hits']  += $matches;
 				}
 			}
 
-			return $item->searchHits > 0;
+			$scores[$item->id()] = $scoring;
+			return $scoring['hits'] > 0;
 		});
 
-		return $results->sort('searchScore', 'desc');
+		return $results->sort(
+			fn ($item) => $scores[$item->id()]['score'],
+			'desc'
+		);
 	},
 
 	/**
@@ -267,23 +280,8 @@ return [
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, $name, array $data = []): string {
-		$snippets = A::wrap($name);
-
-		foreach ($snippets as $name) {
-			$name = (string)$name;
-			$file = $kirby->root('snippets') . '/' . $name . '.php';
-
-			if (file_exists($file) === false) {
-				$file = $kirby->extensions('snippets')[$name] ?? null;
-			}
-
-			if ($file) {
-				break;
-			}
-		}
-
-		return Snippet::load($file, $data);
+	'snippet' => function (App $kirby, string|array $name, array $data = [], bool $slots = false): Snippet|string {
+		return Snippet::factory($name, $data, $slots);
 	},
 
 	/**
@@ -293,7 +291,7 @@ return [
 	 * @param string $name Template name
 	 * @param string $type Extension type
 	 * @param string $defaultType Default extension type
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 */
 	'template' => function (App $kirby, string $name, string $type = 'html', string $defaultType = 'html') {
 		return new Template($name, $type, $defaultType);

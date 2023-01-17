@@ -39,22 +39,27 @@ class CollectionFilterTest extends TestCase
 			]
 		]);
 
-		$result = new Collection([
+		$expected = [
 			[
 				'name'  => 'Bastian',
 				'role'  => 'developer',
 				'color' => 'red'
 			]
-		]);
+		];
 
-		$this->assertEquals($result, $collection->filter([
+		$result = $collection->filter([
 			['role', '==', 'developer'],
 			['color', '==', 'red']
-		]));
-		$this->assertEquals($result, $collection->filterBy([
+		]);
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
+
+		$result = $collection->filterBy([
 			['role', '==', 'developer'],
 			['color', '==', 'red']
-		]));
+		]);
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
 	}
 
 	public function testFilterClosure()
@@ -70,19 +75,20 @@ class CollectionFilterTest extends TestCase
 			]
 		]);
 
-		$result = new Collection([
+		$expected = [
 			[
 				'name'  => 'Bastian',
 				'role'  => 'founder'
 			]
-		]);
+		];
 
-		$this->assertEquals($result, $collection->filter(function ($item) {
-			return $item['role'] === 'founder';
-		}));
-		$this->assertEquals($result, $collection->filterBy(function ($item) {
-			return $item['role'] === 'founder';
-		}));
+		$result = $collection->filter(fn ($item) => $item['role'] === 'founder');
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
+
+		$result = $collection->filterBy(fn ($item) => $item['role'] === 'founder');
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
 	}
 
 	public function filterDataProvider()
@@ -663,7 +669,7 @@ class CollectionFilterTest extends TestCase
 		$collection = new Collection($data);
 		$result     = $collection->filter('attribute', $operator, $test, $split);
 
-		$this->assertEquals($expected, $result->keys(), $operator);
+		$this->assertSame($expected, $result->keys(), $operator);
 	}
 
 	public function testNot()
@@ -674,10 +680,12 @@ class CollectionFilterTest extends TestCase
 			'three' => 'drei'
 		]);
 
-		$result = new Collection([
+		$expected = [
 			'two' => 'zwei',
-		]);
+		];
 
-		$this->assertEquals($result, $collection->not('one', 'three'));
+		$result = $collection->not('one', 'three');
+		$this->assertInstanceOf(Collection::class, $result);
+		$this->assertSame($expected, $result->data());
 	}
 }

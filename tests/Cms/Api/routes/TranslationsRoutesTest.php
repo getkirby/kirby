@@ -34,8 +34,8 @@ class TranslationsRoutesTest extends TestCase
 
 		$response = $app->api()->call('translations/de');
 
-		$this->assertEquals('de', $response['data']['id']);
-		$this->assertEquals('Deutsch', $response['data']['name']);
-		$this->assertEquals('ltr', $response['data']['direction']);
+		$this->assertSame('de', $response['data']['id']);
+		$this->assertSame('Deutsch', $response['data']['name']);
+		$this->assertSame('ltr', $response['data']['direction']);
 	}
 }

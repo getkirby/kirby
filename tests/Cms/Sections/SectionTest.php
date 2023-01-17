@@ -55,8 +55,8 @@ class SectionTest extends TestCase
 			'model' => new Page(['slug' => 'test'])
 		]);
 
-		$this->assertEquals('default', $section->example());
-		$this->assertEquals(['one', 'two'], $section->buttons());
+		$this->assertSame('default', $section->example());
+		$this->assertSame(['one', 'two'], $section->buttons());
 	}
 
 	public function testToResponse()
@@ -88,6 +88,6 @@ class SectionTest extends TestCase
 			'b'      => 'B'
 		];
 
-		$this->assertEquals($expected, $section->toResponse());
+		$this->assertSame($expected, $section->toResponse());
 	}
 }

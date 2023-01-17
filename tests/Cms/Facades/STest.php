@@ -27,6 +27,6 @@ class STest extends TestCase
 
 	public function testInstance()
 	{
-		$this->assertEquals($this->app->session(), S::instance());
+		$this->assertSame($this->app->session(), S::instance());
 	}
 }

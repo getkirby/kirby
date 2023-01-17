@@ -17,7 +17,7 @@ class CollectionFinderTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals([
+		$this->assertSame([
 			'name' => 'Bastian',
 			'email' => 'bastian@getkirby.com'
 		], $collection->findBy('email', 'bastian@getkirby.com'));
@@ -30,6 +30,6 @@ class CollectionFinderTest extends TestCase
 			'two' => 'zwei'
 		]);
 
-		$this->assertEquals('zwei', $collection->find('two'));
+		$this->assertSame('zwei', $collection->find('two'));
 	}
 }

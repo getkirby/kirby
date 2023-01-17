@@ -82,9 +82,10 @@ trait AppCaches
 			];
 		}
 
-		$prefix = str_replace(['/', ':'], '_', $this->system()->indexUrl()) .
-				  '/' .
-				  str_replace('.', '/', $key);
+		$prefix =
+			str_replace(['/', ':'], '_', $this->system()->indexUrl()) .
+			'/' .
+			str_replace('.', '/', $key);
 
 		$defaults = [
 			'active'    => true,

@@ -169,11 +169,12 @@ trait FileActions
 	 * way of generating files.
 	 *
 	 * @param array $props
+	 * @param bool $move If set to `true`, the source will be deleted
 	 * @return static
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public static function create(array $props)
+	public static function create(array $props, bool $move = false)
 	{
 		if (isset($props['source'], $props['parent']) === false) {
 			throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
@@ -204,12 +205,16 @@ trait FileActions
 		$file = $file->clone(['content' => $form->strings(true)]);
 
 		// run the hook
-		return $file->commit('create', compact('file', 'upload'), function ($file, $upload) {
+		$arguments = compact('file', 'upload');
+		return $file->commit('create', $arguments, function ($file, $upload) use ($move) {
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
+			// only move the original source if intended
+			$method = $move === true ? 'move' : 'copy';
+
 			// overwrite the original
-			if (F::copy($upload->root(), $file->root(), true) !== true) {
+			if (F::$method($upload->root(), $file->root(), true) !== true) {
 				throw new LogicException('The file could not be created');
 			}
 
@@ -280,10 +285,11 @@ trait FileActions
 	 * source.
 	 *
 	 * @param string $source
+	 * @param bool $move If set to `true`, the source will be deleted
 	 * @return static
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public function replace(string $source)
+	public function replace(string $source, bool $move = false)
 	{
 		$file = $this->clone();
 
@@ -292,12 +298,15 @@ trait FileActions
 			'upload' => $file->asset($source)
 		];
 
-		return $this->commit('replace', $arguments, function ($file, $upload) {
+		return $this->commit('replace', $arguments, function ($file, $upload) use ($move) {
 			// delete all public versions
 			$file->unpublish(true);
 
+			// only move the original source if intended
+			$method = $move === true ? 'move' : 'copy';
+
 			// overwrite the original
-			if (F::copy($upload->root(), $file->root(), true) !== true) {
+			if (F::$method($upload->root(), $file->root(), true) !== true) {
 				throw new LogicException('The file could not be created');
 			}
 

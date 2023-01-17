@@ -215,9 +215,10 @@ class Exif
 	 */
 	protected function parseFocalLength(): string|null
 	{
-		return $this->data['FocalLength'] ??
-			   $this->data['FocalLengthIn35mmFilm'] ??
-			   null;
+		return
+			$this->data['FocalLength'] ??
+			$this->data['FocalLengthIn35mmFilm'] ??
+			null;
 	}
 
 	/**

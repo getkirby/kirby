@@ -153,7 +153,7 @@ class AutoSessionTest extends TestCase
 		$session = $autoSession->get(['long' => true]);
 		$this->assertSame('awesome session', $session->data()->get('id'));
 		$this->assertSame(1209600, $session->duration());
-		$this->assertSame(false, $session->timeout());
+		$this->assertFalse($session->timeout());
 		Cookie::remove('kirby_session');
 
 		// custom duration and timeout (normal session)
@@ -211,21 +211,21 @@ class AutoSessionTest extends TestCase
 		$session = $autoSession->get();
 		$this->assertSame('awesome session', $session->data()->get('id'));
 		$this->assertSame(7300, $session->duration());
-		$this->assertSame(false, $session->timeout());
+		$this->assertFalse($session->timeout());
 		Cookie::remove('kirby_session');
 
 		// timeout for the first time: shouldn't change anything
 		$autoSession = new AutoSession($this->store);
 		$session = $autoSession->get(['long' => true]);
 		$this->assertSame(1209600, $session->duration());
-		$this->assertSame(false, $session->timeout());
+		$this->assertFalse($session->timeout());
 		$session->data()->set('id', 'awesome session');
 		$session->commit();
 		Cookie::set('kirby_session', $session->token());
 		$session = $autoSession->get();
 		$this->assertSame('awesome session', $session->data()->get('id'));
 		$this->assertSame(1209600, $session->duration());
-		$this->assertSame(false, $session->timeout());
+		$this->assertFalse($session->timeout());
 		$session->commit();
 	}
 

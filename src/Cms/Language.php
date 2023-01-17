@@ -658,12 +658,8 @@ class Language extends Model
 	 */
 	public function url(): string
 	{
-		$url = $this->url;
-
-		if ($url === null) {
-			$url = '/' . $this->code;
-		}
-
+		$url   = $this->url;
+		$url ??= '/' . $this->code;
 		return Url::makeAbsolute($url, $this->kirby()->url());
 	}
 

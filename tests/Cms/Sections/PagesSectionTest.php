@@ -38,7 +38,7 @@ class PagesSectionTest extends TestCase
 			'label' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->headline());
+		$this->assertSame('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('pages', [
@@ -50,7 +50,7 @@ class PagesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Pages', $section->headline());
+		$this->assertSame('Pages', $section->headline());
 	}
 
 	public function testHeadlineFromLabel()
@@ -62,7 +62,7 @@ class PagesSectionTest extends TestCase
 			'label' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->headline());
+		$this->assertSame('Test', $section->headline());
 
 		// translated label
 		$section = new Section('pages', [
@@ -74,7 +74,7 @@ class PagesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Pages', $section->headline());
+		$this->assertSame('Pages', $section->headline());
 	}
 
 	public function testParent()
@@ -94,7 +94,7 @@ class PagesSectionTest extends TestCase
 			'model' => $parent,
 		]);
 
-		$this->assertEquals('test', $section->parent()->id());
+		$this->assertSame('test', $section->parent()->id());
 
 		// page.find
 		$section = new Section('pages', [
@@ -103,7 +103,7 @@ class PagesSectionTest extends TestCase
 			'parent' => 'page.find("a")'
 		]);
 
-		$this->assertEquals('test/a', $section->parent()->id());
+		$this->assertSame('test/a', $section->parent()->id());
 	}
 
 	public function testParentWithInvalidOption()
@@ -152,7 +152,7 @@ class PagesSectionTest extends TestCase
 			'status' => $input
 		]);
 
-		$this->assertEquals($expected, $section->status());
+		$this->assertSame($expected, $section->status());
 	}
 
 	public function addableStatusProvider()
@@ -187,7 +187,7 @@ class PagesSectionTest extends TestCase
 			'status'   => $input
 		]);
 
-		$this->assertEquals($expected, $section->add());
+		$this->assertSame($expected, $section->add());
 	}
 
 	public function testAddWhenSectionIsFull()
@@ -227,9 +227,9 @@ class PagesSectionTest extends TestCase
 			'name'  => 'test',
 			'model' => $page
 		]);
-		$this->assertEquals('Z', $section->data()[0]['text']);
-		$this->assertEquals('Ä', $section->data()[1]['text']);
-		$this->assertEquals('B', $section->data()[2]['text']);
+		$this->assertSame('Z', $section->data()[0]['text']);
+		$this->assertSame('Ä', $section->data()[1]['text']);
+		$this->assertSame('B', $section->data()[2]['text']);
 
 		// sort by field
 		$section = new Section('pages', [
@@ -237,9 +237,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title'
 		]);
-		$this->assertEquals('B', $section->data()[0]['text']);
-		$this->assertEquals('Z', $section->data()[1]['text']);
-		$this->assertEquals('Ä', $section->data()[2]['text']);
+		$this->assertSame('B', $section->data()[0]['text']);
+		$this->assertSame('Z', $section->data()[1]['text']);
+		$this->assertSame('Ä', $section->data()[2]['text']);
 
 		// custom sorting direction
 		$section = new Section('pages', [
@@ -247,9 +247,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title desc'
 		]);
-		$this->assertEquals('Ä', $section->data()[0]['text']);
-		$this->assertEquals('Z', $section->data()[1]['text']);
-		$this->assertEquals('B', $section->data()[2]['text']);
+		$this->assertSame('Ä', $section->data()[0]['text']);
+		$this->assertSame('Z', $section->data()[1]['text']);
+		$this->assertSame('B', $section->data()[2]['text']);
 
 		// custom flag
 		$section = new Section('pages', [
@@ -257,9 +257,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title SORT_LOCALE_STRING'
 		]);
-		$this->assertEquals('Ä', $section->data()[0]['text']);
-		$this->assertEquals('B', $section->data()[1]['text']);
-		$this->assertEquals('Z', $section->data()[2]['text']);
+		$this->assertSame('Ä', $section->data()[0]['text']);
+		$this->assertSame('B', $section->data()[1]['text']);
+		$this->assertSame('Z', $section->data()[2]['text']);
 
 		// flag & sorting direction
 		$section = new Section('pages', [
@@ -267,9 +267,9 @@ class PagesSectionTest extends TestCase
 			'model'  => $page,
 			'sortBy' => 'title desc SORT_LOCALE_STRING'
 		]);
-		$this->assertEquals('Z', $section->data()[0]['text']);
-		$this->assertEquals('B', $section->data()[1]['text']);
-		$this->assertEquals('Ä', $section->data()[2]['text']);
+		$this->assertSame('Z', $section->data()[0]['text']);
+		$this->assertSame('B', $section->data()[1]['text']);
+		$this->assertSame('Ä', $section->data()[2]['text']);
 
 		setlocale(LC_ALL, $locale);
 	}
@@ -349,9 +349,9 @@ class PagesSectionTest extends TestCase
 			'flip'  => true
 		]);
 
-		$this->assertEquals('B', $section->data()[0]['text']);
-		$this->assertEquals('A', $section->data()[1]['text']);
-		$this->assertEquals('C', $section->data()[2]['text']);
+		$this->assertSame('B', $section->data()[0]['text']);
+		$this->assertSame('A', $section->data()[1]['text']);
+		$this->assertSame('C', $section->data()[2]['text']);
 	}
 
 	public function sortableStatusProvider()
@@ -376,7 +376,7 @@ class PagesSectionTest extends TestCase
 			'status'   => $input
 		]);
 
-		$this->assertEquals($expected, $section->sortable());
+		$this->assertSame($expected, $section->sortable());
 	}
 
 	public function testImageString()
@@ -428,7 +428,7 @@ class PagesSectionTest extends TestCase
 			'templates' => 'blog'
 		]);
 
-		$this->assertEquals(['blog'], $section->templates());
+		$this->assertSame(['blog'], $section->templates());
 
 		// multiple templates
 		$section = new Section('pages', [
@@ -437,7 +437,7 @@ class PagesSectionTest extends TestCase
 			'templates' => ['blog', 'notes']
 		]);
 
-		$this->assertEquals(['blog', 'notes'], $section->templates());
+		$this->assertSame(['blog', 'notes'], $section->templates());
 
 		// template via alias
 		$section = new Section('pages', [
@@ -446,7 +446,7 @@ class PagesSectionTest extends TestCase
 			'template' => 'blog'
 		]);
 
-		$this->assertEquals(['blog'], $section->templates());
+		$this->assertSame(['blog'], $section->templates());
 	}
 
 	public function testEmpty()
@@ -457,7 +457,7 @@ class PagesSectionTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->empty());
+		$this->assertSame('Test', $section->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -468,7 +468,7 @@ class PagesSectionTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $section->empty());
+		$this->assertSame('Test', $section->empty());
 	}
 
 	public function testHelp()
@@ -480,7 +480,7 @@ class PagesSectionTest extends TestCase
 			'help'  => 'Test'
 		]);
 
-		$this->assertEquals('<p>Test</p>', $section->help());
+		$this->assertSame('<p>Test</p>', $section->help());
 
 		// translated help
 		$section = new Section('pages', [
@@ -492,7 +492,7 @@ class PagesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>Information</p>', $section->help());
+		$this->assertSame('<p>Information</p>', $section->help());
 	}
 
 	public function testTranslatedInfo()

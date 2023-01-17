@@ -14,8 +14,8 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals('drei', $collection->slice(2)->first());
-		$this->assertEquals('vier', $collection->slice(2, 2)->last());
+		$this->assertSame('drei', $collection->slice(2)->first());
+		$this->assertSame('vier', $collection->slice(2, 2)->last());
 	}
 
 	public function testSliceNotReally()
@@ -28,7 +28,7 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals($collection, $collection->slice());
+		$this->assertSame($collection, $collection->slice());
 	}
 
 	public function testLimit()
@@ -41,8 +41,8 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals('drei', $collection->limit(3)->last());
-		$this->assertEquals('fünf', $collection->limit(99)->last());
+		$this->assertSame('drei', $collection->limit(3)->last());
+		$this->assertSame('fünf', $collection->limit(99)->last());
 	}
 
 	public function testOffset()
@@ -55,9 +55,9 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals('drei', $collection->offset(2)->first());
-		$this->assertEquals('vier', $collection->offset(3)->first());
-		$this->assertEquals(null, $collection->offset(99)->first());
+		$this->assertSame('drei', $collection->offset(2)->first());
+		$this->assertSame('vier', $collection->offset(3)->first());
+		$this->assertNull($collection->offset(99)->first());
 	}
 
 	public function testPaginate()
@@ -70,18 +70,18 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals('eins', $collection->paginate(2)->first());
-		$this->assertEquals('drei', $collection->paginate(2, 2)->first());
+		$this->assertSame('eins', $collection->paginate(2)->first());
+		$this->assertSame('drei', $collection->paginate(2, 2)->first());
 
-		$this->assertEquals('eins', $collection->paginate([
+		$this->assertSame('eins', $collection->paginate([
 			'foo' => 'bar'
 		])->first());
-		$this->assertEquals('fünf', $collection->paginate([
+		$this->assertSame('fünf', $collection->paginate([
 			'limit' => 2,
 			'page' => 3
 		])->first());
 
-		$this->assertEquals(3, $collection->pagination()->page());
+		$this->assertSame(3, $collection->pagination()->page());
 	}
 
 	public function testChunk()
@@ -94,8 +94,8 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertEquals(3, $collection->chunk(2)->count());
-		$this->assertEquals('eins', $collection->chunk(2)->first()->first());
-		$this->assertEquals('fünf', $collection->chunk(2)->last()->first());
+		$this->assertCount(3, $collection->chunk(2));
+		$this->assertSame('eins', $collection->chunk(2)->first()->first());
+		$this->assertSame('fünf', $collection->chunk(2)->last()->first());
 	}
 }

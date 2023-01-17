@@ -26,7 +26,7 @@ class UrlsTest extends TestCase
 
 		$urls = $app->urls();
 
-		$this->assertEquals($url, $urls->$method());
+		$this->assertSame($url, $urls->$method());
 	}
 
 	public function customBaseUrlProvider(): array
@@ -52,7 +52,7 @@ class UrlsTest extends TestCase
 		]);
 
 		$urls = $app->urls();
-		$this->assertEquals($url, $urls->$method());
+		$this->assertSame($url, $urls->$method());
 	}
 
 	public function customUrlProvider(): array
@@ -79,7 +79,7 @@ class UrlsTest extends TestCase
 		]);
 
 		$urls = $app->urls();
-		$this->assertEquals($url, $urls->$method());
+		$this->assertSame($url, $urls->$method());
 	}
 
 	public function testCurrent()
@@ -90,7 +90,7 @@ class UrlsTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals('/', $app->url('current'));
+		$this->assertSame('/', $app->url('current'));
 	}
 
 	public function testCurrentInSubfolderSetup()
@@ -103,8 +103,8 @@ class UrlsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('http://localhost/starterkit', $app->url('index'));
-		$this->assertEquals('http://localhost/starterkit', $app->url('current'));
+		$this->assertSame('http://localhost/starterkit', $app->url('index'));
+		$this->assertSame('http://localhost/starterkit', $app->url('current'));
 
 		$app = $this->app->clone([
 			'cli' => false,
@@ -115,8 +115,8 @@ class UrlsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('http://localhost/starterkit', $app->url('index'));
-		$this->assertEquals('http://localhost/starterkit/sub/folder', $app->url('current'));
+		$this->assertSame('http://localhost/starterkit', $app->url('index'));
+		$this->assertSame('http://localhost/starterkit/sub/folder', $app->url('current'));
 	}
 
 	public function testCurrentWithCustomIndex()
@@ -130,7 +130,7 @@ class UrlsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('http://getkirby.com', $app->url('current'));
+		$this->assertSame('http://getkirby.com', $app->url('current'));
 	}
 
 	public function testCurrentWithCustomPath()
@@ -142,7 +142,7 @@ class UrlsTest extends TestCase
 			'path' => 'test/path'
 		]);
 
-		$this->assertEquals('/test/path', $app->url('current'));
+		$this->assertSame('/test/path', $app->url('current'));
 	}
 
 	public function testCurrentWithCustomPathAndCustomIndex()
@@ -157,6 +157,6 @@ class UrlsTest extends TestCase
 			'path' => 'test/path'
 		]);
 
-		$this->assertEquals('http://getkirby.com/test/path', $app->url('current'));
+		$this->assertSame('http://getkirby.com/test/path', $app->url('current'));
 	}
 }

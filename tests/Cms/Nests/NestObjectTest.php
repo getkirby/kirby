@@ -13,7 +13,7 @@ class NestObjectTest extends TestCase
 			'b' => 'B'
 		]);
 
-		$this->assertEquals($expected, $o->toArray());
+		$this->assertSame($expected, $o->toArray());
 	}
 
 	public function testToArrayWithFields()
@@ -28,7 +28,7 @@ class NestObjectTest extends TestCase
 			'b' => 'B'
 		];
 
-		$this->assertEquals($expected, $o->toArray());
+		$this->assertSame($expected, $o->toArray());
 	}
 
 	public function testToArrayWithNestedObjects()
@@ -45,6 +45,6 @@ class NestObjectTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $o->toArray());
+		$this->assertSame($expected, $o->toArray());
 	}
 }

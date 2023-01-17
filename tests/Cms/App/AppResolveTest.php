@@ -58,7 +58,7 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test');
 
 		$this->assertInstanceOf(Page::class, $result);
-		$this->assertEquals('test', $result->id());
+		$this->assertSame('test', $result->id());
 	}
 
 	public function testResolveSubPage()
@@ -82,7 +82,7 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test/subpage');
 
 		$this->assertInstanceOf(Page::class, $result);
-		$this->assertEquals('test/subpage', $result->id());
+		$this->assertSame('test/subpage', $result->id());
 	}
 
 	public function testResolvePageRepresentation()
@@ -111,6 +111,8 @@ class AppResolveTest extends TestCase
 
 		// missing representation
 		$result = $app->resolve('test.json');
+		$this->assertNull($result);
+		$result = $app->resolve('test.');
 		$this->assertNull($result);
 
 		// xml representation
@@ -147,7 +149,7 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test.jpg');
 
 		$this->assertInstanceOf(File::class, $result);
-		$this->assertEquals('test.jpg', $result->id());
+		$this->assertSame('test.jpg', $result->id());
 	}
 
 	public function testResolvePageFile()
@@ -176,7 +178,7 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test/test.jpg');
 
 		$this->assertInstanceOf(File::class, $result);
-		$this->assertEquals('test/test.jpg', $result->id());
+		$this->assertSame('test/test.jpg', $result->id());
 	}
 
 	public function testResolveMultilangPageRepresentation()
@@ -220,21 +222,21 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test');
 
 		$this->assertInstanceOf(Page::class, $result);
-		$this->assertEquals('test', $result->id());
-		$this->assertEquals('de', $app->language()->code());
+		$this->assertSame('test', $result->id());
+		$this->assertSame('de', $app->language()->code());
 
 		// missing representation
 		$result = $app->resolve('test.json');
 
 		$this->assertNull($result);
-		$this->assertEquals('de', $app->language()->code());
+		$this->assertSame('de', $app->language()->code());
 
 		// xml presentation
 		$result = $app->resolve('test.xml');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('de', $app->language()->code());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('de', $app->language()->code());
 
 		/**
 		 * Secondary language (EN)
@@ -244,21 +246,21 @@ class AppResolveTest extends TestCase
 		$result = $app->resolve('test', 'en');
 
 		$this->assertInstanceOf(Page::class, $result);
-		$this->assertEquals('test', $result->id());
-		$this->assertEquals('en', $app->language()->code());
+		$this->assertSame('test', $result->id());
+		$this->assertSame('en', $app->language()->code());
 
 		// missing representation
 		$result = $app->resolve('test.json', 'en');
 
 		$this->assertNull($result);
-		$this->assertEquals('en', $app->language()->code());
+		$this->assertSame('en', $app->language()->code());
 
 		// xml presentation
 		$result = $app->resolve('test.xml', 'en');
 
 		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertEquals('xml', $result->body());
-		$this->assertEquals('en', $app->language()->code());
+		$this->assertSame('xml', $result->body());
+		$this->assertSame('en', $app->language()->code());
 	}
 
 	public function testRepresentationErrorType()

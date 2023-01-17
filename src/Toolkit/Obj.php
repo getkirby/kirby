@@ -19,8 +19,6 @@ class Obj extends stdClass
 {
 	/**
 	 * Constructor
-	 *
-	 * @param array $data
 	 */
 	public function __construct(array $data = [])
 	{
@@ -31,10 +29,6 @@ class Obj extends stdClass
 
 	/**
 	 * Magic getter
-	 *
-	 * @param string $property
-	 * @param array $arguments
-	 * @return mixed
 	 */
 	public function __call(string $property, array $arguments)
 	{
@@ -43,8 +37,6 @@ class Obj extends stdClass
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -53,9 +45,6 @@ class Obj extends stdClass
 
 	/**
 	 * Magic property getter
-	 *
-	 * @param string $property
-	 * @return mixed
 	 */
 	public function __get(string $property)
 	{
@@ -65,19 +54,15 @@ class Obj extends stdClass
 	/**
 	 * Gets one or multiple properties of the object
 	 *
-	 * @param string|array $property
 	 * @param mixed $fallback If multiple properties are requested:
 	 *                        Associative array of fallback values per key
-	 * @return mixed
 	 */
-	public function get($property, $fallback = null)
+	public function get(string|array $property, $fallback = null)
 	{
 		if (is_array($property)) {
-			if ($fallback === null) {
-				$fallback = [];
-			}
+			$fallback ??= [];
 
-			if (!is_array($fallback)) {
+			if (is_array($fallback) === false) {
 				throw new InvalidArgumentException('The fallback value must be an array when getting multiple properties');
 			}
 
@@ -93,8 +78,6 @@ class Obj extends stdClass
 
 	/**
 	 * Converts the object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -116,9 +99,6 @@ class Obj extends stdClass
 
 	/**
 	 * Converts the object to a json string
-	 *
-	 * @param mixed ...$arguments
-	 * @return string
 	 */
 	public function toJson(...$arguments): string
 	{

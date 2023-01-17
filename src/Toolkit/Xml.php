@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\Helpers;
 use SimpleXMLElement;
 
 /**
@@ -17,10 +18,8 @@ class Xml
 {
 	/**
 	 * HTML to XML conversion table for entities
-	 *
-	 * @var array
 	 */
-	public static $entities = [
+	public static array|null $entities = [
 		'&nbsp;' => '&#160;', '&iexcl;' => '&#161;', '&cent;' => '&#162;', '&pound;' => '&#163;', '&curren;' => '&#164;', '&yen;' => '&#165;', '&brvbar;' => '&#166;', '&sect;' => '&#167;',
 		'&uml;' => '&#168;', '&copy;' => '&#169;', '&ordf;' => '&#170;', '&laquo;' => '&#171;', '&not;' => '&#172;', '&shy;' => '&#173;', '&reg;' => '&#174;', '&macr;' => '&#175;',
 		'&deg;' => '&#176;', '&plusmn;' => '&#177;', '&sup2;' => '&#178;', '&sup3;' => '&#179;', '&acute;' => '&#180;', '&micro;' => '&#181;', '&para;' => '&#182;', '&middot;' => '&#183;',
@@ -71,7 +70,7 @@ class Xml
 	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
-	public static function attr($name, $value = null): string|null
+	public static function attr(string|array $name, $value = null): string|null
 	{
 		if (is_array($name) === true) {
 			if ($value !== false) {
@@ -80,26 +79,43 @@ class Xml
 
 			$attributes = [];
 			foreach ($name as $key => $val) {
-				$a = static::attr($key, $val);
+				if (is_int($key) === true) {
+					$key = $val;
+					$val = true;
+				}
 
-				if ($a) {
-					$attributes[] = $a;
+				if ($attribute = static::attr($key, $val)) {
+					$attributes[] = $attribute;
 				}
 			}
 
 			return implode(' ', $attributes);
 		}
 
+		// TODO: In 3.10, treat $value === '' to render as name=""
 		if ($value === null || $value === '' || $value === []) {
+			// TODO: Remove in 3.10
+			// @codeCoverageIgnoreStart
+			if ($value === '') {
+				Helpers::deprecated('Passing an empty string as value to `Xml::attr()` has been deprecated. In a future version, passing an empty string won\'t omit the attribute anymore but render it with an empty value. To omit the attribute, please pass `null`.');
+			}
+			// @codeCoverageIgnoreEnd
+
 			return null;
 		}
 
+		// TODO: In 3.10, add deprecation message for space = empty attribute
+		// TODO: In 3.11, render space as space
 		if ($value === ' ') {
-			return strtolower($name) . '=""';
+			return $name . '=""';
 		}
 
-		if (is_bool($value) === true) {
-			return $value === true ? strtolower($name) . '="' . strtolower($name) . '"' : null;
+		if ($value === true) {
+			return $name . '="' . $name . '"';
+		}
+
+		if ($value === false) {
+			return null;
 		}
 
 		if (is_array($value) === true) {
@@ -115,7 +131,7 @@ class Xml
 			$value = static::encode($value);
 		}
 
-		return strtolower($name) . '="' . $value . '"';
+		return $name . '="' . $value . '"';
 	}
 
 	/**
@@ -133,8 +149,13 @@ class Xml
 	 * @param int $level The indentation level (used internally)
 	 * @return string The XML string
 	 */
-	public static function create($props, string $name = 'root', bool $head = true, string $indent = '  ', int $level = 0): string
-	{
+	public static function create(
+		array|string $props,
+		string $name = 'root',
+		bool $head = true,
+		string $indent = '  ',
+		int $level = 0
+	): string {
 		if (is_array($props) === true) {
 			if (A::isAssociative($props) === true) {
 				// a tag with attributes or named children
@@ -177,7 +198,7 @@ class Xml
 		} else {
 			// scalar value
 
-			$result = static::tag($name, $props, null, $indent, $level);
+			$result = static::tag($name, $props, [], $indent, $level);
 		}
 
 		if ($head === true) {
@@ -194,17 +215,10 @@ class Xml
 	 * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
 	 * // output: some über crazy stuff
 	 * ```
-	 *
-	 * @param string|null $string
-	 * @return string
 	 */
 	public static function decode(string|null $string): string
 	{
-		if ($string === null) {
-			$string = '';
-		}
-
-		$string = strip_tags($string);
+		$string = strip_tags($string ?? '');
 		return html_entity_decode($string, ENT_COMPAT, 'utf-8');
 	}
 
@@ -219,9 +233,7 @@ class Xml
 	 * // output: some &#252;ber crazy stuff
 	 * ```
 	 *
-	 * @param string|null $string
 	 * @param bool $html True = Convert to HTML-safe first
-	 * @return string
 	 */
 	public static function encode(string|null $string, bool $html = true): string
 	{
@@ -242,8 +254,6 @@ class Xml
 
 	/**
 	 * Returns the HTML-to-XML entity translation table
-	 *
-	 * @return array
 	 */
 	public static function entities(): array
 	{
@@ -253,7 +263,6 @@ class Xml
 	/**
 	 * Parses an XML string and returns an array
 	 *
-	 * @param string $xml
 	 * @return array|null Parsed array or `null` on error
 	 */
 	public static function parse(string $xml): array|null
@@ -271,11 +280,9 @@ class Xml
 	 * Breaks a SimpleXMLElement down into a simpler tree
 	 * structure of arrays and strings
 	 *
-	 * @param \SimpleXMLElement $element
 	 * @param bool $collectName Whether the element name should be collected (for the root element)
-	 * @return array|string
 	 */
-	public static function simplify(SimpleXMLElement $element, bool $collectName = true)
+	public static function simplify(SimpleXMLElement $element, bool $collectName = true): array|string
 	{
 		// get all XML namespaces of the whole document to iterate over later;
 		// we don't need the global namespace (empty string) in the list
@@ -365,7 +372,7 @@ class Xml
 	 * @param int $level Indentation level
 	 * @return string The generated XML
 	 */
-	public static function tag(string $name, $content = '', array $attr = null, string|null $indent = null, int $level = 0): string
+	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
 	{
 		$attr       = static::attr($attr);
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
@@ -394,9 +401,6 @@ class Xml
 
 	/**
 	 * Properly encodes tag contents
-	 *
-	 * @param mixed $value
-	 * @return string|null
 	 */
 	public static function value($value): string|null
 	{

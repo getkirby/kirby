@@ -9,6 +9,9 @@ use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Text\KirbyTags
+ */
 class KirbyTagsTest extends TestCase
 {
 	protected $app;
@@ -44,13 +47,14 @@ class KirbyTagsTest extends TestCase
 		return $tests;
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParse()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					return 'test';
-				}
+				'html' => fn () => 'test'
 			]
 		];
 
@@ -60,13 +64,14 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('test', KirbyTags::parse('(tEsT: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithValue()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function ($tag) {
-					return $tag->value;
-				}
+				'html' => fn ($tag) => $tag->value
 			]
 		];
 
@@ -75,14 +80,15 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo', KirbyTags::parse('(TEST: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithAttribute()
 	{
 		KirbyTag::$types = [
 			'test' => [
 				'attr' => ['a'],
-				'html' => function ($tag) {
-					return $tag->value . '|' . $tag->a;
-				}
+				'html' => fn ($tag) => $tag->value . '|' . $tag->a
 			]
 		];
 
@@ -91,23 +97,20 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('foo|bar', KirbyTags::parse('(TEST: foo a: bar)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithException()
 	{
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					throw new Exception('Just for fun');
-				}
+				'html' => fn () => throw new Exception('Just for fun')
 			],
 			'invalidargument' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Just for fun');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Just for fun')
 			],
 			'undefined' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Undefined tag type: undefined');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
 			]
 		];
 
@@ -116,22 +119,26 @@ class KirbyTagsTest extends TestCase
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug1()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Just for fun');
 
 		KirbyTag::$types = [
 			'test' => [
-				'html' => function () {
-					throw new Exception('Just for fun');
-				}
+				'html' => fn () => throw new Exception('Just for fun')
 			]
 		];
 
 		KirbyTags::parse('(test: foo)', [], ['debug' => true]);
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug2()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -139,28 +146,30 @@ class KirbyTagsTest extends TestCase
 
 		KirbyTag::$types = [
 			'invalidargument' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Just for fun');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Just for fun')
 			]
 		];
 
 		KirbyTags::parse('(invalidargument: foo)', [], ['debug' => true]);
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithExceptionDebug3()
 	{
 		KirbyTag::$types = [
 			'undefined' => [
-				'html' => function () {
-					throw new InvalidArgumentException('Undefined tag type: undefined');
-				}
+				'html' => fn () => throw new InvalidArgumentException('Undefined tag type: undefined')
 			]
 		];
 
 		$this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], ['debug' => true]));
 	}
 
+	/**
+	 * @covers ::parse
+	 */
 	public function testParseWithBrackets()
 	{
 		KirbyTag::$types = [
@@ -189,6 +198,7 @@ class KirbyTagsTest extends TestCase
 	}
 
 	/**
+	 * @covers ::parse
 	 * @dataProvider dataProvider
 	 */
 	public function testWithMarkdown($kirbytext, $expected)
@@ -201,10 +211,11 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($expected, $kirby->kirbytext($kirbytext));
+		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
 	}
 
 	/**
+	 * @covers ::parse
 	 * @dataProvider dataProvider
 	 */
 	public function testWithMarkdownExtra($kirbytext, $expected)
@@ -217,7 +228,7 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($expected, $kirby->kirbytext($kirbytext));
+		$this->assertSame($expected, $kirby->kirbytext($kirbytext));
 	}
 
 	public function testImageWithoutFigure()
@@ -234,7 +245,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<img alt="" src="https://test.com/something.jpg">';
 
-		$this->assertEquals($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
+		$this->assertSame($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
 	}
 
 	public function testImageWithCaption()
@@ -242,7 +253,7 @@ class KirbyTagsTest extends TestCase
 		$kirby    = $this->app->clone();
 		$expected = '<figure><img alt="" src="/myimage.jpg"><figcaption>This is an <em>awesome</em> image and this a <a href="">link</a></figcaption></figure>';
 
-		$this->assertEquals($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
+		$this->assertSame($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
 	}
 
 	public function testImageWithFileLink()
@@ -274,7 +285,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<figure><a href="' . $doc->url() . '"><img alt="" src="' . $image->url() . '"></a></figure>';
 
-		$this->assertEquals($expected, $page->text()->kt()->value());
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testImageWithFileUUID()
@@ -304,7 +315,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<figure><img alt="" src="' . $image->url() . '"></figure>';
 
-		$this->assertEquals($expected, $page->text()->kt()->value());
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testFile()
@@ -332,7 +343,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
 
-		$this->assertEquals($expected, $page->text()->kt()->value());
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testFileWithUUID()
@@ -362,7 +373,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
 
-		$this->assertEquals($expected, $page->text()->kt()->value());
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testFileWithDisabledDownloadOption()
@@ -390,7 +401,7 @@ class KirbyTagsTest extends TestCase
 
 		$expected = '<p><a href="' . $file->url() . '">a.jpg</a></p>';
 
-		$this->assertEquals($expected, $page->text()->kt()->value());
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testFileWithinFile()
@@ -420,7 +431,7 @@ class KirbyTagsTest extends TestCase
 		$b = $kirby->file('a/b.jpg');
 		$expected = '<p><a download href="' . $b->url() . '">b.jpg</a></p>';
 
-		$this->assertEquals($expected, $a->caption()->kt()->value());
+		$this->assertSame($expected, $a->caption()->kt()->value());
 	}
 
 	public function testLinkWithLangAttribute()
@@ -444,8 +455,8 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a lang: en)'));
-		$this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
+		$this->assertSame('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a lang: en)'));
+		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
 	}
 
 	public function testLinkWithHash()
@@ -469,10 +480,10 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a)'));
-		$this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
-		$this->assertEquals('<a href="https://getkirby.com/en/a#anchor">getkirby.com/en/a</a>', $app->kirbytags('(link: a#anchor lang: en)'));
-		$this->assertEquals('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
+		$this->assertSame('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a)'));
+		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
+		$this->assertSame('<a href="https://getkirby.com/en/a#anchor">getkirby.com/en/a</a>', $app->kirbytags('(link: a#anchor lang: en)'));
+		$this->assertSame('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
 	}
 
 	public function testLinkWithUuid()
@@ -498,10 +509,10 @@ class KirbyTagsTest extends TestCase
 		]);
 
 		$result = $app->kirbytags('(link: page://page-uuid)');
-		$this->assertEquals('<a href="https://getkirby.com/a">getkirby.com/a</a>', $result);
+		$this->assertSame('<a href="https://getkirby.com/a">getkirby.com/a</a>', $result);
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file)');
-		$this->assertEquals('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
+		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
 	}
 
 	public function testLinkWithUuidAndLang()
@@ -560,10 +571,10 @@ class KirbyTagsTest extends TestCase
 		]);
 
 		$result = $app->kirbytags('(link: page://page-uuid lang: de)');
-		$this->assertEquals('<a href="https://getkirby.com/de/ae">getkirby.com/de/ae</a>', $result);
+		$this->assertSame('<a href="https://getkirby.com/de/ae">getkirby.com/de/ae</a>', $result);
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file lang: de)');
-		$this->assertEquals('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
+		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
 	}
 
 	public function testHooks()
@@ -576,7 +587,7 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('before', $app->kirbytags('test'));
+		$this->assertSame('before', $app->kirbytags('test'));
 
 		$app = $app->clone([
 			'hooks' => [
@@ -586,7 +597,7 @@ class KirbyTagsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('after', $app->kirbytags('test'));
+		$this->assertSame('after', $app->kirbytags('test'));
 	}
 
 	public function testVideoLocal()

@@ -35,8 +35,9 @@ return [
 			$code = $this->user()?->language() ??
 					$this->kirby()->panelLanguage();
 
-			return $this->kirby()->translation($code) ??
-				   $this->kirby()->translation('en');
+			return
+				$this->kirby()->translation($code) ??
+				$this->kirby()->translation('en');
 		},
 		'kirbytext' => fn () => $this->kirby()->option('panel.kirbytext') ?? true,
 		'user' => fn () => $this->user(),

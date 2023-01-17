@@ -19,7 +19,7 @@ class SiteApiModelTest extends ApiModelTestCase
 		$site      = $this->app->site();
 		$blueprint = $this->attr($site, 'blueprint');
 
-		$this->assertEquals('Test', $blueprint['title']);
+		$this->assertSame('Test', $blueprint['title']);
 	}
 
 	public function testChildren()
@@ -33,8 +33,8 @@ class SiteApiModelTest extends ApiModelTestCase
 
 		$children = $this->attr($site, 'children');
 
-		$this->assertEquals('a', $children[0]['id']);
-		$this->assertEquals('b', $children[1]['id']);
+		$this->assertSame('a', $children[0]['id']);
+		$this->assertSame('b', $children[1]['id']);
 	}
 
 	public function testContent()
@@ -60,8 +60,8 @@ class SiteApiModelTest extends ApiModelTestCase
 
 		$drafts = $this->attr($site, 'drafts');
 
-		$this->assertEquals('a', $drafts[0]['id']);
-		$this->assertEquals('b', $drafts[1]['id']);
+		$this->assertSame('a', $drafts[0]['id']);
+		$this->assertSame('b', $drafts[1]['id']);
 	}
 
 	public function testFiles()
@@ -75,8 +75,8 @@ class SiteApiModelTest extends ApiModelTestCase
 
 		$files = $this->attr($site, 'files');
 
-		$this->assertEquals('a.jpg', $files[0]['filename']);
-		$this->assertEquals('b.jpg', $files[1]['filename']);
+		$this->assertSame('a.jpg', $files[0]['filename']);
+		$this->assertSame('b.jpg', $files[1]['filename']);
 	}
 
 	public function testTitle()

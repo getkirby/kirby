@@ -57,7 +57,7 @@ class FilesSectionTest extends TestCase
 			'label' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->headline());
+		$this->assertSame('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('files', [
@@ -69,7 +69,7 @@ class FilesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Files', $section->headline());
+		$this->assertSame('Files', $section->headline());
 	}
 
 	public function testMax()
@@ -136,9 +136,9 @@ class FilesSectionTest extends TestCase
 			'model' => $a,
 		]);
 
-		$this->assertEquals(false, $section->link());
-		$this->assertEquals($a, $section->parent());
-		$this->assertEquals('pages/a/files', $section->upload()['api']);
+		$this->assertNull($section->link());
+		$this->assertSame($a, $section->parent());
+		$this->assertSame('pages/a/files', $section->upload()['api']);
 
 		// different parent
 		$section = new Section('files', [
@@ -146,9 +146,9 @@ class FilesSectionTest extends TestCase
 			'parent' => 'site.find("b")'
 		]);
 
-		$this->assertEquals('/pages/b', $section->link());
-		$this->assertEquals($b, $section->parent());
-		$this->assertEquals('pages/b/files', $section->upload()['api']);
+		$this->assertSame('/pages/b', $section->link());
+		$this->assertSame($b, $section->parent());
+		$this->assertSame('pages/b/files', $section->upload()['api']);
 	}
 
 	public function testParentCollectionFail()
@@ -184,7 +184,7 @@ class FilesSectionTest extends TestCase
 			'empty' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->empty());
+		$this->assertSame('Test', $section->empty());
 	}
 
 	public function testTranslatedEmpty()
@@ -195,7 +195,7 @@ class FilesSectionTest extends TestCase
 			'empty' => ['en' => 'Test', 'de' => 'Töst']
 		]);
 
-		$this->assertEquals('Test', $section->empty());
+		$this->assertSame('Test', $section->empty());
 	}
 
 	public function testDragText()
@@ -219,7 +219,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertEquals('(image: a.jpg)', $data[0]['dragText']);
+		$this->assertSame('(image: a.jpg)', $data[0]['dragText']);
 	}
 
 	public function testDragTextWithDifferentParent()
@@ -254,7 +254,7 @@ class FilesSectionTest extends TestCase
 		]);
 
 		$data = $section->data();
-		$this->assertEquals('(image: file://test-file-a)', $data[0]['dragText']);
+		$this->assertSame('(image: file://test-file-a)', $data[0]['dragText']);
 	}
 
 	public function testHelp()
@@ -266,7 +266,7 @@ class FilesSectionTest extends TestCase
 			'help'  => 'Test'
 		]);
 
-		$this->assertEquals('<p>Test</p>', $section->help());
+		$this->assertSame('<p>Test</p>', $section->help());
 
 		// translated help
 		$section = new Section('files', [
@@ -278,7 +278,7 @@ class FilesSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('<p>Information</p>', $section->help());
+		$this->assertSame('<p>Information</p>', $section->help());
 	}
 
 	public function testSortBy()
@@ -306,9 +306,9 @@ class FilesSectionTest extends TestCase
 			'name'  => 'test',
 			'model' => $model
 		]);
-		$this->assertEquals('b.jpg', $section->data()[0]['filename']);
-		$this->assertEquals('z.jpg', $section->data()[1]['filename']);
-		$this->assertEquals('ä.jpg', $section->data()[2]['filename']);
+		$this->assertSame('b.jpg', $section->data()[0]['filename']);
+		$this->assertSame('z.jpg', $section->data()[1]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
 
 		// custom sorting direction
 		$section = new Section('files', [
@@ -316,9 +316,9 @@ class FilesSectionTest extends TestCase
 			'model'  => $model,
 			'sortBy' => 'filename desc'
 		]);
-		$this->assertEquals('ä.jpg', $section->data()[0]['filename']);
-		$this->assertEquals('z.jpg', $section->data()[1]['filename']);
-		$this->assertEquals('b.jpg', $section->data()[2]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[0]['filename']);
+		$this->assertSame('z.jpg', $section->data()[1]['filename']);
+		$this->assertSame('b.jpg', $section->data()[2]['filename']);
 
 		// custom flag
 		$section = new Section('files', [
@@ -326,9 +326,9 @@ class FilesSectionTest extends TestCase
 			'model'  => $model,
 			'sortBy' => 'filename SORT_LOCALE_STRING'
 		]);
-		$this->assertEquals('ä.jpg', $section->data()[0]['filename']);
-		$this->assertEquals('b.jpg', $section->data()[1]['filename']);
-		$this->assertEquals('z.jpg', $section->data()[2]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[0]['filename']);
+		$this->assertSame('b.jpg', $section->data()[1]['filename']);
+		$this->assertSame('z.jpg', $section->data()[2]['filename']);
 
 		// flag & sorting direction
 		$section = new Section('files', [
@@ -336,9 +336,9 @@ class FilesSectionTest extends TestCase
 			'model'  => $model,
 			'sortBy' => 'filename desc SORT_LOCALE_STRING'
 		]);
-		$this->assertEquals('z.jpg', $section->data()[0]['filename']);
-		$this->assertEquals('b.jpg', $section->data()[1]['filename']);
-		$this->assertEquals('ä.jpg', $section->data()[2]['filename']);
+		$this->assertSame('z.jpg', $section->data()[0]['filename']);
+		$this->assertSame('b.jpg', $section->data()[1]['filename']);
+		$this->assertSame('ä.jpg', $section->data()[2]['filename']);
 
 		setlocale(LC_ALL, $locale);
 	}
@@ -398,9 +398,9 @@ class FilesSectionTest extends TestCase
 			'flip'  => true
 		]);
 
-		$this->assertEquals('c.jpg', $section->data()[0]['filename']);
-		$this->assertEquals('b.jpg', $section->data()[1]['filename']);
-		$this->assertEquals('a.jpg', $section->data()[2]['filename']);
+		$this->assertSame('c.jpg', $section->data()[0]['filename']);
+		$this->assertSame('b.jpg', $section->data()[1]['filename']);
+		$this->assertSame('a.jpg', $section->data()[2]['filename']);
 	}
 
 	public function testTranslatedInfo()

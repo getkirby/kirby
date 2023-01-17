@@ -15,6 +15,7 @@ use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Session\Session;
 use Kirby\Toolkit\A;
+use SensitiveParameter;
 use Throwable;
 
 /**
@@ -381,17 +382,16 @@ class Auth
 	/**
 	 * Login a user by email and password
 	 *
-	 * @param string $email
-	 * @param string $password
-	 * @param bool $long
-	 * @return \Kirby\Cms\User
-	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
-	public function login(string $email, string $password, bool $long = false)
-	{
+	public function login(
+		string $email,
+		#[SensitiveParameter]
+		string $password,
+		bool $long = false
+	): User {
 		// session options
 		$options = [
 			'createMode' => 'cookie',
@@ -412,17 +412,16 @@ class Auth
 	 * Login a user by email, password and auth challenge
 	 * @since 3.5.0
 	 *
-	 * @param string $email
-	 * @param string $password
-	 * @param bool $long
-	 * @return \Kirby\Cms\Auth\Status
-	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
-	public function login2fa(string $email, string $password, bool $long = false)
-	{
+	public function login2fa(
+		string $email,
+		#[SensitiveParameter]
+		string $password,
+		bool $long = false
+	): Status {
 		$this->validatePassword($email, $password);
 		return $this->createChallenge($email, $long, '2fa');
 	}
@@ -516,16 +515,15 @@ class Auth
 	 * Validates the user credentials and returns the user object on success;
 	 * otherwise logs the failed attempt
 	 *
-	 * @param string $email
-	 * @param string $password
-	 * @return \Kirby\Cms\User
-	 *
 	 * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
 	 * @throws \Kirby\Exception\NotFoundException If the email was invalid
 	 * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
 	 */
-	public function validatePassword(string $email, string $password)
-	{
+	public function validatePassword(
+		string $email,
+		#[SensitiveParameter]
+		string $password
+	): User {
 		$email = Idn::decodeEmail($email);
 
 		try {
@@ -798,8 +796,10 @@ class Auth
 	 * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
 	 * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid
 	 */
-	public function verifyChallenge(string $code)
-	{
+	public function verifyChallenge(
+		#[SensitiveParameter]
+		string $code
+	) {
 		try {
 			$session = $this->kirby->session();
 

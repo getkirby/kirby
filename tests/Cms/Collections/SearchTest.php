@@ -147,22 +147,22 @@ class SearchTest extends TestCase
 
 	public function testFiles()
 	{
-		$this->assertSame(5, $this->app()->site()->index()->files()->count());
+		$this->assertCount(5, $this->app()->site()->index()->files());
 		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
-		$this->assertSame(2, $files->count());
+		$this->assertCount(2, $files);
 	}
 
 	public function testPages()
 	{
-		$this->assertSame(3, $this->app()->site()->index()->count());
+		$this->assertCount(3, $this->app()->site()->index());
 		$this->assertInstanceOf(Pages::class, $pages = Search::pages('products'));
-		$this->assertSame(1, $pages->count());
+		$this->assertCount(1, $pages);
 	}
 
 	public function testUsers()
 	{
-		$this->assertSame(5, $this->app()->users()->count());
+		$this->assertCount(5, $this->app()->users());
 		$this->assertInstanceOf(Users::class, $users = Search::users('user'));
-		$this->assertSame(3, $users->count());
+		$this->assertCount(3, $users);
 	}
 }

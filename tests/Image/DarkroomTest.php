@@ -40,7 +40,7 @@ class DarkroomTest extends TestCase
 			'width' => 100
 		]);
 
-		$this->assertEquals('center', $options['crop']);
+		$this->assertSame('center', $options['crop']);
 	}
 
 	public function testBlurWithoutPosition()
@@ -50,7 +50,7 @@ class DarkroomTest extends TestCase
 			'blur' => true,
 		]);
 
-		$this->assertEquals(10, $options['blur']);
+		$this->assertSame(10, $options['blur']);
 	}
 
 	public function testQualityWithoutValue()
@@ -60,7 +60,7 @@ class DarkroomTest extends TestCase
 			'quality' => null,
 		]);
 
-		$this->assertEquals(90, $options['quality']);
+		$this->assertSame(90, $options['quality']);
 	}
 
 	public function testDefaults()
@@ -68,13 +68,13 @@ class DarkroomTest extends TestCase
 		$darkroom = new Darkroom();
 		$options  = $darkroom->preprocess('/dev/null');
 
-		$this->assertEquals(true, $options['autoOrient']);
-		$this->assertEquals(false, $options['crop']);
-		$this->assertEquals(false, $options['blur']);
-		$this->assertEquals(false, $options['grayscale']);
-		$this->assertEquals(null, $options['height']);
-		$this->assertEquals(90, $options['quality']);
-		$this->assertEquals(null, $options['width']);
+		$this->assertTrue($options['autoOrient']);
+		$this->assertFalse($options['crop']);
+		$this->assertFalse($options['blur']);
+		$this->assertFalse($options['grayscale']);
+		$this->assertSame(0, $options['height']);
+		$this->assertSame(90, $options['quality']);
+		$this->assertSame(0, $options['width']);
 	}
 
 	public function testGlobalOptions()
@@ -85,7 +85,7 @@ class DarkroomTest extends TestCase
 
 		$options = $darkroom->preprocess($this->file());
 
-		$this->assertEquals(20, $options['quality']);
+		$this->assertSame(20, $options['quality']);
 	}
 
 	public function testPassedOptions()
@@ -98,7 +98,7 @@ class DarkroomTest extends TestCase
 			'quality' => 30
 		]);
 
-		$this->assertEquals(30, $options['quality']);
+		$this->assertSame(30, $options['quality']);
 	}
 
 	public function testProcess()
@@ -111,7 +111,7 @@ class DarkroomTest extends TestCase
 			'quality' => 30
 		]);
 
-		$this->assertEquals(30, $options['quality']);
+		$this->assertSame(30, $options['quality']);
 	}
 
 	public function testGrayscaleFixes()
@@ -123,22 +123,22 @@ class DarkroomTest extends TestCase
 			'grayscale' => true
 		]);
 
-		$this->assertEquals(true, $options['grayscale']);
+		$this->assertTrue($options['grayscale']);
 
 		// greyscale
 		$options = $darkroom->preprocess($this->file(), [
 			'greyscale' => true
 		]);
 
-		$this->assertEquals(true, $options['grayscale']);
-		$this->assertEquals(false, isset($options['greyscale']));
+		$this->assertTrue($options['grayscale']);
+		$this->assertFalse(isset($options['greyscale']));
 
 		// bw
 		$options = $darkroom->preprocess($this->file(), [
 			'bw' => true
 		]);
 
-		$this->assertEquals(true, $options['grayscale']);
-		$this->assertEquals(false, isset($options['bw']));
+		$this->assertTrue($options['grayscale']);
+		$this->assertFalse(isset($options['bw']));
 	}
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use Kirby\Cms\Helpers;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -18,7 +19,6 @@ use Kirby\Exception\InvalidArgumentException;
  * @license   https://opensource.org/licenses/MIT
  *
  * @deprecated 3.8.2 Use `Kirby\Query\Query` instead
- * // TODO: throw warnings in 3.9.0
  * // TODO: Remove in 3.10.0
  */
 class Query
@@ -57,6 +57,8 @@ class Query
 	{
 		$this->query = $query;
 		$this->data  = $data;
+
+		Helpers::deprecated('The `Toolkit\Query` class has been deprecated and will be removed in a future version. Use `Query\Query` instead: Kirby\Query\Query::factory($query)->resolve($data).');
 	}
 
 	/**

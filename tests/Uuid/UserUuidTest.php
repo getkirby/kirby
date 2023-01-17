@@ -36,6 +36,6 @@ class UserUuidTest extends TestCase
 	public function testPopulate()
 	{
 		$uuid = $this->app->user('my-user')->uuid();
-		$this->assertSame(true, $uuid->populate());
+		$this->assertTrue($uuid->populate());
 	}
 }

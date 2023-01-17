@@ -196,10 +196,7 @@ class Page extends Model
 	protected function imageSource(
 		string|null $query = null
 	): CmsFile|Asset|null {
-		if ($query === null) {
-			$query = 'page.image';
-		}
-
+		$query ??= 'page.image';
 		return parent::imageSource($query);
 	}
 
@@ -234,8 +231,9 @@ class Page extends Model
 	 */
 	public function position(): int
 	{
-		return $this->model->num() ??
-			   $this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
+		return
+			$this->model->num() ??
+			$this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
 	}
 
 	/**

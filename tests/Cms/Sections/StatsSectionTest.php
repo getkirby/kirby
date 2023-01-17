@@ -59,7 +59,7 @@ class StatsSectionTest extends TestCase
 			'label' => 'Test'
 		]);
 
-		$this->assertEquals('Test', $section->headline());
+		$this->assertSame('Test', $section->headline());
 
 		// translated headline
 		$section = new Section('stats', [
@@ -71,7 +71,7 @@ class StatsSectionTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Stats', $section->headline());
+		$this->assertSame('Stats', $section->headline());
 	}
 
 	public function testReports()

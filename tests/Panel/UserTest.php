@@ -407,7 +407,7 @@ class UserTest extends TestCase
 		$panel = new User($user);
 		$translations = $panel->translation();
 		$this->assertSame('foo', $translations->code());
-		$this->assertSame(null, $translations->get('translation.name'));
+		$this->assertNull($translations->get('translation.name'));
 	}
 
 	/**

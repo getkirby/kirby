@@ -47,8 +47,8 @@ class LanguagesTest extends TestCase
 	public function testLoad()
 	{
 		$this->assertCount(2, $this->languages);
-		$this->assertEquals(['en', 'de'], $this->languages->codes());
-		$this->assertEquals('en', $this->languages->default()->code());
+		$this->assertSame(['en', 'de'], $this->languages->codes());
+		$this->assertSame('en', $this->languages->default()->code());
 	}
 
 	public function testLoadFromFiles()
@@ -71,15 +71,15 @@ class LanguagesTest extends TestCase
 		$languages = Languages::load();
 
 		$this->assertCount(2, $languages);
-		$this->assertEquals(['de', 'en'], $languages->codes());
-		$this->assertEquals('en', $languages->default()->code());
+		$this->assertSame(['de', 'en'], $languages->codes());
+		$this->assertSame('en', $languages->default()->code());
 
 		Dir::remove($root);
 	}
 
 	public function testDefault()
 	{
-		$this->assertEquals('en', $this->languages->default()->code());
+		$this->assertSame('en', $this->languages->default()->code());
 	}
 
 	public function testMultipleDefault()
@@ -113,7 +113,7 @@ class LanguagesTest extends TestCase
 		]);
 
 		$this->assertSame('tr', $language->code());
-		$this->assertSame(false, $language->isDefault());
+		$this->assertFalse($language->isDefault());
 		$this->assertSame('ltr', $language->direction());
 		$this->assertSame('tr', $language->name());
 		$this->assertSame('/tr', $language->url());

@@ -181,18 +181,11 @@ class HelperFunctionsTest extends TestCase
 
 	public function testDeprecated()
 	{
-		// with disabled debug mode
-		$this->assertFalse(deprecated('The xyz method is deprecated.'));
-
-		$this->kirby = $this->kirby->clone([
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		// with enabled debug mode
+		// the deprecation warnings are always triggered in testing mode,
+		// so we cannot test it with disabled debug mode
 		$this->expectException('Whoops\Exception\ErrorException');
 		$this->expectExceptionMessage('The xyz method is deprecated.');
+
 		deprecated('The xyz method is deprecated.');
 	}
 
@@ -648,7 +641,7 @@ class HelperFunctionsTest extends TestCase
 	{
 		$this->assertSame('a', r(1 === 1, 'a', 'b'));
 		$this->assertSame('b', r(1 === 2, 'a', 'b'));
-		$this->assertSame(null, r(1 === 2, 'a'));
+		$this->assertNull(r(1 === 2, 'a'));
 	}
 
 	public function testRouter()
@@ -777,6 +770,25 @@ class HelperFunctionsTest extends TestCase
 		]);
 
 		snippet('snippet', ['message' => 'world']);
+	}
+
+	public function testSnippetWithSlots()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'snippets' => __DIR__ . '/fixtures/HelpersTest'
+			]
+		]);
+
+		ob_start();
+
+		snippet('snippet-slots', slots: true);
+		slot();
+		echo 'Test';
+		endslot();
+		endsnippet();
+
+		$this->assertSame('Test', ob_get_clean());
 	}
 
 	public function testSvg()

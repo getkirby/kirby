@@ -1464,7 +1464,8 @@ Collection::$filters['date <='] = [
  */
 Collection::$filters['date between'] = Collection::$filters['date ..'] = [
 	'validator' => function ($value, $test) {
-		return V::date($value, '>=', $test[0]) &&
-			   V::date($value, '<=', $test[1]);
+		return
+			V::date($value, '>=', $test[0]) &&
+			V::date($value, '<=', $test[1]);
 	}
 ];

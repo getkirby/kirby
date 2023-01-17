@@ -8,16 +8,16 @@ class MultiselectFieldTest extends TestCase
 	{
 		$field = $this->field('multiselect');
 
-		$this->assertEquals('multiselect', $field->type());
-		$this->assertEquals('multiselect', $field->name());
-		$this->assertEquals([], $field->value());
-		$this->assertEquals([], $field->default());
-		$this->assertEquals([], $field->options());
-		$this->assertEquals(null, $field->min());
-		$this->assertEquals(null, $field->max());
-		$this->assertEquals(',', $field->separator());
-		$this->assertEquals(null, $field->icon());
-		$this->assertEquals(null, $field->counter());
+		$this->assertSame('multiselect', $field->type());
+		$this->assertSame('multiselect', $field->name());
+		$this->assertSame([], $field->value());
+		$this->assertSame([], $field->default());
+		$this->assertSame([], $field->options());
+		$this->assertNull($field->min());
+		$this->assertNull($field->max());
+		$this->assertSame(',', $field->separator());
+		$this->assertNull($field->icon());
+		$this->assertNull($field->counter());
 		$this->assertTrue($field->search());
 		$this->assertFalse($field->sort());
 		$this->assertTrue($field->save());

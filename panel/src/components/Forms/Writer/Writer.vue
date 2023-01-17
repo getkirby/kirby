@@ -44,10 +44,10 @@ import LinkDialog from "./Dialogs/LinkDialog.vue";
 import EmailDialog from "./Dialogs/EmailDialog.vue";
 
 // Marks
+import Link from "./Marks/Link";
 import Code from "./Marks/Code";
 import Bold from "./Marks/Bold";
 import Italic from "./Marks/Italic";
-import Link from "./Marks/Link";
 import Email from "./Marks/Email";
 import Strike from "./Marks/Strike";
 import Underline from "./Marks/Underline";
@@ -254,12 +254,12 @@ export default {
 		createMarks() {
 			return this.filterExtensions(
 				{
+					link: new Link(),
 					bold: new Bold(),
 					italic: new Italic(),
 					strike: new Strike(),
 					underline: new Underline(),
 					code: new Code(),
-					link: new Link(),
 					email: new Email()
 				},
 				this.marks

@@ -25,18 +25,11 @@ class HelpersTest extends TestCase
 	 */
 	public function testDeprecated()
 	{
-		// with disabled debug mode
-		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.'));
-
-		$this->app = $this->app->clone([
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		// with enabled debug mode
+		// the deprecation warnings are always triggered in testing mode,
+		// so we cannot test it with disabled debug mode
 		$this->expectException('Whoops\Exception\ErrorException');
 		$this->expectExceptionMessage('The xyz method is deprecated.');
+
 		Helpers::deprecated('The xyz method is deprecated.');
 	}
 
@@ -124,7 +117,7 @@ class HelpersTest extends TestCase
 			$this->assertSame('Some warning', $errstr);
 		});
 
-		$this->assertSame(true, Helpers::handleErrors(
+		$this->assertTrue(Helpers::handleErrors(
 			fn () => trigger_error('Some warning', E_USER_WARNING),
 			function (int $errno, string $errstr) {
 				$this->assertSame(E_USER_WARNING, $errno);

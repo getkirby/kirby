@@ -28,8 +28,8 @@ class PagesTest extends TestCase
 		$result = $pages->add($page);
 
 		$this->assertCount(2, $result);
-		$this->assertEquals('a', $result->nth(0)->slug());
-		$this->assertEquals('b', $result->nth(1)->slug());
+		$this->assertSame('a', $result->nth(0)->slug());
+		$this->assertSame('b', $result->nth(1)->slug());
 	}
 
 	public function testAddCollection()
@@ -46,9 +46,9 @@ class PagesTest extends TestCase
 		$c = $a->add($b);
 
 		$this->assertCount(3, $c);
-		$this->assertEquals('a', $c->nth(0)->slug());
-		$this->assertEquals('b', $c->nth(1)->slug());
-		$this->assertEquals('c', $c->nth(2)->slug());
+		$this->assertSame('a', $c->nth(0)->slug());
+		$this->assertSame('b', $c->nth(1)->slug());
+		$this->assertSame('c', $c->nth(2)->slug());
 	}
 
 	public function testAddById()
@@ -75,9 +75,9 @@ class PagesTest extends TestCase
 		$pages = $app->site()->children()->add('a/aa');
 
 		$this->assertCount(3, $pages);
-		$this->assertEquals('a', $pages->nth(0)->id());
-		$this->assertEquals('b', $pages->nth(1)->id());
-		$this->assertEquals('a/aa', $pages->nth(2)->id());
+		$this->assertSame('a', $pages->nth(0)->id());
+		$this->assertSame('b', $pages->nth(1)->id());
+		$this->assertSame('a/aa', $pages->nth(2)->id());
 	}
 
 	public function testAddNull()
@@ -128,7 +128,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.mp3', 'b.mp3'], $pages->audio()->pluck('filename'));
+		$this->assertSame(['a.mp3', 'b.mp3'], $pages->audio()->pluck('filename'));
 	}
 
 	public function testCode()
@@ -149,7 +149,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.js', 'b.js'], $pages->code()->pluck('filename'));
+		$this->assertSame(['a.js', 'b.js'], $pages->code()->pluck('filename'));
 	}
 
 	public function testConstructWithCollection()
@@ -185,7 +185,7 @@ class PagesTest extends TestCase
 			'b/bb',
 		];
 
-		$this->assertEquals($expected, $pages->children()->keys());
+		$this->assertSame($expected, $pages->children()->keys());
 	}
 
 	public function testDocuments()
@@ -206,7 +206,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.pdf', 'b.pdf'], $pages->documents()->pluck('filename'));
+		$this->assertSame(['a.pdf', 'b.pdf'], $pages->documents()->pluck('filename'));
 	}
 
 	public function testDrafts()
@@ -235,7 +235,7 @@ class PagesTest extends TestCase
 			'b/bb',
 		];
 
-		$this->assertEquals($expected, $pages->drafts()->keys());
+		$this->assertSame($expected, $pages->drafts()->keys());
 	}
 
 	public function testFiles()
@@ -255,7 +255,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.jpg', 'b.pdf'], $pages->files()->pluck('filename'));
+		$this->assertSame(['a.jpg', 'b.pdf'], $pages->files()->pluck('filename'));
 	}
 
 	public function testFind()
@@ -273,7 +273,7 @@ class PagesTest extends TestCase
 
 	public function testFindByUuid()
 	{
-		$app = new App([
+		$app = $this->app->clone([
 			'site' => [
 				'children' => [
 					['slug' => 'a', 'content' => ['uuid' => 'test-a']],
@@ -665,7 +665,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.jpg', 'b.png'], $pages->images()->pluck('filename'));
+		$this->assertSame(['a.jpg', 'b.png'], $pages->images()->pluck('filename'));
 	}
 
 	public function testIndex()
@@ -704,7 +704,7 @@ class PagesTest extends TestCase
 			'b/bb',
 		];
 
-		$this->assertEquals($expected, $pages->index()->keys());
+		$this->assertSame($expected, $pages->index()->keys());
 	}
 
 	public function testIndexWithDrafts()
@@ -751,7 +751,7 @@ class PagesTest extends TestCase
 			'b/bb',
 		];
 
-		$this->assertEquals($expected, $pages->index(true)->keys());
+		$this->assertSame($expected, $pages->index(true)->keys());
 	}
 
 	public function testIndexCacheMode()
@@ -844,11 +844,11 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(null)->pluck('slug'));
-		$this->assertEquals(['b', 'c'], $pages->notTemplate('a')->pluck('slug'));
-		$this->assertEquals(['c'], $pages->notTemplate(['a', 'b'])->pluck('slug'));
-		$this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(['z'])->pluck('slug'));
-		$this->assertEquals([], $pages->notTemplate(['a', 'b', 'c'])->pluck('slug'));
+		$this->assertSame(['a', 'b', 'c', 'd'], $pages->notTemplate(null)->pluck('slug'));
+		$this->assertSame(['b', 'c'], $pages->notTemplate('a')->pluck('slug'));
+		$this->assertSame(['c'], $pages->notTemplate(['a', 'b'])->pluck('slug'));
+		$this->assertSame(['a', 'b', 'c', 'd'], $pages->notTemplate(['z'])->pluck('slug'));
+		$this->assertSame([], $pages->notTemplate(['a', 'b', 'c'])->pluck('slug'));
 	}
 
 	public function testNums()
@@ -864,7 +864,7 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals([1, 2], $pages->nums());
+		$this->assertSame([1, 2], $pages->nums());
 	}
 
 	public function testListed()
@@ -974,7 +974,7 @@ class PagesTest extends TestCase
 		]);
 
 		$pages = $pages->find('page')->children();
-		$this->assertEquals('ab', $pages->test());
+		$this->assertSame('ab', $pages->test());
 
 		Pages::$methods = [];
 	}
@@ -996,9 +996,9 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a', 'b', 'c'], $pages->template(null)->pluck('slug'));
-		$this->assertEquals(['a', 'c'], $pages->template('a')->pluck('slug'));
-		$this->assertEquals(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
+		$this->assertSame(['a', 'b', 'c'], $pages->template(null)->pluck('slug'));
+		$this->assertSame(['a', 'c'], $pages->template('a')->pluck('slug'));
+		$this->assertSame(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
 	}
 
 	public function testVideos()
@@ -1019,6 +1019,6 @@ class PagesTest extends TestCase
 			],
 		]);
 
-		$this->assertEquals(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
+		$this->assertSame(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
 	}
 }

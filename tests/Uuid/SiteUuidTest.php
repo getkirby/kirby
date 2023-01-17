@@ -36,7 +36,7 @@ class SiteUuidTest extends TestCase
 	public function testPopulate()
 	{
 		$uuid = $this->app->site()->uuid();
-		$this->assertSame(true, $uuid->populate());
+		$this->assertTrue($uuid->populate());
 	}
 
 	/**

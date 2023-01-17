@@ -148,6 +148,7 @@ class KirbyTag
 
 		return $this->kirby()->file($path, null, true);
 	}
+
 	/**
 	 * Returns the current Kirby instance
 	 */

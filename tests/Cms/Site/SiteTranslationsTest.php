@@ -59,32 +59,32 @@ class SiteTranslationsTest extends TestCase
 	{
 		$site = $this->site();
 
-		$this->assertEquals('/en', $site->url());
-		$this->assertEquals('/de', $site->url('de'));
+		$this->assertSame('/en', $site->url());
+		$this->assertSame('/de', $site->url('de'));
 
 		// non-existing language
-		$this->assertEquals('/', $site->url('fr'));
+		$this->assertSame('/', $site->url('fr'));
 	}
 
 	public function testContentInEnglish()
 	{
 		$site = $this->site();
-		$this->assertEquals('Site', $site->title()->value());
-		$this->assertEquals('Untranslated', $site->untranslated()->value());
+		$this->assertSame('Site', $site->title()->value());
+		$this->assertSame('Untranslated', $site->untranslated()->value());
 	}
 
 	public function testContentInDeutsch()
 	{
 		$site = $this->app('de')->site();
-		$this->assertEquals('Seite', $site->title()->value());
-		$this->assertEquals('Untranslated', $site->untranslated()->value());
+		$this->assertSame('Seite', $site->title()->value());
+		$this->assertSame('Untranslated', $site->untranslated()->value());
 	}
 
 	public function testTranslations()
 	{
 		$site = $this->site();
 		$this->assertCount(2, $site->translations());
-		$this->assertEquals(['en', 'de'], $site->translations()->keys());
+		$this->assertSame(['en', 'de'], $site->translations()->keys());
 	}
 
 	public function visitProvider()
@@ -142,9 +142,9 @@ class SiteTranslationsTest extends TestCase
 		$site = $app->site();
 		$page = $site->visit('test', $languageCode);
 
-		$this->assertEquals($languageCode, $app->language()->code());
-		$this->assertEquals('test', $page->slug());
-		$this->assertEquals($siteTitle, $site->title()->value());
-		$this->assertEquals($pageTitle, $page->title()->value());
+		$this->assertSame($languageCode, $app->language()->code());
+		$this->assertSame('test', $page->slug());
+		$this->assertSame($siteTitle, $site->title()->value());
+		$this->assertSame($pageTitle, $page->title()->value());
 	}
 }

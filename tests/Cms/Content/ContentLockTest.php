@@ -111,9 +111,9 @@ class ContentLockTest extends TestCase
 		$app->impersonate('homer@simpson.com');
 		$data = $page->lock()->get();
 
-		$this->assertFalse(empty($data));
+		$this->assertNotEmpty($data);
 		$this->assertFalse($data['unlockable']);
-		$this->assertEquals('test@getkirby.com', $data['email']);
+		$this->assertSame('test@getkirby.com', $data['email']);
 		$this->assertArrayHasKey('time', $data);
 	}
 
@@ -129,9 +129,9 @@ class ContentLockTest extends TestCase
 		$app->impersonate('homer@simpson.com');
 		$data = $page->lock()->get();
 		$this->assertFileExists($this->fixtures . '/content/test/.lock');
-		$this->assertFalse(empty($data));
+		$this->assertNotEmpty($data);
 		$this->assertFalse($data['unlockable']);
-		$this->assertEquals('test@getkirby.com', $data['email']);
+		$this->assertSame('test@getkirby.com', $data['email']);
 		$this->assertArrayHasKey('time', $data);
 
 		$app->users()->remove($app->user('test@getkirby.com'));
@@ -184,10 +184,10 @@ class ContentLockTest extends TestCase
 		$app->impersonate('test@getkirby.com');
 
 		$this->assertTrue($page->lock()->create());
-		$this->assertFalse(empty($app->locks()->get($page)));
+		$this->assertNotEmpty($app->locks()->get($page));
 
 		$this->assertTrue($page->lock()->remove());
-		$this->assertTrue(empty($app->locks()->get($page)));
+		$this->assertEmpty($app->locks()->get($page));
 	}
 
 	public function testUnlockWithNoLock()
@@ -210,7 +210,7 @@ class ContentLockTest extends TestCase
 		$app->impersonate('homer@simpson.com');
 		$this->assertTrue($page->lock()->unlock());
 
-		$this->assertFalse(empty($app->locks()->get($page)['unlock']));
+		$this->assertNotEmpty($app->locks()->get($page)['unlock']);
 	}
 
 	public function testIsUnlocked()
@@ -251,7 +251,7 @@ class ContentLockTest extends TestCase
 
 		$app->impersonate('homer@simpson.com');
 		$this->assertTrue($page->lock()->unlock());
-		$this->assertFalse(empty($app->locks()->get($page)['unlock']));
+		$this->assertNotEmpty($app->locks()->get($page)['unlock']);
 
 		$app->impersonate('test@getkirby.com');
 		$this->assertTrue($page->lock()->isUnlocked());
@@ -270,18 +270,18 @@ class ContentLockTest extends TestCase
 
 		$app->impersonate('homer@simpson.com');
 		$this->assertTrue($page->lock()->unlock());
-		$this->assertEquals(count($app->locks()->get($page)['unlock']), 1);
+		$this->assertCount(1, $app->locks()->get($page)['unlock']);
 		$this->assertTrue($page->lock()->create());
 
 		$app->impersonate('peter@lustig.de');
 		$this->assertTrue($page->lock()->unlock());
-		$this->assertEquals(count($app->locks()->get($page)['unlock']), 2);
+		$this->assertCount(2, $app->locks()->get($page)['unlock']);
 
 		$app->impersonate('test@getkirby.com');
 		$this->assertTrue($page->lock()->isUnlocked());
 		$this->assertTrue($page->lock()->resolve());
 		$this->assertFalse($page->lock()->isUnlocked());
-		$this->assertEquals(count($app->locks()->get($page)['unlock']), 1);
+		$this->assertCount(1, $app->locks()->get($page)['unlock']);
 
 		$app->impersonate('homer@simpson.com');
 		$this->assertTrue($page->lock()->isUnlocked());
@@ -296,7 +296,7 @@ class ContentLockTest extends TestCase
 
 		$page->lock()->create();
 
-		$this->assertSame(null, $page->lock()->state());
+		$this->assertNull($page->lock()->state());
 
 		$app->impersonate('test@getkirby.com');
 
@@ -345,6 +345,6 @@ class ContentLockTest extends TestCase
 
 		// state is locked
 		$this->assertSame('unlock', $lockArray['state']);
-		$this->assertSame(false, $lockArray['data']);
+		$this->assertFalse($lockArray['data']);
 	}
 }

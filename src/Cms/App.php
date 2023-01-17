@@ -18,6 +18,7 @@ use Kirby\Http\Router;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
+use Kirby\Template\Snippet;
 use Kirby\Text\KirbyTag;
 use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
@@ -1278,6 +1279,11 @@ class App
 		// set the current locale
 		$this->setCurrentLanguage($language);
 
+		// directly prevent path with incomplete content representation
+		if (Str::endsWith($path, '.') === true) {
+			return null;
+		}
+
 		// the site is needed a couple times here
 		$site = $this->site();
 
@@ -1558,24 +1564,6 @@ class App
 	}
 
 	/**
-	 * Returns the Environment object
-	 * @deprecated 3.7.0 Use `$kirby->environment()` instead
-	 *
-	 * @return \Kirby\Http\Environment
-	 * @deprecated Will be removed in Kirby 3.9.0
-	 * @todo Remove in 3.9.0
-	 * @codeCoverageIgnore
-	 */
-	public function server()
-	{
-		// @codeCoverageIgnoreStart
-		Helpers::deprecated('$kirby->server() has been deprecated and will be removed in Kirby 3.9.0. Use $kirby->environment() instead.');
-		// @codeCoverageIgnoreEnd
-
-		return $this->environment();
-	}
-
-	/**
 	 * Initializes and returns the Site object
 	 *
 	 * @return \Kirby\Cms\Site
@@ -1630,15 +1618,20 @@ class App
 	 * @return string|null
 	 * @psalm-return ($return is true ? string : null)
 	 */
-	public function snippet($name, $data = [], bool $return = true): string|null
+	public function snippet($name, $data = [], bool $return = true, bool $slots = false): Snippet|string|null
 	{
 		if (is_object($data) === true) {
 			$data = ['item' => $data];
 		}
 
-		$snippet = ($this->component('snippet'))($this, $name, array_merge($this->data, $data));
+		$snippet = ($this->component('snippet'))(
+			$this,
+			$name,
+			array_merge($this->data, $data),
+			$slots
+		);
 
-		if ($return === true) {
+		if ($return === true || $slots === true) {
 			return $snippet;
 		}
 
@@ -1661,7 +1654,7 @@ class App
 	 * and return the Template object
 	 *
 	 * @internal
-	 * @return \Kirby\Cms\Template
+	 * @return \Kirby\Template\Template
 	 * @param string $name
 	 * @param string $type
 	 * @param string $defaultType

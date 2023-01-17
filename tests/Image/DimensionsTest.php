@@ -139,9 +139,16 @@ class DimensionsTest extends TestCase
 	public function testForSvg()
 	{
 		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle.svg');
-
 		$this->assertSame(50, $dimensions->width());
 		$this->assertSame(50, $dimensions->height());
+
+		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle-abs.svg');
+		$this->assertSame(35, $dimensions->width());
+		$this->assertSame(35, $dimensions->height());
+
+		$dimensions = Dimensions::forSvg(__DIR__ . '/fixtures/dimensions/circle-offset.svg');
+		$this->assertSame(40, $dimensions->width());
+		$this->assertSame(25, $dimensions->height());
 	}
 
 	public function testResize()

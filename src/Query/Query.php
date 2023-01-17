@@ -124,7 +124,6 @@ Query::$entries['site'] = function (): Site {
 	return App::instance()->site();
 };
 
-
 Query::$entries['t'] = function (
 	string $key,
 	string|array $fallback = null,

@@ -8,8 +8,8 @@ class LineFieldTest extends TestCase
 	{
 		$field = $this->field('line');
 
-		$this->assertEquals('line', $field->type());
-		$this->assertEquals('line', $field->name());
+		$this->assertSame('line', $field->type());
+		$this->assertSame('line', $field->name());
 		$this->assertFalse($field->save());
 	}
 }

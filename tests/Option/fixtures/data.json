@@ -1,20 +1,16 @@
-{
-	"Directory": {
-		"Companies": [
-			{
-				"value": "A",
-				"key": "a",
-				"name": "Company A",
-				"email": "info@company-a.com",
-				"slogan": "We are <b>great</b>"
-			},
-			{
-				"value": "B",
-				"key": "b",
-				"name": "Company B",
-				"email": "info@company-b.com",
-				"slogan": "We are <b>better</b>"
-			}
-		]
+[
+	{
+		"value": "A",
+		"key": "a",
+		"name": "Company A",
+		"email": "info@company-a.com",
+		"slogan": "We are <b>great</b>"
+	},
+	{
+		"value": "B",
+		"key": "b",
+		"name": "Company B",
+		"email": "info@company-b.com",
+		"slogan": "We are <b>better</b>"
 	}
-}
+]

@@ -4,6 +4,9 @@
 /**
  * Content Lock Routes
  */
+
+use Kirby\Exception\NotFoundException;
+
 return [
 	[
 		'pattern' => '(:all)/lock',
@@ -25,7 +28,11 @@ return [
 		'pattern' => '(:all)/lock',
 		'method'  => 'DELETE',
 		'action'  => function (string $path) {
-			return $this->parent($path)->lock()?->remove();
+			try {
+				return $this->parent($path)->lock()?->remove();
+			} catch (NotFoundException) {
+				return true;
+			}
 		}
 	],
 	[
@@ -39,7 +46,11 @@ return [
 		'pattern' => '(:all)/unlock',
 		'method'  => 'DELETE',
 		'action'  => function (string $path) {
-			return  $this->parent($path)->lock()?->resolve();
+			try {
+				return $this->parent($path)->lock()?->resolve();
+			} catch (NotFoundException) {
+				return true;
+			}
 		}
 	],
 ];

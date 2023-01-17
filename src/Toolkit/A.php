@@ -114,9 +114,16 @@ class A
 
 					// the element needs to exist and also needs to be an array; otherwise
 					// we cannot find the remaining keys within it (invalid array structure)
-					if (isset($array[$currentKey]) === true && is_array($array[$currentKey]) === true) {
+					if (
+						isset($array[$currentKey]) === true &&
+						is_array($array[$currentKey]) === true
+					) {
 						// $keys only holds the remaining keys that have not been shifted off yet
-						return static::get($array[$currentKey], implode('.', $keys), $default);
+						return static::get(
+							$array[$currentKey],
+							implode('.', $keys),
+							$default
+						);
 					}
 				}
 
@@ -127,7 +134,11 @@ class A
 			// if the input array uses a completely nested structure,
 			// recursively progress layer by layer
 			if (is_array($array[$firstKey]) === true) {
-				return static::get($array[$firstKey], implode('.', $keys), $default);
+				return static::get(
+					$array[$firstKey],
+					implode('.', $keys),
+					$default
+				);
 			}
 
 			// the $firstKey element was found, but isn't an array, so we cannot
@@ -146,6 +157,7 @@ class A
 		if (is_string($value) === true) {
 			return $value;
 		}
+
 		return implode($separator, $value);
 	}
 
@@ -251,6 +263,7 @@ class A
 	public static function pluck(array $array, string $key): array
 	{
 		$output = [];
+
 		foreach ($array as $a) {
 			if (isset($a[$key]) === true) {
 				$output[] = $a[$key];
@@ -396,12 +409,12 @@ class A
 	 */
 	public static function fill(array $array, int $limit, $fill = 'placeholder'): array
 	{
-		if (count($array) < $limit) {
-			$diff = $limit - count($array);
-			for ($x = 0; $x < $diff; $x++) {
-				$array[] = $fill;
-			}
+		$diff = $limit - count($array);
+
+		for ($x = 0; $x < $diff; $x++) {
+			$array[] = $fill;
 		}
+
 		return $array;
 	}
 
@@ -467,13 +480,7 @@ class A
 	 */
 	public static function missing(array $array, array $required = []): array
 	{
-		$missing = [];
-		foreach ($required as $r) {
-			if (isset($array[$r]) === false) {
-				$missing[] = $r;
-			}
-		}
-		return $missing;
+		return array_values(array_diff($required, array_keys($array)));
 	}
 
 	/**

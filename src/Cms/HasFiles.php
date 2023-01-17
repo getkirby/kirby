@@ -57,16 +57,17 @@ trait HasFiles
 	 * Creates a new file
 	 *
 	 * @param array $props
+	 * @param bool $move If set to `true`, the source will be deleted
 	 * @return \Kirby\Cms\File
 	 */
-	public function createFile(array $props)
+	public function createFile(array $props, bool $move = false)
 	{
 		$props = array_merge($props, [
 			'parent' => $this,
 			'url'    => null
 		]);
 
-		return File::create($props);
+		return File::create($props, $move);
 	}
 
 	/**

@@ -21,9 +21,9 @@ class RoleTest extends TestCase
 			'title' => 'Admin'
 		]);
 
-		$this->assertEquals('admin', $role->name());
-		$this->assertEquals('Admin', $role->title());
-		$this->assertEquals('Test', $role->description());
+		$this->assertSame('admin', $role->name());
+		$this->assertSame('Admin', $role->title());
+		$this->assertSame('Test', $role->description());
 	}
 
 	public function testFactory()
@@ -31,8 +31,8 @@ class RoleTest extends TestCase
 		$app  = $this->app();
 		$role = Role::load(__DIR__ . '/fixtures/blueprints/users/editor.yml');
 
-		$this->assertEquals('editor', $role->name());
-		$this->assertEquals('Editor', $role->title());
+		$this->assertSame('editor', $role->name());
+		$this->assertSame('Editor', $role->title());
 	}
 
 	public function testMissingRole()
@@ -48,8 +48,8 @@ class RoleTest extends TestCase
 		$app  = $this->app();
 		$role = Role::admin();
 
-		$this->assertEquals('admin', $role->name());
-		$this->assertEquals('Admin', $role->title());
+		$this->assertSame('admin', $role->name());
+		$this->assertSame('Admin', $role->title());
 	}
 
 	public function testNobody()
@@ -57,8 +57,8 @@ class RoleTest extends TestCase
 		$app  = $this->app();
 		$role = Role::nobody();
 
-		$this->assertEquals('nobody', $role->name());
-		$this->assertEquals('Nobody', $role->title());
+		$this->assertSame('nobody', $role->name());
+		$this->assertSame('Nobody', $role->title());
 		$this->assertTrue($role->isNobody());
 	}
 
@@ -72,7 +72,7 @@ class RoleTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Editor', $role->title());
+		$this->assertSame('Editor', $role->title());
 	}
 
 	public function testTranslateDescription()
@@ -85,7 +85,7 @@ class RoleTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Editor', $role->title());
+		$this->assertSame('Editor', $role->title());
 	}
 
 	public function testToArrayAndDebugInfo()
@@ -103,7 +103,7 @@ class RoleTest extends TestCase
 			'title'       => 'Editor'
 		];
 
-		$this->assertEquals($expected, $role->toArray());
-		$this->assertEquals($expected, $role->__debugInfo());
+		$this->assertSame($expected, $role->toArray());
+		$this->assertSame($expected, $role->__debugInfo());
 	}
 }

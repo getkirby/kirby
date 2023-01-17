@@ -435,9 +435,7 @@ class UpdateStatus
 				// verify that we found at least one possible version;
 				// otherwise try the `$maxVersion` as a last chance before
 				// concluding at the top that we cannot solve the task
-				if ($incidentVersion === null) {
-					$incidentVersion = $maxVersion;
-				}
+				$incidentVersion ??= $maxVersion;
 
 				// we need a version that fixes all vulnerabilities, so use the
 				// "largest of the smallest" fixed versions

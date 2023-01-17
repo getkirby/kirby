@@ -85,7 +85,7 @@ class ContentTest extends TestCase
 		$this->assertInstanceOf(Field::class, $field);
 		$this->assertSame('invalid', $field->key());
 		$this->assertSame($this->parent, $field->parent());
-		$this->assertSame(null, $field->value());
+		$this->assertNull($field->value());
 
 		// all fields
 		$fields = $this->content->get();
@@ -125,31 +125,31 @@ class ContentTest extends TestCase
 	{
 		$content1 = $this->content->not('a');
 		$this->assertNotSame($this->content, $content1);
-		$this->assertSame(null, $content1->get('a')->value());
+		$this->assertNull($content1->get('a')->value());
 		$this->assertSame('B', $content1->get('b')->value());
 
 		$content2 = $this->content->not('A');
 		$this->assertNotSame($this->content, $content2);
-		$this->assertSame(null, $content2->get('a')->value());
+		$this->assertNull($content2->get('a')->value());
 		$this->assertSame('B', $content2->get('b')->value());
 
 		$content3 = $this->content->not('MIxeD');
 		$this->assertNotSame($this->content, $content3);
-		$this->assertSame(null, $content3->get('mixed')->value());
+		$this->assertNull($content3->get('mixed')->value());
 		$this->assertSame('B', $content3->get('b')->value());
 
 		// multiple nots
 		$content4 = $this->content->not('a')->not('MIxed');
 		$this->assertNotSame($this->content, $content4);
-		$this->assertSame(null, $content4->get('a')->value());
-		$this->assertSame(null, $content4->get('mixed')->value());
+		$this->assertNull($content4->get('a')->value());
+		$this->assertNull($content4->get('mixed')->value());
 		$this->assertSame('B', $content4->get('b')->value());
 
 		// multiple nots in one go
 		$content5 = $this->content->not('a', 'MIxed');
 		$this->assertNotSame($this->content, $content5);
-		$this->assertSame(null, $content5->get('a')->value());
-		$this->assertSame(null, $content5->get('mixed')->value());
+		$this->assertNull($content5->get('a')->value());
+		$this->assertNull($content5->get('mixed')->value());
 		$this->assertSame('B', $content5->get('b')->value());
 	}
 

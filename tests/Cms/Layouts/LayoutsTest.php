@@ -43,10 +43,12 @@ class LayoutsTest extends TestCase
 		$columns = $layouts->first()->columns();
 		$blocks  = $columns->first()->blocks();
 
-		$this->assertEquals('heading', $blocks->first()->type());
-		$this->assertEquals('Heading', $blocks->first()->text());
-		$this->assertEquals('text', $blocks->last()->type());
-		$this->assertEquals('Text', $blocks->last()->text());
+		$this->assertSame('heading', $blocks->first()->type());
+		$this->assertInstanceOf(Field::class, $blocks->first()->text());
+		$this->assertSame('Heading', $blocks->first()->text()->value());
+		$this->assertSame('text', $blocks->last()->type());
+		$this->assertInstanceOf(Field::class, $blocks->last()->text());
+		$this->assertSame('Text', $blocks->last()->text()->value());
 	}
 
 	public function testHasBlockType()

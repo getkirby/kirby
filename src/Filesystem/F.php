@@ -514,7 +514,14 @@ class F
 			static::remove($newRoot);
 		}
 
-		// actually move the file if it exists
+		$directory = dirname($newRoot);
+
+		// create the parent directory if it does not exist
+		if (is_dir($directory) === false) {
+			Dir::make($directory, true);
+		}
+
+		// actually move the file
 		if (rename($oldRoot, $newRoot) !== true) {
 			return false;
 		}

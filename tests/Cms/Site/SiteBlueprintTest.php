@@ -17,6 +17,6 @@ class SiteBlueprintTest extends TestCase
 			'update'      => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertSame($expected, $blueprint->options());
 	}
 }

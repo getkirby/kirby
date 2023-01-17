@@ -435,10 +435,7 @@ class Dom
 	{
 		$allowedNamespaces = $options['allowedNamespaces'];
 		$localName         = $node->localName;
-
-		if ($compare === null) {
-			$compare = fn ($expected, $real): bool => $expected === $real;
-		}
+		$compare         ??= fn ($expected, $real): bool => $expected === $real;
 
 		// if the configuration does not define namespace URIs or if the
 		// currently checked node is from the special `xml:` namespace
@@ -709,9 +706,7 @@ class Dom
 		// ensure that the document is encoded as UTF-8
 		// unless a different encoding was specified in
 		// the input or before exporting
-		if ($this->doc->encoding === null) {
-			$this->doc->encoding = 'UTF-8';
-		}
+		$this->doc->encoding ??= 'UTF-8';
 
 		return trim($this->doc->saveXML());
 	}

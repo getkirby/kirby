@@ -12,6 +12,6 @@ class TranslationsApiCollectionTest extends ApiCollectionTestCase
 		$result     = $collection->toArray();
 
 		$this->assertCount(1, $result);
-		$this->assertEquals('en', $result[0]['id']);
+		$this->assertSame('en', $result[0]['id']);
 	}
 }

@@ -34,6 +34,6 @@ class SiteMethodsTest extends TestCase
 	public function testSiteMethod()
 	{
 		$site = $this->app->site();
-		$this->assertEquals('site method', $site->test());
+		$this->assertSame('site method', $site->test());
 	}
 }

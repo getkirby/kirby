@@ -100,7 +100,7 @@ class ATest extends TestCase
 		$this->assertSame($array, A::get($array, null));
 
 		// fallback value
-		$this->assertSame(null, A::get($array, 'elephant'));
+		$this->assertNull(A::get($array, 'elephant'));
 		$this->assertSame('toot', A::get($array, 'elephant', 'toot'));
 
 		$this->assertSame([
@@ -404,7 +404,7 @@ class ATest extends TestCase
 		// Assert existence and correctness of keys
 		$random1 = A::random($array, 1);
 		$this->assertTrue(in_array(array_values($random1)[0], $array));
-		$this->assertTrue(in_array(array_key_first($random1), array_keys($array)));
+		$this->assertTrue(array_key_exists(array_key_first($random1), $array));
 
 		// Assert order of keys in non-shuffled random
 		$random2 = A::random($array, 2);

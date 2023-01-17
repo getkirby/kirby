@@ -41,7 +41,7 @@ class I18n
 	 * The fallback locale or a
 	 * list of fallback locales
 	 *
-	 * @var string|array|\Closure
+	 * @var string|array|\Closure|null
 	 */
 	public static $fallback = ['en'];
 
@@ -54,8 +54,6 @@ class I18n
 
 	/**
 	 * Returns the list of fallback locales
-	 *
-	 * @return array
 	 */
 	public static function fallbacks(): array
 	{
@@ -77,9 +75,7 @@ class I18n
 	 * Returns singular or plural
 	 * depending on the given number
 	 *
-	 * @param int $count
 	 * @param bool $none If true, 'none' will be returned if the count is 0
-	 * @return string
 	 */
 	public static function form(int $count, bool $none = false): string
 	{
@@ -92,23 +88,17 @@ class I18n
 
 	/**
 	 * Formats a number
-	 *
-	 * @param int|float $number
-	 * @param string $locale
-	 * @return string
 	 */
-	public static function formatNumber($number, string $locale = null): string
+	public static function formatNumber(int|float $number, string $locale = null): string
 	{
-		$locale    ??= static::locale();
-		$formatter   = static::decimalNumberFormatter($locale);
-		$number      = $formatter?->format($number) ?? $number;
+		$locale  ??= static::locale();
+		$formatter = static::decimalNumberFormatter($locale);
+		$number    = $formatter?->format($number) ?? $number;
 		return (string)$number;
 	}
 
 	/**
 	 * Returns the locale code
-	 *
-	 * @return string
 	 */
 	public static function locale(): string
 	{
@@ -126,25 +116,22 @@ class I18n
 	/**
 	 * Translates a given message
 	 * according to the currently set locale
-	 *
-	 * @param string|array $key
-	 * @param string|array|null $fallback
-	 * @param string|null $locale
-	 * @return string|array|null
 	 */
-	public static function translate($key, $fallback = null, string $locale = null)
-	{
+	public static function translate(
+		string|array|null $key,
+		string|array $fallback = null,
+		string $locale = null
+	): string|array|Closure|null {
 		$locale ??= static::locale();
 
 		if (is_array($key) === true) {
 			// try to use actual locale
-			if (isset($key[$locale]) === true) {
-				return $key[$locale];
+			if ($result = $key[$locale] ?? null) {
+				return $result;
 			}
 			// try to use language code, e.g. `es` when locale is `es_ES`
-			$lang = Str::before($locale, '_');
-			if (isset($key[$lang]) === true) {
-				return $key[$lang];
+			if ($result = $key[Str::before($locale, '_')] ?? null) {
+				return $result;
 			}
 			// use global wildcard as i18n key
 			if (isset($key['*']) === true) {
@@ -152,16 +139,18 @@ class I18n
 			}
 			// use fallback
 			if (is_array($fallback) === true) {
-				return $fallback[$locale] ??
-					   $fallback['en'] ??
-					   reset($fallback);
+				return
+					$fallback[$locale] ??
+					$fallback['en'] ??
+					reset($fallback);
 			}
 
 			return $fallback;
 		}
 
-		if ($translation = static::translation($locale)[$key] ?? null) {
-			return $translation;
+		// $key is a string
+		if ($result = static::translation($locale)[$key] ?? null) {
+			return $result;
 		}
 
 		if ($fallback !== null) {
@@ -174,8 +163,8 @@ class I18n
 				continue;
 			}
 
-			if ($translation = static::translation($fallback)[$key] ?? null) {
-				return $translation;
+			if ($result = static::translation($fallback)[$key] ?? null) {
+				return $result;
 			}
 		}
 
@@ -192,8 +181,12 @@ class I18n
 	 * @param string|null $locale
 	 * @return string
 	 */
-	public static function template(string $key, $fallback = null, array|null $replace = null, string|null $locale = null): string
-	{
+	public static function template(
+		string $key,
+		string|array $fallback = null,
+		array|null $replace = null,
+		string|null $locale = null
+	): string {
 		if (is_array($fallback) === true) {
 			$replace  = $fallback;
 			$fallback = null;
@@ -271,11 +264,7 @@ class I18n
 	 *   defined, the template that is defined last in the translation array is used
 	 * - Translation is a callback with a `$count` argument: Returns the callback return value
 	 *
-	 * @param string $key
-	 * @param int $count
-	 * @param string|null $locale
 	 * @param bool $formatNumber If set to `false`, the count is not formatted
-	 * @return mixed
 	 */
 	public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
 	{

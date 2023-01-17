@@ -20,8 +20,8 @@ class SiteContentTest extends TestCase
 			'content' => $content
 		]);
 
-		$this->assertEquals($content, $site->content()->toArray());
-		$this->assertEquals('lorem ipsum', $site->text()->value());
+		$this->assertSame($content, $site->content()->toArray());
+		$this->assertSame('lorem ipsum', $site->text()->value());
 	}
 
 	public function testInvalidContent()

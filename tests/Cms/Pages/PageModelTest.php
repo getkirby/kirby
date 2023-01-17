@@ -29,7 +29,7 @@ class PageModelTest extends TestCase
 		]);
 
 		$this->assertInstanceOf(ArticlePage::class, $page);
-		$this->assertEquals('test', $page->test());
+		$this->assertSame('test', $page->test());
 	}
 
 	public function testMissingPageModel()

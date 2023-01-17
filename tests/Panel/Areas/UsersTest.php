@@ -26,7 +26,7 @@ class UsersTest extends AreaTestCase
 		$this->assertSame('k-users-view', $view['component']);
 		$this->assertSame('Users', $view['title']);
 
-		$this->assertSame(null, $props['role']);
+		$this->assertNull($props['role']);
 		$this->assertSame([
 			[
 				'id'    => 'admin',

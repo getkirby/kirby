@@ -51,6 +51,11 @@ class Segment
 		throw new BadMethodCallException($error);
 	}
 
+	/**
+	 * Parses a segment into the property/method name and its arguments
+	 *
+	 * @param int $position String position of the segment inside the full query
+	 */
 	public static function factory(
 		string $segment,
 		int $position = 0
@@ -69,6 +74,10 @@ class Segment
 		);
 	}
 
+	/**
+	 * Automatically resolves the segment depending on the
+	 * segment position and the type of the base
+	 */
 	public function resolve(mixed $base = null, array|object $data = []): mixed
 	{
 		// resolve arguments to array

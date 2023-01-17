@@ -39,7 +39,8 @@ class Value
 	 *
 	 * @param int $minutes the number of minutes until the value expires
 	 *                     or an absolute UNIX timestamp
-	 * @param int $created the UNIX timestamp when the value has been created
+	 * @param int|null $created the UNIX timestamp when the value has been created
+	 *                          (defaults to the current time)
 	 */
 	public function __construct($value, int $minutes = 0, int|null $created = null)
 	{

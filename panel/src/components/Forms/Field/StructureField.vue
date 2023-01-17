@@ -1,15 +1,21 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-		<!-- Add button -->
 		<template #options>
-			<k-button
-				v-if="more && currentIndex === null"
-				:id="_uid"
-				ref="add"
-				:text="$t('add')"
-				icon="add"
-				@click="onAdd"
-			/>
+			<k-dropdown v-if="!currentIndex">
+				<k-button icon="dots" @click="$refs.options.toggle()" />
+				<k-dropdown-content ref="options" align="right">
+					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
+						{{ $t("add") }}
+					</k-dropdown-item>
+					<k-dropdown-item
+						:disabled="items.length === 0 || disabled"
+						icon="trash"
+						@click="confirmToRemoveAll"
+					>
+						{{ $t("delete.all") }}
+					</k-dropdown-item>
+				</k-dropdown-content>
+			</k-dropdown>
 		</template>
 
 		<!-- Form -->
@@ -46,23 +52,38 @@
 				:empty="$t('field.structure.empty')"
 				:index="index"
 				:options="options"
+				:pagination="limit ? pagination : false"
 				:rows="paginatedItems"
 				:sortable="isSortable"
 				:data-invalid="isInvalid"
 				@cell="jump($event.rowIndex, $event.columnIndex)"
 				@input="onInput"
 				@option="onOption"
+				@paginate="paginate"
 			/>
-			<k-pagination v-if="limit" v-bind="pagination" @paginate="paginate" />
-			<k-dialog
+
+			<k-button
+				v-if="more"
+				class="k-field-add-item-button"
+				icon="add"
+				:tooltip="$t('add')"
+				@click="onAdd"
+			/>
+
+			<k-remove-dialog
 				v-if="!disabled"
 				ref="remove"
-				:submit-button="$t('delete')"
 				theme="negative"
+				:submit-button="$t('delete')"
+				:text="$t('field.structure.delete.confirm')"
 				@submit="onRemove"
-			>
-				<k-text>{{ $t("field.structure.delete.confirm") }}</k-text>
-			</k-dialog>
+			/>
+
+			<k-remove-dialog
+				ref="dialogRemoveAll"
+				:text="$t('field.structure.delete.confirm.all')"
+				@submit="onRemoveAll"
+			/>
 		</template>
 	</k-field>
 </template>
@@ -314,6 +335,9 @@ export default {
 				this.items.push(value);
 			}
 		},
+		confirmToRemoveAll() {
+			this.$refs.dialogRemoveAll.open();
+		},
 		/**
 		 * Focuses the add button
 		 * @public
@@ -396,8 +420,12 @@ export default {
 		 * @param {number} index index of new row to be shown
 		 */
 		async onFormPaginate(index) {
-			await this.save();
-			this.open(index);
+			try {
+				await this.save();
+				this.open(index);
+			} catch (e) {
+				// don't change the page
+			}
 		},
 		/**
 		 * Handles the structure form submission
@@ -460,6 +488,16 @@ export default {
 
 			this.items = this.sort(this.items);
 		},
+		/**
+		 * When removal has been confirmed,
+		 * remove all entries
+		 */
+		onRemoveAll() {
+			this.items = [];
+			this.onInput();
+			this.$refs.dialogRemoveAll.close();
+		},
+
 		/**
 		 * Edit the structure field entry at `index` position
 		 * in the structure form with field `field` focused

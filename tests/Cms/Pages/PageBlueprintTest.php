@@ -29,7 +29,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function testExtendedOptionsFromString()
@@ -62,7 +62,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function testExtendedOptions()
@@ -98,7 +98,7 @@ class PageBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
 	}
 
 	public function numProvider()
@@ -125,7 +125,7 @@ class PageBlueprintTest extends TestCase
 			'num'   => $input
 		]);
 
-		$this->assertEquals($expected, $blueprint->num());
+		$this->assertSame($expected, $blueprint->num());
 	}
 
 	public function testStatus()
@@ -154,7 +154,7 @@ class PageBlueprintTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	public function testStatusWithCustomText()
@@ -179,7 +179,7 @@ class PageBlueprintTest extends TestCase
 			'status' => $expected,
 		]);
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	public function testStatusTranslations()
@@ -225,7 +225,7 @@ class PageBlueprintTest extends TestCase
 			'status' => $input,
 		]);
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	public function testInvalidStatus()
@@ -252,7 +252,7 @@ class PageBlueprintTest extends TestCase
 			'status' => $input,
 		]);
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	public function testExtendStatus()
@@ -305,7 +305,7 @@ class PageBlueprintTest extends TestCase
 			'status' => $input
 		]);
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	public function testExtendStatusFromString()
@@ -334,7 +334,7 @@ class PageBlueprintTest extends TestCase
 			'status' => 'status/default'
 		]);
 
-		$this->assertEquals($expected, $blueprint->status());
+		$this->assertSame($expected, $blueprint->status());
 	}
 
 	/**

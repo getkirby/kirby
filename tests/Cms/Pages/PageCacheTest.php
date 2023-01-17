@@ -90,7 +90,7 @@ class PageCacheTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($expected, $app->page('default')->isCacheable());
+		$this->assertSame($expected, $app->page('default')->isCacheable());
 	}
 
 	/**

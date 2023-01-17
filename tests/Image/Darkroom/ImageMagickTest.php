@@ -2,7 +2,7 @@
 
 namespace Kirby\Image\Darkroom;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 

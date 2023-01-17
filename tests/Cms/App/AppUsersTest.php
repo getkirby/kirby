@@ -116,40 +116,6 @@ class AppUsersTest extends TestCase
 		$this->app->impersonate('homer@simpsons.com');
 	}
 
-	/**
-	 * @todo remove in 3.9.0
-	 */
-	public function testImpersonateDeprecatedThisAsApp()
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'debug' => false
-			],
-			'site' => [
-				'content' => ['title' => 'Foo']
-			]
-		]);
-
-		$self = $this;
-		$app->impersonate('kirby', function () use ($self) {
-			$self->assertSame('Foo', (string)$this->site()->title());
-		});
-
-		// with debug mode on
-
-		$app = $this->app->clone([
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		$this->expectExceptionMessage('Calling $kirby->site() as $this->site() has been deprecated inside the $kirby->impersonate() callback function. Use a dedicated $kirby object for your call instead of $this. In Kirby 3.9.0 $this will no longer refer to the $kirby object, but the current context of the callback function.');
-
-		$app->impersonate('kirby', function () {
-			$this->site()->title();
-		});
-	}
-
 	public function testLoad()
 	{
 		$app = $this->app->clone([
@@ -159,7 +125,7 @@ class AppUsersTest extends TestCase
 		]);
 
 		$this->assertCount(1, $app->users());
-		$this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
 	public function testSet()
@@ -173,7 +139,7 @@ class AppUsersTest extends TestCase
 		]);
 
 		$this->assertCount(1, $app->users());
-		$this->assertEquals('user@getkirby.com', $app->users()->first()->email());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 
 	public function basicAuthApp()
@@ -203,7 +169,7 @@ class AppUsersTest extends TestCase
 		$user = $app->auth()->currentUserFromBasicAuth($auth);
 
 		$this->assertInstanceOf(User::class, $user);
-		$this->assertEquals('test@getkirby.com', $user->email());
+		$this->assertSame('test@getkirby.com', $user->email());
 	}
 
 	public function testUserFromBasicAuthDisabled()

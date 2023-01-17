@@ -61,7 +61,7 @@ class AuthCsrfTest extends TestCase
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
 		$_GET = ['csrf' => 'session-csrf'];
-		$this->assertEquals('session-csrf', $this->auth->csrf());
+		$this->assertSame('session-csrf', $this->auth->csrf());
 	}
 
 	/**
@@ -108,7 +108,7 @@ class AuthCsrfTest extends TestCase
 		$this->app->session()->set('kirby.csrf', 'session-csrf');
 
 		$_GET = ['csrf' => 'option-csrf'];
-		$this->assertEquals('option-csrf', $this->auth->csrf());
+		$this->assertSame('option-csrf', $this->auth->csrf());
 	}
 
 	/**

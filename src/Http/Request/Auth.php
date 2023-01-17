@@ -2,6 +2,8 @@
 
 namespace Kirby\Http\Request;
 
+use SensitiveParameter;
+
 /**
  * Base class for auth types
  *
@@ -22,8 +24,10 @@ abstract class Auth
 	/**
 	 * Constructor
 	 */
-	public function __construct(string $data)
-	{
+	public function __construct(
+		#[SensitiveParameter]
+		string $data
+	) {
 		$this->data = $data;
 	}
 

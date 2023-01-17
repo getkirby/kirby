@@ -14,11 +14,11 @@ class TranslationTest extends TestCase
 			'test'                  => 'Test'
 		]);
 
-		$this->assertEquals('Kirby', $translation->author());
-		$this->assertEquals('English', $translation->name());
-		$this->assertEquals('ltr', $translation->direction());
-		$this->assertEquals('en_GB', $translation->locale());
-		$this->assertEquals('Test', $translation->get('test'));
+		$this->assertSame('Kirby', $translation->author());
+		$this->assertSame('English', $translation->name());
+		$this->assertSame('ltr', $translation->direction());
+		$this->assertSame('en_GB', $translation->locale());
+		$this->assertSame('Test', $translation->get('test'));
 	}
 
 	public function testLoad()

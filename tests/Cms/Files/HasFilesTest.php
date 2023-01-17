@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 
 class HasFileTraitUser
 {
@@ -32,7 +34,14 @@ class HasFilesTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => $this->tmp = __DIR__ . '/tmp'
-			]
+			],
+			'users' => [
+				[
+					'email' => 'admin@domain.com',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'admin@domain.com'
 		]);
 
 		Dir::make($this->tmp);
@@ -59,6 +68,52 @@ class HasFilesTest extends TestCase
 		];
 	}
 
+	public function testCreateFile()
+	{
+		$source = $this->tmp . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		$parent = $this->app->site();
+
+		$result = $parent->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		$this->assertFileExists($source);
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.md');
+		$this->assertInstanceOf(BaseFile::class, $result->asset());
+
+		// make sure file received UUID right away
+		$this->assertIsString($result->content()->get('uuid')->value());
+	}
+
+	public function testCreateFileMove()
+	{
+		$source = $this->tmp . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		$parent = $this->app->site();
+
+		$result = $parent->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		], true);
+
+		$this->assertFileDoesNotExist($source);
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.md');
+		$this->assertInstanceOf(BaseFile::class, $result->asset());
+
+		// make sure file received UUID right away
+		$this->assertIsString($result->content()->get('uuid')->value());
+	}
+
 	public function testFileWithSlash()
 	{
 		$page = new Page([
@@ -74,7 +129,7 @@ class HasFilesTest extends TestCase
 		]);
 
 		$file = $page->file('child/file.jpg');
-		$this->assertEquals('mother/child/file.jpg', $file->id());
+		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
 	/**
@@ -110,7 +165,7 @@ class HasFilesTest extends TestCase
 			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
-		$this->assertEquals($expected, $parent->{'has' . $type}());
+		$this->assertSame($expected, $parent->{'has' . $type}());
 	}
 
 	public function testHasFiles()

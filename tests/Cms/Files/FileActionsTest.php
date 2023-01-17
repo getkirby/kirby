@@ -109,7 +109,7 @@ class FileActionsTest extends TestCase
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
-		$this->assertEquals('test.csv', $result->filename());
+		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->contentFile());
 	}
@@ -145,7 +145,7 @@ class FileActionsTest extends TestCase
 		$result = $file->changeName('test');
 
 		$this->assertNotEquals($file->root(), $result->root());
-		$this->assertEquals('test.csv', $result->filename());
+		$this->assertSame('test.csv', $result->filename());
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->contentFile('en'));
 		$this->assertFileExists($result->contentFile('de'));
@@ -193,6 +193,32 @@ class FileActionsTest extends TestCase
 			'parent'   => $parent
 		]);
 
+		$this->assertFileExists($source);
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.md');
+		$this->assertInstanceOf(BaseFile::class, $result->asset());
+
+		// make sure file received UUID right away
+		$this->assertIsString($result->content()->get('uuid')->value());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testCreateMove($parent)
+	{
+		$source = $this->tmp . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent
+		], true);
+
+		$this->assertFileDoesNotExist($source);
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
 		$this->assertInstanceOf(BaseFile::class, $result->asset());
@@ -230,8 +256,8 @@ class FileActionsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('A', $result->a()->value());
-		$this->assertEquals('B', $result->b()->value());
+		$this->assertSame('A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
 	}
 
 	/**
@@ -266,8 +292,8 @@ class FileActionsTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('Custom A', $result->a()->value());
-		$this->assertEquals('B', $result->b()->value());
+		$this->assertSame('Custom A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
 	}
 
 	/**
@@ -305,7 +331,7 @@ class FileActionsTest extends TestCase
 				'file.create:after' => function (File $file) use (&$after, $phpunit) {
 					$phpunit->assertTrue($file->siblings(true)->has($file));
 					$phpunit->assertTrue($file->parent()->files()->has($file));
-					$phpunit->assertEquals('test.md', $file->filename());
+					$phpunit->assertSame('test.md', $file->filename());
 
 					$after = true;
 				}
@@ -379,12 +405,45 @@ class FileActionsTest extends TestCase
 			'parent'   => $parent
 		]);
 
-		$this->assertEquals(F::read($original), F::read($originalFile->root()));
+		$this->assertFileExists($original);
+		$this->assertSame(F::read($original), F::read($originalFile->root()));
 		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement);
 
-		$this->assertEquals(F::read($replacement), F::read($replacedFile->root()));
+		$this->assertFileExists($original);
+		$this->assertFileExists($replacement);
+		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
+		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testReplaceMove($parent)
+	{
+		$original    = $this->tmp . '/original.md';
+		$replacement = $this->tmp . '/replacement.md';
+
+		// create the dummy files
+		F::write($original, '# Original');
+		F::write($replacement, '# Replacement');
+
+		$originalFile = File::create([
+			'filename' => 'test.md',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$this->assertFileExists($original);
+		$this->assertSame(F::read($original), F::read($originalFile->root()));
+		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
+
+		$replacedFile = $originalFile->replace($replacement, true);
+
+		$this->assertFileExists($original);
+		$this->assertFileDoesNotExist($replacement);
+		$this->assertSame('# Replacement', F::read($replacedFile->root()));
 		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
@@ -451,7 +510,7 @@ class FileActionsTest extends TestCase
 			'caption' => $caption = 'test'
 		]);
 
-		$this->assertEquals($caption, $file->caption()->value());
+		$this->assertSame($caption, $file->caption()->value());
 	}
 
 	public function testChangeNameHooks()

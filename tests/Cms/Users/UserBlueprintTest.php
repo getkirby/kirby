@@ -16,7 +16,7 @@ class UserBlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('User', $blueprint->description());
+		$this->assertSame('User', $blueprint->description());
 	}
 
 	public function testOptions()
@@ -36,6 +36,6 @@ class UserBlueprintTest extends TestCase
 			'update'         => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertSame($expected, $blueprint->options());
 	}
 }

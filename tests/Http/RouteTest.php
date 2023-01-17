@@ -19,10 +19,10 @@ class RouteTest extends TestCase
 			return 'test';
 		});
 
-		$this->assertEquals('', $route->pattern());
-		$this->assertEquals('POST', $route->method());
-		$this->assertEquals($func, $route->action());
-		$this->assertEquals('test', $route->action()->call($route));
+		$this->assertSame('', $route->pattern());
+		$this->assertSame('POST', $route->method());
+		$this->assertSame($func, $route->action());
+		$this->assertSame('test', $route->action()->call($route));
 	}
 
 	public function testName()
@@ -32,7 +32,7 @@ class RouteTest extends TestCase
 			'name' => 'test'
 		]);
 
-		$this->assertEquals('test', $route->name());
+		$this->assertSame('test', $route->name());
 	}
 
 	public function testAttributes()
@@ -43,7 +43,7 @@ class RouteTest extends TestCase
 			'b' => 'b'
 		]);
 
-		$this->assertEquals($attributes, $route->attributes());
+		$this->assertSame($attributes, $route->attributes());
 	}
 
 	public function testAttributesGetter()
@@ -53,35 +53,35 @@ class RouteTest extends TestCase
 			'a' => 'a'
 		]);
 
-		$this->assertEquals('a', $route->a());
-		$this->assertEquals(null, $route->b());
+		$this->assertSame('a', $route->a());
+		$this->assertNull($route->b());
 	}
 
 	public function testPattern()
 	{
 		$route = $this->_route();
-		$this->assertEquals('a', $route->pattern());
+		$this->assertSame('a', $route->pattern());
 	}
 
 	public function testMethod()
 	{
 		$route = $this->_route();
-		$this->assertEquals('GET', $route->method());
+		$this->assertSame('GET', $route->method());
 	}
 
 	public function testRegex()
 	{
 		$route = $this->_route();
-		$this->assertEquals('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
-		$this->assertEquals('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
-		$this->assertEquals('a/([a-zA-Z0-9]+)/b', $route->regex('a/(:alphanum)/b'));
-		$this->assertEquals('a/([a-zA-Z0-9\.\-_%= \+\@\(\)]+)/b', $route->regex('a/(:any)/b'));
-		$this->assertEquals('a/(.*)', $route->regex('a/(:all)'));
-		$this->assertEquals('a(?:/(-?[0-9]+))?', $route->regex('a/(:num?)'));
-		$this->assertEquals('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
-		$this->assertEquals('a(?:/([a-zA-Z0-9]+))?', $route->regex('a/(:alphanum?)'));
-		$this->assertEquals('a(?:/([a-zA-Z0-9\.\-_%= \+\@\(\)]+))?', $route->regex('a/(:any?)'));
-		$this->assertEquals('a(?:/(.*))?', $route->regex('a/(:all?)'));
+		$this->assertSame('a/(-?[0-9]+)/b', $route->regex('a/(:num)/b'));
+		$this->assertSame('a/([a-zA-Z]+)/b', $route->regex('a/(:alpha)/b'));
+		$this->assertSame('a/([a-zA-Z0-9]+)/b', $route->regex('a/(:alphanum)/b'));
+		$this->assertSame('a/([a-zA-Z0-9\.\-_%= \+\@\(\)]+)/b', $route->regex('a/(:any)/b'));
+		$this->assertSame('a/(.*)', $route->regex('a/(:all)'));
+		$this->assertSame('a(?:/(-?[0-9]+))?', $route->regex('a/(:num?)'));
+		$this->assertSame('a(?:/([a-zA-Z]+))?', $route->regex('a/(:alpha?)'));
+		$this->assertSame('a(?:/([a-zA-Z0-9]+))?', $route->regex('a/(:alphanum?)'));
+		$this->assertSame('a(?:/([a-zA-Z0-9\.\-_%= \+\@\(\)]+))?', $route->regex('a/(:any?)'));
+		$this->assertSame('a(?:/(.*))?', $route->regex('a/(:all?)'));
 	}
 
 	public function patternProvider()
@@ -125,9 +125,9 @@ class RouteTest extends TestCase
 
 		if ($match === true) {
 			// required
-			$this->assertEquals([$input], $route->parse('(' . $pattern . ')', $input));
+			$this->assertSame([$input], $route->parse('(' . $pattern . ')', $input));
 			// optional
-			$this->assertEquals([$input], $route->parse('/(' . $pattern . '?)', '/' . $input));
+			$this->assertSame([$input], $route->parse('/(' . $pattern . '?)', '/' . $input));
 		} else {
 			// required
 			$this->assertFalse($route->parse('(' . $pattern . ')', $input));

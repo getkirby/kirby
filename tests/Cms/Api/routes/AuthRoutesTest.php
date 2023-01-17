@@ -35,7 +35,7 @@ class AuthRoutesTest extends TestCase
 
 		$response = $this->app->api()->call('auth');
 
-		$this->assertEquals('kirby@getkirby.com', $response['data']['email']);
+		$this->assertSame('kirby@getkirby.com', $response['data']['email']);
 	}
 
 	public function testLoginWithoutCSRF()

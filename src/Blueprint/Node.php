@@ -13,7 +13,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage in 3.9
+ * // TODO: include in test coverage in 3.10
  * @codeCoverageIgnore
  */
 class Node
@@ -52,7 +52,6 @@ class Node
 		$props = static::polyfill($props);
 		return Factory::make(static::class, $props);
 	}
-
 
 	public static function load(string|array $props): static
 	{

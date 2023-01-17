@@ -23,7 +23,7 @@ class FileBlueprintTest extends TestCase
 			'update'     => null,
 		];
 
-		$this->assertEquals($expected, $blueprint->options());
+		$this->assertSame($expected, $blueprint->options());
 	}
 
 	public function testTemplateFromContent()
@@ -40,7 +40,7 @@ class FileBlueprintTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals('gallery', $file->template());
+		$this->assertSame('gallery', $file->template());
 	}
 
 	public function testCustomTemplate()
@@ -55,7 +55,7 @@ class FileBlueprintTest extends TestCase
 			'template' => 'gallery'
 		]);
 
-		$this->assertEquals('gallery', $file->template());
+		$this->assertSame('gallery', $file->template());
 	}
 
 	public function testDefaultBlueprint()
@@ -99,7 +99,7 @@ class FileBlueprintTest extends TestCase
 		$blueprint = $file->blueprint();
 
 		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
-		$this->assertEquals('Gallery', $blueprint->title());
+		$this->assertSame('Gallery', $blueprint->title());
 	}
 
 	public function testAccept()
@@ -369,6 +369,6 @@ class FileBlueprintTest extends TestCase
 		]);
 
 		$blueprint = $file->blueprint();
-		$this->assertEquals(['image/jpeg'], $blueprint->accept()['mime']);
+		$this->assertSame(['image/jpeg'], $blueprint->accept()['mime']);
 	}
 }

@@ -39,12 +39,12 @@ class PageMethodsTest extends TestCase
 	public function testPageMethod()
 	{
 		$page = $this->app->page('test');
-		$this->assertEquals('page method', $page->test());
+		$this->assertSame('page method', $page->test());
 	}
 
 	public function testPagesMethod()
 	{
 		$pages = $this->app->site()->children();
-		$this->assertEquals('pages method', $pages->test());
+		$this->assertSame('pages method', $pages->test());
 	}
 }

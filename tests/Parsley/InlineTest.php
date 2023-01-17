@@ -95,7 +95,7 @@ class InlineTest extends TestCase
 		$comment = $dom->childNodes[1];
 		$html    = Inline::parseNode($comment);
 
-		$this->assertSame(null, $html);
+		$this->assertNull($html);
 	}
 
 	/**

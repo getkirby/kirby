@@ -13,6 +13,6 @@ class NextRouteExceptionTest extends TestCase
 	{
 		$exception = new NextRouteException('test');
 		$this->assertInstanceOf(\Exception::class, $exception);
-		$this->assertEquals('test', $exception->getMessage());
+		$this->assertSame('test', $exception->getMessage());
 	}
 }

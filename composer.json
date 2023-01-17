@@ -3,7 +3,7 @@
 	"description": "The Kirby 3 core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "3.8.4",
+	"version": "3.9.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": ">=8.0.0 <8.2.0",
+		"php": ">=8.0.0 <8.3.0",
 		"ext-SimpleXML": "*",
 		"ext-ctype": "*",
 		"ext-curl": "*",
@@ -36,15 +36,15 @@
 		"ext-libxml": "*",
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
-		"claviska/simpleimage": "3.7.0",
+		"claviska/simpleimage": "3.7.2",
 		"composer/semver": "3.3.2",
 		"filp/whoops": "2.14.6",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.12.0",
 		"michelf/php-smartypants": "1.8.1",
-		"phpmailer/phpmailer": "6.6.5",
-		"symfony/polyfill-intl-idn": "1.26.0",
-		"symfony/polyfill-mbstring": "1.26.0"
+		"phpmailer/phpmailer": "6.7.1",
+		"symfony/polyfill-intl-idn": "1.27.0",
+		"symfony/polyfill-mbstring": "1.27.0"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -105,7 +105,8 @@
 			"@test"
 		],
 		"fix": "php-cs-fixer fix",
-		"test": "phpunit --stderr --coverage-html=tests/coverage",
+		"test": "phpunit --stderr",
+		"test:coverage": "phpunit --stderr --coverage-html=tests/coverage",
 		"zip": "composer archive --format=zip --file=dist"
 	}
 }

@@ -10,6 +10,7 @@ use Kirby\Filesystem\F;
 use Kirby\Panel\User as Panel;
 use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
+use SensitiveParameter;
 
 /**
  * The `$user` object represents a
@@ -274,11 +275,11 @@ class User extends ModelWithContent
 	 * which will leave it as `null`
 	 *
 	 * @internal
-	 * @param string|null $password
-	 * @return string|null
 	 */
-	public static function hashPassword($password): string|null
-	{
+	public static function hashPassword(
+		#[SensitiveParameter]
+		string $password = null
+	): string|null {
 		if ($password !== null) {
 			$password = password_hash($password, PASSWORD_DEFAULT);
 		}
@@ -372,8 +373,9 @@ class User extends ModelWithContent
 	 */
 	public function isLastAdmin(): bool
 	{
-		return $this->role()->isAdmin() === true &&
-			   $this->kirby()->users()->filter('role', 'admin')->count() <= 1;
+		return
+			$this->role()->isAdmin() === true &&
+			$this->kirby()->users()->filter('role', 'admin')->count() <= 1;
 	}
 
 	/**
@@ -410,12 +412,13 @@ class User extends ModelWithContent
 	/**
 	 * Logs the user in
 	 *
-	 * @param string $password
 	 * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
-	 * @return bool
 	 */
-	public function login(string $password, $session = null): bool
-	{
+	public function login(
+		#[SensitiveParameter]
+		string $password,
+		$session = null
+	): bool {
 		$this->validatePassword($password);
 		$this->loginPasswordless($session);
 
@@ -750,11 +753,12 @@ class User extends ModelWithContent
 	/**
 	 * Sets the user's password hash
 	 *
-	 * @param string $password|null
 	 * @return $this
 	 */
-	protected function setPassword(string $password = null)
-	{
+	protected function setPassword(
+		#[SensitiveParameter]
+		string $password = null
+	): static {
 		$this->password = $password;
 		return $this;
 	}
@@ -848,15 +852,14 @@ class User extends ModelWithContent
 	/**
 	 * Compares the given password with the stored one
 	 *
-	 * @param string $password|null
-	 * @return bool
-	 *
 	 * @throws \Kirby\Exception\NotFoundException If the user has no password
 	 * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
 	 *                                                   or does not match the user password
 	 */
-	public function validatePassword(string $password = null): bool
-	{
+	public function validatePassword(
+		#[SensitiveParameter]
+		string $password = null
+	): bool {
 		if (empty($this->password()) === true) {
 			throw new NotFoundException(['key' => 'user.password.undefined']);
 		}

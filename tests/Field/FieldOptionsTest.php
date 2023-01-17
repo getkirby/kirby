@@ -22,6 +22,7 @@ class FieldOptionsTest extends TestCase
 			'url' => $url = 'https://api.getkirby.com'
 		]);
 		$this->assertInstanceOf(OptionsApi::class, $options->options);
+		$this->assertTrue($options->safeMode);
 		$this->assertSame($url, $options->options->url);
 
 		$options = FieldOptions::factory([
@@ -29,11 +30,24 @@ class FieldOptionsTest extends TestCase
 			'query' => $query = 'site.children'
 		]);
 		$this->assertInstanceOf(OptionsQuery::class, $options->options);
+		$this->assertTrue($options->safeMode);
 		$this->assertSame($query, $options->options->query);
 
-		$options = FieldOptions::factory(['type'  => 'array', 'options' => ['a', 'b']]);
+		$options = FieldOptions::factory(['type' => 'array', 'options' => ['a', 'b']]);
 		$this->assertInstanceOf(Options::class, $options->options);
-		$this->assertSame(2, $options->options->count());
+		$this->assertTrue($options->safeMode);
+		$this->assertCount(2, $options->options);
+
+		$options = FieldOptions::factory(
+			[
+				'type'  => 'query',
+				'query' => $query = 'site.children'
+			],
+			false
+		);
+		$this->assertInstanceOf(OptionsQuery::class, $options->options);
+		$this->assertFalse($options->safeMode);
+		$this->assertSame($query, $options->options->query);
 	}
 
 	/**
@@ -76,11 +90,25 @@ class FieldOptionsTest extends TestCase
 
 		$options = FieldOptions::factory([
 			'type'  => 'api',
-			'url'   =>  __DIR__ . '/../Option/fixtures/data.json',
-			'query' => 'Directory.Companies'
+			'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
+			'query' => 'Directory.Companies',
+			'text'  => '{{ item.slogan }}'
 		]);
 		$this->assertInstanceOf(Options::class, $options->resolve($model));
-		$this->assertSame('a', $options->render($model)[0]['value']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $options->render($model)[0]['text']);
+
+		// without safe mode
+		$options = FieldOptions::factory(
+			[
+				'type'  => 'api',
+				'url'   =>  __DIR__ . '/../Option/fixtures/data-nested.json',
+				'query' => 'Directory.Companies',
+				'text'  => '{{ item.slogan }}'
+			],
+			false
+		);
+		$this->assertInstanceOf(Options::class, $options->resolve($model));
+		$this->assertSame('We are <b>great</b>', $options->render($model)[0]['text']);
 
 		$options = FieldOptions::factory([
 			'type'  => 'query',

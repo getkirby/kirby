@@ -65,7 +65,7 @@ class AuthTest extends TestCase
 	 */
 	public function testImpersonate()
 	{
-		$this->assertSame(null, $this->auth->user());
+		$this->assertNull($this->auth->user());
 
 		$user = $this->auth->impersonate('kirby');
 		$this->assertSame([

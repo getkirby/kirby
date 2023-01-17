@@ -121,12 +121,12 @@ class PHPMailerTest extends TestCase
 			'beforeSend' => function (\PHPMailer\PHPMailer\PHPMailer $mailer) use ($phpunit, &$beforeSend) {
 				$phpunit->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
 				$phpunit->assertSame('smtp', $mailer->Mailer);
-				$phpunit->assertSame(null, $mailer->Host);
-				$phpunit->assertSame(false, $mailer->SMTPAuth);
-				$phpunit->assertSame(null, $mailer->Username);
-				$phpunit->assertSame(null, $mailer->Password);
+				$phpunit->assertNull($mailer->Host);
+				$phpunit->assertFalse($mailer->SMTPAuth);
+				$phpunit->assertNull($mailer->Username);
+				$phpunit->assertNull($mailer->Password);
 				$phpunit->assertSame('ssl', $mailer->SMTPSecure);
-				$phpunit->assertSame(null, $mailer->Port);
+				$phpunit->assertNull($mailer->Port);
 
 				$beforeSend = true;
 			}

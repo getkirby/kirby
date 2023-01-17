@@ -8,16 +8,16 @@ class SlugFieldTest extends TestCase
 	{
 		$field = $this->field('slug');
 
-		$this->assertEquals('slug', $field->type());
-		$this->assertEquals('slug', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals('url', $field->icon());
-		$this->assertEquals('', $field->allow());
-		$this->assertEquals(null, $field->path());
-		$this->assertEquals(null, $field->sync());
-		$this->assertEquals(null, $field->placeholder());
-		$this->assertEquals(null, $field->counter());
-		$this->assertEquals(false, $field->wizard());
+		$this->assertSame('slug', $field->type());
+		$this->assertSame('slug', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame('url', $field->icon());
+		$this->assertSame('', $field->allow());
+		$this->assertNull($field->path());
+		$this->assertNull($field->sync());
+		$this->assertNull($field->placeholder());
+		$this->assertNull($field->counter());
+		$this->assertFalse($field->wizard());
 		$this->assertTrue($field->save());
 	}
 }

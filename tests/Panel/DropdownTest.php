@@ -106,7 +106,7 @@ class DropdownTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $options);
+		$this->assertEquals($expected, $options); // cannot use strict assertion (array order)
 	}
 
 	/**
@@ -141,7 +141,7 @@ class DropdownTest extends TestCase
 			]
 		];
 
-		$this->assertEquals($expected, $options);
+		$this->assertSame($expected, $options);
 	}
 
 	/**
@@ -185,7 +185,7 @@ class DropdownTest extends TestCase
 			],
 		];
 
-		$this->assertEquals($expected, $options);
+		$this->assertSame($expected, $options);
 	}
 
 	/**

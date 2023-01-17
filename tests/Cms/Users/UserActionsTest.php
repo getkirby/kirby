@@ -115,7 +115,8 @@ class UserActionsTest extends TestCase
 		$user = $this->app->user('editor@domain.com');
 		$user = $user->changeRole('editor');
 
-		$this->assertEquals('editor', $user->role());
+		$this->assertInstanceOf(Role::class, $user->role());
+		$this->assertSame('editor', $user->role()->name());
 	}
 
 	public function testCreateAdmin()
@@ -128,7 +129,8 @@ class UserActionsTest extends TestCase
 		$this->assertTrue($user->exists());
 
 		$this->assertSame('new@domain.com', $user->email());
-		$this->assertEquals('admin', $user->role());
+		$this->assertInstanceOf(Role::class, $user->role());
+		$this->assertSame('admin', $user->role()->name());
 	}
 
 	public function testCreateUserWithUnicodeEmail()
@@ -164,7 +166,8 @@ class UserActionsTest extends TestCase
 		$this->assertTrue($user->exists());
 
 		$this->assertSame('new@domain.com', $user->email());
-		$this->assertEquals('editor', $user->role());
+		$this->assertInstanceOf(Role::class, $user->role());
+		$this->assertSame('editor', $user->role()->name());
 	}
 
 	public function testCreateWithContent()

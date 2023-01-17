@@ -2,6 +2,8 @@
 
 namespace Kirby\Image;
 
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase as TestCase;
@@ -30,23 +32,23 @@ class ImageTest extends TestCase
 
 		// svg with width and height
 		$file = $this->_image('square.svg');
-		$this->assertEquals(100, $file->dimensions()->width());
-		$this->assertEquals(100, $file->dimensions()->height());
+		$this->assertSame(100, $file->dimensions()->width());
+		$this->assertSame(100, $file->dimensions()->height());
 
 		// svg with viewBox
 		$file = $this->_image('circle.svg');
-		$this->assertEquals(50, $file->dimensions()->width());
-		$this->assertEquals(50, $file->dimensions()->height());
+		$this->assertSame(50, $file->dimensions()->width());
+		$this->assertSame(50, $file->dimensions()->height());
 
 		// webp
 		$file = $this->_image('valley.webp');
-		$this->assertEquals(550, $file->dimensions()->width());
-		$this->assertEquals(368, $file->dimensions()->height());
+		$this->assertSame(550, $file->dimensions()->width());
+		$this->assertSame(368, $file->dimensions()->height());
 
 		// non-image file
 		$file = $this->_image('blank.pdf');
-		$this->assertEquals(0, $file->dimensions()->width());
-		$this->assertEquals(0, $file->dimensions()->height());
+		$this->assertSame(0, $file->dimensions()->width());
+		$this->assertSame(0, $file->dimensions()->height());
 
 		// cached object
 		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
@@ -79,6 +81,20 @@ class ImageTest extends TestCase
 	{
 		$file = $this->_image();
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'cat.jpg',
+			'parent'   => $page,
+			'content'  => ['alt' => 'Test text']
+		]);
+		$image = new Image([
+			'root'  => __DIR__ . '/fixtures/image/cat.jpg',
+			'url'   => 'https://foo.bar/cat.jpg',
+			'model' => $file
+		]);
+
+		$this->assertSame('<img alt="Test text" src="https://foo.bar/cat.jpg">', $image->html());
 	}
 
 	/**
@@ -203,7 +219,7 @@ class ImageTest extends TestCase
 	public function testRatio()
 	{
 		$image  = $this->_image();
-		$this->assertEquals(1.0, $image->ratio());
+		$this->assertSame(1.0, $image->ratio());
 	}
 
 	/**

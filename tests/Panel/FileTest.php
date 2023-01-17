@@ -345,7 +345,7 @@ class FileTest extends TestCase
 		$this->assertSame('orange-400', $image['color']);
 		$this->assertSame('3/2', $image['ratio']);
 		$this->assertSame('pattern', $image['back']);
-		$this->assertTrue(array_key_exists('url', $image));
+		$this->assertArrayHasKey('url', $image);
 	}
 
 	/**

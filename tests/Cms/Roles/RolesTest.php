@@ -20,8 +20,8 @@ class RolesTest extends TestCase
 
 		// should contain the editor role from fixtures and the default admin role
 		$this->assertCount(2, $roles);
-		$this->assertEquals('admin', $roles->first()->name());
-		$this->assertEquals('editor', $roles->last()->name());
+		$this->assertSame('admin', $roles->first()->name());
+		$this->assertSame('editor', $roles->last()->name());
 	}
 
 	public function testLoad()
@@ -32,8 +32,8 @@ class RolesTest extends TestCase
 
 		// should contain the editor role from fixtures and the default admin role
 		$this->assertCount(2, $roles);
-		$this->assertEquals('admin', $roles->first()->name());
-		$this->assertEquals('editor', $roles->last()->name());
+		$this->assertSame('admin', $roles->first()->name());
+		$this->assertSame('editor', $roles->last()->name());
 	}
 
 	public function testLoadFromPlugins()
@@ -54,8 +54,8 @@ class RolesTest extends TestCase
 		$roles = Roles::load();
 
 		$this->assertCount(2, $roles);
-		$this->assertEquals('admin', $roles->first()->name());
-		$this->assertEquals('editor', $roles->last()->name());
+		$this->assertSame('admin', $roles->first()->name());
+		$this->assertSame('editor', $roles->last()->name());
 	}
 
 	public function testLoadFromPluginsCallbackString()

@@ -35,8 +35,8 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->site(), $file->mediaHash(), $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(200, $result->code());
-		$this->assertEquals('image/svg+xml', $result->type());
+		$this->assertSame(200, $result->code());
+		$this->assertSame('image/svg+xml', $result->type());
 	}
 
 	public function testLinkPageFile()
@@ -47,8 +47,8 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->page('projects'), $file->mediaHash(), $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(200, $result->code());
-		$this->assertEquals('image/svg+xml', $result->type());
+		$this->assertSame(200, $result->code());
+		$this->assertSame('image/svg+xml', $result->type());
 	}
 
 	public function testLinkWithInvalidHash()
@@ -60,7 +60,7 @@ class MediaTest extends TestCase
 		$result = Media::link($this->app->page('projects'), $file->mediaToken() . '-12345', $file->filename());
 
 		$this->assertInstanceOf(Response::class, $result);
-		$this->assertEquals(307, $result->code());
+		$this->assertSame(307, $result->code());
 
 		// with a completely invalid hash
 		$file   = $this->app->file('projects/test.svg');
@@ -97,13 +97,13 @@ class MediaTest extends TestCase
 		$this->assertTrue(Media::publish($file, $dest = $versionB2 . '/test.jpg'));
 
 		// the file should be copied
-		$this->assertTrue(is_dir($versionB2));
-		$this->assertTrue(is_file($dest));
+		$this->assertDirectoryExists($versionB2);
+		$this->assertFileExists($dest);
 
 		// older versions should be removed
-		$this->assertFalse(is_dir($versionA1));
-		$this->assertFalse(is_dir($versionA2));
-		$this->assertFalse(is_dir($versionB1));
+		$this->assertDirectoryDoesNotExist($versionA1);
+		$this->assertDirectoryDoesNotExist($versionA2);
+		$this->assertDirectoryDoesNotExist($versionB1);
 	}
 
 	public function testUnpublish()
@@ -128,17 +128,17 @@ class MediaTest extends TestCase
 		Dir::make($versionB1 = $directory . '/' . $newToken . '-1234');
 		Dir::make($versionB2 = $directory . '/' . $newToken . '-5678');
 
-		$this->assertTrue(is_dir($versionA1));
-		$this->assertTrue(is_dir($versionA2));
-		$this->assertTrue(is_dir($versionB1));
-		$this->assertTrue(is_dir($versionB2));
+		$this->assertDirectoryExists($versionA1);
+		$this->assertDirectoryExists($versionA2);
+		$this->assertDirectoryExists($versionB1);
+		$this->assertDirectoryExists($versionB2);
 
 		Media::unpublish($directory, $file);
 
-		$this->assertFalse(is_dir($versionA1));
-		$this->assertFalse(is_dir($versionA2));
-		$this->assertFalse(is_dir($versionB1));
-		$this->assertFalse(is_dir($versionB2));
+		$this->assertDirectoryDoesNotExist($versionA1);
+		$this->assertDirectoryDoesNotExist($versionA2);
+		$this->assertDirectoryDoesNotExist($versionB1);
+		$this->assertDirectoryDoesNotExist($versionB2);
 	}
 
 	public function testUnpublishAndIgnore()
@@ -163,17 +163,17 @@ class MediaTest extends TestCase
 		Dir::make($versionB1 = $directory . '/' . $newToken . '-1234');
 		Dir::make($versionB2 = $directory . '/' . $newToken . '-5678');
 
-		$this->assertTrue(is_dir($versionA1));
-		$this->assertTrue(is_dir($versionA2));
-		$this->assertTrue(is_dir($versionB1));
-		$this->assertTrue(is_dir($versionB2));
+		$this->assertDirectoryExists($versionA1);
+		$this->assertDirectoryExists($versionA2);
+		$this->assertDirectoryExists($versionB1);
+		$this->assertDirectoryExists($versionB2);
 
 		Media::unpublish($directory, $file, $versionB1);
 
-		$this->assertTrue(is_dir($versionB1));
-		$this->assertFalse(is_dir($versionA1));
-		$this->assertFalse(is_dir($versionA2));
-		$this->assertFalse(is_dir($versionB2));
+		$this->assertDirectoryExists($versionB1);
+		$this->assertDirectoryDoesNotExist($versionA1);
+		$this->assertDirectoryDoesNotExist($versionA2);
+		$this->assertDirectoryDoesNotExist($versionB2);
 	}
 
 	public function testUnpublishNonExistingDirectory()

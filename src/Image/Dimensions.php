@@ -2,6 +2,8 @@
 
 namespace Kirby\Image;
 
+use Kirby\Toolkit\Str;
+
 /**
  * The Dimension class is used to provide additional
  * methods for images and possibly other objects with
@@ -253,12 +255,28 @@ class Dimensions
 
 		if ($xml !== false) {
 			$attr   = $xml->attributes();
-			$width  = (int)($attr->width);
-			$height = (int)($attr->height);
-			if (($width === 0 || $height === 0) && empty($attr->viewBox) === false) {
-				$box    = explode(' ', $attr->viewBox);
-				$width  = (int)($box[2] ?? 0);
-				$height = (int)($box[3] ?? 0);
+
+			$rawWidth  = $attr->width;
+			$width     = (int)$rawWidth;
+			$rawHeight = $attr->height;
+			$height    = (int)$rawHeight;
+
+			// use viewbox values if direct attributes are 0
+			// or based on percentages
+			if (empty($attr->viewBox) === false) {
+				$box = explode(' ', $attr->viewBox);
+
+				// when using viewbox values, make sure to subtract
+				// first two box values from last two box values
+				// to retrieve the absolute dimensions
+
+				if (Str::endsWith($rawWidth, '%') === true || $width === 0) {
+					$width = (int)($box[2] ?? 0) - (int)($box[0] ?? 0);
+				}
+
+				if (Str::endsWith($rawHeight, '%') === true || $height === 0) {
+					$height = (int)($box[3] ?? 0) - (int)($box[1] ?? 0);
+				}
 			}
 		}
 

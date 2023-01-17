@@ -8,14 +8,14 @@ class TimeFieldTest extends TestCase
 	{
 		$field = $this->field('time');
 
-		$this->assertEquals('time', $field->type());
-		$this->assertEquals('time', $field->name());
-		$this->assertEquals(null, $field->value());
-		$this->assertEquals(null, $field->default());
-		$this->assertEquals('HH:mm', $field->display());
-		$this->assertEquals('clock', $field->icon());
-		$this->assertEquals(24, $field->notation());
-		$this->assertEquals(['size' => 5, 'unit' => 'minute'], $field->step());
+		$this->assertSame('time', $field->type());
+		$this->assertSame('time', $field->name());
+		$this->assertSame('', $field->value());
+		$this->assertSame('', $field->default());
+		$this->assertSame('HH:mm', $field->display());
+		$this->assertSame('clock', $field->icon());
+		$this->assertSame(24, $field->notation());
+		$this->assertSame(['size' => 5, 'unit' => 'minute'], $field->step());
 		$this->assertTrue($field->save());
 	}
 
