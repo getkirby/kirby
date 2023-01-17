@@ -24,7 +24,24 @@
 					</k-dropdown>
 
 					<template v-if="currentType.finder">
-						<div>{{ value.link }}</div>
+						<div class="k-link-field-preview">
+							<k-tag
+								v-if="link.length && model"
+								:removable="true"
+								@click.native="toggleFinder()"
+								@remove="remove()"
+							>
+								<k-item-image :image="model.image" layout="list" />
+								{{ model.title }}
+							</k-tag>
+							<k-button
+								v-else
+								class="k-link-field-placeholder"
+								@click="toggleFinder()"
+							>
+								{{ currentType.placeholder }}
+							</k-button>
+						</div>
 					</template>
 					<template v-else>
 						<input
@@ -32,7 +49,7 @@
 							ref="input"
 							:placeholder="currentType.placeholder"
 							:type="currentType.input"
-							:value="value.link"
+							:value="link"
 							@input="currentType.onInput($event.target.value)"
 						/>
 					</template>
@@ -55,42 +72,62 @@
 
 			<template v-if="state === 'settings'">
 				<div class="k-link-field-settings">
-					<k-form :fields="settingsFields" :value="value" @input="onSettings" />
+					<k-form
+						:fields="settingsFields"
+						:value="value || {}"
+						@input="onSettings"
+					/>
 				</div>
 			</template>
 
-			<template v-else-if="currentType.finder">
+			<template v-else-if="currentType.finder && state === 'finder'">
 				<div class="k-link-field-body">
 					<div class="k-link-field-breadcrumb">
-						<k-button icon="home" @click="find()" />
+						<k-button icon="home" @click="openFinder('')" />
 						<k-button
 							v-for="crumb in finder.crumb"
 							:key="crumb.uuid"
-							@click="find(crumb.uuid)"
+							@click="openFinder(crumb.uuid)"
 						>
 							{{ crumb.title }}
 						</k-button>
 					</div>
 					<div class="k-link-field-finder">
 						<ul>
-							<!-- <li v-if="finder.parent?.root === false">
-								<k-button icon="folder" @click="find(finder.parent?.uuid)">
+							<li v-if="finder.parent?.root === false">
+								<k-button
+									class="k-link-field-finder-item"
+									icon="folder"
+									@click="openFinder(finder.parent.uuid)"
+								>
 									..
 								</k-button>
-							</li> -->
+							</li>
 							<li
 								v-for="item in finder.children"
 								:key="item.uuid"
-								:aria-current="item.uuid === value.link"
+								:aria-current="item.uuid === link"
 							>
 								<k-button
-									icon="angle-right"
-									@click="find(item.uuid)"
-									:disabled="!item.children"
+									class="k-link-field-finder-icon"
+									:icon="item.icon"
+									@click="
+										item.type === 'file' ? select(item) : openFinder(item.uuid)
+									"
+									tabindex="-1"
 								/>
-								<k-button :icon="item.icon" @click="select(item)">
+								<k-button
+									class="k-link-field-finder-item"
+									@click="select(item)"
+								>
 									{{ item.title }}
 								</k-button>
+								<k-button
+									v-if="item.children"
+									class="k-link-field-finder-arrow"
+									icon="angle-right"
+									@click="openFinder(item.uuid)"
+								/>
 							</li>
 						</ul>
 					</div>
@@ -118,17 +155,22 @@ export default {
 		return {
 			isLoading: false,
 			finder: {},
-			memory: {},
+			model: null,
 			state: null
 		};
 	},
 	created() {
 		this.search = this.$helper.debounce(this.search, 250);
-		this.find();
 	},
 	computed: {
 		currentType() {
-			return this.types[this.value?.type] || this.types["url"];
+			return this.types[this.linkType] || this.types["url"];
+		},
+		link() {
+			return this.value?.link || "";
+		},
+		linkType() {
+			return this.value?.type || "url";
 		},
 		settingsFields() {
 			return {
@@ -199,7 +241,7 @@ export default {
 				file: {
 					icon: "file",
 					label: this.$t("file"),
-					placeholder: "Search for a file …",
+					placeholder: "Select a file …",
 					input: "text",
 					scheme: "file://",
 					search: "files",
@@ -210,75 +252,92 @@ export default {
 		}
 	},
 	watch: {
-		"value.type": {
+		link: {
 			immediate: true,
-			handler(newValue, oldValue) {
-				if (newValue === oldValue) {
+			async handler(newValue, oldValue) {
+				if (newValue === oldValue || newValue?.length === 0) {
 					return;
 				}
 
-				const type = this.value?.type;
-
-				if (["page", "file"].includes(type)) {
-					this.find(this.value?.link);
+				if (["page", "file"].includes(this.linkType) === false) {
+					return;
 				}
+
+				this.model = null;
+				this.model = await this.$api.get(this.endpoints.field + "/model", {
+					id: newValue,
+					type: this.linkType
+				});
 			}
+		},
+		linkType() {
+			if (this.currentType.finder) {
+				this.openFinder();
+			}
+
+			this.$nextTick(this.focus);
 		}
 	},
 	methods: {
-		focus() {
-			this.$refs.input.focus();
-		},
 		emit(link) {
-			this.memory[this.value.type] = link;
-
 			this.$emit("input", {
-				...this.value,
+				...(this.value || {}),
 				link: link
 			});
 		},
 		async find(parent) {
-			this.finder = await this.$api.get(this.endpoints.field + "/pages", {
-				parent: parent
+			parent = parent ?? localStorage.getItem("finder");
+
+			this.finder = await this.$api.get(this.endpoints.field + "/finder", {
+				parent: parent,
+				type: this.linkType
 			});
+
+			localStorage.setItem("finder", parent);
 		},
-		findAndSelect(item) {
-			if (item) {
-				this.find(item.uuid);
-				this.select(item);
-			} else {
-				this.find();
-				this.emit("");
-			}
-		},
-		select(item) {
-			this.emit(item.uuid);
+		focus() {
+			this.$refs.input?.focus();
 		},
 		onSettings(settings) {
 			this.$emit("input", {
-				...this.value,
+				...(this.value || {}),
 				...settings
 			});
 		},
-		switchType(type) {
-			if (type === this.value?.type) {
+		closeFinder() {
+			this.finder = {};
+			this.state = null;
+		},
+		async openFinder(parent) {
+			await this.find(parent);
+			this.state = "finder";
+		},
+		remove() {
+			this.emit("");
+			this.openFinder();
+		},
+		select(item) {
+			if (item.type === "page" && this.linkType === "file") {
+				this.find(item.uuid);
 				return;
 			}
 
-			this.finder = {};
-
-			// keep the current value in memory
-			this.memory[this.value.type] = this.value.link;
-
+			this.emit(item.uuid);
+			this.closeFinder();
+		},
+		switchType(type) {
 			this.$emit("input", {
-				...this.value,
+				...(this.value || {}),
 				type: type,
-				link: this.memory[type] || ""
+				link: ""
 			});
-
-			setTimeout(() => {
-				this.$refs.input?.focus();
-			}, 100);
+		},
+		toggleFinder() {
+			if (this.state === "finder") {
+				this.closeFinder();
+			} else {
+				this.openFinder();
+			}
 		}
 	}
 };
@@ -292,42 +351,43 @@ export default {
 		"body";
 }
 
-.k-link-field-toggle {
-	display: flex;
-	flex-shrink: 0;
-	width: max-content;
+.k-link-field-header {
+	display: grid;
+	grid-template-columns: max-content 1fr auto;
 	align-items: center;
-	font-size: var(--text-sm);
-	background: var(--color-gray-200);
-	color: var(--color-black);
-	padding: 0.325rem 1.325rem 0.325rem 0.325rem;
-	line-height: 1;
-	border-radius: var(--rounded-sm);
-	margin: 0.25rem;
+	gap: 0.25rem;
+	height: var(--field-input-height);
+	grid-area: header;
 }
-.k-link-field-toggle:hover {
-	background-color: var(--color-gray-300);
+
+.k-link-field-toggle.k-button {
+	display: flex;
+	align-items: center;
+	font-size: var(--text-base);
+	color: var(--color-black);
+	padding: 0 1.325rem 0 0.5rem;
+	line-height: 1;
+	height: calc(var(--field-input-height) - 4px);
 }
 .k-link-field-toggle.k-button .k-button-text {
-	opacity: 1;
 	padding-inline-start: var(--spacing-1);
+	font-size: var(--text-base);
+	opacity: 1;
+	color: var(--field-input-color-before);
 }
+.k-link-field-toggle.k-button:hover .k-button-text {
+	color: var(--color-black);
+}
+
 .k-link-field-toggle .k-button-text::after {
 	position: absolute;
 	top: 50%;
 	right: 0.5rem;
 	margin-top: -2px;
 	content: "";
-	border-top: 4px solid currentColor;
+	border-top: 4px solid var(--color-black);
 	border-inline-start: 4px solid transparent;
 	border-inline-end: 4px solid transparent;
-}
-
-.k-link-field-header {
-	display: grid;
-	grid-template-columns: auto 1fr auto;
-	align-items: center;
-	grid-area: header;
 }
 
 .k-link-field-settings-toggle {
@@ -350,6 +410,7 @@ export default {
 .k-link-field-breadcrumb .k-button {
 	display: flex;
 	white-space: nowrap;
+	height: 1.75rem;
 	padding: 0.5rem 0.625rem;
 	line-height: 1;
 	align-items: center;
@@ -373,8 +434,12 @@ export default {
 }
 .k-link-field-finder li {
 	display: flex;
+	justify-content: space-between;
 	padding: 0 0.325rem;
 	align-items: center;
+}
+.k-link-field-finder li:hover {
+	background: rgba(0, 0, 0, 0.075);
 }
 .k-link-field-finder li[aria-current] {
 	background: var(--color-blue-200);
@@ -388,14 +453,13 @@ export default {
 	line-height: 1;
 	border-radius: var(--rounded);
 }
-.k-link-field-finder .k-button:first-child[data-disabled] {
-	opacity: 0.05;
-}
-.k-link-field-finder .k-button:first-child:hover {
+.k-link-field-finder-icon:hover,
+.k-link-field-finder-arrow:hover {
 	background: rgba(0, 0, 0, 0.075);
 }
-.k-link-field-finder .k-button:last-child {
+.k-link-field-finder-item {
 	padding-inline: 0.25rem;
+	flex-grow: 1;
 	text-align: left;
 	display: flex;
 	align-items: center;
@@ -403,9 +467,6 @@ export default {
 	border-radius: var(--rounded);
 }
 
-.k-link-field-finder .k-button svg {
-	width: 14px;
-}
 .k-link-field-finder li + li {
 	margin-top: 1px;
 }
@@ -432,5 +493,47 @@ export default {
 	font-weight: 400;
 	text-align: right;
 	padding-bottom: 0;
+}
+
+.k-link-field-placeholder.k-button {
+	font-size: var(--text-base);
+	display: flex;
+	color: var(--color-gray-600);
+}
+
+.k-link-field-preview {
+	display: flex;
+	align-items: center;
+	padding-left: 0.5rem;
+}
+.k-link-field-preview .k-tag {
+	display: inline-flex;
+	background: var(--color-gray-200);
+	color: var(--color-black);
+	border-radius: var(--rounded-sm);
+	overflow: hidden;
+}
+.k-link-field-preview .k-tag:focus {
+	background: var(--color-gray-300);
+	color: var(--color-black);
+}
+.k-link-field-preview .k-tag .k-tag-toggle {
+	color: currentColor;
+	border-inline-start: 0;
+}
+.k-link-field-preview .k-tag .k-tag-text {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding-inline-start: 0;
+	padding-inline-end: 0.25rem;
+	padding-block: 0;
+	line-height: 1;
+}
+.k-link-field-preview .k-item-figure {
+	height: 1.75rem;
+	border-start-start-radius: var(--rounded-sm);
+	border-end-start-radius: var(--rounded-sm);
+	width: 1.625rem;
 }
 </style>

@@ -21,21 +21,44 @@ return [
 	'api' => function () {
 		return [
 			[
-				'pattern' => 'pages',
+				'pattern' => 'model',
+				'action'  => function () {
+					$id   = get('id');
+					$type = get('type');
+
+					$model = match ($type) {
+						'file' => kirby()->file($id),
+						'page' => kirby()->page($id),
+						default => site()
+					};
+
+					return [
+						'title' => $model instanceof File ? $model->filename() : $model->title()->value(),
+						'uuid'  => $model->uuid()->toString(),
+						'image' => $model->panel()->image([
+							'cover'  => true,
+							'layout' => 'list'
+						]),
+					];
+				}
+			],
+			[
+				'pattern' => 'finder',
 				'action'  => function () {
 					$result   = [];
 					$parentId = get('parent');
+					$type     = get('type');
 					$parent   = match (true) {
 						empty($parentId)
 							=> site(),
 						str_starts_with($parentId, 'file://') === true
-							=> kirby()->file($parentId),
+							=> kirby()->file($parentId)->parent(),
 						default
 							=> kirby()->page($parentId)
 					};
 
 					if (empty($parent) === true) {
-						return [];
+						$parent = site();
 					}
 
 					$render = function ($item) {
@@ -45,23 +68,33 @@ return [
 								'title'    => $item->filename(),
 								'uuid'     => $item->uuid()->toString(),
 								'children' => false,
+								'type'     => 'file',
 							],
 							default => [
 								'icon'     => 'folder',
 								'title'    => $item->title()->value(),
 								'uuid'     => $item->uuid()->toString(),
 								'children' => $item->hasChildren() || $item->hasDrafts() || $item->hasFiles(),
+								'type'     => 'page',
 							],
 						};
 					};
 
 					if ($parent instanceof File === false) {
 						foreach ($parent->childrenAndDrafts()->sortBy('title', 'asc') as $page) {
+							// doesn't make sense to link to the error page
+							if ($page->isErrorPage()) {
+								continue;
+							}
+
 							$result[] = $render($page);
 						}
 
-						foreach ($parent->files()->sortBy('filename', 'asc') as $file) {
-							$result[] = $render($file);
+						// only add files for the files browser
+						if ($type === 'file') {
+							foreach ($parent->files()->sortBy('filename', 'asc') as $file) {
+								$result[] = $render($file);
+							}
 						}
 
 						$grandParent = $parent->parentModel();
@@ -83,7 +116,7 @@ return [
 						'crumb' => $crumb,
 						'parent' => [
 							'title' => $grandParent->title()->value(),
-							'uuid'  => $grandParent instanceof Site ? null : $grandParent->uuid()->toString(),
+							'uuid'  => $grandParent instanceof Site ? '' : $grandParent->uuid()->toString(),
 							'root'  => $parent instanceof Site ? true : false
 						],
 						'children' => $result,
