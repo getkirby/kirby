@@ -50,8 +50,13 @@ class Response
 	/**
 	 * Creates a new response object
 	 */
-	public function __construct(string|array $body = '', string|null $type = null, int|null $code = null, array|null $headers = null, string|null $charset = null)
-	{
+	public function __construct(
+		string|array $body = '',
+		string|null $type = null,
+		int|null $code = null,
+		array|null $headers = null,
+		string|null $charset = null
+	) {
 		// array construction
 		if (is_array($body) === true) {
 			$params  = $body;
@@ -127,8 +132,11 @@ class Response
 	 *
 	 * @param array $props Custom overrides for response props (e.g. headers)
 	 */
-	public static function download(string $file, string|null $filename = null, array $props = []): static
-	{
+	public static function download(
+		string $file,
+		string|null $filename = null,
+		array $props = []
+	): static {
 		if (file_exists($file) === false) {
 			throw new Exception('The file could not be found');
 		}
@@ -224,8 +232,12 @@ class Response
 	 * Creates a json response with appropriate
 	 * header and automatic conversion of arrays.
 	 */
-	public static function json(string|array $body = '', int|null $code = null, bool|null $pretty = null, array $headers = []): static
-	{
+	public static function json(
+		string|array $body = '',
+		int|null $code = null,
+		bool|null $pretty = null,
+		array $headers = []
+	): static {
 		if (is_array($body) === true) {
 			$body = json_encode($body, $pretty === true ? JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES : 0);
 		}

@@ -193,8 +193,19 @@ class RemoteTest extends TestCase
 
 	public function testGet()
 	{
+		// default
 		$request = Remote::get('https://getkirby.com');
 		$this->assertSame('GET', $request->method());
+
+		// url without query string + query options
+		$request = Remote::get('https://getkirby.com/a', ['data' => ['b' => 'foo']]);
+		$this->assertSame('GET', $request->method());
+		$this->assertSame('https://getkirby.com/a?b=foo', $request->url());
+
+		// url with query string + query options
+		$request = Remote::get('https://getkirby.com/a?b=c', ['data' => ['d' => 'foo']]);
+		$this->assertSame('GET', $request->method());
+		$this->assertSame('https://getkirby.com/a?b=c&d=foo', $request->url());
 	}
 
 	public function testHead()

@@ -227,7 +227,10 @@ class Uri
 
 		$domain .= $this->host;
 
-		if ($this->port !== null && in_array($this->port, [80, 443]) === false) {
+		if (
+			$this->port !== null &&
+			in_array($this->port, [80, 443]) === false
+		) {
 			$domain .= ':' . $this->port;
 		}
 

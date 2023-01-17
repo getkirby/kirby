@@ -147,9 +147,7 @@ class Request
 		// this ensures that the response is only cached for
 		// unauthenticated visitors;
 		// https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
-		if ($kirby) {
-			$kirby->response()->usesAuth(true);
-		}
+		$kirby?->response()->usesAuth(true);
 
 		if ($auth = $this->authString()) {
 			$type = Str::lower(Str::before($auth, ' '));
@@ -292,7 +290,10 @@ class Request
 		$headers = [];
 
 		foreach (Environment::getGlobally() as $key => $value) {
-			if (substr($key, 0, 5) !== 'HTTP_' && substr($key, 0, 14) !== 'REDIRECT_HTTP_') {
+			if (
+				substr($key, 0, 5) !== 'HTTP_' &&
+				substr($key, 0, 14) !== 'REDIRECT_HTTP_'
+			) {
 				continue;
 			}
 
