@@ -163,15 +163,22 @@ class Template
 		// take the buffer output from the template as default slot
 		// and render the snippet as final template output
 		if (
-			Snippet::$current !== null &&
-			Snippet::$current->parent() === $snippet
+			Snippet::$current === null ||
+			Snippet::$current->parent() !== $snippet
 		) {
-			$template = Snippet::$current->render($data, [
+			return $template;
+		}
+
+		// no slots have been defined, but the template code
+		// should be used as default slot
+		if (count(Snippet::$current->slots()) === 0) {
+			return Snippet::$current->render($data, [
 				'default' => $template
 			]);
 		}
 
-		return $template;
+		// let the snippet close and render natively
+		return Snippet::$current->render($data);
 	}
 
 	/**
