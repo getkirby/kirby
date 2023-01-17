@@ -25,5 +25,6 @@ class SlotsTest extends TestCase
 		$this->assertSame($header, $slots->header());
 		$this->assertSame($footer, $slots->footer);
 		$this->assertSame($footer, $slots->footer());
+		$this->assertCount(2, $slots);
 	}
 }

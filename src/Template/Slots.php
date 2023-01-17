@@ -2,6 +2,8 @@
 
 namespace Kirby\Template;
 
+use Countable;
+
 /**
  * The slots collection is simplifying
  * slot access. Slots can be accessed with
@@ -14,7 +16,7 @@ namespace Kirby\Template;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Slots
+class Slots implements Countable
 {
 	/**
 	 * Creates a new slots collection
@@ -39,5 +41,13 @@ class Slots
 	public function __call(string $name, array $args): Slot|null
 	{
 		return $this->__get($name);
+	}
+
+	/**
+	 * Counts the number of defined slots
+	 */
+	public function count(): int
+	{
+		return count($this->slots);
 	}
 }

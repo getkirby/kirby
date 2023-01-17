@@ -226,6 +226,27 @@ class SnippetTest extends TestCase
 	/**
 	 * @covers ::render
 	 */
+	public function testRenderWithoutClosingAndMultipleSlots()
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet(__DIR__ . '/fixtures/layout-with-multiple-slots.php');
+
+		$snippet->slot('header');
+		echo 'Header content';
+		$snippet->endslot();
+
+		$snippet->slot();
+		echo 'Body content';
+		$snippet->endslot();
+
+		$this->assertSame("<h1>Layout</h1>\n<header>Header content</header>\n<main>Body content</main>\n", $snippet->render());
+	}
+
+	/**
+	 * @covers ::render
+	 */
 	public function testRenderWithLazySlots()
 	{
 		$snippet = new Snippet(__DIR__ . '/fixtures/slots.php');
