@@ -3,7 +3,7 @@
 		<k-grid>
 			<template v-for="(field, fieldName) in fields">
 				<k-column
-					v-if="$helper.field.isVisible(field, value)"
+					v-if="$helper.field.isVisible(field, context)"
 					:key="field.signature"
 					:width="field.width"
 				>
@@ -47,10 +47,23 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+
 /**
  * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
  */
 export default {
+	provide() {
+		return {
+			context: computed(() => this.context)
+		};
+	},
+	inject: {
+		injectedContext: {
+			from: "context",
+			default: {}
+		}
+	},
 	props: {
 		config: Object,
 		disabled: Boolean,
@@ -78,6 +91,14 @@ export default {
 		return {
 			errors: {}
 		};
+	},
+	computed: {
+		context() {
+			return {
+				...this.injectedContext,
+				...this.value
+			}
+		}
 	},
 	methods: {
 		/**
