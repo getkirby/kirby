@@ -8,10 +8,12 @@
 	>
 		<k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />
 
-		<template v-if="text">
-			{{ text }}
-		</template>
-		<span v-else-if="$slots.default" class="k-button-text"><slot /></span>
+		<span v-if="text || $slots.default" class="k-button-text">
+			<template v-if="text">
+				{{ text }}
+			</template>
+			<slot />
+		</span>
 	</component>
 </template>
 
@@ -86,7 +88,7 @@ export default {
 	},
 	computed: {
 		attributes() {
-			const attributes = {
+			const common = {
 				class: "k-button",
 				"data-responsive": this.responsive,
 				"data-theme": this.theme,
@@ -94,33 +96,44 @@ export default {
 				title: this.tooltip
 			};
 
-			// button only
+			const disabled = {
+				"data-disabled": this.disabled,
+				"aria-disabled": this.disabled
+			};
+
+			const focus = {
+				"aria-current": this.current,
+				autofocus: this.autofocus,
+				role: this.role,
+				tabindex: this.tabindex
+			};
+
+			// Button (enabled + disabled)
 			if (this.component === "button") {
-				attributes["type"] = this.type;
-				attributes["data-disabled"] = this.disabled;
-				attributes["aria-disabled"] = this.disabled;
+				return {
+					...common,
+					...disabled,
+					...focus,
+					type: this.type
+				};
 			}
 
-			// link only
+			// Link (enabled)
 			if (this.component === "k-link") {
-				attributes["rel"] = this.rel;
-				attributes["target"] = this.target;
-				attributes["to"] = this.link;
+				return {
+					...common,
+					...focus,
+					rel: this.rel,
+					target: this.target,
+					to: this.link
+				};
 			}
 
-			if (this.component === "span") {
-				attributes["data-disabled"] = true;
-			}
-
-			// for buttons and enabled links
-			if (this.component === "button" || this.component === "k-link") {
-				attributes["aria-current"] = this.current;
-				attributes["autofocus"] = this.autofocus;
-				attributes["role"] = this.role;
-				attributes["tabindex"] = this.tabindex;
-			}
-
-			return attributes;
+			// Text (= disabled link)
+			return {
+				...common,
+				...disabled
+			};
 		},
 		component() {
 			if (!this.link) {
