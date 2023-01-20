@@ -58,7 +58,7 @@ class Query
 		$this->query = $query;
 		$this->data  = $data;
 
-		Helpers::deprecated('The `Toolkit\Query` class has been deprecated and will be removed in a future version. Use `Query\Query` instead: Kirby\Query\Query::factory($query)->resolve($data).');
+		Helpers::deprecated('The `Toolkit\Query` class has been deprecated and will be removed in a future version. Use `Query\Query` instead: Kirby\Query\Query::factory($query)->resolve($data).', 'toolkit-query-class');
 	}
 
 	/**

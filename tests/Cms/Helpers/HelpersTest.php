@@ -34,6 +34,27 @@ class HelpersTest extends TestCase
 	}
 
 	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedKeyUndefined()
+	{
+		$this->expectException('Whoops\Exception\ErrorException');
+		$this->expectExceptionMessage('The xyz method is deprecated.');
+
+		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
+	}
+
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedKeyDeactivated()
+	{
+		Helpers::$deprecations = ['my-key' => false];
+		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
+		Helpers::$deprecations = [];
+	}
+
+	/**
 	 * @covers ::dump
 	 */
 	public function testDumpOnCli()

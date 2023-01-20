@@ -18,19 +18,23 @@ use Kirby\Toolkit\Str;
  */
 class Helpers
 {
+	public static $deprecations = [];
+
 	/**
 	 * Triggers a deprecation warning if debug mode is active
+	 * and warning has not been surpressed via `Helpers::$deprecations`
 	 *
-	 * @param string $message
 	 * @return bool Whether the warning was triggered
 	 */
-	public static function deprecated(string $message): bool
+	public static function deprecated(string $message, string $key = null): bool
 	{
 		if (
 			App::instance()->option('debug') === true ||
 			(defined('KIRBY_TESTING') === true && KIRBY_TESTING === true)
 		) {
-			return trigger_error($message, E_USER_DEPRECATED) === true;
+			if ((static::$deprecations[$key] ?? true) !== false) {
+				return trigger_error($message, E_USER_DEPRECATED) === true;
+			}
 		}
 
 		return false;
