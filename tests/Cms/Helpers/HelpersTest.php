@@ -15,11 +15,15 @@ class HelpersTest extends TestCase
 
 	public function setUp(): void
 	{
+		parent::setUp();
+
 		$this->deprecations = Helpers::$deprecations;
 	}
 
 	public function tearDown(): void
 	{
+		parent::tearDown();
+
 		Helpers::$deprecations = $this->deprecations;
 
 		if ($this->hasErrorHandler === true) {
