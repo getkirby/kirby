@@ -20,7 +20,7 @@ class Helpers
 {
 	public static $deprecations = [
 		// Passing the $slot or $slots variables to snippets is
-		// deprecated and will break in Kirby 3.10.
+		// deprecated and will break in a future version.
 		'snippet-pass-slots'    => true,
 
 		// The `Toolkit\Query` class has been deprecated and will
