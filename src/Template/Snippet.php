@@ -309,7 +309,7 @@ class Snippet extends Tpl
 			array_key_exists('slot', $data) === true ||
 			array_key_exists('slots', $data) === true
 		) {
-			Helpers::deprecated('Passing the $slot or $slots variables to snippets is deprecated and will break in Kirby 3.10.');
+			Helpers::deprecated('Passing the $slot or $slots variables to snippets is deprecated and will break in a future version.', 'snippet-pass-slots');
 		}
 		// @codeCoverageIgnoreEnd
 
