@@ -4,7 +4,6 @@
 [![CI Status](https://github.com/getkirby/kirby/workflows/CI/badge.svg)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
 [![Coverage Status](https://badgen.net/codecov/c/gh/getkirby/kirby/main?label=coverage)](https://codecov.io/gh/getkirby/kirby)
 [![Downloads](https://badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
-[![Twitter](https://badgen.net/twitter/follow/getkirby?color=cyan)](https://twitter.com/getkirby)
 
 **Kirby: the CMS that adapts to any project, loved by developers and editors alike.**  
 With Kirby, you build your own ideal interface. Combine forms, galleries, articles, spreadsheets and more into an amazing editing experience. You can learn more about Kirby at [getkirby.com](https://getkirby.com).  
@@ -30,8 +29,6 @@ If you have ideas for a feature or enhancement for Kirby, please use our [feedba
 **Translations, bug fixes, code contributions ...**  
 Read about how to contribute to the development in our [contributing guide](/CONTRIBUTING.md).
 
-
-
 ## What's Kirby?
 - **[getkirby.com](https://getkirby.com)** – Get to know the CMS.
 - **[Try it](https://getkirby.com/try)** – Take a test ride with our online demo. Or download one of our kits to get started.
@@ -40,10 +37,11 @@ Read about how to contribute to the development in our [contributing guide](/CON
 - **[Feedback](https://feedback.getkirby.com)** – You have an idea for Kirby? Share it.
 - **[Forum](https://forum.getkirby.com)** – Whenever you get stuck, don't hesitate to reach out for questions and support.
 - **[Discord](https://chat.getkirby.com)** – Hang out and meet the community.
-- **[Twitter](https://twitter.com/getkirby)** – Spread the word.
+- **[YouTube](https://youtube.com/kirbyCasts)** - Watch the latest video tutorials visually with Bastian.
+- **[Mastodon](https://mastodon.social/@getkirby)** – Spread the word.
 - **[Instagram](https://www.instagram.com/getkirby/)** – Share your creations: #madewithkirby.
 
 ---
 
-© 2009-2022 Bastian Allgeier  
+© 2009-2023 Bastian Allgeier  
 [getkirby.com](https://getkirby.com) · [License agreement](https://getkirby.com/license)
