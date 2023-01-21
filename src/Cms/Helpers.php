@@ -18,6 +18,16 @@ use Kirby\Toolkit\Str;
  */
 class Helpers
 {
+	/**
+	 * Allows to disable specific deprecation warnings
+	 * by setting them to `false`.
+	 * You can do this by putting the following code in
+	 * `site/config/config.php`:
+	 *
+	 * ```php
+	 * Helpers::$deprecations['<deprecation-key>'] = false;
+	 * ```
+	 */
 	public static $deprecations = [
 		// Passing the $slot or $slots variables to snippets is
 		// deprecated and will break in a future version.
@@ -39,9 +49,10 @@ class Helpers
 	 * Triggers a deprecation warning if debug mode is active
 	 * and warning has not been surpressed via `Helpers::$deprecations`
 	 *
+	 * @param string|null $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
 	 */
-	public static function deprecated(string $message, string $key = null): bool
+	public static function deprecated(string $message, string|null $key = null): bool
 	{
 		if (
 			App::instance()->option('debug') === true ||
