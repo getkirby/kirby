@@ -54,16 +54,22 @@ class Helpers
 	 */
 	public static function deprecated(string $message, string|null $key = null): bool
 	{
+		// only trigger warning in debug mode or when running PHPUnit tests
+		// @codeCoverageIgnoreStart
 		if (
-			App::instance()->option('debug') === true ||
-			(defined('KIRBY_TESTING') === true && KIRBY_TESTING === true)
+			App::instance()->option('debug') !== true &&
+			(defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true)
 		) {
-			if ((static::$deprecations[$key] ?? true) !== false) {
-				return trigger_error($message, E_USER_DEPRECATED) === true;
-			}
+			return false;
+		}
+		// @codeCoverageIgnoreEnd
+
+		// don't trigger the warning if disabled by default or by the dev
+		if ($key !== null && (static::$deprecations[$key] ?? true) === false) {
+			return false;
 		}
 
-		return false;
+		return trigger_error($message, E_USER_DEPRECATED) === true;
 	}
 
 	/**
