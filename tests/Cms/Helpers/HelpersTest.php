@@ -49,7 +49,19 @@ class HelpersTest extends TestCase
 		$this->expectException('Whoops\Exception\ErrorException');
 		$this->expectExceptionMessage('The xyz method is deprecated.');
 
-		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
+		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+	}
+
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedActivated()
+	{
+		$this->expectException('Whoops\Exception\ErrorException');
+		$this->expectExceptionMessage('The xyz method is deprecated.');
+
+		Helpers::$deprecations = ['my-key' => true];
+		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
 	}
 
 	/**
