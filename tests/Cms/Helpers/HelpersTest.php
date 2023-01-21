@@ -10,10 +10,18 @@ use Kirby\Toolkit\Obj;
  */
 class HelpersTest extends TestCase
 {
+	protected $deprecations = [];
 	protected $hasErrorHandler = false;
+
+	public function setUp(): void
+	{
+		$this->deprecations = Helpers::$deprecations;
+	}
 
 	public function tearDown(): void
 	{
+		Helpers::$deprecations = $this->deprecations;
+
 		if ($this->hasErrorHandler === true) {
 			restore_error_handler();
 			$this->hasErrorHandler = false;
@@ -51,7 +59,6 @@ class HelpersTest extends TestCase
 	{
 		Helpers::$deprecations = ['my-key' => false];
 		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
-		Helpers::$deprecations = [];
 	}
 
 	/**
