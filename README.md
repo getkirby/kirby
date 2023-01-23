@@ -1,9 +1,9 @@
 [<img src="https://getkirby.com/assets/images/github/kirby.jpg" width="300">](https://getkirby.com)   
 
-[![Release](https://badgen.net/github/release/getkirby/kirby/stable?color=yellow)](https://github.com/getkirby/kirby/releases/latest)
-[![CI Status](https://github.com/getkirby/kirby/workflows/CI/badge.svg)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
-[![Coverage Status](https://badgen.net/codecov/c/gh/getkirby/kirby/main?label=coverage)](https://codecov.io/gh/getkirby/kirby)
-[![Downloads](https://badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
+[![Release](https://img.shields.io/github/v/release/getkirby/kirby)](https://github.com/getkirby/kirby/releases/latest)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/getkirby/kirby/ci.yml?branch=main&label=CI)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI+branch%3Amain)
+[![Coverage Status](https://img.shields.io/codecov/c/gh/getkirby/kirby?token=ROZ2RVA0OF)](https://codecov.io/gh/getkirby/kirby)
+[![Downloads](https://img.shields.io/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
 
 **Kirby: the CMS that adapts to any project, loved by developers and editors alike.**  
 With Kirby, you build your own ideal interface. Combine forms, galleries, articles, spreadsheets and more into an amazing editing experience. You can learn more about Kirby at [getkirby.com](https://getkirby.com).  
