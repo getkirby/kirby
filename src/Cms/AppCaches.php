@@ -44,7 +44,7 @@ trait AppCaches
 
 		if (array_key_exists($type, $types) === false) {
 			throw new InvalidArgumentException([
-				'key'  => 'app.invalid.cacheType',
+				'key'  => 'cache.type.invalid',
 				'data' => ['type' => $type]
 			]);
 		}
@@ -57,7 +57,7 @@ trait AppCaches
 		// check if it is a usable cache object
 		if ($cache instanceof Cache === false) {
 			throw new InvalidArgumentException([
-				'key'  => 'app.invalid.cacheType',
+				'key'  => 'cache.type.invalid',
 				'data' => ['type' => $type]
 			]);
 		}
