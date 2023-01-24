@@ -280,9 +280,9 @@ export default {
 		 * c. cursor selection covers more than one part
 		 *    => select the last affected part
 		 * d. cursor selection cover last part
-		 *    => tab should blur the input, focus on next tabbale element
+		 *    => tab should blur the input, focus on next tabable element
 		 * e. cursor is at the end of the pattern
-		 *    => tab should blur the input, focus on next tabbale element
+		 *    => tab should blur the input, focus on next tabable element
 		 *
 		 * @param {Event} event
 		 */
