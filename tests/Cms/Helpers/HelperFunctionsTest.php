@@ -732,6 +732,32 @@ class HelperFunctionsTest extends TestCase
 		$this->assertSame('Hello world', $result);
 	}
 
+	public function testSnippetNullArgument()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
+				'snippets'  => $index,
+			]
+		]);
+
+		$result = snippet(null, ['message' => 'world'], true);
+		$this->assertSame('', $result);
+	}
+
+	public function testSnippetNotExists()
+	{
+		$this->kirby->clone([
+			'roots' => [
+				'index'     => $index = __DIR__ . '/fixtures/HelpersTest',
+				'snippets'  => $index
+			]
+		]);
+
+		$result = snippet('not-exist', ['message' => 'world'], true);
+		$this->assertSame('', $result);
+	}
+
 	public function testSnippetAlternatives()
 	{
 		$this->kirby->clone([
@@ -741,7 +767,11 @@ class HelperFunctionsTest extends TestCase
 			]
 		]);
 
-		$result = snippet(['does-not-exist', 'does-not-exist-either', 'snippet'], ['message' => 'world'], true);
+		$result = snippet(
+			[null, 'does-not-exist', 'does-not-exist-either', 'snippet'],
+			['message' => 'world'],
+			true
+		);
 		$this->assertSame('Hello world', $result);
 	}
 
