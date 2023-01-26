@@ -280,7 +280,7 @@ return [
 	 * @param string|array $name Snippet name
 	 * @param array $data Data array for the snippet
 	 */
-	'snippet' => function (App $kirby, string|array $name, array $data = [], bool $slots = false): Snippet|string {
+	'snippet' => function (App $kirby, string|array|null $name, array $data = [], bool $slots = false): Snippet|string {
 		return Snippet::factory($name, $data, $slots);
 	},
 

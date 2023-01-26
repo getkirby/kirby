@@ -153,11 +153,14 @@ class Snippet extends Tpl
 	 * or the template string for self-enclosed snippets
 	 */
 	public static function factory(
-		string|array $name,
+		string|array|null $name,
 		array $data = [],
 		bool $slots = false
 	): static|string {
-		$file = static::file($name);
+		// instead of returning empty string when `$name` is null
+		// allow rest of code to run, otherwise the wrong snippet would be closed
+		// and potential issues for nested snippets may occur
+		$file = $name !== null ? static::file($name) : null;
 
 		// for snippets with slots, make sure to open a new
 		// snippet and start capturing slots

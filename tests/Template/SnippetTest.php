@@ -48,10 +48,16 @@ class SnippetTest extends TestCase
 		$openProp->setAccessible(true);
 		$this->assertTrue($openProp->getValue($snippet));
 
+		$snippet = Snippet::factory(null, ['message' => 'hello']);
+		$this->assertSame('', $snippet);
+
 		$snippet = Snippet::factory('missin', ['message' => 'hello']);
 		$this->assertSame('', $snippet);
 
 		$snippet = Snippet::factory('missin', ['message' => 'hello'], slots: true);
+		$this->assertInstanceOf(Snippet::class, $snippet);
+
+		$snippet = Snippet::factory(null, ['message' => 'hello'], slots: true);
 		$this->assertInstanceOf(Snippet::class, $snippet);
 	}
 
