@@ -53,16 +53,16 @@ class Asset
 			return $this->$method;
 		}
 
-		// asset methods
-		if ($this->hasMethod($method)) {
-			return $this->callMethod($method, $arguments);
-		}
-
 		// asset method proxy
 		if (method_exists($this->asset(), $method)) {
 			return $this->asset()->$method(...$arguments);
 		}
 
+		// asset methods
+		if ($this->hasMethod($method)) {
+			return $this->callMethod($method, $arguments);
+		}
+		
 		throw new BadMethodCallException('The method: "' . $method . '" does not exist');
 	}
 
