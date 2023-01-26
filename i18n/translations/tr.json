@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "En az bir blok eklemelisiniz",
 	"error.blocks.validation": "\"{fieldset}\" blok türünü kullanan {index}. bloktaki \"{field}\" alanında bir hata var",
 
+	"error.cache.type.invalid": "Geçersiz önbellek türü \"{type}\"",
+
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",

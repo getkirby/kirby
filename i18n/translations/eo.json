@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Oni devas aldoni almenaŭ unu blokon",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "La retpoŝta antaŭagordo \"{name}\" ne estas trovebla",
 
 	"error.field.converter.invalid": "Nevalida konvertilo \"{converter}\"",

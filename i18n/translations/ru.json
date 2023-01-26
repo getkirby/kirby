@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Вы должны добавить хотя бы один блок",
 	"error.blocks.validation": "Ошибка в поле \"{field}\" в блоке {index} типа \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Шаблон эл. почты \"{name}\" не найден",
 
 	"error.field.converter.invalid": "Неверный конвертер \"{converter}\"",

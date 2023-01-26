@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
 
 	"error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",

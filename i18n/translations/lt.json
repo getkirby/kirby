@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Jūs turite pridėti bent vieną bloką",
 	"error.blocks.validation": "Yra klaida laukelyje \"{field}\" bloke {index} naudojant bloko tipą \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "El. pašto paruoštukas \"{name}\" nerastas",
 
 	"error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",

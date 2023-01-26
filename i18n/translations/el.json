@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
 
 	"error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",

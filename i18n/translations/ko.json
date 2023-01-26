@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "블록을 하나 이상 추가하세요.",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
 	"error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",

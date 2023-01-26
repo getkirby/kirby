@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Anda setidaknya menambahkan satu blok",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
 	"error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",

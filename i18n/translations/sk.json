@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "E-mailovú predvoľbu \"{name}\" nie je možné nájsť",
 
 	"error.field.converter.invalid": "Neplatný converter \"{converter}\"",

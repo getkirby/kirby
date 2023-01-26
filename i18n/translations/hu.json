@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Legalább egy blokkot hozzá kell adnod",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "A \"{name}\" email-beállítás nem található",
 
 	"error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",

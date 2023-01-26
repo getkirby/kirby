@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Allavegana einn bálkur takk",
 	"error.blocks.validation": "Það er villa í {field} sviðinu í bálkinum {index} sem notar {fieldset} bálkgerðina",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",

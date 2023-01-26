@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Du måste lägga till minst ett block",
 	"error.blocks.validation": "Det finns ett fel i fältet \"{field}\" i block {index} med blocktypen \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
 	"error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
