@@ -58,7 +58,7 @@ class SnippetTest extends TestCase
 		$this->assertInstanceOf(Snippet::class, $snippet);
 
 		$snippet = Snippet::factory(null, ['message' => 'hello'], slots: true);
-		$this->assertSame('', $snippet);
+		$this->assertInstanceOf(Snippet::class, $snippet);
 	}
 
 	/**
