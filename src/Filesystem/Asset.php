@@ -62,7 +62,7 @@ class Asset
 		if ($this->hasMethod($method)) {
 			return $this->callMethod($method, $arguments);
 		}
-		
+
 		throw new BadMethodCallException('The method: "' . $method . '" does not exist');
 	}
 
