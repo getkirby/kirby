@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Не удалось установить панель",
 	"installation.issues.mbstring": "Расширение <code>MB String</code> необходимо",
 	"installation.issues.media": "Каталог <code>/media</code> не существует или нет прав записи",
-	"installation.issues.php": "Убедитесь, что используется <code>PHP 7+</code>",
+	"installation.issues.php": "Убедитесь, что используется <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby требует <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code> ",
 	"installation.issues.sessions": "Каталог <code>/site/sessions</code> не существует или нет прав записи",
 

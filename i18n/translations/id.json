@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Panel tidak dapat dipasang",
 	"installation.issues.mbstring": "Ekstensi <code>MB String</code> diperlukan",
 	"installation.issues.media": "Folder <code>/media</code> tidak ada atau tidak dapat ditulis",
-	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 7+</code>",
+	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby memerlukan <code>Apache</code>, <code>Nginx</code>, atau <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> tidak ada atau tidak dapat ditulis",
 

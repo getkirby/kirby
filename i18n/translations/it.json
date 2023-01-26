@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Il pannello non può esser installato",
 	"installation.issues.mbstring": "È necessaria l'estensione <code>MB String</code>",
 	"installation.issues.media": "La cartella <code>/media</code> non esiste o non dispone dei permessi di scrittura",
-	"installation.issues.php": "Assicurati di utilizzare <code>PHP 7.1+</code>",
+	"installation.issues.php": "Assicurati di utilizzare <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby necessita di <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
 	"installation.issues.sessions": "La cartella <code>/site/sessions</code>non esiste o non dispone dei permessi di scrittura",
 

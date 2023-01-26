@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Nie można zainstalować panelu",
 	"installation.issues.mbstring": "Wymagane jest rozszerzenie <code>MB String</code>",
 	"installation.issues.media": "Folder <code>/media</code> nie istnieje lub nie ma uprawnień do zapisu",
-	"installation.issues.php": "Upewnij się, że używasz <code>PHP 7+</code>",
+	"installation.issues.php": "Upewnij się, że używasz <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby wymaga <code>Apache</code>, <code>Nginx</code> lub <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> nie istnieje lub nie ma uprawnień do zapisu",
 

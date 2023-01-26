@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Uppsetning Panelsins mistókst hrapalega",
 	"installation.issues.mbstring": "<code>MB String</code> er hér bráðnauðsynleg",
 	"installation.issues.media": "<code>/media</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
-	"installation.issues.php": "Notaðu <code>PHP 7+</code>",
+	"installation.issues.php": "Notaðu <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby krefst <code>Apache</code>, <code>Nginx</code> eða <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
 

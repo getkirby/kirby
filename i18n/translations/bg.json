@@ -320,7 +320,7 @@
 	"installation.issues.headline": "Панелът не може да бъде инсталиран",
 	"installation.issues.mbstring": "Изисква се разширението <code>MB String</code>",
 	"installation.issues.media": "Папката <code>/media</code> не съществува или няма права за запис",
-	"installation.issues.php": "Бъдете сигурни, че използвате <code>PHP 7+</code>",
+	"installation.issues.php": "Бъдете сигурни, че използвате <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby изисква <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
