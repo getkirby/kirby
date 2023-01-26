@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "En az bir blok eklemelisiniz",
 	"error.blocks.validation": "\"{fieldset}\" blok türünü kullanan {index}. bloktaki \"{field}\" alanında bir hata var",
 
+	"error.cache.type.invalid": "Geçersiz önbellek türü \"{type}\"",
+
 	"error.email.preset.notFound": "\"{name}\" e-posta adresi bulunamadı",
 
 	"error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panel kurulamadı",
 	"installation.issues.mbstring": "<code>MB String</code> eklentisi gerekli",
 	"installation.issues.media": "<code>/media</code> klasörü yok yada yazılamaz",
-	"installation.issues.php": "<code>PHP 7+</code> kullandığınızdan emin olun. ",
+	"installation.issues.php": "<code>PHP 8+</code> kullandığınızdan emin olun. ",
 	"installation.issues.server": "Kirby <code>Apache</code>, <code>Nginx</code> veya <code>Caddy</code> gerektirir",
 	"installation.issues.sessions": "<code>/site/sessions</code> klasörü mevcut değil veya yazılabilir değil",
 

@@ -72,10 +72,12 @@
 	"error.blocks.min.singular": "Jūs turite pridėti bent vieną bloką",
 	"error.blocks.validation": "Yra klaida laukelyje \"{field}\" bloke {index} naudojant bloko tipą \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "El. pašto paruoštukas \"{name}\" nerastas",
 
 	"error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",
-	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
+	"error.field.type.missing": "Laukelis \"{ name }\": Šio tipo (\"{ type }\") laukelis neegzistuoja",
 
 	"error.file.changeName.empty": "Pavadinimas negali būti tuščias",
 	"error.file.changeName.permission": "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
@@ -290,7 +292,7 @@
 	"field.pages.empty": "Dar nėra puslapių",
 
 	"field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
-	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.all": "Ar tikrai norite išrtinti visus įrašus?",
 	"field.structure.empty": "Dar nėra įrašų",
 
 	"field.users.empty": "Dar nėra vartotojų",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Nepavyko įdiegti valdymo pulto",
 	"installation.issues.mbstring": "Plėtinys <code>MB String</code> yra privalomas",
 	"installation.issues.media": "Katalogas <code>/media</code> neegzistuoja arba neturi įrašymo teisių",
-	"installation.issues.php": "Įsitikinkite, kad naudojama <code>PHP 7+</code>",
+	"installation.issues.php": "Įsitikinkite, kad naudojama <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby reikalauja <code>Apache</code>, <code>Nginx</code> arba <code>Caddy</code>",
 	"installation.issues.sessions": "Katalogas <code>/site/sessions</code> neegzistuoja arba neturi įrašymo teisių",
 
@@ -502,7 +504,7 @@
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "Debugging must be turned off in production",
 	"system.issues.git": "The .git folder seems to be exposed",
-	"system.issues.https": "We recommend HTTPS for all your sites",
+	"system.issues.https": "Rekomenduojame HTTPS visoms svetainėms",
 	"system.issues.kirby": "The kirby folder seems to be exposed",
 	"system.issues.site": "The site folder seems to be exposed",
 	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",

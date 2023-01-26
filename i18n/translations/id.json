@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Anda setidaknya menambahkan satu blok",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
 	"error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panel tidak dapat dipasang",
 	"installation.issues.mbstring": "Ekstensi <code>MB String</code> diperlukan",
 	"installation.issues.media": "Folder <code>/media</code> tidak ada atau tidak dapat ditulis",
-	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 7+</code>",
+	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby memerlukan <code>Apache</code>, <code>Nginx</code>, atau <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> tidak ada atau tidak dapat ditulis",
 

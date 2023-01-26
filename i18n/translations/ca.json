@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "No es pot trobar la configuració de correu electrònic \"{name}\"",
 
 	"error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "El panell no es pot instal·lar",
 	"installation.issues.mbstring": "Es requereix l'extensió de <code>MB String</code>",
 	"installation.issues.media": "La carpeta <code>/media</code> no existeix o no es pot escriure",
-	"installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 7+</code>",
+	"installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
 	"installation.issues.sessions": "La carpeta <code>/site/sessions</code> no existeix o no es pot escriure",
 

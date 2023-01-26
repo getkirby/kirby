@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Je moet ten minste één blok toevoegen",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "De e-mailvoorinstelling \"{name}\" kan niet worden gevonden",
 
 	"error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Het Panel kan niet worden geïnstalleerd",
 	"installation.issues.mbstring": "De <code>MB String</code> extensie is verplicht",
 	"installation.issues.media": "De map <code>/media</code>bestaat niet of heeft geen schrijfrechten",
-	"installation.issues.php": "Gebruik <code>PHP7+</code>",
+	"installation.issues.php": "Gebruik <code>PHP8+</code>",
 	"installation.issues.server": "Kirby vereist <code>Apache</code>, <code>Nginx</code> of <code>Caddy</code>",
 	"installation.issues.sessions": "De map <code>/site/sessions</code> bestaat niet of heeft geen schrijfrechten",
 

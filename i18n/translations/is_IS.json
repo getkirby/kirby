@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Allavegana einn bálkur takk",
 	"error.blocks.validation": "Það er villa í {field} sviðinu í bálkinum {index} sem notar {fieldset} bálkgerðina",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Uppsetning Panelsins mistókst hrapalega",
 	"installation.issues.mbstring": "<code>MB String</code> er hér bráðnauðsynleg",
 	"installation.issues.media": "<code>/media</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
-	"installation.issues.php": "Notaðu <code>PHP 7+</code>",
+	"installation.issues.php": "Notaðu <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby krefst <code>Apache</code>, <code>Nginx</code> eða <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> mappan er annaðhvort ekki til eða er ekki skrifanleg",
 

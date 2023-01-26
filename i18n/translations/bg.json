@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Email шаблонът \"{name}\" не може да бъде открит",
 
 	"error.field.converter.invalid": "Невалиден конвертор \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Панелът не може да бъде инсталиран",
 	"installation.issues.mbstring": "Изисква се разширението <code>MB String</code>",
 	"installation.issues.media": "Папката <code>/media</code> не съществува или няма права за запис",
-	"installation.issues.php": "Бъдете сигурни, че използвате <code>PHP 7+</code>",
+	"installation.issues.php": "Бъдете сигурни, че използвате <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby изисква <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code>",
 	"installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 

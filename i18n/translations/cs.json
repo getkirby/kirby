@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Musíte přidat alespoň jeden blok",
 	"error.blocks.validation": "V poli \"{field}\" v bloku {index} je při použití \"{fieldset}\" typu chyba",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Nelze nalézt emailové přednastavení \"{name}\"",
 
 	"error.field.converter.invalid": "Neplatný konvertor \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panel nelze nainstalovat",
 	"installation.issues.mbstring": "Je vyžadováno rozšíření<code>MB String</code>",
 	"installation.issues.media": "Složka<code>/media</code> neexistuje, nebo nemá povolený zápis",
-	"installation.issues.php": "Ujistěte se, že používáte<code>PHP 7+</code>",
+	"installation.issues.php": "Ujistěte se, že používáte<code>PHP 8+</code>",
 	"installation.issues.server": "Kirby vyžaduje<code>Apache</code>, <code>Nginx</code> nebo<code>Caddy</code>",
 	"installation.issues.sessions": "Složka<code>/site/sessions</code> neexistuje, nebo nemá povolený zápis",
 

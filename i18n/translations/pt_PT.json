@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Você deve adicionar pelo menos um bloco",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Preset de email \"{name}\" não encontrado",
 
 	"error.field.converter.invalid": "Conversor \"{converter}\" inválido",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "O painel não pôde ser instalado",
 	"installation.issues.mbstring": "A extensão <code>MB String</code> é necessária",
 	"installation.issues.media": "A pasta <code>/media</code> não existe ou não possui permissão de escrita",
-	"installation.issues.php": "Certifique-se que está a usar o <code>PHP 7+</code>",
+	"installation.issues.php": "Certifique-se que você está usando o <code>PHP 8+</code>",
 	"installation.issues.server": "O Kirby necessita do <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
 	"installation.issues.sessions": "A pasta <code>/site/sessions</code> não existe ou não possui permissão de escrita",
 

@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Oni devas aldoni almenaŭ unu blokon",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "La retpoŝta antaŭagordo \"{name}\" ne estas trovebla",
 
 	"error.field.converter.invalid": "Nevalida konvertilo \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Ne eblas instali la panelon",
 	"installation.issues.mbstring": "La kromprogramo <code>MB String</code> estas deviga",
 	"installation.issues.media": "La dosierujo <code>/media</code> ne ekzistas, aũ ne estas skribebla",
-	"installation.issues.php": "Nepre uzu <code>PHP 7+</code>",
+	"installation.issues.php": "Nepre uzu <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby bezonas <code>Apache</code>, <code>Nginx</code> aŭ <code>Caddy</code>",
 	"installation.issues.sessions": "La dosierujo <code>/site/sessions</code> ne ekzistas, aŭ ne estas skribebla",
 

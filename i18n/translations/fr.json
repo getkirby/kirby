@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Vous devez ajouter au moins un bloc",
 	"error.blocks.validation": "Il y a une erreur sur le champ \"{field}\" du bloc {index} utilisant le type de bloc \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "La configuration de courriel « {name} » n’a pu être trouvé ",
 
 	"error.field.converter.invalid": "Convertisseur « {converter} » incorrect",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Le Panel ne peut être installé",
 	"installation.issues.mbstring": "L’extension <code>MB String</code> est requise",
 	"installation.issues.media": "Le dossier <code>/media</code> n’existe pas ou n’est pas accessible en écriture",
-	"installation.issues.php": "Veuillez utiliser <code>PHP 7+</code>",
+	"installation.issues.php": "Veuillez utiliser <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby requiert <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
 	"installation.issues.sessions": "Le dossier <code>/site/sessions</code> n’existe pas ou n’est pas accessible en écriture",
 
