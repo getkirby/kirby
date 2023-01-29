@@ -27,6 +27,7 @@ export default {
 	inset: 0;
 	display: flex;
 	flex-direction: column;
+	container: inline-size / app;
 }
 .k-panel-inside:focus {
 	outline: 0;
