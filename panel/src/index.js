@@ -53,5 +53,7 @@ if (CSS.supports("selector(:has(*))") === false) {
 		cssHas(document);
 	});
 }
+// Polyfill
+import "container-query-polyfill";
 
 app.$mount("#app");

@@ -19,6 +19,7 @@
 	"dependencies": {
 		"@linusborg/vue-simple-portal": "^0.1.5",
 		"autosize": "^5.0.2",
+		"container-query-polyfill": "^1.0.2",
 		"dayjs": "^1.11.7",
 		"mitt": "^3.0.0",
 		"prosemirror-commands": "^1.5.0",
