@@ -143,46 +143,63 @@ export default {
 </script>
 
 <style>
+.k-items {
+	position: relative;
+	display: grid;
+}
+
 /**
  * Cards
  */
 .k-cards-items {
-	--min: 13rem;
-	--max: 1fr;
-	--gap: 1.5rem;
-	--column-gap: var(--gap);
-	--row-gap: var(--gap);
+	--items-layout-mode: auto-fit;
 	display: grid;
-	grid-column-gap: var(--column-gap);
-	grid-row-gap: var(--row-gap);
-	grid-template-columns: repeat(auto-fill, minmax(var(--min), var(--max)));
+	gap: 1.5rem;
+	grid-template-columns: repeat(
+		var(--items-layout-mode),
+		minmax(var(--items-size, 12rem), 1fr)
+	);
 }
 
-@media screen and (min-width: 30em) {
+.k-cards-items[data-size="tiny"] {
+	--items-size: 6rem;
+}
+.k-cards-items[data-size="small"] {
+	--items-size: 9rem;
+}
+.k-cards-items[data-size="medium"] {
+	--items-size: 12rem;
+}
+.k-cards-items[data-size="large"] {
+	--items-size: 15rem;
+}
+.k-cards-items[data-size="huge"] {
+	--items-size: 18rem;
+}
+
+@container (max-width: 6rem) {
 	.k-cards-items[data-size="tiny"] {
-		--min: 10rem;
-	}
-	.k-cards-items[data-size="small"] {
-		--min: 16rem;
-	}
-	.k-cards-items[data-size="medium"] {
-		--min: 24rem;
-	}
-	.k-cards-items[data-size="large"],
-	.k-cards-items[data-size="huge"] {
-		--min: 1fr;
-	}
-
-	.k-column[data-width="1/4"] .k-cards-items,
-	.k-column[data-width="1/5"] .k-cards-items,
-	.k-column[data-width="1/6"] .k-cards-items {
-		--min: 1fr;
+		grid-template-columns: repeat(1, 1fr);
 	}
 }
-
-@media screen and (min-width: 65em) {
+@container (max-width: 9rem) {
+	.k-cards-items[data-size="small"] {
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+@container (max-width: 12rem) {
+	.k-cards-items[data-size="medium"] {
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+@container (max-width: 15rem) {
 	.k-cards-items[data-size="large"] {
-		--min: 32rem;
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+@container (max-width: 18rem) {
+	.k-cards-items[data-size="huge"] {
+		grid-template-columns: repeat(1, 1fr);
 	}
 }
 
@@ -191,14 +208,14 @@ export default {
  */
 .k-cardlets-items {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-	grid-gap: 0.5rem;
+	gap: 0.75rem;
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
 
 /**
  * List
  */
-.k-list-items .k-list-item:not(:last-child) {
-	margin-bottom: 2px;
+.k-list-items {
+	gap: 2px;
 }
 </style>
