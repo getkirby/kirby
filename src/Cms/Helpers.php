@@ -19,21 +19,57 @@ use Kirby\Toolkit\Str;
 class Helpers
 {
 	/**
-	 * Triggers a deprecation warning if debug mode is active
+	 * Allows to disable specific deprecation warnings
+	 * by setting them to `false`.
+	 * You can do this by putting the following code in
+	 * `site/config/config.php`:
 	 *
-	 * @param string $message
+	 * ```php
+	 * Helpers::$deprecations['<deprecation-key>'] = false;
+	 * ```
+	 */
+	public static $deprecations = [
+		// Passing the $slot or $slots variables to snippets is
+		// deprecated and will break in a future version.
+		'snippet-pass-slots'    => true,
+
+		// The `Toolkit\Query` class has been deprecated and will
+		// be removed in a future version. Use `Query\Query` instead:
+		// Kirby\Query\Query::factory($query)->resolve($data).
+		'toolkit-query-class'   => true,
+
+		// Passing an empty string as value to `Xml::attr()` has been
+		// deprecated. In a future version, passing an empty string won't
+		// omit the attribute anymore but render it with an empty value.
+		// To omit the attribute, please pass `null`.
+		'xml-attr-empty-string' => false,
+	];
+
+	/**
+	 * Triggers a deprecation warning if debug mode is active
+	 * and warning has not been surpressed via `Helpers::$deprecations`
+	 *
+	 * @param string|null $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
 	 */
-	public static function deprecated(string $message): bool
+	public static function deprecated(string $message, string|null $key = null): bool
 	{
+		// only trigger warning in debug mode or when running PHPUnit tests
+		// @codeCoverageIgnoreStart
 		if (
-			App::instance()->option('debug') === true ||
-			(defined('KIRBY_TESTING') === true && KIRBY_TESTING === true)
+			App::instance()->option('debug') !== true &&
+			(defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true)
 		) {
-			return trigger_error($message, E_USER_DEPRECATED) === true;
+			return false;
+		}
+		// @codeCoverageIgnoreEnd
+
+		// don't trigger the warning if disabled by default or by the dev
+		if ($key !== null && (static::$deprecations[$key] ?? true) === false) {
+			return false;
 		}
 
-		return false;
+		return trigger_error($message, E_USER_DEPRECATED) === true;
 	}
 
 	/**

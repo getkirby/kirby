@@ -30,7 +30,8 @@ class Url
 	 */
 	public static function __callStatic(string $method, array $arguments)
 	{
-		return (new Uri($arguments[0] ?? static::current()))->$method(...array_slice($arguments, 1));
+		$uri = new Uri($arguments[0] ?? static::current());
+		return $uri->$method(...array_slice($arguments, 1));
 	}
 
 	/**
@@ -65,7 +66,11 @@ class Url
 	public static function fix(string|null $url = null): string|null
 	{
 		// make sure to not touch absolute urls
-		return (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) ? 'http://' . $url : $url;
+		if (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) {
+			return 'http://' . $url;
+		}
+
+		return $url;
 	}
 
 	/**
@@ -93,7 +98,9 @@ class Url
 		//  //example.com/uri
 		//  http://example.com/uri, https://example.com/uri, ftp://example.com/uri
 		//  mailto:example@example.com, geo:49.0158,8.3239?z=11
-		return $url !== null && preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
+		return
+			$url !== null &&
+			preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
 	}
 
 	/**
@@ -127,8 +134,11 @@ class Url
 	/**
 	 * Returns the path for the given url
 	 */
-	public static function path(string|array|null $url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
-	{
+	public static function path(
+		string|array|null $url = null,
+		bool $leadingSlash = false,
+		bool $trailingSlash = false
+	): string {
 		return Url::toObject($url)->path()->toString($leadingSlash, $trailingSlash);
 	}
 
@@ -151,8 +161,12 @@ class Url
 	/**
 	 * Shortens the Url by removing all unnecessary parts
 	 */
-	public static function short(string|null $url = null, int $length = 0, bool $base = false, string $rep = '…'): string
-	{
+	public static function short(
+		string|null $url = null,
+		int $length = 0,
+		bool $base = false,
+		string $rep = '…'
+	): string {
 		$uri = static::toObject($url);
 
 		$uri->fragment = null;

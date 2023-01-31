@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Du måste lägga till minst ett block",
 	"error.blocks.validation": "Det finns ett fel i fältet \"{field}\" i block {index} med blocktypen \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "E-postförinställningen \"{name}\" kan inte hittas",
 
 	"error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panelen kan inte installeras",
 	"installation.issues.mbstring": "Tillägget <code>MB String</code> krävs",
 	"installation.issues.media": "Mappen <code>/media</code> finns inte eller är inte skrivbar",
-	"installation.issues.php": "Se till att du använder <code>PHP 7+</code>",
+	"installation.issues.php": "Se till att du använder <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby kräver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
 	"installation.issues.sessions": "Mappen <code>/site/sessions</code> finns inte eller är inte skrivbar",
 

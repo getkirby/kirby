@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "블록을 하나 이상 추가하세요.",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "기본 이메일 주소({name})가 없습니다.",
 
 	"error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "패널을 설치할 수 없습니다.",
 	"installation.issues.mbstring": "<code>MB String</code> 확장 모듈이 필요합니다.",
 	"installation.issues.media": "<code>/media</code> 폴더의 쓰기 권한을 확인하세요.",
-	"installation.issues.php": "<code>PHP</code> 버전이 7 이상인지 확인하세요.",
+	"installation.issues.php": "<code>PHP</code> 버전이 8 이상인지 확인하세요.",
 	"installation.issues.server": "Kirby를 실행하려면 <code>Apache</code>, <code>Nginx</code>, 또는 <code>Caddy</code>가 필요합니다.",
 	"installation.issues.sessions": "<code>/site/sessions</code> 폴더의 쓰기 권한을 확인하세요.",
 

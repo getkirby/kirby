@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Lisää vähintään yksi lohko",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Nimellä \"{name}\" ja kyseisellä verkkotunnuksella ei löydy sähköpostiosoitetta",
 
 	"error.field.converter.invalid": "Muunnin \"{converter}\" ei kelpaa",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Paneelia ei voida asentaa",
 	"installation.issues.mbstring": "<code>MB String</code>-laajennos on pakollinen",
 	"installation.issues.media": "<code>/media</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
-	"installation.issues.php": "Varmista että <code>PHP 7+</code> on käytössä",
+	"installation.issues.php": "Varmista että <code>PHP 8+</code> on käytössä",
 	"installation.issues.server": "Kirby tarvitsee jonkun seuraavista: <code>Apache</code>, <code>Nginx</code> tai <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
 

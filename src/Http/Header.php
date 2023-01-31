@@ -101,8 +101,11 @@ class Header
 	 *
 	 * @return string|void
 	 */
-	public static function type(string $mime, string $charset = 'UTF-8', bool $send = true)
-	{
+	public static function type(
+		string $mime,
+		string $charset = 'UTF-8',
+		bool $send = true
+	) {
 		return static::contentType($mime, $charset, $send);
 	}
 
@@ -118,17 +121,25 @@ class Header
 	 * @return string|void
 	 * @psalm-return ($send is false ? string : void)
 	 */
-	public static function status(int|string|null $code = null, bool $send = true)
-	{
+	public static function status(
+		int|string|null $code = null,
+		bool $send = true
+	) {
 		$codes    = static::$codes;
 		$protocol = Environment::getGlobally('SERVER_PROTOCOL', 'HTTP/1.1');
 
 		// allow full control over code and message
-		if (is_string($code) === true && preg_match('/^\d{3} \w.+$/', $code) === 1) {
+		if (
+			is_string($code) === true &&
+			preg_match('/^\d{3} \w.+$/', $code) === 1
+		) {
 			$message = substr(rtrim($code), 4);
 			$code    = substr($code, 0, 3);
 		} else {
-			$code    = array_key_exists('_' . $code, $codes) === false ? 500 : $code;
+			if (array_key_exists('_' . $code, $codes) === false) {
+				$code = 500;
+			}
+
 			$message = $codes['_' . $code] ?? 'Something went wrong';
 		}
 

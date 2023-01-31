@@ -1,10 +1,10 @@
 {
-	"account.changeName": "Change your name",
-	"account.delete": "Delete your account",
-	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+	"account.changeName": "Ubah nama Anda",
+	"account.delete": "Hapus akun Anda",
+	"account.delete.confirm": "Anda yakin menghapus akun? Anda akan dikeluarkan segera. Akun Anda tidak dapat dipulihkan.",
 
 	"add": "Tambah",
-	"author": "Author",
+	"author": "Penulis",
 	"avatar": "Gambar profil",
 	"back": "Kembali",
 	"cancel": "Batal",
@@ -14,7 +14,7 @@
 	"collapse": "Lipat",
 	"collapse.all": "Lipat Semua",
 	"copy": "Salin",
-	"copy.all": "Copy all",
+	"copy.all": "Salin semua",
 	"create": "Buat",
 
 	"date": "Tanggal",
@@ -71,6 +71,8 @@
 	"error.blocks.min.plural": "Anda setidaknya menambahkan {min} blok",
 	"error.blocks.min.singular": "Anda setidaknya menambahkan satu blok",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
 
 	"error.email.preset.notFound": "Surel \"{name}\" tidak dapat ditemukan",
 
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panel tidak dapat dipasang",
 	"installation.issues.mbstring": "Ekstensi <code>MB String</code> diperlukan",
 	"installation.issues.media": "Folder <code>/media</code> tidak ada atau tidak dapat ditulis",
-	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 7+</code>",
+	"installation.issues.php": "Pastikan Anda menggunakan <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby memerlukan <code>Apache</code>, <code>Nginx</code>, atau <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> tidak ada atau tidak dapat ditulis",
 

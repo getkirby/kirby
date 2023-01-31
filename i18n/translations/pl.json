@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Musisz dodać co najmniej jeden blok",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Nie udało się załadować wzorca wiadomości e-mail \"{name}\"",
 
 	"error.field.converter.invalid": "Nieprawidłowy konwerter \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Nie można zainstalować panelu",
 	"installation.issues.mbstring": "Wymagane jest rozszerzenie <code>MB String</code>",
 	"installation.issues.media": "Folder <code>/media</code> nie istnieje lub nie ma uprawnień do zapisu",
-	"installation.issues.php": "Upewnij się, że używasz <code>PHP 7+</code>",
+	"installation.issues.php": "Upewnij się, że używasz <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby wymaga <code>Apache</code>, <code>Nginx</code> lub <code>Caddy</code>",
 	"installation.issues.sessions": "Folder <code>/site/sessions</code> nie istnieje lub nie ma uprawnień do zapisu",
 

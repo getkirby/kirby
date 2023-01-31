@@ -280,7 +280,9 @@ export default {
 		 * c. cursor selection covers more than one part
 		 *    => select the last affected part
 		 * d. cursor selection cover last part
-		 *    => tab should blur the input, focus on next tabbale element
+		 *    => tab should blur the input, focus on next tabable element
+		 * e. cursor is at the end of the pattern
+		 *    => tab should blur the input, focus on next tabable element
 		 *
 		 * @param {Event} event
 		 */
@@ -322,8 +324,33 @@ export default {
 						this.selectNext(selection.index);
 					}
 				} else {
-					// select default part (step unit)
-					event.shiftKey ? this.selectLast() : this.selectFirst();
+					// nothing or no part fully selected
+					if (
+						this.$refs.input &&
+						this.$refs.input.selectionStart == selection.end + 1 &&
+						selection.index == this.pattern.parts.length - 1
+					) {
+						// cursor at the end of the pattern, jump out
+						return;
+					}
+
+					// more than one part selected, select last affected part
+					else if (
+						this.$refs.input &&
+						this.$refs.input.selectionEnd - 1 > selection.end
+					) {
+						const last = this.pattern.at(
+							this.$refs.input.selectionEnd,
+							this.$refs.input.selectionEnd
+						);
+
+						this.select(this.pattern.parts[last.index]);
+					}
+
+					// select part where the cursor is located
+					else {
+						this.select(this.pattern.parts[selection.index]);
+					}
 				}
 
 				event.preventDefault();

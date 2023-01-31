@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "Δεν είναι δυνατή η εύρεση της προεπιλογής διεύθινσης ηλεκτρονικού ταχυδρομείου \"{name}\"",
 
 	"error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Ο πίνακας ελέγχου δεν μπορεί να εγκατασταθεί",
 	"installation.issues.mbstring": "Απαιτείται η επέκταση <code>MB String</code> ",
 	"installation.issues.media": "Ο φάκελος <code>/media</code>  δεν υπάρχει ή δεν είναι εγγράψιμος",
-	"installation.issues.php": "Βεβαιωθείτε ότι χρησιμοποιήτε <code>PHP 7+</code>",
+	"installation.issues.php": "Βεβαιωθείτε ότι χρησιμοποιήτε <code>PHP 8+</code>",
 	"installation.issues.server": "To Kirby απαιτεί <code>Apache</code>, <code>Nginx</code> ή <code>Caddy</code>",
 	"installation.issues.sessions": "Ο φάκελος <code>/site/sessions</code> δεν υπάρχει ή δεν είναι εγγράψιμος",
 

@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cache\FileCache;
 use Kirby\Cache\NullCache;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 
 class AppCachesTest extends TestCase
@@ -39,6 +40,22 @@ class AppCachesTest extends TestCase
 
 		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
 		$this->assertSame($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
+	}
+
+	public function testInvalidCacheType()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid cache type "not-exists"');
+
+		$kirby = $this->app([
+			'options' => [
+				'cache.pages' => [
+					'type' => 'not-exists'
+				]
+			]
+		]);
+
+		$kirby->cache('pages');
 	}
 
 	public function testEnabledCacheWithOptions()

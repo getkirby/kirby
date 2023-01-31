@@ -15,4 +15,6 @@
 **bold**
 
 This is some text
-and some more text.
+and some more text 👀.
+
+<div>and emojis 🫣💡🕧</div>

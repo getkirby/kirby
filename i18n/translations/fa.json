@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "قالب ایمیل «{name}» پیدا نشد",
 
 	"error.field.converter.invalid": "مبدل «{converter}» نامعتبر است",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "نصب پانل کاربری ممکن نیست",
 	"installation.issues.mbstring": "افزونه <code>MB String</code> مورد نیاز است",
 	"installation.issues.media": "پوشه <code>/media</code> موجود نیست یا قابل نوشتن نیست",
-	"installation.issues.php": "لطفا از پی‌اچ‌پی 7 یا بالاتر استفاده کنید",
+	"installation.issues.php": "لطفا از پی‌اچ‌پی 8 یا بالاتر استفاده کنید",
 	"installation.issues.server": "کربی نیاز به <code>Apache</code>، <code>Nginx</code> یا <code>Caddy</code> دارد",
 	"installation.issues.sessions": "پوشه <code>/site/sessions</code> وجود ندارد یا قابل نوشتن نیست",
 

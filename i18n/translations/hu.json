@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Legalább egy blokkot hozzá kell adnod",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "A \"{name}\" email-beállítás nem található",
 
 	"error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "A panel telepítése sikertelen",
 	"installation.issues.mbstring": "Az <code>MB String</code> bővítmény engedélyezése szükséges",
 	"installation.issues.media": "A <code>/media</code> mappa nem létezik vagy nem írható",
-	"installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 7+</code>",
+	"installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 8+</code>",
 	"installation.issues.server": "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
 	"installation.issues.sessions": "A <code>/site/sessions</code> könyvtár nem létezik vagy nem írható",
 

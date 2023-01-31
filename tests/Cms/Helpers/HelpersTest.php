@@ -10,10 +10,22 @@ use Kirby\Toolkit\Obj;
  */
 class HelpersTest extends TestCase
 {
+	protected $deprecations = [];
 	protected $hasErrorHandler = false;
+
+	public function setUp(): void
+	{
+		parent::setUp();
+
+		$this->deprecations = Helpers::$deprecations;
+	}
 
 	public function tearDown(): void
 	{
+		parent::tearDown();
+
+		Helpers::$deprecations = $this->deprecations;
+
 		if ($this->hasErrorHandler === true) {
 			restore_error_handler();
 			$this->hasErrorHandler = false;
@@ -31,6 +43,38 @@ class HelpersTest extends TestCase
 		$this->expectExceptionMessage('The xyz method is deprecated.');
 
 		Helpers::deprecated('The xyz method is deprecated.');
+	}
+
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedKeyUndefined()
+	{
+		$this->expectException('Whoops\Exception\ErrorException');
+		$this->expectExceptionMessage('The xyz method is deprecated.');
+
+		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+	}
+
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedActivated()
+	{
+		$this->expectException('Whoops\Exception\ErrorException');
+		$this->expectExceptionMessage('The xyz method is deprecated.');
+
+		Helpers::$deprecations = ['my-key' => true];
+		Helpers::deprecated('The xyz method is deprecated.', 'my-key');
+	}
+
+	/**
+	 * @covers ::deprecated
+	 */
+	public function testDeprecatedKeyDeactivated()
+	{
+		Helpers::$deprecations = ['my-key' => false];
+		$this->assertFalse(Helpers::deprecated('The xyz method is deprecated.', 'my-key'));
 	}
 
 	/**

@@ -570,9 +570,18 @@ class ParsedownExtra extends Parsedown
 
         $DOMDocument = new DOMDocument();
 
-        # http://stackoverflow.com/q/11309194/200145
-        $elementMarkup = htmlentities($elementMarkup);
-		$elementMarkup = htmlspecialchars_decode($elementMarkup);
+		// Migrating away from `mb_convert_encoding($elementMarkup,
+		//'HTML-ENTITIES', 'UTF-8');` has caused multibyte characters like
+		// emojis not to be converted into entities, which is needed so that
+		// the `DOM` extension can properly parse the markup.
+		// The following line works like this: It treats the input string
+		// as UTF-8 and converts every Unicode character with 8 or more bits
+		// (= character code starting at 128 or 0x80 up to the Unicode limit
+		// of 0x10ffff) to an entity; the third and fourth arguments for the
+		// map are not needed for our use case and are set to the default values
+		// (no offset and a full mask)
+		// [http://stackoverflow.com/q/11309194/200145]
+		$elementMarkup = mb_encode_numericentity($elementMarkup, [0x80, 0x10ffff, 0, 0xffffff], 'UTF-8');
 
         # Ensure that saveHTML() is not remove new line characters. New lines will be split by this character.
         $DOMDocument->formatOutput = true;

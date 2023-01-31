@@ -82,7 +82,7 @@ return [
 			$this->user($id)->avatar()?->delete();
 
 			return $this->upload(
-				function ($source, $filename) {
+				function ($source, $filename) use ($id) {
 					$props = [
 						'filename' => 'profile.' . F::extension($filename),
 						'template' => 'avatar',

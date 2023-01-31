@@ -49,13 +49,13 @@
 	"email": "Email",
 	"email.placeholder": "mail@esempio.com",
 
-	"entries": "Entries",
-	"entry": "Entry",
+	"entries": "Voci",
+	"entry": "Voce",
 
 	"environment": "Ambiente",
 
 	"error.access.code": "Codice non valido",
-	"error.access.login": "Login Invalido",
+	"error.access.login": "Login invalido",
 	"error.access.panel": "Non ti è permesso accedere al pannello",
 	"error.access.view": "Non ti è permesso accedere a questa parte del pannello",
 
@@ -70,12 +70,14 @@
 	"error.blocks.max.singular": "Non puoi aggiungere più di un blocco",
 	"error.blocks.min.plural": "Devi aggiungere almeno {min} blocchi",
 	"error.blocks.min.singular": "Devi aggiungere almeno un blocco",
-	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
+	"error.blocks.validation": "C'è un errore sul campo \"{field}\" nel blocco {index} che utilizza il tipo di blocco \"{fieldset}\"",
+
+	"error.cache.type.invalid": "Tipo di cache \"{type}\" non valido",
 
 	"error.email.preset.notFound": "Non è stato possibile trovare il preset email \"{name}\"",
 
 	"error.field.converter.invalid": "Convertitore \"{converter}\" non valido",
-	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
+	"error.field.type.missing": "Campo \"{ name }\": il tipo di campo \"{ type }\" non esiste",
 
 	"error.file.changeName.empty": "Il nome non dev'essere vuoto",
 	"error.file.changeName.permission": "Non ti è permesso modificare il nome di \"{filename}\"",
@@ -108,14 +110,14 @@
 	"error.language.name": "Inserisci un nome valido per la lingua",
 	"error.language.notFound": "La lingua non è stata trovata",
 
-	"error.layout.validation.block": "There's an error on the \"{field}\" field in block {blockIndex} using the \"{fieldset}\" block type in layout {layoutIndex}",
+	"error.layout.validation.block": "C'è un errore sul campo \"{field}\" nel blocco {blockIndex} che utilizza il tipo di blocco \"{fieldset}\" nel layout {layoutIndex}",
 	"error.layout.validation.settings": "C'è un errore nelle impostazioni del layout {index}",
 
 	"error.license.format": "Inserisci un codice di licenza valido",
 	"error.license.email": "Inserisci un indirizzo email valido",
 	"error.license.verification": "Non è stato possibile verificare la licenza",
 
-	"error.object.validation": "There’s an error in the \"{label}\" field:\n{message}",
+	"error.object.validation": "C'è un errore nel campo \"{label}\":\n{message}",
 
 	"error.offline": "Il pannello di controllo è attualmente offline",
 
@@ -285,12 +287,12 @@
 	"field.layout.empty": "Nessuna riga inserita",
 	"field.layout.select": "Scegli un layout",
 
-	"field.object.empty": "No information yet",
+	"field.object.empty": "Ancora nessuna informazione",
 
 	"field.pages.empty": "Nessuna pagina selezionata",
 
 	"field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",
-	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.all": "Vuoi davvero cancellare tutte le voci?",
 	"field.structure.empty": "Non ci sono ancora elementi.",
 
 	"field.users.empty": "Nessun utente selezionato",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Il pannello non può esser installato",
 	"installation.issues.mbstring": "È necessaria l'estensione <code>MB String</code>",
 	"installation.issues.media": "La cartella <code>/media</code> non esiste o non dispone dei permessi di scrittura",
-	"installation.issues.php": "Assicurati di utilizzare <code>PHP 7.1+</code>",
+	"installation.issues.php": "Assicurati di utilizzare <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby necessita di <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
 	"installation.issues.sessions": "La cartella <code>/site/sessions</code>non esiste o non dispone dei permessi di scrittura",
 
@@ -348,14 +350,14 @@
 	"license": "Licenza di Kirby",
 	"license.buy": "Acquista una licenza",
 	"license.register": "Registra",
-	"license.manage": "Manage your licenses",
+	"license.manage": "Gestisci le tue licenze",
 	"license.register.help": "Hai ricevuto il codice di licenza tramite email dopo l'acquisto. Per favore inseriscilo per registrare Kirby.",
 	"license.register.label": "Inserisci il codice di licenza",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
+	"license.register.domain": "La tua licenza verrà registrata su <strong>{host}</strong>.",
+	"license.register.local": "Stai per registrare la licenza per il dominio locale <strong>{host}</strong>. Se questo sito verrà rilasciato su un dominio pubblico, ti preghiamo di registrarlo lì. Se {host} è il dominio per il quale desideri ottenere la licenza di Kirby, procedi pure.",
 	"license.register.success": "Ti ringraziamo per aver supportato Kirby",
 	"license.unregistered": "Questa è una versione demo di Kirby non registrata",
-	"license.unregistered.label": "Unregistered",
+	"license.unregistered.label": "Non registrato",
 
 	"link": "Link",
 	"link.text": "Testo del link",
@@ -486,7 +488,7 @@
 
 	"section.required": "La sezione è obbligatoria",
 
-	"security": "Security",
+	"security": "Sicurezza",
 	"select": "Seleziona",
 	"server": "Server",
 	"settings": "Impostazioni",
@@ -496,26 +498,26 @@
 	"slug": "URL",
 	"sort": "Ordina",
 
-	"stats.empty": "No reports",
-	"system.issues.content": "The content folder seems to be exposed",
-	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
-	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
-	"system.issues.debug": "Debugging must be turned off in production",
-	"system.issues.git": "The .git folder seems to be exposed",
-	"system.issues.https": "We recommend HTTPS for all your sites",
-	"system.issues.kirby": "The kirby folder seems to be exposed",
-	"system.issues.site": "The site folder seems to be exposed",
-	"system.issues.vulnerability.kirby": "Your installation might be affected by the following vulnerability ({ severity } severity): { description }",
-	"system.issues.vulnerability.plugin": "Your installation might be affected by the following vulnerability in the { plugin } plugin ({ severity } severity): { description }",
-	"system.updateStatus": "Update status",
-	"system.updateStatus.error": "Could not check for updates",
-	"system.updateStatus.not-vulnerable": "No known vulnerabilities",
-	"system.updateStatus.security-update": "Free security update { version } available",
-	"system.updateStatus.security-upgrade": "Upgrade { version } with security fixes available",
-	"system.updateStatus.unreleased": "Unreleased version",
-	"system.updateStatus.up-to-date": "Up to date",
-	"system.updateStatus.update": "Free update { version } available",
-	"system.updateStatus.upgrade": "Upgrade { version } available",
+	"stats.empty": "Nessuna segnalazione",
+	"system.issues.content": "La cartella content sembra essere esposta",
+	"system.issues.eol.kirby": "La versione di Kirby installata è giunta alla fine del suo ciclo di vita e non riceverà ulteriori aggiornamenti di sicurezza ",
+	"system.issues.eol.plugin": "La versione installata del plugin { plugin } è giunta alla fine del suo ciclo di vita e non riceverà ulteriori aggiornamenti di sicurezza",
+	"system.issues.debug": "Il debug deve essere disattivato in produzione",
+	"system.issues.git": "La cartella .git sembra essere esposta",
+	"system.issues.https": "Raccomandiamo l'utilizzo di HTTPS per tutti i siti",
+	"system.issues.kirby": "La cartella kirby sembra essere esposta",
+	"system.issues.site": "La cartella site sembra essere esposta",
+	"system.issues.vulnerability.kirby": "La tua installazione potrebbe essere colpita dalla seguente vulnerabilità ({ severity } gravità): { description }",
+	"system.issues.vulnerability.plugin": "La tua installazione potrebbe essere colpita dalla seguente vulnerabilità nel plugin { plugin } ({ severity } gravità): { description }",
+	"system.updateStatus": "Aggiorna lo stato",
+	"system.updateStatus.error": "Impossibile verificare gli aggiornamenti",
+	"system.updateStatus.not-vulnerable": "Nessuna vulnerabilità conosciuta",
+	"system.updateStatus.security-update": "Aggiornamento di sicurezza gratuito { version } disponibile",
+	"system.updateStatus.security-upgrade": "Aggiornamento { version } con le correzioni di sicurezza disponibili",
+	"system.updateStatus.unreleased": "Versione non rilasciata",
+	"system.updateStatus.up-to-date": "Aggiornato",
+	"system.updateStatus.update": "Aggiornamento gratuito { version } disponibile",
+	"system.updateStatus.upgrade": "Aggiornamento { version } disponibile",
 
 	"title": "Titolo",
 	"template": "Template",
@@ -582,9 +584,9 @@
 	"users": "Utenti",
 
 	"version": "Versione di Kirby",
-	"version.current": "Current version",
-	"version.latest": "Latest version",
-	"versionInformation": "Version information",
+	"version.current": "Versione corrente",
+	"version.latest": "Ultima versione",
+	"versionInformation": "Informazioni sulla versione",
 
 	"view.account": "Il tuo account",
 	"view.installation": "Installazione",

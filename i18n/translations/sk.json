@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "You must add at least one block",
 	"error.blocks.validation": "There's an error on the \"{field}\" field in block {index} using the \"{fieldset}\" block type",
 
+	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+
 	"error.email.preset.notFound": "E-mailovú predvoľbu \"{name}\" nie je možné nájsť",
 
 	"error.field.converter.invalid": "Neplatný converter \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Panel nie je možné naištalovať",
 	"installation.issues.mbstring": "<code>MB String</code> rozšírenie je povinné",
 	"installation.issues.media": "Priečinok <code>/media</code> neexistuje alebo nie je nastavený ako zapisovateľný",
-	"installation.issues.php": "Uistite sa, že používate <code>PHP 7+</code>",
+	"installation.issues.php": "Uistite sa, že používate <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby vyžaduje <code>Apache</code>, <code>Nginx</code> alebo <code>Caddy</code>",
 	"installation.issues.sessions": "Priečinok <code>/site/sessions</code> neexistuje alebo nie je nastavený ako zapisovateľný",
 

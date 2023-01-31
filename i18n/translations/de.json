@@ -72,6 +72,8 @@
 	"error.blocks.min.singular": "Bitte füge mindestens einen Block hinzu",
 	"error.blocks.validation": "Fehler im \"{field}\" Feld in Block {index} mit dem Block Typ \"{fieldset}\"",
 
+	"error.cache.type.invalid": "Ungültiger Cachetyp: \"{type}\"",
+
 	"error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
 	"error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
@@ -320,7 +322,7 @@
 	"installation.issues.headline": "Das Panel kann nicht installiert werden",
 	"installation.issues.mbstring": "Die <code>MB String</code> Erweiterung wird benötigt",
 	"installation.issues.media": "Der <code>/media</code> Ordner ist nicht beschreibbar",
-	"installation.issues.php": "Bitte verwende <code>PHP 7+</code>",
+	"installation.issues.php": "Bitte verwende <code>PHP 8+</code>",
 	"installation.issues.server": "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
 	"installation.issues.sessions": "<code>/site/sessions</code> ist nicht beschreibbar",
 
