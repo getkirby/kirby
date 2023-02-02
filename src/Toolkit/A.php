@@ -297,6 +297,19 @@ class A
 	}
 
 	/**
+	 * Reduce an array to a single value
+	 *
+	 * @param array $array
+	 * @param callable $callback
+	 * @param mixed $initial
+	 * @return mixed
+	 */
+	public static function reduce(array $array, callable $callback, $initial = null): mixed
+	{
+		return array_reduce($array, $callback, $initial);
+	}
+
+	/**
 	 * Shuffles an array and keeps the keys
 	 *
 	 * <code>

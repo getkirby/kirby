@@ -389,6 +389,29 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::reduce
+	 */
+	public function testReduce()
+	{
+		$array = $this->_array();
+
+		$reduced = A::reduce($array, function ($carry, $item) {
+			return $carry . $item;
+		}, '');
+		$this->assertSame('miaowufftweet', $reduced);
+
+		$reduced = A::reduce([1, 2, 3], function ($carry, $item) {
+			return $carry + $item;
+		}, 0);
+		$this->assertSame(6, $reduced);
+
+		$reduced = A::reduce([], function ($carry, $item) {
+			return $carry + $item;
+		});
+		$this->assertSame(null, $reduced);
+	}
+
+	/**
 	 * @covers ::first
 	 */
 	public function testFirst()
