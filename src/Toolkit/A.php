@@ -404,15 +404,17 @@ class A
 	 * @param int $limit The number of elements the array should
 	 *                   contain after filling it up.
 	 * @param mixed $fill The element, which should be used to
-	 *                    fill the array
+	 *                    fill the array. If it's a callable, it
+	 *                    will be called with the current index
 	 * @return array The filled-up result array
 	 */
 	public static function fill(array $array, int $limit, $fill = 'placeholder'): array
 	{
 		$diff = $limit - count($array);
+		$original = count($array);
 
 		for ($x = 0; $x < $diff; $x++) {
-			$array[] = $fill;
+			$array[] = is_callable($fill) ? $fill($original + $x) : $fill;
 		}
 
 		return $array;

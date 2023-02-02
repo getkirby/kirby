@@ -447,6 +447,24 @@ class ATest extends TestCase
 			'elephant',
 			'elephant'
 		], A::fill($array, 5, 'elephant'));
+
+		// Callable
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant',
+			'elephant'
+		], A::fill($array, 6, function () {
+			return 'elephant';
+		}));
+
+		// Callable with Closure
+		$this->assertSame([1, 2, 3], A::fill([], 3, function(int $i) { return $i + 1; }));
+
+		// callable with callable
+		$this->assertSame([false, true, false], A::fill([], 3, [\Kirby\Toolkit\V::class, 'accepted']));
 	}
 
 	/**
