@@ -522,6 +522,20 @@ class Str
 		return preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string);
 	}
 
+	/**
+	 * Match string against a regular expression and return matches
+	 *
+	 * @param string $string The string to match
+	 * @param string $pattern The regular expression
+	 * @param int $flags Optional flags for the match
+	 * @param int $offset Optional offset for the match
+	 * @return array|null The matches or null if no match was found
+	 */
+	public static function match(string $string, string $pattern, int $flags = 0, int $offset = 0): ?array
+	{
+		$result = preg_match($pattern, $string, $matches, $flags, $offset);
+		return ($result > 0) ? $matches : null;
+	}
 
 	/**
 	 * Get a character pool with various possible combinations

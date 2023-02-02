@@ -527,6 +527,15 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::match
+	 */
+	public function testMatch()
+	{
+		$this->assertSame(['test', 'es'], Str::match('test', '/t(es)t/'));
+		$this->assertNull(Str::match('one two three', '/(four)/'));
+	}
+
+	/**
 	 * @covers ::pool
 	 */
 	public function testPool()
