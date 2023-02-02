@@ -536,6 +536,15 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::matches
+	 */
+	public function testMatches()
+	{
+		$this->assertTrue(Str::matches('test', '/t(es)t/'));
+		$this->assertFalse(Str::matches('one two three', '/(four)/'));
+	}
+
+	/**
 	 * @covers ::matchAll
 	 */
 	public function testMatchAll()

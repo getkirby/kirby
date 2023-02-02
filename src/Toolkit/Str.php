@@ -538,6 +538,20 @@ class Str
 	}
 
 	/**
+	 * Syntax sugar for boolean string matching
+	 *
+	 * @param string $string The string to match
+	 * @param string $pattern The regular expression
+	 * @param int $flags Optional flags for the match
+	 * @param int $offset Optional offset for the match
+	 * @return bool True if the string matches the pattern
+	 */
+	public static function matches(string $string, string $pattern, int $flags = 0, int $offset = 0): bool
+	{
+		return static::match($string, $pattern, $flags, $offset) !== null;
+	}
+
+	/**
 	 * Match string against a regular expression and return all matches
 	 *
 	 * @param string $string The string to match
