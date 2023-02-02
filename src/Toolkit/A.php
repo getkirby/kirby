@@ -363,6 +363,18 @@ class A
 	): array {
 		return array_slice($array, $offset, $length, $preserveKeys);
 	}
+
+	/**
+	 * Sums an array
+	 *
+	 * @param array $array
+	 * @return int|float
+	 */
+	public static function sum(array $array): int|float
+	{
+		return array_sum($array);
+	}
+
 	/**
 	 * Returns the first element of an array
 	 *

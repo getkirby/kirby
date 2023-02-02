@@ -426,6 +426,19 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::sum
+	 */
+	public function testSum()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(0, A::sum([]));
+		$this->assertSame(6, A::sum([1, 2, 3]));
+		$this->assertSame(6, A::sum([1, -1, 6]));
+		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
+	}
+
+	/**
 	 * @covers ::first
 	 */
 	public function testFirst()
