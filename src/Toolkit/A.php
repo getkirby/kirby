@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Exception;
+use Kirby\Toolkit\Macroable;
 
 /**
  * The `A` class provides a set of handy methods
@@ -20,6 +21,8 @@ use Exception;
  */
 class A
 {
+	use Macroable;
+
 	/**
 	 * Appends the given array
 	 */

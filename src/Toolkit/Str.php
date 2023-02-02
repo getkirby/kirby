@@ -5,10 +5,11 @@ namespace Kirby\Toolkit;
 use Closure;
 use DateTime;
 use Exception;
-use IntlDateFormatter;
-use Kirby\Exception\InvalidArgumentException;
-use Kirby\Query\Query;
 use Throwable;
+use IntlDateFormatter;
+use Kirby\Query\Query;
+use Kirby\Toolkit\Macroable;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The String class provides a set
@@ -23,6 +24,8 @@ use Throwable;
  */
 class Str
 {
+	use Macroable;
+
 	/**
 	 * Language translation table
 	 */
