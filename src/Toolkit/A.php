@@ -48,6 +48,21 @@ class A
 	}
 
 	/**
+	 * Counts the number of elements in an array
+	 *
+	 * @param array $array
+	 * @return int
+	 */
+	public static function count(array $array = []): int
+	{
+		if (!is_array($array)) {
+			throw new Exception('Invalid argument type: ' . gettype($array));
+		}
+
+		return count($array);
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * <code>
@@ -198,7 +213,7 @@ class A
 				) {
 					$merged[] = $value;
 
-				// recursively merge the two array values
+					// recursively merge the two array values
 				} elseif (
 					is_array($value) === true &&
 					isset($merged[$key]) === true &&
@@ -206,7 +221,7 @@ class A
 				) {
 					$merged[$key] = static::merge($merged[$key], $value, $mode);
 
-				// simply overwrite with the value from the second array
+					// simply overwrite with the value from the second array
 				} else {
 					$merged[$key] = $value;
 				}

@@ -78,6 +78,18 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::count
+	 */
+	public function testCount()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(3, A::count($array));
+		$this->assertSame(2, A::count(['cat', 'dog']));
+		$this->assertSame(0, A::count([]));
+	}
+
+	/**
 	 * @covers ::get
 	 */
 	public function testGet()
@@ -351,9 +363,9 @@ class ATest extends TestCase
 	public function testPluck()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		$this->assertSame([
@@ -696,9 +708,9 @@ class ATest extends TestCase
 	public function testSort()
 	{
 		$array = [
-			[ 'id' => 1, 'username' => 'bastian'],
-			[ 'id' => 2, 'username' => 'sonja'],
-			[ 'id' => 3, 'username' => 'lukas']
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
 		];
 
 		// ASC
@@ -899,7 +911,7 @@ class ATest extends TestCase
 		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::without($associativeArray, ['this', 'cat', 'doesnt', 'exist']));
 
 		$this->assertSame([0 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, range(1, 3)));
-		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4=> 'dog', 5 => 'bird'], A::without($indexedArray, 0));
+		$this->assertSame([1 => 'dog', 2 => 'bird', 3 => 'cat', 4 => 'dog', 5 => 'bird'], A::without($indexedArray, 0));
 		$this->assertSame(['cat', 'dog', 'bird', 'cat', 'dog', 'bird'], A::without($indexedArray, -1));
 	}
 }
