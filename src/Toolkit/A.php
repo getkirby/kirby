@@ -345,6 +345,24 @@ class A
 		return $new;
 	}
 
+
+	/**
+	 * Returns a slice of an array
+	 *
+	 * @param array $array
+	 * @param int $offset
+	 * @param int|null $length
+	 * @param bool $preserveKeys
+	 * @return array
+	 */
+	public static function slice(
+		array $array,
+		int $offset,
+		int $length = null,
+		bool $preserveKeys = false
+	): array {
+		return array_slice($array, $offset, $length, $preserveKeys);
+	}
 	/**
 	 * Returns the first element of an array
 	 *

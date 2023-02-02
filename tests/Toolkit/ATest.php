@@ -412,6 +412,20 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::slice
+	 */
+	public function testSlice()
+	{
+		$array = $this->_array();
+
+		$this->assertSame(['cat' => 'miao'], A::slice($array, 0, 1));
+		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::slice($array, 1));
+		$this->assertSame(['bird' => 'tweet'], A::slice($array, -1));
+		$this->assertSame(['dog' => 'wuff'], A::slice($array, -2, 1));
+		$this->assertSame($array, A::slice($array, 0));
+	}
+
+	/**
 	 * @covers ::first
 	 */
 	public function testFirst()
