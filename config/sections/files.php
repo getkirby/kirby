@@ -57,6 +57,11 @@ return [
 			// search
 			if ($this->search === true && empty($this->searchterm()) === false) {
 				$files = $files->search($this->searchterm());
+
+				// disable flip and sortBy while searching
+				// to show most relevant results
+				$this->flip = false;
+				$this->sortBy = null;
 			}
 
 			// sort
