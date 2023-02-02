@@ -27,6 +27,32 @@ class MacroableTest extends TestCase
 
 	/**
 	 * @covers ::_addMacro
+	 */
+	public function testAddMacroWhenItExists()
+	{
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('Class "Kirby\Toolkit\Str" already includes macro "test"');
+
+		Str::_addMacro('test', function () {
+			return 'test';
+		});
+	}
+
+	/**
+	 * @covers ::_addMacro
+	 */
+	public function testAddMacroNamedAfterExistingMethod()
+	{
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('Class "Kirby\Toolkit\Str" already contains static method "upper"');
+
+		Str::_addMacro('upper', function () {
+			return 'oh no';
+		});
+	}
+
+	/**
+	 * @covers ::_addMacro
 	 * @covers ::_hasMacro
 	 */
 	public function testHasMacro()
