@@ -190,9 +190,6 @@ class ATest extends TestCase
 		$this->assertFalse(A::has($array, 'cat'));
 		$this->assertFalse(A::has($array, 4));
 		$this->assertFalse(A::has($array, ['miao']));
-
-		// test alias
-		$this->assertTrue(A::includes($array, 'miao'));
 	}
 
 	/**

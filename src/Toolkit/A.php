@@ -55,10 +55,6 @@ class A
 	 */
 	public static function count(array $array = []): int
 	{
-		if (!is_array($array)) {
-			throw new Exception('Invalid argument type: ' . gettype($array));
-		}
-
 		return count($array);
 	}
 
@@ -168,22 +164,13 @@ class A
 	 * Checks in array has a value
 	 *
 	 * @param array $array
+	 * @param mixed $value
+	 * @param bool $strict
 	 * @return bool
 	 */
-	public static function has(array $array, $value): bool
+	public static function has(array $array, $value, bool $strict = false): bool
 	{
-		return in_array($value, $array);
-	}
-
-	/**
-	 * Checks in array includes a value (alias for A::has)
-	 *
-	 * @param array $array
-	 * @return bool
-	 */
-	public static function includes(array $array, mixed $value): bool
-	{
-		return A::has($array, $value);
+		return in_array($value, $array, $strict);
 	}
 
 	/**
