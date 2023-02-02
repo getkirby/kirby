@@ -180,6 +180,22 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::has
+	 */
+	public function testHas()
+	{
+		$array = $this->_array();
+
+		$this->assertTrue(A::has($array, 'miao'));
+		$this->assertFalse(A::has($array, 'cat'));
+		$this->assertFalse(A::has($array, 4));
+		$this->assertFalse(A::has($array, ['miao']));
+
+		// test alias
+		$this->assertTrue(A::includes($array, 'miao'));
+	}
+
+	/**
 	 * @covers ::map
 	 */
 	public function testMap()

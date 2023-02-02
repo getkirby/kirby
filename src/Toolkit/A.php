@@ -165,6 +165,28 @@ class A
 	}
 
 	/**
+	 * Checks in array has a value
+	 *
+	 * @param array $array
+	 * @return bool
+	 */
+	public static function has(array $array, $value): bool
+	{
+		return in_array($value, $array);
+	}
+
+	/**
+	 * Checks in array includes a value (alias for A::has)
+	 *
+	 * @param array $array
+	 * @return bool
+	 */
+	public static function includes(array $array, mixed $value): bool
+	{
+		return A::has($array, $value);
+	}
+
+	/**
 	 * Joins the elements of an array to a string
 	 */
 	public static function join(array|string $value, string $separator = ', '): string
