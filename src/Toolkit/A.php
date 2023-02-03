@@ -410,11 +410,8 @@ class A
 	 */
 	public static function fill(array $array, int $limit, $fill = 'placeholder'): array
 	{
-		$diff = $limit - count($array);
-		$original = count($array);
-
-		for ($x = 0; $x < $diff; $x++) {
-			$array[] = is_callable($fill) ? $fill($original + $x) : $fill;
+		for ($x = count($array); $x < $limit; $x++) {
+			$array[] = is_callable($fill) ? $fill($x) : $fill;
 		}
 
 		return $array;
