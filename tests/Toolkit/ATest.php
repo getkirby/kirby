@@ -820,6 +820,62 @@ class ATest extends TestCase
 	}
 
 	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyBy()
+	{
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_id = [
+			1 => [ 'id' => 1, 'username' => 'bastian'],
+			2 => [ 'id' => 2, 'username' => 'sonja'],
+			3 => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_name = [
+			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_cb = [
+			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja-2' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas-3' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
+		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
+		$this->assertSame($array_by_cb, A::keyBy($array, function ($item) {
+			return $item['username'] . '-' . $item['id'];
+		}));
+
+		// test with associative array
+		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
+	}
+
+	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyByWithNonexistentKeys()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
+
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		A::keyBy($array, 'nonexistent');
+	}
+
+	/**
 	 * @covers ::update
 	 */
 	public function testUpdate()
