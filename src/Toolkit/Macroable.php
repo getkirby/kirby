@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
+
 /**
  * Macroable
  *
@@ -25,11 +27,11 @@ trait Macroable {
 	 */
 	public static function _addMacro(string $name, callable $macro) {
 		if (method_exists(static::class, $name)) {
-			throw new \Exception('Class "' . static::class . "\" already contains static method \"{$name}\"");
+			throw new Exception('Class "' . static::class . "\" already contains static method \"{$name}\"");
 		}
 
 		if (array_key_exists($name, static::$_macros)) {
-			throw new \Exception('Class "' . static::class . "\" already includes macro \"{$name}\"");
+			throw new Exception('Class "' . static::class . "\" already includes macro \"{$name}\"");
 		}
 
 		static::$_macros[$name] = $macro;
@@ -54,7 +56,7 @@ trait Macroable {
 	 */
 	public static function __callStatic($name, $arguments) {
 		if (! static::_hasMacro($name)) {
-			throw new \Exception('Class "' . self::class . "\" does not contain static method \"{$name}\"");
+			throw new Exception('Class "' . self::class . "\" does not contain static method \"{$name}\"");
 		}
 
 		$macro = static::$_macros[$name];
