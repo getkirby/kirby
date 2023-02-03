@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
 /**

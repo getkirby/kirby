@@ -15,7 +15,8 @@ use Exception;
  * @copyright Adam Kiss
  * @license   https://opensource.org/licenses/MIT
  */
-trait Macroable {
+trait Macroable
+{
 	private static $_macros = [];
 
 	/**
@@ -25,7 +26,8 @@ trait Macroable {
 	 * @param callable $macro
 	 * @return void
 	 */
-	public static function _addMacro(string $name, callable $macro) {
+	public static function _addMacro(string $name, callable $macro)
+	{
 		if (method_exists(static::class, $name)) {
 			throw new Exception('Class "' . static::class . "\" already contains static method \"{$name}\"");
 		}
@@ -43,7 +45,8 @@ trait Macroable {
 	 * @param string $name
 	 * @return bool
 	 */
-	public static function _hasMacro(string $name): bool {
+	public static function _hasMacro(string $name): bool
+	{
 		return array_key_exists($name, static::$_macros);
 	}
 
@@ -54,7 +57,8 @@ trait Macroable {
 	 * @param array $arguments
 	 * @return mixed
 	 */
-	public static function __callStatic($name, $arguments) {
+	public static function __callStatic($name, $arguments)
+	{
 		if (! static::_hasMacro($name)) {
 			throw new Exception('Class "' . self::class . "\" does not contain static method \"{$name}\"");
 		}

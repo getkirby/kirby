@@ -4,7 +4,6 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Exception;
-use Kirby\Toolkit\Macroable;
 
 /**
  * The `A` class provides a set of handy methods
