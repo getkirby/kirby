@@ -1,6 +1,6 @@
 <template>
 	<div :style="'--width:' + width" :data-sticky="sticky" class="k-column">
-		<div><slot /></div>
+		<slot />
 	</div>
 </template>
 
@@ -29,9 +29,9 @@ export default {
 	container: column / inline-size;
 }
 
-.k-column[data-sticky="true"] > div {
+.k-column[data-sticky="true"] {
 	position: sticky;
-	top: 4vh;
+	top: 2vh;
 	z-index: 2;
 }
 

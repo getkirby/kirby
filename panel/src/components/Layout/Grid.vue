@@ -26,9 +26,10 @@ export default {
 	display: grid;
 	grid-column-gap: var(--column-gap);
 	grid-row-gap: var(--row-gap);
+	align-items: start;
 }
 
-@container (min-width: 40em) {
+@container (min-width: 50rem) {
 	.k-grid {
 		--columns: 12;
 		--column-gap: 1.5rem;

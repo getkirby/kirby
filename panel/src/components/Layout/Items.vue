@@ -153,7 +153,7 @@ export default {
  */
 .k-cards-items {
 	--items-layout-mode: auto-fit;
-	display: grid;
+
 	gap: 1.5rem;
 	grid-template-columns: repeat(
 		var(--items-layout-mode),
@@ -179,27 +179,27 @@ export default {
 
 @container (max-width: 6rem) {
 	.k-cards-items[data-size="tiny"] {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 9rem) {
 	.k-cards-items[data-size="small"] {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 12rem) {
 	.k-cards-items[data-size="medium"] {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 15rem) {
 	.k-cards-items[data-size="large"] {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 18rem) {
 	.k-cards-items[data-size="huge"] {
-		grid-template-columns: repeat(1, 1fr);
+		grid-template-columns: 1fr;
 	}
 }
 
@@ -207,7 +207,6 @@ export default {
  * Cardlets
  */
 .k-cardlets-items {
-	display: grid;
 	gap: 0.75rem;
 	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 }
