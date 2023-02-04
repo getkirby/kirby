@@ -26,7 +26,7 @@ export default {
 <style>
 .k-column {
 	min-width: 0;
-	container: inline-size / column;
+	container: column / inline-size;
 }
 
 .k-column[data-sticky="true"] > div {
