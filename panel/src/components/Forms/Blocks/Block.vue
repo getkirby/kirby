@@ -243,7 +243,7 @@ export default {
 	border-radius: var(--rounded);
 }
 .k-block-container:not(:last-of-type) {
-	border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+	border-block-end: 1px dashed rgba(0, 0, 0, 0.1);
 }
 .k-block-container:focus {
 	outline: 0;
@@ -270,9 +270,9 @@ export default {
 .k-block-container .k-block-options {
 	display: none;
 	position: absolute;
-	top: 0;
+	inset-block-start: 0;
 	inset-inline-end: 0.75rem;
-	margin-top: calc(-1.75rem + 2px);
+	margin-block-start: calc(-1.75rem + 2px);
 }
 .k-block-container[data-last-in-batch="true"] > .k-block-options,
 .k-block-container[data-selected="true"] > .k-block-options {

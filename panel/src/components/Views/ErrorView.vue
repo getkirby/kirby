@@ -44,6 +44,6 @@ export default {
 	display: inline-block;
 }
 .k-error-view-content p:not(:last-child) {
-	margin-bottom: 0.75rem;
+	margin-block-end: 0.75rem;
 }
 </style>

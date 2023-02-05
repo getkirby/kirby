@@ -50,7 +50,7 @@ export default {
 }
 .k-block-type-quote-text {
 	font-size: var(--text-xl);
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 	line-height: 1.25em;
 }
 .k-block-type-quote-citation {

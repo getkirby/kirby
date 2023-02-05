@@ -158,6 +158,6 @@ export default {
 	background: var(--color-gray-100);
 }
 .k-block-options .k-dropdown-content {
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 }
 </style>

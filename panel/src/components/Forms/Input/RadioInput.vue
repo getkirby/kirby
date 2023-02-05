@@ -100,7 +100,7 @@ export default {
 }
 .k-radio-input label::before {
 	position: absolute;
-	top: 0.175em;
+	inset-block-start: 0.175em;
 	inset-inline-start: 0;
 	content: "";
 	width: 1rem;

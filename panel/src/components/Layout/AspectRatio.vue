@@ -48,7 +48,7 @@ export default {
 	position: relative;
 	display: block;
 	overflow: hidden;
-	padding-bottom: 100%;
+	padding-block-end: 100%;
 }
 .k-aspect-ratio > * {
 	position: absolute !important;

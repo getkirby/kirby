@@ -157,7 +157,7 @@ export default {
 	}
 }
 .k-tab-button.k-button > .k-button-text {
-	padding-top: 0.375rem;
+	padding-block-start: 0.375rem;
 	padding-inline-start: 0;
 	font-size: 10px;
 	overflow: hidden;
@@ -169,7 +169,7 @@ export default {
 @media screen and (min-width: 30em) {
 	.k-tab-button.k-button > .k-button-text {
 		font-size: var(--text-xs);
-		padding-top: 0;
+		padding-block-start: 0;
 	}
 }
 .k-tab-button:last-child {
@@ -193,25 +193,25 @@ export default {
 
 .k-tab-button[aria-current]::before {
 	inset-inline: -1px;
-	top: -1px;
+	inset-block-start: -1px;
 	height: 2px;
 	background: var(--color-black);
 }
 
 .k-tab-button[aria-current]::after {
 	inset-inline: 0;
-	bottom: -1px;
+	inset-block-end: -1px;
 	height: 1px;
 	background: var(--color-background);
 }
 .k-tabs-dropdown {
-	top: 100%;
+	inset-block-start: 100%;
 	inset-inline-end: 0;
 }
 .k-tabs-badge {
 	position: absolute;
-	top: 3px;
 	font-variant-numeric: tabular-nums;
+	inset-block-start: 3px;
 	inset-inline-end: 2px;
 	line-height: 1.5;
 	padding: 0 0.25rem;

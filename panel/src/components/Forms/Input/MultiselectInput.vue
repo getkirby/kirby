@@ -400,10 +400,10 @@ export default {
 }
 
 .k-multiselect-search {
-	margin-top: 0 !important;
+	margin-block-start: 0 !important;
 	color: var(--color-white);
 	background: var(--color-gray-900);
-	border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+	border-block-end: 1px dashed rgba(255, 255, 255, 0.2);
 }
 .k-multiselect-search > .k-button-text {
 	flex: 1;
@@ -451,7 +451,7 @@ export default {
 	padding: 0.75rem;
 	color: rgba(255, 255, 255, 0.8);
 	text-align: center;
-	border-top: 1px dashed rgba(255, 255, 255, 0.2);
+	border-block-start: 1px dashed rgba(255, 255, 255, 0.2);
 }
 .k-multiselect-more:hover {
 	color: var(--color-white);

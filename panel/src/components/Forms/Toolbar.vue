@@ -261,12 +261,12 @@ export default {
 	background: var(--color-white);
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
-	border-bottom: 1px solid var(--color-background);
+	border-block-end: 1px solid var(--color-background);
 	height: 38px;
 }
 .k-toolbar-wrapper {
 	position: absolute;
-	top: 0;
+	inset-block-start: 0;
 	inset-inline: 0;
 	max-width: 100%;
 }

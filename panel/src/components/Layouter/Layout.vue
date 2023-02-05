@@ -141,7 +141,7 @@ export default {
 	padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {
-	margin-bottom: 1px;
+	margin-block-end: 1px;
 }
 .k-layout:focus {
 	outline: 0;
@@ -168,7 +168,7 @@ export default {
 	height: var(--layout-toolbar-width);
 }
 .k-layout-toolbar .k-sort-handle {
-	margin-top: auto;
+	margin-block-start: auto;
 	color: currentColor;
 }
 
@@ -179,6 +179,6 @@ export default {
 	background: var(--color-gray-300);
 }
 .k-layout:not(:first-child) .k-layout-columns.k-grid {
-	border-top: 0;
+	border-block-start: 0;
 }
 </style>

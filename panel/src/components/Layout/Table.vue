@@ -425,7 +425,7 @@ export default {
 /** Sticky header **/
 .k-table thead th {
 	position: sticky;
-	top: 0;
+	inset-block-start: 0;
 	inset-inline: 0;
 	z-index: 1;
 }
@@ -476,7 +476,7 @@ export default {
 	box-shadow: var(--shadow-outline);
 	outline: 2px solid var(--color-black);
 	border-radius: var(--rounded);
-	margin-bottom: 2px;
+	margin-block-end: 2px;
 	cursor: grabbing;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
@@ -528,7 +528,7 @@ td.k-table-options-column {
 }
 
 .k-table-pagination.k-pagination {
-	border-top: 1px solid var(--color-gray-200);
+	border-block-start: 1px solid var(--color-gray-200);
 	background: var(--color-gray-100);
 	display: flex;
 	justify-content: space-between;

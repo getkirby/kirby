@@ -67,13 +67,13 @@ export default {
 .k-text p,
 .k-text > ol,
 .k-text > ul {
-	margin-bottom: 1.5em;
+	margin-block-end: 1.5em;
 }
 .k-text a {
 	text-decoration: underline;
 }
 .k-text > *:last-child {
-	margin-bottom: 0;
+	margin-block-end: 0;
 }
 
 .k-text[data-size="tiny"] {

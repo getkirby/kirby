@@ -101,12 +101,12 @@ export default {
 
 <style>
 .k-languages-view .k-header {
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 }
 .k-languages-view-section-header {
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 }
 .k-languages-view-section {
-	margin-bottom: 3rem;
+	margin-block-end: 3rem;
 }
 </style>

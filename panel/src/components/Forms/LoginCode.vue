@@ -87,7 +87,7 @@ export default {
 <style>
 .k-login-code-form .k-user-info {
 	height: 38px;
-	margin-bottom: 2.25rem;
+	margin-block-end: 2.25rem;
 	padding: 0.5rem;
 	background: var(--color-white);
 	border-radius: var(--rounded-xs);

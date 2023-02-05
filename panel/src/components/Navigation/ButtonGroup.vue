@@ -49,7 +49,7 @@ export default {
 	line-height: var(--line-height);
 }
 .k-button-group .k-dropdown-content {
-	top: calc(100% + 1px);
+	inset-block-start: calc(100% + 1px);
 	margin: 0 var(--padding-x);
 }
 </style>

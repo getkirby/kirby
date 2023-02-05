@@ -147,10 +147,10 @@ export default {
 	color: var(--color-white);
 }
 .k-block-selector .k-headline {
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 .k-block-selector details:not(:last-of-type) {
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 }
 .k-block-selector summary {
 	font-size: var(--text-xs);
@@ -169,7 +169,7 @@ export default {
 .k-block-types {
 	display: grid;
 	grid-gap: 2px;
-	margin-top: 0.75rem;
+	margin-block-start: 0.75rem;
 	grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
@@ -193,7 +193,7 @@ export default {
 	height: 38px;
 }
 .k-clipboard-hint {
-	padding-top: 1.5rem;
+	padding-block-start: 1.5rem;
 	font-size: var(--text-xs);
 	color: var(--color-gray-400);
 }

@@ -77,7 +77,7 @@ export default {
 }
 .k-stat-value {
 	font-size: var(--value);
-	margin-bottom: var(--spacing-1);
+	margin-block-end: var(--spacing-1);
 	order: 1;
 }
 .k-stat-label,

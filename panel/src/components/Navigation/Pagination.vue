@@ -297,7 +297,7 @@ export default {
 
 .k-dropdown-content.k-pagination-selector {
 	position: absolute;
-	top: 100%;
+	inset-block-start: 100%;
 	inset-inline-start: 50%;
 	transform: translateX(-50%);
 	background: var(--color-black);

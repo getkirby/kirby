@@ -307,7 +307,7 @@ export default {
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
 	width: 100%;
-	margin-top: -1px; /* to avoid a bleeding background with the border radius */
+	margin-block-start: -1px; /* to avoid a bleeding background with the border radius */
 	line-height: 1.25rem;
 	color: var(--color-white);
 	display: flex;
@@ -336,12 +336,12 @@ export default {
 }
 
 .k-dialog-body .k-fieldset {
-	padding-bottom: 0.5rem;
+	padding-block-end: 0.5rem;
 }
 
 .k-dialog-footer {
 	padding: 0;
-	border-top: 1px solid var(--color-gray-300);
+	border-block-start: 1px solid var(--color-gray-300);
 	line-height: 1;
 	flex-shrink: 0;
 }
@@ -367,7 +367,7 @@ export default {
 
 /** Pagination **/
 .k-dialog .k-pagination {
-	margin-bottom: -1.5rem;
+	margin-block-end: -1.5rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -375,7 +375,7 @@ export default {
 
 /** Dialog search field **/
 .k-dialog-search {
-	margin-bottom: 0.75rem;
+	margin-block-end: 0.75rem;
 }
 
 .k-dialog-search.k-input {

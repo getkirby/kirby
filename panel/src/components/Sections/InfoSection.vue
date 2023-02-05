@@ -31,6 +31,6 @@ export default {
 
 <style>
 .k-info-section-label {
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 }
 </style>

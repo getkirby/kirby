@@ -81,20 +81,20 @@ export default {
 
 <style>
 .k-header {
-	padding-top: 4vh;
-	margin-bottom: 2rem;
-	border-bottom: 1px solid var(--color-border);
+	padding-block-start: 4vh;
+	margin-block-end: 2rem;
+	border-block-end: 1px solid var(--color-border);
 }
 .k-header[data-tabs="true"] {
-	border-bottom: 0;
+	border-block-end: 0;
 }
 .k-header .k-headline {
 	min-height: 1.25em;
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 	word-wrap: break-word;
 }
 .k-header .k-header-buttons {
-	margin-top: -0.5rem;
+	margin-block-start: -0.5rem;
 	height: 3.25rem;
 }
 .k-header .k-headline-editable {

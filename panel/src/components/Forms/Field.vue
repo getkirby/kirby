@@ -81,7 +81,7 @@ export default {
 }
 .k-field-options {
 	position: absolute;
-	top: calc(-0.5rem - 1px);
+	inset-block-start: calc(-0.5rem - 1px);
 	inset-inline-end: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
@@ -107,7 +107,7 @@ export default {
 	display: block;
 }
 .k-field-help {
-	padding-top: 0.5rem;
+	padding-block-start: 0.5rem;
 }
 
 /** Add Button **/

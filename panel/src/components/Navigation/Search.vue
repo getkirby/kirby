@@ -255,7 +255,7 @@ export default {
 	padding: 0.5rem 1rem 1rem;
 }
 .k-search .k-item:not(:last-child) {
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 }
 .k-search .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);

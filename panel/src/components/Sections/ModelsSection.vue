@@ -254,7 +254,7 @@ export default {
 }
 
 .k-models-section-search.k-input {
-	margin-bottom: var(--spacing-3);
+	margin-block-end: var(--spacing-3);
 	background: var(--color-gray-300);
 	padding: var(--spacing-2) var(--spacing-3);
 	height: var(--field-input-height);

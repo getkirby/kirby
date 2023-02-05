@@ -67,7 +67,7 @@ export default {
 .k-table-update-status-cell-button {
 	display: inline-flex;
 	padding: 0.25rem 0.325rem;
-	padding-right: 1.5rem;
+	padding-inline-end: 1.5rem;
 	border-radius: var(--rounded);
 	line-height: 1;
 	align-items: center;
@@ -75,13 +75,12 @@ export default {
 }
 .k-table-update-status-cell-button .k-button-text::after {
 	position: absolute;
-	top: 50%;
-	right: 0.5rem;
-	margin-top: -2px;
+	inset-block-start: 50%;
+	inset-inline-end: 0.5rem;
+	margin-block-start: -2px;
 	content: "";
-	border-top: 4px solid black;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
+	border-block-start: 4px solid black;
+	border-inline: 4px solid transparent;
 }
 .k-table-update-status-cell-button .k-icon {
 	color: var(--theme);
@@ -91,18 +90,18 @@ export default {
 	padding: 1rem;
 }
 .k-plugin-info div + div {
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 }
 .k-plugin-info dt {
 	color: var(--color-gray-400);
-	margin-right: 0.5rem;
+	margin-inline-end: 0.5rem;
 }
 .k-plugin-info dd[data-theme] {
 	color: var(--theme-light);
 }
 .k-plugin-info + .k-dropdown-item {
-	padding-top: 0.75rem;
-	border-top: 1px solid var(--color-gray-700);
+	padding-block-start: 0.75rem;
+	border-block-start: 1px solid var(--color-gray-700);
 }
 
 @media screen and (min-width: 30em) {

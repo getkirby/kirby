@@ -98,7 +98,7 @@ export default {
 	position: relative;
 	z-index: 3;
 	border-radius: var(--rounded-xs);
-	margin-bottom: 1px;
+	margin-block-end: 1px;
 	box-shadow: rgba(17, 17, 17, 0.05) 0 0 0 3px;
 	border: 1px solid var(--color-border);
 	background: var(--color-background);
@@ -109,7 +109,7 @@ export default {
 }
 
 .k-structure-form-buttons {
-	border-top: 1px solid var(--color-border);
+	border-block-start: 1px solid var(--color-border);
 	display: flex;
 	justify-content: space-between;
 }

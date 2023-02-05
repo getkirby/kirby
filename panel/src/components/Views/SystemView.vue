@@ -141,15 +141,15 @@ export default {
 
 <style>
 .k-system-view .k-header {
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 }
 .k-system-view-section-header {
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 	display: flex;
 	justify-content: space-between;
 }
 .k-system-view-section {
-	margin-bottom: 3rem;
+	margin-block-end: 3rem;
 }
 
 .k-system-info .k-stat-label {

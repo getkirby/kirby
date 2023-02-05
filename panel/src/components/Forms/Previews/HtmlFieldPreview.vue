@@ -33,7 +33,7 @@ export default {
 	line-height: 1.5em;
 }
 .k-html-field-preview p:not(:last-child) {
-	margin-bottom: 1.5em;
+	margin-block-end: 1.5em;
 }
 .k-html-field-preview ul,
 .k-html-field-preview ol {

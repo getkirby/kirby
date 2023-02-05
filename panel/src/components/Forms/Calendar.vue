@@ -355,7 +355,7 @@ export default {
 	table-layout: fixed;
 	width: 100%;
 	min-width: 15rem;
-	padding-top: 0.5rem;
+	padding-block-start: 0.5rem;
 }
 
 .k-calendar-input > nav {
@@ -422,7 +422,7 @@ export default {
 }
 .k-calendar-today {
 	text-align: center;
-	padding-top: 0.5rem;
+	padding-block-start: 0.5rem;
 }
 .k-calendar-today .k-button {
 	font-size: var(--text-xs);

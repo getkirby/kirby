@@ -215,7 +215,7 @@ export default {
 }
 .k-drawer-tab.k-button[aria-current]::after {
 	position: absolute;
-	bottom: -1px;
+	inset-block-end: -1px;
 	inset-inline: 0.75rem;
 	content: "";
 	background: var(--color-black);
@@ -250,6 +250,6 @@ export default {
 /* Sticky elements inside drawer */
 .k-drawer-body .k-textarea-input:focus-within .k-toolbar,
 .k-drawer-body .k-table th {
-	top: -1.5rem;
+	inset-block-start: -1.5rem;
 }
 </style>

@@ -351,7 +351,7 @@ export default {
  */
 .k-cards-item .k-item-footer {
 	position: absolute;
-	bottom: 0;
+	inset-block-end: 0;
 	inset-inline-end: 0;
 	width: auto;
 }

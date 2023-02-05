@@ -79,7 +79,7 @@ export default {
 
 <style>
 .k-fields-issue-headline {
-	margin-bottom: 0.5rem;
+	margin-block-end: 0.5rem;
 }
 .k-fields-section input[type="submit"] {
 	display: none;

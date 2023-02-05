@@ -93,7 +93,7 @@ export default {
 }
 .k-times .k-icon {
 	width: 1rem;
-	margin-bottom: var(--spacing-2);
+	margin-block-end: var(--spacing-2);
 }
 .k-times-slot .k-button {
 	padding: var(--spacing-1) var(--spacing-3) var(--spacing-1) 0;
@@ -106,7 +106,7 @@ export default {
 	margin: var(--spacing-2) 0;
 	border: 0;
 	height: 1px;
-	top: 1px;
+	inset-block-start: 1px;
 	background: var(--color-dark);
 }
 </style>

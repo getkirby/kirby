@@ -221,13 +221,13 @@ export default {
 .k-writer-toolbar-button.k-writer-toolbar-nodes::after {
 	content: "";
 	margin-inline-start: 0.5rem;
-	border-top: 4px solid var(--color-white);
+	border-block-start: 4px solid var(--color-white);
 	border-inline: 4px solid transparent;
 }
 .k-writer-toolbar .k-dropdown-content {
 	color: var(--color-black);
 	background: var(--color-white);
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 }
 .k-writer-toolbar .k-dropdown-content .k-dropdown-item[aria-current] {
 	color: var(--color-focus);
