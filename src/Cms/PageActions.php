@@ -523,7 +523,7 @@ trait PageActions
 		// clean up the slug
 		$props['slug']     = Str::slug($props['slug'] ?? $props['content']['title'] ?? null);
 		$props['template'] = $props['model'] = strtolower($props['template'] ?? 'default');
-		$props['isDraft']  = ($props['draft'] ?? true);
+		$props['isDraft']  ??= true;
 
 		// make sure that a UUID gets generated and
 		// added to content right away
