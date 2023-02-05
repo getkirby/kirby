@@ -157,7 +157,7 @@ class Pages extends Collection
 	 * @param bool $draft
 	 * @return static
 	 */
-	public static function factory(array $pages, Model $model = null, bool $draft = false)
+	public static function factory(array $pages, Model $model = null, bool $draft = null)
 	{
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
@@ -175,7 +175,7 @@ class Pages extends Collection
 			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
-			$props['isDraft'] ??= $draft;
+			$props['isDraft'] = $draft ?? ($props['isDraft'] ?? false);
 
 			$page = Page::factory($props);
 
