@@ -79,6 +79,11 @@ export default {
 </script>
 
 <style>
+.k-panel {
+	background-color: var(--color-light);
+	min-height: 100vh;
+	min-height: 100dvh;
+}
 .k-panel[data-loading="true"] {
 	animation: LoadingCursor 0.5s;
 }
