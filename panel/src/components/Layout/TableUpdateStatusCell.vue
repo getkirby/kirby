@@ -98,7 +98,7 @@ export default {
 	margin-right: 0.5rem;
 }
 .k-plugin-info dd[data-theme] {
-	color: var(--theme-light);
+	color: var(--theme-color-back);
 }
 .k-plugin-info + .k-dropdown-item {
 	padding-top: 0.75rem;

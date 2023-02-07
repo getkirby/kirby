@@ -116,7 +116,7 @@ export default {
 	padding: 0.5rem 0;
 }
 .k-topbar .k-button[data-theme] {
-	color: var(--theme-light);
+	color: var(--theme-color-back);
 }
 .k-topbar .k-button-text {
 	opacity: 1;
