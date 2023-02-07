@@ -14,7 +14,10 @@ export default {
 		 * Width of the column in the grid
 		 * @values 1/6, 1/4, 1/3, 1/2, 2/3, 3/4, 5/6, 1/1
 		 */
-		width: String,
+		width: {
+			type: String,
+			default: "1/1"
+		},
 		/**
 		 * Whether the column should stick to the window edge when scrolling
 		 */
