@@ -1,0 +1,41 @@
+@import url("./config/colors.css");
+@import url("./config/font-family.css");
+@import url("./config/font-size.css");
+@import url("./config/font-weight.css");
+@import url("./config/height.css");
+@import url("./config/rounded.css");
+@import url("./config/shadow.css");
+@import url("./config/spacing.css");
+@import url("./config/z-index.css");
+
+/** Legacy **/
+:root {
+	/** Framework **/
+	--container: 80rem;
+
+	--leading-none: 1;
+	--leading-tight: 1.25;
+	--leading-snug: 1.375;
+	--leading-normal: 1.5;
+	--leading-relaxed: 1.625;
+	--leading-loose: 2;
+
+	/** Custom Panel **/
+	--field-input-padding: 0.5rem;
+	--field-input-height: 2.25rem;
+	--field-input-line-height: 1.25rem;
+	--field-input-font-size: var(--font-size-0);
+	--field-input-color-before: var(--color-gray-700);
+	--field-input-color-after: var(--color-gray-700);
+	--field-input-border: 1px solid var(--color-border);
+	--field-input-focus-border: 1px solid var(--color-focus);
+	--field-input-focus-outline: 2px solid var(--color-focus-outline);
+	--field-input-invalid-border: 1px solid var(--color-negative-outline);
+	--field-input-invalid-outline: 0;
+	--field-input-invalid-focus-border: 1px solid var(--color-negative);
+	--field-input-invalid-focus-outline: 2px solid var(--color-negative-outline);
+	--field-input-background: var(--color-white);
+	--field-input-disabled-color: var(--color-gray-500);
+	--field-input-disabled-background: var(--color-white);
+	--field-input-disabled-border: 1px solid var(--color-gray-300);
+}

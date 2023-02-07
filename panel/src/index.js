@@ -27,9 +27,8 @@ const app = new Vue({
 });
 
 // Global styles
-import "./styles/variables.css";
+import "./styles/config.css";
 import "./styles/reset.css";
-import "./styles/animations.css";
 
 // Load functionalities
 Vue.use(Errors);

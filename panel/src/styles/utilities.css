@@ -1,12 +1,20 @@
-/* Align */
-[data-align="left"] {
-	--align: start;
+@import url("./utilities/align.css");
+@import url("./utilities/animations.css");
+@import url("./utilities/sr-only.css");
+@import url("./utilities/theme.css");
+
+:root {
+	--outline: 2px solid var(--color-focus, currentColor);
+	--pattern: repeating-conic-gradient(
+		var(--color-white) 0% 25%,
+		var(--color-slate-300) 0% 50%
+	) 50% / 20px 20px;
 }
-[data-align="center"] {
-	--align: center;
-}
-[data-align="right"] {
-	--align: end;
+
+
+/** Legacy **/
+:root {
+	--bg-pattern: var(--pattern);
 }
 
 /* Invalid */
@@ -23,31 +31,6 @@
 [data-tabbed="true"] {
 	box-shadow: var(--shadow-outline);
 	border-radius: var(--rounded);
-}
-
-/* Theme */
-[data-theme="positive"],
-[data-theme="success"] {
-	--theme: var(--color-positive);
-	--theme-light: var(--color-positive-light);
-	--theme-bg: var(--color-green-300);
-}
-
-[data-theme="negative"],
-[data-theme="error"] {
-	--theme: var(--color-negative);
-	--theme-light: var(--color-negative-light);
-	--theme-bg: var(--color-red-300);
-}
-[data-theme="notice"] {
-	--theme: var(--color-notice);
-	--theme-light: var(--color-notice-light);
-	--theme-bg: var(--color-orange-300);
-}
-[data-theme="info"] {
-	--theme: var(--color-focus);
-	--theme-light: var(--color-focus-light);
-	--theme-bg: var(--color-blue-200);
 }
 
 .scroll-x,
@@ -81,19 +64,4 @@
 	width: 0;
 	height: 0;
 	opacity: 0;
-}
-
-/** k-offscreen has been deprecated, use sr-only instead **/
-/** TODO: remove in 3.10 */
-.sr-only,
-.k-offscreen {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border-width: 0;
 }

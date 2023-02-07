@@ -55,7 +55,7 @@ export default {
 
 <style>
 .k-headline {
-	--size: var(--text-base);
+	--size: var(--text-md);
 	font-size: var(--size);
 	font-weight: var(--font-bold);
 	line-height: 1.5em;

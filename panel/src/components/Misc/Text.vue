@@ -83,7 +83,7 @@ export default {
 	font-size: var(--text-sm);
 }
 .k-text[data-size="medium"] {
-	font-size: var(--text-base);
+	font-size: var(--text-md);
 }
 .k-text[data-size="large"] {
 	font-size: var(--text-xl);

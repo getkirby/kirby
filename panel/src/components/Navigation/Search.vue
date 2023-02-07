@@ -221,7 +221,7 @@ export default {
 }
 .k-search-types > .k-button {
 	padding-inline-start: 1rem;
-	font-size: var(--text-base);
+	font-size: var(--text-md);
 	line-height: 1;
 	height: 2.5rem;
 }
