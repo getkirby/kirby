@@ -187,14 +187,14 @@ export default {
 }
 
 .k-installation-issues .k-icon svg * {
-	fill: var(--color-negative);
+	fill: var(--color-red-700);
 }
 .k-installation-issues li:not(:last-child) {
 	margin-bottom: 2px;
 }
 .k-installation-issues li code {
 	font: inherit;
-	color: var(--color-negative);
+	color: var(--color-red-700);
 }
 
 .k-installation-view .k-button[type="submit"] {

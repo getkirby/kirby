@@ -269,7 +269,7 @@ export default {
 	background: var(--color-background);
 	width: 100%;
 	box-shadow: var(--shadow-lg);
-	border-radius: var(--rounded-md);
+	border-radius: var(--rounded-lg);
 	line-height: 1;
 	max-height: calc(100vh - 3rem);
 	margin: 1.5rem;

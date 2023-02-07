@@ -6,15 +6,15 @@
 
 	--shadow: var(--shadow-sm);
 
-	/** @deprecated **/
+	/** Legacy **/
 	--shadow-outline: var(--color-focus, currentColor) 0 0 0 2px;
-	--shadow-inset: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
+	/** @deprecated **/
+	--shadow-inset: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+	--shadow-sticky: rgba(0, 0, 0, 0.05) 0 2px 5px;
 	--box-shadow-dropdown: var(--shadow-dropdown);
 	--box-shadow-item: var(--shadow);
 	--box-shadow-focus: var(--shadow-xl);
-
-	--shadow-sticky: rgba(0, 0, 0, 0.05) 0 2px 5px;
 	--shadow-dropdown: var(--shadow-lg);
 	--shadow-item: var(--shadow-sm);
 }

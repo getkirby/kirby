@@ -430,14 +430,14 @@ export default {
 	position: relative;
 }
 .k-multiselect-option.selected {
-	color: var(--color-positive-light);
+	color: var(--color-green-500);
 }
 
 .k-multiselect-option.disabled:not(.selected) .k-icon {
 	opacity: 0;
 }
 .k-multiselect-option b {
-	color: var(--color-focus-light);
+	color: var(--color-focus);
 	font-weight: 700;
 }
 

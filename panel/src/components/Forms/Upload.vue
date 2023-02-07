@@ -235,7 +235,7 @@ export default {
 	margin-bottom: 2px;
 }
 .k-upload-error-filename {
-	color: var(--color-negative);
+	color: var(--color-red-700);
 	font-weight: var(--font-bold);
 }
 .k-upload-error-message {

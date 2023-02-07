@@ -13,7 +13,7 @@
 	align-items: center;
 	min-height: 38px;
 	margin-bottom: 2rem;
-	background: var(--color-negative);
+	background: var(--color-red-700);
 	color: var(--color-white);
 	font-size: var(--text-sm);
 	border-radius: var(--rounded-xs);

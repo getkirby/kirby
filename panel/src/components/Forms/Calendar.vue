@@ -383,7 +383,7 @@ export default {
 	font-size: var(--text-sm);
 }
 .k-calendar-selects .k-select-input:focus-within {
-	color: var(--color-focus-light) !important;
+	color: var(--color-focus) !important;
 }
 .k-calendar-input th {
 	padding: 0.5rem 0;
@@ -418,7 +418,7 @@ export default {
 .k-calendar-day[aria-selected="date"] .k-button {
 	border-color: currentColor;
 	font-weight: 600;
-	color: var(--color-focus-light);
+	color: var(--color-focus);
 }
 .k-calendar-today {
 	text-align: center;

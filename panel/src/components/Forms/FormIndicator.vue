@@ -72,7 +72,7 @@ export default {
 
 <style>
 .k-form-indicator-toggle {
-	color: var(--color-notice-light);
+	color: var(--color-orange-500);
 }
 .k-form-indicator-info {
 	font-size: var(--text-sm);

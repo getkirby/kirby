@@ -7,7 +7,7 @@
 }
 
 :where(b, strong) {
-	font-weight: var(--font-weight-bold, 600);
+	font-weight: var(--font-bold, 600);
 }
 
 :where([hidden]) {
@@ -148,8 +148,8 @@ input:not([type=checkbox],
 }
 
 body {
-	font-family: var(--font-family-sans, sans-serif);
-	font-size: var(--font-size-0);
+	font-family: var(--font-sans, sans-serif);
+	font-size: var(--text-md);
 	line-height: 1;
 	position: relative;
 	accent-color: var(--color-focus, currentColor);

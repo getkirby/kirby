@@ -29,7 +29,7 @@
 	align-items: center;
 }
 .k-registration p {
-	color: var(--color-negative-light);
+	color: var(--color-red-500);
 	font-size: var(--text-sm);
 	margin-inline-end: 1rem;
 	font-weight: 600;

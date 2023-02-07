@@ -264,7 +264,7 @@ export default {
 
 .k-block-container[data-selected="true"] {
 	z-index: 2;
-	box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
+	box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus) 0 0 0 3px;
 	border-bottom-color: transparent;
 }
 .k-block-container .k-block-options {
