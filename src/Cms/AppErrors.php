@@ -82,6 +82,14 @@ trait AppErrors
 				if ($editor = $this->option('editor')) {
 					$handler->setEditor($editor);
 				}
+
+                if ($blacklist = $this->option('whoops_blacklist')) {
+                    foreach($blacklist as $superglobal => $vars) {
+                        foreach($vars as $var) {
+                            $handler->blacklist($superglobal, $var);
+                        }
+                    }
+                }
 			}
 		} else {
 			$handler = new CallbackHandler(function ($exception, $inspector, $run) {
