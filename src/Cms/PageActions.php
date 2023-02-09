@@ -736,6 +736,52 @@ trait PageActions
 	}
 
 	/**
+	 * Moves the page to a new parent if the
+     * new parent accepts the page type
+	 */
+	public function move(string $parentId): Page
+	{
+		// find the parent model
+		$parent = empty($parentId) ? $this->site() : Find::page($parentId);
+
+		// nothing to move
+		if ($this->parentModel()->is($parent) === true) {
+			return $this;
+		}
+
+		// check for duplicates
+		if ($parent->childrenAndDrafts()->find($this->slug())) {
+			throw new DuplicateException('Another page with the same URL appendix exists');
+		}
+
+		// move to the right directory
+		if ($this->isDraft() === true) {
+			$newRoot = $parent->root() . '/_drafts/' . $this->dirname();
+		} else {
+			$newRoot = $parent->root() . '/' . $this->dirname();
+		}
+
+		/**
+	 	 * Todos:
+		 * - check for allowed page types
+		 */
+
+		// try to move the page directory on disk
+		if (Dir::move($this->root(), $newRoot) !== true) {
+			throw new LogicException('The page directory not be moved');
+		}
+
+		$parent->purge();
+
+		if (!$newPage = $parent->childrenAndDrafts()->find($this->slug())) {
+			throw new LogicException('The moved page could not be found');
+		}
+
+		return $newPage;
+	}
+
+
+	/**
 	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException If the folder cannot be moved
 	 */

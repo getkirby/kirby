@@ -54,6 +54,7 @@ class Permissions
 			'create'         => true,
 			'delete'         => true,
 			'duplicate'      => true,
+			'move'           => true,
 			'preview'        => true,
 			'read'           => true,
 			'sort'           => true,

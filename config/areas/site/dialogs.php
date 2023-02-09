@@ -530,6 +530,37 @@ return [
 		'submit'  => $files['delete']['submit'],
 	],
 
+	// move page
+	'page.move' => [
+		'pattern' => 'pages/(:any)/move',
+		'load'    => function (string $id) {
+			$page = Find::page($id);
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => [
+						'parent' => [
+							'label' => 'Parent',
+							'type'  => 'text'
+						]
+					],
+					'value' => [
+						'parent' => $page->parent()?->id()
+					]
+				]
+			];
+		},
+		'submit' => function (string $id) {
+			$newPage = Find::page($id)->move(get('parent'));
+
+			return [
+				'event'    => 'page.move',
+				'redirect' => $newPage->panel()->url(true)
+			];
+		}
+	],
+
 	// change site title
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',

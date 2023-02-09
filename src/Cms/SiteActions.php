@@ -89,12 +89,14 @@ trait SiteActions
 	 */
 	public function purge()
 	{
-		$this->blueprint    = null;
-		$this->children     = null;
-		$this->content      = null;
-		$this->files        = null;
-		$this->inventory    = null;
-		$this->translations = null;
+		$this->blueprint         = null;
+		$this->children          = null;
+		$this->childrenAndDrafts = null;
+		$this->content           = null;
+		$this->drafts            = null;
+		$this->files             = null;
+		$this->inventory         = null;
+		$this->translations      = null;
 
 		return $this;
 	}

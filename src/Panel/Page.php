@@ -143,6 +143,16 @@ class Page extends Model
 		];
 
 		$result[] = '-';
+
+		$result['move'] = [
+			'dialog'   => $url . '/move',
+			'icon'     => 'road-sign',
+			'text'     => I18n::translate('page.move'),
+			'disabled' => $this->isDisabledDropdownOption('move', $options, $permissions)
+		];
+
+		$result[] = '-';
+
 		$result['delete'] = [
 			'dialog'   => $url . '/delete',
 			'icon'     => 'trash',

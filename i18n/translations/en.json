@@ -439,6 +439,7 @@
 	"page.duplicate.appendix": "Copy",
 	"page.duplicate.files": "Copy files",
 	"page.duplicate.pages": "Copy pages",
+	"page.move": "Move page",
 	"page.sort": "Change position",
 	"page.status": "Status",
 	"page.status.draft": "Draft",
