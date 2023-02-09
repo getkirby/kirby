@@ -11,12 +11,6 @@
 	) 50% / 20px 20px;
 }
 
-
-/** Legacy **/
-:root {
-	--bg-pattern: var(--pattern);
-}
-
 /* Invalid */
 [data-invalid="true"] {
 	border: 1px solid var(--color-red-900);

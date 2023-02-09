@@ -78,10 +78,3 @@
 	--theme-color-text: var(--color-text-dimmed);
 	border: 1px dashed var(--theme-color-border);
 }
-
-/** @deprecated **/
-[data-theme] {
-	--theme: var(--theme-color-700);
-	--theme-light: var(--theme-color-500);
-	--theme-bg: var(--theme-color-500);
-}
