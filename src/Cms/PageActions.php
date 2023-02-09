@@ -749,37 +749,41 @@ trait PageActions
 			return $this;
 		}
 
-		// check for duplicates
-		if ($parent->childrenAndDrafts()->find($this->slug())) {
-			throw new DuplicateException('Another page with the same URL appendix exists');
-		}
+		$arguments = [
+			'page'   => $this,
+			'parent' => $parent
+		];
 
-		// move to the right directory
-		if ($this->isDraft() === true) {
-			$newRoot = $parent->root() . '/_drafts/' . $this->dirname();
-		} else {
-			$newRoot = $parent->root() . '/' . $this->dirname();
-		}
+		return $this->commit('move', $arguments, function ($page, $parent) {
 
-		/**
-	 	 * Todos:
-		 * - check for allowed page types
-		 */
+			// move drafts into the drafts folder of the parent
+			if ($page->isDraft() === true) {
+				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
+			} else {
+				$newRoot = $parent->root() . '/' . $page->dirname();
+			}
 
-		// try to move the page directory on disk
-		if (Dir::move($this->root(), $newRoot) !== true) {
-			throw new LogicException('The page directory not be moved');
-		}
+			// try to move the page directory on disk
+			if (Dir::move($page->root(), $newRoot) !== true) {
+				throw new LogicException([
+					'key' => 'page.move.directory'
+				]);
+			}
 
-		$parent->purge();
+			// flush all collection caches to be sure that
+			// the new child is included afterwards
+			$parent->purge();
 
-		if (!$newPage = $parent->childrenAndDrafts()->find($this->slug())) {
-			throw new LogicException('The moved page could not be found');
-		}
+			// double-check if the new child can actually be found
+			if (!$newPage = $parent->childrenAndDrafts()->find($page->slug())) {
+				throw new LogicException([
+					'key' => 'page.move.notFound'
+				]);
+			}
 
-		return $newPage;
+			return $newPage;
+		});
 	}
-
 
 	/**
 	 * @return $this|static
