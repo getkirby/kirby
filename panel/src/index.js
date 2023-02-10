@@ -47,7 +47,12 @@ Vue.use(Plugins);
 // to increase specificity
 import "./styles/utilities.css";
 
-import cssHas from "css-has-pseudo/browser";
-cssHas(document);
+// :has() CSS polyfill
+// TODO: remove when Firefox supports CSS :has
+if (CSS.supports("selector(:has(*))") === false) {
+	import("css-has-pseudo/browser").then(({ default: cssHas }) => {
+		cssHas(document);
+	});
+}
 
 app.$mount("#app");

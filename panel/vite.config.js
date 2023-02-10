@@ -58,7 +58,13 @@ export default defineConfig(({ command }) => {
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].js",
-					chunkFileNames: "js/[name].js",
+					chunkFileNames: (chunkInfo) => {
+						// TODO: remove when removing CSS :has polyfill
+						if (chunkInfo.name === "browser") {
+							return "js/css-has-polyfill.js";
+						}
+						return "js/[name].js";
+					},
 					assetFileNames: "[ext]/[name].[ext]"
 				}
 			}
