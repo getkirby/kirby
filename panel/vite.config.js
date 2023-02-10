@@ -6,6 +6,7 @@ import vue from "@vitejs/plugin-vue2";
 import postcssAutoprefixer from "autoprefixer";
 import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
+import postcssHas from "css-has-pseudo";
 import postcssLogical from "postcss-logical";
 
 let custom;
@@ -69,10 +70,11 @@ export default defineConfig(({ command }) => {
 		css: {
 			postcss: {
 				plugins: [
+					postcssAutoprefixer(),
 					postcssLogical(),
 					postcssDirPseudoClass(),
-					postcssCsso(),
-					postcssAutoprefixer()
+					postcssHas(),
+					postcssCsso()
 				]
 			}
 		},
