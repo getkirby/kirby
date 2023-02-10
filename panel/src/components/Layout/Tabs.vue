@@ -220,7 +220,7 @@ export default {
 	box-shadow: var(--shadow-md);
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
-	background: var(--theme-light);
+	background: var(--theme-color-back);
 	color: var(--color-black);
 }
 </style>

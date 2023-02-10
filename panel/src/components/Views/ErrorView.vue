@@ -40,7 +40,7 @@ export default {
 	text-align: center;
 }
 .k-error-view-icon {
-	color: var(--color-negative);
+	color: var(--color-red-700);
 	display: inline-block;
 }
 .k-error-view-content p:not(:last-child) {

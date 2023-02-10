@@ -83,8 +83,8 @@ export default {
 .k-box[data-theme="notice"],
 .k-box[data-theme="info"] {
 	border: 0;
-	border-inline-start-color: var(--theme-light);
-	background: var(--theme-bg);
+	border-inline-start-color: var(--theme-color-back);
+	background: var(--theme-color-back);
 }
 
 .k-box[data-theme="empty"] {

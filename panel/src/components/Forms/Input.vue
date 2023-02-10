@@ -151,7 +151,7 @@ export default {
 }
 .k-input[data-theme="field"]:focus-within {
 	border: var(--field-input-focus-border);
-	box-shadow: var(--color-focus-outline) 0 0 0 2px;
+	box-shadow: var(--color-focus) 0 0 0 2px;
 }
 
 .k-input[data-theme="field"][data-disabled="true"] {

@@ -1,0 +1,11 @@
+@import url("./config/colors.css");
+@import url("./config/font-family.css");
+@import url("./config/font-size.css");
+@import url("./config/font-weight.css");
+@import url("./config/height.css");
+@import url("./config/rounded.css");
+@import url("./config/shadow.css");
+@import url("./config/spacing.css");
+@import url("./config/z-index.css");
+
+@import url("./config/legacy.css");

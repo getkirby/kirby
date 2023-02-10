@@ -283,7 +283,7 @@ export default {
 
 <style>
 .k-form-buttons[data-theme] {
-	background: var(--theme-light);
+	background: var(--theme-color-500);
 }
 .k-form-buttons .k-view {
 	display: flex;

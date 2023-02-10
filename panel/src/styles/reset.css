@@ -6,37 +6,151 @@
 	box-sizing: border-box;
 }
 
-noscript {
-	padding: 1.5rem;
+:where(b, strong) {
+	font-weight: var(--font-bold, 600);
+}
+
+:where([hidden]) {
+	display: none !important;
+}
+
+:where(input, button, textarea, select) {
+	border: 0;
+	font: inherit;
+	line-height: inherit;
+	color: inherit;
+	background: none;
+}
+
+:where(fieldset) {
+	border: 0;
+}
+
+:where(legend) {
+	width: 100%;
+	float: left;
+}
+
+:where(legend + *) {
+	clear: both;
+}
+
+:where(select) {
+	appearance: none;
+}
+
+:where(textarea,
+select,
+input:not([type=checkbox],
+[type=radio],
+[type=reset],
+[type=submit])) {
+	width: 100%;
+}
+
+:where(textarea) {
+	resize: vertical;
+}
+
+:where(input)::-webkit-calendar-picker-indicator {
+	display: none;
+}
+
+:where(input[type=search]) {
+	appearance: none;
+}
+
+:where(input)::-webkit-search-cancel-button {
+	display: none;
+}
+
+:where(button, label, select, summary, [role=button], [role=option]) {
+	cursor: pointer;
+}
+
+:where(select[multiple]) option {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	height: 100vh;
-	text-align: center;
 }
 
-html {
-	font-family: var(--font-sans);
-	background: var(--color-background);
+:where(:disabled) {
+	cursor: not-allowed;
 }
 
-html,
-body {
-	color: var(--color-gray-900);
-	height: 100%;
-	overflow: hidden;
+:where(label:has(> input:disabled), label:has(+ input:disabled)) {
+	cursor: not-allowed;
 }
 
-a {
-	color: inherit;
+:where(a) {
+	color: currentColor;
 	text-decoration: none;
+	text-underline-offset: 0.2ex;
 }
 
-li {
+:where(ul, ol) {
 	list-style: none;
 }
 
-strong,
-b {
-	font-weight: var(--font-bold);
+:where(img, svg, video, canvas, audio, iframe, embed, object) {
+	display: block;
+}
+
+:where(iframe) {
+	border: 0;
+}
+
+:where(img, picture, svg) {
+	max-inline-size: 100%;
+	block-size: auto;
+}
+
+:where(p, h1, h2, h3, h4, h5, h6) {
+	overflow-wrap: break-word;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+	font: inherit;
+}
+
+:where(:focus, :focus-visible, :focus-within) {
+	outline-color: var(--color-focus, currentColor);
+	outline-offset: 0;
+}
+
+:where(:focus-visible) {
+	outline: var(--outline, 2px solid var(--color-focus, currentColor));
+}
+
+:where(dialog) {
+	border: 0;
+	max-width: none;
+	max-height: none;
+}
+
+:where(hr) {
+	border: 0;
+}
+
+:where(table) {
+	font: inherit;
+	width: 100%;
+	border-spacing: 0;
+	font-variant-numeric: tabular-nums;
+}
+
+:where(table th) {
+	font: inherit;
+	text-align: start;
+}
+
+:where(svg *) {
+	fill: currentColor;
+}
+
+body {
+	font-family: var(--font-sans, sans-serif);
+	font-size: var(--text-md);
+	line-height: 1;
+	position: relative;
+	accent-color: var(--color-focus, currentColor);
 }
