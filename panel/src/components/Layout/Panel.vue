@@ -83,6 +83,7 @@ export default {
 	background-color: var(--color-light);
 	min-height: 100vh;
 	min-height: 100dvh;
+	container: app / inline-size;
 }
 .k-panel[data-loading="true"] {
 	animation: LoadingCursor 0.5s;

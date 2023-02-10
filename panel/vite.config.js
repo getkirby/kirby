@@ -4,10 +4,10 @@ import path from "path";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
 import postcssAutoprefixer from "autoprefixer";
-import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 import postcssHas from "css-has-pseudo";
 import postcssLogical from "postcss-logical";
+import postcssNano from "cssnano";
 
 let custom;
 try {
@@ -80,7 +80,7 @@ export default defineConfig(({ command }) => {
 					postcssLogical(),
 					postcssDirPseudoClass(),
 					postcssHas(),
-					postcssCsso()
+					postcssNano()
 				]
 			}
 		},

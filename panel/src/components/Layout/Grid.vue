@@ -1,73 +1,56 @@
 <template>
-	<div :data-gutter="gutter" class="k-grid">
+	<div :data-variant="variant" class="k-grid">
 		<slot />
 	</div>
 </template>
 
 <script>
 /**
+ * @todo breaking change: removed `gutter` prop/data variant to set gap size
+ */
+
+/**
  * The Grid component is a CSS Grid wrapper. It goes very well together with the `<k-bolumn>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
  */
 export default {
 	props: {
 		/**
-		 * @values small, medium, large, huge
+		 * @values `columns`, `fields`
 		 */
-		gutter: String
+		variant: String
 	}
 };
 </script>
 
 <style>
 .k-grid {
-	--columns: 12;
 	display: grid;
-	grid-column-gap: 0;
-	grid-row-gap: 0;
-	grid-template-columns: 1fr;
+	align-items: start;
 }
 
-@media screen and (min-width: 30em) {
-	.k-grid[data-gutter="small"] {
-		grid-column-gap: 1rem;
-		grid-row-gap: 1rem;
-	}
-
-	.k-grid[data-gutter="medium"],
-	.k-grid[data-gutter="large"],
-	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 1.5rem;
-		grid-row-gap: 1.5rem;
-	}
-}
-
-@media screen and (min-width: 65em) {
+@container (min-width: 50rem) {
 	.k-grid {
+		--columns: 12;
 		grid-template-columns: repeat(var(--columns), 1fr);
 	}
-	.k-grid[data-gutter="large"] {
-		grid-column-gap: 3rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 4.5rem;
+
+	.k-grid > * {
+		--width: calc(1 / var(--columns));
+		--span: calc(var(--columns) * var(--width));
+		grid-column: span var(--span);
 	}
 }
 
-@media screen and (min-width: 90em) {
-	.k-grid[data-gutter="large"] {
-		grid-column-gap: 4.5rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 6rem;
-	}
+/** Grid variants **/
+.k-grid[data-variant="columns"] {
+	column-gap: clamp(0.75rem, 5cqw, 6rem);
+	row-gap: clamp(1.5rem, 5cqh, 3rem);
+}
+.k-grid[data-variant="columns"] > * {
+	container: column / inline-size;
 }
 
-@media screen and (min-width: 120em) {
-	.k-grid[data-gutter="large"] {
-		grid-column-gap: 6rem;
-	}
-	.k-grid[data-gutter="huge"] {
-		grid-column-gap: 7.5rem;
-	}
+.k-grid[data-variant="fields"] {
+	gap: var(--spacing-6);
 }
 </style>

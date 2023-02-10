@@ -53,5 +53,10 @@ if (CSS.supports("selector(:has(*))") === false) {
 		cssHas(document);
 	});
 }
+// container queries CSS polyfill
+// TODO: remove when global support for container queries is reached
+if (CSS.supports("container") === false) {
+	import("container-query-polyfill");
+}
 
 app.$mount("#app");
