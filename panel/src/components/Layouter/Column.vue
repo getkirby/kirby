@@ -1,7 +1,7 @@
 <template>
 	<div
 		:id="id"
-		:data-width="width"
+		:style="'--width: ' + width"
 		tabindex="0"
 		class="k-column k-layout-column"
 		@dblclick="$refs.blocks.choose(blocks.length)"
@@ -32,7 +32,10 @@ export default {
 		fieldsets: Object,
 		id: String,
 		isSelected: Boolean,
-		width: String
+		width: {
+			type: String,
+			default: "1/1"
+		}
 	}
 };
 </script>
