@@ -1,19 +1,21 @@
 <template>
-	<div :data-variant="variant" class="k-grid">
+	<div :data-gutter="gutter" :data-variant="variant" class="k-grid">
 		<slot />
 	</div>
 </template>
 
 <script>
 /**
- * @todo breaking change: removed `gutter` prop/data variant to set gap size
- */
-
-/**
- * The Grid component is a CSS Grid wrapper. It goes very well together with the `<k-bolumn>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
+ * The Grid component is a CSS Grid wrapper. It goes very well together with the `<k-column>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
  */
 export default {
 	props: {
+		/**
+		 * @deprecated Use `style="gap: "` or `variant` prop instead
+		 * @todo Remove in v5.0
+		 * @values small, medium, large, huge
+		 */
+		gutter: String,
 		/**
 		 * @values `columns`, `fields`
 		 */
@@ -38,6 +40,46 @@ export default {
 		--width: calc(1 / var(--columns));
 		--span: calc(var(--columns) * var(--width));
 		grid-column: span var(--span);
+	}
+}
+
+/** @deprecated: Gutter **/
+/** @todo remove in v5.0 */
+@media screen and (min-width: 30em) {
+	.k-grid[data-gutter="small"] {
+		grid-column-gap: 1rem;
+		grid-row-gap: 1rem;
+	}
+	.k-grid[data-gutter="medium"],
+	.k-grid[data-gutter="large"],
+	.k-grid[data-gutter="huge"] {
+		grid-column-gap: 1.5rem;
+		grid-row-gap: 1.5rem;
+	}
+}
+
+@media screen and (min-width: 65em) {
+	.k-grid[data-gutter="large"] {
+		grid-column-gap: 3rem;
+	}
+	.k-grid[data-gutter="huge"] {
+		grid-column-gap: 4.5rem;
+	}
+}
+@media screen and (min-width: 90em) {
+	.k-grid[data-gutter="large"] {
+		grid-column-gap: 4.5rem;
+	}
+	.k-grid[data-gutter="huge"] {
+		grid-column-gap: 6rem;
+	}
+}
+@media screen and (min-width: 120em) {
+	.k-grid[data-gutter="large"] {
+		grid-column-gap: 6rem;
+	}
+	.k-grid[data-gutter="huge"] {
+		grid-column-gap: 7.5rem;
 	}
 }
 
