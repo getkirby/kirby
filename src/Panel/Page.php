@@ -98,15 +98,6 @@ class Page extends Model
 			'disabled' => $this->isDisabledDropdownOption('changeTitle', $options, $permissions)
 		];
 
-		$result['duplicate'] = [
-			'dialog'   => $url . '/duplicate',
-			'icon'     => 'copy',
-			'text'     => I18n::translate('duplicate'),
-			'disabled' => $this->isDisabledDropdownOption('duplicate', $options, $permissions)
-		];
-
-		$result[] = '-';
-
 		$result['changeSlug'] = [
 			'dialog' => [
 				'url'   => $url . '/changeTitle',
@@ -149,6 +140,13 @@ class Page extends Model
 			'icon'     => 'road-sign',
 			'text'     => I18n::translate('page.move'),
 			'disabled' => $this->isDisabledDropdownOption('move', $options, $permissions)
+		];
+
+		$result['duplicate'] = [
+			'dialog'   => $url . '/duplicate',
+			'icon'     => 'copy',
+			'text'     => I18n::translate('duplicate'),
+			'disabled' => $this->isDisabledDropdownOption('duplicate', $options, $permissions)
 		];
 
 		$result[] = '-';
