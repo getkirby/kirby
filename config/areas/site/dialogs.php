@@ -554,11 +554,18 @@ return [
 		'submit' => function (string $id) {
 			$kirby   = App::instance();
 			$parent  = $kirby->request()->get('parent');
-			$newPage = Find::page($id)->move($parent);
+			$oldPage = Find::page($id);
+			$newPage = $oldPage->move($parent);
 
 			return [
 				'event'    => 'page.move',
-				'redirect' => $newPage->panel()->url(true)
+				'redirect' => $newPage->panel()->url(true),
+				'dispatch' => [
+					'content/move' => [
+						$oldPage->panel()->url(true),
+						$newPage->panel()->url(true)
+					]
+				],
 			];
 		}
 	],
