@@ -552,7 +552,9 @@ return [
 			];
 		},
 		'submit' => function (string $id) {
-			$newPage = Find::page($id)->move(get('parent'));
+			$kirby   = App::instance();
+			$parent  = $kirby->request()->get('parent');
+			$newPage = Find::page($id)->move($parent);
 
 			return [
 				'event'    => 'page.move',
@@ -583,8 +585,8 @@ return [
 		},
 		'submit' => function () {
 			$kirby = App::instance();
-
 			$kirby->site()->changeTitle($kirby->request()->get('title'));
+
 			return [
 				'event' => 'site.changeTitle',
 			];
