@@ -737,7 +737,7 @@ trait PageActions
 
 	/**
 	 * Moves the page to a new parent if the
-     * new parent accepts the page type
+	 * new parent accepts the page type
 	 */
 	public function move(string $parentId): Page
 	{
@@ -755,7 +755,6 @@ trait PageActions
 		];
 
 		return $this->commit('move', $arguments, function ($page, $parent) {
-
 			// move drafts into the drafts folder of the parent
 			if ($page->isDraft() === true) {
 				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
