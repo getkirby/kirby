@@ -48,9 +48,7 @@ describe("FileView", () => {
 			cy.get("@info").find("li:nth-child(6)").should("contain", "Portrait");
 
 			// Preview Button
-			cy.get(
-				'.k-header [data-position="left"] > .k-button-group > :nth-child(1)'
-			).as("preview");
+			cy.get(".k-file-view-options:first-child").as("preview");
 
 			cy.get("@preview").should("have.attr", "target", "_blank");
 			cy.get("@preview")
@@ -73,11 +71,9 @@ describe("FileView", () => {
 
 		it("should be deleted", () => {
 			// open settings
+			cy.get(".k-file-view-options:nth-of-type(1) .k-button").click();
 			cy.get(
-				".k-header [data-position=left] .k-button-group:first-child :nth-child(2) .k-button"
-			).click();
-			cy.get(
-				".k-header [data-position=left] .k-dropdown-content .k-button:last-child"
+				".k-file-view-options:nth-of-type(1) .k-dropdown-content .k-button:last-child"
 			).click();
 
 			dialog().find(".k-dialog-button-submit").click();

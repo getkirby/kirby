@@ -15,7 +15,7 @@
 					@edit="$dialog(id + '/changeName')"
 				>
 					{{ model.filename }}
-					<template #left>
+					<template #buttons>
 						<k-button-group>
 							<k-button
 								:link="preview.url"

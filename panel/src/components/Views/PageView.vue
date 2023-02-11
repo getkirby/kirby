@@ -13,7 +13,7 @@
 				@edit="$dialog(id + '/changeTitle')"
 			>
 				{{ model.title }}
-				<template #left>
+				<template #buttons>
 					<k-button-group>
 						<k-button
 							v-if="permissions.preview && model.previewUrl"
@@ -45,8 +45,7 @@
 
 						<k-languages-dropdown />
 					</k-button-group>
-				</template>
-				<template #right>
+
 					<k-prev-next v-if="model.id" :prev="prev" :next="next" />
 				</template>
 			</k-header>
