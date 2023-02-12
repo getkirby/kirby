@@ -493,17 +493,16 @@ class App
 			$name .= '.' . $contentType;
 		}
 
-		// controller on disk
-		if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
+		// controller from site root
+		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php');
+		// controller from extension
+		$controller ??= $this->extension('controllers', $name);
+
+		if ($controller instanceof Controller) {
 			return $controller;
 		}
 
-		// registry controller
-		if ($controller = $this->extension('controllers', $name)) {
-			if ($controller instanceof Controller) {
-				return $controller;
-			}
-
+		if ($controller !== null) {
 			return new Controller($controller);
 		}
 
