@@ -57,6 +57,7 @@ class Blocks extends Items
 	public static function factory(array $items = null, array $params = [])
 	{
 		$items = static::extractFromLayouts($items);
+		$items = BlockConverter::editorBlocks($items);
 
 		return parent::factory($items, $params);
 	}
@@ -73,8 +74,12 @@ class Blocks extends Items
 			return [];
 		}
 
-		// no columns = no layout
-		if (array_key_exists('columns', $input[0]) === false) {
+		if (
+			// no columns = no layout
+			array_key_exists('columns', $input[0]) === false  ||
+			// checks if this is a block for the builder plugin
+			array_key_exists('_key', $input[0]) === true
+		) {
 			return $input;
 		}
 
