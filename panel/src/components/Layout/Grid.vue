@@ -6,20 +6,33 @@
 
 <script>
 /**
- * The Grid component is a CSS Grid wrapper. It goes very well together with the `<k-column>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
+ * The Grid component is a CSS grid wrapper. It goes very well together with the `<k-column>` component, which allows to set column widths in a very comfortable way. Any other element within the Grid component can be used as well though.
+ *
+ * Customised the grid via the `--columns` CSS property on `<k-grid>` and the `--width` and/or `--span` properties on its children
  */
 export default {
 	props: {
 		/**
-		 * @deprecated Use `style="gap: "` or `variant` prop instead
-		 * @todo Remove in v5.0
+		 * @deprecated 4.0 Use `style="gap: "` or `variant` prop instead
+		 * @todo grid.gutter.deprecated - remove @ 5.0
 		 * @values small, medium, large, huge
 		 */
 		gutter: String,
 		/**
+		 * Variants for common grid-spacing use cases
 		 * @values `columns`, `fields`
 		 */
 		variant: String
+	},
+	/**
+	 *  @todo grid.gutter.deprecated - remove @ 5.0
+	 */
+	mounted() {
+		if (this.gutter) {
+			window.panel.deprecated(
+				'<k-grid>: the `gutter` prop will be removed in a future version. Use `style="gap: "` or `variant` prop instead.'
+			);
+		}
 	}
 };
 </script>
@@ -43,8 +56,7 @@ export default {
 	}
 }
 
-/** @deprecated: Gutter **/
-/** @todo remove in v5.0 */
+/** @todo grid.gutter.deprecated - remove @ 5.0 */
 @media screen and (min-width: 30em) {
 	.k-grid[data-gutter="small"] {
 		grid-column-gap: 1rem;
