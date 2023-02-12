@@ -26,11 +26,11 @@ class MacroableTest extends TestCase
 		$this->assertEquals('<strong>test</strong>', Str::wrapInStrong('test'));
 
 		$this->assertEquals(['1test', '2test'], A::test([1, 2]));
-		$this->assertEquals(['1test', '2test'], A::test2([1, 2], fn($value) => $value . 'test'));
+		$this->assertEquals(['1test', '2test'], A::test2([1, 2], fn ($value) => $value . 'test'));
 	}
 
 	/**
-	 * @covers ::_addMacro
+	 * @covers ::__callStatic
 	 */
 	public function testCallStaticNonExistent()
 	{
