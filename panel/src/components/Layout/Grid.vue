@@ -26,20 +26,21 @@ export default {
 
 <style>
 .k-grid {
+	--columns: 12;
+
 	display: grid;
 	align-items: start;
 }
 
+.k-grid > * {
+	--width: calc(1 / var(--columns));
+	--span: calc(var(--columns) * var(--width));
+	grid-column: span var(--span);
+}
+
 @container (min-width: 50rem) {
 	.k-grid {
-		--columns: 12;
 		grid-template-columns: repeat(var(--columns), 1fr);
-	}
-
-	.k-grid > * {
-		--width: calc(1 / var(--columns));
-		--span: calc(var(--columns) * var(--width));
-		grid-column: span var(--span);
 	}
 }
 
