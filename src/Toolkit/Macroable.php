@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Exception;
 
 /**
@@ -17,38 +18,7 @@ use Exception;
  */
 trait Macroable
 {
-	private static $_macros = [];
-
-	/**
-	 * Adds a macro to the class
-	 *
-	 * @param string $name
-	 * @param callable $macro
-	 * @return void
-	 */
-	public static function _addMacro(string $name, callable $macro)
-	{
-		if (method_exists(static::class, $name)) {
-			throw new Exception('Class "' . static::class . "\" already contains static method \"{$name}\"");
-		}
-
-		if (array_key_exists($name, static::$_macros)) {
-			throw new Exception('Class "' . static::class . "\" already includes macro \"{$name}\"");
-		}
-
-		static::$_macros[$name] = $macro;
-	}
-
-	/**
-	 * Checks if a macro exists
-	 *
-	 * @param string $name
-	 * @return bool
-	 */
-	public static function _hasMacro(string $name): bool
-	{
-		return array_key_exists($name, static::$_macros);
-	}
+	public static $methods = [];
 
 	/**
 	 * Calls a macro if it exists (and method static::$name does not exist)
@@ -59,16 +29,16 @@ trait Macroable
 	 */
 	public static function __callStatic($name, $arguments)
 	{
-		if (! static::_hasMacro($name)) {
-			throw new Exception('Class "' . self::class . "\" does not contain static method \"{$name}\"");
+		if (! isset(static::$methods[$name])) {
+			throw new Exception('Class "' . self::class . "\" does not contain method \"{$name}\"");
 		}
 
-		$macro = static::$_macros[$name];
+		$method = static::$methods[$name];
 
-		if ($macro instanceof \Closure) {
-			return \Closure::bind($macro, null, static::class)(...$arguments);
+		if ($method instanceof Closure) {
+			return Closure::bind($method, null, static::class)(...$arguments);
 		}
 
-		return call_user_func_array($macro, $arguments);
+		return call_user_func_array($method, $arguments);
 	}
 }
