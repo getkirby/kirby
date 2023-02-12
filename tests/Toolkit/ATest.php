@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Toolkit\V;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -457,10 +456,10 @@ class ATest extends TestCase
 			'elephant',
 			'elephant',
 			'elephant'
-		], A::fill($array, 6, fn() => 'elephant'));
+		], A::fill($array, 6, fn () => 'elephant'));
 
 		// Callable with Closure
-		$this->assertSame([1, 2, 3], A::fill([], 3, fn(int $i) => $i + 1));
+		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
 
 		// callable with callable
 		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
