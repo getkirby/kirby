@@ -63,6 +63,12 @@ export default {
 	border-radius: var(--rounded);
 	margin: 0 0.25rem;
 }
+.k-block-importer label small {
+	display: block;
+	margin-top: 0.5rem;
+	color: var(--color-gray-600);
+}
+
 .k-block-importer textarea {
 	width: 100%;
 	height: 20rem;
