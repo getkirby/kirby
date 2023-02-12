@@ -66,7 +66,8 @@ return function (App $app) {
 			try {
 				$blocks = Blocks::parse($field->value());
 				$blocks = Blocks::factory($blocks, [
-					'parent' => $field->parent()
+					'parent' => $field->parent(),
+					'field'  => $field,
 				]);
 				return $blocks->filter('isHidden', false);
 			} catch (Throwable) {
@@ -192,7 +193,8 @@ return function (App $app) {
 		 */
 		'toLayouts' => function (Field $field) {
 			return Layouts::factory(Layouts::parse($field->value()), [
-				'parent' => $field->parent()
+				'parent' => $field->parent(),
+				'field'  => $field,
 			]);
 		},
 

@@ -20,6 +20,11 @@ class Items extends Collection
 	public const ITEM_CLASS = Item::class;
 
 	/**
+	 * @var \Kirby\Cms\Field|null
+	 */
+	protected $field;
+
+	/**
 	 * @var array
 	 */
 	protected $options;
@@ -39,6 +44,7 @@ class Items extends Collection
 	{
 		$this->options = $options;
 		$this->parent  = $options['parent'] ?? App::instance()->site();
+		$this->field   = $options['field']  ?? null;
 
 		parent::__construct($objects, $this->parent);
 	}
@@ -54,6 +60,7 @@ class Items extends Collection
 	public static function factory(array $items = null, array $params = [])
 	{
 		$options = array_merge([
+			'field'   => null,
 			'options' => [],
 			'parent'  => App::instance()->site(),
 		], $params);
@@ -74,6 +81,7 @@ class Items extends Collection
 				continue;
 			}
 
+			$params['field']    = $options['field'];
 			$params['options']  = $options['options'];
 			$params['parent']   = $options['parent'];
 			$params['siblings'] = $collection;
@@ -83,6 +91,14 @@ class Items extends Collection
 		}
 
 		return $collection;
+	}
+
+	/**
+	 * Returns the parent field if known
+	 */
+	public function field(): Field|null
+	{
+		return $this->field;
 	}
 
 	/**
