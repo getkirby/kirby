@@ -124,11 +124,28 @@ class PageCreateTest extends TestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
-	public function testCreateUnlistedPage()
+	public function testCreateUnlistedPageDraftProp()
+	{
+		$site = $this->app->site();
+		$page = Page::create([
+			'slug'  => 'new-page',
+			'draft' => false,
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertInstanceOf(Page::class, $page);
+		$this->assertFalse($page->isDraft());
+		$this->assertFalse($page->isListed());
+		$this->assertTrue($page->parentModel()->children()->has($page));
+		$this->assertTrue($site->children()->has($page));
+	}
+
+	public function testCreateUnlistedPageIsDraftProp()
 	{
 		$site = $this->app->site();
 		$page = Page::create([
 			'slug'    => 'new-page',
+			'draft'   => true,
 			'isDraft' => false,
 		]);
 
