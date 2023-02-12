@@ -1,7 +1,7 @@
 <template>
 	<div :data-align="align" class="k-bar">
-		<!-- @deprecated left/centre/right slots. use with default slot only instead -->
-		<!-- @todo remove specific slots in v5.0 -->
+		<!-- @deprecated 4.0 left/centre/right slots. Use with default slot only instead -->
+		<!-- @todo bar.slots.deprecated - remove specific slots @ 5.0 -->
 		<template v-if="$slots.left || $slots.center || $slots.right">
 			<div v-if="$slots.left" class="k-bar-slot" data-position="left">
 				<slot name="left" />
@@ -38,6 +38,16 @@ export default {
 		 * @values `start`, `center`, `end`
 		 */
 		align: String
+	},
+	/**
+	 * @todo bar.slots.deprecated - remove @ 5.0
+	 */
+	mounted() {
+		if (this.$slots.left || this.$slots.center || this.$slots.right) {
+			window.panel.deprecated(
+				"<k-bar>: left/centre/right slots will be removed in a future version. Use with default slot only instead."
+			);
+		}
 	}
 };
 </script>
@@ -59,7 +69,7 @@ export default {
 	justify-content: end;
 }
 
-/** @todo remove in v5.0 */
+/** @todo bar.slots.deprecated - remove @ 5.0 */
 .k-bar-slot {
 	flex-grow: 1;
 }

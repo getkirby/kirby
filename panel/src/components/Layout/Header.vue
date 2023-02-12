@@ -75,6 +75,16 @@ export default {
 				return tab;
 			});
 		}
+	},
+	/**
+	 * @todo remove in v5.0 when removing slots
+	 */
+	mounted() {
+		if (this.$slots.left || this.$slots.right) {
+			window.panel.deprecated(
+				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."
+			);
+		}
 	}
 };
 </script>
