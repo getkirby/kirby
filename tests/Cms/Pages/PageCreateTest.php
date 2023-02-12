@@ -124,6 +124,22 @@ class PageCreateTest extends TestCase
 		$this->assertTrue($site->children()->has($page));
 	}
 
+	public function testCreateUnlistedPage()
+	{
+		$site = $this->app->site();
+		$page = Page::create([
+			'slug'    => 'new-page',
+			'isDraft' => false,
+		]);
+
+		$this->assertTrue($page->exists());
+		$this->assertInstanceOf(Page::class, $page);
+		$this->assertFalse($page->isDraft());
+		$this->assertFalse($page->isListed());
+		$this->assertTrue($page->parentModel()->children()->has($page));
+		$this->assertTrue($site->children()->has($page));
+	}
+
 	public function testCreateDuplicate()
 	{
 		$this->expectException(DuplicateException::class);
