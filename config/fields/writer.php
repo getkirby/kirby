@@ -8,9 +8,7 @@ return [
 		 * Available heading levels
 		 */
 		'headings' => function (array|null $headings = null) {
-			return $headings ?? [
-				1, 2, 3, 4, 5, 6
-			];
+			return array_intersect($headings ?? range(1, 6), range(1, 6));
 		},
 		/**
 		 * Enables inline mode, which will not wrap new lines in paragraphs and creates hard breaks instead.
