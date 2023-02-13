@@ -19,10 +19,7 @@ class Items extends Collection
 {
 	public const ITEM_CLASS = Item::class;
 
-	/**
-	 * @var \Kirby\Cms\Field|null
-	 */
-	protected $field;
+	protected Field|null $field;
 
 	/**
 	 * @var array

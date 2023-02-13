@@ -26,10 +26,7 @@ class Item
 
 	public const ITEMS_CLASS = Items::class;
 
-	/**
-	 * @var \Kirby\Cms\Field|null
-	 */
-	protected $field;
+	protected Field|null $field;
 
 	/**
 	 * @var string
