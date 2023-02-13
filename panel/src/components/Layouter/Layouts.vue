@@ -291,7 +291,7 @@ export default {
 
 /** Selector **/
 .k-layout-selector.k-dialog {
-	background: #313740;
+	background: var(--color-dark);
 	color: var(--color-white);
 }
 .k-layout-selector .k-headline {

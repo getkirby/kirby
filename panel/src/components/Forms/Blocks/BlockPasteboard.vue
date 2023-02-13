@@ -44,7 +44,7 @@ export default {
 
 <style>
 .k-block-importer.k-dialog {
-	background: #313740;
+	background: var(--color-dark);
 	color: var(--color-white);
 }
 .k-block-importer .k-dialog-body {
@@ -66,7 +66,7 @@ export default {
 .k-block-importer label small {
 	display: block;
 	margin-top: 0.5rem;
-	color: var(--color-gray-600);
+	color: var(--color-gray-500);
 }
 
 .k-block-importer textarea {
