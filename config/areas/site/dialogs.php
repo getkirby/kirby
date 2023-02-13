@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
@@ -308,19 +309,30 @@ return [
 			// the pre-selected template
 			$template = $blueprints[0]['name'] ?? $blueprints[0]['value'] ?? null;
 
+			// create a temporary page object
+			$page = Page::factory([
+				'slug'     => 'new',
+				'template' => $template,
+				'model'    => $template
+			]);
+
 			$fields = [
-				'parent' => Field::hidden(),
 				'title'  => Field::title([
 					'required'  => true,
 					'preselect' => true
 				]),
-				'slug'   => Field::slug([
-					'required' => true,
-					'sync'     => 'title',
-					'path'     => empty($model->id()) === false ? '/' . $model->id() . '/' : '/'
-				]),
-				'template' => Field::hidden()
 			];
+
+			$fields = array_merge($fields, $page->blueprint()->fields());
+
+			$fields['parent'] = Field::hidden();
+			$fields['slug'] = Field::slug([
+				'required' => true,
+				'sync'     => 'title',
+				'path'     => empty($model->id()) === false ? '/' . $model->id() . '/' : '/'
+			]);
+
+			$fields['template'] = Field::hidden();
 
 			// only show template field if > 1 templates available
 			// or when in debug mode
