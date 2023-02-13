@@ -542,7 +542,8 @@ return [
 					'fields' => [
 						'parent' => [
 							'label' => 'Parent',
-							'type'  => 'text'
+							'type'  => 'text',
+							'help'  => 'Path/ID of the new parent page'
 						]
 					],
 					'value' => [
