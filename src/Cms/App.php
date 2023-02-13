@@ -482,12 +482,8 @@ class App
 
 	/**
 	 * Try to find a controller by name
-	 *
-	 * @param string $name
-	 * @param string $contentType
-	 * @return \Kirby\Toolkit\Controller|null
 	 */
-	protected function controllerLookup(string $name, string $contentType = 'html')
+	protected function controllerLookup(string $name, string $contentType = 'html'): Controller|null
 	{
 		if ($contentType !== null && $contentType !== 'html') {
 			$name .= '.' . $contentType;
