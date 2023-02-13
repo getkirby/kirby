@@ -91,7 +91,7 @@ class SiteActionsTest extends TestCase
 			'copyright' => 2018
 		]);
 
-		$this->assertSame(2018, $site->copyright()->value());
+		$this->assertSame('2018', $site->copyright()->value());
 	}
 
 	public function testChangeTitleHooks()
@@ -182,8 +182,22 @@ class SiteActionsTest extends TestCase
 			]
 		]);
 
-		$this->assertNotNull([], $app->site()->translations);
-		$app->site()->purge();
-		$this->assertNull($app->site()->translations);
+		$site = $app->site();
+
+		$site->children();
+		$site->drafts();
+		$site->childrenAndDrafts();
+
+		$this->assertNotNull([], $site->translations);
+		$this->assertNotNull($site->children);
+		$this->assertNotNull($site->drafts);
+		$this->assertNotNull($site->childrenAndDrafts);
+
+		$site->purge();
+
+		$this->assertNull($site->translations);
+		$this->assertNull($site->children);
+		$this->assertNull($site->drafts);
+		$this->assertNull($site->childrenAndDrafts);
 	}
 }
