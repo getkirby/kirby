@@ -73,6 +73,13 @@ input:not([type=checkbox],
 	align-items: center;
 }
 
+:where(
+	input:-webkit-autofill
+) {
+	-webkit-text-fill-color: var(--input-color-text) !important;
+	-webkit-background-clip: text;
+}
+
 :where(:disabled) {
 	cursor: not-allowed;
 }
