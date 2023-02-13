@@ -205,4 +205,9 @@ export default {
 	border-radius: var(--rounded);
 	margin: 0 0.25rem;
 }
+.k-clipboard-hint small {
+	display: block;
+	margin-top: 0.5rem;
+	color: var(--color-gray-500);
+}
 </style>
