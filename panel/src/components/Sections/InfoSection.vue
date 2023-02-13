@@ -3,9 +3,7 @@
 		<k-headline class="k-info-section-label">
 			{{ label }}
 		</k-headline>
-		<k-box :theme="theme">
-			<k-text :html="text" />
-		</k-box>
+		<k-box :html="true" :text="text" :theme="theme" />
 	</section>
 </template>
 

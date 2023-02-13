@@ -1,5 +1,15 @@
 <template>
-	<div :data-theme="theme" class="k-box" v-on="$listeners">
+	<component
+		:is="element"
+		:data-align="align"
+		:data-theme="theme"
+		:type="type"
+		:style="height ? '--box-height: ' + height : null"
+		class="k-box"
+		v-on="$listeners"
+	>
+		<k-icon v-if="icon" v-bind="icon" />
+
 		<!-- @slot Use instead of `text` prop -->
 		<slot>
 			<k-text v-if="html" :html="text" />
@@ -7,7 +17,7 @@
 				{{ text }}
 			</k-text>
 		</slot>
-	</div>
+	</component>
 </template>
 
 <script>
@@ -23,6 +33,13 @@
  */
 export default {
 	props: {
+		/**
+		 * @values center
+		 */
+		align: String,
+		button: Boolean,
+		height: String,
+		icon: Object,
 		/**
 		 * Choose one of the pre-defined styles
 		 * @values none, code, button, positive, negative, notice, info, empty
@@ -42,68 +59,57 @@ export default {
 			type: Boolean,
 			default: false
 		}
+	},
+	computed: {
+		element() {
+			return this.button ? "button" : "div";
+		},
+		type() {
+			return this.button ? "button" : null;
+		}
 	}
 };
 </script>
 
 <style>
 .k-box {
-	word-wrap: break-word;
-	font-size: var(--text-sm);
-}
-.k-box:not([data-theme="none"]) {
-	background: var(--color-white);
-	border-radius: var(--rounded);
-	line-height: 1.25rem;
-	padding: 0.5rem 0.75rem;
-}
-.k-box[data-theme="code"] {
-	background: var(--color-gray-900);
-	border: 1px solid var(--color-black);
-	color: var(--color-light);
-	font-family: "Input", "Menlo", monospace;
-	font-size: var(--text-sm);
-	line-height: 1.5;
-}
-.k-box[data-theme="button"] {
-	padding: 0;
-}
-.k-box[data-theme="button"] .k-button {
-	padding: 0 0.75rem;
-	height: 2.25rem;
+	--box-color-back: none;
+	--box-color-text: currentColor;
+	--box-padding-inline: var(--spacing-2);
+	--box-height: var(--height-md);
+	--text-font-size: var(--text-sm);
+	--icon-color: var(--box-color-icon);
+	display: flex;
 	width: 100%;
-	display: flex;
 	align-items: center;
-	line-height: 2rem;
-	text-align: start;
+	gap: var(--spacing-2);
+	color: var(--box-color-text);
+	background: var(--box-color-back);
+	word-wrap: break-word;
 }
 
-.k-box[data-theme="positive"],
-.k-box[data-theme="negative"],
-.k-box[data-theme="notice"],
-.k-box[data-theme="info"] {
-	border: 0;
-	border-inline-start-color: var(--theme-color-back);
-	background: var(--theme-color-back);
+/* Themes */
+.k-box[data-theme] {
+	--box-color-back: var(--theme-color-back);
+	--box-color-text: var(--theme-color-text);
+	--box-color-icon: var(--theme-color-icon);
+	min-height: var(--box-height);
+	line-height: 1.25;
+	padding: 0.375rem var(--box-padding-inline);
+	border-radius: var(--rounded);
 }
 
-.k-box[data-theme="empty"] {
-	text-align: center;
-	border-inline-start: 0;
-	padding: 3rem 1.5rem;
-	display: flex;
+/* Text Box */
+.k-box[data-theme]:has(> .k-text) {
+	max-width: max-content;
+}
+.k-box[data-theme] > .k-text {
+	padding: var(--spacing-3);
+	margin-inline: auto;
+}
+
+/* Align:center */
+.k-box[data-align="center"] {
 	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	background: var(--color-background);
-	color: var(--color-gray-600);
-	border: 1px dashed var(--color-border);
-}
-.k-box[data-theme="empty"] .k-icon {
-	margin-bottom: 0.5rem;
-	color: var(--color-gray-500);
-}
-.k-box[data-theme="empty"] p {
-	color: var(--color-gray-600);
 }
 </style>

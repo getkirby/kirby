@@ -5,6 +5,7 @@ import Layout from "@/components/Layout/index.js";
 import Layouts from "@/components/Layouts/index.js";
 import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
+import Text from "@/components/Text/index.js";
 import Sections from "@/components/Sections/index.js";
 import Views from "@/components/Views/index.js";
 
@@ -20,6 +21,7 @@ export default {
 		app.use(Layouts);
 		app.use(Misc);
 		app.use(Navigation);
+		app.use(Text);
 		app.use(Sections);
 		app.use(Views);
 

@@ -14,8 +14,8 @@
 
 /* Invalid */
 [data-invalid="true"] {
-	border: 1px solid var(--color-red-900);
-	box-shadow: var(--color-red-900) 0 0 3px 2px;
+	border: 1px solid var(--color-red-500);
+	box-shadow: var(--color-red-400) 0 0 3px 2px;
 }
 [data-invalid="true"]:focus-within {
 	border: var(--field-input-invalid-focus-border) !important;

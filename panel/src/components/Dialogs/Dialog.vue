@@ -335,6 +335,10 @@ export default {
 	padding: 1.5rem;
 }
 
+.k-dialog-body .k-text {
+	word-wrap: break-word;
+}
+
 .k-dialog-body .k-fieldset {
 	padding-bottom: 0.5rem;
 }
