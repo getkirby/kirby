@@ -49,7 +49,7 @@
 						{{ model.name }}
 					</template>
 
-					<template #left>
+					<template #buttons>
 						<k-button-group>
 							<k-dropdown class="k-user-view-options">
 								<k-button
@@ -62,8 +62,7 @@
 							</k-dropdown>
 							<k-languages-dropdown />
 						</k-button-group>
-					</template>
-					<template #right>
+
 						<k-prev-next v-if="!model.account" :prev="prev" :next="next" />
 					</template>
 				</k-header>

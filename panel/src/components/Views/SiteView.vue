@@ -13,7 +13,7 @@
 				@edit="$dialog('site/changeTitle')"
 			>
 				{{ model.title }}
-				<template #left>
+				<template #buttons>
 					<k-button-group>
 						<k-button
 							:link="model.previewUrl"

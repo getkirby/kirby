@@ -16,15 +16,15 @@
 			</span>
 			<slot v-else />
 		</k-headline>
-		<k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
-			<template #left>
-				<!-- @slot buttons on the left -->
-				<slot name="left" />
-			</template>
-			<template #right>
-				<!-- @slot buttons on the right -->
-				<slot name="right" />
-			</template>
+		<k-bar
+			v-if="$slots.buttons || $slots.left || $slots.right"
+			class="k-header-buttons"
+		>
+			<slot name="buttons" />
+			<!-- @deprecated left/right slot, use buttons slot instead -->
+			<!-- @todo remove right/left slots in v5.0 -->
+			<slot name="left" />
+			<slot name="right" />
 		</k-bar>
 
 		<k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
@@ -74,6 +74,16 @@ export default {
 
 				return tab;
 			});
+		}
+	},
+	/**
+	 * @todo remove in v5.0 when removing slots
+	 */
+	mounted() {
+		if (this.$slots.left || this.$slots.right) {
+			window.panel.deprecated(
+				"<k-header>: left/right slots will be removed in a future version. Use `buttons` slot instead."
+			);
 		}
 	}
 };
