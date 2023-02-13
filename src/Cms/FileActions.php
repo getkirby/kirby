@@ -218,7 +218,7 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
-			// always create pages in the default language
+			// always create files in the default language
 			if ($file->kirby()->multilang() === true) {
 				$languageCode = $file->kirby()->defaultLanguage()->code();
 			} else {
@@ -230,6 +230,14 @@ trait FileActions
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
+
+			// load post-create options from the blueprint
+			$createOptions = $file->blueprint()->create();
+
+			// optimize images directly after the upload
+			if (empty($createOptions) === false && $file->isResizable() === true) {
+				$file->kirby()->thumb($file->root(), $file->root(), $createOptions);
+			}
 
 			// return a fresh clone
 			return $file->clone();
