@@ -27,6 +27,7 @@ class PageBlueprintTest extends TestCase
 			'read'           => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
@@ -60,6 +61,7 @@ class PageBlueprintTest extends TestCase
 			'read'           => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
@@ -96,6 +98,7 @@ class PageBlueprintTest extends TestCase
 			'read'           => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
