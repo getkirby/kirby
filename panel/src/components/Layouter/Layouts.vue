@@ -208,23 +208,17 @@ export default {
 	grid-gap: 1.5rem;
 }
 .k-layout-selector-option .k-grid {
-	height: 5rem;
-	grid-gap: 2px;
+	gap: 2px;
+	grid-template-columns: repeat(var(--columns), 1fr);
 	box-shadow: var(--shadow);
 	cursor: pointer;
 }
 .k-layout-selector-option:hover {
-	outline: 2px solid var(--color-green-300);
+	outline: 2px solid var(--color-focus);
 	outline-offset: 2px;
 }
-.k-layout-selector-option:last-child {
-	margin-bottom: 0;
-}
 .k-layout-selector-option .k-column {
-	display: flex;
-	background: rgba(255, 255, 255, 0.2);
-	justify-content: center;
-	font-size: var(--text-xs);
-	align-items: center;
+	background: var(--color-slate-800);
+	height: 5rem;
 }
 </style>
