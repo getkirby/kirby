@@ -91,7 +91,7 @@ class SiteActionsTest extends TestCase
 			'copyright' => 2018
 		]);
 
-		$this->assertSame('2018', $site->copyright()->value());
+		$this->assertSame(2018, $site->copyright()->value());
 	}
 
 	public function testChangeTitleHooks()
