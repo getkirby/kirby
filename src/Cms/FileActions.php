@@ -271,7 +271,7 @@ trait FileActions
 	/**
 	 * Resizes/crops the original file with Kirby's thumb handler
 	 */
-	public function manipulate(array $options = []): static
+	public function manipulate(array|null $options = []): static
 	{
 		// nothing to process
 		if (empty($options) === true || $this->isResizable() === false) {
