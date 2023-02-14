@@ -880,6 +880,7 @@ class FieldMethodsTest extends TestCase
 		$page    = kirby()->page('files');
 		$field   = new Field($page, 'test', json_encode($data));
 		$layouts = $field->toLayouts();
+		$blocks  = $layouts->toBlocks();
 
 		$this->assertInstanceOf(Layouts::class, $layouts);
 		$this->assertSame($page, $layouts->parent());
@@ -893,6 +894,10 @@ class FieldMethodsTest extends TestCase
 		$this->assertArrayHasKey('attrs', $array);
 		$this->assertArrayHasKey('columns', $array);
 		$this->assertArrayHasKey('id', $array);
+
+		$block = $blocks->first();
+		$this->assertSame($page, $block->parent());
+		$this->assertEquals($field, $block->field());
 	}
 
 	public function testToObject()
