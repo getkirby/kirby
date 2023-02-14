@@ -77,6 +77,7 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+
 	public function testParent()
 	{
 		$this->app->impersonate('kirby');
@@ -824,5 +825,33 @@ class PagesSectionTest extends TestCase
 
 		$this->assertSame([], $options['columns']);
 		$this->assertNull($options['link']);
+	}
+
+	public function testQuery()
+	{
+		$this->app->impersonate('kirby');
+
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page([
+				'slug' => 'test',
+				'children' => [
+					[
+						'slug' => 'a',
+						'num'  => 1,
+					],
+					[
+						'slug' => 'b',
+						'num'  => 2,
+					]
+				]
+			]),
+			'query' => $query = 'page.children.filter("num", ">", 1)'
+		]);
+
+		$this->assertSame($query, $section->query());
+		$this->assertFalse($section->sortable());
+
+		$this->assertCount(1, $section->pages());
 	}
 }
