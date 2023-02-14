@@ -422,6 +422,25 @@ class PageActionsTest extends TestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
+	public function testMove()
+	{
+		$parentA = $this->app->site()->createChild([
+			'slug' => 'parent-a'
+		]);
+
+		$parentB = $this->app->site()->createChild([
+			'slug' => 'parent-b'
+		]);
+
+		$child = $parentA->createChild([
+			'slug' => 'child'
+		]);
+
+		$moved = $child->move('parent-b');
+
+		$this->assertTrue($moved->parent()->is($parentB));
+	}
+
 	public function testPurge()
 	{
 		$page = new Page([
