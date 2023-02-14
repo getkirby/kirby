@@ -577,14 +577,13 @@ trait PageActions
 	public function createChild(array $props)
 	{
 		$props = array_merge($props, [
-			'url'      => null,
-			'num'      => null,
-			'parent'   => $this,
-			'site'     => $this->site(),
-			'template' => null,
+			'url'    => null,
+			'num'    => null,
+			'parent' => $this,
+			'site'   => $this->site(),
 		]);
 
-		$modelClass = Page::$models[$props['template']] ?? Page::class;
+		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
 		return $modelClass::create($props);
 	}
 
