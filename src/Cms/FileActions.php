@@ -231,13 +231,8 @@ trait FileActions
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
 
-			// load post-create options from the blueprint
-			$createOptions = $file->blueprint()->create();
-
-			// optimize images directly after the upload
-			if (empty($createOptions) === false && $file->isResizable() === true) {
-				$file->kirby()->thumb($file->root(), $file->root(), $createOptions);
-			}
+			// resize the file on upload if configured
+			$file->manipulate($file->blueprint()->create());
 
 			// return a fresh clone
 			return $file->clone();
@@ -271,6 +266,22 @@ trait FileActions
 
 			return true;
 		});
+	}
+
+	/**
+	 * Resizes/crops the original file with Kirby's thumb handler
+	 */
+	public function manipulate(array $options = []): static
+	{
+		// nothing to process
+		if (empty($options) === true || $this->isResizable() === false) {
+			return $this;
+		}
+
+		$this->kirby()->thumb($this->root(), $this->root(), $options);
+
+		// returns a cloned version of the file
+		return $this->clone();
 	}
 
 	/**
@@ -317,6 +328,9 @@ trait FileActions
 			if (F::$method($upload->root(), $file->root(), true) !== true) {
 				throw new LogicException('The file could not be created');
 			}
+
+			// apply the resizing/crop options from the blueprint
+			$file->manipulate($file->blueprint()->create());
 
 			// return a fresh clone
 			return $file->clone();
