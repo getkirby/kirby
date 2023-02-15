@@ -179,7 +179,7 @@ class File extends ModelWithContent
 	public function contentFileData(array $data, string $languageCode = null): array
 	{
 		return A::append($data, [
-			'template' => $this->template(),
+			'template' => $data['template'] ?? $this->template(),
 		]);
 	}
 
