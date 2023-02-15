@@ -70,7 +70,9 @@ export default {
 				// everything went fine. We can close the dialog,
 				// show the smiley in the topbar, fire events that
 				// might have been defined in the response
-				this.$refs.dialog.success(dialog);
+				if (!dialog.dialog) {
+					this.$refs.dialog.success(dialog);
+				}
 
 				// dispatch store actions that might have been defined in the response
 				if (dialog.dispatch) {
@@ -85,7 +87,7 @@ export default {
 
 				// redirect or reload
 				if (dialog.redirect) {
-					this.$go(dialog.redirect);
+					this.redirect(dialog.redirect);
 				} else {
 					this.$reload(dialog.reload || {});
 				}
@@ -93,6 +95,17 @@ export default {
 				this.$refs.dialog.error(e);
 			} finally {
 				this.isProcessing = false;
+			}
+		},
+		redirect(redirect) {
+			if (typeof redirect === "string") {
+				redirect = { url: redirect };
+			}
+
+			if (redirect.type === "dialog") {
+				this.$dialog(redirect.url, redirect);
+			} else {
+				this.$go(redirect.url, redirect);
 			}
 		}
 	}
