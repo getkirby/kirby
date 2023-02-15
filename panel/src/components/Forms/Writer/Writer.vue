@@ -280,7 +280,9 @@ export default {
 				{
 					bulletList: new BulletList(),
 					orderedList: new OrderedList(),
-					heading: new Heading(),
+					heading: new Heading({
+						levels: this.headings
+					}),
 					horizontalRule: new HorizontalRule(),
 					listItem: new ListItem()
 				},
