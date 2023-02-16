@@ -154,7 +154,7 @@ class Pages extends Collection
 	 *
 	 * @param array $pages
 	 * @param \Kirby\Cms\Model|null $model
-	 * @param bool $draft
+	 * @param bool|null $draft
 	 * @return static
 	 */
 	public static function factory(array $pages, Model $model = null, bool $draft = null)
@@ -175,7 +175,7 @@ class Pages extends Collection
 			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
-			$props['isDraft'] = $draft ?? ($props['isDraft'] ?? false);
+			$props['isDraft'] = $draft ?? $props['isDraft'] ?? false;
 
 			$page = Page::factory($props);
 
