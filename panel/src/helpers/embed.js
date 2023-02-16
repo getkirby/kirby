@@ -66,7 +66,7 @@ export function youtube(url, doNotTrack = false) {
 				}
 
 				query.delete("t");
-			} else if (first === "embed" && isYoutubeId(second)) {
+			} else if (["embed", "shorts"].includes(first) && isYoutubeId(second)) {
 				src = host + "/" + second;
 			}
 	}

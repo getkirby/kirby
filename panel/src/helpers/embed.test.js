@@ -38,6 +38,10 @@ describe.concurrent("$helper.embed()", () => {
 				"https://www.youtube.com/embed/d9NF2edxy-M?start=10&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys"
 			],
 			[
+				"http://www.youtube.com/shorts/z-zDhFM_oAo",
+				"https://www.youtube.com/embed/z-zDhFM_oAo"
+			],
+			[
 				"https://www.youtube-nocookie.com/embed/d9NF2edxy-M",
 				"https://www.youtube-nocookie.com/embed/d9NF2edxy-M"
 			],
