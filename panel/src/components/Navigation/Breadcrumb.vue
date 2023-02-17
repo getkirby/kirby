@@ -117,7 +117,7 @@ export default {
 .k-breadcrumb li:not(:last-child)::after {
 	content: "/";
 	padding-inline: 0.5rem;
-	opacity: 0.5;
+	opacity: 0.175;
 	flex-shrink: 0;
 }
 .k-breadcrumb li:not(:first-child):not(:last-child) {
