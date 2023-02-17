@@ -62,5 +62,6 @@ export default {
 .k-block-type-image-auto {
 	max-width: 100%;
 	max-height: 30rem;
+	margin-inline: auto;
 }
 </style>
