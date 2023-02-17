@@ -3,10 +3,10 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
+use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Cms\Response;
 use Kirby\Panel\Field;
 use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;

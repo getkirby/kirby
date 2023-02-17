@@ -40,7 +40,7 @@ class PageCreateDialog
 	}
 
 	/**
-     * A list of supported custom field types
+	 * A list of supported custom field types
 	 */
 	public function customFieldTypes(): array
 	{
@@ -225,5 +225,4 @@ class PageCreateDialog
 	{
 		return Find::parent($viewId ?? $this->parentId);
 	}
-
 }
