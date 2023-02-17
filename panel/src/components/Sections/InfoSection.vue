@@ -12,6 +12,7 @@
 <script>
 import SectionMixin from "@/mixins/section.js";
 export default {
+	inheritAttrs: false,
 	mixins: [SectionMixin],
 	data() {
 		return {
