@@ -6,9 +6,10 @@
 :root {
 	--outline: 2px solid var(--color-focus, currentColor);
 	--pattern: repeating-conic-gradient(
-		var(--color-white) 0% 25%,
-		var(--color-slate-300) 0% 50%
-	) 50% / 20px 20px;
+			rgba(0, 0, 0, 0) 0% 25%,
+			rgba(0, 0, 0, 0.2) 0% 50%
+		)
+		50% / 20px 20px;
 }
 
 /* Invalid */
