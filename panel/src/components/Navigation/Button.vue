@@ -155,14 +155,6 @@ button::-moz-focus-inner {
 	padding-inline-start: 0.5rem;
 }
 
-.k-button-text {
-	opacity: 0.75;
-}
-.k-button:focus .k-button-text,
-.k-button:hover .k-button-text {
-	opacity: 1;
-}
-
 .k-button-text span,
 .k-button-text b {
 	vertical-align: baseline;
