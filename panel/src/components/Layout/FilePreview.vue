@@ -1,37 +1,35 @@
 <template>
 	<div class="k-file-preview">
-		<k-view class="k-file-preview-layout">
-			<div class="k-file-preview-image">
-				<k-link
-					:to="url"
-					:title="$t('open')"
-					class="k-file-preview-image-link"
-					target="_blank"
-				>
-					<k-item-image :image="image" layout="cards" />
-				</k-link>
-			</div>
-			<div class="k-file-preview-details">
-				<ul>
-					<li v-for="detail in details" :key="detail.title">
-						<h3>{{ detail.title }}</h3>
-						<p>
-							<k-link
-								v-if="detail.link"
-								:to="detail.link"
-								tabindex="-1"
-								target="_blank"
-							>
-								/{{ detail.text }}
-							</k-link>
-							<template v-else>
-								{{ detail.text }}
-							</template>
-						</p>
-					</li>
-				</ul>
-			</div>
-		</k-view>
+		<div class="k-file-preview-image">
+			<k-link
+				:to="url"
+				:title="$t('open')"
+				class="k-file-preview-image-link"
+				target="_blank"
+			>
+				<k-item-image :image="image" layout="cards" />
+			</k-link>
+		</div>
+		<div class="k-file-preview-details">
+			<ul>
+				<li v-for="detail in details" :key="detail.title">
+					<h3>{{ detail.title }}</h3>
+					<p>
+						<k-link
+							v-if="detail.link"
+							:to="detail.link"
+							tabindex="-1"
+							target="_blank"
+						>
+							/{{ detail.text }}
+						</k-link>
+						<template v-else>
+							{{ detail.text }}
+						</template>
+					</p>
+				</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -47,12 +45,10 @@ export default {
 <style>
 .k-file-preview {
 	background: var(--color-dark);
-}
-.k-file-preview-layout {
 	display: grid;
 	grid-template-columns: 50% auto;
 }
-.k-file-preview-layout > * {
+.k-file-preview > * {
 	min-width: 0;
 }
 
@@ -106,12 +102,12 @@ export default {
 	}
 }
 @media screen and (max-width: 65em) {
-	.k-file-preview-layout {
+	.k-file-preview {
 		padding: 0 !important;
 	}
 }
 @media screen and (min-width: 65em) {
-	.k-file-preview-layout {
+	.k-file-preview {
 		grid-template-columns: 33.333% auto;
 		align-items: center;
 	}
@@ -120,7 +116,7 @@ export default {
 	}
 }
 @media screen and (min-width: 90em) {
-	.k-file-preview-layout {
+	.k-file-preview {
 		grid-template-columns: 25% auto;
 	}
 }
