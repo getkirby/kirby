@@ -263,6 +263,7 @@ export default {
 	border-radius: var(--rounded);
 	text-align: start;
 	margin-bottom: 6rem;
+	width: max-content;
 }
 .k-dropdown-content[data-align="left"] {
 	inset-inline-start: 0;
