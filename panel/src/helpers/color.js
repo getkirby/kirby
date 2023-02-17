@@ -13,7 +13,7 @@ export default function (string) {
 	string = string.toLowerCase();
 
 	if (string === "pattern") {
-		return `var(--color-gray-800) var(--bg-pattern)`;
+		return `var(--color-slate-800) var(--pattern)`;
 	}
 
 	// check pre-defined color variables

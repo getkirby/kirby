@@ -3,22 +3,18 @@
 		:data-ratio="ratio"
 		:data-back="back"
 		:data-cover="cover"
+		:style="{ 'aspect-ratio': ratio }"
 		class="k-image"
 		v-on="$listeners"
 	>
-		<span :style="'padding-bottom:' + ratioPadding">
-			<img
-				v-if="loaded"
-				:key="src"
-				:alt="alt || ''"
-				:src="src"
-				:srcset="srcset"
-				:sizes="sizes"
-				@dragstart.prevent
-			/>
-			<k-loader v-if="!loaded && !error" position="center" theme="light" />
-			<k-icon v-if="!loaded && error" class="k-image-error" type="cancel" />
-		</span>
+		<img
+			:key="src"
+			:alt="alt || ''"
+			:src="src"
+			:srcset="srcset"
+			:sizes="sizes"
+			@dragstart.prevent
+		/>
 	</span>
 </template>
 
@@ -80,54 +76,15 @@ export default {
 		 * For responsive images, pass the `srcset` attribute
 		 */
 		srcset: String
-	},
-	data() {
-		return {
-			loaded: {
-				type: Boolean,
-				default: false
-			},
-			error: {
-				type: Boolean,
-				default: false
-			}
-		};
-	},
-	computed: {
-		ratioPadding() {
-			return this.$helper.ratio(this.ratio || "1/1");
-		}
-	},
-	created() {
-		let img = new Image();
-
-		img.onload = () => {
-			this.loaded = true;
-			/**
-			 * Image was loaded
-			 */
-			this.$emit("load");
-		};
-
-		img.onerror = () => {
-			this.error = true;
-			/**
-			 * Issue occurred when loading the image
-			 */
-			this.$emit("error");
-		};
-
-		img.src = this.src;
 	}
 };
 </script>
 
 <style>
-.k-image span {
+.k-image {
 	position: relative;
 	display: block;
 	line-height: 0;
-	padding-bottom: 100%;
 }
 .k-image img {
 	position: absolute;
@@ -136,32 +93,17 @@ export default {
 	height: 100%;
 	object-fit: contain;
 }
-.k-image-error {
-	position: absolute;
-	top: 50%;
-	inset-inline-start: 50%;
-	transform: translate(-50%, -50%);
-	color: var(--color-white);
-	font-size: 0.9em;
-}
-.k-image-error svg * {
-	fill: rgba(255, 255, 255, 0.3);
-}
 .k-image[data-cover="true"] img {
 	object-fit: cover;
 }
-.k-image[data-back="black"] span {
-	background: var(--color-gray-900);
+.k-image[data-back="black"] {
+	background: var(--color-black);
 }
-.k-image[data-back="white"] span {
+.k-image[data-back="white"] {
 	background: var(--color-white);
 	color: var(--color-gray-900);
 }
-.k-image[data-back="white"] .k-image-error {
-	background: var(--color-gray-900);
-	color: var(--color-white);
-}
-.k-image[data-back="pattern"] span {
-	background: var(--color-gray-800) var(--bg-pattern);
+.k-image[data-back="pattern"] {
+	background: var(--color-black) var(--pattern);
 }
 </style>
