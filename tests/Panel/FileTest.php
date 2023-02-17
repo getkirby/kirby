@@ -343,7 +343,6 @@ class FileTest extends TestCase
 		$image = (new File($file))->image();
 		$this->assertSame('image', $image['icon']);
 		$this->assertSame('orange-400', $image['color']);
-		$this->assertSame('3/2', $image['ratio']);
 		$this->assertSame('pattern', $image['back']);
 		$this->assertArrayHasKey('url', $image);
 	}
@@ -372,7 +371,6 @@ class FileTest extends TestCase
 			'color' => 'orange-400',
 			'cover' => false,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
@@ -384,7 +382,6 @@ class FileTest extends TestCase
 			'color' => 'orange-400',
 			'cover' => true,
 			'icon' => 'image',
-			'ratio' => '3/2',
 			'url' => '/media/site/' . $hash . '/test.jpg',
 			'src' => Model::imagePlaceholder(),
 			'srcset' => '/media/site/' . $hash . '/test-38x38-crop.jpg 1x, /media/site/' . $hash . '/test-76x76-crop.jpg 2x'
@@ -623,7 +620,6 @@ class FileTest extends TestCase
 		$this->assertSame('test.jpg', $data['filename']);
 		$this->assertSame('(image: test.jpg)', $data['dragText']);
 		$this->assertSame('test/test.jpg', $data['id']);
-		$this->assertSame('3/2', $data['image']['ratio']);
 		$this->assertSame('image', $data['image']['icon']);
 		$this->assertSame('/pages/test/files/test.jpg', $data['link']);
 		$this->assertSame('test.jpg', $data['text']);

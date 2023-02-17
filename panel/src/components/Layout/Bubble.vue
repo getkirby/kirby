@@ -9,7 +9,7 @@
 		class="k-bubble"
 		@click.native.stop
 	>
-		<k-item-image v-if="image" :image="image" layout="list" />
+		<k-image-frame v-if="image" v-bind="image" />
 		{{ text }}
 	</component>
 </template>

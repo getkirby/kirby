@@ -1,12 +1,5 @@
 <template>
-	<span
-		:data-ratio="ratio"
-		:data-back="back"
-		:data-cover="cover"
-		:style="{ 'aspect-ratio': ratio }"
-		class="k-image"
-		v-on="$listeners"
-	>
+	<k-frame v-bind="$props" element="figure" class="k-image" v-on="$listeners">
 		<img
 			:key="src"
 			:alt="alt || ''"
@@ -15,7 +8,7 @@
 			:sizes="sizes"
 			@dragstart.prevent
 		/>
-	</span>
+	</k-frame>
 </template>
 
 <script>
@@ -30,6 +23,7 @@
  * @example <k-image src="myimage.jpg" />
  */
 export default {
+	inheritAttrs: false,
 	props: {
 		/**
 		 * Just like in regular `<img>` tags,
@@ -81,29 +75,14 @@ export default {
 </script>
 
 <style>
-.k-image {
-	position: relative;
-	display: block;
-	line-height: 0;
-}
-.k-image img {
-	position: absolute;
-	inset: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: contain;
-}
-.k-image[data-cover="true"] img {
-	object-fit: cover;
+.k-image[data-back="pattern"] {
+	--back: var(--color-black) var(--pattern);
 }
 .k-image[data-back="black"] {
-	background: var(--color-black);
+	--back: var(--color-black);
 }
 .k-image[data-back="white"] {
-	background: var(--color-white);
+	--back: var(--color-white);
 	color: var(--color-gray-900);
-}
-.k-image[data-back="pattern"] {
-	background: var(--color-black) var(--pattern);
 }
 </style>

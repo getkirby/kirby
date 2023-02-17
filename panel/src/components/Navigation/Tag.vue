@@ -70,7 +70,6 @@ export default {
 	color: rgba(255, 255, 255, 0.7);
 	width: 1.75rem;
 	padding-inline-end: 1px;
-	height: 100%;
 	border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
 }
 .k-tag-toggle:hover {

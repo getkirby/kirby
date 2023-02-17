@@ -11,7 +11,7 @@
 			v-on="$listeners"
 			@mousedown="close"
 		>
-			<k-loader v-if="loading" class="k-overlay-loader" />
+			<k-icon v-if="loading" type="loader" class="k-overlay-loader" />
 			<slot v-else :close="close" :is-open="isOpen" />
 		</div>
 	</portal>

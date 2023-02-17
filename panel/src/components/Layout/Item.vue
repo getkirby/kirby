@@ -13,12 +13,13 @@
 	>
 		<!-- Image -->
 		<slot name="image">
-			<k-item-image
-				v-if="hasFigure"
-				:image="image"
-				:layout="layout"
-				:width="width"
-			/>
+			<template v-if="hasFigure">
+				<k-image-frame
+					v-if="image.src"
+					v-bind="{ cover: true, ...image, sizes }"
+				/>
+				<k-icon-frame v-else v-bind="{ ...image }" />
+			</template>
 		</slot>
 
 		<!-- Sort handle -->
@@ -96,6 +97,23 @@ export default {
 		hasFigure() {
 			return this.image !== false && Object.keys(this.image).length > 0;
 		},
+		sizes() {
+			switch (this.width) {
+				case "1/2":
+				case "2/4":
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 44em, 27em";
+				case "1/3":
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 29.333em, 27em";
+				case "1/4":
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 22em, 27em";
+				case "2/3":
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 27em, 27em";
+				case "3/4":
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 66em, 27em";
+				default:
+					return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 88em, 27em";
+			}
+		},
 		title() {
 			return this.text || "-";
 		}
@@ -126,16 +144,15 @@ export default {
 }
 .k-item-sort-handle.k-sort-handle {
 	position: absolute;
-	opacity: 0;
-	width: 1.25rem;
-	height: 1.5rem;
 	z-index: 2;
 	border-radius: 1px;
+	padding-block: 2px;
+	--icon-size: calc(1rem + 4px);
 }
-.k-item:hover .k-item-sort-handle {
-	opacity: 1;
+.k-item:not(:hover) .k-item-sort-handle {
+	opacity: 0;
 }
-.k-item-figure {
+.k-item .k-frame {
 	grid-area: figure;
 }
 .k-item-content {
@@ -205,11 +222,11 @@ export default {
 	height: 38px;
 }
 .k-list-item .k-item-sort-handle {
-	inset-inline-start: -1.5rem;
-	width: 1.5rem;
+	inset-inline-start: -1.25rem;
 }
-.k-list-item .k-item-figure {
+.k-list-item .k-frame {
 	width: 38px;
+	aspect-ratio: 1/1;
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 }
@@ -271,7 +288,7 @@ export default {
 		"figure content"
 		"figure footer";
 }
-.k-cardlets-item .k-item-figure {
+.k-cardlets-item .k-frame {
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 }
@@ -287,7 +304,7 @@ export default {
 		"figure"
 		"content";
 }
-.k-cards-item .k-item-figure {
+.k-cards-item .k-frame {
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
 }

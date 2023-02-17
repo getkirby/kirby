@@ -500,6 +500,7 @@
 	"size": "Size",
 	"slug": "URL appendix",
 	"sort": "Sort",
+	"sort.drag": "Drag to sort …",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",

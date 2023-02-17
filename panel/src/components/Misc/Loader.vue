@@ -6,6 +6,9 @@
 
 <script>
 /**
+ * @deprecated Use `<k-icon type="loader" />` instead
+ * @todo remove @ 5.0
+ *
  * Animated loading spinner
  * @public
  *

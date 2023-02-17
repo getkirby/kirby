@@ -350,6 +350,7 @@ export default {
 	padding: 0.5rem;
 	color: var(--color-light);
 	border-radius: var(--rounded-xs);
+	width: min-content;
 }
 .k-calendar-table {
 	table-layout: fixed;
