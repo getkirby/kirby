@@ -120,15 +120,9 @@ export default {
 	grid-template-columns: auto;
 	line-height: 1;
 }
-.k-item:focus {
-	outline: 0;
-}
 .k-item:focus-within,
 .k-item.k-sortable-ghost {
-	box-shadow: var(--shadow-outline);
-}
-.k-item a:focus {
-	outline: 0;
+	outline: var(--outline);
 }
 .k-item-sort-handle.k-sort-handle {
 	position: absolute;
