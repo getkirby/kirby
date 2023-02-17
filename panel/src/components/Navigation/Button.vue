@@ -120,6 +120,7 @@ button::-moz-focus-inner {
 	font-size: var(--text-sm);
 	transition: color 0.3s;
 	outline: none;
+	border-radius: var(--rounded);
 }
 .k-button:focus,
 .k-button:hover {
