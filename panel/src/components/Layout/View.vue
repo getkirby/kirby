@@ -28,6 +28,12 @@ export default {
 	padding-inline: 1.5rem;
 }
 
+@media screen and (min-width: 30rem) {
+	.k-view {
+		padding-inline: 3rem;
+	}
+}
+
 .k-view[data-align="center"] {
 	height: 100vh;
 	display: flex;
