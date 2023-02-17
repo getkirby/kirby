@@ -145,13 +145,12 @@ export default {
 
 .k-input[data-theme="field"] {
 	line-height: 1;
-	border: var(--field-input-border);
+	outline: var(--field-input-border);
 	background: var(--field-input-background);
 	border-radius: var(--rounded);
 }
 .k-input[data-theme="field"]:focus-within {
-	border: var(--field-input-focus-border);
-	box-shadow: var(--color-focus) 0 0 0 2px;
+	outline: var(--outline);
 }
 
 .k-input[data-theme="field"][data-disabled="true"] {

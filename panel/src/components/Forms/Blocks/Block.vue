@@ -259,12 +259,14 @@ export default {
 	content: "";
 	background: rgba(238, 242, 246, 0.375);
 	mix-blend-mode: multiply;
-	border: 1px solid var(--color-focus);
+	outline: var(--outline);
+	border-radius: var(--rounded);
 }
 
 .k-block-container[data-selected="true"] {
+	transform: translate(0);
 	z-index: 2;
-	box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus) 0 0 0 3px;
+	outline: var(--outline);
 	border-bottom-color: transparent;
 }
 .k-block-container .k-block-options {

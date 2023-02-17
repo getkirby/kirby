@@ -276,10 +276,6 @@ export default {
 	gap: 1px;
 	border-radius: var(--rounded);
 }
-.k-date-field-body:focus-within {
-	border: var(--field-input-focus-border);
-	box-shadow: var(--color-focus) 0 0 0 2px;
-}
 .k-date-field[data-disabled] .k-date-field-body {
 	background: none;
 }
