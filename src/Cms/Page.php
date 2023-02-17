@@ -444,16 +444,10 @@ class Page extends ModelWithContent
 	 * takes page models into account.
 	 *
 	 * @internal
-	 * @param mixed $props
-	 * @return static
 	 */
-	public static function factory($props)
+	public static function factory($props): static
 	{
-		if (empty($props['model']) === false) {
-			return static::model($props['model'], $props);
-		}
-
-		return new static($props);
+		return static::model($props['model'] ?? 'default', $props);
 	}
 
 	/**
@@ -850,13 +844,13 @@ class Page extends ModelWithContent
 	 * Creates a page model if it has been registered
 	 *
 	 * @internal
-	 * @param string $name
-	 * @param array $props
-	 * @return static
 	 */
-	public static function model(string $name, array $props = [])
+	public static function model(string $name, array $props = []): static
 	{
-		if ($class = (static::$models[$name] ?? null)) {
+		$class   = static::$models[$name] ?? null;
+		$class ??= static::$models['default'] ?? null;
+
+		if ($class !== null) {
 			$object = new $class($props);
 
 			if ($object instanceof self) {

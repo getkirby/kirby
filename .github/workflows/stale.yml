@@ -11,7 +11,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@9c1b1c6e115ca2af09755448e0dbba24e5061cc8 # pin@v5
+      - uses: actions/stale@6f05e4244c9a0b2ed3401882b05d701dd0a7289b # pin@v7
         with:
           # Idle number of days before marking issues stale, set `-1` to disable
           days-before-issue-stale: 180

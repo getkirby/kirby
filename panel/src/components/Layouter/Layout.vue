@@ -56,6 +56,13 @@
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
 					<hr />
+					<k-dropdown-item icon="template" @click="$emit('copy')">
+						{{ $t("copy") }}
+					</k-dropdown-item>
+					<k-dropdown-item icon="download" @click="$emit('paste')">
+						{{ $t("paste.after") }}
+					</k-dropdown-item>
+					<hr />
 					<k-dropdown-item
 						icon="trash"
 						@click="$refs.confirmRemoveDialog.open()"

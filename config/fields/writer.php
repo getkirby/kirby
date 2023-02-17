@@ -5,6 +5,12 @@ use Kirby\Sane\Sane;
 return [
 	'props' => [
 		/**
+		 * Available heading levels
+		 */
+		'headings' => function (array|null $headings = null) {
+			return array_intersect($headings ?? range(1, 6), range(1, 6));
+		},
+		/**
 		 * Enables inline mode, which will not wrap new lines in paragraphs and creates hard breaks instead.
 		 *
 		 * @param bool $inline
