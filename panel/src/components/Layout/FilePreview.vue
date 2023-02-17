@@ -46,7 +46,7 @@ export default {
 </script>
 <style>
 .k-file-preview {
-	background: var(--color-gray-800);
+	background: var(--color-dark);
 }
 .k-file-preview-layout {
 	display: grid;
