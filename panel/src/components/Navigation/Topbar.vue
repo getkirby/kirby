@@ -15,7 +15,6 @@
 					<k-dropdown-content
 						ref="menu"
 						:options="menu"
-						theme="light"
 						class="k-topbar-menu"
 					/>
 				</k-dropdown>
@@ -85,10 +84,10 @@ export default {
 
 <style>
 .k-topbar {
-	--bg: var(--color-black);
+	--bg: var(--color-light);
 
 	position: relative;
-	color: var(--color-white);
+	color: var(--color-text);
 	flex-shrink: 0;
 	height: 2.5rem;
 	line-height: 1;
@@ -98,7 +97,6 @@ export default {
 	position: relative;
 	display: flex;
 	align-items: center;
-	margin-inline: -0.75rem;
 }
 .k-topbar-wrapper::after {
 	position: absolute;
@@ -116,7 +114,7 @@ export default {
 	padding: 0.5rem 0;
 }
 .k-topbar .k-button[data-theme] {
-	color: var(--theme-color-back);
+	color: var(--color-text);
 }
 .k-topbar .k-button-text {
 	opacity: 1;

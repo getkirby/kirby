@@ -79,8 +79,11 @@ export default {
 </script>
 
 <style>
-.k-panel {
+body {
 	background-color: var(--color-light);
+}
+
+.k-panel {
 	min-height: 100vh;
 	min-height: 100dvh;
 	container: app / inline-size;

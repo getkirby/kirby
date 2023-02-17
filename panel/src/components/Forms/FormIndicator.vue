@@ -5,7 +5,7 @@
 			icon="edit"
 			@click="toggle"
 		/>
-		<k-dropdown-content ref="list" align="right" theme="light">
+		<k-dropdown-content ref="list" align="right">
 			<p class="k-form-indicator-info">{{ $t("lock.unsaved") }}:</p>
 			<hr />
 			<k-dropdown-item
@@ -72,7 +72,7 @@ export default {
 
 <style>
 .k-form-indicator-toggle {
-	color: var(--color-orange-500);
+	color: var(--color-orange-600);
 }
 .k-form-indicator-info {
 	font-size: var(--text-sm);

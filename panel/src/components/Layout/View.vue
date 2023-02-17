@@ -24,23 +24,6 @@ export default {
 </script>
 
 <style>
-.k-view {
-	padding-inline: 1.5rem;
-	margin: 0 auto;
-	max-width: 100rem;
-}
-@media screen and (min-width: 30em) {
-	.k-view {
-		padding-inline: 3rem;
-	}
-}
-
-@media screen and (min-width: 90em) {
-	.k-view {
-		padding-inline: 6rem;
-	}
-}
-
 .k-view[data-align="center"] {
 	height: 100vh;
 	display: flex;
