@@ -24,6 +24,10 @@ export default {
 </script>
 
 <style>
+.k-view {
+	padding-inline: 1.5rem;
+}
+
 .k-view[data-align="center"] {
 	height: 100vh;
 	display: flex;

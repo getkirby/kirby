@@ -97,6 +97,7 @@ export default {
 	position: relative;
 	display: flex;
 	align-items: center;
+	margin-inline: -0.75rem;
 }
 .k-topbar-wrapper::after {
 	position: absolute;
