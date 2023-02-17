@@ -159,7 +159,7 @@ export default {
 }
 .k-item-info {
 	grid-area: info;
-	color: var(--color-gray-500);
+	color: var(--color-text-dimmed);
 }
 .k-item-title-link.k-link[data-="true"] {
 	box-shadow: none;
