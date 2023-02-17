@@ -317,6 +317,31 @@ class FileActionsTest extends TestCase
 	/**
 	 * @dataProvider parentProvider
 	 */
+	public function testCreateImageAndManipulate($parent)
+	{
+		$source =  __DIR__ . '/fixtures/files/test.jpg';
+		$result = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent,
+			'blueprint' => [
+				'name' => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+				]
+			]
+		]);
+
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.jpg');
+		$this->assertSame(100, $result->width());
+		$this->assertSame(100, $result->height());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
 	public function testCreateHooks($parent)
 	{
 		$phpunit = $this;
@@ -507,10 +532,38 @@ class FileActionsTest extends TestCase
 	public function testUpdate($file)
 	{
 		$file = $file->update([
-			'caption' => $caption = 'test'
+			'caption' => $caption = 'test',
+			'template' => $template = 'test'
 		]);
 
 		$this->assertSame($caption, $file->caption()->value());
+		$this->assertSame($template, $file->template());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulate($parent)
+	{
+		$original =  __DIR__ . '/fixtures/files/test.jpg';
+
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$this->assertSame(128, $originalFile->width());
+		$this->assertSame(128, $originalFile->height());
+
+		$replacedFile = $originalFile->manipulate([
+			'width' => 100,
+			'height' => 100,
+		]);
+
+		$this->assertSame($originalFile->root(), $replacedFile->root());
+		$this->assertSame(100, $replacedFile->width());
+		$this->assertSame(100, $replacedFile->height());
 	}
 
 	public function testChangeNameHooks()

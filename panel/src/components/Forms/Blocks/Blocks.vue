@@ -318,7 +318,10 @@ export default {
 			}
 
 			// a sign that it has been copied
-			this.$store.dispatch("notification/success", `${blocks.length} copied!`);
+			this.$store.dispatch(
+				"notification/success",
+				this.$t("copy.success", { count: blocks.length })
+			);
 		},
 		copyAll() {
 			this.selectAll();
@@ -553,6 +556,12 @@ export default {
 			}
 
 			this.append(blocks, lastIndex + 1);
+
+			// a sign that it has been pasted
+			this.$store.dispatch(
+				"notification/success",
+				this.$t("paste.success", { count: blocks.length })
+			);
 		},
 		pasteboard() {
 			this.$refs.pasteboard.open();
