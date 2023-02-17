@@ -85,7 +85,7 @@ export default {
 
 <style>
 .k-topbar {
-	--bg: var(--color-gray-900);
+	--bg: var(--color-black);
 
 	position: relative;
 	color: var(--color-white);
