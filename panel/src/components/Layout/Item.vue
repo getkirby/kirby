@@ -219,7 +219,8 @@ export default {
 
 /** List Item **/
 .k-list-item {
-	display: flex;
+	grid-template-columns: auto 1fr auto;
+	grid-template-areas: "figure content footer";
 	align-items: center;
 	height: 38px;
 }
