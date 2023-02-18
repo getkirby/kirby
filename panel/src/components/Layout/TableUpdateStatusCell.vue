@@ -19,27 +19,19 @@
 			/>
 			<k-dropdown-content ref="dropdown" align="right">
 				<dl class="k-plugin-info">
-					<div>
-						<dt>{{ $t("plugin") }}</dt>
-						<dd>{{ value.pluginName }}</dd>
-					</div>
-					<div>
-						<dt>{{ $t("version.current") }}</dt>
-						<dd>{{ value.currentVersion }}</dd>
-					</div>
-					<div>
-						<dt>{{ $t("version.latest") }}</dt>
-						<dd>{{ value.latestVersion }}</dd>
-					</div>
-					<div>
-						<dt>{{ $t("system.updateStatus") }}</dt>
-						<dd :data-theme="value.theme">{{ value.label }}</dd>
-					</div>
+					<dt>{{ $t("plugin") }}</dt>
+					<dd>{{ value.pluginName }}</dd>
+					<dt>{{ $t("version.current") }}</dt>
+					<dd>{{ value.currentVersion }}</dd>
+					<dt>{{ $t("version.latest") }}</dt>
+					<dd>{{ value.latestVersion }}</dd>
+					<dt>{{ $t("system.updateStatus") }}</dt>
+					<dd :data-theme="value.theme">{{ value.label }}</dd>
 				</dl>
-
-				<k-dropdown-item v-if="value.url" icon="open" :link="value.url">
+				<hr />
+				<k-button v-if="value.url" icon="open" :link="value.url">
 					{{ $t("versionInformation") }}
-				</k-dropdown-item>
+				</k-button>
 			</k-dropdown-content>
 		</k-dropdown>
 	</div>
@@ -71,29 +63,28 @@ export default {
 }
 
 .k-plugin-info {
-	padding: 1rem;
-}
-.k-plugin-info div + div {
-	margin-top: 0.5rem;
+	display: grid;
+	column-gap: var(--spacing-3);
+	row-gap: 2px;
+	padding: var(--button-padding);
 }
 .k-plugin-info dt {
 	color: var(--color-gray-400);
-	margin-right: 0.5rem;
 }
 .k-plugin-info dd[data-theme] {
 	color: var(--theme-color-600);
 }
-.k-plugin-info + .k-dropdown-item {
-	padding-top: 0.75rem;
-	border-top: 1px solid var(--color-gray-700);
+
+@media screen and (max-width: 30em) {
+	.k-plugin-info dd:not(:last-of-type) {
+		margin-bottom: var(--spacing-2);
+	}
 }
 
 @media screen and (min-width: 30em) {
 	.k-plugin-info {
 		width: 20rem;
-	}
-	.k-plugin-info div {
-		display: flex;
+		grid-template-columns: 1fr auto;
 	}
 }
 </style>

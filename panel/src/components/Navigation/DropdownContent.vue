@@ -294,7 +294,7 @@ export default {
 .k-dropdown-content[data-dropup="true"] {
 	top: auto;
 	bottom: 100%;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0;
 }
 
 .k-dropdown-content hr {
