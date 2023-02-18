@@ -49,23 +49,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-dropdown-item {
-	white-space: nowrap;
-	line-height: 1;
-	display: flex;
-	width: 100%;
-	align-items: center;
-	font-size: var(--text-sm);
-	padding: 6px 16px;
-}
-.k-dropdown-item:focus {
-	outline: none;
-	box-shadow: var(--shadow-outline);
-}
-.k-dropdown-item .k-button-figure {
-	text-align: center;
-	padding-inline-end: 0.5rem;
-}
-</style>

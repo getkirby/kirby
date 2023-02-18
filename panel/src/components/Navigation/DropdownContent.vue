@@ -191,10 +191,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]) {
 							this.focus(this.current);
 							break;
 						}
@@ -217,10 +214,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]) {
 							this.focus(this.current);
 							break;
 						}
@@ -237,10 +231,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]) {
 							break;
 						}
 					}
@@ -254,32 +245,50 @@ export default {
 
 <style>
 :root {
+	--dropdown-color-bg: var(--color-black);
+	--dropdown-color-text: var(--color-white);
 	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+	--dropdown-shadow: var(--shadow-xl);
 }
 
 .k-dropdown-content {
 	position: absolute;
 	top: 100%;
-	background: var(--color-black);
-	color: var(--color-white);
+	inset-inline-start: 0;
+
 	z-index: var(--z-dropdown);
-	box-shadow: var(--shadow-lg);
+	width: max-content;
+	padding: 0.5rem;
+	background: var(--dropdown-color-bg);
 	border-radius: var(--rounded);
+	color: var(--dropdown-color-text);
+	box-shadow: var(--dropdown-shadow);
+
 	text-align: start;
 	margin-bottom: 6rem;
-	width: max-content;
 }
-.k-dropdown-content[data-align="left"] {
-	inset-inline-start: 0;
+
+.k-dropdown-content .k-button {
+	--button-height: var(--height-xs);
+	--button-color-hover: var(--dropdown-color-hr);
+	--button-color-text: var(--dropdown-color-text);
+	display: flex;
+	justify-content: flex-start;
+	gap: 0.75rem;
+	border-radius: var(--rounded-sm);
+	width: 100%;
 }
-.k-dropdown-content[data-align="right"] {
+.k-dropdown-content .k-button:focus {
+	outline: var(--outline);
+}
+.k-dropdown-content .k-button + .k-button {
+	margin-top: 2px;
+}
+
+.k-dropdown-content[data-align="right"],
+.k-dropdown-content[data-align="end"] {
+	inset-inline-start: auto;
 	inset-inline-end: 0;
-}
-.k-dropdown-content > .k-dropdown-item:first-child {
-	margin-top: 0.5rem;
-}
-.k-dropdown-content > .k-dropdown-item:last-child {
-	margin-bottom: 0.5rem;
 }
 
 .k-dropdown-content[data-dropup="true"] {
@@ -293,9 +302,10 @@ export default {
 	height: 1px;
 	background: var(--dropdown-color-hr);
 }
+
 .k-dropdown-content[data-theme="light"] {
+	--dropdown-color-bg: var(--color-white);
+	--dropdown-color-text: var(--color-black);
 	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
-	background: var(--color-white);
-	color: var(--color-black);
 }
 </style>

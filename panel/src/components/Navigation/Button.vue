@@ -181,13 +181,7 @@ export default {
 	},
 	methods: {
 		focus() {
-			this.$refs.button.focus?.();
-		},
-		tab() {
-			this.$refs.button.tab?.();
-		},
-		untab() {
-			this.$refs.button.untab?.();
+			this.$el.focus?.();
 		},
 		onClick(e) {
 			if (this.disabled) {
