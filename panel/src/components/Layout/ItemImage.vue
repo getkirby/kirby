@@ -1,35 +1,13 @@
 <template>
-	<div
-		v-if="image"
+	<k-image-frame
+		v-if="image.src"
+		v-bind="{ cover: true, ...image, sizes }"
 		class="k-item-figure"
-		:style="{ background: $helper.color(back) }"
-	>
-		<!-- image -->
-		<k-image
-			v-if="image.src"
-			:cover="image.cover"
-			:ratio="ratio"
-			:sizes="sizes"
-			:src="image.src"
-			:srcset="image.srcset"
-			class="k-item-image"
-		/>
-		<!-- icon -->
-		<k-aspect-ratio v-else :ratio="ratio">
-			<k-icon
-				:color="$helper.color(image.color)"
-				:type="image.icon"
-				class="k-item-icon"
-			/>
-		</k-aspect-ratio>
-	</div>
+	/>
+	<k-icon-frame v-else v-bind="{ ...image }" class="k-item-figure" />
 </template>
 
 <script>
-/**
- * @deprecated Use `k-image-frame` and/or `k-icon-frame` insted
- * @todo remove @ 5.0
- */
 export default {
 	inheritAttrs: false,
 	props: {
@@ -47,23 +25,6 @@ export default {
 	computed: {
 		back() {
 			return this.image.back || "black";
-		},
-		ratio() {
-			if (this.layout === "cards") {
-				return this.image.ratio || "1/1";
-			}
-
-			return "1/1";
-		},
-		size() {
-			switch (this.layout) {
-				case "cards":
-					return "large";
-				case "cardlets":
-					return "medium";
-				default:
-					return "regular";
-			}
 		},
 		sizes() {
 			switch (this.width) {
@@ -85,10 +46,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-item-figure {
-	overflow: hidden;
-	flex-shrink: 0;
-}
-</style>

@@ -19,9 +19,8 @@
 								v-if="model.avatar"
 								:cover="true"
 								:src="model.avatar"
-								ratio="1/1"
 							/>
-							<k-icon v-else back="gray-900" color="gray-200" type="user" />
+							<k-icon-frame v-else icon="user" />
 						</k-button>
 						<k-dropdown-content
 							v-if="model.avatar"
@@ -177,22 +176,16 @@ export default {
 	white-space: nowrap;
 }
 
-.k-user-view-image .k-image,
-.k-user-view-image .k-icon {
+.k-user-view-image .k-frame {
 	width: 5rem;
 	height: 5rem;
 	border-radius: var(--rounded);
 	line-height: 0;
 	overflow: hidden;
 }
-.k-user-view-image[data-disabled="true"] {
-	opacity: 1;
-}
-.k-user-view-image .k-image {
-	display: block;
-}
-.k-user-view-image .k-button-text {
-	opacity: 1;
+.k-user-view-image .k-icon-frame {
+	--back: var(--color-black);
+	--icon-color: var(--color-white);
 }
 
 .k-user-name-placeholder {

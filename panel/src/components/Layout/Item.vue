@@ -13,13 +13,12 @@
 	>
 		<!-- Image -->
 		<slot name="image">
-			<template v-if="hasFigure">
-				<k-image-frame
-					v-if="image.src"
-					v-bind="{ cover: true, ...image, sizes }"
-				/>
-				<k-icon-frame v-else v-bind="{ ...image }" />
-			</template>
+			<k-item-image
+				v-if="hasFigure"
+				:image="image"
+				:layout="layout"
+				:width="width"
+			/>
 		</slot>
 
 		<!-- Sort handle -->
@@ -224,7 +223,7 @@ export default {
 .k-list-item .k-item-sort-handle {
 	inset-inline-start: -1.25rem;
 }
-.k-list-item .k-frame {
+.k-list-item .k-item-figure {
 	width: 38px;
 	aspect-ratio: 1/1;
 	border-start-start-radius: var(--rounded);
@@ -288,7 +287,7 @@ export default {
 		"figure content"
 		"figure footer";
 }
-.k-cardlets-item .k-frame {
+.k-cardlets-item .k-item-figure {
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 }
@@ -304,7 +303,7 @@ export default {
 		"figure"
 		"content";
 }
-.k-cards-item .k-frame {
+.k-cards-item .k-item-figure {
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
 }
