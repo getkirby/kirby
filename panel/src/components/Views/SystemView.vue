@@ -15,7 +15,13 @@
 			<section v-if="securityIssues.length" class="k-system-view-section">
 				<header class="k-system-view-section-header">
 					<k-headline>{{ $t("security") }}</k-headline>
-					<k-button :tooltip="$t('retry')" icon="refresh" @click="retry" />
+					<k-button
+						:title="$t('retry')"
+						icon="refresh"
+						size="xs"
+						variant="filled"
+						@click="retry"
+					/>
 				</header>
 				<k-items :items="securityIssues" />
 			</section>

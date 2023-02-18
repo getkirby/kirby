@@ -2,7 +2,12 @@
 	<k-field v-bind="$props" class="k-blocks-field">
 		<template #options>
 			<k-dropdown v-if="hasFieldsets">
-				<k-button icon="dots" @click="$refs.options.toggle()" />
+				<k-button
+					icon="dots"
+					variant="filled"
+					size="xs"
+					@click="$refs.options.toggle()"
+				/>
 				<k-dropdown-content ref="options" align="right">
 					<k-dropdown-item
 						:disabled="isFull"
@@ -54,13 +59,15 @@
 			v-on="$listeners"
 		/>
 
-		<k-button
-			v-if="!isEmpty && !isFull"
-			class="k-field-add-item-button"
-			icon="add"
-			:tooltip="$t('add')"
-			@click="$refs.blocks.choose(value.length)"
-		/>
+		<footer v-if="!isEmpty && !isFull" class="k-bar" data-align="center">
+			<k-button
+				icon="add"
+				size="xs"
+				variant="filled"
+				:title="$t('add')"
+				@click="$refs.blocks.choose(value.length)"
+			/>
+		</footer>
 	</k-field>
 </template>
 
@@ -118,5 +125,8 @@ export default {
 <style>
 .k-blocks-field {
 	position: relative;
+}
+.k-blocks-field .k-blocks:has(+ footer) {
+	margin-bottom: var(--spacing-3);
 }
 </style>

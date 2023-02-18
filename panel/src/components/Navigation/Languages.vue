@@ -4,6 +4,8 @@
 			:text="language.name"
 			:responsive="true"
 			icon="globe"
+			variant="filled"
+			size="sm"
 			@click="$refs.languages.toggle()"
 		/>
 		<k-dropdown-content v-if="languages" ref="languages">

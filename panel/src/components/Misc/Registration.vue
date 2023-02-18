@@ -3,7 +3,7 @@
 		<p>{{ $t("license.unregistered") }}</p>
 		<k-button
 			:responsive="true"
-			:tooltip="$t('license.unregistered')"
+			:title="$t('license.unregistered')"
 			class="k-topbar-button"
 			icon="key"
 			@click="$dialog('registration')"

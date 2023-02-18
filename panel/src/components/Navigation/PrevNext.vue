@@ -1,5 +1,11 @@
 <template>
-	<k-button-group :buttons="buttons" class="k-prev-next" />
+	<k-button-group
+		:buttons="buttons"
+		layout="collapsed"
+		size="sm"
+		variant="filled"
+		class="k-prev-next"
+	/>
 </template>
 
 <script>

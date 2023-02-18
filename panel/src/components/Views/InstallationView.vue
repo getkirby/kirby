@@ -20,7 +20,13 @@
 					:value="user"
 					@input="user = $event"
 				/>
-				<k-button :text="$t('install')" type="submit" icon="check" />
+				<k-button
+					:text="$t('install')"
+					icon="check"
+					theme="positive"
+					type="submit"
+					variant="filled"
+				/>
 			</form>
 
 			<!-- not meeting requirements -->
@@ -85,7 +91,12 @@
 					</li>
 				</ul>
 
-				<k-button :text="$t('retry')" icon="refresh" @click="$reload" />
+				<k-button
+					:text="$t('retry')"
+					icon="refresh"
+					variant="filled"
+					@click="$reload"
+				/>
 			</div>
 		</k-view>
 	</k-panel>
@@ -195,10 +206,5 @@ export default {
 .k-installation-issues li code {
 	font: inherit;
 	color: var(--color-red-700);
-}
-
-.k-installation-view .k-button[type="submit"] {
-	padding: 1rem;
-	margin-inline-start: -1rem;
 }
 </style>

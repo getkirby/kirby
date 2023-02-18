@@ -27,7 +27,13 @@
 					@input="user.remember = $event"
 				/>
 			</span>
-			<k-button class="k-login-button" icon="check" type="submit">
+			<k-button
+				class="k-login-button"
+				icon="check"
+				theme="positive"
+				type="submit"
+				variant="filled"
+			>
 				{{ $t("login" + (isResetForm ? ".reset" : "")) }}
 				<template v-if="isLoading"> … </template>
 			</k-button>

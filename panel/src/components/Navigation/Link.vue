@@ -12,7 +12,7 @@
 	>
 		<slot />
 	</a>
-	<span v-else :title="title" class="k-link" data-disabled>
+	<span v-else :title="title" class="k-link" aria-disabled>
 		<slot />
 	</span>
 </template>
@@ -103,23 +103,23 @@ export default {
 
 			return true;
 		},
-		onClick(event) {
+		onClick(e) {
 			if (this.disabled === true) {
-				event.preventDefault();
+				e.preventDefault();
 				return false;
 			}
 
 			if (typeof this.to === "function") {
-				event.preventDefault();
+				e.preventDefault();
 				this.to();
 			}
 
-			if (this.isRoutable(event)) {
-				event.preventDefault();
+			if (this.isRoutable(e)) {
+				e.preventDefault();
 				this.$go(this.to);
 			}
 
-			this.$emit("click", event);
+			this.$emit("click", e);
 		}
 	}
 };

@@ -6,6 +6,8 @@
 					v-if="more && !disabled"
 					:icon="btnIcon"
 					:text="btnLabel"
+					variant="filled"
+					size="xs"
 					class="k-field-options-button"
 					@click="open"
 				/>
@@ -21,7 +23,7 @@
 			<template #options="{ index }">
 				<k-button
 					v-if="!disabled"
-					:tooltip="$t('remove')"
+					:title="$t('remove')"
 					icon="remove"
 					@click="remove(index)"
 				/>

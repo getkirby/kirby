@@ -13,7 +13,7 @@ export default {
 
 				page.flag = {
 					status: page.status,
-					tooltip:
+					title:
 						this.$t("page.status") +
 						": " +
 						this.$t("page.status." + page.status),

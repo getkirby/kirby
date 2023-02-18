@@ -5,7 +5,9 @@
 		:responsive="responsive"
 		:text="text"
 		:theme="theme"
-		:tooltip="title"
+		:title="titleAttr"
+		:size="size"
+		:variant="variant"
 		:class="'k-status-icon k-status-icon-' + status"
 		@click="onClick"
 	/>
@@ -25,7 +27,14 @@ export default {
 		responsive: Boolean,
 		status: String,
 		text: String,
-		tooltip: String
+		/**
+		 * @deprecated 4.0 Use the `title` prop instead
+		 * @todo button.prop.tooltip.deprecated - remove @ 5.0
+		 */
+		tooltip: String,
+		title: String,
+		variant: String,
+		size: String
 	},
 	computed: {
 		icon() {
@@ -40,6 +49,10 @@ export default {
 			return "circle";
 		},
 		theme() {
+			if (this.disabled) {
+				return "passive";
+			}
+
 			if (this.status === "draft") {
 				return "negative";
 			}
@@ -50,8 +63,11 @@ export default {
 
 			return "positive";
 		},
-		title() {
-			let title = this.tooltip || this.text;
+		/**
+		 * @todo button.prop.tooltip.deprecated - adapt @ 5.0
+		 */
+		titleAttr() {
+			let title = this.title || this.tooltip || this.text;
 
 			if (this.disabled) {
 				title += ` (${this.$t("disabled")})`;
@@ -70,21 +86,9 @@ export default {
 </script>
 
 <style>
-.k-status-icon svg {
-	width: 14px;
-	height: 14px;
-}
-.k-status-icon .k-icon {
-	color: var(--theme-color-600);
-}
-.k-status-icon .k-button-text {
-	color: var(--color-black);
-}
-.k-status-icon[data-disabled="true"] {
-	opacity: 1 !important;
-}
-.k-status-icon[data-disabled="true"] .k-icon {
-	color: var(--color-gray-400);
-	opacity: 0.5;
+.k-button.k-status-icon[data-variant="filled"] {
+	--button-color-icon: var(--theme-color-600);
+	--button-color-back: hsla(0, 0%, 0%, 7%);
+	--button-color-hover: hsla(0, 0%, 0%, 12%);
 }
 </style>

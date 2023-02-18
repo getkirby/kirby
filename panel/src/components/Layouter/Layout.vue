@@ -25,7 +25,7 @@
 		<nav v-if="!disabled" class="k-layout-toolbar">
 			<k-button
 				v-if="settings"
-				:tooltip="$t('settings')"
+				:title="$t('settings')"
 				class="k-layout-toolbar-button"
 				icon="settings"
 				@click="$refs.drawer.open()"

@@ -151,8 +151,8 @@ export default {
 
 			return {
 				icon: isSelected ? this.checkedIcon : "circle-outline",
-				tooltip: isSelected ? this.$t("remove") : this.$t("select"),
-				theme: isSelected ? "positive" : null
+				title: isSelected ? this.$t("remove") : this.$t("select"),
+				theme: isSelected ? "info" : null
 			};
 		},
 		updateSearch() {

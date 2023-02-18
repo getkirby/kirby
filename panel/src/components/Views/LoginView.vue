@@ -100,21 +100,6 @@ export default {
 	padding: 1.5rem 0;
 }
 
-.k-login-button {
-	padding: 0.5rem 1rem;
-	font-weight: 500;
-	transition: opacity 0.3s;
-	margin-inline-end: -1rem;
-}
-
-.k-login-button span {
-	opacity: 1;
-}
-
-.k-login-button[disabled] {
-	opacity: 0.25;
-}
-
 .k-login-back-button,
 .k-login-checkbox {
 	display: flex;

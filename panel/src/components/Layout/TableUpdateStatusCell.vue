@@ -9,12 +9,14 @@
 		<k-dropdown v-else :data-theme="value.theme">
 			<k-button
 				class="k-table-update-status-cell-button"
+				:dropdown="true"
 				:icon="value.icon"
 				:href="value.url"
+				:text="value.currentVersion"
+				size="sm"
+				variant="filled"
 				@click.stop="$refs.dropdown.toggle()"
-			>
-				{{ value.currentVersion }}
-			</k-button>
+			/>
 			<k-dropdown-content ref="dropdown" align="right">
 				<dl class="k-plugin-info">
 					<div>
@@ -64,27 +66,8 @@ export default {
 	font-variant-numeric: tabular-nums;
 }
 
-.k-table-update-status-cell-button {
-	display: inline-flex;
-	padding: 0.25rem 0.325rem;
-	padding-right: 1.5rem;
-	border-radius: var(--rounded);
-	line-height: 1;
-	align-items: center;
-	background: var(--color-gray-200);
-}
-.k-table-update-status-cell-button .k-button-text::after {
-	position: absolute;
-	top: 50%;
-	right: 0.5rem;
-	margin-top: -2px;
-	content: "";
-	border-top: 4px solid black;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-}
 .k-table-update-status-cell-button .k-icon {
-	color: var(--theme);
+	--button-color-icon: var(--theme-color-600);
 }
 
 .k-plugin-info {
@@ -98,7 +81,7 @@ export default {
 	margin-right: 0.5rem;
 }
 .k-plugin-info dd[data-theme] {
-	color: var(--theme-color-back);
+	color: var(--theme-color-600);
 }
 .k-plugin-info + .k-dropdown-item {
 	padding-top: 0.75rem;

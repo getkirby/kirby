@@ -100,12 +100,11 @@ export default {
 }
 .k-header .k-headline {
 	min-height: 1.25em;
-	margin-bottom: 0.5rem;
+	margin-bottom: var(--spacing-6);
 	word-wrap: break-word;
 }
 .k-header .k-header-buttons {
-	margin-top: -0.5rem;
-	height: 3.25rem;
+	margin-bottom: var(--spacing-2);
 }
 .k-header .k-headline-editable {
 	cursor: pointer;

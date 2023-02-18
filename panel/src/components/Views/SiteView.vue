@@ -21,6 +21,8 @@
 							:text="$t('open')"
 							icon="open"
 							target="_blank"
+							variant="filled"
+							size="sm"
 							class="k-site-view-preview"
 						/>
 						<k-languages-dropdown />

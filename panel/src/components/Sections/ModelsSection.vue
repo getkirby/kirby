@@ -10,7 +10,7 @@
 				<abbr v-if="options.min" :title="$t('section.required')">*</abbr>
 			</k-headline>
 
-			<k-button-group :buttons="buttons" />
+			<k-button-group :buttons="buttons" size="xs" variant="filled" />
 		</header>
 
 		<!-- Error -->

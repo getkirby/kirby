@@ -65,7 +65,6 @@ export default {
 .k-field-label {
 	font-weight: var(--font-bold);
 	display: block;
-	padding: 0 0 0.75rem;
 	flex-grow: 1;
 	line-height: 1.25rem;
 }
@@ -77,19 +76,8 @@ export default {
 .k-field-header {
 	position: relative;
 	display: flex;
-	align-items: baseline;
-}
-.k-field-options {
-	position: absolute;
-	top: calc(-0.5rem - 1px);
-	inset-inline-end: 0;
-}
-.k-field-options.k-button-group .k-dropdown {
-	height: auto;
-}
-.k-field-options.k-button-group .k-field-options-button.k-button {
-	padding: 0.75rem;
-	display: flex;
+	align-items: center;
+	padding-bottom: var(--spacing-2);
 }
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
@@ -108,18 +96,5 @@ export default {
 }
 .k-field-help {
 	padding-top: 0.5rem;
-}
-
-/** Add Button **/
-.k-field-add-item-button {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	color: var(--color-gray-500);
-	justify-content: center;
-	padding: 0.75rem 0;
-}
-.k-field-add-item-button:hover {
-	color: var(--color-black);
 }
 </style>

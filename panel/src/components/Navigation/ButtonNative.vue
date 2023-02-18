@@ -19,7 +19,14 @@
 </template>
 
 <script>
+import tab from "@/mixins/tab.js";
+
+/**
+ * @deprecated `<k-button-native>` has been deprecated and will be removed in Kirby 5. Use `<k-button>` instead.
+ * @todo Remove in v5.0
+ */
 export default {
+	mixins: [tab],
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,

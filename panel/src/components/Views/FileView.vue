@@ -21,16 +21,21 @@
 								:link="preview.url"
 								:responsive="true"
 								:text="$t('open')"
-								icon="open"
-								target="_blank"
 								class="k-file-view-options"
+								icon="open"
+								size="sm"
+								target="_blank"
+								variant="filled"
 							/>
 							<k-dropdown class="k-file-view-options">
 								<k-button
 									:disabled="isLocked"
+									:dropdown="true"
 									:responsive="true"
 									:text="$t('settings')"
 									icon="cog"
+									size="sm"
+									variant="filled"
 									@click="$refs.settings.toggle()"
 								/>
 								<k-dropdown-content

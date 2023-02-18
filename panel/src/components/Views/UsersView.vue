@@ -6,6 +6,8 @@
 
 				<template #left>
 					<k-button-group
+						variant="filled"
+						size="sm"
 						:buttons="[
 							{
 								disabled: $permissions.users.create === false,
@@ -24,6 +26,8 @@
 								:responsive="true"
 								:text="`${$t('role')}: ${role ? role.title : $t('role.all')}`"
 								icon="funnel"
+								variant="filled"
+								size="sm"
 								@click="$refs.roles.toggle()"
 							/>
 							<k-dropdown-content ref="roles" align="right">

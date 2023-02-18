@@ -33,7 +33,7 @@
 				'k-writer-toolbar-button-active': activeMarks.includes(markType)
 			}"
 			:icon="mark.icon"
-			:tooltip="mark.label"
+			:title="mark.label"
 			@mousedown.prevent="command(mark.command || markType)"
 		/>
 	</div>

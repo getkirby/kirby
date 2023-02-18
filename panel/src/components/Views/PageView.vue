@@ -22,6 +22,8 @@
 							:text="$t('open')"
 							icon="open"
 							target="_blank"
+							variant="filled"
+							size="sm"
 							class="k-page-view-preview"
 						/>
 						<k-status-icon
@@ -30,14 +32,19 @@
 							:disabled="!permissions.changeStatus || isLocked"
 							:responsive="true"
 							:text="status.label"
+							variant="filled"
+							size="sm"
 							@click="$dialog(id + '/changeStatus')"
 						/>
 						<k-dropdown class="k-page-view-options">
 							<k-button
 								:disabled="isLocked === true"
+								:dropdown="true"
 								:responsive="true"
 								:text="$t('settings')"
 								icon="cog"
+								variant="filled"
+								size="sm"
 								@click="$refs.settings.toggle()"
 							/>
 							<k-dropdown-content ref="settings" :options="$dropdown(id)" />

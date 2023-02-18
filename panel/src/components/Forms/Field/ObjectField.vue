@@ -2,8 +2,20 @@
 	<k-field v-bind="$props" class="k-object-field">
 		<!-- Remove button -->
 		<template v-if="!disabled" #options>
-			<k-button v-if="isEmpty" icon="add" @click="onAdd" />
-			<k-button v-else icon="remove" @click="onRemove" />
+			<k-button
+				v-if="isEmpty"
+				icon="add"
+				size="xs"
+				variant="filled"
+				@click="onAdd"
+			/>
+			<k-button
+				v-else
+				icon="remove"
+				size="xs"
+				variant="filled"
+				@click="onRemove"
+			/>
 		</template>
 
 		<table

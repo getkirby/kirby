@@ -5,7 +5,8 @@
 				<!-- menu -->
 				<k-dropdown class="k-topbar-menu">
 					<k-button
-						:tooltip="$t('menu')"
+						:dropdown="true"
+						:title="$t('menu')"
 						icon="bars"
 						class="k-topbar-button k-topbar-menu-button"
 						@click="$refs.menu.toggle()"
@@ -44,7 +45,7 @@
 
 					<!-- search -->
 					<k-button
-						:tooltip="$t('search')"
+						:title="$t('search')"
 						class="k-topbar-button"
 						icon="search"
 						@click="$refs.search.open()"

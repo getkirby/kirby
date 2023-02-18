@@ -13,7 +13,7 @@
 			<header v-if="model" class="k-pages-dialog-navbar">
 				<k-button
 					:disabled="!model.id"
-					:tooltip="$t('back')"
+					:title="$t('back')"
 					icon="angle-left"
 					@click="back"
 				/>
@@ -37,7 +37,7 @@
 					<k-button
 						v-if="model"
 						:disabled="!page.hasChildren"
-						:tooltip="$t('open')"
+						:title="$t('open')"
 						icon="angle-right"
 						@click.stop="go(page)"
 					/>

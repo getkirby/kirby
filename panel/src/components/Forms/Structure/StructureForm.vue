@@ -19,6 +19,8 @@
 				<k-button
 					:text="$t('cancel')"
 					icon="cancel"
+					size="xs"
+					variant="filled"
 					class="k-structure-form-cancel-button"
 					@click="$emit('close')"
 				/>
@@ -34,6 +36,8 @@
 				<k-button
 					:text="$t(index !== 'new' ? 'confirm' : 'add')"
 					icon="check"
+					size="xs"
+					variant="filled"
 					class="k-structure-form-submit-button"
 					@click="onSubmit"
 				/>
@@ -111,27 +115,23 @@ export default {
 .k-structure-form-buttons {
 	border-top: 1px solid var(--color-border);
 	display: flex;
+	padding: 0.25rem 0.5rem;
+	align-items: center;
 	justify-content: space-between;
 }
 
 .k-structure-form-buttons .k-pagination {
 	display: none;
 }
-@media screen and (min-width: 65em) {
+@container (min-width: 30rem) {
 	.k-structure-form-buttons .k-pagination {
 		display: flex;
+		align-items: center;
 	}
 }
 
 .k-structure-form-buttons .k-pagination > .k-button,
 .k-structure-form-buttons .k-pagination > span {
-	padding: 0.875rem 1rem !important;
-}
-
-.k-structure-form-cancel-button,
-.k-structure-form-submit-button {
-	padding: 0.875rem 1.5rem;
-	line-height: 1rem;
-	display: flex;
+	padding: 0 1rem !important;
 }
 </style>
