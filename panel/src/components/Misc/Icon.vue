@@ -5,7 +5,7 @@
 		:aria-hidden="!alt"
 		:data-type="type"
 		class="k-icon"
-		:style="{ '--color': $helper.color(color) }"
+		:style="{ color: $helper.color(color) }"
 	>
 		<use :xlink:href="'#icon-' + type" />
 	</svg>
