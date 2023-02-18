@@ -316,6 +316,9 @@ export default {
 	box-shadow: var(--shadow);
 	cursor: pointer;
 }
+.k-layout-selector-option .k-column {
+	grid-column: span var(--span);
+}
 .k-layout-selector-option:hover {
 	outline: 2px solid var(--color-focus);
 	outline-offset: 2px;
