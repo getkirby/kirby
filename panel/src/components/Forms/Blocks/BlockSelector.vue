@@ -149,8 +149,8 @@ export default {
 .k-block-selector .k-headline {
 	margin-bottom: 1rem;
 }
-.k-block-selector details:not(:last-of-type) {
-	margin-bottom: 1.5rem;
+.k-block-selector details + details {
+	margin-top: var(--spacing-6);
 }
 .k-block-selector summary {
 	font-size: var(--text-xs);
@@ -164,7 +164,7 @@ export default {
 	outline: 0;
 }
 .k-block-selector summary:focus-visible {
-	color: var(--color-green-400);
+	color: var(--color-focus);
 }
 .k-block-types {
 	display: grid;
@@ -173,24 +173,15 @@ export default {
 	grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
-	display: flex;
-	align-items: flex-start;
-	border-radius: var(--rounded);
-	background: rgba(0, 0, 0, 0.5);
+	--button-color-back: rgba(0, 0, 0, 0.5);
+	--button-color-hover: rgba(0, 0, 0, 0.3);
 	width: 100%;
-	text-align: start;
-	padding: 0 0.75rem 0 0;
-	line-height: 1.5em;
+	justify-content: start;
+	gap: 1rem;
+	padding-inline: var(--spacing-3);
 }
 .k-block-types .k-button:focus {
-	outline: 2px solid var(--color-green-300);
-}
-.k-block-types .k-button .k-button-text {
-	padding: 0.5rem 0 0.5rem 0.5rem;
-}
-.k-block-types .k-button .k-icon {
-	width: 38px;
-	height: 38px;
+	outline: 2px solid var(--color-focus);
 }
 .k-clipboard-hint {
 	padding-top: 1.5rem;
