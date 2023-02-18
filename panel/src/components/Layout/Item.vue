@@ -213,6 +213,9 @@ export default {
 .k-item-buttons > .k-options-dropdown > .k-options-dropdown-toggle {
 	z-index: var(--z-toolbar);
 }
+.k-item .k-status-icon {
+	--icon-size: 13px;
+}
 
 /** List Item **/
 .k-list-item {

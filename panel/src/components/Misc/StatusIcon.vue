@@ -34,7 +34,10 @@ export default {
 		tooltip: String,
 		title: String,
 		variant: String,
-		size: String
+		size: {
+			type: String,
+			default: "xs"
+		}
 	},
 	computed: {
 		icon() {
