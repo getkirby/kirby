@@ -162,6 +162,9 @@ export default {
 	width: var(--layout-toolbar-width);
 	display: flex;
 	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: var(--spacing-2);
 	font-size: var(--text-sm);
 	background: var(--color-gray-100);
 	border-inline-start: 1px solid var(--color-light);
@@ -173,10 +176,6 @@ export default {
 .k-layout-toolbar-button {
 	width: var(--layout-toolbar-width);
 	height: var(--layout-toolbar-width);
-}
-.k-layout-toolbar .k-sort-handle {
-	margin-top: auto;
-	color: currentColor;
 }
 
 /** Columns **/

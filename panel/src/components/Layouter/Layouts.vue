@@ -291,7 +291,7 @@ export default {
 	cursor: -webkit-grabbing;
 	z-index: 1;
 }
-.k-layouts .k-blocks:has(+ footer) {
+.k-layouts:has(+ footer) {
 	margin-bottom: var(--spacing-3);
 }
 
