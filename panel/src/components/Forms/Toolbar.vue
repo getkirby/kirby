@@ -14,7 +14,7 @@
 							<k-button
 								:key="buttonIndex"
 								:icon="button.icon"
-								:tooltip="button.label"
+								:title="button.label"
 								tabindex="-1"
 								class="k-toolbar-button"
 								@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
@@ -37,7 +37,7 @@
 						<k-button
 							:key="buttonIndex"
 							:icon="button.icon"
-							:tooltip="button.label"
+							:title="button.label"
 							tabindex="-1"
 							class="k-toolbar-button"
 							@click="command(button.command, button.args)"

@@ -28,7 +28,7 @@
 
 			<footer v-if="$slots['footer'] || buttons.length" class="k-dialog-footer">
 				<slot name="footer">
-					<k-button-group :buttons="buttons" />
+					<k-button-group variant="filled" :buttons="buttons" />
 				</slot>
 			</footer>
 		</div>
@@ -340,7 +340,7 @@ export default {
 }
 
 .k-dialog-footer {
-	padding: 0;
+	padding: var(--spacing-3) var(--spacing-6);
 	border-top: 1px solid var(--color-gray-300);
 	line-height: 1;
 	flex-shrink: 0;
@@ -348,21 +348,7 @@ export default {
 
 .k-dialog-footer .k-button-group {
 	display: flex;
-	margin: 0;
 	justify-content: space-between;
-}
-.k-dialog-footer .k-button-group .k-button {
-	padding: 0.75rem 1rem;
-	line-height: 1.25rem;
-}
-
-.k-dialog-footer .k-button-group .k-button:first-child {
-	text-align: start;
-	padding-inline-start: 1.5rem;
-}
-.k-dialog-footer .k-button-group .k-button:last-child {
-	text-align: end;
-	padding-inline-end: 1.5rem;
 }
 
 /** Pagination **/

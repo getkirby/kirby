@@ -30,14 +30,17 @@
 				/>
 			</k-draggable>
 
-			<k-button
-				v-if="!disabled"
-				class="k-field-add-item-button"
-				icon="add"
-				:tooltip="$t('add')"
-				@click="selectLayout(rows.length)"
-			/>
+			<footer v-if="!disabled" class="k-bar" data-align="center">
+				<k-button
+					:title="$t('add')"
+					icon="add"
+					size="xs"
+					variant="filled"
+					@click="selectLayout(rows.length)"
+				/>
+			</footer>
 		</template>
+
 		<template v-else>
 			<k-empty icon="dashboard" class="k-layout-empty" @click="selectLayout(0)">
 				{{ empty || $t("field.layout.empty") }}
@@ -287,6 +290,9 @@ export default {
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 	z-index: 1;
+}
+.k-layouts .k-blocks:has(+ footer) {
+	margin-bottom: var(--spacing-3);
 }
 
 /** Selector **/

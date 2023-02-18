@@ -13,6 +13,10 @@
 </template>
 
 <script>
+/**
+ * @deprecated `<k-button-disabled>` has been deprecated and will be removed in Kirby 5. Use `<k-button :disabled="true">` instead.
+ * @todo Remove in v5.0
+ */
 export default {
 	inheritAttrs: false,
 	props: {

@@ -328,7 +328,9 @@ abstract class Model
 	{
 		return [
 			'link'    => $this->url(true),
-			'tooltip' => (string)$this->model->{$tooltip}()
+			'title'   => $title = (string)$this->model->{$tooltip}(),
+			// @todo button.prop.tooltip.deprecated - adapt @ 5.0
+			'tooltip' => $title
 		];
 	}
 

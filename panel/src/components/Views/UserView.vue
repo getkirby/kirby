@@ -10,8 +10,9 @@
 				<k-view>
 					<k-dropdown>
 						<k-button
-							:tooltip="$t('avatar')"
-							:disabled="isLocked"
+							:title="$t('avatar')"
+							:aria-disabled="isLocked"
+							variant="filled"
 							class="k-user-view-image"
 							@click="onAvatar"
 						>
@@ -53,8 +54,11 @@
 							<k-dropdown class="k-user-view-options">
 								<k-button
 									:disabled="isLocked"
+									:dropdown="true"
 									:text="$t('settings')"
 									icon="cog"
+									size="sm"
+									variant="filled"
 									@click="$refs.settings.toggle()"
 								/>
 								<k-dropdown-content ref="settings" :options="$dropdown(id)" />
@@ -169,25 +173,23 @@ export default {
 	overflow: hidden;
 	margin-inline-start: 0.75rem;
 }
-.k-user-profile .k-button-group .k-button {
-	display: block;
-	padding-block: 0.25rem;
-	overflow: hidden;
-	white-space: nowrap;
+.k-user-profile {
+	--button-height: auto;
 }
 
+.k-user-view-image {
+	padding: 0;
+}
 .k-user-view-image .k-frame {
 	width: 5rem;
 	height: 5rem;
 	border-radius: var(--rounded);
 	line-height: 0;
-	overflow: hidden;
 }
 .k-user-view-image .k-icon-frame {
 	--back: var(--color-black);
-	--icon-color: var(--color-white);
+	--icon-color: var(--color-gray-200);
 }
-
 .k-user-name-placeholder {
 	color: var(--color-gray-500);
 	transition: color 0.3s;

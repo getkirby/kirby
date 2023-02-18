@@ -21,12 +21,19 @@
 			<k-button
 				class="k-login-button k-login-back-button"
 				icon="angle-left"
+				variant="filled"
 				@click="back"
 			>
 				{{ $t("back") }} <template v-if="isLoadingBack"> … </template>
 			</k-button>
 
-			<k-button class="k-login-button" icon="check" type="submit">
+			<k-button
+				class="k-login-button"
+				icon="check"
+				type="submit"
+				theme="positive"
+				variant="filled"
+			>
 				{{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
 				<template v-if="isLoadingLogin"> … </template>
 			</k-button>

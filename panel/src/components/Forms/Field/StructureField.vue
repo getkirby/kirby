@@ -62,13 +62,16 @@
 				@paginate="paginate"
 			/>
 
-			<k-button
-				v-if="more"
-				class="k-field-add-item-button"
-				icon="add"
-				:tooltip="$t('add')"
-				@click="onAdd"
-			/>
+			<footer v-if="more" class="k-bar" data-align="center">
+				<k-button
+					v-if="more"
+					:title="$t('add')"
+					icon="add"
+					size="xs"
+					variant="filled"
+					@click="onAdd"
+				/>
+			</footer>
 
 			<k-remove-dialog
 				v-if="!disabled"
@@ -602,5 +605,8 @@ export default {
 <style>
 .k-structure-field:not([data-disabled="true"]) td.k-table-column {
 	cursor: pointer;
+}
+.k-structure-field .k-table:has(+ footer) {
+	margin-bottom: var(--spacing-3);
 }
 </style>

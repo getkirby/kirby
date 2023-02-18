@@ -3,7 +3,7 @@
 		<k-button
 			v-if="show"
 			:disabled="!hasPrev"
-			:tooltip="prevLabel"
+			:title="prevLabel"
 			icon="angle-left"
 			@click="prev"
 		/>
@@ -59,7 +59,7 @@
 		<k-button
 			v-if="show"
 			:disabled="!hasNext"
-			:tooltip="nextLabel"
+			:title="nextLabel"
 			icon="angle-right"
 			@click="next"
 		/>

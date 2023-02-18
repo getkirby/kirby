@@ -7,7 +7,7 @@
 				:link="tabButton.link"
 				:current="current === tabButton.name"
 				:icon="tabButton.icon"
-				:tooltip="tabButton.label"
+				:title="tabButton.label"
 				class="k-tab-button"
 			>
 				{{ tabButton.label || tabButton.text || tabButton.name }}
@@ -38,7 +38,7 @@
 				:link="tabButton.link"
 				:current="tab === tabButton.name"
 				:icon="tabButton.icon"
-				:tooltip="tabButton.label"
+				:title="tabButton.label"
 			>
 				{{ tabButton.label || tabButton.text || tabButton.name }}
 			</k-dropdown-item>

@@ -16,7 +16,7 @@
 				<template #options="{ index }">
 					<k-button
 						v-if="!disabled"
-						:tooltip="$t('remove')"
+						:title="$t('remove')"
 						icon="remove"
 						@click="remove(index)"
 					/>
@@ -54,7 +54,9 @@ export default {
 			if (this.uploads) {
 				return {
 					icon: this.btnIcon,
+					size: "xs",
 					text: this.btnLabel,
+					variant: "filled",
 					options: [
 						{ icon: "check", text: this.$t("select"), click: "open" },
 						{ icon: "upload", text: this.$t("upload"), click: "upload" }

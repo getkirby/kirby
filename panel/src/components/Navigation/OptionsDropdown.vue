@@ -3,7 +3,9 @@
 	<k-button
 		v-if="hasSingleOption"
 		:icon="options[0].icon || icon"
-		:tooltip="options[0].tooltip || options[0].text"
+		:size="options[0].size || size"
+		:title="options[0].title || options[0].tooltip || options[0].text"
+		:variant="options[0].variant || variant"
 		class="k-options-dropdown-toggle"
 		@click="onAction(options[0].option || options[0].click, options[0], 0)"
 	>
@@ -18,15 +20,15 @@
 	<!-- Multiple options = dropdown -->
 	<k-dropdown v-else-if="options.length" class="k-options-dropdown">
 		<k-button
+			:dropdown="true"
 			:icon="icon"
-			:tooltip="$t('options')"
+			:size="size"
+			:text="text !== true ? text : null"
+			:title="$t('options')"
+			:variant="variant"
 			class="k-options-dropdown-toggle"
 			@click="$refs.options.toggle()"
-		>
-			<template v-if="text && text !== true">
-				{{ text }}
-			</template>
-		</k-button>
+		/>
 		<k-dropdown-content
 			ref="options"
 			:align="align"
@@ -76,7 +78,15 @@ export default {
 		theme: {
 			type: String,
 			default: "dark"
-		}
+		},
+		/**
+		 * Specific size styling for the button
+		 */
+		size: String,
+		/**
+		 * Styling variant for the button
+		 */
+		variant: String
 	},
 	computed: {
 		hasSingleOption() {
@@ -104,14 +114,5 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 38px;
-}
-.k-options-dropdown-toggle {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-width: 38px;
-	height: 38px;
-	padding: 0 0.75rem;
 }
 </style>

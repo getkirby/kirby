@@ -489,11 +489,11 @@ class ModelTest extends TestCase
 
 		$toLink = $panel->toLink();
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($title, $toLink['tooltip']);
+		$this->assertSame($title, $toLink['title']);
 
 		$toLink = $panel->toLink('author');
 		$this->assertSame('/custom', $toLink['link']);
-		$this->assertSame($author, $toLink['tooltip']);
+		$this->assertSame($author, $toLink['title']);
 	}
 
 	/**

@@ -15,4 +15,8 @@ export default {};
 .k-dropdown {
 	position: relative;
 }
+
+.k-dropdown .k-button {
+	justify-content: start;
+}
 </style>

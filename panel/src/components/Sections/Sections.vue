@@ -82,25 +82,15 @@ export default {
 .k-section-header {
 	position: relative;
 	display: flex;
-	align-items: baseline;
+	align-items: center;
 	z-index: 1;
+	padding-bottom: var(--spacing-2);
 }
 .k-section-header .k-headline {
-	line-height: 1.25rem;
-	min-height: 2rem;
 	flex-grow: 1;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	padding-inline-end: var(--spacing-3);
-}
-.k-section-header .k-button-group {
-	position: absolute;
-	top: calc(-0.5rem - 1px);
-	inset-inline-end: 0;
-}
-.k-section-header .k-button-group > .k-button {
-	padding: 0.75rem;
-	display: inline-flex;
 }
 </style>

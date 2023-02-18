@@ -28,7 +28,7 @@
 					<k-dropdown>
 						<k-button
 							:icon="icon"
-							:tooltip="$t('date.select')"
+							:title="$t('date.select')"
 							class="k-input-icon-button"
 							@click="$refs.calendar.toggle()"
 						/>
@@ -63,7 +63,7 @@
 					<k-dropdown>
 						<k-button
 							:icon="time.icon || 'clock'"
-							:tooltip="$t('time.select')"
+							:title="$t('time.select')"
 							class="k-input-icon-button"
 							@click="$refs.times.toggle()"
 						/>

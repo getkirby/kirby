@@ -2,13 +2,13 @@
 	<k-dropdown class="k-block-options">
 		<template v-if="isBatched">
 			<k-button
-				:tooltip="$t('copy')"
+				:title="$t('copy')"
 				class="k-block-options-button"
 				icon="template"
 				@click.prevent="$emit('copy')"
 			/>
 			<k-button
-				:tooltip="$t('remove')"
+				:title="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
 				@click.prevent="$emit('confirmToRemoveSelected')"
@@ -17,32 +17,32 @@
 		<template v-else>
 			<k-button
 				v-if="isEditable"
-				:tooltip="$t('edit')"
+				:title="$t('edit')"
 				icon="edit"
 				class="k-block-options-button"
 				@click="$emit('open')"
 			/>
 			<k-button
 				:disabled="isFull"
-				:tooltip="$t('insert.after')"
+				:title="$t('insert.after')"
 				class="k-block-options-button"
 				icon="add"
 				@click="$emit('chooseToAppend')"
 			/>
 			<k-button
-				:tooltip="$t('delete')"
+				:title="$t('delete')"
 				class="k-block-options-button"
 				icon="trash"
 				@click="$emit('confirmToRemove')"
 			/>
 			<k-button
-				:tooltip="$t('more')"
+				:title="$t('more')"
 				class="k-block-options-button"
 				icon="dots"
 				@click="$refs.options.toggle()"
 			/>
 			<k-button
-				:tooltip="$t('sort.drag')"
+				:title="$t('sort.drag')"
 				class="k-block-options-button k-sort-handle"
 				icon="sort"
 				@keydown.up.prevent="$emit('sortUp')"
