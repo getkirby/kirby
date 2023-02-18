@@ -282,6 +282,12 @@ export default {
 </script>
 
 <style>
+.k-form-buttons {
+	position: sticky;
+	inset-inline: 0;
+	bottom: 0;
+}
+
 .k-form-buttons[data-theme] {
 	background: var(--theme-color-500);
 }
