@@ -253,6 +253,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+}
+
 .k-dropdown-content {
 	position: absolute;
 	top: 100%;
@@ -285,11 +289,12 @@ export default {
 }
 
 .k-dropdown-content hr {
-	border-color: currentColor;
-	opacity: 0.2;
-	margin: 0.5rem 1rem;
+	margin: 0.5rem 0;
+	height: 1px;
+	background: var(--dropdown-color-hr);
 }
 .k-dropdown-content[data-theme="light"] {
+	--dropdown-color-hr: rgba(0, 0, 0, 0.1);
 	background: var(--color-white);
 	color: var(--color-black);
 }
