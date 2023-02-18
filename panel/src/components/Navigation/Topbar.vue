@@ -27,6 +27,8 @@
 					class="k-topbar-breadcrumb"
 				/>
 
+				<div class="k-topbar-spacer" />
+
 				<div class="k-topbar-signals">
 					<!-- notifications -->
 					<k-button
@@ -90,7 +92,6 @@ export default {
 	position: relative;
 	color: var(--color-text);
 	flex-shrink: 0;
-	height: 2.5rem;
 	line-height: 1;
 	background: var(--bg);
 }
@@ -98,15 +99,8 @@ export default {
 	position: relative;
 	display: flex;
 	align-items: center;
-	margin-inline: -0.75rem;
-}
-.k-topbar-wrapper::after {
-	position: absolute;
-	content: "";
 	height: 2.5rem;
-	background: var(--bg);
-	inset-inline-start: 100%;
-	width: 3rem;
+	margin-inline: -0.75rem;
 }
 
 .k-topbar-menu {
@@ -129,7 +123,6 @@ export default {
 }
 .k-topbar-button {
 	padding: 0.75rem;
-	line-height: 1;
 	font-size: var(--text-sm);
 }
 .k-topbar-button .k-button-text {
@@ -145,34 +138,16 @@ export default {
 	margin-inline-end: 0.5rem;
 }
 
+.k-topbar-spacer {
+	flex-grow: 1;
+}
+
 .k-topbar-signals {
-	position: absolute;
-	top: 0;
-	inset-inline-end: 0;
-	background: var(--bg);
-	height: 2.5rem;
 	display: flex;
 	align-items: center;
 }
-.k-topbar-signals::before {
-	position: absolute;
-	content: "";
-	top: -0.5rem;
-	bottom: 0;
-	width: 0.5rem;
-	background: -webkit-linear-gradient(
-		inline-start,
-		rgba(17, 17, 17, 0),
-		rgba(17, 17, 17, 1)
-	);
-}
-.k-topbar-signals .k-button {
-	line-height: 1;
-}
-
 .k-topbar-notification {
 	font-weight: var(--font-bold);
-	line-height: 1;
 	display: flex;
 }
 
