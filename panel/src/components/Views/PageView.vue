@@ -1,69 +1,67 @@
 <template>
-	<k-inside>
-		<k-view
-			:data-locked="isLocked"
-			:data-id="model.id"
-			:data-template="blueprint"
-			class="k-page-view"
+	<k-inside
+		:data-locked="isLocked"
+		:data-id="model.id"
+		:data-template="blueprint"
+		class="k-page-view"
+	>
+		<k-header
+			:editable="permissions.changeTitle && !isLocked"
+			:tab="tab.name"
+			:tabs="tabs"
+			@edit="$dialog(id + '/changeTitle')"
 		>
-			<k-header
-				:editable="permissions.changeTitle && !isLocked"
-				:tab="tab.name"
-				:tabs="tabs"
-				@edit="$dialog(id + '/changeTitle')"
-			>
-				{{ model.title }}
-				<template #buttons>
-					<k-button-group>
+			{{ model.title }}
+			<template #buttons>
+				<k-button-group>
+					<k-button
+						v-if="permissions.preview && model.previewUrl"
+						:link="model.previewUrl"
+						:responsive="true"
+						:text="$t('open')"
+						icon="open"
+						target="_blank"
+						variant="filled"
+						size="sm"
+						class="k-page-view-preview"
+					/>
+					<k-status-icon
+						v-if="status"
+						:status="model.status"
+						:disabled="!permissions.changeStatus || isLocked"
+						:responsive="true"
+						:text="status.label"
+						variant="filled"
+						size="sm"
+						@click="$dialog(id + '/changeStatus')"
+					/>
+					<k-dropdown class="k-page-view-options">
 						<k-button
-							v-if="permissions.preview && model.previewUrl"
-							:link="model.previewUrl"
+							:disabled="isLocked === true"
+							:dropdown="true"
 							:responsive="true"
-							:text="$t('open')"
-							icon="open"
-							target="_blank"
+							:text="$t('settings')"
+							icon="cog"
 							variant="filled"
 							size="sm"
-							class="k-page-view-preview"
+							@click="$refs.settings.toggle()"
 						/>
-						<k-status-icon
-							v-if="status"
-							:status="model.status"
-							:disabled="!permissions.changeStatus || isLocked"
-							:responsive="true"
-							:text="status.label"
-							variant="filled"
-							size="sm"
-							@click="$dialog(id + '/changeStatus')"
-						/>
-						<k-dropdown class="k-page-view-options">
-							<k-button
-								:disabled="isLocked === true"
-								:dropdown="true"
-								:responsive="true"
-								:text="$t('settings')"
-								icon="cog"
-								variant="filled"
-								size="sm"
-								@click="$refs.settings.toggle()"
-							/>
-							<k-dropdown-content ref="settings" :options="$dropdown(id)" />
-						</k-dropdown>
+						<k-dropdown-content ref="settings" :options="$dropdown(id)" />
+					</k-dropdown>
 
-						<k-languages-dropdown />
-					</k-button-group>
+					<k-languages-dropdown />
+				</k-button-group>
 
-					<k-prev-next v-if="model.id" :prev="prev" :next="next" />
-				</template>
-			</k-header>
-			<k-sections
-				:blueprint="blueprint"
-				:empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
-				:lock="lock"
-				:parent="id"
-				:tab="tab"
-			/>
-		</k-view>
+				<k-prev-next v-if="model.id" :prev="prev" :next="next" />
+			</template>
+		</k-header>
+		<k-sections
+			:blueprint="blueprint"
+			:empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
+			:lock="lock"
+			:parent="id"
+			:tab="tab"
+		/>
 		<template #footer>
 			<k-form-buttons :lock="lock" />
 		</template>

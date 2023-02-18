@@ -252,4 +252,9 @@ export default {
 .k-drawer-body .k-table th {
 	top: -1.5rem;
 }
+
+/* Scroll lock */
+:where(body):has(.k-drawer) {
+	overflow: hidden;
+}
 </style>

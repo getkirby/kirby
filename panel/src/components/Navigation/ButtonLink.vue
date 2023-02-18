@@ -22,7 +22,7 @@
 <script>
 /**
  * @deprecated `<k-button-link>` has been deprecated and will be removed in Kirby 5. Use `<k-button :link="https//getkirby.com">` instead.
- * @todo Remove in v5.0
+ * @todo deprecated.buttons.components - remove @ 5.0
  */
 export default {
 	inheritAttrs: false,

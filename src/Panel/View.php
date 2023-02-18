@@ -352,7 +352,6 @@ class View
 			'disabled' => ($permissions['access']['account'] ?? false) === false,
 			'text'     => I18n::translate('view.account'),
 		];
-		$menu[] = '-';
 
 		// logout
 		$menu[] = [

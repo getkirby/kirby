@@ -80,17 +80,23 @@ export default {
 
 <style>
 body {
-	background-color: var(--color-light);
+	background: var(--color-light);
+	font-size: var(--text-sm);
+}
+.k-panel {
+	container: app / inline-size;
+	background: var(--color-light);
 }
 
-.k-panel {
-	min-height: 100vh;
-	min-height: 100dvh;
-	container: app / inline-size;
-}
 .k-panel[data-loading="true"] {
 	animation: LoadingCursor 0.5s;
 }
+@keyframes LoadingCursor {
+	100% {
+		cursor: progress;
+	}
+}
+
 .k-panel[data-loading="true"]::after,
 .k-panel[data-dragging="true"] {
 	user-select: none;

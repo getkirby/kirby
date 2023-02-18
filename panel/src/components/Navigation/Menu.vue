@@ -1,0 +1,212 @@
+<template>
+	<nav class="k-panel-menu">
+		<!-- Collapse/expand handle -->
+		<label class="k-panel-menu-handle">
+			<k-icon type="collapse" />
+			<input
+				ref="handle"
+				type="checkbox"
+				name="menu"
+				data-variant="invisible"
+				@input="onHandle"
+			/>
+		</label>
+
+		<!-- Search button -->
+		<k-button
+			:text="$t('search')"
+			icon="search"
+			class="k-panel-menu-search"
+			@click="$refs.search.open()"
+		/>
+
+		<!-- Site title -->
+		<h1 class="k-panel-menu-title">{{ $system.title }}</h1>
+
+		<!-- Menus -->
+		<menu v-for="(menu, menuIdex) in menus" :key="menuIdex">
+			<k-button
+				v-for="entry in menu"
+				:key="entry.id"
+				v-bind="entry"
+				:current="entry.id === view.id"
+				:title="entry.title ?? entry.text"
+				:variant="entry.id === view.id ? 'filled' : null"
+			/>
+		</menu>
+
+		<!-- Search dialog -->
+		<k-search ref="search" :type="view.search || 'pages'" :types="$searches" />
+	</nav>
+</template>
+
+<script>
+export default {
+	props: {
+		entries: Array,
+		view: Object
+	},
+	computed: {
+		menus() {
+			return this.entries.split("-");
+		}
+	},
+	mounted() {
+		const media = window.matchMedia("(max-width: 40rem)");
+		this.onCSSMediaChange(media);
+		media.addEventListener("change", this.onCSSMediaChange);
+	},
+	methods: {
+		onCSSMediaChange(media) {
+			// when resizing to mobile, make sure menu starts closed
+			if (media.matches === true) {
+				this.$refs.handle.checked = false;
+			} else if (localStorage.getItem("kirby$menu") !== null) {
+				// only restore collapse/expanded state when not mobile
+				this.$refs.handle.checked = true;
+			}
+		},
+		onHandle(e) {
+			e.target.checked
+				? localStorage.setItem("kirby$menu", true)
+				: localStorage.removeItem("kirby$menu");
+		}
+	}
+};
+</script>
+
+<style>
+:root {
+	--menu-width: 12rem;
+}
+
+.k-panel-menu {
+	--menu-padding-inline: calc(var(--button-padding) + 0.125rem);
+
+	height: 100vh;
+	height: 100dvh;
+	flex-shrink: 0;
+	overflow-y: scroll;
+	overscroll-behavior: contain;
+	z-index: var(--z-navigation);
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-1);
+	padding: var(--spacing-3);
+	background-color: var(--color-slate-300);
+}
+
+.k-panel-menu-title {
+	visibility: var(--menu-title-visibility);
+	padding-inline: var(--menu-padding-inline);
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.k-panel-menu-search {
+	margin-bottom: var(--spacing-12);
+}
+.k-panel-menu menu + menu {
+	margin-top: var(--spacing-6);
+}
+.k-panel-menu menu:has(+ :last-child) {
+	flex-grow: 1;
+}
+
+.k-panel-menu .k-button {
+	--button-width: 100%;
+	--button-text-display: var(--menu-buttons);
+}
+
+@media (max-width: 40rem) {
+	.k-panel-menu {
+		position: absolute;
+		inset-block: 0;
+		inset-inline-start: 0;
+		width: var(--menu-width);
+		box-shadow: var(--shadow-xl);
+	}
+
+	.k-panel-menu:not(:has([name="menu"]:checked)) {
+		display: none;
+	}
+
+	:where(html, body):has([name="menu"]:checked) {
+		overflow: hidden;
+	}
+
+	.k-panel-menu-handle {
+		height: var(--button-height);
+		padding-inline: var(--button-padding);
+		margin-bottom: var(--spacing-1);
+	}
+
+	.k-panel-menu-search {
+		margin-bottom: var(--spacing-6);
+	}
+	.k-panel-menu menu + menu {
+		margin-top: var(--spacing-3);
+	}
+	.k-panel-menu .k-button {
+		justify-content: flex-start;
+	}
+}
+
+@media (min-width: 40rem) {
+	.k-panel-menu {
+		--menu-title-visibility: hidden;
+		--menu-buttons: none;
+
+		position: sticky;
+		top: 0;
+		width: calc(2.25rem + 2 * var(--spacing-3));
+	}
+
+	.k-panel-menu-handle,
+	.k-panel-menu-handle .k-icon,
+	.k-panel-menu-proxy {
+		display: none;
+	}
+}
+
+@media (min-width: 60rem) {
+	.k-panel-menu:has([name="menu"]:checked) {
+		--menu-title-visibility: visible;
+		--menu-buttons: block;
+
+		width: var(--menu-width);
+	}
+
+	.k-panel-menu:has([name="menu"]:checked) .k-button {
+		padding-inline-start: var(--menu-padding-inline);
+		justify-content: flex-start;
+	}
+
+	.k-panel-menu-handle {
+		position: absolute;
+		inset-block-start: 50%;
+		inset-inline-end: var(--spacing-1);
+		transform: translateY(-50%);
+		width: 4px;
+		height: 2rem;
+		border-radius: var(--rounded);
+		background-color: var(--color-slate-400);
+		z-index: var(--z-dialog);
+	}
+
+	.k-panel-menu:hover .k-panel-menu-handle {
+		display: block;
+	}
+}
+
+/** @todo Temporary fixes */
+input:where([type="checkbox"], [type="radio"])[data-variant="invisible"] {
+	position: absolute;
+	size: 0;
+	border: 0;
+	opacity: 0;
+}
+</style>

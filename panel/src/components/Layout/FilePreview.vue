@@ -44,9 +44,10 @@ export default {
 </script>
 <style>
 .k-file-preview {
-	background: var(--color-dark);
 	display: grid;
 	grid-template-columns: 50% auto;
+	background: var(--color-dark);
+	border-radius: var(--rounded-lg);
 }
 .k-file-preview > * {
 	min-width: 0;

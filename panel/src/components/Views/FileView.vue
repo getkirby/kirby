@@ -1,66 +1,66 @@
 <template>
-	<k-inside>
-		<div
-			:data-locked="isLocked"
-			:data-id="model.id"
-			:data-template="blueprint"
-			class="k-file-view"
+	<k-inside
+		:data-locked="isLocked"
+		:data-id="model.id"
+		:data-template="blueprint"
+		class="k-file-view"
+	>
+		<k-file-preview v-bind="preview" />
+
+		<k-header
+			:editable="permissions.changeName && !isLocked"
+			:tab="tab.name"
+			:tabs="tabs"
+			@edit="$dialog(id + '/changeName')"
 		>
-			<k-file-preview v-bind="preview" />
-			<k-view class="k-file-content">
-				<k-header
-					:editable="permissions.changeName && !isLocked"
-					:tab="tab.name"
-					:tabs="tabs"
-					@edit="$dialog(id + '/changeName')"
-				>
-					{{ model.filename }}
-					<template #buttons>
-						<k-button-group>
-							<k-button
-								:link="preview.url"
-								:responsive="true"
-								:text="$t('open')"
-								class="k-file-view-options"
-								icon="open"
-								size="sm"
-								target="_blank"
-								variant="filled"
-							/>
-							<k-dropdown class="k-file-view-options">
-								<k-button
-									:disabled="isLocked"
-									:dropdown="true"
-									:responsive="true"
-									:text="$t('settings')"
-									icon="cog"
-									size="sm"
-									variant="filled"
-									@click="$refs.settings.toggle()"
-								/>
-								<k-dropdown-content
-									ref="settings"
-									:options="$dropdown(id)"
-									@action="action"
-								/>
-							</k-dropdown>
-							<k-languages-dropdown />
-						</k-button-group>
-					</template>
-					<template #right>
-						<k-prev-next :prev="prev" :next="next" />
-					</template>
-				</k-header>
-				<k-sections
-					:blueprint="blueprint"
-					:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
-					:lock="lock"
-					:parent="id"
-					:tab="tab"
-				/>
-				<k-upload ref="upload" @success="onUpload" />
-			</k-view>
-		</div>
+			{{ model.filename }}
+			<template #buttons>
+				<k-button-group>
+					<k-button
+						:link="preview.url"
+						:responsive="true"
+						:text="$t('open')"
+						class="k-file-view-options"
+						icon="open"
+						size="sm"
+						target="_blank"
+						variant="filled"
+					/>
+					<k-dropdown class="k-file-view-options">
+						<k-button
+							:disabled="isLocked"
+							:dropdown="true"
+							:responsive="true"
+							:text="$t('settings')"
+							icon="cog"
+							size="sm"
+							variant="filled"
+							@click="$refs.settings.toggle()"
+						/>
+						<k-dropdown-content
+							ref="settings"
+							:options="$dropdown(id)"
+							@action="action"
+						/>
+					</k-dropdown>
+					<k-languages-dropdown />
+				</k-button-group>
+			</template>
+			<template #right>
+				<k-prev-next :prev="prev" :next="next" />
+			</template>
+		</k-header>
+
+		<k-sections
+			:blueprint="blueprint"
+			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
+			:lock="lock"
+			:parent="id"
+			:tab="tab"
+		/>
+
+		<k-upload ref="upload" @success="onUpload" />
+
 		<template #footer>
 			<k-form-buttons :lock="lock" />
 		</template>

@@ -1,22 +1,20 @@
 <template>
-	<k-panel>
-		<k-view align="center" :class="viewClass">
-			<!-- <div> as a wrapper so that <k-view>
+	<k-outside :class="viewClass">
+		<!-- <div> as a wrapper so that <k-view>
 			     has a single child for Flexbox layout -->
-			<div>
-				<h1 class="sr-only">
-					{{ $t("login") }}
-				</h1>
+		<div>
+			<h1 class="sr-only">
+				{{ $t("login") }}
+			</h1>
 
-				<k-login-alert v-if="issue" @click="issue = null">
-					{{ issue }}
-				</k-login-alert>
+			<k-login-alert v-if="issue" @click="issue = null">
+				{{ issue }}
+			</k-login-alert>
 
-				<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
-				<k-login-plugin v-else :methods="methods" @error="onError" />
-			</div>
-		</k-view>
-	</k-panel>
+			<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
+			<k-login-plugin v-else :methods="methods" @error="onError" />
+		</div>
+	</k-outside>
 </template>
 
 <script>
