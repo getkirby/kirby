@@ -11,6 +11,9 @@
 
 <script>
 /**
+ * @deprecated Use `k-frame` instead
+ * @todo remove @ 5.0
+ *
  * Creates a layout element
  * in the specified ratio
  * @public

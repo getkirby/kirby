@@ -7,7 +7,7 @@
 				class="k-file-preview-image-link"
 				target="_blank"
 			>
-				<k-item-image :image="image" layout="cards" />
+				<k-image-frame v-bind="image" />
 			</k-link>
 		</div>
 		<div class="k-file-preview-details">
@@ -64,11 +64,6 @@ export default {
 	width: 100%;
 	padding: min(4vw, 3rem);
 	outline: 0;
-}
-.k-file-preview-image-link[data-tabbed="true"] {
-	box-shadow: none;
-	outline: 2px solid var(--color-focus);
-	outline-offset: -2px;
 }
 
 .k-file-preview-details {

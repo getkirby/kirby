@@ -321,10 +321,4 @@ export default {
 	display: flex;
 	flex-shrink: 0;
 }
-.k-form-lock-loader {
-	animation: Spin 4s linear infinite;
-}
-.k-form-lock-loader .k-icon-loader {
-	display: flex;
-}
 </style>

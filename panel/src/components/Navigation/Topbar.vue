@@ -114,9 +114,6 @@ export default {
 .k-topbar-menu ul {
 	padding: 0.5rem 0;
 }
-.k-topbar .k-button[data-theme] {
-	color: var(--color-text);
-}
 .k-topbar .k-button-text {
 	opacity: 1;
 }

@@ -1,5 +1,5 @@
 <template>
-	<k-item-image class="k-image-field-preview" :image="value" layout="list" />
+	<k-image-frame class="k-image-field-preview" v-bind="value" />
 </template>
 
 <script>

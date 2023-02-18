@@ -1,6 +1,6 @@
 <template>
 	<div class="k-user-info">
-		<k-image
+		<k-image-frame
 			v-if="user.avatar"
 			:cover="true"
 			:src="user.avatar.url"

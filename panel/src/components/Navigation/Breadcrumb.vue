@@ -13,7 +13,11 @@
 					:aria-current="isLast(index) ? 'page' : false"
 					class="k-breadcrumb-link"
 				>
-					<k-loader v-if="crumb.loading" class="k-breadcrumb-icon" />
+					<k-icon
+						v-if="crumb.loading"
+						type="loader"
+						class="k-breadcrumb-icon"
+					/>
 					<k-icon
 						v-else-if="crumb.icon"
 						:type="crumb.icon"
@@ -126,7 +130,7 @@ export default {
 .k-breadcrumb-icon {
 	margin-inline-end: 0.5rem;
 }
-.k-breadcrumb-icon.k-loader {
+.k-breadcrumb-icon[data-type="loader"] {
 	opacity: 0.5;
 }
 .k-breadcrumb-link-text {

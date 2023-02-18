@@ -275,10 +275,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('back', $image);
 		$this->assertArrayHasKey('cover', $image);
 		$this->assertArrayHasKey('icon', $image);
-		$this->assertArrayHasKey('ratio', $image);
 		$this->assertFalse($image['cover']);
 		$this->assertSame('page', $image['icon']);
-		$this->assertSame('3/2', $image['ratio']);
 
 		// deactivate
 		$this->assertNull($panel->image(false));

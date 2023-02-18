@@ -26,6 +26,10 @@
 </template>
 
 <script>
+/**
+ * @deprecated Use `k-image-frame` and/or `k-icon-frame` insted
+ * @todo remove @ 5.0
+ */
 export default {
 	inheritAttrs: false,
 	props: {

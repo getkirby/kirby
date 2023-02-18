@@ -22,7 +22,7 @@
 		>
 			<slot name="buttons" />
 			<!-- @deprecated left/right slot, use buttons slot instead -->
-			<!-- @todo remove right/left slots in v5.0 -->
+			<!-- @todo remove right/left slots @ 5.0 -->
 			<slot name="left" />
 			<slot name="right" />
 		</k-bar>

@@ -42,7 +42,7 @@
 				@click="$refs.options.toggle()"
 			/>
 			<k-button
-				:tooltip="$t('sort')"
+				:tooltip="$t('sort.drag')"
 				class="k-block-options-button k-sort-handle"
 				icon="sort"
 				@keydown.up.prevent="$emit('sortUp')"

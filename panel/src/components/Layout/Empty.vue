@@ -6,7 +6,7 @@
 		class="k-empty"
 		v-on="$listeners"
 	>
-		<k-icon v-if="icon" :type="icon" />
+		<k-icon-frame v-if="icon" :icon="icon" />
 		<p>
 			<slot>{{ text }}</slot>
 		</p>
@@ -64,7 +64,7 @@ button.k-empty:focus {
 	font-size: var(--text-sm);
 	color: var(--color-gray-600);
 }
-.k-empty > .k-icon {
+.k-empty > .k-icon-frame {
 	color: var(--color-gray-500);
 }
 
@@ -76,12 +76,12 @@ button.k-empty:focus {
 	justify-content: center;
 	flex-direction: column;
 }
-.k-empty[data-layout="cards"] .k-icon,
-.k-empty[data-layout="cardlets"] .k-icon {
+.k-empty[data-layout="cards"] .k-icon-frame,
+.k-empty[data-layout="cardlets"] .k-icon-frame {
 	margin-bottom: 1rem;
 }
-.k-empty[data-layout="cards"] .k-icon svg,
-.k-empty[data-layout="cardlets"] .k-icon svg {
+.k-empty[data-layout="cards"] .k-icon-frame svg,
+.k-empty[data-layout="cardlets"] .k-icon-frame svg {
 	width: 2rem;
 	height: 2rem;
 }
@@ -91,8 +91,8 @@ button.k-empty:focus {
 .k-empty[data-layout="table"] {
 	min-height: 38px;
 }
-.k-empty[data-layout="list"] > .k-icon,
-.k-empty[data-layout="table"] > .k-icon {
+.k-empty[data-layout="list"] > .k-icon-frame,
+.k-empty[data-layout="table"] > .k-icon-frame {
 	width: 36px;
 	min-height: 36px;
 	border-inline-end: 1px solid rgba(0, 0, 0, 0.05);

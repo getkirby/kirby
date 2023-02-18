@@ -15,7 +15,7 @@
 							class="k-user-view-image"
 							@click="onAvatar"
 						>
-							<k-image
+							<k-image-frame
 								v-if="model.avatar"
 								:cover="true"
 								:src="model.avatar"
