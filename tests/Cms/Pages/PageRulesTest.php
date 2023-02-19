@@ -264,6 +264,40 @@ class PageRulesTest extends TestCase
 		PageRules::changeTemplate($page, 'test');
 	}
 
+	public function testChangeTemplateTooFewTemplates()
+	{
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$page = $this->createMock(Page::class);
+		$page->method('blueprints')->willReturn([[]]);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the page "test" cannot be changed');
+
+		PageRules::changeTemplate($page, 'c');
+	}
+
+	public function testChangeTemplateWithInvalidTemplateName()
+	{
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$page = $this->createMock(Page::class);
+		$page->method('blueprints')->willReturn([
+			['name' => 'a'], ['name' => 'b']
+		]);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the page "test" cannot be changed');
+
+		PageRules::changeTemplate($page, 'c');
+	}
+
 	public function testChangeTitleWithEmptyValue()
 	{
 		$page = new Page([
