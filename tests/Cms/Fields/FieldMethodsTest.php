@@ -540,6 +540,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
 
 		$this->assertSame($expected, $this->field($input)->nl2br()->value());
+		$this->assertSame('', $this->field(null)->nl2br()->value());
 	}
 
 	public function testKirbytext()

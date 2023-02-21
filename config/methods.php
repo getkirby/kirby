@@ -483,7 +483,7 @@ return function (App $app) {
 		 * @return \Kirby\Cms\Field
 		 */
 		'nl2br' => function (Field $field) {
-			$field->value = nl2br($field->value, false);
+			$field->value = nl2br($field->value ?? '', false);
 			return $field;
 		},
 
