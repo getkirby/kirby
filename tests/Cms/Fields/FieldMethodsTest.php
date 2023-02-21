@@ -531,6 +531,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Headline Subtitle with <a href="#">link</a>.';
 
 		$this->assertSame($expected, $this->field($html)->inline()->value());
+		$this->assertSame('', $this->field(null)->inline()->value());
 	}
 
 	public function testNl2br()

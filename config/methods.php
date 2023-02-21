@@ -396,7 +396,7 @@ return function (App $app) {
 			// Obsolete elements, script tags, image maps and form elements have
 			// been excluded for safety reasons and as they are most likely not
 			// needed in most cases.
-			$field->value = strip_tags($field->value, Html::$inlineList);
+			$field->value = strip_tags($field->value ?? '', Html::$inlineList);
 			return $field;
 		},
 
