@@ -278,10 +278,10 @@ return function (App $app) {
 		 * Converts the field value to a Unix timestamp
 		 *
 		 * @param \Kirby\Cms\Field $field
-		 * @return int
+		 * @return int|false
 		 */
-		'toTimestamp' => function (Field $field): int {
-			return strtotime($field->value);
+		'toTimestamp' => function (Field $field): int|false {
+			return strtotime($field->value ?? '');
 		},
 
 		/**

@@ -406,6 +406,15 @@ class FieldMethodsTest extends TestCase
 		$field->toStructure();
 	}
 
+	public function testToTimestamp()
+	{
+		$field = $this->field('2012-12-12');
+		$ts    = strtotime('2012-12-12');
+
+		$this->assertSame($ts, $field->toTimestamp());
+		$this->assertFalse($this->field(null)->toTimestamp());
+	}
+
 	public function testToDefaultUrl()
 	{
 		$field    = $this->field('super/cool');
