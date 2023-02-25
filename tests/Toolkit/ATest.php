@@ -447,6 +447,22 @@ class ATest extends TestCase
 			'elephant',
 			'elephant'
 		], A::fill($array, 5, 'elephant'));
+
+		// Callable
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant',
+			'elephant'
+		], A::fill($array, 6, fn () => 'elephant'));
+
+		// Callable with Closure
+		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
+
+		// callable with callable
+		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
 	}
 
 	/**
