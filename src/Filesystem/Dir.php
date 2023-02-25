@@ -143,7 +143,7 @@ class Dir
 	public static function index(
 		string $dir,
 		bool $recursive = false,
-		array|null $ignore = null,
+		array|null $ignore = [],
 		string $path = null
 	): array {
 		$result = [];
@@ -151,6 +151,10 @@ class Dir
 		$items  = static::read($dir);
 
 		foreach ($items as $item) {
+			if (in_array($item, $ignore) === true) {
+				continue;
+			}
+
 			$root     = $dir . '/' . $item;
 			$entry    = $path !== null ? $path . '/' . $item : $item;
 			$result[] = $entry;
