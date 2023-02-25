@@ -406,6 +406,15 @@ class FieldMethodsTest extends TestCase
 		$field->toStructure();
 	}
 
+	public function testToTimestamp()
+	{
+		$field = $this->field('2012-12-12');
+		$ts    = strtotime('2012-12-12');
+
+		$this->assertSame($ts, $field->toTimestamp());
+		$this->assertFalse($this->field(null)->toTimestamp());
+	}
+
 	public function testToDefaultUrl()
 	{
 		$field    = $this->field('super/cool');
@@ -531,6 +540,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Headline Subtitle with <a href="#">link</a>.';
 
 		$this->assertSame($expected, $this->field($html)->inline()->value());
+		$this->assertSame('', $this->field(null)->inline()->value());
 	}
 
 	public function testNl2br()
@@ -539,6 +549,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
 
 		$this->assertSame($expected, $this->field($input)->nl2br()->value());
+		$this->assertSame('', $this->field(null)->nl2br()->value());
 	}
 
 	public function testKirbytext()
