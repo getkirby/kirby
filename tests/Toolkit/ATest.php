@@ -447,6 +447,22 @@ class ATest extends TestCase
 			'elephant',
 			'elephant'
 		], A::fill($array, 5, 'elephant'));
+
+		// Callable
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant',
+			'elephant'
+		], A::fill($array, 6, fn () => 'elephant'));
+
+		// Callable with Closure
+		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
+
+		// callable with callable
+		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
 	}
 
 	/**
@@ -817,6 +833,62 @@ class ATest extends TestCase
 		$this->assertSame('a/b/c', A::join($array, '/'));
 
 		$this->assertSame('a/b/c', A::join('a/b/c'));
+	}
+
+	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyBy()
+	{
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_id = [
+			1 => [ 'id' => 1, 'username' => 'bastian'],
+			2 => [ 'id' => 2, 'username' => 'sonja'],
+			3 => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_name = [
+			'bastian' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_cb = [
+			'bastian-1' => [ 'id' => 1, 'username' => 'bastian'],
+			'sonja-2' => [ 'id' => 2, 'username' => 'sonja'],
+			'lukas-3' => [ 'id' => 3, 'username' => 'lukas']
+		];
+
+		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
+		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
+		$this->assertSame($array_by_cb, A::keyBy($array, function ($item) {
+			return $item['username'] . '-' . $item['id'];
+		}));
+
+		// test with associative array
+		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
+	}
+
+	/**
+	 * @covers ::keyBy
+	 */
+	public function testKeyByWithNonexistentKeys()
+	{
+		$this->expectException('InvalidArgumentException');
+		$this->expectExceptionMessage('The "key by" argument must be a valid key or a callable');
+
+		$array = [
+			[ 'id' => 1, 'username' => 'bastian'],
+			[ 'id' => 2, 'username' => 'sonja'],
+			[ 'id' => 3, 'username' => 'lukas']
+		];
+
+		A::keyBy($array, 'nonexistent');
 	}
 
 	/**

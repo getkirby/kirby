@@ -98,6 +98,9 @@ class Layouts extends Items
 			}
 		}
 
-		return Blocks::factory($blocks);
+		return Blocks::factory($blocks, [
+			'field'  => $this->field,
+			'parent' => $this->parent
+		]);
 	}
 }

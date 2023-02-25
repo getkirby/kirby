@@ -55,14 +55,18 @@ export function youtube(url, doNotTrack = false) {
 		default:
 			// short URLs
 			if (uri.host.includes("youtu.be") && isYoutubeId(first)) {
-				src = "https://www.youtube.com/embed/" + first;
+				if (doNotTrack === true) {
+					src = "https://www.youtube-nocookie.com/embed/" + first;
+				} else {
+					src = "https://www.youtube.com/embed/" + first;
+				}
 
 				if (query.has("t")) {
 					query.set("start", query.get("t"));
 				}
 
 				query.delete("t");
-			} else if (first === "embed" && isYoutubeId(second)) {
+			} else if (["embed", "shorts"].includes(first) && isYoutubeId(second)) {
 				src = host + "/" + second;
 			}
 	}

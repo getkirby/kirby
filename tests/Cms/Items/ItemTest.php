@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 class ItemTest extends TestCase
 {
 	protected $app;
+	protected $field;
 	protected $page;
 
 	public function setUp(): void
@@ -17,7 +18,8 @@ class ItemTest extends TestCase
 			],
 		]);
 
-		$this->page = new Page(['slug' => 'test']);
+		$this->page  = new Page(['slug' => 'test']);
+		$this->field = new Field($this->page, 'test', 'abcde');
 	}
 
 	public function testConstruct()
@@ -28,6 +30,16 @@ class ItemTest extends TestCase
 		$this->assertSame($this->app, $item->kirby());
 		$this->assertInstanceOf(Site::class, $item->parent());
 		$this->assertInstanceOf(Items::class, $item->siblings());
+	}
+
+	public function testField()
+	{
+		$item = new Item([
+			'parent' => $this->page,
+			'field'  => $this->field
+		]);
+
+		$this->assertSame($this->field, $item->field());
 	}
 
 	public function testIs()
