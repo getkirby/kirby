@@ -1021,4 +1021,42 @@ class PagesTest extends TestCase
 
 		$this->assertSame(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
 	}
+
+	public function testFactoryIsDraftProp()
+	{
+		$pages = Pages::factory([
+			[
+				'slug'    => 'a',
+				'isDraft' => true,
+			],
+			[
+				'slug'    => 'b',
+				'isDraft' => false,
+			],
+			[
+				'slug'    => 'c',
+			]
+		]);
+
+		$this->assertSame([true, false, false], $pages->pluck('isDraft'));
+	}
+
+	public function testFactoryDraftParameter()
+	{
+		$pages = Pages::factory([
+			[
+				'slug'    => 'a',
+				'isDraft' => true,
+			],
+			[
+				'slug'    => 'b',
+				'isDraft' => false,
+			],
+			[
+				'slug'    => 'c',
+			],
+		], null, true);
+
+		$this->assertSame([true, true, true], $pages->pluck('isDraft'));
+	}
 }
