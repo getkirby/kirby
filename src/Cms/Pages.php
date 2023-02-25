@@ -175,7 +175,7 @@ class Pages extends Collection
 			$props['kirby']   = $kirby;
 			$props['parent']  = $parent;
 			$props['site']    = $site;
-			$props['isDraft'] = $draft ?? $props['isDraft'] ?? false;
+			$props['isDraft'] = $draft ?? $props['isDraft'] ?? $props['draft'] ?? false;
 
 			$page = Page::factory($props);
 
