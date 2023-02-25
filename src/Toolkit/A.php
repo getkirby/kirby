@@ -4,6 +4,7 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * The `A` class provides a set of handy methods
@@ -159,6 +160,33 @@ class A
 		}
 
 		return implode($separator, $value);
+	}
+
+	/**
+	 * Takes an array and makes it associative by an argument.
+	 * If the argument is a callable, it will be used to map the array.
+	 * If it is a string, it will be used as a key to pluck from the array.
+	 *
+	 * <code>
+	 * $array = [['id'=>1], ['id'=>2], ['id'=>3]];
+	 * $keyed = A::keyBy($array, 'id');
+	 *
+	 * // Now you can access the array by the id
+	 * </code>
+	 *
+	 * @param array $array
+	 * @param string|callable $keyBy
+	 * @return array
+	 */
+	public static function keyBy(array $array, string|callable $keyBy): array
+	{
+		$keys = is_callable($keyBy) ? static::map($array, $keyBy) : static::pluck($array, $keyBy);
+
+		if (count($keys) !== count($array)) {
+			throw new InvalidArgumentException('The "key by" argument must be a valid key or a callable');
+		}
+
+		return array_combine($keys, $array);
 	}
 
 	public const MERGE_OVERWRITE = 0;
