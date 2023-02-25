@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -230,6 +231,22 @@ class BlueprintTest extends TestCase
 		]);
 
 		$this->assertSame('Test', $blueprint->title());
+	}
+
+	/**
+	 * @covers ::title
+	 */
+	public function testTitleTranslatedFallback()
+	{
+		I18n::$locale       = 'de';
+		I18n::$translations = ['en' => ['my.i18n.string' => 'success']];
+
+		$blueprint = new Blueprint([
+			'title' => 'my.i18n.string',
+			'model' => $this->model
+		]);
+
+		$this->assertSame('success', $blueprint->title());
 	}
 
 	/**

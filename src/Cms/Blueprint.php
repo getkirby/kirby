@@ -77,7 +77,8 @@ class Blueprint
 		$props['name'] ??= 'default';
 
 		// normalize and translate the title
-		$props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
+		$props['title'] ??= ucfirst($props['name']);
+		$props['title']   = $this->i18n($props['title']);
 
 		// convert all shortcuts
 		$props = $this->convertFieldsToSections('main', $props);
@@ -311,14 +312,14 @@ class Blueprint
 
 	/**
 	 * Used to translate any label, heading, etc.
-	 *
-	 * @param mixed $value
-	 * @param mixed $fallback
-	 * @return mixed
 	 */
-	protected function i18n($value, $fallback = null)
-	{
-		return I18n::translate($value, $fallback ?? $value);
+	protected function i18n(
+		string|array|null $value,
+		string|array $fallback = null
+	): string|null {
+		// use $value as final fallback to show i18n strings
+		// (e.g. my.editor.title) when no actual translation is found
+		return I18n::translate($value, $fallback) ?? $value;
 	}
 
 	/**
@@ -341,20 +342,10 @@ class Blueprint
 	{
 		$props = static::find($name);
 
-		$normalize = function ($props) use ($name) {
-			// inject the filename as name if no name is set
-			$props['name'] ??= $name;
+		// inject the filename as name if no name is set
+		$props['name'] ??= $name;
 
-			// normalize the title
-			$title = $props['title'] ?? ucfirst($props['name']);
-
-			// translate the title
-			$props['title'] = I18n::translate($title, $title);
-
-			return $props;
-		};
-
-		return $normalize($props);
+		return $props;
 	}
 
 	/**
