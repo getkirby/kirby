@@ -68,7 +68,7 @@ class Exif
 	public function __construct(Image $image)
 	{
 		$this->image = $image;
-		$this->data  = $this->read();
+		$this->data  = $this->read($this->image->root());
 		$this->parse();
 	}
 
@@ -161,9 +161,9 @@ class Exif
 	}
 
 	/**
-	 * Read the exif data of the image object if possible
+	 * Read the exif data of the image file if possible
 	 */
-	protected function read(): array
+	public static function read(string $root): array
 	{
 		// @codeCoverageIgnoreStart
 		if (function_exists('exif_read_data') === false) {
@@ -171,7 +171,7 @@ class Exif
 		}
 		// @codeCoverageIgnoreEnd
 
-		$data = @exif_read_data($this->image->root());
+		$data = @exif_read_data($root);
 		return is_array($data) ? $data : [];
 	}
 

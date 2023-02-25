@@ -227,18 +227,25 @@ class Dimensions
 		return $this;
 	}
 
-	/**
-	 * Detect the dimensions for an image file
-	 */
-	public static function forImage(string $root): static
-	{
-		if (file_exists($root) === false) {
-			return new static(0, 0);
-		}
-
-		$size = getimagesize($root);
-		return new static($size[0] ?? 0, $size[1] ?? 1);
+/**
+ * Detect the dimensions for an image file
+ */
+public static function forImage(string $root): static
+{
+	if (file_exists($root) === false) {
+		return new static(0, 0);
 	}
+
+	$orientation = Exif::read($root)['Orientation'] ?? 1;
+	$size        = getimagesize($root);
+
+	// orientation 1 is normal, 2 - 4 are flipped, 5 - 8 are rotated
+	if ($orientation > 4) {
+		return new static($size[0] ?? 1, $size[1] ?? 0);
+	}
+
+	return new static($size[0] ?? 0, $size[1] ?? 1);
+}
 
 	/**
 	 * Detect the dimensions for a svg file
