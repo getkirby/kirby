@@ -66,6 +66,9 @@ export default class Fiber {
 
 		// set initial state
 		this.setState(state);
+
+		// set up event handlers
+		window.addEventListener("popstate", this.popState.bind(this));
 	}
 
 	/**
@@ -294,6 +297,12 @@ export default class Fiber {
 			return data;
 		} finally {
 			this.options.onFinish(options);
+		}
+	}
+
+	async popState(event) {
+		if (event.state?.$url) {
+			window.location = event.state.$url;
 		}
 	}
 

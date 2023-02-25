@@ -114,9 +114,6 @@ export default {
 				};
 			}
 		});
-
-		// back button event
-		window.addEventListener("popstate", this.$reload);
 	},
 	methods: {
 		/**
