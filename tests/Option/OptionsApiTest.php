@@ -287,7 +287,7 @@ class OptionsApiTest extends TestCase
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
 			url: __DIR__ . '/fixtures/data-nested.json',
-			query: "simple",
+			query: 'simple',
 			text: '{{ item }}',
 			value: '{{ item.slug }}'
 		);
