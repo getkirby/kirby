@@ -51,7 +51,7 @@ class Query
 	/**
 	 * Creates a new Query object
 	 */
-	public static function factory(string $query): static
+	public static function factory(string|null $query): static
 	{
 		return new static(query: $query);
 	}

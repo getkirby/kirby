@@ -259,4 +259,23 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('We are <b>better</b>', $result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 	}
+
+	/**
+	 * @covers ::resolve
+	 */
+	public function testResolveApplyFieldMethods()
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(
+			url: __DIR__ . '/fixtures/data.json',
+			text: '{{ item.name }}',
+			value: '{{ item.name.slug }}'
+		);
+		$result  = $options->render($model);
+
+		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('company-a', $result[0]['value']);
+		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('company-b', $result[1]['value']);
+	}
 }
