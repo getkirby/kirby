@@ -2,9 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Json;
+use Kirby\Data\Yaml;
 use Kirby\Parsley\Parsley;
 use Kirby\Parsley\Schema\Blocks as BlockSchema;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -57,7 +60,12 @@ class Blocks extends Items
 	public static function factory(array $items = null, array $params = [])
 	{
 		$items = static::extractFromLayouts($items);
+
+		// @deprecated old editor format
+		// @todo block.converter remove eventually
+		// @codeCoverageIgnoreStart
 		$items = BlockConverter::editorBlocks($items);
+		// @codeCoverageIgnoreEnd
 
 		return parent::factory($items, $params);
 	}
@@ -77,7 +85,8 @@ class Blocks extends Items
 		if (
 			// no columns = no layout
 			array_key_exists('columns', $input[0]) === false  ||
-			// checks if this is a block for the builder plugin
+			// @deprecated checks if this is a block for the builder plugin
+			// @todo block.converter remove eventually
 			array_key_exists('_key', $input[0]) === true
 		) {
 			return $input;
@@ -120,8 +129,31 @@ class Blocks extends Items
 			try {
 				$input = Json::decode((string)$input);
 			} catch (Throwable) {
-				$parser = new Parsley((string)$input, new BlockSchema());
-				$input  = $parser->blocks();
+				// @deprecated try to import the old YAML format
+				// @todo block.converter remove eventually
+				// @codeCoverageIgnoreStart
+				try {
+					$yaml  = Yaml::decode((string)$input);
+					$first = A::first($yaml);
+
+					// check for valid yaml
+					if (
+						empty($yaml) === true ||
+						(
+							isset($first['_key']) === false &&
+							isset($first['type']) === false
+						)
+					) {
+						throw new Exception('Invalid YAML');
+					} else {
+						$input = $yaml;
+					}
+				} catch (Throwable $e) {
+					// the next 2 lines remain after removing block.covnerter
+					$parser = new Parsley((string)$input, new BlockSchema());
+					$input  = $parser->blocks();
+				}
+				// @codeCoverageIgnoreEnd
 			}
 		}
 

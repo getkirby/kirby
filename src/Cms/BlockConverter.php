@@ -5,7 +5,11 @@ namespace Kirby\Cms;
 /**
  * Converts the data from the old builder and editor fields
  * to the format supported by the new block field.
- * @since 3.5.0
+ * @since 3.9.0
+ * @deprecated
+ *
+ * @todo block.converter remove eventually
+ * @codeCoverageIgnore
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>

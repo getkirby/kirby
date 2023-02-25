@@ -60,6 +60,9 @@ class BlockTest extends TestCase
 		$this->assertSame($content, $block->content()->toArray());
 	}
 
+	/**
+	 * @todo block.converter remove eventually
+	 */
 	public function testContentWhenNotArrayConvertedAsEditorBlock()
 	{
 		$block = new Block([
