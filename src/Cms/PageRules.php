@@ -204,7 +204,12 @@ class PageRules
 			]);
 		}
 
-		if (count($page->blueprints()) <= 1) {
+		$blueprints = $page->blueprints();
+
+		if (
+			count($blueprints) <= 1 ||
+			in_array($template, array_column($blueprints, 'name')) === false
+		) {
 			throw new LogicException([
 				'key'  => 'page.changeTemplate.invalid',
 				'data' => ['slug' => $page->slug()]
