@@ -29,12 +29,14 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
+					@close="isEditing = false"
 					@copy="copy()"
 					@confirmToRemoveSelected="confirmToRemoveSelected"
 					@click.native.stop="select(block, $event)"
 					@duplicate="duplicate(block, index)"
 					@focus="select(block)"
 					@hide="hide(block)"
+					@open="isEditing = true"
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
@@ -112,6 +114,7 @@ export default {
 	},
 	data() {
 		return {
+			isEditing: false,
 			isMultiSelectKey: false,
 			batch: [],
 			blocks: this.value,
@@ -138,11 +141,6 @@ export default {
 		},
 		hasFieldsets() {
 			return Object.keys(this.fieldsets).length;
-		},
-		isEditing() {
-			return (
-				this.$store.state.dialog || this.$store.state.drawers.open.length > 0
-			);
 		},
 		isEmpty() {
 			return this.blocks.length === 0;
@@ -277,8 +275,8 @@ export default {
 			this.$refs.removeSelected.open();
 		},
 		copy(e) {
-			// don't copy when the drawer is open
-			if (this.isEditing === true) {
+			// don't copy when the drawer or any dialogs are open
+			if (this.isEditing === true || this.$store.state.dialog) {
 				return false;
 			}
 
@@ -510,7 +508,7 @@ export default {
 			}
 
 			// never paste when dialogs or drawers are open
-			if (this.isEditing === true) {
+			if (this.isEditing === true || this.$store.state.dialog) {
 				// enable pasting when the block selector is open
 				if (this.$refs.selector?.isOpen() === true) {
 					return this.paste(e);
