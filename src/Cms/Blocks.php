@@ -149,9 +149,11 @@ class Blocks extends Items
 						$input = $yaml;
 					}
 				} catch (Throwable $e) {
-					// the next 2 lines remain after removing block.covnerter
+					// the next 2 lines remain after removing block.converter
+					// @codeCoverageIgnoreEnd
 					$parser = new Parsley((string)$input, new BlockSchema());
 					$input  = $parser->blocks();
+					// @codeCoverageIgnoreStart
 				}
 				// @codeCoverageIgnoreEnd
 			}
