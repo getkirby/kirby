@@ -1,3 +1,20 @@
+import { clone } from "./object.js";
+
+/**
+ * Creates form values for provided fields
+ * @param {Object} fields
+ * @returns {Object}
+ */
+export function form(fields) {
+	const form = {};
+
+	for (const fieldName in fields) {
+		form[fieldName] = clone(fields[fieldName].default);
+	}
+
+	return form;
+}
+
 /**
  * Evaluates the when option and field
  * type to check if a field should be
@@ -15,18 +32,21 @@ export function isVisible(field, values) {
 		return true;
 	}
 
-	let result = true;
-
-	Object.keys(field.when).forEach((key) => {
+	for (const key in field.when) {
 		const value = values[key.toLowerCase()];
 		const condition = field.when[key];
 
-		if (value !== condition) {
-			result = false;
+		// if condition is checking for empty field
+		if (value === undefined && (condition === "" || condition === [])) {
+			continue;
 		}
-	});
 
-	return result;
+		if (value !== condition) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /**
@@ -57,6 +77,7 @@ export function subfields(field, fields) {
 }
 
 export default {
+	form,
 	isVisible,
 	subfields
 };
