@@ -107,11 +107,11 @@ abstract class ModelUuid extends Uuid
 
 		// overwrite the content in memory for the current request
 		if ($this->model->kirby()->multilang() === true) {
-			// update the default translation instead of the content object
+			// update the default content language instead of the content object
 			// (the default content object is always freshly loaded from the
-			// default translation afterwards, so updating the default
+			// default content language afterwards, so updating the default
 			// content object would not have any effect)
-			$this->model->translation('default')->update($data);
+			$this->model->contentLanguage('default')->update($data);
 		} else {
 			$this->model->content('default')->update($data);
 		}

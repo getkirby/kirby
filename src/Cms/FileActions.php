@@ -61,11 +61,14 @@ trait FileActions
 			F::move($oldFile->root(), $newFile->root());
 
 			if ($newFile->kirby()->multilang() === true) {
-				foreach ($newFile->translations() as $translation) {
-					$translationCode = $translation->code();
+				foreach ($newFile->contentLanguages() as $language) {
+					$languageCode = $language->code();
 
 					// rename the content file
-					F::move($oldFile->contentFile($translationCode), $newFile->contentFile($translationCode));
+					F::move(
+						$oldFile->contentFile($languageCode),
+						$newFile->contentFile($languageCode)
+					);
 				}
 			} else {
 				// rename the content file
@@ -249,8 +252,8 @@ trait FileActions
 			$file->unpublish();
 
 			if ($file->kirby()->multilang() === true) {
-				foreach ($file->translations() as $translation) {
-					F::remove($file->contentFile($translation->code()));
+				foreach ($file->contentLanguages() as $language) {
+					F::remove($file->contentFile($language->code()));
 				}
 			} else {
 				F::remove($file->contentFile());

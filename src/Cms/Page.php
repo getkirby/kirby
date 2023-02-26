@@ -201,7 +201,9 @@ class Page extends ModelWithContent
 		return array_merge($this->toArray(), [
 			'content'      => $this->content(),
 			'children'     => $this->children(),
+			'languages'    => $this->contentLanguages(),
 			'siblings'     => $this->siblings(),
+			// @todo content.translations.deprecated
 			'translations' => $this->translations(),
 			'files'        => $this->files(),
 		]);
@@ -1282,9 +1284,9 @@ class Page extends ModelWithContent
 
 			if (
 				$languageCode !== $defaultLanguageCode &&
-				$translation = $this->translations()->find($languageCode)
+				$language = $this->contentLanguages()->find($languageCode)
 			) {
-				return $translation->slug() ?? $this->slug;
+				return $language->slug() ?? $this->slug;
 			}
 		}
 
@@ -1353,12 +1355,14 @@ class Page extends ModelWithContent
 			'content'      => $this->content()->toArray(),
 			'files'        => $this->files()->keys(),
 			'id'           => $this->id(),
+			'languages'    => $this->contentLanguages()->toArray(),
 			'mediaUrl'     => $this->mediaUrl(),
 			'mediaRoot'    => $this->mediaRoot(),
 			'num'          => $this->num(),
 			'parent'       => $this->parent() ? $this->parent()->id() : null,
 			'slug'         => $this->slug(),
 			'template'     => $this->template(),
+			// @todo content.translations.deprecated
 			'translations' => $this->translations()->toArray(),
 			'uid'          => $this->uid(),
 			'uri'          => $this->uri(),

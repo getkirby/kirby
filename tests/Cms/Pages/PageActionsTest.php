@@ -820,10 +820,7 @@ class PageActionsTest extends TestCase
 			'slug' => 'test',
 		]);
 
-		new ContentTranslation([
-			'parent' => $page,
-			'code'   => 'en',
-		]);
+		new ContentLanguage(parent: $page, code: 'en');
 		$this->assertFileExists($page->contentFile('en'));
 
 		$drafts = $app->site()->drafts();

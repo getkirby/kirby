@@ -967,6 +967,7 @@ class PageTest extends TestCase
 			'content' => [],
 			'files' => [],
 			'id' => 'test',
+			'languages' => [],
 			'mediaUrl' => '/media/pages/test',
 			'mediaRoot' => '/dev/null/media/pages/test',
 			'num' => null,

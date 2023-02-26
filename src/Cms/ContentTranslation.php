@@ -9,6 +9,8 @@ use Kirby\Toolkit\Properties;
  * translated versions of their content,
  * represented by this class
  *
+ * @deprecated 4.0.0 Use `Cms\ContentLanguage` instead
+ *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com

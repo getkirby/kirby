@@ -63,7 +63,7 @@ trait PageActions
 				// remove all translated slugs
 				if (
 					$language->isDefault() === false &&
-					$copy->translation($language)->exists() === true
+					$copy->contentLanguage($language)->exists() === true
 				) {
 					$copy = $copy->save(['slug' => null], $language->code());
 				}
@@ -353,7 +353,7 @@ trait PageActions
 				]);
 
 				foreach ($this->kirby()->languages()->codes() as $code) {
-					if ($oldPage->translation($code)->exists() !== true) {
+					if ($oldPage->contentLanguage($code)->exists() !== true) {
 						continue;
 					}
 
@@ -791,6 +791,8 @@ trait PageActions
 		$this->drafts            = null;
 		$this->files             = null;
 		$this->inventory         = null;
+		$this->languages		 = null;
+		// TODO: content.translations.deprecated
 		$this->translations      = null;
 
 		return $this;

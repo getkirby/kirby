@@ -36,6 +36,46 @@ class UrlTest extends TestCase
 
 	public function testToWithLanguage()
 	{
+		// $this->app->clone([
+		// 	'languages' => [
+		// 		'en' => [
+		// 			'code' => 'en'
+		// 		],
+		// 		'de' => [
+		// 			'code' => 'de'
+		// 		]
+		// 	],
+		// 	'site' => [
+		// 		'children' => [
+		// 			['slug' => 'a'],
+		// 			['slug' => 'b'],
+		// 			[
+		// 				'slug' => 'c',
+		// 				'languages' => [
+		// 					[
+		// 						'code' => 'de',
+		// 						'content' => [
+		// 							'slug' => 'custom'
+		// 						]
+		// 					]
+		// 				]
+		// 			]
+		// 		]
+		// 	]
+		// ]);
+
+		// $this->assertSame('https://getkirby.com/en/a', Url::to('a'));
+		// $this->assertSame('https://getkirby.com/en/a', Url::to('a', 'en'));
+		// $this->assertSame('https://getkirby.com/de/a', Url::to('a', 'de'));
+
+		// $this->assertSame('https://getkirby.com/en/a', Url::to('a', ['language' => 'en']));
+		// $this->assertSame('https://getkirby.com/de/a', Url::to('a', ['language' => 'de']));
+
+		// // translated slug
+		// $this->assertSame('https://getkirby.com/de/custom', Url::to('c', 'de'));
+
+		// TODO: content.translations.deprecated
+		// remove the following
 		$this->app->clone([
 			'languages' => [
 				'en' => [

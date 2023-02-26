@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -30,8 +31,10 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public $content;
 
+	public Collection|null $languages = null;
 	/**
-	 * @var \Kirby\Cms\Translations
+	 * @depcrecated 4.0.0 Use `$languages` instead
+	 * @todo content.translations.deprecated
 	 */
 	public $translations;
 
@@ -44,9 +47,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns an array with all blueprints that are available
-	 *
-	 * @param string|null $inSection
-	 * @return array
 	 */
 	public function blueprints(string $inSection = null): array
 	{
@@ -69,18 +69,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Executes any given model action
-	 *
-	 * @param string $action
-	 * @param array $arguments
-	 * @param \Closure $callback
-	 * @return mixed
 	 */
-	abstract protected function commit(string $action, array $arguments, Closure $callback);
+	abstract protected function commit(
+		string $action,
+		array $arguments,
+		Closure $callback
+	);
 
 	/**
 	 * Returns the content
 	 *
-	 * @param string|null $languageCode
 	 * @return \Kirby\Cms\Content
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
@@ -88,12 +86,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	{
 		// single language support
 		if ($this->kirby()->multilang() === false) {
-			if ($this->content instanceof Content) {
-				return $this->content;
-			}
-
 			// don't normalize field keys (already handled by the `Data` class)
-			return $this->content = new Content($this->readContent(), $this, false);
+			return $this->content ??= new Content($this->readContent(), $this, false);
 		}
 
 		// get the targeted language
@@ -109,11 +103,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 			return $this->content;
 		}
 
-		// get the translation by code
-		$translation = $this->translation($language->code());
+		// get the language by code
+		$language = $this->contentLanguage($language->code());
 
-		// don't normalize field keys (already handled by the `ContentTranslation` class)
-		$content = new Content($translation->content(), $this, false);
+		// don't normalize field keys
+		// (already handled by the `ContentLanguage` class)
+		$content = new Content($language->content(), $this, false);
 
 		// only store the content for the current language
 		if ($languageCode === null) {
@@ -127,13 +122,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Returns the absolute path to the content file
 	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @param bool $force
-	 * @return string
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
-	public function contentFile(string $languageCode = null, bool $force = false): string
-	{
+	public function contentFile(
+		string $languageCode = null,
+		bool $force = false
+	): string {
 		$extension = $this->contentFileExtension();
 		$directory = $this->contentFileDirectory();
 		$filename  = $this->contentFileName();
@@ -161,17 +155,14 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns an array with all content files
-	 *
-	 * @return array
 	 */
 	public function contentFiles(): array
 	{
 		if ($this->kirby()->multilang() === true) {
-			$files = [];
-			foreach ($this->kirby()->languages()->codes() as $code) {
-				$files[] = $this->contentFile($code);
-			}
-			return $files;
+			return A::map(
+				$this->kirby()->languages()->codes(),
+				fn ($code) => $this->contentFile($code)
+			);
 		}
 
 		return [
@@ -184,12 +175,11 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * to the text file
 	 *
 	 * @internal
-	 * @param array $data
-	 * @param string|null $languageCode
-	 * @return array
 	 */
-	public function contentFileData(array $data, string $languageCode = null): array
-	{
+	public function contentFileData(
+		array $data,
+		string $languageCode = null
+	): array {
 		return $data;
 	}
 
@@ -199,7 +189,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * located
 	 *
 	 * @internal
-	 * @return string|null
 	 */
 	public function contentFileDirectory(): string|null
 	{
@@ -210,7 +199,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Returns the extension of the content file
 	 *
 	 * @internal
-	 * @return string
 	 */
 	public function contentFileExtension(): string
 	{
@@ -221,20 +209,55 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Needs to be declared by the final model
 	 *
 	 * @internal
-	 * @return string
 	 */
 	abstract public function contentFileName(): string;
 
 	/**
-	 * Decrement a given field value
-	 *
-	 * @param string $field
-	 * @param int $by
-	 * @param int $min
-	 * @return static
+	 * Returns a single content language by  code
+	 * If no code is specified the current language is returned
 	 */
-	public function decrement(string $field, int $by = 1, int $min = 0)
+	public function contentLanguage(
+		string $languageCode = null
+	): ContentLanguage|null {
+		if ($language = $this->kirby()->language($languageCode)) {
+			return $this->contentLanguages()->find($language->code());
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the content languages collection
+	 */
+	public function contentLanguages(): Collection
 	{
+		if ($this->languages !== null) {
+			return $this->languages;
+		}
+
+		$this->languages = new Collection();
+
+		foreach ($this->kirby()->languages() as $language) {
+			$this->languages->{$language->code()} = new ContentLanguage(
+				parent: $this,
+				code:   $language->code()
+			);
+		}
+
+		// TODO: content.translations.deprecated
+		$this->translations = $this->languages;
+
+		return $this->languages;
+	}
+
+	/**
+	 * Decrement a given field value
+	 */
+	public function decrement(
+		string $field,
+		int $by = 1,
+		int $min = 0
+	): static {
 		$value = (int)$this->content()->get($field)->value() - $by;
 
 		if ($value < $min) {
@@ -246,8 +269,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns all content validation errors
-	 *
-	 * @return array
 	 */
 	public function errors(): array
 	{
@@ -262,14 +283,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Increment a given field value
-	 *
-	 * @param string $field
-	 * @param int $by
-	 * @param int|null $max
-	 * @return static
 	 */
-	public function increment(string $field, int $by = 1, int $max = null)
-	{
+	public function increment(
+		string $field,
+		int $by = 1,
+		int $max = null
+	): static {
 		$value = (int)$this->content()->get($field)->value() + $by;
 
 		if ($max && $value > $max) {
@@ -281,19 +300,14 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Checks if the model is locked for the current user
-	 *
-	 * @return bool
 	 */
 	public function isLocked(): bool
 	{
-		$lock = $this->lock();
-		return $lock && $lock->isLocked() === true;
+		return $this->lock()?->isLocked() === true;
 	}
 
 	/**
 	 * Checks if the data has any errors
-	 *
-	 * @return bool
 	 */
 	public function isValid(): bool
 	{
@@ -340,9 +354,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Creates a string query, starting from the model
 	 *
 	 * @internal
-	 * @param string|null $query
-	 * @param string|null $expect
-	 * @return mixed
 	 */
 	public function query(string $query = null, string $expect = null)
 	{
@@ -372,8 +383,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Read the content from the content file
 	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @return array
 	 */
 	public function readContent(string $languageCode = null): array
 	{
@@ -391,8 +400,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 	/**
 	 * Returns the absolute path to the model
-	 *
-	 * @return string|null
 	 */
 	abstract public function root(): string|null;
 
@@ -400,22 +407,22 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Stores the content on disk
 	 *
 	 * @internal
-	 * @param array|null $data
-	 * @param string|null $languageCode
-	 * @param bool $overwrite
 	 * @return static
 	 */
-	public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
-	{
+	public function save(
+		array $data = null,
+		string $languageCode = null,
+		bool $overwrite = false
+	) {
 		if ($this->kirby()->multilang() === true) {
-			return $this->saveTranslation($data, $languageCode, $overwrite);
+			return $this->saveContentLanguage($data, $languageCode, $overwrite);
 		}
 
 		return $this->saveContent($data, $overwrite);
 	}
 
 	/**
-	 * Save the single language content
+	 * Saves the single language content
 	 *
 	 * @param array|null $data
 	 * @param bool $overwrite
@@ -436,28 +443,27 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Save a translation
+	 * Saves a content language
 	 *
-	 * @param array|null $data
-	 * @param string|null $languageCode
-	 * @param bool $overwrite
-	 * @return static
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
-	protected function saveTranslation(array $data = null, string $languageCode = null, bool $overwrite = false)
-	{
+	protected function saveContentLanguage(
+		array $data = null,
+		string $languageCode = null,
+		bool $overwrite = false
+	): static {
 		// create a clone to not touch the original
 		$clone = $this->clone();
 
-		// fetch the matching translation and update all the strings
-		$translation = $clone->translation($languageCode);
+		// fetch the matching language and update all the strings
+		$language = $clone->contentLanguage($languageCode);
 
-		if ($translation === null) {
+		if ($language === null) {
 			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
 		}
 
 		// get the content to store
-		$content      = $translation->update($data, $overwrite)->content();
+		$content      = $language->update($data, $overwrite)->content();
 		$kirby        = $this->kirby();
 		$languageCode = $kirby->languageCode($languageCode);
 
@@ -474,12 +480,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 				$content['uuid'] = null;
 			}
 
-			// merge the translation with the new data
-			$translation->update($content, true);
+			// merge the language's content with the new data
+			$language->update($content, true);
 		}
 
-		// send the full translation array to the writer
-		$clone->writeContent($translation->content(), $languageCode);
+		// send the full language's content array to the writer
+		$clone->writeContent($language->content(), $languageCode);
 
 		// reset the content object
 		$clone->content = null;
@@ -489,12 +495,23 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
+	 * @deprecated 4.0.0 Use `::saveContentLanguage()` instead
+	 * @see ::saveContentLanguage
+	 */
+	protected function saveTranslation(
+		array $data = null,
+		string $languageCode = null,
+		bool $overwrite = false
+	) {
+		return $this->saveContentLanguage($data, $languageCode, $overwrite);
+	}
+
+	/**
 	 * Sets the Content object
 	 *
-	 * @param array|null $content
 	 * @return $this
 	 */
-	protected function setContent(array $content = null)
+	protected function setContent(array $content = null): static
 	{
 		if ($content !== null) {
 			$content = new Content($content, $this);
@@ -505,24 +522,35 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Create the translations collection from an array
+	 * Create the languages collection from an array
 	 *
-	 * @param array|null $translations
 	 * @return $this
 	 */
-	protected function setTranslations(array $translations = null)
+	protected function setLanguages(array $languages = null): static
 	{
-		if ($translations !== null) {
-			$this->translations = new Collection();
+		if ($languages !== null) {
+			$this->languages = new Collection();
 
-			foreach ($translations as $props) {
+			foreach ($languages as $props) {
 				$props['parent'] = $this;
-				$translation = new ContentTranslation($props);
-				$this->translations->data[$translation->code()] = $translation;
+				$language = new ContentLanguage(...$props);
+				$this->languages->{$language->code()} = $language;
 			}
+
+			// TODO: content.translations.deprecated
+			$this->translations = $this->languages;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @deprecated 4.0.0 Use `::setLanguages` instead
+	 * @see ::setLanguages
+	 */
+	protected function setTranslations(array $translations = null)
+	{
+		return $this->setLanguages($translations);
 	}
 
 	/**
@@ -530,13 +558,14 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * @since 3.6.0
 	 *
 	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param array $data
 	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
 	 *                              (`null` to keep the original token)
-	 * @return string
 	 */
-	public function toSafeString(string $template = null, array $data = [], string|null $fallback = ''): string
-	{
+	public function toSafeString(
+		string $template = null,
+		array $data = [],
+		string|null $fallback = ''
+	): string {
 		return $this->toString($template, $data, $fallback, 'safeTemplate');
 	}
 
@@ -544,14 +573,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * String template builder
 	 *
 	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param array $data
 	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
 	 *                              (`null` to keep the original token)
 	 * @param string $handler For internal use
-	 * @return string
 	 */
-	public function toString(string $template = null, array $data = [], string|null $fallback = '', string $handler = 'template'): string
-	{
+	public function toString(
+		string $template = null,
+		array $data = [],
+		string|null $fallback = '',
+		string $handler = 'template'
+	): string {
 		if ($template === null) {
 			return $this->id() ?? '';
 		}
@@ -571,57 +602,34 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
-	 * Returns a single translation by language code
-	 * If no code is specified the current translation is returned
-	 *
-	 * @param string|null $languageCode
-	 * @return \Kirby\Cms\ContentTranslation|null
+	 * @deprecated 4.0.0 Use `::contentLanguage()` instead
+	 * @see ::contentLanguage
 	 */
 	public function translation(string $languageCode = null)
 	{
-		if ($language = $this->kirby()->language($languageCode)) {
-			return $this->translations()->find($language->code());
-		}
-
-		return null;
+		return $this->contentLanguage($languageCode);
 	}
 
 	/**
-	 * Returns the translations collection
-	 *
-	 * @return \Kirby\Cms\Collection
+	 * @deprecated 4.0.0 Use `::contentLanguages()` instead
+	 * @see ::contentLanguages
 	 */
 	public function translations()
 	{
-		if ($this->translations !== null) {
-			return $this->translations;
-		}
-
-		$this->translations = new Collection();
-
-		foreach ($this->kirby()->languages() as $language) {
-			$translation = new ContentTranslation([
-				'parent' => $this,
-				'code'   => $language->code(),
-			]);
-
-			$this->translations->data[$translation->code()] = $translation;
-		}
-
-		return $this->translations;
+		return $this->contentLanguages();
 	}
 
 	/**
 	 * Updates the model data
 	 *
-	 * @param array|null $input
-	 * @param string|null $languageCode
-	 * @param bool $validate
 	 * @return static
 	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
 	 */
-	public function update(array $input = null, string $languageCode = null, bool $validate = false)
-	{
+	public function update(
+		array $input = null,
+		string $languageCode = null,
+		bool $validate = false
+	) {
 		$form = Form::for($this, [
 			'ignoreDisabled' => $validate === false,
 			'input'          => $input,
@@ -636,10 +644,18 @@ abstract class ModelWithContent extends Model implements Identifiable
 			]);
 		}
 
-		$arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
-		return $this->commit('update', $arguments, function ($model, $values, $strings, $languageCode) {
-			return $model->save($strings, $languageCode, true);
-		});
+		return $this->commit(
+			'update',
+			[
+				static::CLASS_ALIAS => $this,
+				'values' 			=> $form->data(),
+				'strings' 			=> $form->strings(),
+				'languageCode' 		=> $languageCode
+			],
+			function ($model, $values, $strings, $languageCode) {
+				return $model->save($strings, $languageCode, true);
+			}
+		);
 	}
 
 	/**
@@ -656,9 +672,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * to store the given data on disk or anywhere else
 	 *
 	 * @internal
-	 * @param array $data
-	 * @param string|null $languageCode
-	 * @return bool
 	 */
 	public function writeContent(array $data, string $languageCode = null): bool
 	{
