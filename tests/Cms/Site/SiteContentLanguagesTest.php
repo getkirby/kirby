@@ -4,10 +4,7 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * @todo content.translations.deprecated
- */
-class SiteTranslationsTest extends TestCase
+class SiteContentLanguagesTest extends TestCase
 {
 	public function app($language = null)
 	{
@@ -27,7 +24,7 @@ class SiteTranslationsTest extends TestCase
 				]
 			],
 			'site' => [
-				'translations' => [
+				'languages' => [
 					[
 						'code' => 'en',
 						'content' => [
@@ -108,7 +105,7 @@ class SiteTranslationsTest extends TestCase
 				'children' => [
 					[
 						'slug' => 'test',
-						'translations' => [
+						'languages' => [
 							[
 								'code' => 'en',
 								'content' => [
@@ -124,7 +121,7 @@ class SiteTranslationsTest extends TestCase
 						]
 					]
 				],
-				'translations' => [
+				'languages' => [
 					[
 						'code' => 'en',
 						'content' => [

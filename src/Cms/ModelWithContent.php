@@ -244,9 +244,6 @@ abstract class ModelWithContent extends Model implements Identifiable
 			);
 		}
 
-		// TODO: content.translations.deprecated
-		$this->translations = $this->languages;
-
 		return $this->languages;
 	}
 
@@ -536,12 +533,20 @@ abstract class ModelWithContent extends Model implements Identifiable
 				$language = new ContentLanguage(...$props);
 				$this->languages->{$language->code()} = $language;
 			}
-
-			// TODO: content.translations.deprecated
-			$this->translations = $this->languages;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Only used to proxy deprecated translation property
+	 * @private
+	 * @todo content.translations.deprecated
+	 */
+	protected function setProperties($props, array $keys = null)
+	{
+		parent::setProperties($props, $keys);
+		$this->translations = $this->languages;
 	}
 
 	/**
@@ -550,6 +555,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	protected function setTranslations(array $translations = null)
 	{
+		// TODO: add deprecation warning
 		return $this->setLanguages($translations);
 	}
 
@@ -607,6 +613,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function translation(string $languageCode = null)
 	{
+		// TODO: add deprecation warning
 		return $this->contentLanguage($languageCode);
 	}
 
@@ -616,6 +623,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function translations()
 	{
+		// TODO: add deprecation warning
 		return $this->contentLanguages();
 	}
 

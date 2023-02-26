@@ -120,11 +120,83 @@ class PageUuidTest extends TestCase
 		];
 	}
 
+
 	/**
 	 * @dataProvider providerForMultilang
 	 * @covers ::id
 	 */
 	public function testMultilang(string $language, string $title)
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo',
+						'languages' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title' => 'Foo',
+								]
+							],
+							[
+								'code' => 'de',
+								'slug' => 'bar',
+								'content' => [
+									'title' => 'Bar',
+								]
+							],
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->call($language . '/foo');
+
+		// the title should be translated properly
+		$this->assertSame($title, $page->title()->value());
+
+		// the uuid should have been created
+		$this->assertSame(16, strlen($page->uuid()->id()));
+
+		// the uuid must match between languages
+		$this->assertTrue($page->content('en')->get('uuid')->value() === $page->content('de')->get('uuid')->value());
+
+		// the translation for the default language must be updated
+		$this->assertSame($page->contentLanguage('en')->content()['uuid'], $page->uuid()->id());
+
+		// the contentLanguage for the secondary language must inherit the UUID
+		$this->assertSame($page->translation('de')->content()['uuid'], $page->uuid()->id());
+
+		// the uuid must be stored in the primary language file
+		$this->assertSame($page->readContent('en')['uuid'], $page->uuid()->id());
+
+		// the secondary language must not have the uuid in the content file
+		$this->assertNull($page->readContent('de')['uuid'] ?? null);
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 * @dataProvider providerForMultilang
+	 * @covers ::id
+	 */
+	public function testMultilangDeprecated(string $language, string $title)
 	{
 		$app = new App([
 			'roots' => [

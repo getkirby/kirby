@@ -5,10 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @todo content.translations.deprecated
- */
-class PageTranslationsTest extends TestCase
+class PageContentLanguagesTest extends TestCase
 {
 	public function app($language = null)
 	{
@@ -35,7 +32,7 @@ class PageTranslationsTest extends TestCase
 								'children' => [
 									[
 										'slug' => 'child',
-										'translations' => [
+										'languages' => [
 											[
 												'code' => 'en',
 												'content' => [
@@ -53,7 +50,7 @@ class PageTranslationsTest extends TestCase
 									]
 								],
 								'slug' => 'mother',
-								'translations' => [
+								'languages' => [
 									[
 										'code' => 'en',
 										'content' => [
@@ -71,7 +68,7 @@ class PageTranslationsTest extends TestCase
 							]
 						],
 						'slug'  => 'grandma',
-						'translations' => [
+						'languages' => [
 							[
 								'code' => 'en',
 								'content' => [
@@ -197,11 +194,11 @@ class PageTranslationsTest extends TestCase
 		$this->assertSame('grandma/mother/child', $app->page('oma/mutter/kind')->id());
 	}
 
-	public function testTranslations()
+	public function testContentLanguages()
 	{
 		$page = $this->app()->page('grandma');
-		$this->assertCount(2, $page->translations());
-		$this->assertSame(['en', 'de'], $page->translations()->keys());
+		$this->assertCount(2, $page->contentLanguages());
+		$this->assertSame(['en', 'de'], $page->contentLanguages()->keys());
 	}
 
 	public function testUntranslatableFields()

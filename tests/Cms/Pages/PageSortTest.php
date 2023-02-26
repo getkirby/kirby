@@ -330,6 +330,57 @@ class PageSortTest extends TestCase
 		$this->assertSame(20121212, $page->createNum());
 	}
 
+	public function testCreateNumWithContentLanguages()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'num' => 'date'
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'date' => '2019-01-01',
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'date' => '2018-01-01',
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(20190101, $page->createNum());
+
+		$app->setCurrentLanguage('de');
+		$app->setCurrentTranslation('de');
+
+		$this->assertSame(20190101, $page->createNum());
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 */
 	public function testCreateNumWithTranslations()
 	{
 		$app = new App([
@@ -422,6 +473,50 @@ class PageSortTest extends TestCase
 		$this->assertSame(0, $app->page('test')->createNum());
 
 		// multilang with default language fallback
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'blueprint' => [
+							'num' => '{{ page.year }}'
+						],
+						'languages' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'year' => 2016
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'year' => 1999
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(2016, $app->page('test')->createNum());
+
+		// TODO: content.translations.deprecated
 		$app = new App([
 			'roots' => [
 				'index' => '/dev/null'

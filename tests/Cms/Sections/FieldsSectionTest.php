@@ -96,6 +96,73 @@ class FieldsSectionTest extends TestCase
 
 		$model = new Page([
 			'slug' => 'test',
+			'languages' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'text' => 'Hello'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'text' => 'Hallo'
+					]
+				],
+			],
+		]);
+
+		// default language
+		$section = new Section('fields', [
+			'name' => 'test',
+			'model' => $model,
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertSame('Hello', $section->form()->content()['text']);
+
+		// secondary language
+		$app->setCurrentLanguage('de');
+		$app->setCurrentTranslation('de');
+
+		$section = new Section('fields', [
+			'name' => 'test',
+			'model' => $model,
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertSame('Hallo', $section->form()->content()['text']);
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 */
+	public function testFormContentMultilangDeprecated()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$model = new Page([
+			'slug' => 'test',
 			'translations' => [
 				[
 					'code' => 'en',

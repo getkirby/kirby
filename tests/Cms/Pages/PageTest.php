@@ -663,6 +663,60 @@ class PageTest extends TestCase
 				'children' => [
 					[
 						'slug' => 'grandma',
+						'languages' => [
+							[
+								'code' => 'en',
+							],
+							[
+								'code' => 'de',
+								'slug' => 'oma'
+							],
+						],
+						'children' => [
+							[
+								'slug' => 'mother',
+								'languages' => [
+									[
+										'code' => 'en'
+									],
+									[
+										'code' => 'de',
+										'slug' => 'mutter'
+									],
+								],
+							]
+						]
+					]
+				]
+			]
+		]);
+
+
+		$this->assertSame('grandma/mother', $app->site()->find('grandma/mother')->uri());
+		$this->assertSame('oma/mutter', $app->site()->find('grandma/mother')->uri('de'));
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 */
+	public function testUriTranslatedDeprecated()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'languages' => [
+				[
+					'code' => 'en'
+				],
+				[
+					'code' => 'de'
+				],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'grandma',
 						'translations' => [
 							[
 								'code' => 'en',

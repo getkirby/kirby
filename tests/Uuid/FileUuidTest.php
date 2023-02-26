@@ -160,6 +160,84 @@ class FileUuidTest extends TestCase
 						'files' => [
 							[
 								'filename' => 'a.jpg',
+								'languages' => [
+									[
+										'code' => 'en',
+										'content' => [
+											'title' => 'Foo',
+										]
+									],
+									[
+										'code' => 'de',
+										'content' => [
+											'title' => 'Bar',
+										]
+									],
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = $app->call($language . '/foo');
+		$file = $page->files()->first();
+
+		// the title should be translated properly
+		$this->assertSame($title, $file->title()->value());
+
+		// the uuid should have been created
+		$this->assertSame(16, strlen($file->uuid()->id()));
+
+		// the uuid must match between languages
+		$this->assertTrue($file->content('en')->get('uuid')->value() === $file->content('de')->get('uuid')->value());
+
+		// the translation for the default language must be updated
+		$this->assertSame($file->contentLanguage('en')->content()['uuid'], $file->uuid()->id());
+
+		// the translation for the secondary language must inherit the UUID
+		$this->assertSame($file->contentLanguage('de')->content()['uuid'], $file->uuid()->id());
+
+		// the uuid must be stored in the primary language file
+		$this->assertSame($file->readContent('en')['uuid'], $file->uuid()->id());
+
+		// the secondary language must not have the uuid in the content file
+		$this->assertNull($file->readContent('de')['uuid'] ?? null);
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 * @dataProvider providerForMultilang
+	 * @covers ::id
+	 */
+	public function testMultilangDeprecated(string $language, string $title)
+	{
+		$app = new App([
+			'roots' => [
+				'index' => $this->tmp
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
 								'translations' => [
 									[
 										'code' => 'en',

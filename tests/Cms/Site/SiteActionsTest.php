@@ -151,6 +151,48 @@ class SiteActionsTest extends TestCase
 
 	public function testPurge()
 	{
+		// we're going to test it on languages
+		// because it's just that public propery
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			],
+			'site' => [
+				'languages' => [
+					[
+						'code' => 'en',
+						'content' => [
+							'title' => 'Site',
+						]
+					],
+					[
+						'code' => 'de',
+						'content' => [
+							'title' => 'Seite',
+						]
+					],
+				]
+			]
+		]);
+
+		$this->assertNotNull([], $app->site()->languages);
+		$app->site()->purge();
+		$this->assertNull($app->site()->languages);
+	}
+
+	/**
+	 * @todo content.translations.deprecated
+	 */
+	public function testPurgeDeprecated()
+	{
 		// we're going to test it on translations because it's just that public propery
 		$app = $this->app->clone([
 			'languages' => [

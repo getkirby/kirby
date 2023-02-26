@@ -969,11 +969,7 @@ class PageActionsTest extends TestCase
 		$page = $app->site()->createChild(['slug' => 'test']);
 		$page->createChild(['slug' => 'foo', 'template' => 'default']);
 
-		new ContentTranslation([
-			'parent' => $page,
-			'code'   => 'en'
-		]);
-
+		new ContentLanguage(parent: $page, code: 'en');
 		$copy = $page->duplicate('test-copy', ['children' => true]);
 
 		$this->assertFileExists($copy->contentFile('en'));
