@@ -268,9 +268,19 @@ class ModelWithContentTest extends TestCase
 
 	public function testToSafeString()
 	{
-		$model = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
-		$this->assertSame('Hello value &amp; foo', $model->toSafeString('Hello {{ model.title }} {{ model.slug }}'));
-		$this->assertSame('Hello value & foo', $model->toSafeString('Hello {< model.title >} {{ model.slug }}'));
+		$model = new Page([
+			'slug'    => 'foo',
+			'content' => ['title' => 'value &']
+		]);
+
+		$this->assertSame(
+			'Hello value &amp; foo',
+			$model->toSafeString('Hello {{ model.title }} {{ model.slug }}')
+		);
+		$this->assertSame(
+			'Hello value & foo',
+			$model->toSafeString('Hello {< model.title >} {{ model.slug }}')
+		);
 	}
 
 	public function testToSafeStringWithData()
@@ -352,64 +362,64 @@ class ModelWithContentTest extends TestCase
 		$this->assertSame('foo', $model->toString());
 	}
 
-	// public function testContentLanguage()
-	// {
-	// 	$app = new App([
-	// 		'roots' => [
-	// 			'index' => '/dev/null'
-	// 		],
-	// 		'options' => [
-	// 			'languages' => true
-	// 		],
-	// 		'site' => [
-	// 			'children' => [
-	// 				[
-	// 					'slug'  => 'foo',
-	// 					'llanguages' => [
-	// 						[
-	// 							'code' => 'en',
-	// 							'content' => [
-	// 								'title' => 'English Title'
-	// 							]
-	// 						],
-	// 						[
-	// 							'code' => 'de',
-	// 							'content' => [
-	// 								'title' => 'Deutscher Titel'
-	// 							]
-	// 						]
-	// 					]
-	// 				]
-	// 			],
-	// 		],
-	// 		'languages' => [
-	// 			[
-	// 				'code' => 'en',
-	// 				'default' => true
-	// 			],
-	// 			[
-	// 				'code' => 'de',
-	// 			]
-	// 		]
-	// 	]);
+	public function testContentLanguage()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'foo',
+						'languages' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title' => 'English Title'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title' => 'Deutscher Titel'
+								]
+							]
+						]
+					]
+				],
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+				]
+			]
+		]);
 
-	// 	$app->setCurrentLanguage('de');
+		$app->setCurrentLanguage('de');
 
-	// 	$en = $app->page('foo')->contentLanguage('en');
-	// 	$this->assertSame('English Title', $en->content()['title']);
+		$en = $app->page('foo')->contentLanguage('en');
+		$this->assertSame('English Title', $en->content()['title']);
 
-	// 	$de = $app->page('foo')->contentLanguage('de');
-	// 	$this->assertSame('Deutscher Titel', $de->content()['title']);
+		$de = $app->page('foo')->contentLanguage('de');
+		$this->assertSame('Deutscher Titel', $de->content()['title']);
 
-	// 	$default = $app->page('foo')->contentLanguage('default');
-	// 	$this->assertSame('English Title', $default->content()['title']);
+		$default = $app->page('foo')->contentLanguage('default');
+		$this->assertSame('English Title', $default->content()['title']);
 
-	// 	$current = $app->page('foo')->contentLanguage();
-	// 	$this->assertSame('Deutscher Titel', $current->content()['title']);
+		$current = $app->page('foo')->contentLanguage();
+		$this->assertSame('Deutscher Titel', $current->content()['title']);
 
-	// 	$fr = $app->page('foo')->contentLanguage('fr');
-	// 	$this->assertNull($fr);
-	// }
+		$fr = $app->page('foo')->contentLanguage('fr');
+		$this->assertNull($fr);
+	}
 
 	/**
 	 * @todo content.translations.deprecated
