@@ -542,6 +542,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Only used to proxy deprecated translation property
 	 * @private
 	 * @todo content.translations.deprecated
+	 * @codeCoverageIgnore
 	 */
 	protected function setProperties($props, array $keys = null)
 	{
@@ -552,6 +553,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * @deprecated 4.0.0 Use `::setLanguages` instead
 	 * @see ::setLanguages
+	 * @todo content.translations.deprecated
+	 * @codeCoverageIgnore
 	 */
 	protected function setTranslations(array $translations = null)
 	{
@@ -610,6 +613,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * @deprecated 4.0.0 Use `::contentLanguage()` instead
 	 * @see ::contentLanguage
+	 * @todo content.translations.deprecated
+	 * @codeCoverageIgnore
 	 */
 	public function translation(string $languageCode = null)
 	{
@@ -620,6 +625,8 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * @deprecated 4.0.0 Use `::contentLanguages()` instead
 	 * @see ::contentLanguages
+	 * @todo content.translations.deprecated
+	 * @codeCoverageIgnore
 	 */
 	public function translations()
 	{
