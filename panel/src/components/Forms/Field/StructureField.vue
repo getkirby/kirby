@@ -3,9 +3,9 @@
 		<template #options>
 			<k-dropdown v-if="!currentIndex">
 				<k-button
+					icon="dots"
 					size="xs"
 					variant="filled"
-					icon="dots"
 					@click="$refs.options.toggle()"
 				/>
 				<k-dropdown-content ref="options" align="right">

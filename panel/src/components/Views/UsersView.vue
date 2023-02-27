@@ -6,8 +6,6 @@
 
 				<template #left>
 					<k-button-group
-						variant="filled"
-						size="sm"
 						:buttons="[
 							{
 								disabled: $permissions.users.create === false,
@@ -16,6 +14,8 @@
 								click: () => $dialog('users/create')
 							}
 						]"
+						size="sm"
+						variant="filled"
 					/>
 				</template>
 
