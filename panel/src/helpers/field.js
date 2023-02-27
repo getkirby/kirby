@@ -21,7 +21,8 @@ export function form(fields) {
  * visible. Also works for sections.
  *
  * @param {object} field
- * @returns {object}
+ * @param {array} values
+ * @returns {boolean}
  */
 export function isVisible(field, values) {
 	if (field.type === "hidden") {
