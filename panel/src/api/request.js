@@ -47,15 +47,15 @@ export default (config) => {
 			config.onStart(id, silent);
 			this.running++;
 
-			// fetch the resquest's response
-			const response = await fetch(
-				[config.endpoint, path].join(
-					config.endpoint.endsWith("/") || path.startsWith("/") ? "" : "/"
-				),
-				options
-			);
-
 			try {
+				// fetch the resquest's response
+				const response = await fetch(
+					[config.endpoint, path].join(
+						config.endpoint.endsWith("/") || path.startsWith("/") ? "" : "/"
+					),
+					options
+				);
+
 				// try to parse JSON
 				const json = await toJson(response);
 
@@ -88,6 +88,8 @@ export default (config) => {
 				if (config.onError(e) !== false) {
 					throw e;
 				}
+
+				return {};
 			}
 		},
 		async get(path, query, options, silent = false) {
