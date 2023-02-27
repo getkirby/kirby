@@ -249,6 +249,40 @@ class BlueprintTest extends TestCase
 		$this->assertSame('success', $blueprint->title());
 	}
 
+	public function testTitleTranslatedFallbackForRoles()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true,
+					'translations' => [
+						'my.custom.role' => 'My custom role'
+					]
+				],
+				[
+					'code' => 'de',
+					'translations' => []
+				]
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'title' => 'my.custom.role'
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('de');
+		$app->setCurrentLanguage('de');
+
+		$role = $app->roles()->get('editor')->title();
+		$this->assertSame('My custom role', $role);
+	}
+
 	/**
 	 * @covers ::title
 	 */
