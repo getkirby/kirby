@@ -2,7 +2,12 @@
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
 		<template #options>
 			<k-dropdown v-if="!currentIndex">
-				<k-button icon="dots" @click="$refs.options.toggle()" />
+				<k-button
+					size="xs"
+					variant="filled"
+					icon="dots"
+					@click="$refs.options.toggle()"
+				/>
 				<k-dropdown-content ref="options" align="right">
 					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
 						{{ $t("add") }}

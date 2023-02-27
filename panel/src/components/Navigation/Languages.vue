@@ -1,8 +1,9 @@
 <template>
 	<k-dropdown v-if="languages.length" class="k-languages-dropdown">
 		<k-button
-			:text="language.name"
+			:dropdown="true"
 			:responsive="true"
+			:text="language.name"
 			icon="globe"
 			variant="filled"
 			size="sm"
