@@ -48,11 +48,12 @@ if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	 * Returns the result of a collection by name
 	 *
 	 * @param string $name
+	 * @param array $extraOptions
 	 * @return \Kirby\Cms\Collection|null
 	 */
-	function collection(string $name)
+	function collection(string $name, array $extraOptions = [])
 	{
-		return App::instance()->collection($name);
+		return App::instance()->collection($name, $extraOptions);
 	}
 }
 

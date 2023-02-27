@@ -7,11 +7,12 @@ use ReflectionClass;
 class CollectionTestCase extends TestCase
 {
 	public $collection = null;
+	public $collectionExtraOptions = [];
 	public $collectionType = null;
 
-	public function collection($name = null)
+	public function collection($name = null, $collectionExtraOptions = [])
 	{
-		return $this->kirby()->collection($name ?? $this->collection);
+		return $this->kirby()->collection($name ?? $this->collection, $collectionExtraOptions ?? $this->collectionExtraOptions);
 	}
 
 	public function collectionRoot(): string
