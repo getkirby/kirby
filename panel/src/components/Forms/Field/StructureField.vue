@@ -369,15 +369,8 @@ export default {
 				return false;
 			}
 
-			// create entry data from field defaults
-			let data = {};
-
-			for (const fieldName in this.fields) {
-				data[fieldName] = this.$helper.clone(this.fields[fieldName].default);
-			}
-
 			this.currentIndex = "new";
-			this.currentModel = data;
+			this.currentModel = this.$helper.field.form(this.fields);
 
 			this.onFormOpen();
 		},
