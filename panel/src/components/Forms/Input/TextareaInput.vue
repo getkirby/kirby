@@ -33,6 +33,7 @@
 				@keydown.ctrl.enter="onSubmit"
 				@keydown.meta.exact="onShortcut"
 				@keydown.ctrl.exact="onShortcut"
+				@paste="onPaste"
 				@dragover="onOver"
 				@dragleave="onOut"
 				@drop="onDrop"
@@ -255,6 +256,9 @@ export default {
 				this.focus();
 				this.over = true;
 			}
+		},
+		onPaste(e) {
+			this.$emit("paste", e);
 		},
 		onShortcut($event) {
 			if (

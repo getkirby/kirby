@@ -125,6 +125,14 @@ class Element
 	}
 
 	/**
+	 * Returns the original DOM element
+	 */
+	public function node(): DOMElement
+	{
+		return $this->node;
+	}
+
+	/**
 	 * Returns the full HTML for the element
 	 */
 	public function outerHtml(array|null $marks = null): string

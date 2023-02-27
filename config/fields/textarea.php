@@ -1,5 +1,10 @@
 <?php
 
+use Kirby\Parsley\Parsley;
+use Kirby\Parsley\Schema\Markdown;
+use Kirby\Toolkit\Str;
+use Kirby\Toolkit\Xml;
+
 return [
 	'mixins' => ['filepicker', 'upload'],
 	'props' => [
@@ -95,6 +100,21 @@ return [
 					]);
 
 					return $this->field()->filepicker($params);
+				}
+			],
+			[
+				'pattern' => 'paste',
+				'method'  => 'POST',
+				'action' => function () {
+					$request  = $this->kirby()->request();
+					$parser   = new Parsley($request->get('html'), new Markdown());
+					$blocks   = array_column($parser->blocks(), 'content');
+					$markdown = implode(PHP_EOL . PHP_EOL, $blocks);
+					$markdown = html_entity_decode($markdown);
+
+					return [
+						'markdown' => $markdown
+					];
 				}
 			],
 			[

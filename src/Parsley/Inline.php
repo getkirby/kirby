@@ -148,7 +148,21 @@ class Inline
 			return $html;
 		}
 
-		return null;
+		// unknown marks
+		if (array_key_exists($node->tagName, $marks) === false) {
+			return static::parseChildren($node->childNodes, $marks);
+		}
+
+		// collect all allowed attributes
+		$attrs     = static::parseAttrs($node, $marks);
+		$render    = $marks[$node->tagName]['render'] ?? null;
+		$innerHtml = static::parseInnerHtml($node, $marks);
+
+		if (is_callable($render) === true) {
+			return $render($node, $innerHtml, $attrs);
+		}
+
+		return static::render($node, $innerHtml, $attrs);
 	}
 
 	/**
@@ -158,4 +172,21 @@ class Inline
 	{
 		return $this->html;
 	}
+
+	public static function render(DOMNode $node, string|null $innerHtml = null, array $attrs = [])
+	{
+		// skip empty paragraphs
+		if ($innerHtml === null && $node->tagName === 'p') {
+			return null;
+		}
+
+		// self-closing elements
+		if (Html::isVoid($node->tagName) === true) {
+			return '<' . $node->tagName . Html::attr($attrs, null, ' ') . ' />';
+		}
+
+		// create the outer html for the element
+		return '<' . $node->tagName . Html::attr($attrs, null, ' ') . '>' . $innerHtml . '</' . $node->tagName . '>';
+	}
+
 }
