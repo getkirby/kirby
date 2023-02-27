@@ -365,17 +365,17 @@ class App
 	 * automatically injected
 	 *
 	 * @param string $name
-	 * @param string $extraOptions
+	 * @param string $options
 	 * @return \Kirby\Cms\Collection|null
 	 */
-	public function collection(string $name, array $extraOptions = [])
+	public function collection(string $name, array $options = [])
 	{
 		return $this->collections()->get($name, array_merge([
 			'kirby' => $this,
 			'site'  => $this->site(),
 			'pages' => $this->site()->children(),
 			'users' => $this->users()
-		]), $extraOptions);
+		]), $options);
 	}
 
 	/**
