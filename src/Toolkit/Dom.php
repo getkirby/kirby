@@ -499,7 +499,7 @@ class Dom
 	 */
 	public function query(
 		string $query,
-		DOMNode $node = null
+		DOMNode|null $node = null
 	): DOMNodeList|false {
 		return (new DOMXPath($this->doc))->query($query, $node);
 	}
