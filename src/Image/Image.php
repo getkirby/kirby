@@ -2,6 +2,7 @@
 
 namespace Kirby\Image;
 
+use Kirby\Cms\Content;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\File;
 use Kirby\Toolkit\Html;
@@ -114,8 +115,13 @@ class Image extends File
 	{
 		// if no alt text explicitly provided,
 		// try to infer from model content file
-		if ($alt = $this->model?->alt()) {
-			$attr['alt'] ??= $alt;
+		if (
+			$this->model !== null &&
+			method_exists($this->model, 'content') === true &&
+			$this->model->content() instanceof Content &&
+			$this->model->content()->get('alt')->isNotEmpty() === true
+		) {
+			$attr['alt'] ??= $this->model->content()->get('alt')->value();
 		}
 
 		if ($url = $this->url()) {

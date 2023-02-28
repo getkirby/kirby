@@ -84,6 +84,12 @@ class AssetTest extends TestCase
 		$this->assertSame($this->app->url('media') . '/' . $mediaPath, $asset->mediaUrl());
 	}
 
+	public function testToString()
+	{
+		$asset = $this->_asset();
+		$this->assertSame('<img alt="" src="https://getkirby.com/images/logo.svg">', $asset->__toString());
+	}
+
 	public function testNonExistingMethod()
 	{
 		$asset = $this->_asset();

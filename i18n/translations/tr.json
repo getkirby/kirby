@@ -388,7 +388,7 @@
 	"login.toggleText.password-reset.email": "Şifrenizi mi unuttunuz?",
 	"login.toggleText.password-reset.email-password": "← Girişe geri dön",
 
-	"logout": "Güvenli Çıkış",
+	"logout": "Oturumu kapat",
 
 	"menu": "Menü",
 	"meridiem": "AM/PM",

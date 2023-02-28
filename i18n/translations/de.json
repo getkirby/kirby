@@ -1,7 +1,7 @@
 {
 	"account.changeName": "Deinen Namen ändern",
 	"account.delete": "Deinen Account löschen",
-	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden. ",
+	"account.delete.confirm": "Willst du deinen Account wirklich löschen? Du wirst sofort danach abgemeldet. Dein Account kann nicht wieder hergestellt werden.",
 
 	"add": "Hinzuf\u00fcgen",
 	"author": "Autor",
@@ -77,7 +77,7 @@
 	"error.email.preset.notFound": "Die E-Mailvorlage \"{name}\" wurde nicht gefunden",
 
 	"error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
-	"error.field.type.missing": "Feld \"{ name }\": Der Feld Typ \"{ type }\" existiert nicht",
+	"error.field.type.missing": "Feld \"{ name }\": Der Feldtyp \"{ type }\" existiert nicht",
 
 	"error.file.changeName.empty": "Bitte gib einen Namen an",
 	"error.file.changeName.permission": "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
@@ -110,7 +110,7 @@
 	"error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
 	"error.language.notFound": "Die Sprache konnte nicht gefunden werden",
 
-	"error.layout.validation.block": "Fehler im \"{field}\" Feld in Block {blockIndex} mit dem Block Typ \"{fieldset}\" in Layout {layoutIndex}",
+	"error.layout.validation.block": "Fehler im \"{field}\" Feld in Block {blockIndex} mit dem Blocktyp \"{fieldset}\" in Layout {layoutIndex}",
 	"error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
 
 	"error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
@@ -165,7 +165,7 @@
 
 	"error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
-	"error.unexpected": "Ein unerwarteter Fehler ist aufgetreten. Aktiviere den Debug Modus für weitere Informationen: https://getkirby.com/docs/reference/system/options/debug",
+	"error.unexpected": "Ein unerwarteter Fehler ist aufgetreten. Aktiviere den Debug-Modus für weitere Informationen: https://getkirby.com/docs/reference/system/options/debug",
 
 	"error.user.changeEmail.permission": "Du kannst die E-Mailadresse für den Account \"{name}\" nicht ändern",
 	"error.user.changeLanguage.permission": "Du kannst die Sprache für den Account \"{name}\" nicht ändern",
