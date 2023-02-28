@@ -370,12 +370,12 @@ class App
 	 */
 	public function collection(string $name, array $options = [])
 	{
-		return $this->collections()->get($name, array_merge([
+		return $this->collections()->get($name, array_merge($options, [
 			'kirby' => $this,
 			'site'  => $this->site(),
 			'pages' => $this->site()->children(),
 			'users' => $this->users()
-		]), $options);
+		]));
 	}
 
 	/**
