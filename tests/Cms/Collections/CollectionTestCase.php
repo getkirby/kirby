@@ -10,6 +10,15 @@ class CollectionTestCase extends TestCase
 	public $collectionOptions = [];
 	public $collectionType = null;
 
+	protected function _app()
+	{
+		return new App([
+			'roots' => [
+				'collections' => __DIR__ . '/fixtures/collections'
+			]
+		]);
+	}
+
 	public function collection($name = null, $collectionOptions = [])
 	{
 		return $this->kirby()->collection($name ?? $this->collection, $collectionOptions ?? $this->collectionOptions);
@@ -50,6 +59,40 @@ class CollectionTestCase extends TestCase
 	public function assertCollectionHasNoPagination()
 	{
 		$this->assertNotInstanceOf(Pagination::class, $this->collectionPagination());
+	}
+
+	public function testCollectionHasOptions()
+	{
+		$app = $this->_app();
+		$result = $app->collection('options', ['a' => 10, 'b' => 10, 'c' => 10]);
+
+		$this->assertSame(30, $result);
+	}
+
+	public function testCollectionHasDefaultOptions()
+	{
+		$app = $this->_app();
+		$result = $app->collection('options_with_default', ['a' => 10, 'b' => 10, 'c' => 10]);
+
+		$this->assertSame($result['kirby'], $app);
+		$this->assertSame($result['result'], 30);
+	}
+
+	public function testCollectionHasDefaultOptionsDoesntOverwrite()
+	{
+		$app = $this->_app();
+		$result = $app->collection('options_with_default', ['a' => 10, 'b' => 10, 'c' => 10, 'kirby' => 'i_am_not_kirby']);
+
+		$this->assertSame($result['kirby'], $app);
+		$this->assertSame($result['result'], 30);
+	}
+
+	public function testCollectionHasDefaultsToNullWhenNoOptionSpecified()
+	{
+		$app = $this->_app();
+		$result = $app->collection('options_with_default_null');
+
+		$this->assertNull($result['iShouldBeNull']);
 	}
 
 	public function testCollectionType()
