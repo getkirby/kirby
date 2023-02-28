@@ -15,10 +15,6 @@ export default {
 					}
 				},
 				onError: (error) => {
-					if (window.panel.$config.debug) {
-						window.console.error(error);
-					}
-
 					// handle requests that return no auth
 					if (
 						error.code === 403 &&
@@ -27,6 +23,10 @@ export default {
 					) {
 						Vue.prototype.$go("/logout");
 						return false;
+					}
+
+					if (window.panel.$config.debug) {
+						window.console.error(error);
 					}
 				},
 				onParserError: ({ html, silent }) => {

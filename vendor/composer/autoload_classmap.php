@@ -51,6 +51,7 @@ return array(
     'Kirby\\Cms\\Auth\\EmailChallenge' => $baseDir . '/src/Cms/Auth/EmailChallenge.php',
     'Kirby\\Cms\\Auth\\Status' => $baseDir . '/src/Cms/Auth/Status.php',
     'Kirby\\Cms\\Block' => $baseDir . '/src/Cms/Block.php',
+    'Kirby\\Cms\\BlockConverter' => $baseDir . '/src/Cms/BlockConverter.php',
     'Kirby\\Cms\\Blocks' => $baseDir . '/src/Cms/Blocks.php',
     'Kirby\\Cms\\Blueprint' => $baseDir . '/src/Cms/Blueprint.php',
     'Kirby\\Cms\\Collection' => $baseDir . '/src/Cms/Collection.php',

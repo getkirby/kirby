@@ -388,7 +388,7 @@
 	"login.toggleText.password-reset.email": "암호 찾기",
 	"login.toggleText.password-reset.email-password": "로그인 화면으로",
 
-	"logout": "\ub85c\uadf8\uc544\uc6c3",
+	"logout": "로그아웃",
 
 	"menu": "메뉴",
 	"meridiem": "오전/오후",
