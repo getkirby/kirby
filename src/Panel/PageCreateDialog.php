@@ -79,7 +79,7 @@ class PageCreateDialog
 		$custom    = [];
 		$ignore    = ['title', 'slug', 'parent', 'template'];
 		$blueprint = $page->blueprint();
-		$fields    = $page->blueprint()->fields();
+		$fields    = $blueprint->fields();
 		$types     = $this->customFieldTypes();
 
 		foreach ($blueprint->create()['fields'] ?? [] as $name) {
