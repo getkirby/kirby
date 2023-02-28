@@ -43,8 +43,12 @@
 			:title="fieldset.name"
 			:value="content"
 			class="k-block-drawer"
-			@close="focus()"
+			@close="
+				focus();
+				$emit('close');
+			"
 			@input="$emit('update', $event)"
+			@open="$emit('open')"
 		>
 			<template #options>
 				<k-button

@@ -105,16 +105,7 @@ export default {
 	},
 	methods: {
 		onAdd() {
-			this.object = {};
-
-			for (const fieldName in this.fields) {
-				const field = this.fields[fieldName];
-
-				if (field.default) {
-					this.object[fieldName] = this.$helper.clone(field.default);
-				}
-			}
-
+			this.object = this.$helper.field.form(this.fields);
 			this.$emit("input", this.object);
 			this.open();
 		},
