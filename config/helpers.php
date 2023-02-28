@@ -123,7 +123,7 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	 * @param mixed $value The string to be echoed if the condition is true
 	 * @param mixed $alternative An alternative string which should be echoed when the condition is false
 	 */
-	function e($condition, $value, $alternative = null)
+	function e($condition, $value, $alternative = null): void
 	{
 		echo $condition ? $value : $alternative;
 	}
