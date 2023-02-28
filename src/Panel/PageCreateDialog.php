@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
+use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\I18n;
@@ -11,6 +12,7 @@ use Kirby\Toolkit\Str;
 
 class PageCreateDialog
 {
+	protected PageBlueprint $blueprint;
 	protected Page|Site $parent;
 	protected string $parentId;
 	protected string|null $template;
@@ -19,13 +21,24 @@ class PageCreateDialog
 		string|null $parentId,
 		string|null $template,
 	) {
-		// if ($template === null) {
-		// 	throw new InvalidArgumentException('Please provide a template');
-		// }
-
 		$this->parentId = $parentId ?? 'site';
 		$this->parent   = Find::parent($this->parentId);
 		$this->template = $template;
+	}
+
+	/**
+	 * Get the blueprint settings for the new page
+	 */
+	public function blueprint(): PageBlueprint
+	{
+		// create a temporary page object
+		$page = Page::factory([
+			'slug'     => 'new',
+			'template' => $this->template,
+			'model'    => $this->template
+		]);
+
+		return $this->blueprint ??= $page->blueprint();
 	}
 
 	/**
@@ -37,6 +50,40 @@ class PageCreateDialog
 			$blueprint['name'] ??= $blueprint['value'] ?? null;
 			return $blueprint;
 		}, $view->blueprints($sectionId));
+	}
+
+	/**
+	 * Loads custom fields for the page type
+	 */
+	public function customFields(): array
+	{
+		$custom    = [];
+		$ignore    = ['title', 'slug', 'parent', 'template'];
+		$blueprint = $this->blueprint();
+		$fields    = $blueprint->fields();
+		$types     = $this->customFieldTypes();
+
+		foreach ($blueprint->create()['fields'] ?? [] as $name) {
+			if (!$field = ($fields[$name] ?? null)) {
+				continue;
+			}
+
+			if (in_array($field['type'], $types) === false) {
+				continue;
+			}
+
+			if (in_array($name, $ignore) === true) {
+				continue;
+			}
+
+			// switch all fields to 1/1
+			$field['width'] = '1/1';
+
+			// add the field to the form
+			$custom[$name] = $field;
+		}
+
+		return $custom;
 	}
 
 	/**
@@ -65,53 +112,13 @@ class PageCreateDialog
 	}
 
 	/**
-	 * Loads custom fields for the page type
-	 */
-	public function customFields(): array
-	{
-		// create a temporary page object
-		$page = Page::factory([
-			'slug'     => 'new',
-			'template' => $this->template,
-			'model'    => $this->template
-		]);
-
-		$custom    = [];
-		$ignore    = ['title', 'slug', 'parent', 'template'];
-		$blueprint = $page->blueprint();
-		$fields    = $blueprint->fields();
-		$types     = $this->customFieldTypes();
-
-		foreach ($blueprint->create()['fields'] ?? [] as $name) {
-			if (!$field = ($fields[$name] ?? null)) {
-				continue;
-			}
-
-			if (in_array($field['type'], $types) === false) {
-				continue;
-			}
-
-			if (in_array($name, $ignore) === true) {
-				continue;
-			}
-
-			// switch all fields to 1/1
-			$field['width'] = '1/1';
-
-			// add the field to the form
-			$custom[$name] = $field;
-		}
-
-		return $custom;
-	}
-
-	/**
 	 * Loads all the fields for the dialog
 	 */
 	public function fields(): array
 	{
 		return [
 			'title' => Field::title([
+				'label'     => $this->blueprint()->create()['title']['label'] ?? I18n::translate('title'),
 				'required'  => true,
 				'preselect' => true
 			]),
