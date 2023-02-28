@@ -141,7 +141,7 @@ class PageCreateDialog
 			// there are multiple blueprints to choose from.
 			// show the picker dialog first
 			if (count($blueprints) > 1) {
-				$picker = new PageTypeDialog($this->parentId);
+				$picker = new PageTemplateDialog($this->parentId);
 				return $picker->load($blueprints);
 			}
 
@@ -184,7 +184,7 @@ class PageCreateDialog
 	public function submit(array $input): array
 	{
 		if (empty($input['template']) === true) {
-			$picker = new PageTypeDialog($this->parentId);
+			$picker = new PageTemplateDialog($this->parentId);
 			return $picker->submit($input);
 		}
 

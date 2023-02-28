@@ -4,7 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Exception\InvalidArgumentException;
 
-class PageTypeDialog
+class PageTemplateDialog
 {
 	protected string $parentId;
 
