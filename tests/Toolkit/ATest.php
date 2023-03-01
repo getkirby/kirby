@@ -415,8 +415,8 @@ class ATest extends TestCase
 
 		$reduced = A::reduce([1, 2, 3], function ($carry, $item) {
 			return $carry + $item;
-		}, 0);
-		$this->assertSame(6, $reduced);
+		}, 42);
+		$this->assertSame(48, $reduced);
 
 		$reduced = A::reduce([], function ($carry, $item) {
 			return $carry + $item;

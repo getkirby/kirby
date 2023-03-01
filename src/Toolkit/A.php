@@ -161,7 +161,7 @@ class A
 	}
 
 	/**
-	 * Checks in array has a value
+	 * Checks if array has a value
 	 *
 	 * @param array $array
 	 * @param mixed $value
