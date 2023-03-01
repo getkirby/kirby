@@ -16,7 +16,7 @@ use Exception;
  * @copyright Adam Kiss
  * @license   https://opensource.org/licenses/MIT
  */
-trait Macroable
+trait HasMethods
 {
 	public static $methods = [];
 

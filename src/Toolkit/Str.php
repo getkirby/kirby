@@ -23,7 +23,7 @@ use Throwable;
  */
 class Str
 {
-	use Macroable;
+	use HasMethods;
 
 	/**
 	 * Language translation table

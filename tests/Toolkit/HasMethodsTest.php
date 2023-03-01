@@ -5,9 +5,9 @@ namespace Kirby\Toolkit;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Toolkit\Macroable
+ * @coversDefaultClass \Kirby\Toolkit\HasMethods
  */
-class MacroableTest extends TestCase
+class HasMethodsTest extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{

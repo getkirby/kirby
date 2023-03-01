@@ -20,7 +20,7 @@ use Exception;
  */
 class A
 {
-	use Macroable;
+	use HasMethods;
 
 	/**
 	 * Appends the given array
