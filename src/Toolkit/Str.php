@@ -563,7 +563,7 @@ class Str
 	public static function matchAll(string $string, string $pattern, int $flags = 0, int $offset = 0): ?array
 	{
 		$result = preg_match_all($pattern, $string, $matches, $flags, $offset);
-		return ($result === 1) ? $matches : null;
+		return ($result > 0) ? $matches : null;
 	}
 
 	/**
