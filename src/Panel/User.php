@@ -143,12 +143,28 @@ class User extends Model
 	}
 
 	/**
+	 * Checks whether the user is on their own account page
+	 * by checking the session and the last part of the URL
+	 *
+	 * For examples:
+	 * /panel/users/*** > FALSE
+	 * /custom-panel-address/account > TRUE
+	 *
+	 * @internal
+	 */
+	protected function isAccountView(): bool
+	{
+		return $this->model->isLoggedIn() === true
+			&& $this->model->kirby()->request()->path()->last() === 'account';
+	}
+
+	/**
 	 * Returns the full path without leading slash
 	 */
 	public function path(): string
 	{
 		// path to your own account
-		if ($this->model->isLoggedIn() === true) {
+		if ($this->isAccountView() === true) {
 			return 'account';
 		}
 
@@ -193,7 +209,7 @@ class User extends Model
 	public function props(): array
 	{
 		$user    = $this->model;
-		$account = $user->isLoggedIn();
+		$account = $this->isAccountView();
 		$avatar  = $user->avatar();
 
 		return array_merge(
