@@ -89,9 +89,13 @@ export default {
 </script>
 
 <style>
-.k-button.k-status-icon[data-variant="filled"] {
+.k-button[data-variant="filled"]:is(.k-status-icon) {
 	--button-color-icon: var(--theme-color-600);
 	--button-color-back: hsla(0, 0%, 0%, 7%);
 	--button-color-hover: hsla(0, 0%, 0%, 12%);
+}
+
+.k-status-icon:is([data-theme="passive"]) {
+	--button-color-icon: var(--theme-color-500);
 }
 </style>
