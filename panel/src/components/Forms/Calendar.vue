@@ -359,9 +359,14 @@ export default {
 	padding-top: 0.5rem;
 }
 
+.k-dropdown-content .k-calendar-input .k-button {
+	justify-content: center;
+}
+
 .k-calendar-input > nav {
 	display: flex;
 	direction: ltr;
+	align-items: center;
 }
 .k-calendar-input > nav .k-button {
 	padding: 0.5rem;
@@ -379,15 +384,14 @@ export default {
 	direction: rtl;
 }
 .k-calendar-selects .k-select-input {
-	padding: 0 0.5rem;
-	font-weight: var(--font-normal);
+	padding-inline: 0.5rem;
 	font-size: var(--text-sm);
 }
 .k-calendar-selects .k-select-input:focus-within {
 	color: var(--color-focus) !important;
 }
 .k-calendar-input th {
-	padding: 0.5rem 0;
+	padding-block: 0.5rem;
 	color: var(--color-gray-500);
 	font-size: var(--text-xs);
 	font-weight: 400;
@@ -396,19 +400,8 @@ export default {
 .k-calendar-day .k-button {
 	width: 2rem;
 	height: 2rem;
-	margin-inline: auto;
-	color: var(--color-white);
-	line-height: 1.75rem;
-	display: flex;
-	justify-content: center;
 	border-radius: 50%;
 	border: 2px solid transparent;
-}
-.k-calendar-day .k-button .k-button-text {
-	opacity: 1;
-}
-.k-calendar-table .k-button:hover {
-	color: var(--color-white);
 }
 .k-calendar-day:hover .k-button:not([data-disabled="true"]) {
 	border-color: rgba(255, 255, 255, 0.25);
@@ -417,21 +410,16 @@ export default {
 	text-decoration: underline;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-	border-color: currentColor;
-	font-weight: 600;
 	color: var(--color-focus);
+	border-color: currentColor;
+	font-weight: var(--font-bold);
 }
 .k-calendar-today {
-	text-align: center;
 	padding-top: 0.5rem;
 }
 .k-calendar-today .k-button {
 	font-size: var(--text-xs);
 	padding: 1rem;
 	text-decoration: underline;
-}
-.k-calendar-today .k-button-text {
-	opacity: 1;
-	vertical-align: baseline;
 }
 </style>
