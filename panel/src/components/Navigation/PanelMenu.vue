@@ -46,30 +46,68 @@ export default {
 		entries: Array,
 		view: Object
 	},
+	data() {
+		return {
+			media: null
+		};
+	},
 	computed: {
 		menus() {
 			return this.entries.split("-");
 		}
 	},
 	mounted() {
-		const media = window.matchMedia("(max-width: 40rem)");
-		this.onCSSMediaChange(media);
-		media.addEventListener("change", this.onCSSMediaChange);
+		this.media = window.matchMedia("(max-width: 40rem)");
+		this.onCSSMediaChange(this.media);
+		this.media.addEventListener("change", this.onCSSMediaChange);
+		this.$events.$on("keydown.esc", this.onEscape);
+	},
+	destroyed() {
+		this.media.removeEventListener("change", this.onCSSMediaChange);
+		this.$events.$off("keydown.esc", this.onEscape);
 	},
 	methods: {
+		close() {
+			if (this.$refs.handle) {
+				this.$refs.handle.checked = false;
+				this.onHandle();
+			}
+		},
+		onClick(event) {
+			if (
+				document.querySelector(".k-panel-menu-proxy").contains(event.target) ===
+					false &&
+				this.$el.contains(event.target) === false
+			) {
+				this.close();
+			}
+		},
 		onCSSMediaChange(media) {
 			// when resizing to mobile, make sure menu starts closed
 			if (media.matches === true) {
-				this.$refs.handle.checked = false;
+				this.close();
 			} else if (localStorage.getItem("kirby$menu") !== null) {
 				// only restore collapse/expanded state when not mobile
 				this.$refs.handle.checked = true;
 			}
 		},
-		onHandle(e) {
-			e.target.checked
-				? localStorage.setItem("kirby$menu", true)
-				: localStorage.removeItem("kirby$menu");
+		onEscape() {
+			return this.media.matches ? this.close() : null;
+		},
+		onHandle() {
+			if (this.$refs.handle.checked) {
+				if (this.media.matches) {
+					document.addEventListener("click", this.onClick);
+				} else {
+					localStorage.setItem("kirby$menu", true);
+				}
+			} else {
+				if (this.media.matches) {
+					document.removeEventListener("click", this.onClick);
+				} else {
+					localStorage.removeItem("kirby$menu");
+				}
+			}
 		}
 	}
 };

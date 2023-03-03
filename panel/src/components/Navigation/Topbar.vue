@@ -54,7 +54,7 @@ export default {
 	},
 	methods: {
 		openMenu() {
-			document.querySelector(".k-panel-menu-handle input").checked = true;
+			document.querySelector(".k-panel-menu-handle input").click();
 		}
 	}
 };
