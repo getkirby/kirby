@@ -86,7 +86,8 @@ export default {
 	height: 100vh;
 	height: 100dvh;
 	flex-shrink: 0;
-	overflow-y: scroll;
+	overflow-x: hidden;
+	overflow-y: auto;
 	overscroll-behavior: contain;
 	z-index: var(--z-navigation);
 
@@ -188,7 +189,7 @@ export default {
 	.k-panel-menu-handle {
 		position: absolute;
 		inset-block-start: 50%;
-		inset-inline-end: var(--spacing-1);
+		inset-inline-end: 4px;
 		transform: translateY(-50%);
 		width: 4px;
 		height: 2rem;
