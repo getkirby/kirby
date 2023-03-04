@@ -1,3 +1,4 @@
+import Collection from "@/components/Collection/index.js";
 import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
 import Forms from "@/components/Forms/index.js";
@@ -14,6 +15,7 @@ import PortalVue from "portal-vue";
 
 export default {
 	install(app) {
+		app.use(Collection);
 		app.use(Dialogs);
 		app.use(Drawers);
 		app.use(Forms);

@@ -9,21 +9,14 @@ export default {
 		},
 		items() {
 			return this.data.map((page) => {
-				const isEnabled = page.permissions.changeStatus !== false;
-
-				page.flag = {
-					status: page.status,
-					title:
-						this.$t("page.status") +
-						": " +
-						this.$t("page.status." + page.status),
-					disabled: !isEnabled,
-					click: () => this.$dialog(page.link + "/changeStatus")
-				};
+				const disabled = page.permissions.changeStatus === false;
+				const status = this.$helper.page.status(page.status, disabled);
+				status.click = () => this.$dialog(page.link + "/changeStatus");
 
 				page.sortable = page.permissions.sort && this.options.sortable;
 				page.deletable = this.data.length > this.options.min;
 				page.column = this.column;
+				page.buttons = [status, ...(page.buttons || [])];
 				page.options = this.$dropdown(page.link, {
 					query: {
 						view: "list",

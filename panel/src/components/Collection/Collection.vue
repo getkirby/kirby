@@ -26,7 +26,7 @@
 		/>
 
 		<footer v-if="hasFooter" class="k-collection-footer">
-			<k-text v-if="help" theme="help" class="k-collection-help" :html="help" />
+			<k-text v-if="help" class="k-help k-collection-help" :html="help" />
 			<div class="k-collection-pagination">
 				<!--
           Emitted when the pagination changes
@@ -147,12 +147,10 @@ export default {
 </script>
 
 <style>
-.k-collection-help {
-	padding: 0.5rem 0.75rem;
-}
 .k-collection-footer {
 	display: flex;
 	justify-content: space-between;
+	margin-top: 0.5rem;
 	margin-inline: -0.75rem;
 }
 .k-collection-pagination {

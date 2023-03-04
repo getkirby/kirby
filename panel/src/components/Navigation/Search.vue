@@ -245,18 +245,12 @@ export default {
 	width: 3rem;
 	line-height: 1;
 }
-.k-search-close .k-icon-loader {
-	animation: Spin 2s linear infinite;
-}
 .k-search input:focus {
 	outline: 0;
 }
 
 .k-search-results {
 	padding: 0.5rem 1rem 1rem;
-}
-.k-search .k-item:not(:last-child) {
-	margin-bottom: 0.25rem;
 }
 .k-search .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);

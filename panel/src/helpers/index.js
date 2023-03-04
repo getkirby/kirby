@@ -9,6 +9,7 @@ import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
 import object from "./object.js";
+import page from "./page.js";
 import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
@@ -31,6 +32,7 @@ export default {
 			field,
 			keyboard,
 			object,
+			page,
 			pad: string.pad,
 			ratio,
 			slug: string.slug,
