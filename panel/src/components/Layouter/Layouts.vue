@@ -201,21 +201,6 @@ export default {
 			this.save();
 			this.$refs.changeSelector.close();
 		},
-		/**
-		 * Finds which layout index it uses from the layout object
-		 *
-		 * @param {object} layout
-		 * @returns {number}
-		 */
-		layoutIndex(layout) {
-			const columns = layout.columns.map((column) => {
-				return column.width;
-			});
-
-			return this.layouts.findIndex(
-				(layout) => layout.toString() === columns.toString()
-			);
-		},
 		duplicateLayout(index, layout) {
 			let copy = {
 				...this.$helper.clone(layout),
@@ -254,6 +239,31 @@ export default {
 			});
 			return layouts;
 		},
+		/**
+		 * Finds which layout index it uses from the layout object
+		 *
+		 * @param {object} layout
+		 * @returns {number}
+		 */
+		layoutIndex(layout) {
+			const columns = layout.columns.map((column) => {
+				return column.width;
+			});
+
+			return this.layouts.findIndex(
+				(layout) => layout.toString() === columns.toString()
+			);
+		},
+		onChangeLayout(rowIndex, layout) {
+			// data required to change the layout both in the dialog and afterwards
+			const payload = {
+				rowIndex: rowIndex,
+				layoutIndex: this.layoutIndex(layout),
+				layout: layout
+			};
+
+			this.$refs.changeSelector.open(payload);
+		},
 		paste(e) {
 			const copy = JSON.parse(this.$helper.clipboard.read(e));
 			const index = this.currentLayout ?? this.rows.length;
@@ -276,16 +286,6 @@ export default {
 		pasteboard(index) {
 			this.currentLayout = index;
 			this.$refs.pasteboard.open();
-		},
-		onChangeLayout(rowIndex, layout) {
-			// data required to change the layout both in the dialog and afterwards
-			const payload = {
-				rowIndex: rowIndex,
-				layoutIndex: this.layoutIndex(layout),
-				layout: layout
-			};
-
-			this.$refs.changeSelector.open(payload);
 		},
 		removeLayout(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
