@@ -1,5 +1,6 @@
 import BlocksField from "./BlocksField.vue";
 import CheckboxesField from "./CheckboxesField.vue";
+import ColorField from "./ColorField.vue";
 import DateField from "./DateField.vue";
 import EmailField from "./EmailField.vue";
 import FilesField from "./FilesField.vue";
@@ -34,6 +35,7 @@ export default {
 	install(app) {
 		app.component("k-blocks-field", BlocksField);
 		app.component("k-checkboxes-field", CheckboxesField);
+		app.component("k-color-field", ColorField);
 		app.component("k-date-field", DateField);
 		app.component("k-email-field", EmailField);
 		app.component("k-files-field", FilesField);
