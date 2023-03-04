@@ -85,7 +85,7 @@ export default {
 
 			context.dispatch("open", {
 				type: "success",
-				timeout: 90000,
+				timeout: 4000,
 				...payload
 			});
 		}

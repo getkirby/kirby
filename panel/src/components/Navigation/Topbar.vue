@@ -147,8 +147,8 @@ export default {
 	align-items: center;
 }
 .k-topbar-notification {
+	--button-color-text: var(--theme-color-700);
 	font-weight: var(--font-bold);
-	display: flex;
 }
 
 @media screen and (max-width: 30em) {
