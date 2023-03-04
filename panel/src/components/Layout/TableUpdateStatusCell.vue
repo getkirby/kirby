@@ -28,10 +28,12 @@
 					<dt>{{ $t("system.updateStatus") }}</dt>
 					<dd :data-theme="value.theme">{{ value.label }}</dd>
 				</dl>
-				<hr />
-				<k-button v-if="value.url" icon="open" :link="value.url">
-					{{ $t("versionInformation") }}
-				</k-button>
+				<template v-if="value.url">
+					<hr />
+					<k-button icon="open" :link="value.url">
+						{{ $t("versionInformation") }}
+					</k-button>
+				</template>
 			</k-dropdown-content>
 		</k-dropdown>
 	</div>
