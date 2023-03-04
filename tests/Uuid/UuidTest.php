@@ -118,6 +118,19 @@ class UuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::clear
+	 */
+	public function testClearNotGenerate()
+	{
+		$page = $this->app->page('page-b');
+		$uuid = $page->uuid();
+		$this->assertNull($uuid->key());
+		$this->assertNull($page->content()->get('uuid')->value());
+		$this->assertTrue($uuid->clear());
+		$this->assertNull($page->content()->get('uuid')->value());
+	}
+
+	/**
 	 * @covers ::context
 	 */
 	public function testContext()
@@ -290,6 +303,19 @@ class UuidTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isCached
+	 */
+	public function testIsCachedNotGenerate()
+	{
+		$page = $this->app->page('page-b');
+		$uuid = $page->uuid();
+		$this->assertNull($uuid->key());
+		$this->assertNull($page->content()->get('uuid')->value());
+		$this->assertFalse($uuid->isCached());
+		$this->assertNull($page->content()->get('uuid')->value());
+	}
+
+	/**
 	 * @covers ::is
 	 */
 	public function testIsConfigDisabled()
@@ -309,6 +335,18 @@ class UuidTest extends TestCase
 	{
 		$uuid = $this->app->page('page-a')->uuid();
 		$this->assertSame('page/my/-page', $uuid->key());
+	}
+
+	/**
+	 * @covers ::key
+	 */
+	public function testKeyGenerate()
+	{
+		$page = $this->app->page('page-b');
+		$uuid = $page->uuid();
+		$this->assertNull($uuid->key());
+		$this->assertSame(22, strlen($key =$uuid->key(true)));
+		$this->assertSame($key, $uuid->key());
 	}
 
 	/**
@@ -346,6 +384,18 @@ class UuidTest extends TestCase
 		$this->assertNull(Uuid::for('page://something')->model());
 		$this->assertNull(Uuid::for('user://something')->model());
 		$this->assertNull(Uuid::for('file://something')->model());
+	}
+
+	/**
+	 * @covers ::isCached
+	 */
+	public function testPopulateGenerate()
+	{
+		$page = $this->app->page('page-b');
+		$uuid = $page->uuid();
+		$this->assertNull($page->content()->get('uuid')->value());
+		$this->assertTrue($uuid->populate());
+		$this->assertNotNull($page->content()->get('uuid')->value());
 	}
 
 	/**
