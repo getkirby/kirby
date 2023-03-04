@@ -6,7 +6,6 @@
 					v-if="more && !disabled"
 					:icon="btnIcon"
 					:text="btnLabel"
-					:responsive="true"
 					variant="filled"
 					size="xs"
 					class="k-field-options-button"
