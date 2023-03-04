@@ -13,6 +13,7 @@
 					:is-selected="selected === layout.id"
 					:settings="settings"
 					@append="selectLayout(layoutIndex + 1)"
+					@change="onChangeLayout(layoutIndex, layout)"
 					@copy="copy($event, layoutIndex)"
 					@duplicate="duplicateLayout(layoutIndex, layout)"
 					@paste="pasteboard(layoutIndex + 1)"
@@ -44,30 +45,17 @@
 			</k-empty>
 		</template>
 
-		<k-dialog
+		<k-layout-selector
 			ref="selector"
-			:cancel-button="false"
-			:submit-button="false"
-			size="medium"
-			class="k-layout-selector"
-		>
-			<k-headline>{{ $t("field.layout.select") }}</k-headline>
-			<ul>
-				<li
-					v-for="(layoutOption, layoutOptionIndex) in layouts"
-					:key="layoutOptionIndex"
-					class="k-layout-selector-option"
-				>
-					<k-grid @click.native="addLayout(layoutOption)">
-						<k-column
-							v-for="(column, columnIndex) in layoutOption"
-							:key="columnIndex"
-							:width="column"
-						/>
-					</k-grid>
-				</li>
-			</ul>
-		</k-dialog>
+			:layouts="layouts"
+			@select="addLayout"
+		/>
+
+		<k-layout-selector
+			ref="changeSelector"
+			:layouts="layouts"
+			@select="changeLayout"
+		/>
 
 		<k-remove-dialog
 			ref="removeAll"
@@ -81,6 +69,7 @@
 
 <script>
 import Layout from "./Layout.vue";
+import LayoutSelector from "./LayoutSelector.vue";
 import Pasteboard from "@/components/Forms/Blocks/BlockPasteboard.vue";
 
 /**
@@ -89,6 +78,7 @@ import Pasteboard from "@/components/Forms/Blocks/BlockPasteboard.vue";
 export default {
 	components: {
 		"k-layout": Layout,
+		"k-layout-selector": LayoutSelector,
 		"k-block-pasteboard": Pasteboard
 	},
 	props: {
@@ -156,6 +146,73 @@ export default {
 				this.$t("copy.success", { count: copy.length ?? 1 })
 			);
 		},
+		/**
+		 * Working logic of changing layout:
+		 * - If the new layout has more columns, it places them in order.
+		 * - If the new layout has fewer columns, it places them in order.
+		 * It continues by adding the rest to new layouts based on the new layout.
+		 *
+		 * @param {array} columns
+		 * @param {number} layoutIndex
+		 * @param {object|null} payload
+		 * @returns {Promise<void>}
+		 */
+		async changeLayout(columns, layoutIndex, payload) {
+			// remove the layout at first
+			this.rows.splice(payload.rowIndex, 1);
+
+			// create empty layout based on selected
+			const newLayout = await this.$api.post(this.endpoints.field + "/layout", {
+				columns: columns
+			});
+
+			const oldLayout = payload.layout;
+
+			// filter columns that have blocks
+			const oldLayoutColumns = oldLayout.columns.filter(column => column?.blocks?.length > 0);
+
+			// if the new layout has more columns
+			// it determines how many times it should loop
+			// to transfer all of them to the new layout
+			const layoutChunks = Math.ceil(oldLayoutColumns.length / newLayout.columns.length);
+
+			let copy, offset;
+			for (let i = 0; i < layoutChunks; i++) {
+				offset = i * newLayout.columns.length;
+
+				copy = {
+					...this.$helper.clone(newLayout),
+					id: this.$helper.uuid()
+				};
+
+				// move blocks to new layout from old
+				copy.columns = copy.columns.map((column, columnIndex) => {
+					column.blocks = oldLayoutColumns[columnIndex + offset]?.blocks ?? [];
+					return column;
+				});
+
+				// add layout only columns have blocks
+				if (copy.columns.filter(column => column?.blocks?.length > 0).length > 0) {
+					this.rows.splice(payload.rowIndex + i, 0, copy);
+				}
+			}
+
+			this.save();
+			this.$refs.changeSelector.close();
+		},
+		/**
+		 * Finds which layout index it uses from the layout object
+		 *
+		 * @param {object} currentLayout
+		 * @returns {number}
+		 */
+		currentLayoutIndex(currentLayout) {
+			const columns = currentLayout.columns.map((column) => {
+				return column.width;
+			});
+
+			return this.layouts.findIndex((layout) => layout.toString() === columns.toString());
+		},
 		duplicateLayout(index, layout) {
 			let copy = {
 				...this.$helper.clone(layout),
@@ -216,6 +273,16 @@ export default {
 		pasteboard(index) {
 			this.currentLayout = index;
 			this.$refs.pasteboard.open();
+		},
+		onChangeLayout(rowIndex, layout) {
+			// data required to change the layout both in the dialog and afterwards
+			const payload = {
+				rowIndex: rowIndex,
+				layoutIndex: this.currentLayoutIndex(layout),
+				layout: layout
+			};
+
+			this.$refs.changeSelector.open(payload);
 		},
 		removeLayout(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
@@ -287,41 +354,5 @@ export default {
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;
 	z-index: 1;
-}
-
-/** Selector **/
-.k-layout-selector.k-dialog {
-	background: var(--color-dark);
-	color: var(--color-white);
-}
-.k-layout-selector .k-headline {
-	line-height: 1;
-	margin-top: -0.25rem;
-	margin-bottom: 1.5rem;
-}
-.k-layout-selector ul {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 1.5rem;
-}
-.k-layout-selector-option .k-grid {
-	height: 5rem;
-	grid-gap: 2px;
-	box-shadow: var(--shadow);
-	cursor: pointer;
-}
-.k-layout-selector-option:hover {
-	outline: 2px solid var(--color-green-300);
-	outline-offset: 2px;
-}
-.k-layout-selector-option:last-child {
-	margin-bottom: 0;
-}
-.k-layout-selector-option .k-column {
-	display: flex;
-	background: rgba(255, 255, 255, 0.2);
-	justify-content: center;
-	font-size: var(--text-xs);
-	align-items: center;
 }
 </style>

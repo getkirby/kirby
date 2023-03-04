@@ -55,12 +55,8 @@
 					<k-dropdown-item icon="copy" @click="$emit('duplicate')">
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item icon="template" @click="$emit('copy')">
-						{{ $t("copy") }}
-					</k-dropdown-item>
-					<k-dropdown-item icon="download" @click="$emit('paste')">
-						{{ $t("paste.after") }}
+					<k-dropdown-item icon="dashboard" @click="$emit('change')">
+						{{ $t("field.layout.change") }}
 					</k-dropdown-item>
 					<hr />
 					<k-dropdown-item
