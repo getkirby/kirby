@@ -11,7 +11,7 @@
 			<li
 				v-for="(columns, layoutIndex) in layouts"
 				:key="layoutIndex"
-				:data-disabled="layoutIndex === payload?.layoutIndex"
+				:data-disabled="isDisabled(layoutIndex)"
 				class="k-layout-selector-option"
 			>
 				<k-grid @click.native="$emit('select', columns, layoutIndex, payload)">
@@ -43,6 +43,15 @@ export default {
 	methods: {
 		close() {
 			this.$refs.dialog.close();
+		},
+		/**
+		 * If change layout selector, the current layout should not be selected
+		 *
+		 * @param layoutIndex
+		 * @returns {boolean}
+		 */
+		isDisabled(layoutIndex) {
+			return layoutIndex === this.payload?.layoutIndex
 		},
 		open(payload) {
 			this.payload = payload;
