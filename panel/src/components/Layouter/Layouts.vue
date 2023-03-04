@@ -143,9 +143,9 @@ export default {
 		},
 		/**
 		 * Working logic of changing layout:
-		 * - If the new layout has more columns, it places them in order.
-		 * - If the new layout has fewer columns, it places them in order.
-		 * It continues by adding the rest to new layouts based on the new layout.
+		 * - If the new layout has more columns, they are filled in order from the start.
+		 * - If the new layout has fewer columns, all are filled in order from the start
+		 * 	 and as many additional layout rows are added as needed.
 		 *
 		 * @param {array} columns
 		 * @param {number} layoutIndex
