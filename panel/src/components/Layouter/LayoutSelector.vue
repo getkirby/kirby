@@ -51,7 +51,7 @@ export default {
 		 * @returns {boolean}
 		 */
 		isDisabled(layoutIndex) {
-			return layoutIndex === this.payload?.layoutIndex
+			return layoutIndex === this.payload?.layoutIndex;
 		},
 		open(payload) {
 			this.payload = payload;
