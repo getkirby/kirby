@@ -40,8 +40,6 @@ export default {
 			payload: null
 		};
 	},
-	computed: {
-	},
 	methods: {
 		close() {
 			this.$refs.dialog.close();

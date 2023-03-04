@@ -45,12 +45,7 @@
 			</k-empty>
 		</template>
 
-		<k-layout-selector
-			ref="selector"
-			:layouts="layouts"
-			@select="addLayout"
-		/>
-
+		<k-layout-selector ref="selector" :layouts="layouts" @select="addLayout" />
 		<k-layout-selector
 			ref="changeSelector"
 			:layouts="layouts"
@@ -169,12 +164,16 @@ export default {
 			const oldLayout = payload.layout;
 
 			// filter columns that have blocks
-			const oldLayoutColumns = oldLayout.columns.filter(column => column?.blocks?.length > 0);
+			const oldLayoutColumns = oldLayout.columns.filter(
+				(column) => column?.blocks?.length > 0
+			);
 
 			// if the new layout has more columns
 			// it determines how many times it should loop
 			// to transfer all of them to the new layout
-			const layoutChunks = Math.ceil(oldLayoutColumns.length / newLayout.columns.length);
+			const layoutChunks = Math.ceil(
+				oldLayoutColumns.length / newLayout.columns.length
+			);
 
 			let copy, offset;
 			for (let i = 0; i < layoutChunks; i++) {
@@ -192,7 +191,9 @@ export default {
 				});
 
 				// add layout only columns have blocks
-				if (copy.columns.filter(column => column?.blocks?.length > 0).length > 0) {
+				if (
+					copy.columns.filter((column) => column?.blocks?.length > 0).length > 0
+				) {
 					this.rows.splice(payload.rowIndex + i, 0, copy);
 				}
 			}
@@ -211,7 +212,9 @@ export default {
 				return column.width;
 			});
 
-			return this.layouts.findIndex((layout) => layout.toString() === columns.toString());
+			return this.layouts.findIndex(
+				(layout) => layout.toString() === columns.toString()
+			);
 		},
 		duplicateLayout(index, layout) {
 			let copy = {
