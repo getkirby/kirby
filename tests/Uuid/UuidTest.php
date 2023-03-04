@@ -3,9 +3,14 @@
 namespace Kirby\Uuid;
 
 use Generator;
-use Kirby\Cms\Page;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
+
+class TestUuid extends Uuid {
+	public function id(): string {
+		return $this->uri->host();
+	}
+}
 
 /**
  * @coversDefaultClass \Kirby\Uuid\Uuid
@@ -17,7 +22,7 @@ class UuidTest extends TestCase
 	 */
 	public function testConstructUuidString()
 	{
-		$uuid = new Uuid($uri = 'page://my-page-uuid');
+		$uuid = new TestUuid($uri = 'page://my-page-uuid');
 		$this->assertInstanceOf(Uri::class, $uuid->uri);
 		$this->assertSame($uri, $uuid->uri->toString());
 		$this->assertNull($uuid->model);
@@ -72,7 +77,7 @@ class UuidTest extends TestCase
 		$this->app->clone(['options' => ['content' => ['uuid' => false]]]);
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('UUIDs have been disabled via the `content.uuid` config option.');
-		new Uuid('page://my-page-uuid');
+		new TestUuid('page://my-page-uuid');
 	}
 
 	/**
@@ -119,7 +124,7 @@ class UuidTest extends TestCase
 		$this->assertInstanceOf(Generator::class, $uuid->context());
 		$this->assertSame(0, iterator_count($uuid->context()));
 
-		$uuid = new Uuid(
+		$uuid = new TestUuid(
 			uuid: 'page://my-app',
 			context: $this->app->site()->children()
 		);
@@ -210,7 +215,7 @@ class UuidTest extends TestCase
 	 */
 	public function testId()
 	{
-		$uuid = new Uuid('page://my-uuid-id');
+		$uuid = new TestUuid('page://my-uuid-id');
 		$this->assertSame('my-uuid-id', $uuid->id());
 
 		$uuid = $this->app->page('page-a')->uuid();
@@ -232,11 +237,11 @@ class UuidTest extends TestCase
 	 */
 	public function testIndexes()
 	{
-		$uuid = new Uuid('page://my-uuid');
+		$uuid = new TestUuid('page://my-uuid');
 		$this->assertInstanceOf(Generator::class, $uuid->indexes());
 		$this->assertSame(0, iterator_count($uuid->indexes()));
 
-		$uuid = new Uuid(
+		$uuid = new TestUuid(
 			uuid: 'page://my-app',
 			context: $this->app->site()->children()
 		);

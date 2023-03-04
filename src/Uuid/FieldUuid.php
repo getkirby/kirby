@@ -39,22 +39,17 @@ abstract class FieldUuid extends Uuid
 	protected function findByCache(): Identifiable|null
 	{
 		// get mixed Uri from cache
-		$key   = $this->key();
-		$value = Uuids::cache()->get($key);
+		if ($key = $this->key()) {
+			if ($value = Uuids::cache()->get($key)) {
+				// value is an array containing
+				// the UUID for the parent, the field name
+				// and the specific ID
+				$parent = Uuid::for($value['parent'])->model();
 
-		if ($value === null) {
-			return null;
-		}
-
-		// value is an array containing
-		// the UUID for the parent, the field name
-		// and the specific ID
-		$parent = Uuid::for($value['parent'])->model();
-		$field  = $parent?->content()->get($value['field']);
-
-		if ($field) {
-			$collection = $this->fieldToCollection($field);
-			return $collection->get($value['id']);
+				if ($field = $parent?->content()->get($value['field'])) {
+					return $this->fieldToCollection($field)->get($value['id']);
+				}
+			}
 		}
 
 		return null;

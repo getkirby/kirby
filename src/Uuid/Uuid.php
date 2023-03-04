@@ -40,7 +40,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Uuid
+abstract class Uuid
 {
 	protected const TYPE = 'uuid';
 
@@ -213,12 +213,10 @@ class Uuid
 	/**
 	 * Returns the UUID's id string (UUID without scheme);
 	 * in child classes, this method must ensure that the
-	 * model has an ID
+	 * model has an ID (or generate a new one if the model
+	 * does not have one yet)
 	 */
-	public function id(): string
-	{
-		return $this->uri->host();
-	}
+	abstract public function id(): string;
 
 	/**
 	 * Generator function that creates an index of
@@ -287,7 +285,9 @@ class Uuid
 	 */
 	public function key(bool $generate = false): string|null
 	{
-		$id = $generate ? $this->id() : $this->uri->host();
+		// the generation happens in the child class
+		// that overrides the `id()` method
+		$id = $generate === true ? $this->id() : $this->uri->host();
 
 		if ($id !== null) {
 			// for better performance when using a file-based cache,
