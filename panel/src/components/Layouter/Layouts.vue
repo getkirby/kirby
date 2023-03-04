@@ -190,7 +190,7 @@ export default {
 					return column;
 				});
 
-				// add layout only columns have blocks
+				// add layout row only if any column has blocks
 				if (
 					copy.columns.filter((column) => column?.blocks?.length > 0).length > 0
 				) {
