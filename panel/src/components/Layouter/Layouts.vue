@@ -245,7 +245,7 @@ export default {
 		 * @param {object} layout
 		 * @returns {number}
 		 */
-		layoutIndex(layout) {
+		getLayoutIndex(layout) {
 			const columns = layout.columns.map((column) => {
 				return column.width;
 			});
@@ -258,7 +258,7 @@ export default {
 			// data required to change the layout both in the dialog and afterwards
 			const payload = {
 				rowIndex: rowIndex,
-				layoutIndex: this.layoutIndex(layout),
+				layoutIndex: this.getLayoutIndex(layout),
 				layout: layout
 			};
 
