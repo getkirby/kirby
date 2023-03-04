@@ -163,7 +163,8 @@ export default {
 				this.select(this.selected - 1);
 			}
 		},
-		open() {
+		open(e) {
+			e?.preventDefault();
 			this.$refs.overlay.open();
 		},
 		async search(query) {
