@@ -204,11 +204,11 @@ export default {
 		/**
 		 * Finds which layout index it uses from the layout object
 		 *
-		 * @param {object} currentLayout
+		 * @param {object} layout
 		 * @returns {number}
 		 */
-		currentLayoutIndex(currentLayout) {
-			const columns = currentLayout.columns.map((column) => {
+		layoutIndex(layout) {
+			const columns = layout.columns.map((column) => {
 				return column.width;
 			});
 
@@ -281,7 +281,7 @@ export default {
 			// data required to change the layout both in the dialog and afterwards
 			const payload = {
 				rowIndex: rowIndex,
-				layoutIndex: this.currentLayoutIndex(layout),
+				layoutIndex: this.layoutIndex(layout),
 				layout: layout
 			};
 
