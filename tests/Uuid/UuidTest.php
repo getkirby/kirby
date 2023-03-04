@@ -6,8 +6,10 @@ use Generator;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\Str;
 
-class TestUuid extends Uuid {
-	public function id(): string {
+class TestUuid extends Uuid
+{
+	public function id(): string
+	{
 		return $this->uri->host();
 	}
 }
