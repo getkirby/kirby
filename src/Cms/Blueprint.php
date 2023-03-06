@@ -284,8 +284,12 @@ class Blueprint
 		$root  = $kirby->root('blueprints');
 		$file  = $root . '/' . $name . '.yml';
 
-		// first try to find a site blueprint,
-		// then check in the plugin extensions
+		// if blueprint does not exist in the
+		// site directory (blueprint root),
+		// also check the plugin extension
+		// (this includes not only blueprints from
+		// plugins but also system default blueprints
+		// stored in `kirby/config/blueprints`)
 		if (F::exists($file, $root) !== true) {
 			$file = $kirby->extension('blueprints', $name);
 		}

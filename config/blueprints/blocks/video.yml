@@ -1,4 +1,4 @@
-name: Video
+title: Video
 icon: video
 label: "{{ url }}"
 fields:

@@ -1,7 +1,5 @@
-name: Site
 title: Site
 sections:
   pages:
     headline: Pages
     type: pages
-
