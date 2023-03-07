@@ -3,7 +3,7 @@
 		<template v-if="rows.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
-					v-for="(layout, layoutIndex) in rows"
+					v-for="(layout, index) in rows"
 					v-bind="layout"
 					:key="layout.id"
 					:disabled="disabled"
@@ -12,22 +12,16 @@
 					:fieldsets="fieldsets"
 					:is-selected="selected === layout.id"
 					:settings="settings"
-					@append="selectLayout(layoutIndex + 1)"
-					@change="onChangeLayout(layoutIndex, layout)"
-					@copy="copy($event, layoutIndex)"
-					@duplicate="duplicateLayout(layoutIndex, layout)"
-					@paste="pasteboard(layoutIndex + 1)"
-					@prepend="selectLayout(layoutIndex)"
-					@remove="removeLayout(layout)"
+					@append="select(index + 1)"
+					@change="change(index, layout)"
+					@copy="copy($event, index)"
+					@duplicate="duplicate(index, layout)"
+					@paste="pasteboard(index + 1)"
+					@prepend="select(index)"
+					@remove="remove(layout)"
 					@select="selected = layout.id"
-					@updateAttrs="updateAttrs(layoutIndex, $event)"
-					@updateColumn="
-						updateColumn({
-							layout,
-							layoutIndex,
-							...$event
-						})
-					"
+					@updateAttrs="updateAttrs(index, $event)"
+					@updateColumn="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
 
@@ -36,29 +30,22 @@
 				class="k-field-add-item-button"
 				icon="add"
 				:tooltip="$t('add')"
-				@click="selectLayout(rows.length)"
+				@click="select(rows.length)"
 			/>
 		</template>
 		<template v-else>
-			<k-empty icon="dashboard" class="k-layout-empty" @click="selectLayout(0)">
+			<k-empty icon="dashboard" class="k-layout-empty" @click="select(0)">
 				{{ empty || $t("field.layout.empty") }}
 			</k-empty>
 		</template>
 
-		<k-layout-selector ref="selector" :layouts="layouts" @select="addLayout" />
-		<k-layout-selector
-			ref="changeSelector"
-			:layouts="layouts"
-			@select="changeLayout"
-		/>
-
+		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
 		<k-remove-dialog
 			ref="removeAll"
 			:text="$t('field.layout.delete.confirm.all')"
-			@submit="removeAll"
+			@submit="onRemoveAll"
 		/>
-
-		<k-block-pasteboard ref="pasteboard" @paste="paste" />
+		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
 
@@ -80,7 +67,7 @@ export default {
 	},
 	data() {
 		return {
-			currentLayout: null,
+			current: null,
 			nextIndex: null,
 			rows: this.value,
 			selected: null
@@ -101,19 +88,6 @@ export default {
 		}
 	},
 	methods: {
-		async addLayout(columns) {
-			let layout = await this.$api.post(this.endpoints.field + "/layout", {
-				columns: columns
-			});
-
-			this.rows.splice(this.nextIndex, 0, layout);
-
-			if (this.layouts.length > 1) {
-				this.$refs.selector.close();
-			}
-
-			this.save();
-		},
 		confirmRemoveAll() {
 			this.$refs.removeAll.open();
 		},
@@ -132,67 +106,16 @@ export default {
 				this.$t("copy.success", { count: copy.length ?? 1 })
 			);
 		},
-		/**
-		 * Working logic of changing layout:
-		 * - If the new layout has more columns, they are filled in order from the start.
-		 * - If the new layout has fewer columns, all are filled in order from the start
-		 * 	 and as many additional layout rows are added as needed.
-		 *
-		 * @param {array} columns
-		 * @param {number} layoutIndex
-		 * @param {object|null} payload
-		 * @returns {Promise<void>}
-		 */
-		async changeLayout(columns, layoutIndex, payload) {
-			// remove the layout at first
-			this.rows.splice(payload.rowIndex, 1);
-
-			// create empty layout based on selected
-			const newLayout = await this.$api.post(this.endpoints.field + "/layout", {
-				columns: columns
-			});
-
-			const oldLayout = payload.layout;
-
-			// filter columns that have blocks
-			const oldLayoutColumns = oldLayout.columns.filter(
-				(column) => column?.blocks?.length > 0
+		change(rowIndex, layout) {
+			const columns = layout.columns.map((column) => column.width);
+			const layoutIndex = this.layouts.findIndex(
+				(layout) => layout.toString() === columns.toString()
 			);
 
-			// if the new layout has more columns
-			// it determines how many times it should loop
-			// to transfer all of them to the new layout
-			const layoutChunks = Math.ceil(
-				oldLayoutColumns.length / newLayout.columns.length
-			);
-
-			let copy, offset;
-			for (let i = 0; i < layoutChunks; i++) {
-				offset = i * newLayout.columns.length;
-
-				copy = {
-					...this.$helper.clone(newLayout),
-					id: this.$helper.uuid()
-				};
-
-				// move blocks to new layout from old
-				copy.columns = copy.columns.map((column, columnIndex) => {
-					column.blocks = oldLayoutColumns[columnIndex + offset]?.blocks ?? [];
-					return column;
-				});
-
-				// add layout row only if any column has blocks
-				if (
-					copy.columns.filter((column) => column?.blocks?.length > 0).length > 0
-				) {
-					this.rows.splice(payload.rowIndex + i, 0, copy);
-				}
-			}
-
-			this.save();
-			this.$refs.changeSelector.close();
+			// data required to change the layout both in the dialog and afterwards
+			this.$refs.selector.open({ rowIndex, layoutIndex, layout });
 		},
-		duplicateLayout(index, layout) {
+		duplicate(index, layout) {
 			let copy = {
 				...this.$helper.clone(layout),
 				id: this.$helper.uuid()
@@ -204,7 +127,7 @@ export default {
 			this.rows.splice(index + 1, 0, copy);
 			this.save();
 		},
-		filterUnallowedLayoutsFieldsets(layouts) {
+		filterUnallowedFieldsets(layouts) {
 			if (Array.isArray(layouts) === false) {
 				layouts = [layouts];
 			}
@@ -230,37 +153,90 @@ export default {
 			});
 			return layouts;
 		},
-		/**
-		 * Finds which layout index it uses from the layout object
-		 *
-		 * @param {object} layout
-		 * @returns {number}
-		 */
-		getLayoutIndex(layout) {
-			const columns = layout.columns.map((column) => {
-				return column.width;
+		async onAdd(columns) {
+			let layout = await this.$api.post(this.endpoints.field + "/layout", {
+				columns: columns
 			});
 
-			return this.layouts.findIndex(
-				(layout) => layout.toString() === columns.toString()
-			);
-		},
-		onChangeLayout(rowIndex, layout) {
-			// data required to change the layout both in the dialog and afterwards
-			const payload = {
-				rowIndex: rowIndex,
-				layoutIndex: this.getLayoutIndex(layout),
-				layout: layout
-			};
+			this.rows.splice(this.nextIndex, 0, layout);
 
-			this.$refs.changeSelector.open(payload);
+			if (this.layouts.length > 1) {
+				this.$refs.selector.close();
+			}
+
+			this.save();
 		},
-		paste(e) {
+		/**
+		 * Working logic of changing layout:
+		 * - If the new layout has more columns,
+		 *   as many as needed are filled in order from the start.
+		 * - If the new layout has fewer columns,
+		 *   all are filled in order from the start and as many
+		 *   additional layout rows are added as needed.
+		 *
+		 * @param {array} columns
+		 * @param {number} layoutIndex
+		 * @param {object|null} payload
+		 * @returns {Promise<void>}
+		 */
+		async onChange(columns, layoutIndex, payload) {
+			// don't do anything if the same layout got selected
+			if (layoutIndex === payload.layoutIndex) {
+				return this.$refs.selector.close();
+			}
+
+			const oldLayout = payload.layout;
+
+			// create empty layout based on selected columns
+			const newLayout = await this.$api.post(this.endpoints.field + "/layout", {
+				columns: columns
+			});
+
+			// filter columns that have blocks
+			const oldColumns = oldLayout.columns.filter(
+				(column) => column?.blocks?.length > 0
+			);
+
+			// start collecting new rows
+			const rows = [];
+
+			// check how many columns in how many layout rows we need
+			// by comparing the number of columns before and after
+			const chunks =
+				Math.ceil(oldColumns.length / newLayout.columns.length) *
+				newLayout.columns.length;
+
+			// move throught the new layout rows in steps of columns per row
+			for (let i = 0; i < chunks; i += newLayout.columns.length) {
+				const copy = {
+					...this.$helper.clone(newLayout),
+					id: this.$helper.uuid()
+				};
+
+				// move blocks to new layout from old
+				copy.columns = copy.columns.map((column, columnIndex) => {
+					column.blocks = oldColumns[columnIndex + i]?.blocks ?? [];
+					return column;
+				});
+
+				// add row only if any of its columns has any blocks
+				if (copy.columns.filter((column) => column?.blocks?.length).length) {
+					rows.push(copy);
+				}
+			}
+
+			// remove old layout row and add new rows in one go
+			this.rows.splice(payload.rowIndex, 1, ...rows);
+
+			this.save();
+			this.$refs.selector.close();
+		},
+		onPaste(e) {
 			const copy = JSON.parse(this.$helper.clipboard.read(e));
-			const index = this.currentLayout ?? this.rows.length;
+			const index = this.current ?? this.rows.length;
 
 			// throw out anything that isn't allowed.
-			let rows = this.filterUnallowedLayoutsFieldsets(copy);
+			let rows = this.filterUnallowedFieldsets(copy);
 
 			// replace all unique IDs for columns and blocks
 			rows = this.updateIds(rows);
@@ -274,11 +250,21 @@ export default {
 				this.$t("paste.success", { count: rows.length })
 			);
 		},
+		onRemoveAll() {
+			this.rows = [];
+			this.save();
+			this.$refs.removeAll.close();
+		},
+		async onSelect(columns, layoutIndex, payload) {
+			return payload
+				? this.onChange(columns, layoutIndex, payload)
+				: this.onAdd(columns);
+		},
 		pasteboard(index) {
-			this.currentLayout = index;
+			this.current = index;
 			this.$refs.pasteboard.open();
 		},
-		removeLayout(layout) {
+		remove(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
 
 			if (index !== -1) {
@@ -287,20 +273,14 @@ export default {
 
 			this.save();
 		},
-		removeAll() {
-			this.rows = [];
-			this.save();
-			this.$refs.removeAll.close();
-		},
 		save() {
 			this.$emit("input", this.rows);
 		},
-		selectLayout(index) {
+		select(index) {
 			this.nextIndex = index;
 
 			if (this.layouts.length === 1) {
-				this.addLayout(this.layouts[0]);
-				return;
+				return this.onAddLayout(this.layouts[0]);
 			}
 
 			this.$refs.selector.open();
@@ -310,8 +290,7 @@ export default {
 			this.save();
 		},
 		updateColumn(args) {
-			this.rows[args.layoutIndex].columns[args.columnIndex].blocks =
-				args.blocks;
+			this.rows[args.index].columns[args.columnIndex].blocks = args.blocks;
 			this.save();
 		},
 		updateIds(copy) {
@@ -345,8 +324,6 @@ export default {
 	box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
 	outline: 2px solid var(--color-focus);
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 	z-index: 1;
 }
 </style>

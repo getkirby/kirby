@@ -11,10 +11,10 @@
 			<li
 				v-for="(columns, layoutIndex) in layouts"
 				:key="layoutIndex"
-				:data-disabled="isDisabled(layoutIndex)"
+				:aria-current="isCurrent(layoutIndex)"
 				class="k-layout-selector-option"
 			>
-				<k-grid @click.native="$emit('select', columns, layoutIndex, payload)">
+				<k-grid @click.native="onSelect(columns, layoutIndex)">
 					<k-column
 						v-for="(column, columnIndex) in columns"
 						:key="columnIndex"
@@ -44,14 +44,11 @@ export default {
 		close() {
 			this.$refs.dialog.close();
 		},
-		/**
-		 * If change layout selector, the current layout should not be selected
-		 *
-		 * @param layoutIndex
-		 * @returns {boolean}
-		 */
-		isDisabled(layoutIndex) {
+		isCurrent(layoutIndex) {
 			return layoutIndex === this.payload?.layoutIndex;
+		},
+		onSelect(columns, layoutIndex) {
+			this.$emit("select", columns, layoutIndex, this.payload);
 		},
 		open(payload) {
 			this.payload = payload;
@@ -76,31 +73,31 @@ export default {
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: 1.5rem;
 }
+
+.k-layout-selector-option {
+	outline: 2px solid var(--option-outline, transparent);
+	outline-offset: 2px;
+}
+.k-layout-selector-option[aria-current="true"] {
+	--option-outline: var(--color-blue-300);
+}
+.k-layout-selector-option:not([aria-current]):hover {
+	--option-outline: var(--color-green-300);
+}
+.k-layout-selector-option:last-child {
+	margin-bottom: 0;
+}
+
 .k-layout-selector-option .k-grid {
 	height: 5rem;
 	grid-gap: 2px;
 	box-shadow: var(--shadow);
 	cursor: pointer;
 }
-.k-layout-selector-option:hover {
-	outline: 2px solid var(--color-green-300);
-	outline-offset: 2px;
-}
-.k-layout-selector-option:last-child {
-	margin-bottom: 0;
-}
 .k-layout-selector-option .k-column {
 	display: flex;
-	background: rgba(255, 255, 255, 0.2);
+	background: rgb(255 255 255 / 0.2);
 	justify-content: center;
-	font-size: var(--text-xs);
 	align-items: center;
-}
-.k-layout-selector-option[data-disabled="true"] {
-	cursor: not-allowed;
-	opacity: 0.25;
-}
-.k-layout-selector-option[data-disabled="true"] * {
-	pointer-events: none;
 }
 </style>
