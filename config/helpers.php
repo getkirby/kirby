@@ -439,7 +439,7 @@ if (Helpers::hasOverride('r') === false) { // @codeCoverageIgnore
 	 * @param mixed $value The string to be returned if the condition is true
 	 * @param mixed $alternative An alternative string which should be returned when the condition is false
 	 */
-	function r(mixed $condition, mixed $value, mixed $alternative = null)
+	function r(mixed $condition, mixed $value, mixed $alternative = null): mixed
 	{
 		return $condition ? $value : $alternative;
 	}
@@ -456,7 +456,7 @@ if (Helpers::hasOverride('router') === false) { // @codeCoverageIgnore
 		string $method = 'GET',
 		array $routes = [],
 		Closure|null $callback = null
-	) {
+	): mixed {
 		return Router::execute($path, $method, $routes, $callback);
 	}
 }
