@@ -5,7 +5,7 @@
 				<k-button icon="dots" @click="$refs.options.toggle()" />
 
 				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item icon="add" @click="$refs.layouts.selectLayout(0)">
+					<k-dropdown-item icon="add" @click="$refs.layouts.select(0)">
 						{{ $t("add") }}
 					</k-dropdown-item>
 					<hr />
