@@ -280,7 +280,7 @@ export default {
 			this.nextIndex = index;
 
 			if (this.layouts.length === 1) {
-				return this.onAddLayout(this.layouts[0]);
+				return this.onAdd(this.layouts[0]);
 			}
 
 			this.$refs.selector.open();
