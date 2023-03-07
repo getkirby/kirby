@@ -200,28 +200,34 @@ export default {
 			// start collecting new rows
 			const rows = [];
 
-			// check how many columns in how many layout rows we need
-			// by comparing the number of columns before and after
-			const chunks =
-				Math.ceil(oldColumns.length / newLayout.columns.length) *
-				newLayout.columns.length;
+			// if the layout row was completely empty,
+			// just switch it to the new layout
+			if (oldColumns.length === 0) {
+				rows.push(newLayout);
+			} else {
+				// otherwise check how many chunks (columns per layout rows)
+				// we need to host all filled columns
+				const chunks =
+					Math.ceil(oldColumns.length / newLayout.columns.length) *
+					newLayout.columns.length;
 
-			// move throught the new layout rows in steps of columns per row
-			for (let i = 0; i < chunks; i += newLayout.columns.length) {
-				const copy = {
-					...this.$helper.clone(newLayout),
-					id: this.$helper.uuid()
-				};
+				// move throught the new layout rows in steps of columns per row
+				for (let i = 0; i < chunks; i += newLayout.columns.length) {
+					const copy = {
+						...this.$helper.clone(newLayout),
+						id: this.$helper.uuid()
+					};
 
-				// move blocks to new layout from old
-				copy.columns = copy.columns.map((column, columnIndex) => {
-					column.blocks = oldColumns[columnIndex + i]?.blocks ?? [];
-					return column;
-				});
+					// move blocks to new layout from old
+					copy.columns = copy.columns.map((column, columnIndex) => {
+						column.blocks = oldColumns[columnIndex + i]?.blocks ?? [];
+						return column;
+					});
 
-				// add row only if any of its columns has any blocks
-				if (copy.columns.filter((column) => column?.blocks?.length).length) {
-					rows.push(copy);
+					// add row only if any of its columns has any blocks
+					if (copy.columns.filter((column) => column?.blocks?.length).length) {
+						rows.push(copy);
+					}
 				}
 			}
 
