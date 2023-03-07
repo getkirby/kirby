@@ -442,7 +442,7 @@ class Date extends DateTime
 	/**
 	 * Returns the timezone object
 	 */
-	public function timezone(): DateTimeZone
+	public function timezone(): DateTimeZone|false
 	{
 		return $this->getTimezone();
 	}

@@ -39,10 +39,11 @@ class A
 	 */
 	public static function apply(array $array, ...$args): array
 	{
-		array_walk_recursive(
-			$array,
-			fn (&$item) => $item = $item instanceof Closure ? $item(...$args) : $item
-		);
+		array_walk_recursive($array, function (&$item) use ($args) {
+			if ($item instanceof Closure) {
+				$item = $item(...$args);
+			}
+		});
 
 		return $array;
 	}
