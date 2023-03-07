@@ -110,7 +110,7 @@ if (Helpers::hasOverride('dump') === false) { // @codeCoverageIgnore
 	 * Simple object and variable dumper
 	 * to help with debugging.
 	 */
-	function dump($variable, bool $echo = true): string
+	function dump(mixed $variable, bool $echo = true): string
 	{
 		return Helpers::dump($variable, $echo);
 	}
@@ -123,7 +123,7 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	 * @param mixed $value The string to be echoed if the condition is true
 	 * @param mixed $alternative An alternative string which should be echoed when the condition is false
 	 */
-	function e($condition, $value, $alternative = null): void
+	function e(mixed $condition, mixed $value, mixed $alternative = null): void
 	{
 		echo $condition ? $value : $alternative;
 	}
@@ -170,7 +170,7 @@ if (Helpers::hasOverride('get') === false) { // @codeCoverageIgnore
 	 * @param mixed $key The key to look for. Pass false or null to return the entire request array.
 	 * @param mixed $default Optional default value, which should be returned if no element has been found
 	 */
-	function get($key = null, $default = null)
+	function get(mixed $key = null, mixed $default = null): mixed
 	{
 		return App::instance()->request()->get($key, $default);
 	}
@@ -371,7 +371,7 @@ if (Helpers::hasOverride('option') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for `$kirby->option($key, $default)`
 	 */
-	function option(string $key, $default = null)
+	function option(string $key, mixed $default = null): mixed
 	{
 		return App::instance()->option($key, $default);
 	}
@@ -439,7 +439,7 @@ if (Helpers::hasOverride('r') === false) { // @codeCoverageIgnore
 	 * @param mixed $value The string to be returned if the condition is true
 	 * @param mixed $alternative An alternative string which should be returned when the condition is false
 	 */
-	function r($condition, $value, $alternative = null)
+	function r(mixed $condition, mixed $value, mixed $alternative = null)
 	{
 		return $condition ? $value : $alternative;
 	}
@@ -475,7 +475,7 @@ if (Helpers::hasOverride('size') === false) { // @codeCoverageIgnore
 	/**
 	 * Determines the size/length of numbers, strings, arrays and countable objects
 	 */
-	function size($value): int
+	function size(mixed $value): int
 	{
 		return Helpers::size($value);
 	}
@@ -551,7 +551,7 @@ if (Helpers::hasOverride('tc') === false) { // @codeCoverageIgnore
 		int $count,
 		string|null $locale = null,
 		bool $formatNumber = true
-	) {
+	): mixed {
 		return I18n::translateCount($key, $count, $locale, $formatNumber);
 	}
 }
