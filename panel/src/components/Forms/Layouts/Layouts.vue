@@ -63,19 +63,10 @@
 </template>
 
 <script>
-import Layout from "./Layout.vue";
-import LayoutSelector from "./LayoutSelector.vue";
-import Pasteboard from "@/components/Forms/Blocks/BlockPasteboard.vue";
-
 /**
  * @internal
  */
 export default {
-	components: {
-		"k-layout": Layout,
-		"k-layout-selector": LayoutSelector,
-		"k-block-pasteboard": Pasteboard
-	},
 	props: {
 		disabled: Boolean,
 		empty: String,

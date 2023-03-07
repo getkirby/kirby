@@ -6,8 +6,6 @@ import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
 import Sections from "@/components/Sections/index.js";
 import Views from "@/components/Views/index.js";
-import Blocks from "@/components/Forms/Blocks/index.js";
-import Previews from "@/components/Forms/Previews/index.js";
 
 // 3rd party libraries
 import Portal from "@linusborg/vue-simple-portal";
@@ -22,8 +20,6 @@ export default {
 		app.use(Navigation);
 		app.use(Sections);
 		app.use(Views);
-		app.use(Blocks);
-		app.use(Previews);
 
 		app.use(Portal);
 	}
