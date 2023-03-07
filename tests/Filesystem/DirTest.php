@@ -231,7 +231,11 @@ class DirTest extends TestCase
 			'sub/sub/c.txt'
 		];
 
-		$this->assertSame($expected, Dir::index($dir, true, ['a.txt']));
+		$this->assertSame($expected, Dir::index($dir, true, [
+			$this->tmp . '/a.txt',
+			$this->tmp . '/sub/a.txt',
+			$this->tmp . '/sub/sub/a.txt'
+		]));
 	}
 
 	/**

@@ -139,23 +139,31 @@ class Dir
 
 	/**
 	 * Read the directory and all subdirectories
+	 *
+     * @todo Remove support for `$ignore = null` in a major release
+     * @param array|null $ignore Passing null is deprecated.
 	 */
 	public static function index(
 		string $dir,
 		bool $recursive = false,
-		array|null $ignore = [],
+		array|bool|null $ignore = [],
 		string $path = null
 	): array {
 		$result = [];
 		$dir    = realpath($dir);
-		$items  = static::read($dir);
+		$items  = static::read($dir, $ignore === false ? [] : null);
+		$ignore = (array)$ignore;
 
 		foreach ($items as $item) {
-			if (in_array($item, $ignore) === true) {
+			$root = $dir . '/' . $item;
+
+			if (
+				is_array($ignore) === true &&
+				in_array($root, $ignore) === true
+			) {
 				continue;
 			}
 
-			$root     = $dir . '/' . $item;
 			$entry    = $path !== null ? $path . '/' . $item : $item;
 			$result[] = $entry;
 
