@@ -140,8 +140,8 @@ class Dir
 	/**
 	 * Read the directory and all subdirectories
 	 *
-     * @todo Remove support for `$ignore = null` in a major release
-     * @param array|null $ignore Passing null is deprecated.
+	 * @todo Remove support for `$ignore = null` in a major release
+	 * @param array|null $ignore Passing null is deprecated.
 	 */
 	public static function index(
 		string $dir,
