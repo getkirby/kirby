@@ -21,7 +21,6 @@
 
 <script>
 /**
- * @displayName LayoutColumn
  * @internal
  */
 export default {

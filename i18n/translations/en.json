@@ -283,6 +283,7 @@
 
 	"field.files.empty": "No files selected yet",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
 	"field.layout.delete.confirm": "Do you really want to delete this layout?",
 	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",

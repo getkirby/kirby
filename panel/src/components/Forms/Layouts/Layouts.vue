@@ -3,7 +3,7 @@
 		<template v-if="rows.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
-					v-for="(layout, layoutIndex) in rows"
+					v-for="(layout, index) in rows"
 					v-bind="layout"
 					:key="layout.id"
 					:disabled="disabled"
@@ -12,21 +12,16 @@
 					:fieldsets="fieldsets"
 					:is-selected="selected === layout.id"
 					:settings="settings"
-					@append="selectLayout(layoutIndex + 1)"
-					@copy="copy($event, layoutIndex)"
-					@duplicate="duplicateLayout(layoutIndex, layout)"
-					@paste="pasteboard(layoutIndex + 1)"
-					@prepend="selectLayout(layoutIndex)"
-					@remove="removeLayout(layout)"
+					@append="select(index + 1)"
+					@change="change(index, layout)"
+					@copy="copy($event, index)"
+					@duplicate="duplicate(index, layout)"
+					@paste="pasteboard(index + 1)"
+					@prepend="select(index)"
+					@remove="remove(layout)"
 					@select="selected = layout.id"
-					@updateAttrs="updateAttrs(layoutIndex, $event)"
-					@updateColumn="
-						updateColumn({
-							layout,
-							layoutIndex,
-							...$event
-						})
-					"
+					@updateAttrs="updateAttrs(index, $event)"
+					@updateColumn="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
 
@@ -36,64 +31,32 @@
 					icon="add"
 					size="xs"
 					variant="filled"
-					@click="selectLayout(rows.length)"
+					@click="select(rows.length)"
 				/>
 			</footer>
 		</template>
 
 		<template v-else>
-			<k-empty icon="dashboard" class="k-layout-empty" @click="selectLayout(0)">
+			<k-empty icon="dashboard" class="k-layout-empty" @click="select(0)">
 				{{ empty || $t("field.layout.empty") }}
 			</k-empty>
 		</template>
 
-		<k-dialog
-			ref="selector"
-			:cancel-button="false"
-			:submit-button="false"
-			size="medium"
-			class="k-layout-selector"
-		>
-			<k-headline>{{ $t("field.layout.select") }}</k-headline>
-			<ul>
-				<li
-					v-for="(layoutOption, layoutOptionIndex) in layouts"
-					:key="layoutOptionIndex"
-					class="k-layout-selector-option"
-				>
-					<k-grid @click.native="addLayout(layoutOption)">
-						<k-column
-							v-for="(column, columnIndex) in layoutOption"
-							:key="columnIndex"
-							:width="column"
-						/>
-					</k-grid>
-				</li>
-			</ul>
-		</k-dialog>
-
+		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
 		<k-remove-dialog
 			ref="removeAll"
 			:text="$t('field.layout.delete.confirm.all')"
-			@submit="removeAll"
+			@submit="onRemoveAll"
 		/>
-
-		<k-block-pasteboard ref="pasteboard" @paste="paste" />
+		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
 
 <script>
-import Layout from "./Layout.vue";
-import Pasteboard from "@/components/Forms/Blocks/BlockPasteboard.vue";
-
 /**
  * @internal
  */
 export default {
-	components: {
-		"k-layout": Layout,
-		"k-block-pasteboard": Pasteboard
-	},
 	props: {
 		disabled: Boolean,
 		empty: String,
@@ -107,7 +70,7 @@ export default {
 	},
 	data() {
 		return {
-			currentLayout: null,
+			current: null,
 			nextIndex: null,
 			rows: this.value,
 			selected: null
@@ -128,19 +91,6 @@ export default {
 		}
 	},
 	methods: {
-		async addLayout(columns) {
-			let layout = await this.$api.post(this.endpoints.field + "/layout", {
-				columns: columns
-			});
-
-			this.rows.splice(this.nextIndex, 0, layout);
-
-			if (this.layouts.length > 1) {
-				this.$refs.selector.close();
-			}
-
-			this.save();
-		},
 		confirmRemoveAll() {
 			this.$refs.removeAll.open();
 		},
@@ -159,7 +109,16 @@ export default {
 				this.$t("copy.success", { count: copy.length ?? 1 })
 			);
 		},
-		duplicateLayout(index, layout) {
+		change(rowIndex, layout) {
+			const columns = layout.columns.map((column) => column.width);
+			const layoutIndex = this.layouts.findIndex(
+				(layout) => layout.toString() === columns.toString()
+			);
+
+			// data required to change the layout both in the dialog and afterwards
+			this.$refs.selector.open({ rowIndex, layoutIndex, layout });
+		},
+		duplicate(index, layout) {
 			let copy = {
 				...this.$helper.clone(layout),
 				id: this.$helper.uuid()
@@ -171,7 +130,7 @@ export default {
 			this.rows.splice(index + 1, 0, copy);
 			this.save();
 		},
-		filterUnallowedLayoutsFieldsets(layouts) {
+		filterUnallowedFieldsets(layouts) {
 			if (Array.isArray(layouts) === false) {
 				layouts = [layouts];
 			}
@@ -197,12 +156,96 @@ export default {
 			});
 			return layouts;
 		},
-		paste(e) {
+		async onAdd(columns) {
+			let layout = await this.$api.post(this.endpoints.field + "/layout", {
+				columns: columns
+			});
+
+			this.rows.splice(this.nextIndex, 0, layout);
+
+			if (this.layouts.length > 1) {
+				this.$refs.selector.close();
+			}
+
+			this.save();
+		},
+		/**
+		 * Working logic of changing layout:
+		 * - If the new layout has more columns,
+		 *   as many as needed are filled in order from the start.
+		 * - If the new layout has fewer columns,
+		 *   all are filled in order from the start and as many
+		 *   additional layout rows are added as needed.
+		 *
+		 * @param {array} columns
+		 * @param {number} layoutIndex
+		 * @param {object|null} payload
+		 * @returns {Promise<void>}
+		 */
+		async onChange(columns, layoutIndex, payload) {
+			// don't do anything if the same layout got selected
+			if (layoutIndex === payload.layoutIndex) {
+				return this.$refs.selector.close();
+			}
+
+			const oldLayout = payload.layout;
+
+			// create empty layout based on selected columns
+			const newLayout = await this.$api.post(this.endpoints.field + "/layout", {
+				columns: columns
+			});
+
+			// filter columns that have blocks
+			const oldColumns = oldLayout.columns.filter(
+				(column) => column?.blocks?.length > 0
+			);
+
+			// start collecting new rows
+			const rows = [];
+
+			// if the layout row was completely empty,
+			// just switch it to the new layout
+			if (oldColumns.length === 0) {
+				rows.push(newLayout);
+			} else {
+				// otherwise check how many chunks (columns per layout rows)
+				// we need to host all filled columns
+				const chunks =
+					Math.ceil(oldColumns.length / newLayout.columns.length) *
+					newLayout.columns.length;
+
+				// move throught the new layout rows in steps of columns per row
+				for (let i = 0; i < chunks; i += newLayout.columns.length) {
+					const copy = {
+						...this.$helper.clone(newLayout),
+						id: this.$helper.uuid()
+					};
+
+					// move blocks to new layout from old
+					copy.columns = copy.columns.map((column, columnIndex) => {
+						column.blocks = oldColumns[columnIndex + i]?.blocks ?? [];
+						return column;
+					});
+
+					// add row only if any of its columns has any blocks
+					if (copy.columns.filter((column) => column?.blocks?.length).length) {
+						rows.push(copy);
+					}
+				}
+			}
+
+			// remove old layout row and add new rows in one go
+			this.rows.splice(payload.rowIndex, 1, ...rows);
+
+			this.save();
+			this.$refs.selector.close();
+		},
+		onPaste(e) {
 			const copy = JSON.parse(this.$helper.clipboard.read(e));
-			const index = this.currentLayout ?? this.rows.length;
+			const index = this.current ?? this.rows.length;
 
 			// throw out anything that isn't allowed.
-			let rows = this.filterUnallowedLayoutsFieldsets(copy);
+			let rows = this.filterUnallowedFieldsets(copy);
 
 			// replace all unique IDs for columns and blocks
 			rows = this.updateIds(rows);
@@ -216,11 +259,21 @@ export default {
 				this.$t("paste.success", { count: rows.length })
 			);
 		},
+		onRemoveAll() {
+			this.rows = [];
+			this.save();
+			this.$refs.removeAll.close();
+		},
+		async onSelect(columns, layoutIndex, payload) {
+			return payload
+				? this.onChange(columns, layoutIndex, payload)
+				: this.onAdd(columns);
+		},
 		pasteboard(index) {
-			this.currentLayout = index;
+			this.current = index;
 			this.$refs.pasteboard.open();
 		},
-		removeLayout(layout) {
+		remove(layout) {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
 
 			if (index !== -1) {
@@ -229,20 +282,14 @@ export default {
 
 			this.save();
 		},
-		removeAll() {
-			this.rows = [];
-			this.save();
-			this.$refs.removeAll.close();
-		},
 		save() {
 			this.$emit("input", this.rows);
 		},
-		selectLayout(index) {
+		select(index) {
 			this.nextIndex = index;
 
 			if (this.layouts.length === 1) {
-				this.addLayout(this.layouts[0]);
-				return;
+				return this.onAdd(this.layouts[0]);
 			}
 
 			this.$refs.selector.open();
@@ -252,8 +299,7 @@ export default {
 			this.save();
 		},
 		updateColumn(args) {
-			this.rows[args.layoutIndex].columns[args.columnIndex].blocks =
-				args.blocks;
+			this.rows[args.index].columns[args.columnIndex].blocks = args.blocks;
 			this.save();
 		},
 		updateIds(copy) {
@@ -287,44 +333,9 @@ export default {
 	box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
 	outline: 2px solid var(--color-focus);
 	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
 	z-index: 1;
 }
 .k-layouts:has(+ footer) {
 	margin-bottom: var(--spacing-3);
-}
-
-/** Selector **/
-.k-layout-selector.k-dialog {
-	background: var(--color-dark);
-	color: var(--color-white);
-}
-.k-layout-selector .k-headline {
-	line-height: 1;
-	margin-top: -0.25rem;
-	margin-bottom: 1.5rem;
-}
-.k-layout-selector ul {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 1.5rem;
-}
-.k-layout-selector-option .k-grid {
-	gap: 2px;
-	grid-template-columns: repeat(var(--columns), 1fr);
-	box-shadow: var(--shadow);
-	cursor: pointer;
-}
-.k-layout-selector-option .k-column {
-	grid-column: span var(--span);
-}
-.k-layout-selector-option:hover {
-	outline: 2px solid var(--color-focus);
-	outline-offset: 2px;
-}
-.k-layout-selector-option .k-column {
-	background: var(--color-slate-800);
-	height: 5rem;
 }
 </style>

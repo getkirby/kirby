@@ -55,6 +55,9 @@
 					<k-dropdown-item icon="copy" @click="$emit('duplicate')">
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
+					<k-dropdown-item icon="dashboard" @click="$emit('change')">
+						{{ $t("field.layout.change") }}
+					</k-dropdown-item>
 					<hr />
 					<k-dropdown-item icon="template" @click="$emit('copy')">
 						{{ $t("copy") }}
@@ -94,15 +97,10 @@
 </template>
 
 <script>
-import Column from "./Column.vue";
-
 /**
  * @internal
  */
 export default {
-	components: {
-		"k-layout-column": Column
-	},
 	props: {
 		attrs: [Array, Object],
 		columns: Array,
