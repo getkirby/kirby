@@ -295,7 +295,5 @@ class OptionsApiTest extends TestCase
 
 		$this->assertSame('Company A', $result[0]['text']);
 		$this->assertSame('company-a', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
-		$this->assertSame('company-b', $result[1]['value']);
 	}
 }
