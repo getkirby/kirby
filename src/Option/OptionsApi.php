@@ -2,6 +2,7 @@
 
 namespace Kirby\Option;
 
+use Kirby\Cms\Field;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Nest;
 use Kirby\Data\Json;
@@ -108,9 +109,11 @@ class OptionsApi extends OptionsProvider
 		// load data from URL and convert from JSON to array
 		$data = $this->load($model);
 
+		// @codeCoverageIgnoreStart
 		if ($data === null) {
 			throw new NotFoundException('Options could not be loaded from API: ' . $model->toSafeString($this->url));
 		}
+		// @codeCoverageIgnoreEnd
 
 		// turn data into Nest so that it can be queried
 		// or field methods applied to the data
@@ -125,10 +128,7 @@ class OptionsApi extends OptionsProvider
 		foreach ($data as $key => $item) {
 			// convert simple `key: value` API data
 			if (is_string($item) === true) {
-				$item = [
-					'key'   => $key,
-					'value' => $item
-				];
+				$item = new Field(null, $key, $item);
 			}
 
 			$safeMethod = $safeMode === true ? 'toSafeString' : 'toString';
