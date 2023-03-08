@@ -20,9 +20,6 @@
 			@click="$refs.search.open()"
 		/>
 
-		<!-- Site title -->
-		<h1 class="k-panel-menu-title">{{ $system.title }}</h1>
-
 		<!-- Menus -->
 		<menu v-for="(menu, menuIdex) in menus" :key="menuIdex">
 			<k-button
@@ -136,15 +133,6 @@ export default {
 	background-color: var(--color-slate-300);
 }
 
-.k-panel-menu-title {
-	visibility: var(--menu-title-visibility);
-	padding-inline: var(--menu-padding-inline);
-	font-weight: 600;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
 .k-panel-menu-search {
 	margin-bottom: var(--spacing-12);
 }
@@ -196,7 +184,6 @@ export default {
 
 @media (min-width: 40rem) {
 	.k-panel-menu {
-		--menu-title-visibility: hidden;
 		--menu-buttons: none;
 
 		position: sticky;
@@ -213,7 +200,6 @@ export default {
 
 @media (min-width: 60rem) {
 	.k-panel-menu:has([name="menu"]:checked) {
-		--menu-title-visibility: visible;
 		--menu-buttons: block;
 
 		width: var(--menu-width);

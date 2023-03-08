@@ -32,8 +32,7 @@ export default {
 }
 
 .k-panel-main {
-	--main-padding-inline: max(3cqw, var(--spacing-6));
-
+	--main-padding-inline: clamp(var(--spacing-3), 5cqw, var(--spacing-24));
 	flex-grow: 1;
 }
 
