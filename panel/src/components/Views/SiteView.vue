@@ -26,6 +26,8 @@
 					/>
 					<k-languages-dropdown />
 				</k-button-group>
+
+				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
 
@@ -37,9 +39,6 @@
 			parent="site"
 			@submit="$emit('submit', $event)"
 		/>
-		<template #footer>
-			<k-form-buttons :lock="lock" />
-		</template>
 	</k-inside>
 </template>
 

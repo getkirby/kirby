@@ -67,8 +67,11 @@
 					</k-dropdown>
 					<k-languages-dropdown />
 				</k-button-group>
+
+				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
 		<k-sections
 			:blueprint="blueprint"
 			:empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
@@ -83,9 +86,6 @@
 			accept="image/*"
 			@success="uploadedAvatar"
 		/>
-		<template #footer>
-			<k-form-buttons :lock="lock" />
-		</template>
 	</k-inside>
 </template>
 
