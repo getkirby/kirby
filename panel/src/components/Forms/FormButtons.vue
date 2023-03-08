@@ -229,9 +229,7 @@ export default {
 				return false;
 			}
 
-			if (e.preventDefault) {
-				e.preventDefault();
-			}
+			e.preventDefault?.();
 
 			try {
 				await this.$store.dispatch("content/save");
