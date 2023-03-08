@@ -1,62 +1,14 @@
 <template>
-	<nav :data-theme="theme" class="k-form-buttons">
-		<k-view v-if="mode === 'unlock'">
-			<p class="k-form-lock-info">
-				{{ $t("lock.isUnlocked") }}
-			</p>
-			<span class="k-form-lock-buttons">
-				<k-button
-					:text="$t('download')"
-					icon="download"
-					class="k-form-button"
-					@click="onDownload"
-				/>
-				<k-button
-					:text="$t('confirm')"
-					icon="check"
-					class="k-form-button"
-					@click="onResolve"
-				/>
-			</span>
-		</k-view>
+	<nav class="k-form-buttons">
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-if="message" class="k-help" v-html="message" />
 
-		<k-view v-else-if="mode === 'lock'">
-			<p class="k-form-lock-info">
-				<k-icon type="lock" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="$t('lock.isLocked', { email: $esc(lock.data.email) })" />
-			</p>
-
-			<k-icon
-				v-if="!lock.data.unlockable"
-				type="loader"
-				class="k-form-lock-loader"
-			/>
-			<k-button
-				v-else
-				:text="$t('lock.unlock')"
-				icon="unlock"
-				class="k-form-button"
-				@click="onUnlock()"
-			/>
-		</k-view>
-
-		<k-view v-else-if="mode === 'changes'">
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('revert')"
-				icon="undo"
-				class="k-form-button"
-				@click="onRevert"
-			/>
-			<k-button
-				:disabled="isDisabled"
-				:text="$t('save')"
-				icon="check"
-				class="k-form-button"
-				@click="onSave"
-			/>
-		</k-view>
+		<k-button-group
+			:buttons="buttons"
+			:theme="theme"
+			layout="collapsed"
+			variant="filled"
+		/>
 
 		<k-dialog
 			ref="revert"
@@ -87,6 +39,74 @@ export default {
 		api() {
 			// always use silent requests (without loading spinner)
 			return [this.$view.path + "/lock", null, null, true];
+		},
+		message() {
+			if (this.mode === "unlock") {
+				return this.$t("lock.isUnlocked");
+			}
+
+			if (this.mode === "lock") {
+				return this.$t("lock.isLocked", {
+					email: this.$esc(this.lock.data.email)
+				});
+			}
+
+			return false;
+		},
+		buttons() {
+			if (this.mode === "unlock") {
+				return [
+					{
+						icon: "download",
+						text: this.$t("download"),
+						responsive: true,
+						click: this.onDownload
+					},
+					{
+						icon: "check",
+						text: this.$t("confirm"),
+						click: this.onResolve
+					}
+				];
+			}
+
+			if (this.mode === "lock") {
+				if (this.lock.data.unlockable) {
+					return [
+						{
+							icon: "unlock",
+							text: this.$t("lock.unlock"),
+							click: this.onUnlock
+						}
+					];
+				}
+
+				return [
+					{
+						icon: "loader"
+					}
+				];
+			}
+
+			if (this.mode === "changes") {
+				return [
+					{
+						icon: "undo",
+						text: this.$t("revert"),
+						responsive: true,
+						disabled: this.isDisabled,
+						click: this.onRevert
+					},
+					{
+						icon: "check",
+						text: this.$t("save"),
+						disabled: this.isDisabled,
+						click: this.onSave
+					}
+				];
+			}
+
+			return [];
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
@@ -281,48 +301,17 @@ export default {
 
 <style>
 .k-form-buttons {
-	position: sticky;
-	inset-inline: 0;
-	bottom: 0;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+.k-form-buttons .k-help {
+	max-width: 22rem;
 }
 
-.k-form-buttons[data-theme] {
-	background: var(--theme-color-500);
-}
-.k-form-buttons .k-view {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-.k-form-button.k-button {
-	font-weight: 500;
-	white-space: nowrap;
-	line-height: 1;
-	height: 2.5rem;
-	display: flex;
-	padding: 0 1rem;
-	align-items: center;
-}
-.k-form-button:first-child {
-	margin-inline-start: -1rem;
-}
-.k-form-button:last-child {
-	margin-inline-end: -1rem;
-}
-
-.k-form-lock-info {
-	display: flex;
-	font-size: var(--text-sm);
-	align-items: center;
-	line-height: 1.5em;
-	padding: 0.625rem 0;
-	margin-inline-end: 3rem;
-}
-.k-form-lock-info > .k-icon {
-	margin-inline-end: 0.5rem;
-}
-.k-form-lock-buttons {
-	display: flex;
-	flex-shrink: 0;
+@container (max-width: 60rem) {
+	.k-form-buttons .k-help {
+		display: none;
+	}
 }
 </style>

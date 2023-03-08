@@ -49,6 +49,8 @@
 					</k-dropdown>
 					<k-languages-dropdown />
 				</k-button-group>
+
+				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
 
@@ -61,10 +63,6 @@
 		/>
 
 		<k-upload ref="upload" @success="onUpload" />
-
-		<template #footer>
-			<k-form-buttons :lock="lock" />
-		</template>
 	</k-inside>
 </template>
 

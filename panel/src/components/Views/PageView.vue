@@ -55,6 +55,8 @@
 
 					<k-languages-dropdown />
 				</k-button-group>
+
+				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
 		<k-sections
@@ -64,9 +66,6 @@
 			:parent="id"
 			:tab="tab"
 		/>
-		<template #footer>
-			<k-form-buttons :lock="lock" />
-		</template>
 	</k-inside>
 </template>
 
