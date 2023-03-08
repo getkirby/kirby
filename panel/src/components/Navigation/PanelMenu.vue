@@ -237,7 +237,6 @@ export default {
 		position: absolute;
 		top: 0.5rem;
 		inset-inline-end: 4px;
-		background: red;
 		width: 4px;
 		height: 2rem;
 		background-color: var(--color-slate-400);
