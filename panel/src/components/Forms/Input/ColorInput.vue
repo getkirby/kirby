@@ -56,6 +56,7 @@ export default {
 	},
 	mounted() {
 		this.onInvalid();
+		this.onBlur();
 
 		if (this.$props.autofocus) {
 			this.focus();

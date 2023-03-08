@@ -2,6 +2,7 @@
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 return [
 	'props' => [
@@ -47,6 +48,9 @@ return [
 		}
 	],
 	'computed' => [
+		'default' => function (): string {
+			return Str::lower($this->default);
+		},
 		'options' => function (): array {
 			return A::map(array_keys($this->options), fn ($key) => [
 				'value' => $this->options[$key],

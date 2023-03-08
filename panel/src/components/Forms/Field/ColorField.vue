@@ -9,7 +9,7 @@
 			<button
 				v-for="color in convertedOptions"
 				:key="color.value"
-				:aria-current="color.value === option?.value"
+				:aria-current="color.value === currentOption?.value"
 				:style="'color: ' + color.value"
 				:title="color.text ?? color.value"
 				class="k-color-preview"
@@ -70,7 +70,9 @@
 				/>
 			</template>
 
-			<template v-if="option?.text" #after>{{ option.text }}</template>
+			<template v-if="currentOption?.text" #after>
+				{{ currentOption.text }}
+			</template>
 		</k-input>
 	</k-field>
 </template>
@@ -116,7 +118,7 @@ export default {
 				value: this.convert(option.value)
 			}));
 		},
-		option() {
+		currentOption() {
 			return this.convertedOptions.find((color) => color.value === this.value);
 		}
 	},
