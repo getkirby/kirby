@@ -124,7 +124,7 @@ export default {
 		prevBtn() {
 			return {
 				disabled: this.start <= 1,
-				title: this.prevLabel ?? this.$t("prev"),
+				tooltip: this.prevLabel ?? this.$t("prev"),
 				icon: "angle-left",
 				click: () => this.prev()
 			};
@@ -132,7 +132,7 @@ export default {
 		nextBtn() {
 			return {
 				disabled: this.end >= this.total,
-				title: this.nextLabel ?? this.$t("next"),
+				tooltip: this.nextLabel ?? this.$t("next"),
 				icon: "angle-right",
 				click: () => this.next()
 			};
