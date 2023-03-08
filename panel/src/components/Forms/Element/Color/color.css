@@ -38,6 +38,8 @@
 
 	position: relative;
 	display: inline-block;
+	color: transparent;
+	background: var(--color-white) var(--pattern);
 	border-radius: var(--rounded-sm);
 	overflow: hidden;
 }
