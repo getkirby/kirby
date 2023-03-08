@@ -6,6 +6,7 @@
 		v-on="$listeners"
 	>
 		<img
+			v-if="src"
 			:key="src"
 			:alt="alt || ''"
 			:src="src"

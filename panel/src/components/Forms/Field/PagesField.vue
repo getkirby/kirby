@@ -6,8 +6,8 @@
 					v-if="more && !disabled"
 					:icon="btnIcon"
 					:text="btnLabel"
-					variant="filled"
 					size="xs"
+					variant="filled"
 					class="k-field-options-button"
 					@click="open"
 				/>
