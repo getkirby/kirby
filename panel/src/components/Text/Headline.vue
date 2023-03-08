@@ -69,7 +69,7 @@ export default {
 	--font-h5: var(--font-semi);
 	--font-h6: var(--font-semi);
 
-	--leading-h1: 1;
+	--leading-h1: 1.125;
 	--leading-h2: 1.125;
 	--leading-h3: 1.25;
 	--leading-h4: 1.375;

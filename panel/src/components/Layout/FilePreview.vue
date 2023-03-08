@@ -42,6 +42,7 @@ export default {
 	display: grid;
 	background: var(--color-dark);
 	border-radius: var(--rounded-lg);
+	margin-bottom: var(--spacing-6);
 }
 
 .k-file-preview-thumb {

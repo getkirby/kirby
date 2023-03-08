@@ -13,8 +13,6 @@
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
-			:tab="tab.name"
-			:tabs="tabs"
 			@edit="$dialog(id + '/changeName')"
 		>
 			{{ model.filename }}
@@ -53,6 +51,8 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"

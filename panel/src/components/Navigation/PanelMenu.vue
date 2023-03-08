@@ -126,7 +126,6 @@ export default {
 
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacing-1);
 	padding: var(--spacing-3);
 	background-color: var(--color-slate-300);
 }
