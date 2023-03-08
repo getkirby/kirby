@@ -32,16 +32,14 @@
 }
 
 .k-color-preview {
+	--button-color-back: var(--color-white) var(--pattern);
+	--button-color-hover: var(--button-color-back);
+	--button-color-text: transparent;
+
 	position: relative;
 	display: inline-block;
-	color: transparent;
-	background: white var(--bg-pattern);
 	border-radius: var(--rounded-sm);
 	overflow: hidden;
-}
-
-.k-color-preview:hover {
-	background: white var(--bg-pattern);
 }
 
 .k-color-preview::after {
