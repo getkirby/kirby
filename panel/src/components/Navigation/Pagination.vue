@@ -1,49 +1,43 @@
 <template>
-	<nav v-if="isVisible" :data-align="align" class="k-pagination">
+	<k-button-group
+		v-if="isVisible"
+		:data-align="align"
+		layout="collapsed"
+		class="k-pagination"
+	>
 		<!-- prev -->
 		<k-button v-bind="prevBtn" />
 
 		<!-- details -->
 		<k-dropdown v-if="details">
-			<k-button
-				:disabled="!hasPages"
-				class="k-pagination-details"
-				@click="$refs.dropdown?.toggle()"
-			>
-				<template v-if="total > 1">
-					{{ detailsText }}
-				</template>
-				{{ total }}
-			</k-button>
+			<k-button v-bind="detailsBtn" />
 
 			<k-dropdown-content
-				v-if="dropdown"
 				ref="dropdown"
+				align="right"
 				class="k-pagination-selector"
 				@open="$nextTick(() => $refs.page.focus())"
 			>
-				<div class="k-pagination-settings">
-					<label for="k-pagination-page">
-						<span>{{ pageLabel ?? $t("pagination.page") }}:</span>
-						<select id="k-pagination-page" ref="page">
-							<option
-								v-for="p in pages"
-								:key="p"
-								:selected="page === p"
-								:value="p"
-							>
-								{{ p }}
-							</option>
-						</select>
-					</label>
-					<k-button icon="check" @click="goTo($refs.page.value)" />
-				</div>
+				<label for="k-pagination-page">
+					<span>{{ pageLabel ?? $t("pagination.page") }}:</span>
+					<select id="k-pagination-page" ref="page">
+						<option
+							v-for="p in pages"
+							:key="p"
+							:selected="page === p"
+							:value="p"
+						>
+							{{ p }}
+						</option>
+					</select>
+				</label>
+				<k-button icon="check" @click="goTo($refs.page.value)" />
 			</k-dropdown-content>
 		</k-dropdown>
 
 		<!-- next -->
 		<k-button v-bind="nextBtn" />
-	</nav>
+	</k-button-group>
 </template>
 
 <script>
@@ -124,17 +118,31 @@ export default {
 		prevBtn() {
 			return {
 				disabled: this.start <= 1,
-				tooltip: this.prevLabel ?? this.$t("prev"),
 				icon: "angle-left",
+				size: "xs",
+				tooltip: this.prevLabel ?? this.$t("prev"),
+				variant: "filled",
 				click: () => this.prev()
 			};
 		},
 		nextBtn() {
 			return {
 				disabled: this.end >= this.total,
-				tooltip: this.nextLabel ?? this.$t("next"),
 				icon: "angle-right",
+				size: "xs",
+				tooltip: this.nextLabel ?? this.$t("next"),
+				variant: "filled",
 				click: () => this.next()
+			};
+		},
+		detailsBtn() {
+			return {
+				class: "k-pagination-details",
+				disabled: this.total <= this.limit,
+				size: "xs",
+				text: `${this.total > 1 ? this.detailsText : null} ${this.total}`,
+				variant: "filled",
+				click: () => this.$refs.dropdown?.toggle()
 			};
 		},
 		start() {
@@ -152,9 +160,6 @@ export default {
 		},
 		pages() {
 			return Math.ceil(this.total / this.limit);
-		},
-		hasPages() {
-			return this.total > this.limit;
 		},
 		offset() {
 			return this.start - 1;
@@ -230,43 +235,39 @@ export default {
 }
 
 .k-pagination-details {
+	--button-padding: var(--spacing-3);
+	font-size: var(--text-sm);
 	white-space: nowrap;
 }
-.k-pagination-details:not(:has(+ .k-dropdown-content)) {
+.k-pagination-details:has(:not(+ .k-dropdown-content)) {
 	cursor: default;
+	pointer-events: none;
 }
 
-.k-pagination[data-align] {
-	text-align: var(--align);
-}
-
-.k-dropdown-content.k-pagination-selector {
-	position: absolute;
-	top: 100%;
-	inset-inline-start: 50%;
-	transform: translateX(-50%);
-	background: var(--color-black);
-}
-[dir="ltr"] .k-dropdown-content.k-pagination-selector {
+[dir="ltr"] .k-pagination-selector {
 	direction: ltr;
 }
-[dir="rtl"] .k-dropdown-content.k-pagination-selector {
+[dir="rtl"] .k-pagination-selector {
 	direction: rtl;
 }
 
-.k-pagination-settings {
+.k-pagination-selector {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	padding: 0;
+	font-size: var(--text-xs);
 }
-.k-pagination-settings label {
+.k-pagination-selector label {
 	display: flex;
 	border-inline-end: 1px solid rgba(255, 255, 255, 0.35);
 	align-items: center;
-	padding: 0.625rem 1rem;
-	font-size: var(--text-xs);
+	padding: var(--spacing-3);
 }
-.k-pagination-settings label span {
-	margin-inline-end: 0.5rem;
+.k-pagination-selector select {
+	width: auto;
+}
+.k-pagination-selector label span {
+	margin-inline-end: var(--spacing-2);
 }
 </style>
