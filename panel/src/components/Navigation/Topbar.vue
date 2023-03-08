@@ -27,6 +27,8 @@
 
 			<!-- unsaved changes indicator -->
 			<k-form-indicator />
+
+			<slot />
 		</div>
 	</div>
 </template>

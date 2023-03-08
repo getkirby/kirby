@@ -5,6 +5,10 @@
 		:data-template="blueprint"
 		class="k-user-view"
 	>
+		<template #topbar>
+			<k-prev-next v-if="model.account" :prev="prev" :next="next" />
+		</template>
+
 		<div class="k-user-profile">
 			<k-dropdown>
 				<k-button
@@ -63,8 +67,6 @@
 					</k-dropdown>
 					<k-languages-dropdown />
 				</k-button-group>
-
-				<k-prev-next v-if="!model.account" :prev="prev" :next="next" />
 			</template>
 		</k-header>
 		<k-sections

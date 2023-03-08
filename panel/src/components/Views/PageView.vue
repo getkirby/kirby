@@ -5,6 +5,10 @@
 		:data-template="blueprint"
 		class="k-page-view"
 	>
+		<template #topbar>
+			<k-prev-next v-if="model.id" :prev="prev" :next="next" />
+		</template>
+
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
 			:tab="tab.name"
@@ -51,8 +55,6 @@
 
 					<k-languages-dropdown />
 				</k-button-group>
-
-				<k-prev-next v-if="model.id" :prev="prev" :next="next" />
 			</template>
 		</k-header>
 		<k-sections

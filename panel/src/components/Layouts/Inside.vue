@@ -8,7 +8,9 @@
 					:breadcrumb="$view.breadcrumb"
 					:license="$license"
 					:view="$view"
-				/>
+				>
+					<slot name="topbar" />
+				</k-topbar>
 
 				<slot />
 			</div>

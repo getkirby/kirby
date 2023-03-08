@@ -5,6 +5,10 @@
 		:data-template="blueprint"
 		class="k-file-view"
 	>
+		<template #topbar>
+			<k-prev-next :prev="prev" :next="next" />
+		</template>
+
 		<k-file-preview v-bind="preview" />
 
 		<k-header
@@ -45,9 +49,6 @@
 					</k-dropdown>
 					<k-languages-dropdown />
 				</k-button-group>
-			</template>
-			<template #right>
-				<k-prev-next :prev="prev" :next="next" />
 			</template>
 		</k-header>
 
