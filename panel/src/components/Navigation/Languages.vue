@@ -3,10 +3,10 @@
 		<k-button
 			:dropdown="true"
 			:responsive="true"
-			:text="language.name"
+			:text="code"
 			icon="globe"
-			variant="filled"
 			size="sm"
+			variant="filled"
 			@click="$refs.languages.toggle()"
 		/>
 		<k-dropdown-content v-if="languages" ref="languages">
@@ -28,6 +28,9 @@
 <script>
 export default {
 	computed: {
+		code() {
+			return this.language.code.toUpperCase();
+		},
 		defaultLanguage() {
 			return this.$languages.find((language) => language.default === true);
 		},
