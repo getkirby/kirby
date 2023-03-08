@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 class ItemsTest extends TestCase
 {
 	protected $app;
+	protected $field;
 	protected $page;
 
 	public function setUp(): void
@@ -17,7 +18,8 @@ class ItemsTest extends TestCase
 			],
 		]);
 
-		$this->page = new Page(['slug' => 'test']);
+		$this->page  = new Page(['slug' => 'test']);
+		$this->field = new Field($this->page, 'test', 'abcde');
 	}
 
 	public function testConstruct()
@@ -37,19 +39,41 @@ class ItemsTest extends TestCase
 
 	public function testFactoryFromArray()
 	{
-		$items = Items::factory([
+		$items = Items::factory(
 			[
-				'id' => 'a',
+				[
+					'id' => 'a',
+				],
+				[
+					'id' => 'b',
+				]
 			],
 			[
-				'id' => 'b',
+				'parent' => $this->page,
+				'field'  => $this->field
 			]
-		]);
+		);
 
 		$this->assertCount(2, $items);
 		$this->assertSame($items, $items->first()->siblings());
 		$this->assertSame('a', $items->first()->id());
 		$this->assertSame('b', $items->last()->id());
+		$this->assertSame($this->page, $items->first()->parent());
+		$this->assertSame($this->field, $items->first()->field());
+	}
+
+	public function testField()
+	{
+		$items = new Items([]);
+
+		$this->assertNull($items->field());
+
+		$items = new Blocks([], [
+			'parent' => $this->page,
+			'field'  => $this->field
+		]);
+
+		$this->assertSame($this->field, $items->field());
 	}
 
 	public function testParent()

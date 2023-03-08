@@ -568,7 +568,7 @@ class ViewTest extends TestCase
 			'icon' => 'logout',
 			'id'   => 'logout',
 			'link' => 'logout',
-			'text' => 'Logout'
+			'text' => 'Log out'
 		];
 
 		$this->assertCount(4, $menu);

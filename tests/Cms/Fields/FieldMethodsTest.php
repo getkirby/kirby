@@ -406,6 +406,15 @@ class FieldMethodsTest extends TestCase
 		$field->toStructure();
 	}
 
+	public function testToTimestamp()
+	{
+		$field = $this->field('2012-12-12');
+		$ts    = strtotime('2012-12-12');
+
+		$this->assertSame($ts, $field->toTimestamp());
+		$this->assertFalse($this->field(null)->toTimestamp());
+	}
+
 	public function testToDefaultUrl()
 	{
 		$field    = $this->field('super/cool');
@@ -531,6 +540,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Headline Subtitle with <a href="#">link</a>.';
 
 		$this->assertSame($expected, $this->field($html)->inline()->value());
+		$this->assertSame('', $this->field(null)->inline()->value());
 	}
 
 	public function testNl2br()
@@ -539,6 +549,7 @@ class FieldMethodsTest extends TestCase
 		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
 
 		$this->assertSame($expected, $this->field($input)->nl2br()->value());
+		$this->assertSame('', $this->field(null)->nl2br()->value());
 	}
 
 	public function testKirbytext()
@@ -825,7 +836,8 @@ class FieldMethodsTest extends TestCase
 		];
 
 		$json   = Json::encode($data);
-		$field  = new Field(kirby()->page('files'), 'test', $json);
+		$page   = kirby()->page('files');
+		$field  = new Field($page, 'test', $json);
 		$blocks = $field->toBlocks();
 
 		$this->assertInstanceOf(Blocks::class, $blocks);
@@ -836,6 +848,8 @@ class FieldMethodsTest extends TestCase
 		foreach ($data as $index => $row) {
 			$block = $blocks->nth($index);
 
+			$this->assertSame($page, $block->parent());
+			$this->assertEquals($field, $block->field()); // cannot use strict assertion (cloned object)
 			$this->assertSame($row['type'], $block->type());
 			$this->assertSame($row['content'], $block->content()->data());
 			$this->assertNotEmpty($block->toHtml());
@@ -874,17 +888,27 @@ class FieldMethodsTest extends TestCase
 			]
 		];
 
-		$field = $this->field(json_encode($data));
+		$page    = kirby()->page('files');
+		$field   = new Field($page, 'test', json_encode($data));
 		$layouts = $field->toLayouts();
+		$blocks  = $layouts->toBlocks();
 
 		$this->assertInstanceOf(Layouts::class, $layouts);
-		$this->assertInstanceOf(Site::class, $layouts->parent());
+		$this->assertSame($page, $layouts->parent());
 		$this->assertCount(1, $layouts->data());
 
-		$layout = $layouts->first()->toArray();
-		$this->assertArrayHasKey('attrs', $layout);
-		$this->assertArrayHasKey('columns', $layout);
-		$this->assertArrayHasKey('id', $layout);
+		$layout = $layouts->first();
+		$this->assertSame($page, $layout->parent());
+		$this->assertEquals($field, $layout->field()); // cannot use strict assertion (cloned object)
+
+		$array = $layout->toArray();
+		$this->assertArrayHasKey('attrs', $array);
+		$this->assertArrayHasKey('columns', $array);
+		$this->assertArrayHasKey('id', $array);
+
+		$block = $blocks->first();
+		$this->assertSame($page, $block->parent());
+		$this->assertEquals($field, $block->field());
 	}
 
 	public function testToObject()

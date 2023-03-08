@@ -691,6 +691,60 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
+	public function testSearchWithFlip()
+	{
+		$_GET['searchterm'] = 'bike';
+
+		$model = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'subpage-1', 'content' => ['title' => 'Bike']],
+				['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+				['slug' => 'subpage-3', 'content' => ['title' => 'Mount Bike']]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'flip'   => true,
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('Bike', $section->data()[0]['text']);
+		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+		$_GET = [];
+	}
+
+	public function testSearchWithSortBy()
+	{
+		$_GET['searchterm'] = 'bike';
+
+		$model = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'subpage-1', 'content' => ['title' => 'Bike']],
+				['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+				['slug' => 'subpage-3', 'content' => ['title' => 'Mount Bike']]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true,
+			'sortBy' => 'title desc'
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('Bike', $section->data()[0]['text']);
+		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+		$_GET = [];
+	}
+
 	public function testTableLayout()
 	{
 		$model = new Page([

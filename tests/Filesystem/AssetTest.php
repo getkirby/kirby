@@ -22,6 +22,11 @@ class AssetTest extends TestCase
 			'urls' => [
 				'index' => 'https://getkirby.com'
 			],
+			'assetMethods' => [
+				'test' => function () {
+					return 'asset method';
+				}
+			]
 		]);
 	}
 
@@ -61,6 +66,28 @@ class AssetTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__call
+	 */
+	public function testCall()
+	{
+		$asset = $this->_asset($file = 'images/logo.svg');
+
+		// property access
+		$this->assertSame('images', $asset->path());
+
+		// asset method
+		$this->assertSame('image/svg+xml', $asset->mime());
+
+		// custom method
+		$this->assertSame('asset method', $asset->test());
+
+		// invalid
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method: "foo" does not exist');
+		$asset->foo();
+	}
+
+	/**
 	 * @covers ::mediaHash
 	 * @covers ::mediaPath
 	 * @covers ::mediaRoot
@@ -77,6 +104,12 @@ class AssetTest extends TestCase
 		$this->assertSame($mediaPath, $asset->mediaPath());
 		$this->assertSame($this->app->root('media') . '/' . $mediaPath, $asset->mediaRoot());
 		$this->assertSame($this->app->url('media') . '/' . $mediaPath, $asset->mediaUrl());
+	}
+
+	public function testToString()
+	{
+		$asset = $this->_asset();
+		$this->assertSame('<img alt="" src="https://getkirby.com/images/logo.svg">', $asset->__toString());
 	}
 
 	public function testNonExistingMethod()

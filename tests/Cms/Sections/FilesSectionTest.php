@@ -574,6 +574,64 @@ class FilesSectionTest extends TestCase
 		$this->assertSame('mountain.jpg', $section->data()[0]['filename']);
 	}
 
+	public function testSearchWithFlip()
+	{
+		$this->app->clone([
+			'request' => [
+				'query' => ['searchterm' => 'bike']
+			]
+		]);
+
+		$model = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'bike.jpg'],
+				['filename' => 'mountain.jpg'],
+				['filename' => 'mount-bike.jpg']
+			]
+		]);
+
+		$section = new Section('files', [
+			'flip'   => true,
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('bike.jpg', $section->data()[0]['filename']);
+		$this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
+	}
+
+	public function testSearchWithSortBy()
+	{
+		$this->app->clone([
+			'request' => [
+				'query' => ['searchterm' => 'bike']
+			]
+		]);
+
+		$model = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'bike.jpg'],
+				['filename' => 'mountain.jpg'],
+				['filename' => 'mount-bike.jpg']
+			]
+		]);
+
+		$section = new Section('files', [
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true,
+			'sortBy' => 'filename desc',
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('bike.jpg', $section->data()[0]['filename']);
+		$this->assertSame('mount-bike.jpg', $section->data()[1]['filename']);
+	}
+
 	public function testTableLayout()
 	{
 		$model = new Page([

@@ -60,14 +60,17 @@ class BlockTest extends TestCase
 		$this->assertSame($content, $block->content()->toArray());
 	}
 
-	public function testContentWhenNotArray()
+	/**
+	 * @todo block.converter remove eventually
+	 */
+	public function testContentWhenNotArrayConvertedAsEditorBlock()
 	{
 		$block = new Block([
 			'type'    => 'heading',
-			'content' => 'this is invalid now'
+			'content' => $content ='this is old editor content'
 		]);
 
-		$this->assertSame([], $block->content()->toArray());
+		$this->assertSame($content, $block->content()->toArray()['text']);
 	}
 
 	public function testController()
