@@ -218,6 +218,7 @@ class Core
 		return [
 			'blocks'      => 'Kirby\Form\Field\BlocksField',
 			'checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
 			'files'       => $this->root . '/fields/files.php',
