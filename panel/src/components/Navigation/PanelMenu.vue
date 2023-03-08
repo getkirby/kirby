@@ -116,8 +116,6 @@ export default {
 }
 
 .k-panel-menu {
-	--menu-padding-inline: calc(var(--button-padding) + 0.125rem);
-
 	height: 100vh;
 	height: 100dvh;
 	flex-shrink: 0;
@@ -206,7 +204,7 @@ export default {
 	}
 
 	.k-panel-menu:has([name="menu"]:checked) .k-button {
-		padding-inline-start: var(--menu-padding-inline);
+		padding-inline-start: calc(var(--button-padding) + 0.125rem);
 		justify-content: flex-start;
 	}
 
