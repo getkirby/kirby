@@ -571,11 +571,10 @@ class ViewTest extends TestCase
 			'text' => 'Log out'
 		];
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(3, $menu);
 		$this->assertSame('-', $menu[0]);
 		$this->assertSame($account, $menu[1]);
-		$this->assertSame('-', $menu[2]);
-		$this->assertSame($logout, $menu[3]);
+		$this->assertSame($logout, $menu[2]);
 	}
 
 	/**
@@ -609,7 +608,7 @@ class ViewTest extends TestCase
 			'text'     => 'Site'
 		];
 
-		$this->assertCount(5, $menu);
+		$this->assertCount(4, $menu);
 		$this->assertSame($expected, $menu[0]);
 	}
 
@@ -635,7 +634,7 @@ class ViewTest extends TestCase
 			'site'
 		);
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(3, $menu);
 		$this->assertSame('-', $menu[0]);
 	}
 
@@ -657,7 +656,7 @@ class ViewTest extends TestCase
 			],
 		);
 
-		$this->assertCount(5, $menu);
+		$this->assertCount(4, $menu);
 		$this->assertSame('Site', $menu[0]['text']);
 	}
 
@@ -679,7 +678,7 @@ class ViewTest extends TestCase
 			],
 		);
 
-		$this->assertCount(5, $menu);
+		$this->assertCount(4, $menu);
 		$this->assertTrue($menu[0]['disabled']);
 	}
 
@@ -701,7 +700,7 @@ class ViewTest extends TestCase
 			],
 		);
 
-		$this->assertCount(4, $menu);
+		$this->assertCount(3, $menu);
 	}
 
 	/**
