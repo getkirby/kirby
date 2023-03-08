@@ -29,7 +29,7 @@
 		<slot name="footer">
 			<footer v-if="help || $slots.help" class="k-field-footer">
 				<slot name="help">
-					<k-text v-if="help" theme="help" class="k-field-help" :html="help" />
+					<k-text v-if="help" class="k-help k-field-help" :html="help" />
 				</slot>
 			</footer>
 		</slot>
@@ -94,7 +94,7 @@ export default {
 .k-field:focus-within > .k-field-header > .k-field-counter {
 	display: block;
 }
-.k-field-help {
-	padding-top: 0.5rem;
+.k-field > :has(+ footer) {
+	margin-bottom: var(--spacing-1);
 }
 </style>
