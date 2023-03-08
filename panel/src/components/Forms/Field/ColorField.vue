@@ -157,11 +157,11 @@ export default {
 	--preview-width: 1.5rem;
 }
 .k-color-field .k-input .k-input-before {
-	padding: 0.25rem;
+	padding: var(--spacing-1);
 }
 .k-color-field .k-input .k-color-field-preview {
-	width: calc(var(--field-input-height) - 0.5rem);
-	height: calc(var(--field-input-height) - 0.5rem);
+	width: calc(var(--field-input-height) - var(--spacing-2));
+	height: calc(var(--field-input-height) - var(--spacing-2));
 	flex-shrink: 0;
 	transition: none;
 }
@@ -196,11 +196,6 @@ export default {
 .k-color-field .k-color-preview[aria-current] {
 	border: 2px solid var(--color-focus);
 	outline: var(--field-input-focus-outline);
-}
-
-.k-color-field .k-color-input {
-	font-size: var(--text-sm);
-	font-family: var(--font-mono);
 }
 
 .k-color-field .k-input-after {

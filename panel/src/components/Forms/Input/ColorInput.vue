@@ -110,3 +110,10 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-text-input.k-color-input {
+	font-size: var(--text-sm);
+	font-family: var(--font-mono);
+}
+</style>
