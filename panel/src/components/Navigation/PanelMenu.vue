@@ -226,16 +226,26 @@ export default {
 
 	.k-panel-menu-handle {
 		position: absolute;
-		inset-block-start: 50%;
-		inset-inline-end: 4px;
-		transform: translateY(-50%);
-		width: 4px;
-		height: 2rem;
-		border-radius: var(--rounded);
-		background-color: var(--color-slate-400);
+		inset-block-start: calc(50% - 1.5rem);
+		inset-inline-end: 0;
+		width: 12px;
+		height: 3rem;
 		z-index: var(--z-dialog);
 	}
-
+	.k-panel-menu-handle::before {
+		content: "";
+		position: absolute;
+		top: 0.5rem;
+		inset-inline-end: 4px;
+		background: red;
+		width: 4px;
+		height: 2rem;
+		background-color: var(--color-slate-400);
+		border-radius: var(--rounded);
+	}
+	.k-panel-menu-handle * {
+		cursor: pointer;
+	}
 	.k-panel-menu:hover .k-panel-menu-handle {
 		display: block;
 	}
