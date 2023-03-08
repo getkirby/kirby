@@ -66,6 +66,28 @@ class AssetTest extends TestCase
 	}
 
 	/**
+	 * @covers ::__call
+	 */
+	public function testCall()
+	{
+		$asset = $this->_asset($file = 'images/logo.svg');
+
+		// property access
+		$this->assertSame('images', $asset->path());
+
+		// asset method
+		$this->assertSame('image/svg+xml', $asset->mime());
+
+		// custom method
+		$this->assertSame('asset method', $asset->test());
+
+		// invalid
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The method: "foo" does not exist');
+		$asset->foo();
+	}
+
+	/**
 	 * @covers ::mediaHash
 	 * @covers ::mediaPath
 	 * @covers ::mediaRoot
@@ -96,11 +118,5 @@ class AssetTest extends TestCase
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
-	}
-
-	public function testAssetMethod()
-	{
-		$asset = $this->_asset();
-		$this->assertSame('asset method', $asset->test());
 	}
 }
