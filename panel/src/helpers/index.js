@@ -37,6 +37,23 @@ export default {
 			});
 		};
 
+		/**
+		 * Array.split()
+		 */
+		Array.prototype.split = function (delimiter) {
+			return this.reduce(
+				(entries, entry) => {
+					if (entry === delimiter) {
+						entries.push([]);
+					} else {
+						entries[entries.length - 1].push(entry);
+					}
+					return entries;
+				},
+				[[]]
+			);
+		};
+
 		Vue.prototype.$helper = {
 			clipboard,
 			clone: object.clone,

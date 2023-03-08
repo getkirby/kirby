@@ -2,6 +2,7 @@ import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
 import Forms from "@/components/Forms/index.js";
 import Layout from "@/components/Layout/index.js";
+import Layouts from "@/components/Layouts/index.js";
 import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
 import Sections from "@/components/Sections/index.js";
@@ -16,6 +17,7 @@ export default {
 		app.use(Drawers);
 		app.use(Forms);
 		app.use(Layout);
+		app.use(Layouts);
 		app.use(Misc);
 		app.use(Navigation);
 		app.use(Sections);

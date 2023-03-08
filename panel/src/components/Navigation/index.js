@@ -6,6 +6,7 @@ import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
 import Link from "./Link.vue";
 import Languages from "./Languages.vue";
+import PanelMenu from "./PanelMenu.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
@@ -13,7 +14,7 @@ import Search from "./Search.vue";
 import Tag from "./Tag.vue";
 import Topbar from "./Topbar.vue";
 
-/** @deprecated @todo Remove in v5.0 */
+/** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */
 import ButtonDisabled from "./ButtonDisabled.vue";
 import ButtonLink from "./ButtonLink.vue";
 import ButtonNative from "./ButtonNative.vue";
@@ -28,6 +29,7 @@ export default {
 		app.component("k-dropdown-item", DropdownItem);
 		app.component("k-languages-dropdown", Languages);
 		app.component("k-link", Link);
+		app.component("k-panel-menu", PanelMenu);
 		app.component("k-options-dropdown", OptionsDropdown);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
@@ -35,7 +37,7 @@ export default {
 		app.component("k-tag", Tag);
 		app.component("k-topbar", Topbar);
 
-		/** @deprecated @todo Remove in v5.0 */
+		/** @deprecated @todo deprecated.buttons.components - remove @ 5.0 */
 		app.component("k-button-disabled", ButtonDisabled);
 		app.component("k-button-link", ButtonLink);
 		app.component("k-button-native", ButtonNative);

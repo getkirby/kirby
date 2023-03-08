@@ -15,8 +15,7 @@ describe("SiteView", () => {
 
 	it("should be active in menu", () => {
 		cy.visit("/panel/site");
-		cy.get(".k-topbar-menu-button").click();
-		cy.get(".k-topbar-menu a:first-child").should(
+		cy.get(".k-panel-menu a:first-of-type").should(
 			"have.attr",
 			"aria-current",
 			"true"

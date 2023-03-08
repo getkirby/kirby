@@ -13,12 +13,10 @@ import Grid from "./Grid.vue";
 import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
 import ImageFrame from "./Frame/ImageFrame.vue";
-import Inside from "./Inside.vue";
 import Item from "./Item.vue";
 import ItemImage from "./ItemImage.vue";
 import Items from "./Items.vue";
 import Overlay from "./Overlay.vue";
-import Panel from "./Panel.vue";
 import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
@@ -41,7 +39,6 @@ export default {
 		app.component("k-frame", Frame);
 		app.component("k-grid", Grid);
 		app.component("k-header", Header);
-		app.component("k-inside", Inside);
 		app.component("k-icon-frame", IconFrame);
 		app.component("k-image-frame", ImageFrame);
 		app.component("k-image", ImageFrame);
@@ -49,7 +46,6 @@ export default {
 		app.component("k-item-image", ItemImage);
 		app.component("k-items", Items);
 		app.component("k-overlay", Overlay);
-		app.component("k-panel", Panel);
 		app.component("k-stats", Stats);
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);

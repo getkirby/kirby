@@ -2,8 +2,7 @@
 	<k-button-group
 		:buttons="buttons"
 		layout="collapsed"
-		size="sm"
-		variant="filled"
+		size="xs"
 		class="k-prev-next"
 	/>
 </template>

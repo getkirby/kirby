@@ -1,62 +1,60 @@
 <template>
-	<k-inside>
-		<k-view class="k-system-view">
-			<k-header>
-				{{ $t("view.system") }}
-			</k-header>
-			<section class="k-system-view-section">
-				<header class="k-system-view-section-header">
-					<k-headline>{{ $t("environment") }}</k-headline>
-				</header>
+	<k-inside class="k-system-view">
+		<k-header>
+			{{ $t("view.system") }}
+		</k-header>
+		<section class="k-system-view-section">
+			<header class="k-system-view-section-header">
+				<k-headline>{{ $t("environment") }}</k-headline>
+			</header>
 
-				<k-stats :reports="environment" size="medium" class="k-system-info" />
-			</section>
+			<k-stats :reports="environment" size="medium" class="k-system-info" />
+		</section>
 
-			<section v-if="securityIssues.length" class="k-system-view-section">
-				<header class="k-system-view-section-header">
-					<k-headline>{{ $t("security") }}</k-headline>
-					<k-button
-						:title="$t('retry')"
-						icon="refresh"
-						size="xs"
-						variant="filled"
-						@click="retry"
-					/>
-				</header>
-				<k-items :items="securityIssues" />
-			</section>
-
-			<section v-if="plugins.length" class="k-system-view-section">
-				<header class="k-system-view-section-header">
-					<k-headline link="https://getkirby.com/plugins">
-						{{ $t("plugins") }}
-					</k-headline>
-				</header>
-				<k-table
-					:index="false"
-					:columns="{
-						name: {
-							label: $t('name'),
-							type: 'url',
-							mobile: true
-						},
-						author: {
-							label: $t('author')
-						},
-						license: {
-							label: $t('license')
-						},
-						version: {
-							label: $t('version'),
-							type: 'update-status',
-							mobile: true,
-							width: '10rem'
-						}
-					}"
-					:rows="plugins"
+		<section v-if="securityIssues.length" class="k-system-view-section">
+			<header class="k-system-view-section-header">
+				<k-headline>{{ $t("security") }}</k-headline>
+				<k-button
+					:title="$t('retry')"
+					icon="refresh"
+					size="xs"
+					variant="filled"
+					@click="retry"
 				/>
-			</section>
-		</k-view>
+			</header>
+			<k-items :items="securityIssues" />
+		</section>
+
+		<section v-if="plugins.length" class="k-system-view-section">
+			<header class="k-system-view-section-header">
+				<k-headline link="https://getkirby.com/plugins">
+					{{ $t("plugins") }}
+				</k-headline>
+			</header>
+			<k-table
+				:index="false"
+				:columns="{
+					name: {
+						label: $t('name'),
+						type: 'url',
+						mobile: true
+					},
+					author: {
+						label: $t('author')
+					},
+					license: {
+						label: $t('license')
+					},
+					version: {
+						label: $t('version'),
+						type: 'update-status',
+						mobile: true,
+						width: '10rem'
+					}
+				}"
+				:rows="plugins"
+			/>
+		</section>
 	</k-inside>
 </template>
 
@@ -146,9 +144,6 @@ export default {
 </script>
 
 <style>
-.k-system-view .k-header {
-	margin-bottom: 1.5rem;
-}
 .k-system-view-section-header {
 	margin-bottom: 0.5rem;
 	display: flex;

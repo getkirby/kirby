@@ -1,90 +1,88 @@
 <template>
-	<k-inside>
-		<div
-			:data-locked="isLocked"
-			:data-id="model.id"
-			:data-template="blueprint"
-			class="k-user-view"
-		>
-			<div class="k-user-profile">
-				<k-view>
-					<k-dropdown>
-						<k-button
-							:title="$t('avatar')"
-							:aria-disabled="isLocked"
-							variant="filled"
-							class="k-user-view-image"
-							@click="onAvatar"
-						>
-							<k-image-frame
-								v-if="model.avatar"
-								:cover="true"
-								:src="model.avatar"
-							/>
-							<k-icon-frame v-else icon="user" />
-						</k-button>
-						<k-dropdown-content
-							v-if="model.avatar"
-							ref="picture"
-							:options="avatarOptions"
-						/>
-					</k-dropdown>
-					<k-button-group :buttons="buttons" />
-				</k-view>
-			</div>
-			<k-view>
-				<k-header
-					:editable="permissions.changeName && !isLocked"
-					:tab="tab.name"
-					:tabs="tabs"
-					@edit="$dialog(id + '/changeName')"
+	<k-inside
+		:data-locked="isLocked"
+		:data-id="model.id"
+		:data-template="blueprint"
+		class="k-user-view"
+	>
+		<template #topbar>
+			<k-prev-next v-if="model.account" :prev="prev" :next="next" />
+		</template>
+
+		<div class="k-user-profile">
+			<k-dropdown>
+				<k-button
+					:title="$t('avatar')"
+					:aria-disabled="isLocked"
+					variant="filled"
+					class="k-user-view-image"
+					@click="onAvatar"
 				>
-					<span
-						v-if="!model.name || model.name.length === 0"
-						class="k-user-name-placeholder"
-					>
-						{{ $t("name") }} …
-					</span>
-					<template v-else>
-						{{ model.name }}
-					</template>
-
-					<template #buttons>
-						<k-button-group>
-							<k-dropdown class="k-user-view-options">
-								<k-button
-									:disabled="isLocked"
-									:dropdown="true"
-									:text="$t('settings')"
-									icon="cog"
-									size="sm"
-									variant="filled"
-									@click="$refs.settings.toggle()"
-								/>
-								<k-dropdown-content ref="settings" :options="$dropdown(id)" />
-							</k-dropdown>
-							<k-languages-dropdown />
-						</k-button-group>
-
-						<k-prev-next v-if="!model.account" :prev="prev" :next="next" />
-					</template>
-				</k-header>
-				<k-sections
-					:blueprint="blueprint"
-					:empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
-					:lock="lock"
-					:parent="id"
-					:tab="tab"
+					<k-image-frame
+						v-if="model.avatar"
+						:cover="true"
+						:src="model.avatar"
+					/>
+					<k-icon-frame v-else icon="user" />
+				</k-button>
+				<k-dropdown-content
+					v-if="model.avatar"
+					ref="picture"
+					:options="avatarOptions"
 				/>
-				<k-upload
-					ref="upload"
-					:url="uploadApi"
-					:multiple="false"
-					accept="image/*"
-					@success="uploadedAvatar"
-				/>
-			</k-view>
+			</k-dropdown>
+
+			<k-button-group :buttons="buttons" />
 		</div>
+
+		<k-header
+			:editable="permissions.changeName && !isLocked"
+			:tab="tab.name"
+			:tabs="tabs"
+			@edit="$dialog(id + '/changeName')"
+		>
+			<span
+				v-if="!model.name || model.name.length === 0"
+				class="k-user-name-placeholder"
+			>
+				{{ $t("name") }} …
+			</span>
+			<template v-else>
+				{{ model.name }}
+			</template>
+
+			<template #buttons>
+				<k-button-group>
+					<k-dropdown class="k-user-view-options">
+						<k-button
+							:disabled="isLocked"
+							:dropdown="true"
+							:text="$t('settings')"
+							icon="cog"
+							size="sm"
+							variant="filled"
+							@click="$refs.settings.toggle()"
+						/>
+						<k-dropdown-content ref="settings" :options="$dropdown(id)" />
+					</k-dropdown>
+					<k-languages-dropdown />
+				</k-button-group>
+			</template>
+		</k-header>
+		<k-sections
+			:blueprint="blueprint"
+			:empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
+			:lock="lock"
+			:parent="id"
+			:tab="tab"
+		/>
+		<k-upload
+			ref="upload"
+			:url="uploadApi"
+			:multiple="false"
+			accept="image/*"
+			@success="uploadedAvatar"
+		/>
 		<template #footer>
 			<k-form-buttons :lock="lock" />
 		</template>
@@ -161,20 +159,19 @@ export default {
 
 <style>
 .k-user-profile {
+	--button-height: auto;
+	padding: var(--spacing-2);
 	background: var(--color-white);
-}
-.k-user-profile > .k-view {
-	padding-block: 3rem;
+	border-radius: var(--rounded-lg);
 	display: flex;
 	align-items: center;
-	line-height: 0;
+	gap: var(--spacing-3);
 }
+
 .k-user-profile .k-button-group {
-	overflow: hidden;
-	margin-inline-start: 0.75rem;
-}
-.k-user-profile {
-	--button-height: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 }
 
 .k-user-view-image {
