@@ -25,11 +25,12 @@ import Toolbar from "./Toolbar.vue";
 import ToolbarEmailDialog from "./Toolbar/EmailDialog.vue";
 import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
-/* Form Inputs */
-import Inputs from "./Input/index.js";
-
-/* Form Fields */
+/* Further form components */
+import Blocks from "./Blocks/index.js";
 import Fields from "./Field/index.js";
+import Inputs from "./Input/index.js";
+import Layouts from "./Layouts/index.js";
+import Previews from "./Previews/index.js";
 
 export default {
 	install(app) {
@@ -56,7 +57,10 @@ export default {
 		app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
 		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
-		app.use(Inputs);
+		app.use(Blocks);
 		app.use(Fields);
+		app.use(Inputs);
+		app.use(Layouts);
+		app.use(Previews);
 	}
 };

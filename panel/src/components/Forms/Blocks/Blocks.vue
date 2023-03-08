@@ -87,12 +87,8 @@
 
 <script>
 import { set } from "vue";
-import Pasteboard from "./BlockPasteboard.vue";
 
 export default {
-	components: {
-		"k-block-pasteboard": Pasteboard
-	},
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
