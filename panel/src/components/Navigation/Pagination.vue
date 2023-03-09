@@ -1,68 +1,48 @@
 <template>
-	<nav v-if="show" :data-align="align" class="k-pagination">
-		<k-button
-			v-if="show"
-			:disabled="!hasPrev"
-			:title="prevLabel"
-			icon="angle-left"
-			@click="prev"
-		/>
+	<nav v-if="isVisible" :data-align="align" class="k-pagination">
+		<!-- prev -->
+		<k-button v-bind="prevBtn" />
 
-		<template v-if="details">
-			<template v-if="dropdown">
-				<k-dropdown>
-					<k-button
-						:disabled="!hasPages"
-						class="k-pagination-details"
-						@click="$refs.dropdown.toggle()"
-					>
-						<template v-if="total > 1">
-							{{ detailsText }}
-						</template>
-						{{ total }}
-					</k-button>
+		<!-- details -->
+		<k-dropdown v-if="details">
+			<k-button
+				:disabled="!hasPages"
+				class="k-pagination-details"
+				@click="$refs.dropdown?.toggle()"
+			>
+				<template v-if="total > 1">
+					{{ detailsText }}
+				</template>
+				{{ total }}
+			</k-button>
 
-					<k-dropdown-content
-						ref="dropdown"
-						class="k-pagination-selector"
-						@open="$nextTick(() => $refs.page.focus())"
-					>
-						<div class="k-pagination-settings">
-							<label for="k-pagination-page">
-								<span>{{ pageLabel }}:</span>
-								<select id="k-pagination-page" ref="page">
-									<option
-										v-for="p in pages"
-										:key="p"
-										:selected="page === p"
-										:value="p"
-									>
-										{{ p }}
-									</option>
-								</select>
-							</label>
-							<k-button icon="check" @click="goTo($refs.page.value)" />
-						</div>
-					</k-dropdown-content>
-				</k-dropdown>
-			</template>
-			<template v-else>
-				<span class="k-pagination-details">
-					<template v-if="total > 1">
-						{{ detailsText }}
-					</template>
-					{{ total }}
-				</span>
-			</template>
-		</template>
+			<k-dropdown-content
+				v-if="dropdown"
+				ref="dropdown"
+				class="k-pagination-selector"
+				@open="$nextTick(() => $refs.page.focus())"
+			>
+				<div class="k-pagination-settings">
+					<label for="k-pagination-page">
+						<span>{{ pageLabel ?? $t("pagination.page") }}:</span>
+						<select id="k-pagination-page" ref="page">
+							<option
+								v-for="p in pages"
+								:key="p"
+								:selected="page === p"
+								:value="p"
+							>
+								{{ p }}
+							</option>
+						</select>
+					</label>
+					<k-button icon="check" @click="goTo($refs.page.value)" />
+				</div>
+			</k-dropdown-content>
+		</k-dropdown>
 
-		<k-button
-			v-if="show"
-			:disabled="!hasNext"
-			:title="nextLabel"
-			icon="angle-right"
-			@click="next"
-		/>
+		<!-- next -->
+		<k-button v-bind="nextBtn" />
 	</nav>
 </template>
 
@@ -88,21 +68,12 @@ export default {
 		/**
 		 * Show/hide the details display with the page selector in the center of the two navigation buttons.
 		 */
-		details: {
-			type: Boolean,
-			default: false
-		},
-		dropdown: {
-			type: Boolean,
-			default: true
-		},
+		details: Boolean,
+		dropdown: Boolean,
 		/**
 		 * Enable/disable keyboard navigation
 		 */
-		keys: {
-			type: Boolean,
-			default: false
-		},
+		keys: Boolean,
 		/**
 		 * Sets the limit of items to be shown per page
 		 */
@@ -120,12 +91,7 @@ export default {
 		/**
 		 * Sets the label for the page selector
 		 */
-		pageLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("pagination.page");
-			}
-		},
+		pageLabel: String,
 		/**
 		 * Sets the total number of items that are in the paginated list. This has to be set higher to 0 to activate pagination.
 		 */
@@ -136,64 +102,56 @@ export default {
 		/**
 		 * Sets the label for the `prev` arrow button
 		 */
-		prevLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("prev");
-			}
-		},
+		prevLabel: String,
 		/**
 		 * Sets the label for the `next` arrow button
 		 */
-		nextLabel: {
-			type: String,
-			default() {
-				return window.panel.$t("next");
-			}
-		},
+		nextLabel: String,
 		validate: {
 			type: Function,
-			default() {
-				return Promise.resolve();
-			}
+			default: () => Promise.resolve()
 		}
 	},
 	data() {
 		return {
-			currentPage: this.page
+			current: this.page
 		};
 	},
 	computed: {
-		show() {
+		isVisible() {
 			return this.pages > 1;
 		},
+		prevBtn() {
+			return {
+				disabled: this.start <= 1,
+				title: this.prevLabel ?? this.$t("prev"),
+				icon: "angle-left",
+				click: () => this.prev()
+			};
+		},
+		nextBtn() {
+			return {
+				disabled: this.end >= this.total,
+				title: this.nextLabel ?? this.$t("next"),
+				icon: "angle-right",
+				click: () => this.next()
+			};
+		},
 		start() {
-			return (this.currentPage - 1) * this.limit + 1;
+			return (this.current - 1) * this.limit + 1;
 		},
 		end() {
-			let value = this.start - 1 + this.limit;
-
-			if (value > this.total) {
-				return this.total;
-			} else {
-				return value;
-			}
+			return Math.min(this.start - 1 + this.limit, this.total);
 		},
 		detailsText() {
 			if (this.limit === 1) {
 				return this.start + " / ";
-			} else {
-				return this.start + "-" + this.end + " / ";
 			}
+
+			return this.start + "-" + this.end + " / ";
 		},
 		pages() {
 			return Math.ceil(this.total / this.limit);
-		},
-		hasPrev() {
-			return this.start > 1;
-		},
-		hasNext() {
-			return this.end < this.total;
 		},
 		hasPages() {
 			return this.total > this.limit;
@@ -204,16 +162,16 @@ export default {
 	},
 	watch: {
 		page(page) {
-			this.currentPage = parseInt(page);
+			this.current = parseInt(page);
 		}
 	},
 	created() {
 		if (this.keys === true) {
-			window.addEventListener("keydown", this.navigate, false);
+			window.addEventListener("keydown", this.onKey, false);
 		}
 	},
 	destroyed() {
-		window.removeEventListener("keydown", this.navigate, false);
+		window.removeEventListener("keydown", this.onKey, false);
 	},
 	methods: {
 		/**
@@ -223,27 +181,15 @@ export default {
 		async goTo(page) {
 			try {
 				await this.validate(page);
-
-				if (page < 1) {
-					page = 1;
-				}
-
-				if (page > this.pages) {
-					page = this.pages;
-				}
-
-				this.currentPage = page;
-
-				if (this.$refs.dropdown) {
-					this.$refs.dropdown.close();
-				}
+				this.$refs.dropdown?.close();
 
 				this.$emit("paginate", {
-					page: this.currentPage,
+					page: Math.max(1, Math.min(page, this.pages)),
 					start: this.start,
 					end: this.end,
 					limit: this.limit,
-					offset: this.offset
+					offset: this.offset,
+					total: this.total
 				});
 			} catch (e) {
 				// pagination stopped
@@ -254,23 +200,21 @@ export default {
 		 * @public
 		 */
 		prev() {
-			this.goTo(this.currentPage - 1);
+			this.goTo(this.current - 1);
 		},
 		/**
 		 * Jump to the next page
 		 * @public
 		 */
 		next() {
-			this.goTo(this.currentPage + 1);
+			this.goTo(this.current + 1);
 		},
-		navigate(e) {
+		onKey(e) {
 			switch (e.code) {
 				case "ArrowLeft":
-					this.prev();
-					break;
+					return this.prev();
 				case "ArrowRight":
-					this.next();
-					break;
+					return this.next();
 			}
 		}
 	}
@@ -279,18 +223,19 @@ export default {
 
 <style>
 .k-pagination {
+	display: flex;
+	align-items: center;
 	user-select: none;
 	direction: ltr;
 }
-.k-pagination .k-button {
-	padding: 1rem;
-}
+
 .k-pagination-details {
 	white-space: nowrap;
 }
-.k-pagination > span {
-	font-size: var(--text-sm);
+.k-pagination-details:not(:has(+ .k-dropdown-content)) {
+	cursor: default;
 }
+
 .k-pagination[data-align] {
 	text-align: var(--align);
 }
@@ -313,9 +258,6 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-}
-.k-pagination-settings .k-button {
-	line-height: 1;
 }
 .k-pagination-settings label {
 	display: flex;

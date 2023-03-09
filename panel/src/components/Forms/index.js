@@ -1,3 +1,5 @@
+import Autosize from "./Autosize.js";
+
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
 import Calendar from "./Calendar.vue";
@@ -35,6 +37,8 @@ import Previews from "./Previews/index.js";
 
 export default {
 	install(app) {
+		customElements.define("k-autosize", Autosize);
+
 		app.component("k-calendar", Calendar);
 		app.component("k-counter", Counter);
 		app.component("k-autocomplete", Autocomplete);

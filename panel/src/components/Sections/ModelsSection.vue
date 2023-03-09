@@ -194,20 +194,19 @@ export default {
 	},
 	methods: {
 		async load(reload) {
+			this.isProcessing = true;
+
 			if (!reload) {
 				this.isLoading = true;
 			}
 
-			this.isProcessing = true;
-
-			if (this.pagination.page === null) {
-				this.pagination.page = localStorage.getItem(this.paginationId) || 1;
-			}
+			const page =
+				this.pagination.page ?? localStorage.getItem(this.paginationId) ?? 1;
 
 			try {
 				const response = await this.$api.get(
 					this.parent + "/sections/" + this.name,
-					{ page: this.pagination.page, searchterm: this.searchterm }
+					{ page, searchterm: this.searchterm }
 				);
 
 				this.options = response.options;
