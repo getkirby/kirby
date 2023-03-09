@@ -448,6 +448,7 @@ class Blueprint
 		$name = $props['name'];
 		$type = $props['type'] ?? $name;
 
+
 		if ($type !== 'group' && isset(Field::$types[$type]) === false) {
 			throw new InvalidArgumentException('Invalid field type ("' . $type . '")');
 		}
@@ -459,10 +460,23 @@ class Blueprint
 
 		// groups don't need all the crap
 		if ($type === 'group') {
+
+			$fields = $props['fields'];
+
+			if (array_key_exists('when', $props)) {
+
+				$fields = array_map(function($field) use ($props) {
+					
+					return array_merge($field, ['when' => $props['when']]);
+
+				}, $fields);
+
+			};
+
 			return [
-				'fields' => $props['fields'],
+				'fields' => $fields,
 				'name'   => $name,
-				'type'   => $type,
+				'type'   => $type
 			];
 		}
 
@@ -471,8 +485,9 @@ class Blueprint
 			'label' => $props['label'] ?? ucfirst($name),
 			'name'  => $name,
 			'type'  => $type,
-			'width' => $props['width'] ?? '1/1',
+			'width' => $props['width'] ?? '1/1'
 		]);
+
 	}
 
 	/**
