@@ -1,3 +1,4 @@
+import Section from "../Sections/Section.vue";
 import Sections from "@/components/Sections/Sections.vue";
 
 /* Section Types */
@@ -9,6 +10,7 @@ import StatsSection from "@/components/Sections/StatsSection.vue";
 
 export default {
 	install(app) {
+		app.component("k-section", Section);
 		app.component("k-sections", Sections);
 
 		app.component("k-fields-section", FieldsSection);

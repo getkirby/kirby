@@ -1,18 +1,13 @@
 <template>
-	<section
+	<k-section
 		v-if="isLoading === false"
+		:headline="options.headline || ' '"
+		:link="options.link"
+		:buttons="buttons"
 		:data-processing="isProcessing"
+		:required="options.min"
 		:class="`k-models-section k-${type}-section`"
 	>
-		<header class="k-section-header">
-			<k-headline :link="options.link">
-				{{ options.headline || " " }}
-				<abbr v-if="options.min" :title="$t('section.required')">*</abbr>
-			</k-headline>
-
-			<k-button-group :buttons="buttons" size="xs" variant="filled" />
-		</header>
-
 		<!-- Error -->
 		<k-box v-if="error" theme="negative">
 			<k-text size="small">
@@ -49,7 +44,7 @@
 
 			<k-upload ref="upload" @success="onUpload" @error="reload" />
 		</template>
-	</section>
+	</k-section>
 </template>
 
 <script>

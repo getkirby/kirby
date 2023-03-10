@@ -76,21 +76,4 @@ export default {
 .k-sections {
 	padding-bottom: 3rem;
 }
-.k-section {
-	padding-bottom: 3rem;
-}
-.k-section-header {
-	position: relative;
-	display: flex;
-	align-items: center;
-	z-index: 1;
-	padding-bottom: var(--spacing-2);
-}
-.k-section-header .k-headline {
-	flex-grow: 1;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	padding-inline-end: var(--spacing-3);
-}
 </style>

@@ -1,10 +1,7 @@
 <template>
-	<section class="k-info-section">
-		<k-headline class="k-info-section-label">
-			{{ label }}
-		</k-headline>
+	<k-section :headline="label" class="k-info-section">
 		<k-box :html="true" :text="text" :theme="theme" />
-	</section>
+	</k-section>
 </template>
 
 <script>
@@ -27,9 +24,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-info-section-label {
-	margin-bottom: 0.5rem;
-}
-</style>
