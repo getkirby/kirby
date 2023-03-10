@@ -5,7 +5,7 @@
 		:link="options.link"
 		:buttons="buttons"
 		:data-processing="isProcessing"
-		:required="options.min"
+		:required="Boolean(options.min)"
 		:class="`k-models-section k-${type}-section`"
 	>
 		<!-- Error -->
