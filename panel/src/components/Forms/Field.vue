@@ -7,9 +7,9 @@
 		@focusout="$emit('blur', $event)"
 	>
 		<slot name="header">
-			<header class="k-field-header">
+			<header class="k-bar k-field-header">
 				<slot name="label">
-					<label :for="input" class="k-field-label">
+					<label :for="input" class="k-label k-field-label">
 						{{ labelText }}
 						<abbr v-if="required" :title="$t('field.required')">*</abbr>
 					</label>
@@ -62,22 +62,8 @@ export default {
 </script>
 
 <style>
-.k-field-label {
-	font-weight: var(--font-bold);
-	display: block;
-	flex-grow: 1;
-	line-height: 1.25rem;
-}
-.k-field-label abbr {
-	text-decoration: none;
-	color: var(--color-gray-500);
-	padding-inline-start: 0.25rem;
-}
 .k-field-header {
-	position: relative;
-	display: flex;
-	align-items: center;
-	padding-bottom: var(--spacing-2);
+	margin-bottom: var(--spacing-2);
 }
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;

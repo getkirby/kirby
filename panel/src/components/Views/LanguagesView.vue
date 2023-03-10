@@ -14,35 +14,27 @@
 			</k-button-group>
 		</k-header>
 
-		<section class="k-languages">
-			<template v-if="languages.length > 0">
-				<section class="k-languages-view-section">
-					<header class="k-languages-view-section-header">
-						<k-headline>{{ $t("languages.default") }}</k-headline>
-					</header>
-					<k-collection :items="primaryLanguage" />
-				</section>
+		<template v-if="languages.length > 0">
+			<k-section :headline="$t('languages.default')">
+				<k-collection :items="primaryLanguage" />
+			</k-section>
 
-				<section class="k-languages-view-section">
-					<header class="k-languages-view-section-header">
-						<k-headline>{{ $t("languages.secondary") }}</k-headline>
-					</header>
-					<k-collection
-						v-if="secondaryLanguages.length"
-						:items="secondaryLanguages"
-					/>
-					<k-empty v-else icon="globe" @click="$dialog('languages/create')">
-						{{ $t("languages.secondary.empty") }}
-					</k-empty>
-				</section>
-			</template>
-
-			<template v-else-if="languages.length === 0">
-				<k-empty icon="globe" @click="$dialog('languages/create')">
-					{{ $t("languages.empty") }}
+			<k-section :headline="$t('languages.secondary')">
+				<k-collection
+					v-if="secondaryLanguages.length"
+					:items="secondaryLanguages"
+				/>
+				<k-empty v-else icon="globe" @click="$dialog('languages/create')">
+					{{ $t("languages.secondary.empty") }}
 				</k-empty>
-			</template>
-		</section>
+			</k-section>
+		</template>
+
+		<template v-else-if="languages.length === 0">
+			<k-empty icon="globe" @click="$dialog('languages/create')">
+				{{ $t("languages.empty") }}
+			</k-empty>
+		</template>
 	</k-inside>
 </template>
 
@@ -98,12 +90,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-languages-view-section-header {
-	margin-bottom: 0.5rem;
-}
-.k-languages-view-section {
-	margin-bottom: 3rem;
-}
-</style>

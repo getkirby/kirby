@@ -3,34 +3,32 @@
 		<k-header>
 			{{ $t("view.system") }}
 		</k-header>
-		<section class="k-system-view-section">
-			<header class="k-system-view-section-header">
-				<k-headline>{{ $t("environment") }}</k-headline>
-			</header>
 
+		<k-section :headline="$t('environment')">
 			<k-stats :reports="environment" size="medium" class="k-system-info" />
-		</section>
+		</k-section>
 
-		<section v-if="securityIssues.length" class="k-system-view-section">
-			<header class="k-system-view-section-header">
-				<k-headline>{{ $t("security") }}</k-headline>
-				<k-button
-					:title="$t('retry')"
-					icon="refresh"
-					size="xs"
-					variant="filled"
-					@click="retry"
-				/>
-			</header>
+		<k-section
+			v-if="securityIssues.length"
+			:headline="$t('security')"
+			:buttons="[
+				{
+					title: $t('retry'),
+					icon: 'refresh',
+					size: 'xs',
+					variant: 'filled',
+					click: retry
+				}
+			]"
+		>
 			<k-items :items="securityIssues" />
-		</section>
+		</k-section>
 
-		<section v-if="plugins.length" class="k-system-view-section">
-			<header class="k-system-view-section-header">
-				<k-headline link="https://getkirby.com/plugins">
-					{{ $t("plugins") }}
-				</k-headline>
-			</header>
+		<k-section
+			v-if="plugins.length"
+			:headline="$t('plugins')"
+			link="https://getkirby.com/plugins"
+		>
 			<k-table
 				:index="false"
 				:columns="{
@@ -54,7 +52,7 @@
 				}"
 				:rows="plugins"
 			/>
-		</section>
+		</k-section>
 	</k-inside>
 </template>
 
@@ -144,15 +142,6 @@ export default {
 </script>
 
 <style>
-.k-system-view-section-header {
-	margin-bottom: 0.5rem;
-	display: flex;
-	justify-content: space-between;
-}
-.k-system-view-section {
-	margin-bottom: 3rem;
-}
-
 .k-system-info .k-stat-label {
 	color: var(--theme, var(--color-black));
 }
