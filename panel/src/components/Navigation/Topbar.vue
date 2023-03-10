@@ -22,9 +22,6 @@
 				@click="$store.dispatch('notification/close')"
 			/>
 
-			<!-- registration -->
-			<k-registration v-else-if="!license" />
-
 			<!-- unsaved changes indicator -->
 			<k-form-indicator />
 

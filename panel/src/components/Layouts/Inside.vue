@@ -4,18 +4,14 @@
 
 		<main class="k-panel-main">
 			<div class="k-panel-view">
-				<k-topbar
-					:breadcrumb="$view.breadcrumb"
-					:license="$license"
-					:view="$view"
-				>
+				<k-topbar :breadcrumb="$view.breadcrumb" :view="$view">
 					<slot name="topbar" />
 				</k-topbar>
 
 				<slot />
 			</div>
 
-			<slot name="footer" />
+			<k-registration v-if="!$license" />
 		</main>
 	</k-panel>
 </template>

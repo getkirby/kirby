@@ -1,42 +1,48 @@
 <template>
-	<div class="k-registration">
+	<k-bar :data-theme="theme">
 		<p>{{ $t("license.unregistered") }}</p>
-		<k-button
-			:responsive="true"
-			:title="$t('license.unregistered')"
-			class="k-topbar-button"
-			icon="key"
-			@click="$dialog('registration')"
-		>
-			{{ $t("license.register") }}
-		</k-button>
-		<k-button
-			:responsive="true"
-			class="k-topbar-button"
-			link="https://getkirby.com/buy"
-			target="_blank"
-			icon="cart"
-		>
-			{{ $t("license.buy") }}
-		</k-button>
-	</div>
+
+		<k-button-group :buttons="buttons" :responsive="true" size="sm" />
+	</k-bar>
 </template>
 
-<style>
-.k-registration {
-	display: flex;
-	margin-inline-end: 1rem;
-	align-items: center;
-}
-.k-registration p {
-	color: var(--color-red-600);
-	font-size: var(--text-sm);
-	margin-inline-end: 1rem;
-	font-weight: 600;
-}
-@media screen and (max-width: 90em) {
-	.k-registration p {
-		display: none;
+<script>
+export default {
+	computed: {
+		buttons() {
+			return [
+				{
+					icon: "key",
+					text: this.$t("license.register"),
+					title: this.$t("license.unregistered"),
+					click: () => this.$dialog("registration")
+				},
+				{
+					icon: "cart",
+					text: this.$t("license.buy"),
+					link: "https://getkirby.com/buy",
+					target: "_blank"
+				}
+			];
+		},
+		theme() {
+			return this.$system.isLocal ? "info" : "negative";
+		}
 	}
+};
+</script>
+
+<style scoped>
+.k-bar {
+	position: sticky;
+	bottom: 0;
+	height: 3rem;
+	padding-inline: var(--main-padding-inline);
+	background: var(--theme-color-back);
+	container-type: inline-size;
+}
+
+.k-bar p {
+	font-size: var(--text-sm);
 }
 </style>
