@@ -3,12 +3,26 @@
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-if="message" class="k-help" v-html="message" />
 
-		<k-button-group
-			:buttons="buttons"
-			:theme="theme"
-			layout="collapsed"
-			variant="filled"
-		/>
+		<k-button-group layout="collapsed">
+			<k-button
+				v-bind="button"
+				size="sm"
+				variant="filled"
+				:disabled="disabled"
+				:theme="theme"
+			/>
+			<k-dropdown v-if="mode">
+				<k-button
+					icon="dots"
+					size="sm"
+					variant="filled"
+					:disabled="disabled"
+					:theme="theme"
+					@click="$refs.dropdown.toggle()"
+				/>
+				<k-dropdown-content ref="dropdown" :options="dropdown" align="end" />
+			</k-dropdown>
+		</k-button-group>
 
 		<k-dialog
 			ref="revert"
@@ -53,60 +67,66 @@ export default {
 
 			return false;
 		},
-		buttons() {
+		button() {
 			if (this.mode === "unlock") {
-				return [
-					{
-						icon: "download",
-						text: this.$t("download"),
-						responsive: true,
-						click: this.onDownload
-					},
-					{
-						icon: "check",
-						text: this.$t("confirm"),
-						click: this.onResolve
-					}
-				];
+				return {
+					icon: "check",
+					text: this.$t("confirm"),
+					click: this.onResolve
+				};
 			}
 
 			if (this.mode === "lock") {
-				if (this.lock.data.unlockable) {
-					return [
-						{
-							icon: "unlock",
-							text: this.$t("lock.unlock"),
-							click: this.onUnlock
-						}
-					];
-				}
-
-				return [
-					{
-						icon: "loader"
-					}
-				];
+				return {
+					icon: "unlock",
+					text: this.$t("lock.unlock"),
+					click: this.onUnlock
+				};
 			}
 
+			if (this.mode === "changes") {
+				return {
+					icon: "check",
+					text: this.$t("save"),
+					disabled: this.isDisabled,
+					click: this.onSave
+				};
+			}
+
+			return {
+				icon: "check",
+				text: "Published",
+				disabled: true
+			};
+		},
+		dropdown() {
 			if (this.mode === "changes") {
 				return [
 					{
 						icon: "undo",
 						text: this.$t("revert"),
-						responsive: true,
 						disabled: this.isDisabled,
 						click: this.onRevert
-					},
-					{
-						icon: "check",
-						text: this.$t("save"),
-						disabled: this.isDisabled,
-						click: this.onSave
 					}
 				];
 			}
 
 			return [];
+		},
+		disabled() {
+			if (this.mode === "unlock") {
+				return false;
+			}
+
+			if (this.mode === "lock") {
+				return !this.lock.data.unlockable;
+			}
+
+			if (this.mode === "changes") {
+				return this.isDisabled;
+			}
+
+			return true;
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
@@ -144,8 +164,11 @@ export default {
 			if (this.mode === "unlock") {
 				return "info";
 			}
+			if (this.mode === "changes") {
+				return "notice";
+			}
 
-			return "notice";
+			return null;
 		}
 	},
 	watch: {

@@ -76,11 +76,15 @@ export default {
 	gap: 1px;
 }
 
+/** @todo adapt when new dropdowns are here */
 .k-button-group[data-layout="collapsed"]
 	> .k-button[data-variant="filled"]:has(
 		+ .k-button[data-variant="filled"],
-		+ details > .k-button[data-variant="filled"]
-	) {
+		+ .k-dropdown > .k-button[data-variant="filled"]
+	),
+.k-button-group[data-layout="collapsed"]
+	> .k-dropdown:has(+ .k-button[data-variant="filled"])
+	> .k-button[data-variant="filled"] {
 	border-start-end-radius: 0;
 	border-end-end-radius: 0;
 }
@@ -90,8 +94,11 @@ export default {
 	+ .k-button[data-variant="filled"],
 .k-button-group[data-layout="collapsed"]
 	> .k-button[data-variant="filled"]
-	+ details
-	> .k-button[data-variant="filled"] {
+	+ .k-dropdown
+	> .k-button[data-variant="filled"],
+.k-button-group[data-layout="collapsed"]
+	> .k-dropdown:has(+ .k-button[data-variant="filled"])
+	+ .k-button[data-variant="filled"] {
 	border-start-start-radius: 0;
 	border-end-start-radius: 0;
 }
