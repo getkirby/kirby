@@ -178,8 +178,8 @@ export default {
 	padding: 0;
 }
 .k-user-view-image .k-frame {
-	width: 5rem;
-	height: 5rem;
+	width: 6rem;
+	height: 6rem;
 	border-radius: var(--rounded);
 	line-height: 0;
 }
