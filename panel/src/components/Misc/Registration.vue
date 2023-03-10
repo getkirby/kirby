@@ -36,7 +36,7 @@ export default {
 .k-bar {
 	position: sticky;
 	bottom: 0;
-	height: 3rem;
+	height: var(--height-xl);
 	padding-inline: var(--main-padding-inline);
 	background: var(--theme-color-back);
 	container-type: inline-size;
