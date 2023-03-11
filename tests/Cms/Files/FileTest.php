@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 
 class FileTestModel extends File
 {
@@ -36,8 +37,211 @@ class FileTest extends TestCase
 	public function testAsset()
 	{
 		$file = $this->file();
-		$this->assertInstanceOf('Kirby\Filesystem\File', $file->asset());
-		$this->assertSame('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
+		$this->assertInstanceOf(BaseFile::class, $file->asset());
+		$this->assertSame(
+			'https://getkirby.com/projects/project-a/cover.jpg',
+			$file->asset()->url()
+		);
+	}
+
+	public function testBlueprints()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'for-section/a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'for-section/b'
+						],
+						[
+							'type' => 'files',
+							'template' => 'not-exist'
+						],
+						[
+							'type' => 'fields',
+							'fields' => [
+								'a' => [
+									'type' => 'info'
+								],
+								'b' => [
+									'type' => 'files'
+								],
+								'c' => [
+									'type'    => 'files',
+									'uploads' => 'for-fields/a'
+								],
+								'd' => [
+									'type'    => 'files',
+									'uploads' => [
+										'template' => 'for-fields/b'
+									]
+								],
+								'e' => [
+									'type'    => 'files',
+									'uploads' => [
+										'parent'   => 'foo',
+										'template' => 'for-fields/c'
+									]
+								],
+								'f' => [
+									'type'    => 'files',
+									'uploads' => 'for-fields/c'
+								]
+							]
+						]
+					]
+				],
+				'files/for-section/a' => [
+					'title' => 'Type A'
+				],
+				'files/for-section/b' => [
+					'title' => 'Type B'
+				],
+				'files/for-fields/a' => [
+					'title' => 'Field Type A'
+				],
+				'files/for-fields/b' => [
+					'title' => 'Field Type B'
+				],
+				'files/for-fields/c' => [
+					'title' => 'Field Type C',
+					'accept' => 'image'
+				],
+				'files/current' => [
+					'title' => 'Just the current'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'current']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file       = $app->file('test/test.pdf');
+		$blueprints = $file->blueprints();
+		$this->assertCount(6, $blueprints);
+		$this->assertSame('default', $blueprints[0]['name']);
+		$this->assertSame('for-fields/a', $blueprints[1]['name']);
+		$this->assertSame('for-fields/b', $blueprints[2]['name']);
+		$this->assertSame('current', $blueprints[3]['name']);
+		$this->assertSame('for-section/a', $blueprints[4]['name']);
+		$this->assertSame('for-section/b', $blueprints[5]['name']);
+	}
+
+	public function testBlueprintsInSection()
+	{
+		$app = new App([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						'section-a' => [
+							'type' => 'files',
+							'template' => 'for-section/a'
+						],
+						'section-b' => [
+							'type' => 'files',
+							'template' => 'for-section/b'
+						],
+						'section-c' => [
+							'type' => 'fields',
+							'fields' => [
+								[
+									'type' => 'files'
+								],
+								[
+									'type'    => 'files',
+									'uploads' => 'for-fields/a'
+								],
+								[
+									'type'    => 'files',
+									'uploads' => [
+										'template' => 'for-fields/b'
+									]
+								],
+								[
+									'type'    => 'files',
+									'uploads' => [
+										'parent'   => 'foo',
+										'template' => 'for-fields/c'
+									]
+								],
+								[
+									'type'    => 'files',
+									'uploads' => 'for-fields/c'
+								]
+							]
+						]
+					]
+				],
+				'files/for-section/a' => [
+					'title' => 'Type A'
+				],
+				'files/for-section/b' => [
+					'title' => 'Type B'
+				],
+				'files/for-fields/a' => [
+					'title' => 'Field Type A'
+				],
+				'files/for-fields/b' => [
+					'title' => 'Field Type B'
+				],
+				'files/for-fields/c' => [
+					'title' => 'Field Type C',
+					'accept' => 'image'
+				],
+				'files/current' => [
+					'title' => 'Just the current'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files'    => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'current']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file       = $app->file('test/test.pdf');
+		$blueprints = $file->blueprints('section-a');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('current', $blueprints[0]['name']);
+		$this->assertSame('for-section/a', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('section-c');
+		$this->assertCount(4, $blueprints);
+		$this->assertSame('default', $blueprints[0]['name']);
+		$this->assertSame('for-fields/a', $blueprints[1]['name']);
+		$this->assertSame('for-fields/b', $blueprints[2]['name']);
+		$this->assertSame('current', $blueprints[3]['name']);
 	}
 
 	public function testContent()

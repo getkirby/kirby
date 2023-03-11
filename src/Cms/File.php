@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
@@ -40,10 +41,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Cache for the initialized blueprint object
-	 *
-	 * @var \Kirby\Cms\FileBlueprint
 	 */
-	protected $blueprint;
+	protected FileBlueprint|null $blueprint = null;
 
 	/**
 	 * @var string
@@ -155,16 +154,120 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the FileBlueprint object for the file
-	 *
-	 * @return \Kirby\Cms\FileBlueprint
 	 */
-	public function blueprint()
+	public function blueprint(): FileBlueprint
 	{
-		if ($this->blueprint instanceof FileBlueprint) {
-			return $this->blueprint;
+		return $this->blueprint ??= FileBlueprint::factory(
+			'files/' . $this->template(),
+			'files/default',
+			$this
+		);
+	}
+
+	/**
+	 * Returns an array with all blueprints that are available for the file
+	 * by comparing files sections and files fields of the parent model
+	 */
+	public function blueprints(string $inSection = null): array
+	{
+		if ($inSection === null && $this->blueprints !== null) {
+			return $this->blueprints; // @codeCoverageIgnore
 		}
 
-		return $this->blueprint = FileBlueprint::factory('files/' . $this->template(), 'files/default', $this);
+		// always include the current template as option
+		$template  = $this->template() ?? 'default';
+		$templates = [$template];
+		$parent    = $this->parent();
+
+		// what file templates/blueprints should be considered is
+		// defined bythe parent's blueprint: which templates it allows
+		// in files sections as well as files fields
+		$blueprint = $parent->blueprint();
+
+		// collect all allowed templates…
+		foreach ($blueprint->sections() as $section) {
+			// if collecting for a specific section, skip all others
+			if ($inSection !== null && $section->name() !== $inSection) {
+				continue;
+			}
+
+			//  …from files sections
+			if ($section->type() === 'files') {
+				$templates[] = $section->template() ?? 'default';
+				continue;
+			}
+
+			//  …from files fields
+			if ($section->type() === 'fields') {
+				foreach ($section->fields() as $field) {
+					if ($field['type'] !== 'files') {
+						continue;
+					}
+
+					$uploads = $field['uploads'] ?? null;
+
+					// only if the `uploads` parent is the actual parent
+					if ($target = $uploads['parent'] ?? null) {
+						if ($parent->id() !== $target) {
+							continue;
+						}
+					}
+
+					$templates[] = $uploads['template'] ?? 'default';
+					continue;
+				}
+			}
+		}
+
+		// make sure every template is only included once
+		$templates = array_unique(array_filter($templates));
+
+		// load the blueprint details for each collected template name
+		$blueprints = [];
+
+		foreach ($templates as $template) {
+			// default template doesn't need to exist as file
+			// to be included in the list
+			if ($template === 'default') {
+				$blueprints[$template] = [
+					'name'  => 'default',
+					'title' => '– (default)',
+				];
+				continue;
+			}
+
+			if ($blueprint = FileBlueprint::factory('files/' . $template, null, $this)) {
+				try {
+					// ensure that file matches `accept` option,
+					// if not remove template from available list
+					$this->match($blueprint->accept());
+
+					$blueprints[$template] = [
+						'name'  => $name = Str::after($blueprint->name(), '/'),
+						'title' => $blueprint->title() . ' (' . $name . ')',
+					];
+				} catch (Exception) {
+					// skip when `accept` doesn't match
+				}
+			}
+		}
+
+		$blueprints = array_values($blueprints);
+
+		// sort blueprints alphabetically while
+		// making sure the default blueprint is on top of list
+		usort($blueprints, fn ($a, $b) => match (true) {
+			$a['name'] === 'default' => -1,
+			$b['name'] === 'default' => 1,
+			default => strnatcmp($a['title'], $b['title'])
+		});
+
+		// no caching for when collecting for specific section
+		if ($inSection !== null) {
+			return $blueprints; // @codeCoverageIgnore
+		}
+
+		return $this->blueprints = $blueprints;
 	}
 
 	/**
