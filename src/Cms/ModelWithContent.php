@@ -353,6 +353,20 @@ abstract class ModelWithContent extends Model implements Identifiable
 	abstract public function permissions();
 
 	/**
+	 * Clean internal caches
+	 *
+	 * @return $this
+	 */
+	public function purge(): static
+	{
+		$this->blueprints   = null;
+		$this->content      = null;
+		$this->translations = null;
+
+		return $this;
+	}
+
+	/**
 	 * Creates a string query, starting from the model
 	 *
 	 * @internal
