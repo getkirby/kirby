@@ -249,6 +249,10 @@ class Page extends ModelWithContent
 			return $this->blueprint()->section($inSection)->blueprints();
 		}
 
+		if ($this->blueprints !== null) {
+			return $this->blueprints;
+		}
+
 		$blueprints      = [];
 		$templates       = $this->blueprint()->changeTemplate() ?? $this->blueprint()->options()['changeTemplate'] ?? [];
 		$currentTemplate = $this->intendedTemplate()->name();
@@ -278,7 +282,7 @@ class Page extends ModelWithContent
 			}
 		}
 
-		return array_values($blueprints);
+		return $this->blueprints = array_values($blueprints);
 	}
 
 	/**
