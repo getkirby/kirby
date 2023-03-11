@@ -255,6 +255,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -296,10 +299,14 @@ class PageActionsTest extends TestCase
 		$page = $drafts->find('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
 
 		$modified = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 
 		$this->assertSame($modified, $drafts->find('test'));
@@ -332,6 +339,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'radio'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -364,28 +374,43 @@ class PageActionsTest extends TestCase
 					'code' => 'fr',
 					'name' => 'Français',
 				]
-			]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'video',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title'   => 'Test',
+									'caption' => 'Caption',
+									'text'    => 'Text'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title'   => 'Prüfen',
+									'caption' => 'Untertitel',
+									'text'    => 'Täxt'
+								]
+							],
+						]
+					]
+				]
+			],
 		]);
 
 		$app->impersonate('kirby');
-
-		$page = $app->site()->createChild([
-			'slug'     => 'test',
-			'template' => 'video',
-			'content'  => [
-				'title'   => 'Test',
-				'caption' => 'Caption',
-				'text'    => 'Text'
-			]
-		]);
-
-		$page = $page->update([
-			'title'   => 'Prüfen',
-			'caption' => 'Untertitel',
-			'text'    => 'Text'
-		], 'de');
+		$page = $app->page('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
+		$this->assertSame('Untertitel', $page->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $page->content('de')->get('text')->value());
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
@@ -398,9 +423,10 @@ class PageActionsTest extends TestCase
 		$this->assertFileExists($modified->contentFile('en'));
 		$this->assertFileExists($modified->contentFile('de'));
 		$this->assertFileDoesNotExist($modified->contentFile('fr'));
-
-		$this->assertSame($modified, $drafts->find('test'));
-		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
+		$this->assertNull($modified->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $modified->content('de')->get('text')->value());
 	}
 
 	public function testChangeTitle()
