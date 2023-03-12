@@ -24,7 +24,6 @@ use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
-use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 use Throwable;
@@ -49,7 +48,6 @@ class App
 	use AppPlugins;
 	use AppTranslations;
 	use AppUsers;
-	use Properties;
 
 	public const CLASS_ALIAS = 'kirby';
 
@@ -84,6 +82,8 @@ class App
 	protected $users;
 	protected $visitor;
 
+	protected array $propertyData;
+
 	/**
 	 * Creates a new App instance
 	 *
@@ -109,6 +109,8 @@ class App
 			$this->handleErrors();
 		}
 
+		$this->propertyData = $props;
+
 		// a custom request setup must come before defining the path
 		$this->setRequest($props['request'] ?? null);
 
@@ -120,13 +122,11 @@ class App
 		$this->bakeUrls($props['urls'] ?? []);
 
 		// configurable properties
-		$this->setOptionalProperties($props, [
-			'languages',
-			'roles',
-			'site',
-			'user',
-			'users'
-		]);
+		$this->setLanguages($props['languages'] ?? null);
+		$this->setRoles($props['roles'] ?? null);
+		$this->setSite($props['site'] ?? null);
+		$this->setUser($props['user'] ?? null);
+		$this->setUsers($props['users'] ?? null);
 
 		// set the singleton
 		if (static::$instance === null || $setInstance === true) {
