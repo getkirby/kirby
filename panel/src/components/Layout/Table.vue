@@ -455,19 +455,16 @@ export default {
 }
 
 /** Index & Sort handle */
-.k-table-index,
-.k-table .k-sort-handle {
+td.k-table-index-column {
 	display: grid;
 	place-items: center;
-	width: 100%;
-	height: var(--table-row-height);
 }
 .k-table .k-sort-handle,
 .k-table tr:hover .k-table-index-column[data-sortable="true"] .k-table-index {
 	display: none;
 }
 .k-table tr:hover .k-sort-handle {
-	display: grid !important;
+	display: block;
 }
 
 .k-table-row-ghost {
@@ -486,12 +483,10 @@ export default {
 }
 
 /** Index column **/
-th.k-table-index-column,
-td.k-table-index-column,
-th.k-table-options-column,
-td.k-table-options-column {
+:is(th, td).k-table-index-column,
+:is(th, td).k-table-options-column {
 	width: var(--table-row-height);
-	text-align: center !important;
+	text-align: center;
 }
 .k-table-index {
 	font-size: var(--text-xs);
