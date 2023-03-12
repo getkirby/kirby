@@ -1,8 +1,11 @@
 <template>
-	<k-dropdown v-if="hasChanges" class="k-form-indicator">
+	<k-dropdown class="k-form-indicator">
 		<k-button
-			class="k-form-indicator-toggle k-topbar-button"
-			icon="edit"
+			:disabled="!hasChanges"
+			:theme="hasChanges ? 'notice' : null"
+			icon="circle-nested"
+			size="xs"
+			class="k-form-indicator-toggle"
 			@click="toggle"
 		/>
 		<k-dropdown-content ref="list" align="right">
@@ -71,9 +74,6 @@ export default {
 </script>
 
 <style>
-.k-form-indicator-toggle {
-	--button-color-icon: var(--color-orange-500);
-}
 .k-form-indicator-info {
 	font-size: var(--text-sm);
 	font-weight: var(--font-bold);

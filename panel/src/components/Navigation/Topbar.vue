@@ -23,7 +23,7 @@
 			/>
 
 			<!-- unsaved changes indicator -->
-			<k-form-indicator />
+			<k-form-indicator v-else />
 
 			<slot />
 		</div>

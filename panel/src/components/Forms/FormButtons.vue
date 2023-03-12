@@ -86,7 +86,7 @@ export default {
 
 			if (this.mode === "changes") {
 				return {
-					icon: "check",
+					icon: "circle-nested",
 					text: this.$t("save"),
 					disabled: this.isDisabled,
 					click: this.onSave
