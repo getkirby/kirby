@@ -71,7 +71,7 @@ class File extends ModelWithContent
 	/**
 	 * The absolute path to the file
 	 */
-	protected string|null $root = null;
+	protected string|null $root;
 
 	/**
 	 * @var string
@@ -81,7 +81,7 @@ class File extends ModelWithContent
 	/**
 	 * The public file Url
 	 */
-	protected string|null $url = null;
+	protected string|null $url;
 
 	/**
 	 * Magic caller for file methods
@@ -125,6 +125,11 @@ class File extends ModelWithContent
 
 		// set other properties
 		$this->setProperties($props);
+
+		// setProperties doesn't recognize root and url prop as they are
+		// first defined in the IsFile trait. Calling their setters manually
+		$this->setProperty('root', $props['root'] ?? null);
+		$this->setProperty('url', $props['url'] ?? null);
 	}
 
 	/**
