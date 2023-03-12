@@ -16,100 +16,109 @@ use Kirby\Exception\Exception;
  */
 class Pagination
 {
-	use Properties {
-		setProperties as protected baseSetProperties;
-	}
-
 	/**
 	 * The current page
-	 *
-	 * @var int
 	 */
-	protected $page;
+	protected int $page;
 
 	/**
 	 * Total number of items
-	 *
-	 * @var int
 	 */
-	protected $total = 0;
+	protected int $total;
 
 	/**
 	 * The number of items per page
-	 *
-	 * @var int
 	 */
-	protected $limit = 20;
+	protected int $limit;
 
 	/**
 	 * Whether validation of the pagination page
 	 * is enabled; will throw Exceptions if true
-	 *
-	 * @var bool
 	 */
-	public static $validate = true;
+	public static bool $validate = true;
 
 	/**
 	 * Creates a new pagination object
 	 * with the given parameters
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props = [])
 	{
-		$this->setProperties($props);
+		$this->setLimit($props['limit'] ?? 20);
+		$this->setPage($props['page'] ?? null);
+		$this->setTotal($props['total'] ?? 0);
+
+		// ensure that page is set to something, otherwise
+		// generate "default page" based on other params
+		$this->page ??= $this->firstPage();
+
+		// allow a page value of 1 even if there are no pages;
+		// otherwise the exception will get thrown for this pretty common case
+		$min = $this->firstPage();
+		$max = $this->pages();
+		if ($this->page === 1 && $max === 0) {
+			$this->page = 0;
+		}
+
+		// validate page based on all params if validation is enabled,
+		// otherwise limit the page number to the bounds
+		if ($this->page < $min || $this->page > $max) {
+			if (static::$validate === true) {
+				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
+			}
+
+			$this->page = max(min($this->page, $max), $min);
+		}
+	}
+
+	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_replace_recursive([
+			'page'  => $this->page,
+			'limit' => $this->limit,
+			'total' => $this->total
+		], $props));
 	}
 
 	/**
 	 * Creates a pagination instance for the given
 	 * collection with a flexible argument api
-	 *
-	 * @param \Kirby\Toolkit\Collection $collection
-	 * @param mixed ...$arguments
-	 * @return static
 	 */
-	public static function for(Collection $collection, ...$arguments)
-	{
+	public static function for(
+		Collection $collection,
+		mixed ...$arguments
+	): static {
 		$a = $arguments[0] ?? null;
 		$b = $arguments[1] ?? null;
 
 		$params = [];
 
+		// First argument is a pagination/self object
 		if ($a instanceof static) {
-			/**
-			 * First argument is a pagination/self object
-			 */
 			return $a;
-		} elseif (is_array($a) === true) {
-			/**
-			 * First argument is an option array
-			 *
-			 * $collection->paginate([...])
-			 */
+		}
+
+		if (is_array($a) === true) {
+			// First argument is an option array:
+			// $collection->paginate([...])
 			$params = $a;
 		} elseif (is_int($a) === true && $b === null) {
-			/**
-			 * First argument is the limit
-			 *
-			 * $collection->paginate(10)
-			 */
+			// First argument is the limit
+			// $collection->paginate(10)
 			$params['limit'] = $a;
 		} elseif (is_int($a) === true && is_int($b) === true) {
-			/**
-			 * First argument is the limit,
-			 * second argument is the page
-			 *
-			 * $collection->paginate(10, 2)
-			 */
+			// First argument is the limit,
+			// second argument is the page:
+			// $collection->paginate(10, 2)
 			$params['limit'] = $a;
 			$params['page']  = $b;
 		} elseif (is_int($a) === true && is_array($b) === true) {
-			/**
-			 * First argument is the limit,
-			 * second argument are options
-			 *
-			 * $collection->paginate(10, [...])
-			 */
+			// First argument is the limit,
+			// second argument are options:
+			// $collection->paginate(10, [...])
 			$params = $b;
 			$params['limit'] = $a;
 		}
@@ -126,8 +135,6 @@ class Pagination
 
 	/**
 	 * Getter for the current page
-	 *
-	 * @return int
 	 */
 	public function page(): int
 	{
@@ -136,8 +143,6 @@ class Pagination
 
 	/**
 	 * Getter for the total number of items
-	 *
-	 * @return int
 	 */
 	public function total(): int
 	{
@@ -146,8 +151,6 @@ class Pagination
 
 	/**
 	 * Getter for the number of items per page
-	 *
-	 * @return int
 	 */
 	public function limit(): int
 	{
@@ -156,17 +159,11 @@ class Pagination
 
 	/**
 	 * Returns the index of the first item on the page
-	 *
-	 * @return int
 	 */
 	public function start(): int
 	{
 		$index = $this->page() - 1;
-
-		if ($index < 0) {
-			$index = 0;
-		}
-
+		$index = max($index, 0);
 		return $index * $this->limit() + 1;
 	}
 
@@ -178,18 +175,12 @@ class Pagination
 	public function end(): int
 	{
 		$value = ($this->start() - 1) + $this->limit();
-
-		if ($value <= $this->total()) {
-			return $value;
-		}
-
-		return $this->total();
+		$value = min($value, $this->total());
+		return $value;
 	}
 
 	/**
 	 * Returns the total number of pages
-	 *
-	 * @return int
 	 */
 	public function pages(): int
 	{
@@ -202,8 +193,6 @@ class Pagination
 
 	/**
 	 * Returns the first page
-	 *
-	 * @return int
 	 */
 	public function firstPage(): int
 	{
@@ -212,8 +201,6 @@ class Pagination
 
 	/**
 	 * Returns the last page
-	 *
-	 * @return int
 	 */
 	public function lastPage(): int
 	{
@@ -222,8 +209,6 @@ class Pagination
 
 	/**
 	 * Returns the offset (i.e. for db queries)
-	 *
-	 * @return int
 	 */
 	public function offset(): int
 	{
@@ -232,9 +217,6 @@ class Pagination
 
 	/**
 	 * Checks if the given page exists
-	 *
-	 * @param int $page
-	 * @return bool
 	 */
 	public function hasPage(int $page): bool
 	{
@@ -251,8 +233,6 @@ class Pagination
 
 	/**
 	 * Checks if there are any pages at all
-	 *
-	 * @return bool
 	 */
 	public function hasPages(): bool
 	{
@@ -261,8 +241,6 @@ class Pagination
 
 	/**
 	 * Checks if there's a previous page
-	 *
-	 * @return bool
 	 */
 	public function hasPrevPage(): bool
 	{
@@ -271,18 +249,14 @@ class Pagination
 
 	/**
 	 * Returns the previous page
-	 *
-	 * @return int|null
 	 */
-	public function prevPage()
+	public function prevPage(): int|null
 	{
 		return $this->hasPrevPage() ? $this->page() - 1 : null;
 	}
 
 	/**
 	 * Checks if there's a next page
-	 *
-	 * @return bool
 	 */
 	public function hasNextPage(): bool
 	{
@@ -291,18 +265,14 @@ class Pagination
 
 	/**
 	 * Returns the next page
-	 *
-	 * @return int|null
 	 */
-	public function nextPage()
+	public function nextPage(): int|null
 	{
 		return $this->hasNextPage() ? $this->page() + 1 : null;
 	}
 
 	/**
 	 * Checks if the current page is the first page
-	 *
-	 * @return bool
 	 */
 	public function isFirstPage(): bool
 	{
@@ -311,8 +281,6 @@ class Pagination
 
 	/**
 	 * Checks if the current page is the last page
-	 *
-	 * @return bool
 	 */
 	public function isLastPage(): bool
 	{
@@ -321,9 +289,6 @@ class Pagination
 
 	/**
 	 * Creates a range of page numbers for Google-like pagination
-	 *
-	 * @param int $range
-	 * @return array
 	 */
 	public function range(int $range = 5): array
 	{
@@ -355,9 +320,6 @@ class Pagination
 
 	/**
 	 * Returns the first page of the created range
-	 *
-	 * @param int $range
-	 * @return int
 	 */
 	public function rangeStart(int $range = 5): int
 	{
@@ -366,9 +328,6 @@ class Pagination
 
 	/**
 	 * Returns the last page of the created range
-	 *
-	 * @param int $range
-	 * @return int
 	 */
 	public function rangeEnd(int $range = 5): int
 	{
@@ -377,48 +336,11 @@ class Pagination
 	}
 
 	/**
-	 * Sets the properties limit, total and page
-	 * and validates that the properties match
-	 *
-	 * @param array $props Array with keys limit, total and/or page
-	 * @return $this
-	 */
-	protected function setProperties(array $props)
-	{
-		$this->baseSetProperties($props);
-
-		// ensure that page is set to something, otherwise
-		// generate "default page" based on other params
-		$this->page ??= $this->firstPage();
-
-		// allow a page value of 1 even if there are no pages;
-		// otherwise the exception will get thrown for this pretty common case
-		$min = $this->firstPage();
-		$max = $this->pages();
-		if ($this->page === 1 && $max === 0) {
-			$this->page = 0;
-		}
-
-		// validate page based on all params if validation is enabled,
-		// otherwise limit the page number to the bounds
-		if ($this->page < $min || $this->page > $max) {
-			if (static::$validate === true) {
-				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
-			}
-
-			$this->page = max(min($this->page, $max), $min);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Sets the number of items per page
 	 *
-	 * @param int $limit
 	 * @return $this
 	 */
-	protected function setLimit(int $limit = 20)
+	protected function setLimit(int $limit): static
 	{
 		if ($limit < 1) {
 			throw new Exception('Invalid pagination limit: ' . $limit);
@@ -431,10 +353,9 @@ class Pagination
 	/**
 	 * Sets the total number of items
 	 *
-	 * @param int $total
 	 * @return $this
 	 */
-	protected function setTotal(int $total = 0)
+	protected function setTotal(int $total): static
 	{
 		if ($total < 0) {
 			throw new Exception('Invalid total number of items: ' . $total);
@@ -451,7 +372,7 @@ class Pagination
 	 *                              automatically determined if null
 	 * @return $this
 	 */
-	protected function setPage($page = null)
+	protected function setPage(int|string|null $page = null): static
 	{
 		// if $page is null, it is set to a default in the setProperties() method
 		if ($page !== null) {
@@ -467,8 +388,6 @@ class Pagination
 
 	/**
 	 * Returns an array with all properties
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
