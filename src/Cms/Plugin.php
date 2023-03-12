@@ -23,7 +23,7 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class Plugin extends Model
+class Plugin
 {
 	protected array $extends;
 	protected string $name;
@@ -34,25 +34,31 @@ class Plugin extends Model
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
-	 * Allows access to any composer.json field by method call
-	 */
-	public function __call(string $key, array $arguments = null)
-	{
-		return $this->info()[$key] ?? null;
-	}
-
-	/**
 	 * @param string $name Plugin name within Kirby (`vendor/plugin`)
 	 * @param array $extends Associative array of plugin extensions
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the plugin name has an invalid format
 	 */
 	public function __construct(string $name, array $extends = [])
 	{
-		$this->setName($name);
+		if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
+			throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
+		}
+
+		$this->name    = $name;
 		$this->extends = $extends;
 		$this->root    = $extends['root'] ?? dirname(debug_backtrace()[0]['file']);
 		$this->info    = empty($extends['info']) === false && is_array($extends['info']) ? $extends['info'] : null;
 
 		unset($this->extends['root'], $this->extends['info']);
+	}
+
+	/**
+	 * Allows access to any composer.json field by method call
+	 */
+	public function __call(string $key, array $arguments = null): mixed
+	{
+		return $this->info()[$key] ?? null;
 	}
 
 	/**
@@ -112,6 +118,14 @@ class Plugin extends Model
 		}
 
 		return $this->info = $info;
+	}
+
+	/**
+	 * Current $kirby instance
+	 */
+	public function kirby(): App
+	{
+		return App::instance();
 	}
 
 	/**
@@ -183,23 +197,6 @@ class Plugin extends Model
 	public function root(): string
 	{
 		return $this->root;
-	}
-
-	/**
-	 * Validates and sets the plugin name
-	 *
-	 * @return $this
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the plugin name has an invalid format
-	 */
-	protected function setName(string $name): static
-	{
-		if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
-			throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
-		}
-
-		$this->name = $name;
-		return $this;
 	}
 
 	/**
