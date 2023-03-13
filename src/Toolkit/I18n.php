@@ -89,7 +89,7 @@ class I18n
 	}
 
 	/**
-	 * Returns thecurrent locale code
+	 * Returns the current locale code
 	 */
 	public static function locale(): string
 	{
