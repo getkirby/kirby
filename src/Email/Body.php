@@ -32,6 +32,7 @@ class Body
 	/**
 	 * Creates a new instance while
 	 * merging initial and new properties
+	 * @deprecated 4.0.0
 	 */
 	public function clone(array $props = []): static
 	{
