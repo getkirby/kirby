@@ -1,3 +1,5 @@
+import Autosize from "./Autosize.js";
+
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
 import Calendar from "./Calendar.vue";
@@ -25,14 +27,18 @@ import Toolbar from "./Toolbar.vue";
 import ToolbarEmailDialog from "./Toolbar/EmailDialog.vue";
 import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
-/* Form Inputs */
-import Inputs from "./Input/index.js";
-
-/* Form Fields */
+/* Form parts */
+import Blocks from "./Blocks/index.js";
+import Elements from "./Element/index.js";
 import Fields from "./Field/index.js";
+import Inputs from "./Input/index.js";
+import Layouts from "./Layouts/index.js";
+import Previews from "./Previews/index.js";
 
 export default {
 	install(app) {
+		customElements.define("k-autosize", Autosize);
+
 		app.component("k-calendar", Calendar);
 		app.component("k-counter", Counter);
 		app.component("k-autocomplete", Autocomplete);
@@ -56,7 +62,12 @@ export default {
 		app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
 		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
+		app.use(Blocks);
+		app.use(Elements);
 		app.use(Inputs);
 		app.use(Fields);
+		app.use(Inputs);
+		app.use(Layouts);
+		app.use(Previews);
 	}
 };

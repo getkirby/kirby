@@ -15,33 +15,35 @@
 				@mousedown.native.prevent
 				@command="onCommand"
 			/>
-			<textarea
-				ref="input"
-				v-bind="{
-					autofocus,
-					disabled,
-					id,
-					minlength,
-					name,
-					placeholder,
-					required,
-					spellcheck,
-					value
-				}"
-				v-direction
-				:data-font="font"
-				class="k-textarea-input-native"
-				@click="onClick"
-				@focus="onFocus"
-				@input="onInput"
-				@keydown.meta.enter="onSubmit"
-				@keydown.ctrl.enter="onSubmit"
-				@keydown.meta="onShortcut"
-				@keydown.ctrl="onShortcut"
-				@dragover="onOver"
-				@dragleave="onOut"
-				@drop="onDrop"
-			/>
+			<k-autosize>
+				<textarea
+					ref="input"
+					v-bind="{
+						autofocus,
+						disabled,
+						id,
+						minlength,
+						name,
+						placeholder,
+						required,
+						spellcheck,
+						value
+					}"
+					v-direction
+					:data-font="font"
+					class="k-textarea-input-native"
+					@click="onClick"
+					@focus="onFocus"
+					@input="onInput"
+					@keydown.meta.enter="onSubmit"
+					@keydown.ctrl.enter="onSubmit"
+					@keydown.meta="onShortcut"
+					@keydown.ctrl="onShortcut"
+					@dragover="onOver"
+					@dragleave="onOut"
+					@drop="onDrop"
+				/>
+			</k-autosize>
 		</div>
 
 		<k-toolbar-email-dialog
@@ -115,16 +117,9 @@ export default {
 	watch: {
 		value() {
 			this.onInvalid();
-			this.$nextTick(() => {
-				this.resize();
-			});
 		}
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.$library.autosize(this.$refs.input);
-		});
-
 		this.onInvalid();
 
 		if (this.$props.autofocus) {
@@ -168,8 +163,6 @@ export default {
 					this.$emit("input", value);
 				}
 			});
-
-			this.resize();
 		},
 		insertFile(files) {
 			if (files?.length > 0) {
@@ -260,9 +253,6 @@ export default {
 		},
 		prepend(prepend) {
 			this.insert(prepend + " " + this.selection());
-		},
-		resize() {
-			this.$library.autosize.update(this.$refs.input);
 		},
 		select() {
 			this.$refs.select();

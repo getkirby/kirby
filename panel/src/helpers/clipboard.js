@@ -1,4 +1,4 @@
-export function read(e) {
+export function read(e, plain = false) {
 	if (!e) {
 		return null;
 	}
@@ -9,6 +9,11 @@ export function read(e) {
 
 	if (e instanceof ClipboardEvent) {
 		e.preventDefault();
+
+		if (plain === true) {
+			return e.clipboardData.getData("text/plain");
+		}
+
 		const html =
 			e.clipboardData.getData("text/html") ||
 			e.clipboardData.getData("text/plain") ||
