@@ -62,7 +62,7 @@ class File extends ModelWithContent
 	/**
 	 * The parent object
 	 *
-	 * @var \Kirby\Cms\Model
+	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site|\Kirby\Cms\User
 	 */
 	protected $parent;
 
@@ -539,11 +539,9 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Returns the parent Model object
-	 *
-	 * @return \Kirby\Cms\Model
+	 * Returns the parent object
 	 */
-	public function parent()
+	public function parent(): Page|Site|User
 	{
 		return $this->parent ??= $this->kirby()->site();
 	}
@@ -642,12 +640,11 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Sets the parent model object
+	 * Sets the parent object
 	 *
-	 * @param \Kirby\Cms\Model $parent
 	 * @return $this
 	 */
-	protected function setParent(Model $parent)
+	protected function setParent(Page|Site|User $parent)
 	{
 		$this->parent = $parent;
 		return $this;

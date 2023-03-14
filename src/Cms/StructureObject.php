@@ -104,7 +104,7 @@ class StructureObject
 	}
 
 	/**
-	 * Returns the parent Model object
+	 * Returns the parent object
 	 */
 	public function parent(): ModelWithContent|null
 	{

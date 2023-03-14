@@ -143,9 +143,8 @@ class Field
 
 	/**
 	 * @see Field::parent()
-	 * @return \Kirby\Cms\Model|null
 	 */
-	public function model()
+	public function model(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
