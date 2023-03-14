@@ -522,6 +522,49 @@ class Str
 		return preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string);
 	}
 
+	/**
+	 * Match string against a regular expression and return matches
+	 *
+	 * @param string $string The string to match
+	 * @param string $pattern The regular expression
+	 * @param int $flags Optional flags for PHP `preg_match()`
+	 * @param int $offset Positional offset in the string to start the search
+	 * @return array|null The matches or null if no match was found
+	 */
+	public static function match(string $string, string $pattern, int $flags = 0, int $offset = 0): ?array
+	{
+		$result = preg_match($pattern, $string, $matches, $flags, $offset);
+		return ($result === 1) ? $matches : null;
+	}
+
+	/**
+	 * Check whether a string matches a regular expression
+	 *
+	 * @param string $string The string to match
+	 * @param string $pattern The regular expression
+	 * @param int $flags Optional flags for PHP `preg_match()`
+	 * @param int $offset Positional offset in the string to start the search
+	 * @return bool True if the string matches the pattern
+	 */
+	public static function matches(string $string, string $pattern, int $flags = 0, int $offset = 0): bool
+	{
+		return static::match($string, $pattern, $flags, $offset) !== null;
+	}
+
+	/**
+	 * Match string against a regular expression and return all matches
+	 *
+	 * @param string $string The string to match
+	 * @param string $pattern The regular expression
+	 * @param int $flags Optional flags for PHP `preg_match_all()`
+	 * @param int $offset Positional offset in the string to start the search
+	 * @return array|null The matches or null if no match was found
+	 */
+	public static function matchAll(string $string, string $pattern, int $flags = 0, int $offset = 0): ?array
+	{
+		$result = preg_match_all($pattern, $string, $matches, $flags, $offset);
+		return ($result > 0) ? $matches : null;
+	}
 
 	/**
 	 * Get a character pool with various possible combinations
