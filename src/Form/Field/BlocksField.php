@@ -41,7 +41,7 @@ class BlocksField extends FieldClass
 		$this->setPretty($params['pretty'] ?? false);
 	}
 
-	public function blocksToValues($blocks, $to = 'values'): array
+	public function blocksToValues(array $blocks, string $to = 'values', bool $includeInvalids = true): array
 	{
 		$result = [];
 		$fields = [];
@@ -58,7 +58,9 @@ class BlocksField extends FieldClass
 
 				$result[] = $block;
 			} catch (Throwable) {
-				$result[] = $block;
+				if ($includeInvalids === true) {
+					$result[] = $block;
+				}
 
 				// skip invalid blocks
 				continue;

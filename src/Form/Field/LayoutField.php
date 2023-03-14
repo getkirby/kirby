@@ -61,6 +61,29 @@ class LayoutField extends BlocksField
 		return $this->layouts;
 	}
 
+	public function layoutsToValues(array $layouts): array
+	{
+		foreach ($layouts as $layoutIndex => &$layout) {
+			// remove the row if layout not available for the pasted layout field
+			$columns = array_column($layout['columns'], 'width');
+			if (in_array($columns, $this->layouts()) === false) {
+				unset($layouts[$layoutIndex]);
+				continue;
+			}
+
+			$layout['id'] = Str::uuid();
+
+			foreach ($layout['columns'] ?? [] as $columnIndex => $column) {
+				$blocks = $this->blocksToValues($column['blocks'] ?? [], includeInvalids: false);
+
+				$layout['columns'][$columnIndex]['id'] = Str::uuid();
+				$layout['columns'][$columnIndex]['blocks'] = $blocks;
+			}
+		}
+
+		return $layouts;
+	}
+
 	public function props(): array
 	{
 		$settings = $this->settings();
@@ -94,6 +117,17 @@ class LayoutField extends BlocksField
 					], $columns)
 				])->toArray();
 			},
+		];
+
+		$routes[] = [
+			'pattern' => 'pasteLayout',
+			'method'  => 'POST',
+			'action'  => function () use ($field) {
+				$request = App::instance()->request();
+				$value   = Layouts::parse($request->get('json'));
+				$layouts = Layouts::factory($value);
+				return $field->layoutsToValues($layouts->toArray());
+			}
 		];
 
 		$routes[] = [
