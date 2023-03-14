@@ -287,7 +287,6 @@ return array(
     'Kirby\\Toolkit\\Obj' => $baseDir . '/src/Toolkit/Obj.php',
     'Kirby\\Toolkit\\Pagination' => $baseDir . '/src/Toolkit/Pagination.php',
     'Kirby\\Toolkit\\Properties' => $baseDir . '/src/Toolkit/Properties.php',
-    'Kirby\\Toolkit\\Query' => $baseDir . '/src/Toolkit/Query.php',
     'Kirby\\Toolkit\\Silo' => $baseDir . '/src/Toolkit/Silo.php',
     'Kirby\\Toolkit\\Str' => $baseDir . '/src/Toolkit/Str.php',
     'Kirby\\Toolkit\\Tpl' => $baseDir . '/src/Toolkit/Tpl.php',
