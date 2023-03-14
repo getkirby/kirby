@@ -20,15 +20,23 @@ on:
       - "!panel/scripts/**"
   workflow_call:
 
+  workflow_dispatch:
+
 jobs:
   tests:
     name: "Unit tests"
 
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
+    # runs jobs only under the following conditions:
+    # - manually triggered from any `getkirby` repositories
+    # - if on pull request, only run if from a fork
+    #   (our own repo is covered by the push event)
+    # - automatic run, only if repository is `getkirby/kirby`
     if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      (github.event_name == 'workflow_dispatch' && github.repository_owner == 'getkirby') ||
+      (
+        github.event_name != 'pull_request' &&
+        (github.repository == 'getkirby/kirby' || github.event.pull_request.head.repo.owner.login != 'getkirby')
+      )
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -68,6 +76,18 @@ jobs:
 
   coding-style:
     name: "Coding Style"
+
+    # runs jobs only under the following conditions:
+    # - manually triggered from any `getkirby` repositories
+    # - if on pull request, only run if from a fork
+    #   (our own repo is covered by the push event)
+    # - automatic run, only if repository is `getkirby/kirby`
+    if: >
+      (github.event_name == 'workflow_dispatch' && github.repository_owner == 'getkirby') ||
+      (
+        github.event_name != 'pull_request' &&
+        (github.repository == 'getkirby/kirby' || github.event.pull_request.head.repo.owner.login != 'getkirby')
+      )
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
