@@ -162,10 +162,9 @@ return [
 			}
 
 			// count all uploaded files
-			$total = count($this->data);
-			$max   = $this->max ? $this->max - $total : null;
+			$max = $this->max ? $this->max - $this->total : null;
 
-			if ($this->max && $total === $this->max - 1) {
+			if ($this->max && $this->total === $this->max - 1) {
 				$multiple = false;
 			} else {
 				$multiple = true;
@@ -179,7 +178,7 @@ return [
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
 				'attributes' => array_filter([
-					'sort'     => $this->sortable === true ? $total + 1 : null,
+					'sort'     => $this->sortable === true ? $this->total + 1 : null,
 					'template' => $template
 				])
 			];
