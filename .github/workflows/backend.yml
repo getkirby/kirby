@@ -36,12 +36,12 @@ jobs:
   tests:
     name: "Unit tests - PHP ${{ matrix.php }}"
 
-    # runs jobs only under the following conditions:
-    # - can be triggered manually from any repositories
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
     # - if on pull request, only run if from a fork
     #   (our own repo is covered by the push event)
-    # - if off pull request, only automatic run
-    #   if owner is not getkirby or repository is getkirby/kirby
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
     if: >
       github.event_name == 'workflow_dispatch' ||
       (
@@ -49,8 +49,8 @@ jobs:
         github.event.pull_request.head.repo.full_name != github.repository
       ) ||
       (
-        github.event_name != 'pull_request' &&
-        (github.repository_owner != 'getkirby' || github.repository == 'getkirby/kirby')
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
     runs-on: ubuntu-latest
@@ -147,12 +147,12 @@ jobs:
   analysis:
     name: "Code Quality"
 
-    # runs jobs only under the following conditions:
-    # - can be triggered manually from any repositories
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
     # - if on pull request, only run if from a fork
     #   (our own repo is covered by the push event)
-    # - if off pull request, only automatic run
-    #   if owner is not getkirby or repository is getkirby/kirby
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
     if: >
       github.event_name == 'workflow_dispatch' ||
       (
@@ -160,8 +160,8 @@ jobs:
         github.event.pull_request.head.repo.full_name != github.repository
       ) ||
       (
-        github.event_name != 'pull_request' &&
-        (github.repository_owner != 'getkirby' || github.repository == 'getkirby/kirby')
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
     runs-on: ubuntu-latest
@@ -232,12 +232,12 @@ jobs:
   coding-style:
     name: "Coding Style"
 
-    # runs jobs only under the following conditions:
-    # - can be triggered manually from any repositories
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
     # - if on pull request, only run if from a fork
     #   (our own repo is covered by the push event)
-    # - if off pull request, only automatic run
-    #   if owner is not getkirby or repository is getkirby/kirby
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
     if: >
       github.event_name == 'workflow_dispatch' ||
       (
@@ -245,8 +245,8 @@ jobs:
         github.event.pull_request.head.repo.full_name != github.repository
       ) ||
       (
-        github.event_name != 'pull_request' &&
-        (github.repository_owner != 'getkirby' || github.repository == 'getkirby/kirby')
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
       )
 
     runs-on: ubuntu-latest
