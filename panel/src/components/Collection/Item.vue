@@ -186,7 +186,9 @@ export default {
 
 /** List */
 .k-item[data-layout="list"] {
-	--item-height: var(--height-md);
+	--item-height: var(
+		--field-input-height
+	); /* TODO: change back to --height-md after inptu refactoring */
 	--item-button-height: var(--item-height);
 	--item-button-width: auto;
 
