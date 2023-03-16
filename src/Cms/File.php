@@ -184,7 +184,7 @@ class File extends ModelWithContent
 		// in files sections as well as files fields
 		$blueprint = $parent->blueprint();
 
-		$fromFields = function ($fields) use ($parent) {
+		$fromFields = function ($fields) use (&$fromFields, $parent) {
 			$templates = [];
 
 			foreach ($fields as $field) {
@@ -203,6 +203,13 @@ class File extends ModelWithContent
 					}
 
 					$templates[] = $uploads['template'] ?? 'default';
+					continue;
+				}
+
+				// structure field
+				if ($field['type'] === 'structure') {
+					$fields    = $fromFields($field['fields']);
+					$templates = array_merge($templates, $fields);
 					continue;
 				}
 			}
