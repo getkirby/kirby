@@ -375,6 +375,12 @@ trait AppPlugins
 	 */
 	protected function extendFieldMethods(array $methods): array
 	{
+		foreach (array_keys($methods) as $value) {
+			if ($value !== $key = strtolower($value)) {
+				Field::$aliases[$key] = $value;
+			}
+		}
+		
 		return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, $methods);
 	}
 
