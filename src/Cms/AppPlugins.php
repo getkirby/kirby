@@ -375,7 +375,7 @@ trait AppPlugins
 	 */
 	protected function extendFieldMethods(array $methods): array
 	{
-		return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, array_change_key_case($methods));
+		return $this->extensions['fieldMethods'] = Field::$methods = array_merge(Field::$methods, $methods);
 	}
 
 	/**
