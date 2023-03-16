@@ -16,7 +16,7 @@ describe("FileView", () => {
 
 		it("should display correctly", () => {
 			// Title
-			cy.get(".k-headline-editable").should("contain", "cheesy-autumn.jpg");
+			cy.get(".k-headline").should("contain", "cheesy-autumn.jpg");
 			cy.get(".k-topbar-breadcrumb a:last-child").should(
 				"contain",
 				"cheesy-autumn.jpg"
@@ -61,7 +61,7 @@ describe("FileView", () => {
 
 		it("should be renamed", () => {
 			// open settings
-			cy.get(".k-headline-editable").click();
+			cy.get(".k-headline").click();
 
 			dialog().find('input[name="name"]').type("trees");
 			dialog().find("form").submit();

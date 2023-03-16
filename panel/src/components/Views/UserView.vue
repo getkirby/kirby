@@ -37,8 +37,6 @@
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
-			:tab="tab.name"
-			:tabs="tabs"
 			@edit="$dialog(id + '/changeName')"
 		>
 			<span
@@ -71,6 +69,8 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
@@ -166,6 +166,7 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-3);
+	margin-bottom: var(--spacing-6);
 }
 
 .k-user-profile .k-button-group {

@@ -11,8 +11,6 @@
 
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
-			:tab="tab.name"
-			:tabs="tabs"
 			@edit="$dialog(id + '/changeTitle')"
 		>
 			{{ model.title }}
@@ -59,6 +57,9 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+
 		<k-sections
 			:blueprint="blueprint"
 			:empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"

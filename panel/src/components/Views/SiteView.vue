@@ -7,8 +7,6 @@
 	>
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
-			:tabs="tabs"
-			:tab="tab.name"
 			@edit="$dialog('site/changeTitle')"
 		>
 			{{ model.title }}
@@ -30,6 +28,8 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
