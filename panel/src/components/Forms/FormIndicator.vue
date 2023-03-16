@@ -74,6 +74,9 @@ export default {
 </script>
 
 <style>
+.k-form-indicator {
+	--button-color-icon: var(--color-gray-500);
+}
 .k-form-indicator-info {
 	font-size: var(--text-sm);
 	font-weight: var(--font-bold);
