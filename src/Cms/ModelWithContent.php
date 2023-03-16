@@ -5,6 +5,8 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
@@ -242,6 +244,57 @@ abstract class ModelWithContent extends Model implements Identifiable
 	abstract public function contentFileName(): string;
 
 	/**
+	 * Converts model to new blueprint
+	 * incl. its content for all translations
+	 */
+	protected function convertTo(string $blueprint): static
+	{
+		// first close object with new blueprint as template
+		$new = $this->clone(['template' => $blueprint]);
+
+		// for multilang, we go through all translations and
+		// covnert the content for each of them, remove the content file
+		// to rewrite it with converted content afterwards
+		if ($this->kirby()->multilang() === true) {
+			$translations = [];
+
+			foreach ($this->kirby()->languages()->codes() as $code) {
+				if ($this->translation($code)?->exists() === true) {
+					$content = $this->content($code)->convertTo($blueprint);
+
+					if (F::remove($this->contentFile($code)) !== true) {
+						throw new LogicException('The old text file could not be removed'); // @codeCoverageIgnore
+					}
+
+					// save to re-create the translation content file
+					// with the converted/updated content
+					$new->save($content, $code);
+				}
+
+				$translations[] = [
+					'code'    => $code,
+					'content' => $content ?? null
+				];
+			}
+
+			// cloning the object with the new translations content ensures
+			// that `propertyData` prop does not hold any old translations
+			// content that could surface on subsequent cloning
+			return $new->clone(['translations' => $translations]);
+		}
+
+		// for single language setups, we do the same,
+		// just once for the main content
+		$content = $this->content()->convertTo($blueprint);
+
+		if (F::remove($this->contentFile()) !== true) {
+			throw new LogicException('The old text file could not be removed'); // @codeCoverageIgnore
+		}
+
+		return $new->save($content);
+	}
+
+	/**
 	 * Decrement a given field value
 	 *
 	 * @param string $field
@@ -351,6 +404,20 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * @return \Kirby\Cms\ModelPermissions
 	 */
 	abstract public function permissions();
+
+	/**
+	 * Clean internal caches
+	 *
+	 * @return $this
+	 */
+	public function purge(): static
+	{
+		$this->blueprints   = null;
+		$this->content      = null;
+		$this->translations = null;
+
+		return $this;
+	}
 
 	/**
 	 * Creates a string query, starting from the model
