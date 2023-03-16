@@ -184,6 +184,32 @@ class File extends ModelWithContent
 		// in files sections as well as files fields
 		$blueprint = $parent->blueprint();
 
+		$fromFields = function ($fields) use ($parent) {
+			$templates = [];
+
+			foreach ($fields as $field) {
+				// files or textare field
+				if (
+					$field['type'] === 'files' ||
+					$field['type'] === 'textarea'
+				) {
+					$uploads = $field['uploads'] ?? null;
+
+					// only if the `uploads` parent is the actual parent
+					if ($target = $uploads['parent'] ?? null) {
+						if ($parent->id() !== $target) {
+							continue;
+						}
+					}
+
+					$templates[] = $uploads['template'] ?? 'default';
+					continue;
+				}
+			}
+
+			return $templates;
+		};
+
 		// collect all allowed templates…
 		foreach ($blueprint->sections() as $section) {
 			// if collecting for a specific section, skip all others
@@ -197,25 +223,10 @@ class File extends ModelWithContent
 				continue;
 			}
 
-			//  …from files fields
+			//  …from fields
 			if ($section->type() === 'fields') {
-				foreach ($section->fields() as $field) {
-					if ($field['type'] !== 'files') {
-						continue;
-					}
-
-					$uploads = $field['uploads'] ?? null;
-
-					// only if the `uploads` parent is the actual parent
-					if ($target = $uploads['parent'] ?? null) {
-						if ($parent->id() !== $target) {
-							continue;
-						}
-					}
-
-					$templates[] = $uploads['template'] ?? 'default';
-					continue;
-				}
+				$fields    = $fromFields($section->fields());
+				$templates = array_merge($templates, $fields);
 			}
 		}
 

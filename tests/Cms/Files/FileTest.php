@@ -91,7 +91,11 @@ class FileTest extends TestCase
 								'f' => [
 									'type'    => 'files',
 									'uploads' => 'for-fields/c'
-								]
+								],
+								'g' => [
+									'type'    => 'textarea',
+									'uploads' => 'for-fields/d'
+								],
 							]
 						]
 					]
@@ -111,6 +115,9 @@ class FileTest extends TestCase
 				'files/for-fields/c' => [
 					'title' => 'Field Type C',
 					'accept' => 'image'
+				],
+				'files/for-fields/d' => [
+					'title' => 'Field Type D'
 				],
 				'files/current' => [
 					'title' => 'Just the current'
@@ -137,13 +144,14 @@ class FileTest extends TestCase
 
 		$file       = $app->file('test/test.pdf');
 		$blueprints = $file->blueprints();
-		$this->assertCount(6, $blueprints);
+		$this->assertCount(7, $blueprints);
 		$this->assertSame('default', $blueprints[0]['name']);
 		$this->assertSame('for-fields/a', $blueprints[1]['name']);
 		$this->assertSame('for-fields/b', $blueprints[2]['name']);
-		$this->assertSame('current', $blueprints[3]['name']);
-		$this->assertSame('for-section/a', $blueprints[4]['name']);
-		$this->assertSame('for-section/b', $blueprints[5]['name']);
+		$this->assertSame('for-fields/d', $blueprints[3]['name']);
+		$this->assertSame('current', $blueprints[4]['name']);
+		$this->assertSame('for-section/a', $blueprints[5]['name']);
+		$this->assertSame('for-section/b', $blueprints[6]['name']);
 	}
 
 	public function testBlueprintsInSection()
