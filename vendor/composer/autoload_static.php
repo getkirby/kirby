@@ -32,6 +32,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         ),
         'L' => 
         array (
+            'League\\ColorExtractor\\' => 22,
             'Laminas\\Escaper\\' => 16,
         ),
         'K' => 
@@ -69,6 +70,10 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
+        'League\\ColorExtractor\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/color-extractor/src',
+        ),
         'Laminas\\Escaper\\' => 
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
@@ -82,10 +87,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         array (
             0 => __DIR__ . '/..' . '/composer/semver/src',
         ),
-    );
-
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/..' . '/league/color-extractor/src',
     );
 
     public static $prefixesPsr0 = array (
@@ -243,10 +244,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Cms\\UserRules' => __DIR__ . '/../..' . '/src/Cms/UserRules.php',
         'Kirby\\Cms\\Users' => __DIR__ . '/../..' . '/src/Cms/Users.php',
         'Kirby\\Cms\\Visitor' => __DIR__ . '/../..' . '/src/Cms/Visitor.php',
-        'Kirby\\ComposerInstaller\\CmsInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/CmsInstaller.php',
-        'Kirby\\ComposerInstaller\\Installer' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Installer.php',
-        'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
-        'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
         'Kirby\\Data\\Data' => __DIR__ . '/../..' . '/src/Data/Data.php',
         'Kirby\\Data\\Handler' => __DIR__ . '/../..' . '/src/Data/Handler.php',
         'Kirby\\Data\\Json' => __DIR__ . '/../..' . '/src/Data/Json.php',
@@ -418,9 +415,9 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Laminas\\Escaper\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/ExceptionInterface.php',
         'Laminas\\Escaper\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/InvalidArgumentException.php',
         'Laminas\\Escaper\\Exception\\RuntimeException' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/RuntimeException.php',
-        'League\\ColorExtractor\\Color' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/Color.php',
-        'League\\ColorExtractor\\ColorExtractor' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/ColorExtractor.php',
-        'League\\ColorExtractor\\Palette' => __DIR__ . '/..' . '/league/color-extractor/src/League/ColorExtractor/Palette.php',
+        'League\\ColorExtractor\\Color' => __DIR__ . '/..' . '/league/color-extractor/src/Color.php',
+        'League\\ColorExtractor\\ColorExtractor' => __DIR__ . '/..' . '/league/color-extractor/src/ColorExtractor.php',
+        'League\\ColorExtractor\\Palette' => __DIR__ . '/..' . '/league/color-extractor/src/Palette.php',
         'Michelf\\SmartyPants' => __DIR__ . '/..' . '/michelf/php-smartypants/Michelf/SmartyPants.php',
         'Michelf\\SmartyPantsTypographer' => __DIR__ . '/..' . '/michelf/php-smartypants/Michelf/SmartyPantsTypographer.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
@@ -477,7 +474,6 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInita8011b477bb239488e5d139cdeb7b31e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInita8011b477bb239488e5d139cdeb7b31e::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInita8011b477bb239488e5d139cdeb7b31e::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInita8011b477bb239488e5d139cdeb7b31e::$prefixesPsr0;
             $loader->classMap = ComposerStaticInita8011b477bb239488e5d139cdeb7b31e::$classMap;
 

@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'claviska/simpleimage' => array(
-            'pretty_version' => '3.7.2',
-            'version' => '3.7.2.0',
-            'reference' => '82dbef988e356baa5d73993a1351bcb6c0959269',
+            'pretty_version' => '4.0.0',
+            'version' => '4.0.0.0',
+            'reference' => '755615d786bf5565f67f45c21bc048e34c89990f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../claviska/simpleimage',
             'aliases' => array(),
@@ -65,9 +65,9 @@
             'dev_requirement' => false,
         ),
         'league/color-extractor' => array(
-            'pretty_version' => '0.3.2',
-            'version' => '0.3.2.0',
-            'reference' => '837086ec60f50c84c611c613963e4ad2e2aec806',
+            'pretty_version' => '0.4.0',
+            'version' => '0.4.0.0',
+            'reference' => '21fcac6249c5ef7d00eb83e128743ee6678fe505',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/color-extractor',
             'aliases' => array(),
