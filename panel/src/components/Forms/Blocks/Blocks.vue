@@ -507,6 +507,11 @@ export default {
 			}
 		},
 		onPaste(e) {
+			// enable pasting when the block selector is open
+			if (this.$refs.selector?.isOpen() === true) {
+				return this.paste(e);
+			}
+
 			if (
 				// only act on paste events for this blocks component
 				this.$el.contains(e.target) === false ||
@@ -514,11 +519,6 @@ export default {
 				this.isInputEvent(e) === true
 			) {
 				return false;
-			}
-
-			// enable pasting when the block selector is open
-			if (this.$refs.selector?.isOpen() === true) {
-				return this.paste(e);
 			}
 
 			// but not when any other dialogs or drawers are open
