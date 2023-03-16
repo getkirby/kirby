@@ -249,7 +249,7 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints());
@@ -260,10 +260,13 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints('menu'));
+
+		// non-existing section
+		$this->assertSame([], $model->blueprints('foo'));
 	}
 
 	public function testToSafeString()

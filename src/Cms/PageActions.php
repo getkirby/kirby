@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -347,40 +346,8 @@ trait PageActions
 		}
 
 		return $this->commit('changeTemplate', ['page' => $this, 'template' => $template], function ($oldPage, $template) {
-			if ($this->kirby()->multilang() === true) {
-				$newPage = $this->clone([
-					'template' => $template
-				]);
-
-				foreach ($this->kirby()->languages()->codes() as $code) {
-					if ($oldPage->translation($code)->exists() !== true) {
-						continue;
-					}
-
-					$content = $oldPage->content($code)->convertTo($template);
-
-					if (F::remove($oldPage->contentFile($code)) !== true) {
-						throw new LogicException('The old text file could not be removed');
-					}
-
-					// save the language file
-					$newPage->save($content, $code);
-				}
-
-				// return a fresh copy of the object
-				$page = $newPage->clone();
-			} else {
-				$newPage = $this->clone([
-					'content'  => $this->content()->convertTo($template),
-					'template' => $template
-				]);
-
-				if (F::remove($oldPage->contentFile()) !== true) {
-					throw new LogicException('The old text file could not be removed');
-				}
-
-				$page = $newPage->save();
-			}
+			// convert for new template/blueprint
+			$page = $oldPage->convertTo($template);
 
 			// update the parent collection
 			static::updateParentCollections($page, 'set');
@@ -780,18 +747,19 @@ trait PageActions
 
 	/**
 	 * Clean internal caches
+	 *
 	 * @return $this
 	 */
-	public function purge()
+	public function purge(): static
 	{
+		parent::purge();
+
 		$this->blueprint         = null;
 		$this->children          = null;
 		$this->childrenAndDrafts = null;
-		$this->content           = null;
 		$this->drafts            = null;
 		$this->files             = null;
 		$this->inventory         = null;
-		$this->translations      = null;
 
 		return $this;
 	}
