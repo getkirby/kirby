@@ -264,6 +264,9 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Page'
 			]
 		], $model->blueprints('menu'));
+
+		// non-existing section
+		$this->assertSame([], $model->blueprints('foo'));
 	}
 
 	public function testToSafeString()

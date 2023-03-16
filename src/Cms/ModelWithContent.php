@@ -24,6 +24,12 @@ use Throwable;
 abstract class ModelWithContent extends Model implements Identifiable
 {
 	/**
+	 * Cached array of valid blueprints
+	 * that could be used for the model
+	 */
+	public array|null $blueprints = null;
+
+	/**
 	 * The content
 	 *
 	 * @var \Kirby\Cms\Content
@@ -50,21 +56,31 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 */
 	public function blueprints(string $inSection = null): array
 	{
-		$blueprints = [];
-		$blueprint  = $this->blueprint();
-		$sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
+		// helper function
+		$toBlueprints = function (array $sections): array {
+			$blueprints = [];
 
-		foreach ($sections as $section) {
-			if ($section === null) {
-				continue;
+			foreach ($sections as $section) {
+				if ($section === null) {
+					continue;
+				}
+
+				foreach ((array)$section->blueprints() as $blueprint) {
+					$blueprints[$blueprint['name']] = $blueprint;
+				}
 			}
 
-			foreach ((array)$section->blueprints() as $blueprint) {
-				$blueprints[$blueprint['name']] = $blueprint;
-			}
+			return array_values($blueprints);
+		};
+
+		$blueprint = $this->blueprint();
+
+		// no caching for when collecting for specific section
+		if ($inSection !== null) {
+			return $toBlueprints([$blueprint->section($inSection)]);
 		}
 
-		return array_values($blueprints);
+		return $this->blueprints ??= $toBlueprints($blueprint->sections());
 	}
 
 	/**
