@@ -435,6 +435,7 @@
 	"page.changeStatus.position": "Please select a position",
 	"page.changeStatus.select": "Select a new status",
 	"page.changeTemplate": "Change template",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
 	"page.delete.confirm": "Do you really want to delete <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
 	"page.delete.confirm.title": "Enter the page title to confirm",

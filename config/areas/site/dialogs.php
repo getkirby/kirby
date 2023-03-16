@@ -155,10 +155,16 @@ return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
+						'notice' => [
+							'type'  => 'info',
+							'theme' => 'notice',
+							'text'  => I18n::translate('page.changeTemplate.notice')
+						],
 						'template' => Field::template($blueprints, [
 							'required' => true
 						])
 					],
+					'theme' => 'notice',
 					'submitButton' => I18n::translate('change'),
 					'value' => [
 						'template' => $page->intendedTemplate()->name()
@@ -167,9 +173,10 @@ return [
 			];
 		},
 		'submit' => function (string $id) {
-			$request = App::instance()->request();
+			$page     = Find::page($id);
+			$template = App::instance()->request()->get('template');
 
-			Find::page($id)->changeTemplate($request->get('template'));
+			$page->changeTemplate($template);
 
 			return [
 				'event' => 'page.changeTemplate',

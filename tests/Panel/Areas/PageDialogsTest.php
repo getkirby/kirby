@@ -533,7 +533,7 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame('site', $props['value']['parent']);
 		$this->assertSame('', $props['value']['slug']);
-		$this->assertSame('Page', $props['value']['template']);
+		$this->assertSame('default', $props['value']['template']);
 		$this->assertSame('', $props['value']['title']);
 	}
 

@@ -249,7 +249,7 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints());
@@ -260,7 +260,7 @@ class ModelWithContentTest extends TestCase
 				'title' => 'Home'
 			],
 			[
-				'name' => 'Page',
+				'name' => 'default',
 				'title' => 'Page'
 			]
 		], $model->blueprints('menu'));
