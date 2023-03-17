@@ -115,6 +115,33 @@ class LayoutField extends BlocksField
 		return $routes;
 	}
 
+	protected function setDefault($default = null)
+	{
+		// set id for layouts, columns and blocks within layout if not exists
+		if (is_array($default) === true) {
+			$default = array_map(function ($layout) {
+				$layout['id'] ??= Str::uuid();
+
+				// set columns id within layout
+				$layout['columns'] = array_map(function ($column) {
+					$column['id'] ??= Str::uuid();
+
+					// set blocks id within column
+					$column['blocks'] = array_map(function ($block) {
+						$block['id'] ??= Str::uuid();
+						return $block;
+					}, $column['blocks'] ?? []);
+
+					return $column;
+				}, $layout['columns'] ?? []);
+
+				return $layout;
+			}, $default);
+		}
+
+		parent::setDefault($default);
+	}
+
 	protected function setLayouts(array $layouts = [])
 	{
 		$this->layouts = array_map(
