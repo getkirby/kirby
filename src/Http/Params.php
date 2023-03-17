@@ -66,7 +66,7 @@ class Params extends Obj
 				$paramValue = $paramParts[1] ?? null;
 
 				if ($paramKey !== null) {
-					$params[rawurldecode($paramKey)] = $paramValue ? rawurldecode($paramValue) : null;
+					$params[rawurldecode($paramKey)] = $paramValue !== null ? rawurldecode($paramValue) : null;
 				}
 
 				unset($path[$index]);
