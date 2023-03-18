@@ -14,19 +14,19 @@ jobs:
       - uses: actions/stale@6f05e4244c9a0b2ed3401882b05d701dd0a7289b # pin@v7
         with:
           # Idle number of days before marking issues stale, set `-1` to disable
-          days-before-issue-stale: 75
+          days-before-issue-stale: 60
 
           # Idle number of days before marking issues stale, set `-1` to disable
-          days-before-pr-stale: 75
+          days-before-pr-stale: 60
 
           # Idle number of days before closing stale issues/PRs
-          days-before-close: 21
+          days-before-close: 15
 
           # Comment on the staled issues
-          stale-issue-message: "This issue has been marked as stale because it requires further input but has not seen activity in the past months. This is for us to prioritize issues that are still relevant and actionable. It will be closed if no further activity occurs within the next 21 days. If this issue is still relevant to you, please help us in gathering the necessary input."
+          stale-issue-message: "This issue has been marked as stale because it requires further input but has not seen activity in the past months. This is for us to prioritize issues that are still relevant and actionable. It will be closed if no further activity occurs within the next 15 days. If this issue is still relevant to you, please help us in gathering the necessary input."
 
           # Comment on the staled PRs
-          stale-pr-message: "This PR has been marked as stale because it requires further changes but has not seen activity in the past months. This is for us to prioritize PRs that can be reviewed and merged. It will be closed if no further activity occurs within the next 21 days. If you still have interest in this PR, please help us finalizing it."
+          stale-pr-message: "This PR has been marked as stale because it requires further changes but has not seen activity in the past months. This is for us to prioritize PRs that can be reviewed and merged. It will be closed if no further activity occurs within the next 15 days. If you still have interest in this PR, please help us finalizing it."
 
           # Label to apply on staled issues
           stale-issue-label: "type: stale 💤"
@@ -38,7 +38,9 @@ jobs:
           close-issue-reason: not_planned
 
           # Labels to check for stale issues/PRs
-          any-of-labels: "needs: changes 🔁,"
+          any-of-pr-labels: "needs: changes 🔁,needs: docs 📝,needs: tests  🧪"
+          any-of-issue-labels: "needs: information ❓,needs: replication 🔬"
 
-          # Labels on issues exempted from stale
+          # PRs/issues exempted from stale
+          exempt-all-milestones: true
           exempt-issue-labels: "critical: roadblock 🚧,type: regression 🚨"
