@@ -6,7 +6,7 @@
 		:data-disabled="fieldset.disabled"
 		:data-hidden="isHidden"
 		:data-id="id"
-		:data-last-in-batch="isLastInBatch"
+		:data-last-selected="isLastSelected"
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
 		class="k-block-container"
@@ -97,7 +97,7 @@ export default {
 		isBatched: Boolean,
 		isFull: Boolean,
 		isHidden: Boolean,
-		isLastInBatch: Boolean,
+		isLastSelected: Boolean,
 		isSelected: Boolean,
 		name: String,
 		next: Object,
@@ -253,24 +253,19 @@ export default {
 	outline: 0;
 }
 
-.k-block-container[data-batched="true"] {
+.k-block-container[data-selected="true"] {
 	z-index: 2;
 	border-bottom-color: transparent;
+	box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
 }
 .k-block-container[data-batched="true"]::after {
 	position: absolute;
 	inset: 0;
 	content: "";
-	background: rgba(238, 242, 246, 0.375);
+	background: hsl(214 33% 77% / 0.175);
 	mix-blend-mode: multiply;
-	border: 1px solid var(--color-focus);
 }
 
-.k-block-container[data-selected="true"] {
-	z-index: 2;
-	box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
-	border-bottom-color: transparent;
-}
 .k-block-container .k-block-options {
 	display: none;
 	position: absolute;
@@ -278,8 +273,7 @@ export default {
 	inset-inline-end: 0.75rem;
 	margin-top: calc(-1.75rem + 2px);
 }
-.k-block-container[data-last-in-batch="true"] > .k-block-options,
-.k-block-container[data-selected="true"] > .k-block-options {
+.k-block-container[data-last-selected="true"] > .k-block-options {
 	display: flex;
 }
 .k-block-container[data-hidden="true"] .k-block {
