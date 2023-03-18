@@ -8,16 +8,15 @@
 			:value="content.text"
 			@input="update({ text: $event })"
 		/>
-		<div class="k-block-type-heading-level">
-			<k-input
-				ref="level"
-				:empty="false"
-				:options="levels"
-				:value="content.level"
-				type="select"
-				@input="update({ level: $event })"
-			/>
-		</div>
+		<k-input
+			ref="level"
+			:empty="false"
+			:options="levels"
+			:value="content.level"
+			type="select"
+			class="k-block-type-heading-level"
+			@input="update({ level: $event })"
+		/>
 	</div>
 </template>
 
@@ -51,45 +50,39 @@ export default {
 
 <style>
 .k-block-type-heading-input {
+	display: flex;
+	align-items: center;
 	line-height: 1.25em;
+	font-size: var(--text-size);
 	font-weight: var(--font-bold);
 }
 .k-block-type-heading-input[data-level="h1"] {
-	font-size: var(--text-3xl);
+	--text-size: var(--text-3xl);
 	line-height: 1.125em;
 }
 .k-block-type-heading-input[data-level="h2"] {
-	font-size: var(--text-2xl);
+	--text-size: var(--text-2xl);
 }
 .k-block-type-heading-input[data-level="h3"] {
-	font-size: var(--text-xl);
+	--text-size: var(--text-xl);
 }
 .k-block-type-heading-input[data-level="h4"] {
-	font-size: var(--text-lg);
+	--text-size: var(--text-lg);
 }
 .k-block-type-heading-input[data-level="h5"] {
+	--text-size: var(--text-base);
 	line-height: 1.5em;
-	font-size: var(--text-base);
 }
 .k-block-type-heading-input[data-level="h6"] {
+	--text-size: var(--text-sm);
 	line-height: 1.5em;
-	font-size: var(--text-sm);
 }
 .k-block-type-heading-input .ProseMirror strong {
 	font-weight: 700;
 }
 .k-block-type-heading-level {
 	font-size: var(--text-sm);
-	font-weight: var(--font-bolder);
-	position: absolute;
-	inset-inline-end: 0;
-	bottom: 0;
-	top: 50%;
-	transform: translateY(-50%);
-}
-.k-block-type-heading-level .k-select-input {
-	position: relative;
-	padding: 0.325rem 0.75rem 0.5rem 2rem;
-	z-index: 1;
+	font-weight: var(--font-bold);
+	color: var(--color-gray-500);
 }
 </style>
