@@ -3,6 +3,7 @@
 		<k-writer
 			ref="input"
 			:inline="true"
+			:keys="keys"
 			:marks="textField.marks"
 			:placeholder="textField.placeholder"
 			:value="content.text"
@@ -28,6 +29,25 @@
  */
 export default {
 	computed: {
+		isSplitable() {
+			return (
+				this.content.text.length > 0 &&
+				this.editor().selectionIsAtStart === false &&
+				this.editor().selectionIsAtEnd === false
+			);
+		},
+		keys() {
+			return {
+				Enter: () => {
+					if (this.editor().selectionIsAtEnd === true) {
+						return this.$emit("append", "text");
+					}
+
+					return this.split();
+				},
+				"Mod-Enter": this.split
+			};
+		},
 		levels() {
 			return this.field("level", { options: [] }).options;
 		},
@@ -38,8 +58,27 @@ export default {
 		}
 	},
 	methods: {
+		editor() {
+			return this.$refs.input.editor;
+		},
 		focus() {
 			this.$refs.input.focus();
+		},
+		merge(blocks) {
+			this.update({
+				text: blocks.map((block) => block.content.text).join(" ")
+			});
+		},
+		split() {
+			const contents = this.editor().getHTMLStartToSelectionToEnd();
+			this.$emit("split", [
+				{ text: contents[0] },
+				{
+					// decrease heading level for newly created block
+					level: "h" + Math.min(parseInt(this.content.level.slice(1)) + 1, 6),
+					text: contents[1]
+				}
+			]);
 		}
 	}
 };

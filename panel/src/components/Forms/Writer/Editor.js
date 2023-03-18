@@ -261,12 +261,6 @@ export default class Editor extends Emitter {
 		// apply the new state to the view
 		this.view.updateState(newState);
 
-		// store the updated selection
-		this.selection = {
-			from: this.state.selection.from,
-			to: this.state.selection.to
-		};
-
 		// store active nodes and marks for the toolbar
 		this.setActiveNodesAndMarks();
 
@@ -313,19 +307,33 @@ export default class Editor extends Emitter {
 		setTimeout(() => this.view.focus(), 10);
 	}
 
-	getHTML() {
+	getHTML(fragment = this.state.doc.content) {
 		const div = document.createElement("div");
-		const fragment = DOMSerializer.fromSchema(this.schema).serializeFragment(
-			this.state.doc.content
+		const html = DOMSerializer.fromSchema(this.schema).serializeFragment(
+			fragment
 		);
 
-		div.appendChild(fragment);
+		div.appendChild(html);
 
 		if (this.options.inline && div.querySelector("p")) {
 			return div.querySelector("p").innerHTML;
 		}
 
 		return div.innerHTML;
+	}
+
+	getHTMLStartToSelection() {
+		const fragment = this.state.doc.slice(0, this.selection.head).content;
+		return this.getHTML(fragment);
+	}
+
+	getHTMLSelectionToEnd() {
+		const fragment = this.state.doc.slice(this.selection.head).content;
+		return this.getHTML(fragment);
+	}
+
+	getHTMLStartToSelectionToEnd() {
+		return [this.getHTMLStartToSelection(), this.getHTMLSelectionToEnd()];
 	}
 
 	getJSON() {
@@ -353,7 +361,7 @@ export default class Editor extends Emitter {
 
 		this.element = this.options.element;
 		this.focused = false;
-		this.selection = { from: 0, to: 0 };
+		// this.selection = { from: 0, to: 0 };
 
 		this.events = this.createEvents();
 		this.extensions = this.createExtensions();
@@ -416,24 +424,33 @@ export default class Editor extends Emitter {
 		}
 	}
 
+	get selection() {
+		return this.state.selection;
+	}
+	get selectionAtEnd() {
+		return TextSelection.atEnd(this.state.doc);
+	}
+	get selectionIsAtEnd() {
+		return this.selection.head === this.selectionAtEnd.head;
+	}
+	get selectionAtStart() {
+		return TextSelection.atStart(this.state.doc);
+	}
+	get selectionIsAtStart() {
+		return this.selection.head === this.selectionAtStart.head;
+	}
+
 	selectionAtPosition(position = null) {
-		if (this.selection && position === null) {
+		if (position === null) {
 			return this.selection;
 		}
 
 		if (position === "start" || position === true) {
-			return {
-				from: 0,
-				to: 0
-			};
+			return this.selectionAtStart;
 		}
 
 		if (position === "end") {
-			const { doc } = this.state;
-			return {
-				from: doc.content.size,
-				to: doc.content.size
-			};
+			return this.selectionAtEnd;
 		}
 
 		return {

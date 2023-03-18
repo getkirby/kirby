@@ -17,6 +17,7 @@
 					:is-last-selected="isLastSelected(block)"
 					:is-full="isFull"
 					:is-hidden="block.isHidden === true"
+					:is-mergable="isMergable"
 					:is-selected="isSelected(block)"
 					:next="prevNext(index + 1)"
 					:prev="prevNext(index - 1)"
@@ -27,20 +28,23 @@
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
 					@close="isEditing = false"
-					@copy="copy()"
 					@confirmToRemoveSelected="confirmToRemoveSelected"
+					@copy="copy()"
 					@duplicate="duplicate(block, index)"
 					@focus="onFocus(block)"
 					@focusPrev="focusPrev(index)"
 					@focusNext="focusNext(index)"
+					@click.native.stop="select(block, $event)"
 					@hide="hide(block)"
+					@merge="merge()"
 					@open="isEditing = true"
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
+					@show="show(block)"
 					@sortDown="sort(block, index, index + 1)"
 					@sortUp="sort(block, index, index - 1)"
-					@show="show(block)"
+					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
 				<template #footer>
@@ -142,6 +146,20 @@ export default {
 			}
 
 			return this.blocks.length >= this.max;
+		},
+		isMergable() {
+			if (this.selected.length < 2) {
+				return false;
+			}
+
+			const blocks = this.selected.map((id) => this.find(id));
+			const types = new Set(blocks.map((block) => block.type));
+
+			if (types.size > 1) {
+				return false;
+			}
+
+			return typeof this.ref(blocks[0]).$refs.editor.merge === "function";
 		}
 	},
 	watch: {
@@ -172,7 +190,7 @@ export default {
 		}
 	},
 	methods: {
-		append(what, index) {
+		async append(what, index) {
 			if (typeof what === "string") {
 				this.add(what, index);
 				return;
@@ -365,7 +383,7 @@ export default {
 			return this.blocks.findIndex((element) => element.id === id);
 		},
 		focus(block) {
-			const ref = this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
+			const ref = this.ref(block);
 			this.selected = [block?.id ?? this.blocks[0]];
 			ref?.focus();
 			ref?.$el.scrollIntoView({ block: "nearest" });
@@ -402,6 +420,20 @@ export default {
 		},
 		isSelected(block) {
 			return this.selected.includes(block.id);
+		},
+		merge() {
+			const blocks = this.selected.map((id) => this.find(id));
+
+			// top selected block handles merging
+			// (will update its own content with merged content)
+			this.ref(blocks[0]).$refs.editor.merge(blocks);
+
+			// remove all other selected blocks
+			for (const block of blocks.slice(1)) {
+				this.remove(block);
+			}
+
+			this.$nextTick(() => this.focus(blocks[0]));
 		},
 		move(event) {
 			// moving block between fields
@@ -569,6 +601,9 @@ export default {
 				return this.$refs["block-" + this.blocks[index].id]?.[0];
 			}
 		},
+		ref(block) {
+			return this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
+		},
 		remove(block) {
 			const index = this.findIndex(block.id);
 
@@ -622,6 +657,28 @@ export default {
 			this.blocks = blocks;
 			this.save();
 			this.$nextTick(() => this.focus(block));
+		},
+		async split(block, index, contents) {
+			// prepare old block with reduced content chunk
+			const oldBlock = this.$helper.clone(block);
+			oldBlock.content = { ...oldBlock.content, ...contents[0] };
+
+			// create a new block and merge in default contents as
+			// well as the newly splitted content chunk
+			const newBlock = await this.$api.get(
+				this.endpoints.field + "/fieldsets/" + block.type
+			);
+			newBlock.content = {
+				...newBlock.content,
+				...oldBlock.content,
+				...contents[1]
+			};
+
+			// in one go: remove old block and onsert updated and new block
+			this.blocks.splice(index, 1, oldBlock, newBlock);
+			this.save();
+
+			this.$nextTick(() => this.focus(newBlock));
 		},
 		update(block, content) {
 			const index = this.findIndex(block.id);

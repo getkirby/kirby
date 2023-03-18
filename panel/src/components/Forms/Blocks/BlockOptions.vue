@@ -8,6 +8,13 @@
 				@click.prevent="$emit('copy')"
 			/>
 			<k-button
+				v-if="isMergable"
+				:tooltip="$t('merge')"
+				class="k-block-options-button"
+				icon="collapse"
+				@click.prevent="$emit('merge')"
+			/>
+			<k-button
 				:tooltip="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
@@ -28,6 +35,14 @@
 				class="k-block-options-button"
 				icon="add"
 				@click="$emit('chooseToAppend')"
+			/>
+			<k-button
+				v-if="isSplitable"
+				:disabled="isFull"
+				:tooltip="$t('split')"
+				class="k-block-options-button"
+				icon="expand"
+				@click="$emit('split')"
 			/>
 			<k-button
 				:tooltip="$t('delete')"
@@ -70,6 +85,13 @@
 				<k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
 					{{ $t("field.blocks.changeType") }}
 				</k-dropdown-item>
+				<k-dropdown-item
+					v-if="isSplitable"
+					icon="expand"
+					@click="$emit('split')"
+				>
+					{{ $t("split") }}
+				</k-dropdown-item>
 				<hr />
 				<k-dropdown-item icon="template" @click="$emit('copy')">
 					{{ $t("copy") }}
@@ -109,7 +131,9 @@ export default {
 		isBatched: Boolean,
 		isEditable: Boolean,
 		isFull: Boolean,
-		isHidden: Boolean
+		isHidden: Boolean,
+		isMergable: Boolean,
+		isSplitable: Boolean
 	},
 	methods: {
 		open() {

@@ -39,7 +39,12 @@
 			:is-editable="isEditable"
 			:is-full="isFull"
 			:is-hidden="isHidden"
-			v-on="listeners"
+			:is-mergable="isMergable"
+			:is-splitable="isSplitable()"
+			v-on="{
+				...listeners,
+				split: () => $refs.editor.split()
+			}"
 		/>
 
 		<k-form-drawer
@@ -106,6 +111,7 @@ export default {
 		isFull: Boolean,
 		isHidden: Boolean,
 		isLastSelected: Boolean,
+		isMergable: Boolean,
 		isSelected: Boolean,
 		name: String,
 		next: Object,
@@ -214,16 +220,6 @@ export default {
 				}
 			}
 		},
-		onFocusIn(event) {
-			// skip focus if the event is coming from the options buttons
-			// to preserve the current focus (since options buttons directly
-			// trigger events and don't need any focus themselves)
-			if (this.$refs.options?.$el?.contains(event.target)) {
-				return;
-			}
-
-			this.$emit("focus", event);
-		},
 		goTo(block) {
 			if (block) {
 				this.skipFocus = true;
@@ -235,6 +231,26 @@ export default {
 					this.skipFocus = false;
 				});
 			}
+		},
+		isSplitable() {
+			if (this.$refs.editor) {
+				return (
+					(this.$refs.editor.isSplitable ?? true) &&
+					typeof this.$refs.editor?.split === "function"
+				);
+			}
+
+			return false;
+		},
+		onFocusIn(event) {
+			// skip focus if the event is coming from the options buttons
+			// to preserve the current focus (since options buttons directly
+			// trigger events and don't need any focus themselves)
+			if (this.$refs.options?.$el?.contains(event.target)) {
+				return;
+			}
+
+			this.$emit("focus", event);
 		},
 		open() {
 			this.$refs.drawer?.open();

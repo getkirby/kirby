@@ -63,6 +63,7 @@ import OrderedList from "./Nodes/OrderedList";
 // Extensions
 import History from "./Extensions/History.js";
 import Insert from "./Extensions/Insert.js";
+import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
 // Toolbar
@@ -88,6 +89,7 @@ export const props = {
 			type: Boolean,
 			default: false
 		},
+		keys: Object,
 		marks: {
 			type: [Array, Boolean],
 			default: true
@@ -100,11 +102,7 @@ export const props = {
 		},
 		paste: {
 			type: Function,
-			default() {
-				return () => {
-					return false;
-				};
-			}
+			default: () => false
 		},
 		placeholder: String,
 		spellcheck: Boolean,
@@ -168,9 +166,7 @@ export default {
 					this.toolbar = toolbar;
 
 					if (this.toolbar.visible) {
-						this.$nextTick(() => {
-							this.onToolbarOpen();
-						});
+						this.$nextTick(() => this.onToolbarOpen());
 					}
 				},
 				update: (payload) => {
@@ -212,6 +208,7 @@ export default {
 				...this.createNodes(),
 
 				// Extensions
+				new Keys(this.keys),
 				new History(),
 				new Insert(),
 				new Toolbar(),
@@ -227,27 +224,6 @@ export default {
 		this.editor.destroy();
 	},
 	methods: {
-		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
-			}
-
-			let installed = [];
-
-			allowed.forEach((allowed) => {
-				if (available[allowed]) {
-					installed.push(available[allowed]);
-				}
-			});
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
-		},
 		command(command, ...args) {
 			this.editor.command(command, ...args);
 		},
@@ -303,11 +279,32 @@ export default {
 				}
 			);
 		},
-		getHTML() {
-			return this.editor.getHTML();
+		filterExtensions(available, allowed, postFilter) {
+			if (allowed === false) {
+				allowed = [];
+			} else if (allowed === true || Array.isArray(allowed) === false) {
+				allowed = Object.keys(available);
+			}
+
+			let installed = [];
+
+			allowed.forEach((allowed) => {
+				if (available[allowed]) {
+					installed.push(available[allowed]);
+				}
+			});
+
+			if (typeof postFilter === "function") {
+				installed = postFilter(allowed, installed);
+			}
+
+			return installed;
 		},
 		focus() {
 			this.editor.focus();
+		},
+		getHTML() {
+			return this.editor.getHTML();
 		},
 		onToolbarOpen() {
 			if (this.$refs.toolbar) {
