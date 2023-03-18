@@ -8,6 +8,16 @@
 			:value="content.text"
 			@input="update({ text: $event })"
 		/>
+		<div class="k-block-type-heading-level">
+			<k-input
+				ref="level"
+				:empty="false"
+				:options="levels"
+				:value="content.level"
+				type="select"
+				@input="update({ level: $event })"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -18,6 +28,13 @@
  */
 export default {
 	computed: {
+		levels() {
+			let options = this.field("level", { options: [] }).options;
+			return options.map((heading) => {
+				heading.text = heading.text.toUpperCase();
+				return heading;
+			});
+		},
 		textField() {
 			return this.field("text", {
 				marks: true
@@ -60,5 +77,19 @@ export default {
 }
 .k-block-type-heading-input .ProseMirror strong {
 	font-weight: 700;
+}
+.k-block-type-heading-level {
+	font-size: var(--text-sm);
+	font-weight: var(--font-bolder);
+	position: absolute;
+	inset-inline-end: 0;
+	bottom: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.k-block-type-heading-level .k-select-input {
+	position: relative;
+	padding: 0.325rem 0.75rem 0.5rem 2rem;
+	z-index: 1;
 }
 </style>
