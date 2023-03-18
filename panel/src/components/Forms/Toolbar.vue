@@ -115,6 +115,32 @@ export default {
 			}
 		});
 
+		// inject custom textarea buttons
+		const customButtons = window.panel.plugins.textarea ?? {};
+
+		if (this.buttons === true && Object.keys(customButtons).length) {
+			layout["divider-custom-buttons"] = { divider: true };
+		}
+
+		Object.keys(customButtons).forEach(name => {
+			const button = customButtons[name];
+
+			// check required props for the button
+			if (
+				!button.label ||
+				!button.icon ||
+				(!button.command && !button.dropdown)
+			) {
+				return;
+			}
+
+			layout[name] = button;
+
+			if (button.shortcut) {
+				shortcuts[button.shortcut] = name;
+			}
+		});
+
 		return {
 			layout: layout,
 			shortcuts: shortcuts
