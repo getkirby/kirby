@@ -512,17 +512,22 @@ export default {
 				return this.paste(e);
 			}
 
-			if (
-				// only act on paste events for this blocks component
-				this.$el.contains(e.target) === false ||
-				// never paste blocks when the focus is in an input element
-				this.isInputEvent(e) === true
-			) {
+			// never paste blocks when the focus is in an input element
+			if (this.isInputEvent(e) === true) {
 				return false;
 			}
 
-			// but not when any other dialogs or drawers are open
+			// not when any other dialogs or drawers are open
 			if (this.isEditing === true || this.$store.state.dialog) {
+				return false;
+			}
+
+			// not when nothing is selected and the paste event
+			// doesn't target something in the block component
+			if (
+				this.selectedOrBatched.length === 0 &&
+				this.$el.contains(e.target) === false
+			) {
 				return false;
 			}
 
