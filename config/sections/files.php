@@ -178,6 +178,9 @@ return [
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
 				'attributes' => array_filter([
+					// TODO: an edge issue that needs to be solved:
+					//		 if multiple users load the same section at the same time
+					// 		 and upload a file, uploaded files have the same sort number
 					'sort'     => $this->sortable === true ? $this->total + 1 : null,
 					'template' => $template
 				])
