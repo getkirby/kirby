@@ -1,5 +1,5 @@
 <template>
-	<k-bar :data-theme="theme">
+	<k-bar :data-is-local="$system.isLocal">
 		<p>{{ $t("license.unregistered") }}</p>
 
 		<k-button-group :buttons="buttons" :responsive="true" size="sm" />
@@ -24,9 +24,6 @@ export default {
 					target: "_blank"
 				}
 			];
-		},
-		theme() {
-			return this.$system.isLocal ? "info" : "negative";
 		}
 	}
 };
@@ -38,8 +35,12 @@ export default {
 	bottom: 0;
 	height: var(--height-xl);
 	padding-inline: var(--main-padding-inline);
-	background: var(--theme-color-back);
+	background: var(--color-red-500);
 	container-type: inline-size;
+}
+
+.k-bar[data-is-local="true"] {
+	background: var(--color-blue-300);
 }
 
 .k-bar p {
