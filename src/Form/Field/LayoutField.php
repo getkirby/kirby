@@ -119,24 +119,23 @@ class LayoutField extends BlocksField
 	{
 		// set id for layouts, columns and blocks within layout if not exists
 		if (is_array($default) === true) {
-			$default = array_map(function ($layout) {
+			array_walk($default, function (&$layout) {
 				$layout['id'] ??= Str::uuid();
 
 				// set columns id within layout
-				$layout['columns'] = array_map(function ($column) {
-					$column['id'] ??= Str::uuid();
+				if (isset($layout['columns']) === true) {
+					array_walk($layout['columns'], function (&$column) {
+						$column['id'] ??= Str::uuid();
 
-					// set blocks id within column
-					$column['blocks'] = array_map(function ($block) {
-						$block['id'] ??= Str::uuid();
-						return $block;
-					}, $column['blocks'] ?? []);
-
-					return $column;
-				}, $layout['columns'] ?? []);
-
-				return $layout;
-			}, $default);
+						// set blocks id within column
+						if (isset($column['blocks']) === true) {
+							array_walk($column['blocks'], function (&$block) {
+								$block['id'] ??= Str::uuid();
+							});
+						}
+					});
+				}
+			});
 		}
 
 		parent::setDefault($default);

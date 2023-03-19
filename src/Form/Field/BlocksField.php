@@ -206,10 +206,9 @@ class BlocksField extends FieldClass
 	{
 		// set id for blocks if not exists
 		if (is_array($default) === true) {
-			$default = array_map(function ($block) {
+			array_walk($default, function (&$block) {
 				$block['id'] ??= Str::uuid();
-				return $block;
-			}, $default);
+			});
 		}
 
 		parent::setDefault($default);
