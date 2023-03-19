@@ -38,7 +38,7 @@ jobs:
           close-issue-reason: not_planned
 
           # Labels to check for stale issues/PRs
-          any-of-pr-labels: "needs: changes 🔁,needs: docs 📝,needs: tests  🧪"
+          any-of-pr-labels: "needs: changes 🔁"
           any-of-issue-labels: "needs: information ❓,needs: replication 🔬"
 
           # PRs/issues exempted from stale
