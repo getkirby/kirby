@@ -4,7 +4,7 @@ window.panel.plugins = {
   created: [],
   icons: {},
   routes: [],
-  textarea: {},
+  textareaButtons: {},
   use: [],
   views: {},
   thirdParty: {}
@@ -62,8 +62,8 @@ window.panel.plugin = function (plugin, parts) {
   }
 
   // Textarea custom toolbar buttons
-  resolve(parts, "textarea", function (name, options) {
-    window.panel.plugins.textarea[name] = options;
+  resolve(parts, "textareaButtons", function (name, options) {
+    window.panel.plugins.textareaButtons[name] = options;
   });
 
   // Third-party plugins
