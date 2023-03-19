@@ -62,14 +62,16 @@ export default {
 	font-size: var(--text-sm);
 	text-align: center;
 }
-.k-block-figure-empty.k-button {
-	display: flex;
-	width: 100%;
-	height: 6rem;
+.k-block-figure-empty {
+	--button-width: 100%;
+	--button-height: 6rem;
+	--button-color-text: var(--color-gray-600);
+	--button-color-back: var(--color-background);
+	--button-color-hover: var(--color-background);
+}
+
+.k-block-figure-empty,
+.k-block-figure-container > * {
 	border-radius: var(--rounded-sm);
-	align-items: center;
-	justify-content: center;
-	color: var(--color-gray-600);
-	background: var(--color-background);
 }
 </style>
