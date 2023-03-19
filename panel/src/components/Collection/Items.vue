@@ -177,7 +177,7 @@ export default {
 }
 .k-items[data-size="sm"],
 .k-items[data-size="small"] {
-	--items-size: 9rem;
+	--items-size: 10rem;
 }
 .k-items[data-size="md"],
 .k-items[data-size="medium"] {
