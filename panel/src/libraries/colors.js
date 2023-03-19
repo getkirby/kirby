@@ -181,8 +181,14 @@ export function toString(color, format, alpha = true) {
 
 	// HEX
 	if (isHex(value) === true) {
-		if (!alpha && value.length > 6) {
-			value = value.slice(0, 7);
+		if (alpha !== true) {
+			if (value.length === 5) {
+				// short form with alpha
+				value = value.slice(0, 4);
+			} else if (value.length > 7) {
+				// long form with alpha
+				value = value.slice(0, 7);
+			}
 		}
 
 		return value.toLowerCase();
