@@ -365,7 +365,7 @@ export default {
 		},
 		focus(block) {
 			const ref = this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
-			this.selected = [block.id];
+			this.selected = [block?.id ?? this.blocks[0]];
 			ref?.focus();
 			ref?.$el.scrollIntoView({ block: "nearest" });
 		},
