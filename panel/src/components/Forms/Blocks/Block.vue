@@ -203,7 +203,11 @@ export default {
 			this.$refs.drawer.close();
 		},
 		confirmToRemove() {
-			this.$refs.removeDialog.open();
+			if (this.isBatched) {
+				this.$emit("confirmToRemoveSelected");
+			} else {
+				this.$refs.removeDialog.open();
+			}
 		},
 		focus() {
 			if (this.skipFocus !== true) {
