@@ -422,18 +422,20 @@ export default {
 			return this.selected.includes(block.id);
 		},
 		merge() {
-			const blocks = this.selected.map((id) => this.find(id));
+			if (this.isMergable) {
+				const blocks = this.selected.map((id) => this.find(id));
 
-			// top selected block handles merging
-			// (will update its own content with merged content)
-			this.ref(blocks[0]).$refs.editor.merge(blocks);
+				// top selected block handles merging
+				// (will update its own content with merged content)
+				this.ref(blocks[0]).$refs.editor.merge(blocks);
 
-			// remove all other selected blocks
-			for (const block of blocks.slice(1)) {
-				this.remove(block);
+				// remove all other selected blocks
+				for (const block of blocks.slice(1)) {
+					this.remove(block);
+				}
+
+				this.$nextTick(() => this.focus(blocks[0]));
 			}
-
-			this.$nextTick(() => this.focus(blocks[0]));
 		},
 		move(event) {
 			// moving block between fields
