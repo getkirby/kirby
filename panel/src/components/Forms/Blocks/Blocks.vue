@@ -64,6 +64,7 @@
 			<k-remove-dialog
 				ref="removeAll"
 				:text="$t('field.blocks.delete.confirm.all')"
+				:submit-button="$t('delete.all')"
 				@submit="removeAll"
 			/>
 
