@@ -68,6 +68,14 @@ class ParamsTest extends TestCase
 		$this->assertSame($expected, $params);
 	}
 
+	public function testExtractFromZeroString()
+	{
+		$params   = Params::extract('price:0');
+		$expected = ['price' => '0'];
+
+		$this->assertSame($expected, $params['params']);
+	}
+
 	public function testExtractFromSeparator()
 	{
 		$params   = Params::extract(Params::separator());
