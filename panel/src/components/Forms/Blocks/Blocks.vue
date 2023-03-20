@@ -41,6 +41,8 @@
 					@prepend="add($event, index)"
 					@remove="remove(block)"
 					@show="show(block)"
+					@selectDown="selectDown"
+					@selectUp="selectUp"
 					@sortDown="sort(block, index, index + 1)"
 					@sortUp="sort(block, index, index - 1)"
 					@split="split(block, index, $event)"
@@ -639,6 +641,22 @@ export default {
 			if (this.isSelected(block) === false) {
 				this.selected.push(block.id);
 				this.selected.sort((a, b) => this.findIndex(a) - this.findIndex(b));
+			}
+		},
+		selectDown() {
+			const last = this.selected[this.selected.length - 1];
+			const index = this.findIndex(last) + 1;
+
+			if (index < this.blocks.length) {
+				this.select(this.blocks[index]);
+			}
+		},
+		selectUp() {
+			const first = this.selected[0];
+			const index = this.findIndex(first) - 1;
+
+			if (index >= 0) {
+				this.select(this.blocks[index]);
 			}
 		},
 		selectAll() {
