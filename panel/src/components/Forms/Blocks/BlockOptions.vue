@@ -11,7 +11,7 @@
 				v-if="isMergable"
 				:tooltip="$t('merge')"
 				class="k-block-options-button"
-				icon="collapse"
+				icon="merge"
 				@click.prevent="$emit('merge')"
 			/>
 			<k-button
@@ -41,7 +41,7 @@
 				:disabled="isFull"
 				:tooltip="$t('split')"
 				class="k-block-options-button"
-				icon="expand"
+				icon="split"
 				@click="$emit('split')"
 			/>
 			<k-button
@@ -87,7 +87,7 @@
 				</k-dropdown-item>
 				<k-dropdown-item
 					v-if="isSplitable"
-					icon="expand"
+					icon="split"
 					@click="$emit('split')"
 				>
 					{{ $t("split") }}
