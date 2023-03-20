@@ -972,7 +972,7 @@ class SimpleImage
 
         // Resize to height
         if (! $width && $height) {
-            $width = $height * $this->getAspectRatio();
+            $width = (int) round($height * $this->getAspectRatio());
         }
 
         // If the dimensions are the same, there's no need to resize

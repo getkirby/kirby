@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "claviska/simpleimage",
-            "version": "4.0.1",
-            "version_normalized": "4.0.1.0",
+            "version": "4.0.2",
+            "version_normalized": "4.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "755615d786bf5565f67f45c21bc048e34c89990f"
+                "reference": "226d507cca0c8400d69bee7eb324158e3cbe246e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/755615d786bf5565f67f45c21bc048e34c89990f",
-                "reference": "755615d786bf5565f67f45c21bc048e34c89990f",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/226d507cca0c8400d69bee7eb324158e3cbe246e",
+                "reference": "226d507cca0c8400d69bee7eb324158e3cbe246e",
                 "shasum": ""
             },
             "require": {
@@ -24,7 +24,7 @@
                 "laravel/pint": "^1.5",
                 "phpstan/phpstan": "^1.10"
             },
-            "time": "2023-02-27T16:37:07+00:00",
+            "time": "2023-03-20T15:27:20+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -46,7 +46,7 @@
             "description": "A PHP class that makes working with images as simple as possible.",
             "support": {
                 "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/4.0.1"
+                "source": "https://github.com/claviska/SimpleImage/tree/4.0.2"
             },
             "funding": [
                 {

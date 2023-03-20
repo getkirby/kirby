@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'claviska/simpleimage' => array(
-            'pretty_version' => '4.0.1',
-            'version' => '4.0.1.0',
-            'reference' => '755615d786bf5565f67f45c21bc048e34c89990f',
+            'pretty_version' => '4.0.2',
+            'version' => '4.0.2.0',
+            'reference' => '226d507cca0c8400d69bee7eb324158e3cbe246e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../claviska/simpleimage',
             'aliases' => array(),
