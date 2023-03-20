@@ -364,8 +364,10 @@ export default {
 			return this.blocks.findIndex((element) => element.id === id);
 		},
 		focus(block) {
-			this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0]?.focus();
-			this.selected = [block?.id ?? this.blocks[0]];
+			const ref = this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
+			this.selected = [block.id];
+			ref?.focus();
+			ref?.$el.scrollIntoView({ block: "nearest" });
 		},
 		focusNext(index) {
 			const block = this.blocks[Math.min(index + 1, this.blocks.length - 1)];
