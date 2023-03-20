@@ -31,6 +31,8 @@
 					@confirmToRemoveSelected="confirmToRemoveSelected"
 					@duplicate="duplicate(block, index)"
 					@focus="onFocus(block)"
+					@focusPrev="focusPrev(index)"
+					@focusNext="focusNext(index)"
 					@hide="hide(block)"
 					@open="isEditing = true"
 					@paste="pasteboard()"
@@ -363,8 +365,18 @@ export default {
 			return this.blocks.findIndex((element) => element.id === id);
 		},
 		focus(block) {
-			this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0]?.focus();
+			const ref = this.$refs["block-" + (block?.id ?? this.blocks[0]?.id)]?.[0];
 			this.selected = [block?.id ?? this.blocks[0]];
+			ref?.focus();
+			ref?.$el.scrollIntoView({ block: "nearest" });
+		},
+		focusNext(index) {
+			const block = this.blocks[Math.min(index + 1, this.blocks.length - 1)];
+			this.focus(block);
+		},
+		focusPrev(index) {
+			const block = this.blocks[Math.max(0, index - 1)];
+			this.focus(block);
 		},
 		focusOrOpen(block) {
 			if (this.fieldsets[block.type].wysiwyg) {
