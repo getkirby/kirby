@@ -11,6 +11,8 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
+		@keydown.meta.j.prevent="$emit('merge')"
+		@keydown.ctrl.j.prevent="$emit('merge')"
 		@keydown.meta.up.exact.prevent="$emit('focusPrev')"
 		@keydown.ctrl.up.exact.prevent="$emit('focusPrev')"
 		@keydown.meta.down.exact.prevent="$emit('focusNext')"
