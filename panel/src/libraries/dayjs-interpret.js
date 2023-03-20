@@ -24,8 +24,11 @@ export default (option, Dayjs, dayjs) => {
 				"MMM D YYYY": false,
 				"MMM DD YY": false,
 				"MMM D YY": false,
+				"MMM YYYY": true,
 				"MMM DD": false,
 				"MMM D": false,
+				"MM YYYY": true,
+				"M YYYY": true,
 
 				"DD MMMM YYYY": false,
 				"DD MMMM YY": false,
