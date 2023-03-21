@@ -9,6 +9,7 @@
 			@input="update({ text: $event })"
 		/>
 		<k-input
+			v-if="levels.length > 1"
 			ref="level"
 			:empty="false"
 			:options="levels"
@@ -28,11 +29,7 @@
 export default {
 	computed: {
 		levels() {
-			let options = this.field("level", { options: [] }).options;
-			return options.map((heading) => {
-				heading.text = heading.text.toUpperCase();
-				return heading;
-			});
+			return this.field("level", { options: [] }).options;
 		},
 		textField() {
 			return this.field("text", {
@@ -83,6 +80,7 @@ export default {
 .k-block-type-heading-level {
 	font-size: var(--text-sm);
 	font-weight: var(--font-bold);
+	text-transform: uppercase;
 	color: var(--color-gray-500);
 }
 </style>

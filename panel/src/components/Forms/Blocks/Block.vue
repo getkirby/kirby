@@ -11,8 +11,16 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
+		@keydown.meta.up.exact.prevent="$emit('focusPrev')"
+		@keydown.ctrl.up.exact.prevent="$emit('focusPrev')"
+		@keydown.meta.down.exact.prevent="$emit('focusNext')"
+		@keydown.ctrl.down.exact.prevent="$emit('focusNext')"
+		@keydown.meta.shift.down.prevent="$emit('sortDown')"
 		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
+		@keydown.meta.shift.up.prevent="$emit('sortUp')"
 		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
+		@keydown.meta.backspace.prevent="confirmToRemove"
+		@keydown.ctrl.backspace.prevent="confirmToRemove"
 		@focus="$emit('focus')"
 		@focusin="onFocusIn"
 	>
@@ -195,7 +203,11 @@ export default {
 			this.$refs.drawer.close();
 		},
 		confirmToRemove() {
-			this.$refs.removeDialog.open();
+			if (this.isBatched) {
+				this.$emit("confirmToRemoveSelected");
+			} else {
+				this.$refs.removeDialog.open();
+			}
 		},
 		focus() {
 			if (this.skipFocus !== true) {
