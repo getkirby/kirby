@@ -264,4 +264,38 @@ class LayoutFieldTest extends TestCase
 
 		$this->assertSame($value, $field->empty());
 	}
+
+	public function testDefault()
+	{
+		$field = $this->field('layout', [
+			'default' => [
+				[
+					'columns' => [
+						[
+							'width' => '1/2',
+							'blocks' => [
+								[
+									'type' => 'heading',
+									'text' => 'Some title'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$default = $field->default();
+
+		$layout = $default[0];
+		$column = $layout['columns'][0];
+		$block = $column['blocks'][0];
+
+		$this->assertCount(1, $default);
+		$this->assertArrayHasKey('id', $layout);
+		$this->assertArrayHasKey('id', $column);
+		$this->assertArrayHasKey('id', $block);
+		$this->assertSame('heading', $block['type']);
+		$this->assertSame('Some title', $block['text']);
+	}
 }

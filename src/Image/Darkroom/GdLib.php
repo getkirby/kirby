@@ -33,7 +33,7 @@ class GdLib extends Darkroom
 		$image = $this->blur($image, $options);
 		$image = $this->grayscale($image, $options);
 
-		$image->toFile($file, $mime, $options['quality']);
+		$image->toFile($file, $mime, $options);
 
 		return $options;
 	}
@@ -60,7 +60,11 @@ class GdLib extends Darkroom
 			return $image->resize($options['width'], $options['height']);
 		}
 
-		return $image->thumbnail($options['width'], $options['height'] ?? $options['width'], $options['crop']);
+		return $image->thumbnail(
+			$options['width'],
+			$options['height'] ?? $options['width'],
+			$options['crop']
+		);
 	}
 
 	/**
