@@ -202,6 +202,18 @@ class BlocksField extends FieldClass
 		return $this->valueToJson($blocks, $this->pretty());
 	}
 
+	protected function setDefault($default = null)
+	{
+		// set id for blocks if not exists
+		if (is_array($default) === true) {
+			array_walk($default, function (&$block) {
+				$block['id'] ??= Str::uuid();
+			});
+		}
+
+		parent::setDefault($default);
+	}
+
 	protected function setFieldsets($fieldsets, $model)
 	{
 		if (is_string($fieldsets) === true) {
