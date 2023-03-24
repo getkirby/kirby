@@ -298,4 +298,19 @@ export default {
 [data-disabled="true"] .k-block-container {
 	background: var(--color-background);
 }
+
+/* Collapse long blocks while dragging */
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block {
+	position: relative;
+	max-height: 4rem;
+	overflow: hidden;
+}
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block::after {
+	position: absolute;
+	bottom: 0;
+	content: "";
+	height: 2rem;
+	width: 100%;
+	background: linear-gradient(to top, var(--color-white), transparent);
+}
 </style>
