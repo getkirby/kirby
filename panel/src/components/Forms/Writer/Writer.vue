@@ -131,6 +131,12 @@ export default {
 		};
 	},
 	computed: {
+		isCursorAtEnd() {
+			return this.editor.selectionIsAtEnd;
+		},
+		isCursorAtStart() {
+			return this.editor.selectionIsAtStart;
+		},
 		isParagraphNodeHidden() {
 			return (
 				Array.isArray(this.nodes) === true &&
@@ -305,6 +311,9 @@ export default {
 		},
 		getHTML() {
 			return this.editor.getHTML();
+		},
+		getSplitContent() {
+			return this.editor.getHTMLStartToSelectionToEnd();
 		},
 		onToolbarOpen() {
 			if (this.$refs.toolbar) {

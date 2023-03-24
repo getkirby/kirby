@@ -20,8 +20,8 @@ export default {
 		isSplitable() {
 			return (
 				this.content.text.length > 0 &&
-				this.editor().selectionIsAtStart === false &&
-				this.editor().selectionIsAtEnd === false
+				this.input().isCursorAtStart === false &&
+				this.input().isCursorAtEnd === false
 			);
 		},
 		keys() {
@@ -34,11 +34,11 @@ export default {
 		}
 	},
 	methods: {
-		editor() {
-			return this.$refs.input.$refs.input.$refs.input.editor;
-		},
 		focus() {
 			this.$refs.input.focus();
+		},
+		input() {
+			return this.$refs.input.$refs.input.$refs.input;
 		},
 		merge(blocks) {
 			this.update({
@@ -49,11 +49,14 @@ export default {
 			});
 		},
 		split() {
-			const contents = this.editor().getHTMLStartToSelectionToEnd();
-			this.$emit("split", [
-				{ text: contents[0].replace(/(<li><p><\/p><\/li><\/ul>)$/, "</ul>") },
-				{ text: contents[1].replace(/^(<ul><li><p><\/p><\/li>)/, "<ul>") }
-			]);
+			const contents = this.input().getSplitContent?.();
+
+			if (contents) {
+				this.$emit("split", [
+					{ text: contents[0].replace(/(<li><p><\/p><\/li><\/ul>)$/, "</ul>") },
+					{ text: contents[1].replace(/^(<ul><li><p><\/p><\/li>)/, "<ul>") }
+				]);
+			}
 		}
 	}
 };
