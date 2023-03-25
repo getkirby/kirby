@@ -95,7 +95,13 @@ export const props = {
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default: () => ["heading", "bulletList", "orderedList"]
+			default: () => [
+				"paragraph",
+				"heading",
+				"bulletList",
+				"orderedList",
+				"horizontalRule"
+			]
 		},
 		paste: {
 			type: Function,
@@ -459,6 +465,16 @@ export default {
 .k-writer .ProseMirror li > ol,
 .k-writer .ProseMirror li > ul {
 	margin: 0;
+}
+
+.k-writer .ProseMirror hr {
+	border: 0;
+	border-top: 2px solid var(--color-gray-300);
+	border-radius: var(--rounded);
+	margin-block: var(--spacing-1);
+}
+.k-writer .ProseMirror hr.ProseMirror-selectednode {
+	outline: 2px var(--color-focus) solid;
 }
 
 .k-writer-code pre {
