@@ -39,6 +39,7 @@
 <script>
 import Editor from "./Editor";
 import Mark from "./Mark";
+import Node from "./Node";
 
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
@@ -86,10 +87,7 @@ export const props = {
 			}
 		},
 		headings: [Array, Boolean],
-		inline: {
-			type: Boolean,
-			default: false
-		},
+		inline: Boolean,
 		keys: Object,
 		marks: {
 			type: [Array, Boolean],
@@ -97,13 +95,11 @@ export const props = {
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default() {
-				return ["heading", "bulletList", "orderedList"];
-			}
+			default: () => ["heading", "bulletList", "orderedList"]
 		},
 		paste: {
 			type: Function,
-			default: () => false
+			default: () => () => false
 		},
 		placeholder: String,
 		spellcheck: Boolean,
@@ -231,6 +227,27 @@ export default {
 		this.editor.destroy();
 	},
 	methods: {
+		filterExtensions(available, allowed, postFilter) {
+			if (allowed === false) {
+				allowed = [];
+			} else if (allowed === true || Array.isArray(allowed) === false) {
+				allowed = Object.keys(available);
+			}
+
+			let installed = [];
+
+			for (const extension of allowed) {
+				if (available[extension]) {
+					installed.push(available[extension]);
+				}
+			}
+
+			if (typeof postFilter === "function") {
+				installed = postFilter(allowed, installed);
+			}
+
+			return installed;
+		},
 		command(command, ...args) {
 			this.editor.command(command, ...args);
 		},
@@ -244,12 +261,12 @@ export default {
 					code: new Code(),
 					link: new Link(),
 					email: new Email(),
-					...this.createCustomMarks()
+					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
 			);
 		},
-		createCustomMarks() {
+		createMarksFromPanelPlugins() {
 			const customs = window.panel.plugins.writerMarks ?? {};
 
 			// take each extenstion object and turn
@@ -281,7 +298,8 @@ export default {
 						levels: this.headings
 					}),
 					horizontalRule: new HorizontalRule(),
-					listItem: new ListItem()
+					listItem: new ListItem(),
+					...this.createNodesFromPanelPlugins()
 				},
 				this.nodes,
 				(allowed, installed) => {
@@ -300,26 +318,21 @@ export default {
 				}
 			);
 		},
-		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
+		createNodesFromPanelPlugins() {
+			const customs = window.panel.plugins.writerNodes ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Node class
+			for (const nodeName in customs) {
+				const extension = customs[nodeName];
+				const node = new Node();
+				customs[nodeName] = Object.assign(node, extension);
 			}
 
-			let installed = [];
-
-			allowed.forEach((allowed) => {
-				if (available[allowed]) {
-					installed.push(available[allowed]);
-				}
-			});
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
+			return customs;
+		},
+		getHTML() {
+			return this.editor.getHTML();
 		},
 		focus() {
 			this.editor.focus();

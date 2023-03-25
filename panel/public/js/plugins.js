@@ -8,6 +8,7 @@ window.panel.plugins = {
 	use: [],
 	views: {},
 	writerMarks: {},
+	writerNodes: {},
 	thirdParty: {}
 };
 
@@ -70,6 +71,11 @@ window.panel.plugin = function (plugin, parts) {
 	// Writer custom marks
 	resolve(parts, "writerMarks", function (name, options) {
 		window.panel.plugins.writerMarks[name] = options;
+	});
+
+	// Writer custom nodes
+	resolve(parts, "writerNodes", function (name, options) {
+		window.panel.plugins.writerNodes[name] = options;
 	});
 
 	// Third-party plugins
