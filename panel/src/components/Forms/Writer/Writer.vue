@@ -91,7 +91,15 @@ export const props = {
 		keys: Object,
 		marks: {
 			type: [Array, Boolean],
-			default: true
+			default: () => [
+				"bold",
+				"italic",
+				"underline",
+				"strike",
+				"code",
+				"link",
+				"email"
+			]
 		},
 		nodes: {
 			type: [Array, Boolean],
