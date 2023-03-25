@@ -104,11 +104,11 @@ export const props = {
 		nodes: {
 			type: [Array, Boolean],
 			default: () => [
-				"paragraph",
 				"heading",
 				"bulletList",
 				"orderedList",
-				"horizontalRule"
+				"horizontalRule",
+				"blockquote"
 			]
 		},
 		paste: {
@@ -286,9 +286,7 @@ export default {
 			// take each extenstion object and turn
 			// it into an instance that extends the Mark class
 			for (const markName in customs) {
-				const extension = customs[markName];
-				const mark = new Mark();
-				customs[markName] = Object.assign(mark, extension);
+				Object.setPrototypeOf(customs[markName], new Mark());
 			}
 
 			return customs;
@@ -338,9 +336,7 @@ export default {
 			// take each extenstion object and turn
 			// it into an instance that extends the Node class
 			for (const nodeName in customs) {
-				const extension = customs[nodeName];
-				const node = new Node();
-				customs[nodeName] = Object.assign(node, extension);
+				Object.setPrototypeOf(customs[nodeName], new Node());
 			}
 
 			return customs;

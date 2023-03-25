@@ -14,7 +14,7 @@
 					<k-dropdown-item
 						:key="nodeType"
 						:current="activeButton?.id === node.id"
-						:disabled="activeButton?.when.includes(node.name) === false"
+						:disabled="activeButton?.when?.includes(node.name) === false"
 						:icon="node.icon"
 						@click="command(node.command || nodeType)"
 					>
