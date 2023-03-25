@@ -38,6 +38,7 @@
 
 <script>
 import Editor from "./Editor";
+import Mark from "./Mark";
 
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
@@ -236,16 +237,30 @@ export default {
 		createMarks() {
 			return this.filterExtensions(
 				{
-					link: new Link(),
 					bold: new Bold(),
 					italic: new Italic(),
 					strike: new Strike(),
 					underline: new Underline(),
 					code: new Code(),
-					email: new Email()
+					link: new Link(),
+					email: new Email(),
+					...this.createCustomMarks()
 				},
 				this.marks
 			);
+		},
+		createCustomMarks() {
+			const customs = window.panel.plugins.writerMarks ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Mark class
+			for (const markName in customs) {
+				const extension = customs[markName];
+				const mark = new Mark();
+				customs[markName] = Object.assign(mark, extension);
+			}
+
+			return customs;
 		},
 		createNodes() {
 			const hardBreak = new HardBreak({
