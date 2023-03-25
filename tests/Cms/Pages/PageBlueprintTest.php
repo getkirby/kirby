@@ -9,6 +9,11 @@ use PHPUnit\Framework\TestCase;
  */
 class PageBlueprintTest extends TestCase
 {
+	public function tearDown(): void
+	{
+		Blueprint::$loaded = [];
+	}
+
 	public function testOptions()
 	{
 		$blueprint = new PageBlueprint([
@@ -359,5 +364,172 @@ class PageBlueprintTest extends TestCase
 
 		$this->assertSame('Extended', $blueprint->title());
 		$this->assertSame('date', $blueprint->num());
+	}
+
+	/**
+	 * @coversNothing
+	 */
+	public function testTitleI18n()
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'name'  => 'Foo',
+					'title' => 'page.test'
+				]
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true,
+					'translations' => [
+						'page.test' => 'Simple Page'
+					]
+				],
+				[
+					'code' => 'de',
+					'translations' => [
+						'page.test' => 'Einfache Seite'
+					],
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('de');
+		$page = $app->page('test');
+
+		$this->assertSame('Einfache Seite', $page->blueprint()->title());
+
+		$app->setCurrentTranslation('en');
+		$page->purge();
+
+		$this->assertSame('Simple Page', $page->blueprint()->title());
+	}
+
+	/**
+	 * @coversNothing
+	 */
+	public function testTitleI18nWithFallbackLanguage()
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-fallback'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/test-fallback' => [
+					'name'  => 'Foo',
+					'title' => 'page.test'
+				]
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true,
+					'translations' => [
+						'page.test' => 'Thanks to fallback'
+					]
+				],
+				[
+					'code' => 'de',
+					'translations' => [],
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('de');
+		$page = $app->page('test');
+		$this->assertSame('Thanks to fallback', $page->blueprint()->title());
+	}
+
+	/**
+	 * @coversNothing
+	 */
+	public function testTitleI18nArray()
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-i18n-array'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/test-i18n-array' => [
+					'name'  => 'Foo',
+					'title' => [
+						'en' => 'My title',
+						'de' => 'Mein Titel'
+					]
+				]
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('de');
+		$page = $app->page('test');
+		$this->assertSame('Mein Titel', $page->blueprint()->title());
+
+		$page->purge();
+		$app->setCurrentTranslation('en');
+		$this->assertSame('My title', $page->blueprint()->title());
+	}
+
+	public function testTitleI18nArrayFallBack()
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-i18n-array'
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/test-i18n-array' => [
+					'name'  => 'Foo',
+					'title' => [
+						'en' => 'My title',
+						'de' => 'Mein Titel'
+					]
+				]
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('fr');
+		$page = $app->page('test');
+		$this->assertSame('My title', $page->blueprint()->title());
 	}
 }

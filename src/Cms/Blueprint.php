@@ -77,7 +77,8 @@ class Blueprint
 		$props['name'] ??= 'default';
 
 		// normalize and translate the title
-		$props['title'] = $this->i18n($props['title'] ?? ucfirst($props['name']));
+		$props['title'] ??= ucfirst($props['name']);
+		$props['title']   = $this->i18n($props['title']);
 
 		// convert all shortcuts
 		$props = $this->convertFieldsToSections('main', $props);
@@ -221,14 +222,12 @@ class Blueprint
 
 	/**
 	 * Create a new blueprint for a model
-	 *
-	 * @param string $name
-	 * @param string|null $fallback
-	 * @param \Kirby\Cms\Model $model
-	 * @return static|null
 	 */
-	public static function factory(string $name, string $fallback = null, Model $model)
-	{
+	public static function factory(
+		string $name,
+		string $fallback = null,
+		Model $model
+	): static|null {
 		try {
 			$props = static::load($name);
 		} catch (Exception) {
@@ -320,7 +319,7 @@ class Blueprint
 	 */
 	protected function i18n($value, $fallback = null)
 	{
-		return I18n::translate($value, $fallback ?? $value);
+		return I18n::translate($value, $fallback) ?? $value;
 	}
 
 	/**
@@ -335,28 +334,21 @@ class Blueprint
 
 	/**
 	 * Loads a blueprint from file or array
-	 *
-	 * @param string $name
-	 * @return array
 	 */
 	public static function load(string $name): array
 	{
 		$props = static::find($name);
 
-		$normalize = function ($props) use ($name) {
-			// inject the filename as name if no name is set
-			$props['name'] ??= $name;
+		// inject the filename as name if no name is set
+		$props['name'] ??= $name;
 
-			// normalize the title
-			$title = $props['title'] ?? ucfirst($props['name']);
+		// normalize the title
+		$title = $props['title'] ?? ucfirst($props['name']);
 
-			// translate the title
-			$props['title'] = I18n::translate($title, $title);
+		// translate the title
+		$props['title'] = I18n::translate($title) ?? $title;
 
-			return $props;
-		};
-
-		return $normalize($props);
+		return $props;
 	}
 
 	/**
