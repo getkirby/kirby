@@ -32,7 +32,7 @@
 					v-direction
 					:data-font="font"
 					class="k-textarea-input-native"
-					@click="onClick"
+					@click="$refs.toolbar?.close()"
 					@focus="onFocus"
 					@input="onInput"
 					@keydown.meta.enter="onSubmit"
@@ -172,11 +172,6 @@ export default {
 		insertUpload(files, response) {
 			this.insert(response.map((file) => file.dragText).join("\n\n"));
 			this.$events.$emit("model.update");
-		},
-		onClick() {
-			if (this.$refs.toolbar) {
-				this.$refs.toolbar.close();
-			}
 		},
 		onCommand(command, callback) {
 			if (typeof this[command] !== "function") {

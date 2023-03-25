@@ -393,6 +393,7 @@
 
 	"logout": "Log out",
 
+	"merge": "Merge",
 	"menu": "Menu",
 	"meridiem": "AM/PM",
 	"mime": "Media Type",
@@ -502,6 +503,7 @@
 	"size": "Size",
 	"slug": "URL appendix",
 	"sort": "Sort",
+	"split": "Split",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",
