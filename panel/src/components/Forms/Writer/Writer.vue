@@ -351,9 +351,6 @@ export default {
 		focus() {
 			this.editor.focus();
 		},
-		getHTML() {
-			return this.editor.getHTML();
-		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
