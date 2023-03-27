@@ -4,32 +4,33 @@
 		:data-inline="inline"
 		:style="inline ? 'display: none' : null"
 	>
-		<template v-if="hasVisibleNodeButtons">
-			<k-dropdown @mousedown.native.prevent>
-				<k-button
-					:current="!!activeButton"
-					:icon="activeButton.icon || 'title'"
-					class="k-toolbar-button k-writer-toolbar-nodes"
-					@click="$refs.nodes.toggle()"
-				/>
-				<k-dropdown-content ref="nodes">
-					<template v-for="(node, nodeType) in nodeButtons">
-						<k-dropdown-item
-							:key="nodeType"
-							:current="activeButton?.id === node.id"
-							:disabled="activeButton?.when?.includes(node.name) === false"
-							:icon="node.icon"
-							@click="command(node.command || nodeType)"
-						>
-							{{ node.label }}
-						</k-dropdown-item>
-						<hr v-if="node.separator === true" :key="nodeType + '-divider'" />
-					</template>
-				</k-dropdown-content>
-			</k-dropdown>
+		<k-dropdown v-if="hasVisibleNodeButtons" @mousedown.native.prevent>
+			<k-button
+				:current="!!activeNodeButton"
+				:icon="activeNodeButton.icon || 'title'"
+				class="k-toolbar-button k-writer-toolbar-nodes"
+				@click="$refs.nodes.toggle()"
+			/>
+			<k-dropdown-content ref="nodes">
+				<template v-for="(node, nodeType) in nodeButtons">
+					<k-dropdown-item
+						:key="nodeType"
+						:current="activeNodeButton?.id === node.id"
+						:disabled="activeNodeButton?.when?.includes(node.name) === false"
+						:icon="node.icon"
+						@click="command(node.command || nodeType)"
+					>
+						{{ node.label }}
+					</k-dropdown-item>
+					<hr v-if="node.separator === true" :key="nodeType + '-divider'" />
+				</template>
+			</k-dropdown-content>
+		</k-dropdown>
 
-			<div class="k-toolbar-divider" />
-		</template>
+		<div
+			v-if="hasVisibleNodeButtons && hasVisibleMarkButtons"
+			class="k-toolbar-divider"
+		/>
 
 		<template v-for="(mark, markType) in markButtons">
 			<div v-if="mark === '|'" :key="markType" class="k-toolbar-divider" />
@@ -37,7 +38,6 @@
 				v-else
 				:key="markType"
 				:current="activeMarks.includes(markType)"
-				:disabled="mark.disabled"
 				:icon="mark.icon"
 				:tooltip="mark.label"
 				class="k-toolbar-button"
@@ -82,6 +82,9 @@ export default {
 				) || false
 			);
 		},
+		hasVisibleMarkButtons() {
+			return Object.values(this.markButtons).length > 0;
+		},
 		hasVisibleNodeButtons() {
 			const nodeButtons = Object.keys(this.nodeButtons);
 
@@ -92,11 +95,11 @@ export default {
 			);
 		},
 		markButtons() {
-			const available = this.editor.buttons("mark");
-
 			if (this.marks === false) {
 				return {};
 			}
+
+			const available = this.editor.buttons("mark");
 
 			if (this.marks === true) {
 				return available;
@@ -107,7 +110,7 @@ export default {
 			for (const [index, mark] of this.marks.entries()) {
 				if (mark === "|") {
 					buttons["divider" + index] = "|";
-				} else {
+				} else if (available[mark]) {
 					buttons[mark] = available[mark];
 				}
 			}
@@ -115,15 +118,15 @@ export default {
 			return buttons;
 		},
 		nodeButtons() {
+			if (this.nodes === false) {
+				return {};
+			}
+
 			const available = this.editor.buttons("node");
 
 			// remove the paragraph when certain nodes are requested to be loaded
 			if (this.isParagraphNodeHidden === true && available.paragraph) {
 				delete available.paragraph;
-			}
-
-			if (this.nodes === false) {
-				return {};
 			}
 
 			if (this.nodes === true) {
@@ -133,7 +136,9 @@ export default {
 			const buttons = {};
 
 			for (const node of this.nodes.entries()) {
-				buttons[node] = available[node];
+				if (available[node]) {
+					buttons[node] = available[node];
+				}
 			}
 
 			return buttons;
@@ -196,9 +201,5 @@ export default {
 	box-shadow: var(--shadow);
 	border: 0;
 	border-radius: var(--rounded);
-}
-
-.k-writer-toolbar[data-inline="true"] .k-toolbar-divider {
-	margin-inline: var(--spacing-1);
 }
 </style>
