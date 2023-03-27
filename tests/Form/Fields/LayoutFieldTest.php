@@ -125,7 +125,7 @@ class LayoutFieldTest extends TestCase
 		$routes = $field->routes();
 
 		$this->assertIsArray($routes);
-		$this->assertCount(6, $routes);
+		$this->assertCount(7, $routes);
 	}
 
 	public function testStore()
