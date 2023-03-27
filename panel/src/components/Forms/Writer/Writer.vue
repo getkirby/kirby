@@ -20,7 +20,7 @@
 					bottom: toolbar.position.bottom + 'px',
 					'inset-inline-start': toolbar.position.left + 'px'
 				}"
-				@command="editor.command($event)"
+				@command="onCommand"
 			/>
 			<k-writer-link-dialog
 				ref="linkDialog"
@@ -46,11 +46,12 @@ import LinkDialog from "./Dialogs/LinkDialog.vue";
 import EmailDialog from "./Dialogs/EmailDialog.vue";
 
 // Marks
-import Link from "./Marks/Link";
-import Code from "./Marks/Code";
 import Bold from "./Marks/Bold";
-import Italic from "./Marks/Italic";
+import Clear from "./Marks/Clear";
+import Code from "./Marks/Code";
 import Email from "./Marks/Email";
+import Italic from "./Marks/Italic";
+import Link from "./Marks/Link";
 import Strike from "./Marks/Strike";
 import Underline from "./Marks/Underline";
 
@@ -79,37 +80,21 @@ export const props = {
 		disabled: Boolean,
 		emptyDocument: {
 			type: Object,
-			default() {
-				return {
-					type: "doc",
-					content: []
-				};
-			}
+			default: () => ({
+				type: "doc",
+				content: []
+			})
 		},
 		headings: [Array, Boolean],
 		inline: Boolean,
 		keys: Object,
 		marks: {
 			type: [Array, Boolean],
-			default: () => [
-				"bold",
-				"italic",
-				"underline",
-				"strike",
-				"code",
-				"link",
-				"email"
-			]
+			default: true
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default: () => [
-				"heading",
-				"bulletList",
-				"orderedList",
-				"horizontalRule",
-				"blockquote"
-			]
+			default: () => ["heading", "bulletList", "orderedList"]
 		},
 		paste: {
 			type: Function,
@@ -241,27 +226,6 @@ export default {
 		this.editor.destroy();
 	},
 	methods: {
-		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
-			}
-
-			let installed = [];
-
-			for (const extension of allowed) {
-				if (available[extension]) {
-					installed.push(available[extension]);
-				}
-			}
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
-		},
 		command(command, ...args) {
 			this.editor.command(command, ...args);
 		},
@@ -270,9 +234,10 @@ export default {
 				{
 					bold: new Bold(),
 					italic: new Italic(),
-					strike: new Strike(),
 					underline: new Underline(),
+					strike: new Strike(),
 					code: new Code(),
+					clear: new Clear(),
 					link: new Link(),
 					email: new Email(),
 					...this.createMarksFromPanelPlugins()
@@ -306,9 +271,7 @@ export default {
 				{
 					bulletList: new BulletList(),
 					orderedList: new OrderedList(),
-					heading: new Heading({
-						levels: this.headings
-					}),
+					heading: new Heading({ levels: this.headings }),
 					horizontalRule: new HorizontalRule(),
 					listItem: new ListItem(),
 					...this.createNodesFromPanelPlugins()
@@ -344,11 +307,35 @@ export default {
 		getHTML() {
 			return this.editor.getHTML();
 		},
+		filterExtensions(available, allowed, postFilter) {
+			if (allowed === false) {
+				allowed = [];
+			} else if (allowed === true || Array.isArray(allowed) === false) {
+				allowed = Object.keys(available);
+			}
+
+			let installed = [];
+
+			for (const extension of allowed) {
+				if (available[extension]) {
+					installed.push(available[extension]);
+				}
+			}
+
+			if (typeof postFilter === "function") {
+				installed = postFilter(allowed, installed);
+			}
+
+			return installed;
+		},
 		focus() {
 			this.editor.focus();
 		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
+		},
+		onCommand(command, ...args) {
+			this.editor.command(command, ...args);
 		},
 		onToolbarOpen() {
 			if (this.$refs.toolbar) {

@@ -32,9 +32,10 @@
 				'k-writer-toolbar-button': true,
 				'k-writer-toolbar-button-active': activeMarks.includes(markType)
 			}"
+			:disabled="mark.disabled"
 			:icon="mark.icon"
 			:tooltip="mark.label"
-			@mousedown.prevent="command(mark.command || markType)"
+			@mousedown.prevent="command(mark.command || markType, $event)"
 		/>
 	</div>
 </template>
@@ -44,28 +45,19 @@ export default {
 	props: {
 		activeMarks: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		activeNodes: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		activeNodeAttrs: {
 			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		editor: {
 			type: Object,
 			required: true
-		},
-		marks: {
-			type: Array
 		},
 		isParagraphNodeHidden: {
 			type: Boolean,
@@ -90,10 +82,10 @@ export default {
 			);
 		},
 		markButtons() {
-			return this.buttons("mark");
+			return this.editor.buttons("mark");
 		},
 		nodeButtons() {
-			let nodeButtons = this.buttons("node");
+			let nodeButtons = this.editor.buttons("node");
 
 			// remove the paragraph when certain nodes are requested to be loaded
 			if (this.isParagraphNodeHidden === true && nodeButtons.paragraph) {
@@ -104,24 +96,6 @@ export default {
 		}
 	},
 	methods: {
-		buttons(type) {
-			const available = this.editor.buttons(type);
-			let sorting = this.sorting;
-
-			if (sorting === false || Array.isArray(sorting) === false) {
-				sorting = Object.keys(available);
-			}
-
-			let buttons = {};
-
-			sorting.forEach((buttonName) => {
-				if (available[buttonName]) {
-					buttons[buttonName] = available[buttonName];
-				}
-			});
-
-			return buttons;
-		},
 		command(command, ...args) {
 			this.$emit("command", command, ...args);
 		},
@@ -180,7 +154,7 @@ export default {
 	background: rgba(255, 255, 255, 0.15);
 }
 .k-writer-toolbar-button.k-writer-toolbar-button-active {
-	color: var(--color-blue-300);
+	color: var(--color-blue-400);
 }
 .k-writer-toolbar-button.k-writer-toolbar-nodes {
 	width: auto;
