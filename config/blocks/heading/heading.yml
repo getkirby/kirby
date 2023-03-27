@@ -5,10 +5,9 @@ preview: heading
 fields:
   level:
     label: field.blocks.heading.level
-    type: select
+    type: toggles
     empty: false
     default: "h2"
-    width: 1/6
     options:
       - h1
       - h2
@@ -20,5 +19,4 @@ fields:
     label: field.blocks.heading.text
     type: writer
     inline: true
-    width: 5/6
     placeholder: field.blocks.heading.placeholder
