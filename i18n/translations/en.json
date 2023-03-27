@@ -550,6 +550,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Paragraph",
 	"toolbar.button.strike": "Strike-through",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Ordered list",
 	"toolbar.button.underline": "Underline",
 	"toolbar.button.ul": "Bullet list",
