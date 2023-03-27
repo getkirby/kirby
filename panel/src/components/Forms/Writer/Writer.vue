@@ -9,17 +9,13 @@
 	>
 		<template v-if="editor">
 			<k-writer-toolbar
-				v-if="toolbar.visible"
 				ref="toolbar"
+				v-bind="toolbar"
 				:editor="editor"
-				:active-marks="toolbar.marks"
-				:active-nodes="toolbar.nodes"
-				:active-node-attrs="toolbar.nodeAttrs"
+				:active-marks="editor.activeMarks"
+				:active-nodes="editor.activeNodes"
+				:active-node-attrs="editor.activeNodeAttrs"
 				:is-paragraph-node-hidden="isParagraphNodeHidden"
-				:style="{
-					bottom: toolbar.position.bottom + 'px',
-					'inset-inline-start': toolbar.position.left + 'px'
-				}"
 				@command="onCommand"
 			/>
 			<k-writer-link-dialog
@@ -40,10 +36,6 @@
 import Editor from "./Editor";
 import Mark from "./Mark";
 import Node from "./Node";
-
-// Dialogs
-import LinkDialog from "./Dialogs/LinkDialog.vue";
-import EmailDialog from "./Dialogs/EmailDialog.vue";
 
 // Marks
 import Bold from "./Marks/Bold";
@@ -69,9 +61,6 @@ import Insert from "./Extensions/Insert.js";
 import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
-// Toolbar
-import ToolbarComponent from "./Toolbar.vue";
-
 export const props = {
 	props: {
 		autofocus: Boolean,
@@ -85,6 +74,7 @@ export const props = {
 				content: []
 			})
 		},
+		extensions: Array,
 		headings: [Array, Boolean],
 		inline: Boolean,
 		keys: Object,
@@ -102,7 +92,10 @@ export const props = {
 		},
 		placeholder: String,
 		spellcheck: Boolean,
-		extensions: Array,
+		toolbar: {
+			type: Object,
+			default: () => ({ inline: true })
+		},
 		value: {
 			type: String,
 			default: ""
@@ -111,19 +104,13 @@ export const props = {
 };
 
 export default {
-	components: {
-		"k-writer-email-dialog": EmailDialog,
-		"k-writer-link-dialog": LinkDialog,
-		"k-writer-toolbar": ToolbarComponent
-	},
 	mixins: [props],
 	data() {
 		return {
 			editor: null,
 			json: {},
 			html: this.value,
-			isEmpty: true,
-			toolbar: false
+			isEmpty: true
 		};
 	},
 	computed: {
@@ -164,13 +151,6 @@ export default {
 					this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
 				},
 				paste: this.paste,
-				toolbar: (toolbar) => {
-					this.toolbar = toolbar;
-
-					if (this.toolbar.visible) {
-						this.$nextTick(() => this.onToolbarOpen());
-					}
-				},
 				update: (payload) => {
 					if (!this.editor) {
 						return;
@@ -213,7 +193,10 @@ export default {
 				new Keys(this.keys),
 				new History(),
 				new Insert(),
-				new Toolbar(),
+				new Toolbar({
+					writer: this,
+					inline: this.toolbar.inline
+				}),
 				...(this.extensions || [])
 			],
 			inline: this.inline
@@ -336,28 +319,6 @@ export default {
 		},
 		onCommand(command, ...args) {
 			this.editor.command(command, ...args);
-		},
-		onToolbarOpen() {
-			if (this.$refs.toolbar) {
-				const editorWidth = this.$el.clientWidth;
-				const toolbarWidth = this.$refs.toolbar.$el.clientWidth;
-
-				let left = this.toolbar.position.left;
-
-				// adjust left overflow
-				if (left - toolbarWidth / 2 < 0) {
-					left = left + (toolbarWidth / 2 - left) - 20;
-				}
-
-				// adjust right overflow
-				if (left + toolbarWidth / 2 > editorWidth) {
-					left = left - (left + toolbarWidth / 2 - editorWidth) + 20;
-				}
-
-				if (left !== this.toolbar.position.left) {
-					this.$refs.toolbar.$el.style.left = left + "px";
-				}
-			}
 		}
 	}
 };
@@ -367,9 +328,11 @@ export default {
 .k-writer {
 	position: relative;
 	width: 100%;
-	grid-template-areas: "content";
 	display: grid;
+	grid-template-areas: "content";
+	gap: var(--spacing-1);
 }
+
 .k-writer .ProseMirror {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
