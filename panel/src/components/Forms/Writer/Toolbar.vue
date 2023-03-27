@@ -13,14 +13,14 @@
 				<template v-for="(node, nodeType) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
-						:current="isButtonCurrent(node)"
-						:disabled="isButtonDisabled(node)"
+						:current="activeButton?.id === node.id"
+						:disabled="activeButton?.when?.includes(node.name) === false"
 						:icon="node.icon"
 						@click="command(node.command || nodeType)"
 					>
 						{{ node.label }}
 					</k-dropdown-item>
-					<hr v-if="needDividerAfterNode(node)" :key="nodeType + '-divider'" />
+					<hr v-if="node.separator === true" :key="nodeType + '-divider'" />
 				</template>
 			</k-dropdown-content>
 		</k-dropdown>
@@ -149,35 +149,6 @@ export default {
 			return (
 				isActiveNodeAttr === true && this.activeNodes.includes(button.name)
 			);
-		},
-		isButtonCurrent(node) {
-			if (this.activeButton) {
-				return this.activeButton.id === node.id;
-			}
-
-			return false;
-		},
-		isButtonDisabled(node) {
-			if (this.activeButton?.when) {
-				const when = this.activeButton.when;
-				return when.includes(node.name) === false;
-			}
-
-			return false;
-		},
-		needDividerAfterNode(node) {
-			let afterNodes = ["paragraph"];
-			let nodeButtons = Object.keys(this.nodeButtons);
-
-			// add divider if list node available
-			if (
-				nodeButtons.includes("bulletList") ||
-				nodeButtons.includes("orderedList")
-			) {
-				afterNodes.push("h6");
-			}
-
-			return afterNodes.includes(node.id);
 		}
 	}
 };

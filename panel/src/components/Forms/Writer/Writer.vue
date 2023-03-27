@@ -38,6 +38,8 @@
 
 <script>
 import Editor from "./Editor";
+import Mark from "./Mark";
+import Node from "./Node";
 
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
@@ -85,24 +87,33 @@ export const props = {
 			}
 		},
 		headings: [Array, Boolean],
-		inline: {
-			type: Boolean,
-			default: false
-		},
+		inline: Boolean,
 		keys: Object,
 		marks: {
 			type: [Array, Boolean],
-			default: true
+			default: () => [
+				"bold",
+				"italic",
+				"underline",
+				"strike",
+				"code",
+				"link",
+				"email"
+			]
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default() {
-				return ["heading", "bulletList", "orderedList"];
-			}
+			default: () => [
+				"heading",
+				"bulletList",
+				"orderedList",
+				"horizontalRule",
+				"blockquote"
+			]
 		},
 		paste: {
 			type: Function,
-			default: () => false
+			default: () => () => false
 		},
 		placeholder: String,
 		spellcheck: Boolean,
@@ -230,22 +241,55 @@ export default {
 		this.editor.destroy();
 	},
 	methods: {
+		filterExtensions(available, allowed, postFilter) {
+			if (allowed === false) {
+				allowed = [];
+			} else if (allowed === true || Array.isArray(allowed) === false) {
+				allowed = Object.keys(available);
+			}
+
+			let installed = [];
+
+			for (const extension of allowed) {
+				if (available[extension]) {
+					installed.push(available[extension]);
+				}
+			}
+
+			if (typeof postFilter === "function") {
+				installed = postFilter(allowed, installed);
+			}
+
+			return installed;
+		},
 		command(command, ...args) {
 			this.editor.command(command, ...args);
 		},
 		createMarks() {
 			return this.filterExtensions(
 				{
-					link: new Link(),
 					bold: new Bold(),
 					italic: new Italic(),
 					strike: new Strike(),
 					underline: new Underline(),
 					code: new Code(),
-					email: new Email()
+					link: new Link(),
+					email: new Email(),
+					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
 			);
+		},
+		createMarksFromPanelPlugins() {
+			const customs = window.panel.plugins.writerMarks ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Mark class
+			for (const markName in customs) {
+				Object.setPrototypeOf(customs[markName], new Mark());
+			}
+
+			return customs;
 		},
 		createNodes() {
 			const hardBreak = new HardBreak({
@@ -266,7 +310,8 @@ export default {
 						levels: this.headings
 					}),
 					horizontalRule: new HorizontalRule(),
-					listItem: new ListItem()
+					listItem: new ListItem(),
+					...this.createNodesFromPanelPlugins()
 				},
 				this.nodes,
 				(allowed, installed) => {
@@ -285,32 +330,22 @@ export default {
 				}
 			);
 		},
-		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
+		createNodesFromPanelPlugins() {
+			const customs = window.panel.plugins.writerNodes ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Node class
+			for (const nodeName in customs) {
+				Object.setPrototypeOf(customs[nodeName], new Node());
 			}
 
-			let installed = [];
-
-			allowed.forEach((allowed) => {
-				if (available[allowed]) {
-					installed.push(available[allowed]);
-				}
-			});
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
-		},
-		focus() {
-			this.editor.focus();
+			return customs;
 		},
 		getHTML() {
 			return this.editor.getHTML();
+		},
+		focus() {
+			this.editor.focus();
 		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
@@ -431,6 +466,16 @@ export default {
 .k-writer .ProseMirror li > ol,
 .k-writer .ProseMirror li > ul {
 	margin: 0;
+}
+
+.k-writer .ProseMirror hr {
+	border: 0;
+	border-top: 2px solid var(--color-gray-300);
+	border-radius: var(--rounded);
+	margin-block: var(--spacing-1);
+}
+.k-writer .ProseMirror hr.ProseMirror-selectednode {
+	outline: 2px var(--color-focus) solid;
 }
 
 .k-writer-code pre {

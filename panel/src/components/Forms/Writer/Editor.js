@@ -67,9 +67,7 @@ export default class Editor extends Emitter {
 	}
 
 	command(command, ...args) {
-		if (this.commands[command]) {
-			this.commands[command](...args);
-		}
+		this.commands[command]?.(...args);
 	}
 
 	createCommands() {
