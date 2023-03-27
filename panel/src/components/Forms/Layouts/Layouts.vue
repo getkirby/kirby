@@ -221,7 +221,10 @@ export default {
 			});
 
 			if (rows.length) {
-				this.rows.splice(index, 0, rows);
+				// replace all unique IDs for columns and blocks
+				rows = this.updateIds(rows);
+
+				this.rows.splice(index, 0, ...rows);
 				this.save();
 			}
 

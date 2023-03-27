@@ -64,6 +64,9 @@ class LayoutField extends BlocksField
 	public function layoutsToValues(array $layouts): array
 	{
 		foreach ($layouts as $layoutIndex => &$layout) {
+			$layout['id'] 	   ??= Str::uuid();
+			$layout['columns'] ??= [];
+
 			// remove the row if layout not available for the pasted layout field
 			$columns = array_column($layout['columns'], 'width');
 			if (in_array($columns, $this->layouts()) === false) {
@@ -71,12 +74,10 @@ class LayoutField extends BlocksField
 				continue;
 			}
 
-			$layout['id'] = Str::uuid();
-
-			foreach ($layout['columns'] ?? [] as $columnIndex => $column) {
+			foreach ($layout['columns'] as $columnIndex => $column) {
 				$blocks = $this->blocksToValues($column['blocks'] ?? [], includeInvalids: false);
 
-				$layout['columns'][$columnIndex]['id'] = Str::uuid();
+				$layout['columns'][$columnIndex]['id']   ??= Str::uuid();
 				$layout['columns'][$columnIndex]['blocks'] = $blocks;
 			}
 		}
