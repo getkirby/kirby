@@ -237,9 +237,9 @@ export default {
 					underline: new Underline(),
 					strike: new Strike(),
 					code: new Code(),
-					clear: new Clear(),
 					link: new Link(),
 					email: new Email(),
+					clear: new Clear(),
 					...this.createMarksFromPanelPlugins()
 				},
 				this.marks

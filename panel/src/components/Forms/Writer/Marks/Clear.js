@@ -3,7 +3,7 @@ import Mark from "../Mark";
 export default class Clear extends Mark {
 	get button() {
 		return {
-			icon: "cancel-small",
+			icon: "clear",
 			label: window.panel.$t("toolbar.button.clear")
 		};
 	}
