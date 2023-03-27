@@ -18,8 +18,13 @@
 			/>
 			<label :for="id + '-' + index" :title="option.text">
 				<k-icon v-if="option.icon" :type="option.icon" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-if="labels" class="k-toggles-text" v-html="option.text" />
+				<!-- eslint-disable vue/no-v-html -->
+				<span
+					v-if="labels || !option.icon"
+					class="k-toggles-text"
+					v-html="option.text"
+				/>
+				<!-- eslint-enable vue/no-v-html -->
 			</label>
 		</li>
 	</ul>
