@@ -37,14 +37,6 @@
 				@click="$emit('chooseToAppend')"
 			/>
 			<k-button
-				v-if="isSplitable"
-				:disabled="isFull"
-				:tooltip="$t('split')"
-				class="k-block-options-button"
-				icon="split"
-				@click="$emit('split')"
-			/>
-			<k-button
 				:tooltip="$t('delete')"
 				class="k-block-options-button"
 				icon="trash"
