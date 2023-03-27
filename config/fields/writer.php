@@ -1,6 +1,8 @@
 <?php
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Sane\Sane;
+use Kirby\Toolkit\V;
 
 return [
 	'props' => [
@@ -81,4 +83,28 @@ return [
 			return Sane::sanitize($value, 'html');
 		}
 	],
+	'validations' => [
+		'minlength' => function ($value) {
+			if (
+				$this->minlength &&
+				V::minLength(strip_tags($value), $this->minlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.minlength',
+					'data' => ['min' => $this->minlength]
+				]);
+			}
+		},
+		'maxlength'  => function ($value) {
+			if (
+				$this->maxlength &&
+				V::maxLength(strip_tags($value), $this->maxlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.maxlength',
+					'data' => ['max' => $this->maxlength]
+				]);
+			}
+		},
+	]
 ];
