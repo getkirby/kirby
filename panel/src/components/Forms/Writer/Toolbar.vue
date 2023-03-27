@@ -2,10 +2,10 @@
 	<div class="k-writer-toolbar">
 		<k-dropdown v-if="hasVisibleButtons" @mousedown.native.prevent>
 			<k-button
-				:icon="activeButton.icon || 'title'"
+				:icon="activeNodeButton.icon || 'title'"
 				:class="{
 					'k-writer-toolbar-button k-writer-toolbar-nodes': true,
-					'k-writer-toolbar-button-active': !!activeButton
+					'k-writer-toolbar-button-active': !!activeNodeButton
 				}"
 				@click="$refs.nodes.toggle()"
 			/>
@@ -13,8 +13,8 @@
 				<template v-for="(node, nodeType) in nodeButtons">
 					<k-dropdown-item
 						:key="nodeType"
-						:current="activeButton?.id === node.id"
-						:disabled="activeButton?.when?.includes(node.name) === false"
+						:current="activeNodeButton?.id === node.id"
+						:disabled="activeNodeButton?.when?.includes(node.name) === false"
 						:icon="node.icon"
 						@click="command(node.command || nodeType)"
 					>
@@ -73,7 +73,7 @@ export default {
 		}
 	},
 	computed: {
-		activeButton() {
+		activeNodeButton() {
 			return (
 				Object.values(this.nodeButtons).find((button) =>
 					this.isButtonActive(button)
