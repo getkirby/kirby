@@ -63,8 +63,10 @@ class LayoutField extends BlocksField
 
 	public function layoutsToValues(array $layouts): array
 	{
+		$fields = [];
+
 		foreach ($layouts as $layoutIndex => &$layout) {
-			$layout['id'] 	   ??= Str::uuid();
+			$layout['id'] 	     = Str::uuid();
 			$layout['columns'] ??= [];
 
 			// remove the row if layout not available for the pasted layout field
@@ -75,9 +77,30 @@ class LayoutField extends BlocksField
 			}
 
 			foreach ($layout['columns'] as $columnIndex => $column) {
-				$blocks = $this->blocksToValues($column['blocks'] ?? [], includeInvalids: false);
+				$blocks             = [];
+				$column['blocks'] ??= [];
 
-				$layout['columns'][$columnIndex]['id']   ??= Str::uuid();
+				foreach ($column['blocks'] as $block) {
+					try {
+						$type = $block['type'];
+
+						// create new id
+						$block['id'] = Str::uuid();
+
+						// get and cache fields at the same time
+						$fields[$type] ??= $this->fields($block['type']);
+
+						// overwrite the block content with form values
+						$block['content'] = $this->form($fields[$type], $block['content'])->values();
+
+						$blocks[] = $block;
+					} catch (Throwable) {
+						// skip invalid blocks
+						continue;
+					}
+				}
+
+				$layout['columns'][$columnIndex]['id']     = Str::uuid();
 				$layout['columns'][$columnIndex]['blocks'] = $blocks;
 			}
 		}
@@ -146,7 +169,7 @@ class LayoutField extends BlocksField
 			]
 		];
 
-		return array_replace(parent::routes(), $routes);
+		return array_merge($routes, parent::routes());
 	}
 
 	protected function setDefault($default = null)

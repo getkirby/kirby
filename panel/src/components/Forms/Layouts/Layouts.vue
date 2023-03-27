@@ -221,9 +221,6 @@ export default {
 			});
 
 			if (rows.length) {
-				// replace all unique IDs for columns and blocks
-				rows = this.updateIds(rows);
-
 				this.rows.splice(index, 0, ...rows);
 				this.save();
 			}
