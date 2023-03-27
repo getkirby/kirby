@@ -2,7 +2,7 @@
 	<k-field
 		v-bind="$props"
 		:input="_uid"
-		:counter="false"
+		:counter="counterOptions"
 		class="k-writer-field"
 	>
 		<k-input
@@ -27,10 +27,20 @@
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 import { props as Writer } from "@/components/Forms/Writer/Writer.vue";
+import counter from "@/mixins/forms/counter.js";
 
 export default {
-	mixins: [Field, Input, Writer],
+	mixins: [Field, Input, Writer, counter],
 	inheritAttrs: false,
+	props: {
+		maxlength: Number,
+		minlength: Number
+	},
+	computed: {
+		counterValue() {
+			return this.$helper.string.stripHTML(this.value);
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

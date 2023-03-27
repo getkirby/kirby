@@ -5,6 +5,12 @@ use Kirby\Sane\Sane;
 return [
 	'props' => [
 		/**
+		 * Enables/disables the character counter in the top right corner
+		 */
+		'counter' => function (bool $counter = true) {
+			return $counter;
+		},
+		/**
 		 * Available heading levels
 		 */
 		'headings' => function (array|null $headings = null) {
@@ -24,6 +30,19 @@ return [
 		 */
 		'marks' => function ($marks = null) {
 			return $marks;
+		},
+		/**
+		 * Maximum number of allowed characters
+		 */
+		'maxlength' => function (int $maxlength = null) {
+			return $maxlength;
+		},
+
+		/**
+		 * Minimum number of required characters
+		 */
+		'minlength' => function (int $minlength = null) {
+			return $minlength;
 		},
 		/**
 		 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
