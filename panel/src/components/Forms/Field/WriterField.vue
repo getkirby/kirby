@@ -38,7 +38,8 @@ export default {
 	},
 	computed: {
 		counterValue() {
-			return this.$helper.string.stripHTML(this.value);
+			const plain = this.$helper.string.stripHTML(this.value);
+			return this.$helper.string.unescapeHTML(plain);
 		}
 	},
 	methods: {
