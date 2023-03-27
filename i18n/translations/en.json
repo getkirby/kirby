@@ -259,6 +259,8 @@
 	"field.blocks.image.crop": "Crop",
 	"field.blocks.image.link": "Link",
 	"field.blocks.image.location": "Location",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Image",
 	"field.blocks.image.placeholder": "Select an image",
 	"field.blocks.image.ratio": "Ratio",
