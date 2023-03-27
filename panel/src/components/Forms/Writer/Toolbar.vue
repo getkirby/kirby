@@ -94,6 +94,10 @@ export default {
 		markButtons() {
 			const available = this.editor.buttons("mark");
 
+			if (this.marks === false) {
+				return {};
+			}
+
 			if (this.marks === true) {
 				return available;
 			}
@@ -116,6 +120,10 @@ export default {
 			// remove the paragraph when certain nodes are requested to be loaded
 			if (this.isParagraphNodeHidden === true && available.paragraph) {
 				delete available.paragraph;
+			}
+
+			if (this.nodes === false) {
+				return {};
 			}
 
 			if (this.nodes === true) {
