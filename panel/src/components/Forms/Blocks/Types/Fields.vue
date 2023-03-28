@@ -70,7 +70,7 @@ export default {
 
 .k-block-type-fields-form {
 	background-color: #eeeff2;
-	padding: var(--spacing-4) var(--spacing-3) var(--spacing-8);
+	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded);
 }
 
