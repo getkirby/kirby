@@ -45,6 +45,8 @@ import Email from "./Marks/Email";
 import Italic from "./Marks/Italic";
 import Link from "./Marks/Link";
 import Strike from "./Marks/Strike";
+import Sup from "./Marks/Sup";
+import Sub from "./Marks/Sub";
 import Underline from "./Marks/Underline";
 
 // Nodes
@@ -219,6 +221,8 @@ export default {
 					italic: new Italic(),
 					underline: new Underline(),
 					strike: new Strike(),
+					sup: new Sup(),
+					sub: new Sub(),
 					code: new Code(),
 					link: new Link(),
 					email: new Email(),
@@ -356,12 +360,7 @@ export default {
 .k-writer .ProseMirror > *:last-child {
 	margin-bottom: 0;
 }
-.k-writer .ProseMirror p,
-.k-writer .ProseMirror ul,
-.k-writer .ProseMirror ol,
-.k-writer .ProseMirror h1,
-.k-writer .ProseMirror h2,
-.k-writer .ProseMirror h3 {
+.k-writer .ProseMirror :where(p, ul, ol, h1, h2, h3) {
 	margin-bottom: 0.75rem;
 }
 
@@ -377,15 +376,19 @@ export default {
 	font-size: var(--text-xl);
 	line-height: 1.25em;
 }
-.k-writer .ProseMirror h1 strong,
-.k-writer .ProseMirror h2 strong,
-.k-writer .ProseMirror h3 strong {
+.k-writer .ProseMirror :where(h1, h2, h3) strong {
 	font-weight: 700;
 }
 
 .k-writer .ProseMirror strong {
 	font-weight: 600;
 }
+
+.k-writer .ProseMirror :where(sup, sub) {
+	font-size: var(--text-xs);
+	line-height: 1;
+}
+
 .k-writer .ProseMirror code {
 	position: relative;
 	font-size: 0.925em;
@@ -396,8 +399,7 @@ export default {
 	border-radius: var(--rounded);
 	font-family: var(--font-mono);
 }
-.k-writer .ProseMirror ul,
-.k-writer .ProseMirror ol {
+.k-writer .ProseMirror :where(ul, ol) {
 	padding-inline-start: 1.75rem;
 }
 .k-writer .ProseMirror ul > li {
@@ -412,9 +414,7 @@ export default {
 .k-writer .ProseMirror ol > li {
 	list-style: decimal;
 }
-.k-writer .ProseMirror li > p,
-.k-writer .ProseMirror li > ol,
-.k-writer .ProseMirror li > ul {
+.k-writer .ProseMirror li > :where(p, ol, ul) {
 	margin: 0;
 }
 
