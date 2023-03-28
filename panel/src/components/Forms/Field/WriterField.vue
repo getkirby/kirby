@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style>
-.k-writer-field-input {
+.k-writer-field-input .ProseMirror {
 	line-height: 1.5em;
 	padding: 0.375rem 0.5rem;
 }

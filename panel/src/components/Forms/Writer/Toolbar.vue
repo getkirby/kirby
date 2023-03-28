@@ -1,12 +1,14 @@
 <template>
-	<div class="k-writer-toolbar">
-		<k-dropdown v-if="hasVisibleButtons" @mousedown.native.prevent>
+	<nav
+		class="k-toolbar k-writer-toolbar"
+		:data-inline="inline"
+		:style="inline ? 'display: none' : null"
+	>
+		<k-dropdown v-if="hasVisibleNodeButtons" @mousedown.native.prevent>
 			<k-button
+				:current="!!activeNodeButton"
 				:icon="activeNodeButton.icon || 'title'"
-				:class="{
-					'k-writer-toolbar-button k-writer-toolbar-nodes': true,
-					'k-writer-toolbar-button-active': !!activeNodeButton
-				}"
+				class="k-toolbar-button k-writer-toolbar-nodes"
 				@click="$refs.nodes.toggle()"
 			/>
 			<k-dropdown-content ref="nodes">
@@ -25,32 +27,31 @@
 			</k-dropdown-content>
 		</k-dropdown>
 
-		<k-button
-			v-for="(mark, markType) in markButtons"
-			:key="markType"
-			:class="{
-				'k-writer-toolbar-button': true,
-				'k-writer-toolbar-button-active': activeMarks.includes(markType)
-			}"
-			:disabled="mark.disabled"
-			:icon="mark.icon"
-			:tooltip="mark.label"
-			@mousedown.prevent="command(mark.command || markType, $event)"
+		<div
+			v-if="hasVisibleNodeButtons && hasVisibleMarkButtons"
+			class="k-toolbar-divider"
 		/>
-	</div>
+
+		<template v-for="(mark, markType) in markButtons">
+			<div v-if="mark === '|'" :key="markType" class="k-toolbar-divider" />
+			<k-button
+				v-else
+				:key="markType"
+				:current="activeMarks.includes(markType)"
+				:icon="mark.icon"
+				:tooltip="mark.label"
+				class="k-toolbar-button"
+				@mousedown.prevent="command(mark.command || markType, $event)"
+			/>
+		</template>
+	</nav>
 </template>
 
 <script>
 export default {
 	props: {
-		activeMarks: {
-			type: Array,
-			default: () => []
-		},
-		activeNodes: {
-			type: Array,
-			default: () => []
-		},
+		activeMarks: Array,
+		activeNodes: Array,
 		activeNodeAttrs: {
 			type: [Array, Object],
 			default: () => []
@@ -59,9 +60,18 @@ export default {
 			type: Object,
 			required: true
 		},
-		isParagraphNodeHidden: {
+		inline: {
 			type: Boolean,
-			default: false
+			default: true
+		},
+		isParagraphNodeHidden: Boolean,
+		marks: {
+			type: [Array, Boolean],
+			default: true
+		},
+		nodes: {
+			type: [Array, Boolean],
+			default: true
 		}
 	},
 	computed: {
@@ -72,7 +82,10 @@ export default {
 				) || false
 			);
 		},
-		hasVisibleButtons() {
+		hasVisibleMarkButtons() {
+			return Object.values(this.markButtons).length > 0;
+		},
+		hasVisibleNodeButtons() {
 			const nodeButtons = Object.keys(this.nodeButtons);
 
 			return (
@@ -82,17 +95,53 @@ export default {
 			);
 		},
 		markButtons() {
-			return this.editor.buttons("mark");
-		},
-		nodeButtons() {
-			let nodeButtons = this.editor.buttons("node");
-
-			// remove the paragraph when certain nodes are requested to be loaded
-			if (this.isParagraphNodeHidden === true && nodeButtons.paragraph) {
-				delete nodeButtons.paragraph;
+			if (this.marks === false) {
+				return {};
 			}
 
-			return nodeButtons;
+			const available = this.editor.buttons("mark");
+
+			if (this.marks === true) {
+				return available;
+			}
+
+			const buttons = {};
+
+			for (const [index, mark] of this.marks.entries()) {
+				if (mark === "|") {
+					buttons["divider" + index] = "|";
+				} else if (available[mark]) {
+					buttons[mark] = available[mark];
+				}
+			}
+
+			return buttons;
+		},
+		nodeButtons() {
+			if (this.nodes === false) {
+				return {};
+			}
+
+			const available = this.editor.buttons("node");
+
+			// remove the paragraph when certain nodes are requested to be loaded
+			if (this.isParagraphNodeHidden === true && available.paragraph) {
+				delete available.paragraph;
+			}
+
+			if (this.nodes === true) {
+				return available;
+			}
+
+			const buttons = {};
+
+			for (const node of this.nodes.entries()) {
+				if (available[node]) {
+					buttons[node] = available[node];
+				}
+			}
+
+			return buttons;
 		}
 	},
 	methods: {
@@ -129,53 +178,28 @@ export default {
 </script>
 
 <style>
-.k-writer-toolbar {
-	position: absolute;
-	display: flex;
-	background: var(--color-black);
-	height: 30px;
-	transform: translateX(-50%) translateY(-0.75rem);
-	z-index: calc(var(--z-dropdown) + 1);
-	box-shadow: var(--shadow);
-	color: var(--color-white);
-	border-radius: var(--rounded);
+.k-writer:has(.k-writer-toolbar:not([data-inline="true"])) {
+	grid-template-areas: "topbar" "content";
+	grid-template-rows: 38px 1fr;
 }
-.k-writer-toolbar-button.k-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 30px;
-	width: 30px;
-	font-size: var(--text-sm) !important;
-	color: currentColor;
-	line-height: 1;
-}
-.k-writer-toolbar-button.k-button:hover {
-	background: rgba(255, 255, 255, 0.15);
-}
-.k-writer-toolbar-button.k-writer-toolbar-button-active {
+
+.k-writer-toolbar:has(~ :focus-within) .k-button[aria-current] {
 	color: var(--color-blue-400);
 }
-.k-writer-toolbar-button.k-writer-toolbar-nodes {
-	width: auto;
-	padding: 0 0.75rem;
-}
-.k-writer-toolbar .k-dropdown + .k-writer-toolbar-button {
-	border-inline-start: 1px solid var(--color-gray-700);
-}
-.k-writer-toolbar-button.k-writer-toolbar-nodes::after {
-	content: "";
-	margin-inline-start: 0.5rem;
-	border-top: 4px solid var(--color-white);
-	border-inline: 4px solid transparent;
-}
-.k-writer-toolbar .k-dropdown-content {
-	color: var(--color-black);
-	background: var(--color-white);
-	margin-top: 0.5rem;
-}
-.k-writer-toolbar .k-dropdown-content .k-dropdown-item[aria-current] {
-	color: var(--color-focus);
-	font-weight: 500;
+
+.k-writer-toolbar[data-inline="true"] {
+	--toolbar-size: 30px;
+	--toolbar-text: var(--color-white);
+	--toolbar-back: var(--color-black);
+	--toolbar-hover: rgba(255, 255, 255, 0.15);
+	--toolbar-border: var(--color-gray-700);
+
+	position: absolute;
+	transform: translateX(-50%) translateY(-0.75rem);
+	z-index: calc(var(--z-dropdown) + 1);
+
+	box-shadow: var(--shadow);
+	border: 0;
+	border-radius: var(--rounded);
 }
 </style>
