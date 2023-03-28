@@ -329,6 +329,14 @@ class Field extends Component
 	}
 
 	/**
+	 * Checks if the field is hidden
+	 */
+	public function isHidden(): bool
+	{
+		return ($this->options['hidden'] ?? false) === true;
+	}
+
+	/**
 	 * Checks if the field is invalid
 	 *
 	 * @return bool
@@ -439,6 +447,7 @@ class Field extends Component
 
 		unset($array['model']);
 
+		$array['hidden']    = $this->isHidden();
 		$array['saveable']  = $this->save();
 		$array['signature'] = md5(json_encode($array));
 

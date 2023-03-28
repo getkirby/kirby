@@ -104,8 +104,8 @@ class FileTest extends TestCase
 											'uploads' => 'for-fields/e'
 										],
 										[
-										'type'    => 'structure',
-										'fields'  => [
+											'type'    => 'structure',
+											'fields'  => [
 												[
 													'type'    => 'files',
 													'uploads' => 'for-fields/f'

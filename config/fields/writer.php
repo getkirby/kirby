@@ -31,9 +31,32 @@ return [
 		 */
 		'nodes' => function ($nodes = null) {
 			return $nodes;
+		},
+		/**
+		 * Toolbar options, incl. `marks` (to narrow down which marks should have toolbar buttons), `nodes` (to narrow down which nodes should have toolbar dropdown entries) and `inline` to set the position of the toolbar (false = sticking on top of the field)
+		 */
+		'toolbar' => function ($toolbar = null) {
+			return $toolbar;
 		}
 	],
 	'computed' => [
+		'toolbar' => function () {
+			return array_merge([
+				'inline' => true,
+				'marks'  => $this->marks ?? [
+					'bold',
+					'italic',
+					'underline',
+					'strike',
+					'code',
+					'|',
+					'link',
+					'email',
+					'|',
+					'clear'
+				]
+			], $this->toolbar ?? []);
+		},
 		'value' => function () {
 			$value = trim($this->value ?? '');
 			return Sane::sanitize($value, 'html');
