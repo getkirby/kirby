@@ -8,8 +8,8 @@ fields:
     columns: 2
     default: "kirby"
     options:
-      kirby: Kirby
-      web: Web
+      kirby: "{{ t('field.blocks.image.location.internal') }}"
+      web: "{{ t('field.blocks.image.location.external') }}"
   image:
     label: field.blocks.image.name
     type: files
