@@ -3,6 +3,7 @@
 		ref="input"
 		v-bind="$props"
 		:extensions="extensions"
+		:keys="keys"
 		:nodes="['bulletList', 'orderedList']"
 		:value="list"
 		class="k-list-input"
@@ -17,6 +18,7 @@ export default {
 	inheritAttrs: false,
 	props: {
 		autofocus: Boolean,
+		keys: Object,
 		marks: {
 			type: [Array, Boolean],
 			default: true
