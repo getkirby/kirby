@@ -5,20 +5,25 @@ preview: heading
 fields:
   level:
     label: field.blocks.heading.level
-    type: select
+    type: toggles
     empty: false
     default: "h2"
-    width: 1/6
+    labels: false
     options:
-      - h1
-      - h2
-      - h3
-      - h4
-      - h5
-      - h6
+      - value: h1
+        icon: h1
+      - value: h2
+        icon: h2
+      - value: h3
+        icon: h3
+      - value: h4
+        icon: h4
+      - value: h5
+        icon: h5
+      - value: h6
+        icon: h6
   text:
     label: field.blocks.heading.text
     type: writer
     inline: true
-    width: 5/6
     placeholder: field.blocks.heading.placeholder

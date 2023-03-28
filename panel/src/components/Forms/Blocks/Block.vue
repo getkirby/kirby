@@ -11,10 +11,16 @@
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
+		@keydown.meta.j.prevent="$emit('merge')"
+		@keydown.ctrl.j.prevent="$emit('merge')"
 		@keydown.meta.up.exact.prevent="$emit('focusPrev')"
 		@keydown.ctrl.up.exact.prevent="$emit('focusPrev')"
 		@keydown.meta.down.exact.prevent="$emit('focusNext')"
 		@keydown.ctrl.down.exact.prevent="$emit('focusNext')"
+		@keydown.meta.alt.down.prevent="$emit('selectDown')"
+		@keydown.ctrl.alt.down.prevent="$emit('selectDown')"
+		@keydown.meta.alt.up.prevent="$emit('selectUp')"
+		@keydown.ctrl.alt.up.prevent="$emit('selectUp')"
 		@keydown.meta.shift.down.prevent="$emit('sortDown')"
 		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
 		@keydown.meta.shift.up.prevent="$emit('sortUp')"
@@ -39,7 +45,12 @@
 			:is-editable="isEditable"
 			:is-full="isFull"
 			:is-hidden="isHidden"
-			v-on="listeners"
+			:is-mergable="isMergable"
+			:is-splitable="isSplitable()"
+			v-on="{
+				...listeners,
+				split: () => $refs.editor.split()
+			}"
 		/>
 
 		<k-form-drawer
@@ -106,6 +117,7 @@ export default {
 		isFull: Boolean,
 		isHidden: Boolean,
 		isLastSelected: Boolean,
+		isMergable: Boolean,
 		isSelected: Boolean,
 		name: String,
 		next: Object,
@@ -218,16 +230,6 @@ export default {
 				}
 			}
 		},
-		onFocusIn(event) {
-			// skip focus if the event is coming from the options buttons
-			// to preserve the current focus (since options buttons directly
-			// trigger events and don't need any focus themselves)
-			if (this.$refs.options?.$el?.contains(event.target)) {
-				return;
-			}
-
-			this.$emit("focus", event);
-		},
 		goTo(block) {
 			if (block) {
 				this.skipFocus = true;
@@ -239,6 +241,26 @@ export default {
 					this.skipFocus = false;
 				});
 			}
+		},
+		isSplitable() {
+			if (this.$refs.editor) {
+				return (
+					(this.$refs.editor.isSplitable ?? true) &&
+					typeof this.$refs.editor?.split === "function"
+				);
+			}
+
+			return false;
+		},
+		onFocusIn(event) {
+			// skip focus if the event is coming from the options buttons
+			// to preserve the current focus (since options buttons directly
+			// trigger events and don't need any focus themselves)
+			if (this.$refs.options?.$el?.contains(event.target)) {
+				return;
+			}
+
+			this.$emit("focus", event);
 		},
 		open() {
 			this.$refs.drawer?.open();
@@ -297,5 +319,20 @@ export default {
 }
 [data-disabled="true"] .k-block-container {
 	background: var(--color-background);
+}
+
+/* Collapse long blocks while dragging */
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block {
+	position: relative;
+	max-height: 4rem;
+	overflow: hidden;
+}
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block::after {
+	position: absolute;
+	bottom: 0;
+	content: "";
+	height: 2rem;
+	width: 100%;
+	background: linear-gradient(to top, var(--color-white), transparent);
 }
 </style>

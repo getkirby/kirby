@@ -38,6 +38,8 @@
 
 <script>
 import Editor from "./Editor";
+import Mark from "./Mark";
+import Node from "./Node";
 
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
@@ -63,6 +65,7 @@ import OrderedList from "./Nodes/OrderedList";
 // Extensions
 import History from "./Extensions/History.js";
 import Insert from "./Extensions/Insert.js";
+import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
 // Toolbar
@@ -84,27 +87,33 @@ export const props = {
 			}
 		},
 		headings: [Array, Boolean],
-		inline: {
-			type: Boolean,
-			default: false
-		},
+		inline: Boolean,
+		keys: Object,
 		marks: {
 			type: [Array, Boolean],
-			default: true
+			default: () => [
+				"bold",
+				"italic",
+				"underline",
+				"strike",
+				"code",
+				"link",
+				"email"
+			]
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default() {
-				return ["heading", "bulletList", "orderedList"];
-			}
+			default: () => [
+				"heading",
+				"bulletList",
+				"orderedList",
+				"horizontalRule",
+				"blockquote"
+			]
 		},
 		paste: {
 			type: Function,
-			default() {
-				return () => {
-					return false;
-				};
-			}
+			default: () => () => false
 		},
 		placeholder: String,
 		spellcheck: Boolean,
@@ -133,6 +142,12 @@ export default {
 		};
 	},
 	computed: {
+		isCursorAtEnd() {
+			return this.editor.selectionIsAtEnd;
+		},
+		isCursorAtStart() {
+			return this.editor.selectionIsAtStart;
+		},
 		isParagraphNodeHidden() {
 			return (
 				Array.isArray(this.nodes) === true &&
@@ -168,9 +183,7 @@ export default {
 					this.toolbar = toolbar;
 
 					if (this.toolbar.visible) {
-						this.$nextTick(() => {
-							this.onToolbarOpen();
-						});
+						this.$nextTick(() => this.onToolbarOpen());
 					}
 				},
 				update: (payload) => {
@@ -212,6 +225,7 @@ export default {
 				...this.createNodes(),
 
 				// Extensions
+				new Keys(this.keys),
 				new History(),
 				new Insert(),
 				new Toolbar(),
@@ -236,11 +250,11 @@ export default {
 
 			let installed = [];
 
-			allowed.forEach((allowed) => {
-				if (available[allowed]) {
-					installed.push(available[allowed]);
+			for (const extension of allowed) {
+				if (available[extension]) {
+					installed.push(available[extension]);
 				}
-			});
+			}
 
 			if (typeof postFilter === "function") {
 				installed = postFilter(allowed, installed);
@@ -254,16 +268,28 @@ export default {
 		createMarks() {
 			return this.filterExtensions(
 				{
-					link: new Link(),
 					bold: new Bold(),
 					italic: new Italic(),
 					strike: new Strike(),
 					underline: new Underline(),
 					code: new Code(),
-					email: new Email()
+					link: new Link(),
+					email: new Email(),
+					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
 			);
+		},
+		createMarksFromPanelPlugins() {
+			const customs = window.panel.plugins.writerMarks ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Mark class
+			for (const markName in customs) {
+				Object.setPrototypeOf(customs[markName], new Mark());
+			}
+
+			return customs;
 		},
 		createNodes() {
 			const hardBreak = new HardBreak({
@@ -284,7 +310,8 @@ export default {
 						levels: this.headings
 					}),
 					horizontalRule: new HorizontalRule(),
-					listItem: new ListItem()
+					listItem: new ListItem(),
+					...this.createNodesFromPanelPlugins()
 				},
 				this.nodes,
 				(allowed, installed) => {
@@ -303,11 +330,25 @@ export default {
 				}
 			);
 		},
+		createNodesFromPanelPlugins() {
+			const customs = window.panel.plugins.writerNodes ?? {};
+
+			// take each extenstion object and turn
+			// it into an instance that extends the Node class
+			for (const nodeName in customs) {
+				Object.setPrototypeOf(customs[nodeName], new Node());
+			}
+
+			return customs;
+		},
 		getHTML() {
 			return this.editor.getHTML();
 		},
 		focus() {
 			this.editor.focus();
+		},
+		getSplitContent() {
+			return this.editor.getHTMLStartToSelectionToEnd();
 		},
 		onToolbarOpen() {
 			if (this.$refs.toolbar) {
@@ -425,6 +466,16 @@ export default {
 .k-writer .ProseMirror li > ol,
 .k-writer .ProseMirror li > ul {
 	margin: 0;
+}
+
+.k-writer .ProseMirror hr {
+	border: 0;
+	border-top: 2px solid var(--color-gray-300);
+	border-radius: var(--rounded);
+	margin-block: var(--spacing-1);
+}
+.k-writer .ProseMirror hr.ProseMirror-selectednode {
+	outline: 2px var(--color-focus) solid;
 }
 
 .k-writer-code pre {
