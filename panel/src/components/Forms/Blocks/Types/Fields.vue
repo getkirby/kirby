@@ -1,20 +1,12 @@
 <template>
-	<div>
+	<div @dblclick.native="!fieldset.wysiwyg ? $emit('open') : null">
 		<header class="k-block-type-fields-header">
 			<k-block-title
 				:content="values"
 				:fieldset="fieldset"
 				@dblclick="$emit('open', tab)"
 			/>
-			<nav v-if="hasTabs" class="k-block-type-fields-tabs">
-				<k-button
-					v-for="tabButton in tabs"
-					:key="tabButton.name"
-					:current="tab == tabButton.name"
-					:text="tabButton.label"
-					@click.stop="tab = tabButton.name"
-				/>
-			</nav>
+			<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="tab = $event" />
 		</header>
 
 		<k-form
@@ -25,7 +17,6 @@
 			:value="values"
 			class="k-block-type-fields-form"
 			@input="$emit('update', $event)"
-			@dblclick.native="!fieldset.wysiwyg ? $emit('open') : null"
 		/>
 	</div>
 </template>
@@ -66,29 +57,14 @@ export default {
 .k-block-type-fields-header {
 	display: flex;
 	justify-content: space-between;
-	padding: var(--spacing-3);
+	padding-inline: var(--spacing-3);
 	background: var(--color-white);
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
 }
 
-.k-block-type-fields-tabs {
-	display: flex;
-	gap: var(--spacing-3);
-}
-.k-block-type-fields-tabs .k-button {
-	font-size: var(--text-xs);
-}
-.k-block-type-fields-tabs .k-button[aria-current="true"] {
-	font-weight: bold;
-}
-.k-block-type-fields-tabs .k-button[aria-current="true"]::after {
-	position: absolute;
-	bottom: -12px;
-	inset-inline-start: calc(50% - 10px);
-	content: "";
-	border: 10px solid transparent;
-	border-bottom-color: #eeeff2;
+.k-block-type-fields-header .k-button {
+	height: 2.5rem;
 }
 
 .k-block-type-fields-form {

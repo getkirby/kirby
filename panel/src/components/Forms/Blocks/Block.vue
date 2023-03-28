@@ -134,9 +134,7 @@ export default {
 			let className = ["k-block-type-" + this.type];
 
 			if (this.fieldset.preview !== this.type) {
-				className.push(
-					"k-block-type-" + this.fieldset.preview?.type ?? this.fieldset.preview
-				);
+				className.push("k-block-type-" + this.fieldset.preview);
 			}
 
 			if (this.wysiwyg === false) {
@@ -187,15 +185,15 @@ export default {
 			return this.wysiwygComponent !== false;
 		},
 		wysiwygComponent() {
-			if (this.fieldset.preview === false) {
+			const preview = this.fieldset.preview;
+
+			if (preview === false) {
 				return false;
 			}
 
 			let component;
 
 			// custom preview
-			const preview = this.fieldset.preview?.type ?? this.fieldset.preview;
-
 			if (preview) {
 				component = "k-block-type-" + preview;
 

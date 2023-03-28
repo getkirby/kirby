@@ -21,16 +21,7 @@
 							/>
 						</li>
 					</ul>
-					<nav v-if="hasTabs" class="k-drawer-tabs">
-						<k-button
-							v-for="tabButton in tabs"
-							:key="tabButton.name"
-							:current="tab == tabButton.name"
-							:text="tabButton.label"
-							class="k-drawer-tab"
-							@click.stop="$emit('tab', tabButton.name)"
-						/>
-					</nav>
+					<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="$emit('tab', $event)" />
 					<nav class="k-drawer-options">
 						<slot name="options" />
 						<k-button class="k-drawer-option" icon="check" @click="close" />
@@ -62,9 +53,6 @@ export default {
 	computed: {
 		breadcrumb() {
 			return this.$store.state.drawers.open;
-		},
-		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
 		},
 		index() {
 			return this.breadcrumb.findIndex((item) => item.id === this._uid);
