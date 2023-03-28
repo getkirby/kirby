@@ -1,0 +1,105 @@
+<template>
+	<div>
+		<header class="k-block-type-fields-header">
+			<k-block-title
+				:content="values"
+				:fieldset="fieldset"
+				@dblclick="$emit('open', tab)"
+			/>
+			<nav v-if="hasTabs" class="k-block-type-fields-tabs">
+				<k-button
+					v-for="tabButton in tabs"
+					:key="tabButton.name"
+					:current="tab == tabButton.name"
+					:text="tabButton.label"
+					@click.stop="tab = tabButton.name"
+				/>
+			</nav>
+		</header>
+
+		<k-form
+			ref="form"
+			:autofocus="true"
+			:disabled="!fieldset.wysiwyg"
+			:fields="fields"
+			:value="values"
+			class="k-block-type-fields-form"
+			@input="$emit('update', $event)"
+			@dblclick.native="!fieldset.wysiwyg ? $emit('open') : null"
+		/>
+	</div>
+</template>
+
+<script>
+/**
+ * @displayName BlockTypeFields
+ * @internal
+ */
+export default {
+	data() {
+		return {
+			tab: Object.keys(this.fieldset.tabs)[0]
+		};
+	},
+	computed: {
+		hasTabs() {
+			return this.tabs.length > 1;
+		},
+		fields() {
+			return this.fieldset.tabs[this.tab].fields;
+		},
+		tabs() {
+			return Object.values(this.fieldset.tabs);
+		},
+		values() {
+			return Object.assign({}, this.content);
+		}
+	}
+};
+</script>
+
+<style>
+.k-block-container:has(.k-block-type-fields) {
+	padding: 0;
+}
+
+.k-block-type-fields-header {
+	display: flex;
+	justify-content: space-between;
+	padding: var(--spacing-3);
+	background: var(--color-white);
+	border-start-start-radius: var(--rounded);
+	border-start-end-radius: var(--rounded);
+}
+
+.k-block-type-fields-tabs {
+	display: flex;
+	gap: var(--spacing-3);
+}
+.k-block-type-fields-tabs .k-button {
+	font-size: var(--text-xs);
+}
+.k-block-type-fields-tabs .k-button[aria-current="true"] {
+	font-weight: bold;
+}
+.k-block-type-fields-tabs .k-button[aria-current="true"]::after {
+	position: absolute;
+	bottom: -12px;
+	inset-inline-start: calc(50% - 10px);
+	content: "";
+	border: 10px solid transparent;
+	border-bottom-color: #eeeff2;
+}
+
+.k-block-type-fields-form {
+	background-color: #eeeff2;
+	padding: var(--spacing-4) var(--spacing-3) var(--spacing-8);
+	border-end-start-radius: var(--rounded);
+	border-end-end-radius: var(--rounded);
+}
+
+.k-block-container[data-hidden="true"]
+	:where(.k-block-type-fields-tabs, .k-block-type-fields-form) {
+	display: none;
+}
+</style>
