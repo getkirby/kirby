@@ -198,22 +198,7 @@ export default {
 			}
 
 			if (Array.isArray(what)) {
-				let blocks = this.$helper.clone(what).map((block) => {
-					block.id = this.$helper.uuid();
-					return block;
-				});
-
-				// filters only supported blocks
-				const availableFieldsets = Object.keys(this.fieldsets);
-				blocks = blocks.filter((block) =>
-					availableFieldsets.includes(block.type)
-				);
-
-				// don't add blocks that exceed the maximum limit
-				if (this.max) {
-					const max = this.max - this.blocks.length;
-					blocks = blocks.slice(0, max);
-				}
+				let blocks = this.$helper.clone(what);
 
 				this.blocks.splice(index, 0, ...blocks);
 				this.save();

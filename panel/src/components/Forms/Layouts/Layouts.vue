@@ -216,7 +216,7 @@ export default {
 			const index = this.current ?? this.rows.length;
 
 			// pass json to the paste endpoint to validate
-			let rows = await this.$api.post(this.endpoints.field + "/paste", {
+			let rows = await this.$api.post(this.endpoints.field + "/layout/paste", {
 				json: json
 			});
 

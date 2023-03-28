@@ -61,13 +61,36 @@ class LayoutField extends BlocksField
 		return $this->layouts;
 	}
 
+	/**
+	 * Creates form values for each layout
+	 */
 	public function layoutsToValues(array $layouts): array
 	{
-		$fields = [];
+		foreach ($layouts as &$layout) {
+			$layout['id'] 	   ??= Str::uuid();
+			$layout['columns'] ??= [];
+
+			array_walk($layout['columns'], function (&$column) {
+				$column['id']     ??= Str::uuid();
+				$column['blocks']   = $this->blocksToValues($column['blocks'] ?? []);
+			});
+		}
+
+		return $layouts;
+	}
+
+	/**
+	 * Paste action for layouts:
+	 *  - generates new uuids for layout, column and blocks
+	 *  - filters only supported layouts
+	 *  - filters only supported fieldsets
+	 */
+	public function pasteLayouts(array $layouts): array
+	{
+		$layouts = $this->layoutsToValues($layouts);
 
 		foreach ($layouts as $layoutIndex => &$layout) {
-			$layout['id'] 	     = Str::uuid();
-			$layout['columns'] ??= [];
+			$layout['id'] = Str::uuid();
 
 			// remove the row if layout not available for the pasted layout field
 			$columns = array_column($layout['columns'], 'width');
@@ -76,33 +99,20 @@ class LayoutField extends BlocksField
 				continue;
 			}
 
-			foreach ($layout['columns'] as $columnIndex => $column) {
-				$blocks             = [];
-				$column['blocks'] ??= [];
+			array_walk($layout['columns'], function (&$column) {
+				$column['id'] = Str::uuid();
 
-				foreach ($column['blocks'] as $block) {
+				array_walk($column['blocks'], function (&$block, $index) use ($column) {
+					$block['id'] = Str::uuid();
+
+					// remove the block if it's not available
 					try {
-						$type = $block['type'];
-
-						// create new id
-						$block['id'] = Str::uuid();
-
-						// get and cache fields at the same time
-						$fields[$type] ??= $this->fields($block['type']);
-
-						// overwrite the block content with form values
-						$block['content'] = $this->form($fields[$type], $block['content'])->values();
-
-						$blocks[] = $block;
+						$this->fieldset($block['type']);
 					} catch (Throwable) {
-						// skip invalid blocks
-						continue;
+						unset($column['blocks'][$index]);
 					}
-				}
-
-				$layout['columns'][$columnIndex]['id']     = Str::uuid();
-				$layout['columns'][$columnIndex]['blocks'] = $blocks;
-			}
+				});
+			});
 		}
 
 		return $layouts;
@@ -143,13 +153,14 @@ class LayoutField extends BlocksField
 				},
 			],
 			[
-				'pattern' => 'paste',
+				'pattern' => 'layout/paste',
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					$request = App::instance()->request();
 					$value   = Layouts::parse($request->get('json'));
 					$layouts = Layouts::factory($value);
-					return $field->layoutsToValues($layouts->toArray());
+
+					return $field->pasteLayouts($layouts->toArray());
 				}
 			],
 			[

@@ -125,6 +125,35 @@ class BlocksField extends FieldClass
 		return $this->pretty;
 	}
 
+	/**
+	 * Paste action for blocks:
+	 *  - generates new uuids for the blocks
+	 *  - filters only supported fieldsets
+	 *  - applies max limit if defined
+	 */
+	public function pasteBlocks(array $blocks): array
+	{
+		$blocks = $this->blocksToValues($blocks);
+
+		foreach ($blocks as $index => &$block) {
+			$block['id'] = Str::uuid();
+
+			// remove the block if it's not available
+			try {
+				$this->fieldset($block['type']);
+			} catch (Throwable) {
+				unset($blocks[$index]);
+			}
+		}
+
+		// don't add blocks that exceed the maximum limit
+		if ($max = $this->max()) {
+			$blocks = array_slice($blocks, 0, $max);
+		}
+
+		return $blocks;
+	}
+
 	public function props(): array
 	{
 		return [
@@ -151,10 +180,10 @@ class BlocksField extends FieldClass
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					$request = App::instance()->request();
+					$value   = BlocksCollection::parse($request->get('html'));
+					$blocks  = BlocksCollection::factory($value);
 
-					$value  = BlocksCollection::parse($request->get('html'));
-					$blocks = BlocksCollection::factory($value);
-					return $field->blocksToValues($blocks->toArray());
+					return $field->pasteBlocks($blocks->toArray());
 				}
 			],
 			[
