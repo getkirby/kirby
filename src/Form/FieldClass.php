@@ -323,6 +323,11 @@ abstract class FieldClass
 		return in_array($value, [null, '', []], true);
 	}
 
+	public function isHidden(): bool
+	{
+		return false;
+	}
+
 	/**
 	 * Checks if the field is invalid
 	 *
@@ -478,6 +483,7 @@ abstract class FieldClass
 			'default'     => $this->default(),
 			'disabled'    => $this->isDisabled(),
 			'help'        => $this->help(),
+			'hidden'      => $this->isHidden(),
 			'icon'        => $this->icon(),
 			'label'       => $this->label(),
 			'name'        => $this->name(),
