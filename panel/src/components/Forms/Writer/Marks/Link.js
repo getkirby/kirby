@@ -10,7 +10,11 @@ export default class Link extends Mark {
 
 	commands() {
 		return {
-			link: () => {
+			link: (event) => {
+				if (event.altKey || event.metaKey) {
+					return this.remove();
+				}
+
 				this.editor.emit("link", this.editor);
 			},
 			insertLink: (attrs = {}) => {

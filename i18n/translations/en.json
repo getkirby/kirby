@@ -530,6 +530,7 @@
 	"template": "Template",
 	"today": "Today",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Code",
 	"toolbar.button.bold": "Bold",
 	"toolbar.button.email": "Email",
