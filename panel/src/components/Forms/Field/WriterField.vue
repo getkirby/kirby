@@ -40,7 +40,9 @@ export default {
 </script>
 
 <style>
-.k-writer-field-input .ProseMirror {
+.k-writer-field-input .ProseMirror,
+/* ::before is used for the placeholder */
+.k-writer-field-input::before {
 	line-height: 1.5em;
 	padding: 0.375rem 0.5rem;
 }

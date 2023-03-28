@@ -444,7 +444,6 @@ export default {
 .k-writer[data-placeholder][data-empty="true"]::before {
 	grid-area: content;
 	content: attr(data-placeholder);
-	line-height: inherit;
 	color: var(--color-gray-500);
 	pointer-events: none;
 	white-space: pre-wrap;
