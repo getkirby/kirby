@@ -21,16 +21,7 @@
 							/>
 						</li>
 					</ul>
-					<nav v-if="hasTabs" class="k-drawer-tabs">
-						<k-button
-							v-for="tabButton in tabs"
-							:key="tabButton.name"
-							:current="tab == tabButton.name"
-							:text="tabButton.label"
-							class="k-drawer-tab"
-							@click.stop="$emit('tab', tabButton.name)"
-						/>
-					</nav>
+					<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="$emit('tab', $event)" />
 					<nav class="k-drawer-options">
 						<slot name="options" />
 						<k-button class="k-drawer-option" icon="check" @click="close" />
@@ -62,9 +53,6 @@ export default {
 	computed: {
 		breadcrumb() {
 			return this.$store.state.drawers.open;
-		},
-		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
 		},
 		index() {
 			return this.breadcrumb.findIndex((item) => item.id === this._uid);
@@ -199,27 +187,6 @@ export default {
 }
 .k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
 	padding-inline-start: 0;
-}
-.k-drawer-tabs {
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	margin-inline-end: 0.75rem;
-}
-.k-drawer-tab.k-button {
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
-	display: flex;
-	align-items: center;
-	font-size: var(--text-xs);
-}
-.k-drawer-tab.k-button[aria-current]::after {
-	position: absolute;
-	bottom: -1px;
-	inset-inline: 0.75rem;
-	content: "";
-	background: var(--color-black);
-	height: 2px;
 }
 
 .k-drawer-options {

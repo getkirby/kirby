@@ -185,15 +185,17 @@ export default {
 			return this.wysiwygComponent !== false;
 		},
 		wysiwygComponent() {
-			if (this.fieldset.preview === false) {
+			const preview = this.fieldset.preview;
+
+			if (preview === false) {
 				return false;
 			}
 
 			let component;
 
 			// custom preview
-			if (this.fieldset.preview) {
-				component = "k-block-type-" + this.fieldset.preview;
+			if (preview) {
+				component = "k-block-type-" + preview;
 
 				if (this.$helper.isComponent(component)) {
 					return component;
@@ -262,8 +264,8 @@ export default {
 
 			this.$emit("focus", event);
 		},
-		open() {
-			this.$refs.drawer?.open();
+		open(tab) {
+			this.$refs.drawer?.open(tab);
 		},
 		remove() {
 			this.$refs.removeDialog.close();
