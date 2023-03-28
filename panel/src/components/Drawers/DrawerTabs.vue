@@ -3,7 +3,7 @@
 		<k-button
 			v-for="tabButton in tabs"
 			:key="tabButton.name"
-			:current="tab == tabButton.name"
+			:current="tab === tabButton.name"
 			:text="tabButton.label"
 			class="k-drawer-tab"
 			@click.stop="$emit('tab', tabButton.name)"

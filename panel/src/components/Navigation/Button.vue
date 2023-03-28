@@ -128,11 +128,12 @@ export default {
 		attrs() {
 			// Shared
 			const attrs = {
+				"aria-current": this.current,
+				"aria-disabled": this.disabled,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
 				"data-theme": this.theme,
 				"data-variant": this.variant,
-				"aria-disabled": this.disabled,
 				id: this.id,
 				tabindex: this.tabindex,
 				/** @todo button.prop.tooltip.deprecated - adapt @ 5.0 */
@@ -141,7 +142,6 @@ export default {
 
 			if (this.component === "k-link") {
 				// For `<a>`/`<k-link>` element:
-				attrs["aria-current"] = this.current;
 				attrs["disabled"] = this.disabled;
 				attrs["to"] = this.link;
 				attrs["rel"] = this.rel;
@@ -209,6 +209,7 @@ export default {
 }
 
 .k-button {
+	position: relative;
 	display: inline-flex;
 	font-size: var(--text-sm);
 	align-items: center;
@@ -223,7 +224,6 @@ export default {
 	min-width: max-content;
 	width: var(--button-width);
 	color: var(--button-color-text);
-	overflow: hidden;
 }
 
 .k-button:where(:not([aria-disabled])):hover {
