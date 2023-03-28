@@ -57,6 +57,7 @@ export default {
 .k-block-type-fields-header {
 	display: flex;
 	justify-content: space-between;
+	height: 2.5rem;
 	padding-inline: var(--spacing-3);
 	background: var(--color-white);
 	border-start-start-radius: var(--rounded);
@@ -73,8 +74,12 @@ export default {
 	border-radius: var(--rounded);
 }
 
+.k-block-container[data-hidden="true"] {
+	padding-bottom: 0;
+}
+
 .k-block-container[data-hidden="true"]
-	:where(.k-block-type-fields-tabs, .k-block-type-fields-form) {
+	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;
 }
 </style>
