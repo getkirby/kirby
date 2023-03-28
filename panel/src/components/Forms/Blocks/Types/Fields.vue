@@ -1,5 +1,5 @@
 <template>
-	<div @dblclick.native="!fieldset.wysiwyg ? $emit('open') : null">
+	<div @dblclick="!fieldset.wysiwyg ? $emit('open') : null">
 		<header class="k-block-type-fields-header">
 			<k-block-title
 				:content="values"
@@ -51,7 +51,7 @@ export default {
 
 <style>
 .k-block-container:has(.k-block-type-fields) {
-	padding: 0;
+	padding-top: 0;
 }
 
 .k-block-type-fields-header {
@@ -70,8 +70,7 @@ export default {
 .k-block-type-fields-form {
 	background-color: #eeeff2;
 	padding: var(--spacing-4) var(--spacing-3) var(--spacing-8);
-	border-end-start-radius: var(--rounded);
-	border-end-end-radius: var(--rounded);
+	border-radius: var(--rounded);
 }
 
 .k-block-container[data-hidden="true"]
