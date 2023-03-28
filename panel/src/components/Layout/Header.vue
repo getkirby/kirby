@@ -49,6 +49,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--header-bar-height: var(--height-md);
+}
+
 .k-header {
 	border-bottom: 1px solid var(--color-border);
 	margin-bottom: var(--spacing-12);
@@ -81,7 +85,7 @@ export default {
 
 .k-header:has(.k-header-buttons) {
 	position: sticky;
-	inset-block-start: calc((var(--text-h1) + var(--spacing-6)) * -1);
+	top: calc((var(--text-h1) + var(--spacing-6)) * -1);
 	background-color: var(--color-light);
 	z-index: var(--z-toolbar);
 }
@@ -101,7 +105,7 @@ export default {
 }
 
 .k-header .k-header-buttons {
-	--bar-height: var(--height-md);
+	--bar-height: var(--header-bar-height);
 	margin-bottom: var(--spacing-1);
 }
 </style>

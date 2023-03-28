@@ -113,7 +113,7 @@ export default {
 	--text-size: var(--text-sm);
 	line-height: 1.5em;
 }
-.k-block-type-heading-input .ProseMirror strong {
+.k-block-type-heading-input .k-writer .ProseMirror strong {
 	font-weight: 700;
 }
 .k-block-type-heading-level {

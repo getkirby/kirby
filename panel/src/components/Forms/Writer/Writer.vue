@@ -9,18 +9,14 @@
 	>
 		<template v-if="editor">
 			<k-writer-toolbar
-				v-if="toolbar.visible"
 				ref="toolbar"
+				v-bind="toolbar"
 				:editor="editor"
-				:active-marks="toolbar.marks"
-				:active-nodes="toolbar.nodes"
-				:active-node-attrs="toolbar.nodeAttrs"
+				:active-marks="editor.activeMarks"
+				:active-nodes="editor.activeNodes"
+				:active-node-attrs="editor.activeNodeAttrs"
 				:is-paragraph-node-hidden="isParagraphNodeHidden"
-				:style="{
-					bottom: toolbar.position.bottom + 'px',
-					'inset-inline-start': toolbar.position.left + 'px'
-				}"
-				@command="editor.command($event)"
+				@command="onCommand"
 			/>
 			<k-writer-link-dialog
 				ref="linkDialog"
@@ -41,17 +37,16 @@ import Editor from "./Editor";
 import Mark from "./Mark";
 import Node from "./Node";
 
-// Dialogs
-import LinkDialog from "./Dialogs/LinkDialog.vue";
-import EmailDialog from "./Dialogs/EmailDialog.vue";
-
 // Marks
-import Link from "./Marks/Link";
-import Code from "./Marks/Code";
 import Bold from "./Marks/Bold";
-import Italic from "./Marks/Italic";
+import Clear from "./Marks/Clear";
+import Code from "./Marks/Code";
 import Email from "./Marks/Email";
+import Italic from "./Marks/Italic";
+import Link from "./Marks/Link";
 import Strike from "./Marks/Strike";
+import Sup from "./Marks/Sup";
+import Sub from "./Marks/Sub";
 import Underline from "./Marks/Underline";
 
 // Nodes
@@ -68,9 +63,6 @@ import Insert from "./Extensions/Insert.js";
 import Keys from "./Extensions/Keys.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
-// Toolbar
-import ToolbarComponent from "./Toolbar.vue";
-
 export const props = {
 	props: {
 		autofocus: Boolean,
@@ -79,37 +71,22 @@ export const props = {
 		disabled: Boolean,
 		emptyDocument: {
 			type: Object,
-			default() {
-				return {
-					type: "doc",
-					content: []
-				};
-			}
+			default: () => ({
+				type: "doc",
+				content: []
+			})
 		},
+		extensions: Array,
 		headings: [Array, Boolean],
 		inline: Boolean,
 		keys: Object,
 		marks: {
 			type: [Array, Boolean],
-			default: () => [
-				"bold",
-				"italic",
-				"underline",
-				"strike",
-				"code",
-				"link",
-				"email"
-			]
+			default: true
 		},
 		nodes: {
 			type: [Array, Boolean],
-			default: () => [
-				"heading",
-				"bulletList",
-				"orderedList",
-				"horizontalRule",
-				"blockquote"
-			]
+			default: () => ["heading", "bulletList", "orderedList"]
 		},
 		paste: {
 			type: Function,
@@ -117,7 +94,10 @@ export const props = {
 		},
 		placeholder: String,
 		spellcheck: Boolean,
-		extensions: Array,
+		toolbar: {
+			type: Object,
+			default: () => ({ inline: true })
+		},
 		value: {
 			type: String,
 			default: ""
@@ -126,19 +106,13 @@ export const props = {
 };
 
 export default {
-	components: {
-		"k-writer-email-dialog": EmailDialog,
-		"k-writer-link-dialog": LinkDialog,
-		"k-writer-toolbar": ToolbarComponent
-	},
 	mixins: [props],
 	data() {
 		return {
 			editor: null,
 			json: {},
 			html: this.value,
-			isEmpty: true,
-			toolbar: false
+			isEmpty: true
 		};
 	},
 	computed: {
@@ -179,13 +153,6 @@ export default {
 					this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
 				},
 				paste: this.paste,
-				toolbar: (toolbar) => {
-					this.toolbar = toolbar;
-
-					if (this.toolbar.visible) {
-						this.$nextTick(() => this.onToolbarOpen());
-					}
-				},
 				update: (payload) => {
 					if (!this.editor) {
 						return;
@@ -228,7 +195,10 @@ export default {
 				new Keys(this.keys),
 				new History(),
 				new Insert(),
-				new Toolbar(),
+				new Toolbar({
+					writer: this,
+					inline: this.toolbar.inline
+				}),
 				...(this.extensions || [])
 			],
 			inline: this.inline
@@ -241,27 +211,6 @@ export default {
 		this.editor.destroy();
 	},
 	methods: {
-		filterExtensions(available, allowed, postFilter) {
-			if (allowed === false) {
-				allowed = [];
-			} else if (allowed === true || Array.isArray(allowed) === false) {
-				allowed = Object.keys(available);
-			}
-
-			let installed = [];
-
-			for (const extension of allowed) {
-				if (available[extension]) {
-					installed.push(available[extension]);
-				}
-			}
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
-		},
 		command(command, ...args) {
 			this.editor.command(command, ...args);
 		},
@@ -270,11 +219,14 @@ export default {
 				{
 					bold: new Bold(),
 					italic: new Italic(),
-					strike: new Strike(),
 					underline: new Underline(),
+					strike: new Strike(),
+					sup: new Sup(),
+					sub: new Sub(),
 					code: new Code(),
 					link: new Link(),
 					email: new Email(),
+					clear: new Clear(),
 					...this.createMarksFromPanelPlugins()
 				},
 				this.marks
@@ -306,9 +258,7 @@ export default {
 				{
 					bulletList: new BulletList(),
 					orderedList: new OrderedList(),
-					heading: new Heading({
-						levels: this.headings
-					}),
+					heading: new Heading({ levels: this.headings }),
 					horizontalRule: new HorizontalRule(),
 					listItem: new ListItem(),
 					...this.createNodesFromPanelPlugins()
@@ -344,33 +294,35 @@ export default {
 		getHTML() {
 			return this.editor.getHTML();
 		},
+		filterExtensions(available, allowed, postFilter) {
+			if (allowed === false) {
+				allowed = [];
+			} else if (allowed === true || Array.isArray(allowed) === false) {
+				allowed = Object.keys(available);
+			}
+
+			let installed = [];
+
+			for (const extension of allowed) {
+				if (available[extension]) {
+					installed.push(available[extension]);
+				}
+			}
+
+			if (typeof postFilter === "function") {
+				installed = postFilter(allowed, installed);
+			}
+
+			return installed;
+		},
 		focus() {
 			this.editor.focus();
 		},
 		getSplitContent() {
 			return this.editor.getHTMLStartToSelectionToEnd();
 		},
-		onToolbarOpen() {
-			if (this.$refs.toolbar) {
-				const editorWidth = this.$el.clientWidth;
-				const toolbarWidth = this.$refs.toolbar.$el.clientWidth;
-
-				let left = this.toolbar.position.left;
-
-				// adjust left overflow
-				if (left - toolbarWidth / 2 < 0) {
-					left = left + (toolbarWidth / 2 - left) - 20;
-				}
-
-				// adjust right overflow
-				if (left + toolbarWidth / 2 > editorWidth) {
-					left = left - (left + toolbarWidth / 2 - editorWidth) + 20;
-				}
-
-				if (left !== this.toolbar.position.left) {
-					this.$refs.toolbar.$el.style.left = left + "px";
-				}
-			}
+		onCommand(command, ...args) {
+			this.editor.command(command, ...args);
 		}
 	}
 };
@@ -380,9 +332,11 @@ export default {
 .k-writer {
 	position: relative;
 	width: 100%;
-	grid-template-areas: "content";
 	display: grid;
+	grid-template-areas: "content";
+	gap: var(--spacing-1);
 }
+
 .k-writer .ProseMirror {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
@@ -406,12 +360,7 @@ export default {
 .k-writer .ProseMirror > *:last-child {
 	margin-bottom: 0;
 }
-.k-writer .ProseMirror p,
-.k-writer .ProseMirror ul,
-.k-writer .ProseMirror ol,
-.k-writer .ProseMirror h1,
-.k-writer .ProseMirror h2,
-.k-writer .ProseMirror h3 {
+.k-writer .ProseMirror :where(p, ul, ol, h1, h2, h3) {
 	margin-bottom: 0.75rem;
 }
 
@@ -427,15 +376,19 @@ export default {
 	font-size: var(--text-xl);
 	line-height: 1.25em;
 }
-.k-writer .ProseMirror h1 strong,
-.k-writer .ProseMirror h2 strong,
-.k-writer .ProseMirror h3 strong {
+.k-writer .ProseMirror :where(h1, h2, h3) strong {
 	font-weight: 700;
 }
 
 .k-writer .ProseMirror strong {
 	font-weight: 600;
 }
+
+.k-writer .ProseMirror :where(sup, sub) {
+	font-size: var(--text-xs);
+	line-height: 1;
+}
+
 .k-writer .ProseMirror code {
 	position: relative;
 	font-size: 0.925em;
@@ -446,8 +399,7 @@ export default {
 	border-radius: var(--rounded);
 	font-family: var(--font-mono);
 }
-.k-writer .ProseMirror ul,
-.k-writer .ProseMirror ol {
+.k-writer .ProseMirror :where(ul, ol) {
 	padding-inline-start: 1.75rem;
 }
 .k-writer .ProseMirror ul > li {
@@ -462,9 +414,7 @@ export default {
 .k-writer .ProseMirror ol > li {
 	list-style: decimal;
 }
-.k-writer .ProseMirror li > p,
-.k-writer .ProseMirror li > ol,
-.k-writer .ProseMirror li > ul {
+.k-writer .ProseMirror li > :where(p, ol, ul) {
 	margin: 0;
 }
 
@@ -494,7 +444,6 @@ export default {
 .k-writer[data-placeholder][data-empty="true"]::before {
 	grid-area: content;
 	content: attr(data-placeholder);
-	line-height: inherit;
 	color: var(--color-gray-500);
 	pointer-events: none;
 	white-space: pre-wrap;

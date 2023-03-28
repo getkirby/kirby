@@ -112,7 +112,10 @@ return [
 				foreach ($this->fields as $field) {
 					// Skip hidden and unsaveable fields
 					// They should never be included as column
-					if ($field['type'] === 'hidden' || $field['saveable'] === false) {
+					if (
+						$field['hidden'] === true ||
+						$field['saveable'] === false
+					) {
 						continue;
 					}
 
