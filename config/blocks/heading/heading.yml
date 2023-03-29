@@ -12,16 +12,22 @@ fields:
     options:
       - value: h1
         icon: h1
+        text: H1
       - value: h2
         icon: h2
+        text: H2
       - value: h3
         icon: h3
+        text: H3
       - value: h4
         icon: h4
+        text: H4
       - value: h5
         icon: h5
+        text: H5
       - value: h6
         icon: h6
+        text: H6
   text:
     label: field.blocks.heading.text
     type: writer
