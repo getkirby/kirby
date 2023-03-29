@@ -21,7 +21,7 @@
 					:is-selected="isSelected(block)"
 					:next="prevNext(index + 1)"
 					:prev="prevNext(index - 1)"
-					@append="append($event, index + 1)"
+					@append="add($event, index + 1)"
 					@choose="choose($event)"
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
@@ -191,19 +191,6 @@ export default {
 		}
 	},
 	methods: {
-		async append(what, index) {
-			if (typeof what === "string") {
-				this.add(what, index);
-				return;
-			}
-
-			if (Array.isArray(what)) {
-				let blocks = this.$helper.clone(what);
-
-				this.blocks.splice(index, 0, ...blocks);
-				this.save();
-			}
-		},
 		async add(type = "text", index) {
 			const block = await this.$api.get(
 				this.endpoints.field + "/fieldsets/" + type
@@ -573,7 +560,8 @@ export default {
 				lastIndex = this.blocks.length;
 			}
 
-			this.append(blocks, lastIndex + 1);
+			this.blocks.splice(lastIndex + 1, 0, ...blocks);
+			this.save();
 
 			// a sign that it has been pasted
 			this.$store.dispatch(
