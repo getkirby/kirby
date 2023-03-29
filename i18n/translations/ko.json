@@ -500,7 +500,7 @@
 
 	"stats.empty": "관련 기록이 없습니다.",
 	"system.issues.content": "<code>/content</code> 폴더의 권한을 확인하세요.",
-	"system.issues.eol.kirby": "Your installed Kirby version has reached end-of-life and will not receive further security updates",
+	"system.issues.eol.kirby": "설치된 Kirby는 버전이 만료되었습니다. 더 이상 보안 업데이트를 받을 수 없습니다.",
 	"system.issues.eol.plugin": "Your installed version of the { plugin } plugin is has reached end-of-life and will not receive further security updates",
 	"system.issues.debug": "공개 서버상에서는 디버그 모드를 해제하세요.",
 	"system.issues.git": "<code>/.git</code> 폴더의 권한을 확인하세요.",

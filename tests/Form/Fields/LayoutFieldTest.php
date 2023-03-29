@@ -138,7 +138,7 @@ class LayoutFieldTest extends TestCase
 							[
 								'type'    => 'heading',
 								'content' => [
-									'text' => 'A nice heading',
+									'text' => 'A nice block/heäding',
 								]
 							]
 						]
@@ -164,14 +164,17 @@ class LayoutFieldTest extends TestCase
 		$store = $field->store($value);
 		$this->assertIsString($store);
 
-		$expected = json_decode($store, true);
+		// ensure that the Unicode characters and slashes are not encoded
+		$this->assertStringContainsString('A nice block/heäding', $store);
 
-		$this->assertSame(['url' => 'https://getkirby.com/'], $expected[0]['attrs']);
-		$this->assertArrayHasKey('id', $expected[0]);
-		$this->assertArrayHasKey('columns', $expected[0]);
-		$this->assertIsArray($expected[0]['columns']);
-		$this->assertSame('heading', $expected[0]['columns'][0]['blocks'][0]['type']);
-		$this->assertSame('A nice heading', $expected[0]['columns'][0]['blocks'][0]['content']['text']);
+		$result = json_decode($store, true);
+
+		$this->assertSame(['url' => 'https://getkirby.com/'], $result[0]['attrs']);
+		$this->assertArrayHasKey('id', $result[0]);
+		$this->assertArrayHasKey('columns', $result[0]);
+		$this->assertIsArray($result[0]['columns']);
+		$this->assertSame('heading', $result[0]['columns'][0]['blocks'][0]['type']);
+		$this->assertSame('A nice block/heäding', $result[0]['columns'][0]['blocks'][0]['content']['text']);
 
 		// empty tests
 		$this->assertSame('', $field->store(null));
@@ -260,5 +263,39 @@ class LayoutFieldTest extends TestCase
 		]);
 
 		$this->assertSame($value, $field->empty());
+	}
+
+	public function testDefault()
+	{
+		$field = $this->field('layout', [
+			'default' => [
+				[
+					'columns' => [
+						[
+							'width' => '1/2',
+							'blocks' => [
+								[
+									'type' => 'heading',
+									'text' => 'Some title'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$default = $field->default();
+
+		$layout = $default[0];
+		$column = $layout['columns'][0];
+		$block = $column['blocks'][0];
+
+		$this->assertCount(1, $default);
+		$this->assertArrayHasKey('id', $layout);
+		$this->assertArrayHasKey('id', $column);
+		$this->assertArrayHasKey('id', $block);
+		$this->assertSame('heading', $block['type']);
+		$this->assertSame('Some title', $block['text']);
 	}
 }
