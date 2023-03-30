@@ -56,6 +56,9 @@ class BlocksField extends FieldClass
 				// overwrite the block content with form values
 				$block['content'] = $this->form($fields[$type], $block['content'])->$to();
 
+				// create id if not exists
+				$block['id'] ??= Str::uuid();
+
 				$result[] = $block;
 			} catch (Throwable) {
 				$result[] = $block;

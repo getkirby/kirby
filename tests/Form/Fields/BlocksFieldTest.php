@@ -104,6 +104,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$value = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'text' => 'A nice block/heäding'
@@ -113,6 +114,7 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
@@ -259,6 +261,7 @@ class BlocksFieldTest extends TestCase
 	{
 		$value = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'text' => 'A nice block/heäding'
@@ -268,6 +271,7 @@ class BlocksFieldTest extends TestCase
 
 		$expected = [
 			[
+				'id'	  => 'uuid',
 				'type'    => 'heading',
 				'content' => [
 					'level' => '',
