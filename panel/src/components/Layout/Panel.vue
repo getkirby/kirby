@@ -25,6 +25,8 @@
 
 		<!-- Icons -->
 		<k-icons />
+
+		<portal-target name="overlay" slim />
 	</div>
 </template>
 
