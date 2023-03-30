@@ -73,7 +73,7 @@ class Field
 
 	public static function hidden(): array
 	{
-		return ['type' => 'hidden'];
+		return ['hidden' => true];
 	}
 
 	/**
