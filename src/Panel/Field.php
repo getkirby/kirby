@@ -4,7 +4,11 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
+use Kirby\Cms\Find;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Form\Form;
+use Kirby\Http\Router;
 use Kirby\Toolkit\I18n;
 
 /**
@@ -20,6 +24,33 @@ use Kirby\Toolkit\I18n;
  */
 class Field
 {
+
+	/**
+	 * Creates the routes for a field dialog
+	 * This is most definitely not a good place for this
+	 * method, but as long as the other classes are
+	 * not fully refactored, it still feels appropriate
+	 */
+	public static function dialog(
+		ModelWithContent $model,
+		string $fieldName,
+		string|null $path = null,
+		string $method = 'GET',
+	) {
+		$field  = Form::for($model)->field($fieldName);
+		$routes = [];
+
+		foreach ($field->dialogs() as $dialogId => $dialog) {
+			$routes = array_merge($routes, Panel::routesForDialog(
+				dialogId: $dialogId,
+				areaId: 'site',
+				dialog: $dialog
+			));
+		}
+
+		return Router::execute($path, $method, $routes);
+	}
+
 	/**
 	 * A standard email field
 	 */

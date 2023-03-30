@@ -46,6 +46,13 @@ return [
 		'submit'  => $dialogs['user.delete']['submit'],
 	],
 
+	// account fields dialogs
+	'account.fields' => [
+		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $dialogs['user.fields']['load'],
+		'submit'  => $dialogs['user.fields']['submit']
+	],
+
 	// change file name
 	'account.file.changeName' => [
 		'pattern' => '(account)/files/(:any)/changeName',
@@ -67,4 +74,10 @@ return [
 		'submit'  => $dialogs['user.file.delete']['submit'],
 	],
 
+	// account file fields dialogs
+	'account.file.fields' => [
+		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $dialogs['user.file.fields']['load'],
+		'submit'  => $dialogs['user.file.fields']['submit']
+	],
 ];

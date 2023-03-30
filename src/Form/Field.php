@@ -264,6 +264,23 @@ class Field extends Component
 	}
 
 	/**
+	 * Returns optional dialog routes for the field
+	 *
+	 * @return array
+	 */
+	public function dialogs(): array
+	{
+		if (
+			isset($this->options['dialogs']) === true &&
+			$this->options['dialogs'] instanceof Closure
+		) {
+			return $this->options['dialogs']->call($this);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Creates a new field instance
 	 *
 	 * @param string $type
