@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
+use Kirby\Data\Json;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -22,10 +22,21 @@ class Layouts extends Items
 
 	public static function factory(array $items = null, array $params = [])
 	{
+		// convert single layout to layouts array
+		if (
+			isset($items['columns']) === true ||
+			isset($items['id']) === true
+		) {
+			$items = [$items];
+		}
+
 		$first = $items[0] ?? [];
 
 		// if there are no wrapping layouts for blocks yet …
-		if (array_key_exists('content', $first) === true || array_key_exists('type', $first) === true) {
+		if (
+			isset($first['content']) === true ||
+			isset($first['type']) === true
+		) {
 			$items = [
 				[
 					'id'      => Str::uuid(),
@@ -64,7 +75,7 @@ class Layouts extends Items
 	{
 		if (empty($input) === false && is_array($input) === false) {
 			try {
-				$input = Data::decode($input, 'json');
+                $input = Json::decode((string)$input);
 			} catch (Throwable) {
 				return [];
 			}

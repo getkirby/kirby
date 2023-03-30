@@ -61,6 +61,63 @@ class LayoutField extends BlocksField
 		return $this->layouts;
 	}
 
+	/**
+	 * Creates form values for each layout
+	 */
+	public function layoutsToValues(array $layouts): array
+	{
+		foreach ($layouts as &$layout) {
+			$layout['id'] 	   ??= Str::uuid();
+			$layout['columns'] ??= [];
+
+			array_walk($layout['columns'], function (&$column) {
+				$column['id']     ??= Str::uuid();
+				$column['blocks']   = $this->blocksToValues($column['blocks'] ?? []);
+			});
+		}
+
+		return $layouts;
+	}
+
+	/**
+	 * Paste action for layouts:
+	 *  - generates new uuids for layout, column and blocks
+	 *  - filters only supported layouts
+	 *  - filters only supported fieldsets
+	 */
+	public function pasteLayouts(array $layouts): array
+	{
+		$layouts = $this->layoutsToValues($layouts);
+
+		foreach ($layouts as $layoutIndex => &$layout) {
+			$layout['id'] = Str::uuid();
+
+			// remove the row if layout not available for the pasted layout field
+			$columns = array_column($layout['columns'], 'width');
+			if (in_array($columns, $this->layouts()) === false) {
+				unset($layouts[$layoutIndex]);
+				continue;
+			}
+
+			array_walk($layout['columns'], function (&$column) {
+				$column['id'] = Str::uuid();
+
+				array_walk($column['blocks'], function (&$block, $index) use ($column) {
+					$block['id'] = Str::uuid();
+
+					// remove the block if it's not available
+					try {
+						$this->fieldset($block['type']);
+					} catch (Throwable) {
+						unset($column['blocks'][$index]);
+					}
+				});
+			});
+		}
+
+		return $layouts;
+	}
+
 	public function props(): array
 	{
 		$settings = $this->settings();
@@ -75,6 +132,7 @@ class LayoutField extends BlocksField
 	{
 		$field  = $this;
 		$routes = parent::routes();
+
 		$routes[] = [
 			'pattern' => 'layout',
 			'method'  => 'POST',
@@ -94,6 +152,18 @@ class LayoutField extends BlocksField
 					], $columns)
 				])->toArray();
 			},
+		];
+
+		$routes[] = [
+			'pattern' => 'layout/paste',
+			'method'  => 'POST',
+			'action'  => function () use ($field) {
+				$request = App::instance()->request();
+				$value   = Layouts::parse($request->get('json'));
+				$layouts = Layouts::factory($value);
+
+				return $field->pasteLayouts($layouts->toArray());
+			}
 		];
 
 		$routes[] = [

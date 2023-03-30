@@ -1,9 +1,17 @@
 <?php
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Sane\Sane;
+use Kirby\Toolkit\V;
 
 return [
 	'props' => [
+		/**
+		 * Enables/disables the character counter in the top right corner
+		 */
+		'counter' => function (bool $counter = true) {
+			return $counter;
+		},
 		/**
 		 * Available heading levels
 		 */
@@ -24,6 +32,19 @@ return [
 		 */
 		'marks' => function ($marks = null) {
 			return $marks;
+		},
+		/**
+		 * Maximum number of allowed characters
+		 */
+		'maxlength' => function (int $maxlength = null) {
+			return $maxlength;
+		},
+
+		/**
+		 * Minimum number of required characters
+		 */
+		'minlength' => function (int $minlength = null) {
+			return $minlength;
 		},
 		/**
 		 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
@@ -62,4 +83,28 @@ return [
 			return Sane::sanitize($value, 'html');
 		}
 	],
+	'validations' => [
+		'minlength' => function ($value) {
+			if (
+				$this->minlength &&
+				V::minLength(strip_tags($value), $this->minlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.minlength',
+					'data' => ['min' => $this->minlength]
+				]);
+			}
+		},
+		'maxlength'  => function ($value) {
+			if (
+				$this->maxlength &&
+				V::maxLength(strip_tags($value), $this->maxlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.maxlength',
+					'data' => ['max' => $this->maxlength]
+				]);
+			}
+		},
+	]
 ];

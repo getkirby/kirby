@@ -3,6 +3,7 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\Fieldsets;
+use Kirby\Cms\Layouts;
 
 class LayoutFieldTest extends TestCase
 {
@@ -125,7 +126,7 @@ class LayoutFieldTest extends TestCase
 		$routes = $field->routes();
 
 		$this->assertIsArray($routes);
-		$this->assertCount(6, $routes);
+		$this->assertCount(7, $routes);
 	}
 
 	public function testStore()
@@ -297,5 +298,123 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('id', $block);
 		$this->assertSame('heading', $block['type']);
 		$this->assertSame('Some title', $block['text']);
+	}
+
+	public function testToValues()
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout', [
+			'value' => $value
+		]);
+
+		$form = $field->layoutsToValues($value);
+
+		$this->assertArrayHasKey('id', $form[0]);
+		$this->assertArrayHasKey('columns', $form[0]);
+		$this->assertIsArray($form[0]['columns']);
+		$this->assertArrayHasKey('id', $form[0]['columns'][0]);
+		$this->assertArrayHasKey('blocks', $form[0]['columns'][0]);
+		$this->assertArrayHasKey('id', $form[0]['columns'][0]['blocks'][0]);
+	}
+
+	public function testPaste()
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout', [
+			'value' => $value
+		]);
+
+		$original = $field->value();
+		$layouts  = Layouts::factory($value);
+		$pasted   = $field->pasteLayouts($layouts->toArray());
+
+		// layout id
+		$this->assertNotEmpty($pasted[0]['id']);
+		$this->assertNotSame($original[0]['id'], $pasted[0]['id']);
+
+		// layout column id
+		$this->assertNotEmpty($pasted[0]['columns'][0]);
+		$this->assertNotSame($original[0]['columns'][0]['id'], $pasted[0]['columns'][0]['id']);
+
+		// block id
+		$this->assertNotEmpty($pasted[0]['columns'][0]);
+		$this->assertNotSame($original[0]['columns'][0]['blocks'][0]['id'], $pasted[0]['columns'][0]['blocks'][0]['id']);
+
+		// block content
+		$this->assertNotEmpty($pasted[0]['id']);
+		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
+	}
+
+	public function testRoutePaste()
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'json' => json_encode($value)
+				]
+			]
+		]);
+
+		$field = $this->field('layout');
+		$route = $field->routes()[5];
+
+		$response = $route['action']();
+
+		$this->assertCount(1, $response);
+		$this->assertArrayHasKey('id', $response[0]);
+		$this->assertArrayHasKey('columns', $response[0]);
+		$this->assertIsArray($response[0]['columns']);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('blocks', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]['blocks'][0]);
 	}
 }
