@@ -25,6 +25,10 @@ class ColorExtractor
      */
     public function extract($colorCount = 1)
     {
+        if ($colorCount === 0) {
+            return [];
+        }
+
         if (!$this->isInitialized()) {
             $this->initialize();
         }
@@ -75,6 +79,9 @@ class ColorExtractor
     protected static function mergeColors(\SplFixedArray $colors, $limit, $maxDelta)
     {
         $limit = min(count($colors), $limit);
+        if ($limit === 0) {
+            return [];
+        }
         if ($limit === 1) {
             return [$colors[0]];
         }

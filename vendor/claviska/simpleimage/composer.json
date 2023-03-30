@@ -3,9 +3,9 @@
   "description": "A PHP class that makes working with images as simple as possible.",
   "license": "MIT",
   "require": {
-    "php": ">=5.6.0",
+    "php": ">=8.0",
     "ext-gd": "*",
-    "league/color-extractor": "0.3.*"
+    "league/color-extractor": "0.4.*"
   },
   "authors": [
     {
@@ -18,5 +18,9 @@
     "psr-0": {
       "claviska": "src/"
     }
+  },
+  "require-dev": {
+    "laravel/pint": "^1.5",
+    "phpstan/phpstan": "^1.10"
   }
 }
