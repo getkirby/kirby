@@ -25,7 +25,7 @@ export function form(fields) {
  * @returns {boolean}
  */
 export function isVisible(field, values) {
-	if (field.hidden === true) {
+	if (field.type === "hidden" || field.hidden === true) {
 		return false;
 	}
 
