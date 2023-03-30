@@ -130,32 +130,6 @@ export default {
 			this.rows.splice(index + 1, 0, copy);
 			this.save();
 		},
-		filterUnallowedFieldsets(layouts) {
-			if (Array.isArray(layouts) === false) {
-				layouts = [layouts];
-			}
-
-			// first filter unallowed layouts
-			layouts = layouts.filter((layout) => {
-				const columns = layout.columns.map((column) => column.width);
-				const index = this.layouts.findIndex(
-					(x) => JSON.stringify(x) === JSON.stringify(columns)
-				);
-				return index !== -1;
-			});
-
-			// then filter unallowed block/fieldsets
-			layouts = layouts.map((layout) => {
-				layout.columns = layout.columns.map((column) => {
-					column.blocks = column.blocks.filter((block) =>
-						Object.keys(this.fieldsets).includes(block.type)
-					);
-					return column;
-				});
-				return layout;
-			});
-			return layouts;
-		},
 		async onAdd(columns) {
 			let layout = await this.$api.post(this.endpoints.field + "/layout", {
 				columns: columns
@@ -240,18 +214,19 @@ export default {
 			this.save();
 			this.$refs.selector.close();
 		},
-		onPaste(e) {
-			const copy = JSON.parse(this.$helper.clipboard.read(e));
+		async onPaste(e) {
+			const json = this.$helper.clipboard.read(e);
 			const index = this.current ?? this.rows.length;
 
-			// throw out anything that isn't allowed.
-			let rows = this.filterUnallowedFieldsets(copy);
+			// pass json to the paste endpoint to validate
+			let rows = await this.$api.post(this.endpoints.field + "/layout/paste", {
+				json: json
+			});
 
-			// replace all unique IDs for columns and blocks
-			rows = this.updateIds(rows);
-
-			this.rows.splice(index, 0, ...rows);
-			this.save();
+			if (rows.length) {
+				this.rows.splice(index, 0, ...rows);
+				this.save();
+			}
 
 			// a sign that it has been pasted
 			this.$store.dispatch(

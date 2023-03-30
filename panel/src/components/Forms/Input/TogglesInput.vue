@@ -8,6 +8,7 @@
 		<li v-for="(option, index) in options" :key="index">
 			<input
 				:id="id + '-' + index"
+				:aria-label="option.text"
 				:value="option.value"
 				:name="id"
 				:checked="value === option.value"
