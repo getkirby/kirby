@@ -1,3 +1,5 @@
+import Elements from "./Elements/index.js";
+
 import Dialog from "./Dialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
 import FiberDialog from "./FiberDialog.vue";
@@ -11,6 +13,8 @@ import UsersDialog from "./UsersDialog.vue";
 
 export default {
 	install(app) {
+		app.use(Elements);
+
 		app.component("k-dialog", Dialog);
 		app.component("k-error-dialog", ErrorDialog);
 		app.component("k-fiber-dialog", FiberDialog);

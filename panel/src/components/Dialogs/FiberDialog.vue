@@ -5,8 +5,8 @@
 		v-bind="props"
 		:disabled="isProcessing"
 		:visible="true"
-		@cancel="onCancel"
-		@submit="onSubmit"
+		@cancel="cancel"
+		@submit="submit"
 	/>
 </template>
 
@@ -28,12 +28,12 @@ export default {
 		close() {
 			this.$refs.dialog.close();
 		},
-		onCancel() {
+		cancel() {
 			if (typeof this.$store.state.dialog.cancel === "function") {
 				this.$store.state.dialog.cancel({ dialog: this });
 			}
 		},
-		async onSubmit(value) {
+		async submit(value) {
 			// do not handle a new request while a request is in progress
 			if (this.isProcessing === true) {
 				return false;
@@ -71,24 +71,6 @@ export default {
 				// show the smiley in the topbar, fire events that
 				// might have been defined in the response
 				this.$refs.dialog.success(dialog);
-
-				// dispatch store actions that might have been defined in the response
-				if (dialog.dispatch) {
-					Object.keys(dialog.dispatch).forEach((event) => {
-						const payload = dialog.dispatch[event];
-						this.$store.dispatch(
-							event,
-							Array.isArray(payload) === true ? [...payload] : payload
-						);
-					});
-				}
-
-				// redirect or reload
-				if (dialog.redirect) {
-					this.$go(dialog.redirect);
-				} else {
-					this.$reload(dialog.reload || {});
-				}
 			} catch (e) {
 				this.$refs.dialog.error(e);
 			} finally {
