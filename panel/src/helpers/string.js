@@ -84,7 +84,9 @@ export function lcfirst(string) {
 }
 
 /**
- * Trims the given characters at the beginning of the string
+ * Trims the given character(s) at the beginning of the string.
+ * This method is greedy and removes any occurrence at the beginning,
+ * not just the first.
  *
  * @param {string} string
  * @param {string} replace
@@ -129,6 +131,8 @@ export function random(length) {
 
 /**
  * Trims the given characters at the end of the string
+ * This method is greedy and removes any occurrence at the end,
+ * not just the last.
  *
  * @param {string} string
  * @param {string} replace
