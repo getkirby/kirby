@@ -69,19 +69,17 @@ export default {
 	},
 	methods: {
 		/**
-		 * Opens the overlay and triggers the `@open` event
-		 * Use the `ready` event to
+		 * Triggers the `@cancel` event and closes the dialog.
 		 * @public
 		 */
-		open() {
-			// show the
-			this.$refs.overlay.open();
-
+		cancel() {
 			/**
-			 * This event is triggered as soon as the dialog is being opened.
-			 * @event open
+			 * This event is triggered whenever the cancel button or
+			 * the backdrop is clicked.
+			 * @event cancel
 			 */
-			this.$emit("open");
+			this.$emit("cancel");
+			this.close();
 		},
 		/**
 		 * Triggers the `@close` event and closes the dialog.
@@ -106,19 +104,6 @@ export default {
 			this.$refs.overlay?.close();
 		},
 		/**
-		 * Triggers the `@cancel` event and closes the dialog.
-		 * @public
-		 */
-		cancel() {
-			/**
-			 * This event is triggered whenever the cancel button or
-			 * the backdrop is clicked.
-			 * @event cancel
-			 */
-			this.$emit("cancel");
-			this.close();
-		},
-		/**
 		 * Shows the error notification bar in the dialog with the given message
 		 * @public
 		 * @param {string} message
@@ -141,6 +126,21 @@ export default {
 		 */
 		focus() {
 			this.$refs.overlay.focus();
+		},
+		/**
+		 * Opens the overlay and triggers the `@open` event
+		 * Use the `ready` event to
+		 * @public
+		 */
+		open() {
+			// show the
+			this.$refs.overlay.open();
+
+			/**
+			 * This event is triggered as soon as the dialog is being opened.
+			 * @event open
+			 */
+			this.$emit("open");
 		},
 		/**
 		 * When the overlay is open and fully usable
