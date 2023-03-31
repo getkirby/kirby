@@ -83,7 +83,7 @@ export default {
 			);
 		},
 		hasVisibleMarkButtons() {
-			return Object.values(this.markButtons).length > 0;
+			return this.$helper.object.length(this.markButtons) > 0;
 		},
 		hasVisibleNodeButtons() {
 			const nodeButtons = Object.keys(this.nodeButtons);

@@ -240,7 +240,7 @@ export default {
 					return;
 				}
 
-				if (response.details && Object.keys(response.details).length > 0) {
+				if (this.$helper.object.length(response.details) > 0) {
 					this.$store.dispatch("notification/error", {
 						message: this.$t("error.form.incomplete"),
 						details: response.details

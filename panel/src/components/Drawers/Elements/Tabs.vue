@@ -19,7 +19,7 @@ export default {
 	},
 	computed: {
 		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
+			return this.$helper.object.length(this.tabs) > 1;
 		}
 	}
 };

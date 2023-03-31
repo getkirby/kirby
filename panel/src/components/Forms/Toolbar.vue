@@ -113,7 +113,10 @@ export default {
 		// inject custom textarea buttons
 		const customButtons = window.panel.plugins.textareaButtons ?? {};
 
-		if (this.buttons === true && Object.keys(customButtons).length) {
+		if (
+			this.buttons === true &&
+			this.$helper.object.length(customButtons) > 0
+		) {
 			layout["divider-custom-buttons"] = { divider: true };
 		}
 
