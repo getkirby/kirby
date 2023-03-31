@@ -18,9 +18,7 @@ export default {
 			type: Boolean
 		},
 		placeholder: {
-			default() {
-				return window.panel.$t("search") + " …";
-			},
+			default: () => window.panel.$t("search") + " …",
 			type: String
 		},
 		value: {

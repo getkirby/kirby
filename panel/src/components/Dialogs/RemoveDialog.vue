@@ -11,15 +11,16 @@ export default {
 	mixins: [TextDialog],
 	props: {
 		icon: {
-			default: "trash"
+			default: "trash",
+			type: String
 		},
 		submitButton: {
-			default() {
-				return window.panel.$t("delete");
-			}
+			default: () => window.panel.$t("delete"),
+			type: String
 		},
 		theme: {
-			default: "negative"
+			default: "negative",
+			type: String
 		}
 	}
 };
