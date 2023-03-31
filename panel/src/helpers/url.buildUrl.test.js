@@ -9,6 +9,20 @@ describe("$helper.url.buildUrl", () => {
 		expect(result.toString()).toStrictEqual(input);
 	});
 
+	it("should build Url with path", () => {
+		const input = "https://getkirby.com/foo";
+		const result = url.buildUrl(input);
+
+		expect(result.toString()).toStrictEqual(input);
+	});
+
+	it("should build Url with path with trailing slash", () => {
+		const input = "https://getkirby.com/foo/";
+		const result = url.buildUrl(input);
+
+		expect(result.toString()).toStrictEqual(input);
+	});
+
 	it("should build Url with query", () => {
 		const input = "https://getkirby.com/";
 		const result = url.buildUrl(input, {
@@ -16,6 +30,22 @@ describe("$helper.url.buildUrl", () => {
 		});
 
 		expect(result.toString()).toStrictEqual(input + "?search=test");
+	});
+
+	it("should build Url with query in input", () => {
+		const input = "https://getkirby.com/?search=test";
+		const result = url.buildUrl(input);
+
+		expect(result.toString()).toStrictEqual(input);
+	});
+
+	it("should build Url with query combination", () => {
+		const input = "https://getkirby.com/?search=test";
+		const result = url.buildUrl(input, {
+			page: "2"
+		});
+
+		expect(result.toString()).toStrictEqual(input + "&page=2");
 	});
 
 	it("should build Url based on origin", () => {
