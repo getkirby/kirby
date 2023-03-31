@@ -3,6 +3,7 @@ import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
 import field from "./field.js";
+import focus from "./focus.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
@@ -43,6 +44,7 @@ export default {
 			clone: object.clone,
 			color,
 			embed,
+			focus,
 			isComponent,
 			isUploadEvent,
 			debounce,

@@ -1,7 +1,5 @@
 <template>
-	<k-dialog-footer v-if="buttons.length">
-		<k-button-group :buttons="buttons" class="k-dialog-buttons" />
-	</k-dialog-footer>
+	<k-button-group :buttons="buttons" class="k-dialog-buttons" />
 </template>
 
 <script>
