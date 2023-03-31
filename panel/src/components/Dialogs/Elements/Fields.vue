@@ -8,7 +8,7 @@
 		@input="$emit('input', $event)"
 		@submit="$emit('submit', $event)"
 	/>
-	<k-box v-else theme="negative">{{ empty }}</k-box>
+	<k-box v-else theme="info">{{ empty }}</k-box>
 </template>
 
 <script>
@@ -20,7 +20,7 @@ export const props = {
 		empty: {
 			type: String,
 			default() {
-				return "This form dialog has no fields";
+				return window.panel.$t("dialog.fields.empty");
 			}
 		},
 		/**
