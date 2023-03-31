@@ -11,6 +11,7 @@ import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
+import url from "./url.js";
 
 import "./regex.js";
 
@@ -54,6 +55,7 @@ export default {
 			sort,
 			string,
 			upload,
+			url,
 			uuid: string.uuid
 		};
 
