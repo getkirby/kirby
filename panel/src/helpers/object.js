@@ -23,15 +23,11 @@ export function isEmpty(value) {
 		return true;
 	}
 
-	if (
-		typeof value === "object" &&
-		Object.keys(value).length === 0 &&
-		value.constructor === Object
-	) {
+	if (isObject(value) && length(value) === 0) {
 		return true;
 	}
 
-	if (value.length !== undefined && value.length === 0) {
+	if (value.length === 0) {
 		return true;
 	}
 
@@ -46,6 +42,16 @@ export function isEmpty(value) {
  */
 export function isObject(input) {
 	return typeof input === "object" && input?.constructor === Object;
+}
+
+/**
+ * Counts all keys in the object
+ *
+ * @param {object} object
+ * @returns int
+ */
+export function length(object) {
+	return Object.keys(object || {}).length;
 }
 
 /**
@@ -85,6 +91,7 @@ export default {
 	clone,
 	isEmpty,
 	isObject,
+	length,
 	merge,
 	toLowerKeys
 };

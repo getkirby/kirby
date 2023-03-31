@@ -1,64 +1,35 @@
+import { props as Dialog } from "@/components/Dialogs/Dialog.vue";
+
+/**
+ * The Dialog mixin is intended for all components
+ * that extend <k-dialog> It forwards the methods to
+ * the <k-dialog> ref. Extending <k-dialog> directly
+ * can lead to breaking methods when the methods are not
+ * wired correctly to the right elements and refs.
+ */
 export default {
-	props: {
-		autofocus: {
-			type: Boolean,
-			default: true
-		},
-		cancelButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		icon: String,
-		submitButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * @values small, default, medium, large
-		 */
-		size: String,
-		/**
-		 * @values success, error
-		 */
-		theme: String,
-		visible: Boolean
-	},
+	mixins: [Dialog],
 	methods: {
+		cancel() {
+			this.$refs.dialog.cancel();
+		},
 		close() {
 			this.$refs.dialog.close();
-			this.$emit("close");
 		},
-		error(message) {
-			this.$refs.dialog.error(message);
+		error(error) {
+			this.$refs.dialog.error(error);
+		},
+		focus() {
+			this.$refs.dialog.focus();
 		},
 		open() {
 			this.$refs.dialog.open();
-			this.$emit("open");
 		},
-		success(payload) {
-			this.$refs.dialog.close();
-
-			if (payload.route) {
-				this.$go(payload.route);
-			}
-
-			if (payload.message) {
-				this.$store.dispatch("notification/success", payload.message);
-			}
-
-			if (payload.event) {
-				if (typeof payload.event === "string") {
-					payload.event = [payload.event];
-				}
-
-				payload.event.forEach((event) => {
-					this.$events.$emit(event, payload);
-				});
-			}
-
-			if (payload?.emit !== false) {
-				this.$emit("success");
-			}
+		submit() {
+			this.$refs.dialog.submit();
+		},
+		success(success) {
+			this.$refs.dialog.success(success);
 		}
 	}
 };
