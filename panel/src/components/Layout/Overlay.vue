@@ -1,5 +1,5 @@
 <template>
-	<portal v-if="isOpen">
+	<portal v-if="isOpen" to="overlay">
 		<div
 			ref="overlay"
 			:data-centered="loading || centered"
