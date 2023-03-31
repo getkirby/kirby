@@ -10,9 +10,7 @@
 <script>
 import { props as Notification } from "@/components/Misc/Notification.vue";
 
-export const props = {
-	mixins: [Notification]
-};
+export const props = Notification;
 
 export default {
 	mixins: [props]
