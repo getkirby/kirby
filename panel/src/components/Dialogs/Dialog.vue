@@ -227,7 +227,7 @@ export default {
 
 			// emit a general success event unless it is
 			// explicitely blocked
-			if (success.emit !== false) {
+			if (success?.emit !== false) {
 				this.$emit("success");
 			}
 
