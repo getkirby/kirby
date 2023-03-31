@@ -110,6 +110,92 @@ class FileRulesTest extends TestCase
 		FileRules::changeName($file, 'b');
 	}
 
+	public function testChangeTemplate()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'b'
+						]
+					]
+				],
+				'files/a' => ['title' => 'a'],
+				'files/b' => ['title' => 'b'],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'foo',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'a']
+							]
+						]
+					]
+				]
+			],
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertTrue(FileRules::changeTemplate($file, 'b'));
+	}
+
+	public function testChangeTemplateWithoutPermissions()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(false);
+
+		$file = $this->createMock(File::class);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for the file "test"');
+
+		FileRules::changeTemplate($file, 'test');
+	}
+
+	public function testChangeTemplateTooFewTemplates()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$file = $this->createMock(File::class);
+		$file->method('blueprints')->willReturn([[]]);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+
+		FileRules::changeTemplate($file, 'c');
+	}
+
+	public function testChangeTemplateWithInvalidTemplateName()
+	{
+		$permissions = $this->createMock(FilePermissions::class);
+		$permissions->method('__call')->with('changeTemplate')->willReturn(true);
+
+		$file = $this->createMock(File::class);
+		$file->method('blueprints')->willReturn([
+			['name' => 'a'], ['name' => 'b']
+		]);
+		$file->method('id')->willReturn('test');
+		$file->method('permissions')->willReturn($permissions);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+
+		FileRules::changeTemplate($file, 'c');
+	}
+
 	public function testCreateExistingFile()
 	{
 		$file = $this->createMock(File::class);
