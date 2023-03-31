@@ -27,9 +27,9 @@
 						<k-button class="k-drawer-option" icon="check" @click="close" />
 					</nav>
 				</header>
-				<div class="k-drawer-body scroll-y-auto">
+				<k-drawer-body>
 					<slot />
-				</div>
+				</k-drawer-body>
 			</div>
 		</div>
 	</k-overlay>
@@ -203,20 +203,8 @@ export default {
 	color: var(--color-black);
 }
 
-.k-drawer-body {
-	padding: 1.5rem;
-	flex-grow: 1;
-	background: var(--color-background);
-}
-
 /* Nested drawers */
 .k-drawer[data-nested="true"] {
 	background: none;
-}
-
-/* Sticky elements inside drawer */
-.k-drawer-body .k-textarea-input:focus-within .k-toolbar,
-.k-drawer-body .k-table th {
-	top: -1.5rem;
 }
 </style>

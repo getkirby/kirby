@@ -15,7 +15,7 @@
 export default {
 	props: {
 		tab: String,
-		tabs: Array
+		tabs: [Array, Object]
 	},
 	computed: {
 		hasTabs() {
