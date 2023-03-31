@@ -5,8 +5,8 @@
 		v-bind="props"
 		:disabled="isProcessing"
 		:visible="true"
-		@cancel="onCancel"
-		@submit="onSubmit"
+		@cancel="cancel"
+		@submit="submit"
 	/>
 </template>
 
@@ -28,12 +28,12 @@ export default {
 		close() {
 			this.$refs.dialog.close();
 		},
-		onCancel() {
+		cancel() {
 			if (typeof this.$store.state.dialog.cancel === "function") {
 				this.$store.state.dialog.cancel({ dialog: this });
 			}
 		},
-		async onSubmit(value) {
+		async submit(value) {
 			// do not handle a new request while a request is in progress
 			if (this.isProcessing === true) {
 				return false;
