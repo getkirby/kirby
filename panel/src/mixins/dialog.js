@@ -56,10 +56,7 @@ export default {
 				});
 			}
 
-			if (
-				Object.prototype.hasOwnProperty.call(payload, "emit") === false ||
-				payload.emit !== false
-			) {
+			if (payload?.emit !== false) {
 				this.$emit("success");
 			}
 		}
