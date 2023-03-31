@@ -6,4 +6,11 @@ describe("$helper.url.makeAbsolute", () => {
 		const result = url.makeAbsolute("https://getkirby.com");
 		expect(result).toStrictEqual("https://getkirby.com");
 	});
+
+	it("should make URLs absolute", () => {
+		window.location = new URL("https://getkirby.com");
+
+		const result = url.makeAbsolute("/foo");
+		expect(result).toStrictEqual("https://getkirby.com/foo");
+	});
 });
