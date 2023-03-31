@@ -5,44 +5,26 @@
 		@cancel="$emit('cancel')"
 		@close="$emit('close')"
 		@ready="$emit('ready')"
-		@submit="$refs.form.submit()"
+		@submit="submit"
 	>
-		<template v-if="text">
-			<k-text :html="text" />
-		</template>
-		<k-form
-			v-if="hasFields"
-			ref="form"
-			:value="model"
+		<k-dialog-text v-if="text" :text="text" />
+		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
-			@input="onInput"
-			@submit="onSubmit"
+			:value="model"
+			@input="input"
+			@submit="submit"
 		/>
-		<k-box v-else theme="negative"> This form dialog has no fields </k-box>
 	</k-dialog>
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [DialogMixin],
+	mixins: [Dialog, Fields],
 	props: {
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
-		fields: {
-			type: [Array, Object],
-			default() {
-				return [];
-			}
-		},
-		novalidate: {
-			type: Boolean,
-			default: true
-		},
 		size: {
 			type: String,
 			default: "medium"
@@ -55,16 +37,6 @@ export default {
 		},
 		text: {
 			type: String
-		},
-		theme: {
-			type: String,
-			default: "positive"
-		},
-		value: {
-			type: Object,
-			default() {
-				return {};
-			}
 		}
 	},
 	data() {
@@ -75,26 +47,21 @@ export default {
 			model: this.value
 		};
 	},
-	computed: {
-		hasFields() {
-			return Object.keys(this.fields).length > 0;
-		}
-	},
 	watch: {
 		value(value) {
 			this.model = value;
 		}
 	},
 	methods: {
-		onInput(values) {
+		input(values) {
 			// Since fiber dialogs don't update their `value` prop
 			// we need to update our local  state ourselves, so that `k-form`
 			// received up-to-date data
 			this.model = values;
-			this.$emit("input", values);
+			this.$emit("input", this.model);
 		},
-		onSubmit(values) {
-			this.$emit("submit", values);
+		submit() {
+			this.$emit("submit", this.model);
 		}
 	}
 };

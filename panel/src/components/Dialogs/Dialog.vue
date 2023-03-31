@@ -6,145 +6,59 @@
 		@close="onOverlayClose"
 		@ready="$emit('ready')"
 	>
-		<div
-			ref="dialog"
-			:data-size="size"
-			:class="$vnode.data.staticClass"
-			class="k-dialog"
-			@mousedown.stop
-		>
-			<div
-				v-if="notification"
-				:data-theme="notification.type"
-				class="k-dialog-notification"
-			>
-				<p>{{ notification.message }}</p>
-				<k-button icon="cancel" @click="notification = null" />
-			</div>
-
-			<div class="k-dialog-body scroll-y-auto">
-				<slot />
-			</div>
-
-			<footer v-if="$slots['footer'] || buttons.length" class="k-dialog-footer">
+		<k-dialog-box ref="dialog" :size="size" :class="$vnode.data.staticClass">
+			<k-dialog-form @submit="submit">
+				<k-dialog-notification
+					v-if="notification"
+					v-bind="notification"
+					@close="notification = null"
+				/>
+				<k-dialog-body>
+					<slot />
+				</k-dialog-body>
 				<slot name="footer">
-					<k-button-group :buttons="buttons" />
+					<k-dialog-buttons
+						:cancel-button="cancelButton"
+						:disabled="disabled"
+						:icon="icon"
+						:submit-button="submitButton"
+						:theme="theme"
+						@cancel="cancel"
+						@submit="submit"
+					/>
 				</slot>
-			</footer>
-		</div>
+			</k-dialog-form>
+		</k-dialog-box>
 	</k-overlay>
 </template>
 
 <script>
-/**
- * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
- */
-export default {
+import { props as Box } from "./Elements/Box.vue";
+import { props as Buttons } from "./Elements/Buttons.vue";
+
+export const props = {
+	mixins: [Box, Buttons],
 	props: {
 		autofocus: {
 			type: Boolean,
 			default: true
 		},
-		cancelButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
-		/**
-		 * The icon type for the submit button
-		 */
-		icon: {
-			type: String,
-			default: "check"
-		},
-		/**
-		 * The modal size can be adjusted with the size prop
-		 * @values small, medium, large
-		 */
-		size: {
-			type: String,
-			default: "default"
-		},
-		/**
-		 * The text for the submit button
-		 */
-		submitButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * The theme of the submit button
-		 * @values positive, negative
-		 */
-		theme: String,
 		/**
 		 * Dialogs are only openend on demand with the `open()` method. If you need a dialog that's visible on creation, you can set the `visible` prop
 		 */
 		visible: Boolean
-	},
+	}
+};
+
+/**
+ * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
+ */
+export default {
+	mixins: [props],
 	data() {
 		return {
 			notification: null
 		};
-	},
-	computed: {
-		buttons() {
-			let buttons = [];
-
-			if (this.cancelButton) {
-				buttons.push({
-					icon: "cancel",
-					text: this.cancelButtonLabel,
-					class: "k-dialog-button-cancel",
-					click: this.cancel
-				});
-			}
-
-			if (this.submitButtonConfig) {
-				buttons.push({
-					icon: this.icon,
-					text: this.submitButtonLabel,
-					theme: this.theme,
-					class: "k-dialog-button-submit",
-					click: this.submit,
-					disabled: this.disabled
-				});
-			}
-
-			return buttons;
-		},
-		cancelButtonLabel() {
-			if (this.cancelButton === false) {
-				return false;
-			}
-
-			if (this.cancelButton === true || this.cancelButton.length === 0) {
-				return this.$t("cancel");
-			}
-
-			return this.cancelButton;
-		},
-		submitButtonConfig() {
-			if (this.$attrs["button"] !== undefined) {
-				return this.$attrs["button"];
-			}
-
-			if (this.submitButton !== undefined) {
-				return this.submitButton;
-			}
-
-			return true;
-		},
-		submitButtonLabel() {
-			if (this.submitButton === true || this.submitButton.length === 0) {
-				return this.$t("confirm");
-			}
-
-			return this.submitButton;
-		}
 	},
 	created() {
 		this.$events.$on("keydown.esc", this.close, false);
@@ -262,126 +176,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-dialog {
-	position: relative;
-	background: var(--color-background);
-	width: 100%;
-	box-shadow: var(--shadow-lg);
-	border-radius: var(--rounded-md);
-	line-height: 1;
-	max-height: calc(100vh - 3rem);
-	margin: 1.5rem;
-	display: flex;
-	flex-direction: column;
-}
-
-@media screen and (min-width: 20rem) {
-	.k-dialog[data-size="small"] {
-		width: 20rem;
-	}
-}
-
-@media screen and (min-width: 22rem) {
-	.k-dialog[data-size="default"] {
-		width: 22rem;
-	}
-}
-
-@media screen and (min-width: 30rem) {
-	.k-dialog[data-size="medium"] {
-		width: 30rem;
-	}
-}
-
-@media screen and (min-width: 40rem) {
-	.k-dialog[data-size="large"] {
-		width: 40rem;
-	}
-}
-
-.k-dialog-notification {
-	padding: 0.75rem 1.5rem;
-	background: var(--color-gray-900);
-	border-start-start-radius: var(--rounded);
-	border-start-end-radius: var(--rounded);
-	width: 100%;
-	margin-top: -1px; /* to avoid a bleeding background with the border radius */
-	line-height: 1.25rem;
-	color: var(--color-white);
-	display: flex;
-	flex-shrink: 0;
-	align-items: center;
-}
-
-.k-dialog-notification[data-theme] {
-	background: var(--theme-light);
-	color: var(--color-black);
-}
-
-.k-dialog-notification p {
-	flex-grow: 1;
-	word-wrap: break-word;
-	overflow: hidden;
-}
-
-.k-dialog-notification .k-button {
-	display: flex;
-	margin-inline-start: 1rem;
-}
-
-.k-dialog-body {
-	padding: 1.5rem;
-}
-
-.k-dialog-body .k-fieldset {
-	padding-bottom: 0.5rem;
-}
-
-.k-dialog-footer {
-	padding: 0;
-	border-top: 1px solid var(--color-gray-300);
-	line-height: 1;
-	flex-shrink: 0;
-}
-
-.k-dialog-footer .k-button-group {
-	display: flex;
-	margin: 0;
-	justify-content: space-between;
-}
-.k-dialog-footer .k-button-group .k-button {
-	padding: 0.75rem 1rem;
-	line-height: 1.25rem;
-}
-
-.k-dialog-footer .k-button-group .k-button:first-child {
-	text-align: start;
-	padding-inline-start: 1.5rem;
-}
-.k-dialog-footer .k-button-group .k-button:last-child {
-	text-align: end;
-	padding-inline-end: 1.5rem;
-}
-
-/** Pagination **/
-.k-dialog .k-pagination {
-	margin-bottom: -1.5rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-/** Dialog search field **/
-.k-dialog-search {
-	margin-bottom: 0.75rem;
-}
-
-.k-dialog-search.k-input {
-	background: rgba(0, 0, 0, 0.075);
-	padding: 0 1rem;
-	height: 36px;
-	border-radius: var(--rounded);
-}
-</style>

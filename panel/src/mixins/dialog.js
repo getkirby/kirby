@@ -1,34 +1,18 @@
+import { props as Dialog } from "@/components/Dialogs/Dialog.vue";
+
 export default {
-	props: {
-		autofocus: {
-			type: Boolean,
-			default: true
-		},
-		cancelButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		icon: String,
-		submitButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * @values small, default, medium, large
-		 */
-		size: String,
-		/**
-		 * @values success, error
-		 */
-		theme: String,
-		visible: Boolean
-	},
+	mixins: [Dialog],
 	methods: {
 		close() {
 			this.$refs.dialog.close();
 			this.$emit("close");
 		},
 		error(message) {
+			// resolve error objects
+			if (message instanceof Error) {
+				message = message.message;
+			}
+
 			this.$refs.dialog.error(message);
 		},
 		open() {

@@ -6,6 +6,7 @@ import Icon from "./Icon.vue";
 import Icons from "./Icons.vue";
 import Image from "./Image.vue";
 import Loader from "./Loader.vue";
+import Notification from "./Notification.vue";
 import OfflineWarning from "./OfflineWarning.vue";
 import Progress from "./Progress.vue";
 import Registration from "./Registration.vue";
@@ -24,6 +25,7 @@ export default {
 		app.component("k-icons", Icons);
 		app.component("k-image", Image);
 		app.component("k-loader", Loader);
+		app.component("k-notification", Notification);
 		app.component("k-offline-warning", OfflineWarning);
 		app.component("k-progress", Progress);
 		app.component("k-registration", Registration);

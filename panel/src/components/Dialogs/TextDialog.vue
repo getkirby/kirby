@@ -1,25 +1,20 @@
 <template>
 	<k-dialog ref="dialog" v-bind="$props" v-on="$listeners">
 		<slot>
-			<k-text v-if="text" :html="text" />
-			<k-box v-else theme="negative">
-				This dialog does not define any text
-			</k-box>
+			<k-dialog-text :text="text" />
 		</slot>
 	</k-dialog>
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import Dialog from "@/mixins/dialog.js";
+import { props as Text } from "./Elements/Text.vue";
+
+export const props = {
+	mixins: [Dialog, Text]
+};
 
 export default {
-	mixins: [DialogMixin],
-	props: {
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
-		text: String
-	}
+	mixins: [props]
 };
 </script>
