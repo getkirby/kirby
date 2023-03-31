@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -12,23 +13,23 @@ use Kirby\Filesystem\File as BaseFile;
 class FileRulesTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest'
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest'
 			]
 		]);
 
 		$this->app->impersonate('kirby');
-		Dir::make($this->fixtures);
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testChangeName()
@@ -218,7 +219,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFile',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFile',
 			],
 			'site' => [
 				'children' => [
@@ -259,7 +260,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createSameFileWithDifferentTemplate',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createSameFileWithDifferentTemplate',
 			],
 			'site' => [
 				'children' => [
@@ -300,7 +301,7 @@ class FileRulesTest extends TestCase
 
 		$app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/FileRulesTest/createDifferentFileWithSameFilename',
+				'index' => $this->tmp = __DIR__ . '/tmp/FileRulesTest/createDifferentFileWithSameFilename',
 			],
 			'site' => [
 				'children' => [
