@@ -35,8 +35,10 @@
 	"delete": "Delete",
 	"delete.all": "Delete all",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
 	"dialog.pages.empty": "No pages to select",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "No users to select",
 
 	"dimensions": "Dimensions",

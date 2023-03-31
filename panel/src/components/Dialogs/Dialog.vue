@@ -2,211 +2,108 @@
 	<k-overlay
 		ref="overlay"
 		:autofocus="autofocus"
-		:centered="true"
-		@close="onOverlayClose"
-		@ready="$emit('ready')"
+		:centered="centered"
+		:dimmed="dimmed"
+		:loading="loading"
+		:visible="visible"
+		class="k-dialog-overlay"
+		@cancel="cancel"
+		@ready="ready"
 	>
-		<div
-			ref="dialog"
-			:data-size="size"
-			:class="$vnode.data.staticClass"
-			class="k-dialog"
-			@mousedown.stop
-		>
-			<div
-				v-if="notification"
-				:data-theme="notification.type"
-				class="k-dialog-notification"
-			>
-				<p>{{ notification.message }}</p>
-				<k-button icon="cancel" @click="notification = null" />
-			</div>
-
-			<div class="k-dialog-body scroll-y-auto">
-				<slot />
-			</div>
-
-			<footer v-if="$slots['footer'] || buttons.length" class="k-dialog-footer">
+		<k-dialog-box :size="size" :class="$vnode.data.staticClass">
+			<k-dialog-form @submit="submit">
+				<k-dialog-notification
+					v-if="notification"
+					v-bind="notification"
+					@close="notification = null"
+				/>
+				<k-dialog-body>
+					<slot />
+				</k-dialog-body>
 				<slot name="footer">
-					<k-button-group variant="filled" :buttons="buttons" />
+					<k-dialog-footer v-if="cancelButton || submitButton">
+						<k-dialog-buttons
+							:cancel-button="cancelButton"
+							:disabled="disabled"
+							:icon="icon"
+							:submit-button="submitButton"
+							:theme="theme"
+							@cancel="cancel"
+							@submit="submit"
+						/>
+					</k-dialog-footer>
 				</slot>
-			</footer>
-		</div>
+			</k-dialog-form>
+		</k-dialog-box>
 	</k-overlay>
 </template>
 
 <script>
+import { props as Box } from "./Elements/Box.vue";
+import { props as Buttons } from "./Elements/Buttons.vue";
+import { props as Overlay } from "@/components/Layout/Overlay.vue";
+
+export const props = {
+	mixins: [Overlay, Box, Buttons],
+	props: {
+		/**
+		 * Dialogs are centered by default.
+		 * The overlay sets the default to false
+		 * here so we need to overwrite it.
+		 */
+		centered: {
+			default: true
+		}
+	}
+};
+
 /**
  * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
  */
 export default {
-	props: {
-		autofocus: {
-			type: Boolean,
-			default: true
-		},
-		cancelButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
-		/**
-		 * The icon type for the submit button
-		 */
-		icon: {
-			type: String,
-			default: "check"
-		},
-		/**
-		 * The modal size can be adjusted with the size prop
-		 * @values small, medium, large
-		 */
-		size: {
-			type: String,
-			default: "default"
-		},
-		/**
-		 * The text for the submit button
-		 */
-		submitButton: {
-			type: [String, Boolean],
-			default: true
-		},
-		/**
-		 * The theme of the submit button
-		 * @values positive, negative
-		 */
-		theme: String,
-		/**
-		 * Dialogs are only openend on demand with the `open()` method. If you need a dialog that's visible on creation, you can set the `visible` prop
-		 */
-		visible: Boolean
-	},
+	mixins: [props],
 	data() {
 		return {
 			notification: null
 		};
 	},
-	computed: {
-		buttons() {
-			let buttons = [];
-
-			if (this.cancelButton) {
-				buttons.push({
-					icon: "cancel",
-					text: this.cancelButtonLabel,
-					class: "k-dialog-button-cancel",
-					click: this.cancel
-				});
-			}
-
-			if (this.submitButtonConfig) {
-				buttons.push({
-					icon: this.icon,
-					text: this.submitButtonLabel,
-					theme: this.theme,
-					class: "k-dialog-button-submit",
-					click: this.submit,
-					disabled: this.disabled
-				});
-			}
-
-			return buttons;
-		},
-		cancelButtonLabel() {
-			if (this.cancelButton === false) {
-				return false;
-			}
-
-			if (this.cancelButton === true || this.cancelButton.length === 0) {
-				return this.$t("cancel");
-			}
-
-			return this.cancelButton;
-		},
-		submitButtonConfig() {
-			if (this.$attrs["button"] !== undefined) {
-				return this.$attrs["button"];
-			}
-
-			if (this.submitButton !== undefined) {
-				return this.submitButton;
-			}
-
-			return true;
-		},
-		submitButtonLabel() {
-			if (this.submitButton === true || this.submitButton.length === 0) {
-				return this.$t("confirm");
-			}
-
-			return this.submitButton;
-		}
-	},
-	created() {
-		this.$events.$on("keydown.esc", this.close, false);
-	},
-	destroyed() {
-		this.$events.$off("keydown.esc", this.close, false);
-	},
-	mounted() {
-		if (this.visible) {
-			this.$nextTick(this.open);
-		}
-	},
 	methods: {
 		/**
-		 * Reacts to the overlay being closed
-		 * and cleans up the dialog events
-		 * @private
-		 */
-		onOverlayClose() {
-			this.notification = null;
-			/**
-			 * This event is triggered when the dialog is being closed.
-			 * This happens independently from the cancel event.
-			 * @event close
-			 */
-			this.$emit("close");
-			this.$events.$off("keydown.esc", this.close);
-			this.$store.dispatch("dialog", false);
-		},
-		/**
-		 * Opens the dialog and triggers the `@open` event
+		 * Opens the overlay and triggers the `@open` event
+		 * Use the `ready` event to
 		 * @public
 		 */
 		open() {
-			// when dialogs are used in the old-fashioned way
-			// by adding their component to a template and calling
-			// open on the component manually, the dialog state
-			// is set to true. In comparison, this.$dialog fills
-			// the dialog state after a successfull request and
-			// the fiber dialog component is injected on store change
-			// automatically.
-			if (!this.$store.state.dialog) {
-				this.$store.dispatch("dialog", true);
-			}
-
-			this.notification = null;
+			// show the
 			this.$refs.overlay.open();
+
 			/**
-			 * This event is triggered as soon as the dialog opens.
+			 * This event is triggered as soon as the dialog is being opened.
 			 * @event open
 			 */
 			this.$emit("open");
-			this.$events.$on("keydown.esc", this.close);
 		},
 		/**
 		 * Triggers the `@close` event and closes the dialog.
 		 * @public
 		 */
 		close() {
-			if (this.$refs.overlay) {
-				this.$refs.overlay.close();
-			}
+			this.notification = null;
+
+			/**
+			 * This event is triggered when the dialog is being closed.
+			 * This happens independently from the cancel event.
+			 * @event close
+			 */
+			this.$emit("close");
+			this.$store.dispatch("dialog", false);
+
+			/**
+			 * close the overlay if it is still there
+			 * in fiber dialogs the entire dialog compoengets destroyed
+			 * and this step is not necessary
+			 */
+			this.$refs.overlay?.close();
 		},
 		/**
 		 * Triggers the `@cancel` event and closes the dialog.
@@ -221,29 +118,62 @@ export default {
 			this.$emit("cancel");
 			this.close();
 		},
-		focus() {
-			if (this.$refs.dialog?.querySelector) {
-				const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
-
-				if (typeof btn?.focus === "function") {
-					btn.focus();
-				}
-			}
-		},
 		/**
 		 * Shows the error notification bar in the dialog with the given message
 		 * @public
 		 * @param {string} message
 		 */
 		error(message) {
+			// resolve error objects
+			if (message instanceof Error) {
+				message = message.message;
+			}
+
 			this.notification = {
 				message: message,
 				type: "error"
 			};
 		},
+		/**
+		 * The overlay component has a built-in focus
+		 * method that finds the best first element to
+		 * focus on
+		 */
+		focus() {
+			this.$refs.overlay.focus();
+		},
+		/**
+		 * When the overlay is open and fully usable
+		 * the ready event is fired and forwarded here
+		 */
+		ready() {
+			// when dialogs are used in the old-fashioned way
+			// by adding their component to a template and calling
+			// open on the component manually, the dialog state
+			// is set to true. In comparison, this.$dialog fills
+			// the dialog state after a successfull request and
+			// the fiber dialog component is injected on store change
+			// automatically.
+			if (!this.$store.state.dialog) {
+				this.$store.dispatch("dialog", true);
+			}
+
+			// close any notifications if there's still an open one
+			this.notification = null;
+
+			/**
+			 * Mark the dialog as ready to be used
+			 * @event ready
+			 */
+			this.$emit("ready");
+		},
+		/**
+		 * This event is triggered when the submit button is clicked,
+		 * or the form is submitted. It can also be called manually.
+		 * @public
+		 */
 		submit() {
 			/**
-			 * This event is triggered when the submit button is clicked.
 			 * @event submit
 			 */
 			this.$emit("submit");
@@ -253,125 +183,62 @@ export default {
 		 * @public
 		 * @param {string} message
 		 */
-		success(message) {
-			this.notification = {
-				message: message,
-				type: "success"
-			};
+		success(success) {
+			// send a success message to the dialog
+			// and keep the dialog open if a simple
+			// string is passed to the method
+			if (typeof success === "string") {
+				this.notification = {
+					message: message,
+					type: "success"
+				};
+
+				// keep the dialog open
+				return;
+			}
+
+			// send a global success notification
+			if (success.message) {
+				this.$store.dispatch("notification/success", success.message);
+			}
+
+			// dispatch store actions that might have been defined in
+			// the success response
+			if (success.dispatch) {
+				Object.keys(success.dispatch).forEach((event) => {
+					const payload = success.dispatch[event];
+					this.$store.dispatch(
+						event,
+						Array.isArray(payload) === true ? [...payload] : payload
+					);
+				});
+			}
+
+			// send optional events to the event bus
+			if (success.event) {
+				// wrap events in an array
+				success.event = Array.isArray(success.event)
+					? success.event
+					: [success.event];
+				success.event.forEach((event) => {
+					this.$events.$emit(event, success);
+				});
+			}
+
+			// emit a general success event unless it is
+			// explicitely blocked
+			if (success?.emit !== false) {
+				this.$emit("success");
+			}
+
+			// redirect (route is deprecated)
+			if (success.redirect || success.route) {
+				return this.$go(success.redirect || success.route);
+			}
+
+			// reload the current view
+			this.$reload(success.reload || {});
 		}
 	}
 };
 </script>
-
-<style>
-.k-dialog {
-	position: relative;
-	background: var(--color-background);
-	width: 100%;
-	box-shadow: var(--shadow-lg);
-	border-radius: var(--rounded-lg);
-	line-height: 1;
-	max-height: calc(100vh - 3rem);
-	margin: 1.5rem;
-	display: flex;
-	flex-direction: column;
-}
-
-@media screen and (min-width: 20rem) {
-	.k-dialog[data-size="small"] {
-		width: 20rem;
-	}
-}
-
-@media screen and (min-width: 22rem) {
-	.k-dialog[data-size="default"] {
-		width: 22rem;
-	}
-}
-
-@media screen and (min-width: 30rem) {
-	.k-dialog[data-size="medium"] {
-		width: 30rem;
-	}
-}
-
-@media screen and (min-width: 40rem) {
-	.k-dialog[data-size="large"] {
-		width: 40rem;
-	}
-}
-
-.k-dialog-notification {
-	padding: 0.75rem 1.5rem;
-	background: var(--color-gray-900);
-	border-start-start-radius: var(--rounded);
-	border-start-end-radius: var(--rounded);
-	width: 100%;
-	margin-top: -1px; /* to avoid a bleeding background with the border radius */
-	line-height: 1.25rem;
-	color: var(--color-white);
-	display: flex;
-	flex-shrink: 0;
-	align-items: center;
-}
-
-.k-dialog-notification[data-theme] {
-	background: var(--theme-color-back);
-	color: var(--color-black);
-}
-
-.k-dialog-notification p {
-	flex-grow: 1;
-	word-wrap: break-word;
-	overflow: hidden;
-}
-
-.k-dialog-notification .k-button {
-	display: flex;
-	margin-inline-start: 1rem;
-}
-
-.k-dialog-body {
-	padding: 1.5rem;
-}
-
-.k-dialog-body .k-text {
-	word-wrap: break-word;
-}
-
-.k-dialog-body .k-fieldset {
-	padding-bottom: 0.5rem;
-}
-
-.k-dialog-footer {
-	padding: var(--spacing-3) var(--spacing-6);
-	border-top: 1px solid var(--color-gray-300);
-	line-height: 1;
-	flex-shrink: 0;
-}
-
-.k-dialog-footer .k-button-group {
-	display: flex;
-	justify-content: space-between;
-}
-
-/** Pagination **/
-.k-dialog .k-pagination {
-	margin-bottom: -1.5rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-/** Dialog search field **/
-.k-dialog-search {
-	margin-bottom: 0.75rem;
-}
-
-.k-dialog-search.k-input {
-	background: rgba(0, 0, 0, 0.075);
-	padding: 0 1rem;
-	height: 36px;
-	border-radius: var(--rounded);
-}
-</style>

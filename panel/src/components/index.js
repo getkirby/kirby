@@ -10,7 +10,7 @@ import Sections from "@/components/Sections/index.js";
 import Views from "@/components/Views/index.js";
 
 // 3rd party libraries
-import Portal from "@linusborg/vue-simple-portal";
+import PortalVue from "portal-vue";
 
 export default {
 	install(app) {
@@ -25,6 +25,6 @@ export default {
 		app.use(Sections);
 		app.use(Views);
 
-		app.use(Portal);
+		app.use(PortalVue);
 	}
 };

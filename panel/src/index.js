@@ -3,7 +3,7 @@ import Vue, { h } from "vue";
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
-import Errors from "./config/errors.js";
+import ErrorHandling from "./config/errorhandling";
 import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
@@ -31,7 +31,7 @@ import "./styles/config.css";
 import "./styles/reset.css";
 
 // Load functionalities
-Vue.use(Errors);
+Vue.use(ErrorHandling);
 Vue.use(Helpers);
 Vue.use(Libraries);
 Vue.use(Api, store);

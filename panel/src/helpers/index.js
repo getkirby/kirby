@@ -3,6 +3,7 @@ import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
 import field from "./field.js";
+import focus from "./focus.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import keyboard from "./keyboard.js";
@@ -11,6 +12,7 @@ import ratio from "./ratio.js";
 import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
+import url from "./url.js";
 
 import "./regex.js";
 
@@ -59,6 +61,7 @@ export default {
 			clone: object.clone,
 			color,
 			embed,
+			focus,
 			isComponent,
 			isUploadEvent,
 			debounce,
@@ -71,6 +74,7 @@ export default {
 			sort,
 			string,
 			upload,
+			url,
 			uuid: string.uuid
 		};
 

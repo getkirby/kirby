@@ -36,9 +36,7 @@ export default {
 		/**
 		 * Checks for an ID if a model exists in the store
 		 */
-		exists: (state) => (id) => {
-			return Object.prototype.hasOwnProperty.call(state.models, id);
-		},
+		exists: (state) => (id) => Object.hasOwn(state.models, id),
 		/**
 		 * Checks for an ID if a model has unsaved changes
 		 */

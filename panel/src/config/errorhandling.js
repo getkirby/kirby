@@ -4,7 +4,12 @@ export default {
 	install(app) {
 		window.panel = window.panel || {};
 
-		// global rejected promise handler
+		/**
+		 * Handles promise rejections that have
+		 * not been caught
+		 *
+		 * @param {Event} event
+		 */
 		window.onunhandledrejection = (event) => {
 			event.preventDefault();
 			store.dispatch("notification/error", event.reason);
@@ -15,7 +20,11 @@ export default {
 			store.dispatch("notification/deprecated", message);
 		};
 
-		// global error handler
+		/**
+		 * Handles any Vue errors
+		 *
+		 * @param {Error} error
+		 */
 		window.panel.error = app.config.errorHandler = (error) => {
 			store.dispatch("notification/error", error);
 		};

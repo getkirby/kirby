@@ -1,4 +1,4 @@
-import "./regex.js";
+import "./regex";
 
 const escapingMap = {
 	"&": "&amp;",
@@ -185,12 +185,9 @@ export function stripHTML(string) {
 export function template(string, values = {}) {
 	const resolve = (parts, data = {}) => {
 		const part = escapeHTML(parts.shift());
-		const value = data[part] ?? null;
+		const value = data[part] ?? "…";
 
-		if (value === null) {
-			return Object.prototype.hasOwnProperty.call(data, part) || "…";
-		}
-		if (parts.length === 0) {
+		if (value === "…" || parts.length === 0) {
 			return value;
 		}
 
