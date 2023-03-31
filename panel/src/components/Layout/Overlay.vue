@@ -146,6 +146,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--overlay-color-back: var(--color-backdrop);
+}
+
 .k-overlay {
 	position: fixed;
 	inset: 0;
@@ -155,12 +159,11 @@ export default {
 	transform: translate3d(0, 0, 0);
 }
 .k-overlay[data-centered="true"] {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: grid;
+	place-items: center;
 }
 .k-overlay[data-dimmed="true"] {
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 }
 .k-overlay-loader {
 	color: var(--color-white);

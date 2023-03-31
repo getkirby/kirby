@@ -12,11 +12,15 @@
 </template>
 
 <script>
-export default {
+export const props = {
 	props: {
 		tab: String,
 		tabs: [Array, Object]
-	},
+	}
+};
+
+export default {
+	mixins: [props],
 	computed: {
 		hasTabs() {
 			return this.tabs && Object.keys(this.tabs).length > 1;

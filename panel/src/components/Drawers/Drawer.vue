@@ -1,53 +1,65 @@
 <template>
-	<k-overlay ref="overlay" :dimmed="false" @close="onClose" @open="onOpen">
-		<div
-			:data-id="id"
-			:data-nested="nested"
-			class="k-drawer"
-			@mousedown.stop="mousedown(true)"
-			@mouseup="mouseup"
-		>
-			<div class="k-drawer-box" @mousedown.stop="mousedown(false)">
-				<header class="k-drawer-header">
-					<h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
-						<k-icon :type="icon" /> {{ title }}
-					</h2>
-					<ul v-else class="k-drawer-breadcrumb">
-						<li v-for="crumb in breadcrumb" :key="crumb.id">
-							<k-button
-								:icon="crumb.icon"
-								:text="crumb.title"
-								@click="goTo(crumb.id)"
-							/>
-						</li>
-					</ul>
-					<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="$emit('tab', $event)" />
-					<nav class="k-drawer-options">
-						<slot name="options" />
-						<k-button class="k-drawer-option" icon="check" @click="close" />
-					</nav>
-				</header>
-				<k-drawer-body>
-					<slot />
-				</k-drawer-body>
-			</div>
+	<k-overlay
+		ref="overlay"
+		:autofocus="autofocus"
+		:dimmed="dimmed"
+		:loading="loading"
+		:visible="visible"
+		class="k-drawer-overlay"
+		@cancel="cancel"
+		@ready="ready"
+	>
+		<div :data-id="id" :data-nested="nested" class="k-drawer">
+			<k-drawer-notification
+				v-if="notification"
+				v-bind="notification"
+				@close="notification = null"
+			/>
+			<header class="k-drawer-header">
+				<h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
+					<k-icon :type="icon" /> {{ title }}
+				</h2>
+				<ul v-else class="k-drawer-breadcrumb">
+					<li v-for="crumb in breadcrumb" :key="crumb.id">
+						<k-button
+							:icon="crumb.icon"
+							:text="crumb.title"
+							@click="goTo(crumb.id)"
+						/>
+					</li>
+				</ul>
+				<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="$emit('tab', $event)" />
+				<nav class="k-drawer-options">
+					<slot name="options" />
+					<k-button class="k-drawer-option" icon="check" @click="close" />
+				</nav>
+			</header>
+			<k-drawer-body>
+				<slot />
+			</k-drawer-body>
 		</div>
 	</k-overlay>
 </template>
 
 <script>
-export default {
-	inheritAttrs: false,
+import { props as Overlay } from "@/components/Layout/Overlay.vue";
+import { props as Tabs } from "./Elements/Tabs.vue";
+
+export const props = {
+	mixins: [Overlay, Tabs],
 	props: {
 		id: String,
 		icon: String,
-		tab: String,
-		tabs: Object,
 		title: String
-	},
+	}
+};
+
+export default {
+	mixins: [props],
 	data() {
 		return {
-			click: false
+			click: false,
+			notification: null
 		};
 	},
 	computed: {
@@ -72,69 +84,128 @@ export default {
 		this.$store.dispatch("drawers/close", this._uid);
 	},
 	methods: {
+		/**
+		 * Triggers the `@cancel` event and closes the dialog.
+		 * @public
+		 */
+		cancel() {
+			/**
+			 * This event is triggered whenever the cancel button or
+			 * the backdrop is clicked.
+			 * @event cancel
+			 */
+			this.$emit("cancel");
+			this.close();
+		},
 		close() {
-			this.$refs.overlay.close();
+			this.notification = null;
+
+			/**
+			 * This event is triggered when the drawer is being closed.
+			 * This happens independently from the cancel event.
+			 * @event close
+			 */
+			this.$emit("close");
+			this.$store.dispatch("drawers/close", this._uid);
+
+			/**
+			 * close the overlay if it is still there
+			 * in fiber drawers the entire drawer component gets destroyed
+			 * and this step is not necessary
+			 */
+			this.$refs.overlay?.close();
+		},
+		/**
+		 * The overlay component has a built-in focus
+		 * method that finds the best first element to
+		 * focus on
+		 */
+		focus() {
+			this.$refs.overlay.focus();
 		},
 		goTo(id) {
 			if (id === this._uid) {
 				return true;
 			}
+
+			this.notification = null;
 			this.$store.dispatch("drawers/goto", id);
 		},
-		mouseup() {
-			if (this.click === true) {
-				this.close();
-			}
+		open() {
+			// show the overlay
+			this.$refs.overlay.open();
 
-			this.click = false;
+			/**
+			 * This event is triggered as soon as the drawer is being opened.
+			 * @event open
+			 */
+			this.$emit("open");
 		},
-		mousedown(click = false) {
-			this.click = click;
-
-			if (this.click === true) {
-				this.$store.dispatch("drawers/close");
-			}
-		},
-		onClose() {
-			this.$store.dispatch("drawers/close", this._uid);
-			this.$emit("close");
-		},
-		onOpen() {
+		ready() {
+			// when drawers are used in the old-fashioned way
+			// by adding their component to a template and calling
+			// open on the component manually, the drawer state
+			// is set to a minimum. In comparison, this.$drawer fills
+			// the drawer state after a successfull request and
+			// the fiber drawer component is injected on store change
+			// automatically.
 			this.$store.dispatch("drawers/open", {
 				id: this._uid,
 				icon: this.icon,
 				title: this.title
 			});
-			this.$emit("open");
+
+			// close any notifications if there's still an open one
+			this.notification = null;
+
+			/**
+			 * Mark the drawer as ready to be used
+			 * @event ready
+			 */
+			this.$emit("ready");
 		},
-		open() {
-			this.$refs.overlay.open();
+		/**
+		 * This event is triggered when the submit button is clicked,
+		 * or the form is submitted. It can also be called manually.
+		 * @public
+		 */
+		submit() {
+			/**
+			 * @event submit
+			 */
+			this.$emit("submit");
 		}
 	}
 };
 </script>
 
 <style>
-.k-drawer {
+:root {
+	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1.5rem;
+	--drawer-shadow: var(--shadow-xl);
+	--drawer-width: 50rem;
+}
 
-	position: fixed;
-	inset: 0;
-	z-index: var(--z-toolbar);
+.k-drawer-overlay {
+	--overlay-color-back: rgba(0, 0, 0, 0.2);
 	display: flex;
 	align-items: stretch;
 	justify-content: flex-end;
-	background: rgba(0, 0, 0, 0.2);
 }
-.k-drawer-box {
+
+.k-drawer {
+	z-index: var(--z-toolbar);
+	display: flex;
+	flex-basis: var(--drawer-width);
 	position: relative;
-	flex-basis: 50rem;
 	display: flex;
 	flex-direction: column;
-	background: var(--color-background);
-	box-shadow: var(--shadow-xl);
+	background: var(--drawer-color-back);
+	box-shadow: var(--drawer-shadow);
 }
+
 .k-drawer-header {
 	flex-shrink: 0;
 	height: var(--drawer-header-height);

@@ -133,7 +133,7 @@ export default {
 		 * @public
 		 */
 		open() {
-			// show the
+			// show the overlay
 			this.$refs.overlay.open();
 
 			/**
