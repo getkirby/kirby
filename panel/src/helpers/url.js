@@ -73,9 +73,23 @@ export function isSameOrigin(url) {
  * @returns {boolean}
  */
 export function isUrl(url) {
-	return (
-		url instanceof URL || url instanceof Location || typeof url === "string"
-	);
+	if (url instanceof URL || url instanceof Location) {
+		return true;
+	}
+
+	if (typeof url !== "string") {
+		return false;
+	}
+
+	// check if the given URL can be
+	// converted to a URL object to
+	// validate it
+	try {
+		new URL(url, window.location);
+		return true;
+	} catch (error) {
+		return false;
+	}
 }
 
 /**
