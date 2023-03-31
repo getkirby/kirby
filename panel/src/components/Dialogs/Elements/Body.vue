@@ -6,9 +6,6 @@
 
 <style>
 .k-dialog-body {
-	padding: 1.5rem;
-}
-.k-dialog-body .k-fieldset {
-	padding-bottom: 0.5rem;
+	padding: var(--dialog-padding);
 }
 </style>

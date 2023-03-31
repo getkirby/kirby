@@ -39,6 +39,10 @@ import { props as Buttons } from "./Elements/Buttons.vue";
 export const props = {
 	mixins: [Box, Buttons],
 	props: {
+		/**
+		 * The first focusable element is focused by default,
+		 * but this behaviour can be switched off.
+		 */
 		autofocus: {
 			type: Boolean,
 			default: true
