@@ -75,7 +75,7 @@ class Layouts extends Items
 	{
 		if (empty($input) === false && is_array($input) === false) {
 			try {
-                $input = Json::decode((string)$input);
+				$input = Json::decode((string)$input);
 			} catch (Throwable) {
 				return [];
 			}
