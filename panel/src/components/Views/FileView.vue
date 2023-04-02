@@ -6,7 +6,10 @@
 			:data-template="blueprint"
 			class="k-file-view"
 		>
-			<k-file-preview v-bind="preview" />
+			<k-file-preview
+				v-bind="preview"
+				:focusable="!isLocked && permissions.update"
+			/>
 			<k-view class="k-file-content">
 				<k-header
 					:editable="permissions.changeName && !isLocked"
@@ -17,14 +20,6 @@
 					{{ model.filename }}
 					<template #left>
 						<k-button-group>
-							<k-button
-								:link="preview.url"
-								:responsive="true"
-								:text="$t('open')"
-								icon="open"
-								target="_blank"
-								class="k-file-view-options"
-							/>
 							<k-dropdown class="k-file-view-options">
 								<k-button
 									:disabled="isLocked"
