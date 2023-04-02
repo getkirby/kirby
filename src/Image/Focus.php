@@ -88,12 +88,14 @@ class Focus
 			return [$focus->x, $focus->y];
 		}
 
+		preg_match_all("/(\d{1,3}\.?\d*)[%|,|\s]*/", $value, $points);
+
 		return A::map(
-			explode(',', $value),
+			$points[1],
 			function ($point) {
-				$point = (float)str_replace('%', '', $point);
+				$point = (float)$point;
 				$point = $point > 1 ? $point / 100 : $point;
-				return $point;
+				return round($point, 3);
 			}
 		);
 	}

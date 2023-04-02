@@ -157,12 +157,13 @@ abstract class Model
 						]
 					]);
 				}
+
+				if ($focus = $image->focus()->value()) {
+					$settings['focus'] = $focus;
+				}
+
 			} elseif ($image->isViewable() === true) {
 				$settings['src'] = $image->url();
-			}
-
-			if ($focus = $image->focus()->value()) {
-				$settings['focus'] = $focus;
 			}
 		}
 
