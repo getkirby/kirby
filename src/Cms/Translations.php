@@ -20,6 +20,13 @@ use Kirby\Filesystem\F;
 class Translations extends Collection
 {
 	/**
+	 * All registered translations methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
+	/**
 	 * @param string $code
 	 * @return void
 	 */

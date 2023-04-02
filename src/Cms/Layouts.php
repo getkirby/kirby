@@ -20,6 +20,13 @@ class Layouts extends Items
 {
 	public const ITEM_CLASS = Layout::class;
 
+	/**
+	 * All registered layouts methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
 	public static function factory(array $items = null, array $params = [])
 	{
 		$first = $items[0] ?? [];
