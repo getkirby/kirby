@@ -121,8 +121,8 @@ export default {
 				options.push({
 					icon: "cancel",
 					text: this.$t("file.focus.reset"),
-					disabled: Boolean(this.focus) === false,
-					click: this.onFocus
+					disabled: !this.hasFocus,
+					click: this.setFocus
 				});
 			}
 			return options;
@@ -137,7 +137,6 @@ export default {
 				focus = `${focus.x.toFixed(1)}% ${focus.y.toFixed(1)}%`;
 			}
 
-			// TODO: always write to default language
 			this.$store.dispatch("content/update", ["focus", focus]);
 		}
 	}
@@ -239,11 +238,21 @@ export default {
 	background: var(--color-gray-700);
 	padding: 0.25rem;
 	border-radius: var(--rounded);
-	font-size: var(--text-xs);
+	font-size: var(--text-sm);
 	line-height: 1;
 }
 .k-file-preview-focus-info .k-button:hover {
 	background: var(--color-gray-600);
+}
+.k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
+	display: flex;
+	flex-direction: row-reverse;
+	gap: 0.25rem;
+}
+.k-file-preview[data-has-focus="true"]
+	.k-file-preview-focus-info
+	.k-button-text {
+	padding: 0;
 }
 
 @media screen and (min-width: 36rem) {

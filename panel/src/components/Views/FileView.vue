@@ -6,10 +6,7 @@
 			:data-template="blueprint"
 			class="k-file-view"
 		>
-			<k-file-preview
-				v-bind="preview"
-				:focusable="!isLocked && permissions.update"
-			/>
+			<k-file-preview v-bind="preview" :focusable="isFocusable" />
 			<k-view class="k-file-content">
 				<k-header
 					:editable="permissions.changeName && !isLocked"
@@ -64,6 +61,15 @@ export default {
 	extends: ModelView,
 	props: {
 		preview: Object
+	},
+	computed: {
+		isFocusable() {
+			return (
+				!this.isLocked &&
+				this.permissions.update &&
+				(!window.panel.$multilang || window.panel.$language.default)
+			);
+		}
 	},
 	methods: {
 		action(action) {
