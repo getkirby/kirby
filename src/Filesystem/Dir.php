@@ -309,10 +309,23 @@ class Dir
 			$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
 		}
 
-		foreach (Page::$models as $modelName => $modelClass) {
-			if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
-				$model = $modelName;
-				break;
+		// For many models, one call to scandir() is faster
+		// than many calls to file_exists()
+		if (count(Page::$models) < 6) {
+			foreach (Page::$models as $modelName => $modelClass) {
+				if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
+					$model = $modelName;
+					break;
+				}
+			}
+		} else {
+			$files = scandir($root, SCANDIR_SORT_NONE);
+
+			foreach (Page::$models as $modelName => $modelClass) {
+				if (in_array($modelName . $contentExtension, $files) === true) {
+					$model = $modelName;
+					break;
+				}
 			}
 		}
 
