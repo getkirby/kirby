@@ -2,7 +2,7 @@
 	<div
 		v-if="image"
 		class="k-item-figure"
-		:style="{ background: $helper.color(back) }"
+		:style="{ background: $helper.color(back), '--position': image.focus }"
 	>
 		<!-- image -->
 		<k-image
@@ -86,5 +86,8 @@ export default {
 .k-item-figure {
 	overflow: hidden;
 	flex-shrink: 0;
+}
+.k-item-image img {
+	object-position: var(--position);
 }
 </style>

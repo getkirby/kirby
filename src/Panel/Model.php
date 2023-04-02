@@ -148,17 +148,21 @@ abstract class Model
 						'1x' => [
 							'width'  => $sizes[0],
 							'height' => $sizes[0],
-							'crop'   => 'center'
+							'crop'   => true
 						],
 						'2x' => [
 							'width'  => $sizes[1],
 							'height' => $sizes[1],
-							'crop'   => 'center'
+							'crop'   => true
 						]
 					]);
 				}
 			} elseif ($image->isViewable() === true) {
 				$settings['src'] = $image->url();
+			}
+
+			if ($focus = $image->focus()->value()) {
+				$settings['focus'] = $focus;
 			}
 		}
 
