@@ -6,7 +6,7 @@
 		class="k-image"
 		v-on="$listeners"
 	>
-		<span :style="'padding-bottom:' + ratioPadding">
+		<span :style="{ 'padding-bottom': ratioPadding, '--position': position }">
 			<img
 				v-if="loaded"
 				:key="src"
@@ -59,6 +59,7 @@ export default {
 		 * the image will be cropped to fit the ratio.
 		 */
 		cover: Boolean,
+		position: String,
 		/**
 		 * The container can be set to a fixed ratio.
 		 * The ratio can be defined freely with the format
@@ -149,6 +150,7 @@ export default {
 }
 .k-image[data-cover="true"] img {
 	object-fit: cover;
+	object-position: var(--position);
 }
 .k-image[data-back="black"] span {
 	background: var(--color-gray-900);

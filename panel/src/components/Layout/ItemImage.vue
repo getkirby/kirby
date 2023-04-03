@@ -8,6 +8,7 @@
 		<k-image
 			v-if="image.src"
 			:cover="image.cover"
+			:position="image.focus"
 			:ratio="ratio"
 			:sizes="sizes"
 			:src="image.src"
@@ -15,7 +16,7 @@
 			class="k-item-image"
 		/>
 		<!-- icon -->
-		<k-aspect-ratio v-else :ratio="ratio" :position="image.focus">
+		<k-aspect-ratio v-else :ratio="ratio">
 			<k-icon
 				:color="$helper.color(image.color)"
 				:type="image.icon"
