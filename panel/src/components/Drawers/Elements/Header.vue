@@ -8,11 +8,15 @@
 				<k-button
 					:icon="crumb.icon"
 					:text="crumb.title"
-					@click="$emit('crumb', crumb)"
+					@click="$emit('openCrumb', crumb)"
 				/>
 			</li>
 		</ul>
-		<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="$emit('tab', $event)" />
+		<k-drawer-tabs
+			:tab="tab"
+			:tabs="tabs"
+			@openTab="$emit('openTab', $event)"
+		/>
 		<nav class="k-drawer-options">
 			<slot />
 			<k-button class="k-drawer-option" icon="check" type="submit" />

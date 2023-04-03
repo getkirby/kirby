@@ -10,7 +10,7 @@
 		@ready="ready"
 	>
 		<k-drawer-box :id="id" :nested="nested">
-			<k-drawer-form>
+			<k-drawer-form @submit="submit">
 				<k-drawer-notification
 					v-if="notification"
 					v-bind="notification"
@@ -22,8 +22,8 @@
 					:tab="tab"
 					:tabs="tabs"
 					:title="title"
-					@crumb="goTo($event.id)"
-					@tab="$emit('tab', $event)"
+					@openCrumb="openCrumb"
+					@openTab="openTab"
 				>
 					<slot name="options" />
 				</k-drawer-header>
@@ -52,7 +52,7 @@ export default {
 	mixins: [props],
 	data() {
 		return {
-			click: false,
+			currentTab: this.tabs[this.tab],
 			notification: null
 		};
 	},
@@ -134,6 +134,14 @@ export default {
 			 * @event open
 			 */
 			this.$emit("open");
+		},
+		openCrumb(crumb) {
+			this.goTo(crumb.id);
+			this.$emit("openCrumb", crumb);
+		},
+		openTab(tab) {
+			this.currentTab = tab;
+			this.$emit("openTab", tab);
 		},
 		ready() {
 			// when drawers are used in the old-fashioned way
