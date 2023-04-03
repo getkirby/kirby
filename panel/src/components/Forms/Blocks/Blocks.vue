@@ -136,7 +136,7 @@ export default {
 			};
 		},
 		hasFieldsets() {
-			return Object.keys(this.fieldsets).length;
+			return this.$helper.object.length(this.fieldsets) > 0;
 		},
 		isEmpty() {
 			return this.blocks.length === 0;
@@ -201,7 +201,7 @@ export default {
 			this.$nextTick(() => this.focusOrOpen(block));
 		},
 		choose(index) {
-			if (Object.keys(this.fieldsets).length === 1) {
+			if (this.$helper.object.length(this.fieldsets) === 1) {
 				const type = Object.values(this.fieldsets)[0].type;
 				this.add(type, index);
 			} else {

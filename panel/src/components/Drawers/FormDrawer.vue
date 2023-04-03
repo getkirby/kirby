@@ -15,7 +15,7 @@
 			<slot name="options" />
 		</template>
 		<template #default>
-			<k-box v-if="Object.keys(fields).length === 0" theme="info">
+			<k-box v-if="$helper.object.length(fields) === 0" theme="info">
 				{{ empty }}
 			</k-box>
 			<k-form
