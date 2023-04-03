@@ -1,5 +1,5 @@
 <template>
-	<div class="k-block-type-code-editor">
+	<div class="k-code k-block-type-code-editor">
 		<k-input
 			ref="code"
 			:buttons="false"
@@ -46,15 +46,10 @@ export default {
 </script>
 
 <style>
-.k-block-type-code-editor {
-	position: relative;
-	font-size: var(--text-sm);
+.k-code.k-block-type-code-editor {
+	--code-font-size: var(--text-sm);
 	line-height: 1.5em;
-	background: #000;
-	border-radius: var(--rounded);
 	padding: 0.5rem 0.75rem 3rem;
-	color: #fff;
-	font-family: var(--font-mono);
 }
 .k-block-type-code-editor .k-editor {
 	white-space: pre-wrap;

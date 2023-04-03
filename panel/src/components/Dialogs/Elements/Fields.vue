@@ -18,19 +18,15 @@ export const props = {
 		 * Empty state message if no fields are defined
 		 */
 		empty: {
-			type: String,
-			default() {
-				return window.panel.$t("dialog.fields.empty");
-			}
+			default: () => window.panel.$t("dialog.fields.empty"),
+			type: String
 		},
 		/**
 		 * An array or object with all available fields
 		 */
 		fields: {
-			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => [],
+			type: [Array, Object]
 		},
 		/**
 		 * Skip client side validation (vuelidate).
@@ -38,17 +34,15 @@ export const props = {
 		 * dialogs. Native input validation still works though.
 		 */
 		novalidate: {
-			type: Boolean,
-			default: true
+			default: true,
+			type: Boolean
 		},
 		/**
 		 * An object with all values for the fields
 		 */
 		value: {
-			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({}),
+			type: Object
 		}
 	}
 };

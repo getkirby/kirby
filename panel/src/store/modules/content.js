@@ -1,5 +1,5 @@
 import Vue, { set, del } from "vue";
-import { clone } from "@/helpers/object.js";
+import { clone, length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
 	localStorage.setItem("kirby$content$" + id, JSON.stringify(data));
@@ -42,7 +42,7 @@ export default {
 		 */
 		hasChanges: (state, getters) => (id) => {
 			const changes = getters.model(id).changes;
-			return Object.keys(changes).length > 0;
+			return length(changes) > 0;
 		},
 		/**
 		 * Checks for an ID if it is the current model

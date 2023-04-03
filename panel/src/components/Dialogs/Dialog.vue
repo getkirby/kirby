@@ -189,7 +189,7 @@ export default {
 			// string is passed to the method
 			if (typeof success === "string") {
 				this.notification = {
-					message: message,
+					message: success,
 					type: "success"
 				};
 
@@ -205,24 +205,21 @@ export default {
 			// dispatch store actions that might have been defined in
 			// the success response
 			if (success.dispatch) {
-				Object.keys(success.dispatch).forEach((event) => {
+				for (const event in success.dispatch) {
 					const payload = success.dispatch[event];
 					this.$store.dispatch(
 						event,
 						Array.isArray(payload) === true ? [...payload] : payload
 					);
-				});
+				}
 			}
 
 			// send optional events to the event bus
 			if (success.event) {
 				// wrap events in an array
-				success.event = Array.isArray(success.event)
-					? success.event
-					: [success.event];
-				success.event.forEach((event) => {
+				for (const event of Array.wrap(success.event)) {
 					this.$events.$emit(event, success);
-				});
+				}
 			}
 
 			// emit a general success event unless it is
@@ -233,11 +230,11 @@ export default {
 
 			// redirect (route is deprecated)
 			if (success.redirect || success.route) {
-				return this.$go(success.redirect || success.route);
+				return this.$go(success.redirect ?? success.route);
 			}
 
 			// reload the current view
-			this.$reload(success.reload || {});
+			this.$reload(success.reload ?? {});
 		}
 	}
 };

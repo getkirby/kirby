@@ -17,6 +17,13 @@ use Kirby\Filesystem\F;
 class Languages extends Collection
 {
 	/**
+	 * All registered languages methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
+	/**
 	 * Creates a new collection with the given language objects
 	 *
 	 * @param array $objects `Kirby\Cms\Language` objects

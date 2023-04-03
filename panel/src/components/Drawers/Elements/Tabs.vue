@@ -23,7 +23,7 @@ export default {
 	mixins: [props],
 	computed: {
 		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
+			return this.$helper.object.length(this.tabs) > 1;
 		}
 	}
 };
