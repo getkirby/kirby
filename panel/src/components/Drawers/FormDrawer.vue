@@ -15,13 +15,7 @@
 			<slot name="options" />
 		</template>
 		<template #default>
-			<k-box v-if="$helper.object.length(fields) === 0" theme="info">
-				{{ empty }}
-			</k-box>
-			<k-form
-				v-else
-				ref="form"
-				:autofocus="true"
+			<k-drawer-fields
 				:fields="fields"
 				:value="$helper.clone(value)"
 				@input="$emit('input', $event)"
@@ -32,21 +26,13 @@
 </template>
 
 <script>
+import { props as Drawer } from "./Drawer.vue";
+import { props as Fields } from "./Elements/Fields.vue";
+
 export default {
-	inheritAttrs: false,
+	mixins: [Drawer, Fields],
 	props: {
-		empty: {
-			type: String,
-			default() {
-				return "Missing field setup";
-			}
-		},
-		icon: String,
-		id: String,
-		tabs: Object,
-		title: String,
-		type: String,
-		value: Object
+		type: String
 	},
 	data() {
 		return {

@@ -26,7 +26,7 @@
 		<!-- Icons -->
 		<k-icons />
 
-		<portal-target name="overlay" slim />
+		<portal-target name="overlay" multiple />
 	</div>
 </template>
 
