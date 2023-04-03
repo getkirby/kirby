@@ -87,7 +87,7 @@ export default {
 	overflow: hidden;
 	flex-shrink: 0;
 }
-.k-item-image img {
+.k-item-image[data-cover="true"] img {
 	object-position: var(--position);
 }
 </style>
