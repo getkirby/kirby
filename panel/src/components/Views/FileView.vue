@@ -67,7 +67,9 @@ export default {
 			return (
 				!this.isLocked &&
 				this.permissions.update &&
-				(!window.panel.$multilang || window.panel.$language.default)
+				(!window.panel.$multilang ||
+					window.panel.$languages.length === 0 ||
+					window.panel.$language?.default)
 			);
 		}
 	},
