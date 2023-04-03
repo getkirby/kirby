@@ -41,15 +41,13 @@ export default {
 		details: [Object, Array],
 		message: String,
 		size: {
-			type: String,
-			default: "medium"
+			default: "medium",
+			type: String
 		}
 	},
 	computed: {
 		detailsList() {
-			return Array.isArray(this.details)
-				? this.details
-				: Object.values(this.details || {});
+			return Array.fromObject(this.details);
 		}
 	}
 };

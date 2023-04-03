@@ -37,12 +37,8 @@ export default {
 				} else {
 					// if the entered language code exists
 					// matches the locale values in the languages defined in the system
-					let locales = this.$system.locales || [];
-					if (locales?.[code]) {
-						this.model.locale = locales[code];
-					} else {
-						this.model.locale = null;
-					}
+					let locales = this.$system.locales ?? [];
+					this.model.locale = locales?.[code];
 				}
 			}
 		},
