@@ -9,7 +9,12 @@
 		@update="update"
 	>
 		<template v-if="src">
-			<k-aspect-ratio v-if="ratio" :ratio="ratio" :cover="crop">
+			<k-aspect-ratio
+				v-if="ratio"
+				:ratio="ratio"
+				:cover="crop"
+				:position="content.image[0]?.image.focus"
+			>
 				<img :alt="content.alt" :src="src" />
 			</k-aspect-ratio>
 			<img

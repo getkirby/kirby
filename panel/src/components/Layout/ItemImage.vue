@@ -2,7 +2,7 @@
 	<div
 		v-if="image"
 		class="k-item-figure"
-		:style="{ background: $helper.color(back), '--position': image.focus }"
+		:style="{ background: $helper.color(back) }"
 	>
 		<!-- image -->
 		<k-image
@@ -15,7 +15,7 @@
 			class="k-item-image"
 		/>
 		<!-- icon -->
-		<k-aspect-ratio v-else :ratio="ratio">
+		<k-aspect-ratio v-else :ratio="ratio" :position="image.focus">
 			<k-icon
 				:color="$helper.color(image.color)"
 				:type="image.icon"

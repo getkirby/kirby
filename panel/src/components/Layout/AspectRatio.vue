@@ -1,7 +1,7 @@
 <template>
 	<span
 		:data-cover="cover"
-		:style="{ 'padding-bottom': ratioPadding }"
+		:style="{ 'padding-bottom': ratioPadding, '--position': position }"
 		class="k-aspect-ratio"
 	>
 		<!-- @slot Content -->
@@ -33,7 +33,8 @@ export default {
 		 *
 		 * @values e.g. `1/1`, `16/9` or `4/5`
 		 */
-		ratio: String
+		ratio: String,
+		position: String
 	},
 	computed: {
 		ratioPadding() {
@@ -59,5 +60,6 @@ export default {
 }
 .k-aspect-ratio[data-cover="true"] > * {
 	object-fit: cover;
+	object-position: var(--position);
 }
 </style>
