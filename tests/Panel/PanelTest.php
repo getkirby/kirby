@@ -475,6 +475,43 @@ class PanelTest extends TestCase
 	}
 
 	/**
+	 * @covers ::routesForDialog
+	 */
+	public function testRoutesForDialog(): void
+	{
+		$routes = Panel::routesForDialog(
+			dialogId: 'test',
+			areaId: 'site',
+			prefix: 'dialogs',
+			dialog: [
+				'pattern' => 'test',
+				'load' => $load = function () {
+				},
+				'submit' => $submit = function () {
+				}
+			]
+		);
+
+		$expected = [
+			[
+				'pattern' => 'dialogs/test',
+				'type' => 'dialog',
+				'area' => 'site',
+				'action'  => $load
+			],
+			[
+				'pattern' => 'dialogs/test',
+				'type' => 'dialog',
+				'area' => 'site',
+				'method' => 'POST',
+				'action'  => $submit
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
 	 * @covers ::routesForDialogs
 	 */
 	public function testRoutesForDialogs(): void

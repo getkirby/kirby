@@ -84,6 +84,20 @@ export function lcfirst(string) {
 }
 
 /**
+ * Trims the given character(s) at the beginning of the string.
+ * This method is greedy and removes any occurrence at the beginning,
+ * not just the first.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function ltrim(string, replace) {
+	const expression = new RegExp(`^(${replace})+`, "g");
+	return string.replace(expression, "");
+}
+
+/**
  * Prefixes string with 0 until length is reached
  * @param {string} value
  * @param {number} length
@@ -113,6 +127,20 @@ export function random(length) {
 		result += pool.charAt(Math.floor(Math.random() * count));
 	}
 	return result;
+}
+
+/**
+ * Trims the given characters at the end of the string
+ * This method is greedy and removes any occurrence at the end,
+ * not just the last.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function rtrim(string, replace) {
+	const expression = new RegExp(`(${replace})+$`, "g");
+	return string.replace(expression, "");
 }
 
 /**
@@ -263,8 +291,10 @@ export default {
 	escapeHTML,
 	hasEmoji,
 	lcfirst,
+	ltrim,
 	pad,
 	random,
+	rtrim,
 	slug,
 	stripHTML,
 	template,

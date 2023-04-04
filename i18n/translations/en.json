@@ -84,6 +84,9 @@
 
 	"error.file.changeName.empty": "The name must not be empty",
 	"error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
