@@ -10,6 +10,7 @@ use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
+$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -516,6 +517,13 @@ return [
 		}
 	],
 
+	// page field dialogs
+	'page.fields' => [
+		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit']
+	],
+
 	// change filename
 	'page.file.changeName' => [
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
@@ -535,6 +543,13 @@ return [
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
+	],
+
+	// page file field dialogs
+	'page.file.fields' => [
+		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit'],
 	],
 
 	// change site title
@@ -567,6 +582,13 @@ return [
 		}
 	],
 
+	// site field dialogs
+	'site.fields' => [
+		'pattern' => '(site)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit'],
+	],
+
 	// change filename
 	'site.file.changeName' => [
 		'pattern' => '(site)/files/(:any)/changeName',
@@ -586,6 +608,13 @@ return [
 		'pattern' => '(site)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
+	],
+
+	// site file field dialogs
+	'site.file.fields' => [
+		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit'],
 	],
 
 ];
