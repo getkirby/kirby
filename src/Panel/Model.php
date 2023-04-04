@@ -138,11 +138,30 @@ abstract class Model
 					default    => [38, 76]
 				};
 
-				if (
-					($settings['cover'] ?? false) === false ||
-					$layout === 'cards'
-				) {
+				 if (($settings['cover'] ?? false) === false) {
 					$settings['srcset'] = $image->srcset($sizes);
+				} else if ($layout === 'cards') {
+					// for card layouts with `cover: true` provide
+					// crops based on the card ratio
+					$ratio = explode('/', $settings['ratio']);
+					$ratio = $ratio[0] / $ratio[1];
+					$settings['srcset'] = $image->srcset([
+						$sizes[0] . 'w' => [
+							'width'  => $sizes[0],
+							'height' => $sizes[0] / $ratio,
+							'crop'   => true
+						],
+						$sizes[1] . 'w' => [
+							'width'  => $sizes[1],
+							'height' => $sizes[1] / $ratio,
+							'crop'   => true
+						],
+						$sizes[2] . 'w' => [
+							'width'  => $sizes[2],
+							'height' => $sizes[2] / $ratio,
+							'crop'   => true
+						]
+					]);
 				} else {
 					$settings['srcset'] = $image->srcset([
 						'1x' => [
