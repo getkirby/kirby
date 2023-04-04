@@ -37,13 +37,16 @@
 
 <script>
 import { props as Overlay } from "@/components/Layout/Overlay.vue";
-import { props as Tabs } from "./Elements/Tabs.vue";
 
 export const props = {
-	mixins: [Overlay, Tabs],
+	mixins: [Overlay],
 	props: {
 		id: String,
 		icon: String,
+		tabs: {
+			default: () => {},
+			type: [Array, Object]
+		},
 		title: String
 	}
 };
@@ -52,8 +55,8 @@ export default {
 	mixins: [props],
 	data() {
 		return {
-			currentTab: this.tabs[this.tab],
-			notification: null
+			notification: null,
+			tab: {}
 		};
 	},
 	computed: {
@@ -72,6 +75,11 @@ export default {
 			if (this.index === -1) {
 				this.close();
 			}
+		},
+		tabs() {
+			// open the first tab
+			// when tabs change
+			this.openTab();
 		}
 	},
 	destroyed() {
@@ -140,7 +148,13 @@ export default {
 			this.$emit("openCrumb", crumb);
 		},
 		openTab(tab) {
-			this.currentTab = tab;
+			tab = tab || Object.values(this.tabs)[0] || {};
+
+			if (!tab) {
+				return false;
+			}
+
+			this.tab = tab;
 			this.$emit("openTab", tab);
 		},
 		ready() {
@@ -165,6 +179,9 @@ export default {
 			 * @event ready
 			 */
 			this.$emit("ready");
+
+			// open the first tab
+			this.openTab();
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,

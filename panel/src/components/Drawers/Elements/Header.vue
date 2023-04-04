@@ -12,11 +12,7 @@
 				/>
 			</li>
 		</ul>
-		<k-drawer-tabs
-			:tab="tab"
-			:tabs="tabs"
-			@openTab="$emit('openTab', $event)"
-		/>
+		<k-drawer-tabs :tab="tab" :tabs="tabs" @open="$emit('openTab', $event)" />
 		<nav class="k-drawer-options">
 			<slot />
 			<k-button class="k-drawer-option" icon="check" type="submit" />

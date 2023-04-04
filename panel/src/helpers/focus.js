@@ -9,12 +9,6 @@ export default function focus(element) {
 		return false;
 	}
 
-	// call the focus method of the element if it has one
-	if (typeof element.focus === "function") {
-		element.focus();
-		return element;
-	}
-
 	// search for the first focusable element inside this element
 	let target = element?.querySelector(`
 		[autofocus],
@@ -29,6 +23,12 @@ export default function focus(element) {
 	if (typeof target?.focus === "function") {
 		target.focus();
 		return target;
+	}
+
+	// call the focus method of the element if it has one
+	if (typeof element.focus === "function") {
+		element.focus();
+		return element;
 	}
 
 	// return false if nothing could be focused

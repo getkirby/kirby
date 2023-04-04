@@ -6,7 +6,7 @@
 				:fieldset="fieldset"
 				@dblclick="$emit('open', tab)"
 			/>
-			<k-drawer-tabs :tab="tab" :tabs="tabs" @tab="tab = $event" />
+			<k-drawer-tabs :tab="tab" :tabs="fieldset.tabs" @open="tab = $event" />
 		</header>
 
 		<k-form
@@ -29,18 +29,12 @@
 export default {
 	data() {
 		return {
-			tab: Object.keys(this.fieldset.tabs)[0]
+			tab: Object.values(this.fieldset.tabs)[0]
 		};
 	},
 	computed: {
-		hasTabs() {
-			return this.tabs.length > 1;
-		},
 		fields() {
-			return this.fieldset.tabs[this.tab].fields;
-		},
-		tabs() {
-			return Object.values(this.fieldset.tabs);
+			return this.tab.fields;
 		},
 		values() {
 			return Object.assign({}, this.content);

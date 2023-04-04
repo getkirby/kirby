@@ -1,42 +1,55 @@
 <template>
-	<k-drawer
-		ref="drawer"
+	<k-overlay
+		ref="overlay"
 		:autofocus="autofocus"
-		:id="id"
-		:icon="icon"
+		:dimmed="!nested"
 		:loading="loading"
-		:tab="currentTab"
-		:tabs="tabs"
-		:title="title"
 		:visible="visible"
-		class="k-form-drawer"
+		class="k-drawer-overlay"
+		@cancel="cancel"
+		@ready="ready"
 	>
-		<template #options>
-			<slot name="options" />
-		</template>
-		<template #default>
-			<k-drawer-fields
-				:fields="currentFields"
-				:value="model"
-				@input="input"
-				@invalid="invalid"
-				@submit="submit"
-			/>
-		</template>
-	</k-drawer>
+		<k-drawer-box :id="id" :nested="nested">
+			<k-drawer-form @submit="submit">
+				<k-drawer-notification
+					v-if="notification"
+					v-bind="notification"
+					@close="notification = null"
+				/>
+				<k-drawer-header
+					:breadcrumb="breadcrumb"
+					:icon="icon"
+					:tab="tab"
+					:tabs="tabs"
+					:title="title"
+					@openCrumb="openCrumb"
+					@openTab="openTab"
+				>
+					<slot name="options" />
+				</k-drawer-header>
+				<k-drawer-body>
+					<k-drawer-fields
+						:fields="fieldset"
+						:value="model"
+						@input="input"
+						@invalid="invalid"
+						@submit="submit"
+					/>
+				</k-drawer-body>
+			</k-drawer-form>
+		</k-drawer-box>
+	</k-overlay>
 </template>
 
 <script>
-import Drawer from "@/mixins/drawer.js";
+import Drawer from "./Drawer.vue";
 import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
 	mixins: [Drawer, Fields],
 	data() {
 		return {
-			currentFields: null,
-			currentTab: null,
-
+			fieldset: {},
 			// Since fiber drawers don't update their `value` prop
 			// on an emitted `input` event, we need to ensure a local
 			// state of all updated values
@@ -44,6 +57,10 @@ export default {
 		};
 	},
 	watch: {
+		tab() {
+			this.fieldset = this.tab.fields;
+			this.$refs.overlay.focus();
+		},
 		value(value) {
 			this.model = value;
 		}
@@ -56,17 +73,9 @@ export default {
 		invalid() {
 			this.$emit("invalid", this.model);
 		},
-		open(tabId, focus = true) {
-			this.openTab(this.tabs[tabId]);
-			this.$refs.drawer.open();
-			this.$refs.drawer.focus();
-		},
-		openTab(tab) {
-			this.currentTab = tab?.id ?? Object.keys(this.tabs)[0];
-			this.currentFields = this.tabs[this.currentTab]?.fields ?? {};
-		},
 		submit() {
 			this.$emit("submit", this.model);
+			this.close();
 		}
 	}
 };
