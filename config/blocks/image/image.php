@@ -11,7 +11,7 @@ $src     = null;
 if ($block->location() == 'web') {
 	$src = $block->src()->esc();
 } elseif ($image = $block->image()->toFile()) {
-	$alt = $alt ?? $image->alt();
+	$alt = $alt->or($image->alt());
 	$src = $image->url();
 }
 
