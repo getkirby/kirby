@@ -62,7 +62,7 @@
 			:title="fieldset.name"
 			:value="content"
 			class="k-block-drawer"
-			@close="
+			@submit="
 				focus();
 				$emit('close');
 			"

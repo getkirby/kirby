@@ -1,11 +1,9 @@
 <template>
 	<k-overlay
 		ref="overlay"
-		:centered="centered"
-		:dimmed="dimmed"
-		:loading="loading"
+		:centered="true"
+		:dimmed="true"
 		:visible="visible"
-		class="k-dialog-overlay"
 		type="dialog"
 		@cancel="cancel"
 		@ready="ready"
@@ -44,22 +42,17 @@
 
 <script>
 import { props as Buttons } from "./Elements/Buttons.vue";
-import { props as Overlay } from "@/components/Layout/Overlay.vue";
 
 export const props = {
-	mixins: [Overlay, Buttons],
+	mixins: [Buttons],
 	props: {
-		/**
-		 * Dialogs are centered by default.
-		 * The overlay sets the default to false
-		 * here so we need to overwrite it.
-		 */
-		centered: {
-			default: true
-		},
 		size: {
 			default: "default",
 			type: String
+		},
+		visible: {
+			default: false,
+			type: Boolean
 		}
 	}
 };

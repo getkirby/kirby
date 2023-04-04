@@ -6,7 +6,7 @@
 			:data-dimmed="dimmed"
 			:data-loading="loading"
 			:dir="$translation.direction"
-			:class="$vnode.data.staticClass"
+			:class="'k-' + type + '-overlay'"
 			class="k-overlay"
 			@click="click"
 		>
@@ -37,7 +37,6 @@ export const props = {
 		},
 		type: {
 			default: "overlay",
-			required: true,
 			type: String
 		},
 		/**

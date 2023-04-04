@@ -1,11 +1,5 @@
 <template>
-	<k-overlay
-		ref="overlay"
-		class="k-drawer-overlay"
-		type="drawer"
-		@cancel="cancel"
-		@ready="ready"
-	>
+	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
 		<form
 			class="k-form-drawer k-drawer"
 			method="dialog"
@@ -79,7 +73,6 @@ export default {
 		},
 		submit() {
 			this.$emit("submit", this.model);
-			this.close();
 		}
 	}
 };

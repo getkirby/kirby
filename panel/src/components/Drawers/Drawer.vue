@@ -1,11 +1,5 @@
 <template>
-	<k-overlay
-		ref="overlay"
-		class="k-drawer-overlay"
-		type="drawer"
-		@cancel="cancel"
-		@ready="ready"
-	>
+	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
 		<form class="k-drawer" method="dialog" @submit.prevent="submit">
 			<k-drawer-notification
 				v-if="notification"
@@ -31,10 +25,7 @@
 </template>
 
 <script>
-import { props as Overlay } from "@/components/Layout/Overlay.vue";
-
 export const props = {
-	mixins: [Overlay],
 	props: {
 		id: String,
 		icon: String,
