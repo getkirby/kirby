@@ -89,8 +89,8 @@ return [
 			// also it has been tested that there is no performance difference
 			// even in 0.1 seconds on 100k virtual pages
 			$pages = $pages->filter(function ($page) {
-				// remove all protected pages
-				if ($page->isReadable() === false) {
+				// remove all protected and hidden pages
+				if ($page->isListable() === false) {
 					return false;
 				}
 
