@@ -2,6 +2,7 @@
 	<k-overlay
 		ref="overlay"
 		class="k-drawer-overlay"
+		type="drawer"
 		@cancel="cancel"
 		@ready="ready"
 	>

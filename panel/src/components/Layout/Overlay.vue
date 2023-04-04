@@ -1,5 +1,5 @@
 <template>
-	<portal v-if="isOpen" to="overlay">
+	<portal v-if="isOpen" :to="type">
 		<div
 			ref="overlay"
 			:data-centered="loading || centered"
@@ -8,8 +8,7 @@
 			:dir="$translation.direction"
 			:class="$vnode.data.staticClass"
 			class="k-overlay"
-			v-on="$listeners"
-			@mousedown="click"
+			@click="click"
 		>
 			<k-loader v-if="loading" class="k-overlay-loader" />
 			<slot v-else :close="close" :is-open="isOpen" />
@@ -35,6 +34,11 @@ export const props = {
 		loading: {
 			default: false,
 			type: Boolean
+		},
+		type: {
+			default: "overlay",
+			required: true,
+			type: String
 		},
 		/**
 		 * Overlays are only openend on demand with the `open()` method.

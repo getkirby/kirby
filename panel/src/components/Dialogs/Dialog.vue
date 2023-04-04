@@ -6,6 +6,7 @@
 		:loading="loading"
 		:visible="visible"
 		class="k-dialog-overlay"
+		type="dialog"
 		@cancel="cancel"
 		@ready="ready"
 	>
