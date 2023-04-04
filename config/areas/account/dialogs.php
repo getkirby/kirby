@@ -67,6 +67,13 @@ return [
 		'submit'  => $dialogs['user.file.changeSort']['submit'],
 	],
 
+	// change file template
+	'account.file.changeTemplate' => [
+		'pattern' => '(account)/files/(:any)/changeTemplate',
+		'load'    => $dialogs['user.file.changeTemplate']['load'],
+		'submit'  => $dialogs['user.file.changeTemplate']['submit'],
+	],
+
 	// delete
 	'account.file.delete' => [
 		'pattern' => '(account)/files/(:any)/delete',
