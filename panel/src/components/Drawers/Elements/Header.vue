@@ -32,12 +32,6 @@ export const props = {
 			},
 			type: Array
 		},
-		buttons: {
-			default() {
-				return {};
-			},
-			type: [Object, Array]
-		},
 		icon: {
 			type: String,
 			default: "box"

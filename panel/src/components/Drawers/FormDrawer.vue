@@ -1,43 +1,41 @@
 <template>
 	<k-overlay
 		ref="overlay"
-		:autofocus="autofocus"
-		:dimmed="!nested"
-		:loading="loading"
-		:visible="visible"
 		class="k-drawer-overlay"
 		@cancel="cancel"
 		@ready="ready"
 	>
-		<k-drawer-box :id="id" :nested="nested">
-			<k-drawer-form @submit="submit">
-				<k-drawer-notification
-					v-if="notification"
-					v-bind="notification"
-					@close="notification = null"
+		<form
+			class="k-form-drawer k-drawer"
+			method="dialog"
+			@submit.prevent="submit"
+		>
+			<k-drawer-notification
+				v-if="notification"
+				v-bind="notification"
+				@close="notification = null"
+			/>
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:icon="icon"
+				:tab="tab"
+				:tabs="tabs"
+				:title="title"
+				@openCrumb="openCrumb"
+				@openTab="openTab"
+			>
+				<slot name="options" />
+			</k-drawer-header>
+			<k-drawer-body>
+				<k-drawer-fields
+					:fields="fieldset"
+					:value="model"
+					@input="input"
+					@invalid="invalid"
+					@submit="submit"
 				/>
-				<k-drawer-header
-					:breadcrumb="breadcrumb"
-					:icon="icon"
-					:tab="tab"
-					:tabs="tabs"
-					:title="title"
-					@openCrumb="openCrumb"
-					@openTab="openTab"
-				>
-					<slot name="options" />
-				</k-drawer-header>
-				<k-drawer-body>
-					<k-drawer-fields
-						:fields="fieldset"
-						:value="model"
-						@input="input"
-						@invalid="invalid"
-						@submit="submit"
-					/>
-				</k-drawer-body>
-			</k-drawer-form>
-		</k-drawer-box>
+			</k-drawer-body>
+		</form>
 	</k-overlay>
 </template>
 
@@ -59,7 +57,12 @@ export default {
 	watch: {
 		tab() {
 			this.fieldset = this.tab.fields;
-			this.$refs.overlay.focus();
+
+			// focus on the first best element
+			// in the drawer
+			setTimeout(() => {
+				this.$refs.overlay.focus();
+			});
 		},
 		value(value) {
 			this.model = value;

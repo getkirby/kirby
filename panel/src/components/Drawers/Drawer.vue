@@ -1,37 +1,31 @@
 <template>
 	<k-overlay
 		ref="overlay"
-		:autofocus="autofocus"
-		:dimmed="!nested"
-		:loading="loading"
-		:visible="visible"
 		class="k-drawer-overlay"
 		@cancel="cancel"
 		@ready="ready"
 	>
-		<k-drawer-box :id="id" :nested="nested">
-			<k-drawer-form @submit="submit">
-				<k-drawer-notification
-					v-if="notification"
-					v-bind="notification"
-					@close="notification = null"
-				/>
-				<k-drawer-header
-					:breadcrumb="breadcrumb"
-					:icon="icon"
-					:tab="tab"
-					:tabs="tabs"
-					:title="title"
-					@openCrumb="openCrumb"
-					@openTab="openTab"
-				>
-					<slot name="options" />
-				</k-drawer-header>
-				<k-drawer-body>
-					<slot />
-				</k-drawer-body>
-			</k-drawer-form>
-		</k-drawer-box>
+		<form class="k-drawer" method="dialog" @submit.prevent="submit">
+			<k-drawer-notification
+				v-if="notification"
+				v-bind="notification"
+				@close="notification = null"
+			/>
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:icon="icon"
+				:tab="tab"
+				:tabs="tabs"
+				:title="title"
+				@openCrumb="openCrumb"
+				@openTab="openTab"
+			>
+				<slot name="options" />
+			</k-drawer-header>
+			<k-drawer-body>
+				<slot />
+			</k-drawer-body>
+		</form>
 	</k-overlay>
 </template>
 
@@ -64,10 +58,9 @@ export default {
 			return this.$store.state.drawers.open;
 		},
 		index() {
-			return this.breadcrumb.findIndex((item) => item.id === this._uid);
-		},
-		nested() {
-			return this.index > 0;
+			return this.$store.state.drawers.open.findIndex(
+				(item) => item.id === this._uid
+			);
 		}
 	},
 	watch: {
@@ -197,3 +190,39 @@ export default {
 	}
 };
 </script>
+
+<style>
+:root {
+	--drawer-color-back: var(--color-light);
+	--drawer-header-height: 2.5rem;
+	--drawer-header-padding: 1.5rem;
+	--drawer-shadow: var(--shadow-xl);
+	--drawer-width: 50rem;
+}
+
+.k-drawer-overlay {
+	--overlay-color-back: rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-end;
+}
+
+/**
+ * Don't apply the dark background twice
+ * for nested drawers.
+ */
+.k-drawer-overlay + .k-drawer-overlay {
+	--overlay-color-back: none;
+}
+
+.k-drawer {
+	z-index: var(--z-toolbar);
+	display: flex;
+	flex-basis: var(--drawer-width);
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	background: var(--drawer-color-back);
+	box-shadow: var(--drawer-shadow);
+}
+</style>

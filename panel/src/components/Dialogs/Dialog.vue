@@ -1,7 +1,6 @@
 <template>
 	<k-overlay
 		ref="overlay"
-		:autofocus="autofocus"
 		:centered="centered"
 		:dimmed="dimmed"
 		:loading="loading"
@@ -10,41 +9,44 @@
 		@cancel="cancel"
 		@ready="ready"
 	>
-		<k-dialog-box :size="size" :class="$vnode.data.staticClass">
-			<k-dialog-form @submit="submit">
-				<k-dialog-notification
-					v-if="notification"
-					v-bind="notification"
-					@close="notification = null"
-				/>
-				<k-dialog-body>
-					<slot />
-				</k-dialog-body>
-				<slot name="footer">
-					<k-dialog-footer v-if="cancelButton || submitButton">
-						<k-dialog-buttons
-							:cancel-button="cancelButton"
-							:disabled="disabled"
-							:icon="icon"
-							:submit-button="submitButton"
-							:theme="theme"
-							@cancel="cancel"
-							@submit="submit"
-						/>
-					</k-dialog-footer>
-				</slot>
-			</k-dialog-form>
-		</k-dialog-box>
+		<form
+			:class="$vnode.data.staticClass"
+			:data-size="size"
+			class="k-dialog"
+			method="dialog"
+			@submit.prevent="submit"
+		>
+			<k-dialog-notification
+				v-if="notification"
+				v-bind="notification"
+				@close="notification = null"
+			/>
+			<k-dialog-body>
+				<slot />
+			</k-dialog-body>
+			<slot name="footer">
+				<k-dialog-footer v-if="cancelButton || submitButton">
+					<k-dialog-buttons
+						:cancel-button="cancelButton"
+						:disabled="disabled"
+						:icon="icon"
+						:submit-button="submitButton"
+						:theme="theme"
+						@cancel="cancel"
+						@submit="submit"
+					/>
+				</k-dialog-footer>
+			</slot>
+		</form>
 	</k-overlay>
 </template>
 
 <script>
-import { props as Box } from "./Elements/Box.vue";
 import { props as Buttons } from "./Elements/Buttons.vue";
 import { props as Overlay } from "@/components/Layout/Overlay.vue";
 
 export const props = {
-	mixins: [Overlay, Box, Buttons],
+	mixins: [Overlay, Buttons],
 	props: {
 		/**
 		 * Dialogs are centered by default.
@@ -53,6 +55,10 @@ export const props = {
 		 */
 		centered: {
 			default: true
+		},
+		size: {
+			default: "default",
+			type: String
 		}
 	}
 };
@@ -239,3 +245,60 @@ export default {
 	}
 };
 </script>
+
+<style>
+:root {
+	--dialog-color-back: var(--color-light);
+	--dialog-color-text: currentColor;
+	--dialog-rounded: var(--rounded-md);
+	--dialog-padding: var(--spacing-6);
+	--dialog-shadow: var(--shadow-xl);
+	--dialog-width: 22rem;
+}
+
+.k-dialog {
+	position: relative;
+	background: var(--dialog-color-back);
+	color: var(--dialog-color-text);
+	width: clamp(10rem, 100%, var(--dialog-width));
+	box-shadow: var(--dialog-shadow);
+	border-radius: var(--dialog-rounded);
+	line-height: 1;
+	max-height: calc(100vh - 3rem);
+	margin: 1.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+@media screen and (min-width: 20rem) {
+	.k-dialog[data-size="small"] {
+		--dialog-width: 20rem;
+	}
+}
+
+@media screen and (min-width: 22rem) {
+	.k-dialog[data-size="default"] {
+		--dialog-width: 22rem;
+	}
+}
+
+@media screen and (min-width: 30rem) {
+	.k-dialog[data-size="medium"] {
+		--dialog-width: 30rem;
+	}
+}
+
+@media screen and (min-width: 40rem) {
+	.k-dialog[data-size="large"] {
+		--dialog-width: 40rem;
+	}
+}
+
+/** Pagination **/
+.k-dialog .k-pagination {
+	margin-bottom: -1.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>
