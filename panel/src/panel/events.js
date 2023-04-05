@@ -94,6 +94,7 @@ export default () => {
 		 */
 		dragexit(e) {
 			this.prevent(e);
+			this.entered = null;
 			this.emit("dragexit", e);
 		},
 
@@ -109,6 +110,7 @@ export default () => {
 			this.prevent(e);
 
 			if (this.entered === e.target) {
+				this.entered = null;
 				this.emit("dragleave", e);
 			}
 		},
@@ -134,6 +136,7 @@ export default () => {
 		 */
 		drop(e) {
 			this.prevent(e);
+			this.entered = null;
 			this.emit("drop", e);
 		},
 
