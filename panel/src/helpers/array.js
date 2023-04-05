@@ -28,6 +28,27 @@ Array.prototype.sortBy = function (sortBy) {
 };
 
 /**
+ * Array.split()
+ *
+ * @param {String} delimiter
+ * @returns {Array}
+ *
+ */
+Array.prototype.split = function (delimiter) {
+	return this.reduce(
+		(entries, entry) => {
+			if (entry === delimiter) {
+				entries.push([]);
+			} else {
+				entries[entries.length - 1].push(entry);
+			}
+			return entries;
+		},
+		[[]]
+	);
+};
+
+/**
  * Array.wrap()
  */
 Array.wrap = function (array) {
