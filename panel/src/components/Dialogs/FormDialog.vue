@@ -26,14 +26,12 @@ export default {
 	mixins: [Dialog, Fields],
 	props: {
 		size: {
-			type: String,
-			default: "medium"
+			default: "medium",
+			type: String
 		},
 		submitButton: {
 			type: [String, Boolean],
-			default() {
-				return window.panel.$t("save");
-			}
+			default: () => window.panel.$t("save")
 		},
 		text: {
 			type: String

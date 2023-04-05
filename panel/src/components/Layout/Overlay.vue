@@ -1,15 +1,14 @@
 <template>
-	<portal v-if="isOpen" to="overlay">
+	<portal v-if="isOpen" :to="type">
 		<div
 			ref="overlay"
 			:data-centered="loading || centered"
 			:data-dimmed="dimmed"
 			:data-loading="loading"
 			:dir="$translation.direction"
-			:class="$vnode.data.staticClass"
+			:class="'k-' + type + '-overlay'"
 			class="k-overlay"
-			v-on="$listeners"
-			@mousedown="click"
+			@click="click"
 		>
 			<k-loader v-if="loading" class="k-overlay-loader" />
 			<slot v-else :close="close" :is-open="isOpen" />
@@ -35,6 +34,10 @@ export const props = {
 		loading: {
 			default: false,
 			type: Boolean
+		},
+		type: {
+			default: "overlay",
+			type: String
 		},
 		/**
 		 * Overlays are only openend on demand with the `open()` method.
@@ -146,6 +149,10 @@ export default {
 </script>
 
 <style>
+:root {
+	--overlay-color-back: var(--color-backdrop);
+}
+
 .k-overlay {
 	position: fixed;
 	inset: 0;
@@ -155,12 +162,11 @@ export default {
 	transform: translate3d(0, 0, 0);
 }
 .k-overlay[data-centered="true"] {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: grid;
+	place-items: center;
 }
 .k-overlay[data-dimmed="true"] {
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 }
 .k-overlay-loader {
 	color: var(--color-white);

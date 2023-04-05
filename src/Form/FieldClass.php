@@ -224,6 +224,16 @@ abstract class FieldClass
 	}
 
 	/**
+	 * Returns optional dialog routes for the field
+	 *
+	 * @return array
+	 */
+	public function dialogs(): array
+	{
+		return [];
+	}
+
+	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 *
 	 * @return bool

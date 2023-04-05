@@ -173,6 +173,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dialogs
+	 */
+	public function testDialogs()
+	{
+		$field = new TestField();
+		$this->assertSame([], $field->dialogs());
+	}
+
+	/**
 	 * @covers ::disabled
 	 * @covers ::isDisabled
 	 */

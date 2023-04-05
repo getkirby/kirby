@@ -1,3 +1,5 @@
+import { ltrim } from "@/helpers/string.js";
+
 /**
  * Defines dialogs via JS object
  *
@@ -57,6 +59,8 @@ const asyncDialog = async function (path, options = {}) {
 		submit = options.submit;
 		cancel = options.cancel;
 	}
+
+	path = ltrim(path, "/");
 
 	// load the dialog definition from the server
 	let result = await this.$fiber.request("dialogs/" + path, {

@@ -20,6 +20,13 @@ class Layouts extends Items
 {
 	public const ITEM_CLASS = Layout::class;
 
+	/**
+	 * All registered layouts methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
 	public static function factory(array $items = null, array $params = [])
 	{
 		// convert single layout to layouts array
@@ -75,7 +82,7 @@ class Layouts extends Items
 	{
 		if (empty($input) === false && is_array($input) === false) {
 			try {
-                $input = Json::decode((string)$input);
+				$input = Json::decode((string)$input);
 			} catch (Throwable) {
 				return [];
 			}

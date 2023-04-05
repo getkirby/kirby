@@ -26,6 +26,13 @@ class Blocks extends Items
 	public const ITEM_CLASS = Block::class;
 
 	/**
+	 * All registered blocks methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
+	/**
 	 * Return HTML when the collection is
 	 * converted to a string
 	 *

@@ -1,3 +1,4 @@
+import "./array.js";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
@@ -17,29 +18,8 @@ import url from "./url.js";
 import "./regex.js";
 
 export default {
-	install(Vue) {
-		/**
-		 * Array.sortBy()
-		 */
-		Array.prototype.sortBy = function (sortBy) {
-			const sort = Vue.prototype.$helper.sort();
-			const options = sortBy.split(" ");
-			const field = options[0];
-			const direction = options[1] || "asc";
-
-			return this.sort((a, b) => {
-				const valueA = String(a[field]).toLowerCase();
-				const valueB = String(b[field]).toLowerCase();
-
-				if (direction === "desc") {
-					return sort(valueB, valueA);
-				} else {
-					return sort(valueA, valueB);
-				}
-			});
-		};
-
-		Vue.prototype.$helper = {
+	install(app) {
+		app.prototype.$helper = {
 			clipboard,
 			clone: object.clone,
 			color,
@@ -61,6 +41,6 @@ export default {
 			uuid: string.uuid
 		};
 
-		Vue.prototype.$esc = string.escapeHTML;
+		app.prototype.$esc = string.escapeHTML;
 	}
 };

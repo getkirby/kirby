@@ -84,6 +84,9 @@
 
 	"error.file.changeName.empty": "The name must not be empty",
 	"error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -305,6 +308,8 @@
 	"field.users.empty": "No users selected yet",
 
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Change template",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
 	"file.sort": "Change position",
 

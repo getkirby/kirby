@@ -67,7 +67,7 @@ export default {
 
 			try {
 				await this.$api.auth.verifyCode(this.code);
-				this.$store.dispatch("notification/success", this.$t("welcome"));
+				this.$panel.notification.success(this.$t("welcome"));
 
 				if (this.mode === "password-reset") {
 					this.$go("reset-password");
