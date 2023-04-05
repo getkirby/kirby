@@ -144,6 +144,11 @@ export const installPlugins = (app, plugins) => {
 	return plugins;
 };
 
+/**
+ * The plugin module installs all
+ * given plugins and makes them accessible
+ * at window.panel.plugins
+ */
 export default (app, plugins = {}) => {
 	plugins = {
 		components: {},
