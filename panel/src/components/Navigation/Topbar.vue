@@ -19,6 +19,7 @@
 				:icon="notification.icon"
 				:text="notification.message"
 				:theme="notification.theme"
+				size="xs"
 				class="k-topbar-notification k-topbar-button"
 				@click="notification.close()"
 			/>
