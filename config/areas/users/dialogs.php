@@ -309,6 +309,13 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change file template
+	'user.file.changeTemplate' => [
+		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete file
 	'user.file.delete' => [
 		'pattern' => '(users/.*?)/files/(:any)/delete',

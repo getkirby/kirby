@@ -308,6 +308,8 @@
 	"field.users.empty": "No users selected yet",
 
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Change template",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
 	"file.sort": "Change position",
 

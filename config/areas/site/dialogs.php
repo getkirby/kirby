@@ -538,6 +538,13 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change template
+	'page.file.changeTemplate' => [
+		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete
 	'page.file.delete' => [
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
@@ -601,6 +608,13 @@ return [
 		'pattern' => '(site)/files/(:any)/changeSort',
 		'load'    => $files['changeSort']['load'],
 		'submit'  => $files['changeSort']['submit'],
+	],
+
+	// change template
+	'site.file.changeTemplate' => [
+		'pattern' => '(site)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
 	],
 
 	// delete
