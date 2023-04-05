@@ -45,6 +45,7 @@ export default {
 		},
 		/**
 		 * Visual look of the headline
+		 * @values positive, negative
 		 */
 		theme: {
 			type: String

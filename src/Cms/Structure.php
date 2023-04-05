@@ -21,6 +21,13 @@ use Kirby\Exception\InvalidArgumentException;
 class Structure extends Collection
 {
 	/**
+	 * All registered structure methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
+	/**
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param array $objects Kirby\Cms\StructureObject` objects or props arrays

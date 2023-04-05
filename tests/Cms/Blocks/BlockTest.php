@@ -359,4 +359,51 @@ class BlockTest extends TestCase
 		$this->assertSame('gallery', $block->prev()->type());
 		$this->assertSame('quote', $block->next()->type());
 	}
+
+	public function testImageBlock()
+	{
+		$this->app = new App([
+			'roots' => [
+				'index'   => __DIR__ . '/tmp',
+				'content' => __DIR__ . '/fixtures/files'
+			]
+		]);
+
+		// no alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'image' => 'foo.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/foo.jpg" alt="">';
+		$this->assertStringContainsString($expected, $block->toHtml());
+
+		// image alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'image' => 'bar.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Sample alt text">';
+		$this->assertStringContainsString($expected, $block->toHtml());
+
+		// custom alt
+		$block = new Block([
+			'type'    => 'image',
+			'content' => [
+				'alt'   => 'Custom image alt text',
+				'image' => 'bar.jpg'
+			]
+		]);
+
+		$image = $block->image()->toFile();
+		$expected = '<img src="/media/site/' . $image->mediaHash() . '/bar.jpg" alt="Custom image alt text">';
+		$this->assertStringContainsString($expected, $block->toHtml());
+	}
 }

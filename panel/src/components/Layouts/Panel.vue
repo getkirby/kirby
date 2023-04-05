@@ -18,7 +18,10 @@
 		</template>
 
 		<!-- Fatal iframe -->
-		<k-fatal v-if="$store.state.fatal !== false" :html="$store.state.fatal" />
+		<k-fatal
+			v-if="$panel.notification.isFatal && $panel.notification.isOpen"
+			:html="$panel.notification.message"
+		/>
 
 		<!-- Offline warning -->
 		<k-offline-warning v-if="$system.isLocal === false" />
@@ -26,7 +29,9 @@
 		<!-- Icons -->
 		<k-icons />
 
-		<portal-target name="overlay" slim />
+		<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
+		<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>
 

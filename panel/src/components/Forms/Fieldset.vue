@@ -124,7 +124,7 @@ export default {
 			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
-			return Object.keys(this.errors).length;
+			return this.$helper.object.length(this.errors) > 0;
 		}
 	}
 };

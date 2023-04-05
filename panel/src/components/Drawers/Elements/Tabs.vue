@@ -6,20 +6,29 @@
 			:current="tab === tabButton.name"
 			:text="tabButton.label"
 			class="k-drawer-tab"
-			@click.stop="$emit('tab', tabButton.name)"
+			@click="$emit('open', tabButton.name)"
 		/>
 	</nav>
 </template>
 
 <script>
-export default {
+export const props = {
 	props: {
-		tab: String,
-		tabs: Array
-	},
+		tab: {
+			type: String
+		},
+		tabs: {
+			default: () => {},
+			type: [Array, Object]
+		}
+	}
+};
+
+export default {
+	mixins: [props],
 	computed: {
 		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
+			return this.$helper.object.length(this.tabs) > 1;
 		}
 	}
 };

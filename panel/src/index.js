@@ -1,4 +1,4 @@
-import Vue, { h } from "vue";
+import Vue, { h, reactive } from "vue";
 
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
@@ -9,6 +9,7 @@ import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
 import Libraries from "./libraries/index.js";
+import Notification from "./panel/notification.js";
 import Plugins from "./config/plugins.js";
 import store from "./store/store.js";
 import Vuelidate from "vuelidate";
@@ -19,9 +20,21 @@ Vue.config.devtools = true;
 const app = new Vue({
 	store,
 	created() {
-		window.panel.$vue = window.panel.app = this;
 		window.panel.plugins.created.forEach((plugin) => plugin(this));
+		window.panel.$vue = window.panel.app = this;
 		this.$store.dispatch("content/init");
+
+		/**
+		 * This is temporary panel setup
+		 * code until the entire panel.js class is there
+		 */
+		window.panel.notification = Notification({
+			debug: window.panel.$config.debug
+		});
+
+		reactive(window.panel.notification);
+
+		Vue.prototype.$panel = window.panel;
 	},
 	render: () => h(App)
 });

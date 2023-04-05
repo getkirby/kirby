@@ -186,7 +186,7 @@ export default {
 		complete(file, data) {
 			this.completed[file.name] = data;
 
-			if (Object.keys(this.completed).length == this.total) {
+			if (this.$helper.object.length(this.completed) == this.total) {
 				// remove the selected file
 				this.$refs.input.value = "";
 

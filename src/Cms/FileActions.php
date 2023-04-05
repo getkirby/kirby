@@ -96,6 +96,38 @@ trait FileActions
 	}
 
 	/**
+	 * @return $this|static
+	 */
+	public function changeTemplate(string|null $template): static
+	{
+		if ($template === $this->template()) {
+			return $this;
+		}
+
+		$arguments = [
+			'file'     => $this,
+			'template' => $template ?? 'default'
+		];
+
+		return $this->commit('changeTemplate', $arguments, function ($oldFile, $template) {
+			// convert to new template/blueprint incl. content
+			$file = $oldFile->convertTo($template);
+
+			// update template, prefer unset over writing `default`
+			if ($template === 'default') {
+				$file = $file->update(['template' => null]);
+			} else {
+				$file = $file->update(['template' => $template]);
+			}
+
+			// resize the file if configured by new blueprint
+			$file->manipulate($file->blueprint()->create());
+
+			return $file;
+		});
+	}
+
+	/**
 	 * Commits a file action, by following these steps
 	 *
 	 * 1. checks the action rules

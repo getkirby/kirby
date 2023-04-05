@@ -87,7 +87,7 @@ export default {
 					this.values.password
 				);
 
-				this.$store.dispatch("notification/success", ":)");
+				this.$panel.notification.success();
 				this.$go("/");
 			} catch (error) {
 				this.issue = error.message;

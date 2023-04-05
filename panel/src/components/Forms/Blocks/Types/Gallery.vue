@@ -44,10 +44,10 @@ export default {
 			return this.field("caption", { marks: true }).marks;
 		},
 		crop() {
-			return this.content.crop || false;
+			return this.content.crop;
 		},
 		ratio() {
-			return this.content.ratio || false;
+			return this.content.ratio;
 		}
 	}
 };

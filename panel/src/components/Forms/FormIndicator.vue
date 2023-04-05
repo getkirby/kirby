@@ -35,9 +35,9 @@ export default {
 			return this.ids.length > 0;
 		},
 		ids() {
-			return Object.keys(this.store).filter((id) => {
-				return Object.keys(this.store[id]?.changes || {}).length > 0;
-			});
+			return Object.keys(this.store).filter(
+				(id) => this.$helper.object.length(this.store[id]?.changes) > 0
+			);
 		},
 		store() {
 			return this.$store.state.content.models;

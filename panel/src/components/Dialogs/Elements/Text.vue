@@ -11,9 +11,7 @@ export const props = {
 		 */
 		empty: {
 			type: String,
-			default() {
-				return window.panel.$t("dialog.text.empty");
-			}
+			default: () => window.panel.$t("dialog.text.empty")
 		},
 		text: {
 			type: String

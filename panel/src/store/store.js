@@ -14,7 +14,6 @@ export default new Vuex.Store({
 	state: {
 		dialog: null,
 		drag: null,
-		fatal: false,
 		isLoading: false
 	},
 	mutations: {
@@ -23,9 +22,6 @@ export default new Vuex.Store({
 		},
 		SET_DRAG(state, drag) {
 			state.drag = drag;
-		},
-		SET_FATAL(state, html) {
-			state.fatal = html;
 		},
 		SET_LOADING(state, loading) {
 			state.isLoading = loading;
@@ -38,27 +34,11 @@ export default new Vuex.Store({
 		drag(context, drag) {
 			context.commit("SET_DRAG", drag);
 		},
+		/**
+		 * @deprecated Use window.panel.notification.fatal()
+		 */
 		fatal(context, options) {
-			// close the fatal window if false
-			// is passed as options
-			if (options === false) {
-				context.commit("SET_FATAL", false);
-				return;
-			}
-
-			console.error("The JSON response could not be parsed");
-
-			// show the full response in the console
-			// if debug mode is enabled
-			if (window.panel.$config.debug) {
-				console.info(options.html);
-			}
-
-			// only show the fatal dialog if the silent
-			// option is not set to true
-			if (!options.silent) {
-				context.commit("SET_FATAL", options.html);
-			}
+			window.panel.notification.fatal(options);
 		},
 		isLoading(context, loading) {
 			context.commit("SET_LOADING", loading === true);

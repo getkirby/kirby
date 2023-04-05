@@ -84,15 +84,7 @@ export default {
 			};
 		},
 		isEmpty() {
-			if (!this.object) {
-				return true;
-			}
-
-			if (this.object && Object.keys(this.object).length === 0) {
-				return true;
-			}
-
-			return false;
+			return this.$helper.object.length(this.object) === 0;
 		},
 		isInvalid() {
 			return this.required === true && this.isEmpty;

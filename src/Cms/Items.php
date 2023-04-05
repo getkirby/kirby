@@ -22,6 +22,13 @@ class Items extends Collection
 	protected Field|null $field;
 
 	/**
+	 * All registered items methods
+	 *
+	 * @var array
+	 */
+	public static $methods = [];
+
+	/**
 	 * @var array
 	 */
 	protected $options;

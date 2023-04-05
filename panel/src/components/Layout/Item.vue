@@ -94,7 +94,7 @@ export default {
 	},
 	computed: {
 		hasFigure() {
-			return this.image !== false && Object.keys(this.image).length > 0;
+			return this.image !== false && this.$helper.object.length(this.image) > 0;
 		},
 		sizes() {
 			switch (this.width) {

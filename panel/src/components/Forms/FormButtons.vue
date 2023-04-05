@@ -279,19 +279,19 @@ export default {
 			try {
 				await this.$store.dispatch("content/save");
 				this.$events.$emit("model.update");
-				this.$store.dispatch("notification/success", ":)");
+				this.$panel.notification.success();
 			} catch (response) {
 				if (response.code === 403) {
 					return;
 				}
 
-				if (response.details && Object.keys(response.details).length > 0) {
-					this.$store.dispatch("notification/error", {
+				if (this.$helper.object.length(response.details) > 0) {
+					this.$panel.notification.error({
 						message: this.$t("error.form.incomplete"),
 						details: response.details
 					});
 				} else {
-					this.$store.dispatch("notification/error", {
+					this.$panel.notification.error({
 						message: this.$t("error.form.notSaved"),
 						details: [
 							{

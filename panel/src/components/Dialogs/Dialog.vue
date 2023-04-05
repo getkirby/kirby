@@ -1,58 +1,58 @@
 <template>
 	<k-overlay
 		ref="overlay"
-		:autofocus="autofocus"
-		:centered="centered"
-		:dimmed="dimmed"
-		:loading="loading"
+		:centered="true"
+		:dimmed="true"
 		:visible="visible"
-		class="k-dialog-overlay"
+		type="dialog"
 		@cancel="cancel"
 		@ready="ready"
 	>
-		<k-dialog-box :size="size" :class="$vnode.data.staticClass">
-			<k-dialog-form @submit="submit">
-				<k-dialog-notification
-					v-if="notification"
-					v-bind="notification"
-					@close="notification = null"
-				/>
-				<k-dialog-body>
-					<slot />
-				</k-dialog-body>
-				<slot name="footer">
-					<k-dialog-footer v-if="cancelButton || submitButton">
-						<k-dialog-buttons
-							:cancel-button="cancelButton"
-							:disabled="disabled"
-							:icon="icon"
-							:submit-button="submitButton"
-							:theme="theme"
-							@cancel="cancel"
-							@submit="submit"
-						/>
-					</k-dialog-footer>
-				</slot>
-			</k-dialog-form>
-		</k-dialog-box>
+		<form
+			:class="$vnode.data.staticClass"
+			:data-size="size"
+			class="k-dialog"
+			method="dialog"
+			@submit.prevent="submit"
+		>
+			<k-dialog-notification
+				v-if="notification"
+				v-bind="notification"
+				@close="notification = null"
+			/>
+			<k-dialog-body>
+				<slot />
+			</k-dialog-body>
+			<slot name="footer">
+				<k-dialog-footer v-if="cancelButton || submitButton">
+					<k-dialog-buttons
+						:cancel-button="cancelButton"
+						:disabled="disabled"
+						:icon="icon"
+						:submit-button="submitButton"
+						:theme="theme"
+						@cancel="cancel"
+						@submit="submit"
+					/>
+				</k-dialog-footer>
+			</slot>
+		</form>
 	</k-overlay>
 </template>
 
 <script>
-import { props as Box } from "./Elements/Box.vue";
 import { props as Buttons } from "./Elements/Buttons.vue";
-import { props as Overlay } from "@/components/Layout/Overlay.vue";
 
 export const props = {
-	mixins: [Overlay, Box, Buttons],
+	mixins: [Buttons],
 	props: {
-		/**
-		 * Dialogs are centered by default.
-		 * The overlay sets the default to false
-		 * here so we need to overwrite it.
-		 */
-		centered: {
-			default: true
+		size: {
+			default: "default",
+			type: String
+		},
+		visible: {
+			default: false,
+			type: Boolean
 		}
 	}
 };
@@ -69,19 +69,17 @@ export default {
 	},
 	methods: {
 		/**
-		 * Opens the overlay and triggers the `@open` event
-		 * Use the `ready` event to
+		 * Triggers the `@cancel` event and closes the dialog.
 		 * @public
 		 */
-		open() {
-			// show the
-			this.$refs.overlay.open();
-
+		cancel() {
 			/**
-			 * This event is triggered as soon as the dialog is being opened.
-			 * @event open
+			 * This event is triggered whenever the cancel button or
+			 * the backdrop is clicked.
+			 * @event cancel
 			 */
-			this.$emit("open");
+			this.$emit("cancel");
+			this.close();
 		},
 		/**
 		 * Triggers the `@close` event and closes the dialog.
@@ -106,19 +104,6 @@ export default {
 			this.$refs.overlay?.close();
 		},
 		/**
-		 * Triggers the `@cancel` event and closes the dialog.
-		 * @public
-		 */
-		cancel() {
-			/**
-			 * This event is triggered whenever the cancel button or
-			 * the backdrop is clicked.
-			 * @event cancel
-			 */
-			this.$emit("cancel");
-			this.close();
-		},
-		/**
 		 * Shows the error notification bar in the dialog with the given message
 		 * @public
 		 * @param {string} message
@@ -141,6 +126,21 @@ export default {
 		 */
 		focus() {
 			this.$refs.overlay.focus();
+		},
+		/**
+		 * Opens the overlay and triggers the `@open` event
+		 * Use the `ready` event to
+		 * @public
+		 */
+		open() {
+			// show the overlay
+			this.$refs.overlay.open();
+
+			/**
+			 * This event is triggered as soon as the dialog is being opened.
+			 * @event open
+			 */
+			this.$emit("open");
 		},
 		/**
 		 * When the overlay is open and fully usable
@@ -189,7 +189,7 @@ export default {
 			// string is passed to the method
 			if (typeof success === "string") {
 				this.notification = {
-					message: message,
+					message: success,
 					type: "success"
 				};
 
@@ -199,30 +199,27 @@ export default {
 
 			// send a global success notification
 			if (success.message) {
-				this.$store.dispatch("notification/success", success.message);
+				this.$panel.notification.success(success.message);
 			}
 
 			// dispatch store actions that might have been defined in
 			// the success response
 			if (success.dispatch) {
-				Object.keys(success.dispatch).forEach((event) => {
+				for (const event in success.dispatch) {
 					const payload = success.dispatch[event];
 					this.$store.dispatch(
 						event,
 						Array.isArray(payload) === true ? [...payload] : payload
 					);
-				});
+				}
 			}
 
 			// send optional events to the event bus
 			if (success.event) {
 				// wrap events in an array
-				success.event = Array.isArray(success.event)
-					? success.event
-					: [success.event];
-				success.event.forEach((event) => {
+				for (const event of Array.wrap(success.event)) {
 					this.$events.$emit(event, success);
-				});
+				}
 			}
 
 			// emit a general success event unless it is
@@ -233,12 +230,69 @@ export default {
 
 			// redirect (route is deprecated)
 			if (success.redirect || success.route) {
-				return this.$go(success.redirect || success.route);
+				return this.$go(success.redirect ?? success.route);
 			}
 
 			// reload the current view
-			this.$reload(success.reload || {});
+			this.$reload(success.reload ?? {});
 		}
 	}
 };
 </script>
+
+<style>
+:root {
+	--dialog-color-back: var(--color-light);
+	--dialog-color-text: currentColor;
+	--dialog-rounded: var(--rounded-md);
+	--dialog-padding: var(--spacing-6);
+	--dialog-shadow: var(--shadow-xl);
+	--dialog-width: 22rem;
+}
+
+.k-dialog {
+	position: relative;
+	background: var(--dialog-color-back);
+	color: var(--dialog-color-text);
+	width: clamp(10rem, 100%, var(--dialog-width));
+	box-shadow: var(--dialog-shadow);
+	border-radius: var(--dialog-rounded);
+	line-height: 1;
+	max-height: calc(100vh - 3rem);
+	margin: 1.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+@media screen and (min-width: 20rem) {
+	.k-dialog[data-size="small"] {
+		--dialog-width: 20rem;
+	}
+}
+
+@media screen and (min-width: 22rem) {
+	.k-dialog[data-size="default"] {
+		--dialog-width: 22rem;
+	}
+}
+
+@media screen and (min-width: 30rem) {
+	.k-dialog[data-size="medium"] {
+		--dialog-width: 30rem;
+	}
+}
+
+@media screen and (min-width: 40rem) {
+	.k-dialog[data-size="large"] {
+		--dialog-width: 40rem;
+	}
+}
+
+/** Pagination **/
+.k-dialog .k-pagination {
+	margin-bottom: -1.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+</style>

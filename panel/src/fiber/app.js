@@ -29,11 +29,8 @@ export default {
 			 *
 			 * @param {object}
 			 */
-			onFatal({ text, options }) {
-				this.$store.dispatch("fatal", {
-					html: text,
-					silent: options.silent
-				});
+			onFatal({ text }) {
+				window.panel.notification.fatal(text);
 			},
 			/**
 			 * Is being called when a Fiber request

@@ -6,7 +6,7 @@
 				<k-button
 					icon="cancel"
 					text="Close"
-					@click="$store.dispatch('fatal', false)"
+					@click="$panel.notification.close()"
 				/>
 			</k-bar>
 			<iframe ref="iframe" class="k-fatal-iframe" />
