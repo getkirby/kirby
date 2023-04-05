@@ -227,7 +227,7 @@ export default () => {
 		 * @param {Event} e
 		 */
 		keyup(e) {
-			this.emit(keychain("keyup", e), e);
+			this.emit(this.keychain("keyup", e), e);
 			this.emit("keyup", e);
 		},
 
