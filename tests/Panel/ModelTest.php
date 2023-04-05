@@ -317,9 +317,9 @@ class ModelTest extends TestCase
 			'cover'  => true
 		], 'cards');
 
-		$this->assertStringContainsString('test-352x234.67-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-352x235-crop.jpg 352w', $image['srcset']);
 		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
-		$this->assertStringContainsString('test-1408x938.67-crop.jpg 1408w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x939-crop.jpg 1408w', $image['srcset']);
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
