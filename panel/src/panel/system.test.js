@@ -5,7 +5,7 @@
 import { describe, expect, it } from "vitest";
 import System from "./system";
 
-describe.concurrent("panel.system()", () => {
+describe.concurrent("panel.system", () => {
 	it("should have a default state", async () => {
 		const system = System();
 
