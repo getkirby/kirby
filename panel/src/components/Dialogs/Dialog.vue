@@ -199,7 +199,7 @@ export default {
 
 			// send a global success notification
 			if (success.message) {
-				this.$store.dispatch("notification/success", success.message);
+				this.$panel.notification.success(success.message);
 			}
 
 			// dispatch store actions that might have been defined in

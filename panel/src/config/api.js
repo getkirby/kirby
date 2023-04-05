@@ -29,8 +29,8 @@ export default {
 						window.console.error(error);
 					}
 				},
-				onParserError: ({ html, silent }) => {
-					store.dispatch("fatal", { html, silent });
+				onParserError: ({ html }) => {
+					window.panel.notification.fatal(html);
 				},
 				onPrepare: (options) => {
 					// if language set, add to headers

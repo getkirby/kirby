@@ -5,6 +5,7 @@ import Timer from "./timer.js";
 
 export const defaults = () => {
 	return {
+		details: null,
 		isOpen: false,
 		message: null,
 		timeout: null,
@@ -12,7 +13,7 @@ export const defaults = () => {
 	};
 };
 
-export default (panel) => {
+export default (panel = {}) => {
 	const parent = Module("$notification", defaults());
 
 	return {
@@ -40,14 +41,26 @@ export default (panel) => {
 		 * When a drawer or dialog is open, it's
 		 * displayed there instead of the topbar
 		 *
-		 * @returns {String} dialog|drawer|view
+		 * @returns {false|String} false|dialog|drawer|fatal|error|view
 		 */
 		get context() {
-			if (panel.dialog.isOpen) {
+			// no notifications, no context
+			if (this.isOpen === false) {
+				return false;
+			}
+
+			// show notifications in the fatal overlay
+			if (this.type === "fatal") {
+				return "fatal";
+			}
+
+			// show notifications in the dialog
+			if (panel.dialog?.isOpen) {
 				return "dialog";
 			}
 
-			if (panel.drawer.isOpen) {
+			// show notifications in the drawer
+			if (panel.drawer?.isOpen) {
 				return "drawer";
 			}
 
@@ -102,6 +115,7 @@ export default (panel) => {
 
 			return this.open({
 				message: error.message || "Something went wrong",
+				details: error.details || {},
 				type: "error"
 			});
 		},

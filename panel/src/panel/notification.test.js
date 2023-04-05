@@ -102,10 +102,7 @@ describe.concurrent("panel.notification", () => {
 	});
 
 	it("should convert Error objects", async () => {
-		const notification = Notification({
-			// switch off debugging to avoid console output
-			debug: false
-		});
+		const notification = Notification();
 
 		notification.error(new Error("test"));
 

@@ -83,7 +83,7 @@ export default {
 			}
 		},
 		onUpload() {
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		}
 	}
