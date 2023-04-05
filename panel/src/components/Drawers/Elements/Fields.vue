@@ -33,7 +33,7 @@ export default {
 	mixins: [props],
 	computed: {
 		hasFields() {
-			return Object.keys(this.fields || {}).length > 0;
+			return this.$helper.object.length(this.fields) > 0;
 		}
 	}
 };
