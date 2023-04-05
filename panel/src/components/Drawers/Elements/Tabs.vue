@@ -3,10 +3,10 @@
 		<k-button
 			v-for="tabButton in tabs"
 			:key="tabButton.name"
-			:current="tab.name === tabButton.name"
+			:current="tab === tabButton.name"
 			:text="tabButton.label"
 			class="k-drawer-tab"
-			@click="$emit('open', tabButton)"
+			@click="$emit('open', tabButton.name)"
 		/>
 	</nav>
 </template>
@@ -15,8 +15,7 @@
 export const props = {
 	props: {
 		tab: {
-			default: () => {},
-			type: Object
+			type: String
 		},
 		tabs: {
 			default: () => {},

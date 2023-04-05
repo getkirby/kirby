@@ -42,7 +42,7 @@ export default {
 	data() {
 		return {
 			notification: null,
-			tab: {}
+			tab: null
 		};
 	},
 	computed: {
@@ -133,7 +133,7 @@ export default {
 			this.$emit("openCrumb", crumb);
 		},
 		openTab(tab) {
-			tab = tab || Object.values(this.tabs)[0] || {};
+			tab = tab || Object.keys(this.tabs)[0];
 
 			if (!tab) {
 				return false;

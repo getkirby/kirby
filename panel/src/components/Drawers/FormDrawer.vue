@@ -51,7 +51,7 @@ export default {
 	},
 	watch: {
 		tab() {
-			this.fieldset = this.tab.fields;
+			this.fieldset = this.tabs[this.tab]?.fields || {};
 
 			// focus on the first best element
 			// in the drawer

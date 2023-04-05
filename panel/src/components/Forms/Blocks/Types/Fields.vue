@@ -29,12 +29,12 @@
 export default {
 	data() {
 		return {
-			tab: Object.values(this.fieldset.tabs)[0]
+			tab: Object.keys(this.fieldset.tabs)[0]
 		};
 	},
 	computed: {
 		fields() {
-			return this.tab.fields;
+			return this.fieldset.tabs[this.tab]?.fields;
 		},
 		values() {
 			return Object.assign({}, this.content);
