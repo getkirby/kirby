@@ -12,7 +12,7 @@ class FocusTest extends TestCase
 	/**
 	 * @covers ::coords
 	 */
-	public function testFocus()
+	public function testCoords()
 	{
 		$options = [
 			'sourceWidth'  => 1200,
@@ -97,6 +97,22 @@ class FocusTest extends TestCase
 		$this->assertSame(700, $focus['x2']);
 		$this->assertSame(293, $focus['y1']);
 		$this->assertSame(906, $focus['y2']);
+	}
+
+	/**
+	 * @covers ::coords
+	 */
+	public function testCoordsSameRatio()
+	{
+		$options = [
+			'sourceWidth'  => 1200,
+			'sourceHeight' => 700,
+			'width'        => 600,
+			'height'       => 350,
+			'crop'         => '30% 70%'
+		];
+
+		$this->assertNull(Focus::coords(...$options));
 	}
 
 	/**

@@ -48,7 +48,7 @@ trait FileModifications
 	public function crop(int $width, int $height = null, $options = null)
 	{
 		$quality = null;
-		$crop    = $this->focus()->value() ?? 'center';
+		$crop    = true;
 
 		if (is_int($options) === true) {
 			$quality = $options;

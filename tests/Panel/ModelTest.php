@@ -261,6 +261,7 @@ class ModelTest extends TestCase
 	 * @covers ::image
 	 * @covers ::imageDefaults
 	 * @covers ::imageSource
+	 * @covers ::imageSrcset
 	 */
 	public function testImage()
 	{
@@ -316,9 +317,9 @@ class ModelTest extends TestCase
 			'cover'  => true
 		], 'cards');
 
-		$this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
-		$this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
-		$this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
+		$this->assertStringContainsString('test-352x234.67-crop.jpg 352w', $image['srcset']);
+		$this->assertStringContainsString('test-864x576-crop.jpg 864w', $image['srcset']);
+		$this->assertStringContainsString('test-1408x938.67-crop.jpg 1408w', $image['srcset']);
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
@@ -337,8 +338,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($icon, $image['icon']);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-38x38.jpg 1x', $image['srcset']);
-		$this->assertStringContainsString('test-76x76.jpg 2x', $image['srcset']);
+		$this->assertStringContainsString('test-38x38-crop.jpg 1x', $image['srcset']);
+		$this->assertStringContainsString('test-76x76-crop.jpg 2x', $image['srcset']);
 	}
 
 	/**
