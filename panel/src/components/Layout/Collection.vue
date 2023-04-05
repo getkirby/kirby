@@ -52,9 +52,7 @@ export default {
 	props: {
 		columns: {
 			type: [Object, Array],
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		empty: Object,
 		/**
@@ -63,9 +61,7 @@ export default {
 		help: String,
 		items: {
 			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		/**
 		 * Layout of the collection
@@ -93,9 +89,7 @@ export default {
 		sortable: Boolean,
 		pagination: {
 			type: [Boolean, Object],
-			default() {
-				return false;
-			}
+			default: false
 		}
 	},
 	computed: {

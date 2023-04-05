@@ -27,9 +27,7 @@ export const props = {
 	mixins: [Tabs],
 	props: {
 		breadcrumb: {
-			default() {
-				return [];
-			},
+			default: () => [],
 			type: Array
 		},
 		icon: {

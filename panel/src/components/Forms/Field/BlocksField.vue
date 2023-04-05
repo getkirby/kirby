@@ -82,9 +82,7 @@ export default {
 		},
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
