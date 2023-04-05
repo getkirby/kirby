@@ -206,7 +206,6 @@ abstract class Model
 			default    => [38, 76]
 		};
 
-
 		// no additional modfications needed if `cover: false`
 		if (($settings['cover'] ?? false) === false) {
 			return $image->srcset($sizes);
@@ -221,17 +220,17 @@ abstract class Model
 			return $image->srcset([
 				$sizes[0] . 'w' => [
 					'width'  => $sizes[0],
-					'height' => round($sizes[0] / $ratio, 2),
+					'height' => round($sizes[0] / $ratio),
 					'crop'   => true
 				],
 				$sizes[1] . 'w' => [
 					'width'  => $sizes[1],
-					'height' => round($sizes[1] / $ratio, 2),
+					'height' => round($sizes[1] / $ratio),
 					'crop'   => true
 				],
 				$sizes[2] . 'w' => [
 					'width'  => $sizes[2],
-					'height' => round($sizes[2] / $ratio, 2),
+					'height' => round($sizes[2] / $ratio),
 					'crop'   => true
 				]
 			]);
