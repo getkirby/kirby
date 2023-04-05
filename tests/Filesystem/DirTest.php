@@ -302,6 +302,25 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryChild
+	 */
+	public function testInventoryWithMoreThan5PageModels()
+	{
+		Page::$models = ['a' => '', 'b' => '', 'c' => '', 'd' => '', 'e' => '', 'f' => ''];
+
+		$inventory = $this->create([
+			'1_project-a',
+			'1_project-a/c.txt',
+			'cover.jpg',
+			'cover.jpg.txt'
+		]);
+
+		$this->assertSame('c', $inventory['children'][0]['model']);
+		Page::$models = [];
+	}
+
+	/**
+	 * @covers ::inventory
 	 */
 	public function testInventoryWithSkippedFiles()
 	{
@@ -321,6 +340,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryChild
 	 */
 	public function testInventoryChildSorting()
 	{
@@ -337,6 +357,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryChild
 	 */
 	public function testInventoryChildWithLeadingZero()
 	{
@@ -376,6 +397,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryMissingTemplate()
 	{
@@ -390,6 +412,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
+	 * @covers ::inventoryTemplate
 	 */
 	public function testInventoryTemplateWithDotInFilename()
 	{
@@ -450,7 +473,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
 	public function testInventoryModels()
 	{
@@ -474,7 +497,7 @@ class DirTest extends TestCase
 
 	/**
 	 * @covers ::inventory
-	 * @covers ::inventoryModels
+	 * @covers ::inventoryChild
 	 */
 	public function testInventoryMultilangModels()
 	{

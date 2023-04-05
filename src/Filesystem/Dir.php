@@ -313,7 +313,7 @@ class Dir
 		// than many calls to file_exists()
 		if (count(Page::$models) < 6) {
 			foreach (Page::$models as $modelName => $modelClass) {
-				if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
+				if (file_exists($root . '/' . $modelName . '.' . $contentExtension)) {
 					$model = $modelName;
 					break;
 				}
@@ -322,7 +322,7 @@ class Dir
 			$files = scandir($root, SCANDIR_SORT_NONE);
 
 			foreach (Page::$models as $modelName => $modelClass) {
-				if (in_array($modelName . $contentExtension, $files) === true) {
+				if (in_array($modelName . '.' . $contentExtension, $files)) {
 					$model = $modelName;
 					break;
 				}
