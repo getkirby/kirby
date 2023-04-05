@@ -80,7 +80,7 @@ export default {
 		notification(notification) {
 			// send the notification to the dialog instead
 			// of the topbar.
-			if (notification.type === "error") {
+			if (notification?.type === "error") {
 				this.$dialog({
 					component: "k-error-dialog",
 					props: notification.state()
