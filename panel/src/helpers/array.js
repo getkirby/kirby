@@ -3,7 +3,7 @@ import sort from "./sort";
 /**
  * Array.fromObject()
  */
-Array.prototype.fromObject = function (object) {
+Array.fromObject = function (object) {
 	return Array.isArray(object) ? object : Object.values(object ?? {});
 };
 
@@ -30,8 +30,6 @@ Array.prototype.sortBy = function (sortBy) {
 /**
  * Array.wrap()
  */
-Array.prototype.wrap = function (array) {
+Array.wrap = function (array) {
 	return Array.isArray(array) ? array : [array];
 };
-
-export default {};
