@@ -123,9 +123,7 @@ export default {
 		 */
 		time: {
 			type: [Boolean, Object],
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		/**
 		 * Deactivate the times dropdown or not

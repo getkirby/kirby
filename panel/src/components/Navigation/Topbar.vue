@@ -49,15 +49,18 @@ export default {
 		}
 	},
 	watch: {
-		notification(notification) {
-			// send the notification to the dialog instead
-			// of the topbar.
-			if (notification?.type === "error") {
-				this.$dialog({
-					component: "k-error-dialog",
-					props: notification.state()
-				});
-			}
+		notification: {
+			handler(notification) {
+				// send the notification to the dialog instead
+				// of the topbar.
+				if (notification?.type === "error") {
+					this.$dialog({
+						component: "k-error-dialog",
+						props: notification.state()
+					});
+				}
+			},
+			immediate: true
 		}
 	},
 	methods: {

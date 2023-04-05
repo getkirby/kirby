@@ -49,15 +49,11 @@ export default {
 	props: {
 		columns: {
 			type: [Object, Array],
-			default() {
-				return {};
-			}
+			default: () => []
 		},
 		items: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		layout: {
 			type: String,
@@ -69,9 +65,7 @@ export default {
 		},
 		image: {
 			type: [Object, Boolean],
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		sortable: Boolean,
 		/**

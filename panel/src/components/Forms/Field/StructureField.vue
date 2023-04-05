@@ -155,9 +155,7 @@ export default {
 		sortBy: String,
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {

@@ -70,9 +70,7 @@ export default {
 	props: {
 		types: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		type: String
 	},

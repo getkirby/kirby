@@ -34,9 +34,7 @@ export const props = {
 		},
 		formData: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		sync: {
 			type: String

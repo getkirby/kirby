@@ -6,18 +6,14 @@ export default {
 		prev: Object,
 		permissions: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		lock: {
 			type: [Boolean, Object]
 		},
 		model: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		tab: {
 			type: Object,
@@ -29,9 +25,7 @@ export default {
 		},
 		tabs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	computed: {

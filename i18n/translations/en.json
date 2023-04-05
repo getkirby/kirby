@@ -44,6 +44,9 @@
 	"dimensions": "Dimensions",
 	"disabled": "Disabled",
 	"discard": "Discard",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Download",
 	"duplicate": "Duplicate",
 

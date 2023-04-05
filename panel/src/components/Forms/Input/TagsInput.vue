@@ -99,9 +99,7 @@ export const props = {
 		 */
 		options: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		separator: {
 			type: String,
@@ -109,9 +107,7 @@ export const props = {
 		},
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	}
 };

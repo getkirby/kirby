@@ -26,9 +26,7 @@ export default {
 	props: {
 		crumbs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		label: {
 			type: String,
