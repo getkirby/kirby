@@ -3,20 +3,29 @@
 		<k-button
 			v-for="tabButton in tabs"
 			:key="tabButton.name"
-			:current="tab == tabButton.name"
+			:current="tab === tabButton.name"
 			:text="tabButton.label"
 			class="k-drawer-tab"
-			@click.stop="$emit('tab', tabButton.name)"
+			@click="$emit('open', tabButton.name)"
 		/>
 	</nav>
 </template>
 
 <script>
-export default {
+export const props = {
 	props: {
-		tab: String,
-		tabs: [Object, Array]
-	},
+		tab: {
+			type: String
+		},
+		tabs: {
+			default: () => {},
+			type: [Array, Object]
+		}
+	}
+};
+
+export default {
+	mixins: [props],
 	computed: {
 		hasTabs() {
 			return this.$helper.object.length(this.tabs) > 1;

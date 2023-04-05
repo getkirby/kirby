@@ -62,12 +62,10 @@
 			:title="fieldset.name"
 			:value="content"
 			class="k-block-drawer"
-			@close="
-				focus();
-				$emit('close');
-			"
-			@input="$emit('update', $event)"
-			@open="$emit('open')"
+			@close="onDrawerClose"
+			@input="onDrawerInput"
+			@open="onDrawerOpen"
+			@submit="onDrawerSubmit"
 		>
 			<template #options>
 				<k-button
@@ -254,6 +252,20 @@ export default {
 
 			return false;
 		},
+		onDrawerClose() {
+			this.$emit("close");
+			this.focus();
+		},
+		onDrawerInput(value) {
+			this.$emit("update", value);
+		},
+		onDrawerOpen() {
+			this.$emit("open");
+		},
+		onDrawerSubmit() {
+			this.$emit("submit");
+			this.close();
+		},
 		onFocusIn(event) {
 			// skip focus if the event is coming from the options buttons
 			// to preserve the current focus (since options buttons directly
@@ -270,6 +282,9 @@ export default {
 		remove() {
 			this.$refs.removeDialog.close();
 			this.$emit("remove", this.id);
+		},
+		submit() {
+			this.close();
 		}
 	}
 };

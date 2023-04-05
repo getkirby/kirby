@@ -26,7 +26,9 @@
 		<!-- Icons -->
 		<k-icons />
 
-		<portal-target name="overlay" slim />
+		<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
+		<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>
 
