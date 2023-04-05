@@ -10,6 +10,7 @@ describe.concurrent("panel.notification", () => {
 		const notification = Notification();
 
 		const state = {
+			details: null,
 			isOpen: false,
 			message: null,
 			timeout: null,
@@ -41,6 +42,10 @@ describe.concurrent("panel.notification", () => {
 		};
 
 		const notification = Notification(panel);
+
+		expect(notification.context).toStrictEqual(false);
+
+		notification.isOpen = true;
 
 		expect(notification.context).toStrictEqual("view");
 

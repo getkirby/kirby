@@ -109,10 +109,6 @@ export default (panel = {}) => {
 				});
 			}
 
-			if (panel.debug) {
-				console.error(error);
-			}
-
 			return this.open({
 				message: error.message || "Something went wrong",
 				details: error.details || {},
