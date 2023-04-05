@@ -152,9 +152,9 @@ export default {
 					globals: ["$system", "$translation"]
 				});
 
-				this.$store.dispatch("notification/success", this.$t("welcome") + "!");
+				this.$panel.notification.success(this.$t("welcome") + "!");
 			} catch (error) {
-				this.$store.dispatch("notification/error", error);
+				this.$panel.notification.error(error);
 			}
 		}
 	}

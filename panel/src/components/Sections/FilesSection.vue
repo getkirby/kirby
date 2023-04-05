@@ -86,11 +86,11 @@ export default {
 					files: items.map((item) => item.id),
 					index: this.pagination.offset
 				});
-				this.$store.dispatch("notification/success", ":)");
+				this.$panel.notification.success();
 				this.$events.$emit("file.sort");
 			} catch (error) {
 				this.reload();
-				this.$store.dispatch("notification/error", error.message);
+				this.$panel.notification.error(error.message);
 			} finally {
 				this.isProcessing = false;
 			}
@@ -98,7 +98,7 @@ export default {
 		onUpload() {
 			this.$events.$emit("file.create");
 			this.$events.$emit("model.update");
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 		},
 		replace(file) {
 			this.$refs.upload.open({
