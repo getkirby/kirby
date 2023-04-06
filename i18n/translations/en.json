@@ -314,6 +314,9 @@
 	"file.changeTemplate": "Change template",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Change position",
 
 	"files": "Files",

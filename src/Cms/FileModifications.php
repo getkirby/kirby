@@ -48,7 +48,7 @@ trait FileModifications
 	public function crop(int $width, int $height = null, $options = null)
 	{
 		$quality = null;
-		$crop    = 'center';
+		$crop    = true;
 
 		if (is_int($options) === true) {
 			$quality = $options;
@@ -190,6 +190,11 @@ trait FileModifications
 
 		if (empty($options) === true || is_array($options) === false) {
 			return $this;
+		}
+
+		// fallback to content file options
+		if (($options['crop'] ?? false) === true) {
+			$options['crop'] = $this->focus()->value() ?? 'center';
 		}
 
 		// fallback to global config options
