@@ -17,7 +17,7 @@ describe.concurrent("panel.language", () => {
 			rules: []
 		};
 
-		expect(language.key()).toStrictEqual("$language");
+		expect(language.key()).toStrictEqual("language");
 		expect(language.state()).toStrictEqual(state);
 	});
 
