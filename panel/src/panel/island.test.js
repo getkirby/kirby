@@ -94,6 +94,25 @@ describe.concurrent("panel/island.js", () => {
 		expect(panel.notification.isOpen).toStrictEqual(false);
 	});
 
+	it("should not close a previous notification on re-open", async () => {
+		const panel = Panel.create();
+		const island = Island(panel, "test", defaults());
+
+		await island.open({
+			component: "k-test"
+		});
+
+		panel.notification.error("Test");
+
+		expect(panel.notification.isOpen).toStrictEqual(true);
+
+		await island.open({
+			component: "k-test"
+		});
+
+		expect(panel.notification.isOpen).toStrictEqual(true);
+	});
+
 	it("should change value", async () => {
 		const panel = Panel.create();
 		const island = Island(panel, "test", defaults());
@@ -113,5 +132,52 @@ describe.concurrent("panel/island.js", () => {
 		expect(island.props.value).toStrictEqual("foo");
 		expect(island.value).toStrictEqual("foo");
 		expect(input).toStrictEqual("foo");
+	});
+
+	it("should send notification after submit", async () => {
+		const panel = Panel.create();
+		const island = Island(panel, "test", defaults());
+
+		island.submitSuccessHandler({
+			message: "Test"
+		});
+
+		expect(panel.notification.type).toStrictEqual("success");
+		expect(panel.notification.message).toStrictEqual("Test");
+	});
+
+	it("should emit panel events after submit", async () => {
+		const panel = Panel.create();
+		const island = Island(panel, "test", defaults());
+		const emitted = [];
+
+		panel.events.on("success", () => {
+			emitted.push("success");
+		});
+
+		panel.events.on("user.deleted", () => {
+			emitted.push("user.deleted");
+		});
+
+		island.submitSuccessHandler({
+			event: "user.deleted"
+		});
+
+		expect(emitted).toStrictEqual(["user.deleted", "success"]);
+	});
+
+	it("should close island after submit", async () => {
+		const panel = Panel.create();
+		const island = Island(panel, "test", defaults());
+
+		await island.open({
+			component: "k-test"
+		});
+
+		expect(island.isOpen).toStrictEqual(true);
+
+		island.submitSuccessHandler({});
+
+		expect(island.isOpen).toStrictEqual(false);
 	});
 });

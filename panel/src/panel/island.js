@@ -1,5 +1,4 @@
-import Vue from "vue";
-import { hasProperty, isObject } from "@/helpers/object.js";
+import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 
 /**
@@ -179,7 +178,7 @@ export default (panel, key, defaults) => {
 			}
 
 			// emit a success event
-			if (hasProperty(state, "emit") === false || state.emit !== false) {
+			if (state.emit !== false) {
 				panel.events.emit("success", state);
 			}
 		},
