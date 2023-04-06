@@ -3,8 +3,6 @@
 		ref="input"
 		v-bind="$props"
 		:extensions="extensions"
-		:keys="keys"
-		:nodes="['bulletList', 'orderedList']"
 		:value="list"
 		class="k-list-input"
 		@input="onInput"
@@ -14,17 +12,25 @@
 <script>
 import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
-export default {
-	inheritAttrs: false,
+export const props = {
 	props: {
 		autofocus: Boolean,
 		keys: Object,
+		nodes: {
+			type: Array,
+			default: () => ["bulletList", "orderedList"]
+		},
 		marks: {
 			type: [Array, Boolean],
 			default: true
 		},
 		value: String
-	},
+	}
+};
+
+export default {
+	mixins: [props],
+	inheritAttrs: false,
 	data() {
 		return {
 			list: this.value,
@@ -35,7 +41,8 @@ export default {
 		extensions() {
 			return [
 				new ListDoc({
-					inline: true
+					inline: true,
+					nodes: this.nodes
 				})
 			];
 		}
