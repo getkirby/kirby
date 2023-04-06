@@ -1,4 +1,5 @@
 import Dialog from "./dialog.js";
+import Drawer from "./drawer.js";
 import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
@@ -34,7 +35,7 @@ export const globals = {
  * can be opened and closed based
  * on the response
  */
-export const islands = ["dialog"];
+export const islands = ["dialog", "drawer"];
 
 /**
  * Modules are more advanced parts
@@ -68,6 +69,7 @@ export default {
 		this.user = User(this);
 
 		// islands
+		this.drawer = Drawer(this);
 		this.dialog = Dialog(this);
 
 		// view
