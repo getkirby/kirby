@@ -1,5 +1,6 @@
 import Dialog from "./dialog.js";
 import Drawer from "./drawer.js";
+import Dropdown from "./dropdown.js";
 import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
@@ -43,6 +44,7 @@ export const islands = ["dialog", "drawer"];
  * logic and methods
  */
 export const modules = [
+	"dropdown",
 	"language",
 	"notification",
 	"system",
@@ -72,7 +74,8 @@ export default {
 		this.drawer = Drawer(this);
 		this.dialog = Dialog(this);
 
-		// view
+		// features
+		this.dropdown = Dropdown(this);
 		this.view = View(this);
 
 		// methods
@@ -245,7 +248,7 @@ export default {
 		});
 
 		/**
-		 * Open or close islands
+		 * Toggle islands
 		 */
 		islands.forEach((island) => {
 			// if there's a new state for the
@@ -262,7 +265,16 @@ export default {
 		});
 
 		/**
-		 * Register the view
+		 * Toggle the dropdown
+		 */
+		if (isObject(state.dropdown) === true) {
+			this.dropdown.open(state.dropdown);
+		} else if (state.dropdown !== undefined) {
+			this.dropdown.close();
+		}
+
+		/**
+		 * Open the view
 		 */
 		if (isObject(state.view) === true) {
 			this.view.open(state.view);
@@ -293,6 +305,7 @@ export default {
 			state[island] = this[island].state();
 		});
 
+		state.dropdown = this.dropdown.state();
 		state.view = this.view.state();
 
 		return state;
