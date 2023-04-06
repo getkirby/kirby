@@ -229,16 +229,15 @@ class Dir
 			return $inventory;
 		}
 
-		$items = static::read($dir, $contentIgnore);
-
 		// a temporary store for all content files
 		$content = [];
 
-		// sort all items naturally to avoid sorting issues later
+		// read and sort all items naturally to avoid sorting issues later
+		$items = static::read($dir, $contentIgnore);
 		natsort($items);
 
 		foreach ($items as $item) {
-			// ignore all items with a leading dot
+			// ignore all items with a leading dot or underscore
 			if (in_array(substr($item, 0, 1), ['.', '_']) === true) {
 				continue;
 			}
@@ -246,114 +245,105 @@ class Dir
 			$root = $dir . '/' . $item;
 
 			if (is_dir($root) === true) {
-				// extract the slug and num of the directory
-				if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
-					$num  = (int)$match[1];
-					$slug = $match[2];
-				} else {
-					$num  = null;
-					$slug = $item;
-				}
-
-				$inventory['children'][] = [
-					'dirname' => $item,
-					'model'   => null,
-					'num'     => $num,
-					'root'    => $root,
-					'slug'    => $slug,
-				];
+				$inventory['children'][] = static::inventoryChild($root, $contentExtension, $multilang);
 			} else {
 				$extension = pathinfo($item, PATHINFO_EXTENSION);
 
-				switch ($extension) {
-					case 'htm':
-					case 'html':
-					case 'php':
-						// don't track those files
-						break;
-					case $contentExtension:
-						$content[] = pathinfo($item, PATHINFO_FILENAME);
-						break;
-					default:
-						$inventory['files'][$item] = [
-							'filename'  => $item,
-							'extension' => $extension,
-							'root'      => $root,
-						];
+				// don't track those files
+				if (
+					$extension === 'htm' ||
+					$extension === 'html' ||
+					$extension === 'php'
+				) {
+					continue;
 				}
+
+				if ($extension === $contentExtension) {
+					$filename = pathinfo($item, PATHINFO_FILENAME);
+
+					// remove the language codes from all content filenames
+					if ($multilang === true) {
+						$filename = pathinfo($filename, PATHINFO_FILENAME);
+					}
+
+					$content[] = $filename;
+					continue;
+				}
+
+				$inventory['files'][$item] = [
+					'filename'  => $item,
+					'extension' => $extension,
+					'root'      => $root,
+				];
 			}
 		}
 
-		// remove the language codes from all content filenames
-		if ($multilang === true) {
-			foreach ($content as $key => $filename) {
-				$content[$key] = pathinfo($filename, PATHINFO_FILENAME);
-			}
-
-			$content = array_unique($content);
-		}
-
-		$inventory = static::inventoryContent($inventory, $content);
-		$inventory = static::inventoryModels($inventory, $contentExtension, $multilang);
+		$content 			   = array_unique($content);
+		$inventory['template'] = static::inventoryTemplate(
+			$content,
+			$inventory['files']
+		);
 
 		return $inventory;
 	}
 
 	/**
-	 * Take all content files,
-	 * remove those who are meta files and
-	 * detect the main content file
+	 * Gathers all inventory information for a child,
+	 * incl. matching the correct page model
 	 */
-	protected static function inventoryContent(array $inventory, array $content): array
-	{
-		// filter meta files from the content file
-		if (empty($content) === true) {
-			$inventory['template'] = 'default';
-			return $inventory;
+	protected static function inventoryChild(
+		string $root,
+		string $contentExtension = 'txt',
+		bool $multilang = false
+	): array {
+		$name = pathinfo($root, PATHINFO_BASENAME);
+
+		// extract the slug and num of the directory
+		if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $name, $match)) {
+			$num  = (int)$match[1];
+			$slug = $match[2];
 		}
 
+		// adapt the content extension for mult-language setups
+		if ($multilang === true) {
+			$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
+		}
+
+		foreach (Page::$models as $modelName => $modelClass) {
+			if (file_exists($root . '/' . $modelName . '.' . $contentExtension) === true) {
+				$model = $modelName;
+				break;
+			}
+		}
+
+		return  [
+			'dirname' => $name,
+			'model'   => $model ?? null,
+			'num'     => $num ?? null,
+			'root'    => $root,
+			'slug'    => $slug ?? $name,
+		];
+	}
+
+	/**
+	 * Determines the main template for the inventroy
+	 * from all collected content files
+	 */
+	protected static function inventoryTemplate(
+		array $content,
+		array $files
+	): string {
 		foreach ($content as $contentName) {
 			// could be a meta file. i.e. cover.jpg
-			if (isset($inventory['files'][$contentName]) === true) {
+			if (isset($files[$contentName]) === true) {
 				continue;
 			}
 
 			// it's most likely the template
-			$inventory['template'] = $contentName;
+			$template = $contentName;
 		}
 
-		return $inventory;
-	}
-
-	/**
-	 * Go through all inventory children
-	 * and inject a model for each
-	 */
-	protected static function inventoryModels(
-		array $inventory,
-		string $contentExtension,
-		bool $multilang = false
-	): array {
-		// inject models
-		if (
-			empty($inventory['children']) === false &&
-			empty(Page::$models) === false
-		) {
-			if ($multilang === true) {
-				$contentExtension = App::instance()->defaultLanguage()->code() . '.' . $contentExtension;
-			}
-
-			foreach ($inventory['children'] as $key => $child) {
-				foreach (Page::$models as $modelName => $modelClass) {
-					if (file_exists($child['root'] . '/' . $modelName . '.' . $contentExtension) === true) {
-						$inventory['children'][$key]['model'] = $modelName;
-						break;
-					}
-				}
-			}
-		}
-
-		return $inventory;
+		return $template ?? 'default';
 	}
 
 	/**
