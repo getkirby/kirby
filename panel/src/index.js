@@ -11,6 +11,7 @@ import I18n from "./config/i18n.js";
 import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
+import Panel from "./panel/panel.js";
 import Plugins from "./panel/plugins.js";
 import store from "./store/store.js";
 import Vuelidate from "vuelidate";
@@ -25,6 +26,12 @@ const app = new Vue({
 		 * Shortcut to the panel for all components
 		 */
 		Vue.prototype.$panel = window.panel;
+
+		/**
+		 * Make the new panel temporarily available in the console
+		 * to test features manually
+		 */
+		window.p = Panel.create(Vue, window.panel.plugins);
 
 		/**
 		 * Temporary polyfill until this is all

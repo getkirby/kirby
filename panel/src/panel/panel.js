@@ -8,6 +8,7 @@ import { buildUrl, isUrl } from "@/helpers/url.js";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
 import User from "./user.js";
+import View from "./view.js";
 import { isObject } from "@/helpers/object.js";
 import { isEmpty } from "@/helpers/string.js";
 
@@ -57,6 +58,9 @@ export default {
 		this.system = System(this);
 		this.translation = Translation(this);
 		this.user = User(this);
+
+		// view
+		this.view = View(this);
 
 		// methods
 		this.redirect = redirect;
@@ -226,6 +230,13 @@ export default {
 				this[module].set(state[module]);
 			}
 		});
+
+		/**
+		 * Register the view
+		 */
+		if (isObject(state.view) === true) {
+			this.view.open(state.view);
+		}
 	},
 
 	/**
