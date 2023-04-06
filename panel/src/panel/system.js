@@ -12,5 +12,5 @@ export const defaults = () => {
 };
 
 export default () => {
-	return Module("$system", defaults());
+	return Module("system", defaults());
 };

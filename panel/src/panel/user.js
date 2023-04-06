@@ -11,5 +11,5 @@ export const defaults = () => {
 };
 
 export default () => {
-	return Module("$user", defaults());
+	return Module("user", defaults());
 };

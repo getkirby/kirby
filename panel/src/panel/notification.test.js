@@ -17,6 +17,7 @@ describe.concurrent("panel.notification", () => {
 			type: null
 		};
 
+		expect(notification.key()).toStrictEqual("notification");
 		expect(notification.state()).toStrictEqual(state);
 	});
 
