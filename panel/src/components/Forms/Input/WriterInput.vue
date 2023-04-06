@@ -2,7 +2,6 @@
 	<k-writer
 		ref="input"
 		v-bind="$props"
-		:value="value"
 		class="k-writer-input"
 		@input="$emit('input', $event)"
 	/>
