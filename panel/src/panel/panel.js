@@ -235,7 +235,7 @@ export default {
 		 * Register the view
 		 */
 		if (isObject(state.view) === true) {
-			this.view.set(state.view);
+			this.view.open(state.view);
 		}
 	},
 

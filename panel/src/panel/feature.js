@@ -109,55 +109,29 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Opens the feature either by URL or by
-		 * passing a state object
+		 * Loads a feature from the server
+		 * and opens it afterwards
 		 *
 		 * @example
-		 * panel.view.open("/some/view");
+		 * panel.view.load("/some/view");
 		 *
 		 * @example
-		 * panel.view.open("/some/view", () => {
+		 * panel.view.load("/some/view", () => {
 		 *   // submit
 		 * });
 		 *
 		 * @example
-		 * panel.view.open("/some/view", {
+		 * panel.view.load("/some/view", {
 		 *   query: {
 		 *     search: "Find me"
 		 *   }
 		 * });
 		 *
-		 * @example
-		 * panel.dialog.view({
-		 *   component: "k-page-view",
-		 *	 props: {},
-		 *   on: {
-		 *     submit: () => {}
-		 * 	 }
-		 * });
-		 *
-		 * @param {String|URL|Object} urlOrState
+		 * @param {String|URL} url
 		 * @param {Object|Function} options
 		 * @returns {Object} Returns the current state
 		 */
-		async open(urlOrState, options = {}) {
-			// simple wrapper to allow passing a submit handler
-			// as second argument instead of the options
-			if (typeof options === "function") {
-				options = {
-					on: {
-						submit: options
-					}
-				};
-			}
-
-			// open the feature by passing in an object
-			if (isUrl(urlOrState) === false) {
-				urlOrState = {
-					[this.key()]: urlOrState
-				};
-			}
-
+		async load(url, options = {}) {
 			// each feature can have its own loading state
 			// the panel.open method also triggers the global loading
 			// state for the entire panel. This adds fine-grained controll
@@ -168,13 +142,63 @@ export default (panel, key, defaults) => {
 			// that a response can also trigger other features.
 			// For example, a dialog request could also open a drawer
 			// or a notification by sending the matching object
-			await panel.open(urlOrState, options);
+			await panel.open(url, options);
 
 			// stop the feature loader
 			this.isLoading = false;
 
 			// add additional listeners from the options
 			this.addEventListeners(options.on);
+
+			// return the final state
+			return this.state();
+		},
+
+		/**
+		 * Opens the feature either by URL or by
+		 * passing a state object
+		 *
+		 * @example
+		 * panel.dialog.view({
+		 *   component: "k-page-view",
+		 *	 props: {},
+		 *   on: {
+		 *     submit: () => {}
+		 * 	 }
+		 * });
+		 *
+		 * See load for more examples
+		 *
+		 * @param {String|URL|Object} feature
+		 * @param {Object|Function} options
+		 * @returns {Object} Returns the current state
+		 */
+		async open(feature, options = {}) {
+			// simple wrapper to allow passing a submit handler
+			// as second argument instead of the options
+			if (typeof options === "function") {
+				options = {
+					on: {
+						submit: options
+					}
+				};
+			}
+
+			// the feature needs to be loaded first
+			// before it can be opened. This will route
+			// the request through panel.open
+			if (isUrl(feature) === true) {
+				return this.load(feature, options);
+			}
+
+			// set the new state
+			this.set(feature);
+
+			// add additional listeners from the options
+			this.addEventListeners(options.on);
+
+			// trigger optional open listeners
+			this.emit("open", feature, options);
 
 			// return the final state
 			return this.state();
