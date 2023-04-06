@@ -1,3 +1,4 @@
+import Dialog from "./dialog.js";
 import Events from "./events.js";
 import Notification from "./notification.js";
 import Language from "./language.js";
@@ -29,6 +30,13 @@ export const globals = {
 };
 
 /**
+ * Islands are features that
+ * can be opened and closed based
+ * on the response
+ */
+export const islands = ["dialog"];
+
+/**
  * Modules are more advanced parts
  * of the state that have their own
  * logic and methods
@@ -58,6 +66,9 @@ export default {
 		this.system = System(this);
 		this.translation = Translation(this);
 		this.user = User(this);
+
+		// islands
+		this.dialog = Dialog(this);
 
 		// view
 		this.view = View(this);
@@ -232,6 +243,23 @@ export default {
 		});
 
 		/**
+		 * Open or close islands
+		 */
+		islands.forEach((island) => {
+			// if there's a new state for the
+			// module, call its state setter method
+			if (isObject(state[island])) {
+				return this[island].open(state[island]);
+			}
+
+			// islands will be closed if the response is null or false.
+			// on undefined, the state of the island stays untouched
+			if (state[island] !== undefined) {
+				this[island].close(state[island]);
+			}
+		});
+
+		/**
 		 * Register the view
 		 */
 		if (isObject(state.view) === true) {
@@ -258,6 +286,12 @@ export default {
 		modules.forEach((module) => {
 			state[module] = this[module].state();
 		});
+
+		islands.forEach((island) => {
+			state[island] = this[island].state();
+		});
+
+		state.view = this.view.state();
 
 		return state;
 	},
