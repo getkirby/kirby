@@ -66,6 +66,10 @@ export default (panel, key, defaults) => {
 		 * @param {Object} value
 		 */
 		input(value) {
+			if (this.isOpen === false) {
+				return;
+			}
+
 			this.props.value = value;
 			this.emit("input", value);
 		},
@@ -79,40 +83,18 @@ export default (panel, key, defaults) => {
 		 * @param {Object} state
 		 * @returns {Object} The new state
 		 */
-		set(state) {
+		async open(feature, options = {}) {
 			// close previous notifications from other
 			// contexts, if the island wasn't open so far
 			if (this.isOpen === false) {
 				panel.notification.close();
 			}
 
-			// set the new state
-			parent.set.call(this, state);
+			// open the feature via url or with a state object
+			await parent.open.call(this, feature, options);
 
 			// mark the island as open
 			this.isOpen = true;
-
-			this.emit("open");
-
-			return this.state();
-		},
-
-		/**
-		 * Closes the dialog/drawer and fires
-		 * the close event
-		 *
-		 * @returns {Object} The new inactive state
-		 */
-		reset() {
-			// close legacy components
-			this.ref?.hide();
-
-			// emit the close event before the
-			// inactive state removes all listeners
-			this.emit("close");
-
-			// reset the defaults
-			parent.reset.call(this);
 
 			return this.state();
 		},
