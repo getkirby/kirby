@@ -832,7 +832,7 @@ class KirbyTagsTest extends TestCase
 			],
 			[
 				'(link: http://wikipedia.org text: Wikipedia)',
-				'<p><a class="link-class" href="http://wikipedia.org" rel="noopener noreferrer" target="_blank">Wikipedia</a></p>'
+				'<p><a class="link-class" href="http://wikipedia.org" rel="noreferrer" target="_blank">Wikipedia</a></p>'
 			],
 			[
 				'(tel: +49123456789)',
