@@ -7,6 +7,9 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\PageRules
+ */
 class PageRulesTest extends TestCase
 {
 	public function appWithAdmin()
@@ -25,6 +28,9 @@ class PageRulesTest extends TestCase
 		]);
 	}
 
+	/**
+	 * @covers ::changeNum
+	 */
 	public function testChangeNum()
 	{
 		$page = new Page([
@@ -36,6 +42,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::changeNum($page));
 	}
 
+	/**
+	 * @covers ::changeNum
+	 */
 	public function testInvalidChangeNum()
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -49,6 +58,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeNum($page, -1);
 	}
 
+	/**
+	 * @covers ::changeSlug
+	 */
 	public function testChangeSlug()
 	{
 		$app = $this->appWithAdmin()->clone([
@@ -72,6 +84,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($page, 'test-b');
 	}
 
+	/**
+	 * @covers ::changeSlug
+	 */
 	public function testChangeSlugWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -87,6 +102,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($page, 'test');
 	}
 
+	/**
+	 * @covers ::changeSlug
+	 */
 	public function testChangeSlugWithHomepage()
 	{
 		$this->expectException(PermissionException::class);
@@ -108,6 +126,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($app->page('home'), 'test-a');
 	}
 
+	/**
+	 * @covers ::changeSlug
+	 */
 	public function testChangeSlugWithErrorPage()
 	{
 		$this->expectException(PermissionException::class);
@@ -139,6 +160,10 @@ class PageRulesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::changeStatus
+	 * @covers ::changeStatusToDraft
+	 * @covers ::changeStatusToListed
+	 * @covers ::changeStatusToUnlisted
 	 * @dataProvider statusActionProvider
 	 */
 	public function testChangeStatusWithoutPermission($status, $args = [])
@@ -156,6 +181,10 @@ class PageRulesTest extends TestCase
 		PageRules::{'changeStatusTo' . $status}($page, ...$args);
 	}
 
+	/**
+	 * @covers ::changeStatus
+	 * @covers ::changeStatusToDraft
+	 */
 	public function testChangeStatusToListedWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -171,6 +200,10 @@ class PageRulesTest extends TestCase
 		PageRules::changeStatusToDraft($page);
 	}
 
+	/**
+	 * @covers ::changeStatus
+	 * @covers ::changeStatusToDraft
+	 */
 	public function testChangeStatusInvalid()
 	{
 		$this->expectException(PermissionException::class);
@@ -193,6 +226,7 @@ class PageRulesTest extends TestCase
 	}
 
 	/**
+	 * @covers ::changeStatus
 	 * @dataProvider statusActionProvider
 	 */
 	public function testChangeStatus($status, $args = [])
@@ -213,6 +247,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::changeStatus($page, $status, ...$args));
 	}
 
+	/**
+	 * @covers ::changeTemplate
+	 */
 	public function testChangeTemplate()
 	{
 		$app = new App([
@@ -249,6 +286,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::changeTemplate($page, 'b'));
 	}
 
+	/**
+	 * @covers ::changeTemplate
+	 */
 	public function testChangeTemplateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -264,6 +304,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeTemplate($page, 'test');
 	}
 
+	/**
+	 * @covers ::changeTemplate
+	 */
 	public function testChangeTemplateTooFewTemplates()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -280,6 +323,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeTemplate($page, 'c');
 	}
 
+	/**
+	 * @covers ::changeTemplate
+	 */
 	public function testChangeTemplateWithInvalidTemplateName()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -298,6 +344,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeTemplate($page, 'c');
 	}
 
+	/**
+	 * @covers ::changeTitle
+	 */
 	public function testChangeTitleWithEmptyValue()
 	{
 		$page = new Page([
@@ -311,6 +360,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeTitle($page, '');
 	}
 
+	/**
+	 * @covers ::changeTitle
+	 */
 	public function testChangeTitleWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -326,6 +378,9 @@ class PageRulesTest extends TestCase
 		PageRules::changeTitle($page, 'test');
 	}
 
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -341,6 +396,9 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateInvalidSlug()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -356,6 +414,9 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	/**
+	 * @covers ::create
+	 */
 	public function testCreateDuplicateException()
 	{
 		$app = $this->appWithAdmin()->clone([
@@ -377,6 +438,9 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	/**
+	 * @covers ::update
+	 */
 	public function testUpdate()
 	{
 		$page = new Page([
@@ -389,6 +453,9 @@ class PageRulesTest extends TestCase
 		]));
 	}
 
+	/**
+	 * @covers ::update
+	 */
 	public function testUpdateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -404,6 +471,9 @@ class PageRulesTest extends TestCase
 		PageRules::update($page, []);
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDelete()
 	{
 		$page = new Page([
@@ -414,6 +484,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::delete($page));
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -429,6 +502,9 @@ class PageRulesTest extends TestCase
 		PageRules::delete($page);
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteNotExists()
 	{
 		$page = new Page([
@@ -439,6 +515,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::delete($page));
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteHomepage()
 	{
 		$this->expectException(PermissionException::class);
@@ -460,6 +539,9 @@ class PageRulesTest extends TestCase
 		PageRules::delete($app->page('home'));
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteErrorPage()
 	{
 		$this->expectException(PermissionException::class);
@@ -481,6 +563,9 @@ class PageRulesTest extends TestCase
 		PageRules::delete($app->page('error'));
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteWithChildren()
 	{
 		$this->expectException(LogicException::class);
@@ -498,6 +583,9 @@ class PageRulesTest extends TestCase
 		PageRules::delete($page);
 	}
 
+	/**
+	 * @covers ::delete
+	 */
 	public function testDeleteWithChildrenForce()
 	{
 		$page = new Page([
@@ -513,6 +601,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::delete($page, true));
 	}
 
+	/**
+	 * @covers ::duplicate
+	 */
 	public function testDuplicate()
 	{
 		$page = new Page([
@@ -523,6 +614,9 @@ class PageRulesTest extends TestCase
 		$this->assertTrue(PageRules::duplicate($page, 'test-copy'));
 	}
 
+	/**
+	 * @covers ::duplicate
+	 */
 	public function testDuplicateInvalid()
 	{
 		$page = new Page([
@@ -536,6 +630,9 @@ class PageRulesTest extends TestCase
 		PageRules::duplicate($page, '');
 	}
 
+	/**
+	 * @covers ::duplicate
+	 */
 	public function testDuplicateWithoutPermissions()
 	{
 		$permissions = $this->createMock(PagePermissions::class);
@@ -551,7 +648,10 @@ class PageRulesTest extends TestCase
 		PageRules::duplicate($page, 'something');
 	}
 
-	public function testSlugMaxlength()
+	/**
+	 * @covers ::validateSlugLength
+	 */
+	public function testValidateSlugMaxlength()
 	{
 		$app = new App([
 			'roots' => [
