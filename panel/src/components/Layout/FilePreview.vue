@@ -1,88 +1,80 @@
 <template>
 	<div class="k-file-preview" :data-has-focus="hasFocus">
-		<k-view class="k-file-preview-layout">
-			<!-- Thumb -->
-			<div class="k-file-preview-thumb">
-				<!-- Image with focus picker -->
-				<template v-if="image.src">
-					<k-coords
-						:aria-disabled="!focusable"
-						:x="focus?.x"
-						:y="focus?.y"
-						@input="setFocus($event.detail)"
+		<!-- Thumb -->
+		<div class="k-file-preview-thumb">
+			<!-- Image with focus picker -->
+			<template v-if="image.src">
+				<k-coords
+					:aria-disabled="!focusable"
+					:x="focus?.x"
+					:y="focus?.y"
+					@input="setFocus($event.detail)"
+				>
+					<img v-bind="image" @dragstart.prevent />
+				</k-coords>
+
+				<k-dropdown>
+					<k-button
+						icon="dots"
+						size="xs"
+						style="color: var(--color-gray-500)"
+						@click="$refs.dropdown.toggle()"
+					/>
+					<k-dropdown-content ref="dropdown" :options="options" theme="light" />
+				</k-dropdown>
+			</template>
+
+			<!-- Icon -->
+			<k-icon
+				v-else
+				:color="$helper.color(image.color)"
+				:type="image.icon"
+				class="k-item-icon"
+			/>
+		</div>
+
+		<!-- Details -->
+		<div class="k-file-preview-details">
+			<dl v-for="detail in details" :key="detail.title">
+				<dt>{{ detail.title }}</dt>
+				<dd>
+					<k-link
+						v-if="detail.link"
+						:to="detail.link"
+						tabindex="-1"
+						target="_blank"
 					>
-						<img v-bind="image" @dragstart.prevent />
-					</k-coords>
+						/{{ detail.text }}
+					</k-link>
+					<template v-else>
+						{{ detail.text }}
+					</template>
+				</dd>
+			</dl>
 
-					<k-dropdown>
-						<k-button
-							icon="dots"
-							size="xs"
-							style="color: var(--color-gray-500)"
-							@click="$refs.dropdown.toggle()"
-						/>
-						<k-dropdown-content
-							ref="dropdown"
-							:options="options"
-							theme="light"
-						/>
-					</k-dropdown>
-				</template>
-
-				<!-- Icon -->
-				<k-icon
-					v-else
-					:color="$helper.color(image.color)"
-					:type="image.icon"
-					class="k-item-icon"
-				/>
-			</div>
-
-			<!-- Details -->
-			<div class="k-file-preview-details">
-				<dl v-for="detail in details" :key="detail.title">
-					<dt>{{ detail.title }}</dt>
-					<dd>
-						<k-link
-							v-if="detail.link"
-							:to="detail.link"
-							tabindex="-1"
-							target="_blank"
-						>
-							/{{ detail.text }}
-						</k-link>
-						<template v-else>
-							{{ detail.text }}
+			<dl v-if="image.src" class="k-file-preview-focus-info">
+				<dt>{{ $t("file.focus.title") }}</dt>
+				<dd>
+					<k-button
+						v-if="focusable"
+						:icon="hasFocus ? 'cancel-small' : 'preview'"
+						:title="hasFocus ? $t('file.focus.reset') : undefined"
+						size="xs"
+						variant="filled"
+						@click="setFocus(hasFocus ? undefined : '50% 50%')"
+					>
+						<template v-if="hasFocus"> {{ focus.x }}% {{ focus.y }}% </template>
+						<template v-else-if="focusable">
+							{{ $t("file.focus.placeholder") }}
 						</template>
-					</dd>
-				</dl>
-
-				<dl v-if="image.src" class="k-file-preview-focus-info">
-					<dt>{{ $t("file.focus.title") }}</dt>
-					<dd>
-						<k-button
-							v-if="focusable"
-							:icon="hasFocus ? 'cancel-small' : 'preview'"
-							:title="hasFocus ? $t('file.focus.reset') : undefined"
-							size="xs"
-							variant="filled"
-							@click="setFocus(hasFocus ? undefined : '50% 50%')"
-						>
-							<template v-if="hasFocus">
-								{{ focus.x }}% {{ focus.y }}%
-							</template>
-							<template v-else-if="focusable">
-								{{ $t("file.focus.placeholder") }}
-							</template>
-						</k-button>
-						<template v-else-if="hasFocus">
-							{{ focus.x }}% {{ focus.y }}%
-						</template>
-						<template v-else>–</template>
-					</dd>
-				</dl>
-			</div>
-		</k-view>
+					</k-button>
+					<template v-else-if="hasFocus">
+						{{ focus.x }}% {{ focus.y }}%
+					</template>
+					<template v-else>–</template>
+				</dd>
+			</dl>
+		</div>
 	</div>
 </template>
 
@@ -144,27 +136,21 @@ export default {
 </script>
 <style>
 .k-file-preview {
-	background: var(--color-gray-800);
-}
-.k-file-preview-layout {
 	display: grid;
 	align-items: stretch;
+	background: var(--color-slate-900);
 	border-radius: var(--rounded-lg);
 	margin-bottom: var(--spacing-6);
 	overflow: hidden;
 }
-.k-file-preview-layout > * {
-	min-width: 0;
-}
 
 /* Thumb */
 .k-file-preview-thumb {
-	--icon-size: 2rem;
 	display: grid;
 	place-items: center;
 	aspect-ratio: 1/1;
 	padding: var(--spacing-6);
-	background: var(--bg-pattern);
+	background: var(--pattern);
 	container-type: size;
 }
 
@@ -181,14 +167,17 @@ export default {
 	box-shadow: none;
 }
 .k-file-preview .k-coords-thumb::after {
-	content: "";
-	width: 0.4rem;
-	height: 0.4rem;
-	border-radius: 50%;
-	background: var(--color-white);
+	--size: 0.4rem;
+	--pos: calc(50% - (var(--size) / 2));
+
 	position: absolute;
-	top: calc(50% - 0.2rem);
-	inset-inline-start: calc(50% - 0.2rem);
+	top: var(--pos);
+	inset-inline-start: var(--pos);
+	width: var(--size);
+	height: var(--size);
+	content: "";
+	background: var(--color-white);
+	border-radius: 50%;
 }
 .k-file-preview:not([data-has-focus="true"]) .k-coords-thumb {
 	display: none;
@@ -207,9 +196,9 @@ export default {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 	grid-gap: var(--spacing-6) var(--spacing-12);
+	align-self: center;
 	padding: var(--spacing-6);
 	line-height: 1.5em;
-	align-self: center;
 	padding: var(--spacing-6);
 }
 .k-file-preview-details dt {
@@ -234,29 +223,15 @@ export default {
 }
 
 .k-file-preview-focus-info .k-button {
-	height: 24px;
-	background: var(--color-gray-700);
-	padding: 0.25rem;
-	border-radius: var(--rounded);
-	font-size: var(--text-sm);
-	line-height: 1;
-}
-.k-file-preview-focus-info .k-button:hover {
-	background: var(--color-gray-600);
+	--button-color-back: var(--color-slate-800);
+	--button-color-hover: var(--color-slate-700);
 }
 .k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
-	display: flex;
 	flex-direction: row-reverse;
-	gap: 0.25rem;
-}
-.k-file-preview[data-has-focus="true"]
-	.k-file-preview-focus-info
-	.k-button-text {
-	padding: 0;
 }
 
-@media screen and (min-width: 36rem) {
-	.k-file-preview-layout {
+@container (min-width: 36rem) {
+	.k-file-preview {
 		grid-template-columns: 50% auto;
 	}
 	.k-file-preview-thumb {
@@ -264,15 +239,15 @@ export default {
 	}
 }
 
-@media screen and (min-width: 65rem) {
+@container (min-width: 65rem) {
+	.k-file-preview {
+		grid-template-columns: 33.333% auto;
+	}
 	.k-file-preview-thumb {
 		aspect-ratio: 1/1;
 	}
-	.k-file-preview-layout {
-		grid-template-columns: 33.333% auto;
-	}
 }
-@media screen and (min-width: 90rem) {
+@container (min-width: 90rem) {
 	.k-file-preview-layout {
 		grid-template-columns: 25% auto;
 	}
