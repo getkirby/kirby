@@ -438,38 +438,6 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdate()
-	{
-		$page = new Page([
-			'kirby' => $this->appWithAdmin(),
-			'slug'  => 'test',
-		]);
-
-		$this->assertTrue(PageRules::update($page, [
-			'color' => 'red'
-		]));
-	}
-
-	/**
-	 * @covers ::update
-	 */
-	public function testUpdateWithoutPermissions()
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('__call')->with('update')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update "test"');
-
-		PageRules::update($page, []);
-	}
 
 	/**
 	 * @covers ::delete
@@ -646,6 +614,39 @@ class PageRulesTest extends TestCase
 		$this->expectExceptionMessage('You are not allowed to duplicate "test"');
 
 		PageRules::duplicate($page, 'something');
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdate()
+	{
+		$page = new Page([
+			'kirby' => $this->appWithAdmin(),
+			'slug'  => 'test',
+		]);
+
+		$this->assertTrue(PageRules::update($page, [
+			'color' => 'red'
+		]));
+	}
+
+	/**
+	 * @covers ::update
+	 */
+	public function testUpdateWithoutPermissions()
+	{
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('__call')->with('update')->willReturn(false);
+
+		$page = $this->createMock(Page::class);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update "test"');
+
+		PageRules::update($page, []);
 	}
 
 	/**
