@@ -5,7 +5,7 @@
 			<k-text :html="text" />
 		</k-box>
 		<footer v-if="help" class="k-field-footer">
-			<k-text v-if="help" theme="help" class="k-field-help" :html="help" />
+			<k-text :html="help" theme="help" class="k-field-help" />
 		</footer>
 	</div>
 </template>
