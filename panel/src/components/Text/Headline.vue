@@ -4,7 +4,7 @@
 		:data-theme="theme"
 		:data-size="size"
 		class="k-headline"
-		v-on="$listeners"
+		@click="$emit('click', $event)"
 	>
 		<k-link v-if="link" :to="link">
 			<!-- @slot Content/text of the headline -->
@@ -49,7 +49,8 @@ export default {
 		theme: {
 			type: String
 		}
-	}
+	},
+	emits: ["click"]
 };
 </script>
 
