@@ -1,46 +1,49 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
 		<template #options>
-			<k-dropdown v-if="hasFieldsets">
+			<k-button-group layout="collapsed">
 				<k-button
-					icon="dots"
+					:disabled="isFull"
+					:text="$t('add')"
+					icon="add"
 					variant="filled"
 					size="xs"
-					@click="$refs.options.toggle()"
+					@click="$refs.blocks.choose(value.length)"
 				/>
-				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="add"
-						@click="$refs.blocks.choose(value.length)"
-					>
-						{{ $t("add") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="template"
-						@click="$refs.blocks.copyAll()"
-					>
-						{{ $t("copy.all") }}
-					</k-dropdown-item>
-					<k-dropdown-item
-						:disabled="isFull"
-						icon="download"
-						@click="$refs.blocks.pasteboard()"
-					>
-						{{ $t("paste") }}
-					</k-dropdown-item>
-					<hr />
-					<k-dropdown-item
-						:disabled="isEmpty"
-						icon="trash"
-						@click="$refs.blocks.confirmToRemoveAll()"
-					>
-						{{ $t("delete.all") }}
-					</k-dropdown-item>
-				</k-dropdown-content>
-			</k-dropdown>
+
+				<k-dropdown v-if="hasFieldsets">
+					<k-button
+						icon="dots"
+						variant="filled"
+						size="xs"
+						@click="$refs.options.toggle()"
+					/>
+					<k-dropdown-content ref="options" align="right">
+						<k-dropdown-item
+							:disabled="isEmpty"
+							icon="template"
+							@click="$refs.blocks.copyAll()"
+						>
+							{{ $t("copy.all") }}
+						</k-dropdown-item>
+						<k-dropdown-item
+							:disabled="isFull"
+							icon="download"
+							@click="$refs.blocks.pasteboard()"
+						>
+							{{ $t("paste") }}
+						</k-dropdown-item>
+						<hr />
+						<k-dropdown-item
+							:disabled="isEmpty"
+							icon="trash"
+							@click="$refs.blocks.confirmToRemoveAll()"
+						>
+							{{ $t("delete.all") }}
+						</k-dropdown-item>
+					</k-dropdown-content>
+				</k-dropdown>
+			</k-button-group>
 		</template>
 
 		<k-blocks
