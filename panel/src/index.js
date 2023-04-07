@@ -37,7 +37,7 @@ const app = new Vue({
 		 * Temporary polyfill until this is all
 		 * bundled under window.panel
 		 */
-		this.$panel.plugins = Plugins(Vue, window.panel.plugins);
+		this.$panel.plugins = window.p.plugins;
 
 		/**
 		 * This is temporary panel setup
