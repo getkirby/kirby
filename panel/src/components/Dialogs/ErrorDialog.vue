@@ -5,6 +5,7 @@
 		:size="size"
 		:visible="true"
 		class="k-error-dialog"
+		theme="passive"
 		@cancel="$emit('cancel')"
 		@close="$emit('close')"
 		@submit="$refs.dialog.close()"
