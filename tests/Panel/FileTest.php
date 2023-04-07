@@ -349,6 +349,7 @@ class FileTest extends TestCase
 
 	/**
 	 * @covers ::imageSource
+	 * @covers ::imageSrcset
 	 */
 	public function testImageCover()
 	{

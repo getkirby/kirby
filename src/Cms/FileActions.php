@@ -408,4 +408,24 @@ trait FileActions
 
 		return $this;
 	}
+
+	/**
+	 * Updates the file's data and ensures that
+	 * media files get wiped if `focus` changed
+	 *
+	 * @return static
+	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
+	 */
+	public function update(
+		array $input = null,
+		string $languageCode = null,
+		bool $validate = false
+	) {
+		// delete all public media versions when focus field gets changed
+		if ($input !== null && array_key_exists('focus', $input) === true) {
+			$this->unpublish(true);
+		}
+
+		return parent::update($input, $languageCode, $validate);
+	}
 }

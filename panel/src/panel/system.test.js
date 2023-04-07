@@ -18,7 +18,7 @@ describe.concurrent("panel.system", () => {
 			title: null
 		};
 
-		expect(system.key()).toStrictEqual("$system");
+		expect(system.key()).toStrictEqual("system");
 		expect(system.state()).toStrictEqual(state);
 	});
 

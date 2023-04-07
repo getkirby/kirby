@@ -110,18 +110,18 @@ class Darkroom
 		$options = $this->options($options);
 		$image   = new Image($file);
 
-		$dimensions      = $image->dimensions();
-		$thumbDimensions = $dimensions->thumb($options);
+		$options['sourceWidth']  = $image->width();
+		$options['sourceHeight'] = $image->height();
 
-		$sourceWidth  = $image->width();
-		$sourceHeight = $image->height();
+		$dimensions        = $image->dimensions();
+		$thumbDimensions   = $dimensions->thumb($options);
 
 		$options['width']  = $thumbDimensions->width();
 		$options['height'] = $thumbDimensions->height();
 
 		// scale ratio compared to the source dimensions
-		$options['scaleWidth']  = $sourceWidth ? $options['width'] / $sourceWidth : null;
-		$options['scaleHeight'] = $sourceHeight ? $options['height'] / $sourceHeight : null;
+		$options['scaleWidth']  = Focus::ratio($options['width'], $options['sourceWidth']);
+		$options['scaleHeight'] = Focus::ratio($options['height'], $options['sourceHeight']);
 
 		return $options;
 	}

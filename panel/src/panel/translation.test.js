@@ -12,7 +12,7 @@ describe.concurrent("panel.translation", () => {
 			name: null
 		};
 
-		expect(translation.key()).toStrictEqual("$translation");
+		expect(translation.key()).toStrictEqual("translation");
 		expect(translation.state()).toStrictEqual(state);
 	});
 

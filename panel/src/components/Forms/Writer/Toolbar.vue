@@ -86,13 +86,7 @@ export default {
 			return this.$helper.object.length(this.markButtons) > 0;
 		},
 		hasVisibleNodeButtons() {
-			const nodeButtons = Object.keys(this.nodeButtons);
-
-			return (
-				nodeButtons.length > 1 ||
-				(nodeButtons.length === 1 &&
-					nodeButtons.includes("paragraph") === false)
-			);
+			return this.$helper.object.length(this.nodeButtons) > 1;
 		},
 		markButtons() {
 			if (this.marks === false) {

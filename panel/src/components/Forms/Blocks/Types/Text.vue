@@ -25,13 +25,13 @@ export default {
 			}
 
 			// fallback to writer
-			return "k-writer";
+			return "k-writer-input";
 		},
 		isSplitable() {
 			return (
 				this.content.text.length > 0 &&
-				this.$refs.input.isCursorAtStart === false &&
-				this.$refs.input.isCursorAtEnd === false
+				this.input().isCursorAtStart === false &&
+				this.input().isCursorAtEnd === false
 			);
 		},
 		keys() {
@@ -53,6 +53,9 @@ export default {
 		focus() {
 			this.$refs.input.focus();
 		},
+		input() {
+			return this.$refs.input.$refs.input;
+		},
 		merge(blocks) {
 			this.update({
 				text: blocks
@@ -61,7 +64,7 @@ export default {
 			});
 		},
 		split() {
-			const contents = this.$refs.input.getSplitContent?.();
+			const contents = this.input().getSplitContent?.();
 
 			if (contents) {
 				if (this.textField.type === "writer") {

@@ -74,6 +74,19 @@ export function hasEmoji(string) {
 }
 
 /**
+ * Checks if a string is empty
+ * @param {String|undefined|null} string
+ * @returns {Boolean}
+ */
+export function isEmpty(string) {
+	if (!string) {
+		return true;
+	}
+
+	return String(string).length === 0;
+}
+
+/**
  * Turns first letter lowercase
  * @param {string} string
  * @returns {string}
@@ -290,6 +303,7 @@ export default {
 	camelToKebab,
 	escapeHTML,
 	hasEmoji,
+	isEmpty,
 	lcfirst,
 	ltrim,
 	pad,

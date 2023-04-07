@@ -15,7 +15,7 @@
 	transform: translate(-50%, -50%);
 }
 .k-coords-thumb {
-	cursor: grab;
+	cursor: move;
 }
 .k-coords-thumb:active {
 	cursor: grabbing;

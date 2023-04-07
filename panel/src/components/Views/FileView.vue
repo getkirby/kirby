@@ -9,7 +9,7 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-file-preview v-bind="preview" />
+		<k-file-preview v-bind="preview" :focusable="isFocusable" />
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
@@ -73,6 +73,17 @@ export default {
 	extends: ModelView,
 	props: {
 		preview: Object
+	},
+	computed: {
+		isFocusable() {
+			return (
+				!this.isLocked &&
+				this.permissions.update &&
+				(!window.panel.$multilang ||
+					window.panel.$languages.length === 0 ||
+					window.panel.$language?.default)
+			);
+		}
 	},
 	methods: {
 		action(action) {

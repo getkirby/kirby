@@ -34,6 +34,7 @@ class FTest extends TestCase
 
 	public function tearDown(): void
 	{
+		F::unlink($this->test);
 		Dir::remove($this->tmp);
 
 		if ($this->hasErrorHandler === true) {
@@ -471,6 +472,7 @@ class FTest extends TestCase
 
 		$this->assertFileExists($this->test);
 		$this->assertFileDoesNotExist($origin);
+		$this->assertSame('test', file_get_contents($this->test));
 
 		// replace file via moving
 		F::copy($this->test, $origin);
@@ -483,6 +485,46 @@ class FTest extends TestCase
 
 		$this->assertFileDoesNotExist($this->test);
 		$this->assertFileExists($origin);
+		$this->assertSame('test', file_get_contents($origin));
+	}
+
+	/**
+	 * @covers ::move
+	 */
+	public function testMoveAcrossDevices()
+	{
+		$tmpDir = sys_get_temp_dir();
+
+		if (stat($this->tmp)['dev'] === stat($tmpDir)['dev']) {
+			$this->markTestSkipped('Temporary directory "' . $tmpDir . '" is on the same filesystem');
+			return;
+		}
+
+		F::write($origin = $this->tmp . '/a.txt', 'test');
+		$this->test = $tmpDir . '/kirby-test-' . uniqid();
+
+		// simply move file
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
+
+		$this->assertTrue(F::move($origin, $this->test));
+
+		$this->assertFileExists($this->test);
+		$this->assertFileDoesNotExist($origin);
+		$this->assertSame('test', file_get_contents($this->test));
+
+		// replace file via moving
+		F::copy($this->test, $origin);
+
+		$this->assertFileExists($origin);
+		$this->assertFileExists($this->test);
+
+		$this->assertFalse(F::move($this->test, $origin));
+		$this->assertTrue(F::move($this->test, $origin, true));
+
+		$this->assertFileDoesNotExist($this->test);
+		$this->assertFileExists($origin);
+		$this->assertSame('test', file_get_contents($origin));
 	}
 
 	/**

@@ -17,7 +17,7 @@ describe.concurrent("panel.user", () => {
 			username: null
 		};
 
-		expect(user.key()).toStrictEqual("$user");
+		expect(user.key()).toStrictEqual("user");
 		expect(user.state()).toStrictEqual(state);
 	});
 

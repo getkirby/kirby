@@ -15,7 +15,7 @@ export const defaults = () => {
  * translation
  */
 export default () => {
-	const parent = Module("$translation", defaults());
+	const parent = Module("translation", defaults());
 
 	return {
 		...parent,
