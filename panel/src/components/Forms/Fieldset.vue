@@ -70,6 +70,7 @@ export default {
 			default: () => ({})
 		}
 	},
+	emits: ["focus", "input", "invalid", "submit"],
 	data() {
 		return {
 			errors: {}
