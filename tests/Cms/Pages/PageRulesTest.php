@@ -150,6 +150,31 @@ class PageRulesTest extends TestCase
 		PageRules::changeSlug($app->page('error'), 'test-a');
 	}
 
+	/**
+	 * @covers ::changeSlug
+	 * @covers ::validateSlugProtectedPaths
+	 */
+	public function testChangeSlugReservedPath()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		PageRules::changeSlug($app->page('a'), 'api');
+	}
+
 	public function statusActionProvider()
 	{
 		return [
@@ -438,6 +463,31 @@ class PageRulesTest extends TestCase
 		PageRules::create($page);
 	}
 
+	/**
+	 * @covers ::create
+	 * @covers ::validateSlugProtectedPaths
+	 */
+	public function testCreateSlugReservedPath()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeSlug.reserved');
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			]
+		]);
+
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('__call')->with('create')->willReturn(true);
+
+		$page = $this->createMock(Page::class);
+		$page->method('kirby')->willReturn($app);
+		$page->method('permissions')->willReturn($permissions);
+		$page->method('slug')->willReturn('api');
+
+		PageRules::create($page);
+	}
 
 	/**
 	 * @covers ::delete
