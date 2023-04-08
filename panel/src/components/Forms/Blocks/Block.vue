@@ -122,6 +122,33 @@ export default {
 		prev: Object,
 		type: String
 	},
+	emits: [
+		"append",
+		"chooseToAppend",
+		"chooseToConvert",
+		"chooseToPrepend",
+		"close",
+		"copy",
+		"duplicate",
+		"focus",
+		"focusPrev",
+		"focusNext",
+		"hide",
+		"merge",
+		"open",
+		"paste",
+		"prepend",
+		"remove",
+		"selectDown",
+		"selectUp",
+		"show",
+		"sortDown",
+		"sortUp",
+		"split",
+		"submit",
+		"update",
+		"confirmToRemoveSelected"
+	],
 	data() {
 		return {
 			skipFocus: false
