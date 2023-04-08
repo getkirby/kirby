@@ -22,7 +22,6 @@
 					:next="prevNext(index + 1)"
 					:prev="prevNext(index - 1)"
 					@append="add($event, index + 1)"
-					@choose="choose($event)"
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
