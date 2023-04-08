@@ -1,5 +1,10 @@
 <template>
-	<component :is="component" ref="button" v-bind="$props" v-on="$listeners">
+	<component
+		:is="component"
+		ref="button"
+		v-bind="$props"
+		@click.native="$emit('click', $event)"
+	>
 		<template v-if="text">
 			{{ text }}
 		</template>
@@ -70,6 +75,7 @@ export default {
 			default: "button"
 		}
 	},
+	emits: ["click"],
 	computed: {
 		component() {
 			if (this.disabled === true) {
