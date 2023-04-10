@@ -463,7 +463,7 @@ class Blueprint
 
 			if (isset($props['when']) === true) {
 				$fields = array_map(
-					fn ($field) => array_merge_recursive(['when' => $props['when']], $field),
+					fn ($field) => array_replace_recursive(['when' => $props['when']], $field),
 					$fields
 				);
 			}
