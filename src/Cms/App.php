@@ -581,14 +581,15 @@ class App
 		$languages = $this->languages();
 		$visitor   = $this->visitor();
 
-		foreach ($visitor->acceptedLanguages() as $lang) {
-			if ($language = $languages->filter(fn ($language) => $language->locale(LC_ALL) === $lang->locale())?->first()) {
+		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
+			$closure = fn ($language) => $language->locale(LC_ALL) === $acceptedLang->locale();
+			if ($language = $languages->filter($closure)?->first()) {
 				return $language;
 			}
 		}
 
-		foreach ($visitor->acceptedLanguages() as $lang) {
-			if ($language = $languages->findBy('code', $lang->code())) {
+		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
+			if ($language = $languages->findBy('code', $acceptedLang->code())) {
 				return $language;
 			}
 		}
