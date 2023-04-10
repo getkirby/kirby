@@ -190,4 +190,38 @@ class BlueprintFieldTest extends TestCase
 
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
+
+	public function testFieldGroupWhen()
+	{
+		$props = Blueprint::fieldProps([
+			'name'   => 'test',
+			'type'   => 'group',
+			'when'	 => [
+				'category' => 'value'
+			],
+			'fields' => [
+				'headline' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$expected = [
+			'fields' => [
+				'headline' => [
+					'label' => 'Headline',
+					'name'  => 'headline',
+					'type'  => 'text',
+					'width' => '1/1',
+					'when'	 => [
+						'category' => 'value'
+					],
+				]
+			],
+			'name' => 'test',
+			'type' => 'group'
+		];
+
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+	}
 }
