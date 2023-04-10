@@ -75,7 +75,7 @@ class FileVersion
 	 */
 	public function modifications(): array
 	{
-		return $this->modifications ?? [];
+		return $this->modifications;
 	}
 
 	/**
