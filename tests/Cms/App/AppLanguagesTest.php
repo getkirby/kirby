@@ -48,4 +48,50 @@ class AppLanguagesTest extends TestCase
 		$this->assertSame('en', $app->languageCode());
 		$this->assertNull($app->languageCode('fr'));
 	}
+
+	public function detectedLanguageProvider(): array
+	{
+		return [
+			['en', 'en'],
+			['en-GB', 'en'],
+			['en-US', 'us'],
+			['de', 'de'],
+			['fr', 'en'],
+			['en-US,en;q=0.5', 'us'],
+		];
+	}
+
+	/**
+	 * @dataProvider detectedLanguageProvider
+	 */
+	public function testDetectedLanguage($accept, $expected)
+	{
+		// set the accepted visitor language
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English (GB)',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				],
+				[
+					'code'    => 'us',
+					'name'    => 'English (US)',
+					'locale'  => 'en_US'
+				]
+			],
+			'options' => [
+				'languages' => true,
+				'languages.detect' => true
+			]
+		]);
+
+		$this->assertSame($app->detectedLanguage()->code(), $expected);
+	}
 }
