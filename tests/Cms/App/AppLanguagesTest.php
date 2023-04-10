@@ -64,6 +64,7 @@ class AppLanguagesTest extends TestCase
 
 	/**
 	 * @dataProvider detectedLanguageProvider
+	 * @backupGlobals enabled
 	 */
 	public function testDetectedLanguage($accept, $expected)
 	{
@@ -93,6 +94,6 @@ class AppLanguagesTest extends TestCase
 			]
 		]);
 
-		$this->assertSame($app->detectedLanguage()->code(), $expected);
+		$this->assertSame($expected, $app->detectedLanguage()->code());
 	}
 }
