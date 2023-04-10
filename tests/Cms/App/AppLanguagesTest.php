@@ -57,7 +57,8 @@ class AppLanguagesTest extends TestCase
 			['en-US', 'us'],
 			['de', 'de'],
 			['fr', 'en'],
-			['en-US,en;q=0.5', 'us'],
+			['en-US, en;q=0.5', 'us'],
+			['en-US;q=0.5, de;q=0.8, fr;q=0.9', 'de'],
 		];
 	}
 
