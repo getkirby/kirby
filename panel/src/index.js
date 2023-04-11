@@ -13,6 +13,7 @@ import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
+import Translation from "./panel/translation.js";
 import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
@@ -47,6 +48,15 @@ const app = new Vue({
 		this.$panel.notification = Notification({
 			debug: this.$panel.$config.debug
 		});
+
+		this.$panel.translation = Translation();
+
+		/**
+		 * shortcut for the translation method
+		 */
+		this.$panel.t = this.$panel.translation.translate.bind(
+			this.$panel.translation
+		);
 
 		/**
 		 * Make notification reactive. This will be done in
