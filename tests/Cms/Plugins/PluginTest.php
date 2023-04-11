@@ -294,7 +294,7 @@ class PluginTest extends TestCase
 
 	/**
 	 * @covers ::name
-	 * @covers ::setName
+	 * @covers ::validateName
 	 */
 	public function testName()
 	{
@@ -305,7 +305,7 @@ class PluginTest extends TestCase
 
 	/**
 	 * @covers ::name
-	 * @covers ::setName
+	 * @covers ::validateName
 	 */
 	public function testNameWithInvalidInput()
 	{
