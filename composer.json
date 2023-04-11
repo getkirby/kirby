@@ -44,7 +44,8 @@
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.8.0",
 		"symfony/polyfill-intl-idn": "1.27.0",
-		"symfony/polyfill-mbstring": "1.27.0"
+		"symfony/polyfill-mbstring": "1.27.0",
+		"symfony/yaml": "^5.4"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"

@@ -2,19 +2,30 @@
 
 namespace Kirby\Data;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Kirby\Data\Yaml
  */
-class YamlTest extends TestCase
+class YamlSymfonyTest extends TestCase
 {
+	public function setUp(): void
+	{
+		new App(['options' => ['yaml' => 'symfony']]);
+	}
+
+	public function tearDown(): void
+	{
+		new App([]);
+	}
+
 	/**
 	 * @covers ::encode
 	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::encode
-	 * @covers \Kirby\Data\YamlSpyc::decode
+	 * @covers \Kirby\Data\YamlSymfony::encode
+	 * @covers \Kirby\Data\YamlSymfony::decode
 	 */
 	public function testEncodeDecode()
 	{
@@ -32,7 +43,7 @@ class YamlTest extends TestCase
 		$result = Yaml::decode($data);
 		$this->assertSame($array, $result);
 
-		$this->assertSame('', Yaml::encode([]));
+		$this->assertSame('[]', Yaml::encode([]));
 		$this->assertSame([], Yaml::decode(''));
 
 		$this->assertSame([], Yaml::decode(null));
@@ -41,7 +52,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
+	 * @covers \Kirby\Data\YamlSymfony::decode
 	 */
 	public function testDecodeInvalid1()
 	{
@@ -53,7 +64,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::decode
-	 * @covers \Kirby\Data\YamlSpyc::decode
+	 * @covers \Kirby\Data\YamlSymfony::decode
 	 */
 	public function testDecodeInvalid2()
 	{
@@ -65,7 +76,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
+	 * @covers \Kirby\Data\YamlSymfony::encode
 	 */
 	public function testEncodeFloat()
 	{
@@ -78,7 +89,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
+	 * @covers \Kirby\Data\YamlSymfony::encode
 	 */
 	public function testEncodeFloatWithNonUSLocale()
 	{
@@ -97,12 +108,12 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::encode
-	 * @covers \Kirby\Data\YamlSpyc::encode
+	 * @covers \Kirby\Data\YamlSymfony::encode
 	 */
 	public function testEncodeNodeTypes()
 	{
 		$data = Yaml::encode(['test' => '']);
-		$this->assertSame('test: ""' . PHP_EOL, $data);
+		$this->assertSame('test: \'\'' . PHP_EOL, $data);
 
 		$data = Yaml::encode(['test' => null]);
 		$this->assertSame('test: null' . PHP_EOL, $data);
@@ -120,6 +131,6 @@ class YamlTest extends TestCase
 		$this->assertSame('test: string' . PHP_EOL, $data);
 
 		$data = Yaml::encode(['test' => '"string"']);
-		$this->assertSame('test: "string"' . PHP_EOL, $data);
+		$this->assertSame('test: \'"string"\'' . PHP_EOL, $data);
 	}
 }
