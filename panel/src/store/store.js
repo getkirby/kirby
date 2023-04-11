@@ -13,8 +13,7 @@ export default new Vuex.Store({
 	strict: process.env.NODE_ENV !== "production",
 	state: {
 		dialog: null,
-		drag: null,
-		isLoading: false
+		drag: null
 	},
 	mutations: {
 		SET_DIALOG(state, dialog) {
@@ -22,9 +21,6 @@ export default new Vuex.Store({
 		},
 		SET_DRAG(state, drag) {
 			state.drag = drag;
-		},
-		SET_LOADING(state, loading) {
-			state.isLoading = loading;
 		}
 	},
 	actions: {
@@ -40,8 +36,11 @@ export default new Vuex.Store({
 		fatal(context, options) {
 			window.panel.notification.fatal(options);
 		},
+		/**
+		 * @deprecated Use window.panel.isLoading
+		 */
 		isLoading(context, loading) {
-			context.commit("SET_LOADING", loading === true);
+			window.panel.isLoading = loading;
 		},
 		navigate(context) {
 			context.dispatch("dialog", null);

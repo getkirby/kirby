@@ -39,7 +39,7 @@ export default {
 			 */
 			onFinish: () => {
 				if (this.$api.requests.length === 0) {
-					this.$store.dispatch("isLoading", false);
+					this.$panel.isLoading = false;
 				}
 			},
 			/**
@@ -69,7 +69,7 @@ export default {
 				// show the loader unless the silent option is activated
 				// this is useful i.e. for background reloads (see our locking checks)
 				if (silent !== true) {
-					this.$store.dispatch("isLoading", true);
+					this.$panel.isLoading = true;
 				}
 			},
 			/**

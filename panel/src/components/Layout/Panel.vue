@@ -1,7 +1,7 @@
 <template>
 	<div
 		:data-dragging="$store.state.drag"
-		:data-loading="$store.state.isLoading"
+		:data-loading="$panel.isLoading"
 		:data-language="language"
 		:data-language-default="defaultLanguage"
 		:data-role="role"
