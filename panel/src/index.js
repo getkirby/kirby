@@ -12,7 +12,6 @@ import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
 import Panel from "./panel/panel.js";
-import Plugins from "./panel/plugins.js";
 import store from "./store/store.js";
 import Vuelidate from "vuelidate";
 
@@ -43,6 +42,7 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
+		this.$panel.isLoading = false;
 		this.$panel.events = Events();
 		this.$panel.notification = Notification({
 			debug: this.$panel.$config.debug
@@ -52,7 +52,7 @@ const app = new Vue({
 		 * Make notification reactive. This will be done in
 		 * the Panel object later
 		 */
-		reactive(this.$panel.notification);
+		reactive(this.$panel);
 
 		/**
 		 * Delegate all required window events to the
@@ -76,11 +76,11 @@ import "./styles/reset.css";
 import "./styles/animations.css";
 
 // Load functionalities
-Vue.use(ErrorHandling);
+Vue.use(ErrorHandling, window.panel);
 Vue.use(Legacy);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Api, store);
+Vue.use(Api, window.panel);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);

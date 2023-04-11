@@ -53,10 +53,7 @@ export default {
 						this.options = options;
 					});
 				} catch (e) {
-					this.$store.dispatch(
-						"notification/success",
-						this.$t("lock.unsaved.empty")
-					);
+					this.$panel.notification.success(this.$t("lock.unsaved.empty"));
 					this.$store.dispatch("content/clear");
 					return false;
 				}

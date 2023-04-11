@@ -1,17 +1,17 @@
 import Api from "@/api/index.js";
 
 export default {
-	install(Vue, store) {
+	install(Vue, panel) {
 		Vue.prototype.$api = Vue.$api = Api({
 			config: {
-				endpoint: window.panel.$urls.api,
+				endpoint: panel.$urls.api,
 				onComplete: (requestId) => {
 					Vue.$api.requests = Vue.$api.requests.filter((value) => {
 						return value !== requestId;
 					});
 
 					if (Vue.$api.requests.length === 0) {
-						store.dispatch("isLoading", false);
+						panel.isLoading = false;
 					}
 				},
 				onError: (error) => {
@@ -25,27 +25,27 @@ export default {
 						return false;
 					}
 
-					if (window.panel.$config.debug) {
+					if (panel.$config.debug) {
 						window.console.error(error);
 					}
 				},
 				onParserError: ({ html }) => {
-					window.panel.notification.fatal(html);
+					panel.notification.fatal(html);
 				},
 				onPrepare: (options) => {
 					// if language set, add to headers
-					if (window.panel.$language) {
-						options.headers["x-language"] = window.panel.$language.code;
+					if (panel.$language) {
+						options.headers["x-language"] = panel.$language.code;
 					}
 
 					// add the csrf token to every request
-					options.headers["x-csrf"] = window.panel.$system.csrf;
+					options.headers["x-csrf"] = panel.$system.csrf;
 
 					return options;
 				},
 				onStart: (requestId, silent = false) => {
 					if (silent === false) {
-						store.dispatch("isLoading", true);
+						panel.isLoading = true;
 					}
 
 					Vue.$api.requests.push(requestId);
