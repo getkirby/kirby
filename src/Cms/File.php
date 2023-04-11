@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -82,6 +81,24 @@ class File extends ModelWithContent
 	protected string|null $url;
 
 	/**
+	 * Creates a new File object
+	 */
+	public function __construct(array $props)
+	{
+		// set filename as the most important prop first
+		// TODO: refactor later to avoid redundant prop setting
+		$this->setProperty('filename', $props['filename'] ?? null, true);
+
+		// set other properties
+		$this->setProperties($props);
+
+		// setProperties doesn't recognize root and url prop as they are
+		// first defined in the IsFile trait. Calling their setters manually
+		$this->setProperty('root', $props['root'] ?? null);
+		$this->setProperty('url', $props['url'] ?? null);
+	}
+
+	/**
 	 * Magic caller for file methods
 	 * and content fields. (in this order)
 	 *
@@ -108,26 +125,6 @@ class File extends ModelWithContent
 
 		// content fields
 		return $this->content()->get($method);
-	}
-
-	/**
-	 * Creates a new File object
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props)
-	{
-		// set filename as the most important prop first
-		// TODO: refactor later to avoid redundant prop setting
-		$this->setProperty('filename', $props['filename'] ?? null, true);
-
-		// set other properties
-		$this->setProperties($props);
-
-		// setProperties doesn't recognize root and url prop as they are
-		// first defined in the IsFile trait. Calling their setters manually
-		$this->setProperty('root', $props['root'] ?? null);
-		$this->setProperty('url', $props['url'] ?? null);
 	}
 
 	/**
@@ -644,7 +641,7 @@ class File extends ModelWithContent
 	 *
 	 * @return $this
 	 */
-	protected function setParent(Page|Site|User $parent)
+	protected function setParent(Page|Site|User $parent): static
 	{
 		$this->parent = $parent;
 		return $this;

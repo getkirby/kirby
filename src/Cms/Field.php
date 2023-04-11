@@ -27,6 +27,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Field
 {
+	/**
+	 * Field method aliases
+	 */
 	public static array $aliases = [];
 
 	/**
