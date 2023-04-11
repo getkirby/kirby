@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Locale;
@@ -48,6 +49,10 @@ class Language
 	 */
 	public function __construct(array $props)
 	{
+		if (isset($props['code']) === false) {
+			throw new InvalidArgumentException('The property "code" is required');
+		}
+
 		static::$kirby      = $props['kirby'] ?? null;
 		$this->code         = trim($props['code']);
 		$this->default      = $props['default'] ?? false;

@@ -48,7 +48,7 @@ class StructureObject
 		}
 
 		$this->id        = $props['id'];
-		$this->parent    = $props['parent'] ?? null;
+		$this->parent    = $props['parent'] ?? App::instance()->site();
 		$this->structure = $props['structure'] ?? null;
 		$this->content   = $props['content'] ?? [];
 	}

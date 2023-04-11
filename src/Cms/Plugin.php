@@ -41,9 +41,7 @@ class Plugin
 	 */
 	public function __construct(string $name, array $extends = [])
 	{
-		if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
-			throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
-		}
+		static::validateName($name);
 
 		$this->name    = $name;
 		$this->extends = $extends;
@@ -259,6 +257,19 @@ class Plugin
 		}
 
 		return $this->updateStatus = new UpdateStatus($this, false, $data);
+	}
+
+	/**
+	 * Checks if the name follows the required pattern
+	 * and throws an exception if not
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException
+	 */
+	public static function validateName(string $name): void
+	{
+		if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
+			throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
+		}
 	}
 
 	/**

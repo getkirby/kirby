@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 class StructureObjectTest extends TestCase
 {
 	public function testId()
@@ -24,10 +26,10 @@ class StructureObjectTest extends TestCase
 
 	public function testMissingId()
 	{
-		$this->expectException('Exception');
+		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The property "id" is required');
 
-		$object = new StructureObject(['foo' => 'bar']);
+		new StructureObject(['foo' => 'bar']);
 	}
 
 	public function testContent()
@@ -104,6 +106,15 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertSame($parent, $object->parent());
+	}
+
+	public function testParentFallback()
+	{
+		$object = new StructureObject([
+			'id'     => 'test',
+		]);
+
+		$this->assertInstanceOf(Site::class, $object->parent());
 	}
 
 	public function testInvalidParent()

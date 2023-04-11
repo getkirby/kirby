@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Find;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Form\Form;
@@ -24,7 +23,6 @@ use Kirby\Toolkit\I18n;
  */
 class Field
 {
-
 	/**
 	 * Creates the routes for a field dialog
 	 * This is most definitely not a good place for this
