@@ -170,9 +170,10 @@ export default {
 				this.$panel.language.reset();
 			} else if (state.$language) {
 				this.$panel.language.set(state.$language);
-    },
+			}
+		},
 
-    /**
+		/**
 		 * Temporarily connects the old fiber code with the new panel
 		 *
 		 * @param {object} state
@@ -192,8 +193,8 @@ export default {
 			this.$panel.multilang = state.$multilang;
 		},
 
- 		/**
-     * Temporary state setter for the new panel.system module
+		/**
+		 * Temporary state setter for the new panel.system module
 		 *
 		 * @param {object} state
 		 */
