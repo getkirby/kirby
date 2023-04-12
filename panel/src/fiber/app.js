@@ -90,6 +90,7 @@ export default {
 				this.setGlobals(state);
 				this.setLanguage(state);
 				this.setLanguages(state);
+				this.setMenu(state);
 				this.setMultilang(state);
 				this.setSystem(state);
 				this.setTitle(state);
@@ -160,9 +161,9 @@ export default {
 				}
 			});
 		},
-
-		/**
-		 * Temporarily connects the old fiber code with the new language module
+  
+    /**
+     * Temporarily connects the old fiber code with the new language module
 		 *
 		 * @param {object} state
 		 */
@@ -184,6 +185,17 @@ export default {
 				this.$panel.languages = state.$languages;
 			}
 		},
+
+		/**
+		 * Temporarily connect the new panel
+		 *
+		 * @param {object} state
+		 */
+		setMenu(state) {
+			if (state.$menu) {
+				this.$panel.menu = state.$menu;
+      }
+    },
 
 		/**
 		 * Temporarily connects the old fiber code with the new panel

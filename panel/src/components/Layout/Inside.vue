@@ -4,7 +4,7 @@
 			<k-topbar
 				:breadcrumb="$view.breadcrumb"
 				:license="$license"
-				:menu="$menu"
+				:menu="$panel.menu"
 				:view="$view"
 			/>
 		</header>

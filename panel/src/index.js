@@ -48,9 +48,9 @@ const app = new Vue({
 		 */
 		this.$panel.events = Events();
 		this.$panel.isLoading = false;
-		this.$panel.notification = Notification();
 		this.$panel.language = Language();
 		this.$panel.languages = window.fiber.$languages;
+		this.$panel.menu = window.fiber.$menu;
 		this.$panel.multilang = window.fiber.$multilang;
 		this.$panel.notification = Notification();
 		this.$panel.system = System();
