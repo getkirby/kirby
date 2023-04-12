@@ -24,7 +24,7 @@
 		/>
 
 		<!-- Offline warning -->
-		<k-offline-warning v-if="$system.isLocal === false" />
+		<k-offline-warning v-if="$panel.system.isLocal === false" />
 
 		<!-- Icons -->
 		<k-icons />

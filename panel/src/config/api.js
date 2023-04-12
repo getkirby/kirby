@@ -39,7 +39,7 @@ export default {
 					}
 
 					// add the csrf token to every request
-					options.headers["x-csrf"] = panel.$system.csrf;
+					options.headers["x-csrf"] = panel.system.csrf;
 
 					return options;
 				},
