@@ -53,6 +53,5 @@ class Yaml extends Handler
 	public static function handler(): string
 	{
 		return App::instance(null, true)?->option('yaml') ?? 'spyc';
-
 	}
 }

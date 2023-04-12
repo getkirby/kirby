@@ -27,7 +27,6 @@ class YamlSymfony
 			2,
 			Symfony::DUMP_MULTI_LINE_LITERAL_BLOCK | Symfony::DUMP_EMPTY_ARRAY_AS_SEQUENCE
 		);
-
 	}
 
 	/**
