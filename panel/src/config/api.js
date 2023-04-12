@@ -25,7 +25,7 @@ export default {
 						return false;
 					}
 
-					if (panel.$config.debug) {
+					if (panel.debug) {
 						window.console.error(error);
 					}
 				},
