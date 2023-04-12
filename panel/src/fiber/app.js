@@ -88,6 +88,7 @@ export default {
 				};
 
 				this.setGlobals(state);
+				this.setMenu(state);
 				this.setTitle(state);
 				this.setTranslation(state);
 
@@ -153,6 +154,17 @@ export default {
 					Vue.prototype[key] = state[key] = window.panel[key];
 				}
 			});
+		},
+
+		/**
+		 * Temporarily connect the new panel
+		 *
+		 * @param {object} state
+		 */
+		setMenu(state) {
+			if (state.$menu) {
+				this.$panel.menu = state.$menu;
+			}
 		},
 
 		/**
