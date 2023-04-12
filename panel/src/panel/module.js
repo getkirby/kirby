@@ -2,7 +2,7 @@ import { isObject } from "@/helpers/object";
 
 /**
  * Panel modules represent a particular part of state
- * for the panel. I.e. $system, $translation.
+ * for the panel. I.e. system, translation.
  * Features are built upon such state modules
  *
  * The inheritance cascade is:

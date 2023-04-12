@@ -13,6 +13,7 @@ import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
+import System from "./panel/system.js";
 import Translation from "./panel/translation.js";
 import Vuelidate from "vuelidate";
 
@@ -43,12 +44,10 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		this.$panel.isLoading = false;
 		this.$panel.events = Events();
-		this.$panel.notification = Notification({
-			debug: this.$panel.$config.debug
-		});
-
+		this.$panel.isLoading = false;
+		this.$panel.notification = Notification();
+		this.$panel.system = System();
 		this.$panel.translation = Translation();
 
 		/**
