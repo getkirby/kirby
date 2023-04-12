@@ -170,14 +170,13 @@ export default {
 		},
 
 		/**
-		 * Sets the lang attribute on every request
+		 * Sets the translation state
 		 *
 		 * @param {object} state
 		 */
 		setTranslation(state) {
-			// set the lang attribute according to the current translation
 			if (state.$translation) {
-				document.documentElement.lang = state.$translation.code;
+				this.$panel.translation.set(state.$translation);
 			}
 		}
 	},
