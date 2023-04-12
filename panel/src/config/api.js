@@ -4,7 +4,7 @@ export default {
 	install(Vue, panel) {
 		Vue.prototype.$api = Vue.$api = Api({
 			config: {
-				endpoint: panel.$urls.api,
+				endpoint: panel.urls.api,
 				onComplete: (requestId) => {
 					Vue.$api.requests = Vue.$api.requests.filter((value) => {
 						return value !== requestId;
@@ -25,7 +25,7 @@ export default {
 						return false;
 					}
 
-					if (panel.$config.debug) {
+					if (panel.debug) {
 						window.console.error(error);
 					}
 				},
@@ -34,12 +34,10 @@ export default {
 				},
 				onPrepare: (options) => {
 					// if language set, add to headers
-					if (panel.$language) {
-						options.headers["x-language"] = panel.$language.code;
-					}
+					options.headers["x-language"] = panel.language.code;
 
 					// add the csrf token to every request
-					options.headers["x-csrf"] = panel.$system.csrf;
+					options.headers["x-csrf"] = panel.system.csrf;
 
 					return options;
 				},

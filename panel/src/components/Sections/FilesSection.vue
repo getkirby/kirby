@@ -48,7 +48,7 @@ export default {
 		uploadProps() {
 			return {
 				...this.options.upload,
-				url: this.$urls.api + "/" + this.options.upload.api
+				url: this.$panel.urls.api + "/" + this.options.upload.api
 			};
 		}
 	},
@@ -104,7 +104,7 @@ export default {
 		},
 		replace(file) {
 			this.$refs.upload.open({
-				url: this.$urls.api + "/" + file.link,
+				url: this.$panel.urls.api + "/" + file.link,
 				accept: "." + file.extension + "," + file.mime,
 				multiple: false
 			});

@@ -11,7 +11,7 @@ export default {
 		};
 	},
 	errorCaptured(error) {
-		if (this.$config.debug) {
+		if (this.$panel.debug) {
 			window.console.warn(error);
 		}
 

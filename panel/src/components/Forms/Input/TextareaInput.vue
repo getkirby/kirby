@@ -189,7 +189,7 @@ export default {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
 				return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-					url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 					multiple: false
 				});
 			}
@@ -267,7 +267,7 @@ export default {
 		},
 		uploadFile() {
 			this.$refs.fileUpload.open({
-				url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false
 			});
 		},
