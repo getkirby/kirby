@@ -45,6 +45,7 @@ const app = new Vue({
 		 */
 		this.$panel.isLoading = false;
 		this.$panel.events = Events();
+		this.$panel.license = window.panel.$license;
 		this.$panel.notification = Notification({
 			debug: this.$panel.$config.debug
 		});

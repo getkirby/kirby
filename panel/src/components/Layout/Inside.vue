@@ -3,7 +3,7 @@
 		<header class="k-panel-header">
 			<k-topbar
 				:breadcrumb="$view.breadcrumb"
-				:license="$license"
+				:license="$panel.license"
 				:menu="$menu"
 				:view="$view"
 			/>
