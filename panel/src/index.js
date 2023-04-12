@@ -15,6 +15,7 @@ import Panel from "./panel/panel.js";
 import store from "./store/store.js";
 import System from "./panel/system.js";
 import Translation from "./panel/translation.js";
+import User from "./panel/user.js";
 import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
@@ -49,6 +50,7 @@ const app = new Vue({
 		this.$panel.notification = Notification();
 		this.$panel.system = System();
 		this.$panel.translation = Translation();
+		this.$panel.user = User();
 
 		/**
 		 * shortcut for the translation method

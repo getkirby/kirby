@@ -51,10 +51,10 @@ export default {
 			return this.$language ? this.$language.code : null;
 		},
 		role() {
-			return this.$user ? this.$user.role : null;
+			return this.$panel.user.role;
 		},
 		user() {
-			return this.$user ? this.$user.id : null;
+			return this.$panel.user.id;
 		}
 	},
 	created() {
