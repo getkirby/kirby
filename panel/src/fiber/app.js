@@ -19,7 +19,7 @@ export default {
 			 */
 			headers: () => {
 				return {
-					"X-CSRF": this.state.$system.csrf
+					"X-CSRF": this.$panel.system.csrf
 				};
 			},
 			/**
@@ -88,6 +88,7 @@ export default {
 				};
 
 				this.setGlobals(state);
+				this.setSystem(state);
 				this.setTitle(state);
 				this.setTranslation(state);
 
@@ -153,6 +154,17 @@ export default {
 					Vue.prototype[key] = state[key] = window.panel[key];
 				}
 			});
+		},
+
+		/**
+		 * Temporary state setter for the new panel.system module
+		 *
+		 * @param {object} state
+		 */
+		setSystem(state) {
+			if (state.$system) {
+				this.$panel.system.set(state.$system);
+			}
 		},
 
 		/**
