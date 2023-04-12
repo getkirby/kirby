@@ -4,7 +4,7 @@ export default {
 	install(Vue, panel) {
 		Vue.prototype.$api = Vue.$api = Api({
 			config: {
-				endpoint: panel.$urls.api,
+				endpoint: panel.urls.api,
 				onComplete: (requestId) => {
 					Vue.$api.requests = Vue.$api.requests.filter((value) => {
 						return value !== requestId;

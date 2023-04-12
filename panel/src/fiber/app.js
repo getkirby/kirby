@@ -90,6 +90,7 @@ export default {
 				this.setGlobals(state);
 				this.setTitle(state);
 				this.setTranslation(state);
+				this.setUrls(state);
 
 				this.component = state.$view.component;
 				this.state = state;
@@ -177,6 +178,17 @@ export default {
 		setTranslation(state) {
 			if (state.$translation) {
 				this.$panel.translation.set(state.$translation);
+			}
+		},
+
+		/**
+		 * Temporarily transfer urls to the new panel
+		 *
+		 * @param {object} state
+		 */
+		setUrls(state) {
+			if (state.$urls) {
+				this.$panel.urls = state.$urls;
 			}
 		}
 	},

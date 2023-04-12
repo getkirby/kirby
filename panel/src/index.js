@@ -50,6 +50,7 @@ const app = new Vue({
 		});
 
 		this.$panel.translation = Translation();
+		this.$panel.urls = window.panel.$urls;
 
 		/**
 		 * shortcut for the translation method
