@@ -44,15 +44,12 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		this.$panel.isLoading = false;
 		this.$panel.events = Events();
-		this.$panel.notification = Notification({
-			debug: this.$panel.$config.debug
-		});
-
+		this.$panel.isLoading = false;
 		this.$panel.language = Language();
-		this.$panel.languages = [];
-		this.$panel.multilang = false;
+		this.$panel.languages = window.fiber.$languages;
+		this.$panel.multilang = window.fiber.$multilang;
+		this.$panel.notification = Notification();
 		this.$panel.translation = Translation();
 
 		/**
