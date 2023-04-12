@@ -11,9 +11,7 @@ export const props = {
 		},
 		placeholder: {
 			type: String,
-			default() {
-				return window.panel.$t("email.placeholder");
-			}
+			default: () => window.panel.$t("email.placeholder")
 		},
 		type: {
 			type: String,

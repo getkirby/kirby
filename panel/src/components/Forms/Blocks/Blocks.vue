@@ -254,8 +254,7 @@ export default {
 			this.selected = blocks.map((block) => block.id);
 
 			// a sign that it has been copied
-			this.$store.dispatch(
-				"notification/success",
+			this.$panel.notification.success(
 				this.$t("copy.success", { count: blocks.length })
 			);
 		},

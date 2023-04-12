@@ -14,7 +14,7 @@ export const defaults = () => {
 };
 
 export default (panel = {}) => {
-	const parent = Module("$notification", defaults());
+	const parent = Module("notification", defaults());
 
 	return {
 		...parent,

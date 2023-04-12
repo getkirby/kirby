@@ -2,7 +2,6 @@
 	<k-writer
 		ref="input"
 		v-bind="$props"
-		:value="value"
 		class="k-writer-input"
 		@input="$emit('input', $event)"
 	/>
@@ -35,12 +34,6 @@ export const props = {
 export default {
 	mixins: [props, Writer],
 	inheritAttrs: false,
-	computed: {
-		counterValue() {
-			const plain = this.$helper.string.stripHTML(this.value);
-			return this.$helper.string.unescapeHTML(plain);
-		}
-	},
 	watch: {
 		value() {
 			this.onInvalid();

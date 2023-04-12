@@ -51,9 +51,7 @@ export default {
 	props: {
 		languages: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	computed: {

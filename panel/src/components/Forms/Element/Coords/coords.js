@@ -12,8 +12,8 @@ export default class Coords extends HTMLElement {
 
 	attributeChangedCallback() {
 		this.value = {
-			x: this.getAttribute("x") || 0,
-			y: this.getAttribute("y") || 0
+			x: this.getAttribute("x") ?? 0,
+			y: this.getAttribute("y") ?? 0
 		};
 	}
 
@@ -30,6 +30,10 @@ export default class Coords extends HTMLElement {
 		this.addEventListener("keydown", (e) => this.onKeys(e));
 
 		this.appendChild(this.marker);
+
+		if (this.value.x !== undefined && this.value.y !== undefined) {
+			this.setMarker();
+		}
 	}
 
 	getCoords(event, bounds) {
@@ -46,7 +50,12 @@ export default class Coords extends HTMLElement {
 		);
 	}
 
-	onDrag() {
+	onDrag(e) {
+		// only react on mousedown of main mouse button
+		if (e.button !== 0) {
+			return;
+		}
+
 		const moving = (e) => this.onMove(e);
 		const end = () => {
 			window.removeEventListener("mousemove", moving);
@@ -126,7 +135,7 @@ export default class Coords extends HTMLElement {
 
 		return {
 			x: coords[0],
-			y: coords[1] || 0
+			y: coords[1] ?? 0
 		};
 	}
 
@@ -145,6 +154,10 @@ export default class Coords extends HTMLElement {
 		this.x = Math.min(Math.max(parseFloat(value.x ?? 0), 0), 100);
 		this.y = Math.min(Math.max(parseFloat(value.y ?? 0), 0), 100);
 
+		this.setMarker();
+	}
+
+	setMarker() {
 		if (this.marker) {
 			this.marker.style.left = this.x + "%";
 			this.marker.style.top = this.y + "%";

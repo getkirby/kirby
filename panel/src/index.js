@@ -4,14 +4,19 @@ import Api from "./config/api.js";
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
-import Events from "./config/events.js";
+import Events from "./panel/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
+import Language from "./panel/language.js";
+import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
-import Plugins from "./config/plugins.js";
+import Panel from "./panel/panel.js";
 import store from "./store/store.js";
+import System from "./panel/system.js";
+import Translation from "./panel/translation.js";
+import User from "./panel/user.js";
 import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
@@ -20,21 +25,69 @@ Vue.config.devtools = true;
 const app = new Vue({
 	store,
 	created() {
-		window.panel.plugins.created.forEach((plugin) => plugin(this));
-		window.panel.$vue = window.panel.app = this;
-		this.$store.dispatch("content/init");
+		/**
+		 * Shortcut to the panel for all components
+		 */
+		Vue.prototype.$panel = window.panel;
+
+		/**
+		 * Make the new panel temporarily available in the console
+		 * to test features manually
+		 */
+		window.p = Panel.create(Vue, window.panel.plugins);
+
+		/**
+		 * Temporary polyfill until this is all
+		 * bundled under window.panel
+		 */
+		this.$panel.plugins = window.p.plugins;
 
 		/**
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		window.panel.notification = Notification({
-			debug: window.panel.$config.debug
-		});
+		this.$panel.config = window.fiber.$config;
+		this.$panel.debug = this.$panel.config.debug;
+		this.$panel.events = Events();
+		this.$panel.isLoading = false;
+		this.$panel.language = Language();
+		this.$panel.languages = window.fiber.$languages;
+		this.$panel.license = window.fiber.$license;
+		this.$panel.menu = window.fiber.$menu;
+		this.$panel.multilang = window.fiber.$multilang;
+		this.$panel.notification = Notification();
+		this.$panel.permissions = window.fiber.$permissions;
+		this.$panel.searches = window.fiber.$searches;
+		this.$panel.system = System();
+		this.$panel.translation = Translation();
+		this.$panel.urls = window.fiber.$urls;
+		this.$panel.user = User();
 
-		reactive(window.panel.notification);
+		/**
+		 * shortcut for the translation method
+		 */
+		this.$panel.t = this.$panel.translation.translate.bind(
+			this.$panel.translation
+		);
 
-		Vue.prototype.$panel = window.panel;
+		/**
+		 * Make notification reactive. This will be done in
+		 * the Panel object later
+		 */
+		reactive(this.$panel);
+
+		/**
+		 * Delegate all required window events to the
+		 * event emitter
+		 */
+		this.$panel.events.subscribe();
+
+		/**
+		 * Register all created plugins
+		 */
+		this.$panel.plugins.created.forEach((plugin) => plugin(this));
+
+		this.$store.dispatch("content/init");
 	},
 	render: () => h(App)
 });
@@ -45,16 +98,15 @@ import "./styles/reset.css";
 import "./styles/animations.css";
 
 // Load functionalities
-Vue.use(ErrorHandling);
+Vue.use(ErrorHandling, window.panel);
+Vue.use(Legacy);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Api, store);
-Vue.use(Events);
+Vue.use(Api, window.panel);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);
 Vue.use(Components);
-Vue.use(Plugins);
 
 // Load CSS utilities after components
 // to increase specificity

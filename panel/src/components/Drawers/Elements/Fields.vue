@@ -16,9 +16,7 @@ export const props = {
 	props: {
 		empty: {
 			type: String,
-			default() {
-				return "This form drawer has no fields";
-			}
+			default: () => window.panel.$t("drawer.fields.empty")
 		},
 		fields: Object,
 		novalidate: {

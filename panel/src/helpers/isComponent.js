@@ -6,9 +6,5 @@ import Vue from "vue";
  * @returns {bool}
  */
 export default (name) => {
-	if (Vue.options.components[name] !== undefined) {
-		return true;
-	}
-
-	return false;
+	return Object.hasOwn(Vue.options.components, name);
 };

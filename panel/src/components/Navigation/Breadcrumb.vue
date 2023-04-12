@@ -33,9 +33,7 @@ export default {
 	props: {
 		crumbs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		label: {
 			type: String,
@@ -57,7 +55,7 @@ export default {
 					link: this.view.link,
 					label: this.view.breadcrumbLabel,
 					icon: this.view.icon,
-					loading: this.$store.state.isLoading
+					loading: this.$panel.isLoading
 				},
 				...this.crumbs
 			];

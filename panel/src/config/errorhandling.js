@@ -1,7 +1,5 @@
 export default {
-	install(app) {
-		window.panel = window.panel || {};
-
+	install(app, panel) {
 		/**
 		 * Handles promise rejections that have
 		 * not been caught
@@ -10,12 +8,12 @@ export default {
 		 */
 		window.onunhandledrejection = (event) => {
 			event.preventDefault();
-			window.panel.notification.error(event.reason);
-		};
 
-		// global deprecation handler
-		window.panel.deprecated = (message) => {
-			window.panel.notification.deprecated(message);
+			if (panel.debug) {
+				console.error(event.reason);
+			}
+
+			panel.notification.error(event.reason);
 		};
 
 		/**
@@ -23,8 +21,12 @@ export default {
 		 *
 		 * @param {Error} error
 		 */
-		window.panel.error = app.config.errorHandler = (error) => {
-			window.panel.notification.error(error);
+		app.config.errorHandler = (error) => {
+			if (panel.debug) {
+				console.error(error);
+			}
+
+			panel.notification.error(error);
 		};
 	}
 };

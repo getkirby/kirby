@@ -47,9 +47,7 @@ export default {
 		 */
 		skip: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		/**
 		 * Options for the autocomplete dropdown must be passed as an array of

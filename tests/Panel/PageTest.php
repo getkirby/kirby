@@ -300,6 +300,7 @@ class PageTest extends TestCase
 
 	/**
 	 * @covers ::imageSource
+	 * @covers \Kirby\Panel\Model::imageSrcset
 	 */
 	public function testImageCover()
 	{

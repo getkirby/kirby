@@ -58,12 +58,7 @@ export default {
 		 */
 		id: (state) => (id) => {
 			id = id || state.current;
-
-			if (window.panel.$language) {
-				return id + "?language=" + window.panel.$language.code;
-			}
-
-			return id;
+			return id + "?language=" + window.panel.language.code;
 		},
 		/**
 		 * Return the full model object for passed ID
@@ -175,7 +170,9 @@ export default {
 
 			// // compare current field value with its original value
 			const current = JSON.stringify(value);
-			const original = JSON.stringify(state.models[id].originals[field]);
+			const original = JSON.stringify(
+				state.models[id].originals[field] ?? null
+			);
 
 			if (original == current) {
 				// if the same, there are no unsaved changes
