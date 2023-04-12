@@ -88,6 +88,9 @@ export default {
 				};
 
 				this.setGlobals(state);
+				this.setLanguage(state);
+				this.setLanguages(state);
+				this.setMultilang(state);
 				this.setSystem(state);
 				this.setTitle(state);
 				this.setTranslation(state);
@@ -109,7 +112,7 @@ export default {
 			 */
 			query: () => {
 				return {
-					language: this.state.$language?.code
+					language: this.$panel.language.code
 				};
 			}
 		});
@@ -158,7 +161,39 @@ export default {
 		},
 
 		/**
-		 * Temporary state setter for the new panel.system module
+		 * Temporarily connects the old fiber code with the new language module
+		 *
+		 * @param {object} state
+		 */
+		setLanguage(state) {
+			if (state.$language === null) {
+				this.$panel.language.reset();
+			} else if (state.$language) {
+				this.$panel.language.set(state.$language);
+    },
+
+    /**
+		 * Temporarily connects the old fiber code with the new panel
+		 *
+		 * @param {object} state
+		 */
+		setLanguages(state) {
+			if (state.$languages) {
+				this.$panel.languages = state.$languages;
+			}
+		},
+
+		/**
+		 * Temporarily connects the old fiber code with the new panel
+		 *
+		 * @param {object} state
+		 */
+		setMultilang(state) {
+			this.$panel.multilang = state.$multilang;
+		},
+
+ 		/**
+     * Temporary state setter for the new panel.system module
 		 *
 		 * @param {object} state
 		 */

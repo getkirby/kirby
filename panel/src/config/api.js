@@ -34,9 +34,7 @@ export default {
 				},
 				onPrepare: (options) => {
 					// if language set, add to headers
-					if (panel.$language) {
-						options.headers["x-language"] = panel.$language.code;
-					}
+					options.headers["x-language"] = panel.language.code;
 
 					// add the csrf token to every request
 					options.headers["x-csrf"] = panel.system.csrf;
