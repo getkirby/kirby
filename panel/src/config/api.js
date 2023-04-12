@@ -37,7 +37,7 @@ export default {
 					options.headers["x-language"] = panel.language.code;
 
 					// add the csrf token to every request
-					options.headers["x-csrf"] = panel.$system.csrf;
+					options.headers["x-csrf"] = panel.system.csrf;
 
 					return options;
 				},
