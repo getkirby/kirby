@@ -57,6 +57,7 @@ const app = new Vue({
 		this.$panel.multilang = window.fiber.$multilang;
 		this.$panel.notification = Notification();
 		this.$panel.permissions = window.fiber.$permissions;
+		this.$panel.searches = window.fiber.$searches;
 		this.$panel.system = System();
 		this.$panel.translation = Translation();
 		this.$panel.urls = window.fiber.$urls;

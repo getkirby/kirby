@@ -94,6 +94,7 @@ export default {
 				this.setMenu(state);
 				this.setMultilang(state);
 				this.setPermissions(state);
+				this.setSearches(state);
 				this.setSystem(state);
 				this.setTitle(state);
 				this.setTranslation(state);
@@ -238,6 +239,17 @@ export default {
 		setPermissions(state) {
 			if (state.$permissions) {
 				this.$panel.permissions = state.$permissions;
+			}
+		},
+
+		/**
+		 * Temp connection for new panel
+		 *
+		 * @param {object} state
+		 */
+		setSearches(state) {
+			if (state.$searches) {
+				this.$panel.searches = state.$searches;
 			}
 		},
 
