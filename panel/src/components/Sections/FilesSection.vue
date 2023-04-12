@@ -8,7 +8,9 @@ export default {
 			return "upload";
 		},
 		canAdd() {
-			return this.$permissions.files.create && this.options.upload !== false;
+			return (
+				this.$panel.permissions.files.create && this.options.upload !== false
+			);
 		},
 		canDrop() {
 			return this.canAdd !== false;

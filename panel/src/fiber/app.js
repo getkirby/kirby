@@ -88,6 +88,7 @@ export default {
 				};
 
 				this.setGlobals(state);
+				this.setPermissions(state);
 				this.setTitle(state);
 				this.setTranslation(state);
 
@@ -153,6 +154,17 @@ export default {
 					Vue.prototype[key] = state[key] = window.panel[key];
 				}
 			});
+		},
+
+		/**
+		 * Temp connection for new panel
+		 *
+		 * @param {object} state
+		 */
+		setPermissions(state) {
+			if (state.$permissions) {
+				this.$panel.permissions = state.$permissions;
+			}
 		},
 
 		/**
