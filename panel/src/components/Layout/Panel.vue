@@ -39,7 +39,7 @@
 export default {
 	computed: {
 		defaultLanguage() {
-			return this.$language ? this.$language.default : false;
+			return this.$panel.language.isDefault;
 		},
 		dialog() {
 			return this.$helper.clone(this.$store.state.dialog);
@@ -48,7 +48,7 @@ export default {
 			return this.$panel.translation.direction;
 		},
 		language() {
-			return this.$language ? this.$language.code : null;
+			return this.$panel.language.code;
 		},
 		role() {
 			return this.$user ? this.$user.role : null;

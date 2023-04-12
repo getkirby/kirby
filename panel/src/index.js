@@ -8,6 +8,7 @@ import Events from "./panel/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
+import Language from "./panel/language.js";
 import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
@@ -49,6 +50,9 @@ const app = new Vue({
 			debug: this.$panel.$config.debug
 		});
 
+		this.$panel.language = Language();
+		this.$panel.languages = [];
+		this.$panel.multilang = false;
 		this.$panel.translation = Translation();
 
 		/**

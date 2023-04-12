@@ -58,11 +58,7 @@ export default {
 		 */
 		id: (state) => (id) => {
 			id = id || state.current;
-			if (window.panel.$language) {
-				return id + "?language=" + window.panel.$language.code;
-			}
-
-			return id;
+			return id + "?language=" + window.panel.language.code;
 		},
 		/**
 		 * Return the full model object for passed ID
