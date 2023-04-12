@@ -19,7 +19,7 @@ export default {
 			 */
 			headers: () => {
 				return {
-					"X-CSRF": this.state.$system.csrf
+					"X-CSRF": this.$panel.system.csrf
 				};
 			},
 			/**
@@ -88,9 +88,14 @@ export default {
 				};
 
 				this.setGlobals(state);
+				this.setLanguage(state);
+				this.setLanguages(state);
+				this.setMultilang(state);
+				this.setSystem(state);
 				this.setTitle(state);
 				this.setTranslation(state);
 				this.setUrls(state);
+				this.setUser(state);
 
 				this.component = state.$view.component;
 				this.state = state;
@@ -108,7 +113,7 @@ export default {
 			 */
 			query: () => {
 				return {
-					language: this.state.$language?.code
+					language: this.$panel.language.code
 				};
 			}
 		});
@@ -157,6 +162,50 @@ export default {
 		},
 
 		/**
+		 * Temporarily connects the old fiber code with the new language module
+		 *
+		 * @param {object} state
+		 */
+		setLanguage(state) {
+			if (state.$language === null) {
+				this.$panel.language.reset();
+			} else if (state.$language) {
+				this.$panel.language.set(state.$language);
+			}
+		},
+
+		/**
+		 * Temporarily connects the old fiber code with the new panel
+		 *
+		 * @param {object} state
+		 */
+		setLanguages(state) {
+			if (state.$languages) {
+				this.$panel.languages = state.$languages;
+			}
+		},
+
+		/**
+		 * Temporarily connects the old fiber code with the new panel
+		 *
+		 * @param {object} state
+		 */
+		setMultilang(state) {
+			this.$panel.multilang = state.$multilang;
+		},
+
+		/**
+		 * Temporary state setter for the new panel.system module
+		 *
+		 * @param {object} state
+		 */
+		setSystem(state) {
+			if (state.$system) {
+				this.$panel.system.set(state.$system);
+			}
+		},
+
+		/**
 		 * Sets the document title on each request
 		 *
 		 * @param {object} state
@@ -189,6 +238,17 @@ export default {
 		setUrls(state) {
 			if (state.$urls) {
 				this.$panel.urls = state.$urls;
+      }
+    },
+        
+    /**
+     * Temporary state setter for the new user module
+		 *
+		 * @param {object} state
+		 */
+		setUser(state) {
+			if (state.$user) {
+				this.$panel.user.set(state.$user);
 			}
 		}
 	},
