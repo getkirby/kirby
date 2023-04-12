@@ -43,7 +43,7 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		this.$panel.config = window.panel.$config;
+		this.$panel.config = window.fiber.$config;
 		this.$panel.debug = this.$panel.config.debug;
 		this.$panel.events = Events();
 		this.$panel.isLoading = false;
