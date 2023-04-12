@@ -190,4 +190,79 @@ class BlueprintFieldTest extends TestCase
 
 		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
 	}
+
+	public function testFieldGroupWhen()
+	{
+		$props = Blueprint::fieldProps([
+			'name'   => 'test',
+			'type'   => 'group',
+			'when'	 => [
+				'category' => 'value'
+			],
+			'fields' => [
+				'headline' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$expected = [
+			'fields' => [
+				'headline' => [
+					'label' => 'Headline',
+					'name'  => 'headline',
+					'type'  => 'text',
+					'width' => '1/1',
+					'when'	 => [
+						'category' => 'value'
+					],
+				]
+			],
+			'name' => 'test',
+			'type' => 'group'
+		];
+
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+	}
+
+	public function testFieldGroupWhenMerge()
+	{
+		$props = Blueprint::fieldProps([
+			'name'   => 'test',
+			'type'   => 'group',
+			'when'	 => [
+				'category' => 'value',
+				'another'  => 'value',
+			],
+			'fields' => [
+				'headline' => [
+					'type' => 'text',
+					'when' => [
+						'category'  => 'different-value',
+						'different' => 'field'
+					]
+				]
+			]
+		]);
+
+		$expected = [
+			'fields' => [
+				'headline' => [
+					'label' => 'Headline',
+					'name'  => 'headline',
+					'type'  => 'text',
+					'width' => '1/1',
+					'when'	 => [
+						'category'  => 'different-value',
+						'another'   => 'value',
+						'different' => 'field'
+					],
+				]
+			],
+			'name' => 'test',
+			'type' => 'group'
+		];
+
+		$this->assertEquals($expected, $props); // cannot use strict assertion (array order)
+	}
 }

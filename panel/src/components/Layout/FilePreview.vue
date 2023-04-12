@@ -109,7 +109,8 @@ export default {
 					target: "_blank"
 				}
 			];
-			if (this.image.src) {
+
+			if (this.isFocusable && this.image.src) {
 				options.push({
 					icon: "cancel",
 					text: this.$t("file.focus.reset"),
@@ -117,6 +118,7 @@ export default {
 					click: this.setFocus
 				});
 			}
+
 			return options;
 		},
 		storeId() {
@@ -155,6 +157,8 @@ export default {
 }
 
 .k-file-preview .k-coords {
+	--opacity-disabled: 1;
+
 	cursor: crosshair;
 }
 .k-file-preview-thumb img {

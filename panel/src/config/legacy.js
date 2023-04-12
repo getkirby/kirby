@@ -6,13 +6,15 @@
 export default {
 	install(app) {
 		/**
-		 * @deprecated Use `window.panel.events`
+		 * @deprecated Access through `this.$panel` instead
 		 */
 		app.prototype.$events = window.panel.events;
+		app.prototype.$t = window.panel.t;
 
 		/**
-		 * @deprecated Use `window.panel.vue`
+		 * @deprecated Access through `window.panel` without dollar sign
 		 */
+		window.panel.$t = window.panel.t;
 		window.panel.$vue = window.panel.app = this;
 
 		/**

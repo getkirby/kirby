@@ -1,7 +1,7 @@
 <template>
 	<div
 		:data-dragging="$store.state.drag"
-		:data-loading="$store.state.isLoading"
+		:data-loading="$panel.isLoading"
 		:data-language="language"
 		:data-language-default="defaultLanguage"
 		:data-role="role"
@@ -24,7 +24,7 @@
 		/>
 
 		<!-- Offline warning -->
-		<k-offline-warning v-if="$system.isLocal === false" />
+		<k-offline-warning v-if="$panel.system.isLocal === false" />
 
 		<!-- Icons -->
 		<k-icons />
@@ -39,35 +39,22 @@
 export default {
 	computed: {
 		defaultLanguage() {
-			return this.$language ? this.$language.default : false;
+			return this.$panel.language.isDefault;
 		},
 		dialog() {
 			return this.$helper.clone(this.$store.state.dialog);
 		},
 		dir() {
-			return this.$translation.direction;
+			return this.$panel.translation.direction;
 		},
 		language() {
-			return this.$language ? this.$language.code : null;
+			return this.$panel.language.code;
 		},
 		role() {
-			return this.$user ? this.$user.role : null;
+			return this.$panel.user.role;
 		},
 		user() {
-			return this.$user ? this.$user.id : null;
-		}
-	},
-	watch: {
-		dir: {
-			handler() {
-				/**
-				 * Some elements – i.e. drag ghosts -
-				 * are injected into the body and not the panel div.
-				 * They need the dir to be displayed correctly
-				 */
-				document.body.dir = this.dir;
-			},
-			immediate: true
+			return this.$panel.user.id;
 		}
 	},
 	created() {

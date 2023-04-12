@@ -104,8 +104,7 @@ export default {
 			this.$helper.clipboard.write(JSON.stringify(copy), e);
 
 			// a sign that it has been pasted
-			this.$store.dispatch(
-				"notification/success",
+			this.$panel.notification.success(
 				this.$t("copy.success", { count: copy.length ?? 1 })
 			);
 		},

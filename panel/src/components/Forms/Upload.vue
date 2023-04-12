@@ -163,7 +163,7 @@ export default {
 					attributes: this.options.attributes,
 					method: this.options.method,
 					headers: {
-						"X-CSRF": window.panel.$system.csrf
+						"X-CSRF": window.panel.system.csrf
 					},
 					progress: (xhr, file, progress) => {
 						this.$refs[file.name]?.[0]?.set(progress);

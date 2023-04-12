@@ -5,7 +5,7 @@ export default {
 	extends: ModelsSection,
 	computed: {
 		canAdd() {
-			return this.options.add && this.$permissions.pages.create;
+			return this.options.add && this.$panel.permissions.pages.create;
 		},
 		items() {
 			return this.data.map((page) => {

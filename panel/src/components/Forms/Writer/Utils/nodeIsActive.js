@@ -9,7 +9,7 @@ export default (state, type, attrs = {}) => {
 		findSelectedNodeOfType(type)(state.selection) ||
 		findParentNode(predicate)(state.selection);
 
-	if (length(attrs) > 0 || !node) {
+	if (length(attrs) === 0 || !node) {
 		return !!node;
 	}
 
