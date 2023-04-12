@@ -43,12 +43,11 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		this.$panel.isLoading = false;
+		this.$panel.config = window.panel.$config;
+		this.$panel.debug = this.$panel.config.debug;
 		this.$panel.events = Events();
-		this.$panel.notification = Notification({
-			debug: this.$panel.$config.debug
-		});
-
+		this.$panel.isLoading = false;
+		this.$panel.notification = Notification();
 		this.$panel.translation = Translation();
 
 		/**

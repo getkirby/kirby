@@ -87,6 +87,7 @@ export default {
 					...options
 				};
 
+				this.setConfig(state);
 				this.setGlobals(state);
 				this.setTitle(state);
 				this.setTranslation(state);
@@ -122,6 +123,17 @@ export default {
 		 */
 		navigate() {
 			this.$store.dispatch("navigate");
+		},
+
+		/**
+		 * Temporarily connect new panel
+		 *
+		 * @param {object} state
+		 */
+		setConfig(state) {
+			if (state.$config) {
+				this.$panel.config = state.$config;
+			}
 		},
 
 		/**

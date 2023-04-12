@@ -39,7 +39,7 @@ export default {
 	},
 	computed: {
 		kirbytext() {
-			return this.$config.kirbytext;
+			return this.$panel.config.kirbytext;
 		}
 	},
 	methods: {
