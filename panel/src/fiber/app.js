@@ -94,6 +94,7 @@ export default {
 				this.setSystem(state);
 				this.setTitle(state);
 				this.setTranslation(state);
+				this.setUrls(state);
 				this.setUser(state);
 
 				this.component = state.$view.component;
@@ -230,7 +231,18 @@ export default {
 		},
 
 		/**
-		 * Temporary state setter for the new user module
+		 * Temporarily transfer urls to the new panel
+		 *
+		 * @param {object} state
+		 */
+		setUrls(state) {
+			if (state.$urls) {
+				this.$panel.urls = state.$urls;
+      }
+    },
+        
+    /**
+     * Temporary state setter for the new user module
 		 *
 		 * @param {object} state
 		 */
