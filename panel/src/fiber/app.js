@@ -218,6 +218,17 @@ export default {
 		},
 
 		/**
+		 * Temporarily connect with the new panel
+		 *
+		 * @param {object} state
+		 */
+		setLicense(state) {
+			if (typeof state.$license === "boolean") {
+				this.$panel.license = state.$license;
+			}
+		},
+
+		/**
 		 * Sets the document title on each request
 		 *
 		 * @param {object} state

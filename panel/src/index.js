@@ -50,6 +50,7 @@ const app = new Vue({
 		this.$panel.isLoading = false;
 		this.$panel.language = Language();
 		this.$panel.languages = window.fiber.$languages;
+		this.$panel.license = window.fiber.$license;
 		this.$panel.menu = window.fiber.$menu;
 		this.$panel.multilang = window.fiber.$multilang;
 		this.$panel.notification = Notification();
