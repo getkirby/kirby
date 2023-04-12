@@ -24,7 +24,7 @@
 		/>
 
 		<!-- Offline warning -->
-		<k-offline-warning v-if="$system.isLocal === false" />
+		<k-offline-warning v-if="$panel.system.isLocal === false" />
 
 		<!-- Icons -->
 		<k-icons />
@@ -39,7 +39,7 @@
 export default {
 	computed: {
 		defaultLanguage() {
-			return this.$language ? this.$language.default : false;
+			return this.$panel.language.isDefault;
 		},
 		dialog() {
 			return this.$helper.clone(this.$store.state.dialog);
@@ -48,13 +48,13 @@ export default {
 			return this.$panel.translation.direction;
 		},
 		language() {
-			return this.$language ? this.$language.code : null;
+			return this.$panel.language.code;
 		},
 		role() {
-			return this.$user ? this.$user.role : null;
+			return this.$panel.user.role;
 		},
 		user() {
-			return this.$user ? this.$user.id : null;
+			return this.$panel.user.id;
 		}
 	},
 	created() {

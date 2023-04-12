@@ -67,9 +67,9 @@ export default {
 			return (
 				!this.isLocked &&
 				this.permissions.update &&
-				(!window.panel.$multilang ||
-					window.panel.$languages.length === 0 ||
-					window.panel.$language?.default)
+				(!window.panel.multilang ||
+					window.panel.languages.length === 0 ||
+					window.panel.language.default)
 			);
 		}
 	},
@@ -78,7 +78,7 @@ export default {
 			switch (action) {
 				case "replace":
 					this.$refs.upload.open({
-						url: this.$urls.api + "/" + this.id,
+						url: this.$panel.urls.api + "/" + this.id,
 						accept: "." + this.model.extension + "," + this.model.mime,
 						multiple: false
 					});

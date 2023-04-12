@@ -132,7 +132,7 @@ export default {
 			];
 		},
 		uploadApi() {
-			return this.$urls.api + "/" + this.id + "/avatar";
+			return this.$panel.urls.api + "/" + this.id + "/avatar";
 		}
 	},
 	methods: {
