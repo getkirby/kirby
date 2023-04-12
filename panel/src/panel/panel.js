@@ -82,6 +82,9 @@ export default {
 		this.redirect = redirect;
 		this.request = request;
 
+		// translator
+		this.t = this.translation.translate.bind(this.translation);
+
 		// register all plugins
 		this.plugins = Plugins(app, plugins);
 

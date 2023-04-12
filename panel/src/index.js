@@ -8,12 +8,15 @@ import Events from "./panel/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
+import Language from "./panel/language.js";
 import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
 import Notification from "./panel/notification.js";
 import Panel from "./panel/panel.js";
-import Plugins from "./panel/plugins.js";
 import store from "./store/store.js";
+import System from "./panel/system.js";
+import Translation from "./panel/translation.js";
+import User from "./panel/user.js";
 import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
@@ -43,16 +46,35 @@ const app = new Vue({
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
+		this.$panel.config = window.fiber.$config;
+		this.$panel.debug = this.$panel.config.debug;
 		this.$panel.events = Events();
-		this.$panel.notification = Notification({
-			debug: this.$panel.$config.debug
-		});
+		this.$panel.isLoading = false;
+		this.$panel.language = Language();
+		this.$panel.languages = window.fiber.$languages;
+		this.$panel.license = window.fiber.$license;
+		this.$panel.menu = window.fiber.$menu;
+		this.$panel.multilang = window.fiber.$multilang;
+		this.$panel.notification = Notification();
+		this.$panel.permissions = window.fiber.$permissions;
+		this.$panel.searches = window.fiber.$searches;
+		this.$panel.system = System();
+		this.$panel.translation = Translation();
+		this.$panel.urls = window.fiber.$urls;
+		this.$panel.user = User();
+
+		/**
+		 * shortcut for the translation method
+		 */
+		this.$panel.t = this.$panel.translation.translate.bind(
+			this.$panel.translation
+		);
 
 		/**
 		 * Make notification reactive. This will be done in
 		 * the Panel object later
 		 */
-		reactive(this.$panel.notification);
+		reactive(this.$panel);
 
 		/**
 		 * Delegate all required window events to the
@@ -76,11 +98,11 @@ import "./styles/reset.css";
 import "./styles/animations.css";
 
 // Load functionalities
-Vue.use(ErrorHandling);
+Vue.use(ErrorHandling, window.panel);
 Vue.use(Legacy);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Api, store);
+Vue.use(Api, window.panel);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);

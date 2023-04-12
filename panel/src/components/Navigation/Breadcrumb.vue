@@ -55,7 +55,7 @@ export default {
 					link: this.view.link,
 					label: this.view.breadcrumbLabel,
 					icon: this.view.icon,
-					loading: this.$store.state.isLoading
+					loading: this.$panel.isLoading
 				},
 				...this.crumbs
 			];
