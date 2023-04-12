@@ -90,6 +90,7 @@ export default {
 				this.setGlobals(state);
 				this.setTitle(state);
 				this.setTranslation(state);
+				this.setUser(state);
 
 				this.component = state.$view.component;
 				this.state = state;
@@ -177,6 +178,17 @@ export default {
 		setTranslation(state) {
 			if (state.$translation) {
 				this.$panel.translation.set(state.$translation);
+			}
+		},
+
+		/**
+		 * Temporary state setter for the new user module
+		 *
+		 * @param {object} state
+		 */
+		setUser(state) {
+			if (state.$user) {
+				this.$panel.user.set(state.$user);
 			}
 		}
 	},
