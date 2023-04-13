@@ -13,7 +13,7 @@ class YamlSymfonyTest extends TestCase
 {
 	public function setUp(): void
 	{
-		new App(['options' => ['yaml' => 'symfony']]);
+		new App(['options' => ['yaml.handler' => 'symfony']]);
 	}
 
 	public function tearDown(): void

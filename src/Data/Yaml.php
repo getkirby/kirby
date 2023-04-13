@@ -50,8 +50,13 @@ class Yaml extends Handler
 		};
 	}
 
+	/**
+	 * Returns which YAML parser (`spyc` or `symfony`)
+	 * is configured to be used
+	 * @internal
+	 */
 	public static function handler(): string
 	{
-		return App::instance(null, true)?->option('yaml') ?? 'spyc';
+		return App::instance(null, true)?->option('yaml.handler') ?? 'spyc';
 	}
 }

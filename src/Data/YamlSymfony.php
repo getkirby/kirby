@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\A;
 use Symfony\Component\Yaml\Yaml as Symfony;
 
@@ -21,10 +22,12 @@ class YamlSymfony
 	 */
 	public static function encode($data): string
 	{
+		$kirby  = App::instance(null, true);
+
 		return Symfony::dump(
 			$data,
-			2,
-			2,
+			$kirby?->option('yaml.params.inline') ?? 9999,
+			$kirby?->option('yaml.params.indent') ?? 2,
 			Symfony::DUMP_MULTI_LINE_LITERAL_BLOCK | Symfony::DUMP_EMPTY_ARRAY_AS_SEQUENCE
 		);
 	}
