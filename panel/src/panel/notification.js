@@ -2,6 +2,7 @@ import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
 import Module from "./module.js";
 import Timer from "./timer.js";
+import AuthError from "@/errors/AuthError.js";
 
 export const defaults = () => {
 	return {
@@ -84,6 +85,10 @@ export default (panel = {}) => {
 		 * @returns {Object} The notification state
 		 */
 		error(error) {
+			if (error instanceof AuthError) {
+				return panel.redirect("logout");
+			}
+
 			if (error instanceof JsonRequestError) {
 				return this.fatal(error);
 			}

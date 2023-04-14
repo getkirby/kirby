@@ -1,5 +1,6 @@
 import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url.js";
 import { toLowerKeys } from "../helpers/object.js";
+import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
 
@@ -105,16 +106,26 @@ export const request = async (url, options = {}) => {
 		return redirect(request.url);
 	}
 
-	const response = await fetch(request);
+	// parse the JSON response and react on errors
+	return await responder(request, await fetch(request));
+};
 
-	// redirect to non-fiber requests
+/**
+ * Try to parse the response and throw
+ * matching errors for issues with the response.
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @returns Response
+ */
+export const responder = async (request, response) => {
+	// redirect to non-json requests
 	if (
 		response.headers.get("Content-Type").includes("application/json") === false
 	) {
 		return redirect(response.url);
 	}
 
-	// try to parse the response.
 	try {
 		response.text = await response.text();
 		response.json = JSON.parse(response.text);
@@ -126,6 +137,20 @@ export const request = async (url, options = {}) => {
 		});
 	}
 
+	// auth error
+	if (response.status === 403) {
+		throw new AuthError(`Unauthenticated`, {
+			request,
+			response
+		});
+	}
+
+	// server error
+	if (response.json?.status === "error") {
+		throw response.json;
+	}
+
+	// request error
 	if (response.ok === false) {
 		throw new RequestError(`The request to ${response.url} failed`, {
 			request,
