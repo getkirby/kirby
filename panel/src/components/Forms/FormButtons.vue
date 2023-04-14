@@ -231,32 +231,9 @@ export default {
 
 			e.preventDefault?.();
 
-			try {
-				await this.$store.dispatch("content/save");
-				this.$events.$emit("model.update");
-				this.$panel.notification.success();
-			} catch (response) {
-				if (response.code === 403) {
-					return;
-				}
-
-				if (this.$helper.object.length(response.details) > 0) {
-					this.$panel.notification.error({
-						message: this.$t("error.form.incomplete"),
-						details: response.details
-					});
-				} else {
-					this.$panel.notification.error({
-						message: this.$t("error.form.notSaved"),
-						details: [
-							{
-								label: "Exception: " + response.exception,
-								message: response.message
-							}
-						]
-					});
-				}
-			}
+			await this.$store.dispatch("content/save");
+			this.$events.$emit("model.update");
+			this.$panel.notification.success();
 		},
 		async onUnlock(unlock = true) {
 			const api = [this.$view.path + "/unlock", null, null, true];
