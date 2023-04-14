@@ -1,4 +1,4 @@
-import Vue, { set, del } from "vue";
+import { set, del } from "vue";
 import { clone, length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
@@ -306,7 +306,7 @@ export default {
 
 			// Send updated values to API
 			try {
-				await Vue.$api.patch(model.api, data);
+				await window.panel.api.patch(model.api, data);
 
 				// re-create model with updated values as originals
 				context.commit("CREATE", [
