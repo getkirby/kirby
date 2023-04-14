@@ -2,11 +2,11 @@
 
 namespace Kirby\Data;
 
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Spyc;
 
 /**
- * Simple Wrapper around the Spyc YAML class
+ * Simple Wrapper around the Symfony or Spyc YAML class
  *
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -21,8 +21,10 @@ class Yaml extends Handler
 	 */
 	public static function encode($data): string
 	{
-		// $data, $indent, $wordwrap, $no_opening_dashes
-		return Spyc::YAMLDump($data, false, false, true);
+		return match (static::handler()) {
+			'symfony' => YamlSymfony::encode($data),
+			default   => YamlSpyc::encode($data),
+		};
 	}
 
 	/**
@@ -42,16 +44,19 @@ class Yaml extends Handler
 			throw new InvalidArgumentException('Invalid YAML data; please pass a string');
 		}
 
-		// remove BOM
-		$string = str_replace("\xEF\xBB\xBF", '', $string);
-		$result = Spyc::YAMLLoadString($string);
+		return match (static::handler()) {
+			'symfony' => YamlSymfony::decode($string),
+			default   => YamlSpyc::decode($string)
+		};
+	}
 
-		if (is_array($result) === true) {
-			return $result;
-		}
-
-		// apparently Spyc always returns an array, even for invalid YAML syntax
-		// so this Exception should currently never be thrown
-		throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
+	/**
+	 * Returns which YAML parser (`spyc` or `symfony`)
+	 * is configured to be used
+	 * @internal
+	 */
+	public static function handler(): string
+	{
+		return App::instance(null, true)?->option('yaml.handler') ?? 'spyc';
 	}
 }
