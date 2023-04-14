@@ -89,7 +89,7 @@ export default {
 		this.plugins = Plugins(app, plugins);
 
 		// set initial state
-		this.set({});
+		this.set(window.fiber);
 
 		// Turn the entire panel object
 		// reactive. This will only be applied
