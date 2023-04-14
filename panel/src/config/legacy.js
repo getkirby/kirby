@@ -8,6 +8,7 @@ export default {
 		/**
 		 * @deprecated Access through `this.$panel` instead
 		 */
+		app.prototype.$api = window.panel.api;
 		app.prototype.$events = window.panel.events;
 		app.prototype.$t = window.panel.t;
 
