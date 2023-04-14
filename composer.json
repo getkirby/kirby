@@ -38,7 +38,7 @@
 		"ext-openssl": "*",
 		"claviska/simpleimage": "4.0.2",
 		"composer/semver": "3.3.2",
-		"filp/whoops": "2.15.1",
+		"filp/whoops": "2.15.2",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.12.0",
 		"michelf/php-smartypants": "1.8.1",
