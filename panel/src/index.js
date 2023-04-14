@@ -1,6 +1,5 @@
 import Vue, { h, reactive } from "vue";
 
-import Api from "./config/api.js";
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
@@ -31,15 +30,10 @@ const app = new Vue({
 		window.p = Panel.create(Vue, window.panel.plugins);
 
 		/**
-		 * Temporary polyfill until this is all
-		 * bundled under window.panel
-		 */
-		this.$panel.plugins = window.p.plugins;
-
-		/**
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
+		this.$panel.api = window.p.api;
 		this.$panel.config = window.p.config;
 		this.$panel.debug = window.p.debug;
 		this.$panel.events = window.p.events;
@@ -51,6 +45,7 @@ const app = new Vue({
 		this.$panel.multilang = window.p.multilang;
 		this.$panel.notification = window.p.notification;
 		this.$panel.permissions = window.p.permissions;
+		this.$panel.plugins = window.p.plugins;
 		this.$panel.searches = window.p.searches;
 		this.$panel.system = window.p.system;
 		this.$panel.t = window.p.t;
@@ -90,7 +85,6 @@ Vue.use(ErrorHandling, window.panel);
 Vue.use(Legacy);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Api, window.panel);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);
