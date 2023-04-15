@@ -2,6 +2,8 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
+use Kirby\Image\Image;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
 
@@ -99,16 +101,30 @@ return [
 			'link',
 			'linkclass',
 			'rel',
+			'srcset',
 			'target',
 			'title',
 			'width'
 		],
 		'html' => function ($tag) {
 			if ($tag->file = $tag->file($tag->value)) {
-				$tag->src     = $tag->file->url();
-				$tag->alt     = $tag->alt     ?? $tag->file->alt()->or(' ')->value();
-				$tag->title   = $tag->title   ?? $tag->file->title()->value();
-				$tag->caption = $tag->caption ?? $tag->file->caption()->value();
+				$tag->src       = $tag->file->url();
+				$tag->alt     ??= $tag->file->alt()->or(' ')->value();
+				$tag->title   ??= $tag->file->title()->value();
+				$tag->caption ??= $tag->file->caption()->value();
+
+				if ($srcset = $tag->srcset) {
+					$srcset = Str::split($srcset);
+					$srcset = match (count($srcset) > 1) {
+						// comma-separated list of sizes
+						true => A::map($srcset, fn ($size) => (int)trim($size)),
+						// srcset config name
+						default => $srcset[0]
+					};
+
+					$tag->srcset = $tag->file->srcset($srcset);
+				}
+
 			} else {
 				$tag->src = Url::to($tag->value);
 			}
@@ -129,6 +145,7 @@ return [
 			};
 
 			$image = Html::img($tag->src, [
+				'srcset' => $tag->srcset,
 				'width'  => $tag->width,
 				'height' => $tag->height,
 				'class'  => $tag->imgclass,
