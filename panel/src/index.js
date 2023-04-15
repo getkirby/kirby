@@ -1,22 +1,15 @@
 import Vue, { h, reactive } from "vue";
 
-import Api from "./config/api.js";
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
-import Events from "./panel/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
-import Language from "./panel/language.js";
 import Legacy from "./config/legacy.js";
 import Libraries from "./libraries/index.js";
-import Notification from "./panel/notification.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
-import System from "./panel/system.js";
-import Translation from "./panel/translation.js";
-import User from "./panel/user.js";
 import Vuelidate from "vuelidate";
 
 Vue.config.productionTip = false;
@@ -37,38 +30,28 @@ const app = new Vue({
 		window.p = Panel.create(Vue, window.panel.plugins);
 
 		/**
-		 * Temporary polyfill until this is all
-		 * bundled under window.panel
-		 */
-		this.$panel.plugins = window.p.plugins;
-
-		/**
 		 * This is temporary panel setup
 		 * code until the entire panel.js class is there
 		 */
-		this.$panel.config = window.fiber.$config;
-		this.$panel.debug = this.$panel.config.debug;
-		this.$panel.events = Events();
-		this.$panel.isLoading = false;
-		this.$panel.language = Language();
-		this.$panel.languages = window.fiber.$languages;
-		this.$panel.license = window.fiber.$license;
-		this.$panel.menu = window.fiber.$menu;
-		this.$panel.multilang = window.fiber.$multilang;
-		this.$panel.notification = Notification();
-		this.$panel.permissions = window.fiber.$permissions;
-		this.$panel.searches = window.fiber.$searches;
-		this.$panel.system = System();
-		this.$panel.translation = Translation();
-		this.$panel.urls = window.fiber.$urls;
-		this.$panel.user = User();
-
-		/**
-		 * shortcut for the translation method
-		 */
-		this.$panel.t = this.$panel.translation.translate.bind(
-			this.$panel.translation
-		);
+		this.$panel.api = window.p.api;
+		this.$panel.config = window.p.config;
+		this.$panel.debug = window.p.debug;
+		this.$panel.events = window.p.events;
+		this.$panel.isLoading = window.p.isLoading;
+		this.$panel.language = window.p.language;
+		this.$panel.languages = window.p.languages;
+		this.$panel.license = window.p.license;
+		this.$panel.menu = window.p.menu;
+		this.$panel.multilang = window.p.multilang;
+		this.$panel.notification = window.p.notification;
+		this.$panel.permissions = window.p.permissions;
+		this.$panel.plugins = window.p.plugins;
+		this.$panel.searches = window.p.searches;
+		this.$panel.system = window.p.system;
+		this.$panel.t = window.p.t;
+		this.$panel.translation = window.p.translation;
+		this.$panel.urls = window.p.urls;
+		this.$panel.user = window.p.user;
 
 		/**
 		 * Make notification reactive. This will be done in
@@ -102,7 +85,6 @@ Vue.use(ErrorHandling, window.panel);
 Vue.use(Legacy);
 Vue.use(Helpers);
 Vue.use(Libraries);
-Vue.use(Api, window.panel);
 Vue.use(I18n);
 Vue.use(Fiber);
 Vue.use(Vuelidate);

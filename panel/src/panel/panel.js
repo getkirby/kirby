@@ -1,3 +1,4 @@
+import Api from "./api.js";
 import Dialog from "./dialog.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
@@ -89,7 +90,11 @@ export default {
 		this.plugins = Plugins(app, plugins);
 
 		// set initial state
-		this.set({});
+		this.set(window.fiber);
+
+		// api needs the initial state
+		// for the endpoint config
+		this.api = Api(this);
 
 		// Turn the entire panel object
 		// reactive. This will only be applied
