@@ -28,8 +28,10 @@ class Date extends DateTime
 	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
-	public function __construct($datetime = 'now', ?DateTimeZone $timezone = null)
-	{
+	public function __construct(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	) {
 		if (is_int($datetime) === true) {
 			$datetime = date('r', $datetime);
 		}
@@ -69,11 +71,11 @@ class Date extends DateTime
 	/**
 	 * Returns the interval between the provided and the object's datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function compare(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): DateInterval {
 		return $this->diff(new static($datetime, $timezone));
 	}
@@ -133,11 +135,11 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is the same as the given datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function is(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): bool {
 		return $this == new static($datetime, $timezone);
 	}
@@ -145,11 +147,11 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is after the given datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isAfter(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): bool {
 		return $this > new static($datetime, $timezone);
 	}
@@ -157,11 +159,11 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is before the given datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isBefore(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): bool {
 		return $this < new static($datetime, $timezone);
 	}
@@ -179,11 +181,11 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is at or before the given datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isMax(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): bool {
 		return $this <= new static($datetime, $timezone);
 	}
@@ -191,11 +193,11 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is at or after the given datetime
 	 *
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function isMin(
 		string|int|DateTimeInterface $datetime = 'now',
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): bool {
 		return $this >= new static($datetime, $timezone);
 	}
@@ -271,9 +273,9 @@ class Date extends DateTime
 	/**
 	 * Returns an instance of the current datetime
 	 *
-	 * @param \DateTimeZone $timezone
+	 * @param \DateTimeZone|null $timezone
 	 */
-	public static function now(DateTimeZone $timezone = null): static
+	public static function now(DateTimeZone|null $timezone = null): static
 	{
 		return new static('now', $timezone);
 	}
@@ -282,8 +284,10 @@ class Date extends DateTime
 	 * Tries to create an instance from the given string
 	 * or fails silently by returning `null` on error
 	 */
-	public static function optional(string|null $datetime = null, DateTimeZone $timezone = null): static|null
-	{
+	public static function optional(
+		string|null $datetime = null,
+		DateTimeZone|null $timezone = null
+	): static|null {
 		if (empty($datetime) === true) {
 			return null;
 		}
@@ -379,11 +383,11 @@ class Date extends DateTime
 	 * Overwrites the datetime value with a different one
 	 *
 	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
-	 * @param \DateTimeZone $timezone Optional default timezone if `$datetime` is string
+	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
 	public function set(
 		string|int|DateTimeInterface $datetime,
-		DateTimeZone $timezone = null
+		DateTimeZone|null $timezone = null
 	): void {
 		$datetime = new static($datetime, $timezone);
 		$this->setTimestamp($datetime->timestamp());
