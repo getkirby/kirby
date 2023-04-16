@@ -5,11 +5,8 @@
  * Page Routes
  */
 
-use Kirby\Cms\Permissions;
-use Kirby\Exception\PermissionException;
 
 return [
-
 	[
 		'pattern' => 'pages/(:any)',
 		'method'  => 'GET',
