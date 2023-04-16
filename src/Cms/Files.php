@@ -26,10 +26,8 @@ class Files extends Collection
 
 	/**
 	 * All registered files methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Adds a single file or

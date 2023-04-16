@@ -20,68 +20,50 @@ class Responder
 	/**
 	 * Timestamp when the response expires
 	 * in Kirby's cache
-	 *
-	 * @var int|null
 	 */
-	protected $expires = null;
+	protected int|null $expires = null;
 
 	/**
 	 * HTTP status code
-	 *
-	 * @var int
 	 */
-	protected $code = null;
+	protected int|null $code = null;
 
 	/**
 	 * Response body
-	 *
-	 * @var string
 	 */
-	protected $body = null;
+	protected string|null $body = null;
 
 	/**
 	 * Flag that defines whether the current
 	 * response can be cached by Kirby's cache
-	 *
-	 * @var bool
 	 */
-	protected $cache = true;
+	protected bool $cache = true;
 
 	/**
 	 * HTTP headers
-	 *
-	 * @var array
 	 */
-	protected $headers = [];
+	protected array $headers = [];
 
 	/**
 	 * Content type
-	 *
-	 * @var string
 	 */
-	protected $type = null;
+	protected string|null $type = null;
 
 	/**
 	 * Flag that defines whether the current
 	 * response uses the HTTP `Authorization`
 	 * request header
-	 *
-	 * @var bool
 	 */
-	protected $usesAuth = false;
+	protected bool $usesAuth = false;
 
 	/**
 	 * List of cookie names the response
 	 * relies on
-	 *
-	 * @var array
 	 */
-	protected $usesCookies = [];
+	protected array $usesCookies = [];
 
 	/**
 	 * Creates and sends the response
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -91,10 +73,9 @@ class Responder
 	/**
 	 * Setter and getter for the response body
 	 *
-	 * @param string|null $body
-	 * @return string|$this
+	 * @return $this|string|null
 	 */
-	public function body(string $body = null)
+	public function body(string $body = null): static|string|null
 	{
 		if ($body === null) {
 			return $this->body;
@@ -110,10 +91,9 @@ class Responder
 	 * by Kirby's cache
 	 * @since 3.5.5
 	 *
-	 * @param bool|null $cache
 	 * @return bool|$this
 	 */
-	public function cache(bool|null $cache = null)
+	public function cache(bool|null $cache = null): bool|static
 	{
 		if ($cache === null) {
 			// never ever cache private responses
@@ -134,10 +114,9 @@ class Responder
 	 * `Authorization` request header
 	 * @since 3.7.0
 	 *
-	 * @param bool|null $usesAuth
 	 * @return bool|$this
 	 */
-	public function usesAuth(bool|null $usesAuth = null)
+	public function usesAuth(bool|null $usesAuth = null): bool|static
 	{
 		if ($usesAuth === null) {
 			return $this->usesAuth;
@@ -151,9 +130,6 @@ class Responder
 	 * Setter for a cookie name that is
 	 * used by the response
 	 * @since 3.7.0
-	 *
-	 * @param string $name
-	 * @return void
 	 */
 	public function usesCookie(string $name): void
 	{
@@ -168,7 +144,6 @@ class Responder
 	 * names the response relies on
 	 * @since 3.7.0
 	 *
-	 * @param array|null $usesCookies
 	 * @return array|$this
 	 */
 	public function usesCookies(array|null $usesCookies = null)

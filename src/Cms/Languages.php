@@ -18,10 +18,8 @@ class Languages extends Collection
 {
 	/**
 	 * All registered languages methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Creates a new collection with the given language objects

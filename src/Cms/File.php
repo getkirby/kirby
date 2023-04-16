@@ -56,10 +56,8 @@ class File extends ModelWithContent
 
 	/**
 	 * All registered file methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * The parent object

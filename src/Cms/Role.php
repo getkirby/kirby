@@ -112,9 +112,6 @@ class Role
 		return $this->name;
 	}
 
-	/**
-	 * @return static
-	 */
 	public static function nobody(array $inject = []): static
 	{
 		try {
