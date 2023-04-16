@@ -73,6 +73,14 @@
 			<template v-if="currentOption?.text" #after>
 				{{ currentOption.text }}
 			</template>
+
+			<template v-if="mode === 'picker'" #icon>
+				<k-button
+					:icon="icon"
+					class="k-input-icon-button"
+					@click.stop="$refs.picker.toggle()"
+				/>
+			</template>
 		</k-input>
 	</k-field>
 </template>
