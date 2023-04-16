@@ -314,8 +314,18 @@ return [
 		$options  = $darkroom->preprocess($src, $options);
 		$root     = (new Filename($src, $dst, $options))->toString();
 
-		F::copy($src, $root, true);
-		$darkroom->process($root, $options);
+		// Generate `$tmp`/`$path` location where file first is moved
+		// and processed before moved to the final location.
+		// When there are problems during the generation, this
+		// ensures not to leave a broken media file in the final
+		// location but rather none, which will trigger a new generation
+		// process during the next request (as the job file will still remain)
+		$tmp  = tmpfile();
+		$path = stream_get_meta_data($tmp)['uri'];
+
+		F::copy($src, $path, true);
+		$darkroom->process($path, $options);
+		F::move($path, $root, true);
 
 		return $root;
 	},
