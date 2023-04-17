@@ -92,7 +92,7 @@ export default defineConfig(({ command }) => {
 		},
 		optimizeDeps: {
 			entries: "src/**/*.{js,vue}",
-			exclude: ["vitest"]
+			exclude: ["vitest", "vue"]
 		},
 		css: {
 			postcss: {
