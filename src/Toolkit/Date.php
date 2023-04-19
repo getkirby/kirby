@@ -454,7 +454,7 @@ class Date extends DateTime
 	/**
 	 * Returns an instance of the beginning of the current day
 	 */
-	public static function today(DateTimeZone $timezone = null): static
+	public static function today(DateTimeZone|null $timezone = null): static
 	{
 		return new static('today', $timezone);
 	}
