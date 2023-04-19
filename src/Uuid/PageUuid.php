@@ -31,9 +31,13 @@ class PageUuid extends ModelUuid
 	 */
 	protected function findByCache(): Page|null
 	{
-		$key   = $this->key();
-		$value = Uuids::cache()->get($key);
-		return App::instance()->page($value);
+		if ($key = $this->key()) {
+			if ($value = Uuids::cache()->get($key)) {
+				return App::instance()->page($value);
+			}
+		}
+
+		return null;
 	}
 
 	/**
