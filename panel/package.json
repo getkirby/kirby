@@ -48,8 +48,10 @@
 		"postcss-dir-pseudo-class": "^7.0.2",
 		"postcss-logical": "^6.1.0",
 		"prettier": "^2.8.4",
+		"rollup-plugin-external-globals": "^0.7.3",
 		"terser": "^5.16.6",
 		"vite": "^4.2.0",
+		"vite-plugin-static-copy": "^0.13.1",
 		"vitest": "^0.29.3",
 		"vue-docgen-api": "^4.60.0",
 		"vue-template-compiler": "^2.7.14"

@@ -69,10 +69,15 @@ class Document
 				'custom'  => static::customAsset('panel.css'),
 			],
 			'icons' => static::favicon($url),
-			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
+			// loader for plugins' index.dev.mjs files –
+			// inlined, so we provide the code instead of the asset URL
 			'plugin-imports' => $plugins->read('mjs'),
 			'js' => [
-				'vendor'       => [
+				'vue' => [
+					'nonce' => $nonce,
+					'src'   => $url . '/js/vue.js'
+				],
+				'vendor' => [
 					'nonce' => $nonce,
 					'src'   => $url . '/js/vendor.js',
 					'type'  => 'module'
@@ -82,17 +87,17 @@ class Document
 					'src'   => $url . '/js/plugins.js',
 					'type'  => 'module'
 				],
-				'plugins'      => [
+				'plugins' => [
 					'nonce' => $nonce,
 					'src'   => $plugins->url('js'),
 					'defer' => true
 				],
-				'custom'       => [
+				'custom' => [
 					'nonce' => $nonce,
 					'src'   => static::customAsset('panel.js'),
 					'type'  => 'module'
 				],
-				'index'        => [
+				'index' => [
 					'nonce' => $nonce,
 					'src'   => $url . '/js/index.js',
 					'type'  => 'module'
@@ -114,6 +119,9 @@ class Document
 				'src'   => $url . '/src/index.js',
 				'type'  => 'module'
 			];
+
+			// load the development version of Vue
+			$assets['js']['vue']['src'] = $url . '/node_modules/vue/dist/vue.js';
 
 			unset($assets['css']['index'], $assets['js']['vendor']);
 		}
