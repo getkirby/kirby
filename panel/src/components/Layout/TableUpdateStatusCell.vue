@@ -11,7 +11,7 @@
 				class="k-table-update-status-cell-button"
 				:icon="value.icon"
 				:href="value.url"
-				@click.stop="$refs.dropdown.toggle()"
+				@click="$refs.dropdown.toggle()"
 			>
 				{{ value.currentVersion }}
 			</k-button>

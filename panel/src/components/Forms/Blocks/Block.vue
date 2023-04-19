@@ -196,6 +196,8 @@ export default {
 				prepend: ($event) => this.$emit("prepend", $event),
 				remove: () => this.$emit("remove"),
 				show: () => this.$emit("show"),
+				sortDown: () => this.$emit("sortDown"),
+				sortUp: () => this.$emit("sortUp"),
 				split: ($event) => this.$emit("split", $event),
 				update: ($event) => this.$emit("update", $event)
 			};
