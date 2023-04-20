@@ -15,10 +15,10 @@
 			<!-- eslint-disable vue/no-mutating-props -->
 			<k-fieldset
 				ref="fields"
-				v-model="value"
 				:disabled="disabled"
 				:fields="fields"
 				:novalidate="novalidate"
+				:value="value"
 				@focus="onFocus"
 				@input="onInput"
 				@invalid="onInvalid"
