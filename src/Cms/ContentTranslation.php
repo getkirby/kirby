@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Properties;
-
 /**
  * Each page, file or site can have multiple
  * translated versions of their content,
@@ -17,48 +15,30 @@ use Kirby\Toolkit\Properties;
  */
 class ContentTranslation
 {
-	use Properties;
-
-	/**
-	 * @var string
-	 */
-	protected $code;
-
-	/**
-	 * @var array
-	 */
-	protected $content;
-
-	/**
-	 * @var string
-	 */
-	protected $contentFile;
-
-	/**
-	 * @var Model
-	 */
-	protected $parent;
-
-	/**
-	 * @var string
-	 */
-	protected $slug;
+	protected string $code;
+	protected array|null $content;
+	protected string $contentFile;
+	protected ModelWithContent $parent;
+	protected string|null $slug;
 
 	/**
 	 * Creates a new translation object
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
-		$this->setRequiredProperties($props, ['parent', 'code']);
-		$this->setOptionalProperties($props, ['slug', 'content']);
+		$this->code   = $props['code'];
+		$this->parent = $props['parent'];
+		$this->slug   = $props['slug'] ?? null;
+
+		if ($content = $props['content'] ?? null) {
+			$this->content = array_change_key_case($content);
+		} else {
+			$this->content = null;
+		}
 	}
 
 	/**
 	 * Improve `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -68,8 +48,6 @@ class ContentTranslation
 	/**
 	 * Returns the language code of the
 	 * translation
-	 *
-	 * @return string
 	 */
 	public function code(): string
 	{
@@ -79,8 +57,6 @@ class ContentTranslation
 	/**
 	 * Returns the translation content
 	 * as plain array
-	 *
-	 * @return array
 	 */
 	public function content(): array
 	{
@@ -92,9 +68,10 @@ class ContentTranslation
 			$this->isDefault() === false &&
 			$defaultLanguage = $parent->kirby()->defaultLanguage()
 		) {
-			if ($default = $parent->translation($defaultLanguage->code())?->content()) {
-				$content = array_merge($default, $content);
-			}
+			$content = array_merge(
+				$parent->translation($defaultLanguage->code())?->content() ?? [],
+				$content
+			);
 		}
 
 		return $content;
@@ -102,8 +79,6 @@ class ContentTranslation
 
 	/**
 	 * Absolute path to the translation content file
-	 *
-	 * @return string
 	 */
 	public function contentFile(): string
 	{
@@ -122,8 +97,6 @@ class ContentTranslation
 
 	/**
 	 * Returns the translation code as id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
@@ -133,77 +106,22 @@ class ContentTranslation
 	/**
 	 * Checks if the this is the default translation
 	 * of the model
-	 *
-	 * @return bool
 	 */
 	public function isDefault(): bool
 	{
-		if ($defaultLanguage = $this->parent->kirby()->defaultLanguage()) {
-			return $this->code() === $defaultLanguage->code();
-		}
-
-		return false;
+		return $this->code() === $this->parent->kirby()->defaultLanguage()?->code();
 	}
 
 	/**
 	 * Returns the parent page, file or site object
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
-	public function parent()
+	public function parent(): ModelWithContent
 	{
 		return $this->parent;
 	}
 
 	/**
-	 * @param string $code
-	 * @return $this
-	 */
-	protected function setCode(string $code)
-	{
-		$this->code = $code;
-		return $this;
-	}
-
-	/**
-	 * @param array|null $content
-	 * @return $this
-	 */
-	protected function setContent(array $content = null)
-	{
-		if ($content !== null) {
-			$this->content = array_change_key_case($content);
-		} else {
-			$this->content = null;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * @param \Kirby\Cms\Model $parent
-	 * @return $this
-	 */
-	protected function setParent(Model $parent)
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * @param string|null $slug
-	 * @return $this
-	 */
-	protected function setSlug(string $slug = null)
-	{
-		$this->slug = $slug;
-		return $this;
-	}
-
-	/**
 	 * Returns the custom translation slug
-	 *
-	 * @return string|null
 	 */
 	public function slug(): string|null
 	{
@@ -213,22 +131,23 @@ class ContentTranslation
 	/**
 	 * Merge the old and new data
 	 *
-	 * @param array|null $data
-	 * @param bool $overwrite
 	 * @return $this
 	 */
-	public function update(array $data = null, bool $overwrite = false)
+	public function update(array $data = null, bool $overwrite = false): static
 	{
 		$data = array_change_key_case((array)$data);
-		$this->content = $overwrite === true ? $data : array_merge($this->content(), $data);
+
+		$this->content = match ($overwrite) {
+			true    => $data,
+			default => array_merge($this->content(), $data)
+		};
+
 		return $this;
 	}
 
 	/**
 	 * Converts the most important translation
 	 * props to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
