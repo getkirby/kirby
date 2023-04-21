@@ -1,6 +1,6 @@
 import Vue, { h } from "vue";
 
-import App from "./fiber/app.js";
+import App from "./panel/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
 import Helpers from "./helpers/index.js";
@@ -35,20 +35,6 @@ Vue.prototype.$panel = window.panel;
  */
 window.panel.app = new Vue({
 	store,
-	created() {
-		/**
-		 * Delegate all required window events to the
-		 * event emitter
-		 */
-		this.$panel.events.subscribe();
-
-		/**
-		 * Register all created plugins
-		 */
-		this.$panel.plugins.created.forEach((plugin) => plugin(this));
-
-		this.$store.dispatch("content/init");
-	},
 	render: () => h(App)
 });
 

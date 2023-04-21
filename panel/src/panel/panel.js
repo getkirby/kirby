@@ -81,6 +81,7 @@ export default {
 
 		// methods
 		this.redirect = redirect;
+		this.reload = this.view.reload.bind(this.view);
 		this.request = request;
 
 		// translator
@@ -210,6 +211,7 @@ export default {
 		const { $search } = await this.get(`/search/${type}`, {
 			query: { query }
 		});
+
 		return $search;
 	},
 
