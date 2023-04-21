@@ -59,7 +59,7 @@ export const modules = [
  * and handles the reactive, global state of the panel.
  */
 export default {
-	create(app, plugins = {}) {
+	create(plugins = {}) {
 		// props
 		this.isLoading = false;
 
@@ -87,7 +87,7 @@ export default {
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(app, plugins);
+		this.plugins = Plugins(window.Vue, plugins);
 
 		// set initial state
 		this.set(window.fiber);

@@ -2,15 +2,8 @@ import Vue from "vue";
 
 export default {
 	name: "Fiber",
-	data() {
-		return {
-			component: null,
-			state: window.fiber,
-			key: null
-		};
-	},
 	created() {
-		this.$fiber.init(this.state, {
+		this.$fiber.init(window.fiber, {
 			base: document.querySelector("base").href,
 			/**
 			 * Returns all custom headers for
@@ -30,7 +23,7 @@ export default {
 			 * @param {object}
 			 */
 			onFatal({ text }) {
-				window.panel.notification.fatal(text);
+				this.$panel.notification.fatal(text);
 			},
 			/**
 			 * Is being called when a Fiber request
@@ -38,7 +31,7 @@ export default {
 			 * there are still running API requests
 			 */
 			onFinish: () => {
-				if (this.$api.requests.length === 0) {
+				if (this.$panel.api.requests.length === 0) {
 					this.$panel.isLoading = false;
 				}
 			},
@@ -83,7 +76,6 @@ export default {
 			onSwap: async (state, options) => {
 				options = {
 					navigate: true,
-					replace: false,
 					...options
 				};
 
@@ -100,10 +92,7 @@ export default {
 				this.setTranslation(state);
 				this.setUrls(state);
 				this.setUser(state);
-
-				this.component = state.$view.component;
-				this.state = state;
-				this.key = state.$view.timestamp;
+				this.setView(state);
 
 				if (options.navigate === true) {
 					this.navigate();
@@ -175,9 +164,9 @@ export default {
 				}
 			});
 		},
-  
-    /**
-     * Temporarily connects the old fiber code with the new language module
+
+		/**
+		 * Temporarily connects the old fiber code with the new language module
 		 *
 		 * @param {object} state
 		 */
@@ -219,8 +208,8 @@ export default {
 		setMenu(state) {
 			if (state.$menu) {
 				this.$panel.menu = state.$menu;
-      }
-    },
+			}
+		},
 
 		/**
 		 * Temporarily connects the old fiber code with the new panel
@@ -297,11 +286,11 @@ export default {
 		setUrls(state) {
 			if (state.$urls) {
 				this.$panel.urls = state.$urls;
-      }
-    },
-        
-    /**
-     * Temporary state setter for the new user module
+			}
+		},
+
+		/**
+		 * Temporary state setter for the new user module
 		 *
 		 * @param {object} state
 		 */
@@ -309,13 +298,24 @@ export default {
 			if (state.$user) {
 				this.$panel.user.set(state.$user);
 			}
+		},
+
+		/**
+		 * Temporary state setter for the new view module
+		 *
+		 * @param {object} state
+		 */
+		setView(state) {
+			if (state.$view) {
+				this.$panel.view.set(state.$view);
+			}
 		}
 	},
 	render(h) {
-		if (this.component) {
-			return h(this.component, {
-				key: this.key,
-				props: this.state.$view.props
+		if (this.$panel.view.component) {
+			return h(this.$panel.view.component, {
+				key: this.$panel.view.timestamp,
+				props: this.$panel.view.props
 			});
 		}
 	}

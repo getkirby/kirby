@@ -8,6 +8,7 @@ export const defaults = () => {
 		icon: null,
 		id: null,
 		link: null,
+		search: "pages",
 		timestamp: null,
 		title: null
 	};
