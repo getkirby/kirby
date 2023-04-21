@@ -1,3 +1,9 @@
+import Fiber from "./index";
+import Vue from "vue";
+
+// all of this will be gone soon
+Vue.prototype.$fiber = new Fiber();
+
 export default {
 	name: "Fiber",
 	created() {

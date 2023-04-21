@@ -3,7 +3,6 @@ import Vue, { h } from "vue";
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
-import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
 import Legacy from "./legacy/index.js";
@@ -69,7 +68,6 @@ Vue.use(Legacy, window.panel);
 Vue.use(Helpers);
 Vue.use(Libraries);
 Vue.use(I18n);
-Vue.use(Fiber);
 Vue.use(Vuelidate);
 Vue.use(Components);
 
