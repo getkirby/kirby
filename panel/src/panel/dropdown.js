@@ -29,7 +29,7 @@ export default (panel) => {
 							: option.dialog.url;
 					const options =
 						typeof option.dialog === "object" ? option.dialog : {};
-					return panel.vue.$dialog(url, options);
+					return panel.app.$dialog(url, options);
 				};
 
 				return option;

@@ -63,23 +63,23 @@ const asyncDialog = async function (path, options = {}) {
 	path = ltrim(path, "/");
 
 	// load the dialog definition from the server
-	let result = await this.$fiber.request("dialogs/" + path, {
+	let { $dialog } = await this.$panel.get("dialogs/" + path, {
 		...options,
 		type: "$dialog"
 	});
 
 	// JSON parsing failed. The dialog is invalid
-	if (typeof result !== "object") {
+	if (typeof $dialog !== "object") {
 		return false;
 	}
 
 	// add the event handlers to the result
 	// they will be stored in Vuex to be available
 	// in the Fiber dialog component
-	result.submit = submit || null;
-	result.cancel = cancel || null;
+	$dialog.submit = submit || null;
+	$dialog.cancel = cancel || null;
 
-	return result;
+	return $dialog;
 };
 
 /**

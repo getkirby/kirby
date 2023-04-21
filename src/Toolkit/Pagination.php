@@ -19,17 +19,17 @@ class Pagination
 	/**
 	 * The current page
 	 */
-	protected int $page;
+	protected int $page = 1;
 
 	/**
 	 * Total number of items
 	 */
-	protected int $total;
+	protected int $total = 0;
 
 	/**
 	 * The number of items per page
 	 */
-	protected int $limit;
+	protected int $limit = 20;
 
 	/**
 	 * Whether validation of the pagination page
@@ -87,22 +87,20 @@ class Pagination
 	 * Creates a pagination instance for the given
 	 * collection with a flexible argument api
 	 */
-	public static function for(
-		Collection $collection,
-		mixed ...$arguments
-	): static {
+	public static function for(Collection $collection, ...$arguments): static
+	{
 		$a = $arguments[0] ?? null;
 		$b = $arguments[1] ?? null;
 
 		$params = [];
 
-		// First argument is a pagination/self object
+		// First argument is a pagination object
 		if ($a instanceof static) {
 			return $a;
 		}
 
 		if (is_array($a) === true) {
-			// First argument is an option array:
+			// First argument is an option array
 			// $collection->paginate([...])
 			$params = $a;
 		} elseif (is_int($a) === true && $b === null) {
@@ -110,14 +108,12 @@ class Pagination
 			// $collection->paginate(10)
 			$params['limit'] = $a;
 		} elseif (is_int($a) === true && is_int($b) === true) {
-			// First argument is the limit,
-			// second argument is the page:
+			// First argument is the limit, second argument is the page
 			// $collection->paginate(10, 2)
 			$params['limit'] = $a;
 			$params['page']  = $b;
 		} elseif (is_int($a) === true && is_array($b) === true) {
-			// First argument is the limit,
-			// second argument are options:
+			// First argument is the limit, second argument are options
 			// $collection->paginate(10, [...])
 			$params = $b;
 			$params['limit'] = $a;
@@ -162,20 +158,16 @@ class Pagination
 	 */
 	public function start(): int
 	{
-		$index = $this->page() - 1;
-		$index = max($index, 0);
+		$index = max(0, $this->page() - 1);
 		return $index * $this->limit() + 1;
 	}
 
 	/**
 	 * Returns the index of the last item on the page
-	 *
-	 * @return int
 	 */
 	public function end(): int
 	{
-		$value = ($this->start() - 1) + $this->limit();
-		$value = min($value, $this->total());
+		$value = min($this->total(), ($this->start() - 1) + $this->limit());
 		return $value;
 	}
 
@@ -336,11 +328,47 @@ class Pagination
 	}
 
 	/**
+	 * Sets the properties limit, total and page
+	 * and validates that the properties match
+	 *
+	 * @param array $props Array with keys limit, total and/or page
+	 * @return $this
+	 */
+	protected function setProperties(array $props): static
+	{
+		$this->baseSetProperties($props);
+
+		// ensure that page is set to something, otherwise
+		// generate "default page" based on other params
+		$this->page ??= $this->firstPage();
+
+		// allow a page value of 1 even if there are no pages;
+		// otherwise the exception will get thrown for this pretty common case
+		$min = $this->firstPage();
+		$max = $this->pages();
+		if ($this->page === 1 && $max === 0) {
+			$this->page = 0;
+		}
+
+		// validate page based on all params if validation is enabled,
+		// otherwise limit the page number to the bounds
+		if ($this->page < $min || $this->page > $max) {
+			if (static::$validate === true) {
+				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
+			}
+
+			$this->page = max(min($this->page, $max), $min);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Sets the number of items per page
 	 *
 	 * @return $this
 	 */
-	protected function setLimit(int $limit): static
+	protected function setLimit(int $limit = 20): static
 	{
 		if ($limit < 1) {
 			throw new Exception('Invalid pagination limit: ' . $limit);
@@ -355,7 +383,7 @@ class Pagination
 	 *
 	 * @return $this
 	 */
-	protected function setTotal(int $total): static
+	protected function setTotal(int $total = 0): static
 	{
 		if ($total < 0) {
 			throw new Exception('Invalid total number of items: ' . $total);

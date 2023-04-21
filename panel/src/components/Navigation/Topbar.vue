@@ -56,11 +56,7 @@
 		</k-view>
 
 		<!-- search overlay -->
-		<k-search
-			ref="search"
-			:type="$view.search || 'pages'"
-			:types="$panel.searches"
-		/>
+		<k-search ref="search" :type="view.search" :types="$panel.searches" />
 	</div>
 </template>
 
