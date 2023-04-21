@@ -16,7 +16,7 @@ export default {
 		 * @deprecated Access through `window.panel` without dollar sign
 		 */
 		window.panel.$t = window.panel.t;
-		window.panel.$vue = window.panel.app = this;
+		window.panel.$vue = this;
 
 		/**
 		 * @deprecated Use `window.panel.notification.error` or throw an error

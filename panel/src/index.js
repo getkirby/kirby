@@ -1,4 +1,4 @@
-import Vue, { h, reactive } from "vue";
+import Vue, { h } from "vue";
 
 import App from "./fiber/app.js";
 import Components from "./components/index.js";
@@ -16,9 +16,14 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 /**
+ * Make Vue accessible globally
+ */
+window.Vue = Vue;
+
+/**
  * Create the Panel instance
  */
-window.panel = Panel.create(Vue, window.panel.plugins);
+window.panel = Panel.create(window.panel.plugins);
 
 /**
  * This is the single source of truth
@@ -29,7 +34,7 @@ Vue.prototype.$panel = window.panel;
 /**
  * Create the Vue application
  */
-window.panel.vue = new Vue({
+window.panel.app = new Vue({
 	store,
 	created() {
 		/**
@@ -77,4 +82,4 @@ import "./styles/utilities.css";
 /**
  * Mount the Vue application
  */
-window.panel.vue.$mount("#app");
+window.panel.app.$mount("#app");
