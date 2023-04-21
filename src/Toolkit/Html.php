@@ -90,10 +90,11 @@ class Html extends Xml
 	 *
 	 * @param string $tag Tag name
 	 * @param array $arguments Further arguments for the Html::tag() method
-	 * @return string
 	 */
-	public static function __callStatic(string $tag, array $arguments = []): string
-	{
+	public static function __callStatic(
+		string $tag,
+		array $arguments = []
+	): string {
 		if (static::isVoid($tag) === true) {
 			return static::tag($tag, null, ...$arguments);
 		}
@@ -133,8 +134,12 @@ class Html extends Xml
 	 * @param string|null $after An optional string that will be appended if the result is not empty
 	 * @return string|null The generated HTML attributes string
 	 */
-	public static function attr($name, $value = null, string|null $before = null, string|null $after = null): string|null
-	{
+	public static function attr(
+		string|array $name,
+		$value = null,
+		string|null $before = null,
+		string|null $after = null
+	): string|null {
 		// HTML supports boolean attributes without values
 		if (is_array($name) === false && is_bool($value) === true) {
 			return $value === true ? strtolower($name) : null;
@@ -167,9 +172,6 @@ class Html extends Xml
 
 	/**
 	 * Converts lines in a string into HTML breaks
-	 *
-	 * @param string $string
-	 * @return string
 	 */
 	public static function breaks(string $string): string
 	{
@@ -184,8 +186,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the tag
 	 * @return string The generated HTML
 	 */
-	public static function email(string $email, $text = null, array $attr = []): string
-	{
+	public static function email(
+		string $email,
+		string|array|null $text = null,
+		array $attr = []
+	): string {
 		if (empty($email) === true) {
 			return '';
 		}
@@ -214,14 +219,15 @@ class Html extends Xml
 	/**
 	 * Converts a string to an HTML-safe string
 	 *
-	 * @param string|null $string
 	 * @param bool $keepTags If true, existing tags won't be escaped
 	 * @return string The HTML string
 	 *
 	 * @psalm-suppress ParamNameMismatch
 	 */
-	public static function encode(string|null $string, bool $keepTags = false): string
-	{
+	public static function encode(
+		string|null $string,
+		bool $keepTags = false
+	): string {
 		if ($string === null) {
 			return '';
 		}
@@ -241,8 +247,6 @@ class Html extends Xml
 
 	/**
 	 * Returns the entity translation table
-	 *
-	 * @return array
 	 */
 	public static function entities(): array
 	{
@@ -257,8 +261,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<figure>` tag
 	 * @return string The generated HTML
 	 */
-	public static function figure($content, $caption = '', array $attr = []): string
-	{
+	public static function figure(
+		string|array $content,
+		string|array|null $caption = '',
+		array $attr = []
+	): string {
 		if ($caption) {
 			$figcaption = static::tag('figcaption', $caption);
 
@@ -280,8 +287,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<script>` tag
 	 * @return string The generated HTML
 	 */
-	public static function gist(string $url, string|null $file = null, array $attr = []): string
-	{
+	public static function gist(
+		string $url,
+		string|null $file = null,
+		array $attr = []
+	): string {
 		$src = $url . '.js';
 
 		if ($file !== null) {
@@ -294,7 +304,6 @@ class Html extends Xml
 	/**
 	 * Creates an `<iframe>`
 	 *
-	 * @param string $src
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string The generated HTML
 	 */
@@ -322,9 +331,6 @@ class Html extends Xml
 
 	/**
 	 * Checks if a tag is self-closing
-	 *
-	 * @param string $tag
-	 * @return bool
 	 */
 	public static function isVoid(string $tag): bool
 	{
@@ -339,8 +345,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the tag
 	 * @return string The generated HTML
 	 */
-	public static function link(string $href, $text = null, array $attr = []): string
-	{
+	public static function link(
+		string $href,
+		string|array|null $text = null,
+		array $attr = []
+	): string {
 		$attr = array_merge(['href' => $href], $attr);
 
 		if (empty($text) === true) {
@@ -364,8 +373,10 @@ class Html extends Xml
 	 * @param string|null $target Current `target` value
 	 * @return string|null New `rel` value or `null` if not needed
 	 */
-	public static function rel(string|null $rel = null, string|null $target = null): string|null
-	{
+	public static function rel(
+		string|null $rel = null,
+		string|null $target = null
+	): string|null {
 		$rel = trim($rel ?? '');
 
 		if ($target === '_blank') {
@@ -390,8 +401,13 @@ class Html extends Xml
 	 * @param int $level Indentation level
 	 * @return string The generated HTML
 	 */
-	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
-	{
+	public static function tag(
+		string $name,
+		array|string|null $content = '',
+		array $attr = [],
+		string $indent = null,
+		int $level = 0
+	): string {
 		// treat an explicit `null` value as an empty tag
 		// as void tags are already covered below
 		$content ??= '';
@@ -412,8 +428,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the tag
 	 * @return string The generated HTML
 	 */
-	public static function tel(string $tel, $text = null, array $attr = []): string
-	{
+	public static function tel(
+		string $tel,
+		string|array|null $text = null,
+		array $attr = []
+	): string {
 		$number = preg_replace('![^0-9\+]+!', '', $tel);
 
 		if (empty($text) === true) {
@@ -425,9 +444,6 @@ class Html extends Xml
 
 	/**
 	 * Properly encodes tag contents
-	 *
-	 * @param mixed $value
-	 * @return string|null
 	 */
 	public static function value($value): string|null
 	{
@@ -461,8 +477,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function video(string $url, array $options = [], array $attr = []): string|null
-	{
+	public static function video(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		// YouTube video
 		if (Str::contains($url, 'youtu', true) === true) {
 			return static::youtube($url, $options['youtube'] ?? [], $attr);
@@ -494,9 +513,6 @@ class Html extends Xml
 	/**
 	 * Generates a list of attributes
 	 * for video iframes
-	 *
-	 * @param array $attr
-	 * @return array
 	 */
 	public static function videoAttr(array $attr = []): array
 	{
@@ -521,8 +537,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function vimeo(string $url, array $options = [], array $attr = []): string|null
-	{
+	public static function vimeo(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		$uri   = new Uri($url);
 		$path  = $uri->path();
 		$query = $uri->query();
@@ -556,8 +575,11 @@ class Html extends Xml
 	 * @param array $attr Additional attributes for the `<iframe>` tag
 	 * @return string|null The generated HTML
 	 */
-	public static function youtube(string $url, array $options = [], array $attr = []): string|null
-	{
+	public static function youtube(
+		string $url,
+		array $options = [],
+		array $attr = []
+	): string|null {
 		if (preg_match('!youtu!i', $url) !== 1) {
 			return null;
 		}
