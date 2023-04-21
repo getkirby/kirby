@@ -104,6 +104,22 @@ export default {
 	},
 
 	/**
+	 * Get the current editing context
+	 * the user is in.
+	 */
+	get context() {
+		if (this.dialog.isOpen) {
+			return "dialog";
+		}
+
+		if (this.drawer.isOpen) {
+			return "drawer";
+		}
+
+		return "view";
+	},
+
+	/**
 	 * Returns the debug state of the Panel
 	 *
 	 * @returns {Boolean}

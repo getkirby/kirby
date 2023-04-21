@@ -43,18 +43,24 @@ export default (panel, key, defaults) => {
 		async cancel() {
 			if (this.isOpen) {
 				this.emit("cancel");
-				this.close();
 			}
+
+			this.close();
 		},
 
 		/**
 		 * Closes the island
 		 */
 		async close() {
+			// close legacy components
+			// if it is still open
+			this.ref?.$refs.overlay?.close();
+
 			if (this.isOpen) {
 				this.emit("close");
-				this.reset();
 			}
+
+			this.reset();
 		},
 
 		/**
@@ -83,6 +89,11 @@ export default (panel, key, defaults) => {
 		 * @returns {Object} The new state
 		 */
 		async open(feature, options = {}) {
+			// check for legacy Vue components
+			if (feature instanceof window.Vue) {
+				return this.openComponent(feature);
+			}
+
 			// close previous notifications from other
 			// contexts, if the island wasn't open so far
 			if (this.isOpen === false) {
@@ -94,6 +105,36 @@ export default (panel, key, defaults) => {
 
 			// mark the island as open
 			this.isOpen = true;
+
+			return this.state();
+		},
+
+		/**
+		 * Takes a legacy Vue component and
+		 * opens it manually.
+		 */
+		async openComponent(component) {
+			await this.open({
+				component: component.$options._componentTag,
+				// don't render this in the island
+				// comonent. The Vue component already
+				// takes over rendering.
+				island: false,
+				// Use a combination of attributes and props
+				// to get everything that was passed to the component
+				props: {
+					...component.$attrs,
+					...component.$props
+				},
+				// add all registered listeners on the component
+				on: component.$listeners,
+				// add a reference to the Vue component
+				// This will make it possible to determine
+				// its open state in the dialog or drawer components
+				ref: component
+			});
+
+			component.$refs.overlay?.open();
 
 			return this.state();
 		},
@@ -134,7 +175,44 @@ export default (panel, key, defaults) => {
 			// I.e. { $dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.submitSuccessHandler(response[this.key()] ?? {});
+			return this.success(response[this.key()] ?? {});
+		},
+
+		/**
+		 * This is rebuilding the previous
+		 * behaviours from the dialog mixin.
+		 * Most of the response handling should
+		 * be redone. But we keep it for compatibility
+		 *
+		 * @param {Object} state
+		 * @returns
+		 */
+		success(success) {
+			if (typeof success === "string") {
+				panel.notification.success(success);
+				// keep the dialog open
+				return;
+			}
+
+			// close the dialog or drawer
+			this.close();
+
+			// show a success message
+			this.successNotification(success);
+
+			// send custom events to the event bus
+			this.successEvents(success);
+
+			// dispatch store actions that might have been defined in the response
+			this.successDispatch(success);
+
+			// handle any redirects
+			this.successRedirect(success);
+
+			// reload the parent view to show changes
+			panel.view.reload(success.reload);
+
+			return success;
 		},
 
 		/**
@@ -143,14 +221,14 @@ export default (panel, key, defaults) => {
 		 * @param {Object} state
 		 * @param {String|Array} events
 		 */
-		submitSuccessDispatch(state) {
+		successDispatch(state) {
 			if (isObject(state.dispatch) === false) {
 				return;
 			}
 
 			Object.keys(state.dispatch).forEach((event) => {
 				const payload = state.dispatch[event];
-				panel.app?.$store.dispatch(
+				panel.vue?.$store.dispatch(
 					event,
 					Array.isArray(payload) === true ? [...payload] : payload
 				);
@@ -163,7 +241,7 @@ export default (panel, key, defaults) => {
 		 * @param {Object} state
 		 * @param {String|Array} events
 		 */
-		submitSuccessEvents(state) {
+		successEvents(state) {
 			if (state.event) {
 				// wrap single events to treat them all at once
 				const events =
@@ -184,43 +262,12 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * This is rebuilding the previous
-		 * behaviours from the dialog mixin.
-		 * Most of the response handling should
-		 * be redone. But we keep it for compatibility
-		 *
-		 * @param {Object} state
-		 * @returns
-		 */
-		submitSuccessHandler(state) {
-			// close the dialog or drawer
-			this.close();
-
-			// show a success message
-			this.submitSuccessNotification(state);
-
-			// send custom events to the event bus
-			this.submitSuccessEvents(state);
-
-			// dispatch store actions that might have been defined in the response
-			this.submitSuccessDispatch(state);
-
-			// handle any redirects
-			this.submitSuccessRedirect(state);
-
-			// reload the parent view to show changes
-			panel.view.reload(state.reload);
-
-			return state;
-		},
-
-		/**
 		 * Sends a success notification if the
 		 * response contains a success message
 		 *
 		 * @param {Object} state
 		 */
-		submitSuccessNotification(state) {
+		successNotification(state) {
 			if (state.message) {
 				panel.notification.success(state.message);
 			}
@@ -231,7 +278,7 @@ export default (panel, key, defaults) => {
 		 *
 		 * @param {Object} state
 		 */
-		submitSuccessRedirect(state) {
+		successRedirect(state) {
 			// @deprecated Use state.redirect instead
 			if (state.route) {
 				return panel.view.open(state.route);

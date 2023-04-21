@@ -1,4 +1,4 @@
-import dialog from "@/fiber/dialog.js";
+import dialog from "./dialog.js";
 import dropdown from "./dropdown.js";
 import go from "./go.js";
 
