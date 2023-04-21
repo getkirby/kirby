@@ -3,7 +3,7 @@
 	"description": "The Kirby 3 core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "3.9.3",
+	"version": "3.9.4",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -38,13 +38,14 @@
 		"ext-openssl": "*",
 		"claviska/simpleimage": "4.0.2",
 		"composer/semver": "3.3.2",
-		"filp/whoops": "2.15.1",
+		"filp/whoops": "2.15.2",
 		"getkirby/composer-installer": "^1.2.1",
 		"laminas/laminas-escaper": "2.12.0",
 		"michelf/php-smartypants": "1.8.1",
 		"phpmailer/phpmailer": "6.8.0",
 		"symfony/polyfill-intl-idn": "1.27.0",
-		"symfony/polyfill-mbstring": "1.27.0"
+		"symfony/polyfill-mbstring": "1.27.0",
+		"symfony/yaml": "5.4.21"
 	},
 	"replace": {
 		"symfony/polyfill-php72": "*"
@@ -91,11 +92,9 @@
 		"analyze": [
 			"@analyze:composer",
 			"@analyze:psalm",
-			"@analyze:phpcpd",
 			"@analyze:phpmd"
 		],
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-		"analyze:phpcpd": "phpcpd --fuzzy --exclude tests --exclude vendor .",
 		"analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
 		"analyze:psalm": "psalm",
 		"build": "./scripts/build",

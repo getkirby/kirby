@@ -358,7 +358,7 @@ class Html extends Xml
 	}
 
 	/**
-	 * Add noopener & noreferrer to rels when target is `_blank`
+	 * Add noreferrer to rels when target is `_blank`
 	 *
 	 * @param string|null $rel Current `rel` value
 	 * @param string|null $target Current `target` value
@@ -373,7 +373,7 @@ class Html extends Xml
 				return $rel;
 			}
 
-			return trim($rel . ' noopener noreferrer', ' ');
+			return trim($rel . ' noreferrer', ' ');
 		}
 
 		return $rel ?: null;
