@@ -86,7 +86,7 @@ export default {
 	computed: {
 		api() {
 			// always use silent requests (without loading spinner)
-			return [this.$view.path + "/lock", null, null, true];
+			return [this.$panel.view.path + "/lock", null, null, true];
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
@@ -171,7 +171,7 @@ export default {
 	methods: {
 		async check() {
 			const { lock } = await this.$api.get(...this.api);
-			set(this.$view.props, "lock", lock);
+			set(this.$panel.view.props, "lock", lock);
 		},
 		async onLock(lock = true) {
 			// writing lock
@@ -209,7 +209,7 @@ export default {
 				"href",
 				"data:text/plain;charset=utf-8," + encodeURIComponent(content)
 			);
-			link.setAttribute("download", this.$view.path + ".txt");
+			link.setAttribute("download", this.$panel.view.path + ".txt");
 			link.style.display = "none";
 
 			document.body.appendChild(link);
@@ -236,7 +236,7 @@ export default {
 			this.$panel.notification.success();
 		},
 		async onUnlock(unlock = true) {
-			const api = [this.$view.path + "/unlock", null, null, true];
+			const api = [this.$panel.view.path + "/unlock", null, null, true];
 
 			if (unlock === true) {
 				// unlocking (writing unlock)

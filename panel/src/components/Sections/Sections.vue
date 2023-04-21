@@ -31,7 +31,7 @@
 						:lock="lock"
 						:name="section.name"
 						:parent="parent"
-						:timestamp="$view.timestamp"
+						:timestamp="$panel.view.timestamp"
 						:class="'k-section k-section-name-' + section.name"
 						@submit="$emit('submit', $event)"
 					/>
