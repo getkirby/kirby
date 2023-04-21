@@ -150,7 +150,7 @@ export default (panel, key, defaults) => {
 
 			Object.keys(state.dispatch).forEach((event) => {
 				const payload = state.dispatch[event];
-				panel.vue?.$store.dispatch(
+				panel.app?.$store.dispatch(
 					event,
 					Array.isArray(payload) === true ? [...payload] : payload
 				);

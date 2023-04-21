@@ -1,12 +1,11 @@
 import Vue, { h } from "vue";
 
-import App from "./fiber/app.js";
+import App from "./panel/app.js";
 import Components from "./components/index.js";
 import ErrorHandling from "./config/errorhandling";
-import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
-import Legacy from "./config/legacy.js";
+import Legacy from "./legacy/index.js";
 import Libraries from "./libraries/index.js";
 import Panel from "./panel/panel.js";
 import store from "./store/store.js";
@@ -36,20 +35,6 @@ Vue.prototype.$panel = window.panel;
  */
 window.panel.app = new Vue({
 	store,
-	created() {
-		/**
-		 * Delegate all required window events to the
-		 * event emitter
-		 */
-		this.$panel.events.subscribe();
-
-		/**
-		 * Register all created plugins
-		 */
-		this.$panel.plugins.created.forEach((plugin) => plugin(this));
-
-		this.$store.dispatch("content/init");
-	},
 	render: () => h(App)
 });
 
@@ -65,11 +50,10 @@ import "./styles/animations.css";
  * Additional functionalities and app configuration
  */
 Vue.use(ErrorHandling, window.panel);
-Vue.use(Legacy);
+Vue.use(Legacy, window.panel);
 Vue.use(Helpers);
 Vue.use(Libraries);
 Vue.use(I18n);
-Vue.use(Fiber);
 Vue.use(Vuelidate);
 Vue.use(Components);
 
