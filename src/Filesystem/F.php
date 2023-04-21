@@ -528,6 +528,7 @@ class F
 			return rename($oldRoot, $newRoot) === true;
 		}
 
+		// @codeCoverageIgnoreStart
 		// not the same filesystem; we need to copy
 		// the file and unlink the source afterwards
 		if (copy($oldRoot, $newRoot) === true) {
@@ -537,7 +538,6 @@ class F
 		// copying failed, ensure the new root isn't there
 		// (e.g. if the file could be created but there's no
 		// more remaining disk space to write its contents)
-		// @codeCoverageIgnoreStart
 		static::remove($newRoot);
 		return false;
 		// @codeCoverageIgnoreEnd

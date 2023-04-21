@@ -1,11 +1,7 @@
 <template>
 	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
 		<form class="k-drawer" method="dialog" @submit.prevent="submit">
-			<k-drawer-notification
-				v-if="notification"
-				v-bind="notification"
-				@close="notification = null"
-			/>
+			<k-drawer-notification />
 			<k-drawer-header
 				:breadcrumb="breadcrumb"
 				:icon="icon"
@@ -41,7 +37,6 @@ export default {
 	mixins: [props],
 	data() {
 		return {
-			notification: null,
 			tab: null
 		};
 	},
@@ -85,8 +80,6 @@ export default {
 			this.close();
 		},
 		close() {
-			this.notification = null;
-
 			/**
 			 * This event is triggered when the drawer is being closed.
 			 * This happens independently from the cancel event.
@@ -115,7 +108,6 @@ export default {
 				return true;
 			}
 
-			this.notification = null;
 			this.$store.dispatch("drawers/goto", id);
 		},
 		open() {
@@ -155,9 +147,6 @@ export default {
 				icon: this.icon,
 				title: this.title
 			});
-
-			// close any notifications if there's still an open one
-			this.notification = null;
 
 			/**
 			 * Mark the drawer as ready to be used

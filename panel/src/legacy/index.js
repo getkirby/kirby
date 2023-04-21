@@ -14,7 +14,14 @@ export default {
 		 */
 		panel.error = app.config.errorHandler;
 		panel.deprecated = panel.notification.deprecated.bind(panel.notification);
-		panel.reload = panel.view.reload.bind(panel.view);
+
+		/**
+		 * Method object binding for the polyfills below
+		 */
+		panel.redirect = panel.redirect.bind(panel);
+		panel.reload = panel.reload.bind(panel);
+		panel.request = panel.request.bind(panel);
+		panel.search = panel.search.bind(panel);
 
 		/**
 		 * @deprecated Dollar Sign Shortcuts
@@ -42,8 +49,6 @@ export default {
 			"menu",
 			"multilang",
 			"permissions",
-			"reload",
-			"request",
 			"search",
 			"searches",
 			"system",
@@ -63,9 +68,6 @@ export default {
 
 		/**
 		 * Shortcut methods
-		 *
-		 * @deprecated since 4.0
-		 * @todo Refactor app features to use panel.{method} instead
 		 */
 		app.prototype.$dialog = dialog;
 		app.prototype.$dropdown = dropdown;

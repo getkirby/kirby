@@ -59,7 +59,7 @@ export const modules = [
  * and handles the reactive, global state of the panel.
  */
 export default {
-	create(app, plugins = {}) {
+	create(plugins = {}) {
 		// props
 		this.isLoading = false;
 
@@ -81,13 +81,14 @@ export default {
 
 		// methods
 		this.redirect = redirect;
+		this.reload = this.view.reload.bind(this.view);
 		this.request = request;
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
 
 		// register all plugins
-		this.plugins = Plugins(app, plugins);
+		this.plugins = Plugins(window.Vue, plugins);
 
 		// set initial state
 		this.set(window.fiber);
@@ -100,6 +101,22 @@ export default {
 		// reactive. This will only be applied
 		// to objects and arrays. Methods won't be touched.
 		return reactive(this);
+	},
+
+	/**
+	 * Get the current editing context
+	 * the user is in.
+	 */
+	get context() {
+		if (this.dialog.isOpen) {
+			return "dialog";
+		}
+
+		if (this.drawer.isOpen) {
+			return "drawer";
+		}
+
+		return "view";
 	},
 
 	/**
@@ -210,6 +227,7 @@ export default {
 		const { $search } = await this.get(`/search/${type}`, {
 			query: { query }
 		});
+
 		return $search;
 	},
 

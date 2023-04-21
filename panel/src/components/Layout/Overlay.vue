@@ -5,7 +5,7 @@
 			:data-centered="loading || centered"
 			:data-dimmed="dimmed"
 			:data-loading="loading"
-			:dir="$translation.direction"
+			:dir="$panel.direction"
 			:class="'k-' + type + '-overlay'"
 			class="k-overlay"
 			@click="click"

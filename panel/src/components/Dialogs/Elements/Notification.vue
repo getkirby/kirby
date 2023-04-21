@@ -1,21 +1,9 @@
 <template>
 	<k-notification
-		:message="message"
-		:type="type"
+		v-if="$panel.notification.context === 'dialog'"
 		class="k-dialog-notification"
-		@close="$emit('close')"
 	/>
 </template>
-
-<script>
-import { props as Notification } from "@/components/Misc/Notification.vue";
-
-export const props = Notification;
-
-export default {
-	mixins: [props]
-};
-</script>
 
 <style>
 .k-notification.k-dialog-notification {

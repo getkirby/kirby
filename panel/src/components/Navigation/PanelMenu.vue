@@ -33,11 +33,7 @@
 		</menu>
 
 		<!-- Search dialog -->
-		<k-search
-			ref="search"
-			:type="view.search || 'pages'"
-			:types="$panel.searches"
-		/>
+		<k-search ref="search" :type="view.search" :types="$panel.searches" />
 	</nav>
 </template>
 

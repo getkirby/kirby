@@ -2,19 +2,19 @@
 	<div
 		:data-dragging="$store.state.drag"
 		:data-loading="$panel.isLoading"
-		:data-language="language"
-		:data-language-default="defaultLanguage"
-		:data-role="role"
-		:data-translation="$translation.code"
-		:data-user="user"
-		:dir="dir"
+		:data-language="$panel.language.code"
+		:data-language-default="$panel.language.isDefault"
+		:data-role="$panel.user.role"
+		:data-translation="$panel.translation.code"
+		:data-user="$panel.user.id"
+		:dir="$panel.direction"
 		class="k-panel"
 	>
 		<slot />
 
 		<!-- Fiber dialogs -->
-		<template v-if="$store.state.dialog && $store.state.dialog.props">
-			<k-fiber-dialog v-bind="dialog" />
+		<template v-if="$panel.dialog.isOpen && $panel.dialog.island">
+			<k-fiber-dialog />
 		</template>
 
 		<!-- Fatal iframe -->
@@ -38,35 +38,8 @@
 <script>
 export default {
 	computed: {
-		defaultLanguage() {
-			return this.$panel.language.isDefault;
-		},
 		dialog() {
 			return this.$helper.clone(this.$store.state.dialog);
-		},
-		dir() {
-			return this.$panel.translation.direction;
-		},
-		language() {
-			return this.$panel.language.code;
-		},
-		role() {
-			return this.$panel.user.role;
-		},
-		user() {
-			return this.$panel.user.id;
-		}
-	},
-	created() {
-		this.$events.$on("drop", this.drop);
-	},
-	destroyed() {
-		this.$events.$off("drop", this.drop);
-	},
-	methods: {
-		drop() {
-			// remove any drop data from the store
-			this.$store.dispatch("drag", null);
 		}
 	}
 };

@@ -114,7 +114,7 @@ export default {
 			user: {
 				name: "",
 				email: "",
-				language: this.$translation.code,
+				language: this.$panel.translation.code,
 				password: "",
 				role: "admin"
 			}
