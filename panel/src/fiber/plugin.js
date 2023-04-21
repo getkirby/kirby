@@ -14,6 +14,5 @@ export default {
 		app.prototype.$reload = window.panel.$reload = fiber.reload.bind(fiber);
 		app.prototype.$request = window.panel.$request = fiber.request.bind(fiber);
 		app.prototype.$search = window.panel.$search = search;
-		app.prototype.$url = window.panel.$url = fiber.url.bind(fiber);
 	}
 };

@@ -67,8 +67,8 @@ export default {
 		 * @deprecated since 4.0
 		 * @todo Refactor app features to use panel.{method} instead
 		 */
-		app.prototype.$dialog = dialog;
-		app.prototype.$dropdown = dropdown;
-		app.prototype.$go = go;
+		// app.prototype.$dialog = dialog;
+		// app.prototype.$dropdown = dropdown;
+		// app.prototype.$go = go;
 	}
 };

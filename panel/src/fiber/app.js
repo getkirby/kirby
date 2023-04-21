@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default {
 	name: "Fiber",
 	created() {
@@ -80,7 +78,6 @@ export default {
 				};
 
 				this.setConfig(state);
-				this.setGlobals(state);
 				this.setLanguage(state);
 				this.setLanguages(state);
 				this.setMenu(state);
@@ -88,7 +85,6 @@ export default {
 				this.setPermissions(state);
 				this.setSearches(state);
 				this.setSystem(state);
-				this.setTitle(state);
 				this.setTranslation(state);
 				this.setUrls(state);
 				this.setUser(state);
@@ -132,37 +128,6 @@ export default {
 			if (state.$config) {
 				this.$panel.config = state.$config;
 			}
-		},
-
-		/**
-		 * Registers all globals from the state in
-		 * the Vue prototype and the window.panel object
-		 *
-		 * @param {object} state
-		 */
-		setGlobals(state) {
-			[
-				"$config",
-				"$direction",
-				"$language",
-				"$languages",
-				"$license",
-				"$menu",
-				"$multilang",
-				"$permissions",
-				"$searches",
-				"$system",
-				"$translation",
-				"$urls",
-				"$user",
-				"$view"
-			].forEach((key) => {
-				if (state[key] !== undefined) {
-					Vue.prototype[key] = window.panel[key] = state[key];
-				} else {
-					Vue.prototype[key] = state[key] = window.panel[key];
-				}
-			});
 		},
 
 		/**
@@ -250,20 +215,6 @@ export default {
 		setSystem(state) {
 			if (state.$system) {
 				this.$panel.system.set(state.$system);
-			}
-		},
-
-		/**
-		 * Sets the document title on each request
-		 *
-		 * @param {object} state
-		 */
-		setTitle(state) {
-			// set the document title according to $view.title
-			if (state.$view.title) {
-				document.title = state.$view.title + " | " + state.$system.title;
-			} else {
-				document.title = state.$system.title;
 			}
 		},
 
