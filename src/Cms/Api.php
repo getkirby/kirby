@@ -18,7 +18,7 @@ use Kirby\Session\Session;
  */
 class Api extends BaseApi
 {
-	protected App|null $kirby = null;
+	protected App $kirby;
 
 	public function __construct(array $props)
 	{

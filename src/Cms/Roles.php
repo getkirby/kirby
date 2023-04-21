@@ -20,10 +20,8 @@ class Roles extends Collection
 {
 	/**
 	 * All registered roles methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Returns a filtered list of all

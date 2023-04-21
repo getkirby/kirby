@@ -21,9 +21,6 @@ class PluginAssets
 {
 	/**
 	 * Clean old/deprecated assets on every resolve
-	 *
-	 * @param string $pluginName
-	 * @return void
 	 */
 	public static function clean(string $pluginName): void
 	{
@@ -51,13 +48,11 @@ class PluginAssets
 	/**
 	 * Create a symlink for a plugin asset and
 	 * return the public URL
-	 *
-	 * @param string $pluginName
-	 * @param string $filename
-	 * @return \Kirby\Cms\Response|null
 	 */
-	public static function resolve(string $pluginName, string $filename)
-	{
+	public static function resolve(
+		string $pluginName,
+		string $filename
+	): Response|null {
 		if ($plugin = App::instance()->plugin($pluginName)) {
 			$source = $plugin->root() . '/assets/' . $filename;
 

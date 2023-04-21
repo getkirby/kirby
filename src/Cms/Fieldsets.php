@@ -23,15 +23,13 @@ class Fieldsets extends Items
 
 	/**
 	 * All registered fieldsets methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	protected static function createFieldsets($params)
 	{
 		$fieldsets = [];
-		$groups = [];
+		$groups    = [];
 
 		foreach ($params as $type => $fieldset) {
 			if (is_int($type) === true && is_string($fieldset)) {

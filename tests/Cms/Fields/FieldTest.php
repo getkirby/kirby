@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use stdClass;
+use TypeError;
+
 class FieldTest extends TestCase
 {
 	public function test__debuginfo()
@@ -86,11 +89,12 @@ class FieldTest extends TestCase
 
 	public function testInvalidValueSetter()
 	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('Invalid field value type: object');
+		$this->expectException(TypeError::class);
+		$this->expectExceptionMessage('Argument #1 ($value) must be of type Closure|string|null, stdClass given');
+
 
 		$field = new Field(null, 'title', 'Title');
-		$field->value(new Page(['slug' => 'yay']));
+		$field->value(new stdClass());
 	}
 
 	public function testCloningInMethods()

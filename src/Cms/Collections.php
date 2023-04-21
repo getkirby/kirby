@@ -28,39 +28,27 @@ class Collections
 	 * has been called, to avoid further
 	 * processing on sequential calls to
 	 * the same collection.
-	 *
-	 * @var array
 	 */
-	protected $cache = [];
+	protected array $cache = [];
 
 	/**
 	 * Store of all collections
-	 *
-	 * @var array
 	 */
-	protected $collections = [];
+	protected array $collections = [];
 
 	/**
 	 * Magic caller to enable something like
 	 * `$collections->myCollection()`
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return \Kirby\Cms\Collection|null
 	 */
-	public function __call(string $name, array $arguments = [])
+	public function __call(string $name, array $arguments = []): Collection|null
 	{
 		return $this->get($name, ...$arguments);
 	}
 
 	/**
 	 * Loads a collection by name if registered
-	 *
-	 * @param string $name
-	 * @param array $data
-	 * @return \Kirby\Cms\Collection|null
 	 */
-	public function get(string $name, array $data = [])
+	public function get(string $name, array $data = []): Collection|string|null
 	{
 		// if not yet loaded
 		$this->collections[$name] ??= $this->load($name);
@@ -87,9 +75,6 @@ class Collections
 
 	/**
 	 * Checks if a collection exists
-	 *
-	 * @param string $name
-	 * @return bool
 	 */
 	public function has(string $name): bool
 	{
@@ -109,11 +94,9 @@ class Collections
 	 * Loads collection from php file in a
 	 * given directory or from plugin extension.
 	 *
-	 * @param string $name
-	 * @return mixed
 	 * @throws \Kirby\Exception\NotFoundException
 	 */
-	public function load(string $name)
+	public function load(string $name): mixed
 	{
 		$kirby = App::instance();
 
@@ -131,10 +114,7 @@ class Collections
 		// fallback to collections from plugins
 		$collections = $kirby->extensions('collections');
 
-		if (isset($collections[$name]) === true) {
-			return $collections[$name];
-		}
-
-		throw new NotFoundException('The collection cannot be found');
+		return $collections[$name] ??
+			throw new NotFoundException('The collection cannot be found');
 	}
 }

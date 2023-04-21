@@ -18,39 +18,29 @@ class Content
 {
 	/**
 	 * The raw data array
-	 *
-	 * @var array
 	 */
-	protected $data = [];
+	protected array $data = [];
 
 	/**
 	 * Cached field objects
 	 * Once a field is being fetched
 	 * it is added to this array for
 	 * later reuse
-	 *
-	 * @var array
 	 */
-	protected $fields = [];
+	protected array $fields = [];
 
 	/**
 	 * A potential parent object.
 	 * Not necessarily needed. Especially
 	 * for testing, but field methods might
 	 * need it.
-	 *
-	 * @var \Kirby\Cms\ModelWithContent
 	 */
-	protected $parent;
+	protected ModelWithContent|null $parent;
 
 	/**
 	 * Magic getter for content fields
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return \Kirby\Cms\Field
 	 */
-	public function __call(string $name, array $arguments = [])
+	public function __call(string $name, array $arguments = []): Field
 	{
 		return $this->get($name);
 	}
@@ -58,12 +48,13 @@ class Content
 	/**
 	 * Creates a new Content object
 	 *
-	 * @param array|null $data
-	 * @param object|null $parent
 	 * @param bool $normalize Set to `false` if the input field keys are already lowercase
 	 */
-	public function __construct(array $data = [], $parent = null, bool $normalize = true)
-	{
+	public function __construct(
+		array $data = [],
+		ModelWithContent $parent = null,
+		bool $normalize = true
+	) {
 		if ($normalize === true) {
 			$data = array_change_key_case($data, CASE_LOWER);
 		}
@@ -77,7 +68,6 @@ class Content
 	 * `var_dump` output
 	 *
 	 * @see self::data()
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -135,8 +125,6 @@ class Content
 
 	/**
 	 * Returns the raw data array
-	 *
-	 * @return array
 	 */
 	public function data(): array
 	{
@@ -145,8 +133,6 @@ class Content
 
 	/**
 	 * Returns all registered field objects
-	 *
-	 * @return array
 	 */
 	public function fields(): array
 	{
@@ -159,11 +145,8 @@ class Content
 	/**
 	 * Returns either a single field object
 	 * or all registered fields
-	 *
-	 * @param string|null $key
-	 * @return \Kirby\Cms\Field|array
 	 */
-	public function get(string $key = null)
+	public function get(string $key = null): Field|array
 	{
 		if ($key === null) {
 			return $this->fields();
@@ -180,9 +163,6 @@ class Content
 
 	/**
 	 * Checks if a content field is set
-	 *
-	 * @param string $key
-	 * @return bool
 	 */
 	public function has(string $key): bool
 	{
@@ -191,8 +171,6 @@ class Content
 
 	/**
 	 * Returns all field keys
-	 *
-	 * @return array
 	 */
 	public function keys(): array
 	{
@@ -203,14 +181,11 @@ class Content
 	 * Returns a clone of the content object
 	 * without the fields, specified by the
 	 * passed key(s)
-	 *
-	 * @param string ...$keys
-	 * @return static
 	 */
-	public function not(...$keys)
+	public function not(string ...$keys): static
 	{
 		$copy = clone $this;
-		$copy->fields = null;
+		$copy->fields = [];
 
 		foreach ($keys as $key) {
 			unset($copy->data[strtolower($key)]);
@@ -222,10 +197,8 @@ class Content
 	/**
 	 * Returns the parent
 	 * Site, Page, File or User object
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
-	public function parent()
+	public function parent(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
@@ -233,10 +206,9 @@ class Content
 	/**
 	 * Set the parent model
 	 *
-	 * @param \Kirby\Cms\Model $parent
 	 * @return $this
 	 */
-	public function setParent(Model $parent)
+	public function setParent(ModelWithContent $parent)
 	{
 		$this->parent = $parent;
 		return $this;
@@ -246,7 +218,6 @@ class Content
 	 * Returns the raw data array
 	 *
 	 * @see self::data()
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -257,12 +228,12 @@ class Content
 	 * Updates the content and returns
 	 * a cloned object
 	 *
-	 * @param array|null $content
-	 * @param bool $overwrite
 	 * @return $this
 	 */
-	public function update(array $content = null, bool $overwrite = false)
-	{
+	public function update(
+		array $content = null,
+		bool $overwrite = false
+	): static {
 		$content = array_change_key_case((array)$content, CASE_LOWER);
 		$this->data = $overwrite === true ? $content : array_merge($this->data, $content);
 
