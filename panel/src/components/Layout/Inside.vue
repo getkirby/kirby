@@ -2,10 +2,10 @@
 	<k-panel class="k-panel-inside" tabindex="0">
 		<header class="k-panel-header">
 			<k-topbar
-				:breadcrumb="$view.breadcrumb"
+				:breadcrumb="$panel.view.breadcrumb"
 				:license="$panel.license"
 				:menu="$panel.menu"
-				:view="$view"
+				:view="$panel.view"
 			/>
 		</header>
 		<main class="k-panel-view scroll-y">

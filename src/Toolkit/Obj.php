@@ -17,9 +17,6 @@ use stdClass;
  */
 class Obj extends stdClass
 {
-	/**
-	 * Constructor
-	 */
 	public function __construct(array $data = [])
 	{
 		foreach ($data as $key => $val) {

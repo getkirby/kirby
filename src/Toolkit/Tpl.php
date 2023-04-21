@@ -21,8 +21,10 @@ class Tpl
 	 *
 	 * @throws Throwable
 	 */
-	public static function load(string|null $file = null, array $data = []): string
-	{
+	public static function load(
+		string|null $file = null,
+		array $data = []
+	): string {
 		if ($file === null || is_file($file) === false) {
 			return '';
 		}
@@ -39,10 +41,10 @@ class Tpl
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		if ($exception === null) {
-			return $content;
+		if ($exception !== null) {
+			throw $exception;
 		}
 
-		throw $exception;
+		return $content;
 	}
 }
