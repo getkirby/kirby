@@ -23,11 +23,11 @@ describe("UsersView", () => {
 		cy.get("@users")
 			.find(".k-items")
 			.should("have.attr", "data-layout", "list");
-		cy.get("@users").find("article").should("have.length", 1);
+		cy.get("@users").find(".k-item").should("have.length", 1);
 		cy.get("@users")
-			.find("article:first-child")
+			.find(".k-item:first-child")
 			.should("contain", "test@getkirby.com");
-		cy.get("@users").find("article:first-child").should("contain", "Admin");
+		cy.get("@users").find(".k-item:first-child").should("contain", "Admin");
 	});
 
 	describe("UserCreateDialog", () => {
@@ -44,11 +44,11 @@ describe("UsersView", () => {
 			cy.get("@dialog").find('input[name="password"]').type("top-secret-1234");
 			cy.get("@dialog").find("form").submit();
 
-			cy.get("@users").find("article").should("have.length", 2);
+			cy.get("@users").find(".k-item").should("have.length", 2);
 			// @todo the order of the users in the list is non-deterministic;
 			// cannot reliably test the order and if the role is in the same line as the name
-			cy.get("@users").find("article.k-item").should("contain", "Ada");
-			cy.get("@users").find("article.k-item").should("contain", "Admin");
+			cy.get("@users").find(".k-item").should("contain", "Ada");
+			cy.get("@users").find(".k-item").should("contain", "Admin");
 		});
 
 		it("should create editor", () => {
@@ -58,11 +58,11 @@ describe("UsersView", () => {
 			cy.get("@dialog").find(".k-radio-input li:last-child label").click();
 			cy.get("@dialog").find("form").submit();
 
-			cy.get("@users").find("article").should("have.length", 3);
+			cy.get("@users").find(".k-item").should("have.length", 3);
 			// @todo the order of the users in the list is non-deterministic;
 			// cannot reliably test the order and if the role is in the same line as the name
-			cy.get("@users").find("article.k-item").should("contain", "Grace");
-			cy.get("@users").find("article.k-item").should("contain", "Editor");
+			cy.get("@users").find(".k-item").should("contain", "Grace");
+			cy.get("@users").find(".k-item").should("contain", "Editor");
 		});
 	});
 });

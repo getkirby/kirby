@@ -1,4 +1,5 @@
 <template>
+	<!-- Layout: table -->
 	<k-table
 		v-if="layout === 'table'"
 		v-bind="table"
@@ -6,15 +7,17 @@
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	/>
+
+	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
 		class="k-items"
 		:class="'k-' + layout + '-items'"
-		:handle="true"
-		:options="dragOptions"
 		:data-layout="layout"
 		:data-size="size"
+		:handle="true"
 		:list="items"
+		:options="dragOptions"
 		@change="$emit('change', $event)"
 		@end="$emit('sort', items, $event)"
 	>
@@ -140,14 +143,26 @@ export default {
 .k-items {
 	position: relative;
 	display: grid;
+	container-type: inline-size;
 }
 
-/**
- * Cards
- */
-.k-cards-items {
-	--items-layout-mode: auto-fit;
+/** List */
+.k-items[data-layout="list"] {
+	gap: 2px;
+}
 
+/** Cardlets */
+.k-items[data-layout="cardlets"] {
+	display: grid;
+	gap: 0.75rem;
+	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+/** Cards */
+.k-items[data-layout="cards"] {
+	--items-layout-mode: auto-fill;
+
+	display: grid;
 	gap: 1.5rem;
 	grid-template-columns: repeat(
 		var(--items-layout-mode),
@@ -155,60 +170,56 @@ export default {
 	);
 }
 
-.k-cards-items[data-size="tiny"] {
+/* @todo do we want to support both size value sets? */
+.k-items[data-size="xs"],
+.k-items[data-size="tiny"] {
 	--items-size: 6rem;
 }
-.k-cards-items[data-size="small"] {
-	--items-size: 9rem;
+.k-items[data-size="sm"],
+.k-items[data-size="small"] {
+	--items-size: 10rem;
 }
-.k-cards-items[data-size="medium"] {
+.k-items[data-size="md"],
+.k-items[data-size="medium"] {
 	--items-size: 12rem;
 }
-.k-cards-items[data-size="large"] {
+.k-items[data-size="lg"],
+.k-items[data-size="large"] {
 	--items-size: 15rem;
 }
-.k-cards-items[data-size="huge"] {
-	--items-size: 18rem;
+.k-items[data-size="xl"],
+.k-items[data-size="huge"] {
+	--items-size: 1fr;
 }
 
 @container (max-width: 6rem) {
-	.k-cards-items[data-size="tiny"] {
+	.k-items[data-layout="cards"][data-size="xs"],
+	.k-items[data-layout="cards"][data-size="tiny"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 9rem) {
-	.k-cards-items[data-size="small"] {
+	.k-items[data-layout="cards"][data-size="sm"],
+	.k-items[data-layout="cards"][data-size="small"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 12rem) {
-	.k-cards-items[data-size="medium"] {
+	.k-items[data-layout="cards"][data-size="md"],
+	.k-items[data-layout="cards"][data-size="medium"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 15rem) {
-	.k-cards-items[data-size="large"] {
+	.k-items[data-layout="cards"][data-size="lg"],
+	.k-items[data-layout="cards"][data-size="large"] {
 		grid-template-columns: 1fr;
 	}
 }
 @container (max-width: 18rem) {
-	.k-cards-items[data-size="huge"] {
+	.k-items[data-layout="cards"][data-size="xl"],
+	.k-items[data-layout="cards"][data-size="huge"] {
 		grid-template-columns: 1fr;
 	}
-}
-
-/**
- * Cardlets
- */
-.k-cardlets-items {
-	gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-}
-
-/**
- * List
- */
-.k-list-items {
-	gap: 2px;
 }
 </style>

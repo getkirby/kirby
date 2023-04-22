@@ -27,14 +27,10 @@
 						size="sm"
 						class="k-page-view-preview"
 					/>
-					<k-status-icon
+					<k-button
 						v-if="status"
-						:status="model.status"
-						:disabled="!permissions.changeStatus || isLocked"
-						:responsive="true"
-						:text="status.label"
-						variant="filled"
-						size="sm"
+						v-bind="statusBtn"
+						class="k-page-view-status"
 						@click="$dialog(id + '/changeStatus')"
 					/>
 					<k-dropdown class="k-page-view-options">
@@ -81,7 +77,28 @@ export default {
 	computed: {
 		protectedFields() {
 			return ["title"];
+		},
+		statusBtn() {
+			return {
+				...this.$helper.page.status.call(
+					this,
+					this.model.status,
+					!this.permissions.changeStatus || this.isLocked
+				),
+				responsive: true,
+				size: "sm",
+				text: this.status.label,
+				variant: "filled"
+			};
 		}
 	}
 };
 </script>
+
+<style>
+.k-page-view-status {
+	--button-color-icon: var(--theme-color-600);
+	--button-color-back: hsla(0, 0%, 0%, 7%);
+	--button-color-hover: hsla(0, 0%, 0%, 12%);
+}
+</style>

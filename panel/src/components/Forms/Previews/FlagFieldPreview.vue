@@ -1,5 +1,5 @@
 <template>
-	<k-status-icon class="k-flag-field-preview" v-bind="value" />
+	<k-button v-bind="$helper.page.status(value)" class="k-flag-field-preview" />
 </template>
 
 <script>

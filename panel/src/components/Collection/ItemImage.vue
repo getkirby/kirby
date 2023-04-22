@@ -1,10 +1,6 @@
 <template>
-	<k-image-frame
-		v-if="image.src"
-		v-bind="{ cover: true, ...image, sizes }"
-		class="k-item-figure"
-	/>
-	<k-icon-frame v-else v-bind="{ ...image }" class="k-item-figure" />
+	<k-image-frame v-if="image.src" v-bind="attrs" class="k-item-figure" />
+	<k-icon-frame v-else v-bind="attrs" class="k-item-figure" />
 </template>
 
 <script>
@@ -23,8 +19,14 @@ export default {
 		width: String
 	},
 	computed: {
-		back() {
-			return this.image.back || "black";
+		attrs() {
+			return {
+				back: this.image.back ?? "gray-500",
+				cover: true,
+				...this.image,
+				ratio: this.layout === "list" ? "1/1" : this.image.ratio,
+				size: this.sizes
+			};
 		},
 		sizes() {
 			switch (this.width) {

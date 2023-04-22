@@ -269,7 +269,7 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	line-height: 1;
-	border: var(--field-input-border);
+	outline: var(--field-input-border);
 	background: var(--color-gray-300);
 	gap: 1px;
 	border-radius: var(--rounded);
