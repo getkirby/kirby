@@ -122,6 +122,33 @@ export default {
 		prev: Object,
 		type: String
 	},
+	emits: [
+		"append",
+		"chooseToAppend",
+		"chooseToConvert",
+		"chooseToPrepend",
+		"close",
+		"copy",
+		"duplicate",
+		"focus",
+		"focusPrev",
+		"focusNext",
+		"hide",
+		"merge",
+		"open",
+		"paste",
+		"prepend",
+		"remove",
+		"selectDown",
+		"selectUp",
+		"show",
+		"sortDown",
+		"sortUp",
+		"split",
+		"submit",
+		"update",
+		"confirmToRemoveSelected"
+	],
 	data() {
 		return {
 			skipFocus: false
@@ -153,9 +180,26 @@ export default {
 		},
 		listeners() {
 			return {
-				...this.$listeners,
-				confirmToRemove: this.confirmToRemove,
-				open: this.open
+				append: ($event) => this.$emit("append", $event),
+				chooseToAppend: ($event) => this.$emit("chooseToAppend", $event),
+				chooseToConvert: ($event) => this.$emit("chooseToConvert", $event),
+				chooseToPrepend: ($event) => this.$emit("chooseToPrepend", $event),
+				close: () => this.$emit("close"),
+				confirmToRemove: () => this.confirmToRemove(),
+				copy: () => this.$emit("copy"),
+				duplicate: () => this.$emit("duplicate"),
+				focus: () => this.$emit("focus"),
+				hide: () => this.$emit("hide"),
+				merge: () => this.$emit("merge"),
+				open: () => this.open(),
+				paste: () => this.$emit("paste"),
+				prepend: ($event) => this.$emit("prepend", $event),
+				remove: () => this.$emit("remove"),
+				show: () => this.$emit("show"),
+				sortDown: () => this.$emit("sortDown"),
+				sortUp: () => this.$emit("sortUp"),
+				split: ($event) => this.$emit("split", $event),
+				update: ($event) => this.$emit("update", $event)
 			};
 		},
 		tabs() {

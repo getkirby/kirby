@@ -6,7 +6,10 @@
 		:list="list"
 		:move="move"
 		class="k-draggable"
-		v-on="listeners"
+		@change="$emit('change', $event)"
+		@end="onEnd"
+		@sort="$emit('sort', $event)"
+		@start="onStart"
 	>
 		<slot />
 		<template #footer>
@@ -49,27 +52,7 @@ export default {
 		move: Function,
 		options: Object
 	},
-	data() {
-		return {
-			listeners: {
-				...this.$listeners,
-				start: (event) => {
-					this.$store.dispatch("drag", {});
-
-					if (this.$listeners.start) {
-						this.$listeners.start(event);
-					}
-				},
-				end: (event) => {
-					this.$store.dispatch("drag", null);
-
-					if (this.$listeners.end) {
-						this.$listeners.end(event);
-					}
-				}
-			}
-		};
-	},
+	emits: ["change", "end", "sort", "start"],
 	computed: {
 		dragOptions() {
 			let handle = false;
@@ -89,6 +72,16 @@ export default {
 				scroll: document.querySelector(".k-panel-view"),
 				...this.options
 			};
+		}
+	},
+	methods: {
+		onStart(event) {
+			this.$store.dispatch("drag", {});
+			this.$emit("start", event);
+		},
+		onEnd(event) {
+			this.$store.dispatch("drag", null);
+			this.$emit("end", event);
 		}
 	}
 };

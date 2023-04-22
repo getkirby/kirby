@@ -1,5 +1,5 @@
 <template>
-	<div :data-theme="theme" class="k-box" v-on="$listeners">
+	<div :data-theme="theme" class="k-box">
 		<!-- @slot Use instead of `text` prop -->
 		<slot>
 			<k-text v-if="html" :html="text" />
