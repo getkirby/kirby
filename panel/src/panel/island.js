@@ -226,13 +226,13 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			Object.keys(state.dispatch).forEach((event) => {
+			for (const event in state.dispatch) {
 				const payload = state.dispatch[event];
 				panel.vue?.$store.dispatch(
 					event,
 					Array.isArray(payload) === true ? [...payload] : payload
 				);
-			});
+			}
 		},
 
 		/**
@@ -244,15 +244,14 @@ export default (panel, key, defaults) => {
 		successEvents(state) {
 			if (state.event) {
 				// wrap single events to treat them all at once
-				const events =
-					Array.isArray(state.event) === true ? state.event : [state.event];
+				const events = Array.wrap(state.event);
 
 				// emit all defined events
-				events.forEach((event) => {
+				for (const event of events) {
 					if (typeof event === "string") {
 						panel.events.emit(event, state);
 					}
-				});
+				}
 			}
 
 			// emit a success event

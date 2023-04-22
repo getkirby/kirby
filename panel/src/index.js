@@ -15,11 +15,6 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 /**
- * Make Vue accessible globally
- */
-window.Vue = Vue;
-
-/**
  * Create the Panel instance
  */
 window.panel = Panel.create(window.panel.plugins);
