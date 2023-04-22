@@ -31,6 +31,12 @@ window.panel = Panel.create(window.panel.plugins);
 Vue.prototype.$panel = window.panel;
 
 /**
+ * Some shortcuts to the Panel's features
+ */
+Vue.prototype.$go = window.panel.view.open;
+Vue.prototype.$reload = window.panel.reload;
+
+/**
  * Create the Vue application
  */
 window.panel.app = new Vue({
