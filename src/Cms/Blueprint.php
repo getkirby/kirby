@@ -226,7 +226,7 @@ class Blueprint
 	public static function factory(
 		string $name,
 		string $fallback = null,
-		Model $model
+		ModelWithContent $model
 	): static|null {
 		try {
 			$props = static::load($name);
@@ -353,10 +353,8 @@ class Blueprint
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
-	public function model()
+	public function model(): ModelWithContent
 	{
 		return $this->model;
 	}

@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
@@ -246,13 +246,10 @@ class Form
 		return $this->fields;
 	}
 
-	/**
-	 * @param \Kirby\Cms\Model $model
-	 * @param array $props
-	 * @return static
-	 */
-	public static function for(Model $model, array $props = [])
-	{
+	public static function for(
+		ModelWithContent $model,
+		array $props = []
+	): static {
 		// get the original model data
 		$original = $model->content($props['language'] ?? null)->toArray();
 		$values   = $props['values'] ?? [];

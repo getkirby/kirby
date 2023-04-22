@@ -219,7 +219,7 @@ class ModelWithContentTest extends TestCase
 	public function testContentLock()
 	{
 		$model = new ExtendedModelWithContent();
-		$this->assertInstanceOf('Kirby\\Cms\\ContentLock', $model->lock());
+		$this->assertInstanceOf(ContentLock::class, $model->lock());
 	}
 
 	public function testContentLockWithNoDirectory()
@@ -230,9 +230,8 @@ class ModelWithContentTest extends TestCase
 
 	/**
 	 * @dataProvider modelsProvider
-	 * @param \Kirby\Cms\Model $model
 	 */
-	public function testBlueprints($model)
+	public function testBlueprints(ModelWithContent $model)
 	{
 		$model = new BlueprintsModelWithContent($model);
 		$this->assertSame([

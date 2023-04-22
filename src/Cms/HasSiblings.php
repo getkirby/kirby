@@ -31,8 +31,6 @@ trait HasSiblings
 	 * Returns the next item in the collection if available
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return \Kirby\Cms\Model|null
 	 */
 	public function next($collection = null)
 	{
@@ -57,8 +55,6 @@ trait HasSiblings
 	 * Returns the previous item in the collection if available
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
-	 *
-	 * @return \Kirby\Cms\Model|null
 	 */
 	public function prev($collection = null)
 	{

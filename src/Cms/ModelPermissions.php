@@ -33,10 +33,8 @@ abstract class ModelPermissions
 
 	/**
 	 * ModelPermissions constructor
-	 *
-	 * @param \Kirby\Cms\Model $model
 	 */
-	public function __construct(Model $model)
+	public function __construct(ModelWithContent $model)
 	{
 		$this->model       = $model;
 		$this->options     = $model->blueprint()->options();
