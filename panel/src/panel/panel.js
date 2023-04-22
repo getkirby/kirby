@@ -62,6 +62,7 @@ export default {
 	create(plugins = {}) {
 		// props
 		this.isLoading = false;
+		this.drag = null;
 
 		// modules
 		this.events = Events(this);

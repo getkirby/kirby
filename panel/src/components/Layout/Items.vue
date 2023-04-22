@@ -103,10 +103,10 @@ export default {
 	},
 	methods: {
 		onDragStart($event, dragText) {
-			this.$store.dispatch("drag", {
+			this.$panel.drag = {
 				type: "text",
 				data: dragText
-			});
+			};
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
