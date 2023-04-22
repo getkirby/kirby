@@ -20,15 +20,14 @@ class UserPermissions extends ModelPermissions
 
 	/**
 	 * UserPermissions constructor
-	 *
-	 * @param \Kirby\Cms\Model $model
 	 */
-	public function __construct(Model $model)
+	public function __construct(User $model)
 	{
 		parent::__construct($model);
 
-		// change the scope of the permissions, when the current user is this user
-		$this->category = $this->user && $this->user->is($model) ? 'user' : 'users';
+		// change the scope of the permissions,
+		// when the current user is this user
+		$this->category = $this->user?->is($model) ? 'user' : 'users';
 	}
 
 	/**

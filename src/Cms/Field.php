@@ -27,6 +27,9 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Field
 {
+	/**
+	 * Field method aliases
+	 */
 	public static array $aliases = [];
 
 	/**
@@ -143,9 +146,8 @@ class Field
 
 	/**
 	 * @see Field::parent()
-	 * @return \Kirby\Cms\Model|null
 	 */
-	public function model()
+	public function model(): ModelWithContent|null
 	{
 		return $this->parent;
 	}

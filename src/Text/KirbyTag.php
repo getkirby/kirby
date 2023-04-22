@@ -6,7 +6,7 @@ use AllowDynamicProperties;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
-use Kirby\Cms\Model;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Uuid\Uri as UuidUri;
@@ -217,7 +217,7 @@ class KirbyTag
 	/**
 	 * Returns the parent model
 	 */
-	public function parent(): Model|null
+	public function parent(): ModelWithContent|null
 	{
 		return $this->data['parent'];
 	}

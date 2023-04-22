@@ -257,13 +257,14 @@ class Collection extends BaseCollection
 		$this->pagination = Pagination::for($this, ...$arguments);
 
 		// slice and clone the collection according to the pagination
-		return $this->slice($this->pagination->offset(), $this->pagination->limit());
+		return $this->slice(
+			$this->pagination->offset(),
+			$this->pagination->limit()
+		);
 	}
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
 	public function parent()
 	{

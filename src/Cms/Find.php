@@ -94,11 +94,10 @@ class Find
 	 * Returns the model's object for the given path
 	 *
 	 * @param string $path Path to parent model
-	 * @return \Kirby\Cms\Model|null
 	 * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
 	 * @throws \Kirby\Exception\NotFoundException if the model cannot be found
 	 */
-	public static function parent(string $path)
+	public static function parent(string $path): ModelWithContent
 	{
 		$path       = trim($path, '/');
 		$modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
