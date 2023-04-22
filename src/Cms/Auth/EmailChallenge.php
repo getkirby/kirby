@@ -24,7 +24,6 @@ class EmailChallenge extends Challenge
 	 *
 	 * @param \Kirby\Cms\User $user User the code will be generated for
 	 * @param string $mode Purpose of the code ('login', 'reset' or '2fa')
-	 * @return bool
 	 */
 	public static function isAvailable(User $user, string $mode): bool
 	{

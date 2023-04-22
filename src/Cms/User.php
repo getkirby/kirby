@@ -68,10 +68,8 @@ class User extends ModelWithContent
 
 	/**
 	 * All registered user methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Registry with all User models

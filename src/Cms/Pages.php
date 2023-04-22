@@ -41,10 +41,8 @@ class Pages extends Collection
 
 	/**
 	 * All registered pages methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Adds a single page or

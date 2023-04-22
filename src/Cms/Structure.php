@@ -22,10 +22,8 @@ class Structure extends Collection
 {
 	/**
 	 * All registered structure methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Creates a new Collection with the given objects

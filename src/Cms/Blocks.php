@@ -27,10 +27,8 @@ class Blocks extends Items
 
 	/**
 	 * All registered blocks methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Return HTML when the collection is

@@ -18,10 +18,13 @@ use Kirby\Session\Session;
  */
 class Api extends BaseApi
 {
-	/**
-	 * @var App
-	 */
-	protected $kirby;
+	protected App $kirby;
+
+	public function __construct(array $props)
+	{
+		$this->kirby = $props['kirby'];
+		parent::__construct($props);
+	}
 
 	/**
 	 * Execute an API call for the given path,
@@ -47,20 +50,33 @@ class Api extends BaseApi
 	}
 
 	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 */
+	public function clone(array $props = []): static
+	{
+		return parent::clone(array_merge([
+			'kirby' => $this->kirby
+		], $props));
+	}
+
+	/**
 	 * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
 	 */
 	public function fieldApi($model, string $name, string|null $path = null)
 	{
 		$field = Form::for($model)->field($name);
 
-		$fieldApi = new static(
-			array_merge($this->propertyData, [
-				'data'   => array_merge($this->data(), ['field' => $field]),
-				'routes' => $field->api(),
-			]),
-		);
+		$fieldApi = $this->clone([
+			'data'   => array_merge($this->data(), ['field' => $field]),
+			'routes' => $field->api(),
+		]);
 
-		return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+		return $fieldApi->call(
+			$path,
+			$this->requestMethod(),
+			$this->requestData()
+		);
 	}
 
 	/**
@@ -158,17 +174,6 @@ class Api extends BaseApi
 		return $this->kirby->session(array_merge([
 			'detect' => true
 		], $options));
-	}
-
-	/**
-	 * Setter for the parent Kirby instance
-	 *
-	 * @return $this
-	 */
-	protected function setKirby(App $kirby): static
-	{
-		$this->kirby = $kirby;
-		return $this;
 	}
 
 	/**

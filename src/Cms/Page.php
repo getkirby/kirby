@@ -38,10 +38,8 @@ class Page extends ModelWithContent
 
 	/**
 	 * All registered page methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Registry with all Page models
