@@ -18,35 +18,28 @@ trait FileModifications
 {
 	/**
 	 * Blurs the image by the given amount of pixels
-	 *
-	 * @param bool $pixels
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function blur($pixels = true)
+	public function blur(int|bool $pixels = true): FileVersion|File|Asset
 	{
 		return $this->thumb(['blur' => $pixels]);
 	}
 
 	/**
 	 * Converts the image to black and white
-	 *
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function bw()
+	public function bw(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
 	}
 
 	/**
 	 * Crops the image by the given width and height
-	 *
-	 * @param int $width
-	 * @param int|null $height
-	 * @param string|array $options
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function crop(int $width, int $height = null, $options = null)
-	{
+	public function crop(
+		int $width,
+		int $height = null,
+		$options = null
+	): FileVersion|File|Asset {
 		$quality = null;
 		$crop    = true;
 
@@ -71,31 +64,24 @@ trait FileModifications
 
 	/**
 	 * Alias for File::bw()
-	 *
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function grayscale()
+	public function grayscale(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
 	}
 
 	/**
 	 * Alias for File::bw()
-	 *
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function greyscale()
+	public function greyscale(): FileVersion|File|Asset
 	{
 		return $this->thumb(['grayscale' => true]);
 	}
 
 	/**
 	 * Sets the JPEG compression quality
-	 *
-	 * @param int $quality
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 */
-	public function quality(int $quality)
+	public function quality(int $quality): FileVersion|File|Asset
 	{
 		return $this->thumb(['quality' => $quality]);
 	}
@@ -104,14 +90,13 @@ trait FileModifications
 	 * Resizes the file with the given width and height
 	 * while keeping the aspect ratio.
 	 *
-	 * @param int|null $width
-	 * @param int|null $height
-	 * @param int|null $quality
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function resize(int $width = null, int $height = null, int $quality = null)
-	{
+	public function resize(
+		int $width = null,
+		int $height = null,
+		int $quality = null
+	): FileVersion|File|Asset {
 		return $this->thumb([
 			'width'   => $width,
 			'height'  => $height,
@@ -124,11 +109,8 @@ trait FileModifications
 	 * Sizes can be defined as a simple array. They can
 	 * also be set up in the config with the thumbs.srcsets option.
 	 * @since 3.1.0
-	 *
-	 * @param array|string|null $sizes
-	 * @return string|null
 	 */
-	public function srcset($sizes = null): string|null
+	public function srcset(array|string|null $sizes = null): string|null
 	{
 		if (empty($sizes) === true) {
 			$sizes = $this->kirby()->option('thumbs.srcsets.default', []);
@@ -175,12 +157,11 @@ trait FileModifications
 	 * could potentially also be a CDN or any other
 	 * place.
 	 *
-	 * @param array|null|string $options
-	 * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function thumb($options = null)
-	{
+	public function thumb(
+		array|string|null $options = null
+	): FileVersion|File|Asset {
 		// thumb presets
 		if (empty($options) === true) {
 			$options = $this->kirby()->option('thumbs.presets.default');

@@ -13,14 +13,8 @@ namespace Kirby\Cms;
  */
 class UserPermissions extends ModelPermissions
 {
-	/**
-	 * @var string
-	 */
-	protected $category = 'users';
+	protected string $category = 'users';
 
-	/**
-	 * UserPermissions constructor
-	 */
 	public function __construct(User $model)
 	{
 		parent::__construct($model);
@@ -30,17 +24,11 @@ class UserPermissions extends ModelPermissions
 		$this->category = $this->user?->is($model) ? 'user' : 'users';
 	}
 
-	/**
-	 * @return bool
-	 */
 	protected function canChangeRole(): bool
 	{
 		return $this->model->roles()->count() > 1;
 	}
 
-	/**
-	 * @return bool
-	 */
 	protected function canCreate(): bool
 	{
 		// the admin can always create new users
@@ -56,9 +44,6 @@ class UserPermissions extends ModelPermissions
 		return true;
 	}
 
-	/**
-	 * @return bool
-	 */
 	protected function canDelete(): bool
 	{
 		return $this->model->isLastAdmin() !== true;
