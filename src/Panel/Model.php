@@ -107,14 +107,10 @@ abstract class Model
 		// skip image thumbnail if option
 		// is explicitly set to show the icon
 		if ($settings === 'icon') {
-			$settings = [
-				'query' => false
-			];
+			$settings = ['query' => false];
 		} elseif (is_string($settings) === true) {
 			// convert string settings to proper array
-			$settings = [
-				'query' => $settings
-			];
+			$settings = ['query' => $settings];
 		}
 
 		// merge with defaults and blueprint option
@@ -128,35 +124,10 @@ abstract class Model
 			// main url
 			$settings['url'] = $image->url();
 
-			// only create srcsets for resizable files
 			if ($image->isResizable() === true) {
-				$settings['src'] = static::imagePlaceholder();
-
-				$sizes = match ($layout) {
-					'cards'    => [352, 864, 1408],
-					'cardlets' => [96, 192],
-					default    => [38, 76]
-				};
-
-				if (
-					($settings['cover'] ?? false) === false ||
-					$layout === 'cards'
-				) {
-					$settings['srcset'] = $image->srcset($sizes);
-				} else {
-					$settings['srcset'] = $image->srcset([
-						'1x' => [
-							'width'  => $sizes[0],
-							'height' => $sizes[0],
-							'crop'   => 'center'
-						],
-						'2x' => [
-							'width'  => $sizes[1],
-							'height' => $sizes[1],
-							'crop'   => 'center'
-						]
-					]);
-				}
+				// only create srcsets for resizable files
+				$settings['src']    = static::imagePlaceholder();
+				$settings['srcset'] = $this->imageSrcset($image, $layout, $settings);
 			} elseif ($image->isViewable() === true) {
 				$settings['src'] = $image->url();
 			}
@@ -214,6 +185,70 @@ abstract class Model
 		}
 
 		return null;
+	}
+
+	/**
+	 * Provides the correct srcset string based on
+	 * the layout and settings
+	 * @internal
+	 */
+	protected function imageSrcset(
+		CmsFile|Asset $image,
+		string $layout,
+		array $settings
+	): string|null {
+		// depending on layout type, set different sizes
+		// to have multiple options for the srcset attribute
+		$sizes = match ($layout) {
+			'cards'    => [352, 864, 1408],
+			'cardlets' => [96, 192],
+			default    => [38, 76]
+		};
+
+		// no additional modfications needed if `cover: false`
+		if (($settings['cover'] ?? false) === false) {
+			return $image->srcset($sizes);
+		}
+
+		// for card layouts with `cover: true` provide
+		// crops based on the card ratio
+		if ($layout === 'cards') {
+			$ratio = explode('/', $settings['ratio']);
+			$ratio = $ratio[0] / $ratio[1];
+
+			return $image->srcset([
+				$sizes[0] . 'w' => [
+					'width'  => $sizes[0],
+					'height' => round($sizes[0] / $ratio),
+					'crop'   => true
+				],
+				$sizes[1] . 'w' => [
+					'width'  => $sizes[1],
+					'height' => round($sizes[1] / $ratio),
+					'crop'   => true
+				],
+				$sizes[2] . 'w' => [
+					'width'  => $sizes[2],
+					'height' => round($sizes[2] / $ratio),
+					'crop'   => true
+				]
+			]);
+		}
+
+		// for list and cardlets with `cover: true`
+		// provide square crops in two resolutions
+		return $image->srcset([
+			'1x' => [
+				'width'  => $sizes[0],
+				'height' => $sizes[0],
+				'crop'   => true
+			],
+			'2x' => [
+				'width'  => $sizes[1],
+				'height' => $sizes[1],
+				'crop'   => true
+			]
+		]);
 	}
 
 	/**

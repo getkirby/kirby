@@ -70,8 +70,10 @@ class Xml
 	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 * @return string|null The generated XML attributes string
 	 */
-	public static function attr(string|array $name, $value = null): string|null
-	{
+	public static function attr(
+		string|array $name,
+		$value = null
+	): string|null {
 		if (is_array($name) === true) {
 			if ($value !== false) {
 				ksort($name);
@@ -235,8 +237,10 @@ class Xml
 	 *
 	 * @param bool $html True = Convert to HTML-safe first
 	 */
-	public static function encode(string|null $string, bool $html = true): string
-	{
+	public static function encode(
+		string|null $string,
+		bool $html = true
+	): string {
 		if ($string === null) {
 			return '';
 		}
@@ -282,8 +286,10 @@ class Xml
 	 *
 	 * @param bool $collectName Whether the element name should be collected (for the root element)
 	 */
-	public static function simplify(SimpleXMLElement $element, bool $collectName = true): array|string
-	{
+	public static function simplify(
+		SimpleXMLElement $element,
+		bool $collectName = true
+	): array|string {
 		// get all XML namespaces of the whole document to iterate over later;
 		// we don't need the global namespace (empty string) in the list
 		$usedNamespaces = $element->getNamespaces(true);
@@ -348,17 +354,17 @@ class Xml
 			}
 
 			return $array;
-		} else {
-			// we didn't find any XML children above, only use the string value
-			$element = (string)$element;
-
-			if (count($array) === 0) {
-				return $element;
-			}
-
-			$array['@value'] = $element;
-			return $array;
 		}
+
+		// we didn't find any XML children above, only use the string value
+		$element = (string)$element;
+
+		if (count($array) === 0) {
+			return $element;
+		}
+
+		$array['@value'] = $element;
+		return $array;
 	}
 
 	/**
@@ -372,8 +378,13 @@ class Xml
 	 * @param int $level Indentation level
 	 * @return string The generated XML
 	 */
-	public static function tag(string $name, $content = '', array $attr = [], string $indent = null, int $level = 0): string
-	{
+	public static function tag(
+		string $name,
+		array|string|null $content = '',
+		array $attr = [],
+		string $indent = null,
+		int $level = 0
+	): string {
 		$attr       = static::attr($attr);
 		$start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
 		$startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;

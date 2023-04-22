@@ -1,93 +1,74 @@
 <template>
-	<k-drawer
-		:id="id"
-		ref="drawer"
-		:icon="icon"
-		:tabs="tabs"
-		:tab="tab"
-		:title="title"
-		class="k-form-drawer"
-		@close="$emit('close')"
-		@open="$emit('open')"
-		@tab="tab = $event"
-	>
-		<template #options>
-			<slot name="options" />
-		</template>
-		<template #default>
-			<k-box v-if="Object.keys(fields).length === 0" theme="info">
-				{{ empty }}
-			</k-box>
-			<k-form
-				v-else
-				ref="form"
-				:autofocus="true"
-				:fields="fields"
-				:value="$helper.clone(value)"
-				@input="$emit('input', $event)"
-				@invalid="$emit('invalid', $event)"
-			/>
-		</template>
-	</k-drawer>
+	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
+		<form
+			class="k-form-drawer k-drawer"
+			method="dialog"
+			@submit.prevent="submit"
+		>
+			<k-drawer-notification />
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:icon="icon"
+				:tab="tab"
+				:tabs="tabs"
+				:title="title"
+				@openCrumb="openCrumb"
+				@openTab="openTab"
+			>
+				<slot name="options" />
+			</k-drawer-header>
+			<k-drawer-body>
+				<k-drawer-fields
+					:fields="fieldset"
+					:value="model"
+					@input="input"
+					@invalid="invalid"
+					@submit="submit"
+				/>
+			</k-drawer-body>
+		</form>
+	</k-overlay>
 </template>
 
 <script>
+import Drawer from "./Drawer.vue";
+import { props as Fields } from "./Elements/Fields.vue";
+
 export default {
-	inheritAttrs: false,
-	props: {
-		empty: {
-			type: String,
-			default() {
-				return "Missing field setup";
-			}
-		},
-		icon: String,
-		id: String,
-		tabs: Object,
-		title: String,
-		type: String,
-		value: Object
-	},
+	mixins: [Drawer, Fields],
 	data() {
 		return {
-			tab: null
+			fieldset: {},
+			// Since fiber drawers don't update their `value` prop
+			// on an emitted `input` event, we need to ensure a local
+			// state of all updated values
+			model: this.value
 		};
 	},
-	computed: {
-		fields() {
-			const tabId = this.tab || null;
-			const tabs = this.tabs;
-			const tab = tabs[tabId] || this.firstTab;
-			const fields = tab.fields || {};
+	watch: {
+		tab() {
+			this.fieldset = this.tabs[this.tab]?.fields || {};
 
-			return fields;
+			// focus on the first best element
+			// in the drawer
+			setTimeout(() => {
+				this.$refs.overlay.focus();
+			});
 		},
-		firstTab() {
-			return Object.values(this.tabs)[0];
+		value(value) {
+			this.model = value;
 		}
 	},
 	methods: {
-		close() {
-			this.$refs.drawer.close();
+		input(value) {
+			this.model = value;
+			this.$emit("input", this.model);
 		},
-		focus(name) {
-			if (typeof this.$refs.form?.focus === "function") {
-				this.$refs.form.focus(name);
-			}
+		invalid() {
+			this.$emit("invalid", this.model);
 		},
-		open(tab, focus = true) {
-			this.$refs.drawer.open();
-			this.tab = tab || this.firstTab.name;
-
-			if (focus === true) {
-				focus = Object.values(this.fields).find(
-					(field) => field.autofocus === true
-				)?.name;
-			}
-
-			setTimeout(() => {
-				this.focus(focus);
-			}, 10);
+		submit() {
+			this.$emit("submit", this.model);
 		}
 	}
 };

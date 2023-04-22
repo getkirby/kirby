@@ -32,13 +32,17 @@ export default {
 			return this.language.code.toUpperCase();
 		},
 		defaultLanguage() {
-			return this.$languages.find((language) => language.default === true);
+			return this.$panel.languages.find(
+				(language) => language.default === true
+			);
 		},
 		language() {
-			return this.$language;
+			return this.$panel.language;
 		},
 		languages() {
-			return this.$languages.filter((language) => language.default === false);
+			return this.$panel.languages.filter(
+				(language) => language.default === false
+			);
 		}
 	},
 	methods: {

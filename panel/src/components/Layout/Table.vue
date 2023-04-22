@@ -211,7 +211,7 @@ export default {
 		 * @returns {number}
 		 */
 		columnsCount() {
-			return Object.keys(this.columns).length;
+			return this.$helper.object.length(this.columns);
 		},
 		/**
 		 * Config options for `k-draggable`

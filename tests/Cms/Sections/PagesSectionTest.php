@@ -22,6 +22,8 @@ class PagesSectionTest extends TestCase
 				'index' => $this->tmp
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function tearDown(): void
@@ -80,8 +82,6 @@ class PagesSectionTest extends TestCase
 
 	public function testParent()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -109,8 +109,6 @@ class PagesSectionTest extends TestCase
 
 	public function testParentWithInvalidOption()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -382,8 +380,6 @@ class PagesSectionTest extends TestCase
 
 	public function testImageString()
 	{
-		$this->app->impersonate('kirby');
-
 		$model = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -550,13 +546,14 @@ class PagesSectionTest extends TestCase
 
 	public function testUnreadable()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'blueprints' => [
 				'pages/unreadable' => [
 					'options' => ['read' => false]
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -829,8 +826,6 @@ class PagesSectionTest extends TestCase
 
 	public function testQuery()
 	{
-		$this->app->impersonate('kirby');
-
 		$section = new Section('pages', [
 			'name'  => 'test',
 			'model' => new Page([

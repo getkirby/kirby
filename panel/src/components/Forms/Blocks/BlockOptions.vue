@@ -8,6 +8,13 @@
 				@click.prevent="$emit('copy')"
 			/>
 			<k-button
+				v-if="isMergable"
+				:title="$t('merge')"
+				class="k-block-options-button"
+				icon="merge"
+				@click.prevent="$emit('merge')"
+			/>
+			<k-button
 				:title="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
@@ -70,6 +77,13 @@
 				<k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
 					{{ $t("field.blocks.changeType") }}
 				</k-dropdown-item>
+				<k-dropdown-item
+					v-if="isSplitable"
+					icon="split"
+					@click="$emit('split')"
+				>
+					{{ $t("split") }}
+				</k-dropdown-item>
 				<hr />
 				<k-dropdown-item icon="template" @click="$emit('copy')">
 					{{ $t("copy") }}
@@ -109,7 +123,9 @@ export default {
 		isBatched: Boolean,
 		isEditable: Boolean,
 		isFull: Boolean,
-		isHidden: Boolean
+		isHidden: Boolean,
+		isMergable: Boolean,
+		isSplitable: Boolean
 	},
 	methods: {
 		open() {

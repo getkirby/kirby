@@ -36,9 +36,7 @@ export const props = {
 		 */
 		value: {
 			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	}
 };

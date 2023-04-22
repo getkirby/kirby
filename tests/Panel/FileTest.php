@@ -349,6 +349,7 @@ class FileTest extends TestCase
 
 	/**
 	 * @covers ::imageSource
+	 * @covers ::imageSrcset
 	 */
 	public function testImageCover()
 	{
@@ -423,12 +424,13 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => true,
-			'update'     => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'read'           => true,
+			'replace'        => true,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -453,12 +455,13 @@ class FileTest extends TestCase
 
 		// without override
 		$expected = [
-			'changeName' => false,
-			'create'     => false,
-			'delete'     => false,
-			'read'       => false,
-			'replace'    => false,
-			'update'     => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => false,
+			'read'           => false,
+			'replace'        => false,
+			'update'         => false,
 		];
 
 		$panel = new File($file);
@@ -466,12 +469,13 @@ class FileTest extends TestCase
 
 		// with override
 		$expected = [
-			'changeName' => false,
-			'create'     => false,
-			'delete'     => true,
-			'read'       => false,
-			'replace'    => false,
-			'update'     => false,
+			'changeName'     => false,
+			'changeTemplate' => false,
+			'create'         => false,
+			'delete'         => true,
+			'read'           => false,
+			'replace'        => false,
+			'update'         => false,
 		];
 
 		$panel = new File($file);
@@ -494,12 +498,13 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => false,
-			'update'     => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'read'           => true,
+			'replace'        => false,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -533,12 +538,13 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => true,
-			'update'     => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'read'           => true,
+			'replace'        => true,
+			'update'         => true,
 		];
 
 		$panel = new File($file);
@@ -574,12 +580,13 @@ class FileTest extends TestCase
 		$file->kirby()->impersonate('kirby');
 
 		$expected = [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => false,
-			'update'     => true,
+			'changeName'     => true,
+			'changeTemplate' => false,
+			'create'         => true,
+			'delete'         => true,
+			'read'           => true,
+			'replace'        => false,
+			'update'         => true,
 		];
 
 		$panel = new File($file);

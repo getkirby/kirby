@@ -1,9 +1,17 @@
 <?php
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Sane\Sane;
+use Kirby\Toolkit\V;
 
 return [
 	'props' => [
+		/**
+		 * Enables/disables the character counter in the top right corner
+		 */
+		'counter' => function (bool $counter = true) {
+			return $counter;
+		},
 		/**
 		 * Available heading levels
 		 */
@@ -19,11 +27,24 @@ return [
 			return $inline;
 		},
 		/**
-		 * Sets the allowed HTML formats. Available formats: `bold`, `italic`, `underline`, `strike`, `code`, `link`, `email`. Activate them all by passing `true`. Deactivate them all by passing `false`
+		 * Sets the allowed HTML formats. Available formats: `bold`, `italic`, `underline`, `strike`, `code`, `link`, `email`. Activate/deactivate them all by passing `true`/`false`. Default marks are `bold`, `italic`, `underline`, `strike`, `link`, `email`
 		 * @param array|bool $marks
 		 */
-		'marks' => function ($marks = true) {
+		'marks' => function ($marks = null) {
 			return $marks;
+		},
+		/**
+		 * Maximum number of allowed characters
+		 */
+		'maxlength' => function (int $maxlength = null) {
+			return $maxlength;
+		},
+
+		/**
+		 * Minimum number of required characters
+		 */
+		'minlength' => function (int $minlength = null) {
+			return $minlength;
 		},
 		/**
 		 * Sets the allowed nodes. Available nodes: `paragraph`, `heading`, `bulletList`, `orderedList`. Activate/deactivate them all by passing `true`/`false`. Default nodes are `paragraph`, `heading`, `bulletList`, `orderedList`.
@@ -31,12 +52,59 @@ return [
 		 */
 		'nodes' => function ($nodes = null) {
 			return $nodes;
+		},
+		/**
+		 * Toolbar options, incl. `marks` (to narrow down which marks should have toolbar buttons), `nodes` (to narrow down which nodes should have toolbar dropdown entries) and `inline` to set the position of the toolbar (false = sticking on top of the field)
+		 */
+		'toolbar' => function ($toolbar = null) {
+			return $toolbar;
 		}
 	],
 	'computed' => [
+		'toolbar' => function () {
+			return array_merge([
+				'inline' => true,
+				'marks'  => $this->marks ?? [
+					'bold',
+					'italic',
+					'underline',
+					'strike',
+					'code',
+					'|',
+					'link',
+					'email',
+					'|',
+					'clear'
+				]
+			], $this->toolbar ?? []);
+		},
 		'value' => function () {
 			$value = trim($this->value ?? '');
 			return Sane::sanitize($value, 'html');
 		}
 	],
+	'validations' => [
+		'minlength' => function ($value) {
+			if (
+				$this->minlength &&
+				V::minLength(strip_tags($value), $this->minlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.minlength',
+					'data' => ['min' => $this->minlength]
+				]);
+			}
+		},
+		'maxlength'  => function ($value) {
+			if (
+				$this->maxlength &&
+				V::maxLength(strip_tags($value), $this->maxlength) === false
+			) {
+				throw new InvalidArgumentException([
+					'key' => 'validation.maxlength',
+					'data' => ['max' => $this->maxlength]
+				]);
+			}
+		},
+	]
 ];

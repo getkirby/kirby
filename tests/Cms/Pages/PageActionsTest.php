@@ -255,6 +255,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -296,10 +299,14 @@ class PageActionsTest extends TestCase
 		$page = $drafts->find('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
 
 		$modified = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 
 		$this->assertSame($modified, $drafts->find('test'));
@@ -332,6 +339,9 @@ class PageActionsTest extends TestCase
 				'pages/article' => [
 					'title'  => 'Article',
 					'fields' => [
+						'caption' => [
+							'type' => 'radio'
+						],
 						'text' => [
 							'type' => 'textarea'
 						]
@@ -364,28 +374,43 @@ class PageActionsTest extends TestCase
 					'code' => 'fr',
 					'name' => 'Français',
 				]
-			]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'video',
+						'translations' => [
+							[
+								'code' => 'en',
+								'content' => [
+									'title'   => 'Test',
+									'caption' => 'Caption',
+									'text'    => 'Text'
+								]
+							],
+							[
+								'code' => 'de',
+								'content' => [
+									'title'   => 'Prüfen',
+									'caption' => 'Untertitel',
+									'text'    => 'Täxt'
+								]
+							],
+						]
+					]
+				]
+			],
 		]);
 
 		$app->impersonate('kirby');
-
-		$page = $app->site()->createChild([
-			'slug'     => 'test',
-			'template' => 'video',
-			'content'  => [
-				'title'   => 'Test',
-				'caption' => 'Caption',
-				'text'    => 'Text'
-			]
-		]);
-
-		$page = $page->update([
-			'title'   => 'Prüfen',
-			'caption' => 'Untertitel',
-			'text'    => 'Text'
-		], 'de');
+		$page = $app->page('test');
 
 		$this->assertSame('video', $page->intendedTemplate()->name());
+		$this->assertSame('Caption', $page->caption()->value());
+		$this->assertSame('Text', $page->text()->value());
+		$this->assertSame('Untertitel', $page->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $page->content('de')->get('text')->value());
 
 		$drafts = $app->site()->drafts();
 		$childrenAndDrafts = $app->site()->childrenAndDrafts();
@@ -398,9 +423,10 @@ class PageActionsTest extends TestCase
 		$this->assertFileExists($modified->contentFile('en'));
 		$this->assertFileExists($modified->contentFile('de'));
 		$this->assertFileDoesNotExist($modified->contentFile('fr'));
-
-		$this->assertSame($modified, $drafts->find('test'));
-		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
+		$this->assertNull($modified->content('de')->get('caption')->value());
+		$this->assertSame('Täxt', $modified->content('de')->get('text')->value());
 	}
 
 	public function testChangeTitle()
@@ -1176,5 +1202,188 @@ class PageActionsTest extends TestCase
 		$page->duplicate();
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testCreateDefaultLanguage()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		$page = Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => ['type' => 'text'],
+					'text'     => ['type' => 'textarea']
+				]
+			],
+		]);
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateSecondaryLanguage()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->setCurrentLanguage('de');
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		$page = Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => ['type' => 'text'],
+					'text'     => ['type' => 'textarea']
+				]
+			]
+		]);
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame('de', $app->language()->code());
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateSecondaryLanguageUntranslatable()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->setCurrentLanguage('de');
+
+		$value = [
+			'title'    => 'Test page',
+			'headline' => 'A headline',
+			'text'     => 'Any text'
+		];
+
+		$page = Page::create([
+			'slug'      => 'test',
+			'content'   => $value,
+			'blueprint' => [
+				'title'  => 'Default',
+				'fields' => [
+					'headline' => [
+						'type'      => 'text',
+						'translate' => false
+					],
+					'text'     => ['type' => 'textarea']
+				]
+			]
+		]);
+
+		$value['uuid'] = $page->content()->get('uuid')->value();
+
+		$this->assertSame('de', $app->language()->code());
+		$this->assertSame($value, $page->content('en')->toArray());
+		$this->assertSame($value, $page->content('de')->toArray());
+	}
+
+	public function testCreateSecondaryLanguageDefaultValues()
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$app->setCurrentLanguage('de');
+
+		$page = Page::create([
+			'slug'       => 'test',
+			'content'    => ['title' => 'Test page'],
+			'blueprint'  => [
+				'title'  => 'test',
+				'fields' => [
+					'headline' => [
+						'type'      => 'text',
+						'translate' => false,
+						'default'   => 'A headline'
+					],
+					'text'     => [
+						'type'    => 'textarea',
+						'default' => 'Any text'
+					]
+				]
+			]
+		]);
+
+		$expected = [
+			'title'    => 'Test page',
+			'uuid'     =>  $page->content()->get('uuid')->value(),
+			'headline' => 'A headline',
+			'text'     => 'Any text',
+		];
+
+		$this->assertSame('de', $app->language()->code());
+		$this->assertSame($expected, $page->content('en')->toArray());
+		$this->assertSame($expected, $page->content('de')->toArray());
 	}
 }

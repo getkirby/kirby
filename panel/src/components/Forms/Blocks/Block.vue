@@ -6,13 +6,27 @@
 		:data-disabled="fieldset.disabled"
 		:data-hidden="isHidden"
 		:data-id="id"
-		:data-last-in-batch="isLastInBatch"
+		:data-last-selected="isLastSelected"
 		:data-selected="isSelected"
 		:data-translate="fieldset.translate"
 		class="k-block-container"
 		tabindex="0"
+		@keydown.meta.j.prevent="$emit('merge')"
+		@keydown.ctrl.j.prevent="$emit('merge')"
+		@keydown.meta.up.exact.prevent="$emit('focusPrev')"
+		@keydown.ctrl.up.exact.prevent="$emit('focusPrev')"
+		@keydown.meta.down.exact.prevent="$emit('focusNext')"
+		@keydown.ctrl.down.exact.prevent="$emit('focusNext')"
+		@keydown.meta.alt.down.prevent="$emit('selectDown')"
+		@keydown.ctrl.alt.down.prevent="$emit('selectDown')"
+		@keydown.meta.alt.up.prevent="$emit('selectUp')"
+		@keydown.ctrl.alt.up.prevent="$emit('selectUp')"
+		@keydown.meta.shift.down.prevent="$emit('sortDown')"
 		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
+		@keydown.meta.shift.up.prevent="$emit('sortUp')"
 		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
+		@keydown.meta.backspace.prevent="confirmToRemove"
+		@keydown.ctrl.backspace.prevent="confirmToRemove"
 		@focus="$emit('focus')"
 		@focusin="onFocusIn"
 	>
@@ -31,7 +45,12 @@
 			:is-editable="isEditable"
 			:is-full="isFull"
 			:is-hidden="isHidden"
-			v-on="listeners"
+			:is-mergable="isMergable"
+			:is-splitable="isSplitable()"
+			v-on="{
+				...listeners,
+				split: () => $refs.editor.split()
+			}"
 		/>
 
 		<k-form-drawer
@@ -43,12 +62,10 @@
 			:title="fieldset.name"
 			:value="content"
 			class="k-block-drawer"
-			@close="
-				focus();
-				$emit('close');
-			"
-			@input="$emit('update', $event)"
-			@open="$emit('open')"
+			@close="onDrawerClose"
+			@input="onDrawerInput"
+			@open="onDrawerOpen"
+			@submit="onDrawerSubmit"
 		>
 			<template #options>
 				<k-button
@@ -97,7 +114,8 @@ export default {
 		isBatched: Boolean,
 		isFull: Boolean,
 		isHidden: Boolean,
-		isLastInBatch: Boolean,
+		isLastSelected: Boolean,
+		isMergable: Boolean,
 		isSelected: Boolean,
 		name: String,
 		next: Object,
@@ -165,15 +183,17 @@ export default {
 			return this.wysiwygComponent !== false;
 		},
 		wysiwygComponent() {
-			if (this.fieldset.preview === false) {
+			const preview = this.fieldset.preview;
+
+			if (preview === false) {
 				return false;
 			}
 
 			let component;
 
 			// custom preview
-			if (this.fieldset.preview) {
-				component = "k-block-type-" + this.fieldset.preview;
+			if (preview) {
+				component = "k-block-type-" + preview;
 
 				if (this.$helper.isComponent(component)) {
 					return component;
@@ -195,7 +215,11 @@ export default {
 			this.$refs.drawer.close();
 		},
 		confirmToRemove() {
-			this.$refs.removeDialog.open();
+			if (this.isBatched) {
+				this.$emit("confirmToRemoveSelected");
+			} else {
+				this.$refs.removeDialog.open();
+			}
 		},
 		focus() {
 			if (this.skipFocus !== true) {
@@ -205,16 +229,6 @@ export default {
 					this.$refs.container.focus();
 				}
 			}
-		},
-		onFocusIn(event) {
-			// skip focus if the event is coming from the options buttons
-			// to preserve the current focus (since options buttons directly
-			// trigger events and don't need any focus themselves)
-			if (this.$refs.options?.$el?.contains(event.target)) {
-				return;
-			}
-
-			this.$emit("focus", event);
 		},
 		goTo(block) {
 			if (block) {
@@ -228,12 +242,49 @@ export default {
 				});
 			}
 		},
-		open() {
-			this.$refs.drawer?.open();
+		isSplitable() {
+			if (this.$refs.editor) {
+				return (
+					(this.$refs.editor.isSplitable ?? true) &&
+					typeof this.$refs.editor?.split === "function"
+				);
+			}
+
+			return false;
+		},
+		onDrawerClose() {
+			this.$emit("close");
+			this.focus();
+		},
+		onDrawerInput(value) {
+			this.$emit("update", value);
+		},
+		onDrawerOpen() {
+			this.$emit("open");
+		},
+		onDrawerSubmit() {
+			this.$emit("submit");
+			this.close();
+		},
+		onFocusIn(event) {
+			// skip focus if the event is coming from the options buttons
+			// to preserve the current focus (since options buttons directly
+			// trigger events and don't need any focus themselves)
+			if (this.$refs.options?.$el?.contains(event.target)) {
+				return;
+			}
+
+			this.$emit("focus", event);
+		},
+		open(tab) {
+			this.$refs.drawer?.open(tab);
 		},
 		remove() {
 			this.$refs.removeDialog.close();
 			this.$emit("remove", this.id);
+		},
+		submit() {
+			this.close();
 		}
 	}
 };
@@ -253,26 +304,20 @@ export default {
 	outline: 0;
 }
 
-.k-block-container[data-batched="true"] {
-	z-index: 2;
-	border-bottom-color: transparent;
-}
-.k-block-container[data-batched="true"]::after {
-	position: absolute;
-	inset: 0;
-	content: "";
-	background: rgba(238, 242, 246, 0.375);
-	mix-blend-mode: multiply;
-	outline: var(--outline);
-	border-radius: var(--rounded);
-}
-
 .k-block-container[data-selected="true"] {
 	transform: translate(0);
 	z-index: 2;
 	outline: var(--outline);
 	border-bottom-color: transparent;
 }
+.k-block-container[data-batched="true"]::after {
+	position: absolute;
+	inset: 0;
+	content: "";
+	background: hsl(214 33% 77% / 0.175);
+	mix-blend-mode: multiply;
+}
+
 .k-block-container .k-block-options {
 	display: none;
 	position: absolute;
@@ -280,8 +325,7 @@ export default {
 	inset-inline-end: 0.75rem;
 	margin-top: calc(-1.75rem + 2px);
 }
-.k-block-container[data-last-in-batch="true"] > .k-block-options,
-.k-block-container[data-selected="true"] > .k-block-options {
+.k-block-container[data-last-selected="true"] > .k-block-options {
 	display: flex;
 }
 .k-block-container[data-hidden="true"] .k-block {
@@ -293,5 +337,20 @@ export default {
 }
 [data-disabled="true"] .k-block-container {
 	background: var(--color-background);
+}
+
+/* Collapse long blocks while dragging */
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block {
+	position: relative;
+	max-height: 4rem;
+	overflow: hidden;
+}
+.k-block-container:is(.k-sortable-ghost, .k-sortable-fallback) .k-block::after {
+	position: absolute;
+	bottom: 0;
+	content: "";
+	height: 2rem;
+	width: 100%;
+	background: linear-gradient(to top, var(--color-white), transparent);
 }
 </style>

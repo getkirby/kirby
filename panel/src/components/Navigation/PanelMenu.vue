@@ -33,7 +33,7 @@
 		</menu>
 
 		<!-- Search dialog -->
-		<k-search ref="search" :type="view.search || 'pages'" :types="$searches" />
+		<k-search ref="search" :type="view.search" :types="$panel.searches" />
 	</nav>
 </template>
 
@@ -126,7 +126,6 @@ export default {
 
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacing-1);
 	padding: var(--spacing-3);
 	background-color: var(--color-slate-300);
 }

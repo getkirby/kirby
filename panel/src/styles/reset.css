@@ -156,7 +156,7 @@ input:not([type=checkbox],
 
 body {
 	font-family: var(--font-sans, sans-serif);
-	font-size: var(--text-md);
+	font-size: var(--text-sm);
 	line-height: 1;
 	position: relative;
 	accent-color: var(--color-focus, currentColor);

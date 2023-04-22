@@ -1,51 +1,46 @@
 <template>
 	<nav class="k-toolbar">
-		<div class="k-toolbar-wrapper">
-			<div class="k-toolbar-buttons">
-				<template v-for="(button, buttonIndex) in layout">
-					<!-- divider -->
-					<template v-if="button.divider">
-						<span :key="buttonIndex" class="k-toolbar-divider" />
-					</template>
+		<template v-for="(button, buttonIndex) in layout">
+			<!-- divider -->
+			<div
+				v-if="button.divider"
+				:key="buttonIndex + '-divider'"
+				class="k-toolbar-divider"
+			/>
 
-					<!-- dropdown -->
-					<template v-else-if="button.dropdown">
-						<k-dropdown :key="buttonIndex">
-							<k-button
-								:key="buttonIndex"
-								:icon="button.icon"
-								:title="button.label"
-								tabindex="-1"
-								class="k-toolbar-button"
-								@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
-							/>
-							<k-dropdown-content :ref="buttonIndex + '-dropdown'">
-								<k-dropdown-item
-									v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
-									:key="dropdownItemIndex"
-									:icon="dropdownItem.icon"
-									@click="command(dropdownItem.command, dropdownItem.args)"
-								>
-									{{ dropdownItem.label }}
-								</k-dropdown-item>
-							</k-dropdown-content>
-						</k-dropdown>
-					</template>
+			<!-- dropdown -->
+			<k-dropdown v-else-if="button.dropdown" :key="buttonIndex + '-dropdown'">
+				<k-button
+					:key="buttonIndex"
+					:icon="button.icon"
+					:title="button.label"
+					tabindex="-1"
+					class="k-toolbar-button"
+					@click="$refs[buttonIndex + '-dropdown'][0].toggle()"
+				/>
+				<k-dropdown-content :ref="buttonIndex + '-dropdown'">
+					<k-dropdown-item
+						v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
+						:key="dropdownItemIndex"
+						:icon="dropdownItem.icon"
+						@click="command(dropdownItem.command, dropdownItem.args)"
+					>
+						{{ dropdownItem.label }}
+					</k-dropdown-item>
+				</k-dropdown-content>
+			</k-dropdown>
 
-					<!-- single button -->
-					<template v-else>
-						<k-button
-							:key="buttonIndex"
-							:icon="button.icon"
-							:title="button.label"
-							tabindex="-1"
-							class="k-toolbar-button"
-							@click="command(button.command, button.args)"
-						/>
-					</template>
-				</template>
-			</div>
-		</div>
+			<!-- single button -->
+			<k-button
+				v-else
+				:key="buttonIndex + '-button'"
+				:icon="button.icon"
+				:title="button.label"
+				tabindex="-1"
+				class="k-toolbar-button"
+				@click="command(button.command, button.args)"
+			/>
+		</template>
 	</nav>
 </template>
 
@@ -115,6 +110,35 @@ export default {
 			}
 		});
 
+		// inject custom textarea buttons
+		const customButtons = window.panel.plugins.textareaButtons ?? {};
+
+		if (
+			this.buttons === true &&
+			this.$helper.object.length(customButtons) > 0
+		) {
+			layout["divider-custom-buttons"] = { divider: true };
+		}
+
+		Object.keys(customButtons).forEach((name) => {
+			const button = customButtons[name];
+
+			// check required props for the button
+			if (
+				!button.label ||
+				!button.icon ||
+				(!button.command && !button.dropdown)
+			) {
+				return;
+			}
+
+			layout[name] = button;
+
+			if (button.shortcut) {
+				shortcuts[button.shortcut] = name;
+			}
+		});
+
 		return {
 			layout: layout,
 			shortcuts: shortcuts
@@ -129,13 +153,13 @@ export default {
 			}
 		},
 		close() {
-			Object.keys(this.$refs).forEach((ref) => {
+			for (const ref in this.$refs) {
 				const component = this.$refs[ref][0];
 
 				if (typeof component?.close === "function") {
 					component.close();
 				}
-			});
+			}
 		},
 		fileCommandSetup() {
 			let command = {
@@ -170,19 +194,19 @@ export default {
 					dropdown: {
 						h1: {
 							label: this.$t("toolbar.button.heading.1"),
-							icon: "title",
+							icon: "h1",
 							command: "prepend",
 							args: "#"
 						},
 						h2: {
 							label: this.$t("toolbar.button.heading.2"),
-							icon: "title",
+							icon: "h2",
 							command: "prepend",
 							args: "##"
 						},
 						h3: {
 							label: this.$t("toolbar.button.heading.3"),
-							icon: "title",
+							icon: "h3",
 							command: "prepend",
 							args: "###"
 						}
@@ -226,16 +250,12 @@ export default {
 				ul: {
 					label: this.$t("toolbar.button.ul"),
 					icon: "list-bullet",
-					command() {
-						return list.apply(this, ["ul"]);
-					}
+					command: () => list.apply(this, ["ul"])
 				},
 				ol: {
 					label: this.$t("toolbar.button.ol"),
 					icon: "list-numbers",
-					command() {
-						return list.apply(this, ["ol"]);
-					}
+					command: () => list.apply(this, ["ol"])
 				}
 			};
 		},
@@ -258,30 +278,45 @@ export default {
 
 <style>
 .k-toolbar {
-	background: var(--color-white);
+	--toolbar-size: 38px;
+	--toolbar-text: #aaa;
+	--toolbar-back: var(--color-white);
+	--toolbar-hover: rgba(239, 239, 239, 0.5);
+	--toolbar-border: var(--color-background);
+
+	display: flex;
+	max-width: 100%;
+	height: var(--toolbar-size);
+	margin-bottom: var(--spacing-1);
+
+	color: var(--toolbar-text);
+	background: var(--toolbar-back);
 	border-start-start-radius: var(--rounded);
 	border-start-end-radius: var(--rounded);
-	border-bottom: 1px solid var(--color-background);
-	height: 38px;
+	border-bottom: 1px solid var(--toolbar-border);
 }
-.k-toolbar-wrapper {
-	position: absolute;
-	top: 0;
-	inset-inline: 0;
-	max-width: 100%;
-}
-.k-toolbar-buttons {
-	display: flex;
-}
+
 .k-toolbar-divider {
 	width: 1px;
-	background: var(--color-background);
+	border-left: 1px solid var(--toolbar-border);
 }
+
 .k-toolbar-button {
-	width: 36px;
-	height: 36px;
+	--button-width: var(--toolbar-size);
+	--button-height: var(--toolbar-size);
 }
 .k-toolbar-button:hover {
-	background: rgba(239, 239, 239, 0.5);
+	--button-color-hover: var(--toolbar-hover);
+}
+
+.k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
+	position: sticky;
+	top: calc(var(--header-bar-height) + var(--spacing-1) + 3px);
+	inset-inline: 0;
+	z-index: 1;
+
+	--toolbar-text: var(--color-black);
+	--toolbar-border: rgba(0, 0, 0, 0.1);
+	box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
 }
 </style>

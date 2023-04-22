@@ -70,9 +70,7 @@ export default {
 	props: {
 		types: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		type: String
 	},
@@ -104,12 +102,10 @@ export default {
 	created() {
 		this.search = debounce(this.search, 250);
 		this.$events.$on("keydown.cmd.shift.f", this.open);
-		this.$events.$on("keydown.cmd.k", this.open);
 		this.$events.$on("keydown.cmd./", this.open);
 	},
 	destroyed() {
 		this.$events.$off("keydown.cmd.shift.f", this.open);
-		this.$events.$off("keydown.cmd.k", this.open);
 		this.$events.$off("keydown.cmd./", this.open);
 	},
 	methods: {
@@ -249,18 +245,12 @@ export default {
 	width: 3rem;
 	line-height: 1;
 }
-.k-search-close .k-icon-loader {
-	animation: Spin 2s linear infinite;
-}
 .k-search input:focus {
 	outline: 0;
 }
 
 .k-search-results {
 	padding: 0.5rem 1rem 1rem;
-}
-.k-search .k-item:not(:last-child) {
-	margin-bottom: 0.25rem;
 }
 .k-search .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);

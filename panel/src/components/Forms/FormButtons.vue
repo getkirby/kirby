@@ -52,7 +52,7 @@ export default {
 	computed: {
 		api() {
 			// always use silent requests (without loading spinner)
-			return [this.$view.path + "/lock", null, null, true];
+			return [this.$panel.view.path + "/lock", null, null, true];
 		},
 		message() {
 			if (this.mode === "unlock") {
@@ -204,17 +204,19 @@ export default {
 			this.isRefreshing = setInterval(this.check, 10000);
 		}
 		this.$events.$on("keydown.cmd.s", this.onSave);
+		this.$events.$on("keydown.cmd.shift.s", this.onRevert);
 	},
 	destroyed() {
 		// make sure to clear all intervals
 		clearInterval(this.isRefreshing);
 		clearInterval(this.isLocking);
 		this.$events.$off("keydown.cmd.s", this.onSave);
+		this.$events.$off("keydown.cmd.shift.s", this.onRevert);
 	},
 	methods: {
 		async check() {
 			const { lock } = await this.$api.get(...this.api);
-			set(this.$view.props, "lock", lock);
+			set(this.$panel.view.props, "lock", lock);
 		},
 		async onLock(lock = true) {
 			// writing lock
@@ -252,7 +254,7 @@ export default {
 				"href",
 				"data:text/plain;charset=utf-8," + encodeURIComponent(content)
 			);
-			link.setAttribute("download", this.$view.path + ".txt");
+			link.setAttribute("download", this.$panel.view.path + ".txt");
 			link.style.display = "none";
 
 			document.body.appendChild(link);
@@ -274,35 +276,12 @@ export default {
 
 			e.preventDefault?.();
 
-			try {
-				await this.$store.dispatch("content/save");
-				this.$events.$emit("model.update");
-				this.$store.dispatch("notification/success", ":)");
-			} catch (response) {
-				if (response.code === 403) {
-					return;
-				}
-
-				if (response.details && Object.keys(response.details).length > 0) {
-					this.$store.dispatch("notification/error", {
-						message: this.$t("error.form.incomplete"),
-						details: response.details
-					});
-				} else {
-					this.$store.dispatch("notification/error", {
-						message: this.$t("error.form.notSaved"),
-						details: [
-							{
-								label: "Exception: " + response.exception,
-								message: response.message
-							}
-						]
-					});
-				}
-			}
+			await this.$store.dispatch("content/save");
+			this.$events.$emit("model.update");
+			this.$panel.notification.success();
 		},
 		async onUnlock(unlock = true) {
-			const api = [this.$view.path + "/unlock", null, null, true];
+			const api = [this.$panel.view.path + "/unlock", null, null, true];
 
 			if (unlock === true) {
 				// unlocking (writing unlock)

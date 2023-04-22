@@ -9,12 +9,10 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-file-preview v-bind="preview" />
+		<k-file-preview v-bind="preview" :focusable="isFocusable" />
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
-			:tab="tab.name"
-			:tabs="tabs"
 			@edit="$dialog(id + '/changeName')"
 		>
 			{{ model.filename }}
@@ -54,6 +52,8 @@
 			</template>
 		</k-header>
 
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+
 		<k-sections
 			:blueprint="blueprint"
 			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
@@ -74,12 +74,23 @@ export default {
 	props: {
 		preview: Object
 	},
+	computed: {
+		isFocusable() {
+			return (
+				!this.isLocked &&
+				this.permissions.update &&
+				(!window.panel.multilang ||
+					window.panel.languages.length === 0 ||
+					window.panel.language.default)
+			);
+		}
+	},
 	methods: {
 		action(action) {
 			switch (action) {
 				case "replace":
 					this.$refs.upload.open({
-						url: this.$urls.api + "/" + this.id,
+						url: this.$panel.urls.api + "/" + this.id,
 						accept: "." + this.model.extension + "," + this.model.mime,
 						multiple: false
 					});
@@ -87,7 +98,7 @@ export default {
 			}
 		},
 		onUpload() {
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		}
 	}

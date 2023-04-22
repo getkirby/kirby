@@ -19,6 +19,7 @@ import TimeInput from "./TimeInput.vue";
 import ToggleInput from "./ToggleInput.vue";
 import TogglesInput from "./TogglesInput.vue";
 import UrlInput from "./UrlInput.vue";
+import WriterInput from "./WriterInput.vue";
 
 export default {
 	install(app) {
@@ -43,5 +44,6 @@ export default {
 		app.component("k-toggle-input", ToggleInput);
 		app.component("k-toggles-input", TogglesInput);
 		app.component("k-url-input", UrlInput);
+		app.component("k-writer-input", WriterInput);
 	}
 };

@@ -59,7 +59,6 @@ export default {
 
 <style>
 .k-block-type-image .k-block-figure-container {
-	display: block;
 	text-align: center;
 	line-height: 0;
 }

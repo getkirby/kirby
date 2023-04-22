@@ -118,7 +118,7 @@ class FieldTest extends TestCase
 	public function testHidden(): void
 	{
 		$field = Field::hidden();
-		$this->assertSame(['type' => 'hidden'], $field);
+		$this->assertSame(['hidden' => true], $field);
 	}
 
 	/**
@@ -193,7 +193,7 @@ class FieldTest extends TestCase
 		$page  = $site->find('a');
 		$field = Field::pagePosition($page);
 
-		$this->assertSame('hidden', $field['type']);
+		$this->assertTrue($field['hidden']);
 	}
 
 	/**

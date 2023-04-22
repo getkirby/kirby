@@ -56,9 +56,7 @@ export default {
 		disabled: Boolean,
 		fields: {
 			type: [Array, Object],
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		/**
 		 * If `true`, form fields won't show their validation status on the fly.
@@ -69,9 +67,7 @@ export default {
 		},
 		value: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		}
 	},
 	data() {
@@ -124,7 +120,7 @@ export default {
 			this.$emit("input", values, field, name);
 		},
 		hasErrors() {
-			return Object.keys(this.errors).length;
+			return this.$helper.object.length(this.errors) > 0;
 		}
 	}
 };

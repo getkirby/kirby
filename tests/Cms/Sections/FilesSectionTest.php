@@ -708,4 +708,34 @@ class FilesSectionTest extends TestCase
 		$this->assertSame([], $options['columns']);
 		$this->assertNull($options['link']);
 	}
+
+	public function testSort()
+	{
+		$model = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				['filename' => 'c.jpg'],
+			]
+		]);
+
+		// fewer files than limit
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => $model,
+			'limit'   => 5
+		]);
+
+		$this->assertSame(4, $section->upload()['attributes']['sort']);
+
+		// more files than limit
+		$section = new Section('files', [
+			'name'  => 'test',
+			'model' => $model,
+			'limit'   => 2
+		]);
+
+		$this->assertSame(4, $section->upload()['attributes']['sort']);
+	}
 }

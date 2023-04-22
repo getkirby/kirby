@@ -1,8 +1,8 @@
 <template>
-	<k-icon
+	<k-button
 		:title="$t('sort.drag')"
-		type="sort"
-		class="k-sort-handle"
+		icon="sort"
+		class="k-sort-handle k-sort-button"
 		aria-hidden="true"
 	/>
 </template>

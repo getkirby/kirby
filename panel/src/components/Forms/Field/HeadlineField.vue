@@ -4,7 +4,7 @@
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">
-			<k-text v-if="help" class="k-help k-field-help" :html="help" />
+			<k-text class="k-help k-field-help" :html="help" />
 		</footer>
 	</div>
 </template>

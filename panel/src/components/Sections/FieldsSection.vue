@@ -10,7 +10,7 @@
 			:validate="true"
 			:value="values"
 			:disabled="lock && lock.state === 'lock'"
-			@input="input"
+			@input="onInput"
 			@submit="onSubmit"
 		/>
 	</k-section>
@@ -43,13 +43,10 @@ export default {
 		}
 	},
 	created() {
-		this.input = debounce(this.input, 50);
+		this.onInput = debounce(this.onInput, 50);
 		this.fetch();
 	},
 	methods: {
-		input(values, field, fieldName) {
-			this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
-		},
 		async fetch() {
 			try {
 				const response = await this.load();
@@ -68,6 +65,9 @@ export default {
 			} finally {
 				this.isLoading = false;
 			}
+		},
+		onInput(values, field, fieldName) {
+			this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
 		},
 		onSubmit(values) {
 			// ensure that all values are actually committed to content store

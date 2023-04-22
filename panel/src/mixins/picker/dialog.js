@@ -1,5 +1,6 @@
 import { set } from "vue";
 import debounce from "@/helpers/debounce.js";
+import { length } from "@/helpers/object";
 
 export default {
 	data() {
@@ -137,10 +138,7 @@ export default {
 				return;
 			}
 
-			if (
-				this.options.max &&
-				this.options.max <= Object.keys(this.selected).length
-			) {
+			if (this.options.max && this.options.max <= length(this.selected)) {
 				return;
 			}
 

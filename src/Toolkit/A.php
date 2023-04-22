@@ -49,6 +49,17 @@ class A
 	}
 
 	/**
+	 * Counts the number of elements in an array
+	 *
+	 * @param array $array
+	 * @return int
+	 */
+	public static function count(array $array): int
+	{
+		return count($array);
+	}
+
+	/**
 	 * Gets an element of an array by key
 	 *
 	 * <code>
@@ -106,20 +117,23 @@ class A
 			$keys     = explode('.', $key);
 			$firstKey = array_shift($keys);
 
-			// if the input array also uses dot notation, try to find a subset of the $keys
+			// if the input array also uses dot notation,
+			// try to find a subset of the $keys
 			if (isset($array[$firstKey]) === false) {
 				$currentKey = $firstKey;
 
 				while ($innerKey = array_shift($keys)) {
 					$currentKey .= '.' . $innerKey;
 
-					// the element needs to exist and also needs to be an array; otherwise
-					// we cannot find the remaining keys within it (invalid array structure)
+					// the element needs to exist and also needs
+					// to be an array; otherwise we cannot find the
+					// remaining keys within it (invalid array structure)
 					if (
 						isset($array[$currentKey]) === true &&
 						is_array($array[$currentKey]) === true
 					) {
-						// $keys only holds the remaining keys that have not been shifted off yet
+						// $keys only holds the remaining keys
+						// that have not been shifted off yet
 						return static::get(
 							$array[$currentKey],
 							implode('.', $keys),
@@ -148,6 +162,19 @@ class A
 		}
 
 		return $default;
+	}
+
+	/**
+	 * Checks if array has a value
+	 *
+	 * @param array $array
+	 * @param mixed $value
+	 * @param bool $strict
+	 * @return bool
+	 */
+	public static function has(array $array, $value, bool $strict = false): bool
+	{
+		return in_array($value, $array, $strict);
 	}
 
 	/**
@@ -180,7 +207,10 @@ class A
 	 */
 	public static function keyBy(array $array, string|callable $keyBy): array
 	{
-		$keys = is_callable($keyBy) ? static::map($array, $keyBy) : static::pluck($array, $keyBy);
+		$keys =
+			is_callable($keyBy) ?
+			static::map($array, $keyBy) :
+			static::pluck($array, $keyBy);
 
 		if (count($keys) !== count($array)) {
 			throw new InvalidArgumentException('The "key by" argument must be a valid key or a callable');
@@ -310,6 +340,19 @@ class A
 	}
 
 	/**
+	 * Reduce an array to a single value
+	 *
+	 * @param array $array
+	 * @param callable $callback
+	 * @param mixed $initial
+	 * @return mixed
+	 */
+	public static function reduce(array $array, callable $callback, $initial = null): mixed
+	{
+		return array_reduce($array, $callback, $initial);
+	}
+
+	/**
 	 * Shuffles an array and keeps the keys
 	 *
 	 * <code>
@@ -343,6 +386,36 @@ class A
 		}
 
 		return $new;
+	}
+
+
+	/**
+	 * Returns a slice of an array
+	 *
+	 * @param array $array
+	 * @param int $offset
+	 * @param int|null $length
+	 * @param bool $preserveKeys
+	 * @return array
+	 */
+	public static function slice(
+		array $array,
+		int $offset,
+		int $length = null,
+		bool $preserveKeys = false
+	): array {
+		return array_slice($array, $offset, $length, $preserveKeys);
+	}
+
+	/**
+	 * Sums an array
+	 *
+	 * @param array $array
+	 * @return int|float
+	 */
+	public static function sum(array $array): int|float
+	{
+		return array_sum($array);
 	}
 
 	/**
@@ -533,7 +606,7 @@ class A
 			$key     = array_shift($subKeys);
 
 			// skip the magic for ignored keys
-			if (isset($ignore[$key]) === true && $ignore[$key] === true) {
+			if (($ignore[$key] ?? null) === true) {
 				$result[$fullKey] = $value;
 				continue;
 			}
@@ -551,8 +624,7 @@ class A
 			// merge arrays with previous results if necessary
 			// (needed when the same keys are used both with and without dot notation)
 			if (
-				isset($result[$key]) === true &&
-				is_array($result[$key]) === true &&
+				is_array($result[$key] ?? null) === true &&
 				is_array($value) === true
 			) {
 				$value = array_replace_recursive($result[$key], $value);
@@ -637,8 +709,12 @@ class A
 	 *                    PHP by sort flags
 	 * @return array The sorted array
 	 */
-	public static function sort(array $array, string $field, string $direction = 'desc', $method = SORT_REGULAR): array
-	{
+	public static function sort(
+		array $array,
+		string $field,
+		string $direction = 'desc',
+		$method = SORT_REGULAR
+	): array {
 		$direction = strtolower($direction) === 'desc' ? SORT_DESC : SORT_ASC;
 		$helper    = [];
 		$result    = [];
@@ -751,7 +827,7 @@ class A
 	{
 		foreach ($update as $key => $value) {
 			if ($value instanceof Closure) {
-				$value = call_user_func($value, static::get($array, $key));
+				$value = $value(static::get($array, $key));
 			}
 
 			$array[$key] = $value;

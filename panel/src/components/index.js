@@ -1,3 +1,4 @@
+import Collection from "@/components/Collection/index.js";
 import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
 import Forms from "@/components/Forms/index.js";
@@ -5,15 +6,16 @@ import Layout from "@/components/Layout/index.js";
 import Layouts from "@/components/Layouts/index.js";
 import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
-import Text from "@/components/Text/index.js";
 import Sections from "@/components/Sections/index.js";
+import Text from "@/components/Text/index.js";
 import Views from "@/components/Views/index.js";
 
 // 3rd party libraries
-import Portal from "@linusborg/vue-simple-portal";
+import PortalVue from "portal-vue";
 
 export default {
 	install(app) {
+		app.use(Collection);
 		app.use(Dialogs);
 		app.use(Drawers);
 		app.use(Forms);
@@ -23,8 +25,9 @@ export default {
 		app.use(Navigation);
 		app.use(Text);
 		app.use(Sections);
+		app.use(Text);
 		app.use(Views);
 
-		app.use(Portal);
+		app.use(PortalVue);
 	}
 };

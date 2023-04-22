@@ -5,6 +5,7 @@
 		:size="size"
 		:visible="true"
 		class="k-error-dialog"
+		theme="passive"
 		@cancel="$emit('cancel')"
 		@close="$emit('close')"
 		@submit="$refs.dialog.close()"
@@ -41,15 +42,13 @@ export default {
 		details: [Object, Array],
 		message: String,
 		size: {
-			type: String,
-			default: "medium"
+			default: "medium",
+			type: String
 		}
 	},
 	computed: {
 		detailsList() {
-			return Array.isArray(this.details)
-				? this.details
-				: Object.values(this.details || {});
+			return Array.fromObject(this.details);
 		}
 	}
 };

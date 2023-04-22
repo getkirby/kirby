@@ -96,6 +96,38 @@ trait FileActions
 	}
 
 	/**
+	 * @return $this|static
+	 */
+	public function changeTemplate(string|null $template): static
+	{
+		if ($template === $this->template()) {
+			return $this;
+		}
+
+		$arguments = [
+			'file'     => $this,
+			'template' => $template ?? 'default'
+		];
+
+		return $this->commit('changeTemplate', $arguments, function ($oldFile, $template) {
+			// convert to new template/blueprint incl. content
+			$file = $oldFile->convertTo($template);
+
+			// update template, prefer unset over writing `default`
+			if ($template === 'default') {
+				$file = $file->update(['template' => null]);
+			} else {
+				$file = $file->update(['template' => $template]);
+			}
+
+			// resize the file if configured by new blueprint
+			$file->manipulate($file->blueprint()->create());
+
+			return $file;
+		});
+	}
+
+	/**
 	 * Commits a file action, by following these steps
 	 *
 	 * 1. checks the action rules
@@ -375,5 +407,25 @@ trait FileActions
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Updates the file's data and ensures that
+	 * media files get wiped if `focus` changed
+	 *
+	 * @return static
+	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
+	 */
+	public function update(
+		array $input = null,
+		string $languageCode = null,
+		bool $validate = false
+	) {
+		// delete all public media versions when focus field gets changed
+		if ($input !== null && array_key_exists('focus', $input) === true) {
+			$this->unpublish(true);
+		}
+
+		return parent::update($input, $languageCode, $validate);
 	}
 }

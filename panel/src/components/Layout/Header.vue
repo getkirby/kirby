@@ -1,21 +1,10 @@
 <template>
-	<header
-		:data-editable="editable"
-		:data-tabs="tabsWithBadges.length > 1"
-		class="k-header"
-	>
-		<k-headline tag="h1" size="huge">
-			<span
-				v-if="editable && $listeners.edit"
-				class="k-headline-editable"
-				@click="$emit('edit')"
-			>
-				<!-- @slot headline -->
-				<slot />
-				<k-icon type="edit" />
-			</span>
-			<slot v-else />
+	<header :data-editable="editable" class="k-header">
+		<k-headline tag="h1" @click="isEditable ? $emit('edit') : null">
+			<slot />
+			<k-icon type="edit" />
 		</k-headline>
+
 		<k-bar
 			v-if="$slots.buttons || $slots.left || $slots.right"
 			class="k-header-buttons"
@@ -26,8 +15,6 @@
 			<slot name="left" />
 			<slot name="right" />
 		</k-bar>
-
-		<k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
 	</header>
 </template>
 
@@ -41,39 +28,11 @@ export default {
 		/**
 		 * Whether the headline is editable
 		 */
-		editable: Boolean,
-		tab: String,
-		tabs: {
-			type: Array,
-			default() {
-				return [];
-			}
-		}
+		editable: Boolean
 	},
 	computed: {
-		tabsWithBadges() {
-			const changed = Object.keys(this.$store.getters["content/changes"]());
-
-			return this.tabs.map((tab) => {
-				// collect all fields per tab
-				let fields = [];
-				Object.values(tab.columns).forEach((column) => {
-					Object.values(column.sections).forEach((section) => {
-						if (section.type === "fields") {
-							Object.keys(section.fields).forEach((field) => {
-								fields.push(field);
-							});
-						}
-					});
-				});
-
-				// get count of changed fields in this tab
-				tab.badge = fields.filter((field) =>
-					changed.includes(field.toLowerCase())
-				).length;
-
-				return tab;
-			});
+		isEditable() {
+			return this.editable && this.$listeners.edit;
 		}
 	},
 	/**
@@ -90,33 +49,63 @@ export default {
 </script>
 
 <style>
+:root {
+	--header-bar-height: var(--height-md);
+}
+
 .k-header {
-	padding-top: 4vh;
-	margin-bottom: 2rem;
 	border-bottom: 1px solid var(--color-border);
+	margin-bottom: var(--spacing-12);
 }
-.k-header[data-tabs="true"] {
-	border-bottom: 0;
-}
-.k-header .k-headline {
-	min-height: 1.25em;
+
+.k-header h1 {
+	display: inline-flex;
+	align-items: baseline;
+	gap: var(--spacing-2);
+
+	font-size: var(--text-h1);
+	font-weight: var(--font-h1);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	margin-bottom: var(--spacing-6);
-	word-wrap: break-word;
-}
-.k-header .k-header-buttons {
-	margin-bottom: var(--spacing-2);
-}
-.k-header .k-headline-editable {
+	line-height: var(--leading-h1);
 	cursor: pointer;
 }
-.k-header .k-headline-editable .k-icon {
+
+.k-header h1 svg {
 	color: var(--color-gray-500);
 	opacity: 0;
-	transition: opacity 0.3s;
-	display: inline-block;
-	margin-inline-start: 0.5rem;
+	transition: opacity 0.2s;
 }
-.k-header .k-headline-editable:hover .k-icon {
+
+.k-header[data-editable="true"] h1:hover svg {
 	opacity: 1;
+}
+
+.k-header:has(.k-header-buttons) {
+	position: sticky;
+	top: calc((var(--text-h1) + var(--spacing-6)) * -1);
+	background-color: var(--color-light);
+	z-index: var(--z-toolbar);
+}
+.k-header:has(.k-header-buttons)::before,
+.k-header:has(.k-header-buttons)::after {
+	position: absolute;
+	inset-block: 0;
+	width: var(--spacing-1);
+	background-color: var(--color-light);
+	content: "";
+}
+.k-header:has(.k-header-buttons)::before {
+	inset-inline-start: calc(var(--spacing-1) * -1);
+}
+.k-header:has(.k-header-buttons)::after {
+	inset-inline-end: calc(var(--spacing-1) * -1);
+}
+
+.k-header .k-header-buttons {
+	--bar-height: var(--header-bar-height);
+	margin-bottom: var(--spacing-1);
 }
 </style>

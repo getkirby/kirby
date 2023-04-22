@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
@@ -347,40 +346,8 @@ trait PageActions
 		}
 
 		return $this->commit('changeTemplate', ['page' => $this, 'template' => $template], function ($oldPage, $template) {
-			if ($this->kirby()->multilang() === true) {
-				$newPage = $this->clone([
-					'template' => $template
-				]);
-
-				foreach ($this->kirby()->languages()->codes() as $code) {
-					if ($oldPage->translation($code)->exists() !== true) {
-						continue;
-					}
-
-					$content = $oldPage->content($code)->convertTo($template);
-
-					if (F::remove($oldPage->contentFile($code)) !== true) {
-						throw new LogicException('The old text file could not be removed');
-					}
-
-					// save the language file
-					$newPage->save($content, $code);
-				}
-
-				// return a fresh copy of the object
-				$page = $newPage->clone();
-			} else {
-				$newPage = $this->clone([
-					'content'  => $this->content()->convertTo($template),
-					'template' => $template
-				]);
-
-				if (F::remove($oldPage->contentFile()) !== true) {
-					throw new LogicException('The old text file could not be removed');
-				}
-
-				$page = $newPage->save();
-			}
+			// convert for new template/blueprint
+			$page = $oldPage->convertTo($template);
 
 			// update the parent collection
 			static::updateParentCollections($page, 'set');
@@ -536,29 +503,43 @@ trait PageActions
 		// create a temporary page object
 		$page = Page::factory($props);
 
+		// always create pages in the default language
+		if ($page->kirby()->multilang() === true) {
+			$languageCode = $page->kirby()->defaultLanguage()->code();
+		} else {
+			$languageCode = null;
+		}
+
 		// create a form for the page
-		$form = Form::for($page, ['values' => $props['content']]);
+		// use always default language to fill form with default values
+		$form = Form::for(
+			$page,
+			[
+				'language' => $languageCode,
+				'values'   => $props['content']
+			]
+		);
 
 		// inject the content
 		$page = $page->clone(['content' => $form->strings(true)]);
 
 		// run the hooks and creation action
-		$page = $page->commit('create', ['page' => $page, 'input' => $props], function ($page, $props) {
-			// always create pages in the default language
-			if ($page->kirby()->multilang() === true) {
-				$languageCode = $page->kirby()->defaultLanguage()->code();
-			} else {
-				$languageCode = null;
+		$page = $page->commit(
+			'create',
+			[
+				'page'  => $page,
+				'input' => $props
+			],
+			function ($page, $props) use ($languageCode) {
+				// write the content file
+				$page = $page->save($page->content()->toArray(), $languageCode);
+
+				// flush the parent cache to get children and drafts right
+				static::updateParentCollections($page, 'append');
+
+				return $page;
 			}
-
-			// write the content file
-			$page = $page->save($page->content()->toArray(), $languageCode);
-
-			// flush the parent cache to get children and drafts right
-			static::updateParentCollections($page, 'append');
-
-			return $page;
-		});
+		);
 
 		// publish the new page if a number is given
 		if (isset($props['num']) === true) {
@@ -780,18 +761,19 @@ trait PageActions
 
 	/**
 	 * Clean internal caches
+	 *
 	 * @return $this
 	 */
-	public function purge()
+	public function purge(): static
 	{
+		parent::purge();
+
 		$this->blueprint         = null;
 		$this->children          = null;
 		$this->childrenAndDrafts = null;
-		$this->content           = null;
 		$this->drafts            = null;
 		$this->files             = null;
 		$this->inventory         = null;
-		$this->translations      = null;
 
 		return $this;
 	}

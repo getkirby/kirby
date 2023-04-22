@@ -24,16 +24,16 @@ describe("SiteView", () => {
 
 	it("should have site title", () => {
 		cy.visit("/panel/site");
-		cy.get(".k-headline-editable").should("contain", "Test");
+		cy.get(".k-headline").should("contain", "Test");
 		cy.get(".k-topbar-breadcrumb a:first-child").should("contain", "Test");
 	});
 
 	it("should update site title", () => {
 		cy.visit("/panel/site");
-		cy.get(".k-headline-editable").click();
+		cy.get(".k-headline").click();
 		cy.get('.k-dialog input[name="title"]').type("My Site");
 		cy.get(".k-dialog form").submit();
-		cy.get(".k-headline-editable").should("contain", "My Site");
+		cy.get(".k-headline").should("contain", "My Site");
 		cy.get(".k-topbar-breadcrumb a:first-child").should("contain", "My Site");
 	});
 

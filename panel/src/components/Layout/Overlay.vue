@@ -1,15 +1,14 @@
 <template>
-	<portal v-if="isOpen">
+	<portal v-if="isOpen" :to="type">
 		<div
 			ref="overlay"
 			:data-centered="loading || centered"
 			:data-dimmed="dimmed"
 			:data-loading="loading"
-			:dir="$translation.direction"
-			:class="$vnode.data.staticClass"
+			:dir="$panel.direction"
+			:class="'k-' + type + '-overlay'"
 			class="k-overlay"
-			v-on="$listeners"
-			@mousedown="close"
+			@click="click"
 		>
 			<k-icon v-if="loading" type="loader" class="k-overlay-loader" />
 			<slot v-else :close="close" :is-open="isOpen" />
@@ -18,33 +17,76 @@
 </template>
 
 <script>
-export default {
-	inheritAttrs: true,
+export const props = {
 	props: {
 		autofocus: {
-			type: Boolean,
-			default: true
+			default: true,
+			type: Boolean
 		},
 		centered: {
-			type: Boolean,
-			default: false
+			default: false,
+			type: Boolean
 		},
 		dimmed: {
-			type: Boolean,
-			default: true
+			default: true,
+			type: Boolean
 		},
 		loading: {
-			type: Boolean,
-			default: false
+			default: false,
+			type: Boolean
+		},
+		type: {
+			default: "overlay",
+			type: String
+		},
+		/**
+		 * Overlays are only openend on demand with the `open()` method.
+		 * If you need an overlay that's visible on creation, you can set the
+		 * `visible` prop
+		 */
+		visible: {
+			default: false,
+			type: Boolean
 		}
-	},
+	}
+};
+
+export default {
+	inheritAttrs: true,
+	mixins: [props],
 	data() {
 		return {
 			isOpen: false,
 			scrollTop: 0
 		};
 	},
+	mounted() {
+		if (this.visible) {
+			this.open();
+		}
+	},
 	methods: {
+		/**
+		 * The cancel event is fired when the backdrop is
+		 * clicked or the ESC key is pressed
+		 */
+		cancel() {
+			this.$emit("cancel");
+			this.close();
+		},
+		/**
+		 * Check for clicks on the backdrop
+		 */
+		click(event) {
+			// compare the event target with the overlay element
+			if (event.target === this.$refs.overlay) {
+				this.cancel();
+			}
+		},
+		/**
+		 * Closes the overlay, removes the escape key listener
+		 * and restores the scroll position in the panel view
+		 */
 		close() {
 			// it makes it run once
 			if (this.isOpen === false) {
@@ -56,30 +98,10 @@ export default {
 			this.restoreScrollPosition();
 
 			// unbind events
-			this.$events.$off("keydown.esc", this.close);
+			this.$events.$off("keydown.esc", this.cancel);
 		},
 		focus() {
-			let target = this.$refs.overlay.querySelector(`
-        [autofocus],
-        [data-autofocus]
-      `);
-
-			if (target === null) {
-				target = this.$refs.overlay.querySelector(`
-          input,
-          textarea,
-          select,
-          button
-        `);
-			}
-
-			if (typeof target?.focus === "function") {
-				return target.focus();
-			}
-
-			if (typeof this.$slots.default[0]?.context?.focus === "function") {
-				return this.$slots.default[0].context.focus();
-			}
+			this.$helper.focus(this.$refs.overlay);
 		},
 		open() {
 			// it makes it run once
@@ -91,22 +113,20 @@ export default {
 			this.isOpen = true;
 			this.$emit("open");
 
-			// bind events
-			this.$events.$on("keydown.esc", this.close);
+			// listen for the escape key to
+			// close the overlay
+			this.$events.$on("keydown.esc", this.cancel);
 
-			setTimeout(() => {
+			// wait for the next rendering round
+			// otherwise the portal won't be ready
+			this.$nextTick(() => {
 				// autofocus
 				if (this.autofocus === true) {
 					this.focus();
 				}
 
-				// prevent that clicks on the overlay slot trigger close
-				document
-					.querySelector(".k-overlay > *")
-					.addEventListener("mousedown", (e) => e.stopPropagation());
-
 				this.$emit("ready");
-			}, 1);
+			});
 		},
 		restoreScrollPosition() {
 			const view = document.querySelector(".k-panel-view");
@@ -129,21 +149,25 @@ export default {
 </script>
 
 <style>
+:root {
+	--overlay-color-back: var(--color-backdrop);
+}
+
 .k-overlay {
 	position: fixed;
 	inset: 0;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
+	height: 100dvh;
 	z-index: var(--z-dialog);
 	transform: translate3d(0, 0, 0);
 }
 .k-overlay[data-centered="true"] {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: grid;
+	place-items: center;
 }
 .k-overlay[data-dimmed="true"] {
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 }
 .k-overlay-loader {
 	color: var(--color-white);

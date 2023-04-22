@@ -7,34 +7,12 @@ export default class Toolbar extends Extension {
 
 	close() {
 		this.visible = false;
-		this.emit();
-	}
-
-	emit() {
-		this.editor.emit("toolbar", {
-			marks: this.marks,
-			nodes: this.nodes,
-			nodeAttrs: this.nodeAttrs,
-			position: this.position,
-			visible: this.visible
-		});
 	}
 
 	init() {
-		this.position = {
-			left: 0,
-			bottom: 0
-		};
+		this.editor.on("blur", () => this.close());
 
-		this.visible = false;
-
-		this.editor.on("blur", () => {
-			this.close();
-		});
-
-		this.editor.on("deselect", () => {
-			this.close();
-		});
+		this.editor.on("deselect", () => this.close());
 
 		this.editor.on("select", ({ hasChanged }) => {
 			/**
@@ -43,7 +21,6 @@ export default class Toolbar extends Extension {
 			 * but the marks still need to be updated
 			 */
 			if (hasChanged === false) {
-				this.emit();
 				return;
 			}
 
@@ -51,22 +28,19 @@ export default class Toolbar extends Extension {
 		});
 	}
 
-	get marks() {
-		return this.editor.activeMarks;
-	}
-
-	get nodes() {
-		return this.editor.activeNodes;
-	}
-
-	get nodeAttrs() {
-		return this.editor.activeNodeAttrs;
-	}
-
 	open() {
 		this.visible = true;
-		this.reposition();
-		this.emit();
+
+		if (this.options.inline) {
+			this.options.writer.$nextTick(() => this.reposition());
+		}
+	}
+
+	set position(position) {
+		if (this.options.inline) {
+			this.toolbar.style.bottom = position.bottom + "px";
+			this.toolbar.style.left = position.left + "px";
+		}
 	}
 
 	reposition() {
@@ -83,13 +57,45 @@ export default class Toolbar extends Extension {
 		let left = (start.left + end.left) / 2 - editorRect.left;
 		let bottom = Math.round(editorRect.bottom - start.top);
 
-		return (this.position = {
+		// Align to writer editor
+		const editorWidth = editorRect.clientWidth;
+		const toolbarWidth = this.toolbar.clientWidth;
+
+		// adjust left overflow
+		if (left - toolbarWidth / 2 < 0) {
+			left = left + (toolbarWidth / 2 - left) - 20;
+		}
+
+		// adjust right overflow
+		if (left + toolbarWidth / 2 > editorWidth) {
+			left = left - (left + toolbarWidth / 2 - editorWidth) + 20;
+		}
+
+		this.position = {
 			bottom,
 			left
-		});
+		};
+	}
+
+	get toolbar() {
+		return this.editor.element.querySelector(".k-writer-toolbar");
 	}
 
 	get type() {
 		return "toolbar";
+	}
+
+	get visible() {
+		return this.toolbar?.style.display === "flex";
+	}
+
+	set visible(visible) {
+		if (this.options.inline && this.toolbar) {
+			if (visible) {
+				this.toolbar.style.display = "flex";
+			} else {
+				this.toolbar.style.display = "none";
+			}
+		}
 	}
 }

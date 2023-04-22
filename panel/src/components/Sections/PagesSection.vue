@@ -5,25 +5,18 @@ export default {
 	extends: ModelsSection,
 	computed: {
 		canAdd() {
-			return this.options.add && this.$permissions.pages.create;
+			return this.options.add && this.$panel.permissions.pages.create;
 		},
 		items() {
 			return this.data.map((page) => {
-				const isEnabled = page.permissions.changeStatus !== false;
-
-				page.flag = {
-					status: page.status,
-					title:
-						this.$t("page.status") +
-						": " +
-						this.$t("page.status." + page.status),
-					disabled: !isEnabled,
-					click: () => this.$dialog(page.link + "/changeStatus")
-				};
+				const disabled = page.permissions.changeStatus === false;
+				const status = this.$helper.page.status(page.status, disabled);
+				status.click = () => this.$dialog(page.link + "/changeStatus");
 
 				page.sortable = page.permissions.sort && this.options.sortable;
 				page.deletable = this.data.length > this.options.min;
 				page.column = this.column;
+				page.buttons = [status, ...(page.buttons || [])];
 				page.options = this.$dropdown(page.link, {
 					query: {
 						view: "list",
@@ -82,10 +75,10 @@ export default {
 
 				try {
 					await this.$api.pages.changeStatus(element.id, "listed", position);
-					this.$store.dispatch("notification/success", ":)");
+					this.$panel.notification.success();
 					this.$events.$emit("page.sort", element);
 				} catch (error) {
-					this.$store.dispatch("notification/error", {
+					this.$panel.notification.error({
 						message: error.message,
 						details: error.details
 					});

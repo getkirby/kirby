@@ -10,6 +10,14 @@ class TestField extends FieldClass
 {
 }
 
+class HiddenField extends FieldClass
+{
+	public function isHidden(): bool
+	{
+		return true;
+	}
+}
+
 class UnsaveableField extends FieldClass
 {
 	public function isSaveable(): bool
@@ -165,6 +173,15 @@ class FieldClassTest extends TestCase
 	}
 
 	/**
+	 * @covers ::dialogs
+	 */
+	public function testDialogs()
+	{
+		$field = new TestField();
+		$this->assertSame([], $field->dialogs());
+	}
+
+	/**
 	 * @covers ::disabled
 	 * @covers ::isDisabled
 	 */
@@ -240,6 +257,18 @@ class FieldClassTest extends TestCase
 		$this->assertFalse($field->isEmptyValue(' '));
 		$this->assertFalse($field->isEmptyValue(0));
 		$this->assertFalse($field->isEmptyValue('0'));
+	}
+
+	/**
+	 * @covers ::isHidden
+	 */
+	public function testIsHidden()
+	{
+		$field = new TestField();
+		$this->assertFalse($field->isHidden());
+
+		$field = new HiddenField();
+		$this->assertTrue($field->isHidden());
 	}
 
 	/**
@@ -446,6 +475,7 @@ class FieldClassTest extends TestCase
 			'default'     => 'Default value',
 			'disabled'    => false,
 			'help'        => 'Help value',
+			'hidden'      => false,
 			'icon'        => 'Icon value',
 			'label'       => 'Label value',
 			'name'        => 'name-value',

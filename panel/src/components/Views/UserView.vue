@@ -37,8 +37,6 @@
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
-			:tab="tab.name"
-			:tabs="tabs"
 			@edit="$dialog(id + '/changeName')"
 		>
 			<span
@@ -71,6 +69,8 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
 		<k-sections
 			:blueprint="blueprint"
@@ -132,14 +132,14 @@ export default {
 			];
 		},
 		uploadApi() {
-			return this.$urls.api + "/" + this.id + "/avatar";
+			return this.$panel.urls.api + "/" + this.id + "/avatar";
 		}
 	},
 	methods: {
 		async deleteAvatar() {
 			await this.$api.users.deleteAvatar(this.model.id);
 			this.avatar = null;
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		},
 		onAvatar() {
@@ -150,7 +150,7 @@ export default {
 			}
 		},
 		uploadedAvatar() {
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		}
 	}
@@ -166,6 +166,7 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-3);
+	margin-bottom: var(--spacing-6);
 }
 
 .k-user-profile .k-button-group {

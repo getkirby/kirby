@@ -264,6 +264,23 @@ class Field extends Component
 	}
 
 	/**
+	 * Returns optional dialog routes for the field
+	 *
+	 * @return array
+	 */
+	public function dialogs(): array
+	{
+		if (
+			isset($this->options['dialogs']) === true &&
+			$this->options['dialogs'] instanceof Closure
+		) {
+			return $this->options['dialogs']->call($this);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Creates a new field instance
 	 *
 	 * @param string $type
@@ -326,6 +343,14 @@ class Field extends Component
 		}
 
 		return in_array($value, [null, '', []], true);
+	}
+
+	/**
+	 * Checks if the field is hidden
+	 */
+	public function isHidden(): bool
+	{
+		return ($this->options['hidden'] ?? false) === true;
 	}
 
 	/**
@@ -439,6 +464,7 @@ class Field extends Component
 
 		unset($array['model']);
 
+		$array['hidden']    = $this->isHidden();
 		$array['saveable']  = $this->save();
 		$array['signature'] = md5(json_encode($array));
 

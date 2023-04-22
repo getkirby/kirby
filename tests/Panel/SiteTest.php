@@ -76,6 +76,7 @@ class SiteTest extends TestCase
 	 * @covers ::imageSource
 	 * @covers \Kirby\Panel\Model::image
 	 * @covers \Kirby\Panel\Model::imageSource
+	 * @covers \Kirby\Panel\Model::imageSrcset
 	 */
 	public function testImageCover()
 	{

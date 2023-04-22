@@ -15,12 +15,13 @@ class FileBlueprintTest extends TestCase
 		]);
 
 		$expected = [
-			'changeName' => null,
-			'create'     => null,
-			'delete'     => null,
-			'read'       => null,
-			'replace'    => null,
-			'update'     => null,
+			'changeName' 	 => null,
+			'changeTemplate' => null,
+			'create'     	 => null,
+			'delete'     	 => null,
+			'read'       	 => null,
+			'replace'    	 => null,
+			'update'     	 => null,
 		];
 
 		$this->assertSame($expected, $blueprint->options());

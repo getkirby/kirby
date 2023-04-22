@@ -1,17 +1,17 @@
 <template>
 	<k-panel class="k-panel-inside" tabindex="0">
-		<k-panel-menu :entries="$menu" :view="$view" />
+		<k-panel-menu :entries="$panel.menu" :view="$panel.view" />
 
 		<main class="k-panel-main">
 			<div class="k-panel-view">
-				<k-topbar :breadcrumb="$view.breadcrumb" :view="$view">
+				<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
 					<slot name="topbar" />
 				</k-topbar>
 
 				<slot />
 			</div>
 
-			<k-registration v-if="!$license" />
+			<k-registration v-if="!$panel.license" />
 		</main>
 	</k-panel>
 </template>

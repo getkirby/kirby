@@ -5,29 +5,22 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import TextDialog from "./TextDialog.vue";
 
 export default {
-	mixins: [DialogMixin],
+	mixins: [TextDialog],
 	props: {
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
 		icon: {
-			type: String,
-			default: "trash"
+			default: "trash",
+			type: String
 		},
 		submitButton: {
-			type: [String, Boolean],
-			default() {
-				return window.panel.$t("delete");
-			}
+			default: () => window.panel.$t("delete"),
+			type: String
 		},
-		text: String,
 		theme: {
-			type: String,
-			default: "negative"
+			default: "negative",
+			type: String
 		}
 	}
 };
