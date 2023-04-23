@@ -66,6 +66,9 @@ class Session
 		$this->sessions = $sessions;
 		$this->mode     = $options['mode'] ?? 'cookie';
 
+		// ensure that all changes are committed on script termination
+		register_shutdown_function([$this, 'commit']);
+
 		if (is_string($token) === true) {
 			// existing session
 
@@ -75,62 +78,50 @@ class Session
 			// initialize, but only try to write to the session if not read-only
 			// (only the case for moved sessions)
 			$this->init();
+
 			if ($this->tokenKey !== null) {
 				$this->autoRenew();
 			}
 
-		} elseif ($token === null) {
-			// new session
+			return;
+		}
 
-			// set data based on options
-			$this->startTime  = static::timeToTimestamp($options['startTime'] ?? time());
-			$this->expiryTime = static::timeToTimestamp($options['expiryTime'] ?? '+ 2 hours', $this->startTime);
-			$this->duration   = $this->expiryTime - $this->startTime;
-			$this->timeout    = $options['timeout'] ?? 1800;
-			$this->renewable  = $options['renewable'] ?? true;
-			$this->data       = new SessionData($this, []);
+		// new session ($token = null)
 
-			// validate persistent data
-			if (time() > $this->expiryTime) {
-				// session must not already be expired, but the start time may be in the future
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'expiryTime\']'],
-					'translate' => false
-				]);
-			}
-			if ($this->duration < 0) {
-				// expiry time must be after start time
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'startTime\' & \'expiryTime\']'],
-					'translate' => false
-				]);
-			}
-			if (is_int($this->timeout) === false && $this->timeout !== false) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'timeout\']'],
-					'translate' => false
-				]);
-			}
-			if (is_bool($this->renewable) === false) {
-				throw new InvalidArgumentException([
-					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'renewable\']'],
-					'translate' => false
-				]);
-			}
+		// set data based on options
+		$this->startTime  = static::timeToTimestamp($options['startTime'] ?? time());
+		$this->expiryTime = static::timeToTimestamp($options['expiryTime'] ?? '+ 2 hours', $this->startTime);
+		$this->duration   = $this->expiryTime - $this->startTime;
+		$this->timeout    = $options['timeout'] ?? 1800;
+		$this->renewable  = $options['renewable'] ?? true;
+		$this->data       = new SessionData($this, []);
 
-			// set activity time if a timeout was requested
-			if (is_int($this->timeout) === true) {
-				$this->lastActivity = time();
-			}
-		} else {
+		// validate persistent data
+		if (time() > $this->expiryTime) {
+			// session must not already be expired, but the start time may be in the future
 			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::__construct', 'argument' => '$token'],
+				'data' => [
+					'method'   => 'Session::__construct',
+					'argument' => '$options[\'expiryTime\']'
+				],
+				'translate' => false
+			]);
+		}
+		if ($this->duration < 0) {
+			// expiry time must be after start time
+			throw new InvalidArgumentException([
+				'data' => [
+					'method'   => 'Session::__construct',
+					'argument' => '$options[\'startTime\' & \'expiryTime\']'
+				],
 				'translate' => false
 			]);
 		}
 
-		// ensure that all changes are committed on script termination
-		register_shutdown_function([$this, 'commit']);
+		// set activity time if a timeout was requested
+		if (is_int($this->timeout) === true) {
+			$this->lastActivity = time();
+		}
 	}
 
 	/**
