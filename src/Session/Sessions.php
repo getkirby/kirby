@@ -50,7 +50,10 @@ class Sessions
 		// validate options
 		if (in_array($this->mode, ['cookie', 'header', 'manual']) === false) {
 			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'mode\']'],
+				'data' => [
+					'method'   => 'Sessions::__construct',
+					'argument' => '$options[\'mode\']'
+				],
 				'translate' => false
 			]);
 		}
@@ -70,7 +73,10 @@ class Sessions
 
 		} elseif ($gcInterval !== false) {
 			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'gcInterval\']'],
+				'data' => [
+					'method'   => 'Sessions::__construct',
+					'argument' => '$options[\'gcInterval\']'
+				],
 				'translate' => false
 			]);
 		}
