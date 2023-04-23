@@ -65,7 +65,6 @@ export default {
 		app.use(Elements);
 		app.use(Inputs);
 		app.use(Fields);
-		app.use(Inputs);
 		app.use(Layouts);
 		app.use(Previews);
 		app.use(Writer);
