@@ -1,26 +1,13 @@
 <template>
-	<div :data-theme="type" class="k-notification">
-		<p>{{ message }}</p>
-		<k-button icon="cancel" @click="$emit('close')" />
+	<div
+		v-if="$panel.notification.isOpen"
+		:data-theme="$panel.notification.type"
+		class="k-notification"
+	>
+		<p>{{ $panel.notification.message }}</p>
+		<k-button icon="cancel" @click="$panel.notification.close()" />
 	</div>
 </template>
-
-<script>
-export const props = {
-	props: {
-		message: {
-			type: String
-		},
-		type: {
-			type: String
-		}
-	}
-};
-
-export default {
-	mixins: [props]
-};
-</script>
 
 <style>
 .k-notification {

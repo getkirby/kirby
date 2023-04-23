@@ -5,11 +5,7 @@
 			method="dialog"
 			@submit.prevent="submit"
 		>
-			<k-drawer-notification
-				v-if="notification"
-				v-bind="notification"
-				@close="notification = null"
-			/>
+			<k-drawer-notification />
 			<k-drawer-header
 				:breadcrumb="breadcrumb"
 				:icon="icon"
