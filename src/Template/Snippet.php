@@ -110,6 +110,7 @@ class Snippet extends Tpl
 		if (empty($this->slots) === true) {
 			$this->slots['default'] = new Slot('default');
 			$this->slots['default']->content = ob_get_clean();
+
 		} else {
 			// swallow any "unslotted" content
 			// between start and end
@@ -285,12 +286,12 @@ class Snippet extends Tpl
 	 *
 	 * @param \Kirby\Template\Slots|null $slots If null, an empty dummy object is used
 	 */
-	protected static function scope(array $data = [], Slots|null $slots = null): array
-	{
+	protected static function scope(
+		array $data = [],
+		Slots|null $slots = null
+	): array {
 		// initialize a dummy slots object and cache it for better performance
-		if ($slots === null) {
-			$slots = static::$dummySlots ??= new Slots([]);
-		}
+		$slots ??= static::$dummySlots ??= new Slots([]);
 
 		$data = array_merge(App::instance()->data, $data);
 
