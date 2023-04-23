@@ -65,7 +65,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.dispatch("title", this.$t("view.resetPassword"));
+		this.$panel.title = this.$t("view.resetPassword");
 	},
 	methods: {
 		async submit() {
