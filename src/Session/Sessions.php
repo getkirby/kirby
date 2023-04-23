@@ -38,16 +38,10 @@ class Sessions
 	 */
 	public function __construct(SessionStore|string $store, array $options = [])
 	{
-		if (is_string($store)) {
-			$this->store = new FileSessionStore($store);
-		} elseif ($store instanceof SessionStore) {
-			$this->store = $store;
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Sessions::__construct', 'argument' => 'store'],
-				'translate' => false
-			]);
-		}
+		$this->store = match(is_string($store)) {
+			true    =>  new FileSessionStore($store),
+			default => $store
+		};
 
 		$this->mode       = $options['mode']       ?? 'cookie';
 		$this->cookieName = $options['cookieName'] ?? 'kirby_session';
@@ -57,12 +51,6 @@ class Sessions
 		if (!in_array($this->mode, ['cookie', 'header', 'manual'])) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'mode\']'],
-				'translate' => false
-			]);
-		}
-		if (!is_string($this->cookieName)) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'cookieName\']'],
 				'translate' => false
 			]);
 		}
@@ -248,17 +236,16 @@ class Sessions
 		$headers = $request->headers();
 
 		// check if the header exists at all
-		if (isset($headers['Authorization']) === false) {
-			return null;
+		if ($header = $headers['Authorization'] ?? null) {
+			// check if the header uses the "Session" scheme
+			if (Str::startsWith($header, 'Session ', true) !== true) {
+				return null;
+			}
+
+			// return the part after the scheme
+			return substr($header, 8);
 		}
 
-		// check if the header uses the "Session" scheme
-		$header = $headers['Authorization'];
-		if (Str::startsWith($header, 'Session ', true) !== true) {
-			return null;
-		}
-
-		// return the part after the scheme
-		return substr($header, 8);
+		return null;
 	}
 }

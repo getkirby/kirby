@@ -11,6 +11,7 @@ use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use TypeError;
 
 require_once __DIR__ . '/mocks.php';
 
@@ -149,7 +150,7 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidTimeout()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		new Session($this->sessions, null, [
 			'timeout' => 'at some point'
@@ -161,10 +162,10 @@ class SessionTest extends TestCase
 	 */
 	public function testCreateInvalidRenewable()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		new Session($this->sessions, null, [
-			'renewable' => 'maybe'
+			'renewable' => ['maybe']
 		]);
 	}
 
@@ -376,7 +377,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeoutInvalidType()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		$session = new Session($this->sessions, null, [
 			'timeout' => 1234
@@ -886,7 +887,7 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeToTimestampInvalidParam()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
@@ -900,13 +901,13 @@ class SessionTest extends TestCase
 	 */
 	public function testTimeToTimestampInvalidTimeString()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		$reflector = new ReflectionClass(Session::class);
 		$timeToTimestamp = $reflector->getMethod('timeToTimestamp');
 		$timeToTimestamp->setAccessible(true);
 
-		$timeToTimestamp->invoke(null, 'some gibberish that is definitely no valid time');
+		$timeToTimestamp->invoke(null, ['some gibberish that is definitely no valid time']);
 	}
 
 	/**

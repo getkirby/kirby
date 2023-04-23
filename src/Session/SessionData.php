@@ -46,11 +46,6 @@ class SessionData
 			$this->data[$key] = $value;
 		} elseif (is_array($key)) {
 			$this->data = array_merge($this->data, $key);
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::set', 'argument' => 'key'],
-				'translate' => false
-			]);
 		}
 	}
 
@@ -62,53 +57,43 @@ class SessionData
 	 * @param int|null $max Maximum amount (value is not incremented further)
 	 * @return void
 	 */
-		if ($max !== null && !is_int($max)) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::increment', 'argument' => 'max'],
-				'translate' => false
-			]);
 	public function increment(
 		string|array $key,
 		int $by = 1,
 		int|null $max = null
 	): void {
-		}
-
-		if (is_string($key)) {
-			// make sure we have the correct values before getting
-			$this->session->prepareForWriting();
-
-			$value = $this->get($key, 0);
-
-			if (!is_int($value)) {
-				throw new LogicException([
-					'key'       => 'session.data.increment.nonInt',
-					'data'      => ['key' => $key],
-					'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be incremented',
-					'translate' => false
-				]);
-			}
-
-			// increment the value, but ensure $max constraint
-			if (is_int($max) && $value + $by > $max) {
-				// set the value to $max
-				// but not if the current $value is already larger than $max
-				$value = max($value, $max);
-			} else {
-				$value += $by;
-			}
-
-			$this->set($key, $value);
-		} elseif (is_array($key)) {
+		// if array passed, call method recursively
+		if (is_array($key) === true) {
 			foreach ($key as $k) {
 				$this->increment($k, $by, $max);
 			}
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::increment', 'argument' => 'key'],
+			return;
+		}
+
+		// make sure we have the correct values before getting
+		$this->session->prepareForWriting();
+
+		$value = $this->get($key, 0);
+
+		if (is_int($value) === false) {
+			throw new LogicException([
+				'key'       => 'session.data.increment.nonInt',
+				'data'      => ['key' => $key],
+				'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be incremented',
 				'translate' => false
 			]);
 		}
+
+		// increment the value, but ensure $max constraint
+		if (is_int($max) == true && $value + $by > $max) {
+			// set the value to $max
+			// but not if the current $value is already larger than $max
+			$value = max($value, $max);
+		} else {
+			$value += $by;
+		}
+
+		$this->set($key, $value);
 	}
 
 	/**
@@ -118,53 +103,43 @@ class SessionData
 	 * @param int $by Decrement by which amount?
 	 * @param int|null $min Minimum amount (value is not decremented further)
 	 */
-		if ($min !== null && !is_int($min)) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::decrement', 'argument' => 'min'],
-				'translate' => false
-			]);
 	public function decrement(
 		string|array $key,
 		int $by = 1,
 		int|null $min = null
 	): void {
-		}
-
-		if (is_string($key)) {
-			// make sure we have the correct values before getting
-			$this->session->prepareForWriting();
-
-			$value = $this->get($key, 0);
-
-			if (!is_int($value)) {
-				throw new LogicException([
-					'key'       => 'session.data.decrement.nonInt',
-					'data'      => ['key' => $key],
-					'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be decremented',
-					'translate' => false
-				]);
-			}
-
-			// decrement the value, but ensure $min constraint
-			if (is_int($min) && $value - $by < $min) {
-				// set the value to $min
-				// but not if the current $value is already smaller than $min
-				$value = min($value, $min);
-			} else {
-				$value -= $by;
-			}
-
-			$this->set($key, $value);
-		} elseif (is_array($key)) {
+		// if array passed, call method recursively
+		if (is_array($key) === true) {
 			foreach ($key as $k) {
 				$this->decrement($k, $by, $min);
 			}
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::decrement', 'argument' => 'key'],
+			return;
+		}
+
+		// make sure we have the correct values before getting
+		$this->session->prepareForWriting();
+
+		$value = $this->get($key, 0);
+
+		if (is_int($value) === false) {
+			throw new LogicException([
+				'key'       => 'session.data.decrement.nonInt',
+				'data'      => ['key' => $key],
+				'fallback'  => 'Session value "' . $key . '" is not an integer and cannot be decremented',
 				'translate' => false
 			]);
 		}
+
+		// decrement the value, but ensure $min constraint
+		if (is_int($min) === true && $value - $by < $min) {
+			// set the value to $min
+			// but not if the current $value is already smaller than $min
+			$value = min($value, $min);
+		} else {
+			$value -= $by;
+		}
+
+		$this->set($key, $value);
 	}
 
 	/**
@@ -175,21 +150,11 @@ class SessionData
 	 */
 	public function get(string|null $key = null, mixed $default = null): mixed
 	{
-		if (is_string($key)) {
-			return $this->data[$key] ?? $default;
-		}
-
 		if ($key === null) {
 			return $this->data;
 		}
 
-		throw new InvalidArgumentException([
-			'data' => [
-				'method'   => 'SessionData::get',
-				'argument' => 'key'
-			],
-			'translate' => false
-		]);
+		return $this->data[$key] ?? $default;
 	}
 
 	/**
@@ -218,17 +183,8 @@ class SessionData
 	{
 		$this->session->prepareForWriting();
 
-		if (is_string($key)) {
-			unset($this->data[$key]);
-		} elseif (is_array($key)) {
-			foreach ($key as $k) {
-				unset($this->data[$k]);
-			}
-		} else {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'SessionData::remove', 'argument' => 'key'],
-				'translate' => false
-			]);
+		foreach (A::wrap($key) as $k) {
+			unset($this->data[$k]);
 		}
 	}
 

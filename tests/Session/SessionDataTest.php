@@ -2,9 +2,10 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
+use stdClass;
+use TypeError;
 
 require_once __DIR__ . '/mocks.php';
 
@@ -61,9 +62,9 @@ class SessionDataTest extends TestCase
 	 */
 	public function testSetInvalidKey()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
-		$this->sessionData->set(123, 'someValue');
+		$this->sessionData->set(new stdClass(), 'someValue');
 	}
 
 	/**
@@ -99,9 +100,8 @@ class SessionDataTest extends TestCase
 	 */
 	public function testIncrementInvalidKey()
 	{
-		$this->expectException(InvalidArgumentException::class);
-
-		$this->sessionData->increment(123, 10);
+		$this->expectException(TypeError::class);
+		$this->sessionData->increment(new stdClass(), 10);
 	}
 
 	/**
@@ -109,7 +109,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testIncrementInvalidMax()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		$this->sessionData->increment('someInt', 10, 'some invalid max value');
 	}
@@ -158,9 +158,9 @@ class SessionDataTest extends TestCase
 	 */
 	public function testDecrementInvalidKey()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
-		$this->sessionData->decrement(123, 10);
+		$this->sessionData->decrement(new stdClass(), 10);
 	}
 
 	/**
@@ -168,7 +168,7 @@ class SessionDataTest extends TestCase
 	 */
 	public function testDecrementInvalidMin()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
 		$this->sessionData->decrement('someInt', 10, 'some invalid min value');
 	}
@@ -207,9 +207,9 @@ class SessionDataTest extends TestCase
 	 */
 	public function testGetInvalidKey()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
-		$this->sessionData->get(123, 456);
+		$this->sessionData->get(new stdClass(), 456);
 	}
 
 	/**
@@ -255,9 +255,9 @@ class SessionDataTest extends TestCase
 	 */
 	public function testRemoveInvalidKey()
 	{
-		$this->expectException(InvalidArgumentException::class);
+		$this->expectException(TypeError::class);
 
-		$this->sessionData->remove(123);
+		$this->sessionData->remove(new stdClass());
 	}
 
 	/**

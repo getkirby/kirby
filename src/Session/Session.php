@@ -135,11 +135,13 @@ class Session
 	public function token(): string|null
 	{
 		if ($this->tokenExpiry !== null) {
-			if (is_string($this->tokenKey)) {
-				return $this->tokenExpiry . '.' . $this->tokenId . '.' . $this->tokenKey;
+			$token = $this->tokenExpiry . '.' . $this->tokenId;
+
+			if (is_string($this->tokenKey) === true) {
+				$token .= '.' . $this->tokenKey;
 			}
 
-			return $this->tokenExpiry . '.' . $this->tokenId;
+			return $token;
 		}
 
 		return null;
@@ -250,9 +252,9 @@ class Session
 	 */
 	public function timeout(int|false|null $timeout = null): int|false
 	{
-		if (is_int($timeout) || $timeout === false) {
+		if ($timeout !== null) {
 			// verify that the timeout is at least 1 second
-			if (is_int($timeout) && $timeout < 1) {
+			if (is_int($timeout) === true && $timeout < 1) {
 				throw new InvalidArgumentException([
 					'data'      => ['method' => 'Session::timeout', 'argument' => '$timeout'],
 					'translate' => false
@@ -260,18 +262,11 @@ class Session
 			}
 
 			$this->prepareForWriting();
-			$this->timeout = $timeout;
-
-			if (is_int($timeout)) {
-				$this->lastActivity = time();
-			} else {
-				$this->lastActivity = null;
-			}
-		} elseif ($timeout !== null) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::timeout', 'argument' => '$timeout'],
-				'translate' => false
-			]);
+			$this->timeout      = $timeout;
+			$this->lastActivity = match (is_int($timeout)) {
+				true    => time(),
+				default => null
+			};
 		}
 
 		return $this->timeout;
@@ -285,7 +280,7 @@ class Session
 	 */
 	public function renewable(bool|null $renewable = null): bool
 	{
-		if (is_bool($renewable)) {
+		if ($renewable !== null) {
 			$this->prepareForWriting();
 			$this->renewable = $renewable;
 			$this->autoRenew();
@@ -594,27 +589,16 @@ class Session
 		int|null $now = null
 	): int {
 		// default to current time as $now
-		if (!is_int($now)) {
+		if (is_int($now) === false) {
 			$now = time();
 		}
 
 		// convert date strings to a timestamp first
-		if (is_string($time)) {
+		if (is_string($time) === true) {
 			$time = strtotime($time, $now);
 		}
 
-		// now make sure that we have a valid timestamp
-		if (is_int($time)) {
-			return $time;
-		}
-
-		throw new InvalidArgumentException([
-			'data' => [
-				'method'   => 'Session::timeToTimestamp',
-				'argument' => '$time'
-			],
-			'translate' => false
-		]);
+		return $time;
 	}
 
 	/**
