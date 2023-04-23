@@ -22,29 +22,29 @@ use Throwable;
 class Session
 {
 	// parent data
-	protected $sessions;
-	protected $mode;
+	protected Sessions $sessions;
+	protected string $mode;
 
 	// parts of the token
-	protected $tokenExpiry;
-	protected $tokenId;
-	protected $tokenKey;
+	protected int|null $tokenExpiry = null;
+	protected string|null $tokenId = null;
+	protected string|null $tokenKey = null;
 
 	// persistent data
-	protected $startTime;
-	protected $expiryTime;
-	protected $duration;
-	protected $timeout;
-	protected $lastActivity;
-	protected $renewable;
-	protected $data;
-	protected $newSession;
+	protected int $startTime;
+	protected int $expiryTime;
+	protected int $duration;
+	protected int|false $timeout = false;
+	protected int|null $lastActivity = null;
+	protected bool $renewable;
+	protected SessionData|null $data = null;
+	protected string|null $newSession = null;
 
 	// temporary state flags
-	protected $updatingLastActivity = false;
-	protected $destroyed = false;
-	protected $writeMode = false;
-	protected $needsRetransmission = false;
+	protected bool $updatingLastActivity = false;
+	protected bool $destroyed = false;
+	protected bool $writeMode = false;
+	protected bool $needsRetransmission = false;
 
 	/**
 	 * Creates a new Session instance
@@ -131,10 +131,8 @@ class Session
 
 	/**
 	 * Gets the session token or null if the session doesn't have a token yet
-	 *
-	 * @return string|null
 	 */
-	public function token()
+	public function token(): string|null
 	{
 		if ($this->tokenExpiry !== null) {
 			if (is_string($this->tokenKey)) {
@@ -151,10 +149,10 @@ class Session
 	 * Gets or sets the transmission mode
 	 * Setting only works for new sessions that haven't been transmitted yet
 	 *
-	 * @param string $mode Optional new transmission mode
+	 * @param string|null $mode Optional new transmission mode
 	 * @return string Transmission mode
 	 */
-	public function mode(string $mode = null)
+	public function mode(string $mode = null): string
 	{
 		if (is_string($mode)) {
 			// only allow this if this is a new session, otherwise the change
@@ -186,10 +184,10 @@ class Session
 	 * Gets or sets the session expiry time
 	 * Setting the expiry time also updates the duration and regenerates the session token
 	 *
-	 * @param string|int $expiryTime Optional new expiry timestamp or time string to set
+	 * @param string|int|null $expiryTime Optional new expiry timestamp or time string to set
 	 * @return int Timestamp
 	 */
-	public function expiryTime($expiryTime = null): int
+	public function expiryTime(string|int|null $expiryTime = null): int
 	{
 		if (is_string($expiryTime) || is_int($expiryTime)) {
 			// convert to a timestamp
@@ -221,7 +219,7 @@ class Session
 	 * Gets or sets the session duration
 	 * Setting the duration also updates the expiry time and regenerates the session token
 	 *
-	 * @param int $duration Optional new duration in seconds to set
+	 * @param int|null $duration Optional new duration in seconds to set
 	 * @return int Number of seconds
 	 */
 	public function duration(int $duration = null): int
@@ -247,10 +245,10 @@ class Session
 	/**
 	 * Gets or sets the session timeout
 	 *
-	 * @param int|false $timeout Optional new timeout to set or false to disable timeout
+	 * @param int|false|null $timeout Optional new timeout to set or false to disable timeout
 	 * @return int|false Number of seconds or false for "no timeout"
 	 */
-	public function timeout($timeout = null)
+	public function timeout(int|false|null $timeout = null): int|false
 	{
 		if (is_int($timeout) || $timeout === false) {
 			// verify that the timeout is at least 1 second
@@ -283,10 +281,9 @@ class Session
 	 * Gets or sets the renewable flag
 	 * Automatically renews the session if renewing gets enabled
 	 *
-	 * @param bool $renewable Optional new renewable flag to set
-	 * @return bool
+	 * @param bool|null $renewable Optional new renewable flag to set
 	 */
-	public function renewable(bool $renewable = null): bool
+	public function renewable(bool|null $renewable = null): bool
 	{
 		if (is_bool($renewable)) {
 			$this->prepareForWriting();
@@ -329,10 +326,8 @@ class Session
 
 	/**
 	 * Writes all changes to the session to the session store
-	 *
-	 * @return void
 	 */
-	public function commit()
+	public function commit(): void
 	{
 		// nothing to do if nothing changed or the session has been just created or destroyed
 		/**
@@ -381,10 +376,8 @@ class Session
 
 	/**
 	 * Entirely destroys the session
-	 *
-	 * @return void
 	 */
-	public function destroy()
+	public function destroy(): void
 	{
 		// no need to destroy new or destroyed sessions
 		if ($this->tokenExpiry === null || $this->destroyed === true) {
@@ -406,10 +399,8 @@ class Session
 	/**
 	 * Renews the session with the same session duration
 	 * Renewing also regenerates the session token
-	 *
-	 * @return void
 	 */
-	public function renew()
+	public function renew(): void
 	{
 		if ($this->renewable() !== true) {
 			throw new LogicException([
@@ -427,10 +418,8 @@ class Session
 	/**
 	 * Regenerates the session token
 	 * The old token will keep its validity for a 30 second grace period
-	 *
-	 * @return void
 	 */
-	public function regenerateToken()
+	public function regenerateToken(): void
 	{
 		// don't do anything for destroyed sessions
 		if ($this->destroyed === true) {
@@ -481,8 +470,6 @@ class Session
 	/**
 	 * Returns whether the session token needs to be retransmitted to the client
 	 * Only relevant in header and manual modes
-	 *
-	 * @return bool
 	 */
 	public function needsRetransmission(): bool
 	{
@@ -491,6 +478,8 @@ class Session
 
 	/**
 	 * Ensures that all pending changes are written to disk before the object is destructed
+	 *
+	 * @return void
 	 */
 	public function __destruct()
 	{
@@ -500,10 +489,8 @@ class Session
 	/**
 	 * Initially generates the token for new sessions
 	 * Used internally
-	 *
-	 * @return void
 	 */
-	public function ensureToken()
+	public function ensureToken(): void
 	{
 		if ($this->tokenExpiry === null) {
 			$this->regenerateToken();
@@ -511,12 +498,11 @@ class Session
 	}
 
 	/**
-	 * Puts the session into write mode by acquiring a lock and reloading the data
-	 * Used internally
-	 *
-	 * @return void
+	 * Puts the session into write mode by acquiring a lock
+	 * and reloading the data
+	 * @internal
 	 */
-	public function prepareForWriting()
+	public function prepareForWriting(): void
 	{
 		// verify that we need to get into write mode:
 		// - new sessions are only written to if the token has explicitly been ensured
@@ -560,9 +546,8 @@ class Session
 	 *
 	 * @param string $token Session token
 	 * @param bool $withoutKey If true, $token is passed without key
-	 * @return void
 	 */
-	protected function parseToken(string $token, bool $withoutKey = false)
+	protected function parseToken(string $token, bool $withoutKey = false): void
 	{
 		// split the token into its parts
 		$parts = explode('.', $token);
@@ -601,11 +586,13 @@ class Session
 	 * Makes sure that the given value is a valid timestamp
 	 *
 	 * @param string|int $time Timestamp or date string (must be supported by `strtotime()`)
-	 * @param int $now Timestamp to use as a base for the calculation of relative dates
+	 * @param int|null $now Timestamp to use as a base for the calculation of relative dates
 	 * @return int Timestamp value
 	 */
-	protected static function timeToTimestamp($time, int $now = null): int
-	{
+	protected static function timeToTimestamp(
+		string|int $time,
+		int|null $now = null
+	): int {
 		// default to current time as $now
 		if (!is_int($now)) {
 			$now = time();
@@ -632,10 +619,8 @@ class Session
 
 	/**
 	 * Loads the session data from the session store
-	 *
-	 * @return void
 	 */
-	protected function init()
+	protected function init(): void
 	{
 		// sessions that are new, written to or that have been destroyed should never be initialized
 		if ($this->tokenExpiry === null || $this->writeMode === true || $this->destroyed === true) {
@@ -747,10 +732,8 @@ class Session
 
 	/**
 	 * Regenerate session token, but only if there is already one
-	 *
-	 * @return void
 	 */
-	protected function regenerateTokenIfNotNew()
+	protected function regenerateTokenIfNotNew(): void
 	{
 		if ($this->tokenExpiry !== null) {
 			$this->regenerateToken();
@@ -759,10 +742,8 @@ class Session
 
 	/**
 	 * Automatically renews the session if possible and necessary
-	 *
-	 * @return void
 	 */
-	protected function autoRenew()
+	protected function autoRenew(): void
 	{
 		// check if the session needs renewal at all
 		if ($this->needsRenewal() !== true) {
@@ -780,8 +761,6 @@ class Session
 	/**
 	 * Checks if the session can be renewed and if the last renewal
 	 * was more than half a session duration ago
-	 *
-	 * @return bool
 	 */
 	protected function needsRenewal(): bool
 	{

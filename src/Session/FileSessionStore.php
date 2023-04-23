@@ -19,11 +19,11 @@ use Kirby\Toolkit\Str;
  */
 class FileSessionStore extends SessionStore
 {
-	protected $path;
+	protected string $path;
 
 	// state of the session files
-	protected $handles  = [];
-	protected $isLocked = [];
+	protected array $handles  = [];
+	protected array $isLocked = [];
 
 	/**
 	 * Creates a new instance of the file session store
@@ -111,9 +111,8 @@ class FileSessionStore extends SessionStore
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
-	 * @return void
 	 */
-	public function lock(int $expiryTime, string $id)
+	public function lock(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
 
@@ -148,9 +147,8 @@ class FileSessionStore extends SessionStore
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
-	 * @return void
 	 */
-	public function unlock(int $expiryTime, string $id)
+	public function unlock(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
 
@@ -190,7 +188,6 @@ class FileSessionStore extends SessionStore
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
-	 * @return string
 	 */
 	public function get(int $expiryTime, string $id): string
 	{
@@ -254,9 +251,8 @@ class FileSessionStore extends SessionStore
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
 	 * @param string $data Session data to write
-	 * @return void
 	 */
-	public function set(int $expiryTime, string $id, string $data)
+	public function set(int $expiryTime, string $id, string $data): void
 	{
 		$name   = $this->name($expiryTime, $id);
 		$handle = $this->handle($name);
@@ -305,9 +301,8 @@ class FileSessionStore extends SessionStore
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
-	 * @return void
 	 */
-	public function destroy(int $expiryTime, string $id)
+	public function destroy(int $expiryTime, string $id): void
 	{
 		$name = $this->name($expiryTime, $id);
 		$path = $this->path($name);
@@ -341,10 +336,8 @@ class FileSessionStore extends SessionStore
 	 * Deletes all expired sessions
 	 *
 	 * Needs to throw an Exception on error.
-	 *
-	 * @return void
 	 */
-	public function collectGarbage()
+	public function collectGarbage(): void
 	{
 		$iterator = new FilesystemIterator($this->path);
 
@@ -394,7 +387,6 @@ class FileSessionStore extends SessionStore
 	 *
 	 * @param int $expiryTime Timestamp
 	 * @param string $id Session ID
-	 * @return string
 	 */
 	protected function name(int $expiryTime, string $id): string
 	{
@@ -405,7 +397,6 @@ class FileSessionStore extends SessionStore
 	 * Returns the full path to the session file
 	 *
 	 * @param string $name Combined name
-	 * @return string
 	 */
 	protected function path(string $name): string
 	{
@@ -458,9 +449,8 @@ class FileSessionStore extends SessionStore
 	 * Closes an open file handle
 	 *
 	 * @param string $name Combined name
-	 * @return void
 	 */
-	protected function closeHandle(string $name)
+	protected function closeHandle(string $name): void
 	{
 		if (!isset($this->handles[$name])) {
 			return;

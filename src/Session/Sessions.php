@@ -21,11 +21,11 @@ use Throwable;
  */
 class Sessions
 {
-	protected $store;
-	protected $mode;
-	protected $cookieName;
+	protected SessionStore $store;
+	protected string $mode;
+	protected string $cookieName;
 
-	protected $cache = [];
+	protected array $cache = [];
 
 	/**
 	 * Creates a new Sessions instance
@@ -36,7 +36,7 @@ class Sessions
 	 *                       - `cookieName`: Name to use for the session cookie; defaults to `kirby_session`
 	 *                       - `gcInterval`: How often should the garbage collector be run?; integer or `false` for never; defaults to `100`
 	 */
-	public function __construct($store, array $options = [])
+	public function __construct(SessionStore|string $store, array $options = [])
 	{
 		if (is_string($store)) {
 			$this->store = new FileSessionStore($store);
@@ -96,9 +96,8 @@ class Sessions
 	 *                       - `expiryTime`: Time the session expires (date string or timestamp); defaults to `+ 2 hours`
 	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
 	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
-	 * @return \Kirby\Session\Session
 	 */
-	public function create(array $options = [])
+	public function create(array $options = []): Session
 	{
 		// fall back to default mode
 		$options['mode'] ??= $this->mode;
@@ -110,10 +109,9 @@ class Sessions
 	 * Returns the specified Session object
 	 *
 	 * @param string $token Session token, either including or without the key
-	 * @param string $mode Optional transmission mode override
-	 * @return \Kirby\Session\Session
+	 * @param string|null $mode Optional transmission mode override
 	 */
-	public function get(string $token, string $mode = null)
+	public function get(string $token, string $mode = null): Session
 	{
 		return $this->cache[$token] ??= new Session($this, $token, ['mode' => $mode ?? $this->mode]);
 	}
@@ -128,7 +126,7 @@ class Sessions
 	 * @throws \Kirby\Exception\Exception
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public function current()
+	public function current(): Session|null
 	{
 		$token = match ($this->mode) {
 			'cookie' => $this->tokenFromCookie(),
@@ -164,7 +162,7 @@ class Sessions
 	 *
 	 * @return \Kirby\Session\Session|null Either the current session or null in case there isn't one
 	 */
-	public function currentDetected()
+	public function currentDetected(): Session|null
 	{
 		$tokenFromHeader = $this->tokenFromHeader();
 		$tokenFromCookie = $this->tokenFromCookie();
@@ -188,11 +186,9 @@ class Sessions
 
 	/**
 	 * Getter for the session store instance
-	 * Used internally
-	 *
-	 * @return \Kirby\Session\SessionStore
+	 * @internal
 	 */
-	public function store()
+	public function store(): SessionStore
 	{
 		return $this->store;
 	}
@@ -200,8 +196,6 @@ class Sessions
 	/**
 	 * Getter for the cookie name
 	 * Used internally
-	 *
-	 * @return string
 	 */
 	public function cookieName(): string
 	{
@@ -213,10 +207,8 @@ class Sessions
 	 *
 	 * If the `gcInterval` is configured, this is done automatically
 	 * on init of the Sessions object.
-	 *
-	 * @return void
 	 */
-	public function collectGarbage()
+	public function collectGarbage(): void
 	{
 		$this->store()->collectGarbage();
 	}
@@ -235,10 +227,8 @@ class Sessions
 
 	/**
 	 * Returns the auth token from the cookie
-	 *
-	 * @return string|null
 	 */
-	protected function tokenFromCookie()
+	protected function tokenFromCookie(): string|null
 	{
 		$value = Cookie::get($this->cookieName());
 
@@ -251,10 +241,8 @@ class Sessions
 
 	/**
 	 * Returns the auth token from the Authorization header
-	 *
-	 * @return string|null
 	 */
-	protected function tokenFromHeader()
+	protected function tokenFromHeader(): string|null
 	{
 		$request = new Request();
 		$headers = $request->headers();

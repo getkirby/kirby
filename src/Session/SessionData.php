@@ -18,9 +18,6 @@ use Kirby\Exception\LogicException;
  */
 class SessionData
 {
-	protected $session;
-	protected $data;
-
 	/**
 	 * Creates a new SessionData instance
 	 *
@@ -28,10 +25,10 @@ class SessionData
 	 * @param \Kirby\Session\Session $session Session object this data belongs to
 	 * @param array $data Currently stored session data
 	 */
-	public function __construct(Session $session, array $data)
-	{
-		$this->session = $session;
-		$this->data    = $data;
+	public function __construct(
+		protected Session $session,
+		protected array $data
+	) {
 	}
 
 	/**
@@ -39,9 +36,8 @@ class SessionData
 	 *
 	 * @param string|array $key The key to define or a key-value array with multiple values
 	 * @param mixed $value The value for the passed key (only if one $key is passed)
-	 * @return void
 	 */
-	public function set($key, $value = null)
+	public function set(string|array $key, mixed $value = null): void
 	{
 		$this->session->ensureToken();
 		$this->session->prepareForWriting();
@@ -63,16 +59,19 @@ class SessionData
 	 *
 	 * @param string|array $key The key to increment or an array with multiple keys
 	 * @param int $by Increment by which amount?
-	 * @param int $max Maximum amount (value is not incremented further)
+	 * @param int|null $max Maximum amount (value is not incremented further)
 	 * @return void
 	 */
-	public function increment($key, int $by = 1, $max = null)
-	{
 		if ($max !== null && !is_int($max)) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'SessionData::increment', 'argument' => 'max'],
 				'translate' => false
 			]);
+	public function increment(
+		string|array $key,
+		int $by = 1,
+		int|null $max = null
+	): void {
 		}
 
 		if (is_string($key)) {
@@ -117,16 +116,18 @@ class SessionData
 	 *
 	 * @param string|array $key The key to decrement or an array with multiple keys
 	 * @param int $by Decrement by which amount?
-	 * @param int $min Minimum amount (value is not decremented further)
-	 * @return void
+	 * @param int|null $min Minimum amount (value is not decremented further)
 	 */
-	public function decrement($key, int $by = 1, $min = null)
-	{
 		if ($min !== null && !is_int($min)) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'SessionData::decrement', 'argument' => 'min'],
 				'translate' => false
 			]);
+	public function decrement(
+		string|array $key,
+		int $by = 1,
+		int|null $min = null
+	): void {
 		}
 
 		if (is_string($key)) {
@@ -171,9 +172,8 @@ class SessionData
 	 *
 	 * @param string|null $key The key to get or null for the entire data array
 	 * @param mixed $default Optional default value to return if the key is not defined
-	 * @return mixed
 	 */
-	public function get($key = null, $default = null)
+	public function get(string|null $key = null, mixed $default = null): mixed
 	{
 		if (is_string($key)) {
 			return $this->data[$key] ?? $default;
@@ -197,9 +197,8 @@ class SessionData
 	 *
 	 * @param string $key The key to get
 	 * @param mixed $default Optional default value to return if the key is not defined
-	 * @return mixed
 	 */
-	public function pull(string $key, $default = null)
+	public function pull(string $key, mixed $default = null): mixed
 	{
 		// make sure we have the correct value before getting
 		// we do this here (but not in get) as we need to write anyway
@@ -214,9 +213,8 @@ class SessionData
 	 * Removes one or multiple session values by key
 	 *
 	 * @param string|array $key The key to remove or an array with multiple keys
-	 * @return void
 	 */
-	public function remove($key)
+	public function remove(string|array $key): void
 	{
 		$this->session->prepareForWriting();
 
@@ -236,10 +234,8 @@ class SessionData
 
 	/**
 	 * Clears all session data
-	 *
-	 * @return void
 	 */
-	public function clear()
+	public function clear(): void
 	{
 		$this->session->prepareForWriting();
 
@@ -251,9 +247,8 @@ class SessionData
 	 * Only used internally
 	 *
 	 * @param array $data Currently stored session data
-	 * @return void
 	 */
-	public function reload(array $data)
+	public function reload(array $data): void
 	{
 		$this->data = $data;
 	}
