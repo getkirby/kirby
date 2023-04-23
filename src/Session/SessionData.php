@@ -2,8 +2,8 @@
 
 namespace Kirby\Session;
 
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\A;
 
 /**
  * The session object can be used to
@@ -42,9 +42,10 @@ class SessionData
 		$this->session->ensureToken();
 		$this->session->prepareForWriting();
 
-		if (is_string($key)) {
+		if (is_string($key) === true) {
 			$this->data[$key] = $value;
-		} elseif (is_array($key)) {
+
+		} elseif (is_array($key) === true) {
 			$this->data = array_merge($this->data, $key);
 		}
 	}
@@ -194,7 +195,6 @@ class SessionData
 	public function clear(): void
 	{
 		$this->session->prepareForWriting();
-
 		$this->data = [];
 	}
 

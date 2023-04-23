@@ -48,7 +48,7 @@ class Sessions
 		$gcInterval       = $options['gcInterval'] ?? 100;
 
 		// validate options
-		if (!in_array($this->mode, ['cookie', 'header', 'manual'])) {
+		if (in_array($this->mode, ['cookie', 'header', 'manual']) === false) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'mode\']'],
 				'translate' => false
@@ -56,7 +56,7 @@ class Sessions
 		}
 
 		// trigger automatic garbage collection with the given probability
-		if (is_int($gcInterval) && $gcInterval > 0) {
+		if (is_int($gcInterval) === true && $gcInterval > 0) {
 			// convert the interval into a probability between 0 and 1
 			$gcProbability = 1 / $gcInterval;
 
@@ -67,6 +67,7 @@ class Sessions
 			if ($random <= $gcProbability * 10000) {
 				$this->collectGarbage();
 			}
+
 		} elseif ($gcInterval !== false) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Sessions::__construct', 'argument' => '$options[\'gcInterval\']'],
@@ -101,7 +102,11 @@ class Sessions
 	 */
 	public function get(string $token, string $mode = null): Session
 	{
-		return $this->cache[$token] ??= new Session($this, $token, ['mode' => $mode ?? $this->mode]);
+		return $this->cache[$token] ??= new Session(
+			$this,
+			$token,
+			['mode' => $mode ?? $this->mode]
+		);
 	}
 
 	/**
@@ -159,13 +164,13 @@ class Sessions
 		$token = $tokenFromHeader ?? $tokenFromCookie;
 
 		// no token was found, no session
-		if (!is_string($token)) {
+		if (is_string($token) === false) {
 			return null;
 		}
 
 		// token was found, try to get the session
 		try {
-			$mode = (is_string($tokenFromHeader)) ? 'header' : 'cookie';
+			$mode = is_string($tokenFromHeader) ? 'header' : 'cookie';
 			return $this->get($token, $mode);
 		} catch (Throwable) {
 			return null;

@@ -58,12 +58,15 @@ class Session
 	 *                       - `timeout`: Activity timeout in seconds (integer or false for none); defaults to `1800` (half an hour)
 	 *                       - `renewable`: Should it be possible to extend the expiry date?; defaults to `true`
 	 */
-	public function __construct(Sessions $sessions, $token, array $options)
-	{
+	public function __construct(
+		Sessions $sessions,
+		string|null $token,
+		array $options
+	) {
 		$this->sessions = $sessions;
 		$this->mode     = $options['mode'] ?? 'cookie';
 
-		if (is_string($token)) {
+		if (is_string($token) === true) {
 			// existing session
 
 			// set the token as instance vars
@@ -75,6 +78,7 @@ class Session
 			if ($this->tokenKey !== null) {
 				$this->autoRenew();
 			}
+
 		} elseif ($token === null) {
 			// new session
 
@@ -101,13 +105,13 @@ class Session
 					'translate' => false
 				]);
 			}
-			if (!is_int($this->timeout) && $this->timeout !== false) {
+			if (is_int($this->timeout) === false && $this->timeout !== false) {
 				throw new InvalidArgumentException([
 					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'timeout\']'],
 					'translate' => false
 				]);
 			}
-			if (!is_bool($this->renewable)) {
+			if (is_bool($this->renewable) === false) {
 				throw new InvalidArgumentException([
 					'data'      => ['method' => 'Session::__construct', 'argument' => '$options[\'renewable\']'],
 					'translate' => false
@@ -115,7 +119,7 @@ class Session
 			}
 
 			// set activity time if a timeout was requested
-			if (is_int($this->timeout)) {
+			if (is_int($this->timeout) === true) {
 				$this->lastActivity = time();
 			}
 		} else {
@@ -156,7 +160,7 @@ class Session
 	 */
 	public function mode(string $mode = null): string
 	{
-		if (is_string($mode)) {
+		if (is_string($mode) === true) {
 			// only allow this if this is a new session, otherwise the change
 			// might not be applied correctly to the current request
 			if ($this->token() !== null) {
@@ -191,7 +195,7 @@ class Session
 	 */
 	public function expiryTime(string|int|null $expiryTime = null): int
 	{
-		if (is_string($expiryTime) || is_int($expiryTime)) {
+		if (is_string($expiryTime) === true || is_int($expiryTime) === true) {
 			// convert to a timestamp
 			$expiryTime = static::timeToTimestamp($expiryTime);
 
@@ -207,6 +211,7 @@ class Session
 			$this->expiryTime = $expiryTime;
 			$this->duration   = $expiryTime - time();
 			$this->regenerateTokenIfNotNew();
+
 		} elseif ($expiryTime !== null) {
 			throw new InvalidArgumentException([
 				'data'      => ['method' => 'Session::expiryTime', 'argument' => '$expiryTime'],
@@ -226,7 +231,7 @@ class Session
 	 */
 	public function duration(int $duration = null): int
 	{
-		if (is_int($duration)) {
+		if (is_int($duration) === true) {
 			// verify that the duration is at least 1 second
 			if ($duration < 1) {
 				throw new InvalidArgumentException([
@@ -607,7 +612,11 @@ class Session
 	protected function init(): void
 	{
 		// sessions that are new, written to or that have been destroyed should never be initialized
-		if ($this->tokenExpiry === null || $this->writeMode === true || $this->destroyed === true) {
+		if (
+			$this->tokenExpiry === null ||
+			$this->writeMode === true ||
+			$this->destroyed === true
+		) {
 			// unexpected error that shouldn't occur
 			throw new Exception(['translate' => false]); // @codeCoverageIgnore
 		}
@@ -624,13 +633,19 @@ class Session
 		}
 
 		// get the session data from the store
-		$data = $this->sessions->store()->get($this->tokenExpiry, $this->tokenId);
+		$data = $this->sessions->store()->get(
+			$this->tokenExpiry,
+			$this->tokenId
+		);
 
 		// verify HMAC
 		// skip if we don't have the key (only the case for moved sessions)
 		$hmac = Str::before($data, "\n");
 		$data = trim(Str::after($data, "\n"));
-		if ($this->tokenKey !== null && hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true) {
+		if (
+			$this->tokenKey !== null &&
+			hash_equals(hash_hmac('sha256', $data, $this->tokenKey), $hmac) !== true
+		) {
 			throw new LogicException([
 				'key'       => 'session.invalid',
 				'data'      => ['token' => $this->token()],
@@ -655,7 +670,10 @@ class Session
 		}
 
 		// verify start and expiry time
-		if (time() < $data['startTime'] || time() > $data['expiryTime']) {
+		if (
+			time() < $data['startTime'] ||
+			time() > $data['expiryTime']
+		) {
 			throw new LogicException([
 				'key'       => 'session.invalid',
 				'data'      => ['token' => $this->token()],
@@ -666,14 +684,14 @@ class Session
 		}
 
 		// follow to the new session if there is one
-		if (isset($data['newSession'])) {
+		if (isset($data['newSession']) === true) {
 			$this->parseToken($data['newSession'], true);
 			$this->init();
 			return;
 		}
 
 		// verify timeout
-		if (is_int($data['timeout'])) {
+		if (is_int($data['timeout']) === true) {
 			if (time() - $data['lastActivity'] > $data['timeout']) {
 				throw new LogicException([
 					'key'       => 'session.invalid',
@@ -687,7 +705,11 @@ class Session
 			// set a new activity timestamp, but only every few minutes for better performance
 			// don't do this if another call to init() is already doing it to prevent endless loops;
 			// also don't do this for read-only sessions
-			if ($this->updatingLastActivity === false && $this->tokenKey !== null && time() - $data['lastActivity'] > $data['timeout'] / 15) {
+			if (
+				$this->updatingLastActivity === false &&
+				$this->tokenKey !== null &&
+				time() - $data['lastActivity'] > $data['timeout'] / 15
+			) {
 				$this->updatingLastActivity = true;
 				$this->prepareForWriting();
 
@@ -737,6 +759,7 @@ class Session
 		// re-load the session and check again to make sure that no other thread
 		// already renewed the session in the meantime
 		$this->prepareForWriting();
+
 		if ($this->needsRenewal() === true) {
 			$this->renew();
 		}
@@ -748,6 +771,8 @@ class Session
 	 */
 	protected function needsRenewal(): bool
 	{
-		return $this->renewable() === true && $this->expiryTime() - time() < $this->duration() / 2;
+		return
+			$this->renewable() === true &&
+			$this->expiryTime() - time() < $this->duration() / 2;
 	}
 }

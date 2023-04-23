@@ -89,7 +89,8 @@ class AutoSession
 				'renewable'  => true,
 			]);
 
-			// cache the newly created session to ensure that we don't create multiple
+			// cache the newly created session to ensure
+			// that we don't create multiple
 			$this->createdSession = $session;
 		}
 
