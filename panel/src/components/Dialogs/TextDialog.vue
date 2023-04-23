@@ -1,5 +1,10 @@
 <template>
-	<k-dialog ref="dialog" v-bind="$props" v-on="$listeners">
+	<k-dialog
+		ref="dialog"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
+	>
 		<slot>
 			<k-dialog-text :text="text" />
 		</slot>
@@ -15,6 +20,7 @@ export const props = {
 };
 
 export default {
-	mixins: [props]
+	mixins: [props],
+	emits: ["cancel", "submit"]
 };
 </script>
