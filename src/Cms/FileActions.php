@@ -159,7 +159,7 @@ trait FileActions
 	/**
 	 * Copy the file to the given page
 	 */
-	public function copy(Page $page): File
+	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
 
