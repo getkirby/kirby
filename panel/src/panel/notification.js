@@ -1,3 +1,4 @@
+import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
 import Module from "./module.js";
@@ -84,8 +85,8 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message || "Something went wrong",
-				details: error.details || {},
+				message: error.message ?? "Something went wrong",
+				details: error.details ?? {},
 				type: "error"
 			});
 		},
@@ -134,7 +135,7 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message || "Something went wrong",
+				message: error.message ?? "Something went wrong",
 				type: "fatal"
 			});
 		},
@@ -166,9 +167,7 @@ export default (panel = {}) => {
 			this.isOpen = true;
 
 			// start a timer to auto-close the notification
-			this.timer.start(this.timeout, () => {
-				this.close();
-			});
+			this.timer.start(this.timeout, () => this.close());
 
 			// returns the new open state
 			return this.state();
