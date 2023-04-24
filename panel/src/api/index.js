@@ -1,25 +1,21 @@
-import Auth from "@/api/auth.js";
-import Delete from "@/api/delete.js";
-import Files from "@/api/files.js";
-import Get from "@/api/get.js";
-import Languages from "@/api/languages.js";
-import Pages from "@/api/pages.js";
-import Patch from "@/api/patch.js";
-import Post from "@/api/post.js";
-import Request from "@/api/request.js";
-import Roles from "@/api/roles.js";
-import System from "@/api/system.js";
-import Site from "@/api/site.js";
-import Translations from "@/api/translations.js";
-import Users from "@/api/users.js";
+import Auth from "./auth.js";
+import Delete from "./delete.js";
+import Files from "./files.js";
+import Get from "./get.js";
+import Languages from "./languages.js";
+import Pages from "./pages.js";
+import Patch from "./patch.js";
+import Post from "./post.js";
+import Request from "./request.js";
+import Roles from "./roles.js";
+import System from "./system.js";
+import Site from "./site.js";
+import Translations from "./translations.js";
+import Users from "./users.js";
 import { rtrim } from "@/helpers/string";
 
 /**
  * Panel API Setup
- *
- * @todo All of this could be put directly into the api object
- * to avoid the additional configuration code. We don't ship it
- * as a stand-alone library anyway.
  *
  * @param {object} panel
  */

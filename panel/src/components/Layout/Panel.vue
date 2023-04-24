@@ -13,8 +13,8 @@
 		<slot />
 
 		<!-- Fiber dialogs -->
-		<template v-if="$store.state.dialog && $store.state.dialog.props">
-			<k-fiber-dialog v-bind="dialog" />
+		<template v-if="$panel.dialog.isOpen && $panel.dialog.island">
+			<k-fiber-dialog />
 		</template>
 
 		<!-- Fatal iframe -->

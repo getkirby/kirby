@@ -1,11 +1,12 @@
+import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
 import Module from "./module.js";
 import Timer from "./timer.js";
-import AuthError from "@/errors/AuthError.js";
 
 export const defaults = () => {
 	return {
+		context: null,
 		details: null,
 		isOpen: false,
 		message: null,
@@ -35,37 +36,6 @@ export default (panel = {}) => {
 
 			// return the closed state
 			return this.state();
-		},
-
-		/**
-		 * Checks where it should be displayed.
-		 * When a drawer or dialog is open, it's
-		 * displayed there instead of the topbar
-		 *
-		 * @returns {false|String} false|dialog|drawer|fatal|error|view
-		 */
-		get context() {
-			// no notifications, no context
-			if (this.isOpen === false) {
-				return false;
-			}
-
-			// show notifications in the fatal overlay
-			if (this.type === "fatal") {
-				return "fatal";
-			}
-
-			// show notifications in the dialog
-			if (panel.dialog?.isOpen) {
-				return "dialog";
-			}
-
-			// show notifications in the drawer
-			if (panel.drawer?.isOpen) {
-				return "drawer";
-			}
-
-			return "view";
 		},
 
 		/**
@@ -115,8 +85,8 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message || "Something went wrong",
-				details: error.details || {},
+				message: error.message ?? "Something went wrong",
+				details: error.details ?? {},
 				type: "error"
 			});
 		},
@@ -165,7 +135,7 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message || "Something went wrong",
+				message: error.message ?? "Something went wrong",
 				type: "fatal"
 			});
 		},
@@ -187,6 +157,9 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
+			// add the current editing context
+			notification.context = panel.context;
+
 			// set the new state
 			this.set(notification);
 
@@ -194,9 +167,7 @@ export default (panel = {}) => {
 			this.isOpen = true;
 
 			// start a timer to auto-close the notification
-			this.timer.start(this.timeout, () => {
-				this.close();
-			});
+			this.timer.start(this.timeout, () => this.close());
 
 			// returns the new open state
 			return this.state();

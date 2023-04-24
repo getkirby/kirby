@@ -460,7 +460,7 @@ export default {
 				this.$el.contains(event.target) === false ||
 				// don't copy when the drawer or any dialogs are open
 				this.isEditing === true ||
-				this.$store.state.dialog ||
+				this.$panel.dialog.isOpen === true ||
 				// don't copy if an input is focused
 				this.isInputEvent(event) === true
 			) {
@@ -524,7 +524,7 @@ export default {
 			}
 
 			// not when any other dialogs or drawers are open
-			if (this.isEditing === true || this.$store.state.dialog) {
+			if (this.isEditing === true || this.$panel.dialog.isOpen === true) {
 				return false;
 			}
 
@@ -562,8 +562,7 @@ export default {
 			this.save();
 
 			// a sign that it has been pasted
-			this.$store.dispatch(
-				"notification/success",
+			this.$panel.notification.success(
 				this.$t("paste.success", { count: blocks.length })
 			);
 		},

@@ -71,7 +71,7 @@ export default (panel, key, defaults) => {
 		 * @returns {any}
 		 */
 		emit(event, ...args) {
-			if (this.hasEventListener(event)) {
+			if (this.hasEventListener(event) === true) {
 				return this.on[event](...args);
 			}
 
@@ -221,7 +221,7 @@ export default (panel, key, defaults) => {
 
 			// if no value has been passed to the submit method,
 			// take the value object from the props
-			value = value || this.props?.value || {};
+			value = value ?? this.props?.value ?? {};
 
 			try {
 				return await panel.post(this.path, value, options);
@@ -266,7 +266,7 @@ export default (panel, key, defaults) => {
 			this.on = {};
 
 			// register new listeners
-			this.addEventListeners(state.on || {});
+			this.addEventListeners(state.on ?? {});
 
 			return this.state();
 		},

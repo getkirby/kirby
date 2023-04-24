@@ -12,20 +12,19 @@ export default new Vuex.Store({
 	// eslint-disable-next-line
 	strict: process.env.NODE_ENV !== "production",
 	state: {
-		dialog: null,
 		drag: null
 	},
 	mutations: {
-		SET_DIALOG(state, dialog) {
-			state.dialog = dialog;
-		},
 		SET_DRAG(state, drag) {
 			state.drag = drag;
 		}
 	},
 	actions: {
+		/**
+		 * @deprecated Use window.panel.dialog.open()
+		 */
 		dialog(context, dialog) {
-			context.commit("SET_DIALOG", dialog);
+			window.panel.dialog.open(dialog);
 		},
 		drag(context, drag) {
 			context.commit("SET_DRAG", drag);
@@ -42,8 +41,11 @@ export default new Vuex.Store({
 		isLoading(context, loading) {
 			window.panel.isLoading = loading;
 		},
+		/**
+		 * @deprecated
+		 */
 		navigate(context) {
-			context.dispatch("dialog", null);
+			window.panel.dialog.close();
 			context.dispatch("drawers/close");
 		}
 	},
