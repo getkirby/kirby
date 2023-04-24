@@ -1,6 +1,5 @@
 import dialog from "./dialog.js";
 import dropdown from "./dropdown.js";
-import go from "./go.js";
 
 /**
  * This is the graveyard for all deprecated
@@ -71,6 +70,5 @@ export default {
 		 */
 		app.prototype.$dialog = dialog;
 		app.prototype.$dropdown = dropdown;
-		app.prototype.$go = go;
 	}
 };
