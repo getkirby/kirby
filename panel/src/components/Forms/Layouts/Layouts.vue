@@ -228,8 +228,7 @@ export default {
 			}
 
 			// a sign that it has been pasted
-			this.$store.dispatch(
-				"notification/success",
+			this.$panel.notification.success(
 				this.$t("paste.success", { count: rows.length })
 			);
 		},

@@ -61,7 +61,7 @@ export default () => {
 				return;
 			}
 
-			const string = this.data[key] || fallback;
+			const string = this.data[key] ?? fallback;
 
 			if (typeof string !== "string") {
 				return string;

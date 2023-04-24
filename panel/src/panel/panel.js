@@ -1,4 +1,4 @@
-import Api from "./api.js";
+import Api from "@/api/index.js";
 import Dialog from "./dialog.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
@@ -184,7 +184,8 @@ export default {
 				this.set(url);
 			} else {
 				this.isLoading = true;
-				this.set(await this.get(url, options));
+				const state = await this.get(url, options);
+				this.set(state);
 				this.isLoading = false;
 			}
 
@@ -265,30 +266,30 @@ export default {
 		/**
 		 * Register all modules
 		 */
-		modules.forEach((module) => {
+		for (const module of modules) {
 			// if there's a new state for the
 			// module, call its state setter method
-			if (isObject(state[module])) {
+			if (isObject(state[module]) === true) {
 				this[module].set(state[module]);
 			}
-		});
+		}
 
 		/**
 		 * Toggle islands
 		 */
-		islands.forEach((island) => {
+		for (const island of islands) {
 			// if there's a new state for the
 			// module, call its state setter method
-			if (isObject(state[island])) {
-				return this[island].open(state[island]);
+			if (isObject(state[island]) === true) {
+				this[island].open(state[island]);
 			}
 
 			// islands will be closed if the response is null or false.
 			// on undefined, the state of the island stays untouched
-			if (state[island] !== undefined) {
+			else if (state[island] !== undefined) {
 				this[island].close(state[island]);
 			}
-		});
+		}
 
 		/**
 		 * Toggle the dropdown
@@ -323,13 +324,13 @@ export default {
 			state[global] = this[global] ?? globals[global];
 		}
 
-		modules.forEach((module) => {
+		for (const module of modules) {
 			state[module] = this[module].state();
-		});
+		}
 
-		islands.forEach((island) => {
+		for (const island of islands) {
 			state[island] = this[island].state();
-		});
+		}
 
 		state.dropdown = this.dropdown.state();
 		state.view = this.view.state();
@@ -353,10 +354,10 @@ export default {
 	 */
 	set title(title) {
 		if (isEmpty(this.system.title) === false) {
-			document.title = title + " | " + this.system.title;
-		} else {
-			document.title = title;
+			title += " | " + this.system.title;
 		}
+
+		document.title = title;
 	},
 
 	/**
