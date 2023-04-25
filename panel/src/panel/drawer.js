@@ -24,9 +24,6 @@ export default (panel) => {
 
 			return crumbs.reverse();
 		},
-		async close() {
-			await parent.close.call(this);
-		},
 		goTo(id) {
 			let parent = this;
 
