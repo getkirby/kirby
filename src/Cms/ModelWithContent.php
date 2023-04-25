@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
+use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -23,8 +24,18 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent extends Model implements Identifiable
+abstract class ModelWithContent implements Identifiable
 {
+	use Properties;
+
+	/**
+	 * Each model must define a CLASS_ALIAS
+	 * which will be used in template queries.
+	 * The CLASS_ALIAS is a short human-readable
+	 * version of the class name, i.e. page.
+	 */
+	public const CLASS_ALIAS = null;
+
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
@@ -37,6 +48,20 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * @var \Kirby\Cms\Content
 	 */
 	public $content;
+
+	/**
+	 * The parent Kirby instance
+	 *
+	 * @var \Kirby\Cms\App
+	 */
+	public static $kirby;
+
+	/**
+	 * The parent site instance
+	 *
+	 * @var \Kirby\Cms\Site
+	 */
+	protected $site;
 
 	/**
 	 * @var \Kirby\Cms\Translations
@@ -330,6 +355,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
+	 * Each model must return a unique id
+	 *
+	 * @return string|null
+	 */
+	public function id()
+	{
+		return null;
+	}
+
+	/**
 	 * Increment a given field value
 	 *
 	 * @param string $field
@@ -367,6 +402,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 	public function isValid(): bool
 	{
 		return Form::for($this)->hasErrors() === false;
+	}
+
+	/**
+	 * Returns the parent Kirby instance
+	 *
+	 * @return \Kirby\Cms\App
+	 */
+	public function kirby()
+	{
+		return static::$kirby ??= App::instance();
 	}
 
 	/**
@@ -588,6 +633,31 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
+	 * Setter for the parent Kirby object
+	 *
+	 * @param \Kirby\Cms\App|null $kirby
+	 * @return $this
+	 */
+	protected function setKirby(App $kirby = null)
+	{
+		static::$kirby = $kirby;
+		return $this;
+	}
+
+	/**
+	 * Setter for the parent site object
+	 *
+	 * @internal
+	 * @param \Kirby\Cms\Site|null $site
+	 * @return $this
+	 */
+	public function setSite(Site $site = null)
+	{
+		$this->site = $site;
+		return $this;
+	}
+
+	/**
 	 * Create the translations collection from an array
 	 *
 	 * @param array|null $translations
@@ -606,6 +676,26 @@ abstract class ModelWithContent extends Model implements Identifiable
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Returns the parent Site instance
+	 *
+	 * @return \Kirby\Cms\Site
+	 */
+	public function site()
+	{
+		return $this->site ??= $this->kirby()->site();
+	}
+
+	/**
+	 * Convert the model to a simple array
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return $this->propertiesToArray();
 	}
 
 	/**
@@ -651,6 +741,17 @@ abstract class ModelWithContent extends Model implements Identifiable
 		], $data), ['fallback' => $fallback]);
 
 		return $result;
+	}
+
+	/**
+	 * Makes it possible to convert the entire model
+	 * to a string. Mostly useful for debugging
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->id();
 	}
 
 	/**
