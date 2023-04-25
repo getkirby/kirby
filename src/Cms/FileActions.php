@@ -25,12 +25,9 @@ trait FileActions
 	 * Renames the file without touching the extension
 	 * The store is used to actually execute this.
 	 *
-	 * @param string $name
-	 * @param bool $sanitize
-	 * @return $this|static
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public function changeName(string $name, bool $sanitize = true)
+	public function changeName(string $name, bool $sanitize = true): static
 	{
 		if ($sanitize === true) {
 			$name = F::safeName($name);
@@ -82,11 +79,8 @@ trait FileActions
 
 	/**
 	 * Changes the file's sorting number in the meta file
-	 *
-	 * @param int $sort
-	 * @return static
 	 */
-	public function changeSort(int $sort)
+	public function changeSort(int $sort): static
 	{
 		return $this->commit(
 			'changeSort',
@@ -135,14 +129,12 @@ trait FileActions
 	 * 3. commits the store action
 	 * 4. sends the after hook
 	 * 5. returns the result
-	 *
-	 * @param string $action
-	 * @param array $arguments
-	 * @param Closure $callback
-	 * @return mixed
 	 */
-	protected function commit(string $action, array $arguments, Closure $callback)
-	{
+	protected function commit(
+		string $action,
+		array $arguments,
+		Closure $callback
+	): mixed {
 		$old            = $this->hardcopy();
 		$kirby          = $this->kirby();
 		$argumentValues = array_values($arguments);
@@ -166,22 +158,23 @@ trait FileActions
 
 	/**
 	 * Copy the file to the given page
-	 *
-	 * @param \Kirby\Cms\Page $page
-	 * @return \Kirby\Cms\File
 	 */
-	public function copy(Page $page)
+	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
 
 		if ($this->kirby()->multilang() === true) {
 			foreach ($this->kirby()->languages() as $language) {
-				$contentFile = $this->contentFile($language->code());
-				F::copy($contentFile, $page->root() . '/' . basename($contentFile));
+				F::copy(
+					$contentFile = $this->contentFile($language->code()),
+					$page->root() . '/' . basename($contentFile)
+				);
 			}
 		} else {
-			$contentFile = $this->contentFile();
-			F::copy($contentFile, $page->root() . '/' . basename($contentFile));
+			F::copy(
+				$contentFile = $this->contentFile(),
+				$page->root() . '/' . basename($contentFile)
+			);
 		}
 
 		$copy = $page->clone()->file($this->filename());
@@ -200,13 +193,11 @@ trait FileActions
 	 * writing, so it can be replaced by any other
 	 * way of generating files.
 	 *
-	 * @param array $props
 	 * @param bool $move If set to `true`, the source will be deleted
-	 * @return static
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public static function create(array $props, bool $move = false)
+	public static function create(array $props, bool $move = false): static
 	{
 		if (isset($props['source'], $props['parent']) === false) {
 			throw new InvalidArgumentException('Please provide the "source" and "parent" props for the File');
@@ -274,8 +265,6 @@ trait FileActions
 	/**
 	 * Deletes the file. The store is used to
 	 * manipulate the filesystem or whatever you prefer.
-	 *
-	 * @return bool
 	 */
 	public function delete(): bool
 	{
@@ -322,7 +311,7 @@ trait FileActions
 	 *
 	 * @return $this
 	 */
-	public function publish()
+	public function publish(): static
 	{
 		Media::publish($this, $this->mediaRoot());
 		return $this;
@@ -335,12 +324,10 @@ trait FileActions
 	 * finally decides what it will support as
 	 * source.
 	 *
-	 * @param string $source
 	 * @param bool $move If set to `true`, the source will be deleted
-	 * @return static
 	 * @throws \Kirby\Exception\LogicException
 	 */
-	public function replace(string $source, bool $move = false)
+	public function replace(string $source, bool $move = false): static
 	{
 		$file = $this->clone();
 
@@ -373,13 +360,12 @@ trait FileActions
 	 * Stores the content on disk
 	 *
 	 * @internal
-	 * @param array|null $data
-	 * @param string|null $languageCode
-	 * @param bool $overwrite
-	 * @return static
 	 */
-	public function save(array $data = null, string $languageCode = null, bool $overwrite = false)
-	{
+	public function save(
+		array $data = null,
+		string $languageCode = null,
+		bool $overwrite = false
+	): static {
 		$file = parent::save($data, $languageCode, $overwrite);
 
 		// update model in siblings collection
@@ -393,7 +379,7 @@ trait FileActions
 	 *
 	 * @return $this
 	 */
-	public function unpublish(bool $onlyMedia = false)
+	public function unpublish(bool $onlyMedia = false): static
 	{
 		// unpublish media files
 		Media::unpublish($this->parent()->mediaRoot(), $this);

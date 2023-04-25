@@ -24,12 +24,12 @@ class Find
 	 * parent path and filename
 	 *
 	 * @param string|null $path Path to file's parent model
-	 * @param string $filename Filename
-	 * @return \Kirby\Cms\File|null
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public static function file(string $path = null, string $filename)
-	{
+	public static function file(
+		string $path = null,
+		string $filename
+	): File|null {
 		$filename = urldecode($filename);
 		$file     = static::parent($path)->file($filename);
 
@@ -49,10 +49,9 @@ class Find
 	 * Returns the language object for the given code
 	 *
 	 * @param string $code Language code
-	 * @return \Kirby\Cms\Language|null
 	 * @throws \Kirby\Exception\NotFoundException if the language cannot be found
 	 */
-	public static function language(string $code)
+	public static function language(string $code): Language|null
 	{
 		if ($language = App::instance()->language($code)) {
 			return $language;
@@ -70,10 +69,9 @@ class Find
 	 * Returns the page object for the given id
 	 *
 	 * @param string $id Page's id
-	 * @return \Kirby\Cms\Page|null
 	 * @throws \Kirby\Exception\NotFoundException if the page cannot be found
 	 */
-	public static function page(string $id)
+	public static function page(string $id): Page|null
 	{
 		$id   = str_replace(['+', ' '], '/', $id);
 		$page = App::instance()->page($id);
@@ -136,10 +134,9 @@ class Find
 	 * id is passed
 	 *
 	 * @param string|null $id User's id
-	 * @return \Kirby\Cms\User|null
 	 * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
 	 */
-	public static function user(string $id = null)
+	public static function user(string $id = null): User|null
 	{
 		// account is a reserved word to find the current
 		// user. It's used in various API and area routes.

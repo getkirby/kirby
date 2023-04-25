@@ -15,25 +15,12 @@ use Kirby\Toolkit\A;
  */
 abstract class ModelPermissions
 {
-	protected $category;
-	protected $model;
-	protected $options;
-	protected $permissions;
-	protected $user;
+	protected string $category;
+	protected ModelWithContent $model;
+	protected array $options;
+	protected Permissions $permissions;
+	protected User $user;
 
-	/**
-	 * @param string $method
-	 * @param array $arguments
-	 * @return bool
-	 */
-	public function __call(string $method, array $arguments = []): bool
-	{
-		return $this->can($method);
-	}
-
-	/**
-	 * ModelPermissions constructor
-	 */
 	public function __construct(ModelWithContent $model)
 	{
 		$this->model       = $model;
@@ -42,20 +29,19 @@ abstract class ModelPermissions
 		$this->permissions = $this->user->role()->permissions();
 	}
 
+	public function __call(string $method, array $arguments = []): bool
+	{
+		return $this->can($method);
+	}
+
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
 		return $this->toArray();
 	}
 
-	/**
-	 * @param string $action
-	 * @return bool
-	 */
 	public function can(string $action): bool
 	{
 		$role = $this->user->role()->id();
@@ -95,18 +81,11 @@ abstract class ModelPermissions
 		return $this->permissions->for($this->category, $action);
 	}
 
-	/**
-	 * @param string $action
-	 * @return bool
-	 */
 	public function cannot(string $action): bool
 	{
 		return $this->can($action) === false;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
 		$array = [];
