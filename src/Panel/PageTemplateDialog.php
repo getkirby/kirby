@@ -50,11 +50,12 @@ class PageTemplateDialog
 
 		return [
 			'redirect' => [
-				'url'   => 'pages/create',
-				'type'  => 'dialog',
-				'query' => [
-					'parent'   => $this->parentId,
-					'template' => $input['blueprint']
+				'url' => 'dialogs/pages/create',
+				'options' => [
+					'query' => [
+						'parent'   => $this->parentId,
+						'template' => $input['blueprint']
+					]
 				]
 			]
 		];

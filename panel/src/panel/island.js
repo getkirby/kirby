@@ -175,7 +175,7 @@ export default (panel, key, defaults) => {
 			// I.e. { $dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response[this.key()] ?? {});
+			return this.success(response["$" + this.key()] ?? {});
 		},
 
 		/**
@@ -194,7 +194,7 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			// close the dialog or drawer
+			// close the island
 			this.close();
 
 			// show a success message
@@ -278,14 +278,18 @@ export default (panel, key, defaults) => {
 		 * @param {Object} state
 		 */
 		successRedirect(state) {
-			// @deprecated Use state.redirect instead
-			if (state.route) {
-				return panel.view.open(state.route);
+			const redirect = state.route ?? state.redirect;
+
+			// no redirect
+			if (!redirect) {
+				return false;
 			}
 
-			if (state.redirect) {
-				return panel.view.open(state.redirect);
+			if (typeof redirect === "string") {
+				return panel.open(redirect);
 			}
+
+			return panel.open(redirect.url, redirect.options);
 		},
 
 		/**
