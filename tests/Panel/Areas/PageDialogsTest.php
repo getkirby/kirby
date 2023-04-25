@@ -521,19 +521,19 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertFormDialog($dialog);
 
-		$this->assertSame('hidden', $props['fields']['parent']['type']);
 		$this->assertSame('Title', $props['fields']['title']['label']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
 		$this->assertSame('title', $props['fields']['slug']['sync']);
+		$this->assertTrue($props['fields']['parent']['hidden']);
 
 		// there's only the default template for now
-		$this->assertSame('hidden', $props['fields']['template']['type']);
+		$this->assertTrue($props['fields']['template']['hidden']);
 
 		$this->assertSame('Create draft', $props['submitButton']);
 
 		$this->assertSame('site', $props['value']['parent']);
 		$this->assertSame('', $props['value']['slug']);
-		$this->assertSame('Page', $props['value']['template']);
+		$this->assertSame('default', $props['value']['template']);
 		$this->assertSame('', $props['value']['title']);
 	}
 

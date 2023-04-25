@@ -14,7 +14,6 @@ import Login from "./Login.vue";
 import LoginCode from "./LoginCode.vue";
 import Times from "./Times.vue";
 import Upload from "./Upload.vue";
-import Writer from "./Writer/Writer.vue";
 
 /** Form Helpers */
 import LoginAlert from "./LoginAlert.vue";
@@ -34,6 +33,7 @@ import Fields from "./Field/index.js";
 import Inputs from "./Input/index.js";
 import Layouts from "./Layouts/index.js";
 import Previews from "./Previews/index.js";
+import Writer from "./Writer/index.js";
 
 export default {
 	install(app) {
@@ -52,7 +52,6 @@ export default {
 		app.component("k-login-code", LoginCode);
 		app.component("k-times", Times);
 		app.component("k-upload", Upload);
-		app.component("k-writer", Writer);
 
 		app.component("k-login-alert", LoginAlert);
 
@@ -66,8 +65,8 @@ export default {
 		app.use(Elements);
 		app.use(Inputs);
 		app.use(Fields);
-		app.use(Inputs);
 		app.use(Layouts);
 		app.use(Previews);
+		app.use(Writer);
 	}
 };

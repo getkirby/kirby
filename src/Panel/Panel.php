@@ -368,6 +368,41 @@ class Panel
 	}
 
 	/**
+	 * Creates the load and submit routes for a single dialog
+	 * and adds the correct route pattern prefix
+	 */
+	public static function routesForDialog(
+		string $dialogId,
+		string $areaId,
+		string $prefix = '',
+		array $dialog = []
+	): array {
+		$routes = [];
+
+		// create the full pattern with dialogs prefix
+		$pattern = trim($prefix . '/' . ($dialog['pattern'] ?? $dialogId), '/');
+
+		// load event
+		$routes[] = [
+			'pattern' => $pattern,
+			'type'    => 'dialog',
+			'area'    => $areaId,
+			'action'  => $dialog['load'] ?? fn () => 'The load handler for your dialog is missing'
+		];
+
+		// submit event
+		$routes[] = [
+			'pattern' => $pattern,
+			'type'    => 'dialog',
+			'area'    => $areaId,
+			'method'  => 'POST',
+			'action'  => $dialog['submit'] ?? fn () => 'Your dialog does not define a submit handler'
+		];
+
+		return $routes;
+	}
+
+	/**
 	 * Extract all routes from an area
 	 */
 	public static function routesForDialogs(string $areaId, array $area): array
@@ -375,26 +410,13 @@ class Panel
 		$dialogs = $area['dialogs'] ?? [];
 		$routes  = [];
 
-		foreach ($dialogs as $key => $dialog) {
-			// create the full pattern with dialogs prefix
-			$pattern = 'dialogs/' . trim(($dialog['pattern'] ?? $key), '/');
-
-			// load event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'dialog',
-				'area'    => $areaId,
-				'action'  => $dialog['load'] ?? fn () => 'The load handler for your dialog is missing'
-			];
-
-			// submit event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'dialog',
-				'area'    => $areaId,
-				'method'  => 'POST',
-				'action'  => $dialog['submit'] ?? fn () => 'Your dialog does not define a submit handler'
-			];
+		foreach ($dialogs as $dialogId => $dialog) {
+			$routes = array_merge($routes, static::routesForDialog(
+				dialogId: $dialogId,
+				areaId: $areaId,
+				prefix: 'dialogs',
+				dialog: $dialog
+			));
 		}
 
 		return $routes;

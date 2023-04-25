@@ -56,6 +56,9 @@ class BlocksField extends FieldClass
 				// overwrite the block content with form values
 				$block['content'] = $this->form($fields[$type], $block['content'])->$to();
 
+				// create id if not exists
+				$block['id'] ??= Str::uuid();
+
 				$result[] = $block;
 			} catch (Throwable) {
 				$result[] = $block;
@@ -125,6 +128,35 @@ class BlocksField extends FieldClass
 		return $this->pretty;
 	}
 
+	/**
+	 * Paste action for blocks:
+	 *  - generates new uuids for the blocks
+	 *  - filters only supported fieldsets
+	 *  - applies max limit if defined
+	 */
+	public function pasteBlocks(array $blocks): array
+	{
+		$blocks = $this->blocksToValues($blocks);
+
+		foreach ($blocks as $index => &$block) {
+			$block['id'] = Str::uuid();
+
+			// remove the block if it's not available
+			try {
+				$this->fieldset($block['type']);
+			} catch (Throwable) {
+				unset($blocks[$index]);
+			}
+		}
+
+		// don't add blocks that exceed the maximum limit
+		if ($max = $this->max()) {
+			$blocks = array_slice($blocks, 0, $max);
+		}
+
+		return $blocks;
+	}
+
 	public function props(): array
 	{
 		return [
@@ -151,10 +183,10 @@ class BlocksField extends FieldClass
 				'method'  => 'POST',
 				'action'  => function () use ($field) {
 					$request = App::instance()->request();
+					$value   = BlocksCollection::parse($request->get('html'));
+					$blocks  = BlocksCollection::factory($value);
 
-					$value  = BlocksCollection::parse($request->get('html'));
-					$blocks = BlocksCollection::factory($value);
-					return $field->blocksToValues($blocks->toArray());
+					return $field->pasteBlocks($blocks->toArray());
 				}
 			],
 			[
@@ -200,6 +232,18 @@ class BlocksField extends FieldClass
 		}
 
 		return $this->valueToJson($blocks, $this->pretty());
+	}
+
+	protected function setDefault($default = null)
+	{
+		// set id for blocks if not exists
+		if (is_array($default) === true) {
+			array_walk($default, function (&$block) {
+				$block['id'] ??= Str::uuid();
+			});
+		}
+
+		parent::setDefault($default);
 	}
 
 	protected function setFieldsets($fieldsets, $model)

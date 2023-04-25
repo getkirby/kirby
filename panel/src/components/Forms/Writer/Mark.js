@@ -14,7 +14,7 @@ export default class Mark extends Extension {
 	}
 
 	get schema() {
-		return null;
+		return {};
 	}
 
 	get type() {

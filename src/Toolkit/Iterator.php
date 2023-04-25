@@ -23,14 +23,8 @@ use IteratorAggregate;
  */
 class Iterator implements IteratorAggregate
 {
-	/**
-	 * The data array
-	 */
 	public array $data = [];
 
-	/**
-	 * Constructor
-	 */
 	public function __construct(array $data = [])
 	{
 		$this->data = $data;

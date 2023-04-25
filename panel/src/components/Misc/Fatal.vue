@@ -9,7 +9,7 @@
 					<k-button
 						icon="cancel"
 						text="Close"
-						@click="$store.dispatch('fatal', false)"
+						@click="$panel.notification.close()"
 					/>
 				</template>
 			</k-bar>

@@ -26,9 +26,7 @@ export default {
 		text: String,
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {

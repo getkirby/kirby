@@ -72,6 +72,9 @@ describe.concurrent("$helper.string.template", () => {
 		result = string.template("{{ notexists.field }}", values);
 		expect(result).toBe("…");
 
+		result = string.template("{{ notexists.field.more }}", values);
+		expect(result).toBe("…");
+
 		result = string.template("Filename: {{ images.99.filename }}", values);
 		expect(result).toBe("Filename: …");
 
@@ -80,5 +83,13 @@ describe.concurrent("$helper.string.template", () => {
 			values
 		);
 		expect(result).toBe("New user … registered now");
+	});
+
+	it("should allow native string methods", () => {
+		const values = {
+			title: "Kirby"
+		};
+		let result = string.template("{{ title.length }}", values);
+		expect(result).toBe("5");
 	});
 });

@@ -147,9 +147,7 @@ export default {
 		sortBy: String,
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
@@ -542,7 +540,7 @@ export default {
 
 					return true;
 				} catch (errors) {
-					this.$store.dispatch("notification/error", {
+					this.$panel.notification.error({
 						message: this.$t("error.form.incomplete"),
 						details: errors
 					});

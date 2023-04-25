@@ -35,12 +35,13 @@ class FileBlueprint extends Blueprint
 			$this->props['options'] ?? true,
 			// defaults
 			[
-				'changeName' => null,
-				'create'     => null,
-				'delete'     => null,
-				'read'       => null,
-				'replace'    => null,
-				'update'     => null,
+				'changeName'     => null,
+				'changeTemplate' => null,
+				'create'     	 => null,
+				'delete'     	 => null,
+				'read'       	 => null,
+				'replace'    	 => null,
+				'update'     	 => null,
 			]
 		);
 

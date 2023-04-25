@@ -32,7 +32,7 @@
 					v-direction
 					:data-font="font"
 					class="k-textarea-input-native"
-					@click="onClick"
+					@click="$refs.toolbar?.close()"
 					@focus="onFocus"
 					@input="onInput"
 					@keydown.meta.enter="onSubmit"
@@ -173,11 +173,6 @@ export default {
 			this.insert(response.map((file) => file.dragText).join("\n\n"));
 			this.$events.$emit("model.update");
 		},
-		onClick() {
-			if (this.$refs.toolbar) {
-				this.$refs.toolbar.close();
-			}
-		},
 		onCommand(command, callback) {
 			if (typeof this[command] !== "function") {
 				window.console.warn(command + " is not a valid command");
@@ -194,7 +189,7 @@ export default {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
 				return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-					url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 					multiple: false
 				});
 			}
@@ -272,7 +267,7 @@ export default {
 		},
 		uploadFile() {
 			this.$refs.fileUpload.open({
-				url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false
 			});
 		},
@@ -330,19 +325,5 @@ export default {
 }
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
-}
-
-.k-toolbar {
-	margin-bottom: 0.25rem;
-	color: #aaa;
-}
-.k-textarea-input:focus-within .k-toolbar {
-	position: sticky;
-	top: 0;
-	inset-inline: 0;
-	z-index: 1;
-	box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	color: #000;
 }
 </style>

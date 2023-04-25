@@ -1,76 +1,53 @@
 <template>
-	<k-overlay ref="overlay" :dimmed="false" @close="onClose" @open="onOpen">
-		<div
-			:data-id="id"
-			:data-nested="nested"
-			class="k-drawer"
-			@mousedown.stop="mousedown(true)"
-			@mouseup="mouseup"
-		>
-			<div class="k-drawer-box" @mousedown.stop="mousedown(false)">
-				<header class="k-drawer-header">
-					<h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
-						<k-icon :type="icon" /> {{ title }}
-					</h2>
-					<ul v-else class="k-drawer-breadcrumb">
-						<li v-for="crumb in breadcrumb" :key="crumb.id">
-							<k-button
-								:icon="crumb.icon"
-								:text="crumb.title"
-								@click="goTo(crumb.id)"
-							/>
-						</li>
-					</ul>
-					<nav v-if="hasTabs" class="k-drawer-tabs">
-						<k-button
-							v-for="tabButton in tabs"
-							:key="tabButton.name"
-							:current="tab == tabButton.name"
-							:text="tabButton.label"
-							class="k-drawer-tab"
-							@click.stop="$emit('tab', tabButton.name)"
-						/>
-					</nav>
-					<nav class="k-drawer-options">
-						<slot name="options" />
-						<k-button class="k-drawer-option" icon="check" @click="close" />
-					</nav>
-				</header>
-				<div class="k-drawer-body scroll-y-auto">
-					<slot />
-				</div>
-			</div>
-		</div>
+	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
+		<form class="k-drawer" method="dialog" @submit.prevent="submit">
+			<k-drawer-notification />
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:icon="icon"
+				:tab="tab"
+				:tabs="tabs"
+				:title="title"
+				@openCrumb="openCrumb"
+				@openTab="openTab"
+			>
+				<slot name="options" />
+			</k-drawer-header>
+			<k-drawer-body>
+				<slot />
+			</k-drawer-body>
+		</form>
 	</k-overlay>
 </template>
 
 <script>
-export default {
-	inheritAttrs: false,
+export const props = {
 	props: {
 		id: String,
 		icon: String,
-		tab: String,
-		tabs: Object,
+		tabs: {
+			default: () => {},
+			type: [Array, Object]
+		},
 		title: String
-	},
+	}
+};
+
+export default {
+	mixins: [props],
 	data() {
 		return {
-			click: false
+			tab: null
 		};
 	},
 	computed: {
 		breadcrumb() {
 			return this.$store.state.drawers.open;
 		},
-		hasTabs() {
-			return this.tabs && Object.keys(this.tabs).length > 1;
-		},
 		index() {
-			return this.breadcrumb.findIndex((item) => item.id === this._uid);
-		},
-		nested() {
-			return this.index > 0;
+			return this.$store.state.drawers.open.findIndex(
+				(item) => item.id === this._uid
+			);
 		}
 	},
 	watch: {
@@ -78,178 +55,155 @@ export default {
 			if (this.index === -1) {
 				this.close();
 			}
+		},
+		tabs() {
+			// open the first tab
+			// when tabs change
+			this.openTab();
 		}
 	},
 	destroyed() {
 		this.$store.dispatch("drawers/close", this._uid);
 	},
 	methods: {
+		/**
+		 * Triggers the `@cancel` event and closes the dialog.
+		 * @public
+		 */
+		cancel() {
+			/**
+			 * This event is triggered whenever the cancel button or
+			 * the backdrop is clicked.
+			 * @event cancel
+			 */
+			this.$emit("cancel");
+			this.close();
+		},
 		close() {
-			this.$refs.overlay.close();
+			/**
+			 * This event is triggered when the drawer is being closed.
+			 * This happens independently from the cancel event.
+			 * @event close
+			 */
+			this.$emit("close");
+			this.$store.dispatch("drawers/close", this._uid);
+
+			/**
+			 * close the overlay if it is still there
+			 * in fiber drawers the entire drawer component gets destroyed
+			 * and this step is not necessary
+			 */
+			this.$refs.overlay?.close();
+		},
+		/**
+		 * The overlay component has a built-in focus
+		 * method that finds the best first element to
+		 * focus on
+		 */
+		focus() {
+			this.$refs.overlay.focus();
 		},
 		goTo(id) {
 			if (id === this._uid) {
 				return true;
 			}
+
 			this.$store.dispatch("drawers/goto", id);
 		},
-		mouseup() {
-			if (this.click === true) {
-				this.close();
+		open() {
+			// show the overlay
+			this.$refs.overlay.open();
+
+			/**
+			 * This event is triggered as soon as the drawer is being opened.
+			 * @event open
+			 */
+			this.$emit("open");
+		},
+		openCrumb(crumb) {
+			this.goTo(crumb.id);
+			this.$emit("openCrumb", crumb);
+		},
+		openTab(tab) {
+			tab = tab || Object.keys(this.tabs)[0];
+
+			if (!tab) {
+				return false;
 			}
 
-			this.click = false;
+			this.tab = tab;
+			this.$emit("openTab", tab);
 		},
-		mousedown(click = false) {
-			this.click = click;
-
-			if (this.click === true) {
-				this.$store.dispatch("drawers/close");
-			}
-		},
-		onClose() {
-			this.$store.dispatch("drawers/close", this._uid);
-			this.$emit("close");
-		},
-		onOpen() {
+		ready() {
+			// when drawers are used in the old-fashioned way
+			// by adding their component to a template and calling
+			// open on the component manually, the drawer state
+			// is set to a minimum. In comparison, this.$drawer fills
+			// the drawer state after a successfull request and
+			// the fiber drawer component is injected on store change
+			// automatically.
 			this.$store.dispatch("drawers/open", {
 				id: this._uid,
 				icon: this.icon,
 				title: this.title
 			});
-			this.$emit("open");
+
+			/**
+			 * Mark the drawer as ready to be used
+			 * @event ready
+			 */
+			this.$emit("ready");
+
+			// open the first tab
+			this.openTab();
 		},
-		open() {
-			this.$refs.overlay.open();
+		/**
+		 * This event is triggered when the submit button is clicked,
+		 * or the form is submitted. It can also be called manually.
+		 * @public
+		 */
+		submit() {
+			/**
+			 * @event submit
+			 */
+			this.$emit("submit");
 		}
 	}
 };
 </script>
 
 <style>
-.k-drawer {
+:root {
+	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1.5rem;
+	--drawer-shadow: var(--shadow-xl);
+	--drawer-width: 50rem;
+}
 
-	position: fixed;
-	inset: 0;
-	z-index: var(--z-toolbar);
+.k-drawer-overlay {
+	--overlay-color-back: rgba(0, 0, 0, 0.2);
 	display: flex;
 	align-items: stretch;
 	justify-content: flex-end;
-	background: rgba(0, 0, 0, 0.2);
 }
-.k-drawer-box {
+
+/**
+ * Don't apply the dark background twice
+ * for nested drawers.
+ */
+.k-drawer-overlay + .k-drawer-overlay {
+	--overlay-color-back: none;
+}
+
+.k-drawer {
+	z-index: var(--z-toolbar);
+	display: flex;
+	flex-basis: var(--drawer-width);
 	position: relative;
-	flex-basis: 50rem;
 	display: flex;
 	flex-direction: column;
-	background: var(--color-background);
-	box-shadow: var(--shadow-xl);
-}
-.k-drawer-header {
-	flex-shrink: 0;
-	height: var(--drawer-header-height);
-	padding-inline-start: var(--drawer-header-padding);
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	justify-content: space-between;
-	background: var(--color-white);
-	font-size: var(--text-sm);
-}
-.k-drawer-title {
-	padding: 0 0.75rem;
-}
-.k-drawer-title,
-.k-drawer-breadcrumb {
-	display: flex;
-	flex-grow: 1;
-	align-items: center;
-	min-width: 0;
-	margin-inline-start: -0.75rem;
-	font-size: var(--text-sm);
-	font-weight: var(--font-normal);
-}
-.k-drawer-breadcrumb li:not(:last-child) .k-button::after {
-	position: absolute;
-	inset-inline-end: -0.75rem;
-	width: 1.5rem;
-	display: inline-flex;
-	justify-content: center;
-	align-items: center;
-	content: "›";
-	color: var(--color-gray-500);
-	height: var(--drawer-header-height);
-}
-.k-drawer-title .k-icon,
-.k-drawer-breadcrumb .k-icon {
-	width: 1rem;
-	color: var(--color-gray-500);
-	margin-inline-end: 0.5rem;
-}
-.k-drawer-breadcrumb .k-button {
-	display: inline-flex;
-	align-items: center;
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
-}
-.k-drawer-breadcrumb .k-button-text {
-	opacity: 1;
-}
-.k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
-	padding-inline-start: 0;
-}
-.k-drawer-tabs {
-	display: flex;
-	align-items: center;
-	line-height: 1;
-	margin-inline-end: 0.75rem;
-}
-.k-drawer-tab.k-button {
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
-	display: flex;
-	align-items: center;
-	font-size: var(--text-xs);
-}
-.k-drawer-tab.k-button[aria-current]::after {
-	position: absolute;
-	bottom: -1px;
-	inset-inline: 0.75rem;
-	content: "";
-	background: var(--color-black);
-	height: 2px;
-}
-
-.k-drawer-options {
-	padding-inline-end: 0.75rem;
-}
-.k-drawer-option.k-button {
-	width: var(--drawer-header-height);
-	height: var(--drawer-header-height);
-	color: var(--color-gray-500);
-	line-height: 1;
-}
-.k-drawer-option.k-button:focus,
-.k-drawer-option.k-button:hover {
-	color: var(--color-black);
-}
-
-.k-drawer-body {
-	padding: 1.5rem;
-	flex-grow: 1;
-	background: var(--color-background);
-}
-
-/* Nested drawers */
-.k-drawer[data-nested="true"] {
-	background: none;
-}
-
-/* Sticky elements inside drawer */
-.k-drawer-body .k-textarea-input:focus-within .k-toolbar,
-.k-drawer-body .k-table th {
-	top: -1.5rem;
+	background: var(--drawer-color-back);
+	box-shadow: var(--drawer-shadow);
 }
 </style>

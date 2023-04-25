@@ -6,6 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -57,6 +58,7 @@ class PageRules
 		}
 
 		self::validateSlugLength($slug);
+		self::validateSlugProtectedPaths($page, $slug);
 
 		$siblings = $page->parentModel()->children();
 		$drafts   = $page->parentModel()->drafts();
@@ -269,6 +271,7 @@ class PageRules
 		}
 
 		self::validateSlugLength($page->slug());
+		self::validateSlugProtectedPaths($page, $page->slug());
 
 		if ($page->exists() === true) {
 			throw new DuplicateException([
@@ -428,6 +431,36 @@ class PageRules
 					'key'  => 'page.slug.maxlength',
 					'data' => [
 						'length' => $maxlength
+					]
+				]);
+			}
+		}
+	}
+
+
+	/**
+	 * Ensure that a top-level page path does not start with one of
+	 * the reserved URL paths, e.g. for API or the Panel
+	 *
+	 * @throws \Kirby\Exception\InvalidArgumentException If the page ID starts as one of the disallowed paths
+	 */
+	protected static function validateSlugProtectedPaths(
+		Page $page,
+		string $slug
+	): void {
+		if ($page->parent() === null) {
+			$paths = A::map(
+				['api', 'assets', 'media', 'panel'],
+				fn ($url) => $page->kirby()->url($url, true)->path()->toString()
+			);
+
+			$index = array_search($slug, $paths);
+
+			if ($index !== false) {
+				throw new InvalidArgumentException([
+					'key'  => 'page.changeSlug.reserved',
+					'data' => [
+						'path' => $paths[$index]
 					]
 				]);
 			}

@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
@@ -27,8 +28,10 @@ class Date extends DateTime
 	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
-	public function __construct($datetime = 'now', ?DateTimeZone $timezone = null)
-	{
+	public function __construct(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	) {
 		if (is_int($datetime) === true) {
 			$datetime = date('r', $datetime);
 		}
@@ -42,8 +45,6 @@ class Date extends DateTime
 
 	/**
 	 * Returns the datetime in `YYYY-MM-DD hh:mm:ss` format with timezone
-	 *
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -58,7 +59,7 @@ class Date extends DateTime
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
 	 */
-	public function ceil(string $unit)
+	public function ceil(string $unit): static
 	{
 		static::validateUnit($unit);
 
@@ -70,20 +71,17 @@ class Date extends DateTime
 	/**
 	 * Returns the interval between the provided and the object's datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return \DateInterval
 	 */
-	public function compare($datetime = 'now', ?DateTimeZone $timezone = null)
-	{
+	public function compare(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): DateInterval {
 		return $this->diff(new static($datetime, $timezone));
 	}
 
 	/**
 	 * Gets or sets the day value
-	 *
-	 * @param int|null $day
-	 * @return int
 	 */
 	public function day(int|null $day = null): int
 	{
@@ -103,7 +101,7 @@ class Date extends DateTime
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name is invalid
 	 */
-	public function floor(string $unit)
+	public function floor(string $unit): static
 	{
 		static::validateUnit($unit);
 
@@ -123,9 +121,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets or sets the hour value
-	 *
-	 * @param int|null $hour
-	 * @return int
 	 */
 	public function hour(int|null $hour = null): int
 	{
@@ -140,79 +135,75 @@ class Date extends DateTime
 	/**
 	 * Checks if the object's datetime is the same as the given datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return bool
 	 */
-	public function is($datetime = 'now', ?DateTimeZone $timezone = null): bool
-	{
+	public function is(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): bool {
 		return $this == new static($datetime, $timezone);
 	}
 
 	/**
 	 * Checks if the object's datetime is after the given datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return bool
 	 */
-	public function isAfter($datetime = 'now', ?DateTimeZone $timezone = null): bool
-	{
+	public function isAfter(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): bool {
 		return $this > new static($datetime, $timezone);
 	}
 
 	/**
 	 * Checks if the object's datetime is before the given datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return bool
 	 */
-	public function isBefore($datetime = 'now', ?DateTimeZone $timezone = null): bool
-	{
+	public function isBefore(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): bool {
 		return $this < new static($datetime, $timezone);
 	}
 
 	/**
 	 * Checks if the object's datetime is between the given datetimes
-	 *
-	 * @param string|int|\DateTimeInterface $min
-	 * @param string|int|\DateTimeInterface $max
-	 * @return bool
 	 */
-	public function isBetween($min, $max): bool
-	{
+	public function isBetween(
+		string|int|DateTimeInterface $min,
+		string|int|DateTimeInterface $max
+	): bool {
 		return $this->isMin($min) === true && $this->isMax($max) === true;
 	}
 
 	/**
 	 * Checks if the object's datetime is at or before the given datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return bool
 	 */
-	public function isMax($datetime = 'now', ?DateTimeZone $timezone = null): bool
-	{
+	public function isMax(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): bool {
 		return $this <= new static($datetime, $timezone);
 	}
 
 	/**
 	 * Checks if the object's datetime is at or after the given datetime
 	 *
-	 * @param string|int|\DateTimeInterface $datetime
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
-	 * @return bool
 	 */
-	public function isMin($datetime = 'now', ?DateTimeZone $timezone = null): bool
-	{
+	public function isMin(
+		string|int|DateTimeInterface $datetime = 'now',
+		DateTimeZone|null $timezone = null
+	): bool {
 		return $this >= new static($datetime, $timezone);
 	}
 
 	/**
 	 * Gets the microsecond value
-	 *
-	 * @return int
 	 */
 	public function microsecond(): int
 	{
@@ -221,8 +212,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets the millisecond value
-	 *
-	 * @return int
 	 */
 	public function millisecond(): int
 	{
@@ -231,9 +220,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets or sets the minute value
-	 *
-	 * @param int|null $minute
-	 * @return int
 	 */
 	public function minute(int|null $minute = null): int
 	{
@@ -247,9 +233,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets or sets the month value
-	 *
-	 * @param int|null $month
-	 * @return int
 	 */
 	public function month(int|null $month = null): int
 	{
@@ -265,10 +248,10 @@ class Date extends DateTime
 	 * Returns the datetime which is nearest to the object's datetime
 	 *
 	 * @param string|int|\DateTimeInterface ...$datetime Datetime strings, UNIX timestamps or objects
-	 * @return string|int|\DateTimeInterface
 	 */
-	public function nearest(...$datetime)
-	{
+	public function nearest(
+		string|int|DateTimeInterface ...$datetime
+	): string|int|DateTimeInterface {
 		$timestamp = $this->timestamp();
 		$minDiff   = PHP_INT_MAX;
 		$nearest   = null;
@@ -291,9 +274,8 @@ class Date extends DateTime
 	 * Returns an instance of the current datetime
 	 *
 	 * @param \DateTimeZone|null $timezone
-	 * @return static
 	 */
-	public static function now(?DateTimeZone $timezone = null)
+	public static function now(DateTimeZone|null $timezone = null): static
 	{
 		return new static('now', $timezone);
 	}
@@ -301,13 +283,11 @@ class Date extends DateTime
 	/**
 	 * Tries to create an instance from the given string
 	 * or fails silently by returning `null` on error
-	 *
-	 * @param string|null $datetime
-	 * @param \DateTimeZone|null $timezone
-	 * @return static|null
 	 */
-	public static function optional(string|null $datetime = null, ?DateTimeZone $timezone = null)
-	{
+	public static function optional(
+		string|null $datetime = null,
+		DateTimeZone|null $timezone = null
+	): static|null {
 		if (empty($datetime) === true) {
 			return null;
 		}
@@ -328,7 +308,7 @@ class Date extends DateTime
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the unit name or size is invalid
 	 */
-	public function round(string $unit, int $size = 1)
+	public function round(string $unit, int $size = 1): static
 	{
 		static::validateUnit($unit);
 
@@ -365,12 +345,12 @@ class Date extends DateTime
 	 * by the defined step
 	 * @since 3.7.0
 	 *
-	 * @param string|null $date
 	 * @param int|array|null $step array of `unit` and `size` to round to nearest
-	 * @return int|null
 	 */
-	public static function roundedTimestamp(string|null $date = null, $step = null): int|null
-	{
+	public static function roundedTimestamp(
+		string|null $date = null,
+		int|array|null $step = null
+	): int|null {
 		if ($date = static::optional($date)) {
 			if ($step !== null) {
 				$step = static::stepConfig($step, [
@@ -388,9 +368,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets or sets the second value
-	 *
-	 * @param int|null $second
-	 * @return int
 	 */
 	public function second(int|null $second = null): int
 	{
@@ -408,8 +385,10 @@ class Date extends DateTime
 	 * @param string|int|\DateTimeInterface $datetime Datetime string, UNIX timestamp or object
 	 * @param \DateTimeZone|null $timezone Optional default timezone if `$datetime` is string
 	 */
-	public function set($datetime, ?DateTimeZone $timezone = null)
-	{
+	public function set(
+		string|int|DateTimeInterface $datetime,
+		DateTimeZone|null $timezone = null
+	): void {
 		$datetime = new static($datetime, $timezone);
 		$this->setTimestamp($datetime->timestamp());
 	}
@@ -422,13 +401,11 @@ class Date extends DateTime
 	 * @param array|null $default Default values to use if one or both values are not provided
 	 * @return array
 	 */
-	public static function stepConfig($input = null, array|null $default = null): array
-	{
-		$default ??= [
-			'size' => 1,
-			'unit' => 'day'
-		];
-
+	public static function stepConfig(
+		// no type hint to use InvalidArgumentException at the end
+		$input = null,
+		array|null $default = ['size' => 1, 'unit' => 'day']
+	): array {
 		if ($input === null) {
 			return $default;
 		}
@@ -452,8 +429,6 @@ class Date extends DateTime
 
 	/**
 	 * Returns the time in `hh:mm:ss` format
-	 *
-	 * @return string
 	 */
 	public function time(): string
 	{
@@ -462,8 +437,6 @@ class Date extends DateTime
 
 	/**
 	 * Returns the UNIX timestamp
-	 *
-	 * @return int
 	 */
 	public function timestamp(): int
 	{
@@ -472,21 +445,16 @@ class Date extends DateTime
 
 	/**
 	 * Returns the timezone object
-	 *
-	 * @return \DateTimeZone
 	 */
-	public function timezone()
+	public function timezone(): DateTimeZone|false
 	{
 		return $this->getTimezone();
 	}
 
 	/**
 	 * Returns an instance of the beginning of the current day
-	 *
-	 * @param \DateTimeZone|null $timezone
-	 * @return static
 	 */
-	public static function today(?DateTimeZone $timezone = null)
+	public static function today(DateTimeZone|null $timezone = null): static
 	{
 		return new static('today', $timezone);
 	}
@@ -497,12 +465,13 @@ class Date extends DateTime
 	 *
 	 * @param string $mode `date`, `time` or `datetime`
 	 * @param bool $timezone Whether the timezone is printed as well
-	 * @return string
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the mode is invalid
 	 */
-	public function toString(string $mode = 'datetime', bool $timezone = true): string
-	{
+	public function toString(
+		string $mode = 'datetime',
+		bool $timezone = true
+	): string {
 		$format = match ($mode) {
 			'date'     => 'Y-m-d',
 			'time'     => 'H:i:s',
@@ -519,9 +488,6 @@ class Date extends DateTime
 
 	/**
 	 * Gets or sets the year value
-	 *
-	 * @param int|null $year
-	 * @return int
 	 */
 	public function year(int|null $year = null): int
 	{
@@ -535,9 +501,6 @@ class Date extends DateTime
 
 	/**
 	 * Ensures that the provided string is a valid unit name
-	 *
-	 * @param string $unit
-	 * @return void
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */

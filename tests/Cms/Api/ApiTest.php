@@ -469,6 +469,7 @@ class ApiTest extends TestCase
 			'users' => [
 				[
 					'email' => 'current@getkirby.com',
+					'role'  => 'admin'
 				],
 				[
 					'email' => 'test@getkirby.com',

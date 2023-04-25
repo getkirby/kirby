@@ -57,9 +57,7 @@ export default {
 		},
 		options: {
 			type: [Array, Function, String],
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		/**
 		 * Whether or which text to show

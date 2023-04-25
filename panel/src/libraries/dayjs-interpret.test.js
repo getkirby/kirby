@@ -83,7 +83,11 @@ describe("dayjs.interpret(input, 'date')", () => {
 		"Aug 5": "2022-08-05",
 
 		December: "2022-12-01",
-		Dec: "2022-12-01"
+		Dec: "2022-12-01",
+
+		"Feb 2022": "2022-02-01",
+		"02 2022": "2022-02-01",
+		"2 2022": "2022-02-01"
 	};
 
 	for (const input in expected) {

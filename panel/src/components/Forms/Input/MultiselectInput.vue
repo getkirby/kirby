@@ -123,9 +123,7 @@ export const props = {
 		value: {
 			type: Array,
 			required: true,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	}
 };

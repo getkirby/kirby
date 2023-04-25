@@ -4,13 +4,17 @@ export default class Email extends Mark {
 	get button() {
 		return {
 			icon: "email",
-			label: "Email"
+			label: window.panel.$t("toolbar.button.email")
 		};
 	}
 
 	commands() {
 		return {
-			email: () => {
+			email: (event) => {
+				if (event.altKey || event.metaKey) {
+					return this.remove();
+				}
+
 				this.editor.emit("email");
 			},
 			insertEmail: (attrs = {}) => {

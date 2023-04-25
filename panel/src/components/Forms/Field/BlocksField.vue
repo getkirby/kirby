@@ -82,9 +82,7 @@ export default {
 		},
 		value: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	data() {
@@ -94,7 +92,7 @@ export default {
 	},
 	computed: {
 		hasFieldsets() {
-			return Object.keys(this.fieldsets).length;
+			return this.$helper.object.length(this.fieldsets) > 0;
 		},
 		isEmpty() {
 			return this.value.length === 0;

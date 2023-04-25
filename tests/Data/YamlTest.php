@@ -13,6 +13,8 @@ class YamlTest extends TestCase
 	/**
 	 * @covers ::encode
 	 * @covers ::decode
+	 * @covers \Kirby\Data\YamlSpyc::encode
+	 * @covers \Kirby\Data\YamlSpyc::decode
 	 */
 	public function testEncodeDecode()
 	{
@@ -39,6 +41,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::decode
+	 * @covers \Kirby\Data\YamlSpyc::decode
 	 */
 	public function testDecodeInvalid1()
 	{
@@ -50,6 +53,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::decode
+	 * @covers \Kirby\Data\YamlSpyc::decode
 	 */
 	public function testDecodeInvalid2()
 	{
@@ -61,6 +65,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::encode
+	 * @covers \Kirby\Data\YamlSpyc::encode
 	 */
 	public function testEncodeFloat()
 	{
@@ -73,6 +78,7 @@ class YamlTest extends TestCase
 
 	/**
 	 * @covers ::encode
+	 * @covers \Kirby\Data\YamlSpyc::encode
 	 */
 	public function testEncodeFloatWithNonUSLocale()
 	{
@@ -89,6 +95,10 @@ class YamlTest extends TestCase
 		setlocale(LC_ALL, $locale);
 	}
 
+	/**
+	 * @covers ::encode
+	 * @covers \Kirby\Data\YamlSpyc::encode
+	 */
 	public function testEncodeNodeTypes()
 	{
 		$data = Yaml::encode(['test' => '']);

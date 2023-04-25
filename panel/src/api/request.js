@@ -1,130 +1,50 @@
-export async function toJson(response) {
-	const text = await response.text();
-	let data;
+import { responder } from "@/panel/request.js";
+import { toLowerKeys } from "@/helpers/object.js";
+import { ltrim, rtrim } from "@/helpers/string";
 
-	try {
-		data = JSON.parse(text);
-	} catch (e) {
-		window.panel.$vue.$api.onParserError({ html: text });
-		return false;
-	}
+export default (api) => {
+	return async (path, options = {}) => {
+		// create options object
+		options = {
+			cache: "no-store",
+			credentials: "same-origin",
+			mode: "same-origin",
+			headers: {
+				"content-type": "application/json",
+				"x-csrf": api.csrf,
+				"x-language": api.language,
+				...toLowerKeys(options.headers ?? {})
+			},
+			...options
+		};
 
-	return data;
-}
-
-import { toLowerKeys } from "../helpers/object.js";
-
-export default (config) => {
-	return {
-		running: 0,
-		async request(path, options, silent = false) {
-			// create options object
-			options = Object.assign(options || {}, {
-				credentials: "same-origin",
-				cache: "no-store",
-				headers: {
-					"content-type": "application/json",
-					...toLowerKeys(options.headers ?? {})
-				}
-			});
-
-			// adapt headers for all non-GET and non-POST methods
-			if (
-				config.methodOverwrite &&
-				options.method !== "GET" &&
-				options.method !== "POST"
-			) {
-				options.headers["x-http-method-override"] = options.method;
-				options.method = "POST";
-			}
-
-			// CMS specific options via callback
-			options = config.onPrepare(options);
-
-			// create a request id
-			const id = path + "/" + JSON.stringify(options);
-
-			config.onStart(id, silent);
-			this.running++;
-
-			try {
-				// fetch the resquest's response
-				const response = await fetch(
-					[config.endpoint, path].join(
-						config.endpoint.endsWith("/") || path.startsWith("/") ? "" : "/"
-					),
-					options
-				);
-
-				// try to parse JSON
-				const json = await toJson(response);
-
-				// check for the server response code
-				if (response.status < 200 || response.status > 299) {
-					throw json;
-				}
-
-				// look for an error status
-				if (json.status === "error") {
-					throw json;
-				}
-
-				let data = json;
-
-				if (json.data && json.type === "model") {
-					data = json.data;
-				}
-
-				this.running--;
-				config.onComplete(id);
-				config.onSuccess(json);
-				return data;
-			} catch (e) {
-				this.running--;
-				config.onComplete(id);
-
-				// pass to error callback and throw error
-				// except when callback explicitly suppresses it
-				if (config.onError(e) !== false) {
-					throw e;
-				}
-
-				return {};
-			}
-		},
-		async get(path, query, options, silent = false) {
-			if (query) {
-				path +=
-					"?" +
-					Object.keys(query)
-						.filter((key) => query[key] !== undefined && query[key] !== null)
-						.map((key) => key + "=" + query[key])
-						.join("&");
-			}
-
-			return this.request(
-				path,
-				Object.assign(options || {}, {
-					method: "GET"
-				}),
-				silent
-			);
-		},
-		async post(path, data, options, method = "POST", silent = false) {
-			return this.request(
-				path,
-				Object.assign(options || {}, {
-					method: method,
-					body: JSON.stringify(data)
-				}),
-				silent
-			);
-		},
-		async patch(path, data, options, silent = false) {
-			return this.post(path, data, options, "PATCH", silent);
-		},
-		async delete(path, data, options, silent = false) {
-			return this.post(path, data, options, "DELETE", silent);
+		// adapt headers for all non-GET and non-POST methods
+		if (
+			api.methodOverwrite &&
+			options.method !== "GET" &&
+			options.method !== "POST"
+		) {
+			options.headers["x-http-method-override"] = options.method;
+			options.method = "POST";
 		}
+
+		// build the request URL
+		options.url = rtrim(api.endpoint, "/") + "/" + ltrim(path, "/");
+
+		// The request object is a nice way to access all the
+		// important parts later in errors for example
+		const request = new Request(options.url, options);
+
+		// fetch the resquest's response
+		const { response } = await responder(request, await fetch(request));
+
+		let data = response.json;
+
+		// simplify the response
+		if (data.data && data.type === "model") {
+			data = data.data;
+		}
+
+		return data;
 	};
 };

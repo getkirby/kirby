@@ -118,31 +118,6 @@ export default {
 		};
 	},
 	computed: {
-		isVisible() {
-			return this.pages > 1;
-		},
-		prevBtn() {
-			return {
-				disabled: this.start <= 1,
-				tooltip: this.prevLabel ?? this.$t("prev"),
-				icon: "angle-left",
-				click: () => this.prev()
-			};
-		},
-		nextBtn() {
-			return {
-				disabled: this.end >= this.total,
-				tooltip: this.nextLabel ?? this.$t("next"),
-				icon: "angle-right",
-				click: () => this.next()
-			};
-		},
-		start() {
-			return (this.current - 1) * this.limit + 1;
-		},
-		end() {
-			return Math.min(this.start - 1 + this.limit, this.total);
-		},
 		detailsText() {
 			if (this.limit === 1) {
 				return this.start + " / ";
@@ -150,14 +125,39 @@ export default {
 
 			return this.start + "-" + this.end + " / ";
 		},
-		pages() {
-			return Math.ceil(this.total / this.limit);
+		end() {
+			return Math.min(this.start - 1 + this.limit, this.total);
 		},
 		hasPages() {
 			return this.total > this.limit;
 		},
+		isVisible() {
+			return this.pages > 1;
+		},
+		nextBtn() {
+			return {
+				disabled: this.end >= this.total,
+				tooltip: this.nextLabel ?? this.$t("next"),
+				icon: "angle-right",
+				click: this.next
+			};
+		},
 		offset() {
 			return this.start - 1;
+		},
+		pages() {
+			return Math.ceil(this.total / this.limit);
+		},
+		prevBtn() {
+			return {
+				disabled: this.start <= 1,
+				tooltip: this.prevLabel ?? this.$t("prev"),
+				icon: "angle-left",
+				click: this.prev
+			};
+		},
+		start() {
+			return (this.current - 1) * this.limit + 1;
 		}
 	},
 	watch: {
@@ -183,12 +183,20 @@ export default {
 				await this.validate(page);
 				this.$refs.dropdown?.close();
 
+				// Don't assign page directly to `this.current` as
+				// this leads to a flicker of the navigation.
+				// However, because of this we need to manually
+				// calculate start, end and offset that depend on
+				// the new page value
+				page = Math.max(1, Math.min(page, this.pages));
+				const start = (page - 1) * this.limit + 1;
+
 				this.$emit("paginate", {
-					page: Math.max(1, Math.min(page, this.pages)),
-					start: this.start,
-					end: this.end,
+					page,
+					start,
+					end: Math.min(start - 1 + this.limit, this.total),
 					limit: this.limit,
-					offset: this.offset,
+					offset: start - 1,
 					total: this.total
 				});
 			} catch (e) {

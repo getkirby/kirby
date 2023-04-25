@@ -70,9 +70,7 @@ export default {
 	props: {
 		types: {
 			type: Object,
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		type: String
 	},
@@ -104,12 +102,10 @@ export default {
 	created() {
 		this.search = debounce(this.search, 250);
 		this.$events.$on("keydown.cmd.shift.f", this.open);
-		this.$events.$on("keydown.cmd.k", this.open);
 		this.$events.$on("keydown.cmd./", this.open);
 	},
 	destroyed() {
 		this.$events.$off("keydown.cmd.shift.f", this.open);
-		this.$events.$off("keydown.cmd.k", this.open);
 		this.$events.$off("keydown.cmd./", this.open);
 	},
 	methods: {

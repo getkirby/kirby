@@ -12,59 +12,40 @@ export default new Vuex.Store({
 	// eslint-disable-next-line
 	strict: process.env.NODE_ENV !== "production",
 	state: {
-		dialog: null,
-		drag: null,
-		fatal: false,
-		isLoading: false
+		drag: null
 	},
 	mutations: {
-		SET_DIALOG(state, dialog) {
-			state.dialog = dialog;
-		},
 		SET_DRAG(state, drag) {
 			state.drag = drag;
-		},
-		SET_FATAL(state, html) {
-			state.fatal = html;
-		},
-		SET_LOADING(state, loading) {
-			state.isLoading = loading;
 		}
 	},
 	actions: {
+		/**
+		 * @deprecated Use window.panel.dialog.open()
+		 */
 		dialog(context, dialog) {
-			context.commit("SET_DIALOG", dialog);
+			window.panel.dialog.open(dialog);
 		},
 		drag(context, drag) {
 			context.commit("SET_DRAG", drag);
 		},
+		/**
+		 * @deprecated Use window.panel.notification.fatal()
+		 */
 		fatal(context, options) {
-			// close the fatal window if false
-			// is passed as options
-			if (options === false) {
-				context.commit("SET_FATAL", false);
-				return;
-			}
-
-			console.error("The JSON response could not be parsed");
-
-			// show the full response in the console
-			// if debug mode is enabled
-			if (window.panel.$config.debug) {
-				console.info(options.html);
-			}
-
-			// only show the fatal dialog if the silent
-			// option is not set to true
-			if (!options.silent) {
-				context.commit("SET_FATAL", options.html);
-			}
+			window.panel.notification.fatal(options);
 		},
+		/**
+		 * @deprecated Use window.panel.isLoading
+		 */
 		isLoading(context, loading) {
-			context.commit("SET_LOADING", loading === true);
+			window.panel.isLoading = loading;
 		},
+		/**
+		 * @deprecated
+		 */
 		navigate(context) {
-			context.dispatch("dialog", null);
+			window.panel.dialog.close();
 			context.dispatch("drawers/close");
 		}
 	},
