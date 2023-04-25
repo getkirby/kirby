@@ -993,8 +993,9 @@ class PageTest extends TestCase
 		]);
 
 		$expected = [
-			'children' => [],
 			'content' => [],
+			'translations' => [],
+			'children' => [],
 			'files' => [],
 			'id' => 'test',
 			'mediaUrl' => '/media/pages/test',
@@ -1003,7 +1004,6 @@ class PageTest extends TestCase
 			'parent' => null,
 			'slug' => 'test',
 			'template' => $page->template(),
-			'translations' => [],
 			'uid' => 'test',
 			'uri' => 'test',
 			'url' => '/test',
