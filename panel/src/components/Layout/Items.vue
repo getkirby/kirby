@@ -103,10 +103,7 @@ export default {
 	},
 	methods: {
 		onDragStart($event, dragText) {
-			this.$panel.drag = {
-				type: "text",
-				data: dragText
-			};
+			this.$panel.drag.start("text", dragText);
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);

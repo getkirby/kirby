@@ -195,7 +195,7 @@ export default {
 			}
 
 			// dropping text
-			if (this.$panel.drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				this.focus();
 				this.insert(this.$panel.drag.data);
 			}
@@ -223,7 +223,7 @@ export default {
 			}
 
 			// drag & drop for text
-			if (this.$panel.drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				$event.dataTransfer.dropEffect = "copy";
 				this.focus();
 				this.over = true;

@@ -19,10 +19,10 @@ export default new Vuex.Store({
 			window.panel.dialog.open(dialog);
 		},
 		/**
-		 * @deprecated Use window.panel.drag
+		 * @deprecated Use window.panel.drag.start(type, data)
 		 */
 		drag(context, drag) {
-			window.panel.drag = drag;
+			window.panel.drag.start(...drag);
 		},
 		/**
 		 * @deprecated Use window.panel.notification.fatal()
