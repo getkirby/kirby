@@ -518,20 +518,14 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the user's name
-	 *
-	 * @return \Kirby\Cms\Field
 	 */
-	public function name()
+	public function name(): Field
 	{
 		if (is_string($this->name) === true) {
 			return new Field($this, 'name', $this->name);
 		}
 
-		if ($this->name !== null) {
-			return $this->name;
-		}
-
-		return $this->name = new Field($this, 'name', $this->credentials()['name'] ?? null);
+		return $this->name ??= new Field($this, 'name', $this->credentials()['name'] ?? null);
 	}
 
 	/**
@@ -572,32 +566,21 @@ class User extends ModelWithContent
 
 	/**
 	 * Returns the encrypted user password
-	 *
-	 * @return string|null
 	 */
 	public function password(): string|null
 	{
-		if ($this->password !== null) {
-			return $this->password;
-		}
-
-		return $this->password = $this->readPassword();
+		return $this->password ??= $this->readPassword();
 	}
 
-	/**
-	 * @return \Kirby\Cms\UserPermissions
-	 */
-	public function permissions()
+	public function permissions(): UserPermissions
 	{
 		return new UserPermissions($this);
 	}
 
 	/**
 	 * Returns the user role
-	 *
-	 * @return \Kirby\Cms\Role
 	 */
-	public function role()
+	public function role(): Role
 	{
 		if ($this->role instanceof Role) {
 			return $this->role;
@@ -664,10 +647,9 @@ class User extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;

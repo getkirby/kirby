@@ -28,12 +28,12 @@ use Kirby\Toolkit\A;
  */
 class Page extends ModelWithContent
 {
-	use PageActions;
-	use PageSiblings;
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
 	use HasSiblings;
+	use PageActions;
+	use PageSiblings;
 
 	public const CLASS_ALIAS = 'page';
 
@@ -201,16 +201,14 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the blueprint object
-	 *
-	 * @return \Kirby\Cms\PageBlueprint
 	 */
-	public function blueprint()
+	public function blueprint(): PageBlueprint
 	{
-		if ($this->blueprint instanceof PageBlueprint) {
-			return $this->blueprint;
-		}
-
-		return $this->blueprint = PageBlueprint::factory('pages/' . $this->intendedTemplate(), 'pages/default', $this);
+		return $this->blueprint ??= PageBlueprint::factory(
+			'pages/' . $this->intendedTemplate(),
+			'pages/default',
+			$this
+		);
 	}
 
 	/**
@@ -477,10 +475,8 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the template that should be
 	 * loaded if it exists.
-	 *
-	 * @return \Kirby\Template\Template
 	 */
-	public function intendedTemplate()
+	public function intendedTemplate(): Template
 	{
 		if ($this->intendedTemplate !== null) {
 			return $this->intendedTemplate;
@@ -1124,10 +1120,9 @@ class Page extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -1140,10 +1135,9 @@ class Page extends ModelWithContent
 	/**
 	 * Sets the intended template
 	 *
-	 * @param string|null $template
 	 * @return $this
 	 */
-	protected function setTemplate(string $template = null)
+	protected function setTemplate(string $template = null): static
 	{
 		if ($template !== null) {
 			$this->intendedTemplate = $this->kirby()->template($template);
@@ -1155,10 +1149,9 @@ class Page extends ModelWithContent
 	/**
 	 * Sets the Url
 	 *
-	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(string $url = null)
+	protected function setUrl(string $url = null): static
 	{
 		if (is_string($url) === true) {
 			$url = rtrim($url, '/');

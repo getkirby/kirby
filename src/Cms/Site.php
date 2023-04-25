@@ -22,10 +22,10 @@ use Kirby\Toolkit\A;
  */
 class Site extends ModelWithContent
 {
-	use SiteActions;
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
+	use SiteActions;
 
 	public const CLASS_ALIAS = 'site';
 
@@ -220,27 +220,16 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the error page object
-	 *
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function errorPage()
+	public function errorPage(): Page|null
 	{
-		if ($this->errorPage instanceof Page) {
-			return $this->errorPage;
-		}
-
-		if ($error = $this->find($this->errorPageId())) {
-			return $this->errorPage = $error;
-		}
-
-		return null;
+		return $this->errorPage ??= $this->find($this->errorPageId());
 	}
 
 	/**
 	 * Returns the global error page id
 	 *
 	 * @internal
-	 * @return string
 	 */
 	public function errorPageId(): string
 	{
@@ -249,8 +238,6 @@ class Site extends ModelWithContent
 
 	/**
 	 * Checks if the site exists on disk
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -259,27 +246,16 @@ class Site extends ModelWithContent
 
 	/**
 	 * Returns the home page object
-	 *
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function homePage()
+	public function homePage(): Page|null
 	{
-		if ($this->homePage instanceof Page) {
-			return $this->homePage;
-		}
-
-		if ($home = $this->find($this->homePageId())) {
-			return $this->homePage = $home;
-		}
-
-		return null;
+		return $this->homePage ??= $this->find($this->homePageId());
 	}
 
 	/**
 	 * Returns the global home page id
 	 *
 	 * @internal
-	 * @return string
 	 */
 	public function homePageId(): string
 	{
@@ -374,9 +350,8 @@ class Site extends ModelWithContent
 	 *
 	 * @param string|null $path omit for current page,
 	 *                          otherwise e.g. `notes/across-the-ocean`
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function page(string|null $path = null)
+	public function page(string|null $path = null): Page|null
 	{
 		if ($path !== null) {
 			return $this->find($path);
@@ -483,10 +458,9 @@ class Site extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array|null $blueprint = null)
+	protected function setBlueprint(array|null $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -565,7 +539,7 @@ class Site extends ModelWithContent
 		}
 
 		// convert ids to a Page object
-		if (is_string($page)) {
+		if (is_string($page) === true) {
 			$page = $this->find($page);
 		}
 

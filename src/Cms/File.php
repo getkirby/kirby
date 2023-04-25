@@ -375,23 +375,17 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
-		if ($this->id !== null) {
-			return $this->id;
-		}
-
 		if (
 			$this->parent() instanceof Page ||
 			$this->parent() instanceof User
 		) {
-			return $this->id = $this->parent()->id() . '/' . $this->filename();
+			return $this->id ??= $this->parent()->id() . '/' . $this->filename();
 		}
 
-		return $this->id = $this->filename();
+		return $this->id ??= $this->filename();
 	}
 
 	/**
@@ -605,10 +599,9 @@ class File extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -617,7 +610,6 @@ class File extends ModelWithContent
 
 		return $this;
 	}
-
 
 	/**
 	 * Returns the parent Files collection
@@ -669,8 +661,6 @@ class File extends ModelWithContent
 	 * Extended info for the array export
 	 * by injecting the information from
 	 * the asset.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -682,8 +672,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the Url
-	 *
-	 * @return string
 	 */
 	public function url(): string
 	{

@@ -638,10 +638,9 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Sets the Content object
 	 *
-	 * @param array|null $content
 	 * @return $this
 	 */
-	protected function setContent(array $content = null)
+	protected function setContent(array $content = null): static
 	{
 		if ($content !== null) {
 			$content = new Content($content, $this);
@@ -690,7 +689,8 @@ abstract class ModelWithContent implements Identifiable
 	public function toArray(): array
 	{
 		return [
-			'content' => $this->content()->toArray()
+			'content'      => $this->content()->toArray(),
+			'translations' => $this->translations()->toArray()
 		];
 	}
 
