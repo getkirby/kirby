@@ -1,16 +1,8 @@
 <template>
-	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
+	<k-overlay ref="overlay" type="drawer" @cancel="cancel">
 		<form class="k-drawer" method="dialog" @submit.prevent="submit">
 			<k-drawer-notification />
-			<k-drawer-header
-				:breadcrumb="breadcrumb"
-				:icon="icon"
-				:tab="tab"
-				:tabs="tabs"
-				:title="title"
-				@openCrumb="openCrumb"
-				@openTab="openTab"
-			>
+			<k-drawer-header @openCrumb="openCrumb">
 				<slot name="options" />
 			</k-drawer-header>
 			<k-drawer-body>
@@ -35,65 +27,16 @@ export const props = {
 
 export default {
 	mixins: [props],
-	data() {
-		return {
-			tab: null
-		};
-	},
-	computed: {
-		breadcrumb() {
-			return this.$store.state.drawers.open;
-		},
-		index() {
-			return this.$store.state.drawers.open.findIndex(
-				(item) => item.id === this._uid
-			);
-		}
-	},
-	watch: {
-		index() {
-			if (this.index === -1) {
-				this.close();
-			}
-		},
-		tabs() {
-			// open the first tab
-			// when tabs change
-			this.openTab();
-		}
-	},
-	destroyed() {
-		this.$store.dispatch("drawers/close", this._uid);
-	},
 	methods: {
 		/**
 		 * Triggers the `@cancel` event and closes the dialog.
 		 * @public
 		 */
 		cancel() {
-			/**
-			 * This event is triggered whenever the cancel button or
-			 * the backdrop is clicked.
-			 * @event cancel
-			 */
-			this.$emit("cancel");
-			this.close();
+			this.$panel.drawer.cancel();
 		},
 		close() {
-			/**
-			 * This event is triggered when the drawer is being closed.
-			 * This happens independently from the cancel event.
-			 * @event close
-			 */
-			this.$emit("close");
-			this.$store.dispatch("drawers/close", this._uid);
-
-			/**
-			 * close the overlay if it is still there
-			 * in fiber drawers the entire drawer component gets destroyed
-			 * and this step is not necessary
-			 */
-			this.$refs.overlay?.close();
+			this.$panel.drawer.close();
 		},
 		/**
 		 * The overlay component has a built-in focus
@@ -103,59 +46,8 @@ export default {
 		focus() {
 			this.$refs.overlay.focus();
 		},
-		goTo(id) {
-			if (id === this._uid) {
-				return true;
-			}
-
-			this.$store.dispatch("drawers/goto", id);
-		},
 		open() {
-			// show the overlay
-			this.$refs.overlay.open();
-
-			/**
-			 * This event is triggered as soon as the drawer is being opened.
-			 * @event open
-			 */
-			this.$emit("open");
-		},
-		openCrumb(crumb) {
-			this.goTo(crumb.id);
-			this.$emit("openCrumb", crumb);
-		},
-		openTab(tab) {
-			tab = tab || Object.keys(this.tabs)[0];
-
-			if (!tab) {
-				return false;
-			}
-
-			this.tab = tab;
-			this.$emit("openTab", tab);
-		},
-		ready() {
-			// when drawers are used in the old-fashioned way
-			// by adding their component to a template and calling
-			// open on the component manually, the drawer state
-			// is set to a minimum. In comparison, this.$drawer fills
-			// the drawer state after a successfull request and
-			// the fiber drawer component is injected on store change
-			// automatically.
-			this.$store.dispatch("drawers/open", {
-				id: this._uid,
-				icon: this.icon,
-				title: this.title
-			});
-
-			/**
-			 * Mark the drawer as ready to be used
-			 * @event ready
-			 */
-			this.$emit("ready");
-
-			// open the first tab
-			this.openTab();
+			this.$panel.drawer.open(this);
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,
@@ -163,10 +55,7 @@ export default {
 		 * @public
 		 */
 		submit() {
-			/**
-			 * @event submit
-			 */
-			this.$emit("submit");
+			this.$panel.drawer.submit();
 		}
 	}
 };
