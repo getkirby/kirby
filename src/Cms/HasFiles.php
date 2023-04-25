@@ -37,15 +37,6 @@ trait HasFiles
 	}
 
 	/**
-	 * Returns a list of file ids
-	 * for the toArray method of the model
-	 */
-	protected function convertFilesToArray(): array
-	{
-		return $this->files()->keys();
-	}
-
-	/**
 	 * Creates a new file
 	 *
 	 * @param bool $move If set to `true`, the source will be deleted
