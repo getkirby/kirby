@@ -1,6 +1,6 @@
 <template>
 	<k-overlay
-		ref="overlay"
+		ref="dialog"
 		:centered="true"
 		:dimmed="true"
 		:visible="visible"
