@@ -124,7 +124,6 @@ return [
 
 					$tag->srcset = $tag->file->srcset($srcset);
 				}
-
 			} else {
 				$tag->src = Url::to($tag->value);
 			}
