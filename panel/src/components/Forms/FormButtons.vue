@@ -225,8 +225,8 @@ export default {
 			this.$refs.revert.open();
 		},
 		async onSave(e) {
-			if (!e) {
-				return false;
+			if (this.$panel.context !== "view") {
+				return;
 			}
 
 			e.preventDefault?.();
