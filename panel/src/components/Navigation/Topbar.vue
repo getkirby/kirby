@@ -75,21 +75,6 @@ export default {
 				? this.$panel.notification
 				: null;
 		}
-	},
-	watch: {
-		notification: {
-			handler(notification) {
-				// send the notification to the dialog instead
-				// of the topbar.
-				if (notification?.type === "error") {
-					this.$dialog({
-						component: "k-error-dialog",
-						props: notification.state()
-					});
-				}
-			},
-			immediate: true
-		}
 	}
 };
 </script>

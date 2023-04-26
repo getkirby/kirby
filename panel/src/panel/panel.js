@@ -1,5 +1,6 @@
 import Api from "@/api/index.js";
 import Dialog from "./dialog.js";
+import Drag from "./drag.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events.js";
@@ -63,21 +64,23 @@ export default {
 		// props
 		this.isLoading = false;
 
-		// modules
+		this.drag = Drag(this);
 		this.events = Events(this);
+
+		// modules
 		this.language = Language(this);
 		this.notification = Notification(this);
 		this.system = System(this);
 		this.translation = Translation(this);
 		this.user = User(this);
 
-		// islands
-		this.drawer = Drawer(this);
-		this.dialog = Dialog(this);
-
 		// features
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
+
+		// islands
+		this.drawer = Drawer(this);
+		this.dialog = Dialog(this);
 
 		// methods
 		this.redirect = redirect;

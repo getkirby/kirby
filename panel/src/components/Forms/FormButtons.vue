@@ -160,13 +160,13 @@ export default {
 		if (this.supportsLocking) {
 			this.isRefreshing = setInterval(this.check, 10000);
 		}
-		this.$events.$on("keydown.cmd.s", this.onSave);
+		this.$events.$on("view.save", this.onSave);
 	},
 	destroyed() {
 		// make sure to clear all intervals
 		clearInterval(this.isRefreshing);
 		clearInterval(this.isLocking);
-		this.$events.$off("keydown.cmd.s", this.onSave);
+		this.$events.$off("view.save", this.onSave);
 	},
 	methods: {
 		async check() {
@@ -225,10 +225,6 @@ export default {
 			this.$refs.revert.open();
 		},
 		async onSave(e) {
-			if (!e) {
-				return false;
-			}
-
 			e.preventDefault?.();
 
 			await this.$store.dispatch("content/save");

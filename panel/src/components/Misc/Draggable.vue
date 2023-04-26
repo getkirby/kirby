@@ -76,11 +76,11 @@ export default {
 	},
 	methods: {
 		onStart(event) {
-			this.$store.dispatch("drag", {});
+			this.$panel.drag.start("data", {});
 			this.$emit("start", event);
 		},
 		onEnd(event) {
-			this.$store.dispatch("drag", null);
+			this.$panel.drag.stop();
 			this.$emit("end", event);
 		}
 	}

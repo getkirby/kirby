@@ -28,8 +28,8 @@ Vue.prototype.$panel = window.panel;
 /**
  * Some shortcuts to the Panel's features
  */
-Vue.prototype.$go = window.panel.view.open;
-Vue.prototype.$reload = window.panel.reload;
+Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
+Vue.prototype.$reload = window.panel.reload.bind(window.panel);
 
 /**
  * Create the Vue application
