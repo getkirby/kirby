@@ -37,100 +37,13 @@
 </template>
 
 <script>
-import { props as Buttons } from "./Elements/Buttons.vue";
-
-export const props = {
-	mixins: [Buttons],
-	props: {
-		size: {
-			default: "default",
-			type: String
-		},
-		visible: {
-			default: false,
-			type: Boolean
-		}
-	}
-};
+import Dialog from "@/mixins/dialog.js";
 
 /**
  * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
  */
 export default {
-	mixins: [props],
-	methods: {
-		/**
-		 * Triggers the `@cancel` event and closes the dialog.
-		 * @public
-		 */
-		cancel() {
-			this.$panel.dialog.cancel();
-		},
-		/**
-		 * Triggers the `@close` event and closes the dialog.
-		 * @public
-		 */
-		close() {
-			this.$panel.dialog.close();
-		},
-		/**
-		 * Shows the error notification bar in the dialog with the given message
-		 * @public
-		 * @param {string} error
-		 */
-		error(error) {
-			this.$panel.dialog.error(error);
-		},
-		/**
-		 * The overlay component has a built-in focus
-		 * method that finds the best first element to
-		 * focus on
-		 * @public
-		 */
-		focus() {
-			this.$refs.overlay.focus();
-		},
-		/**
-		 * Updates the dialog values
-		 * @public
-		 * @param {Object} value
-		 */
-		input(value) {
-			this.$panel.dialog.input(value);
-		},
-		/**
-		 * Opens the overlay and triggers the `@open` event
-		 * Use the `ready` event to
-		 * @public
-		 */
-		open() {
-			this.$panel.dialog.open(this);
-		},
-		/**
-		 * When the overlay is open and fully usable
-		 * the ready event is fired and forwarded here
-		 * @public
-		 */
-		ready() {
-			this.$panel.dialog.emit("ready");
-		},
-		/**
-		 * This event is triggered when the submit button is clicked,
-		 * or the form is submitted. It can also be called manually.
-		 * @public
-		 */
-		submit() {
-			this.$panel.dialog.submit(this.$panel.value);
-		},
-		/**
-		 * Shows the success notification bar in the dialog with the given message
-		 * @public
-		 * @param {String|Object} message
-		 */
-		success(success) {
-			this.$panel.dialog.success(success);
-		}
-	}
+	mixins: [Dialog]
 };
 </script>
 
