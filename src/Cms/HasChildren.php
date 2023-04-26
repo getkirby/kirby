@@ -49,15 +49,6 @@ trait HasChildren
 	}
 
 	/**
-	 * Returns a list of IDs for the model's
-	 * `toArray` method
-	 */
-	protected function convertChildrenToArray(): array
-	{
-		return $this->children()->keys();
-	}
-
-	/**
 	 * Searches for a draft child by ID
 	 */
 	public function draft(string $path): Page|null

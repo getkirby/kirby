@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
-use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
@@ -26,8 +25,6 @@ use Throwable;
  */
 abstract class ModelWithContent implements Identifiable
 {
-	use Properties;
-
 	/**
 	 * Each model must define a CLASS_ALIAS
 	 * which will be used in template queries.
@@ -42,31 +39,25 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public array|null $blueprints = null;
 
-	/**
-	 * The content
-	 *
-	 * @var \Kirby\Cms\Content
-	 */
-	public $content;
+	public Content|null $content;
+	public static App $kirby;
+	protected Site|null $site;
+	public Collection|null $translations;
 
 	/**
-	 * The parent Kirby instance
-	 *
-	 * @var \Kirby\Cms\App
+	 * Store values used to initilaize object
 	 */
-	public static $kirby;
+	protected array $propertyData = [];
 
-	/**
-	 * The parent site instance
-	 *
-	 * @var \Kirby\Cms\Site
-	 */
-	protected $site;
+	public function __construct(array $props = [])
+	{
+		$this->site = $props['site'] ?? null;
 
-	/**
-	 * @var \Kirby\Cms\Translations
-	 */
-	public $translations;
+		$this->setContent($props['content'] ?? null);
+		$this->setTranslations($props['translations'] ?? null);
+
+		$this->propertyData = $props;
+	}
 
 	/**
 	 * Returns the blueprint of the model
@@ -108,6 +99,17 @@ abstract class ModelWithContent implements Identifiable
 		}
 
 		return $this->blueprints ??= $toBlueprints($blueprint->sections());
+	}
+
+	/**
+	 * Creates a new instance with the same
+	 * initial properties
+	 *
+	 * @todo eventually refactor without need of propertyData
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_replace_recursive($this->propertyData, $props));
 	}
 
 	/**
@@ -352,6 +354,23 @@ abstract class ModelWithContent implements Identifiable
 		}
 
 		return $errors;
+	}
+
+	/**
+	 * Creates a clone and fetches all
+	 * lazy-loaded getters to get a full copy
+	 */
+	public function hardcopy(): static
+	{
+		$clone = $this->clone();
+
+		foreach (get_object_vars($clone) as $name => $default) {
+			if (method_exists($clone, $name) === true) {
+				$clone->$name();
+			}
+		}
+
+		return $clone;
 	}
 
 	/**
@@ -619,41 +638,15 @@ abstract class ModelWithContent implements Identifiable
 	/**
 	 * Sets the Content object
 	 *
-	 * @param array|null $content
 	 * @return $this
 	 */
-	protected function setContent(array $content = null)
+	protected function setContent(array $content = null): static
 	{
 		if ($content !== null) {
 			$content = new Content($content, $this);
 		}
 
 		$this->content = $content;
-		return $this;
-	}
-
-	/**
-	 * Setter for the parent Kirby object
-	 *
-	 * @param \Kirby\Cms\App|null $kirby
-	 * @return $this
-	 */
-	protected function setKirby(App $kirby = null)
-	{
-		static::$kirby = $kirby;
-		return $this;
-	}
-
-	/**
-	 * Setter for the parent site object
-	 *
-	 * @internal
-	 * @param \Kirby\Cms\Site|null $site
-	 * @return $this
-	 */
-	public function setSite(Site $site = null)
-	{
-		$this->site = $site;
 		return $this;
 	}
 
@@ -673,6 +666,8 @@ abstract class ModelWithContent implements Identifiable
 				$translation = new ContentTranslation($props);
 				$this->translations->data[$translation->code()] = $translation;
 			}
+		} else {
+			$this->translations = null;
 		}
 
 		return $this;
@@ -690,12 +685,13 @@ abstract class ModelWithContent implements Identifiable
 
 	/**
 	 * Convert the model to a simple array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
-		return $this->propertiesToArray();
+		return [
+			'content'      => $this->content()->toArray(),
+			'translations' => $this->translations()->toArray()
+		];
 	}
 
 	/**
