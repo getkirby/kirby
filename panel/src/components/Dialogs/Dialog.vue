@@ -58,13 +58,6 @@ export const props = {
  */
 export default {
 	mixins: [props],
-	emits: [
-		/**
-		 * When the dialog as ready to be used
-		 * @event ready
-		 */
-		"ready"
-	],
 	methods: {
 		/**
 		 * Triggers the `@cancel` event and closes the dialog.
@@ -109,7 +102,7 @@ export default {
 		 * the ready event is fired and forwarded here
 		 */
 		ready() {
-			this.$emit("ready");
+			this.$panel.dialog.emit("ready");
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,
