@@ -66,7 +66,6 @@ class Assets
 	/**
 	 * Check for a custom asset file from the
 	 * config (e.g. panel.css or panel.js)
-	 * @since 3.7.0
 	 */
 	public function custom(string $option): string|null
 	{
@@ -87,35 +86,18 @@ class Assets
 	 */
 	public function external(): array
 	{
-		$assets = [
+		return [
 			'css'   => $this->css(),
 			'icons' => $this->favicons(),
 			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
 			'plugin-imports' => $this->plugins->read('mjs'),
 			'js' => $this->js()
 		];
-
-		// during dev mode, add vite client and adapt
-		// path to `index.js` - vendor and stylesheet
-		// don't need to be loaded in dev mode
-		if ($this->dev === true) {
-			unset($assets['css']['index'], $assets['js']['vendor']);
-		}
-
-		// remove missing files
-		$assets['css'] = array_filter($assets['css']);
-		$assets['js']  = array_filter(
-			$assets['js'],
-			fn ($js) => empty($js['src']) === false
-		);
-
-		return $assets;
 	}
 
 	/**
 	 * Returns array of favicon icons
 	 * based on config option
-	 * @since 3.7.0
 	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
