@@ -20,6 +20,8 @@ export default function focus(element, field) {
 		"input",
 		"textarea",
 		"select",
+		"[contenteditable=true]",
+		"[type=submit]",
 		"button"
 	];
 
