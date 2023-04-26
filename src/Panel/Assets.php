@@ -20,6 +20,7 @@ use Kirby\Filesystem\F;
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 class Assets
 {
@@ -39,7 +40,9 @@ class Assets
 
 		// get the assets from the Vite dev server in dev mode;
 		// dev mode = explicitly enabled in the config AND Vite is running
-		$this->dev = $this->kirby->option('panel.dev', false) !== false && $this->vite === true;
+		$this->dev =
+			$this->kirby->option('panel.dev', false) !== false &&
+			$this->vite === true;
 
 		// get the base URL
 		$this->url = $this->url();
@@ -56,6 +59,8 @@ class Assets
 			'custom'  => $this->custom('panel.css'),
 		];
 
+		// during dev mode we do not need to load
+		// the general stylesheet (as styling will be inlined)
 		if ($this->dev === true) {
 			$css['index'] = null;
 		}
@@ -87,11 +92,12 @@ class Assets
 	public function external(): array
 	{
 		return [
-			'css'   => $this->css(),
-			'icons' => $this->favicons(),
-			// loader for plugins' index.dev.mjs files – inlined, so we provide the code instead of the asset URL
+			'css'            => $this->css(),
+			'icons'          => $this->favicons(),
+			// loader for plugins' index.dev.mjs files – inlined,
+			// so we provide the code instead of the asset URL
 			'plugin-imports' => $this->plugins->read('mjs'),
-			'js' => $this->js()
+			'js'             => $this->js()
 		];
 	}
 
@@ -142,8 +148,9 @@ class Assets
 	 */
 	public function icons(): string
 	{
-		$dir = $this->dev ? 'public' : 'dist';
-		return F::read($this->kirby->root('panel') . '/' . $dir . '/img/icons.svg');
+		$dir  = $this->kirby->root('panel') . '/';
+		$dir .= $this->dev ? 'public' : 'dist';
+		return F::read($dir . '/img/icons.svg');
 	}
 
 	/**
@@ -184,8 +191,8 @@ class Assets
 		];
 
 		// during dev mode, add vite client and adapt
-		// path to `index.js` - vendor and stylesheet
-		// don't need to be loaded in dev mode
+		// path to `index.js` - vendor does not need
+		// to be loaded in dev mode
 		if ($this->dev === true) {
 			$js['vite'] = [
 				'nonce' => $this->nonce,
@@ -206,9 +213,7 @@ class Assets
 			$js['vendor']['src'] = null;
 		}
 
-		return array_filter($js, function ($js) {
-			return empty($js['src']) === false;
-		});
+		return array_filter($js, fn ($js) => empty($js['src']) === false);
 	}
 
 	/**
