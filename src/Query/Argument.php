@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Kirby\Query;
 
@@ -70,6 +71,10 @@ class Argument
 
 		// numeric
 		if (is_numeric($argument) === true) {
+			if (strpos($argument, '.') === false) {
+				return new static((int)$argument);
+			}
+
 			return new static((float)$argument);
 		}
 

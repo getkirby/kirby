@@ -37,15 +37,6 @@ trait HasFiles
 	}
 
 	/**
-	 * Returns a list of file ids
-	 * for the toArray method of the model
-	 */
-	protected function convertFilesToArray(): array
-	{
-		return $this->files()->keys();
-	}
-
-	/**
 	 * Creates a new file
 	 *
 	 * @param bool $move If set to `true`, the source will be deleted
@@ -81,7 +72,7 @@ trait HasFiles
 
 		// find by global UUID
 		if (Uuid::is($filename, 'file') === true) {
-			return Uuid::for($filename, $this->files())->model();
+			return Uuid::for($filename, $this->$in())->model();
 		}
 
 		if (strpos($filename, '/') !== false) {

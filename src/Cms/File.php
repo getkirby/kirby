@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
@@ -39,41 +40,30 @@ class File extends ModelWithContent
 	public const CLASS_ALIAS = 'file';
 
 	/**
-	 * Cache for the initialized blueprint object
-	 */
-	protected FileBlueprint|null $blueprint = null;
-
-	/**
-	 * @var string
-	 */
-	protected $filename;
-
-	/**
-	 * @var string
-	 */
-	protected $id;
-
-	/**
 	 * All registered file methods
 	 */
 	public static array $methods = [];
 
 	/**
-	 * The parent object
-	 *
-	 * @var \Kirby\Cms\Page|\Kirby\Cms\Site|\Kirby\Cms\User
+	 * Cache for the initialized blueprint object
 	 */
-	protected $parent;
+	protected FileBlueprint|null $blueprint = null;
+
+	protected string $filename;
+
+	protected string $id;
+
+	/**
+	 * The parent object
+	 */
+	protected Page|Site|User|null $parent = null;
 
 	/**
 	 * The absolute path to the file
 	 */
 	protected string|null $root;
 
-	/**
-	 * @var string
-	 */
-	protected $template;
+	protected string|null $template;
 
 	/**
 	 * The public file Url
@@ -85,17 +75,21 @@ class File extends ModelWithContent
 	 */
 	public function __construct(array $props)
 	{
-		// set filename as the most important prop first
-		// TODO: refactor later to avoid redundant prop setting
-		$this->setProperty('filename', $props['filename'] ?? null, true);
+		parent::__construct($props);
 
-		// set other properties
-		$this->setProperties($props);
+		if (isset($props['filename'], $props['parent']) === false) {
+			throw new InvalidArgumentException('The filename and parent are required');
+		}
 
-		// setProperties doesn't recognize root and url prop as they are
-		// first defined in the IsFile trait. Calling their setters manually
-		$this->setProperty('root', $props['root'] ?? null);
-		$this->setProperty('url', $props['url'] ?? null);
+		$this->filename = $props['filename'];
+		$this->parent   = $props['parent'];
+		$this->template = $props['template'] ?? null;
+		// Always set the root to null, to invoke
+		// auto root detection
+		$this->root     = null;
+		$this->url      = $props['url'] ?? null;
+
+		$this->setBlueprint($props['blueprint'] ?? null);
 	}
 
 	/**
@@ -381,23 +375,17 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
-		if ($this->id !== null) {
-			return $this->id;
-		}
-
 		if (
 			$this->parent() instanceof Page ||
 			$this->parent() instanceof User
 		) {
-			return $this->id = $this->parent()->id() . '/' . $this->filename();
+			return $this->id ??= $this->parent()->id() . '/' . $this->filename();
 		}
 
-		return $this->id = $this->filename();
+		return $this->id ??= $this->filename();
 	}
 
 	/**
@@ -611,74 +599,15 @@ class File extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
 			$this->blueprint = new FileBlueprint($blueprint);
 		}
 
-		return $this;
-	}
-
-	/**
-	 * Sets the filename
-	 *
-	 * @param string $filename
-	 * @return $this
-	 */
-	protected function setFilename(string $filename)
-	{
-		$this->filename = $filename;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent object
-	 *
-	 * @return $this
-	 */
-	protected function setParent(Page|Site|User $parent): static
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * Always set the root to null, to invoke
-	 * auto root detection
-	 *
-	 * @param string|null $root
-	 * @return $this
-	 */
-	protected function setRoot(string $root = null)
-	{
-		$this->root = null;
-		return $this;
-	}
-
-	/**
-	 * @param string|null $template
-	 * @return $this
-	 */
-	protected function setTemplate(string $template = null)
-	{
-		$this->template = $template;
-		return $this;
-	}
-
-	/**
-	 * Sets the url
-	 *
-	 * @param string|null $url
-	 * @return $this
-	 */
-	protected function setUrl(string $url = null)
-	{
-		$this->url = $url;
 		return $this;
 	}
 
@@ -732,18 +661,17 @@ class File extends ModelWithContent
 	 * Extended info for the array export
 	 * by injecting the information from
 	 * the asset.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
-		return array_merge($this->asset()->toArray(), parent::toArray());
+		return array_merge(parent::toArray(), $this->asset()->toArray(), [
+			'id'       => $this->id(),
+			'template' => $this->template(),
+		]);
 	}
 
 	/**
 	 * Returns the Url
-	 *
-	 * @return string
 	 */
 	public function url(): string
 	{

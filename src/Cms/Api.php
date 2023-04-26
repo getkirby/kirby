@@ -98,7 +98,7 @@ class Api extends BaseApi
 	 * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
 	 * @throws \Kirby\Exception\NotFoundException if the model cannot be found
 	 */
-	public function parent(string $path): Model|null
+	public function parent(string $path): ModelWithContent|null
 	{
 		return Find::parent($path);
 	}

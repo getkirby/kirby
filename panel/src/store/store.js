@@ -41,6 +41,9 @@ export default new Vuex.Store({
 		isLoading(context, loading) {
 			window.panel.isLoading = loading;
 		},
+		/**
+		 * @deprecated
+		 */
 		navigate(context) {
 			window.panel.dialog.close();
 			context.dispatch("drawers/close");

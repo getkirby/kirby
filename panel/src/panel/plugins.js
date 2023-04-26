@@ -95,7 +95,7 @@ export const installComponentExtension = (app, name, options) => {
 		options,
 		components: {
 			...app.options.components,
-			...(options.components || {})
+			...(options.components ?? {})
 		}
 	});
 
