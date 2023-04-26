@@ -11,25 +11,31 @@ export default {
 	mixins: [Dialog],
 	methods: {
 		cancel() {
-			this.$refs.dialog.cancel();
+			this.$panel.dialog.cancel();
 		},
 		close() {
-			this.$refs.dialog.close();
+			this.$panel.dialog.close();
 		},
 		error(error) {
-			this.$refs.dialog.error(error);
+			this.$panel.dialog.error(error);
 		},
 		focus() {
 			this.$refs.dialog.focus();
 		},
+		input(value) {
+			this.$panel.dialog.input(value);
+		},
 		open() {
-			this.$refs.dialog.open();
+			this.$panel.dialog.open(this);
+		},
+		ready() {
+			this.$panel.dialog.emit("ready");
 		},
 		submit() {
-			this.$refs.dialog.submit();
+			this.$panel.dialog.submit(this.panel.$value);
 		},
 		success(success) {
-			this.$refs.dialog.success(success);
+			this.$panel.dialog.success(success);
 		}
 	}
 };

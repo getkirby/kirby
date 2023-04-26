@@ -85,9 +85,18 @@ export default {
 		 * The overlay component has a built-in focus
 		 * method that finds the best first element to
 		 * focus on
+		 * @public
 		 */
 		focus() {
 			this.$refs.overlay.focus();
+		},
+		/**
+		 * Updates the dialog values
+		 * @public
+		 * @param {Object} value
+		 */
+		input(value) {
+			this.$panel.dialog.input(value);
 		},
 		/**
 		 * Opens the overlay and triggers the `@open` event
@@ -100,6 +109,7 @@ export default {
 		/**
 		 * When the overlay is open and fully usable
 		 * the ready event is fired and forwarded here
+		 * @public
 		 */
 		ready() {
 			this.$panel.dialog.emit("ready");
@@ -110,12 +120,12 @@ export default {
 		 * @public
 		 */
 		submit() {
-			this.$panel.dialog.submit();
+			this.$panel.dialog.submit(this.$panel.value);
 		},
 		/**
 		 * Shows the success notification bar in the dialog with the given message
 		 * @public
-		 * @param {string} message
+		 * @param {String|Object} message
 		 */
 		success(success) {
 			this.$panel.dialog.success(success);
