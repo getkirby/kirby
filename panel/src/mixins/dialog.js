@@ -1,6 +1,13 @@
 import { props as Buttons } from "@/components/Dialogs/Elements/Buttons.vue";
 
-export const props = {
+/**
+ * The Dialog mixin is intended for all components
+ * that extend <k-dialog> It forwards the methods to
+ * the <k-dialog> ref. Extending <k-dialog> directly
+ * can lead to breaking methods when the methods are not
+ * wired correctly to the right elements and refs.
+ */
+export default {
 	mixins: [Buttons],
 	props: {
 		size: {
@@ -11,18 +18,7 @@ export const props = {
 			default: false,
 			type: Boolean
 		}
-	}
-};
-
-/**
- * The Dialog mixin is intended for all components
- * that extend <k-dialog> It forwards the methods to
- * the <k-dialog> ref. Extending <k-dialog> directly
- * can lead to breaking methods when the methods are not
- * wired correctly to the right elements and refs.
- */
-export default {
-	mixins: [props],
+	},
 	methods: {
 		/**
 		 * Triggers the `@cancel` event and closes the dialog.
@@ -41,19 +37,28 @@ export default {
 		/**
 		 * Shows the error notification bar in the dialog with the given message
 		 * @public
-		 * @param {string} error
+		 * @param {String} error
 		 */
 		error(error) {
 			this.$panel.dialog.error(error);
 		},
 		/**
-		 * The overlay component has a built-in focus
-		 * method that finds the best first element to
-		 * focus on
+		 * Sets the focus on the first usable input
+		 * or a given input by name
 		 * @public
+		 * @param {String} input
 		 */
 		focus(input) {
 			this.$panel.dialog.focus(input);
+		},
+		/**
+		 * Hides the overlay. This should only be used
+		 * in the island code to support inline components
+		 *
+		 * @private
+		 */
+		hide() {
+			this.$refs.dialog.hide();
 		},
 		/**
 		 * Updates the dialog values
@@ -64,8 +69,9 @@ export default {
 			this.$panel.dialog.input(value);
 		},
 		/**
-		 * Opens the overlay and triggers the `@open` event
-		 * Use the `ready` event to
+		 * Opens the dialog and triggers the `@open` event.
+		 * Use ready to fire events that should be run as
+		 * soon as the dialog is open
 		 * @public
 		 */
 		open() {
@@ -78,6 +84,15 @@ export default {
 		 */
 		ready() {
 			this.$panel.dialog.emit("ready");
+		},
+		/**
+		 * Shows the overlay. This should only be used
+		 * in the island code to support inline components
+		 *
+		 * @private
+		 */
+		show() {
+			this.$refs.dialog.show();
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,
