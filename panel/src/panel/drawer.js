@@ -11,6 +11,12 @@ export const defaults = () => {
 export default (panel) => {
 	const parent = Island(panel, "drawer", defaults());
 
+	// shortcut to submit drawers
+	panel.events.on("drawer.save", (e) => {
+		e.preventDefault();
+		panel.drawer.submit();
+	});
+
 	return {
 		...parent,
 		get breadcrumb() {
