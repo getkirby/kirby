@@ -24,7 +24,7 @@ export default {
 		 * Clean drag & drop info
 		 */
 		this.$panel.events.on("drop", () => {
-			this.$store.dispatch("drag", null);
+			this.$panel.drag.stop();
 		});
 
 		/**
