@@ -1,8 +1,8 @@
 <template>
-	<k-overlay ref="overlay" type="drawer" @cancel="cancel">
+	<k-overlay ref="drawer" type="drawer" @cancel="cancel">
 		<form class="k-drawer" method="dialog" @submit.prevent="submit">
 			<k-drawer-notification />
-			<k-drawer-header @openCrumb="openCrumb">
+			<k-drawer-header>
 				<slot name="options" />
 			</k-drawer-header>
 			<k-drawer-body>
@@ -13,51 +13,10 @@
 </template>
 
 <script>
-export const props = {
-	props: {
-		id: String,
-		icon: String,
-		tabs: {
-			default: () => {},
-			type: [Array, Object]
-		},
-		title: String
-	}
-};
+import Drawer from "@/mixins/drawer.js";
 
 export default {
-	mixins: [props],
-	methods: {
-		/**
-		 * Triggers the `@cancel` event and closes the dialog.
-		 * @public
-		 */
-		cancel() {
-			this.$panel.drawer.cancel();
-		},
-		close() {
-			this.$panel.drawer.close();
-		},
-		/**
-		 * The overlay component has a built-in focus
-		 * method that finds the best first element to
-		 * focus on
-		 */
-		focus() {
-			this.$refs.overlay.focus();
-		},
-		open() {
-			this.$panel.drawer.open(this);
-		},
-		/**
-		 * This event is triggered when the submit button is clicked,
-		 * or the form is submitted. It can also be called manually.
-		 * @public
-		 */
-		submit() {
-			this.$panel.drawer.submit();
-		}
-	}
+	mixins: [Drawer]
 };
 </script>
 

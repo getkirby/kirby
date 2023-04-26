@@ -1,5 +1,5 @@
 <template>
-	<k-overlay ref="overlay" type="drawer" @cancel="cancel">
+	<k-overlay ref="drawer" type="drawer" @cancel="cancel">
 		<form
 			class="k-form-drawer k-drawer"
 			method="dialog"
@@ -22,15 +22,10 @@
 </template>
 
 <script>
-import Drawer from "./Drawer.vue";
+import Drawer from "@/mixins/drawer.js";
 import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [Drawer, Fields],
-	methods: {
-		input(value) {
-			this.$panel.drawer.input(value);
-		}
-	}
+	mixins: [Drawer, Fields]
 };
 </script>
