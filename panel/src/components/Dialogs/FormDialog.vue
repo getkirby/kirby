@@ -1,12 +1,5 @@
 <template>
-	<k-dialog
-		ref="dialog"
-		v-bind="$props"
-		@cancel="$emit('cancel')"
-		@close="$emit('close')"
-		@ready="$emit('ready')"
-		@submit="submit"
-	>
+	<k-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
 		<k-dialog-text v-if="text" :text="text" />
 		<k-dialog-fields
 			:fields="fields"
@@ -39,9 +32,6 @@ export default {
 	},
 	data() {
 		return {
-			// Since fiber dialogs don't update their `value` prop
-			// on an emitted `input` event, we need to ensure a local
-			// state of all updated values
 			model: this.value
 		};
 	},
@@ -51,15 +41,9 @@ export default {
 		}
 	},
 	methods: {
-		input(values) {
-			// Since fiber dialogs don't update their `value` prop
-			// we need to update our local  state ourselves, so that `k-form`
-			// received up-to-date data
-			this.model = values;
-			this.$emit("input", this.model);
-		},
-		submit() {
-			this.$emit("submit", this.model);
+		input(value) {
+			this.model = value;
+			this.$panel.dialog.input(value);
 		}
 	}
 };

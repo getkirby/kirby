@@ -4,17 +4,10 @@
 		:data-tabs="tabsWithBadges.length > 1"
 		class="k-header"
 	>
-		<k-headline tag="h1" size="huge">
-			<span
-				v-if="editable && $listeners.edit"
-				class="k-headline-editable"
-				@click="$emit('edit')"
-			>
-				<!-- @slot headline -->
-				<slot />
-				<k-icon type="edit" />
-			</span>
-			<slot v-else />
+		<k-headline tag="h1" size="huge" @click="editable ? $emit('edit') : null">
+			<!-- @slot headline -->
+			<slot />
+			<k-icon type="edit" />
 		</k-headline>
 		<k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
 			<template #left>
@@ -86,26 +79,28 @@ export default {
 .k-header[data-tabs="true"] {
 	border-bottom: 0;
 }
+
 .k-header .k-headline {
 	min-height: 1.25em;
 	margin-bottom: 0.5rem;
 	word-wrap: break-word;
 }
-.k-header .k-header-buttons {
-	margin-top: -0.5rem;
-	height: 3.25rem;
-}
-.k-header .k-headline-editable {
+.k-header[data-editable="true"] .k-headline {
 	cursor: pointer;
 }
-.k-header .k-headline-editable .k-icon {
+.k-header .k-headline .k-icon {
 	color: var(--color-gray-500);
 	opacity: 0;
 	transition: opacity 0.3s;
 	display: inline-block;
 	margin-inline-start: 0.5rem;
 }
-.k-header .k-headline-editable:hover .k-icon {
+.k-header[data-editable="true"] .k-headline:hover .k-icon {
 	opacity: 1;
+}
+
+.k-header .k-header-buttons {
+	margin-top: -0.5rem;
+	height: 3.25rem;
 }
 </style>

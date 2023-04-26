@@ -51,6 +51,20 @@ export default {
 			default: "dark"
 		}
 	},
+	emits: [
+		"action",
+		/**
+		 * When the dropdown content is closed
+		 * @event close
+		 */
+		"close",
+		"leave",
+		/**
+		 * When the dropdown content is opened
+		 * @event open
+		 */
+		"open"
+	],
 	data() {
 		return {
 			current: -1,
@@ -99,10 +113,6 @@ export default {
 				this.isOpen = true;
 				OpenDropdown = this;
 				this.onOpen();
-				/**
-				 * When the dropdown content is opened
-				 * @event open
-				 */
 				this.$emit("open");
 			});
 		},
@@ -118,10 +128,6 @@ export default {
 		close() {
 			this.reset();
 			this.isOpen = OpenDropdown = false;
-			/**
-			 * When the dropdown content is closed
-			 * @event close
-			 */
 			this.$emit("close");
 		},
 		/**
@@ -191,10 +197,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]?.disabled === false) {
 							this.focus(this.current);
 							break;
 						}
@@ -217,10 +220,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]?.disabled === false) {
 							this.focus(this.current);
 							break;
 						}
@@ -237,10 +237,7 @@ export default {
 							break;
 						}
 
-						if (
-							this.$children[this.current] &&
-							this.$children[this.current].disabled === false
-						) {
+						if (this.$children[this.current]?.disabled === false) {
 							break;
 						}
 					}

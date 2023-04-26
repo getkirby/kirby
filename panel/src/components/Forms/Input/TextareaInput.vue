@@ -195,11 +195,9 @@ export default {
 			}
 
 			// dropping text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				this.focus();
-				this.insert(drag.data);
+				this.insert(this.$panel.drag.data);
 			}
 		},
 		onFocus($event) {
@@ -225,9 +223,7 @@ export default {
 			}
 
 			// drag & drop for text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				$event.dataTransfer.dropEffect = "copy";
 				this.focus();
 				this.over = true;

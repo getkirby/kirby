@@ -2,7 +2,11 @@
 	<k-dropdown class="k-autocomplete">
 		<!-- @slot Use to insert your input -->
 		<slot />
-		<k-dropdown-content ref="dropdown" :autofocus="true" v-on="$listeners">
+		<k-dropdown-content
+			ref="dropdown"
+			:autofocus="true"
+			@leave="$emit('leave')"
+		>
 			<k-dropdown-item
 				v-for="(item, index) in matches"
 				:key="index"
@@ -62,6 +66,7 @@ export default {
 		 */
 		query: String
 	},
+	emits: ["leave", "search", "select"],
 	data() {
 		return {
 			matches: [],

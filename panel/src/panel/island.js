@@ -1,5 +1,6 @@
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import focus from "@/helpers/focus.js";
 
 /**
  * Additional default values for islands
@@ -54,13 +55,24 @@ export default (panel, key, defaults) => {
 		async close() {
 			// close legacy components
 			// if it is still open
-			this.ref?.$refs.overlay?.close();
+			this.ref?.hide();
 
 			if (this.isOpen) {
 				this.emit("close");
 			}
 
 			this.reset();
+		},
+
+		/**
+		 * Set the focus to the first focusable input
+		 * or button in the island. The input can also
+		 * be set manually.
+		 *
+		 * @param {String} input
+		 */
+		focus(input) {
+			focus(`.k-${this.key()}-portal`, input);
 		},
 
 		/**
@@ -94,19 +106,7 @@ export default (panel, key, defaults) => {
 				return this.openComponent(feature);
 			}
 
-			// close previous notifications from other
-			// contexts, if the island wasn't open so far
-			if (this.isOpen === false) {
-				panel.notification.close();
-			}
-
-			// open the feature via url or with a state object
-			await parent.open.call(this, feature, options);
-
-			// mark the island as open
-			this.isOpen = true;
-
-			return this.state();
+			return this.openState(feature, options);
 		},
 
 		/**
@@ -114,7 +114,7 @@ export default (panel, key, defaults) => {
 		 * opens it manually.
 		 */
 		async openComponent(component) {
-			await this.open({
+			const state = await this.openState({
 				component: component.$options._componentTag,
 				// don't render this in the island
 				// comonent. The Vue component already
@@ -134,7 +134,29 @@ export default (panel, key, defaults) => {
 				ref: component
 			});
 
-			component.$refs.overlay?.open();
+			component.show();
+
+			return state;
+		},
+
+		/**
+		 * Opens the state by object or URL
+		 * @param {String|Object|URL} feature
+		 * @param {Object} options
+		 * @returns {Object}
+		 */
+		async openState(feature, options) {
+			// close previous notifications from other
+			// contexts, if the island wasn't open so far
+			if (this.isOpen === false) {
+				panel.notification.close();
+			}
+
+			// open the feature via url or with a state object
+			await parent.open.call(this, feature, options);
+
+			// mark the island as open
+			this.isOpen = true;
 
 			return this.state();
 		},

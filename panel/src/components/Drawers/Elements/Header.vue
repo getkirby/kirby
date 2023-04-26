@@ -1,47 +1,28 @@
 <template>
 	<header class="k-drawer-header">
-		<h2 v-if="breadcrumb.length <= 1" class="k-drawer-title">
-			<k-icon :type="icon" /> {{ title }}
+		<h2 v-if="$panel.drawer.breadcrumb.length <= 1" class="k-drawer-title">
+			<k-icon :type="$panel.drawer.icon" /> {{ $panel.drawer.title }}
 		</h2>
 		<ul v-else class="k-drawer-breadcrumb">
-			<li v-for="crumb in breadcrumb" :key="crumb.id">
+			<li v-for="crumb in $panel.drawer.breadcrumb" :key="crumb.id">
 				<k-button
 					:icon="crumb.icon"
 					:text="crumb.title"
-					@click="$emit('openCrumb', crumb)"
+					@click="$panel.drawer.goTo(crumb.id)"
 				/>
 			</li>
 		</ul>
-		<k-drawer-tabs :tab="tab" :tabs="tabs" @open="$emit('openTab', $event)" />
+		<k-drawer-tabs
+			:tab="$panel.drawer.tabId"
+			:tabs="$panel.drawer.tabs"
+			@open="$panel.drawer.openTab($event)"
+		/>
 		<nav class="k-drawer-options">
 			<slot />
 			<k-button class="k-drawer-option" icon="check" type="submit" />
 		</nav>
 	</header>
 </template>
-
-<script>
-import { props as Tabs } from "./Tabs.vue";
-
-export const props = {
-	mixins: [Tabs],
-	props: {
-		breadcrumb: {
-			default: () => [],
-			type: Array
-		},
-		icon: {
-			type: String,
-			default: "box"
-		},
-		title: String
-	}
-};
-
-export default {
-	mixins: [props]
-};
-</script>
 
 <style>
 .k-drawer-header {
