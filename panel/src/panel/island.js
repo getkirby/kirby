@@ -1,5 +1,6 @@
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import focus from "@/helpers/focus.js";
 
 /**
  * Additional default values for islands
@@ -61,6 +62,17 @@ export default (panel, key, defaults) => {
 			}
 
 			this.reset();
+		},
+
+		/**
+		 * Set the focus to the first focusable input
+		 * or button in the island. The input can also
+		 * be set manually.
+		 *
+		 * @param {String} input
+		 */
+		focus(input) {
+			focus(`.k-${this.key()}-portal`, input);
 		},
 
 		/**
