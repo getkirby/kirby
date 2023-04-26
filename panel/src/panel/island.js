@@ -55,7 +55,7 @@ export default (panel, key, defaults) => {
 		async close() {
 			// close legacy components
 			// if it is still open
-			this.ref?.$refs.overlay?.close();
+			this.ref?.hide();
 
 			if (this.isOpen) {
 				this.emit("close");
@@ -134,7 +134,7 @@ export default (panel, key, defaults) => {
 				ref: component
 			});
 
-			component.$refs.overlay?.open();
+			component.show();
 
 			return state;
 		},
