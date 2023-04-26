@@ -4,7 +4,7 @@
 		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
-			:value="value"
+			:value="model"
 			@input="input"
 			@submit="submit"
 		/>
@@ -28,6 +28,22 @@ export default {
 		},
 		text: {
 			type: String
+		}
+	},
+	data() {
+		return {
+			model: this.value
+		};
+	},
+	watch: {
+		value(value) {
+			this.model = value;
+		}
+	},
+	methods: {
+		input(value) {
+			this.model = value;
+			this.$panel.dialog.input(value);
 		}
 	}
 };
