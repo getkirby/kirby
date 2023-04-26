@@ -3,7 +3,6 @@
 		ref="dialog"
 		v-bind="$props"
 		@cancel="$emit('cancel')"
-		@close="$emit('close')"
 		@submit="$emit('submit')"
 	>
 		<k-dialog-text v-if="text" :text="text" />
@@ -35,6 +34,7 @@ export default {
 		text: {
 			type: String
 		}
-	}
+	},
+	emits: ["cancel", "input", "submit"]
 };
 </script>
