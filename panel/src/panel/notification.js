@@ -77,16 +77,29 @@ export default (panel = {}) => {
 				}
 			}
 
+			// convert strings to full error objects
 			if (typeof error === "string") {
-				return this.open({
+				error = {
 					message: error,
 					type: "error"
+				};
+			}
+
+			// fill in some defaults
+			error.message = error.message ?? "Something went wrong";
+			error.details = error.details ?? {};
+
+			// open the error dialog in views
+			if (panel.context === "view") {
+				return panel.dialog.open({
+					component: "k-error-dialog",
+					props: error
 				});
 			}
 
+			// show the error notification bar
 			return this.open({
-				message: error.message ?? "Something went wrong",
-				details: error.details ?? {},
+				message: error.message,
 				type: "error"
 			});
 		},

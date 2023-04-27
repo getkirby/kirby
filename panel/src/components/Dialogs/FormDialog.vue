@@ -1,17 +1,12 @@
 <template>
-	<k-dialog
-		ref="dialog"
-		v-bind="$props"
-		@cancel="$emit('cancel')"
-		@submit="$emit('submit')"
-	>
+	<k-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
 		<k-dialog-text v-if="text" :text="text" />
 		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
-			:value="value"
-			@input="$emit('input')"
-			@submit="$emit('submit')"
+			:value="model"
+			@input="input"
+			@submit="submit"
 		/>
 	</k-dialog>
 </template>
@@ -35,6 +30,21 @@ export default {
 			type: String
 		}
 	},
-	emits: ["cancel", "input", "submit"]
+	data() {
+		return {
+			model: this.value
+		};
+	},
+	watch: {
+		value(value) {
+			this.model = value;
+		}
+	},
+	methods: {
+		input(value) {
+			this.model = value;
+			this.$panel.dialog.input(value);
+		}
+	}
 };
 </script>

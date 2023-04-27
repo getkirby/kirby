@@ -39,9 +39,9 @@ export default new Vuex.Store({
 		/**
 		 * @deprecated
 		 */
-		navigate(context) {
+		navigate() {
 			window.panel.dialog.close();
-			context.dispatch("drawers/close");
+			window.panel.drawer.close();
 		}
 	},
 	modules: {
