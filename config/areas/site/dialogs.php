@@ -291,24 +291,23 @@ return [
 			$request = App::instance()->request();
 			$dialog  = new PageCreateDialog(
 				parentId: $request->get('parent'),
+				sectionId: $request->get('section'),
 				template: $request->get('template'),
+				viewId:    $request->get('view'),
 			);
 
-			return $dialog->load(
-				viewId:    $request->get('view'),
-				sectionId: $request->get('section')
-			);
+			return $dialog->load();
 		},
 		'submit' => function () {
 			$request = App::instance()->request();
 			$dialog  = new PageCreateDialog(
 				parentId: $request->get('parent'),
+				sectionId: $request->get('section'),
 				template: $request->get('template'),
+				viewId:    $request->get('view'),
 			);
 
-			return $dialog->submit(
-				input: $request->get(),
-			);
+			return $dialog->submit($request->get());
 		}
 	],
 

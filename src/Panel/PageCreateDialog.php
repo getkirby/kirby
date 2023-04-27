@@ -15,15 +15,23 @@ class PageCreateDialog
 	protected PageBlueprint $blueprint;
 	protected Page|Site $parent;
 	protected string $parentId;
+	protected string|null $sectionId;
 	protected string|null $template;
+	protected Page|Site $view;
+	protected string|null $viewId;
 
 	public function __construct(
 		string|null $parentId,
+		string|null $sectionId,
 		string|null $template,
+		string|null $viewId,
 	) {
-		$this->parentId = $parentId ?? 'site';
-		$this->parent   = Find::parent($this->parentId);
-		$this->template = $template;
+		$this->parentId  = $parentId ?? 'site';
+		$this->parent    = Find::parent($this->parentId);
+		$this->sectionId = $sectionId;
+		$this->template  = $template;
+		$this->viewId    = $viewId;
+		$this->view      = Find::parent($this->viewId ?? $this->parentId);
 	}
 
 	/**
@@ -44,12 +52,12 @@ class PageCreateDialog
 	/**
 	 * Get an array of all blueprints for the parent view
 	 */
-	public function blueprints(Site|Page $view, string $sectionId): array
+	public function blueprints(): array
 	{
 		return array_map(function ($blueprint) {
 			$blueprint['name'] ??= $blueprint['value'] ?? null;
 			return $blueprint;
-		}, $view->blueprints($sectionId));
+		}, $this->view->blueprints($this->sectionId));
 	}
 
 	/**
@@ -128,7 +136,9 @@ class PageCreateDialog
 				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
 			]),
 			'parent'   => Field::hidden(),
-			'template' => Field::hidden()
+			'section'  => Field::hidden(),
+			'template' => Field::hidden(),
+			'view'     => Field::hidden(),
 		];
 	}
 
@@ -137,29 +147,21 @@ class PageCreateDialog
 	 * dialog, including the fields and
 	 * initial values
 	 */
-	public function load(
-		string|null $viewId,
-		string|null $sectionId
-	): array {
-		if (empty($this->template) === true) {
-			$view       = $this->view($viewId);
-			$blueprints = $this->blueprints($view, $sectionId);
+	public function load(): array {
+		$blueprints = $this->blueprints();
 
-			// there are multiple blueprints to choose from.
-			// show the picker dialog first
-			if (count($blueprints) > 1) {
-				$picker = new PageTemplateDialog($this->parentId);
-				return $picker->load($blueprints);
-			}
-
-			$this->template = $blueprints[0]['name'];
-		}
+		$this->template ??= $blueprints[0]['name'];
 
 		return [
-			'component' => 'k-form-dialog',
+			'component' => 'k-page-create-dialog',
 			'props' => [
+				'blueprints'   => $blueprints,
 				'fields'       => array_merge($this->fields(), $this->customFields()),
+				'parent'       => $this->parentId,
+				'section'      => $this->sectionId,
 				'submitButton' => I18n::translate('page.draft.create'),
+				'template'     => $this->template,
+				'view'         => $this->viewId,
 				'value'        => $this->value()
 			]
 		];
@@ -190,11 +192,6 @@ class PageCreateDialog
 	 */
 	public function submit(array $input): array
 	{
-		if (empty($input['template']) === true) {
-			$picker = new PageTemplateDialog($this->parentId);
-			return $picker->submit($input);
-		}
-
 		$input = $this->sanitize($input);
 
 		$this->validate($input);
@@ -220,16 +217,13 @@ class PageCreateDialog
 
 	public function value(): array
 	{
-		return [
+		return array_merge([
 			'parent'   => $this->parentId,
+			'section'  => $this->sectionId,
 			'slug'     => '',
 			'template' => $this->template,
 			'title'    => '',
-		];
-	}
-
-	public function view(string|null $viewId): Site|Page
-	{
-		return Find::parent($viewId ?? $this->parentId);
+			'view'     => $this->viewId,
+		], (array)get('value'));
 	}
 }

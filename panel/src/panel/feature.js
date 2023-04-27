@@ -249,7 +249,7 @@ export default (panel, key, defaults) => {
 				return false;
 			}
 
-			this.open(this.path, options);
+			this.open(this.url(), options);
 		},
 
 		/**
@@ -276,7 +276,7 @@ export default (panel, key, defaults) => {
 		 *
 		 * @returns {URL}
 		 */
-		get url() {
+		url() {
 			return panel.url(this.path);
 		}
 	};

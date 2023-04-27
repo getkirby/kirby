@@ -37,7 +37,7 @@ export default (panel) => {
 			panel.title = this.title;
 
 			// change the browser location if the path changed
-			if (window.location.toString() !== this.url.toString()) {
+			if (window.location.toString() !== this.url().toString()) {
 				window.history.pushState(null, null, this.path);
 			}
 		},
