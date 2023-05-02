@@ -305,7 +305,7 @@ export default {
 		 * @param {number} rowIndex
 		 */
 		onOption(option, row, rowIndex) {
-			this.$emit("option", option, row, rowIndex);
+			this.$emit("option", { option, row, rowIndex });
 		},
 		/**
 		 * When the table has been sorted,

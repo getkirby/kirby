@@ -681,6 +681,10 @@ class Language extends Model
 		$kirby   = App::instance();
 		$updated = $this->clone($props);
 
+		if (isset($props['translations']) === true) {
+			$updated->setTranslations($props['translations']);
+		}
+
 		// validate the updated language
 		LanguageRules::update($updated);
 

@@ -2,10 +2,11 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
-use Kirby\Panel\Field;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 $languageDialogFields = [
 	'name' => [
@@ -37,6 +38,20 @@ $languageDialogFields = [
 		'label' => I18n::translate('language.locale'),
 		'type'  => 'text',
 	],
+];
+
+$translationDialogFields = [
+	'key' => [
+		'label' => 'Key',
+		'type' => 'slug',
+		'width' => '1/3',
+		'icon' => null,
+	],
+	'value' => [
+		'label' => 'Value',
+		'type' => 'text',
+		'width' => '2/3',
+	]
 ];
 
 return [
@@ -152,4 +167,102 @@ return [
 			];
 		}
 	],
+
+	'language.translation.create' => [
+		'pattern' => 'languages/(:any)/translations/create',
+		'load'    => function (string $languageCode) use ($translationDialogFields) {
+			$language = Find::language($languageCode);
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => $translationDialogFields,
+					'size'   => 'large',
+				],
+			];
+		},
+		'submit' => function (string $languageCode) {
+			$language     = Find::language($languageCode);
+			$translations = $language->translations();
+			$key          = Str::slug(get('key'));
+			$value        = get('value');
+
+			$translations[$key] = $value;
+
+			$language->update([
+				'translations' => $translations
+			]);
+
+			return true;
+		}
+	],
+	'language.translation.delete' => [
+		'pattern' => 'languages/(:any)/translations/(:any)/delete',
+		'load'    => function (string $languageCode, string $translationKey) {
+			$language = Find::language($languageCode);
+			$translations = $language->translations();
+
+			if (isset($translations[$translationKey]) === false) {
+				throw new NotFoundException('The translation could not be found');
+			}
+
+			return [
+				'component' => 'k-remove-dialog',
+				'props' => [
+					'text' => 'Do you really want to delete the translation for "' . $translationKey . '"?'
+				],
+			];
+		},
+		'submit' => function (string $languageCode, string $translationKey) {
+			$language     = Find::language($languageCode);
+			$translations = $language->translations();
+
+			unset($translations[$translationKey]);
+
+			$language->update([
+				'translations' => $translations
+			]);
+
+			return true;
+		}
+	],
+	'language.translation.update' => [
+		'pattern' => 'languages/(:any)/translations/(:any)/update',
+		'load'    => function (string $languageCode, string $translationKey) use ($translationDialogFields) {
+			$language     = Find::language($languageCode);
+			$translations = $language->translations();
+
+			$fields = $translationDialogFields;
+			$fields['key']['disabled'] = true;
+			$fields['value']['autofocus'] = true;
+
+			return [
+				'component' => 'k-form-dialog',
+				'props' => [
+					'fields' => $fields,
+					'size'   => 'large',
+					'value'  => [
+						'key'   => $translationKey,
+						'value' => $translations[$translationKey] ?? ''
+					]
+				],
+			];
+		},
+		'submit' => function (string $languageCode, string $translationKey) {
+			$language     = Find::language($languageCode);
+			$translations = $language->translations();
+
+			$key   = Str::slug(get('key'));
+			$value = get('value');
+
+			$translations[$key] = $value;
+
+			$language->update([
+				'translations' => $translations
+			]);
+
+			return true;
+		}
+	]
+
 ];
