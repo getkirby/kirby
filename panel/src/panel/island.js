@@ -197,7 +197,7 @@ export default (panel, key, defaults) => {
 			// I.e. { $dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response[this.key()] ?? {});
+			return this.success(response["$" + this.key()] ?? {});
 		},
 
 		/**
@@ -212,8 +212,6 @@ export default (panel, key, defaults) => {
 		success(success) {
 			if (typeof success === "string") {
 				panel.notification.success(success);
-				// keep the dialog open
-				return;
 			}
 
 			// close the dialog or drawer
@@ -228,11 +226,14 @@ export default (panel, key, defaults) => {
 			// dispatch store actions that might have been defined in the response
 			this.successDispatch(success);
 
-			// handle any redirects
-			this.successRedirect(success);
-
-			// reload the parent view to show changes
-			panel.view.reload(success.reload);
+			// redirect or reload
+			if (success.route || success.redirect) {
+				// handle any redirects
+				this.successRedirect(success);
+			} else {
+				// reload the parent view to show changes
+				panel.view.reload(success.reload);
+			}
 
 			return success;
 		},

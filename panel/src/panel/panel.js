@@ -85,7 +85,6 @@ export default {
 		// methods
 		this.redirect = redirect;
 		this.reload = this.view.reload.bind(this.view);
-		this.request = request;
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
@@ -161,7 +160,7 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async get(url, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "GET",
 			...options
 		});
@@ -210,13 +209,21 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async post(url, data = {}, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
 			...options
 		});
 
 		return response.json;
+	},
+
+	async request(url, options = {}) {
+		return request(url, {
+			referrer: this.view.path,
+			csrf: this.system.csrf,
+			...options
+		});
 	},
 
 	/**
