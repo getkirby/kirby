@@ -1,3 +1,5 @@
+// @ts-check
+
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
@@ -28,6 +30,10 @@ export const defaults = () => {
  * An island is a feature that can be opened and
  * closed and will be placed in the Panel by the matching
  * Island component
+ *
+ * @param {any} panel
+ * @param {string} key
+ * @param {object} defaults
  */
 export default (panel, key, defaults) => {
 	const parent = Feature(panel, key, defaults);
@@ -97,8 +103,8 @@ export default (panel, key, defaults) => {
 		 * before an island is opened. It also sets the
 		 * isOpen state.
 		 *
-		 * @param {Object} state
-		 * @returns {Object} The new state
+		 * @param {Object} feature
+		 * @returns {Promise} Returns the new state
 		 */
 		async open(feature, options = {}) {
 			// check for legacy Vue components
@@ -112,6 +118,8 @@ export default (panel, key, defaults) => {
 		/**
 		 * Takes a legacy Vue component and
 		 * opens it manually.
+		 *
+		 * @param {any} component
 		 */
 		async openComponent(component) {
 			const state = await this.openState({
@@ -143,7 +151,7 @@ export default (panel, key, defaults) => {
 		 * Opens the state by object or URL
 		 * @param {String|Object|URL} feature
 		 * @param {Object} options
-		 * @returns {Object}
+		 * @returns {Promise}
 		 */
 		async openState(feature, options) {
 			// close previous notifications from other
@@ -168,7 +176,7 @@ export default (panel, key, defaults) => {
 		 *
 		 * @param {Object} value
 		 * @param {Object} options
-		 * @returns {Object} The new state or false if the request failed
+		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
 			// close the drawer or dialog if there's no submitter
@@ -206,7 +214,7 @@ export default (panel, key, defaults) => {
 		 * Most of the response handling should
 		 * be redone. But we keep it for compatibility
 		 *
-		 * @param {Object} state
+		 * @param {Object|String} success
 		 * @returns
 		 */
 		success(success) {
@@ -242,7 +250,6 @@ export default (panel, key, defaults) => {
 		 * Dispatch deprecated store events
 		 *
 		 * @param {Object} state
-		 * @param {String|Array} events
 		 */
 		successDispatch(state) {
 			if (isObject(state.dispatch) === false) {
@@ -262,7 +269,6 @@ export default (panel, key, defaults) => {
 		 * Emit all events that might be in the response
 		 *
 		 * @param {Object} state
-		 * @param {String|Array} events
 		 */
 		successEvents(state) {
 			if (state.event) {
