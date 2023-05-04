@@ -235,6 +235,13 @@ export default {
 	 * @returns {Object} { code, path, referrer, results, timestamp }
 	 */
 	async search(type, query) {
+		// open the search dialog
+		if (!type && !query) {
+			return this.dialog.open({
+				component: "k-search-dialog"
+			});
+		}
+
 		const { $search } = await this.get(`/search/${type}`, {
 			query: { query }
 		});
