@@ -35,6 +35,7 @@ export default {
 						"data-id": file.id,
 						"data-template": file.template
 					},
+					link: "/drawers" + file.link,
 					options: this.$dropdown(file.link, {
 						query: {
 							delete: deletable,
