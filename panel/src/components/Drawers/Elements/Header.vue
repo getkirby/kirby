@@ -80,16 +80,17 @@
 }
 
 .k-drawer-options {
+	display: flex;
+	align-items: center;
 	padding-inline-end: 0.75rem;
 }
 .k-drawer-option.k-button {
-	width: var(--drawer-header-height);
+	display: flex;
+	align-items: center;
+	padding-inline: 0.75rem;
+	justify-content: center;
+	min-width: var(--drawer-header-height);
 	height: var(--drawer-header-height);
-	color: var(--color-gray-500);
 	line-height: 1;
-}
-.k-drawer-option.k-button:focus,
-.k-drawer-option.k-button:hover {
-	color: var(--color-black);
 }
 </style>

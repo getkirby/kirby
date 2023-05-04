@@ -154,6 +154,8 @@ class View
 					}
 				}
 			},
+			'$dialog' => null,
+			'$drawer' => null,
 			'$language' => function () use ($kirby, $multilang, $language) {
 				if ($multilang === true && $language) {
 					return [
@@ -214,6 +216,7 @@ class View
 				// make sure that views and dialogs are gone
 				unset(
 					$view['dialogs'],
+					$view['drawers'],
 					$view['dropdowns'],
 					$view['searches'],
 					$view['views']

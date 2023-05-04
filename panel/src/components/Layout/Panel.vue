@@ -17,6 +17,11 @@
 			<k-fiber-dialog />
 		</template>
 
+		<!-- Fiber drawers -->
+		<template v-if="$panel.drawer.isOpen && $panel.drawer.island">
+			<k-fiber-drawer />
+		</template>
+
 		<!-- Fatal iframe -->
 		<k-fatal
 			v-if="$panel.notification.isFatal && $panel.notification.isOpen"
