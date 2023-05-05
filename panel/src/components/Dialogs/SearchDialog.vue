@@ -27,7 +27,10 @@
 							v-for="(typeItem, typeIndex) in $panel.searches"
 							:key="typeIndex"
 							:icon="typeItem.icon"
-							@click="changeType(typeIndex)"
+							@click="
+								type = typeIndex;
+								focus();
+							"
 						>
 							{{ typeItem.label }}
 						</k-dropdown-item>
@@ -40,9 +43,8 @@
 					:placeholder="$t('search') + ' …'"
 					:aria-label="$t('search')"
 					:autofocus="true"
-					:value="q"
 					type="text"
-					@input="onInput($event.target.value)"
+					@input="search($event.target.value)"
 					@keydown.down.prevent="onDown"
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
@@ -60,18 +62,17 @@
 				/>
 			</div>
 
-			<div v-if="q && (!hasResults || items.length)" class="k-search-results">
+			<div v-if="q?.length > 1" class="k-search-results">
 				<!-- Results -->
 				<k-collection
 					v-if="items.length"
 					ref="items"
 					:items="items"
-					@hover="onHover"
 					@mouseout.native="select(-1)"
 				/>
 
 				<!-- No results -->
-				<p v-else-if="!hasResults" class="k-search-empty">
+				<p v-else class="k-search-empty">
 					{{ $t("search.results.none") }}
 				</p>
 			</div>
@@ -83,35 +84,66 @@
 import Dialog from "@/mixins/dialog.js";
 import debounce from "@/helpers/debounce.js";
 
-export default {
-	mixins: [Dialog],
+export const search = {
 	data() {
 		return {
 			isLoading: false,
-			hasResults: true,
 			items: [],
-			currentType: this.getType(this.$panel.view.search),
 			q: null,
-			selected: -1
+			selected: -1,
+			type: this.$panel.view.search
 		};
 	},
+	computed: {
+		currentType() {
+			return (
+				this.$panel.searches[this.type] ??
+				Object.values(this.$panel.searches)[0]
+			);
+		}
+	},
 	watch: {
-		q(newQuery, oldQuery) {
-			if (newQuery !== oldQuery) {
-				this.search(this.q);
-			}
-		},
-		currentType(newType, oldType) {
-			if (newType !== oldType) {
-				this.search(this.q);
-			}
-		},
 		type() {
-			this.currentType = this.getType(this.$panel.view.search);
+			this.search(this.q);
 		}
 	},
 	created() {
 		this.search = debounce(this.search, 250);
+	},
+	methods: {
+		clear() {
+			this.items = [];
+			this.q = null;
+		},
+		focus() {
+			this.$refs.input?.focus();
+		},
+		async search(query) {
+			this.q = query;
+			this.isLoading = true;
+			this.$refs.types?.close();
+			this.select(-1);
+
+			try {
+				// Skip API call if query empty
+				if (query === null || query.length < 2) {
+					throw Error("Empty query");
+				}
+
+				const response = await this.$search(this.type, query);
+				this.items = response.results;
+			} catch (error) {
+				this.items = [];
+			} finally {
+				this.isLoading = false;
+			}
+		}
+	}
+};
+
+export default {
+	mixins: [Dialog, search],
+	created() {
 		this.$events.$on("keydown.cmd.shift.f", this.open);
 		this.$events.$on("keydown.cmd./", this.open);
 	},
@@ -120,26 +152,11 @@ export default {
 		this.$events.$off("keydown.cmd./", this.open);
 	},
 	methods: {
-		changeType(type) {
-			this.currentType = this.getType(type);
-			this.$nextTick(() => {
-				this.$refs.input.focus();
-			});
-		},
-		clear() {
-			this.hasResults = true;
-			this.items = [];
-			this.q = null;
-		},
-		getType(type) {
-			return (
-				this.$panel.searches[type] ||
-				this.$panel.searches[Object.keys(this.$panel.searches)[0]]
-			);
-		},
 		navigate(item) {
-			this.$go(item.link);
-			this.close();
+			if (item) {
+				this.$go(item.link);
+				this.close();
+			}
 		},
 		onDown() {
 			if (this.selected < this.items.length - 1) {
@@ -147,64 +164,23 @@ export default {
 			}
 		},
 		onEnter() {
-			let item = this.items[this.selected] || this.items[0];
-
-			if (item) {
-				this.navigate(item);
-			}
-		},
-		onHover(e, icon, index) {
-			this.select(index);
-		},
-		onInput(q) {
-			this.q = q;
-			this.hasResults = true;
+			this.navigate(this.items[this.selected] ?? this.items[0]);
 		},
 		onTab() {
-			const item = this.items[this.selected];
-
-			if (item) {
-				this.navigate(item);
-			}
+			this.navigate(this.items[this.selected]);
 		},
 		onUp() {
 			if (this.selected >= 0) {
 				this.select(this.selected - 1);
 			}
 		},
-		async search(query) {
-			this.isLoading = true;
-			this.$refs.types?.close();
-
-			try {
-				// Skip API call if query empty
-				if (query === null || query === "") {
-					throw Error("Empty query");
-				}
-
-				const response = await this.$search(this.currentType.id, query);
-
-				if (response === false) {
-					throw Error("JSON parsing failed");
-				}
-
-				this.items = response.results;
-			} catch (error) {
-				this.items = [];
-			} finally {
-				this.select(-1);
-				this.isLoading = false;
-				this.hasResults = this.items.length > 0;
-			}
-		},
 		select(index) {
 			this.selected = index;
-			if (this.$refs.items) {
-				const items = this.$refs.items.$el.querySelectorAll(".k-item");
-				[...items].forEach((item) => delete item.dataset.selected);
-				if (index >= 0) {
-					items[index].dataset.selected = true;
-				}
+			const items = this.$refs.items?.$el.querySelectorAll(".k-item") ?? [];
+			[...items].forEach((item) => delete item.dataset.selected);
+
+			if (index >= 0) {
+				items[index].dataset.selected = true;
 			}
 		}
 	}
