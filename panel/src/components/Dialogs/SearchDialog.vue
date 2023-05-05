@@ -1,6 +1,19 @@
 <template>
-	<k-overlay ref="overlay">
-		<div class="k-search" role="search">
+	<k-overlay
+		ref="dialog"
+		:dimmed="true"
+		:visible="visible"
+		type="dialog"
+		@cancel="cancel"
+		@ready="ready"
+	>
+		<form
+			class="k-search-dialog k-dialog"
+			data-size="medium"
+			method="dialog"
+			role="search"
+			@submit.prevent="submit"
+		>
 			<div class="k-search-input">
 				<!-- Type select -->
 				<k-dropdown class="k-search-types">
@@ -11,7 +24,7 @@
 					/>
 					<k-dropdown-content ref="types">
 						<k-dropdown-item
-							v-for="(typeItem, typeIndex) in types"
+							v-for="(typeItem, typeIndex) in $panel.searches"
 							:key="typeIndex"
 							:icon="typeItem.icon"
 							@click="changeType(typeIndex)"
@@ -34,7 +47,10 @@
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
 					@keydown.enter="onEnter"
-					@keydown.esc="close"
+					@keydown.esc="
+						clear();
+						close();
+					"
 				/>
 				<k-button
 					:icon="isLoading ? 'loader' : 'cancel'"
@@ -59,27 +75,22 @@
 					{{ $t("search.results.none") }}
 				</p>
 			</div>
-		</div>
+		</form>
 	</k-overlay>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
 import debounce from "@/helpers/debounce.js";
 
 export default {
-	props: {
-		types: {
-			type: Object,
-			default: () => ({})
-		},
-		type: String
-	},
+	mixins: [Dialog],
 	data() {
 		return {
 			isLoading: false,
 			hasResults: true,
 			items: [],
-			currentType: this.getType(this.type),
+			currentType: this.getType(this.$panel.view.search),
 			q: null,
 			selected: -1
 		};
@@ -96,7 +107,7 @@ export default {
 			}
 		},
 		type() {
-			this.currentType = this.getType(this.type);
+			this.currentType = this.getType(this.$panel.view.search);
 		}
 	},
 	created() {
@@ -115,14 +126,16 @@ export default {
 				this.$refs.input.focus();
 			});
 		},
-		close() {
-			this.$refs.overlay.close();
+		clear() {
 			this.hasResults = true;
 			this.items = [];
 			this.q = null;
 		},
 		getType(type) {
-			return this.types[type] || this.types[Object.keys(this.types)[0]];
+			return (
+				this.$panel.searches[type] ||
+				this.$panel.searches[Object.keys(this.$panel.searches)[0]]
+			);
 		},
 		navigate(item) {
 			this.$go(item.link);
@@ -158,10 +171,6 @@ export default {
 			if (this.selected >= 0) {
 				this.select(this.selected - 1);
 			}
-		},
-		open(e) {
-			e?.preventDefault();
-			this.$refs.overlay.open();
 		},
 		async search(query) {
 			this.isLoading = true;
@@ -206,12 +215,8 @@ export default {
 </script>
 
 <style>
-.k-search {
-	max-width: 30rem;
+.k-search-dialog {
 	margin: 2.5rem auto;
-	box-shadow: var(--shadow-lg);
-	background: var(--color-light);
-	border-radius: var(--rounded);
 }
 .k-search-input {
 	display: flex;
@@ -248,20 +253,20 @@ export default {
 .k-search-close .k-icon-loader {
 	animation: Spin 2s linear infinite;
 }
-.k-search input:focus {
+.k-search-dialog input:focus {
 	outline: 0;
 }
 
 .k-search-results {
 	padding: 0.5rem 1rem 1rem;
 }
-.k-search .k-item:not(:last-child) {
+.k-search-dialog .k-item:not(:last-child) {
 	margin-bottom: 0.25rem;
 }
-.k-search .k-item[data-selected="true"] {
+.k-search-dialog .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);
 }
-.k-search .k-item-info {
+.k-search-dialog-search .k-item-info {
 	font-size: var(--text-xs);
 }
 

@@ -9,6 +9,9 @@ export default {
 	props: {
 		icon: String,
 		id: String,
+		options: {
+			type: Array
+		},
 		tabs: {
 			default: () => {},
 			type: [Array, Object]

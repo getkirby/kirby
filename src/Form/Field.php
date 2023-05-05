@@ -281,6 +281,23 @@ class Field extends Component
 	}
 
 	/**
+	 * Returns optional drawer routes for the field
+	 *
+	 * @return array
+	 */
+	public function drawers(): array
+	{
+		if (
+			isset($this->options['drawers']) === true &&
+			$this->options['drawers'] instanceof Closure
+		) {
+			return $this->options['drawers']->call($this);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Creates a new field instance
 	 *
 	 * @param string $type

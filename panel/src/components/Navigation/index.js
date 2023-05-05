@@ -12,7 +12,6 @@ import Languages from "./Languages.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
-import Search from "./Search.vue";
 import Tag from "./Tag.vue";
 import Topbar from "./Topbar.vue";
 
@@ -32,7 +31,6 @@ export default {
 		app.component("k-options-dropdown", OptionsDropdown);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
-		app.component("k-search", Search);
 		app.component("k-tag", Tag);
 		app.component("k-topbar", Topbar);
 	}
