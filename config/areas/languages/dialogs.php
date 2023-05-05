@@ -2,6 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Cms\LanguageVariable;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
@@ -171,7 +172,8 @@ return [
 	'language.translation.create' => [
 		'pattern' => 'languages/(:any)/translations/create',
 		'load'    => function (string $languageCode) use ($translationDialogFields) {
-			$language = Find::language($languageCode);
+			// find the language to make sure it exists
+			Find::language($languageCode);
 
 			return [
 				'component' => 'k-form-dialog',
@@ -182,16 +184,16 @@ return [
 			];
 		},
 		'submit' => function (string $languageCode) {
-			$language     = Find::language($languageCode);
-			$translations = $language->translations();
-			$key          = Str::slug(get('key'));
-			$value        = get('value');
+			$language = Find::language($languageCode);
 
-			$translations[$key] = $value;
+			$key   = get('key');
+			$value = get('value');
 
-			$language->update([
-				'translations' => $translations
-			]);
+			LanguageVariable::create($key, $value);
+
+			if ($language->isDefault() === false) {
+				$language->variable($key)->update($value);
+			}
 
 			return true;
 		}
@@ -199,38 +201,31 @@ return [
 	'language.translation.delete' => [
 		'pattern' => 'languages/(:any)/translations/(:any)/delete',
 		'load'    => function (string $languageCode, string $translationKey) {
-			$language = Find::language($languageCode);
-			$translations = $language->translations();
+			$variable = Find::language($languageCode)->variable($translationKey);
 
-			if (isset($translations[$translationKey]) === false) {
-				throw new NotFoundException('The translation could not be found');
+			if ($variable->exists() === false) {
+				throw new NotFoundException('The variable could not be found');
 			}
 
 			return [
 				'component' => 'k-remove-dialog',
 				'props' => [
-					'text' => 'Do you really want to delete the translation for "' . $translationKey . '"?'
+					'text' => 'Do you really want to delete the variable for "' . $translationKey . '"?'
 				],
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			$language     = Find::language($languageCode);
-			$translations = $language->translations();
-
-			unset($translations[$translationKey]);
-
-			$language->update([
-				'translations' => $translations
-			]);
-
-			return true;
+			return Find::language($languageCode)->variable($translationKey)->delete();
 		}
 	],
 	'language.translation.update' => [
 		'pattern' => 'languages/(:any)/translations/(:any)/update',
 		'load'    => function (string $languageCode, string $translationKey) use ($translationDialogFields) {
-			$language     = Find::language($languageCode);
-			$translations = $language->translations();
+			$variable = Find::language($languageCode)->variable($translationKey);
+
+			if ($variable->exists() === false) {
+				throw new NotFoundException('The variable could not be found');
+			}
 
 			$fields = $translationDialogFields;
 			$fields['key']['disabled'] = true;
@@ -242,24 +237,14 @@ return [
 					'fields' => $fields,
 					'size'   => 'large',
 					'value'  => [
-						'key'   => $translationKey,
-						'value' => $translations[$translationKey] ?? ''
+						'key'   => $variable->key(),
+						'value' => $variable->value()
 					]
 				],
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			$language     = Find::language($languageCode);
-			$translations = $language->translations();
-
-			$key   = Str::slug(get('key'));
-			$value = get('value');
-
-			$translations[$key] = $value;
-
-			$language->update([
-				'translations' => $translations
-			]);
+			Find::language($languageCode)->variable($translationKey)->update(get('value'));
 
 			return true;
 		}

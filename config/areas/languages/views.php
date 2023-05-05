@@ -14,6 +14,8 @@ return [
 			$foundation   = App::instance()->defaultLanguage()->translations();
 			$translations = $language->translations();
 
+			ksort($foundation);
+
 			foreach ($foundation as $key => $value) {
 				$strings[] = [
 					'key'   => $key,

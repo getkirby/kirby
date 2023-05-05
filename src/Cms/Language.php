@@ -730,4 +730,13 @@ class Language extends Model
 
 		return $language;
 	}
+
+	/**
+	 * Returns a language variable object
+	 * for the key in the translations array
+	 */
+	public function variable(string $key): LanguageVariable
+	{
+		return new LanguageVariable($this, $key);
+	}
 }

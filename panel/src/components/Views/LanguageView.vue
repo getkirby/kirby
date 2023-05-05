@@ -16,7 +16,7 @@
 			</k-header>
 
 			<k-bar>
-				<k-headline slot="left">Translations</k-headline>
+				<k-headline slot="left">Language variables</k-headline>
 				<k-button-group slot="right">
 					<k-button icon="add" :text="$t('add')" @click="createTranslation()" />
 				</k-button-group>
