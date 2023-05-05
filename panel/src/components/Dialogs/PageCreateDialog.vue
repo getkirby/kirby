@@ -8,7 +8,7 @@
 	>
 		<template slot="container">
 			<div class="k-page-create-dialog-sidebar" v-if="blueprints.length > 1">
-				<k-headline>Template</k-headline>
+				<k-headline>{{ $t("template") }}</k-headline>
 				<nav>
 					<button
 						v-for="blueprint in blueprints"
@@ -58,14 +58,8 @@ export default {
 		blueprints: {
 			type: Array
 		},
-		parent: {
-			type: String
-		},
 		size: {
 			default: "medium",
-			type: String
-		},
-		section: {
 			type: String
 		},
 		submitButton: {
@@ -73,9 +67,6 @@ export default {
 			default: () => window.panel.$t("save")
 		},
 		template: {
-			type: String
-		},
-		view: {
 			type: String
 		}
 	},
@@ -94,14 +85,11 @@ export default {
 			this.model = value;
 			this.$panel.dialog.input(value);
 		},
-		pick(blueprint) {
+		pick(template) {
 			this.$panel.dialog.reload({
 				query: {
-					parent: this.parent,
-					section: this.section,
-					template: blueprint,
-					view: this.view,
-					value: this.model
+					...this.$panel.dialog.query,
+					template: template
 				}
 			});
 		}

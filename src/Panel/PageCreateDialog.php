@@ -157,11 +157,8 @@ class PageCreateDialog
 			'props' => [
 				'blueprints'   => $blueprints,
 				'fields'       => array_merge($this->fields(), $this->customFields()),
-				'parent'       => $this->parentId,
-				'section'      => $this->sectionId,
 				'submitButton' => I18n::translate('page.draft.create'),
 				'template'     => $this->template,
-				'view'         => $this->viewId,
 				'value'        => $this->value()
 			]
 		];
