@@ -9,6 +9,7 @@ import LanguageDialog from "./LanguageDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
 import RemoveDialog from "./RemoveDialog.vue";
+import SearchDialog from "./SearchDialog.vue";
 import TextDialog from "./TextDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
 
@@ -25,6 +26,7 @@ export default {
 		app.component("k-page-create-dialog", PageCreateDialog);
 		app.component("k-pages-dialog", PagesDialog);
 		app.component("k-remove-dialog", RemoveDialog);
+		app.component("k-search-dialog", SearchDialog);
 		app.component("k-text-dialog", TextDialog);
 		app.component("k-users-dialog", UsersDialog);
 	}

@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Throwable;
@@ -66,6 +67,7 @@ abstract class Json
 		// always inject the response code
 		$data['code']   ??= 200;
 		$data['path']     = $options['path'] ?? null;
+		$data['query']    = App::instance()->request()->query()->toArray();
 		$data['referrer'] = Panel::referrer();
 
 		return Panel::json([static::$key => $data], $data['code']);

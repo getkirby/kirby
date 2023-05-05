@@ -1,9 +1,39 @@
 <template>
-	<k-overlay ref="drawer" type="drawer" @cancel="cancel">
-		<form class="k-drawer" method="dialog" @submit.prevent="submit">
+	<k-overlay ref="drawer" :visible="visible" type="drawer" @cancel="cancel">
+		<form
+			:class="$vnode.data.staticClass"
+			class="k-drawer"
+			method="dialog"
+			@submit.prevent="submit"
+		>
 			<k-drawer-notification />
 			<k-drawer-header>
-				<slot name="options" />
+				<slot name="options">
+					<template v-for="(option, index) in options">
+						<template v-if="option.dropdown">
+							<k-dropdown :key="index">
+								<k-button
+									v-bind="option"
+									class="k-drawer-option"
+									@click="$refs['dropdown-' + index][0].toggle()"
+								/>
+								<k-dropdown-content
+									:ref="'dropdown-' + index"
+									:options="option.dropdown"
+									align="right"
+									theme="light"
+								/>
+							</k-dropdown>
+						</template>
+
+						<k-button
+							v-else
+							:key="index"
+							v-bind="option"
+							class="k-drawer-option"
+						/>
+					</template>
+				</slot>
 			</k-drawer-header>
 			<k-drawer-body>
 				<slot />

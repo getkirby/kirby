@@ -251,6 +251,7 @@ class Panel
 		// handle different response types (view, dialog, ...)
 		return match ($options['type'] ?? null) {
 			'dialog'   => Dialog::response($result, $options),
+			'drawer'   => Drawer::response($result, $options),
 			'dropdown' => Dropdown::response($result, $options),
 			'search'   => Search::response($result, $options),
 			default    => View::response($result, $options)
@@ -340,6 +341,7 @@ class Panel
 				static::routesForViews($areaId, $area),
 				static::routesForSearches($areaId, $area),
 				static::routesForDialogs($areaId, $area),
+				static::routesForDrawers($areaId, $area),
 				static::routesForDropdowns($areaId, $area),
 			);
 		}
@@ -368,41 +370,6 @@ class Panel
 	}
 
 	/**
-	 * Creates the load and submit routes for a single dialog
-	 * and adds the correct route pattern prefix
-	 */
-	public static function routesForDialog(
-		string $dialogId,
-		string $areaId,
-		string $prefix = '',
-		array $dialog = []
-	): array {
-		$routes = [];
-
-		// create the full pattern with dialogs prefix
-		$pattern = trim($prefix . '/' . ($dialog['pattern'] ?? $dialogId), '/');
-
-		// load event
-		$routes[] = [
-			'pattern' => $pattern,
-			'type'    => 'dialog',
-			'area'    => $areaId,
-			'action'  => $dialog['load'] ?? fn () => 'The load handler for your dialog is missing'
-		];
-
-		// submit event
-		$routes[] = [
-			'pattern' => $pattern,
-			'type'    => 'dialog',
-			'area'    => $areaId,
-			'method'  => 'POST',
-			'action'  => $dialog['submit'] ?? fn () => 'Your dialog does not define a submit handler'
-		];
-
-		return $routes;
-	}
-
-	/**
 	 * Extract all routes from an area
 	 */
 	public static function routesForDialogs(string $areaId, array $area): array
@@ -411,11 +378,31 @@ class Panel
 		$routes  = [];
 
 		foreach ($dialogs as $dialogId => $dialog) {
-			$routes = array_merge($routes, static::routesForDialog(
-				dialogId: $dialogId,
+			$routes = array_merge($routes, Dialog::routes(
+				id: $dialogId,
 				areaId: $areaId,
 				prefix: 'dialogs',
-				dialog: $dialog
+				options: $dialog
+			));
+		}
+
+		return $routes;
+	}
+
+	/**
+	 * Extract all routes from an area
+	 */
+	public static function routesForDrawers(string $areaId, array $area): array
+	{
+		$drawers = $area['drawers'] ?? [];
+		$routes  = [];
+
+		foreach ($drawers as $drawerId => $drawer) {
+			$routes = array_merge($routes, Drawer::routes(
+				id: $drawerId,
+				areaId: $areaId,
+				prefix: 'drawers',
+				options: $drawer
 			));
 		}
 
