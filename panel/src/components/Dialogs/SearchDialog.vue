@@ -174,10 +174,7 @@ export default {
 		},
 		async search(query) {
 			this.isLoading = true;
-
-			if (this.$refs.types) {
-				this.$refs.types.close();
-			}
+			this.$refs.types?.close();
 
 			try {
 				// Skip API call if query empty

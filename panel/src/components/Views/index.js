@@ -8,6 +8,7 @@ import LoginView from "./LoginView.vue";
 import PageView from "./PageView.vue";
 import PluginView from "./PluginView.vue";
 import ResetPasswordView from "./ResetPasswordView.vue";
+import SearchView from "./SearchView.vue";
 import SiteView from "./SiteView.vue";
 import SystemView from "./SystemView.vue";
 import UsersView from "./UsersView.vue";
@@ -25,6 +26,7 @@ export default {
 		app.component("k-page-view", PageView);
 		app.component("k-plugin-view", PluginView);
 		app.component("k-reset-password-view", ResetPasswordView);
+		app.component("k-search-view", SearchView);
 		app.component("k-site-view", SiteView);
 		app.component("k-system-view", SystemView);
 		app.component("k-users-view", UsersView);
