@@ -4,6 +4,7 @@
 		:novalidate="novalidate"
 		:fields="fields"
 		:value="value"
+		class="k-drawer-fields"
 		@input="$emit('input', $event)"
 		@invalid="$emit('invalid', $event)"
 		@submit="$emit('submit', $event)"

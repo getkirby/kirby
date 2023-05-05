@@ -374,7 +374,7 @@ export default {
 .k-block-container[data-hidden="true"] .k-block {
 	opacity: 0.25;
 }
-.k-drawer-options .k-button[data-disabled="true"] {
+.k-drawer-options .k-drawer-option[data-disabled="true"] {
 	vertical-align: middle;
 	display: inline-grid;
 }
