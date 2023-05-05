@@ -39,10 +39,36 @@ class Field
 		$routes = [];
 
 		foreach ($field->dialogs() as $dialogId => $dialog) {
-			$routes = array_merge($routes, Panel::routesForDialog(
-				dialogId: $dialogId,
+			$routes = array_merge($routes, Dialog::routes(
+				id: $dialogId,
 				areaId: 'site',
-				dialog: $dialog
+				options: $dialog
+			));
+		}
+
+		return Router::execute($path, $method, $routes);
+	}
+
+	/**
+	 * Creates the routes for a field drawer
+	 * This is most definitely not a good place for this
+	 * method, but as long as the other classes are
+	 * not fully refactored, it still feels appropriate
+	 */
+	public static function drawer(
+		ModelWithContent $model,
+		string $fieldName,
+		string|null $path = null,
+		string $method = 'GET',
+	) {
+		$field  = Form::for($model)->field($fieldName);
+		$routes = [];
+
+		foreach ($field->drawers() as $drawerId => $drawer) {
+			$routes = array_merge($routes, Drawer::routes(
+				id: $drawerId,
+				areaId: 'site',
+				options: $drawer
 			));
 		}
 
