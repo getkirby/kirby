@@ -154,6 +154,8 @@ class View
 					}
 				}
 			},
+			'$dialog' => null,
+			'$drawer' => null,
 			'$language' => function () use ($kirby, $multilang, $language) {
 				if ($multilang === true && $language) {
 					return [
@@ -204,9 +206,11 @@ class View
 					'breadcrumb' => [],
 					'code'       => 200,
 					'path'       => Str::after($kirby->path(), '/'),
-					'timestamp'  => (int)(microtime(true) * 1000),
 					'props'      => [],
-					'search'     => $kirby->option('panel.search.type', 'pages')
+					'query'      => App::instance()->request()->query()->toArray(),
+					'referrer'   => Panel::referrer(),
+					'search'     => $kirby->option('panel.search.type', 'pages'),
+					'timestamp'  => (int)(microtime(true) * 1000),
 				];
 
 				$view = array_replace_recursive($defaults, $options['area'] ?? [], $view);
@@ -214,6 +218,7 @@ class View
 				// make sure that views and dialogs are gone
 				unset(
 					$view['dialogs'],
+					$view['drawers'],
 					$view['dropdowns'],
 					$view['searches'],
 					$view['views']
