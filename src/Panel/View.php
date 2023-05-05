@@ -206,9 +206,11 @@ class View
 					'breadcrumb' => [],
 					'code'       => 200,
 					'path'       => Str::after($kirby->path(), '/'),
-					'timestamp'  => (int)(microtime(true) * 1000),
 					'props'      => [],
-					'search'     => $kirby->option('panel.search.type', 'pages')
+					'query'      => App::instance()->request()->query()->toArray(),
+					'referrer'   => Panel::referrer(),
+					'search'     => $kirby->option('panel.search.type', 'pages'),
+					'timestamp'  => (int)(microtime(true) * 1000),
 				];
 
 				$view = array_replace_recursive($defaults, $options['area'] ?? [], $view);

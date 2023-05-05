@@ -17,6 +17,8 @@ export const defaults = () => {
 		path: null,
 		// all props for the feature component
 		props: {},
+		// the query parameters form the latest request
+		query: {},
 		// referrer can be used to redirect properly in handlers
 		referrer: null,
 		// timestamp from the backend to force refresh the reactive state
@@ -249,7 +251,7 @@ export default (panel, key, defaults) => {
 				return false;
 			}
 
-			this.open(this.path, options);
+			this.open(this.url(), options);
 		},
 
 		/**
@@ -276,8 +278,8 @@ export default (panel, key, defaults) => {
 		 *
 		 * @returns {URL}
 		 */
-		get url() {
-			return panel.url(this.path);
+		url() {
+			return panel.url(this.path, this.query);
 		}
 	};
 };
