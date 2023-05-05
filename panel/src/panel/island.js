@@ -1,5 +1,8 @@
+// @ts-check
+
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
+import focus from "@/helpers/focus.js";
 
 /**
  * Additional default values for islands
@@ -27,6 +30,10 @@ export const defaults = () => {
  * An island is a feature that can be opened and
  * closed and will be placed in the Panel by the matching
  * Island component
+ *
+ * @param {any} panel
+ * @param {string} key
+ * @param {object} defaults
  */
 export default (panel, key, defaults) => {
 	const parent = Feature(panel, key, defaults);
@@ -54,13 +61,24 @@ export default (panel, key, defaults) => {
 		async close() {
 			// close legacy components
 			// if it is still open
-			this.ref?.$refs.overlay?.close();
+			this.ref?.hide();
 
 			if (this.isOpen) {
 				this.emit("close");
 			}
 
 			this.reset();
+		},
+
+		/**
+		 * Set the focus to the first focusable input
+		 * or button in the island. The input can also
+		 * be set manually.
+		 *
+		 * @param {String} input
+		 */
+		focus(input) {
+			focus(`.k-${this.key()}-portal`, input);
 		},
 
 		/**
@@ -85,8 +103,8 @@ export default (panel, key, defaults) => {
 		 * before an island is opened. It also sets the
 		 * isOpen state.
 		 *
-		 * @param {Object} state
-		 * @returns {Object} The new state
+		 * @param {Object} feature
+		 * @returns {Promise} Returns the new state
 		 */
 		async open(feature, options = {}) {
 			// check for legacy Vue components
@@ -94,27 +112,17 @@ export default (panel, key, defaults) => {
 				return this.openComponent(feature);
 			}
 
-			// close previous notifications from other
-			// contexts, if the island wasn't open so far
-			if (this.isOpen === false) {
-				panel.notification.close();
-			}
-
-			// open the feature via url or with a state object
-			await parent.open.call(this, feature, options);
-
-			// mark the island as open
-			this.isOpen = true;
-
-			return this.state();
+			return this.openState(feature, options);
 		},
 
 		/**
 		 * Takes a legacy Vue component and
 		 * opens it manually.
+		 *
+		 * @param {any} component
 		 */
 		async openComponent(component) {
-			await this.open({
+			const state = await this.openState({
 				component: component.$options._componentTag,
 				// don't render this in the island
 				// comonent. The Vue component already
@@ -134,7 +142,29 @@ export default (panel, key, defaults) => {
 				ref: component
 			});
 
-			component.$refs.overlay?.open();
+			component.show();
+
+			return state;
+		},
+
+		/**
+		 * Opens the state by object or URL
+		 * @param {String|Object|URL} feature
+		 * @param {Object} options
+		 * @returns {Promise}
+		 */
+		async openState(feature, options) {
+			// close previous notifications from other
+			// contexts, if the island wasn't open so far
+			if (this.isOpen === false) {
+				panel.notification.close();
+			}
+
+			// open the feature via url or with a state object
+			await parent.open.call(this, feature, options);
+
+			// mark the island as open
+			this.isOpen = true;
 
 			return this.state();
 		},
@@ -146,7 +176,7 @@ export default (panel, key, defaults) => {
 		 *
 		 * @param {Object} value
 		 * @param {Object} options
-		 * @returns {Object} The new state or false if the request failed
+		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
 			// close the drawer or dialog if there's no submitter
@@ -175,7 +205,7 @@ export default (panel, key, defaults) => {
 			// I.e. { $dialog: { ... } }
 			// pass it forward to the success handler
 			// to react on elements in the response
-			return this.success(response[this.key()] ?? {});
+			return this.success(response["$" + this.key()] ?? {});
 		},
 
 		/**
@@ -184,14 +214,12 @@ export default (panel, key, defaults) => {
 		 * Most of the response handling should
 		 * be redone. But we keep it for compatibility
 		 *
-		 * @param {Object} state
+		 * @param {Object|String} success
 		 * @returns
 		 */
 		success(success) {
 			if (typeof success === "string") {
 				panel.notification.success(success);
-				// keep the dialog open
-				return;
 			}
 
 			// close the dialog or drawer
@@ -206,11 +234,14 @@ export default (panel, key, defaults) => {
 			// dispatch store actions that might have been defined in the response
 			this.successDispatch(success);
 
-			// handle any redirects
-			this.successRedirect(success);
-
-			// reload the parent view to show changes
-			panel.view.reload(success.reload);
+			// redirect or reload
+			if (success.route || success.redirect) {
+				// handle any redirects
+				this.successRedirect(success);
+			} else {
+				// reload the parent view to show changes
+				panel.view.reload(success.reload);
+			}
 
 			return success;
 		},
@@ -219,7 +250,6 @@ export default (panel, key, defaults) => {
 		 * Dispatch deprecated store events
 		 *
 		 * @param {Object} state
-		 * @param {String|Array} events
 		 */
 		successDispatch(state) {
 			if (isObject(state.dispatch) === false) {
@@ -228,7 +258,7 @@ export default (panel, key, defaults) => {
 
 			for (const event in state.dispatch) {
 				const payload = state.dispatch[event];
-				panel.vue?.$store.dispatch(
+				panel.app.$store.dispatch(
 					event,
 					Array.isArray(payload) === true ? [...payload] : payload
 				);
@@ -239,7 +269,6 @@ export default (panel, key, defaults) => {
 		 * Emit all events that might be in the response
 		 *
 		 * @param {Object} state
-		 * @param {String|Array} events
 		 */
 		successEvents(state) {
 			if (state.event) {

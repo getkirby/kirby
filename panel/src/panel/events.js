@@ -6,8 +6,21 @@ import mitt from "mitt";
  * which can be used by any component in the app
  * to start and stop listening to events
  */
-export default () => {
+export default (panel) => {
 	const emitter = mitt();
+
+	/**
+	 * Custom handler for save events
+	 */
+	emitter.on("keydown.cmd.s", (e) => {
+		emitter.emit(panel.context + ".save", e);
+	});
+
+	/**
+	 * Custom handler for search
+	 */
+	emitter.on("keydown.cmd.shift.f", () => panel.search());
+	emitter.on("keydown.cmd./", () => panel.search());
 
 	/**
 	 * Config for globally delegated events.

@@ -11,14 +11,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
 	// eslint-disable-next-line
 	strict: process.env.NODE_ENV !== "production",
-	state: {
-		drag: null
-	},
-	mutations: {
-		SET_DRAG(state, drag) {
-			state.drag = drag;
-		}
-	},
 	actions: {
 		/**
 		 * @deprecated Use window.panel.dialog.open()
@@ -26,8 +18,11 @@ export default new Vuex.Store({
 		dialog(context, dialog) {
 			window.panel.dialog.open(dialog);
 		},
+		/**
+		 * @deprecated Use window.panel.drag.start(type, data)
+		 */
 		drag(context, drag) {
-			context.commit("SET_DRAG", drag);
+			window.panel.drag.start(...drag);
 		},
 		/**
 		 * @deprecated Use window.panel.notification.fatal()
@@ -44,9 +39,9 @@ export default new Vuex.Store({
 		/**
 		 * @deprecated
 		 */
-		navigate(context) {
+		navigate() {
 			window.panel.dialog.close();
-			context.dispatch("drawers/close");
+			window.panel.drawer.close();
 		}
 	},
 	modules: {

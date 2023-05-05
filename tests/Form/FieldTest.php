@@ -222,8 +222,10 @@ class FieldTest extends TestCase
 		$routes = [
 			[
 				'pattern' => 'foo',
-				'load'    => function () {},
-				'submit'  => function () {}
+				'load'    => function () {
+				},
+				'submit'  => function () {
+				}
 			]
 		];
 

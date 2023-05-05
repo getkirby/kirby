@@ -244,6 +244,16 @@ abstract class FieldClass
 	}
 
 	/**
+	 * Returns optional drawer routes for the field
+	 *
+	 * @return array
+	 */
+	public function drawers(): array
+	{
+		return [];
+	}
+
+	/**
 	 * Runs all validations and returns an array of
 	 * error messages
 	 *

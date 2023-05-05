@@ -1,5 +1,6 @@
 import Api from "@/api/index.js";
 import Dialog from "./dialog.js";
+import Drag from "./drag.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events.js";
@@ -63,26 +64,27 @@ export default {
 		// props
 		this.isLoading = false;
 
-		// modules
+		this.drag = Drag(this);
 		this.events = Events(this);
+
+		// modules
 		this.language = Language(this);
 		this.notification = Notification(this);
 		this.system = System(this);
 		this.translation = Translation(this);
 		this.user = User(this);
 
-		// islands
-		this.drawer = Drawer(this);
-		this.dialog = Dialog(this);
-
 		// features
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
 
+		// islands
+		this.drawer = Drawer(this);
+		this.dialog = Dialog(this);
+
 		// methods
 		this.redirect = redirect;
 		this.reload = this.view.reload.bind(this.view);
-		this.request = request;
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
@@ -158,7 +160,7 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async get(url, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "GET",
 			...options
 		});
@@ -207,13 +209,21 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async post(url, data = {}, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
 			...options
 		});
 
 		return response.json;
+	},
+
+	async request(url, options = {}) {
+		return request(url, {
+			referrer: this.view.path,
+			csrf: this.system.csrf,
+			...options
+		});
 	},
 
 	/**
@@ -225,6 +235,13 @@ export default {
 	 * @returns {Object} { code, path, referrer, results, timestamp }
 	 */
 	async search(type, query) {
+		// open the search dialog
+		if (!type && !query) {
+			return this.dialog.open({
+				component: "k-search-dialog"
+			});
+		}
+
 		const { $search } = await this.get(`/search/${type}`, {
 			query: { query }
 		});

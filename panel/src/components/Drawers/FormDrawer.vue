@@ -1,75 +1,26 @@
 <template>
-	<k-overlay ref="overlay" type="drawer" @cancel="cancel" @ready="ready">
-		<form
-			class="k-form-drawer k-drawer"
-			method="dialog"
-			@submit.prevent="submit"
-		>
-			<k-drawer-notification />
-			<k-drawer-header
-				:breadcrumb="breadcrumb"
-				:icon="icon"
-				:tab="tab"
-				:tabs="tabs"
-				:title="title"
-				@openCrumb="openCrumb"
-				@openTab="openTab"
-			>
-				<slot name="options" />
-			</k-drawer-header>
-			<k-drawer-body>
-				<k-drawer-fields
-					:fields="fieldset"
-					:value="model"
-					@input="input"
-					@invalid="invalid"
-					@submit="submit"
-				/>
-			</k-drawer-body>
-		</form>
-	</k-overlay>
+	<k-drawer
+		ref="drawer"
+		v-bind="$props"
+		class="k-form-drawer"
+		@cancel="cancel"
+		@submit="submit"
+	>
+		<slot name="options" slot="options" />
+		<k-drawer-fields
+			:fields="$panel.drawer.tab?.fields"
+			:value="value"
+			@input="input"
+			@submit="submit"
+		/>
+	</k-drawer>
 </template>
 
 <script>
-import Drawer from "./Drawer.vue";
+import Drawer from "@/mixins/drawer.js";
 import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [Drawer, Fields],
-	data() {
-		return {
-			fieldset: {},
-			// Since fiber drawers don't update their `value` prop
-			// on an emitted `input` event, we need to ensure a local
-			// state of all updated values
-			model: this.value
-		};
-	},
-	watch: {
-		tab() {
-			this.fieldset = this.tabs[this.tab]?.fields || {};
-
-			// focus on the first best element
-			// in the drawer
-			setTimeout(() => {
-				this.$refs.overlay.focus();
-			});
-		},
-		value(value) {
-			this.model = value;
-		}
-	},
-	methods: {
-		input(value) {
-			this.model = value;
-			this.$emit("input", this.model);
-		},
-		invalid() {
-			this.$emit("invalid", this.model);
-		},
-		submit() {
-			this.$emit("submit", this.model);
-		}
-	}
+	mixins: [Drawer, Fields]
 };
 </script>

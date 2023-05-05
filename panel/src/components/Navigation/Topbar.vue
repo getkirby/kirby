@@ -49,14 +49,11 @@
 						:tooltip="$t('search')"
 						class="k-topbar-button"
 						icon="search"
-						@click="$refs.search.open()"
+						@click="$panel.search()"
 					/>
 				</div>
 			</div>
 		</k-view>
-
-		<!-- search overlay -->
-		<k-search ref="search" :type="view.search" :types="$panel.searches" />
 	</div>
 </template>
 
@@ -74,21 +71,6 @@ export default {
 			return this.$panel.notification.context === "view"
 				? this.$panel.notification
 				: null;
-		}
-	},
-	watch: {
-		notification: {
-			handler(notification) {
-				// send the notification to the dialog instead
-				// of the topbar.
-				if (notification?.type === "error") {
-					this.$dialog({
-						component: "k-error-dialog",
-						props: notification.state()
-					});
-				}
-			},
-			immediate: true
 		}
 	}
 };

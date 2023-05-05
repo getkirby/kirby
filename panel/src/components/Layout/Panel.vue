@@ -1,6 +1,6 @@
 <template>
 	<div
-		:data-dragging="$store.state.drag"
+		:data-dragging="$panel.drag.isDragging"
 		:data-loading="$panel.isLoading"
 		:data-language="$panel.language.code"
 		:data-language-default="$panel.language.isDefault"
@@ -15,6 +15,11 @@
 		<!-- Fiber dialogs -->
 		<template v-if="$panel.dialog.isOpen && $panel.dialog.island">
 			<k-fiber-dialog />
+		</template>
+
+		<!-- Fiber drawers -->
+		<template v-if="$panel.drawer.isOpen && $panel.drawer.island">
+			<k-fiber-drawer />
 		</template>
 
 		<!-- Fatal iframe -->
