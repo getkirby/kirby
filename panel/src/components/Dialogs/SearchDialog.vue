@@ -40,9 +40,10 @@
 				<!-- Input -->
 				<input
 					ref="input"
-					:placeholder="$t('search') + ' …'"
 					:aria-label="$t('search')"
 					:autofocus="true"
+					:placeholder="$t('search') + ' …'"
+					:value="q"
 					type="text"
 					@input="search($event.target.value)"
 					@keydown.down.prevent="onDown"
@@ -67,14 +68,24 @@
 				<k-collection
 					v-if="items.length"
 					ref="items"
-					:items="items"
+					:items="items.slice(0, 10)"
 					@mouseout.native="select(-1)"
 				/>
 
 				<!-- No results -->
-				<p v-else class="k-search-empty">
-					{{ $t("search.results.none") }}
-				</p>
+				<footer class="k-search-footer">
+					<p v-if="!items.length">
+						{{ $t("search.results.none") }}
+					</p>
+
+					<k-button
+						v-else-if="items.length > 10"
+						icon="search"
+						@click="$go(`/search?type=${type}&q=${q}`)"
+					>
+						All {{ items.length }} results
+					</k-button>
+				</footer>
 			</div>
 		</form>
 	</k-overlay>
@@ -122,7 +133,7 @@ export const search = {
 			this.q = query;
 			this.isLoading = true;
 			this.$refs.types?.close();
-			this.select(-1);
+			this.select?.(-1);
 
 			try {
 				// Skip API call if query empty
@@ -243,9 +254,14 @@ export default {
 	font-size: var(--text-xs);
 }
 
-.k-search-empty {
+.k-search-footer {
 	text-align: center;
+}
+.k-search-footer p {
 	font-size: var(--text-xs);
 	color: var(--color-gray-600);
+}
+.k-search-footer .k-button {
+	margin-top: var(--spacing-3);
 }
 </style>

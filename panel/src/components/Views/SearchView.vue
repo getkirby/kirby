@@ -2,36 +2,84 @@
 	<k-inside>
 		<k-view class="k-search-view">
 			<k-header>
-				{{ $t("search") }}: <strong>{{ query ?? "–" }}</strong>
+				<!-- Type select -->
+				<k-dropdown class="k-search-types">
+					<k-button
+						:icon="currentType.icon"
+						:text="currentType.label"
+						@click="$refs.types.toggle()"
+					/>
+					<k-dropdown-content ref="types">
+						<k-dropdown-item
+							v-for="(typeItem, typeIndex) in $panel.searches"
+							:key="typeIndex"
+							:icon="typeItem.icon"
+							@click="
+								type = typeIndex;
+								focus();
+							"
+						>
+							{{ typeItem.label }}
+						</k-dropdown-item>
+					</k-dropdown-content>
+				</k-dropdown>
+
+				<!-- Input -->
+				<input
+					ref="input"
+					:aria-label="$t('search')"
+					:autofocus="true"
+					:placeholder="$t('search') + ' …'"
+					:value="q"
+					type="text"
+					@input="search($event.target.value)"
+					@keydown.esc="clear"
+				/>
 			</k-header>
 
 			<div class="k-search-results">
 				<!-- Results -->
-				<k-collection v-if="results.length" ref="items" :items="results" />
+				<k-collection v-if="items.length" ref="items" :items="items" />
 
 				<!-- No results -->
-				<p v-else class="k-search-empty">
+				<k-empty v-else icon="search">
 					{{ $t("search.results.none") }}
-				</p>
+				</k-empty>
 			</div>
 		</k-view>
 	</k-inside>
 </template>
 
 <script>
+import { search } from "@/components/Dialogs/SearchDialog.vue";
+
 export default {
-	props: {
-		query: String,
-		results: Object
+	mixins: [search],
+	data() {
+		return {
+			q: window.panel.view.query.q,
+			type: window.panel.view.query.type ?? "page"
+		};
+	},
+	watch: {
+		q: {
+			handler(query) {
+				this.search(query);
+			},
+			immediate: true
+		}
 	}
 };
 </script>
 
 <style>
-.k-search-view-input {
-	background: var(--color-white);
-	padding: var(--spacing-2) var(--spacing-3);
-	border-radius: var(--rounded);
-	margin-bottom: var(--spacing-6);
+.k-search-view .k-headline {
+	display: flex;
+	gap: 1rem;
+}
+.k-search-view input {
+	background: transparent;
+	border: none;
+	padding: var(--spacing-1);
 }
 </style>
