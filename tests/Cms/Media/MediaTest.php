@@ -9,27 +9,28 @@ use PHPUnit\Framework\TestCase;
 class MediaTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $fixtures = __DIR__ . '/fixtures';
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/MediaTest',
+				'index' => $this->tmp = __DIR__ . '/tmp',
 			],
 		]);
 
-		Dir::make($this->fixtures);
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testLinkSiteFile()
 	{
-		F::write($this->fixtures . '/content/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+		F::write($this->tmp . '/content/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
 
 		$file   = $this->app->file('test.svg');
 		$result = Media::link($this->app->site(), $file->mediaHash(), $file->filename());
@@ -41,7 +42,7 @@ class MediaTest extends TestCase
 
 	public function testLinkPageFile()
 	{
-		F::write($this->fixtures . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+		F::write($this->tmp . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
 
 		$file   = $this->app->file('projects/test.svg');
 		$result = Media::link($this->app->page('projects'), $file->mediaHash(), $file->filename());
@@ -53,7 +54,7 @@ class MediaTest extends TestCase
 
 	public function testLinkWithInvalidHash()
 	{
-		F::write($this->fixtures . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+		F::write($this->tmp . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
 
 		// with the correct media token
 		$file   = $this->app->file('projects/test.svg');
@@ -78,7 +79,7 @@ class MediaTest extends TestCase
 	{
 		$site = new Site();
 
-		F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+		F::write($src = $this->tmp . '/content/test.jpg', 'nice jpg');
 		$file = new File([
 			'kirby'    => $this->app,
 			'parent'   => $site,
@@ -87,7 +88,7 @@ class MediaTest extends TestCase
 
 		$oldToken  = crc32($filename);
 		$newToken  = $file->mediaToken();
-		$directory = $this->fixtures . '/media/site';
+		$directory = $this->tmp . '/media/site';
 
 		Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
 		Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
@@ -112,7 +113,7 @@ class MediaTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+		F::write($src = $this->tmp . '/content/test.jpg', 'nice jpg');
 		$file = new File([
 			'kirby'    => $this->app,
 			'parent'   => $page,
@@ -121,7 +122,7 @@ class MediaTest extends TestCase
 
 		$oldToken  = crc32($filename);
 		$newToken  = $file->mediaToken();
-		$directory = $this->fixtures . '/media/site';
+		$directory = $this->tmp . '/media/site';
 
 		Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
 		Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
@@ -147,7 +148,7 @@ class MediaTest extends TestCase
 			'slug' => 'test'
 		]);
 
-		F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+		F::write($src = $this->tmp . '/content/test.jpg', 'nice jpg');
 		$file = new File([
 			'kirby'    => $this->app,
 			'parent'   => $page,
@@ -156,7 +157,7 @@ class MediaTest extends TestCase
 
 		$oldToken  = crc32($filename);
 		$newToken  = $file->mediaToken();
-		$directory = $this->fixtures . '/media/site';
+		$directory = $this->tmp . '/media/site';
 
 		Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
 		Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
@@ -178,7 +179,7 @@ class MediaTest extends TestCase
 
 	public function testUnpublishNonExistingDirectory()
 	{
-		$directory = $this->fixtures . '/does-not-exist';
+		$directory = $this->tmp . '/does-not-exist';
 
 		$page = new Page([
 			'slug' => 'test'
@@ -195,10 +196,10 @@ class MediaTest extends TestCase
 
 	public function testThumb()
 	{
-		Dir::make($this->fixtures . '/content');
+		Dir::make($this->tmp . '/content');
 
 		// copy test image to content
-		F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+		F::copy($this->fixtures . '/files/test.jpg', $this->tmp . '/content/test.jpg');
 
 		// get file object
 		$file  = $this->app->file('test.jpg');
@@ -239,22 +240,22 @@ class MediaTest extends TestCase
 
 	public function testThumbStringModel()
 	{
-		Dir::make($this->fixtures . '/content');
+		Dir::make($this->tmp . '/content');
 
 		// copy test image to content
-		F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+		F::copy($this->fixtures . '/files/test.jpg', $this->tmp . '/content/test.jpg');
 
 		// get file object
 		$file  = $this->app->file('test.jpg');
-		Dir::make($this->fixtures . '/media/assets/site/' . $file->mediaHash());
+		Dir::make($this->tmp . '/media/assets/site/' . $file->mediaHash());
 		$this->assertInstanceOf(File::class, $file);
 
 		// create job file
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-		F::write($this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
+		F::write($this->tmp . '/media/assets/site/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
 		// copy to media folder
-		$file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
+		$file->asset()->copy($mediaPath = $this->tmp . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
 
 		$thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
 		$this->assertInstanceOf('Kirby\Cms\Response', $thumb);
