@@ -119,7 +119,7 @@ class Media
 			}
 
 			$source = match (true) {
-				is_string($model) === true
+				is_string($model)
 					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
 				default
 				=> $model->file($options['filename'])->root()
