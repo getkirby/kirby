@@ -120,7 +120,7 @@ class Media
 			// send a customized error message to make clearer what happened here
 			throw new NotFoundException('The thumbnail configuration could not be found');
 		}
-		
+
 		if (empty($options['filename']) === true) {
 			throw new InvalidArgumentException('Incomplete thumbnail configuration');
 		}
@@ -132,7 +132,7 @@ class Media
 				is_string($model) === true
 					=> $kirby->root('index') . '/' . $model . '/' . $options['filename'],
 				default
-					=> $model->file($options['filename'])->root()
+				=> $model->file($options['filename'])->root()
 			};
 
 			// generate the thumbnail and save it in the media folder
