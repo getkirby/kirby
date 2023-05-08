@@ -93,7 +93,7 @@ class Media
 	 * @param \Kirby\Cms\Model|string $model
 	 * @param string $hash
 	 * @param string $filename
-	 * @return \Kirby\Cms\Response|false
+	 * @return \Kirby\Cms\Response
 	 */
 	public static function thumb($model, string $hash, string $filename)
 	{
