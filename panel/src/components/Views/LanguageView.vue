@@ -60,7 +60,7 @@ export default {
 		createTranslation() {
 			this.$dialog(`languages/${this.id}/translations/create`);
 		},
-		option({ option, row }) {
+		option(option, row) {
 			this.$dialog(`languages/${this.id}/translations/${row.key}/${option}`);
 		},
 		remove() {
