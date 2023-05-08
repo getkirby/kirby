@@ -111,8 +111,10 @@ return [
 		},
 		'submit' => function (string $id) {
 			Find::language($id)->delete();
+
 			return [
-				'event' => 'language.delete',
+				'event'    => 'language.delete',
+				'redirect' => 'languages'
 			];
 		}
 	],
