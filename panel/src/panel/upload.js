@@ -1,6 +1,6 @@
 import { uuid } from "@/helpers/string";
 import Module from "./module.js";
-import { reactive, ref } from "vue";
+import upload from "@/helpers/upload.js";
 
 export const defaults = () => {
 	return {
@@ -22,7 +22,16 @@ export default (panel) => {
 		isEmpty() {
 			return this.files.length === 0;
 		},
-		dialog() {
+		close() {
+			if (panel.dialog.component === "k-upload-dialog") {
+				panel.dialog.close();
+			}
+		},
+		dialog(options) {
+			if (options) {
+				this.set(options);
+			}
+
 			panel.dialog.open({
 				component: "k-upload-dialog",
 				on: {
@@ -35,11 +44,17 @@ export default (panel) => {
 				}
 			});
 		},
-		drop(files) {
+		drop(files, options) {
+			if (options) {
+				this.set(options);
+			}
+
 			this.select(files);
 		},
-		open(options = {}) {
-			this.set(options);
+		open(options) {
+			if (options) {
+				this.set(options);
+			}
 
 			if (this.max === 1) {
 				this.multiple = false;
@@ -89,34 +104,79 @@ export default (panel) => {
 				const parts = file.name.split(".");
 
 				this.files.push({
-					alt: null,
 					name: parts.slice(0, -1).join("."),
+					error: null,
 					extension: parts.slice(-1).join(""),
-					niceSize: formatter.format(file.size),
 					filename: file.name,
+					niceSize: formatter.format(file.size),
+					progress: 0,
 					size: file.size,
 					src: file,
 					type: file.type,
+					upload: true,
 					url: url,
 					uuid: uuid()
 				});
 			});
+
+			this.dialog();
 		},
 		start(url) {
 			if (url) {
 				this.url = url;
 			}
 
+			// only keep the ones that have been marked for the upload
+			this.files = this.files.filter((file) => file.upload);
+
 			// nothing to upload
 			if (this.files.length === 0) {
-				return true;
+				this.close();
+				panel.reload();
+				return;
 			}
 
 			if (!this.url) {
 				throw new Error("The upload URL is missing");
 			}
 
-			alert("starting the upload");
+			this.files
+				.filter((file) => file.upload === true)
+				.forEach((file) => {
+					upload(file.src, {
+						attributes: this.attributes,
+						headers: {
+							"x-csrf": panel.system.csrf
+						},
+						filename: file.name + "." + file.extension,
+						url: this.url,
+						error: (xhr, src, response) => {
+							file.error = response.message;
+							file.progress = 0;
+						},
+						progress: (xhr, src, progress) => {
+							file.progress = progress;
+						},
+						success: () => {
+							this.files = this.files.filter((f) => f !== file);
+
+							const remaining = this.files.filter((file) => {
+								// incomplete / with errors / not selected
+								return file.progress !== 100 || file.error;
+							}).length;
+
+							if (remaining === 0) {
+								this.close();
+								panel.view.reload();
+							}
+						}
+					});
+
+					// if there is sort data, increment in the loop for next file
+					if (this.attributes?.sort !== undefined) {
+						this.attributes.sort++;
+					}
+				});
 		}
 	};
 };
