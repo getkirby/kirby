@@ -116,13 +116,13 @@ class Media
 
 		try {
 			$options = Data::read($job);
-
-			if (empty($options['filename']) === true) {
-				throw new InvalidArgumentException('Incomplete thumbnail configuration');
-			}
 		} catch (Throwable) {
 			// send a customized error message to make clearer what happened here
 			throw new NotFoundException('The thumbnail configuration could not be found');
+		}
+		
+		if (empty($options['filename']) === true) {
+			throw new InvalidArgumentException('Incomplete thumbnail configuration');
 		}
 
 		try {
