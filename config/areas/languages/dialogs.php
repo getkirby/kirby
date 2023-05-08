@@ -7,10 +7,10 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
 $languageDialogFields = [
 	'name' => [
+		'counter'  => false,
 		'label'    => I18n::translate('language.name'),
 		'type'     => 'text',
 		'required' => true,
@@ -36,22 +36,25 @@ $languageDialogFields = [
 		'width'    => '1/2'
 	],
 	'locale' => [
-		'label' => I18n::translate('language.locale'),
-		'type'  => 'text',
+		'counter' => false,
+		'label'   => I18n::translate('language.locale'),
+		'type'    => 'text',
 	],
 ];
 
 $translationDialogFields = [
 	'key' => [
-		'label' => 'Key',
-		'type' => 'slug',
-		'width' => '1/3',
-		'icon' => null,
+		'counter' => false,
+		'icon'    => null,
+		'label'   => 'Key',
+		'type'    => 'slug',
+		'width'   => '1/3',
 	],
 	'value' => [
-		'label' => 'Value',
-		'type' => 'text',
-		'width' => '2/3',
+		'counter' => false,
+		'label'   => 'Value',
+		'type'    => 'text',
+		'width'   => '2/3',
 	]
 ];
 
