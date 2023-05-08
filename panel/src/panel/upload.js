@@ -1,5 +1,6 @@
 import { uuid } from "@/helpers/string";
 import Module from "./module.js";
+import { reactive, ref } from "vue";
 
 export const defaults = () => {
 	return {
@@ -49,10 +50,15 @@ export default (panel) => {
 			}
 
 			this.input = document.querySelector("#uploader");
+			this.input.value = null;
 			this.input.accept = this.accept;
 			this.input.multiple = this.multiple;
 
 			this.input.click();
+		},
+		reset() {
+			parent.reset.call(this);
+			this.files.splice(0);
 		},
 		select(files) {
 			if (files instanceof Event) {
@@ -80,10 +86,12 @@ export default (panel) => {
 			// add all files to the list
 			files.forEach((file) => {
 				const url = URL.createObjectURL(file);
+				const parts = file.name.split(".");
 
 				this.files.push({
 					alt: null,
-					name: file.name.split(".").slice(0, -1).join("."),
+					name: parts.slice(0, -1).join("."),
+					extension: parts.slice(-1).join(""),
 					niceSize: formatter.format(file.size),
 					filename: file.name,
 					size: file.size,
