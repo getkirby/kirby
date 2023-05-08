@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -115,6 +116,10 @@ class Media
 
 		try {
 			$options = Data::read($job);
+
+			if (empty($options['filename']) === true) {
+				throw new InvalidArgumentException('Incomplete thumbnail configuration');
+			}
 		} catch (Throwable) {
 			// send a customized error message to make clearer what happened here
 			throw new NotFoundException('The thumbnail configuration could not be found');
