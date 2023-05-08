@@ -5,11 +5,15 @@
 				{{ name }}
 
 				<k-button-group slot="left">
-					<k-button :text="code.toUpperCase()" icon="globe" @click="update()" />
+					<k-button
+						:text="code.toUpperCase()"
+						icon="globe"
+						@click="update('code')"
+					/>
 					<k-button
 						:text="direction.toUpperCase()"
 						:icon="direction === 'rtl' ? 'text-right' : 'text-left'"
-						@click="update()"
+						@click="update('direction')"
 					/>
 					<k-button :text="$t('delete')" icon="trash" @click="remove()" />
 				</k-button-group>
@@ -58,16 +62,26 @@ export default {
 	},
 	methods: {
 		createTranslation() {
-			this.$dialog(`languages/${this.id}/translations/create`);
+			this.$panel.dialog.open(
+				`dialogs/languages/${this.id}/translations/create`
+			);
 		},
 		option(option, row) {
-			this.$dialog(`languages/${this.id}/translations/${row.key}/${option}`);
+			this.$panel.dialog.open(
+				`dialogs/languages/${this.id}/translations/${row.key}/${option}`
+			);
 		},
 		remove() {
-			this.$dialog(`languages/${this.id}/delete`);
+			this.$panel.dialog.open(`dialogs/languages/${this.id}/delete`);
 		},
-		update() {
-			this.$dialog(`languages/${this.id}/update`);
+		update(focus) {
+			this.$panel.dialog.open(`dialogs/languages/${this.id}/update`, {
+				on: {
+					ready: () => {
+						this.$panel.dialog.focus(focus);
+					}
+				}
+			});
 		},
 		updateTranslation({ row }) {
 			this.$dialog(`languages/${this.id}/translations/${row.key}/update`);
