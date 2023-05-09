@@ -736,6 +736,10 @@ trait PageActions
 		];
 
 		return $this->commit('move', $arguments, function ($page, $parent) {
+
+			// remove the uuid cache for this page
+			$page->uuid()->clear(true);
+
 			// move drafts into the drafts folder of the parent
 			if ($page->isDraft() === true) {
 				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
