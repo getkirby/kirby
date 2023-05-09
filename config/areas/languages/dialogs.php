@@ -191,8 +191,8 @@ return [
 		'submit' => function (string $languageCode) {
 			$language = Find::language($languageCode);
 
-			$key   = get('key');
-			$value = get('value');
+			$key   = get('key', '');
+			$value = get('value', '');
 
 			LanguageVariable::create($key, $value);
 

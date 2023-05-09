@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use InvalidArgumentException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Toolkit\Str;
 
@@ -36,8 +37,11 @@ class LanguageVariable
 		$value        = trim($value ?? '');
 		$kirby        = App::instance();
 		$language     = $kirby->defaultLanguage();
-		$variable     = $language->variable($key);
 		$translations = $language->translations();
+
+		if (empty($key) === true) {
+			throw new InvalidArgumentException('The variable needs a valid key');
+		}
 
 		if ($kirby->translation()->get($key) !== null) {
 			if (isset($translations[$key]) === true) {
