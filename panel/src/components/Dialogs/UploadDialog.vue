@@ -3,20 +3,19 @@
 		ref="dialog"
 		class="k-upload-dialog"
 		v-bind="$props"
-		@cancel="cancel"
 		@submit="submit"
 	>
 		<k-dropzone @drop="$panel.upload.select($event)">
-			<template v-if="$panel.upload.isEmpty()">
-				<k-empty icon="upload" layout="cards" @click="$panel.upload.open()">
+			<template v-if="$panel.upload.files.length === 0">
+				<k-empty icon="upload" layout="cards" @click="$panel.upload.pick()">
 					{{ $t("files.empty") }}
 				</k-empty>
 			</template>
 			<template v-else>
 				<ul class="k-upload-items">
 					<li
-						v-for="(file, index) in queue"
-						:key="file.uuid"
+						v-for="(file, index) in $panel.upload.files"
+						:key="file.id"
 						class="k-upload-item"
 					>
 						<a :href="file.url" class="k-upload-item-preview" target="_blank">
@@ -32,6 +31,7 @@
 						</a>
 						<k-input
 							v-model="file.name"
+							:disabled="file.completed"
 							:after="'.' + file.extension"
 							:novalidate="true"
 							:required="true"
@@ -46,13 +46,22 @@
 						</div>
 						<div class="k-upload-item-progress">
 							<k-progress
-								v-if="file.progress > 0 && !file.error"
+								v-if="file.progress > 0 && !file.error && !file.completed"
 								:value="file.progress"
 							/>
 						</div>
-						<div class="k-upload-item-toggle">
-							<input type="checkbox" v-model="file.upload" />
-						</div>
+						<k-button
+							v-if="!file.completed && !file.progress"
+							icon="remove"
+							class="k-upload-item-toggle"
+							@click="$panel.upload.remove(file.id)"
+						/>
+						<k-icon
+							v-else-if="file.completed"
+							class="k-upload-item-toggle"
+							type="check"
+							data-theme="positive"
+						/>
 					</li>
 				</ul>
 			</template>
@@ -69,11 +78,6 @@ export default {
 		submitButton: {
 			type: [String, Boolean],
 			default: () => window.panel.$t("upload")
-		}
-	},
-	computed: {
-		queue() {
-			return this.$panel.upload.files.filter((file) => file.progress !== 100);
 		}
 	}
 };
@@ -93,7 +97,7 @@ export default {
 	display: grid;
 	grid-template-areas:
 		"preview input input"
-		"preview body body"
+		"preview body toggle"
 		"preview progress toggle";
 	grid-template-columns: 6rem 1fr auto;
 	grid-template-rows: 1fr 1fr 1fr;
@@ -146,25 +150,23 @@ export default {
 }
 .k-upload-item-error {
 	font-size: var(--text-xs);
-	margin-top: 0.5rem;
+	margin-top: 0.25rem;
 	color: var(--color-red-400);
 }
 .k-upload-item-progress {
 	padding-inline: var(--spacing-3);
 	align-self: end;
-	height: 1.25rem;
+	height: 1.375rem;
 	grid-area: progress;
 	--progress-height: 0.25rem;
-	--progress-color-value: var(--color-green-400);
 	--progress-color-back: var(--color-light);
 }
 .k-upload-item-toggle {
 	grid-area: toggle;
-	padding-inline: var(--spacing-3);
-	padding-bottom: var(--spacing-2);
+	padding: var(--spacing-3);
 	align-self: end;
 }
-.k-upload-item:not(:has(:checked)) {
-	opacity: 0.25;
+.k-upload-item-toggle[data-theme="positive"] {
+	color: var(--color-positive);
 }
 </style>

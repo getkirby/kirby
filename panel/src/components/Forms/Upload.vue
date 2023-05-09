@@ -42,10 +42,18 @@ export default {
 		 * @param {object} params
 		 */
 		open(params) {
-			this.$panel.upload.open({
+			this.$panel.upload.pick(this.params(params));
+		},
+		params(params) {
+			return {
 				...this.$props,
-				...(params || {})
-			});
+				...(params || {}),
+				on: {
+					complete: (files, models) => {
+						this.$emit("success", files, models);
+					}
+				}
+			};
 		},
 		select(e) {
 			this.$panel.upload.select(e.target.files);
@@ -60,17 +68,10 @@ export default {
 		 * @param {object} params
 		 */
 		drop(files, params) {
-			this.$panel.upload.drop(files, {
-				...this.$props,
-				...(params || {})
-			});
+			this.$panel.upload.open(files, this.params(params));
 		},
 		upload(files) {
-			this.$panel.upload.select(files, {
-				...this.$props,
-				...(params || {})
-			});
-
+			this.$panel.upload.select(files, this.params(params));
 			this.$panel.upload.start();
 		}
 	}

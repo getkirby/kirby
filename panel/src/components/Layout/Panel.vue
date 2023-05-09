@@ -30,31 +30,11 @@
 		<!-- Icons -->
 		<k-icons />
 
-		<input
-			aria-hidden="true"
-			class="sr-only"
-			id="uploader"
-			type="file"
-			tabindex="-1"
-			@change="$panel.upload.select($event)"
-			@click.stop
-		/>
-
 		<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
 		<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
 		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>
-
-<script>
-export default {
-	computed: {
-		dialog() {
-			return this.$helper.clone(this.$store.state.dialog);
-		}
-	}
-};
-</script>
 
 <style>
 .k-panel[data-loading="true"] {

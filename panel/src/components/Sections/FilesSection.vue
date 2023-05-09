@@ -68,12 +68,12 @@ export default {
 		},
 		onAdd() {
 			if (this.canAdd) {
-				this.$panel.upload.open(this.uploadProps);
+				this.$panel.upload.pick(this.uploadProps);
 			}
 		},
 		onDrop(files) {
 			if (this.canAdd) {
-				this.$panel.upload.drop(files, this.uploadProps);
+				this.$panel.upload.open(files, this.uploadProps);
 			}
 		},
 		async onSort(items) {
