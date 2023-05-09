@@ -9,6 +9,7 @@ use Kirby\Panel\Panel;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
+$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -287,6 +288,13 @@ return [
 		}
 	],
 
+	// user field dialogs
+	'user.fields' => [
+		'pattern' => '(users/.*?)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit']
+	],
+
 	// change file name
 	'user.file.changeName' => [
 		'pattern' => '(users/.*?)/files/(:any)/changeName',
@@ -301,11 +309,25 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change file template
+	'user.file.changeTemplate' => [
+		'pattern' => '(users/.*?)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete file
 	'user.file.delete' => [
 		'pattern' => '(users/.*?)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
-	]
+	],
+
+	// user file fields dialogs
+	'user.file.fields' => [
+		'pattern' => '(users/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit']
+	],
 
 ];

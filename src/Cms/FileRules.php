@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\File as BaseFile;
 use Kirby\Toolkit\Str;
@@ -66,6 +67,42 @@ class FileRules
 	 */
 	public static function changeSort(File $file, int $sort): bool
 	{
+		return true;
+	}
+
+	/**
+	 * Validates if the template of the file can be changed
+	 *
+	 * @throws \Kirby\Exception\LogicException If the template of the page cannot be changed at all
+	 * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the template
+	 */
+	public static function changeTemplate(File $file, string $template): bool
+	{
+		if ($file->permissions()->changeTemplate() !== true) {
+			throw new PermissionException([
+				'key'  => 'file.changeTemplate.permission',
+				'data' => ['id' => $file->id()]
+			]);
+		}
+
+		$blueprints = $file->blueprints();
+
+		// ensure that the $template is a valid blueprint
+		// option for this file
+		if (
+			count($blueprints) <= 1 ||
+			in_array($template, array_column($blueprints, 'name')) === false
+		) {
+			throw new LogicException([
+				'key'  => 'file.changeTemplate.invalid',
+				'data' => [
+					'id' 		 => $file->id(),
+					'template'   => $template,
+					'blueprints' => implode(', ', array_column($blueprints, 'name'))
+				]
+			]);
+		}
+
 		return true;
 	}
 

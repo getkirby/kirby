@@ -37,7 +37,8 @@ export default {
 				this.fieldset.label,
 				this.content
 			);
-			return label === "…" ? false : label;
+
+			return label === "…" ? false : this.$helper.string.stripHTML(label);
 		},
 		name() {
 			return this.fieldset.name;

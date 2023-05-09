@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\File;
+use Kirby\Cms\Files;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -18,6 +19,12 @@ return [
 		'sort'
 	],
 	'props' => [
+		/**
+		 * Filters pages by a query. Sorting will be disabled
+		 */
+		'query' => function (string|null $query = null) {
+			return $query;
+		},
 		/**
 		 * Filters all files by template and also sets the template, which will be used for all uploads
 		 */
@@ -49,7 +56,14 @@ return [
 			return $this->parentModel();
 		},
 		'files' => function () {
-			$files = $this->parent->files()->template($this->template);
+			if ($this->query !== null) {
+				$files = $this->parent->query($this->query, Files::class) ?? new Files([]);
+			} else {
+				$files = $this->parent->files();
+			}
+
+			// filter files by template
+			$files = $files->template($this->template);
 
 			// filter out all protected files
 			$files = $files->filter('isReadable', true);
@@ -162,10 +176,9 @@ return [
 			}
 
 			// count all uploaded files
-			$total = count($this->data);
-			$max   = $this->max ? $this->max - $total : null;
+			$max = $this->max ? $this->max - $this->total : null;
 
-			if ($this->max && $total === $this->max - 1) {
+			if ($this->max && $this->total === $this->max - 1) {
 				$multiple = false;
 			} else {
 				$multiple = true;
@@ -179,7 +192,10 @@ return [
 				'max'        => $max,
 				'api'        => $this->parent->apiUrl(true) . '/files',
 				'attributes' => array_filter([
-					'sort'     => $this->sortable === true ? $total + 1 : null,
+					// TODO: an edge issue that needs to be solved:
+					//		 if multiple users load the same section at the same time
+					// 		 and upload a file, uploaded files have the same sort number
+					'sort'     => $this->sortable === true ? $this->total + 1 : null,
 					'template' => $template
 				])
 			];

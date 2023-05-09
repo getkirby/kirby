@@ -29,15 +29,6 @@ class Helpers
 	 * ```
 	 */
 	public static $deprecations = [
-		// Passing the $slot or $slots variables to snippets is
-		// deprecated and will break in a future version.
-		'snippet-pass-slots'    => true,
-
-		// The `Toolkit\Query` class has been deprecated and will
-		// be removed in a future version. Use `Query\Query` instead:
-		// Kirby\Query\Query::factory($query)->resolve($data).
-		'toolkit-query-class'   => true,
-
 		// Passing an empty string as value to `Xml::attr()` has been
 		// deprecated. In a future version, passing an empty string won't
 		// omit the attribute anymore but render it with an empty value.

@@ -388,7 +388,7 @@
 	"login.toggleText.password-reset.email": "Mot de passe oublié ?",
 	"login.toggleText.password-reset.email-password": "← Retour à la connexion",
 
-	"logout": "Se déconnecter",
+	"logout": "Déconnexion",
 
 	"menu": "Menu",
 	"meridiem": "AM/PM",

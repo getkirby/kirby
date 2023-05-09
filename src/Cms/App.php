@@ -482,28 +482,23 @@ class App
 
 	/**
 	 * Try to find a controller by name
-	 *
-	 * @param string $name
-	 * @param string $contentType
-	 * @return \Kirby\Toolkit\Controller|null
 	 */
-	protected function controllerLookup(string $name, string $contentType = 'html')
+	protected function controllerLookup(string $name, string $contentType = 'html'): Controller|null
 	{
 		if ($contentType !== null && $contentType !== 'html') {
 			$name .= '.' . $contentType;
 		}
 
-		// controller on disk
-		if ($controller = Controller::load($this->root('controllers') . '/' . $name . '.php')) {
+		// controller from site root
+		$controller   = Controller::load($this->root('controllers') . '/' . $name . '.php');
+		// controller from extension
+		$controller ??= $this->extension('controllers', $name);
+
+		if ($controller instanceof Controller) {
 			return $controller;
 		}
 
-		// registry controller
-		if ($controller = $this->extension('controllers', $name)) {
-			if ($controller instanceof Controller) {
-				return $controller;
-			}
-
+		if ($controller !== null) {
 			return new Controller($controller);
 		}
 
@@ -560,10 +555,8 @@ class App
 
 	/**
 	 * Returns the default language object
-	 *
-	 * @return \Kirby\Cms\Language|null
 	 */
-	public function defaultLanguage()
+	public function defaultLanguage(): Language|null
 	{
 		return $this->defaultLanguage ??= $this->languages()->default();
 	}
@@ -582,22 +575,21 @@ class App
 
 	/**
 	 * Detect the preferred language from the visitor object
-	 *
-	 * @return \Kirby\Cms\Language
 	 */
-	public function detectedLanguage()
+	public function detectedLanguage(): Language|null
 	{
 		$languages = $this->languages();
 		$visitor   = $this->visitor();
 
-		foreach ($visitor->acceptedLanguages() as $lang) {
-			if ($language = $languages->findBy('locale', $lang->locale(LC_ALL))) {
+		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
+			$closure = fn ($language) => $language->locale(LC_ALL) === $acceptedLang->locale();
+			if ($language = $languages->filter($closure)?->first()) {
 				return $language;
 			}
 		}
 
-		foreach ($visitor->acceptedLanguages() as $lang) {
-			if ($language = $languages->findBy('code', $lang->code())) {
+		foreach ($visitor->acceptedLanguages() as $acceptedLang) {
+			if ($language = $languages->findBy('code', $acceptedLang->code())) {
 				return $language;
 			}
 		}

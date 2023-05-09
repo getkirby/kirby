@@ -39,7 +39,7 @@ class Content
 	 * for testing, but field methods might
 	 * need it.
 	 *
-	 * @var Model
+	 * @var \Kirby\Cms\ModelWithContent
 	 */
 	protected $parent;
 
@@ -86,9 +86,6 @@ class Content
 
 	/**
 	 * Converts the content to a new blueprint
-	 *
-	 * @param string $to
-	 * @return array
 	 */
 	public function convertTo(string $to): array
 	{
@@ -99,11 +96,21 @@ class Content
 		// blueprints
 		$old       = $this->parent->blueprint();
 		$subfolder = dirname($old->name());
-		$new       = Blueprint::factory($subfolder . '/' . $to, $subfolder . '/default', $this->parent);
+		$new       = Blueprint::factory(
+			$subfolder . '/' . $to,
+			$subfolder . '/default',
+			$this->parent
+		);
 
 		// forms
-		$oldForm = new Form(['fields' => $old->fields(), 'model' => $this->parent]);
-		$newForm = new Form(['fields' => $new->fields(), 'model' => $this->parent]);
+		$oldForm = new Form([
+			'fields' => $old->fields(),
+			'model'  => $this->parent
+		]);
+		$newForm = new Form([
+			'fields' => $new->fields(),
+			'model'  => $this->parent
+		]);
 
 		// fields
 		$oldFields = $oldForm->fields();

@@ -61,6 +61,63 @@ class LayoutField extends BlocksField
 		return $this->layouts;
 	}
 
+	/**
+	 * Creates form values for each layout
+	 */
+	public function layoutsToValues(array $layouts): array
+	{
+		foreach ($layouts as &$layout) {
+			$layout['id'] 	   ??= Str::uuid();
+			$layout['columns'] ??= [];
+
+			array_walk($layout['columns'], function (&$column) {
+				$column['id']     ??= Str::uuid();
+				$column['blocks']   = $this->blocksToValues($column['blocks'] ?? []);
+			});
+		}
+
+		return $layouts;
+	}
+
+	/**
+	 * Paste action for layouts:
+	 *  - generates new uuids for layout, column and blocks
+	 *  - filters only supported layouts
+	 *  - filters only supported fieldsets
+	 */
+	public function pasteLayouts(array $layouts): array
+	{
+		$layouts = $this->layoutsToValues($layouts);
+
+		foreach ($layouts as $layoutIndex => &$layout) {
+			$layout['id'] = Str::uuid();
+
+			// remove the row if layout not available for the pasted layout field
+			$columns = array_column($layout['columns'], 'width');
+			if (in_array($columns, $this->layouts()) === false) {
+				unset($layouts[$layoutIndex]);
+				continue;
+			}
+
+			array_walk($layout['columns'], function (&$column) {
+				$column['id'] = Str::uuid();
+
+				array_walk($column['blocks'], function (&$block, $index) use ($column) {
+					$block['id'] = Str::uuid();
+
+					// remove the block if it's not available
+					try {
+						$this->fieldset($block['type']);
+					} catch (Throwable) {
+						unset($column['blocks'][$index]);
+					}
+				});
+			});
+		}
+
+		return $layouts;
+	}
+
 	public function props(): array
 	{
 		$settings = $this->settings();
@@ -75,6 +132,7 @@ class LayoutField extends BlocksField
 	{
 		$field  = $this;
 		$routes = parent::routes();
+
 		$routes[] = [
 			'pattern' => 'layout',
 			'method'  => 'POST',
@@ -97,6 +155,18 @@ class LayoutField extends BlocksField
 		];
 
 		$routes[] = [
+			'pattern' => 'layout/paste',
+			'method'  => 'POST',
+			'action'  => function () use ($field) {
+				$request = App::instance()->request();
+				$value   = Layouts::parse($request->get('json'));
+				$layouts = Layouts::factory($value);
+
+				return $field->pasteLayouts($layouts->toArray());
+			}
+		];
+
+		$routes[] = [
 			'pattern' => 'fields/(:any)/(:all?)',
 			'method'  => 'ALL',
 			'action'  => function (string $fieldName, string $path = null) use ($field) {
@@ -113,6 +183,32 @@ class LayoutField extends BlocksField
 		];
 
 		return $routes;
+	}
+
+	protected function setDefault($default = null)
+	{
+		// set id for layouts, columns and blocks within layout if not exists
+		if (is_array($default) === true) {
+			array_walk($default, function (&$layout) {
+				$layout['id'] ??= Str::uuid();
+
+				// set columns id within layout
+				if (isset($layout['columns']) === true) {
+					array_walk($layout['columns'], function (&$column) {
+						$column['id'] ??= Str::uuid();
+
+						// set blocks id within column
+						if (isset($column['blocks']) === true) {
+							array_walk($column['blocks'], function (&$block) {
+								$block['id'] ??= Str::uuid();
+							});
+						}
+					});
+				}
+			});
+		}
+
+		parent::setDefault($default);
 	}
 
 	protected function setLayouts(array $layouts = [])

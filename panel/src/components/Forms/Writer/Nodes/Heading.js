@@ -2,17 +2,20 @@ import Node from "../Node";
 
 export default class Heading extends Node {
 	get button() {
-		return this.options.levels.map((level) => {
-			return {
-				id: `h${level}`,
-				command: `h${level}`,
-				icon: `h${level}`,
-				label: window.panel.$t("toolbar.button.heading." + level),
-				attrs: { level },
-				name: this.name,
-				when: ["heading", "paragraph"]
-			};
-		});
+		const buttons = this.options.levels.map((level) => ({
+			id: `h${level}`,
+			command: `h${level}`,
+			icon: `h${level}`,
+			label: window.panel.$t("toolbar.button.heading." + level),
+			attrs: { level },
+			name: this.name,
+			when: ["heading", "paragraph"]
+		}));
+
+		// last button has separator line afterwards
+		buttons[buttons.length - 1].separator = true;
+
+		return buttons;
 	}
 
 	commands({ type, schema, utils }) {

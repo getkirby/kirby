@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
@@ -28,6 +29,12 @@ return [
 		 */
 		'create' => function ($create = null) {
 			return $create;
+		},
+		/**
+		 * Filters pages by a query. Sorting will be disabled
+		 */
+		'query' => function (string|null $query = null) {
+			return $query;
 		},
 		/**
 		 * Filters pages by their status. Available status settings: `draft`, `unlisted`, `listed`, `published`, `all`.
@@ -64,13 +71,17 @@ return [
 			return $parent;
 		},
 		'pages' => function () {
-			$pages = match ($this->status) {
-				'draft'     => $this->parent->drafts(),
-				'listed'    => $this->parent->children()->listed(),
-				'published' => $this->parent->children(),
-				'unlisted'  => $this->parent->children()->unlisted(),
-				default     => $this->parent->childrenAndDrafts()
-			};
+			if ($this->query !== null) {
+				$pages = $this->parent->query($this->query, Pages::class) ?? new Pages([]);
+			} else {
+				$pages = match ($this->status) {
+					'draft'     => $this->parent->drafts(),
+					'listed'    => $this->parent->children()->listed(),
+					'published' => $this->parent->children(),
+					'unlisted'  => $this->parent->children()->unlisted(),
+					default     => $this->parent->childrenAndDrafts()
+				};
+			}
 
 			// filters pages that are protected and not in the templates list
 			// internal `filter()` method used instead of foreach loop that previously included `unset()`

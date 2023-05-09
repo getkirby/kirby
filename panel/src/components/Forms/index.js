@@ -1,3 +1,5 @@
+import Autosize from "./Autosize.js";
+
 /* Form */
 import Autocomplete from "./Autocomplete.vue";
 import Calendar from "./Calendar.vue";
@@ -12,7 +14,6 @@ import Login from "./Login.vue";
 import LoginCode from "./LoginCode.vue";
 import Times from "./Times.vue";
 import Upload from "./Upload.vue";
-import Writer from "./Writer/Writer.vue";
 
 /** Form Helpers */
 import LoginAlert from "./LoginAlert.vue";
@@ -25,14 +26,19 @@ import Toolbar from "./Toolbar.vue";
 import ToolbarEmailDialog from "./Toolbar/EmailDialog.vue";
 import ToolbarLinkDialog from "./Toolbar/LinkDialog.vue";
 
-/* Form Inputs */
-import Inputs from "./Input/index.js";
-
-/* Form Fields */
+/* Form parts */
+import Blocks from "./Blocks/index.js";
+import Elements from "./Element/index.js";
 import Fields from "./Field/index.js";
+import Inputs from "./Input/index.js";
+import Layouts from "./Layouts/index.js";
+import Previews from "./Previews/index.js";
+import Writer from "./Writer/index.js";
 
 export default {
 	install(app) {
+		customElements.define("k-autosize", Autosize);
+
 		app.component("k-calendar", Calendar);
 		app.component("k-counter", Counter);
 		app.component("k-autocomplete", Autocomplete);
@@ -46,7 +52,6 @@ export default {
 		app.component("k-login-code", LoginCode);
 		app.component("k-times", Times);
 		app.component("k-upload", Upload);
-		app.component("k-writer", Writer);
 
 		app.component("k-login-alert", LoginAlert);
 
@@ -56,7 +61,12 @@ export default {
 		app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
 		app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 
+		app.use(Blocks);
+		app.use(Elements);
 		app.use(Inputs);
 		app.use(Fields);
+		app.use(Layouts);
+		app.use(Previews);
+		app.use(Writer);
 	}
 };

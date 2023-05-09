@@ -1,0 +1,10 @@
+<template>
+	<component
+		:is="$panel.drawer.component"
+		:key="$panel.drawer.timestamp"
+		ref="dialog"
+		v-bind="$panel.drawer.props"
+		:disabled="$panel.drawer.isLoading"
+		:visible="true"
+	/>
+</template>

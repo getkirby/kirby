@@ -22,6 +22,8 @@ class PagesSectionTest extends TestCase
 				'index' => $this->tmp
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function tearDown(): void
@@ -77,10 +79,9 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+
 	public function testParent()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -108,8 +109,6 @@ class PagesSectionTest extends TestCase
 
 	public function testParentWithInvalidOption()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -381,8 +380,6 @@ class PagesSectionTest extends TestCase
 
 	public function testImageString()
 	{
-		$this->app->impersonate('kirby');
-
 		$model = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -549,13 +546,14 @@ class PagesSectionTest extends TestCase
 
 	public function testUnreadable()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'blueprints' => [
 				'pages/unreadable' => [
 					'options' => ['read' => false]
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -824,5 +822,31 @@ class PagesSectionTest extends TestCase
 
 		$this->assertSame([], $options['columns']);
 		$this->assertNull($options['link']);
+	}
+
+	public function testQuery()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page([
+				'slug' => 'test',
+				'children' => [
+					[
+						'slug' => 'a',
+						'num'  => 1,
+					],
+					[
+						'slug' => 'b',
+						'num'  => 2,
+					]
+				]
+			]),
+			'query' => $query = 'page.children.filter("num", ">", 1)'
+		]);
+
+		$this->assertSame($query, $section->query());
+		$this->assertFalse($section->sortable());
+
+		$this->assertCount(1, $section->pages());
 	}
 }

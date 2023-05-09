@@ -251,6 +251,7 @@ class Panel
 		// handle different response types (view, dialog, ...)
 		return match ($options['type'] ?? null) {
 			'dialog'   => Dialog::response($result, $options),
+			'drawer'   => Drawer::response($result, $options),
 			'dropdown' => Dropdown::response($result, $options),
 			'search'   => Search::response($result, $options),
 			default    => View::response($result, $options)
@@ -340,6 +341,7 @@ class Panel
 				static::routesForViews($areaId, $area),
 				static::routesForSearches($areaId, $area),
 				static::routesForDialogs($areaId, $area),
+				static::routesForDrawers($areaId, $area),
 				static::routesForDropdowns($areaId, $area),
 			);
 		}
@@ -375,26 +377,33 @@ class Panel
 		$dialogs = $area['dialogs'] ?? [];
 		$routes  = [];
 
-		foreach ($dialogs as $key => $dialog) {
-			// create the full pattern with dialogs prefix
-			$pattern = 'dialogs/' . trim(($dialog['pattern'] ?? $key), '/');
+		foreach ($dialogs as $dialogId => $dialog) {
+			$routes = array_merge($routes, Dialog::routes(
+				id: $dialogId,
+				areaId: $areaId,
+				prefix: 'dialogs',
+				options: $dialog
+			));
+		}
 
-			// load event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'dialog',
-				'area'    => $areaId,
-				'action'  => $dialog['load'] ?? fn () => 'The load handler for your dialog is missing'
-			];
+		return $routes;
+	}
 
-			// submit event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'dialog',
-				'area'    => $areaId,
-				'method'  => 'POST',
-				'action'  => $dialog['submit'] ?? fn () => 'Your dialog does not define a submit handler'
-			];
+	/**
+	 * Extract all routes from an area
+	 */
+	public static function routesForDrawers(string $areaId, array $area): array
+	{
+		$drawers = $area['drawers'] ?? [];
+		$routes  = [];
+
+		foreach ($drawers as $drawerId => $drawer) {
+			$routes = array_merge($routes, Drawer::routes(
+				id: $drawerId,
+				areaId: $areaId,
+				prefix: 'drawers',
+				options: $drawer
+			));
 		}
 
 		return $routes;

@@ -41,11 +41,13 @@ class ImageMagickTest extends TestCase
 			'grayscale' => false,
 			'height' => 500,
 			'quality' => 90,
-			'scaleHeight' => 1,
-			'scaleWidth' => 1,
+			'scaleHeight' => 1.0,
+			'scaleWidth' => 1.0,
 			'width' => 500,
 			'bin' => 'convert',
-			'interlace' => false
+			'interlace' => false,
+			'sourceWidth' => 500,
+			'sourceHeight' => 500
 		], $im->process($file));
 	}
 

@@ -17,7 +17,7 @@
 						{{ issue }}
 					</k-login-alert>
 
-					<k-user-info :user="$user" />
+					<k-user-info :user="$panel.user" />
 				</template>
 
 				<template #footer>
@@ -65,7 +65,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.$store.dispatch("title", this.$t("view.resetPassword"));
+		this.$panel.title = this.$t("view.resetPassword");
 	},
 	methods: {
 		async submit() {
@@ -83,11 +83,11 @@ export default {
 
 			try {
 				await this.$api.users.changePassword(
-					this.$user.id,
+					this.$panel.user.id,
 					this.values.password
 				);
 
-				this.$store.dispatch("notification/success", ":)");
+				this.$panel.notification.success();
 				this.$go("/");
 			} catch (error) {
 				this.issue = error.message;

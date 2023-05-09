@@ -32,8 +32,11 @@ class V
 	 * and returns an array with all error messages.
 	 * The array will be empty if the input is valid
 	 */
-	public static function errors($input, array $rules, array $messages = []): array
-	{
+	public static function errors(
+		$input,
+		array $rules,
+		array $messages = []
+	): array {
 		$errors = static::value($input, $rules, $messages, false);
 
 		return $errors === true ? [] : $errors;
@@ -44,8 +47,11 @@ class V
 	 * checks if the data is invalid
 	 * @since 3.7.0
 	 */
-	public static function invalid(array $data = [], array $rules = [], array $messages = []): array
-	{
+	public static function invalid(
+		array $data = [],
+		array $rules = [],
+		array $messages = []
+	): array {
 		$errors = [];
 
 		foreach ($rules as $field => $validations) {
@@ -108,8 +114,10 @@ class V
 	 * and the arguments. This is used mainly internally
 	 * to create error messages
 	 */
-	public static function message(string $validatorName, ...$params): string|null
-	{
+	public static function message(
+		string $validatorName,
+		...$params
+	): string|null {
 		$validatorName  = strtolower($validatorName);
 		$translationKey = 'error.validation.' . $validatorName;
 		$validators     = array_change_key_case(static::$validators);
@@ -157,8 +165,12 @@ class V
 	 * a set of rules, using all registered
 	 * validators
 	 */
-	public static function value($value, array $rules, array $messages = [], bool $fail = true): bool|array
-	{
+	public static function value(
+		$value,
+		array $rules,
+		array $messages = [],
+		bool $fail = true
+	): bool|array {
 		$errors = [];
 
 		foreach ($rules as $validatorName => $validatorOptions) {

@@ -87,16 +87,16 @@ trait SiteActions
 	 *
 	 * @return $this
 	 */
-	public function purge()
+	public function purge(): static
 	{
+		parent::purge();
+
 		$this->blueprint         = null;
 		$this->children          = null;
 		$this->childrenAndDrafts = null;
-		$this->content           = null;
 		$this->drafts            = null;
 		$this->files             = null;
 		$this->inventory         = null;
-		$this->translations      = null;
 
 		return $this;
 	}

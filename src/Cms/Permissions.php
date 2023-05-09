@@ -35,12 +35,13 @@ class Permissions
 			'users'     => true,
 		],
 		'files' => [
-			'changeName' => true,
-			'create'     => true,
-			'delete'     => true,
-			'read'       => true,
-			'replace'    => true,
-			'update'     => true
+			'changeName'     => true,
+			'changeTemplate' => true,
+			'create'         => true,
+			'delete'         => true,
+			'read'           => true,
+			'replace'        => true,
+			'update'         => true
 		],
 		'languages' => [
 			'create' => true,

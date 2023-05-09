@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
@@ -20,6 +21,7 @@ class FileActionsTest extends TestCase
 
 	public function tearDown(): void
 	{
+		Blueprint::$loaded = [];
 		Dir::remove($this->tmp);
 	}
 
@@ -149,6 +151,341 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->contentFile('en'));
 		$this->assertFileExists($result->contentFile('de'));
+	}
+
+	public function testChangeTemplate()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'b'
+						]
+					]
+				],
+				'files/a' => [
+					'title'  => 'a',
+					'fields' => [
+						'caption' => [
+							'type' => 'text'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+				'files/b' => [
+					'title' => 'b',
+					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => [
+									'template' => 'a',
+									'caption'  => 'Caption',
+									'text'     => 'Text'
+								]
+							]
+						]
+					]
+				]
+			],
+			'hooks' => [
+				'file.changeTemplate:before' => function (File $file, $template) use ($phpunit, &$calls) {
+					$phpunit->assertSame('a', $file->template());
+					$phpunit->assertSame('b', $template);
+					$calls++;
+				},
+				'file.changeTemplate:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+					$phpunit->assertSame('b', $newFile->template());
+					$phpunit->assertSame('a', $oldFile->template());
+					$calls++;
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame('a', $file->template());
+		$this->assertSame('Caption', $file->caption()->value());
+		$this->assertSame('Text', $file->text()->value());
+
+		// changing to the same template
+		$same = $file->changeTemplate('a');
+		$this->assertSame('a', $same->template());
+		$this->assertSame(0, $calls);
+
+		// changing to another template
+		$modified = $file->changeTemplate('b');
+		$this->assertSame('b', $modified->template());
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Text', $modified->text()->value());
+		$this->assertSame(2, $calls);
+
+		$this->assertSame($modified, $app->page('test')->file('test.jpg'));
+	}
+
+	public function testChangeTemplateMultilang()
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'a'
+						],
+						[
+							'type' => 'files',
+							'template' => 'b'
+						]
+					]
+				],
+				'files/a' => [
+					'title' => 'a',
+					'fields' => [
+						'caption' => [
+							'type' => 'text'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+				'files/b' => [
+					'title' => 'b',
+					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'translations' => [
+									[
+										'code' => 'en',
+										'content' => [
+											'template' => 'a',
+											'caption'  => 'This is the caption',
+											'text'     => 'This is the text'
+										]
+									],
+									[
+										'code' => 'de',
+										'content' => [
+											'caption' => 'Das ist die Caption',
+											'text'    => 'Das ist der Text'
+										]
+									],
+									[
+										'code' => 'fr'
+									]
+								],
+							]
+						]
+					]
+				]
+			],
+			'hooks' => [
+				'file.changeTemplate:before' => function (File $file, $template) use ($phpunit, &$calls) {
+					$phpunit->assertSame('a', $file->template());
+					$phpunit->assertSame('b', $template);
+					$calls++;
+				},
+				'file.changeTemplate:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+					$phpunit->assertSame('b', $newFile->template());
+					$phpunit->assertSame('a', $oldFile->template());
+					$calls++;
+				}
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				],
+				[
+					'code' => 'fr',
+					'name' => 'Français',
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame('a', $file->template());
+		$this->assertSame('This is the text', $file->text()->value());
+		$this->assertSame('This is the caption', $file->caption()->value());
+
+		$modified = $file->changeTemplate('b');
+
+		$this->assertSame('b', $modified->template());
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('This is the text', $modified->text()->value());
+		$this->assertSame(2, $calls);
+
+		$modified->purge();
+		$app->setCurrentLanguage('de');
+		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Das ist der Text', $modified->text()->value());
+
+
+		$this->assertFileExists($modified->contentFile('en'));
+		$this->assertFileExists($modified->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->contentFile('fr'));
+	}
+
+	public function testChangeTemplateDefault()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+						],
+						[
+							'type' => 'files',
+							'template' => 'for-default-b'
+						]
+					]
+				],
+				'files/for-default-b' => [
+					'title' => 'Alternative B'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'for-default-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame('for-default-a', $file->template());
+		$this->assertSame('for-default-a', $file->content()->get('template')->value());
+
+		$modified = $file->changeTemplate('default');
+		$this->assertSame('default', $modified->template());
+		$this->assertNull($modified->content()->get('template')->value());
+
+		$back = $modified->changeTemplate('for-default-b');
+		$this->assertSame('for-default-b', $back->template());
+		$this->assertSame('for-default-b', $back->content()->get('template')->value());
+
+		$modified = $file->changeTemplate(null);
+		$this->assertSame('default', $modified->template());
+		$this->assertNull($modified->content()->get('template')->value());
+	}
+
+	public function testChangeTemplateInvalidAccept()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'sections' => [
+						[
+							'type' => 'files',
+							'template' => 'for-default-b'
+						],
+						[
+							'type' => 'files',
+							'template' => 'for-default-c'
+						],
+						[
+							'type' => 'files',
+							'template' => 'for-default-d'
+						]
+					]
+				],
+				'files/for-default-b' => [
+					'title'  => 'Alternative B',
+					'accept' => 'image'
+				],
+				'files/for-default-c' => [
+					'title'  => 'Alternative C'
+				],
+				'files/for-default-d' => [
+					'title'  => 'Alternative D'
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'for-default-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
+
+		$file = $app->page('test')->file('test.pdf');
+		$file->changeTemplate('for-default-b');
 	}
 
 	public function testCopyRenewUuid()
@@ -312,6 +649,31 @@ class FileActionsTest extends TestCase
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.jpg');
 		$this->assertInstanceOf(Image::class, $result->asset());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testCreateImageAndManipulate($parent)
+	{
+		$source =  __DIR__ . '/fixtures/files/test.jpg';
+		$result = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $source,
+			'parent'   => $parent,
+			'blueprint' => [
+				'name' => 'test',
+				'create' => [
+					'width'  => 100,
+					'height' => 100,
+				]
+			]
+		]);
+
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.jpg');
+		$this->assertSame(100, $result->width());
+		$this->assertSame(100, $result->height());
 	}
 
 	/**
@@ -507,10 +869,38 @@ class FileActionsTest extends TestCase
 	public function testUpdate($file)
 	{
 		$file = $file->update([
-			'caption' => $caption = 'test'
+			'caption' => $caption = 'test',
+			'template' => $template = 'test'
 		]);
 
 		$this->assertSame($caption, $file->caption()->value());
+		$this->assertSame($template, $file->template());
+	}
+
+	/**
+	 * @dataProvider parentProvider
+	 */
+	public function testManipulate($parent)
+	{
+		$original =  __DIR__ . '/fixtures/files/test.jpg';
+
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => $original,
+			'parent'   => $parent
+		]);
+
+		$this->assertSame(128, $originalFile->width());
+		$this->assertSame(128, $originalFile->height());
+
+		$replacedFile = $originalFile->manipulate([
+			'width' => 100,
+			'height' => 100,
+		]);
+
+		$this->assertSame($originalFile->root(), $replacedFile->root());
+		$this->assertSame(100, $replacedFile->width());
+		$this->assertSame(100, $replacedFile->height());
 	}
 
 	public function testChangeNameHooks()

@@ -132,14 +132,14 @@ export default {
 			];
 		},
 		uploadApi() {
-			return this.$urls.api + "/" + this.id + "/avatar";
+			return this.$panel.urls.api + "/" + this.id + "/avatar";
 		}
 	},
 	methods: {
 		async deleteAvatar() {
 			await this.$api.users.deleteAvatar(this.model.id);
 			this.avatar = null;
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		},
 		onAvatar() {
@@ -150,7 +150,7 @@ export default {
 			}
 		},
 		uploadedAvatar() {
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 			this.$reload();
 		}
 	}

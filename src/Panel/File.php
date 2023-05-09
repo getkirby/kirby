@@ -131,15 +131,7 @@ class File extends Model
 			'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
 		];
 
-		$result[] = [
-			'click'    => 'replace',
-			'icon'     => 'upload',
-			'text'     => I18n::translate('replace'),
-			'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
-		];
-
 		if ($view === 'list') {
-			$result[] = '-';
 			$result[] = [
 				'dialog'   => $url . '/changeSort',
 				'icon'     => 'sort',
@@ -147,6 +139,22 @@ class File extends Model
 				'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
 			];
 		}
+
+		$result[] = [
+			'dialog'   => $url . '/changeTemplate',
+			'icon'     => 'template',
+			'text'     => I18n::translate('file.changeTemplate'),
+			'disabled' => $this->isDisabledDropdownOption('changeTemplate', $options, $permissions)
+		];
+
+		$result[] = '-';
+
+		$result[] = [
+			'click'    => 'replace',
+			'icon'     => 'upload',
+			'text'     => I18n::translate('replace'),
+			'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
+		];
 
 		$result[] = '-';
 		$result[] = [

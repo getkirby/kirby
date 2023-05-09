@@ -30,11 +30,12 @@
 				<div class="k-topbar-signals">
 					<!-- notifications -->
 					<k-button
-						v-if="notification"
+						v-if="notification && notification.type !== 'error'"
+						:icon="notification.icon"
 						:text="notification.message"
-						theme="positive"
+						:theme="notification.theme"
 						class="k-topbar-notification k-topbar-button"
-						@click="$store.dispatch('notification/close')"
+						@click="notification.close()"
 					/>
 
 					<!-- registration -->
@@ -48,14 +49,11 @@
 						:tooltip="$t('search')"
 						class="k-topbar-button"
 						icon="search"
-						@click="$refs.search.open()"
+						@click="$panel.search()"
 					/>
 				</div>
 			</div>
 		</k-view>
-
-		<!-- search overlay -->
-		<k-search ref="search" :type="$view.search || 'pages'" :types="$searches" />
 	</div>
 </template>
 
@@ -70,14 +68,9 @@ export default {
 	},
 	computed: {
 		notification() {
-			if (
-				this.$store.state.notification.type &&
-				this.$store.state.notification.type !== "error"
-			) {
-				return this.$store.state.notification;
-			} else {
-				return null;
-			}
+			return this.$panel.notification.context === "view"
+				? this.$panel.notification
+				: null;
 		}
 	}
 };

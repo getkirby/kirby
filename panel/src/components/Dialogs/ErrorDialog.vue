@@ -2,12 +2,10 @@
 	<k-dialog
 		ref="dialog"
 		:cancel-button="false"
+		:submit-button="false"
 		:size="size"
-		:visible="true"
+		:visible="visible"
 		class="k-error-dialog"
-		@cancel="$emit('cancel')"
-		@close="$emit('close')"
-		@submit="$refs.dialog.close()"
 	>
 		<k-text>{{ message }}</k-text>
 		<dl v-if="detailsList.length" class="k-error-details">
@@ -33,23 +31,21 @@
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import Dialog from "@/mixins/dialog.js";
 
 export default {
-	mixins: [DialogMixin],
+	mixins: [Dialog],
 	props: {
 		details: [Object, Array],
 		message: String,
 		size: {
-			type: String,
-			default: "medium"
+			default: "medium",
+			type: String
 		}
 	},
 	computed: {
 		detailsList() {
-			return Array.isArray(this.details)
-				? this.details
-				: Object.values(this.details || {});
+			return Array.fromObject(this.details);
 		}
 	}
 };

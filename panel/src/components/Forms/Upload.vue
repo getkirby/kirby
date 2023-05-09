@@ -163,7 +163,7 @@ export default {
 					attributes: this.options.attributes,
 					method: this.options.method,
 					headers: {
-						"X-CSRF": window.panel.$system.csrf
+						"X-CSRF": window.panel.system.csrf
 					},
 					progress: (xhr, file, progress) => {
 						this.$refs[file.name]?.[0]?.set(progress);
@@ -186,7 +186,7 @@ export default {
 		complete(file, data) {
 			this.completed[file.name] = data;
 
-			if (Object.keys(this.completed).length == this.total) {
+			if (this.$helper.object.length(this.completed) == this.total) {
 				// remove the selected file
 				this.$refs.input.value = "";
 
