@@ -4,6 +4,7 @@
 		v-bind="$props"
 		class="k-file-drawer"
 		@cancel="cancel"
+		@option="option"
 		@submit="submit"
 	>
 		<slot name="options" slot="options" />
@@ -14,6 +15,7 @@
 			@input="input"
 			@submit="submit"
 		/>
+		<k-upload ref="upload" @success="uploaded" />
 	</k-drawer>
 </template>
 
@@ -23,8 +25,27 @@ import FormDrawer from "./FormDrawer.vue";
 export default {
 	mixins: [FormDrawer],
 	props: {
+		model: {
+			type: Object
+		},
 		preview: {
 			type: Object
+		}
+	},
+	methods: {
+		option(option) {
+			switch (option) {
+				case "replace":
+					this.$refs.upload.open({
+						url: this.$panel.urls.api + "/" + this.model.id,
+						accept: "." + this.model.extension + "," + this.model.mime,
+						multiple: false
+					});
+					break;
+			}
+		},
+		uploaded() {
+			this.$panel.drawer.reload();
 		}
 	}
 };

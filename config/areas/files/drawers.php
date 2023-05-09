@@ -26,6 +26,11 @@ return [
 							'dropdown' => $file->panel()->url(true)
 						]
 					],
+					'model' => [
+						'extension' => $file->extensions(),
+						'id'        => $file->panel()->url(true),
+						'mime'      => $file->mime(),
+					],
 					'preview' => $file->panel()->preview(),
 					'title' => $file->filename(),
 					'tabs'  => [
