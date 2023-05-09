@@ -84,7 +84,7 @@ export default {
 					{
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: language.default && this.languages.length !== 1,
+						disabled: language.deletable === false,
 						click() {
 							this.$dialog(`languages/${language.id}/delete`);
 						}

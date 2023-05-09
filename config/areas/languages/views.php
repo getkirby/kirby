@@ -44,6 +44,7 @@ return [
 					]
 				],
 				'props'     => [
+					'deletable'    => $language->isDeletable(),
 					'code'         => Escape::html($language->code()),
 					'default'      => $language->isDefault(),
 					'direction'    => $language->direction(),
@@ -63,10 +64,11 @@ return [
 				'component' => 'k-languages-view',
 				'props'     => [
 					'languages' => $kirby->languages()->values(fn ($language) => [
-						'default' => $language->isDefault(),
-						'id'      => $language->code(),
-						'info'    => Escape::html($language->code()),
-						'text'    => Escape::html($language->name()),
+						'deletable' => $language->isDeletable(),
+						'default'   => $language->isDefault(),
+						'id'        => $language->code(),
+						'info'      => Escape::html($language->code()),
+						'text'      => Escape::html($language->name()),
 					])
 				]
 			];

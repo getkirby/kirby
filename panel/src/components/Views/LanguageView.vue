@@ -15,7 +15,12 @@
 						:icon="direction === 'rtl' ? 'text-right' : 'text-left'"
 						@click="update('direction')"
 					/>
-					<k-button :text="$t('delete')" icon="trash" @click="remove()" />
+					<k-button
+						:disabled="!deletable"
+						:text="$t('delete')"
+						icon="trash"
+						@click="remove()"
+					/>
 				</k-button-group>
 			</k-header>
 
@@ -55,6 +60,7 @@
 export default {
 	props: {
 		code: String,
+		deletable: Boolean,
 		direction: String,
 		id: String,
 		name: String,
