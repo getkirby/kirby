@@ -35,6 +35,24 @@ return [
 				];
 			}
 
+			$next = function () use ($language) {
+				if ($next = $language->next()) {
+					return [
+						'link'    => '/languages/' . $next->code(),
+						'tooltip' => $next->name(),
+					];
+				}
+			};
+
+			$prev = function () use ($language) {
+				if ($prev = $language->prev()) {
+					return [
+						'link'    => '/languages/' . $prev->code(),
+						'tooltip' => $prev->name(),
+					];
+				}
+			};
+
 			return [
 				'component' => 'k-language-view',
 				'breadcrumb' => [
@@ -50,6 +68,8 @@ return [
 					'direction'    => $language->direction(),
 					'id'           => $language->code(),
 					'name'         => $name,
+					'next'         => $next,
+					'prev'         => $prev,
 					'translations' => $strings
 				]
 			];

@@ -22,6 +22,10 @@
 						@click="remove()"
 					/>
 				</k-button-group>
+
+				<template #right>
+					<k-prev-next :prev="prev" :next="next" />
+				</template>
 			</k-header>
 
 			<k-bar>
@@ -63,7 +67,9 @@ export default {
 		deletable: Boolean,
 		direction: String,
 		id: String,
+		next: Object,
 		name: String,
+		prev: Object,
 		translations: Array
 	},
 	methods: {

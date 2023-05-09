@@ -28,6 +28,8 @@ use Throwable;
  */
 class Language extends Model
 {
+	use HasSiblings;
+
 	/**
 	 * @var string
 	 */
@@ -623,6 +625,14 @@ class Language extends Model
 	{
 		$this->url = $url;
 		return $this;
+	}
+
+	/**
+	 * Private siblings collector
+	 */
+	protected function siblingsCollection(): Collection
+	{
+		return App::instance()->languages();
 	}
 
 	/**
