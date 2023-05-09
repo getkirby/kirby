@@ -15,24 +15,22 @@
 			method="dialog"
 			@submit.prevent="submit"
 		>
-			<slot name="container">
-				<k-dialog-notification />
-				<k-dialog-body>
-					<slot />
-				</k-dialog-body>
-				<slot name="footer">
-					<k-dialog-footer v-if="cancelButton || submitButton">
-						<k-dialog-buttons
-							:cancel-button="cancelButton"
-							:disabled="disabled"
-							:icon="icon"
-							:submit-button="submitButton"
-							:theme="theme"
-							@cancel="cancel"
-							@submit="submit"
-						/>
-					</k-dialog-footer>
-				</slot>
+			<k-dialog-notification />
+			<k-dialog-body>
+				<slot />
+			</k-dialog-body>
+			<slot name="footer">
+				<k-dialog-footer v-if="cancelButton || submitButton">
+					<k-dialog-buttons
+						:cancel-button="cancelButton"
+						:disabled="disabled"
+						:icon="icon"
+						:submit-button="submitButton"
+						:theme="theme"
+						@cancel="cancel"
+						@submit="submit"
+					/>
+				</k-dialog-footer>
 			</slot>
 		</form>
 	</k-overlay>

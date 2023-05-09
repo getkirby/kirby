@@ -1,59 +1,36 @@
 <template>
-	<k-dialog
+	<k-form-dialog
 		class="k-page-create-dialog"
 		ref="dialog"
 		v-bind="$props"
 		@cancel="cancel"
 		@submit="submit"
 	>
-		<template slot="container">
-			<div class="k-page-create-dialog-sidebar" v-if="blueprints.length > 1">
-				<k-headline>{{ $t("template") }}</k-headline>
-				<nav>
-					<button
-						v-for="blueprint in blueprints"
-						:key="blueprint.name"
-						:aria-current="blueprint.name === template"
-						type="button"
-						@click="pick(blueprint.name)"
-					>
-						{{ blueprint.title }}
-					</button>
-				</nav>
-			</div>
-			<div class="k-page-create-dialog-mainbar">
-				<k-dialog-notification />
-				<k-dialog-body>
-					<k-dialog-fields
-						:fields="fields"
-						:novalidate="novalidate"
-						:value="model"
-						@input="input"
-						@submit="submit"
-					/>
-				</k-dialog-body>
-				<k-dialog-footer>
-					<k-dialog-buttons
-						:cancel-button="cancelButton"
-						:disabled="disabled"
-						:icon="icon"
-						:submit-button="submitButton"
-						:theme="theme"
-						@cancel="cancel"
-						@submit="submit"
-					/>
-				</k-dialog-footer>
-			</div>
-		</template>
-	</k-dialog>
+		<k-select-field
+			class="k-page-template-switch"
+			:empty="false"
+			:label="$t('template')"
+			:options="templates"
+			:required="true"
+			:value="template"
+			@input="pick($event)"
+		/>
+
+		<k-dialog-fields
+			:fields="fields"
+			:novalidate="novalidate"
+			:value="model"
+			@input="input"
+			@submit="submit"
+		/>
+	</k-form-dialog>
 </template>
 
 <script>
-import Dialog from "@/mixins/dialog.js";
-import { props as Fields } from "./Elements/Fields.vue";
+import FormDialog from "./FormDialog.vue";
 
 export default {
-	mixins: [Dialog, Fields],
+	mixins: [FormDialog],
 	props: {
 		blueprints: {
 			type: Array
@@ -74,6 +51,16 @@ export default {
 		return {
 			model: this.value
 		};
+	},
+	computed: {
+		templates() {
+			return this.blueprints.map((blueprint) => {
+				return {
+					text: blueprint.title,
+					value: blueprint.name
+				};
+			});
+		}
 	},
 	watch: {
 		value(value) {
@@ -98,44 +85,29 @@ export default {
 </script>
 
 <style>
-.k-page-create-dialog-sidebar {
-	background: var(--color-dark);
-	border-start-start-radius: var(--dialog-rounded);
-	border-end-start-radius: var(--dialog-rounded);
-	padding: 1.5rem;
-	color: var(--color-gray-300);
+.k-page-template-switch {
+	margin-bottom: var(--spacing-6);
+	padding-bottom: var(--spacing-6);
+	border-bottom: 1px dashed var(--color-gray-300);
 }
-.k-page-create-dialog-sidebar nav {
-	display: flex;
-	flex-direction: column;
+.k-page-template-switch nav {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 2px;
 }
-.k-page-create-dialog-sidebar .k-headline {
+.k-page-template-switch .k-headline {
 	margin-bottom: 0.75rem;
 	line-height: 1.25;
 }
-.k-page-create-dialog-sidebar button {
+.k-page-template-switch button {
 	text-align: start;
-	padding: 0.5rem;
+	padding: 0.625rem 0.75rem;
 	font-size: var(--text-sm);
-	background: rgba(0, 0, 0, 0.5);
-	border-radius: var(--rounded);
+	background: var(--color-white);
+	border-radius: var(--rounded-sm);
+	box-shadow: var(--shadow);
 }
-.k-page-create-dialog-sidebar button[aria-current] {
-	outline: 2px solid var(--color-green-300);
-}
-
-.k-page-create-dialog:has(.k-page-create-dialog-sidebar) {
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	background: none;
-	--dialog-width: 45rem;
-}
-
-.k-page-create-dialog:has(.k-page-create-dialog-sidebar)
-	.k-page-create-dialog-mainbar {
-	background: var(--color-gray-200);
-	border-start-end-radius: var(--dialog-rounded);
-	border-end-end-radius: var(--dialog-rounded);
+.k-page-template-switch button[aria-current] {
+	background: var(--color-light);
 }
 </style>
