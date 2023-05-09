@@ -62,7 +62,7 @@ class Database
 	/**
 	 * The last error
 	 */
-	protected Exception|null $lastError = null;
+	protected Throwable|null $lastError = null;
 
 	/**
 	 * The last insert id
@@ -280,7 +280,7 @@ class Database
 	/**
 	 * Returns the last db error
 	 */
-	public function lastError(): Throwable
+	public function lastError(): Throwable|null
 	{
 		return $this->lastError;
 	}
