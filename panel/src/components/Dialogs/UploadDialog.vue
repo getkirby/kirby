@@ -30,23 +30,26 @@
 								<k-icon type="file" />
 							</k-aspect-ratio>
 						</a>
+						<k-input
+							v-model="file.name"
+							:after="'.' + file.extension"
+							:novalidate="true"
+							:required="true"
+							class="k-upload-item-input"
+							type="slug"
+						/>
 						<div class="k-upload-item-body">
-							<k-input
-								v-model="file.name"
-								:novalidate="true"
-								:required="true"
-								class="k-upload-item-input"
-								type="slug"
-							/>
 							<p class="k-upload-item-meta">
-								.{{ file.extension }} - {{ file.niceSize }}
+								{{ file.niceSize }}
 							</p>
 							<p class="k-upload-item-error">{{ file.error }}</p>
 						</div>
-						<k-progress
-							v-if="file.progress > 0 && !file.error"
-							:value="file.progress"
-						/>
+						<div class="k-upload-item-progress">
+							<k-progress
+								v-if="file.progress > 0 && !file.error"
+								:value="file.progress"
+							/>
+						</div>
 						<div class="k-upload-item-toggle">
 							<input type="checkbox" v-model="file.upload" />
 						</div>
@@ -78,19 +81,7 @@ export default {
 
 <style>
 .k-upload-dialog.k-dialog {
-	--dialog-color-back: var(--color-dark);
-	--dialog-color-text: var(--color-white);
 	--dialog-width: 40rem;
-}
-.k-upload-dialog .k-dialog-footer {
-	border-top: 0;
-}
-.k-upload-dialog .k-dialog-button-submit.k-button {
-	color: var(--color-green-400);
-}
-.k-upload-dialog .k-empty {
-	background: rgba(0, 0, 0, 0.25);
-	border-color: var(--color-gray-900);
 }
 
 .k-upload-items {
@@ -98,16 +89,17 @@ export default {
 	gap: 0.25rem;
 }
 .k-upload-item {
+	accent-color: var(--color-focus);
 	display: grid;
 	grid-template-areas:
-		"preview body toggle"
-		"preview progress progess";
-	grid-template-columns: 6rem 1fr 2.5rem;
-	grid-template-rows: 1fr 1.25rem;
-	gap: 0.75rem;
+		"preview input input"
+		"preview body body"
+		"preview progress toggle";
+	grid-template-columns: 6rem 1fr auto;
+	grid-template-rows: 1fr 1fr 1fr;
 	border-radius: var(--rounded);
-	overflow: hidden;
-	background: var(--color-gray-900);
+	background: var(--color-white);
+	box-shadow: var(--shadow);
 	height: 6rem;
 }
 .k-upload-item-preview {
@@ -115,43 +107,62 @@ export default {
 	display: block;
 	width: 100%;
 	height: 100%;
-	outline: 0;
+	overflow: hidden;
+	border-start-start-radius: var(--rounded);
+	border-end-start-radius: var(--rounded);
+}
+.k-upload-item-preview:focus {
+	border-radius: var(--rounded);
+	outline: 2px solid var(--color-focus);
+	z-index: 1;
 }
 .k-upload-item-preview .k-aspect-ratio > * {
 	display: grid;
 	place-items: center;
 	color: var(--color-gray-500);
-	border-right: 1px solid var(--color-dark);
+	border-right: 1px solid var(--color-light);
 }
 .k-upload-item-body {
 	grid-area: body;
-	padding-top: var(--spacing-3);
+	padding: var(--spacing-2) var(--spacing-3) 0;
 }
 .k-upload-item-input.k-input {
+	grid-area: input;
 	font-size: var(--text-sm);
-	margin-bottom: 0.5rem;
+	padding: var(--spacing-2) var(--spacing-3);
+	border-bottom: 1px solid var(--color-light);
+}
+.k-upload-item-input.k-input:focus-within {
+	outline: 2px solid var(--color-focus);
+	z-index: 1;
 	border-radius: var(--rounded);
+}
+.k-upload-item-input .k-input-after {
+	color: var(--color-gray-600);
 }
 .k-upload-item-meta {
 	font-size: var(--text-xs);
-	color: var(--color-gray-500);
+	color: var(--color-gray-600);
 }
 .k-upload-item-error {
 	font-size: var(--text-xs);
 	margin-top: 0.5rem;
 	color: var(--color-red-400);
 }
-.k-upload-item .k-progress {
+.k-upload-item-progress {
+	padding-inline: var(--spacing-3);
+	align-self: end;
+	height: 1.25rem;
 	grid-area: progress;
 	--progress-height: 0.25rem;
 	--progress-color-value: var(--color-green-400);
-	--progress-color-back: var(--color-dark);
+	--progress-color-back: var(--color-light);
 }
 .k-upload-item-toggle {
-	display: grid;
-	place-items: center;
-	aspect-ratio: 1/1;
 	grid-area: toggle;
+	padding-inline: var(--spacing-3);
+	padding-bottom: var(--spacing-2);
+	align-self: end;
 }
 .k-upload-item:not(:has(:checked)) {
 	opacity: 0.25;

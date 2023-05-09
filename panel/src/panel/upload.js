@@ -75,7 +75,11 @@ export default (panel) => {
 			parent.reset.call(this);
 			this.files.splice(0);
 		},
-		select(files) {
+		select(files, options) {
+			if (options) {
+				this.set(options);
+			}
+
 			if (files instanceof Event) {
 				files = files.target.files;
 			}

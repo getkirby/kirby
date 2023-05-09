@@ -1,64 +1,4 @@
-<template>
-	<div class="k-upload">
-		<input
-			ref="input"
-			:accept="options.accept"
-			:multiple="options.multiple"
-			aria-hidden="true"
-			type="file"
-			tabindex="-1"
-			@change="select"
-			@click.stop
-		/>
-
-		<k-dialog
-			ref="dialog"
-			:cancel-button="false"
-			:submit-button="false"
-			class="k-upload-dialog"
-			size="medium"
-		>
-			<template v-if="errors.length > 0">
-				<k-headline>{{ $t("upload.errors") }}</k-headline>
-				<ul class="k-upload-error-list">
-					<li v-for="(error, index) in errors" :key="'error-' + index">
-						<p class="k-upload-error-filename">
-							{{ error.file.name }}
-						</p>
-						<p class="k-upload-error-message">
-							{{ error.message }}
-						</p>
-					</li>
-				</ul>
-			</template>
-			<template v-else>
-				<k-headline>{{ $t("upload.progress") }}</k-headline>
-				<ul class="k-upload-list">
-					<li v-for="(file, index) in files" :key="'file-' + index">
-						<k-progress :ref="file.name" />
-						<p class="k-upload-list-filename">
-							{{ file.name }}
-						</p>
-						<p>{{ errors[file.name] }}</p>
-					</li>
-				</ul>
-			</template>
-			<template #footer>
-				<template v-if="errors.length > 0">
-					<k-button-group
-						:buttons="[
-							{
-								icon: 'check',
-								text: $t('confirm'),
-								click: () => $refs.dialog.close()
-							}
-						]"
-					/>
-				</template>
-			</template>
-		</k-dialog>
-	</div>
-</template>
+<template></template>
 
 <script>
 /**
@@ -92,24 +32,6 @@ export default {
 			type: String
 		}
 	},
-	data() {
-		return {
-			options: this.$props,
-			completed: {},
-			errors: [],
-			files: [],
-			total: 0
-		};
-	},
-	computed: {
-		limit() {
-			if (this.options.multiple === false) {
-				return 1;
-			}
-
-			return this.options.max;
-		}
-	},
 	methods: {
 		/**
 		 * Opens the uploader with the object of given parameters.
@@ -120,17 +42,13 @@ export default {
 		 * @param {object} params
 		 */
 		open(params) {
-			this.params(params);
-
-			setTimeout(() => {
-				this.$refs.input.click();
-			}, 1);
-		},
-		params(params) {
-			this.options = Object.assign({}, this.$props, params);
+			this.$panel.upload.open({
+				...this.$props,
+				...(params || {})
+			});
 		},
 		select(e) {
-			this.upload(e.target.files);
+			this.$panel.upload.select(e.target.files);
 		},
 		/**
 		 * Instead of opening the file picker first
@@ -142,103 +60,19 @@ export default {
 		 * @param {object} params
 		 */
 		drop(files, params) {
-			this.params(params);
-			this.upload(files);
-		},
-		upload(files) {
-			this.$refs.dialog.open();
-			this.files = [...files];
-			this.completed = {};
-			this.errors = [];
-			this.hasErrors = false;
-
-			if (this.limit) {
-				this.files = this.files.slice(0, this.limit);
-			}
-
-			this.total = this.files.length;
-			this.files.forEach((file) => {
-				this.$helper.upload(file, {
-					url: this.options.url,
-					attributes: this.options.attributes,
-					method: this.options.method,
-					headers: {
-						"X-CSRF": window.panel.system.csrf
-					},
-					progress: (xhr, file, progress) => {
-						this.$refs[file.name]?.[0]?.set(progress);
-					},
-					success: (xhr, file, response) => {
-						this.complete(file, response.data);
-					},
-					error: (xhr, file, response) => {
-						this.errors.push({ file: file, message: response.message });
-						this.complete(file, response.data);
-					}
-				});
-
-				// if there is sort data, increment in the loop for next file
-				if (this.options?.attributes?.sort !== undefined) {
-					this.options.attributes.sort++;
-				}
+			this.$panel.upload.drop(files, {
+				...this.$props,
+				...(params || {})
 			});
 		},
-		complete(file, data) {
-			this.completed[file.name] = data;
+		upload(files) {
+			this.$panel.upload.select(files, {
+				...this.$props,
+				...(params || {})
+			});
 
-			if (this.$helper.object.length(this.completed) == this.total) {
-				// remove the selected file
-				this.$refs.input.value = "";
-
-				if (this.errors.length > 0) {
-					this.$forceUpdate();
-					this.$emit("error", this.files);
-					return;
-				}
-
-				setTimeout(() => {
-					this.$refs.dialog.close();
-					this.$emit("success", this.files, Object.values(this.completed));
-				}, 250);
-			}
+			this.$panel.upload.start();
 		}
 	}
 };
 </script>
-
-<style>
-.k-upload input {
-	position: absolute;
-	top: 0;
-	inset-inline-start: -3000px;
-}
-
-.k-upload-dialog .k-headline {
-	margin-bottom: 0.75rem;
-}
-
-.k-upload-list,
-.k-upload-error-list {
-	line-height: 1.5em;
-	font-size: var(--text-sm);
-}
-.k-upload-list-filename {
-	color: var(--color-gray-600);
-}
-
-.k-upload-error-list li {
-	padding: 0.75rem;
-	background: var(--color-white);
-	border-radius: var(--rounded-xs);
-}
-.k-upload-error-list li:not(:last-child) {
-	margin-bottom: 2px;
-}
-.k-upload-error-filename {
-	color: var(--color-negative);
-	font-weight: var(--font-bold);
-}
-.k-upload-error-message {
-	color: var(--color-gray-600);
-}
-</style>
