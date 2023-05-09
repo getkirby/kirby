@@ -48,6 +48,7 @@ $translationDialogFields = [
 		'icon'    => null,
 		'label'   => 'Key',
 		'type'    => 'slug',
+		'allow'   => 'a-z0-9_-',
 		'width'   => '1/3',
 	],
 	'value' => [

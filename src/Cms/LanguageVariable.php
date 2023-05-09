@@ -33,11 +33,15 @@ class LanguageVariable
 	 */
 	public static function create(string $key, string|null $value = null): static
 	{
-		$key          = Str::slug($key);
+		$key          = Str::slug($key, null, 'a-z0-9_-');
 		$value        = trim($value ?? '');
 		$kirby        = App::instance();
 		$language     = $kirby->defaultLanguage();
 		$translations = $language->translations();
+
+		if (is_numeric($key) === true) {
+			throw new InvalidArgumentException('The variable key must not be numeric');
+		}
 
 		if (empty($key) === true) {
 			throw new InvalidArgumentException('The variable needs a valid key');
