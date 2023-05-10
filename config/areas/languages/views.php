@@ -67,10 +67,29 @@ return [
 					'default'      => $language->isDefault(),
 					'direction'    => $language->direction(),
 					'id'           => $language->code(),
+					'info'         => [
+						[
+							'label'  => 'Status',
+							'value'  => $language->isDefault() ? 'Default language' : 'Secondary language',
+						],
+						[
+							'label' => t('language.code'),
+							'value' => $language->code(),
+						],
+						[
+							'label' => t('language.locale'),
+							'value' => $language->locale(LC_ALL)
+						],
+						[
+							'label' => t('language.direction'),
+							'value' => t('language.direction.'. $language->direction()),
+						],
+					],
 					'name'         => $name,
 					'next'         => $next,
 					'prev'         => $prev,
-					'translations' => $strings
+					'translations' => $strings,
+					'url'          => $language->url(),
 				]
 			];
 		}
