@@ -29,6 +29,7 @@ export default (panel) => {
 		close() {
 			this.emit("close");
 			this.reset();
+			panel.view.reload();
 		},
 		/**
 		 * Opens the file dialog
@@ -203,7 +204,6 @@ export default (panel) => {
 						}).length;
 
 						if (remaining === 0) {
-							panel.view.reload();
 							this.emit(
 								"complete",
 								this.files,

@@ -16,6 +16,7 @@
 					<li
 						v-for="(file, index) in $panel.upload.files"
 						:key="file.id"
+						:data-completed="file.completed"
 						class="k-upload-item"
 					>
 						<a :href="file.url" class="k-upload-item-preview" target="_blank">
@@ -41,27 +42,34 @@
 						<div class="k-upload-item-body">
 							<p class="k-upload-item-meta">
 								{{ file.niceSize }}
+								<template v-if="file.progress">
+									- {{ file.progress }}%</template
+								>
 							</p>
 							<p class="k-upload-item-error">{{ file.error }}</p>
 						</div>
 						<div class="k-upload-item-progress">
 							<k-progress
-								v-if="file.progress > 0 && !file.error && !file.completed"
+								v-if="file.progress > 0 && !file.error"
 								:value="file.progress"
 							/>
 						</div>
-						<k-button
-							v-if="!file.completed && !file.progress"
-							icon="remove"
-							class="k-upload-item-toggle"
-							@click="$panel.upload.remove(file.id)"
-						/>
-						<k-icon
-							v-else-if="file.completed"
-							class="k-upload-item-toggle"
-							type="check"
-							data-theme="positive"
-						/>
+						<div class="k-upload-item-toggle">
+							<k-button
+								v-if="!file.completed && !file.progress"
+								icon="remove"
+								@click="$panel.upload.remove(file.id)"
+							/>
+							<div v-else-if="!file.completed">
+								<k-loader />
+							</div>
+							<k-button
+								v-else
+								icon="check"
+								theme="positive"
+								@click="$panel.upload.remove(file.id)"
+							/>
+						</div>
 					</li>
 				</ul>
 			</template>
@@ -76,8 +84,13 @@ export default {
 	mixins: [Dialog],
 	props: {
 		submitButton: {
-			type: [String, Boolean],
-			default: () => window.panel.$t("upload")
+			type: [String, Boolean, Object],
+			default: () => {
+				return {
+					icon: "upload",
+					text: window.panel.$t("upload")
+				};
+			}
 		}
 	}
 };
@@ -163,10 +176,12 @@ export default {
 }
 .k-upload-item-toggle {
 	grid-area: toggle;
-	padding: var(--spacing-3);
 	align-self: end;
 }
-.k-upload-item-toggle[data-theme="positive"] {
-	color: var(--color-positive);
+.k-upload-item-toggle > * {
+	padding: var(--spacing-3);
+}
+.k-upload-item[data-completed] .k-upload-item-progress {
+	--progress-color-value: var(--color-green-400);
 }
 </style>
