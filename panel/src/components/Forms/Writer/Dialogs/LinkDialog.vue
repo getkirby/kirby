@@ -16,7 +16,7 @@ export default {
 	data() {
 		return {
 			link: {
-				href: null,
+				href: "",
 				title: null,
 				target: false
 			}
@@ -46,10 +46,13 @@ export default {
 	methods: {
 		open(link) {
 			this.link = {
+				href: "",
 				title: null,
 				target: false,
 				...link
 			};
+
+			console.log(this.link);
 
 			this.link.target = Boolean(this.link.target);
 			this.$refs.dialog.open();

@@ -36,7 +36,7 @@
 
 			<template v-if="linkType === 'page'">
 				<div class="k-link-field-body">
-					<k-page-tree :current="value" @select="$emit('input', $event.id)" />
+					<k-page-tree :current="value" @select="emit($event.id)" />
 				</div>
 			</template>
 		</div>
@@ -106,10 +106,6 @@ export default {
 	watch: {
 		value: {
 			handler(value, old) {
-				if (value && value === old) {
-					return;
-				}
-
 				const parts = this.detect(value);
 
 				this.linkType = this.linkType ?? parts.type;
