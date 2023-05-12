@@ -720,11 +720,8 @@ trait PageActions
 	 * Moves the page to a new parent if the
 	 * new parent accepts the page type
 	 */
-	public function move(string $parentId): Page
+	public function move(Site|Page $parent): Page
 	{
-		// find the parent model
-		$parent = empty($parentId) ? $this->site() : Find::page($parentId);
-
 		// nothing to move
 		if ($this->parentModel()->is($parent) === true) {
 			return $this;

@@ -370,6 +370,13 @@ class PageRules
 			]);
 		}
 
+		// the page cannot be moved into itself
+		if ($parent instanceof Page && ($page->is($parent) === true || $page->isAncestorOf($parent) === true)) {
+			throw new LogicException([
+				'key' => 'page.move.ancestor',
+			]);
+		}
+
 		// check for duplicates
 		if ($parent->childrenAndDrafts()->find($page->slug())) {
 			throw new DuplicateException([

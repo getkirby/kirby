@@ -566,24 +566,17 @@ return [
 			$page = Find::page($id);
 
 			return [
-				'component' => 'k-form-dialog',
+				'component' => 'k-page-move-dialog',
 				'props' => [
-					'fields' => [
-						'parent' => [
-							'label' => 'Parent',
-							'type'  => 'text',
-							'help'  => 'Path/ID of the new parent page'
-						]
-					],
 					'value' => [
-						'parent' => $page->parent()?->id()
+						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
 					]
 				]
 			];
 		},
 		'submit' => function (string $id) {
 			$kirby   = App::instance();
-			$parent  = $kirby->request()->get('parent');
+			$parent  = Find::parent($kirby->request()->get('parent'));
 			$oldPage = Find::page($id);
 			$newPage = $oldPage->move($parent);
 
