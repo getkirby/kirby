@@ -6,7 +6,8 @@ export default class Paragraph extends Node {
 			id: this.name,
 			icon: "paragraph",
 			label: window.panel.$t("toolbar.button.paragraph"),
-			name: this.name
+			name: this.name,
+			separator: true
 		};
 	}
 

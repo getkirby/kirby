@@ -224,7 +224,7 @@ class Blocks extends Plain
 				'tag' => 'a',
 				'attrs' => ['href', 'rel', 'target', 'title'],
 				'defaults' => [
-					'rel' => 'noopener noreferrer'
+					'rel' => 'noreferrer'
 				]
 			],
 			[

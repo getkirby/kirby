@@ -15,6 +15,7 @@
 	"collapse.all": "Collapse All",
 	"copy": "Copy",
 	"copy.all": "Copy all",
+	"copy.success": "{count} copied!",
 	"create": "Create",
 
 	"date": "Date",
@@ -34,13 +35,18 @@
 	"delete": "Delete",
 	"delete.all": "Delete all",
 
+	"dialog.fields.empty": "This dialog has no fields",
 	"dialog.files.empty": "No files to select",
 	"dialog.pages.empty": "No pages to select",
+	"dialog.text.empty": "This dialog does not define any text",
 	"dialog.users.empty": "No users to select",
 
 	"dimensions": "Dimensions",
 	"disabled": "Disabled",
 	"discard": "Discard",
+
+	"drawer.fields.empty": "This drawer has no fields",
+
 	"download": "Download",
 	"duplicate": "Duplicate",
 
@@ -81,6 +87,9 @@
 
 	"error.file.changeName.empty": "The name must not be empty",
 	"error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
+	"error.file.changeTemplate.invalid": "The template for the file \"{id}\" cannot be changed to \"{template}\" (valid: \"{blueprints}\")",
+	"error.file.changeTemplate.permission": "You are not allowed to change the template for the file \"{id}\"",
+
 	"error.file.duplicate": "A file with the name \"{filename}\" already exists",
 	"error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
 	"error.file.extension.invalid": "Invalid extension: {extension}",
@@ -122,6 +131,7 @@
 	"error.offline": "The Panel is currently offline",
 
 	"error.page.changeSlug.permission": "You are not allowed to change the URL appendix for \"{slug}\"",
+	"error.page.changeSlug.reserved": "The path of top-level pages must not start with \"{path}\"",
 	"error.page.changeStatus.incomplete": "The page has errors and cannot be published",
 	"error.page.changeStatus.permission": "The status for this page cannot be changed",
 	"error.page.changeStatus.toDraft.invalid": "The page \"{slug}\" cannot be converted to a draft",
@@ -245,7 +255,7 @@
 	"field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
 	"field.blocks.empty": "No blocks yet",
 	"field.blocks.fieldsets.label": "Please select a block type …",
-	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
+	"field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to import layouts/blocks from your clipboard <small>Only those allowed in the current field will get inserted.</small>",
 	"field.blocks.gallery.name": "Gallery",
 	"field.blocks.gallery.images.empty": "No images yet",
 	"field.blocks.gallery.images.label": "Images",
@@ -258,6 +268,8 @@
 	"field.blocks.image.crop": "Crop",
 	"field.blocks.image.link": "Link",
 	"field.blocks.image.location": "Location",
+	"field.blocks.image.location.internal": "This website",
+	"field.blocks.image.location.external": "External source",
 	"field.blocks.image.name": "Image",
 	"field.blocks.image.placeholder": "Select an image",
 	"field.blocks.image.ratio": "Ratio",
@@ -282,8 +294,10 @@
 
 	"field.files.empty": "No files selected yet",
 
+	"field.layout.change": "Change layout",
 	"field.layout.delete": "Delete layout",
 	"field.layout.delete.confirm": "Do you really want to delete this layout?",
+	"field.layout.delete.confirm.all": "Do you really want to delete all layouts?",
 	"field.layout.empty": "No rows yet",
 	"field.layout.select": "Select a layout",
 
@@ -299,7 +313,12 @@
 
 	"file": "File",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
+	"file.changeTemplate": "Change template",
+	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
 	"file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
+	"file.focus.placeholder": "Set focal point",
+	"file.focus.reset": "Remove focal point",
+	"file.focus.title": "Focus",
 	"file.sort": "Change position",
 
 	"files": "Files",
@@ -389,8 +408,9 @@
 	"login.toggleText.password-reset.email": "Forgot your password?",
 	"login.toggleText.password-reset.email-password": "← Back to login",
 
-	"logout": "Logout",
+	"logout": "Log out",
 
+	"merge": "Merge",
 	"menu": "Menu",
 	"meridiem": "AM/PM",
 	"mime": "Media Type",
@@ -434,6 +454,7 @@
 	"page.changeStatus.position": "Please select a position",
 	"page.changeStatus.select": "Select a new status",
 	"page.changeTemplate": "Change template",
+	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
 	"page.delete.confirm": "Do you really want to delete <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
 	"page.delete.confirm.title": "Enter the page title to confirm",
@@ -461,6 +482,7 @@
 	"password": "Password",
 	"paste": "Paste",
 	"paste.after": "Paste after",
+	"paste.success": "{count} pasted!",
 	"pixel": "Pixel",
 	"plugin": "Plugin",
 	"plugins": "Plugins",
@@ -499,6 +521,7 @@
 	"size": "Size",
 	"slug": "URL appendix",
 	"sort": "Sort",
+	"split": "Split",
 
 	"stats.empty": "No reports",
 	"system.issues.content": "The content folder seems to be exposed",
@@ -525,6 +548,7 @@
 	"template": "Template",
 	"today": "Today",
 
+	"toolbar.button.clear": "Clear formatting",
 	"toolbar.button.code": "Code",
 	"toolbar.button.bold": "Bold",
 	"toolbar.button.email": "Email",
@@ -542,6 +566,8 @@
 	"toolbar.button.link": "Link",
 	"toolbar.button.paragraph": "Paragraph",
 	"toolbar.button.strike": "Strike-through",
+	"toolbar.button.sub": "Subscript",
+	"toolbar.button.sup": "Superscript",
 	"toolbar.button.ol": "Ordered list",
 	"toolbar.button.underline": "Underline",
 	"toolbar.button.ul": "Bullet list",

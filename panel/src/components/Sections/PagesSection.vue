@@ -5,7 +5,7 @@ export default {
 	extends: ModelsSection,
 	computed: {
 		canAdd() {
-			return this.options.add && this.$permissions.pages.create;
+			return this.options.add && this.$panel.permissions.pages.create;
 		},
 		items() {
 			return this.data.map((page) => {
@@ -82,10 +82,10 @@ export default {
 
 				try {
 					await this.$api.pages.changeStatus(element.id, "listed", position);
-					this.$store.dispatch("notification/success", ":)");
+					this.$panel.notification.success();
 					this.$events.$emit("page.sort", element);
 				} catch (error) {
-					this.$store.dispatch("notification/error", {
+					this.$panel.notification.error({
 						message: error.message,
 						details: error.details
 					});

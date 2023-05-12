@@ -86,9 +86,9 @@ class Core
 	}
 
 	/**
-	 * Returns a list of all paths to core blueprints
+	 * Returns a list of paths to core blueprints or
+	 * the blueprint in array form
 	 *
-	 * They are located in `/kirby/config/blueprints`.
 	 * Block blueprints are located in `/kirby/config/blocks`
 	 */
 	public function blueprints(): array
@@ -108,13 +108,21 @@ class Core
 			'blocks/video'    => $this->root . '/blocks/video/video.yml',
 
 			// file blueprints
-			'files/default' => $this->root . '/blueprints/files/default.yml',
+			'files/default' => ['title' => 'File'],
 
 			// page blueprints
-			'pages/default' => $this->root . '/blueprints/pages/default.yml',
+			'pages/default' => ['title' => 'Page'],
 
 			// site blueprints
-			'site' => $this->root . '/blueprints/site.yml'
+			'site' => [
+				'title' => 'Site',
+				'sections' => [
+					'pages' => [
+						'headline' => ['*' => 'pages'],
+						'type'	   => 'pages'
+					]
+				]
+			]
 		];
 	}
 
@@ -218,6 +226,7 @@ class Core
 		return [
 			'blocks'      => 'Kirby\Form\Field\BlocksField',
 			'checkboxes'  => $this->root . '/fields/checkboxes.php',
+			'color'       => $this->root . '/fields/color.php',
 			'date'        => $this->root . '/fields/date.php',
 			'email'       => $this->root . '/fields/email.php',
 			'files'       => $this->root . '/fields/files.php',

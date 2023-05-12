@@ -15,33 +15,35 @@
 				@mousedown.native.prevent
 				@command="onCommand"
 			/>
-			<textarea
-				ref="input"
-				v-bind="{
-					autofocus,
-					disabled,
-					id,
-					minlength,
-					name,
-					placeholder,
-					required,
-					spellcheck,
-					value
-				}"
-				v-direction
-				:data-font="font"
-				class="k-textarea-input-native"
-				@click="onClick"
-				@focus="onFocus"
-				@input="onInput"
-				@keydown.meta.enter="onSubmit"
-				@keydown.ctrl.enter="onSubmit"
-				@keydown.meta="onShortcut"
-				@keydown.ctrl="onShortcut"
-				@dragover="onOver"
-				@dragleave="onOut"
-				@drop="onDrop"
-			/>
+			<k-autosize>
+				<textarea
+					ref="input"
+					v-bind="{
+						autofocus,
+						disabled,
+						id,
+						minlength,
+						name,
+						placeholder,
+						required,
+						spellcheck,
+						value
+					}"
+					v-direction
+					:data-font="font"
+					class="k-textarea-input-native"
+					@click="$refs.toolbar?.close()"
+					@focus="onFocus"
+					@input="onInput"
+					@keydown.meta.enter="onSubmit"
+					@keydown.ctrl.enter="onSubmit"
+					@keydown.meta="onShortcut"
+					@keydown.ctrl="onShortcut"
+					@dragover="onOver"
+					@dragleave="onOut"
+					@drop="onDrop"
+				/>
+			</k-autosize>
 		</div>
 
 		<k-toolbar-email-dialog
@@ -115,16 +117,9 @@ export default {
 	watch: {
 		value() {
 			this.onInvalid();
-			this.$nextTick(() => {
-				this.resize();
-			});
 		}
 	},
 	mounted() {
-		this.$nextTick(() => {
-			this.$library.autosize(this.$refs.input);
-		});
-
 		this.onInvalid();
 
 		if (this.$props.autofocus) {
@@ -168,8 +163,6 @@ export default {
 					this.$emit("input", value);
 				}
 			});
-
-			this.resize();
 		},
 		insertFile(files) {
 			if (files?.length > 0) {
@@ -179,11 +172,6 @@ export default {
 		insertUpload(files, response) {
 			this.insert(response.map((file) => file.dragText).join("\n\n"));
 			this.$events.$emit("model.update");
-		},
-		onClick() {
-			if (this.$refs.toolbar) {
-				this.$refs.toolbar.close();
-			}
 		},
 		onCommand(command, callback) {
 			if (typeof this[command] !== "function") {
@@ -201,17 +189,15 @@ export default {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
 				return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-					url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 					multiple: false
 				});
 			}
 
 			// dropping text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				this.focus();
-				this.insert(drag.data);
+				this.insert(this.$panel.drag.data);
 			}
 		},
 		onFocus($event) {
@@ -237,9 +223,7 @@ export default {
 			}
 
 			// drag & drop for text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				$event.dataTransfer.dropEffect = "copy";
 				this.focus();
 				this.over = true;
@@ -261,9 +245,6 @@ export default {
 		prepend(prepend) {
 			this.insert(prepend + " " + this.selection());
 		},
-		resize() {
-			this.$library.autosize.update(this.$refs.input);
-		},
 		select() {
 			this.$refs.select();
 		},
@@ -282,7 +263,7 @@ export default {
 		},
 		uploadFile() {
 			this.$refs.fileUpload.open({
-				url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false
 			});
 		},
@@ -340,19 +321,5 @@ export default {
 }
 .k-textarea-input-native[data-font="monospace"] {
 	font-family: var(--font-mono);
-}
-
-.k-toolbar {
-	margin-bottom: 0.25rem;
-	color: #aaa;
-}
-.k-textarea-input:focus-within .k-toolbar {
-	position: sticky;
-	top: 0;
-	inset-inline: 0;
-	z-index: 1;
-	box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	color: #000;
 }
 </style>

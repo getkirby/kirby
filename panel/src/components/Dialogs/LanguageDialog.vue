@@ -16,7 +16,7 @@ export default {
 				return;
 			}
 
-			this.model.code = this.$helper.slug(code, [this.$system.ascii]);
+			this.model.code = this.$helper.slug(code, [this.$panel.system.ascii]);
 			this.onCodeChanges(this.model.code);
 		}
 	},
@@ -37,18 +37,14 @@ export default {
 				} else {
 					// if the entered language code exists
 					// matches the locale values in the languages defined in the system
-					let locales = this.$system.locales || [];
-					if (locales?.[code]) {
-						this.model.locale = locales[code];
-					} else {
-						this.model.locale = null;
-					}
+					let locales = this.$panel.system.locales ?? [];
+					this.model.locale = locales?.[code];
 				}
 			}
 		},
 		onNameChanges(name) {
 			this.model.code = this.$helper
-				.slug(name, [this.model.rules, this.$system.ascii])
+				.slug(name, [this.model.rules, this.$panel.system.ascii])
 				.substr(0, 2);
 		}
 	}

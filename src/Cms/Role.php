@@ -171,7 +171,7 @@ class Role extends Model
 	 */
 	protected function setDescription($description = null)
 	{
-		$this->description = I18n::translate($description, $description);
+		$this->description = I18n::translate($description) ?? $description;
 		return $this;
 	}
 
@@ -201,7 +201,7 @@ class Role extends Model
 	 */
 	protected function setTitle($title = null)
 	{
-		$this->title = I18n::translate($title, $title);
+		$this->title = I18n::translate($title) ?? $title;
 		return $this;
 	}
 

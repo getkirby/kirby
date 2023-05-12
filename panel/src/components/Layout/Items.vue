@@ -49,15 +49,11 @@ export default {
 	props: {
 		columns: {
 			type: [Object, Array],
-			default() {
-				return {};
-			}
+			default: () => []
 		},
 		items: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		},
 		layout: {
 			type: String,
@@ -69,9 +65,7 @@ export default {
 		},
 		image: {
 			type: [Object, Boolean],
-			default() {
-				return {};
-			}
+			default: () => ({})
 		},
 		sortable: Boolean,
 		/**
@@ -109,10 +103,7 @@ export default {
 	},
 	methods: {
 		onDragStart($event, dragText) {
-			this.$store.dispatch("drag", {
-				type: "text",
-				data: dragText
-			});
+			this.$panel.drag.start("text", dragText);
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);

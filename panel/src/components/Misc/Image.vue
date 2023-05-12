@@ -6,7 +6,7 @@
 		class="k-image"
 		v-on="$listeners"
 	>
-		<span :style="'padding-bottom:' + ratioPadding">
+		<span :style="{ 'padding-bottom': ratioPadding }">
 			<img
 				v-if="loaded"
 				:key="src"

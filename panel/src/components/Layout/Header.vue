@@ -45,9 +45,7 @@ export default {
 		tab: String,
 		tabs: {
 			type: Array,
-			default() {
-				return [];
-			}
+			default: () => []
 		}
 	},
 	computed: {

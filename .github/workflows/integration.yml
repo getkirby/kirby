@@ -30,15 +30,28 @@ on:
       - "!scripts/**"
   workflow_call:
 
+  workflow_dispatch:
+
 jobs:
   e2e:
     name: "E2E tests"
 
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
+    # run job only under the following conditions:
+    # - can be triggered manually from any repository
+    # - if on pull request, only run if from a fork
+    #   (our own repo is covered by the push event)
+    # - if on push, only run CI automatically for the
+    #   main getkirby/kirby repo and for forks
     if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.head.repo.full_name != github.repository
+      ) ||
+      (
+        github.event_name == 'push' &&
+        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
+      )
 
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -48,12 +61,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
         with:
           path: kirby
 
       - name: Checkout Sandbox
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # pin@v3
         with:
           repository: getkirby/sandbox
           path: sandbox
@@ -70,28 +83,28 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@861c58f0808a7d49515b111c6f780a7085f63973 # pin@v1
+        uses: shivammathur/cache-extensions@de71cbc3239d9b69ea8558b8609ccd067ab4cf14 # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: e2e-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # pin@v3
+        uses: actions/cache@6998d139ddd3e68c71e9e398d8e40b71a2f39812 # pin@v3
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@1a18b2267f80291a81ca1d33e7c851fe09e7dfc4 # pin@v2
+        uses: shivammathur/setup-php@d30ad8b1843ace22e6698ab99bbafaa747b6bd0d # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@c5724eda82337bcff977ce14509f47052c12e04c # pin@v5
+        uses: cypress-io/github-action@327178c8042fbb3be13870105eece3c8abf348c9 # pin@v5
         with:
           working-directory: kirby/panel
           runTests: false
@@ -105,7 +118,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@c5724eda82337bcff977ce14509f47052c12e04c # pin@v5
+        uses: cypress-io/github-action@327178c8042fbb3be13870105eece3c8abf348c9 # pin@v5
         with:
           working-directory: kirby/panel
           install: false
@@ -124,14 +137,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # pin@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # pin@v3
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # pin@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # pin@v3
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos

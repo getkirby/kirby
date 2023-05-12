@@ -1,12 +1,16 @@
 /* eslint-env node */
 import fs from "fs";
 import path from "path";
+
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import vue from "@vitejs/plugin-vue2";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import externalGlobals from "rollup-plugin-external-globals";
+
 import postcssAutoprefixer from "autoprefixer";
-import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 import postcssLogical from "postcss-logical";
+import postcssNano from "cssnano";
 
 let custom;
 try {
@@ -44,8 +48,35 @@ export default defineConfig(({ command }) => {
 		secure: false
 	};
 
+	const plugins = [vue(), splitVendorChunkPlugin()];
+
+	if (!process.env.VITEST) {
+		plugins.push(
+			// Externalize Vue so it's not loaded from node_modules
+			// but accessed via window.Vue
+			{
+				...externalGlobals({ vue: "Vue" }),
+				enforce: "post"
+			}
+		);
+	}
+
+	if (command === "build") {
+		plugins.push(
+			viteStaticCopy({
+				targets: [
+					{
+						src: "node_modules/vue/dist/vue.min.js",
+						rename: "vue.js",
+						dest: "js"
+					}
+				]
+			})
+		);
+	}
+
 	return {
-		plugins: [vue(), splitVendorChunkPlugin()],
+		plugins,
 		define: {
 			// Fix vuelidate error
 			"process.env.BUILD": JSON.stringify("production")
@@ -64,24 +95,20 @@ export default defineConfig(({ command }) => {
 		},
 		optimizeDeps: {
 			entries: "src/**/*.{js,vue}",
-			exclude: ["vitest"]
+			exclude: ["vitest", "vue"]
 		},
 		css: {
 			postcss: {
 				plugins: [
 					postcssLogical(),
 					postcssDirPseudoClass(),
-					postcssCsso(),
-					postcssAutoprefixer()
+					postcssAutoprefixer(),
+					postcssNano()
 				]
 			}
 		},
 		resolve: {
 			alias: [
-				{
-					find: "vue",
-					replacement: "vue/dist/vue.esm.js"
-				},
 				{
 					find: "@",
 					replacement: path.resolve(__dirname, "src")
@@ -94,6 +121,7 @@ export default defineConfig(({ command }) => {
 				"/env": proxy,
 				"/media": proxy
 			},
+			open: proxy.target + "/panel",
 			port: 3000,
 			...custom
 		},

@@ -11,15 +11,10 @@
 		</template>
 
 		<template v-else>
-			<k-input
+			<k-dialog-search
 				v-if="options.search"
-				:autofocus="true"
-				:placeholder="$t('search') + ' …'"
 				:value="search"
-				type="text"
-				class="k-dialog-search"
-				icon="search"
-				@input="search = $event"
+				@search="search = $event"
 			/>
 			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
 				<template #options="{ item: file }">

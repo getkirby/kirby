@@ -8,7 +8,9 @@ export default {
 			return "upload";
 		},
 		canAdd() {
-			return this.$permissions.files.create && this.options.upload !== false;
+			return (
+				this.$panel.permissions.files.create && this.options.upload !== false
+			);
 		},
 		canDrop() {
 			return this.canAdd !== false;
@@ -46,7 +48,7 @@ export default {
 		uploadProps() {
 			return {
 				...this.options.upload,
-				url: this.$urls.api + "/" + this.options.upload.api
+				url: this.$panel.urls.api + "/" + this.options.upload.api
 			};
 		}
 	},
@@ -86,11 +88,11 @@ export default {
 					files: items.map((item) => item.id),
 					index: this.pagination.offset
 				});
-				this.$store.dispatch("notification/success", ":)");
+				this.$panel.notification.success();
 				this.$events.$emit("file.sort");
 			} catch (error) {
 				this.reload();
-				this.$store.dispatch("notification/error", error.message);
+				this.$panel.notification.error(error.message);
 			} finally {
 				this.isProcessing = false;
 			}
@@ -98,11 +100,11 @@ export default {
 		onUpload() {
 			this.$events.$emit("file.create");
 			this.$events.$emit("model.update");
-			this.$store.dispatch("notification/success", ":)");
+			this.$panel.notification.success();
 		},
 		replace(file) {
 			this.$refs.upload.open({
-				url: this.$urls.api + "/" + file.link,
+				url: this.$panel.urls.api + "/" + file.link,
 				accept: "." + file.extension + "," + file.mime,
 				multiple: false
 			});

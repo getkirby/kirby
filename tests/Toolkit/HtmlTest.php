@@ -90,7 +90,7 @@ class HtmlTest extends TestCase
 	public function testAWithTarget()
 	{
 		$html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank']);
-		$expected = '<a href="https://getkirby.com" rel="noopener noreferrer" target="_blank">Kirby</a>';
+		$expected = '<a href="https://getkirby.com" rel="noreferrer" target="_blank">Kirby</a>';
 		$this->assertSame($expected, $html);
 	}
 
@@ -250,7 +250,7 @@ class HtmlTest extends TestCase
 	public function testEmailWithTarget()
 	{
 		$html = Html::email('mail@company.com', 'Email', ['target' => '_blank']);
-		$expected = '!^<a href="mailto:(.*?)" rel="noopener noreferrer" target="_blank">Email</a>$!';
+		$expected = '!^<a href="mailto:(.*?)" rel="noreferrer" target="_blank">Email</a>$!';
 		$this->assertMatchesRegularExpression($expected, $html);
 		preg_match($expected, $html, $matches);
 		$this->assertSame('mail@company.com', Html::decode($matches[1]));
@@ -373,7 +373,7 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $html);
 
 		$html = Html::rel(null, '_blank');
-		$expected = 'noopener noreferrer';
+		$expected = 'noreferrer';
 		$this->assertSame($expected, $html);
 
 		$html = Html::rel('noopener', '_blank');

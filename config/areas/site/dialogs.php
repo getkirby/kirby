@@ -10,6 +10,7 @@ use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
+$fields = require __DIR__ . '/../fields/dialogs.php';
 $files = require __DIR__ . '/../files/dialogs.php';
 
 return [
@@ -155,10 +156,16 @@ return [
 				'component' => 'k-form-dialog',
 				'props' => [
 					'fields' => [
+						'notice' => [
+							'type'  => 'info',
+							'theme' => 'notice',
+							'text'  => I18n::translate('page.changeTemplate.notice')
+						],
 						'template' => Field::template($blueprints, [
 							'required' => true
 						])
 					],
+					'theme' => 'notice',
 					'submitButton' => I18n::translate('change'),
 					'value' => [
 						'template' => $page->intendedTemplate()->name()
@@ -167,9 +174,10 @@ return [
 			];
 		},
 		'submit' => function (string $id) {
-			$request = App::instance()->request();
+			$page     = Find::page($id);
+			$template = App::instance()->request()->get('template');
 
-			Find::page($id)->changeTemplate($request->get('template'));
+			$page->changeTemplate($template);
 
 			return [
 				'event' => 'page.changeTemplate',
@@ -509,6 +517,13 @@ return [
 		}
 	],
 
+	// page field dialogs
+	'page.fields' => [
+		'pattern' => '(pages/.*?)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit']
+	],
+
 	// change filename
 	'page.file.changeName' => [
 		'pattern' => '(pages/.*?)/files/(:any)/changeName',
@@ -523,11 +538,25 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change template
+	'page.file.changeTemplate' => [
+		'pattern' => '(pages/.*?)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete
 	'page.file.delete' => [
 		'pattern' => '(pages/.*?)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
+	],
+
+	// page file field dialogs
+	'page.file.fields' => [
+		'pattern' => '(pages/.*?)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit'],
 	],
 
 	// change site title
@@ -560,6 +589,13 @@ return [
 		}
 	],
 
+	// site field dialogs
+	'site.fields' => [
+		'pattern' => '(site)/fields/(:any)/(:all?)',
+		'load'    => $fields['model']['load'],
+		'submit'  => $fields['model']['submit'],
+	],
+
 	// change filename
 	'site.file.changeName' => [
 		'pattern' => '(site)/files/(:any)/changeName',
@@ -574,11 +610,25 @@ return [
 		'submit'  => $files['changeSort']['submit'],
 	],
 
+	// change template
+	'site.file.changeTemplate' => [
+		'pattern' => '(site)/files/(:any)/changeTemplate',
+		'load'    => $files['changeTemplate']['load'],
+		'submit'  => $files['changeTemplate']['submit'],
+	],
+
 	// delete
 	'site.file.delete' => [
 		'pattern' => '(site)/files/(:any)/delete',
 		'load'    => $files['delete']['load'],
 		'submit'  => $files['delete']['submit'],
+	],
+
+	// site file field dialogs
+	'site.file.fields' => [
+		'pattern' => '(site)/files/(:any)/fields/(:any)/(:all?)',
+		'load'    => $fields['file']['load'],
+		'submit'  => $fields['file']['submit'],
 	],
 
 ];

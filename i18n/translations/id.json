@@ -1,10 +1,10 @@
 {
-	"account.changeName": "Change your name",
-	"account.delete": "Delete your account",
-	"account.delete.confirm": "Do you really want to delete your account? You will be logged out immediately. Your account cannot be recovered.",
+	"account.changeName": "Ubah nama Anda",
+	"account.delete": "Hapus akun Anda",
+	"account.delete.confirm": "Anda yakin menghapus akun? Anda akan dikeluarkan segera. Akun Anda tidak dapat dipulihkan.",
 
 	"add": "Tambah",
-	"author": "Author",
+	"author": "Penulis",
 	"avatar": "Gambar profil",
 	"back": "Kembali",
 	"cancel": "Batal",
@@ -14,7 +14,7 @@
 	"collapse": "Lipat",
 	"collapse.all": "Lipat Semua",
 	"copy": "Salin",
-	"copy.all": "Copy all",
+	"copy.all": "Salin semua",
 	"create": "Buat",
 
 	"date": "Tanggal",

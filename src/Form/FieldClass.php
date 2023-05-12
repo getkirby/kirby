@@ -224,6 +224,16 @@ abstract class FieldClass
 	}
 
 	/**
+	 * Returns optional dialog routes for the field
+	 *
+	 * @return array
+	 */
+	public function dialogs(): array
+	{
+		return [];
+	}
+
+	/**
 	 * If `true`, the field is no longer editable and will not be saved
 	 *
 	 * @return bool
@@ -231,6 +241,16 @@ abstract class FieldClass
 	public function disabled(): bool
 	{
 		return $this->disabled;
+	}
+
+	/**
+	 * Returns optional drawer routes for the field
+	 *
+	 * @return array
+	 */
+	public function drawers(): array
+	{
+		return [];
 	}
 
 	/**
@@ -321,6 +341,11 @@ abstract class FieldClass
 	public function isEmptyValue($value = null): bool
 	{
 		return in_array($value, [null, '', []], true);
+	}
+
+	public function isHidden(): bool
+	{
+		return false;
 	}
 
 	/**
@@ -478,6 +503,7 @@ abstract class FieldClass
 			'default'     => $this->default(),
 			'disabled'    => $this->isDisabled(),
 			'help'        => $this->help(),
+			'hidden'      => $this->isHidden(),
 			'icon'        => $this->icon(),
 			'label'       => $this->label(),
 			'name'        => $this->name(),
@@ -838,11 +864,13 @@ abstract class FieldClass
 	 */
 	protected function valueToJson(array $value = null, bool $pretty = false): string
 	{
+		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+
 		if ($pretty === true) {
-			return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+			$constants |= JSON_PRETTY_PRINT;
 		}
 
-		return json_encode($value);
+		return json_encode($value, $constants);
 	}
 
 	/**

@@ -96,6 +96,38 @@ trait FileActions
 	}
 
 	/**
+	 * @return $this|static
+	 */
+	public function changeTemplate(string|null $template): static
+	{
+		if ($template === $this->template()) {
+			return $this;
+		}
+
+		$arguments = [
+			'file'     => $this,
+			'template' => $template ?? 'default'
+		];
+
+		return $this->commit('changeTemplate', $arguments, function ($oldFile, $template) {
+			// convert to new template/blueprint incl. content
+			$file = $oldFile->convertTo($template);
+
+			// update template, prefer unset over writing `default`
+			if ($template === 'default') {
+				$file = $file->update(['template' => null]);
+			} else {
+				$file = $file->update(['template' => $template]);
+			}
+
+			// resize the file if configured by new blueprint
+			$file->manipulate($file->blueprint()->create());
+
+			return $file;
+		});
+	}
+
+	/**
 	 * Commits a file action, by following these steps
 	 *
 	 * 1. checks the action rules
@@ -218,7 +250,7 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
-			// always create pages in the default language
+			// always create files in the default language
 			if ($file->kirby()->multilang() === true) {
 				$languageCode = $file->kirby()->defaultLanguage()->code();
 			} else {
@@ -230,6 +262,9 @@ trait FileActions
 
 			// add the file to the list of siblings
 			$file->siblings()->append($file->id(), $file);
+
+			// resize the file on upload if configured
+			$file->manipulate($file->blueprint()->create());
 
 			// return a fresh clone
 			return $file->clone();
@@ -263,6 +298,22 @@ trait FileActions
 
 			return true;
 		});
+	}
+
+	/**
+	 * Resizes/crops the original file with Kirby's thumb handler
+	 */
+	public function manipulate(array|null $options = []): static
+	{
+		// nothing to process
+		if (empty($options) === true || $this->isResizable() === false) {
+			return $this;
+		}
+
+		$this->kirby()->thumb($this->root(), $this->root(), $options);
+
+		// returns a cloned version of the file
+		return $this->clone();
 	}
 
 	/**
@@ -310,6 +361,9 @@ trait FileActions
 				throw new LogicException('The file could not be created');
 			}
 
+			// apply the resizing/crop options from the blueprint
+			$file->manipulate($file->blueprint()->create());
+
 			// return a fresh clone
 			return $file->clone();
 		});
@@ -353,5 +407,25 @@ trait FileActions
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Updates the file's data and ensures that
+	 * media files get wiped if `focus` changed
+	 *
+	 * @return static
+	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
+	 */
+	public function update(
+		array $input = null,
+		string $languageCode = null,
+		bool $validate = false
+	) {
+		// delete all public media versions when focus field gets changed
+		if ($input !== null && array_key_exists('focus', $input) === true) {
+			$this->unpublish(true);
+		}
+
+		return parent::update($input, $languageCode, $validate);
 	}
 }

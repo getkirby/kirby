@@ -1,28 +1,31 @@
-import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
-import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
-import DateInput from "@/components/Forms/Input/DateInput.vue";
-import EmailInput from "@/components/Forms/Input/EmailInput.vue";
-import ListInput from "@/components/Forms/Input/ListInput.vue";
-import MultiselectInput from "@/components/Forms/Input/MultiselectInput.vue";
-import NumberInput from "@/components/Forms/Input/NumberInput.vue";
-import PasswordInput from "@/components/Forms/Input/PasswordInput.vue";
-import RadioInput from "@/components/Forms/Input/RadioInput.vue";
-import RangeInput from "@/components/Forms/Input/RangeInput.vue";
-import SelectInput from "@/components/Forms/Input/SelectInput.vue";
-import SlugInput from "@/components/Forms/Input/SlugInput.vue";
-import TagsInput from "@/components/Forms/Input/TagsInput.vue";
-import TelInput from "@/components/Forms/Input/TelInput.vue";
-import TextInput from "@/components/Forms/Input/TextInput.vue";
-import TextareaInput from "@/components/Forms/Input/TextareaInput.vue";
-import TimeInput from "@/components/Forms/Input/TimeInput.vue";
-import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
-import TogglesInput from "@/components/Forms/Input/TogglesInput.vue";
-import UrlInput from "@/components/Forms/Input/UrlInput.vue";
+import CheckboxInput from "./CheckboxInput.vue";
+import CheckboxesInput from "./CheckboxesInput.vue";
+import DateInput from "./DateInput.vue";
+import ColorInput from "./ColorInput.vue";
+import EmailInput from "./EmailInput.vue";
+import ListInput from "./ListInput.vue";
+import MultiselectInput from "./MultiselectInput.vue";
+import NumberInput from "./NumberInput.vue";
+import PasswordInput from "./PasswordInput.vue";
+import RadioInput from "./RadioInput.vue";
+import RangeInput from "./RangeInput.vue";
+import SelectInput from "./SelectInput.vue";
+import SlugInput from "./SlugInput.vue";
+import TagsInput from "./TagsInput.vue";
+import TelInput from "./TelInput.vue";
+import TextInput from "./TextInput.vue";
+import TextareaInput from "./TextareaInput.vue";
+import TimeInput from "./TimeInput.vue";
+import ToggleInput from "./ToggleInput.vue";
+import TogglesInput from "./TogglesInput.vue";
+import UrlInput from "./UrlInput.vue";
+import WriterInput from "./WriterInput.vue";
 
 export default {
 	install(app) {
 		app.component("k-checkbox-input", CheckboxInput);
 		app.component("k-checkboxes-input", CheckboxesInput);
+		app.component("k-color-input", ColorInput);
 		app.component("k-date-input", DateInput);
 		app.component("k-email-input", EmailInput);
 		app.component("k-list-input", ListInput);
@@ -41,5 +44,6 @@ export default {
 		app.component("k-toggle-input", ToggleInput);
 		app.component("k-toggles-input", TogglesInput);
 		app.component("k-url-input", UrlInput);
+		app.component("k-writer-input", WriterInput);
 	}
 };

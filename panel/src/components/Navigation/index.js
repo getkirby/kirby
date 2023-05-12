@@ -10,11 +10,12 @@ import DropdownItem from "./DropdownItem.vue";
 import Link from "./Link.vue";
 import Languages from "./Languages.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
+import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
 import PrevNext from "./PrevNext.vue";
-import Search from "./Search.vue";
 import Tag from "./Tag.vue";
 import Topbar from "./Topbar.vue";
+import Tree from "./Tree.vue";
 
 export default {
 	install(app) {
@@ -30,10 +31,11 @@ export default {
 		app.component("k-languages-dropdown", Languages);
 		app.component("k-link", Link);
 		app.component("k-options-dropdown", OptionsDropdown);
+		app.component("k-page-tree", PageTree);
 		app.component("k-pagination", Pagination);
 		app.component("k-prev-next", PrevNext);
-		app.component("k-search", Search);
 		app.component("k-tag", Tag);
 		app.component("k-topbar", Topbar);
+		app.component("k-tree", Tree);
 	}
 };

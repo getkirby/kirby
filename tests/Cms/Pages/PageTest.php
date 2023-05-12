@@ -96,6 +96,36 @@ class PageTest extends TestCase
 		$this->assertSame(['A'], array_column($page->blueprints(), 'title'));
 	}
 
+	public function testBlueprintsInSection()
+	{
+		new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/a' => [
+					'title' => 'A',
+					'sections' => [
+						'my-pages' => [
+							'type'   => 'pages',
+							'create' => 'b'
+						]
+					]
+				],
+				'pages/b' => [
+					'title' => 'B'
+				]
+			],
+			'templates' => [
+				'a' => __FILE__
+			]
+		]);
+
+		// no blueprints
+		$page = new Page(['slug' => 'test', 'template' => 'a']);
+		$this->assertSame(['B'], array_column($page->blueprints('my-pages'), 'title'));
+	}
+
 	public function testDepth()
 	{
 		$site = new Site([

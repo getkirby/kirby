@@ -22,6 +22,8 @@ class PagesSectionTest extends TestCase
 				'index' => $this->tmp
 			]
 		]);
+
+		$this->app->impersonate('kirby');
 	}
 
 	public function tearDown(): void
@@ -77,10 +79,9 @@ class PagesSectionTest extends TestCase
 		$this->assertSame('Pages', $section->headline());
 	}
 
+
 	public function testParent()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -108,8 +109,6 @@ class PagesSectionTest extends TestCase
 
 	public function testParentWithInvalidOption()
 	{
-		$this->app->impersonate('kirby');
-
 		$parent = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -381,8 +380,6 @@ class PagesSectionTest extends TestCase
 
 	public function testImageString()
 	{
-		$this->app->impersonate('kirby');
-
 		$model = new Page([
 			'slug' => 'test',
 			'children' => [
@@ -549,13 +546,14 @@ class PagesSectionTest extends TestCase
 
 	public function testUnreadable()
 	{
-		$this->app->clone([
+		$app = $this->app->clone([
 			'blueprints' => [
 				'pages/unreadable' => [
 					'options' => ['read' => false]
 				]
 			]
 		]);
+		$app->impersonate('kirby');
 
 		$page = new Page([
 			'slug' => 'test',
@@ -691,6 +689,60 @@ class PagesSectionTest extends TestCase
 		$_GET = [];
 	}
 
+	public function testSearchWithFlip()
+	{
+		$_GET['searchterm'] = 'bike';
+
+		$model = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'subpage-1', 'content' => ['title' => 'Bike']],
+				['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+				['slug' => 'subpage-3', 'content' => ['title' => 'Mount Bike']]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'flip'   => true,
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('Bike', $section->data()[0]['text']);
+		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+		$_GET = [];
+	}
+
+	public function testSearchWithSortBy()
+	{
+		$_GET['searchterm'] = 'bike';
+
+		$model = new Page([
+			'slug'     => 'test',
+			'children' => [
+				['slug' => 'subpage-1', 'content' => ['title' => 'Bike']],
+				['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+				['slug' => 'subpage-3', 'content' => ['title' => 'Mount Bike']]
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'   => 'test',
+			'model'  => $model,
+			'search' => true,
+			'sortBy' => 'title desc'
+		]);
+
+		$this->assertCount(2, $section->data());
+		$this->assertSame('Bike', $section->data()[0]['text']);
+		$this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+		$_GET = [];
+	}
+
 	public function testTableLayout()
 	{
 		$model = new Page([
@@ -770,5 +822,31 @@ class PagesSectionTest extends TestCase
 
 		$this->assertSame([], $options['columns']);
 		$this->assertNull($options['link']);
+	}
+
+	public function testQuery()
+	{
+		$section = new Section('pages', [
+			'name'  => 'test',
+			'model' => new Page([
+				'slug' => 'test',
+				'children' => [
+					[
+						'slug' => 'a',
+						'num'  => 1,
+					],
+					[
+						'slug' => 'b',
+						'num'  => 2,
+					]
+				]
+			]),
+			'query' => $query = 'page.children.filter("num", ">", 1)'
+		]);
+
+		$this->assertSame($query, $section->query());
+		$this->assertFalse($section->sortable());
+
+		$this->assertCount(1, $section->pages());
 	}
 }

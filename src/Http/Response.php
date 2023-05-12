@@ -95,11 +95,7 @@ class Response
 	 */
 	public function __toString(): string
 	{
-		try {
-			return $this->send();
-		} catch (Throwable) {
-			return '';
-		}
+		return $this->send();
 	}
 
 	/**

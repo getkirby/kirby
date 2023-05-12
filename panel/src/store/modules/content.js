@@ -1,5 +1,5 @@
-import Vue, { set, del } from "vue";
-import { clone } from "@/helpers/object.js";
+import { set, del } from "vue";
+import { clone, length } from "@/helpers/object.js";
 
 const keep = (id, data) => {
 	localStorage.setItem("kirby$content$" + id, JSON.stringify(data));
@@ -36,15 +36,13 @@ export default {
 		/**
 		 * Checks for an ID if a model exists in the store
 		 */
-		exists: (state) => (id) => {
-			return Object.prototype.hasOwnProperty.call(state.models, id);
-		},
+		exists: (state) => (id) => Object.hasOwn(state.models, id),
 		/**
 		 * Checks for an ID if a model has unsaved changes
 		 */
 		hasChanges: (state, getters) => (id) => {
 			const changes = getters.model(id).changes;
-			return Object.keys(changes).length > 0;
+			return length(changes) > 0;
 		},
 		/**
 		 * Checks for an ID if it is the current model
@@ -60,12 +58,7 @@ export default {
 		 */
 		id: (state) => (id) => {
 			id = id || state.current;
-
-			if (window.panel.$language) {
-				return id + "?language=" + window.panel.$language.code;
-			}
-
-			return id;
+			return id + "?language=" + window.panel.language.code;
 		},
 		/**
 		 * Return the full model object for passed ID
@@ -177,7 +170,9 @@ export default {
 
 			// // compare current field value with its original value
 			const current = JSON.stringify(value);
-			const original = JSON.stringify(state.models[id].originals[field]);
+			const original = JSON.stringify(
+				state.models[id].originals[field] ?? null
+			);
 
 			if (original == current) {
 				// if the same, there are no unsaved changes
@@ -311,7 +306,7 @@ export default {
 
 			// Send updated values to API
 			try {
-				await Vue.$api.patch(model.api, data);
+				await window.panel.api.patch(model.api, data);
 
 				// re-create model with updated values as originals
 				context.commit("CREATE", [

@@ -1,4 +1,4 @@
-import "./regex.js";
+import "./regex";
 
 const escapingMap = {
 	"&": "&amp;",
@@ -74,6 +74,19 @@ export function hasEmoji(string) {
 }
 
 /**
+ * Checks if a string is empty
+ * @param {String|undefined|null} string
+ * @returns {Boolean}
+ */
+export function isEmpty(string) {
+	if (!string) {
+		return true;
+	}
+
+	return String(string).length === 0;
+}
+
+/**
  * Turns first letter lowercase
  * @param {string} string
  * @returns {string}
@@ -81,6 +94,20 @@ export function hasEmoji(string) {
 export function lcfirst(string) {
 	const str = String(string);
 	return str.charAt(0).toLowerCase() + str.slice(1);
+}
+
+/**
+ * Trims the given character(s) at the beginning of the string.
+ * This method is greedy and removes any occurrence at the beginning,
+ * not just the first.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function ltrim(string, replace) {
+	const expression = new RegExp(`^(${replace})+`, "g");
+	return string.replace(expression, "");
 }
 
 /**
@@ -113,6 +140,20 @@ export function random(length) {
 		result += pool.charAt(Math.floor(Math.random() * count));
 	}
 	return result;
+}
+
+/**
+ * Trims the given characters at the end of the string
+ * This method is greedy and removes any occurrence at the end,
+ * not just the last.
+ *
+ * @param {string} string
+ * @param {string} replace
+ * @returns {string}
+ */
+export function rtrim(string, replace) {
+	const expression = new RegExp(`(${replace})+$`, "g");
+	return string.replace(expression, "");
 }
 
 /**
@@ -185,12 +226,9 @@ export function stripHTML(string) {
 export function template(string, values = {}) {
 	const resolve = (parts, data = {}) => {
 		const part = escapeHTML(parts.shift());
-		const value = data[part] ?? null;
+		const value = data[part] ?? "…";
 
-		if (value === null) {
-			return Object.prototype.hasOwnProperty.call(data, part) || "…";
-		}
-		if (parts.length === 0) {
+		if (value === "…" || parts.length === 0) {
 			return value;
 		}
 
@@ -265,9 +303,12 @@ export default {
 	camelToKebab,
 	escapeHTML,
 	hasEmoji,
+	isEmpty,
 	lcfirst,
+	ltrim,
 	pad,
 	random,
+	rtrim,
 	slug,
 	stripHTML,
 	template,

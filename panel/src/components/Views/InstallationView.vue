@@ -105,7 +105,7 @@ export default {
 			user: {
 				name: "",
 				email: "",
-				language: this.$translation.code,
+				language: this.$panel.translation.code,
 				password: "",
 				role: "admin"
 			}
@@ -152,9 +152,9 @@ export default {
 					globals: ["$system", "$translation"]
 				});
 
-				this.$store.dispatch("notification/success", this.$t("welcome") + "!");
+				this.$panel.notification.success(this.$t("welcome") + "!");
 			} catch (error) {
-				this.$store.dispatch("notification/error", error);
+				this.$panel.notification.error(error);
 			}
 		}
 	}

@@ -1,84 +1,39 @@
 <template>
-	<k-dialog
-		ref="dialog"
-		v-bind="$props"
-		@cancel="$emit('cancel')"
-		@close="$emit('close')"
-		@ready="$emit('ready')"
-		@submit="$refs.form.submit()"
-	>
-		<template v-if="text">
-			<k-text :html="text" />
-		</template>
-		<k-form
-			v-if="hasFields"
-			ref="form"
-			:value="model"
+	<k-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
+		<k-dialog-text v-if="text" :text="text" />
+		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
-			@input="onInput"
-			@submit="onSubmit"
+			:value="model"
+			@input="input"
+			@submit="submit"
 		/>
-		<k-box v-else theme="negative"> This form dialog has no fields </k-box>
 	</k-dialog>
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [DialogMixin],
+	mixins: [Dialog, Fields],
 	props: {
-		/**
-		 * Whether to disable the submit button
-		 */
-		disabled: Boolean,
-		fields: {
-			type: [Array, Object],
-			default() {
-				return [];
-			}
-		},
-		novalidate: {
-			type: Boolean,
-			default: true
-		},
 		size: {
-			type: String,
-			default: "medium"
+			default: "medium",
+			type: String
 		},
 		submitButton: {
 			type: [String, Boolean],
-			default() {
-				return window.panel.$t("save");
-			}
+			default: () => window.panel.$t("save")
 		},
 		text: {
 			type: String
-		},
-		theme: {
-			type: String,
-			default: "positive"
-		},
-		value: {
-			type: Object,
-			default() {
-				return {};
-			}
 		}
 	},
 	data() {
 		return {
-			// Since fiber dialogs don't update their `value` prop
-			// on an emitted `input` event, we need to ensure a local
-			// state of all updated values
 			model: this.value
 		};
-	},
-	computed: {
-		hasFields() {
-			return Object.keys(this.fields).length > 0;
-		}
 	},
 	watch: {
 		value(value) {
@@ -86,15 +41,9 @@ export default {
 		}
 	},
 	methods: {
-		onInput(values) {
-			// Since fiber dialogs don't update their `value` prop
-			// we need to update our local  state ourselves, so that `k-form`
-			// received up-to-date data
-			this.model = values;
-			this.$emit("input", values);
-		},
-		onSubmit(values) {
-			this.$emit("submit", values);
+		input(value) {
+			this.model = value;
+			this.$panel.dialog.input(value);
 		}
 	}
 };

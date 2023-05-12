@@ -73,7 +73,7 @@ export default {
 				accept: this.uploads.accept,
 				max: this.max,
 				multiple: this.multiple,
-				url: this.$urls.api + "/" + this.endpoints.field + "/upload"
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload"
 			};
 		}
 	},
