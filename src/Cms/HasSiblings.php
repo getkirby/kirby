@@ -19,9 +19,9 @@ trait HasSiblings
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	public function indexOf($collection = null): int
+	public function indexOf($collection = null): int|false
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->indexOf($this);
