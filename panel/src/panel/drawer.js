@@ -48,8 +48,10 @@ export default (panel) => {
 			const parentDrawer = this.isOpen === true ? this.state() : null;
 			await parent.open.call(this, feature, options);
 
-			// add the parent to the drawer
-			this.parent = parentDrawer;
+			// add the parent to the drawer if it's not the same
+			if (this.path !== parentDrawer?.path) {
+				this.parent = parentDrawer;
+			}
 
 			// open the first tab
 			this.openTab();
