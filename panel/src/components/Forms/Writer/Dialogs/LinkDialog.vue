@@ -26,8 +26,8 @@ export default {
 		fields() {
 			return {
 				href: {
-					label: this.$t("url"),
-					type: "text",
+					label: this.$t("link"),
+					type: "link",
 					icon: "url"
 				},
 				title: {

@@ -32,7 +32,7 @@ export default {
 			this.pages = [
 				{
 					icon: "home",
-					id: "/site",
+					id: "/",
 					label: this.$t("view.site"),
 					hasChildren: true,
 					children: "/site",
@@ -56,13 +56,14 @@ export default {
 			const pages = {};
 
 			data.forEach((page) => {
-				const id = "/pages/" + this.$api.pages.id(page.id);
+				const id = "/" + page.id;
+				const api = "/pages/" + this.$api.pages.id(page.id);
 
 				pages[id] = {
 					id: id,
 					label: page.title,
 					hasChildren: page.hasChildren,
-					children: id,
+					children: api,
 					open: this.current?.includes(id) && this.current !== id
 				};
 			});
