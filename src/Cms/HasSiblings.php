@@ -32,7 +32,7 @@ trait HasSiblings
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return \Kirby\Cms\Model|null
+	 * @return static|null
 	 */
 	public function next($collection = null)
 	{
@@ -58,7 +58,7 @@ trait HasSiblings
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return \Kirby\Cms\Model|null
+	 * @return static|null
 	 */
 	public function prev($collection = null)
 	{
