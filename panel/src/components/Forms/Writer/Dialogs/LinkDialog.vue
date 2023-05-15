@@ -52,8 +52,6 @@ export default {
 				...link
 			};
 
-			console.log(this.link);
-
 			this.link.target = Boolean(this.link.target);
 			this.$refs.dialog.open();
 		},
