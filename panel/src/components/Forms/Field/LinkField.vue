@@ -116,6 +116,8 @@ export default {
 	},
 	methods: {
 		detect(value) {
+			value = value ?? "";
+
 			if (value.startsWith("/") === true) {
 				return {
 					type: "page",
