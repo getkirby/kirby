@@ -36,7 +36,8 @@ export default {
 					label: this.$t("view.site"),
 					hasChildren: true,
 					children: "/site",
-					open: true
+					open: true,
+					uuid: "site://"
 				}
 			];
 		}
@@ -49,7 +50,7 @@ export default {
 	methods: {
 		async load() {
 			const { data } = await this.$api.get(this.items + "/children", {
-				select: "hasChildren,id,title",
+				select: "hasChildren,id,title,uuid",
 				status: "all"
 			});
 
@@ -64,7 +65,8 @@ export default {
 					label: page.title,
 					hasChildren: page.hasChildren,
 					children: api,
-					open: this.current?.includes(id) && this.current !== id
+					open: this.current?.includes(id) && this.current !== id,
+					uuid: page.uuid
 				};
 			});
 

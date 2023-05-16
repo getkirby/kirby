@@ -1,45 +1,41 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<div class="k-input k-link-field-container" data-theme="field">
-			<div class="k-input-element">
-				<div class="k-link-field-header">
-					<k-dropdown>
-						<k-button
-							class="k-link-field-toggle"
-							:icon="currentType.icon"
-							@click="$refs.types.toggle()"
+		<k-input v-bind="$props" theme="field">
+			<div class="k-link-input-header">
+				<k-dropdown>
+					<k-button
+						class="k-link-input-toggle"
+						:icon="currentType.icon"
+						@click="$refs.types.toggle()"
+					>
+						{{ currentType.label }}
+					</k-button>
+					<k-dropdown-content ref="types">
+						<k-dropdown-item
+							v-for="(linkType, key) in types"
+							:key="key"
+							:icon="linkType.icon"
+							@click="switchType(key)"
 						>
-							{{ currentType.label }}
-						</k-button>
-						<k-dropdown-content ref="types">
-							<k-dropdown-item
-								v-for="(linkType, key) in types"
-								:key="key"
-								:icon="linkType.icon"
-								@click="switchType(key)"
-							>
-								{{ linkType.label }}
-							</k-dropdown-item>
-						</k-dropdown-content>
-					</k-dropdown>
-					<input
-						class="k-text-input"
-						ref="input"
-						:id="_uid"
-						:placeholder="currentType.placeholder"
-						:type="currentType.input"
-						:value="linkValue"
-						@input="emit($event.target.value)"
-					/>
-				</div>
+							{{ linkType.label }}
+						</k-dropdown-item>
+					</k-dropdown-content>
+				</k-dropdown>
+				<component
+					ref="input"
+					:is="'k-' + currentType.input + '-input'"
+					:id="_uid"
+					:placeholder="currentType.placeholder"
+					:value="linkValue"
+					@input="onInput"
+				/>
 			</div>
-
 			<template v-if="linkType === 'page'">
-				<div class="k-link-field-body">
-					<k-page-tree :current="value" @select="emit($event.id)" />
+				<div class="k-link-input-body">
+					<k-page-tree :current="value" @select="onInput($event.uuid)" />
 				</div>
 			</template>
-		</div>
+		</k-input>
 	</k-field>
 </template>
 
@@ -63,7 +59,8 @@ export default {
 	data() {
 		return {
 			linkType: null,
-			linkValue: null
+			linkValue: null,
+			isInvalid: false
 		};
 	},
 	computed: {
@@ -74,6 +71,7 @@ export default {
 			return {
 				url: {
 					icon: "url",
+					input: "url",
 					label: this.$t("url"),
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
@@ -81,6 +79,7 @@ export default {
 				},
 				email: {
 					icon: "email",
+					input: "email",
 					label: this.$t("email"),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
@@ -88,6 +87,7 @@ export default {
 				},
 				tel: {
 					icon: "phone",
+					input: "tel",
 					label: "Phone",
 					placeholder: "Enter a phone number …",
 					input: "tel",
@@ -95,6 +95,7 @@ export default {
 				},
 				page: {
 					icon: "page",
+					input: "text",
 					label: this.$t("page"),
 					placeholder: "Select a page …",
 					input: "text",
@@ -118,7 +119,7 @@ export default {
 		detect(value) {
 			value = value ?? "";
 
-			if (value.startsWith("/") === true) {
+			if (value.startsWith("page://") === true || value.startsWith("site://")) {
 				return {
 					type: "page",
 					link: value
@@ -146,7 +147,7 @@ export default {
 				link: value
 			};
 		},
-		emit(link) {
+		onInput(link) {
 			const value = link.trim().length ? this.currentType.schema + link : "";
 			this.$emit("input", value);
 		},
@@ -171,43 +172,30 @@ export default {
 </script>
 
 <style>
-.k-link-field-container {
+.k-link-input-header {
 	display: grid;
-	grid-template-areas:
-		"header"
-		"body";
-}
-
-.k-link-field-header {
-	display: grid;
-	grid-template-columns: max-content 1fr auto;
+	grid-template-columns: max-content 1fr;
 	align-items: center;
 	gap: 0.25rem;
 	height: var(--field-input-height);
 	grid-area: header;
 }
 
-.k-link-field-toggle.k-button {
+.k-link-input-toggle.k-button {
 	display: flex;
 	align-items: center;
-	color: var(--color-black);
 	padding: 0 1.325rem 0 0.375rem;
-	line-height: 1;
 	height: var(--height-sm);
 	border-radius: var(--rounded-sm);
 	margin-inline-start: 0.25rem;
 	gap: 0.25rem;
 	background: var(--color-gray-200);
 }
-.k-link-field-toggle.k-button .k-button-text {
+.k-link-input-toggle.k-button .k-button-text {
 	padding-inline-start: var(--spacing-1);
-	color: var(--field-input-color-before);
-}
-.k-link-field-toggle.k-button:hover .k-button-text {
-	color: var(--color-black);
 }
 
-.k-link-field-toggle .k-button-text::after {
+.k-link-input-toggle .k-button-text::after {
 	position: absolute;
 	top: 50%;
 	right: 0.5rem;
@@ -218,8 +206,7 @@ export default {
 	border-inline-end: 4px solid transparent;
 }
 
-.k-link-field-body {
-	display: none;
+.k-link-input-body {
 	grid-area: body;
 	border-top: 1px solid var(--color-gray-300);
 	background: var(--color-gray-100);
@@ -228,8 +215,5 @@ export default {
 	overflow: auto;
 	--tree-color-back: var(--color-gray-100);
 	--tree-color-hover-back: var(--color-gray-200);
-}
-.k-link-field:focus-within .k-link-field-body {
-	display: block;
 }
 </style>
