@@ -2,6 +2,7 @@ import AccountView from "./AccountView.vue";
 import ErrorView from "./ErrorView.vue";
 import FileView from "./FileView.vue";
 import InstallationView from "./InstallationView.vue";
+import LanguageView from "./LanguageView.vue";
 import LanguagesView from "./LanguagesView.vue";
 import LoginView from "./LoginView.vue";
 import PageView from "./PageView.vue";
@@ -18,6 +19,7 @@ export default {
 		app.component("k-error-view", ErrorView);
 		app.component("k-file-view", FileView);
 		app.component("k-installation-view", InstallationView);
+		app.component("k-language-view", LanguageView);
 		app.component("k-languages-view", LanguagesView);
 		app.component("k-login-view", LoginView);
 		app.component("k-page-view", PageView);
