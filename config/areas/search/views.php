@@ -5,7 +5,10 @@ return [
 		'pattern' => 'search',
 		'action'  => function () {
 			return [
-				'component' => 'k-search-view'
+				'component' => 'k-search-view',
+				'props' => [
+					'type' => get('type') ?? 'pages',
+				]
 			];
 		}
 	],

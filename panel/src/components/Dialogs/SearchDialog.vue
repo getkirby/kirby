@@ -14,9 +14,9 @@
 			role="search"
 			@submit.prevent="submit"
 		>
-			<div class="k-search-input">
+			<div class="k-search-dialog-input">
 				<!-- Type select -->
-				<k-dropdown class="k-search-types">
+				<k-dropdown class="k-search-dialog-types">
 					<k-button
 						:icon="currentType.icon"
 						:text="currentType.label"
@@ -58,12 +58,12 @@
 				<k-button
 					:icon="isLoading ? 'loader' : 'cancel'"
 					:tooltip="$t('close')"
-					class="k-search-close"
+					class="k-search-dialog-close"
 					@click="close"
 				/>
 			</div>
 
-			<div v-if="q?.length > 1" class="k-search-results">
+			<div v-if="q?.length > 1" class="k-search-dialog-results">
 				<!-- Results -->
 				<k-collection
 					v-if="items.length"
@@ -73,7 +73,7 @@
 				/>
 
 				<!-- No results -->
-				<footer class="k-search-footer">
+				<footer class="k-search-dialog-footer">
 					<p v-if="!items.length">
 						{{ $t("search.results.none") }}
 					</p>
@@ -81,7 +81,14 @@
 					<k-button
 						v-else-if="items.length > 10"
 						icon="search"
-						@click="$go(`/search?type=${type}&q=${q}`)"
+						@click="
+							$go('search', {
+								query: {
+									type: type,
+									query: q
+								}
+							})
+						"
 					>
 						All {{ items.length }} results
 					</k-button>
@@ -95,7 +102,11 @@
 import Dialog from "@/mixins/dialog.js";
 import debounce from "@/helpers/debounce.js";
 
-export const search = {
+export default {
+	mixins: [Dialog],
+	created() {
+		this.search = debounce(this.search, 250);
+	},
 	data() {
 		return {
 			isLoading: false,
@@ -118,9 +129,6 @@ export const search = {
 			this.search(this.q);
 		}
 	},
-	created() {
-		this.search = debounce(this.search, 250);
-	},
 	methods: {
 		clear() {
 			this.items = [];
@@ -129,40 +137,6 @@ export const search = {
 		focus() {
 			this.$refs.input?.focus();
 		},
-		async search(query) {
-			this.q = query;
-			this.isLoading = true;
-			this.$refs.types?.close();
-			this.select?.(-1);
-
-			try {
-				// Skip API call if query empty
-				if (query === null || query.length < 2) {
-					throw Error("Empty query");
-				}
-
-				const response = await this.$search(this.type, query);
-				this.items = response.results;
-			} catch (error) {
-				this.items = [];
-			} finally {
-				this.isLoading = false;
-			}
-		}
-	}
-};
-
-export default {
-	mixins: [Dialog, search],
-	created() {
-		this.$events.$on("keydown.cmd.shift.f", this.open);
-		this.$events.$on("keydown.cmd./", this.open);
-	},
-	destroyed() {
-		this.$events.$off("keydown.cmd.shift.f", this.open);
-		this.$events.$off("keydown.cmd./", this.open);
-	},
-	methods: {
 		navigate(item) {
 			if (item) {
 				this.$go(item.link);
@@ -185,6 +159,26 @@ export default {
 				this.select(this.selected - 1);
 			}
 		},
+		async search(query) {
+			this.q = query;
+			this.isLoading = true;
+			this.$refs.types?.close();
+			this.select?.(-1);
+
+			try {
+				// Skip API call if query empty
+				if (query === null || query.length < 2) {
+					throw Error("Empty query");
+				}
+
+				const response = await this.$search(this.type, query);
+				this.items = response.results;
+			} catch (error) {
+				this.items = [];
+			} finally {
+				this.isLoading = false;
+			}
+		},
 		select(index) {
 			this.selected = index;
 			const items = this.$refs.items?.$el.querySelectorAll(".k-item") ?? [];
@@ -202,27 +196,27 @@ export default {
 .k-search-dialog {
 	margin: 2.5rem auto;
 }
-.k-search-input {
+.k-search-dialog-input {
 	display: flex;
 }
-.k-search-types {
+.k-search-dialog-types {
 	flex-shrink: 0;
 	display: flex;
 }
-.k-search-types > .k-button {
+.k-search-dialog-types > .k-button {
 	padding-inline-start: 1rem;
 	font-size: var(--text-base);
 	line-height: 1;
 	height: 2.5rem;
 }
-.k-search-types > .k-button .k-icon {
+.k-search-dialog-types > .k-button .k-icon {
 	height: 2.5rem;
 }
-.k-search-types > .k-button .k-button-text {
+.k-search-dialog-types > .k-button .k-button-text {
 	opacity: 1;
 	font-weight: 500;
 }
-.k-search-input input {
+.k-search-dialog-input input {
 	background: none;
 	flex-grow: 1;
 	font: inherit;
@@ -230,38 +224,38 @@ export default {
 	border: 0;
 	height: 2.5rem;
 }
-.k-search-close {
+.k-search-dialog-input input:focus {
+	outline: 0;
+}
+.k-search-dialog-close {
 	width: 3rem;
 	line-height: 1;
 }
-.k-search-close .k-icon-loader {
+.k-search-dialog-close .k-icon-loader {
 	animation: Spin 2s linear infinite;
 }
-.k-search-dialog input:focus {
-	outline: 0;
-}
 
-.k-search-results {
+.k-search-dialog-results {
 	padding: 0.5rem 1rem 1rem;
 }
-.k-search-dialog .k-item:not(:last-child) {
+.k-search-dialog-results .k-item:not(:last-child) {
 	margin-bottom: 0.25rem;
 }
-.k-search-dialog .k-item[data-selected="true"] {
+.k-search-dialog-results .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);
 }
-.k-search-dialog-search .k-item-info {
+.k-search-dialog-results .k-item-info {
 	font-size: var(--text-xs);
 }
 
-.k-search-footer {
+.k-search-dialog-footer {
 	text-align: center;
 }
-.k-search-footer p {
+.k-search-dialog-footer p {
 	font-size: var(--text-xs);
 	color: var(--color-gray-600);
 }
-.k-search-footer .k-button {
+.k-search-dialog-footer .k-button {
 	margin-top: var(--spacing-3);
 }
 </style>
