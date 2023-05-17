@@ -1,48 +1,46 @@
 <template>
-	<k-inside>
-		<k-view class="k-search-view">
-			<k-header>Search</k-header>
+	<k-inside class="k-search-view">
+		<k-header>Search</k-header>
 
-			<div class="k-search-view-layout">
-				<aside class="k-search-view-types">
-					<nav>
-						<k-button
-							v-for="(typeItem, typeIndex) in $panel.searches"
-							:key="typeIndex"
-							:current="type === typeIndex"
-							:icon="typeItem.icon"
-							:link="'/search/?type=' + typeIndex + '&query=' + query"
-							class="k-search-view-type"
-						>
-							{{ typeItem.label }}
-						</k-button>
-					</nav>
-				</aside>
+		<div class="k-search-view-layout">
+			<aside class="k-search-view-types">
+				<nav>
+					<k-button
+						v-for="(typeItem, typeIndex) in $panel.searches"
+						:key="typeIndex"
+						:current="type === typeIndex"
+						:icon="typeItem.icon"
+						:link="'/search/?type=' + typeIndex + '&query=' + query"
+						class="k-search-view-type"
+					>
+						{{ typeItem.label }}
+					</k-button>
+				</nav>
+			</aside>
 
-				<k-input
-					ref="input"
-					:aria-label="$t('search')"
-					:autofocus="autofocus"
-					:placeholder="$t('search') + ' …'"
-					:value="query"
-					class="k-search-view-input"
-					icon="search"
-					type="text"
-					@input="query = $event"
+			<k-input
+				ref="input"
+				:aria-label="$t('search')"
+				:autofocus="autofocus"
+				:placeholder="$t('search') + ' …'"
+				:value="query"
+				class="k-search-view-input"
+				icon="search"
+				type="text"
+				@input="query = $event"
+			/>
+
+			<div class="k-search-view-results">
+				<k-collection
+					v-if="query"
+					:items="items"
+					:empty="{
+						icon: 'search',
+						text: $t('search.results.none')
+					}"
 				/>
-
-				<div class="k-search-view-results">
-					<k-collection
-						v-if="query"
-						:items="items"
-						:empty="{
-							icon: 'search',
-							text: $t('search.results.none')
-						}"
-					/>
-				</div>
 			</div>
-		</k-view>
+		</div>
 	</k-inside>
 </template>
 
