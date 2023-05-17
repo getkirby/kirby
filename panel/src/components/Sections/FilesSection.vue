@@ -103,14 +103,10 @@ export default {
 		onUpload() {
 			this.$events.$emit("file.create");
 			this.$events.$emit("model.update");
-			this.$panel.notification.success();
+			this.$panel.notification.success({ context: "view" });
 		},
 		replace(file) {
-			this.$refs.upload.open({
-				url: this.$panel.urls.api + "/" + file.link,
-				accept: "." + file.extension + "," + file.mime,
-				multiple: false
-			});
+			this.$panel.upload.replace(file, this.uploadProps);
 		}
 	}
 };

@@ -42,26 +42,36 @@ export default (panel) => {
 				this.set(options);
 				this.select(files);
 			} else {
-				// options can be defined as first argument
+				// allow options being defined as first argument
 				this.set(files);
 			}
 
-			panel.dialog.open({
-				component: "k-upload-dialog",
-				on: {
-					close: () => {
-						this.close();
-					},
-					submit: () => {
-						// if no uncompleted files are left, directly jump to success
-						if (this.files.filter((file) => !file.completed).length === 0) {
-							return this.success();
-						}
-
-						this.start();
+			const listeners = {
+				close: () => {
+					this.close();
+				},
+				submit: () => {
+					// if no uncompleted files are left, directly jump to success
+					if (this.files.filter((file) => !file.completed).length === 0) {
+						return this.success();
 					}
+
+					this.start();
 				}
-			});
+			};
+
+			if (options.replace) {
+				panel.dialog.open({
+					component: "k-upload-replace-dialog",
+					props: { original: options.replace },
+					on: listeners
+				});
+			} else {
+				panel.dialog.open({
+					component: "k-upload-dialog",
+					on: listeners
+				});
+			}
 		},
 		/**
 		 * Open the system file picker
@@ -90,6 +100,15 @@ export default (panel) => {
 		},
 		remove(id) {
 			this.files = this.files.filter((file) => file.id !== id);
+		},
+		replace(file, options) {
+			this.pick({
+				...options,
+				url: panel.urls.api + "/" + file.link,
+				accept: "." + file.extension + "," + file.mime,
+				multiple: false,
+				replace: file
+			});
 		},
 		reset() {
 			parent.reset.call(this);
