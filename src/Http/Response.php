@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
-use Throwable;
 
 /**
  * Representation of an Http response,
@@ -95,11 +94,7 @@ class Response
 	 */
 	public function __toString(): string
 	{
-		try {
-			return $this->send();
-		} catch (Throwable) {
-			return '';
-		}
+		return $this->send();
 	}
 
 	/**

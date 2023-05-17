@@ -17,6 +17,8 @@ export const defaults = () => {
 		path: null,
 		// all props for the feature component
 		props: {},
+		// the query parameters form the latest request
+		query: {},
 		// referrer can be used to redirect properly in handlers
 		referrer: null,
 		// timestamp from the backend to force refresh the reactive state
@@ -236,6 +238,25 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
+		 * Reloads the properties for the feature
+		 */
+		async refresh(options = {}) {
+			options.url = options.url ?? this.url();
+
+			const response = await panel.get(options.url, options);
+			const state = response["$" + this.key()];
+
+			// the state cannot be updated
+			if (!state || state.component !== this.component) {
+				return;
+			}
+
+			this.props = state.props;
+
+			return this.state();
+		},
+
+		/**
 		 * If the feature has a path, it can be reloaded
 		 * with this method to replace/refresh its state
 		 *
@@ -249,7 +270,7 @@ export default (panel, key, defaults) => {
 				return false;
 			}
 
-			this.open(this.path, options);
+			this.open(this.url(), options);
 		},
 
 		/**
@@ -276,8 +297,8 @@ export default (panel, key, defaults) => {
 		 *
 		 * @returns {URL}
 		 */
-		get url() {
-			return panel.url(this.path);
+		url() {
+			return panel.url(this.path, this.query);
 		}
 	};
 };

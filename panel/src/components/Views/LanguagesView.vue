@@ -56,12 +56,19 @@ export default {
 					icon: "globe"
 				},
 				link: () => {
-					this.$dialog(`languages/${language.id}/update`);
+					this.$go(`languages/${language.id}`);
 				},
 				options: [
 					{
 						icon: "edit",
 						text: this.$t("edit"),
+						click() {
+							this.$go(`languages/${language.id}`);
+						}
+					},
+					{
+						icon: "cog",
+						text: this.$t("settings"),
 						click() {
 							this.$dialog(`languages/${language.id}/update`);
 						}
@@ -69,7 +76,7 @@ export default {
 					{
 						icon: "trash",
 						text: this.$t("delete"),
-						disabled: language.default && this.languages.length !== 1,
+						disabled: language.deletable === false,
 						click() {
 							this.$dialog(`languages/${language.id}/delete`);
 						}

@@ -17,7 +17,7 @@
 			:text="$t('search')"
 			icon="search"
 			class="k-panel-menu-search"
-			@click="$refs.search.open()"
+			@click="$panel.search()"
 		/>
 
 		<!-- Menus -->
@@ -31,9 +31,6 @@
 				:variant="entry.id === view.id ? 'filled' : null"
 			/>
 		</menu>
-
-		<!-- Search dialog -->
-		<k-search ref="search" :type="view.search" :types="$panel.searches" />
 	</nav>
 </template>
 

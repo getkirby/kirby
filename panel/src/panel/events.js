@@ -17,6 +17,12 @@ export default (panel) => {
 	});
 
 	/**
+	 * Custom handler for search
+	 */
+	emitter.on("keydown.cmd.shift.f", () => panel.search());
+	emitter.on("keydown.cmd./", () => panel.search());
+
+	/**
 	 * Config for globally delegated events.
 	 * Some events need to be fired on the document
 	 * and some on window. The boolean value determins if

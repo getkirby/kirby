@@ -1376,7 +1376,7 @@ class SimpleImage
     /**
      * Receives a text and breaks into LINES.
      */
-    private function textSeparateLines(string $text, string $fontFile, int $fontSize, int $maxWidth): array
+    private function textSeparateLines(string $text, string $fontFile, float $fontSize, int $maxWidth): array
     {
         $lines = [];
         $words = self::textSeparateWords($text);

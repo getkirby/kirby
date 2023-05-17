@@ -111,6 +111,7 @@ class DatabaseTest extends TestCase
 	 */
 	public function testLastError()
 	{
+		$this->assertNull($this->database->lastError());
 		$this->database->table('users')->select('nonexisting')->all();
 		$this->assertInstanceOf(PDOException::class, $this->database->lastError());
 	}
