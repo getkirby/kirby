@@ -40,7 +40,7 @@
 				<k-input
 					:value="$helper.file.name(original.filename)"
 					:disabled="true"
-					:after="'.' + original.extension"
+					:after="'.' + file.extension"
 					class="k-upload-item-input"
 					type="text"
 				/>

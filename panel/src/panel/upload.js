@@ -8,10 +8,12 @@ export const defaults = () => {
 	return {
 		accept: "*",
 		attributes: {},
+		files: [],
 		max: null,
 		multiple: true,
-		url: null,
-		files: []
+		name: null,
+		replacing: null,
+		url: null
 	};
 };
 
@@ -61,6 +63,9 @@ export default (panel) => {
 
 			const dialog = {
 				component: "k-upload-dialog",
+				props: {
+					name: this.name
+				},
 				on: {
 					close: () => {
 						this.close();
@@ -77,9 +82,9 @@ export default (panel) => {
 			};
 
 			// when replacing a file, use decdicated dialog component
-			if (options.replace) {
+			if (this.replacing) {
 				dialog.component = "k-upload-replace-dialog";
-				dialog.props = { original: options.replace };
+				dialog.props.original = this.replacing;
 			}
 
 			panel.dialog.open(dialog);
@@ -114,11 +119,11 @@ export default (panel) => {
 		},
 		replace(file, options) {
 			this.pick({
-				...options,
 				url: panel.urls.api + "/" + file.link,
 				accept: "." + file.extension + "," + file.mime,
 				multiple: false,
-				replace: file
+				replacing: file,
+				...options
 			});
 		},
 		reset() {
@@ -150,7 +155,7 @@ export default (panel) => {
 					filename: file.name,
 					id: uuid(),
 					model: null,
-					name: name(file.name),
+					name: this.name ?? name(file.name),
 					niceSize: niceSize(file.size),
 					progress: 0,
 					size: file.size,

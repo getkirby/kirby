@@ -93,7 +93,14 @@ export default {
 				{
 					icon: "upload",
 					text: this.$t("change"),
-					click: () => this.$panel.upload.pick(this.uploadOptions)
+					click: () =>
+						this.$panel.upload.replace(
+							{
+								filename: "profile.jpg",
+								url: this.model.avatar
+							},
+							this.uploadOptions
+						)
 				},
 				{
 					icon: "trash",
@@ -129,6 +136,7 @@ export default {
 				url: this.$panel.urls.api + "/" + this.id + "/avatar",
 				accept: "image/*",
 				multiple: false,
+				name: "profile",
 				on: {
 					done: () => {
 						this.$panel.notification.success({ context: "view" });
