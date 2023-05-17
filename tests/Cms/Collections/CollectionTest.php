@@ -206,9 +206,12 @@ class CollectionTest extends TestCase
 			$c = new MockObject(['id' => 'c'])
 		]);
 
+		$d = new MockObject(['id' => 'd']);
+
 		$this->assertSame(0, $collection->indexOf($a));
 		$this->assertSame(1, $collection->indexOf($b));
 		$this->assertSame(2, $collection->indexOf($c));
+		$this->assertFalse($collection->indexOf($d));
 	}
 
 	public function testIndexOfWithString()
@@ -222,6 +225,7 @@ class CollectionTest extends TestCase
 		$this->assertSame(0, $collection->indexOf('a'));
 		$this->assertSame(1, $collection->indexOf('b'));
 		$this->assertSame(2, $collection->indexOf('c'));
+		$this->assertFalse($collection->indexOf('d'));
 	}
 
 	public function testNotWithObjects()

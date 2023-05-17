@@ -195,7 +195,7 @@ class Request
 	 */
 	public function data(): array
 	{
-		return array_merge($this->body()->toArray(), $this->query()->toArray());
+		return array_replace($this->body()->toArray(), $this->query()->toArray());
 	}
 
 	/**

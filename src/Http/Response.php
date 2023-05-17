@@ -6,7 +6,6 @@ use Closure;
 use Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
-use Throwable;
 
 /**
  * Representation of an Http response,
