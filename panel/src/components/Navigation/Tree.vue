@@ -1,0 +1,152 @@
+<template>
+	<ul class="k-tree" :style="{ '--tree-level': level }">
+		<li
+			v-for="(item, index) in items"
+			:key="index"
+			:aria-expanded="item.open"
+			:aria-current="item.id === current"
+		>
+			<p class="k-tree-branch">
+				<button
+					:disabled="!item.hasChildren"
+					class="k-tree-toggle"
+					type="button"
+					@click="toggle(item)"
+				>
+					<k-icon :type="item.open ? 'angle-down' : 'angle-right'" />
+				</button>
+				<button
+					class="k-tree-folder"
+					type="button"
+					@click="select(item)"
+					@dblclick="toggle(item)"
+				>
+					<k-icon :type="item.icon ?? 'folder'" />
+					<span>{{ item.label }}</span>
+				</button>
+			</p>
+			<template v-if="item.hasChildren && item.open">
+				<component
+					:is="element"
+					:current="current"
+					:items="item.children"
+					:level="level + 1"
+					@select="select"
+					@toggle="toggle"
+				/>
+			</template>
+		</li>
+	</ul>
+</template>
+
+<script>
+export default {
+	inheritAttrs: false,
+	props: {
+		element: {
+			type: String,
+			default: "k-tree"
+		},
+		current: {
+			type: String
+		},
+		items: {
+			type: [Array, Object]
+		},
+		level: {
+			default: 0,
+			type: Number
+		}
+	},
+	methods: {
+		select(item) {
+			this.$emit("select", item);
+		},
+		toggle(item) {
+			this.$emit("toggle", item);
+		}
+	}
+};
+</script>
+
+<style>
+:root {
+	--tree-color-back: var(--color-gray-200);
+	--tree-color-hover-back: var(--color-gray-300);
+	--tree-color-selected-back: var(--color-blue-200);
+	--tree-color-selected-text: var(--color-black);
+	--tree-color-text: var(--color-text-dimmed);
+	--tree-level: 0;
+	--tree-indentation: 0.6rem;
+}
+
+.k-tree-branch {
+	display: flex;
+	align-items: center;
+	padding-inline-start: calc(var(--tree-level) * var(--tree-indentation));
+	margin-bottom: 1px;
+}
+.k-tree-branch:has(+ .k-tree) {
+	position: sticky;
+	inset-block-start: calc(var(--tree-level) * 1.5rem);
+	z-index: calc(100 - var(--tree-level));
+	background: var(--tree-color-back);
+}
+.k-tree-branch:hover,
+li[aria-current] > .k-tree-branch {
+	--tree-color-text: var(--tree-color-selected-text);
+	background: var(--tree-color-hover-back);
+	border-radius: var(--rounded);
+}
+li[aria-current] > .k-tree-branch {
+	background: var(--tree-color-selected-back);
+}
+.k-tree-toggle {
+	--icon-size: 12px;
+	width: 1rem;
+	aspect-ratio: 1/1;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border-radius: var(--rounded-sm);
+	margin-inline-start: 0.25rem;
+	flex-shrink: 0;
+}
+.k-tree-toggle:hover {
+	background: rgba(0, 0, 0, 0.075);
+}
+.k-tree-toggle[disabled] {
+	visibility: hidden;
+}
+.k-tree-folder {
+	display: flex;
+	height: var(--height-sm);
+	border-radius: var(--rounded-sm);
+	padding-inline: 0.25rem;
+	width: 100%;
+	align-items: center;
+	gap: 0.325rem;
+	min-width: 3rem;
+	line-height: 1.25;
+	font-size: var(--text-sm);
+}
+
+@container (max-width: 15rem) {
+	.k-tree {
+		--tree-indentation: 0.375rem;
+	}
+	.k-tree-folder {
+		padding-inline: 0.125rem;
+	}
+	.k-tree-folder .k-icon {
+		display: none;
+	}
+}
+
+.k-tree-folder > span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--tree-color-text);
+}
+</style>

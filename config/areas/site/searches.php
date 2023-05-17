@@ -12,8 +12,7 @@ return [
 			$pages = App::instance()->site()
 				->index(true)
 				->search($query)
-				->filter('isReadable', true)
-				->limit(10);
+				->filter('isReadable', true);
 
 			$results = [];
 
@@ -37,8 +36,7 @@ return [
 				->index(true)
 				->filter('isReadable', true)
 				->files()
-				->search($query)
-				->limit(10);
+				->search($query);
 
 			$results = [];
 

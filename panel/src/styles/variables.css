@@ -70,6 +70,14 @@
 	--font-bold: 600;
 	--font-bolder: 800;
 
+	--height-2xs: 1.375rem;
+	--height-xs: 1.5rem;
+	--height-sm: 1.75rem;
+	--height-md: 2rem;
+	--height-lg: 2.25rem;
+	--height-xl: 2.5rem;
+	--height: var(--height-md);
+
 	--leading-none: 1;
 	--leading-tight: 1.25;
 	--leading-snug: 1.375;

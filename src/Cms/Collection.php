@@ -209,9 +209,9 @@ class Collection extends BaseCollection
 	 * or ids and then search accordingly.
 	 *
 	 * @param string|object $needle
-	 * @return int
+	 * @return int|false
 	 */
-	public function indexOf($needle): int
+	public function indexOf($needle): int|false
 	{
 		if (is_string($needle) === true) {
 			return array_search($needle, $this->keys());
