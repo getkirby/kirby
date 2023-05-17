@@ -8,13 +8,17 @@
 		<ul class="k-upload-items">
 			<li class="k-upload-original">
 				<k-image
-					v-if="original.image?.url ?? original.url"
+					v-if="original.url.match('(jpg|jpeg|gif|png|webp|avif)')"
 					:cover="true"
-					:src="original.image?.url ?? original.url"
+					:src="original.url"
 					back="black"
 				/>
 				<k-aspect-ratio v-else ratio="1/1">
-					<k-icon :type="original.image.icon" />
+					<k-icon
+						back="pattern"
+						v-bind="original.image"
+						:type="original.image?.icon ?? 'file'"
+					/>
 				</k-aspect-ratio>
 			</li>
 
@@ -31,10 +35,14 @@
 						v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
 						:cover="true"
 						:src="file.url"
-						back="black"
+						back="pattern"
 					/>
 					<k-aspect-ratio v-else ratio="1/1">
-						<k-icon type="file" />
+						<k-icon
+							back="pattern"
+							v-bind="original.image"
+							:type="original.image?.icon ?? 'file'"
+						/>
 					</k-aspect-ratio>
 				</a>
 				<k-input

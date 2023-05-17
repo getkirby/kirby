@@ -128,11 +128,11 @@ export default (panel) => {
 		},
 		replace(file, options) {
 			this.pick({
+				...options,
 				url: panel.urls.api + "/" + file.link,
 				accept: "." + file.extension + "," + file.mime,
 				multiple: false,
-				replacing: file,
-				...options
+				replacing: file
 			});
 		},
 		reset() {

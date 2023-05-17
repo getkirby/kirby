@@ -76,7 +76,10 @@ export default {
 		action(action) {
 			switch (action) {
 				case "replace":
-					return this.$panel.upload.replace(this.model);
+					return this.$panel.upload.replace({
+						...this.preview,
+						...this.model
+					});
 			}
 		}
 	}

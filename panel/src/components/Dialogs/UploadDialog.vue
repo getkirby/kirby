@@ -25,10 +25,10 @@
 								v-if="file.type.match('(jpg|jpeg|gif|png|webp|avif)')"
 								:cover="true"
 								:src="file.url"
-								back="black"
+								back="pattern"
 							/>
 							<k-aspect-ratio v-else ratio="1/1">
-								<k-icon type="file" />
+								<k-icon back="pattern" type="file" />
 							</k-aspect-ratio>
 						</a>
 						<k-input
