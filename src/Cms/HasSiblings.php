@@ -19,9 +19,9 @@ trait HasSiblings
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	public function indexOf($collection = null): int
+	public function indexOf($collection = null): int|false
 	{
 		$collection ??= $this->siblingsCollection();
 		return $collection->indexOf($this);
@@ -29,10 +29,13 @@ trait HasSiblings
 
 	/**
 	 * Returns the next item in the collection if available
+	 * @todo `static` return type hint is not 100% accurate because of
+	 *       quirks in the `Form` classes; would break if enforced
+	 *       (https://github.com/getkirby/kirby/pull/5175)
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return \Kirby\Cms\Model|null
+	 * @return static|null
 	 */
 	public function next($collection = null)
 	{
@@ -55,10 +58,13 @@ trait HasSiblings
 
 	/**
 	 * Returns the previous item in the collection if available
+	 * @todo `static` return type hint is not 100% accurate because of
+	 *       quirks in the `Form` classes; would break if enforced
+	 *       (https://github.com/getkirby/kirby/pull/5175)
 	 *
 	 * @param \Kirby\Cms\Collection|null $collection
 	 *
-	 * @return \Kirby\Cms\Model|null
+	 * @return static|null
 	 */
 	public function prev($collection = null)
 	{
