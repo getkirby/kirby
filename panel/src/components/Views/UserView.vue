@@ -136,13 +136,7 @@ export default {
 				url: this.$panel.urls.api + "/" + this.id + "/avatar",
 				accept: "image/*",
 				multiple: false,
-				name: "profile",
-				on: {
-					done: () => {
-						this.$panel.notification.success({ context: "view" });
-						this.$reload();
-					}
-				}
+				name: "profile"
 			};
 		}
 	},

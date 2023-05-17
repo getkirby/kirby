@@ -76,18 +76,8 @@ export default {
 		action(action) {
 			switch (action) {
 				case "replace":
-					return this.replace();
+					return this.$panel.upload.replace(this.model);
 			}
-		},
-		replace() {
-			this.$panel.upload.replace(this.model, {
-				on: {
-					done: () => {
-						this.$panel.notification.success({ context: "view" });
-						this.$reload();
-					}
-				}
-			});
 		}
 	}
 };

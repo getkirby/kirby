@@ -51,8 +51,6 @@ export default {
 				url: this.$panel.urls.api + "/" + this.options.upload.api,
 				on: {
 					complete: () => {
-						this.$events.$emit("file.create");
-						this.$events.$emit("model.update");
 						this.$panel.notification.success({ context: "view" });
 					}
 				}

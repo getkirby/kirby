@@ -35,6 +35,11 @@ export default (panel) => {
 				this.emit("complete", this.completed);
 			}
 
+			// always reload view to ensure that
+			// the uploaded files are reflected in all
+			// sections, fields etc.
+			panel.view.reload();
+
 			this.reset();
 		},
 		get completed() {
@@ -43,7 +48,11 @@ export default (panel) => {
 				.map((file) => file.model);
 		},
 		done() {
-			this.emit("done", this.completed);
+			if (this.completed.length > 0) {
+				this.emit("done", this.completed);
+				panel.notification.success({ context: "view" });
+			}
+
 			panel.dialog.close();
 		},
 		/**
