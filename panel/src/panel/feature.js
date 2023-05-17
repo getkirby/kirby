@@ -238,6 +238,25 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
+		 * Reloads the properties for the feature
+		 */
+		async refresh(options = {}) {
+			options.url = options.url ?? this.url();
+
+			const response = await panel.get(options.url, options);
+			const state = response["$" + this.key()];
+
+			// the state cannot be updated
+			if (!state || state.component !== this.component) {
+				return;
+			}
+
+			this.props = state.props;
+
+			return this.state();
+		},
+
+		/**
 		 * If the feature has a path, it can be reloaded
 		 * with this method to replace/refresh its state
 		 *

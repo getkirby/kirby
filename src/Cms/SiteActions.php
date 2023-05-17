@@ -84,10 +84,12 @@ trait SiteActions
 	{
 		parent::purge();
 
-		$this->blueprint = null;
-		$this->children  = null;
-		$this->files     = null;
-		$this->inventory = null;
+		$this->blueprint         = null;
+		$this->children          = null;
+		$this->childrenAndDrafts = null;
+		$this->drafts            = null;
+		$this->files             = null;
+		$this->inventory         = null;
 
 		return $this;
 	}

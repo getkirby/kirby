@@ -13,14 +13,10 @@
 		<slot />
 
 		<!-- Fiber dialogs -->
-		<template v-if="$panel.dialog.isOpen && $panel.dialog.island">
-			<k-fiber-dialog />
-		</template>
+		<k-fiber-dialog v-if="$panel.dialog.isOpen && $panel.dialog.island" />
 
 		<!-- Fiber drawers -->
-		<template v-if="$panel.drawer.isOpen && $panel.drawer.island">
-			<k-fiber-drawer />
-		</template>
+		<k-fiber-drawer v-if="$panel.drawer.isOpen && $panel.drawer.island" />
 
 		<!-- Fatal iframe -->
 		<k-fatal

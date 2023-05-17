@@ -8,9 +8,9 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 import externalGlobals from "rollup-plugin-external-globals";
 
 import postcssAutoprefixer from "autoprefixer";
-import postcssCsso from "postcss-csso";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 import postcssLogical from "postcss-logical";
+import postcssNano from "cssnano";
 
 let custom;
 try {
@@ -102,8 +102,8 @@ export default defineConfig(({ command }) => {
 				plugins: [
 					postcssLogical(),
 					postcssDirPseudoClass(),
-					postcssCsso(),
-					postcssAutoprefixer()
+					postcssAutoprefixer(),
+					postcssNano()
 				]
 			}
 		},

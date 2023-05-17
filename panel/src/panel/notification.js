@@ -69,7 +69,7 @@ export default (panel = {}) => {
 				// when the server always sends back a simple error
 				// response without nesting it in $dropdown, $dialog, etc.
 				const broken = Object.values(error.response.json).find(
-					(element) => typeof element.error === "string"
+					(element) => typeof element?.error === "string"
 				);
 
 				if (broken) {
