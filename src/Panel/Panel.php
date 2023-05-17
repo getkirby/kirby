@@ -545,7 +545,7 @@ class Panel
 	 * Creates an absolute Panel URL
 	 * independent of the Panel slug config
 	 */
-	public static function url(string|null $url = null): string
+	public static function url(string|null $url = null, array $options = []): string
 	{
 		$slug = App::instance()->option('panel.slug', 'panel');
 
@@ -560,7 +560,7 @@ class Panel
 			}
 
 			// create an absolute URL
-			$url = CmsUrl::to($path);
+			$url = CmsUrl::to($path, $options);
 		}
 
 		return $url;

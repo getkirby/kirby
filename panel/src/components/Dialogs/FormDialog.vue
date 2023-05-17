@@ -1,13 +1,15 @@
 <template>
 	<k-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
-		<k-dialog-text v-if="text" :text="text" />
-		<k-dialog-fields
-			:fields="fields"
-			:novalidate="novalidate"
-			:value="model"
-			@input="input"
-			@submit="submit"
-		/>
+		<slot>
+			<k-dialog-text v-if="text" :text="text" />
+			<k-dialog-fields
+				:fields="fields"
+				:novalidate="novalidate"
+				:value="model"
+				@input="input"
+				@submit="submit"
+			/>
+		</slot>
 	</k-dialog>
 </template>
 
