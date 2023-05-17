@@ -131,7 +131,7 @@ export default (panel) => {
 			});
 
 			// apply the max limit to the list of files
-			if (this.max > 1) {
+			if (this.max !== null) {
 				this.files = this.files.slice(0, this.max);
 			}
 
