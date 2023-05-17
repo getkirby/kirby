@@ -190,10 +190,10 @@ export default (panel, key, defaults) => {
 
 			if (this.hasEventListener("submit")) {
 				// call a custom submit handler if it exists
-				response = await this.emit("submit", value, options);
+				response = await this.emit("submit", value ?? this.value, options);
 			} else {
 				// send a request to the backend
-				response = await this.post(value, options);
+				response = await this.post(value ?? this.value, options);
 			}
 
 			// the request failed and should have raised an error
