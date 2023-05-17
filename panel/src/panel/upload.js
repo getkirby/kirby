@@ -37,7 +37,7 @@ export default (panel) => {
 		 * @param {FileList} files
 		 * @param {Object} options
 		 */
-		open(files, options, replacing) {
+		open(files, options) {
 			if (files instanceof FileList) {
 				this.set(options);
 				this.select(files);
@@ -60,10 +60,10 @@ export default (panel) => {
 				}
 			};
 
-			if (replacing) {
+			if (options.replace) {
 				panel.dialog.open({
 					component: "k-upload-replace-dialog",
-					props: { original: replacing },
+					props: { original: options.replace },
 					on: listeners
 				});
 			} else {
@@ -78,7 +78,7 @@ export default (panel) => {
 		 *
 		 * @param {Object} options
 		 */
-		pick(options, replacing) {
+		pick(options) {
 			this.set(options);
 
 			// create a new temporary file input
@@ -94,7 +94,7 @@ export default (panel) => {
 
 			// show the dialog on change
 			this.input.addEventListener("change", (event) => {
-				this.open(event.target.files, options, replacing);
+				this.open(event.target.files, options);
 				this.input.remove();
 			});
 		},
@@ -102,15 +102,13 @@ export default (panel) => {
 			this.files = this.files.filter((file) => file.id !== id);
 		},
 		replace(file, options) {
-			this.pick(
-				{
-					...options,
-					url: panel.urls.api + "/" + file.link,
-					accept: "." + file.extension + "," + file.mime,
-					multiple: false
-				},
-				file
-			);
+			this.pick({
+				...options,
+				url: panel.urls.api + "/" + file.link,
+				accept: "." + file.extension + "," + file.mime,
+				multiple: false,
+				replace: file
+			});
 		},
 		reset() {
 			parent.reset.call(this);
