@@ -190,10 +190,10 @@ export default (panel, key, defaults) => {
 
 			if (this.hasEventListener("submit")) {
 				// call a custom submit handler if it exists
-				response = await this.emit("submit", value, options);
+				response = await this.emit("submit", value ?? this.value, options);
 			} else {
 				// send a request to the backend
-				response = await this.post(value, options);
+				response = await this.post(value ?? this.value, options);
 			}
 
 			// the request failed and should have raised an error
@@ -222,7 +222,7 @@ export default (panel, key, defaults) => {
 				panel.notification.success(success);
 			}
 
-			// close the dialog or drawer
+			// close the island
 			this.close();
 
 			// show a success message
@@ -307,14 +307,18 @@ export default (panel, key, defaults) => {
 		 * @param {Object} state
 		 */
 		successRedirect(state) {
-			// @deprecated Use state.redirect instead
-			if (state.route) {
-				return panel.view.open(state.route);
+			const redirect = state.route ?? state.redirect;
+
+			// no redirect
+			if (!redirect) {
+				return false;
 			}
 
-			if (state.redirect) {
-				return panel.view.open(state.redirect);
+			if (typeof redirect === "string") {
+				return panel.open(redirect);
 			}
+
+			return panel.open(redirect.url, redirect.options);
 		},
 
 		/**

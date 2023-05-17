@@ -69,5 +69,4 @@ class Dialog extends Json
 
 		return $routes;
 	}
-
 }

@@ -14,9 +14,9 @@
 			role="search"
 			@submit.prevent="submit"
 		>
-			<div class="k-search-input">
+			<div class="k-search-dialog-input">
 				<!-- Type select -->
-				<k-dropdown class="k-search-types">
+				<k-dropdown class="k-search-dialog-types">
 					<k-button
 						:icon="currentType.icon"
 						:text="currentType.label"
@@ -27,7 +27,10 @@
 							v-for="(typeItem, typeIndex) in $panel.searches"
 							:key="typeIndex"
 							:icon="typeItem.icon"
-							@click="changeType(typeIndex)"
+							@click="
+								type = typeIndex;
+								focus();
+							"
 						>
 							{{ typeItem.label }}
 						</k-dropdown-item>
@@ -37,12 +40,12 @@
 				<!-- Input -->
 				<input
 					ref="input"
-					:placeholder="$t('search') + ' …'"
 					:aria-label="$t('search')"
 					:autofocus="true"
+					:placeholder="$t('search') + ' …'"
 					:value="q"
 					type="text"
-					@input="onInput($event.target.value)"
+					@input="search($event.target.value)"
 					@keydown.down.prevent="onDown"
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
@@ -55,25 +58,41 @@
 				<k-button
 					:icon="isLoading ? 'loader' : 'cancel'"
 					:tooltip="$t('close')"
-					class="k-search-close"
+					class="k-search-dialog-close"
 					@click="close"
 				/>
 			</div>
 
-			<div v-if="q && (!hasResults || items.length)" class="k-search-results">
+			<div v-if="q?.length > 1" class="k-search-dialog-results">
 				<!-- Results -->
 				<k-collection
 					v-if="items.length"
 					ref="items"
-					:items="items"
-					@hover="onHover"
+					:items="items.slice(0, 10)"
 					@mouseout.native="select(-1)"
 				/>
 
 				<!-- No results -->
-				<p v-else-if="!hasResults" class="k-search-empty">
-					{{ $t("search.results.none") }}
-				</p>
+				<footer class="k-search-dialog-footer">
+					<p v-if="!items.length">
+						{{ $t("search.results.none") }}
+					</p>
+
+					<k-button
+						v-else-if="items.length > 10"
+						icon="search"
+						@click="
+							$go('search', {
+								query: {
+									type: type,
+									query: q
+								}
+							})
+						"
+					>
+						All {{ items.length }} results
+					</k-button>
+				</footer>
 			</div>
 		</form>
 	</k-overlay>
@@ -85,61 +104,44 @@ import debounce from "@/helpers/debounce.js";
 
 export default {
 	mixins: [Dialog],
+	created() {
+		this.search = debounce(this.search, 250);
+	},
 	data() {
 		return {
 			isLoading: false,
-			hasResults: true,
 			items: [],
-			currentType: this.getType(this.$panel.view.search),
 			q: null,
-			selected: -1
+			selected: -1,
+			type: this.$panel.view.search
 		};
 	},
-	watch: {
-		q(newQuery, oldQuery) {
-			if (newQuery !== oldQuery) {
-				this.search(this.q);
-			}
-		},
-		currentType(newType, oldType) {
-			if (newType !== oldType) {
-				this.search(this.q);
-			}
-		},
-		type() {
-			this.currentType = this.getType(this.$panel.view.search);
+	computed: {
+		currentType() {
+			return (
+				this.$panel.searches[this.type] ??
+				Object.values(this.$panel.searches)[0]
+			);
 		}
 	},
-	created() {
-		this.search = debounce(this.search, 250);
-		this.$events.$on("keydown.cmd.shift.f", this.open);
-		this.$events.$on("keydown.cmd./", this.open);
-	},
-	destroyed() {
-		this.$events.$off("keydown.cmd.shift.f", this.open);
-		this.$events.$off("keydown.cmd./", this.open);
+	watch: {
+		type() {
+			this.search(this.q);
+		}
 	},
 	methods: {
-		changeType(type) {
-			this.currentType = this.getType(type);
-			this.$nextTick(() => {
-				this.$refs.input.focus();
-			});
-		},
 		clear() {
-			this.hasResults = true;
 			this.items = [];
 			this.q = null;
 		},
-		getType(type) {
-			return (
-				this.$panel.searches[type] ||
-				this.$panel.searches[Object.keys(this.$panel.searches)[0]]
-			);
+		focus() {
+			this.$refs.input?.focus();
 		},
 		navigate(item) {
-			this.$go(item.link);
-			this.close();
+			if (item) {
+				this.$go(item.link);
+				this.close();
+			}
 		},
 		onDown() {
 			if (this.selected < this.items.length - 1) {
@@ -147,25 +149,10 @@ export default {
 			}
 		},
 		onEnter() {
-			let item = this.items[this.selected] || this.items[0];
-
-			if (item) {
-				this.navigate(item);
-			}
-		},
-		onHover(e, icon, index) {
-			this.select(index);
-		},
-		onInput(q) {
-			this.q = q;
-			this.hasResults = true;
+			this.navigate(this.items[this.selected] ?? this.items[0]);
 		},
 		onTab() {
-			const item = this.items[this.selected];
-
-			if (item) {
-				this.navigate(item);
-			}
+			this.navigate(this.items[this.selected]);
 		},
 		onUp() {
 			if (this.selected >= 0) {
@@ -173,31 +160,32 @@ export default {
 			}
 		},
 		async search(query) {
+			this.q = query;
 			this.isLoading = true;
-
-			if (this.$refs.types) {
-				this.$refs.types.close();
-			}
+			this.$refs.types?.close();
+			this.select?.(-1);
 
 			try {
-				const response = await this.$search(this.currentType.id, query);
+				// Skip API call if query empty
+				if (query === null || query.length < 2) {
+					throw Error("Empty query");
+				}
+
+				const response = await this.$search(this.type, query);
 				this.items = response.results;
 			} catch (error) {
 				this.items = [];
 			} finally {
-				this.select(-1);
 				this.isLoading = false;
-				this.hasResults = this.items.length > 0;
 			}
 		},
 		select(index) {
 			this.selected = index;
-			if (this.$refs.items) {
-				const items = this.$refs.items.$el.querySelectorAll(".k-item");
-				[...items].forEach((item) => delete item.dataset.selected);
-				if (index >= 0) {
-					items[index].dataset.selected = true;
-				}
+			const items = this.$refs.items?.$el.querySelectorAll(".k-item") ?? [];
+			[...items].forEach((item) => delete item.dataset.selected);
+
+			if (index >= 0) {
+				items[index].dataset.selected = true;
 			}
 		}
 	}
@@ -208,27 +196,27 @@ export default {
 .k-search-dialog {
 	margin: 2.5rem auto;
 }
-.k-search-input {
+.k-search-dialog-input {
 	display: flex;
 }
-.k-search-types {
+.k-search-dialog-types {
 	flex-shrink: 0;
 	display: flex;
 }
-.k-search-types > .k-button {
+.k-search-dialog-types > .k-button {
 	padding-inline-start: 1rem;
 	font-size: var(--text-base);
 	line-height: 1;
 	height: 2.5rem;
 }
-.k-search-types > .k-button .k-icon {
+.k-search-dialog-types > .k-button .k-icon {
 	height: 2.5rem;
 }
-.k-search-types > .k-button .k-button-text {
+.k-search-dialog-types > .k-button .k-button-text {
 	opacity: 1;
 	font-weight: 500;
 }
-.k-search-input input {
+.k-search-dialog-input input {
 	background: none;
 	flex-grow: 1;
 	font: inherit;
@@ -236,33 +224,38 @@ export default {
 	border: 0;
 	height: 2.5rem;
 }
-.k-search-close {
+.k-search-dialog-input input:focus {
+	outline: 0;
+}
+.k-search-dialog-close {
 	width: 3rem;
 	line-height: 1;
 }
-.k-search-close .k-icon-loader {
+.k-search-dialog-close .k-icon-loader {
 	animation: Spin 2s linear infinite;
 }
-.k-search-dialog input:focus {
-	outline: 0;
-}
 
-.k-search-results {
+.k-search-dialog-results {
 	padding: 0.5rem 1rem 1rem;
 }
-.k-search-dialog .k-item:not(:last-child) {
+.k-search-dialog-results .k-item:not(:last-child) {
 	margin-bottom: 0.25rem;
 }
-.k-search-dialog .k-item[data-selected="true"] {
+.k-search-dialog-results .k-item[data-selected="true"] {
 	outline: 2px solid var(--color-focus);
 }
-.k-search-dialog-search .k-item-info {
+.k-search-dialog-results .k-item-info {
 	font-size: var(--text-xs);
 }
 
-.k-search-empty {
+.k-search-dialog-footer {
 	text-align: center;
+}
+.k-search-dialog-footer p {
 	font-size: var(--text-xs);
 	color: var(--color-gray-600);
+}
+.k-search-dialog-footer .k-button {
+	margin-top: var(--spacing-3);
 }
 </style>
