@@ -177,8 +177,11 @@ class PageCreateDialog
 	 */
 	public function sanitize(array $input): array
 	{
+		$input['slug']  ??= $this->slug  ?? '';
+		$input['title'] ??= $this->title ?? '';
+
 		$content = [
-			'title' => trim($input['title'] ?? ''),
+			'title' => trim($input['title']),
 		];
 
 		foreach ($this->customFields() as $name => $field) {
@@ -187,7 +190,7 @@ class PageCreateDialog
 
 		return [
 			'content'  => $content,
-			'slug'     => $input['slug'] ?? null,
+			'slug'     => $input['slug'],
 			'template' => $this->template,
 		];
 	}

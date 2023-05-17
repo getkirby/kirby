@@ -295,7 +295,7 @@ return [
 				slug: $request->get('slug'),
 				template: $request->get('template'),
 				title: $request->get('title'),
-				viewId:    $request->get('view'),
+				viewId: $request->get('view'),
 			);
 
 			return $dialog->load();
@@ -305,8 +305,10 @@ return [
 			$dialog  = new PageCreateDialog(
 				parentId: $request->get('parent'),
 				sectionId: $request->get('section'),
+				slug: $request->get('slug'),
 				template: $request->get('template'),
-				viewId:    $request->get('view'),
+				title: $request->get('title'),
+				viewId: $request->get('view'),
 			);
 
 			return $dialog->submit($request->get());
