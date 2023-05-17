@@ -3,6 +3,7 @@
 		ref="dialog"
 		class="k-upload-dialog"
 		v-bind="$props"
+		:disabled="disabled || $panel.upload.files.length === 0"
 		@submit="submit"
 	>
 		<k-dropzone @drop="$panel.upload.select($event)">
@@ -14,7 +15,7 @@
 			<template v-else>
 				<ul class="k-upload-items">
 					<li
-						v-for="(file, index) in $panel.upload.files"
+						v-for="file in $panel.upload.files"
 						:key="file.id"
 						:data-completed="file.completed"
 						class="k-upload-item"
@@ -43,8 +44,8 @@
 							<p class="k-upload-item-meta">
 								{{ file.niceSize }}
 								<template v-if="file.progress">
-									- {{ file.progress }}%</template
-								>
+									- {{ file.progress }}%
+								</template>
 							</p>
 							<p class="k-upload-item-error">{{ file.error }}</p>
 						</div>
