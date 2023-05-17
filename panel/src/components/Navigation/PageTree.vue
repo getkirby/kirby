@@ -21,6 +21,10 @@ export default {
 			default: "/site",
 			type: String
 		},
+		identifier: {
+			default: "uuid",
+			type: String
+		},
 		items: {
 			type: String
 		}
@@ -32,12 +36,11 @@ export default {
 			this.pages = [
 				{
 					icon: "home",
-					id: "/",
+					id: "site://",
 					label: this.$t("view.site"),
 					hasChildren: true,
 					children: "/site",
-					open: true,
-					uuid: "site://"
+					open: true
 				}
 			];
 		}
@@ -57,7 +60,7 @@ export default {
 			const pages = {};
 
 			data.forEach((page) => {
-				const id = "/" + page.id;
+				const id = page[this.identifier];
 				const api = "/pages/" + this.$api.pages.id(page.id);
 
 				pages[id] = {
@@ -65,8 +68,7 @@ export default {
 					label: page.title,
 					hasChildren: page.hasChildren,
 					children: api,
-					open: this.current?.includes(id) && this.current !== id,
-					uuid: page.uuid
+					open: false
 				};
 			});
 

@@ -34,7 +34,7 @@
 			</div>
 			<template v-if="linkType === 'page'">
 				<div class="k-link-input-body">
-					<k-page-tree :current="value" @select="onInput($event.uuid)" />
+					<k-page-tree :current="value" @select="onInput($event.id)" />
 				</div>
 			</template>
 		</k-input>
