@@ -1,5 +1,5 @@
-import { isObject } from "@/helpers/object";
 import { isUrl } from "@/helpers/url";
+import listeners from "./listeners.js";
 import Module from "./module.js";
 
 /**
@@ -45,51 +45,7 @@ export default (panel, key, defaults) => {
 		 * through them.
 		 */
 		...parent,
-
-		/**
-		 * @param {Object}
-		 */
-		addEventListeners(listeners) {
-			// ignore invalid listeners
-			if (isObject(listeners) === false) {
-				return;
-			}
-
-			for (const event in listeners) {
-				if (typeof listeners[event] === "function") {
-					this.on[event] = listeners[event];
-				}
-			}
-		},
-
-		/**
-		 * Emits a feature event
-		 *
-		 * @example
-		 * panel.dialog.emit("submit", {})
-		 *
-		 * @param {String} event
-		 * @param  {...any} args
-		 * @returns {any}
-		 */
-		emit(event, ...args) {
-			if (this.hasEventListener(event) === true) {
-				return this.on[event](...args);
-			}
-
-			// return a dummy listener
-			return () => {};
-		},
-
-		/**
-		 * Checks if a listener exists
-		 *
-		 * @param {String} event
-		 * @returns {Boolean}
-		 */
-		hasEventListener(event) {
-			return typeof this.on[event] === "function";
-		},
+		...listeners(),
 
 		/**
 		 * Checks if the feature can be submitted
