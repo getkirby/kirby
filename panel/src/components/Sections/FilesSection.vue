@@ -48,7 +48,10 @@ export default {
 		uploadProps() {
 			return {
 				...this.options.upload,
-				url: this.$panel.urls.api + "/" + this.options.upload.api
+				url: this.$panel.urls.api + "/" + this.options.upload.api,
+				on: {
+					complete: this.onUpload
+				}
 			};
 		}
 	},
