@@ -53,6 +53,7 @@ class Core
 			'languages'    => $this->root . '/areas/languages.php',
 			'login'        => $this->root . '/areas/login.php',
 			'logout'       => $this->root . '/areas/logout.php',
+			'search'       => $this->root . '/areas/search.php',
 			'site'         => $this->root . '/areas/site.php',
 			'system'       => $this->root . '/areas/system.php',
 			'users'        => $this->root . '/areas/users.php',

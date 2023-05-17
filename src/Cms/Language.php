@@ -29,6 +29,8 @@ use Throwable;
  */
 class Language
 {
+	use HasSiblings;
+
 	/**
 	 * The parent Kirby instance
 	 */
@@ -251,10 +253,12 @@ class Language
 	 */
 	public function delete(): bool
 	{
-		$kirby     = App::instance();
-		$languages = $kirby->languages();
-		$code      = $this->code();
-		$isLast    = $languages->count() === 1;
+		$kirby = App::instance();
+		$code  = $this->code();
+
+		if ($this->isDeletable() === false) {
+			throw new Exception('The language cannot be deleted');
+		}
 
 		// trigger before hook
 		$kirby->trigger('language.delete:before', [
@@ -265,7 +269,7 @@ class Language
 			throw new Exception('The language could not be deleted');
 		}
 
-		if ($isLast === true) {
+		if ($this->isLast() === true) {
 			$this->converter($code, '');
 		} else {
 			$this->deleteContentFiles($code);
@@ -335,6 +339,27 @@ class Language
 	public function isDefault(): bool
 	{
 		return $this->default;
+	}
+
+	/**
+	 * Checks if the language can be deleted
+	 */
+	public function isDeletable(): bool
+	{
+		// the default language can only be deleted if it's the last
+		if ($this->isDefault() === true && $this->isLast() === false) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if this is the last language
+	 */
+	public function isLast(): bool
+	{
+		return App::instance()->languages()->count() === 1;
 	}
 
 	/**
@@ -487,6 +512,14 @@ class Language
 	}
 
 	/**
+	 * Private siblings collector
+	 */
+	protected function siblingsCollection(): Collection
+	{
+		return App::instance()->languages();
+	}
+
+	/**
 	 * Returns the custom slug rules for this language
 	 */
 	public function slugs(): array
@@ -553,6 +586,10 @@ class Language
 		$kirby   = App::instance();
 		$updated = $this->clone($props);
 
+		if (isset($props['translations']) === true) {
+			$updated->translations = $props['translations'];
+		}
+
 		// validate the updated language
 		LanguageRules::update($updated);
 
@@ -597,5 +634,14 @@ class Language
 		]);
 
 		return $language;
+	}
+
+	/**
+	 * Returns a language variable object
+	 * for the key in the translations array
+	 */
+	public function variable(string $key): LanguageVariable
+	{
+		return new LanguageVariable($this, $key);
 	}
 }

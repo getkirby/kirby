@@ -356,6 +356,67 @@ class PageRules
 	}
 
 	/**
+	 * Check if the page can be moved
+	 * to the given parent
+	 */
+	public static function move(Page $page, Site|Page $parent): bool
+	{
+		if ($page->permissions()->move() !== true) {
+			throw new PermissionException([
+				'key' => 'page.move.permission',
+				'data' => [
+					'slug' => $page->slug()
+				]
+			]);
+		}
+
+		// the page cannot be moved into itself
+		if ($parent instanceof Page && ($page->is($parent) === true || $page->isAncestorOf($parent) === true)) {
+			throw new LogicException([
+				'key' => 'page.move.ancestor',
+			]);
+		}
+
+		// check for duplicates
+		if ($parent->childrenAndDrafts()->find($page->slug())) {
+			throw new DuplicateException([
+				'key'  => 'page.move.duplicate',
+				'data' => [
+					'slug' => $page->slug(),
+				]
+			]);
+		}
+
+		$allowed = [];
+
+		// collect all allowed subpage templates
+		foreach ($parent->blueprint()->sections() as $section) {
+			// only take pages sections into consideration
+			if ($section->type() !== 'pages') {
+				continue;
+			}
+
+			// go through all allowed blueprints and add the name to the allow list
+			foreach ($section->blueprints() as $blueprint) {
+				$allowed[] = $blueprint['name'];
+			}
+		}
+
+		// check if the template of this page is allowed as subpage type
+		if (in_array($page->intendedTemplate()->name(), $allowed) === false) {
+			throw new PermissionException([
+				'key'  => 'page.move.template',
+				'data' => [
+					'template' => $page->intendedTemplate()->name(),
+					'parent'   => $parent->id()
+				]
+			]);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Check if the page can be published
 	 * (status change from draft to listed or unlisted)
 	 *

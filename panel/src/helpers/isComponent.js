@@ -4,5 +4,5 @@
  * @returns {bool}
  */
 export default (name) => {
-	return Object.hasOwn(window.Vue.options.components, name);
+	return typeof window.Vue.options.components[name] === "function";
 };

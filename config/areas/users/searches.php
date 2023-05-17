@@ -9,7 +9,7 @@ return [
 		'label' => I18n::translate('users'),
 		'icon'  => 'users',
 		'query' => function (string $query = null) {
-			$users   = App::instance()->users()->search($query)->limit(10);
+			$users   = App::instance()->users()->search($query);
 			$results = [];
 
 			foreach ($users as $user) {

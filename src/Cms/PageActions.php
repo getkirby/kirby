@@ -564,7 +564,7 @@ trait PageActions
 			'site'   => $this->site(),
 		]);
 
-		$modelClass = Page::$models[$props['template']] ?? Page::class;
+		$modelClass = Page::$models[$props['template'] ?? null] ?? Page::class;
 		return $modelClass::create($props);
 	}
 
@@ -713,6 +713,56 @@ trait PageActions
 			}
 
 			return $page;
+		});
+	}
+
+	/**
+	 * Moves the page to a new parent if the
+	 * new parent accepts the page type
+	 */
+	public function move(Site|Page $parent): Page
+	{
+		// nothing to move
+		if ($this->parentModel()->is($parent) === true) {
+			return $this;
+		}
+
+		$arguments = [
+			'page'   => $this,
+			'parent' => $parent
+		];
+
+		return $this->commit('move', $arguments, function ($page, $parent) {
+
+			// remove the uuid cache for this page
+			$page->uuid()->clear(true);
+
+			// move drafts into the drafts folder of the parent
+			if ($page->isDraft() === true) {
+				$newRoot = $parent->root() . '/_drafts/' . $page->dirname();
+			} else {
+				$newRoot = $parent->root() . '/' . $page->dirname();
+			}
+
+			// try to move the page directory on disk
+			if (Dir::move($page->root(), $newRoot) !== true) {
+				throw new LogicException([
+					'key' => 'page.move.directory'
+				]);
+			}
+
+			// flush all collection caches to be sure that
+			// the new child is included afterwards
+			$parent->purge();
+
+			// double-check if the new child can actually be found
+			if (!$newPage = $parent->childrenAndDrafts()->find($page->slug())) {
+				throw new LogicException([
+					'key' => 'page.move.notFound'
+				]);
+			}
+
+			return $newPage;
 		});
 	}
 
