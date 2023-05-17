@@ -277,13 +277,15 @@ export default {
 </script>
 
 <style>
-.k-toolbar {
+:root {
 	--toolbar-size: 38px;
 	--toolbar-text: #aaa;
 	--toolbar-back: var(--color-white);
 	--toolbar-hover: rgba(239, 239, 239, 0.5);
 	--toolbar-border: var(--color-background);
+}
 
+.k-toolbar {
 	display: flex;
 	max-width: 100%;
 	height: var(--toolbar-size);
@@ -301,7 +303,11 @@ export default {
 	border-left: 1px solid var(--toolbar-border);
 }
 
-.k-toolbar-button {
+.k-toolbar-button.k-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
 	width: var(--toolbar-size);
 	height: var(--toolbar-size);
 }

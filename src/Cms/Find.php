@@ -33,6 +33,11 @@ class Find
 		$filename = urldecode($filename);
 		$file     = static::parent($path)->file($filename);
 
+		// try to find the file by UUID
+		if (!$file) {
+			$file = App::instance()->file('file://' . $filename);
+		}
+
 		if ($file?->isReadable() === true) {
 			return $file;
 		}
@@ -77,6 +82,11 @@ class Find
 	{
 		$id   = str_replace(['+', ' '], '/', $id);
 		$page = App::instance()->page($id);
+
+		// search by UUID
+		if (!$page && Str::contains($id, '/') === false) {
+			$page = App::instance()->page('page://' . $id);
+		}
 
 		if ($page?->isReadable() === true) {
 			return $page;

@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" :invalid="isInvalid" theme="field">
+		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
 			<div class="k-link-input-header">
 				<k-dropdown>
 					<k-button
@@ -21,7 +21,21 @@
 						</k-dropdown-item>
 					</k-dropdown-content>
 				</k-dropdown>
+				<template v-if="linkType === 'page'">
+					<div class="k-link-input-page-preview">
+						<k-button class="k-link-input-page-path" @click="toggle">
+							/{{ model?.id }}
+						</k-button>
+						<k-button
+							v-if="model?.id"
+							class="k-link-input-page-toggle"
+							icon="cancel-small"
+							@click="clear"
+						/>
+					</div>
+				</template>
 				<component
+					v-else
 					ref="input"
 					:is="'k-' + currentType.input + '-input'"
 					:id="_uid"
@@ -33,8 +47,12 @@
 				/>
 			</div>
 			<template v-if="linkType === 'page'">
-				<div class="k-link-input-body">
-					<k-page-tree :current="value" @select="onInput($event.id)" />
+				<div v-show="expanded" class="k-link-input-body">
+					<k-page-tree
+						:current="value"
+						:root="false"
+						@select="onInput($event.id)"
+					/>
 				</div>
 			</template>
 		</k-input>
@@ -60,8 +78,10 @@ export default {
 	},
 	data() {
 		return {
+			model: {},
 			linkType: null,
 			linkValue: null,
+			expanded: false,
 			isInvalid: false
 		};
 	},
@@ -114,15 +134,27 @@ export default {
 
 				this.linkType = this.linkType ?? parts.type;
 				this.linkValue = parts.link;
+
+				if (value !== old) {
+					this.preview();
+				}
 			},
 			immediate: true
 		}
 	},
 	methods: {
+		clear() {
+			this.$emit("input", "/");
+			this.expanded = false;
+		},
 		detect(value) {
 			value = value ?? "";
 
-			if (value.startsWith("page://") === true || value.startsWith("site://")) {
+			if (
+				value.startsWith("page://") === true ||
+				value.startsWith("site://") ||
+				value.startsWith("/")
+			) {
 				return {
 					type: "page",
 					link: value
@@ -130,8 +162,6 @@ export default {
 			}
 
 			if (value.startsWith("tel:")) {
-				console.log(value);
-
 				return {
 					type: "tel",
 					link: value.replace(/^tel\:/, "")
@@ -150,6 +180,21 @@ export default {
 				link: value
 			};
 		},
+		focus() {
+			this.$refs.input?.focus();
+		},
+		async preview() {
+			if (
+				this.linkType === "page" &&
+				this.linkValue &&
+				this.linkValue !== "site://" &&
+				this.linkValue !== "/"
+			) {
+				this.model = await this.$api.pages.get(this.linkValue);
+			} else {
+				this.model = null;
+			}
+		},
 		onInput(link) {
 			const value = link.trim().length ? this.currentType.schema + link : "";
 			this.$emit("input", value);
@@ -157,21 +202,28 @@ export default {
 		onInvalid(invalid) {
 			this.isInvalid = invalid;
 		},
-		focus() {
-			this.$refs.input?.focus();
-		},
 		switchType(type) {
 			if (type === this.linkType) {
 				return;
 			}
 
+			this.isInvalid = false;
 			this.linkType = type;
 			this.linkValue = "";
+
+			if (this.linkType === "page") {
+				this.expanded = true;
+			} else {
+				this.expanded = false;
+			}
 
 			this.$emit("input", "");
 			this.$nextTick(() => {
 				this.focus();
 			});
+		},
+		toggle() {
+			this.expanded = !this.expanded;
 		}
 	}
 };
@@ -210,6 +262,28 @@ export default {
 	border-top: 4px solid var(--color-black);
 	border-inline-start: 4px solid transparent;
 	border-inline-end: 4px solid transparent;
+}
+
+.k-link-input-page-preview {
+	display: flex;
+	height: var(--height-sm);
+	background: var(--color-gray-200);
+	border-radius: var(--rounded-sm);
+	margin-inline-end: var(--spacing-1);
+}
+.k-link-input-page-preview .k-button {
+	display: flex;
+	height: var(--height-sm);
+	align-items: center;
+}
+.k-link-input-page-path {
+	flex-grow: 1;
+	padding-inline: var(--spacing-3);
+}
+.k-link-input-page-toggle {
+	flex-shrink: 0;
+	width: var(--height-sm);
+	justify-content: center;
 }
 
 .k-link-input-body {

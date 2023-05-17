@@ -17,6 +17,10 @@ export default {
 	inheritAttrs: false,
 	mixins: [Tree],
 	props: {
+		root: {
+			default: true,
+			type: Boolean
+		},
 		current: {
 			default: "/site",
 			type: String
@@ -31,7 +35,9 @@ export default {
 	},
 	async created() {
 		if (this.items) {
-			this.pages = await this.load();
+			this.pages = await this.load(this.items);
+		} else if (this.root === false) {
+			this.pages = await this.load("/site");
 		} else {
 			this.pages = [
 				{
@@ -51,8 +57,8 @@ export default {
 		};
 	},
 	methods: {
-		async load() {
-			const { data } = await this.$api.get(this.items + "/children", {
+		async load(path) {
+			const { data } = await this.$api.get(path + "/children", {
 				select: "hasChildren,id,title,uuid",
 				status: "all"
 			});

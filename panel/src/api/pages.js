@@ -54,6 +54,10 @@ export default (api) => ({
 		return page;
 	},
 	id(id) {
+		if (id.startsWith("page://") === true) {
+			id = id.replace("page://", "");
+		}
+
 		return id.replace(/\//g, "+");
 	},
 	async files(id, query) {
