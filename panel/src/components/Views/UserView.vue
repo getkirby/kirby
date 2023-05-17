@@ -129,7 +129,12 @@ export default {
 				url: this.$panel.urls.api + "/" + this.id + "/avatar",
 				accept: "image/*",
 				multiple: false,
-				on: { complete: this.uploadedAvatar }
+				on: {
+					done: () => {
+						this.$panel.notification.success({ context: "view" });
+						this.$reload();
+					}
+				}
 			};
 		}
 	},
@@ -146,10 +151,6 @@ export default {
 			} else {
 				this.$panel.upload.pick(this.uploadOptions);
 			}
-		},
-		uploadedAvatar() {
-			this.$panel.notification.success();
-			this.$reload();
 		}
 	}
 };

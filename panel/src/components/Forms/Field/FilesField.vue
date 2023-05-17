@@ -67,14 +67,14 @@ export default {
 				]
 			};
 		},
-		uploadParams() {
+		uploadOptions() {
 			return {
 				accept: this.uploads.accept,
 				max: this.max,
 				multiple: this.multiple,
 				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				on: {
-					complete: this.onUpload
+					done: this.onUpload
 				}
 			};
 		}
@@ -91,7 +91,7 @@ export default {
 				return false;
 			}
 
-			return this.$panel.upload.select(files, this.uploadParams);
+			return this.$panel.upload.open(files, this.uploadOptions);
 		},
 		isSelected(file) {
 			return this.selected.find((f) => f.id === file.id);
@@ -108,15 +108,15 @@ export default {
 				case "open":
 					return this.open();
 				case "upload":
-					return this.$panel.upload.pick(this.uploadParams);
+					return this.$panel.upload.pick(this.uploadOptions);
 			}
 		},
-		onUpload(files, completed) {
+		onUpload(files) {
 			if (this.multiple === false) {
 				this.selected = [];
 			}
 
-			for (const file of completed) {
+			for (const file of files) {
 				if (!this.isSelected(file)) {
 					this.selected.push(file);
 				}

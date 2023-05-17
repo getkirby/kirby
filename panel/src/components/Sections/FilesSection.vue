@@ -45,12 +45,16 @@ export default {
 		type() {
 			return "files";
 		},
-		uploadProps() {
+		uploadOptions() {
 			return {
 				...this.options.upload,
 				url: this.$panel.urls.api + "/" + this.options.upload.api,
 				on: {
-					complete: this.onUpload
+					complete: () => {
+						this.$events.$emit("file.create");
+						this.$events.$emit("model.update");
+						this.$panel.notification.success({ context: "view" });
+					}
 				}
 			};
 		}
@@ -71,12 +75,12 @@ export default {
 		},
 		onAdd() {
 			if (this.canAdd) {
-				this.$panel.upload.pick(this.uploadProps);
+				this.$panel.upload.pick(this.uploadOptions);
 			}
 		},
 		onDrop(files) {
 			if (this.canAdd) {
-				this.$panel.upload.open(files, this.uploadProps);
+				this.$panel.upload.open(files, this.uploadOptions);
 			}
 		},
 		async onSort(items) {
@@ -100,13 +104,8 @@ export default {
 				this.isProcessing = false;
 			}
 		},
-		onUpload() {
-			this.$events.$emit("file.create");
-			this.$events.$emit("model.update");
-			this.$panel.notification.success({ context: "view" });
-		},
 		replace(file) {
-			this.$panel.upload.replace(file, this.uploadProps);
+			this.$panel.upload.replace(file, this.uploadOptions);
 		}
 	}
 };

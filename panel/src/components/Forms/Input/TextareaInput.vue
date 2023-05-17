@@ -116,8 +116,9 @@ export default {
 	computed: {
 		uploadOptions() {
 			return {
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
 				multiple: false,
-				on: { complete: this.insertUpload }
+				on: { done: this.insertUpload }
 			};
 		}
 	},
@@ -195,10 +196,10 @@ export default {
 		onDrop($event) {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
-				return this.$panel.upload.select($event.dataTransfer.files, {
-					...this.uploadOptions,
-					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload"
-				});
+				return this.$panel.upload.open(
+					$event.dataTransfer.files,
+					this.uploadOptions
+				);
 			}
 
 			// dropping text
@@ -256,8 +257,7 @@ export default {
 			this.$refs.select();
 		},
 		selectFile() {
-			this.$panel.upload.pick({
-				...this.uploadOptions,
+			this.$refs.fileDialog.open({
 				endpoint: this.endpoints.field + "/files",
 				multiple: false
 			});
@@ -270,10 +270,7 @@ export default {
 			return area.value.substring(start, end);
 		},
 		uploadFile() {
-			this.$refs.fileUpload.open({
-				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
-				multiple: false
-			});
+			this.$panel.upload.pick(this.uploadOptions);
 		},
 		wrap(text) {
 			this.insert(text + this.selection() + text);

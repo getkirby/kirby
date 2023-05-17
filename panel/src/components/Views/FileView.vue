@@ -76,14 +76,18 @@ export default {
 		action(action) {
 			switch (action) {
 				case "replace":
-					return this.$panel.upload.replace(this.model, {
-						on: { complete: this.onUpload }
-					});
+					return this.replace();
 			}
 		},
-		onUpload() {
-			this.$panel.notification.success();
-			this.$reload();
+		replace() {
+			this.$panel.upload.replace(this.model, {
+				on: {
+					done: () => {
+						this.$panel.notification.success({ context: "view" });
+						this.$reload();
+					}
+				}
+			});
 		}
 	}
 };

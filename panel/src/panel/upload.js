@@ -22,14 +22,27 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
-		cancel() {
-			this.emit("cancel");
-			this.close();
-		},
 		close() {
 			this.emit("close");
+
+			// emit complete event if any files have been completed,
+			// e.g. when first submit/upload yielded any errors and
+			// now cancel was clicked, but already some files have
+			// been completely uploaded
+			if (this.completed.length > 0) {
+				this.emit("complete", this.completed);
+			}
+
 			this.reset();
-			panel.view.reload();
+		},
+		get completed() {
+			return this.files
+				.filter((file) => file.completed)
+				.map((file) => file.model);
+		},
+		done() {
+			this.emit("done", this.completed);
+			panel.dialog.close();
 		},
 		/**
 		 * Opens the file dialog
@@ -46,32 +59,30 @@ export default (panel) => {
 				this.set(files);
 			}
 
-			const listeners = {
-				close: () => {
-					this.close();
-				},
-				submit: () => {
-					// if no uncompleted files are left, directly jump to success
-					if (this.files.filter((file) => !file.completed).length === 0) {
-						return this.success();
-					}
+			const dialog = {
+				component: "k-upload-dialog",
+				on: {
+					close: () => {
+						this.close();
+					},
+					submit: () => {
+						// if no uncompleted files are left, be done
+						if (this.files.length === this.completed.length) {
+							return this.done();
+						}
 
-					this.start();
+						this.start();
+					}
 				}
 			};
 
+			// when replacing a file, use decdicated dialog component
 			if (options.replace) {
-				panel.dialog.open({
-					component: "k-upload-replace-dialog",
-					props: { original: options.replace },
-					on: listeners
-				});
-			} else {
-				panel.dialog.open({
-					component: "k-upload-dialog",
-					on: listeners
-				});
+				dialog.component = "k-upload-replace-dialog";
+				dialog.props = { original: options.replace };
 			}
+
+			panel.dialog.open(dialog);
 		},
 		/**
 		 * Open the system file picker
@@ -233,10 +244,8 @@ export default (panel) => {
 						file.completed = true;
 						file.model = response.data;
 
-						const remaining = this.files.filter((file) => !file.completed);
-
-						if (remaining.length === 0) {
-							this.success();
+						if (this.files.length === this.completed.length) {
+							this.done();
 						}
 					}
 				});
@@ -246,14 +255,6 @@ export default (panel) => {
 					this.attributes.sort++;
 				}
 			}
-		},
-		success() {
-			this.emit(
-				"complete",
-				this.files,
-				this.files.filter((file) => file.completed).map((file) => file.model)
-			);
-			this.close();
 		}
 	};
 };
