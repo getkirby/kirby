@@ -7,6 +7,7 @@
 		@submit="submit"
 	>
 		<k-select-field
+			v-if="templates.length > 1"
 			class="k-page-template-switch"
 			:empty="false"
 			:label="$t('template')"
