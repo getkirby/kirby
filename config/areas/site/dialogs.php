@@ -499,6 +499,40 @@ return [
 		'submit'  => $fields['file']['submit'],
 	],
 
+	// move page
+	'page.move' => [
+		'pattern' => 'pages/(:any)/move',
+		'load'    => function (string $id) {
+			$page = Find::page($id);
+
+			return [
+				'component' => 'k-page-move-dialog',
+				'props' => [
+					'value' => [
+						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
+					]
+				]
+			];
+		},
+		'submit' => function (string $id) {
+			$kirby   = App::instance();
+			$parent  = Find::parent($kirby->request()->get('parent'));
+			$oldPage = Find::page($id);
+			$newPage = $oldPage->move($parent);
+
+			return [
+				'event'    => 'page.move',
+				'redirect' => $newPage->panel()->url(true),
+				'dispatch' => [
+					'content/move' => [
+						$oldPage->panel()->url(true),
+						$newPage->panel()->url(true)
+					]
+				],
+			];
+		}
+	],
+
 	// change site title
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
@@ -521,8 +555,8 @@ return [
 		},
 		'submit' => function () {
 			$kirby = App::instance();
-
 			$kirby->site()->changeTitle($kirby->request()->get('title'));
+
 			return [
 				'event' => 'site.changeTitle',
 			];

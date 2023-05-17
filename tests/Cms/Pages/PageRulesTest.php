@@ -761,4 +761,136 @@ class PageRulesTest extends TestCase
 
 		PageRules::create($page);
 	}
+
+	public function testMove()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'children' => [
+							[
+								'slug' => 'child'
+							]
+						]
+					],
+					[
+						'slug' => 'parent-b'
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->assertTrue(PageRules::move($child, $parentB));
+	}
+
+	public function testMoveWithoutPermissions()
+	{
+		$permissions = $this->createMock(PagePermissions::class);
+		$permissions->method('__call')->with('move')->willReturn(false);
+
+		$page = $this->createMock(Page::class);
+		$page->method('slug')->willReturn('test');
+		$page->method('permissions')->willReturn($permissions);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to move "test"');
+
+		PageRules::move($page, new Page(['slug' => 'test']));
+	}
+
+	public function testMoveWithDuplicate()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'children' => [
+							[
+								'slug' => 'child'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'children' => [
+							[
+								'slug' => 'child'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A sub page with the URL appendix "child" already exists');
+
+		PageRules::move($child, $parentB);
+	}
+
+	public function testMoveWithInvalidTemplate()
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'parent-a',
+						'template' => 'blog',
+						'children' => [
+							[
+								'slug'     => 'child',
+								'template' => 'article'
+							]
+						]
+					],
+					[
+						'slug'     => 'parent-b',
+						'template' => 'photography',
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/photography' => [
+					'sections' => [
+						'albums' => [
+							'type'      => 'pages',
+							'templates' => ['album']
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parentB = $app->page('parent-b');
+		$child   = $app->page('parent-a/child');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The "article" template is not accepted as a subpage of "parent-b"');
+
+		PageRules::move($child, $parentB);
+	}
 }
