@@ -37,38 +37,48 @@ export default (panel) => {
 		 * @param {FileList} files
 		 * @param {Object} options
 		 */
-		open(files, options) {
+		open(files, options, replacing) {
 			if (files instanceof FileList) {
 				this.set(options);
 				this.select(files);
 			} else {
-				// options can be defined as first argument
+				// allow options being defined as first argument
 				this.set(files);
 			}
 
-			panel.dialog.open({
-				component: "k-upload-dialog",
-				on: {
-					close: () => {
-						this.close();
-					},
-					submit: () => {
-						// if no uncompleted files are left, directly jump to success
-						if (this.files.filter((file) => !file.completed).length === 0) {
-							return this.success();
-						}
-
-						this.start();
+			const listeners = {
+				close: () => {
+					this.close();
+				},
+				submit: () => {
+					// if no uncompleted files are left, directly jump to success
+					if (this.files.filter((file) => !file.completed).length === 0) {
+						return this.success();
 					}
+
+					this.start();
 				}
-			});
+			};
+
+			if (replacing) {
+				panel.dialog.open({
+					component: "k-upload-replace-dialog",
+					props: { original: replacing },
+					on: listeners
+				});
+			} else {
+				panel.dialog.open({
+					component: "k-upload-dialog",
+					on: listeners
+				});
+			}
 		},
 		/**
 		 * Open the system file picker
 		 *
 		 * @param {Object} options
 		 */
-		pick(options) {
+		pick(options, replacing) {
 			this.set(options);
 
 			// create a new temporary file input
@@ -84,12 +94,23 @@ export default (panel) => {
 
 			// show the dialog on change
 			this.input.addEventListener("change", (event) => {
-				this.open(event.target.files, options);
+				this.open(event.target.files, options, replacing);
 				this.input.remove();
 			});
 		},
 		remove(id) {
 			this.files = this.files.filter((file) => file.id !== id);
+		},
+		replace(file, options) {
+			this.pick(
+				{
+					...options,
+					url: panel.urls.api + "/" + file.link,
+					accept: "." + file.extension + "," + file.mime,
+					multiple: false
+				},
+				file
+			);
 		},
 		reset() {
 			parent.reset.call(this);
