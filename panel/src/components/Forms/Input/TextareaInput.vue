@@ -61,7 +61,6 @@
 			@cancel="cancel"
 			@submit="insertFile($event)"
 		/>
-		<k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
 	</div>
 </template>
 
@@ -113,6 +112,14 @@ export default {
 		return {
 			over: false
 		};
+	},
+	computed: {
+		uploadOptions() {
+			return {
+				multiple: false,
+				on: { complete: this.insertUpload }
+			};
+		}
 	},
 	watch: {
 		value() {
@@ -188,9 +195,9 @@ export default {
 		onDrop($event) {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
-				return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
-					multiple: false
+				return this.$panel.upload.select($event.dataTransfer.files, {
+					...this.uploadOptions,
+					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload"
 				});
 			}
 
@@ -249,7 +256,8 @@ export default {
 			this.$refs.select();
 		},
 		selectFile() {
-			this.$refs.fileDialog.open({
+			this.$panel.upload.pick({
+				...this.uploadOptions,
 				endpoint: this.endpoints.field + "/files",
 				multiple: false
 			});

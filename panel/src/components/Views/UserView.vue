@@ -74,13 +74,6 @@
 					:parent="id"
 					:tab="tab"
 				/>
-				<k-upload
-					ref="upload"
-					:url="uploadApi"
-					:multiple="false"
-					accept="image/*"
-					@success="uploadedAvatar"
-				/>
 			</k-view>
 		</div>
 		<template #footer>
@@ -100,7 +93,7 @@ export default {
 				{
 					icon: "upload",
 					text: this.$t("change"),
-					click: () => this.$refs.upload.open()
+					click: () => this.$panel.upload.pick(this.uploadOptions)
 				},
 				{
 					icon: "trash",
@@ -131,8 +124,13 @@ export default {
 				}
 			];
 		},
-		uploadApi() {
-			return this.$panel.urls.api + "/" + this.id + "/avatar";
+		uploadOptions() {
+			return {
+				url: this.$panel.urls.api + "/" + this.id + "/avatar",
+				accept: "image/*",
+				multiple: false,
+				on: { complete: this.uploadedAvatar }
+			};
 		}
 	},
 	methods: {
@@ -146,7 +144,7 @@ export default {
 			if (this.model.avatar) {
 				this.$refs.picture.toggle();
 			} else {
-				this.$refs.upload.open();
+				this.$panel.upload.pick(this.uploadOptions);
 			}
 		},
 		uploadedAvatar() {
