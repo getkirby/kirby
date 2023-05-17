@@ -53,6 +53,11 @@ export default (panel) => {
 						this.close();
 					},
 					submit: () => {
+						// if no uncompleted files are left, directly jump to success
+						if (this.files.filter((file) => !file.completed).length === 0) {
+							return this.success();
+						}
+
 						this.start();
 					}
 				}
@@ -204,14 +209,7 @@ export default (panel) => {
 						}).length;
 
 						if (remaining === 0) {
-							this.emit(
-								"complete",
-								this.files,
-								this.files
-									.filter((file) => file.completed)
-									.map((file) => file.model)
-							);
-							this.close();
+							this.success();
 						}
 					}
 				});
@@ -221,6 +219,14 @@ export default (panel) => {
 					this.attributes.sort++;
 				}
 			});
+		},
+		success() {
+			this.emit(
+				"complete",
+				this.files,
+				this.files.filter((file) => file.completed).map((file) => file.model)
+			);
+			this.close();
 		}
 	};
 };
