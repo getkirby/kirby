@@ -171,16 +171,26 @@ export default (panel) => {
 			}
 
 			// upload each file individually and keep track of the progress
-			this.files.forEach((file) => {
+			for (const file of this.files) {
 				// don't upload completed files again
 				if (file.completed === true) {
-					return;
+					continue;
 				}
 
 				// reset progress and error before
 				// the upload starts
 				file.error = null;
 				file.progress = 0;
+
+				// ensure that all files have a unique name
+				const duplicates = this.files.filter(
+					(f) => f.name === file.name && f.extension === file.extension
+				);
+
+				if (duplicates.length > 1) {
+					file.error = panel.t("error.file.name.unique");
+					continue;
+				}
 
 				upload(file.src, {
 					attributes: this.attributes,
@@ -204,11 +214,9 @@ export default (panel) => {
 						file.completed = true;
 						file.model = response.data;
 
-						const remaining = this.files.filter((file) => {
-							return file.completed === false;
-						}).length;
+						const remaining = this.files.filter((file) => !file.completed);
 
-						if (remaining === 0) {
+						if (remaining.length === 0) {
 							this.success();
 						}
 					}
@@ -218,7 +226,7 @@ export default (panel) => {
 				if (this.attributes?.sort !== undefined) {
 					this.attributes.sort++;
 				}
-			});
+			}
 		},
 		success() {
 			this.emit(

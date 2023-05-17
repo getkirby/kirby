@@ -104,6 +104,7 @@
 	"error.file.minheight": "The height of the image must be at least {height} pixels",
 	"error.file.minsize": "The file is too small",
 	"error.file.minwidth": "The width of the image must be at least {width} pixels",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
