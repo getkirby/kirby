@@ -19,7 +19,7 @@
 		<k-dialog-fields
 			:fields="fields"
 			:novalidate="novalidate"
-			:value="model"
+			:value="value"
 			@input="input"
 			@submit="submit"
 		/>
@@ -62,21 +62,14 @@ export default {
 			});
 		}
 	},
-	watch: {
-		value(value) {
-			this.model = value;
-		}
-	},
 	methods: {
-		input(value) {
-			this.model = value;
-			this.$panel.dialog.input(value);
-		},
 		pick(template) {
 			this.$panel.dialog.reload({
 				query: {
 					...this.$panel.dialog.query,
-					template: template
+					slug: this.value.slug,
+					template: template,
+					title: this.value.title
 				}
 			});
 		}

@@ -292,7 +292,9 @@ return [
 			$dialog  = new PageCreateDialog(
 				parentId: $request->get('parent'),
 				sectionId: $request->get('section'),
+				slug: $request->get('slug'),
 				template: $request->get('template'),
+				title: $request->get('title'),
 				viewId:    $request->get('view'),
 			);
 

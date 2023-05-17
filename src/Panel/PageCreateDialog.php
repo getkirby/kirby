@@ -16,7 +16,9 @@ class PageCreateDialog
 	protected Page|Site $parent;
 	protected string $parentId;
 	protected string|null $sectionId;
+	protected string|null $slug;
 	protected string|null $template;
+	protected string|null $title;
 	protected Page|Site $view;
 	protected string|null $viewId;
 
@@ -25,11 +27,17 @@ class PageCreateDialog
 		string|null $sectionId,
 		string|null $template,
 		string|null $viewId,
+
+		/* optional */
+		string|null $slug = null,
+		string|null $title = null,
 	) {
 		$this->parentId  = $parentId ?? 'site';
 		$this->parent    = Find::parent($this->parentId);
 		$this->sectionId = $sectionId;
+		$this->slug      = $slug;
 		$this->template  = $template;
+		$this->title     = $title;
 		$this->viewId    = $viewId;
 		$this->view      = Find::parent($this->viewId ?? $this->parentId);
 	}
@@ -214,13 +222,13 @@ class PageCreateDialog
 
 	public function value(): array
 	{
-		return array_merge([
+		return [
 			'parent'   => $this->parentId,
 			'section'  => $this->sectionId,
-			'slug'     => '',
+			'slug'     => $this->slug ?? '',
 			'template' => $this->template,
-			'title'    => '',
+			'title'    => $this->title ?? '',
 			'view'     => $this->viewId,
-		], (array)get('value'));
+		];
 	}
 }
