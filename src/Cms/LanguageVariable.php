@@ -29,7 +29,7 @@ class LanguageVariable
 	/**
 	 * Creates a new language variable. This will
 	 * be added to the default language first and
-     * can then be translated in other languages.
+	 * can then be translated in other languages.
 	 */
 	public static function create(string $key, string|null $value = null): static
 	{
@@ -66,8 +66,8 @@ class LanguageVariable
 
 	/**
 	 * Deletes a language variable from the translations array.
-     * This will go through all language files and delete the
-     * key from all translation arrays to keep them clean.
+	 * This will go through all language files and delete the
+	 * key from all translation arrays to keep them clean.
 	 */
 	public function delete(): bool
 	{

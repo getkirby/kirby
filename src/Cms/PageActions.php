@@ -733,7 +733,6 @@ trait PageActions
 		];
 
 		return $this->commit('move', $arguments, function ($page, $parent) {
-
 			// remove the uuid cache for this page
 			$page->uuid()->clear(true);
 

@@ -28,7 +28,7 @@ class PageCreateDialog
 		string|null $template,
 		string|null $viewId,
 
-		/* optional */
+		// optional
 		string|null $slug = null,
 		string|null $title = null,
 	) {
@@ -155,7 +155,8 @@ class PageCreateDialog
 	 * dialog, including the fields and
 	 * initial values
 	 */
-	public function load(): array {
+	public function load(): array
+	{
 		$blueprints = $this->blueprints();
 
 		$this->template ??= $blueprints[0]['name'];

@@ -82,7 +82,7 @@ return [
 						],
 						[
 							'label' => t('language.direction'),
-							'value' => t('language.direction.'. $language->direction()),
+							'value' => t('language.direction.' . $language->direction()),
 						],
 					],
 					'name'         => $name,
