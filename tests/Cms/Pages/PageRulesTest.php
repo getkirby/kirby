@@ -772,14 +772,27 @@ class PageRulesTest extends TestCase
 				'children' => [
 					[
 						'slug'     => 'parent-a',
+						'template' => 'parent',
 						'children' => [
 							[
-								'slug' => 'child'
+								'slug' => 'child',
+								'template' => 'child'
 							]
 						]
 					],
 					[
-						'slug' => 'parent-b'
+						'slug'     => 'parent-b',
+						'template' => 'parent',
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
 					]
 				]
 			]

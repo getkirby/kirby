@@ -450,19 +450,37 @@ class PageActionsTest extends TestCase
 
 	public function testMove()
 	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'sections' => [
+						'subpages' => [
+							'type'     => 'pages',
+							'template' => 'child'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
 		$parentA = $this->app->site()->createChild([
-			'slug' => 'parent-a'
+			'slug'     => 'parent-a',
+			'template' => 'parent'
 		]);
 
 		$parentB = $this->app->site()->createChild([
-			'slug' => 'parent-b'
+			'slug'     => 'parent-b',
+			'template' => 'parent'
 		]);
 
 		$child = $parentA->createChild([
-			'slug' => 'child'
+			'slug'     => 'child',
+			'template' => 'child'
 		]);
 
-		$moved = $child->move('parent-b');
+		$moved = $child->move($parentB);
 
 		$this->assertTrue($moved->parent()->is($parentB));
 	}
