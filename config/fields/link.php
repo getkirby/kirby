@@ -8,8 +8,8 @@ use Kirby\Toolkit\V;
 
 return [
 	'props' => [
-		'value' => function (string $value = null) {
-			return $value;
+		'value' => function (string|null $value = null) {
+			return $value ?? '';
 		}
 	],
 	'validations' => [
@@ -19,9 +19,27 @@ return [
 			}
 
 			if (Str::startsWith($value, 'mailto:') === true) {
-				if (V::email($value) === false) {
+				// get the plain email address
+				$email = str_replace('mailto:', '', $value);
+
+				// validate the email address
+				if (V::email($email) === false) {
 					throw new InvalidArgumentException([
 						'key' => 'validation.email'
+					]);
+				}
+
+				return true;
+			}
+
+			if (Str::startsWith($value, 'tel:') === true) {
+				// get the plain phone number
+				$tel = str_replace('tel:', '', $value);
+
+				// validate the phone address
+				if (V::tel($tel) === false) {
+					throw new InvalidArgumentException([
+						'key' => 'validation.tel'
 					]);
 				}
 

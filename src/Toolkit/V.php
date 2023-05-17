@@ -597,6 +597,13 @@ V::$validators = [
 	},
 
 	/**
+	 * Checks for a valid unformatted telephone number
+	 */
+	'tel' => function ($value): bool {
+		return V::match($value, '!^[+]{0,1}[0-9]+$!');
+	},
+
+	/**
 	 * Checks for valid time
 	 */
 	'time' => function ($value): bool {

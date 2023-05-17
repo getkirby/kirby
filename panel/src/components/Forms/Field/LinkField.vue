@@ -1,6 +1,6 @@
 <template>
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" theme="field">
+		<k-input v-bind="$props" :invalid="isInvalid" theme="field">
 			<div class="k-link-input-header">
 				<k-dropdown>
 					<k-button
@@ -25,8 +25,10 @@
 					ref="input"
 					:is="'k-' + currentType.input + '-input'"
 					:id="_uid"
+					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
 					:value="linkValue"
+					@invalid="onInvalid"
 					@input="onInput"
 				/>
 			</div>
@@ -89,6 +91,7 @@ export default {
 					icon: "phone",
 					input: "tel",
 					label: "Phone",
+					pattern: "[+]{0,1}[0-9]+",
 					placeholder: "Enter a phone number …",
 					input: "tel",
 					schema: "tel:"
@@ -150,6 +153,9 @@ export default {
 		onInput(link) {
 			const value = link.trim().length ? this.currentType.schema + link : "";
 			this.$emit("input", value);
+		},
+		onInvalid(invalid) {
+			this.isInvalid = invalid;
 		},
 		focus() {
 			this.$refs.input?.focus();
