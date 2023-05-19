@@ -170,11 +170,12 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
-			// add the current editing context
-			notification.context = panel.context;
-
 			// set the new state
-			this.set(notification);
+			this.set({
+				// add the current editing context
+				context: panel.context,
+				...notification
+			});
 
 			// open the notification
 			this.isOpen = true;
