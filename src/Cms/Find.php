@@ -28,14 +28,16 @@ class Find
 	 * @return \Kirby\Cms\File|null
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public static function file(string $path = null, string $filename)
+	public static function file(string|null $path = null, string $filename = null)
 	{
+		$kirby    = App::instance();
 		$filename = urldecode($filename);
-		$file     = static::parent($path)->file($filename);
+		$parent   = empty($path) ? $kirby : static::parent($path);
+		$file     = $parent->file($filename);
 
 		// try to find the file by UUID
 		if (!$file) {
-			$file = App::instance()->file('file://' . $filename);
+			$file = $kirby->file('file://' . $filename);
 		}
 
 		if ($file?->isReadable() === true) {

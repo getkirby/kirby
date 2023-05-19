@@ -14,7 +14,7 @@ return [
 	],
 	'validations' => [
 		'value' => function ($value) {
-			if (Uuid::is($value, 'page') === true || Uuid::is($value, 'site') === true) {
+			if (V::uuid($value) === true) {
 				return true;
 			}
 

@@ -21,17 +21,21 @@
 						</k-dropdown-item>
 					</k-dropdown-content>
 				</k-dropdown>
-				<template v-if="linkType === 'page'">
-					<div class="k-link-input-page-preview">
-						<k-button class="k-link-input-page-path" @click="toggle">
-							/{{ model?.id }}
-						</k-button>
-						<k-button
-							v-if="model?.id"
-							class="k-link-input-page-toggle"
-							icon="cancel-small"
-							@click="clear"
-						/>
+				<template v-if="linkType === 'page' || linkType === 'file'">
+					<div class="k-link-input-model" @click="toggle">
+						<template v-if="model">
+							<k-tag :removable="true" @remove="clear">
+								{{ model.label }}
+							</k-tag>
+						</template>
+
+						<template v-else>
+							<k-button class="k-link-input-model-placeholder" @click="toggle">
+								{{ currentType.placeholder }}
+							</k-button>
+						</template>
+
+						<k-button class="k-link-input-model-toggle" icon="bars" />
 					</div>
 				</template>
 				<component
@@ -47,12 +51,17 @@
 				/>
 			</div>
 			<template v-if="linkType === 'page'">
-				<div v-show="expanded" class="k-link-input-body">
+				<div v-show="expanded" data-type="page" class="k-link-input-body">
 					<k-page-tree
 						:current="value"
 						:root="false"
 						@select="onInput($event.id)"
 					/>
+				</div>
+			</template>
+			<template v-else-if="linkType === 'file'">
+				<div v-show="expanded" data-type="file" class="k-link-input-body">
+					<k-file-browser :selected="value" @select="onInput($event.id)" />
 				</div>
 			</template>
 		</k-input>
@@ -78,7 +87,7 @@ export default {
 	},
 	data() {
 		return {
-			model: {},
+			model: null,
 			linkType: null,
 			linkValue: null,
 			expanded: false,
@@ -93,7 +102,6 @@ export default {
 			return {
 				url: {
 					icon: "url",
-					input: "url",
 					label: this.$t("url"),
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
@@ -101,7 +109,6 @@ export default {
 				},
 				email: {
 					icon: "email",
-					input: "email",
 					label: this.$t("email"),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
@@ -109,7 +116,6 @@ export default {
 				},
 				tel: {
 					icon: "phone",
-					input: "tel",
 					label: "Phone",
 					pattern: "[+]{0,1}[0-9]+",
 					placeholder: "Enter a phone number …",
@@ -118,10 +124,15 @@ export default {
 				},
 				page: {
 					icon: "page",
-					input: "text",
 					label: this.$t("page"),
 					placeholder: "Select a page …",
 					input: "text",
+					schema: ""
+				},
+				file: {
+					icon: "file",
+					label: this.$t("file"),
+					placeholder: "Select a file …",
 					schema: ""
 				}
 			};
@@ -144,7 +155,7 @@ export default {
 	},
 	methods: {
 		clear() {
-			this.$emit("input", "/");
+			this.$emit("input", "");
 			this.expanded = false;
 		},
 		detect(value) {
@@ -157,6 +168,13 @@ export default {
 			) {
 				return {
 					type: "page",
+					link: value
+				};
+			}
+
+			if (value.startsWith("file://") === true) {
+				return {
+					type: "file",
 					link: value
 				};
 			}
@@ -184,13 +202,21 @@ export default {
 			this.$refs.input?.focus();
 		},
 		async preview() {
-			if (
-				this.linkType === "page" &&
-				this.linkValue &&
-				this.linkValue !== "site://" &&
-				this.linkValue !== "/"
-			) {
-				this.model = await this.$api.pages.get(this.linkValue);
+			if (this.linkType === "page" && this.linkValue) {
+				const page = await this.$api.pages.get(this.linkValue, {
+					select: "id,title"
+				});
+
+				this.model = {
+					label: page.title
+				};
+			} else if (this.linkType === "file" && this.linkValue) {
+				const file = await this.$api.get("files/" + this.linkValue, {
+					select: "id,filename"
+				});
+				this.model = {
+					label: file.filename
+				};
 			} else {
 				this.model = null;
 			}
@@ -211,7 +237,7 @@ export default {
 			this.linkType = type;
 			this.linkValue = "";
 
-			if (this.linkType === "page") {
+			if (this.linkType === "page" || this.linkType === "file") {
 				this.expanded = true;
 			} else {
 				this.expanded = false;
@@ -264,36 +290,63 @@ export default {
 	border-inline-end: 4px solid transparent;
 }
 
-.k-link-input-page-preview {
+.k-link-input-model {
 	display: flex;
+	justify-content: space-between;
 	height: var(--height-sm);
-	background: var(--color-gray-200);
-	border-radius: var(--rounded-sm);
 	margin-inline-end: var(--spacing-1);
+
+	--tag-color-back: var(--color-gray-200);
+	--tag-color-text: var(--color-black);
+	--tag-color-focus-back: var(--tag-color-back);
+	--tag-color-focus-text: var(--tag-color-text);
+	--tag-rounded: var(--rounded-sm);
 }
-.k-link-input-page-preview .k-button {
+.k-link-input-model-preview {
+	display: inline-flex;
+	align-items: center;
+	background: var(--color-blue-200);
+	padding-inline-start: var(--spacing-3);
+	font-size: var(--text-sm);
+	border-radius: var(--rounded-sm);
+}
+.k-link-input-model-placeholder.k-button {
+	display: flex;
+	flex-grow: 1;
+	align-items: center;
+	justify-content: start;
+	height: var(--height-sm);
+	font-size: var(--text-base);
+	padding-inline: var(--spacing-2);
+	color: var(--color-gray-600);
+}
+.k-link-input-model-toggle {
 	display: flex;
 	height: var(--height-sm);
-	align-items: center;
-}
-.k-link-input-page-path {
-	flex-grow: 1;
-	padding-inline: var(--spacing-3);
-}
-.k-link-input-page-toggle {
-	flex-shrink: 0;
 	width: var(--height-sm);
+	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
 }
 
 .k-link-input-body {
 	grid-area: body;
 	border-top: 1px solid var(--color-gray-300);
 	background: var(--color-gray-100);
-	padding: var(--spacing-2);
-	padding-bottom: calc(var(--spacing-2) - 1px);
 	overflow: auto;
 	--tree-color-back: var(--color-gray-100);
 	--tree-color-hover-back: var(--color-gray-200);
+}
+
+.k-link-input-body[data-type="page"] {
+	padding: var(--spacing-2);
+	padding-bottom: calc(var(--spacing-2) - 1px);
+}
+
+.k-link-input-body .k-file-browser-tree {
+	border-right: 1px solid var(--color-gray-300);
+}
+.k-link-input-body .k-file-browser-items {
+	background: var(--color-gray-100);
 }
 </style>
