@@ -107,6 +107,19 @@ export default {
 					input: "url",
 					schema: ""
 				},
+				page: {
+					icon: "page",
+					label: this.$t("page"),
+					placeholder: "Select a page …",
+					input: "text",
+					schema: ""
+				},
+				file: {
+					icon: "file",
+					label: this.$t("file"),
+					placeholder: "Select a file …",
+					schema: ""
+				},
 				email: {
 					icon: "email",
 					label: this.$t("email"),
@@ -121,19 +134,6 @@ export default {
 					placeholder: "Enter a phone number …",
 					input: "tel",
 					schema: "tel:"
-				},
-				page: {
-					icon: "page",
-					label: this.$t("page"),
-					placeholder: "Select a page …",
-					input: "text",
-					schema: ""
-				},
-				file: {
-					icon: "file",
-					label: this.$t("file"),
-					placeholder: "Select a file …",
-					schema: ""
 				}
 			};
 		}
