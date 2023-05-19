@@ -177,12 +177,17 @@ class PageCreateDialog
 
 		$this->template ??= $blueprints[0]['name'];
 
+		$status = $this->blueprint()->create()['status'] ?? 'draft';
+		$status = $this->blueprint()->status()[$status]['label'] ?? I18n::translate('page.status.' . $status);
+
 		return [
 			'component' => 'k-page-create-dialog',
 			'props' => [
 				'blueprints'   => $blueprints,
 				'fields'       => $this->fields(),
-				'submitButton' => I18n::translate('page.draft.create'),
+				'submitButton' => I18n::template('page.create', [
+					'status' => $status
+				]),
 				'template'     => $this->template,
 				'value'        => $this->value()
 			]
@@ -221,7 +226,12 @@ class PageCreateDialog
 
 		$this->validate($input);
 
-		$page = $this->parent->createChild($input);
+		$page   = $this->parent->createChild($input);
+		$status = $this->blueprint()->create()['status'] ?? 'draft';
+
+		if ($status !== 'draft') {
+			$page->changeStatus($status);
+		}
 
 		$payload = [
 			'event' => 'page.create'
