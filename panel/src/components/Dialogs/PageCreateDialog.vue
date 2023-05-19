@@ -1,19 +1,19 @@
 <template>
 	<k-form-dialog
-		class="k-page-create-dialog"
 		ref="dialog"
 		v-bind="$props"
+		class="k-page-create-dialog"
 		@cancel="cancel"
 		@submit="submit"
 	>
 		<k-select-field
 			v-if="templates.length > 1"
-			class="k-page-template-switch"
 			:empty="false"
 			:label="$t('template')"
 			:options="templates"
 			:required="true"
 			:value="template"
+			class="k-page-template-switch"
 			@input="pick($event)"
 		/>
 

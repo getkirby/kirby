@@ -36,16 +36,6 @@
 	</div>
 </template>
 
-<script>
-export default {
-	computed: {
-		dialog() {
-			return this.$helper.clone(this.$store.state.dialog);
-		}
-	}
-};
-</script>
-
 <style>
 .k-panel[data-loading="true"] {
 	animation: LoadingCursor 0.5s;

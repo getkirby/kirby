@@ -45,7 +45,6 @@
 					:parent="id"
 					:tab="tab"
 				/>
-				<k-upload ref="upload" @success="onUpload" />
 			</k-view>
 		</div>
 		<template #footer>
@@ -77,17 +76,11 @@ export default {
 		action(action) {
 			switch (action) {
 				case "replace":
-					this.$refs.upload.open({
-						url: this.$panel.urls.api + "/" + this.id,
-						accept: "." + this.model.extension + "," + this.model.mime,
-						multiple: false
+					return this.$panel.upload.replace({
+						...this.preview,
+						...this.model
 					});
-					break;
 			}
-		},
-		onUpload() {
-			this.$panel.notification.success();
-			this.$reload();
 		}
 	}
 };
