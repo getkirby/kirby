@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import Island, { defaults } from "./island.js";
 import Panel from "./panel.js";
 import Vue from "vue";

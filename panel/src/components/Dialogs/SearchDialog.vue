@@ -104,9 +104,6 @@ import debounce from "@/helpers/debounce.js";
 
 export default {
 	mixins: [Dialog],
-	created() {
-		this.search = debounce(this.search, 250);
-	},
 	data() {
 		return {
 			isLoading: false,
@@ -128,6 +125,9 @@ export default {
 		type() {
 			this.search(this.q);
 		}
+	},
+	created() {
+		this.search = debounce(this.search, 250);
 	},
 	methods: {
 		clear() {
