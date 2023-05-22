@@ -71,7 +71,7 @@ export default {
 		render() {
 			return;
 		},
-		upload(files) {
+		upload(files, params) {
 			this.$panel.upload.select(files, this.params(params));
 			this.$panel.upload.start();
 		}
