@@ -1,5 +1,3 @@
-<template></template>
-
 <script>
 /**
  * The Upload component is a combination of a native file input
@@ -69,6 +67,9 @@ export default {
 		 */
 		drop(files, params) {
 			this.$panel.upload.open(files, this.params(params));
+		},
+		render() {
+			return;
 		},
 		upload(files) {
 			this.$panel.upload.select(files, this.params(params));
