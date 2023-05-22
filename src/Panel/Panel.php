@@ -2,7 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Url as CmsUrl;
 use Kirby\Cms\User;

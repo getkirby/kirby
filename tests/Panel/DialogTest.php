@@ -217,5 +217,4 @@ class DialogTest extends TestCase
 		$this->assertSame('The load handler is missing', $routes[0]['action']());
 		$this->assertSame('The submit handler is missing', $routes[1]['action']());
 	}
-
 }

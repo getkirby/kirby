@@ -308,7 +308,7 @@ class DropdownTest extends TestCase
 		$dropdown = [
 			'pattern' => 'test',
 			'action'  => $action = function () {
-					return [
+				return [
 					[
 						'text' => 'Test',
 						'link' => '/test'
@@ -405,5 +405,4 @@ class DropdownTest extends TestCase
 
 		$this->assertSame($expected, $routes);
 	}
-
 }
