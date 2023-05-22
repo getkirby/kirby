@@ -105,7 +105,7 @@ export function lcfirst(string) {
  * @param {string} replace
  * @returns {string}
  */
-export function ltrim(string, replace) {
+export function ltrim(string = "", replace = "") {
 	const expression = new RegExp(`^(${replace})+`, "g");
 	return string.replace(expression, "");
 }
@@ -151,7 +151,7 @@ export function random(length) {
  * @param {string} replace
  * @returns {string}
  */
-export function rtrim(string, replace) {
+export function rtrim(string = "", replace = "") {
 	const expression = new RegExp(`(${replace})+$`, "g");
 	return string.replace(expression, "");
 }
