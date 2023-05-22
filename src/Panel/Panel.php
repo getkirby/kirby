@@ -417,27 +417,13 @@ class Panel
 		$dropdowns = $area['dropdowns'] ?? [];
 		$routes    = [];
 
-		foreach ($dropdowns as $name => $dropdown) {
-			// Handle shortcuts for dropdowns. The name is the pattern
-			// and options are defined in a Closure
-			if ($dropdown instanceof Closure) {
-				$dropdown = [
-					'pattern' => $name,
-					'action'  => $dropdown
-				];
-			}
-
-			// create the full pattern with dropdowns prefix
-			$pattern = 'dropdowns/' . trim(($dropdown['pattern'] ?? $name), '/');
-
-			// load event
-			$routes[] = [
-				'pattern' => $pattern,
-				'type'    => 'dropdown',
-				'area'    => $areaId,
-				'method'  => 'GET|POST',
-				'action'  => $dropdown['options'] ?? $dropdown['action']
-			];
+		foreach ($dropdowns as $dropdownId => $dropdown) {
+			$routes = array_merge($routes, Dropdown::routes(
+				id: $dropdownId,
+				areaId: $areaId,
+				prefix: 'dropdowns',
+				options: $dropdown
+			));
 		}
 
 		return $routes;
