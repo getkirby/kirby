@@ -29,7 +29,7 @@ return [
 		'pattern' => $parentPattern,
 		'method'  => 'GET',
 		'action'  => function (string $path) {
-			return $this->parent($path)->files()->sorted();
+			return $this->files($path)->sorted();
 		}
 	],
 	[
@@ -58,7 +58,7 @@ return [
 		'pattern' => $parentPattern . '/search',
 		'method'  => 'GET|POST',
 		'action'  => function (string $path) {
-			$files = $this->parent($path)->files();
+			$files = $this->files($path);
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));
@@ -71,7 +71,7 @@ return [
 		'pattern' => $parentPattern . '/sort',
 		'method'  => 'PATCH',
 		'action'  => function (string $path) {
-			return $this->parent($path)->files()->changeSort(
+			return $this->files($path)->changeSort(
 				$this->requestBody('files'),
 				$this->requestBody('index')
 			);
@@ -127,7 +127,8 @@ return [
 				->site()
 				->index(true)
 				->filter('isReadable', true)
-				->files();
+				->files()
+				->filter('isReadable', true);
 
 			if ($this->requestMethod() === 'GET') {
 				return $files->search($this->requestQuery('q'));

@@ -21,7 +21,6 @@ trait HasUuids
 		string $uuid,
 		string|null $scheme = null
 	): Identifiable|null {
-
 		// handle UUID shortcuts with a leading @
 		if ($scheme !== null && str_starts_with($uuid, '@') === true) {
 			$uuid = $scheme . '://' . substr($uuid, 1);

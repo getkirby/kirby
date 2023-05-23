@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Uuid\Uuid;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Str;
