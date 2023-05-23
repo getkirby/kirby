@@ -1,10 +1,27 @@
 <template>
-	<div class="k-file-browser">
-		<aside class="k-file-browser-tree">
-			<k-page-tree :current="page?.id" @select="selectPage" />
-		</aside>
-		<div class="k-file-browser-items">
-			<k-browser :items="files" :selected="selected" @select="selectFile" />
+	<div class="k-file-browser" :data-view="view">
+		<div class="k-file-browser-layout">
+			<aside ref="tree" class="k-file-browser-tree">
+				<k-page-tree
+					:current="page?.id"
+					@select="selectPage"
+					@toggleBranch="togglePage"
+				/>
+			</aside>
+			<div ref="items" class="k-file-browser-items">
+				<k-button
+					class="k-file-browser-back-button"
+					icon="angle-left"
+					text="…"
+					@click="view = 'tree'"
+				/>
+				<k-browser
+					v-if="files.length"
+					:items="files"
+					:selected="selected"
+					@select="selectFile"
+				/>
+			</div>
 		</div>
 	</div>
 </template>
@@ -19,7 +36,8 @@ export default {
 	data() {
 		return {
 			files: [],
-			page: null
+			page: null,
+			view: "tree"
 		};
 	},
 	methods: {
@@ -48,6 +66,17 @@ export default {
 					value: file.uuid
 				};
 			});
+
+			this.view = "files";
+		},
+		togglePage() {
+			this.$nextTick(() => {
+				this.$refs.tree.scrollIntoView({
+					behaviour: "smooth",
+					block: "nearest",
+					inline: "nearest"
+				});
+			});
 		}
 	}
 };
@@ -55,15 +84,50 @@ export default {
 
 <style>
 .k-file-browser {
+	container-type: inline-size;
+	overflow: hidden;
+}
+
+.k-file-browser-layout {
 	display: grid;
-	grid-template-columns: 15rem 1fr;
+	grid-template-columns: minmax(10rem, 15rem) 1fr;
 }
 
 .k-file-browser-tree {
 	padding: var(--spacing-2);
+	border-right: 1px solid var(--color-gray-300);
 }
 .k-file-browser-items {
 	padding: var(--spacing-2);
-	background: var(--color-white);
+	background: var(--color-gray-100);
+}
+.k-file-browser-back-button {
+	display: none;
+}
+
+@container (max-width: 30rem) {
+	.k-file-browser-layout {
+		grid-template-columns: minmax(0, 1fr);
+		min-height: 10rem;
+	}
+	.k-file-browser-back-button {
+		display: flex;
+		width: 100%;
+		height: var(--height-sm);
+		padding-inline: 0.25rem;
+		background: var(--color-gray-200);
+		border-radius: var(--rounded);
+		align-items: center;
+		margin-bottom: 0.5rem;
+	}
+	.k-file-browser-tree {
+		border-right: 0;
+	}
+	.k-file-browser[data-view="files"] .k-file-browser-tree {
+		display: none;
+	}
+	.k-file-browser[data-view="tree"] .k-file-browser-items {
+		display: none;
+	}
 }
 </style>

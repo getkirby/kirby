@@ -82,6 +82,7 @@ export default {
 		},
 		async toggle(page) {
 			page.open = !page.open;
+			this.$emit("toggleBranch", page);
 		}
 	}
 };

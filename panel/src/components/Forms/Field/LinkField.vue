@@ -24,13 +24,17 @@
 				<template v-if="linkType === 'page' || linkType === 'file'">
 					<div class="k-link-input-model" @click="toggle">
 						<template v-if="model">
-							<k-tag :removable="true" @remove="clear">
+							<k-tag
+								:removable="true"
+								class="k-link-input-model-preview"
+								@remove="clear"
+							>
 								{{ model.label }}
 							</k-tag>
 						</template>
 
 						<template v-else>
-							<k-button class="k-link-input-model-placeholder" @click="toggle">
+							<k-button class="k-link-input-model-placeholder">
 								{{ currentType.placeholder }}
 							</k-button>
 						</template>
@@ -52,11 +56,13 @@
 			</div>
 			<template v-if="linkType === 'page'">
 				<div v-show="expanded" data-type="page" class="k-link-input-body">
-					<k-page-tree
-						:current="value"
-						:root="false"
-						@select="onInput($event.id)"
-					/>
+					<div class="k-page-browser">
+						<k-page-tree
+							:current="value"
+							:root="false"
+							@select="onInput($event.id)"
+						/>
+					</div>
 				</div>
 			</template>
 			<template v-else-if="linkType === 'file'">
@@ -110,14 +116,14 @@ export default {
 				page: {
 					icon: "page",
 					label: this.$t("page"),
-					placeholder: "Select a page …",
+					placeholder: this.$t("select") + " …",
 					input: "text",
 					schema: ""
 				},
 				file: {
 					icon: "file",
 					label: this.$t("file"),
-					placeholder: "Select a file …",
+					placeholder: this.$t("select") + " …",
 					schema: ""
 				},
 				email: {
@@ -258,7 +264,7 @@ export default {
 <style>
 .k-link-input-header {
 	display: grid;
-	grid-template-columns: max-content 1fr;
+	grid-template-columns: max-content minmax(0, 1fr);
 	align-items: center;
 	gap: 0.25rem;
 	height: var(--field-input-height);
@@ -292,6 +298,7 @@ export default {
 
 .k-link-input-model {
 	display: flex;
+	overflow: hidden;
 	justify-content: space-between;
 	height: var(--height-sm);
 	margin-inline-end: var(--spacing-1);
@@ -303,16 +310,18 @@ export default {
 	--tag-rounded: var(--rounded-sm);
 }
 .k-link-input-model-preview {
-	display: inline-flex;
-	align-items: center;
-	background: var(--color-blue-200);
-	padding-inline-start: var(--spacing-3);
-	font-size: var(--text-sm);
-	border-radius: var(--rounded-sm);
+	overflow: hidden;
+	white-space: nowrap;
+}
+.k-link-input-model-preview .k-tag-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .k-link-input-model-placeholder.k-button {
 	display: flex;
 	flex-grow: 1;
+	overflow: hidden;
+	white-space: nowrap;
 	align-items: center;
 	justify-content: start;
 	height: var(--height-sm);
@@ -330,23 +339,19 @@ export default {
 }
 
 .k-link-input-body {
-	grid-area: body;
+	display: grid;
+	overflow: hidden;
 	border-top: 1px solid var(--color-gray-300);
 	background: var(--color-gray-100);
-	overflow: auto;
 	--tree-color-back: var(--color-gray-100);
 	--tree-color-hover-back: var(--color-gray-200);
 }
 
-.k-link-input-body[data-type="page"] {
+.k-link-input-body[data-type="page"] .k-page-browser {
 	padding: var(--spacing-2);
 	padding-bottom: calc(var(--spacing-2) - 1px);
-}
-
-.k-link-input-body .k-file-browser-tree {
-	border-right: 1px solid var(--color-gray-300);
-}
-.k-link-input-body .k-file-browser-items {
-	background: var(--color-gray-100);
+	width: 100%;
+	container-type: inline-size;
+	overflow: auto;
 }
 </style>
