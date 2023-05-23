@@ -6,7 +6,7 @@
 		@cancel="cancel"
 		@submit="submit"
 	>
-		<slot name="options" slot="options" />
+		<slot slot="options" name="options" />
 		<k-drawer-fields
 			:fields="$panel.drawer.tab?.fields"
 			:value="value"

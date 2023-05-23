@@ -14,8 +14,8 @@
 import Tree from "./Tree.vue";
 
 export default {
-	inheritAttrs: false,
 	mixins: [Tree],
+	inheritAttrs: false,
 	props: {
 		root: {
 			default: true,
@@ -32,6 +32,11 @@ export default {
 		items: {
 			type: String
 		}
+	},
+	data() {
+		return {
+			pages: []
+		};
 	},
 	async created() {
 		if (this.items) {
@@ -50,11 +55,6 @@ export default {
 				}
 			];
 		}
-	},
-	data() {
-		return {
-			pages: []
-		};
 	},
 	methods: {
 		async load(path) {

@@ -91,9 +91,10 @@ export default (panel = {}) => {
 
 			// open the error dialog in views
 			if (panel.context === "view") {
-				return panel.dialog.open({
+				panel.dialog.open({
 					component: "k-error-dialog",
-					props: error
+					props: error,
+					type: "error"
 				});
 			}
 

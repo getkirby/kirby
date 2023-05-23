@@ -60,10 +60,6 @@ export default {
 			items: []
 		};
 	},
-	updated() {
-		this.query = this.getQuery();
-		this.focus();
-	},
 	watch: {
 		query: {
 			handler(query) {
@@ -74,6 +70,10 @@ export default {
 		type() {
 			this.search(this.query);
 		}
+	},
+	updated() {
+		this.query = this.getQuery();
+		this.focus();
 	},
 	methods: {
 		focus() {

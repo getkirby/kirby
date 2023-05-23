@@ -256,7 +256,7 @@ export default {
 	 *
 	 * @param {Object} state
 	 */
-	set(state) {
+	set(state = {}) {
 		/**
 		 * Old fiber requests use $ as key prefix
 		 * This will remove the dollar sign in keys first
