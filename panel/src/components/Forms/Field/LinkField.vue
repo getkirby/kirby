@@ -207,32 +207,47 @@ export default {
 		focus() {
 			this.$refs.input?.focus();
 		},
-		async preview() {
-			if (this.linkType === "page" && this.linkValue) {
-				const page = await this.$api.pages.get(this.linkValue, {
-					select: "id,title"
-				});
-
-				this.model = {
-					label: page.title
-				};
-			} else if (this.linkType === "file" && this.linkValue) {
-				const file = await this.$api.get("files/" + this.linkValue, {
-					select: "id,filename"
-				});
-				this.model = {
-					label: file.filename
-				};
-			} else {
-				this.model = null;
-			}
-		},
 		onInput(link) {
 			const value = link.trim().length ? this.currentType.schema + link : "";
 			this.$emit("input", value);
 		},
 		onInvalid(invalid) {
 			this.isInvalid = invalid;
+		},
+		async preview() {
+			if (this.linkType === "page" && this.linkValue) {
+				this.model = await this.previewForPage(this.linkValue);
+			} else if (this.linkType === "file" && this.linkValue) {
+				this.model = await this.previewForFile(this.linkValue);
+			} else {
+				this.model = null;
+			}
+		},
+		async previewForFile(id) {
+			try {
+				const file = await this.$api.get("files/" + id, {
+					select: "id,filename"
+				});
+
+				return {
+					label: file.filename
+				};
+			} catch (e) {
+				return null;
+			}
+		},
+		async previewForPage(id) {
+			try {
+				const page = await this.$api.pages.get(id, {
+					select: "id,title"
+				});
+
+				return {
+					label: page.title
+				};
+			} catch (e) {
+				return null;
+			}
 		},
 		switchType(type) {
 			if (type === this.linkType) {
@@ -323,7 +338,7 @@ export default {
 	overflow: hidden;
 	white-space: nowrap;
 	align-items: center;
-	justify-content: start;
+	justify-content: flex-start;
 	height: var(--height-sm);
 	font-size: var(--text-base);
 	padding-inline: var(--spacing-2);
