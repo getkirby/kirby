@@ -56,8 +56,13 @@ export default {
 			this.$refs.dialog.open();
 		},
 		submit() {
+			const href = this.link.href
+				.replace("file://", "/@/file/")
+				.replace("page://", "/@/page/");
+
 			this.$emit("submit", {
 				...this.link,
+				href: href,
 				target: this.link.target ? "_blank" : null
 			});
 

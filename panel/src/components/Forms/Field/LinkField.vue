@@ -124,7 +124,7 @@ export default {
 					placeholder: this.$t("select") + " …",
 					input: "text",
 					value: (value) => {
-						return value.replace("page://", "/@/page/");
+						return value;
 					}
 				},
 				file: {
@@ -132,7 +132,7 @@ export default {
 					label: this.$t("file"),
 					placeholder: this.$t("select") + " …",
 					value: (value) => {
-						return value.replace("file://", "/@/file/");
+						return value;
 					}
 				},
 				email: {
