@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AuthException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\PermissionException;
 
 /**
  * Takes care of content lock and unlock information
@@ -251,6 +251,6 @@ class ContentLock
 	protected function user(): User
 	{
 		return $this->kirby()->user() ??
-			throw new PermissionException('No user authenticated.');
+			throw new AuthException('No user authenticated.');
 	}
 }

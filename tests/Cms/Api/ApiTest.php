@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AuthException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
@@ -426,7 +426,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException(PermissionException::class);
+		$this->expectException(AuthException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
@@ -446,7 +446,7 @@ class ApiTest extends TestCase
 		$kirby = $this->createMock(App::class);
 		$kirby->method('auth')->willReturn($auth);
 
-		$this->expectException(PermissionException::class);
+		$this->expectException(AuthException::class);
 		$this->expectExceptionMessage('Unauthenticated');
 
 		$function = require $this->app->root('kirby') . '/config/api/authentication.php';
