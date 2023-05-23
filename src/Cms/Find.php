@@ -30,15 +30,9 @@ class Find
 	 */
 	public static function file(string|null $path = null, string $filename = null)
 	{
-		$kirby    = App::instance();
 		$filename = urldecode($filename);
-		$parent   = empty($path) ? $kirby : static::parent($path);
-		$file     = $parent->file($filename);
-
-		// try to find the file by UUID
-		if (!$file) {
-			$file = $kirby->file('file://' . $filename);
-		}
+		$parent   = empty($path) ? null : static::parent($path);
+		$file     = App::instance()->file($filename, $parent);
 
 		if ($file?->isReadable() === true) {
 			return $file;
@@ -82,13 +76,7 @@ class Find
 	 */
 	public static function page(string $id)
 	{
-		$id   = str_replace(['+', ' '], '/', $id);
 		$page = App::instance()->page($id);
-
-		// search by UUID
-		if (!$page && Str::contains($id, '/') === false) {
-			$page = App::instance()->page('page://' . $id);
-		}
 
 		if ($page?->isReadable() === true) {
 			return $page;

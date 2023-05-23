@@ -372,7 +372,7 @@ return [
 		}
 
 		// support UUIDs
-		if (Uuid::is($path, 'page') === true || Uuid::is($path, 'file') === true) {
+		if ($path !== null && (Uuid::is($path, 'page') === true || Uuid::is($path, 'file') === true)) {
 			$path = Uuid::for($path)->model()->url();
 		}
 

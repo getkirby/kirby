@@ -255,7 +255,7 @@ export default {
 		},
 		async previewForFile(id) {
 			try {
-				const file = await this.$api.get("files/" + this.getFileUUID(id), {
+				const file = await this.$api.files.get(null, id, {
 					select: "filename"
 				});
 
@@ -268,7 +268,7 @@ export default {
 		},
 		async previewForPage(id) {
 			try {
-				const page = await this.$api.get("pages/" + this.getPageUUID(id), {
+				const page = await this.$api.pages.get(id, {
 					select: "title"
 				});
 

@@ -1178,11 +1178,6 @@ class App
 			return null;
 		}
 
-		// find by global UUID
-		if (Uuid::is($id, 'page') === true) {
-			return Uuid::for($id, $parent?->childrenAndDrafts())->model();
-		}
-
 		$parent = $parent ?? $this->site();
 
 		if ($page = $parent->find($id)) {

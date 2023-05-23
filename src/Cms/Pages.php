@@ -223,6 +223,9 @@ class Pages extends Collection
 		// remove trailing or leading slashes
 		$key = trim($key, '/');
 
+		// decode API ID encoding
+		$key = str_replace(['+', ' '], '/', $key);
+
 		// strip extensions from the id
 		if (strpos($key, '.') !== false) {
 			$info = pathinfo($key);
