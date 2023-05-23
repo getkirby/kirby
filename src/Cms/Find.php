@@ -76,6 +76,9 @@ class Find
 	 */
 	public static function page(string $id)
 	{
+		// decode API ID encoding
+		$id = str_replace(['+', ' '], '/', $id);
+
 		$page = App::instance()->page($id);
 
 		if ($page?->isReadable() === true) {
