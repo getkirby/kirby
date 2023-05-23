@@ -54,8 +54,12 @@ export default (api) => ({
 		return page;
 	},
 	id(id) {
+		if (id.startsWith("/@/page/") === true) {
+			return id.replace("/@/page/", "");
+		}
+
 		if (id.startsWith("page://") === true) {
-			id = id.replace("page://", "");
+			return id.replace("page://", "");
 		}
 
 		return id.replace(/\//g, "+");

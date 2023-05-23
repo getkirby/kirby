@@ -103,8 +103,7 @@ export default class Link extends Mark {
 			toDOM: (node) => [
 				"a",
 				{
-					...node.attrs,
-					rel: "noreferrer"
+					...node.attrs
 				},
 				0
 			]

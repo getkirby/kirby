@@ -58,7 +58,7 @@
 				<div v-show="expanded" data-type="page" class="k-link-input-body">
 					<div class="k-page-browser">
 						<k-page-tree
-							:current="value"
+							:current="getPageUUID(value)"
 							:root="false"
 							@select="onInput($event.id)"
 						/>
@@ -67,7 +67,10 @@
 			</template>
 			<template v-else-if="linkType === 'file'">
 				<div v-show="expanded" data-type="file" class="k-link-input-body">
-					<k-file-browser :selected="value" @select="onInput($event.id)" />
+					<k-file-browser
+						:selected="getFileUUID(value)"
+						@select="onInput($event.id)"
+					/>
 				</div>
 			</template>
 		</k-input>
@@ -111,27 +114,35 @@ export default {
 					label: this.$t("url"),
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
-					schema: ""
+					value: (value) => {
+						return value;
+					}
 				},
 				page: {
 					icon: "page",
 					label: this.$t("page"),
 					placeholder: this.$t("select") + " …",
 					input: "text",
-					schema: ""
+					value: (value) => {
+						return value.replace("page://", "/@/page/");
+					}
 				},
 				file: {
 					icon: "file",
 					label: this.$t("file"),
 					placeholder: this.$t("select") + " …",
-					schema: ""
+					value: (value) => {
+						return value.replace("file://", "/@/file/");
+					}
 				},
 				email: {
 					icon: "email",
 					label: this.$t("email"),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
-					schema: "mailto:"
+					value: (value) => {
+						return "mailto:" + value;
+					}
 				},
 				tel: {
 					icon: "phone",
@@ -139,7 +150,9 @@ export default {
 					pattern: "[+]{0,1}[0-9]+",
 					placeholder: "Enter a phone number …",
 					input: "tel",
-					schema: "tel:"
+					value: (value) => {
+						return "tel:" + value;
+					}
 				}
 			};
 		}
@@ -167,18 +180,14 @@ export default {
 		detect(value) {
 			value = value ?? "";
 
-			if (
-				value.startsWith("page://") === true ||
-				value.startsWith("site://") ||
-				value.startsWith("/")
-			) {
+			if (this.isPageUUID(value) === true) {
 				return {
 					type: "page",
 					link: value
 				};
 			}
 
-			if (value.startsWith("file://") === true) {
+			if (this.isFileUUID(value) === true) {
 				return {
 					type: "file",
 					link: value
@@ -207,9 +216,30 @@ export default {
 		focus() {
 			this.$refs.input?.focus();
 		},
+		getFileUUID(value) {
+			return value.replace("/@/file/", "file://");
+		},
+		getPageUUID(value) {
+			return value.replace("/@/page/", "page://");
+		},
+		isFileUUID(value) {
+			return (
+				value.startsWith("file://") === true || value.startsWith("/@/file/")
+			);
+		},
+		isPageUUID(value) {
+			return (
+				value.startsWith("page://") === true || value.startsWith("/@/page/")
+			);
+		},
 		onInput(link) {
-			const value = link.trim().length ? this.currentType.schema + link : "";
-			this.$emit("input", value);
+			const value = link.trim();
+
+			if (!value.length) {
+				return this.$emit("input", "");
+			}
+
+			this.$emit("input", this.currentType.value(value));
 		},
 		onInvalid(invalid) {
 			this.isInvalid = invalid;
@@ -225,8 +255,8 @@ export default {
 		},
 		async previewForFile(id) {
 			try {
-				const file = await this.$api.get("files/" + id, {
-					select: "id,filename"
+				const file = await this.$api.get("files/" + this.getFileUUID(id), {
+					select: "filename"
 				});
 
 				return {
@@ -238,8 +268,8 @@ export default {
 		},
 		async previewForPage(id) {
 			try {
-				const page = await this.$api.pages.get(id, {
-					select: "id,title"
+				const page = await this.$api.get("pages/" + this.getPageUUID(id), {
+					select: "title"
 				});
 
 				return {
