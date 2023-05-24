@@ -39,16 +39,23 @@ class Collections
 	/**
 	 * Magic caller to enable something like
 	 * `$collections->myCollection()`
+	 *
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 5.0 Add return type declaration
 	 */
-	public function __call(string $name, array $arguments = []): Collection|null
+	public function __call(string $name, array $arguments = [])
 	{
 		return $this->get($name, ...$arguments);
 	}
 
 	/**
 	 * Loads a collection by name if registered
+	 *
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 4.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 5.0 Add return type declaration
 	 */
-	public function get(string $name, array $data = []): Collection|string|null
+	public function get(string $name, array $data = [])
 	{
 		// if not yet loaded
 		$this->collections[$name] ??= $this->load($name);

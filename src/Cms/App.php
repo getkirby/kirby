@@ -354,8 +354,11 @@ class App
 	 * Returns a specific user-defined collection
 	 * by name. All relevant dependencies are
 	 * automatically injected
+	 *
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 5.0 Add return type declaration
 	 */
-	public function collection(string $name): Collection|null
+	public function collection(string $name)
 	{
 		return $this->collections()->get($name, [
 			'kirby' => $this,
