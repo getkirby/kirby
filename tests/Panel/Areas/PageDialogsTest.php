@@ -519,7 +519,7 @@ class PageDialogsTest extends AreaTestCase
 		$dialog = $this->dialog('pages/create');
 		$props  = $dialog['props'];
 
-		$this->assertFormDialog($dialog);
+		$this->assertSame('k-page-create-dialog', $dialog['component']);
 
 		$this->assertSame('Title', $props['fields']['title']['label']);
 		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
@@ -529,7 +529,7 @@ class PageDialogsTest extends AreaTestCase
 		// there's only the default template for now
 		$this->assertTrue($props['fields']['template']['hidden']);
 
-		$this->assertSame('Create draft', $props['submitButton']);
+		$this->assertSame('Create as Draft', $props['submitButton']);
 
 		$this->assertSame('site', $props['value']['parent']);
 		$this->assertSame('', $props['value']['slug']);
@@ -575,7 +575,7 @@ class PageDialogsTest extends AreaTestCase
 		$props  = $dialog['props'];
 
 		// a + b + default
-		$this->assertCount(3, $props['fields']['template']['options']);
+		$this->assertCount(3, $props['blueprints']);
 	}
 
 	public function testCreateOnSubmit(): void

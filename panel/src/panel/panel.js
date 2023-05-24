@@ -12,6 +12,7 @@ import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
+import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
 import { isObject } from "@/helpers/object.js";
@@ -66,6 +67,7 @@ export default {
 
 		this.drag = Drag(this);
 		this.events = Events(this);
+		this.upload = Upload(this);
 
 		// modules
 		this.language = Language(this);
@@ -254,7 +256,7 @@ export default {
 	 *
 	 * @param {Object} state
 	 */
-	set(state) {
+	set(state = {}) {
 		/**
 		 * Old fiber requests use $ as key prefix
 		 * This will remove the dollar sign in keys first

@@ -34,7 +34,9 @@ describe.concurrent("panel.view", () => {
 			on: {},
 			path: null,
 			props: {},
+			query: {},
 			referrer: null,
+			search: "pages",
 			timestamp: null,
 			title: null
 		};

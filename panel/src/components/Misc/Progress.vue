@@ -65,32 +65,32 @@ export default {
 </script>
 
 <style>
-.k-progress {
-	-webkit-appearance: none;
+:root {
+	--progress-height: var(--spacing-2);
+	--progress-color-back: var(--color-gray-300);
+	--progress-color-value: var(--color-focus);
+}
+
+progress {
+	display: block;
 	width: 100%;
-	height: 0.5rem;
-	border-radius: 5rem;
-	background: var(--color-border);
+	height: var(--progress-height);
+	border-radius: var(--progress-height);
 	overflow: hidden;
-	border: none;
 }
 
-.k-progress::-webkit-progress-bar {
-	border: none;
-	background: var(--color-border);
-	height: 0.5rem;
-	border-radius: 20px;
+/** Determinate **/
+progress::-webkit-progress-bar {
+	background: var(--progress-color-back);
 }
 
-.k-progress::-webkit-progress-value {
-	border-radius: inherit;
-	background: var(--color-focus);
-	transition: width 0.3s;
+progress::-webkit-progress-value {
+	background: var(--progress-color-value);
+	border-radius: var(--progress-height);
 }
 
-.k-progress::-moz-progress-bar {
-	border-radius: inherit;
-	background: var(--color-focus);
-	transition: width 0.3s;
+/**	Indeterminate **/
+progress:not([value])::-webkit-progress-bar {
+	background: var(--progress-color-value);
 }
 </style>

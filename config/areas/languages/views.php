@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\I18n;
 
 return [
 	'language' => [
@@ -24,12 +25,12 @@ return [
 						[
 							'click' => 'update',
 							'icon'  => 'edit',
-							'text'  => t('edit'),
+							'text'  => I18n::translate('edit'),
 						],
 						[
 							'click' => 'delete',
 							'icon'  => 'trash',
-							'text'  => t('delete'),
+							'text'  => I18n::translate('delete'),
 						]
 					]
 				];
@@ -73,16 +74,16 @@ return [
 							'value'  => $language->isDefault() ? 'Default language' : 'Secondary language',
 						],
 						[
-							'label' => t('language.code'),
+							'label' => I18n::translatet('language.code'),
 							'value' => $language->code(),
 						],
 						[
-							'label' => t('language.locale'),
+							'label' => I18n::translate('language.locale'),
 							'value' => $language->locale(LC_ALL)
 						],
 						[
-							'label' => t('language.direction'),
-							'value' => t('language.direction.' . $language->direction()),
+							'label' => I18n::translate('language.direction'),
+							'value' => I18n::translate('language.direction.' . $language->direction()),
 						],
 					],
 					'name'         => $name,

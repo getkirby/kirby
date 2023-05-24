@@ -40,46 +40,48 @@
 
 			<!-- Details -->
 			<div class="k-file-preview-details">
-				<dl v-for="detail in details" :key="detail.title">
-					<dt>{{ detail.title }}</dt>
-					<dd>
-						<k-link
-							v-if="detail.link"
-							:to="detail.link"
-							tabindex="-1"
-							target="_blank"
-						>
-							/{{ detail.text }}
-						</k-link>
-						<template v-else>
-							{{ detail.text }}
-						</template>
-					</dd>
-				</dl>
+				<dl>
+					<div v-for="detail in details" :key="detail.title">
+						<dt>{{ detail.title }}</dt>
+						<dd>
+							<k-link
+								v-if="detail.link"
+								:to="detail.link"
+								tabindex="-1"
+								target="_blank"
+							>
+								/{{ detail.text }}
+							</k-link>
+							<template v-else>
+								{{ detail.text }}
+							</template>
+						</dd>
+					</div>
 
-				<dl v-if="image.src" class="k-file-preview-focus-info">
-					<dt>{{ $t("file.focus.title") }}</dt>
-					<dd>
-						<k-button
-							v-if="focusable"
-							:icon="hasFocus ? 'cancel-small' : 'preview'"
-							:title="hasFocus ? $t('file.focus.reset') : undefined"
-							size="xs"
-							variant="filled"
-							@click="setFocus(hasFocus ? undefined : '50% 50%')"
-						>
-							<template v-if="hasFocus">
+					<div v-if="image.src" class="k-file-preview-focus-info">
+						<dt>{{ $t("file.focus.title") }}</dt>
+						<dd>
+							<k-button
+								v-if="focusable"
+								:icon="hasFocus ? 'cancel-small' : 'preview'"
+								:title="hasFocus ? $t('file.focus.reset') : undefined"
+								size="xs"
+								variant="filled"
+								@click="setFocus(hasFocus ? undefined : '50% 50%')"
+							>
+								<template v-if="hasFocus">
+									{{ focus.x }}% {{ focus.y }}%
+								</template>
+								<template v-else-if="focusable">
+									{{ $t("file.focus.placeholder") }}
+								</template>
+							</k-button>
+							<template v-else-if="hasFocus">
 								{{ focus.x }}% {{ focus.y }}%
 							</template>
-							<template v-else-if="focusable">
-								{{ $t("file.focus.placeholder") }}
-							</template>
-						</k-button>
-						<template v-else-if="hasFocus">
-							{{ focus.x }}% {{ focus.y }}%
-						</template>
-						<template v-else>–</template>
-					</dd>
+							<template v-else>–</template>
+						</dd>
+					</div>
 				</dl>
 			</div>
 		</k-view>
@@ -118,7 +120,7 @@ export default {
 				}
 			];
 
-			if (this.isFocusable && this.image.src) {
+			if (this.focusable && this.image.src) {
 				options.push({
 					icon: "cancel",
 					text: this.$t("file.focus.reset"),
@@ -209,6 +211,9 @@ export default {
 /* Details */
 .k-file-preview-details {
 	display: grid;
+}
+.k-file-preview-details dl {
+	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
 	grid-gap: var(--spacing-6) var(--spacing-12);
 	padding: var(--spacing-6);
@@ -221,7 +226,7 @@ export default {
 	font-weight: 500;
 	font-weight: var(--font-semi);
 	color: var(--color-gray-500);
-	margin-bottom: var(--spacing-2);
+	margin-bottom: var(--spacing-1);
 }
 .k-file-preview-details :where(dd, a) {
 	font-size: var(--text-xs);

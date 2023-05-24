@@ -137,8 +137,8 @@ class PagePicker extends Picker
 			$items = $this->itemsForQuery();
 		}
 
-		// filter protected pages
-		$items = $items->filter('isReadable', true);
+		// filter protected and hidden pages
+		$items = $items->filter('isListable', true);
 
 		// search
 		$items = $this->search($items);

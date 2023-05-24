@@ -1,8 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import Island, { defaults } from "./island.js";
 import Panel from "./panel.js";
+import Vue from "vue";
 
 describe.concurrent("panel/island.js", () => {
+	window.Vue = Vue;
+
 	it("should have a default state", async () => {
 		const panel = Panel.create();
 		const island = Island(panel, "test", defaults());
@@ -15,6 +18,7 @@ describe.concurrent("panel/island.js", () => {
 			on: {},
 			path: null,
 			props: {},
+			query: {},
 			ref: null,
 			referrer: null,
 			timestamp: null
@@ -138,7 +142,7 @@ describe.concurrent("panel/island.js", () => {
 		const panel = Panel.create();
 		const island = Island(panel, "test", defaults());
 
-		island.submitSuccessHandler({
+		island.success({
 			message: "Test"
 		});
 
@@ -159,7 +163,7 @@ describe.concurrent("panel/island.js", () => {
 			emitted.push("user.deleted");
 		});
 
-		island.submitSuccessHandler({
+		island.success({
 			event: "user.deleted"
 		});
 
@@ -176,7 +180,7 @@ describe.concurrent("panel/island.js", () => {
 
 		expect(island.isOpen).toStrictEqual(true);
 
-		island.submitSuccessHandler({});
+		island.success({});
 
 		expect(island.isOpen).toStrictEqual(false);
 	});

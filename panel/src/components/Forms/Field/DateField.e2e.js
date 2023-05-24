@@ -18,15 +18,17 @@ describe("DateField", () => {
 		});
 
 		it("should keep input value", () => {
-			cy.get(".k-field-name-date input")
-				.type("2021-05-12")
-				.should("have.value", "2021-05-12");
+			cy.get(".k-field-name-date input").as("input");
+
+			cy.get("@input").type("2021-05-12");
+			cy.get("@input").should("have.value", "2021-05-12");
 		});
 
 		it("should parse input on enter", () => {
-			cy.get(".k-field-name-date input")
-				.type("12.5.2021{enter}")
-				.should("have.value", "2021-05-12");
+			cy.get(".k-field-name-date input").as("input");
+
+			cy.get("@input").type("12.5.2021{enter}");
+			cy.get("@input").should("have.value", "2021-05-12");
 		});
 
 		// TODO: does not pass in CI yet for some unknown reason
