@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Cms\App;
+
 return [
 	'search' => [
 		'pattern' => 'search',
@@ -7,7 +9,7 @@ return [
 			return [
 				'component' => 'k-search-view',
 				'props' => [
-					'type' => get('type') ?? 'pages',
+					'type' => App::instance()->request()->get('type') ?? 'pages',
 				]
 			];
 		}

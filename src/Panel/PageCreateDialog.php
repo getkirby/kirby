@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -48,13 +49,11 @@ class PageCreateDialog
 	public function blueprint(): PageBlueprint
 	{
 		// create a temporary page object
-		$page = Page::factory([
+		return $this->blueprint ??= Page::factory([
 			'slug'     => 'new',
 			'template' => $this->template,
 			'model'    => $this->template
-		]);
-
-		return $this->blueprint ??= $page->blueprint();
+		])->blueprint();
 	}
 
 	/**
@@ -62,10 +61,36 @@ class PageCreateDialog
 	 */
 	public function blueprints(): array
 	{
-		return array_map(function ($blueprint) {
-			$blueprint['name'] ??= $blueprint['value'] ?? null;
-			return $blueprint;
-		}, $this->view->blueprints($this->sectionId));
+		return A::map(
+			$this->view->blueprints($this->sectionId),
+			function ($blueprint) {
+				$blueprint['name'] ??= $blueprint['value'] ?? null;
+				return $blueprint;
+			}
+		);
+	}
+
+	/**
+	 * All the default fields for the dialog
+	 */
+	public function coreFields(): array
+	{
+		return [
+			'title' => Field::title([
+				'label'     => $this->blueprint()->create()['title']['label'] ?? I18n::translate('title'),
+				'required'  => true,
+				'preselect' => true
+			]),
+			'slug' => Field::slug([
+				'required' => true,
+				'sync'     => 'title',
+				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
+			]),
+			'parent'   => Field::hidden(),
+			'section'  => Field::hidden(),
+			'template' => Field::hidden(),
+			'view'     => Field::hidden(),
+		];
 	}
 
 	/**
@@ -85,10 +110,12 @@ class PageCreateDialog
 			}
 
 			if (in_array($field['type'], $types) === false) {
+				// TODO: should throw an error, otherwise frustrating to debug
 				continue;
 			}
 
 			if (in_array($name, $ignore) === true) {
+				// TODO: should throw an error, otherwise frustrating to debug
 				continue;
 			}
 
@@ -107,6 +134,7 @@ class PageCreateDialog
 	 */
 	public function customFieldTypes(): array
 	{
+		// TODO: how can one extend this via plugins?
 		return [
 			'checkboxes',
 			'date',
@@ -132,22 +160,10 @@ class PageCreateDialog
 	 */
 	public function fields(): array
 	{
-		return [
-			'title' => Field::title([
-				'label'     => $this->blueprint()->create()['title']['label'] ?? I18n::translate('title'),
-				'required'  => true,
-				'preselect' => true
-			]),
-			'slug' => Field::slug([
-				'required' => true,
-				'sync'     => 'title',
-				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
-			]),
-			'parent'   => Field::hidden(),
-			'section'  => Field::hidden(),
-			'template' => Field::hidden(),
-			'view'     => Field::hidden(),
-		];
+		return array_merge(
+			$this->coreFields(),
+			$this->customFields()
+		);
 	}
 
 	/**
@@ -161,12 +177,17 @@ class PageCreateDialog
 
 		$this->template ??= $blueprints[0]['name'];
 
+		$status = $this->blueprint()->create()['status'] ?? 'draft';
+		$status = $this->blueprint()->status()[$status]['label'] ?? I18n::translate('page.status.' . $status);
+
 		return [
 			'component' => 'k-page-create-dialog',
 			'props' => [
 				'blueprints'   => $blueprints,
-				'fields'       => array_merge($this->fields(), $this->customFields()),
-				'submitButton' => I18n::translate('page.draft.create'),
+				'fields'       => $this->fields(),
+				'submitButton' => I18n::template('page.create', [
+					'status' => $status
+				]),
 				'template'     => $this->template,
 				'value'        => $this->value()
 			]
@@ -205,12 +226,23 @@ class PageCreateDialog
 
 		$this->validate($input);
 
-		$page = $this->parent->createChild($input);
+		$page   = $this->parent->createChild($input);
+		$status = $this->blueprint()->create()['status'] ?? 'draft';
 
-		return [
-			'event'    => 'page.create',
-			'redirect' => $page->panel()->url(true)
+		if ($status !== 'draft') {
+			$page->changeStatus($status);
+		}
+
+		$payload = [
+			'event' => 'page.create'
 		];
+
+		// add redirect, if not explicitly disabled
+		if (($this->blueprint()->create()['redirect'] ?? null) !== false) {
+			$payload['redirect'] = $page->panel()->url(true);
+		}
+
+		return $payload;
 	}
 
 	public function validate(array $input): bool

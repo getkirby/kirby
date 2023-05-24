@@ -7,7 +7,7 @@ export const defaults = () => {
 	};
 };
 
-export default (panel = {}) => {
+export default () => {
 	const parent = Module("drag", defaults());
 
 	return {

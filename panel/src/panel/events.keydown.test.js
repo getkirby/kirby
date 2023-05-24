@@ -1,12 +1,10 @@
-/**
- * @vitest-environment node
- */
-
 import { describe, expect, it } from "vitest";
 import Events from "./events.js";
+import Panel from "./panel.js";
 
 describe.concurrent("panel.events.keydown", () => {
-	const events = Events();
+	const panel = Panel.create();
+	const events = Events(panel);
 
 	it("should fire keydown event with modifiers", async () => {
 		let fired = false;

@@ -178,6 +178,6 @@ describe.concurrent("panel/feature.js", () => {
 			path: "/a/b/c"
 		});
 
-		expect(feature.url).toStrictEqual("/a/b/c");
+		expect(feature.url()).toStrictEqual("/a/b/c");
 	});
 });

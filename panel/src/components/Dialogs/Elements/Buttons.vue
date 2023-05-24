@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { isObject, merge } from "@/helpers/object.js";
+import { isObject } from "@/helpers/object.js";
 
 export const props = {
 	props: {
