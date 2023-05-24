@@ -17,8 +17,16 @@ export default {
 	mixins: [Tree],
 	inheritAttrs: false,
 	props: {
+		root: {
+			default: true,
+			type: Boolean
+		},
 		current: {
 			default: "/site",
+			type: String
+		},
+		identifier: {
+			default: "uuid",
 			type: String
 		},
 		items: {
@@ -32,12 +40,14 @@ export default {
 	},
 	async created() {
 		if (this.items) {
-			this.pages = await this.load();
+			this.pages = await this.load(this.items);
+		} else if (this.root === false) {
+			this.pages = await this.load("/site");
 		} else {
 			this.pages = [
 				{
 					icon: "home",
-					id: "/site",
+					id: "site://",
 					label: this.$t("view.site"),
 					hasChildren: true,
 					children: "/site",
@@ -47,23 +57,24 @@ export default {
 		}
 	},
 	methods: {
-		async load() {
-			const { data } = await this.$api.get(this.items + "/children", {
-				select: "hasChildren,id,title",
+		async load(path) {
+			const { data } = await this.$api.get(path + "/children", {
+				select: "hasChildren,id,title,uuid",
 				status: "all"
 			});
 
 			const pages = {};
 
 			data.forEach((page) => {
-				const id = "/pages/" + this.$api.pages.id(page.id);
+				const id = page[this.identifier];
+				const api = "/pages/" + this.$api.pages.id(page.id);
 
 				pages[id] = {
 					id: id,
 					label: page.title,
 					hasChildren: page.hasChildren,
-					children: id,
-					open: this.current?.includes(id) && this.current !== id
+					children: api,
+					open: false
 				};
 			});
 
@@ -71,6 +82,7 @@ export default {
 		},
 		async toggle(page) {
 			page.open = !page.open;
+			this.$emit("toggleBranch", page);
 		}
 	}
 };

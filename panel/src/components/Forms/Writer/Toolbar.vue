@@ -182,7 +182,7 @@ export default {
 }
 
 .k-writer-toolbar[data-inline="true"] {
-	--toolbar-size: 30px;
+	--toolbar-size: var(--height-md);
 	--toolbar-text: var(--color-white);
 	--toolbar-back: var(--color-black);
 	--toolbar-hover: rgba(255, 255, 255, 0.15);

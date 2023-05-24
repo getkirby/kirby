@@ -16,7 +16,7 @@ export default {
 	data() {
 		return {
 			link: {
-				href: null,
+				href: "",
 				title: null,
 				target: false
 			}
@@ -26,8 +26,8 @@ export default {
 		fields() {
 			return {
 				href: {
-					label: this.$t("url"),
-					type: "text",
+					label: this.$t("link"),
+					type: "link",
 					icon: "url"
 				},
 				title: {
@@ -46,6 +46,7 @@ export default {
 	methods: {
 		open(link) {
 			this.link = {
+				href: "",
 				title: null,
 				target: false,
 				...link
@@ -55,8 +56,13 @@ export default {
 			this.$refs.dialog.open();
 		},
 		submit() {
+			const href = this.link.href
+				.replace("file://", "/@/file/")
+				.replace("page://", "/@/page/");
+
 			this.$emit("submit", {
 				...this.link,
+				href: href,
 				target: this.link.target ? "_blank" : null
 			});
 

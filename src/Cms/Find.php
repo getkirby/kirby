@@ -28,10 +28,11 @@ class Find
 	 * @return \Kirby\Cms\File|null
 	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
 	 */
-	public static function file(string $path = null, string $filename)
+	public static function file(string|null $path = null, string $filename = null)
 	{
 		$filename = urldecode($filename);
-		$file     = static::parent($path)->file($filename);
+		$parent   = empty($path) ? null : static::parent($path);
+		$file     = App::instance()->file($filename, $parent);
 
 		if ($file?->isReadable() === true) {
 			return $file;
@@ -75,7 +76,9 @@ class Find
 	 */
 	public static function page(string $id)
 	{
-		$id   = str_replace(['+', ' '], '/', $id);
+		// decode API ID encoding
+		$id = str_replace(['+', ' '], '/', $id);
+
 		$page = App::instance()->page($id);
 
 		if ($page?->isAccessible() === true) {

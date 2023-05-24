@@ -87,7 +87,6 @@ export default {
 	margin-bottom: 1px;
 }
 .k-tree-branch:has(+ .k-tree) {
-	position: sticky;
 	inset-block-start: calc(var(--tree-level) * 1.5rem);
 	z-index: calc(100 - var(--tree-level));
 	background: var(--tree-color-back);

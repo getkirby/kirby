@@ -9,7 +9,6 @@ export const defaults = () => {
 		id: null,
 		link: null,
 		search: "pages",
-		timestamp: null,
 		title: null
 	};
 };

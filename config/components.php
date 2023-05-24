@@ -19,6 +19,7 @@ use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuid;
 
 return [
 
@@ -368,6 +369,11 @@ return [
 			(substr($path, 0, 2) === './' || substr($path, 0, 3) === '../')
 		) {
 			return $path;
+		}
+
+		// support UUIDs
+		if ($path !== null && (Uuid::is($path, 'page') === true || Uuid::is($path, 'file') === true)) {
+			$path = Uuid::for($path)->model()->url();
 		}
 
 		$url = Url::makeAbsolute($path, $kirby->url());

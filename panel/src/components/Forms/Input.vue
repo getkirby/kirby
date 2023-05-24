@@ -75,6 +75,11 @@ export default {
 			};
 		}
 	},
+	watch: {
+		invalid() {
+			this.isInvalid = this.invalid;
+		}
+	},
 	methods: {
 		blur(e) {
 			if (e?.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
