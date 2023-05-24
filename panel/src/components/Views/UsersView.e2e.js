@@ -43,7 +43,7 @@ describe("UsersView", () => {
 			cy.get("@dialog").find('input[name="name"]').type("Ada");
 			cy.get("@dialog").find('input[name="email"]').type("ada@getkirby.com");
 			cy.get("@dialog").find('input[name="password"]').type("top-secret-1234");
-			cy.get("@dialog").find("form").submit();
+			cy.get("@dialog").submit();
 
 			cy.get("@users").find("article").should("have.length", 2);
 			// @todo the order of the users in the list is non-deterministic;
@@ -57,7 +57,7 @@ describe("UsersView", () => {
 			cy.get("@dialog").find('input[name="email"]').type("grace@getkirby.com");
 			cy.get("@dialog").find('input[name="password"]').type("top-secret-1234");
 			cy.get("@dialog").find(".k-radio-input li:last-child label").click();
-			cy.get("@dialog").find("form").submit();
+			cy.get("@dialog").submit();
 
 			cy.get("@users").find("article").should("have.length", 3);
 			// @todo the order of the users in the list is non-deterministic;

@@ -33,7 +33,7 @@ describe("SiteView", () => {
 		cy.visit("/panel/site");
 		cy.get(".k-headline-editable").click();
 		cy.get('.k-dialog input[name="title"]').type("My Site");
-		cy.get(".k-dialog form").submit();
+		cy.get(".k-dialog").submit();
 		cy.get(".k-headline-editable").should("contain", "My Site");
 		cy.get(".k-topbar-breadcrumb a:first-child").should("contain", "My Site");
 	});
