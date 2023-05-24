@@ -28,25 +28,20 @@ class Collections
 	 * has been called, to avoid further
 	 * processing on sequential calls to
 	 * the same collection.
-	 *
-	 * @var array
 	 */
-	protected $cache = [];
+	protected array $cache = [];
 
 	/**
 	 * Store of all collections
-	 *
-	 * @var array
 	 */
-	protected $collections = [];
+	protected array $collections = [];
 
 	/**
 	 * Magic caller to enable something like
 	 * `$collections->myCollection()`
 	 *
-	 * @param string $name
-	 * @param array $arguments
-	 * @return \Kirby\Cms\Collection|null
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 5.0 Add return type declaration
 	 */
 	public function __call(string $name, array $arguments = [])
 	{
@@ -56,9 +51,9 @@ class Collections
 	/**
 	 * Loads a collection by name if registered
 	 *
-	 * @param string $name
-	 * @param array $data
-	 * @return \Kirby\Cms\Collection|null
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 4.0 Add deprecation warning when anything else than a Collection is returned
+	 * @todo 5.0 Add return type declaration
 	 */
 	public function get(string $name, array $data = [])
 	{
