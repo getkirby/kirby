@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
 use Kirby\Exception\LogicException;
@@ -81,5 +82,39 @@ class Dropdown extends Json
 		}
 
 		return parent::response($data, $options);
+	}
+
+	/**
+	 * Routes for the dropdown
+	 */
+	public static function routes(
+		string $id,
+		string $areaId,
+		string $prefix = '',
+		Closure|array $options = []
+	): array {
+		// Handle shortcuts for dropdowns. The name is the pattern
+		// and options are defined in a Closure
+		if ($options instanceof Closure) {
+			$options = [
+				'pattern' => $id,
+				'action'  => $options
+			];
+		}
+
+		// create the full pattern with dialogs prefix
+		$pattern = trim($prefix . '/' . ($options['pattern'] ?? $id), '/');
+		$type    = str_replace('$', '', static::$key);
+
+		return [
+			// load event
+			[
+				'pattern' => $pattern,
+				'type'    => $type,
+				'area'    => $areaId,
+				'method'  => 'GET|POST',
+				'action'  => $options['options'] ?? $options['action']
+			]
+		];
 	}
 }

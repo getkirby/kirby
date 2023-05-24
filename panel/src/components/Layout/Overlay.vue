@@ -52,18 +52,13 @@ export const props = {
 };
 
 export default {
-	inheritAttrs: true,
 	mixins: [props],
+	inheritAttrs: true,
 	data() {
 		return {
 			isOpen: false,
 			scrollTop: 0
 		};
-	},
-	mounted() {
-		if (this.visible) {
-			this.open();
-		}
 	},
 	watch: {
 		visible: {
@@ -71,6 +66,11 @@ export default {
 				visible === true ? this.open() : this.close();
 			},
 			immediate: true
+		}
+	},
+	mounted() {
+		if (this.visible) {
+			this.open();
 		}
 	},
 	methods: {

@@ -76,6 +76,17 @@ class Api extends BaseApi
 	}
 
 	/**
+	 * Returns the all readable files for the parent
+	 *
+	 * @param string $path Path to file's parent model
+	 * @throws \Kirby\Exception\NotFoundException if the file cannot be found
+	 */
+	public function files(string $path): Files
+	{
+		return $this->parent($path)->files()->filter('isReadable', true);
+	}
+
+	/**
 	 * Returns the model's object for the given path
 	 *
 	 * @param string $path Path to parent model
@@ -122,8 +133,7 @@ class Api extends BaseApi
 	public function pages(string|null $parentId = null, string|null $status = null): Pages
 	{
 		$parent = $parentId === null ? $this->site() : $this->page($parentId);
-
-		return match ($status) {
+		$pages  = match ($status) {
 			'all'             => $parent->childrenAndDrafts(),
 			'draft', 'drafts' => $parent->drafts(),
 			'listed'          => $parent->children()->listed(),
@@ -131,6 +141,8 @@ class Api extends BaseApi
 			'published'       => $parent->children(),
 			default           => $parent->children()
 		};
+
+		return $pages->filter('isReadable', true);
 	}
 
 	/**

@@ -14,6 +14,7 @@ describe.concurrent("panel.dialog", () => {
 			on: {},
 			path: null,
 			props: {},
+			query: {},
 			ref: null,
 			referrer: null,
 			timestamp: null

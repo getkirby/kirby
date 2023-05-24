@@ -3,6 +3,7 @@
 import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
+import "@/helpers/array.js";
 
 /**
  * Additional default values for islands

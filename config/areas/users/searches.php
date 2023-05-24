@@ -17,7 +17,8 @@ return [
 					'image' => $user->panel()->image(),
 					'text'  => Escape::html($user->username()),
 					'link'  => $user->panel()->url(true),
-					'info'  => Escape::html($user->role()->title())
+					'info'  => Escape::html($user->role()->title()),
+					'uuid'  => $user->uuid()->toString(),
 				];
 			}
 

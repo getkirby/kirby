@@ -104,6 +104,7 @@
 	"error.file.minheight": "The height of the image must be at least {height} pixels",
 	"error.file.minsize": "The file is too small",
 	"error.file.minwidth": "The width of the image must be at least {width} pixels",
+	"error.file.name.unique": "The filename must be unique",
 	"error.file.name.missing": "The filename must not be empty",
 	"error.file.notFound": "The file \"{filename}\" cannot be found",
 	"error.file.orientation": "The orientation of the image must be \"{orientation}\"",
@@ -242,6 +243,7 @@
 	"error.validation.same": "Please enter \"{other}\"",
 	"error.validation.size": "The size of the value must be \"{size}\"",
 	"error.validation.startswith": "The value must start with \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Please enter a valid time",
 	"error.validation.time.after": "Please enter a time after {time}",
 	"error.validation.time.before": "Please enter a time before {time}",
@@ -317,6 +319,7 @@
 
 	"field.users.empty": "No users selected yet",
 
+	"file": "File",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Change template",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
@@ -452,6 +455,7 @@
 	"orientation.portrait": "Portrait",
 	"orientation.square": "Square",
 
+	"page": "Page",
 	"page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Change URL",
 	"page.changeSlug.fromTitle": "Create from title",
@@ -460,10 +464,10 @@
 	"page.changeStatus.select": "Select a new status",
 	"page.changeTemplate": "Change template",
 	"page.changeTemplate.notice": "Changing the page's template will remove content for fields that don't match in type. Use with caution.",
+	"page.create": "Create as {status}",
 	"page.delete.confirm": "Do you really want to delete <strong>{title}</strong>?",
 	"page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
 	"page.delete.confirm.title": "Enter the page title to confirm",
-	"page.draft.create": "Create draft",
 	"page.duplicate.appendix": "Copy",
 	"page.duplicate.files": "Copy files",
 	"page.duplicate.pages": "Copy pages",

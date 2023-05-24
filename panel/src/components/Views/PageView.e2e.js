@@ -55,7 +55,7 @@ describe("PageView", () => {
 			cy.get("@drafts").find(".k-section-header .k-button").click();
 
 			dialog().find("input[name=title]").type("Portraits");
-			dialog().find("form").submit();
+			dialog().submit();
 
 			cy.url().should("contain", "/pages/photography+portraits");
 			cy.get(".k-headline").should("contain", "Portraits");
@@ -71,7 +71,7 @@ describe("PageView", () => {
 				.click();
 
 			dialog().find(".k-radio-input li:last-child label").click();
-			dialog().find("form").submit();
+			dialog().submit();
 
 			cy.get("@drafts").find(".k-cards-item").should("have.length", 1);
 			cy.get("@listed").find(".k-cards-item").should("have.length", 9);

@@ -6,7 +6,7 @@
 			</k-button-group>
 		</template>
 
-		<k-dropzone :disabled="!moreUpload" @drop="drop">
+		<k-dropzone :disabled="!canUpload" @drop="drop">
 			<k-collection
 				v-bind="collection"
 				@empty="prompt"
@@ -25,7 +25,6 @@
 		</k-dropzone>
 
 		<k-files-dialog ref="selector" @submit="select" />
-		<k-upload ref="fileUpload" @success="upload" />
 	</k-field>
 </template>
 
@@ -41,14 +40,14 @@ export default {
 		uploads: [Boolean, Object, Array]
 	},
 	computed: {
+		canUpload() {
+			return !this.disabled && this.more && this.uploads;
+		},
 		emptyProps() {
 			return {
 				icon: "image",
 				text: this.empty || this.$t("field.files.empty")
 			};
-		},
-		moreUpload() {
-			return !this.disabled && this.more && this.uploads;
 		},
 		options() {
 			if (this.uploads) {
@@ -70,12 +69,15 @@ export default {
 				]
 			};
 		},
-		uploadParams() {
+		uploadOptions() {
 			return {
 				accept: this.uploads.accept,
 				max: this.max,
 				multiple: this.multiple,
-				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload"
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
+				on: {
+					done: this.onUpload
+				}
 			};
 		}
 	},
@@ -91,24 +93,16 @@ export default {
 				return false;
 			}
 
-			return this.$refs.fileUpload.drop(files, this.uploadParams);
+			return this.$panel.upload.open(files, this.uploadOptions);
 		},
-		prompt() {
-			if (this.disabled) {
-				return false;
-			}
-
-			if (this.moreUpload) {
-				this.$refs.options.toggle();
-			} else {
-				this.open();
-			}
+		isSelected(file) {
+			return this.selected.find((f) => f.id === file.id);
 		},
 		onAction(action) {
 			// no need for `action` modifier
 			// as native button `click` prop requires
 			// inline function when only one option available
-			if (!this.moreUpload) {
+			if (!this.canUpload) {
 				return;
 			}
 
@@ -116,25 +110,33 @@ export default {
 				case "open":
 					return this.open();
 				case "upload":
-					return this.$refs.fileUpload.open(this.uploadParams);
+					return this.$panel.upload.pick(this.uploadOptions);
 			}
 		},
-		isSelected(file) {
-			return this.selected.find((f) => f.id === file.id);
-		},
-		upload(upload, files) {
+		onUpload(files) {
 			if (this.multiple === false) {
 				this.selected = [];
 			}
 
-			files.forEach((file) => {
+			for (const file of files) {
 				if (!this.isSelected(file)) {
 					this.selected.push(file);
 				}
-			});
+			}
 
 			this.onInput();
 			this.$events.$emit("model.update");
+		},
+		prompt() {
+			if (this.disabled) {
+				return false;
+			}
+
+			if (this.canUpload) {
+				return this.$refs.options.toggle();
+			}
+
+			this.open();
 		}
 	}
 };

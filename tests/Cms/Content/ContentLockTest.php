@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AuthException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -73,7 +73,7 @@ class ContentLockTest extends TestCase
 
 	public function testCreateUnauthenticated()
 	{
-		$this->expectException(PermissionException::class);
+		$this->expectException(AuthException::class);
 		$this->expectExceptionMessage('No user authenticated');
 
 		$app = $this->app;

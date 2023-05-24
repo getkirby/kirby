@@ -12,7 +12,7 @@ return [
 			$pages = App::instance()->site()
 				->index(true)
 				->search($query)
-				->filter('isReadable', true);
+				->filter('isListable', true);
 
 			$results = [];
 
@@ -21,7 +21,8 @@ return [
 					'image' => $page->panel()->image(),
 					'text' => Escape::html($page->title()->value()),
 					'link' => $page->panel()->url(true),
-					'info' => Escape::html($page->id())
+					'info' => Escape::html($page->id()),
+					'uuid' => $page->uuid()->toString(),
 				];
 			}
 
@@ -34,7 +35,7 @@ return [
 		'query' => function (string $query = null) {
 			$files = App::instance()->site()
 				->index(true)
-				->filter('isReadable', true)
+				->filter('isListable', true)
 				->files()
 				->search($query);
 
@@ -45,7 +46,8 @@ return [
 					'image' => $file->panel()->image(),
 					'text'  => Escape::html($file->filename()),
 					'link'  => $file->panel()->url(true),
-					'info'  => Escape::html($file->id())
+					'info'  => Escape::html($file->id()),
+					'uuid'  => $file->uuid()->toString(),
 				];
 			}
 

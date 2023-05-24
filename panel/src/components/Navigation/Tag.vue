@@ -44,14 +44,26 @@ export default {
 </script>
 
 <style>
+:root {
+	--tag-color-back: var(--color-gray-900);
+	--tag-color-text: var(--color-light);
+	--tag-color-focus-back: var(--color-focus);
+	--tag-color-focus-text: var(--color-white);
+	--tag-color-disabled-back: var(--color-gray-600);
+	--tag-color-disabled-text: var(--tag-color-text);
+	--tag-rounded: var(--rounded);
+	--tag-height: var(--height-sm);
+}
+
 .k-tag {
 	position: relative;
+	height: var(--tag-height);
 	font-size: var(--text-sm);
 	line-height: 1;
 	cursor: pointer;
-	background-color: var(--color-gray-900);
-	color: var(--color-light);
-	border-radius: var(--rounded);
+	background-color: var(--tag-color-back);
+	color: var(--tag-color-text);
+	border-radius: var(--tag-rounded);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -59,25 +71,26 @@ export default {
 }
 .k-tag:focus {
 	outline: 0;
-	background-color: var(--color-focus);
-	color: #fff;
+	background-color: var(--tag-color-focus-back);
+	color: var(--tag-color-focus-text);
 }
 .k-tag-text {
-	padding: 0.3rem 0.75rem 0.375rem;
+	padding-inline: 0.75rem;
 	line-height: var(--leading-tight);
 }
 .k-tag-toggle {
-	color: rgba(255, 255, 255, 0.7);
-	width: 1.75rem;
+	width: var(--tag-height);
+	height: var(--tag-height);
 	padding-inline-end: 1px;
 	border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
+	color: rgba(255, 255, 255, 0.7);
 }
-.k-tag-toggle:hover {
-	background: rgba(255, 255, 255, 0.2);
-	color: #fff;
+.k-tag:has(.k-tag-toggle) .k-tag-text {
+	padding-inline-end: 0.125rem;
 }
 [data-disabled="true"] .k-tag {
-	background-color: var(--color-gray-600);
+	background-color: var(--tag-color-disabled-back);
+	color: var(--tag-color-disabled-text);
 }
 [data-disabled="true"] .k-tag .k-tag-toggle {
 	display: none;

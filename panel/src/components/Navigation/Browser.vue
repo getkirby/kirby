@@ -1,0 +1,108 @@
+<template>
+	<nav class="k-browser">
+		<div class="k-browser-items">
+			<label
+				v-for="(item, index) in items"
+				:key="item.value"
+				class="k-browser-item"
+			>
+				<input
+					:checked="selected === item.value"
+					:name="name"
+					:type="type"
+					@change="$emit('select', item)"
+				/>
+				<span class="k-browser-item-image">
+					<img :src="item.image.src" />
+				</span>
+				<span class="k-browser-item-info">
+					{{ item.label }}
+				</span>
+			</label>
+		</div>
+	</nav>
+</template>
+
+<script>
+export default {
+	props: {
+		items: {
+			type: Array
+		},
+		name: {
+			default: "items",
+			type: String
+		},
+		selected: {
+			type: String
+		},
+		type: {
+			default: "radio",
+			type: String
+		}
+	}
+};
+</script>
+
+<style>
+.k-browser {
+	container-type: inline-size;
+	font-size: var(--text-sm);
+}
+
+.k-browser-items {
+	--browser-item-gap: 1px;
+	--browser-item-size: 1fr;
+	--browser-item-height: var(--height-sm);
+	--browser-item-padding: 0.25rem;
+	--browser-item-rounded: var(--rounded);
+	display: grid;
+	column-gap: var(--browser-item-gap);
+	row-gap: var(--browser-item-gap);
+	grid-template-columns: repeat(
+		auto-fill,
+		minmax(var(--browser-item-size), 1fr)
+	);
+}
+
+.k-browser-item {
+	display: flex;
+	overflow: hidden;
+	gap: 0.5rem;
+	align-items: center;
+	flex-shrink: 0;
+	height: var(--browser-item-height);
+	padding-inline: calc(var(--browser-item-padding) + 1px);
+	border-radius: var(--browser-item-rounded);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.k-browser-item-image {
+	height: calc(var(--browser-item-height) - var(--browser-item-padding) * 2);
+	aspect-ratio: 1/1;
+	border-radius: var(--rounded);
+	display: grid;
+	place-items: center;
+	overflow: hidden;
+	box-shadow: var(--shadow);
+	flex-shrink: 0;
+}
+
+.k-browser-item-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.k-browser-item input {
+	position: absolute;
+	box-shadow: var(--shadow);
+	opacity: 0;
+	width: 0;
+}
+.k-browser-item:has(input:checked) {
+	color: var(--color-blue-700);
+	background: var(--color-blue-200);
+}
+</style>

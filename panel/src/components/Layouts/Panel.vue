@@ -36,16 +36,6 @@
 	</div>
 </template>
 
-<script>
-export default {
-	computed: {
-		dialog() {
-			return this.$helper.clone(this.$store.state.dialog);
-		}
-	}
-};
-</script>
-
 <style>
 body {
 	background: var(--color-light);

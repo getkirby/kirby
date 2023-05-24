@@ -231,6 +231,7 @@ class DropdownTest extends TestCase
 				'options'  => ['Test'],
 				'code'     => 200,
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -251,6 +252,7 @@ class DropdownTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Invalid response',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -270,6 +272,7 @@ class DropdownTest extends TestCase
 				'code'     => 500,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
@@ -289,10 +292,117 @@ class DropdownTest extends TestCase
 				'code'     => 404,
 				'error'    => 'Test',
 				'path'     => null,
+				'query'    => [],
 				'referrer' => '/'
 			]
 		];
 
 		$this->assertSame($expected, json_decode($response->body(), true));
+	}
+
+	/**
+	 * @covers ::routes
+	 */
+	public function testRoutes(): void
+	{
+		$dropdown = [
+			'pattern' => 'test',
+			'action'  => $action = function () {
+				return [
+					[
+						'text' => 'Test',
+						'link' => '/test'
+					]
+				];
+			}
+		];
+
+		$routes = Dropdown::routes(
+			id: 'test',
+			areaId: 'test',
+			prefix: 'dropdowns',
+			options: $dropdown
+		);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
+	 * @covers ::routesForDropdowns
+	 */
+	public function testRoutesForDropdownsWithOptions(): void
+	{
+		$area = [
+			'dropdowns' => [
+				'test' => [
+					'pattern' => 'test',
+					'options' => $action = function () {
+						return [
+							[
+								'text' => 'Test',
+								'link' => '/test'
+							]
+						];
+					}
+				]
+			]
+		];
+
+		$routes = Panel::routesForDropdowns('test', $area);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
+	}
+
+	/**
+	 * @covers ::routesForDropdowns
+	 */
+	public function testRoutesForDropdownsWithShortcut(): void
+	{
+		$area = [
+			'dropdowns' => [
+				'test' => $action = function () {
+					return [
+						[
+							'text' => 'Test',
+							'link' => '/test'
+						]
+					];
+				}
+			]
+		];
+
+		$routes = Panel::routesForDropdowns('test', $area);
+
+		$expected = [
+			[
+				'pattern' => 'dropdowns/test',
+				'type'    => 'dropdown',
+				'area'    => 'test',
+				'method'  => 'GET|POST',
+				'action'  => $action,
+			]
+		];
+
+		$this->assertSame($expected, $routes);
 	}
 }
