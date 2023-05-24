@@ -109,7 +109,6 @@ class Snippet extends Tpl
 		if (empty($this->slots) === true) {
 			$this->slots['default'] = new Slot('default');
 			$this->slots['default']->content = ob_get_clean();
-
 		} else {
 			// swallow any "unslotted" content
 			// between start and end

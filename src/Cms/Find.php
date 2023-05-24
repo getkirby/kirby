@@ -31,7 +31,8 @@ class Find
 		string $filename
 	): File|null {
 		$filename = urldecode($filename);
-		$file     = static::parent($path)->file($filename);
+		$parent   = empty($path) ? null : static::parent($path);
+		$file     = App::instance()->file($filename, $parent);
 
 		if ($file?->isReadable() === true) {
 			return $file;
@@ -73,7 +74,9 @@ class Find
 	 */
 	public static function page(string $id): Page|null
 	{
-		$id   = str_replace(['+', ' '], '/', $id);
+		// decode API ID encoding
+		$id = str_replace(['+', ' '], '/', $id);
+
 		$page = App::instance()->page($id);
 
 		if ($page?->isAccessible() === true) {

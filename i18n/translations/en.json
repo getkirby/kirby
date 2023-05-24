@@ -243,6 +243,7 @@
 	"error.validation.same": "Please enter \"{other}\"",
 	"error.validation.size": "The size of the value must be \"{size}\"",
 	"error.validation.startswith": "The value must start with \"{start}\"",
+	"error.validation.tel": "Please enter an unformatted phone number",
 	"error.validation.time": "Please enter a valid time",
 	"error.validation.time.after": "Please enter a time after {time}",
 	"error.validation.time.before": "Please enter a time before {time}",
@@ -318,6 +319,7 @@
 
 	"field.users.empty": "No users selected yet",
 
+	"file": "File",
 	"file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
 	"file.changeTemplate": "Change template",
 	"file.changeTemplate.notice": "Changing the file's template will remove content for fields that don't match in type. If the new template defines certain rules, e.g. image dimensions, those will also be applied irreversibly. Use with caution.",
@@ -453,6 +455,7 @@
 	"orientation.portrait": "Portrait",
 	"orientation.square": "Square",
 
+	"page": "Page",
 	"page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
 	"page.changeSlug": "Change URL",
 	"page.changeSlug.fromTitle": "Create from title",
