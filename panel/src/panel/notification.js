@@ -91,9 +91,10 @@ export default (panel = {}) => {
 
 			// open the error dialog in views
 			if (panel.context === "view") {
-				return panel.dialog.open({
+				panel.dialog.open({
 					component: "k-error-dialog",
-					props: error
+					props: error,
+					type: "error"
 				});
 			}
 
@@ -170,11 +171,12 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
-			// add the current editing context
-			notification.context = panel.context;
-
 			// set the new state
-			this.set(notification);
+			this.set({
+				// add the current editing context
+				context: panel.context,
+				...notification
+			});
 
 			// open the notification
 			this.isOpen = true;

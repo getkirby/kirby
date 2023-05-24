@@ -46,8 +46,6 @@
 					@paginate="onPaginate"
 				/>
 			</k-dropzone>
-
-			<k-upload ref="upload" @success="onUpload" @error="reload" />
 		</template>
 	</section>
 </template>
@@ -234,7 +232,6 @@ export default {
 			this.searching = !this.searching;
 			this.searchterm = null;
 		},
-		onUpload() {},
 
 		async reload() {
 			await this.load(true);

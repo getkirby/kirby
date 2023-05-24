@@ -190,10 +190,11 @@ return [
 			];
 		},
 		'submit' => function (string $languageCode) {
+			$request  = App::instance()->request();
 			$language = Find::language($languageCode);
 
-			$key   = get('key', '');
-			$value = get('value', '');
+			$key   = $request->get('key', '');
+			$value = $request->get('value', '');
 
 			LanguageVariable::create($key, $value);
 
@@ -250,7 +251,9 @@ return [
 			];
 		},
 		'submit' => function (string $languageCode, string $translationKey) {
-			Find::language($languageCode)->variable($translationKey)->update(get('value'));
+			Find::language($languageCode)->variable($translationKey)->update(
+				App::instance()->request()->get('value')
+			);
 
 			return true;
 		}

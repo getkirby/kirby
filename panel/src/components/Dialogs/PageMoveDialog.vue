@@ -1,12 +1,12 @@
 <template>
 	<k-dialog
+		ref="dialog"
 		:submit-button="{
 			icon: 'road-sign',
 			text: $t('move')
 		}"
 		class="k-page-move-dialog"
 		size="medium"
-		ref="dialog"
 		v-bind="$props"
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>

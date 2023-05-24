@@ -532,6 +532,24 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the page is accessible that accessible and listable.
+	 * This permission depends on the `read` option until v5
+	 */
+	public function isAccessible(): bool
+	{
+		// TODO: remove this check when `read` option deprecated in v5
+		if ($this->isReadable() === false) {
+			return false;
+		}
+
+		static $accessible = [];
+
+		$template = $this->intendedTemplate()->name();
+
+		return $accessible[$template] ??= $this->permissions()->can('access');
+	}
+
+	/**
 	 * Checks if the page is the current page
 	 *
 	 * @return bool
@@ -697,6 +715,29 @@ class Page extends ModelWithContent
 	}
 
 	/**
+	 * Check if the page can be listable by the current user
+	 * This permission depends on the `read` option until v5
+	 */
+	public function isListable(): bool
+	{
+		// TODO: remove this check when `read` option deprecated in v5
+		if ($this->isReadable() === false) {
+			return false;
+		}
+
+		// not accessible also means not listable
+		if ($this->isAccessible() === false) {
+			return false;
+		}
+
+		static $listable = [];
+
+		$template = $this->intendedTemplate()->name();
+
+		return $listable[$template] ??= $this->permissions()->can('list');
+	}
+
+	/**
 	 * Checks if the page has a sorting number
 	 *
 	 * @return bool
@@ -738,8 +779,7 @@ class Page extends ModelWithContent
 
 	/**
 	 * Check if the page can be read by the current user
-	 *
-	 * @return bool
+	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
@@ -752,8 +792,6 @@ class Page extends ModelWithContent
 
 	/**
 	 * Checks if the page is sortable
-	 *
-	 * @return bool
 	 */
 	public function isSortable(): bool
 	{

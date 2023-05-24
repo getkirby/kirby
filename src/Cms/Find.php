@@ -76,7 +76,7 @@ class Find
 		$id   = str_replace(['+', ' '], '/', $id);
 		$page = App::instance()->page($id);
 
-		if ($page?->isReadable() === true) {
+		if ($page?->isAccessible() === true) {
 			return $page;
 		}
 

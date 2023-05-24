@@ -13,10 +13,13 @@ describe.concurrent("panel.drawer", () => {
 			isOpen: false,
 			island: true,
 			on: {},
+			parent: null,
 			path: null,
 			props: {},
+			query: {},
 			ref: null,
 			referrer: null,
+			tabId: null,
 			timestamp: null
 		};
 

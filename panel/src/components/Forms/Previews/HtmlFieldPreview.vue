@@ -53,4 +53,8 @@ export default {
 	color: var(--color-gray-500);
 	font-size: var(--text-xs);
 }
+.k-html-field-preview a {
+	color: var(--color-focus);
+	text-decoration: underline;
+}
 </style>

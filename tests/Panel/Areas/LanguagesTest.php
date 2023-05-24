@@ -44,12 +44,14 @@ class LanguagesTest extends AreaTestCase
 
 		$languages = [
 			[
+				'deletable' => false,
 				'default' => true,
 				'id' => 'en',
 				'info' => 'en',
 				'text' => 'English'
 			],
 			[
+				'deletable' => true,
 				'default' => false,
 				'id' => 'de',
 				'info' => 'de',
