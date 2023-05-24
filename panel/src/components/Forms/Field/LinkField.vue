@@ -2,6 +2,7 @@
 	<k-field v-bind="$props" :input="_uid" class="k-link-field">
 		<k-input v-bind="$props" :invalid="isInvalid" :icon="false" theme="field">
 			<div class="k-link-input-header">
+				<!-- Type selector -->
 				<k-dropdown>
 					<k-button
 						class="k-link-input-toggle"
@@ -12,41 +13,41 @@
 					</k-button>
 					<k-dropdown-content ref="types">
 						<k-dropdown-item
-							v-for="(linkType, key) in types"
+							v-for="(type, key) in types"
 							:key="key"
-							:icon="linkType.icon"
+							:icon="type.icon"
 							@click="switchType(key)"
 						>
-							{{ linkType.label }}
+							{{ type.label }}
 						</k-dropdown-item>
 					</k-dropdown-content>
 				</k-dropdown>
-				<template v-if="linkType === 'page' || linkType === 'file'">
-					<div class="k-link-input-model" @click="toggle">
-						<template v-if="model">
-							<k-tag
-								:removable="true"
-								class="k-link-input-model-preview"
-								@remove="clear"
-							>
-								{{ model.label }}
-							</k-tag>
-						</template>
 
-						<template v-else>
-							<k-button class="k-link-input-model-placeholder">
-								{{ currentType.placeholder }}
-							</k-button>
-						</template>
+				<!-- Input -->
+				<div
+					v-if="linkType === 'page' || linkType === 'file'"
+					class="k-link-input-model"
+					@click="toggle"
+				>
+					<k-tag
+						v-if="model"
+						:removable="true"
+						class="k-link-input-model-preview"
+						@remove="clear"
+					>
+						{{ model.label }}
+					</k-tag>
+					<k-button v-else class="k-link-input-model-placeholder">
+						{{ currentType.placeholder }}
+					</k-button>
 
-						<k-button class="k-link-input-model-toggle" icon="bars" />
-					</div>
-				</template>
+					<k-button class="k-link-input-model-toggle" icon="bars" />
+				</div>
 				<component
 					v-else
-					ref="input"
 					:is="'k-' + currentType.input + '-input'"
 					:id="_uid"
+					ref="input"
 					:pattern="currentType.pattern ?? null"
 					:placeholder="currentType.placeholder"
 					:value="linkValue"
@@ -54,25 +55,33 @@
 					@input="onInput"
 				/>
 			</div>
-			<template v-if="linkType === 'page'">
-				<div v-show="expanded" data-type="page" class="k-link-input-body">
-					<div class="k-page-browser">
-						<k-page-tree
-							:current="getPageUUID(value)"
-							:root="false"
-							@select="onInput($event.id)"
-						/>
-					</div>
-				</div>
-			</template>
-			<template v-else-if="linkType === 'file'">
-				<div v-show="expanded" data-type="file" class="k-link-input-body">
-					<k-file-browser
-						:selected="getFileUUID(value)"
+
+			<!-- Page or file browser -->
+			<div
+				v-if="linkType === 'page'"
+				v-show="expanded"
+				data-type="page"
+				class="k-link-input-body"
+			>
+				<div class="k-page-browser">
+					<k-page-tree
+						:current="getPageUUID(value)"
+						:root="false"
 						@select="onInput($event.id)"
 					/>
 				</div>
-			</template>
+			</div>
+			<div
+				v-else-if="linkType === 'file'"
+				v-show="expanded"
+				data-type="file"
+				class="k-link-input-body"
+			>
+				<k-file-browser
+					:selected="getFileUUID(value)"
+					@select="onInput($event.id)"
+				/>
+			</div>
 		</k-input>
 	</k-field>
 </template>
@@ -105,7 +114,7 @@ export default {
 	},
 	computed: {
 		currentType() {
-			return this.types[this.linkType] || this.types["url"];
+			return this.types[this.linkType] ?? this.types["url"];
 		},
 		types() {
 			return {
@@ -114,35 +123,27 @@ export default {
 					label: this.$t("url"),
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
-					value: (value) => {
-						return value;
-					}
+					value: (value) => value
 				},
 				page: {
 					icon: "page",
 					label: this.$t("page"),
 					placeholder: this.$t("select") + " …",
 					input: "text",
-					value: (value) => {
-						return value;
-					}
+					value: (value) => value
 				},
 				file: {
 					icon: "file",
 					label: this.$t("file"),
 					placeholder: this.$t("select") + " …",
-					value: (value) => {
-						return value;
-					}
+					value: (value) => value
 				},
 				email: {
 					icon: "email",
 					label: this.$t("email"),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
-					value: (value) => {
-						return "mailto:" + value;
-					}
+					value: (value) => "mailto:" + value
 				},
 				tel: {
 					icon: "phone",
@@ -150,9 +151,7 @@ export default {
 					pattern: "[+]{0,1}[0-9]+",
 					placeholder: "Enter a phone number …",
 					input: "tel",
-					value: (value) => {
-						return "tel:" + value;
-					}
+					value: (value) => "tel:" + value
 				}
 			};
 		}
@@ -177,9 +176,7 @@ export default {
 			this.$emit("input", "");
 			this.expanded = false;
 		},
-		detect(value) {
-			value = value ?? "";
-
+		detect(value = "") {
 			if (this.isPageUUID(value) === true) {
 				return {
 					type: "page",
@@ -197,14 +194,14 @@ export default {
 			if (value.startsWith("tel:")) {
 				return {
 					type: "tel",
-					link: value.replace(/^tel\:/, "")
+					link: value.replace(/^tel:/, "")
 				};
 			}
 
 			if (value.startsWith("mailto:")) {
 				return {
 					type: "email",
-					link: value.replace(/^mailto\:/, "")
+					link: value.replace(/^mailto:/, "")
 				};
 			}
 
@@ -224,12 +221,14 @@ export default {
 		},
 		isFileUUID(value) {
 			return (
-				value.startsWith("file://") === true || value.startsWith("/@/file/")
+				value.startsWith("file://") === true ||
+				value.startsWith("/@/file/") === true
 			);
 		},
 		isPageUUID(value) {
 			return (
-				value.startsWith("page://") === true || value.startsWith("/@/page/")
+				value.startsWith("page://") === true ||
+				value.startsWith("/@/page/") === true
 			);
 		},
 		onInput(link) {

@@ -64,6 +64,12 @@ Vue.use(Components);
  */
 import "./styles/utilities.css";
 
+// container queries CSS polyfill
+// TODO: remove when global support for container queries is reached
+if (CSS.supports("container") === false) {
+	import("container-query-polyfill");
+}
+
 /**
  * Mount the Vue application
  */

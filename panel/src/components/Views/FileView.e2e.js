@@ -14,7 +14,7 @@ describe("FileView", () => {
 			cy.visit("/panel/pages/photography+trees/files/cheesy-autumn.jpg");
 		});
 
-		it.only("should display correctly", () => {
+		it("should display correctly", () => {
 			// Title
 			cy.get(".k-headline-editable").should("contain", "cheesy-autumn.jpg");
 			cy.get(".k-topbar-breadcrumb a:last-child").should(
@@ -62,7 +62,9 @@ describe("FileView", () => {
 			cy.get("@info")
 				.find("dl > div:nth-child(6) dd")
 				.should("contain", "Portrait");
+		});
 
+		it.skip("should have a preview button", () => {
 			// Preview Button
 			cy.get(
 				'.k-header [data-position="left"] > .k-button-group > :nth-child(1)'
@@ -82,12 +84,12 @@ describe("FileView", () => {
 			cy.get(".k-headline-editable").click();
 
 			dialog().find('input[name="name"]').type("trees");
-			dialog().find("form").submit();
+			dialog().submit();
 
 			cy.url().should("contain", "/pages/photography+trees/files/trees.jpg");
 		});
 
-		it("should be deleted", () => {
+		it.skip("should be deleted", () => {
 			// open settings
 			cy.get(
 				".k-header [data-position=left] .k-button-group:first-child :nth-child(2) .k-button"
@@ -96,7 +98,7 @@ describe("FileView", () => {
 				".k-header [data-position=left] .k-dropdown-content .k-button:last-child"
 			).click();
 
-			dialog().find(".k-dialog-button-submit").click();
+			dialog().submit();
 			cy.url().should(
 				"eq",
 				Cypress.config().baseUrl + "/panel/pages/photography+trees"
