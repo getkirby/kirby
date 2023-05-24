@@ -298,7 +298,7 @@ class Page extends Model
 					->filter('status', $page->status());
 			}
 
-			return $siblings->filter('isReadable', true);
+			return $siblings->filter('isListable', true);
 		};
 
 		return [

@@ -81,7 +81,7 @@ class Find
 
 		$page = App::instance()->page($id);
 
-		if ($page?->isReadable() === true) {
+		if ($page?->isAccessible() === true) {
 			return $page;
 		}
 

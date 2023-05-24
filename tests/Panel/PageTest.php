@@ -360,6 +360,7 @@ class PageTest extends TestCase
 		$page->kirby()->impersonate('kirby');
 
 		$expected = [
+			'access'         => true,
 			'changeSlug'     => true,
 			'changeStatus'   => true,
 			'changeTemplate' => false, // no other template available in this scenario
@@ -367,6 +368,7 @@ class PageTest extends TestCase
 			'create'         => true,
 			'delete'         => true,
 			'duplicate'      => true,
+			'list'           => true,
 			'move'           => true,
 			'preview'        => true,
 			'read'           => true,
@@ -391,6 +393,7 @@ class PageTest extends TestCase
 
 		// without override
 		$expected = [
+			'access'         => false,
 			'changeSlug'     => false,
 			'changeStatus'   => false,
 			'changeTemplate' => false,
@@ -398,7 +401,8 @@ class PageTest extends TestCase
 			'create'         => false,
 			'delete'         => false,
 			'duplicate'      => false,
-			'move'		     => false,
+			'list'           => false,
+			'move'           => false,
 			'preview'        => false,
 			'read'           => false,
 			'sort'           => false,
@@ -410,6 +414,7 @@ class PageTest extends TestCase
 
 		// with override
 		$expected = [
+			'access'         => false,
 			'changeSlug'     => false,
 			'changeStatus'   => false,
 			'changeTemplate' => false,
@@ -417,7 +422,8 @@ class PageTest extends TestCase
 			'create'         => false,
 			'delete'         => false,
 			'duplicate'      => false,
-			'move'			 => false,
+			'list'           => false,
+			'move'           => false,
 			'preview'        => true,
 			'read'           => false,
 			'sort'           => false,

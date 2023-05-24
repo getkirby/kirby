@@ -12,7 +12,7 @@ return [
 			$pages = App::instance()->site()
 				->index(true)
 				->search($query)
-				->filter('isReadable', true);
+				->filter('isListable', true);
 
 			$results = [];
 
@@ -35,7 +35,7 @@ return [
 		'query' => function (string $query = null) {
 			$files = App::instance()->site()
 				->index(true)
-				->filter('isReadable', true)
+				->filter('isListable', true)
 				->files()
 				->search($query);
 

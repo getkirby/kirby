@@ -364,8 +364,8 @@ class App
 	 * by name. All relevant dependencies are
 	 * automatically injected
 	 *
-	 * @param string $name
-	 * @return \Kirby\Cms\Collection|null
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 5.0 Add return type declaration
 	 */
 	public function collection(string $name)
 	{
@@ -379,10 +379,8 @@ class App
 
 	/**
 	 * Returns all user-defined collections
-	 *
-	 * @return \Kirby\Cms\Collections
 	 */
-	public function collections()
+	public function collections(): Collections
 	{
 		return $this->collections ??= new Collections();
 	}

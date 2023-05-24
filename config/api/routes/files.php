@@ -126,7 +126,7 @@ return [
 			$files = $this
 				->site()
 				->index(true)
-				->filter('isReadable', true)
+				->filter('isListable', true)
 				->files()
 				->filter('isReadable', true);
 
