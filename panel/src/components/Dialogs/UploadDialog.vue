@@ -32,15 +32,6 @@
 							</k-aspect-ratio>
 						</a>
 						<k-input
-							v-if="name"
-							:disabled="true"
-							:after="'.' + file.extension"
-							:value="name"
-							class="k-upload-item-input"
-							type="text"
-						/>
-						<k-input
-							v-else
 							v-model="file.name"
 							:disabled="file.completed"
 							:after="'.' + file.extension"
@@ -93,7 +84,6 @@ import Dialog from "@/mixins/dialog.js";
 export default {
 	mixins: [Dialog],
 	props: {
-		name: String,
 		submitButton: {
 			type: [String, Boolean, Object],
 			default: () => {
