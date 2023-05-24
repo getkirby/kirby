@@ -172,6 +172,7 @@ export default {
 	height: calc(var(--field-input-height) - var(--spacing-2));
 	flex-shrink: 0;
 	transition: none;
+	border: 1px solid var(--color-gray-200);
 }
 
 .k-color-field-picker {
@@ -199,6 +200,7 @@ export default {
 .k-color-field .k-color-preview {
 	aspect-ratio: 1/1;
 	width: var(--preview-width);
+	border: 1px solid var(--color-gray-300);
 }
 
 .k-color-field .k-color-preview[aria-current] {
