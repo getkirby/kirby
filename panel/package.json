@@ -17,6 +17,7 @@
 		"test:unit:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
+		"container-query-polyfill": "^1.0.2",
 		"dayjs": "^1.11.7",
 		"mitt": "^3.0.0",
 		"portal-vue": "^2.1.7",
