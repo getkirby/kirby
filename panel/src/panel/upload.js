@@ -11,7 +11,6 @@ export const defaults = () => {
 		files: [],
 		max: null,
 		multiple: true,
-		name: null,
 		replacing: null,
 		url: null
 	};
@@ -24,8 +23,8 @@ export default (panel) => {
 		...parent,
 		...listeners(),
 		input: null,
-		close() {
-			this.emit("close");
+		cancel() {
+			this.emit("cancel");
 
 			// emit complete event if any files have been completed,
 			// e.g. when first submit/upload yielded any errors and
@@ -33,12 +32,8 @@ export default (panel) => {
 			// been completely uploaded
 			if (this.completed.length > 0) {
 				this.emit("complete", this.completed);
+				panel.view.reload();
 			}
-
-			// always reload view to ensure that
-			// the uploaded files are reflected in all
-			// sections, fields etc.
-			panel.view.reload();
 
 			this.reset();
 		},
@@ -48,12 +43,34 @@ export default (panel) => {
 				.map((file) => file.model);
 		},
 		done() {
+			panel.dialog.close();
+
 			if (this.completed.length > 0) {
 				this.emit("done", this.completed);
 				panel.notification.success({ context: "view" });
+				panel.view.reload();
 			}
 
-			panel.dialog.close();
+			this.reset();
+		},
+		file(file) {
+			const url = URL.createObjectURL(file);
+
+			return {
+				completed: false,
+				error: null,
+				extension: extension(file.name),
+				filename: file.name,
+				id: uuid(),
+				model: null,
+				name: name(file.name),
+				niceSize: niceSize(file.size),
+				progress: 0,
+				size: file.size,
+				src: file,
+				type: file.type,
+				url: url
+			};
 		},
 		/**
 		 * Opens the file dialog
@@ -72,28 +89,16 @@ export default (panel) => {
 
 			const dialog = {
 				component: "k-upload-dialog",
-				props: {
-					name: this.name
-				},
 				on: {
-					close: () => {
-						this.close();
-					},
-					submit: () => {
-						// if no uncompleted files are left, be done
-						if (this.files.length === this.completed.length) {
-							return this.done();
-						}
-
-						this.start();
-					}
+					cancel: () => this.cancel(),
+					submit: () => this.start()
 				}
 			};
 
 			// when replacing a file, use decdicated dialog component
 			if (this.replacing) {
 				dialog.component = "k-upload-replace-dialog";
-				dialog.props.original = this.replacing;
+				dialog.props = { original: this.replacing };
 			}
 
 			panel.dialog.open(dialog);
@@ -119,7 +124,15 @@ export default (panel) => {
 
 			// show the dialog on change
 			this.input.addEventListener("change", (event) => {
-				this.open(event.target.files, options);
+				if (options.immediate === true) {
+					// if upload should start immediately
+					this.set(options);
+					this.select(event.target.files);
+					this.start();
+				} else {
+					this.open(event.target.files, options);
+				}
+
 				this.input.remove();
 			});
 		},
@@ -153,26 +166,8 @@ export default (panel) => {
 			// convert the file list to an array
 			files = [...files];
 
-			// add all files to the list
-			this.files = files.map((file) => {
-				const url = URL.createObjectURL(file);
-
-				return {
-					completed: false,
-					error: null,
-					extension: extension(file.name),
-					filename: file.name,
-					id: uuid(),
-					model: null,
-					name: this.name ?? name(file.name),
-					niceSize: niceSize(file.size),
-					progress: 0,
-					size: file.size,
-					src: file,
-					type: file.type,
-					url: url
-				};
-			});
+			// add all files to the list as enriched objects
+			this.files = files.map((file) => this.file(file));
 
 			// apply the max limit to the list of files
 			if (this.max !== null) {
@@ -212,6 +207,11 @@ export default (panel) => {
 			// nothing to upload
 			if (this.files.length === 0) {
 				return;
+			}
+
+			// if no uncompleted files are left, be done
+			if (this.files.length === this.completed.length) {
+				return this.done();
 			}
 
 			// upload each file individually and keep track of the progress
