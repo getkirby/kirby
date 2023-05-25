@@ -7,7 +7,7 @@
 				<k-input
 					ref="input"
 					:aria-label="$t('search')"
-					:autofocus="autofocus"
+					:autofocus="true"
 					:placeholder="$t('search') + ' …'"
 					:value="query"
 					class="k-search-view-input"
