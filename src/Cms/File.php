@@ -95,12 +95,8 @@ class File extends ModelWithContent
 	/**
 	 * Magic caller for file methods
 	 * and content fields. (in this order)
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -123,8 +119,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -136,10 +130,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the url to api endpoint
-	 *
 	 * @internal
-	 * @param bool $relative
-	 * @return string
 	 */
 	public function apiUrl(bool $relative = false): string
 	{
@@ -285,7 +276,6 @@ class File extends ModelWithContent
 	/**
 	 * Store the template in addition to the
 	 * other content.
-	 *
 	 * @internal
 	 */
 	public function contentFileData(
@@ -307,9 +297,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the directory in which
 	 * the content file is located
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function contentFileDirectory(): string
 	{
@@ -318,9 +306,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Filename for the content file
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function contentFileName(): string
 	{
@@ -341,8 +327,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the filename with extension
-	 *
-	 * @return string
 	 */
 	public function filename(): string
 	{
@@ -361,9 +345,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Converts the file to html
-	 *
-	 * @param array $attr
-	 * @return string
 	 */
 	public function html(array $attr = []): string
 	{
@@ -390,9 +371,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Compares the current object with the given file object
-	 *
-	 * @param \Kirby\Cms\File $file
-	 * @return bool
 	 */
 	public function is(File $file): bool
 	{
@@ -401,8 +379,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Check if the file can be read by the current user
-	 *
-	 * @return bool
 	 */
 	public function isReadable(): bool
 	{
@@ -415,9 +391,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a unique media hash
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaHash(): string
 	{
@@ -426,9 +400,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the file in the public media folder
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaRoot(): string
 	{
@@ -437,9 +409,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a non-guessable token string for this file
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaToken(): string
 	{
@@ -449,9 +419,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute Url to the file in the public media folder
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaUrl(): string
 	{
@@ -481,7 +449,6 @@ class File extends ModelWithContent
 	 * of the content file
 	 *
 	 * @param string|null $languageCode
-	 * @return int
 	 */
 	protected function modifiedContent(string $languageCode = null): int
 	{
@@ -491,8 +458,6 @@ class File extends ModelWithContent
 	/**
 	 * Timestamp of the last modification
 	 * of the source file
-	 *
-	 * @return int
 	 */
 	protected function modifiedFile(): int
 	{
@@ -533,9 +498,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the parent id if a parent exists
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function parentId(): string
 	{
@@ -577,8 +540,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute root to the file
-	 *
-	 * @return string|null
 	 */
 	public function root(): string|null
 	{
@@ -638,8 +599,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the final template
-	 *
-	 * @return string|null
 	 */
 	public function template(): string|null
 	{
@@ -682,8 +641,6 @@ class File extends ModelWithContent
 	 * Simplified File URL that uses the parent
 	 * Page URL and the filename as a more stable
 	 * alternative for the media URLs.
-	 *
-	 * @return string
 	 */
 	public function previewUrl(): string
 	{
