@@ -121,12 +121,20 @@ export default {
 			];
 
 			if (this.focusable && this.image.src) {
-				options.push({
-					icon: "cancel",
-					text: this.$t("file.focus.reset"),
-					disabled: !this.hasFocus,
-					click: this.setFocus
-				});
+				if (this.hasFocus) {
+					options.push({
+						icon: "cancel",
+						text: this.$t("file.focus.reset"),
+						disabled: !this.hasFocus,
+						click: this.setFocus
+					});
+				} else {
+					options.push({
+						icon: "preview",
+						text: this.$t("file.focus.placeholder"),
+						click: () => this.setFocus("50% 50%")
+					});
+				}
 			}
 
 			return options;
@@ -243,9 +251,11 @@ export default {
 }
 
 .k-file-preview-focus-info .k-button {
+	display: flex;
+	align-items: center;
 	height: 24px;
 	background: var(--color-gray-700);
-	padding: 0.25rem;
+	padding: 0.25rem 0.25rem 0.25rem 0.5rem;
 	border-radius: var(--rounded);
 	font-size: var(--text-sm);
 	line-height: 1;

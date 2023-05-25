@@ -17,6 +17,9 @@
 					{{ model.filename }}
 					<template #left>
 						<k-button-group>
+							<k-button :link="preview.url" icon="open" target="_blank">
+								{{ $t("open") }}
+							</k-button>
 							<k-dropdown class="k-file-view-options">
 								<k-button
 									:disabled="isLocked"
