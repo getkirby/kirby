@@ -10,7 +10,7 @@
 				/>
 				<k-item-image
 					v-if="item.image"
-					:image="{ ...item.image, cover: true, back: 'gray-300' }"
+					:image="{ ...item.image, cover: true, back: 'black' }"
 					class="k-browser-item-image"
 				/>
 				<span class="k-browser-item-info">
@@ -79,8 +79,12 @@ export default {
 .k-browser-item-image {
 	height: calc(var(--browser-item-height) - var(--browser-item-padding) * 2);
 	aspect-ratio: 1/1;
-	border-radius: var(--rounded);
+	border-radius: var(--rounded-sm);
 	box-shadow: var(--shadow);
+}
+.k-browser-item-image:has(svg) {
+	box-shadow: none;
+	background: var(--color-white);
 }
 .k-browser-item-image svg {
 	transform: scale(0.8);
