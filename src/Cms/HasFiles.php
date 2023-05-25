@@ -90,7 +90,10 @@ trait HasFiles
 	public function file(string $filename = null, string $in = 'files')
 	{
 		if ($filename === null) {
-			return $this->$in()->first();
+			return $this
+				->$in()
+				->sortBy('sort', 'asc', 'filename', 'asc')
+				->first();
 		}
 
 		// find by global UUID
