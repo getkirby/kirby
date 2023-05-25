@@ -9,20 +9,24 @@ return [
 		'label' => I18n::translate('users'),
 		'icon'  => 'users',
 		'query' => function (string $query = null) {
-			$users   = App::instance()->users()->search($query);
-			$results = [];
+			$kirby = App::instance();
+			$users = $kirby->users()
+				->search($query)
+				->paginate(
+					(int)$kirby->request()->get('limit', 10),
+					(int)$kirby->request()->get('page', 1)
+				);
 
-			foreach ($users as $user) {
-				$results[] = [
+			return [
+				'results' => $users->values(fn ($user) => [
 					'image' => $user->panel()->image(),
 					'text'  => Escape::html($user->username()),
 					'link'  => $user->panel()->url(true),
 					'info'  => Escape::html($user->role()->title()),
 					'uuid'  => $user->uuid()->toString(),
-				];
-			}
-
-			return $results;
+				]),
+				'pagination' => $users->pagination()->toArray()
+			];
 		}
 	]
 ];

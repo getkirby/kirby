@@ -19,15 +19,4 @@ use Kirby\Http\Response;
 class Search extends Json
 {
 	protected static string $key = '$search';
-
-	public static function response($data, array $options = []): Response
-	{
-		if (is_array($data) === true) {
-			$data = [
-				'results' => $data
-			];
-		}
-
-		return parent::response($data, $options);
-	}
 }

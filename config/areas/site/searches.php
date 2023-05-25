@@ -9,49 +9,53 @@ return [
 		'label' => I18n::translate('pages'),
 		'icon'  => 'page',
 		'query' => function (string $query = null) {
-			$pages = App::instance()->site()
+			$kirby = App::instance();
+			$pages = $kirby->site()
 				->index(true)
 				->search($query)
-				->filter('isListable', true);
+				->filter('isListable', true)
+				->paginate(
+					(int)$kirby->request()->get('limit', 10),
+					(int)$kirby->request()->get('page', 1)
+				);
 
-			$results = [];
-
-			foreach ($pages as $page) {
-				$results[] = [
+			return [
+				'results' => $pages->values(fn ($page) => [
 					'image' => $page->panel()->image(),
 					'text' => Escape::html($page->title()->value()),
 					'link' => $page->panel()->url(true),
 					'info' => Escape::html($page->id()),
 					'uuid' => $page->uuid()->toString(),
-				];
-			}
-
-			return $results;
+				]),
+				'pagination' => $pages->pagination()->toArray()
+			];
 		}
 	],
 	'files' => [
 		'label' => I18n::translate('files'),
 		'icon'  => 'image',
 		'query' => function (string $query = null) {
-			$files = App::instance()->site()
+			$kirby = App::instance();
+			$files = $kirby->site()
 				->index(true)
 				->filter('isListable', true)
 				->files()
-				->search($query);
+				->search($query)
+				->paginate(
+					(int)$kirby->request()->get('limit', 10),
+					(int)$kirby->request()->get('page', 1)
+				);
 
-			$results = [];
-
-			foreach ($files as $file) {
-				$results[] = [
+			return [
+				'results' => $files->values(fn ($file) => [
 					'image' => $file->panel()->image(),
 					'text'  => Escape::html($file->filename()),
 					'link'  => $file->panel()->url(true),
 					'info'  => Escape::html($file->id()),
 					'uuid'  => $file->uuid()->toString(),
-				];
-			}
-
-			return $results;
+				]),
+				'pagination' => $files->pagination()->toArray()
+			];
 		}
 	]
 ];
