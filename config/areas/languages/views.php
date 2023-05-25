@@ -74,7 +74,7 @@ return [
 							'value'  => $language->isDefault() ? 'Default language' : 'Secondary language',
 						],
 						[
-							'label' => I18n::translatet('language.code'),
+							'label' => I18n::translate('language.code'),
 							'value' => $language->code(),
 						],
 						[
