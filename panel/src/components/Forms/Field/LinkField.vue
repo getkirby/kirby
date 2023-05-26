@@ -182,7 +182,9 @@ export default {
 			this.$emit("input", "");
 			this.expanded = false;
 		},
-		detect(value = "") {
+		detect(value) {
+			value = value ?? "";
+
 			if (this.isPageUUID(value) === true) {
 				return {
 					type: "page",
