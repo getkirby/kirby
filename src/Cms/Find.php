@@ -77,9 +77,16 @@ class Find
 	public static function page(string $id)
 	{
 		// decode API ID encoding
-		$id = str_replace(['+', ' '], '/', $id);
+		$id    = str_replace(['+', ' '], '/', $id);
+		$kirby = App::instance();
 
-		$page = App::instance()->page($id);
+		// support looking up the site itself,
+		// as this will fail when using $kirby->page()
+		if ($id === '/' || $id === 'site://') {
+			return $kirby->site();
+		}
+
+		$page = $kirby->page($id, null, true);
 
 		if ($page?->isAccessible() === true) {
 			return $page;

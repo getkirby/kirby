@@ -14,9 +14,13 @@ export default {
 			default: "/site",
 			type: String
 		},
+		/**
+		 * @values `id`, `uuid`
+		 */
 		identifier: {
 			default: "uuid",
-			type: String
+			type: String,
+			validator: (value) => ["id", "uuid"].includes(value)
 		},
 		items: {
 			type: String
