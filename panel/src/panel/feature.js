@@ -184,7 +184,7 @@ export default (panel, key, defaults) => {
 			try {
 				return await panel.post(this.path, value, options);
 			} catch (error) {
-				panel.notification.error(error);
+				panel.error(error);
 			} finally {
 				// stop the loader
 				this.isLoading = false;

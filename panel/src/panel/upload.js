@@ -244,6 +244,10 @@ export default (panel) => {
 					filename: file.name + "." + file.extension,
 					url: this.url,
 					error: (xhr, src, response) => {
+						if (panel.debug) {
+							console.error(response);
+						}
+
 						// store the error message to show it in
 						// the dialog for example
 						file.error = response.message;
