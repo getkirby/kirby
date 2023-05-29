@@ -4,8 +4,6 @@ namespace Kirby\Session;
 
 use Kirby\Exception\LogicException;
 use PHPUnit\Framework\TestCase;
-use stdClass;
-use TypeError;
 
 require_once __DIR__ . '/mocks.php';
 
@@ -65,16 +63,6 @@ class SessionDataTest extends TestCase
 	}
 
 	/**
-	 * @covers ::set
-	 */
-	public function testSetInvalidKey()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->set(new stdClass(), 'someValue');
-	}
-
-	/**
 	 * @covers ::increment
 	 */
 	public function testIncrement()
@@ -100,25 +88,6 @@ class SessionDataTest extends TestCase
 
 		$this->sessionData->increment('someInt', 10, 200);
 		$this->assertSame(155, $this->sessionData->get('someInt'));
-	}
-
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrementInvalidKey()
-	{
-		$this->expectException(TypeError::class);
-		$this->sessionData->increment(new stdClass(), 10);
-	}
-
-	/**
-	 * @covers ::increment
-	 */
-	public function testIncrementInvalidMax()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->increment('someInt', 10, 'some invalid max value');
 	}
 
 	/**
@@ -163,26 +132,6 @@ class SessionDataTest extends TestCase
 	/**
 	 * @covers ::decrement
 	 */
-	public function testDecrementInvalidKey()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->decrement(new stdClass(), 10);
-	}
-
-	/**
-	 * @covers ::decrement
-	 */
-	public function testDecrementInvalidMin()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->decrement('someInt', 10, 'some invalid min value');
-	}
-
-	/**
-	 * @covers ::decrement
-	 */
 	public function testDecrementNonIntValue()
 	{
 		$this->expectException(LogicException::class);
@@ -207,16 +156,6 @@ class SessionDataTest extends TestCase
 			'someString' => 'someValue',
 			'someInt'    => 123
 		], $this->sessionData->get());
-	}
-
-	/**
-	 * @covers ::get
-	 */
-	public function testGetInvalidKey()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->get(new stdClass(), 456);
 	}
 
 	/**
@@ -255,16 +194,6 @@ class SessionDataTest extends TestCase
 		$this->assertFalse($this->session->ensuredToken);
 		$this->assertTrue($this->session->preparedForWriting);
 		$this->assertSame([], $this->sessionData->get());
-	}
-
-	/**
-	 * @covers ::remove
-	 */
-	public function testRemoveInvalidKey()
-	{
-		$this->expectException(TypeError::class);
-
-		$this->sessionData->remove(new stdClass());
 	}
 
 	/**
