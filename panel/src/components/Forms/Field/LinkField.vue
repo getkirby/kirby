@@ -50,8 +50,8 @@
 					<k-button class="k-link-input-model-toggle" icon="bars" />
 				</div>
 				<component
-					v-else
 					:is="'k-' + currentType.input + '-input'"
+					v-else
 					:id="_uid"
 					ref="input"
 					:pattern="currentType.pattern ?? null"
