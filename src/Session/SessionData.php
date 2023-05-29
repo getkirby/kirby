@@ -45,10 +45,10 @@ class SessionData
 		$this->session->prepareForWriting();
 
 		if (is_string($key) === true) {
-			$key = [$key => $value];
+			$this->data[$key] = $value;
+		} else {
+			$this->data = array_replace($this->data, $key);
 		}
-
-		$this->data = array_replace($this->data, $key);
 	}
 
 	/**
