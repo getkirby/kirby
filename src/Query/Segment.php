@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Kirby\Query;
 
 use Closure;
@@ -87,7 +85,7 @@ class Segment
 
 		// 1st segment, start from $data array
 		if ($this->position === 0) {
-			if (is_array($data) == true) {
+			if (is_array($data) === true) {
 				return $this->resolveArray($data, $args);
 			}
 
@@ -129,8 +127,8 @@ class Segment
 	}
 
 	/**
-	 * Resolves segment by calling the method/accessing the property
-	 * on the base object
+	 * Resolves segment by calling the method/
+	 * accessing the property on the base object
 	 */
 	protected function resolveObject(object $object, array $args): mixed
 	{
@@ -142,7 +140,8 @@ class Segment
 		}
 
 		if (
-			$args === [] && (
+			$args === [] &&
+			(
 				property_exists($object, $this->method) === true ||
 				method_exists($object, '__get') === true
 			)
