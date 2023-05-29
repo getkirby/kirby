@@ -24,7 +24,6 @@ export default (panel) => {
 		csrf: panel.system.csrf,
 		endpoint: rtrim(panel.urls.api, "/"),
 		methodOverwrite: true,
-		language: panel.language.code,
 		ping: null,
 		requests: [],
 		running: 0
@@ -49,6 +48,10 @@ export default (panel) => {
 			panel.isLoading = true;
 		}
 
+		// always update the language on each request to ensure
+		// that only the most current one is used
+		api.language = panel.language.code;
+
 		try {
 			return await Request(api)(path, options);
 		} finally {
@@ -56,9 +59,7 @@ export default (panel) => {
 			ping();
 
 			// remove the request from the running list
-			api.requests = api.requests.filter((value) => {
-				return value !== id;
-			});
+			api.requests = api.requests.filter((value) => value !== id);
 
 			// stop the loader if all requests ended
 			if (api.requests.length === 0) {

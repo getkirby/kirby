@@ -41,8 +41,7 @@ export default {
 	},
 	methods: {
 		change(language) {
-			this.$emit("change", language);
-			this.$go(window.location, {
+			this.$reload({
 				query: {
 					language: language.code
 				}
