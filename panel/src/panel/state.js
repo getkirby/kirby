@@ -1,29 +1,29 @@
 import { isObject } from "@/helpers/object";
 
 /**
- * Panel modules represent a particular part of state
- * for the panel. I.e. system, translation.
- * Features are built upon such state modules
+ * Represents a particular part of state
+ * for the panel, i.e. system, translation.
+ * Features are built upon such state objects
  *
  * The inheritance cascade is:
- * Module -> Feature -> Island
+ * State -> Feature -> Island
  *
  * @param {Object} panel The panel singleton
- * @param {String} key Sets the $key for the module. Backend responses use this key.
- * @param {Object} defaults Sets the default state of the module
+ * @param {String} key Sets the $key for the state used by backend responses
+ * @param {Object} defaults Sets the default state
  */
 export default (key, defaults = {}) => {
 	return {
 		/**
-		 * Module defaults will be reactive and
+		 * State defaults will be reactive and
 		 * must be present immediately in the object
 		 * to get reactivity out of the box.
 		 */
 		...defaults,
 
 		/**
-		 * The key is used to place the module
-		 * state in the right place within the global
+		 * The key is used to place the state
+		 * in the right place within the global
 		 * panel state
 		 *
 		 * @returns {String}
@@ -51,7 +51,7 @@ export default (key, defaults = {}) => {
 		},
 
 		/**
-		 * Sets a new state for the module
+		 * Sets a new state
 		 *
 		 * @param {Object} state
 		 */

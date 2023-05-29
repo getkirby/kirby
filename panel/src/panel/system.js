@@ -1,4 +1,4 @@
-import Module from "./module.js";
+import State from "./state.js";
 
 export const defaults = () => {
 	return {
@@ -12,5 +12,5 @@ export const defaults = () => {
 };
 
 export default () => {
-	return Module("system", defaults());
+	return State("system", defaults());
 };

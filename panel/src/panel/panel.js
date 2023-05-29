@@ -21,7 +21,7 @@ import { isEmpty } from "@/helpers/string.js";
 /**
  * Globals are just reactive objects
  * from the backend that don't have their
- * own modules.
+ * own state objects.
  */
 export const globals = {
 	config: {},
@@ -42,11 +42,11 @@ export const globals = {
 export const islands = ["dialog", "drawer"];
 
 /**
- * Modules are more advanced parts
- * of the state that have their own
- * logic and methods
+ * State objects are more advanced parts
+ * of the overall panel state that
+ * have their own logic and methods
  */
-export const modules = [
+export const states = [
 	"dropdown",
 	"language",
 	"notification",
@@ -69,7 +69,7 @@ export default {
 		this.events = Events(this);
 		this.upload = Upload(this);
 
-		// modules
+		// state objects
 		this.language = Language(this);
 		this.notification = Notification(this);
 		this.system = System(this);
@@ -283,13 +283,13 @@ export default {
 		}
 
 		/**
-		 * Register all modules
+		 * Register all state objects
 		 */
-		for (const module of modules) {
+		for (const key of states) {
 			// if there's a new state for the
-			// module, call its state setter method
-			if (isObject(state[module]) === true) {
-				this[module].set(state[module]);
+			// state object, call its state setter method
+			if (isObject(state[key]) === true) {
+				this[key].set(state[key]);
 			}
 		}
 
@@ -298,7 +298,7 @@ export default {
 		 */
 		for (const island of islands) {
 			// if there's a new state for the
-			// module, call its state setter method
+			// island, call its state setter method
 			if (isObject(state[island]) === true) {
 				this[island].open(state[island]);
 			}
@@ -339,16 +339,16 @@ export default {
 	state() {
 		const state = {};
 
-		for (const global in globals) {
-			state[global] = this[global] ?? globals[global];
+		for (const key in globals) {
+			state[key] = this[key] ?? globals[key];
 		}
 
-		for (const module of modules) {
-			state[module] = this[module].state();
+		for (const key of states) {
+			state[key] = this[key].state();
 		}
 
-		for (const island of islands) {
-			state[island] = this[island].state();
+		for (const key of islands) {
+			state[key] = this[key].state();
 		}
 
 		state.dropdown = this.dropdown.state();

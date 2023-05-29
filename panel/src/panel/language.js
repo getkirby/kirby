@@ -1,4 +1,4 @@
-import Module from "./module.js";
+import State from "./state.js";
 
 export const defaults = () => {
 	return {
@@ -11,7 +11,7 @@ export const defaults = () => {
 };
 
 export default () => {
-	const parent = Module("language", defaults());
+	const parent = State("language", defaults());
 
 	return {
 		...parent,
