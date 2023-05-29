@@ -35,11 +35,11 @@ export const globals = {
 };
 
 /**
- * Islands are features that
+ * Modals are features that
  * can be opened and closed based
  * on the response
  */
-export const islands = ["dialog", "drawer"];
+export const modals = ["dialog", "drawer"];
 
 /**
  * State objects are more advanced parts
@@ -80,7 +80,7 @@ export default {
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
 
-		// islands
+		// modals
 		this.drawer = Drawer(this);
 		this.dialog = Dialog(this);
 
@@ -294,19 +294,19 @@ export default {
 		}
 
 		/**
-		 * Toggle islands
+		 * Toggle modals
 		 */
-		for (const island of islands) {
+		for (const modal of modals) {
 			// if there's a new state for the
-			// island, call its state setter method
-			if (isObject(state[island]) === true) {
-				this[island].open(state[island]);
+			// modal, call its state setter method
+			if (isObject(state[modal]) === true) {
+				this[modal].open(state[modal]);
 			}
 
-			// islands will be closed if the response is null or false.
-			// on undefined, the state of the island stays untouched
-			else if (state[island] !== undefined) {
-				this[island].close(state[island]);
+			// modals will be closed if the response is null or false.
+			// on undefined, the state of the modal stays untouched
+			else if (state[modal] !== undefined) {
+				this[modal].close(state[modal]);
 			}
 		}
 
@@ -347,7 +347,7 @@ export default {
 			state[key] = this[key].state();
 		}
 
-		for (const key of islands) {
+		for (const key of modals) {
 			state[key] = this[key].state();
 		}
 

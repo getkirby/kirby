@@ -10,7 +10,7 @@ describe.concurrent("panel.dialog", () => {
 			component: null,
 			isLoading: false,
 			isOpen: false,
-			island: true,
+			modal: true,
 			on: {},
 			path: null,
 			props: {},

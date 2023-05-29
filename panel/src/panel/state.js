@@ -6,7 +6,7 @@ import { isObject } from "@/helpers/object";
  * Features are built upon such state objects
  *
  * The inheritance cascade is:
- * State -> Feature -> Island
+ * State -> Feature -> Modal
  *
  * @param {Object} panel The panel singleton
  * @param {String} key Sets the $key for the state used by backend responses

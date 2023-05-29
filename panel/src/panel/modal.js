@@ -6,31 +6,31 @@ import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
 
 /**
- * Additional default values for islands
+ * Additional default values for modals
  */
 export const defaults = () => {
 	return {
 		...featureDefaults(),
 		// when drawers or dialogs are created with the
 		// deprecated way of adding a dialog/drawer component
-		// to a template, `island` is set to false in the open method
-		// and the matching island component will not load it.
-		island: true,
-		// open state for the island
+		// to a template, `modal` is set to false in the open method
+		// and the matching modal component will not load it.
+		modal: true,
+		// open state for the modal
 		isOpen: false,
 		// Store for the Vue component reference
 		// This will make it possible to determine
 		// its open state in the dialog or drawer components
 		// It would not be needed if we load all dialogs
-		// and drawers through islands
+		// and drawers through modals
 		ref: null
 	};
 };
 
 /**
- * An island is a feature that can be opened and
+ * A modal is a feature that can be opened and
  * closed and will be placed in the Panel by the matching
- * Island component
+ * Modal component
  *
  * @param {any} panel
  * @param {string} key
@@ -57,7 +57,7 @@ export default (panel, key, defaults) => {
 		},
 
 		/**
-		 * Closes the island
+		 * Closes the modal
 		 */
 		async close() {
 			// close legacy components
@@ -73,7 +73,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Set the focus to the first focusable input
-		 * or button in the island. The input can also
+		 * or button in the modal. The input can also
 		 * be set manually.
 		 *
 		 * @param {String} input
@@ -101,7 +101,7 @@ export default (panel, key, defaults) => {
 		/**
 		 * Customized setter for the active state, which
 		 * will make sure to close unwanted notifications
-		 * before an island is opened. It also sets the
+		 * before a modal is opened. It also sets the
 		 * isOpen state.
 		 *
 		 * @param {Object} feature
@@ -125,10 +125,10 @@ export default (panel, key, defaults) => {
 		async openComponent(component) {
 			const state = await this.openState({
 				component: component.$options._componentTag,
-				// don't render this in the island
-				// comonent. The Vue component already
+				// don't render this in the modal
+				// component. The Vue component already
 				// takes over rendering.
-				island: false,
+				modal: false,
 				// Use a combination of attributes and props
 				// to get everything that was passed to the component
 				props: {
@@ -156,7 +156,7 @@ export default (panel, key, defaults) => {
 		 */
 		async openState(feature, options) {
 			// close previous notifications from other
-			// contexts, if the island wasn't open so far
+			// contexts, if the modal wasn't open so far
 			if (this.isOpen === false) {
 				panel.notification.close();
 			}
@@ -164,7 +164,7 @@ export default (panel, key, defaults) => {
 			// open the feature via url or with a state object
 			await parent.open.call(this, feature, options);
 
-			// mark the island as open
+			// mark the modal as open
 			this.isOpen = true;
 
 			return this.state();
@@ -172,7 +172,7 @@ export default (panel, key, defaults) => {
 
 		/**
 		 * Custom submitter for the dialog/drawer
-		 * It will automatically close the island
+		 * It will automatically close the modal
 		 * if there's no submit listner or backend route.
 		 *
 		 * @param {Object} value
@@ -223,7 +223,7 @@ export default (panel, key, defaults) => {
 				panel.notification.success(success);
 			}
 
-			// close the island
+			// close the modal
 			this.close();
 
 			// show a success message
