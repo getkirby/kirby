@@ -37,7 +37,7 @@ class Session
 	protected int|false $timeout = false;
 	protected int|null $lastActivity = null;
 	protected bool $renewable;
-	protected SessionData|null $data = null;
+	protected SessionData $data;
 	protected string|null $newSession = null;
 
 	// temporary state flags
@@ -720,7 +720,7 @@ class Session
 		$this->renewable    = $data['renewable'];
 
 		// reload data into existing object to avoid breaking memory references
-		if ($this->data instanceof SessionData) {
+		if (isset($this->data) === true) {
 			$this->data()->reload($data['data']);
 		} else {
 			$this->data = new SessionData($this, $data['data']);
