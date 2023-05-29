@@ -43,11 +43,10 @@ class SessionData
 		$this->session->prepareForWriting();
 
 		if (is_string($key) === true) {
-			$this->data[$key] = $value;
-
-		} elseif (is_array($key) === true) {
-			$this->data = array_merge($this->data, $key);
+			$key = [$key => $value];
 		}
+
+		$this->data = array_merge($this->data, $key);
 	}
 
 	/**
@@ -56,7 +55,6 @@ class SessionData
 	 * @param string|array $key The key to increment or an array with multiple keys
 	 * @param int $by Increment by which amount?
 	 * @param int|null $max Maximum amount (value is not incremented further)
-	 * @return void
 	 */
 	public function increment(
 		string|array $key,
@@ -86,7 +84,7 @@ class SessionData
 		}
 
 		// increment the value, but ensure $max constraint
-		if (is_int($max) == true && $value + $by > $max) {
+		if (is_int($max) === true && $value + $by > $max) {
 			// set the value to $max
 			// but not if the current $value is already larger than $max
 			$value = max($value, $max);

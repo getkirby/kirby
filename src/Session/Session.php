@@ -151,7 +151,7 @@ class Session
 	 */
 	public function mode(string $mode = null): string
 	{
-		if (is_string($mode) === true) {
+		if ($mode !== null) {
 			// only allow this if this is a new session, otherwise the change
 			// might not be applied correctly to the current request
 			if ($this->token() !== null) {
@@ -186,7 +186,7 @@ class Session
 	 */
 	public function expiryTime(string|int|null $expiryTime = null): int
 	{
-		if (is_string($expiryTime) === true || is_int($expiryTime) === true) {
+		if ($expiryTime !== null) {
 			// convert to a timestamp
 			$expiryTime = static::timeToTimestamp($expiryTime);
 
@@ -202,12 +202,6 @@ class Session
 			$this->expiryTime = $expiryTime;
 			$this->duration   = $expiryTime - time();
 			$this->regenerateTokenIfNotNew();
-
-		} elseif ($expiryTime !== null) {
-			throw new InvalidArgumentException([
-				'data'      => ['method' => 'Session::expiryTime', 'argument' => '$expiryTime'],
-				'translate' => false
-			]);
 		}
 
 		return $this->expiryTime;
@@ -222,7 +216,7 @@ class Session
 	 */
 	public function duration(int $duration = null): int
 	{
-		if (is_int($duration) === true) {
+		if ($duration !== null) {
 			// verify that the duration is at least 1 second
 			if ($duration < 1) {
 				throw new InvalidArgumentException([
@@ -259,10 +253,7 @@ class Session
 
 			$this->prepareForWriting();
 			$this->timeout      = $timeout;
-			$this->lastActivity = match (is_int($timeout)) {
-				true    => time(),
-				default => null
-			};
+			$this->lastActivity = is_int($timeout) ? time() : null;
 		}
 
 		return $this->timeout;
@@ -305,7 +296,17 @@ class Session
 	public function __call(string $name, array $arguments)
 	{
 		// validate that we can handle the called method
-		if (!in_array($name, ['set', 'increment', 'decrement', 'get', 'pull', 'remove', 'clear'])) {
+		$methods = [
+			'clear',
+			'decrement',
+			'get',
+			'increment',
+			'pull',
+			'remove',
+			'set'
+		];
+
+		if (in_array($name, $methods) === false) {
 			throw new BadMethodCallException([
 				'data'      => ['method' => 'Session::' . $name],
 				'translate' => false
@@ -468,7 +469,8 @@ class Session
 	}
 
 	/**
-	 * Ensures that all pending changes are written to disk before the object is destructed
+	 * Ensures that all pending changes are written
+	 * to disk before the object is destructed
 	 *
 	 * @return void
 	 */
@@ -585,9 +587,7 @@ class Session
 		int|null $now = null
 	): int {
 		// default to current time as $now
-		if (is_int($now) === false) {
-			$now = time();
-		}
+		$now ??= time();
 
 		// convert date strings to a timestamp first
 		if (is_string($time) === true) {

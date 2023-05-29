@@ -38,8 +38,8 @@ class Sessions
 	 */
 	public function __construct(SessionStore|string $store, array $options = [])
 	{
-		$this->store = match(is_string($store)) {
-			true    =>  new FileSessionStore($store),
+		$this->store = match (is_string($store)) {
+			true    => new FileSessionStore($store),
 			default => $store
 		};
 
@@ -70,7 +70,6 @@ class Sessions
 			if ($random <= $gcProbability * 10000) {
 				$this->collectGarbage();
 			}
-
 		} elseif ($gcInterval !== false) {
 			throw new InvalidArgumentException([
 				'data' => [
@@ -136,7 +135,7 @@ class Sessions
 				'translate' => false,
 				'httpCode'  => 500
 			]),
-			// unexpected error that shouldn't occur
+				// unexpected error that shouldn't occur
 			default => throw new Exception(['translate' => false]) // @codeCoverageIgnore
 		};
 
@@ -194,7 +193,7 @@ class Sessions
 
 	/**
 	 * Getter for the cookie name
-	 * Used internally
+	 * @internal
 	 */
 	public function cookieName(): string
 	{
