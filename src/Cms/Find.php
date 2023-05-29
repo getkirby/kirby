@@ -82,7 +82,7 @@ class Find
 
 		// support looking up the site itself,
 		// as this will fail when using $kirby->page()
-		if ($id === '/' || $id === 'site' || $id === 'site://') {
+		if ($id === '/' || $id === 'site://') {
 			return $kirby->site();
 		}
 
