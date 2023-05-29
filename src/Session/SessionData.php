@@ -37,8 +37,10 @@ class SessionData
 	 * @param string|array $key The key to define or a key-value array with multiple values
 	 * @param mixed $value The value for the passed key (only if one $key is passed)
 	 */
-	public function set(string|array $key, mixed $value = null): void
-	{
+	public function set(
+		string|array $key,
+		mixed $value = null
+	): void {
 		$this->session->ensureToken();
 		$this->session->prepareForWriting();
 
@@ -46,7 +48,7 @@ class SessionData
 			$key = [$key => $value];
 		}
 
-		$this->data = array_merge($this->data, $key);
+		$this->data = array_replace($this->data, $key);
 	}
 
 	/**
@@ -147,8 +149,10 @@ class SessionData
 	 * @param string|null $key The key to get or null for the entire data array
 	 * @param mixed $default Optional default value to return if the key is not defined
 	 */
-	public function get(string|null $key = null, mixed $default = null): mixed
-	{
+	public function get(
+		string|null $key = null,
+		mixed $default = null
+	): mixed {
 		if ($key === null) {
 			return $this->data;
 		}

@@ -44,6 +44,13 @@ class SessionDataTest extends TestCase
 		$this->assertTrue($this->session->preparedForWriting);
 		$this->assertSame('someValue', $this->sessionData->get('someKey'));
 
+		// int as key
+		$this->sessionData->set(123, 42);
+		$this->assertSame(42, $this->sessionData->get(123));
+		$this->sessionData->increment(123, 5);
+		$this->sessionData->decrement(123, 2);
+		$this->assertSame(45, $this->sessionData->get(123));
+
 		// key-value array
 		$this->session->ensuredToken = false;
 		$this->session->preparedForWriting = false;
