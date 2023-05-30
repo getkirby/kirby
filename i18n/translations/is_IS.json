@@ -72,12 +72,12 @@
 	"error.blocks.min.singular": "Allavegana einn bálkur takk",
 	"error.blocks.validation": "Það er villa í {field} sviðinu í bálkinum {index} sem notar {fieldset} bálkgerðina",
 
-	"error.cache.type.invalid": "Invalid cache type \"{type}\"",
+	"error.cache.type.invalid": "Ógyld skyndiminnisgerð \"{type}\"",
 
 	"error.email.preset.notFound": "Netfangstillingarnar: \"{name}\" fundust ekki",
 
 	"error.field.converter.invalid": "Ógildur umbreytari \"{converter}\"",
-	"error.field.type.missing": "Field \"{ name }\": The field type \"{ type }\" does not exist",
+	"error.field.type.missing": "Sviðið \"{ name }\": Sviðgerðin er \"{type}\" er alls ekki til.",
 
 	"error.file.changeName.empty": "Nafn skal fylla út",
 	"error.file.changeName.permission": "Þú mátt ekkert breyta nafninu á skránni \"{filename}\"",
@@ -292,7 +292,7 @@
 	"field.pages.empty": "Engar síður valdar ennþá",
 
 	"field.structure.delete.confirm": "Viltu virkilega eyða þessari röð?",
-	"field.structure.delete.confirm.all": "Do you really want to delete all entries?",
+	"field.structure.delete.confirm.all": "Ætlar þú virkilega að eyða öllum færslum?",
 	"field.structure.empty": "Engar færslur enn",
 
 	"field.users.empty": "Engir notendur valdir enn",
@@ -333,7 +333,7 @@
 	"language.create": "Bættu við nýju tungumáli",
 	"language.delete.confirm": "Ertu nú viss um að þú viljir eyða <strong>{name}</strong> og öllum tilheyrandi þýðingum? Þetta verður ekki tekið til baka!",
 	"language.deleted": "Tungumálinu hefur verið eytt",
-	"language.direction": "Lestursátt (hægri, vinstri)",
+	"language.direction": "Lesátt",
 	"language.direction.ltr": "Vinstra til hægri",
 	"language.direction.rtl": "Hægra til vinstri",
 	"language.locale": "PHP locale strengur",
@@ -353,8 +353,8 @@
 	"license.manage": "Sýslaðu með leyfin þín",
 	"license.register.help": "Þú fékkst sendan tölvupóst með leyfiskóðanum þegar þú keyptir leyfi. Vinsamlegast afritaðu hann og settu hann hingað til að skrá þig.",
 	"license.register.label": "Vinsamlegast settu inn leyfiskóðan",
-	"license.register.domain": "Your license will be registered to <strong>{host}</strong>.",
-	"license.register.local": "You are about to register your license for your local domain <strong>{host}</strong>. If this site will be deployed to a public domain, please register it there instead. If {host} is the domain you want to license Kirby to, please continue.",
+	"license.register.domain": "Leyfið þitt verður skráð á  <strong>{host}</strong>.",
+	"license.register.local": "Nú ertu að fara skrá leyfið þitt á staðbundna lénið (e. local domain) <strong>{host}</strong>. Ef þetta vefsvæði verður fært út á vefinn, vinsamlegast skráðu það frekar þar þegar það hefur verið gefið þar út. Ef {host] er raunverulega lénið sem þú vilt skrá leyfir þitt á, endilega haltu þínu striki.",
 	"license.register.success": "Þakka þér fyrir að velja Kirby",
 	"license.unregistered": "Þetta er óskráð prufueintak af Kirby",
 	"license.unregistered.label": "Óskráð",
@@ -514,7 +514,7 @@
 	"system.updateStatus.not-vulnerable": "Engir þekktir veikleikar",
 	"system.updateStatus.security-update": "Ókeypis öryggisuppfærsla { version } fáanleg",
 	"system.updateStatus.security-upgrade": "Uppfærsla { version } með öryggisuppfærslum fáanleg",
-	"system.updateStatus.unreleased": "Óútgefin útgáfa",
+	"system.updateStatus.unreleased": "Þróunarútgáfa",
 	"system.updateStatus.up-to-date": "Allt spikk og span",
 	"system.updateStatus.update": "Ókeypis uppfærsla { version } fáanleg",
 	"system.updateStatus.upgrade": "Uppfærsla  fyrir { version } fáanleg",
