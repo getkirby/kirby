@@ -1,5 +1,5 @@
 export default {
-	install(app, panel) {
+	install(app) {
 		/**
 		 * Handles promise rejections that have
 		 * not been caught
@@ -9,11 +9,11 @@ export default {
 		window.onunhandledrejection = (event) => {
 			event.preventDefault();
 
-			if (panel.debug) {
+			if (window.panel.debug) {
 				console.error(event.reason);
 			}
 
-			panel.notification.error(event.reason);
+			window.panel.notification.error(event.reason);
 		};
 
 		/**
@@ -22,11 +22,11 @@ export default {
 		 * @param {Error} error
 		 */
 		app.config.errorHandler = (error) => {
-			if (panel.debug) {
+			if (window.panel.debug) {
 				console.error(error);
 			}
 
-			panel.notification.error(error);
+			window.panel.notification.error(error);
 		};
 	}
 };
