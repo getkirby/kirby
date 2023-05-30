@@ -11,13 +11,13 @@ import "@/helpers/array.js";
 export const defaults = () => {
 	return {
 		...featureDefaults(),
-		// when drawers or dialogs are created with the
-		// deprecated way of adding a dialog/drawer component
-		// to a template, `modal` is set to false in the open method
-		// and the matching modal component will not load it.
-		modal: true,
 		// open state for the modal
 		isOpen: false,
+		// when drawers or dialogs are created with the
+		// deprecated way of adding a dialog/drawer component
+		// to a template, `legacy` is set to true in the open method
+		// and the matching modal component will not load it.
+		legacy: false,
 		// Store for the Vue component reference
 		// This will make it possible to determine
 		// its open state in the dialog or drawer components
@@ -128,7 +128,7 @@ export default (panel, key, defaults) => {
 				// don't render this in the modal
 				// component. The Vue component already
 				// takes over rendering.
-				modal: false,
+				legacy: true,
 				// Use a combination of attributes and props
 				// to get everything that was passed to the component
 				props: {
