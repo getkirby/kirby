@@ -50,6 +50,9 @@ return [
 	// image classes
 	'dimensions' => 'Kirby\Image\Dimensions',
 
+	// kql classes
+	'kql'        => 'Kirby\Kql\Kql',
+
 	// panel classes
 	'panel'      => 'Kirby\Panel\Panel',
 
@@ -83,4 +86,5 @@ return [
 	'kirby\toolkit\f'          => 'Kirby\Filesystem\F',
 	'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
 	'kirby\toolkit\mime'       => 'Kirby\Filesystem\Mime',
+	'kirby\kql\interceptor'    => 'Kirby\Kql\Interceptors\Interceptor',
 ];

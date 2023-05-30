@@ -12,6 +12,7 @@ use Kirby\Cms\Url;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
 use Kirby\Http\Router;
+use Kirby\Kql\Kql;
 use Kirby\Template\Slot;
 use Kirby\Template\Snippet;
 use Kirby\Toolkit\Date;
@@ -345,6 +346,16 @@ if (Helpers::hasOverride('kti') === false) { // @codeCoverageIgnore
 	{
 		$options['markdown']['inline'] = true;
 		return App::instance()->kirbytext($text, $options);
+	}
+}
+
+if (Helpers::hasOverride('kql') === false) { // @codeCoverageIgnore
+	/**
+	 * Run a KQL query
+	 */
+	function kql(mixed $input, mixed $model = null): mixed
+	{
+		return Kql::run($input, $model);
 	}
 }
 

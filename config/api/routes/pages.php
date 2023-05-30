@@ -1,10 +1,8 @@
 <?php
 
-
 /**
  * Page Routes
  */
-
 
 return [
 	[
