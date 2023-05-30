@@ -1,5 +1,5 @@
 export default {
-	install(app, panel) {
+	install(app) {
 		/**
 		 * Handles promise rejections that have
 		 * not been caught
@@ -8,12 +8,12 @@ export default {
 		 */
 		window.onunhandledrejection = (event) => {
 			event.preventDefault();
-			panel.error(event.reason);
+			window.panel.error(event.reason);
 		};
 
 		/**
 		 * Handles any Vue errors
 		 */
-		app.config.errorHandler = panel.error;
+		app.config.errorHandler = window.panel.error.bind(window.panel);
 	}
 };

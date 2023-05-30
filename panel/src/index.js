@@ -15,15 +15,29 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 /**
- * Create the Panel instance
+ * Global styles need to be loaded before
+ * components
  */
-window.panel = Panel.create(window.panel.plugins);
+import "./styles/variables.css";
+import "./styles/reset.css";
+import "./styles/animations.css";
 
 /**
+ * Load all relevant Vue plugins
+ * that do not depend on the Panel instance
+ */
+Vue.use(Helpers);
+Vue.use(Libraries);
+Vue.use(Vuelidate);
+Vue.use(Components);
+
+/**
+ * Create the Panel instance
+ *
  * This is the single source of truth
  * for all Vue components.
  */
-Vue.prototype.$panel = window.panel;
+window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
 
 /**
  * Some shortcuts to the Panel's features
@@ -40,23 +54,11 @@ window.panel.app = new Vue({
 });
 
 /**
- * Global styles need to be loaded before
- * components
- */
-import "./styles/variables.css";
-import "./styles/reset.css";
-import "./styles/animations.css";
-
-/**
  * Additional functionalities and app configuration
  */
-Vue.use(ErrorHandling, window.panel);
-Vue.use(Legacy, window.panel);
-Vue.use(Helpers);
-Vue.use(Libraries);
 Vue.use(I18n);
-Vue.use(Vuelidate);
-Vue.use(Components);
+Vue.use(ErrorHandling);
+Vue.use(Legacy);
 
 /**
  * Load CSS utilities after components
@@ -64,6 +66,13 @@ Vue.use(Components);
  */
 import "./styles/utilities.css";
 
+// :has() CSS polyfill
+// TODO: remove when Firefox supports CSS :has
+if (CSS.supports("selector(:has(*))") === false) {
+	import("css-has-pseudo/browser").then(({ default: cssHas }) => {
+		cssHas(document);
+	});
+}
 // container queries CSS polyfill
 // TODO: remove when global support for container queries is reached
 if (CSS.supports("container") === false) {
