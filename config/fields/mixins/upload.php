@@ -22,9 +22,9 @@ return [
 				$uploads = [];
 			}
 
-			$template = $uploads['template'] ?? null;
+			$uploads['accept'] = '*';
 
-			if ($template) {
+			if ($template = $uploads['template'] ?? null) {
 				$file = new File([
 					'filename' => 'tmp',
 					'parent'   => $this->model(),
@@ -32,8 +32,6 @@ return [
 				]);
 
 				$uploads['accept'] = $file->blueprint()->acceptMime();
-			} else {
-				$uploads['accept'] = '*';
 			}
 
 			return $uploads;
@@ -45,10 +43,10 @@ return [
 				throw new Exception('Uploads are disabled for this field');
 			}
 
+			$parent = $this->model();
+
 			if ($parentQuery = ($params['parent'] ?? null)) {
-				$parent = $this->model()->query($parentQuery);
-			} else {
-				$parent = $this->model();
+				$parent = $parent->query($parentQuery);
 			}
 
 			if ($parent instanceof File) {

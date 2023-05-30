@@ -211,7 +211,7 @@ class Api
 	 */
 	public function clone(array $props = []): static
 	{
-		return new static(array_merge_recursive([
+		return new static(array_merge([
 			'autentication' => $this->authentication,
 			'data'			=> $this->data,
 			'routes'		=> $this->routes,
