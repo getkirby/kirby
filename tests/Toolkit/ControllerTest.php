@@ -30,6 +30,20 @@ class ControllerTest extends TestCase
 	}
 
 	/**
+	 * @covers ::arguments
+	 */
+	public function testVariadicArguments()
+	{
+		$controller = new Controller(fn ($c, ...$args) => $c . implode('', $args));
+
+		$this->assertSame('CAB', $controller->call(null, [
+			'a' => 'A',
+			'b' => 'B',
+			'c' => 'C'
+		]));
+	}
+
+	/**
 	 * @covers ::call
 	 */
 	public function testCallBind()
