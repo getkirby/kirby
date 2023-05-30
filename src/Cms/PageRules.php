@@ -396,7 +396,14 @@ class PageRules
 				continue;
 			}
 
-			// go through all allowed blueprints and add the name to the allow list
+			// only consider page sections that list pages
+			// of the targeted new parent page
+			if ($section->parent() !== $parent) {
+				continue;
+			}
+
+			// go through all allowed blueprints and
+			// add the name to the allow list
 			foreach ($section->blueprints() as $blueprint) {
 				$allowed[] = $blueprint['name'];
 			}
@@ -408,7 +415,7 @@ class PageRules
 				'key'  => 'page.move.template',
 				'data' => [
 					'template' => $page->intendedTemplate()->name(),
-					'parent'   => $parent->id()
+					'parent'   => $parent->id() ?? '/',
 				]
 			]);
 		}
