@@ -79,14 +79,7 @@ class Find
 		// decode API ID encoding
 		$id    = str_replace(['+', ' '], '/', $id);
 		$kirby = App::instance();
-
-		// support looking up the site itself,
-		// as this will fail when using $kirby->page()
-		if ($id === '/' || $id === 'site://') {
-			return $kirby->site();
-		}
-
-		$page = $kirby->page($id, null, true);
+		$page  = $kirby->page($id, null, true);
 
 		if ($page?->isAccessible() === true) {
 			return $page;
