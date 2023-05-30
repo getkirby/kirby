@@ -11,7 +11,7 @@ describe.concurrent("panel.drawer", () => {
 			component: null,
 			isLoading: false,
 			isOpen: false,
-			island: true,
+			legacy: false,
 			on: {},
 			parent: null,
 			path: null,

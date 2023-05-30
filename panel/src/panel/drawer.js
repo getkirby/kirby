@@ -1,15 +1,15 @@
-import Island, { defaults as islandDefaults } from "./island.js";
+import Modal, { defaults as modalDefaults } from "./modal.js";
 
 export const defaults = () => {
 	return {
-		...islandDefaults(),
+		...modalDefaults(),
 		parent: null,
 		tabId: null
 	};
 };
 
 export default (panel) => {
-	const parent = Island(panel, "drawer", defaults());
+	const parent = Modal(panel, "drawer", defaults());
 
 	// shortcut to submit drawers
 	panel.events.on("drawer.save", (e) => {

@@ -1,7 +1,7 @@
 import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
-import Module from "./module.js";
+import State from "./state.js";
 import Timer from "./timer.js";
 
 export const defaults = () => {
@@ -16,7 +16,7 @@ export const defaults = () => {
 };
 
 export default (panel = {}) => {
-	const parent = Module("notification", defaults());
+	const parent = State("notification", defaults());
 
 	return {
 		...parent,
