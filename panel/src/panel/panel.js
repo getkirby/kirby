@@ -145,6 +145,21 @@ export default {
 	},
 
 	/**
+	 *
+	 * @param {Event} error
+	 * @param {Boolean} openNotification
+	 */
+	error(error, openNotification = true) {
+		if (this.debug === true) {
+			console.error(error);
+		}
+
+		if (openNotification === true) {
+			return this.notification.error(error);
+		}
+	},
+
+	/**
 	 * Sends a GET request
 	 *
 	 * @example
@@ -195,7 +210,7 @@ export default {
 
 			return this.state();
 		} catch (error) {
-			return this.notification.error(error);
+			return this.error(error);
 		}
 	},
 

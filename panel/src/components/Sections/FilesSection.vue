@@ -96,8 +96,8 @@ export default {
 				this.$panel.notification.success();
 				this.$events.$emit("file.sort");
 			} catch (error) {
+				this.$panel.error(error);
 				this.reload();
-				this.$panel.notification.error(error.message);
 			} finally {
 				this.isProcessing = false;
 			}

@@ -11,7 +11,11 @@
 	>
 		<k-headline>{{ $t("page.move") }}</k-headline>
 		<div class="k-page-move-parent" tabindex="0" data-autofocus>
-			<k-page-tree :current="$panel.dialog.value.parent" @select="select" />
+			<k-page-tree
+				:current="$panel.dialog.value.parent"
+				identifier="id"
+				@select="select"
+			/>
 		</div>
 	</k-dialog>
 </template>

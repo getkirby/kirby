@@ -94,7 +94,9 @@ export default (panel, key, defaults) => {
 			// the panel.open method also triggers the global loading
 			// state for the entire panel. This adds fine-grained controll
 			// over apropriate spinners.
-			this.isLoading = true;
+			if (options.silent !== true) {
+				this.isLoading = true;
+			}
 
 			// the global open method is used to make sure
 			// that a response can also trigger other features.
@@ -184,7 +186,7 @@ export default (panel, key, defaults) => {
 			try {
 				return await panel.post(this.path, value, options);
 			} catch (error) {
-				panel.notification.error(error);
+				panel.error(error);
 			} finally {
 				// stop the loader
 				this.isLoading = false;

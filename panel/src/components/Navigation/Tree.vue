@@ -1,7 +1,7 @@
 <template>
-	<ul class="k-tree" :style="{ '--tree-level': level }">
+	<ul :class="$options.name" class="k-tree" :style="{ '--tree-level': level }">
 		<li
-			v-for="(item, index) in items"
+			v-for="(item, index) in state"
 			:key="index"
 			:aria-expanded="item.open"
 			:aria-current="item.id === current"
@@ -27,8 +27,8 @@
 			</p>
 			<template v-if="item.hasChildren && item.open">
 				<component
-					:is="element"
-					:current="current"
+					:is="$options.name"
+					v-bind="$props"
 					:items="item.children"
 					:level="level + 1"
 					@select="select"
@@ -41,6 +41,7 @@
 
 <script>
 export default {
+	name: "k-tree",
 	inheritAttrs: false,
 	props: {
 		element: {
@@ -57,6 +58,11 @@ export default {
 			default: 0,
 			type: Number
 		}
+	},
+	data() {
+		return {
+			state: this.items
+		};
 	},
 	methods: {
 		select(item) {

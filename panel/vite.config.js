@@ -9,6 +9,7 @@ import externalGlobals from "rollup-plugin-external-globals";
 
 import postcssAutoprefixer from "autoprefixer";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
+import postcssHas from "css-has-pseudo";
 import postcssLogical from "postcss-logical";
 import postcssNano from "cssnano";
 
@@ -88,7 +89,13 @@ export default defineConfig(({ command }) => {
 				input: "./src/index.js",
 				output: {
 					entryFileNames: "js/[name].js",
-					chunkFileNames: "js/[name].js",
+					chunkFileNames: (chunkInfo) => {
+						// TODO: remove when removing CSS :has polyfill
+						if (chunkInfo.name === "browser") {
+							return "js/css-has-polyfill.js";
+						}
+						return "js/[name].js";
+					},
 					assetFileNames: "[ext]/[name].[ext]"
 				}
 			}
@@ -100,9 +107,10 @@ export default defineConfig(({ command }) => {
 		css: {
 			postcss: {
 				plugins: [
+					postcssAutoprefixer(),
 					postcssLogical(),
 					postcssDirPseudoClass(),
-					postcssAutoprefixer(),
+					postcssHas(),
 					postcssNano()
 				]
 			}
