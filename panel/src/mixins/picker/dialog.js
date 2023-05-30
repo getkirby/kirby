@@ -75,6 +75,7 @@ export default {
 					this.onFetched(response);
 				}
 			} catch (e) {
+				this.$panel.error(e, false);
 				this.models = [];
 				this.issue = e.message;
 			}

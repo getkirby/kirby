@@ -154,7 +154,7 @@ export default {
 
 				this.$panel.notification.success(this.$t("welcome") + "!");
 			} catch (error) {
-				this.$panel.notification.error(error);
+				this.$panel.error(error);
 			}
 		}
 	}
