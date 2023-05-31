@@ -864,7 +864,7 @@ class PageRulesTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null',
+				'index' => $this->tmp,
 			],
 			'site' => [
 				'children' => [
@@ -890,6 +890,11 @@ class PageRulesTest extends TestCase
 						'albums' => [
 							'type'      => 'pages',
 							'templates' => ['album']
+						],
+						'related' => [
+							'type'      => 'pages',
+							'parent'    => 'site.find("parent-a")',
+							'templates' => ['article']
 						]
 					]
 				]

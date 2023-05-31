@@ -35,6 +35,12 @@
 						class="k-link-input-model-preview"
 						@remove="clear"
 					>
+						<k-item-image
+							v-if="model.image"
+							:image="{ ...model.image, cover: true, back: 'gray-200' }"
+							class="k-link-input-model-preview-image"
+						/>
+
 						{{ model.label }}
 					</k-tag>
 					<k-button v-else class="k-link-input-model-placeholder">
@@ -44,8 +50,8 @@
 					<k-button class="k-link-input-model-toggle" icon="bars" />
 				</div>
 				<component
-					v-else
 					:is="'k-' + currentType.input + '-input'"
+					v-else
 					:id="_uid"
 					ref="input"
 					:pattern="currentType.pattern ?? null"
@@ -176,7 +182,9 @@ export default {
 			this.$emit("input", "");
 			this.expanded = false;
 		},
-		detect(value = "") {
+		detect(value) {
+			value = value ?? "";
+
 			if (this.isPageUUID(value) === true) {
 				return {
 					type: "page",
@@ -255,11 +263,12 @@ export default {
 		async previewForFile(id) {
 			try {
 				const file = await this.$api.files.get(null, id, {
-					select: "filename"
+					select: "filename, panelImage"
 				});
 
 				return {
-					label: file.filename
+					label: file.filename,
+					image: file.panelImage
 				};
 			} catch (e) {
 				return null;
@@ -358,8 +367,19 @@ export default {
 	white-space: nowrap;
 }
 .k-link-input-model-preview .k-tag-text {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.k-link-input-model-preview-image {
+	height: calc(var(--height-sm) - 0.5rem);
+	aspect-ratio: 1/1;
+	border-radius: 1px;
+}
+.k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
+	padding-inline-start: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
 	display: flex;

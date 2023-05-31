@@ -1,5 +1,5 @@
 import { template } from "@/helpers/string.js";
-import Module from "./module.js";
+import State from "./state.js";
 
 export const defaults = () => {
 	return {
@@ -15,7 +15,7 @@ export const defaults = () => {
  * translation
  */
 export default () => {
-	const parent = Module("translation", defaults());
+	const parent = State("translation", defaults());
 
 	return {
 		...parent,

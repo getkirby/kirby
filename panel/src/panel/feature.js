@@ -1,6 +1,6 @@
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
-import Module from "./module.js";
+import State from "./state.js";
 
 /**
  * Default state for all features
@@ -36,11 +36,11 @@ export const defaults = () => {
  * @param {Object} defaults Sets the default state of the feature
  */
 export default (panel, key, defaults) => {
-	const parent = Module(key, defaults);
+	const parent = State(key, defaults);
 
 	return {
 		/**
-		 * Features inherit all the module methods
+		 * Features inherit all the state methods
 		 * and reactive defaults are also merged
 		 * through them.
 		 */
@@ -94,7 +94,9 @@ export default (panel, key, defaults) => {
 			// the panel.open method also triggers the global loading
 			// state for the entire panel. This adds fine-grained controll
 			// over apropriate spinners.
-			this.isLoading = true;
+			if (options.silent !== true) {
+				this.isLoading = true;
+			}
 
 			// the global open method is used to make sure
 			// that a response can also trigger other features.
@@ -184,7 +186,7 @@ export default (panel, key, defaults) => {
 			try {
 				return await panel.post(this.path, value, options);
 			} catch (error) {
-				panel.notification.error(error);
+				panel.error(error);
 			} finally {
 				// stop the loader
 				this.isLoading = false;

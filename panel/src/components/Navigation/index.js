@@ -6,8 +6,8 @@ import Dropdown from "./Dropdown.vue";
 import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
 import FileBrowser from "./FileBrowser.vue";
+import LanguagesDropdown from "./LanguagesDropdown.vue";
 import Link from "./Link.vue";
-import Languages from "./Languages.vue";
 import ModelTabs from "./ModelTabs.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
 import PageTree from "./PageTree.vue";
@@ -33,7 +33,7 @@ export default {
 		app.component("k-dropdown-content", DropdownContent);
 		app.component("k-dropdown-item", DropdownItem);
 		app.component("k-file-browser", FileBrowser);
-		app.component("k-languages-dropdown", Languages);
+		app.component("k-languages-dropdown", LanguagesDropdown);
 		app.component("k-link", Link);
 		app.component("k-model-tabs", ModelTabs);
 		app.component("k-options-dropdown", OptionsDropdown);

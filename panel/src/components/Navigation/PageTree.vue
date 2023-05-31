@@ -1,20 +1,9 @@
-<template>
-	<k-tree
-		:current="current"
-		:items="pages"
-		:level="level"
-		class="k-page-tree"
-		element="k-page-tree"
-		@select="select"
-		@toggle="toggle"
-	/>
-</template>
-
 <script>
 import Tree from "./Tree.vue";
 
 export default {
-	mixins: [Tree],
+	name: "k-page-tree",
+	extends: Tree,
 	inheritAttrs: false,
 	props: {
 		root: {
@@ -25,26 +14,25 @@ export default {
 			default: "/site",
 			type: String
 		},
+		/**
+		 * @values `id`, `uuid`
+		 */
 		identifier: {
 			default: "uuid",
-			type: String
+			type: String,
+			validator: (value) => ["id", "uuid"].includes(value)
 		},
 		items: {
 			type: String
 		}
 	},
-	data() {
-		return {
-			pages: []
-		};
-	},
 	async created() {
 		if (this.items) {
-			this.pages = await this.load(this.items);
+			this.state = await this.load(this.items);
 		} else if (this.root === false) {
-			this.pages = await this.load("/site");
+			this.state = await this.load("/site");
 		} else {
-			this.pages = [
+			this.state = [
 				{
 					icon: "home",
 					id: "site://",
@@ -67,20 +55,19 @@ export default {
 
 			data.forEach((page) => {
 				const id = page[this.identifier];
-				const api = "/pages/" + this.$api.pages.id(page.id);
 
 				pages[id] = {
-					id: id,
+					id,
 					label: page.title,
 					hasChildren: page.hasChildren,
-					children: api,
+					children: "/pages/" + this.$api.pages.id(page.id),
 					open: false
 				};
 			});
 
 			return pages;
 		},
-		async toggle(page) {
+		toggle(page) {
 			page.open = !page.open;
 			this.$emit("toggleBranch", page);
 		}

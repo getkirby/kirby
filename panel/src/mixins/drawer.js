@@ -56,7 +56,7 @@ export default {
 		},
 		/**
 		 * Hides the overlay. This should only be used
-		 * in the island code to support inline components
+		 * in the modal code to support inline components
 		 *
 		 * @private
 		 */
@@ -90,7 +90,7 @@ export default {
 		},
 		/**
 		 * Shows the overlay. This should only be used
-		 * in the island code to support inline components
+		 * in the modal code to support inline components
 		 *
 		 * @private
 		 */

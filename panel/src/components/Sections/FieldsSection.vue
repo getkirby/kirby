@@ -52,14 +52,14 @@ export default {
 				const response = await this.load();
 				this.fields = response.fields;
 
-				Object.keys(this.fields).forEach((name) => {
+				for (const name in this.fields) {
 					this.fields[name].section = this.name;
 					this.fields[name].endpoints = {
 						field: this.parent + "/fields/" + name,
 						section: this.parent + "/sections/" + this.name,
 						model: this.parent
 					};
-				});
+				}
 			} catch (error) {
 				this.issue = error;
 			} finally {

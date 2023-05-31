@@ -3,6 +3,18 @@
 		<k-header>Search</k-header>
 
 		<div class="k-search-view-layout">
+			<k-input
+				ref="input"
+				:aria-label="$t('search')"
+				:autofocus="true"
+				:placeholder="$t('search') + ' …'"
+				:value="query"
+				class="k-search-view-input"
+				icon="search"
+				type="text"
+				@input="query = $event"
+			/>
+
 			<aside class="k-search-view-types">
 				<nav>
 					<k-button
@@ -17,18 +29,6 @@
 					</k-button>
 				</nav>
 			</aside>
-
-			<k-input
-				ref="input"
-				:aria-label="$t('search')"
-				:autofocus="autofocus"
-				:placeholder="$t('search') + ' …'"
-				:value="query"
-				class="k-search-view-input"
-				icon="search"
-				type="text"
-				@input="query = $event"
-			/>
 
 			<div class="k-search-view-results">
 				<k-collection
@@ -114,17 +114,9 @@ export default {
 }
 .k-search-view-layout {
 	display: grid;
-	grid-template-columns: 15rem 1fr;
-	grid-template-rows: var(--height-lg) 1fr;
-	column-gap: 3rem;
 	row-gap: 1.5rem;
-	grid-template-areas:
-		"types input"
-		"types results";
 }
-.k-search-view-types {
-	grid-area: types;
-}
+
 .k-search-view-types nav {
 	display: flex;
 	flex-direction: column;
@@ -151,6 +143,22 @@ export default {
 	width: 100%;
 	border-radius: var(--rounded);
 	padding: var(--spacing-3);
-	grid-area: input;
+}
+
+@media (min-width: 50rem) {
+	.k-search-view-layout {
+		grid-template-columns: 15rem 1fr;
+		grid-template-rows: var(--height-lg) 1fr;
+		column-gap: 3rem;
+		grid-template-areas:
+			"types input"
+			"types results";
+	}
+	.k-search-view-types {
+		grid-area: types;
+	}
+	.k-search-view-input {
+		grid-area: input;
+	}
 }
 </style>

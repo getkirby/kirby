@@ -1,20 +1,18 @@
 <template>
 	<nav class="k-browser">
 		<div class="k-browser-items">
-			<label
-				v-for="(item, index) in items"
-				:key="item.value"
-				class="k-browser-item"
-			>
+			<label v-for="item in items" :key="item.value" class="k-browser-item">
 				<input
 					:checked="selected === item.value"
 					:name="name"
 					:type="type"
 					@change="$emit('select', item)"
 				/>
-				<span class="k-browser-item-image">
-					<img :src="item.image.src" />
-				</span>
+				<k-item-image
+					v-if="item.image"
+					:image="{ ...item.image, cover: true, back: 'black' }"
+					class="k-browser-item-image"
+				/>
 				<span class="k-browser-item-info">
 					{{ item.label }}
 				</span>
@@ -81,18 +79,15 @@ export default {
 .k-browser-item-image {
 	height: calc(var(--browser-item-height) - var(--browser-item-padding) * 2);
 	aspect-ratio: 1/1;
-	border-radius: var(--rounded);
-	display: grid;
-	place-items: center;
-	overflow: hidden;
+	border-radius: var(--rounded-sm);
 	box-shadow: var(--shadow);
-	flex-shrink: 0;
 }
-
-.k-browser-item-image img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+.k-browser-item-image:has(svg) {
+	box-shadow: none;
+	background: var(--color-white);
+}
+.k-browser-item-image svg {
+	transform: scale(0.8);
 }
 
 .k-browser-item input {

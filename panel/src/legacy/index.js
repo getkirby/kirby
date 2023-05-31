@@ -7,20 +7,22 @@ import dropdown from "./dropdown.js";
  * in future major releases to clean up.
  */
 export default {
-	install(app, panel) {
+	install(app) {
 		/**
 		 * @deprecated Deprecated Panel Methods
 		 */
-		panel.error = app.config.errorHandler;
-		panel.deprecated = panel.notification.deprecated.bind(panel.notification);
+		window.panel.error = app.config.errorHandler;
+		window.panel.deprecated = window.panel.notification.deprecated.bind(
+			window.panel.notification
+		);
 
 		/**
 		 * Method object binding for the polyfills below
 		 */
-		panel.redirect = panel.redirect.bind(panel);
-		panel.reload = panel.reload.bind(panel);
-		panel.request = panel.request.bind(panel);
-		panel.search = panel.search.bind(panel);
+		window.panel.redirect = window.panel.redirect.bind(window.panel);
+		window.panel.reload = window.panel.reload.bind(window.panel);
+		window.panel.request = window.panel.request.bind(window.panel);
+		window.panel.search = window.panel.search.bind(window.panel);
 
 		/**
 		 * @deprecated Dollar Sign Shortcuts
@@ -62,7 +64,7 @@ export default {
 
 		for (const polyfill of polyfills) {
 			const key = `$${polyfill}`;
-			app.prototype[key] = panel[key] = panel[polyfill];
+			app.prototype[key] = window.panel[key] = window.panel[polyfill];
 		}
 
 		/**

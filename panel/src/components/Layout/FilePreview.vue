@@ -115,12 +115,20 @@ export default {
 			];
 
 			if (this.focusable && this.image.src) {
-				options.push({
-					icon: "cancel",
-					text: this.$t("file.focus.reset"),
-					disabled: !this.hasFocus,
-					click: this.setFocus
-				});
+				if (this.hasFocus) {
+					options.push({
+						icon: "cancel",
+						text: this.$t("file.focus.reset"),
+						disabled: !this.hasFocus,
+						click: this.setFocus
+					});
+				} else {
+					options.push({
+						icon: "preview",
+						text: this.$t("file.focus.placeholder"),
+						click: () => this.setFocus("50% 50%")
+					});
+				}
 			}
 
 			return options;
