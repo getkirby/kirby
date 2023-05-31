@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
 class ComponentTest extends TestCase
@@ -205,8 +206,10 @@ class ComponentTest extends TestCase
 		];
 
 		$component = new Component('test', ['message' => 'hello world']);
+		$expected  = ['message' => 'HELLO WORLD'];
 
-		$this->assertSame(['message' => 'HELLO WORLD'], $component->toArray());
+		$this->assertSame($expected, $component->toArray());
+		$this->assertSame($expected, $component->__debugInfo());
 	}
 
 	public function testCustomToArray()
@@ -231,7 +234,16 @@ class ComponentTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Undefined component type: test');
 
-		$component = new Component('test');
+		new Component('test');
+	}
+
+	public function testLoadInvalidFile()
+	{
+		Component::$types = ['foo' => 'bar'];
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Component definition bar does not exist');
+
+		Component::load('foo');
 	}
 
 	public function testMixins()

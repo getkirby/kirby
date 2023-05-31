@@ -135,7 +135,7 @@ class Sessions
 				'translate' => false,
 				'httpCode'  => 500
 			]),
-				// unexpected error that shouldn't occur
+			// unexpected error that shouldn't occur
 			default => throw new Exception(['translate' => false]) // @codeCoverageIgnore
 		};
 

@@ -8,6 +8,19 @@ namespace Kirby\Toolkit;
 class IteratorTest extends TestCase
 {
 	/**
+	 * @covers ::__construct
+	 */
+	public function testConstruct()
+	{
+		$iterator = new Iterator($expected = [
+			'one' => 'eins',
+			'two' => 'zwei',
+		]);
+
+		$this->assertSame($expected, $iterator->data);
+	}
+
+	/**
 	 * @covers ::key
 	 */
 	public function testKey()
