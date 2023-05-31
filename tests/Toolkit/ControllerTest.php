@@ -34,7 +34,7 @@ class ControllerTest extends TestCase
 	 */
 	public function testVariadicArguments()
 	{
-		$controller = new Controller(fn ($c, ...$args) => $c . implode('', $args));
+		$controller = new Controller(fn ($c, ...$args) => $c . '/' . implode('', $args));
 
 		$this->assertSame('CAB', $controller->call(null, [
 			'a' => 'A',
