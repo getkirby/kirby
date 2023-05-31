@@ -328,42 +328,6 @@ class Pagination
 	}
 
 	/**
-	 * Sets the properties limit, total and page
-	 * and validates that the properties match
-	 *
-	 * @param array $props Array with keys limit, total and/or page
-	 * @return $this
-	 */
-	protected function setProperties(array $props): static
-	{
-		$this->baseSetProperties($props);
-
-		// ensure that page is set to something, otherwise
-		// generate "default page" based on other params
-		$this->page ??= $this->firstPage();
-
-		// allow a page value of 1 even if there are no pages;
-		// otherwise the exception will get thrown for this pretty common case
-		$min = $this->firstPage();
-		$max = $this->pages();
-		if ($this->page === 1 && $max === 0) {
-			$this->page = 0;
-		}
-
-		// validate page based on all params if validation is enabled,
-		// otherwise limit the page number to the bounds
-		if ($this->page < $min || $this->page > $max) {
-			if (static::$validate === true) {
-				throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
-			}
-
-			$this->page = max(min($this->page, $max), $min);
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Sets the number of items per page
 	 *
 	 * @return $this
