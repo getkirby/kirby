@@ -60,7 +60,8 @@ export default {
 					},
 					class: "k-dialog-button-cancel",
 					icon: "cancel",
-					text: this.$t("cancel")
+					text: this.$t("cancel"),
+					variant: "filled"
 				}),
 				this.button(this.submitButton, {
 					class: "k-dialog-button-submit",
@@ -68,7 +69,8 @@ export default {
 					icon: this.icon,
 					text: this.$t("confirm"),
 					theme: this.theme,
-					type: "submit"
+					type: "submit",
+					variant: "filled"
 				})
 			].filter((button) => button !== false);
 		}
@@ -101,20 +103,9 @@ export default {
 
 <style>
 .k-button-group.k-dialog-buttons {
-	display: flex;
-	margin: 0;
-	justify-content: space-between;
-}
-.k-button-group.k-dialog-buttons .k-button {
-	padding: 0.75rem 1rem;
-	line-height: 1.25rem;
-}
-.k-button-group.k-dialog-buttons .k-button.k-dialog-button-cancel {
-	text-align: start;
-	padding-inline-start: 1.5rem;
-}
-.k-button-group.k-dialog-buttons .k-button.k-dialog-button-submit {
-	text-align: end;
-	padding-inline-end: 1.5rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--spacing-3);
+	--button-height: var(--height-lg);
 }
 </style>
