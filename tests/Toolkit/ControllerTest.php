@@ -36,7 +36,7 @@ class ControllerTest extends TestCase
 	{
 		$controller = new Controller(fn ($c, ...$args) => $c . '/' . implode('', $args));
 
-		$this->assertSame('CAB', $controller->call(null, [
+		$this->assertSame('C/AB', $controller->call(null, [
 			'a' => 'A',
 			'b' => 'B',
 			'c' => 'C'
