@@ -31,7 +31,7 @@ class Controller
 		foreach ($info->getParameters() as $param) {
 			$name = $param->getName();
 
-			if ($param->isVariadic()) {
+			if ($param->isVariadic() === true) {
 				$args += $data;
 			} else {
 				$args[$name] = $data[$name] ?? null;
