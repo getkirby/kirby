@@ -186,6 +186,17 @@ export default {
 	},
 
 	/**
+	 * Runs a KQL request and returns the result
+	 *
+	 * @param {Object} options
+	 * @returns {Object|String|Array}
+	 */
+	async kql(options) {
+		const { result } = await this.api.post("query", options);
+		return result;
+	},
+
+	/**
 	 * Opens a Panel URL and sets the state.
 	 * This is the main difference to panel.get,
 	 * which does not manipulate the state.
