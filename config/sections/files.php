@@ -2,6 +2,7 @@
 
 use Kirby\Cms\File;
 use Kirby\Cms\Files;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\I18n;
 
 return [

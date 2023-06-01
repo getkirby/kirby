@@ -882,6 +882,37 @@ class PagesSectionTest extends TestCase
 		$this->assertCount(3, $section->pages());
 	}
 
+	public function testQueryCreateInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid `create` prop: query must return string or array.');
+
+		$app = $this->app->clone([
+			'options' => [
+				'create' => new \stdClass()
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a'],
+				['slug' => 'b'],
+				['slug' => 'c']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'create' => 'kirby.option("create")',
+			'model'  => $parent,
+			'name'   => 'test'
+		]);
+
+		$section->create();
+	}
+
 	public function testQueryTemplate()
 	{
 		$app = $this->app->clone([
@@ -941,5 +972,36 @@ class PagesSectionTest extends TestCase
 
 		$this->assertSame($expected, $section->templates());
 		$this->assertCount(2, $section->pages());
+	}
+
+	public function testQueryTemplatesInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid `templates` prop: query must return string or array.');
+
+		$app = $this->app->clone([
+			'options' => [
+				'templates' => new \stdClass()
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'foo'],
+				['slug' => 'b', 'template' => 'bar'],
+				['slug' => 'c', 'template' => 'baz']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'      => 'test',
+			'model'     => $parent,
+			'templates' => 'kirby.option("templates")'
+		]);
+
+		$section->templates();
 	}
 }

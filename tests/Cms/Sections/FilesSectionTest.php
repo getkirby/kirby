@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -771,5 +772,41 @@ class FilesSectionTest extends TestCase
 
 		$this->assertSame('foo', $section->template());
 		$this->assertCount(1, $section->files());
+	}
+
+	public function testQueryTemplateInvalid()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid `template` prop: query must return a string.');
+
+		$app = $this->app->clone([
+			'options' => [
+				'template' => new \stdClass()
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$model = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				[
+					'filename' => 'c.jpg',
+					'content' => [
+						'template' => 'foo'
+					]
+				],
+			]
+		]);
+
+		$section = new Section('files', [
+			'name'     => 'test',
+			'model'    => $model,
+			'template' => 'kirby.option("template")'
+		]);
+
+		$section->template();
 	}
 }
