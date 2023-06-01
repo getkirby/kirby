@@ -7,6 +7,7 @@
 <style>
 .k-panel.k-panel-outside {
 	display: grid;
+	grid-template-rows: 1fr;
 	place-items: center;
 	height: 100vh;
 	height: 100dvh;
