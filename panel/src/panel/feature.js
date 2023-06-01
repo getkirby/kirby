@@ -1,6 +1,6 @@
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
-import Module from "./module.js";
+import State from "./state.js";
 
 /**
  * Default state for all features
@@ -36,11 +36,11 @@ export const defaults = () => {
  * @param {Object} defaults Sets the default state of the feature
  */
 export default (panel, key, defaults) => {
-	const parent = Module(key, defaults);
+	const parent = State(key, defaults);
 
 	return {
 		/**
-		 * Features inherit all the module methods
+		 * Features inherit all the state methods
 		 * and reactive defaults are also merged
 		 * through them.
 		 */

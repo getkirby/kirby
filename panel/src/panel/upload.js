@@ -1,5 +1,5 @@
 import { uuid } from "@/helpers/string";
-import Module from "./module.js";
+import State from "./state.js";
 import listeners from "./listeners.js";
 import upload from "@/helpers/upload.js";
 import { extension, name, niceSize } from "@/helpers/file.js";
@@ -17,7 +17,7 @@ export const defaults = () => {
 };
 
 export default (panel) => {
-	const parent = Module("upload", defaults());
+	const parent = State("upload", defaults());
 
 	return {
 		...parent,

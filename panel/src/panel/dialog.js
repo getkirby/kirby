@@ -1,4 +1,4 @@
-import Island, { defaults } from "./island.js";
+import Modal, { defaults } from "./modal.js";
 
 export default (panel) => {
 	// shortcut to submit dialogs
@@ -7,5 +7,5 @@ export default (panel) => {
 		panel.dialog.submit();
 	});
 
-	return Island(panel, "dialog", defaults());
+	return Modal(panel, "dialog", defaults());
 };

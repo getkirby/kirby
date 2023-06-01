@@ -21,7 +21,7 @@ import { isEmpty } from "@/helpers/string.js";
 /**
  * Globals are just reactive objects
  * from the backend that don't have their
- * own modules.
+ * own state objects.
  */
 export const globals = {
 	config: {},
@@ -35,18 +35,18 @@ export const globals = {
 };
 
 /**
- * Islands are features that
+ * Modals are features that
  * can be opened and closed based
  * on the response
  */
-export const islands = ["dialog", "drawer"];
+export const modals = ["dialog", "drawer"];
 
 /**
- * Modules are more advanced parts
- * of the state that have their own
- * logic and methods
+ * State objects are more advanced parts
+ * of the overall panel state that
+ * have their own logic and methods
  */
-export const modules = [
+export const states = [
 	"dropdown",
 	"language",
 	"notification",
@@ -69,7 +69,7 @@ export default {
 		this.events = Events(this);
 		this.upload = Upload(this);
 
-		// modules
+		// state objects
 		this.language = Language(this);
 		this.notification = Notification(this);
 		this.system = System(this);
@@ -80,7 +80,7 @@ export default {
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
 
-		// islands
+		// modals
 		this.drawer = Drawer(this);
 		this.dialog = Dialog(this);
 
@@ -298,30 +298,30 @@ export default {
 		}
 
 		/**
-		 * Register all modules
+		 * Register all state objects
 		 */
-		for (const module of modules) {
+		for (const key of states) {
 			// if there's a new state for the
-			// module, call its state setter method
-			if (isObject(state[module]) === true) {
-				this[module].set(state[module]);
+			// state object, call its state setter method
+			if (isObject(state[key]) === true) {
+				this[key].set(state[key]);
 			}
 		}
 
 		/**
-		 * Toggle islands
+		 * Toggle modals
 		 */
-		for (const island of islands) {
+		for (const modal of modals) {
 			// if there's a new state for the
-			// module, call its state setter method
-			if (isObject(state[island]) === true) {
-				this[island].open(state[island]);
+			// modal, call its state setter method
+			if (isObject(state[modal]) === true) {
+				this[modal].open(state[modal]);
 			}
 
-			// islands will be closed if the response is null or false.
-			// on undefined, the state of the island stays untouched
-			else if (state[island] !== undefined) {
-				this[island].close(state[island]);
+			// modals will be closed if the response is null or false.
+			// on undefined, the state of the modal stays untouched
+			else if (state[modal] !== undefined) {
+				this[modal].close(state[modal]);
 			}
 		}
 
@@ -354,16 +354,16 @@ export default {
 	state() {
 		const state = {};
 
-		for (const global in globals) {
-			state[global] = this[global] ?? globals[global];
+		for (const key in globals) {
+			state[key] = this[key] ?? globals[key];
 		}
 
-		for (const module of modules) {
-			state[module] = this[module].state();
+		for (const key of states) {
+			state[key] = this[key].state();
 		}
 
-		for (const island of islands) {
-			state[island] = this[island].state();
+		for (const key of modals) {
+			state[key] = this[key].state();
 		}
 
 		state.dropdown = this.dropdown.state();

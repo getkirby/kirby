@@ -1,20 +1,20 @@
 import { describe, expect, it } from "vitest";
-import Island, { defaults } from "./island.js";
+import Modal, { defaults } from "./modal.js";
 import Panel from "./panel.js";
 import Vue from "vue";
 
-describe.concurrent("panel/island.js", () => {
+describe.concurrent("panel/modal.js", () => {
 	window.Vue = Vue;
 
 	it("should have a default state", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 
 		const state = {
 			component: null,
 			isLoading: false,
 			isOpen: false,
-			island: true,
+			legacy: false,
 			on: {},
 			path: null,
 			props: {},
@@ -24,19 +24,19 @@ describe.concurrent("panel/island.js", () => {
 			timestamp: null
 		};
 
-		expect(island.key()).toStrictEqual("test");
-		expect(island.state()).toStrictEqual(state);
+		expect(modal.key()).toStrictEqual("test");
+		expect(modal.state()).toStrictEqual(state);
 	});
 
 	it("should open and close", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 		let opened = false;
 		let closed = false;
 
-		expect(island.isOpen).toStrictEqual(false);
+		expect(modal.isOpen).toStrictEqual(false);
 
-		await island.open({
+		await modal.open({
 			component: "k-test",
 			on: {
 				close() {
@@ -48,21 +48,21 @@ describe.concurrent("panel/island.js", () => {
 			}
 		});
 
-		expect(island.isOpen).toStrictEqual(true);
+		expect(modal.isOpen).toStrictEqual(true);
 		expect(opened).toStrictEqual(true);
 
-		island.close();
+		modal.close();
 
-		expect(island.isOpen).toStrictEqual(false);
+		expect(modal.isOpen).toStrictEqual(false);
 		expect(closed).toStrictEqual(true);
 	});
 
 	it("should cancel", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 		let cancelled = false;
 
-		await island.open({
+		await modal.open({
 			component: "k-test",
 			on: {
 				cancel() {
@@ -71,38 +71,38 @@ describe.concurrent("panel/island.js", () => {
 			}
 		});
 
-		expect(island.isOpen).toStrictEqual(true);
-		expect(island.component).toStrictEqual("k-test");
+		expect(modal.isOpen).toStrictEqual(true);
+		expect(modal.component).toStrictEqual("k-test");
 		expect(cancelled).toStrictEqual(false);
 
-		island.cancel();
+		modal.cancel();
 
 		expect(cancelled).toStrictEqual(true);
 	});
 
 	it("should close a previous notification", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 
 		// open a notification first
 		panel.notification.error("Foo");
 
-		expect(island.isOpen).toStrictEqual(false);
+		expect(modal.isOpen).toStrictEqual(false);
 		expect(panel.notification.isOpen).toStrictEqual(true);
 
-		await island.open({
+		await modal.open({
 			component: "k-test"
 		});
 
-		expect(island.isOpen).toStrictEqual(true);
+		expect(modal.isOpen).toStrictEqual(true);
 		expect(panel.notification.isOpen).toStrictEqual(false);
 	});
 
 	it("should not close a previous notification on re-open", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 
-		await island.open({
+		await modal.open({
 			component: "k-test"
 		});
 
@@ -110,7 +110,7 @@ describe.concurrent("panel/island.js", () => {
 
 		expect(panel.notification.isOpen).toStrictEqual(true);
 
-		await island.open({
+		await modal.open({
 			component: "k-test"
 		});
 
@@ -119,10 +119,10 @@ describe.concurrent("panel/island.js", () => {
 
 	it("should change value", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 		let input = null;
 
-		await island.open({
+		await modal.open({
 			component: "k-test",
 			on: {
 				input(value) {
@@ -131,18 +131,18 @@ describe.concurrent("panel/island.js", () => {
 			}
 		});
 
-		island.input("foo");
+		modal.input("foo");
 
-		expect(island.props.value).toStrictEqual("foo");
-		expect(island.value).toStrictEqual("foo");
+		expect(modal.props.value).toStrictEqual("foo");
+		expect(modal.value).toStrictEqual("foo");
 		expect(input).toStrictEqual("foo");
 	});
 
 	it("should send notification after submit", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 
-		island.success({
+		modal.success({
 			message: "Test"
 		});
 
@@ -152,7 +152,7 @@ describe.concurrent("panel/island.js", () => {
 
 	it("should emit panel events after submit", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 		const emitted = [];
 
 		panel.events.on("success", () => {
@@ -163,25 +163,25 @@ describe.concurrent("panel/island.js", () => {
 			emitted.push("user.deleted");
 		});
 
-		island.success({
+		modal.success({
 			event: "user.deleted"
 		});
 
 		expect(emitted).toStrictEqual(["user.deleted", "success"]);
 	});
 
-	it("should close island after submit", async () => {
+	it("should close modal after submit", async () => {
 		const panel = Panel.create();
-		const island = Island(panel, "test", defaults());
+		const modal = Modal(panel, "test", defaults());
 
-		await island.open({
+		await modal.open({
 			component: "k-test"
 		});
 
-		expect(island.isOpen).toStrictEqual(true);
+		expect(modal.isOpen).toStrictEqual(true);
 
-		island.success({});
+		modal.success({});
 
-		expect(island.isOpen).toStrictEqual(false);
+		expect(modal.isOpen).toStrictEqual(false);
 	});
 });

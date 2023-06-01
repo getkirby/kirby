@@ -1,4 +1,4 @@
-import Module from "./module.js";
+import State from "./state.js";
 
 export const defaults = () => {
 	return {
@@ -8,7 +8,7 @@ export const defaults = () => {
 };
 
 export default () => {
-	const parent = Module("drag", defaults());
+	const parent = State("drag", defaults());
 
 	return {
 		...parent,
