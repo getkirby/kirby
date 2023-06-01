@@ -7,6 +7,7 @@ use Kirby\Cms\Page;
 use Kirby\Cms\PageBlueprint;
 use Kirby\Cms\Site;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -14,6 +15,7 @@ use Kirby\Toolkit\Str;
 class PageCreateDialog
 {
 	protected PageBlueprint $blueprint;
+	protected Page $model;
 	protected Page|Site $parent;
 	protected string $parentId;
 	protected string|null $sectionId;
@@ -22,6 +24,25 @@ class PageCreateDialog
 	protected string|null $title;
 	protected Page|Site $view;
 	protected string|null $viewId;
+
+	public static array $fieldTypes = [
+		'checkboxes',
+		'date',
+		'email',
+		'multiselect',
+		'number',
+		'list',
+		'radio',
+		'select',
+		'tags',
+		'tel',
+		'text',
+		'textarea',
+		'toggles',
+		'time',
+		'url',
+		'writer'
+	];
 
 	public function __construct(
 		string|null $parentId,
@@ -49,11 +70,7 @@ class PageCreateDialog
 	public function blueprint(): PageBlueprint
 	{
 		// create a temporary page object
-		return $this->blueprint ??= Page::factory([
-			'slug'     => 'new',
-			'template' => $this->template,
-			'model'    => $this->template
-		])->blueprint();
+		return $this->blueprint ??= $this->model()->blueprint();
 	}
 
 	/**
@@ -102,21 +119,18 @@ class PageCreateDialog
 		$ignore    = ['title', 'slug', 'parent', 'template'];
 		$blueprint = $this->blueprint();
 		$fields    = $blueprint->fields();
-		$types     = $this->customFieldTypes();
 
 		foreach ($blueprint->create()['fields'] ?? [] as $name) {
 			if (!$field = ($fields[$name] ?? null)) {
 				continue;
 			}
 
-			if (in_array($field['type'], $types) === false) {
-				// TODO: should throw an error, otherwise frustrating to debug
-				continue;
+			if (in_array($field['type'], static::$fieldTypes) === false) {
+				throw new InvalidArgumentException('Field type "' . $field['type'] . '" not supported in create dialog');
 			}
 
 			if (in_array($name, $ignore) === true) {
-				// TODO: should throw an error, otherwise frustrating to debug
-				continue;
+				throw new InvalidArgumentException('Field "' . $name . '" not allowed as custom field in create dialog');
 			}
 
 			// switch all fields to 1/1
@@ -126,33 +140,15 @@ class PageCreateDialog
 			$custom[$name] = $field;
 		}
 
-		return $custom;
-	}
+		// create form so that field props, options etc.
+		// can be properly resolved
+		$form = new Form([
+			'fields' => $custom,
+			'model'  => $this->model(),
+			'strict' => true
+		]);
 
-	/**
-	 * A list of supported custom field types
-	 */
-	public function customFieldTypes(): array
-	{
-		// TODO: how can one extend this via plugins?
-		return [
-			'checkboxes',
-			'date',
-			'email',
-			'multiselect',
-			'number',
-			'list',
-			'radio',
-			'select',
-			'tags',
-			'tel',
-			'text',
-			'textarea',
-			'toggles',
-			'time',
-			'url',
-			'writer',
-		];
+		return $form->fields()->toArray();
 	}
 
 	/**
@@ -192,6 +188,21 @@ class PageCreateDialog
 				'value'        => $this->value()
 			]
 		];
+	}
+
+	/**
+	 * Temporary model for the page to
+	 * be created, used to properly render
+	 * the blueprint for fields
+	 */
+	public function model(): Page
+	{
+		return $this->model ??= Page::factory([
+			'slug'     => 'new',
+			'template' => $this->template,
+			'model'    => $this->template,
+			'parent'   => $this->parent
+		]);
 	}
 
 	/**
