@@ -738,4 +738,38 @@ class FilesSectionTest extends TestCase
 
 		$this->assertSame(4, $section->upload()['attributes']['sort']);
 	}
+
+	public function testQueryTemplate()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'template' => 'foo'
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$model = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg'],
+				[
+					'filename' => 'c.jpg',
+					'content' => [
+						'template' => 'foo'
+					]
+				],
+			]
+		]);
+
+		$section = new Section('files', [
+			'name'     => 'test',
+			'model'    => $model,
+			'template' => 'kirby.option("template")'
+		]);
+
+		$this->assertSame('foo', $section->template());
+		$this->assertCount(1, $section->files());
+	}
 }

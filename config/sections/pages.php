@@ -51,13 +51,59 @@ return [
 			return $status;
 		},
 		/**
+		 * Filters the list by single template.
+		 */
+		'template' => function (string $template = null) {
+			return $template;
+		},
+		/**
 		 * Filters the list by templates and sets template options when adding new pages to the section.
 		 */
 		'templates' => function ($templates = null) {
-			return A::wrap($templates ?? $this->template);
+			return $templates;
 		}
 	],
 	'computed' => [
+		'create' => function () {
+			$create = $this->create;
+
+			if (is_string($create) === true) {
+				if ($query = $this->model->query($create)) {
+					if (
+						is_string($query) === false &&
+						is_array($query) === false
+					) {
+						throw new InvalidArgumentException('Invalid `create` prop: query must return string or array.');
+					}
+
+					$create = $query;
+				}
+			}
+
+			return $create;
+		},
+		/**
+		 * Do not change the order of this alphabetically.
+		 * It must be processed before other computed calls to work correctly.
+		 */
+		'templates' => function () {
+			$templates = $this->templates ?? $this->template;
+
+			if (is_string($templates) === true) {
+				if ($query = $this->model->query($templates)) {
+					if (
+						is_string($query) === false &&
+						is_array($query) === false
+					) {
+						throw new InvalidArgumentException('Invalid `templates` prop: query must return string or array.');
+					}
+
+					$templates = $query;
+				}
+			}
+
+			return A::wrap($templates);
+		},
 		'parent' => function () {
 			$parent = $this->parentModel();
 

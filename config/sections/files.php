@@ -39,6 +39,23 @@ return [
 		}
 	],
 	'computed' => [
+		/**
+		 * Do not change the order of this alphabetically.
+		 * It must be processed before other computed calls to work correctly.
+		 */
+		'template' => function () {
+			$template = $this->template;
+
+			if ($query = $this->model->query($template)) {
+				if (is_string($query) === false) {
+					throw new InvalidArgumentException('Invalid `template` prop: query must return a string.');
+				}
+
+				$template = $query;
+			}
+
+			return $template;
+		},
 		'accept' => function () {
 			if ($this->template) {
 				$file = new File([

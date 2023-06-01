@@ -849,4 +849,97 @@ class PagesSectionTest extends TestCase
 
 		$this->assertCount(1, $section->pages());
 	}
+
+	public function testQueryCreate()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'create' => $expected = [
+					'foo',
+					'bar'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a'],
+				['slug' => 'b'],
+				['slug' => 'c']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'create' => 'kirby.option("create")',
+			'model'  => $parent,
+			'name'   => 'test'
+		]);
+
+		$this->assertSame($expected, $section->create());
+		$this->assertCount(3, $section->pages());
+	}
+
+	public function testQueryTemplate()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'template' => 'bar'
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'foo'],
+				['slug' => 'b', 'template' => 'bar'],
+				['slug' => 'c', 'template' => 'baz']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'      => 'test',
+			'model'     => $parent,
+			'template'  => 'kirby.option("template")'
+		]);
+
+		$this->assertSame(['bar'], $section->templates());
+		$this->assertCount(1, $section->pages());
+	}
+
+	public function testQueryTemplates()
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'templates' => $expected = [
+					'foo',
+					'bar'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$parent = new Page([
+			'slug' => 'test',
+			'children' => [
+				['slug' => 'a', 'template' => 'foo'],
+				['slug' => 'b', 'template' => 'bar'],
+				['slug' => 'c', 'template' => 'baz']
+			]
+		]);
+
+		$section = new Section('pages', [
+			'name'      => 'test',
+			'model'     => $parent,
+			'templates' => 'kirby.option("templates")'
+		]);
+
+		$this->assertSame($expected, $section->templates());
+		$this->assertCount(2, $section->pages());
+	}
 }
