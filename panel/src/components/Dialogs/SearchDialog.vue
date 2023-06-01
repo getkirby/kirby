@@ -198,6 +198,7 @@ export default {
 }
 .k-search-dialog-input {
 	display: flex;
+	align-items: center;
 }
 .k-search-dialog-types {
 	flex-shrink: 0;
