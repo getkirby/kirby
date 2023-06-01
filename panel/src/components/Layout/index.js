@@ -6,7 +6,6 @@ import Bubbles from "./Bubbles.vue";
 import Column from "./Column.vue";
 import Dropzone from "./Dropzone.vue";
 import Frame from "./Frame/Frame.vue";
-import FilePreview from "./FilePreview.vue";
 import Grid from "./Grid.vue";
 import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
@@ -28,7 +27,6 @@ export default {
 		app.component("k-bubbles", Bubbles);
 		app.component("k-column", Column);
 		app.component("k-dropzone", Dropzone);
-		app.component("k-file-preview", FilePreview);
 		app.component("k-frame", Frame);
 		app.component("k-grid", Grid);
 		app.component("k-header", Header);
