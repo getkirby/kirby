@@ -344,13 +344,11 @@ class Collection extends BaseCollection
 
 	/**
 	 * Searches the collection
-	 *
-	 * @param string|null $query
-	 * @param array $params
-	 * @return self
 	 */
-	public function search(string $query = null, $params = [])
-	{
+	public function search(
+		string $query = null,
+		string|array $params = []
+	): static {
 		return Search::collection($this, $query, $params);
 	}
 
