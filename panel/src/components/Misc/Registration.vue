@@ -1,5 +1,5 @@
 <template>
-	<k-bar :data-is-local="$system.isLocal">
+	<k-bar class="k-registration" :data-is-local="$system.isLocal">
 		<p>{{ $t("license.unregistered") }}</p>
 
 		<k-button-group
@@ -24,20 +24,19 @@
 </template>
 
 <style scoped>
-.k-bar {
-	position: sticky;
-	bottom: 0;
+.k-registration {
 	height: var(--height-xl);
 	padding-inline: var(--main-padding-inline);
-	background: var(--color-red-500);
+	background: var(--color-red-400);
 	container-type: inline-size;
+	margin-bottom: 1.5rem;
 }
 
-.k-bar[data-is-local="true"] {
-	background: var(--color-blue-300);
+.k-registration[data-is-local="true"] {
+	background: var(--color-orange-400);
 }
 
-.k-bar p {
+.k-registration p {
 	font-size: var(--text-sm);
 }
 </style>
