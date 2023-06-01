@@ -169,10 +169,10 @@ class DirTest extends TestCase
 	public function testIndex()
 	{
 		Dir::make($dir = $this->tmp);
-		Dir::make($sub = $this->tmp . '/sub');
+		Dir::make($this->tmp . '/sub');
 
-		F::write($a = $this->tmp . '/a.txt', 'test');
-		F::write($b = $this->tmp . '/b.txt', 'test');
+		F::write($this->tmp . '/a.txt', 'test');
+		F::write($this->tmp . '/b.txt', 'test');
 
 		$expected = [
 			'a.txt',
@@ -189,12 +189,12 @@ class DirTest extends TestCase
 	public function testIndexRecursive()
 	{
 		Dir::make($dir = $this->tmp);
-		Dir::make($sub = $this->tmp . '/sub');
-		Dir::make($subsub = $this->tmp . '/sub/sub');
+		Dir::make($this->tmp . '/sub');
+		Dir::make($this->tmp . '/sub/sub');
 
-		F::write($a = $this->tmp . '/a.txt', 'test');
-		F::write($b = $this->tmp . '/sub/b.txt', 'test');
-		F::write($c = $this->tmp . '/sub/sub/c.txt', 'test');
+		F::write($this->tmp . '/a.txt', 'test');
+		F::write($this->tmp . '/sub/b.txt', 'test');
+		F::write($this->tmp . '/sub/sub/c.txt', 'test');
 
 		$expected = [
 			'a.txt',
@@ -205,6 +205,64 @@ class DirTest extends TestCase
 		];
 
 		$this->assertSame($expected, Dir::index($dir, true));
+	}
+
+	/**
+	 * @covers ::index
+	 */
+	public function testIndexIgnore()
+	{
+		Dir::$ignore = ['z.txt'];
+
+		Dir::make($dir = $this->tmp);
+		Dir::make($this->tmp . '/sub');
+		Dir::make($this->tmp . '/sub/sub');
+
+		F::write($this->tmp . '/a.txt', 'test');
+		F::write($this->tmp . '/d.txt', 'test');
+		F::write($this->tmp . '/z.txt', 'test');
+		F::write($this->tmp . '/sub/a.txt', 'test');
+		F::write($this->tmp . '/sub/b.txt', 'test');
+		F::write($this->tmp . '/sub/sub/a.txt', 'test');
+		F::write($this->tmp . '/sub/sub/c.txt', 'test');
+
+		// only global static $ignore
+		$this->assertSame([
+			'a.txt',
+			'd.txt',
+			'sub',
+			'sub/a.txt',
+			'sub/b.txt',
+			'sub/sub',
+			'sub/sub/a.txt',
+			'sub/sub/c.txt'
+		], Dir::index($dir, true));
+
+		// disabling global static $ignore
+		$this->assertSame([
+			'a.txt',
+			'd.txt',
+			'sub',
+			'sub/a.txt',
+			'sub/b.txt',
+			'sub/sub',
+			'sub/sub/a.txt',
+			'sub/sub/c.txt',
+			'z.txt',
+		], Dir::index($dir, true, false));
+
+		// passing $ignore values
+		$this->assertSame([
+			'd.txt',
+			'sub',
+			'sub/b.txt',
+			'sub/sub',
+			'sub/sub/c.txt'
+		], Dir::index($dir, true, [
+			$this->tmp . '/a.txt',
+			$this->tmp . '/sub/a.txt',
+			$this->tmp . '/sub/sub/a.txt'
+		]));
 	}
 
 	/**

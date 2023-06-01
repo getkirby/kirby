@@ -94,6 +94,7 @@ export default defineConfig(({ command }) => {
 				"/env": proxy,
 				"/media": proxy
 			},
+			open: proxy.target + "/panel",
 			port: 3000,
 			...custom
 		},

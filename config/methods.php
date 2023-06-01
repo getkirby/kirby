@@ -66,7 +66,8 @@ return function (App $app) {
 			try {
 				$blocks = Blocks::parse($field->value());
 				$blocks = Blocks::factory($blocks, [
-					'parent' => $field->parent()
+					'parent' => $field->parent(),
+					'field'  => $field,
 				]);
 				return $blocks->filter('isHidden', false);
 			} catch (Throwable) {
@@ -192,7 +193,8 @@ return function (App $app) {
 		 */
 		'toLayouts' => function (Field $field) {
 			return Layouts::factory(Layouts::parse($field->value()), [
-				'parent' => $field->parent()
+				'parent' => $field->parent(),
+				'field'  => $field,
 			]);
 		},
 
@@ -276,10 +278,10 @@ return function (App $app) {
 		 * Converts the field value to a Unix timestamp
 		 *
 		 * @param \Kirby\Cms\Field $field
-		 * @return int
+		 * @return int|false
 		 */
-		'toTimestamp' => function (Field $field): int {
-			return strtotime($field->value);
+		'toTimestamp' => function (Field $field): int|false {
+			return strtotime($field->value ?? '');
 		},
 
 		/**
@@ -394,7 +396,7 @@ return function (App $app) {
 			// Obsolete elements, script tags, image maps and form elements have
 			// been excluded for safety reasons and as they are most likely not
 			// needed in most cases.
-			$field->value = strip_tags($field->value, Html::$inlineList);
+			$field->value = strip_tags($field->value ?? '', Html::$inlineList);
 			return $field;
 		},
 
@@ -481,7 +483,7 @@ return function (App $app) {
 		 * @return \Kirby\Cms\Field
 		 */
 		'nl2br' => function (Field $field) {
-			$field->value = nl2br($field->value, false);
+			$field->value = nl2br($field->value ?? '', false);
 			return $field;
 		},
 

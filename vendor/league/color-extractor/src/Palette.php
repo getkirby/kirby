@@ -2,34 +2,41 @@
 
 namespace League\ColorExtractor;
 
+
+
 class Palette implements \Countable, \IteratorAggregate
 {
-    /** @var array */
-    protected $colors;
-
-    /**
+    /** 
+     * @var array
+     */
+    protected $colors = [];
+    
+    /** 
      * @return int
      */
-    public function count()
+    #[\ReturnTypeWillChange]
+    public function count(): int
     {
         return count($this->colors);
     }
 
-    /**
-     * @return \ArrayIterator
+    /** 
+     * @return \Traversable
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->colors);
     }
-
-    /**
-     * @param int $color
-     *
+    
+    /** 
      * @return int
      */
     public function getColorCount($color)
     {
+        if (!array_key_exists($color, $this->colors)) {
+            return 0;
+        }
+
         return $this->colors[$color];
     }
 
@@ -48,10 +55,57 @@ class Palette implements \Countable, \IteratorAggregate
      * @param int|null $backgroundColor
      *
      * @return Palette
+     * 
+     * @throws \InvalidArgumentException
      */
     public static function fromFilename($filename, $backgroundColor = null)
     {
-        $image = imagecreatefromstring(file_get_contents($filename));
+        if (!is_readable($filename)) {
+            throw new \InvalidArgumentException('Filename must be a valid path and should be readable');
+        }
+
+        return self::fromContents(file_get_contents($filename), $backgroundColor);
+    }
+
+    /**
+     * @param string   $url
+     * @param int|null $backgroundColor
+     *
+     * @return Palette
+     *
+     * @throws \RuntimeException
+     */
+    public static function fromUrl($url, $backgroundColor = null)
+    {
+        if (!function_exists('curl_init')){
+            return self::fromContents(file_get_contents($url));
+        }
+
+        $ch = curl_init();
+        try {
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $contents = curl_exec($ch);
+            if ($contents === false) {
+                throw new \RuntimeException('Failed to fetch image from URL');
+            }
+        } finally {
+            curl_close($ch);
+        }
+
+        return self::fromContents($contents, $backgroundColor);
+    }
+
+    /**
+     * Create instance with file contents
+     *
+     * @param string $contents
+     * @param int|null  $backgroundColor
+     *
+     * @return Palette
+     */
+    public static function fromContents($contents, $backgroundColor = null) {
+        $image = imagecreatefromstring($contents);
         $palette = self::fromGD($image, $backgroundColor);
         imagedestroy($image);
 
@@ -59,16 +113,16 @@ class Palette implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param resource $image
+     * @param \GDImage|resource $image
      * @param int|null $backgroundColor
      *
      * @return Palette
      *
      * @throws \InvalidArgumentException
      */
-    public static function fromGD($image, $backgroundColor = null)
+    public static function fromGD($image, ?int $backgroundColor = null)
     {
-        if (!is_resource($image) || get_resource_type($image) != 'gd') {
+        if (!$image instanceof \GDImage && (!is_resource($image) || get_resource_type($image) !== 'gd')) {
             throw new \InvalidArgumentException('Image must be a gd resource');
         }
         if ($backgroundColor !== null && (!is_numeric($backgroundColor) || $backgroundColor < 0 || $backgroundColor > 16777215)) {

@@ -17,16 +17,24 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": "^7.3 || ^8.0",
         "ext-gd": "*"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2",
-        "phpunit/phpunit": "~5"
+        "phpunit/phpunit": "^9.5"
+    },
+    "suggest": {
+        "ext-curl": "To download images from remote URLs if allow_url_fopen is disabled for security reasons"
     },
     "autoload": {
         "psr-4": {
-            "": "src"
+            "League\\ColorExtractor\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "League\\ColorExtractor\\Tests\\": "tests"
         }
     }
 }

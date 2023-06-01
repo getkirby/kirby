@@ -29,12 +29,14 @@
 					@chooseToAppend="choose(index + 1)"
 					@chooseToConvert="chooseToConvert(block)"
 					@chooseToPrepend="choose(index)"
+					@close="isEditing = false"
 					@copy="copy()"
 					@confirmToRemoveSelected="confirmToRemoveSelected"
 					@click.native.stop="select(block, $event)"
 					@duplicate="duplicate(block, index)"
 					@focus="select(block)"
 					@hide="hide(block)"
+					@open="isEditing = true"
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
@@ -112,6 +114,7 @@ export default {
 	},
 	data() {
 		return {
+			isEditing: false,
 			isMultiSelectKey: false,
 			batch: [],
 			blocks: this.value,
@@ -138,11 +141,6 @@ export default {
 		},
 		hasFieldsets() {
 			return Object.keys(this.fieldsets).length;
-		},
-		isEditing() {
-			return (
-				this.$store.state.dialog || this.$store.state.drawers.open.length > 0
-			);
 		},
 		isEmpty() {
 			return this.blocks.length === 0;
@@ -176,7 +174,7 @@ export default {
 	},
 	created() {
 		this.$events.$on("blur", this.onBlur);
-		this.$events.$on("copy", this.copy);
+		this.$events.$on("copy", this.onCopy);
 		this.$events.$on("focus", this.onOutsideFocus);
 		this.$events.$on("keydown", this.onKey);
 		this.$events.$on("keyup", this.onKey);
@@ -184,7 +182,7 @@ export default {
 	},
 	destroyed() {
 		this.$events.$off("blur", this.onBlur);
-		this.$events.$off("copy", this.copy);
+		this.$events.$off("copy", this.onCopy);
 		this.$events.$off("focus", this.onOutsideFocus);
 		this.$events.$off("keydown", this.onKey);
 		this.$events.$off("keyup", this.onKey);
@@ -277,11 +275,6 @@ export default {
 			this.$refs.removeSelected.open();
 		},
 		copy(e) {
-			// don't copy when the drawer is open
-			if (this.isEditing === true) {
-				return false;
-			}
-
 			// don't copy when there are no blocks yet
 			if (this.blocks.length === 0) {
 				return false;
@@ -292,18 +285,13 @@ export default {
 				return false;
 			}
 
-			// don't copy if an input is focused
-			if (this.isInputEvent(e) === true) {
-				return false;
-			}
-
 			let blocks = [];
 
-			this.blocks.forEach((block) => {
+			for (const block of this.blocks) {
 				if (this.selectedOrBatched.includes(block.id)) {
 					blocks.push(block);
 				}
-			});
+			}
 
 			// don't copy if no blocks could be found
 			if (blocks.length === 0) {
@@ -431,7 +419,7 @@ export default {
 			const focused = document.querySelector(":focus");
 			return (
 				focused &&
-				focused.matches("input, textarea, [contenteditable], .k-writer")
+				focused?.matches("input, textarea, [contenteditable], .k-writer")
 			);
 		},
 		isLastInBatch(block) {
@@ -473,6 +461,21 @@ export default {
 				this.isMultiSelectKey = false;
 			}
 		},
+		onCopy(event) {
+			if (
+				// only act on copy events for this blocks component
+				this.$el.contains(event.target) === false ||
+				// don't copy when the drawer or any dialogs are open
+				this.isEditing === true ||
+				this.$store.state.dialog ||
+				// don't copy if an input is focused
+				this.isInputEvent(event) === true
+			) {
+				return false;
+			}
+
+			return this.copy(event);
+		},
 		onKey(event) {
 			this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
 		},
@@ -504,37 +507,34 @@ export default {
 			}
 		},
 		onPaste(e) {
+			// enable pasting when the block selector is open
+			if (this.$refs.selector?.isOpen() === true) {
+				return this.paste(e);
+			}
+
 			// never paste blocks when the focus is in an input element
 			if (this.isInputEvent(e) === true) {
 				return false;
 			}
 
-			// never paste when dialogs or drawers are open
-			if (this.isEditing === true) {
-				// enable pasting when the block selector is open
-				if (this.$refs.selector?.isOpen() === true) {
-					return this.paste(e);
-				}
-
+			// not when any other dialogs or drawers are open
+			if (this.isEditing === true || this.$store.state.dialog) {
 				return false;
 			}
 
-			// if nothing is selected …
-			if (this.selectedOrBatched.length === 0) {
-				// if there are multiple instances,
-				// pasting is disabled to avoid multiple
-				// pasted blocks
-				if (this.isOnlyInstance() !== true) {
-					return false;
-				}
+			// not when nothing is selected and the paste event
+			// doesn't target something in the block component
+			if (
+				this.selectedOrBatched.length === 0 &&
+				this.$el.contains(e.target) === false
+			) {
+				return false;
 			}
 
 			return this.paste(e);
 		},
 		open(block) {
-			if (this.$refs["block-" + block.id]) {
-				this.$refs["block-" + block.id][0].open();
-			}
+			this.$refs["block-" + block.id]?.[0].open();
 		},
 		async paste(e) {
 			const html = this.$helper.clipboard.read(e);
@@ -559,11 +559,7 @@ export default {
 		},
 		prevNext(index) {
 			if (this.blocks[index]) {
-				let block = this.blocks[index];
-
-				if (this.$refs["block-" + block.id]) {
-					return this.$refs["block-" + block.id][0];
-				}
+				return this.$refs["block-" + this.blocks[index].id]?.[0];
 			}
 		},
 		remove(block) {
@@ -585,12 +581,12 @@ export default {
 			this.$refs.removeAll.close();
 		},
 		removeSelected() {
-			this.batch.forEach((id) => {
+			for (const id of this.batch) {
 				const index = this.findIndex(id);
 				if (index !== -1) {
 					this.$delete(this.blocks, index);
 				}
-			});
+			}
 
 			this.deselectAll();
 			this.save();

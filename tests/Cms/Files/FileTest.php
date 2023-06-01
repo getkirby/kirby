@@ -63,6 +63,22 @@ class FileTest extends TestCase
 		$this->assertSame($this->defaults()['filename'], $this->file()->filename());
 	}
 
+	/**
+	 * @covers ::contentFileData
+	 */
+	public function testContentFileData()
+	{
+		$file = $this->file();
+
+		$this->assertSame([], $file->contentFileData([]));
+		$this->assertSame(['foo' => 'bar'], $file->contentFileData(['foo' => 'bar']));
+
+		$file = $this->file(['content' => ['template' => 'image']]);
+		$this->assertSame(['template' => 'image'], $file->contentFileData([]));
+		$this->assertSame(['foo' => 'bar', 'template' => 'image'], $file->contentFileData(['foo' => 'bar']));
+		$this->assertSame(['template' => null], $file->contentFileData(['template' => null]));
+	}
+
 	public function testPage()
 	{
 		$file = $this->file([

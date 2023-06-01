@@ -527,6 +527,43 @@ class StrTest extends TestCase
 	}
 
 	/**
+	 * @covers ::match
+	 */
+	public function testMatch()
+	{
+		$this->assertSame(['test', 'es'], Str::match('test', '/t(es)t/'));
+		$this->assertNull(Str::match('one two three', '/(four)/'));
+	}
+
+	/**
+	 * @covers ::matches
+	 */
+	public function testMatches()
+	{
+		$this->assertTrue(Str::matches('test', '/t(es)t/'));
+		$this->assertFalse(Str::matches('one two three', '/(four)/'));
+	}
+
+	/**
+	 * @covers ::matchAll
+	 */
+	public function testMatchAll()
+	{
+		$longText = <<<TEXT
+		This is line with "one" and something else to match.
+		This is line with "two" and another thing to match.
+		This is line with "three" and yet another match.
+		TEXT;
+
+		$matches = Str::matchAll($longText, '/"(.*)" and (.*).$/m');
+
+		$this->assertSame(['one', 'two', 'three'], $matches[1]);
+		$this->assertSame(['something else to match', 'another thing to match', 'yet another match'], $matches[2]);
+		$this->assertNull(Str::matchAll($longText, '/(miao)/'));
+		$this->assertNull(Str::matchAll('one two three', '/(four)/'));
+	}
+
+	/**
 	 * @covers ::pool
 	 */
 	public function testPool()
