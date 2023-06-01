@@ -377,8 +377,8 @@ class Environment
 				$data['https'] = $this->detectHttpsProtocol($fields['proto']);
 			}
 
-			if ($data['port'] === null && $data['https'] === true) {
-				$data['port'] = 443;
+			if ($data['https'] === true) {
+				$data['port'] ??= 443;
 			}
 
 			$data['for'] = $parts['for'] ?? null;

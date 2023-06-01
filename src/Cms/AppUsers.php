@@ -66,7 +66,7 @@ trait AppUsers
 		} finally {
 			// ensure that the impersonation is *always* reset
 			// to the original value, even if an error occurred
-			$auth->impersonate($userBefore !== null ? $userBefore->id() : null);
+			$auth->impersonate($userBefore?->id());
 		}
 	}
 
