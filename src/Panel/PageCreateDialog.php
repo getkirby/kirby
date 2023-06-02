@@ -201,7 +201,7 @@ class PageCreateDialog
 			'slug'     => 'new',
 			'template' => $this->template,
 			'model'    => $this->template,
-			'parent'   => $this->parent
+			'parent'   => $this->parent instanceof Page ? $this->parent : null
 		]);
 	}
 
