@@ -29,6 +29,7 @@ class PageCreateDialog
 		'checkboxes',
 		'date',
 		'email',
+		'info',
 		'multiselect',
 		'number',
 		'list',
@@ -122,7 +123,7 @@ class PageCreateDialog
 
 		foreach ($blueprint->create()['fields'] ?? [] as $name) {
 			if (!$field = ($fields[$name] ?? null)) {
-				continue;
+				throw new InvalidArgumentException('Unknown field  "' . $name . '" in create dialog');
 			}
 
 			if (in_array($field['type'], static::$fieldTypes) === false) {
@@ -130,7 +131,7 @@ class PageCreateDialog
 			}
 
 			if (in_array($name, $ignore) === true) {
-				throw new InvalidArgumentException('Field "' . $name . '" not allowed as custom field in create dialog');
+				throw new InvalidArgumentException('Field name "' . $name . '" not allowed as custom field in create dialog');
 			}
 
 			// switch all fields to 1/1

@@ -578,6 +578,112 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertCount(3, $props['blueprints']);
 	}
 
+	public function testCreateWithCustomField(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'select',
+							'options' => [
+								'type' => 'array',
+								'options' => [
+									'a' => 'A',
+									'b' => 'B'
+								],
+								'width' => '1/2'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$props  = $dialog['props'];
+
+		$this->assertArrayHasKey('foo', $props['fields']);
+		$this->assertSame('1/1', $props['fields']['foo']['width']);
+	}
+
+	public function testCreateWithUnknownCustomField(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'notthere'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$this->assertSame('Unknown field  "notthere" in create dialog', $dialog['error']);
+	}
+
+	public function testCreateWithUnsupportedCustomField(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'files',
+						]
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$this->assertSame('Field type "files" not supported in create dialog', $dialog['error']);
+	}
+
+	public function testCreateWithForbiddenCustomField(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'slug'
+						]
+					],
+					'fields' => [
+						'slug' => [
+							'type' => 'text',
+						]
+					]
+				]
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$this->assertSame('Field name "slug" not allowed as custom field in create dialog', $dialog['error']);
+	}
+
 	public function testCreateOnSubmit(): void
 	{
 		$this->submit([
@@ -592,6 +698,7 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame('test', $this->app->page('test')->slug());
 		$this->assertSame('Test', $this->app->page('test')->title()->value());
+		$this->assertSame('draft', $this->app->page('test')->status());
 	}
 
 	public function testCreateOnSubmitWithParent(): void
@@ -620,6 +727,38 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertSame('Test', $this->app->page('test/test-child')->title()->value());
 	}
 
+	public function testCreateOnSubmitWithCustomField(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'text',
+						]
+					]
+				]
+			]
+		]);
+
+		$this->submit([
+			'title' => 'Test',
+			'slug'  => 'test',
+			'foo'   => 'bar',
+			'homer' => 'simpson'
+		]);
+
+		$this->dialog('pages/create');
+
+		$this->assertSame('bar', $this->app->page('test')->foo()->value());
+		$this->assertNull($this->app->page('test')->homer()->value());
+	}
+
 	public function testCreateOnSubmitWithoutTitle(): void
 	{
 		$this->submit([
@@ -630,6 +769,27 @@ class PageDialogsTest extends AreaTestCase
 
 		$this->assertSame(400, $dialog['code']);
 		$this->assertSame('The title must not be empty', $dialog['error']);
+	}
+
+	public function testCreateOnSubmitWithCustomStatus(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'status' => 'unlisted'
+					]
+				]
+			]
+		]);
+
+		$this->submit([
+			'title' => 'Test',
+			'slug'  => 'test'
+		]);
+
+		$this->dialog('pages/create');
+		$this->assertSame('unlisted', $this->app->page('test')->status());
 	}
 
 	public function testDelete(): void
