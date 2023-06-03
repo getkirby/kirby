@@ -53,47 +53,6 @@
 			}"
 		/>
 
-		<k-form-drawer
-			v-if="isEditable && !isBatched"
-			:id="id"
-			ref="drawer"
-			:icon="fieldset.icon || 'box'"
-			:tabs="tabs"
-			:title="fieldset.name"
-			:value="content"
-			class="k-block-drawer"
-			@close="onDrawerClose"
-			@input="onDrawerInput"
-			@open="onDrawerOpen"
-			@submit="onDrawerSubmit"
-		>
-			<template #options>
-				<k-button
-					v-if="isHidden"
-					class="k-drawer-option"
-					icon="hidden"
-					@click="$emit('show')"
-				/>
-				<k-button
-					:disabled="!prev"
-					class="k-drawer-option"
-					icon="angle-left"
-					@click.prevent.stop="goTo(prev)"
-				/>
-				<k-button
-					:disabled="!next"
-					class="k-drawer-option"
-					icon="angle-right"
-					@click.prevent.stop="goTo(next)"
-				/>
-				<k-button
-					class="k-drawer-option"
-					icon="trash"
-					@click.prevent.stop="confirmToRemove"
-				/>
-			</template>
-		</k-form-drawer>
-
 		<k-remove-dialog
 			ref="removeDialog"
 			:text="$t('field.blocks.delete.confirm')"
@@ -256,7 +215,7 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$refs.drawer.close();
+			this.$panel.drawer.close();
 		},
 		confirmToRemove() {
 			if (this.isBatched) {
@@ -321,7 +280,52 @@ export default {
 			this.$emit("focus", event);
 		},
 		open(tab) {
-			this.$refs.drawer?.open(tab);
+			if (!this.isEditable || this.isBatched) {
+				return;
+			}
+
+			const options = [
+				{
+					icon: "angle-left",
+					disabled: !this.prev,
+					click: () => this.goTo(this.prev)
+				},
+				{
+					icon: "angle-right",
+					disabled: !this.next,
+					click: () => this.goTo(this.next)
+				},
+				{
+					icon: "trash",
+					click: this.confirmToRemove
+				}
+			];
+
+			if (this.isHidden === true) {
+				options.unshift({
+					icon: "hidden",
+					click: () => this.$emit("show")
+				});
+			}
+
+			this.$panel.drawer.open({
+				component: "k-form-drawer",
+				tabId: tab,
+				props: {
+					id: this.id,
+					icon: this.fieldset.icon || "box",
+					options,
+					tabs: this.tabs,
+					title: this.fieldset.name,
+					value: this.content
+				},
+				on: {
+					close: this.onDrawerClose,
+					input: this.onDrawerInput,
+					open: this.onDrawerOpen,
+					submit: this.onDrawerSubmit
+				}
+			});
 		},
 		remove() {
 			this.$refs.removeDialog.close();
@@ -373,10 +377,6 @@ export default {
 }
 .k-block-container[data-hidden="true"] .k-block {
 	opacity: 0.25;
-}
-.k-drawer-options .k-drawer-option[data-disabled="true"] {
-	vertical-align: middle;
-	display: inline-grid;
 }
 [data-disabled="true"] .k-block-container {
 	background: var(--color-background);

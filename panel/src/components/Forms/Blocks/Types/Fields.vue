@@ -10,7 +10,6 @@
 		</header>
 
 		<k-form
-			ref="form"
 			:autofocus="true"
 			:disabled="!fieldset.wysiwyg"
 			:fields="fields"
