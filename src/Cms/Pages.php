@@ -270,9 +270,9 @@ class Pages extends Collection
 		$query      = $startAt;
 
 		foreach ($path as $key) {
-			$collection = $item ? $item->children() : $this;
-			$query = ltrim($query . '/' . $key, '/');
-			$item  = $collection->get($query) ?? null;
+			$collection = $item?->children() ?? $this;
+			$query      = ltrim($query . '/' . $key, '/');
+			$item       = $collection->get($query) ?? null;
 
 			if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
 				if (count($path) > 1 || $collection->parent()) {
