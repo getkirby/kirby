@@ -21,7 +21,7 @@
 					@click="select(item)"
 					@dblclick="toggle(item)"
 				>
-					<k-icon :type="item.icon ?? 'folder'" />
+					<k-icon-frame :icon="item.icon ?? 'folder'" />
 					<span>{{ item.label }}</span>
 				</button>
 			</p>
