@@ -8,14 +8,11 @@ return [
 	'users' => [
 		'label' => I18n::translate('users'),
 		'icon'  => 'users',
-		'query' => function (string $query = null) {
+		'query' => function (string $query = null, int $limit, int $page) {
 			$kirby = App::instance();
 			$users = $kirby->users()
 				->search($query)
-				->paginate(
-					(int)$kirby->request()->get('limit', 10),
-					(int)$kirby->request()->get('page', 1)
-				);
+				->paginate($limit, $page);
 
 			return [
 				'results' => $users->values(fn ($user) => [

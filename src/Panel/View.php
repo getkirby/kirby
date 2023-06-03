@@ -213,7 +213,11 @@ class View
 					'timestamp'  => (int)(microtime(true) * 1000),
 				];
 
-				$view = array_replace_recursive($defaults, $options['area'] ?? [], $view);
+				$view = array_replace_recursive(
+					$defaults,
+					$options['area'] ?? [],
+					$view
+				);
 
 				// make sure that views and dialogs are gone
 				unset(
@@ -262,12 +266,8 @@ class View
 		return [
 			'$config' => function () use ($kirby) {
 				return [
-					'debug'     => $kirby->option('debug', false),
-					'kirbytext' => $kirby->option('panel.kirbytext', true),
-					'search'    => [
-						'limit' => $kirby->option('panel.search.limit', 10),
-						'type'  => $kirby->option('panel.search.type', 'pages')
-					],
+					'debug'       => $kirby->option('debug', false),
+					'kirbytext'   => $kirby->option('panel.kirbytext', true),
 					'translation' => $kirby->option('panel.language', 'en'),
 				];
 			},

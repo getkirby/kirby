@@ -8,16 +8,13 @@ return [
 	'pages' => [
 		'label' => I18n::translate('pages'),
 		'icon'  => 'page',
-		'query' => function (string $query = null) {
+		'query' => function (string $query = null, int $limit, int $page) {
 			$kirby = App::instance();
 			$pages = $kirby->site()
 				->index(true)
 				->search($query)
 				->filter('isListable', true)
-				->paginate(
-					(int)$kirby->request()->get('limit', 10),
-					(int)$kirby->request()->get('page', 1)
-				);
+				->paginate($limit, $page);
 
 			return [
 				'results' => $pages->values(fn ($page) => [
@@ -34,17 +31,14 @@ return [
 	'files' => [
 		'label' => I18n::translate('files'),
 		'icon'  => 'image',
-		'query' => function (string $query = null) {
+		'query' => function (string $query = null, int $limit, int $page) {
 			$kirby = App::instance();
 			$files = $kirby->site()
 				->index(true)
 				->filter('isListable', true)
 				->files()
 				->search($query)
-				->paginate(
-					(int)$kirby->request()->get('limit', 10),
-					(int)$kirby->request()->get('page', 1)
-				);
+				->paginate($limit, $page);
 
 			return [
 				'results' => $files->values(fn ($file) => [
