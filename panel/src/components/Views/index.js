@@ -3,6 +3,7 @@ import SearchView from "./SearchView.vue";
 
 import FileView from "./Files/FileView.vue";
 import FilePreview from "./Files/FilePreview.vue";
+import FileFocusButton from "./Files/FileFocusButton.vue";
 
 import LanguagesView from "./Languages/LanguagesView.vue";
 import LanguageView from "./Languages/LanguageView.vue";
@@ -30,6 +31,7 @@ export default {
 
 		app.component("k-file-view", FileView);
 		app.component("k-file-preview", FilePreview);
+		app.component("k-file-focus-button", FileFocusButton);
 
 		app.component("k-languages-view", LanguagesView);
 		app.component("k-language-view", LanguageView);

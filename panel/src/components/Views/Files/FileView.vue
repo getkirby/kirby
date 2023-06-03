@@ -9,7 +9,7 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-file-preview v-bind="preview" :focusable="isFocusable" />
+		<k-file-preview v-bind="preview" :file="model" :focusable="isFocusable" />
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"

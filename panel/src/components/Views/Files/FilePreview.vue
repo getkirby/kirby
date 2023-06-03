@@ -1,5 +1,5 @@
 <template>
-	<div class="k-file-preview" :data-has-focus="hasFocus">
+	<div class="k-file-preview" :data-has-focus="Boolean(focus)">
 		<!-- Thumb -->
 		<div class="k-file-preview-thumb">
 			<!-- Image with focus picker -->
@@ -56,22 +56,14 @@
 				<div v-if="image.src" class="k-file-preview-focus-info">
 					<dt>{{ $t("file.focus.title") }}</dt>
 					<dd>
-						<k-button
+						<k-file-focus-button
 							v-if="focusable"
-							:icon="hasFocus ? 'cancel-small' : 'preview'"
-							:title="hasFocus ? $t('file.focus.reset') : undefined"
-							size="xs"
-							variant="filled"
-							@click="setFocus(hasFocus ? undefined : '50% 50%')"
-						>
-							<template v-if="hasFocus">
-								{{ focus.x }}% {{ focus.y }}%
-							</template>
-							<template v-else-if="focusable">
-								{{ $t("file.focus.placeholder") }}
-							</template>
-						</k-button>
-						<template v-else-if="hasFocus">
+							ref="focus"
+							:file="file"
+							:focus="focus"
+							@set="setFocus"
+						/>
+						<template v-else-if="focus">
 							{{ focus.x }}% {{ focus.y }}%
 						</template>
 						<template v-else>–</template>
@@ -86,6 +78,7 @@
 export default {
 	props: {
 		details: Array,
+		file: Object,
 		focusable: Boolean,
 		image: Object,
 		url: String
@@ -101,9 +94,6 @@ export default {
 			const [x, y] = focus.replaceAll("%", "").split(" ");
 			return { x: parseFloat(x), y: parseFloat(y) };
 		},
-		hasFocus() {
-			return this.focus?.x !== undefined && this.focus?.y !== undefined;
-		},
 		options() {
 			const options = [
 				{
@@ -115,18 +105,17 @@ export default {
 			];
 
 			if (this.focusable && this.image.src) {
-				if (this.hasFocus) {
+				if (this.focus) {
 					options.push({
 						icon: "cancel",
 						text: this.$t("file.focus.reset"),
-						disabled: !this.hasFocus,
-						click: this.setFocus
+						click: () => this.$refs.focus.reset()
 					});
 				} else {
 					options.push({
 						icon: "preview",
 						text: this.$t("file.focus.placeholder"),
-						click: () => this.setFocus("50% 50%")
+						click: () => this.$refs.focus.set()
 					});
 				}
 			}
