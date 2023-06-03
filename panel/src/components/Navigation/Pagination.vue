@@ -154,9 +154,11 @@ export default {
 		prevBtn() {
 			return {
 				disabled: this.start <= 1,
-				tooltip: this.prevLabel ?? this.$t("prev"),
 				icon: "angle-left",
-				click: this.prev
+				size: "xs",
+				tooltip: this.prevLabel ?? this.$t("prev"),
+				variant: "filled",
+				click: () => this.prev()
 			};
 		},
 		start() {
