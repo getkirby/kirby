@@ -1,7 +1,14 @@
 <template>
 	<div class="k-collection">
+		<k-empty
+			v-if="items.length === 0"
+			v-bind="empty"
+			:layout="layout"
+			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
+		/>
+
 		<k-items
-			v-if="items.length"
+			v-else
 			:columns="columns"
 			:items="items"
 			:layout="layout"
@@ -18,27 +25,18 @@
 			</template>
 		</k-items>
 
-		<k-empty
-			v-else
-			v-bind="empty"
-			:layout="layout"
-			v-on="$listeners['empty'] ? { click: onEmpty } : {}"
-		/>
-
-		<footer v-if="hasFooter" class="k-collection-footer">
-			<k-text v-if="help" class="k-help k-collection-help" :html="help" />
-			<div class="k-collection-pagination">
-				<!--
-          Emitted when the pagination changes
-          @event paginate
-          @property {object} pagination
-        -->
-				<k-pagination
-					v-if="hasPagination"
-					v-bind="paginationOptions"
-					@paginate="$emit('paginate', $event)"
-				/>
-			</div>
+		<footer class="k-bar k-collection-footer">
+			<k-text class="k-help k-collection-help" :html="help" />
+			<!--
+				Emitted when the pagination changes
+				@event paginate
+				@property {object} pagination
+			-->
+			<k-pagination
+				v-if="hasPagination"
+				v-bind="paginationOptions"
+				@paginate="$emit('paginate', $event)"
+			/>
 		</footer>
 	</div>
 </template>
@@ -108,13 +106,6 @@ export default {
 
 			return true;
 		},
-		hasFooter() {
-			if (this.hasPagination || this.help) {
-				return true;
-			}
-
-			return false;
-		},
 		paginationOptions() {
 			const options =
 				typeof this.pagination !== "object" ? {} : this.pagination;
@@ -148,18 +139,6 @@ export default {
 
 <style>
 .k-collection-footer {
-	display: flex;
-	justify-content: space-between;
-	margin-top: 0.5rem;
-	margin-inline: -0.75rem;
-}
-.k-collection-pagination {
-	line-height: 1.25rem;
-	flex-shrink: 0;
-	min-height: 2.75rem;
-}
-.k-collection-pagination .k-pagination .k-button {
-	padding: 0.5rem 0.75rem;
-	line-height: 1.125rem;
+	margin-top: var(--spacing-2);
 }
 </style>
