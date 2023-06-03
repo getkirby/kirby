@@ -14,7 +14,6 @@ import Overlay from "./Overlay.vue";
 import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
-import TableUpdateStatusCell from "./TableUpdateStatusCell.vue";
 import Tabs from "./Tabs.vue";
 import View from "./View.vue";
 
@@ -37,7 +36,6 @@ export default {
 		app.component("k-stats", Stats);
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);
-		app.component("k-table-update-status-cell", TableUpdateStatusCell);
 		app.component("k-tabs", Tabs);
 		app.component("k-view", View);
 	}

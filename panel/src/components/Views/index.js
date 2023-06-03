@@ -15,6 +15,7 @@ import PageView from "./Pages/PageView.vue";
 import SiteView from "./Pages/SiteView.vue";
 
 import SystemView from "./System/SystemView.vue";
+import TableUpdateStatusCell from "./System/TableUpdateStatusCell.vue";
 
 import UsersView from "./Users/UsersView.vue";
 import UserView from "./Users/UserView.vue";
@@ -41,6 +42,7 @@ export default {
 		app.component("k-site-view", SiteView);
 
 		app.component("k-system-view", SystemView);
+		app.component("k-table-update-status-cell", TableUpdateStatusCell);
 
 		app.component("k-users-view", UsersView);
 		app.component("k-user-view", UserView);
