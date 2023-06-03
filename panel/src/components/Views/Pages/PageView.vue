@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import ModelView from "./ModelView.vue";
+import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
