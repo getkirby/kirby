@@ -1,5 +1,5 @@
 <template>
-	<k-inside class="k-languages-view">
+	<k-panel-inside class="k-languages-view">
 		<k-header>
 			{{ $t("view.languages") }}
 
@@ -35,7 +35,7 @@
 				{{ $t("languages.empty") }}
 			</k-empty>
 		</template>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-	<k-inside
+	<k-panel-inside
 		:data-locked="isLocked"
 		data-id="/"
 		data-template="site"
@@ -39,7 +39,7 @@
 			parent="site"
 			@submit="$emit('submit', $event)"
 		/>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

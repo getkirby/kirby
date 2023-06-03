@@ -1,5 +1,5 @@
 <template>
-	<k-inside
+	<k-panel-inside
 		:data-locked="isLocked"
 		:data-id="model.id"
 		:data-template="blueprint"
@@ -63,7 +63,7 @@
 			:parent="id"
 			:tab="tab"
 		/>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

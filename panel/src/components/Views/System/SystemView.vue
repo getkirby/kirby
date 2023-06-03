@@ -1,5 +1,5 @@
 <template>
-	<k-inside class="k-system-view">
+	<k-panel-inside class="k-system-view">
 		<k-header>
 			{{ $t("view.system") }}
 		</k-header>
@@ -53,7 +53,7 @@
 				:rows="plugins"
 			/>
 		</k-section>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

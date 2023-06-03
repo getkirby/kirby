@@ -1,5 +1,5 @@
 <template>
-	<k-inside>
+	<k-panel-inside>
 		<k-view class="k-password-reset-view" align="center">
 			<k-form
 				:fields="fields"
@@ -29,7 +29,7 @@
 				</template>
 			</k-form>
 		</k-view>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

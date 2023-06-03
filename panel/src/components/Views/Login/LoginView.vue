@@ -1,5 +1,5 @@
 <template>
-	<k-outside :class="viewClass">
+	<k-panel-outside :class="viewClass">
 		<!-- <div> as a wrapper so that <k-view>
 			     has a single child for Flexbox layout -->
 		<div>
@@ -14,7 +14,7 @@
 			<k-login-code v-if="form === 'code'" v-bind="$props" @error="onError" />
 			<k-login-plugin v-else :methods="methods" @error="onError" />
 		</div>
-	</k-outside>
+	</k-panel-outside>
 </template>
 
 <script>

@@ -12,7 +12,6 @@ import ModelTabs from "./ModelTabs.vue";
 import OptionsDropdown from "./OptionsDropdown.vue";
 import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
-import PanelMenu from "./PanelMenu.vue";
 import PrevNext from "./PrevNext.vue";
 import Tag from "./Tag.vue";
 import Topbar from "./Topbar.vue";
@@ -39,7 +38,6 @@ export default {
 		app.component("k-options-dropdown", OptionsDropdown);
 		app.component("k-page-tree", PageTree);
 		app.component("k-pagination", Pagination);
-		app.component("k-panel-menu", PanelMenu);
 		app.component("k-prev-next", PrevNext);
 		app.component("k-tag", Tag);
 		app.component("k-topbar", Topbar);

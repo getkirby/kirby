@@ -1,5 +1,5 @@
 <template>
-	<k-outside class="k-installation-view">
+	<k-panel-outside class="k-installation-view">
 		<!-- installation complete -->
 		<k-text v-if="isComplete">
 			<k-headline>{{ $t("installation.completed") }}</k-headline>
@@ -97,7 +97,7 @@
 				@click="$reload"
 			/>
 		</div>
-	</k-outside>
+	</k-panel-outside>
 </template>
 
 <script>

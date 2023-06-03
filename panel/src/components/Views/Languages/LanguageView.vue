@@ -1,5 +1,5 @@
 <template>
-	<k-inside>
+	<k-panel-inside>
 		<k-view class="k-language-view">
 			<k-header :editable="true" @edit="update()">
 				{{ name }}
@@ -22,7 +22,9 @@
 
 			<section>
 				<k-bar>
-					<k-headline slot="left" style="margin-bottom: var(--spacing-3)">Language settings</k-headline>
+					<k-headline slot="left" style="margin-bottom: var(--spacing-3)"
+						>Language settings</k-headline
+					>
 				</k-bar>
 				<k-stats :reports="info" size="small" />
 			</section>
@@ -62,7 +64,7 @@
 				</template>
 			</section>
 		</k-view>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

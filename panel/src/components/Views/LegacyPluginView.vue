@@ -1,7 +1,7 @@
 <template>
-	<k-inside>
+	<k-panel-inside>
 		<component :is="view" />
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

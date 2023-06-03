@@ -1,5 +1,5 @@
 <template>
-	<k-inside class="k-search-view">
+	<k-panel-inside class="k-search-view">
 		<k-header>Search</k-header>
 
 		<div class="k-search-view-layout">
@@ -41,7 +41,7 @@
 				/>
 			</div>
 		</div>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>

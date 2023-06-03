@@ -1,5 +1,5 @@
 <template>
-	<k-inside class="k-users-view">
+	<k-panel-inside class="k-users-view">
 		<k-header>
 			{{ $t("view.users") }}
 
@@ -57,7 +57,7 @@
 		<k-empty v-else-if="users.pagination.total === 0" icon="users">
 			{{ $t("role.empty") }}
 		</k-empty>
-	</k-inside>
+	</k-panel-inside>
 </template>
 
 <script>
