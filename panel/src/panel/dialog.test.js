@@ -10,10 +10,11 @@ describe.concurrent("panel.dialog", () => {
 			component: null,
 			isLoading: false,
 			isOpen: false,
-			island: true,
+			legacy: false,
 			on: {},
 			path: null,
 			props: {},
+			query: {},
 			ref: null,
 			referrer: null,
 			timestamp: null

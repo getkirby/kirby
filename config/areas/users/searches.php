@@ -9,7 +9,7 @@ return [
 		'label' => I18n::translate('users'),
 		'icon'  => 'users',
 		'query' => function (string $query = null) {
-			$users   = App::instance()->users()->search($query)->limit(10);
+			$users   = App::instance()->users()->search($query);
 			$results = [];
 
 			foreach ($users as $user) {
@@ -17,7 +17,8 @@ return [
 					'image' => $user->panel()->image(),
 					'text'  => Escape::html($user->username()),
 					'link'  => $user->panel()->url(true),
-					'info'  => Escape::html($user->role()->title())
+					'info'  => Escape::html($user->role()->title()),
+					'uuid'  => $user->uuid()->toString(),
 				];
 			}
 

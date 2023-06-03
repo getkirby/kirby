@@ -54,18 +54,12 @@ export default {
 			listeners: {
 				...this.$listeners,
 				start: (event) => {
-					this.$store.dispatch("drag", {});
-
-					if (this.$listeners.start) {
-						this.$listeners.start(event);
-					}
+					this.$panel.drag.start("data", {});
+					this.$listeners.start?.(event);
 				},
 				end: (event) => {
-					this.$store.dispatch("drag", null);
-
-					if (this.$listeners.end) {
-						this.$listeners.end(event);
-					}
+					this.$panel.drag.stop();
+					this.$listeners.end?.(event);
 				}
 			}
 		};

@@ -9,7 +9,6 @@ export const defaults = () => {
 		id: null,
 		link: null,
 		search: "pages",
-		timestamp: null,
 		title: null
 	};
 };
@@ -36,9 +35,12 @@ export default (panel) => {
 			// change the document title
 			panel.title = this.title;
 
+			// get the current url
+			const url = this.url().toString();
+
 			// change the browser location if the path changed
-			if (window.location.toString() !== this.url.toString()) {
-				window.history.pushState(null, null, this.path);
+			if (window.location.toString() !== url) {
+				window.history.pushState(null, null, url);
 			}
 		},
 

@@ -1,6 +1,6 @@
-import { isObject } from "@/helpers/object";
 import { isUrl } from "@/helpers/url";
-import Module from "./module.js";
+import listeners from "./listeners.js";
+import State from "./state.js";
 
 /**
  * Default state for all features
@@ -17,6 +17,8 @@ export const defaults = () => {
 		path: null,
 		// all props for the feature component
 		props: {},
+		// the query parameters form the latest request
+		query: {},
 		// referrer can be used to redirect properly in handlers
 		referrer: null,
 		// timestamp from the backend to force refresh the reactive state
@@ -34,60 +36,16 @@ export const defaults = () => {
  * @param {Object} defaults Sets the default state of the feature
  */
 export default (panel, key, defaults) => {
-	const parent = Module(key, defaults);
+	const parent = State(key, defaults);
 
 	return {
 		/**
-		 * Features inherit all the module methods
+		 * Features inherit all the state methods
 		 * and reactive defaults are also merged
 		 * through them.
 		 */
 		...parent,
-
-		/**
-		 * @param {Object}
-		 */
-		addEventListeners(listeners) {
-			// ignore invalid listeners
-			if (isObject(listeners) === false) {
-				return;
-			}
-
-			for (const event in listeners) {
-				if (typeof listeners[event] === "function") {
-					this.on[event] = listeners[event];
-				}
-			}
-		},
-
-		/**
-		 * Emits a feature event
-		 *
-		 * @example
-		 * panel.dialog.emit("submit", {})
-		 *
-		 * @param {String} event
-		 * @param  {...any} args
-		 * @returns {any}
-		 */
-		emit(event, ...args) {
-			if (this.hasEventListener(event)) {
-				return this.on[event](...args);
-			}
-
-			// return a dummy listener
-			return () => {};
-		},
-
-		/**
-		 * Checks if a listener exists
-		 *
-		 * @param {String} event
-		 * @returns {Boolean}
-		 */
-		hasEventListener(event) {
-			return typeof this.on[event] === "function";
-		},
+		...listeners(),
 
 		/**
 		 * Checks if the feature can be submitted
@@ -136,7 +94,9 @@ export default (panel, key, defaults) => {
 			// the panel.open method also triggers the global loading
 			// state for the entire panel. This adds fine-grained controll
 			// over apropriate spinners.
-			this.isLoading = true;
+			if (options.silent !== true) {
+				this.isLoading = true;
+			}
 
 			// the global open method is used to make sure
 			// that a response can also trigger other features.
@@ -221,18 +181,37 @@ export default (panel, key, defaults) => {
 
 			// if no value has been passed to the submit method,
 			// take the value object from the props
-			value = value || this.props?.value || {};
+			value = value ?? this.props?.value ?? {};
 
 			try {
 				return await panel.post(this.path, value, options);
 			} catch (error) {
-				panel.notification.error(error);
+				panel.error(error);
 			} finally {
 				// stop the loader
 				this.isLoading = false;
 			}
 
 			return false;
+		},
+
+		/**
+		 * Reloads the properties for the feature
+		 */
+		async refresh(options = {}) {
+			options.url = options.url ?? this.url();
+
+			const response = await panel.get(options.url, options);
+			const state = response["$" + this.key()];
+
+			// the state cannot be updated
+			if (!state || state.component !== this.component) {
+				return;
+			}
+
+			this.props = state.props;
+
+			return this.state();
 		},
 
 		/**
@@ -249,7 +228,7 @@ export default (panel, key, defaults) => {
 				return false;
 			}
 
-			this.open(this.path, options);
+			this.open(this.url(), options);
 		},
 
 		/**
@@ -266,7 +245,7 @@ export default (panel, key, defaults) => {
 			this.on = {};
 
 			// register new listeners
-			this.addEventListeners(state.on || {});
+			this.addEventListeners(state.on ?? {});
 
 			return this.state();
 		},
@@ -276,8 +255,8 @@ export default (panel, key, defaults) => {
 		 *
 		 * @returns {URL}
 		 */
-		get url() {
-			return panel.url(this.path);
+		url() {
+			return panel.url(this.path, this.query);
 		}
 	};
 };

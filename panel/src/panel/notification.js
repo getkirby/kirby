@@ -1,6 +1,7 @@
+import AuthError from "@/errors/AuthError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import RequestError from "@/errors/RequestError.js";
-import Module from "./module.js";
+import State from "./state.js";
 import Timer from "./timer.js";
 
 export const defaults = () => {
@@ -15,7 +16,7 @@ export const defaults = () => {
 };
 
 export default (panel = {}) => {
-	const parent = Module("notification", defaults());
+	const parent = State("notification", defaults());
 
 	return {
 		...parent,
@@ -68,7 +69,7 @@ export default (panel = {}) => {
 				// when the server always sends back a simple error
 				// response without nesting it in $dropdown, $dialog, etc.
 				const broken = Object.values(error.response.json).find(
-					(element) => typeof element.error === "string"
+					(element) => typeof element?.error === "string"
 				);
 
 				if (broken) {
@@ -76,16 +77,30 @@ export default (panel = {}) => {
 				}
 			}
 
+			// convert strings to full error objects
 			if (typeof error === "string") {
-				return this.open({
+				error = {
 					message: error,
+					type: "error"
+				};
+			}
+
+			// fill in some defaults
+			error.message = error.message ?? "Something went wrong";
+			error.details = error.details ?? {};
+
+			// open the error dialog in views
+			if (panel.context === "view") {
+				panel.dialog.open({
+					component: "k-error-dialog",
+					props: error,
 					type: "error"
 				});
 			}
 
+			// show the error notification bar
 			return this.open({
-				message: error.message || "Something went wrong",
-				details: error.details || {},
+				message: error.message,
 				type: "error"
 			});
 		},
@@ -134,7 +149,7 @@ export default (panel = {}) => {
 			}
 
 			return this.open({
-				message: error.message || "Something went wrong",
+				message: error.message ?? "Something went wrong",
 				type: "fatal"
 			});
 		},
@@ -156,19 +171,18 @@ export default (panel = {}) => {
 				return this.success(notification);
 			}
 
-			// add the current editing context
-			notification.context = panel.context;
-
 			// set the new state
-			this.set(notification);
+			this.set({
+				// add the current editing context
+				context: panel.context,
+				...notification
+			});
 
 			// open the notification
 			this.isOpen = true;
 
 			// start a timer to auto-close the notification
-			this.timer.start(this.timeout, () => {
-				this.close();
-			});
+			this.timer.start(this.timeout, () => this.close());
 
 			// returns the new open state
 			return this.state();

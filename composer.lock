@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69b8764b73a3ee160520dca4ac70a53d",
+    "content-hash": "78d6cc958c8f81e512e2ac1ff74b9061",
     "packages": [
         {
             "name": "claviska/simpleimage",
-            "version": "4.0.2",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "226d507cca0c8400d69bee7eb324158e3cbe246e"
+                "reference": "a447473883e5dd0daa0d014ae849f0db5b8a1d08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/226d507cca0c8400d69bee7eb324158e3cbe246e",
-                "reference": "226d507cca0c8400d69bee7eb324158e3cbe246e",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/a447473883e5dd0daa0d014ae849f0db5b8a1d08",
+                "reference": "a447473883e5dd0daa0d014ae849f0db5b8a1d08",
                 "shasum": ""
             },
             "require": {
@@ -49,7 +49,7 @@
             "description": "A PHP class that makes working with images as simple as possible.",
             "support": {
                 "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/4.0.2"
+                "source": "https://github.com/claviska/SimpleImage/tree/4.0.4"
             },
             "funding": [
                 {
@@ -57,7 +57,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-20T15:27:20+00:00"
+            "time": "2023-05-08T14:27:59+00:00"
         },
         {
             "name": "composer/semver",
@@ -970,16 +970,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v5.4.21",
+            "version": "v5.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "3713e20d93e46e681e51605d213027e48dab3469"
+                "reference": "4cd2e3ea301aadd76a4172756296fe552fb45b0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/3713e20d93e46e681e51605d213027e48dab3469",
-                "reference": "3713e20d93e46e681e51605d213027e48dab3469",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/4cd2e3ea301aadd76a4172756296fe552fb45b0b",
+                "reference": "4cd2e3ea301aadd76a4172756296fe552fb45b0b",
                 "shasum": ""
             },
             "require": {
@@ -1025,7 +1025,7 @@
             "description": "Loads and dumps YAML files",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/yaml/tree/v5.4.21"
+                "source": "https://github.com/symfony/yaml/tree/v5.4.23"
             },
             "funding": [
                 {
@@ -1041,7 +1041,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-02-21T19:46:44+00:00"
+            "time": "2023-04-23T19:33:36+00:00"
         }
     ],
     "packages-dev": [],

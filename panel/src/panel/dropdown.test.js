@@ -13,6 +13,7 @@ describe.concurrent("panel.dropdown", () => {
 			on: {},
 			path: null,
 			props: {},
+			query: {},
 			referrer: null,
 			timestamp: null
 		};

@@ -15,20 +15,40 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 /**
- * Make Vue accessible globally
+ * Global styles need to be loaded before
+ * components
  */
-window.Vue = Vue;
+import "./styles/config.css";
+import "./styles/reset.css";
+
+/**
+ * Load all relevant Vue plugins
+ * that do not depend on the Panel instance
+ */
+Vue.use(Helpers);
+Vue.use(Libraries);
+Vue.use(Vuelidate);
+Vue.use(Components);
+
+/**
+ * Load CSS utilities after components
+ * to increase specificity
+ */
+import "./styles/utilities.css";
 
 /**
  * Create the Panel instance
- */
-window.panel = Panel.create(window.panel.plugins);
-
-/**
+ *
  * This is the single source of truth
  * for all Vue components.
  */
-Vue.prototype.$panel = window.panel;
+window.panel = Vue.prototype.$panel = Panel.create(window.panel.plugins);
+
+/**
+ * Some shortcuts to the Panel's features
+ */
+Vue.prototype.$go = window.panel.view.open.bind(window.panel.view);
+Vue.prototype.$reload = window.panel.reload.bind(window.panel);
 
 /**
  * Create the Vue application
@@ -39,28 +59,11 @@ window.panel.app = new Vue({
 });
 
 /**
- * Global styles need to be loaded before
- * components
- */
-import "./styles/config.css";
-import "./styles/reset.css";
-
-/**
  * Additional functionalities and app configuration
  */
-Vue.use(ErrorHandling, window.panel);
-Vue.use(Legacy, window.panel);
-Vue.use(Helpers);
-Vue.use(Libraries);
 Vue.use(I18n);
-Vue.use(Vuelidate);
-Vue.use(Components);
-
-/**
- * Load CSS utilities after components
- * to increase specificity
- */
-import "./styles/utilities.css";
+Vue.use(ErrorHandling);
+Vue.use(Legacy);
 
 // :has() CSS polyfill
 // TODO: remove when Firefox supports CSS :has

@@ -28,6 +28,7 @@ class PageBlueprint extends Blueprint
 			$this->props['options'] ?? true,
 			// defaults
 			[
+				'access'     	 => null,
 				'changeSlug'     => null,
 				'changeStatus'   => null,
 				'changeTemplate' => null,
@@ -35,8 +36,10 @@ class PageBlueprint extends Blueprint
 				'create'         => null,
 				'delete'         => null,
 				'duplicate'      => null,
-				'read'           => null,
+				'list'           => null,
+				'move'           => null,
 				'preview'        => null,
+				'read'           => null,
 				'sort'           => null,
 				'update'         => null,
 			],

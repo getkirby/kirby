@@ -52,13 +52,21 @@ export const props = {
 };
 
 export default {
-	inheritAttrs: true,
 	mixins: [props],
+	inheritAttrs: true,
 	data() {
 		return {
 			isOpen: false,
 			scrollTop: 0
 		};
+	},
+	watch: {
+		visible: {
+			handler(visible) {
+				visible === true ? this.open() : this.close();
+			},
+			immediate: true
+		}
 	},
 	mounted() {
 		if (this.visible) {
@@ -103,6 +111,13 @@ export default {
 		focus() {
 			this.$helper.focus(this.$refs.overlay);
 		},
+		/**
+		 * Alias for close. This is needed to simplify
+		 * hiding dialogs and drawers.
+		 */
+		hide() {
+			this.close();
+		},
 		open() {
 			// it makes it run once
 			if (this.isOpen === true) {
@@ -119,7 +134,7 @@ export default {
 
 			// wait for the next rendering round
 			// otherwise the portal won't be ready
-			this.$nextTick(() => {
+			setTimeout(() => {
 				// autofocus
 				if (this.autofocus === true) {
 					this.focus();
@@ -134,6 +149,13 @@ export default {
 			if (view?.scrollTop) {
 				view.scrollTop = this.scrollTop;
 			}
+		},
+		/**
+		 * Alias for open. This is needed to simplify
+		 * showing dialogs and drawers.
+		 */
+		show() {
+			this.open();
 		},
 		storeScrollPosition() {
 			const view = document.querySelector(".k-panel-view");

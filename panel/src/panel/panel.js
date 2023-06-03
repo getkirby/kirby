@@ -1,5 +1,6 @@
-import Api from "./api.js";
+import Api from "@/api/index.js";
 import Dialog from "./dialog.js";
+import Drag from "./drag.js";
 import Drawer from "./drawer.js";
 import Dropdown from "./dropdown.js";
 import Events from "./events.js";
@@ -11,6 +12,7 @@ import Translation from "./translation.js";
 import { buildUrl, isUrl } from "@/helpers/url.js";
 import { reactive } from "vue";
 import { redirect, request } from "./request.js";
+import Upload from "./upload.js";
 import User from "./user.js";
 import View from "./view.js";
 import { isObject } from "@/helpers/object.js";
@@ -19,7 +21,7 @@ import { isEmpty } from "@/helpers/string.js";
 /**
  * Globals are just reactive objects
  * from the backend that don't have their
- * own modules.
+ * own state objects.
  */
 export const globals = {
 	config: {},
@@ -33,18 +35,18 @@ export const globals = {
 };
 
 /**
- * Islands are features that
+ * Modals are features that
  * can be opened and closed based
  * on the response
  */
-export const islands = ["dialog", "drawer"];
+export const modals = ["dialog", "drawer"];
 
 /**
- * Modules are more advanced parts
- * of the state that have their own
- * logic and methods
+ * State objects are more advanced parts
+ * of the overall panel state that
+ * have their own logic and methods
  */
-export const modules = [
+export const states = [
 	"dropdown",
 	"language",
 	"notification",
@@ -63,26 +65,28 @@ export default {
 		// props
 		this.isLoading = false;
 
-		// modules
+		this.drag = Drag(this);
 		this.events = Events(this);
+		this.upload = Upload(this);
+
+		// state objects
 		this.language = Language(this);
 		this.notification = Notification(this);
 		this.system = System(this);
 		this.translation = Translation(this);
 		this.user = User(this);
 
-		// islands
-		this.drawer = Drawer(this);
-		this.dialog = Dialog(this);
-
 		// features
 		this.dropdown = Dropdown(this);
 		this.view = View(this);
 
+		// modals
+		this.drawer = Drawer(this);
+		this.dialog = Dialog(this);
+
 		// methods
 		this.redirect = redirect;
 		this.reload = this.view.reload.bind(this.view);
-		this.request = request;
 
 		// translator
 		this.t = this.translation.translate.bind(this.translation);
@@ -141,6 +145,21 @@ export default {
 	},
 
 	/**
+	 *
+	 * @param {Event} error
+	 * @param {Boolean} openNotification
+	 */
+	error(error, openNotification = true) {
+		if (this.debug === true) {
+			console.error(error);
+		}
+
+		if (openNotification === true) {
+			return this.notification.error(error);
+		}
+	},
+
+	/**
 	 * Sends a GET request
 	 *
 	 * @example
@@ -158,7 +177,7 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async get(url, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "GET",
 			...options
 		});
@@ -184,13 +203,14 @@ export default {
 				this.set(url);
 			} else {
 				this.isLoading = true;
-				this.set(await this.get(url, options));
+				const state = await this.get(url, options);
+				this.set(state);
 				this.isLoading = false;
 			}
 
 			return this.state();
 		} catch (error) {
-			return this.notification.error(error);
+			return this.error(error);
 		}
 	},
 
@@ -206,13 +226,21 @@ export default {
 	 * @returns {Object} Returns the parsed response data
 	 */
 	async post(url, data = {}, options = {}) {
-		const { response } = await request(url, {
+		const { response } = await this.request(url, {
 			method: "POST",
 			body: data,
 			...options
 		});
 
 		return response.json;
+	},
+
+	async request(url, options = {}) {
+		return request(url, {
+			referrer: this.view.path,
+			csrf: this.system.csrf,
+			...options
+		});
 	},
 
 	/**
@@ -224,6 +252,13 @@ export default {
 	 * @returns {Object} { code, path, referrer, results, timestamp }
 	 */
 	async search(type, query) {
+		// open the search dialog
+		if (!type && !query) {
+			return this.dialog.open({
+				component: "k-search-dialog"
+			});
+		}
+
 		const { $search } = await this.get(`/search/${type}`, {
 			query: { query }
 		});
@@ -236,7 +271,7 @@ export default {
 	 *
 	 * @param {Object} state
 	 */
-	set(state) {
+	set(state = {}) {
 		/**
 		 * Old fiber requests use $ as key prefix
 		 * This will remove the dollar sign in keys first
@@ -263,32 +298,32 @@ export default {
 		}
 
 		/**
-		 * Register all modules
+		 * Register all state objects
 		 */
-		modules.forEach((module) => {
+		for (const key of states) {
 			// if there's a new state for the
-			// module, call its state setter method
-			if (isObject(state[module])) {
-				this[module].set(state[module]);
+			// state object, call its state setter method
+			if (isObject(state[key]) === true) {
+				this[key].set(state[key]);
 			}
-		});
+		}
 
 		/**
-		 * Toggle islands
+		 * Toggle modals
 		 */
-		islands.forEach((island) => {
+		for (const modal of modals) {
 			// if there's a new state for the
-			// module, call its state setter method
-			if (isObject(state[island])) {
-				return this[island].open(state[island]);
+			// modal, call its state setter method
+			if (isObject(state[modal]) === true) {
+				this[modal].open(state[modal]);
 			}
 
-			// islands will be closed if the response is null or false.
-			// on undefined, the state of the island stays untouched
-			if (state[island] !== undefined) {
-				this[island].close(state[island]);
+			// modals will be closed if the response is null or false.
+			// on undefined, the state of the modal stays untouched
+			else if (state[modal] !== undefined) {
+				this[modal].close(state[modal]);
 			}
-		});
+		}
 
 		/**
 		 * Toggle the dropdown
@@ -319,17 +354,17 @@ export default {
 	state() {
 		const state = {};
 
-		for (const global in globals) {
-			state[global] = this[global] ?? globals[global];
+		for (const key in globals) {
+			state[key] = this[key] ?? globals[key];
 		}
 
-		modules.forEach((module) => {
-			state[module] = this[module].state();
-		});
+		for (const key of states) {
+			state[key] = this[key].state();
+		}
 
-		islands.forEach((island) => {
-			state[island] = this[island].state();
-		});
+		for (const key of modals) {
+			state[key] = this[key].state();
+		}
 
 		state.dropdown = this.dropdown.state();
 		state.view = this.view.state();
@@ -353,10 +388,10 @@ export default {
 	 */
 	set title(title) {
 		if (isEmpty(this.system.title) === false) {
-			document.title = title + " | " + this.system.title;
-		} else {
-			document.title = title;
+			title += " | " + this.system.title;
 		}
+
+		document.title = title;
 	},
 
 	/**

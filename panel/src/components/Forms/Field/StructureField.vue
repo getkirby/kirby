@@ -290,6 +290,12 @@ export default {
 			let options = [];
 			let more = this.duplicate && this.more && this.currentIndex === null;
 
+			options.push({
+				icon: "edit",
+				text: this.$t("edit"),
+				click: "edit"
+			});
+
 			if (more) {
 				options.push({
 					icon: "copy",
@@ -461,6 +467,10 @@ export default {
 				case "duplicate":
 					this.add(this.items[rowIndex + this.pagination.offset]);
 					this.onInput();
+					break;
+
+				case "edit":
+					this.open(rowIndex);
 					break;
 			}
 		},

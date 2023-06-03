@@ -4,6 +4,8 @@ import Vue from "vue";
 import isComponent from "@/helpers/isComponent.js";
 
 describe.concurrent("panel.plugins", () => {
+	window.Vue = Vue;
+
 	it("should have defaults", async () => {
 		const plugins = Plugins(Vue);
 

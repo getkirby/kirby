@@ -11,12 +11,15 @@ describe.concurrent("panel.drawer", () => {
 			component: null,
 			isLoading: false,
 			isOpen: false,
-			island: true,
+			legacy: false,
 			on: {},
+			parent: null,
 			path: null,
 			props: {},
+			query: {},
 			ref: null,
 			referrer: null,
+			tabId: null,
 			timestamp: null
 		};
 

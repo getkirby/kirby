@@ -21,6 +21,7 @@ class PageBlueprintTest extends TestCase
 		]);
 
 		$expected = [
+			'access'     	 => null,
 			'changeSlug'     => null,
 			'changeStatus'   => null,
 			'changeTemplate' => null,
@@ -28,10 +29,14 @@ class PageBlueprintTest extends TestCase
 			'create'         => null,
 			'delete'         => null,
 			'duplicate'      => null,
+			'list'					 => null,
+			'move'           => null,
 			'preview'        => null,
 			'read'           => null,
+			'preview'        => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
@@ -54,6 +59,7 @@ class PageBlueprintTest extends TestCase
 		]);
 
 		$expected = [
+			'access'     	 => null,
 			'changeSlug'     => true,
 			'changeStatus'   => null,
 			'changeTemplate' => false,
@@ -61,10 +67,14 @@ class PageBlueprintTest extends TestCase
 			'create'         => null,
 			'delete'         => null,
 			'duplicate'      => null,
+			'list'					 => null,
+			'move'           => null,
 			'preview'        => null,
 			'read'           => null,
+			'preview'        => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)
@@ -90,6 +100,7 @@ class PageBlueprintTest extends TestCase
 		]);
 
 		$expected = [
+			'access'     	 => null,
 			'changeSlug'     => true,
 			'changeStatus'   => null,
 			'changeTemplate' => false,
@@ -97,10 +108,14 @@ class PageBlueprintTest extends TestCase
 			'create'         => false,
 			'delete'         => null,
 			'duplicate'      => null,
+			'list'					 => null,
+			'move'           => null,
 			'preview'        => null,
 			'read'           => null,
+			'preview'        => null,
 			'sort'           => null,
 			'update'         => null,
+			'move'			 => null
 		];
 
 		$this->assertEquals($expected, $blueprint->options()); // cannot use strict assertion (array order)

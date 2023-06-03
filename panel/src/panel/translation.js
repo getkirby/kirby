@@ -1,5 +1,5 @@
 import { template } from "@/helpers/string.js";
-import Module from "./module.js";
+import State from "./state.js";
 
 export const defaults = () => {
 	return {
@@ -15,7 +15,7 @@ export const defaults = () => {
  * translation
  */
 export default () => {
-	const parent = Module("translation", defaults());
+	const parent = State("translation", defaults());
 
 	return {
 		...parent,
@@ -61,7 +61,7 @@ export default () => {
 				return;
 			}
 
-			const string = this.data[key] || fallback;
+			const string = this.data[key] ?? fallback;
 
 			if (typeof string !== "string") {
 				return string;

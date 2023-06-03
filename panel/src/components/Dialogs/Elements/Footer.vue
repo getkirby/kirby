@@ -6,8 +6,7 @@
 
 <style>
 .k-dialog-footer {
-	padding: 0;
-	border-top: 1px solid var(--color-gray-300);
+	padding: var(--dialog-padding);
 	line-height: 1;
 	flex-shrink: 0;
 }

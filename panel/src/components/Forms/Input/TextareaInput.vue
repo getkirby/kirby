@@ -61,7 +61,6 @@
 			@cancel="cancel"
 			@submit="insertFile($event)"
 		/>
-		<k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
 	</div>
 </template>
 
@@ -113,6 +112,15 @@ export default {
 		return {
 			over: false
 		};
+	},
+	computed: {
+		uploadOptions() {
+			return {
+				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
+				multiple: false,
+				on: { done: this.insertUpload }
+			};
+		}
 	},
 	watch: {
 		value() {
@@ -188,18 +196,16 @@ export default {
 		onDrop($event) {
 			// dropping files
 			if (this.uploads && this.$helper.isUploadEvent($event)) {
-				return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-					url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
-					multiple: false
-				});
+				return this.$panel.upload.open(
+					$event.dataTransfer.files,
+					this.uploadOptions
+				);
 			}
 
 			// dropping text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				this.focus();
-				this.insert(drag.data);
+				this.insert(this.$panel.drag.data);
 			}
 		},
 		onFocus($event) {
@@ -225,9 +231,7 @@ export default {
 			}
 
 			// drag & drop for text
-			const drag = this.$store.state.drag;
-
-			if (drag?.type === "text") {
+			if (this.$panel.drag.type === "text") {
 				$event.dataTransfer.dropEffect = "copy";
 				this.focus();
 				this.over = true;
@@ -266,10 +270,7 @@ export default {
 			return area.value.substring(start, end);
 		},
 		uploadFile() {
-			this.$refs.fileUpload.open({
-				url: this.$panel.urls.api + "/" + this.endpoints.field + "/upload",
-				multiple: false
-			});
+			this.$panel.upload.pick(this.uploadOptions);
 		},
 		wrap(text) {
 			this.insert(text + this.selection() + text);

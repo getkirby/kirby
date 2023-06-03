@@ -138,7 +138,7 @@ export const responder = async (request, response) => {
 	}
 
 	// auth error
-	if (response.status === 403) {
+	if (response.status === 401) {
 		throw new AuthError(`Unauthenticated`, {
 			request,
 			response

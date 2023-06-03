@@ -281,6 +281,23 @@ class Field extends Component
 	}
 
 	/**
+	 * Returns optional drawer routes for the field
+	 *
+	 * @return array
+	 */
+	public function drawers(): array
+	{
+		if (
+			isset($this->options['drawers']) === true &&
+			$this->options['drawers'] instanceof Closure
+		) {
+			return $this->options['drawers']->call($this);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Creates a new field instance
 	 *
 	 * @param string $type
@@ -427,7 +444,7 @@ class Field extends Component
 			if ($formFields !== null) {
 				foreach ($this->when as $field => $value) {
 					$field      = $formFields->get($field);
-					$inputValue = $field !== null ? $field->value() : '';
+					$inputValue = $field?->value() ?? '';
 
 					// if the input data doesn't match the requested `when` value,
 					// that means that this field is not required and can be saved

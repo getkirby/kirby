@@ -78,7 +78,7 @@ export default {
 					this.$panel.notification.success();
 					this.$events.$emit("page.sort", element);
 				} catch (error) {
-					this.$panel.notification.error({
+					this.$panel.error({
 						message: error.message,
 						details: error.details
 					});

@@ -3,6 +3,7 @@ export default (file, params) => {
 		url: "/",
 		field: "file",
 		method: "POST",
+		filename: file.name,
 		attributes: {},
 		complete: function () {},
 		error: function () {},
@@ -13,7 +14,7 @@ export default (file, params) => {
 	const options = Object.assign(defaults, params);
 	const formData = new FormData();
 
-	formData.append(options.field, file, file.name);
+	formData.append(options.field, file, options.filename);
 
 	if (options.attributes) {
 		Object.keys(options.attributes).forEach((key) => {

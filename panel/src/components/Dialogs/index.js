@@ -6,9 +6,14 @@ import FiberDialog from "./FiberDialog.vue";
 import FilesDialog from "./FilesDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
+import PageCreateDialog from "./PageCreateDialog.vue";
+import PageMoveDialog from "./PageMoveDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
 import RemoveDialog from "./RemoveDialog.vue";
+import SearchDialog from "./SearchDialog.vue";
 import TextDialog from "./TextDialog.vue";
+import UploadDialog from "./UploadDialog.vue";
+import UploadReplaceDialog from "./UploadReplaceDialog.vue";
 import UsersDialog from "./UsersDialog.vue";
 
 export default {
@@ -21,9 +26,14 @@ export default {
 		app.component("k-files-dialog", FilesDialog);
 		app.component("k-form-dialog", FormDialog);
 		app.component("k-language-dialog", LanguageDialog);
+		app.component("k-page-create-dialog", PageCreateDialog);
+		app.component("k-page-move-dialog", PageMoveDialog);
 		app.component("k-pages-dialog", PagesDialog);
 		app.component("k-remove-dialog", RemoveDialog);
+		app.component("k-search-dialog", SearchDialog);
 		app.component("k-text-dialog", TextDialog);
+		app.component("k-upload-dialog", UploadDialog);
+		app.component("k-upload-replace-dialog", UploadReplaceDialog);
 		app.component("k-users-dialog", UsersDialog);
 	}
 };

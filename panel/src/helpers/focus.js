@@ -1,22 +1,38 @@
 /**
  * Helper to set the focus inside an
  * HTML element
- * @param {HTMLElement} element
+ * @param {String|HTMLElement} element
+ * @param {String} field
  * @returns {HTMLElement|false}
  */
-export default function focus(element) {
+export default function focus(element, field) {
+	if (typeof element === "string") {
+		element = document.querySelector(element);
+	}
+
 	if (!element) {
 		return false;
 	}
 
-	const target = focusTarget(element, [
+	const selectors = [
 		"[autofocus]",
 		"[data-autofocus]",
 		"input",
 		"textarea",
 		"select",
+		"[contenteditable=true]",
+		"[type=submit]",
 		"button"
-	]);
+	];
+
+	// add a selector for a specific field
+	// to the beginning of the selector array
+	if (field) {
+		selectors.unshift(`[name="${field}"]`);
+	}
+
+	// try to find a focusable element
+	const target = focusTarget(element, selectors);
 
 	// check if a focusable child was found
 	if (target) {

@@ -3,11 +3,11 @@ import Dialogs from "@/components/Dialogs/index.js";
 import Drawers from "@/components/Drawers/index.js";
 import Forms from "@/components/Forms/index.js";
 import Layout from "@/components/Layout/index.js";
-import Layouts from "@/components/Layouts/index.js";
 import Misc from "@/components/Misc/index.js";
 import Navigation from "@/components/Navigation/index.js";
 import Sections from "@/components/Sections/index.js";
 import Text from "@/components/Text/index.js";
+import View from "@/components/View/index.js";
 import Views from "@/components/Views/index.js";
 
 // 3rd party libraries
@@ -20,12 +20,12 @@ export default {
 		app.use(Drawers);
 		app.use(Forms);
 		app.use(Layout);
-		app.use(Layouts);
 		app.use(Misc);
 		app.use(Navigation);
 		app.use(Text);
 		app.use(Sections);
 		app.use(Text);
+		app.use(View);
 		app.use(Views);
 
 		app.use(PortalVue);

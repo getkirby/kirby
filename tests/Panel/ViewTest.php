@@ -534,7 +534,7 @@ class ViewTest extends TestCase
 	public function testResponseAsHTML(): void
 	{
 		// create panel dist files first to avoid redirect
-		Document::link($this->app);
+		(new Assets())->link();
 
 		// get panel response
 		$response = View::response([

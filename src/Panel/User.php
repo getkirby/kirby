@@ -194,7 +194,6 @@ class User extends Model
 	{
 		$user    = $this->model;
 		$account = $user->isLoggedIn();
-		$avatar  = $user->avatar();
 
 		return array_merge(
 			parent::props(),
@@ -203,7 +202,7 @@ class User extends Model
 				'blueprint' => $this->model->role()->name(),
 				'model' => [
 					'account'  => $account,
-					'avatar'   => $avatar ? $avatar->url() : null,
+					'avatar'   => $user->avatar()?->url(),
 					'content'  => $this->content(),
 					'email'    => $user->email(),
 					'id'       => $user->id(),

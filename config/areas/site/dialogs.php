@@ -2,10 +2,13 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Find;
+use Kirby\Cms\Page;
+use Kirby\Cms\Response;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
+use Kirby\Panel\PageCreateDialog;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -285,93 +288,30 @@ return [
 	'page.create' => [
 		'pattern' => 'pages/create',
 		'load' => function () {
-			$kirby   = App::instance();
-			$request = $kirby->request();
+			$request = App::instance()->request();
+			$dialog  = new PageCreateDialog(
+				parentId: $request->get('parent'),
+				sectionId: $request->get('section'),
+				slug: $request->get('slug'),
+				template: $request->get('template'),
+				title: $request->get('title'),
+				viewId: $request->get('view'),
+			);
 
-			// the parent model for the new page
-			$parent = $request->get('parent', 'site');
-
-			// the view on which the add button is located
-			// this is important to find the right section
-			// and provide the correct templates for the new page
-			$view = $request->get('view', $parent);
-
-			// templates will be fetched depending on the
-			// section settings in the blueprint
-			$section = $request->get('section');
-
-			// this is the parent model
-			$model = Find::parent($parent);
-
-			// this is the view model
-			// i.e. site if the add button is on
-			// the dashboard
-			$view = Find::parent($view);
-
-			// available blueprints/templates for the new page
-			// are always loaded depending on the matching section
-			// in the view model blueprint
-			$blueprints = $view->blueprints($section);
-
-			// the pre-selected template
-			$template = $blueprints[0]['name'] ?? $blueprints[0]['value'] ?? null;
-
-			$fields = [
-				'parent' => Field::hidden(),
-				'title'  => Field::title([
-					'required'  => true,
-					'preselect' => true
-				]),
-				'slug'   => Field::slug([
-					'required' => true,
-					'sync'     => 'title',
-					'path'     => empty($model->id()) === false ? '/' . $model->id() . '/' : '/'
-				]),
-				'template' => Field::hidden()
-			];
-
-			// only show template field if > 1 templates available
-			// or when in debug mode
-			if (count($blueprints) > 1 || $kirby->option('debug') === true) {
-				$fields['template'] = Field::template($blueprints, [
-					'required' => true
-				]);
-			}
-
-			return [
-				'component' => 'k-form-dialog',
-				'props' => [
-					'fields' => $fields,
-					'submitButton' => I18n::translate('page.draft.create'),
-					'value' => [
-						'parent'   => $parent,
-						'slug'     => '',
-						'template' => $template,
-						'title'    => '',
-					]
-				]
-			];
+			return $dialog->load();
 		},
 		'submit' => function () {
 			$request = App::instance()->request();
-			$title = trim($request->get('title', ''));
+			$dialog  = new PageCreateDialog(
+				parentId: $request->get('parent'),
+				sectionId: $request->get('section'),
+				slug: $request->get('slug'),
+				template: $request->get('template'),
+				title: $request->get('title'),
+				viewId: $request->get('view'),
+			);
 
-			if (Str::length($title) === 0) {
-				throw new InvalidArgumentException([
-					'key' => 'page.changeTitle.empty'
-				]);
-			}
-
-			$page = Find::parent($request->get('parent', 'site'))->createChild([
-				'content'  => ['title' => $title],
-				'slug'     => $request->get('slug'),
-				'template' => $request->get('template'),
-			]);
-
-			return [
-				'event'    => 'page.create',
-				'redirect' => $page->panel()->url(true)
-			];
+			return $dialog->submit($request->get());
 		}
 	],
 
@@ -559,6 +499,41 @@ return [
 		'submit'  => $fields['file']['submit'],
 	],
 
+	// move page
+	'page.move' => [
+		'pattern' => 'pages/(:any)/move',
+		'load'    => function (string $id) {
+			$page = Find::page($id);
+
+			return [
+				'component' => 'k-page-move-dialog',
+				'props' => [
+					'value' => [
+						'parent' => $page->parent()?->panel()->url(true) ?? '/site'
+					]
+				]
+			];
+		},
+		'submit' => function (string $id) {
+			$kirby    = App::instance();
+			$parentId = $kirby->request()->get('parent');
+			$parent   = (empty($parentId) === true || $parentId === '/' || $parentId === 'site://') ? $kirby->site() : Find::page($parentId);
+			$oldPage  = Find::page($id);
+			$newPage  = $oldPage->move($parent);
+
+			return [
+				'event'    => 'page.move',
+				'redirect' => $newPage->panel()->url(true),
+				'dispatch' => [
+					'content/move' => [
+						$oldPage->panel()->url(true),
+						$newPage->panel()->url(true)
+					]
+				],
+			];
+		}
+	],
+
 	// change site title
 	'site.changeTitle' => [
 		'pattern' => 'site/changeTitle',
@@ -581,8 +556,8 @@ return [
 		},
 		'submit' => function () {
 			$kirby = App::instance();
-
 			$kirby->site()->changeTitle($kirby->request()->get('title'));
+
 			return [
 				'event' => 'site.changeTitle',
 			];

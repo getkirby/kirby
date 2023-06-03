@@ -277,13 +277,15 @@ export default {
 </script>
 
 <style>
-.k-toolbar {
+:root {
 	--toolbar-size: 38px;
 	--toolbar-text: #aaa;
 	--toolbar-back: var(--color-white);
 	--toolbar-hover: rgba(239, 239, 239, 0.5);
 	--toolbar-border: var(--color-background);
+}
 
+.k-toolbar {
 	display: flex;
 	max-width: 100%;
 	height: var(--toolbar-size);

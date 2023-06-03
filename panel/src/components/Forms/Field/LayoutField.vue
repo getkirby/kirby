@@ -3,7 +3,6 @@
 		<template #options>
 			<k-button-group layout="collapsed">
 				<k-button
-					:disabled="isFull"
 					:text="$t('add')"
 					icon="add"
 					variant="filled"

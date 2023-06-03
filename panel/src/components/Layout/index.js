@@ -6,7 +6,6 @@ import Bubbles from "./Bubbles.vue";
 import Column from "./Column.vue";
 import Dropzone from "./Dropzone.vue";
 import Frame from "./Frame/Frame.vue";
-import FilePreview from "./FilePreview.vue";
 import Grid from "./Grid.vue";
 import Header from "./Header.vue";
 import IconFrame from "./Frame/IconFrame.vue";
@@ -15,7 +14,6 @@ import Overlay from "./Overlay.vue";
 import Stats from "./Stats.vue";
 import Table from "./Table.vue";
 import TableCell from "./TableCell.vue";
-import TableUpdateStatusCell from "./TableUpdateStatusCell.vue";
 import Tabs from "./Tabs.vue";
 import View from "./View.vue";
 
@@ -28,7 +26,6 @@ export default {
 		app.component("k-bubbles", Bubbles);
 		app.component("k-column", Column);
 		app.component("k-dropzone", Dropzone);
-		app.component("k-file-preview", FilePreview);
 		app.component("k-frame", Frame);
 		app.component("k-grid", Grid);
 		app.component("k-header", Header);
@@ -39,7 +36,6 @@ export default {
 		app.component("k-stats", Stats);
 		app.component("k-table", Table);
 		app.component("k-table-cell", TableCell);
-		app.component("k-table-update-status-cell", TableUpdateStatusCell);
 		app.component("k-tabs", Tabs);
 		app.component("k-view", View);
 	}
