@@ -26,6 +26,11 @@ export default {
 			type: String
 		}
 	},
+	data() {
+		return {
+			state: []
+		};
+	},
 	async created() {
 		if (this.items) {
 			this.state = await this.load(this.items);
