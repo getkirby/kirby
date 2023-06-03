@@ -194,4 +194,9 @@ export default {
 .k-overlay-loader {
 	color: var(--color-white);
 }
+
+/* Scroll lock */
+:where(body):has(.k-overlay) {
+	overflow: hidden;
+}
 </style>

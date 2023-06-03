@@ -84,9 +84,4 @@ export default {
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
 }
-
-/* Scroll lock */
-:where(body):has(.k-drawer) {
-	overflow: hidden;
-}
 </style>
