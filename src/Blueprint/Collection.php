@@ -16,7 +16,7 @@ use TypeError;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage 3.10
+ * // TODO: include in test coverage once blueprint refactoring is done
  * @codeCoverageIgnore
  */
 class Collection extends BaseCollection

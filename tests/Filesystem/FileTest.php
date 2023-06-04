@@ -78,7 +78,6 @@ class FileTest extends TestCase
 	 */
 	public function testLegacyConstruct()
 	{
-		// @todo 4.0.0 Remove
 		$file = new File(
 			'/dev/null/test.pdf',
 			'https://home.io/test.pdf'

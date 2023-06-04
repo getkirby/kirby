@@ -14,7 +14,7 @@ use Kirby\Toolkit\I18n;
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * // TODO: include in test coverage in 3.10
+ * // TODO: include in test coverage once blueprint refactoring is done
  * @codeCoverageIgnore
  */
 class NodeI18n extends NodeProperty

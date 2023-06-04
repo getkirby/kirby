@@ -65,7 +65,6 @@ class File
 	) {
 		// Legacy support for old constructor of
 		// the `Kirby\Image\Image` class
-		// @todo 4.0.0 remove
 		if (is_array($props) === false) {
 			$props = [
 				'root' => $props,
