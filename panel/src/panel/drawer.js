@@ -30,6 +30,13 @@ export default (panel) => {
 
 			return crumbs.reverse();
 		},
+		async close() {
+			if (this.parent) {
+				this.openState(this.parent);
+			} else {
+				parent.close.call(this);
+			}
+		},
 		goTo(id) {
 			let parent = this;
 
@@ -49,7 +56,7 @@ export default (panel) => {
 			await parent.open.call(this, feature, options);
 
 			// add the parent to the drawer if it's not the same
-			if (this.path !== parentDrawer?.path) {
+			if (this.props.id !== parentDrawer?.props.id) {
 				this.parent = parentDrawer;
 			}
 
