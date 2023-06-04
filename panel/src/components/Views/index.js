@@ -20,6 +20,8 @@ import TableUpdateStatusCell from "./System/TableUpdateStatusCell.vue";
 
 import UsersView from "./Users/UsersView.vue";
 import UserView from "./Users/UserView.vue";
+import UserAvatar from "./Users/UserAvatar.vue";
+import UserProfile from "./Users/UserProfile.vue";
 import AccountView from "./Users/AccountView.vue";
 
 import LegacyPluginView from "./LegacyPluginView.vue";
@@ -48,6 +50,8 @@ export default {
 
 		app.component("k-users-view", UsersView);
 		app.component("k-user-view", UserView);
+		app.component("k-user-avatar", UserAvatar);
+		app.component("k-user-profile", UserProfile);
 		app.component("k-account-view", AccountView);
 
 		app.component("k-plugin-view", LegacyPluginView);

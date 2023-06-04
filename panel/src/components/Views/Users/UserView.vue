@@ -9,31 +9,11 @@
 			<k-prev-next v-if="model.account" :prev="prev" :next="next" />
 		</template>
 
-		<div class="k-user-profile">
-			<k-dropdown>
-				<k-button
-					:title="$t('avatar')"
-					:aria-disabled="isLocked"
-					variant="filled"
-					class="k-user-view-image"
-					@click="onAvatar"
-				>
-					<k-image-frame
-						v-if="model.avatar"
-						:cover="true"
-						:src="model.avatar"
-					/>
-					<k-icon-frame v-else icon="user" />
-				</k-button>
-				<k-dropdown-content
-					v-if="model.avatar"
-					ref="picture"
-					:options="avatarOptions"
-				/>
-			</k-dropdown>
-
-			<k-button-group :buttons="buttons" />
-		</div>
+		<k-user-profile
+			:is-locked="isLocked"
+			:model="model"
+			:permissions="permissions"
+		/>
 
 		<k-header
 			:editable="permissions.changeName && !isLocked"
@@ -87,101 +67,25 @@ import ModelView from "../ModelView.vue";
 
 export default {
 	extends: ModelView,
-	computed: {
-		avatarOptions() {
-			return [
-				{
-					icon: "upload",
-					text: this.$t("change"),
-					click: () => this.$panel.upload.pick(this.uploadOptions)
-				},
-				{
-					icon: "trash",
-					text: this.$t("delete"),
-					click: this.deleteAvatar
-				}
-			];
+	methods: {
+		async deleteAvatar() {
+			await this.$api.users.deleteAvatar(this.model.id);
+			this.$panel.notification.success();
+			this.$reload();
 		},
-		buttons() {
-			return [
-				{
-					icon: "email",
-					text: `${this.$t("email")}: ${this.model.email}`,
-					disabled: !this.permissions.changeEmail || this.isLocked,
-					click: () => this.$dialog(this.id + "/changeEmail")
-				},
-				{
-					icon: "bolt",
-					text: `${this.$t("role")}: ${this.model.role}`,
-					disabled: !this.permissions.changeRole || this.isLocked,
-					click: () => this.$dialog(this.id + "/changeRole")
-				},
-				{
-					icon: "globe",
-					text: `${this.$t("language")}: ${this.model.language}`,
-					disabled: !this.permissions.changeLanguage || this.isLocked,
-					click: () => this.$dialog(this.id + "/changeLanguage")
-				}
-			];
-		},
-		uploadOptions() {
-			return {
+		uploadAvatar() {
+			this.$panel.upload.pick({
 				url: this.$panel.urls.api + "/" + this.id + "/avatar",
 				accept: "image/*",
 				immediate: true,
 				multiple: false
-			};
-		}
-	},
-	methods: {
-		async deleteAvatar() {
-			await this.$api.users.deleteAvatar(this.model.id);
-			this.avatar = null;
-			this.$panel.notification.success();
-			this.$reload();
-		},
-		onAvatar() {
-			if (this.model.avatar) {
-				this.$refs.picture.toggle();
-			} else {
-				this.$panel.upload.pick(this.uploadOptions);
-			}
+			});
 		}
 	}
 };
 </script>
 
 <style>
-.k-user-profile {
-	--button-height: auto;
-	padding: var(--spacing-2);
-	background: var(--color-white);
-	border-radius: var(--rounded-lg);
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-3);
-	margin-bottom: var(--spacing-6);
-}
-
-.k-user-profile .k-button-group {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-}
-
-.k-user-view-image {
-	padding: 0;
-}
-.k-user-view-image .k-frame {
-	width: 6rem;
-	height: 6rem;
-	border-radius: var(--rounded);
-	line-height: 0;
-}
-.k-user-view-image .k-icon-frame {
-	--back: var(--color-black);
-	--icon-color: var(--color-gray-200);
-}
 .k-user-name-placeholder {
 	color: var(--color-gray-500);
 	transition: color 0.3s;
