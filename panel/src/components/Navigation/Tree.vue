@@ -79,7 +79,7 @@ export default {
 :root {
 	--tree-color-back: var(--color-gray-200);
 	--tree-color-hover-back: var(--color-gray-300);
-	--tree-color-selected-back: var(--color-blue-200);
+	--tree-color-selected-back: var(--color-blue-300);
 	--tree-color-selected-text: var(--color-black);
 	--tree-color-text: var(--color-text-dimmed);
 	--tree-level: 0;
