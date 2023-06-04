@@ -8,56 +8,20 @@
 			<k-stats :reports="environment" size="medium" class="k-system-info" />
 		</k-section>
 
-		<k-section
-			v-if="securityIssues.length"
-			:headline="$t('security')"
-			:buttons="[
-				{
-					title: $t('retry'),
-					icon: 'refresh',
-					size: 'xs',
-					variant: 'filled',
-					click: retry
-				}
-			]"
-		>
-			<k-items :items="securityIssues" />
-		</k-section>
-
-		<k-section
-			v-if="plugins.length"
-			:headline="$t('plugins')"
-			link="https://getkirby.com/plugins"
-		>
-			<k-table
-				:index="false"
-				:columns="{
-					name: {
-						label: $t('name'),
-						type: 'url',
-						mobile: true
-					},
-					author: {
-						label: $t('author')
-					},
-					license: {
-						label: $t('license')
-					},
-					version: {
-						label: $t('version'),
-						type: 'update-status',
-						mobile: true,
-						width: '10rem'
-					}
-				}"
-				:rows="plugins"
-			/>
-		</k-section>
+		<security :security="security" :urls="urls" />
+		<plugins :plugins="plugins" />
 	</k-panel-inside>
 </template>
 
 <script>
+import Plugins from "./SystemPlugins.vue";
+import Security from "./SystemSecurity.vue";
+
 export default {
+	components: {
+		Plugins,
+		Security
+	},
 	props: {
 		environment: Array,
 		exceptions: Array,
@@ -65,77 +29,15 @@ export default {
 		security: Array,
 		urls: Object
 	},
-	data() {
-		return {
-			accessible: []
-		};
-	},
-	computed: {
-		securityIssues() {
-			// transform accesible URLs into security messages
-			const accessible = this.accessible.map((key) => ({
-				id: key,
-				text: this.$t("system.issues." + key),
-				link: "https://getkirby.com/security/" + key,
-				icon: "folder"
-			}));
-
-			// merge messages from backend and from dynamic URL checks
-			return this.security.concat(accessible).map((issue) => ({
-				// give each message an image prop unless it already has one
-				image: {
-					back: "var(--color-red-200)",
-					icon: issue.icon || "alert",
-					color: "var(--color-red)"
-				},
-				...issue
-			}));
-		}
-	},
-	async created() {
-		// print exceptions from the update check to console for debugging
+	created() {
+		// print exceptions from the backend's update check
+		// to console for debugging
 		if (this.exceptions.length > 0) {
 			console.info(
 				"The following errors occurred during the update check of Kirby and/or plugins:"
 			);
 			this.exceptions.map((exception) => console.warn(exception));
 			console.info("End of errors from the update check.");
-		}
-
-		console.info(
-			"Running system health checks for the Panel system view; failed requests in the following console output are expected behavior."
-		);
-
-		// `Promise.all` as fallback for older browsers
-		const promiseAll = (Promise.allSettled || Promise.all).bind(Promise);
-
-		// call the check method on every URL in the `urls` object
-		const promises = Object.entries(this.urls).map(this.check);
-
-		await promiseAll(promises);
-
-		console.info(
-			`System health checks ended. ${this.accessible.length} issues with accessible files/folders found (see the security list in the system view).`
-		);
-	},
-	methods: {
-		async check([key, url]) {
-			if (!url) {
-				return false;
-			}
-
-			const result = await this.isAccessible(url);
-
-			if (result === true) {
-				this.accessible.push(key);
-			}
-		},
-		async isAccessible(url) {
-			const response = await fetch(url, { cache: "no-store" });
-			return response.status < 400;
-		},
-		retry() {
-			this.$go(window.location.href);
 		}
 	}
 };
