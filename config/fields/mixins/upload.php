@@ -25,9 +25,12 @@ return [
 			$uploads['accept'] = '*';
 
 			if ($template = $uploads['template'] ?? null) {
-				$file = new File([
+				// get parent object for upload target
+				$parent = $this->uploadParent($uploads['parent'] ?? null);
+
+				$file   = new File([
 					'filename' => 'tmp',
-					'parent'   => $this->model(),
+					'parent'   => $parent,
 					'template' => $template
 				]);
 
@@ -43,15 +46,7 @@ return [
 				throw new Exception('Uploads are disabled for this field');
 			}
 
-			$parent = $this->model();
-
-			if ($parentQuery = ($params['parent'] ?? null)) {
-				$parent = $parent->query($parentQuery);
-			}
-
-			if ($parent instanceof File) {
-				$parent = $parent->parent();
-			}
+			$parent = $this->uploadParent($params['parent'] ?? null);
 
 			return $api->upload(function ($source, $filename) use ($parent, $params, $map) {
 				$props = [
@@ -69,6 +64,19 @@ return [
 
 				return $map($file, $parent);
 			});
+		},
+		'uploadParent' => function (string $parentQuery = null) {
+			$parent = $this->model();
+
+			if ($parentQuery) {
+				$parent = $parent->query($parentQuery);
+			}
+
+			if ($parent instanceof File) {
+				$parent = $parent->parent();
+			}
+
+			return $parent;
 		}
 	]
 ];
