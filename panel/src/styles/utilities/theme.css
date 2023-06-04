@@ -22,6 +22,7 @@
 	--theme-color-l: var(--color-blue-l);
 }
 
+[data-theme="error"],
 [data-theme="negative"] {
 	--theme-color-h: var(--color-red-h);
 	--theme-color-s: var(--color-red-s);
