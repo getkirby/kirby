@@ -19,6 +19,7 @@ import SystemView from "./System/SystemView.vue";
 import TableUpdateStatusCell from "./System/TableUpdateStatusCell.vue";
 
 import UsersView from "./Users/UsersView.vue";
+import UsersRoleFilter from "./Users/UsersRoleFilter.vue";
 import UserView from "./Users/UserView.vue";
 import UserAvatar from "./Users/UserAvatar.vue";
 import UserProfile from "./Users/UserProfile.vue";
@@ -49,6 +50,7 @@ export default {
 		app.component("k-table-update-status-cell", TableUpdateStatusCell);
 
 		app.component("k-users-view", UsersView);
+		app.component("k-users-role-filter", UsersRoleFilter);
 		app.component("k-user-view", UserView);
 		app.component("k-user-avatar", UserAvatar);
 		app.component("k-user-profile", UserProfile);

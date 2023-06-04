@@ -10,7 +10,7 @@
 			<header class="k-bar k-field-header">
 				<slot name="label">
 					<label :for="input" class="k-label k-field-label">
-						{{ labelText }}
+						{{ label || " " }}
 						<abbr v-if="required" :title="$t('field.required')">*</abbr>
 					</label>
 				</slot>
@@ -52,12 +52,7 @@ export const props = {
 
 export default {
 	mixins: [props],
-	inheritAttrs: false,
-	computed: {
-		labelText() {
-			return this.label || " ";
-		}
-	}
+	inheritAttrs: false
 };
 </script>
 
