@@ -137,7 +137,7 @@ class View
 		$user = $kirby->user();
 
 		// user permissions
-		$permissions = $user ? $user->role()->permissions()->toArray() : [];
+		$permissions = $user?->role()->permissions()->toArray() ?? [];
 
 		// current content language
 		$language = $kirby->language();

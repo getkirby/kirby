@@ -360,7 +360,7 @@ class File
 		return F::modified(
 			$this->root(),
 			$format,
-			$handler ?? ($kirby ? $kirby->option('date.handler', 'date') : 'date')
+			$handler ?? $kirby?->option('date.handler', 'date') ?? 'date'
 		);
 	}
 

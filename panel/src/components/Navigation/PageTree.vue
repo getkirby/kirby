@@ -26,6 +26,11 @@ export default {
 			type: String
 		}
 	},
+	data() {
+		return {
+			state: []
+		};
+	},
 	async created() {
 		if (this.items) {
 			this.state = await this.load(this.items);
@@ -47,7 +52,7 @@ export default {
 	methods: {
 		async load(path) {
 			const { data } = await this.$api.get(path + "/children", {
-				select: "hasChildren,id,title,uuid",
+				select: "hasChildren,id,panelImage,title,uuid",
 				status: "all"
 			});
 
@@ -58,6 +63,7 @@ export default {
 
 				pages[id] = {
 					id,
+					icon: page.panelImage.icon,
 					label: page.title,
 					hasChildren: page.hasChildren,
 					children: "/pages/" + this.$api.pages.id(page.id),
