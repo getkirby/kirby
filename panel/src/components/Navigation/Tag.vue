@@ -6,10 +6,10 @@
 		@keydown.delete.prevent="remove"
 	>
 		<span class="k-tag-text"><slot /></span>
-		<k-icon
+		<k-icon-frame
 			v-if="removable"
 			class="k-tag-toggle"
-			type="cancel-small"
+			icon="cancel-small"
 			@click.native="remove"
 		/>
 	</span>
@@ -58,15 +58,15 @@ export default {
 .k-tag {
 	position: relative;
 	height: var(--tag-height);
-	font-size: var(--text-sm);
-	line-height: 1;
-	cursor: pointer;
-	background-color: var(--tag-color-back);
-	color: var(--tag-color-text);
-	border-radius: var(--tag-rounded);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	font-size: var(--text-sm);
+	line-height: 1;
+	color: var(--tag-color-text);
+	background-color: var(--tag-color-back);
+	border-radius: var(--tag-rounded);
+	cursor: pointer;
 	user-select: none;
 }
 .k-tag:focus {
@@ -86,8 +86,9 @@ export default {
 	color: rgba(255, 255, 255, 0.7);
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
-	padding-inline-end: 0.125rem;
+	padding-inline-end: 0.5rem;
 }
+
 [data-disabled="true"] .k-tag {
 	background-color: var(--tag-color-disabled-back);
 	color: var(--tag-color-disabled-text);
