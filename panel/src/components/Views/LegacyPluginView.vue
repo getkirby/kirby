@@ -1,6 +1,6 @@
 <template>
 	<k-panel-inside>
-		<component :is="view" />
+		<component :is="'k-' + id + '-plugin-view'" />
 	</k-panel-inside>
 </template>
 
@@ -8,11 +8,6 @@
 export default {
 	props: {
 		id: String
-	},
-	computed: {
-		view() {
-			return "k-" + this.id + "-plugin-view";
-		}
 	}
 };
 </script>
