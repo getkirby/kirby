@@ -2,32 +2,26 @@
 	<k-bar :data-is-local="$system.isLocal">
 		<p>{{ $t("license.unregistered") }}</p>
 
-		<k-button-group :buttons="buttons" :responsive="true" size="sm" />
-	</k-bar>
-</template>
-
-<script>
-export default {
-	computed: {
-		buttons() {
-			return [
+		<k-button-group
+			:buttons="[
 				{
-					icon: "key",
-					text: this.$t("license.register"),
-					title: this.$t("license.unregistered"),
-					click: () => this.$dialog("registration")
+					icon: 'key',
+					text: $t('license.register'),
+					title: $t('license.unregistered'),
+					click: () => $dialog('registration')
 				},
 				{
-					icon: "cart",
-					text: this.$t("license.buy"),
-					link: "https://getkirby.com/buy",
-					target: "_blank"
+					icon: 'cart',
+					text: $t('license.buy'),
+					link: 'https://getkirby.com/buy',
+					target: '_blank'
 				}
-			];
-		}
-	}
-};
-</script>
+			]"
+			:responsive="true"
+			size="sm"
+		/>
+	</k-bar>
+</template>
 
 <style scoped>
 .k-bar {
