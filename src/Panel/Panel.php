@@ -449,8 +449,7 @@ class Panel
 					$kirby   = App::instance();
 					$request = $kirby->request();
 					$query   = $request->get('query');
-					$limit   = (int)$request->get('limit', 10);
-					$limit ??= $kirby->option('panel.search.limit', 10);
+					$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
 					$page    = (int)$request->get('page', 1);
 
 					return $params['query']($query, $limit, $page);
