@@ -83,10 +83,7 @@
 	opacity: 0;
 }
 
-/** k-offscreen has been deprecated, use sr-only instead **/
-/** TODO: remove in 3.10 */
-.sr-only,
-.k-offscreen {
+.sr-only {
 	position: absolute;
 	width: 1px;
 	height: 1px;

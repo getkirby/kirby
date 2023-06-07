@@ -69,7 +69,8 @@ return [
 	'v'          => 'Kirby\Toolkit\V',
 	'xml'        => 'Kirby\Toolkit\Xml',
 
-	// TODO: remove in 4.0.0
+	// Deprecated aliases:
+	// Any of these might be removed  at any point in the future
 	'kirby\cms\asset'          => 'Kirby\Filesystem\Asset',
 	'kirby\cms\dir'            => 'Kirby\Filesystem\Dir',
 	'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',

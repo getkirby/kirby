@@ -62,7 +62,8 @@ class File
 		array|string $props = null,
 		string $url = null
 	) {
-		// Support for old $props constructor
+		// Legacy support for old constructor of
+		// the `Kirby\Image\Image` class
 		if (is_array($props) === false) {
 			$props = [
 				'root' => $props,
