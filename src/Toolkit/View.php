@@ -18,22 +18,13 @@ use Throwable;
 class View
 {
 	/**
-	 * The absolute path to the view file
-	 */
-	protected string $file;
-
-	/**
-	 * The view data
-	 */
-	protected array $data = [];
-
-	/**
 	 * Creates a new view object
 	 */
-	public function __construct(string $file, array $data = [])
-	{
-		$this->file = $file;
-		$this->data = $data;
+	public function __construct(
+		// The absolute path to the view file
+		protected string $file,
+		protected array $data = []
+	) {
 	}
 
 	/**

@@ -49,7 +49,7 @@ class LayoutField extends BlocksField
 		$settings = $this->settings();
 
 		return new Form([
-			'fields' => $settings ? $settings->fields() : [],
+			'fields' => $settings?->fields() ?? [],
 			'model'  => $this->model,
 			'strict' => true,
 			'values' => $input,
@@ -66,7 +66,7 @@ class LayoutField extends BlocksField
 		$settings = $this->settings();
 
 		return array_merge(parent::props(), [
-			'settings' => $settings !== null ? $settings->toArray() : null,
+			'settings' => $settings?->toArray(),
 			'layouts'  => $this->layouts()
 		]);
 	}
