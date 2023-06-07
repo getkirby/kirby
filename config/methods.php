@@ -286,12 +286,9 @@ return function (App $app) {
 
 		/**
 		 * Turns the field value into an absolute Url
-		 *
-		 * @param \Kirby\Cms\Field $field
-		 * @return string
 		 */
-		'toUrl' => function (Field $field): string {
-			return Url::to($field->value);
+		'toUrl' => function (Field $field): string|null {
+			return $field->value ? Url::to($field->value) : null;
 		},
 
 		/**
