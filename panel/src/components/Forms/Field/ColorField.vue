@@ -178,8 +178,8 @@ export default {
 .k-color-field-picker {
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacing-3, 0.75rem);
-	padding: var(--spacing-2, 0.5rem);
+	gap: var(--spacing-3);
+	padding: var(--spacing-2);
 }
 
 .k-color-field .k-color {
@@ -190,11 +190,7 @@ export default {
 	display: flex;
 	justify-content: flex-start;
 	flex-wrap: wrap;
-	gap: var(--spacing-3, 0.75rem);
-}
-
-.k-dropdown .k-color-field-options {
-	justify-content: space-around;
+	gap: 0.6rem; /* this will allow for eaxctly 6 options in the 12rem width */
 }
 
 .k-color-field .k-color-preview {
