@@ -25,7 +25,7 @@
 			</template>
 		</k-items>
 
-		<footer class="k-bar k-collection-footer">
+		<footer v-if="help || hasPagination" class="k-bar k-collection-footer">
 			<k-text class="k-help k-collection-help" :html="help" />
 			<!--
 				Emitted when the pagination changes
