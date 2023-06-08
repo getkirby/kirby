@@ -717,10 +717,9 @@ class Str
 	 * Replaces all or some occurrences of the search string with the replacement string
 	 * Extension of the str_replace() function in PHP with an additional $limit parameter
 	 *
-	 * @param string|array $string String being replaced on (haystack);
-	 *                             can be an array of multiple subject strings
-	 * @param string|array $search Value being searched for (needle)
-	 * @param string|array $replace Value to replace matches with
+	 * @param string|array|Collection $string String being replaced on (haystack); can be an array of multiple subject strings
+	 * @param string|array|Collection $search Value being searched for (needle)
+	 * @param string|array|Collection $replace Value to replace matches with
 	 * @param int|array $limit Maximum possible replacements for each search value;
 	 *                         multiple limits for each search value are supported;
 	 *                         defaults to no limit
