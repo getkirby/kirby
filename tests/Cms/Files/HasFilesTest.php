@@ -10,14 +10,12 @@ class HasFileTraitUser
 {
 	use HasFiles;
 
-	protected $files;
-
 	public function __construct($files)
 	{
 		$this->files = $files;
 	}
 
-	public function files()
+	public function files(): Files
 	{
 		return new Files($this->files);
 	}
@@ -175,8 +173,7 @@ class HasFilesTest extends TestCase
 		]);
 
 		// no files
-		$parent = new HasFileTraitUser([
-		]);
+		$parent = new HasFileTraitUser([]);
 
 		$this->assertFalse($parent->hasFiles());
 

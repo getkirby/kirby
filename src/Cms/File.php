@@ -3,10 +3,10 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -40,58 +40,63 @@ class File extends ModelWithContent
 	public const CLASS_ALIAS = 'file';
 
 	/**
+	 * All registered file methods
+	 */
+	public static array $methods = [];
+
+	/**
 	 * Cache for the initialized blueprint object
 	 */
 	protected FileBlueprint|null $blueprint = null;
 
-	/**
-	 * @var string
-	 */
-	protected $filename;
+	protected string $filename;
 
-	/**
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * All registered file methods
-	 *
-	 * @var array
-	 */
-	public static $methods = [];
+	protected string $id;
 
 	/**
 	 * The parent object
-	 *
-	 * @var \Kirby\Cms\Model
 	 */
-	protected $parent;
+	protected Page|Site|User|null $parent = null;
 
 	/**
 	 * The absolute path to the file
 	 */
-	protected string|null $root = null;
+	protected string|null $root;
 
-	/**
-	 * @var string
-	 */
-	protected $template;
+	protected string|null $template;
 
 	/**
 	 * The public file Url
 	 */
-	protected string|null $url = null;
+	protected string|null $url;
+
+	/**
+	 * Creates a new File object
+	 */
+	public function __construct(array $props)
+	{
+		parent::__construct($props);
+
+		if (isset($props['filename'], $props['parent']) === false) {
+			throw new InvalidArgumentException('The filename and parent are required');
+		}
+
+		$this->filename = $props['filename'];
+		$this->parent   = $props['parent'];
+		$this->template = $props['template'] ?? null;
+		// Always set the root to null, to invoke
+		// auto root detection
+		$this->root     = null;
+		$this->url      = $props['url'] ?? null;
+
+		$this->setBlueprint($props['blueprint'] ?? null);
+	}
 
 	/**
 	 * Magic caller for file methods
 	 * and content fields. (in this order)
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -113,24 +118,7 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Creates a new File object
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props)
-	{
-		// set filename as the most important prop first
-		// TODO: refactor later to avoid redundant prop setting
-		$this->setProperty('filename', $props['filename'] ?? null, true);
-
-		// set other properties
-		$this->setProperties($props);
-	}
-
-	/**
 	 * Improved `var_dump` output
-	 *
-	 * @return array
 	 */
 	public function __debugInfo(): array
 	{
@@ -142,10 +130,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the url to api endpoint
-	 *
 	 * @internal
-	 * @param bool $relative
-	 * @return string
 	 */
 	public function apiUrl(bool $relative = false): string
 	{
@@ -291,7 +276,6 @@ class File extends ModelWithContent
 	/**
 	 * Store the template in addition to the
 	 * other content.
-	 *
 	 * @internal
 	 */
 	public function contentFileData(
@@ -313,9 +297,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the directory in which
 	 * the content file is located
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function contentFileDirectory(): string
 	{
@@ -324,9 +306,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Filename for the content file
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function contentFileName(): string
 	{
@@ -347,8 +327,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the filename with extension
-	 *
-	 * @return string
 	 */
 	public function filename(): string
 	{
@@ -367,9 +345,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Converts the file to html
-	 *
-	 * @param array $attr
-	 * @return string
 	 */
 	public function html(array $attr = []): string
 	{
@@ -381,30 +356,21 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
-		if ($this->id !== null) {
-			return $this->id;
-		}
-
 		if (
 			$this->parent() instanceof Page ||
 			$this->parent() instanceof User
 		) {
-			return $this->id = $this->parent()->id() . '/' . $this->filename();
+			return $this->id ??= $this->parent()->id() . '/' . $this->filename();
 		}
 
-		return $this->id = $this->filename();
+		return $this->id ??= $this->filename();
 	}
 
 	/**
 	 * Compares the current object with the given file object
-	 *
-	 * @param \Kirby\Cms\File $file
-	 * @return bool
 	 */
 	public function is(File $file): bool
 	{
@@ -413,8 +379,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Check if the file can be read by the current user
-	 *
-	 * @return bool
 	 */
 	public function isReadable(): bool
 	{
@@ -427,9 +391,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a unique media hash
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaHash(): string
 	{
@@ -438,9 +400,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute path to the file in the public media folder
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaRoot(): string
 	{
@@ -449,9 +409,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a non-guessable token string for this file
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaToken(): string
 	{
@@ -461,9 +419,7 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute Url to the file in the public media folder
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function mediaUrl(): string
 	{
@@ -493,7 +449,6 @@ class File extends ModelWithContent
 	 * of the content file
 	 *
 	 * @param string|null $languageCode
-	 * @return int
 	 */
 	protected function modifiedContent(string $languageCode = null): int
 	{
@@ -503,8 +458,6 @@ class File extends ModelWithContent
 	/**
 	 * Timestamp of the last modification
 	 * of the source file
-	 *
-	 * @return int
 	 */
 	protected function modifiedFile(): int
 	{
@@ -536,20 +489,16 @@ class File extends ModelWithContent
 	}
 
 	/**
-	 * Returns the parent Model object
-	 *
-	 * @return \Kirby\Cms\Model
+	 * Returns the parent object
 	 */
-	public function parent()
+	public function parent(): Page|Site|User
 	{
 		return $this->parent ??= $this->kirby()->site();
 	}
 
 	/**
 	 * Returns the parent id if a parent exists
-	 *
 	 * @internal
-	 * @return string
 	 */
 	public function parentId(): string
 	{
@@ -591,8 +540,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the absolute root to the file
-	 *
-	 * @return string|null
 	 */
 	public function root(): string|null
 	{
@@ -613,75 +560,15 @@ class File extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
 			$this->blueprint = new FileBlueprint($blueprint);
 		}
 
-		return $this;
-	}
-
-	/**
-	 * Sets the filename
-	 *
-	 * @param string $filename
-	 * @return $this
-	 */
-	protected function setFilename(string $filename)
-	{
-		$this->filename = $filename;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent model object
-	 *
-	 * @param \Kirby\Cms\Model $parent
-	 * @return $this
-	 */
-	protected function setParent(Model $parent)
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * Always set the root to null, to invoke
-	 * auto root detection
-	 *
-	 * @param string|null $root
-	 * @return $this
-	 */
-	protected function setRoot(string $root = null)
-	{
-		$this->root = null;
-		return $this;
-	}
-
-	/**
-	 * @param string|null $template
-	 * @return $this
-	 */
-	protected function setTemplate(string $template = null)
-	{
-		$this->template = $template;
-		return $this;
-	}
-
-	/**
-	 * Sets the url
-	 *
-	 * @param string|null $url
-	 * @return $this
-	 */
-	protected function setUrl(string $url = null)
-	{
-		$this->url = $url;
 		return $this;
 	}
 
@@ -712,8 +599,6 @@ class File extends ModelWithContent
 
 	/**
 	 * Returns the final template
-	 *
-	 * @return string|null
 	 */
 	public function template(): string|null
 	{
@@ -735,18 +620,17 @@ class File extends ModelWithContent
 	 * Extended info for the array export
 	 * by injecting the information from
 	 * the asset.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
-		return array_merge($this->asset()->toArray(), parent::toArray());
+		return array_merge(parent::toArray(), $this->asset()->toArray(), [
+			'id'       => $this->id(),
+			'template' => $this->template(),
+		]);
 	}
 
 	/**
 	 * Returns the Url
-	 *
-	 * @return string
 	 */
 	public function url(): string
 	{
@@ -757,8 +641,6 @@ class File extends ModelWithContent
 	 * Simplified File URL that uses the parent
 	 * Page URL and the filename as a more stable
 	 * alternative for the media URLs.
-	 *
-	 * @return string
 	 */
 	public function previewUrl(): string
 	{

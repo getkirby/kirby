@@ -7,6 +7,8 @@ use ReflectionMethod;
 
 /**
  * Properties
+ * @deprecated 4.0.0 Will be remove in Kirby 5
+ * @codeCoverageIgnore
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>

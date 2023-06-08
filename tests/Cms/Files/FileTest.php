@@ -31,7 +31,8 @@ class FileTest extends TestCase
 
 	protected function file(array $props = [])
 	{
-		return new File(array_merge($this->defaults($props['kirby'] ?? null), $props));
+		$defaults = $this->defaults($props['kirby'] ?? null);
+		return new File(array_merge($defaults, $props));
 	}
 
 	public function testAsset()

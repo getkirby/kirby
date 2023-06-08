@@ -209,7 +209,6 @@ class Collection extends BaseCollection
 	 * or ids and then search accordingly.
 	 *
 	 * @param string|object $needle
-	 * @return int|false
 	 */
 	public function indexOf($needle): int|false
 	{
@@ -258,13 +257,14 @@ class Collection extends BaseCollection
 		$this->pagination = Pagination::for($this, ...$arguments);
 
 		// slice and clone the collection according to the pagination
-		return $this->slice($this->pagination->offset(), $this->pagination->limit());
+		return $this->slice(
+			$this->pagination->offset(),
+			$this->pagination->limit()
+		);
 	}
 
 	/**
 	 * Returns the parent model
-	 *
-	 * @return \Kirby\Cms\Model
 	 */
 	public function parent()
 	{
@@ -344,13 +344,11 @@ class Collection extends BaseCollection
 
 	/**
 	 * Searches the collection
-	 *
-	 * @param string|null $query
-	 * @param array $params
-	 * @return self
 	 */
-	public function search(string $query = null, $params = [])
-	{
+	public function search(
+		string $query = null,
+		string|array $params = []
+	): static {
 		return Search::collection($this, $query, $params);
 	}
 

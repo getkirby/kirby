@@ -21,7 +21,7 @@ describe("PageView", () => {
 
 		it("should display correctly", () => {
 			// Title
-			cy.get(".k-headline-editable").should("contain", "Photography");
+			cy.get("[data-editable] .k-headline").should("contain", "Photography");
 			cy.get(".k-topbar-breadcrumb a:last-child").should(
 				"contain",
 				"Photography"
@@ -58,7 +58,7 @@ describe("PageView", () => {
 			dialog().submit();
 
 			cy.url().should("contain", "/pages/photography+portraits");
-			cy.get(".k-headline-editable").should("contain", "Portraits");
+			cy.get("[data-editable] .k-headline").should("contain", "Portraits");
 			cy.get(".k-status-icon").should("contain", "Draft");
 		});
 

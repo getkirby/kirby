@@ -23,25 +23,41 @@ use Throwable;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent extends Model implements Identifiable
+abstract class ModelWithContent implements Identifiable
 {
+	/**
+	 * Each model must define a CLASS_ALIAS
+	 * which will be used in template queries.
+	 * The CLASS_ALIAS is a short human-readable
+	 * version of the class name, i.e. page.
+	 */
+	public const CLASS_ALIAS = null;
+
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
 	 */
 	public array|null $blueprints = null;
 
-	/**
-	 * The content
-	 *
-	 * @var \Kirby\Cms\Content
-	 */
-	public $content;
+	public Content|null $content;
+	public static App $kirby;
+	protected Site|null $site;
+	public Collection|null $translations;
 
 	/**
-	 * @var \Kirby\Cms\Translations
+	 * Store values used to initilaize object
 	 */
-	public $translations;
+	protected array $propertyData = [];
+
+	public function __construct(array $props = [])
+	{
+		$this->site = $props['site'] ?? null;
+
+		$this->setContent($props['content'] ?? null);
+		$this->setTranslations($props['translations'] ?? null);
+
+		$this->propertyData = $props;
+	}
 
 	/**
 	 * Returns the blueprint of the model
@@ -83,6 +99,17 @@ abstract class ModelWithContent extends Model implements Identifiable
 		}
 
 		return $this->blueprints ??= $toBlueprints($blueprint->sections());
+	}
+
+	/**
+	 * Creates a new instance with the same
+	 * initial properties
+	 *
+	 * @todo eventually refactor without need of propertyData
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_replace_recursive($this->propertyData, $props));
 	}
 
 	/**
@@ -330,6 +357,33 @@ abstract class ModelWithContent extends Model implements Identifiable
 	}
 
 	/**
+	 * Creates a clone and fetches all
+	 * lazy-loaded getters to get a full copy
+	 */
+	public function hardcopy(): static
+	{
+		$clone = $this->clone();
+
+		foreach (get_object_vars($clone) as $name => $default) {
+			if (method_exists($clone, $name) === true) {
+				$clone->$name();
+			}
+		}
+
+		return $clone;
+	}
+
+	/**
+	 * Each model must return a unique id
+	 *
+	 * @return string|null
+	 */
+	public function id()
+	{
+		return null;
+	}
+
+	/**
 	 * Increment a given field value
 	 *
 	 * @param string $field
@@ -367,6 +421,16 @@ abstract class ModelWithContent extends Model implements Identifiable
 	public function isValid(): bool
 	{
 		return Form::for($this)->hasErrors() === false;
+	}
+
+	/**
+	 * Returns the parent Kirby instance
+	 *
+	 * @return \Kirby\Cms\App
+	 */
+	public function kirby()
+	{
+		return static::$kirby ??= App::instance();
 	}
 
 	/**
@@ -574,10 +638,9 @@ abstract class ModelWithContent extends Model implements Identifiable
 	/**
 	 * Sets the Content object
 	 *
-	 * @param array|null $content
 	 * @return $this
 	 */
-	protected function setContent(array $content = null)
+	protected function setContent(array $content = null): static
 	{
 		if ($content !== null) {
 			$content = new Content($content, $this);
@@ -603,9 +666,32 @@ abstract class ModelWithContent extends Model implements Identifiable
 				$translation = new ContentTranslation($props);
 				$this->translations->data[$translation->code()] = $translation;
 			}
+		} else {
+			$this->translations = null;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Returns the parent Site instance
+	 *
+	 * @return \Kirby\Cms\Site
+	 */
+	public function site()
+	{
+		return $this->site ??= $this->kirby()->site();
+	}
+
+	/**
+	 * Convert the model to a simple array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'content'      => $this->content()->toArray(),
+			'translations' => $this->translations()->toArray()
+		];
 	}
 
 	/**
@@ -651,6 +737,17 @@ abstract class ModelWithContent extends Model implements Identifiable
 		], $data), ['fallback' => $fallback]);
 
 		return $result;
+	}
+
+	/**
+	 * Makes it possible to convert the entire model
+	 * to a string. Mostly useful for debugging
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->id();
 	}
 
 	/**

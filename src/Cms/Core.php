@@ -22,13 +22,11 @@ namespace Kirby\Cms;
 class Core
 {
 	protected array $cache = [];
-	protected App $kirby;
 	protected string $root;
 
-	public function __construct(App $kirby)
+	public function __construct(protected App $kirby)
 	{
-		$this->kirby = $kirby;
-		$this->root  = dirname(__DIR__, 2) . '/config';
+		$this->root = dirname(__DIR__, 2) . '/config';
 	}
 
 	/**

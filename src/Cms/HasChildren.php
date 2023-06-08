@@ -18,72 +18,40 @@ trait HasChildren
 {
 	/**
 	 * The list of available published children
-	 *
-	 * @var \Kirby\Cms\Pages|null
 	 */
-	public $children;
+	public Pages|null $children = null;
 
 	/**
 	 * The list of available draft children
-	 *
-	 * @var \Kirby\Cms\Pages|null
 	 */
-	public $drafts;
+	public Pages|null $drafts = null;
 
 	/**
 	 * The combined list of available published
 	 * and draft children
-	 *
-	 * @var \Kirby\Cms\Pages|null
 	 */
-	public $childrenAndDrafts;
+	public Pages|null $childrenAndDrafts = null;
 
 	/**
 	 * Returns all published children
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function children()
+	public function children(): Pages
 	{
-		if ($this->children instanceof Pages) {
-			return $this->children;
-		}
-
-		return $this->children = Pages::factory($this->inventory()['children'], $this);
+		return $this->children ??= Pages::factory($this->inventory()['children'], $this);
 	}
 
 	/**
 	 * Returns all published and draft children at the same time
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function childrenAndDrafts()
+	public function childrenAndDrafts(): Pages
 	{
-		if ($this->childrenAndDrafts instanceof Pages) {
-			return $this->childrenAndDrafts;
-		}
-
-		return $this->childrenAndDrafts = $this->children()->merge($this->drafts());
-	}
-
-	/**
-	 * Returns a list of IDs for the model's
-	 * `toArray` method
-	 *
-	 * @return array
-	 */
-	protected function convertChildrenToArray(): array
-	{
-		return $this->children()->keys();
+		return $this->childrenAndDrafts ??= $this->children()->merge($this->drafts());
 	}
 
 	/**
 	 * Searches for a draft child by ID
-	 *
-	 * @param string $path
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function draft(string $path)
+	public function draft(string $path): Page|null
 	{
 		$path = str_replace('_drafts/', '', $path);
 
@@ -113,10 +81,8 @@ trait HasChildren
 
 	/**
 	 * Returns all draft children
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function drafts()
+	public function drafts(): Pages
 	{
 		if ($this->drafts instanceof Pages) {
 			return $this->drafts;
@@ -137,40 +103,30 @@ trait HasChildren
 
 	/**
 	 * Finds one or multiple published children by ID
-	 *
-	 * @param string ...$arguments
-	 * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
 	 */
-	public function find(...$arguments)
+	public function find(string|array ...$arguments): Page|Pages|null
 	{
 		return $this->children()->find(...$arguments);
 	}
 
 	/**
 	 * Finds a single published or draft child
-	 *
-	 * @param string $path
-	 * @return \Kirby\Cms\Page|null
 	 */
-	public function findPageOrDraft(string $path)
+	public function findPageOrDraft(string $path): Page|null
 	{
 		return $this->children()->find($path) ?? $this->drafts()->find($path);
 	}
 
 	/**
 	 * Returns a collection of all published children of published children
-	 *
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function grandChildren()
+	public function grandChildren(): Pages
 	{
 		return $this->children()->children();
 	}
 
 	/**
 	 * Checks if the model has any published children
-	 *
-	 * @return bool
 	 */
 	public function hasChildren(): bool
 	{
@@ -179,8 +135,6 @@ trait HasChildren
 
 	/**
 	 * Checks if the model has any draft children
-	 *
-	 * @return bool
 	 */
 	public function hasDrafts(): bool
 	{
@@ -189,8 +143,6 @@ trait HasChildren
 
 	/**
 	 * Checks if the page has any listed children
-	 *
-	 * @return bool
 	 */
 	public function hasListedChildren(): bool
 	{
@@ -199,8 +151,6 @@ trait HasChildren
 
 	/**
 	 * Checks if the page has any unlisted children
-	 *
-	 * @return bool
 	 */
 	public function hasUnlistedChildren(): bool
 	{
@@ -211,9 +161,8 @@ trait HasChildren
 	 * Creates a flat child index
 	 *
 	 * @param bool $drafts If set to `true`, draft children are included
-	 * @return \Kirby\Cms\Pages
 	 */
-	public function index(bool $drafts = false)
+	public function index(bool $drafts = false): Pages
 	{
 		if ($drafts === true) {
 			return $this->childrenAndDrafts()->index($drafts);
@@ -225,10 +174,9 @@ trait HasChildren
 	/**
 	 * Sets the published children collection
 	 *
-	 * @param array|null $children
 	 * @return $this
 	 */
-	protected function setChildren(array $children = null)
+	protected function setChildren(array $children = null): static
 	{
 		if ($children !== null) {
 			$this->children = Pages::factory($children, $this);
@@ -240,10 +188,9 @@ trait HasChildren
 	/**
 	 * Sets the draft children collection
 	 *
-	 * @param array|null $drafts
 	 * @return $this
 	 */
-	protected function setDrafts(array $drafts = null)
+	protected function setDrafts(array $drafts = null): static
 	{
 		if ($drafts !== null) {
 			$this->drafts = Pages::factory($drafts, $this, true);

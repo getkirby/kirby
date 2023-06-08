@@ -42,8 +42,11 @@ class Template
 	/**
 	 * Creates a new template object
 	 */
-	public function __construct(string $name, string $type = 'html', string $defaultType = 'html')
-	{
+	public function __construct(
+		string $name,
+		string $type = 'html',
+		string $defaultType = 'html'
+	) {
 		$this->name = strtolower($name);
 		$this->type = $type;
 		$this->defaultType = $defaultType;
@@ -98,8 +101,8 @@ class Template
 		$root      = $this->root();
 
 		if ($this->hasDefaultType() === true) {
+			// Try the default template in the default template directory
 			try {
-				// Try the default template in the default template directory.
 				return F::realpath($root . '/' . $name . '.' . $extension, $root);
 			} catch (Exception) {
 				// ignore errors, continue searching
@@ -115,11 +118,13 @@ class Template
 
 		$name .= '.' . $this->type();
 
+		// Try the template with type extension
+		// in the default template directory
 		try {
-			// Try the template with type extension in the default template directory.
 			return F::realpath($root . '/' . $name . '.' . $extension, $root);
 		} catch (Exception) {
-			// Look for the template with type extension provided by an extension.
+			// Look for the template with type extension
+			// provided by an extension.
 			// This might be null if the template does not exist.
 			return App::instance()->extension($store, $name);
 		}

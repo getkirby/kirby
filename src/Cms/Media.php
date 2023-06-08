@@ -25,14 +25,12 @@ class Media
 	/**
 	 * Tries to find a file by model and filename
 	 * and to copy it to the media folder.
-	 *
-	 * @param \Kirby\Cms\Model|null $model
-	 * @param string $hash
-	 * @param string $filename
-	 * @return \Kirby\Cms\Response|false
 	 */
-	public static function link(Model $model = null, string $hash, string $filename)
-	{
+	public static function link(
+		Page|Site|User $model = null,
+		string $hash,
+		string $filename
+	): Response|false {
 		if ($model === null) {
 			return false;
 		}
@@ -89,14 +87,12 @@ class Media
 	 * Tries to find a job file for the
 	 * given filename and then calls the thumb
 	 * component to create a thumbnail accordingly
-	 *
-	 * @param \Kirby\Cms\Model|string $model
-	 * @param string $hash
-	 * @param string $filename
-	 * @return \Kirby\Cms\Response
 	 */
-	public static function thumb($model, string $hash, string $filename)
-	{
+	public static function thumb(
+		File|Page|Site|User|string $model,
+		string $hash,
+		string $filename
+	): Response|false {
 		$kirby = App::instance();
 
 		$root = match (true) {

@@ -1,5 +1,5 @@
 <template>
-	<div class="k-block-title" v-on="$listeners">
+	<div class="k-block-title">
 		<k-icon :type="icon" class="k-block-icon" />
 		<span class="k-block-name">
 			{{ name }}

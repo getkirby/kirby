@@ -44,7 +44,7 @@ class Section extends Component
 			throw new InvalidArgumentException('Undefined section model');
 		}
 
-		if ($attrs['model'] instanceof Model === false) {
+		if ($attrs['model'] instanceof ModelWithContent === false) {
 			throw new InvalidArgumentException('Invalid section model');
 		}
 
@@ -64,25 +64,16 @@ class Section extends Component
 		return $this->errors ?? [];
 	}
 
-	/**
-	 * @return \Kirby\Cms\App
-	 */
-	public function kirby()
+	public function kirby(): App
 	{
 		return $this->model()->kirby();
 	}
 
-	/**
-	 * @return \Kirby\Cms\Model
-	 */
-	public function model()
+	public function model(): ModelWithContent
 	{
 		return $this->model;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function toArray(): array
 	{
 		$array = parent::toArray();

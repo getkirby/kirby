@@ -162,8 +162,8 @@ class PageTest extends TestCase
 
 	public function testEmptyId()
 	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The property "slug" is required');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page slug is required');
 
 		$page = new Page(['slug' => null]);
 	}
@@ -243,7 +243,7 @@ class PageTest extends TestCase
 
 		$page = new Page([
 			'slug'  => 'test',
-			'num' => []
+			'num'   => []
 		]);
 	}
 
@@ -320,7 +320,7 @@ class PageTest extends TestCase
 	{
 		$this->expectException('TypeError');
 
-		$page = new Page([
+		new Page([
 			'slug'     => 'test/child',
 			'parent' => 'some parent'
 		]);
@@ -993,8 +993,9 @@ class PageTest extends TestCase
 		]);
 
 		$expected = [
-			'children' => [],
 			'content' => [],
+			'translations' => [],
+			'children' => [],
 			'files' => [],
 			'id' => 'test',
 			'mediaUrl' => '/media/pages/test',
@@ -1003,7 +1004,6 @@ class PageTest extends TestCase
 			'parent' => null,
 			'slug' => 'test',
 			'template' => $page->template(),
-			'translations' => [],
 			'uid' => 'test',
 			'uri' => 'test',
 			'url' => '/test',

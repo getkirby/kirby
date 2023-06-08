@@ -8,7 +8,7 @@
 		:target="target"
 		:title="title"
 		class="k-link"
-		v-on="listeners"
+		@click="onClick"
 	>
 		<slot />
 	</a>
@@ -40,15 +40,7 @@ export default {
 		 */
 		to: [String, Function]
 	},
-	data() {
-		return {
-			relAttr: this.target === "_blank" ? "noreferrer noopener" : this.rel,
-			listeners: {
-				...this.$listeners,
-				click: this.onClick
-			}
-		};
-	},
+	emits: ["click"],
 	computed: {
 		href() {
 			if (typeof this.to === "function") {
@@ -68,6 +60,9 @@ export default {
 			}
 
 			return this.to;
+		},
+		relAttr() {
+			return this.target === "_blank" ? "noreferrer noopener" : this.rel;
 		}
 	},
 	methods: {

@@ -4,7 +4,7 @@
 			<k-block-title
 				:content="values"
 				:fieldset="fieldset"
-				@dblclick="$emit('open', tab)"
+				@dblclick.native="$emit('open', tab)"
 			/>
 			<k-drawer-tabs :tab="tab" :tabs="fieldset.tabs" @open="tab = $event" />
 		</header>
