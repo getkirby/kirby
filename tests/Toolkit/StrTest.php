@@ -2,10 +2,12 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
 use IntlDateFormatter;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Query\TestUser as QueryTestUser;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * @coversDefaultClass \Kirby\Toolkit\Str
@@ -733,7 +735,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid1()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replace('some string', 'string', ['array'], 1);
 	}
@@ -743,8 +745,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid2()
 	{
-		$this->expectException('Exception');
-
+		$this->expectException(TypeError::class);
 		Str::replace('some string', 'string', 'other string', 'some invalid string as limit');
 	}
 
@@ -753,7 +754,7 @@ class StrTest extends TestCase
 	 */
 	public function testReplaceInvalid3()
 	{
-		$this->expectException('Exception');
+		$this->expectException(Exception::class);
 
 		Str::replace('some string', ['some', 'string'], 'other string', [1, 'string']);
 	}
