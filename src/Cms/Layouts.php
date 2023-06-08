@@ -22,10 +22,8 @@ class Layouts extends Items
 
 	/**
 	 * All registered layouts methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	public static function factory(array $items = null, array $params = [])
 	{

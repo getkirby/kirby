@@ -5,20 +5,20 @@
 				:title="$t('copy')"
 				class="k-block-options-button"
 				icon="template"
-				@click.prevent="$emit('copy')"
+				@click="$emit('copy')"
 			/>
 			<k-button
 				v-if="isMergable"
 				:title="$t('merge')"
 				class="k-block-options-button"
 				icon="merge"
-				@click.prevent="$emit('merge')"
+				@click="$emit('merge')"
 			/>
 			<k-button
 				:title="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
-				@click.prevent="$emit('confirmToRemoveSelected')"
+				@click="$emit('confirmToRemove')"
 			/>
 		</template>
 		<template v-else>
@@ -52,8 +52,8 @@
 				:title="$t('sort.drag')"
 				class="k-block-options-button k-sort-handle"
 				icon="sort"
-				@keydown.up.prevent="$emit('sortUp')"
-				@keydown.down.prevent="$emit('sortDown')"
+				@keydown.native.up.prevent="$emit('sortUp')"
+				@keydown.native.down.prevent="$emit('sortDown')"
 			/>
 			<k-dropdown-content ref="options" align="right">
 				<k-dropdown-item

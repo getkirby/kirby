@@ -237,7 +237,7 @@ class SiteTest extends TestCase
 		$site = new Site();
 		$data = $site->toArray();
 
-		$this->assertCount(8, $data);
+		$this->assertCount(9, $data);
 		$this->assertArrayHasKey('children', $data);
 		$this->assertArrayHasKey('content', $data);
 		$this->assertArrayHasKey('errorPage', $data);
@@ -245,6 +245,7 @@ class SiteTest extends TestCase
 		$this->assertArrayHasKey('homePage', $data);
 		$this->assertArrayHasKey('page', $data);
 		$this->assertArrayHasKey('title', $data);
+		$this->assertArrayHasKey('translations', $data);
 		$this->assertArrayHasKey('url', $data);
 
 		$this->assertSame([], $data['children']);
@@ -254,6 +255,7 @@ class SiteTest extends TestCase
 		$this->assertFalse($data['homePage']);
 		$this->assertFalse($data['page']);
 		$this->assertNull($data['title']);
+		$this->assertSame([], $data['translations']);
 		$this->assertSame('/', $data['url']);
 	}
 

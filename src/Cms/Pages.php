@@ -41,10 +41,8 @@ class Pages extends Collection
 
 	/**
 	 * All registered pages methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Adds a single page or
@@ -151,14 +149,12 @@ class Pages extends Collection
 
 	/**
 	 * Creates a pages collection from an array of props
-	 *
-	 * @param array $pages
-	 * @param \Kirby\Cms\Model|null $model
-	 * @param bool|null $draft
-	 * @return static
 	 */
-	public static function factory(array $pages, Model $model = null, bool $draft = null)
-	{
+	public static function factory(
+		array $pages,
+		Page|Site $model = null,
+		bool $draft = null
+	): static {
 		$model  ??= App::instance()->site();
 		$children = new static([], $model);
 		$kirby    = $model->kirby();

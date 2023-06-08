@@ -1,5 +1,5 @@
 <template>
-	<component :is="component" v-bind="attrs" class="k-button" v-on="listeners">
+	<component :is="component" v-bind="attrs" class="k-button" @click="onClick">
 		<k-icon v-if="icon" :type="icon" />
 
 		<span v-if="text || $slots.default" class="k-button-text">
@@ -171,12 +171,6 @@ export default {
 			}
 
 			return "button";
-		},
-		listeners() {
-			return {
-				...this.$listeners,
-				click: this.onClick
-			};
 		}
 	},
 	methods: {

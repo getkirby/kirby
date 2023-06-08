@@ -10,7 +10,6 @@
 		:title="tooltip"
 		:type="type"
 		class="k-button"
-		v-on="$listeners"
 		@click="click"
 	>
 		<k-icon v-if="icon" :type="icon" :alt="tooltip" class="k-button-icon" />

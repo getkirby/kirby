@@ -11,6 +11,7 @@ use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
+use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 
 /**
@@ -27,132 +28,121 @@ use Kirby\Toolkit\A;
  */
 class Page extends ModelWithContent
 {
-	use PageActions;
-	use PageSiblings;
 	use HasChildren;
 	use HasFiles;
 	use HasMethods;
 	use HasSiblings;
+	use PageActions;
+	use PageSiblings;
 
 	public const CLASS_ALIAS = 'page';
 
 	/**
 	 * All registered page methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Registry with all Page models
-	 *
-	 * @var array
 	 */
-	public static $models = [];
+	public static array $models = [];
 
 	/**
 	 * The PageBlueprint object
-	 *
-	 * @var \Kirby\Cms\PageBlueprint
 	 */
-	protected $blueprint;
+	protected PageBlueprint|null $blueprint = null;
 
 	/**
 	 * Nesting level
-	 *
-	 * @var int
 	 */
-	protected $depth;
+	protected int $depth;
 
 	/**
 	 * Sorting number + slug
-	 *
-	 * @var string
 	 */
-	protected $dirname;
+	protected string|null $dirname;
 
 	/**
 	 * Path of dirnames
-	 *
-	 * @var string
 	 */
-	protected $diruri;
+	protected string|null $diruri = null;
 
 	/**
 	 * Draft status flag
-	 *
-	 * @var bool
 	 */
-	protected $isDraft;
+	protected bool $isDraft;
 
 	/**
 	 * The Page id
-	 *
-	 * @var string
 	 */
-	protected $id;
+	protected string|null $id = null;
 
 	/**
 	 * The template, that should be loaded
 	 * if it exists
-	 *
-	 * @var \Kirby\Template\Template
 	 */
-	protected $intendedTemplate;
+	protected Template|null $intendedTemplate = null;
 
-	/**
-	 * @var array
-	 */
-	protected $inventory;
+	protected array|null $inventory = null;
 
 	/**
 	 * The sorting number
-	 *
-	 * @var int|null
 	 */
-	protected $num;
+	protected int|null $num;
 
 	/**
 	 * The parent page
-	 *
-	 * @var \Kirby\Cms\Page|null
 	 */
-	protected $parent;
+	protected Page|null $parent;
 
 	/**
 	 * Absolute path to the page directory
-	 *
-	 * @var string
 	 */
-	protected $root;
-
-	/**
-	 * The parent Site object
-	 *
-	 * @var \Kirby\Cms\Site|null
-	 */
-	protected $site;
+	protected string|null $root;
 
 	/**
 	 * The URL-appendix aka slug
-	 *
-	 * @var string
 	 */
-	protected $slug;
+	protected string $slug;
 
 	/**
 	 * The intended page template
-	 *
-	 * @var \Kirby\Template\Template
 	 */
-	protected $template;
+	protected Template|null $template = null;
 
 	/**
 	 * The page url
-	 *
-	 * @var string|null
 	 */
-	protected $url;
+	protected string|null $url;
+
+	/**
+	 * Creates a new page object
+	 */
+	public function __construct(array $props)
+	{
+		if (isset($props['slug']) === false) {
+			throw new InvalidArgumentException('The page slug is required');
+		}
+
+		parent::__construct($props);
+
+		$this->slug    = $props['slug'];
+		// Sets the dirname manually, which works
+		// more reliable in connection with the inventory
+		// than computing the dirname afterwards
+		$this->dirname = $props['dirname'] ?? null;
+		$this->isDraft = $props['isDraft'] ?? false;
+		$this->num     = $props['num'] ?? null;
+		$this->parent  = $props['parent'] ?? null;
+		$this->root    = $props['root'] ?? null;
+
+		$this->setBlueprint($props['blueprint'] ?? null);
+		$this->setChildren($props['children'] ?? null);
+		$this->setDrafts($props['drafts'] ?? null);
+		$this->setFiles($props['files'] ?? null);
+		$this->setTemplate($props['template'] ?? null);
+		$this->setUrl($props['url'] ?? null);
+	}
 
 	/**
 	 * Magic caller
@@ -175,20 +165,6 @@ class Page extends ModelWithContent
 
 		// return page content otherwise
 		return $this->content()->get($method);
-	}
-
-	/**
-	 * Creates a new page object
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props)
-	{
-		// set the slug as the first property
-		$this->slug = $props['slug'] ?? null;
-
-		// add all other properties
-		$this->setProperties($props);
 	}
 
 	/**
@@ -225,16 +201,14 @@ class Page extends ModelWithContent
 
 	/**
 	 * Returns the blueprint object
-	 *
-	 * @return \Kirby\Cms\PageBlueprint
 	 */
-	public function blueprint()
+	public function blueprint(): PageBlueprint
 	{
-		if ($this->blueprint instanceof PageBlueprint) {
-			return $this->blueprint;
-		}
-
-		return $this->blueprint = PageBlueprint::factory('pages/' . $this->intendedTemplate(), 'pages/default', $this);
+		return $this->blueprint ??= PageBlueprint::factory(
+			'pages/' . $this->intendedTemplate(),
+			'pages/default',
+			$this
+		);
 	}
 
 	/**
@@ -501,10 +475,8 @@ class Page extends ModelWithContent
 	/**
 	 * Returns the template that should be
 	 * loaded if it exists.
-	 *
-	 * @return \Kirby\Template\Template
 	 */
-	public function intendedTemplate()
+	public function intendedTemplate(): Template
 	{
 		if ($this->intendedTemplate !== null) {
 			return $this->intendedTemplate;
@@ -1186,10 +1158,9 @@ class Page extends ModelWithContent
 	/**
 	 * Sets the Blueprint object
 	 *
-	 * @param array|null $blueprint
 	 * @return $this
 	 */
-	protected function setBlueprint(array $blueprint = null)
+	protected function setBlueprint(array $blueprint = null): static
 	{
 		if ($blueprint !== null) {
 			$blueprint['model'] = $this;
@@ -1200,86 +1171,11 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Sets the dirname manually, which works
-	 * more reliable in connection with the inventory
-	 * than computing the dirname afterwards
-	 *
-	 * @param string|null $dirname
-	 * @return $this
-	 */
-	protected function setDirname(string $dirname = null)
-	{
-		$this->dirname = $dirname;
-		return $this;
-	}
-
-	/**
-	 * Sets the draft flag
-	 *
-	 * @param bool $isDraft
-	 * @return $this
-	 */
-	protected function setIsDraft(bool $isDraft = null)
-	{
-		$this->isDraft = $isDraft ?? false;
-		return $this;
-	}
-
-	/**
-	 * Sets the sorting number
-	 *
-	 * @param int|null $num
-	 * @return $this
-	 */
-	protected function setNum(int $num = null)
-	{
-		$this->num = $num === null ? $num : (int)$num;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent page object
-	 *
-	 * @param \Kirby\Cms\Page|null $parent
-	 * @return $this
-	 */
-	protected function setParent(Page $parent = null)
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * Sets the absolute path to the page
-	 *
-	 * @param string|null $root
-	 * @return $this
-	 */
-	protected function setRoot(string $root = null)
-	{
-		$this->root = $root;
-		return $this;
-	}
-
-	/**
-	 * Sets the required Page slug
-	 *
-	 * @param string $slug
-	 * @return $this
-	 */
-	protected function setSlug(string $slug)
-	{
-		$this->slug = $slug;
-		return $this;
-	}
-
-	/**
 	 * Sets the intended template
 	 *
-	 * @param string|null $template
 	 * @return $this
 	 */
-	protected function setTemplate(string $template = null)
+	protected function setTemplate(string $template = null): static
 	{
 		if ($template !== null) {
 			$this->intendedTemplate = $this->kirby()->template($template);
@@ -1291,10 +1187,9 @@ class Page extends ModelWithContent
 	/**
 	 * Sets the Url
 	 *
-	 * @param string|null $url
 	 * @return $this
 	 */
-	protected function setUrl(string $url = null)
+	protected function setUrl(string $url = null): static
 	{
 		if (is_string($url) === true) {
 			$url = rtrim($url, '/');
@@ -1384,22 +1279,20 @@ class Page extends ModelWithContent
 	 */
 	public function toArray(): array
 	{
-		return [
-			'children'     => $this->children()->keys(),
-			'content'      => $this->content()->toArray(),
-			'files'        => $this->files()->keys(),
-			'id'           => $this->id(),
-			'mediaUrl'     => $this->mediaUrl(),
-			'mediaRoot'    => $this->mediaRoot(),
-			'num'          => $this->num(),
-			'parent'       => $this->parent() ? $this->parent()->id() : null,
-			'slug'         => $this->slug(),
-			'template'     => $this->template(),
-			'translations' => $this->translations()->toArray(),
-			'uid'          => $this->uid(),
-			'uri'          => $this->uri(),
-			'url'          => $this->url()
-		];
+		return array_merge(parent::toArray(), [
+			'children'  => $this->children()->keys(),
+			'files'     => $this->files()->keys(),
+			'id'        => $this->id(),
+			'mediaUrl'  => $this->mediaUrl(),
+			'mediaRoot' => $this->mediaRoot(),
+			'num'       => $this->num(),
+			'parent'    => $this->parent()?->id(),
+			'slug'      => $this->slug(),
+			'template'  => $this->template(),
+			'uid'       => $this->uid(),
+			'uri'       => $this->uri(),
+			'url'       => $this->url()
+		]);
 	}
 
 	/**

@@ -26,10 +26,8 @@ class Users extends Collection
 
 	/**
 	 * All registered users methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	public function create(array $data)
 	{

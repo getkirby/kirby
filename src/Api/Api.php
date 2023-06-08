@@ -14,7 +14,6 @@ use Kirby\Http\Router;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Pagination;
-use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 use Throwable;
 
@@ -32,8 +31,6 @@ use Throwable;
  */
 class Api
 {
-	use Properties;
-
 	/**
 	 * Authentication callback
 	 */
@@ -87,6 +84,28 @@ class Api
 	protected string|null $requestMethod = null;
 
 	/**
+	 * Creates a new API instance
+	 */
+	public function __construct(array $props)
+	{
+		$this->authentication = $props['authentication'] ?? null;
+		$this->data           = $props['data'] ?? [];
+		$this->routes         = $props['routes'] ?? [];
+		$this->debug  		  = $props['debug'] ?? false;
+
+		if ($collections = $props['collections'] ?? null) {
+			$this->collections = array_change_key_case($collections);
+		}
+
+		if ($models = $props['models'] ?? null) {
+			$this->models = array_change_key_case($models);
+		}
+
+		$this->setRequestData($props['requestData'] ?? null);
+		$this->setRequestMethod($props['requestMethod'] ?? null);
+	}
+
+	/**
 	 * Magic accessor for any given data
 	 *
 	 * @throws \Kirby\Exception\NotFoundException
@@ -94,14 +113,6 @@ class Api
 	public function __call(string $method, array $args = [])
 	{
 		return $this->data($method, ...$args);
-	}
-
-	/**
-	 * Creates a new API instance
-	 */
-	public function __construct(array $props)
-	{
-		$this->setProperties($props);
 	}
 
 	/**
@@ -192,6 +203,24 @@ class Api
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_merge([
+			'autentication' => $this->authentication,
+			'data'			=> $this->data,
+			'routes'		=> $this->routes,
+			'debug'			=> $this->debug,
+			'collections'   => $this->collections,
+			'models'		=> $this->models,
+			'requestData'   => $this->requestData,
+			'requestMethod' => $this->requestMethod
+		], $props));
 	}
 
 	/**
@@ -404,97 +433,6 @@ class Api
 	}
 
 	/**
-	 * Setter for the authentication callback
-	 * @return $this
-	 */
-	protected function setAuthentication(Closure|null $authentication = null): static
-	{
-		$this->authentication = $authentication;
-		return $this;
-	}
-
-	/**
-	 * Setter for the collections definition
-	 * @return $this
-	 */
-	protected function setCollections(array|null $collections = null): static
-	{
-		if ($collections !== null) {
-			$this->collections = array_change_key_case($collections);
-		}
-		return $this;
-	}
-
-	/**
-	 * Setter for the injected data
-	 * @return $this
-	 */
-	protected function setData(array|null $data = null): static
-	{
-		$this->data = $data ?? [];
-		return $this;
-	}
-
-	/**
-	 * Setter for the debug flag
-	 * @return $this
-	 */
-	protected function setDebug(bool $debug = false): static
-	{
-		$this->debug = $debug;
-		return $this;
-	}
-
-	/**
-	 * Setter for the model definitions
-	 * @return $this
-	 */
-	protected function setModels(array|null $models = null): static
-	{
-		if ($models !== null) {
-			$this->models = array_change_key_case($models);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Setter for the request data
-	 * @return $this
-	 */
-	protected function setRequestData(array|null $requestData = null): static
-	{
-		$defaults = [
-			'query' => [],
-			'body'  => [],
-			'files' => []
-		];
-
-		$this->requestData = array_merge($defaults, (array)$requestData);
-		return $this;
-	}
-
-	/**
-	 * Setter for the request method
-	 * @return $this
-	 */
-	protected function setRequestMethod(string|null $requestMethod = null): static
-	{
-		$this->requestMethod = $requestMethod ?? 'GET';
-		return $this;
-	}
-
-	/**
-	 * Setter for the route definitions
-	 * @return $this
-	 */
-	protected function setRoutes(array|null $routes = null): static
-	{
-		$this->routes = $routes ?? [];
-		return $this;
-	}
-
-	/**
 	 * Renders the API call
 	 */
 	public function render(string $path, string $method = 'GET', array $requestData = [])
@@ -617,6 +555,32 @@ class Api
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Setter for the request data
+	 * @return $this
+	 */
+	protected function setRequestData(array|null $requestData = []): static
+	{
+		$defaults = [
+			'query' => [],
+			'body'  => [],
+			'files' => []
+		];
+
+		$this->requestData = array_merge($defaults, (array)$requestData);
+		return $this;
+	}
+
+	/**
+	 * Setter for the request method
+	 * @return $this
+	 */
+	protected function setRequestMethod(string $requestMethod = null): static
+	{
+		$this->requestMethod = $requestMethod ?? 'GET';
+		return $this;
 	}
 
 	/**

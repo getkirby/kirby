@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Http\Visitor as BaseVisitor;
 use Kirby\Toolkit\Facade;
 
 /**
@@ -15,10 +16,7 @@ use Kirby\Toolkit\Facade;
  */
 class Visitor extends Facade
 {
-	/**
-	 * @return \Kirby\Http\Visitor
-	 */
-	public static function instance()
+	public static function instance(): BaseVisitor
 	{
 		return App::instance()->visitor();
 	}

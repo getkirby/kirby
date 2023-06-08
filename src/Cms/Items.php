@@ -23,10 +23,8 @@ class Items extends Collection
 
 	/**
 	 * All registered items methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * @var array

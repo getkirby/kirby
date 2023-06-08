@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -28,49 +29,48 @@ class Field
 {
 	/**
 	 * Field method aliases
-	 *
-	 * @var array
 	 */
-	public static $aliases = [];
+	public static array $aliases = [];
 
 	/**
 	 * The field name
-	 *
-	 * @var string
 	 */
-	protected $key;
+	protected string $key;
 
 	/**
 	 * Registered field methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * The parent object if available.
 	 * This will be the page, site, user or file
 	 * to which the content belongs
-	 *
-	 * @var Model
 	 */
-	protected $parent;
+	protected ModelWithContent|null $parent;
 
 	/**
 	 * The value of the field
-	 *
-	 * @var mixed
 	 */
-	public $value;
+	public mixed $value;
+
+	/**
+	 * Creates a new field object
+	 */
+	public function __construct(
+		ModelWithContent|null $parent,
+		string $key,
+		mixed $value
+	) {
+		$this->key    = $key;
+		$this->value  = $value;
+		$this->parent = $parent;
+	}
 
 	/**
 	 * Magic caller for field methods
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		$method = strtolower($method);
 
@@ -90,26 +90,11 @@ class Field
 	}
 
 	/**
-	 * Creates a new field object
-	 *
-	 * @param object|null $parent
-	 * @param string $key
-	 * @param mixed $value
-	 */
-	public function __construct(object|null $parent, string $key, $value)
-	{
-		$this->key    = $key;
-		$this->value  = $value;
-		$this->parent = $parent;
-	}
-
-	/**
 	 * Simplifies the var_dump result
 	 *
 	 * @see Field::toArray
-	 * @return array
 	 */
-	public function __debugInfo()
+	public function __debugInfo(): array
 	{
 		return $this->toArray();
 	}
@@ -119,7 +104,6 @@ class Field
 	 * or stringify the entire object
 	 *
 	 * @see Field::toString
-	 * @return string
 	 */
 	public function __toString(): string
 	{
@@ -128,8 +112,6 @@ class Field
 
 	/**
 	 * Checks if the field exists in the content data array
-	 *
-	 * @return bool
 	 */
 	public function exists(): bool
 	{
@@ -138,18 +120,16 @@ class Field
 
 	/**
 	 * Checks if the field content is empty
-	 *
-	 * @return bool
 	 */
 	public function isEmpty(): bool
 	{
-		return empty($this->value) === true && in_array($this->value, [0, '0', false], true) === false;
+		return
+			empty($this->value) === true &&
+			in_array($this->value, [0, '0', false], true) === false;
 	}
 
 	/**
 	 * Checks if the field content is not empty
-	 *
-	 * @return bool
 	 */
 	public function isNotEmpty(): bool
 	{
@@ -158,8 +138,6 @@ class Field
 
 	/**
 	 * Returns the name of the field
-	 *
-	 * @return string
 	 */
 	public function key(): string
 	{
@@ -168,9 +146,8 @@ class Field
 
 	/**
 	 * @see Field::parent()
-	 * @return \Kirby\Cms\Model|null
 	 */
-	public function model()
+	public function model(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
@@ -178,10 +155,9 @@ class Field
 	/**
 	 * Provides a fallback if the field value is empty
 	 *
-	 * @param mixed $fallback
 	 * @return $this|static
 	 */
-	public function or($fallback = null)
+	public function or(mixed $fallback = null): static
 	{
 		if ($this->isNotEmpty()) {
 			return $this;
@@ -198,18 +174,14 @@ class Field
 
 	/**
 	 * Returns the parent object of the field
-	 *
-	 * @return \Kirby\Cms\Model|null
 	 */
-	public function parent()
+	public function parent(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
 
 	/**
 	 * Converts the Field object to an array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -218,8 +190,6 @@ class Field
 
 	/**
 	 * Returns the field value as string
-	 *
-	 * @return string
 	 */
 	public function toString(): string
 	{
@@ -231,23 +201,20 @@ class Field
 	 * the modified field will be returned. Otherwise it
 	 * will return the field value.
 	 *
-	 * @param string|\Closure $value
-	 * @return mixed
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function value($value = null)
+	public function value(string|Closure $value = null): mixed
 	{
 		if ($value === null) {
 			return $this->value;
 		}
 
-		if (is_scalar($value)) {
-			$value = (string)$value;
-		} elseif (is_callable($value)) {
-			$value = (string)$value->call($this, $this->value);
-		} else {
-			throw new InvalidArgumentException('Invalid field value type: ' . gettype($value));
-		}
+		$value = match (true) {
+			is_scalar($value)   => (string)$value,
+			is_callable($value) => (string)$value->call($this, $this->value),
+			default
+			=> throw new InvalidArgumentException('Invalid field value type: ' . gettype($value))
+		};
 
 		$clone = clone $this;
 		$clone->value = $value;

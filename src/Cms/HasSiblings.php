@@ -155,8 +155,8 @@ trait HasSiblings
 	/**
 	 * Checks if the item is at a certain position
 	 *
-	 * @param \Kirby\Cms\Collection|null $collection
 	 * @param int $n
+	 * @param \Kirby\Cms\Collection|null $collection
 	 *
 	 * @return bool
 	 */

@@ -593,6 +593,10 @@ class StrTest extends TestCase
 		$this->assertTrue(V::alphanum($string));
 		$this->assertSame(62, strlen($string));
 
+		// default fallback: empty pool
+		$pool = Str::pool('invalid', true);
+		$this->assertSame([], $pool);
+
 		// [alphaLower, num]
 		$string = Str::pool(['alphaLower', 'num'], false);
 		$this->assertTrue(V::alphanum($string));

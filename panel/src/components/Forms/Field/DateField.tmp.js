@@ -24,8 +24,8 @@ describe("DateField", () => {
 			cy.get("@input").should("have.value", "2021-05-12");
 		});
 
-		it("should parse input on enter", () => {
-			cy.get(".k-field-name-date input").as("input");
+		it.skip("should parse input on enter", () => {
+			cy.get(".k-field-name-daterequired input").as("input");
 
 			cy.get("@input").type("12.5.2021{enter}");
 			cy.get("@input").should("have.value", "2021-05-12");

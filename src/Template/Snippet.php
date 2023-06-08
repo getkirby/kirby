@@ -289,9 +289,7 @@ class Snippet extends Tpl
 		Slots|null $slots = null
 	): array {
 		// initialize a dummy slots object and cache it for better performance
-		if ($slots === null) {
-			$slots = static::$dummySlots ??= new Slots([]);
-		}
+		$slots ??= static::$dummySlots ??= new Slots([]);
 
 		$data = array_merge(App::instance()->data, $data);
 

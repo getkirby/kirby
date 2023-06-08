@@ -20,8 +20,6 @@ class Camera
 
 	/**
 	 * Model exif data
-	 *
-	 * @var
 	 */
 	protected string|null $model;
 

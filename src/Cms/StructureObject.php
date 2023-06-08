@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects
@@ -18,43 +20,44 @@ namespace Kirby\Cms;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class StructureObject extends Model
+class StructureObject
 {
 	use HasSiblings;
 
 	/**
 	 * The content
-	 *
-	 * @var Content
 	 */
-	protected $content;
-
-	/**
-	 * @var string
-	 */
-	protected $id;
-
-	/**
-	 * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null
-	 */
-	protected $parent;
+	protected Content|array $content;
+	protected string $id;
+	protected ModelWithContent|null $parent;
 
 	/**
 	 * The parent Structure collection
-	 *
-	 * @var Structure
 	 */
-	protected $structure;
+	protected Structure|null $structure;
+
+	/**
+	 * Creates a new StructureObject with the given props
+	 *
+	 * @param array $props
+	 */
+	public function __construct(array $props)
+	{
+		if (isset($props['id']) === false) {
+			throw new InvalidArgumentException('The property "id" is required');
+		}
+
+		$this->id        = $props['id'];
+		$this->parent    = $props['parent'] ?? App::instance()->site();
+		$this->structure = $props['structure'] ?? null;
+		$this->content   = $props['content'] ?? [];
+	}
 
 	/**
 	 * Modified getter to also return fields
 	 * from the object's content
-	 *
-	 * @param string $method
-	 * @param array $arguments
-	 * @return mixed
 	 */
-	public function __call(string $method, array $arguments = [])
+	public function __call(string $method, array $arguments = []): mixed
 	{
 		// public property access
 		if (isset($this->$method) === true) {
@@ -65,21 +68,9 @@ class StructureObject extends Model
 	}
 
 	/**
-	 * Creates a new StructureObject with the given props
-	 *
-	 * @param array $props
-	 */
-	public function __construct(array $props)
-	{
-		$this->setProperties($props);
-	}
-
-	/**
 	 * Returns the content
-	 *
-	 * @return \Kirby\Cms\Content
 	 */
-	public function content()
+	public function content(): Content
 	{
 		if ($this->content instanceof Content) {
 			return $this->content;
@@ -94,8 +85,6 @@ class StructureObject extends Model
 
 	/**
 	 * Returns the required id
-	 *
-	 * @return string
 	 */
 	public function id(): string
 	{
@@ -104,11 +93,8 @@ class StructureObject extends Model
 
 	/**
 	 * Compares the current object with the given structure object
-	 *
-	 * @param mixed $structure
-	 * @return bool
 	 */
-	public function is($structure): bool
+	public function is(mixed $structure): bool
 	{
 		if ($structure instanceof self === false) {
 			return false;
@@ -118,72 +104,17 @@ class StructureObject extends Model
 	}
 
 	/**
-	 * Returns the parent Model object
-	 *
-	 * @return \Kirby\Cms\Model
+	 * Returns the parent object
 	 */
-	public function parent()
+	public function parent(): ModelWithContent|null
 	{
 		return $this->parent;
 	}
 
 	/**
-	 * Sets the Content object with the given parent
-	 *
-	 * @param array|null $content
-	 * @return $this
-	 */
-	protected function setContent(array $content = null)
-	{
-		$this->content = $content;
-		return $this;
-	}
-
-	/**
-	 * Sets the id of the object.
-	 * The id is required. The structure
-	 * class will use the index, if no id is
-	 * specified.
-	 *
-	 * @param string $id
-	 * @return $this
-	 */
-	protected function setId(string $id)
-	{
-		$this->id = $id;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent Model
-	 *
-	 * @return $this
-	 * @param \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null $parent
-	 */
-	protected function setParent(Model $parent = null)
-	{
-		$this->parent = $parent;
-		return $this;
-	}
-
-	/**
-	 * Sets the parent Structure collection
-	 *
-	 * @param \Kirby\Cms\Structure|null $structure
-	 * @return $this
-	 */
-	protected function setStructure(Structure $structure = null)
-	{
-		$this->structure = $structure;
-		return $this;
-	}
-
-	/**
 	 * Returns the parent Structure collection as siblings
-	 *
-	 * @return \Kirby\Cms\Structure
 	 */
-	protected function siblingsCollection()
+	protected function siblingsCollection(): Structure|null
 	{
 		return $this->structure;
 	}
@@ -194,8 +125,6 @@ class StructureObject extends Model
 	 * injected into the array afterwards
 	 * to make sure it's always present and
 	 * not overloaded in the content.
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

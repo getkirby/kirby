@@ -2,8 +2,12 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\View
+ */
 class ViewTest extends TestCase
 {
 	public const FIXTURES = __DIR__ . '/fixtures/view';
@@ -13,21 +17,9 @@ class ViewTest extends TestCase
 		return new View(static::FIXTURES . '/view.php', $data);
 	}
 
-	public function testFile()
-	{
-		$view = $this->_view();
-		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
-	}
-
-	public function testWithMissingFile()
-	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The view does not exist: invalid-file.php');
-
-		$view = new View('invalid-file.php');
-		$view->render();
-	}
-
+	/**
+	 * @covers ::data
+	 */
 	public function testData()
 	{
 		$view = $this->_view();
@@ -37,20 +29,60 @@ class ViewTest extends TestCase
 		$this->assertSame(['test'], $view->data());
 	}
 
+	/**
+	 * @covers ::exists
+	 */
+	public function testExists()
+	{
+		$view = $this->_view();
+		$this->assertTrue($view->exists());
+
+		$view = new View(static::FIXTURES . '/foo.php');
+		$this->assertFalse($view->exists());
+	}
+
+	/**
+	 * @covers ::file
+	 */
+	public function testFile()
+	{
+		$view = $this->_view();
+		$this->assertSame(static::FIXTURES . '/view.php', $view->file());
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithMissingFile()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The view does not exist: invalid-file.php');
+
+		$view = new View('invalid-file.php');
+		$view->render();
+	}
+
+	/**
+	 * @covers ::render
+	 */
+	public function testRenderWithException()
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('View exception');
+
+		$view = new View(static::FIXTURES . '/view-with-exception.php');
+		$view->render();
+	}
+
+	/**
+	 * @covers ::toString
+	 * @covers ::__toString
+	 */
 	public function testToString()
 	{
 		$view = $this->_view(['name' => 'Tester']);
 		$this->assertSame('Hello Tester', $view->toString());
 		$this->assertSame('Hello Tester', $view->__toString());
 		$this->assertSame('Hello Tester', (string)$view);
-	}
-
-	public function testWithException()
-	{
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('View exception');
-
-		$view = new View(static::FIXTURES . '/view-with-exception.php');
-		$view->render();
 	}
 }

@@ -15,7 +15,7 @@ namespace Kirby\Exception;
  */
 class AuthException extends Exception
 {
-	protected static $defaultKey = 'auth';
-	protected static $defaultFallback = 'Unauthenticated';
-	protected static $defaultHttpCode = 401;
+	protected static string $defaultKey = 'auth';
+	protected static string $defaultFallback = 'Unauthenticated';
+	protected static int $defaultHttpCode = 401;
 }

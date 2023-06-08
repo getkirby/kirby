@@ -4,7 +4,7 @@ namespace Kirby\Email;
 
 use Closure;
 use Exception;
-use Kirby\Toolkit\Properties;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\V;
 
 /**
@@ -19,8 +19,6 @@ use Kirby\Toolkit\V;
  */
 class Email
 {
-	use Properties;
-
 	/**
 	 * If set to `true`, the debug mode is enabled
 	 * for all emails
@@ -33,56 +31,48 @@ class Email
 	 */
 	public static array $emails = [];
 
-	/**
-	 * @var array
-	 */
-	protected array|null $attachments = null;
-
-	protected Body|null $body = null;
-
-	/**
-	 * @var array
-	 */
-	protected array|null $bcc = null;
-
-	protected Closure|null $beforeSend = null;
-
-	/**
-	 * @var array
-	 */
-	protected array|null $cc = null;
-
-	/**
-	 * @var string
-	 */
-	protected string|null $from = null;
-	protected string|null $fromName = null;
-
 	protected bool $isSent = false;
 
-	/**
-	 * @var string
-	 */
-	protected string|null $replyTo = null;
-	protected string|null $replyToName = null;
-
-	/**
-	 * @var string
-	 */
-	protected string|null $subject = null;
-
-	/**
-	 * @var array
-	 */
-	protected array|null $to = null;
-	protected array|null $transport = null;
+	protected array $attachments;
+	protected Body $body;
+	protected array $bcc;
+	protected Closure|null $beforeSend;
+	protected array $cc;
+	protected string $from;
+	protected string|null $fromName;
+	protected string $replyTo;
+	protected string|null $replyToName;
+	protected string $subject;
+	protected array $to;
+	protected array|null $transport;
 
 	/**
 	 * Email constructor
 	 */
 	public function __construct(array $props = [], bool $debug = false)
 	{
-		$this->setProperties($props);
+		foreach (['body', 'from', 'to', 'subject'] as $required) {
+			if (isset($props[$required]) === false) {
+				throw new InvalidArgumentException('The property "' . $required . '" is required');
+			}
+		}
+
+		if (is_string($props['body']) === true) {
+			$props['body'] = ['text' => $props['body']];
+		}
+
+		$this->attachments = $props['attachments'] ?? [];
+		$this->bcc         = $this->resolveEmail($props['bcc'] ?? null);
+		$this->beforeSend  = $props['beforeSend'] ?? null;
+		$this->body        = new Body($props['body']);
+		$this->cc          = $this->resolveEmail($props['cc'] ?? null);
+		$this->from        = $this->resolveEmail($props['from'], false);
+		$this->fromName    = $props['fromName'] ?? null;
+		$this->replyTo     = $this->resolveEmail($props['replyTo'] ?? null, false);
+		$this->replyToName = $props['replyToName'] ?? null;
+		$this->subject     = $props['subject'];
+		$this->to          = $this->resolveEmail($props['to']);
+		$this->transport   = $props['transport'] ?? null;
 
 		// @codeCoverageIgnoreStart
 		if (static::$debug === false && $debug === false) {
@@ -132,6 +122,29 @@ class Email
 	public function cc(): array
 	{
 		return $this->cc;
+	}
+
+	/**
+	 * Creates a new instance while
+	 * merging initial and new properties
+	 * @deprecated 4.0.0
+	 */
+	public function clone(array $props = []): static
+	{
+		return new static(array_merge_recursive([
+			'attachments'   => $this->attachments,
+			'bcc'			=> $this->bcc,
+			'beforeSend'    => $this->beforeSend,
+			'body'			=> $this->body->toArray(),
+			'cc'   			=> $this->cc,
+			'from'			=> $this->from,
+			'fromName'   	=> $this->fromName,
+			'replyTo' 		=> $this->replyTo,
+			'replyToName'	=> $this->replyToName,
+			'subject'   	=> $this->subject,
+			'to'   			=> $this->to,
+			'transport' 	=> $this->transport
+		], $props));
 	}
 
 	/**
@@ -238,142 +251,6 @@ class Email
 	}
 
 	/**
-	 * Sets the email attachments
-	 *
-	 * @return $this
-	 */
-	protected function setAttachments(array|null $attachments = null): static
-	{
-		$this->attachments = $attachments ?? [];
-		return $this;
-	}
-
-	/**
-	 * Sets the email body
-	 *
-	 * @return $this
-	 */
-	protected function setBody(string|array $body): static
-	{
-		if (is_string($body) === true) {
-			$body = ['text' => $body];
-		}
-
-		$this->body = new Body($body);
-		return $this;
-	}
-
-	/**
-	 * Sets "bcc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setBcc(string|array|null $bcc = null): static
-	{
-		$this->bcc = $this->resolveEmail($bcc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "beforeSend" callback
-	 *
-	 * @return $this
-	 */
-	protected function setBeforeSend(Closure|null $beforeSend = null): static
-	{
-		$this->beforeSend = $beforeSend;
-		return $this;
-	}
-
-	/**
-	 * Sets "cc" recipients
-	 *
-	 * @return $this
-	 */
-	protected function setCc(string|array|null $cc = null): static
-	{
-		$this->cc = $this->resolveEmail($cc);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" email address
-	 *
-	 * @return $this
-	 */
-	protected function setFrom(string $from): static
-	{
-		$this->from = $this->resolveEmail($from, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "from" name
-	 *
-	 * @return $this
-	 */
-	protected function setFromName(string|null $fromName = null): static
-	{
-		$this->fromName = $fromName;
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" email address
-	 *
-	 * @return $this
-	 */
-	protected function setReplyTo(string|null $replyTo = null): static
-	{
-		$this->replyTo = $this->resolveEmail($replyTo, false);
-		return $this;
-	}
-
-	/**
-	 * Sets the "reply to" name
-	 *
-	 * @return $this
-	 */
-	protected function setReplyToName(string|null $replyToName = null): static
-	{
-		$this->replyToName = $replyToName;
-		return $this;
-	}
-
-	/**
-	 * Sets the email subject
-	 *
-	 * @return $this
-	 */
-	protected function setSubject(string $subject): static
-	{
-		$this->subject = $subject;
-		return $this;
-	}
-
-	/**
-	 * Sets the recipients of the email
-	 *
-	 * @return $this
-	 */
-	protected function setTo(string|array $to): static
-	{
-		$this->to = $this->resolveEmail($to);
-		return $this;
-	}
-
-	/**
-	 * Sets the email transport settings
-	 *
-	 * @return $this
-	 */
-	protected function setTransport(array|null $transport = null): static
-	{
-		$this->transport = $transport;
-		return $this;
-	}
-
-	/**
 	 * Returns the email subject
 	 */
 	public function subject(): string
@@ -395,5 +272,25 @@ class Email
 	public function transport(): array
 	{
 		return $this->transport ?? $this->defaultTransport();
+	}
+
+	/**
+	 * @since 4.0.0
+	 */
+	public function toArray(): array
+	{
+		return [
+			'attachments'   => $this->attachments(),
+			'bcc'			=> $this->bcc(),
+			'body'			=> $this->body()->toArray(),
+			'cc'   			=> $this->cc(),
+			'from'			=> $this->from(),
+			'fromName'   	=> $this->fromName(),
+			'replyTo' 		=> $this->replyTo(),
+			'replyToName'	=> $this->replyToName(),
+			'subject'   	=> $this->subject(),
+			'to'   			=> $this->to(),
+			'transport' 	=> $this->transport()
+		];
 	}
 }

@@ -4,7 +4,8 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
-use Kirby\Cms\Model;
+use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Data;
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
@@ -204,11 +205,9 @@ class Form
 	 * Get the field object by name
 	 * and handle nested fields correctly
 	 *
-	 * @param string $name
 	 * @throws \Kirby\Exception\NotFoundException
-	 * @return \Kirby\Form\Field
 	 */
-	public function field(string $name)
+	public function field(string $name): Field|FieldClass
 	{
 		$form       = $this;
 		$fieldNames = Str::split($name, '+');
@@ -246,13 +245,10 @@ class Form
 		return $this->fields;
 	}
 
-	/**
-	 * @param \Kirby\Cms\Model $model
-	 * @param array $props
-	 * @return static
-	 */
-	public static function for(Model $model, array $props = [])
-	{
+	public static function for(
+		ModelWithContent $model,
+		array $props = []
+	): static {
 		// get the original model data
 		$original = $model->content($props['language'] ?? null)->toArray();
 		$values   = $props['values'] ?? [];

@@ -29,6 +29,13 @@ class LanguageTest extends TestCase
 		Dir::remove($this->fixtures);
 	}
 
+	public function testConstructNoCode()
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The property "code" is required');
+		new Language([]);
+	}
+
 	public function testCodeAndId()
 	{
 		$language = new Language([

@@ -19,8 +19,6 @@ class FilePicker extends Picker
 {
 	/**
 	 * Extends the basic defaults
-	 *
-	 * @return array
 	 */
 	public function defaults(): array
 	{
@@ -33,10 +31,9 @@ class FilePicker extends Picker
 	/**
 	 * Search all files for the picker
 	 *
-	 * @return \Kirby\Cms\Files|null
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function items()
+	public function items(): Files|null
 	{
 		$model = $this->options['model'];
 

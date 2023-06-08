@@ -2,17 +2,21 @@
 	<k-dropdown class="k-autocomplete">
 		<!-- @slot Use to insert your input -->
 		<slot />
-		<k-dropdown-content ref="dropdown" :autofocus="true" v-on="$listeners">
+		<k-dropdown-content
+			ref="dropdown"
+			:autofocus="true"
+			@leave="$emit('leave')"
+		>
 			<k-dropdown-item
 				v-for="(item, index) in matches"
 				:key="index"
 				v-bind="item"
-				@mousedown="onSelect(item)"
-				@keydown.tab.prevent="onSelect(item)"
-				@keydown.enter.prevent="onSelect(item)"
-				@keydown.left.prevent="close"
-				@keydown.backspace.prevent="close"
-				@keydown.delete.prevent="close"
+				@mousedown.native="onSelect(item)"
+				@keydown.native.tab.prevent="onSelect(item)"
+				@keydown.native.enter.prevent="onSelect(item)"
+				@keydown.native.left.prevent="close"
+				@keydown.native.backspace.prevent="close"
+				@keydown.native.delete.prevent="close"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
 				<span v-html="html ? item.text : $esc(item.text)" />
@@ -62,6 +66,7 @@ export default {
 		 */
 		query: String
 	},
+	emits: ["leave", "search", "select"],
 	data() {
 		return {
 			matches: [],

@@ -6,10 +6,8 @@
 		:type="type"
 		:style="height ? '--box-height: ' + height : null"
 		class="k-box"
-		v-on="$listeners"
 	>
 		<k-icon v-if="icon" v-bind="icon" />
-
 		<!-- @slot Use instead of `text` prop -->
 		<slot>
 			<k-text v-if="html" :html="text" />

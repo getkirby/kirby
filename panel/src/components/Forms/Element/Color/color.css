@@ -1,3 +1,9 @@
+:root {
+	--color-preview-rounded: var(--rounded-sm);
+	--color-preview-size: 1.5rem;
+	--color-preview-darkness: 0%;
+}
+
 .k-color {
 	--h: 0;
 	--s: 0%;
@@ -22,8 +28,7 @@
 
 .k-color .k-coords {
 	aspect-ratio: 1/1;
-	background:
-		linear-gradient(to bottom, transparent, #000),
+	background: linear-gradient(to bottom, transparent, #000),
 		linear-gradient(to right, #fff, hsl(var(--h), 100%, 50%));
 }
 
@@ -32,19 +37,20 @@
 }
 
 .k-color-preview {
-	--button-color-back: var(--color-white) var(--pattern);
-	--button-color-hover: var(--button-color-back);
-	--button-color-text: transparent;
-
+	aspect-ratio: 1/1;
 	position: relative;
 	display: inline-block;
 	color: transparent;
 	background: var(--color-white) var(--pattern);
-	border-radius: var(--rounded-sm);
+	border-radius: var(--color-preview-rounded);
 	overflow: hidden;
+	width: var(--color-preview-size);
+	background-clip: padding-box;
 }
 
 .k-color-preview::after {
+	border-radius: calc(var(--color-preview-rounded) - 1px);
+	box-shadow: 0 0 0 1px inset hsla(0, 0%, var(--color-preview-darkness), 0.175);
 	position: absolute;
 	inset: 0;
 	background-color: currentColor;

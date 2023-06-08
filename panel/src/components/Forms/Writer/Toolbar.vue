@@ -41,7 +41,7 @@
 				:icon="mark.icon"
 				:title="mark.label"
 				class="k-toolbar-button"
-				@mousedown.prevent="command(mark.command || markType, $event)"
+				@mousedown.native.prevent="command(mark.command || markType, $event)"
 			/>
 		</template>
 	</nav>

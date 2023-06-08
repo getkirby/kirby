@@ -138,11 +138,13 @@ return [
 	 *
 	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\Collection $collection Collection of searchable models
-	 * @param string $query
-	 * @param mixed $params
-	 * @return \Kirby\Cms\Collection|bool
 	 */
-	'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
+	'search' => function (
+		App $kirby,
+		Collection $collection,
+		string $query = null,
+		string|array $params = []
+	): Collection {
 		// empty search query
 		if (empty(trim($query ?? '')) === true) {
 			return $collection->limit(0);
@@ -372,7 +374,13 @@ return [
 		}
 
 		// support UUIDs
-		if ($path !== null && (Uuid::is($path, 'page') === true || Uuid::is($path, 'file') === true)) {
+		if (
+			$path !== null &&
+			(
+				Uuid::is($path, 'page') === true ||
+				Uuid::is($path, 'file') === true
+			)
+		) {
 			$path = Uuid::for($path)->model()->url();
 		}
 

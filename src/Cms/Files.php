@@ -26,10 +26,8 @@ class Files extends Collection
 
 	/**
 	 * All registered files methods
-	 *
-	 * @var array
 	 */
-	public static $methods = [];
+	public static array $methods = [];
 
 	/**
 	 * Adds a single file or
@@ -88,12 +86,8 @@ class Files extends Collection
 
 	/**
 	 * Creates a files collection from an array of props
-	 *
-	 * @param array $files
-	 * @param \Kirby\Cms\Model $parent
-	 * @return static
 	 */
-	public static function factory(array $files, Model $parent)
+	public static function factory(array $files, Page|Site|User $parent): static
 	{
 		$collection = new static([], $parent);
 		$kirby      = $parent->kirby();
