@@ -33,9 +33,10 @@
 			<template #before>
 				<template v-if="mode === 'picker'">
 					<k-dropdown>
-						<k-button
+						<button
 							:style="!isInvalid ? 'color: ' + value : null"
 							class="k-color-field-preview k-color-preview"
+							type="button"
 							@click="$refs.picker.toggle()"
 						/>
 						<k-dropdown-content
@@ -161,18 +162,11 @@ export default {
 </script>
 
 <style>
-.k-color-field {
-	--preview-width: 1.5rem;
-}
 .k-color-field .k-input .k-input-before {
 	padding: var(--spacing-1);
 }
-.k-color-field .k-input .k-color-field-preview {
-	width: calc(var(--field-input-height) - var(--spacing-2));
-	height: calc(var(--field-input-height) - var(--spacing-2));
-	flex-shrink: 0;
-	transition: none;
-	border: 1px solid var(--color-gray-200);
+.k-color-field-preview {
+	--color-preview-size: calc(var(--field-input-height) - var(--spacing-2));
 }
 
 .k-color-field-picker {
@@ -187,16 +181,11 @@ export default {
 }
 
 .k-color-field-options {
-	display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	gap: 0.6rem; /* this will allow for eaxctly 6 options in the 12rem width */
-}
-
-.k-color-field .k-color-preview {
-	aspect-ratio: 1/1;
-	width: var(--preview-width);
-	border: 1px solid var(--color-gray-300);
+	--color-preview-size: 100%;
+	--color-preview-darkness: 100%;
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: var(--spacing-2);
 }
 
 .k-color-field .k-color-preview[aria-current] {
