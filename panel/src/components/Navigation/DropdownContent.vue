@@ -269,7 +269,7 @@ export default {
 }
 
 .k-dropdown-content .k-button {
-	--button-height: var(--height-xs);
+	--button-height: var(--height-sm);
 	--button-color-hover: var(--dropdown-color-hr);
 	--button-color-text: var(--dropdown-color-text);
 	display: flex;
