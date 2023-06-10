@@ -197,6 +197,6 @@ export default {
 
 /* Scroll lock */
 :where(body):has(.k-overlay) {
-	overflow: hidden;
+	overflow: clip;
 }
 </style>
