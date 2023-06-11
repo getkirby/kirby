@@ -209,8 +209,21 @@ class FieldTest extends TestCase
 	{
 		$fallback = new Field(null, 'fallback', 'fallback value');
 		$field    = new Field(null, 'test', '');
+
+		$this->assertSame($fallback, $fallback->or($field));
+		$this->assertSame($fallback, $field->or($fallback));
+	}
+
+	/**
+	 * @covers ::or
+	 */
+	public function testOrWithStringFallback()
+	{
+		$fallback = 'fallback value';
+		$field    = new Field(null, 'test', '');
 		$result   = $field->or($fallback);
 
-		$this->assertSame($fallback, $result);
+		$this->assertNotSame($field, $result);
+		$this->assertSame($fallback, $result->value());
 	}
 }
