@@ -1,18 +1,28 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Blocks;
+use Kirby\Cms\Files;
+use Kirby\Cms\Layouts;
+use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
+use Kirby\Cms\Site;
+use Kirby\Cms\Users;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
+use PHPUnit\Framework\TestCase;
 
 class FieldMethodsTest extends TestCase
 {
+	protected $tmp;
+
 	public function setUp(): void
 	{
 		parent::setUp();
-
 
 		new App([
 			'roots' => [
@@ -28,11 +38,6 @@ class FieldMethodsTest extends TestCase
 	{
 		parent::tearDown();
 		Dir::remove($this->tmp);
-	}
-
-	public function field($value = '', $parent = null)
-	{
-		return new Field($parent, 'test', $value);
 	}
 
 	public function testFieldMethodCaseInsensitivity()
@@ -930,5 +935,10 @@ class FieldMethodsTest extends TestCase
 		$this->assertInstanceOf(Content::class, $object);
 
 		$this->assertSame('Heading', $object->heading()->value());
+	}
+
+	protected function field($value = '', $parent = null)
+	{
+		return new Field($parent, 'test', $value);
 	}
 }

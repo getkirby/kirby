@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
 use Closure;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -19,7 +20,7 @@ use Kirby\Exception\InvalidArgumentException;
  * $page->myField()->lower();
  * ```
  *
- * @package   Kirby Cms
+ * @package   Kirby Content
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier

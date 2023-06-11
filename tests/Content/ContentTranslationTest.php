@@ -1,11 +1,22 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass Kirby\Content\ContentTranslation
+ */
 class ContentTranslationTest extends TestCase
 {
+	/**
+	 * @covers ::__construct
+	 * @covers ::code
+	 * @covers ::id
+	 * @covers ::parent
+	 */
 	public function testParentAndCode()
 	{
 		$page = new Page([
@@ -22,6 +33,11 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame('de', $translation->id());
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::content
+	 * @covers ::slug
+	 */
 	public function testContentAndSlug()
 	{
 		$page = new Page([
@@ -41,6 +57,9 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame($content, $translation->content());
 	}
 
+	/**
+	 * @covers ::contentFile
+	 */
 	public function testContentFile()
 	{
 		$app = new App([
@@ -48,7 +67,6 @@ class ContentTranslationTest extends TestCase
 				'content' => '/content',
 			]
 		]);
-
 
 		$page = new Page([
 			'slug'     => 'test',
@@ -63,6 +81,9 @@ class ContentTranslationTest extends TestCase
 		$this->assertSame('/content/test/project.de.txt', $translation->contentFile());
 	}
 
+	/**
+	 * @covers ::exists
+	 */
 	public function testExists()
 	{
 		$page = new Page(['slug' => 'test']);
@@ -84,6 +105,10 @@ class ContentTranslationTest extends TestCase
 		$this->assertTrue($translation->exists());
 	}
 
+	/**
+	 * @covers ::__debugInfo
+	 * @covers ::toArray
+	 */
 	public function testToArrayAndDebugInfo()
 	{
 		$page = new Page(['slug' => 'test']);

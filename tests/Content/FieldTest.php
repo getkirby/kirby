@@ -1,24 +1,38 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Content;
 
+use Kirby\Cms\Page;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use TypeError;
 
+/**
+ * @coversDefaultClass Kirby\Content\Field
+ */
 class FieldTest extends TestCase
 {
-	public function test__debuginfo()
+	/**
+	 * @covers ::__debugInfo
+	 */
+	public function test__debugInfo()
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame(['title' => 'Title'], $field->__debugInfo());
 	}
 
+	/**
+	 * @covers ::key
+	 */
 	public function testKey()
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('title', $field->key());
 	}
 
+	/**
+	 * @covers ::exists
+	 */
 	public function testExists()
 	{
 		$parent = new Page([
@@ -32,6 +46,9 @@ class FieldTest extends TestCase
 		$this->assertFalse($parent->b()->exists());
 	}
 
+	/**
+	 * @covers ::model
+	 */
 	public function testModel()
 	{
 		$model = new Page(['slug' => 'test']);
@@ -40,6 +57,9 @@ class FieldTest extends TestCase
 		$this->assertSame($model, $field->model());
 	}
 
+	/**
+	 * @covers ::parent
+	 */
 	public function testParent()
 	{
 		$parent = new Page(['slug' => 'test']);
@@ -48,6 +68,11 @@ class FieldTest extends TestCase
 		$this->assertSame($parent, $field->parent());
 	}
 
+	/**
+	 * @covers ::__construct
+	 * @covers ::__toString
+	 * @covers ::toString
+	 */
 	public function testToString()
 	{
 		$field = new Field(null, 'title', 'Title');
@@ -57,18 +82,27 @@ class FieldTest extends TestCase
 		$this->assertSame('Title', (string)$field);
 	}
 
+	/**
+	 * @covers ::toArray
+	 */
 	public function testToArray()
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame(['title' => 'Title'], $field->toArray());
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testValue()
 	{
 		$field = new Field(null, 'title', 'Title');
 		$this->assertSame('Title', $field->value());
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testValueSetter()
 	{
 		$field = new Field(null, 'title', 'Title');
@@ -77,6 +111,9 @@ class FieldTest extends TestCase
 		$this->assertSame('Modified', $field->value());
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testValueCallbackSetter()
 	{
 		$field = new Field(null, 'title', 'Title');
@@ -87,6 +124,9 @@ class FieldTest extends TestCase
 		$this->assertSame('Modified', $field->value());
 	}
 
+	/**
+	 * @covers ::value
+	 */
 	public function testInvalidValueSetter()
 	{
 		$this->expectException(TypeError::class);
@@ -97,6 +137,9 @@ class FieldTest extends TestCase
 		$field->value(new stdClass());
 	}
 
+	/**
+	 * @covers ::__call
+	 */
 	public function testCloningInMethods()
 	{
 		Field::$methods = [
@@ -129,6 +172,7 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isEmpty
 	 * @dataProvider emptyDataProvider
 	 */
 	public function testIsEmpty($input, $expected)
@@ -138,6 +182,7 @@ class FieldTest extends TestCase
 	}
 
 	/**
+	 * @covers ::isNotEmpty
 	 * @dataProvider emptyDataProvider
 	 */
 	public function testIsNotEmpty($input, $expected)
@@ -146,6 +191,9 @@ class FieldTest extends TestCase
 		$this->assertSame(!$expected, $field->isNotEmpty());
 	}
 
+	/**
+	 * @covers ::__call
+	 */
 	public function testCallNonExistingMethod()
 	{
 		$field  = new Field(null, 'test', 'value');
@@ -154,6 +202,9 @@ class FieldTest extends TestCase
 		$this->assertSame($field, $result);
 	}
 
+	/**
+	 * @covers ::or
+	 */
 	public function testOrWithFieldFallback()
 	{
 		$fallback = new Field(null, 'fallback', 'fallback value');
