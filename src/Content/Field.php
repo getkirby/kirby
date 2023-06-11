@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Closure;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Every field in a Kirby content text file
@@ -201,8 +200,6 @@ class Field
 	 * Returns the field content. If a new value is passed,
 	 * the modified field will be returned. Otherwise it
 	 * will return the field value.
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public function value(string|Closure $value = null): mixed
 	{
@@ -210,15 +207,12 @@ class Field
 			return $this->value;
 		}
 
-		$value = match (true) {
-			is_scalar($value)   => (string)$value,
-			is_callable($value) => (string)$value->call($this, $this->value),
-			default
-			=> throw new InvalidArgumentException('Invalid field value type: ' . gettype($value))
-		};
+		if (is_callable($value) === true) {
+			$value = $value->call($this, $this->value);
+		}
 
 		$clone = clone $this;
-		$clone->value = $value;
+		$clone->value = (string)$value;
 
 		return $clone;
 	}
