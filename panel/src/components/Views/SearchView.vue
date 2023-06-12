@@ -39,6 +39,8 @@
 							icon: 'search',
 							text: $t('search.results.none')
 						}"
+						:pagination="pagination"
+						@paginate="onPaginate"
 					/>
 				</div>
 			</div>
@@ -56,8 +58,9 @@ export default {
 	},
 	data() {
 		return {
+			items: [],
 			query: this.getQuery(),
-			items: []
+			pagination: {}
 		};
 	},
 	watch: {
@@ -82,12 +85,20 @@ export default {
 		getQuery() {
 			return new URLSearchParams(window.location.search).get("query");
 		},
-		async search(query) {
+		onPaginate(pagination) {
+			this.search(this.query, pagination.page);
+		},
+		async search(query, page) {
 			this.$panel.isLoading = true;
+
+			if (!page) {
+				page = new URLSearchParams(window.location.search).get("page") ?? 1;
+			}
 
 			const url = this.$panel.url(window.location, {
 				type: this.type,
-				query: this.query
+				query: this.query,
+				page: page > 1 ? page : null
 			});
 
 			window.history.pushState("", "", url.toString());
@@ -98,10 +109,15 @@ export default {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, query);
+				const response = await this.$search(this.type, query, {
+					page,
+					limit: 15
+				});
 				this.items = response.results;
+				this.pagination = response.pagination;
 			} catch (error) {
 				this.items = [];
+				this.pagination = {};
 			} finally {
 				this.$panel.isLoading = false;
 			}
