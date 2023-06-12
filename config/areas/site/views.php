@@ -6,7 +6,11 @@ use Kirby\Cms\Find;
 return [
 	'page' => [
 		'pattern' => 'pages/(:any)',
-		'action'  => fn (string $path) => Find::page($path)->panel()->view()
+		'load'    => fn (string $path) => Find::page($path)->panel()->view(),
+		'submit'  => function (string $path) {
+			return [
+			];
+		}
 	],
 	'page.file' => [
 		'pattern' => 'pages/(:any)/files/(:any)',
