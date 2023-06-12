@@ -415,6 +415,42 @@ class View
 		return Document::response($fiber);
 	}
 
+	/**
+	 * Builds the routes for a view
+	 */
+	public static function routes(
+		string $id,
+		string $areaId,
+		array $options = []
+	) {
+		$pattern = $options['pattern'] ?? $id;
+		$routes  = [];
+
+		// polyfill for old view routes
+		$options['load'] ??= $options['action'] ?? null;
+
+		// load event
+		$routes[] = [
+			'action'  => $options['load'] ?? fn () => 'The load handler is missing',
+			'area'    => $areaId,
+			'auth'    => $options['auth'] ?? true,
+			'pattern' => $pattern,
+			'type'    => 'view',
+		];
+
+		// submit event
+		$routes[] = [
+			'action'  => $options['submit'] ?? fn () => 'The submit handler is missing',
+			'area'    => $areaId,
+			'auth'    => $options['auth'] ?? true,
+			'method'  => 'POST',
+			'pattern' => $pattern,
+			'type'    => 'view',
+		];
+
+		return $routes;
+	}
+
 	public static function searches(array $areas, array $permissions): array
 	{
 		$searches = [];

@@ -182,11 +182,7 @@ class Panel
 	{
 		$request = App::instance()->request();
 
-		if ($request->method() === 'GET') {
-			return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
-		}
-
-		return false;
+		return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
 	}
 
 	/**
@@ -468,10 +464,12 @@ class Panel
 		$views  = $area['views'] ?? [];
 		$routes = [];
 
-		foreach ($views as $view) {
-			$view['area'] = $areaId;
-			$view['type'] = 'view';
-			$routes[] = $view;
+		foreach ($views as $viewId => $view) {
+			$routes = array_merge($routes, View::routes(
+				id: $viewId,
+				areaId: $areaId,
+				options: $view
+			));
 		}
 
 		return $routes;
