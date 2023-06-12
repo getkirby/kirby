@@ -42,14 +42,6 @@ export default (panel) => {
 			if (window.location.toString() !== url) {
 				window.history.pushState(null, null, url);
 			}
-		},
-
-		/**
-		 * Submitting view form values is not
-		 * implemented yet
-		 */
-		async submit() {
-			throw new Error("Not yet implemented");
 		}
 	};
 };

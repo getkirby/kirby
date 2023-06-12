@@ -1,5 +1,6 @@
 import { isUrl } from "@/helpers/url";
 import listeners from "./listeners.js";
+import submitter from "./submitter.js";
 import State from "./state.js";
 
 /**
@@ -46,25 +47,7 @@ export default (panel, key, defaults) => {
 		 */
 		...parent,
 		...listeners(),
-
-		/**
-		 * Checks if the feature can be submitted
-		 *
-		 * @returns {Boolean}
-		 */
-		hasSubmitter() {
-			// the feature has a custom submit listener
-			if (this.hasEventListener("submit") === true) {
-				return true;
-			}
-
-			// the feature can be submitted to the backend
-			if (typeof this.path === "string") {
-				return true;
-			}
-
-			return false;
-		},
+		...submitter(panel),
 
 		/**
 		 * Loads a feature from the server
@@ -162,37 +145,6 @@ export default (panel, key, defaults) => {
 
 			// return the final state
 			return this.state();
-		},
-
-		/**
-		 * Sends a post request to the backend route for
-		 * this Feature
-		 *
-		 * @param {Object} value
-		 * @param {Object} options
-		 */
-		async post(value, options = {}) {
-			if (!this.path) {
-				throw new Error(`The ${this.key()} cannot be posted`);
-			}
-
-			// start the loader
-			this.isLoading = true;
-
-			// if no value has been passed to the submit method,
-			// take the value object from the props
-			value = value ?? this.props?.value ?? {};
-
-			try {
-				return await panel.post(this.path, value, options);
-			} catch (error) {
-				panel.error(error);
-			} finally {
-				// stop the loader
-				this.isLoading = false;
-			}
-
-			return false;
 		},
 
 		/**
