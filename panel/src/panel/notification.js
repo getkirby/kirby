@@ -56,7 +56,12 @@ export default (panel = {}) => {
 		 */
 		error(error) {
 			if (error instanceof AuthError) {
-				return panel.redirect("logout");
+				// only redirect to logout if panel state actually
+				// assumes the user is authenticated, otherwise
+				// continue to show a normal error notification
+				if (panel.user.id) {
+					return panel.redirect("logout");
+				}
 			}
 
 			if (error instanceof JsonRequestError) {
@@ -85,9 +90,12 @@ export default (panel = {}) => {
 				};
 			}
 
-			// fill in some defaults
-			error.message = error.message ?? "Something went wrong";
-			error.details = error.details ?? {};
+			// turn instances into basic object and
+			// fill in some fallback defaults
+			error = {
+				message: error.message ?? "Something went wrong",
+				details: error.details ?? {}
+			};
 
 			// open the error dialog in views
 			if (panel.context === "view") {
