@@ -18,7 +18,7 @@
 				:tooltip="$t('remove')"
 				class="k-block-options-button"
 				icon="trash"
-				@click="$emit('confirmToRemove')"
+				@click="$emit('removeSelected')"
 			/>
 		</template>
 		<template v-else>
@@ -40,7 +40,7 @@
 				:tooltip="$t('delete')"
 				class="k-block-options-button"
 				icon="trash"
-				@click="$emit('confirmToRemove')"
+				@click="$emit('remove')"
 			/>
 			<k-button
 				:tooltip="$t('more')"
@@ -106,7 +106,7 @@
 					{{ $t("duplicate") }}
 				</k-dropdown-item>
 				<hr />
-				<k-dropdown-item icon="trash" @click="$emit('confirmToRemove')">
+				<k-dropdown-item icon="trash" @click="$emit('remove')">
 					{{ $t("delete") }}
 				</k-dropdown-item>
 			</k-dropdown-content>

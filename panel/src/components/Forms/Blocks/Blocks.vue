@@ -27,7 +27,6 @@
 					@chooseToPrepend="choose(index)"
 					@click.native.prevent.stop="onClickBlock(block, $event)"
 					@close="isEditing = false"
-					@confirmToRemoveSelected="confirmToRemoveSelected"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
 					@focus="onFocus(block)"
@@ -39,6 +38,7 @@
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
+					@removeSelected="removeSelected"
 					@show="show(block)"
 					@selectDown="selectDown"
 					@selectUp="selectUp"
@@ -65,19 +65,6 @@
 				@add="add"
 				@convert="convert"
 				@paste="paste($event)"
-			/>
-
-			<k-remove-dialog
-				ref="removeAll"
-				:text="$t('field.blocks.delete.confirm.all')"
-				:submit-button="$t('delete.all')"
-				@submit="removeAll"
-			/>
-
-			<k-remove-dialog
-				ref="removeSelected"
-				:text="$t('field.blocks.delete.confirm.selected')"
-				@submit="removeSelected"
 			/>
 
 			<k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
@@ -216,12 +203,6 @@ export default {
 		},
 		click(block) {
 			this.$emit("click", block);
-		},
-		confirmToRemoveAll() {
-			this.$refs.removeAll.open();
-		},
-		confirmToRemoveSelected() {
-			this.$refs.removeSelected.open();
 		},
 		copy(e) {
 			// don't copy when there are no blocks yet
@@ -587,22 +568,44 @@ export default {
 			}
 		},
 		removeAll() {
-			this.selected = [];
-			this.blocks = [];
-			this.save();
-			this.$refs.removeAll.close();
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.blocks.delete.confirm.all"),
+					submitButton: this.$t("delete.all")
+				},
+				on: {
+					submit: () => {
+						this.selected = [];
+						this.blocks = [];
+						this.save();
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		removeSelected() {
-			for (const id of this.selected) {
-				const index = this.findIndex(id);
-				if (index !== -1) {
-					this.$delete(this.blocks, index);
-				}
-			}
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.blocks.delete.confirm.selected")
+				},
+				on: {
+					submit: () => {
+						for (const id of this.selected) {
+							const index = this.findIndex(id);
+							if (index !== -1) {
+								this.$delete(this.blocks, index);
+							}
+						}
 
-			this.deselectAll();
-			this.save();
-			this.$refs.removeSelected.close();
+						this.deselectAll();
+						this.save();
+
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		save() {
 			this.$emit("input", this.blocks);
