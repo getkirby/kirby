@@ -25,8 +25,8 @@
 		@keydown.ctrl.shift.down.prevent="$emit('sortDown')"
 		@keydown.meta.shift.up.prevent="$emit('sortUp')"
 		@keydown.ctrl.shift.up.prevent="$emit('sortUp')"
-		@keydown.meta.backspace.prevent="confirmToRemove"
-		@keydown.ctrl.backspace.prevent="confirmToRemove"
+		@keydown.meta.backspace.prevent="remove"
+		@keydown.ctrl.backspace.prevent="remove"
 		@focus="$emit('focus')"
 		@focusin="onFocusIn"
 	>
@@ -89,16 +89,10 @@
 				<k-button
 					class="k-drawer-option"
 					icon="trash"
-					@click.prevent.stop="confirmToRemove"
+					@click.prevent.stop="remove"
 				/>
 			</template>
 		</k-form-drawer>
-
-		<k-remove-dialog
-			ref="removeDialog"
-			:text="$t('field.blocks.delete.confirm')"
-			@submit="remove"
-		/>
 	</div>
 </template>
 
@@ -185,7 +179,6 @@ export default {
 				chooseToConvert: ($event) => this.$emit("chooseToConvert", $event),
 				chooseToPrepend: ($event) => this.$emit("chooseToPrepend", $event),
 				close: () => this.$emit("close"),
-				confirmToRemove: () => this.confirmToRemove(),
 				copy: () => this.$emit("copy"),
 				duplicate: () => this.$emit("duplicate"),
 				focus: () => this.$emit("focus"),
@@ -194,7 +187,8 @@ export default {
 				open: () => this.open(),
 				paste: () => this.$emit("paste"),
 				prepend: ($event) => this.$emit("prepend", $event),
-				remove: () => this.$emit("remove"),
+				remove: () => this.remove(),
+				removeSelected: () => this.$emit("removeSelected"),
 				show: () => this.$emit("show"),
 				sortDown: () => this.$emit("sortDown"),
 				sortUp: () => this.$emit("sortUp"),
@@ -258,13 +252,6 @@ export default {
 		close() {
 			this.$refs.drawer.close();
 		},
-		confirmToRemove() {
-			if (this.isBatched) {
-				this.$emit("confirmToRemoveSelected");
-			} else {
-				this.$refs.removeDialog.open();
-			}
-		},
 		focus() {
 			if (this.skipFocus !== true) {
 				if (typeof this.$refs.editor.focus === "function") {
@@ -324,8 +311,22 @@ export default {
 			this.$refs.drawer?.open(tab);
 		},
 		remove() {
-			this.$refs.removeDialog.close();
-			this.$emit("remove", this.id);
+			if (this.isBatched) {
+				return this.$emit("removeSelected");
+			}
+
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.blocks.delete.confirm")
+				},
+				on: {
+					submit: () => {
+						this.$panel.dialog.close();
+						this.$emit("remove", this.id);
+					}
+				}
+			});
 		},
 		submit() {
 			this.close();

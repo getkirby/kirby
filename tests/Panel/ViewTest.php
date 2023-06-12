@@ -484,7 +484,6 @@ class ViewTest extends TestCase
 		// $config
 		$this->assertFalse($config['debug']);
 		$this->assertTrue($config['kirbytext']);
-		$this->assertSame(['limit' => 10, 'type'  => 'pages'], $config['search']);
 		$this->assertSame('en', $config['translation']);
 
 		// $system

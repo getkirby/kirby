@@ -198,7 +198,7 @@ class Panel
 		$request = App::instance()->request();
 
 		return Response::json($data, $code, $request->get('_pretty'), [
-			'X-Fiber' => 'true',
+			'X-Fiber'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);
 	}
@@ -446,9 +446,13 @@ class Panel
 				'type'    => 'search',
 				'area'    => $areaId,
 				'action'  => function () use ($params) {
-					$request = App::instance()->request();
+					$kirby   = App::instance();
+					$request = $kirby->request();
+					$query   = $request->get('query');
+					$limit   = (int)$request->get('limit', $kirby->option('panel.search.limit', 10));
+					$page    = (int)$request->get('page', 1);
 
-					return $params['query']($request->get('query'));
+					return $params['query']($query, $limit, $page);
 				}
 			];
 		}

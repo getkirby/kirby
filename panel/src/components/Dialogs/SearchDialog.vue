@@ -68,7 +68,7 @@
 				<k-collection
 					v-if="items.length"
 					ref="items"
-					:items="items.slice(0, 10)"
+					:items="items"
 					@mouseout.native="select(-1)"
 				/>
 
@@ -79,7 +79,7 @@
 					</p>
 
 					<k-button
-						v-else-if="items.length > 10"
+						v-else-if="items.length < pagination.total"
 						icon="search"
 						@click="
 							$go('search', {
@@ -90,7 +90,7 @@
 							})
 						"
 					>
-						All {{ items.length }} results
+						All {{ pagination.total }} results
 					</k-button>
 				</footer>
 			</div>
@@ -108,6 +108,7 @@ export default {
 		return {
 			isLoading: false,
 			items: [],
+			pagination: {},
 			q: null,
 			selected: -1,
 			type: this.$panel.view.search
@@ -173,8 +174,10 @@ export default {
 
 				const response = await this.$search(this.type, query);
 				this.items = response.results;
+				this.pagination = response.pagination;
 			} catch (error) {
 				this.items = [];
+				this.pagination = {};
 			} finally {
 				this.isLoading = false;
 			}

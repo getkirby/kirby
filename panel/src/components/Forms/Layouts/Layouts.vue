@@ -43,11 +43,6 @@
 		</template>
 
 		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
-		<k-remove-dialog
-			ref="removeAll"
-			:text="$t('field.layout.delete.confirm.all')"
-			@submit="onRemoveAll"
-		/>
 		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
@@ -91,9 +86,6 @@ export default {
 		}
 	},
 	methods: {
-		confirmRemoveAll() {
-			this.$refs.removeAll.open();
-		},
 		copy(e, index) {
 			// don't copy when there are not layouts
 			if (this.rows.length === 0) {
@@ -232,11 +224,6 @@ export default {
 				this.$t("paste.success", { count: rows.length })
 			);
 		},
-		onRemoveAll() {
-			this.rows = [];
-			this.save();
-			this.$refs.removeAll.close();
-		},
 		async onSelect(columns, layoutIndex, payload) {
 			return payload
 				? this.onChange(columns, layoutIndex, payload)
@@ -254,6 +241,21 @@ export default {
 			}
 
 			this.save();
+		},
+		removeAll() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.layout.delete.confirm.all")
+				},
+				on: {
+					submit: () => {
+						this.rows = [];
+						this.save();
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		save() {
 			this.$emit("input", this.rows);

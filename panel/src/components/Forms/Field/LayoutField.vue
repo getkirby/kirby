@@ -36,7 +36,7 @@
 						<k-dropdown-item
 							:disabled="isEmpty"
 							icon="trash"
-							@click="$refs.layouts.confirmRemoveAll()"
+							@click="$refs.layouts.removeAll()"
 						>
 							{{ $t("delete.all") }}
 						</k-dropdown-item>

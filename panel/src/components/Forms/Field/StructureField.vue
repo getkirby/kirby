@@ -15,7 +15,7 @@
 					<k-dropdown-item
 						:disabled="items.length === 0 || disabled"
 						icon="trash"
-						@click="confirmToRemoveAll"
+						@click="removeAll"
 					>
 						{{ $t("delete.all") }}
 					</k-dropdown-item>
@@ -77,21 +77,6 @@
 					@click="onAdd"
 				/>
 			</footer>
-
-			<k-remove-dialog
-				v-if="!disabled"
-				ref="remove"
-				theme="negative"
-				:submit-button="$t('delete')"
-				:text="$t('field.structure.delete.confirm')"
-				@submit="onRemove"
-			/>
-
-			<k-remove-dialog
-				ref="dialogRemoveAll"
-				:text="$t('field.structure.delete.confirm.all')"
-				@submit="onRemoveAll"
-			/>
 		</template>
 	</k-field>
 </template>
@@ -164,7 +149,6 @@ export default {
 			items: this.toItems(this.value),
 			currentIndex: null,
 			currentModel: null,
-			trash: null,
 			page: 1
 		};
 	},
@@ -347,9 +331,6 @@ export default {
 				this.items.push(value);
 			}
 		},
-		confirmToRemoveAll() {
-			this.$refs.dialogRemoveAll.open();
-		},
 		/**
 		 * Focuses the add button
 		 * @public
@@ -460,8 +441,7 @@ export default {
 			switch (option) {
 				case "remove":
 					this.onFormClose();
-					this.trash = rowIndex + this.pagination.offset;
-					this.$refs.remove.open();
+					this.remove(rowIndex + this.pagination.offset);
 					break;
 
 				case "duplicate":
@@ -473,38 +453,6 @@ export default {
 					this.open(rowIndex);
 					break;
 			}
-		},
-		/**
-		 * When removal has been confirmed,
-		 * remove entry
-		 */
-		onRemove() {
-			// stop if no entry has been flagged for removal
-			if (this.trash === null) {
-				return false;
-			}
-
-			this.items.splice(this.trash, 1);
-			this.trash = null;
-			this.$refs.remove.close();
-			this.onInput();
-
-			// if pagination page doesn't exist anymore,
-			// go to previous page
-			if (this.paginatedItems.length === 0 && this.page > 1) {
-				this.page--;
-			}
-
-			this.items = this.sort(this.items);
-		},
-		/**
-		 * When removal has been confirmed,
-		 * remove all entries
-		 */
-		onRemoveAll() {
-			this.items = [];
-			this.onInput();
-			this.$refs.dialogRemoveAll.close();
 		},
 
 		/**
@@ -525,6 +473,55 @@ export default {
 		 */
 		paginate({ page }) {
 			this.page = page;
+		},
+		/**
+		 * Remove current entry
+		 */
+		remove(index) {
+			if (this.disabled || index === null) {
+				return;
+			}
+
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.structure.delete.confirm")
+				},
+				on: {
+					submit: () => {
+						this.items.splice(index, 1);
+						this.onInput();
+						this.$panel.dialog.close();
+
+						// if pagination page doesn't exist anymore,
+						// go to previous page
+						if (this.paginatedItems.length === 0 && this.page > 1) {
+							this.page--;
+						}
+
+						this.items = this.sort(this.items);
+					}
+				}
+			});
+		},
+		/**
+		 * Remove all entries
+		 */
+		removeAll() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.structure.delete.confirm.all")
+				},
+				on: {
+					submit: () => {
+						this.page = 1;
+						this.items = [];
+						this.onInput();
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		/**
 		 * Sort items according to `sortBy` prop
