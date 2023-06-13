@@ -96,7 +96,7 @@ class BlocksField extends FieldClass
 		return empty($fieldsetGroups) === true ? null : $fieldsetGroups;
 	}
 
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$value  = BlocksCollection::parse($value);
 		$blocks = BlocksCollection::factory($value);
@@ -234,7 +234,7 @@ class BlocksField extends FieldClass
 		return $this->valueToJson($blocks, $this->pretty());
 	}
 
-	protected function setDefault($default = null)
+	protected function setDefault($default = null): void
 	{
 		// set id for blocks if not exists
 		if (is_array($default) === true) {
@@ -246,7 +246,7 @@ class BlocksField extends FieldClass
 		parent::setDefault($default);
 	}
 
-	protected function setFieldsets($fieldsets, $model)
+	protected function setFieldsets($fieldsets, $model): void
 	{
 		if (is_string($fieldsets) === true) {
 			$fieldsets = [];
@@ -257,12 +257,12 @@ class BlocksField extends FieldClass
 		]);
 	}
 
-	protected function setGroup(string $group = null)
+	protected function setGroup(string $group = null): void
 	{
 		$this->group = $group;
 	}
 
-	protected function setPretty(bool $pretty = false)
+	protected function setPretty(bool $pretty = false): void
 	{
 		$this->pretty = $pretty;
 	}

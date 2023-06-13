@@ -118,8 +118,6 @@ abstract class FieldClass
 	protected $width;
 
 	/**
-	 * @param string $param
-	 * @param array $args
 	 * @return mixed
 	 */
 	public function __call(string $param, array $args)
@@ -131,9 +129,6 @@ abstract class FieldClass
 		return $this->params[$param] ?? null;
 	}
 
-	/**
-	 * @param array $params
-	 */
 	public function __construct(array $params = [])
 	{
 		$this->params = $params;
@@ -160,33 +155,21 @@ abstract class FieldClass
 		}
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function after(): string|null
 	{
 		return $this->stringTemplate($this->after);
 	}
 
-	/**
-	 * @return array
-	 */
 	public function api(): array
 	{
 		return $this->routes();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function autofocus(): bool
 	{
 		return $this->autofocus;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function before(): string|null
 	{
 		return $this->stringTemplate($this->before);
@@ -200,7 +183,6 @@ abstract class FieldClass
 	 * in a format to be stored
 	 * in Kirby's content fields
 	 *
-	 * @param bool $default
 	 * @return mixed
 	 */
 	public function data(bool $default = false)
@@ -225,8 +207,6 @@ abstract class FieldClass
 
 	/**
 	 * Returns optional dialog routes for the field
-	 *
-	 * @return array
 	 */
 	public function dialogs(): array
 	{
@@ -235,8 +215,6 @@ abstract class FieldClass
 
 	/**
 	 * If `true`, the field is no longer editable and will not be saved
-	 *
-	 * @return bool
 	 */
 	public function disabled(): bool
 	{
@@ -245,8 +223,6 @@ abstract class FieldClass
 
 	/**
 	 * Returns optional drawer routes for the field
-	 *
-	 * @return array
 	 */
 	public function drawers(): array
 	{
@@ -256,8 +232,6 @@ abstract class FieldClass
 	/**
 	 * Runs all validations and returns an array of
 	 * error messages
-	 *
-	 * @return array
 	 */
 	public function errors(): array
 	{
@@ -268,17 +242,14 @@ abstract class FieldClass
 	 * Setter for the value
 	 *
 	 * @param mixed $value
-	 * @return void
 	 */
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$this->value = $value;
 	}
 
 	/**
 	 * Optional help text below the field
-	 *
-	 * @return string|null
 	 */
 	public function help(): string|null
 	{
@@ -293,7 +264,6 @@ abstract class FieldClass
 
 	/**
 	 * @param string|array|null $param
-	 * @return string|null
 	 */
 	protected function i18n($param = null): string|null
 	{
@@ -302,33 +272,22 @@ abstract class FieldClass
 
 	/**
 	 * Optional icon that will be shown at the end of the field
-	 *
-	 * @return string|null
 	 */
 	public function icon(): string|null
 	{
 		return $this->icon;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function id(): string
 	{
 		return $this->name();
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isDisabled(): bool
 	{
 		return $this->disabled;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isEmpty(): bool
 	{
 		return $this->isEmptyValue($this->value());
@@ -336,7 +295,6 @@ abstract class FieldClass
 
 	/**
 	 * @param mixed $value
-	 * @return bool
 	 */
 	public function isEmptyValue($value = null): bool
 	{
@@ -350,25 +308,17 @@ abstract class FieldClass
 
 	/**
 	 * Checks if the field is invalid
-	 *
-	 * @return bool
 	 */
 	public function isInvalid(): bool
 	{
 		return $this->isValid() === false;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isRequired(): bool
 	{
 		return $this->required;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isSaveable(): bool
 	{
 		return true;
@@ -376,8 +326,6 @@ abstract class FieldClass
 
 	/**
 	 * Checks if the field is valid
-	 *
-	 * @return bool
 	 */
 	public function isValid(): bool
 	{
@@ -396,12 +344,12 @@ abstract class FieldClass
 
 	/**
 	 * The field label can be set as string or associative array with translations
-	 *
-	 * @return string
 	 */
 	public function label(): string
 	{
-		return $this->stringTemplate($this->label ?? Str::ucfirst($this->name()));
+		return $this->stringTemplate(
+			$this->label ?? Str::ucfirst($this->name())
+		);
 	}
 
 	/**
@@ -416,8 +364,6 @@ abstract class FieldClass
 
 	/**
 	 * Returns the field name
-	 *
-	 * @return string
 	 */
 	public function name(): string
 	{
@@ -431,8 +377,6 @@ abstract class FieldClass
 	 * - The field is required
 	 * - The field is currently empty
 	 * - The field is not currently inactive because of a `when` rule
-	 *
-	 * @return bool
 	 */
 	protected function needsValue(): bool
 	{
@@ -470,8 +414,6 @@ abstract class FieldClass
 
 	/**
 	 * Returns all original params for the field
-	 *
-	 * @return array
 	 */
 	public function params(): array
 	{
@@ -480,8 +422,6 @@ abstract class FieldClass
 
 	/**
 	 * Optional placeholder value that will be shown when the field is empty
-	 *
-	 * @return string|null
 	 */
 	public function placeholder(): string|null
 	{
@@ -491,8 +431,6 @@ abstract class FieldClass
 	/**
 	 * Define the props that will be sent to
 	 * the Vue component
-	 *
-	 * @return array
 	 */
 	public function props(): array
 	{
@@ -519,8 +457,6 @@ abstract class FieldClass
 
 	/**
 	 * If `true`, the field has to be filled in correctly to be saved.
-	 *
-	 * @return bool
 	 */
 	public function required(): bool
 	{
@@ -529,8 +465,6 @@ abstract class FieldClass
 
 	/**
 	 * Routes for the field API
-	 *
-	 * @return array
 	 */
 	public function routes(): array
 	{
@@ -549,126 +483,85 @@ abstract class FieldClass
 
 	/**
 	 * @param array|string|null $after
-	 * @return void
 	 */
-	protected function setAfter($after = null)
+	protected function setAfter($after = null): void
 	{
 		$this->after = $this->i18n($after);
 	}
 
-	/**
-	 * @param bool $autofocus
-	 * @return void
-	 */
-	protected function setAutofocus(bool $autofocus = false)
+	protected function setAutofocus(bool $autofocus = false): void
 	{
 		$this->autofocus = $autofocus;
 	}
 
 	/**
 	 * @param array|string|null $before
-	 * @return void
 	 */
-	protected function setBefore($before = null)
+	protected function setBefore($before = null): void
 	{
 		$this->before = $this->i18n($before);
 	}
 
 	/**
 	 * @param mixed $default
-	 * @return void
 	 */
-	protected function setDefault($default = null)
+	protected function setDefault($default = null): void
 	{
 		$this->default = $default;
 	}
 
-	/**
-	 * @param bool $disabled
-	 * @return void
-	 */
-	protected function setDisabled(bool $disabled = false)
+	protected function setDisabled(bool $disabled = false): void
 	{
 		$this->disabled = $disabled;
 	}
 
 	/**
 	 * @param array|string|null $help
-	 * @return void
 	 */
-	protected function setHelp($help = null)
+	protected function setHelp($help = null): void
 	{
 		$this->help = $this->i18n($help);
 	}
 
-	/**
-	 * @param string|null $icon
-	 * @return void
-	 */
-	protected function setIcon(string|null $icon = null)
+	protected function setIcon(string|null $icon = null): void
 	{
 		$this->icon = $icon;
 	}
 
 	/**
 	 * @param array|string|null $label
-	 * @return void
 	 */
-	protected function setLabel($label = null)
+	protected function setLabel($label = null): void
 	{
 		$this->label = $this->i18n($label);
 	}
 
-	/**
-	 * @param \Kirby\Cms\ModelWithContent $model
-	 * @return void
-	 */
-	protected function setModel(ModelWithContent $model)
+	protected function setModel(ModelWithContent $model): void
 	{
 		$this->model = $model;
 	}
 
-	/**
-	 * @param string|null $name
-	 * @return void
-	 */
-	protected function setName(string $name = null)
+	protected function setName(string|null $name = null): void
 	{
 		$this->name = $name;
 	}
 
-	/**
-	 * @param array|string|null $placeholder
-	 * @return void
-	 */
-	protected function setPlaceholder($placeholder = null)
+	protected function setPlaceholder($placeholder = null): void
 	{
 		$this->placeholder = $this->i18n($placeholder);
 	}
 
-	/**
-	 * @param bool $required
-	 * @return void
-	 */
-	protected function setRequired(bool $required = false)
+	protected function setRequired(bool $required = false): void
 	{
 		$this->required = $required;
 	}
 
-	/**
-	 * @param \Kirby\Form\Fields|null $siblings
-	 * @return void
-	 */
-	protected function setSiblings(?Fields $siblings = null)
+	protected function setSiblings(Fields|null $siblings = null): void
 	{
 		$this->siblings = $siblings ?? new Fields([$this]);
 	}
 
-	/**
-	 * @param bool $translate
-	 * @return void
-	 */
-	protected function setTranslate(bool $translate = true)
+	protected function setTranslate(bool $translate = true): void
 	{
 		$this->translate = $translate;
 	}
@@ -677,20 +570,16 @@ abstract class FieldClass
 	 * Setter for the when condition
 	 *
 	 * @param mixed $when
-	 * @return void
 	 */
-	protected function setWhen($when = null)
+	protected function setWhen($when = null): void
 	{
 		$this->when = $when;
 	}
 
 	/**
 	 * Setter for the field width
-	 *
-	 * @param string|null $width
-	 * @return void
 	 */
-	protected function setWidth(string $width = null)
+	protected function setWidth(string|null $width = null): void
 	{
 		$this->width = $width;
 	}
@@ -707,9 +596,6 @@ abstract class FieldClass
 
 	/**
 	 * Parses a string template in the given value
-	 *
-	 * @param string|null $string
-	 * @return string|null
 	 */
 	protected function stringTemplate(string|null $string = null): string|null
 	{
@@ -734,8 +620,6 @@ abstract class FieldClass
 
 	/**
 	 * Should the field be translatable?
-	 *
-	 * @return bool
 	 */
 	public function translate(): bool
 	{
@@ -744,8 +628,6 @@ abstract class FieldClass
 
 	/**
 	 * Converts the field to a plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -759,8 +641,6 @@ abstract class FieldClass
 
 	/**
 	 * Returns the field type
-	 *
-	 * @return string
 	 */
 	public function type(): string
 	{
@@ -769,8 +649,6 @@ abstract class FieldClass
 
 	/**
 	 * Runs the validations defined for the field
-	 *
-	 * @return array
 	 */
 	protected function validate(): array
 	{
@@ -808,8 +686,6 @@ abstract class FieldClass
 
 	/**
 	 * Defines all validation rules
-	 *
-	 * @return array
 	 */
 	protected function validations(): array
 	{
@@ -837,7 +713,6 @@ abstract class FieldClass
 
 	/**
 	 * @param mixed $value
-	 * @return array
 	 */
 	protected function valueFromJson($value): array
 	{
@@ -850,20 +725,16 @@ abstract class FieldClass
 
 	/**
 	 * @param mixed $value
-	 * @return array
 	 */
 	protected function valueFromYaml($value): array
 	{
 		return Data::decode($value, 'yaml');
 	}
 
-	/**
-	 * @param array|null $value
-	 * @param bool $pretty
-	 * @return string
-	 */
-	protected function valueToJson(array $value = null, bool $pretty = false): string
-	{
+	protected function valueToJson(
+		array $value = null,
+		bool $pretty = false
+	): string {
 		$constants = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
 
 		if ($pretty === true) {
@@ -873,10 +744,6 @@ abstract class FieldClass
 		return json_encode($value, $constants);
 	}
 
-	/**
-	 * @param array|null $value
-	 * @return string
-	 */
 	protected function valueToYaml(array $value = null): string
 	{
 		return Data::encode($value, 'yaml');
@@ -884,8 +751,6 @@ abstract class FieldClass
 
 	/**
 	 * Conditions when the field will be shown
-	 *
-	 * @return array|null
 	 */
 	public function when(): array|null
 	{
@@ -895,8 +760,6 @@ abstract class FieldClass
 	/**
 	 * Returns the width of the field in
 	 * the Panel grid
-	 *
-	 * @return string
 	 */
 	public function width(): string
 	{

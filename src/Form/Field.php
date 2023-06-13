@@ -54,13 +54,13 @@ class Field extends Component
 	/**
 	 * Field constructor
 	 *
-	 * @param string $type
-	 * @param array $attrs
-	 * @param \Kirby\Form\Fields|null $formFields
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
-	public function __construct(string $type, array $attrs = [], ?Fields $formFields = null)
-	{
+	public function __construct(
+		string $type,
+		array $attrs = [],
+		Fields|null $formFields = null
+	) {
 		if (isset(static::$types[$type]) === false) {
 			throw new InvalidArgumentException([
 				'key'  => 'field.type.missing',
@@ -99,7 +99,6 @@ class Field extends Component
 	/**
 	 * Returns field data
 	 *
-	 * @param bool $default
 	 * @return mixed
 	 */
 	public function data(bool $default = false)
@@ -125,8 +124,6 @@ class Field extends Component
 
 	/**
 	 * Default props and computed of the field
-	 *
-	 * @return array
 	 */
 	public static function defaults(): array
 	{
@@ -265,8 +262,6 @@ class Field extends Component
 
 	/**
 	 * Returns optional dialog routes for the field
-	 *
-	 * @return array
 	 */
 	public function dialogs(): array
 	{
@@ -282,8 +277,6 @@ class Field extends Component
 
 	/**
 	 * Returns optional drawer routes for the field
-	 *
-	 * @return array
 	 */
 	public function drawers(): array
 	{
@@ -300,13 +293,13 @@ class Field extends Component
 	/**
 	 * Creates a new field instance
 	 *
-	 * @param string $type
-	 * @param array $attrs
-	 * @param Fields|null $formFields
 	 * @return static
 	 */
-	public static function factory(string $type, array $attrs = [], ?Fields $formFields = null)
-	{
+	public static function factory(
+		string $type,
+		array $attrs = [],
+		Fields|null $formFields = null
+	) {
 		$field = static::$types[$type] ?? null;
 
 		if (is_string($field) && class_exists($field) === true) {
@@ -319,18 +312,14 @@ class Field extends Component
 
 	/**
 	 * Parent collection with all fields of the current form
-	 *
-	 * @return \Kirby\Form\Fields|null
 	 */
-	public function formFields(): ?Fields
+	public function formFields(): Fields|null
 	{
 		return $this->formFields;
 	}
 
 	/**
 	 * Validates when run for the first time and returns any errors
-	 *
-	 * @return array
 	 */
 	public function errors(): array
 	{
@@ -345,7 +334,6 @@ class Field extends Component
 	 * Checks if the field is empty
 	 *
 	 * @param mixed ...$args
-	 * @return bool
 	 */
 	public function isEmpty(...$args): bool
 	{
@@ -372,8 +360,6 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is invalid
-	 *
-	 * @return bool
 	 */
 	public function isInvalid(): bool
 	{
@@ -382,8 +368,6 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is required
-	 *
-	 * @return bool
 	 */
 	public function isRequired(): bool
 	{
@@ -392,8 +376,6 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is valid
-	 *
-	 * @return bool
 	 */
 	public function isValid(): bool
 	{
@@ -427,8 +409,6 @@ class Field extends Component
 	 * - The field is required
 	 * - The field is currently empty
 	 * - The field is not currently inactive because of a `when` rule
-	 *
-	 * @return bool
 	 */
 	protected function needsValue(): bool
 	{
@@ -462,8 +442,6 @@ class Field extends Component
 
 	/**
 	 * Checks if the field is saveable
-	 *
-	 * @return bool
 	 */
 	public function save(): bool
 	{
@@ -472,8 +450,6 @@ class Field extends Component
 
 	/**
 	 * Converts the field to a plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -495,8 +471,6 @@ class Field extends Component
 
 	/**
 	 * Runs the validations defined for the field
-	 *
-	 * @return void
 	 */
 	protected function validate(): void
 	{
