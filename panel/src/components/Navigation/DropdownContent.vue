@@ -1,10 +1,12 @@
 <template>
-	<div
+	<dialog
 		v-if="isOpen"
 		:data-align="align"
 		:data-dropup="dropup"
 		:data-theme="theme"
 		class="k-dropdown-content"
+		@close="close"
+		@click="click"
 	>
 		<!-- @slot Content of the dropdown -->
 		<slot>
@@ -21,7 +23,7 @@
 				</k-dropdown-item>
 			</template>
 		</slot>
-	</div>
+	</dialog>
 </template>
 
 <script>
@@ -74,6 +76,12 @@ export default {
 		};
 	},
 	methods: {
+		click(event) {
+			// compare the event target with the overlay element
+			if (event.target === this.$el) {
+				this.$el.close();
+			}
+		},
 		async fetchOptions(ready) {
 			if (this.options) {
 				if (typeof this.options === "string") {
@@ -98,7 +106,7 @@ export default {
 		 * Opens the dropdown
 		 * @public
 		 */
-		open() {
+		open(opener) {
 			this.reset();
 
 			if (OpenDropdown && OpenDropdown !== this) {
@@ -106,13 +114,18 @@ export default {
 				OpenDropdown.close();
 			}
 
+			opener =
+				opener ??
+				window.event?.target.closest("button") ??
+				window.event?.target;
+
 			this.fetchOptions((items) => {
 				this.$events.$on("keydown", this.navigate);
 				this.$events.$on("click", this.close);
 				this.items = items;
 				this.isOpen = true;
 				OpenDropdown = this;
-				this.onOpen();
+				this.onOpen(opener);
 				this.$emit("open");
 			});
 		},
@@ -134,8 +147,8 @@ export default {
 		 * Toggles the open state of the dropdown
 		 * @public
 		 */
-		toggle() {
-			this.isOpen ? this.close() : this.open();
+		toggle(opener) {
+			this.isOpen ? this.close() : this.open(opener);
 		},
 		focus(n = 0) {
 			if (this.$children[n]?.focus) {
@@ -143,12 +156,27 @@ export default {
 				this.$children[n].focus();
 			}
 		},
-		onOpen() {
+		onOpen(opener) {
 			// disable dropup before calculate
 			this.dropup = false;
 
 			this.$nextTick(() => {
 				if (this.$el) {
+					const rect = opener.getBoundingClientRect();
+
+					// set the top position
+					this.$el.style.top = rect.top + window.scrollY + rect.height + "px";
+
+					// set the left position based on the alignment
+					if (this.align === "end" || this.align === "right") {
+						this.$el.style.left =
+							rect.left + window.scrollX + rect.width + "px";
+					} else {
+						this.$el.style.left = rect.left + window.scrollX + "px";
+					}
+
+					this.$el.showModal();
+
 					// get window height depending on the browser
 					let windowHeight =
 						window.innerHeight ||
@@ -172,6 +200,8 @@ export default {
 						scrollTop + dropdownHeight > windowHeight - safeSpaceHeight &&
 						dropdownHeight + safeSpaceHeight * 2 < scrollTop
 					) {
+						this.$el.style.top =
+							parseInt(this.$el.style.top) - rect.height + "px";
 						this.dropup = true;
 					}
 				}
@@ -180,9 +210,8 @@ export default {
 		navigate(e) {
 			/*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 			switch (e.code) {
-				case "Escape":
 				case "ArrowLeft":
-					this.close();
+					this.$el.close();
 					this.$emit("leave", e.code);
 					break;
 				case "ArrowUp":
@@ -192,7 +221,7 @@ export default {
 						this.current--;
 
 						if (this.current < 0) {
-							this.close();
+							this.$el.close();
 							this.$emit("leave", e.code);
 							break;
 						}
@@ -227,22 +256,6 @@ export default {
 					}
 
 					break;
-				case "Tab":
-					while (true) {
-						this.current++;
-
-						if (this.current > this.$children.length - 1) {
-							this.close();
-							this.$emit("leave", e.code);
-							break;
-						}
-
-						if (this.$children[this.current]?.disabled === false) {
-							break;
-						}
-					}
-
-					break;
 			}
 		}
 	}
@@ -258,20 +271,22 @@ export default {
 }
 
 .k-dropdown-content {
+	--dropdown-x: 0;
+	--dropdown-y: 0;
 	position: absolute;
-	top: 100%;
+	inset-block-start: 0;
 	inset-inline-start: 0;
-
-	z-index: var(--z-dropdown);
 	width: max-content;
 	padding: 0.5rem;
 	background: var(--dropdown-color-bg);
 	border-radius: var(--rounded);
 	color: var(--dropdown-color-text);
 	box-shadow: var(--dropdown-shadow);
-
 	text-align: start;
-	margin-bottom: 6rem;
+	transform: translate(var(--dropdown-x), var(--dropdown-y));
+}
+.k-dropdown-content::backdrop {
+	background: none;
 }
 
 .k-dropdown-content .k-button {
@@ -293,14 +308,11 @@ export default {
 
 .k-dropdown-content[data-align="right"],
 .k-dropdown-content[data-align="end"] {
-	inset-inline-start: auto;
-	inset-inline-end: 0;
+	--dropdown-x: -100%;
 }
 
 .k-dropdown-content[data-dropup="true"] {
-	top: auto;
-	bottom: 100%;
-	margin-bottom: 0;
+	--dropdown-y: -100%;
 }
 
 .k-dropdown-content hr {
