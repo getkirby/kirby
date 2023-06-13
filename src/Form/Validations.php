@@ -20,8 +20,6 @@ class Validations
 	 * Validates if the field value is boolean
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function boolean($field, $value): bool
@@ -41,8 +39,6 @@ class Validations
 	 * Validates if the field value is valid date
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function date($field, $value): bool
@@ -62,8 +58,6 @@ class Validations
 	 * Validates if the field value is valid email
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function email($field, $value): bool
@@ -83,8 +77,6 @@ class Validations
 	 * Validates if the field value is maximum
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function max($field, $value): bool
@@ -104,8 +96,6 @@ class Validations
 	 * Validates if the field value is max length
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function maxlength($field, $value): bool
@@ -125,8 +115,6 @@ class Validations
 	 * Validates if the field value is minimum
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function min($field, $value): bool
@@ -146,8 +134,6 @@ class Validations
 	 * Validates if the field value is min length
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function minlength($field, $value): bool
@@ -167,8 +153,6 @@ class Validations
 	 * Validates if the field value matches defined pattern
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function pattern($field, $value): bool
@@ -188,8 +172,6 @@ class Validations
 	 * Validates if the field value is required
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function required($field, $value): bool
@@ -207,8 +189,6 @@ class Validations
 	 * Validates if the field value is in defined options
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function option($field, $value): bool
@@ -230,8 +210,6 @@ class Validations
 	 * Validates if the field values is in defined options
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function options($field, $value): bool
@@ -254,8 +232,6 @@ class Validations
 	 * Validates if the field value is valid time
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function time($field, $value): bool
@@ -275,8 +251,6 @@ class Validations
 	 * Validates if the field value is valid url
 	 *
 	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass $field
-	 * @param $value
-	 * @return bool
 	 * @throws \Kirby\Exception\InvalidArgumentException
 	 */
 	public static function url($field, $value): bool

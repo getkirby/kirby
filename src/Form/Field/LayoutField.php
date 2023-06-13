@@ -26,7 +26,7 @@ class LayoutField extends BlocksField
 		parent::__construct($params);
 	}
 
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$value   = $this->valueFromJson($value);
 		$layouts = Layouts::factory($value, ['parent' => $this->model])->toArray();
@@ -185,7 +185,7 @@ class LayoutField extends BlocksField
 		return $routes;
 	}
 
-	protected function setDefault($default = null)
+	protected function setDefault($default = null): void
 	{
 		// set id for layouts, columns and blocks within layout if not exists
 		if (is_array($default) === true) {
@@ -211,7 +211,7 @@ class LayoutField extends BlocksField
 		parent::setDefault($default);
 	}
 
-	protected function setLayouts(array $layouts = [])
+	protected function setLayouts(array $layouts = []): void
 	{
 		$this->layouts = array_map(
 			fn ($layout) => Str::split($layout),
@@ -219,7 +219,7 @@ class LayoutField extends BlocksField
 		);
 	}
 
-	protected function setSettings($settings = null)
+	protected function setSettings($settings = null): void
 	{
 		if (empty($settings) === true) {
 			$this->settings = null;

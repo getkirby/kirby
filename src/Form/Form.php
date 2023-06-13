@@ -48,8 +48,6 @@ class Form
 
 	/**
 	 * Form constructor
-	 *
-	 * @param array $props
 	 */
 	public function __construct(array $props)
 	{
@@ -118,8 +116,6 @@ class Form
 	/**
 	 * Returns the data required to write to the content file
 	 * Doesn't include default and null values
-	 *
-	 * @return array
 	 */
 	public function content(): array
 	{
@@ -130,8 +126,6 @@ class Form
 	 * Returns data for all fields in the form
 	 *
 	 * @param false $defaults
-	 * @param bool $includeNulls
-	 * @return array
 	 */
 	public function data($defaults = false, bool $includeNulls = true): array
 	{
@@ -154,8 +148,6 @@ class Form
 
 	/**
 	 * An array of all found errors
-	 *
-	 * @return array
 	 */
 	public function errors(): array
 	{
@@ -180,12 +172,12 @@ class Form
 	/**
 	 * Shows the error with the field
 	 *
-	 * @param \Throwable $exception
-	 * @param array $props
 	 * @return \Kirby\Form\Field
 	 */
-	public static function exceptionField(Throwable $exception, array $props = [])
-	{
+	public static function exceptionField(
+		Throwable $exception,
+		array $props = []
+	) {
 		$message = $exception->getMessage();
 
 		if (App::instance()->option('debug') === true) {
@@ -285,8 +277,6 @@ class Form
 
 	/**
 	 * Checks if the form is invalid
-	 *
-	 * @return bool
 	 */
 	public function isInvalid(): bool
 	{
@@ -295,8 +285,6 @@ class Form
 
 	/**
 	 * Checks if the form is valid
-	 *
-	 * @return bool
 	 */
 	public function isValid(): bool
 	{
@@ -306,13 +294,11 @@ class Form
 	/**
 	 * Disables fields in secondary languages when
 	 * they are configured to be untranslatable
-	 *
-	 * @param array $fields
-	 * @param string|null $language
-	 * @return array
 	 */
-	protected static function prepareFieldsForLanguage(array $fields, string|null $language = null): array
-	{
+	protected static function prepareFieldsForLanguage(
+		array $fields,
+		string|null $language = null
+	): array {
 		$kirby = App::instance(null, true);
 
 		// only modify the fields if we have a valid Kirby multilang instance
@@ -339,7 +325,6 @@ class Form
 	 * Converts the data of fields to strings
 	 *
 	 * @param false $defaults
-	 * @return array
 	 */
 	public function strings($defaults = false): array
 	{
@@ -360,8 +345,6 @@ class Form
 
 	/**
 	 * Converts the form to a plain array
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -376,8 +359,6 @@ class Form
 
 	/**
 	 * Returns form values
-	 *
-	 * @return array
 	 */
 	public function values(): array
 	{
