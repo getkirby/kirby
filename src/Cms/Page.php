@@ -3,16 +3,17 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
 
 /**
  * The `$page` object is the heart and
@@ -886,11 +887,18 @@ class Page extends ModelWithContent
 	 */
 	public function modified(string $format = null, string $handler = null, string $languageCode = null)
 	{
-		return F::modified(
-			$this->contentFile($languageCode),
-			$format,
-			$handler ?? $this->kirby()->option('date.handler', 'date')
+		$identifier = $this->isDraft() === true ? VersionIdentifier::changes() : VersionIdentifier::published();
+
+		$modified = $this->storage()->modified(
+			$identifier,
+			$this->storage()->languageCodeToObject($languageCode)
 		);
+
+		if ($modified === null) {
+			return null;
+		}
+
+		return Str::date($modified, $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
 	}
 
 	/**

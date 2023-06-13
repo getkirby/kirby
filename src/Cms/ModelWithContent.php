@@ -9,9 +9,7 @@ use Kirby\Content\VersionIdentifier;
 use Kirby\Content\VersionTemplate;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
@@ -276,6 +274,11 @@ abstract class ModelWithContent implements Identifiable
 		// first close object with new blueprint as template
 		$new = $this->clone(['template' => $blueprint]);
 
+		// temporary compatibility change (TODO: also convert changes)
+		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionIdentifier::changes() :
+			VersionIdentifier::published();
+
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
 		// to rewrite it with converted content afterwards
@@ -286,9 +289,11 @@ abstract class ModelWithContent implements Identifiable
 				if ($this->translation($code)?->exists() === true) {
 					$content = $this->content($code)->convertTo($blueprint);
 
-					if (F::remove($this->contentFile($code)) !== true) {
-						throw new LogicException('The old text file could not be removed'); // @codeCoverageIgnore
-					}
+					// delete the old text file
+					$this->storage()->delete(
+						$identifier,
+						$this->storage()->languageCodeToObject($code)
+					);
 
 					// save to re-create the translation content file
 					// with the converted/updated content
@@ -311,9 +316,8 @@ abstract class ModelWithContent implements Identifiable
 		// just once for the main content
 		$content = $this->content()->convertTo($blueprint);
 
-		if (F::remove($this->contentFile()) !== true) {
-			throw new LogicException('The old text file could not be removed'); // @codeCoverageIgnore
-		}
+		// delete the old text file
+		$this->storage()->delete($identifier, new Language(['code' => 'default']));
 
 		return $new->save($content);
 	}
@@ -440,7 +444,10 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function lock()
 	{
-		$dir = $this->contentFileDirectory();
+		$dir = $this->root();
+		if ($this::CLASS_ALIAS === 'file') {
+			$dir = dirname($dir);
+		}
 
 		if (
 			$this->kirby()->option('content.locking', true) &&

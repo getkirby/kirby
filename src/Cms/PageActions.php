@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -462,7 +463,8 @@ trait PageActions
 				$ignore[] = $file->root();
 
 				// append all content files
-				array_push($ignore, ...$file->contentFiles());
+				array_push($ignore, ...$file->storage()->contentFiles(VersionIdentifier::published()));
+				array_push($ignore, ...$file->storage()->contentFiles(VersionIdentifier::changes()));
 			}
 		}
 

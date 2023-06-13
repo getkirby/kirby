@@ -78,7 +78,8 @@ class ContentLocks
 	 */
 	public static function file(ModelWithContent $model): string
 	{
-		return $model->contentFileDirectory() . '/.lock';
+		$root = $model::CLASS_ALIAS === 'file' ? dirname($model->root()) : $model->root();
+		return $root . '/.lock';
 	}
 
 	/**

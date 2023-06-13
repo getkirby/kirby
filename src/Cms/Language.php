@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Content\VersionIdentifier;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -147,46 +148,75 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
+		$from = $site->storage()->languageCodeToObject($from, true);
+		$to   = $site->storage()->languageCodeToObject($to, true);
+
 		// convert site
 		foreach ($site->files() as $file) {
 			F::move(
-				$file->contentFile($from, true),
-				$file->contentFile($to, true)
+				$file->storage()->contentFile(VersionIdentifier::changes(), $from),
+				$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+			);
+			F::move(
+				$file->storage()->contentFile(VersionIdentifier::published(), $from),
+				$file->storage()->contentFile(VersionIdentifier::published(), $to)
 			);
 		}
 
 		F::move(
-			$site->contentFile($from, true),
-			$site->contentFile($to, true)
+			$site->storage()->contentFile(VersionIdentifier::changes(), $from),
+			$site->storage()->contentFile(VersionIdentifier::changes(), $to)
+		);
+		F::move(
+			$site->storage()->contentFile(VersionIdentifier::published(), $from),
+			$site->storage()->contentFile(VersionIdentifier::published(), $to)
 		);
 
 		// convert all pages
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
 				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
+					$file->storage()->contentFile(VersionIdentifier::changes(), $from),
+					$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+				);
+				F::move(
+					$file->storage()->contentFile(VersionIdentifier::published(), $from),
+					$file->storage()->contentFile(VersionIdentifier::published(), $to)
 				);
 			}
 
 			F::move(
-				$page->contentFile($from, true),
-				$page->contentFile($to, true)
+				$page->storage()->contentFile(VersionIdentifier::changes(), $from),
+				$page->storage()->contentFile(VersionIdentifier::changes(), $to)
 			);
+			if ($page->isDraft() === false) {
+				F::move(
+					$page->storage()->contentFile(VersionIdentifier::published(), $from),
+					$page->storage()->contentFile(VersionIdentifier::published(), $to)
+				);
+			}
 		}
 
 		// convert all users
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
 				F::move(
-					$file->contentFile($from, true),
-					$file->contentFile($to, true)
+					$file->storage()->contentFile(VersionIdentifier::changes(), $from),
+					$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+				);
+				F::move(
+					$file->storage()->contentFile(VersionIdentifier::published(), $from),
+					$file->storage()->contentFile(VersionIdentifier::published(), $to)
 				);
 			}
 
 			F::move(
-				$user->contentFile($from, true),
-				$user->contentFile($to, true)
+				$user->storage()->contentFile(VersionIdentifier::changes(), $from),
+				$user->storage()->contentFile(VersionIdentifier::changes(), $to)
+			);
+			F::move(
+				$user->storage()->contentFile(VersionIdentifier::published(), $from),
+				$user->storage()->contentFile(VersionIdentifier::published(), $to)
 			);
 		}
 
@@ -295,22 +325,31 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
-		F::remove($site->contentFile($code, true));
+		$language = $site->storage()->languageCodeToObject($code, true);
+
+		$site->storage()->delete(VersionIdentifier::changes(), $language);
+		$site->storage()->delete(VersionIdentifier::published(), $language);
 
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
-				F::remove($file->contentFile($code, true));
+				$file->storage()->delete(VersionIdentifier::changes(), $language);
+				$file->storage()->delete(VersionIdentifier::published(), $language);
 			}
 
-			F::remove($page->contentFile($code, true));
+			$page->storage()->delete(VersionIdentifier::changes(), $language);
+			if ($page->isDraft() === false) {
+				$page->storage()->delete(VersionIdentifier::published(), $language);
+			}
 		}
 
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
-				F::remove($file->contentFile($code, true));
+				$file->storage()->delete(VersionIdentifier::changes(), $language);
+				$file->storage()->delete(VersionIdentifier::published(), $language);
 			}
 
-			F::remove($user->contentFile($code, true));
+			$user->storage()->delete(VersionIdentifier::changes(), $language);
+			$user->storage()->delete(VersionIdentifier::published(), $language);
 		}
 
 		return true;
@@ -603,19 +642,36 @@ class Language
 		if ($updated->isDefault() === true) {
 			$kirby->defaultLanguage()?->clone(['default' => false])->save();
 
-			$code = $this->code();
 			$site = $kirby->site();
 
-			touch($site->contentFile($code));
+			if ($site->storage()->exists(VersionIdentifier::changes(), $this) === true) {
+				$site->storage()->touch(VersionIdentifier::changes(), $this);
+			}
+			if ($site->storage()->exists(VersionIdentifier::published(), $this) === true) {
+				$site->storage()->touch(VersionIdentifier::published(), $this);
+			}
 
 			foreach ($kirby->site()->index(true) as $page) {
 				$files = $page->files();
 
 				foreach ($files as $file) {
-					touch($file->contentFile($code));
+					if ($file->storage()->exists(VersionIdentifier::changes(), $this) === true) {
+						$file->storage()->touch(VersionIdentifier::changes(), $this);
+					}
+					if ($file->storage()->exists(VersionIdentifier::published(), $this) === true) {
+						$file->storage()->touch(VersionIdentifier::published(), $this);
+					}
 				}
 
-				touch($page->contentFile($code));
+				if ($page->storage()->exists(VersionIdentifier::changes(), $this) === true) {
+					$page->storage()->touch(VersionIdentifier::changes(), $this);
+				}
+				if (
+					$page->isDraft() === false &&
+					$page->storage()->exists(VersionIdentifier::published(), $this) === true
+				) {
+					$page->storage()->touch(VersionIdentifier::published(), $this);
+				}
 			}
 		} elseif ($this->isDefault() === true) {
 			throw new PermissionException('Please select another language to be the primary language');

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Content\VersionIdentifier;
 use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -79,7 +80,10 @@ class System
 
 		switch ($folder) {
 			case 'content':
-				return $url . '/' . basename($this->app->site()->contentFile());
+				return $url . '/' . basename($this->app->site()->storage()->contentFile(
+					VersionIdentifier::published(),
+					$this->app->site()->storage()->languageCodeToObject(null)
+				));
 			case 'git':
 				return $url . '/config';
 			case 'kirby':
