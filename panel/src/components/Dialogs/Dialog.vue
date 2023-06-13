@@ -51,7 +51,7 @@ export default {
 :root {
 	--dialog-color-back: var(--color-light);
 	--dialog-color-text: currentColor;
-	--dialog-rounded: var(--rounded-md);
+	--dialog-rounded: var(--rounded-xl);
 	--dialog-padding: var(--spacing-6);
 	--dialog-shadow: var(--shadow-xl);
 	--dialog-width: 22rem;
