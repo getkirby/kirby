@@ -65,12 +65,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-writer-input .ProseMirror,
-/* ::before is used for the placeholder */
-.k-writer-input::before {
-	line-height: 1.5em;
-	padding: 0.375rem 0.5rem;
-}
-</style>
