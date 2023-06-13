@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Content\ContentStorage;
+use Kirby\Content\PlainTextContentStorage;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -42,6 +44,7 @@ abstract class ModelWithContent implements Identifiable
 	public Content|null $content;
 	public static App $kirby;
 	protected Site|null $site;
+	protected ContentStorage|null $storage;
 	public Collection|null $translations;
 
 	/**
@@ -681,6 +684,15 @@ abstract class ModelWithContent implements Identifiable
 	public function site()
 	{
 		return $this->site ??= $this->kirby()->site();
+	}
+
+	/**
+	 * Returns the content storage handler
+	 * @internal
+	 */
+	public function storage(): ContentStorage
+	{
+		return $this->storage ??= new PlainTextContentStorage($this);
 	}
 
 	/**
