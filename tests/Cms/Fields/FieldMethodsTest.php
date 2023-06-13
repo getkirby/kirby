@@ -440,6 +440,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toUrl());
 	}
 
+	public function testToUrlEmpty()
+	{
+		$field = $this->field();
+		$this->assertNull($field->toUrl());
+	}
+
 	public function testToUser()
 	{
 		$app = new App([

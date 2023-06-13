@@ -28,7 +28,7 @@ class UnsaveableField extends FieldClass
 
 class JsonField extends FieldClass
 {
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$this->value = $this->valueFromJson($value);
 	}
@@ -36,7 +36,7 @@ class JsonField extends FieldClass
 
 class YamlField extends FieldClass
 {
-	public function fill($value = null)
+	public function fill($value = null): void
 	{
 		$this->value = $this->valueFromYaml($value);
 	}

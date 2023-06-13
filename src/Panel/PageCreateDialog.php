@@ -30,19 +30,21 @@ class PageCreateDialog
 		'date',
 		'email',
 		'info',
-		'multiselect',
-		'number',
+		'line',
+		'link',
 		'list',
+		'number',
+		'multiselect',
 		'radio',
+		'range',
 		'select',
+		'slug',
 		'tags',
 		'tel',
 		'text',
-		'textarea',
 		'toggles',
 		'time',
-		'url',
-		'writer'
+		'url'
 	];
 
 	public function __construct(

@@ -66,10 +66,7 @@
 						{{ $t("paste.after") }}
 					</k-dropdown-item>
 					<hr />
-					<k-dropdown-item
-						icon="trash"
-						@click="$refs.confirmRemoveDialog.open()"
-					>
+					<k-dropdown-item icon="trash" @click="remove">
 						{{ $t("field.layout.delete") }}
 					</k-dropdown-item>
 				</k-dropdown-content>
@@ -86,12 +83,6 @@
 			class="k-layout-drawer"
 			icon="settings"
 			@input="$emit('updateAttrs', $event)"
-		/>
-
-		<k-remove-dialog
-			ref="confirmRemoveDialog"
-			:text="$t('field.layout.delete.confirm')"
-			@submit="$emit('remove')"
 		/>
 	</section>
 </template>
@@ -127,6 +118,22 @@ export default {
 			});
 
 			return tabs;
+		}
+	},
+	methods: {
+		remove() {
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					text: this.$t("field.layout.delete.confirm")
+				},
+				on: {
+					submit: () => {
+						this.$emit("remove");
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		}
 	}
 };

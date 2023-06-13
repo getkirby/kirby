@@ -363,6 +363,9 @@ export default {
 .k-writer .ProseMirror :where(p, ul, ol, h1, h2, h3) {
 	margin-bottom: 0.75rem;
 }
+.k-writer .ProseMirror :where(p, ul, ol) {
+	line-height: 1.5;
+}
 
 .k-writer .ProseMirror h1 {
 	font-size: var(--text-3xl);

@@ -249,9 +249,10 @@ export default {
 	 *
 	 * @param {String} type
 	 * @param {Object} query
+	 * @param {Object} options { limit, page }
 	 * @returns {Object} { code, path, referrer, results, timestamp }
 	 */
-	async search(type, query) {
+	async search(type, query, options) {
 		// open the search dialog
 		if (!type && !query) {
 			return this.dialog.open({
@@ -260,7 +261,7 @@ export default {
 		}
 
 		const { $search } = await this.get(`/search/${type}`, {
-			query: { query }
+			query: { query, ...options }
 		});
 
 		return $search;

@@ -11,7 +11,6 @@ export default {
 		/**
 		 * @deprecated Deprecated Panel Methods
 		 */
-		window.panel.error = app.config.errorHandler;
 		window.panel.deprecated = window.panel.notification.deprecated.bind(
 			window.panel.notification
 		);
