@@ -109,6 +109,7 @@ export default {
 }
 
 .k-grid[data-variant="fields"] {
-	gap: var(--spacing-6);
+	column-gap: var(--spacing-6);
+	row-gap: var(--spacing-8);
 }
 </style>
