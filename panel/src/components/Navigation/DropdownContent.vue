@@ -1,28 +1,30 @@
 <template>
 	<dialog
+		ref="dropdown"
 		v-if="isOpen"
 		:data-align="align"
 		:data-dropup="dropup"
 		:data-theme="theme"
 		class="k-dropdown-content"
-		@close="close"
-		@click="click"
+		@close="onClose"
+		@click="onClick"
 	>
 		<!-- @slot Content of the dropdown -->
-		<slot>
-			<template v-for="(option, index) in items">
-				<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
-				<k-dropdown-item
-					v-else
-					:ref="_uid + '-item-' + index"
-					:key="_uid + '-item-' + index"
-					v-bind="option"
-					@click="onOptionClick(option)"
-				>
-					{{ option.text }}
-				</k-dropdown-item>
-			</template>
-		</slot>
+		<k-navigate ref="navigate" axis="y">
+			<slot>
+				<template v-for="(option, index) in items">
+					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
+					<k-dropdown-item
+						v-else
+						:key="_uid + '-item-' + index"
+						v-bind="option"
+						@click="onOptionClick(option)"
+					>
+						{{ option.text }}
+					</k-dropdown-item>
+				</template>
+			</slot>
+		</k-navigate>
 	</dialog>
 </template>
 
@@ -60,7 +62,6 @@ export default {
 		 * @event close
 		 */
 		"close",
-		"leave",
 		/**
 		 * When the dropdown content is opened
 		 * @event open
@@ -69,31 +70,66 @@ export default {
 	],
 	data() {
 		return {
-			current: -1,
 			dropup: false,
 			isOpen: false,
 			items: []
 		};
 	},
 	methods: {
-		click(event) {
-			// compare the event target with the overlay element
-			if (event.target === this.$el) {
-				this.$el.close();
-			}
+		/**
+		 * Closes the dropdown
+		 * @public
+		 */
+		close() {
+			this.$refs.dropdown?.close();
 		},
 		async fetchOptions(ready) {
-			if (this.options) {
-				if (typeof this.options === "string") {
-					this.$dropdown(this.options)(ready);
-				} else if (typeof this.options === "function") {
-					this.options(ready);
-				} else if (Array.isArray(this.options)) {
-					ready(this.options);
-				}
-			} else {
+			if (!this.options) {
 				return ready(this.items);
 			}
+
+			// resolve a dropdown URL
+			if (typeof this.options === "string") {
+				return this.$dropdown(this.options)(ready);
+			}
+
+			// resolve a callback function
+			if (typeof this.options === "function") {
+				return this.options(ready);
+			}
+
+			// resolve options from a simple array
+			if (Array.isArray(this.options)) {
+				return ready(this.options);
+			}
+		},
+		focus(n = 0) {
+			this.$refs.navigate.focus(n);
+		},
+		onClick(event) {
+			// close the dialog if the backdrop is being clicked
+			if (event.target === this.$el) {
+				this.close();
+			}
+		},
+		onClose() {
+			this.resetPosition();
+			this.isOpen = OpenDropdown = false;
+			this.$emit("close");
+		},
+		onOpen(opener) {
+			this.isOpen = true;
+
+			// store a global reference to the dropdown
+			OpenDropdown = this;
+
+			// wait until the dropdown is rendered
+			this.$nextTick(() => {
+				if (this.$el && opener) {
+					this.position(opener);
+					this.$emit("open");
+				}
+			});
 		},
 		onOptionClick(option) {
 			if (typeof option.click === "function") {
@@ -107,41 +143,69 @@ export default {
 		 * @public
 		 */
 		open(opener) {
-			this.reset();
-
 			if (OpenDropdown && OpenDropdown !== this) {
 				// close the current dropdown
 				OpenDropdown.close();
 			}
 
+			// find the opening element
 			opener =
 				opener ??
 				window.event?.target.closest("button") ??
 				window.event?.target;
 
+			// load all options and open the dropdown as
+			// soon as they are loaded
 			this.fetchOptions((items) => {
-				this.$events.$on("keydown", this.navigate);
-				this.$events.$on("click", this.close);
 				this.items = items;
-				this.isOpen = true;
-				OpenDropdown = this;
 				this.onOpen(opener);
-				this.$emit("open");
 			});
 		},
-		reset() {
-			this.current = -1;
-			this.$events.$off("keydown", this.navigate);
-			this.$events.$off("click", this.close);
+		position(opener) {
+			// reset the dropup state before position calculation
+			this.dropup = false;
+
+			// get the dimensions of the opening button
+			const openerRect = opener.getBoundingClientRect();
+
+			// set the top position and take scroll position into consideration
+			this.$el.style.top =
+				openerRect.top + window.scrollY + openerRect.height + "px";
+
+			// set the left position based on the alignment
+			if (this.align === "end" || this.align === "right") {
+				this.$el.style.left =
+					openerRect.left + window.scrollX + openerRect.width + "px";
+			} else {
+				this.$el.style.left = openerRect.left + window.scrollX + "px";
+			}
+
+			// open the modal after the correct positioning has been applied
+			this.$el.showModal();
+
+			// get the dimensions of the open dropdown
+			const dropdownRect = this.$el.getBoundingClientRect();
+
+			// the minimum height required from above and below for the behavior of the dropup
+			// k-topbar or form-buttons (2.5rem = 40px)
+			// safe area height is slightly higher than that
+			let safeSpaceHeight = 50;
+
+			// activates the dropup if the dropdown content overflows
+			// to the bottom of the screen but only if there is enough space top of screen
+			if (
+				dropdownRect.top + dropdownRect.height >
+					window.innerHeight - safeSpaceHeight &&
+				dropdownRect.height + safeSpaceHeight * 2 < dropdownRect.top
+			) {
+				this.$el.style.top =
+					parseInt(this.$el.style.top) - openerRect.height + "px";
+				this.dropup = true;
+			}
 		},
-		/**
-		 * Closes the dropdown
-		 * @public
-		 */
-		close() {
-			this.reset();
-			this.isOpen = OpenDropdown = false;
-			this.$emit("close");
+		resetPosition() {
+			this.$el.style.top = 0;
+			this.$el.style.left = 0;
 		},
 		/**
 		 * Toggles the open state of the dropdown
@@ -149,114 +213,6 @@ export default {
 		 */
 		toggle(opener) {
 			this.isOpen ? this.close() : this.open(opener);
-		},
-		focus(n = 0) {
-			if (this.$children[n]?.focus) {
-				this.current = n;
-				this.$children[n].focus();
-			}
-		},
-		onOpen(opener) {
-			// disable dropup before calculate
-			this.dropup = false;
-
-			this.$nextTick(() => {
-				if (this.$el) {
-					const rect = opener.getBoundingClientRect();
-
-					// set the top position
-					this.$el.style.top = rect.top + window.scrollY + rect.height + "px";
-
-					// set the left position based on the alignment
-					if (this.align === "end" || this.align === "right") {
-						this.$el.style.left =
-							rect.left + window.scrollX + rect.width + "px";
-					} else {
-						this.$el.style.left = rect.left + window.scrollX + "px";
-					}
-
-					this.$el.showModal();
-
-					// get window height depending on the browser
-					let windowHeight =
-						window.innerHeight ||
-						document.body.clientHeight ||
-						document.documentElement.clientHeight;
-
-					// the minimum height required from above and below for the behavior of the dropup
-					// k-topbar or form-buttons (2.5rem = 40px)
-					// safe area height is slightly higher than that
-					let safeSpaceHeight = 50;
-
-					// dropdown content position relative to the viewport
-					let scrollTop = this.$el.getBoundingClientRect().top || 0;
-
-					// dropdown content height
-					let dropdownHeight = this.$el.clientHeight;
-
-					// activates the dropup if the dropdown content overflows
-					// to the bottom of the screen but only if there is enough space top of screen
-					if (
-						scrollTop + dropdownHeight > windowHeight - safeSpaceHeight &&
-						dropdownHeight + safeSpaceHeight * 2 < scrollTop
-					) {
-						this.$el.style.top =
-							parseInt(this.$el.style.top) - rect.height + "px";
-						this.dropup = true;
-					}
-				}
-			});
-		},
-		navigate(e) {
-			/*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-			switch (e.code) {
-				case "ArrowLeft":
-					this.$el.close();
-					this.$emit("leave", e.code);
-					break;
-				case "ArrowUp":
-					e.preventDefault();
-
-					while (true) {
-						this.current--;
-
-						if (this.current < 0) {
-							this.$el.close();
-							this.$emit("leave", e.code);
-							break;
-						}
-
-						if (this.$children[this.current]?.disabled === false) {
-							this.focus(this.current);
-							break;
-						}
-					}
-
-					break;
-				case "ArrowDown":
-					e.preventDefault();
-
-					while (true) {
-						this.current++;
-
-						if (this.current > this.$children.length - 1) {
-							const enabled = this.$children.filter(
-								(x) => x.disabled === false
-							);
-							this.current = this.$children.indexOf(
-								enabled[enabled.length - 1]
-							);
-							break;
-						}
-
-						if (this.$children[this.current]?.disabled === false) {
-							this.focus(this.current);
-							break;
-						}
-					}
-
-					break;
-			}
 		}
 	}
 };
