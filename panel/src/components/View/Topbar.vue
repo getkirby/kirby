@@ -60,8 +60,7 @@ export default {
 .k-topbar {
 	position: relative;
 	margin-inline: calc(var(--button-padding) * -1);
-	margin-bottom: var(--spacing-12);
-
+	margin-bottom: var(--spacing-8);
 	display: flex;
 	align-items: center;
 }

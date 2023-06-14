@@ -2,10 +2,10 @@
 	<header :data-editable="editable" class="k-header">
 		<k-headline tag="h1" @click="isEditable ? $emit('edit') : null">
 			<slot />
-			<k-icon type="edit" />
+			<k-icon v-if="editable" type="edit" />
 		</k-headline>
 
-		<k-bar
+		<div
 			v-if="$slots.buttons || $slots.left || $slots.right"
 			class="k-header-buttons"
 		>
@@ -14,7 +14,7 @@
 			<!-- @todo remove right/left slots @ 5.0 -->
 			<slot name="left" />
 			<slot name="right" />
-		</k-bar>
+		</div>
 	</header>
 </template>
 
@@ -51,61 +51,58 @@ export default {
 <style>
 :root {
 	--header-bar-height: var(--height-md);
+	--header-color-back: var(--color-light);
+	--header-padding-block: var(--spacing-4);
 }
 
 .k-header {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
 	border-bottom: 1px solid var(--color-border);
+	background: var(--header-color-back);
+	padding-top: var(--header-padding-block);
 	margin-bottom: var(--spacing-12);
+	box-shadow: 2px 0 0 0 var(--header-color-back),
+		-2px 0 0 0 var(--header-color-back);
 }
 
 .k-header h1 {
 	display: inline-flex;
 	align-items: baseline;
 	gap: var(--spacing-2);
-
 	font-size: var(--text-h1);
 	font-weight: var(--font-h1);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	margin-bottom: var(--spacing-6);
 	line-height: var(--leading-h1);
 	cursor: pointer;
+	margin-bottom: var(--header-padding-block);
 }
 
 .k-header h1 svg {
-	color: var(--color-gray-500);
+	--icon-color: var(--color-gray-500);
 	opacity: 0;
 	transition: opacity 0.2s;
 }
 
-.k-header[data-editable="true"] h1:hover svg {
+.k-header h1:hover svg {
 	opacity: 1;
 }
 
-.k-header:has(.k-header-buttons) {
-	position: sticky;
-	top: calc((var(--text-h1) + var(--spacing-6)) * -1);
-	background-color: var(--color-light);
-	z-index: var(--z-toolbar);
-}
-.k-header:has(.k-header-buttons)::before,
-.k-header:has(.k-header-buttons)::after {
-	position: absolute;
-	inset-block: 0;
-	width: var(--spacing-1);
-	background-color: var(--color-light);
-	content: "";
-}
-.k-header:has(.k-header-buttons)::before {
-	inset-inline-start: calc(var(--spacing-1) * -1);
-}
-.k-header:has(.k-header-buttons)::after {
-	inset-inline-end: calc(var(--spacing-1) * -1);
+.k-header-buttons {
+	display: flex;
+	flex-shrink: 0;
+	gap: var(--spacing-2);
+	margin-bottom: var(--header-padding-block);
 }
 
-.k-header .k-header-buttons {
-	--bar-height: var(--header-bar-height);
-	margin-bottom: var(--spacing-1);
-}
+/* .k-header:has(.k-header-buttons) {
+	position: sticky;
+	top: 0;
+	z-index: var(--z-toolbar);
+} */
 </style>
