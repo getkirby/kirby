@@ -7,6 +7,7 @@
 			:current="current === tabButton.name"
 			:icon="tabButton.icon"
 			:title="tabButton.label"
+			variant="dimmed"
 			class="k-tab-button"
 		>
 			{{ tabButton.label || tabButton.text || tabButton.name }}
