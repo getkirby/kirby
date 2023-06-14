@@ -44,7 +44,7 @@ export default {
 		}
 	},
 	methods: {
-		async toggle() {
+		async toggle(event) {
 			if (this.$refs.list.isOpen === false) {
 				try {
 					await this.$dropdown("changes", {
@@ -63,7 +63,7 @@ export default {
 			}
 
 			if (this.$refs.list) {
-				this.$refs.list.toggle();
+				this.$refs.list.toggle(event.target);
 			}
 		}
 	}

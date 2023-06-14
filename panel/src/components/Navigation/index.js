@@ -9,6 +9,7 @@ import FileBrowser from "./FileBrowser.vue";
 import LanguagesDropdown from "./LanguagesDropdown.vue";
 import Link from "./Link.vue";
 import ModelTabs from "./ModelTabs.vue";
+import Navigate from "./Navigate.js";
 import OptionsDropdown from "./OptionsDropdown.vue";
 import PageTree from "./PageTree.vue";
 import Pagination from "./Pagination.vue";
@@ -23,6 +24,8 @@ import ButtonNative from "./ButtonNative.vue";
 
 export default {
 	install(app) {
+		customElements.define("k-navigate", Navigate);
+
 		app.component("k-breadcrumb", Breadcrumb);
 		app.component("k-browser", Browser);
 		app.component("k-button", Button);
