@@ -53,10 +53,10 @@ export default {
 <style>
 :root {
 	--drawer-color-back: var(--color-light);
-	--drawer-header-height: 3rem;
+	--drawer-header-height: 2.5rem;
 	--drawer-header-padding: 1.5rem;
 	--drawer-shadow: var(--shadow-xl);
-	--drawer-width: 35rem;
+	--drawer-width: 50rem;
 }
 
 .k-drawer-overlay {
@@ -83,8 +83,5 @@ export default {
 	flex-direction: column;
 	background: var(--drawer-color-back);
 	box-shadow: var(--drawer-shadow);
-	border-radius: var(--rounded-xl);
-	margin: var(--spacing-6);
-	overflow: hidden;
 }
 </style>

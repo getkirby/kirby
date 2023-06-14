@@ -33,7 +33,7 @@
 	align-items: center;
 	line-height: 1;
 	justify-content: space-between;
-	background: var(--drawer-color-back);
+	background: var(--color-white);
 	font-size: var(--text-sm);
 }
 .k-drawer-title {
@@ -89,8 +89,8 @@
 	align-items: center;
 	padding-inline: 0.75rem;
 	justify-content: center;
-	min-width: var(--height);
-	height: var(--height);
+	min-width: var(--drawer-header-height);
+	height: var(--drawer-header-height);
 	line-height: 1;
 }
 </style>
