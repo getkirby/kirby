@@ -9,14 +9,9 @@
 			<k-prev-next v-if="model.account" :prev="prev" :next="next" />
 		</template>
 
-		<k-user-profile
-			:is-locked="isLocked"
-			:model="model"
-			:permissions="permissions"
-		/>
-
 		<k-header
 			:editable="permissions.changeName && !isLocked"
+			class="k-user-view-header"
 			@edit="$dialog(id + '/changeName')"
 		>
 			<span
@@ -49,6 +44,12 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-user-profile
+			:is-locked="isLocked"
+			:model="model"
+			:permissions="permissions"
+		/>
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -90,7 +91,11 @@ export default {
 	color: var(--color-gray-500);
 	transition: color 0.3s;
 }
-.k-header[data-editable="true"] .k-user-name-placeholder:hover {
+.k-user-view-header[data-editable="true"] .k-user-name-placeholder:hover {
 	color: var(--color-gray-900);
+}
+.k-user-view-header {
+	margin-bottom: 0;
+	border-bottom: 0;
 }
 </style>

@@ -47,6 +47,7 @@ export default {
 	align-items: center;
 	gap: var(--spacing-3);
 	margin-bottom: var(--spacing-6);
+	box-shadow: var(--shadow);
 }
 
 .k-user-profile .k-button-group {
