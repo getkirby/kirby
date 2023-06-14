@@ -23,8 +23,7 @@
 	--color-positive: var(--color-green-700);
 	--color-positive-light: var(--color-green-500);
 	--color-positive-outline: var(--color-green-900);
-	--color-text: var(--color-gray-900);
-	--color-text-light: var(--color-gray-700);
+	--color-text-light: var(--color-text-dimmed);
 
 	/* Font size */
 	--text-base: var(--text-md);
