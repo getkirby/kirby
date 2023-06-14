@@ -297,7 +297,7 @@ export default {
 
 .k-button:where([data-size="sm"]) {
 	--button-height: var(--height-sm);
-	--button-padding: 0.375rem;
+	--button-padding: 0.5rem;
 }
 
 .k-button:where([data-size="lg"]) {
