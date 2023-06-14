@@ -9,10 +9,9 @@
 			<k-prev-next :prev="prev" :next="next" />
 		</template>
 
-		<k-file-preview v-bind="preview" :file="model" :focusable="isFocusable" />
-
 		<k-header
 			:editable="permissions.changeName && !isLocked"
+			class="k-file-view-header"
 			@edit="$dialog(id + '/changeName')"
 		>
 			{{ model.filename }}
@@ -51,6 +50,8 @@
 				<k-form-buttons :lock="lock" />
 			</template>
 		</k-header>
+
+		<k-file-preview v-bind="preview" :file="model" :focusable="isFocusable" />
 
 		<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
@@ -96,3 +97,9 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-file-view-header {
+	margin-bottom: 0;
+}
+</style>
