@@ -29,8 +29,8 @@ export default {
 </script>
 
 <style>
-.k-section {
-	padding-bottom: 3rem;
+.k-section + .k-section {
+	margin-top: var(--spacing-8);
 }
 .k-section-header {
 	margin-bottom: var(--spacing-2);

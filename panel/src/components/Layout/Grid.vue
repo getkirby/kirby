@@ -102,14 +102,13 @@ export default {
 /** Grid variants **/
 .k-grid[data-variant="columns"] {
 	column-gap: clamp(0.75rem, 5cqw, 6rem);
-	row-gap: clamp(1.5rem, 5cqh, 3rem);
+	row-gap: var(--spacing-8);
 }
 .k-grid[data-variant="columns"] > * {
 	container: column / inline-size;
 }
 
 .k-grid[data-variant="fields"] {
-	column-gap: var(--spacing-6);
-	row-gap: var(--spacing-8);
+	gap: var(--spacing-8);
 }
 </style>
