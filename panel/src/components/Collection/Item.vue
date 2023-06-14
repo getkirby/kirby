@@ -235,18 +235,21 @@ export default {
 
 /** Cardlet & cards */
 .k-item:is([data-layout="cardlets"], [data-layout="cards"]) .k-sort-button {
-	top: 0.35rem;
-	left: 0.35rem;
-	background: rgba(255, 255, 255, 0.5);
-	--button-width: 1.35rem;
-	--button-height: 1.35rem;
+	top: var(--spacing-2);
+	inset-inline-start: var(--spacing-2);
+	background: hsla(0, 0%, 100%, 50%);
+	backdrop-filter: blur(5px);
+	box-shadow: 0 2px 5px hsla(0, 0%, 0%, 20%);
+	--button-width: 1.5rem;
+	--button-height: 1.5rem;
+	--button-rounded: var(--rounded-sm);
 	--button-padding: 0;
-	--icon-size: var(--text-sm);
+	--icon-size: 14px;
 }
 
 .k-item:is([data-layout="cardlets"], [data-layout="cards"])
 	.k-sort-button:hover {
-	background: rgba(255, 255, 255, 0.875);
+	background: hsla(0, 0%, 100%, 95%);
 }
 
 /** Cardlet */
