@@ -1,49 +1,28 @@
 [data-theme] {
-	--theme-color-100: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-100) + var(--theme-color-l))
-	);
-	--theme-color-200: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-200) + var(--theme-color-l))
-	);
-	--theme-color-300: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-300) + var(--theme-color-l))
-	);
-	--theme-color-400: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-400) + var(--theme-color-l))
-	);
-	--theme-color-500: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-500) + var(--theme-color-l))
-	);
-	--theme-color-600: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-600) + var(--theme-color-l))
-	);
-	--theme-color-700: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-700) + var(--theme-color-l))
-	);
-	--theme-color-800: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-800) + var(--theme-color-l))
-	);
-	--theme-color-900: hsl(
-		var(--theme-color-h),
-		var(--theme-color-s),
-		calc(var(--color-l-900) + var(--theme-color-l))
-	);
+	--theme-color-h: 0;
+	--theme-color-s: 0%;
+	--theme-color-hs: var(--theme-color-h), var(--theme-color-s);
+	--theme-color-boost: 3%;
+
+	--theme-color-l-100: calc(var(--color-l-100) + var(--theme-color-boost));
+	--theme-color-l-200: calc(var(--color-l-200) + var(--theme-color-boost));
+	--theme-color-l-300: calc(var(--color-l-300) + var(--theme-color-boost));
+	--theme-color-l-400: calc(var(--color-l-400) + var(--theme-color-boost));
+	--theme-color-l-500: calc(var(--color-l-500) + var(--theme-color-boost));
+	--theme-color-l-600: calc(var(--color-l-600) + var(--theme-color-boost));
+	--theme-color-l-700: calc(var(--color-l-700) + var(--theme-color-boost));
+	--theme-color-l-800: calc(var(--color-l-800) + var(--theme-color-boost));
+	--theme-color-l-900: calc(var(--color-l-900) + var(--theme-color-boost));
+
+	--theme-color-100: hsl(var(--theme-color-hs), var(--theme-color-l-100));
+	--theme-color-200: hsl(var(--theme-color-hs), var(--theme-color-l-200));
+	--theme-color-300: hsl(var(--theme-color-hs), var(--theme-color-l-300));
+	--theme-color-400: hsl(var(--theme-color-hs), var(--theme-color-l-400));
+	--theme-color-500: hsl(var(--theme-color-hs), var(--theme-color-l-500));
+	--theme-color-600: hsl(var(--theme-color-hs), var(--theme-color-l-600));
+	--theme-color-700: hsl(var(--theme-color-hs), var(--theme-color-l-700));
+	--theme-color-800: hsl(var(--theme-color-hs), var(--theme-color-l-800));
+	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
 	--theme-color-text: var(--theme-color-900);
 	--theme-color-back: var(--theme-color-400);
@@ -55,32 +34,32 @@
 [data-theme="info"] {
 	--theme-color-h: var(--color-blue-h);
 	--theme-color-s: var(--color-blue-s);
-	--theme-color-l: var(--color-blue-l);
+	--theme-color-boost: var(--color-blue-boost);
 }
 
 [data-theme="error"],
 [data-theme="negative"] {
 	--theme-color-h: var(--color-red-h);
 	--theme-color-s: var(--color-red-s);
-	--theme-color-l: var(--color-red-l);
+	--theme-color-boost: var(--color-red-boost);
 }
 
 [data-theme="notice"] {
 	--theme-color-h: var(--color-orange-h);
 	--theme-color-s: var(--color-orange-s);
-	--theme-color-l: var(--color-orange-l);
+	--theme-color-boost: var(--color-orange-boost);
 }
 
 [data-theme="positive"] {
 	--theme-color-h: var(--color-green-h);
 	--theme-color-s: var(--color-green-s);
-	--theme-color-l: var(--color-green-l);
+	--theme-color-boost: var(--color-green-boost);
 }
 
 [data-theme="passive"] {
 	--theme-color-h: var(--color-slate-h);
 	--theme-color-s: var(--color-slate-s);
-	--theme-color-l: 10%;
+	--theme-color-boost: 10%;
 }
 
 [data-theme="white"] {
@@ -94,7 +73,7 @@
 [data-theme="dark"] {
 	--theme-color-h: var(--color-slate-h);
 	--theme-color-s: var(--color-slate-s);
-	--theme-color-l: var(--color-slate-l);
+	--theme-color-boost: var(--color-slate-boost);
 	--theme-color-back: var(--color-slate-800);
 	--theme-color-icon: var(--color-slate-500);
 	--theme-color-text: var(--color-slate-200);
@@ -102,6 +81,7 @@
 
 [data-theme="code"] {
 	--theme-color-back: var(--code-color-back);
+	--theme-color-hover: var(--color-black);
 	--theme-color-icon: var(--code-color-icon);
 	--theme-color-text: var(--code-color-text);
 	font-family: var(--code-font-family);
