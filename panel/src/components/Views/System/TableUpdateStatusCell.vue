@@ -6,14 +6,15 @@
 		>
 			{{ value }}
 		</span>
-		<k-dropdown v-else :data-theme="value.theme">
+		<k-dropdown v-else>
 			<k-button
 				class="k-table-update-status-cell-button"
 				:dropdown="true"
 				:icon="value.icon"
 				:href="value.url"
 				:text="value.currentVersion"
-				size="sm"
+				:theme="value.theme"
+				size="xs"
 				variant="filled"
 				@click.stop="$refs.dropdown.toggle()"
 			/>
@@ -58,10 +59,6 @@ export default {
 .k-table-update-status-cell-version,
 .k-table-update-status-cell-button {
 	font-variant-numeric: tabular-nums;
-}
-
-.k-table-update-status-cell-button .k-icon {
-	--button-color-icon: var(--theme-color-600);
 }
 
 .k-plugin-info {
