@@ -1,13 +1,49 @@
 [data-theme] {
-	--theme-color-100: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-100) + var(--theme-color-l)));
-	--theme-color-200: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-200) + var(--theme-color-l)));
-	--theme-color-300: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-300) + var(--theme-color-l)));
-	--theme-color-400: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-400) + var(--theme-color-l)));
-	--theme-color-500: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-500) + var(--theme-color-l)));
-	--theme-color-600: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-600) + var(--theme-color-l)));
-	--theme-color-700: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-700) + var(--theme-color-l)));
-	--theme-color-800: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-800) + var(--theme-color-l)));
-	--theme-color-900: hsl(var(--theme-color-h), var(--theme-color-s), calc(var(--color-l-900) + var(--theme-color-l)));
+	--theme-color-100: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-100) + var(--theme-color-l))
+	);
+	--theme-color-200: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-200) + var(--theme-color-l))
+	);
+	--theme-color-300: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-300) + var(--theme-color-l))
+	);
+	--theme-color-400: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-400) + var(--theme-color-l))
+	);
+	--theme-color-500: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-500) + var(--theme-color-l))
+	);
+	--theme-color-600: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-600) + var(--theme-color-l))
+	);
+	--theme-color-700: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-700) + var(--theme-color-l))
+	);
+	--theme-color-800: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-800) + var(--theme-color-l))
+	);
+	--theme-color-900: hsl(
+		var(--theme-color-h),
+		var(--theme-color-s),
+		calc(var(--color-l-900) + var(--theme-color-l))
+	);
 
 	--theme-color-text: var(--theme-color-900);
 	--theme-color-back: var(--theme-color-400);
@@ -50,7 +86,7 @@
 [data-theme="white"] {
 	--theme-color-back: var(--color-white);
 	--theme-color-icon: var(--color-slate-800);
-	--theme-color-text: var(--color-text-dimmed);
+	--theme-color-text: var(--color-text);
 	--color-h: var(--color-black);
 }
 
