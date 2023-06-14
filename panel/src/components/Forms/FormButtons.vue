@@ -96,7 +96,7 @@ export default {
 			return {
 				icon: "check",
 				text: "Published",
-				disabled: true
+				click: this.onSave
 			};
 		},
 		dropdown() {
@@ -126,7 +126,7 @@ export default {
 				return this.isDisabled;
 			}
 
-			return true;
+			return false;
 		},
 		hasChanges() {
 			return this.$store.getters["content/hasChanges"]();
