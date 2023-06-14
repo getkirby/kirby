@@ -18,17 +18,9 @@
 			<template #buttons>
 				<k-button-group>
 					<k-button
-						v-if="status"
-						v-bind="statusBtn"
-						class="k-page-view-status"
-						variant="filled"
-						@click="$dialog(id + '/changeStatus')"
-					/>
-					<k-button
 						v-if="permissions.preview && model.previewUrl"
 						:link="model.previewUrl"
-						:responsive="true"
-						:text="$t('open')"
+						:title="$t('open')"
 						icon="open"
 						target="_blank"
 						variant="filled"
@@ -39,8 +31,7 @@
 						<k-button
 							:disabled="isLocked === true"
 							:dropdown="true"
-							:responsive="true"
-							:text="$t('settings')"
+							:title="$t('settings')"
 							icon="cog"
 							variant="filled"
 							size="sm"
@@ -54,6 +45,14 @@
 					</k-dropdown>
 
 					<k-languages-dropdown />
+
+					<k-button
+						v-if="status"
+						v-bind="statusBtn"
+						class="k-page-view-status"
+						variant="filled"
+						@click="$dialog(id + '/changeStatus')"
+					/>
 				</k-button-group>
 
 				<k-form-buttons :lock="lock" />
