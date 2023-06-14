@@ -102,4 +102,7 @@ export default {
 .k-file-view-header {
 	margin-bottom: 0;
 }
+.k-file-view:has(.k-tabs) .k-file-preview {
+	margin-bottom: 0;
+}
 </style>

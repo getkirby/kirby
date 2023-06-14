@@ -98,4 +98,10 @@ export default {
 	margin-bottom: 0;
 	border-bottom: 0;
 }
+.k-user-view .k-user-profile {
+	margin-bottom: var(--spacing-12);
+}
+.k-user-view:has(.k-tabs) .k-user-profile {
+	margin-bottom: 0;
+}
 </style>

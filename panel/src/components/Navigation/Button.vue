@@ -199,6 +199,7 @@ export default {
 	--button-color-text: currentColor;
 	--button-color-icon: currentColor;
 	--button-padding: var(--spacing-2);
+	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
 }
 
@@ -212,7 +213,7 @@ export default {
 	padding-inline: var(--button-padding);
 	white-space: nowrap;
 	line-height: 1.25;
-	border-radius: 4px;
+	border-radius: var(--button-rounded);
 	background: var(--button-color-back);
 	height: var(--button-height);
 	min-width: max-content;

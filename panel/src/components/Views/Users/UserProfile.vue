@@ -46,7 +46,6 @@ export default {
 	display: flex;
 	align-items: center;
 	gap: var(--spacing-3);
-	margin-bottom: var(--spacing-6);
 	box-shadow: var(--shadow);
 }
 

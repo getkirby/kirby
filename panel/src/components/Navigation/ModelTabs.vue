@@ -39,9 +39,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-model-tabs {
-	margin-bottom: var(--spacing-8);
-}
-</style>

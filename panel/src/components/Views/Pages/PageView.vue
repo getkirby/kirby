@@ -11,6 +11,7 @@
 
 		<k-header
 			:editable="permissions.changeTitle && !isLocked"
+			class="k-page-view-header"
 			@edit="$dialog(id + '/changeTitle')"
 		>
 			{{ model.title }}
@@ -100,5 +101,9 @@ export default {
 	--button-color-icon: var(--theme-color-600);
 	--button-color-back: hsla(0, 0%, 0%, 7%);
 	--button-color-hover: hsla(0, 0%, 0%, 12%);
+}
+
+.k-page-view:has(.k-tabs) .k-page-view-header {
+	margin-bottom: 0;
 }
 </style>
