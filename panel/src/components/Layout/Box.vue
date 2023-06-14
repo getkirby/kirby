@@ -99,13 +99,13 @@ export default {
 	border-radius: var(--rounded);
 }
 
-/* Text Box */
-.k-box[data-theme]:has(> .k-text) {
-	max-width: max-content;
+.k-box[data-theme="text"],
+.k-box[data-theme="white"] {
+	box-shadow: var(--shadow);
 }
-.k-box[data-theme] > .k-text {
-	padding: var(--spacing-3);
-	margin-inline: auto;
+
+.k-box[data-theme="text"] {
+	padding: var(--spacing-6);
 }
 
 /* Align:center */

@@ -70,10 +70,6 @@ export default {
 	margin-block-start: calc(var(--text-line-height) * 1em);
 }
 
-.k-text > * {
-	max-width: 60ch;
-}
-
 .k-text ol,
 .k-text ul {
 	margin-inline-start: 2em;

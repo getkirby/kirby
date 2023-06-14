@@ -62,7 +62,8 @@
 	--theme-color-boost: 10%;
 }
 
-[data-theme="white"] {
+[data-theme="white"],
+[data-theme="text"] {
 	--theme-color-back: var(--color-white);
 	--theme-color-icon: var(--color-slate-800);
 	--theme-color-text: var(--color-text);
