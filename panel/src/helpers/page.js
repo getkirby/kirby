@@ -8,20 +8,19 @@ export function status(status, disabled = false) {
 			window.panel.$t("page.status." + status),
 		disabled: disabled,
 		size: "xs",
-		style: "--icon-size: 13px"
+		style: "--icon-size: 12px"
 	};
 
 	if (disabled) {
-		button.theme = "passive";
 		button.title += ` (${window.panel.$t("disabled")})`;
+	}
+
+	if (status === "draft") {
+		button.theme = "negative";
+	} else if (status === "unlisted") {
+		button.theme = "info";
 	} else {
-		if (status === "draft") {
-			button.theme = "negative";
-		} else if (status === "unlisted") {
-			button.theme = "info";
-		} else {
-			button.theme = "positive";
-		}
+		button.theme = "positive";
 	}
 
 	return button;
