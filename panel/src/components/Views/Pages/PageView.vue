@@ -18,6 +18,13 @@
 			<template #buttons>
 				<k-button-group>
 					<k-button
+						v-if="status"
+						v-bind="statusBtn"
+						class="k-page-view-status"
+						variant="filled"
+						@click="$dialog(id + '/changeStatus')"
+					/>
+					<k-button
 						v-if="permissions.preview && model.previewUrl"
 						:link="model.previewUrl"
 						:responsive="true"
@@ -27,12 +34,6 @@
 						variant="filled"
 						size="sm"
 						class="k-page-view-preview"
-					/>
-					<k-button
-						v-if="status"
-						v-bind="statusBtn"
-						class="k-page-view-status"
-						@click="$dialog(id + '/changeStatus')"
 					/>
 					<k-dropdown class="k-page-view-options">
 						<k-button
@@ -45,7 +46,11 @@
 							size="sm"
 							@click="$refs.settings.toggle()"
 						/>
-						<k-dropdown-content ref="settings" :options="$dropdown(id)" />
+						<k-dropdown-content
+							ref="settings"
+							:options="$dropdown(id)"
+							align="right"
+						/>
 					</k-dropdown>
 
 					<k-languages-dropdown />
@@ -97,13 +102,13 @@ export default {
 </script>
 
 <style>
-.k-page-view-status {
-	--button-color-icon: var(--theme-color-600);
-	--button-color-back: hsla(0, 0%, 0%, 7%);
-	--button-color-hover: hsla(0, 0%, 0%, 12%);
-}
-
 .k-page-view:has(.k-tabs) .k-page-view-header {
 	margin-bottom: 0;
+}
+.k-page-view-status {
+	--button-color-back: var(--color-gray-300);
+	--button-color-text: var(--color-text);
+	--button-color-hover-back: var(--color-gray-400);
+	--button-color-hover-text: var(--color-text);
 }
 </style>
