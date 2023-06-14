@@ -28,7 +28,6 @@
 				v-bind="entry"
 				:current="entry.id === view.id"
 				:title="entry.title ?? entry.text"
-				:variant="entry.id === view.id ? 'filled' : null"
 			/>
 		</menu>
 	</nav>
@@ -109,6 +108,7 @@ export default {
 
 <style>
 :root {
+	--menu-color-back: var(--color-gray-200);
 	--menu-width: 12rem;
 }
 
@@ -120,11 +120,11 @@ export default {
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	z-index: var(--z-navigation);
-
 	display: flex;
 	flex-direction: column;
 	padding: var(--spacing-3);
-	background-color: var(--color-slate-300);
+	background-color: var(--menu-color-back);
+	border-right: 1px solid var(--color-gray-300);
 }
 
 .k-panel-menu-search {
@@ -140,6 +140,10 @@ export default {
 .k-panel-menu .k-button {
 	--button-width: 100%;
 	--button-text-display: var(--menu-buttons);
+}
+.k-panel-menu .k-button[aria-current] {
+	--button-color-back: var(--color-white);
+	box-shadow: var(--shadow);
 }
 
 @media (max-width: 40rem) {
@@ -219,7 +223,7 @@ export default {
 		inset-inline-end: 4px;
 		width: 4px;
 		height: 2rem;
-		background-color: var(--color-slate-400);
+		background-color: var(--color-gray-400);
 		border-radius: var(--rounded);
 	}
 	.k-panel-menu-handle * {
