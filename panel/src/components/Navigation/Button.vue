@@ -297,6 +297,5 @@ export default {
 /** Disabled button **/
 .k-button:where([aria-disabled]) {
 	cursor: not-allowed;
-	opacity: var(--opacity-disabled);
 }
 </style>

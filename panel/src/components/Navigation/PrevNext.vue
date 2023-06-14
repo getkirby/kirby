@@ -69,4 +69,7 @@ export default {
 .k-prev-next {
 	direction: ltr;
 }
+.k-prev-next [aria-disabled] {
+	opacity: var(--opacity-disabled);
+}
 </style>

@@ -255,8 +255,8 @@ export default {
 	border-radius: var(--rounded-sm);
 	width: 100%;
 }
-.k-dropdown-content .k-button:focus {
-	outline: var(--outline);
+.k-dropdown-content .k-button[aria-disabled] {
+	opacity: var(--opacity-disabled);
 }
 .k-dropdown-content .k-button + .k-button {
 	margin-top: 2px;
