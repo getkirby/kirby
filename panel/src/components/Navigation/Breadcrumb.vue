@@ -12,7 +12,7 @@
 					:link="crumb.link"
 					:text="crumb.text || crumb.label"
 					:title="crumb.text || crumb.label"
-					:current="isLast(index) ? 'page' : false"
+					:current="isLast(index - 1) ? 'page' : false"
 					variant="dimmed"
 					class="k-breadcrumb-link"
 				/>
