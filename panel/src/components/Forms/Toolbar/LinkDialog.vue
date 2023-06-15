@@ -1,19 +1,14 @@
 <template>
-	<k-dialog
+	<k-form-dialog
 		ref="dialog"
 		size="medium"
+		:fields="fields"
 		:submit-button="$t('insert')"
-		@close="cancel"
-		@submit="$refs.form.submit()"
-	>
-		<k-form
-			ref="form"
-			:fields="fields"
-			:value="value"
-			@input="value = $event"
-			@submit="submit"
-		/>
-	</k-dialog>
+		:value="value"
+		@cancel="$emit('cancel')"
+		@input="value = $event"
+		@submit="submit"
+	/>
 </template>
 
 <script>
