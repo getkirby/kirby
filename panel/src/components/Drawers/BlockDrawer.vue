@@ -3,32 +3,30 @@
 		ref="drawer"
 		class="k-block-drawer"
 		v-bind="$props"
-		v-on="$listeners"
+		@cancel="$emit('cancel', $event)"
+		@input="$emit('input', $event)"
+		@submit="$emit('submit', $event)"
 	>
 		<template #options>
 			<k-button
 				v-if="hidden"
 				class="k-drawer-option"
 				icon="hidden"
-				@click="$panel.drawer.emit('show')"
+				@click="$emit('show')"
 			/>
 			<k-button
 				:disabled="!prev"
 				class="k-drawer-option"
 				icon="angle-left"
-				@click="$panel.drawer.emit('prev')"
+				@click="$emit('prev')"
 			/>
 			<k-button
 				:disabled="!next"
 				class="k-drawer-option"
 				icon="angle-right"
-				@click="$panel.drawer.emit('next')"
+				@click="$emit('next')"
 			/>
-			<k-button
-				class="k-drawer-option"
-				icon="trash"
-				@click="$panel.drawer.emit('remove')"
-			/>
+			<k-button class="k-drawer-option" icon="trash" @click="$emit('remove')" />
 		</template>
 	</k-form-drawer>
 </template>
@@ -52,6 +50,7 @@ export const props = {
 };
 
 export default {
-	mixins: [Drawer, Fields, props]
+	mixins: [Drawer, Fields, props],
+	emits: ["cancel", "input", "next", "prev", "remove", "show", "submit"]
 };
 </script>

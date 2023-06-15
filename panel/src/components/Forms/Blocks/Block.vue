@@ -52,47 +52,6 @@
 				split: () => $refs.editor.split()
 			}"
 		/>
-
-		<k-form-drawer
-			v-if="isEditable && !isBatched"
-			:id="id"
-			ref="drawer"
-			:icon="fieldset.icon || 'box'"
-			:tabs="tabs"
-			:title="fieldset.name"
-			:value="content"
-			class="k-block-drawer"
-			@close="onDrawerClose"
-			@input="onDrawerInput"
-			@open="onDrawerOpen"
-			@submit="onDrawerSubmit"
-		>
-			<template #options>
-				<k-button
-					v-if="isHidden"
-					class="k-drawer-option"
-					icon="hidden"
-					@click="$emit('show')"
-				/>
-				<k-button
-					:disabled="!prev"
-					class="k-drawer-option"
-					icon="angle-left"
-					@click.prevent.stop="goTo(prev)"
-				/>
-				<k-button
-					:disabled="!next"
-					class="k-drawer-option"
-					icon="angle-right"
-					@click.prevent.stop="goTo(next)"
-				/>
-				<k-button
-					class="k-drawer-option"
-					icon="trash"
-					@click.prevent.stop="remove"
-				/>
-			</template>
-		</k-form-drawer>
 	</div>
 </template>
 
@@ -250,7 +209,7 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$refs.drawer.close();
+			this.$panel.drawer.close();
 		},
 		focus() {
 			if (this.skipFocus !== true) {
@@ -283,19 +242,9 @@ export default {
 
 			return false;
 		},
-		onDrawerClose() {
+		onClose() {
 			this.$emit("close");
 			this.focus();
-		},
-		onDrawerInput(value) {
-			this.$emit("update", value);
-		},
-		onDrawerOpen() {
-			this.$emit("open");
-		},
-		onDrawerSubmit() {
-			this.$emit("submit");
-			this.close();
 		},
 		onFocusIn(event) {
 			// skip focus if the event is coming from the options buttons
@@ -307,8 +256,38 @@ export default {
 
 			this.$emit("focus", event);
 		},
+		onInput(value) {
+			this.$emit("update", value);
+		},
 		open(tab) {
-			this.$refs.drawer?.open(tab);
+			if (!this.isEditable || this.isBatched) {
+				return;
+			}
+
+			this.$panel.drawer.open({
+				component: "k-block-drawer",
+				on: {
+					close: this.onClose,
+					input: this.onInput,
+					next: () => this.goTo(this.next),
+					prev: () => this.goTo(this.prev),
+					remove: this.remove,
+					show: this.show,
+					submit: this.submit
+				},
+				props: {
+					hidden: this.isHidden,
+					icon: this.fieldset.icon ?? "box",
+					id: this.id,
+					next: this.next,
+					prev: this.prev,
+					tabs: this.tabs,
+					title: this.fieldset.name,
+					value: this.content
+				}
+			});
+
+			this.$emit("open");
 		},
 		remove() {
 			if (this.isBatched) {
@@ -322,14 +301,19 @@ export default {
 				},
 				on: {
 					submit: () => {
+						this.$panel.drawer.close();
 						this.$panel.dialog.close();
 						this.$emit("remove", this.id);
 					}
 				}
 			});
 		},
+		show() {
+			this.$emit("show");
+		},
 		submit() {
 			this.close();
+			this.$emit("submit");
 		}
 	}
 };
