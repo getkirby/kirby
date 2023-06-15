@@ -51,6 +51,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["cancel"],
 	computed: {
 		buttons() {
 			return [
