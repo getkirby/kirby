@@ -1,19 +1,12 @@
 <template>
-	<k-overlay
-		ref="dialog"
-		:centered="true"
-		:dimmed="true"
-		:visible="visible"
-		type="dialog"
-		@cancel="cancel"
-		@ready="ready"
-	>
+	<portal v-if="visible" to="dialog">
 		<form
 			:class="$vnode.data.staticClass"
 			:data-size="size"
 			class="k-dialog"
 			method="dialog"
 			@submit.prevent="submit"
+			@click.stop
 		>
 			<k-dialog-notification />
 			<k-dialog-body>
@@ -33,7 +26,7 @@
 				</k-dialog-footer>
 			</slot>
 		</form>
-	</k-overlay>
+	</portal>
 </template>
 
 <script>

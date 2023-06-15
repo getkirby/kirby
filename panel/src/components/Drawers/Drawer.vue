@@ -1,9 +1,10 @@
 <template>
-	<k-overlay ref="drawer" :visible="visible" type="drawer" @cancel="cancel">
+	<portal v-if="visible" to="drawer">
 		<form
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
+			@click.stop
 			@submit.prevent="submit"
 		>
 			<k-drawer-notification />
@@ -39,7 +40,7 @@
 				<slot />
 			</k-drawer-body>
 		</form>
-	</k-overlay>
+	</portal>
 </template>
 
 <script>
@@ -57,13 +58,6 @@ export default {
 	--drawer-header-padding: 1.5rem;
 	--drawer-shadow: var(--shadow-xl);
 	--drawer-width: 50rem;
-}
-
-.k-drawer-overlay {
-	--overlay-color-back: rgba(0, 0, 0, 0.2);
-	display: flex;
-	align-items: stretch;
-	justify-content: flex-end;
 }
 
 /**

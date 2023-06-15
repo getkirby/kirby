@@ -11,8 +11,6 @@ import "@/helpers/array.js";
 export const defaults = () => {
 	return {
 		...featureDefaults(),
-		// open state for the modal
-		isOpen: false,
 		// when drawers or dialogs are created with the
 		// deprecated way of adding a dialog/drawer component
 		// to a template, `legacy` is set to true in the open method
@@ -68,6 +66,7 @@ export default (panel, key, defaults) => {
 				this.emit("close");
 			}
 
+			this.isOpen = false;
 			this.reset();
 		},
 
@@ -97,6 +96,8 @@ export default (panel, key, defaults) => {
 			this.props.value = value;
 			this.emit("input", value);
 		},
+
+		isOpen: false,
 
 		/**
 		 * Customized setter for the active state, which
@@ -142,6 +143,10 @@ export default (panel, key, defaults) => {
 				// its open state in the dialog or drawer components
 				ref: component
 			});
+
+			console.warn(
+				"Drawers and dialogs should no longer be embedded as components"
+			);
 
 			component.show();
 

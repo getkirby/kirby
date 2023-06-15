@@ -1,19 +1,14 @@
 <template>
-	<portal v-if="isOpen" :to="type">
-		<div
-			ref="overlay"
-			:data-centered="loading || centered"
-			:data-dimmed="dimmed"
-			:data-loading="loading"
-			:dir="$panel.direction"
-			:class="'k-' + type + '-overlay'"
-			class="k-overlay"
-			@click="click"
-		>
-			<k-icon v-if="loading" type="loader" class="k-overlay-loader" />
-			<slot v-else :close="close" :is-open="isOpen" />
-		</div>
-	</portal>
+	<dialog
+		ref="overlay"
+		:data-type="type"
+		class="k-overlay"
+		@click="onClick"
+		@close="onClose"
+		@open="onOpen"
+	>
+		<slot />
+	</dialog>
 </template>
 
 <script>
@@ -21,18 +16,6 @@ export const props = {
 	props: {
 		autofocus: {
 			default: true,
-			type: Boolean
-		},
-		centered: {
-			default: false,
-			type: Boolean
-		},
-		dimmed: {
-			default: true,
-			type: Boolean
-		},
-		loading: {
-			default: false,
 			type: Boolean
 		},
 		type: {
@@ -54,23 +37,17 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: true,
-	data() {
-		return {
-			isOpen: false,
-			scrollTop: 0
-		};
-	},
 	watch: {
-		visible: {
-			handler(visible) {
-				visible === true ? this.open() : this.close();
-			},
-			immediate: true
-		}
-	},
-	mounted() {
-		if (this.visible) {
-			this.open();
+		visible(newValue, oldValue) {
+			if (newValue === oldValue) {
+				return;
+			}
+
+			if (newValue === true) {
+				this.open();
+			} else {
+				this.close();
+			}
 		}
 	},
 	methods: {
@@ -83,54 +60,31 @@ export default {
 			this.close();
 		},
 		/**
-		 * Check for clicks on the backdrop
-		 */
-		click(event) {
-			// compare the event target with the overlay element
-			if (event.target === this.$refs.overlay) {
-				this.cancel();
-			}
-		},
-		/**
 		 * Closes the overlay, removes the escape key listener
 		 * and restores the scroll position in the panel view
 		 */
 		close() {
 			// it makes it run once
-			if (this.isOpen === false) {
+			if (this.$refs.overlay.open === false) {
 				return;
 			}
 
-			this.isOpen = false;
-			this.$emit("close");
-			this.restoreScrollPosition();
-
-			// unbind events
-			this.$events.$off("keydown.esc", this.cancel);
+			this.$refs.overlay.close();
 		},
 		focus() {
 			this.$helper.focus(this.$refs.overlay);
 		},
 		/**
-		 * Alias for close. This is needed to simplify
-		 * hiding dialogs and drawers.
+		 * Check for clicks on the backdrop
 		 */
-		hide() {
-			this.close();
+		onClick(event) {
+			this.cancel();
 		},
-		open() {
-			// it makes it run once
-			if (this.isOpen === true) {
-				return;
-			}
-
-			this.storeScrollPosition();
-			this.isOpen = true;
+		onClose() {
+			this.$emit("close");
+		},
+		onOpen() {
 			this.$emit("open");
-
-			// listen for the escape key to
-			// close the overlay
-			this.$events.$on("keydown.esc", this.cancel);
 
 			// wait for the next rendering round
 			// otherwise the portal won't be ready
@@ -143,28 +97,13 @@ export default {
 				this.$emit("ready");
 			});
 		},
-		restoreScrollPosition() {
-			const view = document.querySelector(".k-panel-view");
-
-			if (view?.scrollTop) {
-				view.scrollTop = this.scrollTop;
+		open() {
+			// it makes it run once
+			if (this.$refs.overlay.open === true) {
+				return;
 			}
-		},
-		/**
-		 * Alias for open. This is needed to simplify
-		 * showing dialogs and drawers.
-		 */
-		show() {
-			this.open();
-		},
-		storeScrollPosition() {
-			const view = document.querySelector(".k-panel-view");
 
-			if (view?.scrollTop) {
-				this.scrollTop = view.scrollTop;
-			} else {
-				this.scrollTop = 0;
-			}
+			this.$refs.overlay.showModal();
 		}
 	}
 };
@@ -175,28 +114,40 @@ export default {
 	--overlay-color-back: var(--color-backdrop);
 }
 
-.k-overlay {
+.k-overlay[open] {
 	position: fixed;
 	inset: 0;
 	width: 100%;
 	height: 100vh;
 	height: 100dvh;
+	background: none;
 	z-index: var(--z-dialog);
 	transform: translate3d(0, 0, 0);
 }
-.k-overlay[data-centered="true"] {
+.k-overlay[open]::backdrop {
+	background: none;
+}
+
+.k-overlay[open] > .k-portal {
+	position: fixed;
+	inset: 0;
+	background: var(--overlay-color-back);
+}
+
+.k-overlay[open][data-type="dialog"] > .k-portal {
 	display: grid;
 	place-items: center;
 }
-.k-overlay[data-dimmed="true"] {
-	background: var(--overlay-color-back);
-}
-.k-overlay-loader {
-	color: var(--color-white);
+
+.k-overlay[open][data-type="drawer"] > .k-portal {
+	--overlay-color-back: rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-end;
 }
 
 /* Scroll lock */
-:where(body):has(.k-overlay) {
+:where(body):has(.k-overlay[open]) {
 	overflow: clip;
 }
 </style>

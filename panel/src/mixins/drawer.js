@@ -61,7 +61,7 @@ export default {
 		 * @private
 		 */
 		hide() {
-			this.$refs.drawer.hide();
+			this.visible = false;
 		},
 		/**
 		 * Updates the drawer values
@@ -95,7 +95,7 @@ export default {
 		 * @private
 		 */
 		show() {
-			this.$refs.drawer.show();
+			this.visible = true;
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,

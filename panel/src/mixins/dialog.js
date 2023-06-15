@@ -58,7 +58,7 @@ export default {
 		 * @private
 		 */
 		hide() {
-			this.$refs.dialog.hide();
+			this.visible = false;
 		},
 		/**
 		 * Updates the dialog values
@@ -92,7 +92,7 @@ export default {
 		 * @private
 		 */
 		show() {
-			this.$refs.dialog.show();
+			this.visible = true;
 		},
 		/**
 		 * This event is triggered when the submit button is clicked,
