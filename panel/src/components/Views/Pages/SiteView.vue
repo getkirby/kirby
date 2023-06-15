@@ -14,8 +14,7 @@
 				<k-button-group>
 					<k-button
 						:link="model.previewUrl"
-						:responsive="true"
-						:text="$t('open')"
+						:title="$t('open')"
 						icon="open"
 						target="_blank"
 						variant="filled"
