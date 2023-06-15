@@ -222,14 +222,8 @@ export default {
 		},
 		goTo(block) {
 			if (block) {
-				this.skipFocus = true;
-				this.close();
-
-				this.$nextTick(() => {
-					block.$refs.container.focus();
-					block.open();
-					this.skipFocus = false;
-				});
+				block.$refs.container.focus();
+				block.open();
 			}
 		},
 		isSplitable() {

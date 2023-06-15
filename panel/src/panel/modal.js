@@ -47,11 +47,12 @@ export default (panel, key, defaults) => {
 		 * Closes the modal
 		 */
 		async close() {
-			if (this.isOpen) {
-				this.emit("close");
+			if (this.isOpen === false) {
+				return;
 			}
 
 			this.isOpen = false;
+			this.emit("close");
 			this.reset();
 		},
 
