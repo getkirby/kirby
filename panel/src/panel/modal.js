@@ -10,9 +10,7 @@ import "@/helpers/array.js";
  */
 export const defaults = () => {
 	return {
-		...featureDefaults(),
-		// open state for the modal
-		isOpen: false
+		...featureDefaults()
 	};
 };
 
@@ -53,6 +51,7 @@ export default (panel, key, defaults) => {
 				this.emit("close");
 			}
 
+			this.isOpen = false;
 			this.reset();
 		},
 
@@ -82,6 +81,8 @@ export default (panel, key, defaults) => {
 			this.props.value = value;
 			this.emit("input", value);
 		},
+
+		isOpen: false,
 
 		/**
 		 * Define the default listeners
