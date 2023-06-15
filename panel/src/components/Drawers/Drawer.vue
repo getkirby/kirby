@@ -1,10 +1,15 @@
 <template>
-	<k-overlay ref="drawer" :visible="visible" type="drawer" @cancel="cancel">
+	<k-overlay
+		ref="drawer"
+		:visible="visible"
+		type="drawer"
+		@cancel="$emit('cancel')"
+	>
 		<form
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
-			@submit.prevent="submit"
+			@submit.prevent="$emit('submit')"
 		>
 			<k-drawer-notification />
 			<k-drawer-header>
@@ -46,7 +51,8 @@
 import Drawer from "@/mixins/drawer.js";
 
 export default {
-	mixins: [Drawer]
+	mixins: [Drawer],
+	emits: ["cancel", "submit"]
 };
 </script>
 

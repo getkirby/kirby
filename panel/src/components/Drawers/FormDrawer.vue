@@ -1,17 +1,17 @@
 <template>
 	<k-drawer
 		ref="drawer"
-		v-bind="$props"
 		class="k-form-drawer"
-		@cancel="cancel"
-		@submit="submit"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
 		<slot slot="options" name="options" />
 		<k-drawer-fields
 			:fields="$panel.drawer.tab?.fields"
 			:value="value"
-			@input="input"
-			@submit="submit"
+			@input="$emit('input', $event)"
+			@submit="$emit('submit', value)"
 		/>
 	</k-drawer>
 </template>
@@ -21,6 +21,7 @@ import Drawer from "@/mixins/drawer.js";
 import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
-	mixins: [Drawer, Fields]
+	mixins: [Drawer, Fields],
+	emits: ["cancel", "input", "submit"]
 };
 </script>
