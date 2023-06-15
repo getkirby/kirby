@@ -4,8 +4,7 @@
 		:dimmed="true"
 		:visible="visible"
 		type="dialog"
-		@cancel="cancel"
-		@ready="ready"
+		@cancel="$emit('cancel')"
 	>
 		<form
 			class="k-search-dialog k-dialog"
@@ -104,6 +103,7 @@ import debounce from "@/helpers/debounce.js";
 
 export default {
 	mixins: [Dialog],
+	emits: ["cancel"],
 	data() {
 		return {
 			isLoading: false,
