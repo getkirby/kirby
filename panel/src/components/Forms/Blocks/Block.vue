@@ -102,11 +102,6 @@ export default {
 		"update",
 		"confirmToRemoveSelected"
 	],
-	data() {
-		return {
-			skipFocus: false
-		};
-	},
 	computed: {
 		className() {
 			let className = ["k-block-type-" + this.type];
@@ -212,12 +207,10 @@ export default {
 			this.$panel.drawer.close();
 		},
 		focus() {
-			if (this.skipFocus !== true) {
-				if (typeof this.$refs.editor.focus === "function") {
-					this.$refs.editor.focus();
-				} else {
-					this.$refs.container.focus();
-				}
+			if (typeof this.$refs.editor.focus === "function") {
+				this.$refs.editor.focus();
+			} else {
+				this.$refs.container.focus();
 			}
 		},
 		goTo(block) {
