@@ -26,6 +26,7 @@ export const props = {
 
 export default {
 	mixins: [props],
+	emits: ["open"],
 	computed: {
 		hasTabs() {
 			return this.$helper.object.length(this.tabs) > 1;
