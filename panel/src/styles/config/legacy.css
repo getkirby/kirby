@@ -3,7 +3,6 @@
 	--container: 80rem;
 
 	/** Colors **/
-	--color-backdrop: rgba(0, 0, 0, 0.6);
 	--color-background: var(--color-light);
 	--color-gray: var(--color-gray-600);
 	--color-red: var(--color-red-600);

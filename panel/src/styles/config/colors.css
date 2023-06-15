@@ -264,6 +264,7 @@
 	--color-slate-900: hsl(var(--color-slate-hs), var(--color-slate-l-900));
 
 	/** Shortcuts **/
+	--color-backdrop: rgba(0, 0, 0, 0.6);
 	--color-black: black;
 	--color-border: var(--color-gray-300);
 	--color-dark: var(--color-slate-900);
