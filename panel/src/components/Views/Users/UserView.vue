@@ -30,7 +30,7 @@
 						<k-button
 							:disabled="isLocked"
 							:dropdown="true"
-							:text="$t('settings')"
+							:title="$t('settings')"
 							icon="cog"
 							size="sm"
 							variant="filled"

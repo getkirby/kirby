@@ -1,5 +1,5 @@
 <template>
-	<nav v-if="tabs && tabs.length > 1" :data-theme="theme" class="k-tabs">
+	<nav v-if="tabs && tabs.length > 1" class="k-tabs">
 		<k-button
 			v-for="tabButton in visibleTabs"
 			:key="tabButton.name"
@@ -12,7 +12,7 @@
 		>
 			{{ tabButton.label || tabButton.text || tabButton.name }}
 
-			<span v-if="tabButton.badge" class="k-tabs-badge">
+			<span v-if="tabButton.badge" :data-theme="theme" class="k-tabs-badge">
 				{{ tabButton.badge }}
 			</span>
 		</k-button>

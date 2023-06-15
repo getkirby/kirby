@@ -95,7 +95,7 @@ export default {
 
 			return {
 				icon: "check",
-				text: "Published",
+				text: "No changes",
 				click: this.onSave
 			};
 		},

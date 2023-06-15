@@ -20,7 +20,7 @@
 					<k-button
 						:link="preview.url"
 						:responsive="true"
-						:text="$t('open')"
+						:title="$t('open')"
 						class="k-file-view-options"
 						icon="open"
 						size="sm"
@@ -31,8 +31,7 @@
 						<k-button
 							:disabled="isLocked"
 							:dropdown="true"
-							:responsive="true"
-							:text="$t('settings')"
+							:title="$t('settings')"
 							icon="cog"
 							size="sm"
 							variant="filled"
