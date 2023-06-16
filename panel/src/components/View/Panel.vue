@@ -31,6 +31,7 @@
 		<k-icons />
 
 		<k-overlay
+			:nested="$panel.drawer.history.milestones.length > 1"
 			:visible="$panel.drawer.isOpen"
 			type="drawer"
 			@close="$panel.drawer.close()"

@@ -4,7 +4,6 @@
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
-			@click.stop
 			@submit.prevent="$emit('submit')"
 		>
 			<k-drawer-notification />
@@ -56,7 +55,7 @@ export default {
 :root {
 	--drawer-color-back: var(--color-light);
 	--drawer-header-height: 2.5rem;
-	--drawer-header-padding: 1.5rem;
+	--drawer-header-padding: 1rem;
 	--drawer-shadow: var(--shadow-xl);
 	--drawer-width: 50rem;
 }

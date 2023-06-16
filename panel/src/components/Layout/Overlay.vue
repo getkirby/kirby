@@ -3,6 +3,7 @@
 		ref="overlay"
 		:data-type="type"
 		class="k-overlay"
+		@cancel="onCancel"
 		@click="onClick"
 		@close="onClose"
 		@open="onOpen"
@@ -16,6 +17,10 @@ export const props = {
 	props: {
 		autofocus: {
 			default: true,
+			type: Boolean
+		},
+		nested: {
+			default: false,
 			type: Boolean
 		},
 		type: {
@@ -69,16 +74,33 @@ export default {
 				return;
 			}
 
+			// fire the event without
+			// actually closing the overlay
+			if (this.nested) {
+				return this.onClose();
+			}
+
 			this.$refs.overlay.close();
 		},
 		focus() {
 			this.$helper.focus(this.$refs.overlay);
 		},
+		onCancel(event) {
+			// don't close the overlay when the
+			// escape key is pressed when this is
+			// a nested overlay.
+			if (this.nested) {
+				event.preventDefault();
+				this.cancel();
+			}
+		},
 		/**
 		 * Check for clicks on the backdrop
 		 */
 		onClick(event) {
-			this.cancel();
+			if (event.target.matches(".k-portal")) {
+				this.cancel();
+			}
 		},
 		onClose() {
 			this.$emit("close");

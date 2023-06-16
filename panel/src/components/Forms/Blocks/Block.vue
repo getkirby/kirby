@@ -100,8 +100,7 @@ export default {
 		"sortUp",
 		"split",
 		"submit",
-		"update",
-		"confirmToRemoveSelected"
+		"update"
 	],
 	computed: {
 		className() {
@@ -208,16 +207,16 @@ export default {
 			this.$panel.drawer.close();
 		},
 		focus() {
-			if (typeof this.$refs.editor.focus === "function") {
+			if (typeof this.$refs.editor?.focus === "function") {
 				this.$refs.editor.focus();
 			} else {
-				this.$refs.container.focus();
+				this.$refs.container?.focus();
 			}
 		},
 		goTo(block) {
 			if (block) {
-				block.$refs.container.focus();
-				block.open();
+				block.$refs.container?.focus();
+				block.open(null, true);
 			}
 		},
 		isSplitable() {
@@ -247,13 +246,14 @@ export default {
 		onInput(value) {
 			this.$emit("update", value);
 		},
-		open(tab) {
+		open(tab, replace = false) {
 			if (!this.isEditable || this.isBatched) {
 				return;
 			}
 
 			this.$panel.drawer.open({
 				component: "k-block-drawer",
+				id: this.id,
 				on: {
 					close: this.onClose,
 					input: this.onInput,
@@ -266,13 +266,13 @@ export default {
 				props: {
 					hidden: this.isHidden,
 					icon: this.fieldset.icon ?? "box",
-					id: this.id,
 					next: this.next,
 					prev: this.prev,
 					tabs: this.tabs,
 					title: this.fieldset.name,
 					value: this.content
-				}
+				},
+				replace: replace
 			});
 
 			this.$emit("open");
@@ -289,7 +289,10 @@ export default {
 				},
 				on: {
 					submit: () => {
-						this.$panel.drawer.close();
+						if (this.$panel.drawer.id === this.id) {
+							this.$panel.drawer.close();
+						}
+
 						this.$panel.dialog.close();
 						this.$emit("remove", this.id);
 					}

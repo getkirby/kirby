@@ -1,9 +1,11 @@
+import { clone } from "@/helpers/object.js";
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import History from "./history.js";
 
 export const defaults = () => {
 	return {
 		...modalDefaults(),
-		parent: null,
+		id: null,
 		tabId: null
 	};
 };
@@ -20,44 +22,63 @@ export default (panel) => {
 	return {
 		...parent,
 		get breadcrumb() {
-			const crumbs = [];
-			let parent = this;
-
-			while (parent !== null) {
-				crumbs.push(parent.props);
-				parent = parent.parent;
+			return this.history.milestones;
+		},
+		/**
+		 * Closes the drawer and goes back to the
+		 * parent one if it has been stored
+		 */
+		async close() {
+			if (this.isOpen === false) {
+				return;
 			}
 
-			return crumbs.reverse();
+			this.history.removeLast();
+
+			// no more items in the history
+			if (this.history.isEmpty() === true) {
+				this.reset();
+				this.isOpen = false;
+				this.emit("close");
+				return;
+			}
+
+			return this.open(this.history.last());
 		},
+
 		goTo(id) {
-			let parent = this;
+			const state = this.history.goto(id);
 
-			while (parent !== null) {
-				if (parent.props.id === id) {
-					return this.openState(parent);
-				}
-
-				parent = parent.parent;
+			if (state !== undefined) {
+				this.open(state);
 			}
 		},
+
+		history: History(),
+
 		get icon() {
 			return this.props.icon ?? "box";
 		},
-		async open(feature, options = {}) {
-			const parentDrawer = this.isOpen === true ? this.state() : null;
-			await parent.open.call(this, feature, options);
 
-			// add the parent to the drawer if it's not the same
-			if (this.path !== parentDrawer?.path) {
-				this.parent = parentDrawer;
-			}
+		async open(feature, options = {}) {
+			await parent.open.call(this, feature, options);
 
 			// open the first tab
 			this.openTab();
 
-			return this.state();
+			// get the current state and add it to the list of parents
+			const state = this.state();
+
+			// add the drawer to the history
+			if (feature.replace === true) {
+				this.history.replace(-1, state);
+			} else {
+				this.history.add(state);
+			}
+
+			return state;
 		},
+
 		openTab(tabId) {
 			tabId = tabId || Object.keys(this.tabs)[0];
 
@@ -68,6 +89,7 @@ export default (panel) => {
 			this.tabId = tabId;
 			this.emit("openTab", tabId);
 		},
+
 		get tab() {
 			return this.tabs[this.tabId] ?? null;
 		},
