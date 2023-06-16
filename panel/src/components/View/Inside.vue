@@ -3,13 +3,11 @@
 		<k-panel-menu :entries="$panel.menu" :view="$panel.view" />
 
 		<main class="k-panel-main">
-			<k-registration v-if="!$panel.license" />
-
 			<div class="k-panel-view">
+				<k-registration v-if="!$panel.license" />
 				<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
 					<slot name="topbar" />
 				</k-topbar>
-
 				<slot />
 			</div>
 		</main>

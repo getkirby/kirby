@@ -208,13 +208,12 @@ export default {
 .k-button {
 	position: relative;
 	display: inline-flex;
-	font-size: var(--text-sm);
 	align-items: center;
 	justify-content: center;
 	gap: 0.5rem;
 	padding-inline: var(--button-padding);
 	white-space: nowrap;
-	line-height: 1.25;
+	line-height: 1;
 	border-radius: var(--button-rounded);
 	background: var(--button-color-back);
 	height: var(--button-height);
