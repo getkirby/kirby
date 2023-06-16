@@ -34,6 +34,7 @@
 			<component
 				:is="customComponent"
 				ref="editor"
+				:tabs="tabs"
 				v-bind="$props"
 				v-on="listeners"
 			/>

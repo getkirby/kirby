@@ -27,14 +27,18 @@
  * @internal
  */
 export default {
+	props: {
+		endpoints: Object,
+		tabs: Object
+	},
 	data() {
 		return {
-			tab: Object.keys(this.fieldset.tabs)[0]
+			tab: Object.keys(this.tabs)[0]
 		};
 	},
 	computed: {
 		fields() {
-			return this.fieldset.tabs[this.tab]?.fields;
+			return this.tabs[this.tab]?.fields;
 		},
 		values() {
 			return Object.assign({}, this.content);
