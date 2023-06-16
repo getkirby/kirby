@@ -100,6 +100,7 @@ export default {
 		return {
 			isEditing: false,
 			isMultiSelectKey: false,
+			isPasteable: false,
 			blocks: this.value,
 			selected: []
 		};
@@ -191,14 +192,42 @@ export default {
 				const type = Object.values(this.fieldsets)[0].type;
 				this.add(type, index);
 			} else {
-				this.$refs.selector.open(index);
+				this.isPasteable = true;
+				this.$panel.dialog.open({
+					component: "k-block-selector",
+					props: {
+						fieldsetGroups: this.fieldsetGroups,
+						fieldsets: this.fieldsets
+					},
+					on: {
+						close: () => (this.isPasteable = false),
+						submit: (type) => {
+							this.add(type);
+							this.$panel.dialog.close();
+						},
+						paste: this.paste
+					}
+				});
 			}
 		},
 		chooseToConvert(block) {
-			this.$refs.selector.open(block, {
-				disabled: [block.type],
-				headline: this.$t("field.blocks.changeType"),
-				event: "convert"
+			this.isPasteable = true;
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					disabledFieldsets: [block.type],
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets,
+					headline: this.$t("field.blocks.changeType")
+				},
+				on: {
+					close: () => (this.isPasteable = false),
+					submit: (type) => {
+						this.convert(type, block);
+						this.$panel.dialog.close();
+					},
+					paste: this.paste
+				}
 			});
 		},
 		click(block) {
@@ -495,7 +524,7 @@ export default {
 		},
 		onPaste(e) {
 			// enable pasting when the block selector is open
-			if (this.$refs.selector?.isOpen() === true) {
+			if (this.isPasteable === true) {
 				return this.paste(e);
 			}
 

@@ -1,35 +1,32 @@
 <template>
 	<k-dialog
-		ref="dialog"
-		:cancel-button="false"
-		:submit-button="false"
+		v-bind="$props"
 		class="k-block-selector"
-		size="medium"
-		@open="onOpen"
-		@close="onClose"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
 		<k-headline v-if="headline">
 			{{ headline }}
 		</k-headline>
+
 		<details
 			v-for="(group, groupName) in groups"
 			:key="groupName"
 			:open="group.open"
 		>
 			<summary>{{ group.label }}</summary>
-			<div class="k-block-types">
+			<k-navigate class="k-block-types">
 				<k-button
 					v-for="fieldset in group.fieldsets"
-					:ref="'fieldset-' + fieldset.index"
 					:key="fieldset.name"
-					:disabled="disabled.includes(fieldset.type)"
+					:disabled="disabledFieldsets.includes(fieldset.type)"
 					:icon="fieldset.icon || 'box'"
 					:text="fieldset.name"
-					@keydown.up="navigate(fieldset.index - 1)"
-					@keydown.down="navigate(fieldset.index + 1)"
-					@click="add(fieldset.type)"
+					size="lg"
+					@click="$emit('submit', fieldset.type)"
+					@focus.native="$emit('input', fieldset.type)"
 				/>
-			</div>
+			</k-navigate>
 		</details>
 		<!-- eslint-disable vue/no-v-html -->
 		<p
@@ -41,40 +38,57 @@
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+
 /**
  * @internal
  */
 export default {
 	inheritAttrs: false,
+	mixins: [Dialog],
 	props: {
-		endpoint: String,
-		fieldsets: Object,
-		fieldsetGroups: Object
+		cancelButton: {
+			default: false
+		},
+		disabledFieldsets: {
+			default() {
+				return [];
+			},
+			type: Array
+		},
+		fieldsets: {
+			type: Object
+		},
+		fieldsetGroups: {
+			type: Object
+		},
+		headline: {
+			type: String
+		},
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: false
+		},
+		value: {
+			default: null,
+			type: String
+		}
+	},
+	created() {
+		this.$events.$on("paste", this.close);
+	},
+	destroyed() {
+		this.$events.$off("paste", this.close);
 	},
 	data() {
 		return {
-			dialogIsOpen: false,
-			disabled: [],
-			headline: null,
-			payload: null,
-			event: "add",
-			groups: this.createGroups()
+			selected: null
 		};
 	},
 	computed: {
-		shortcut() {
-			return this.$helper.keyboard.metaKey() + "+v";
-		}
-	},
-	methods: {
-		add(type) {
-			this.$emit(this.event, type, this.payload);
-			this.$refs.dialog.close();
-		},
-		close() {
-			this.$refs.dialog.close();
-		},
-		createGroups() {
+		groups() {
 			let groups = {};
 			let index = 0;
 
@@ -109,33 +123,8 @@ export default {
 
 			return groups;
 		},
-		isOpen() {
-			return this.dialogIsOpen;
-		},
-		navigate(index) {
-			this.$refs["fieldset-" + index]?.[0]?.focus();
-		},
-		onClose() {
-			this.dialogIsOpen = false;
-			this.$events.$off("paste", this.close);
-		},
-		onOpen() {
-			this.dialogIsOpen = true;
-			this.$events.$on("paste", this.close);
-		},
-		open(payload, params = {}) {
-			const options = {
-				event: "add",
-				disabled: [],
-				headline: null,
-				...params
-			};
-
-			this.event = options.event;
-			this.disabled = options.disabled;
-			this.headline = options.headline;
-			this.payload = payload;
-			this.$refs.dialog.open();
+		shortcut() {
+			return this.$helper.keyboard.metaKey() + "+v";
 		}
 	}
 };
@@ -143,7 +132,7 @@ export default {
 
 <style>
 .k-block-selector.k-dialog {
-	background: var(--color-dark);
+	background: var(--color-slate-800);
 	color: var(--color-white);
 }
 .k-block-selector .k-headline {
@@ -173,15 +162,19 @@ export default {
 	grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
-	--button-color-back: rgba(0, 0, 0, 0.5);
-	--button-color-hover: rgba(0, 0, 0, 0.3);
+	--button-color-icon: var(--color-slate-700);
+	--button-color-back: var(--color-slate-900);
+	--button-color-hover-back: hsl(
+		var(--color-slate-hs),
+		calc(var(--color-slate-l-900) - 2%)
+	);
 	width: 100%;
 	justify-content: start;
 	gap: 1rem;
 	padding-inline: var(--spacing-3);
 }
-.k-block-types .k-button:focus {
-	outline: 2px solid var(--color-focus);
+.k-block-types .k-button[aria-disabled] {
+	opacity: var(--opacity-disabled);
 }
 .k-clipboard-hint {
 	padding-top: 1.5rem;

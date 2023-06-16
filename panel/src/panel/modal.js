@@ -4,6 +4,7 @@ import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
+import { set } from "vue";
 
 /**
  * Additional default values for modals
@@ -79,7 +80,9 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			this.props.value = value;
+			// make sure that value is reactive
+			set(this.props, "value", value);
+
 			this.emit("input", value);
 		},
 
