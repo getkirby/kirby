@@ -45,7 +45,7 @@ export default {
 	border-radius: var(--rounded);
 	overflow: hidden;
 }
-.k-bubble .k-item-figure {
+.k-bubble .k-item-image {
 	width: 1.525rem;
 	height: 1.525rem;
 	margin-inline-start: -0.5rem;

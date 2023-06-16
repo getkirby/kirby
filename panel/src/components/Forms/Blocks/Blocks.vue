@@ -178,29 +178,31 @@ export default {
 		},
 		choose(index) {
 			if (this.$helper.object.length(this.fieldsets) === 1) {
-				const type = Object.values(this.fieldsets)[0].type;
-				this.add(type, index);
-			} else {
-				this.isPasteable = true;
-				this.$panel.dialog.open({
-					component: "k-block-selector",
-					props: {
-						fieldsetGroups: this.fieldsetGroups,
-						fieldsets: this.fieldsets
-					},
-					on: {
-						close: () => (this.isPasteable = false),
-						submit: (type) => {
-							this.add(type);
-							this.$panel.dialog.close();
-						},
-						paste: this.paste
-					}
-				});
+				return this.add(Object.values(this.fieldsets)[0].type, index);
 			}
+
+			this.$panel.dialog.open({
+				component: "k-block-selector",
+				props: {
+					fieldsetGroups: this.fieldsetGroups,
+					fieldsets: this.fieldsets
+				},
+				on: {
+					open: () => {
+						this.isPasteable = true;
+					},
+					close: () => {
+						this.isPasteable = false;
+					},
+					submit: (type) => {
+						this.add(type, index);
+						this.$panel.dialog.close();
+					},
+					paste: this.paste
+				}
+			});
 		},
 		chooseToConvert(block) {
-			this.isPasteable = true;
 			this.$panel.dialog.open({
 				component: "k-block-selector",
 				props: {
@@ -210,7 +212,12 @@ export default {
 					headline: this.$t("field.blocks.changeType")
 				},
 				on: {
-					close: () => (this.isPasteable = false),
+					open: () => {
+						this.isPasteable = true;
+					},
+					close: () => {
+						this.isPasteable = false;
+					},
 					submit: (type) => {
 						this.convert(type, block);
 						this.$panel.dialog.close();

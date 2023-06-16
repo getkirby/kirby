@@ -50,7 +50,14 @@
 			:is-splitable="isSplitable()"
 			v-on="{
 				...listeners,
-				split: () => $refs.editor.split()
+				split: () => $refs.editor.split(),
+				open: () => {
+					if (typeof $refs.editor.open === 'function') {
+						$refs.editor.open();
+					} else {
+						open();
+					}
+				}
 			}"
 		/>
 	</div>
@@ -128,33 +135,33 @@ export default {
 		},
 		listeners() {
 			return {
-				append: ($event) => this.$emit("append", $event),
-				chooseToAppend: ($event) => this.$emit("chooseToAppend", $event),
-				chooseToConvert: ($event) => this.$emit("chooseToConvert", $event),
-				chooseToPrepend: ($event) => this.$emit("chooseToPrepend", $event),
+				append: (event) => this.$emit("append", event),
+				chooseToAppend: (event) => this.$emit("chooseToAppend", event),
+				chooseToConvert: (event) => this.$emit("chooseToConvert", event),
+				chooseToPrepend: (event) => this.$emit("chooseToPrepend", event),
 				close: () => this.$emit("close"),
 				copy: () => this.$emit("copy"),
 				duplicate: () => this.$emit("duplicate"),
 				focus: () => this.$emit("focus"),
 				hide: () => this.$emit("hide"),
 				merge: () => this.$emit("merge"),
-				open: () => this.open(),
+				open: (tab) => this.open(tab),
 				paste: () => this.$emit("paste"),
-				prepend: ($event) => this.$emit("prepend", $event),
+				prepend: (event) => this.$emit("prepend", event),
 				remove: () => this.remove(),
 				removeSelected: () => this.$emit("removeSelected"),
 				show: () => this.$emit("show"),
 				sortDown: () => this.$emit("sortDown"),
 				sortUp: () => this.$emit("sortUp"),
-				split: ($event) => this.$emit("split", $event),
-				update: ($event) => this.$emit("update", $event)
+				split: (event) => this.$emit("split", event),
+				update: (event) => this.$emit("update", event)
 			};
 		},
 		tabs() {
-			let tabs = this.fieldset.tabs;
+			const tabs = this.fieldset.tabs;
 
-			Object.entries(tabs).forEach(([tabName, tab]) => {
-				Object.entries(tab.fields).forEach(([fieldName]) => {
+			for (const [tabName, tab] of Object.entries(tabs)) {
+				for (const [fieldName] of Object.entries(tab.fields)) {
 					tabs[tabName].fields[fieldName].section = this.name;
 					tabs[tabName].fields[fieldName].endpoints = {
 						field:
@@ -166,8 +173,8 @@ export default {
 						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
-				});
-			});
+				}
+			}
 
 			return tabs;
 		},
@@ -254,6 +261,7 @@ export default {
 			this.$panel.drawer.open({
 				component: "k-block-drawer",
 				id: this.id,
+				tabId: tab,
 				on: {
 					close: this.onClose,
 					input: this.onInput,

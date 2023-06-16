@@ -63,7 +63,7 @@ export default (panel) => {
 		async open(feature, options = {}) {
 			await parent.open.call(this, feature, options);
 
-			// open the first tab
+			// open the provided or first tab
 			this.openTab();
 
 			// get the current state and add it to the list of parents
@@ -79,7 +79,7 @@ export default (panel) => {
 			return state;
 		},
 
-		openTab(tabId) {
+		openTab(tabId = this.tabId) {
 			tabId = tabId || Object.keys(this.tabs)[0];
 
 			if (!tabId) {
