@@ -1,69 +1,73 @@
 <template>
-	<k-panel-inside>
-		<k-view class="k-language-view">
-			<k-header :editable="true" @edit="update()">
-				{{ name }}
+	<k-panel-inside class="k-language-view">
+		<template #topbar>
+			<k-prev-next :prev="prev" :next="next" />
+		</template>
 
-				<k-button-group slot="left">
-					<k-button :link="url" icon="open" text="Open" />
-					<k-button :text="$t('settings')" icon="cog" @click="update()" />
-					<k-button
-						:disabled="!deletable"
-						:text="$t('delete')"
-						icon="trash"
-						@click="remove()"
-					/>
-				</k-button-group>
+		<k-header :editable="true" @edit="update()">
+			{{ name }}
+			<k-button-group slot="buttons">
+				<k-button
+					:link="url"
+					:tooltip="$t('open')"
+					icon="open"
+					target="_blank"
+					variant="filled"
+				/>
+				<k-button
+					:tooltip="$t('settings')"
+					icon="cog"
+					variant="filled"
+					@click="update()"
+				/>
+				<k-button
+					:disabled="!deletable"
+					:tooltip="$t('delete')"
+					icon="trash"
+					variant="filled"
+					@click="remove()"
+				/>
+			</k-button-group>
+		</k-header>
 
-				<template #right>
-					<k-prev-next :prev="prev" :next="next" />
-				</template>
-			</k-header>
+		<k-section headline="Language settings">
+			<k-stats :reports="info" size="small" />
+		</k-section>
 
-			<section>
-				<k-bar>
-					<k-headline slot="left" style="margin-bottom: var(--spacing-3)"
-						>Language settings</k-headline
-					>
-				</k-bar>
-				<k-stats :reports="info" size="small" />
-			</section>
-
-			<section>
-				<k-bar>
-					<k-headline slot="left">Language variables</k-headline>
-					<k-button-group slot="right">
-						<k-button
-							icon="add"
-							:text="$t('add')"
-							@click="createTranslation()"
-						/>
-					</k-button-group>
-				</k-bar>
-
-				<template v-if="translations.length">
-					<k-table
-						:columns="{
-							key: {
-								label: 'Key',
-								mobile: true,
-								width: '1/4'
-							},
-							value: {
-								label: 'Value',
-								mobile: true
-							}
-						}"
-						:rows="translations"
-						@cell="updateTranslation"
-						@option="option"
-					/>
-				</template>
-				<template v-else>
-					<k-empty @click="createTranslation">No translations yet</k-empty>
-				</template>
-			</section>
-		</k-view>
+		<k-section
+			:buttons="[
+				{
+					click: createTranslation,
+					icon: 'add',
+					text: $t('add')
+				}
+			]"
+			headline="Language variables"
+		>
+			<template v-if="translations.length">
+				<k-table
+					:columns="{
+						key: {
+							label: 'Key',
+							mobile: true,
+							width: '1/4'
+						},
+						value: {
+							label: 'Value',
+							mobile: true
+						}
+					}"
+					:rows="translations"
+					@cell="updateTranslation"
+					@option="option"
+				/>
+			</template>
+			<template v-else>
+				<k-empty icon="globe" @click="createTranslation">
+					No translations yet
+				</k-empty>
+			</template>
+		</k-section>
 	</k-panel-inside>
 </template>
 
