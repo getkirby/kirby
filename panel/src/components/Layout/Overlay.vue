@@ -6,7 +6,6 @@
 		@cancel="onCancel"
 		@click="onClick"
 		@close="onClose"
-		@open="onOpen"
 	>
 		<slot />
 	</dialog>
@@ -42,6 +41,13 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: true,
+	mounted() {
+		if (this.visible === true) {
+			this.open();
+		} else {
+			this.close();
+		}
+	},
 	watch: {
 		visible(newValue, oldValue) {
 			if (newValue === oldValue) {
@@ -105,8 +111,11 @@ export default {
 		onClose() {
 			this.$emit("close");
 		},
-		onOpen() {
-			this.$emit("open");
+		open() {
+			// it makes it run once
+			if (this.$refs.overlay.open !== true) {
+				this.$refs.overlay.showModal();
+			}
 
 			// wait for the next rendering round
 			// otherwise the portal won't be ready
@@ -116,16 +125,8 @@ export default {
 					this.focus();
 				}
 
-				this.$emit("ready");
+				this.$emit("open");
 			});
-		},
-		open() {
-			// it makes it run once
-			if (this.$refs.overlay.open === true) {
-				return;
-			}
-
-			this.$refs.overlay.showModal();
 		}
 	}
 };
