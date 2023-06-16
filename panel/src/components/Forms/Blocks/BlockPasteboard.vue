@@ -1,10 +1,10 @@
 <template>
 	<k-dialog
 		ref="dialog"
-		:cancel-button="false"
-		:submit-button="false"
-		size="large"
+		v-bind="$props"
 		class="k-block-importer"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
 	>
 		<!-- eslint-disable vue/no-v-html -->
 		<label
@@ -12,31 +12,39 @@
 			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
 		<!-- eslint-enable -->
-		<textarea id="pasteboard" @paste.prevent="onPaste" />
+		<textarea id="pasteboard" @paste.prevent="paste" />
 	</k-dialog>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+
 /**
  * @internal
  */
 export default {
 	inheritAttrs: false,
+	mixins: [Dialog],
+	props: {
+		cancelButton: {
+			default: false
+		},
+		size: {
+			default: "large"
+		},
+		submitButton: {
+			default: false
+		}
+	},
 	computed: {
 		shortcut() {
 			return this.$helper.keyboard.metaKey() + "+v";
 		}
 	},
 	methods: {
-		close() {
-			this.$refs.dialog.close();
-		},
-		open() {
-			this.$refs.dialog.open();
-		},
-		onPaste(clipboardEvent) {
-			this.$emit("paste", clipboardEvent);
-			this.close();
+		paste(html) {
+			this.$emit("close");
+			this.$emit("paste", html);
 		}
 	}
 };
@@ -44,7 +52,7 @@ export default {
 
 <style>
 .k-block-importer.k-dialog {
-	background: var(--color-dark);
+	background: var(--color-slate-800);
 	color: var(--color-white);
 }
 .k-block-importer .k-dialog-body {

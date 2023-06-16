@@ -57,17 +57,6 @@
 					</k-empty>
 				</template>
 			</k-draggable>
-
-			<k-block-selector
-				ref="selector"
-				:fieldsets="fieldsets"
-				:fieldset-groups="fieldsetGroups"
-				@add="add"
-				@convert="convert"
-				@paste="paste($event)"
-			/>
-
-			<k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
 		</template>
 		<template v-else>
 			<k-box theme="info"> No fieldsets yet </k-box>
@@ -577,7 +566,12 @@ export default {
 			);
 		},
 		pasteboard() {
-			this.$refs.pasteboard.open();
+			this.$panel.dialog.open({
+				component: "k-block-pasteboard",
+				on: {
+					paste: this.paste
+				}
+			});
 		},
 		prevNext(index) {
 			if (this.blocks[index]) {
