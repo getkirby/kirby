@@ -195,6 +195,9 @@ export default {
 	display: grid;
 	height: var(--item-height);
 	align-items: center;
+	grid-template-columns: 1fr auto;
+}
+.k-item[data-layout="list"]:has(.k-item-image) {
 	grid-template-columns: var(--item-height) 1fr auto;
 }
 .k-item[data-layout="list"] .k-frame {
@@ -257,10 +260,16 @@ export default {
 	--item-height: var(--item-height-cardlet);
 	display: grid;
 	grid-template-areas:
+		"content"
+		"options";
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr var(--height-md);
+}
+.k-item[data-layout="cardlets"]:has(.k-item-image) {
+	grid-template-areas:
 		"image content"
 		"image options";
 	grid-template-columns: minmax(0, var(--item-height)) 1fr;
-	grid-template-rows: 1fr var(--height-md);
 }
 .k-item[data-layout="cardlets"] .k-frame {
 	grid-area: image;
