@@ -53,12 +53,12 @@ export default (panel) => {
 				this.parent = parentDrawer;
 			}
 
-			// open the first tab
+			// open the provided or first tab
 			this.openTab();
 
 			return this.state();
 		},
-		openTab(tabId) {
+		openTab(tabId = this.tabId) {
 			tabId = tabId || Object.keys(this.tabs)[0];
 
 			if (!tabId) {

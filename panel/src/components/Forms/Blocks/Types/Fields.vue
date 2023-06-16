@@ -4,7 +4,7 @@
 			<k-block-title
 				:content="values"
 				:fieldset="fieldset"
-				@dblclick.native="$emit('open', tab)"
+				@dblclick.native="open"
 			/>
 			<k-drawer-tabs :tab="tab" :tabs="fieldset.tabs" @open="tab = $event" />
 		</header>
@@ -42,6 +42,11 @@ export default {
 		},
 		values() {
 			return Object.assign({}, this.content);
+		}
+	},
+	methods: {
+		open() {
+			this.$emit("open", this.tab);
 		}
 	}
 };
