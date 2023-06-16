@@ -232,8 +232,7 @@ export default {
 	outline: 0;
 }
 .k-search-dialog-close {
-	width: 3rem;
-	line-height: 1;
+	--button-width: 3rem;
 }
 .k-search-dialog-close .k-icon-loader {
 	animation: Spin 2s linear infinite;
