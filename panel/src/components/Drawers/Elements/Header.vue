@@ -84,13 +84,11 @@
 	align-items: center;
 	padding-inline-end: 0.75rem;
 }
-.k-drawer-option.k-button {
-	display: flex;
-	align-items: center;
-	padding-inline: 0.75rem;
-	justify-content: center;
-	min-width: var(--drawer-header-height);
-	height: var(--drawer-header-height);
-	line-height: 1;
+.k-drawer-option {
+	--button-height: calc(var(--drawer-header-height) - var(--spacing-1));
+	--button-width: var(--button-height);
+}
+.k-drawer-option[aria-disabled] {
+	opacity: var(--opacity-disabled);
 }
 </style>
