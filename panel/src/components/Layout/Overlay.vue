@@ -42,11 +42,12 @@ export default {
 	mixins: [props],
 	inheritAttrs: true,
 	mounted() {
-		if (this.visible === true) {
-			this.open();
-		} else {
-			this.close();
-		}
+		this.toggle();
+	},
+	updated() {
+		setTimeout(() => {
+			this.focus();
+		});
 	},
 	watch: {
 		visible(newValue, oldValue) {
@@ -54,11 +55,7 @@ export default {
 				return;
 			}
 
-			if (newValue === true) {
-				this.open();
-			} else {
-				this.close();
-			}
+			this.toggle();
 		}
 	},
 	methods: {
@@ -127,6 +124,13 @@ export default {
 
 				this.$emit("open");
 			});
+		},
+		toggle() {
+			if (this.visible === true) {
+				this.open();
+			} else {
+				this.close();
+			}
 		}
 	}
 };
