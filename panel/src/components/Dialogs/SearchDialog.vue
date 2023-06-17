@@ -1,11 +1,5 @@
 <template>
-	<k-overlay
-		ref="dialog"
-		:dimmed="true"
-		:visible="visible"
-		type="dialog"
-		@cancel="$emit('cancel')"
-	>
+	<portal to="dialog">
 		<form
 			class="k-search-dialog k-dialog"
 			data-size="medium"
@@ -94,7 +88,7 @@
 				</footer>
 			</div>
 		</form>
-	</k-overlay>
+	</portal>
 </template>
 
 <script>
@@ -197,6 +191,7 @@ export default {
 
 <style>
 .k-search-dialog {
+	align-self: start;
 	margin: 2.5rem auto;
 }
 .k-search-dialog-input {
