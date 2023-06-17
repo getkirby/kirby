@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\PlainTextContentStorage;
+use Kirby\Content\VersionIdentifier;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -172,59 +173,45 @@ abstract class ModelWithContent implements Identifiable
 	}
 
 	/**
-	 * Returns the absolute path to the content file
-	 *
+	 * Returns the absolute path to the content file;
+	 * NOTE: only supports the published content file
+	 * (use `$model->storage()->contentFile()` for other versions)
 	 * @internal
-	 * @param string|null $languageCode
-	 * @param bool $force
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
+	 *
 	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
 	 */
 	public function contentFile(string $languageCode = null, bool $force = false): string
 	{
-		$extension = $this->contentFileExtension();
-		$directory = $this->contentFileDirectory();
-		$filename  = $this->contentFileName();
+		Helpers::deprecated('The internal $model->contentFile() method has been deprecated', 'model-content-file');
 
-		// overwrite the language code
-		if ($force === true) {
-			if (empty($languageCode) === false) {
-				return $directory . '/' . $filename . '.' . $languageCode . '.' . $extension;
-			}
+		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionIdentifier::changes() :
+			VersionIdentifier::published();
 
-			return $directory . '/' . $filename . '.' . $extension;
-		}
-
-		// add and validate the language code in multi language mode
-		if ($this->kirby()->multilang() === true) {
-			if ($language = $this->kirby()->languageCode($languageCode)) {
-				return $directory . '/' . $filename . '.' . $language . '.' . $extension;
-			}
-
-			throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-		}
-
-		return $directory . '/' . $filename . '.' . $extension;
+		return $this->storage()->contentFile(
+			$identifier,
+			$this->storage()->languageCodeToObject($languageCode, $force)
+		);
 	}
 
 	/**
-	 * Returns an array with all content files
-	 *
-	 * @return array
+	 * Returns an array with all content files;
+	 * NOTE: only supports the published content file
+	 * (use `$model->storage()->contentFiles()` for other versions)
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFiles(): array
 	{
-		if ($this->kirby()->multilang() === true) {
-			$files = [];
-			foreach ($this->kirby()->languages()->codes() as $code) {
-				$files[] = $this->contentFile($code);
-			}
-			return $files;
-		}
+		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated', 'model-content-file');
 
-		return [
-			$this->contentFile()
-		];
+		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionIdentifier::changes() :
+			VersionIdentifier::published();
+
+		return $this->storage()->contentFiles($identifier);
 	}
 
 	/**
@@ -247,10 +234,12 @@ abstract class ModelWithContent implements Identifiable
 	 * located
 	 *
 	 * @internal
-	 * @return string|null
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileDirectory(): string|null
 	{
+		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated', 'model-content-file');
 		return $this->root();
 	}
 
@@ -258,10 +247,12 @@ abstract class ModelWithContent implements Identifiable
 	 * Returns the extension of the content file
 	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileExtension(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
 		return $this->kirby()->contentExtension();
 	}
 
@@ -269,7 +260,8 @@ abstract class ModelWithContent implements Identifiable
 	 * Needs to be declared by the final model
 	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	abstract public function contentFileName(): string;
 

@@ -299,11 +299,12 @@ class Page extends ModelWithContent
 	 * which is found by the inventory method
 	 *
 	 * @internal
-	 * @param string|null $languageCode
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(string|null $languageCode = null): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
 		return $this->intendedTemplate()->name();
 	}
 

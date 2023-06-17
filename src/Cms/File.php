@@ -298,18 +298,24 @@ class File extends ModelWithContent
 	 * Returns the directory in which
 	 * the content file is located
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileDirectory(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileDirectory() method has been deprecated', 'model-content-file');
 		return dirname($this->root());
 	}
 
 	/**
 	 * Filename for the content file
 	 * @internal
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
 		return $this->filename();
 	}
 

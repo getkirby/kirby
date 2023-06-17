@@ -198,10 +198,12 @@ class User extends ModelWithContent
 	 * Filename for the content file
 	 *
 	 * @internal
-	 * @return string
+	 * @deprecated 4.0.0
+	 * @todo Remove in v5
 	 */
 	public function contentFileName(): string
 	{
+		Helpers::deprecated('The internal $model->contentFileName() method has been deprecated', 'model-content-file');
 		return 'user';
 	}
 
