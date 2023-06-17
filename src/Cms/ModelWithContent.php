@@ -6,9 +6,11 @@ use Closure;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\PlainTextContentStorage;
 use Kirby\Content\VersionIdentifier;
+use Kirby\Content\VersionTemplate;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
@@ -519,16 +521,21 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function readContent(string $languageCode = null): array
 	{
-		$file = $this->contentFile($languageCode);
+		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionIdentifier::changes() :
+			VersionIdentifier::published();
 
-		// only if the content file really does not exist, it's ok
-		// to return empty content. Otherwise this could lead to
-		// content loss in case of file reading issues
-		if (file_exists($file) === false) {
+		try {
+			return $this->storage()->read(
+				$identifier,
+				$this->storage()->languageCodeToObject($languageCode)
+			);
+		} catch (NotFoundException $e) {
+			// only if the content file really does not exist, it's ok
+			// to return empty content. Otherwise this could lead to
+			// content loss in case of file reading issues
 			return [];
 		}
-
-		return Data::read($file);
 	}
 
 	/**
@@ -846,9 +853,24 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function writeContent(array $data, string $languageCode = null): bool
 	{
-		return Data::write(
-			$this->contentFile($languageCode),
-			$this->contentFileData($data, $languageCode)
-		);
+		$data     = $this->contentFileData($data, $languageCode);
+		$language = $this->storage()->languageCodeToObject($languageCode);
+
+		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionIdentifier::changes() :
+			VersionIdentifier::published();
+
+		// we can only update if the version already exists
+		if ($this->storage()->exists($identifier, $language) === true) {
+			$this->storage()->update($identifier, $language, $data);
+			return true;
+		}
+
+		$template = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			VersionTemplate::changes() :
+			VersionTemplate::published();
+
+		$this->storage()->create($template, $language, $data);
+		return true;
 	}
 }
