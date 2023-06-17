@@ -29,16 +29,15 @@
 				/>
 			</template>
 		</k-collection>
-
-		<k-pages-dialog ref="selector" :has-search="search" @submit="select" />
 	</k-field>
 </template>
 
 <script>
-import Picker from "@/mixins/form/picker.js";
+import Picker from "@/mixins/forms/picker.js";
 
 export default {
 	mixins: [Picker],
+	dialog: "k-pages-dialog",
 	computed: {
 		emptyProps() {
 			return {

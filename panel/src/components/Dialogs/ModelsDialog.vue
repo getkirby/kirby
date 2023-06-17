@@ -1,8 +1,7 @@
 <template>
 	<k-dialog
-		ref="dialog"
+		v-bind="$props"
 		class="k-models-dialog"
-		size="medium"
 		@cancel="$emit('cancel')"
 		@submit="submit"
 	>
@@ -10,9 +9,38 @@
 
 		<k-dialog-search v-if="hasSearch" :value="query" @search="query = $event" />
 
-		<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
+		<k-collection
+			:empty="{
+				...empty,
+				text: $panel.dialog.isLoading ? $t('loading') : empty.text
+			}"
+			:items="items"
+			:link="false"
+			:pagination="{
+				details: true,
+				dropdown: false,
+				align: 'center',
+				...pagination
+			}"
+			:sortable="false"
+			layout="list"
+			@item="toggle"
+			@paginate="paginate"
+		>
 			<template #options="{ item: row }">
-				<k-button v-bind="toggleBtn(row)" @click.stop="toggle(row)" />
+				<k-button
+					v-if="isSelected(row)"
+					:icon="multiple && max !== 1 ? 'check' : 'circle-filled'"
+					:title="$t('remove')"
+					theme="info"
+					@click.stop="toggle(row)"
+				/>
+				<k-button
+					v-else
+					:title="$t('select')"
+					icon="circle-outline"
+					@click.stop="toggle(row)"
+				/>
 				<slot name="options" v-bind="{ item: row }" />
 			</template>
 		</k-collection>
@@ -21,31 +49,40 @@
 
 <script>
 import { set, del } from "vue";
-import { length } from "@/helpers/object";
+import Dialog from "@/mixins/dialog.js";
 import Search from "@/mixins/search.js";
 
-export default {
-	mixins: [Search],
+export const props = {
 	props: {
+		endpoint: String,
 		empty: Object,
 		fetchParams: Object,
 		item: {
 			type: Function,
 			default: (item) => item
+		},
+		max: Number,
+		multiple: {
+			type: Boolean,
+			default: true
+		},
+		size: {
+			type: String,
+			default: "medium"
+		},
+		value: {
+			type: Array,
+			default: () => []
 		}
-	},
+	}
+};
+
+export default {
+	mixins: [Dialog, Search, props],
 	data() {
 		return {
 			models: [],
-			issue: null,
-			selected: {},
-			options: {
-				endpoint: null,
-				max: null,
-				multiple: true,
-				parent: null,
-				selected: []
-			},
+			selected: this.value.reduce((a, id) => ({ ...a, [id]: { id } }), {}),
 			pagination: {
 				limit: 20,
 				page: 1,
@@ -54,30 +91,20 @@ export default {
 		};
 	},
 	computed: {
-		collection() {
-			return {
-				empty: this.empty,
-				items: this.items,
-				link: false,
-				layout: "list",
-				pagination: {
-					details: true,
-					dropdown: false,
-					align: "center",
-					...this.pagination
-				},
-				sortable: false
-			};
-		},
 		items() {
 			return this.models.map(this.item);
 		}
 	},
 	watch: {
-		fetchParams() {
-			this.pagination.page = 1;
-			this.fetch();
+		fetchParams(newParams, oldParams) {
+			if (this.$helper.object.same(newParams, oldParams) === false) {
+				this.pagination.page = 1;
+				this.fetch();
+			}
 		}
+	},
+	created() {
+		this.fetch();
 	},
 	methods: {
 		async fetch() {
@@ -88,52 +115,20 @@ export default {
 			};
 
 			try {
-				const response = await this.$api.get(this.options.endpoint, params);
+				this.$panel.dialog.isLoading = true;
+				const response = await this.$api.get(this.endpoint, params);
 				this.models = response.data;
 				this.pagination = response.pagination;
 				this.$emit("fetched", response);
 			} catch (e) {
-				this.$panel.error(e, false);
+				this.$panel.error(e);
 				this.models = [];
-				this.issue = e.message;
+			} finally {
+				this.$panel.dialog.isLoading = false;
 			}
 		},
 		isSelected(item) {
 			return this.selected[item.id] !== undefined;
-		},
-		async open(models, options) {
-			// reset pagination
-			this.pagination.page = 0;
-
-			// reset the search query
-			this.query = null;
-
-			let fetch = true;
-
-			if (Array.isArray(models)) {
-				this.models = models;
-				fetch = false;
-			} else {
-				this.models = [];
-				options = models;
-			}
-
-			this.options = {
-				...this.options,
-				...options
-			};
-
-			this.selected = {};
-
-			this.options.selected.forEach((id) => {
-				set(this.selected, id, { id });
-			});
-
-			if (fetch) {
-				await this.fetch();
-			}
-
-			this.$refs.dialog.open();
 		},
 		paginate(pagination) {
 			this.pagination.page = pagination.page;
@@ -142,14 +137,13 @@ export default {
 		},
 		submit() {
 			this.$emit("submit", Object.values(this.selected));
-			this.$refs.dialog.close();
 		},
 		async search() {
 			this.pagination.page = 0;
 			await this.fetch();
 		},
 		toggle(item) {
-			if (this.options.multiple === false || this.options.max === 1) {
+			if (this.multiple === false || this.max === 1) {
 				this.selected = {};
 			}
 
@@ -157,27 +151,11 @@ export default {
 				return del(this.selected, item.id);
 			}
 
-			if (this.options.max && this.options.max <= length(this.selected)) {
+			if (this.max && this.max <= this.$helper.object.length(this.selected)) {
 				return;
 			}
 
 			set(this.selected, item.id, item);
-		},
-		toggleBtn(item) {
-			if (this.isSelected(item)) {
-				return {
-					icon:
-						this.options.multiple === true && this.options.max !== 1
-							? "check"
-							: "circle-filled",
-					title: this.$t("remove"),
-					theme: "info"
-				};
-			}
-			return {
-				icon: "circle-outline",
-				title: this.$t("select")
-			};
 		}
 	}
 };

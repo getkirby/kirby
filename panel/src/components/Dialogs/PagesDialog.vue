@@ -1,13 +1,9 @@
 <template>
 	<k-models-dialog
-		ref="dialog"
-		:empty="{
-			icon: 'page',
-			text: $t('dialog.pages.empty')
-		}"
-		:fetch-params="fetch"
+		v-bind="$props"
+		:fetch-params="{ parent: parent }"
 		@cancel="$emit('cancel')"
-		@fetched="onFetched"
+		@fetched="model = $event.model"
 		@submit="$emit('submit', $event)"
 	>
 		<template v-if="model" #header>
@@ -16,7 +12,7 @@
 					:disabled="!model.id"
 					:title="$t('back')"
 					icon="angle-left"
-					@click="back"
+					@click="parent = model.parent"
 				/>
 				<k-headline>{{ model.title }}</k-headline>
 			</header>
@@ -28,42 +24,32 @@
 				:title="$t('open')"
 				icon="angle-right"
 				class="k-pages-dialog-option"
-				@click.stop="go(page)"
+				@click.stop="parent = page.id"
 			/>
 		</template>
 	</k-models-dialog>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as ModelsDialog } from "./ModelsDialog.vue";
+
 export default {
+	mixins: [Dialog, ModelsDialog],
+	props: {
+		empty: {
+			type: Object,
+			default: () => ({
+				icon: "page",
+				text: window.panel.$t("dialog.pages.empty")
+			})
+		}
+	},
 	data() {
 		return {
-			model: {
-				title: null,
-				parent: null
-			},
+			model: null,
 			parent: null
 		};
-	},
-	computed: {
-		fetch() {
-			return { parent: this.parent };
-		}
-	},
-	methods: {
-		back() {
-			this.parent = this.model.parent;
-		},
-		go(page) {
-			this.parent = page.id;
-		},
-		onFetched(response) {
-			this.model = response.model;
-		},
-		open(models, options) {
-			this.parent = options?.parent;
-			this.$refs.dialog.open(models, options);
-		}
 	}
 };
 </script>

@@ -103,11 +103,21 @@ export default {
 				return false;
 			}
 
-			this.$refs.selector.open({
-				endpoint: this.endpoints.field,
-				max: this.max,
-				multiple: this.multiple,
-				selected: this.selected.map((model) => model.id)
+			this.$panel.dialog.open({
+				component: this.$options.dialog,
+				props: {
+					endpoint: this.endpoints.field,
+					hasSearch: this.search,
+					max: this.max,
+					multiple: this.multiple,
+					value: this.selected.map((model) => model.id)
+				},
+				on: {
+					submit: (models) => {
+						this.select(models);
+						this.$panel.dialog.close();
+					}
+				}
 			});
 		},
 		remove(index) {

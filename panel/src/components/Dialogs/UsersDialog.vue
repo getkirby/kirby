@@ -1,28 +1,32 @@
 <template>
 	<k-models-dialog
-		ref="dialog"
-		:empty="{
-			icon: 'users',
-			text: $t('dialog.users.empty')
-		}"
-		:item="item"
+		v-bind="$props"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', $event)"
 	/>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as ModelsDialog } from "./ModelsDialog.vue";
+
 export default {
-	methods: {
-		item(item) {
-			return {
+	mixins: [Dialog, ModelsDialog],
+	props: {
+		empty: {
+			type: Object,
+			default: () => ({
+				icon: "users",
+				text: window.panel.$t("dialog.users.empty")
+			})
+		},
+		item: {
+			type: Function,
+			default: (item) => ({
 				...item,
 				key: item.email,
 				info: item.info !== item.text ? item.info : null
-			};
-		},
-		open(models, options) {
-			this.$refs.dialog.open(models, options);
+			})
 		}
 	}
 };
