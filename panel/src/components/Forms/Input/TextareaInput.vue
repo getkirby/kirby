@@ -149,7 +149,7 @@ export default {
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
-					value: { text: this.selection() }
+					value: { title: this.selection() }
 				},
 				on: {
 					cancel: restoreSelection,

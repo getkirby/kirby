@@ -10,7 +10,7 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
 	mixins: [Dialog, Fields],

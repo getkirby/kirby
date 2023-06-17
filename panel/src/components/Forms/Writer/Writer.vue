@@ -138,7 +138,7 @@ export default {
 			events: {
 				link: (editor) => {
 					this.$panel.dialog.open({
-						component: "k-writer-link-dialog",
+						component: "k-link-dialog",
 						props: {
 							value: editor.getMarkAttrs("link")
 						},
@@ -153,7 +153,7 @@ export default {
 				},
 				email: (editor) => {
 					this.$panel.dialog.open({
-						component: "k-writer-email-dialog",
+						component: "k-email-dialog",
 						props: {
 							value: this.editor.getMarkAttrs("email")
 						},

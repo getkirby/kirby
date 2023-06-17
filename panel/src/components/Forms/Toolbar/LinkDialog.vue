@@ -1,75 +1,45 @@
-<template>
-	<k-form-dialog
-		v-bind="$props"
-		:value="values"
-		@cancel="$emit('cancel')"
-		@input="values = $event"
-		@submit="submit"
-	/>
-</template>
-
 <script>
-import Dialog from "@/mixins/dialog.js";
-import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+import LinkDialog from "@/components/Dialogs/LinkDialog.vue";
 
 export default {
-	mixins: [Dialog, Fields],
+	extends: LinkDialog,
 	props: {
 		fields: {
 			default: () => ({
-				url: {
+				href: {
 					label: window.panel.$t("link"),
 					type: "link",
 					placeholder: window.panel.$t("url.placeholder"),
 					icon: "url"
 				},
-				text: {
+				title: {
 					label: window.panel.$t("link.text"),
-					type: "text"
+					type: "text",
+					icon: "title"
 				}
 			})
-		},
-		size: {
-			default: "medium"
-		},
-		submitButton: {
-			default: () => window.panel.$t("insert")
 		}
-	},
-	data() {
-		return {
-			values: {
-				url: null,
-				text: null,
-				...this.value
-			}
-		};
 	},
 	methods: {
 		submit() {
-			const email = this.values.email ?? "";
+			const url = this.values.href ?? "";
+			const text = this.values.title ?? "";
 
 			// KirbyText
 			if (this.$panel.config.kirbytext) {
-				if (this.values.text?.length > 0) {
-					return this.$emit(
-						"submit",
-						`(link: ${this.values.url} text: ${this.values.text})`
-					);
+				if (text?.length > 0) {
+					return this.$emit("submit", `(link: ${url} text: ${text})`);
 				}
 
-				return this.$emit("submit", `(link: ${this.values.url})`);
+				return this.$emit("submit", `(link: ${url})`);
 			}
 
 			// Markdown
-			if (this.values.text?.length > 0) {
-				return this.$emit(
-					"submit",
-					`[${this.values.text}](${this.valuess.url})`
-				);
+			if (text?.length > 0) {
+				return this.$emit("submit", `[${text}](${url})`);
 			}
 
-			return this.$emit("submit", `<${this.values.url}>`);
+			return this.$emit("submit", `<${url}>`);
 		}
 	}
 };
