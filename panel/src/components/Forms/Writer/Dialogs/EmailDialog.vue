@@ -1,53 +1,53 @@
 <template>
 	<k-form-dialog
-		ref="dialog"
-		:fields="fields"
-		:submit-button="$t('confirm')"
-		:value="email"
-		size="medium"
-		@input="email = $event"
-		@close="$emit('close')"
+		v-bind="$props"
+		:value="values"
+		@cancel="$emit('cancel')"
+		@input="values = $event"
 		@submit="submit"
 	/>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+
 export default {
-	data() {
-		return {
-			email: {
-				email: null,
-				title: null
-			}
-		};
-	},
-	computed: {
-		fields() {
-			return {
+	mixins: [Dialog, Fields],
+	props: {
+		fields: {
+			default: () => ({
 				href: {
-					label: this.$t("email"),
+					label: window.panel.$t("email"),
 					type: "email",
 					icon: "email"
 				},
 				title: {
-					label: this.$t("title"),
+					label: window.panel.$t("link.text"),
 					type: "text",
 					icon: "title"
 				}
-			};
+			})
+		},
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: () => window.panel.$t("insert")
 		}
 	},
-	methods: {
-		open(email) {
-			this.email = {
+	data() {
+		return {
+			values: {
+				href: "",
 				title: null,
-				...email
-			};
-			this.$refs.dialog.open();
-		},
+				...this.value
+			}
+		};
+	},
+	methods: {
 		submit() {
-			this.$emit("submit", this.email);
-			this.$refs.dialog.close();
+			this.$emit("submit", this.values);
 		}
 	}
 };

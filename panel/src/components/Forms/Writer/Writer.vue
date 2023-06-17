@@ -18,16 +18,6 @@
 				:is-paragraph-node-hidden="isParagraphNodeHidden"
 				@command="onCommand"
 			/>
-			<k-writer-link-dialog
-				ref="linkDialog"
-				@close="editor.focus()"
-				@submit="editor.command('toggleLink', $event)"
-			/>
-			<k-writer-email-dialog
-				ref="emailDialog"
-				@close="editor.focus()"
-				@submit="editor.command('toggleEmail', $event)"
-			/>
 		</template>
 	</div>
 </template>
@@ -147,10 +137,34 @@ export default {
 			emptyDocument: this.emptyDocument,
 			events: {
 				link: (editor) => {
-					this.$refs.linkDialog.open(editor.getMarkAttrs("link"));
+					this.$panel.dialog.open({
+						component: "k-writer-link-dialog",
+						props: {
+							value: editor.getMarkAttrs("link")
+						},
+						on: {
+							cancel: () => editor.focus(),
+							submit: (values) => {
+								this.$panel.dialog.close();
+								editor.command("toggleLink", values);
+							}
+						}
+					});
 				},
-				email: () => {
-					this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
+				email: (editor) => {
+					this.$panel.dialog.open({
+						component: "k-writer-email-dialog",
+						props: {
+							value: this.editor.getMarkAttrs("email")
+						},
+						on: {
+							cancel: () => editor.focus(),
+							submit: (values) => {
+								this.$panel.dialog.close();
+								editor.command("toggleEmail", values);
+							}
+						}
+					});
 				},
 				paste: this.paste,
 				update: (payload) => {

@@ -104,7 +104,9 @@ export default {
 			for (const [index, mark] of this.marks.entries()) {
 				if (mark === "|") {
 					buttons["divider" + index] = "|";
-				} else if (available[mark]) {
+					continue;
+				}
+				if (available[mark]) {
 					buttons[mark] = available[mark];
 				}
 			}

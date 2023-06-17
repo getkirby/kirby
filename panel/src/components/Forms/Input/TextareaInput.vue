@@ -48,7 +48,7 @@
 
 		<k-files-dialog
 			ref="fileDialog"
-			@cancel="cancel"
+			@cancel="focus"
 			@submit="insertFile($event)"
 		/>
 	</div>
@@ -129,29 +129,33 @@ export default {
 		}
 	},
 	methods: {
-		cancel() {
-			this.$refs.input.focus();
-		},
 		dialog(dialog) {
 			// store selection
 			const start = this.$refs.input.selectionStart;
 			const end = this.$refs.input.selectionEnd;
 
+			// restore selection as `insert` method
+			// depends on it
+			const restoreSelection = (callback) => {
+				setTimeout(() => {
+					this.$refs.input.setSelectionRange(start, end);
+
+					if (callback) {
+						callback();
+					}
+				});
+			};
+
 			this.$panel.dialog.open({
 				component: "k-toolbar-" + dialog + "-dialog",
 				props: {
-					selection: this.selection()
+					value: { text: this.selection() }
 				},
 				on: {
-					cancel: this.cancel,
+					cancel: restoreSelection,
 					submit: (text) => {
 						this.$panel.dialog.close();
-						setTimeout(() => {
-							// restore selection as `insert` method
-							// depends on it
-							this.$refs.input.setSelectionRange(start, end);
-							this.insert(text);
-						});
+						restoreSelection(() => this.insert(text));
 					}
 				}
 			});

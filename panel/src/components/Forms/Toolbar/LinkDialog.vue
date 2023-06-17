@@ -29,7 +29,6 @@ export default {
 				}
 			})
 		},
-		selection: String,
 		size: {
 			default: "medium"
 		},
@@ -41,7 +40,8 @@ export default {
 		return {
 			values: {
 				url: null,
-				text: this.selection
+				text: null,
+				...this.value
 			}
 		};
 	},

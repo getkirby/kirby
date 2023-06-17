@@ -19,15 +19,16 @@ export default {
 			default: () => ({
 				email: {
 					label: window.panel.$t("email"),
-					type: "email"
+					type: "email",
+					icon: "email"
 				},
 				text: {
 					label: window.panel.$t("link.text"),
-					type: "text"
+					type: "text",
+					icon: "title"
 				}
 			})
 		},
-		selection: String,
 		size: {
 			default: "medium"
 		},
@@ -39,7 +40,8 @@ export default {
 		return {
 			values: {
 				email: null,
-				text: this.selection
+				text: null,
+				...this.value
 			}
 		};
 	},

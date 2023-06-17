@@ -1,72 +1,67 @@
 <template>
 	<k-form-dialog
-		ref="dialog"
-		:fields="fields"
-		:submit-button="$t('confirm')"
-		:value="link"
-		size="medium"
-		@close="$emit('close')"
-		@input="link = $event"
+		v-bind="$props"
+		:value="values"
+		@cancel="$emit('cancel')"
+		@input="values = $event"
 		@submit="submit"
 	/>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+
 export default {
-	data() {
-		return {
-			link: {
-				href: "",
-				title: null,
-				target: false
-			}
-		};
-	},
-	computed: {
-		fields() {
-			return {
+	mixins: [Dialog, Fields],
+	props: {
+		fields: {
+			default: () => ({
 				href: {
-					label: this.$t("link"),
+					label: window.panel.$t("link"),
 					type: "link",
 					icon: "url"
 				},
 				title: {
-					label: this.$t("title"),
+					label: window.panel.$t("title"),
 					type: "text",
 					icon: "title"
 				},
 				target: {
-					label: this.$t("open.newWindow"),
+					label: window.panel.$t("open.newWindow"),
 					type: "toggle",
-					text: [this.$t("no"), this.$t("yes")]
+					text: [window.panel.$t("no"), window.panel.$t("yes")]
 				}
-			};
+			})
+		},
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: () => window.panel.$t("insert")
 		}
 	},
-	methods: {
-		open(link) {
-			this.link = {
+	data() {
+		return {
+			values: {
 				href: "",
 				title: null,
-				target: false,
-				...link
-			};
-
-			this.link.target = Boolean(this.link.target);
-			this.$refs.dialog.open();
-		},
+				...this.value,
+				target: Boolean(this.value.target ?? false)
+			}
+		};
+	},
+	methods: {
 		submit() {
-			const href = this.link.href
+			const href = this.values.href
 				.replace("file://", "/@/file/")
 				.replace("page://", "/@/page/");
 
 			this.$emit("submit", {
-				...this.link,
+				...this.values,
 				href: href,
-				target: this.link.target ? "_blank" : null
+				target: this.values.target ? "_blank" : null
 			});
-
-			this.$refs.dialog.close();
 		}
 	}
 };
