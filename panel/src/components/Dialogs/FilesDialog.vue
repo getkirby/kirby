@@ -1,48 +1,21 @@
 <template>
-	<k-dialog
+	<k-models-dialog
 		ref="dialog"
-		class="k-files-dialog"
-		size="medium"
+		:empty="{
+			icon: 'image',
+			text: $t('dialog.files.empty')
+		}"
 		@cancel="$emit('cancel')"
-		@submit="submit"
-	>
-		<template v-if="issue">
-			<k-box :text="issue" theme="negative" />
-		</template>
-
-		<template v-else>
-			<k-dialog-search
-				v-if="hasSearch"
-				:value="query"
-				@search="query = $event"
-			/>
-			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
-				<template #options="{ item: file }">
-					<k-button v-bind="toggleBtn(file)" @click.stop="toggle(file)" />
-				</template>
-			</k-collection>
-		</template>
-	</k-dialog>
+		@submit="$emit('submit', $event)"
+	/>
 </template>
 
 <script>
-import Picker from "@/mixins/picker/dialog.js";
-
 export default {
-	mixins: [Picker],
-	computed: {
-		emptyProps() {
-			return {
-				icon: "image",
-				text: this.$t("dialog.files.empty")
-			};
+	methods: {
+		open(models, options) {
+			this.$refs.dialog.open(models, options);
 		}
 	}
 };
 </script>
-
-<style>
-.k-files-dialog .k-list-item {
-	cursor: pointer;
-}
-</style>

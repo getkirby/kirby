@@ -1,16 +1,17 @@
 <template>
-	<k-dialog
+	<k-models-dialog
 		ref="dialog"
-		class="k-pages-dialog"
-		size="medium"
+		:empty="{
+			icon: 'page',
+			text: $t('dialog.pages.empty')
+		}"
+		:fetch-params="fetch"
 		@cancel="$emit('cancel')"
-		@submit="submit"
+		@fetched="onFetched"
+		@submit="$emit('submit', $event)"
 	>
-		<template v-if="issue">
-			<k-box :text="issue" theme="negative" />
-		</template>
-		<template v-else>
-			<header v-if="model" class="k-pages-dialog-navbar">
+		<template v-if="model" #header>
+			<header class="k-pages-dialog-navbar">
 				<k-button
 					:disabled="!model.id"
 					:title="$t('back')"
@@ -19,74 +20,49 @@
 				/>
 				<k-headline>{{ model.title }}</k-headline>
 			</header>
-
-			<k-dialog-search
-				v-if="hasSearch"
-				:value="query"
-				@search="query = $event"
-			/>
-
-			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
-				<template #options="{ item: page }">
-					<k-button v-bind="toggleBtn(page)" @click.stop="toggle(page)" />
-					<k-button
-						v-if="model"
-						:disabled="!page.hasChildren"
-						:title="$t('open')"
-						icon="angle-right"
-						@click.stop="go(page)"
-					/>
-				</template>
-			</k-collection>
 		</template>
-	</k-dialog>
+
+		<template v-if="model" #options="{ item: page }">
+			<k-button
+				:disabled="!page.hasChildren"
+				:title="$t('open')"
+				icon="angle-right"
+				class="k-pages-dialog-option"
+				@click.stop="go(page)"
+			/>
+		</template>
+	</k-models-dialog>
 </template>
 
 <script>
-import Picker from "@/mixins/picker/dialog.js";
-
 export default {
-	mixins: [Picker],
 	data() {
-		const mixin = Picker.data();
 		return {
-			...mixin,
 			model: {
 				title: null,
 				parent: null
 			},
-			options: {
-				...mixin.options,
-				parent: null
-			}
+			parent: null
 		};
 	},
 	computed: {
-		emptyProps() {
-			return {
-				icon: "page",
-				text: this.$t("dialog.pages.empty")
-			};
-		},
-		fetchParams() {
-			return {
-				parent: this.options.parent
-			};
+		fetch() {
+			return { parent: this.parent };
 		}
 	},
 	methods: {
 		back() {
-			this.options.parent = this.model.parent;
-			this.pagination.page = 1;
-			this.fetch();
+			this.parent = this.model.parent;
 		},
 		go(page) {
-			this.options.parent = page.id;
-			this.pagination.page = 1;
-			this.fetch();
+			this.parent = page.id;
 		},
 		onFetched(response) {
 			this.model = response.model;
+		},
+		open(models, options) {
+			this.parent = options?.parent;
+			this.$refs.dialog.open(models, options);
 		}
 	}
 };
@@ -100,24 +76,15 @@ export default {
 	margin-bottom: 0.5rem;
 	padding-inline-end: 38px;
 }
-.k-pages-dialog-navbar .k-button {
-	width: 38px;
-}
-.k-pages-dialog-navbar .k-button[disabled] {
+.k-pages-dialog-navbar .k-button[aria-disabled] {
 	opacity: 0;
 }
 .k-pages-dialog-navbar .k-headline {
 	flex-grow: 1;
 	text-align: center;
 }
-.k-pages-dialog .k-list-item {
-	cursor: pointer;
-}
-.k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
-.k-pages-dialog .k-list-item .k-button[disabled] {
+
+.k-pages-dialog-option[aria-disabled] {
 	opacity: 0.25;
-}
-.k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
-	opacity: 1;
 }
 </style>

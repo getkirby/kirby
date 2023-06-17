@@ -1,43 +1,18 @@
 <template>
-	<k-dialog
+	<k-models-dialog
 		ref="dialog"
-		class="k-users-dialog"
-		size="medium"
+		:empty="{
+			icon: 'users',
+			text: $t('dialog.users.empty')
+		}"
+		:item="item"
 		@cancel="$emit('cancel')"
-		@submit="submit"
-	>
-		<template v-if="issue">
-			<k-box :text="issue" theme="negative" />
-		</template>
-
-		<template v-else>
-			<k-dialog-search
-				v-if="hasSearch"
-				:value="query"
-				@search="query = $event"
-			/>
-			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
-				<template #options="{ item: user }">
-					<k-button v-bind="toggleBtn(user)" @click.stop="toggle(user)" />
-				</template>
-			</k-collection>
-		</template>
-	</k-dialog>
+		@submit="$emit('submit', $event)"
+	/>
 </template>
 
 <script>
-import Picker from "@/mixins/picker/dialog.js";
-
 export default {
-	mixins: [Picker],
-	computed: {
-		emptyProps() {
-			return {
-				icon: "users",
-				text: this.$t("dialog.users.empty")
-			};
-		}
-	},
 	methods: {
 		item(item) {
 			return {
@@ -45,13 +20,10 @@ export default {
 				key: item.email,
 				info: item.info !== item.text ? item.info : null
 			};
+		},
+		open(models, options) {
+			this.$refs.dialog.open(models, options);
 		}
 	}
 };
 </script>
-
-<style>
-.k-users-dialog .k-list-item {
-	cursor: pointer;
-}
-</style>

@@ -1,9 +1,39 @@
+<template>
+	<k-dialog
+		ref="dialog"
+		class="k-models-dialog"
+		size="medium"
+		@cancel="$emit('cancel')"
+		@submit="submit"
+	>
+		<slot name="header" />
+
+		<k-dialog-search v-if="hasSearch" :value="query" @search="query = $event" />
+
+		<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
+			<template #options="{ item: row }">
+				<k-button v-bind="toggleBtn(row)" @click.stop="toggle(row)" />
+				<slot name="options" v-bind="{ item: row }" />
+			</template>
+		</k-collection>
+	</k-dialog>
+</template>
+
+<script>
 import { set, del } from "vue";
 import { length } from "@/helpers/object";
 import Search from "@/mixins/search.js";
 
 export default {
 	mixins: [Search],
+	props: {
+		empty: Object,
+		fetchParams: Object,
+		item: {
+			type: Function,
+			default: (item) => item
+		}
+	},
 	data() {
 		return {
 			models: [],
@@ -26,7 +56,7 @@ export default {
 	computed: {
 		collection() {
 			return {
-				empty: this.emptyProps,
+				empty: this.empty,
 				items: this.items,
 				link: false,
 				layout: "list",
@@ -43,22 +73,25 @@ export default {
 			return this.models.map(this.item);
 		}
 	},
+	watch: {
+		fetchParams() {
+			this.pagination.page = 1;
+			this.fetch();
+		}
+	},
 	methods: {
 		async fetch() {
 			const params = {
 				page: this.pagination.page,
 				search: this.query,
-				...(this.fetchParams || {})
+				...this.fetchParams
 			};
 
 			try {
 				const response = await this.$api.get(this.options.endpoint, params);
 				this.models = response.data;
 				this.pagination = response.pagination;
-
-				if (this.onFetched) {
-					this.onFetched(response);
-				}
+				this.$emit("fetched", response);
 			} catch (e) {
 				this.$panel.error(e, false);
 				this.models = [];
@@ -67,9 +100,6 @@ export default {
 		},
 		isSelected(item) {
 			return this.selected[item.id] !== undefined;
-		},
-		item(item) {
-			return item;
 		},
 		async open(models, options) {
 			// reset pagination
@@ -151,3 +181,10 @@ export default {
 		}
 	}
 };
+</script>
+
+<style>
+.k-models-dialog .k-list-item {
+	cursor: pointer;
+}
+</style>
