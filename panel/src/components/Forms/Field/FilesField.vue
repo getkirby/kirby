@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import Picker from "@/mixins/picker/field.js";
+import Picker from "@/mixins/form/picker.js";
 
 /**
  * @example <k-files-field :value="files" @input="files = $event" name="files" label="Files" />

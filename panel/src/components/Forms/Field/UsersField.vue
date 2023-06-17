@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Picker from "@/mixins/picker/field.js";
+import Picker from "@/mixins/form/picker.js";
 
 export default {
 	mixins: [Picker],
