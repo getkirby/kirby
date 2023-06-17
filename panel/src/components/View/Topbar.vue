@@ -23,10 +23,6 @@
 				class="k-topbar-notification k-topbar-button"
 				@click="notification.close()"
 			/>
-
-			<!-- unsaved changes indicator -->
-			<k-form-indicator v-else />
-
 			<slot />
 		</div>
 	</div>
