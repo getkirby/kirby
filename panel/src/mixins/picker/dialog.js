@@ -1,4 +1,4 @@
-import { set } from "vue";
+import { set, del } from "vue";
 import { length } from "@/helpers/object";
 import Search from "@/mixins/search.js";
 
@@ -24,9 +24,6 @@ export default {
 		};
 	},
 	computed: {
-		checkedIcon() {
-			return this.multiple === true ? "check" : "circle-filled";
-		},
 		collection() {
 			return {
 				empty: this.emptyProps,
@@ -44,9 +41,6 @@ export default {
 		},
 		items() {
 			return this.models.map(this.item);
-		},
-		multiple() {
-			return this.options.multiple === true && this.options.max !== 1;
 		}
 	},
 	methods: {
@@ -54,7 +48,7 @@ export default {
 			const params = {
 				page: this.pagination.page,
 				search: this.query,
-				...(this.fetchData || {})
+				...(this.fetchParams || {})
 			};
 
 			try {
@@ -102,7 +96,7 @@ export default {
 			this.selected = {};
 
 			this.options.selected.forEach((id) => {
-				set(this.selected, id, { id: id });
+				set(this.selected, id, { id });
 			});
 
 			if (fetch) {
@@ -129,9 +123,8 @@ export default {
 				this.selected = {};
 			}
 
-			if (this.isSelected(item) === true) {
-				this.$delete(this.selected, item.id);
-				return;
+			if (this.isSelected(item)) {
+				return del(this.selected, item.id);
 			}
 
 			if (this.options.max && this.options.max <= length(this.selected)) {
@@ -141,12 +134,19 @@ export default {
 			set(this.selected, item.id, item);
 		},
 		toggleBtn(item) {
-			const isSelected = this.isSelected(item);
-
+			if (this.isSelected(item)) {
+				return {
+					icon:
+						this.options.multiple === true && this.options.max !== 1
+							? "check"
+							: "circle-filled",
+					title: this.$t("remove"),
+					theme: "info"
+				};
+			}
 			return {
-				icon: isSelected ? this.checkedIcon : "circle-outline",
-				title: isSelected ? this.$t("remove") : this.$t("select"),
-				theme: isSelected ? "info" : null
+				icon: "circle-outline",
+				title: this.$t("select")
 			};
 		}
 	}

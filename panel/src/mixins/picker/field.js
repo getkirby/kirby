@@ -125,16 +125,13 @@ export default {
 			}
 
 			// remove all items that are no longer selected
-			this.selected = this.selected.filter((selected) => {
-				return items.filter((item) => item.id === selected.id).length > 0;
-			});
+			this.selected = this.selected.filter((selected) =>
+				items.find((item) => item.id === selected.id)
+			);
 
 			// add items that are not yet in the selected list
 			items.forEach((item) => {
-				if (
-					this.selected.filter((selected) => item.id === selected.id).length ===
-					0
-				) {
+				if (!this.selected.find((selected) => item.id === selected.id)) {
 					this.selected.push(item);
 				}
 			});

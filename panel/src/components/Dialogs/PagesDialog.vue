@@ -68,7 +68,7 @@ export default {
 				text: this.$t("dialog.pages.empty")
 			};
 		},
-		fetchData() {
+		fetchParams() {
 			return {
 				parent: this.options.parent
 			};
