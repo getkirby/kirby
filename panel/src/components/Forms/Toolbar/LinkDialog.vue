@@ -1,80 +1,75 @@
 <template>
 	<k-form-dialog
-		ref="dialog"
-		size="medium"
-		:fields="fields"
-		:submit-button="$t('insert')"
-		:value="value"
+		v-bind="$props"
+		:value="values"
 		@cancel="$emit('cancel')"
-		@input="value = $event"
+		@input="values = $event"
 		@submit="submit"
 	/>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+
 export default {
-	data() {
-		return {
-			value: {
-				url: null,
-				text: null
-			},
-			fields: {
+	mixins: [Dialog, Fields],
+	props: {
+		fields: {
+			default: () => ({
 				url: {
-					label: this.$t("link"),
+					label: window.panel.$t("link"),
 					type: "link",
-					placeholder: this.$t("url.placeholder"),
+					placeholder: window.panel.$t("url.placeholder"),
 					icon: "url"
 				},
 				text: {
-					label: this.$t("link.text"),
+					label: window.panel.$t("link.text"),
 					type: "text"
 				}
+			})
+		},
+		selection: String,
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: () => window.panel.$t("insert")
+		}
+	},
+	data() {
+		return {
+			values: {
+				url: null,
+				text: this.selection
 			}
 		};
 	},
-	computed: {
-		kirbytext() {
-			return this.$panel.config.kirbytext;
-		}
-	},
 	methods: {
-		open(input, selection) {
-			this.value.text = selection;
-			this.$refs.dialog.open();
-		},
-		cancel() {
-			this.$emit("cancel");
-		},
-		createKirbytext() {
-			if (this.value.text.length > 0) {
-				return `(link: ${this.value.url} text: ${this.value.text})`;
-			} else {
-				return `(link: ${this.value.url})`;
-			}
-		},
-		createMarkdown() {
-			if (this.value.text.length > 0) {
-				return `[${this.value.text}](${this.value.url})`;
-			} else {
-				return `<${this.value.url}>`;
-			}
-		},
 		submit() {
-			// insert the link
-			this.$emit(
-				"submit",
-				this.kirbytext ? this.createKirbytext() : this.createMarkdown()
-			);
+			const email = this.values.email ?? "";
 
-			// reset the form
-			this.value = {
-				url: null,
-				text: null
-			};
+			// KirbyText
+			if (this.$panel.config.kirbytext) {
+				if (this.values.text?.length > 0) {
+					return this.$emit(
+						"submit",
+						`(link: ${this.values.url} text: ${this.values.text})`
+					);
+				}
 
-			// close the modal
-			this.$refs.dialog.close();
+				return this.$emit("submit", `(link: ${this.values.url})`);
+			}
+
+			// Markdown
+			if (this.values.text?.length > 0) {
+				return this.$emit(
+					"submit",
+					`[${this.values.text}](${this.valuess.url})`
+				);
+			}
+
+			return this.$emit("submit", `<${this.values.url}>`);
 		}
 	}
 };

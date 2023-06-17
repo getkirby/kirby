@@ -1,79 +1,70 @@
 <template>
 	<k-form-dialog
-		ref="dialog"
-		:fields="fields"
-		:submit-button="$t('insert')"
-		:value="value"
-		@close="cancel"
-		@input="value = $event"
+		v-bind="$props"
+		:value="values"
+		@cancel="$emit('cancel')"
+		@input="values = $event"
 		@submit="submit"
 	/>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+import { props as Fields } from "@/components/Dialogs/Elements/Fields.vue";
+
 export default {
-	data() {
-		return {
-			value: {
-				email: null,
-				text: null
-			},
-			fields: {
+	mixins: [Dialog, Fields],
+	props: {
+		fields: {
+			default: () => ({
 				email: {
-					label: this.$t("email"),
+					label: window.panel.$t("email"),
 					type: "email"
 				},
 				text: {
-					label: this.$t("link.text"),
+					label: window.panel.$t("link.text"),
 					type: "text"
 				}
+			})
+		},
+		selection: String,
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: () => window.panel.$t("insert")
+		}
+	},
+	data() {
+		return {
+			values: {
+				email: null,
+				text: this.selection
 			}
 		};
 	},
-	computed: {
-		kirbytext() {
-			return this.$panel.config.kirbytext;
-		}
-	},
 	methods: {
-		open(input, selection) {
-			this.value.text = selection;
-			this.$refs.dialog.open();
-		},
-		cancel() {
-			this.$emit("cancel");
-		},
-		createKirbytext() {
-			const email = this.value.email || "";
-			if (this.value.text?.length > 0) {
-				return `(email: ${email} text: ${this.value.text})`;
-			} else {
-				return `(email: ${email})`;
-			}
-		},
-		createMarkdown() {
-			const email = this.value.email || "";
-			if (this.value.text?.length > 0) {
-				return `[${this.value.text}](mailto:${email})`;
-			} else {
-				return `<${email}>`;
-			}
-		},
 		submit() {
-			// insert the link
-			this.$emit(
-				"submit",
-				this.kirbytext ? this.createKirbytext() : this.createMarkdown()
-			);
+			const email = this.values.email ?? "";
 
-			// reset the form
-			this.value = {
-				email: null,
-				text: null
-			};
+			// KirbyText
+			if (this.$panel.config.kirbytext) {
+				if (this.values.text?.length > 0) {
+					return this.$emit(
+						"submit",
+						`(email: ${email} text: ${this.values.text})`
+					);
+				}
 
-			// close the modal
-			this.$refs.dialog.close();
+				return this.$emit("submit", `(email: ${email})`);
+			}
+
+			// Markdown
+			if (this.values.text?.length > 0) {
+				return this.$emit("submit", `[${this.values.text}](mailto:${email})`);
+			}
+
+			return this.$emit("submit", `<${email}>`);
 		}
 	}
 };
