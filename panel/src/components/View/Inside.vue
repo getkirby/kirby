@@ -7,7 +7,6 @@
 				<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
 					<slot name="topbar" />
 				</k-topbar>
-
 				<slot />
 			</div>
 

@@ -8,12 +8,14 @@
 					icon: 'key',
 					text: $t('license.register'),
 					title: $t('license.unregistered'),
+					size: 'sm',
 					click: () => $dialog('registration')
 				},
 				{
 					icon: 'cart',
 					text: $t('license.buy'),
 					link: 'https://getkirby.com/buy',
+					size: 'sm',
 					target: '_blank'
 				}
 			]"
@@ -27,17 +29,23 @@
 .k-bar {
 	position: sticky;
 	bottom: 0;
-	height: var(--height-xl);
+	height: var(--height-md);
 	padding-inline: var(--main-padding-inline);
-	background: var(--color-red-500);
+	background: var(--color-red-400);
 	container-type: inline-size;
+	color: var(--color-red-900);
+	font-size: var(--text-xs);
 }
 
 .k-bar[data-is-local="true"] {
-	background: var(--color-blue-300);
+	color: var(--color-orange-900);
+	background: var(--color-orange-400);
 }
 
-.k-bar p {
-	font-size: var(--text-sm);
+.k-bar .k-button-group {
+	gap: 0;
+}
+.k-bar .k-button {
+	--button-padding: var(--spacing-3);
 }
 </style>
