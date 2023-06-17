@@ -43,12 +43,12 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker/dialog.js";
+import Picker from "@/mixins/picker/dialog.js";
 
 export default {
-	mixins: [picker],
+	mixins: [Picker],
 	data() {
-		const mixin = picker.data();
+		const mixin = Picker.data();
 		return {
 			...mixin,
 			model: {

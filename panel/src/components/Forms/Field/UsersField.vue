@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import picker from "@/mixins/forms/picker.js";
+import Picker from "@/mixins/picker/field.js";
 
 export default {
-	mixins: [picker],
+	mixins: [Picker],
 	computed: {
 		emptyProps() {
 			return {

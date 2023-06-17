@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import picker from "@/mixins/forms/picker.js";
+import Picker from "@/mixins/picker/field.js";
 
 /**
  * @example <k-files-field :value="files" @input="files = $event" name="files" label="Files" />
  */
 export default {
-	mixins: [picker],
+	mixins: [Picker],
 	props: {
 		uploads: [Boolean, Object, Array]
 	},
