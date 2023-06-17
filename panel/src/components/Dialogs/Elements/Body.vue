@@ -6,6 +6,6 @@
 
 <style>
 .k-dialog-body {
-	padding: var(--dialog-padding);
+	padding: var(--dialog-padding) var(--dialog-padding) 0;
 }
 </style>
