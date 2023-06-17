@@ -24,7 +24,7 @@
 			</k-collection>
 		</k-dropzone>
 
-		<k-files-dialog ref="selector" @submit="select" />
+		<k-files-dialog ref="selector" :has-search="search" @submit="select" />
 	</k-field>
 </template>
 

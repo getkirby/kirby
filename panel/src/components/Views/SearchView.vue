@@ -47,7 +47,10 @@
 </template>
 
 <script>
+import Search from "@/mixins/search.js";
+
 export default {
+	mixins: [Search],
 	props: {
 		type: {
 			default: "pages",
@@ -63,18 +66,14 @@ export default {
 	},
 	watch: {
 		query: {
-			handler(query) {
-				this.search(query);
+			handler() {
+				this.search();
 			},
 			immediate: true
 		},
 		type() {
-			this.search(this.query);
+			this.search();
 		}
-	},
-	updated() {
-		this.query = this.getQuery();
-		this.focus();
 	},
 	methods: {
 		focus() {
@@ -84,9 +83,9 @@ export default {
 			return new URLSearchParams(window.location.search).get("query");
 		},
 		onPaginate(pagination) {
-			this.search(this.query, pagination.page);
+			this.search(pagination.page);
 		},
-		async search(query, page) {
+		async search(page) {
 			this.$panel.isLoading = true;
 
 			if (!page) {
@@ -103,11 +102,11 @@ export default {
 
 			try {
 				// Skip API call if query empty
-				if (query === null || query.length < 2) {
+				if (this.query === null || this.query.length < 2) {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, query, {
+				const response = await this.$search(this.type, this.query, {
 					page,
 					limit: 15
 				});

@@ -30,7 +30,7 @@
 			</template>
 		</k-collection>
 
-		<k-users-dialog ref="selector" @submit="select" />
+		<k-users-dialog ref="selector" :has-search="search" @submit="select" />
 	</k-field>
 </template>
 
