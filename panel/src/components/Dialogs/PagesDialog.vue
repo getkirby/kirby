@@ -28,7 +28,7 @@
 
 			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
 				<template #options="{ item: page }">
-					<k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
+					<k-button v-bind="toggleBtn(page)" @click.stop="toggle(page)" />
 					<k-button
 						v-if="model"
 						:disabled="!page.hasChildren"

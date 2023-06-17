@@ -18,7 +18,7 @@
 			/>
 			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">
 				<template #options="{ item: file }">
-					<k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
+					<k-button v-bind="toggleBtn(file)" @click.stop="toggle(file)" />
 				</template>
 			</k-collection>
 		</template>
