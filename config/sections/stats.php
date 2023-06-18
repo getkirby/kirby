@@ -34,9 +34,9 @@ return [
 	],
 	'computed' => [
 		'reports' => function () {
-			$reports = [];
-			$model   = $this->model();
-			$value   = fn ($value) => $value === null ? null : $model->toString($value);
+			$reports  = [];
+			$model    = $this->model();
+			$toString = fn ($value) => $value === null ? null : $model->toString($value);
 
 			foreach ($this->reports as $report) {
 				if (is_string($report) === true) {
@@ -47,14 +47,17 @@ return [
 					continue;
 				}
 
-				$info = $report['info'] ?? null;
+				$info  = $report['info'] ?? null;
+				$label = $report['label'] ?? null;
+				$link  = $report['link'] ?? null;
+				$value = $report['value'] ?? null;
 
 				$reports[] = [
-					'label' => I18n::translate($report['label'], $report['label']),
-					'value' => $value($report['value'] ?? null),
-					'info'  => $value(I18n::translate($info, $info)),
-					'link'  => $value($report['link'] ?? null),
-					'theme' => $value($report['theme'] ?? null)
+					'info'  => $toString(I18n::translate($info, $info)),
+					'label' => $toString(I18n::translate($label, $label)),
+					'link'  => $toString(I18n::translate($link, $link)),
+					'theme' => $toString($report['theme'] ?? null),
+					'value' => $toString(I18n::translate($value, $value))
 				];
 			}
 
