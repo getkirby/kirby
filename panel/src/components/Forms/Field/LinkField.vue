@@ -14,7 +14,7 @@
 					</k-button>
 					<k-dropdown-content ref="types">
 						<k-dropdown-item
-							v-for="(type, key) in types"
+							v-for="(type, key) in activeTypes"
 							:key="key"
 							:icon="type.icon"
 							@click="switchType(key)"
@@ -105,6 +105,7 @@ export default {
 	mixins: [Field, Input],
 	inheritAttrs: false,
 	props: {
+		options: Array,
 		value: {
 			default: "",
 			type: String
@@ -121,9 +122,9 @@ export default {
 	},
 	computed: {
 		currentType() {
-			return this.types[this.linkType] ?? this.types["url"];
+			return this.activeTypes[this.linkType] ?? this.activeTypes["url"];
 		},
-		types() {
+		availableTypes() {
 			return {
 				url: {
 					detect: (value) => {
@@ -201,6 +202,19 @@ export default {
 					value: (value) => value
 				}
 			};
+		},
+		activeTypes() {
+			if (!this.options) {
+				return this.availableTypes;
+			}
+
+			const available = {};
+
+			for (const type of this.options) {
+				available[type] = this.availableTypes[type];
+			}
+
+			return available;
 		}
 	},
 	watch: {
@@ -243,11 +257,11 @@ export default {
 				};
 			}
 
-			for (const type in this.types) {
-				if (this.types[type].detect(value) === true) {
+			for (const type in this.availableTypes) {
+				if (this.availableTypes[type].detect(value) === true) {
 					return {
 						type: type,
-						link: this.types[type].link(value)
+						link: this.availableTypes[type].link(value)
 					};
 				}
 			}

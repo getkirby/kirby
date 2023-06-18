@@ -12,6 +12,12 @@ return [
 		'icon'        => null,
 		'placeholder' => null,
 
+		/**
+		 * @values 'url, 'page, 'file', 'email', 'tel', 'custom'
+		 */
+		'options' => function (array $options = null) {
+			return $options;
+		},
 		'value' => function (string|null $value = null) {
 			return $value ?? '';
 		}
@@ -56,9 +62,9 @@ return [
 						'key' => 'validation.url'
 					]);
 				}
-
-				return true;
 			}
+
+			return true;
 		},
 	]
 ];
