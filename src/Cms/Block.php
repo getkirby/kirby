@@ -232,7 +232,6 @@ class Block extends Item
 				$this->controller(),
 				true
 			);
-
 		} catch (Throwable $e) {
 			if ($kirby->option('debug') === true) {
 				return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
