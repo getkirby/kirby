@@ -3,6 +3,7 @@
 use Kirby\Cms\Api;
 use Kirby\Cms\File;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 return [
 	'props' => [
@@ -28,7 +29,11 @@ return [
 				// get parent object for upload target
 				$parent = $this->uploadParent($uploads['parent'] ?? null);
 
-				$file   = new File([
+				if ($parent === null) {
+					throw new InvalidArgumentException('"' . $uploads['parent'] . '" could not be resolved as a valid parent for the upload');
+				}
+
+				$file = new File([
 					'filename' => 'tmp',
 					'parent'   => $parent,
 					'template' => $template

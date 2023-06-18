@@ -55,7 +55,7 @@
 					<k-dropdown-item icon="copy" @click="$emit('duplicate')">
 						{{ $t("duplicate") }}
 					</k-dropdown-item>
-					<k-dropdown-item icon="dashboard" @click="$emit('change')">
+					<k-dropdown-item :disabled="layouts.length === 1" icon="dashboard" @click="$emit('change')">
 						{{ $t("field.layout.change") }}
 					</k-dropdown-item>
 					<hr />
@@ -101,6 +101,7 @@ export default {
 		fieldsets: Object,
 		id: String,
 		isSelected: Boolean,
+		layouts: Array,
 		settings: Object
 	},
 	computed: {

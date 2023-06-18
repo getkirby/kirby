@@ -11,6 +11,7 @@
 					:fieldset-groups="fieldsetGroups"
 					:fieldsets="fieldsets"
 					:is-selected="selected === layout.id"
+					:layouts="layouts"
 					:settings="settings"
 					@append="select(index + 1)"
 					@change="change(index, layout)"

@@ -578,6 +578,49 @@ class PageDialogsTest extends AreaTestCase
 		$this->assertCount(3, $props['blueprints']);
 	}
 
+	public function testCreateWithCustomTitleLabel(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => [
+							'label' => $label = 'Just a simple label'
+						]
+					]
+				],
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$this->assertSame($label, $dialog['props']['fields']['title']['label']);
+	}
+
+	public function testCreateWithI18nTitleLabel(): void
+	{
+		$this->app([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => [
+							'label' => [
+								'en' => $label = 'English label',
+								'de' => 'German label'
+							]
+						]
+					]
+				],
+			]
+		]);
+
+		$this->login();
+
+		$dialog = $this->dialog('pages/create');
+		$this->assertSame($label, $dialog['props']['fields']['title']['label']);
+	}
+
 	public function testCreateWithCustomField(): void
 	{
 		$this->app([

@@ -181,11 +181,15 @@ export default {
 }
 
 .k-color-field-options {
+	--color-preview-size: var(--field-input-height);
+	display: grid;
+	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
+	gap: var(--spacing-2);
+}
+.k-color-field-picker .k-color-field-options {
 	--color-preview-size: 100%;
 	--color-preview-darkness: 100%;
-	display: grid;
 	grid-template-columns: repeat(6, 1fr);
-	gap: var(--spacing-2);
 }
 
 .k-color-field .k-color-preview[aria-current] {
