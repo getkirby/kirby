@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
-
 /**
  * The StructureObject represents each item
  * in a Structure collection. StructureObjects

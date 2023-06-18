@@ -38,11 +38,12 @@ class Item
 	 */
 	public function __construct(array $params = [])
 	{
+		$class          = static::ITEMS_CLASS;
 		$this->id       = $params['id']       ?? Str::uuid();
 		$this->params   = $params;
 		$this->field    = $params['field']    ?? null;
 		$this->parent   = $params['parent']   ?? App::instance()->site();
-		$this->siblings = $params['siblings'] ?? new (static::ITEMS_CLASS)();
+		$this->siblings = $params['siblings'] ?? new $class();
 	}
 
 	/**

@@ -73,7 +73,8 @@ class Items extends Collection
 			$item['siblings'] = $collection;
 			$item['params']   = $item;
 
-			$item = (static::ITEM_CLASS)::factory($item);
+			$class = static::ITEM_CLASS;
+			$item  = $class::factory($item);
 			$collection->append($item->id(), $item);
 		}
 

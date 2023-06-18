@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\InvalidArgumentException;
 use TypeError;
 
 class StructureObjectTest extends TestCase
@@ -106,7 +105,7 @@ class StructureObjectTest extends TestCase
 
 	public function testInvalidParent()
 	{
-		$this->expectException('TypeError');
+		$this->expectException(TypeError::class);
 
 		$object = new StructureObject([
 			'id'     => 'test',
