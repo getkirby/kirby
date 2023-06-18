@@ -63,13 +63,16 @@ class Items extends Collection
 
 		foreach ($items as $item) {
 			if (is_array($item) === false) {
-				continue;
+				throw new InvalidArgumentException('Invalid data for ' . static::ITEM_CLASS);
 			}
 
+			// inject properties from the parent
 			$item['field']    = $collection->field();
 			$item['options']  = $params['options'] ?? [];
 			$item['parent']   = $collection->parent();
 			$item['siblings'] = $collection;
+			$item['params']   = $item;
+
 			$item = (static::ITEM_CLASS)::factory($item);
 			$collection->append($item->id(), $item);
 		}

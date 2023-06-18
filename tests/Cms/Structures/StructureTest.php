@@ -8,20 +8,20 @@ class StructureTest extends TestCase
 {
 	public function testCreate()
 	{
-		$structure = new Structure([
+		$structure = Structure::factory([
 			['test' => 'Test']
 		]);
 
 		$this->assertInstanceOf(StructureObject::class, $structure->first());
-		$this->assertSame('0', $structure->first()->id());
+		$this->assertSame(1, $structure->count());
 	}
 
 	public function testParent()
 	{
 		$parent    = new Page(['slug' => 'test']);
-		$structure = new Structure([
+		$structure = Structure::factory([
 			['test' => 'Test']
-		], $parent);
+		], ['parent' => $parent]);
 
 		$this->assertSame($parent, $structure->first()->parent());
 	}
@@ -32,20 +32,17 @@ class StructureTest extends TestCase
 			['name' => 'A'],
 			['name' => 'B']
 		];
+		$structure = Structure::factory($data)->toArray();
 
-		$expected = [
-			['id' => '0', 'name' => 'A'],
-			['id' => '1', 'name' => 'B'],
-		];
-
-		$structure = new Structure($data);
-
-		$this->assertSame($expected, $structure->toArray());
+		$this->assertSame('A', $structure[0]['name']);
+		$this->assertArrayHasKey('id', $structure[0]);
+		$this->assertSame('B', $structure[1]['name']);
+		$this->assertArrayHasKey('id', $structure[1]);
 	}
 
 	public function testGroup()
 	{
-		$structure = new Structure([
+		$structure = Structure::factory([
 			[
 				'name' => 'A',
 				'category' => 'cat-a'
@@ -77,7 +74,7 @@ class StructureTest extends TestCase
 
 	public function testSiblings()
 	{
-		$structure = new Structure([
+		$structure = Structure::factory([
 			['name' => 'A'],
 			['name' => 'B'],
 			['name' => 'C']
@@ -103,9 +100,9 @@ class StructureTest extends TestCase
 	public function testWithInvalidData()
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid structure data');
+		$this->expectExceptionMessage('Invalid data for Kirby\Cms\StructureObject');
 
-		$structure = new Structure([
+		Structure::factory([
 			[
 				'name' => 'A',
 				'category' => 'cat-a'
