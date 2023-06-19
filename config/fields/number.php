@@ -8,7 +8,7 @@ return [
 		 * Default number that will be saved when a new page/user/file is created
 		 */
 		'default' => function ($default = null) {
-			return $this->toNumber($default);
+			return $this->toNumber($default) ?? '';
 		},
 		/**
 		 * The lowest allowed number
@@ -26,10 +26,10 @@ return [
 		 * Allowed incremental steps between numbers (i.e `0.5`)
 		 */
 		'step' => function ($step = null) {
-			return $this->toNumber($step);
+			return $this->toNumber($step) ?? '';
 		},
 		'value' => function ($value = null) {
-			return $this->toNumber($value);
+			return $this->toNumber($value) ?? '';
 		}
 	],
 	'methods' => [

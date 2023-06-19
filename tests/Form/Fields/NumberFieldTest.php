@@ -10,19 +10,19 @@ class NumberFieldTest extends TestCase
 
 		$this->assertSame('number', $field->type());
 		$this->assertSame('number', $field->name());
-		$this->assertNull($field->value());
-		$this->assertNull($field->default());
+		$this->assertSame('', $field->value());
+		$this->assertSame('', $field->default());
 		$this->assertNull($field->min());
 		$this->assertNull($field->max());
-		$this->assertNull($field->step());
+		$this->assertSame('', $field->step());
 		$this->assertTrue($field->save());
 	}
 
 	public function valueProvider()
 	{
 		return [
-			[null, null],
-			['', null],
+			[null, ''],
+			['', ''],
 			[false, (float)0],
 			[0, (float)0],
 			['0', (float)0],
@@ -49,12 +49,7 @@ class NumberFieldTest extends TestCase
 
 		$this->assertSame($expected, $field->value());
 		$this->assertSame($expected, $field->default());
-
-		if ($input === null) {
-			$this->assertNull($field->step());
-		} else {
-			$this->assertSame($expected, $field->step());
-		}
+		$this->assertSame($expected, $field->step());
 	}
 
 	public function testMin()
