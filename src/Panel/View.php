@@ -180,9 +180,11 @@ class View
 
 				return [];
 			},
-			'$menu' => function () use ($options, $permissions) {
-				return static::menu($options['areas'] ?? [], $permissions, $options['area']['id'] ?? null);
-			},
+			'$menu' => fn () => static::menu(
+				$options['areas'] ?? [],
+				$permissions,
+				$options['area']['id'] ?? null
+			),
 			'$permissions' => $permissions,
 			'$license' => (bool)$kirby->system()->license(),
 			'$multilang' => $multilang,
@@ -349,6 +351,13 @@ class View
 		}
 
 		$menu[] = '-';
+		$menu[] = [
+			'icon'     => 'circle-nested',
+			'id'       => 'changes',
+			'dialog'   => 'changes',
+			'text'     => 'Has changes',
+		];
+
 		$menu[] = [
 			'current'  => $current === 'account',
 			'icon'     => 'account',
