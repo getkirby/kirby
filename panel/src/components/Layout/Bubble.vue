@@ -49,7 +49,7 @@ export default {
 	border-radius: var(--rounded);
 	overflow: hidden;
 }
-.k-bubble .k-item-image {
+.k-bubble .k-image-frame {
 	width: var(--bubble-size);
 	height: var(--bubble-size);
 }
