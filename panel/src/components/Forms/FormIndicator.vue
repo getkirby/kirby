@@ -21,6 +21,9 @@ export default {
 		cancelButton: {
 			default: false
 		},
+		size: {
+			default: "medium"
+		},
 		submitButton: {
 			default: false
 		}
