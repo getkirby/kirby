@@ -289,6 +289,22 @@ class HomeTest extends TestCase
 	}
 
 	/**
+	 * @covers ::path
+	 */
+	public function testPath()
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$this->assertSame('site', Home::path());
+	}
+
+	/**
 	 * @covers ::remembered
 	 */
 	public function testRemembered()
