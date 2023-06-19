@@ -80,7 +80,7 @@ class BlockModelsTest extends TestCase
 				'index' => '/dev/null',
 			],
 			'blockModels' => [
-				'Kirby\Cms\Block' => DefaultBlock::class
+				'default' => DefaultBlock::class
 			]
 		]);
 
