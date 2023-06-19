@@ -33,19 +33,19 @@ class ArgumentsTest extends \PHPUnit\Framework\TestCase
 	 */
 	public function testResolve()
 	{
-		$arguments = Arguments::factory('1, 2, 3');
-		$this->assertSame([1.0 , 2.0, 3.0], $arguments->resolve());
+		$arguments = Arguments::factory('1, 2.3, 3');
+		$this->assertSame([1, 2.3, 3], $arguments->resolve());
 
-		$arguments = Arguments::factory('1, 2, [3, 4]');
-		$this->assertSame([1.0 , 2.0, [3.0, 4.0]], $arguments->resolve());
+		$arguments = Arguments::factory('1, 2, [3.3, 4]');
+		$this->assertSame([1, 2, [3.3, 4]], $arguments->resolve());
 
 		$arguments = Arguments::factory('1, 2, \'3, 4\'');
-		$this->assertSame([1.0 , 2.0, '3, 4'], $arguments->resolve());
+		$this->assertSame([1, 2, '3, 4'], $arguments->resolve());
 
 		$arguments = Arguments::factory('1, 2, "3, 4"');
-		$this->assertSame([1.0 , 2.0, '3, 4'], $arguments->resolve());
+		$this->assertSame([1, 2, '3, 4'], $arguments->resolve());
 
 		$arguments = Arguments::factory('1, 2, \'(3, 4)\'');
-		$this->assertSame([1.0 , 2.0, '(3, 4)'], $arguments->resolve());
+		$this->assertSame([1, 2, '(3, 4)'], $arguments->resolve());
 	}
 }

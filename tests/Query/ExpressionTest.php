@@ -91,7 +91,7 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 			['0 ?: "no"', 'no'],
 			['null ?? null ?? null ?? "yes"', 'yes'],
 			['"yes" ?? "no"', 'yes'],
-			['null ?? (null ?? null ?? (false ? "what" : 42)) ?? "no"', 42.0],
+			['null ?? (null ?? null ?? (false ? "what" : 42)) ?? "no"', 42],
 		];
 	}
 
