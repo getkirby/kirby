@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
@@ -50,8 +49,11 @@ if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
 if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	/**
 	 * Returns the result of a collection by name
+	 *
+	 * @return \Kirby\Toolkit\Collection|null
+	 * @todo 5.0 Add return type declaration
 	 */
-	function collection(string $name): Collection|null
+	function collection(string $name)
 	{
 		return App::instance()->collection($name);
 	}

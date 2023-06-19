@@ -51,7 +51,7 @@
 		"prettier": "^2.8.1",
 		"rollup-plugin-external-globals": "^0.7.3",
 		"terser": "^5.16.1",
-		"vite": "^4.3.0",
+		"vite": "^4.3.9",
 		"vite-plugin-static-copy": "^0.13.1",
 		"vitest": "^0.25.6",
 		"vue-docgen-api": "^4.56.0",

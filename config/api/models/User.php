@@ -9,7 +9,7 @@ use Kirby\Form\Form;
 return [
 	'default' => fn () => $this->user(),
 	'fields' => [
-		'avatar'      => fn (User $user) => $user->avatar() ? $user->avatar()->crop(512) : null,
+		'avatar'      => fn (User $user) => $user->avatar()?->crop(512),
 		'blueprint'   => fn (User $user) => $user->blueprint(),
 		'content'     => fn (User $user) => Form::for($user)->values(),
 		'email'       => fn (User $user) => $user->email(),

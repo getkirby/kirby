@@ -43,7 +43,9 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 
 		// numbers
 		$argument = Argument::factory(' 23  ');
-		$this->assertSame(23.0, $argument->value);
+		$this->assertSame(23, $argument->value);
+		$argument = Argument::factory(' 23.3  ');
+		$this->assertSame(23.3, $argument->value);
 
 		// null
 		$argument = Argument::factory(' null ');
@@ -70,8 +72,8 @@ class ArgumentTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame(' 23 ', $argument);
 
 		// arrays
-		$argument = Argument::factory('[1, "a", 3]')->resolve();
-		$this->assertSame([1.0, 'a', 3.0], $argument);
+		$argument = Argument::factory('[1, "a", 3.3]')->resolve();
+		$this->assertSame([1, 'a', 3.3], $argument);
 
 		// nested query
 		$argument = Argument::factory('foo')->resolve(['foo' => 'bar']);

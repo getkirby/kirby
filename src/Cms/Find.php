@@ -121,7 +121,10 @@ class Find
 			'site'    => $kirby->site(),
 			'account' => static::user(),
 			'page'    => static::page(basename($path)),
-			'file'    => static::file(...explode('/files/', $path)),
+			// regular expression to split the path at the last
+			// occurrence of /files/ which separates parent path
+			// and filename
+			'file'    => static::file(...preg_split('$.*\K(/files/)$', $path)),
 			'user'    => $kirby->user(basename($path)),
 			default   => throw new InvalidArgumentException('Invalid model type: ' . $modelType)
 		};

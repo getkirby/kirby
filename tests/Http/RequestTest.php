@@ -70,6 +70,25 @@ class RequestTest extends TestCase
 		$this->assertNull($request->get('c'));
 	}
 
+	public function testDataNumeric()
+	{
+		$request = new Request([
+			'body'   => [1 => 'a'],
+			'query'  => [
+				'0' => 'b',
+				2   => 'c'
+			]
+		]);
+
+		$this->assertSame([1 => 'a', 0 => 'b', 2 => 'c'], $request->data());
+		$this->assertSame('b', $request->get(0));
+		$this->assertSame('b', $request->get('0'));
+		$this->assertSame('a', $request->get(1));
+		$this->assertSame('a', $request->get('1'));
+		$this->assertSame('c', $request->get(2));
+		$this->assertSame('c', $request->get('2'));
+	}
+
 	public function test__debuginfo()
 	{
 		$request = new Request();

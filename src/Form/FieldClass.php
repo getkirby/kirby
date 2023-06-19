@@ -427,7 +427,7 @@ abstract class FieldClass
 			if ($formFields !== null) {
 				foreach ($this->when as $field => $value) {
 					$field      = $formFields->get($field);
-					$inputValue = $field !== null ? $field->value() : '';
+					$inputValue = $field?->value() ?? '';
 
 					// if the input data doesn't match the requested `when` value,
 					// that means that this field is not required and can be saved

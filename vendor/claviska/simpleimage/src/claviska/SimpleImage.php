@@ -17,6 +17,7 @@
 namespace claviska;
 
 use Exception;
+use GdImage;
 use League\ColorExtractor\Color;
 use League\ColorExtractor\ColorExtractor;
 use League\ColorExtractor\Palette;
@@ -64,11 +65,11 @@ class SimpleImage
 
     protected array $flags;
 
-    protected $image;
+    protected $image = null;
 
     protected string $mimeType;
 
-    protected null|array|false $exif;
+    protected null|array|false $exif = null;
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
     // Magic methods
@@ -115,10 +116,7 @@ class SimpleImage
      */
     public function __destruct()
     {
-        //Check for a valid GDimage instance
-        $type_check = (gettype($this->image) == 'object' && $this->image::class == 'GdImage');
-
-        if (is_resource($this->image) && $type_check) {
+        if ($this->image instanceof GdImage) {
             imagedestroy($this->image);
         }
     }
@@ -585,7 +583,8 @@ class SimpleImage
      */
     public function getExif(): ?array
     {
-        return $this->exif ?? null;
+        // returns null if exif value is falsy: null, false or empty array.
+        return $this->exif ?: null;
     }
 
     /**
@@ -649,8 +648,8 @@ class SimpleImage
     /**
      * Same as PHP's imagecopymerge, but works with transparent images. Used internally for overlay.
      *
-     * @param  resource  $dstIm Destination image link resource.
-     * @param  resource  $srcIm Source image link resource.
+     * @param  GdImage  $dstIm Destination image.
+     * @param  GdImage  $srcIm Source image.
      * @param  int  $dstX x-coordinate of destination point.
      * @param  int  $dstY y-coordinate of destination point.
      * @param  int  $srcX x-coordinate of source point.
@@ -659,7 +658,7 @@ class SimpleImage
      * @param  int  $srcH Source height.
      * @return bool true if success.
      */
-    protected static function imageCopyMergeAlpha($dstIm, $srcIm, int $dstX, int $dstY, int $srcX, int $srcY, int $srcW, int $srcH, int $pct): bool
+    protected static function imageCopyMergeAlpha(GdImage $dstIm, GdImage $srcIm, int $dstX, int $dstY, int $srcX, int $srcY, int $srcW, int $srcH, int $pct): bool
     {
         // Are we merging with transparency?
         if ($pct < 100) {
@@ -1376,7 +1375,7 @@ class SimpleImage
     /**
      * Receives a text and breaks into LINES.
      */
-    private function textSeparateLines(string $text, string $fontFile, int $fontSize, int $maxWidth): array
+    private function textSeparateLines(string $text, string $fontFile, float $fontSize, int $maxWidth): array
     {
         $lines = [];
         $words = self::textSeparateWords($text);

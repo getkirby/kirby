@@ -245,6 +245,12 @@ class FindTest extends TestCase
 						'files' => [
 							['filename' => 'a-regular-file.jpg']
 						]
+					],
+					[
+						'slug' => 'files',
+						'files' => [
+							['filename' => 'file-in-files-page.jpg']
+						]
 					]
 				],
 				'files' => [
@@ -279,6 +285,7 @@ class FindTest extends TestCase
 		$this->assertInstanceOf(Page::class, Find::parent('pages/a aa'));
 		$this->assertInstanceOf(File::class, Find::parent('site/files/sitefile.jpg'));
 		$this->assertInstanceOf(File::class, Find::parent('pages/a/files/a-regular-file.jpg'));
+		$this->assertInstanceOf(File::class, Find::parent('pages/files/files/file-in-files-page.jpg'));
 		$this->assertInstanceOf(File::class, Find::parent('users/test@getkirby.com/files/userfile.jpg'));
 	}
 

@@ -75,20 +75,33 @@ class QueryDefaultFunctionsTest extends \PHPUnit\Framework\TestCase
 
 	public function testPage()
 	{
-		new App([
+		$app = new App([
 			'site' => [
 				'children' => [
 					[
 						'slug' => 'a',
+					],
+					[
+						'slug'    => 'b',
+						'content' => ['uuid' => 'test']
 					]
 				]
 			]
 		]);
 
-		$query = new Query('page("a")');
-		$this->assertInstanceOf(Page::class, $query->resolve());
+		$a = $app->page('a');
+		$b = $app->page('b');
 
-		$query = new Query('page("b")');
+		$query = new Query('page("a")');
+		$this->assertSame($a, $query->resolve());
+
+		$query = new Query('page("a").slug');
+		$this->assertSame('a', $query->resolve(['slug' => 'foo']));
+
+		$query = new Query('page("page://test")');
+		$this->assertSame($b, $query->resolve(['page' => $b]));
+
+		$query = new Query('page("c")');
 		$this->assertNull($query->resolve());
 	}
 

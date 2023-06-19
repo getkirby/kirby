@@ -117,7 +117,7 @@ Query::$entries['file'] = function (string $id): File|null {
 };
 
 Query::$entries['page'] = function (string $id): Page|null {
-	return App::instance()->site()->find($id);
+	return App::instance()->page($id);
 };
 
 Query::$entries['site'] = function (): Site {

@@ -26,7 +26,7 @@ class NodeString extends NodeProperty
 	public static function factory($value = null): static|null
 	{
 		if ($value === null) {
-			return $value;
+			return null;
 		}
 
 		return new static($value);
