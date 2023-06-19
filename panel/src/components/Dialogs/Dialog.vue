@@ -8,10 +8,14 @@
 			@click.stop
 			@submit.prevent="$emit('submit')"
 		>
-			<k-dialog-notification />
-			<k-dialog-body>
+			<slot name="header">
+				<k-dialog-notification />
+			</slot>
+
+			<k-dialog-body v-if="$slots.default">
 				<slot />
 			</k-dialog-body>
+
 			<slot name="footer">
 				<k-dialog-footer v-if="cancelButton || submitButton">
 					<k-dialog-buttons
@@ -63,6 +67,7 @@ export default {
 	margin: 1.5rem;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 }
 
 @media screen and (min-width: 20rem) {

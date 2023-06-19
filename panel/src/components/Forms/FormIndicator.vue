@@ -1,32 +1,35 @@
 <template>
-	<k-dropdown class="k-form-indicator">
-		<k-button
-			:disabled="!hasChanges"
-			:theme="hasChanges ? 'notice' : null"
-			icon="circle-nested"
-			size="xs"
-			class="k-form-indicator-toggle"
-			@click="toggle"
-		/>
-		<k-dropdown-content ref="list" align="right">
-			<p class="k-form-indicator-info">{{ $t("lock.unsaved") }}:</p>
-			<hr />
-			<k-dropdown-item
-				v-for="option in options"
-				:key="option.id"
-				v-bind="option"
-			>
-				{{ option.text }}
-			</k-dropdown-item>
-		</k-dropdown-content>
-	</k-dropdown>
+	<k-dialog v-bind="$props" class="k-form-indicator">
+		<template #header>
+			<div :data-theme="theme" class="k-notification">
+				<p v-if="options.length">{{ $t("lock.unsaved") }}</p>
+				<p v-else>{{ $t("lock.unsaved.empty") }}</p>
+				<k-button icon="cancel" @click="$panel.dialog.close()" />
+			</div>
+		</template>
+
+		<k-items v-if="options.length" :items="items" layout="list" />
+	</k-dialog>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+
 export default {
+	mixins: [Dialog],
+	props: {
+		cancelButton: {
+			default: false
+		},
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: false
+		}
+	},
 	data() {
 		return {
-			isOpen: false,
 			options: []
 		};
 	},
@@ -39,46 +42,39 @@ export default {
 				(id) => this.$helper.object.length(this.store[id]?.changes) > 0
 			);
 		},
+		items() {
+			return this.options.map((option) => ({
+				...option,
+				image: { icon: option.icon, back: "black", color: "gray-300" }
+			}));
+		},
 		store() {
 			return this.$store.state.content.models;
+		},
+		theme() {
+			return this.options.length ? "notice" : "info";
 		}
 	},
-	methods: {
-		async toggle(event) {
-			if (this.$refs.list.isOpen === false) {
-				try {
-					await this.$dropdown("changes", {
-						method: "POST",
-						body: {
-							ids: this.ids
-						}
-					})((options) => {
-						this.options = options;
-					});
-				} catch (e) {
-					this.$panel.notification.success(this.$t("lock.unsaved.empty"));
-					this.$store.dispatch("content/clear");
-					return false;
+	async mounted() {
+		try {
+			await this.$dropdown("changes", {
+				method: "POST",
+				body: {
+					ids: this.ids
 				}
-			}
-
-			if (this.$refs.list) {
-				this.$refs.list.toggle(event.target);
-			}
+			})((options) => {
+				this.options = options;
+			});
+		} catch (e) {
+			this.options = [];
+			this.$store.dispatch("content/clear");
 		}
 	}
 };
 </script>
 
 <style>
-.k-form-indicator {
-	--button-color-icon: var(--color-gray-500);
-}
-.k-form-indicator-info {
-	font-size: var(--text-sm);
+.k-form-indicator .k-notification p {
 	font-weight: var(--font-bold);
-	padding: 0.75rem 1rem 0.25rem;
-	line-height: 1.25em;
-	width: 15rem;
 }
 </style>
