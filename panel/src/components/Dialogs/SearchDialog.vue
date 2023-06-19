@@ -43,9 +43,9 @@
 					:aria-label="$t('search')"
 					:autofocus="true"
 					:placeholder="$t('search') + ' …'"
-					:value="q"
+					:value="query"
 					type="text"
-					@input="search($event.target.value)"
+					@input="query = $event.target.value"
 					@keydown.down.prevent="onDown"
 					@keydown.up.prevent="onUp"
 					@keydown.tab.prevent="onTab"
@@ -63,7 +63,7 @@
 				/>
 			</div>
 
-			<div v-if="q?.length > 1" class="k-search-dialog-results">
+			<div v-if="query?.length > 1" class="k-search-dialog-results">
 				<!-- Results -->
 				<k-collection
 					v-if="items.length"
@@ -81,14 +81,7 @@
 					<k-button
 						v-else-if="items.length < pagination.total"
 						icon="search"
-						@click="
-							$go('search', {
-								query: {
-									type: type,
-									query: q
-								}
-							})
-						"
+						@click="$go('search', { query: { type, query } })"
 					>
 						All {{ pagination.total }} results
 					</k-button>
@@ -100,16 +93,16 @@
 
 <script>
 import Dialog from "@/mixins/dialog.js";
-import debounce from "@/helpers/debounce.js";
+import Search from "@/mixins/search.js";
 
 export default {
-	mixins: [Dialog],
+	mixins: [Dialog, Search],
+	emits: ["cancel"],
 	data() {
 		return {
 			isLoading: false,
 			items: [],
 			pagination: {},
-			q: null,
 			selected: -1,
 			type: this.$panel.view.search
 		};
@@ -124,16 +117,13 @@ export default {
 	},
 	watch: {
 		type() {
-			this.search(this.q);
+			this.search();
 		}
-	},
-	created() {
-		this.search = debounce(this.search, 250);
 	},
 	methods: {
 		clear() {
 			this.items = [];
-			this.q = null;
+			this.query = null;
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -160,19 +150,18 @@ export default {
 				this.select(this.selected - 1);
 			}
 		},
-		async search(query) {
-			this.q = query;
+		async search() {
 			this.isLoading = true;
 			this.$refs.types?.close();
 			this.select?.(-1);
 
 			try {
 				// Skip API call if query empty
-				if (query === null || query.length < 2) {
+				if (this.query === null || this.query.length < 2) {
 					throw Error("Empty query");
 				}
 
-				const response = await this.$search(this.type, query);
+				const response = await this.$search(this.type, this.query);
 				this.items = response.results;
 				this.pagination = response.pagination;
 			} catch (error) {
