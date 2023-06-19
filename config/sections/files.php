@@ -65,8 +65,8 @@ return [
 			// filter files by template
 			$files = $files->template($this->template);
 
-			// filter out all protected files
-			$files = $files->filter('isReadable', true);
+			// filter out all protected and hidden files
+			$files = $files->filter('isListable', true);
 
 			// search
 			if ($this->search === true && empty($this->searchterm()) === false) {

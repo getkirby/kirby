@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Cms\User;
@@ -9,6 +10,12 @@ use Kirby\Form\Field;
 
 class FilePickerMixinTest extends TestCase
 {
+	public function setUp(): void
+	{
+		$kirby = App::instance();
+		$kirby->impersonate('kirby');
+	}
+
 	public function testPageFiles()
 	{
 		Field::$types = [

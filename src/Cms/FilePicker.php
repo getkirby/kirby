@@ -62,6 +62,9 @@ class FilePicker extends Picker
 			default => throw new InvalidArgumentException('Your query must return a set of files')
 		};
 
+		// filter protected and hidden pages
+		$files = $files->filter('isListable', true);
+
 		// search
 		$files = $this->search($files);
 

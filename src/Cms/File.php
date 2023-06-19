@@ -376,15 +376,61 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the files is accessible.
+	 * This permission depends on the `read` option until v5
+	 */
+	public function isAccessible(): bool
+	{
+		// TODO: remove this check when `read` option deprecated in v5
+		if ($this->isReadable() === false) {
+			return false;
+		}
+
+		if ($template = $this->template()) {
+			static $accessible = [];
+			return $accessible[$template] ??= $this->permissions()->can('access');
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if the file can be listable by the current user
+	 * This permission depends on the `read` option until v5
+	 */
+	public function isListable(): bool
+	{
+		// TODO: remove this check when `read` option deprecated in v5
+		if ($this->isReadable() === false) {
+			return false;
+		}
+
+		// not accessible also means not listable
+		if ($this->isAccessible() === false) {
+			return false;
+		}
+
+		if ($template = $this->template()) {
+			static $listable = [];
+			return $listable[$template] ??= $this->permissions()->can('list');
+		}
+
+		return true;
+	}
+
+	/**
 	 * Check if the file can be read by the current user
+	 *
+	 * @todo Deprecate `read` option in v5 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
-		static $readable = [];
+		if ($template = $this->template()) {
+			static $readable = [];
+			return $readable[$template] ??= $this->permissions()->can('read');
+		}
 
-		$template = $this->template();
-
-		return $readable[$template] ??= $this->permissions()->can('read');
+		return true;
 	}
 
 	/**
