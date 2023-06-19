@@ -1,11 +1,13 @@
 import Elements from "./Elements/index.js";
 
 import Dialog from "./Dialog.vue";
+import EmailDialog from "./EmailDialog.vue";
 import ErrorDialog from "./ErrorDialog.vue";
 import FiberDialog from "./FiberDialog.vue";
 import FilesDialog from "./FilesDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
+import LinkDialog from "./LinkDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
 import PageMoveDialog from "./PageMoveDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
@@ -21,10 +23,12 @@ export default {
 		app.use(Elements);
 
 		app.component("k-dialog", Dialog);
+		app.component("k-email-dialog", EmailDialog);
 		app.component("k-error-dialog", ErrorDialog);
 		app.component("k-fiber-dialog", FiberDialog);
 		app.component("k-files-dialog", FilesDialog);
 		app.component("k-form-dialog", FormDialog);
+		app.component("k-link-dialog", LinkDialog);
 		app.component("k-language-dialog", LanguageDialog);
 		app.component("k-page-create-dialog", PageCreateDialog);
 		app.component("k-page-move-dialog", PageMoveDialog);

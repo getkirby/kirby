@@ -249,7 +249,7 @@ export default {
 			this.$emit("input", this.currentType.value(value));
 		},
 		onInvalid(invalid) {
-			this.isInvalid = invalid;
+			this.isInvalid = !!invalid;
 		},
 		async preview() {
 			if (this.linkType === "page" && this.linkValue) {

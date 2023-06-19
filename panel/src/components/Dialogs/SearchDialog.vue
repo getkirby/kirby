@@ -55,8 +55,6 @@
 			/>
 		</div>
 
-		{{ selected }}
-
 		<div v-if="q?.length > 1" class="k-search-dialog-results">
 			<!-- Results -->
 			<k-collection

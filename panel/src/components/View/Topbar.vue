@@ -43,9 +43,14 @@ export default {
 	},
 	computed: {
 		notification() {
-			return this.$panel.notification.context === "view"
-				? this.$panel.notification
-				: null;
+			if (
+				this.$panel.notification.context === "view" &&
+				!this.$panel.notification.isFatal
+			) {
+				return this.$panel.notification;
+			}
+
+			return null;
 		}
 	},
 	methods: {

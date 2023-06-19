@@ -15,7 +15,7 @@ export default class Email extends Mark {
 					return this.remove();
 				}
 
-				this.editor.emit("email");
+				this.editor.emit("email", this.editor);
 			},
 			insertEmail: (attrs = {}) => {
 				if (attrs.href) {
