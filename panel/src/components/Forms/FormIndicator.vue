@@ -1,7 +1,10 @@
 <template>
 	<k-dialog v-bind="$props" class="k-form-indicator">
 		<template #header>
-			<div :data-theme="theme" class="k-notification">
+			<div
+				:data-theme="options.length ? 'notice' : 'info'"
+				class="k-notification"
+			>
 				<p v-if="options.length">{{ $t("lock.unsaved") }}</p>
 				<p v-else>{{ $t("lock.unsaved.empty") }}</p>
 				<k-button icon="cancel" @click="$panel.dialog.close()" />
@@ -50,9 +53,6 @@ export default {
 		},
 		store() {
 			return this.$store.state.content.models;
-		},
-		theme() {
-			return this.options.length ? "notice" : "info";
 		}
 	},
 	async mounted() {
