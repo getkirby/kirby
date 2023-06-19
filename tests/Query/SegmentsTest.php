@@ -220,10 +220,10 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayCallError()
 	{
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Cannot access array element "user" with arguments');
+		$this->expectExceptionMessage('Cannot access array element "editor" with arguments');
 
-		$segments = Segments::factory('user("test")');
-		$data     = ['user' => new TestUser()];
+		$segments = Segments::factory('editor("test")');
+		$data     = ['editor' => new TestUser()];
 		$segments->resolve($data);
 	}
 
@@ -233,9 +233,9 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayMissingKey1()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing property "user" on array');
+		$this->expectExceptionMessage('Access to non-existing property "editor" on array');
 
-		$segments = Segments::factory('user');
+		$segments = Segments::factory('editor');
 		$segments->resolve();
 	}
 
@@ -245,9 +245,9 @@ class SegmentsTest extends \PHPUnit\Framework\TestCase
 	public function testResolveWithArrayMissingKey2()
 	{
 		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('Access to non-existing property "user" on array');
+		$this->expectExceptionMessage('Access to non-existing property "editor" on array');
 
-		$segments = Segments::factory('user.username');
+		$segments = Segments::factory('editor.username');
 		$segments->resolve();
 	}
 

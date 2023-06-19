@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use InvalidArgumentException;
 use Kirby\Exception\DuplicateException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -21,8 +21,10 @@ class LanguageVariable
 {
 	protected App $kirby;
 
-	public function __construct(protected Language $language, protected string $key)
-	{
+	public function __construct(
+		protected Language $language,
+		protected string $key
+	) {
 		$this->kirby = App::instance();
 	}
 
@@ -31,13 +33,11 @@ class LanguageVariable
 	 * be added to the default language first and
 	 * can then be translated in other languages.
 	 */
-	public static function create(string $key, string|null $value = null): static
-	{
-		$key          = Str::slug($key, null, 'a-z0-9_-');
-		$value        = trim($value ?? '');
-		$kirby        = App::instance();
-		$language     = $kirby->defaultLanguage();
-		$translations = $language->translations();
+	public static function create(
+		string $key,
+		string|null $value = null
+	): static {
+		$key = Str::slug($key, null, 'a-z0-9_-');
 
 		if (is_numeric($key) === true) {
 			throw new InvalidArgumentException('The variable key must not be numeric');
@@ -47,19 +47,21 @@ class LanguageVariable
 			throw new InvalidArgumentException('The variable needs a valid key');
 		}
 
+		$kirby        = App::instance();
+		$language     = $kirby->defaultLanguage();
+		$translations = $language->translations();
+
 		if ($kirby->translation()->get($key) !== null) {
 			if (isset($translations[$key]) === true) {
 				throw new DuplicateException('The variable already exists');
-			} else {
-				throw new DuplicateException('The variable is part of the core translation and cannot be overwritten');
 			}
+
+			throw new DuplicateException('The variable is part of the core translation and cannot be overwritten');
 		}
 
-		$translations[$key] = $value;
+		$translations[$key] = trim($value ?? '');
 
-		$language->update([
-			'translations' => $translations
-		]);
+		$language->update(['translations' => $translations]);
 
 		return $language->variable($key);
 	}
@@ -77,9 +79,7 @@ class LanguageVariable
 
 			unset($variables[$this->key]);
 
-			$language->update([
-				'translations' => $variables
-			]);
+			$language->update(['translations' => $variables]);
 		}
 
 		return true;
@@ -90,7 +90,8 @@ class LanguageVariable
 	 */
 	public function exists(): bool
 	{
-		return isset($this->kirby->defaultLanguage()->translations()[$this->key]) === true;
+		$language = $this->kirby->defaultLanguage();
+		return isset($language->translations()[$this->key]) === true;
 	}
 
 	/**
@@ -109,13 +110,15 @@ class LanguageVariable
 		$translations = $this->language->translations();
 		$translations[$this->key] = $value;
 
-		return $this->language->update(['translations' => $translations])->variable($this->key);
+		$language = $this->language->update(['translations' => $translations]);
+
+		return $language->variable($this->key);
 	}
 
 	/**
 	 * Returns the value if the variable has been translated.
 	 */
-	public function value(): ?string
+	public function value(): string|null
 	{
 		return $this->language->translations()[$this->key] ?? null;
 	}

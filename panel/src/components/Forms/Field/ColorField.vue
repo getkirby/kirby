@@ -165,7 +165,7 @@ export default {
 .k-color-field .k-input .k-input-before {
 	padding: var(--spacing-1);
 }
-.k-color-field-preview {
+.k-color-field .k-color-field-preview {
 	--color-preview-size: calc(var(--field-input-height) - var(--spacing-2));
 }
 

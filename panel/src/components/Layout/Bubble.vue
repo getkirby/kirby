@@ -9,8 +9,11 @@
 		class="k-bubble"
 		@click.native.stop
 	>
-		<k-image-frame v-if="image" v-bind="image" />
-		{{ text }}
+		<slot name="image">
+			<k-image-frame v-if="image" v-bind="image" />
+			<span v-else />
+		</slot>
+		<span v-if="text" class="k-bubble-text">{{ text }}</span>
 	</component>
 </template>
 
@@ -32,23 +35,29 @@ export default {
 </script>
 
 <style>
+:root {
+	--bubble-size: 1.525rem;
+}
+
 .k-bubble {
-	display: flex;
-	padding: 0 0.5rem;
+	width: min-content;
+	height: var(--bubble-size);
 	white-space: nowrap;
-	align-items: center;
 	line-height: 1.5;
-	font-size: var(--text-xs);
-	height: 1.525rem;
 	background: var(--color-light);
 	color: var(--color-black);
 	border-radius: var(--rounded);
 	overflow: hidden;
 }
 .k-bubble .k-item-image {
-	width: 1.525rem;
-	height: 1.525rem;
-	margin-inline-start: -0.5rem;
-	margin-inline-end: var(--spacing-2);
+	width: var(--bubble-size);
+	height: var(--bubble-size);
+}
+.k-bubble:has(.k-bubble-text) {
+	display: flex;
+	gap: var(--spacing-2);
+	align-items: center;
+	padding-inline-end: 0.5rem;
+	font-size: var(--text-xs);
 }
 </style>
