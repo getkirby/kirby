@@ -120,18 +120,9 @@ export default {
 	justify-content: space-between;
 }
 
-.k-structure-form-buttons .k-pagination {
-	display: none;
-}
-@container (min-width: 30rem) {
-	.k-structure-form-buttons .k-pagination {
-		display: flex;
-		align-items: center;
+@container (max-width: 30rem) {
+	.k-pagination-details {
+		display: none;
 	}
-}
-
-.k-structure-form-buttons .k-pagination > .k-button,
-.k-structure-form-buttons .k-pagination > span {
-	padding: 0 1rem !important;
 }
 </style>

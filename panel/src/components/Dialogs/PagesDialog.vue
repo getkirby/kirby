@@ -21,9 +21,9 @@
 			</header>
 
 			<k-dialog-search
-				v-if="options.search"
-				:value="search"
-				@search="search = $event"
+				v-if="hasSearch"
+				:value="query"
+				@search="query = $event"
 			/>
 
 			<k-collection v-bind="collection" @item="toggle" @paginate="paginate">

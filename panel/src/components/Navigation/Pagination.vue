@@ -9,7 +9,7 @@
 		<k-button v-bind="prevBtn" />
 
 		<!-- details -->
-		<k-dropdown v-if="details">
+		<k-dropdown v-if="details" class="k-pagination-details">
 			<k-button v-bind="detailsBtn" />
 
 			<k-dropdown-content

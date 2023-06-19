@@ -1,8 +1,9 @@
 import { set } from "vue";
-import debounce from "@/helpers/debounce.js";
 import { length } from "@/helpers/object";
+import Search from "@/mixins/search.js";
 
 export default {
+	mixins: [Search],
 	data() {
 		return {
 			models: [],
@@ -13,10 +14,8 @@ export default {
 				max: null,
 				multiple: true,
 				parent: null,
-				selected: [],
-				search: true
+				selected: []
 			},
-			search: null,
 			pagination: {
 				limit: 20,
 				page: 1,
@@ -50,19 +49,11 @@ export default {
 			return this.options.multiple === true && this.options.max !== 1;
 		}
 	},
-	watch: {
-		search() {
-			this.updateSearch();
-		}
-	},
-	created() {
-		this.updateSearch = debounce(this.updateSearch, 200);
-	},
 	methods: {
 		async fetch() {
 			const params = {
 				page: this.pagination.page,
-				search: this.search,
+				search: this.query,
 				...(this.fetchData || {})
 			};
 
@@ -80,12 +71,18 @@ export default {
 				this.issue = e.message;
 			}
 		},
+		isSelected(item) {
+			return this.selected[item.id] !== undefined;
+		},
+		item(item) {
+			return item;
+		},
 		async open(models, options) {
 			// reset pagination
 			this.pagination.page = 0;
 
-			// reset the search
-			this.search = null;
+			// reset the search query
+			this.query = null;
 
 			let fetch = true;
 
@@ -123,11 +120,9 @@ export default {
 			this.$emit("submit", Object.values(this.selected));
 			this.$refs.dialog.close();
 		},
-		isSelected(item) {
-			return this.selected[item.id] !== undefined;
-		},
-		item(item) {
-			return item;
+		async search() {
+			this.pagination.page = 0;
+			await this.fetch();
 		},
 		toggle(item) {
 			if (this.options.multiple === false || this.options.max === 1) {
@@ -153,10 +148,6 @@ export default {
 				title: isSelected ? this.$t("remove") : this.$t("select"),
 				theme: isSelected ? "info" : null
 			};
-		},
-		updateSearch() {
-			this.pagination.page = 0;
-			this.fetch();
 		}
 	}
 };

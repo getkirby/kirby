@@ -12,7 +12,7 @@
 				<k-button
 					class="k-file-browser-back-button"
 					icon="angle-left"
-					:text="page.label"
+					:text="page?.label"
 					@click="view = 'tree'"
 				/>
 				<k-browser

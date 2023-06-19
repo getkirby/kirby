@@ -95,9 +95,11 @@ class PageCreateDialog
 	 */
 	public function coreFields(): array
 	{
+		$title = $this->blueprint()->create()['title']['label'] ?? 'title';
+
 		return [
 			'title' => Field::title([
-				'label'     => $this->blueprint()->create()['title']['label'] ?? I18n::translate('title'),
+				'label'     => I18n::translate($title, $title),
 				'required'  => true,
 				'preselect' => true
 			]),

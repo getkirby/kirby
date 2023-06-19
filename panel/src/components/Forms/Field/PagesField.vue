@@ -30,7 +30,7 @@
 			</template>
 		</k-collection>
 
-		<k-pages-dialog ref="selector" @submit="select" />
+		<k-pages-dialog ref="selector" :has-search="search" @submit="select" />
 	</k-field>
 </template>
 
