@@ -145,6 +145,9 @@ export default {
 			editable: !this.disabled,
 			element: this.$el,
 			emptyDocument: this.emptyDocument,
+			parseOptions: {
+				preserveWhitespace: true
+			},
 			events: {
 				link: (editor) => {
 					this.$refs.linkDialog.open(editor.getMarkAttrs("link"));

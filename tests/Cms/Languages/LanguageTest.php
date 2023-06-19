@@ -11,22 +11,22 @@ use PHPUnit\Framework\TestCase;
 class LanguageTest extends TestCase
 {
 	protected $app;
-	protected $fixtures;
+	protected $tmp;
 
 	public function setUp(): void
 	{
 		$this->app = new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/LanguageTest',
+				'index' => $this->tmp = __DIR__ . '/tmp/LanguageTest',
 			]
 		]);
 
-		Dir::make($this->fixtures);
+		Dir::make($this->tmp);
 	}
 
 	public function tearDown(): void
 	{
-		Dir::remove($this->fixtures);
+		Dir::remove($this->tmp);
 	}
 
 	public function testConstructNoCode()
@@ -248,12 +248,12 @@ class LanguageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index'     => $fixtures = __DIR__ . '/fixtures/LanguageTest',
-				'languages' => $fixtures
+				'index'     => $tmp = __DIR__ . '/tmp/LanguageTest',
+				'languages' => $tmp
 			]
 		]);
 
-		$file = $fixtures . '/de.php';
+		$file = $tmp . '/de.php';
 
 		// default
 		$language = new Language([
@@ -314,7 +314,7 @@ class LanguageTest extends TestCase
 
 		$this->assertSame('test', $data['custom']);
 
-		Dir::remove($fixtures);
+		Dir::remove($tmp);
 	}
 
 	public function testRouter()
@@ -352,7 +352,7 @@ class LanguageTest extends TestCase
 	{
 		$app = new App([
 			'roots' => [
-				'index' => __DIR__ . '/fixtures'
+				'index' => __DIR__ . '/tmp'
 			]
 		]);
 
@@ -366,14 +366,14 @@ class LanguageTest extends TestCase
 
 		$this->assertTrue($language->exists());
 
-		Dir::remove(__DIR__ . '/fixtures');
+		Dir::remove(__DIR__ . '/tmp');
 	}
 
 	public function testRoot()
 	{
 		$app = new App([
 			'roots' => [
-				'index' => $fixtures = __DIR__ . '/fixtures'
+				'index' => $tmp = __DIR__ . '/tmp'
 			]
 		]);
 
@@ -381,7 +381,7 @@ class LanguageTest extends TestCase
 			'code' => 'de'
 		]);
 
-		$this->assertSame($fixtures . '/site/languages/de.php', $language->root());
+		$this->assertSame($tmp . '/site/languages/de.php', $language->root());
 	}
 
 	public function pathProvider()
@@ -501,7 +501,7 @@ class LanguageTest extends TestCase
 
 	public function testUpdate()
 	{
-		Dir::make($contentDir = $this->fixtures . '/content');
+		Dir::make($contentDir = $this->tmp . '/content');
 
 		$language = Language::create([
 			'code' => 'en'
@@ -519,7 +519,7 @@ class LanguageTest extends TestCase
 
 		new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/CreateHooksTest',
+				'index' => $this->tmp = __DIR__ . '/tmp/CreateHooksTest',
 			],
 			'hooks' => [
 				'language.create:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
@@ -549,12 +549,12 @@ class LanguageTest extends TestCase
 		$calls = 0;
 		$phpunit = $this;
 
-		$this->fixtures = __DIR__ . '/fixtures/UpdateHooksTest';
-		Dir::make($this->fixtures . '/content');
+		$this->tmp = __DIR__ . '/tmp/UpdateHooksTest';
+		Dir::make($this->tmp . '/content');
 
 		new App([
 			'roots' => [
-				'index' => $this->fixtures,
+				'index' => $this->tmp,
 			],
 			'hooks' => [
 				'language.update:before' => function (Language $language, array $input) use ($phpunit, &$calls) {
@@ -593,7 +593,7 @@ class LanguageTest extends TestCase
 
 		new App([
 			'roots' => [
-				'index' => $this->fixtures = __DIR__ . '/fixtures/DeleteHooksTest',
+				'index' => $this->tmp = __DIR__ . '/tmp/DeleteHooksTest',
 			],
 			'hooks' => [
 				'language.delete:before' => function (Language $language) use ($phpunit, &$calls) {

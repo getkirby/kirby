@@ -170,7 +170,7 @@ class Block extends Item
 		}
 
 		// default model for blocks
-		if ($class = (static::$models['Kirby\Cms\Block'] ?? null)) {
+		if ($class = (static::$models['default'] ?? null)) {
 			$object = new $class($params);
 
 			if ($object instanceof self) {

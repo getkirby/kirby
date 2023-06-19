@@ -15,18 +15,18 @@ class MockPageForStatsSection extends Page
 	{
 		return [
 			[
-				'label' => 'A',
-				'value' => 'Value A',
 				'info'  => 'Info A',
+				'label' => 'A',
 				'link'  => 'https://getkirby.com',
 				'theme' => null,
+				'value' => 'Value A',
 			],
 			[
-				'label' => 'B',
-				'value' => 'Value B',
 				'info'  => null,
+				'label' => 'B',
 				'link'  => null,
 				'theme' => null,
+				'value' => 'Value B',
 			]
 		];
 	}
