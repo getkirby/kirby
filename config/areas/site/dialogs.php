@@ -606,4 +606,13 @@ return [
 		'submit'  => $fields['file']['submit'],
 	],
 
+	// content changes
+	'changes' => [
+		'pattern' => 'changes',
+		'load'    => function () {
+			return [
+				'component' => 'k-form-indicator'
+			];
+		},
+	],
 ];

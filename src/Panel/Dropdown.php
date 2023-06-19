@@ -48,7 +48,11 @@ class Dropdown extends Json
 
 				// add the language to each option, if it is included in the query
 				// of the given ID and the language actually exists
-				if ($multilang && $query->language && $language = $kirby->language($query->language)) {
+				if (
+					$multilang &&
+					$query->language &&
+					$language = $kirby->language($query->language)
+				) {
 					$option['text'] .= ' (' . $language->code() . ')';
 					$option['link']  .= '?language=' . $language->code();
 				}
