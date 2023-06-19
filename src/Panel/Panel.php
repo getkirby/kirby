@@ -354,7 +354,7 @@ class Panel
 				'installation',
 				'login',
 			],
-			'action' => fn () => Panel::go(Home::url()),
+			'action' => fn () => Panel::go(Home::path()),
 			'auth' => false
 		];
 
