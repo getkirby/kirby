@@ -172,6 +172,19 @@ export default (panel) => {
 			// merge the new files with already selected files
 			this.files = [...this.files, ...files];
 
+			// remove duplicates by comparing crucial src attributes,
+			// preserving the newer file
+			this.files = this.files.filter(
+				(file, index) =>
+					this.files.findLastIndex(
+						(x) =>
+							x.src.name === file.src.name &&
+							x.src.type === file.src.type &&
+							x.src.size === file.src.size &&
+							x.src.lastModified === file.src.lastModified
+					) === index
+			);
+
 			// apply the max limit to the list of files
 			if (this.max !== null) {
 				// slice from the end to keep the latest files
