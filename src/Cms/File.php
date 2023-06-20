@@ -386,12 +386,13 @@ class File extends ModelWithContent
 			return false;
 		}
 
+		static $accessible = [];
+
 		if ($template = $this->template()) {
-			static $accessible = [];
 			return $accessible[$template] ??= $this->permissions()->can('access');
 		}
 
-		return true;
+		return $accessible['no-template'] ??= $this->permissions()->can('access');
 	}
 
 	/**
@@ -410,12 +411,14 @@ class File extends ModelWithContent
 			return false;
 		}
 
+		static $listable = [];
+
+
 		if ($template = $this->template()) {
-			static $listable = [];
 			return $listable[$template] ??= $this->permissions()->can('list');
 		}
 
-		return true;
+		return $listable['no-template'] ??= $this->permissions()->can('list');
 	}
 
 	/**
@@ -425,12 +428,13 @@ class File extends ModelWithContent
 	 */
 	public function isReadable(): bool
 	{
+		static $readable = [];
+
 		if ($template = $this->template()) {
-			static $readable = [];
 			return $readable[$template] ??= $this->permissions()->can('read');
 		}
 
-		return true;
+		return $readable['no-template'] ??= $this->permissions()->can('read');
 	}
 
 	/**
