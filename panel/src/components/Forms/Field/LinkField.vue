@@ -377,8 +377,7 @@ export default {
 }
 .k-link-input-model-preview-image {
 	height: calc(var(--height-sm) - 0.5rem);
-	aspect-ratio: 1/1;
-	border-radius: 1px;
+	border-radius: var(--rounded-sm);
 }
 .k-link-input-model-preview .k-tag-text:has(.k-link-input-model-preview-image) {
 	padding-inline-start: 0.25rem;
