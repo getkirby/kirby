@@ -392,7 +392,7 @@ class File extends ModelWithContent
 			return $accessible[$template] ??= $this->permissions()->can('access');
 		}
 
-		return $accessible['no-template'] ??= $this->permissions()->can('access');
+		return $this->permissions()->can('access');
 	}
 
 	/**
@@ -418,7 +418,7 @@ class File extends ModelWithContent
 			return $listable[$template] ??= $this->permissions()->can('list');
 		}
 
-		return $listable['no-template'] ??= $this->permissions()->can('list');
+		return $this->permissions()->can('list');
 	}
 
 	/**
@@ -434,7 +434,7 @@ class File extends ModelWithContent
 			return $readable[$template] ??= $this->permissions()->can('read');
 		}
 
-		return $readable['no-template'] ??= $this->permissions()->can('read');
+		return $this->permissions()->can('read');
 	}
 
 	/**
