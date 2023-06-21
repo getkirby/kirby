@@ -19,7 +19,6 @@ describe.concurrent("panel.drawer", () => {
 			query: {},
 			ref: null,
 			referrer: null,
-			tabId: null,
 			timestamp: null
 		};
 

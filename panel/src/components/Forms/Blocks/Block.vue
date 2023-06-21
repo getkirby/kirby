@@ -261,7 +261,7 @@ export default {
 			this.$panel.drawer.open({
 				component: "k-block-drawer",
 				id: this.id,
-				tabId: tab,
+				tab: tab,
 				on: {
 					close: this.onClose,
 					input: this.onInput,

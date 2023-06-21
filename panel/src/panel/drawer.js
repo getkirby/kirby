@@ -84,7 +84,7 @@ export default (panel) => {
 			await parent.open.call(this, feature, options);
 
 			// open the provided or first tab
-			this.tab();
+			this.tab(feature.tab);
 
 			// get the current state and add it to the list of parents
 			const state = this.state();
