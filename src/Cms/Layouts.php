@@ -25,8 +25,10 @@ class Layouts extends Items
 	 */
 	public static array $methods = [];
 
-	public static function factory(array $items = null, array $params = [])
-	{
+	public static function factory(
+		array $items = null,
+		array $params = []
+	): static {
 		// convert single layout to layouts array
 		if (
 			isset($items['columns']) === true ||
@@ -61,9 +63,6 @@ class Layouts extends Items
 	/**
 	 * Checks if a given block type exists in the layouts collection
 	 * @since 3.6.0
-	 *
-	 * @param string $type
-	 * @return bool
 	 */
 	public function hasBlockType(string $type): bool
 	{
@@ -72,13 +71,13 @@ class Layouts extends Items
 
 	/**
 	 * Parse layouts data
-	 *
-	 * @param array|string $input
-	 * @return array
 	 */
-	public static function parse($input): array
+	public static function parse(array|string|null $input): array
 	{
-		if (empty($input) === false && is_array($input) === false) {
+		if (
+			empty($input) === false &&
+			is_array($input) === false
+		) {
 			try {
 				$input = Json::decode((string)$input);
 			} catch (Throwable) {
@@ -98,9 +97,8 @@ class Layouts extends Items
 	 * @since 3.6.0
 	 *
 	 * @param bool $includeHidden Sets whether to include hidden blocks
-	 * @return \Kirby\Cms\Blocks
 	 */
-	public function toBlocks(bool $includeHidden = false)
+	public function toBlocks(bool $includeHidden = false): Blocks
 	{
 		$blocks = [];
 

@@ -21,20 +21,11 @@ class LayoutColumn extends Item
 
 	public const ITEMS_CLASS = LayoutColumns::class;
 
-	/**
-	 * @var \Kirby\Cms\Blocks
-	 */
-	protected $blocks;
-
-	/**
-	 * @var string
-	 */
-	protected $width;
+	protected Blocks $blocks;
+	protected string $width;
 
 	/**
 	 * Creates a new LayoutColumn object
-	 *
-	 * @param array $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -50,12 +41,8 @@ class LayoutColumn extends Item
 
 	/**
 	 * Magic getter function
-	 *
-	 * @param string $method
-	 * @param mixed $args
-	 * @return mixed
 	 */
-	public function __call(string $method, $args)
+	public function __call(string $method, mixed $args): mixed
 	{
 		// layout column methods
 		if ($this->hasMethod($method) === true) {
@@ -67,9 +54,8 @@ class LayoutColumn extends Item
 	 * Returns the blocks collection
 	 *
 	 * @param bool $includeHidden Sets whether to include hidden blocks
-	 * @return \Kirby\Cms\Blocks
 	 */
-	public function blocks(bool $includeHidden = false)
+	public function blocks(bool $includeHidden = false): Blocks
 	{
 		if ($includeHidden === false) {
 			return $this->blocks->filter('isHidden', false);
@@ -81,8 +67,6 @@ class LayoutColumn extends Item
 	/**
 	 * Checks if the column is empty
 	 * @since 3.5.2
-	 *
-	 * @return bool
 	 */
 	public function isEmpty(): bool
 	{
@@ -95,8 +79,6 @@ class LayoutColumn extends Item
 	/**
 	 * Checks if the column is not empty
 	 * @since 3.5.2
-	 *
-	 * @return bool
 	 */
 	public function isNotEmpty(): bool
 	{
@@ -105,9 +87,6 @@ class LayoutColumn extends Item
 
 	/**
 	 * Returns the number of columns this column spans
-	 *
-	 * @param int $columns
-	 * @return int
 	 */
 	public function span(int $columns = 12): int
 	{
@@ -121,8 +100,6 @@ class LayoutColumn extends Item
 	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{
@@ -135,8 +112,6 @@ class LayoutColumn extends Item
 
 	/**
 	 * Returns the width of the column
-	 *
-	 * @return string
 	 */
 	public function width(): string
 	{
