@@ -10,11 +10,12 @@
 					:roles="roles"
 				/>
 				<k-button
-					v-if="$panel.permissions.users.create"
+					:disabled="!$panel.permissions.users.create"
 					:text="$t('user.create')"
 					icon="add"
 					size="sm"
 					variant="filled"
+					@click="$dialog('users/create')"
 				/>
 			</template>
 		</k-header>
