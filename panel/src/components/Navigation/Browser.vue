@@ -81,6 +81,7 @@ export default {
 	aspect-ratio: 1/1;
 	border-radius: var(--rounded-sm);
 	box-shadow: var(--shadow);
+	flex-shrink: 0;
 }
 .k-browser-item-image:has(svg) {
 	box-shadow: none;
