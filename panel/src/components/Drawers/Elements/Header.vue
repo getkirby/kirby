@@ -58,6 +58,10 @@ export default {
 	font-size: var(--text-sm);
 }
 
+.k-drawer-breadcrumb {
+	flex-grow: 1;
+}
+
 .k-drawer-options {
 	display: flex;
 	align-items: center;

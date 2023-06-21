@@ -75,7 +75,7 @@ export default (panel) => {
 				input: this.input.bind(this),
 				submit: this.submit.bind(this),
 				success: this.success.bind(this),
-				tab: this.openTab.bind(this)
+				tab: this.tab.bind(this)
 			};
 		},
 
@@ -83,7 +83,7 @@ export default (panel) => {
 			await parent.open.call(this, feature, options);
 
 			// open the provided or first tab
-			this.openTab();
+			this.tab();
 
 			// get the current state and add it to the list of parents
 			const state = this.state();
@@ -100,16 +100,21 @@ export default (panel) => {
 			return state;
 		},
 
-		openTab(tab = this.tab) {
+		tab(tab) {
 			tab = tab ?? Object.keys(this.props.tabs)[0];
 
 			if (!tab) {
 				return false;
 			}
 
-			this.props.fields = this.props.tabs[tab].fields;
-			this.props.tab = tab;
-			this.emit("openTab", tab);
+			set(this.props, "fields", this.props.tabs[tab].fields);
+			set(this.props, "tab", tab);
+
+			this.emit("tab", tab);
+
+			setTimeout(() => {
+				this.focus();
+			});
 		}
 	};
 };
