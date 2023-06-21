@@ -36,7 +36,11 @@
 							variant="filled"
 							@click="$refs.settings.toggle()"
 						/>
-						<k-dropdown-content ref="settings" :options="$dropdown(id)" />
+						<k-dropdown-content
+							ref="settings"
+							align="right"
+							:options="$dropdown(id)"
+						/>
 					</k-dropdown>
 					<k-languages-dropdown />
 				</k-button-group>

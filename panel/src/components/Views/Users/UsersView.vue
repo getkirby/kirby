@@ -4,23 +4,17 @@
 			{{ $t("view.users") }}
 
 			<template #buttons>
-				<k-button-group
-					:buttons="[
-						{
-							disabled: !$panel.permissions.users.create,
-							text: $t('user.create'),
-							icon: 'add',
-							click: () => $dialog('users/create')
-						}
-					]"
-					variant="filled"
-					size="sm"
-				/>
-
 				<k-users-role-filter
 					v-if="roles.length > 1"
 					:role="role"
 					:roles="roles"
+				/>
+				<k-button
+					v-if="$panel.permissions.users.create"
+					:text="$t('user.create')"
+					icon="add"
+					size="sm"
+					variant="filled"
 				/>
 			</template>
 		</k-header>
