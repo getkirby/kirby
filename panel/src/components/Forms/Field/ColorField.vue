@@ -185,6 +185,7 @@ export default {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, var(--color-preview-size));
 	gap: var(--spacing-2);
+	margin-top: var(--spacing-3);
 }
 .k-color-field-picker .k-color-field-options {
 	--color-preview-size: 100%;
