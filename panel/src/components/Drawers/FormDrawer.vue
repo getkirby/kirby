@@ -4,14 +4,16 @@
 		class="k-form-drawer"
 		v-bind="$props"
 		@cancel="$emit('cancel')"
-		@submit="$emit('submit', model)"
+		@crumb="$emit('crumb', $event)"
+		@submit="$emit('submit', value)"
+		@tab="$emit('tab', $event)"
 	>
 		<slot slot="options" name="options" />
 		<k-drawer-fields
-			:fields="$panel.drawer.tab?.fields"
-			:value="model"
-			@input="onInput"
-			@submit="$emit('submit', model)"
+			:fields="fields"
+			:value="value"
+			@input="$emit('input', $event)"
+			@submit="$emit('submit', $event)"
 		/>
 	</k-drawer>
 </template>
@@ -22,17 +24,6 @@ import { props as Fields } from "./Elements/Fields.vue";
 
 export default {
 	mixins: [Drawer, Fields],
-	emits: ["cancel", "input", "submit"],
-	data() {
-		return {
-			model: this.value
-		};
-	},
-	methods: {
-		onInput(value) {
-			this.model = value;
-			this.$emit("input", this.model);
-		}
-	}
+	emits: ["cancel", "crumb", "input", "submit", "tab"]
 };
 </script>

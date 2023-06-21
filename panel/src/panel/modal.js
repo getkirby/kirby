@@ -138,7 +138,7 @@ export default (panel, key, defaults) => {
 		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
-			value = value ?? this.value;
+			value = value ?? this.props.value;
 
 			if (this.hasEventListener("submit")) {
 				return this.emit("submit", value, options);

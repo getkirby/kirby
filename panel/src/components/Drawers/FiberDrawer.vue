@@ -1,9 +1,31 @@
 <template>
-	<component
-		:is="$panel.drawer.component"
-		:key="$panel.drawer.timestamp"
-		:visible="true"
-		v-bind="$panel.drawer.props"
-		v-on="$panel.drawer.listeners()"
-	/>
+	<div>
+		<component
+			v-for="drawer in $panel.drawer.history.milestones"
+			:is="drawer.component"
+			:key="drawer.id"
+			:breadcrumb="$panel.drawer.breadcrumb"
+			:disabled="isCurrent(drawer.id) === false"
+			:visible="true"
+			v-bind="drawer.props"
+			v-on="isCurrent(drawer.id) ? $panel.drawer.listeners() : {}"
+		/>
+	</div>
 </template>
+
+<script>
+export default {
+	methods: {
+		isCurrent(id) {
+			return this.$panel.drawer.id === id;
+		}
+	}
+};
+</script>
+
+<style>
+.k-drawer[aria-disabled] {
+	display: none;
+	pointer-events: none;
+}
+</style>

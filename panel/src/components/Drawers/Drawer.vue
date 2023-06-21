@@ -1,13 +1,20 @@
 <template>
 	<portal v-if="visible" to="drawer">
 		<form
+			:aria-disabled="disabled"
 			:class="$vnode.data.staticClass"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
 		>
 			<k-drawer-notification />
-			<k-drawer-header>
+			<k-drawer-header
+				:breadcrumb="breadcrumb"
+				:tab="tab"
+				:tabs="tabs"
+				@crumb="$emit('crumb', $event)"
+				@tab="$emit('tab', $event)"
+			>
 				<slot name="options">
 					<template v-for="(option, index) in options">
 						<template v-if="option.dropdown">
@@ -47,7 +54,7 @@ import Drawer from "@/mixins/drawer.js";
 
 export default {
 	mixins: [Drawer],
-	emits: ["cancel", "submit"]
+	emits: ["cancel", "crumb", "submit", "tab"]
 };
 </script>
 

@@ -4,8 +4,10 @@
 		class="k-block-drawer"
 		v-bind="$props"
 		@cancel="$emit('cancel', $event)"
+		@crumb="$emit('crumb', $event)"
 		@input="$emit('input', $event)"
 		@submit="$emit('submit', $event)"
+		@tab="$emit('tab', $event)"
 	>
 		<template #options>
 			<k-button
@@ -51,6 +53,16 @@ export const props = {
 
 export default {
 	mixins: [Drawer, Fields, props],
-	emits: ["cancel", "input", "next", "prev", "remove", "show", "submit"]
+	emits: [
+		"cancel",
+		"crumb",
+		"input",
+		"next",
+		"prev",
+		"remove",
+		"show",
+		"submit",
+		"tab"
+	]
 };
 </script>

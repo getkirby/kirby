@@ -1,3 +1,5 @@
+import { props as Header } from "@/components/Drawers/Elements/Header.vue";
+
 /**
  * The Drawer mixin is intended for all components
  * that extend <k-drawer> It forwards the methods to
@@ -6,15 +8,16 @@
  * wired correctly to the right elements and refs.
  */
 export default {
+	mixins: [Header],
 	props: {
+		disabled: {
+			default: false,
+			type: Boolean
+		},
 		icon: String,
 		id: String,
 		options: {
 			type: Array
-		},
-		tabs: {
-			default: () => {},
-			type: [Array, Object]
 		},
 		title: String,
 		visible: {
