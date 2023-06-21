@@ -24,7 +24,7 @@ return [
 		/**
 		 * Default selected user(s) when a new page/file/user is created
 		 */
-		'default' => function (string|array|bool $default = null) {
+		'default' => function (string|array|bool|null $default = null) {
 			return $default;
 		},
 
