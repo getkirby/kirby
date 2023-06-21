@@ -73,6 +73,8 @@ trait AppPlugins
 		'sections' => [],
 		'siteMethods' => [],
 		'snippets' => [],
+		'structureMethods' => [],
+		'structureObjectMethods' => [],
 		'tags' => [],
 		'templates' => [],
 		'thirdParty' => [],
@@ -477,6 +479,22 @@ trait AppPlugins
 	protected function extendSnippets(array $snippets): array
 	{
 		return $this->extensions['snippets'] = array_merge($this->extensions['snippets'], $snippets);
+	}
+
+	/**
+	 * Registers additional structure methods
+	 */
+	protected function extendStructureMethods(array $methods): array
+	{
+		return $this->extensions['structureMethods'] = Structure::$methods = array_merge(Structure::$methods, $methods);
+	}
+
+	/**
+	 * Registers additional structure object methods
+	 */
+	protected function extendStructureObjectMethods(array $methods): array
+	{
+		return $this->extensions['structureObjectMethods'] = StructureObject::$methods = array_merge(StructureObject::$methods, $methods);
 	}
 
 	/**

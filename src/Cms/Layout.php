@@ -19,24 +19,13 @@ class Layout extends Item
 
 	public const ITEMS_CLASS = Layouts::class;
 
-	/**
-	 * @var \Kirby\Cms\Content
-	 */
-	protected $attrs;
-
-	/**
-	 * @var \Kirby\Cms\LayoutColumns
-	 */
-	protected $columns;
+	protected Content $attrs;
+	protected LayoutColumns $columns;
 
 	/**
 	 * Proxy for attrs
-	 *
-	 * @param string $method
-	 * @param array $args
-	 * @return \Kirby\Cms\Field
 	 */
-	public function __call(string $method, array $args = [])
+	public function __call(string $method, array $args = []): mixed
 	{
 		// layout methods
 		if ($this->hasMethod($method) === true) {
@@ -48,8 +37,6 @@ class Layout extends Item
 
 	/**
 	 * Creates a new Layout object
-	 *
-	 * @param array $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -66,20 +53,16 @@ class Layout extends Item
 
 	/**
 	 * Returns the attrs object
-	 *
-	 * @return \Kirby\Cms\Content
 	 */
-	public function attrs()
+	public function attrs(): Content
 	{
 		return $this->attrs;
 	}
 
 	/**
 	 * Returns the columns in this layout
-	 *
-	 * @return \Kirby\Cms\LayoutColumns
 	 */
-	public function columns()
+	public function columns(): LayoutColumns
 	{
 		return $this->columns;
 	}
@@ -87,24 +70,18 @@ class Layout extends Item
 	/**
 	 * Checks if the layout is empty
 	 * @since 3.5.2
-	 *
-	 * @return bool
 	 */
 	public function isEmpty(): bool
 	{
 		return $this
 			->columns()
-			->filter(function ($column) {
-				return $column->isNotEmpty();
-			})
+			->filter('isEmpty', false)
 			->count() === 0;
 	}
 
 	/**
 	 * Checks if the layout is not empty
 	 * @since 3.5.2
-	 *
-	 * @return bool
 	 */
 	public function isNotEmpty(): bool
 	{
@@ -114,8 +91,6 @@ class Layout extends Item
 	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
-	 *
-	 * @return array
 	 */
 	public function toArray(): array
 	{

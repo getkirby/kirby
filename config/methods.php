@@ -262,12 +262,15 @@ return function (App $app) {
 		 */
 		'toStructure' => function (Field $field) {
 			try {
-				return new Structure(Data::decode($field->value, 'yaml'), $field->parent());
+				return Structure::factory(
+					Data::decode($field->value, 'yaml'),
+					['parent' => $field->parent()]
+				);
 			} catch (Exception) {
 				$message = 'Invalid structure data for "' . $field->key() . '" field';
 
 				if ($parent = $field->parent()) {
-					$message .= ' on parent "' . $parent->title() . '"';
+					$message .= ' on parent "' . $parent->id() . '"';
 				}
 
 				throw new InvalidArgumentException($message);
