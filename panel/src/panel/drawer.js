@@ -1,6 +1,7 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
 import History from "./history.js";
 import { set } from "vue";
+import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
 	return {
@@ -98,6 +99,22 @@ export default (panel) => {
 			this.focus();
 
 			return state;
+		},
+
+		/**
+		 * Sets a new active state for the feature
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 *
+		 * @param {Object} state
+		 */
+		set(state) {
+			parent.set.call(this, state);
+
+			// create a unique ID for the drawer if it does not have one
+			this.id = this.id ?? uuid();
+
+			return this.state();
 		},
 
 		tab(tab) {
