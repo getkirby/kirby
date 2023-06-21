@@ -167,11 +167,28 @@ export default (panel) => {
 			files = [...files];
 
 			// add all files to the list as enriched objects
-			this.files = files.map((file) => this.file(file));
+			files = files.map((file) => this.file(file));
+
+			// merge the new files with already selected files
+			this.files = [...this.files, ...files];
+
+			// remove duplicates by comparing crucial src attributes,
+			// preserving the newer file
+			this.files = this.files.filter(
+				(file, index) =>
+					this.files.findLastIndex(
+						(x) =>
+							x.src.name === file.src.name &&
+							x.src.type === file.src.type &&
+							x.src.size === file.src.size &&
+							x.src.lastModified === file.src.lastModified
+					) === index
+			);
 
 			// apply the max limit to the list of files
 			if (this.max !== null) {
-				this.files = this.files.slice(0, this.max);
+				// slice from the end to keep the latest files
+				this.files = this.files.slice(-1 * this.max);
 			}
 
 			this.emit("select", this.files);
