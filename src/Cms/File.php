@@ -413,7 +413,6 @@ class File extends ModelWithContent
 
 		static $listable = [];
 
-
 		if ($template = $this->template()) {
 			return $listable[$template] ??= $this->permissions()->can('list');
 		}
