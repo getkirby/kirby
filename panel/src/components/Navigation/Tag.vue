@@ -47,6 +47,8 @@ export default {
 :root {
 	--tag-color-back: var(--color-gray-900);
 	--tag-color-text: var(--color-light);
+	--tag-color-toggle: rgba(255, 255, 255, 0.7);
+	--tag-color-toggle-border: rgba(255, 255, 255, 0.15);
 	--tag-color-focus-back: var(--color-focus);
 	--tag-color-focus-text: var(--color-white);
 	--tag-color-disabled-back: var(--color-gray-600);
@@ -82,8 +84,8 @@ export default {
 	width: var(--tag-height);
 	height: var(--tag-height);
 	padding-inline-end: 1px;
-	border-inline-start: 1px solid rgba(255, 255, 255, 0.15);
-	color: rgba(255, 255, 255, 0.7);
+	border-inline-start: 1px solid var(--tag-color-toggle-border);
+	color: var(--tag-color-toggle);
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
 	padding-inline-end: 0.5rem;

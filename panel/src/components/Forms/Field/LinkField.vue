@@ -358,6 +358,8 @@ export default {
 
 	--tag-color-back: var(--color-gray-200);
 	--tag-color-text: var(--color-black);
+	--tag-color-toggle: var(--tag-color-text);
+	--tag-color-toggle-border: var(--color-gray-300);
 	--tag-color-focus-back: var(--tag-color-back);
 	--tag-color-focus-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded-sm);
@@ -389,17 +391,13 @@ export default {
 	align-items: center;
 	justify-content: flex-start;
 	height: var(--height-sm);
-	font-size: var(--text-base);
+	font-size: var(--text-sm);
 	padding-inline: var(--spacing-2);
 	color: var(--color-gray-600);
 }
 .k-link-input-model-toggle {
-	display: flex;
-	height: var(--height-sm);
-	width: var(--height-sm);
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
+	--button-height: var(--height-sm);
+	--button-width: var(--height-sm);
 }
 
 .k-link-input-body {
