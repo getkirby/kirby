@@ -5,7 +5,7 @@
 		:data-layout="layout"
 		element="k-dropdown"
 		class="k-multiselect-input"
-		@click.native="$refs.dropdown.toggle"
+		@click.native="toggle"
 		@end="onInput"
 	>
 		<k-tag
@@ -17,7 +17,7 @@
 			@remove="remove(tag)"
 			@keydown.native.left="navigate('prev')"
 			@keydown.native.right="navigate('next')"
-			@keydown.native.down="$refs.dropdown.open"
+			@keydown.native.down="open"
 		>
 			<!-- eslint-disable-next-line vue/no-v-html -->
 			<span v-html="tag.text" />
@@ -26,6 +26,7 @@
 		<template #footer>
 			<k-dropdown-content
 				ref="dropdown"
+				class="k-multiselect-dropdown"
 				@open="onOpen"
 				@close="onClose"
 				@keydown.native.esc.stop="close"
@@ -270,7 +271,7 @@ export default {
 			}
 		},
 		focus() {
-			this.$refs.dropdown?.open();
+			this.open();
 		},
 		/**
 		 * Gets index of option in array of selected values
@@ -334,6 +335,9 @@ export default {
 				}
 			});
 		},
+		open() {
+			this.$refs.dropdown?.open(this.$el);
+		},
 		/**
 		 * Removes value from selected
 		 * @param {object} option
@@ -357,6 +361,9 @@ export default {
 			} else {
 				this.add(option);
 			}
+		},
+		toggle() {
+			this.$refs.dropdown?.toggle(this.$el);
 		},
 		toHighlightedString(string) {
 			// make sure that no HTML exists before in the string
@@ -391,10 +398,6 @@ export default {
 }
 .k-multiselect-input .k-tag {
 	border-radius: var(--rounded-sm);
-}
-
-.k-multiselect-input .k-dropdown-content {
-	width: 100%;
 }
 
 .k-multiselect-search {
