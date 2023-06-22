@@ -51,10 +51,22 @@ return [
 			return $status;
 		},
 		/**
+		 * Filters the list by single template.
+		 */
+		'template' => function (string $template = null) {
+			return $template;
+		},
+		/**
 		 * Filters the list by templates and sets template options when adding new pages to the section.
 		 */
 		'templates' => function ($templates = null) {
 			return A::wrap($templates ?? $this->template);
+		},
+		/**
+		 * Excludes the selected templates.
+		 */
+		'templatesIgnore' => function ($templates = null) {
+			return A::wrap($templates);
 		}
 	],
 	'computed' => [
@@ -94,8 +106,21 @@ return [
 					return false;
 				}
 
+				$intendedTemplate = $page->intendedTemplate()->name();
+
 				// filter by all set templates
-				if ($this->templates && in_array($page->intendedTemplate()->name(), $this->templates) === false) {
+				if (
+					$this->templates &&
+					in_array($intendedTemplate, $this->templates) === false
+				) {
+					return false;
+				}
+
+				// exclude by all ignored templates
+				if (
+					$this->templatesIgnore &&
+					in_array($intendedTemplate, $this->templatesIgnore) === true
+				) {
 					return false;
 				}
 
@@ -225,6 +250,11 @@ return [
 
 			if (empty($templates) === true) {
 				$templates = $this->kirby()->blueprints();
+			}
+
+			// excludes ignored templates
+			if ($templatesIgnore = $this->templatesIgnore) {
+				$templates = array_diff($templates, $templatesIgnore);
 			}
 
 			// convert every template to a usable option array
