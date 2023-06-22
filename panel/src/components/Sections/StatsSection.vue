@@ -5,7 +5,7 @@
 		class="k-stats-section"
 	>
 		<k-stats v-if="reports.length > 0" :reports="reports" :size="size" />
-		<k-empty v-else icon="chart"> {{ empty || $t("stats.empty") }}</k-empty>
+		<k-empty v-else icon="chart"> {{ $t("stats.empty") }}</k-empty>
 	</k-section>
 </template>
 
@@ -16,8 +16,8 @@ export default {
 	mixins: [SectionMixin],
 	data() {
 		return {
-			isLoading: true,
 			headline: null,
+			isLoading: true,
 			reports: null,
 			size: null
 		};
