@@ -40,19 +40,18 @@ export default {
 	display: flex;
 	align-items: center;
 	line-height: 1;
-	margin-inline-end: 0.75rem;
 }
 .k-drawer-tab.k-button {
-	height: var(--drawer-header-height);
-	padding-inline: 0.75rem;
+	--button-height: calc(var(--drawer-header-height) - var(--spacing-1));
+	--button-padding: var(--spacing-3);
 	display: flex;
 	align-items: center;
 	font-size: var(--text-xs);
 }
 .k-drawer-tab.k-button[aria-current]::after {
 	position: absolute;
-	bottom: -1px;
-	inset-inline: 0.75rem;
+	bottom: -2px;
+	inset-inline: var(--button-padding);
 	content: "";
 	background: var(--color-black);
 	height: 2px;

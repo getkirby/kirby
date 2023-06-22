@@ -1,12 +1,12 @@
-import { clone } from "@/helpers/object.js";
 import Modal, { defaults as modalDefaults } from "./modal.js";
 import History from "./history.js";
+import { set } from "vue";
+import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
 	return {
 		...modalDefaults(),
-		id: null,
-		tabId: null
+		id: null
 	};
 };
 
@@ -60,11 +60,31 @@ export default (panel) => {
 			return this.props.icon ?? "box";
 		},
 
+		input(value) {
+			// make sure that value is reactive
+			set(this.props, "value", value);
+
+			this.emit("input", this.props.value);
+		},
+
+		listeners() {
+			return {
+				...this.on,
+				cancel: this.cancel.bind(this),
+				close: this.close.bind(this),
+				crumb: this.goTo.bind(this),
+				input: this.input.bind(this),
+				submit: this.submit.bind(this),
+				success: this.success.bind(this),
+				tab: this.tab.bind(this)
+			};
+		},
+
 		async open(feature, options = {}) {
 			await parent.open.call(this, feature, options);
 
 			// open the provided or first tab
-			this.openTab();
+			this.tab(feature.tab);
 
 			// get the current state and add it to the list of parents
 			const state = this.state();
@@ -76,28 +96,42 @@ export default (panel) => {
 				this.history.add(state);
 			}
 
+			this.focus();
+
 			return state;
 		},
 
-		openTab(tabId = this.tabId) {
-			tabId = tabId || Object.keys(this.tabs)[0];
+		/**
+		 * Sets a new active state for the feature
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 *
+		 * @param {Object} state
+		 */
+		set(state) {
+			parent.set.call(this, state);
 
-			if (!tabId) {
+			// create a unique ID for the drawer if it does not have one
+			this.id = this.id ?? uuid();
+
+			return this.state();
+		},
+
+		tab(tab) {
+			tab = tab ?? Object.keys(this.props.tabs)[0];
+
+			if (!tab) {
 				return false;
 			}
 
-			this.tabId = tabId;
-			this.emit("openTab", tabId);
-		},
+			set(this.props, "fields", this.props.tabs[tab].fields);
+			set(this.props, "tab", tab);
 
-		get tab() {
-			return this.tabs[this.tabId] ?? null;
-		},
-		get tabs() {
-			return this.props?.tabs ?? {};
-		},
-		get title() {
-			return this.props.title;
+			this.emit("tab", tab);
+
+			setTimeout(() => {
+				this.focus();
+			});
 		}
 	};
 };

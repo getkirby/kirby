@@ -47,8 +47,6 @@
 		<k-empty v-else :data-invalid="isInvalid" icon="box" @click="onAdd">
 			{{ empty || $t("field.object.empty") }}
 		</k-empty>
-
-		<k-form-drawer ref="drawer" v-bind="drawer" @input="onDrawerInput" />
 	</k-field>
 </template>
 
@@ -70,19 +68,6 @@ export default {
 		};
 	},
 	computed: {
-		drawer() {
-			return {
-				icon: "box",
-				tab: "object",
-				tabs: {
-					object: {
-						fields: this.$helper.field.subfields(this, this.fields)
-					}
-				},
-				title: this.label,
-				value: this.object
-			};
-		},
 		isEmpty() {
 			return this.$helper.object.length(this.object) === 0;
 		},
@@ -118,7 +103,24 @@ export default {
 				return false;
 			}
 
-			this.$refs.drawer.open(null, field);
+			this.$panel.drawer.open({
+				component: "k-form-drawer",
+				props: {
+					breadcrumb: [],
+					icon: "box",
+					tab: "object",
+					tabs: {
+						object: {
+							fields: this.$helper.field.subfields(this, this.fields)
+						}
+					},
+					title: this.label,
+					value: this.object
+				},
+				on: {
+					input: this.onDrawerInput.bind(this)
+				}
+			});
 		},
 		valueToObject(value) {
 			return typeof value !== "object" ? null : value;

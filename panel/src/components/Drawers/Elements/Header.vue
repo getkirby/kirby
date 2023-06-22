@@ -2,29 +2,48 @@
 	<header class="k-drawer-header">
 		<nav class="k-breadcrumb k-drawer-breadcrumb">
 			<ol>
-				<li v-for="crumb in $panel.drawer.breadcrumb" :key="crumb.id">
+				<li v-for="(crumb, index) in breadcrumb" :key="crumb.id">
 					<k-button
 						:icon="crumb.props.icon"
 						:text="crumb.props.title"
-						:current="crumb.id === $panel.drawer.id"
+						:current="index === breadcrumb.length - 1"
 						variant="dimmed"
 						class="k-breadcrumb-link"
-						@click="$panel.drawer.goTo(crumb.id)"
+						@click="$emit('crumb', crumb.id)"
 					/>
 				</li>
 			</ol>
 		</nav>
-		<k-drawer-tabs
-			:tab="$panel.drawer.tabId"
-			:tabs="$panel.drawer.tabs"
-			@open="$panel.drawer.openTab($event)"
-		/>
+		<k-drawer-tabs :tab="tab" :tabs="tabs" @open="$emit('tab', $event)" />
 		<nav class="k-drawer-options">
 			<slot />
 			<k-button class="k-drawer-option" icon="check" type="submit" />
 		</nav>
 	</header>
 </template>
+
+<script>
+export const props = {
+	props: {
+		breadcrumb: {
+			default: () => {},
+			type: Array
+		},
+		tab: {
+			type: String
+		},
+		tabs: {
+			default: () => {},
+			type: Object
+		}
+	}
+};
+
+export default {
+	mixins: [props],
+	emits: ["crumb", "tab"]
+};
+</script>
 
 <style>
 .k-drawer-header {
@@ -37,6 +56,10 @@
 	justify-content: space-between;
 	background: var(--color-white);
 	font-size: var(--text-sm);
+}
+
+.k-drawer-breadcrumb {
+	flex-grow: 1;
 }
 
 .k-drawer-options {
