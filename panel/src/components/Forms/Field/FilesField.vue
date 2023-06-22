@@ -23,19 +23,18 @@
 				</template>
 			</k-collection>
 		</k-dropzone>
-
-		<k-files-dialog ref="selector" :has-search="search" @submit="select" />
 	</k-field>
 </template>
 
 <script>
-import picker from "@/mixins/forms/picker.js";
+import Picker from "@/mixins/forms/picker.js";
 
 /**
  * @example <k-files-field :value="files" @input="files = $event" name="files" label="Files" />
  */
 export default {
-	mixins: [picker],
+	mixins: [Picker],
+	dialog: "k-files-dialog",
 	props: {
 		uploads: [Boolean, Object, Array]
 	},

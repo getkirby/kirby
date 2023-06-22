@@ -45,12 +45,6 @@
 				/>
 			</k-autosize>
 		</div>
-
-		<k-files-dialog
-			ref="fileDialog"
-			@cancel="focus"
-			@submit="insertFile($event)"
-		/>
 	</div>
 </template>
 
@@ -255,9 +249,19 @@ export default {
 			this.$refs.select();
 		},
 		selectFile() {
-			this.$refs.fileDialog.open({
-				endpoint: this.endpoints.field + "/files",
-				multiple: false
+			this.$panel.dialog.open({
+				component: "k-files-dialog",
+				props: {
+					endpoint: this.endpoints.field + "/files",
+					multiple: false
+				},
+				on: {
+					cancel: this.cancel,
+					submit: (file) => {
+						this.insertFile(file);
+						this.$panel.dialog.close();
+					}
+				}
 			});
 		},
 		selection() {

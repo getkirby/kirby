@@ -8,6 +8,7 @@ import FilesDialog from "./FilesDialog.vue";
 import FormDialog from "./FormDialog.vue";
 import LanguageDialog from "./LanguageDialog.vue";
 import LinkDialog from "./LinkDialog.vue";
+import ModelsDialog from "./ModelsDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
 import PageMoveDialog from "./PageMoveDialog.vue";
 import PagesDialog from "./PagesDialog.vue";
@@ -30,6 +31,7 @@ export default {
 		app.component("k-form-dialog", FormDialog);
 		app.component("k-link-dialog", LinkDialog);
 		app.component("k-language-dialog", LanguageDialog);
+		app.component("k-models-dialog", ModelsDialog);
 		app.component("k-page-create-dialog", PageCreateDialog);
 		app.component("k-page-move-dialog", PageMoveDialog);
 		app.component("k-pages-dialog", PagesDialog);
