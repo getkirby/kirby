@@ -119,9 +119,3 @@ export default {
 	}
 };
 </script>
-
-<style>
-.k-link {
-	outline: none;
-}
-</style>

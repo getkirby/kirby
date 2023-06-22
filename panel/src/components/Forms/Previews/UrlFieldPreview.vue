@@ -38,14 +38,16 @@ export default {
 	text-overflow: ellipsis;
 }
 .k-url-field-preview[data-link] {
-	color: var(--color-focus);
+	color: var(--link-color);
 }
 .k-url-field-preview a {
 	text-decoration: underline;
-	transition: color 0.3s;
+	text-underline-offset: var(--link-underline-offset);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	border-radius: var(--rounded-xs);
+	outline-offset: 2px;
 }
 .k-url-field-preview a:hover {
 	color: var(--color-black);
