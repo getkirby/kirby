@@ -213,7 +213,7 @@ abstract class Model
 		// for card layouts with `cover: true` provide
 		// crops based on the card ratio
 		if ($layout === 'cards') {
-			$ratio = explode('/', $settings['ratio']);
+			$ratio = explode('/', $settings['ratio'] ?? '1/1');
 			$ratio = $ratio[0] / $ratio[1];
 
 			return $image->srcset([
