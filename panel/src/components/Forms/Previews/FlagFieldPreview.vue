@@ -1,5 +1,5 @@
 <template>
-	<k-button v-bind="$helper.page.status(value)" class="k-flag-field-preview" />
+	<k-button v-bind="status" class="k-flag-field-preview" />
 </template>
 
 <script>
@@ -10,16 +10,21 @@ export default {
 	inheritAttrs: false,
 	props: {
 		value: Object
+	},
+	computed: {
+		status() {
+			return {
+				...this.$helper.page.status(this.value.status),
+				...this.value
+			};
+		}
 	}
 };
 </script>
 
 <style>
-.k-flag-field-preview {
-	height: var(--table-row-height);
-	width: var(--table-row-height);
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.k-flag-field-preview.k-button {
+	--button-height: var(--table-row-height);
+	--button-width: var(--button-height);
 }
 </style>

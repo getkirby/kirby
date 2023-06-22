@@ -13,6 +13,12 @@ export default {
 				const status = this.$helper.page.status(page.status, disabled);
 				status.click = () => this.$dialog(page.link + "/changeStatus");
 
+				page.flag = {
+					status: page.status,
+					disabled: disabled,
+					click: () => this.$dialog(page.link + "/changeStatus")
+				};
+
 				page.sortable = page.permissions.sort && this.options.sortable;
 				page.deletable = this.data.length > this.options.min;
 				page.column = this.column;
