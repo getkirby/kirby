@@ -2,9 +2,8 @@
 	<component
 		:is="$panel.dialog.component"
 		:key="$panel.dialog.timestamp"
-		ref="dialog"
-		v-bind="$panel.dialog.props"
-		:disabled="$panel.dialog.isLoading"
 		:visible="true"
+		v-bind="$panel.dialog.props"
+		v-on="$panel.dialog.listeners()"
 	/>
 </template>

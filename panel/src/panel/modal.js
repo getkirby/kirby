@@ -4,26 +4,14 @@ import { isObject } from "@/helpers/object.js";
 import Feature, { defaults as featureDefaults } from "./feature.js";
 import focus from "@/helpers/focus.js";
 import "@/helpers/array.js";
+import { set } from "vue";
 
 /**
  * Additional default values for modals
  */
 export const defaults = () => {
 	return {
-		...featureDefaults(),
-		// open state for the modal
-		isOpen: false,
-		// when drawers or dialogs are created with the
-		// deprecated way of adding a dialog/drawer component
-		// to a template, `legacy` is set to true in the open method
-		// and the matching modal component will not load it.
-		legacy: false,
-		// Store for the Vue component reference
-		// This will make it possible to determine
-		// its open state in the dialog or drawer components
-		// It would not be needed if we load all dialogs
-		// and drawers through modals
-		ref: null
+		...featureDefaults()
 	};
 };
 
@@ -60,14 +48,12 @@ export default (panel, key, defaults) => {
 		 * Closes the modal
 		 */
 		async close() {
-			// close legacy components
-			// if it is still open
-			this.ref?.hide();
-
-			if (this.isOpen) {
-				this.emit("close");
+			if (this.isOpen === false) {
+				return;
 			}
 
+			this.isOpen = false;
+			this.emit("close");
 			this.reset();
 		},
 
@@ -94,8 +80,27 @@ export default (panel, key, defaults) => {
 				return;
 			}
 
-			this.props.value = value;
+			// make sure that value is reactive
+			set(this.props, "value", value);
+
 			this.emit("input", value);
+		},
+
+		isOpen: false,
+
+		/**
+		 * Define the default listeners
+		 * for the Fiber component
+		 */
+		listeners() {
+			return {
+				...this.on,
+				cancel: this.cancel.bind(this),
+				close: this.close.bind(this),
+				input: this.input.bind(this),
+				submit: this.submit.bind(this),
+				success: this.success.bind(this)
+			};
 		},
 
 		/**
@@ -107,54 +112,7 @@ export default (panel, key, defaults) => {
 		 * @param {Object} feature
 		 * @returns {Promise} Returns the new state
 		 */
-		async open(feature, options = {}) {
-			// check for legacy Vue components
-			if (feature instanceof window.Vue) {
-				return this.openComponent(feature);
-			}
-
-			return this.openState(feature, options);
-		},
-
-		/**
-		 * Takes a legacy Vue component and
-		 * opens it manually.
-		 *
-		 * @param {any} component
-		 */
-		async openComponent(component) {
-			const state = await this.openState({
-				component: component.$options._componentTag,
-				// don't render this in the modal
-				// component. The Vue component already
-				// takes over rendering.
-				legacy: true,
-				// Use a combination of attributes and props
-				// to get everything that was passed to the component
-				props: {
-					...component.$attrs,
-					...component.$props
-				},
-				// add all registered listeners on the component
-				on: component.$listeners,
-				// add a reference to the Vue component
-				// This will make it possible to determine
-				// its open state in the dialog or drawer components
-				ref: component
-			});
-
-			component.show();
-
-			return state;
-		},
-
-		/**
-		 * Opens the state by object or URL
-		 * @param {String|Object|URL} feature
-		 * @param {Object} options
-		 * @returns {Promise}
-		 */
-		async openState(feature, options) {
+		async open(feature, options) {
 			// close previous notifications from other
 			// contexts, if the modal wasn't open so far
 			if (this.isOpen === false) {
@@ -180,22 +138,20 @@ export default (panel, key, defaults) => {
 		 * @returns {Promise} The new state or false if the request failed
 		 */
 		async submit(value, options = {}) {
+			value = value ?? this.props.value;
+
+			if (this.hasEventListener("submit")) {
+				return this.emit("submit", value, options);
+			}
+
 			// close the drawer or dialog if there's no submitter
-			// An example for this is the blocks drawer
-			if (this.hasSubmitter() === false) {
-				console.warn(`There's no ${this.key()} submitter`);
+			// and no connection to the backend
+			if (!this.path) {
 				return this.close();
 			}
 
-			let response;
-
-			if (this.hasEventListener("submit")) {
-				// call a custom submit handler if it exists
-				response = await this.emit("submit", value ?? this.value, options);
-			} else {
-				// send a request to the backend
-				response = await this.post(value ?? this.value, options);
-			}
+			// send a request to the backend
+			const response = await this.post(value, options);
 
 			// the request failed and should have raised an error
 			if (isObject(response) === false) {
@@ -219,6 +175,10 @@ export default (panel, key, defaults) => {
 		 * @returns
 		 */
 		success(success) {
+			if (this.hasEventListener("success")) {
+				return this.emit("success", success);
+			}
+
 			if (typeof success === "string") {
 				panel.notification.success(success);
 			}

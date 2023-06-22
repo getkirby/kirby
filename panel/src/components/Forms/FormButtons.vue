@@ -23,16 +23,6 @@
 				<k-dropdown-content ref="dropdown" :options="dropdown" align="end" />
 			</k-dropdown>
 		</k-button-group>
-
-		<k-dialog
-			ref="revert"
-			:submit-button="$t('revert')"
-			icon="undo"
-			theme="negative"
-			@submit="revert"
-		>
-			<k-text :html="$t('revert.confirm')" />
-		</k-dialog>
 	</nav>
 </template>
 
@@ -106,7 +96,7 @@ export default {
 						icon: "undo",
 						text: this.$t("revert"),
 						disabled: this.isDisabled,
-						click: this.onRevert
+						click: this.revert
 					}
 				];
 			}
@@ -264,9 +254,6 @@ export default {
 			await this.onUnlock(false);
 			this.$store.dispatch("content/revert");
 		},
-		onRevert() {
-			this.$refs.revert.open();
-		},
 		async onSave(e) {
 			e.preventDefault?.();
 
@@ -288,8 +275,22 @@ export default {
 			this.$reload({ silent: true });
 		},
 		revert() {
-			this.$store.dispatch("content/revert");
-			this.$refs.revert.close();
+			this.$panel.dialog.open({
+				component: "k-remove-dialog",
+				props: {
+					submitButton: {
+						icon: "undo",
+						text: this.$t("revert")
+					},
+					text: this.$t("revert.confirm")
+				},
+				on: {
+					submit: () => {
+						this.$store.dispatch("content/revert");
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		}
 	}
 };

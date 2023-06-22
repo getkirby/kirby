@@ -79,7 +79,13 @@ export function isFocusable(element) {
 		return false;
 	}
 
+	// check if the element itself is disabled
 	if (element.matches("[disabled], [aria-disabled], input[type=hidden]")) {
+		return false;
+	}
+
+	// check if the element is a child of a disabled element
+	if (element.closest("[aria-disabled]") || element.closest("[disabled]")) {
 		return false;
 	}
 

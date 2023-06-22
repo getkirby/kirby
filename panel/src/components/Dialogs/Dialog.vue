@@ -1,19 +1,12 @@
 <template>
-	<k-overlay
-		ref="dialog"
-		:centered="true"
-		:dimmed="true"
-		:visible="visible"
-		type="dialog"
-		@cancel="cancel"
-		@ready="ready"
-	>
+	<portal v-if="visible" to="dialog">
 		<form
 			:class="$vnode.data.staticClass"
 			:data-size="size"
 			class="k-dialog"
 			method="dialog"
-			@submit.prevent="submit"
+			@click.stop
+			@submit.prevent="$emit('submit')"
 		>
 			<slot name="header">
 				<k-dialog-notification />
@@ -31,13 +24,12 @@
 						:icon="icon"
 						:submit-button="submitButton"
 						:theme="theme"
-						@cancel="cancel"
-						@submit="submit"
+						@cancel="$emit('cancel')"
 					/>
 				</k-dialog-footer>
 			</slot>
 		</form>
-	</k-overlay>
+	</portal>
 </template>
 
 <script>
@@ -47,7 +39,8 @@ import Dialog from "@/mixins/dialog.js";
  * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
  */
 export default {
-	mixins: [Dialog]
+	mixins: [Dialog],
+	emits: ["cancel", "submit"]
 };
 </script>
 
@@ -70,6 +63,7 @@ export default {
 	border-radius: var(--dialog-rounded);
 	line-height: 1;
 	max-height: calc(100vh - 3rem);
+	max-height: calc(100dvh - 3rem);
 	margin: 1.5rem;
 	display: flex;
 	flex-direction: column;

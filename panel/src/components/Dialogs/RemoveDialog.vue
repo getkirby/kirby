@@ -1,5 +1,10 @@
 <template>
-	<k-text-dialog ref="dialog" v-bind="$props" @cancel="cancel" @submit="submit">
+	<k-text-dialog
+		ref="dialog"
+		v-bind="$props"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
+	>
 		<slot />
 	</k-text-dialog>
 </template>
@@ -11,16 +16,13 @@ export default {
 	mixins: [TextDialog],
 	props: {
 		icon: {
-			default: "trash",
-			type: String
+			default: "trash"
 		},
 		submitButton: {
-			default: () => window.panel.$t("delete"),
-			type: String
+			default: () => window.panel.$t("delete")
 		},
 		theme: {
-			default: "negative",
-			type: String
+			default: "negative"
 		}
 	}
 };

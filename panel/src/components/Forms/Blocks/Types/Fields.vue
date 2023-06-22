@@ -4,12 +4,18 @@
 			<k-block-title
 				:content="values"
 				:fieldset="fieldset"
-				@dblclick.native="$emit('open', tab)"
+				@click.native="toggle"
 			/>
-			<k-drawer-tabs :tab="tab" :tabs="fieldset.tabs" @open="tab = $event" />
+			<k-drawer-tabs
+				v-if="!collapsed"
+				:tab="tab"
+				:tabs="fieldset.tabs"
+				@open="tab = $event"
+			/>
 		</header>
 
 		<k-form
+			v-if="!collapsed"
 			ref="form"
 			:autofocus="true"
 			:disabled="!fieldset.wysiwyg"
@@ -27,17 +33,40 @@
  * @internal
  */
 export default {
+	props: {
+		endpoints: Object,
+		tabs: Object
+	},
 	data() {
 		return {
-			tab: Object.keys(this.fieldset.tabs)[0]
+			collapsed: this.state(),
+			tab: Object.keys(this.tabs)[0]
 		};
 	},
 	computed: {
 		fields() {
-			return this.fieldset.tabs[this.tab]?.fields;
+			return this.tabs[this.tab]?.fields;
 		},
 		values() {
 			return Object.assign({}, this.content);
+		}
+	},
+	methods: {
+		open() {
+			this.$emit("open", this.tab);
+		},
+		state(collapsed) {
+			const id = `kirby.fieldsBlock.${this.endpoints.field}`;
+
+			if (collapsed !== undefined) {
+				sessionStorage.setItem(id, collapsed);
+			} else {
+				return JSON.parse(sessionStorage.getItem(id));
+			}
+		},
+		toggle() {
+			this.collapsed = !this.collapsed;
+			this.state(this.collapsed);
 		}
 	}
 };
@@ -45,21 +74,20 @@ export default {
 
 <style>
 .k-block-container:has(.k-block-type-fields) {
-	padding-top: 0;
+	padding-block: 0;
+}
+
+.k-block-container:not([data-hidden="true"])
+	.k-block-type-fields:has(.k-block-type-fields-form) {
+	padding-bottom: var(--spacing-3);
 }
 
 .k-block-type-fields-header {
 	display: flex;
 	justify-content: space-between;
-	height: 2.5rem;
-	padding-inline: var(--spacing-3);
+	height: var(--drawer-header-height);
+	padding-inline: var(--spacing-1);
 	background: var(--color-white);
-	border-start-start-radius: var(--rounded);
-	border-start-end-radius: var(--rounded);
-}
-
-.k-block-type-fields-header .k-button {
-	height: 2.5rem;
 }
 
 .k-block-type-fields-form {
@@ -67,12 +95,7 @@ export default {
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
 	border-radius: var(--rounded);
 }
-
-.k-block-container[data-hidden="true"] {
-	padding-bottom: 0;
-}
-
-.k-block-container[data-hidden="true"]
+.k-block-container[data-hidden="true"]:has(.k-block-type-fields)
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
 	display: none;
 }

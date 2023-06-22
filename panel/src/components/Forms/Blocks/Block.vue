@@ -34,6 +34,7 @@
 			<component
 				:is="customComponent"
 				ref="editor"
+				:tabs="tabs"
 				v-bind="$props"
 				v-on="listeners"
 			/>
@@ -49,50 +50,16 @@
 			:is-splitable="isSplitable()"
 			v-on="{
 				...listeners,
-				split: () => $refs.editor.split()
+				split: () => $refs.editor.split(),
+				open: () => {
+					if (typeof $refs.editor.open === 'function') {
+						$refs.editor.open();
+					} else {
+						open();
+					}
+				}
 			}"
 		/>
-
-		<k-form-drawer
-			v-if="isEditable && !isBatched"
-			:id="id"
-			ref="drawer"
-			:icon="fieldset.icon || 'box'"
-			:tabs="tabs"
-			:title="fieldset.name"
-			:value="content"
-			class="k-block-drawer"
-			@close="onDrawerClose"
-			@input="onDrawerInput"
-			@open="onDrawerOpen"
-			@submit="onDrawerSubmit"
-		>
-			<template #options>
-				<k-button
-					v-if="isHidden"
-					class="k-drawer-option"
-					icon="hidden"
-					@click="$emit('show')"
-				/>
-				<k-button
-					:disabled="!prev"
-					class="k-drawer-option"
-					icon="angle-left"
-					@click.prevent.stop="goTo(prev)"
-				/>
-				<k-button
-					:disabled="!next"
-					class="k-drawer-option"
-					icon="angle-right"
-					@click.prevent.stop="goTo(next)"
-				/>
-				<k-button
-					class="k-drawer-option"
-					icon="trash"
-					@click.prevent.stop="remove"
-				/>
-			</template>
-		</k-form-drawer>
 	</div>
 </template>
 
@@ -140,14 +107,8 @@ export default {
 		"sortUp",
 		"split",
 		"submit",
-		"update",
-		"confirmToRemoveSelected"
+		"update"
 	],
-	data() {
-		return {
-			skipFocus: false
-		};
-	},
 	computed: {
 		className() {
 			let className = ["k-block-type-" + this.type];
@@ -174,33 +135,33 @@ export default {
 		},
 		listeners() {
 			return {
-				append: ($event) => this.$emit("append", $event),
-				chooseToAppend: ($event) => this.$emit("chooseToAppend", $event),
-				chooseToConvert: ($event) => this.$emit("chooseToConvert", $event),
-				chooseToPrepend: ($event) => this.$emit("chooseToPrepend", $event),
+				append: (event) => this.$emit("append", event),
+				chooseToAppend: (event) => this.$emit("chooseToAppend", event),
+				chooseToConvert: (event) => this.$emit("chooseToConvert", event),
+				chooseToPrepend: (event) => this.$emit("chooseToPrepend", event),
 				close: () => this.$emit("close"),
 				copy: () => this.$emit("copy"),
 				duplicate: () => this.$emit("duplicate"),
 				focus: () => this.$emit("focus"),
 				hide: () => this.$emit("hide"),
 				merge: () => this.$emit("merge"),
-				open: () => this.open(),
+				open: (tab) => this.open(tab),
 				paste: () => this.$emit("paste"),
-				prepend: ($event) => this.$emit("prepend", $event),
+				prepend: (event) => this.$emit("prepend", event),
 				remove: () => this.remove(),
 				removeSelected: () => this.$emit("removeSelected"),
 				show: () => this.$emit("show"),
 				sortDown: () => this.$emit("sortDown"),
 				sortUp: () => this.$emit("sortUp"),
-				split: ($event) => this.$emit("split", $event),
-				update: ($event) => this.$emit("update", $event)
+				split: (event) => this.$emit("split", event),
+				update: (event) => this.$emit("update", event)
 			};
 		},
 		tabs() {
-			let tabs = this.fieldset.tabs;
+			const tabs = this.fieldset.tabs;
 
-			Object.entries(tabs).forEach(([tabName, tab]) => {
-				Object.entries(tab.fields).forEach(([fieldName]) => {
+			for (const [tabName, tab] of Object.entries(tabs)) {
+				for (const [fieldName] of Object.entries(tab.fields)) {
 					tabs[tabName].fields[fieldName].section = this.name;
 					tabs[tabName].fields[fieldName].endpoints = {
 						field:
@@ -212,8 +173,8 @@ export default {
 						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
-				});
-			});
+				}
+			}
 
 			return tabs;
 		},
@@ -250,27 +211,19 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$refs.drawer.close();
+			this.$panel.drawer.close();
 		},
 		focus() {
-			if (this.skipFocus !== true) {
-				if (typeof this.$refs.editor.focus === "function") {
-					this.$refs.editor.focus();
-				} else {
-					this.$refs.container.focus();
-				}
+			if (typeof this.$refs.editor?.focus === "function") {
+				this.$refs.editor.focus();
+			} else {
+				this.$refs.container?.focus();
 			}
 		},
 		goTo(block) {
 			if (block) {
-				this.skipFocus = true;
-				this.close();
-
-				this.$nextTick(() => {
-					block.$refs.container.focus();
-					block.open();
-					this.skipFocus = false;
-				});
+				block.$refs.container?.focus();
+				block.open(null, true);
 			}
 		},
 		isSplitable() {
@@ -283,19 +236,9 @@ export default {
 
 			return false;
 		},
-		onDrawerClose() {
+		onClose() {
 			this.$emit("close");
 			this.focus();
-		},
-		onDrawerInput(value) {
-			this.$emit("update", value);
-		},
-		onDrawerOpen() {
-			this.$emit("open");
-		},
-		onDrawerSubmit() {
-			this.$emit("submit");
-			this.close();
 		},
 		onFocusIn(event) {
 			// skip focus if the event is coming from the options buttons
@@ -307,8 +250,40 @@ export default {
 
 			this.$emit("focus", event);
 		},
-		open(tab) {
-			this.$refs.drawer?.open(tab);
+		onInput(value) {
+			this.$emit("update", value);
+		},
+		open(tab, replace = false) {
+			if (!this.isEditable || this.isBatched) {
+				return;
+			}
+
+			this.$panel.drawer.open({
+				component: "k-block-drawer",
+				id: this.id,
+				tab: tab,
+				on: {
+					close: this.onClose,
+					input: this.onInput,
+					next: () => this.goTo(this.next),
+					prev: () => this.goTo(this.prev),
+					remove: this.remove,
+					show: this.show,
+					submit: this.submit
+				},
+				props: {
+					hidden: this.isHidden,
+					icon: this.fieldset.icon ?? "box",
+					next: this.next,
+					prev: this.prev,
+					tabs: this.tabs,
+					title: this.fieldset.name,
+					value: this.content
+				},
+				replace: replace
+			});
+
+			this.$emit("open");
 		},
 		remove() {
 			if (this.isBatched) {
@@ -322,14 +297,22 @@ export default {
 				},
 				on: {
 					submit: () => {
+						if (this.$panel.drawer.id === this.id) {
+							this.$panel.drawer.close();
+						}
+
 						this.$panel.dialog.close();
 						this.$emit("remove", this.id);
 					}
 				}
 			});
 		},
+		show() {
+			this.$emit("show");
+		},
 		submit() {
 			this.close();
+			this.$emit("submit");
 		}
 	}
 };

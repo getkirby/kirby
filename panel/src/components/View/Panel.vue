@@ -30,8 +30,23 @@
 		<!-- Icons -->
 		<k-icons />
 
-		<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
-		<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+		<k-overlay
+			:nested="$panel.drawer.history.milestones.length > 1"
+			:visible="$panel.drawer.isOpen"
+			type="drawer"
+			@close="$panel.drawer.close()"
+		>
+			<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
+		</k-overlay>
+
+		<k-overlay
+			:visible="$panel.dialog.isOpen"
+			type="dialog"
+			@close="$panel.dialog.close()"
+		>
+			<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+		</k-overlay>
+
 		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>

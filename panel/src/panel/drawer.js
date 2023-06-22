@@ -1,10 +1,12 @@
 import Modal, { defaults as modalDefaults } from "./modal.js";
+import History from "./history.js";
+import { set } from "vue";
+import { uuid } from "@/helpers/string.js";
 
 export const defaults = () => {
 	return {
 		...modalDefaults(),
-		parent: null,
-		tabId: null
+		id: null
 	};
 };
 
@@ -20,62 +22,116 @@ export default (panel) => {
 	return {
 		...parent,
 		get breadcrumb() {
-			const crumbs = [];
-			let parent = this;
-
-			while (parent !== null) {
-				crumbs.push(parent.props);
-				parent = parent.parent;
+			return this.history.milestones;
+		},
+		/**
+		 * Closes the drawer and goes back to the
+		 * parent one if it has been stored
+		 */
+		async close() {
+			if (this.isOpen === false) {
+				return;
 			}
 
-			return crumbs.reverse();
+			this.history.removeLast();
+
+			// no more items in the history
+			if (this.history.isEmpty() === true) {
+				this.reset();
+				this.isOpen = false;
+				this.emit("close");
+				return;
+			}
+
+			return this.open(this.history.last());
 		},
+
 		goTo(id) {
-			let parent = this;
+			const state = this.history.goto(id);
 
-			while (parent !== null) {
-				if (parent.props.id === id) {
-					return this.openState(parent);
-				}
-
-				parent = parent.parent;
+			if (state !== undefined) {
+				this.open(state);
 			}
 		},
+
+		history: History(),
+
 		get icon() {
 			return this.props.icon ?? "box";
 		},
+
+		input(value) {
+			// make sure that value is reactive
+			set(this.props, "value", value);
+
+			this.emit("input", this.props.value);
+		},
+
+		listeners() {
+			return {
+				...this.on,
+				cancel: this.cancel.bind(this),
+				close: this.close.bind(this),
+				crumb: this.goTo.bind(this),
+				input: this.input.bind(this),
+				submit: this.submit.bind(this),
+				success: this.success.bind(this),
+				tab: this.tab.bind(this)
+			};
+		},
+
 		async open(feature, options = {}) {
-			const parentDrawer = this.isOpen === true ? this.state() : null;
 			await parent.open.call(this, feature, options);
 
-			// add the parent to the drawer if it's not the same
-			if (this.path !== parentDrawer?.path) {
-				this.parent = parentDrawer;
+			// open the provided or first tab
+			this.tab(feature.tab);
+
+			// get the current state and add it to the list of parents
+			const state = this.state();
+
+			// add the drawer to the history
+			if (feature.replace === true) {
+				this.history.replace(-1, state);
+			} else {
+				this.history.add(state);
 			}
 
-			// open the first tab
-			this.openTab();
+			this.focus();
+
+			return state;
+		},
+
+		/**
+		 * Sets a new active state for the feature
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 *
+		 * @param {Object} state
+		 */
+		set(state) {
+			parent.set.call(this, state);
+
+			// create a unique ID for the drawer if it does not have one
+			this.id = this.id ?? uuid();
 
 			return this.state();
 		},
-		openTab(tabId) {
-			tabId = tabId || Object.keys(this.tabs)[0];
 
-			if (!tabId) {
+		tab(tab) {
+			tab = tab ?? Object.keys(this.props.tabs)[0];
+
+			if (!tab) {
 				return false;
 			}
 
-			this.tabId = tabId;
-			this.emit("openTab", tabId);
-		},
-		get tab() {
-			return this.tabs[this.tabId] ?? null;
-		},
-		get tabs() {
-			return this.props?.tabs ?? {};
-		},
-		get title() {
-			return this.props.title;
+			set(this.props, "fields", this.props.tabs[tab].fields);
+			set(this.props, "tab", tab);
+
+			this.emit("tab", tab);
+
+			setTimeout(() => {
+				this.focus();
+			});
 		}
 	};
 };

@@ -75,6 +75,17 @@ export function merge(target, source) {
 }
 
 /**
+ * Check if the objects are identical
+ *
+ * @param {object} a
+ * @param {object} b
+ * @returns {Boolean}
+ */
+export function same(a, b) {
+	return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/**
  * Converts to lowercase all keys in an object
  *
  * @param {Object} obj
@@ -93,5 +104,6 @@ export default {
 	isObject,
 	length,
 	merge,
+	same,
 	toLowerKeys
 };

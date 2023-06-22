@@ -37,30 +37,14 @@
 					@input="onInput"
 					@keydown.meta.enter="onSubmit"
 					@keydown.ctrl.enter="onSubmit"
-					@keydown.meta="onShortcut"
-					@keydown.ctrl="onShortcut"
+					@keydown.meta.exact="onShortcut"
+					@keydown.ctrl.exact="onShortcut"
 					@dragover="onOver"
 					@dragleave="onOut"
 					@drop="onDrop"
 				/>
 			</k-autosize>
 		</div>
-
-		<k-toolbar-email-dialog
-			ref="emailDialog"
-			@cancel="cancel"
-			@submit="insert($event)"
-		/>
-		<k-toolbar-link-dialog
-			ref="linkDialog"
-			@cancel="cancel"
-			@submit="insert($event)"
-		/>
-		<k-files-dialog
-			ref="fileDialog"
-			@cancel="cancel"
-			@submit="insertFile($event)"
-		/>
 	</div>
 </template>
 
@@ -139,37 +123,47 @@ export default {
 		}
 	},
 	methods: {
-		cancel() {
-			this.$refs.input.focus();
-		},
 		dialog(dialog) {
-			if (this.$refs[dialog + "Dialog"]) {
-				this.$refs[dialog + "Dialog"].open(this.$refs.input, this.selection());
-			} else {
-				throw "Invalid toolbar dialog";
-			}
+			// store selection
+			const start = this.$refs.input.selectionStart;
+			const end = this.$refs.input.selectionEnd;
+
+			// restore selection as `insert` method
+			// depends on it
+			const restoreSelection = (callback) => {
+				setTimeout(() => {
+					this.$refs.input.setSelectionRange(start, end);
+
+					if (callback) {
+						callback();
+					}
+				});
+			};
+
+			this.$panel.dialog.open({
+				component: "k-toolbar-" + dialog + "-dialog",
+				props: {
+					value: { title: this.selection() }
+				},
+				on: {
+					cancel: restoreSelection,
+					submit: (text) => {
+						this.$panel.dialog.close();
+						restoreSelection(() => this.insert(text));
+					}
+				}
+			});
 		},
 		focus() {
 			this.$refs.input.focus();
 		},
 		insert(text) {
 			const input = this.$refs.input;
-			const prevalue = input.value;
 
 			setTimeout(() => {
 				input.focus();
-
-				document.execCommand("insertText", false, text);
-
-				// document.execCommand did not work
-				if (input.value === prevalue) {
-					const value =
-						input.value.slice(0, input.selectionStart) +
-						text +
-						input.value.slice(input.selectionEnd);
-					input.value = value;
-					this.$emit("input", value);
-				}
+				input.setRangeText(text, input.selectionStart, input.selectionEnd);
+				this.$emit("input", input.value);
 			});
 		},
 		insertFile(files) {
@@ -183,15 +177,14 @@ export default {
 		},
 		onCommand(command, callback) {
 			if (typeof this[command] !== "function") {
-				window.console.warn(command + " is not a valid command");
-				return;
+				return console.warn(command + " is not a valid command");
 			}
 
 			if (typeof callback === "function") {
-				this[command](callback(this.$refs.input, this.selection()));
-			} else {
-				this[command](callback);
+				callback = callback(this.$refs.input, this.selection());
 			}
+
+			this[command](callback);
 		},
 		onDrop($event) {
 			// dropping files
@@ -241,10 +234,9 @@ export default {
 			if (
 				this.buttons !== false &&
 				$event.key !== "Meta" &&
-				$event.key !== "Control" &&
-				this.$refs.toolbar
+				$event.key !== "Control"
 			) {
-				this.$refs.toolbar.shortcut($event.key, $event);
+				this.$refs.toolbar?.shortcut($event.key, $event);
 			}
 		},
 		onSubmit($event) {
@@ -257,17 +249,26 @@ export default {
 			this.$refs.select();
 		},
 		selectFile() {
-			this.$refs.fileDialog.open({
-				endpoint: this.endpoints.field + "/files",
-				multiple: false
+			this.$panel.dialog.open({
+				component: "k-files-dialog",
+				props: {
+					endpoint: this.endpoints.field + "/files",
+					multiple: false
+				},
+				on: {
+					cancel: this.cancel,
+					submit: (file) => {
+						this.insertFile(file);
+						this.$panel.dialog.close();
+					}
+				}
 			});
 		},
 		selection() {
-			const area = this.$refs.input;
-			const start = area.selectionStart;
-			const end = area.selectionEnd;
-
-			return area.value.substring(start, end);
+			return this.$refs.input.value.substring(
+				this.$refs.input.selectionStart,
+				this.$refs.input.selectionEnd
+			);
 		},
 		uploadFile() {
 			this.$panel.upload.pick(this.uploadOptions);

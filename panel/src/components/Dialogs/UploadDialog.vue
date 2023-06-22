@@ -4,7 +4,8 @@
 		class="k-upload-dialog"
 		v-bind="$props"
 		:disabled="disabled || $panel.upload.files.length === 0"
-		@submit="submit"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit')"
 	>
 		<k-dropzone @drop="$panel.upload.select($event)">
 			<template v-if="$panel.upload.files.length === 0">
