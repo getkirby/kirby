@@ -6,6 +6,7 @@
 				<k-dropdown>
 					<k-button
 						class="k-link-input-toggle"
+						:disabled="disabled"
 						:icon="currentType.icon"
 						@click="$refs.types.toggle()"
 					>
