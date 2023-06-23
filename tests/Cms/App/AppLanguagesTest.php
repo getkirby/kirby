@@ -59,6 +59,7 @@ class AppLanguagesTest extends TestCase
 			['fr', 'en'],
 			['en-US, en;q=0.5', 'us'],
 			['en-US;q=0.5, de;q=0.8, fr;q=0.9', 'de'],
+			['tr, en-US;q=0.9, en;q=0.8', 'tr']
 		];
 	}
 
@@ -86,6 +87,11 @@ class AppLanguagesTest extends TestCase
 					'code'    => 'us',
 					'name'    => 'English (US)',
 					'locale'  => 'en_US'
+				],
+				[
+					'code'    => 'tr',
+					'name'    => 'Turkish (TR)',
+					'locale'  => 'tr_TR.utf-8'
 				]
 			],
 			'options' => [
