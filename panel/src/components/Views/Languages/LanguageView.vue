@@ -11,12 +11,14 @@
 					:link="url"
 					:tooltip="$t('open')"
 					icon="open"
+					size="sm"
 					target="_blank"
 					variant="filled"
 				/>
 				<k-button
 					:tooltip="$t('settings')"
 					icon="cog"
+					size="sm"
 					variant="filled"
 					@click="update()"
 				/>
@@ -24,6 +26,7 @@
 					:disabled="!deletable"
 					:tooltip="$t('delete')"
 					icon="trash"
+					size="sm"
 					variant="filled"
 					@click="remove()"
 				/>
