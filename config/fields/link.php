@@ -7,6 +7,11 @@ use Kirby\Toolkit\V;
 
 return [
 	'props' => [
+		'after'       => null,
+		'before'      => null,
+		'icon'        => null,
+		'placeholder' => null,
+
 		'value' => function (string|null $value = null) {
 			return $value ?? '';
 		}
