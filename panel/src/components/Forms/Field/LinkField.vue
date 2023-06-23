@@ -126,39 +126,79 @@ export default {
 		types() {
 			return {
 				url: {
+					detect: (value) => {
+						return /^(http|https):\/\//.test(value);
+					},
 					icon: "url",
 					label: this.$t("url"),
+					link: (value) => value,
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
 					value: (value) => value
 				},
 				page: {
+					detect: (value) => {
+						return this.isPageUUID(value) === true;
+					},
 					icon: "page",
 					label: this.$t("page"),
+					link: (value) => value,
 					placeholder: this.$t("select") + " …",
 					input: "text",
 					value: (value) => value
 				},
 				file: {
+					detect: (value) => {
+						return this.isFileUUID(value) === true;
+					},
 					icon: "file",
 					label: this.$t("file"),
+					link: (value) => value,
 					placeholder: this.$t("select") + " …",
 					value: (value) => value
 				},
 				email: {
+					detect: (value) => {
+						return value.startsWith("mailto:");
+					},
 					icon: "email",
 					label: this.$t("email"),
+					link: (value) => value.replace(/^mailto:/, ""),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
 					value: (value) => "mailto:" + value
 				},
 				tel: {
+					detect: (value) => {
+						return value.startsWith("tel:");
+					},
 					icon: "phone",
 					label: this.$t("tel"),
+					link: (value) => value.replace(/^tel:/, ""),
 					pattern: "[+]{0,1}[0-9]+",
 					placeholder: this.$t("tel.placeholder"),
 					input: "tel",
 					value: (value) => "tel:" + value
+				},
+				anchor: {
+					detect: (value) => {
+						return value.startsWith("#");
+					},
+					icon: "anchor",
+					label: "Anchor",
+					link: (value) => value,
+					pattern: "^#.+",
+					placeholder: "#element",
+					input: "text",
+					value: (value) => value
+				},
+				custom: {
+					detect: (value) => true,
+					icon: "title",
+					label: "Custom",
+					link: (value) => value,
+					input: "text",
+					value: (value) => value
 				}
 			};
 		}
@@ -166,6 +206,10 @@ export default {
 	watch: {
 		value: {
 			handler(value, old) {
+				if (value === old) {
+					return;
+				}
+
 				const parts = this.detect(value);
 
 				this.linkType = this.linkType ?? parts.type;
@@ -186,38 +230,21 @@ export default {
 		detect(value) {
 			value = value ?? "";
 
-			if (this.isPageUUID(value) === true) {
+			if (value.length === 0) {
 				return {
-					type: "page",
-					link: value
+					type: "url",
+					link: ""
 				};
 			}
 
-			if (this.isFileUUID(value) === true) {
-				return {
-					type: "file",
-					link: value
-				};
+			for (const type in this.types) {
+				if (this.types[type].detect(value) === true) {
+					return {
+						type: type,
+						link: this.types[type].link(value)
+					};
+				}
 			}
-
-			if (value.startsWith("tel:")) {
-				return {
-					type: "tel",
-					link: value.replace(/^tel:/, "")
-				};
-			}
-
-			if (value.startsWith("mailto:")) {
-				return {
-					type: "email",
-					link: value.replace(/^mailto:/, "")
-				};
-			}
-
-			return {
-				type: "url",
-				link: value
-			};
 		},
 		focus() {
 			this.$refs.input?.focus();
