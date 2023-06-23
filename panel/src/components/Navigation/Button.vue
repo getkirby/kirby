@@ -12,8 +12,7 @@
 				<slot />
 			</template>
 		</span>
-
-		<span v-if="dropdown && text" class="k-button-arrow">
+		<span v-if="dropdown && (text || $slots.default)" class="k-button-arrow">
 			<k-icon type="angle-down" />
 		</span>
 	</component>

@@ -7,7 +7,9 @@
 					<k-button
 						class="k-link-input-toggle"
 						:disabled="disabled"
+						:dropdown="true"
 						:icon="currentType.icon"
+						variant="filled"
 						@click="$refs.types.toggle()"
 					>
 						{{ currentType.label }}
@@ -16,6 +18,7 @@
 						<k-dropdown-item
 							v-for="(type, key) in activeTypes"
 							:key="key"
+							:current="key === linkType"
 							:icon="type.icon"
 							@click="switchType(key)"
 						>
@@ -378,28 +381,11 @@ export default {
 }
 
 .k-link-input-toggle.k-button {
-	display: flex;
-	align-items: center;
-	padding: 0 1.325rem 0 0.375rem;
-	height: var(--height-sm);
-	border-radius: var(--rounded-sm);
+	--button-height: var(--height-sm);
+	--button-rounded: var(--rounded-sm);
+	--button-color-back: var(--color-gray-200);
+	--button-color-hover-back: var(--color-gray-300);
 	margin-inline-start: 0.25rem;
-	gap: 0.25rem;
-	background: var(--color-gray-200);
-}
-.k-link-input-toggle.k-button .k-button-text {
-	padding-inline-start: var(--spacing-1);
-}
-
-.k-link-input-toggle .k-button-text::after {
-	position: absolute;
-	top: 50%;
-	right: 0.5rem;
-	margin-top: -2px;
-	content: "";
-	border-top: 4px solid var(--color-black);
-	border-inline-start: 4px solid transparent;
-	border-inline-end: 4px solid transparent;
 }
 
 .k-link-input-model {
@@ -436,16 +422,14 @@ export default {
 	padding-inline-start: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
-	display: flex;
+	--button-color-text: var(--color-gray-600);
+	--button-height: var(--height-sm);
+	--button-padding: var(--spacing-2);
 	flex-grow: 1;
 	overflow: hidden;
 	white-space: nowrap;
 	align-items: center;
 	justify-content: flex-start;
-	height: var(--height-sm);
-	font-size: var(--text-sm);
-	padding-inline: var(--spacing-2);
-	color: var(--color-gray-600);
 }
 .k-link-input-model-toggle {
 	--button-height: var(--height-sm);
