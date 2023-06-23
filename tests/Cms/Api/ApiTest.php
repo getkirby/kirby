@@ -373,6 +373,11 @@ class ApiTest extends TestCase
 		$this->api->page('does-not-exist');
 	}
 
+	public function testPages()
+	{
+		$this->assertSame(['a/aa', 'a/ab'], $this->api->pages('a')->keys());
+	}
+
 	public function testUser()
 	{
 		$app = $this->app->clone([
