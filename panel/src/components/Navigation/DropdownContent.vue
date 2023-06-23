@@ -223,6 +223,7 @@ export default {
 	--dropdown-color-bg: var(--color-black);
 	--dropdown-color-text: var(--color-white);
 	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+	--dropdown-rounded: var(--rounded);
 	--dropdown-shadow: var(--shadow-xl);
 }
 
@@ -235,7 +236,7 @@ export default {
 	width: max-content;
 	padding: 0.5rem;
 	background: var(--dropdown-color-bg);
-	border-radius: var(--rounded);
+	border-radius: var(--dropdown-rounded);
 	color: var(--dropdown-color-text);
 	box-shadow: var(--dropdown-shadow);
 	text-align: start;
