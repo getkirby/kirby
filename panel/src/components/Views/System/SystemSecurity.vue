@@ -21,6 +21,7 @@
 						icon: issue.icon || 'alert',
 						color: 'var(--color-red)'
 					},
+					target: '_blank',
 					...issue
 				}))
 			"
