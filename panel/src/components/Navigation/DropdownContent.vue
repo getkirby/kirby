@@ -245,23 +245,6 @@ export default {
 	background: none;
 }
 
-.k-dropdown-content .k-button {
-	--button-height: var(--height-sm);
-	--button-color-hover-back: var(--dropdown-color-hr);
-	--button-color-text: var(--dropdown-color-text);
-	display: flex;
-	justify-content: flex-start;
-	gap: 0.75rem;
-	border-radius: var(--rounded-sm);
-	width: 100%;
-}
-.k-dropdown-content .k-button[aria-disabled] {
-	opacity: var(--opacity-disabled);
-}
-.k-dropdown-content .k-button + .k-button {
-	margin-top: 2px;
-}
-
 .k-dropdown-content[data-align="right"],
 .k-dropdown-content[data-align="end"] {
 	--dropdown-x: -100%;

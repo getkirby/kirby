@@ -19,14 +19,14 @@
 export default {
 	inheritAttrs: false,
 	props: {
+		current: [Boolean, String],
 		disabled: Boolean,
 		icon: String,
 		image: [String, Object],
 		link: String,
 		target: String,
 		theme: String,
-		upload: String,
-		current: [String, Boolean]
+		upload: String
 	},
 	emit: ["click"],
 	methods: {
@@ -43,3 +43,25 @@ export default {
 	}
 };
 </script>
+
+<style>
+.k-dropdown-item {
+	--button-height: var(--height-sm);
+	--button-color-hover-back: var(--dropdown-color-hr);
+	--button-color-text: var(--dropdown-color-text);
+	display: flex;
+	justify-content: flex-start;
+	gap: 0.75rem;
+	border-radius: var(--rounded-sm);
+	width: 100%;
+}
+.k-dropdown-item[aria-current] {
+	--button-color-text: var(--color-blue-500);
+}
+.k-dropdown-item[aria-disabled] {
+	opacity: var(--opacity-disabled);
+}
+.k-dropdown-item + .k-dropdown-item {
+	margin-top: 2px;
+}
+</style>
