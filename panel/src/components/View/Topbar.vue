@@ -78,7 +78,7 @@ export default {
 	align-items: center;
 }
 .k-topbar-notification {
+	--button-color-icon: var(--theme-color-icon);
 	--button-color-text: var(--theme-color-icon);
-	font-weight: var(--font-bold);
 }
 </style>
