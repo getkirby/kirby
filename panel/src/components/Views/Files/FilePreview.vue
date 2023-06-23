@@ -141,7 +141,7 @@ export default {
 .k-file-preview {
 	display: grid;
 	align-items: stretch;
-	background: var(--color-slate-900);
+	background: var(--color-gray-900);
 	border-radius: var(--rounded-lg);
 	margin-bottom: var(--spacing-6);
 	overflow: hidden;
@@ -152,7 +152,7 @@ export default {
 	display: grid;
 	place-items: center;
 	aspect-ratio: 1/1;
-	padding: var(--spacing-6);
+	padding: var(--spacing-12);
 	background: var(--pattern);
 	container-type: size;
 }
@@ -232,6 +232,8 @@ export default {
 
 .k-file-preview-focus-info .k-button {
 	--button-color-back: var(--color-slate-800);
+	--button-padding: var(--spacing-2);
+	--button-color-back: var(--color-gray-800);
 }
 .k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
 	flex-direction: row-reverse;
