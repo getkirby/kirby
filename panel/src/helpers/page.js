@@ -1,7 +1,6 @@
 export function status(status, disabled = false) {
 	const button = {
 		class: "k-status-icon",
-		click: () => window.panel.dialog("/dialogs/" + page.link + "/changeStatus"),
 		icon: "status-" + status,
 		title:
 			window.panel.$t("page.status") +
