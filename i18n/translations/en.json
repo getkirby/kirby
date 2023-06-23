@@ -211,6 +211,7 @@
 	"error.validation.accepted": "Please confirm",
 	"error.validation.alpha": "Please only enter characters between a-z",
 	"error.validation.alphanum": "Please only enter characters between a-z or numerals 0-9",
+	"error.validation.anchor": "Please enter a correct link anchor",
 	"error.validation.between": "Please enter a value between \"{min}\" and \"{max}\"",
 	"error.validation.boolean": "Please confirm or deny",
 	"error.validation.contains": "Please enter a value that contains \"{needle}\"",
@@ -227,6 +228,7 @@
 	"error.validation.integer": "Please enter a valid integer",
 	"error.validation.ip": "Please enter a valid IP address",
 	"error.validation.less": "Please enter a value lower than {max}",
+	"error.validation.linkType": "The link type is not allowed",
 	"error.validation.match": "The value does not match the expected pattern",
 	"error.validation.max": "Please enter a value equal to or lower than {max}",
 	"error.validation.maxlength": "Please enter a shorter value. (max. {max} characters)",
@@ -248,6 +250,7 @@
 	"error.validation.time.after": "Please enter a time after {time}",
 	"error.validation.time.before": "Please enter a time before {time}",
 	"error.validation.time.between": "Please enter a time between {min} and {max}",
+	"error.validation.uuid": "Please enter a valid UUID",
 	"error.validation.url": "Please enter a valid URL",
 
 	"expand": "Expand",
