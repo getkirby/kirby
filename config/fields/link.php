@@ -50,7 +50,7 @@ return [
 				return true;
 			}
 
-			if (Url::isAbsolute($value) === true) {
+			if (Str::startsWith($value, 'http://') === true || Str::startsWith($value, 'https://') === true) {
 				if (V::url($value) === false) {
 					throw new InvalidArgumentException([
 						'key' => 'validation.url'
