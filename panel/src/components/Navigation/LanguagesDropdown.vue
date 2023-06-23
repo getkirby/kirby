@@ -9,19 +9,7 @@
 			variant="filled"
 			@click="$refs.languages.toggle()"
 		/>
-		<k-dropdown-content v-if="languages" ref="languages">
-			<k-dropdown-item @click="change(defaultLanguage)">
-				{{ defaultLanguage.name }}
-			</k-dropdown-item>
-			<hr />
-			<k-dropdown-item
-				v-for="languageItem in languages"
-				:key="languageItem.code"
-				@click="change(languageItem)"
-			>
-				{{ languageItem.name }}
-			</k-dropdown-item>
-		</k-dropdown-content>
+		<k-dropdown-content v-if="languages" :options="options" ref="languages" />
 	</k-dropdown>
 </template>
 
@@ -31,18 +19,33 @@ export default {
 		code() {
 			return this.language.code.toUpperCase();
 		},
-		defaultLanguage() {
-			return this.$panel.languages.find(
-				(language) => language.default === true
-			);
-		},
 		language() {
 			return this.$panel.language;
 		},
 		languages() {
-			return this.$panel.languages.filter(
+			return this.$panel.languages;
+		},
+		options() {
+			const options = [];
+
+			// add the primary/default language first
+			const primaryLanguage = this.languages.find(
+				(language) => language.default === true
+			);
+
+			options.push(this.item(primaryLanguage));
+			options.push("-");
+
+			// add all secondary languages after the separator
+			const secondaryLanguages = this.languages.filter(
 				(language) => language.default === false
 			);
+
+			for (const language of secondaryLanguages) {
+				options.push(this.item(language));
+			}
+
+			return options;
 		}
 	},
 	methods: {
@@ -52,6 +55,13 @@ export default {
 					language: language.code
 				}
 			});
+		},
+		item(language) {
+			return {
+				click: () => this.change(language),
+				current: language.code === this.language.code,
+				text: language.name
+			};
 		}
 	}
 };
