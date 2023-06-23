@@ -213,10 +213,17 @@ export default {
 	gap: var(--spacing-2);
 	justify-content: space-between;
 }
+.k-item[data-layout="list"] .k-item-title,
 .k-item[data-layout="list"] .k-item-info {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+.k-item[data-layout="list"] .k-item-title {
+	flex-shrink: 1;
+}
+.k-item[data-layout="list"] .k-item-info {
+	flex-shrink: 2;
 }
 
 @container (max-width: 30rem) {
