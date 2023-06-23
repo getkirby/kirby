@@ -110,12 +110,6 @@ export default {
 			type: String
 		}
 	},
-	created() {
-		this.$events.on("click", this.onOutsideClick);
-	},
-	destroyed() {
-		this.$events.off("click", this.onOutsideClick);
-	},
 	data() {
 		return {
 			model: null,
@@ -199,7 +193,7 @@ export default {
 					value: (value) => value
 				},
 				custom: {
-					detect: (value) => true,
+					detect: () => true,
 					icon: "title",
 					label: "Custom",
 					link: (value) => value,
@@ -227,6 +221,12 @@ export default {
 			},
 			immediate: true
 		}
+	},
+	created() {
+		this.$events.on("click", this.onOutsideClick);
+	},
+	destroyed() {
+		this.$events.off("click", this.onOutsideClick);
 	},
 	methods: {
 		clear() {
