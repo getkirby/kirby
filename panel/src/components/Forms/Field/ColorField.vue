@@ -176,6 +176,9 @@ export default {
 .k-color-field .k-color {
 	width: 12rem;
 }
+.k-color-field .k-color > *:first-child {
+	border-radius: var(--rounded-sm);
+}
 
 .k-color-field-options {
 	--color-preview-size: var(--field-input-height);
