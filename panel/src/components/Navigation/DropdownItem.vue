@@ -45,7 +45,7 @@ export default {
 </script>
 
 <style>
-.k-dropdown-item {
+.k-dropdown-item.k-button {
 	--button-height: var(--height-sm);
 	--button-color-hover-back: var(--dropdown-color-hr);
 	--button-color-text: var(--dropdown-color-text);
@@ -55,13 +55,13 @@ export default {
 	border-radius: var(--rounded-sm);
 	width: 100%;
 }
-.k-dropdown-item[aria-current] {
+.k-dropdown-item.k-button[aria-current] {
 	--button-color-text: var(--color-blue-500);
 }
-.k-dropdown-item[aria-disabled] {
+.k-dropdown-item.k-button[aria-disabled] {
 	opacity: var(--opacity-disabled);
 }
-.k-dropdown-item + .k-dropdown-item {
+.k-dropdown-item.k-button + .k-dropdown-item.k-button {
 	margin-top: 2px;
 }
 </style>
