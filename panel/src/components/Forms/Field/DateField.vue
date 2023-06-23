@@ -266,39 +266,13 @@ export default {
 
 <style>
 .k-date-field-body {
-	display: flex;
-	flex-wrap: wrap;
-	line-height: 1;
-	background: var(--color-gray-300);
-	gap: 1px;
-}
-.k-date-field[data-disabled] .k-date-field-body {
-	background: none;
-}
-.k-date-field-body > .k-input[data-theme="field"] {
-	border: 0;
-	box-shadow: none;
-	border-radius: var(--rounded);
-}
-.k-date-field-body > .k-input[data-invalid="true"],
-.k-date-field-body > .k-input[data-invalid="true"]:focus-within {
-	border: 0 !important;
-	box-shadow: none !important;
+	display: grid;
+	gap: var(--spacing-2);
 }
 
-/* https://heydonworks.com/article/the-flexbox-holy-albatross/ */
-.k-date-field-body {
-	--multiplier: calc(25rem - 100%);
-}
-.k-date-field-body > * {
-	flex-grow: 1;
-	flex-basis: calc(var(--multiplier) * 999);
-	max-width: 100%;
-}
-.k-date-field-body .k-input[data-type="date"] {
-	min-width: 60%;
-}
-.k-date-field-body .k-input[data-type="time"] {
-	min-width: 30%;
+@container (min-width: 20rem) {
+	.k-date-field-body:has(.k-time-input) {
+		grid-template-columns: 1fr minmax(6rem, 9rem);
+	}
 }
 </style>
