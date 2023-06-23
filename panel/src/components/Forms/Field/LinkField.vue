@@ -110,6 +110,12 @@ export default {
 			type: String
 		}
 	},
+	created() {
+		this.$events.on("click", this.onOutsideClick);
+	},
+	destroyed() {
+		this.$events.off("click", this.onOutsideClick);
+	},
 	data() {
 		return {
 			model: null,
@@ -278,6 +284,11 @@ export default {
 		},
 		onInvalid(invalid) {
 			this.isInvalid = invalid;
+		},
+		onOutsideClick(event) {
+			if (this.$el.contains(event.target) === false) {
+				this.expanded = false;
+			}
 		},
 		async preview() {
 			if (this.linkType === "page" && this.linkValue) {
