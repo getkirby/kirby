@@ -6,11 +6,12 @@ export const props = {
 	mixins: [TextInputProps],
 	props: {
 		autocomplete: {
-			type: String,
 			default: "tel"
 		},
+		placeholder: {
+			default: () => window.panel.$t("tel.placeholder")
+		},
 		type: {
-			type: String,
 			default: "tel"
 		}
 	}

@@ -14,7 +14,7 @@
 					</k-button>
 					<k-dropdown-content ref="types">
 						<k-dropdown-item
-							v-for="(type, key) in types"
+							v-for="(type, key) in activeTypes"
 							:key="key"
 							:icon="type.icon"
 							@click="switchType(key)"
@@ -105,6 +105,7 @@ export default {
 	mixins: [Field, Input],
 	inheritAttrs: false,
 	props: {
+		options: Array,
 		value: {
 			default: "",
 			type: String
@@ -121,51 +122,108 @@ export default {
 	},
 	computed: {
 		currentType() {
-			return this.types[this.linkType] ?? this.types["url"];
+			return this.activeTypes[this.linkType] ?? this.activeTypes["url"];
 		},
-		types() {
+		availableTypes() {
 			return {
 				url: {
+					detect: (value) => {
+						return /^(http|https):\/\//.test(value);
+					},
 					icon: "url",
 					label: this.$t("url"),
+					link: (value) => value,
 					placeholder: this.$t("url.placeholder"),
 					input: "url",
 					value: (value) => value
 				},
 				page: {
+					detect: (value) => {
+						return this.isPageUUID(value) === true;
+					},
 					icon: "page",
 					label: this.$t("page"),
+					link: (value) => value,
 					placeholder: this.$t("select") + " …",
 					input: "text",
 					value: (value) => value
 				},
 				file: {
+					detect: (value) => {
+						return this.isFileUUID(value) === true;
+					},
 					icon: "file",
 					label: this.$t("file"),
+					link: (value) => value,
 					placeholder: this.$t("select") + " …",
 					value: (value) => value
 				},
 				email: {
+					detect: (value) => {
+						return value.startsWith("mailto:");
+					},
 					icon: "email",
 					label: this.$t("email"),
+					link: (value) => value.replace(/^mailto:/, ""),
 					placeholder: this.$t("email.placeholder"),
 					input: "email",
 					value: (value) => "mailto:" + value
 				},
 				tel: {
+					detect: (value) => {
+						return value.startsWith("tel:");
+					},
 					icon: "phone",
-					label: "Phone",
+					label: this.$t("tel"),
+					link: (value) => value.replace(/^tel:/, ""),
 					pattern: "[+]{0,1}[0-9]+",
-					placeholder: "Enter a phone number …",
+					placeholder: this.$t("tel.placeholder"),
 					input: "tel",
 					value: (value) => "tel:" + value
+				},
+				anchor: {
+					detect: (value) => {
+						return value.startsWith("#");
+					},
+					icon: "anchor",
+					label: "Anchor",
+					link: (value) => value,
+					pattern: "^#.+",
+					placeholder: "#element",
+					input: "text",
+					value: (value) => value
+				},
+				custom: {
+					detect: () => true,
+					icon: "title",
+					label: this.$t("custom"),
+					link: (value) => value,
+					input: "text",
+					value: (value) => value
 				}
 			};
+		},
+		activeTypes() {
+			if (!this.options) {
+				return this.availableTypes;
+			}
+
+			const available = {};
+
+			for (const type of this.options) {
+				available[type] = this.availableTypes[type];
+			}
+
+			return available;
 		}
 	},
 	watch: {
 		value: {
 			handler(value, old) {
+				if (value === old) {
+					return;
+				}
+
 				const parts = this.detect(value);
 
 				this.linkType = this.linkType ?? parts.type;
@@ -178,6 +236,12 @@ export default {
 			immediate: true
 		}
 	},
+	created() {
+		this.$events.on("click", this.onOutsideClick);
+	},
+	destroyed() {
+		this.$events.off("click", this.onOutsideClick);
+	},
 	methods: {
 		clear() {
 			this.$emit("input", "");
@@ -186,38 +250,21 @@ export default {
 		detect(value) {
 			value = value ?? "";
 
-			if (this.isPageUUID(value) === true) {
+			if (value.length === 0) {
 				return {
-					type: "page",
-					link: value
+					type: "url",
+					link: ""
 				};
 			}
 
-			if (this.isFileUUID(value) === true) {
-				return {
-					type: "file",
-					link: value
-				};
+			for (const type in this.availableTypes) {
+				if (this.availableTypes[type].detect(value) === true) {
+					return {
+						type: type,
+						link: this.availableTypes[type].link(value)
+					};
+				}
 			}
-
-			if (value.startsWith("tel:")) {
-				return {
-					type: "tel",
-					link: value.replace(/^tel:/, "")
-				};
-			}
-
-			if (value.startsWith("mailto:")) {
-				return {
-					type: "email",
-					link: value.replace(/^mailto:/, "")
-				};
-			}
-
-			return {
-				type: "url",
-				link: value
-			};
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -251,6 +298,11 @@ export default {
 		},
 		onInvalid(invalid) {
 			this.isInvalid = !!invalid;
+		},
+		onOutsideClick(event) {
+			if (this.$el.contains(event.target) === false) {
+				this.expanded = false;
+			}
 		},
 		async preview() {
 			if (this.linkType === "page" && this.linkValue) {
