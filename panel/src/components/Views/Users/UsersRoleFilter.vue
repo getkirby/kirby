@@ -14,15 +14,17 @@
 				ref="roles"
 				:options="[
 					{
-						text: $t('role.all'),
+						current: !role,
 						icon: 'bolt',
-						link: '/users'
+						link: '/users',
+						text: $t('role.all')
 					},
 					'-',
-					...roles.map((role) => ({
-						text: role.title,
+					...roles.map((roleFilter) => ({
+						current: role && role.id === roleFilter.id,
 						icon: 'bolt',
-						link: '/users?role=' + role.id
+						link: '/users?role=' + roleFilter.id,
+						text: roleFilter.title
 					}))
 				]"
 				align="right"
