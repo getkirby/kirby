@@ -196,7 +196,7 @@ export default {
 				custom: {
 					detect: () => true,
 					icon: "title",
-					label: "Custom",
+					label: this.$t("custom"),
 					link: (value) => value,
 					input: "text",
 					value: (value) => value

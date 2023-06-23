@@ -17,6 +17,7 @@
 	"copy.all": "Copy all",
 	"copy.success": "{count} copied!",
 	"create": "Create",
+	"custom": "Custom",
 
 	"date": "Date",
 	"date.select": "Select a date",
