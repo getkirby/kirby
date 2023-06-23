@@ -554,8 +554,10 @@
 	"system.updateStatus.update": "Free update { version } available",
 	"system.updateStatus.upgrade": "Upgrade { version } available",
 
-	"title": "Title",
+	"tel": "Phone",
+	"tel.placeholder": "+49123456789",
 	"template": "Template",
+	"title": "Title",
 	"today": "Today",
 
 	"toolbar.button.clear": "Clear formatting",

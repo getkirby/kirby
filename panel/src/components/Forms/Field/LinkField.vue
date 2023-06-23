@@ -154,9 +154,9 @@ export default {
 				},
 				tel: {
 					icon: "phone",
-					label: "Phone",
+					label: this.$t("tel"),
 					pattern: "[+]{0,1}[0-9]+",
-					placeholder: "Enter a phone number …",
+					placeholder: this.$t("tel.placeholder"),
 					input: "tel",
 					value: (value) => "tel:" + value
 				}
