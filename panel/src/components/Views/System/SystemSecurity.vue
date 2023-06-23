@@ -6,8 +6,6 @@
 			{
 				title: $t('retry'),
 				icon: 'refresh',
-				size: 'xs',
-				variant: 'filled',
 				click: retry
 			}
 		]"
