@@ -373,6 +373,39 @@ class ApiTest extends TestCase
 		$this->api->page('does-not-exist');
 	}
 
+	public function testPages()
+	{
+		$this->assertSame(['a/aa', 'a/ab'], $this->api->pages('a')->keys());
+	}
+
+	public function testPagesNotAccessible()
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'pages/api-protected' => [
+					'options' => ['access' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' 	   => 'a'
+					],
+					[
+						'slug' 	   => 'b',
+						'template' => 'api-protected'
+					],
+					[
+						'slug' 	   => 'c'
+					]
+				]
+			]
+		]);
+		$app->impersonate('kirby');
+
+		$this->assertSame(['a', 'c'], $app->api()->pages()->keys());
+	}
+
 	public function testUser()
 	{
 		$app = $this->app->clone([
