@@ -158,7 +158,7 @@ class Api extends BaseApi
 			default           => $parent->children()
 		};
 
-		return $pages->filter('isReadable', true);
+		return $pages->filter('isAccessible', true);
 	}
 
 	/**
