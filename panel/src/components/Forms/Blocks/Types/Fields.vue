@@ -91,9 +91,9 @@ export default {
 }
 
 .k-block-type-fields-form {
-	background-color: #eeeff2;
+	background-color: var(--color-gray-200);
 	padding: var(--spacing-6) var(--spacing-6) var(--spacing-8);
-	border-radius: var(--rounded);
+	border-radius: var(--rounded-sm);
 }
 .k-block-container[data-hidden="true"]:has(.k-block-type-fields)
 	:where(.k-drawer-tabs, .k-block-type-fields-form) {
