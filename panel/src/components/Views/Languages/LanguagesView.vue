@@ -3,7 +3,7 @@
 		<k-header>
 			{{ $t("view.languages") }}
 
-			<k-button-group slot="left">
+			<k-button-group slot="buttons">
 				<k-button
 					:text="$t('language.create')"
 					icon="add"
