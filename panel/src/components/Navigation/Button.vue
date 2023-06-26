@@ -196,9 +196,6 @@ export default {
 	--button-color-back: none;
 	--button-color-text: currentColor;
 	--button-color-icon: currentColor;
-	--button-color-hover-back: none;
-	--button-color-hover-text: currentColor;
-	--button-color-hover-icon: var(--button-color-icon);
 	--button-padding: var(--spacing-2);
 	--button-rounded: var(--spacing-1);
 	--button-text-display: block;
@@ -222,12 +219,6 @@ export default {
 	font-variant-numeric: tabular-nums;
 }
 
-.k-button:where(:not([aria-disabled])):hover {
-	--button-color-back: var(--button-color-hover-back);
-	--button-color-icon: var(--button-color-hover-icon);
-	--button-color-text: var(--button-color-hover-text);
-}
-
 .k-button > .k-icon {
 	color: var(--button-color-icon);
 }
@@ -246,14 +237,11 @@ export default {
 
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
-	--button-color-hover-back: var(--color-gray-400);
 }
 
 .k-button:where([data-theme]) {
 	--button-color-icon: var(--theme-color-600);
 	--button-color-text: var(--theme-color-text);
-	--button-color-hover-icon: var(--theme-color-700);
-	--button-color-hover-text: var(--theme-color-text);
 }
 
 .k-button:where([data-theme][data-variant="dimmed"]) {
@@ -264,9 +252,6 @@ export default {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
 	--button-color-text: var(--theme-color-text);
-	--button-color-hover-back: var(--theme-color-hover);
-	--button-color-hover-icon: var(--theme-color-700);
-	--button-color-hover-text: var(--theme-color-text);
 }
 
 /** Responsive buttons **/

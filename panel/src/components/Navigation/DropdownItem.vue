@@ -47,7 +47,6 @@ export default {
 <style>
 .k-dropdown-item.k-button {
 	--button-height: var(--height-sm);
-	--button-color-hover-back: var(--dropdown-color-hr);
 	--button-color-text: var(--dropdown-color-text);
 	display: flex;
 	justify-content: flex-start;

@@ -232,7 +232,6 @@ export default {
 
 .k-file-preview-focus-info .k-button {
 	--button-color-back: var(--color-slate-800);
-	--button-color-hover: var(--color-slate-700);
 }
 .k-file-preview[data-has-focus="true"] .k-file-preview-focus-info .k-button {
 	flex-direction: row-reverse;

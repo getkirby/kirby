@@ -384,7 +384,6 @@ export default {
 	--button-height: var(--height-sm);
 	--button-rounded: var(--rounded-sm);
 	--button-color-back: var(--color-gray-200);
-	--button-color-hover-back: var(--color-gray-300);
 	margin-inline-start: 0.25rem;
 }
 
