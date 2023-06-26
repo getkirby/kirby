@@ -58,16 +58,15 @@ export default {
 }
 .k-block-figure figcaption {
 	padding-top: 0.5rem;
-	color: var(--color-gray-600);
+	color: var(--color-text-dimmed);
 	font-size: var(--text-sm);
 	text-align: center;
 }
 .k-block-figure-empty {
 	--button-width: 100%;
 	--button-height: 6rem;
-	--button-color-text: var(--color-gray-600);
-	--button-color-back: var(--color-background);
-	--button-color-hover: var(--color-background);
+	--button-color-text: var(--color-text-dimmed);
+	--button-color-back: var(--color-gray-200);
 }
 
 .k-block-figure-empty,
