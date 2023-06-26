@@ -1,5 +1,5 @@
 <template>
-	<k-dropdown v-if="languages.length" class="k-languages-dropdown">
+	<k-dropdown v-if="languages.length > 1" class="k-languages-dropdown">
 		<k-button
 			:dropdown="true"
 			:responsive="true"
