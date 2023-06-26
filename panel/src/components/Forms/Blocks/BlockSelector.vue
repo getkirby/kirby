@@ -131,10 +131,6 @@ export default {
 </script>
 
 <style>
-.k-block-selector.k-dialog {
-	background: var(--color-slate-800);
-	color: var(--color-white);
-}
 .k-block-selector .k-headline {
 	margin-bottom: 1rem;
 }
@@ -144,7 +140,7 @@ export default {
 .k-block-selector summary {
 	font-size: var(--text-xs);
 	cursor: pointer;
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
 }
 .k-block-selector details:only-of-type summary {
 	pointer-events: none;
@@ -162,27 +158,27 @@ export default {
 	grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
-	--button-color-icon: var(--color-slate-700);
-	--button-color-back: var(--color-slate-900);
-	--button-color-hover-back: hsl(
-		var(--color-slate-hs),
-		calc(var(--color-slate-l-900) - 2%)
-	);
+	--button-color-icon: var(--color-text);
+	--button-color-back: var(--color-white);
+	--button-padding: var(--spacing-3);
 	width: 100%;
 	justify-content: start;
 	gap: 1rem;
-	padding-inline: var(--spacing-3);
+	box-shadow: var(--shadow);
 }
 .k-block-types .k-button[aria-disabled] {
 	opacity: var(--opacity-disabled);
+	--button-color-back: var(--color-gray-200);
+	box-shadow: none;
 }
 .k-clipboard-hint {
 	padding-top: 1.5rem;
+	line-height: var(--leading-normal);
 	font-size: var(--text-xs);
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
 }
 .k-clipboard-hint kbd {
-	background: rgba(0, 0, 0, 0.5);
+	background: var(--color-gray-300);
 	font-family: var(--font-mono);
 	letter-spacing: 0.1em;
 	padding: 0.25rem;
@@ -191,7 +187,7 @@ export default {
 }
 .k-clipboard-hint small {
 	display: block;
-	margin-top: 0.5rem;
-	color: var(--color-gray-500);
+	font-size: inherit;
+	color: var(--color-text-dimmed);
 }
 </style>
