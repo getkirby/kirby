@@ -352,10 +352,10 @@ class View
 
 		$menu[] = '-';
 		$menu[] = [
-			'icon'     => 'circle-nested',
+			'icon'     => 'edit',
 			'id'       => 'changes',
 			'dialog'   => 'changes',
-			'text'     => 'Has changes',
+			'text'     => I18n::translate('changes'),
 		];
 
 		$menu[] = [
