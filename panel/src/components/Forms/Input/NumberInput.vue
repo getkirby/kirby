@@ -41,7 +41,7 @@ export const props = {
 		/**
 		 * The amount to increment with each input step. This can be a decimal.
 		 */
-		step: Number,
+		step: [Number, String],
 		value: {
 			type: [Number, String],
 			default: ""
