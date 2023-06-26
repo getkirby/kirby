@@ -345,31 +345,24 @@ export default {
 
 <style>
 .k-calendar-input {
-	--cell-padding: 0.25rem 0.5rem;
-
-	padding: 0.5rem;
-	color: var(--color-light);
-	border-radius: var(--rounded-xs);
+	--button-height: var(--height-sm);
+	--button-width: var(--button-height);
+	--button-padding: 0;
+	padding: var(--spacing-2);
 	width: min-content;
 }
 .k-calendar-table {
 	table-layout: fixed;
-	width: 100%;
 	min-width: 15rem;
-	padding-top: 0.5rem;
 }
-
-.k-dropdown-content .k-calendar-input .k-button {
+.k-calendar-input .k-button {
 	justify-content: center;
 }
-
 .k-calendar-input > nav {
 	display: flex;
 	direction: ltr;
 	align-items: center;
-}
-.k-calendar-input > nav .k-button {
-	padding: 0.5rem;
+	margin-bottom: var(--spacing-2);
 }
 .k-calendar-selects {
 	flex-grow: 1;
@@ -384,42 +377,42 @@ export default {
 	direction: rtl;
 }
 .k-calendar-selects .k-select-input {
-	padding-inline: 0.5rem;
-	font-size: var(--text-sm);
+	display: flex;
+	align-items: center;
+	height: var(--button-height);
+	padding: 0 0.5rem;
 }
 .k-calendar-selects .k-select-input:focus-within {
-	color: var(--color-focus) !important;
+	outline: var(--outline);
 }
 .k-calendar-input th {
 	padding-block: 0.5rem;
 	color: var(--color-gray-500);
 	font-size: var(--text-xs);
-	font-weight: 400;
 	text-align: center;
 }
-.k-calendar-day .k-button {
-	width: 2rem;
-	height: 2rem;
-	border-radius: 50%;
-	border: 2px solid transparent;
-}
-.k-calendar-day:hover .k-button:not([data-disabled="true"]) {
-	border-color: rgba(255, 255, 255, 0.25);
+.k-calendar-day {
+	padding: 2px;
 }
 .k-calendar-day[aria-current="date"] .k-button {
 	text-decoration: underline;
 }
 .k-calendar-day[aria-selected="date"] .k-button {
-	color: var(--color-focus);
-	border-color: currentColor;
-	font-weight: var(--font-bold);
+	--button-color-text: var(--color-text);
+	--button-color-back: var(--color-focus);
+}
+.k-calendar-day[aria-selected="date"] .k-button:focus {
+	--button-color-text: initial;
+	--button-color-back: transparent;
 }
 .k-calendar-today {
-	padding-top: 0.5rem;
+	padding-top: var(--spacing-2);
+	text-align: center;
 }
 .k-calendar-today .k-button {
+	--button-width: auto;
+	--button-padding: var(--spacing-3);
 	font-size: var(--text-xs);
-	padding: 1rem;
 	text-decoration: underline;
 }
 </style>
