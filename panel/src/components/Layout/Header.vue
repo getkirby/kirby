@@ -1,9 +1,12 @@
 <template>
-	<header :data-editable="editable" class="k-header">
-		<k-headline tag="h1" @click="isEditable ? $emit('edit') : null">
-			<slot />
-			<k-icon v-if="editable" type="edit" />
-		</k-headline>
+	<header class="k-header">
+		<h1>
+			<button v-if="editable" @click="$emit('edit')">
+				<slot />
+				<k-icon type="edit" />
+			</button>
+			<slot v-else />
+		</h1>
 
 		<div
 			v-if="$slots.buttons || $slots.left || $slots.right"
@@ -29,11 +32,6 @@ export default {
 		 * Whether the headline is editable
 		 */
 		editable: Boolean
-	},
-	computed: {
-		isEditable() {
-			return this.editable && this.$listeners.edit;
-		}
 	},
 	/**
 	 * @todo remove in v5.0 when removing slots
@@ -70,26 +68,32 @@ export default {
 }
 
 .k-header h1 {
-	display: inline-flex;
-	align-items: baseline;
-	gap: var(--spacing-2);
 	font-size: var(--text-h1);
 	font-weight: var(--font-h1);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	line-height: var(--leading-h1);
-	cursor: pointer;
 	margin-bottom: var(--header-padding-block);
 }
 
-.k-header h1 svg {
+.k-header h1 > button {
+	display: inline-flex;
+	text-align: start;
+	gap: var(--spacing-2);
+	align-items: baseline;
+}
+
+.k-header h1,
+.k-header h1 > button {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.k-header h1 > button svg {
 	--icon-color: var(--color-gray-500);
 	opacity: 0;
 	transition: opacity 0.2s;
 }
 
-.k-header h1:hover svg {
+.k-header h1:hover > button svg {
 	opacity: 1;
 }
 
