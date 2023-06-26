@@ -1,7 +1,9 @@
 <template>
 	<div class="k-times">
 		<div class="k-times-slot">
-			<h3><k-icon type="sun" /> <span class="sr-only">Day</span></h3>
+			<h3>
+				<k-icon type="sun" /> <span class="sr-only">{{ $t("day") }}</span>
+			</h3>
 			<ul>
 				<li v-for="time in day" :key="time.select">
 					<hr v-if="time === '-'" />
@@ -12,7 +14,9 @@
 			</ul>
 		</div>
 		<div class="k-times-slot">
-			<h3><k-icon type="moon" /> <span class="sr-only">Night</span></h3>
+			<h3>
+				<k-icon type="moon" /> <span class="sr-only">{{ $t("night") }}</span>
+			</h3>
 			<ul>
 				<li v-for="time in night" :key="time.select">
 					<hr v-if="time === '-'" />
