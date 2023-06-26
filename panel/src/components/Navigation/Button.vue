@@ -219,6 +219,7 @@ export default {
 	min-width: max-content;
 	width: var(--button-width);
 	color: var(--button-color-text);
+	font-variant-numeric: tabular-nums;
 }
 
 .k-button:where(:not([aria-disabled])):hover {

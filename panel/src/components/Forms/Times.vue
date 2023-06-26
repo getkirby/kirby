@@ -1,7 +1,7 @@
 <template>
 	<div class="k-times">
 		<div class="k-times-slot">
-			<k-icon type="sun" />
+			<h3><k-icon type="sun" /> <span class="sr-only">Day</span></h3>
 			<ul>
 				<li v-for="time in day" :key="time.select">
 					<hr v-if="time === '-'" />
@@ -12,7 +12,7 @@
 			</ul>
 		</div>
 		<div class="k-times-slot">
-			<k-icon type="moon" />
+			<h3><k-icon type="moon" /> <span class="sr-only">Night</span></h3>
 			<ul>
 				<li v-for="time in night" :key="time.select">
 					<hr v-if="time === '-'" />
@@ -85,28 +85,20 @@ export default {
 
 <style>
 .k-times {
-	padding: var(--spacing-4) var(--spacing-6);
+	--button-height: var(--height-sm);
+	--button-padding: var(--spacing-3);
 	display: grid;
-	line-height: 1;
 	grid-template-columns: 1fr 1fr;
-	grid-gap: var(--spacing-6);
+	gap: var(--spacing-3);
 }
-.k-times .k-icon {
-	width: 1rem;
-	margin-bottom: var(--spacing-2);
-}
-.k-times-slot .k-button {
-	padding: var(--spacing-1) var(--spacing-3) var(--spacing-1) 0;
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
+.k-times h3 {
+	display: flex;
+	align-items: center;
+	padding-inline: var(--button-padding);
+	height: var(--button-height);
+	margin-bottom: var(--spacing-1);
 }
 .k-times .k-times-slot hr {
-	position: relative;
-	opacity: 1;
-	margin: var(--spacing-2) 0;
-	border: 0;
-	height: 1px;
-	top: 1px;
-	background: var(--color-dark);
+	margin: var(--spacing-2) var(--spacing-3);
 }
 </style>
