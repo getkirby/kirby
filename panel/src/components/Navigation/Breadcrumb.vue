@@ -2,7 +2,7 @@
 	<nav :aria-label="label" class="k-breadcrumb">
 		<k-dropdown class="k-breadcrumb-dropdown">
 			<k-button icon="road-sign" @click="$refs.dropdown.toggle()" />
-			<k-dropdown-content ref="dropdown" :options="dropdown" theme="light" />
+			<k-dropdown-content ref="dropdown" :options="dropdown" />
 		</k-dropdown>
 
 		<ol>
@@ -65,6 +65,7 @@ export default {
 <style>
 .k-breadcrumb {
 	--breadcrumb-divider: "/";
+	overflow: hidden;
 }
 
 .k-breadcrumb ol {
@@ -73,20 +74,20 @@ export default {
 	align-items: center;
 }
 
-.k-breadcrumb li {
+.k-breadcrumb ol li {
 	display: flex;
 	align-items: center;
 	flex-shrink: 3;
 }
-.k-breadcrumb li:not(:last-child)::after {
+.k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
 	flex-shrink: 0;
 }
-.k-breadcrumb li:last-child {
+.k-breadcrumb ol li:last-child {
 	flex-shrink: 1;
 }
-.k-breadcrumb li:not(:first-child):not(:last-child) {
+.k-breadcrumb ol li:not(:first-child):not(:last-child) {
 	max-width: 15vw;
 	max-width: 15cqw;
 }
