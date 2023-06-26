@@ -47,8 +47,11 @@ export default (panel) => {
 
 			if (this.completed.length > 0) {
 				this.emit("done", this.completed);
-				panel.notification.success({ context: "view" });
-				panel.view.reload();
+
+				if (panel.drawer.isOpen === false) {
+					panel.notification.success({ context: "view" });
+					panel.view.reload();
+				}
 			}
 
 			this.reset();
