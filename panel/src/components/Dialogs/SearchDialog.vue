@@ -183,6 +183,12 @@ export default {
 	margin: 2.5rem auto;
 	align-self: start;
 }
+
+.k-search-dialog,
+.k-search-dialog .k-dialog-body {
+	overflow: visible;
+}
+
 .k-search-dialog-input {
 	--input-height: var(--height-lg);
 	--button-height: var(--input-height);
@@ -193,23 +199,14 @@ export default {
 	flex-shrink: 0;
 }
 .k-search-dialog-input input {
-	background: none;
 	flex-grow: 1;
-	font: inherit;
 	padding-inline: 0.75rem;
-	border: 0;
 	height: var(--input-height);
 	border-left: 1px solid var(--color-border);
+	line-height: var(--input-height);
 }
 .k-search-dialog-input input:focus {
 	outline: 0;
-}
-
-.k-search-dialog-close {
-	--button-padding: 0.925rem;
-}
-.k-search-dialog-close .k-icon-loader {
-	animation: Spin 2s linear infinite;
 }
 
 .k-search-dialog-results {
