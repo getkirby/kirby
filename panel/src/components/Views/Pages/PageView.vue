@@ -104,8 +104,4 @@ export default {
 .k-page-view:has(.k-tabs) .k-page-view-header {
 	margin-bottom: 0;
 }
-.k-page-view-status {
-	--button-color-back: var(--color-gray-300);
-	--button-color-text: var(--color-text);
-}
 </style>

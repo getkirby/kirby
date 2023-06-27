@@ -1,6 +1,6 @@
 <template>
 	<component :is="component" v-bind="attrs" class="k-button" @click="onClick">
-		<k-icon v-if="icon" :type="icon" />
+		<k-icon v-if="icon" :type="icon" class="k-button-icon" />
 
 		<span v-if="text || $slots.default" class="k-button-text">
 			<template v-if="text">
@@ -219,51 +219,61 @@ export default {
 	font-variant-numeric: tabular-nums;
 }
 
-.k-button > .k-icon {
-	color: var(--button-color-icon);
+.k-button-icon {
+	--icon-color: var(--button-color-icon);
 }
 
-.k-button .k-button-text {
+.k-button-text {
 	display: var(--button-text-display);
 }
 
+/** Themed Buttons **/
+.k-button:where([data-theme]) {
+	--button-color-icon: var(--theme-color-icon);
+	--button-color-text: var(--theme-color-text);
+}
+
+/** Dimmed Buttons **/
 .k-button:where([data-variant="dimmed"]) {
-	--button-color-icon: var(--theme-color-600, var(--color-black));
+	--button-color-icon: var(--color-text);
 	--button-color-text: var(--color-text-dimmed);
+}
+.k-button:where([data-variant="dimmed"]):hover {
+	filter: brightness(50%);
 }
 .k-button:where([data-variant="dimmed"]):where([aria-current]) {
 	--button-color-text: var(--color-text);
 }
+.k-button:where([data-theme][data-variant="dimmed"]) {
+	--button-color-icon: var(--theme-color-icon);
+	--button-color-text: var(--theme-color-text-dimmed);
+}
 
+/** Filled Buttons **/
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--color-gray-300);
 }
-
-.k-button:where([data-theme]) {
-	--button-color-icon: var(--theme-color-600);
-	--button-color-text: var(--theme-color-text);
+.k-button:where([data-variant="filled"]):hover {
+	filter: brightness(97%);
 }
-
-.k-button:where([data-theme][data-variant="dimmed"]) {
-	--button-color-text: var(--theme-color-700);
-}
-
 .k-button:where([data-theme][data-variant="filled"]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);
 	--button-color-text: var(--theme-color-text);
 }
 
-/** Responsive buttons **/
-.k-button:where([data-responsive]) {
-	justify-content: start;
+/** Icon Buttons **/
+.k-button:not(:has(.k-button-text)) {
+	--button-padding: 0;
+	aspect-ratio: 1/1;
 }
 
+/** Responsive buttons **/
 @container (max-width: 30rem) {
-	.k-button:where([data-responsive]) {
+	.k-button:where([data-responsive]:has(.k-button-icon)) {
+		--button-padding: 0;
+		aspect-ratio: 1/1;
 		--button-text-display: none;
-		--button-width: var(--button-height);
-		min-width: var(--button-width);
 	}
 }
 
@@ -278,12 +288,10 @@ export default {
 	--button-padding: 0.325rem;
 	--icon-size: 14px;
 }
-
 .k-button:where([data-size="sm"]) {
 	--button-height: var(--height-sm);
 	--button-padding: 0.5rem;
 }
-
 .k-button:where([data-size="lg"]) {
 	--button-height: var(--height-lg);
 }
