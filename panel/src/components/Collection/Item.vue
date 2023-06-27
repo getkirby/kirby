@@ -142,7 +142,7 @@ export default {
 }
 
 .k-item .k-icon-frame {
-	--back: var(--color-slate-300);
+	--back: var(--color-gray-300);
 }
 
 .k-item-content {
