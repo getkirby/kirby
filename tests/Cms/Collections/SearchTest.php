@@ -34,7 +34,7 @@ class SearchTest extends TestCase
 		$search = Search::collection($collection, 'm', ['minlength' => 1]);
 		$this->assertCount(3, $search);
 
-		// minLength of 2 is not reached, should return foll collection
+		// minLength of 2 is not reached, should return full collection
 		$search = Search::collection($collection, 'm');
 		$this->assertCount(4, $search);
 	}
