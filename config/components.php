@@ -160,7 +160,7 @@ return [
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
-			return $collection;
+			return $collection->limit(0);
 		}
 
 		$words = preg_replace('/(\s)/u', ',', $query);
@@ -175,8 +175,9 @@ return [
 			return $collection->limit(0);
 		}
 
-		$words = A::map($words, fn ($value) =>
-			Str::wrap(preg_quote($value), $options['words'] ? '\b' : '')
+		$words = A::map(
+			$words,
+			fn ($value) => Str::wrap(preg_quote($value), $options['words'] ? '\b' : '')
 		);
 
 		$exact = preg_quote($query);
