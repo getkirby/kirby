@@ -1,103 +1,106 @@
 <template>
 	<k-dialog
-		ref="dialog"
-		:cancel-button="false"
-		:submit-button="false"
-		size="medium"
+		v-bind="$props"
 		class="k-layout-selector"
+		@cancel="$emit('cancel')"
+		@submit="$emit('submit', value)"
 	>
-		<k-headline>{{ $t("field.layout.select") }}</k-headline>
-		<ul>
-			<li
+		<h3 class="k-label">{{ label }}</h3>
+		<k-navigate axis="x" class="k-layout-selector-options">
+			<button
 				v-for="(columns, layoutIndex) in layouts"
 				:key="layoutIndex"
-				:aria-current="isCurrent(layoutIndex)"
+				:aria-current="value === columns"
+				:aria-label="columns.join(',')"
+				:value="columns"
 				class="k-layout-selector-option"
+				@click="$emit('input', columns)"
 			>
-				<k-grid @click.native="onSelect(columns, layoutIndex)">
+				<k-grid aria-hidden>
 					<k-column
 						v-for="(column, columnIndex) in columns"
 						:key="columnIndex"
 						:width="column"
 					/>
 				</k-grid>
-			</li>
-		</ul>
+			</button>
+		</k-navigate>
 	</k-dialog>
 </template>
 
 <script>
+import Dialog from "@/mixins/dialog.js";
+
 /**
  * @internal
  */
 export default {
 	inheritAttrs: false,
+	mixins: [Dialog],
 	props: {
-		layouts: Array
-	},
-	data() {
-		return {
-			payload: null
-		};
-	},
-	methods: {
-		close() {
-			this.$refs.dialog.close();
+		cancelButton: {
+			default: false
 		},
-		isCurrent(layoutIndex) {
-			return layoutIndex === this.payload?.layoutIndex;
+		label: {
+			default() {
+				return this.$t("field.layout.select");
+			},
+			type: String
 		},
-		onSelect(columns, layoutIndex) {
-			this.$emit("select", columns, layoutIndex, this.payload);
+		layouts: {
+			type: Array
 		},
-		open(payload) {
-			this.payload = payload;
-			this.$refs.dialog.open();
+		size: {
+			default: "medium"
+		},
+		submitButton: {
+			default: false
+		},
+		value: {
+			type: Array
 		}
 	}
 };
 </script>
 
 <style>
-.k-layout-selector.k-dialog {
-	background: var(--color-dark);
-	color: var(--color-white);
-}
-.k-layout-selector .k-headline {
-	line-height: 1;
-	margin-top: -0.25rem;
-	margin-bottom: 1.5rem;
+.k-layout-selector h3 {
+	margin-top: -0.5rem;
+	margin-bottom: var(--spacing-3);
 }
 
-.k-layout-selector ul {
+.k-layout-selector-options {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 1.5rem;
+	gap: var(--spacing-6);
 }
 
 .k-layout-selector-option {
-	outline: 2px solid var(--option-outline, transparent);
-	outline-offset: 2px;
+	--color-border: hsla(var(--color-gray-hs), 0%, 6%);
+	--color-back: var(--color-white);
+	border-radius: var(--rounded);
 }
-.k-layout-selector-option[aria-current="true"] {
-	--option-outline: var(--color-focus);
+.k-layout-selector-option:focus-visible {
+	outline: var(--outline);
+	outline-offset: -1px;
 }
-.k-layout-selector-option:not([aria-current]):hover {
-	--option-outline: var(--color-green-400);
-}
-.k-layout-selector-option:last-child {
-	margin-bottom: 0;
-}
-
 .k-layout-selector-option .k-grid {
-	gap: 2px;
+	border: 1px solid var(--color-border);
+	gap: 1px;
 	grid-template-columns: repeat(var(--columns), 1fr);
-	box-shadow: var(--shadow);
 	cursor: pointer;
+	background: var(--color-border);
+	border-radius: var(--rounded);
+	overflow: hidden;
+	box-shadow: var(--shadow);
 }
 .k-layout-selector-option .k-column {
 	grid-column: span var(--span);
-	background: var(--color-slate-800);
+	background: var(--color-back);
 	height: 5rem;
+}
+.k-layout-selector-option[aria-current] {
+	--color-border: var(--color-focus);
+	--color-back: var(--color-blue-300);
 }
 </style>
