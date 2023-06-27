@@ -8,8 +8,8 @@
 <style>
 .k-dialog .k-notification {
 	padding-block: 0.325rem;
-	border-start-start-radius: var(--rounded);
-	border-start-end-radius: var(--rounded);
+	border-start-start-radius: var(--dialog-rounded);
+	border-start-end-radius: var(--dialog-rounded);
 	margin-top: -1px; /* to avoid a bleeding background with the border radius */
 }
 </style>
