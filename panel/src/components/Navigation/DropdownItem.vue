@@ -46,13 +46,13 @@ export default {
 
 <style>
 .k-dropdown-item.k-button {
-	--button-height: var(--height-sm);
 	--button-color-text: var(--dropdown-color-text);
+	--button-height: var(--height-sm);
+	--button-rounded: var(--rounded-sm);
+	--button-width: 100%;
 	display: flex;
 	justify-content: flex-start;
 	gap: 0.75rem;
-	border-radius: var(--rounded-sm);
-	width: 100%;
 }
 .k-dropdown-item.k-button[aria-current] {
 	--button-color-text: var(--color-blue-500);
@@ -60,7 +60,7 @@ export default {
 .k-dropdown-item.k-button[aria-disabled] {
 	opacity: var(--opacity-disabled);
 }
-.k-dropdown-item.k-button + .k-dropdown-item.k-button {
-	margin-top: 2px;
+.k-dropdown-item.k-button:not([aria-disabled]):hover {
+	--button-color-back: hsl(var(--color-gray-hs), 22%);
 }
 </style>
