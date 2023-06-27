@@ -51,20 +51,17 @@ export default {
 </script>
 
 <style>
-.k-block-importer.k-dialog {
-	background: var(--color-slate-800);
-	color: var(--color-white);
-}
 .k-block-importer .k-dialog-body {
 	padding: 0;
 }
 .k-block-importer label {
 	display: block;
 	padding: var(--spacing-6) var(--spacing-6) 0;
-	color: var(--color-gray-400);
+	color: var(--color-text-dimmed);
+	line-height: var(--leading-normal);
 }
 .k-block-importer label kbd {
-	background: rgba(0, 0, 0, 0.5);
+	background: var(--color-gray-300);
 	font-family: var(--font-mono);
 	letter-spacing: 0.1em;
 	padding: 0.25rem;
@@ -73,8 +70,7 @@ export default {
 }
 .k-block-importer label small {
 	display: block;
-	margin-top: 0.5rem;
-	color: var(--color-gray-500);
+	font-size: inherit;
 }
 
 .k-block-importer textarea {
