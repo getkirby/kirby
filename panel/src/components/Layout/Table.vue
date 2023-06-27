@@ -464,7 +464,7 @@ td.k-table-index-column {
 	display: none;
 }
 .k-table tr:hover .k-sort-handle {
-	display: block;
+	display: flex;
 }
 
 .k-table-row-ghost {
