@@ -145,11 +145,13 @@ export default {
 	position: fixed;
 	inset: 0;
 	width: 100%;
+	height: 100%;
 	height: 100vh;
 	height: 100dvh;
 	background: none;
 	z-index: var(--z-dialog);
 	transform: translate3d(0, 0, 0);
+	overflow: hidden;
 }
 .k-overlay[open]::backdrop {
 	background: none;
@@ -159,6 +161,7 @@ export default {
 	position: fixed;
 	inset: 0;
 	background: var(--overlay-color-back);
+	overflow: auto;
 }
 
 .k-overlay[open][data-type="dialog"] > .k-portal {

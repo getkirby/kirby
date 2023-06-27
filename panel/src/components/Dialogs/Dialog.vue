@@ -62,12 +62,9 @@ export default {
 	box-shadow: var(--dialog-shadow);
 	border-radius: var(--dialog-rounded);
 	line-height: 1;
-	max-height: calc(100vh - 3rem);
-	max-height: calc(100dvh - 3rem);
 	margin: 1.5rem;
 	display: flex;
 	flex-direction: column;
-	overflow: hidden;
 }
 
 @media screen and (min-width: 20rem) {
