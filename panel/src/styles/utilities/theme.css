@@ -25,9 +25,10 @@
 	--theme-color-900: hsl(var(--theme-color-hs), var(--theme-color-l-900));
 
 	--theme-color-text: var(--theme-color-900);
+	--theme-color-text-dimmed: var(--theme-color-700);
 	--theme-color-back: var(--theme-color-400);
 	--theme-color-hover: var(--theme-color-500);
-	--theme-color-icon: var(--theme-color-700);
+	--theme-color-icon: var(--theme-color-600);
 }
 
 /* Color themes */
