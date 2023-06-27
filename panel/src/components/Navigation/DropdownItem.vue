@@ -61,6 +61,6 @@ export default {
 	opacity: var(--opacity-disabled);
 }
 .k-dropdown-item.k-button:not([aria-disabled]):hover {
-	--button-color-back: hsl(var(--color-gray-hs), 22%);
+	--button-color-back: var(--dropdown-color-hr);
 }
 </style>
