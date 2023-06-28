@@ -31,7 +31,9 @@ export default {
 </script>
 
 <style>
-.k-list-field .k-list-input {
-	padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+.k-list-field .k-list-input .ProseMirror,
+/* ::before is used for the placeholder */
+.k-list-field .k-list-input::before {
+	padding: 0.475rem 0.5rem 0.475rem 0.75rem;
 }
 </style>

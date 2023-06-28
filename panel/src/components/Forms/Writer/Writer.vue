@@ -468,5 +468,6 @@ export default {
 	pointer-events: none;
 	white-space: pre-wrap;
 	word-wrap: break-word;
+	line-height: 1.5;
 }
 </style>
