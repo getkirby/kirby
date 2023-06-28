@@ -3,14 +3,13 @@
 		<template #options>
 			<k-dropdown>
 				<k-button
-					:disabled="currentIndex !== null"
 					icon="dots"
 					size="xs"
 					variant="filled"
 					@click="$refs.options.toggle()"
 				/>
 				<k-dropdown-content ref="options" align="right">
-					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
+					<k-dropdown-item :disabled="!more" icon="add" @click="add()">
 						{{ $t("add") }}
 					</k-dropdown-item>
 					<k-dropdown-item
@@ -24,27 +23,12 @@
 			</k-dropdown>
 		</template>
 
-		<!-- Form -->
-		<k-structure-form
-			v-if="currentIndex !== null"
-			ref="form"
-			:fields="form"
-			:index="currentIndex"
-			:total="items.length"
-			:value="currentModel"
-			@close="onFormClose"
-			@discard="onFormDiscard"
-			@input="onFormInput"
-			@paginate="onFormPaginate($event.offset)"
-			@submit="onFormSubmit"
-		/>
-
 		<!-- Empty State -->
 		<k-empty
-			v-else-if="items.length === 0"
+			v-if="items.length === 0"
 			:data-invalid="isInvalid"
 			icon="list-bullet"
-			@click="onAdd"
+			@click="add()"
 		>
 			{{ empty || $t("field.structure.empty") }}
 		</k-empty>
@@ -63,19 +47,18 @@
 				:sortable="isSortable"
 				:data-invalid="isInvalid"
 				@cell="jump($event.rowIndex, $event.columnIndex)"
-				@input="onInput"
-				@option="onOption"
+				@input="save"
+				@option="option"
 				@paginate="paginate"
 			/>
 
 			<footer v-if="more" class="k-bar" data-align="center">
 				<k-button
-					v-if="more"
 					:title="$t('add')"
 					icon="add"
 					size="xs"
 					variant="filled"
-					@click="onAdd"
+					@click="add()"
 				/>
 			</footer>
 		</template>
@@ -148,8 +131,6 @@ export default {
 		return {
 			autofocus: null,
 			items: this.toItems(this.value),
-			currentIndex: null,
-			currentModel: null,
 			page: 1
 		};
 	},
@@ -273,7 +254,7 @@ export default {
 			}
 
 			let options = [];
-			let more = this.duplicate && this.more && this.currentIndex === null;
+			let more = this.duplicate && this.more;
 
 			options.push({
 				icon: "edit",
@@ -281,17 +262,18 @@ export default {
 				click: "edit"
 			});
 
-			if (more) {
-				options.push({
-					icon: "copy",
-					text: this.$t("duplicate"),
-					click: "duplicate"
-				});
-			}
+			options.push({
+				disabled: !more,
+				icon: "copy",
+				text: this.$t("duplicate"),
+				click: "duplicate"
+			});
+
+			options.push("-");
 
 			options.push({
-				icon: "remove",
-				text: more ? this.$t("remove") : null,
+				icon: "trash",
+				text: more ? this.$t("delete") : null,
 				click: "remove"
 			});
 
@@ -323,15 +305,31 @@ export default {
 		/**
 		 * Adds new entry
 		 * @public
-		 * @param {Object} value object with values for each field
 		 */
-		add(value) {
+		add(value = null) {
+			if (this.more === false) {
+				return false;
+			}
+
+			value = value ?? this.$helper.field.form(this.fields);
+
+			let index = 0;
+
 			if (this.prepend === true) {
 				this.items.unshift(value);
+				index = 0;
 			} else {
 				this.items.push(value);
+				index = this.items.length - 1;
 			}
+
+			this.save();
+			this.open(index);
 		},
+		close() {
+			this.$panel.drawer.close();
+		},
+
 		/**
 		 * Focuses the add button
 		 * @public
@@ -348,113 +346,6 @@ export default {
 		jump(index, field) {
 			this.open(index + this.pagination.offset, field);
 		},
-		/**
-		 * Called when adding new structure entry
-		 */
-		onAdd() {
-			// ignore if field is disabled
-			if (this.disabled === true) {
-				return false;
-			}
-
-			// if form is already open, discard it (if possible)
-			if (this.currentIndex !== null) {
-				this.onFormDiscard();
-				return false;
-			}
-
-			this.currentIndex = "new";
-			this.currentModel = this.$helper.field.form(this.fields);
-
-			this.onFormOpen();
-		},
-		/**
-		 * Handles the closing of the structure form
-		 */
-		onFormClose() {
-			this.currentIndex = null;
-			this.currentModel = null;
-		},
-		/**
-		 * Handles when the structure form is discarded (e.g. by escape key)
-		 */
-		onFormDiscard() {
-			// when adding a new item, make sure to only discard empty form
-			if (this.currentIndex === "new") {
-				const values = Object.values(this.currentModel).filter(
-					(value) => this.$helper.object.isEmpty(value) === false
-				);
-
-				if (values.length === 0) {
-					this.onFormClose();
-					return;
-				}
-			}
-
-			this.onFormSubmit();
-		},
-		/**
-		 * Handles the creation and opening of the structure form
-		 * @param {string} field form field to focus
-		 */
-		onFormOpen(field = this.autofocus) {
-			this.$nextTick(() => {
-				this.$refs.form?.focus(field);
-			});
-		},
-		/**
-		 * Called when pagination changes in open form
-		 * @param {number} index index of new row to be shown
-		 */
-		async onFormPaginate(index) {
-			try {
-				await this.save();
-				this.open(index);
-			} catch (e) {
-				// don't change the page
-			}
-		},
-		/**
-		 * Handles the structure form submission
-		 */
-		async onFormSubmit() {
-			try {
-				await this.save();
-				this.onFormClose();
-			} catch (e) {
-				// don't close
-			}
-		},
-		/**
-		 * When the field's value changes
-		 * @param {array} values
-		 */
-		onInput(values = this.items) {
-			this.$emit("input", values);
-		},
-		/**
-		 * Called when option from row's dropdown was engaged
-		 * @param {string} option option name that was triggered
-		 * @param {Object} row
-		 * @param {number} rowIndex
-		 */
-		onOption(option, row, rowIndex) {
-			switch (option) {
-				case "remove":
-					this.onFormClose();
-					this.remove(rowIndex + this.pagination.offset);
-					break;
-
-				case "duplicate":
-					this.add(this.items[rowIndex + this.pagination.offset]);
-					this.onInput();
-					break;
-
-				case "edit":
-					this.open(rowIndex);
-					break;
-			}
-		},
 
 		/**
 		 * Edit the structure field entry at `index` position
@@ -463,11 +354,66 @@ export default {
 		 * @param {number} index
 		 * @param {string} field
 		 */
-		open(index, field) {
-			this.currentIndex = index;
-			this.currentModel = this.$helper.clone(this.items[index]);
-			this.onFormOpen(field);
+		open(index, field, replace = false) {
+			if (this.disabled === true || !this.items[index]) {
+				return false;
+			}
+
+			this.$panel.drawer.open({
+				component: "k-structure-drawer",
+				props: {
+					icon: this.icon ?? "list-bullet",
+					next: this.items[index + 1],
+					prev: this.items[index - 1],
+					tabs: {
+						content: {
+							fields: this.form
+						}
+					},
+					title: this.label,
+					value: this.items[index]
+				},
+				replace: replace,
+				on: {
+					input: (value) => {
+						this.$set(this.items, index, value);
+						this.save();
+					},
+					next: () => {
+						this.open(index + 1, null, true);
+					},
+					prev: () => {
+						this.open(index - 1, null, true);
+					},
+					remove: () => {
+						this.remove(index);
+					}
+				}
+			});
 		},
+
+		/**
+		 * Called when option from row's dropdown was engaged
+		 * @param {string} option option name that was triggered
+		 * @param {Object} row
+		 * @param {number} rowIndex
+		 */
+		option(option, row, rowIndex) {
+			switch (option) {
+				case "remove":
+					this.remove(rowIndex + this.pagination.offset);
+					break;
+
+				case "duplicate":
+					this.add(this.items[rowIndex + this.pagination.offset]);
+					break;
+
+				case "edit":
+					this.open(rowIndex);
+					break;
+			}
+		},
+
 		/**
 		 * Update pagination state
 		 * @param {Object} pagination
@@ -491,8 +437,9 @@ export default {
 				on: {
 					submit: () => {
 						this.items.splice(index, 1);
-						this.onInput();
+						this.save();
 						this.$panel.dialog.close();
+						this.close();
 
 						// if pagination page doesn't exist anymore,
 						// go to previous page
@@ -518,11 +465,18 @@ export default {
 					submit: () => {
 						this.page = 1;
 						this.items = [];
-						this.onInput();
+						this.save();
 						this.$panel.dialog.close();
 					}
 				}
 			});
+		},
+		/**
+		 * When the field's value changes
+		 * @param {array} values
+		 */
+		save(values = this.items) {
+			this.$emit("input", values);
 		},
 		/**
 		 * Sort items according to `sortBy` prop
@@ -537,35 +491,6 @@ export default {
 			return items.sortBy(this.sortBy);
 		},
 		/**
-		 * Saves the current entry with the values
-		 * from the structure form and updates field value
-		 */
-		async save() {
-			if (this.currentIndex !== null && this.currentIndex !== undefined) {
-				try {
-					await this.validate(this.currentModel);
-
-					if (this.currentIndex === "new") {
-						this.add(this.currentModel);
-					} else {
-						this.items[this.currentIndex] = this.currentModel;
-					}
-
-					this.items = this.sort(this.items);
-					this.onInput();
-
-					return true;
-				} catch (errors) {
-					this.$panel.notification.error({
-						message: this.$t("error.form.incomplete"),
-						details: errors
-					});
-
-					throw errors;
-				}
-			}
-		},
-		/**
 		 * Converts field value to internal
 		 * items state
 		 * @param {Array} value
@@ -577,30 +502,6 @@ export default {
 			}
 
 			return this.sort(value);
-		},
-		/**
-		 * Validayes the structure form
-		 * @param {Object} model
-		 * @returns {bool}
-		 */
-		async validate(model) {
-			const errors = await this.$api.post(
-				this.endpoints.field + "/validate",
-				model
-			);
-
-			if (errors.length > 0) {
-				throw errors;
-			} else {
-				return true;
-			}
-		},
-		/**
-		 * Triggered whenever any form field value changes
-		 */
-		onFormInput(model) {
-			this.currentModel = model;
-			this.$emit("formInput", model);
 		}
 	}
 };

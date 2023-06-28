@@ -5,6 +5,7 @@ import Drawer from "./Drawer.vue";
 import BlockDrawer from "./BlockDrawer.vue";
 import FiberDrawer from "./FiberDrawer.vue";
 import FormDrawer from "./FormDrawer.vue";
+import StructureDrawer from "./StructureDrawer.vue";
 
 export default {
 	install(app) {
@@ -15,5 +16,6 @@ export default {
 		app.component("k-block-drawer", BlockDrawer);
 		app.component("k-fiber-drawer", FiberDrawer);
 		app.component("k-form-drawer", FormDrawer);
+		app.component("k-structure-drawer", StructureDrawer);
 	}
 };
