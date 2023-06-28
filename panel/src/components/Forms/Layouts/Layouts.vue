@@ -43,7 +43,6 @@
 			</k-empty>
 		</template>
 
-		<k-layout-selector ref="selector" :layouts="layouts" @select="onSelect" />
 		<k-block-pasteboard ref="pasteboard" @paste="onPaste" />
 	</div>
 </template>
@@ -107,8 +106,25 @@ export default {
 				(layout) => layout.toString() === columns.toString()
 			);
 
-			// data required to change the layout both in the dialog and afterwards
-			this.$refs.selector.open({ rowIndex, layoutIndex, layout });
+			this.$panel.dialog.open({
+				component: "k-layout-selector",
+				props: {
+					label: this.$t("field.layout.change"),
+					layouts: this.layouts,
+					value: this.layouts[layoutIndex]
+				},
+				on: {
+					submit: (value) => {
+						this.onChange(value, layoutIndex, {
+							rowIndex,
+							layoutIndex,
+							layout
+						});
+
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		duplicate(index, layout) {
 			let copy = {
@@ -128,11 +144,6 @@ export default {
 			});
 
 			this.rows.splice(this.nextIndex, 0, layout);
-
-			if (this.layouts.length > 1) {
-				this.$refs.selector.close();
-			}
-
 			this.save();
 		},
 		/**
@@ -149,9 +160,8 @@ export default {
 		 * @returns {Promise<void>}
 		 */
 		async onChange(columns, layoutIndex, payload) {
-			// don't do anything if the same layout got selected
-			if (layoutIndex === payload.layoutIndex) {
-				return this.$refs.selector.close();
+			if (layoutIndex === this.layouts[payload.layoutIndex]) {
+				return;
 			}
 
 			const oldLayout = payload.layout;
@@ -204,7 +214,6 @@ export default {
 			this.rows.splice(payload.rowIndex, 1, ...rows);
 
 			this.save();
-			this.$refs.selector.close();
 		},
 		async onPaste(e) {
 			const json = this.$helper.clipboard.read(e);
@@ -224,11 +233,6 @@ export default {
 			this.$panel.notification.success(
 				this.$t("paste.success", { count: rows.length })
 			);
-		},
-		async onSelect(columns, layoutIndex, payload) {
-			return payload
-				? this.onChange(columns, layoutIndex, payload)
-				: this.onAdd(columns);
 		},
 		pasteboard(index) {
 			this.current = index;
@@ -268,7 +272,19 @@ export default {
 				return this.onAdd(this.layouts[0]);
 			}
 
-			this.$refs.selector.open();
+			this.$panel.dialog.open({
+				component: "k-layout-selector",
+				props: {
+					layouts: this.layouts,
+					value: null
+				},
+				on: {
+					submit: (value) => {
+						this.onAdd(value);
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		updateAttrs(layoutIndex, attrs) {
 			this.rows[layoutIndex].attrs = attrs;
