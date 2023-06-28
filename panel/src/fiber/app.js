@@ -96,7 +96,7 @@ export default {
 
 				this.component = state.$view.component;
 				this.state = state;
-				this.key = options.replace === true ? this.key : state.$view.timestamp;
+				this.key = state.$view.timestamp;
 
 				if (options.navigate === true) {
 					this.navigate();

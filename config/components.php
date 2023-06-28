@@ -135,18 +135,14 @@ return [
 	/**
 	 * Add your own search engine
 	 *
-	 * @param \Kirby\Cms\App $kirby Kirby instance
 	 * @param \Kirby\Cms\Collection $collection Collection of searchable models
-	 * @param string $query
-	 * @param mixed $params
-	 * @return \Kirby\Cms\Collection|bool
 	 */
-	'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
-		// empty search query
-		if (empty(trim($query ?? '')) === true) {
-			return $collection->limit(0);
-		}
-
+	'search' => function (
+		App $kirby,
+		Collection $collection,
+		string $query = '',
+		$params = []
+	): Collection|bool {
 		if (is_string($params) === true) {
 			$params = ['fields' => Str::split($params, '|')];
 		}
@@ -158,30 +154,42 @@ return [
 			'words'     => false,
 		];
 
-		$options     = array_merge($defaults, $params);
 		$collection  = clone $collection;
+		$options     = array_merge($defaults, $params);
+		$query       = trim($query);
+
+		// empty or too short search query
+		if (Str::length($query) < $options['minlength']) {
+			return $collection->limit(0);
+		}
 
 		$words = preg_replace('/(\s)/u', ',', $query);
 		$words = Str::split($words, ',', $options['minlength']);
-		$exact = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
-		$query = Str::lower($query);
 
 		if (empty($options['stopwords']) === false) {
 			$words = array_diff($words, $options['stopwords']);
 		}
-
-		$words = A::map(
-			$words,
-			fn ($value) => $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value)
-		);
 
 		// returns an empty collection if there is no search word
 		if (empty($words) === true) {
 			return $collection->limit(0);
 		}
 
+		$words = A::map(
+			$words,
+			fn ($value) => Str::wrap(preg_quote($value), $options['words'] ? '\b' : '')
+		);
+
+		$exact = preg_quote($query);
+
+		if ($options['words']) {
+			$exact = '(\b' . $exact . '\b)';
+		}
+
+		$query   = Str::lower($query);
 		$preg    = '!(' . implode('|', $words) . ')!i';
 		$scores  = [];
+
 		$results = $collection->filter(function ($item) use ($query, $exact, $preg, $options, &$scores) {
 			$data   = $item->content()->toArray();
 			$keys   = array_keys($data);
@@ -193,10 +201,10 @@ return [
 				$keys[] = 'role';
 			} elseif ($item instanceof Page) {
 				// apply the default score for pages
-				$options['score'] = array_merge([
-					'id'    => 64,
-					'title' => 64,
-				], $options['score']);
+				$options['score'] = array_merge(
+					['id' => 64, 'title' => 64],
+					$options['score']
+				);
 			}
 
 			if (empty($options['fields']) === false) {
@@ -242,6 +250,7 @@ return [
 			}
 
 			$scores[$item->id()] = $scoring;
+
 			return $scoring['hits'] > 0;
 		});
 

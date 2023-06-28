@@ -1,8 +1,12 @@
 <template>
 	<k-field v-bind="$props" class="k-structure-field" @click.native.stop>
 		<template #options>
-			<k-dropdown v-if="!currentIndex">
-				<k-button icon="dots" @click="$refs.options.toggle()" />
+			<k-dropdown>
+				<k-button
+					:disabled="currentIndex !== null"
+					icon="dots"
+					@click="$refs.options.toggle()"
+				/>
 				<k-dropdown-content ref="options" align="right">
 					<k-dropdown-item :disabled="!more" icon="add" @click="onAdd">
 						{{ $t("add") }}
@@ -284,6 +288,12 @@ export default {
 			let options = [];
 			let more = this.duplicate && this.more && this.currentIndex === null;
 
+			options.push({
+				icon: "edit",
+				text: this.$t("edit"),
+				click: "edit"
+			});
+
 			if (more) {
 				options.push({
 					icon: "copy",
@@ -455,6 +465,10 @@ export default {
 				case "duplicate":
 					this.add(this.items[rowIndex + this.pagination.offset]);
 					this.onInput();
+					break;
+
+				case "edit":
+					this.open(rowIndex);
 					break;
 			}
 		},

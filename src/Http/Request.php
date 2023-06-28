@@ -195,7 +195,7 @@ class Request
 	 */
 	public function data(): array
 	{
-		return array_merge($this->body()->toArray(), $this->query()->toArray());
+		return array_replace($this->body()->toArray(), $this->query()->toArray());
 	}
 
 	/**
@@ -210,8 +210,8 @@ class Request
 		// the request method can be overwritten with a header
 		$methodOverride = strtoupper(Environment::getGlobally('HTTP_X_HTTP_METHOD_OVERRIDE', ''));
 
-		if ($method === null && in_array($methodOverride, $methods) === true) {
-			$method = $methodOverride;
+		if (in_array($methodOverride, $methods) === true) {
+			$method ??= $methodOverride;
 		}
 
 		// final chain of options to detect the method
