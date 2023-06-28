@@ -9,8 +9,6 @@
 				</k-topbar>
 				<slot />
 			</div>
-
-			<k-registration v-if="!$panel.license" />
 		</main>
 	</k-panel>
 </template>
