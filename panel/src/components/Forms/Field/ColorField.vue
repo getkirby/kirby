@@ -196,6 +196,9 @@ export default {
 .k-color-field .k-color-preview[aria-current] {
 	outline: var(--field-input-focus-outline);
 }
+.k-color-field[data-disabled="true"] .k-color-field-options {
+	opacity: var(--opacity-disabled);
+}
 
 .k-color-field .k-input-after {
 	font-size: var(--text-xs);
