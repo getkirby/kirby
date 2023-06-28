@@ -1,7 +1,7 @@
 <template>
 	<k-field v-bind="$props" class="k-layout-field">
 		<template #options>
-			<k-button-group layout="collapsed">
+			<k-button-group>
 				<k-button
 					:text="$t('add')"
 					icon="add"
