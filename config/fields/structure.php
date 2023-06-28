@@ -49,7 +49,7 @@ return [
 		/**
 		 * Fields setup for the structure form. Works just like fields in regular forms.
 		 */
-		'fields' => function (array $fields) {
+		'fields' => function (array $fields = []) {
 			return $fields;
 		},
 		/**
