@@ -191,6 +191,7 @@ export default {
 
 <style>
 :root {
+	--button-align: center;
 	--button-height: var(--height-md);
 	--button-width: auto;
 	--button-color-back: none;
@@ -205,7 +206,7 @@ export default {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: var(--button-align);
 	gap: 0.5rem;
 	padding-inline: var(--button-padding);
 	white-space: nowrap;
@@ -213,10 +214,10 @@ export default {
 	border-radius: var(--button-rounded);
 	background: var(--button-color-back);
 	height: var(--button-height);
-	min-width: max-content;
 	width: var(--button-width);
 	color: var(--button-color-text);
 	font-variant-numeric: tabular-nums;
+	overflow-x: clip;
 }
 
 .k-button-icon {
@@ -224,6 +225,8 @@ export default {
 }
 
 .k-button-text {
+	text-overflow: ellipsis;
+	overflow-x: clip;
 	display: var(--button-text-display);
 }
 
