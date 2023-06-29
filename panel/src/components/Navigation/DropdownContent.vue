@@ -177,35 +177,32 @@ export default {
 				openerRect.top + window.scrollY + openerRect.height + "px";
 
 			// set the left position based on the alignment
-			if (this.align === "end" || this.align === "right") {
-				this.$el.style.left =
-					openerRect.left + window.scrollX + openerRect.width + "px";
-			} else {
-				this.$el.style.left = openerRect.left + window.scrollX + "px";
-			}
+			const offsetX =
+				this.align === "end" || this.align === "right" ? openerRect.width : 0;
+			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
 
 			// open the modal after the correct positioning has been applied
 			this.$el.showModal();
 
-			// get the dimensions of the open dropdown
-			const dropdownRect = this.$el.getBoundingClientRect();
+			// as we just set style.top, wait one tick before measuring dropdownRect
+			this.$nextTick(() => {
+				// get the dimensions of the open dropdown
+				const dropdownRect = this.$el.getBoundingClientRect();
+				const safeSpaceHeight = 10;
 
-			// the minimum height required from above and below for the behavior of the dropup
-			// k-topbar or form-buttons (2.5rem = 40px)
-			// safe area height is slightly higher than that
-			let safeSpaceHeight = 50;
-
-			// activates the dropup if the dropdown content overflows
-			// to the bottom of the screen but only if there is enough space top of screen
-			if (
-				dropdownRect.top + dropdownRect.height >
-					window.innerHeight - safeSpaceHeight &&
-				dropdownRect.height + safeSpaceHeight * 2 < dropdownRect.top
-			) {
-				this.$el.style.top =
-					parseInt(this.$el.style.top) - openerRect.height + "px";
-				this.dropup = true;
-			}
+				// activates the dropup if the dropdown content overflows
+				// to the bottom of the screen but only if there is
+				// enough space top of screen
+				if (
+					dropdownRect.top + dropdownRect.height >
+						window.innerHeight - safeSpaceHeight &&
+					dropdownRect.height + safeSpaceHeight * 2 < dropdownRect.top
+				) {
+					this.$el.style.top =
+						parseInt(this.$el.style.top) - openerRect.height + "px";
+					this.dropup = true;
+				}
+			});
 		},
 		resetPosition() {
 			this.$el.style.top = 0;
