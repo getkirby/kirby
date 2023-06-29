@@ -273,7 +273,7 @@ export default {
 
 /** Responsive buttons **/
 @container (max-width: 30rem) {
-	.k-button:where([data-responsive]:has(.k-button-icon)) {
+	.k-button:is([data-responsive]:has(.k-button-icon)) {
 		--button-padding: 0;
 		aspect-ratio: 1/1;
 		--button-text-display: none;
