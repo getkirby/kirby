@@ -24,9 +24,6 @@
 				@click="notification.close()"
 			/>
 
-			<!-- License warning -->
-			<k-registration v-if="!$panel.license" />
-
 			<slot />
 		</div>
 	</div>

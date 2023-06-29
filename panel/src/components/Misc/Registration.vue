@@ -5,20 +5,21 @@
 		<k-button-group
 			:buttons="[
 				{
+					click: () => $dialog('registration'),
 					icon: 'key',
-					title: $t('license.register'),
+					responsive: true,
 					size: 'sm',
-					click: () => $dialog('registration')
+					text: $t('license.register')
 				},
 				{
 					icon: 'cart',
-					title: $t('license.buy'),
 					link: 'https://getkirby.com/buy',
+					responsive: true,
 					size: 'sm',
-					target: '_blank'
+					target: '_blank',
+					text: $t('license.buy')
 				}
 			]"
-			:responsive="true"
 			size="sm"
 		/>
 	</k-box>
@@ -26,13 +27,15 @@
 
 <style scoped>
 .k-box {
+	--box-height: var(--height);
 	color: var(--theme-color-900);
+	padding: 0 var(--spacing-3);
+	border-radius: 0;
+	border-bottom: 1px solid var(--theme-color-500);
+	justify-content: space-between;
+	container-type: inline-size;
 }
-
-.k-box .k-button-group {
-	gap: 0;
-}
-.k-box .k-button {
-	--button-padding: var(--spacing-3);
+.k-box p {
+	padding-inline: var(--spacing-2);
 }
 </style>
