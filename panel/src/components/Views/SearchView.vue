@@ -1,10 +1,11 @@
 <template>
 	<k-panel-inside class="k-search-view">
-		<k-header>Search</k-header>
+		<k-header>
+			Search
 
-		<div class="k-search-view-layout">
 			<k-input
 				ref="input"
+				slot="buttons"
 				:aria-label="$t('search')"
 				:autofocus="true"
 				:placeholder="$t('search') + ' …'"
@@ -14,34 +15,20 @@
 				type="text"
 				@input="query = $event"
 			/>
+		</k-header>
+		<k-tabs :tab="type" :tabs="tabs" />
 
-			<aside class="k-search-view-types">
-				<nav>
-					<k-button
-						v-for="(typeItem, typeIndex) in $panel.searches"
-						:key="typeIndex"
-						:current="type === typeIndex"
-						:icon="typeItem.icon"
-						:link="'/search/?type=' + typeIndex + '&query=' + query"
-						class="k-search-view-type"
-					>
-						{{ typeItem.label }}
-					</k-button>
-				</nav>
-			</aside>
-
-			<div class="k-search-view-results">
-				<k-collection
-					v-if="query"
-					:items="items"
-					:empty="{
-						icon: 'search',
-						text: $t('search.results.none')
-					}"
-					:pagination="pagination"
-					@paginate="onPaginate"
-				/>
-			</div>
+		<div class="k-search-view-results">
+			<k-collection
+				v-if="query"
+				:items="items"
+				:empty="{
+					icon: 'search',
+					text: $t('search.results.none')
+				}"
+				:pagination="pagination"
+				@paginate="onPaginate"
+			/>
 		</div>
 	</k-panel-inside>
 </template>
@@ -63,6 +50,23 @@ export default {
 			query: this.getQuery(),
 			pagination: {}
 		};
+	},
+	computed: {
+		tabs() {
+			const tabs = [];
+
+			for (const typeId in this.$panel.searches) {
+				const type = this.$panel.searches[typeId];
+
+				tabs.push({
+					label: type.label,
+					link: "/search/?type=" + typeId + "&query=" + this.query,
+					name: typeId
+				});
+			}
+
+			return tabs;
+		}
 	},
 	watch: {
 		query: {
@@ -125,55 +129,18 @@ export default {
 
 <style>
 .k-search-view .k-header {
-	margin-bottom: var(--spacing-6);
-}
-.k-search-view-layout {
-	display: grid;
-	row-gap: 1.5rem;
+	margin-bottom: 0;
 }
 
-.k-search-view-types nav {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	background: var(--color-white);
-	box-shadow: var(--shadow);
-	border-radius: var(--rounded);
-	padding: var(--spacing-1);
-}
-.k-search-view-type {
-	display: flex;
-	height: var(--height-sm);
-	align-items: center;
-	padding-inline: var(--spacing-2);
-	border-radius: var(--rounded-sm);
-}
-.k-search-view-type[aria-current] {
-	background: var(--color-blue-200);
-}
 .k-search-view-input {
-	font: inherit;
 	background: var(--color-gray-300);
-	border: none;
-	width: 100%;
+	height: var(--height-sm);
+	width: 40cqw;
+	line-height: var(--height-sm);
 	border-radius: var(--rounded);
-	padding: var(--spacing-3);
+	padding-inline: var(--spacing-2);
 }
-
-@media (min-width: 50rem) {
-	.k-search-view-layout {
-		grid-template-columns: 15rem 1fr;
-		grid-template-rows: var(--height-lg) 1fr;
-		column-gap: 3rem;
-		grid-template-areas:
-			"types input"
-			"types results";
-	}
-	.k-search-view-types {
-		grid-area: types;
-	}
-	.k-search-view-input {
-		grid-area: input;
-	}
+.k-search-view-input:focus-within {
+	outline: var(--outline);
 }
 </style>
