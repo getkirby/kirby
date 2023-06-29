@@ -13,7 +13,7 @@
 		<div class="k-topbar-spacer" />
 
 		<div class="k-topbar-signals">
-			<!-- notifications -->
+			<!-- Notifications -->
 			<k-button
 				v-if="notification && notification.type !== 'error'"
 				:icon="notification.icon"
@@ -23,6 +23,7 @@
 				class="k-topbar-notification k-topbar-button"
 				@click="notification.close()"
 			/>
+
 			<slot />
 		</div>
 	</div>

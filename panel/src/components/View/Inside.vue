@@ -1,18 +1,19 @@
 <template>
-	<k-panel class="k-panel-inside" tabindex="0">
-		<k-panel-menu :entries="$panel.menu" :view="$panel.view" />
-
-		<main class="k-panel-main">
-			<div class="k-panel-view">
-				<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
-					<slot name="topbar" />
-				</k-topbar>
-				<slot />
-			</div>
-
-			<k-registration v-if="!$panel.license" />
-		</main>
-	</k-panel>
+	<div>
+		<!-- License warning -->
+		<k-registration v-if="!$panel.license" />
+		<k-panel class="k-panel-inside" tabindex="0">
+			<k-panel-menu :entries="$panel.menu" :view="$panel.view" />
+			<main class="k-panel-main">
+				<div class="k-panel-view">
+					<k-topbar :breadcrumb="$panel.view.breadcrumb" :view="$panel.view">
+						<slot name="topbar" />
+					</k-topbar>
+					<slot />
+				</div>
+			</main>
+		</k-panel>
+	</div>
 </template>
 
 <script>

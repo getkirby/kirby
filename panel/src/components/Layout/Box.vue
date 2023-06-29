@@ -76,7 +76,7 @@ export default {
 	--box-padding-inline: var(--spacing-2);
 	--box-height: var(
 		--field-input-height
-	); /* TODO: change back to --height-md after inptu refactoring */
+	); /* TODO: change back to --height-md after input refactoring */
 	--text-font-size: var(--text-sm);
 	--icon-color: var(--box-color-icon);
 	display: flex;
