@@ -7,9 +7,13 @@ import debounce from "@/helpers/debounce.js";
  */
 export default {
 	props: {
+		delay: {
+			default: 200,
+			type: Number
+		},
 		hasSearch: {
-			type: Boolean,
-			default: true
+			default: true,
+			type: Boolean
 		}
 	},
 	data() {
@@ -25,7 +29,7 @@ export default {
 		}
 	},
 	created() {
-		this.search = debounce(this.search, 200);
+		this.search = debounce(this.search, this.delay);
 	},
 	methods: {
 		async search() {
