@@ -237,37 +237,11 @@
 	--color-gray-800: hsl(var(--color-gray-hs), var(--color-gray-l-800));
 	--color-gray-900: hsl(var(--color-gray-hs), var(--color-gray-l-900));
 
-	/**	Slate **/
-	--color-slate-h: 216;
-	--color-slate-s: 13%;
-	--color-slate-hs: var(--color-slate-h), var(--color-slate-s);
-	--color-slate-boost: 0%;
-
-	--color-slate-l-100: calc(var(--color-l-100) + var(--color-slate-boost));
-	--color-slate-l-200: calc(var(--color-l-200) + var(--color-slate-boost));
-	--color-slate-l-300: calc(var(--color-l-300) + var(--color-slate-boost));
-	--color-slate-l-400: calc(var(--color-l-400) + var(--color-slate-boost));
-	--color-slate-l-500: calc(var(--color-l-500) + var(--color-slate-boost));
-	--color-slate-l-600: calc(var(--color-l-600) + var(--color-slate-boost));
-	--color-slate-l-700: calc(var(--color-l-700) + var(--color-slate-boost));
-	--color-slate-l-800: calc(var(--color-l-800) + var(--color-slate-boost));
-	--color-slate-l-900: calc(var(--color-l-900) + var(--color-slate-boost));
-
-	--color-slate-100: hsl(var(--color-slate-hs), var(--color-slate-l-100));
-	--color-slate-200: hsl(var(--color-slate-hs), var(--color-slate-l-200));
-	--color-slate-300: hsl(var(--color-slate-hs), var(--color-slate-l-300));
-	--color-slate-400: hsl(var(--color-slate-hs), var(--color-slate-l-400));
-	--color-slate-500: hsl(var(--color-slate-hs), var(--color-slate-l-500));
-	--color-slate-600: hsl(var(--color-slate-hs), var(--color-slate-l-600));
-	--color-slate-700: hsl(var(--color-slate-hs), var(--color-slate-l-700));
-	--color-slate-800: hsl(var(--color-slate-hs), var(--color-slate-l-800));
-	--color-slate-900: hsl(var(--color-slate-hs), var(--color-slate-l-900));
-
 	/** Shortcuts **/
 	--color-backdrop: rgba(0, 0, 0, 0.6);
 	--color-black: black;
 	--color-border: var(--color-gray-300);
-	--color-dark: var(--color-slate-900);
+	--color-dark: var(--color-gray-900);
 	--color-focus: var(--color-blue-600);
 	--color-light: var(--color-gray-200);
 	--color-text: var(--color-black);

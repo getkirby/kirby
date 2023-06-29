@@ -231,7 +231,7 @@ export default {
 }
 
 .k-file-preview-focus-info .k-button {
-	--button-color-back: var(--color-slate-800);
+	--button-color-back: var(--color-gray-800);
 	--button-padding: var(--spacing-2);
 	--button-color-back: var(--color-gray-800);
 }

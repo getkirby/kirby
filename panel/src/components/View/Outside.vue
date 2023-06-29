@@ -11,7 +11,7 @@
 	place-items: center;
 	height: 100vh;
 	height: 100dvh;
-	background: var(--color-slate-200);
+	background: var(--color-gray-200);
 	padding: var(--spacing-6);
 }
 </style>
