@@ -209,6 +209,10 @@ export default {
 	outline: 0;
 }
 
+.k-search-dialog-close {
+	flex-shrink: 0;
+}
+
 .k-search-dialog-results {
 	border-top: 1px solid var(--color-border);
 	padding: 1rem;
