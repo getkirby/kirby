@@ -49,8 +49,6 @@ export default {
 	--tag-color-text: var(--color-light);
 	--tag-color-toggle: rgba(255, 255, 255, 0.7);
 	--tag-color-toggle-border: rgba(255, 255, 255, 0.15);
-	--tag-color-focus-back: var(--color-focus);
-	--tag-color-focus-text: var(--color-white);
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
 	--tag-rounded: var(--rounded);
@@ -72,9 +70,7 @@ export default {
 	user-select: none;
 }
 .k-tag:focus {
-	outline: 0;
-	background-color: var(--tag-color-focus-back);
-	color: var(--tag-color-focus-text);
+	outline: var(--outline);
 }
 .k-tag-text {
 	padding-inline: 0.75rem;
