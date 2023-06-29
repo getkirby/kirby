@@ -312,7 +312,7 @@ export default {
 
 .k-toolbar:not([data-inline="true"]):has(~ :focus-within) {
 	position: sticky;
-	top: calc(var(--header-bar-height) + var(--spacing-1) + 3px);
+	top: 4rem;
 	inset-inline: 0;
 	z-index: 1;
 

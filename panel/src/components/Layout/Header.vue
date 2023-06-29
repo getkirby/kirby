@@ -48,7 +48,6 @@ export default {
 
 <style>
 :root {
-	--header-bar-height: var(--height-md);
 	--header-color-back: var(--color-light);
 	--header-padding-block: var(--spacing-4);
 }
@@ -104,9 +103,9 @@ export default {
 	margin-bottom: var(--header-padding-block);
 }
 
-/* .k-header:has(.k-header-buttons) {
+.k-header:has(.k-header-buttons) {
 	position: sticky;
 	top: 0;
 	z-index: var(--z-toolbar);
-} */
+}
 </style>
