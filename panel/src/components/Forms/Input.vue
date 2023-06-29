@@ -355,34 +355,12 @@ export default {
 
 /* Tags */
 .k-input[data-theme="field"][data-type="tags"] .k-tags-input {
-	padding: 0.25rem 0.25rem 0 0.25rem;
+	display: flex;
+	gap: 0.25rem;
+	padding: 0.25rem;
 }
 .k-input[data-theme="field"][data-type="tags"] .k-tag {
-	margin-inline-end: 0.25rem;
-	margin-bottom: 0.25rem;
-	height: auto;
-	min-height: 1.75rem;
-	font-size: var(--text-sm);
-}
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input input {
-	font-size: var(--text-sm);
-	padding: 0 0.25rem;
-	height: 1.75rem;
-	line-height: 1;
-	margin-bottom: 0.25rem;
-}
-.k-input[data-theme="field"][data-type="tags"]
-	.k-tags-input
-	.k-dropdown-content {
-	top: calc(100% + 0.5rem + 2px);
-}
-/* don't apply dropup feature to tags */
-.k-input[data-theme="field"][data-type="tags"]
-	.k-tags-input
-	.k-dropdown-content[data-dropup] {
-	top: calc(100% + 0.5rem + 2px);
-	bottom: initial;
-	margin-bottom: initial;
+	height: var(--height-sm);
 }
 
 /* Multiselect */

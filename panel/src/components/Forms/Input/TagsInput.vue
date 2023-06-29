@@ -16,6 +16,7 @@
 			@click.native.stop
 			@blur.native="selectTag(null)"
 			@focus.native="selectTag(tag)"
+			@keydown.enter.native="edit(tag)"
 			@keydown.native.left="navigate('prev')"
 			@keydown.native.right="navigate('next')"
 			@dblclick.native="edit(tag)"
@@ -26,34 +27,30 @@
 		</k-tag>
 
 		<template #footer>
-			<span class="k-tags-input-element">
-				<k-autocomplete
+			<k-dropdown>
+				<k-button
+					ref="input"
+					icon="add"
+					size="sm"
+					variant="filled"
+					@click="$refs.autocomplete.toggle()"
+					@keydown.native="toggleInput"
+					@keydown.native.delete="navigate('last')"
+					@keydown.native.left="navigate('last')"
+				/>
+				<k-dropdown-content
 					ref="autocomplete"
-					:html="true"
-					:options="options"
-					:skip="skip"
-					@select="addTag"
-					@leave="$refs.input.focus()"
+					class="k-tags-dropdown"
+					:navigate="false"
 				>
-					<input
-						:id="id"
-						ref="input"
-						:autofocus="autofocus"
-						:disabled="disabled || (max && tags.length >= max)"
-						:name="name"
-						:value="newTag"
-						autocomplete="off"
-						type="text"
-						@input="onType($event.target.value)"
-						@blur="onBlur"
-						@keydown.meta.s="onSubmit"
-						@keydown.left.exact="onBack"
-						@keydown.enter.exact="onEnter"
-						@keydown.tab.exact="onTab"
-						@keydown.backspace.exact="onBack"
+					<k-selector
+						:options="dropdownOptions"
+						@create="addString($event)"
+						@escape="$refs.autocomplete.close()"
+						@select="addTag($event)"
 					/>
-				</k-autocomplete>
-			</span>
+				</k-dropdown-content>
+			</k-dropdown>
 		</template>
 	</k-draggable>
 </template>
@@ -118,8 +115,7 @@ export default {
 	data() {
 		return {
 			tags: this.toValues(this.value),
-			selected: null,
-			newTag: null
+			selected: null
 		};
 	},
 	computed: {
@@ -132,6 +128,11 @@ export default {
 		},
 		draggable() {
 			return this.tags.length > 1;
+		},
+		dropdownOptions() {
+			return this.options.filter((option) => {
+				return this.value.includes(option.value) === false;
+			});
 		},
 		skip() {
 			return this.tags.map((tag) => tag.value);
@@ -202,15 +203,34 @@ export default {
 				this.tags.push(tag);
 				this.onInput();
 			}
-
-			this.newTag = null;
 		},
 		edit(tag) {
-			// since the text for manual tags got escaped, we need
-			// to unescape it when trying to edit it manually again
-			this.newTag = this.$helper.string.unescapeHTML(tag.text);
-			this.$refs.input.select();
-			this.remove(tag);
+			this.$panel.dialog.open({
+				component: "k-form-dialog",
+				props: {
+					fields: {
+						tag: {
+							label: "Tag",
+							type: "text",
+							icon: "tag"
+						}
+					},
+					submitButton: this.$t("change"),
+					value: {
+						tag: this.$helper.string.unescapeHTML(tag.text)
+					}
+				},
+				on: {
+					submit: (value) => {
+						const index = this.index(tag);
+						const updated = this.toValue(value);
+
+						this.$set(this.tags, index, updated);
+						this.onInput();
+						this.$panel.dialog.close();
+					}
+				}
+			});
 		},
 		focus() {
 			this.$refs.input?.focus();
@@ -280,34 +300,6 @@ export default {
 				this.selectTag(null);
 			}
 		},
-		onBack(event) {
-			if (
-				event.target.selectionStart === 0 &&
-				event.target.selectionStart === event.target.selectionEnd &&
-				this.tags.length !== 0
-			) {
-				this.$refs.autocomplete.close();
-				this.navigate("last");
-				event.preventDefault();
-			}
-		},
-		onBlur(event) {
-			let related = event.relatedTarget || event.explicitOriginalTarget;
-
-			if (this.$refs.autocomplete.$el?.contains(related)) {
-				return;
-			}
-
-			this.addString(this.$refs.input.value, false);
-		},
-		onEnter(event) {
-			if (!this.newTag || this.newTag.length === 0) {
-				return true;
-			}
-
-			event.preventDefault();
-			this.addString(this.newTag);
-		},
 		onInput() {
 			// make sure to only emit values
 			const tags = this.tags.map((tag) => tag.value);
@@ -315,27 +307,6 @@ export default {
 		},
 		onInvalid() {
 			this.$emit("invalid", this.$v.$invalid, this.$v);
-		},
-		onSubmit(event) {
-			// prevent immediate saving just yet
-			event.preventDefault();
-			event.stopImmediatePropagation();
-
-			// blur input (which also commits current input as tags)
-			this.onBlur(event);
-
-			// trigger saving
-			this.$emit("submit", event);
-		},
-		onTab(event) {
-			if (this.newTag?.length > 0) {
-				event.preventDefault();
-				this.addString(this.newTag);
-			}
-		},
-		onType(value) {
-			this.newTag = value;
-			this.$refs.autocomplete.search(value);
 		},
 		remove(tag) {
 			// get neighboring tags
@@ -361,6 +332,13 @@ export default {
 		},
 		selectTag(tag) {
 			this.selected = tag;
+		},
+		toggleInput(event) {
+			const char = String.fromCharCode(event.keyCode);
+
+			if (char.match(/(\w)/g)) {
+				this.$refs.autocomplete.open();
+			}
 		},
 		/**
 		 * @param {String,Object} value
@@ -419,6 +397,7 @@ export default {
 
 <style>
 .k-tags-input {
+	--button-rounded: var(--rounded-sm);
 	display: flex;
 	flex-wrap: wrap;
 }
@@ -428,25 +407,40 @@ export default {
 .k-tags-input .k-sortable-ghost {
 	background: var(--color-focus);
 }
-.k-tags-input-element {
-	flex-grow: 1;
-	flex-basis: 0;
-	min-width: 0;
-}
-.k-tags-input:focus-within .k-tags-input-element {
-	flex-basis: 4rem;
-}
-.k-tags-input-element input {
-	font: inherit;
-	border: 0;
-	width: 100%;
-	background: none;
-}
-.k-tags-input-element input:focus {
-	outline: 0;
-}
 .k-tags-input[data-layout="list"] .k-tag {
 	width: 100%;
 	margin-inline-end: 0 !important;
+}
+
+.k-tags-dropdown.k-dropdown-content {
+	--button-width: 100%;
+	width: 15rem;
+	overflow: visible;
+}
+
+.k-tags-dropdown .k-selector-input {
+	background: var(--color-gray-800);
+	height: var(--height-sm);
+}
+.k-tags-dropdown .k-selector-results {
+	margin-top: var(--spacing-2);
+}
+.k-tags-dropdown .k-selector-button {
+	gap: 0.75rem;
+}
+.k-tags-dropdown .k-selector-button:hover {
+	--button-color-back: var(--dropdown-color-hr);
+}
+.k-tags-dropdown .k-selector-empty {
+	color: var(--color-text-dimmed);
+}
+.k-tags-dropdown .k-selector-preview {
+	color: var(--color-focus);
+	font-weight: var(--font-normal);
+}
+.k-tags-dropdown .k-selector-body + .k-selector-footer {
+	padding-top: var(--spacing-2);
+	margin-top: var(--spacing-2);
+	border-top: 1px solid var(--dropdown-color-hr);
 }
 </style>

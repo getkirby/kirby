@@ -421,6 +421,7 @@ export default {
 	padding-inline-start: 0.25rem;
 }
 .k-link-input-model-placeholder.k-button {
+	--button-align: flex-start;
 	--button-color-text: var(--color-gray-600);
 	--button-height: var(--height-sm);
 	--button-padding: var(--spacing-2);
@@ -428,7 +429,6 @@ export default {
 	overflow: hidden;
 	white-space: nowrap;
 	align-items: center;
-	justify-content: flex-start;
 }
 .k-link-input-model-toggle {
 	--button-height: var(--height-sm);
