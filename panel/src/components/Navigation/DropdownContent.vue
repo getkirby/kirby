@@ -10,7 +10,7 @@
 		@click="onClick"
 	>
 		<!-- @slot Content of the dropdown -->
-		<k-navigate ref="navigate" axis="y">
+		<k-navigate ref="navigate" :disabled="navigate === false" axis="y">
 			<slot>
 				<template v-for="(option, index) in items">
 					<hr v-if="option === '-'" :key="_uid + '-item-' + index" />
@@ -44,6 +44,10 @@ export default {
 		align: {
 			type: String,
 			default: "left"
+		},
+		navigate: {
+			default: true,
+			type: Boolean
 		},
 		options: [Array, Function, String],
 		/**
@@ -223,6 +227,7 @@ export default {
 	--dropdown-color-bg: var(--color-black);
 	--dropdown-color-text: var(--color-white);
 	--dropdown-color-hr: rgba(255, 255, 255, 0.25);
+	--dropdown-padding: var(--spacing-2);
 	--dropdown-rounded: var(--rounded);
 	--dropdown-shadow: var(--shadow-xl);
 }
@@ -234,7 +239,7 @@ export default {
 	inset-block-start: 0;
 	inset-inline-start: 0;
 	width: max-content;
-	padding: 0.5rem;
+	padding: var(--dropdown-padding);
 	background: var(--dropdown-color-bg);
 	border-radius: var(--dropdown-rounded);
 	color: var(--dropdown-color-text);

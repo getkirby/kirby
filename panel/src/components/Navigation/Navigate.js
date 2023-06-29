@@ -1,10 +1,12 @@
 export default class Navigate extends HTMLElement {
 	static get observedAttributes() {
-		return ["axis"];
+		return ["axis", "disabled"];
 	}
 
 	attributeChangedCallback(attribute, oldValue, newValue) {
 		switch (attribute) {
+			case "disabled":
+				return (this.disabled = newValue);
 			case "axis":
 				return (this.keys = this.handlers(newValue));
 		}
@@ -69,6 +71,10 @@ export default class Navigate extends HTMLElement {
 	}
 
 	keydown(event) {
+		if (this.disabled) {
+			return false;
+		}
+
 		this.keys[event.key]?.apply(this, [event.target, event]);
 	}
 
