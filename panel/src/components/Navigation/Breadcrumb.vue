@@ -14,6 +14,7 @@
 					:title="crumb.text || crumb.label"
 					:current="isLast(index - 1) ? 'page' : false"
 					variant="dimmed"
+					size="sm"
 					class="k-breadcrumb-link"
 				/>
 			</li>
@@ -65,7 +66,8 @@ export default {
 <style>
 .k-breadcrumb {
 	--breadcrumb-divider: "/";
-	overflow: hidden;
+	overflow-x: clip;
+	padding: 2px;
 }
 
 .k-breadcrumb ol {
@@ -73,34 +75,32 @@ export default {
 	gap: 0.125rem;
 	align-items: center;
 }
-
 .k-breadcrumb ol li {
 	display: flex;
 	align-items: center;
-	flex-shrink: 3;
 }
 .k-breadcrumb ol li:not(:last-child)::after {
 	content: var(--breadcrumb-divider);
 	opacity: 0.175;
 	flex-shrink: 0;
 }
-.k-breadcrumb ol li:last-child {
-	flex-shrink: 1;
+.k-breadcrumb ol li {
+	min-width: 0;
+	transition: flex-shrink 0.1s;
 }
-.k-breadcrumb ol li:not(:first-child):not(:last-child) {
-	max-width: 15vw;
-	max-width: 15cqw;
-}
-
 .k-breadcrumb .k-icon[data-type="loader"] {
 	opacity: 0.5;
 }
+.k-breadcrumb ol li:is(:hover, :focus-within) {
+	flex-shrink: 0;
+}
 
 .k-breadcrumb-dropdown {
-	height: 2.5rem;
-	width: 2.5rem;
 	display: grid;
 	place-content: center;
+}
+.k-breadcrumb-dropdown .k-dropdown-content {
+	width: 15rem;
 }
 
 @media screen and (min-width: 40em) {
