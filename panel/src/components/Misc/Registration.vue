@@ -1,51 +1,41 @@
 <template>
-	<k-bar :data-is-local="$system.isLocal">
+	<k-box :theme="$system.isLocal ? 'warning' : 'negative'">
 		<p>{{ $t("license.unregistered") }}</p>
 
 		<k-button-group
 			:buttons="[
 				{
+					click: () => $dialog('registration'),
 					icon: 'key',
-					text: $t('license.register'),
-					title: $t('license.unregistered'),
+					responsive: true,
 					size: 'sm',
-					click: () => $dialog('registration')
+					text: $t('license.register')
 				},
 				{
 					icon: 'cart',
-					text: $t('license.buy'),
 					link: 'https://getkirby.com/buy',
+					responsive: true,
 					size: 'sm',
-					target: '_blank'
+					target: '_blank',
+					text: $t('license.buy')
 				}
 			]"
-			:responsive="true"
 			size="sm"
 		/>
-	</k-bar>
+	</k-box>
 </template>
 
 <style scoped>
-.k-bar {
-	position: sticky;
-	bottom: 0;
-	height: var(--height-md);
-	padding-inline: var(--main-padding-inline);
-	background: var(--color-red-400);
+.k-box {
+	--box-height: var(--height);
+	color: var(--theme-color-900);
+	padding: 0 var(--spacing-3);
+	border-radius: 0;
+	border-bottom: 1px solid var(--theme-color-500);
+	justify-content: space-between;
 	container-type: inline-size;
-	color: var(--color-red-900);
-	font-size: var(--text-xs);
 }
-
-.k-bar[data-is-local="true"] {
-	color: var(--color-orange-900);
-	background: var(--color-orange-400);
-}
-
-.k-bar .k-button-group {
-	gap: 0;
-}
-.k-bar .k-button {
-	--button-padding: var(--spacing-3);
+.k-box p {
+	padding-inline: var(--spacing-2);
 }
 </style>
