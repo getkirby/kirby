@@ -40,6 +40,7 @@
 						<k-dropdown-content
 							ref="settings"
 							:options="$dropdown(id)"
+							align="right"
 							@action="action"
 						/>
 					</k-dropdown>
