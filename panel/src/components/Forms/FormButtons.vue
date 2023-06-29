@@ -1,5 +1,5 @@
 <template>
-	<nav class="k-form-buttons">
+	<nav v-if="hasChanges" class="k-form-buttons">
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-if="message" class="k-help" v-html="message" />
 
