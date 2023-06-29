@@ -171,8 +171,8 @@ export default {
 				this.insert(files.map((file) => file.dragText).join("\n\n"));
 			}
 		},
-		insertUpload(files, response) {
-			this.insert(response.map((file) => file.dragText).join("\n\n"));
+		insertUpload(files) {
+			this.insertFile(files);
 			this.$events.$emit("model.update");
 		},
 		onCommand(command, callback) {
