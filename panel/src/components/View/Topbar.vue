@@ -67,6 +67,10 @@ export default {
 	align-items: center;
 }
 
+.k-topbar-breadcrumb {
+	margin-inline-start: -2px;
+}
+
 .k-topbar .k-panel-menu-proxy {
 	margin-inline-end: var(--spacing-2);
 }
