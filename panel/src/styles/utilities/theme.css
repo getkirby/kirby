@@ -64,27 +64,27 @@
 }
 
 [data-theme="passive"] {
-	--theme-color-h: var(--color-slate-h);
-	--theme-color-s: var(--color-slate-s);
+	--theme-color-h: var(--color-gray-h);
+	--theme-color-s: var(--color-gray-s);
 	--theme-color-boost: 10%;
 }
 
 [data-theme="white"],
 [data-theme="text"] {
 	--theme-color-back: var(--color-white);
-	--theme-color-icon: var(--color-slate-800);
+	--theme-color-icon: var(--color-gray-800);
 	--theme-color-text: var(--color-text);
 	--color-h: var(--color-black);
 }
 
 /* Special Themes */
 [data-theme="dark"] {
-	--theme-color-h: var(--color-slate-h);
-	--theme-color-s: var(--color-slate-s);
-	--theme-color-boost: var(--color-slate-boost);
-	--theme-color-back: var(--color-slate-800);
-	--theme-color-icon: var(--color-slate-500);
-	--theme-color-text: var(--color-slate-200);
+	--theme-color-h: var(--color-gray-h);
+	--theme-color-s: var(--color-gray-s);
+	--theme-color-boost: var(--color-gray-boost);
+	--theme-color-back: var(--color-gray-800);
+	--theme-color-icon: var(--color-gray-500);
+	--theme-color-text: var(--color-gray-200);
 }
 
 [data-theme="code"] {
