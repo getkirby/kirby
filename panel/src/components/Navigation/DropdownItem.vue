@@ -46,12 +46,12 @@ export default {
 
 <style>
 .k-dropdown-item.k-button {
+	--button-align: flex-start;
 	--button-color-text: var(--dropdown-color-text);
 	--button-height: var(--height-sm);
 	--button-rounded: var(--rounded-sm);
 	--button-width: 100%;
 	display: flex;
-	justify-content: flex-start;
 	gap: 0.75rem;
 }
 .k-dropdown-item.k-button[aria-current] {
