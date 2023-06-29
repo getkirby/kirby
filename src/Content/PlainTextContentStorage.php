@@ -186,23 +186,20 @@ class PlainTextContentStorage implements ContentStorage
 		$extension = $this->model->kirby()->contentExtension();
 		$directory = $this->model->root();
 
-		switch ($this->model::CLASS_ALIAS) {
-			case 'file':
-				$directory = dirname($this->model->root());
-				$filename  = $this->model->filename();
-				break;
-			case 'page':
-				$filename = $this->model->intendedTemplate()->name();
-				break;
-			case 'site':
-			case 'user':
-				$filename = $this->model::CLASS_ALIAS;
-				break;
-			default:
-				// @codeCoverageIgnoreStart
-				throw new LogicException('Cannot determine content filename for model type "' . $this->model::CLASS_ALIAS . '"');
-				// @codeCoverageIgnoreEnd
-		}
+		$directory = match ($this->model::CLASS_ALIAS) {
+			'file'  => dirname($this->model->root()),
+			default => $this->model->root()
+		};
+
+		$filename = match ($this->model::CLASS_ALIAS) {
+			'file'  => $this->model->filename(),
+			'page'  => $this->model->intendedTemplate()->name(),
+			'site',
+			'user'  => $this->model::CLASS_ALIAS,
+			// @codeCoverageIgnoreStart
+			default => throw new LogicException('Cannot determine content filename for model type "' . $this->model::CLASS_ALIAS . '"')
+			// @codeCoverageIgnoreEnd
+		};
 
 		if ($this->model::CLASS_ALIAS === 'page' && $this->model->isDraft() === true) {
 			// changes versions don't need anything extra
@@ -230,11 +227,9 @@ class PlainTextContentStorage implements ContentStorage
 	public function contentFiles(VersionIdentifier $version): array
 	{
 		if ($this->model->kirby()->multilang() === true) {
-			$files = [];
-			foreach ($this->model->kirby()->languages() as $lang) {
-				$files[] = $this->contentFile($version, $lang);
-			}
-			return $files;
+			return $this->model->kirby()->languages()->values(
+				fn ($lang) => $this->contentFile($version, $lang)
+			);
 		}
 
 		return [
@@ -251,7 +246,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @param bool $force If set to `true`, the language code is not validated
 	 */
-	public function languageCodeToObject(string|null $languageCode = null, bool $force = false): Language
+	public function language(string|null $languageCode = null, bool $force = false): Language
 	{
 		if ($this->model->kirby()->multilang() === true) {
 			// look up the actual language object if possible

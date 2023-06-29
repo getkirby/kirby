@@ -741,10 +741,10 @@ class PlainTextContentStorageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::languageCodeToObject
-	 * @dataProvider languageCodeToObjectProvider
+	 * @covers ::language
+	 * @dataProvider languageProvider
 	 */
-	public function testLanguageCodeToObjectMultiLang(string|null $languageCode, bool $force, array $expectedCodes, bool $expectedOriginal)
+	public function testLanguageMultiLang(string|null $languageCode, bool $force, array $expectedCodes, bool $expectedOriginal)
 	{
 		$app = new App([
 			'languages' => [
@@ -758,7 +758,7 @@ class PlainTextContentStorageTest extends TestCase
 			]
 		]);
 
-		$language = $this->storage->languageCodeToObject($languageCode, $force);
+		$language = $this->storage->language($languageCode, $force);
 		$this->assertSame($expectedCodes[0], $language->code());
 		if ($expectedOriginal === true) {
 			$this->assertSame($app->language($expectedCodes[0]), $language);
@@ -768,9 +768,9 @@ class PlainTextContentStorageTest extends TestCase
 	}
 
 	/**
-	 * @covers ::languageCodeToObject
+	 * @covers ::language
 	 */
-	public function testLanguageCodeToObjectMultiLangInvalid()
+	public function testLanguageMultiLangInvalid()
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid language: fr');
@@ -787,29 +787,29 @@ class PlainTextContentStorageTest extends TestCase
 			]
 		]);
 
-		$this->storage->languageCodeToObject('fr', false);
+		$this->storage->language('fr', false);
 	}
 
 	/**
-	 * @covers ::languageCodeToObject
-	 * @dataProvider languageCodeToObjectProvider
+	 * @covers ::language
+	 * @dataProvider languageProvider
 	 */
-	public function testLanguageCodeToObjectSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
+	public function testLanguageSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
 	{
-		$language = $this->storage->languageCodeToObject($languageCode, $force);
+		$language = $this->storage->language($languageCode, $force);
 		$this->assertSame($expectedCodes[1], $language->code());
 	}
 
 	/**
-	 * @covers ::languageCodeToObject
+	 * @covers ::language
 	 */
-	public function testLanguageCodeToObjectSingleLangInvalid()
+	public function testLanguageSingleLangInvalid()
 	{
-		$language = $this->storage->languageCodeToObject('fr', false);
+		$language = $this->storage->language('fr', false);
 		$this->assertSame('default', $language->code());
 	}
 
-	public function languageCodeToObjectProvider(): array
+	public function languageProvider(): array
 	{
 		return [
 			[null, false, ['en', 'default'], true],

@@ -891,7 +891,7 @@ class Page extends ModelWithContent
 
 		$modified = $this->storage()->modified(
 			$identifier,
-			$this->storage()->languageCodeToObject($languageCode)
+			$this->storage()->language($languageCode)
 		);
 
 		if ($modified === null) {

@@ -63,7 +63,7 @@ trait FileActions
 					$translationCode = $translation->code();
 
 					// rename the content files
-					$language = $this->storage()->languageCodeToObject($translationCode);
+					$language = $this->storage()->language($translationCode);
 					F::move(
 						$oldFile->storage()->contentFile(VersionIdentifier::published(), $language),
 						$newFile->storage()->contentFile(VersionIdentifier::published(), $language)
@@ -300,7 +300,7 @@ trait FileActions
 
 			if ($file->kirby()->multilang() === true) {
 				foreach ($file->translations() as $translation) {
-					$language = $this->storage()->languageCodeToObject($translation->code());
+					$language = $this->storage()->language($translation->code());
 					F::remove($file->storage()->contentFile(VersionIdentifier::published(), $language));
 					F::remove($file->storage()->contentFile(VersionIdentifier::changes(), $language));
 				}

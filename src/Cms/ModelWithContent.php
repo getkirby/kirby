@@ -45,7 +45,7 @@ abstract class ModelWithContent implements Identifiable
 	public Content|null $content;
 	public static App $kirby;
 	protected Site|null $site;
-	protected ContentStorage|null $storage;
+	protected ContentStorage $storage;
 	public Collection|null $translations;
 
 	/**
@@ -192,7 +192,7 @@ abstract class ModelWithContent implements Identifiable
 
 		return $this->storage()->contentFile(
 			$identifier,
-			$this->storage()->languageCodeToObject($languageCode, $force)
+			$this->storage()->language($languageCode, $force)
 		);
 	}
 
@@ -292,7 +292,7 @@ abstract class ModelWithContent implements Identifiable
 					// delete the old text file
 					$this->storage()->delete(
 						$identifier,
-						$this->storage()->languageCodeToObject($code)
+						$this->storage()->language($code)
 					);
 
 					// save to re-create the translation content file
@@ -535,7 +535,7 @@ abstract class ModelWithContent implements Identifiable
 		try {
 			return $this->storage()->read(
 				$identifier,
-				$this->storage()->languageCodeToObject($languageCode)
+				$this->storage()->language($languageCode)
 			);
 		} catch (NotFoundException $e) {
 			// only if the content file really does not exist, it's ok
@@ -861,7 +861,7 @@ abstract class ModelWithContent implements Identifiable
 	public function writeContent(array $data, string $languageCode = null): bool
 	{
 		$data     = $this->contentFileData($data, $languageCode);
-		$language = $this->storage()->languageCodeToObject($languageCode);
+		$language = $this->storage()->language($languageCode);
 
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
 			VersionIdentifier::changes() :

@@ -461,7 +461,7 @@ class File extends ModelWithContent
 	{
 		return $this->storage()->modified(
 			VersionIdentifier::published(),
-			$this->storage()->languageCodeToObject($languageCode)
+			$this->storage()->language($languageCode)
 		) ?? 0;
 	}
 

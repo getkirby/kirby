@@ -82,7 +82,7 @@ class System
 			case 'content':
 				return $url . '/' . basename($this->app->site()->storage()->contentFile(
 					VersionIdentifier::published(),
-					$this->app->site()->storage()->languageCodeToObject(null)
+					$this->app->site()->storage()->language(null)
 				));
 			case 'git':
 				return $url . '/config';

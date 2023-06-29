@@ -148,8 +148,8 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
-		$from = $site->storage()->languageCodeToObject($from, true);
-		$to   = $site->storage()->languageCodeToObject($to, true);
+		$from = $site->storage()->language($from, true);
+		$to   = $site->storage()->language($to, true);
 
 		// convert site
 		foreach ($site->files() as $file) {
@@ -325,7 +325,7 @@ class Language
 		$kirby = App::instance();
 		$site  = $kirby->site();
 
-		$language = $site->storage()->languageCodeToObject($code, true);
+		$language = $site->storage()->language($code, true);
 
 		$site->storage()->delete(VersionIdentifier::changes(), $language);
 		$site->storage()->delete(VersionIdentifier::published(), $language);

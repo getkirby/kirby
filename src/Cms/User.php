@@ -232,7 +232,7 @@ class User extends ModelWithContent
 	{
 		return $this->storage()->exists(
 			VersionIdentifier::published(),
-			$this->storage()->languageCodeToObject('default')
+			$this->storage()->language('default')
 		);
 	}
 
@@ -514,7 +514,7 @@ class User extends ModelWithContent
 	 */
 	public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
 	{
-		$language        = $this->storage()->languageCodeToObject($languageCode);
+		$language        = $this->storage()->language($languageCode);
 		$modifiedContent = $this->storage()->modified(VersionIdentifier::published(), $language);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
