@@ -184,11 +184,6 @@ export default {
 	align-self: start;
 }
 
-.k-search-dialog,
-.k-search-dialog .k-dialog-body {
-	overflow: visible;
-}
-
 .k-search-dialog-input {
 	--input-height: var(--height-lg);
 	--button-height: var(--input-height);

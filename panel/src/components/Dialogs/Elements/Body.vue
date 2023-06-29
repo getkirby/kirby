@@ -1,5 +1,5 @@
 <template>
-	<div class="k-dialog-body scroll-y-auto">
+	<div class="k-dialog-body">
 		<slot />
 	</div>
 </template>
