@@ -5,6 +5,8 @@
  * serves to open the file selector from the OS. Once files are
  * selected the dialog will open and show the progress and
  * potential upload errors.
+ *
+ * @deprecated 4.0.0 Use the $panel.upload module instead
  */
 export default {
 	props: {
@@ -68,13 +70,13 @@ export default {
 		drop(files, params) {
 			this.$panel.upload.open(files, this.params(params));
 		},
-		render() {
-			return;
-		},
 		upload(files, params) {
 			this.$panel.upload.select(files, this.params(params));
 			this.$panel.upload.start();
 		}
+	},
+	render() {
+		return "";
 	}
 };
 </script>
