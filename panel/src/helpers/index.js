@@ -1,4 +1,4 @@
-import "./array.js";
+import array from "./array.js";
 import clipboard from "./clipboard.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
@@ -22,6 +22,7 @@ import "./regex.js";
 export default {
 	install(app) {
 		app.prototype.$helper = {
+			array,
 			clipboard,
 			clone: object.clone,
 			color,
