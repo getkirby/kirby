@@ -1,7 +1,7 @@
 <template>
 	<k-field v-bind="$props" class="k-blocks-field">
 		<template #options>
-			<k-button-group>
+			<k-button-group layout="collapsed">
 				<k-button
 					:disabled="isFull"
 					:text="$t('add')"
@@ -11,7 +11,7 @@
 					@click="$refs.blocks.choose(value.length)"
 				/>
 
-				<k-dropdown v-if="hasFieldsets">
+				<k-dropdown>
 					<k-button
 						icon="dots"
 						variant="filled"
@@ -101,9 +101,6 @@ export default {
 		};
 	},
 	computed: {
-		hasFieldsets() {
-			return this.$helper.object.length(this.fieldsets) > 0;
-		},
 		isEmpty() {
 			return this.value.length === 0;
 		},
