@@ -109,7 +109,7 @@ export default {
 
 <style>
 :root {
-	--menu-color-back: var(--color-gray-200);
+	--menu-color-back: #e8e8e8;
 	--menu-width: 12rem;
 }
 
