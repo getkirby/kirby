@@ -57,12 +57,13 @@ trait FileActions
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
 
-			// rename the content file
+			// move the content storage versions
 			foreach ($oldFile->storage()->all() as $version => $lang) {
-				F::move(
-					$oldFile->storage()->contentFile($version, $lang),
-					$newFile->storage()->contentFile($version, $lang)
-				);
+				if ($oldFile->storage()->exists($version, $lang) === true) {
+					$content = $oldFile->storage()->read($version, $lang);
+					$oldFile->storage()->delete($version, $lang);
+					$newFile->storage()->create($version, $lang, $content);
+				}
 			}
 
 			// update collections
@@ -158,14 +159,16 @@ trait FileActions
 	public function copy(Page $page): static
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
+		$copy = $page->clone()->file($this->filename());
 
 		foreach ($this->storage()->all() as $version => $lang) {
-			F::copy(
-				$content = $this->storage()->contentFile($version, $lang),
-				$page->root() . '/' . basename($content)
-			);
+			if ($this->storage()->exists($version, $lang) === true) {
+				$content = $this->storage()->read($version, $lang);
+				$copy->storage()->create($version, $lang, $content);
+			}
 		}
 
+		// ensure the content is re-read after copying it
 		$copy = $page->clone()->file($this->filename());
 
 		// overwrite with new UUID (remove old, add new)
@@ -259,7 +262,7 @@ trait FileActions
 			$file->unpublish();
 
 			foreach ($file->storage()->all() as $version => $lang) {
-				F::remove($file->storage()->contentFile($version, $lang));
+				$file->storage()->delete($version, $lang);
 			}
 
 			F::remove($file->root());
