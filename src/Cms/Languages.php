@@ -44,12 +44,10 @@ class Languages extends Collection
 
 	/**
 	 * Returns all language codes as array
-	 *
-	 * @return array
 	 */
 	public function codes(): array
 	{
-		return $this->keys();
+		return App::instance()->multilang() ? $this->keys() : ['default'];
 	}
 
 	/**
