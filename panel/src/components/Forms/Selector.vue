@@ -125,7 +125,11 @@ export default {
 			this.selected = index;
 			this.focus();
 		},
-		async search() {
+		async search(query) {
+			if (query !== undefined) {
+				this.query = query;
+			}
+
 			this.selected = -1;
 			this.results = this.$helper.array.search(this.options, this.query, {
 				field: "text",

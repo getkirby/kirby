@@ -27,30 +27,24 @@
 		</k-tag>
 
 		<template #footer>
-			<k-dropdown>
+			<k-select-dropdown
+				ref="selector"
+				:options="dropdownOptions"
+				@create="addString($event)"
+				@select="addTag($event)"
+			>
 				<k-button
-					ref="input"
-					icon="add"
-					size="sm"
+					ref="toggle"
+					icon="plus"
+					class="k-tags-input-toggle"
+					size="xs"
 					variant="filled"
-					@click="$refs.autocomplete.toggle()"
-					@keydown.native="toggleInput"
+					@click.native="$refs.selector.open()"
+					@keydown.native="search"
 					@keydown.native.delete="navigate('last')"
 					@keydown.native.left="navigate('last')"
 				/>
-				<k-dropdown-content
-					ref="autocomplete"
-					class="k-tags-dropdown"
-					:navigate="false"
-				>
-					<k-selector
-						:options="dropdownOptions"
-						@create="addString($event)"
-						@escape="$refs.autocomplete.close()"
-						@select="addTag($event)"
-					/>
-				</k-dropdown-content>
-			</k-dropdown>
+			</k-select-dropdown>
 		</template>
 	</k-draggable>
 </template>
@@ -179,10 +173,10 @@ export default {
 		},
 		addTag(tag, focus = true) {
 			this.addTagToIndex(tag);
-			this.$refs.autocomplete.close();
+			this.$refs.selector.close();
 
 			if (focus) {
-				this.$refs.input.focus();
+				this.focus();
 			}
 		},
 		addTagToIndex(tag) {
@@ -233,7 +227,7 @@ export default {
 			});
 		},
 		focus() {
-			this.$refs.input?.focus();
+			this.$refs.toggle.focus();
 		},
 		get(position) {
 			let nextIndex = null;
@@ -296,7 +290,7 @@ export default {
 				result.ref.focus();
 				this.selectTag(result.tag);
 			} else if (position === "next") {
-				this.$refs.input.focus();
+				this.focus();
 				this.selectTag(null);
 			}
 		},
@@ -324,7 +318,14 @@ export default {
 				this.selectTag(next.tag);
 			} else {
 				this.selectTag(null);
-				this.$refs.input.focus();
+				this.$refs.toggle.focus();
+			}
+		},
+		search(event) {
+			const char = String.fromCharCode(event.keyCode);
+
+			if (char.match(/(\w)/g)) {
+				this.$refs.selector.open();
 			}
 		},
 		select() {
@@ -332,13 +333,6 @@ export default {
 		},
 		selectTag(tag) {
 			this.selected = tag;
-		},
-		toggleInput(event) {
-			const char = String.fromCharCode(event.keyCode);
-
-			if (char.match(/(\w)/g)) {
-				this.$refs.autocomplete.open();
-			}
 		},
 		/**
 		 * @param {String,Object} value
@@ -397,50 +391,24 @@ export default {
 
 <style>
 .k-tags-input {
-	--button-rounded: var(--rounded-sm);
 	display: flex;
 	flex-wrap: wrap;
 }
-.k-tags-input .k-tag {
-	border-radius: var(--rounded-sm);
-}
 .k-tags-input .k-sortable-ghost {
-	background: var(--color-focus);
+	outline: var(--outline);
 }
 .k-tags-input[data-layout="list"] .k-tag {
 	width: 100%;
-	margin-inline-end: 0 !important;
+}
+.k-tags-input-toggle.k-button {
+	--button-rounded: var(--button-height);
 }
 
-.k-tags-dropdown.k-dropdown-content {
-	--button-width: 100%;
-	width: 15rem;
-	overflow: visible;
-}
-
-.k-tags-dropdown .k-selector-input {
-	background: var(--color-gray-800);
-	height: var(--height-sm);
-}
-.k-tags-dropdown .k-selector-results {
-	margin-top: var(--spacing-2);
-}
-.k-tags-dropdown .k-selector-button {
-	gap: 0.75rem;
-}
-.k-tags-dropdown .k-selector-button:hover {
-	--button-color-back: var(--dropdown-color-hr);
-}
-.k-tags-dropdown .k-selector-empty {
-	color: var(--color-text-dimmed);
-}
-.k-tags-dropdown .k-selector-preview {
-	color: var(--color-focus);
-	font-weight: var(--font-normal);
-}
-.k-tags-dropdown .k-selector-body + .k-selector-footer {
-	padding-top: var(--spacing-2);
-	margin-top: var(--spacing-2);
-	border-top: 1px solid var(--dropdown-color-hr);
+/* Field Theme */
+.k-input[data-theme="field"][data-type="tags"] .k-tags-input {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.25rem;
 }
 </style>

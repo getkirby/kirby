@@ -45,14 +45,13 @@ export default {
 
 <style>
 :root {
-	--tag-color-back: var(--color-gray-900);
-	--tag-color-text: var(--color-light);
-	--tag-color-toggle: rgba(255, 255, 255, 0.7);
-	--tag-color-toggle-border: rgba(255, 255, 255, 0.15);
+	--tag-color-back: var(--color-black);
+	--tag-color-text: var(--color-white);
+	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
-	--tag-rounded: var(--rounded);
-	--tag-height: var(--height-sm);
+	--tag-height: var(--height-xs);
+	--tag-rounded: var(--tag-height);
 }
 
 .k-tag {
@@ -65,9 +64,10 @@ export default {
 	line-height: 1;
 	color: var(--tag-color-text);
 	background-color: var(--tag-color-back);
-	border-radius: var(--tag-rounded);
+	border-radius: var(--tag-height);
 	cursor: pointer;
 	user-select: none;
+	outline-offset: -1px;
 }
 .k-tag:focus {
 	outline: var(--outline);
@@ -79,12 +79,13 @@ export default {
 .k-tag-toggle {
 	width: var(--tag-height);
 	height: var(--tag-height);
-	padding-inline-end: 1px;
-	border-inline-start: 1px solid var(--tag-color-toggle-border);
-	color: var(--tag-color-toggle);
+	filter: brightness(70%);
+}
+.k-tag-toggle:hover {
+	filter: brightness(100%);
 }
 .k-tag:has(.k-tag-toggle) .k-tag-text {
-	padding-inline-end: 0.5rem;
+	padding-inline-end: 0;
 }
 
 [data-disabled="true"] .k-tag {

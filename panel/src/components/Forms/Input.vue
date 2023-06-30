@@ -353,16 +353,6 @@ export default {
 	inset-inline-end: 0;
 }
 
-/* Tags */
-.k-input[data-theme="field"][data-type="tags"] .k-tags-input {
-	display: flex;
-	gap: 0.25rem;
-	padding: 0.25rem;
-}
-.k-input[data-theme="field"][data-type="tags"] .k-tag {
-	height: var(--height-sm);
-}
-
 /* Multiselect */
 .k-input[data-theme="field"][data-type="multiselect"] {
 	position: relative;

@@ -182,7 +182,9 @@ export default {
 			this.$el.style.left = openerRect.left + window.scrollX + offsetX + "px";
 
 			// open the modal after the correct positioning has been applied
-			this.$el.showModal();
+			if (this.$el.open !== true) {
+				this.$el.showModal();
+			}
 
 			// as we just set style.top, wait one tick before measuring dropdownRect
 			this.$nextTick(() => {
