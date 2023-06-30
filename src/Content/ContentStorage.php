@@ -2,6 +2,8 @@
 
 namespace Kirby\Content;
 
+use Closure;
+use Generator;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
@@ -261,5 +263,14 @@ class ContentStorage
 		}
 
 		return $versions;
+	}
+
+	public function all(): Generator
+	{
+		foreach ($this->model->kirby()->languages()->codes() as $lang) {
+			foreach ($this->versions() as $version) {
+				yield $version => $lang;
+			}
+		}
 	}
 }

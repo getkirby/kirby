@@ -57,15 +57,11 @@ trait FileActions
 			// rename the main file
 			F::move($oldFile->root(), $newFile->root());
 
-			foreach ($newFile->kirby()->languages()->codes() as $lang) {
-				// rename the content file
+			// rename the content file
+			foreach ($oldFile->storage()->all() as $version => $lang) {
 				F::move(
-					$oldFile->storage()->contentFile('published', $lang),
-					$newFile->storage()->contentFile('published', $lang)
-				);
-				F::move(
-					$oldFile->storage()->contentFile('changes', $lang),
-					$newFile->storage()->contentFile('changes', $lang)
+					$oldFile->storage()->contentFile($version, $lang),
+					$newFile->storage()->contentFile($version, $lang)
 				);
 			}
 
@@ -163,13 +159,9 @@ trait FileActions
 	{
 		F::copy($this->root(), $page->root() . '/' . $this->filename());
 
-		foreach ($this->kirby()->languages()->codes() as $lang) {
+		foreach ($this->storage()->all() as $version => $lang) {
 			F::copy(
-				$content = $this->storage()->contentFile('published', $lang),
-				$page->root() . '/' . basename($content)
-			);
-			F::copy(
-				$content = $this->storage()->contentFile('changes', $lang),
+				$content = $this->storage()->contentFile($version, $lang),
 				$page->root() . '/' . basename($content)
 			);
 		}
@@ -266,9 +258,8 @@ trait FileActions
 			// remove all public versions, lock and clear UUID cache
 			$file->unpublish();
 
-			foreach ($file->kirby()->languages()->codes() as $lang) {
-				F::remove($file->storage()->contentFile('published', $lang));
-				F::remove($file->storage()->contentFile('changes', $lang));
+			foreach ($file->storage()->all() as $version => $lang) {
+				F::remove($file->storage()->contentFile($version, $lang));
 			}
 
 			F::remove($file->root());
