@@ -402,6 +402,10 @@ export default {
 }
 .k-tags-input-toggle.k-button {
 	--button-rounded: var(--button-height);
+	opacity: 0;
+}
+.k-tags-input:focus-within .k-tags-input-toggle.k-button {
+	opacity: 1;
 }
 
 /* Field Theme */
