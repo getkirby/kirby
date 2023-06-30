@@ -12,12 +12,6 @@
 	--outline: 2px solid var(--color-red-500);
 }
 
-/* Tabbed */
-[data-tabbed="true"] {
-	box-shadow: var(--shadow-outline);
-	border-radius: var(--rounded);
-}
-
 .scroll-x,
 .scroll-x-auto,
 .scroll-y,

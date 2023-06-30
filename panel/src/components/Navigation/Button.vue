@@ -19,13 +19,10 @@
 </template>
 
 <script>
-import tab from "@/mixins/tab.js";
-
 /**
  * @example <k-button icon="check">Save</k-button>
  */
 export default {
-	mixins: [tab],
 	inheritAttrs: false,
 	props: {
 		/**
