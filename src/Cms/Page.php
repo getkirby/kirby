@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -887,7 +886,7 @@ class Page extends ModelWithContent
 	 */
 	public function modified(string $format = null, string $handler = null, string $languageCode = null)
 	{
-		$identifier = $this->isDraft() === true ? VersionIdentifier::changes() : VersionIdentifier::published();
+		$identifier = $this->isDraft() === true ? 'changes' : 'published';
 
 		$modified = $this->storage()->modified(
 			$identifier,

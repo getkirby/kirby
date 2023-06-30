@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
@@ -65,24 +64,24 @@ trait FileActions
 					// rename the content files
 					$language = $this->storage()->language($translationCode);
 					F::move(
-						$oldFile->storage()->contentFile(VersionIdentifier::published(), $language),
-						$newFile->storage()->contentFile(VersionIdentifier::published(), $language)
+						$oldFile->storage()->contentFile('published', $language),
+						$newFile->storage()->contentFile('published', $language)
 					);
 					F::move(
-						$oldFile->storage()->contentFile(VersionIdentifier::changes(), $language),
-						$newFile->storage()->contentFile(VersionIdentifier::changes(), $language)
+						$oldFile->storage()->contentFile('changes', $language),
+						$newFile->storage()->contentFile('changes', $language)
 					);
 				}
 			} else {
 				// rename the content files
 				$language = new Language(['code' => 'default']);
 				F::move(
-					$oldFile->storage()->contentFile(VersionIdentifier::published(), $language),
-					$newFile->storage()->contentFile(VersionIdentifier::published(), $language)
+					$oldFile->storage()->contentFile('published', $language),
+					$newFile->storage()->contentFile('published', $language)
 				);
 				F::move(
-					$oldFile->storage()->contentFile(VersionIdentifier::changes(), $language),
-					$newFile->storage()->contentFile(VersionIdentifier::changes(), $language)
+					$oldFile->storage()->contentFile('changes', $language),
+					$newFile->storage()->contentFile('changes', $language)
 				);
 			}
 
@@ -183,22 +182,22 @@ trait FileActions
 		if ($this->kirby()->multilang() === true) {
 			foreach ($this->kirby()->languages() as $language) {
 				F::copy(
-					$contentFile = $this->storage()->contentFile(VersionIdentifier::published(), $language),
+					$contentFile = $this->storage()->contentFile('published', $language),
 					$page->root() . '/' . basename($contentFile)
 				);
 				F::copy(
-					$contentFile = $this->storage()->contentFile(VersionIdentifier::changes(), $language),
+					$contentFile = $this->storage()->contentFile('changes', $language),
 					$page->root() . '/' . basename($contentFile)
 				);
 			}
 		} else {
 			$language = new Language(['code' => 'default']);
 			F::copy(
-				$contentFile = $this->storage()->contentFile(VersionIdentifier::published(), $language),
+				$contentFile = $this->storage()->contentFile('published', $language),
 				$page->root() . '/' . basename($contentFile)
 			);
 			F::copy(
-				$contentFile = $this->storage()->contentFile(VersionIdentifier::changes(), $language),
+				$contentFile = $this->storage()->contentFile('changes', $language),
 				$page->root() . '/' . basename($contentFile)
 			);
 		}
@@ -301,13 +300,13 @@ trait FileActions
 			if ($file->kirby()->multilang() === true) {
 				foreach ($file->translations() as $translation) {
 					$language = $this->storage()->language($translation->code());
-					F::remove($file->storage()->contentFile(VersionIdentifier::published(), $language));
-					F::remove($file->storage()->contentFile(VersionIdentifier::changes(), $language));
+					F::remove($file->storage()->contentFile('published', $language));
+					F::remove($file->storage()->contentFile('changes', $language));
 				}
 			} else {
 				$language = new Language(['code' => 'default']);
-				F::remove($file->storage()->contentFile(VersionIdentifier::published(), $language));
-				F::remove($file->storage()->contentFile(VersionIdentifier::changes(), $language));
+				F::remove($file->storage()->contentFile('published', $language));
+				F::remove($file->storage()->contentFile('changes', $language));
 			}
 
 			F::remove($file->root());

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Content\VersionIdentifier;
 use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
@@ -154,45 +153,45 @@ class Language
 		// convert site
 		foreach ($site->files() as $file) {
 			F::move(
-				$file->storage()->contentFile(VersionIdentifier::changes(), $from),
-				$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+				$file->storage()->contentFile('changes', $from),
+				$file->storage()->contentFile('changes', $to)
 			);
 			F::move(
-				$file->storage()->contentFile(VersionIdentifier::published(), $from),
-				$file->storage()->contentFile(VersionIdentifier::published(), $to)
+				$file->storage()->contentFile('published', $from),
+				$file->storage()->contentFile('published', $to)
 			);
 		}
 
 		F::move(
-			$site->storage()->contentFile(VersionIdentifier::changes(), $from),
-			$site->storage()->contentFile(VersionIdentifier::changes(), $to)
+			$site->storage()->contentFile('changes', $from),
+			$site->storage()->contentFile('changes', $to)
 		);
 		F::move(
-			$site->storage()->contentFile(VersionIdentifier::published(), $from),
-			$site->storage()->contentFile(VersionIdentifier::published(), $to)
+			$site->storage()->contentFile('published', $from),
+			$site->storage()->contentFile('published', $to)
 		);
 
 		// convert all pages
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
 				F::move(
-					$file->storage()->contentFile(VersionIdentifier::changes(), $from),
-					$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+					$file->storage()->contentFile('changes', $from),
+					$file->storage()->contentFile('changes', $to)
 				);
 				F::move(
-					$file->storage()->contentFile(VersionIdentifier::published(), $from),
-					$file->storage()->contentFile(VersionIdentifier::published(), $to)
+					$file->storage()->contentFile('published', $from),
+					$file->storage()->contentFile('published', $to)
 				);
 			}
 
 			F::move(
-				$page->storage()->contentFile(VersionIdentifier::changes(), $from),
-				$page->storage()->contentFile(VersionIdentifier::changes(), $to)
+				$page->storage()->contentFile('changes', $from),
+				$page->storage()->contentFile('changes', $to)
 			);
 			if ($page->isDraft() === false) {
 				F::move(
-					$page->storage()->contentFile(VersionIdentifier::published(), $from),
-					$page->storage()->contentFile(VersionIdentifier::published(), $to)
+					$page->storage()->contentFile('published', $from),
+					$page->storage()->contentFile('published', $to)
 				);
 			}
 		}
@@ -201,22 +200,22 @@ class Language
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
 				F::move(
-					$file->storage()->contentFile(VersionIdentifier::changes(), $from),
-					$file->storage()->contentFile(VersionIdentifier::changes(), $to)
+					$file->storage()->contentFile('changes', $from),
+					$file->storage()->contentFile('changes', $to)
 				);
 				F::move(
-					$file->storage()->contentFile(VersionIdentifier::published(), $from),
-					$file->storage()->contentFile(VersionIdentifier::published(), $to)
+					$file->storage()->contentFile('published', $from),
+					$file->storage()->contentFile('published', $to)
 				);
 			}
 
 			F::move(
-				$user->storage()->contentFile(VersionIdentifier::changes(), $from),
-				$user->storage()->contentFile(VersionIdentifier::changes(), $to)
+				$user->storage()->contentFile('changes', $from),
+				$user->storage()->contentFile('changes', $to)
 			);
 			F::move(
-				$user->storage()->contentFile(VersionIdentifier::published(), $from),
-				$user->storage()->contentFile(VersionIdentifier::published(), $to)
+				$user->storage()->contentFile('published', $from),
+				$user->storage()->contentFile('published', $to)
 			);
 		}
 
@@ -327,29 +326,29 @@ class Language
 
 		$language = $site->storage()->language($code, true);
 
-		$site->storage()->delete(VersionIdentifier::changes(), $language);
-		$site->storage()->delete(VersionIdentifier::published(), $language);
+		$site->storage()->delete('changes', $language);
+		$site->storage()->delete('published', $language);
 
 		foreach ($kirby->site()->index(true) as $page) {
 			foreach ($page->files() as $file) {
-				$file->storage()->delete(VersionIdentifier::changes(), $language);
-				$file->storage()->delete(VersionIdentifier::published(), $language);
+				$file->storage()->delete('changes', $language);
+				$file->storage()->delete('published', $language);
 			}
 
-			$page->storage()->delete(VersionIdentifier::changes(), $language);
+			$page->storage()->delete('changes', $language);
 			if ($page->isDraft() === false) {
-				$page->storage()->delete(VersionIdentifier::published(), $language);
+				$page->storage()->delete('published', $language);
 			}
 		}
 
 		foreach ($kirby->users() as $user) {
 			foreach ($user->files() as $file) {
-				$file->storage()->delete(VersionIdentifier::changes(), $language);
-				$file->storage()->delete(VersionIdentifier::published(), $language);
+				$file->storage()->delete('changes', $language);
+				$file->storage()->delete('published', $language);
 			}
 
-			$user->storage()->delete(VersionIdentifier::changes(), $language);
-			$user->storage()->delete(VersionIdentifier::published(), $language);
+			$user->storage()->delete('changes', $language);
+			$user->storage()->delete('published', $language);
 		}
 
 		return true;
@@ -644,33 +643,33 @@ class Language
 
 			$site = $kirby->site();
 
-			if ($site->storage()->exists(VersionIdentifier::changes(), $this) === true) {
-				$site->storage()->touch(VersionIdentifier::changes(), $this);
+			if ($site->storage()->exists('changes', $this) === true) {
+				$site->storage()->touch('changes', $this);
 			}
-			if ($site->storage()->exists(VersionIdentifier::published(), $this) === true) {
-				$site->storage()->touch(VersionIdentifier::published(), $this);
+			if ($site->storage()->exists('published', $this) === true) {
+				$site->storage()->touch('published', $this);
 			}
 
 			foreach ($kirby->site()->index(true) as $page) {
 				$files = $page->files();
 
 				foreach ($files as $file) {
-					if ($file->storage()->exists(VersionIdentifier::changes(), $this) === true) {
-						$file->storage()->touch(VersionIdentifier::changes(), $this);
+					if ($file->storage()->exists('changes', $this) === true) {
+						$file->storage()->touch('changes', $this);
 					}
-					if ($file->storage()->exists(VersionIdentifier::published(), $this) === true) {
-						$file->storage()->touch(VersionIdentifier::published(), $this);
+					if ($file->storage()->exists('published', $this) === true) {
+						$file->storage()->touch('published', $this);
 					}
 				}
 
-				if ($page->storage()->exists(VersionIdentifier::changes(), $this) === true) {
-					$page->storage()->touch(VersionIdentifier::changes(), $this);
+				if ($page->storage()->exists('changes', $this) === true) {
+					$page->storage()->touch('changes', $this);
 				}
 				if (
 					$page->isDraft() === false &&
-					$page->storage()->exists(VersionIdentifier::published(), $this) === true
+					$page->storage()->exists('published', $this) === true
 				) {
-					$page->storage()->touch(VersionIdentifier::published(), $this);
+					$page->storage()->touch('published', $this);
 				}
 			}
 		} elseif ($this->isDefault() === true) {

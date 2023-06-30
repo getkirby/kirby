@@ -29,14 +29,14 @@ interface ContentStorage
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(VersionTemplate $type, Language $lang, array $fields): VersionIdentifier;
+	public function create(string $versionType, Language $lang, array $fields): void;
 
 	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 */
-	public function delete(VersionIdentifier $version, Language $lang): void;
+	public function delete(string $version, Language $lang): void;
 
 	/**
 	 * Checks if a version exists
@@ -44,7 +44,7 @@ interface ContentStorage
 	 * @param \Kirby\Cms\Language|null $lang Language with code `'default'` in a single-lang installation;
 	 *                                       checks for "any language" if not provided
 	 */
-	public function exists(VersionIdentifier $version, Language|null $lang): bool;
+	public function exists(string $version, Language|null $lang): bool;
 
 	/**
 	 * Returns the modification timestamp of a version
@@ -52,7 +52,7 @@ interface ContentStorage
 	 *
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 */
-	public function modified(VersionIdentifier $version, Language $lang): int|null;
+	public function modified(string $version, Language $lang): int|null;
 
 	/**
 	 * Returns the stored content fields
@@ -62,7 +62,7 @@ interface ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(VersionIdentifier $version, Language $lang): array;
+	public function read(string $version, Language $lang): array;
 
 	/**
 	 * Updates the modification timestamp of an existing version
@@ -71,7 +71,7 @@ interface ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(VersionIdentifier $version, Language $lang): void;
+	public function touch(string $version, Language $lang): void;
 
 	/**
 	 * Updates the content fields of an existing version
@@ -81,5 +81,5 @@ interface ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(VersionIdentifier $version, Language $lang, array $fields): void;
+	public function update(string $version, Language $lang, array $fields): void;
 }

@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
@@ -460,7 +459,7 @@ class File extends ModelWithContent
 	protected function modifiedContent(string $languageCode = null): int
 	{
 		return $this->storage()->modified(
-			VersionIdentifier::published(),
+			'published',
 			$this->storage()->language($languageCode)
 		) ?? 0;
 	}

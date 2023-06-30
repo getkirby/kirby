@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Exception;
-use Kirby\Content\VersionIdentifier;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -231,7 +230,7 @@ class User extends ModelWithContent
 	public function exists(): bool
 	{
 		return $this->storage()->exists(
-			VersionIdentifier::published(),
+			'published',
 			$this->storage()->language('default')
 		);
 	}
@@ -515,7 +514,7 @@ class User extends ModelWithContent
 	public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
 	{
 		$language        = $this->storage()->language($languageCode);
-		$modifiedContent = $this->storage()->modified(VersionIdentifier::published(), $language);
+		$modifiedContent = $this->storage()->modified('published', $language);
 		$modifiedIndex   = F::modified($this->root() . '/index.php');
 		$modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
 		$handler       ??= $this->kirby()->option('date.handler', 'date');

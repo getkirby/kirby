@@ -36,18 +36,15 @@ class PlainTextContentStorage implements ContentStorage
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 * @param array<string, string> $fields Content fields
 	 */
-	public function create(VersionTemplate $type, Language $lang, array $fields): VersionIdentifier
+	public function create(string $versionType, Language $lang, array $fields): void
 	{
-		$version = new VersionIdentifier($type->type());
-		$success = Data::write($this->contentFile($version, $lang), $fields);
+		$success = Data::write($this->contentFile($versionType, $lang), $fields);
 
 		// @codeCoverageIgnoreStart
 		if ($success !== true) {
 			throw new Exception('Could not write new content file');
 		}
 		// @codeCoverageIgnoreEnd
-
-		return $version;
 	}
 
 	/**
@@ -55,7 +52,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 */
-	public function delete(VersionIdentifier $version, Language $lang): void
+	public function delete(string $version, Language $lang): void
 	{
 		$contentFile = $this->contentFile($version, $lang);
 		$success = F::unlink($contentFile);
@@ -88,7 +85,7 @@ class PlainTextContentStorage implements ContentStorage
 	 * @param \Kirby\Cms\Language|null $lang Language with code `'default'` in a single-lang installation;
 	 *                                       checks for "any language" if not provided
 	 */
-	public function exists(VersionIdentifier $version, Language|null $lang): bool
+	public function exists(string $version, Language|null $lang): bool
 	{
 		if ($lang === null) {
 			foreach ($this->contentFiles($version) as $file) {
@@ -109,7 +106,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @param \Kirby\Cms\Language $lang Language with code `'default'` in a single-lang installation
 	 */
-	public function modified(VersionIdentifier $version, Language $lang): int|null
+	public function modified(string $version, Language $lang): int|null
 	{
 		$modified = F::modified($this->contentFile($version, $lang));
 
@@ -128,7 +125,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function read(VersionIdentifier $version, Language $lang): array
+	public function read(string $version, Language $lang): array
 	{
 		$this->ensureExistingVersion($version, $lang);
 		return Data::read($this->contentFile($version, $lang));
@@ -141,7 +138,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function touch(VersionIdentifier $version, Language $lang): void
+	public function touch(string $version, Language $lang): void
 	{
 		$this->ensureExistingVersion($version, $lang);
 		$success = touch($this->contentFile($version, $lang));
@@ -161,7 +158,7 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	public function update(VersionIdentifier $version, Language $lang, array $fields): void
+	public function update(string $version, Language $lang, array $fields): void
 	{
 		$this->ensureExistingVersion($version, $lang);
 		$success = Data::write($this->contentFile($version, $lang), $fields);
@@ -181,8 +178,12 @@ class PlainTextContentStorage implements ContentStorage
 	 *
 	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
 	 */
-	public function contentFile(VersionIdentifier $version, Language $lang): string
+	public function contentFile(string $version, Language $lang): string
 	{
+		if (in_array($version, ['published', 'changes']) !== true) {
+			throw new InvalidArgumentException('Invalid version identifier "' . $version . '"');
+		}
+
 		$extension = $this->model->kirby()->contentExtension();
 		$directory = $this->model->root();
 
@@ -205,10 +206,10 @@ class PlainTextContentStorage implements ContentStorage
 			// changes versions don't need anything extra
 			// (drafts already have the `_drafts` prefix in their root),
 			// but a published version is not possible
-			if ($version->type() === 'published') {
+			if ($version === 'published') {
 				throw new LogicException('Drafts cannot have a published content file');
 			}
-		} elseif ($version->type() === 'changes') {
+		} elseif ($version === 'changes') {
 			// other model type or published page that has a changes subfolder
 			$directory .= '/_changes';
 		}
@@ -224,7 +225,7 @@ class PlainTextContentStorage implements ContentStorage
 	 * Returns an array with content files of all languages
 	 * @internal To be made `protected` when the CMS core no longer relies on it
 	 */
-	public function contentFiles(VersionIdentifier $version): array
+	public function contentFiles(string $version): array
 	{
 		if ($this->model->kirby()->multilang() === true) {
 			return $this->model->kirby()->languages()->values(
@@ -275,7 +276,7 @@ class PlainTextContentStorage implements ContentStorage
 	/**
 	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
 	 */
-	protected function ensureExistingVersion(VersionIdentifier $version, Language $lang): void
+	protected function ensureExistingVersion(string $version, Language $lang): void
 	{
 		if ($this->exists($version, $lang) !== true) {
 			throw new NotFoundException('Version "' . $version . ' (' . $lang->code() . ')" does not already exist');

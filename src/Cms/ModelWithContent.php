@@ -5,8 +5,6 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Content\ContentStorage;
 use Kirby\Content\PlainTextContentStorage;
-use Kirby\Content\VersionIdentifier;
-use Kirby\Content\VersionTemplate;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
@@ -187,8 +185,8 @@ abstract class ModelWithContent implements Identifiable
 		Helpers::deprecated('The internal $model->contentFile() method has been deprecated. You can use $model->storage()->contentFile() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionIdentifier::changes() :
-			VersionIdentifier::published();
+			'changes' :
+			'published';
 
 		return $this->storage()->contentFile(
 			$identifier,
@@ -208,8 +206,8 @@ abstract class ModelWithContent implements Identifiable
 		Helpers::deprecated('The internal $model->contentFiles() method has been deprecated. You can use $model->storage()->contentFiles() instead, however please note that this method is also internal and may be removed in the future.', 'model-content-file');
 
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionIdentifier::changes() :
-			VersionIdentifier::published();
+			'changes' :
+			'published';
 
 		return $this->storage()->contentFiles($identifier);
 	}
@@ -276,8 +274,8 @@ abstract class ModelWithContent implements Identifiable
 
 		// temporary compatibility change (TODO: also convert changes)
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionIdentifier::changes() :
-			VersionIdentifier::published();
+			'changes' :
+			'published';
 
 		// for multilang, we go through all translations and
 		// covnert the content for each of them, remove the content file
@@ -529,8 +527,8 @@ abstract class ModelWithContent implements Identifiable
 	public function readContent(string $languageCode = null): array
 	{
 		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionIdentifier::changes() :
-			VersionIdentifier::published();
+			'changes' :
+			'published';
 
 		try {
 			return $this->storage()->read(
@@ -863,20 +861,16 @@ abstract class ModelWithContent implements Identifiable
 		$data     = $this->contentFileData($data, $languageCode);
 		$language = $this->storage()->language($languageCode);
 
-		$identifier = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-			VersionIdentifier::changes() :
-			VersionIdentifier::published();
+		$id = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
+			'changes' :
+			'published';
 
 		try {
 			// we can only update if the version already exists
-			$this->storage()->update($identifier, $language, $data);
+			$this->storage()->update($id, $language, $data);
 		} catch (NotFoundException $e) {
 			// otherwise create a new version
-			$template = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
-				VersionTemplate::changes() :
-				VersionTemplate::published();
-
-			$this->storage()->create($template, $language, $data);
+			$this->storage()->create($id, $language, $data);
 		}
 
 		return true;
