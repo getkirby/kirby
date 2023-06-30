@@ -9,7 +9,6 @@ use Kirby\Cms\User;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 

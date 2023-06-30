@@ -2,7 +2,6 @@
 
 namespace Kirby\Content;
 
-use Closure;
 use Generator;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
@@ -32,14 +31,65 @@ class ContentStorage
 	public function __construct(
 		protected ModelWithContent $model,
 		string $handler = PlainTextContentStorage::class
-	)
-	{
+	) {
 		$this->handler = new $handler($model);
 	}
 
+	/**
+	 * Magic caller for handler methods
+	 */
 	public function __call(string $name, array $args): mixed
 	{
 		return $this->handler->$name(...$args);
+	}
+
+	/**
+	 * Returns generator for all existing versions-languages combinations
+	 *
+	 * @return Generator<string|string>
+	 */
+	public function all(): Generator
+	{
+		foreach ($this->model->kirby()->languages()->codes() as $lang) {
+			foreach ($this->versions() as $version) {
+				yield $version => $lang;
+			}
+		}
+	}
+
+	/**
+	 * Returns the absolute path to the content file
+	 * @internal eventually should only exists in PlainTextContentStorage,
+	 * 			 when not relying anymore on language helper
+	 *
+	 * @param string $lang Code `'default'` in a single-lang installation
+	 *
+	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
+	 */
+	public function contentFile(
+		string $version,
+		string $lang,
+		bool $force = false
+	): string {
+		$lang = $this->language($lang, $force);
+		return $this->handler->contentFile($version, $lang);
+	}
+
+	/**
+	 * Adapts all versions when converting languages
+	 * @internal
+	 */
+	public function convertLanguage(string $from, string $to): void
+	{
+		$from = $this->language($from, true);
+		$to   = $this->language($to, true);
+
+		foreach ($this->versions() as $version) {
+			$this->handler->move(
+				['version' => $version, 'lang' => $from],
+				['version' => $version, 'lang' => $to],
+			);
+		}
 	}
 
 	/**
@@ -58,6 +108,22 @@ class ContentStorage
 	}
 
 	/**
+	 * Returns the default version identifier for the model
+	 * @internal
+	 */
+	public function defaultVersion(): string
+	{
+		if (
+			$this->model instanceof Page === true &&
+			$this->model->isDraft() === true
+		) {
+			return 'changes';
+		}
+
+		return 'published';
+	}
+
+	/**
 	 * Deletes an existing version in an idempotent way if it was already deleted
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
@@ -69,6 +135,31 @@ class ContentStorage
 	): void {
 		$lang = $this->language($lang, $force);
 		$this->handler->delete($version, $lang);
+	}
+
+	/**
+	 * Deletes all versions when deleting a language
+	 * @internal
+	 */
+	public function deleteLanguage(string|null $lang): void
+	{
+		$lang = $this->language($lang, true);
+
+		foreach ($this->versions() as $version) {
+			$this->handler->delete($version, $lang);
+		}
+	}
+
+	/**
+	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 */
+	protected function ensureExistingVersion(
+		string $version,
+		string $lang
+	): void {
+		if ($this->exists($version, $lang) !== true) {
+			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
+		}
 	}
 
 	/**
@@ -86,6 +177,42 @@ class ContentStorage
 		}
 
 		return $this->handler->exists($version, $lang);
+	}
+
+	/**
+	 * Converts a "user-facing" language code to a "raw" language code to be
+	 * used for storage
+	 * @internal
+	 *
+	 * @param bool $force If set to `true`, the language code is not validated
+	 * @return string Language code
+	 */
+	public function language(
+		string|null $languageCode = null,
+		bool $force = false
+	): string {
+		if ($this->model->kirby()->multilang() === true) {
+			// look up the actual language object if possible
+			$language = $this->model->kirby()->language($languageCode);
+
+			// validate the language code
+			if ($force === false && $language === null) {
+				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
+			}
+
+			// fall back to a base language object with just the code
+			// (force mode where the actual language doesn't exist anymore)
+			return $language?->code() ?? $languageCode;
+		}
+
+		// in force mode, use the provided language code even in single-lang for
+		// compatibility with the previous behavior in `$model->contentFile()`
+		if ($force === true) {
+			return $languageCode ?? 'default';
+		}
+
+		// otherwise there can only be a single-lang with hardcoded "default" code
+		return 'default';
 	}
 
 	/**
@@ -136,6 +263,21 @@ class ContentStorage
 	}
 
 	/**
+	 * Touches all versions of a language
+	 * @internal
+	 */
+	public function touchLanguage(string|null $lang): void
+	{
+		$lang = $this->language($lang, true);
+
+		foreach ($this->versions() as $version) {
+			if ($this->exists($version, $lang) === true) {
+				$this->handler->touch($version, $lang);
+			}
+		}
+	}
+
+	/**
 	 * Updates the content fields of an existing version
 	 *
 	 * @param string $lang Code `'default'` in a single-lang installation
@@ -154,103 +296,9 @@ class ContentStorage
 	}
 
 	/**
-	 * Converts a "user-facing" language code to a "raw" language code to be
-	 * used for storage
+	 * Returns all versions availalbe for the model
 	 * @internal
-	 *
-	 * @param bool $force If set to `true`, the language code is not validated
-	 * @return string Language code
 	 */
-	public function language(
-		string|null $languageCode = null,
-		bool $force = false
-	): string {
-		if ($this->model->kirby()->multilang() === true) {
-			// look up the actual language object if possible
-			$language = $this->model->kirby()->language($languageCode);
-
-			// validate the language code
-			if ($force === false && $language === null) {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			// fall back to a base language object with just the code
-			// (force mode where the actual language doesn't exist anymore)
-			return $language?->code() ?? $languageCode;
-		}
-
-		// in force mode, use the provided language code even in single-lang for
-		// compatibility with the previous behavior in `$model->contentFile()`
-		if ($force === true) {
-			return $languageCode ?? 'default';
-		}
-
-		// otherwise there can only be a single-lang with hardcoded "default" code
-		return 'default';
-	}
-
-	/**
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	protected function ensureExistingVersion(
-		string $version,
-		string $lang
-	): void {
-		if ($this->exists($version, $lang) !== true) {
-			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
-		}
-	}
-
-	/**
-	 * Returns the absolute path to the content file
-	 * @internal To be made `protected` when the CMS core no longer relies on it
-	 *
-	 * @param string $lang Code `'default'` in a single-lang installation
-	 *
-	 * @throws \Kirby\Exception\LogicException If the model type doesn't have a known content filename
-	 */
-	public function contentFile(
-		string $version,
-		string $lang,
-		bool $force = false
-	): string {
-		$lang = $this->language($lang, $force);
-		return $this->handler->contentFile($version, $lang);
-	}
-
-	public function convertLanguage(string $from, string $to): void
-	{
-		$from = $this->language($from, true);
-		$to   = $this->language($to, true);
-
-		foreach ($this->versions() as $version) {
-			$this->handler->move(
-				['version' => $version, 'lang' => $from],
-				['version' => $version, 'lang' => $to],
-			);
-		}
-	}
-
-	public function deleteLanguage(string|null $lang): void
-	{
-		$lang = $this->language($lang, true);
-
-		foreach ($this->versions() as $version) {
-			$this->handler->delete($version, $lang);
-		}
-	}
-
-	public function touchLanguage(string|null $lang): void
-	{
-		$lang = $this->language($lang, true);
-
-		foreach ($this->versions() as $version) {
-			if ($this->exists($version, $lang) === true) {
-				$this->handler->touch($version, $lang);
-			}
-		}
-	}
-
 	public function versions(): array
 	{
 		$versions = ['changes'];
@@ -263,26 +311,5 @@ class ContentStorage
 		}
 
 		return $versions;
-	}
-
-	public function all(): Generator
-	{
-		foreach ($this->model->kirby()->languages()->codes() as $lang) {
-			foreach ($this->versions() as $version) {
-				yield $version => $lang;
-			}
-		}
-	}
-
-	public function defaultVersion(): string
-	{
-		if (
-			$this->model instanceof Page === true &&
-			$this->model->isDraft() === true
-		) {
-			return 'changes';
-		}
-
-		return 'published';
 	}
 }
