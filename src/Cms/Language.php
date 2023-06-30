@@ -142,7 +142,7 @@ class Language
 	 * Internal converter to create or remove
 	 * translation files.
 	 */
-	protected static function converter(string $from, string $to): bool
+	protected static function converter(string $from, string $to): void
 	{
 		$kirby = App::instance();
 		$site  = $kirby->site();
@@ -150,76 +150,16 @@ class Language
 		$from = $site->storage()->language($from, true);
 		$to   = $site->storage()->language($to, true);
 
-		// convert site
-		foreach ($site->files() as $file) {
+		foreach ($kirby->models() as $model) {
 			F::move(
-				$file->storage()->contentFile('changes', $from),
-				$file->storage()->contentFile('changes', $to)
+				$model->storage()->contentFile('changes', $from),
+				$model->storage()->contentFile('changes', $to)
 			);
 			F::move(
-				$file->storage()->contentFile('published', $from),
-				$file->storage()->contentFile('published', $to)
-			);
-		}
-
-		F::move(
-			$site->storage()->contentFile('changes', $from),
-			$site->storage()->contentFile('changes', $to)
-		);
-		F::move(
-			$site->storage()->contentFile('published', $from),
-			$site->storage()->contentFile('published', $to)
-		);
-
-		// convert all pages
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				F::move(
-					$file->storage()->contentFile('changes', $from),
-					$file->storage()->contentFile('changes', $to)
-				);
-				F::move(
-					$file->storage()->contentFile('published', $from),
-					$file->storage()->contentFile('published', $to)
-				);
-			}
-
-			F::move(
-				$page->storage()->contentFile('changes', $from),
-				$page->storage()->contentFile('changes', $to)
-			);
-			if ($page->isDraft() === false) {
-				F::move(
-					$page->storage()->contentFile('published', $from),
-					$page->storage()->contentFile('published', $to)
-				);
-			}
-		}
-
-		// convert all users
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				F::move(
-					$file->storage()->contentFile('changes', $from),
-					$file->storage()->contentFile('changes', $to)
-				);
-				F::move(
-					$file->storage()->contentFile('published', $from),
-					$file->storage()->contentFile('published', $to)
-				);
-			}
-
-			F::move(
-				$user->storage()->contentFile('changes', $from),
-				$user->storage()->contentFile('changes', $to)
-			);
-			F::move(
-				$user->storage()->contentFile('published', $from),
-				$user->storage()->contentFile('published', $to)
+				$model->storage()->contentFile('published', $from),
+				$model->storage()->contentFile('published', $to)
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -319,39 +259,15 @@ class Language
 	 * When the language is deleted, all content files with
 	 * the language code must be removed as well.
 	 */
-	protected function deleteContentFiles(mixed $code): bool
+	protected function deleteContentFiles(mixed $code): void
 	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
+		$kirby    = App::instance();
+		$language = $kirby->site()->storage()->language($code, true);
 
-		$language = $site->storage()->language($code, true);
-
-		$site->storage()->delete('changes', $language);
-		$site->storage()->delete('published', $language);
-
-		foreach ($kirby->site()->index(true) as $page) {
-			foreach ($page->files() as $file) {
-				$file->storage()->delete('changes', $language);
-				$file->storage()->delete('published', $language);
-			}
-
-			$page->storage()->delete('changes', $language);
-			if ($page->isDraft() === false) {
-				$page->storage()->delete('published', $language);
-			}
+		foreach ($kirby->models() as $model) {
+			$model->storage()->delete('changes', $language);
+			$model->storage()->delete('published', $language);
 		}
-
-		foreach ($kirby->users() as $user) {
-			foreach ($user->files() as $file) {
-				$file->storage()->delete('changes', $language);
-				$file->storage()->delete('published', $language);
-			}
-
-			$user->storage()->delete('changes', $language);
-			$user->storage()->delete('published', $language);
-		}
-
-		return true;
 	}
 
 	/**
