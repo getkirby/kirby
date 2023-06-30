@@ -174,6 +174,10 @@ export default {
 	--button-color-back: var(--color-white);
 	box-shadow: var(--shadow);
 }
+.k-panel[data-theme="dark"] .k-panel-menu-button[aria-current] {
+	--button-color-back: var(--color-gray-400);
+}
+
 /* Outline should not vanish behind other buttons */
 .k-panel-menu-button:focus {
 	z-index: 1;
@@ -191,7 +195,7 @@ export default {
 	content: "";
 	position: fixed;
 	inset: 0;
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 	display: var(--menu-display-backdrop);
 	pointer-events: none;
 }

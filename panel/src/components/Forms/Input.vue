@@ -215,7 +215,7 @@ export default {
 
 /* Disabled state */
 .k-input[data-disabled="true"] {
-	--input-color-back: var(--color-background);
+	--input-color-back: var(--color-light);
 	--input-color-icon: var(--color-gray-600);
 	pointer-events: none;
 }

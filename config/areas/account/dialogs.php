@@ -1,11 +1,12 @@
 <?php
 
+use Kirby\Cms\App;
+use Kirby\Panel\Panel;
 use Kirby\Panel\UserTotpEnableDialog;
 
 $dialogs = require __DIR__ . '/../users/dialogs.php';
 
 return [
-
 	// change email
 	'account.changeEmail' => [
 		'pattern' => '(account)/changeEmail',
@@ -88,6 +89,16 @@ return [
 		'pattern' => '(account)/files/(:any)/fields/(:any)/(:all?)',
 		'load'    => $dialogs['user.file.fields']['load'],
 		'submit'  => $dialogs['user.file.fields']['submit']
+	],
+
+	// change Panel theme
+	'account.theme' => [
+		'pattern' => 'account/theme/(:any)',
+		'load' => function (string $theme) {
+			$user = App::instance()->user();
+			$user->update(['theme' => $theme]);
+			Panel::go($user->panel()->url());
+		}
 	],
 
 	// account enable TOTP

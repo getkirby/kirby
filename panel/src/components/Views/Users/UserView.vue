@@ -26,6 +26,8 @@
 			</template>
 
 			<template #buttons>
+				<k-account-theme-button v-if="$panel.view.id === 'account'" />
+
 				<k-button-group>
 					<k-button
 						:disabled="isLocked"

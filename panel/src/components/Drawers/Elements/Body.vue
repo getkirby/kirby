@@ -16,7 +16,7 @@ export default {};
 .k-drawer-body {
 	padding: var(--drawer-body-padding);
 	flex-grow: 1;
-	background: var(--color-background);
+	background: var(--color-light);
 }
 /* Sticky elements inside drawer */
 /** TODO: .k-drawer-body .k-toolbar:not([data-inline="true"]):has(~ :focus-within) */

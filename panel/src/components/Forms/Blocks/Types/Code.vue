@@ -63,6 +63,11 @@ export default {
 	--input-padding: var(--spacing-3);
 	--input-padding-multiline: var(--input-padding);
 }
+.k-panel[data-theme="dark"] .k-block-type-code-editor .k-input {
+	--input-color-back: var(--color-light);
+	--input-color-text: var(--color-text);
+}
+
 .k-block-type-code-editor .k-input[data-type="textarea"] {
 	white-space: pre-wrap;
 }

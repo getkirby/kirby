@@ -319,6 +319,11 @@ export default {
 .k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
 	filter: brightness(97%);
 }
+.k-panel[data-theme="dark"]
+	.k-button:where([data-variant="filled"]):not([aria-disabled]):hover {
+	filter: brightness(87%);
+}
+
 .k-button:where([data-theme][data-variant="filled"]) {
 	--button-color-icon: var(--theme-color-700);
 	--button-color-back: var(--theme-color-back);

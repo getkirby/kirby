@@ -16,7 +16,7 @@ export default {};
 	position: fixed;
 	inset: 0;
 	z-index: var(--z-offline);
-	background: var(--color-backdrop);
+	background: var(--overlay-color-back);
 	display: flex;
 	align-items: center;
 	justify-content: center;

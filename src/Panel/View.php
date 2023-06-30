@@ -204,6 +204,7 @@ class View
 						'id'          => $user->id(),
 						'language'    => $user->language(),
 						'role'        => $user->role()->id(),
+						'theme'       => $user->theme()->value(),
 						'username'    => $user->username(),
 					];
 				}
