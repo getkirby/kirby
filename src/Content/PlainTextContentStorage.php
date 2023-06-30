@@ -7,7 +7,6 @@ use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -23,7 +22,7 @@ use Kirby\Filesystem\F;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class PlainTextContentStorage implements ContentStorage
+class PlainTextContentStorage implements ContentStorageHandler
 {
 	public function __construct(protected ModelWithContent $model)
 	{
@@ -235,49 +234,5 @@ class PlainTextContentStorage implements ContentStorage
 		return [
 			$this->contentFile($version, 'default')
 		];
-	}
-
-	/**
-	 * Converts a "user-facing" language code to a "raw" language code to be
-	 * used for storage
-	 * @internal
-	 *
-	 * @param bool $force If set to `true`, the language code is not validated
-	 * @return string Language code
-	 */
-	public function language(string|null $languageCode = null, bool $force = false): string
-	{
-		if ($this->model->kirby()->multilang() === true) {
-			// look up the actual language object if possible
-			$language = $this->model->kirby()->language($languageCode);
-
-			// validate the language code
-			if ($force === false && $language === null) {
-				throw new InvalidArgumentException('Invalid language: ' . $languageCode);
-			}
-
-			// fall back to a base language object with just the code
-			// (force mode where the actual language doesn't exist anymore)
-			return $language?->code() ?? $languageCode;
-		}
-
-		// in force mode, use the provided language code even in single-lang for
-		// compatibility with the previous behavior in `$model->contentFile()`
-		if ($force === true) {
-			return $languageCode ?? 'default';
-		}
-
-		// otherwise there can only be a single-lang with hardcoded "default" code
-		return 'default';
-	}
-
-	/**
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
-	 */
-	protected function ensureExistingVersion(string $version, string $lang): void
-	{
-		if ($this->exists($version, $lang) !== true) {
-			throw new NotFoundException('Version "' . $version . ' (' . $lang . ')" does not already exist');
-		}
 	}
 }

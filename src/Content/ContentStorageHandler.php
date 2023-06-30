@@ -18,7 +18,7 @@ use Kirby\Cms\ModelWithContent;
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-interface ContentStorage
+interface ContentStorageHandler
 {
 	public function __construct(ModelWithContent $model);
 
