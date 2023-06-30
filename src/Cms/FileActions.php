@@ -59,7 +59,6 @@ trait FileActions
 
 			foreach ($newFile->kirby()->languages()->codes() as $lang) {
 				// rename the content file
-				$lang = $this->storage()->language($lang);
 				F::move(
 					$oldFile->storage()->contentFile('published', $lang),
 					$newFile->storage()->contentFile('published', $lang)
@@ -268,7 +267,6 @@ trait FileActions
 			$file->unpublish();
 
 			foreach ($file->kirby()->languages()->codes() as $lang) {
-				$lang = $this->storage()->language($lang);
 				F::remove($file->storage()->contentFile('published', $lang));
 				F::remove($file->storage()->contentFile('changes', $lang));
 			}

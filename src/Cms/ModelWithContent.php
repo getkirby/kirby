@@ -190,7 +190,8 @@ abstract class ModelWithContent implements Identifiable
 
 		return $this->storage()->contentFile(
 			$identifier,
-			$this->storage()->language($languageCode, $force)
+			$languageCode,
+			$force
 		);
 	}
 
@@ -290,7 +291,7 @@ abstract class ModelWithContent implements Identifiable
 					// delete the old text file
 					$this->storage()->delete(
 						$identifier,
-						$this->storage()->language($code)
+						$code
 					);
 
 					// save to re-create the translation content file
@@ -315,7 +316,7 @@ abstract class ModelWithContent implements Identifiable
 		$content = $this->content()->convertTo($blueprint);
 
 		// delete the old text file
-		$this->storage()->delete($identifier, new Language(['code' => 'default']));
+		$this->storage()->delete($identifier, 'default');
 
 		return $new->save($content);
 	}
@@ -533,9 +534,9 @@ abstract class ModelWithContent implements Identifiable
 		try {
 			return $this->storage()->read(
 				$identifier,
-				$this->storage()->language($languageCode)
+				$languageCode
 			);
-		} catch (NotFoundException $e) {
+		} catch (NotFoundException) {
 			// only if the content file really does not exist, it's ok
 			// to return empty content. Otherwise this could lead to
 			// content loss in case of file reading issues
@@ -696,7 +697,10 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function storage(): ContentStorage
 	{
-		return $this->storage ??= new PlainTextContentStorage($this);
+		return $this->storage ??= new ContentStorage(
+			model:   $this,
+			handler: PlainTextContentStorage::class
+		);
 	}
 
 	/**
@@ -858,8 +862,7 @@ abstract class ModelWithContent implements Identifiable
 	 */
 	public function writeContent(array $data, string $languageCode = null): bool
 	{
-		$data     = $this->contentFileData($data, $languageCode);
-		$language = $this->storage()->language($languageCode);
+		$data = $this->contentFileData($data, $languageCode);
 
 		$id = $this::CLASS_ALIAS === 'page' && $this->isDraft() === true ?
 			'changes' :
@@ -867,10 +870,10 @@ abstract class ModelWithContent implements Identifiable
 
 		try {
 			// we can only update if the version already exists
-			$this->storage()->update($id, $language, $data);
+			$this->storage()->update($id, $languageCode, $data);
 		} catch (NotFoundException $e) {
 			// otherwise create a new version
-			$this->storage()->create($id, $language, $data);
+			$this->storage()->create($id, $languageCode, $data);
 		}
 
 		return true;

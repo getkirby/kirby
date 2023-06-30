@@ -28,11 +28,12 @@ class PlainTextContentStorageTest extends TestCase
 		Dir::make($this->tmp);
 
 		$this->model = new Page([
-			'kirby' => new App(),
-			'root' => $this->tmp,
-			'slug' => 'a-page',
+			'kirby'    => new App(),
+			'root'     => $this->tmp,
+			'slug'     => 'a-page',
 			'template' => 'article'
 		]);
+
 		$this->storage = new PlainTextContentStorage($this->model);
 	}
 
@@ -302,7 +303,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testReadChangesMultiLang()
 	{
@@ -319,7 +319,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testReadChangesSingleLang()
 	{
@@ -336,7 +335,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testReadPublishedMultiLang()
 	{
@@ -352,7 +350,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testReadPublishedSingleLang()
 	{
@@ -368,18 +365,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::read
-	 * @covers ::ensureExistingVersion
-	 */
-	public function testReadDoesNotExist()
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (en)" does not already exist');
-
-		$this->storage->read('published', 'en');
-	}
-
-	/**
-	 * @covers ::read
 	 */
 	public function testReadInvalidId()
 	{
@@ -391,7 +376,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testTouchChangesMultiLang()
 	{
@@ -409,7 +393,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testTouchChangesSingleLang()
 	{
@@ -427,7 +410,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testTouchPublishedMultiLang()
 	{
@@ -444,7 +426,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testTouchPublishedSingleLang()
 	{
@@ -461,18 +442,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::touch
-	 * @covers ::ensureExistingVersion
-	 */
-	public function testTouchDoesNotExist()
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (en)" does not already exist');
-
-		$this->storage->touch('published', 'en');
-	}
-
-	/**
-	 * @covers ::touch
 	 */
 	public function testTouchInvalidId()
 	{
@@ -484,7 +453,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testUpdateChangesMultiLang()
 	{
@@ -502,7 +470,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testUpdateChangesSingleLang()
 	{
@@ -520,7 +487,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testUpdatePublishedMultiLang()
 	{
@@ -537,7 +503,6 @@ class PlainTextContentStorageTest extends TestCase
 
 	/**
 	 * @covers ::update
-	 * @covers ::ensureExistingVersion
 	 */
 	public function testUpdatePublishedSingleLang()
 	{
@@ -550,23 +515,6 @@ class PlainTextContentStorageTest extends TestCase
 
 		$this->storage->update('published', 'default', $fields);
 		$this->assertSame($fields, Data::read($this->tmp . '/article.txt'));
-	}
-
-	/**
-	 * @covers ::update
-	 * @covers ::ensureExistingVersion
-	 */
-	public function testUpdateDoesNotExist()
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('Version "published (en)" does not already exist');
-
-		$fields = [
-			'title' => 'Foo',
-			'text'  => 'Bar'
-		];
-
-		$this->storage->update('published', 'en', $fields);
 	}
 
 	/**
@@ -781,82 +729,5 @@ class PlainTextContentStorageTest extends TestCase
 		$this->expectExceptionMessage('Invalid version identifier "invalid"');
 
 		$this->storage->contentFiles('invalid');
-	}
-
-	/**
-	 * @covers ::language
-	 * @dataProvider languageProvider
-	 */
-	public function testLanguageMultiLang(string|null $languageCode, bool $force, array $expectedCodes)
-	{
-		$app = new App([
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			]
-		]);
-
-		$language = $this->storage->language($languageCode, $force);
-		$this->assertSame($expectedCodes[0], $language);
-	}
-
-	/**
-	 * @covers ::language
-	 */
-	public function testLanguageMultiLangInvalid()
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid language: fr');
-
-		$app = new App([
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			]
-		]);
-
-		$this->storage->language('fr', false);
-	}
-
-	/**
-	 * @covers ::language
-	 * @dataProvider languageProvider
-	 */
-	public function testLanguageSingleLang(string|null $languageCode, bool $force, array $expectedCodes)
-	{
-		$language = $this->storage->language($languageCode, $force);
-		$this->assertSame($expectedCodes[1], $language);
-	}
-
-	/**
-	 * @covers ::language
-	 */
-	public function testLanguageSingleLangInvalid()
-	{
-		$language = $this->storage->language('fr', false);
-		$this->assertSame('default', $language);
-	}
-
-	public function languageProvider(): array
-	{
-		return [
-			[null, false, ['en', 'default']],
-			[null, true, ['en', 'default']],
-			['en', false, ['en', 'default']],
-			['en', true, ['en', 'en']],
-			['de', false, ['de', 'default']],
-			['de', true, ['de', 'de']],
-			['fr', true, ['fr', 'fr']],
-		];
 	}
 }

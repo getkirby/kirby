@@ -125,7 +125,6 @@ class PlainTextContentStorage implements ContentStorageHandler
 	 */
 	public function read(string $version, string $lang): array
 	{
-		$this->ensureExistingVersion($version, $lang);
 		return Data::read($this->contentFile($version, $lang));
 	}
 
@@ -138,7 +137,6 @@ class PlainTextContentStorage implements ContentStorageHandler
 	 */
 	public function touch(string $version, string $lang): void
 	{
-		$this->ensureExistingVersion($version, $lang);
 		$success = touch($this->contentFile($version, $lang));
 
 		// @codeCoverageIgnoreStart
@@ -158,7 +156,6 @@ class PlainTextContentStorage implements ContentStorageHandler
 	 */
 	public function update(string $version, string $lang, array $fields): void
 	{
-		$this->ensureExistingVersion($version, $lang);
 		$success = Data::write($this->contentFile($version, $lang), $fields);
 
 		// @codeCoverageIgnoreStart

@@ -144,20 +144,14 @@ class Language
 	 */
 	protected static function converter(string $from, string $to): void
 	{
-		$kirby = App::instance();
-		$site  = $kirby->site();
-
-		$from = $site->storage()->language($from, true);
-		$to   = $site->storage()->language($to, true);
-
-		foreach ($kirby->models() as $model) {
+		foreach (App::instance()->models() as $model) {
 			F::move(
-				$model->storage()->contentFile('changes', $from),
-				$model->storage()->contentFile('changes', $to)
+				$model->storage()->contentFile('changes', $from, true),
+				$model->storage()->contentFile('changes', $to, true)
 			);
 			F::move(
-				$model->storage()->contentFile('published', $from),
-				$model->storage()->contentFile('published', $to)
+				$model->storage()->contentFile('published', $from, true),
+				$model->storage()->contentFile('published', $to, true)
 			);
 		}
 	}
@@ -261,12 +255,9 @@ class Language
 	 */
 	protected function deleteContentFiles(mixed $code): void
 	{
-		$kirby    = App::instance();
-		$language = $kirby->site()->storage()->language($code, true);
-
-		foreach ($kirby->models() as $model) {
-			$model->storage()->delete('changes', $language);
-			$model->storage()->delete('published', $language);
+		foreach (App::instance()->models() as $model) {
+			$model->storage()->delete('changes', $code, true);
+			$model->storage()->delete('published', $code, true);
 		}
 	}
 
